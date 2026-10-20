@@ -569,7 +569,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kyodo.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://www.kyodo.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -577,6 +577,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 24323 declared, 244 pages: read over a CYCLE (1.0 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -1425,7 +1429,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.dailyshincho.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://www.dailyshincho.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -1433,6 +1437,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 45731 declared, 458 pages: read over a CYCLE (1.9 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -3535,11 +3543,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_WASEDA_POSTS", .name = "早稲田大学 — posts (WordPress REST)",
     .name_ja = "早稲田大学 投稿（WordPress REST）",
-    .category = "web", .portal = "https://www.waseda.jp/top/",
+    .category = "media", .portal = "https://www.waseda.jp/top/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.waseda.jp/top/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://www.waseda.jp/top/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -3547,6 +3555,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 12582 declared, 126 pages: read over a CYCLE (0.5 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -3559,11 +3571,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_WEBCARTOP_POSTS", .name = "WEB CARTOP — posts (WordPress REST)",
     .name_ja = "WEB CARTOP 投稿（WordPress REST）",
-    .category = "web", .portal = "https://www.webcartop.jp/",
+    .category = "media", .portal = "https://www.webcartop.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.webcartop.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://www.webcartop.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -3571,6 +3583,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 26821 declared, 269 pages: read over a CYCLE (1.1 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -3608,7 +3624,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_WASEDA_PAGES", .name = "早稲田大学 — pages (WordPress REST)",
     .name_ja = "早稲田大学 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://www.waseda.jp/top/",
+    .category = "media", .portal = "https://www.waseda.jp/top/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3632,7 +3648,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_WEBCARTOP_PAGES", .name = "WEB CARTOP — pages (WordPress REST)",
     .name_ja = "WEB CARTOP 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://www.webcartop.jp/",
+    .category = "media", .portal = "https://www.webcartop.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3656,7 +3672,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_WASEDA_USERS", .name = "早稲田大学 — author/staff register (WordPress REST)",
     .name_ja = "早稲田大学 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://www.waseda.jp/top/",
+    .category = "media", .portal = "https://www.waseda.jp/top/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3679,7 +3695,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_SEIKATSU110_POSTS", .name = "生活110番 — posts (WordPress REST)",
     .name_ja = "生活110番 投稿（WordPress REST）",
-    .category = "web", .portal = "https://www.seikatsu110.jp/",
+    .category = "media", .portal = "https://www.seikatsu110.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3707,7 +3723,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.the-miyanichi.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://www.the-miyanichi.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -3715,6 +3731,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 108937 declared, 1090 pages: read over a CYCLE (4.5 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -3727,7 +3747,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_SEIKATSU110_PAGES", .name = "生活110番 — pages (WordPress REST)",
     .name_ja = "生活110番 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://www.seikatsu110.jp/",
+    .category = "media", .portal = "https://www.seikatsu110.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3776,11 +3796,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_ROOMIE_POSTS", .name = "ROOMIE(ルーミー) — posts (WordPress REST)",
     .name_ja = "ROOMIE(ルーミー) 投稿（WordPress REST）",
-    .category = "web", .portal = "https://www.roomie.jp/",
+    .category = "media", .portal = "https://www.roomie.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.roomie.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://www.roomie.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -3788,6 +3808,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 23042 declared, 231 pages: read over a CYCLE (1.0 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -3800,7 +3824,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_SEIKATSU110_BLOG", .name = "生活110番 — custom post type `blog` (業者ブログ) (WordPress REST)",
     .name_ja = "生活110番 業者ブログ（WordPress REST）",
-    .category = "web", .portal = "https://www.seikatsu110.jp/",
+    .category = "media", .portal = "https://www.seikatsu110.jp/",
     .record_type = "cpt-blog",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3877,7 +3901,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_ROOMIE_PAGES", .name = "ROOMIE(ルーミー) — pages (WordPress REST)",
     .name_ja = "ROOMIE(ルーミー) 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://www.roomie.jp/",
+    .category = "media", .portal = "https://www.roomie.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3901,7 +3925,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_ROOMIE_USERS", .name = "ROOMIE(ルーミー) — author/staff register (WordPress REST)",
     .name_ja = "ROOMIE(ルーミー) 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://www.roomie.jp/",
+    .category = "media", .portal = "https://www.roomie.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3951,7 +3975,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_QETIC_PAGES", .name = "Qetic — pages (WordPress REST)",
     .name_ja = "Qetic 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://qetic.jp/",
+    .category = "media", .portal = "https://qetic.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -3975,11 +3999,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_NEWECONOMY_POSTS", .name = "あたらしい経済 — posts (WordPress REST)",
     .name_ja = "あたらしい経済 投稿（WordPress REST）",
-    .category = "web", .portal = "https://www.neweconomy.jp/",
+    .category = "media", .portal = "https://www.neweconomy.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.neweconomy.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://www.neweconomy.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -3987,6 +4011,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 17542 declared, 176 pages: read over a CYCLE (0.7 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -3999,11 +4027,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_MENSEX_POSTS", .name = "MEN&#039;S EX ONLINE — posts (WordPress REST)",
     .name_ja = "MEN&#039;S EX ONLINE 投稿（WordPress REST）",
-    .category = "web", .portal = "https://www.mens-ex.jp/",
+    .category = "media", .portal = "https://www.mens-ex.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mens-ex.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://www.mens-ex.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -4011,6 +4039,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 13156 declared, 132 pages: read over a CYCLE (0.6 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -4023,7 +4055,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_MENSEX_PAGES", .name = "MEN&#039;S EX ONLINE — pages (WordPress REST)",
     .name_ja = "MEN&#039;S EX ONLINE 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://www.mens-ex.jp/",
+    .category = "media", .portal = "https://www.mens-ex.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4047,7 +4079,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_NEWECONOMY_PAGES", .name = "あたらしい経済 — pages (WordPress REST)",
     .name_ja = "あたらしい経済 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://www.neweconomy.jp/",
+    .category = "media", .portal = "https://www.neweconomy.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4071,11 +4103,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_LISANI_POSTS", .name = "リスアニ! – アニソン・アニメ音楽のポータルサイト — posts (WordPress REST)",
     .name_ja = "リスアニ! – アニソン・アニメ音楽のポータルサイト 投稿（WordPress REST）",
-    .category = "web", .portal = "https://www.lisani.jp/",
+    .category = "media", .portal = "https://www.lisani.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.lisani.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://www.lisani.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -4083,6 +4115,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 33924 declared, 340 pages: read over a CYCLE (1.4 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -4096,7 +4132,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_LISANI_PAGES", .name = "リスアニ! – アニソン・アニメ音楽のポータルサイト — pages (WordPress REST)",
     .name_ja = "リスアニ! – アニソン・アニメ音楽のポータルサイト 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://www.lisani.jp/",
+    .category = "media", .portal = "https://www.lisani.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4147,11 +4183,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_SEIKATSU110_SHOP", .name = "生活110番 — custom post type `shop` (業者情報) (WordPress REST)",
     .name_ja = "生活110番 業者情報（WordPress REST）",
-    .category = "web", .portal = "https://www.seikatsu110.jp/",
+    .category = "media", .portal = "https://www.seikatsu110.jp/",
     .record_type = "cpt-shop",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.seikatsu110.jp/wp-json/wp/v2/shop?per_page=100&orderby=date&order=desc",
+    .url = "https://www.seikatsu110.jp/wp-json/wp/v2/shop?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -4159,6 +4195,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 49878 declared, 499 pages: read over a CYCLE (2.1 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -4173,7 +4213,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_MENSEX_MAGAZINE", .name = "MEN&#039;S EX ONLINE — custom post type `magazine` (MAGAZINE) "
       "(WordPress REST)",
     .name_ja = "MEN&#039;S EX ONLINE MAGAZINE（WordPress REST）",
-    .category = "web", .portal = "https://www.mens-ex.jp/",
+    .category = "media", .portal = "https://www.mens-ex.jp/",
     .record_type = "cpt-magazine",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4198,7 +4238,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_QETIC_USERS", .name = "Qetic — author/staff register (WordPress REST)",
     .name_ja = "Qetic 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://qetic.jp/",
+    .category = "media", .portal = "https://qetic.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4245,11 +4285,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_SEIKATSU110_SHOPSERVICE", .name = "生活110番 — custom post type `shop_service` (サービス) (WordPress REST)",
     .name_ja = "生活110番 サービス（WordPress REST）",
-    .category = "web", .portal = "https://www.seikatsu110.jp/",
+    .category = "media", .portal = "https://www.seikatsu110.jp/",
     .record_type = "cpt-shop-service",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.seikatsu110.jp/wp-json/wp/v2/shop_service?per_page=100&orderby=date&order=desc",
+    .url = "https://www.seikatsu110.jp/wp-json/wp/v2/shop_service?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -4257,6 +4297,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 86726 declared, 868 pages: read over a CYCLE (3.6 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -4270,11 +4314,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_MOSHIMOSHINIPPON_POSTS", .name = "MOSHI MOSHI NIPPON  /  もしもしにっぽん — posts (WordPress REST)",
     .name_ja = "MOSHI MOSHI NIPPON  /  もしもしにっぽん 投稿（WordPress REST）",
-    .category = "web", .portal = "https://www.moshimoshi-nippon.jp/",
+    .category = "media", .portal = "https://www.moshimoshi-nippon.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.moshimoshi-nippon.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://www.moshimoshi-nippon.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -4282,6 +4326,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 12595 declared, 126 pages: read over a CYCLE (0.5 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -4296,7 +4344,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_MENSEX_365V", .name = "MEN&#039;S EX ONLINE — custom post type `365v` (365日Vゾーン) "
       "(WordPress REST)",
     .name_ja = "MEN&#039;S EX ONLINE 365日Vゾーン（WordPress REST）",
-    .category = "web", .portal = "https://www.mens-ex.jp/",
+    .category = "media", .portal = "https://www.mens-ex.jp/",
     .record_type = "cpt-365v",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4322,7 +4370,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_MENSEX_SHOES", .name = "MEN&#039;S EX ONLINE — custom post type `shoes` (本格靴辞典) "
       "(WordPress REST)",
     .name_ja = "MEN&#039;S EX ONLINE 本格靴辞典（WordPress REST）",
-    .category = "web", .portal = "https://www.mens-ex.jp/",
+    .category = "media", .portal = "https://www.mens-ex.jp/",
     .record_type = "cpt-shoes",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4347,7 +4395,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_MOSHIMOSHINIPPON_PAGES", .name = "MOSHI MOSHI NIPPON  /  もしもしにっぽん — pages (WordPress REST)",
     .name_ja = "MOSHI MOSHI NIPPON  /  もしもしにっぽん 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://www.moshimoshi-nippon.jp/",
+    .category = "media", .portal = "https://www.moshimoshi-nippon.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4372,7 +4420,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_SEIKATSU110_GLOSSARY", .name = "生活110番 — custom post type `glossary` (暮らしの用語集) (WordPress REST)",
     .name_ja = "生活110番 暮らしの用語集（WordPress REST）",
-    .category = "web", .portal = "https://www.seikatsu110.jp/",
+    .category = "media", .portal = "https://www.seikatsu110.jp/",
     .record_type = "cpt-glossary",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4397,7 +4445,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_JAPANPOLICYFORUM_POSTS", .name = "Japan Policy Forum — posts (WordPress REST)",
     .name_ja = "Japan Policy Forum 投稿（WordPress REST）",
-    .category = "web", .portal = "https://www.japanpolicyforum.jp/",
+    .category = "media", .portal = "https://www.japanpolicyforum.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4423,7 +4471,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_MOSHIMOSHINIPPON_USERS", .name = "MOSHI MOSHI NIPPON  /  もしもしにっぽん — author/staff register "
       "(WordPress REST)",
     .name_ja = "MOSHI MOSHI NIPPON  /  もしもしにっぽん 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://www.moshimoshi-nippon.jp/",
+    .category = "media", .portal = "https://www.moshimoshi-nippon.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4447,7 +4495,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_JAPANPOLICYFORUM_PAGES", .name = "Japan Policy Forum — pages (WordPress REST)",
     .name_ja = "Japan Policy Forum 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://www.japanpolicyforum.jp/",
+    .category = "media", .portal = "https://www.japanpolicyforum.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4473,7 +4521,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_MENSEX_STORE", .name = "MEN&#039;S EX ONLINE — custom post type `store` (me STORE商品) "
       "(WordPress REST)",
     .name_ja = "MEN&#039;S EX ONLINE me STORE商品（WordPress REST）",
-    .category = "web", .portal = "https://www.mens-ex.jp/",
+    .category = "media", .portal = "https://www.mens-ex.jp/",
     .record_type = "cpt-store",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4498,7 +4546,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_SEIKATSU110_FAQ", .name = "生活110番 — custom post type `faq` (よくあるご質問) (WordPress REST)",
     .name_ja = "生活110番 よくあるご質問（WordPress REST）",
-    .category = "web", .portal = "https://www.seikatsu110.jp/",
+    .category = "media", .portal = "https://www.seikatsu110.jp/",
     .record_type = "cpt-faq",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4523,7 +4571,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_KABUKIBITO_PAGES", .name = "歌舞伎美人 — pages (WordPress REST)",
     .name_ja = "歌舞伎美人 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://www.kabuki-bito.jp/",
+    .category = "media", .portal = "https://www.kabuki-bito.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4547,7 +4595,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_GOODSPRESS_POSTS", .name = "GoodsPress Web — posts (WordPress REST)",
     .name_ja = "GoodsPress Web 投稿（WordPress REST）",
-    .category = "web", .portal = "https://www.goodspress.jp/",
+    .category = "media", .portal = "https://www.goodspress.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4575,7 +4623,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.isenp.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://www.isenp.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -4583,6 +4631,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 9763 declared, 98 pages: read over a CYCLE (0.4 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -4595,7 +4647,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_JAPANPOLICYFORUM_USERS", .name = "Japan Policy Forum — author/staff register (WordPress REST)",
     .name_ja = "Japan Policy Forum 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://www.japanpolicyforum.jp/",
+    .category = "media", .portal = "https://www.japanpolicyforum.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4619,7 +4671,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_KABUKIBITO_PHOTO", .name = "歌舞伎美人 — custom post type `photo` (劇場写真館) (WordPress REST)",
     .name_ja = "歌舞伎美人 劇場写真館（WordPress REST）",
-    .category = "web", .portal = "https://www.kabuki-bito.jp/",
+    .category = "media", .portal = "https://www.kabuki-bito.jp/",
     .record_type = "cpt-photo",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4644,7 +4696,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_GOODSPRESS_PAGES", .name = "GoodsPress Web — pages (WordPress REST)",
     .name_ja = "GoodsPress Web 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://www.goodspress.jp/",
+    .category = "media", .portal = "https://www.goodspress.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4669,11 +4721,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_SEIKATSU110_SERVICEREVIEWS", .name = "生活110番 — custom post type `service_reviews` (口コミ) (WordPress "
       "REST)",
     .name_ja = "生活110番 口コミ（WordPress REST）",
-    .category = "web", .portal = "https://www.seikatsu110.jp/",
+    .category = "media", .portal = "https://www.seikatsu110.jp/",
     .record_type = "cpt-service-reviews",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.seikatsu110.jp/wp-json/wp/v2/service_reviews?per_page=100&orderby=date&order=desc",
+    .url = "https://www.seikatsu110.jp/wp-json/wp/v2/service_reviews?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -4681,6 +4733,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 126887 declared, 1269 pages: read over a CYCLE (5.3 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -4694,7 +4750,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_KABUKIBITO_INTERVIEW", .name = "歌舞伎美人 — custom post type `interview` (対談インタビュー) (WordPress REST)",
     .name_ja = "歌舞伎美人 対談インタビュー（WordPress REST）",
-    .category = "web", .portal = "https://www.kabuki-bito.jp/",
+    .category = "media", .portal = "https://www.kabuki-bito.jp/",
     .record_type = "cpt-interview",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4719,7 +4775,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_GOODSPRESS_USERS", .name = "GoodsPress Web — author/staff register (WordPress REST)",
     .name_ja = "GoodsPress Web 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://www.goodspress.jp/",
+    .category = "media", .portal = "https://www.goodspress.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4743,7 +4799,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_SEIKATSU110_USERS", .name = "生活110番 — author/staff register (WordPress REST)",
     .name_ja = "生活110番 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://www.seikatsu110.jp/",
+    .category = "media", .portal = "https://www.seikatsu110.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4792,7 +4848,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_KABUKIBITO_MONTHLYKABUKI", .name = "歌舞伎美人 — custom post type `monthly_kabuki` (月イチ歌舞伎) (WordPress "
       "REST)",
     .name_ja = "歌舞伎美人 月イチ歌舞伎（WordPress REST）",
-    .category = "web", .portal = "https://www.kabuki-bito.jp/",
+    .category = "media", .portal = "https://www.kabuki-bito.jp/",
     .record_type = "cpt-monthly-kabuki",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4817,7 +4873,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_HAZARDLAB_PAGES", .name = "HPC — pages (WordPress REST)",
     .name_ja = "HPC 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://www.hazardlab.jp/",
+    .category = "media", .portal = "https://www.hazardlab.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4842,7 +4898,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_CYCLESPORTS_PAGES", .name = "サイクルスポーツがお届けするスポーツ自転車総合情報サイト / cyclesports.jp — pages (WordPress "
       "REST)",
     .name_ja = "サイクルスポーツがお届けするスポーツ自転車総合情報サイト / cyclesports.jp 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://www.cyclesports.jp/",
+    .category = "media", .portal = "https://www.cyclesports.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4891,7 +4947,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_CYCLESPORTS_SHOPSTOCK", .name = "サイクルスポーツがお届けするスポーツ自転車総合情報サイト / cyclesports.jp — custom post type "
       "`shopstock` (在庫) (WordPress REST)",
     .name_ja = "サイクルスポーツがお届けするスポーツ自転車総合情報サイト / cyclesports.jp 在庫（WordPress REST）",
-    .category = "web", .portal = "https://www.cyclesports.jp/",
+    .category = "media", .portal = "https://www.cyclesports.jp/",
     .record_type = "cpt-shopstock",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4917,7 +4973,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_KABUKIBITO_ONDEMAND", .name = "歌舞伎美人 — custom post type `ondemand` (歌舞伎オンデマンド) (WordPress REST)",
     .name_ja = "歌舞伎美人 歌舞伎オンデマンド（WordPress REST）",
-    .category = "web", .portal = "https://www.kabuki-bito.jp/",
+    .category = "media", .portal = "https://www.kabuki-bito.jp/",
     .record_type = "cpt-ondemand",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4943,7 +4999,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_KABUKIBITO_PARTNER", .name = "歌舞伎美人 — custom post type `partner` (オフィシャルパートナー) (WordPress "
       "REST)",
     .name_ja = "歌舞伎美人 オフィシャルパートナー（WordPress REST）",
-    .category = "web", .portal = "https://www.kabuki-bito.jp/",
+    .category = "media", .portal = "https://www.kabuki-bito.jp/",
     .record_type = "cpt-partner",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4968,7 +5024,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_HAZARDLAB_COLUMN", .name = "HPC — custom post type `column` (コラム) (WordPress REST)",
     .name_ja = "HPC コラム（WordPress REST）",
-    .category = "web", .portal = "https://www.hazardlab.jp/",
+    .category = "media", .portal = "https://www.hazardlab.jp/",
     .record_type = "cpt-column",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -4994,7 +5050,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_KABUKIBITO_SUPPORTER", .name = "歌舞伎美人 — custom post type `supporter` (オフィシャルサポーター) (WordPress "
       "REST)",
     .name_ja = "歌舞伎美人 オフィシャルサポーター（WordPress REST）",
-    .category = "web", .portal = "https://www.kabuki-bito.jp/",
+    .category = "media", .portal = "https://www.kabuki-bito.jp/",
     .record_type = "cpt-supporter",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5019,7 +5075,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_KABUKIBITO_ACCESS", .name = "歌舞伎美人 — custom post type `access` (劇場アクセス情報) (WordPress REST)",
     .name_ja = "歌舞伎美人 劇場アクセス情報（WordPress REST）",
-    .category = "web", .portal = "https://www.kabuki-bito.jp/",
+    .category = "media", .portal = "https://www.kabuki-bito.jp/",
     .record_type = "cpt-access",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5044,7 +5100,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_KABUKIBITO_USERS", .name = "歌舞伎美人 — author/staff register (WordPress REST)",
     .name_ja = "歌舞伎美人 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://www.kabuki-bito.jp/",
+    .category = "media", .portal = "https://www.kabuki-bito.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5068,7 +5124,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_HAZARDLAB_KNOWLEDGE", .name = "HPC — custom post type `knowledge` (基礎知識) (WordPress REST)",
     .name_ja = "HPC 基礎知識（WordPress REST）",
-    .category = "web", .portal = "https://www.hazardlab.jp/",
+    .category = "media", .portal = "https://www.hazardlab.jp/",
     .record_type = "cpt-knowledge",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5093,7 +5149,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_BARKS_POSTS", .name = "BARKS — posts (WordPress REST)",
     .name_ja = "BARKS 投稿（WordPress REST）",
-    .category = "web", .portal = "https://barks.jp/",
+    .category = "media", .portal = "https://barks.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5117,11 +5173,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_AUTOMESSEWEB_POSTS", .name = "AUTO MESSE WEB(オートメッセウェブ) — posts (WordPress REST)",
     .name_ja = "AUTO MESSE WEB(オートメッセウェブ) 投稿（WordPress REST）",
-    .category = "web", .portal = "https://www.automesseweb.jp/",
+    .category = "media", .portal = "https://www.automesseweb.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.automesseweb.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://www.automesseweb.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -5129,6 +5185,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 22053 declared, 221 pages: read over a CYCLE (0.9 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -5142,7 +5202,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_BARKS_PAGES", .name = "BARKS — pages (WordPress REST)",
     .name_ja = "BARKS 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://barks.jp/",
+    .category = "media", .portal = "https://barks.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5166,11 +5226,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_WOMANMYNAVI_POSTS", .name = "「マイナビウーマン」 — posts (WordPress REST)",
     .name_ja = "「マイナビウーマン」 投稿（WordPress REST）",
-    .category = "web", .portal = "https://woman.mynavi.jp/",
+    .category = "media", .portal = "https://woman.mynavi.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://woman.mynavi.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://woman.mynavi.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -5178,6 +5238,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 108872 declared, 1089 pages: read over a CYCLE (4.5 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -5190,7 +5254,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_AUTOMESSEWEB_PAGES", .name = "AUTO MESSE WEB(オートメッセウェブ) — pages (WordPress REST)",
     .name_ja = "AUTO MESSE WEB(オートメッセウェブ) 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://www.automesseweb.jp/",
+    .category = "media", .portal = "https://www.automesseweb.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5216,11 +5280,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_VIDEOSALON_POSTS", .name = "VIDEO SALON.web  /  映像制作・動画編集のための月刊誌ビデオサロンが運営するWebマガジン — posts "
       "(WordPress REST)",
     .name_ja = "VIDEO SALON.web  /  映像制作・動画編集のための月刊誌ビデオサロンが運営するWebマガジン 投稿（WordPress REST）",
-    .category = "web", .portal = "https://videosalon.jp/",
+    .category = "media", .portal = "https://videosalon.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://videosalon.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://videosalon.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -5228,6 +5292,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 13842 declared, 139 pages: read over a CYCLE (0.6 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -5241,11 +5309,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_THEBRIDGE_POSTS", .name = "BRIDGE(ブリッジ) — posts (WordPress REST)",
     .name_ja = "BRIDGE(ブリッジ) 投稿（WordPress REST）",
-    .category = "web", .portal = "https://thebridge.jp/",
+    .category = "media", .portal = "https://thebridge.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://thebridge.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://thebridge.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -5253,6 +5321,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 27828 declared, 279 pages: read over a CYCLE (1.2 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -5266,7 +5338,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_AUTOMESSEWEB_USERS", .name = "AUTO MESSE WEB(オートメッセウェブ) — author/staff register (WordPress "
       "REST)",
     .name_ja = "AUTO MESSE WEB(オートメッセウェブ) 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://www.automesseweb.jp/",
+    .category = "media", .portal = "https://www.automesseweb.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5290,7 +5362,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_WOMANMYNAVI_PAGES", .name = "「マイナビウーマン」 — pages (WordPress REST)",
     .name_ja = "「マイナビウーマン」 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://woman.mynavi.jp/",
+    .category = "media", .portal = "https://woman.mynavi.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5314,7 +5386,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_THEBRIDGE_PAGES", .name = "BRIDGE(ブリッジ) — pages (WordPress REST)",
     .name_ja = "BRIDGE(ブリッジ) 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://thebridge.jp/",
+    .category = "media", .portal = "https://thebridge.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5339,7 +5411,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_VIDEOSALON_PAGES", .name = "VIDEO SALON.web  /  映像制作・動画編集のための月刊誌ビデオサロンが運営するWebマガジン — pages "
       "(WordPress REST)",
     .name_ja = "VIDEO SALON.web  /  映像制作・動画編集のための月刊誌ビデオサロンが運営するWebマガジン 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://videosalon.jp/",
+    .category = "media", .portal = "https://videosalon.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5364,11 +5436,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_VOLLEYBALLKING_POSTS", .name = "バレーボールキング — posts (WordPress REST)",
     .name_ja = "バレーボールキング 投稿（WordPress REST）",
-    .category = "web", .portal = "https://volleyballking.jp/",
+    .category = "media", .portal = "https://volleyballking.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://volleyballking.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://volleyballking.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -5376,6 +5448,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 7119 declared, 72 pages: read over a CYCLE (0.3 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -5388,11 +5464,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_ASWEB_POSTS", .name = "autosport web — posts (WordPress REST)",
     .name_ja = "autosport web 投稿（WordPress REST）",
-    .category = "web", .portal = "https://www.as-web.jp/",
+    .category = "media", .portal = "https://www.as-web.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.as-web.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://www.as-web.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -5400,6 +5476,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 101551 declared, 1016 pages: read over a CYCLE (4.2 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -5412,7 +5492,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_BARKS_SPECIALPAGE", .name = "BARKS — custom post type `special_page` (特集ページ) (WordPress REST)",
     .name_ja = "BARKS 特集ページ（WordPress REST）",
-    .category = "web", .portal = "https://barks.jp/",
+    .category = "media", .portal = "https://barks.jp/",
     .record_type = "cpt-special-page",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5437,7 +5517,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_WOMANMYNAVI_USERS", .name = "「マイナビウーマン」 — author/staff register (WordPress REST)",
     .name_ja = "「マイナビウーマン」 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://woman.mynavi.jp/",
+    .category = "media", .portal = "https://woman.mynavi.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5461,7 +5541,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_VOLLEYBALLKING_PAGES", .name = "バレーボールキング — pages (WordPress REST)",
     .name_ja = "バレーボールキング 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://volleyballking.jp/",
+    .category = "media", .portal = "https://volleyballking.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5485,11 +5565,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_BARKS_ARTIST", .name = "BARKS — custom post type `artist` (アーティスト) (WordPress REST)",
     .name_ja = "BARKS アーティスト（WordPress REST）",
-    .category = "web", .portal = "https://barks.jp/",
+    .category = "media", .portal = "https://barks.jp/",
     .record_type = "cpt-artist",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://barks.jp/wp-json/wp/v2/artist?per_page=100&orderby=date&order=desc",
+    .url = "https://barks.jp/wp-json/wp/v2/artist?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -5497,6 +5577,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 28971 declared, 290 pages: read over a CYCLE (1.2 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -5510,7 +5594,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_WHISKYMAG_PAGES", .name = "WHISKY Magazine Japan — pages (WordPress REST)",
     .name_ja = "WHISKY Magazine Japan 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://whiskymag.jp/",
+    .category = "media", .portal = "https://whiskymag.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5534,7 +5618,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_VOLLEYBALLKING_WRITER", .name = "バレーボールキング — custom post type `writer` (ライター) (WordPress REST)",
     .name_ja = "バレーボールキング ライター（WordPress REST）",
-    .category = "web", .portal = "https://volleyballking.jp/",
+    .category = "media", .portal = "https://volleyballking.jp/",
     .record_type = "cpt-writer",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5560,7 +5644,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_AXISMAG_PAGES", .name = "AXIS Web  /  デザインの視点で、人間の可能性や創造性を伝えるメディア — pages (WordPress "
       "REST)",
     .name_ja = "AXIS Web  /  デザインの視点で、人間の可能性や創造性を伝えるメディア 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://www.axismag.jp/",
+    .category = "media", .portal = "https://www.axismag.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5586,7 +5670,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_VIDEOSALON_USERS", .name = "VIDEO SALON.web  /  映像制作・動画編集のための月刊誌ビデオサロンが運営するWebマガジン — "
       "author/staff register (WordPress REST)",
     .name_ja = "VIDEO SALON.web  /  映像制作・動画編集のための月刊誌ビデオサロンが運営するWebマガジン 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://videosalon.jp/",
+    .category = "media", .portal = "https://videosalon.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5610,7 +5694,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_BARKS_USERS", .name = "BARKS — author/staff register (WordPress REST)",
     .name_ja = "BARKS 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://barks.jp/",
+    .category = "media", .portal = "https://barks.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5634,7 +5718,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_AXISMAG_USERS", .name = "AXIS Web  /  デザインの視点で、人間の可能性や創造性を伝えるメディア — author/staff register "
       "(WordPress REST)",
     .name_ja = "AXIS Web  /  デザインの視点で、人間の可能性や創造性を伝えるメディア 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://www.axismag.jp/",
+    .category = "media", .portal = "https://www.axismag.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5658,7 +5742,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_THEBRIDGE_USERS", .name = "BRIDGE(ブリッジ) — author/staff register (WordPress REST)",
     .name_ja = "BRIDGE(ブリッジ) 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://thebridge.jp/",
+    .category = "media", .portal = "https://thebridge.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5682,7 +5766,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_TOUCHLAB_POSTS", .name = "Touch Lab - タッチ ラボ — posts (WordPress REST)",
     .name_ja = "Touch Lab - タッチ ラボ 投稿（WordPress REST）",
-    .category = "web", .portal = "https://touchlab.jp/",
+    .category = "media", .portal = "https://touchlab.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5706,7 +5790,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_BICYCLECLUB_PAGES", .name = "FUNQ [ ファンク ] — pages (WordPress REST)",
     .name_ja = "FUNQ [ ファンク ] 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://www.funq.jp/",
+    .category = "media", .portal = "https://www.funq.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5730,11 +5814,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_SERAI_POSTS", .name = "サライ.jp / 小学館の雑誌『サライ』公式サイト — posts (WordPress REST)",
     .name_ja = "サライ.jp / 小学館の雑誌『サライ』公式サイト 投稿（WordPress REST）",
-    .category = "web", .portal = "https://serai.jp/",
+    .category = "media", .portal = "https://serai.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://serai.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://serai.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -5742,6 +5826,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 20860 declared, 209 pages: read over a CYCLE (0.9 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -5754,7 +5842,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_TSURINEWS_PAGES", .name = "TSURINEWS — pages (WordPress REST)",
     .name_ja = "TSURINEWS 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://tsurinews.jp/",
+    .category = "media", .portal = "https://tsurinews.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5778,7 +5866,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_SURFNEWS_POSTS", .name = "THE SURF NEWS「サーフニュース」 — posts (WordPress REST)",
     .name_ja = "THE SURF NEWS「サーフニュース」 投稿（WordPress REST）",
-    .category = "web", .portal = "https://www.surfnews.jp/",
+    .category = "media", .portal = "https://www.surfnews.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5802,7 +5890,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_SERAI_PAGES", .name = "サライ.jp / 小学館の雑誌『サライ』公式サイト — pages (WordPress REST)",
     .name_ja = "サライ.jp / 小学館の雑誌『サライ』公式サイト 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://serai.jp/",
+    .category = "media", .portal = "https://serai.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5826,7 +5914,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_TSURINEWS_USERS", .name = "TSURINEWS — author/staff register (WordPress REST)",
     .name_ja = "TSURINEWS 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://tsurinews.jp/",
+    .category = "media", .portal = "https://tsurinews.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5850,7 +5938,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_TOUCHLAB_PAGES", .name = "Touch Lab - タッチ ラボ — pages (WordPress REST)",
     .name_ja = "Touch Lab - タッチ ラボ 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://touchlab.jp/",
+    .category = "media", .portal = "https://touchlab.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5874,11 +5962,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_RENSAI_POSTS", .name = "連載JP — posts (WordPress REST)",
     .name_ja = "連載JP 投稿（WordPress REST）",
-    .category = "web", .portal = "https://rensai.jp/",
+    .category = "media", .portal = "https://rensai.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://rensai.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://rensai.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -5886,6 +5974,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 39487 declared, 395 pages: read over a CYCLE (1.6 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -5899,7 +5991,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_BICYCLECLUB_MAGAZINES", .name = "FUNQ [ ファンク ] — custom post type `magazines` (マガジン) (WordPress "
       "REST)",
     .name_ja = "FUNQ [ ファンク ] マガジン（WordPress REST）",
-    .category = "web", .portal = "https://www.funq.jp/",
+    .category = "media", .portal = "https://www.funq.jp/",
     .record_type = "cpt-magazines",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5924,7 +6016,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_RENSAI_PAGES", .name = "連載JP — pages (WordPress REST)",
     .name_ja = "連載JP 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://rensai.jp/",
+    .category = "media", .portal = "https://rensai.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5948,7 +6040,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_STEEP_POSTS", .name = "スキー・スノーボード情報メディア  /  STEEP — posts (WordPress REST)",
     .name_ja = "スキー・スノーボード情報メディア  /  STEEP 投稿（WordPress REST）",
-    .category = "web", .portal = "https://steep.jp/",
+    .category = "media", .portal = "https://steep.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5972,7 +6064,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_OTOCOTO_PAGES", .name = "otocoto  /  こだわりの映画エンタメサイト — pages (WordPress REST)",
     .name_ja = "otocoto  /  こだわりの映画エンタメサイト 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://otocoto.jp/",
+    .category = "media", .portal = "https://otocoto.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -5996,7 +6088,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_SURFNEWS_PAGES", .name = "THE SURF NEWS「サーフニュース」 — pages (WordPress REST)",
     .name_ja = "THE SURF NEWS「サーフニュース」 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://www.surfnews.jp/",
+    .category = "media", .portal = "https://www.surfnews.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6020,7 +6112,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_RENSAI_USERS", .name = "連載JP — author/staff register (WordPress REST)",
     .name_ja = "連載JP 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://rensai.jp/",
+    .category = "media", .portal = "https://rensai.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6043,7 +6135,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_ASWEB_PAGES", .name = "autosport web — pages (WordPress REST)",
     .name_ja = "autosport web 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://www.as-web.jp/",
+    .category = "media", .portal = "https://www.as-web.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6067,7 +6159,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_TOUCHLAB_USERS", .name = "Touch Lab - タッチ ラボ — author/staff register (WordPress REST)",
     .name_ja = "Touch Lab - タッチ ラボ 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://touchlab.jp/",
+    .category = "media", .portal = "https://touchlab.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6091,11 +6183,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_OGGI_POSTS", .name = "Oggi.jp — posts (WordPress REST)",
     .name_ja = "Oggi.jp 投稿（WordPress REST）",
-    .category = "web", .portal = "https://oggi.jp/",
+    .category = "media", .portal = "https://oggi.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://oggi.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://oggi.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -6103,6 +6195,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 70042 declared, 701 pages: read over a CYCLE (2.9 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -6116,7 +6212,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_SURFNEWS_ROBOGALLERY", .name = "THE SURF NEWS「サーフニュース」 — custom post type `robogallery` (Robo "
       "Gallery) (WordPress REST)",
     .name_ja = "THE SURF NEWS「サーフニュース」 Robo Gallery（WordPress REST）",
-    .category = "web", .portal = "https://www.surfnews.jp/",
+    .category = "media", .portal = "https://www.surfnews.jp/",
     .record_type = "cpt-robogallery",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6141,11 +6237,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_REALSOUND_POSTS", .name = "Real Sound / リアルサウンド — posts (WordPress REST)",
     .name_ja = "Real Sound / リアルサウンド 投稿（WordPress REST）",
-    .category = "web", .portal = "https://realsound.jp/",
+    .category = "media", .portal = "https://realsound.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://realsound.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://realsound.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -6153,6 +6249,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 70040 declared, 701 pages: read over a CYCLE (2.9 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -6165,7 +6265,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_OGGI_PAGES", .name = "Oggi.jp — pages (WordPress REST)",
     .name_ja = "Oggi.jp 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://oggi.jp/",
+    .category = "media", .portal = "https://oggi.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6214,11 +6314,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_NIKKANSPA_POSTS", .name = "日刊SPA! — posts (WordPress REST)",
     .name_ja = "日刊SPA! 投稿（WordPress REST）",
-    .category = "web", .portal = "https://nikkan-spa.jp/",
+    .category = "media", .portal = "https://nikkan-spa.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://nikkan-spa.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://nikkan-spa.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -6226,6 +6326,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 50335 declared, 504 pages: read over a CYCLE (2.1 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -6238,7 +6342,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_STEEP_PAGES", .name = "スキー・スノーボード情報メディア  /  STEEP — pages (WordPress REST)",
     .name_ja = "スキー・スノーボード情報メディア  /  STEEP 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://steep.jp/",
+    .category = "media", .portal = "https://steep.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6262,7 +6366,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_SURFNEWS_USERS", .name = "THE SURF NEWS「サーフニュース」 — author/staff register (WordPress REST)",
     .name_ja = "THE SURF NEWS「サーフニュース」 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://www.surfnews.jp/",
+    .category = "media", .portal = "https://www.surfnews.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6286,7 +6390,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_REALSOUND_PAGES", .name = "Real Sound / リアルサウンド — pages (WordPress REST)",
     .name_ja = "Real Sound / リアルサウンド 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://realsound.jp/",
+    .category = "media", .portal = "https://realsound.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6310,11 +6414,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_SOTOKOTOONLINE_POSTS", .name = "sotokoto online(ソトコトオンライン) — posts (WordPress REST)",
     .name_ja = "sotokoto online(ソトコトオンライン) 投稿（WordPress REST）",
-    .category = "web", .portal = "https://sotokoto-online.jp/",
+    .category = "media", .portal = "https://sotokoto-online.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://sotokoto-online.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://sotokoto-online.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -6322,6 +6426,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 17716 declared, 178 pages: read over a CYCLE (0.7 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -6335,7 +6443,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_NIKKANSPA_PAGES", .name = "日刊SPA! — pages (WordPress REST)",
     .name_ja = "日刊SPA! 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://nikkan-spa.jp/",
+    .category = "media", .portal = "https://nikkan-spa.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6359,7 +6467,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_REALSOUND_USERS", .name = "Real Sound / リアルサウンド — author/staff register (WordPress REST)",
     .name_ja = "Real Sound / リアルサウンド 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://realsound.jp/",
+    .category = "media", .portal = "https://realsound.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6383,7 +6491,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_NEWSPHERE_PAGES", .name = "NewSphere — pages (WordPress REST)",
     .name_ja = "NewSphere 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://newsphere.jp/",
+    .category = "media", .portal = "https://newsphere.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6408,7 +6516,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_STEEP_CUSTOM", .name = "スキー・スノーボード情報メディア  /  STEEP — custom post type `custom` (NEWS) "
       "(WordPress REST)",
     .name_ja = "スキー・スノーボード情報メディア  /  STEEP NEWS（WordPress REST）",
-    .category = "web", .portal = "https://steep.jp/",
+    .category = "media", .portal = "https://steep.jp/",
     .record_type = "cpt-custom",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6434,7 +6542,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_ASWEB_FEATURE", .name = "autosport web — custom post type `feature` (特集記事) (WordPress "
       "REST)",
     .name_ja = "autosport web 特集記事（WordPress REST）",
-    .category = "web", .portal = "https://www.as-web.jp/",
+    .category = "media", .portal = "https://www.as-web.jp/",
     .record_type = "cpt-feature",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6459,7 +6567,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_NEWSPHERE_USERS", .name = "NewSphere — author/staff register (WordPress REST)",
     .name_ja = "NewSphere 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://newsphere.jp/",
+    .category = "media", .portal = "https://newsphere.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6483,7 +6591,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_SOLARJOURNAL_POSTS", .name = "SOLAR JOURNAL — posts (WordPress REST)",
     .name_ja = "SOLAR JOURNAL 投稿（WordPress REST）",
-    .category = "web", .portal = "https://solarjournal.jp/",
+    .category = "media", .portal = "https://solarjournal.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6507,7 +6615,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_BICYCLECLUB_USERS", .name = "FUNQ [ ファンク ] — author/staff register (WordPress REST)",
     .name_ja = "FUNQ [ ファンク ] 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://www.funq.jp/",
+    .category = "media", .portal = "https://www.funq.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6531,7 +6639,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_OTAPOL_PAGES", .name = "おたぽる — pages (WordPress REST)",
     .name_ja = "おたぽる 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://otapol.jp/",
+    .category = "media", .portal = "https://otapol.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6555,7 +6663,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_SOTOKOTOONLINE_PAGES", .name = "sotokoto online(ソトコトオンライン) — pages (WordPress REST)",
     .name_ja = "sotokoto online(ソトコトオンライン) 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://sotokoto-online.jp/",
+    .category = "media", .portal = "https://sotokoto-online.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6580,7 +6688,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_NIKKANSPA_USERS", .name = "日刊SPA! — author/staff register (WordPress REST)",
     .name_ja = "日刊SPA! 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://nikkan-spa.jp/",
+    .category = "media", .portal = "https://nikkan-spa.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6603,11 +6711,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_OMOCORO_POSTS", .name = "オモコロ あたまゆるゆるインターネット — posts (WordPress REST)",
     .name_ja = "オモコロ あたまゆるゆるインターネット 投稿（WordPress REST）",
-    .category = "web", .portal = "https://omocoro.jp/",
+    .category = "media", .portal = "https://omocoro.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://omocoro.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://omocoro.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -6615,6 +6723,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 22495 declared, 225 pages: read over a CYCLE (0.9 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -6627,7 +6739,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_OTAPOL_USERS", .name = "おたぽる — author/staff register (WordPress REST)",
     .name_ja = "おたぽる 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://otapol.jp/",
+    .category = "media", .portal = "https://otapol.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6650,7 +6762,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_OMOCORO_PAGES", .name = "オモコロ あたまゆるゆるインターネット — pages (WordPress REST)",
     .name_ja = "オモコロ あたまゆるゆるインターネット 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://omocoro.jp/",
+    .category = "media", .portal = "https://omocoro.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6674,11 +6786,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_NEWSCAREERCONNECTION_POSTS", .name = "キャリコネニュース — posts (WordPress REST)",
     .name_ja = "キャリコネニュース 投稿（WordPress REST）",
-    .category = "web", .portal = "https://news.careerconnection.jp/",
+    .category = "media", .portal = "https://news.careerconnection.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://news.careerconnection.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://news.careerconnection.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -6686,6 +6798,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 31961 declared, 320 pages: read over a CYCLE (1.3 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -6698,7 +6814,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_NEWSCAREERCONNECTION_PAGES", .name = "キャリコネニュース — pages (WordPress REST)",
     .name_ja = "キャリコネニュース 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://news.careerconnection.jp/",
+    .category = "media", .portal = "https://news.careerconnection.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6722,7 +6838,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_MOTORFAN_PAGES", .name = "Motor Fan / 自動車情報のモーターファン — pages (WordPress REST)",
     .name_ja = "Motor Fan / 自動車情報のモーターファン 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://motor-fan.jp/",
+    .category = "media", .portal = "https://motor-fan.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6747,7 +6863,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_SOTOKOTOONLINE_USERS", .name = "sotokoto online(ソトコトオンライン) — author/staff register (WordPress "
       "REST)",
     .name_ja = "sotokoto online(ソトコトオンライン) 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://sotokoto-online.jp/",
+    .category = "media", .portal = "https://sotokoto-online.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6798,7 +6914,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_ASWEB_RACERESULT", .name = "autosport web — custom post type `race_result` (リザルト) (WordPress "
       "REST)",
     .name_ja = "autosport web リザルト（WordPress REST）",
-    .category = "web", .portal = "https://www.as-web.jp/",
+    .category = "media", .portal = "https://www.as-web.jp/",
     .record_type = "cpt-race-result",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6823,7 +6939,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_MONEYLAB_POSTS", .name = "マネーラボ関西 — posts (WordPress REST)",
     .name_ja = "マネーラボ関西 投稿（WordPress REST）",
-    .category = "web", .portal = "https://www.money-lab.jp/",
+    .category = "media", .portal = "https://www.money-lab.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6847,7 +6963,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_NEWSDENFAMINICOGAMER_PAGES", .name = "電ファミニコゲーマー – ゲームの面白い記事読んでみない? — pages (WordPress REST)",
     .name_ja = "電ファミニコゲーマー – ゲームの面白い記事読んでみない? 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://news.denfaminicogamer.jp/",
+    .category = "media", .portal = "https://news.denfaminicogamer.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6872,7 +6988,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_MARKETEER_PAGES", .name = "Marketeer(マーケティア) — pages (WordPress REST)",
     .name_ja = "Marketeer(マーケティア) 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://marketeer.jp/",
+    .category = "media", .portal = "https://marketeer.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6896,7 +7012,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_SOGYOTECHO_POPUPS", .name = "創業手帳株式会社 — custom post type `popups` (Popups) (WordPress REST)",
     .name_ja = "創業手帳株式会社 Popups（WordPress REST）",
-    .category = "web", .portal = "https://sogyotecho.jp/",
+    .category = "media", .portal = "https://sogyotecho.jp/",
     .record_type = "cpt-popups",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6922,7 +7038,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_ASWEB_RANKING", .name = "autosport web — custom post type `ranking` (ランキング) (WordPress "
       "REST)",
     .name_ja = "autosport web ランキング（WordPress REST）",
-    .category = "web", .portal = "https://www.as-web.jp/",
+    .category = "media", .portal = "https://www.as-web.jp/",
     .record_type = "cpt-ranking",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6974,7 +7090,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_STEEP_USERS", .name = "スキー・スノーボード情報メディア  /  STEEP — author/staff register (WordPress "
       "REST)",
     .name_ja = "スキー・スノーボード情報メディア  /  STEEP 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://steep.jp/",
+    .category = "media", .portal = "https://steep.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -6998,7 +7114,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_MARKETEER_USERS", .name = "Marketeer(マーケティア) — author/staff register (WordPress REST)",
     .name_ja = "Marketeer(マーケティア) 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://marketeer.jp/",
+    .category = "media", .portal = "https://marketeer.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7023,7 +7139,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_SOGYOTECHO_POPUPTHEMES", .name = "創業手帳株式会社 — custom post type `popup-themes` (Popup Themes) "
       "(WordPress REST)",
     .name_ja = "創業手帳株式会社 Popup Themes（WordPress REST）",
-    .category = "web", .portal = "https://sogyotecho.jp/",
+    .category = "media", .portal = "https://sogyotecho.jp/",
     .record_type = "cpt-popup-themes",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7048,7 +7164,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_MONEYLAB_PAGES", .name = "マネーラボ関西 — pages (WordPress REST)",
     .name_ja = "マネーラボ関西 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://www.money-lab.jp/",
+    .category = "media", .portal = "https://www.money-lab.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7072,7 +7188,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_LEARNINGUNITY3D_POSTS", .name = "Unity Learning Materials — posts (WordPress REST)",
     .name_ja = "Unity Learning Materials 投稿（WordPress REST）",
-    .category = "web", .portal = "https://learning.unity3d.jp/",
+    .category = "media", .portal = "https://learning.unity3d.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7097,7 +7213,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_LEARNINGUNITY3D_PAGES", .name = "Unity Learning Materials — pages (WordPress REST)",
     .name_ja = "Unity Learning Materials 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://learning.unity3d.jp/",
+    .category = "media", .portal = "https://learning.unity3d.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7123,7 +7239,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_MAGTECTURE_PAGES", .name = "TECTURE MAG(テクチャーマガジン)  /  空間デザイン・建築メディア — pages (WordPress "
       "REST)",
     .name_ja = "TECTURE MAG(テクチャーマガジン)  /  空間デザイン・建築メディア 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://mag.tecture.jp/",
+    .category = "media", .portal = "https://mag.tecture.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7149,7 +7265,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_NEWSDENFAMINICOGAMER_GICHRONICLEPOST", .name = "電ファミニコゲーマー – ゲームの面白い記事読んでみない? — custom post type "
       "`gi-chronicle-post` (ギ・クロニクル) (WordPress REST)",
     .name_ja = "電ファミニコゲーマー – ゲームの面白い記事読んでみない? ギ・クロニクル（WordPress REST）",
-    .category = "web", .portal = "https://news.denfaminicogamer.jp/",
+    .category = "media", .portal = "https://news.denfaminicogamer.jp/",
     .record_type = "cpt-gi-chronicle-post",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7174,7 +7290,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_KOSODATEMARCH_POSTS", .name = "子育てNOW — posts (WordPress REST)",
     .name_ja = "子育てNOW 投稿（WordPress REST）",
-    .category = "web", .portal = "https://kosodate-march.jp/",
+    .category = "media", .portal = "https://kosodate-march.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7199,7 +7315,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_LEARNINGUNITY3D_USERS", .name = "Unity Learning Materials — author/staff register (WordPress "
       "REST)",
     .name_ja = "Unity Learning Materials 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://learning.unity3d.jp/",
+    .category = "media", .portal = "https://learning.unity3d.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7223,7 +7339,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_KOSODATEMARCH_PAGES", .name = "子育てNOW — pages (WordPress REST)",
     .name_ja = "子育てNOW 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://kosodate-march.jp/",
+    .category = "media", .portal = "https://kosodate-march.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7247,7 +7363,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_KOUGEIHIN_PAGES", .name = "伝統工芸 青山スクエア — pages (WordPress REST)",
     .name_ja = "伝統工芸 青山スクエア 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://kougeihin.jp/",
+    .category = "media", .portal = "https://kougeihin.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7271,7 +7387,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_MONEYLAB_USERS", .name = "マネーラボ関西 — author/staff register (WordPress REST)",
     .name_ja = "マネーラボ関西 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://www.money-lab.jp/",
+    .category = "media", .portal = "https://www.money-lab.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7294,7 +7410,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_KOSODATEMARCH_USERS", .name = "子育てNOW — author/staff register (WordPress REST)",
     .name_ja = "子育てNOW 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://kosodate-march.jp/",
+    .category = "media", .portal = "https://kosodate-march.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7344,7 +7460,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_NEWSCAREERCONNECTION_USERS", .name = "キャリコネニュース — author/staff register (WordPress REST)",
     .name_ja = "キャリコネニュース 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://news.careerconnection.jp/",
+    .category = "media", .portal = "https://news.careerconnection.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7368,11 +7484,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_JISIN_POSTS", .name = "女性自身[光文社女性週刊誌] — posts (WordPress REST)",
     .name_ja = "女性自身[光文社女性週刊誌] 投稿（WordPress REST）",
-    .category = "web", .portal = "https://jisin.jp/",
+    .category = "media", .portal = "https://jisin.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://jisin.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://jisin.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -7380,6 +7496,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 63901 declared, 640 pages: read over a CYCLE (2.7 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -7392,7 +7512,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_MIJOURNEY_PAGES", .name = "三越伊勢丹の食メディア  /  FOODIE(フーディー) — pages (WordPress REST)",
     .name_ja = "三越伊勢丹の食メディア  /  FOODIE(フーディー) 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://mi-journey.jp/foodie/",
+    .category = "media", .portal = "https://mi-journey.jp/foodie/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7418,7 +7538,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_NEWSDENFAMINICOGAMER_USERS", .name = "電ファミニコゲーマー – ゲームの面白い記事読んでみない? — author/staff register (WordPress "
       "REST)",
     .name_ja = "電ファミニコゲーマー – ゲームの面白い記事読んでみない? 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://news.denfaminicogamer.jp/",
+    .category = "media", .portal = "https://news.denfaminicogamer.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7443,7 +7563,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_MIJOURNEY_USERS", .name = "三越伊勢丹の食メディア  /  FOODIE(フーディー) — author/staff register (WordPress "
       "REST)",
     .name_ja = "三越伊勢丹の食メディア  /  FOODIE(フーディー) 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://mi-journey.jp/foodie/",
+    .category = "media", .portal = "https://mi-journey.jp/foodie/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7467,7 +7587,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_JISIN_PAGES", .name = "女性自身[光文社女性週刊誌] — pages (WordPress REST)",
     .name_ja = "女性自身[光文社女性週刊誌] 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://jisin.jp/",
+    .category = "media", .portal = "https://jisin.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7491,7 +7611,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_SOLARJOURNAL_PAGES", .name = "SOLAR JOURNAL — pages (WordPress REST)",
     .name_ja = "SOLAR JOURNAL 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://solarjournal.jp/",
+    .category = "media", .portal = "https://solarjournal.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7515,11 +7635,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_IPHONEMANIA_POSTS", .name = "iPhone Mania — posts (WordPress REST)",
     .name_ja = "iPhone Mania 投稿（WordPress REST）",
-    .category = "web", .portal = "https://iphone-mania.jp/",
+    .category = "media", .portal = "https://iphone-mania.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://iphone-mania.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://iphone-mania.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -7527,6 +7647,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 47747 declared, 478 pages: read over a CYCLE (2.0 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -7539,11 +7663,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_IOTNEWS_POSTS", .name = "IoTNEWS AI+ — posts (WordPress REST)",
     .name_ja = "IoTNEWS AI+ 投稿（WordPress REST）",
-    .category = "web", .portal = "https://iotnews.jp/",
+    .category = "media", .portal = "https://iotnews.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://iotnews.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://iotnews.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -7551,6 +7675,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 20917 declared, 210 pages: read over a CYCLE (0.9 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -7563,7 +7691,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_KOUGEIHIN_INFO", .name = "伝統工芸 青山スクエア — custom post type `info` (お知らせ) (WordPress REST)",
     .name_ja = "伝統工芸 青山スクエア お知らせ（WordPress REST）",
-    .category = "web", .portal = "https://kougeihin.jp/",
+    .category = "media", .portal = "https://kougeihin.jp/",
     .record_type = "cpt-info",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7588,7 +7716,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_IPHONEMANIA_PAGES", .name = "iPhone Mania — pages (WordPress REST)",
     .name_ja = "iPhone Mania 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://iphone-mania.jp/",
+    .category = "media", .portal = "https://iphone-mania.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7612,7 +7740,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_IOTNEWS_PAGES", .name = "IoTNEWS AI+ — pages (WordPress REST)",
     .name_ja = "IoTNEWS AI+ 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://iotnews.jp/",
+    .category = "media", .portal = "https://iotnews.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7636,7 +7764,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_JBJA_PAGES", .name = "日本ビアジャーナリスト協会 — pages (WordPress REST)",
     .name_ja = "日本ビアジャーナリスト協会 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://www.jbja.jp/",
+    .category = "media", .portal = "https://www.jbja.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7660,7 +7788,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_JAPANESEMYTHOLOGY_POSTS", .name = "出雲神話マガジン — posts (WordPress REST)",
     .name_ja = "出雲神話マガジン 投稿（WordPress REST）",
-    .category = "web", .portal = "https://japanesemythology.jp/",
+    .category = "media", .portal = "https://japanesemythology.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7685,11 +7813,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_OTOCOTO_NEWS", .name = "otocoto  /  こだわりの映画エンタメサイト — custom post type `news` (ニュース) "
       "(WordPress REST)",
     .name_ja = "otocoto  /  こだわりの映画エンタメサイト ニュース（WordPress REST）",
-    .category = "web", .portal = "https://otocoto.jp/",
+    .category = "media", .portal = "https://otocoto.jp/",
     .record_type = "cpt-news",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://otocoto.jp/wp-json/wp/v2/news?per_page=100&orderby=date&order=desc",
+    .url = "https://otocoto.jp/wp-json/wp/v2/news?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -7697,6 +7825,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 7221 declared, 73 pages: read over a CYCLE (0.3 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -7711,7 +7843,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_IOTNEWS_GPELEMENTS", .name = "IoTNEWS AI+ — custom post type `gp_elements` (Elements) "
       "(WordPress REST)",
     .name_ja = "IoTNEWS AI+ Elements（WordPress REST）",
-    .category = "web", .portal = "https://iotnews.jp/",
+    .category = "media", .portal = "https://iotnews.jp/",
     .record_type = "cpt-gp-elements",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7737,7 +7869,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_MAGTECTURE_FEATURE", .name = "TECTURE MAG(テクチャーマガジン)  /  空間デザイン・建築メディア — custom post type "
       "`feature` (FEATURE) (WordPress REST)",
     .name_ja = "TECTURE MAG(テクチャーマガジン)  /  空間デザイン・建築メディア FEATURE（WordPress REST）",
-    .category = "web", .portal = "https://mag.tecture.jp/",
+    .category = "media", .portal = "https://mag.tecture.jp/",
     .record_type = "cpt-feature",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7762,7 +7894,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_IPHONEMANIA_USERS", .name = "iPhone Mania — author/staff register (WordPress REST)",
     .name_ja = "iPhone Mania 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://iphone-mania.jp/",
+    .category = "media", .portal = "https://iphone-mania.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7786,7 +7918,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_KOUGEIHIN_EVENT", .name = "伝統工芸 青山スクエア — custom post type `event` (店内イベント) (WordPress REST)",
     .name_ja = "伝統工芸 青山スクエア 店内イベント（WordPress REST）",
-    .category = "web", .portal = "https://kougeihin.jp/",
+    .category = "media", .portal = "https://kougeihin.jp/",
     .record_type = "cpt-event",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7811,7 +7943,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_JAPANESEMYTHOLOGY_PAGES", .name = "出雲神話マガジン — pages (WordPress REST)",
     .name_ja = "出雲神話マガジン 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://japanesemythology.jp/",
+    .category = "media", .portal = "https://japanesemythology.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7836,11 +7968,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_JBJA_MEDIA", .name = "日本ビアジャーナリスト協会 — custom post type `media` (メディア掲載) (WordPress "
       "REST)",
     .name_ja = "日本ビアジャーナリスト協会 メディア掲載（WordPress REST）",
-    .category = "web", .portal = "https://www.jbja.jp/",
+    .category = "media", .portal = "https://www.jbja.jp/",
     .record_type = "cpt-media",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.jbja.jp/wp-json/wp/v2/media?per_page=100&orderby=date&order=desc",
+    .url = "https://www.jbja.jp/wp-json/wp/v2/media?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -7848,6 +7980,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 34346 declared, 344 pages: read over a CYCLE (1.4 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -7861,7 +7997,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_SOLARJOURNAL_USERS", .name = "SOLAR JOURNAL — author/staff register (WordPress REST)",
     .name_ja = "SOLAR JOURNAL 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://solarjournal.jp/",
+    .category = "media", .portal = "https://solarjournal.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7885,7 +8021,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_GETNEWS_POSTS", .name = "ガジェット通信 GetNews — posts (WordPress REST)",
     .name_ja = "ガジェット通信 GetNews 投稿（WordPress REST）",
-    .category = "web", .portal = "https://getnews.jp/",
+    .category = "media", .portal = "https://getnews.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7909,7 +8045,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_NOMUNICATION_PAGES", .name = "Nomunication — pages (WordPress REST)",
     .name_ja = "Nomunication 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://www.nomunication.jp/",
+    .category = "media", .portal = "https://www.nomunication.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7933,7 +8069,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_JAPANESEMYTHOLOGY_USERS", .name = "出雲神話マガジン — author/staff register (WordPress REST)",
     .name_ja = "出雲神話マガジン 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://japanesemythology.jp/",
+    .category = "media", .portal = "https://japanesemythology.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7958,7 +8094,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_LOCARI_LOCARIMOOK", .name = "LOCARI(ロカリ) — custom post type `locari_mook` (LOCARI MOOK) "
       "(WordPress REST)",
     .name_ja = "LOCARI(ロカリ) LOCARI MOOK（WordPress REST）",
-    .category = "web", .portal = "https://locari.jp/",
+    .category = "media", .portal = "https://locari.jp/",
     .record_type = "cpt-locari-mook",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -7983,11 +8119,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_GETNAVI_POSTS", .name = "GetNavi web ゲットナビ — posts (WordPress REST)",
     .name_ja = "GetNavi web ゲットナビ 投稿（WordPress REST）",
-    .category = "web", .portal = "https://getnavi.jp/",
+    .category = "media", .portal = "https://getnavi.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://getnavi.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://getnavi.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -7995,6 +8131,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 38403 declared, 385 pages: read over a CYCLE (1.6 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -8007,7 +8147,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_LABSGREE_PAGES", .name = "GREE Engineering — pages (WordPress REST)",
     .name_ja = "GREE Engineering 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://labs.gree.jp/blog/",
+    .category = "media", .portal = "https://labs.gree.jp/blog/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8032,7 +8172,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_KOUGEIHIN_EXTERNAL", .name = "伝統工芸 青山スクエア — custom post type `external` (外部催事) (WordPress "
       "REST)",
     .name_ja = "伝統工芸 青山スクエア 外部催事（WordPress REST）",
-    .category = "web", .portal = "https://kougeihin.jp/",
+    .category = "media", .portal = "https://kougeihin.jp/",
     .record_type = "cpt-external",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8082,7 +8222,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_IEMONE_PAGES", .name = "イエモネ — pages (WordPress REST)",
     .name_ja = "イエモネ 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://iemone.jp/",
+    .category = "media", .portal = "https://iemone.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8106,7 +8246,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_IOTNEWS_USERS", .name = "IoTNEWS AI+ — author/staff register (WordPress REST)",
     .name_ja = "IoTNEWS AI+ 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://iotnews.jp/",
+    .category = "media", .portal = "https://iotnews.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8130,7 +8270,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_GETNAVI_PAGES", .name = "GetNavi web ゲットナビ — pages (WordPress REST)",
     .name_ja = "GetNavi web ゲットナビ 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://getnavi.jp/",
+    .category = "media", .portal = "https://getnavi.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8154,7 +8294,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_LOCARI_USERS", .name = "LOCARI(ロカリ) — author/staff register (WordPress REST)",
     .name_ja = "LOCARI(ロカリ) 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://locari.jp/",
+    .category = "media", .portal = "https://locari.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8177,7 +8317,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_GETNEWS_USERS", .name = "ガジェット通信 GetNews — author/staff register (WordPress REST)",
     .name_ja = "ガジェット通信 GetNews 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://getnews.jp/",
+    .category = "media", .portal = "https://getnews.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8201,7 +8341,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_KOUGEIHIN_USERS", .name = "伝統工芸 青山スクエア — author/staff register (WordPress REST)",
     .name_ja = "伝統工芸 青山スクエア 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://kougeihin.jp/",
+    .category = "media", .portal = "https://kougeihin.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8226,7 +8366,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_GETNAVI_MAGAZINE", .name = "GetNavi web ゲットナビ — custom post type `magazine` (雑誌) (WordPress "
       "REST)",
     .name_ja = "GetNavi web ゲットナビ 雑誌（WordPress REST）",
-    .category = "web", .portal = "https://getnavi.jp/",
+    .category = "media", .portal = "https://getnavi.jp/",
     .record_type = "cpt-magazine",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8251,7 +8391,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_LABSGREE_USERS", .name = "GREE Engineering — author/staff register (WordPress REST)",
     .name_ja = "GREE Engineering 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://labs.gree.jp/blog/",
+    .category = "media", .portal = "https://labs.gree.jp/blog/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8275,7 +8415,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_FUNRIDE_POSTS", .name = "すべてのサイクリストが主役!自転車仲間のポータルサイト【ファンライド】 — posts (WordPress REST)",
     .name_ja = "すべてのサイクリストが主役!自転車仲間のポータルサイト【ファンライド】 投稿（WordPress REST）",
-    .category = "web", .portal = "https://funride.jp/",
+    .category = "media", .portal = "https://funride.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8300,7 +8440,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_GAIAXSOCIALMEDIALAB_PAGES", .name = "株式会社ガイアックス — pages (WordPress REST)",
     .name_ja = "株式会社ガイアックス 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://gaiax-socialmedialab.jp/",
+    .category = "media", .portal = "https://gaiax-socialmedialab.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8324,7 +8464,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_FUNRIDE_PAGES", .name = "すべてのサイクリストが主役!自転車仲間のポータルサイト【ファンライド】 — pages (WordPress REST)",
     .name_ja = "すべてのサイクリストが主役!自転車仲間のポータルサイト【ファンライド】 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://funride.jp/",
+    .category = "media", .portal = "https://funride.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8348,11 +8488,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_DOOPE_POSTS", .name = "doope! — posts (WordPress REST)",
     .name_ja = "doope! 投稿（WordPress REST）",
-    .category = "web", .portal = "https://doope.jp/",
+    .category = "media", .portal = "https://doope.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://doope.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://doope.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -8360,6 +8500,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 79024 declared, 791 pages: read over a CYCLE (3.3 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -8372,7 +8516,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_IDEASFORGOOD_USERS", .name = "IDEAS FOR GOOD — author/staff register (WordPress REST)",
     .name_ja = "IDEAS FOR GOOD 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://ideasforgood.jp/",
+    .category = "media", .portal = "https://ideasforgood.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8397,7 +8541,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_FUNRIDE_USERS", .name = "すべてのサイクリストが主役!自転車仲間のポータルサイト【ファンライド】 — author/staff register "
       "(WordPress REST)",
     .name_ja = "すべてのサイクリストが主役!自転車仲間のポータルサイト【ファンライド】 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://funride.jp/",
+    .category = "media", .portal = "https://funride.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8422,7 +8566,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_GAIAXSOCIALMEDIALAB_ACHIEVEMENT", .name = "株式会社ガイアックス — custom post type `achievement` (実績) (WordPress "
       "REST)",
     .name_ja = "株式会社ガイアックス 実績（WordPress REST）",
-    .category = "web", .portal = "https://gaiax-socialmedialab.jp/",
+    .category = "media", .portal = "https://gaiax-socialmedialab.jp/",
     .record_type = "cpt-achievement",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8473,7 +8617,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_DOOPE_PAGES", .name = "doope! — pages (WordPress REST)",
     .name_ja = "doope! 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://doope.jp/",
+    .category = "media", .portal = "https://doope.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8497,7 +8641,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_NOMUNICATION_USERS", .name = "Nomunication — author/staff register (WordPress REST)",
     .name_ja = "Nomunication 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://www.nomunication.jp/",
+    .category = "media", .portal = "https://www.nomunication.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8522,7 +8666,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_MAGTECTURE_CULTURE", .name = "TECTURE MAG(テクチャーマガジン)  /  空間デザイン・建築メディア — custom post type "
       "`culture` (CULTURE) (WordPress REST)",
     .name_ja = "TECTURE MAG(テクチャーマガジン)  /  空間デザイン・建築メディア CULTURE（WordPress REST）",
-    .category = "web", .portal = "https://mag.tecture.jp/",
+    .category = "media", .portal = "https://mag.tecture.jp/",
     .record_type = "cpt-culture",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8547,11 +8691,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_DIGIDAY_POSTS", .name = "DIGIDAY[日本版] — posts (WordPress REST)",
     .name_ja = "DIGIDAY[日本版] 投稿（WordPress REST）",
-    .category = "web", .portal = "https://digiday.jp/",
+    .category = "media", .portal = "https://digiday.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://digiday.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://digiday.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -8559,6 +8703,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 14895 declared, 149 pages: read over a CYCLE (0.6 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -8571,7 +8719,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_DOOPE_USERS", .name = "doope! — author/staff register (WordPress REST)",
     .name_ja = "doope! 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://doope.jp/",
+    .category = "media", .portal = "https://doope.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8594,7 +8742,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_JBJA_USERS", .name = "日本ビアジャーナリスト協会 — author/staff register (WordPress REST)",
     .name_ja = "日本ビアジャーナリスト協会 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://www.jbja.jp/",
+    .category = "media", .portal = "https://www.jbja.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8618,7 +8766,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_GAIAXSOCIALMEDIALAB_LAB", .name = "株式会社ガイアックス — custom post type `lab` (Social Media Lab講座) "
       "(WordPress REST)",
     .name_ja = "株式会社ガイアックス Social Media Lab講座（WordPress REST）",
-    .category = "web", .portal = "https://gaiax-socialmedialab.jp/",
+    .category = "media", .portal = "https://gaiax-socialmedialab.jp/",
     .record_type = "cpt-lab",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8643,7 +8791,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_GREENZ_PAGES", .name = "greenz.jp グリーンズ — pages (WordPress REST)",
     .name_ja = "greenz.jp グリーンズ 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://greenz.jp/",
+    .category = "media", .portal = "https://greenz.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8667,7 +8815,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_GAIAXSOCIALMEDIALAB_USERS", .name = "株式会社ガイアックス — author/staff register (WordPress REST)",
     .name_ja = "株式会社ガイアックス 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://gaiax-socialmedialab.jp/",
+    .category = "media", .portal = "https://gaiax-socialmedialab.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8691,7 +8839,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_DIGIDAY_PAGES", .name = "DIGIDAY[日本版] — pages (WordPress REST)",
     .name_ja = "DIGIDAY[日本版] 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://digiday.jp/",
+    .category = "media", .portal = "https://digiday.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8742,7 +8890,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_OTOCOTO_USERS", .name = "otocoto  /  こだわりの映画エンタメサイト — author/staff register (WordPress "
       "REST)",
     .name_ja = "otocoto  /  こだわりの映画エンタメサイト 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://otocoto.jp/",
+    .category = "media", .portal = "https://otocoto.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8766,11 +8914,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_BUZZMAG_POSTS", .name = "BUZZmag — posts (WordPress REST)",
     .name_ja = "BUZZmag 投稿（WordPress REST）",
-    .category = "web", .portal = "https://buzzmag.jp/",
+    .category = "media", .portal = "https://buzzmag.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://buzzmag.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://buzzmag.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -8778,6 +8926,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 40488 declared, 405 pages: read over a CYCLE (1.7 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -8790,11 +8942,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_BASEBALLKING_POSTS", .name = "BASEBALL KING — posts (WordPress REST)",
     .name_ja = "BASEBALL KING 投稿（WordPress REST）",
-    .category = "web", .portal = "https://baseballking.jp/",
+    .category = "media", .portal = "https://baseballking.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://baseballking.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://baseballking.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -8802,6 +8954,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 63824 declared, 639 pages: read over a CYCLE (2.7 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -8814,11 +8970,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_BRUTUS_POSTS", .name = "ブルータス /  BRUTUS.jp — posts (WordPress REST)",
     .name_ja = "ブルータス /  BRUTUS.jp 投稿（WordPress REST）",
-    .category = "web", .portal = "https://brutus.jp/",
+    .category = "media", .portal = "https://brutus.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://brutus.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://brutus.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -8826,6 +8982,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 17055 declared, 171 pages: read over a CYCLE (0.7 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -8838,7 +8998,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_COLOCAL_POSTS", .name = "「colocal コロカル」ローカルを学ぶ・暮らす・旅する — posts (WordPress REST)",
     .name_ja = "「colocal コロカル」ローカルを学ぶ・暮らす・旅する 投稿（WordPress REST）",
-    .category = "web", .portal = "https://colocal.jp/",
+    .category = "media", .portal = "https://colocal.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8863,7 +9023,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_IEMONE_USERS", .name = "イエモネ — author/staff register (WordPress REST)",
     .name_ja = "イエモネ 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://iemone.jp/",
+    .category = "media", .portal = "https://iemone.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8886,7 +9046,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_CHIIK_PAGES", .name = "Chiik!(チーク) -乳幼児〜小学生までの知育・教育メディア- — pages (WordPress REST)",
     .name_ja = "Chiik!(チーク) -乳幼児〜小学生までの知育・教育メディア- 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://chiik.jp/",
+    .category = "media", .portal = "https://chiik.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8910,7 +9070,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_DIGIDAY_USERS", .name = "DIGIDAY[日本版] — author/staff register (WordPress REST)",
     .name_ja = "DIGIDAY[日本版] 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://digiday.jp/",
+    .category = "media", .portal = "https://digiday.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8934,7 +9094,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_BASEBALLKING_PAGES", .name = "BASEBALL KING — pages (WordPress REST)",
     .name_ja = "BASEBALL KING 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://baseballking.jp/",
+    .category = "media", .portal = "https://baseballking.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8958,7 +9118,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_BUZZMAG_PAGES", .name = "BUZZmag — pages (WordPress REST)",
     .name_ja = "BUZZmag 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://buzzmag.jp/",
+    .category = "media", .portal = "https://buzzmag.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -8982,7 +9142,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_BUSINESSNETWORK_PAGES", .name = "BUSINESS NETWORK — pages (WordPress REST)",
     .name_ja = "BUSINESS NETWORK 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://businessnetwork.jp/",
+    .category = "media", .portal = "https://businessnetwork.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9006,7 +9166,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_BRUTUS_PAGES", .name = "ブルータス /  BRUTUS.jp — pages (WordPress REST)",
     .name_ja = "ブルータス /  BRUTUS.jp 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://brutus.jp/",
+    .category = "media", .portal = "https://brutus.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9030,11 +9190,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_BASKETBALLKING_POSTS", .name = "バスケットボールキング — posts (WordPress REST)",
     .name_ja = "バスケットボールキング 投稿（WordPress REST）",
-    .category = "web", .portal = "https://basketballking.jp/",
+    .category = "media", .portal = "https://basketballking.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://basketballking.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://basketballking.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -9042,6 +9202,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 51317 declared, 514 pages: read over a CYCLE (2.1 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -9054,7 +9218,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_COLOCAL_PAGES", .name = "「colocal コロカル」ローカルを学ぶ・暮らす・旅する — pages (WordPress REST)",
     .name_ja = "「colocal コロカル」ローカルを学ぶ・暮らす・旅する 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://colocal.jp/",
+    .category = "media", .portal = "https://colocal.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9078,7 +9242,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_GREENZ_USERS", .name = "greenz.jp グリーンズ — author/staff register (WordPress REST)",
     .name_ja = "greenz.jp グリーンズ 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://greenz.jp/",
+    .category = "media", .portal = "https://greenz.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9102,7 +9266,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_BUSINESSNETWORK_USERS", .name = "BUSINESS NETWORK — author/staff register (WordPress REST)",
     .name_ja = "BUSINESS NETWORK 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://businessnetwork.jp/",
+    .category = "media", .portal = "https://businessnetwork.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9126,7 +9290,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_ATHOMEINC_POSTS", .name = "athome-inc.jp — posts (WordPress REST)",
     .name_ja = "athome-inc.jp 投稿（WordPress REST）",
-    .category = "web", .portal = "https://www.athome.co.jp/corporate/",
+    .category = "media", .portal = "https://www.athome.co.jp/corporate/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9150,11 +9314,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_CANCAM_POSTS", .name = "CanCam.jp(キャンキャン) — posts (WordPress REST)",
     .name_ja = "CanCam.jp(キャンキャン) 投稿（WordPress REST）",
-    .category = "web", .portal = "https://cancam.jp/",
+    .category = "media", .portal = "https://cancam.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cancam.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://cancam.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -9162,6 +9326,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 68605 declared, 687 pages: read over a CYCLE (2.9 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -9201,7 +9369,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_BRUTUS_BRUTUSDAILYBRUTUS", .name = "ブルータス /  BRUTUS.jp — custom post type `brutus_dailybrutus` "
       "(デイリーブルータス) (WordPress REST)",
     .name_ja = "ブルータス /  BRUTUS.jp デイリーブルータス（WordPress REST）",
-    .category = "web", .portal = "https://brutus.jp/",
+    .category = "media", .portal = "https://brutus.jp/",
     .record_type = "cpt-brutus-dailybrutus",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9226,7 +9394,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_ATHOMEINC_PAGES", .name = "athome-inc.jp — pages (WordPress REST)",
     .name_ja = "athome-inc.jp 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://www.athome.co.jp/corporate/",
+    .category = "media", .portal = "https://www.athome.co.jp/corporate/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9251,7 +9419,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_BASEBALLKING_YAKYUIKU", .name = "BASEBALL KING — custom post type `yakyuiku` (ヤキュイク) (WordPress "
       "REST)",
     .name_ja = "BASEBALL KING ヤキュイク（WordPress REST）",
-    .category = "web", .portal = "https://baseballking.jp/",
+    .category = "media", .portal = "https://baseballking.jp/",
     .record_type = "cpt-yakyuiku",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9277,7 +9445,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_MAGTECTURE_PROJECT", .name = "TECTURE MAG(テクチャーマガジン)  /  空間デザイン・建築メディア — custom post type "
       "`project` (PROJECT) (WordPress REST)",
     .name_ja = "TECTURE MAG(テクチャーマガジン)  /  空間デザイン・建築メディア PROJECT（WordPress REST）",
-    .category = "web", .portal = "https://mag.tecture.jp/",
+    .category = "media", .portal = "https://mag.tecture.jp/",
     .record_type = "cpt-project",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9302,7 +9470,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_ATHOMEINC_USERS", .name = "athome-inc.jp — author/staff register (WordPress REST)",
     .name_ja = "athome-inc.jp 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://www.athome.co.jp/corporate/",
+    .category = "media", .portal = "https://www.athome.co.jp/corporate/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9326,11 +9494,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_BESTCARWEB_POSTS", .name = "自動車情報誌「ベストカー」 — posts (WordPress REST)",
     .name_ja = "自動車情報誌「ベストカー」 投稿（WordPress REST）",
-    .category = "web", .portal = "https://bestcarweb.jp/",
+    .category = "media", .portal = "https://bestcarweb.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://bestcarweb.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .url = "https://bestcarweb.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -9338,6 +9506,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 42421 declared, 425 pages: read over a CYCLE (1.8 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -9351,7 +9523,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_BASEBALLKING_WRITER", .name = "BASEBALL KING — custom post type `writer` (ライター) (WordPress "
       "REST)",
     .name_ja = "BASEBALL KING ライター（WordPress REST）",
-    .category = "web", .portal = "https://baseballking.jp/",
+    .category = "media", .portal = "https://baseballking.jp/",
     .record_type = "cpt-writer",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9376,7 +9548,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_BUZZMAG_USERS", .name = "BUZZmag — author/staff register (WordPress REST)",
     .name_ja = "BUZZmag 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://buzzmag.jp/",
+    .category = "media", .portal = "https://buzzmag.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9399,7 +9571,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_BESTCARWEB_PAGES", .name = "自動車情報誌「ベストカー」 — pages (WordPress REST)",
     .name_ja = "自動車情報誌「ベストカー」 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://bestcarweb.jp/",
+    .category = "media", .portal = "https://bestcarweb.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9424,7 +9596,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_BRUTUS_BRUTUSMAGAZINE", .name = "ブルータス /  BRUTUS.jp — custom post type `brutus_magazine` (雑誌) "
       "(WordPress REST)",
     .name_ja = "ブルータス /  BRUTUS.jp 雑誌（WordPress REST）",
-    .category = "web", .portal = "https://brutus.jp/",
+    .category = "media", .portal = "https://brutus.jp/",
     .record_type = "cpt-brutus-magazine",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9450,7 +9622,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_COLOCAL_NEWS", .name = "「colocal コロカル」ローカルを学ぶ・暮らす・旅する — custom post type `news` "
       "(コロカルニュース) (WordPress REST)",
     .name_ja = "「colocal コロカル」ローカルを学ぶ・暮らす・旅する コロカルニュース（WordPress REST）",
-    .category = "web", .portal = "https://colocal.jp/",
+    .category = "media", .portal = "https://colocal.jp/",
     .record_type = "cpt-news",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9475,7 +9647,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_AGORAWEB_USERS", .name = "アゴラ 言論プラットフォーム — author/staff register (WordPress REST)",
     .name_ja = "アゴラ 言論プラットフォーム 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://agora-web.jp/",
+    .category = "media", .portal = "https://agora-web.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9499,7 +9671,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_TURNS_POSTS", .name = "TURNS(ターンズ) / 移住・地方創生・地域活性化 — posts (WordPress REST)",
     .name_ja = "TURNS(ターンズ) / 移住・地方創生・地域活性化 投稿（WordPress REST）",
-    .category = "web", .portal = "http://turns.jp/",
+    .category = "media", .portal = "http://turns.jp/",
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9524,11 +9696,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_BESTCARWEB_IMAGES", .name = "自動車情報誌「ベストカー」 — custom post type `images` (画像ギャラリー) (WordPress "
       "REST)",
     .name_ja = "自動車情報誌「ベストカー」 画像ギャラリー（WordPress REST）",
-    .category = "web", .portal = "https://bestcarweb.jp/",
+    .category = "media", .portal = "https://bestcarweb.jp/",
     .record_type = "cpt-images",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://bestcarweb.jp/wp-json/wp/v2/images?per_page=100&orderby=date&order=desc",
+    .url = "https://bestcarweb.jp/wp-json/wp/v2/images?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -9536,6 +9708,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 26540 declared, 266 pages: read over a CYCLE (1.1 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -9550,7 +9726,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_BRUTUS_BRUTUSMOOK", .name = "ブルータス /  BRUTUS.jp — custom post type `brutus_mook` (ムック) "
       "(WordPress REST)",
     .name_ja = "ブルータス /  BRUTUS.jp ムック（WordPress REST）",
-    .category = "web", .portal = "https://brutus.jp/",
+    .category = "media", .portal = "https://brutus.jp/",
     .record_type = "cpt-brutus-mook",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9576,7 +9752,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_BESTCARWEB_GALLERY", .name = "自動車情報誌「ベストカー」 — custom post type `gallery` (ギャラリー) (WordPress "
       "REST)",
     .name_ja = "自動車情報誌「ベストカー」 ギャラリー（WordPress REST）",
-    .category = "web", .portal = "https://bestcarweb.jp/",
+    .category = "media", .portal = "https://bestcarweb.jp/",
     .record_type = "cpt-gallery",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9601,7 +9777,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_TURNS_PAGES", .name = "TURNS(ターンズ) / 移住・地方創生・地域活性化 — pages (WordPress REST)",
     .name_ja = "TURNS(ターンズ) / 移住・地方創生・地域活性化 固定ページ（WordPress REST）",
-    .category = "web", .portal = "http://turns.jp/",
+    .category = "media", .portal = "http://turns.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9625,7 +9801,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_BESTCARWEB_USERS", .name = "自動車情報誌「ベストカー」 — author/staff register (WordPress REST)",
     .name_ja = "自動車情報誌「ベストカー」 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://bestcarweb.jp/",
+    .category = "media", .portal = "https://bestcarweb.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9649,11 +9825,11 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_CANCAM_PAGES", .name = "CanCam.jp(キャンキャン) — pages (WordPress REST)",
     .name_ja = "CanCam.jp(キャンキャン) 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://cancam.jp/",
+    .category = "media", .portal = "https://cancam.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cancam.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc",
+    .url = "https://cancam.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -9661,6 +9837,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 7562 declared, 76 pages: read over a CYCLE (0.3 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -9678,7 +9858,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "cpt-foodsnews",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://news.nissyoku.co.jp/wp-json/wp/v2/foodsnews?per_page=100&orderby=date&order=desc",
+    .url = "https://news.nissyoku.co.jp/wp-json/wp/v2/foodsnews?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -9686,6 +9866,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 112865 declared, 1129 pages: read over a CYCLE (4.7 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -9700,7 +9884,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_MAGTECTURE_BUSINESS", .name = "TECTURE MAG(テクチャーマガジン)  /  空間デザイン・建築メディア — custom post type "
       "`business` (BUSINESS) (WordPress REST)",
     .name_ja = "TECTURE MAG(テクチャーマガジン)  /  空間デザイン・建築メディア BUSINESS（WordPress REST）",
-    .category = "web", .portal = "https://mag.tecture.jp/",
+    .category = "media", .portal = "https://mag.tecture.jp/",
     .record_type = "cpt-business",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9726,7 +9910,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_TURNS_USERS", .name = "TURNS(ターンズ) / 移住・地方創生・地域活性化 — author/staff register (WordPress "
       "REST)",
     .name_ja = "TURNS(ターンズ) / 移住・地方創生・地域活性化 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "http://turns.jp/",
+    .category = "media", .portal = "http://turns.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9751,7 +9935,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_BRUTUS_BRUTUSLOCAL", .name = "ブルータス /  BRUTUS.jp — custom post type `brutus_local` (地方記事) "
       "(WordPress REST)",
     .name_ja = "ブルータス /  BRUTUS.jp 地方記事（WordPress REST）",
-    .category = "web", .portal = "https://brutus.jp/",
+    .category = "media", .portal = "https://brutus.jp/",
     .record_type = "cpt-brutus-local",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9777,7 +9961,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_COLOCAL_ODEKAKE", .name = "「colocal コロカル」ローカルを学ぶ・暮らす・旅する — custom post type `odekake` "
       "(おでかけコロカル) (WordPress REST)",
     .name_ja = "「colocal コロカル」ローカルを学ぶ・暮らす・旅する おでかけコロカル（WordPress REST）",
-    .category = "web", .portal = "https://colocal.jp/",
+    .category = "media", .portal = "https://colocal.jp/",
     .record_type = "cpt-odekake",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9803,7 +9987,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_BRUTUS_MAGAZINEFEATURE", .name = "ブルータス /  BRUTUS.jp — custom post type `magazine_feature` (雑誌特集) "
       "(WordPress REST)",
     .name_ja = "ブルータス /  BRUTUS.jp 雑誌特集（WordPress REST）",
-    .category = "web", .portal = "https://brutus.jp/",
+    .category = "media", .portal = "https://brutus.jp/",
     .record_type = "cpt-magazine-feature",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9829,7 +10013,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_COLOCAL_AREAMAGAZINE", .name = "「colocal コロカル」ローカルを学ぶ・暮らす・旅する — custom post type `areamagazine` "
       "(エリアマガジン) (WordPress REST)",
     .name_ja = "「colocal コロカル」ローカルを学ぶ・暮らす・旅する エリアマガジン（WordPress REST）",
-    .category = "web", .portal = "https://colocal.jp/",
+    .category = "media", .portal = "https://colocal.jp/",
     .record_type = "cpt-areamagazine",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9855,7 +10039,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_COLOCAL_MOVIE", .name = "「colocal コロカル」ローカルを学ぶ・暮らす・旅する — custom post type `movie` (動画) "
       "(WordPress REST)",
     .name_ja = "「colocal コロカル」ローカルを学ぶ・暮らす・旅する 動画（WordPress REST）",
-    .category = "web", .portal = "https://colocal.jp/",
+    .category = "media", .portal = "https://colocal.jp/",
     .record_type = "cpt-movie",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9881,7 +10065,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_BRUTUS_MOVIE", .name = "ブルータス /  BRUTUS.jp — custom post type `movie` (動画) (WordPress "
       "REST)",
     .name_ja = "ブルータス /  BRUTUS.jp 動画（WordPress REST）",
-    .category = "web", .portal = "https://brutus.jp/",
+    .category = "media", .portal = "https://brutus.jp/",
     .record_type = "cpt-movie",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9907,7 +10091,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_MOTORFAN_WRITER", .name = "Motor Fan / 自動車情報のモーターファン — custom post type `writer` (表示著者名) "
       "(WordPress REST)",
     .name_ja = "Motor Fan / 自動車情報のモーターファン 表示著者名（WordPress REST）",
-    .category = "web", .portal = "https://motor-fan.jp/",
+    .category = "media", .portal = "https://motor-fan.jp/",
     .record_type = "cpt-writer",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9932,7 +10116,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_BASKETBALLKING_PAGES", .name = "バスケットボールキング — pages (WordPress REST)",
     .name_ja = "バスケットボールキング 固定ページ（WordPress REST）",
-    .category = "web", .portal = "https://basketballking.jp/",
+    .category = "media", .portal = "https://basketballking.jp/",
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -9961,7 +10145,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "cpt-hyakusai",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://news.nissyoku.co.jp/wp-json/wp/v2/hyakusai?per_page=100&orderby=date&order=desc",
+    .url = "https://news.nissyoku.co.jp/wp-json/wp/v2/hyakusai?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -9969,6 +10153,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 7830 declared, 79 pages: read over a CYCLE (0.3 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -9982,7 +10170,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
 
   { .id = "JO45_WP_BASKETBALLKING_USERS", .name = "バスケットボールキング — author/staff register (WordPress REST)",
     .name_ja = "バスケットボールキング 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://basketballking.jp/",
+    .category = "media", .portal = "https://basketballking.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10007,7 +10195,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_MAGTECTURE_PRODUCT", .name = "TECTURE MAG(テクチャーマガジン)  /  空間デザイン・建築メディア — custom post type "
       "`product` (PRODUCT) (WordPress REST)",
     .name_ja = "TECTURE MAG(テクチャーマガジン)  /  空間デザイン・建築メディア PRODUCT（WordPress REST）",
-    .category = "web", .portal = "https://mag.tecture.jp/",
+    .category = "media", .portal = "https://mag.tecture.jp/",
     .record_type = "cpt-product",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10033,7 +10221,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_BRUTUS_BRUTUSNEWS", .name = "ブルータス /  BRUTUS.jp — custom post type `brutus_news` (ニュース) "
       "(WordPress REST)",
     .name_ja = "ブルータス /  BRUTUS.jp ニュース（WordPress REST）",
-    .category = "web", .portal = "https://brutus.jp/",
+    .category = "media", .portal = "https://brutus.jp/",
     .record_type = "cpt-brutus-news",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10059,7 +10247,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_COLOCAL_USERS", .name = "「colocal コロカル」ローカルを学ぶ・暮らす・旅する — author/staff register (WordPress "
       "REST)",
     .name_ja = "「colocal コロカル」ローカルを学ぶ・暮らす・旅する 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://colocal.jp/",
+    .category = "media", .portal = "https://colocal.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10084,7 +10272,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_MOTORFAN_SERIES", .name = "Motor Fan / 自動車情報のモーターファン — custom post type `series` (連載) "
       "(WordPress REST)",
     .name_ja = "Motor Fan / 自動車情報のモーターファン 連載（WordPress REST）",
-    .category = "web", .portal = "https://motor-fan.jp/",
+    .category = "media", .portal = "https://motor-fan.jp/",
     .record_type = "cpt-series",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10110,7 +10298,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_BRUTUS_BRUTUSFEATURE", .name = "ブルータス /  BRUTUS.jp — custom post type `brutus_feature` (SPECIAL "
       "FEATURE) (WordPress REST)",
     .name_ja = "ブルータス /  BRUTUS.jp SPECIAL FEATURE（WordPress REST）",
-    .category = "web", .portal = "https://brutus.jp/",
+    .category = "media", .portal = "https://brutus.jp/",
     .record_type = "cpt-brutus-feature",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10136,7 +10324,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_BRUTUS_BRUTUSFOCUS", .name = "ブルータス /  BRUTUS.jp — custom post type `brutus_focus` (フォーカス) "
       "(WordPress REST)",
     .name_ja = "ブルータス /  BRUTUS.jp フォーカス（WordPress REST）",
-    .category = "web", .portal = "https://brutus.jp/",
+    .category = "media", .portal = "https://brutus.jp/",
     .record_type = "cpt-brutus-focus",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10166,7 +10354,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "cpt-kojocho",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://news.nissyoku.co.jp/wp-json/wp/v2/kojocho?per_page=100&orderby=date&order=desc",
+    .url = "https://news.nissyoku.co.jp/wp-json/wp/v2/kojocho?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -10174,6 +10362,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 8531 declared, 86 pages: read over a CYCLE (0.4 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -10188,7 +10380,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_MAGTECTURE_EVENT", .name = "TECTURE MAG(テクチャーマガジン)  /  空間デザイン・建築メディア — custom post type "
       "`event` (COMPETITION & EVENT) (WordPress REST)",
     .name_ja = "TECTURE MAG(テクチャーマガジン)  /  空間デザイン・建築メディア COMPETITION & EVENT（WordPress REST）",
-    .category = "web", .portal = "https://mag.tecture.jp/",
+    .category = "media", .portal = "https://mag.tecture.jp/",
     .record_type = "cpt-event",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10240,7 +10432,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_BRUTUS_PODCAST", .name = "ブルータス /  BRUTUS.jp — custom post type `podcast` (Episode) "
       "(WordPress REST)",
     .name_ja = "ブルータス /  BRUTUS.jp Episode（WordPress REST）",
-    .category = "web", .portal = "https://brutus.jp/",
+    .category = "media", .portal = "https://brutus.jp/",
     .record_type = "cpt-podcast",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10266,7 +10458,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_MAGTECTURE_JOB", .name = "TECTURE MAG(テクチャーマガジン)  /  空間デザイン・建築メディア — custom post type "
       "`job` (JOB) (WordPress REST)",
     .name_ja = "TECTURE MAG(テクチャーマガジン)  /  空間デザイン・建築メディア JOB（WordPress REST）",
-    .category = "web", .portal = "https://mag.tecture.jp/",
+    .category = "media", .portal = "https://mag.tecture.jp/",
     .record_type = "cpt-job",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10318,7 +10510,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_MAGTECTURE_COMPANY", .name = "TECTURE MAG(テクチャーマガジン)  /  空間デザイン・建築メディア — custom post type "
       "`company` (STUDIO & COMPANY) (WordPress REST)",
     .name_ja = "TECTURE MAG(テクチャーマガジン)  /  空間デザイン・建築メディア STUDIO & COMPANY（WordPress REST）",
-    .category = "web", .portal = "https://mag.tecture.jp/",
+    .category = "media", .portal = "https://mag.tecture.jp/",
     .record_type = "cpt-company",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10344,7 +10536,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_MAGTECTURE_PROFILE", .name = "TECTURE MAG(テクチャーマガジン)  /  空間デザイン・建築メディア — custom post type "
       "`profile` (PROFILE) (WordPress REST)",
     .name_ja = "TECTURE MAG(テクチャーマガジン)  /  空間デザイン・建築メディア PROFILE（WordPress REST）",
-    .category = "web", .portal = "https://mag.tecture.jp/",
+    .category = "media", .portal = "https://mag.tecture.jp/",
     .record_type = "cpt-profile",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10370,7 +10562,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_MAGTECTURE_FIXEDTOP", .name = "TECTURE MAG(テクチャーマガジン)  /  空間デザイン・建築メディア — custom post type "
       "`fixedtop` (トップ固定記事) (WordPress REST)",
     .name_ja = "TECTURE MAG(テクチャーマガジン)  /  空間デザイン・建築メディア トップ固定記事（WordPress REST）",
-    .category = "web", .portal = "https://mag.tecture.jp/",
+    .category = "media", .portal = "https://mag.tecture.jp/",
     .record_type = "cpt-fixedtop",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
@@ -10400,7 +10592,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "cpt-restaurant",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://news.nissyoku.co.jp/wp-json/wp/v2/restaurant?per_page=100&orderby=date&order=desc",
+    .url = "https://news.nissyoku.co.jp/wp-json/wp/v2/restaurant?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -10408,6 +10600,10 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 19242 declared, 193 pages: read over a CYCLE (0.8 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,
@@ -10422,7 +10618,7 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
   { .id = "JO45_WP_MAGTECTURE_USERS", .name = "TECTURE MAG(テクチャーマガジン)  /  空間デザイン・建築メディア — author/staff register "
       "(WordPress REST)",
     .name_ja = "TECTURE MAG(テクチャーマガジン)  /  空間デザイン・建築メディア 利用者一覧（WordPress REST）",
-    .category = "web", .portal = "https://mag.tecture.jp/",
+    .category = "media", .portal = "https://mag.tecture.jp/",
     .record_type = "site-user",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,

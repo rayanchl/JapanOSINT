@@ -219,6 +219,7 @@ export default function SourceDetailPage() {
         <Card>
           <KV pairs={[
             ['declared interval', fmtInterval(sch.declaredInterval)],
+            ['policy interval', sch.policyInterval != null ? `${fmtInterval(sch.policyInterval)} (${sch.policy || 'declared'})` : 'not reported'],
             ['effective interval', sch.effectiveInterval != null ? fmtInterval(sch.effectiveInterval) : 'as declared'],
             ['next due', sch.next_due ? `${when(sch.next_due)}${sch.overdue ? ' — overdue' : ''}` : (sch.declaredInterval > 0 ? 'not yet run' : 'on demand')],
             ['schedule mode', sch.schedule_mode || 'default'],

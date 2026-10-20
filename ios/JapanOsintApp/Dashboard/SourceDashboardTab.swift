@@ -15,6 +15,8 @@ struct SourceDashboardTab: View {
     @State private var search = ""
     @State private var selected: StatusRow?
     @State private var expanded: Set<String> = []
+    /// Groups whose fold of single-source collectors is open (see collectorsList).
+    @State private var singlesOpen: Set<String> = []
     @State private var refreshing: Set<String> = []
     @State private var refreshError: [String: String] = [:]
 
@@ -508,7 +510,13 @@ struct SourceDashboardTab: View {
                   }
                   .padding(.top, 6)
                   .accessibilityAddTraits(.isHeader)
-                  ForEach(section.collectors) { c in
+                  // Collectors holding exactly ONE source (the per-country
+                  // hand-written beats) fold into one row per group, so a group
+                  // with 26 of them reads as a list rather than 26 rows. Nothing
+                  // is dropped: the fold says how many it holds and opens in place.
+                  let multi = section.collectors.filter { $0.sourceCount != 1 }
+                  let singles = section.collectors.filter { $0.sourceCount == 1 }
+                  ForEach(multi) { c in
                     CollectorRow(
                         collector: c,
                         isFavorite: favs.contains(c.id),
@@ -520,6 +528,38 @@ struct SourceDashboardTab: View {
                         refresh: { Task { await refresh(c.id) } },
                         selectSource: { selected = $0 }
                     )
+                  }
+                  if !singles.isEmpty {
+                    Button {
+                        if singlesOpen.contains(section.id) { singlesOpen.remove(section.id) } else { singlesOpen.insert(section.id) }
+                    } label: {
+                        HStack {
+                            Image(systemName: singlesOpen.contains(section.id) ? "chevron.down" : "chevron.right")
+                                .font(.caption2)
+                            Text("\(singles.count) single-source collector\(singles.count == 1 ? "" : "s")")
+                                .font(.caption.monospacedDigit())
+                            Spacer()
+                        }
+                        .foregroundStyle(theme.textMuted)
+                        .padding(.vertical, 4)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel("\(singles.count) single-source collectors in \(section.label)")
+                    if singlesOpen.contains(section.id) {
+                        ForEach(singles) { c in
+                            CollectorRow(
+                                collector: c,
+                                isFavorite: favs.contains(c.id),
+                                isExpanded: expanded.contains(c.id),
+                                isRefreshing: refreshing.contains(c.id),
+                                refreshError: refreshError[c.id],
+                                toggleFavorite: { favs.toggle(c.id) },
+                                toggleExpand: { toggleExpand(c.id) },
+                                refresh: { Task { await refresh(c.id) } },
+                                selectSource: { selected = $0 }
+                            )
+                        }
+                    }
                   }
                 }
             }
@@ -837,6 +877,7 @@ private struct SourceDetail: View {
                     kv("Collector", row.collectorLabel.map { "\($0) (\(row.collector ?? "?"))" } ?? row.collector ?? "not reported by this server")
                     kv("Engine",    row.engine ?? "not reported by this server")
                     kv("Kind",      row.kind ?? "not reported by this server")
+                    kv("Cadence",   row.policyInterval.map { "every \(Int($0)) s (policy)" } ?? (row.updateInterval.map { "every \(Int($0)) s (declared)" } ?? "on demand"))
                     kv("Layer",     row.layer ?? "none")
                     kv("Category",  row.category ?? "—")
                     kv("Type",      row.type ?? "—")
