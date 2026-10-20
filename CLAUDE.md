@@ -1278,14 +1278,32 @@ Engine subtleties worth knowing before writing a row:
   stored position whose HOST is not the row's own — a reading position moves us
   through a collection, never to another server.
 
-  **Two things a cycle does not fix, so they were left alone.** Five ELIA grid
-  rows run every 900–3,600 s over millions of quarter-hourly points: a cycle
-  would blind them to the current grid for days, and a date window is the right
-  shape. Two GOV.UK report searches are the same cadence and fell under the
-  same rule. And `PLOS_RECENT` — 417,719 records against a 20-page ceiling —
+  **Two things a cycle does not fix, and what each got instead (2026-10-20).**
+  Five ELIA grid rows ran every 900–3,600 s over millions of quarter-hourly
+  points, where a cycle would blind them to the current grid for days: four
+  now carry a **date window** sized on their MEASURED publication lag
+  (`where=datetime>=now(days=-5)` for wind, whose newest record was 41 hours
+  old when read; 48 hours for asset loading, published ~14 hours behind in
+  ~6,000-record days; three days for recent generation and for the system
+  imbalance) with `order_by=datetime desc`, 100 a page and a `page_max` that
+  holds the window. One of the five was not truncated at all: **`ods045` ENDED
+  in May 2024** (newest record 2024-05-21, total unchanged between audits) and
+  the row had re-read its first 150 points of 2019 every 15 minutes for 17
+  months — it reads the successor `ods134` now, 212 records in its three-day
+  window, measured. The fifth, `ods147`, has no `datetime` field and the host
+  answered none of twelve requests for one record of it, so its time field is
+  unnamed, its row says so, and its notice still discloses the 20-page read.
+  **Before windowing a row, read its newest record: a frozen series looks
+  exactly like a truncated one from the count alone.** The two GOV.UK report
+  searches (MAIB, RAIB) were not a window problem but the `count`/`start`
+  pager above: at `count=100` each reads its whole register in 12 / 7 pages.
+  And `PLOS_RECENT` — 417,719 records against a 20-page ceiling —
   deliberately does NOT cycle: its name, tags and `publication_date desc` sort
-  all say recency is the point, and a cycle would cost it exactly that. The
-  whole PLOS corpus wants a second row with an ascending sort.
+  all say recency is the point, and a cycle would cost it exactly that.
+  `PLOS_CORPUS` is the second row that note asked for: the same query with
+  `publication_date asc,id asc` and `page_resume`, 418,125 articles over a
+  daily cycle (2,000 a run, resuming at `start=2000`, then `start=4000` —
+  measured).
 
   **A descending sort and a cycle do not compose, and the fix is the sort.**
   New items land at the HEAD of a newest-first collection, so every page
