@@ -156,16 +156,31 @@ def set_param(url, key, val):
     return url + ("&" if "?" in url else "?") + "%s=%s" % (key, val)
 
 
-# A transport failure that is OURS, not the upstream's. "Connection refused"
-# names a socket that was never opened, so it says nothing about the server at
-# the other end — and under load it is what a saturated local egress answers
-# with. The first run of this sweep recorded 569 of them as PAGE1_FAILED, all
-# in its last 15% and spread across wholly unrelated hosts (a Japanese
-# university's WordPress, the EIB, NHTSA); every one re-tested 200 by hand
-# afterwards. That is the same shape as audit_cycle_health.py's load-made STUCK
-# verdicts: a verdict that changes with the tool's own concurrency is not a
-# measurement. These are retried, and if they persist they are reported as
-# LOCAL_EGRESS so nobody can read one as a finding about a source.
+# A transport failure that is OURS, not the upstream's — measured, in both of
+# the two shapes it takes here.
+#
+# "Connection refused" names a socket that was never opened, so it says
+# nothing about the server at the other end. The first full run of this sweep
+# recorded 569 of them as PAGE1_FAILED, all in its last 15% and spread across
+# wholly unrelated hosts (a Japanese university's WordPress, the EIB, NHTSA);
+# both of the two re-tested by hand answered 200 immediately afterwards.
+#
+# "Connection reset by peer" LOOKS like the upstream's own refusal, and the
+# first reading of it here was that a reset is the peer's action and so belongs
+# to the row. That was wrong in this environment, and worth the one command it
+# took to find out: curl against the same hosts reports HTTP 000, and the agent
+# proxy names the cause itself — ws_closed_mid_exchange, "the tunnel to the
+# egress proxy closed before the exchange completed". Confirm with
+#     curl -sS "$HTTPS_PROXY/__agentproxy/status"
+# The hosts are not denied by policy: each answers 200 on its own. It is the
+# tunnel's capacity under many concurrent connections.
+#
+# Both are the same shape as audit_cycle_health.py's load-made STUCK verdicts,
+# one layer up: a verdict that changes with the tool's own concurrency is not a
+# measurement. They are retried with a back-off, and if they persist they are
+# reported as LOCAL_EGRESS so that nobody can read one as a finding about a
+# source. A row that only ever comes back LOCAL_EGRESS is UNMEASURED from
+# here, which is a thing to write down rather than a verdict to act on.
 _LOCAL_EGRESS = re.compile(
     r"Connection refused|Connection reset by peer|Temporary failure in name "
     r"resolution|Cannot assign requested address|Too many open files", re.I)
@@ -331,9 +346,10 @@ def _probe(a, r):
     # finding about this row and must never be counted as one.
     if s1 == -2:
         out["verdict"] = "LOCAL_EGRESS"
-        out["message"] = ("this sweep's own egress refused the connection, "
-                          "retried and still refused — NOT a reading about "
-                          "this source: %s" % message_of(b1))[:220]
+        out["message"] = ("this environment's egress tunnel failed, retried "
+                          "with a back-off and failed again — NOT a reading "
+                          "about this source, which is UNMEASURED from here: "
+                          "%s" % message_of(b1))[:240]
         return out
     if s1 != 200:
         out["verdict"] = "PAGE1_FAILED"
@@ -353,9 +369,10 @@ def _probe(a, r):
 
     if s2 == -2:
         out["verdict"] = "LOCAL_EGRESS"
-        out["message"] = ("this sweep's own egress refused the connection on "
-                          "page 2, retried and still refused — NOT a reading "
-                          "about this source: %s" % msg)[:220]
+        out["message"] = ("this environment's egress tunnel failed on page 2, "
+                          "retried with a back-off and failed again — NOT a "
+                          "reading about this source, which is UNMEASURED "
+                          "from here: %s" % msg)[:240]
         return out
     if s2 == -1:
         out["verdict"] = "NET_ERR"

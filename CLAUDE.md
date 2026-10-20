@@ -24,6 +24,20 @@ moved). Found by measuring the 45 detail-hop rows: eight `il-knesset-*` rows
 whose OData service 303s to an HTML maintenance page, and `us-courtlistener-*`
 answering 429 — nine registered sources storing zero and saying nothing.
 
+**A REFUSAL CAN WEAR A SUCCESS STATUS, and then the note points the wrong
+way.** Archive-It answers `<title>Rate limit reached</title>` with HTTP **200**,
+so the fetch-failure note read "the endpoint may have moved, started
+redirecting to an HTML page, or changed shape" — sending a reader to hunt a
+move that never happened, when the remedy is a per-host gap. A non-parsing 200
+whose body says "rate limit" or "too many requests" is named as one now, with
+the remedy pointing at `core/hostgate.c` AND telling the reader to measure the
+budget first, because a gap set on one reading is a guess. No gap was added for
+Archive-It for exactly that reason: it refuses single requests an hour apart,
+so its budget cannot be measured from behind the limit. `hptest` 44 pins the
+shape and 44b pins that an ordinary unparseable 200 is NOT reported as one —
+"limit" is a legitimate parameter name and appears in half the URLs in this
+tree, so only the refusal's own words count.
+
 It changes two things that read the run line. A dead source now reports
 `records=1 stored=1`, so `audit_registry_emit.py` counts engine notices
 separately from records and has a `FETCH_FAILED` verdict; and `hptest`'s
@@ -885,6 +899,7 @@ says why.
 | `tools/audit_cycle_health.py` | whether a `page_resume` row can actually ADVANCE its cycle. Three outcomes, one healthy: `CYCLING` (a position was stored), `COMPLETE` (the walk ended and cleared it — the measured no-op that makes page_resume safe to apply broadly), `STUCK` (a page failed, so no position was stored and the next run re-reads the same slice; the collection past that point is unreachable). Found as the generalisation of the ENA shape. It reports the failing page's STATUS and URL rather than a bare verdict, because a 400 naming a parameter is a property of the endpoint while a 429 is one reading. Walks to the real ceiling rather than probing shallow — the failure can be at any page — so it costs ~20 requests a row. Reads the `page_resume` rows out of the C, which is the maintained copy |
 | `tools/audit_page_ceiling.py` | which scheduled rows stop at the PAGE CEILING, and how many pages their own upstream says they need. Probes SHALLOW (`--probe-pages`, default 3) and then does arithmetic, because the engine's truncation notice already carries the only number that settles it: a `records_available` whose basis is "upstream declared this total". `CEILING_DECLARED` is measured (pages_needed = total / page_size, the page size derived from the probe when the row declares none); `CEILING_UNKNOWN` means the upstream publishes no total and only a full walk can size it, which is a decision to take deliberately, not a finding. Reads `collector-fetch-failure` too, so a 429 is `FETCH_FAILED` and not "this source returns nothing" |
 | `tools/audit_page_param.py` | rows whose URL already binds their own `page_param`. The engine used to APPEND (`…&pagina=1&pagina=2`) and a server binding the first occurrence then served page 1 for the whole walk — N pages emitted, one stored, `rc=0`. Fixed in `hp_url_set_param` and pinned by `hptest` "9f-bis"; the lint stays because 103 of 1,431 paged rows are that shape and their paging depends on the replacement being right |
+| `tools/audit_page_two.py` | whether page TWO actually returns something different from page 1 — the one question no record count asks. Page 1 is the row's URL as written; page 2 is that URL with the row's own parameter advanced the way `hp_url_set_param` advances it. `SAME_AS_PAGE1` is THE finding (an upstream that takes a page parameter and ignores it answers every page with page 1: N pages emitted, one stored, `rc=0`), `REFUSED` carries a remedy classification, and `PAGE1_IS_ALL` is the benign majority. **`LOCAL_EGRESS` is a verdict about THIS ENVIRONMENT and never about a source** — see the note below on what the first run did to itself. Full run: `docs/page-two-2026-10-20.tsv` |
 | `tools/audit_batch_emit.py` | rule 4 below: runs each MANIFEST row through the real binary and reads back `emitted N of M`. `--timeout S` moves the kill line; a run that hits it is **`SLOW`**, carrying its partial counts — unmeasured, not failed. Each run gets a scratch DB from a warm template (it used to write the developer's live DB), and it exits non-zero on UNREGISTERED, UNPARSEABLE, NO_RUN_LINE or when nothing was measured |
 | `tools/audit_registry_emit.py` | rule 4 **and** 4b for the whole REGISTRY, manifest or not — `--list-sources` is the source list, so nothing registered can hide. Measures emitted *and* stored, per run, against a fresh copy of a warm template DB. `--scheduled`/`--match`/`--only`/`--ids-file`, `--jobs`, `--timeout`, TSV out, `--resume` |
 | `tools/diagnose_emit_keys.py` | why a row emitted nothing, and which `title_keys`/`id_keys` fix it |
@@ -1390,6 +1405,30 @@ Engine subtleties worth knowing before writing a row:
   reproducible** — data.gov.au served 8 rapid serial requests and then 12
   concurrent ones, all 200 — so no pacing entry was added. A tool that adds a
   gap on an unreproducible reading is guessing.
+
+  **A THIRD sweep manufactured its own findings, in a shape the second one's
+  fix could not have caught** (2026-10-20, `docs/page-two-2026-10-20.tsv`).
+  `tools/audit_page_two.py` asked page 2 of all 5,854 paged scheduled rows and
+  reported **781 `PAGE1_FAILED`**. 569 of those are `Connection refused`, every
+  one in the last 15% of the run and spread across wholly unrelated hosts — a
+  Japanese university's WordPress, the EIB, NHTSA — and both of the two
+  re-tested by hand answered HTTP 200 immediately afterwards. A socket that was
+  never opened says nothing about the server at the other end.
+
+  **And the second shape was one I first called correctly and then got wrong.**
+  About a hundred more read `Connection reset by peer`, which LOOKS like the
+  upstream's own refusal, so the first reading was that a reset belongs to the
+  row. One command settled it the other way: `curl` reports HTTP 000 for the
+  same hosts and the agent proxy names the cause itself —
+  **`ws_closed_mid_exchange`**, "the tunnel to the egress proxy closed before
+  the exchange completed", visible under
+  `curl -sS "$HTTPS_PROXY/__agentproxy/status"`. The hosts are not denied by
+  policy; each answers 200 on its own. **So in this container a peer reset can
+  be OURS**, and a sweep that attributes it to the upstream writes down dead
+  sources that are alive. Both errors are retried with a back-off and reported
+  as `LOCAL_EGRESS` when they persist, worded so nobody can read one as a
+  finding; a row that only ever comes back `LOCAL_EGRESS` is **unmeasured from
+  here**, which is a thing to write down rather than a verdict to act on.
 
   A by-catch of the same pass: `CR_SANCARLOS_PREDIOS` had been documented dead
   since round 8 (2026-09-21) because GetCapabilities listed no `predio*` layer,
