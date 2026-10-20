@@ -425,11 +425,20 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "wind-generation",
     .tags = "\"energy\",\"wind\",\"belgium\",\"grid\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.elia.be/api/explore/v2.1/catalog/datasets/ods031/records?limit=50",
+    /* A DATE WINDOW, not a cycle (the exception CLAUDE.md's page_resume note
+     * names). Measured 2026-10-20: 2,068,300 records, 41,366 pages at 50 — and
+     * growing 480 a day (2,064,460 on 2026-10-12), with the newest record at
+     * 2026-10-18T21:45 when read at 14:30 on the 20th, a 41-hour publication
+     * lag. Without a window the row read the first 150 of two million
+     * forever; `where=datetime>=now(hours=-6)` answered total_count 0 because
+     * of that lag. Five days covers the lag with slack: ~2,400 records, 24
+     * pages of 100, newest first on a stable sort. */
+    .url = "https://opendata.elia.be/api/explore/v2.1/catalog/datasets/ods031/records?limit=100&order_by=datetime%20desc&where=datetime%3E%3Dnow(days%3D-5)",
     .array_path = "results",
     .interval = 3600,
     .page_param = "offset",
-    .page_size = 50,
+    .page_size = 100,
+    .page_max = 40,
     /* One record per timestamp per (offshore/onshore, region, grid connection
      * type) split. Verified live 2026-09-07: 50 records, 50 distinct on that
      * four-part key. */

@@ -276,44 +276,6 @@ static const hp_source HP3B34_CKANBULK[] = {
       "disable or deprecate this action, in which case the row is an "
       "honest empty." },
 
-  { .id = "JO34_CKANRES_CATALOG_DATA_GOV", .name = "catalog.data.gov — every dataset with its resource files (CKAN "
-      "package_search, id-sorted)",
-    .name_ja = "catalog.data.gov データセット・リソース全件（CKAN）",
-    .category = "government", .portal = "https://catalog.data.gov",
-    .record_type = "dataset-inventory",
-    .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"usa\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://catalog.data.gov/api/3/action/package_search?sort=id+asc&rows=100",
-    .array_path = "result.results",
-    .body_keys = "notes",
-    .date_keys = "metadata_modified",
-    .id_keys = "id",
-    .interval = 86400,
-    .link_keys = "url",
-    .page_max = 20,
-    .page_param = "start",
-    /* package_search with sort=id asc, not current_package_list_with_resources:
-     * that action has no sort parameter and orders by metadata_modified desc,
-     * so a dataset edited during the walk shifts every later page — measured
-     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
-     * the sink, which on an unstable order means the same number SKIPPED.
-     * The id sort is stable, and page_resume reads a catalogue larger than
-     * the ceiling over a cycle instead of its first 2,000 forever. */
-    .page_resume = 1,
-    .page_size = 100,
-    .timeout_ms = 90000,
-    .title_keys = "title,name",
-    .description = "UNPROBED. The CKAN Action API endpoint that returns whole "
-      "package dicts WITH their resources inline, so each record "
-      "carries the dataset plus the URL, format and size of every "
-      "downloadable file under it. package_search (already wired for "
-      "this host) answers a query with dataset summaries; this answers "
-      "\"what does this body publish, and where are the actual files\". "
-      "Host and CKAN base path are proven live by the existing "
-      "package_search row; the action path is fixed by the CKAN Action "
-      "API. Response is {success, result:[...]}; some CKAN builds "
-      "disable or deprecate this action, in which case the row is an "
-      "honest empty." },
 
   { .id = "JO34_CKANRES_CATALOG_DATA_METRO_TOKYO_LG_JP", .name = "catalog.data.metro.tokyo.lg.jp — every dataset with its resource "
       "files (CKAN current_package_list_with_resources)",
@@ -393,44 +355,6 @@ static const hp_source HP3B34_CKANBULK[] = {
       "disable or deprecate this action, in which case the row is an "
       "honest empty." },
 
-  { .id = "JO34_CKANRES_CATALOGUE_DATA_GOVT_NZ", .name = "catalogue.data.govt.nz — every dataset with its resource files "
-      "(CKAN current_package_list_with_resources)",
-    .name_ja = "catalogue.data.govt.nz データセット・リソース全件（CKAN）",
-    .category = "government", .portal = "https://catalogue.data.govt.nz",
-    .record_type = "dataset-inventory",
-    .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"new-zealand\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://catalogue.data.govt.nz/api/3/action/package_search?sort=id+asc&rows=100",
-    .array_path = "result.results",
-    .body_keys = "notes",
-    .date_keys = "metadata_modified",
-    .id_keys = "id",
-    .interval = 86400,
-    .link_keys = "url",
-    .page_max = 20,
-    .page_param = "start",
-    /* package_search with sort=id asc, not current_package_list_with_resources:
-     * that action has no sort parameter and orders by metadata_modified desc,
-     * so a dataset edited during the walk shifts every later page — measured
-     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
-     * the sink, which on an unstable order means the same number SKIPPED.
-     * The id sort is stable, and page_resume reads a catalogue larger than
-     * the ceiling over a cycle instead of its first 2,000 forever. */
-    .page_resume = 1,
-    .page_size = 100,
-    .timeout_ms = 90000,
-    .title_keys = "title,name",
-    .description = "UNPROBED. The CKAN Action API endpoint that returns whole "
-      "package dicts WITH their resources inline, so each record "
-      "carries the dataset plus the URL, format and size of every "
-      "downloadable file under it. package_search (already wired for "
-      "this host) answers a query with dataset summaries; this answers "
-      "\"what does this body publish, and where are the actual files\". "
-      "Host and CKAN base path are proven live by the existing "
-      "package_search row; the action path is fixed by the CKAN Action "
-      "API. Response is {success, result:[...]}; some CKAN builds "
-      "disable or deprecate this action, in which case the row is an "
-      "honest empty." },
 
   { .id = "JO34_CKANRES_CKAN_GOVDATA_DE", .name = "ckan.govdata.de — every dataset with its resource files (CKAN "
       "package_search, id-sorted)",
@@ -1134,44 +1058,6 @@ static const hp_source HP3B34_CKANBULK[] = {
       "disable or deprecate this action, in which case the row is an "
       "honest empty." },
 
-  { .id = "JO34_CKANRES_DATA_CITY_TENDO_YAMAGATA_JP", .name = "data.city.tendo.yamagata.jp — every dataset with its resource "
-      "files (CKAN current_package_list_with_resources)",
-    .name_ja = "data.city.tendo.yamagata.jp データセット・リソース全件（CKAN）",
-    .category = "government", .portal = "https://data.city.tendo.yamagata.jp",
-    .record_type = "dataset-inventory",
-    .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"japan\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.city.tendo.yamagata.jp/api/3/action/package_search?sort=id+asc&rows=100",
-    .array_path = "result.results",
-    .body_keys = "notes",
-    .date_keys = "metadata_modified",
-    .id_keys = "id",
-    .interval = 86400,
-    .link_keys = "url",
-    .page_max = 20,
-    .page_param = "start",
-    /* package_search with sort=id asc, not current_package_list_with_resources:
-     * that action has no sort parameter and orders by metadata_modified desc,
-     * so a dataset edited during the walk shifts every later page — measured
-     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
-     * the sink, which on an unstable order means the same number SKIPPED.
-     * The id sort is stable, and page_resume reads a catalogue larger than
-     * the ceiling over a cycle instead of its first 2,000 forever. */
-    .page_resume = 1,
-    .page_size = 100,
-    .timeout_ms = 90000,
-    .title_keys = "title,name",
-    .description = "UNPROBED. The CKAN Action API endpoint that returns whole "
-      "package dicts WITH their resources inline, so each record "
-      "carries the dataset plus the URL, format and size of every "
-      "downloadable file under it. package_search (already wired for "
-      "this host) answers a query with dataset summaries; this answers "
-      "\"what does this body publish, and where are the actual files\". "
-      "Host and CKAN base path are proven live by the existing "
-      "package_search row; the action path is fixed by the CKAN Action "
-      "API. Response is {success, result:[...]}; some CKAN builds "
-      "disable or deprecate this action, in which case the row is an "
-      "honest empty." },
 
   { .id = "JO34_CKANRES_DATA_CITY_YOKOHAMA_LG_JP", .name = "data.city.yokohama.lg.jp — every dataset with its resource files "
       "(CKAN current_package_list_with_resources)",
@@ -1290,44 +1176,6 @@ static const hp_source HP3B34_CKANBULK[] = {
       "disable or deprecate this action, in which case the row is an "
       "honest empty." },
 
-  { .id = "JO34_CKANRES_DATA_GO_TH", .name = "data.go.th — every dataset with its resource files (CKAN "
-      "package_search, id-sorted)",
-    .name_ja = "data.go.th データセット・リソース全件（CKAN）",
-    .category = "government", .portal = "https://data.go.th",
-    .record_type = "dataset-inventory",
-    .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"thailand\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.go.th/api/3/action/package_search?sort=id+asc&rows=100",
-    .array_path = "result.results",
-    .body_keys = "notes",
-    .date_keys = "metadata_modified",
-    .id_keys = "id",
-    .interval = 86400,
-    .link_keys = "url",
-    .page_max = 20,
-    .page_param = "start",
-    /* package_search with sort=id asc, not current_package_list_with_resources:
-     * that action has no sort parameter and orders by metadata_modified desc,
-     * so a dataset edited during the walk shifts every later page — measured
-     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
-     * the sink, which on an unstable order means the same number SKIPPED.
-     * The id sort is stable, and page_resume reads a catalogue larger than
-     * the ceiling over a cycle instead of its first 2,000 forever. */
-    .page_resume = 1,
-    .page_size = 100,
-    .timeout_ms = 90000,
-    .title_keys = "title,name",
-    .description = "UNPROBED. The CKAN Action API endpoint that returns whole "
-      "package dicts WITH their resources inline, so each record "
-      "carries the dataset plus the URL, format and size of every "
-      "downloadable file under it. package_search (already wired for "
-      "this host) answers a query with dataset summaries; this answers "
-      "\"what does this body publish, and where are the actual files\". "
-      "Host and CKAN base path are proven live by the existing "
-      "package_search row; the action path is fixed by the CKAN Action "
-      "API. Response is {success, result:[...]}; some CKAN builds "
-      "disable or deprecate this action, in which case the row is an "
-      "honest empty." },
 
   { .id = "JO34_CKANRES_DATA_GOV_IE", .name = "data.gov.ie — every dataset with its resource files (CKAN "
       "package_search, id-sorted)",
@@ -1524,44 +1372,6 @@ static const hp_source HP3B34_CKANBULK[] = {
       "disable or deprecate this action, in which case the row is an "
       "honest empty." },
 
-  { .id = "JO34_CKANRES_DATA_GOV_RO", .name = "data.gov.ro — every dataset with its resource files (CKAN "
-      "package_search, id-sorted)",
-    .name_ja = "data.gov.ro データセット・リソース全件（CKAN）",
-    .category = "government", .portal = "https://data.gov.ro",
-    .record_type = "dataset-inventory",
-    .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"romania\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.gov.ro/api/3/action/package_search?sort=id+asc&rows=100",
-    .array_path = "result.results",
-    .body_keys = "notes",
-    .date_keys = "metadata_modified",
-    .id_keys = "id",
-    .interval = 86400,
-    .link_keys = "url",
-    .page_max = 20,
-    .page_param = "start",
-    /* package_search with sort=id asc, not current_package_list_with_resources:
-     * that action has no sort parameter and orders by metadata_modified desc,
-     * so a dataset edited during the walk shifts every later page — measured
-     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
-     * the sink, which on an unstable order means the same number SKIPPED.
-     * The id sort is stable, and page_resume reads a catalogue larger than
-     * the ceiling over a cycle instead of its first 2,000 forever. */
-    .page_resume = 1,
-    .page_size = 100,
-    .timeout_ms = 90000,
-    .title_keys = "title,name",
-    .description = "UNPROBED. The CKAN Action API endpoint that returns whole "
-      "package dicts WITH their resources inline, so each record "
-      "carries the dataset plus the URL, format and size of every "
-      "downloadable file under it. package_search (already wired for "
-      "this host) answers a query with dataset summaries; this answers "
-      "\"what does this body publish, and where are the actual files\". "
-      "Host and CKAN base path are proven live by the existing "
-      "package_search row; the action path is fixed by the CKAN Action "
-      "API. Response is {success, result:[...]}; some CKAN builds "
-      "disable or deprecate this action, in which case the row is an "
-      "honest empty." },
 
   { .id = "JO34_CKANRES_DATA_GOV_UK", .name = "data.gov.uk — every dataset with its resource files (CKAN "
       "package_search, id-sorted)",
@@ -1641,44 +1451,6 @@ static const hp_source HP3B34_CKANBULK[] = {
       "disable or deprecate this action, in which case the row is an "
       "honest empty." },
 
-  { .id = "JO34_CKANRES_DATA_HOUSTONTX_GOV", .name = "data.houstontx.gov — every dataset with its resource files (CKAN "
-      "package_search, id-sorted)",
-    .name_ja = "data.houstontx.gov データセット・リソース全件（CKAN）",
-    .category = "government", .portal = "https://data.houstontx.gov",
-    .record_type = "dataset-inventory",
-    .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"usa\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.houstontx.gov/api/3/action/package_search?sort=id+asc&rows=100",
-    .array_path = "result.results",
-    .body_keys = "notes",
-    .date_keys = "metadata_modified",
-    .id_keys = "id",
-    .interval = 86400,
-    .link_keys = "url",
-    .page_max = 20,
-    .page_param = "start",
-    /* package_search with sort=id asc, not current_package_list_with_resources:
-     * that action has no sort parameter and orders by metadata_modified desc,
-     * so a dataset edited during the walk shifts every later page — measured
-     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
-     * the sink, which on an unstable order means the same number SKIPPED.
-     * The id sort is stable, and page_resume reads a catalogue larger than
-     * the ceiling over a cycle instead of its first 2,000 forever. */
-    .page_resume = 1,
-    .page_size = 100,
-    .timeout_ms = 90000,
-    .title_keys = "title,name",
-    .description = "UNPROBED. The CKAN Action API endpoint that returns whole "
-      "package dicts WITH their resources inline, so each record "
-      "carries the dataset plus the URL, format and size of every "
-      "downloadable file under it. package_search (already wired for "
-      "this host) answers a query with dataset summaries; this answers "
-      "\"what does this body publish, and where are the actual files\". "
-      "Host and CKAN base path are proven live by the existing "
-      "package_search row; the action path is fixed by the CKAN Action "
-      "API. Response is {success, result:[...]}; some CKAN builds "
-      "disable or deprecate this action, in which case the row is an "
-      "honest empty." },
 
   { .id = "JO34_CKANRES_DATA_KYIVCITY_GOV_UA", .name = "data.kyivcity.gov.ua — every dataset with its resource files "
       "(CKAN current_package_list_with_resources)",
@@ -1719,44 +1491,6 @@ static const hp_source HP3B34_CKANBULK[] = {
       "disable or deprecate this action, in which case the row is an "
       "honest empty." },
 
-  { .id = "JO34_CKANRES_DATA_MILWAUKEE_GOV", .name = "data.milwaukee.gov — every dataset with its resource files (CKAN "
-      "package_search, id-sorted)",
-    .name_ja = "data.milwaukee.gov データセット・リソース全件（CKAN）",
-    .category = "government", .portal = "https://data.milwaukee.gov",
-    .record_type = "dataset-inventory",
-    .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"usa\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.milwaukee.gov/api/3/action/package_search?sort=id+asc&rows=100",
-    .array_path = "result.results",
-    .body_keys = "notes",
-    .date_keys = "metadata_modified",
-    .id_keys = "id",
-    .interval = 86400,
-    .link_keys = "url",
-    .page_max = 20,
-    .page_param = "start",
-    /* package_search with sort=id asc, not current_package_list_with_resources:
-     * that action has no sort parameter and orders by metadata_modified desc,
-     * so a dataset edited during the walk shifts every later page — measured
-     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
-     * the sink, which on an unstable order means the same number SKIPPED.
-     * The id sort is stable, and page_resume reads a catalogue larger than
-     * the ceiling over a cycle instead of its first 2,000 forever. */
-    .page_resume = 1,
-    .page_size = 100,
-    .timeout_ms = 90000,
-    .title_keys = "title,name",
-    .description = "UNPROBED. The CKAN Action API endpoint that returns whole "
-      "package dicts WITH their resources inline, so each record "
-      "carries the dataset plus the URL, format and size of every "
-      "downloadable file under it. package_search (already wired for "
-      "this host) answers a query with dataset summaries; this answers "
-      "\"what does this body publish, and where are the actual files\". "
-      "Host and CKAN base path are proven live by the existing "
-      "package_search row; the action path is fixed by the CKAN Action "
-      "API. Response is {success, result:[...]}; some CKAN builds "
-      "disable or deprecate this action, in which case the row is an "
-      "honest empty." },
 
   { .id = "JO34_CKANRES_DATA_NT_GOV_AU", .name = "data.nt.gov.au — every dataset with its resource files (CKAN "
       "package_search, id-sorted)",
@@ -1797,44 +1531,6 @@ static const hp_source HP3B34_CKANBULK[] = {
       "disable or deprecate this action, in which case the row is an "
       "honest empty." },
 
-  { .id = "JO34_CKANRES_DATA_OK_GOV", .name = "data.ok.gov — every dataset with its resource files (CKAN "
-      "package_search, id-sorted)",
-    .name_ja = "data.ok.gov データセット・リソース全件（CKAN）",
-    .category = "government", .portal = "https://data.ok.gov",
-    .record_type = "dataset-inventory",
-    .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"usa\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.ok.gov/api/3/action/package_search?sort=id+asc&rows=100",
-    .array_path = "result.results",
-    .body_keys = "notes",
-    .date_keys = "metadata_modified",
-    .id_keys = "id",
-    .interval = 86400,
-    .link_keys = "url",
-    .page_max = 20,
-    .page_param = "start",
-    /* package_search with sort=id asc, not current_package_list_with_resources:
-     * that action has no sort parameter and orders by metadata_modified desc,
-     * so a dataset edited during the walk shifts every later page — measured
-     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
-     * the sink, which on an unstable order means the same number SKIPPED.
-     * The id sort is stable, and page_resume reads a catalogue larger than
-     * the ceiling over a cycle instead of its first 2,000 forever. */
-    .page_resume = 1,
-    .page_size = 100,
-    .timeout_ms = 90000,
-    .title_keys = "title,name",
-    .description = "UNPROBED. The CKAN Action API endpoint that returns whole "
-      "package dicts WITH their resources inline, so each record "
-      "carries the dataset plus the URL, format and size of every "
-      "downloadable file under it. package_search (already wired for "
-      "this host) answers a query with dataset summaries; this answers "
-      "\"what does this body publish, and where are the actual files\". "
-      "Host and CKAN base path are proven live by the existing "
-      "package_search row; the action path is fixed by the CKAN Action "
-      "API. Response is {success, result:[...]}; some CKAN builds "
-      "disable or deprecate this action, in which case the row is an "
-      "honest empty." },
 
   { .id = "JO34_CKANRES_DATA_OPENDEVELOPMENTCAMBODIA_NET", .name = "data.opendevelopmentcambodia.net — every dataset with its "
       "resource files (CKAN current_package_list_with_resources)",
@@ -1992,44 +1688,6 @@ static const hp_source HP3B34_CKANBULK[] = {
       "disable or deprecate this action, in which case the row is an "
       "honest empty." },
 
-  { .id = "JO34_CKANRES_DATA_SANANTONIO_GOV", .name = "data.sanantonio.gov — every dataset with its resource files "
-      "(CKAN current_package_list_with_resources)",
-    .name_ja = "data.sanantonio.gov データセット・リソース全件（CKAN）",
-    .category = "government", .portal = "https://data.sanantonio.gov",
-    .record_type = "dataset-inventory",
-    .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"usa\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.sanantonio.gov/api/3/action/package_search?sort=id+asc&rows=100",
-    .array_path = "result.results",
-    .body_keys = "notes",
-    .date_keys = "metadata_modified",
-    .id_keys = "id",
-    .interval = 86400,
-    .link_keys = "url",
-    .page_max = 20,
-    .page_param = "start",
-    /* package_search with sort=id asc, not current_package_list_with_resources:
-     * that action has no sort parameter and orders by metadata_modified desc,
-     * so a dataset edited during the walk shifts every later page — measured
-     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
-     * the sink, which on an unstable order means the same number SKIPPED.
-     * The id sort is stable, and page_resume reads a catalogue larger than
-     * the ceiling over a cycle instead of its first 2,000 forever. */
-    .page_resume = 1,
-    .page_size = 100,
-    .timeout_ms = 90000,
-    .title_keys = "title,name",
-    .description = "UNPROBED. The CKAN Action API endpoint that returns whole "
-      "package dicts WITH their resources inline, so each record "
-      "carries the dataset plus the URL, format and size of every "
-      "downloadable file under it. package_search (already wired for "
-      "this host) answers a query with dataset summaries; this answers "
-      "\"what does this body publish, and where are the actual files\". "
-      "Host and CKAN base path are proven live by the existing "
-      "package_search row; the action path is fixed by the CKAN Action "
-      "API. Response is {success, result:[...]}; some CKAN builds "
-      "disable or deprecate this action, in which case the row is an "
-      "honest empty." },
 
   { .id = "JO34_CKANRES_DATA_SANJOSECA_GOV", .name = "data.sanjoseca.gov — every dataset with its resource files (CKAN "
       "package_search, id-sorted)",
@@ -2148,44 +1806,6 @@ static const hp_source HP3B34_CKANBULK[] = {
       "disable or deprecate this action, in which case the row is an "
       "honest empty." },
 
-  { .id = "JO34_CKANRES_DATA_VIRGINIA_GOV", .name = "data.virginia.gov — every dataset with its resource files (CKAN "
-      "package_search, id-sorted)",
-    .name_ja = "data.virginia.gov データセット・リソース全件（CKAN）",
-    .category = "government", .portal = "https://data.virginia.gov",
-    .record_type = "dataset-inventory",
-    .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"usa\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.virginia.gov/api/3/action/package_search?sort=id+asc&rows=100",
-    .array_path = "result.results",
-    .body_keys = "notes",
-    .date_keys = "metadata_modified",
-    .id_keys = "id",
-    .interval = 86400,
-    .link_keys = "url",
-    .page_max = 20,
-    .page_param = "start",
-    /* package_search with sort=id asc, not current_package_list_with_resources:
-     * that action has no sort parameter and orders by metadata_modified desc,
-     * so a dataset edited during the walk shifts every later page — measured
-     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
-     * the sink, which on an unstable order means the same number SKIPPED.
-     * The id sort is stable, and page_resume reads a catalogue larger than
-     * the ceiling over a cycle instead of its first 2,000 forever. */
-    .page_resume = 1,
-    .page_size = 100,
-    .timeout_ms = 90000,
-    .title_keys = "title,name",
-    .description = "UNPROBED. The CKAN Action API endpoint that returns whole "
-      "package dicts WITH their resources inline, so each record "
-      "carries the dataset plus the URL, format and size of every "
-      "downloadable file under it. package_search (already wired for "
-      "this host) answers a query with dataset summaries; this answers "
-      "\"what does this body publish, and where are the actual files\". "
-      "Host and CKAN base path are proven live by the existing "
-      "package_search row; the action path is fixed by the CKAN Action "
-      "API. Response is {success, result:[...]}; some CKAN builds "
-      "disable or deprecate this action, in which case the row is an "
-      "honest empty." },
 
   { .id = "JO34_CKANRES_DATA_ZAGREB_HR", .name = "data.zagreb.hr — every dataset with its resource files (CKAN "
       "package_search, id-sorted)",
@@ -3084,44 +2704,6 @@ static const hp_source HP3B34_CKANBULK[] = {
       "disable or deprecate this action, in which case the row is an "
       "honest empty." },
 
-  { .id = "JO34_CKANRES_OPENDATA_CITY_NIIGATA_LG_JP", .name = "opendata.city.niigata.lg.jp — every dataset with its resource "
-      "files (CKAN current_package_list_with_resources)",
-    .name_ja = "opendata.city.niigata.lg.jp データセット・リソース全件（CKAN）",
-    .category = "government", .portal = "https://opendata.city.niigata.lg.jp",
-    .record_type = "dataset-inventory",
-    .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"japan\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.city.niigata.lg.jp/api/3/action/package_search?sort=id+asc&rows=100",
-    .array_path = "result.results",
-    .body_keys = "notes",
-    .date_keys = "metadata_modified",
-    .id_keys = "id",
-    .interval = 86400,
-    .link_keys = "url",
-    .page_max = 20,
-    .page_param = "start",
-    /* package_search with sort=id asc, not current_package_list_with_resources:
-     * that action has no sort parameter and orders by metadata_modified desc,
-     * so a dataset edited during the walk shifts every later page — measured
-     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
-     * the sink, which on an unstable order means the same number SKIPPED.
-     * The id sort is stable, and page_resume reads a catalogue larger than
-     * the ceiling over a cycle instead of its first 2,000 forever. */
-    .page_resume = 1,
-    .page_size = 100,
-    .timeout_ms = 90000,
-    .title_keys = "title,name",
-    .description = "UNPROBED. The CKAN Action API endpoint that returns whole "
-      "package dicts WITH their resources inline, so each record "
-      "carries the dataset plus the URL, format and size of every "
-      "downloadable file under it. package_search (already wired for "
-      "this host) answers a query with dataset summaries; this answers "
-      "\"what does this body publish, and where are the actual files\". "
-      "Host and CKAN base path are proven live by the existing "
-      "package_search row; the action path is fixed by the CKAN Action "
-      "API. Response is {success, result:[...]}; some CKAN builds "
-      "disable or deprecate this action, in which case the row is an "
-      "honest empty." },
 
   { .id = "JO34_CKANRES_OPENDATA_CITY_SAGAMIHARA_KANAGAWA_JP", .name = "opendata.city.sagamihara.kanagawa.jp — every dataset with its "
       "resource files (CKAN current_package_list_with_resources)",
@@ -3201,44 +2783,6 @@ static const hp_source HP3B34_CKANBULK[] = {
       "disable or deprecate this action, in which case the row is an "
       "honest empty." },
 
-  { .id = "JO34_CKANRES_OPENDATA_HAWAII_GOV", .name = "opendata.hawaii.gov — every dataset with its resource files "
-      "(CKAN current_package_list_with_resources)",
-    .name_ja = "opendata.hawaii.gov データセット・リソース全件（CKAN）",
-    .category = "government", .portal = "https://opendata.hawaii.gov",
-    .record_type = "dataset-inventory",
-    .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"usa\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.hawaii.gov/api/3/action/package_search?sort=id+asc&rows=100",
-    .array_path = "result.results",
-    .body_keys = "notes",
-    .date_keys = "metadata_modified",
-    .id_keys = "id",
-    .interval = 86400,
-    .link_keys = "url",
-    .page_max = 20,
-    .page_param = "start",
-    /* package_search with sort=id asc, not current_package_list_with_resources:
-     * that action has no sort parameter and orders by metadata_modified desc,
-     * so a dataset edited during the walk shifts every later page — measured
-     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
-     * the sink, which on an unstable order means the same number SKIPPED.
-     * The id sort is stable, and page_resume reads a catalogue larger than
-     * the ceiling over a cycle instead of its first 2,000 forever. */
-    .page_resume = 1,
-    .page_size = 100,
-    .timeout_ms = 90000,
-    .title_keys = "title,name",
-    .description = "UNPROBED. The CKAN Action API endpoint that returns whole "
-      "package dicts WITH their resources inline, so each record "
-      "carries the dataset plus the URL, format and size of every "
-      "downloadable file under it. package_search (already wired for "
-      "this host) answers a query with dataset summaries; this answers "
-      "\"what does this body publish, and where are the actual files\". "
-      "Host and CKAN base path are proven live by the existing "
-      "package_search row; the action path is fixed by the CKAN Action "
-      "API. Response is {success, result:[...]}; some CKAN builds "
-      "disable or deprecate this action, in which case the row is an "
-      "honest empty." },
 
   { .id = "JO34_CKANRES_OPENDATA_MUENCHEN_DE", .name = "opendata.muenchen.de — every dataset with its resource files "
       "(CKAN current_package_list_with_resources)",
@@ -3552,44 +3096,6 @@ static const hp_source HP3B34_CKANBULK[] = {
       "disable or deprecate this action, in which case the row is an "
       "honest empty." },
 
-  { .id = "JO34_CKANRES_WWW_DATOSABIERTOS_GOB_PE", .name = "www.datosabiertos.gob.pe — every dataset with its resource files "
-      "(CKAN current_package_list_with_resources)",
-    .name_ja = "www.datosabiertos.gob.pe データセット・リソース全件（CKAN）",
-    .category = "government", .portal = "https://www.datosabiertos.gob.pe",
-    .record_type = "dataset-inventory",
-    .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"peru\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.datosabiertos.gob.pe/api/3/action/package_search?sort=id+asc&rows=100",
-    .array_path = "result.results",
-    .body_keys = "notes",
-    .date_keys = "metadata_modified",
-    .id_keys = "id",
-    .interval = 86400,
-    .link_keys = "url",
-    .page_max = 20,
-    .page_param = "start",
-    /* package_search with sort=id asc, not current_package_list_with_resources:
-     * that action has no sort parameter and orders by metadata_modified desc,
-     * so a dataset edited during the walk shifts every later page — measured
-     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
-     * the sink, which on an unstable order means the same number SKIPPED.
-     * The id sort is stable, and page_resume reads a catalogue larger than
-     * the ceiling over a cycle instead of its first 2,000 forever. */
-    .page_resume = 1,
-    .page_size = 100,
-    .timeout_ms = 90000,
-    .title_keys = "title,name",
-    .description = "UNPROBED. The CKAN Action API endpoint that returns whole "
-      "package dicts WITH their resources inline, so each record "
-      "carries the dataset plus the URL, format and size of every "
-      "downloadable file under it. package_search (already wired for "
-      "this host) answers a query with dataset summaries; this answers "
-      "\"what does this body publish, and where are the actual files\". "
-      "Host and CKAN base path are proven live by the existing "
-      "package_search row; the action path is fixed by the CKAN Action "
-      "API. Response is {success, result:[...]}; some CKAN builds "
-      "disable or deprecate this action, in which case the row is an "
-      "honest empty." },
 
   { .id = "JO34_CKANRES_WWW_OFFENESDATENPORTAL_DE", .name = "www.offenesdatenportal.de — every dataset with its resource "
       "files (CKAN current_package_list_with_resources)",
