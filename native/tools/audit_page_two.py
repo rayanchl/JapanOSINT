@@ -297,6 +297,47 @@ def count_records(blob):
     return max(0, s.count("\n"))
 
 
+def self_test():
+    """The counter's own fixtures, run before any sweep trusts it.
+
+    CLAUDE.md's reason, from the exhaustiveness scanner: a check whose own case
+    it has stopped seeing reports zero findings and reads like good news. Both
+    of this counter's defects — a polygon ring counted as records, and a
+    guessed count for a body that would not parse — produced numbers that
+    looked like measurements, so the fixtures pin the shapes rather than the
+    code."""
+    cases = [
+        ("bare root array", b'[{"a":1},{"a":2},{"a":3}]', 3),
+        ("CKAN result.results beats a search",
+         json.dumps({"result": {"count": 48,
+                                "results": [{"i": i} for i in range(48)]}}
+                    ).encode(), 48),
+        ("ArcGIS: 7 features, not a 900-point ring",
+         json.dumps({"features": [{"attributes": {"a": 1},
+                                   "geometry": {"rings": [[[0, 0]] * 900]}}
+                                  for _ in range(7)]}).encode(), 7),
+        ("no envelope: longest array of OBJECTS, not of numbers",
+         json.dumps({"weird": {"nums": list(range(5000)),
+                               "recs": [{"x": 1}, {"x": 2}]}}).encode(), 2),
+        ("a truncated body DECLINES rather than guessing",
+         b'{"result":{"results":[{"a":1},{"a":2},{"a":3}', -1),
+        ("empty body", b"", 0),
+        ("an empty result set is zero, not one", json.dumps({"results": []}).encode(), 0),
+        ("csv falls back to lines", b"a,b\n1,2\n3,4\n", 2),
+    ]
+    bad = 0
+    for label, blob, want in cases:
+        got = count_records(blob)
+        if got != want:
+            bad += 1
+            print("SELF-TEST FAIL  %-50s got=%s want=%s" % (label, got, want))
+    if bad:
+        print("\n%d counter fixture(s) failed — the sweep's verdicts would not "
+              "mean anything, so it is not run." % bad)
+        return False
+    return True
+
+
 def message_of(blob):
     """The upstream's own explanation, if it gave one."""
     s = blob.decode("utf-8", "replace")
@@ -519,7 +560,18 @@ def main():
     ap.add_argument("--out")
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--ids-file")
+    ap.add_argument("--self-test", action="store_true",
+                    help="run the record counter's fixtures and exit")
     a = ap.parse_args()
+
+    # Fixtures FIRST, always — not only under the flag. A sweep whose counter
+    # has stopped seeing its own case produces verdicts that read like
+    # measurements, which is how both of this counter's defects survived.
+    if not self_test():
+        return 2
+    if a.self_test:
+        print("counter fixtures: all pass")
+        return 0
 
     rows = paged_rows(a.tree)
     if a.ids_file:
