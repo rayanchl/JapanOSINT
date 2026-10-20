@@ -877,6 +877,7 @@ private struct SourceDetail: View {
                     kv("Collector", row.collectorLabel.map { "\($0) (\(row.collector ?? "?"))" } ?? row.collector ?? "not reported by this server")
                     kv("Engine",    row.engine ?? "not reported by this server")
                     kv("Kind",      row.kind ?? "not reported by this server")
+                    kv("Cadence",   row.policyInterval.map { "every \(Int($0)) s (policy)" } ?? (row.updateInterval.map { "every \(Int($0)) s (declared)" } ?? "on demand"))
                     kv("Layer",     row.layer ?? "none")
                     kv("Category",  row.category ?? "—")
                     kv("Type",      row.type ?? "—")

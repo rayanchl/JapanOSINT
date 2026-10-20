@@ -745,6 +745,39 @@ underneath them that older notes in this file predate:
 
 Plan, audit and as-built notes: `docs/source-pages-revamp/`.
 
+## Cadence policy (2026-10-20)
+
+Every source still declares its own `update_interval_sec` — that is the
+measured value it was authored with — but ONE policy sits above all of them:
+`core/cadence.{c,h}`. It is the operator's, system-wide, and lives in the
+database (`app_settings`, keys `sched.global_interval_sec`,
+`sched.min_interval_sec`, `sched.max_interval_sec`), so it survives restarts
+and is edited from the Sources page (`GET`/`PUT /api/sources/cadence`, PUT
+gated like `/api/sources/:id/schedule`: platform operator). Three shapes:
+
+* **global** — every scheduled row runs at one interval;
+* **clamped** — a floor and/or a ceiling the declared values are held inside;
+* **declared** — nothing set, each row as authored (the default).
+
+`JO_SCHED_INTERVAL_SEC` / `JO_SCHED_MIN_INTERVAL_SEC` /
+`JO_SCHED_MAX_INTERVAL_SEC` bootstrap an EMPTY database only; a stored policy
+always wins. The scheduler reads `cadence_apply(declared)` at every site that
+used the declared value (due time, boot ramp, backoff base, cancellation
+window, search-only and quarantine holds), and re-plans on a change without a
+restart: a row whose next due time is further away than its new interval is
+pulled in to now + interval. Entity pivots (interval 0) are never touched.
+
+What a choice costs is in the response, measured over the registry, not
+guessed: `estimate.runs_per_day_declared` against
+`estimate.runs_per_day_effective`. Measured 2026-10-20 on 19,954 scheduled
+rows: 240,318 runs/day as declared; a global 1 h would be 479,000, 6 h 80,000,
+daily 20,000. The 25 rows under 5 min (webcams, grid telemetry, Tor exits)
+alone make 42,000 of today's runs, which is what a global cadence trades away.
+Every source's pages show `declaredInterval`, `policyInterval` and `policy`
+(`/api/sources/:id/detail` → `sched`, `/api/status` rows → `policyInterval`).
+`tests/unit/test_cadence.c` pins the rules, the persistence and the refusals.
+
+
 ## Where things live
 
 ```
@@ -1429,7 +1462,7 @@ never put two models' vectors in one index — image vectors have their own.
 | index | holds | read by |
 | --- | --- | --- |
 | `intel_vec_v2` | items; `tenant_id` partition, `source_id`/`ts`/`record_type` filter INSIDE the search (the old `intel_vec` is migrated by copy, not re-embedded) | `/api/intel/semantic` (+filters), `sort=hybrid`, `/items/:uid/similar`, `/cases/:id/related`, Nearby `q`, `/timeline?q=`, the corpus lookup, prompt record ranking, stories/novelty, semantic alerts |
-| `service_vec` | every registered source's card (kind pivot/scheduled/pod, aliases from `core/service_aliases.c`), incremental | phase-1 and per-round routing (pivots only), `/api/sources/search`, `service_vec_route_sources`, canonical category votes, layer review, `batch_exclusions.py --semantic` |
+| `service_vec` | every registered source's card (kind pivot/scheduled/pod, aliases from `core/service_aliases.c`), incremental | phase-1 and per-round routing (pivots only), `/api/sources/semantic`, `service_vec_route_sources`, canonical category votes, layer review, `batch_exclusions.py --semantic` |
 | `entity_vec` | entity name + romaji, partitioned by type | merge candidates for the LLM judge (nothing auto-merges), `/api/entities/search?mode=hybrid` |
 | `fewshot_vec`, `anomaly_vec` | the analysis examples (`grammars/fewshot_analysis.jsonl`), past anomalies | per-query few-shot selection, triage memory |
 
