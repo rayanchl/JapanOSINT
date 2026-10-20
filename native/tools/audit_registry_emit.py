@@ -58,6 +58,7 @@ before its run returned, UNREADABLE_DB means the verdict rests on the process's
 own word, and an id the binary does not know was never run at all. A sweep made
 entirely of those used to exit 0.
 """
+import atexit
 import argparse
 import io
 import os
@@ -439,11 +440,35 @@ def main():
     ap.add_argument("--resume", action="store_true",
                     help="skip ids already present in --out")
     ap.add_argument("--quiet", action="store_true")
+    ap.add_argument("--no-pin", action="store_true",
+                    help="run the binary in place instead of a pinned copy "
+                         "(only to measure the binary as it changes)")
     a = ap.parse_args()
 
     a.bin = os.path.abspath(a.bin)
     if not os.access(a.bin, os.X_OK):
         raise SystemExit("not executable: %s" % a.bin)
+    # PIN THE BINARY. CLAUDE.md says "never rebuild the binary while an audit
+    # runs", and that is a discipline nobody can hold for the two hours a 290-
+    # row sweep takes: a `make` in another shell replaces this file underneath
+    # the sweep and every remaining row comes back shell rc=126, which the
+    # tool reports as NO_RUN_LINE — "the process died before the run returned".
+    # Measured 2026-10-20: 229 of 290 batch-49 rows read that way, from a
+    # rebuild made in the middle for an unrelated row fix. Those verdicts look
+    # exactly like a batch of broken sources.
+    #
+    # So copy it once, run against the copy, and the footgun is gone rather
+    # than remembered.
+    if not a.no_pin:
+        _pin = os.path.join(tempfile.gettempdir(),
+                            "jo-audit-bin-%d" % os.getpid())
+        shutil.copy2(a.bin, _pin)
+        os.chmod(_pin, 0o755)
+        atexit.register(lambda: os.path.exists(_pin) and os.unlink(_pin))
+        if not a.quiet:
+            print("pinned binary: %s (a rebuild cannot disturb this run)"
+                  % _pin, flush=True)
+        a.bin = _pin
     a.file_limit_kb = a.file_limit * 1024      # `ulimit -f` counts 1K blocks
 
     own_tmp = None

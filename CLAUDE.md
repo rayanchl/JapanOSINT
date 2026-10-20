@@ -128,7 +128,15 @@ The lessons from batches 43–48 that a new batch must not relearn:
   readings go in the verified TSV. Re-run each FETCH_FAILED once; a row that
   fails twice leaves — and a retry pass a day later recovers a few: 63 of the
   2,724 rows batches 44–46 dropped were alive on 2026-10-19 and are back in
-  their beats. Never rebuild the binary while an audit runs.
+  their beats. **"Never rebuild the binary while an audit runs" is now
+  ENFORCED rather than remembered**: `audit_registry_emit.py` copies the binary
+  at startup and runs the copy (`--no-pin` opts out). It was a discipline
+  nobody can hold for the two hours a 290-row sweep takes — a `make` in another
+  shell replaces the file underneath it and every remaining row comes back
+  shell `rc=126`, reported as `NO_RUN_LINE`, "the process died before the run
+  returned". Measured 2026-10-20: **229 of 290 batch-49 rows read that way**
+  from one unrelated rebuild made in the middle, and the output looks exactly
+  like a batch of broken sources.
 * **A URL changed after validation is unvalidated** (an unescaped `&amp;`
   made Joomla serve Atom where rows declared RSS), **a well-formed feed with
   zero items is `EMPTY_RESULTSET`**, **a substring count of `<item` counts the
