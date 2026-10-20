@@ -86,7 +86,10 @@ def cycling_ids(tree):
 
     The C and not a manifest, for the reason the batch-tooling section of
     CLAUDE.md gives: after a beat ships the C is the maintained copy and 48 of
-    79 beats already differ from what their manifest generates."""
+    79 beats already differ from what their manifest generates.
+
+    Returns (id, host) pairs: the HOST is what run_one serialises on, so a
+    sweep never puts two rows of the same upstream in flight at once."""
     out = []
     for dirpath, _dirs, files in os.walk(tree):
         for fn in files:
@@ -100,8 +103,10 @@ def cycling_ids(tree):
             for m in ROW.finditer(t):
                 nxt = t.find("{ .id =", m.end())
                 body = t[m.start():nxt if nxt > 0 else len(t)]
-                if re.search(r"\.page_resume\s*=\s*1", body):
-                    out.append(m.group(1))
+                if not re.search(r"\.page_resume\s*=\s*1", body):
+                    continue
+                mu = re.search(r'\.url\s*=\s*"https?://([A-Za-z0-9._-]+)', body)
+                out.append((m.group(1), mu.group(1).lower() if mu else ""))
     return out
 
 
@@ -184,11 +189,37 @@ def classify(sid, blob, rc, rows, note, fail, token, secs, timed_out):
 
 
 def run_one(a, tmpl, sid):
-    slot = a.slots.get()
-    try:
-        return _run_in_slot(a, tmpl, sid, slot)
-    finally:
-        a.slots.put(slot)
+    """One row at a time per HOST, whatever --jobs says.
+
+    THIS TOOL MANUFACTURED ITS OWN FINDINGS without it. The first full sweep
+    (2026-10-19, 530 rows, 12 jobs) returned 12 STUCK, and only ONE of them was
+    a property of its endpoint. Five `au-asic` rows share data.gov.au and all
+    five came back 403; re-tested by hand afterwards that host served 8 rapid
+    serial requests and then 12 CONCURRENT ones, all 200. Two FAA rows share
+    services6.arcgis.com and failed at pages 18 and 20 while a separate 6-job
+    emit audit was hitting the same host. `us-sf-311-open311-requests` is
+    already paced at 1,200 ms in core/hostgate.c and still 429'd at page 20.
+
+    A verdict that changes with --jobs is not a measurement — the same
+    reasoning that put the scratch-database SLOT POOL in
+    tools/audit_page_ceiling.py, arrived at again one layer up. hostgate paces
+    requests inside ONE process; it cannot pace twelve processes that each
+    think they are alone, and a cycling row makes ~20 requests to one host, so
+    two rows of the same host overlap for their whole run.
+
+    Note what this cannot create: load makes a page FAIL, so it can only
+    manufacture a false STUCK or FETCH_FAILED. It cannot manufacture a false
+    CYCLING or COMPLETE, because those mean a position was or was not stored
+    after a walk that was served. So an old sweep's healthy verdicts stand;
+    only its findings need re-reading."""
+    host = a.host_of.get(sid) or sid
+    lock = a.hostlocks.setdefault(host, threading.Lock())
+    with lock:
+        slot = a.slots.get()
+        try:
+            return _run_in_slot(a, tmpl, sid, slot)
+        finally:
+            a.slots.put(slot)
 
 
 def _run_in_slot(a, tmpl, sid, slot):
@@ -237,11 +268,19 @@ def main():
                     help="collector tree to read page_resume rows out of")
     a = ap.parse_args()
 
+    # The host map comes from the C either way, so an --ids-file sweep is
+    # paced per host exactly as a full one is. A row whose host cannot be read
+    # (a runtime-composed URL) serialises on its own id, which is the safe
+    # direction: it paces more than needed, never less.
+    pairs = cycling_ids(a.tree)
+    a.host_of = {sid: host for sid, host in pairs if host}
+    a.hostlocks = {}
+
     if a.ids_file:
         ids = [x.strip() for x in open(a.ids_file) if x.strip()
                and not x.startswith("#")]
     else:
-        ids = cycling_ids(a.tree)
+        ids = [sid for sid, _h in pairs]
     if not ids:
         raise SystemExit("no cycling rows to sweep")
     sys.stderr.write("sweeping %d cycling rows, %d jobs\n" % (len(ids), a.jobs))
