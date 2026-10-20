@@ -794,6 +794,15 @@ static const hp_source T[] = {
   { .id = "T_XML_STR", .name = "xml text-only records", .url = "https://x.test/str.xml",
     .mode = HP_XML, .array_path = "string", .interval = 3600,
     .record_type = "t-xmlstr", .free_tier = 1, .description = "d" },
+  /* An XML row that declares NO paging, against an upstream that states its
+   * own total in the envelope wrapping the records (test 42). Japan's KKJ
+   * procurement API is the live case: `<SearchHits>50530</SearchHits>` beside
+   * 1,000 results, and no offset parameter of any name honoured. */
+  { .id = "T_XML_TOTAL", .name = "xml declared total, one request",
+    .url = "https://x.test/kkj?Count=2",
+    .mode = HP_XML, .array_path = "SearchResult", .interval = 86400,
+    .title_keys = "ProjectName", .id_keys = "Key",
+    .record_type = "t-xmltotal", .free_tier = 1, .description = "d" },
 
   /* ── engine fixes of 2026-10-02 (tests 27-33) ── */
   /* A page-numbered page_walk row whose URL states a page size and NO page.
@@ -3681,6 +3690,87 @@ int main(void) {
        "41g: hp_describe_json reports the window cycle");
     free(dw);
   }
+
+  /* 41h. A WINDOW THAT WAS TOO WIDE must not report itself as read in full.
+   *      The window notice's reason said "read its window in full" from one
+   *      condition only — that the row was behind — so an under-sized window
+   *      whose overflow the upstream counted would have been reported as a
+   *      tidy deferral. The difference matters because a DEFERRED record comes
+   *      back on a later run and an OVERFLOWED one never does, and this is
+   *      what lets a window size ship on a measured estimate: set too wide, it
+   *      says so in the data instead of losing records quietly. */
+  fx_reset();
+  fx_add("/wz?from=", 200,
+         "{\"total\":1200,\"items\":[{\"name\":\"a\",\"id\":\"1\"},"
+         "{\"name\":\"b\",\"id\":\"2\"}]}");
+  rc = run_source_resume("T_WINDOW", NULL, NULL);
+  { const cap *nt = NULL;
+    ok(rc == 0 && cap_count("collector-truncation-notice", &nt) == 1 && nt &&
+       strstr(nt->props, "\"records_available\":1200") != NULL &&
+       strstr(nt->props, "the window is too wide") != NULL &&
+       strstr(nt->props, "read its window in full") == NULL &&
+       strstr(nt->props, "NARROW window_days") != NULL,
+       "41h: a window whose own count exceeds one read says it is too wide, "
+       "not that it completed");
+    /* Still a cycle: the next window is the one after this, because stalling
+     * on an over-wide window would lose the rest of the collection too. */
+    ok(g_res_set && strcmp(g_res_out, "w=2020-01-08") == 0,
+       "41h-ii: and the cycle still advances past it"); }
+
+  /* 42. AN XML ROW'S DECLARED TOTAL. hp_run_json has read one since the
+   *     truncation notice needed a remainder to state; the XML path never did,
+   *     so no XML row in the tree could disclose one. And the trigger itself
+   *     required page_walk, so a row making ONE request against an upstream
+   *     that says it holds 50x more filed nothing at all — the quiet half of
+   *     the KKJ defect, which would have survived removing its dead paging. */
+  fx_reset();
+  fx_add("/kkj?Count=2", 200,
+         "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n<Results>\n<Version>1.0</Version>\n"
+         "<SearchResults>\n<SearchHits>50530</SearchHits>\n"
+         "<SearchResult><ResultId>1</ResultId><Key>k1</Key>"
+         "<ProjectName>one</ProjectName></SearchResult>\n"
+         "<SearchResult><ResultId>2</ResultId><Key>k2</Key>"
+         "<ProjectName>two</ProjectName></SearchResult>\n"
+         "</SearchResults>\n</Results>\n");
+  rc = run_source("T_XML_TOTAL", NULL);
+  { const cap *nt = NULL;
+    /* 50530, not 2: the upstream's own count is the honest size of what was
+     * not used, and the records we counted are only a floor on it. */
+    ok(rc == 0 && cap_count("collector-truncation-notice", &nt) == 1 && nt &&
+       strstr(nt->props, "\"records_used\":2") != NULL &&
+       strstr(nt->props, "\"records_available\":50530") != NULL &&
+       strstr(nt->props, "\"records_available_basis\":\"upstream declared this "
+                         "total\"") != NULL,
+       "42: an XML envelope's own total is read, and a one-request row "
+       "discloses the remainder");
+    /* The remedy must not name a knob that cannot move. There is no ceiling to
+     * raise on a row that never walked, and KKJ is the proof that adding a
+     * page parameter is not automatically an option either. */
+    ok(nt && strstr(nt->props, "makes ONE request") != NULL &&
+       strstr(nt->props, "declares no paging") != NULL &&
+       strstr(nt->props, "page_max") == NULL,
+       "42b: and its remedy says to slice the query, not to raise a ceiling");
+  }
+
+  /* 42c. THE SAME NAME INSIDE A RECORD IS NOT THE COLLECTION'S SIZE. Only the
+   *      text before the first record is searched, and `<SearchResult` must not
+   *      match the `<SearchResults>` wrapper on the way — that prefix is how
+   *      the first attempt at this read nothing at all. Here the wrapper
+   *      carries no count and a record carries a `<TotalCount>`: reading it
+   *      would make the disclosure itself a fabrication. */
+  fx_reset();
+  fx_add("/kkj?Count=2", 200,
+         "<Results>\n<SearchResults>\n"
+         "<SearchResult><Key>k1</Key><ProjectName>one</ProjectName>"
+         "<TotalCount>99999</TotalCount></SearchResult>\n"
+         "<SearchResult><Key>k2</Key><ProjectName>two</ProjectName>"
+         "<TotalCount>99999</TotalCount></SearchResult>\n"
+         "</SearchResults>\n</Results>\n");
+  rc = run_source("T_XML_TOTAL", NULL);
+  ok(rc == 0 && cap_count("collector-truncation-notice", NULL) == 0 &&
+     g_cap_ids_has("k1") && g_cap_ids_has("k2"),
+     "42c: a count-shaped field inside a record is not read as the "
+     "collection's total");
 
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;

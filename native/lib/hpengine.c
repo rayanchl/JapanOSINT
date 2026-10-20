@@ -15,6 +15,7 @@
 #include "_credential_notice.inc"  /* jo_needs_credential — the key_env gate below */
 #include "htmlparse.h"   /* the one anchor scanner + dedupe set */
 #include "datetok.h"     /* {date…} tokens, shared with the VJSON fleet */
+#include "jocore.h"      /* jo_memmem: memmem() is not declared without _GNU_SOURCE */
 #include "../core/httpclient.h"
 #include "../third_party/cJSON.h"
 #include <ctype.h>
@@ -2676,6 +2677,53 @@ static int hp_xml_record_tag(const char *body, char *out, size_t cap) {
   return 1;
 }
 
+/* The upstream's own count of what exists, read out of an XML ENVELOPE.
+ *
+ * hp_run_json has read a declared total since the truncation notice needed one
+ * (jsonlist_declared_total), and the XML path never did — so NO XML row in the
+ * tree could ever state a real remainder. Japan's KKJ procurement API is the
+ * case that found it: it answers `<SearchHits>50530</SearchHits>` beside 100
+ * results, which is the upstream saying exactly how much it is holding back.
+ *
+ * Only the text BEFORE the first record is searched. That is the guard that
+ * matters: a name like `TotalCount` could occur inside a record as a field of
+ * its own, and reading one record's field as the collection's size would make
+ * the disclosure itself a fabrication. */
+static long hp_xml_declared_total(const char *body, const char *rec_open) {
+  static const char *EL[] = {
+    "SearchHits", "TotalCount", "TotalResults", "TotalHits", "SearchCount",
+    "RecordCount", "ResultCount", "numberMatched", "totalResults",
+    "totalCount", "numFound", NULL };
+  /* The first RECORD element, found the way the record loop below finds it: a
+   * tag name is only that name when the next character ends it. KKJ wraps its
+   * <SearchResult> records in a <SearchResults> envelope and puts the count
+   * inside that envelope, so a plain strstr for "<SearchResult" stops at the
+   * wrapper and the whole searchable span is the four lines before it. */
+  const char *first = NULL;
+  if (rec_open && *rec_open) {
+    size_t rl = strlen(rec_open);
+    for (const char *p = strstr(body, rec_open); p; p = strstr(p + rl, rec_open)) {
+      char c = p[rl];
+      if (c == '>' || c == '/' || isspace((unsigned char)c)) { first = p; break; }
+    }
+  }
+  size_t limit = first ? (size_t)(first - body) : strlen(body);
+  for (int i = 0; EL[i]; i++) {
+    char open[64];
+    int n = snprintf(open, sizeof open, "<%s>", EL[i]);
+    if (n <= 0 || (size_t)n >= sizeof open) continue;
+    const char *p = jo_memmem(body, limit, open, (size_t)n);
+    if (!p) continue;
+    p += n;
+    char *end = NULL;
+    long v = strtol(p, &end, 10);
+    /* The value must be the WHOLE element text: `<TotalCount>12 of 40<` is not
+     * a count, and neither is an empty element. */
+    if (end && end != p && *end == '<' && v >= 0) return v;
+  }
+  return -1;
+}
+
 static int hp_run_xml(hp_run_state *st, const char *body) {
   const hp_source *s = st->s;
   char tag[96];
@@ -2721,6 +2769,9 @@ static int hp_run_xml(hp_run_state *st, const char *body) {
   }
   char open[100], close[100];
   int ol = snprintf(open, sizeof open, "<%s", tag);
+  /* Read once, on the first page, exactly as hp_run_json does. */
+  if (st->declared_total < 0)
+    st->declared_total = hp_xml_declared_total(body, open);
   int cl = snprintf(close, sizeof close, "</%s>", tag);
   int max = hp_record_cap(s);
   const char *p = body;
@@ -4860,7 +4911,30 @@ date_step_back:
    * pointed back at itself, and an upstream that counted more than it gave. */
   /* Against what was FETCHED (`available`), not what survived filter_query or
    * the sink: a filtered-out record is one the upstream did hand over. */
-  int pw_more = page_walk && st.declared_total > (long)st.available;
+  /* THE UPSTREAM'S OWN TOTAL EXCEEDING WHAT WE FETCHED, whatever paging the
+   * row declares — including NONE. This used to be `page_walk && …`, so a row
+   * that makes ONE request and is told by the upstream that it holds far more
+   * disclosed nothing at all. CLAUDE.md already names this as the
+   * authoritative signal ("records_available with basis 'upstream declared
+   * this total' exceeding records_used"); the condition just did not match it.
+   *
+   * Found on Japan's KKJ procurement API, which honours `LG_Code` and `Count`
+   * (capped at 1,000) and IGNORES every offset parameter tried — so 48
+   * prefectural rows declared `page_param = "Start"`, walked 20 pages
+   * re-emitting the same records, and stored 100 while `<SearchHits>` in the
+   * same body said 50,530 for Hokkaido and 93,053 for Tokyo. With the dead
+   * paging removed each row makes one request for 1,000, and without this
+   * change the remaining shortfall would have been silent — trading a
+   * re-emitting walk for a quiet one. */
+  int pw_more = st.declared_total > (long)st.available;
+  /* Whether this row has ANY way to ask for a second page. The remedy below
+   * used to end at "raise max_items/page_max", which is the right advice for a
+   * walk that stopped at a ceiling and useless for a row that never walked:
+   * there is no ceiling to raise, and KKJ's `Start` is proof that adding a
+   * page parameter is not automatically an option either. Naming a knob that
+   * cannot move is the kind of tidy falsehood these notices exist to avoid. */
+  int can_page = (s->page_param && *s->page_param) ||
+                 (s->next_path && *s->next_path) || s->page_walk || path_paged;
   /* The upstream's own count, when it published one, is the honest size of
    * what was not used; the records we counted are only a floor on it. */
   long avail = st.declared_total > (long)real_available ? st.declared_total
@@ -4950,7 +5024,20 @@ date_step_back:
       hp_cut_reason(failed_status, failed_unreadable, cutwhy, sizeof cutwhy);
     }
     cJSON_AddStringToObject(p, "reason",
-      win_behind && !st.truncated && !failed_midwalk && !st.malformed
+      /* A WINDOW THAT WAS ITSELF TOO WIDE. The branch below says the window was
+       * read IN FULL, and it must not say that when the upstream's count for
+       * this very window exceeds what it handed over — the window is then
+       * under-sized and its overflow is lost, not merely deferred. A deferred
+       * record comes back on a later run; an overflowed one never does, and a
+       * reason that conflates them is the tidy falsehood these notices exist
+       * to prevent. This is also what makes a window size shippable without
+       * measuring every window of every row: a window set too wide SAYS so. */
+      window_on && pw_more && !st.truncated && !failed_midwalk && !st.malformed
+        ? "this row reads its collection one date window at a time, and the "
+          "upstream says this window alone holds more than one request "
+          "returned — the window is too wide, so part of it was dropped "
+          "rather than deferred"
+      : win_behind && !st.truncated && !failed_midwalk && !st.malformed
         ? "this row reads its collection one date window at a time; this run "
           "read its window in full and the rest of the collection lies "
           "outside it"
@@ -4970,6 +5057,9 @@ date_step_back:
         ? "the last page came back full and the upstream offered no next "
           "link, nor does this row's URL carry a parameter that could be "
           "advanced"
+      : !can_page
+        ? "this row makes ONE request and the upstream's own count says it "
+          "holds more than that request returned"
         : "the upstream reports more records than it handed over");
     cJSON_AddStringToObject(p, "remedy",
       st.malformed && !st.truncated && !failed_midwalk
@@ -4988,6 +5078,12 @@ date_step_back:
       : failed_midwalk
         ? "re-run; a rate-limited host needs a per-host minimum gap "
           "(core/hostgate.c) — see docs/SOURCE_EXHAUSTIVENESS.md"
+      : window_on && pw_more
+        ? "NARROW window_days on this row: the upstream counted more inside "
+          "this one window than a single read could take, and those records "
+          "are dropped rather than deferred — records_available here is the "
+          "count for the WINDOW, so window_days / (available / used) is the "
+          "width that would have fitted"
       : window_on
         ? "none needed: this row reads its collection one date window at a "
           "time, and next_run_window_start says which window comes next. "
@@ -4995,6 +5091,13 @@ date_step_back:
       : resume_on
         ? "none needed: this row reads its collection over a cycle, and "
           "next_run_resumes_at says where the next run continues"
+      : !can_page
+        ? "this row declares no paging, so there is no ceiling to raise. Ask "
+          "the endpoint what it honours before adding one — a page parameter "
+          "it ignores walks pages that re-emit page 1. Where no offset works, "
+          "slice the QUERY instead (window_days, or a filter the upstream "
+          "does honour, one request per slice) — see "
+          "docs/SOURCE_EXHAUSTIVENESS.md"
         : "raise max_items/page_max on this row (lib/hpengine.h) — see "
           "docs/SOURCE_EXHAUSTIVENESS.md");
     char *pj = cJSON_PrintUnformatted(p);
