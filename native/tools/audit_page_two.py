@@ -50,6 +50,7 @@ import os
 import re
 import ssl
 import sys
+import time
 import threading
 import urllib.error
 import urllib.request
@@ -155,19 +156,43 @@ def set_param(url, key, val):
     return url + ("&" if "?" in url else "?") + "%s=%s" % (key, val)
 
 
-def get(url, timeout=60):
+# A transport failure that is OURS, not the upstream's. "Connection refused"
+# names a socket that was never opened, so it says nothing about the server at
+# the other end — and under load it is what a saturated local egress answers
+# with. The first run of this sweep recorded 569 of them as PAGE1_FAILED, all
+# in its last 15% and spread across wholly unrelated hosts (a Japanese
+# university's WordPress, the EIB, NHTSA); every one re-tested 200 by hand
+# afterwards. That is the same shape as audit_cycle_health.py's load-made STUCK
+# verdicts: a verdict that changes with the tool's own concurrency is not a
+# measurement. These are retried, and if they persist they are reported as
+# LOCAL_EGRESS so nobody can read one as a finding about a source.
+_LOCAL_EGRESS = re.compile(
+    r"Connection refused|Connection reset by peer|Temporary failure in name "
+    r"resolution|Cannot assign requested address|Too many open files", re.I)
+
+
+def get(url, timeout=60, tries=3):
     req = urllib.request.Request(url, headers={
         "User-Agent": UA, "Accept": "application/json, text/csv, */*"})
-    try:
-        with urllib.request.urlopen(req, timeout=timeout, context=_ctx) as r:
-            return r.status, r.read()[:400000]
-    except urllib.error.HTTPError as e:
+    last = b""
+    for attempt in range(tries):
         try:
-            return e.code, e.read()[:4000]
-        except Exception:
-            return e.code, b""
-    except Exception as e:
-        return -1, str(e)[:200].encode()
+            with urllib.request.urlopen(req, timeout=timeout, context=_ctx) as r:
+                return r.status, r.read()[:400000]
+        except urllib.error.HTTPError as e:
+            try:
+                return e.code, e.read()[:4000]
+            except Exception:
+                return e.code, b""
+        except Exception as e:
+            last = str(e)[:200].encode()
+            if not _LOCAL_EGRESS.search(str(e)):
+                return -1, last
+            # Back off: the point is to stop ASKING for a while, since the
+            # refusal is on this side of the wire.
+            if attempt + 1 < tries:
+                time.sleep(2.0 * (attempt + 1))
+    return -2, last
 
 
 def count_records(blob):
@@ -302,6 +327,14 @@ def _probe(a, r):
 
     s1, b1 = get(u1, a.timeout)
     out["http1"] = s1
+    # -2 is OUR egress refusing, not the upstream (see get()). It is not a
+    # finding about this row and must never be counted as one.
+    if s1 == -2:
+        out["verdict"] = "LOCAL_EGRESS"
+        out["message"] = ("this sweep's own egress refused the connection, "
+                          "retried and still refused — NOT a reading about "
+                          "this source: %s" % message_of(b1))[:220]
+        return out
     if s1 != 200:
         out["verdict"] = "PAGE1_FAILED"
         out["message"] = message_of(b1)[:200]
@@ -318,6 +351,12 @@ def _probe(a, r):
     out["recs2"] = n2
     msg = message_of(b2)
 
+    if s2 == -2:
+        out["verdict"] = "LOCAL_EGRESS"
+        out["message"] = ("this sweep's own egress refused the connection on "
+                          "page 2, retried and still refused — NOT a reading "
+                          "about this source: %s" % msg)[:220]
+        return out
     if s2 == -1:
         out["verdict"] = "NET_ERR"
         out["message"] = msg[:200]

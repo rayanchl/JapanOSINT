@@ -3830,6 +3830,42 @@ int main(void) {
        "43c: a full page that repeats is still reported as an ignored page "
        "parameter"); }
 
+  /* 44. A RATE-LIMIT PAGE SERVED AS HTTP 200 is a refusal wearing a success
+   *     status, and no status check can see it. Archive-It does exactly that
+   *     — `<title>Rate limit reached</title>` with a 200 — so the
+   *     fetch-failure notice said "the endpoint may have moved" and sent the
+   *     reader looking for a move that never happened, when the remedy is a
+   *     per-host gap. Reproducible an hour apart, which is why it is named. */
+  fx_reset();
+  fx_add("/us?per_page=100", 200,
+         "<html><head><title>Rate limit reached</title></head><body>"
+         "You've reached the limit for the number of requests that can be "
+         "made in a short period of time.</body></html>");
+  rc = run_source("T_URLSIZE", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "RATE-LIMIT page instead of the data") != NULL &&
+       strstr(nt->props, "core/hostgate.c") != NULL &&
+       strstr(nt->props, "the endpoint may have moved") == NULL,
+       "44: a rate-limit page served as 200 is named as one, and the remedy "
+       "is pacing rather than a hunt for a moved endpoint");
+    (void)rc; }
+
+  /* 44b. And an ordinary unparseable 200 still reads as one — the detector
+   *      must not claim a rate limit for every HTML body. A page that merely
+   *      contains the word "limit" is not a rate-limit page. */
+  fx_reset();
+  fx_add("/us?per_page=100", 200,
+         "<html><body>Download limit: 50 rows per export.</body></html>");
+  rc = run_source("T_URLSIZE", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "RATE-LIMIT") == NULL &&
+       strstr(nt->props, "the endpoint may have moved") != NULL,
+       "44b: an unparseable 200 that is not a rate-limit page is not reported "
+       "as one");
+    (void)rc; }
+
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;
 }

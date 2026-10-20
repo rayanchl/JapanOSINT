@@ -1311,44 +1311,21 @@ static const hp_source HP3B19_LATAM[] = {
       "supplies much of Costa Rica's central valley, and this names who "
       "is drawing from it" },
 
-  { .id = "CR_SANCARLOS_PATENTES", .name = "IDESCA San Carlos — commercial licences",
-    .name_ja = "コスタリカ サンカルロス市 営業許可",
-    .category = "corporate", .portal = "https://www.munisc.go.cr",
-    .record_type = "business-licence",
-    .tags = "\"costarica\",\"sancarlos\",\"licence\",\"business\",\"municipal\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://idesca.munisc.go.cr/geoserver/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=geonode:patente_comercial_sc&maxFeatures=1000&outputFormat=application%2Fjson",
-    .array_path = "features",
-    .interval = 86400,
-    .page_param = "startIndex",
-    .page_size = 1000,
-    .page_start = 0,
-    .description = "Commercial licences in San Carlos, the largest canton of Costa "
-      "Rica's northern zone, with the land-registry finca number, the "
-      "licence numbers, the licence category, the district, the "
-      "business name, the tax regime it operates under and the address, "
-      "each geolocated. Four thousand named businesses tied to the "
-      "parcel they occupy" },
-
-  { .id = "CR_SANCARLOS_LICORES", .name = "IDESCA San Carlos — liquor licences",
-    .name_ja = "コスタリカ サンカルロス市 酒類販売許可",
-    .category = "corporate", .portal = "https://www.munisc.go.cr",
-    .record_type = "liquor-licence",
-    .tags = "\"costarica\",\"sancarlos\",\"liquor\",\"licence\",\"municipal\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://idesca.munisc.go.cr/geoserver/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=geonode:patentes_licores_sc&maxFeatures=1000&outputFormat=application%2Fjson",
-    .array_path = "features",
-    .interval = 86400,
-    .page_param = "startIndex",
-    .page_size = 1000,
-    .page_start = 0,
-    .description = "Liquor licences in the canton of San Carlos with the parcel "
-      "number, the licence class and sub-classification, the "
-      "application and licence numbers, the district, the address and "
-      "the business name, geolocated. Liquor licensing is one of the "
-      "few Costa Rican municipal registers naming the business at the "
-      "parcel it trades from" },
-
+  /* CR_SANCARLOS_PATENTES and CR_SANCARLOS_LICORES stood here and are GONE —
+   * the commercial-licence and liquor-licence registers were withdrawn from
+   * San Carlos's IDE. Measured 2026-10-20, and measured the way the PREDIOS
+   * recovery says to: not by trusting the name we expected, but by asking the
+   * server what it serves. GetCapabilities lists 38 feature types and none is
+   * a patente or licores layer, and the GeoNode catalogue behind it answers 0
+   * hits for `patente`, `licores` AND `comercial` by title and abstract — so
+   * the concept is absent, not renamed. Both rows failed page 1 with
+   * `ServiceException code="InvalidParameterValue" locator="typeName"`, which
+   * is GeoServer saying the type does not exist; found by the page-2 gate,
+   * which reported them SAME_AS_PAGE1 because both pages were the same
+   * exception document.
+   *
+   * The sibling that WAS renamed is the lesson's other half: PREDIOS reads
+   * `geonode:Catastro_sc` below. */
   { .id = "CR_SANCARLOS_PREDIOS", .name = "IDESCA San Carlos — cadastral parcels",
     .name_ja = "コスタリカ サンカルロス市 地籍区画",
     .category = "reference", .portal = "https://www.munisc.go.cr",

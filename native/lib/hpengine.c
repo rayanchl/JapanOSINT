@@ -1223,6 +1223,12 @@ typedef struct {
    * answers `per_page=100&page=2` with the same 30 instead of the 400 the REST
    * API normally gives, and its own `x-wp-totalpages` header says 1. */
   int   sh_repeat_after_short;
+  /* A non-parsing 200 body that is a RATE-LIMIT page. Archive-It answers
+   * `<title>Rate limit reached</title>` with HTTP 200, so the fetch-failure
+   * notice called it "the endpoint may have moved" and sent the reader looking
+   * for a move that never happened; the remedy is a per-host gap. Reproducible
+   * an hour apart, which is why this is named rather than guessed at. */
+  int   unreadable_ratelimit;
 
   /* Repeat guard on the RECORDS of a paged JSON walk (see hp_run_json).
    * Hashing the whole body could not see an ignored cursor when the envelope
@@ -1927,7 +1933,15 @@ static int hp_run_json(hp_run_state *st, const char *body) {
   cJSON *doc = cJSON_Parse(jsonp ? jsonp : body);
   free(jsonp);
   if (!doc) {
-    fprintf(stderr, "[hp:%s] non-JSON body\n", s->id);
+    /* A 200 that is really a refusal. Only the words a rate limiter puts in a
+     * page it serves INSTEAD of the data — not "limit", which is a legitimate
+     * parameter name and appears in half the URLs in this tree. */
+    if (jo_strcasestr(body, "rate limit") || jo_strcasestr(body, "rate-limit") ||
+        jo_strcasestr(body, "too many requests"))
+      st->unreadable_ratelimit = 1;
+    fprintf(stderr, "[hp:%s] non-JSON body%s\n", s->id,
+            st->unreadable_ratelimit ? " — it is a RATE-LIMIT page served as 200"
+                                     : "");
     st->unreadable = 1;
     return st->emitted;
   }
@@ -5244,6 +5258,10 @@ date_step_back:
         ? "the request was never made — the row needed a token it could not build"
       : first_status == -1
         ? "the request failed at the transport level"
+      : first_status == 200 && st.unreadable_ratelimit
+        ? "the upstream answered 200 with a RATE-LIMIT page instead of the "
+          "data — a refusal wearing a success status, which no status check "
+          "can see"
       : first_status == 200
         ? "the upstream answered 200 and the body did not parse in this row's "
           "declared mode — a redirect to an HTML notice does this"
@@ -5259,6 +5277,10 @@ date_step_back:
       : first_status == 401 || first_status == 403
         ? "the upstream refused this client: check whether the row needs a "
           "credential (key_env) or a User-Agent it is not sending"
+      : first_status == 200 && st.unreadable_ratelimit
+        ? "rate limited behind a 200: give the host a per-host minimum gap in "
+          "core/hostgate.c. Measure the budget before choosing one — a gap "
+          "set on one reading is a guess"
       : first_status == 200
         ? "re-read the body by hand: the endpoint may have moved, started "
           "redirecting to an HTML page, or changed shape"
