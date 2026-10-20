@@ -4960,7 +4960,14 @@ date_step_back:
     cJSON_AddNumberToObject(p, "records_used", out);
     cJSON_AddNumberToObject(p, "records_available", (double)avail);
     cJSON_AddStringToObject(p, "records_available_basis",
-      st.declared_total > (long)real_available
+      /* On a WINDOW row the upstream's count answers the windowed query, so it
+       * is the size of this slice and NOT of the collection. Reporting it as
+       * "this total" invited reading Toyama's 1,458 as its 30,512 — a number
+       * off by a factor of twenty, in the one field a reader trusts. */
+      st.declared_total > (long)real_available && window_on
+        ? "upstream's count for THIS WINDOW — the collection outside it is "
+          "not counted"
+      : st.declared_total > (long)real_available
         ? "upstream declared this total"
       : win_behind
         ? "records in THIS WINDOW — the collection outside it is not counted"
@@ -5079,11 +5086,14 @@ date_step_back:
         ? "re-run; a rate-limited host needs a per-host minimum gap "
           "(core/hostgate.c) — see docs/SOURCE_EXHAUSTIVENESS.md"
       : window_on && pw_more
-        ? "NARROW window_days on this row: the upstream counted more inside "
+        ? "narrow window_days on this row: the upstream counted more inside "
           "this one window than a single read could take, and those records "
-          "are dropped rather than deferred — records_available here is the "
+          "are dropped rather than deferred. records_available here is the "
           "count for the WINDOW, so window_days / (available / used) is the "
-          "width that would have fitted"
+          "width that would fit IF the window's records were spread evenly "
+          "across it — check that first, because a single day holding more "
+          "than one read can take is the upstream's own cap and no width "
+          "fixes it"
       : window_on
         ? "none needed: this row reads its collection one date window at a "
           "time, and next_run_window_start says which window comes next. "

@@ -3709,7 +3709,7 @@ int main(void) {
        strstr(nt->props, "\"records_available\":1200") != NULL &&
        strstr(nt->props, "the window is too wide") != NULL &&
        strstr(nt->props, "read its window in full") == NULL &&
-       strstr(nt->props, "NARROW window_days") != NULL,
+       strstr(nt->props, "narrow window_days") != NULL,
        "41h: a window whose own count exceeds one read says it is too wide, "
        "not that it completed");
     /* Still a cycle: the next window is the one after this, because stalling
