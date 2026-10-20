@@ -141,6 +141,26 @@ The lessons from batches 43–48 that a new batch must not relearn:
   returned". Measured 2026-10-20: **229 of 290 batch-49 rows read that way**
   from one unrelated rebuild made in the middle, and the output looks exactly
   like a batch of broken sources.
+
+  **And when the GATE and the ENGINE disagree, the upstream can be the answer.**
+  Batch 49's audit called `JO49_AGS_GIS_COASTAL_COVERAGE_AREA` `EMITS_NOTHING`
+  while a direct `--run` stored 371 of 371 — the dangerous direction, since a
+  gate that contradicts the engine is how a working row gets "fixed".
+  Reproducing the audit's exact invocation (its `ulimit`, its env, its scratch
+  database) showed the cause was neither tool: `gis.charttools.noaa.gov` FLAPS,
+  answering HTTP **200** carrying `code=500 "Could not find service. Service
+  may be stopped or it may not be configured."` It served 371 twice and that
+  twice, inside ten minutes. **Four readings, two outcomes, one endpoint** — so
+  reproduce the TOOL's invocation before believing either of them about the
+  row, and a single verdict is still not a diagnosis.
+
+  The other 289 of that batch account for themselves in
+  `docs/verified-sources-batch49.tsv`: 258 store exactly their upstream count,
+  25 cycle because their layer exceeds one cycle's 40,000, 5 store slightly
+  MORE because the discovery-pass count is a day stale and the layers grew
+  (`returnCountOnly` re-asked agrees with the engine exactly), and 1 is the
+  tool's own kill line on a 35,204-record layer. **1,670,966 records stored in
+  one pass** against 25,132,703 the layers declare.
 * **A URL changed after validation is unvalidated** (an unescaped `&amp;`
   made Joomla serve Atom where rows declared RSS), **a well-formed feed with
   zero items is `EMPTY_RESULTSET`**, **a substring count of `<item` counts the
