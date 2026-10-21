@@ -358,6 +358,17 @@ static const struct { const char *host, *ua; } UA_OVERRIDE[] = {
   { "pib.gov.in",
     "JapanOSINT/1.0 (contact via repo issues)" },
 
+  /* Camden County, NJ: the contact URL is the refused token, as at PIB.
+   * Measured 2026-10-21 on www.camdencounty.com/feed/:
+   *     the full engine UA                                       403
+   *     "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas)"   403
+   *     "JapanOSINT/1.0 (contact via repo issues)"               200, 10 items
+   *     "JapanOSINT/1.0"                                          200
+   * us-b50-camdencounty-com was rejected in batch 50 for this until the
+   * retry pass bisected it. */
+  { "www.camdencounty.com",
+    "JapanOSINT/1.0 (contact via repo issues)" },
+
   /* The "collector" word filter again, on four more hosts. Measured 2026-09-14
    * by comparing the engine agent against the same agent with that one word
    * removed (the INE / Boston agent above):
@@ -460,6 +471,9 @@ static const struct { const char *host, *ua; } UA_OVERRIDE[] = {
    * 88 batch-50 rows (authored as 45) stored nothing on the emit sweep until this. Hosts that
    * refused EVERY honest agent (only a browser string passed) were not added
    * here and their rows were not shipped: docs/rejected-sources-batch50.tsv. */
+  { "edinburgnd.com",   /* added 2026-10-21 by the retry pass: engine UA 403, this agent 200 */
+    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
+    "contact via repo issues)" },
   { "ajaccio.corsica",
     "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
     "contact via repo issues)" },
@@ -605,19 +619,63 @@ static const struct { const char *host, *ua; } UA_OVERRIDE[] = {
     "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
     "contact via repo issues)" },
 
-  /* NOT LISTED, deliberately: registry.faa.gov.
-   *
-   * It was reported alongside the two above as "answers 200 with no UA", which
-   * is true and is not the same thing. Measured:
-   *     engine UA        403
-   *     the agent above  403     <- so it is NOT a token block
-   *     no User-Agent    200
-   * It refuses every self-identifying client and admits only an anonymous or
-   * browser-shaped one. This table exists to route around a filter that objects
-   * to one WORD in an otherwise honest agent; it is not a place to stop
-   * identifying ourselves, and httpclient.h rules out presenting as a browser.
-   * The source stays honestly failing rather than quietly evading. */
+  /* registry.faa.gov refuses every self-identifying agent (engine UA 403, the
+   * agent above 403, no User-Agent 200). It is now in BROWSER_HOSTS below. */
 };
+
+/* ── Browser-profile hosts ────────────────────────────────────────────────
+ * Hosts that refuse EVERY self-identifying client — the engine agent, the
+ * agent without "collector", a bare "JapanOSINT/1.0" — and admit a request
+ * that looks like a browser's. Until 2026-10-21 the rule here was to leave
+ * them honestly failing; the repository owner changed it for these hosts:
+ * public government feeds and registers are worth reading, and a per-host
+ * table keeps the other ~57,000 sources identifying themselves. A request to
+ * a host listed here carries JO_BROWSER_UA and the headers below INSTEAD of
+ * any User-Agent the caller set (hpengine rows and lib/rss_atom.c set their
+ * own), so it never sends two.
+ *
+ * Measured 2026-10-21, each on its registered URL: engine UA 403, browser UA +
+ * feed Accept + Accept-Language + Sec-Fetch-* 200 with items. www.bls.gov
+ * needs the Sec-Fetch-* headers, not just the agent; the NOAA hosts answer an
+ * HTML Accept with a 202 challenge page, so the caller's own Accept is kept.
+ * registry.faa.gov returns the full N-number record (owner, manufacturer,
+ * serial number, Mode S) where both FAA pivots stored only a 403 notice. */
+static const char *const BROWSER_HOSTS[] = {
+  "cpo.noaa.gov", "globalocean.noaa.gov", "oss.research.noaa.gov", "wpo.noaa.gov",
+  "www.noaa.gov", "www.bls.gov", "www.jpl.nasa.gov", "www.diplomaticrooms.state.gov",
+  "registry.faa.gov", "www.sdcwa.org",
+  "www.security.gov.uk", "isc.independent.gov.uk", "www.nhs24.scot",
+  "www.hkd.meti.go.jp", "www.bungeika.or.jp",
+  NULL };
+
+static const char *const BROWSER_EXTRA_HEADERS[] = {
+  "Accept-Language: en-US,en;q=0.9",
+  "Sec-Fetch-Dest: document",
+  "Sec-Fetch-Mode: navigate",
+  "Sec-Fetch-Site: none",
+  "Upgrade-Insecure-Requests: 1",
+  NULL };
+
+/* The authority of `url` without :port, as a pointer and length. */
+static int url_host(const char *url, const char **h, size_t *n) {
+  if (!url) return 0;
+  const char *p = strstr(url, "://");
+  if (!p) return 0;
+  p += 3;
+  size_t len = strcspn(p, "/?#");
+  const char *colon = memchr(p, ':', len);
+  if (colon) len = (size_t)(colon - p);
+  *h = p; *n = len;
+  return 1;
+}
+
+int http_browser_host(const char *url) {
+  const char *h; size_t n;
+  if (!url_host(url, &h, &n)) return 0;
+  for (int i = 0; BROWSER_HOSTS[i]; i++)
+    if (strlen(BROWSER_HOSTS[i]) == n && strncasecmp(h, BROWSER_HOSTS[i], n) == 0) return 1;
+  return 0;
+}
 
 /* Exact host match against the authority component of `url`. Substring
  * matching would be wrong: "data.humdata.org.evil.example" must not inherit
@@ -625,6 +683,7 @@ static const struct { const char *host, *ua; } UA_OVERRIDE[] = {
 /* The table entry for this URL's host, or NULL when there is none. */
 static const char *ua_override_lookup(const char *url) {
   if (!url) return NULL;
+  if (http_browser_host(url)) return JO_BROWSER_UA;
   const char *h = strstr(url, "://");
   if (!h) return NULL;
   h += 3;
@@ -757,7 +816,13 @@ static int do_once(http_client *c, const char *method, const char *url,
   sbuf b = {0};
   b.cap = body_ceiling();
   struct curl_slist *hl = NULL;
-  for (const char *const *h = headers; h && *h; ++h) hl = curl_slist_append(hl, *h);
+  int browser = http_browser_host(url);
+  for (const char *const *h = headers; h && *h; ++h) {
+    if (browser && !strncasecmp(*h, "User-Agent:", 11)) continue;   /* the profile's agent wins */
+    hl = curl_slist_append(hl, *h);
+  }
+  if (browser)
+    for (const char *const *h = BROWSER_EXTRA_HEADERS; *h; ++h) hl = curl_slist_append(hl, *h);
 
   curl_easy_setopt(e, CURLOPT_URL, url);
   curl_easy_setopt(e, CURLOPT_WRITEFUNCTION, on_data);

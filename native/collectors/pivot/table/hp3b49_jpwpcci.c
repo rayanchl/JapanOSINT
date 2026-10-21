@@ -360,7 +360,6 @@ static const hp_source HP3B49_JPWPCCI[] = {
       "root (/wp/v2/types), not guessed. Post-shaped: title.rendered, "
       "date, link and content.rendered are kept." },
 
-
   { .id = "JO49_WP_ANANCCI_CTA", .name = "阿南商工会議所 — custom post type `cta` (CTA) (WordPress REST)",
     .name_ja = "阿南商工会議所 CTA（WordPress REST）",
     .category = "business", .portal = "https://anancci.or.jp/",
@@ -555,7 +554,6 @@ static const hp_source HP3B49_JPWPCCI[] = {
       "Post-shaped: title.rendered, date, link and content.rendered are "
       "kept." },
 
-
   { .id = "JO49_WP_AMAMICCI_USERS", .name = "奄美大島商工会議所 — author/staff register (WordPress REST)",
     .name_ja = "奄美大島商工会議所 利用者一覧（WordPress REST）",
     .category = "business", .portal = "https://amami-cci.or.jp/",
@@ -604,7 +602,6 @@ static const hp_source HP3B49_JPWPCCI[] = {
       "X-WP-Total. Discovered from this host's own REST root "
       "(/wp/v2/types), not guessed. Keyed on the user id with name as "
       "the title: a user record carries no date field." },
-
 
   { .id = "JO49_WP_AWAIKEDACCI_USERS", .name = "阿波池田商工会議所 — author/staff register (WordPress REST)",
     .name_ja = "阿波池田商工会議所 利用者一覧（WordPress REST）",
@@ -14677,7 +14674,6 @@ static const hp_source HP3B49_JPWPCCI[] = {
       "guessed. Keyed on the user id with name as the title: a user "
       "record carries no date field." },
 
-
   { .id = "JO49_WP_KAWAGOE_KSMEMBER", .name = "川越商工会議所 — custom post type `ks_member` (会員企業) (WordPress REST)",
     .name_ja = "川越商工会議所 会員企業（WordPress REST）",
     .category = "business", .portal = "https://www.kawagoe.or.jp/",
@@ -17015,30 +17011,6 @@ static const hp_source HP3B49_JPWPCCI[] = {
       "this host's own REST root (/wp/v2/types), not guessed. Keyed on "
       "the user id with name as the title: a user record carries no "
       "date field." },
-
-  { .id = "JO49_WP_MIYAWAKACCI_POSTS", .name = "宮若商工会議所 — posts (WordPress REST)",
-    .name_ja = "宮若商工会議所 投稿（WordPress REST）",
-    .category = "business", .portal = "http://www.miyawakacci.or.jp/",
-    .record_type = "site-post",
-    .tags = "\"japan\",\"wordpress\",\"posts\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.miyawakacci.or.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
-    .array_path = ".",
-    .body_keys = "content.rendered",
-    .date_keys = "date",
-    .id_keys = "id",
-    .interval = 21600,
-    .link_keys = "link",
-    .page_max = 60,
-    .page_param = "page",
-    .page_start = 1,
-    .timeout_ms = 30000,
-    .title_keys = "title.rendered",
-    .description = "WordPress REST posts of 宮若商工会議所 (www.miyawakacci.or.jp). Fetched "
-      "2026-10-20: the collection answered with 100 record(s) and "
-      "declares 257 in X-WP-Total. Discovered from this host's own REST "
-      "root (/wp/v2/types), not guessed. Post-shaped: title.rendered, "
-      "date, link and content.rendered are kept." },
 
   { .id = "JO49_WP_MINAMISATSUMACCI_USERS", .name = "南さつま商工会議所 — author/staff register (WordPress REST)",
     .name_ja = "南さつま商工会議所 利用者一覧（WordPress REST）",
