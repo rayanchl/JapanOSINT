@@ -30671,26 +30671,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "18:36:24 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CPIA10", .name = "Cpia10 CENTRO PROV.LE DI ISTRUZ. ADULTI (Pubbliche "
-      "Amministrazioni, Frosinone, FR) - Centro Provinciale Istruzione "
-      "Adulti 8° CPIA Frosinone",
-    .name_ja = "Cpia10 CENTRO PROV.LE DI ISTRUZ. ADULTI (Pubbliche Amministrazioni, Frosinone, FR) - Centro Provinciale Istruzione Adulti 8° CPIA Frosinone",
-    .category = "government", .portal = "https://www.centroprovincialeistruzioneadultifrosinone.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.centroprovincialeistruzioneadultifrosinone.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 21600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "07:56:02 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO47_IT_CPIA2TO", .name = "Centro Provinciale Istruzione Adulti 2 - Via Bologna - Torino "
       "(Pubbliche Amministrazioni, Torino, TO) - CPIA 2 TORINO",
     .name_ja = "Centro Provinciale Istruzione Adulti 2 - Via Bologna - Torino (Pubbliche Amministrazioni, Torino, TO) - CPIA 2 TORINO",
@@ -46958,25 +46938,6 @@ static const hp_source HP3B47_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 29 Sep 2026 "
       "07:55:25 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO47_IT_ISB_064", .name = "Istituto di Istruzione Secondaria Superiore Ruggero II "
-      "(Pubbliche Amministrazioni, Ariano Irpino, AV) - IISS Ruggero II",
-    .name_ja = "Istituto di Istruzione Secondaria Superiore Ruggero II (Pubbliche Amministrazioni, Ariano Irpino, AV) - IISS Ruggero II",
-    .category = "government", .portal = "https://www.istitutosuperioreruggerosecondo.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutosuperioreruggerosecondo.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 86400,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 24 Apr 2026 "
-      "00:13:39 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO47_IT_ISBF", .name = "Istituto Superiore Basilio Focaccia (Pubbliche Amministrazioni, "
