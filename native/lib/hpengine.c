@@ -5510,7 +5510,21 @@ void hp_register(const hp_source *specs, int n, source_def *defs,
   if (!dflt) dflt = "osint";
   for (int i = 0; i < n; i++) {
     const hp_source *s = &specs[i];
-    if (!s->id || !s->url) continue;
+    /* A row that cannot be registered SAYS SO. This used to be a bare
+     * `continue`: a row with an id and no `.url` compiled, sat in its table,
+     * registered nothing, and reported nothing — the invisible nothing house
+     * rule 1 is about, in the registration path rather than the fetch path.
+     * Found 2026-10-21 by two rows of this batch doing exactly that (an
+     * `index_url` row still needs a `.url`; the engine REPLACES it per run),
+     * and the only symptom was `make registry-floor` counting one fewer
+     * source than the day before. An id-less row cannot name itself, so it is
+     * reported by its position in the table. */
+    if (!s->id || !s->url) {
+      fprintf(stderr, "[hp] NOT REGISTERED %s/%d '%s': no %s\n",
+              table ? table : "(table)", i, s->id ? s->id : "(no id)",
+              !s->id ? "id" : "url");
+      continue;
+    }
     if (g_nspecs >= g_cspecs) {
       int nc = g_cspecs ? g_cspecs * 2 : 2048;
       const hp_source **ns = realloc((void *)g_specs, (size_t)nc * sizeof *ns);

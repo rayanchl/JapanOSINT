@@ -141,3 +141,100 @@ work, in order:
 
 What must NOT happen is re-pointing them at a page that answers 200 and
 ignores the query. That trades a visible nothing for an invisible wrong answer.
+
+---
+
+# The re-pointing pass, same day
+
+§6's step 1 is done, and it changed five of the seven answers above. Every
+reading here is from 2026-10-21, taken with the engine's own agent.
+
+## What shipped
+
+| row | kind | endpoint | the reading that settled it |
+| --- | --- | --- | --- |
+| `ZA_MUNICIPAL_MONEY` | pivot (unchanged) | `municipaldata.treasury.gov.za/api/cubes/uifwexp/facts?cut=demarcation.label:"{q}"` | 39 of 39 facts for `Cape Town`, **0 of 0** for an impossible label, 10,000 of a declared 10,314 with no cut |
+| `ZA_GOVERNMENT_GAZETTE` | pivot (unchanged) | `gov.za/search?search_query={q}` + `href_must=/documents/notices/` | 3 notice anchors for a real entity, **0** for an impossible one |
+| `US_DATA_GOV_CKAN` | pivot (unchanged) | `catalog.data.gov/?q={q}` + `href_must=/dataset/`, **no paging** | 8 dataset anchors real, **0** impossible |
+| `EU_ECB_SUPERVISED_ENTITIES` | pivot → **weekly** | the monthly workbook via `index_url`/`index_href_must`, sheet `SIs` | 844 rows |
+| `EU_ECB_SUPERVISED_ENTITIES_LSI` | **new row** | the same workbook, sheet `LSIs` | 2,175 rows |
+| `NO_STORTINGET_DATA` | pivot → **daily** | `data.stortinget.no/eksport/horinger?format=json` | 76 hearings, 83 KB |
+| `NO_STORTINGET_INTERPELLATIONS` | **new row** | `/eksport/interpellasjoner?format=json` | 5 |
+| `NO_STORTINGET_QUESTION_TIME` | **new row** | `/eksport/sporretimesporsmal?format=json` | 60 |
+
+## Five findings that outlive these rows
+
+* **§4's reading of the ECB row was WRONG, and an anchor count is why.** It
+  recorded "288 anchors, the actual list of supervised entities". They are site
+  navigation — `/about/working-at-the-ecb` 23, `/about/organisation` 13,
+  `/press/other-publications` 10. An anchor COUNT says nothing about what the
+  anchors ARE, which is the same error as a record count that cannot see
+  whether the fields parsed. The candidate URL was also *itself* already stale
+  (`/banking/list/who/html/index.en.html` 301s to
+  `/framework/supervised-banks/html/index.en.html`). The list is really
+  published as `ssm.listofsupervisedentities<YYYYMM>.en.xlsx`, renamed every
+  month — the `index_url`/`index_href_must` case — across **four sheets**
+  (SIs 844, LSIs 2,175, Appendix 39, Changes 11). `HP_XLSX` reads one sheet, so
+  reading only `SIs` would have dropped 2,175 banks at the seam; hence a
+  deliberate pair.
+* **Run `make lint-sources` before believing a re-point is a NEW source.**
+  §4 named `data.stortinget.no/eksport/saker` for `NO_STORTINGET_DATA`. The
+  dup-endpoint check answered immediately: `eur-stortinget-saker`
+  (`collectors/feed/generated/vsrc13_europe_gov_2.c`) has read that exact URL
+  every six hours all along — 197 records, rc=0, measured today. Registering it
+  again would have been the `data.gov.uk` PROXY row over again: two rows, one
+  upstream, no new data. Asking which Stortinget exports the tree does NOT read
+  found three live ones missing, and all three are now registered.
+* **A working filter and chrome are two different problems.** `gov.za`'s search
+  filter works, and the impossible entity still returns 3 `/documents/` anchors
+  (`/documents/acts`, `/documents/latest`, the constitution) that would be
+  emitted as gazette notices for EVERY entity. `href_must` fixes the second,
+  `--check-filter` the first, and neither fixes the other.
+* **data.gov's CKAN API is GONE, not moved**, and the replacement is a
+  downgrade that the row now states. 404 on `/api/3/action/package_search`,
+  `/api/action/package_search`, `/api/3/action/status_show` and
+  `/api/3/action/package_list` (main's own batch-34 reading of
+  `catalog.data.gov` 404 agrees). The HTML search is a RANKED 8, not a complete
+  read. **And it must not be paged**: `?page=2` returns the same eight datasets
+  as page 1, differing only in a `from_hint` parameter that base64-encodes the
+  page number — so the bodies are NOT byte-identical and `pagewalk`'s same-body
+  guard would not stop the walk. It would store page 1 under 20 different uids
+  and report 160 records, with every gate green.
+* **`hp_register()` dropped a row with no `.url` SILENTLY**, and two rows of
+  this pass did exactly that: an `index_url` row still needs a `.url` (the
+  engine replaces it each run). They compiled, sat in their table, registered
+  nothing and said nothing; the only symptom was `make registry-floor` counting
+  one fewer source than the day before. It names the table, the index and the
+  missing field now.
+
+## Still open, and why
+
+* **`COPERNICUS_EMS_ACTIVATIONS` has no replacement reachable from here.** §4
+  claimed "31 anchors"; the same error as the ECB row — all 38 anchors on
+  `/activations/` are navigation (`/news/`, `/resources/`, `/accounts/login`).
+  The one feed the page declares, `/latest/feed/`, is "CEMS On Demand Mapping
+  News" with **2 items** — news articles, not the activation register. The
+  activations list is rendered client-side. So this row joins the group in §6
+  step 4, below.
+* **`FI_EDUSKUNTA_RECORDS` and `AT_PARLAMENT_RECORDS` need an engine
+  affordance, not a path.** Both APIs answer with a JSON **table**: an array of
+  ARRAYS in `rowData`/`rows`, with the column names in a sibling `columnNames`/
+  `header`. The engine's JSON path flattens an array record positionally
+  (`.0`, `.1`, …), so a row could ship — and its `title_keys`/`id_keys` would
+  be positions whose meaning the API is free to change without us seeing it.
+  That is the CSV `csv_no_header` shape in JSON clothing, and two independent
+  national parliaments publish it, so it is worth a declared header path rather
+  than positional keys in two rows. Eduskunta's filter is honest and measured
+  (`columnName=lastname&columnValue=Marin` → 1 row, an impossible value → 0,
+  unfiltered → 100 with `hasMore`), so it can stay a pivot once the shape is
+  readable. The Austrian one is a bulk export — 391,269 rows over 4 pages, and
+  it **ignores `pageSize`**: a request for 3 rows returned 100,000 and 58 MB.
+* **§6 step 4's precedent has been overturned.** That paragraph argued for
+  keeping the unreplaceable rows disclosing, on the `registry.faa.gov`
+  precedent of "stays honestly failing rather than quietly evading". The
+  repository owner reversed that for listed hosts on the same day
+  (`BROWSER_HOSTS`, `core/httpclient.c`), and two FAA rows are live again. The
+  precedent therefore no longer points one way, and the decision is squarely
+  the owner's. Note what is NOT in question: a browser profile is a remedy for
+  a host that REFUSES us, and every row in this group answers 404 or renders
+  client-side, so no agent reaches them.

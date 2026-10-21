@@ -295,14 +295,73 @@ static const hp_source HP3B31_EUTRANS[] = {
     .name_ja = "ECB 監督対象銀行", .category = "finance",
     .portal = "https://www.bankingsupervision.europa.eu",
     .record_type = "eu-supervised-bank",
-    .tags = "\"eu\",\"banking\",\"supervision\"", .type = "scraped", .mode = HP_HTML,
+    .tags = "\"eu\",\"banking\",\"supervision\"", .mode = HP_XLSX,
     .free_tier = 1,
-    .url = "https://www.bankingsupervision.europa.eu/search/html/index.en.html?"
-      "searchTerm={q}",
-    .base = "https://www.bankingsupervision.europa.eu", .filter_query = 1,
-    .description = "The banks the ECB supervises directly, the significance "
-      "criteria applied to each, the sanctions imposed and the SREP outcomes "
-      "published — euro-area banking supervision at institution level" },
+    /* RE-POINTED 2026-10-21 (open item B2), and TWICE: the candidate recorded
+     * in docs/b2-path-stale-triage-2026-10-21.md was itself already stale —
+     * /banking/list/who/html/index.en.html 301s to the path below.
+     *
+     * THE TRIAGE'S OWN READING OF THIS ROW WAS WRONG and the correction is the
+     * lesson. It counted 288 anchors on that page and took them for the list
+     * of supervised entities; they are site navigation (/about/..., /press/...,
+     * /activities/...). An anchor COUNT says nothing about what the anchors
+     * ARE, which is the same mistake as a record count that cannot see what
+     * was parsed.
+     * The list itself is published as a workbook re-named every month
+     * (ssm.listofsupervisedentities202608.en.xlsx), so this is the
+     * index_url/index_href_must case: the engine re-reads the landing page
+     * every run and follows the current link, instead of pinning an edition
+     * that 404s next month. index_href_must takes the FIRST matching anchor
+     * and the main list is listed before its _annex_changes sibling; if ECB
+     * ever reversed that order the row would read the 11-row annex instead of
+     * 844 rows, which is visible in the record count rather than silent.
+     *
+     * Also a change of KIND: interval 0 to weekly. A workbook is not an entity
+     * pivot, and an interval-0 row with no {q} never runs at all (rule 3).
+     * The workbook has FOUR sheets — SIs 844 rows, LSIs 2,175, Appendix 39,
+     * Changes 11 — and HP_XLSX reads one, so the less significant institutions
+     * are the deliberate sibling row below rather than 2,175 records dropped
+     * at the seam. */
+    /* The last edition seen, as the convention is (JO32_REG_NIIGATA_*): the
+     * engine REPLACES it every run with the link index_href_must finds, and a
+     * row carrying no `.url` at all is dropped by hp_register() — which is how
+     * both of these rows first shipped registering nothing. */
+    .url = "https://www.bankingsupervision.europa.eu/ecb/pub/pdf/"
+      "ssm.listofsupervisedentities202608.en.xlsx",
+    .index_url = "https://www.bankingsupervision.europa.eu/framework/"
+      "supervised-banks/html/index.en.html",
+    .index_href_must = ".en.xlsx",
+    .xlsx_sheet = "SIs", .interval = 604800,
+    .description = "Every bank the ECB supervises DIRECTLY — the significant "
+      "institutions, with the significance criterion applied to each and the "
+      "group it sits in — from the ECB's own monthly workbook" },
+
+  { .id = "EU_ECB_SUPERVISED_ENTITIES_LSI",
+    .name = "ECB Banking Supervision — less significant institutions",
+    .name_ja = "ECB 監督対象銀行(重要性の低い銀行)", .category = "finance",
+    .portal = "https://www.bankingsupervision.europa.eu",
+    .record_type = "eu-supervised-bank",
+    .tags = "\"eu\",\"banking\",\"supervision\"", .mode = HP_XLSX,
+    .free_tier = 1,
+    /* The LSIs sheet of the same workbook, read as its own row because
+     * HP_XLSX takes one worksheet and 2,175 banks are not an acceptable thing
+     * to lose at a seam (house rule 2). A deliberate pair, like the ELIA
+     * rows: same fetch shape, different sheet. Measured 2026-10-21 from the
+     * same file the row above follows. */
+    /* The last edition seen, as the convention is (JO32_REG_NIIGATA_*): the
+     * engine REPLACES it every run with the link index_href_must finds, and a
+     * row carrying no `.url` at all is dropped by hp_register() — which is how
+     * both of these rows first shipped registering nothing. */
+    .url = "https://www.bankingsupervision.europa.eu/ecb/pub/pdf/"
+      "ssm.listofsupervisedentities202608.en.xlsx",
+    .index_url = "https://www.bankingsupervision.europa.eu/framework/"
+      "supervised-banks/html/index.en.html",
+    .index_href_must = ".en.xlsx",
+    .xlsx_sheet = "LSIs", .interval = 604800,
+    .description = "The euro-area banks supervised by their NATIONAL "
+      "authority under ECB oversight rather than by the ECB directly — the "
+      "long tail of the same monthly workbook, about three times as many "
+      "institutions as the directly supervised list" },
 
   { .id = "EU_EFTA_SURVEILLANCE_CASES", .name = "EFTA Surveillance Authority — cases & decisions",
     .name_ja = "EFTA監視機構 事件/決定", .category = "government",

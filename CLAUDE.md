@@ -89,7 +89,13 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 58,016** (2026-10-21): main's 57,536 merged with
+**The registered count is 58,019** (2026-10-21): 58,016 plus three rows from
+open item B2's re-pointing pass — the ECB workbook's LSIs sheet (2,175 banks
+`HP_XLSX`'s one-sheet read would have dropped at the seam) and two Stortinget
+exports the tree was not reading. Five more rows were re-pointed rather than
+added. `docs/b2-repoint-emit-2026-10-21.tsv`.
+
+**The registered count was 58,016** (2026-10-21): main's 57,536 merged with
 this branch's 57,892 on the 57,415 base they share, MEASURED with `make
 source-count` rather than computed. The arithmetic cross-checks it exactly and
 is worth writing down, because a merge of two branches that both REMOVED rows
@@ -2081,6 +2087,49 @@ Engine subtleties worth knowing before writing a row:
   the collection: `records_available_basis` said "upstream declared this total"
   there, inviting Toyama's 1,458 to be read as its 30,512. `hptest` 41h pins
   both halves.
+* **`filter_query = 1` on a row the SERVER already filters discards the
+  upstream's own matches.** It means "keep only records mentioning the entity",
+  which is right for a bulk file filtered locally (OFAC's sdn.csv) and wrong
+  the moment the URL carries `{q}` and the endpoint honours it. Measured
+  2026-10-21: `US_DATA_GOV_CKAN` re-pointed at data.gov's search kept **1 of
+  the 8** records the page returned, because only one dataset's link TEXT
+  repeats the word. Worse on a gazette, where a notice is titled for the
+  instrument and not the company — "Competition Act: approved merger —
+  Barloworld SA (Pty) Ltd and Leatoy (Pty) Ltd" is a real hit for an entity
+  its own slug never names, and `ZA_GOVERNMENT_GAZETTE` had carried the flag
+  since it was written. Check which side filters before declaring it.
+
+* **A row with no `.url` was dropped at REGISTRATION in silence**, and
+  `index_url` is the trap: such a row still needs a `.url` (the engine replaces
+  it each run with the link `index_href_must` finds). `hp_register()` skipped
+  it with a bare `continue`, so two rows of one batch compiled, sat in their
+  table, registered nothing and said nothing — the only symptom was `make
+  registry-floor` counting one fewer source than the day before, which reads
+  like somebody else's removal. It names the file, the row's index and the
+  missing field now; `hptest` 48 and 48b pin that the unusable row stays out
+  AND that its complete neighbour still registers, so one bad row cannot take
+  a table down.
+
+* **Run `make lint-sources` before believing a re-point is a NEW source.**
+  Open item B2's triage named `data.stortinget.no/eksport/saker` as the
+  replacement for a 404'd pivot; `dup-endpoint` answered at once, because
+  `eur-stortinget-saker` has read exactly that URL every six hours all along
+  (197 records, rc=0, measured). That would have been the `data.gov.uk` PROXY
+  row again: two rows, one upstream, no new data. Asking the inverse question
+  — which of a publisher's exports the tree does NOT read — found three live
+  Stortinget endpoints missing, and all three are registered now.
+
+* **An anchor COUNT is not the data, any more than a record count is.** The
+  same triage recorded "288 anchors, the actual list of supervised entities"
+  for the ECB page. They are site navigation (`/about/working-at-the-ecb` 23,
+  `/press/other-publications` 10); the list is really a workbook renamed every
+  month, over FOUR sheets (SIs 844, LSIs 2,175, Appendix 39, Changes 11), which
+  is the `index_url`/`index_href_must` case and — because `HP_XLSX` reads one
+  sheet — a deliberate PAIR of rows rather than 2,175 banks lost at a seam.
+  Copernicus EMS was the same error: 38 anchors, all of them chrome, and the
+  one feed the page declares is two news items rather than the activation
+  register.
+
 * **A deep-paging cap is the upstream's, and it is disclosed by name.** GLEIF
   refuses `page[number]=51` with HTTP 400 — 50 pages × 200 = 10,000 records —
   so `GLEIF_LEI_HK` reaches 10,000 of 13,419 and the rest needs a narrower

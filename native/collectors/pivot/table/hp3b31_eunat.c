@@ -173,13 +173,78 @@ static const hp_source HP3B31_EUNAT[] = {
   { .id = "NO_STORTINGET_DATA", .name = "Norway Storting — parliamentary data service",
     .name_ja = "ノルウェー議会 データサービス", .category = "government",
     .portal = "https://data.stortinget.no", .record_type = "no-parliamentary-record",
-    .tags = "\"no\",\"parliament\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.stortinget.no/no/Saker-og-publikasjoner/Sok/?stq={q}",
-    .base = "https://www.stortinget.no", .filter_query = 1,
-    .description = "Norwegian parliamentary cases, votes per representative, "
-      "committee hearings and the register of representatives' financial "
-      "interests including shareholdings and paid travel" },
+    .tags = "\"no\",\"parliament\"", .free_tier = 1,
+    /* RE-POINTED 2026-10-21 (open item B2), and a change of KIND as well as of
+     * path: interval 0 to daily. The scraped search path 404s, and the
+     * Storting publishes a documented JSON export instead — but that export
+     * takes a SESSION, not an entity (`?sakid=` alone answers HTTP 500), so it
+     * cannot answer "what do we have on X" and must not stay an interval-0
+     * pivot that nothing would ever run (house rule 3). The openFDA nine went
+     * the other way and CLAUDE.md records what that cost.
+     *
+     * AND THE OBVIOUS REPLACEMENT WAS ALREADY REGISTERED. The triage named
+     * /eksport/saker; `make lint-sources` answered dup-endpoint, because
+     * `eur-stortinget-saker` (collectors/feed/generated/vsrc13_europe_gov_2.c)
+     * has read exactly that URL every six hours all along — measured today,
+     * 197 records, rc=0. Registering it again would have been the data.gov.uk
+     * PROXY row over again: two rows, one upstream, no new data. **Run the
+     * dup-endpoint lint before believing a re-point is a new source.**
+     *
+     * So this row takes an export the tree does NOT read, and the one its own
+     * description already promised ("committee hearings"): /eksport/horinger,
+     * 76 hearings in 83 KB, measured 2026-10-21. Of the nine Stortinget
+     * exports registered in this tree, three live ones were missing —
+     * horinger, interpellasjoner and sporretimesporsmal — and the other two
+     * are the rows beneath this one.
+     *
+     * A hearing's subject lives one level down, in the case it is about, so
+     * the title is a dotted path through the flattened record. */
+    .url = "https://data.stortinget.no/eksport/horinger?format=json",
+    .interval = 86400,
+    .array_path = "horinger_liste",
+    .title_keys = "horing_sak_info_liste.0.sak_korttittel,komite.navn",
+    .id_keys = "id",
+    .description = "Every committee hearing of the Norwegian parliament — the "
+      "committee holding it, the case it concerns, the deadline for written "
+      "submissions and whether it is written-only. Who is invited to be heard "
+      "on a bill is the earliest public signal of who is lobbying it" },
+
+  { .id = "NO_STORTINGET_INTERPELLATIONS",
+    .name = "Norway Storting — interpellations to ministers",
+    .name_ja = "ノルウェー議会 大臣への質問(緊急質問)", .category = "government",
+    .portal = "https://data.stortinget.no", .record_type = "no-parliamentary-record",
+    .tags = "\"no\",\"parliament\"", .free_tier = 1,
+    /* One of the three live exports the tree was missing (2026-10-21): 5
+     * interpellations, each naming the minister who answered and the minister
+     * it was put to — which are not always the same person, and the
+     * difference is the point. */
+    .url = "https://data.stortinget.no/eksport/interpellasjoner?format=json",
+    .interval = 86400,
+    .array_path = "sporsmal_liste",
+    /* `tittel` EXISTS on these records and is null on all five of them (the
+     * session's interpellations are still at status 1, not yet titled), so a
+     * row declaring it alone emitted a shape notice saying 0 of 5 records
+     * carried the declared title. The minister it was put to is always
+     * present, so it is the fallback — and `tittel` stays first for the
+     * records that will have one. */
+    .title_keys = "tittel,sporsmal_til_minister_tittel", .id_keys = "id",
+    .description = "Interpellations put to Norwegian ministers — the full "
+      "question text, who asked it, which minister answered and on whose "
+      "behalf, with the date answered" },
+
+  { .id = "NO_STORTINGET_QUESTION_TIME",
+    .name = "Norway Storting — question-time questions",
+    .name_ja = "ノルウェー議会 質問時間", .category = "government",
+    .portal = "https://data.stortinget.no", .record_type = "no-parliamentary-record",
+    .tags = "\"no\",\"parliament\"", .free_tier = 1,
+    /* The third missing export: 60 question-time questions, same shape as the
+     * interpellations above and the same reason for registering it. */
+    .url = "https://data.stortinget.no/eksport/sporretimesporsmal?format=json",
+    .interval = 86400,
+    .array_path = "sporsmal_liste", .title_keys = "tittel", .id_keys = "id",
+    .description = "Questions put to ministers in the Norwegian parliament's "
+      "question time — the question as asked, the member who asked it, the "
+      "minister it was addressed to and the one who answered" },
 
   { .id = "NO_DOFFIN_TENDERS", .name = "Norway Doffin — public procurement database",
     .name_ja = "ノルウェー 公共調達", .category = "government",

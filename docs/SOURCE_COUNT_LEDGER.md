@@ -5,7 +5,25 @@ was seeded from, what it measured and what it taught. Moved out of `CLAUDE.md`
 on 2026-10-19 so that file keeps the rules and the current number; the lessons
 that a new batch must not relearn are summarised there. Newest first.
 
-**The registered count is 58,016** (2026-10-21): main's 57,536 merged with
+**The registered count is 58,019** (2026-10-21): 58,016 plus **3 rows from open
+item B2's re-pointing pass** — `EU_ECB_SUPERVISED_ENTITIES_LSI` (the LSIs sheet
+of the ECB's monthly workbook, 2,175 banks that `HP_XLSX`'s one-sheet read
+would otherwise have dropped at the seam) and two Stortinget exports the tree
+was not reading, `NO_STORTINGET_INTERPELLATIONS` and
+`NO_STORTINGET_QUESTION_TIME`. Five existing rows were re-pointed rather than
+added, three of them keeping their kind and two becoming scheduled rows;
+measurements in `docs/b2-repoint-emit-2026-10-21.tsv`, corrections in
+`docs/b2-path-stale-triage-2026-10-21.md`.
+
+The three new rows came from asking the INVERSE question. The triage had named
+`/eksport/saker` as the replacement for a dead Stortinget pivot; `make
+lint-sources` answered `dup-endpoint`, because a generated feed row has read
+that exact URL every six hours all along. Asking instead which of a
+publisher's exports the tree does NOT read found three live Stortinget
+endpoints missing — hearings, interpellations and question time — and all
+three are registered now.
+
+**The registered count was 58,016** (2026-10-21): main's 57,536 merged with
 this branch's 57,886, on the 57,415 base they share. Measured with `make
 source-count`, not computed, and then cross-checked: 57,415 + 477 + 121 =
 58,013, **+2** for the two FAA rows restored and **+1** because both sides had

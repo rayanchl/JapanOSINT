@@ -164,12 +164,66 @@ remaining work from "44 path edits" to "44 decisions".
   Google Custom Search as their site search, which is Google's data about the
   ministry and not the ministry's register.
 
-Outstanding: re-point the seven, resolve `FR_ASSEMBLEE_NATIONALE` and
-`CZ_CUZK_CADASTRE` (both name an API nobody has queried yet), find the real
-register for the four above — **and then a decision that is the operator's**,
-for the rows with no server-rendered replacement reachable from here: keep them
-disclosing, or remove them. Both are defensible and the faa.gov precedent
-argues for keeping.
+**The re-pointing pass is DONE** (2026-10-21, same day — the readings are in
+`docs/b2-path-stale-triage-2026-10-21.md` and
+`docs/b2-repoint-emit-2026-10-21.tsv`), and it corrected five of the seven
+answers above. Six rows ship, three of them NEW, and the registry goes
+58,016 → 58,019:
+
+| row | kind | measured |
+| --- | --- | --- |
+| `ZA_MUNICIPAL_MONEY` | pivot | Treasury's cubes API, `cut=demarcation.label:"{q}"` — 39 of a declared 39, impossible label 0 of 0 |
+| `ZA_GOVERNMENT_GAZETTE` | pivot | `/search?search_query=` + `href_must=/documents/notices/`, 3 real / 0 impossible |
+| `US_DATA_GOV_CKAN` | pivot | the HTML search, 8 records over 7 datasets |
+| `NO_STORTINGET_DATA` | → daily | `/eksport/horinger`, 76 of 76 |
+| `NO_STORTINGET_INTERPELLATIONS` | NEW | `/eksport/interpellasjoner`, 5 of 5 |
+| `NO_STORTINGET_QUESTION_TIME` | NEW | `/eksport/sporretimesporsmal`, 60 of 60 |
+| `EU_ECB_SUPERVISED_ENTITIES` | → weekly | the monthly workbook, sheet `SIs` (844 rows) |
+| `EU_ECB_SUPERVISED_ENTITIES_LSI` | NEW | the same workbook, sheet `LSIs` (2,175) |
+
+Five of those answers are not what the triage predicted, and the corrections
+are the part worth keeping — all four generalise and are in CLAUDE.md:
+`filter_query` on a server-filtered row discarding the upstream's own matches
+(1 of 8 kept); `hp_register()` dropping a url-less row in SILENCE; the
+dup-endpoint lint catching a "re-point" onto a URL the tree already read every
+six hours; and an anchor COUNT being mistaken for the data on two separate
+rows.
+
+Still outstanding:
+
+* **`FI_EDUSKUNTA_RECORDS` and `AT_PARLAMENT_RECORDS` need an engine
+  affordance, not a path** — see item B2-bis below.
+* `FR_ASSEMBLEE_NATIONALE` and `CZ_CUZK_CADASTRE` still name an API nobody has
+  queried.
+* the real register for the four that must not be re-pointed.
+* **and then a decision that is the operator's**, for the rows with no
+  server-rendered replacement reachable from here — now including
+  `COPERNICUS_EMS_ACTIVATIONS`, whose "31 anchors" were chrome and whose only
+  declared feed is two news items: keep them disclosing, or remove them. Both
+  are defensible. **The faa.gov precedent that argued for keeping has since
+  been overturned by its own author** (`BROWSER_HOSTS`, and two FAA rows are
+  live again), so it no longer points one way. What is NOT in question: a
+  browser profile is a remedy for a host that REFUSES us, and every row in
+  this group answers 404 or renders client-side, so no agent reaches them.
+
+### B2-bis. Two national parliaments publish a JSON TABLE the engine cannot key
+
+Measured 2026-10-21. Eduskunta's `avoindata` API and the Austrian Parliament's
+filter API both answer with an array of ARRAYS — `rowData` / `rows` — and put
+the column names in a sibling `columnNames` / `header`. The engine's JSON path
+flattens an array record POSITIONALLY (`.0`, `.1`, …), so a row could ship
+today and its `title_keys`/`id_keys` would be positions whose meaning the
+upstream is free to change without anything here noticing. That is the CSV
+`csv_no_header` shape in JSON clothing, and two unrelated publishers serve it,
+which is the argument for a declared header path rather than positional keys
+hand-written into two rows.
+
+Both are otherwise ready. Eduskunta's filter is honest and measured —
+`columnName=lastname&columnValue=Marin` → 1 row, an impossible value → 0,
+unfiltered → 100 with `hasMore` — so it can stay an entity pivot. The Austrian
+one is a bulk export and wants an interval: 391,269 rows over 4 pages, and it
+**ignores `pageSize`** (a request for 3 rows returned 100,000 rows and 58 MB),
+so it also wants a per-row timeout and a hard look at cost before it ships.
 
 The original item read:
 

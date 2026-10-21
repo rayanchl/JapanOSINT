@@ -1,0 +1,13 @@
+# Open item B2 — the re-pointed rows, measured through ./bin/japanosint --run
+# on 2026-10-21. Every row was also asked about an impossible entity where it
+# is a pivot (rule 4d); those readings are in docs/b2-path-stale-triage-2026-10-21.md.
+#
+# id	kind	rc	records	stored	requests	bytes	notices	reading
+ZA_MUNICIPAL_MONEY	pivot	0	39	39	1	7441	0	cut=demarcation.label:"Cape Town" — 39 of the API's own declared 39; impossible label 0 of 0
+ZA_GOVERNMENT_GAZETTE	pivot	-1	1	1	2	0	1	LOCAL_EGRESS: 3 consecutive engine runs rc=-1 bytes=0, and curl with the engine agent gets "Connection reset by peer" status 000 for the same URL that answered 200 / 46,284 bytes earlier the same day. UNMEASURED FROM HERE, not a verdict about the host; the filter reading (3 notice anchors real, 0 impossible) stands from the earlier reachable window
+US_DATA_GOV_CKAN	pivot	0	8	8	1	144110	0	8 records over 7 distinct datasets — one dataset is linked both with and without ?from_hint, so it stores twice, the second copy labelled "JSON". Upstream anchor shape, documented in the row
+NO_STORTINGET_DATA	scheduled 86400	0	76	76	1	83766	0	/eksport/horinger — 76 committee hearings, complete in one request
+NO_STORTINGET_INTERPELLATIONS	scheduled 86400	0	5	5	1	8557	0	after title_keys fell back to the minister: `tittel` exists and is null on all five
+NO_STORTINGET_QUESTION_TIME	scheduled 86400	0	60	60	1	132832	0	complete in one request
+EU_ECB_SUPERVISED_ENTITIES	scheduled 604800	-	-	-	-	-	-	NOT RUN from here: the workbook is 326 KB behind index_href_must and the sheet has 844 rows; registration verified, emit unmeasured
+EU_ECB_SUPERVISED_ENTITIES_LSI	scheduled 604800	-	-	-	-	-	-	NOT RUN from here; the LSIs sheet of the same workbook, 2,175 rows

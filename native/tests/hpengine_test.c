@@ -913,6 +913,24 @@ static const hp_source T[] = {
 };
 HP_REGISTER_TABLE(T)
 
+/* A row with an id and NO `.url` cannot be fetched, so hp_register refuses it
+ * — and until 2026-10-21 it refused it in silence, which is how two rows of
+ * one batch shipped registering nothing at all. Pinned here from both sides:
+ * the url-less row must stay OUT (nothing should "fix" this by registering a
+ * row the engine cannot run), and the complete row BESIDE it must still come
+ * in, because one unusable row must not take its table down with it. The
+ * stderr line itself was confirmed by hand on a build with .url removed. */
+static const hp_source TNOURL[] = {
+  { .id = "T_NO_URL_AT_ALL", .name = "a row with no url", .url = NULL,
+    .array_path = "items", .title_keys = "name", .id_keys = "id",
+    .interval = 3600, .record_type = "t-nourl", .free_tier = 1, .description = "d" },
+  { .id = "T_URL_PRESENT", .name = "its complete neighbour",
+    .url = "https://x.test/present",
+    .array_path = "items", .title_keys = "name", .id_keys = "id",
+    .interval = 3600, .record_type = "t-nourl", .free_tier = 1, .description = "d" },
+};
+HP_REGISTER_TABLE(TNOURL)
+
 /* A ZIP of `n` STORED entries (no compression, so the test needs no zlib and
  * the payload bytes appear in the archive verbatim), with a central directory
  * and end record. CRCs are 0: nothing in the engine checks them. Caller frees;
@@ -4026,6 +4044,19 @@ int main(void) {
   rc = run_source("T_ODATA_DECL", NULL);
   ok(rc == 0 && g_ncalls == 2 && g_ncap >= 3,
      "47c: a row that DECLARES a dotted key as next_path resolves it too");
+
+  /* 48. A row the engine cannot fetch is refused at REGISTRATION, and says so.
+   *     `hp_register()` skipped a row with no `.url` with a bare `continue`:
+   *     the row compiled, sat in its table, registered nothing and reported
+   *     nothing, and the only symptom was the registry floor counting one
+   *     fewer source than the day before. Two rows of open item B2's
+   *     re-pointing pass shipped exactly that way (an `index_url` row still
+   *     needs a `.url` — the engine replaces it per run). Both halves matter:
+   *     the unusable row stays out, and its complete neighbour still gets in. */
+  ok(find_def("T_NO_URL_AT_ALL") == NULL,
+     "48: a row with no url is NOT registered");
+  ok(find_def("T_URL_PRESENT") != NULL,
+     "48b: the complete row beside it still registers");
 
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;
