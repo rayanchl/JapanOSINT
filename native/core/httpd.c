@@ -31,8 +31,9 @@
 #include "sourceindexapi.h"
 #include "camera_stills.h"
 #include "visualsearchapi.h"   /* GET /api/cameras/visual-search */
-#include "camera_dupes.h"
-#include "cadence.h"         /* GET/PUT /api/sources/cadence */      /* GET /api/admin/cameras/duplicates */
+#include "camera_dupes.h"      /* GET /api/admin/cameras/duplicates */
+#include "cadence.h"           /* GET/PUT /api/sources/cadence */
+#include "thresholds.h"        /* /api/admin/thresholds */
 #include "cameraproxy.h"
 #include "uploadapi.h"
 #include "ffmpeg.h"
@@ -1684,6 +1685,16 @@ static void *sem_thread(void *vp) {
   return NULL;
 }
 
+/* GET /api/audit/verify as a semsearch_route_fn, so sem_spawn runs it. */
+static char *audit_verify_route(db_handle *db, const char *tenant,
+                                const char *id, const char *qs,
+                                int is_operator, int *status) {
+  (void)id; (void)qs; (void)is_operator;
+  char *body = tenantapi_audit_verify(db, tenant ? tenant : "");
+  *status = body ? 200 : 500;
+  return body;
+}
+
 /* Run `fn` on a worker; always replies (now, or deferred to MG_EV_WAKEUP). */
 static void sem_spawn(struct mg_connection *c, struct mg_http_message *hm,
                       semsearch_route_fn fn, const char *tenant, const char *id,
@@ -3022,6 +3033,30 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         char *body = ffmpeg_capabilities();
         if (!body) { reply_json(c, 500, "{\"error\":\"server_error\"}"); return; }
         reply_json(c, 200, body); free(body); return;
+      }
+
+      /* Embedding-similarity thresholds (core/thresholds.h): list every
+       * registered cut-off with the value in force and where it came from,
+       * and set or reset an operator override. Applies on the next
+       * threshold_get() — no restart. Audited ("threshold.set"/".reset"). */
+      if (eq(u,"/api/admin/thresholds")) {
+        if (mg_strcmp(hm->method, mg_str("GET")) != 0) {
+          reply_json(c,405,"{\"error\":\"method_not_allowed\"}"); return; }
+        char *b = threshold_list_json();
+        if (!b) { reply_json(c,500,"{\"error\":\"server_error\"}"); return; }
+        reply_json(c,200,b); free(b); return;
+      }
+      {
+        char tkey[64] = {0};
+        if (seg(u,"/api/admin/thresholds/","",tkey,sizeof tkey)) {
+          if (mg_strcmp(hm->method, mg_str("PUT")) != 0) {
+            reply_json(c,405,"{\"error\":\"method_not_allowed\"}"); return; }
+          int st = 200;
+          char *b = thresholds_api_put(g_db, tkey, hm->body.buf, hm->body.len,
+                                       usr.id, &st);
+          if (!b) { reply_json(c,500,"{\"error\":\"server_error\"}"); return; }
+          reply_json(c,st,b); free(b); return;
+        }
       }
 
       if (eq(u,"/api/admin/restart")) {
@@ -4579,9 +4614,13 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
       if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
 
+      /* The chain walk is the whole log, streamed: off the event loop. */
+      if (eq(u, "/api/audit/verify")) {
+        sem_spawn(c, hm, audit_verify_route, tc.tenant_id, "", 0);
+        return;
+      }
       char *body;
       if (eq(u, "/api/me"))                body = tenantapi_me(g_db, &tc);
-      else if (eq(u, "/api/audit/verify")) body = tenantapi_audit_verify(g_db, tc.tenant_id);
       else {
         char lv[16] = {0}, ov[16] = {0};
         int hl = mg_http_get_var(&hm->query, "limit", lv, sizeof lv);

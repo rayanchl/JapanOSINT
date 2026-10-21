@@ -276,9 +276,9 @@
 #define FFMPEG_ERR_NO_DURATION  (-11)
 #define FFMPEG_ERR_OOM          (-12)
 /* A network input whose host is loopback/private/link-local/metadata under
- * the camera destination policy (core/hostgate.h; always strict). Checked
- * before spawning. Segment URLs INSIDE an HLS playlist are
- * fetched by ffmpeg itself and are constrained only by -protocol_whitelist. */
+ * the camera destination policy (core/hostgate.h; always strict), or an HLS
+ * playlist that names one (or could not be read to be checked, see
+ * core/hls_check.h). Checked before spawning. */
 #define FFMPEG_ERR_BLOCKED      (-13)
 
 /* Stable snake_case token for a code — safe to store in a column or return in

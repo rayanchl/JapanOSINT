@@ -260,6 +260,11 @@ char *camera_proxy_fetch(db_handle *db, const char *camera_uid,
 #if LIBCURL_VERSION_NUM >= 0x075000
   curl_easy_setopt(e, CURLOPT_PREREQFUNCTION, proxy_prereq);
   curl_easy_setopt(e, CURLOPT_PREREQDATA, (void *)0);
+#else
+  /* No per-connection hook on this libcurl, so nothing would judge the
+   * address of a redirect's target: a camera URL could 302 into the LAN or
+   * the metadata service. Refuse to follow at all; the first hop was checked. */
+  curl_easy_setopt(e, CURLOPT_FOLLOWLOCATION, 0L);
 #endif
   curl_easy_setopt(e, CURLOPT_TIMEOUT_MS, (long)CAM_PROXY_TIMEOUT_MS);
   curl_easy_setopt(e, CURLOPT_CONNECTTIMEOUT_MS, 3000L);

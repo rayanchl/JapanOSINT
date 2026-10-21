@@ -855,12 +855,18 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
    * working model genuinely found no entity, the user is owed the distinction
    * between "one service was the right answer" and "one service is all we
    * could manage". */
+  /* Type "question": JP_CORPUS_LOOKUP then routes it through the service index
+   * to EVERY scheduled source related by meaning (no count cap, a similarity
+   * floor) and reads those sources' stored records — scheduled feeds cannot
+   * be dispatched on a question, but their records answer it. Without an
+   * embedding server it is the same single keyword search as before. */
   if (tasks.n == 0 && query && *query) {
-    add_task(&tasks, &executed, "JP_CORPUS_LOOKUP", query, "keyword");
+    add_task(&tasks, &executed, "JP_CORPUS_LOOKUP", query, "question");
     progress_stage_error(rp, "services_assigned", "no_entities_extracted",
-      "no entities came out of the analysis stage, so no service could be "
-      "routed to one; falling back to a single JP_CORPUS_LOOKUP keyword "
-      "search over the stored corpus using the raw query text");
+      "no entities came out of the analysis stage, so no pivot could be "
+      "dispatched; falling back to JP_CORPUS_LOOKUP over the stored corpus, "
+      "routed to the related sources by meaning when the service index can "
+      "answer, else a keyword search on the raw query text");
   }
   assign_services(rp, &tasks);
 

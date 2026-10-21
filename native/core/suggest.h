@@ -17,8 +17,9 @@
  *     (items[].source: "history" | "saved" | "service" | "llm");
  *   - the LLM is asked only with expand=1, and its suggestions come after the
  *     retrieved ones;
- *   - the list is cut at SUGGEST_MAX (9, the client's list), and the cut is
- *     stated: meta {candidates, shown, cut_at, truncated, llm}.
+ *   - the RETRIEVED list is cut at SUGGEST_MAX (9, the client's list), and the
+ *     cut is stated: meta {candidates, shown, cut_at, truncated, llm}; the
+ *     LLM's ideas asked for with expand=1 follow the cut in full.
  * Tenancy: history and saved searches are read for the caller's workspace
  * only (the same rule savedsearchapi.c applies to its lists).
  *
