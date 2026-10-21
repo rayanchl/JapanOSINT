@@ -5,7 +5,43 @@ was seeded from, what it measured and what it taught. Moved out of `CLAUDE.md`
 on 2026-10-19 so that file keeps the rules and the current number; the lessons
 that a new batch must not relearn are summarised there. Newest first.
 
-**The registered count is 56,955** (2026-10-21): main's 53,739 (its batch 49, PR #55) − 6 − 25 + 3,247 (batch 50).
+**The registered count is 57,062** (2026-10-21): 56,955 + 136 (batch 51) − 29 (takeovers).
+
+* **+136 — batch 51**, Hong Kong and Macao government feeds plus China News
+  Service (`collectors/sources/cn_feeds_batch51.c`): news.gov.hk by category,
+  HKMA (20), the Centre for Health Protection (12), RTHK, Census and Statistics,
+  OFCA, the Marine Department, EPD and the AQHI, Macao's transport, labour,
+  statistics, meteorological and cultural bureaux, and chinanews.com.cn (23).
+  Read off the publishers' own feed directories — GovHK's RSS list, the HKMA's,
+  China News Service's `/rss/`, and the page each of 306 HK/Macao government
+  homepages (Wikidata P856) links as "RSS". Mainland ministries publish on
+  WeChat rather than RSS, which is why the mainland share is one news agency.
+  Emit: 135 OK + 1 collision that is the upstream's own 16 byte-identical
+  repeats (Macao's events feed lists one event under several dates); 5,051
+  emitted / 5,037 stored. LegCo's 39 feeds refuse the connection from here.
+* **−29 — a sweep of every feed in the tree for domain takeovers**
+  (2026-10-21): the item titles of 42,593 distinct feed and WordPress-collection
+  URLs were read and 52 flagged; each flag was read by hand. 29 were taken over
+  or injected and are removed with their evidence in
+  `docs/removed-sources-2026-10-21-takeovers.tsv` — Ghana's national CERT
+  publishing casino posts, Visit The Gambia, 11 French commune and Mission
+  Locale sites (three of them COMMENT feeds full of pharma spam), five Italian
+  public bodies, a Miyawaka chamber of commerce in main's batch 49, the Belize
+  Reporter now a Vietnamese lottery site, `japanesecreations` from batch 42,
+  and two of batch 50's own rows found after shipping (`pcsa.jp`, City of
+  Hazard). 23 were kept: Vietnamese papers reporting lottery results, Indonesian
+  news on gambling raids, the Horserace Betting Levy Board, Korean and Japanese
+  bodies publishing in Vietnamese for migrant residents, Serbian and Bosnian
+  `đ`, and four real outlets carrying a sponsored post (The Coast, INFO.FR,
+  Asian Journal, The Village Voice) — a sponsored post is the publisher's own,
+  a takeover is not.
+* Batch 50's retry pass: 15 of the 16 hosts that refused every honest agent
+  still do; Camden County, NJ refuses only the contact URL and is back with the
+  PIB-style agent; Edinburg ND is another "collector" block; Ballwin's feed is
+  still empty and left (`EMPTY_RESULTSET`). Batch 50 now reads 3,243 OK + 2
+  byte-identical collisions.
+
+**The registered count was 56,955** (2026-10-21): main's 53,739 (its batch 49, PR #55) − 6 − 25 + 3,247 (batch 50).
 
 * **−6**: `jp_feeds_batch43/44` feeds measured dead on the 2026-10-20 emit
   sweep (game-i.daa.jp serves XHTML, peco-japan.com an S3 AccessDenied,
@@ -43,6 +79,18 @@ that a new batch must not relearn are summarised there. Newest first.
   it. Batches 43 and 44 now also name main's `JO43_` municipal and `JO44_` US
   government tables; the `jp_feeds` measurements are
   `verified-sources-batch4{3,4}.jp_feeds.tsv`.
+
+**main's count was 53,739** (2026-10-20, PR #55), measured — batch 49's 5,393
+rows on 48,346: the WordPress collections of the member organisations of Japan's
+nationwide federations (medical and pharmacist associations, JA, chambers of
+commerce, 法人会, co-ops, JC, the 士業 bodies, fire chiefs, welfare councils,
+public cultural facilities), found by reading the federations' own link pages
+for hosts and asking each host for its REST root, in eleven beats named after
+the federation that listed the host. 5,405 generated; 5,371 OK on the first
+emit pass, 16 of 28 recovered on a second reading, 12 removed
+(`docs/rejected-sources-batch49.emit.tsv`); 518,813 emitted / 518,827 stored.
+`docs/verified-sources-batch49.tsv`,
+`native/collectors/OSINT_SOURCES_BATCH_49_JPWPFEDERATIONS.md`.
 
 **The registered count was 48,343** (2026-10-19): the 47,178 below merged with
 main's 22,408 (21,789 plus PR #50's batch 45) (its own `jp_feeds_batch41..44.c` beats of Japanese RSS sources,

@@ -9162,24 +9162,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "11:05:52 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q140387368", .name = "Gambia Tourism Board (government-agency, GM) - Visit The Gambia",
-    .name_ja = "Gambia Tourism Board (government-agency, GM) - Visit The Gambia",
-    .category = "government", .portal = "https://visitthegambia.com/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://visitthegambia.com/?feed=rss2",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 604800,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 02 Oct 2025 "
-      "09:54:08 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO47_WD_Q140387427", .name = "National Roads Authority (government-agency, GM) - National "
       "Roads Authority",
     .name_ja = "National Roads Authority (government-agency, GM) - National Roads Authority",
@@ -10785,25 +10767,6 @@ static const hp_source HP3B47_WDGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 15 Sep 2026 "
       "04:33:57 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO47_WD_Q7178942", .name = "Petroleum Conservation Research Association ltd "
-      "(government-agency, IN) - สล็อตโปรไทย รีวิวสล็อต",
-    .name_ja = "Petroleum Conservation Research Association ltd (government-agency, IN) - สล็อตโปรไทย รีวิวสล็อต",
-    .category = "government", .portal = "https://www.pcra.org/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.pcra.org/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 86400,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 25 Jun 2026 "
-      "21:46:20 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO47_WD_Q7309177", .name = "Regional Transport Office (government-agency, IN) - RTO Office "
@@ -14834,25 +14797,6 @@ static const hp_source HP3B47_WDGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 16 Mar 2026 "
       "15:28:24 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO47_WD_Q123418554", .name = "National Sugar Development Council (government-agency, NG) - "
-      "National Sugar Development Council",
-    .name_ja = "National Sugar Development Council (government-agency, NG) - National Sugar Development Council",
-    .category = "government", .portal = "https://nsdc.gov.ng/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://nsdc.gov.ng/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "03:18:36 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO47_WD_Q128154227", .name = "Nigeria Federal Department of Agriculture (government-agency, "

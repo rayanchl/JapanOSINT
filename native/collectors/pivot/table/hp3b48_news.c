@@ -9485,25 +9485,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as news-website, country "
       "CL." },
 
-  { .id = "JO48_NEWS_Q136868246", .name = "Dale Albo (CL) - Dale Albo",
-    .name_ja = "Dale Albo (CL) - Dale Albo",
-    .category = "news", .portal = "https://dalealbo.cl/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://dalealbo.cl/rss/feed",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 100 items, RSS2 feed, newest Sun, 18 Oct "
-      "2026 14:18:10 -0300. A feed the organisation itself declares or "
-      "links on its site root. Wikidata classes it as news-website, "
-      "country CL." },
-
   { .id = "JO48_NEWS_Q137783201", .name = "weasnews.cl (CL) - 20 de Marzo: Día de la Felicidad",
     .name_ja = "weasnews.cl (CL) - 20 de Marzo: Día de la Felicidad",
     .category = "news", .portal = "https://weasnews.cl/",
@@ -63752,24 +63733,6 @@ static const hp_source HP3B48_NEWS[] = {
       "13:00:49 -0400. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO48_NEWS_Q7761358", .name = "The Rolla Daily News (US) - therolladailynews.com",
-    .name_ja = "The Rolla Daily News (US) - therolladailynews.com",
-    .category = "news", .portal = "https://therolladailynews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://therolladailynews.com/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 10 Oct 2026 "
-      "01:21:41 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO48_NEWS_Q7762251", .name = "Sanford Herald (US) - www.sanfordherald.com - RSS Results",
     .name_ja = "Sanford Herald (US) - www.sanfordherald.com - RSS Results",
     .category = "news", .portal = "http://www.sanfordherald.com/",
@@ -67136,43 +67099,6 @@ static const hp_source HP3B48_NEWS[] = {
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "07:16:06 -0600. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO48_NEWS_Q28126770", .name = "The Concrete Herald (US) - concrete-herald.com",
-    .name_ja = "The Concrete Herald (US) - concrete-herald.com",
-    .category = "news", .portal = "https://concrete-herald.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://concrete-herald.com/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 05 Feb 2017 "
-      "11:37:00 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO48_NEWS_Q28126770_2", .name = "The Concrete Herald (US) - concrete-herald.com",
-    .name_ja = "The Concrete Herald (US) - concrete-herald.com",
-    .category = "news", .portal = "https://concrete-herald.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://concrete-herald.com/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2017-02-05T11:37:00Z. A feed the organisation itself declares or "
-      "links on its site root. Wikidata classes it as newspaper, "
-      "country US." },
 
   { .id = "JO48_NEWS_Q28232782", .name = "Portland Observer (US) - The Portland Observer",
     .name_ja = "Portland Observer (US) - The Portland Observer",

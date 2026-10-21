@@ -5415,14 +5415,6 @@ RSSX(jp_b50_pbv_or_jp, "jp-b50-pbv-or-jp",
      3600,
      "Peace Boat Disaster Relief — RSS/Atom feed declared by the official website (Wikidata P856) of this organisation; 10 entries at probe")
 
-RSSX(jp_b50_pcsa_jp, "jp-b50-pcsa-jp",
-     "Pachinko Chain Store Association", "パチンコ・チェーンストア協会",
-     "news", "media",
-     "https://www.pcsa.jp/feed/",
-     "ja", "[\"news\",\"country:jp\",\"publisher:Pachinko Chain Store Association\",\"media\",\"batch:50\"]",
-     3600,
-     "Pachinko Chain Store Association — RSS/Atom feed declared by the official website (Wikidata P856) of this organisation; 10 entries at probe")
-
 RSSX(jp_b50_pdd_gf_jp, "jp-b50-pdd-gf-jp",
      "PDD Support Center Green Forest", "ＰＤＤサポートセンターグリーンフォーレスト",
      "news", "media",

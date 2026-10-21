@@ -844,7 +844,6 @@ us	https://wpo.noaa.gov/feed/	NOAA Weather Program Office	REFUSED: engine agent 
 us	https://www.bls.gov/feed/bls_latest.rss	BLS Latest News	REFUSED: engine agent refused (403/0), also without "collector" (403/0); only a browser agent passes, and spoofing is ruled out
 us	https://www.bls.gov/feed/cpi.rss	BLS CPI	REFUSED: engine agent refused (403/0), also without "collector" (403/0); only a browser agent passes, and spoofing is ruled out
 jp	https://www.bungeika.or.jp/feed/	Japan Writers’ Association	REFUSED: engine agent refused (403/0), also without "collector" (403/0); only a browser agent passes, and spoofing is ruled out
-us	https://www.camdencounty.com/feed/	Camden County Improvement Authority	REFUSED: engine agent refused (403/0), also without "collector" (403/0); only a browser agent passes, and spoofing is ruled out
 us	https://www.diplomaticrooms.state.gov/feed/	Office of Fine Arts	REFUSED: engine agent refused (403/0), also without "collector" (403/0); only a browser agent passes, and spoofing is ruled out
 jp	https://www.hkd.meti.go.jp/rss/indexatom.xml	経済産業省北海道経済産業局	REFUSED: engine agent refused (403/0), also without "collector" (403/0); only a browser agent passes, and spoofing is ruled out
 us	https://www.jpl.nasa.gov/feeds/news/	NASA JPL News	REFUSED: engine agent refused (403/0), also without "collector" (403/0); only a browser agent passes, and spoofing is ruled out
@@ -852,3 +851,6 @@ uk	https://www.nhs24.scot/feed/	NHS 24	REFUSED: engine agent refused (403/0), al
 us	https://www.noaa.gov/rss	NOAA News	REFUSED: engine agent refused (403/0), also without "collector" (403/0); only a browser agent passes, and spoofing is ruled out
 us	https://www.sdcwa.org/feed/	San Diego County Water Authority	REFUSED: engine agent refused (403/0), also without "collector" (403/0); only a browser agent passes, and spoofing is ruled out
 uk	https://www.security.gov.uk/feed/	Government Cyber Coordination Centre	REFUSED: engine agent refused (403/0), also without "collector" (403/0); only a browser agent passes, and spoofing is ruled out
+us	https://www.ballwin.mo.us/Latest-News-and-Announcements/?type=rss	City of Ballwin	EMPTY_RESULTSET: well-formed channel with zero items on 2026-10-20 and 2026-10-21 (it held items on 2026-10-19)
+jp	https://www.pcsa.jp/feed/	pcsa.jp	DOMAIN_TAKEOVER (found 2026-10-21, after shipping): feed now a "gambling compendium" with 1xbet posts; see docs/removed-sources-2026-10-21-takeovers.tsv
+us	https://www.cityofhazard.com/feed	City of Hazard	DOMAIN_TAKEOVER (found 2026-10-21, after shipping): 8 of 11 items gambling articles; see docs/removed-sources-2026-10-21-takeovers.tsv

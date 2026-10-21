@@ -1589,14 +1589,6 @@ RSSX(us_b50_aureliaia_com, "us-b50-aureliaia-com",
      10800,
      "Aurelia — RSS/Atom feed declared by the official website (Wikidata P856) of this city government; 3 entries at probe")
 
-RSSX(us_b50_ballwin_mo_us_latest_news_and_announcements_type_rss, "us-b50-ballwin-mo-us-latest-news-and-announcements-type-rss",
-     "Ballwin — City of Ballwin News", "Ballwin — City of Ballwin News",
-     "us_local", "government",
-     "https://www.ballwin.mo.us/Latest-News-and-Announcements/?type=rss",
-     "en", "[\"gov\",\"country:us\",\"publisher:Ballwin — City of Ballwin News\",\"government\",\"batch:50\"]",
-     10800,
-     "Ballwin — City of Ballwin News — RSS/Atom feed declared by the official website (Wikidata P856) of this city government; 1 entries at probe")
-
 RSSX(us_b50_beachnear_me, "us-b50-beachnear-me",
      "Greenfield", "Greenfield",
      "us_local", "government",
@@ -2277,6 +2269,14 @@ RSSX(us_b50_cityofdarlington_com, "us-b50-cityofdarlington-com",
      10800,
      "Darlington — RSS/Atom feed declared by the official website (Wikidata P856) of this city government; 10 entries at probe")
 
+RSSX(us_b50_camdencounty_com, "us-b50-camdencounty-com",
+     "Camden County, NJ", "Camden County, NJ",
+     "us_local", "government",
+     "https://www.camdencounty.com/feed/",
+     "en", "[\"gov\",\"country:us\",\"publisher:Camden County, NJ\",\"government\",\"batch:50\"]",
+     10800,
+     "Camden County, NJ — county government news feed (commissioners, services, roadworks); 10 entries at probe 2026-10-21")
+
 RSSX(us_b50_cityofdeerwood_gov_format_feed_type_atom, "us-b50-cityofdeerwood-gov-format-feed-type-atom",
      "Deerwood — Home", "Deerwood — Home",
      "us_local", "government",
@@ -2484,14 +2484,6 @@ RSSX(us_b50_cityofgw_org, "us-b50-cityofgw-org",
      "en", "[\"gov\",\"country:us\",\"publisher:George West\",\"government\",\"batch:50\"]",
      10800,
      "George West — RSS/Atom feed declared by the official website (Wikidata P856) of this city government; 10 entries at probe")
-
-RSSX(us_b50_cityofhazard_com, "us-b50-cityofhazard-com",
-     "Hazard", "Hazard",
-     "us_local", "government",
-     "https://www.cityofhazard.com/feed",
-     "en", "[\"gov\",\"country:us\",\"publisher:Hazard\",\"government\",\"batch:50\"]",
-     10800,
-     "Hazard — RSS/Atom feed declared by the official website (Wikidata P856) of this city government; 10 entries at probe")
 
 RSSX(us_b50_cityofhelena_org, "us-b50-cityofhelena-org",
      "Helena — City of Helena, AL - Official Website | Make Helena Home | H", "Helena — City of Helena, AL - Official Website | Make Helena Home | H",

@@ -317,6 +317,17 @@ static const struct { const char *host, *ua; } UA_OVERRIDE[] = {
   { "pib.gov.in",
     "JapanOSINT/1.0 (contact via repo issues)" },
 
+  /* Camden County, NJ: the contact URL is the refused token, as at PIB.
+   * Measured 2026-10-21 on www.camdencounty.com/feed/:
+   *     the full engine UA                                       403
+   *     "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas)"   403
+   *     "JapanOSINT/1.0 (contact via repo issues)"               200, 10 items
+   *     "JapanOSINT/1.0"                                          200
+   * us-b50-camdencounty-com was rejected in batch 50 for this until the
+   * retry pass bisected it. */
+  { "www.camdencounty.com",
+    "JapanOSINT/1.0 (contact via repo issues)" },
+
   /* The "collector" word filter again, on four more hosts. Measured 2026-09-14
    * by comparing the engine agent against the same agent with that one word
    * removed (the INE / Boston agent above):
@@ -419,6 +430,9 @@ static const struct { const char *host, *ua; } UA_OVERRIDE[] = {
    * 88 batch-50 rows (authored as 45) stored nothing on the emit sweep until this. Hosts that
    * refused EVERY honest agent (only a browser string passed) were not added
    * here and their rows were not shipped: docs/rejected-sources-batch50.tsv. */
+  { "edinburgnd.com",   /* added 2026-10-21 by the retry pass: engine UA 403, this agent 200 */
+    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
+    "contact via repo issues)" },
   { "ajaccio.corsica",
     "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
     "contact via repo issues)" },

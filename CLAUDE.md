@@ -39,7 +39,17 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 56,955** (2026-10-21): main's 53,739, less six
+**The registered count is 57,062** (2026-10-21): the 56,955 below, plus
+**batch 51's 136** Hong Kong and Macao government feeds and China News Service
+(`collectors/sources/cn_feeds_batch51.c`, read off the publishers' own RSS
+directories), less **29 rows found taken over or injected by a sweep of every
+feed in the tree** (42,593 URLs, 52 flagged, each read by hand —
+`docs/removed-sources-2026-10-21-takeovers.tsv`). New tool:
+`./bin/japanosint --discover-feeds <sites> [--jobs N]` (`core/feeddisc.c`)
+asks each homepage which feeds it declares and verifies them through the
+engine's own client, flagging `TAKEOVER_SUSPECT` on item titles.
+
+**The registered count was 56,955** (2026-10-21): main's 53,739, less six
 `jp_feeds_batch43/44` feeds measured dead, less 25 rows of batches 44/47/48
 whose official domains now publish gambling spam (below), plus **batch 50's
 3,247 government and institutional RSS/Atom feeds** for Japan, the US, the UK,
@@ -940,6 +950,7 @@ says why.
 | `tools/diagnose_emit_keys.py` | why a row emitted nothing, and which `title_keys`/`id_keys` fix it |
 | `tools/cleanup_stale_uids.py` | the rows identity fixes left in an OLD database: a plain-key row whose qualified siblings now hold the same record (the keyqual collectors and FRA), and wayback_jp's captures from before digest+timestamp+URL. Reports by default. `--delete` removes, in one transaction, only rows whose replacement is proven to exist and that nothing references. `--self-test` runs it on a scratch DB (also from `make unit`) |
 | `tools/wp_routes_sweep.py` | the WordPress method as a tool: `sweep` asks each host for its REST root (the homepage's `Link rel="https://api.w.org/"`, else `/wp-json`), its post types and one page of each collection, writing routes.tsv/probe.tsv; `manifest` turns probe.tsv into host-type beats and a rejected TSV. Hosts are normalised (`www.` dropped, one row per REST root) because `funq.jp` and `www.funq.jp` reached the same site and only `batch_exclusions.py` noticed |
+| `./bin/japanosint --discover-feeds <sites> [--jobs N]` | RSS/Atom autodiscovery in C (`core/feeddisc.c`, `test_feeddisc`): reads each homepage's own `<link rel="alternate">` declarations (relative hrefs resolve against the URL asked for, so a homepage redirecting to a squatter's domain yields nothing), skips WordPress comment feeds, decodes `&amp;`, then fetches every feed through the engine's HTTP client — same agent, per-host overrides and pacing — and prints a TSV verdict per feed: `PASS`, `TAKEOVER_SUSPECT` (gambling/pharma phrases or an unexpected script in the item titles — a question for a human, not a verdict), `REGISTERED` (any source's portal or hp row URL), or the failure. No database |
 | `tools/gen_hp_batch.py` | manifest → C, one table per beat, `--prefix`/`--batch` so batches never collide — but the batch NUMBER is yours to keep unique: main shipped a batch 32 while a branch was open with its own, both created `docs/verified-sources-batch32.tsv`, and renumbering the branch to 33 after the fact meant touching the manifest, both TSVs, the table, its array name and two batch citations that had landed in `lib/hpengine.h` and `core/hostgate.c`. Rejects duplicate opts, non-integer int opts, and an opt whose value **swallowed the next one** through a stray `\;` |
 
 ## 4. Fetching is not emitting — prove the second one

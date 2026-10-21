@@ -352,7 +352,7 @@ jp-b50-city-sapporo-jp-shiroishi-new-shiroishi-new	jp_feeds_batch50	rss-feed	htt
 jp-b50-city-sapporo-jp-shiroishi-topics-shiroishi-attention	jp_feeds_batch50	rss-feed	https://www.city.sapporo.jp/shiroishi/topics/shiroishi_attention.xml	PASS	1	OK	1	1	1
 jp-b50-ifarc-metro-tokyo-lg-jp	jp_feeds_batch50	rss-feed	https://www.ifarc.metro.tokyo.lg.jp/atom.xml	PASS	15	OK	15	15	15
 jp-b50-keishicho-metro-tokyo-lg-jp-rss-news	jp_feeds_batch50	rss-feed	https://www.keishicho.metro.tokyo.lg.jp/rss_news.xml	PASS	3	OK	3	3	3
-jp-b50-town-ando-nara-jp	jp_feeds_batch50	rss-feed	https://www.town.ando.nara.jp/rss/rss.xml	PASS	30	EMITS_NOTHING	0	0	0
+jp-b50-town-ando-nara-jp	jp_feeds_batch50	rss-feed	https://www.town.ando.nara.jp/rss/rss.xml	PASS	30	OK	30	30	30
 jp-b50-town-harima-lg-jp-hotnews-hotnews	jp_feeds_batch50	rss-feed	https://www.town.harima.lg.jp/hotnews/hotnews.xml	PASS	10	OK	10	10	10
 jp-b50-town-harima-lg-jp-shinchaku-shinchaku	jp_feeds_batch50	rss-feed	https://www.town.harima.lg.jp/shinchaku/shinchaku.xml	PASS	10	OK	10	10	10
 jp-b50-town-hino-tottori-jp-services-rss10-1752	jp_feeds_batch50	rss-feed	https://www.town.hino.tottori.jp/services/rdf/rss10/1752.xml	PASS	15	OK	15	15	15
@@ -362,7 +362,7 @@ jp-b50-town-ibaraki-lg-jp-rss10-1	jp_feeds_batch50	rss-feed	https://www.town.iba
 jp-b50-town-isen-kagoshima-jp-oshirase	jp_feeds_batch50	rss-feed	https://www.town.isen.kagoshima.jp/oshirase.xml	PASS	5	OK	5	5	5
 jp-b50-town-kamikawa-hyogo-jp	jp_feeds_batch50	rss-feed	https://www.town.kamikawa.hyogo.jp/rss/rss.xml	PASS	30	OK	30	30	30
 jp-b50-town-kaminokawa-lg-jp-rss10-1304011	jp_feeds_batch50	rss-feed	https://www.town.kaminokawa.lg.jp/rss/rss10-1304011.xml	PASS	7	OK	7	7	7
-jp-b50-town-koryo-nara-jp	jp_feeds_batch50	rss-feed	https://www.town.koryo.nara.jp/rss/rss.xml	PASS	30	EMITS_NOTHING	0	0	0
+jp-b50-town-koryo-nara-jp	jp_feeds_batch50	rss-feed	https://www.town.koryo.nara.jp/rss/rss.xml	PASS	30	OK	30	30	30
 jp-b50-town-oe-yamagata-jp-announce	jp_feeds_batch50	rss-feed	https://www.town.oe.yamagata.jp/feed/announce	PASS	10	OK	10	10	10
 jp-b50-town-oe-yamagata-jp-news	jp_feeds_batch50	rss-feed	https://www.town.oe.yamagata.jp/feed/news	PASS	20	OK	20	20	20
 jp-b50-town-oharu-aichi-jp-services-rss10-1035	jp_feeds_batch50	rss-feed	https://www.town.oharu.aichi.jp/services/rdf/rss10/1035.xml	PASS	15	OK	15	15	15
@@ -370,7 +370,7 @@ jp-b50-town-oharu-aichi-jp-services-rss10-1036	jp_feeds_batch50	rss-feed	https:/
 jp-b50-town-oharu-aichi-jp-services-rss10-1037	jp_feeds_batch50	rss-feed	https://www.town.oharu.aichi.jp/services/rdf/rss10/1037.xml	PASS	11	OK	11	11	11
 jp-b50-town-okoppe-lg-jp-cms	jp_feeds_batch50	rss-feed	https://www.town.okoppe.lg.jp/cms/rss.xml	PASS	27	OK	27	27	27
 jp-b50-town-saka-lg-jp	jp_feeds_batch50	rss-feed	https://www.town.saka.lg.jp/feed/	PASS	20	OK	20	20	20
-jp-b50-town-shimoichi-lg-jp	jp_feeds_batch50	rss-feed	https://www.town.shimoichi.lg.jp/rss/rss.xml	PASS	30	EMITS_NOTHING	0	0	0
+jp-b50-town-shimoichi-lg-jp	jp_feeds_batch50	rss-feed	https://www.town.shimoichi.lg.jp/rss/rss.xml	PASS	30	OK	30	30	30
 jp-b50-town-shirataka-lg-jp-services-rss10-1097	jp_feeds_batch50	rss-feed	https://www.town.shirataka.lg.jp/services/rdf/rss10/1097.xml	PASS	15	OK	15	15	15
 jp-b50-town-shirataka-lg-jp-services-rss10-1099	jp_feeds_batch50	rss-feed	https://www.town.shirataka.lg.jp/services/rdf/rss10/1099.xml	PASS	13	OK	13	13	13
 jp-b50-town-tara-lg-jp-topix	jp_feeds_batch50	rss-feed	https://www.town.tara.lg.jp/rss/topix.xml	PASS	14	OK	14	14	14
@@ -1011,7 +1011,6 @@ jp-b50-paraca-co-jp	jp_feeds_batch50	rss-feed	https://paraca.co.jp/feed/	PASS	1	
 jp-b50-park-kagishippo-com-posts-default	jp_feeds_batch50	rss-feed	https://park.kagishippo.com/feeds/posts/default	PASS	25	OK	25	25	25
 jp-b50-park-kagishippo-com-posts-default-alt-rss	jp_feeds_batch50	rss-feed	https://park.kagishippo.com/feeds/posts/default?alt=rss	PASS	25	OK	25	25	25
 jp-b50-pbv-or-jp	jp_feeds_batch50	rss-feed	https://pbv.or.jp/feed	PASS	10	OK	10	10	10
-jp-b50-pcsa-jp	jp_feeds_batch50	rss-feed	https://www.pcsa.jp/feed/	PASS	10	OK	10	10	10
 jp-b50-pdd-gf-jp	jp_feeds_batch50	rss-feed	https://www.pdd-gf.jp/feed/	PASS	10	OK	10	10	10
 jp-b50-peace-wing-n-or-jp	jp_feeds_batch50	rss-feed	https://www.peace-wing-n.or.jp/feed/	PASS	10	OK	10	10	10
 jp-b50-peerminato-com	jp_feeds_batch50	rss-feed	https://peerminato.com/feed/	PASS	10	OK	10	10	10
@@ -2526,7 +2525,6 @@ us-b50-auburn-ne-gov	us_feeds_batch50	rss-feed	https://auburn.ne.gov/feed/	PASS	
 us-b50-auburndalefl-com	us_feeds_batch50	rss-feed	https://auburndalefl.com/feed/	PASS	1	OK	1	1	1
 us-b50-auburnhills-org	us_feeds_batch50	rss-feed	https://www.auburnhills.org/feed/	PASS	10	OK	10	10	10
 us-b50-aureliaia-com	us_feeds_batch50	rss-feed	https://aureliaia.com/feed/	PASS	3	OK	3	3	3
-us-b50-ballwin-mo-us-latest-news-and-announcements-type-rss	us_feeds_batch50	rss-feed	https://www.ballwin.mo.us/Latest-News-and-Announcements/?type=rss	PASS	1	EMITS_NOTHING	0	0	0
 us-b50-beachnear-me	us_feeds_batch50	rss-feed	https://beachnear.me/feed/	PASS	10	OK	10	10	10
 us-b50-beattyville-org	us_feeds_batch50	rss-feed	https://beattyville.org/feed/	PASS	5	OK	5	5	5
 us-b50-bellevueky-org	us_feeds_batch50	rss-feed	https://bellevueky.org/feed/	PASS	10	OK	10	10	10
@@ -2638,7 +2636,6 @@ us-b50-cityofglencoe-org	us_feeds_batch50	rss-feed	https://cityofglencoe.org/fee
 us-b50-cityofgoldbar-us	us_feeds_batch50	rss-feed	https://cityofgoldbar.us/feed/	PASS	4	OK	4	4	4
 us-b50-cityofgraham-com	us_feeds_batch50	rss-feed	https://www.cityofgraham.com/feed/	PASS	10	OK	10	10	10
 us-b50-cityofgw-org	us_feeds_batch50	rss-feed	https://cityofgw.org/feed/	PASS	10	OK	10	10	10
-us-b50-cityofhazard-com	us_feeds_batch50	rss-feed	https://www.cityofhazard.com/feed	PASS	10	OK	10	10	10
 us-b50-cityofhelena-org	us_feeds_batch50	rss-feed	https://www.cityofhelena.org/feed/	PASS	10	OK	10	10	10
 us-b50-cityofhooks-org	us_feeds_batch50	rss-feed	https://cityofhooks.org/feed/	PASS	10	OK	10	10	10
 us-b50-cityofhoopeston-com	us_feeds_batch50	rss-feed	https://cityofhoopeston.com/feed/	PASS	10	OK	10	10	10
@@ -2773,7 +2770,7 @@ us-b50-earlhamiowa-org	us_feeds_batch50	rss-feed	https://earlhamiowa.org/feed/	P
 us-b50-easthelenamt-us-coeh	us_feeds_batch50	rss-feed	https://easthelenamt.us/coeh/feed/	PASS	1	OK	1	1	1
 us-b50-eastlakeohio-com	us_feeds_batch50	rss-feed	https://eastlakeohio.com/feed/	PASS	10	OK	10	10	10
 us-b50-edgertonks-org	us_feeds_batch50	rss-feed	https://edgertonks.org/feed/	PASS	10	OK	10	10	10
-us-b50-edinburgnd-com	us_feeds_batch50	rss-feed	https://edinburgnd.com/feed	PASS	10	EMITS_NOTHING	0	0	0
+us-b50-edinburgnd-com	us_feeds_batch50	rss-feed	https://edinburgnd.com/feed	PASS	10	OK	10	10	10
 us-b50-elginmn-com	us_feeds_batch50	rss-feed	https://www.elginmn.com/feed/	PASS	10	OK	10	10	10
 us-b50-elmwoodil-com-blog-feed	us_feeds_batch50	rss-feed	https://www.elmwoodil.com/blog-feed.xml	PASS	20	OK	20	20	20
 us-b50-enjoyrisingsun-com	us_feeds_batch50	rss-feed	https://enjoyrisingsun.com/feed/	PASS	10	OK	10	10	10
@@ -2812,7 +2809,7 @@ us-b50-greenfieldiowa-com-rss2	us_feeds_batch50	rss-feed	https://www.greenfieldi
 us-b50-greersferry-com	us_feeds_batch50	rss-feed	https://www.greersferry.com/feed/	PASS	10	OK	10	10	10
 us-b50-gretnala-com-events	us_feeds_batch50	rss-feed	https://www.gretnala.com/events/feed/	PASS	10	OK	10	10	10
 us-b50-guntersvilleal-org	us_feeds_batch50	rss-feed	https://guntersvilleal.org/feed/	PASS	10	OK	10	10	10
-us-b50-guthrieky-com	us_feeds_batch50	rss-feed	https://guthrieky.com/feed/	PASS	10	EMITS_NOTHING	0	0	0
+us-b50-guthrieky-com	us_feeds_batch50	rss-feed	https://guthrieky.com/feed/	PASS	10	OK	10	10	10
 us-b50-haileycityhall-org	us_feeds_batch50	rss-feed	https://haileycityhall.org/feed/	PASS	10	OK	10	10	10
 us-b50-hallockmn-org	us_feeds_batch50	rss-feed	https://hallockmn.org/feed/	PASS	10	OK	10	10	10
 us-b50-halstad-com	us_feeds_batch50	rss-feed	https://halstad.com/feed/	PASS	10	OK	10	10	10
@@ -3181,7 +3178,7 @@ us-b50-potomac-edu	us_feeds_batch50	rss-feed	https://potomac.edu/feed/	PASS	10	O
 us-b50-pvamu-edu	us_feeds_batch50	rss-feed	https://www.pvamu.edu/feed/	PASS	10	OK	10	10	10
 us-b50-queens-edu	us_feeds_batch50	rss-feed	https://www.queens.edu/feed/	PASS	10	OK	10	10	10
 us-b50-quincy-edu	us_feeds_batch50	rss-feed	https://www.quincy.edu/feed/	PASS	10	OK	10	10	10
-us-b50-rcu-edu	us_feeds_batch50	rss-feed	https://rcu.edu/feed/	PASS	10	EMITS_NOTHING	0	0	0
+us-b50-rcu-edu	us_feeds_batch50	rss-feed	https://rcu.edu/feed/	PASS	10	OK	10	10	10
 us-b50-redeemeruniversityead-com	us_feeds_batch50	rss-feed	https://redeemeruniversityead.com/feed/	PASS	10	OK	10	10	10
 us-b50-regent-edu	us_feeds_batch50	rss-feed	https://www.regent.edu/feed/	PASS	10	OK	10	10	10
 us-b50-research-ibm-com	us_feeds_batch50	rss-feed	https://research.ibm.com/rss	PASS	20	OK	20	20	20
@@ -3244,5 +3241,6 @@ us-b50-wiltech-edu	us_feeds_batch50	rss-feed	https://www.wiltech.edu/feed/	PASS	
 us-b50-wnmu-edu	us_feeds_batch50	rss-feed	https://wnmu.edu/feed/	PASS	10	OK	10	10	10
 us-b50-www2-trinitydc-edu	us_feeds_batch50	rss-feed	https://www2.trinitydc.edu/feed/	PASS	1	OK	1	1	1
 us-b50-gov-ca-gov	us_feeds_batch50	rss-feed	https://www.gov.ca.gov/feed/	PASS	10	OK	10	10	10
-us-b50-gov-georgia-gov	us_feeds_batch50	rss-feed	https://gov.georgia.gov/rss.xml	PASS	10	EMITS_NOTHING	0	0	0
+us-b50-gov-georgia-gov	us_feeds_batch50	rss-feed	https://gov.georgia.gov/rss.xml	PASS	10	OK	10	10	10
 us-b50-gov-texas-gov-news	us_feeds_batch50	rss-feed	https://gov.texas.gov/news/rss	PASS	10	OK	10	10	10
+us-b50-camdencounty-com	us_feeds_batch50	rss-feed	https://www.camdencounty.com/feed/	PASS	10	OK	10	10	10

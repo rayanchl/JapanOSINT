@@ -23794,25 +23794,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "11:00:32 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CCSSR", .name = "Centro Culturale Sardo S.R.L. (Gestori di Pubblici Servizi, "
-      "Sassari, SS) - Istituto Kennedy",
-    .name_ja = "Centro Culturale Sardo S.R.L. (Gestori di Pubblici Servizi, Sassari, SS) - Istituto Kennedy",
-    .category = "government", .portal = "https://www.kennedyss.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kennedyss.it/new/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 86400,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 02 Sep 2026 "
-      "22:00:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO47_IT_CCTIC", .name = "Consorzio Cimiteriale Tra I Comuni di Casoria Arzano Casavatore "
       "(Pubbliche Amministrazioni, Arzano, NA) - Consorzio Cimiteriale",
     .name_ja = "Consorzio Cimiteriale Tra I Comuni di Casoria Arzano Casavatore (Pubbliche Amministrazioni, Arzano, NA) - Consorzio Cimiteriale",
@@ -24793,26 +24774,6 @@ static const hp_source HP3B47_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 17 Oct 2025 "
       "06:59:51 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO47_IT_CDPIDLM", .name = "Ordine dei Periti Industriali della provincia di Modena "
-      "(Pubbliche Amministrazioni, Modena, MO) - Ordine dei Periti "
-      "Industriali della Provincia di Modena",
-    .name_ja = "Ordine dei Periti Industriali della provincia di Modena (Pubbliche Amministrazioni, Modena, MO) - Ordine dei Periti Industriali della Provincia di Modena",
-    .category = "government", .portal = "https://www.periti.mo.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.periti.mo.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "09:35:59 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO47_IT_CDPIDS", .name = "Collegio Dei Periti Industriali e Dei Periti Industriali "
@@ -35021,25 +34982,6 @@ static const hp_source HP3B47_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 17 Sep 2026 "
       "14:49:01 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO47_IT_DB5H2LR5", .name = "CONSORZIO DI BONIFICA DELLA CALABRIA (Gestori di Pubblici "
-      "Servizi, Catanzaro, CZ) - Consorzio di Bonifica Calabria",
-    .name_ja = "CONSORZIO DI BONIFICA DELLA CALABRIA (Gestori di Pubblici Servizi, Catanzaro, CZ) - Consorzio di Bonifica Calabria",
-    .category = "government", .portal = "https://www.consorziodibonificacalabria.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.consorziodibonificacalabria.it/?feed=rss2",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 86400,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 09 Jul 2026 "
-      "09:30:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO47_IT_DBN4K9WB", .name = "Consorzio di bonifica 5 gela (Stazioni Appaltanti, Gela, CL) - "
@@ -79287,25 +79229,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "16:01:40 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ISTSC_RMIS09700A", .name = "ISTITUTO SUPERIORE - VIA B.M. DE MATTIAS, 5 (Pubbliche "
-      "Amministrazioni, Roma, RM) - IIS Confalonieri – De Chirico",
-    .name_ja = "ISTITUTO SUPERIORE - VIA B.M. DE MATTIAS, 5 (Pubbliche Amministrazioni, Roma, RM) - IIS Confalonieri – De Chirico",
-    .category = "government", .portal = "https://www.confalonieridechirico.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.confalonieridechirico.edu.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 21600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "10:33:05 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO47_IT_ISTSC_RMIS099002", .name = "Istituto Istruzione Superiore Via Gramsci (Pubbliche "
       "Amministrazioni, Valmontone, RM) - IIS Via Gramsci Valmontone",
     .name_ja = "Istituto Istruzione Superiore Via Gramsci (Pubbliche Amministrazioni, Valmontone, RM) - IIS Via Gramsci Valmontone",
@@ -109148,25 +109071,6 @@ static const hp_source HP3B47_ITGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 03 Mar 2026 "
       "15:04:50 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO47_IT_Z0O0K9KU", .name = "A.C.S.E. S.p.A. (Gestori di Pubblici Servizi, Scafati, SA) - "
-      "Acse S.p.A. – Azienda Comunale Servizi Esterni Scafati",
-    .name_ja = "A.C.S.E. S.p.A. (Gestori di Pubblici Servizi, Scafati, SA) - Acse S.p.A. – Azienda Comunale Servizi Esterni Scafati",
-    .category = "government", .portal = "https://acsespa.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://acsespa.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 86400,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 05 Aug 2026 "
-      "10:52:45 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO47_IT_Z0O0K9KU_2", .name = "A.C.S.E. S.p.A. (Gestori di Pubblici Servizi, Scafati, SA) - "
