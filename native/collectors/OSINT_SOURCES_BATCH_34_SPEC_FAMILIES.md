@@ -217,7 +217,61 @@ Still open on this batch, and not done here:
 * **rule 4b is unmeasured** for the 179 OK rows. This audit reads EMITTED; a
   collision between records keying onto each other is invisible to it. Batch 35
   inherited its keys from batch 25 and is the first to distrust.
-* **21 rows sit at exactly 2,000 or 20,000** — the 20-page ceiling — and need a
-  per-row `page_max` measured against each portal's own `result.count`.
+* ~~21 rows sit at exactly 2,000 or 20,000~~ — **done 2026-10-21**, see below.
 * the three alive CKAN rows want re-pointing onto the `package_search` shape
   `od_ckan_walk` already serves.
+
+## The page ceilings, measured and fixed (2026-10-21)
+
+`docs/measured-page-ceilings-batch34-2026-10-21.tsv`. Twenty-one rows read
+exactly `page_max x page_size` records — 19 CKAN portals at 2,000 and the two
+live FDSN event catalogues at 20,000 — which is never an upstream's own total.
+
+**The count had to come from a different endpoint.** These rows use
+`current_package_list_with_resources`, which returns a BARE LIST: no
+`result.count`, no envelope, nothing for a gate to compare a run against. That
+is why 19 rows sat at 2,000 looking healthy through the emit audit. The same
+hosts' `package_search?rows=0` publishes `result.count`, and that is where every
+total below comes from. 792,984 datasets across the 19.
+
+Offset safety was measured on all 19 before any ceiling was raised, because
+CLAUDE.md's worst shape is a walk whose order drifts: the same offset asked
+twice returns the same ids (STABLE), page 0 and page 1 share none (DISJOINT),
+and the offset is honoured. All 19 passed all three.
+
+| fix | rows | examples |
+| --- | --- | --- |
+| complete read (`page_max` = pages needed + 5) | 14 | NHSBSA 2,000 → **2,166**; Berlin → **2,627**; Aragón → **2,425**; data.ca.gov → **4,675** — each its declared total exactly, `stored == emitted` |
+| cycle (`page_max = 200`, `page_resume = 1`) | 5 | Hamburg 246,666 declared (2,467 pages); geoscience QLD 192,703; govdata.de 169,142; Schleswig-Holstein 33,062; data.gov.ie 22,881 |
+
+`data.gov.ie` is the cycle proof: two runs against one database stored 20,000
+and then 2,881 — 22,881, its declared count exactly — and run 2 filed no notice
+because the cycle completed and cleared.
+
+### The headroom is not padding
+
+Set `page_max` to exactly the pages the total needs and the row files a
+**false truncation notice on a complete read**. Measured here: at `page_max = 47`
+data.ca.gov stored all 4,675 records *and* filed `"the page ceiling or a cancel
+stopped the walk"` with `more_pages_pending: true`. Page 47 was short — 75 of
+100, the upstream's own end of data — but our ceiling bit in the same breath and
+the engine cannot distinguish them. At 52: the same 4,675, **no notice**. Five
+pages also absorb ~500 datasets of growth. A disclosure that fires when nothing
+was lost is worse than no disclosure, because it teaches the reader to skip them.
+
+### The two FDSN rows
+
+FDSN publishes no total, so the catalogues were sized by **bisecting the
+offset** — about twenty one-row requests each.
+
+* **ETHZ** ~46,620 events, oldest ECOS-09's year-0250 entry. `page_max = 52`,
+  and the walk then emitted **exactly 46,620** — the probe's arithmetic and the
+  engine's walk agreeing to the record. 20,000 → 46,620.
+* **SCEDC** answers at offset 200,000 with a 1987 event and times out at
+  1,000,000, so the depth below that is recorded as **unmeasured, not absent**.
+  `page_max = 200` + `page_resume = 1`.
+
+Both carried `orderby=time`, which is FDSN's **newest-first**, so every new
+event lands at the head of the collection the walk is reading — one arrival
+mid-walk shifts the boundaries, re-reads one record and skips another. Both are
+`orderby=time-asc` now, measured accepted on each host.

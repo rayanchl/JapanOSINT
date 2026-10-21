@@ -48,7 +48,13 @@ static const hp_source HP3B34_FDSNEVENT[] = {
     .record_type = "seismic-event",
     .tags = "\"sensor\",\"seismic\",\"hazard\",\"fdsn\",\"event-catalogue\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
-    .url = "https://eida.ethz.ch/fdsnws/event/1/query?format=text&nodata=404&orderby=time&limit=1000",
+    /* `orderby=time` is FDSN's newest-first, which puts every new event at the
+     * HEAD of the collection a 47-page walk is reading: one arrival mid-walk
+     * shifts the boundaries and the walk re-reads one record and skips another
+     * (CLAUDE.md's worst shape, visible only as a collision). Ascending puts
+     * arrivals at the TAIL, where the walk has not been. Measured accepted on
+     * this host 2026-10-21; its oldest event is ECOS-09's year-0250 entry. */
+    .url = "https://eida.ethz.ch/fdsnws/event/1/query?format=text&nodata=404&orderby=time-asc&limit=1000",
     .csv_comment = "#",
     .csv_delim = "pipe",
     .csv_no_header = 1,
@@ -57,7 +63,7 @@ static const hp_source HP3B34_FDSNEVENT[] = {
     .interval = 86400,
     .lat_key = "col2",
     .lon_key = "col3",
-    .page_max = 20,
+    .page_max = 52,   /* ~46,620 events (offset bisection, 2026-10-21) = 47 pages of 1,000, +5 headroom */
     .page_param = "offset",
     .page_size = 1000,
     .page_start = 1,
@@ -141,7 +147,11 @@ static const hp_source HP3B34_FDSNEVENT[] = {
     .record_type = "seismic-event",
     .tags = "\"sensor\",\"seismic\",\"hazard\",\"fdsn\",\"event-catalogue\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
-    .url = "https://service.scedc.caltech.edu/fdsnws/event/1/query?format=text&nodata=404&orderby=time&limit=1000",
+    /* Ascending for the same reason as the ETHZ row above, and here it is load
+     * bearing: this catalogue is read over a CYCLE, so a newest-first order
+     * would shift the page boundaries under a walk that resumes hours later.
+     * Measured accepted 2026-10-21; its oldest event is 1932-01-01. */
+    .url = "https://service.scedc.caltech.edu/fdsnws/event/1/query?format=text&nodata=404&orderby=time-asc&limit=1000",
     .csv_comment = "#",
     .csv_delim = "pipe",
     .csv_no_header = 1,
@@ -150,7 +160,8 @@ static const hp_source HP3B34_FDSNEVENT[] = {
     .interval = 86400,
     .lat_key = "col2",
     .lon_key = "col3",
-    .page_max = 20,
+    .page_max = 200,   /* >=200,000 events: offset 200,000 answers with a 1987 event (2026-10-21). The service times out at offset 1,000,000, so the depth below that is UNMEASURED, not absent */
+    .page_resume = 1,  /* so 200 pages a run walks the catalogue forward instead of re-reading its newest 20,000 daily */
     .page_param = "offset",
     .page_size = 1000,
     .page_start = 1,

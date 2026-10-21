@@ -246,13 +246,49 @@ python3 native/tools/audit_registry_emit.py --bin ./bin/japanosint \
 python3 native/tools/probe_hp_batch.py docs/candidate-sources-batch3{4,5}.*.txt --check-filter
 ```
 
-And **21 of the 179 stop dead on the ceiling**: 19 CKAN portals at exactly
-2,000 (20 pages x 100) — Tokyo Metro, govdata.de, opendata.swiss, data.ca.gov,
-Berlin, Hamburg, Toscana, Milano, data.gov.ie among them — and the two
-surviving FDSN event catalogues (ETHZ, SCEDC) at exactly 20,000 (20 x 1,000).
-A round number equal to ceiling x page size is never the upstream's own total;
-each wants a per-row `page_max` measured against its `result.count`, which the
-same envelope already carries.
+**21 of the 179 stopped dead on the ceiling, and all 21 are now measured and
+fixed** (2026-10-21, `docs/measured-page-ceilings-batch34-2026-10-21.tsv`): 19
+CKAN portals at exactly 2,000 (20 pages x 100) and the two surviving FDSN event
+catalogues at exactly 20,000 (20 x 1,000). **A round number equal to ceiling x
+page size is never the upstream's own total.** Their declared totals come to
+**792,984 datasets** for the CKAN 19 alone.
+
+Finding them needed a count the row's own endpoint does not publish:
+`current_package_list_with_resources` returns a BARE LIST, which is precisely
+why 19 rows could sit at 2,000 looking healthy — there was no total in the
+envelope for any gate to compare against. `package_search?rows=0` on the same
+host answers `result.count`, so the total comes from the upstream itself.
+Offset safety was measured too, not assumed, on all 19: stable (the same
+offset twice gives the same ids), disjoint, and the offset honoured.
+
+Fixes follow this file's own 200-page split: 14 rows ≤200 pages get a measured
+`page_max` (opendata.nhsbsa 2,000 → 2,166, Berlin → 2,627, Aragón → 2,425,
+data.ca.gov → 4,675 — each its declared total exactly, `stored == emitted`);
+5 rows over 200 get `page_max = 200` plus **`page_resume = 1`**, so the per-run
+cost stays at the count this file calls sane and the collection is read over a
+cycle. Verified over two runs against one database: `data.gov.ie` 20,000 then
+2,881 = **22,881, its declared total exactly**, and run 2 filed no notice
+because the cycle completed and cleared.
+
+* **A `page_max` set to EXACTLY the pages the total needs manufactures a false
+  truncation notice.** Measured on `data.ca.gov`: at `page_max = 47` the walk
+  stored all 4,675 records and filed `"the page ceiling or a cancel stopped the
+  walk"` with `more_pages_pending: true`. The last page was SHORT (75 of 100) —
+  the upstream's own end of data — but our ceiling bit in the same breath, and
+  the engine cannot tell the two apart. At 52 the same 4,675 records arrive with
+  **no notice at all**. So leave headroom above the measured need: a notice that
+  fires when nothing was lost teaches a reader to ignore notices, which is the
+  one thing rule 2's disclosures cannot afford. (The cycling rows' notices are
+  TRUE — they really did stop mid-collection — and say where.)
+* **FDSN publishes no total, so the catalogue was sized by bisecting the
+  offset** — ~20 one-row requests. ETHZ holds ~46,620 events, oldest ECOS-09's
+  year-0250 entry; the walk then emitted exactly 46,620, so the probe and the
+  engine agree to the record. SCEDC answers at offset 200,000 with a 1987 event
+  and times out at 1,000,000, so its depth is recorded as **unmeasured rather
+  than absent** and it cycles. Both were `orderby=time` — FDSN's newest-first —
+  which is the drift hazard this file names: new events land at the HEAD of the
+  collection the walk is reading. Both are `time-asc` now, verified accepted
+  per host.
 
 Two review findings from batch 34 that generalise:
 
