@@ -1517,6 +1517,15 @@ Engine subtleties worth knowing before writing a row:
   than ignored. Twenty-two comments in 14 collector files cite measurements made
   under "the default 10-page ceiling": those are dated records, not claims about
   today.
+
+  **`$JO_PAGE_MAX` moves the DEFAULT; a row's own `page_max` is final.**
+  `hpengine.c` reads `s->page_max > 0 ? s->page_max : jo_page_max(NULL)`, so
+  the variable cannot lower OR raise a row that declares a ceiling — it only
+  decides what a row WITHOUT one gets. "Overrides in both directions" above is
+  about that default. Read the other way it costs a whole run: an attempt to
+  shrink `JO34_FDSNEVT_SERVICE_SCEDC_CALTECH_EDU`'s declared 200 pages to 5 for
+  a quick cycle test read **80 pages** before the clock stopped it
+  (2026-10-21). To bound a declared row for a test, change the row.
 * **The ceiling is now MEASURED across every paged scheduled row**
   (2026-10-12, `docs/measured-page-ceilings-2026-10-12.tsv`): 2,137 rows,
   3-page probe. 1,111 COMPLETE, 534 `CEILING_UNKNOWN` (the upstream publishes
