@@ -39,9 +39,10 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 53,739** (2026-10-20): batch 49's 5,393 measured rows
+**The registered count is 53,745** (2026-10-21): batch 49's 5,399 measured rows
 (`docs/verified-sources-batch49.tsv`,
-`native/collectors/OSINT_SOURCES_BATCH_49_JPWPFEDERATIONS.md`) on 48,346.
+`native/collectors/OSINT_SOURCES_BATCH_49_JPWPFEDERATIONS.md`) on 48,346 — 5,393
+on 2026-10-20 and six restored by the next-day retry pass.
 **Batch 49 is batch 45's staging set registered** — the WordPress collections of
 the member organisations of Japan's nationwide federations (medical and
 pharmacist associations, JA, chambers of commerce, 法人会, co-ops, JC, the 士業
@@ -51,7 +52,16 @@ REST root; eleven beats named after the federation that listed the host.
 5,405 rows were generated and the engine decided: 5,371 OK on the first pass,
 28 given a second reading of which 16 recovered, 12 removed
 (`docs/rejected-sources-batch49.emit.tsv`); 518,813 emitted / 518,827 stored
-over one pass. Their declared interval is 21600 as data; the cadence that runs
+over one pass. **The next-day look at the 12 restored six** (749 / 749): three
+were transient, two hosts are user-agent bot walls — and `newspromotion.jp`
+resets the HTTP/2 stream for **any User-Agent containing the word
+`collector`**, which `JO_USER_AGENT` does ("feed collector"), so what the
+engine logged as a transport error was a refusal. A transport failure that
+reproduces only with one header is a bot wall; `header1=User-Agent: Mozilla/5.0
+(compatible; JapanOSINT/1.0)` is the remedy, URL-free because `lint-sources`
+reads a URL inside a header as an endpoint. The six that stay out are a
+disabled REST API (401 `rest_disabled`), a disabled route (404) and two
+collections that hold nothing. Their declared interval is 21600 as data; the cadence that runs
 is the system-wide policy (see "Cadence policy" below).
 
 **The registered count was 48,346** (2026-10-19; 48,343 plus the three

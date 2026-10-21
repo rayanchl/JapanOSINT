@@ -7512,6 +7512,62 @@ static const hp_source HP3B49_JPWPCULTURE[] = {
       "X-WP-Total. Discovered from this host's own REST root "
       "(/wp/v2/types), not guessed. Keyed on the user id with name as "
       "the title: a user record carries no date field." },
+  /* JO49_WP_NEWSPROMOTION_PAGES: restored 2026-10-21 — see the description's last sentence; the readings are in docs/rejected-sources-batch49.emit.tsv */
+  { .id = "JO49_WP_NEWSPROMOTION_PAGES", .name = "newspromotion.jp — pages (WordPress REST)",
+    .name_ja = "newspromotion.jp 固定ページ（WordPress REST）",
+    .category = "culture", .portal = "https://www.newspromotion.jp/",
+    .record_type = "site-page",
+    .tags = "\"japan\",\"wordpress\",\"pages\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://newspromotion.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc",
+    .array_path = ".",
+    .body_keys = "content.rendered",
+    .date_keys = "date",
+    .id_keys = "id",
+    .interval = 21600,
+    .link_keys = "link",
+    .page_max = 60,
+    .page_param = "page",
+    .page_start = 1,
+    .headers = { "User-Agent: Mozilla/5.0 (compatible; JapanOSINT/1.0)" },
+    .timeout_ms = 30000,
+    .title_keys = "title.rendered",
+    .description = "WordPress REST pages of newspromotion.jp (www.newspromotion.jp). "
+      "Fetched 2026-10-20: the collection answered with 10 record(s) "
+      "and declares 10 in X-WP-Total. Discovered from this host's own "
+      "REST root (/wp/v2/types), not guessed. Post-shaped: "
+      "title.rendered, date, link and content.rendered are kept."
+      "Removed 2026-10-20 after two FETCH_FAILED readings; re-probed "
+      "2026-10-21: HTTP 200 via a 301 to newspromotion.jp; through the engine every attempt died with an HTTP/2 framing error, and curl reproduces it: the host resets the stream (PROTOCOL_ERROR) for any User-Agent containing the word 'collector' — the engine's default says 'feed collector' — under HTTP/2 and HTTP/1.1 alike, and answers 200 to every other one tried — a user-agent bot wall, so the row declares its User-Agent and reads the canonical host the 301 names, 10 "
+      "records — transient." },
+  /* JO49_WP_NEWSPROMOTION_POSTS: restored 2026-10-21 — see the description's last sentence; the readings are in docs/rejected-sources-batch49.emit.tsv */
+  { .id = "JO49_WP_NEWSPROMOTION_POSTS", .name = "newspromotion.jp — posts (WordPress REST)",
+    .name_ja = "newspromotion.jp 投稿（WordPress REST）",
+    .category = "culture", .portal = "https://www.newspromotion.jp/",
+    .record_type = "site-post",
+    .tags = "\"japan\",\"wordpress\",\"posts\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://newspromotion.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .array_path = ".",
+    .body_keys = "content.rendered",
+    .date_keys = "date",
+    .id_keys = "id",
+    .interval = 21600,
+    .link_keys = "link",
+    .page_max = 60,
+    .page_param = "page",
+    .page_start = 1,
+    .headers = { "User-Agent: Mozilla/5.0 (compatible; JapanOSINT/1.0)" },
+    .timeout_ms = 30000,
+    .title_keys = "title.rendered",
+    .description = "WordPress REST posts of newspromotion.jp (www.newspromotion.jp). "
+      "Fetched 2026-10-20: the collection answered with 5 record(s) and "
+      "declares 5 in X-WP-Total. Discovered from this host's own REST "
+      "root (/wp/v2/types), not guessed. Post-shaped: title.rendered, "
+      "date, link and content.rendered are kept."
+      "Removed 2026-10-20 after two FETCH_FAILED readings; re-probed "
+      "2026-10-21: HTTP 200 via a 301 to newspromotion.jp; through the engine every attempt died with an HTTP/2 framing error, and curl reproduces it: the host resets the stream (PROTOCOL_ERROR) for any User-Agent containing the word 'collector' — the engine's default says 'feed collector' — under HTTP/2 and HTTP/1.1 alike, and answers 200 to every other one tried — a user-agent bot wall, so the row declares its User-Agent and reads the canonical host the 301 names, 185,005 "
+      "bytes — transient." },
 };
 
 HP_REGISTER_TABLE(HP3B49_JPWPCULTURE)

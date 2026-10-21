@@ -5392,3 +5392,9 @@ JO49_WP_ZOOSAFRICA_USERS	jpwpculture	site-user	https://bcre.africa/wp-json/wp/v2
 JO49_WP_ZUSHIHAYAMAJC_PAGES	jpwpjc	site-page	https://zushi-hayamajc.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc	PASS	24	OK	24	24	24
 JO49_WP_ZUSHIHAYAMAJC_POSTS	jpwpjc	site-post	https://zushi-hayamajc.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	PASS	40	OK	40	40	40
 JO49_WP_ZUSHIHAYAMAJC_USERS	jpwpjc	site-user	https://zushi-hayamajc.jp/wp-json/wp/v2/users?per_page=100	PASS	1	OK	1	1	1
+JO49_WP_HTK_PAGES	jpwpprof	site-page	https://www.htk.or.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc	PASS	55	OK	55	55	55
+JO49_WP_JAHS_PAGES	jpwpagri	site-page	https://www.jahs.co.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc	PASS	15	OK	15	15	15
+JO49_WP_KCCIKOMORO_POSTS	jpwpcci	site-post	https://www.kcci.komoro.org/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	PASS	100	OK	597	597	597
+JO49_WP_MIDORINETFUKUSHIMA_PAGES	jpwpagri	site-page	https://www.midorinet-fukushima.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc	PASS	67	OK	67	67	67
+JO49_WP_NEWSPROMOTION_PAGES	jpwpculture	site-page	https://newspromotion.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc	PASS	10	OK	10	10	10
+JO49_WP_NEWSPROMOTION_POSTS	jpwpculture	site-post	https://newspromotion.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	PASS	5	OK	5	5	5
