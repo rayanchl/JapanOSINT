@@ -6740,25 +6740,6 @@ static const hp_source HP3B48_NEWS[] = {
       "00:31:52 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country CA." },
 
-  { .id = "JO48_NEWS_Q7760232", .name = "The Republic (CA) - Sensasi Slot Online Resmi: Bonus Harian, "
-      "Free Spin, dan Jackpot",
-    .name_ja = "The Republic (CA) - Sensasi Slot Online Resmi: Bonus Harian, Free Spin, dan Jackpot",
-    .category = "news", .portal = "https://republic-news.org/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://republic-news.org/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, RSS2 feed, newest Sat, 21 Feb 2026 "
-      "12:27:44 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country CA." },
-
   { .id = "JO48_NEWS_Q7989325", .name = "Westmount Examiner (CA) - Westmount Examiner",
     .name_ja = "Westmount Examiner (CA) - Westmount Examiner",
     .category = "news", .portal = "https://www.westmountexaminer.com/",
@@ -19907,24 +19888,6 @@ static const hp_source HP3B48_NEWS[] = {
       "17:02:46 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country GB." },
 
-  { .id = "JO48_NEWS_Q7435491", .name = "Scotcampus (GB) - scotcampus",
-    .name_ja = "Scotcampus (GB) - scotcampus",
-    .category = "news", .portal = "https://www.scotcampus.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.scotcampus.com/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 28 Sep 2026 "
-      "16:06:15 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country GB." },
-
   { .id = "JO48_NEWS_Q7681172", .name = "Tameside Reporter (GB) - Not Really Here Group: Tameside "
       "Reporter",
     .name_ja = "Tameside Reporter (GB) - Not Really Here Group: Tameside Reporter",
@@ -25158,24 +25121,6 @@ static const hp_source HP3B48_NEWS[] = {
       "links on its site root. Wikidata classes it as newspaper, "
       "country IN." },
 
-  { .id = "JO48_NEWS_Q113957911", .name = "Hindmata Mirror (IN) - 8XBET",
-    .name_ja = "Hindmata Mirror (IN) - 8XBET",
-    .category = "news", .portal = "https://news-region.tv/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://news-region.tv/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 23 Jul 2025 "
-      "13:16:23 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country IN." },
-
   { .id = "JO48_NEWS_Q113977263", .name = "Jansandesh Times (IN) - Jansandesh Times",
     .name_ja = "Jansandesh Times (IN) - Jansandesh Times",
     .category = "news", .portal = "https://www.jansandeshtimes.net/",
@@ -25372,24 +25317,6 @@ static const hp_source HP3B48_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 60 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "22:47:06 +0530. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country IN." },
-
-  { .id = "JO48_NEWS_Q114878379", .name = "Tez (IN) - Tez News",
-    .name_ja = "Tez (IN) - Tez News",
-    .category = "news", .portal = "https://teznews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://teznews.com/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "12:15:34 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country IN." },
 
   { .id = "JO48_NEWS_Q117196007", .name = "Yuva Portal (IN) - Sonfikir",
@@ -26393,25 +26320,6 @@ static const hp_source HP3B48_NEWS[] = {
       "links on its site root. Wikidata classes it as online-newspaper, "
       "country IN." },
 
-  { .id = "JO48_NEWS_Q102514116", .name = "Hindustan Business Times (IN) - ML88",
-    .name_ja = "Hindustan Business Times (IN) - ML88",
-    .category = "news", .portal = "https://ml88.social/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ml88.social/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 09 May 2026 "
-      "08:40:49 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as online-newspaper, "
-      "country IN." },
-
   { .id = "JO48_NEWS_Q110119668", .name = "B4Blaze (IN) - B4blaze News",
     .name_ja = "B4Blaze (IN) - B4blaze News",
     .category = "news", .portal = "https://ml.b4blaze.com/",
@@ -27064,25 +26972,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as news-website, country "
       "IN." },
 
-  { .id = "JO48_NEWS_Q107650478", .name = "Folk Culture India (IN) - Gamehitclub",
-    .name_ja = "Folk Culture India (IN) - Gamehitclub",
-    .category = "news", .portal = "https://hitclub12.app/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://hitclub12.app/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "13:44:11 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as news-website, country "
-      "IN." },
-
   { .id = "JO48_NEWS_Q109637723", .name = "MEAWW (IN) - MEAWW Entertainment - Breaking U.S. News, Politics "
       "& Entertainment Updates",
     .name_ja = "MEAWW (IN) - MEAWW Entertainment - Breaking U.S. News, Politics & Entertainment Updates",
@@ -27465,25 +27354,6 @@ static const hp_source HP3B48_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
       "17:07:55 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as daily-newspaper, "
-      "country IN." },
-
-  { .id = "JO48_NEWS_Q122617376", .name = "Janabadi (IN) - O8",
-    .name_ja = "Janabadi (IN) - O8",
-    .category = "news", .portal = "https://o8yu.jp.net/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://o8yu.jp.net/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 14 Jun 2026 "
-      "14:03:53 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as daily-newspaper, "
       "country IN." },
 
@@ -43238,25 +43108,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as news-website, country "
       "NZ." },
 
-  { .id = "JO48_NEWS_Q3339082", .name = "New Zealand Press Association (NZ) - NzPa",
-    .name_ja = "New Zealand Press Association (NZ) - NzPa",
-    .category = "news", .portal = "https://nzpa.co.nz/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://nzpa.co.nz/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 02 Jan 2025 "
-      "12:58:17 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as news-agency, country "
-      "NZ." },
-
   { .id = "JO48_NEWS_Q109606721", .name = "Waatea News (NZ) - Waatea News: Māori Radio Station",
     .name_ja = "Waatea News (NZ) - Waatea News: Māori Radio Station",
     .category = "news", .portal = "https://waateanews.com/",
@@ -46679,26 +46530,6 @@ static const hp_source HP3B48_NEWS[] = {
       "19:21:05 +0200. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as news-agency, country "
       "RS." },
-
-  { .id = "JO48_NEWS_Q217316", .name = "24 sata (RS) - ThapCamTV – Trực tiếp bóng đá HD – Xem Thập Cẩm "
-      "TV Miễn",
-    .name_ja = "24 sata (RS) - ThapCamTV – Trực tiếp bóng đá HD – Xem Thập Cẩm TV Miễn",
-    .category = "news", .portal = "https://mosaic5g.io/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mosaic5g.io/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 15 Jul 2025 "
-      "15:29:13 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as daily-newspaper, "
-      "country RS." },
 
   { .id = "JO48_NEWS_Q1393659", .name = "Khypar (RU) - ХЫПАР",
     .name_ja = "Khypar (RU) - ХЫПАР",
@@ -63647,24 +63478,6 @@ static const hp_source HP3B48_NEWS[] = {
       "13:19:47 -0400. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO48_NEWS_Q7741812", .name = "The Independent Collegian (US) - สล็อตเว็บตรง ฝากถอน true wallet",
-    .name_ja = "The Independent Collegian (US) - สล็อตเว็บตรง ฝากถอน true wallet",
-    .category = "news", .portal = "https://www.independentcollegian.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.independentcollegian.com/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 8 items, RSS2 feed, newest Sat, 06 Sep 2025 "
-      "12:25:40 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
   { .id = "JO48_NEWS_Q7743213", .name = "The Jewish Exponent (US) - Philadelphia Jewish Exponent",
     .name_ja = "The Jewish Exponent (US) - Philadelphia Jewish Exponent",
     .category = "news", .portal = "http://www.jewishexponent.com/",
@@ -65935,24 +65748,6 @@ static const hp_source HP3B48_NEWS[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
       "22:43:49 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
-
-  { .id = "JO48_NEWS_Q7908968", .name = "Vakarai (US) - 123bet",
-    .name_ja = "Vakarai (US) - 123bet",
-    .category = "news", .portal = "https://pcppl.in/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://pcppl.in/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 25 Nov 2025 "
-      "19:19:17 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO48_NEWS_Q7912156", .name = "Valley News (US) - Valley News",
