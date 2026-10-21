@@ -90,6 +90,19 @@ rubrique it belongs to, so 521 items hold 474 distinct articles and 47 copies �
 and the two still answering 503 lose 5 and 10 on the same shape. No key is
 wrong; nothing is lost that was not a copy.
 
+**394 of the rows dropped as 403s were a wall against the User-Agent, not
+against the reader** (2026-10-20; 16,944 rows now: 5,723 IT, 9,651 FR, 1,570
+WD). The 414 rows of this batch that had answered 403 to the engine's client
+were re-probed with `header1=User-Agent: Mozilla/5.0 (compatible\;
+JapanOSINT/1.0\; +https://github.com/rayanchl/JapanOSINT)` — the same
+identified client with the browser-compatible prefix the walls key on — and
+328 French, 58 Italian and 8 Wikidata rows answered with their feed AND store
+it in the engine under that header (the four Italian school sites that refused
+twice stay out). They are back in their beats with the header on the row, so
+the condition each was proven under is the one it runs under, and
+`verified-sources-batch47.tsv` marks their probe reading `PASS (User-Agent
+header)`.
+
 **Three defects found by the gates, none visible to a probe:**
 
 * **An HTML-escaped `&amp;` in a feed URL changes what the server serves.**

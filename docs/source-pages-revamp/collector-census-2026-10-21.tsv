@@ -1,4 +1,4 @@
-# collector census - ./bin/japanosint --collector-census (registry 57423 sources)
+# collector census - ./bin/japanosint --collector-census (registry 57886 sources)
 key	sources	categories
 _breach	1	breach:1
 _enrich	3	enrichment:3
@@ -185,7 +185,7 @@ hp3b19_apac	79	environment:22;corporate:18;government:12
 hp3b19_crypto	7	economy:5;government:2
 hp3b19_cyber	124	threat:53;infrastructure:51;research:14
 hp3b19_defence	65	government:32;legal:13;energy:6
-hp3b19_energyenv	85	energy:57;environment:18;space:5
+hp3b19_energyenv	86	energy:58;environment:18;space:5
 hp3b19_eurasia	184	economy:44;reference:33;government:25
 hp3b19_finance	102	corporate:66;economy:27;legal:4
 hp3b19_fisheries	6	environment:6
@@ -294,12 +294,12 @@ hp3b32_jprepo2	75	research:75
 hp3b32_jpsearch2	66	archive:66
 hp3b32_jptelemetry	25	infrastructure:22;transport:3
 hp3b33_supplychain	43	cyber:43
-hp3b34_ckanbulk	94	government:94
-hp3b34_fdsnevent	4	surveillance:4
+hp3b34_ckanbulk	88	government:88
+hp3b34_fdsnevent	3	surveillance:3
 hp3b34_fdsnstation	15	surveillance:15
 hp3b34_ndjson	1	cyber:1
 hp3b34_socratacat	24	government:24
-hp3b35_jpweko	100	research:100
+hp3b35_jpweko	98	research:98
 hp3b35_strings	4	cyber:4
 hp3b36_africa	61	economy:61
 hp3b36_china	7	government:6;transport:1
@@ -335,7 +335,7 @@ hp3b42_jpcptuni	205	research:205
 hp3b42_jppages	408	corporate:355;research:24;finance:15
 hp3b42_jpusers	346	corporate:305;research:18;government:14
 hp3b43_jprss	1156	government:1156
-hp3b44_ukgov	1641	government:1641
+hp3b44_ukgov	1727	government:1727
 hp3b44_usgov	2077	government:2077
 hp3b45_jpwpcorp	116	business:63;corporate:33;commerce:9
 hp3b45_jpwpculture	22	library:22
@@ -346,11 +346,11 @@ hp3b45_jpwpmedia	426	media:394;wire:32
 hp3b45_jpwporg	24	organization:11;disciplinary:6;directory:3
 hp3b45_jpwpscience	11	physics:11
 hp3b46_arcgislayers	164	transport:37;infrastructure:34;government:29
-hp3b47_frgov	9321	government:9321
-hp3b47_itgov	5663	government:5663
-hp3b47_wdgov	1557	government:1557
-hp3b48_igo	491	international:489;government:2
-hp3b48_news	3989	news:3989
+hp3b47_frgov	9630	government:9630
+hp3b47_itgov	5721	government:5721
+hp3b47_wdgov	1564	government:1564
+hp3b48_igo	495	international:489;government:6
+hp3b48_news	3996	news:3996
 hp3b49_jpwpagri	847	agriculture:847
 hp3b49_jpwpcci	1021	business:1021
 hp3b49_jpwpcommerce	259	business:259

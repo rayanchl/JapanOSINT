@@ -88,6 +88,17 @@ in the engine** (`JO44_UK_SWANLEYTOWNCOUNCIL_GOV_UK` 10 of 10 among them) and
 ship with both readings in the TSV. The engine measurement is the gate that
 matters; the probe is the cheaper first reading.
 
+**And 86 of those 403s were a wall against the User-Agent, not against the
+reader** (2026-10-20). The 91 UK rows the probe had refused with 403 were
+re-probed with `header1=User-Agent: Mozilla/5.0 (compatible\; JapanOSINT/1.0\;
++https://github.com/rayanchl/JapanOSINT)` — the same identified client, with
+the browser-compatible prefix the walls key on — and 86 answered with their
+feed and **store it in the engine** under that header. They are back in
+`hp3b44_ukgov.c` (1,727 rows now) with the header on the row, so the condition
+each was proven under is the one it runs under; `verified-sources-batch44.tsv`
+marks their probe reading `PASS (User-Agent header)`. The whole sample across
+batches 44, 47 and 48 is in CLAUDE.md's batch 43–48 lessons.
+
 **Two generalisable findings.** `gen_hp_batch.py` escaped `.name` through
 `cstr()` and wrote `.name_ja` raw, so a feed title carrying a double quote
 (Medina NY's alerts feed is titled "Village of Medina") produced C that did not

@@ -223,6 +223,7 @@ typedef struct {
  * Loaded once per build, like load_aggs(): one SELECT, not one per row. */
 typedef struct {
   char src[256]; int failures, empties, quarantined; long effective; long long backoff_until;
+  long freshness;   /* the adaptive measurement (freshness_interval), 0 = none */
 } sched_t;
 
 static sched_t *load_sched(db_handle *db, int *out_n) {
@@ -230,7 +231,7 @@ static sched_t *load_sched(db_handle *db, int *out_n) {
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(db->h,
         "SELECT source_id,consecutive_failures,consecutive_empties,quarantined,"
-        "effective_interval,backoff_until FROM source_sched_state",
+        "effective_interval,backoff_until,freshness_interval FROM source_sched_state",
         -1, &s, NULL) != SQLITE_OK) return NULL;
   int cap = 64, n = 0;
   sched_t *S = malloc((size_t)cap * sizeof *S);
@@ -249,6 +250,7 @@ static sched_t *load_sched(db_handle *db, int *out_n) {
     r->effective   = (long)sqlite3_column_int64(s,4);
     r->backoff_until = sqlite3_column_type(s,5) == SQLITE_NULL
                          ? 0 : sqlite3_column_int64(s,5);
+    r->freshness   = (long)sqlite3_column_int64(s,6);   /* NULL -> 0 */
   }
   sqlite3_finalize(s);
   *out_n = n;
@@ -278,6 +280,11 @@ static cJSON *sched_obj(const sched_t *S, int ns, const char *id,
                                   : cJSON_CreateNull());
   cJSON_AddItemToObject(o, "effectiveInterval",
     r ? cJSON_CreateNumber((double)r->effective) : cJSON_CreateNull());
+  /* what an adaptive row's own newest item re-bucketed it to (core/scheduler.c
+   * sched_freshness_measure); null when the row is not adaptive or has stored
+   * no dated item yet. The policy (below) applies on top of this figure. */
+  cJSON_AddItemToObject(o, "measuredInterval",
+    (r && r->freshness > 0) ? cJSON_CreateNumber((double)r->freshness) : cJSON_CreateNull());
   cJSON_AddNumberToObject(o, "consecutiveFailures", r ? r->failures : 0);
   cJSON_AddNumberToObject(o, "consecutiveEmpties",  r ? r->empties  : 0);
   int backed = r && r->backoff_until > (long long)now;

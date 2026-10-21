@@ -478,11 +478,20 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "wind-generation",
     .tags = "\"energy\",\"wind\",\"belgium\",\"grid\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.elia.be/api/explore/v2.1/catalog/datasets/ods031/records?limit=50",
+    /* A DATE WINDOW, not a cycle (the exception CLAUDE.md's page_resume note
+     * names). Measured 2026-10-20: 2,068,300 records, 41,366 pages at 50 — and
+     * growing 480 a day (2,064,460 on 2026-10-12), with the newest record at
+     * 2026-10-18T21:45 when read at 14:30 on the 20th, a 41-hour publication
+     * lag. Without a window the row read the first 150 of two million
+     * forever; `where=datetime>=now(hours=-6)` answered total_count 0 because
+     * of that lag. Five days covers the lag with slack: ~2,400 records, 24
+     * pages of 100, newest first on a stable sort. */
+    .url = "https://opendata.elia.be/api/explore/v2.1/catalog/datasets/ods031/records?limit=100&order_by=datetime%20desc&where=datetime%3E%3Dnow(days%3D-5)",
     .array_path = "results",
     .interval = 3600,
     .page_param = "offset",
-    .page_size = 50,
+    .page_size = 100,
+    .page_max = 40,
     /* One record per timestamp per (offshore/onshore, region, grid connection
      * type) split. Verified live 2026-09-07: 50 records, 50 distinct on that
      * four-part key. */
@@ -516,7 +525,14 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "generation-mix",
     .tags = "\"energy\",\"grid\",\"belgium\",\"nuclear\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.elia.be/api/explore/v2.1/catalog/datasets/ods177/records?limit=50",
+    /* A DATE WINDOW (753,624 records on 2026-10-12, 15,073 pages at 50; the
+     * row read the first 150 forever). Three days newest-first on a stable
+     * sort: the host answered one request in ten from the measuring
+     * environment on 2026-10-20, so this dataset's own lag was not read by
+     * hand — the window is sized from its sibling ods031's 41-hour lag with a
+     * day of slack, and the engine's run line is the measurement that
+     * validates it (records > 0 at this window, or widen it). */
+    .url = "https://opendata.elia.be/api/explore/v2.1/catalog/datasets/ods177/records?limit=100&order_by=datetime%20desc&where=datetime%3E%3Dnow(days%3D-3)",
     .array_path = "results",
     /* The records carry no id, so the engine keyed on the first scalar (the
      * quarter-hour) and every fuel of a quarter-hour upserted onto one row.
@@ -525,28 +541,102 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .id_keys = "datetime+resolutioncode+fueltypepublication",
     .interval = 3600,
     .page_param = "offset",
-    .page_size = 50,
+    .page_size = 100,
+    .page_max = 40,
     .title_keys = "generatedpower",
     .description = "Recent quarter-hourly Belgian generation per publication fuel "
       "type including nuclear, gas and biofuels. The near-real-time "
       "companion to the historical series, so an outage is visible the "
       "same day" },
 
-  { .id = "ELIA_RENEWABLE_INTRADAY_FORECAST", .name = "Elia — Belgian renewable intraday forecast quality",
-    .name_ja = "Elia ベルギー再エネ予測精度",
+  /* ods147 is NOT a renewable forecast. The row below was authored in batch
+   * 19 as "ELIA_RENEWABLE_INTRADAY_FORECAST" from a guess at the dataset's
+   * content, and the dataset's own metadata (read 2026-10-21, the first
+   * answer opendata.elia.be gave this environment in two days of trying) is
+   * titled "System imbalance forecast next quarter hour (near real-time)":
+   * one record a MINUTE (1,437 in the last 24 hours, measured) carrying
+   * Elia's forecast of the average system imbalance in the next quarter
+   * hour, a linear-regression point forecast in MW and a six-bin probability
+   * distribution, from 2023-10-06T12:57 to four minutes ago (newest record
+   * 11:56 when read at 12:00). 1,576,655 records. Its time field is
+   * `predictiontimeutc` (the metadata annotates it `id: true`), which is why
+   * `datetime` was "Unknown field". The old id, name, tags and description
+   * all described a dataset this is not, so the row is replaced, not edited:
+   * two rows reading the same collection, the deliberate pair this file
+   * already uses for load and for generation (near-real-time window + the
+   * whole series), because neither shape alone serves both questions.
+   *
+   * This row is the LIVE window: the last six hours, newest first — 359
+   * records in four pages when measured — every 15 minutes, so the current
+   * forecast is never older than the cadence. The window is sized to the
+   * cadence with margin, not to an outage; the history row below reads the
+   * whole series over a cycle and covers any gap this one misses. */
+  { .id = "ELIA_SI_FORECAST_NEXT_QH", .name = "Elia — Belgian system imbalance forecast for the next quarter hour (near real-time)",
+    .name_ja = "Elia ベルギー次四半期時間系統インバランス予測（準リアルタイム）",
     .category = "energy", .portal = "https://opendata.elia.be",
-    .record_type = "renewable-forecast",
-    .tags = "\"energy\",\"solar\",\"belgium\",\"forecast\"",
+    .record_type = "system-imbalance-forecast",
+    .tags = "\"energy\",\"grid\",\"belgium\",\"balancing\",\"forecast\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.elia.be/api/explore/v2.1/catalog/datasets/ods147/records?limit=50",
+    .url = "https://opendata.elia.be/api/explore/v2.1/catalog/datasets/ods147/records?limit=100&order_by=predictiontimeutc%20desc&where=predictiontimeutc%3E%3Dnow(hours%3D-6)",
     .array_path = "results",
+    .id_keys = "predictiontimeutc",
+    .date_keys = "predictiontimeutc",
+    .title_keys = "predictions_silinearregressionforecast",
     .interval = 900,
     .page_param = "offset",
-    .page_size = 50,
-    .description = "Minute-resolution renewable output predictions with the "
-      "prediction issue time and a quality status on each. Storing the "
-      "forecast alongside its issue time is what makes forecast error "
-      "measurable rather than asserted" },
+    .page_size = 100,
+    .page_max = 10,
+    .description = "Elia's minute-by-minute forecast of the Belgian system "
+      "imbalance in the next quarter hour (ods147): the quarter hour forecast "
+      "for, a linear-regression point forecast in MW, a six-bin probability "
+      "distribution from below -400 MW to above +400 MW, and Elia's quality "
+      "status on each. The last six hours, refreshed every 15 minutes; "
+      "ELIA_SI_FORECAST_NEXT_QH_HISTORY holds the series since 2023-10-06" },
+
+  /* The HISTORY half: the whole series from 2023-10-06, read over a cycle.
+   * The records endpoint caps `offset` at 10,000, so an offset walk can never
+   * reach past the first 10,000 of 1.58 million; the walk is a KEYSET cursor
+   * instead — ascending on `predictiontimeutc`, each next page asking for
+   * everything strictly after the last record's own timestamp
+   * (`next_path=results.$last.predictiontimeutc` spent through `next_tmpl`,
+   * the Go-module-index shape). Measured directly 2026-10-21:
+   * `where=predictiontimeutc>date'2023-10-06T12:57:15+00:00'` answers the
+   * next 100 minutes exactly (12:58:15 … 14:37:16, total_count one below the
+   * dataset's), with the `+00:00` offset percent-encoded as `{v}` renders it.
+   * `page_resume=1` carries the cursor URL across runs: 100 pages an hour is
+   * 10,000 records a run, 240,000 a day, so the 1.58-million series comes
+   * round in about a week against 1,440 new records a day, then clears and
+   * starts over. Engine readings 2026-10-21, two runs against one database:
+   * 10,000 of 10,000 in 77 s (2023-10-06T12:57 to 2023-10-13T11:36, resume
+   * URL stored), then 10,000 more in 72 s resumed from that URL (to
+   * 2023-10-20T10:32) — 20,000 distinct rows, no overlap. The live row
+   * stored 359 of 359 the same day. ODS also publishes the whole dataset as one streamed export
+   * (/exports/csv, read here to 3 rows: ~135 bytes a row, so ~210 MB a run),
+   * which is the other complete route; the cursor was chosen because it is
+   * 10,000 records a request-budget rather than a 280 MB body every run, and
+   * because a cut walk resumes where it stopped while a cut export restarts. */
+  { .id = "ELIA_SI_FORECAST_NEXT_QH_HISTORY", .name = "Elia — Belgian system imbalance forecast for the next quarter hour (full series since 2023)",
+    .name_ja = "Elia ベルギー次四半期時間系統インバランス予測（2023年以降の全系列）",
+    .category = "energy", .portal = "https://opendata.elia.be",
+    .record_type = "system-imbalance-forecast",
+    .tags = "\"energy\",\"grid\",\"belgium\",\"balancing\",\"forecast\",\"historical\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://opendata.elia.be/api/explore/v2.1/catalog/datasets/ods147/records?limit=100&order_by=predictiontimeutc%20asc",
+    .array_path = "results",
+    .id_keys = "predictiontimeutc",
+    .date_keys = "predictiontimeutc",
+    .title_keys = "predictions_silinearregressionforecast",
+    .interval = 3600,
+    .next_path = "results.$last.predictiontimeutc",
+    .next_tmpl = "https://opendata.elia.be/api/explore/v2.1/catalog/datasets/ods147/records?limit=100&order_by=predictiontimeutc%20asc&where=predictiontimeutc%3Edate%27{v}%27",
+    .page_size = 100,
+    .page_max = 100,
+    .page_resume = 1,
+    .description = "The complete ods147 series: Elia's minute-by-minute "
+      "forecast of the next quarter hour's Belgian system imbalance since "
+      "2023-10-06, point forecast and six-bin probability distribution, "
+      "walked in ascending order on a timestamp cursor and read whole over a "
+      "cycle of hourly runs. ELIA_SI_FORECAST_NEXT_QH is its live window" },
 
   { .id = "ENTSOG_CONNECTION_POINTS", .name = "ENTSOG — European gas connection points",
     .name_ja = "ENTSOG 欧州ガス接続点",
@@ -1294,15 +1384,29 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "system-imbalance",
     .tags = "\"energy\",\"grid\",\"belgium\",\"balancing\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.elia.be/api/explore/v2.1/catalog/datasets/ods045/records?limit=50",
+    /* ods045 ENDED. Measured 2026-10-20: its newest record is
+     * 2024-05-21T20:59 and its total (2,833,800) has not moved since the
+     * 2026-10-12 ceiling audit — Elia closed the one-minute series with the
+     * May 2024 balancing changes, and this row polled it every 15 minutes for
+     * 17 months, reading the first 150 points of 2019 each time. Its
+     * successor is ods134, the quarter-hourly current system imbalance:
+     * 84,576 records, newest 2026-10-19T21:45 when read at 15:00 on the 20th
+     * (~18 hours behind), fields datetime, resolutioncode, qualitystatus,
+     * ace, systemimbalance, alpha, imbalanceprice. A three-day window holds
+     * 212 records (measured), so one page of 100 and change, hourly. */
+    .url = "https://opendata.elia.be/api/explore/v2.1/catalog/datasets/ods134/records?limit=100&order_by=datetime%20desc&where=datetime%3E%3Dnow(days%3D-3)",
     .array_path = "results",
-    .interval = 900,
+    .id_keys = "datetime+resolutioncode",
+    .date_keys = "datetime",
+    .interval = 3600,
     .page_param = "offset",
-    .page_size = 50,
-    .description = "Minute-by-minute Belgian system imbalance, net regulation "
-      "volume, strategic reserve volume and gross upward and downward "
-      "regulation. One minute imbalance is the closest published proxy "
-      "to the frequency deviation itself" },
+    .page_size = 100,
+    .page_max = 10,
+    .description = "Quarter-hourly Belgian system imbalance (ods134, the series "
+      "that replaced the one-minute ods045 in May 2024): area control "
+      "error, system imbalance, the alpha components and the imbalance "
+      "price, with Elia's own quality status on each point. The closest "
+      "published proxy to the frequency deviation itself" },
 
   { .id = "ELIA_GRID_ASSET_LOADING", .name = "Elia — Belgian transmission asset loading by line",
     .name_ja = "Elia ベルギー送電設備別潮流",
@@ -1310,11 +1414,21 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "transmission-line",
     .tags = "\"energy\",\"grid\",\"belgium\",\"transmission\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.elia.be/api/explore/v2.1/catalog/datasets/ods124/records?limit=50",
+    /* A DATE WINDOW on a measured lag. 2026-10-20: 3,311,377 records (65,275
+     * pages at 50), growing ~5,950 a day, newest 2026-10-20T00:30 when read
+     * at 14:00 — published in daily chunks, ~14 hours behind. The 900 s
+     * cadence bought nothing against that lag and the row read the first 150
+     * of three million forever. 48 hours newest-first on a stable sort is
+     * ~12,000 records at 100 a page, so page_max 130 covers it; 6-hourly,
+     * which is the cadence the lag supports and ~520 requests a day on one
+     * host rather than 12,000. The notice names the ceiling if a day is
+     * larger than this. */
+    .url = "https://opendata.elia.be/api/explore/v2.1/catalog/datasets/ods124/records?limit=100&order_by=datetime%20desc&where=datetime%3E%3Dnow(hours%3D-48)",
     .array_path = "results",
-    .interval = 900,
+    .interval = 21600,
     .page_param = "offset",
-    .page_size = 50,
+    .page_size = 100,
+    .page_max = 130,
     /* A quarter-hourly series: the record is one asset at one instant, so the
      * identity is the timestamp AND the asset, not the asset name the row was
      * falling back to. Verified live 2026-09-07: 50 records carry 50 distinct

@@ -132,6 +132,9 @@ INT_OPTS = {"detail_max", "page_start", "page_size", "page_max", "max_items",
             "timeout_ms",
             "page_zero_based", "csv_skip_lines", "xlsx_sheet_index",
             "filter_query", "csv_no_header", "free_tier", "interval",
+            # the scheduler re-buckets the cadence from the newest stored
+            # item's age after every run (hpengine.h adaptive_interval)
+            "adaptive_interval",
             # {date…} tokens: rendered in UTC+tz_minutes; a dated row whose
             # first page is a 4xx or empty steps the date back up to date_back.
             "tz_minutes", "date_back",

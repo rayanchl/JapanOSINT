@@ -545,10 +545,22 @@ typedef struct hp_source {
    * answers from the start of that entity's results, exactly as for
    * page_resume) or when no `{wstart}`/`{wend}` token appears in the url or
    * body — there is nothing to slice, and silently reading one window would be
-   * indistinguishable from reading the whole collection. Appended last so no
-   * existing initializer moves. */
+   * indistinguishable from reading the whole collection. */
   int         window_days;
   const char *window_from;
+  /* adaptive_interval=1: the declared `interval` is the cadence MEASURED when
+   * the row was authored (batches 43–48 set it from the newest item's age:
+   * ≤3 days → hourly, ≤30 → 6-hourly, ≤1 year → daily, else weekly), and a
+   * measurement ages. After every successful run core/scheduler.c re-reads
+   * the newest ISO `published_at` the row has stored and re-buckets the same
+   * way, so a municipal feed that goes quiet drifts to weekly and one that
+   * wakes up comes back to hourly — in BOTH directions, bounded by the
+   * buckets, never by a number nobody re-measured. A row whose records carry
+   * no ISO date keeps its declared interval: no evidence, no change. Off by
+   * default: a row's author may have set its cadence for a reason the item
+   * dates cannot see (a forecast feed, a window the row exists to be fresh
+   * for). Appended last so no existing initializer moves. */
+  int         adaptive_interval;
 } hp_source;
 
 /* Register `n` rows. `defs` must be static storage of at least n entries owned

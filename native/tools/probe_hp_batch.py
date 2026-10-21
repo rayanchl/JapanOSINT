@@ -332,9 +332,60 @@ def row_body(r, entity=None, shift=0):
     return body, {name.strip(): val.strip()}
 
 
+# ── per-host pacing ───────────────────────────────────────────────────────
+# The probe used to send its --jobs threads at whatever hosts the rows named,
+# with no notion of a host: a beat whose rows share one server (a national
+# portal's 500 datasets, a WordPress host serving 60 parish councils) got
+# every worker at once, and the probe then reported 429s and 502s that were a
+# reading of ITS OWN burst, not of the row. CLAUDE.md records the symptom:
+# "shared hosting that answers 502/403 to twelve concurrent probes stores its
+# feed at six". core/hostgate.c paces the engine per host; this is the same
+# idea for the probe — one request per host per HOST_GAP_MS, enforced across
+# threads, with a Retry-After or a 429 widening that host's gap for the rest
+# of the run. Hosts the rows do not share pay nothing.
+HOST_GAP_MS = 1000
+_host_lock = __import__("threading").Lock()
+_host_next = {}          # host -> earliest monotonic time the next request may start
+_host_gap = {}           # host -> gap in seconds (grows on 429 / Retry-After)
+
+
+def _pace(url):
+    host = urllib.parse.urlsplit(url).netloc.lower()
+    if not host or HOST_GAP_MS <= 0:
+        return host
+    import time
+    while True:
+        with _host_lock:
+            now = time.monotonic()
+            due = _host_next.get(host, 0.0)
+            if now >= due:
+                _host_next[host] = now + _host_gap.get(host, HOST_GAP_MS / 1000.0)
+                return host
+            wait = due - now
+        time.sleep(min(wait, 5.0))
+
+
+def _throttled(host, status, retry_after):
+    """A 429 (or any Retry-After) is the host saying the gap is too small."""
+    if not host:
+        return
+    try:
+        ra = float(retry_after) if retry_after else 0.0
+    except ValueError:
+        ra = 0.0
+    with _host_lock:
+        g = _host_gap.get(host, HOST_GAP_MS / 1000.0)
+        g = max(g * 2, ra, 1.0)
+        _host_gap[host] = min(g, 60.0)
+        import time
+        _host_next[host] = time.monotonic() + _host_gap[host]
+    sys.stderr.write("  [pace] %s answered %s; gap now %.1fs\n" % (host, status, _host_gap[host]))
+
+
 def fetch(url, extra, timeout=None, body=None):
     """Same shape as verify_feeds.fetch, plus this row's declared headers and
-    timeout, and its POST body when it declares one."""
+    timeout, and its POST body when it declares one. Paced per host."""
+    host = _pace(url)
     headers = {
         "User-Agent": DEFAULT_UA,
         "Accept": "*/*",
@@ -344,10 +395,17 @@ def fetch(url, extra, timeout=None, body=None):
     data = body.encode("utf-8") if body is not None else None
     req = urllib.request.Request(VF.encode_url(url), headers=headers, data=data,
                                  method="POST" if data is not None else "GET")
-    # The shared TLS context, because the default one refuses handshakes the
-    # engine completes and THIS is the gate that decides whether a row ships.
-    with urllib.request.urlopen(req, timeout=timeout or VF.TIMEOUT,
-                                context=jo_tls.context()) as resp:
+    # Main's 429/Retry-After handling and this branch's shared TLS context are
+    # both needed here: the default context refuses handshakes the engine
+    # completes, and THIS is the gate that decides whether a row ships.
+    try:
+        resp_cm = urllib.request.urlopen(req, timeout=timeout or VF.TIMEOUT,
+                                         context=jo_tls.context())
+    except urllib.error.HTTPError as e:
+        if e.code == 429 or e.headers.get("Retry-After"):
+            _throttled(host, e.code, e.headers.get("Retry-After"))
+        raise
+    with resp_cm as resp:
         raw = resp.read(MAXBYTES + 1)
         if resp.headers.get("Content-Encoding") == "gzip":
             import gzip
@@ -1228,11 +1286,17 @@ def _judge(r, url, shift=0, entity=None):
 
 
 def main():
+    global CHECK_FILTER, HOST_GAP_MS
     ap = argparse.ArgumentParser()
     ap.add_argument("manifests", nargs="+")
     ap.add_argument("--out")
     ap.add_argument("--pass-ids")
     ap.add_argument("--jobs", type=int, default=8)
+    ap.add_argument("--host-gap-ms", type=int, default=HOST_GAP_MS,
+                    help="minimum gap between two requests to ONE host across "
+                         "all workers (default %d); a 429 or Retry-After widens "
+                         "that host's gap for the rest of the run. 0 disables. "
+                         "Rows on distinct hosts are not slowed." % HOST_GAP_MS)
     ap.add_argument("--only", help="comma-separated ids to probe")
     ap.add_argument("--check-filter", action="store_true",
                     help="for every entity-pivot row, ask the endpoint about an "
@@ -1251,8 +1315,8 @@ def main():
                          "under --check-filter still exits 3 -- that verdict "
                          "is fatal (house rule 4d).")
     a = ap.parse_args()
-    global CHECK_FILTER
     CHECK_FILTER = a.check_filter
+    HOST_GAP_MS = a.host_gap_ms
 
     rows = load(a.manifests)
     if a.only:

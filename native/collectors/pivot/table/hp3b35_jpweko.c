@@ -298,38 +298,6 @@ static const hp_source HP3B35_JPWEKO[] = {
       "returned total 0 for an impossible entity, so the platform "
       "honours q). This tenant itself has not been measured." },
 
-  { .id = "JO35_WEKO_NIIGATA_U", .name = "Niigata University Academic Repository — repository records "
-      "search (WEKO3)",
-    .name_ja = "Niigata University Academic Repository 機関リポジトリ — リポジトリ検索（WEKO3）",
-    .category = "research", .portal = "https://niigata-u.repo.nii.ac.jp",
-    .record_type = "repository-item",
-    .tags = "\"japan\",\"repository\",\"jairo-cloud\",\"weko3\",\"academic\",\"thesis\",\"paper\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://niigata-u.repo.nii.ac.jp/api/records/?q={q}&size=100",
-    .array_path = "hits.hits",
-    .date_keys = "metadata.publish_date,updated",
-    .id_keys = "id",
-    .link_keys = "links.self",
-    .next_path = "links.next",
-    .page_size = 100,
-    .timeout_ms = 120000,
-    .title_keys = "metadata.title.0,metadata.title",
-    .description = "UNPROBED as a records-API row. Entity pivot into Niigata "
-      "University Academic Repository's institutional repository "
-      "through the WEKO3 (Invenio) records API that every JAIRO Cloud "
-      "tenant runs: given a name or term it returns the matching "
-      "theses, bulletin articles, reports and datasets, each with "
-      "title, every creator with affiliation, publisher, handle/DOI and "
-      "file URL. The OAI-PMH interface on this same host is already "
-      "wired (JPREPO_NIIGATA_U_OAI) and reported 35,049 records, which "
-      "proves the host and the tenant are live; this row adds the "
-      "ability to ASK it about an entity instead of only harvesting it "
-      "whole. The endpoint, envelope (hits.hits), paging (links.next) "
-      "and keys are copied from the batch-25 rows that run it on 56 "
-      "other WEKO3 tenants and passed the emit audit and the rule-4d "
-      "impossible-entity check (aichi-pu returned total 0 for an "
-      "impossible entity, so the platform honours q). This tenant "
-      "itself has not been measured." },
 
   { .id = "JO35_WEKO_NAGASAKI_U", .name = "Nagasaki University's Academic Output SITE: NAOSITE — repository "
       "records search (WEKO3)",
@@ -890,38 +858,6 @@ static const hp_source HP3B35_JPWEKO[] = {
       "returned total 0 for an impossible entity, so the platform "
       "honours q). This tenant itself has not been measured." },
 
-  { .id = "JO35_WEKO_U_RYUKYU", .name = "University of the Ryukyus Repository — repository records search "
-      "(WEKO3)",
-    .name_ja = "琉球大学 機関リポジトリ — リポジトリ検索（WEKO3）",
-    .category = "research", .portal = "https://u-ryukyu.repo.nii.ac.jp",
-    .record_type = "repository-item",
-    .tags = "\"japan\",\"repository\",\"jairo-cloud\",\"weko3\",\"academic\",\"thesis\",\"paper\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://u-ryukyu.repo.nii.ac.jp/api/records/?q={q}&size=100",
-    .array_path = "hits.hits",
-    .date_keys = "metadata.publish_date,updated",
-    .id_keys = "id",
-    .link_keys = "links.self",
-    .next_path = "links.next",
-    .page_size = 100,
-    .timeout_ms = 120000,
-    .title_keys = "metadata.title.0,metadata.title",
-    .description = "UNPROBED as a records-API row. Entity pivot into University of "
-      "the Ryukyus Repository's institutional repository through the "
-      "WEKO3 (Invenio) records API that every JAIRO Cloud tenant runs: "
-      "given a name or term it returns the matching theses, bulletin "
-      "articles, reports and datasets, each with title, every creator "
-      "with affiliation, publisher, handle/DOI and file URL. The "
-      "OAI-PMH interface on this same host is already wired "
-      "(JO32_REPO_U_RYUKYU_OAI) and reported 17,989 records (OAI count "
-      "fetched 2026-09-30), which proves the host and the tenant are "
-      "live; this row adds the ability to ASK it about an entity "
-      "instead of only harvesting it whole. The endpoint, envelope "
-      "(hits.hits), paging (links.next) and keys are copied from the "
-      "batch-25 rows that run it on 56 other WEKO3 tenants and passed "
-      "the emit audit and the rule-4d impossible-entity check (aichi-pu "
-      "returned total 0 for an impossible entity, so the platform "
-      "honours q). This tenant itself has not been measured." },
 
   { .id = "JO35_WEKO_OMU", .name = "Osaka Metropolitan University Repository Education and Research "
       "Archives — repository records search (WEKO3)",
