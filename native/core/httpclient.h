@@ -12,34 +12,29 @@
  * client and offers a contact route, which is what the audit's defect #14 was
  * about: ReliefWeb blocklists a bare "japanosint" UA, and the documented
  * remedy is a descriptive UA with a contact address — NOT browser spoofing
- * (still the default; hosts that refuse every honest agent are listed in
- * BROWSER_HOSTS, core/httpclient.c, by the owner's decision of 2026-10-21).
+ * (still the default; every exception is a host in core/host_agents.def).
  * That fix reached rss_atom.c only, so every JSON and text fetch in the fleet
  * still went out with an anonymous UA. */
 #define JO_USER_AGENT \
   "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; " \
   "feed collector; contact via repo issues)"
 
-/* What a request to a BROWSER_HOSTS entry (core/httpclient.c) presents
- * itself as. Used for no other host. */
-#define JO_BROWSER_UA \
-  "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) " \
-  "Chrome/130.0.0.0 Safari/537.36"
-
 #include <stddef.h>
+#include <stdio.h>
 
-/* 1 when `url`'s host is one the operator chose to fetch with a browser
- * profile (the BROWSER_HOSTS table): such hosts refuse every self-identifying
- * agent. http_request() applies the profile itself. */
+/* 1 when `url`'s host is HA_BROWSER in core/host_agents.def: it refuses every
+ * self-identifying agent. http_request() applies the profile itself. */
 int http_browser_host(const char *url);
+/* core/host_agents.def as TSV (host, kind, agent, extra headers): what
+ * `./bin/japanosint --host-agents` prints and tools/probe_hp_batch.py reads. */
+void http_host_agents_dump(FILE *out);
 
 /* The per-host User-Agent this URL needs, or NULL when JO_USER_AGENT is fine.
  * Only for callers that set their own "User-Agent:" request header — such a
  * header outranks CURLOPT_USERAGENT, so those callers bypass the table in
  * httpclient.c unless they ask. See the table's comment for what an entry is
  * and is not allowed to be (it routes around a filter that objects to one
- * token). Hosts that refuse every honest agent are a separate, explicit list —
- * BROWSER_HOSTS — for which this returns JO_BROWSER_UA. */
+ * token, or answer only a browser) — core/host_agents.def, one table. */
 const char *http_ua_override(const char *url);
 
 typedef struct {

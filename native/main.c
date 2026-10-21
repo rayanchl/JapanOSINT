@@ -92,6 +92,7 @@ static void usage(FILE *out) {
     "  --dump-source-cards        print id<TAB>kind<TAB>category<TAB>card for every\n"
     "                             source: the exact text the service index embeds\n"
     "                             (\\n \\t \\\\ escaped), for tools/batch_exclusions.py\n"
+    "  --host-agents              the per-host User-Agent table (core/host_agents.def) as TSV\n"
     "  --discover-feeds <file> [--jobs N]\n"
     "                             ask each site in <file> (URL or host per line) which\n"
     "                             RSS/Atom feeds its homepage declares, fetch them and\n"
@@ -160,7 +161,7 @@ int main(int argc, char **argv) {
    * an explicit request for the run that used to happen by accident. */
   static const char *KNOWN[] = {
     "--serve", "--sched", "--list-sources", "--collector-census", "--dump-source-cards",
-    "--discover-feeds", "--jobs",
+    "--discover-feeds", "--jobs", "--host-agents",
     "--run", "--dispatch",
     "--ingest", "--type", "--materialize", "--dry-run",
     "--selftest", "--help", "-h", NULL
@@ -194,6 +195,10 @@ int main(int argc, char **argv) {
       }
     }
   }
+
+  /* --host-agents: core/host_agents.def as TSV, for tools/probe_hp_batch.py. */
+  for (int i = 1; i < argc; i++)
+    if (!strcmp(argv[i], "--host-agents")) { http_host_agents_dump(stdout); return 0; }
 
   /* --discover-feeds <file> [--jobs N]: no database. core/feeddisc.c. */
   for (int i = 1; i < argc; i++) {

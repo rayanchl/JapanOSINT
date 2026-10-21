@@ -251,362 +251,48 @@ void http_client_free(http_client *c) {
  * rows were re-probed specifically "under the engine's own request conditions"
  * — so a host-specific problem gets a host-specific answer.
  *
- * A caller-supplied "User-Agent:" in `headers` still wins, because
- * CURLOPT_HTTPHEADER outranks CURLOPT_USERAGENT; that is how an hpengine row's
- * header1= continues to work. */
-static const struct { const char *host, *ua; } UA_OVERRIDE[] = {
-  { "data.humdata.org",
-    "RCorp-feeds/1.0 (+https://github.com/RCorp; feed collector; "
-    "contact via repo issues)" },
-  /* Same token block as HDX. Measured 2026-08-24:
-   *     engine UA (contains "OSINT")  520
-   *     the agent below                200
-   *     no User-Agent at all           200
-   * We still identify ourselves and still offer a contact route, so this is
-   * the documented remedy rather than an evasion. */
-  { "www.oasis-open.org",
-    "RCorp-feeds/1.0 (+https://github.com/RCorp; feed collector; "
-    "contact via repo issues)" },
-  /* Spain's INE web service (servicios.ine.es/wstempus). Measured 2026-09-07
-   * against /wstempus/js/ES/CLASIFICACIONES:
-   *     engine UA                                                403
-   *     "JapanOSINT/1.0"                                         200
-   *     "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas)"   200
-   *     "JapanOSINT/1.0 (contact via repo issues)"               200
-   *     "JapanOSINT/1.0 (feed collector)"                        403
-   *     the RCorp-feeds agent above                              403
-   * The rejected token is the word "collector", not "OSINT" — which is why
-   * the two agents already in this table do not help. The agent below is the
-   * engine's own, with that one word removed: it still names the product,
-   * still gives the repository and still offers a contact route. All eleven
-   * eur-ine-* sources were storing nothing on every scheduled run; with this
-   * agent CLASIFICACIONES, ESCALAS, PERIODICIDADES, UNIDADES, VARIABLES,
-   * PUBLICACIONES, OPERACIONES_DISPONIBLES and TABLAS_OPERACION/{EPA,IPC,IPRI}
-   * all answer 200 with real records. */
-  { "servicios.ine.es",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
+ * Since 2026-10-21 every per-host agent lives in core/host_agents.def, and a
+ * listed host's agent wins over a caller-supplied "User-Agent:" (the request
+ * builder below drops the caller's), so a row's own header1= now applies to
+ * hosts NOT in the table only. */
+/* THE per-host agent table: core/host_agents.def, also read by
+ * tools/probe_hp_batch.py. One X-macro file, three expansions. */
+typedef enum {
+#define HOST_AGENT_KIND(k, s) k,
+#define HOST_AGENT(h, k)
+#include "core/host_agents.def"
+#undef HOST_AGENT
+#undef HOST_AGENT_KIND
+  HA__COUNT
+} host_agent_kind;
 
-  /* Boston's CKAN portal, behind the same class of filter. Bisected
-   * 2026-09-11 against data.boston.gov/api/3/action/package_search:
-   *     "JapanOSINT/1.0"                                         200
-   *     "JapanOSINT/1.0 (… feed)"                                200
-   *     "JapanOSINT/1.0 (… collector)"                           502
-   *     the full engine UA                                       502
-   * So it is the word "collector" again, exactly as at INE, and the same
-   * agent clears it — verified on package_search, group_list,
-   * organization_list, tag_list, recently_changed_packages_activity_list and
-   * the per-organization `fq=organization:…` searches, which also honour the
-   * filter (9 of 235 packages for one org, so rule 4d is satisfied). 35
-   * registered us-data-boston-gov-* sources were storing nothing on every
-   * scheduled run. */
-  { "data.boston.gov",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-
-  /* India's Press Information Bureau. Here the rejected token is the contact
-   * URL itself, not a word in the product name. Measured 2026-09-11 on
-   * pib.gov.in/RssMain.aspx?ModId=6&Lang=1&Regid=3 (following its 302):
-   *     "JapanOSINT/1.0"                                       200, 20 items
-   *     "JapanOSINT/1.0 (contact via repo issues)"             200, 20 items
-   *     the feed agent carrying "(+https://github.com/…)"      403
-   * The agent below therefore keeps BOTH the product identity and a contact
-   * route, and drops only the URL its filter refuses. Note this is the RSS
-   * path, which sets its own User-Agent header: it reaches this table through
-   * http_ua_override(), not through CURLOPT_USERAGENT. */
-  { "pib.gov.in",
-    "JapanOSINT/1.0 (contact via repo issues)" },
-
-  /* Camden County, NJ: the contact URL is the refused token, as at PIB.
-   * Measured 2026-10-21 on www.camdencounty.com/feed/:
-   *     the full engine UA                                       403
-   *     "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas)"   403
-   *     "JapanOSINT/1.0 (contact via repo issues)"               200, 10 items
-   *     "JapanOSINT/1.0"                                          200
-   * us-b50-camdencounty-com was rejected in batch 50 for this until the
-   * retry pass bisected it. */
-  { "www.camdencounty.com",
-    "JapanOSINT/1.0 (contact via repo issues)" },
-
-  /* The "collector" word filter again, on four more hosts. Measured 2026-09-14
-   * by comparing the engine agent against the same agent with that one word
-   * removed (the INE / Boston agent above):
-   *     data.sanjoseca.gov (OpenGov CKAN)   502 -> 200   15 us-data-sanjoseca-gov-* rows
-   *     www.madamasr.com   (RSS)            520 -> 200   afr-eg-madamasr
-   *     www.telegram.hr    (RSS)            520 -> 200   eur-news-telegram-hr
-   *     www.jornalnoticias.co.mz (RSS)      406 -> 200   afr-mz-jornalnoticias
-   * Every one of those sources was storing nothing on every scheduled run. The
-   * agent still names the product, the repository and a contact route. */
-  { "data.sanjoseca.gov",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.madamasr.com",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.telegram.hr",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.jornalnoticias.co.mz",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-
-  /* OCHA Financial Tracking Service (api.hpc.tools) — the HDX "OSINT" token
-   * block, same operator family. Measured 2026-09-14: engine agent 406, the
-   * RCorp-feeds agent HDX already uses 200. Four ocha-fts-* rows. */
-  { "api.hpc.tools",
-    "RCorp-feeds/1.0 (+https://github.com/RCorp; feed collector; "
-    "contact via repo issues)" },
-
-  /* Seven more, bisected with libcurl on 2026-09-15 (engine agent → the agent
-   * below; statuses as measured):
-   *   reliefweb.int      406 "Blocked" (also without "collector", also bare
-   *                      JapanOSINT/1.0)            → RCorp-feeds 200, 66 KB RSS
-   *   www.unocha.org     406 for any agent containing "OSINT"
-   *                                                 → RCorp-feeds 301→200, 10 items
-   *   hapi.humdata.org   406 "Blocked due to bot activity" (HDX's API host)
-   *                                                 → RCorp-feeds 200, 33 KB records
-   *   jamestown.org      403, also without "collector" or the repo URL
-   *                                                 → RCorp-feeds 200, 10 items
-   *   www.bsi.bund.de    403 (5 feeds) — the word "collector"
-   *                                                 → engine agent minus it 200, 50 items
-   *   container-news.com 403 — the word "collector" → same agent 200, 88 KB
-   *   www.ftc.gov        403 for every agent carrying a github URL
-   *                                                 → product + contact route 200, 10 items
-   * Same remedy as the entries above: each agent still names the client and a
-   * contact route and drops only the token the filter rejects. Hosts that
-   * refused EVERY agent (Europarl 202-empty, Tel Aviv GIS 571, CISA/FEMA/ICE
-   * fingerprinting libcurl itself) are deliberately NOT listed. */
-  { "reliefweb.int",
-    "RCorp-feeds/1.0 (+https://github.com/RCorp; feed collector; "
-    "contact via repo issues)" },
-  { "www.unocha.org",
-    "RCorp-feeds/1.0 (+https://github.com/RCorp; feed collector; "
-    "contact via repo issues)" },
-  { "hapi.humdata.org",
-    "RCorp-feeds/1.0 (+https://github.com/RCorp; feed collector; "
-    "contact via repo issues)" },
-  { "jamestown.org",
-    "RCorp-feeds/1.0 (+https://github.com/RCorp; feed collector; "
-    "contact via repo issues)" },
-  { "www.bsi.bund.de",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "container-news.com",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.ftc.gov",
-    "JapanOSINT/1.0 (contact via repo issues)" },
-  /* The "collector" word filter once more (decided 2026-10-09 to route
-   * around it). Measured against /en/bycountry/JP/:
-   *     engine UA                                              403, 153 B
-   *     "RCorp-feeds/1.0 (…; feed collector; …)"               403
-   *     "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas;
-   *      contact via repo issues)"                             200, 19,850 B
-   * cam-insecam-scrape had failed every run since 2026-10-06 on the 403. */
-  { "www.insecam.org",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-
-  /* INGV's FDSN event service, the same one-word filter. Measured 2026-10-06
-   * against fdsnws/event/1/query?format=geojson:
-   *     "JapanOSINT/1.0"                                         200
-   *     "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas)"   200
-   *     "JapanOSINT/1.0 (feed collector)"                        connection dropped
-   *     the full engine UA                                       connection dropped
-   *     the agent below                                          200 (61 KB)
-   * geo-ingv-events-30d and geo-italy-ingv-last100 failed every run with
-   * "fetch failed" — before and after their date windows were rolled. */
-  { "webservices.ingv.it",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-
-  /* Batch 50: the same "collector" word filter, on 48 more hosts — mostly French
-   * commune sites (WordPress behind one nginx bot rule, answering 444/403) and
-   * small US city sites. Bisected 2026-10-20 per host, on the registered feed URL:
-   *     the full engine UA                                       403 / 444 / 0 items
-   *     "JapanOSINT/1.0 (collector)"                           403 / 444
-   *     "JapanOSINT/1.0 (contact via repo issues)"             200 + items
-   *     the agent below                                          200 + items
-   * 88 batch-50 rows (authored as 45) stored nothing on the emit sweep until this. Hosts that
-   * refused EVERY honest agent (only a browser string passed) were not added
-   * here and their rows were not shipped: docs/rejected-sources-batch50.tsv. */
-  { "edinburgnd.com",   /* added 2026-10-21 by the retry pass: engine UA 403, this agent 200 */
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "ajaccio.corsica",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "avicenne.eu",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "beverlyhillstexas.net",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "cityofelcenizo.com",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "cityofganado.com",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "cityofmauldin.org",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "cityofpickens.com",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "cityofstafford.com",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "denisonia.com",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "douanier-rousseau.paysdelaloire.e-lyco.fr",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "interfor.fr",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "laconcity.com",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "luverne.org",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "metropole.rennes.fr",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "midjourneyvideo.net",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "millcreekut.org",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "njn.net",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.brignoles.fr",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.carquefou.fr",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.chemille-en-anjou.fr",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.cso.scot.nhs.uk",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.fresnes94.fr",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.healthcareimprovementscotland.scot",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.hico-tx.com",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.landerneau.bzh",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.loire-authion.fr",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.lunel.com",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.mairie-balma.fr",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.mairie-begles.fr",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.mairie-orly.fr",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.mauges-sur-loire.fr",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.montrevaultsurevre.fr",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.morsang.fr",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.moundcity.org",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.saint-ouen.fr",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.sainte-luce-loire.com",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.scot.nhs.uk",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.scotblood.co.uk",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.staubinlasalle.fr",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.ville-avrille.fr",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.ville-biscarrosse.fr",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.ville-bressuire.fr",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.ville-cesson-sevigne.fr",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.ville-chilly-mazarin.fr",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.ville-cormeilles95.fr",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.ville-grasse.fr",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.ville-petitbourg.fr",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.ville-viroflay.fr",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-
-  /* registry.faa.gov refuses every self-identifying agent (engine UA 403, the
-   * agent above 403, no User-Agent 200). It is now in BROWSER_HOSTS below. */
+static const char *const HOST_AGENT_STRING[HA__COUNT] = {
+#define HOST_AGENT_KIND(k, s) [k] = s,
+#define HOST_AGENT(h, k)
+#include "core/host_agents.def"
+#undef HOST_AGENT
+#undef HOST_AGENT_KIND
 };
 
-/* ── Browser-profile hosts ────────────────────────────────────────────────
- * Hosts that refuse EVERY self-identifying client — the engine agent, the
- * agent without "collector", a bare "JapanOSINT/1.0" — and admit a request
- * that looks like a browser's. Until 2026-10-21 the rule here was to leave
- * them honestly failing; the repository owner changed it for these hosts:
- * public government feeds and registers are worth reading, and a per-host
- * table keeps the other ~57,000 sources identifying themselves. A request to
- * a host listed here carries JO_BROWSER_UA and the headers below INSTEAD of
- * any User-Agent the caller set (hpengine rows and lib/rss_atom.c set their
- * own), so it never sends two.
- *
- * Measured 2026-10-21, each on its registered URL: engine UA 403, browser UA +
- * feed Accept + Accept-Language + Sec-Fetch-* 200 with items. www.bls.gov
- * needs the Sec-Fetch-* headers, not just the agent; the NOAA hosts answer an
- * HTML Accept with a 202 challenge page, so the caller's own Accept is kept.
- * registry.faa.gov returns the full N-number record (owner, manufacturer,
- * serial number, Mode S) where both FAA pivots stored only a 403 notice. */
-static const char *const BROWSER_HOSTS[] = {
-  "cpo.noaa.gov", "globalocean.noaa.gov", "oss.research.noaa.gov", "wpo.noaa.gov",
-  "www.noaa.gov", "www.bls.gov", "www.jpl.nasa.gov", "www.diplomaticrooms.state.gov",
-  "registry.faa.gov", "www.sdcwa.org",
-  "www.security.gov.uk", "isc.independent.gov.uk", "www.nhs24.scot",
-  "www.hkd.meti.go.jp", "www.bungeika.or.jp",
-  NULL };
+static const char *const HOST_AGENT_NAME[HA__COUNT] = {
+#define HOST_AGENT_KIND(k, s) [k] = #k,
+#define HOST_AGENT(h, k)
+#include "core/host_agents.def"
+#undef HOST_AGENT
+#undef HOST_AGENT_KIND
+};
 
+static const struct { const char *host; host_agent_kind kind; } HOST_AGENTS[] = {
+#define HOST_AGENT_KIND(k, s)
+#define HOST_AGENT(h, k) { h, k },
+#include "core/host_agents.def"
+#undef HOST_AGENT
+#undef HOST_AGENT_KIND
+};
+
+/* Sent beside HA_BROWSER's agent: www.bls.gov needs the Sec-Fetch-* headers,
+ * not just the agent. The caller's own Accept is kept — the NOAA hosts answer
+ * an HTML Accept with a 202 challenge page. */
 static const char *const BROWSER_EXTRA_HEADERS[] = {
   "Accept-Language: en-US,en;q=0.9",
   "Sec-Fetch-Dest: document",
@@ -615,61 +301,43 @@ static const char *const BROWSER_EXTRA_HEADERS[] = {
   "Upgrade-Insecure-Requests: 1",
   NULL };
 
-/* The authority of `url` without :port, as a pointer and length. */
-static int url_host(const char *url, const char **h, size_t *n) {
-  if (!url) return 0;
-  const char *p = strstr(url, "://");
-  if (!p) return 0;
-  p += 3;
-  size_t len = strcspn(p, "/?#");
-  const char *colon = memchr(p, ':', len);
-  if (colon) len = (size_t)(colon - p);
-  *h = p; *n = len;
-  return 1;
+/* The entry for `url`'s host, or -1. Exact host match on the authority
+ * without :port: "data.humdata.org.evil.example" must not inherit an entry,
+ * and neither may a path that merely contains a listed name. */
+static int host_agent_index(const char *url) {
+  if (!url) return -1;
+  const char *h = strstr(url, "://");
+  if (!h) return -1;
+  h += 3;
+  size_t n = strcspn(h, "/?#");
+  const char *colon = memchr(h, ':', n);
+  if (colon) n = (size_t)(colon - h);
+  for (size_t i = 0; i < sizeof HOST_AGENTS / sizeof *HOST_AGENTS; i++)
+    if (strlen(HOST_AGENTS[i].host) == n && strncasecmp(h, HOST_AGENTS[i].host, n) == 0)
+      return (int)i;
+  return -1;
 }
 
 int http_browser_host(const char *url) {
-  const char *h; size_t n;
-  if (!url_host(url, &h, &n)) return 0;
-  for (int i = 0; BROWSER_HOSTS[i]; i++)
-    if (strlen(BROWSER_HOSTS[i]) == n && strncasecmp(h, BROWSER_HOSTS[i], n) == 0) return 1;
-  return 0;
+  int i = host_agent_index(url);
+  return i >= 0 && HOST_AGENTS[i].kind == HA_BROWSER;
 }
 
-/* Exact host match against the authority component of `url`. Substring
- * matching would be wrong: "data.humdata.org.evil.example" must not inherit
- * the override, and neither should an unrelated path containing the name. */
-/* The table entry for this URL's host, or NULL when there is none. */
-static const char *ua_override_lookup(const char *url) {
-  if (!url) return NULL;
-  if (http_browser_host(url)) return JO_BROWSER_UA;
-  const char *h = strstr(url, "://");
-  if (!h) return NULL;
-  h += 3;
-  size_t n = strcspn(h, "/?#");            /* authority, may carry :port */
-  const char *colon = memchr(h, ':', n);
-  if (colon) n = (size_t)(colon - h);      /* strip :port before comparing */
-  for (size_t i = 0; i < sizeof UA_OVERRIDE / sizeof *UA_OVERRIDE; i++) {
-    const char *want = UA_OVERRIDE[i].host;
-    if (strlen(want) == n && strncasecmp(h, want, n) == 0)
-      return UA_OVERRIDE[i].ua;
-  }
-  return NULL;
-}
-
-/* Public because CURLOPT_HTTPHEADER outranks CURLOPT_USERAGENT: a caller that
- * sets its own "User-Agent:" header — lib/rss_atom.c does, for every feed in
- * the tree — never reaches ua_for_url() below, so this table silently did not
- * apply to the one code path with the most bot-wall trouble. Such callers ask
- * here and substitute only when an entry exists, which keeps every
- * already-verified feed on exactly the agent it was verified with. */
 const char *http_ua_override(const char *url) {
-  return ua_override_lookup(url);
+  int i = host_agent_index(url);
+  return i >= 0 ? HOST_AGENT_STRING[HOST_AGENTS[i].kind] : NULL;
 }
 
-static const char *ua_for_url(const char *url) {
-  const char *o = ua_override_lookup(url);
-  return o ? o : JO_USER_AGENT;
+void http_host_agents_dump(FILE *out) {
+  fprintf(out, "host\tkind\tuser_agent\textra_headers\n");
+  for (size_t i = 0; i < sizeof HOST_AGENTS / sizeof *HOST_AGENTS; i++) {
+    host_agent_kind k = HOST_AGENTS[i].kind;
+    fprintf(out, "%s\t%s\t%s\t", HOST_AGENTS[i].host, HOST_AGENT_NAME[k], HOST_AGENT_STRING[k]);
+    if (k == HA_BROWSER)
+      for (const char *const *x = BROWSER_EXTRA_HEADERS; *x; x++)
+        fprintf(out, "%s%s", x == BROWSER_EXTRA_HEADERS ? "" : " | ", *x);
+    fputc('\n', out);
+  }
 }
 
 /* ── Retry-After ────────────────────────────────────────────────────────────
@@ -775,12 +443,15 @@ static int do_once(http_client *c, const char *method, const char *url,
   sbuf b = {0};
   b.cap = max_body_bytes();
   struct curl_slist *hl = NULL;
-  int browser = http_browser_host(url);
+  /* One precedence for every caller: a host in core/host_agents.def gets the
+   * table's agent whatever User-Agent the caller set; any other host keeps a
+   * caller's header, else JO_USER_AGENT. */
+  int ha = host_agent_index(url);
   for (const char *const *h = headers; h && *h; ++h) {
-    if (browser && !strncasecmp(*h, "User-Agent:", 11)) continue;   /* the profile's agent wins */
+    if (ha >= 0 && !strncasecmp(*h, "User-Agent:", 11)) continue;
     hl = curl_slist_append(hl, *h);
   }
-  if (browser)
+  if (ha >= 0 && HOST_AGENTS[ha].kind == HA_BROWSER)
     for (const char *const *h = BROWSER_EXTRA_HEADERS; *h; ++h) hl = curl_slist_append(hl, *h);
 
   curl_easy_setopt(e, CURLOPT_URL, url);
@@ -805,7 +476,7 @@ static int do_once(http_client *c, const char *method, const char *url,
     curl_easy_setopt(e, CURLOPT_CONNECTTIMEOUT_MS, ct);
   }
   curl_easy_setopt(e, CURLOPT_ACCEPT_ENCODING, "");
-  curl_easy_setopt(e, CURLOPT_USERAGENT, ua_for_url(url));
+  curl_easy_setopt(e, CURLOPT_USERAGENT, ha >= 0 ? HOST_AGENT_STRING[HOST_AGENTS[ha].kind] : JO_USER_AGENT);
   curl_easy_setopt(e, CURLOPT_NOSIGNAL, 1L);
   if (c->share) curl_easy_setopt(e, CURLOPT_SHARE, c->share);
   if (hl) curl_easy_setopt(e, CURLOPT_HTTPHEADER, hl);

@@ -22272,6 +22272,33 @@ static const hp_source HP3B43_JPRSS[] = {
       "2026-10-07T17:11:09+09:00. The municipality's own declared site "
       "feed (new notices), found via <link rel=alternate> on its root "
       "page." },
+
+  /* Was an RSSX row in collectors/sources/jp_feeds_batch43.c, hourly, that
+   * never stored anything: the host serves its 1.98 MB feed (150 items with
+   * full content:encoded) at ~23 KB/s — 84 s measured 2026-10-21 — and
+   * rss_collect() allows 25 s, so every run timed out. The newest item is
+   * 2022-03-01: the site stopped publishing, so weekly is the cadence the
+   * interval rule gives (newest item older than a year). Same id and
+   * collector, so its history and its place on the pages stay. */
+  { .id = "jp-b43-tokyogirlsupdate-com", .name = "Tokyo Girls Update",
+    .name_ja = "Tokyo Girls Update", .collector = "jp_webmedia",
+    .category = "media", .portal = "https://tokyogirlsupdate.com/",
+    .record_type = "article",
+    .tags = "\"news\",\"publisher:Tokyo Girls Update\",\"culture\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://tokyogirlsupdate.com/feed",
+    .array_path = "channel.item",
+    .date_keys = "pubDate,dc:date",
+    .id_keys = "guid,link",
+    .interval = 604800,
+    .adaptive_interval = 1,
+    .link_keys = "link",
+    .timeout_ms = 180000,
+    .title_keys = "title",
+    .description = "Tokyo Girls Update — Japanese idol and pop culture news "
+      "in English. Fetched 2026-10-21: 150 items, RSS2 feed with full text, "
+      "newest Tue, 01 Mar 2022 04:46:11 +0000 (the archive of a site that "
+      "has stopped publishing)." },
 };
 
 HP_REGISTER_TABLE(HP3B43_JPRSS)

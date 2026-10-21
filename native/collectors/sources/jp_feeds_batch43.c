@@ -656,13 +656,8 @@ RSSX(jp_b43_thejapanguy_com, "jp-b43-thejapanguy-com",
      3600,
      "The Japan Guy — culture")
 
-RSSX(jp_b43_tokyogirlsupdate_com, "jp-b43-tokyogirlsupdate-com",
-     "Tokyo Girls Update", "Tokyo Girls Update",
-     "jp_webmedia", "media",
-     "https://tokyogirlsupdate.com/feed",
-     "en", "[\"news\",\"publisher:Tokyo Girls Update\",\"culture\"]",
-     3600,
-     "Tokyo Girls Update — culture")
+/* jp-b43-tokyogirlsupdate-com moved to collectors/pivot/table/hp3b43_jprss.c
+ * (2026-10-21): its 2 MB feed takes ~84 s and rss_collect() allows 25. */
 
 RSSX(jp_b43_unseen_japan_com, "jp-b43-unseen-japan-com",
      "Unseen Japan", "Unseen Japan",
