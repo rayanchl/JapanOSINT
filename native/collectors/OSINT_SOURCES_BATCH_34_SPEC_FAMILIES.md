@@ -100,32 +100,51 @@ the unset 0 the walk would re-read the first event of every page.
 | `audit_page_param.py` | no batch-33 row binds its own `page_param` |
 | registry delta | +139 after review, all 139 `JO34_*` ids registered |
 
-## NOT verified — rules 4, 4b and 4d
+## Measured 2026-10-20 — rules 4, 4b and 4d, live
 
-No row was fetched. Unmeasured: whether the engine turns the response into
-`intel_items` (rule 4), whether emitted records survive the sink's uid upsert
-(4b), and whether a pivot's filter is honoured rather than silently ignored
-(4d — a filter being ignored returns the whole collection with HTTP 200 and
-every counting gate green, which is worse than returning nothing).
+The paragraph this replaces said "no row was fetched". Sixteen days later every
+row was: `probe_hp_batch.py --check-filter` over all four manifests, then the
+engine — `audit_registry_emit.py --match '^JO34_'` for the 115 scheduled rows,
+`audit_batch_emit.py` with the manifest for the 24 Socrata pivots (a pivot
+asked with no entity is `NEEDS_ENTITY`, not a verdict), and one re-run of each
+`FETCH_FAILED`. Per-row readings: `docs/verified-sources-batch34.tsv`; the rows
+removed: `docs/rejected-sources-batch34.tsv`.
 
-**Unlike batch 31, the manifests exist**, so both tools can be pointed straight
-at this batch:
-
-```sh
-cd native
-python3 tools/audit_registry_emit.py --bin ./bin/japanosint \
-        --match JO34_ --jobs 6 --timeout 220 --out b33.tsv
-python3 tools/probe_hp_batch.py ../docs/candidate-sources-batch34.*.txt \
-        --check-filter
-```
-
-Retire whatever returns `EMITS_NOTHING`, `COLLISION` or `FILTER_IGNORED`. The
-24 Socrata rows are the ones `--check-filter` matters most for, since they are
-the only entity pivots here; the other 126 are scheduled collection feeds.
+* **Rule 4d held: zero `FILTER_IGNORED`** across the 24 Socrata pivots. The
+  review's `domains=`/`search_context=` fix was the right one — an impossible
+  entity returns an empty result set, a real one returns that portal's
+  matching datasets and nothing from any other Socrata host.
+* **Probe: 110 of 139 PASS.** The refusals were 19 HTTP errors (403 bot walls
+  on data.gov.uk, data.go.th, opendata.az; 502s from the CKAN portals of six
+  US cities and states, read at once), 4 transport failures, 4 Socrata
+  catalogues empty for the probe entity, 1 non-JSON body (data.govt.nz), 1
+  reset.
+* **Engine, scheduled rows: 91 OK, 3 COLLISION, 21 FETCH_FAILED on the sweep;
+  1 of the 21 recovered on the re-run.** Socrata pivots: 19 OK, 4 honest
+  empties for the probe entity, 1 unmeasurable from here (the session's egress
+  refused the tunnel to data.usaid.gov on every attempt — a reading of this
+  environment, not of the source, so the row stays).
+* **The three collisions were SKIPS, and they changed the beat's endpoint.**
+  `current_package_list_with_resources` has no sort parameter and orders by
+  `metadata_modified desc`, so a dataset edited while the walk runs shifts
+  every later page: govdata lost 3 of 2,000, Zürich 16 of 942, and on an
+  unstable order a collision at the sink means the same number of records
+  never served at all (CLAUDE.md, "a collision that is really a skip"). All 95
+  CKAN rows now read `package_search?sort=id+asc&rows=100` — the same
+  datasets WITH their resources, on the stable key — with `page_resume=1` so
+  a catalogue larger than the 20-page ceiling (govdata declares 169,254) is
+  read over a cycle rather than its first 2,000 forever. Re-measured on the
+  new endpoint the same day: Zürich 942 emitted / 942 stored, its own `count`
+  exactly. The per-row readings of that second audit are the ones in the TSV.
+* **Removed: the three FDSN event rows** whose node answers 400/404 to
+  `event/1` on both runs — the shape the review below warned about (a node
+  runs only some of the services the spec defines) — and the CKAN rows that
+  failed twice on the NEW endpoint as well; the rejects TSV names each with
+  both readings.
 
 The engine cannot fabricate — a moved or reshaped endpoint yields an honest
-empty, never an invented record — so an unmeasured row is a coverage gap, not a
-source of false data.
+empty, never an invented record — and now each of these rows has a measured
+reading instead of a coverage gap.
 
 ## Review (same day, before any probe)
 

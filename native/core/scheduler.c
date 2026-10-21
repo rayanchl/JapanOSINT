@@ -217,6 +217,102 @@ long sched_state_interval(const sched_state *st, const sched_policy *p,
   return st->effective_interval > declared ? st->effective_interval : declared;
 }
 
+/* ── freshness-adaptive cadence ──────────────────────────────────────────
+ *
+ * WHY. Batches 43–48 (21,000 feeds declared by public bodies and the press)
+ * had their intervals SET from a measurement: the age of the newest item on
+ * the day each feed was validated, bucketed hourly / 6-hourly / daily /
+ * weekly. That reading was true on 2026-10-19 and nothing kept it true. A
+ * parish council that posts weekly in autumn and daily before an election,
+ * a ministry whose feed broke for a month and came back — every one keeps
+ * the cadence of one afternoon forever, which is the same frozen reading as
+ * a date written into a URL (hpengine.h's {date} note), on a different axis.
+ *
+ * WHAT. After every successful run of a source whose def says
+ * adaptive_interval, the scheduler reads the newest ISO published_at the
+ * source has stored and re-buckets it by the same rule, and that bucket is
+ * the base the backoff arithmetic above works from. Both directions: a
+ * quiet feed drifts to weekly, a feed that wakes comes back to hourly on
+ * its next run (which, at worst, is a week away — the cost of having gone
+ * quiet, not of the mechanism). Bounded by the buckets: never faster than
+ * hourly, never slower than weekly, whatever the declared interval was.
+ *
+ * WHAT IT DOES NOT DO. Nothing for a row whose records carry no ISO date
+ * (undated feeds keep their declared weekly; no evidence, no change), nothing
+ * for a row that is not adaptive, nothing on a failed run (a 403 says
+ * nothing about freshness, and the backoff already handles it), and it never
+ * reads a date that is not a date: an epoch number or dd/mm/yyyy in
+ * published_at is skipped by the GLOB, exactly as embed_pod's eligibility
+ * rule skips them. */
+long sched_freshness_bucket(double age_days) {
+  if (age_days < 0)   return 0;
+  if (age_days <= 3)   return 3600;
+  if (age_days <= 30)  return 21600;
+  if (age_days <= 365) return 86400;
+  return 604800;
+}
+
+long sched_state_base(const sched_state *st, long declared, int adaptive) {
+  /* An entity pivot (interval 0) is never scheduled, whatever its rows'
+   * dates say — the composition test caught the measurement giving one a
+   * cadence. The adaptive flag refines a schedule; it cannot create one. */
+  if (declared <= 0) return declared;
+  if (adaptive && st && st->freshness_interval > 0) return st->freshness_interval;
+  return declared;
+}
+
+/* The ONE composition of the two mechanisms that can move a row's cadence
+ * (2026-10-20, when they met in a merge): the row's own measurement inside,
+ * the operator's system-wide policy outside.
+ *
+ *   sched_row_interval = cadence_apply( sched_state_base(st, declared, adaptive) )
+ *
+ * So a feed whose items say "hourly" runs hourly under no policy, six-hourly
+ * under an operator floor of six hours, and at the global cadence when one is
+ * set — a person's floor outranks a measurement, a global outranks both, and
+ * the measurement is still taken and stored, so a page can say "measured
+ * hourly, held at 6 h by policy" rather than hiding one behind the other.
+ * The health backoff (sched_state_apply / sched_state_interval) then works
+ * from this figure. An entity pivot (interval 0) passes through untouched. */
+long sched_row_interval(const sched_state *st, const source_def *d) {
+  if (!d) return 0;
+  return cadence_apply(sched_state_base(st, d->update_interval_sec, d->adaptive_interval));
+}
+
+long sched_freshness_measure(db_handle *db, const char *id, time_t now) {
+  if (!db || !db->h || !id) return 0;
+  sqlite3_stmt *s;
+  /* ORDER BY on the (source_id, published_at DESC) index rather than max():
+   * the GLOB keeps non-ISO values out, and the first row the index yields
+   * that passes it is the newest ISO date. */
+  if (sqlite3_prepare_v2(db->h,
+        "SELECT published_at FROM intel_items WHERE source_id=?1 AND "
+        "published_at GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]*' "
+        "ORDER BY published_at DESC LIMIT 1", -1, &s, NULL) != SQLITE_OK)
+    return 0;
+  sqlite3_bind_text(s, 1, id, -1, SQLITE_TRANSIENT);
+  long out = 0;
+  if (sqlite3_step(s) == SQLITE_ROW) {
+    const char *v = (const char *)sqlite3_column_text(s, 0);
+    struct tm tm; memset(&tm, 0, sizeof tm);
+    int Y, M, D, h = 0, m = 0, sec = 0;
+    if (v && sscanf(v, "%4d-%2d-%2d", &Y, &M, &D) == 3) {
+      if (strlen(v) >= 19 && (v[10] == 'T' || v[10] == ' '))
+        sscanf(v + 11, "%2d:%2d:%2d", &h, &m, &sec);
+      tm.tm_year = Y - 1900; tm.tm_mon = M - 1; tm.tm_mday = D;
+      tm.tm_hour = h; tm.tm_min = m; tm.tm_sec = sec;
+      time_t t = timegm(&tm);
+      double age = t == (time_t)-1 ? -1.0 : (double)(now - t) / 86400.0;
+      /* A date in the future (a scheduled post, a clock skew, a feed that
+       * stamps items with tomorrow) is "fresh", not "unmeasured". */
+      if (age < 0 && t != (time_t)-1) age = 0;
+      out = sched_freshness_bucket(age);
+    }
+  }
+  sqlite3_finalize(s);
+  return out;
+}
+
 /* Lower key runs first. Three bands that never interleave — healthy sources
  * always beat backed-off ones, which always beat quarantine probes — and
  * inside a band: better trust score first, then the MOST overdue first, so a
@@ -237,7 +333,7 @@ int sched_state_load_one(db_handle *db, const char *id, sched_state *st) {
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(db->h,
         "SELECT consecutive_failures,consecutive_empties,effective_interval,"
-        "backoff_until,quarantined,quarantined_at,last_probe "
+        "backoff_until,quarantined,quarantined_at,last_probe,freshness_interval "
         "FROM source_sched_state WHERE source_id=?1", -1, &s, NULL) != SQLITE_OK)
     return -1;
   sqlite3_bind_text(s, 1, id, -1, SQLITE_TRANSIENT);
@@ -250,6 +346,7 @@ int sched_state_load_one(db_handle *db, const char *id, sched_state *st) {
     st->quarantined          = sqlite3_column_int(s, 4);
     st->quarantined_at       = (time_t)sqlite3_column_int64(s, 5);
     st->last_probe           = (time_t)sqlite3_column_int64(s, 6);
+    st->freshness_interval   = (long)sqlite3_column_int64(s, 7);   /* NULL → 0 */
     rc = 1;
   }
   sqlite3_finalize(s);
@@ -324,16 +421,21 @@ int sched_state_save(db_handle *db, const char *id, const sched_state *st,
   if (sqlite3_prepare_v2(db->h,
         "INSERT INTO source_sched_state(source_id,consecutive_failures,"
         "consecutive_empties,declared_interval,effective_interval,backoff_until,"
-        "quarantined,quarantined_at,last_probe,updated_at) "
-        "VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9,?10) ON CONFLICT(source_id) DO UPDATE SET "
+        "quarantined,quarantined_at,last_probe,updated_at,freshness_interval) "
+        "VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11) ON CONFLICT(source_id) DO UPDATE SET "
         "consecutive_failures=excluded.consecutive_failures,"
         "consecutive_empties=excluded.consecutive_empties,"
         "declared_interval=excluded.declared_interval,"
         "effective_interval=excluded.effective_interval,"
         "backoff_until=excluded.backoff_until,quarantined=excluded.quarantined,"
         "quarantined_at=excluded.quarantined_at,last_probe=excluded.last_probe,"
-        "updated_at=excluded.updated_at", -1, &s, NULL) != SQLITE_OK)
+        "updated_at=excluded.updated_at,"
+        "freshness_interval=excluded.freshness_interval", -1, &s, NULL) != SQLITE_OK)
     return -1;
+  if (st->freshness_interval > 0)
+    sqlite3_bind_int64(s, 11, (sqlite3_int64)st->freshness_interval);
+  else
+    sqlite3_bind_null(s, 11);
   sqlite3_bind_text (s, 1, id, -1, SQLITE_TRANSIENT);
   sqlite3_bind_int  (s, 2, st->consecutive_failures);
   sqlite3_bind_int  (s, 3, st->consecutive_empties);
@@ -366,8 +468,27 @@ static void sched_state_record(db_handle *db, const source_def *d,
   time_t now = time(NULL);
   if (sched_state_load_one(db, d->id, &st) < 0) return;   /* no table: say nothing */
   int was_q = st.quarantined;
-  sched_state_apply(&st, &pol, cadence_apply(d->update_interval_sec), status, records, now);
-  if (sched_state_save(db, d->id, &st, cadence_apply(d->update_interval_sec), now) != 0)
+  /* An adaptive row re-measures its cadence from what it has stored — after
+   * a run that WORKED, because a refused fetch says nothing about how often
+   * the upstream publishes. The bucket replaces the declared interval as the
+   * base of the backoff arithmetic; the authored interval stays on the def. */
+  if (d->adaptive_interval && status && strcmp(status, "ok") == 0) {
+    long fr = sched_freshness_measure(db, d->id, now);
+    if (fr != st.freshness_interval)
+      fprintf(stderr, "[sched] %s freshness: newest stored item re-buckets the "
+                      "cadence %ld -> %ld s (declared %d)\n",
+              d->id, st.freshness_interval > 0 ? st.freshness_interval
+                                               : (long)d->update_interval_sec,
+              fr > 0 ? fr : (long)d->update_interval_sec, d->update_interval_sec);
+    st.freshness_interval = fr;
+  }
+  /* ONE composition, used here and in the due-time loop (sched_row_interval):
+   * the row's measured base inside, the operator's cadence policy outside.
+   * A person's floor outranks a measurement, a global cadence outranks both,
+   * and the health backoff then stretches from the result. */
+  long base = sched_row_interval(&st, d);
+  sched_state_apply(&st, &pol, base, status, records, now);
+  if (sched_state_save(db, d->id, &st, base, now) != 0)
     fprintf(stderr, "[sched] %s: could not persist sched state\n", d->id);
   if (st.consecutive_failures > 0)
     fprintf(stderr, "[sched] %s backoff: %d consecutive failure(s), next in %lds%s\n",
@@ -1132,7 +1253,9 @@ void scheduler_loop(db_handle *db) {
       cad_gen = cadence_generation();
       long pulled = 0;
       for (int i = 0; i < n; i++) {
-        long e = cadence_apply(g_all[i]->update_interval_sec);
+        pthread_mutex_lock(&g_q.mu);
+        long e = sched_row_interval(&g_state[i], g_all[i]);
+        pthread_mutex_unlock(&g_q.mu);
         if (e <= 0) continue;
         if (next[i] > now + (time_t)e) { next[i] = now + (time_t)e; pulled++; }
       }
@@ -1160,11 +1283,12 @@ void scheduler_loop(db_handle *db) {
       pthread_mutex_lock(&g_q.mu);
       sched_state st = g_state[i];
       pthread_mutex_unlock(&g_q.mu);
-      /* "declared" here is the POLICY's interval for this row (cadence.h): the
-       * operator's global cadence or clamp when one is set, the row's own
-       * value otherwise. Backoff doubles from it and the overdue ratio is
-       * measured against it. */
-      long declared = cadence_apply(d->update_interval_sec);
+      /* "declared" here is this row's interval under BOTH mechanisms
+       * (sched_row_interval): the cadence its own stored items measured when
+       * the row is adaptive — the worker refreshed that into g_state[i] —
+       * with the operator's cadence policy (cadence.h) applied on top.
+       * Backoff doubles from it and the overdue ratio is measured against it. */
+      long declared = sched_row_interval(&st, d);
       double overdue = (double)(now - next[i]) / (double)(declared > 0 ? declared : 1);
       q_push(i, sched_priority(&st, source_trust_score(db, d->id), overdue));
       next[i] = now + sched_state_interval(&st, &g_pol, declared);

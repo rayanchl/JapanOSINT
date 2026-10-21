@@ -13,6 +13,7 @@ int sqlite3_vec_init(sqlite3 *db, char **pzErrMsg, const sqlite3_api_routines *p
 #include "camera_stills.h"     /* camera_stills_migrate (same reason) */
 #include "story.h"             /* story_migrate (story_id, novelty columns) */
 #include "alert_sem.h"         /* alert_sem_migrate (alert_rule_vec)        */
+#include "thresholds.h"        /* threshold_migrate (settings_thresholds)   */
 #include "fts_schema.h"        /* fts_schema_migrate (widens intel_items_fts) */
 #include "entitystore.h"       /* es_norm_migrate */
 #include "source_registry.h"   /* src_meta_get (merged metadata)        */
@@ -422,6 +423,10 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
    * One row per scheduled source already exists here; this is one more column
    * on it, not a table of its own. */
   ensure_column(db, "source_sched_state", "resume_token", "TEXT");
+  /* The cadence an adaptive row re-measured from its newest stored item
+   * (source_def.adaptive_interval, core/scheduler.c sched_freshness_measure).
+   * NULL = not measured / undated rows: the declared interval stands. */
+  ensure_column(db, "source_sched_state", "freshness_interval", "INTEGER");
 
   /* Notification inbox (roadmap item 11): read/unread state per event. */
   ensure_column(db, "alert_events", "read_at", "TEXT");
@@ -539,6 +544,9 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
   story_migrate(db);
   /* Semantic alert rules' stored vectors (core/alert_sem.h). */
   alert_sem_migrate(db);
+  /* Operator overrides of the similarity thresholds (core/thresholds.h):
+   * the table, then the in-memory cache every threshold_get() reads. */
+  threshold_migrate(db);
 
   /* Widen intel_items_fts to also index link/author/tags/properties. No-op
    * unless the live index is still the old column set. Deliberately LAST of

@@ -24958,6 +24958,34 @@ static const hp_source HP3B49_JPWPCCI[] = {
       "Discovered from this host's own REST root (/wp/v2/types), not "
       "guessed. Keyed on the user id with name as the title: a user "
       "record carries no date field." },
+  /* JO49_WP_KCCIKOMORO_POSTS: restored 2026-10-21 — see the description's last sentence; the readings are in docs/rejected-sources-batch49.emit.tsv */
+  { .id = "JO49_WP_KCCIKOMORO_POSTS", .name = "www.kcci.komoro.org — posts (WordPress REST)",
+    .name_ja = "www.kcci.komoro.org 投稿（WordPress REST）",
+    .category = "business", .portal = "https://www.kcci.komoro.org/",
+    .record_type = "site-post",
+    .tags = "\"japan\",\"wordpress\",\"posts\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.kcci.komoro.org/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .array_path = ".",
+    .body_keys = "content.rendered",
+    .date_keys = "date",
+    .id_keys = "id",
+    .interval = 21600,
+    .link_keys = "link",
+    .page_max = 60,
+    .page_param = "page",
+    .page_start = 1,
+    .timeout_ms = 30000,
+    .title_keys = "title.rendered",
+    .description = "WordPress REST posts of www.kcci.komoro.org "
+      "(www.kcci.komoro.org). Fetched 2026-10-20: the collection "
+      "answered with 100 record(s) and declares 597 in X-WP-Total. "
+      "Discovered from this host's own REST root (/wp/v2/types), not "
+      "guessed. Post-shaped: title.rendered, date, link and "
+      "content.rendered are kept."
+      "Removed 2026-10-20 after two FETCH_FAILED readings (connection "
+      "reset); re-probed 2026-10-21: HTTP 200, 100 records, 371,116 "
+      "bytes, under every UA — transient." },
 };
 
 HP_REGISTER_TABLE(HP3B49_JPWPCCI)
