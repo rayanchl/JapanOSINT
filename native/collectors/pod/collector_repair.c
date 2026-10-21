@@ -32,6 +32,7 @@
 #include "source.h"
 #include "core/prompts.h"
 #include "core/source_registry.h"
+#include "core/thresholds.h"   /* repair_sem_cos_floor */
 #include "core/url_override.h"
 #include "core/llm_fault.h"
 #include "core/embed_pod.h"
@@ -393,10 +394,10 @@ static char *build_sample(const char *body) {
 #define REPAIR_SEM_CENTROID_N  50
 #define REPAIR_SEM_MIN_VECTORS 5
 
+/* core/thresholds.c ("repair_sem_cos_floor"): runtime override >
+ * JO_REPAIR_SEM_FLOOR > REPAIR_SEM_COS_FLOOR (the default it registers). */
 static double repair_sem_floor(void) {
-  const char *e = getenv("JO_REPAIR_SEM_FLOOR");
-  double v = (e && *e) ? atof(e) : 0;
-  return (v > 0 && v <= 1) ? v : REPAIR_SEM_COS_FLOOR;
+  return threshold_get("repair_sem_cos_floor");
 }
 
 /* 1 pass, 0 fail, -1 skipped. Writes {cos, floor, vectors, skipped} to `g`. */

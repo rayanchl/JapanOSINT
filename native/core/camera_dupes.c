@@ -1,5 +1,6 @@
 /* core/camera_dupes.c — see camera_dupes.h. */
 #include "camera_dupes.h"
+#include "thresholds.h"         /* operator-tunable similarity cut-offs */
 #include "camera_feed.h"
 #include "camera_refframe.h"
 #include "camera_stills.h"
@@ -257,7 +258,7 @@ char *camera_dupes_route(db_handle *db, const char *tenant, const char *id,
   load_items(db, v, n);
 
   /* the eligible cameras, by pointer, for two orderings */
-  dcam **e = calloc((size_t)(n ? n : 1), sizeof *e);
+  dcam **e = calloc((size_t)(n > 0 ? n : 1), sizeof *e);
   int ne = 0, with_vec = 0, with_ph = 0, no_geo = 0;
   /* vectors are LOADED only for the pairs that need one; this only counts */
   sqlite3_stmt *hv = NULL;
@@ -280,6 +281,9 @@ char *camera_dupes_route(db_handle *db, const char *tenant, const char *id,
   int np = 0, pcap = 0;
   cJSON *skipped = cJSON_CreateArray();
   long n_skipped = 0;
+
+  /* Read once per request: an operator change applies to the next scan. */
+  const double cos_min = threshold_get("camera_dup_cosine_min");
 
   /* 1. byte-identical latest frames, grouped by sha */
   if (e && ne > 1) {
@@ -334,7 +338,7 @@ char *camera_dupes_route(db_handle *db, const char *tenant, const char *id,
            * reported as evidence either way) */
           if (vec_of(db, e[i]) && vec_of(db, e[j]) && e[i]->dim == e[j]->dim)
             x.cos = vec_cosine(e[i]->vec, e[j]->vec, e[i]->dim);
-          if (!isnan(x.cos) && x.cos >= CAM_DUP_COSINE_MIN) x.sig = SIG_COSINE;
+          if (!isnan(x.cos) && x.cos >= cos_min) x.sig = SIG_COSINE;
         }
         if (x.sig >= 0 && push(&p, &np, &pcap, x) != 0) break;
       }
@@ -378,7 +382,7 @@ char *camera_dupes_route(db_handle *db, const char *tenant, const char *id,
   cJSON *meta = cJSON_AddObjectToObject(root, "meta");
   cJSON *th = cJSON_AddObjectToObject(meta, "thresholds");
   cJSON_AddNumberToObject(th, "phash_max_distance", CAM_DUP_PHASH_MAX);
-  cJSON_AddNumberToObject(th, "cosine_min", CAM_DUP_COSINE_MIN);
+  cJSON_AddNumberToObject(th, "cosine_min", threshold_get("camera_dup_cosine_min"));
   cJSON_AddNumberToObject(th, "radius_m", CAM_DUP_RADIUS_M);
   cJSON_AddNumberToObject(th, "sha_group_max", CAM_DUP_SHA_GROUP_MAX);
   cJSON_AddNumberToObject(meta, "cameras_examined", ne);
