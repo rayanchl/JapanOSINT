@@ -85,7 +85,13 @@ static const hp_source HP3B34_FDSNEVENT[] = {
     .record_type = "seismic-event",
     .tags = "\"sensor\",\"seismic\",\"hazard\",\"fdsn\",\"event-catalogue\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
-    .url = "https://eida.gein.noa.gr/fdsnws/event/1/query?format=text&nodata=404&orderby=time&limit=1000",
+    /* This service REFUSES an unbounded query with HTTP 400 and answers a
+     * bounded one: measured 2026-10-21, a one-week window returned five real
+     * events (`noa2024aaaak|2024-01-01T00:00:28…`). So it needs a window, and
+     * a rolling one rather than a frozen date — 30 days back, re-rendered
+     * every run, with the records' own origin time as the date. Ascending for
+     * the same drift reason as the ETHZ row. */
+    .url = "https://eida.gein.noa.gr/fdsnws/event/1/query?format=text&nodata=404&starttime={date:%Y-%m-%d:-30}&orderby=time-asc&limit=1000",
     .csv_comment = "#",
     .csv_delim = "pipe",
     .csv_no_header = 1,
@@ -94,7 +100,7 @@ static const hp_source HP3B34_FDSNEVENT[] = {
     .interval = 86400,
     .lat_key = "col2",
     .lon_key = "col3",
-    .page_max = 20,
+    .page_max = 20,   /* 20,000 events per 30-day window; Greek seismicity runs a few thousand a month */
     .page_param = "offset",
     .page_size = 1000,
     .page_start = 1,
@@ -131,15 +137,17 @@ static const hp_source HP3B34_FDSNEVENT[] = {
     .page_start = 1,
     .timeout_ms = 120000,
     .title_keys = "col12,col10",
-    .description = "UNPROBED. FDSN event/1: one pipe-delimited row per located event "
-      "with event id, origin time, latitude, longitude, depth, the "
-      "contributing agency and catalogue, magnitude and magnitude type, "
-      "and the region name. Each data centre authoritative for its own "
-      "region, so the national catalogues carry events the global feeds "
-      "never list. Host and /fdsnws/ base are proven live by an "
-      "existing wired row on this host; the path and schema are fixed "
-      "by the FDSN specification. Walked by the specification's own "
-      "limit/offset, whose offset is 1-based." },
+    .description = "MEASURED 2026-10-21: this host does NOT run event/1. "
+      "/fdsnws/event/1/version is 404 over https and http and "
+      "application.wadl is 404, while /fdsnws/station/1/version "
+      "answers 200 — KOERI serves station and waveform data, not a "
+      "catalogue, which is the batch-34 review's own rule (the FDSN "
+      "spec defines services; a node runs only some) landing on a "
+      "host the review had kept. Its station service is already "
+      "wired in hp3b34_fdsnstation.c, so there is nothing here to "
+      "re-point to: this row has no endpoint that exists. It stays "
+      "registered and files a collector-fetch-failure record naming "
+      "the 404 rather than failing silently." },
 
   { .id = "JO34_FDSNEVT_SERVICE_SCEDC_CALTECH_EDU", .name = "SCEDC, Caltech (Southern California) — FDSN event catalogue",
     .name_ja = "南カリフォルニア地震データセンター 地震カタログ（FDSN）",
@@ -198,15 +206,17 @@ static const hp_source HP3B34_FDSNEVENT[] = {
     .page_start = 1,
     .timeout_ms = 120000,
     .title_keys = "col12,col10",
-    .description = "UNPROBED. FDSN event/1: one pipe-delimited row per located event "
-      "with event id, origin time, latitude, longitude, depth, the "
-      "contributing agency and catalogue, magnitude and magnitude type, "
-      "and the region name. Each data centre authoritative for its own "
-      "region, so the national catalogues carry events the global feeds "
-      "never list. Host and /fdsnws/ base are proven live by an "
-      "existing wired row on this host; the path and schema are fixed "
-      "by the FDSN specification. Walked by the specification's own "
-      "limit/offset, whose offset is 1-based." },
+    .description = "MEASURED 2026-10-21, and the earlier reading was wrong about "
+      "WHY. /fdsnws/event/1/version answers 200 (1.2.4), so the "
+      "service IS deployed; it returns 'no matching events found' "
+      "for every window asked, including starttime=1900-01-01, so "
+      "its catalogue holds nothing to serve. The original 404 was "
+      "the row's own nodata=404 doing its job — an FDSN service "
+      "answers an empty result that way, which means NO DATA MATCHED "
+      "and not NO SUCH SERVICE. Rule 1's honest empty, permanent: "
+      "ICGC's station service is already wired in "
+      "hp3b34_fdsnstation.c and its seismic catalogue is not "
+      "published through FDSN event. Registered and disclosing." },
 };
 
 HP_REGISTER_TABLE(HP3B34_FDSNEVENT)

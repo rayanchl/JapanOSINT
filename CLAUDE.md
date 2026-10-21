@@ -223,17 +223,56 @@ twice. Three lessons, in order of how much they generalise:
   **1,044 organizations**, so its org rows reach under 2% of its publishers,
   and 42 of Israel's 61 have no row at all. The gap is what makes the
   re-pointed row worth having; the count that settles it is
-  `organization_list`. Of the other 19: six are one `ogopendata.com` 502 inside the same
-  minutes, three are bot walls, three the FDSN rows below, one moved, one
-  answers a shape it does not declare, four are transport failures from this
-  container alone, one is a 500.
-* **Reasoning from what an operator DOES got 3 of 5 wrong.** The batch-34
-  review applied its own rule correctly — the FDSN spec defines services and a
-  node runs only some — dropped 11 rows on it, and kept five event catalogues
-  on the reasoning that those operators run monitoring networks. NOA (400),
-  KOERI (404) and ICGC (404) do not serve `event/1`. The doc said so itself:
-  "a probe may still find one of the kept five unimplemented". One request each
-  settled what a paragraph of inference could not.
+  `organization_list`.
+
+  **The other 19 were then taken one at a time too (2026-10-21), and only one
+  more could be made to work.** Six are a single `ogopendata.com` 502 inside
+  the same minutes, so the host was never shown dead; four are transport
+  failures from this container alone; one is a 500. Of the eight that were
+  individually diagnosed, each answer is a different KIND of dead and only the
+  first is a row defect:
+  * **NOA** — a mis-queried live service; fixed, 0 → 1,985 events (above).
+  * **`ckan.publishing.service.gov.uk`** — `package_search` works and reports
+    **59,371** datasets, which is `data.gov.uk`'s 59,370 the same hour: this
+    host IS that catalogue's CKAN backend. Making it work would fetch 59k
+    identical datasets twice a day, so it is deliberately NOT re-pointed.
+    **A row that can be made to work and should not be is still a finding** —
+    dropping one of the two is the end state, and that is a human's call.
+  * **`catalog.data.gov`** — the whole CKAN Action API is gone (package_search,
+    package_list and the legacy `/api/action/` path all 404). Not an action a
+    portal disabled; a platform the row was written for. Reaching it again is
+    new work, not a repair.
+  * **`catalogue.data.govt.nz`** — a bot wall answering **200** with an Imperva
+    "Pardon Our Interruption" page, with a browser User-Agent as much as ours.
+    That is why the emit audit said UNPARSEABLE: a 200 whose body is a
+    challenge. No declarative row can answer a JS challenge.
+  * **`data.go.th`** 403 on both actions, **`datosabiertos.gob.pe`** 418 then
+    404 with no API at that address, **ICGC** and **KOERI** as above.
+* **An FDSN `nodata=404` means NO DATA MATCHED, not NO SUCH SERVICE — and a
+  400 can mean the query was too broad.** This correction is the useful part.
+  On 2026-10-20 three kept event catalogues answered 400/404/404 and were
+  written up as "the node does not run `event/1`", which was the batch-34
+  review's own rule (the spec defines services; a node runs only some) applied
+  to a reading that did not support it. **The status came from the row's own
+  `nodata=404` parameter and from an unbounded query**, not from a missing
+  service. The test that settles it is `/fdsnws/<service>/1/version`, and on
+  2026-10-21 it gave three different answers:
+  * **NOA serves it** (version 1.2.4) and REFUSES an unbounded query with 400.
+    A rolling 30-day window — `starttime={date:%Y-%m-%d:-30}`, never a frozen
+    date — takes it from 0 records to **1,985 events**, `stored == emitted`,
+    three requests, the trailing 404 being `nodata=404` reporting the end of
+    data after a short page. One of the three was simply mis-queried.
+  * **ICGC serves it** (version 1.2.4) and answers "no matching events found"
+    for every window including `starttime=1900-01-01`: deployed, and holding
+    nothing. Rule 1's honest empty, permanently.
+  * **KOERI does not** — 404 on `version` over https and http and on
+    `application.wadl` — while `station/1/version` answers 200.
+
+  So the original rule was right and its application was 1-for-3. Both ICGC's
+  and KOERI's station services were already wired in `hp3b34_fdsnstation.c`,
+  so neither event row has anywhere to be re-pointed; they stay registered and
+  disclose. **Ask the `version` endpoint before concluding a service is
+  absent**, and read a status against the parameters the row itself sent.
 * **The copied keys reached, and are still not verified.** Batch 35's 61 live
   WEKO pivots prove the endpoint and key set carried over from batch 25 produce
   records. They prove nothing about identity: this audit reads EMITTED, and a

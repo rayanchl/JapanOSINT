@@ -249,17 +249,13 @@ static const hp_source HP3B34_CKANBULK[] = {
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
-    .description = "UNPROBED. The CKAN Action API endpoint that returns whole "
-      "package dicts WITH their resources inline, so each record "
-      "carries the dataset plus the URL, format and size of every "
-      "downloadable file under it. package_search (already wired for "
-      "this host) answers a query with dataset summaries; this answers "
-      "\"what does this body publish, and where are the actual files\". "
-      "Host and CKAN base path are proven live by the existing "
-      "package_search row; the action path is fixed by the CKAN Action "
-      "API. Response is {success, result:[...]}; some CKAN builds "
-      "disable or deprecate this action, in which case the row is an "
-      "honest empty." },
+    .description = "MEASURED 2026-10-21: the CKAN Action API is GONE from this host, "
+      "not merely this action. package_search, package_list and the "
+      "legacy /api/action/ path all answer 404, so there is no CKAN "
+      "endpoint left to re-point to - data.gov moved off the platform "
+      "this row was written for. Reaching it again needs whatever API "
+      "replaced it, which is new work and not a repair of this row. "
+      "Registered and disclosing." },
 
   { .id = "JO34_CKANRES_CATALOG_DATA_METRO_TOKYO_LG_JP", .name = "catalog.data.metro.tokyo.lg.jp — every dataset with its resource "
       "files (CKAN current_package_list_with_resources)",
@@ -342,17 +338,16 @@ static const hp_source HP3B34_CKANBULK[] = {
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
-    .description = "UNPROBED. The CKAN Action API endpoint that returns whole "
-      "package dicts WITH their resources inline, so each record "
-      "carries the dataset plus the URL, format and size of every "
-      "downloadable file under it. package_search (already wired for "
-      "this host) answers a query with dataset summaries; this answers "
-      "\"what does this body publish, and where are the actual files\". "
-      "Host and CKAN base path are proven live by the existing "
-      "package_search row; the action path is fixed by the CKAN Action "
-      "API. Response is {success, result:[...]}; some CKAN builds "
-      "disable or deprecate this action, in which case the row is an "
-      "honest empty." },
+    .description = "MEASURED 2026-10-21: a BOT WALL, not an API change. Both "
+      "catalogue.data.govt.nz and data.govt.nz answer 200 with an "
+      "Imperva interruption page (\"Pardon Our Interruption\") or a "
+      "noindex,nofollow JavaScript challenge instead of JSON, for the "
+      "bulk action and for package_search alike, with a browser "
+      "User-Agent as much as with ours. That is why the emit audit "
+      "called it UNPARSEABLE: a 200 whose body is a challenge page. "
+      "Nothing in a declarative row can answer a JS challenge, and "
+      "defeating one is not something this tree does. Registered and "
+      "disclosing." },
 
   { .id = "JO34_CKANRES_CKAN_GOVDATA_DE", .name = "ckan.govdata.de — every dataset with its resource files (CKAN "
       "current_package_list_with_resources)",
@@ -591,17 +586,16 @@ static const hp_source HP3B34_CKANBULK[] = {
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
-    .description = "UNPROBED. The CKAN Action API endpoint that returns whole "
-      "package dicts WITH their resources inline, so each record "
-      "carries the dataset plus the URL, format and size of every "
-      "downloadable file under it. package_search (already wired for "
-      "this host) answers a query with dataset summaries; this answers "
-      "\"what does this body publish, and where are the actual files\". "
-      "Host and CKAN base path are proven live by the existing "
-      "package_search row; the action path is fixed by the CKAN Action "
-      "API. Response is {success, result:[...]}; some CKAN builds "
-      "disable or deprecate this action, in which case the row is an "
-      "honest empty." },
+    .description = "MEASURED 2026-10-21 and this row is a DUPLICATE, which is why it "
+      "is not re-pointed. package_search on this host works and reports "
+      "59,371 datasets - the same catalogue as JO34_CKANRES_DATA_GOV_UK "
+      "(59,370 the same hour), because this IS data.gov.uk's CKAN "
+      "backend and that is its public front end. Making this row work "
+      "would mean fetching 59k identical datasets twice a day. The bulk "
+      "action it was authored against answers 403 here. Left registered "
+      "and disclosing rather than removed or duplicated; dropping one "
+      "of the two rows is the only sensible end state and that is a "
+      "call for a human." },
 
   { .id = "JO34_CKANRES_DADESOBERTES_GVA_ES", .name = "dadesobertes.gva.es — every dataset with its resource files "
       "(CKAN current_package_list_with_resources)",
@@ -1056,17 +1050,11 @@ static const hp_source HP3B34_CKANBULK[] = {
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
-    .description = "UNPROBED. The CKAN Action API endpoint that returns whole "
-      "package dicts WITH their resources inline, so each record "
-      "carries the dataset plus the URL, format and size of every "
-      "downloadable file under it. package_search (already wired for "
-      "this host) answers a query with dataset summaries; this answers "
-      "\"what does this body publish, and where are the actual files\". "
-      "Host and CKAN base path are proven live by the existing "
-      "package_search row; the action path is fixed by the CKAN Action "
-      "API. Response is {success, result:[...]}; some CKAN builds "
-      "disable or deprecate this action, in which case the row is an "
-      "honest empty." },
+    .description = "MEASURED 2026-10-21: a BOT WALL that refuses the engine as much "
+      "as the probe - 403 on the bulk action and on package_search, two "
+      "readings a day apart. CLAUDE.md's own rule: a 403 that refuses "
+      "the engine too is a bot wall, and a bot wall is a measurement "
+      "rather than a row to fix. Registered and disclosing." },
 
   { .id = "JO34_CKANRES_DATA_GOV_IE", .name = "data.gov.ie — every dataset with its resource files (CKAN "
       "current_package_list_with_resources)",
@@ -2871,17 +2859,11 @@ static const hp_source HP3B34_CKANBULK[] = {
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
-    .description = "UNPROBED. The CKAN Action API endpoint that returns whole "
-      "package dicts WITH their resources inline, so each record "
-      "carries the dataset plus the URL, format and size of every "
-      "downloadable file under it. package_search (already wired for "
-      "this host) answers a query with dataset summaries; this answers "
-      "\"what does this body publish, and where are the actual files\". "
-      "Host and CKAN base path are proven live by the existing "
-      "package_search row; the action path is fixed by the CKAN Action "
-      "API. Response is {success, result:[...]}; some CKAN builds "
-      "disable or deprecate this action, in which case the row is an "
-      "honest empty." },
+    .description = "MEASURED 2026-10-21: no CKAN API at this address. The bulk "
+      "action answered 418 (a WAF teapot) on two readings, and "
+      "package_search is 404 on www.datosabiertos.gob.pe while the bare "
+      "host does not resolve, so there is no working endpoint to "
+      "re-point to. Registered and disclosing." },
 
   { .id = "JO34_CKANRES_WWW_OFFENESDATENPORTAL_DE", .name = "www.offenesdatenportal.de — every dataset with its resource "
       "files (CKAN current_package_list_with_resources)",
