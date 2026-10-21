@@ -16572,9 +16572,6 @@ JO47_FR_11D38DD0_A82C_48CA_B616_62C6F0DD564D_3	frgov	government-notice	https://w
 JO47_FR_1225529B_3835_4264_BE41_AD7740C5382D	frgov	government-notice	https://www.flexbourg.fr/feed	PASS (User-Agent header)	10	OK	10	10	10
 JO47_FR_1233AF65_0D6B_45DE_83D6_E284ACA4DE0E	frgov	government-notice	https://www.landujan.fr/default/feeds/actualite_fr_FR.rss	PASS (User-Agent header)	10	OK	10	10	10
 JO47_FR_13FBE043_734E_4430_8DDC_DBAE62D284A0	frgov	government-notice	https://www.chaumesenbrie.fr/default/feeds/actualite_fr_FR.rss	PASS (User-Agent header)	10	OK	10	10	10
-JO47_FR_1491685A_9AC8_4ACB_BF12_6853B97830F2	frgov	government-notice	https://www.ville-grasse.fr/feed/?post_type=post	PASS (User-Agent header)	5	OK	5	5	5
-JO47_FR_1491685A_9AC8_4ACB_BF12_6853B97830F2_2	frgov	government-notice	https://www.ville-grasse.fr/feed/?post_type=contacts	PASS (User-Agent header)	40	OK	40	40	40
-JO47_FR_1491685A_9AC8_4ACB_BF12_6853B97830F2_3	frgov	government-notice	https://www.ville-grasse.fr/feed/?post_type=events	PASS (User-Agent header)	8	OK	8	8	8
 JO47_FR_153B37D1_C06C_48C7_853C_61FC1894F5FD	frgov	government-notice	https://www.bolsenheim.fr/?format=feed&type=rss	PASS (User-Agent header)	4	OK	4	4	4
 JO47_FR_153B37D1_C06C_48C7_853C_61FC1894F5FD_2	frgov	government-notice	https://www.bolsenheim.fr/?format=feed&type=atom	PASS (User-Agent header)	4	OK	4	4	4
 JO47_FR_15DF4DB2_2080_4827_92AE_D9056823FA7A	frgov	government-notice	https://vaucresson.fr/feed/	PASS (User-Agent header)	1	OK	1	1	1
@@ -16600,15 +16597,11 @@ JO47_FR_19DA9641_68D9_4625_826C_06F452198721_2	frgov	government-notice	https://w
 JO47_FR_1BFDBABC_87B5_4F38_95B1_4A6A99B448FF	frgov	government-notice	https://www.elven.bzh/feed/?post_type=post	PASS (User-Agent header)	20	OK	20	20	20
 JO47_FR_1BFDBABC_87B5_4F38_95B1_4A6A99B448FF_2	frgov	government-notice	https://www.elven.bzh/feed/?post_type=contacts	PASS (User-Agent header)	40	OK	40	40	40
 JO47_FR_1BFDBABC_87B5_4F38_95B1_4A6A99B448FF_3	frgov	government-notice	https://www.elven.bzh/feed/?post_type=events	PASS (User-Agent header)	29	OK	29	29	29
-JO47_FR_1CB6903D_A6EE_4AB6_8100_78A6A9F5BA48	frgov	government-notice	https://www.ville-bressuire.fr/feed/?post_type=post	PASS (User-Agent header)	40	OK	40	40	40
-JO47_FR_1CB6903D_A6EE_4AB6_8100_78A6A9F5BA48_2	frgov	government-notice	https://www.ville-bressuire.fr/feed/?post_type=contacts	PASS (User-Agent header)	40	OK	40	40	40
-JO47_FR_1CB6903D_A6EE_4AB6_8100_78A6A9F5BA48_3	frgov	government-notice	https://www.ville-bressuire.fr/feed/?post_type=events	PASS (User-Agent header)	40	OK	40	40	40
 JO47_FR_1D24E7D5_F8D0_460E_A2A8_4B4920FC4091	frgov	government-notice	https://www.mairie-saintjouan.fr/feed/?post_type=post	PASS (User-Agent header)	11	OK	11	11	11
 JO47_FR_1D24E7D5_F8D0_460E_A2A8_4B4920FC4091_2	frgov	government-notice	https://www.mairie-saintjouan.fr/feed/?post_type=contacts	PASS (User-Agent header)	40	OK	40	40	40
 JO47_FR_1D24E7D5_F8D0_460E_A2A8_4B4920FC4091_3	frgov	government-notice	https://www.mairie-saintjouan.fr/feed/?post_type=events	PASS (User-Agent header)	40	OK	40	40	40
 JO47_FR_1E0F58AD_6231_49A5_B7E0_E4202DCBCEE7	frgov	government-notice	https://www.cc-beauceloiretaine.fr/feed/?post_type=post	PASS (User-Agent header)	3	OK	3	3	3
 JO47_FR_1E0F58AD_6231_49A5_B7E0_E4202DCBCEE7_2	frgov	government-notice	https://www.cc-beauceloiretaine.fr/feed/?post_type=events	PASS (User-Agent header)	8	OK	8	8	8
-JO47_FR_1F7EF502_3BDD_4FC4_886B_AAFEE42CBCE4	frgov	government-notice	https://www.fresnes94.fr/feed/	PASS (User-Agent header)	3	OK	3	3	3
 JO47_FR_2071A698_BC44_475E_8C0F_29E019A4EC8A	frgov	government-notice	https://www.hohengoeft.fr/feed	PASS (User-Agent header)	10	OK	10	10	10
 JO47_FR_2275E3B4_1F68_4E40_8800_9822262AF8B4	frgov	government-notice	https://www.ponts.fr/feed/	PASS (User-Agent header)	10	OK	10	10	10
 JO47_FR_2306BBFA_0F13_45A2_BA72_4BA73F452F12	frgov	government-notice	https://www.sud-nivernais-communaute.fr/feed/?post_type=post	PASS (User-Agent header)	14	OK	14	14	14
@@ -16636,7 +16629,6 @@ JO47_FR_349D2E83_B6B0_4B1F_B93C_C49201F8362D_2	frgov	government-notice	https://w
 JO47_FR_35CA4923_63D3_4DBC_A943_B60509B92612	frgov	government-notice	https://www.ville-corenc.fr/feed/?post_type=post	PASS (User-Agent header)	23	OK	23	23	23
 JO47_FR_35CA4923_63D3_4DBC_A943_B60509B92612_2	frgov	government-notice	https://www.ville-corenc.fr/feed/?post_type=contacts	PASS (User-Agent header)	40	OK	40	40	40
 JO47_FR_35CA4923_63D3_4DBC_A943_B60509B92612_3	frgov	government-notice	https://www.ville-corenc.fr/feed/?post_type=events	PASS (User-Agent header)	10	OK	10	10	10
-JO47_FR_362BD30C_9EB3_44A9_81B9_47282D235EB4	frgov	government-notice	https://www.lunel.com/feed/	PASS (User-Agent header)	10	OK	10	10	10
 JO47_FR_37B13921_BBC9_4B60_BF7C_1D4DBDA13C38	frgov	government-notice	https://www.locoal-mendon.bzh/feed/?post_type=post	PASS (User-Agent header)	20	OK	20	20	20
 JO47_FR_37B13921_BBC9_4B60_BF7C_1D4DBDA13C38_2	frgov	government-notice	https://www.locoal-mendon.bzh/feed/?post_type=contacts	PASS (User-Agent header)	40	OK	40	40	40
 JO47_FR_37B13921_BBC9_4B60_BF7C_1D4DBDA13C38_3	frgov	government-notice	https://www.locoal-mendon.bzh/feed/?post_type=events	PASS (User-Agent header)	15	OK	15	15	15
@@ -16646,9 +16638,6 @@ JO47_FR_37D609A3_412F_440E_87F5_F01AF88FCF36_3	frgov	government-notice	https://w
 JO47_FR_3C2279E6_773A_4A80_96F2_B21110762ECE	frgov	government-notice	https://www.plelo.fr/feed/?post_type=post	PASS (User-Agent header)	8	OK	8	8	8
 JO47_FR_3C2279E6_773A_4A80_96F2_B21110762ECE_2	frgov	government-notice	https://www.plelo.fr/feed/?post_type=events	PASS (User-Agent header)	4	OK	4	4	4
 JO47_FR_3D0BAFEB_C328_4370_83A3_C755751BBBB4	frgov	government-notice	http://www.clcl.bzh/index.php?option=com_obrss&task=feed&id=2:flux-rss&format=feed&Itemid=694	PASS (User-Agent header)	30	OK	30	30	30
-JO47_FR_3D574FF8_F9A1_4C31_84DD_145B4DCE3FCB	frgov	government-notice	https://www.ville-viroflay.fr/feed/?post_type=post	PASS (User-Agent header)	16	OK	16	16	16
-JO47_FR_3D574FF8_F9A1_4C31_84DD_145B4DCE3FCB_2	frgov	government-notice	https://www.ville-viroflay.fr/feed/?post_type=contacts	PASS (User-Agent header)	40	OK	40	40	40
-JO47_FR_3D574FF8_F9A1_4C31_84DD_145B4DCE3FCB_3	frgov	government-notice	https://www.ville-viroflay.fr/feed/?post_type=events	PASS (User-Agent header)	40	OK	40	40	40
 JO47_FR_3E34EB90_6E01_4152_9231_1A9A65921CA8	frgov	government-notice	https://www.sdis82.fr/feed/	PASS (User-Agent header)	50	OK	50	50	50
 JO47_FR_408F82CA_D323_4F55_B2B7_08C300D5FAE1	frgov	government-notice	https://www.ecully.fr/actualites-109/flux-rss.xml	PASS (User-Agent header)	372	OK	372	372	372
 JO47_FR_408F82CA_D323_4F55_B2B7_08C300D5FAE1_2	frgov	government-notice	https://www.ecully.fr/agenda-133/flux-rss.xml	PASS (User-Agent header)	7	OK	7	7	7
@@ -16755,10 +16744,6 @@ JO47_FR_9AE89280_414C_407D_A217_78703188946B_2	frgov	government-notice	https://w
 JO47_FR_9F4EB576_B429_46C6_BE11_1F5D2686F260	frgov	government-notice	https://www.mairie-vue.fr/feed/?post_type=post	PASS (User-Agent header)	13	OK	13	13	13
 JO47_FR_9F4EB576_B429_46C6_BE11_1F5D2686F260_2	frgov	government-notice	https://www.mairie-vue.fr/feed/?post_type=events	PASS (User-Agent header)	1	OK	1	1	1
 JO47_FR_9F8745E7_2C17_4A64_B67B_06937A08B1B1	frgov	government-notice	https://www.chmayotte.fr/feed/	PASS (User-Agent header)	1	OK	1	1	1
-JO47_FR_9FC4B8D5_302B_4B90_9C53_0545F903B737	frgov	government-notice	https://www.ville-petitbourg.fr/feed/	PASS (User-Agent header)	50	OK	50	50	50
-JO47_FR_A02B4272_8071_4DB9_9707_1C3BD2E14BD6	frgov	government-notice	https://www.mauges-sur-loire.fr/feed/?post_type=post	PASS (User-Agent header)	40	OK	40	40	40
-JO47_FR_A02B4272_8071_4DB9_9707_1C3BD2E14BD6_2	frgov	government-notice	https://www.mauges-sur-loire.fr/feed/?post_type=contacts	PASS (User-Agent header)	40	OK	40	40	40
-JO47_FR_A02B4272_8071_4DB9_9707_1C3BD2E14BD6_3	frgov	government-notice	https://www.mauges-sur-loire.fr/feed/?post_type=events	PASS (User-Agent header)	40	OK	40	40	40
 JO47_FR_A1BF3213_061B_4C81_BF00_8517A4CD1F14	frgov	government-notice	https://www.kirchheim.fr/feed	PASS (User-Agent header)	10	OK	10	10	10
 JO47_FR_A1DD0D30_BB63_4A03_922D_62945D933ACA	frgov	government-notice	https://www.ville-lamorlaye.fr/feed/?post_type=post	PASS (User-Agent header)	13	OK	13	13	13
 JO47_FR_A1DD0D30_BB63_4A03_922D_62945D933ACA_2	frgov	government-notice	https://www.ville-lamorlaye.fr/feed/?post_type=events	PASS (User-Agent header)	11	OK	11	11	11
@@ -16836,9 +16821,6 @@ JO47_FR_D88B9E1A_B59A_4484_8938_B98678AECCCD_2	frgov	government-notice	https://w
 JO47_FR_DDCA1EAC_AD09_43DD_8FB4_52124AFF5792	frgov	government-notice	https://www.marlenheim.fr/feed	PASS (User-Agent header)	30	OK	30	30	30
 JO47_FR_DE2552F5_4E8F_4F65_807C_7035B7F9C6D7	frgov	government-notice	https://www.saint-uniac.fr/default/feeds/actualite.rss	PASS (User-Agent header)	5	OK	5	5	5
 JO47_FR_DE2552F5_4E8F_4F65_807C_7035B7F9C6D7_2	frgov	government-notice	https://www.saint-uniac.fr/default/feeds/actualite_fr_FR.rss	PASS (User-Agent header)	10	OK	10	10	10
-JO47_FR_DE44BE4F_D6A9_4F50_BA58_2431E8AB1AE5	frgov	government-notice	https://www.morsang.fr/feed/?post_type=post	PASS (User-Agent header)	39	OK	39	39	39
-JO47_FR_DE44BE4F_D6A9_4F50_BA58_2431E8AB1AE5_2	frgov	government-notice	https://www.morsang.fr/feed/?post_type=contacts	PASS (User-Agent header)	40	OK	40	40	40
-JO47_FR_DE44BE4F_D6A9_4F50_BA58_2431E8AB1AE5_3	frgov	government-notice	https://www.morsang.fr/feed/?post_type=events	PASS (User-Agent header)	40	OK	40	40	40
 JO47_FR_E14B71C9_8BEF_4D09_A227_F8C590F3BE31	frgov	government-notice	https://www.mossigvignoble.fr/feed	PASS (User-Agent header)	12	OK	12	12	12
 JO47_FR_E3B7B273_F2E7_4F4E_A049_C8A7971B529B	frgov	government-notice	https://www.jauldes.fr/feed/	PASS (User-Agent header)	10	OK	10	10	10
 JO47_FR_E46C0D7F_4725_43A0_AF06_02A38A68BEDC	frgov	government-notice	https://www.chaumesenretz.fr/feed/?post_type=post	PASS (User-Agent header)	7	OK	7	7	7
@@ -16846,7 +16828,6 @@ JO47_FR_E46C0D7F_4725_43A0_AF06_02A38A68BEDC_2	frgov	government-notice	https://w
 JO47_FR_E46C0D7F_4725_43A0_AF06_02A38A68BEDC_3	frgov	government-notice	https://www.chaumesenretz.fr/feed/?post_type=events	PASS (User-Agent header)	22	OK	22	22	22
 JO47_FR_E4A1EB4F_CED6_4A86_A12A_80C9A91C1D0C	frgov	government-notice	https://www.saintquayportrieux.fr/feed/?post_type=post	PASS (User-Agent header)	10	OK	10	10	10
 JO47_FR_E4A1EB4F_CED6_4A86_A12A_80C9A91C1D0C_2	frgov	government-notice	https://www.saintquayportrieux.fr/feed/?post_type=events	PASS (User-Agent header)	10	OK	10	10	10
-JO47_FR_E666A473_67DA_4889_B9C6_6DBF212CB5EA	frgov	government-notice	https://www.ville-chilly-mazarin.fr/feed/	PASS (User-Agent header)	100	OK	100	100	100
 JO47_FR_E7053C77_268E_4BB6_864F_059C9E5E0DF7	frgov	government-notice	https://www.gundolsheim.fr/?format=feed&type=rss	PASS (User-Agent header)	4	OK	4	4	4
 JO47_FR_E7053C77_268E_4BB6_864F_059C9E5E0DF7_2	frgov	government-notice	https://www.gundolsheim.fr/?format=feed&type=atom	PASS (User-Agent header)	4	OK	4	4	4
 JO47_FR_E77F05D6_2985_44E4_A31E_E93334A864D8	frgov	government-notice	https://www.les-epesses.com/feed/?post_type=post	PASS (User-Agent header)	26	OK	26	26	26
@@ -16938,7 +16919,6 @@ JO47_IT_YYYA2OZI	itgov	government-notice	https://www.icsdegasperipecoraro.edu.it
 JO47_WD_Q110944005	wdgov	government-notice	https://www.yokak.gov.tr/feed/	PASS (User-Agent header)	10	OK	10	10	10
 JO47_WD_Q135274966	wdgov	government-notice	https://cehro.org/now/feed/	PASS (User-Agent header)	10	OK	10	10	10
 JO47_WD_Q140351626	wdgov	government-notice	https://chiefs-of-ontario.org/feed/	PASS (User-Agent header)	10	OK	10	10	10
-JO47_WD_Q140563694	wdgov	government-notice	https://www.bnm.mg/feed/	PASS (User-Agent header)	10	OK	10	10	10
 JO47_WD_Q141146099	wdgov	government-notice	https://midsp.gov.mg/feed/	PASS (User-Agent header)	10	OK	10	10	10
 JO47_WD_Q141665287	wdgov	government-notice	https://ribeograd.ac.rs/feed/	PASS (User-Agent header)	7	OK	7	7	7
 JO47_WD_Q50041046	wdgov	government-notice	https://www.oliveboard.org.il/feed/	PASS (User-Agent header)	10	OK	10	10	10

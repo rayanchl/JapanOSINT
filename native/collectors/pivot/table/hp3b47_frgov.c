@@ -183533,62 +183533,8 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:54:01 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_1491685A_9AC8_4ACB_BF12_6853B97830F2", .name = "Mairie - Grasse (SL, INSEE 06069) - Ville de Grasse (06)",
-    .name_ja = "Mairie - Grasse (SL, INSEE 06069) - Ville de Grasse (06)",
-    .category = "government", .portal = "https://www.ville-grasse.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ville-grasse.fr/feed/?post_type=post",
-    .headers = { "User-Agent: Mozilla/5.0 (compatible; JapanOSINT/1.0; +https://github.com/rayanchl/JapanOSINT)" },
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "12:41:30 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
-  { .id = "JO47_FR_1491685A_9AC8_4ACB_BF12_6853B97830F2_2", .name = "Mairie - Grasse (SL, INSEE 06069) - Ville de Grasse (06)",
-    .name_ja = "Mairie - Grasse (SL, INSEE 06069) - Ville de Grasse (06)",
-    .category = "government", .portal = "https://www.ville-grasse.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ville-grasse.fr/feed/?post_type=contacts",
-    .headers = { "User-Agent: Mozilla/5.0 (compatible; JapanOSINT/1.0; +https://github.com/rayanchl/JapanOSINT)" },
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 40 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "08:30:54 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
-  { .id = "JO47_FR_1491685A_9AC8_4ACB_BF12_6853B97830F2_3", .name = "Mairie - Grasse (SL, INSEE 06069) - Ville de Grasse (06)",
-    .name_ja = "Mairie - Grasse (SL, INSEE 06069) - Ville de Grasse (06)",
-    .category = "government", .portal = "https://www.ville-grasse.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ville-grasse.fr/feed/?post_type=events",
-    .headers = { "User-Agent: Mozilla/5.0 (compatible; JapanOSINT/1.0; +https://github.com/rayanchl/JapanOSINT)" },
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 8 items, RSS2 feed, newest Wed, 30 Sep 2026 "
-      "08:17:07 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO47_FR_153B37D1_C06C_48C7_853C_61FC1894F5FD", .name = "Mairie - Bolsenheim (SL, INSEE 67054) - Site officiel de la "
       "ville de Bolsenheim",
@@ -184080,65 +184026,8 @@ static const hp_source HP3B47_FRGOV[] = {
       "13:39:28 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_1CB6903D_A6EE_4AB6_8100_78A6A9F5BA48", .name = "Centre communal d'action sociale (CCAS) - Bressuire (SL, INSEE "
-      "79049) - Bressuire (79)",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Bressuire (SL, INSEE 79049) - Bressuire (79)",
-    .category = "government", .portal = "https://www.ville-bressuire.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ville-bressuire.fr/feed/?post_type=post",
-    .headers = { "User-Agent: Mozilla/5.0 (compatible; JapanOSINT/1.0; +https://github.com/rayanchl/JapanOSINT)" },
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 40 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "13:04:37 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
-  { .id = "JO47_FR_1CB6903D_A6EE_4AB6_8100_78A6A9F5BA48_2", .name = "Centre communal d'action sociale (CCAS) - Bressuire (SL, INSEE "
-      "79049) - Bressuire (79)",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Bressuire (SL, INSEE 79049) - Bressuire (79)",
-    .category = "government", .portal = "https://www.ville-bressuire.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ville-bressuire.fr/feed/?post_type=contacts",
-    .headers = { "User-Agent: Mozilla/5.0 (compatible; JapanOSINT/1.0; +https://github.com/rayanchl/JapanOSINT)" },
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 40 items, RSS2 feed, newest Mon, 05 Oct 2026 "
-      "09:25:39 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
-  { .id = "JO47_FR_1CB6903D_A6EE_4AB6_8100_78A6A9F5BA48_3", .name = "Centre communal d'action sociale (CCAS) - Bressuire (SL, INSEE "
-      "79049) - Bressuire (79)",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Bressuire (SL, INSEE 79049) - Bressuire (79)",
-    .category = "government", .portal = "https://www.ville-bressuire.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ville-bressuire.fr/feed/?post_type=events",
-    .headers = { "User-Agent: Mozilla/5.0 (compatible; JapanOSINT/1.0; +https://github.com/rayanchl/JapanOSINT)" },
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 40 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "07:08:27 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO47_FR_1D24E7D5_F8D0_460E_A2A8_4B4920FC4091", .name = "Mairie - Saint-Jouan-des-Guérets (SL, INSEE 35284) - Saint-Jouan "
       "des Guérets (35)",
@@ -184240,25 +184129,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:33:55 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_1F7EF502_3BDD_4FC4_886B_AAFEE42CBCE4", .name = "Mairie - Fresnes (SL, INSEE 94034) - Site officiel de la ville "
-      "de Fresnes (94)",
-    .name_ja = "Mairie - Fresnes (SL, INSEE 94034) - Site officiel de la ville de Fresnes (94)",
-    .category = "government", .portal = "https://www.fresnes94.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.fresnes94.fr/feed/",
-    .headers = { "User-Agent: Mozilla/5.0 (compatible; JapanOSINT/1.0; +https://github.com/rayanchl/JapanOSINT)" },
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, RSS2 feed, newest Mon, 24 Apr 2023 "
-      "07:38:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO47_FR_2071A698_BC44_475E_8C0F_29E019A4EC8A", .name = "Mairie - Hohengoeft (SL, INSEE 67208) - Hohengoeft",
     .name_ja = "Mairie - Hohengoeft (SL, INSEE 67208) - Hohengoeft",
@@ -184788,24 +184658,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "07:13:19 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_362BD30C_9EB3_44A9_81B9_47282D235EB4", .name = "Mairie - Lunel (SL, INSEE 34145) - Ville de Lunel",
-    .name_ja = "Mairie - Lunel (SL, INSEE 34145) - Ville de Lunel",
-    .category = "government", .portal = "https://www.lunel.com/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.lunel.com/feed/",
-    .headers = { "User-Agent: Mozilla/5.0 (compatible; JapanOSINT/1.0; +https://github.com/rayanchl/JapanOSINT)" },
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "07:41:52 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO47_FR_37B13921_BBC9_4B60_BF7C_1D4DBDA13C38", .name = "Mairie - Locoal-Mendon (SL, INSEE 56119) - Locoal-Mendon (56)",
     .name_ja = "Mairie - Locoal-Mendon (SL, INSEE 56119) - Locoal-Mendon (56)",
@@ -184981,62 +184833,8 @@ static const hp_source HP3B47_FRGOV[] = {
       "13:54:22 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_3D574FF8_F9A1_4C31_84DD_145B4DCE3FCB", .name = "Mairie - Viroflay (SL, INSEE 78686) - Ville de Viroflay",
-    .name_ja = "Mairie - Viroflay (SL, INSEE 78686) - Ville de Viroflay",
-    .category = "government", .portal = "https://www.ville-viroflay.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ville-viroflay.fr/feed/?post_type=post",
-    .headers = { "User-Agent: Mozilla/5.0 (compatible; JapanOSINT/1.0; +https://github.com/rayanchl/JapanOSINT)" },
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 16 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "07:34:54 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
-  { .id = "JO47_FR_3D574FF8_F9A1_4C31_84DD_145B4DCE3FCB_2", .name = "Mairie - Viroflay (SL, INSEE 78686) - Ville de Viroflay",
-    .name_ja = "Mairie - Viroflay (SL, INSEE 78686) - Ville de Viroflay",
-    .category = "government", .portal = "https://www.ville-viroflay.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ville-viroflay.fr/feed/?post_type=contacts",
-    .headers = { "User-Agent: Mozilla/5.0 (compatible; JapanOSINT/1.0; +https://github.com/rayanchl/JapanOSINT)" },
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 40 items, RSS2 feed, newest Tue, 17 Feb 2026 "
-      "14:20:36 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
-  { .id = "JO47_FR_3D574FF8_F9A1_4C31_84DD_145B4DCE3FCB_3", .name = "Mairie - Viroflay (SL, INSEE 78686) - Ville de Viroflay",
-    .name_ja = "Mairie - Viroflay (SL, INSEE 78686) - Ville de Viroflay",
-    .category = "government", .portal = "https://www.ville-viroflay.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ville-viroflay.fr/feed/?post_type=events",
-    .headers = { "User-Agent: Mozilla/5.0 (compatible; JapanOSINT/1.0; +https://github.com/rayanchl/JapanOSINT)" },
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 40 items, RSS2 feed, newest Mon, 12 Oct 2026 "
-      "12:48:40 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO47_FR_3E34EB90_6E01_4152_9231_1A9A65921CA8", .name = "Service départemental d'incendie et de secours (SDIS) - "
       "Tarn-et-Garonne (SIL, INSEE 82121) - SDIS82",
@@ -187131,86 +186929,9 @@ static const hp_source HP3B47_FRGOV[] = {
       "08:59:25 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_9FC4B8D5_302B_4B90_9C53_0545F903B737", .name = "Centre communal d'action sociale (CCAS) - Petit-Bourg (SL, INSEE "
-      "97118) - Bienvenue sur le site officiel de la Ville de "
-      "Petit-Bourg (Guadeloupe)   Retrouv",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Petit-Bourg (SL, INSEE 97118) - Bienvenue sur le site officiel de la Ville de Petit-Bourg (Guadeloupe)   Retrouv",
-    .category = "government", .portal = "https://www.ville-petitbourg.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ville-petitbourg.fr/feed/",
-    .headers = { "User-Agent: Mozilla/5.0 (compatible; JapanOSINT/1.0; +https://github.com/rayanchl/JapanOSINT)" },
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 50 items, RSS2 feed, newest Thu, 08 Oct 2026 "
-      "18:21:28 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
-  { .id = "JO47_FR_A02B4272_8071_4DB9_9707_1C3BD2E14BD6", .name = "Mairie - Mauges-sur-Loire (SL, INSEE 49244) - Mauges-sur-Loire "
-      "(49)",
-    .name_ja = "Mairie - Mauges-sur-Loire (SL, INSEE 49244) - Mauges-sur-Loire (49)",
-    .category = "government", .portal = "https://www.mauges-sur-loire.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mauges-sur-loire.fr/feed/?post_type=post",
-    .headers = { "User-Agent: Mozilla/5.0 (compatible; JapanOSINT/1.0; +https://github.com/rayanchl/JapanOSINT)" },
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 40 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "07:28:37 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
-  { .id = "JO47_FR_A02B4272_8071_4DB9_9707_1C3BD2E14BD6_2", .name = "Mairie - Mauges-sur-Loire (SL, INSEE 49244) - Mauges-sur-Loire "
-      "(49)",
-    .name_ja = "Mairie - Mauges-sur-Loire (SL, INSEE 49244) - Mauges-sur-Loire (49)",
-    .category = "government", .portal = "https://www.mauges-sur-loire.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mauges-sur-loire.fr/feed/?post_type=contacts",
-    .headers = { "User-Agent: Mozilla/5.0 (compatible; JapanOSINT/1.0; +https://github.com/rayanchl/JapanOSINT)" },
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 40 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "13:05:27 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
-  { .id = "JO47_FR_A02B4272_8071_4DB9_9707_1C3BD2E14BD6_3", .name = "Mairie - Mauges-sur-Loire (SL, INSEE 49244) - Mauges-sur-Loire "
-      "(49)",
-    .name_ja = "Mairie - Mauges-sur-Loire (SL, INSEE 49244) - Mauges-sur-Loire (49)",
-    .category = "government", .portal = "https://www.mauges-sur-loire.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mauges-sur-loire.fr/feed/?post_type=events",
-    .headers = { "User-Agent: Mozilla/5.0 (compatible; JapanOSINT/1.0; +https://github.com/rayanchl/JapanOSINT)" },
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 40 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "09:29:08 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO47_FR_A1BF3213_061B_4C81_BF00_8517A4CD1F14", .name = "Mairie - Kirchheim (SL, INSEE 67240) - Kirchheim",
     .name_ja = "Mairie - Kirchheim (SL, INSEE 67240) - Kirchheim",
@@ -188724,62 +188445,8 @@ static const hp_source HP3B47_FRGOV[] = {
       "11:16:01 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_DE44BE4F_D6A9_4F50_BA58_2431E8AB1AE5", .name = "Mairie - Morsang-sur-Orge (SL, INSEE 91434) - Morsang (91)",
-    .name_ja = "Mairie - Morsang-sur-Orge (SL, INSEE 91434) - Morsang (91)",
-    .category = "government", .portal = "https://www.morsang.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.morsang.fr/feed/?post_type=post",
-    .headers = { "User-Agent: Mozilla/5.0 (compatible; JapanOSINT/1.0; +https://github.com/rayanchl/JapanOSINT)" },
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 38 items, RSS2 feed, newest Thu, 10 Sep 2026 "
-      "07:31:44 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
-  { .id = "JO47_FR_DE44BE4F_D6A9_4F50_BA58_2431E8AB1AE5_2", .name = "Mairie - Morsang-sur-Orge (SL, INSEE 91434) - Morsang (91)",
-    .name_ja = "Mairie - Morsang-sur-Orge (SL, INSEE 91434) - Morsang (91)",
-    .category = "government", .portal = "https://www.morsang.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.morsang.fr/feed/?post_type=contacts",
-    .headers = { "User-Agent: Mozilla/5.0 (compatible; JapanOSINT/1.0; +https://github.com/rayanchl/JapanOSINT)" },
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 40 items, RSS2 feed, newest Mon, 28 Sep 2026 "
-      "12:06:53 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
-  { .id = "JO47_FR_DE44BE4F_D6A9_4F50_BA58_2431E8AB1AE5_3", .name = "Mairie - Morsang-sur-Orge (SL, INSEE 91434) - Morsang (91)",
-    .name_ja = "Mairie - Morsang-sur-Orge (SL, INSEE 91434) - Morsang (91)",
-    .category = "government", .portal = "https://www.morsang.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.morsang.fr/feed/?post_type=events",
-    .headers = { "User-Agent: Mozilla/5.0 (compatible; JapanOSINT/1.0; +https://github.com/rayanchl/JapanOSINT)" },
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 40 items, RSS2 feed, newest Tue, 06 Oct 2026 "
-      "14:11:56 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO47_FR_E14B71C9_8BEF_4D09_A227_F8C590F3BE31", .name = "Communauté de communes - La Mossig et du Vignoble (SL, INSEE "
       "67520) - CC MossigVignoble",
@@ -188920,24 +188587,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "11:43:39 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_E666A473_67DA_4889_B9C6_6DBF212CB5EA", .name = "Mairie - Chilly-Mazarin (SL, INSEE 91161) - Chilly Mazarin",
-    .name_ja = "Mairie - Chilly-Mazarin (SL, INSEE 91161) - Chilly Mazarin",
-    .category = "government", .portal = "https://www.ville-chilly-mazarin.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ville-chilly-mazarin.fr/feed/",
-    .headers = { "User-Agent: Mozilla/5.0 (compatible; JapanOSINT/1.0; +https://github.com/rayanchl/JapanOSINT)" },
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 100 items, RSS2 feed, newest Tue, 13 Oct "
-      "2026 17:15:50 +0000. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_E7053C77_268E_4BB6_864F_059C9E5E0DF7", .name = "Mairie - Gundolsheim (SL, INSEE 68116) - Site officiel de la "
       "commune de Gundolsheim",

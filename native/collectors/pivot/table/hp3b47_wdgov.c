@@ -31162,25 +31162,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "19:21:09 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q140563694", .name = "Q140563694 (government-agency, MG) - Bureau des Normes de "
-      "Madagascar",
-    .name_ja = "Q140563694 (government-agency, MG) - Bureau des Normes de Madagascar",
-    .category = "government", .portal = "https://www.bnm.mg/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.bnm.mg/feed/",
-    .headers = { "User-Agent: Mozilla/5.0 (compatible; JapanOSINT/1.0; +https://github.com/rayanchl/JapanOSINT)" },
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "21:53:09 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO47_WD_Q141146099", .name = "Q141146099 (ministry, MG) - Midsp",
     .name_ja = "Q141146099 (ministry, MG) - Midsp",

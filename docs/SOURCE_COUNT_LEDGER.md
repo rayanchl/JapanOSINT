@@ -5,10 +5,11 @@ was seeded from, what it measured and what it taught. Moved out of `CLAUDE.md`
 on 2026-10-19 so that file keeps the rules and the current number; the lessons
 that a new batch must not relearn are summarised there. Newest first.
 
-**The registered count is 57,428** (2026-10-21): main's 56,955 (its batch 50, the
-six dead feeds and the 25 takeovers, below) plus this branch's 473 — the 491
-rows recovered from bot walls, scanned for the same takeover signature before
-they merged, plus `PLOS_CORPUS`, less 19 rows batches 34 and 35 lost to their
+**The registered count is 57,408** (2026-10-21): main's 56,955 (its batch 50, the
+six dead feeds and the 25 takeovers, below) plus this branch's 453 — the 491
+rows recovered from bot walls, less 19 whose feed batch 50 already reads and
+one the same takeover scan caught (`bnm.mg`, casino spam; the other 490 were
+clean), plus `PLOS_CORPUS`, less 19 rows batches 34 and 35 lost to their
 first measurement — composed in one merge; the cadence policy and the adaptive
 interval compose in `sched_row_interval()`.
 

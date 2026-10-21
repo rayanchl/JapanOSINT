@@ -39,10 +39,12 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 57,428** (2026-10-21): main's 56,955 (below) plus
-this branch's 473 on the same base — the 491 rows the User-Agent header
-recovered from bot walls (scanned for the takeover signature below before
-they merged), plus `PLOS_CORPUS`, less the 19 rows batches 34 and 35 lost to
+**The registered count is 57,408** (2026-10-21): main's 56,955 (below) plus
+this branch's 453 on the same base — the 491 rows the User-Agent header
+recovered from bot walls, less 19 of them whose feed main's batch 50 reads
+(merged first, so its rows stay) and one whose domain the takeover scan below
+caught (`bnm.mg`, casino spam under Madagascar's standards bureau — the other
+490 were clean), plus `PLOS_CORPUS`, less the 19 rows batches 34 and 35 lost to
 their first measurement. The ledger has both sessions' days.
 
 **The count was 56,955** (2026-10-21): main's 53,739, less six

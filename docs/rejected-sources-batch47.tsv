@@ -14948,3 +14948,23 @@ wdgov	engine	JO47_WD_Q685918_2			FETCH_FAILED	stored nothing in the engine on th
 wdgov	engine	JO47_WD_Q685918_3			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 wdgov	engine	JO47_WD_Q7437864			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 wdgov	engine	JO47_WD_Q7541794			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
+frgov	merge-2026-10-21	JO47_FR_1491685A_9AC8_4ACB_BF12_6853B97830F2			DUP_ENDPOINT	DUP_ENDPOINT: the same feed is read by main's batch 50 (fr_feeds_batch50.c), which merged first
+frgov	merge-2026-10-21	JO47_FR_1491685A_9AC8_4ACB_BF12_6853B97830F2_2			DUP_ENDPOINT	DUP_ENDPOINT: the same feed is read by main's batch 50 (fr_feeds_batch50.c), which merged first
+frgov	merge-2026-10-21	JO47_FR_1491685A_9AC8_4ACB_BF12_6853B97830F2_3			DUP_ENDPOINT	DUP_ENDPOINT: the same feed is read by main's batch 50 (fr_feeds_batch50.c), which merged first
+frgov	merge-2026-10-21	JO47_FR_1CB6903D_A6EE_4AB6_8100_78A6A9F5BA48			DUP_ENDPOINT	DUP_ENDPOINT: the same feed is read by main's batch 50 (fr_feeds_batch50.c), which merged first
+frgov	merge-2026-10-21	JO47_FR_1CB6903D_A6EE_4AB6_8100_78A6A9F5BA48_2			DUP_ENDPOINT	DUP_ENDPOINT: the same feed is read by main's batch 50 (fr_feeds_batch50.c), which merged first
+frgov	merge-2026-10-21	JO47_FR_1CB6903D_A6EE_4AB6_8100_78A6A9F5BA48_3			DUP_ENDPOINT	DUP_ENDPOINT: the same feed is read by main's batch 50 (fr_feeds_batch50.c), which merged first
+frgov	merge-2026-10-21	JO47_FR_1F7EF502_3BDD_4FC4_886B_AAFEE42CBCE4			DUP_ENDPOINT	DUP_ENDPOINT: the same feed is read by main's batch 50 (fr_feeds_batch50.c), which merged first
+frgov	merge-2026-10-21	JO47_FR_362BD30C_9EB3_44A9_81B9_47282D235EB4			DUP_ENDPOINT	DUP_ENDPOINT: the same feed is read by main's batch 50 (fr_feeds_batch50.c), which merged first
+frgov	merge-2026-10-21	JO47_FR_3D574FF8_F9A1_4C31_84DD_145B4DCE3FCB			DUP_ENDPOINT	DUP_ENDPOINT: the same feed is read by main's batch 50 (fr_feeds_batch50.c), which merged first
+frgov	merge-2026-10-21	JO47_FR_3D574FF8_F9A1_4C31_84DD_145B4DCE3FCB_2			DUP_ENDPOINT	DUP_ENDPOINT: the same feed is read by main's batch 50 (fr_feeds_batch50.c), which merged first
+frgov	merge-2026-10-21	JO47_FR_3D574FF8_F9A1_4C31_84DD_145B4DCE3FCB_3			DUP_ENDPOINT	DUP_ENDPOINT: the same feed is read by main's batch 50 (fr_feeds_batch50.c), which merged first
+frgov	merge-2026-10-21	JO47_FR_9FC4B8D5_302B_4B90_9C53_0545F903B737			DUP_ENDPOINT	DUP_ENDPOINT: the same feed is read by main's batch 50 (fr_feeds_batch50.c), which merged first
+frgov	merge-2026-10-21	JO47_FR_A02B4272_8071_4DB9_9707_1C3BD2E14BD6			DUP_ENDPOINT	DUP_ENDPOINT: the same feed is read by main's batch 50 (fr_feeds_batch50.c), which merged first
+frgov	merge-2026-10-21	JO47_FR_A02B4272_8071_4DB9_9707_1C3BD2E14BD6_2			DUP_ENDPOINT	DUP_ENDPOINT: the same feed is read by main's batch 50 (fr_feeds_batch50.c), which merged first
+frgov	merge-2026-10-21	JO47_FR_A02B4272_8071_4DB9_9707_1C3BD2E14BD6_3			DUP_ENDPOINT	DUP_ENDPOINT: the same feed is read by main's batch 50 (fr_feeds_batch50.c), which merged first
+frgov	merge-2026-10-21	JO47_FR_DE44BE4F_D6A9_4F50_BA58_2431E8AB1AE5			DUP_ENDPOINT	DUP_ENDPOINT: the same feed is read by main's batch 50 (fr_feeds_batch50.c), which merged first
+frgov	merge-2026-10-21	JO47_FR_DE44BE4F_D6A9_4F50_BA58_2431E8AB1AE5_2			DUP_ENDPOINT	DUP_ENDPOINT: the same feed is read by main's batch 50 (fr_feeds_batch50.c), which merged first
+frgov	merge-2026-10-21	JO47_FR_DE44BE4F_D6A9_4F50_BA58_2431E8AB1AE5_3			DUP_ENDPOINT	DUP_ENDPOINT: the same feed is read by main's batch 50 (fr_feeds_batch50.c), which merged first
+frgov	merge-2026-10-21	JO47_FR_E666A473_67DA_4889_B9C6_6DBF212CB5EA			DUP_ENDPOINT	DUP_ENDPOINT: the same feed is read by main's batch 50 (fr_feeds_batch50.c), which merged first
+wdgov	merge-2026-10-21	JO47_WD_Q140563694			TAKEOVER	TAKEOVER: Bureau des Normes de Madagascar's feed serves casino spam (item titles: 'Jeux incontournables à Mythoswin Casino : slots…')
