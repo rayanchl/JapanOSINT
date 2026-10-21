@@ -3162,204 +3162,32 @@ ukgov	batch_exclusions	JO44_UK_EDUCATION_GOV_UK			DUP_ENDPOINT	in collectors/fee
 ukgov	batch_exclusions	JO44_UK_DVSA_GOV_UK			DUP_ENDPOINT	in collectors/feed/generated/vsrc_government_2.c
 ukgov	probe_hp_batch	JO44_UK_WROUGHTON_GOV_UK		https://wroughton.gov.uk/feed/	ERR	RemoteDisconnected: Remote end closed connection without res
 ukgov	probe_hp_batch	JO44_UK_HAYDONWICK_GOV_UK		https://haydonwick.gov.uk/feed/	ERR	RemoteDisconnected: Remote end closed connection without res
-ukgov	probe_hp_batch	JO44_UK_WINNERSH_GOV_UK		https://www.winnersh.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_CASTLEBROMWICHPC_GOV_UK		https://castlebromwichpc.gov.uk/feed	HTTP_ERR	Forbidden
 ukgov	probe_hp_batch	JO44_UK_EXMOUTH_GOV_UK		https://exmouth.gov.uk/feed/	ERR	RemoteDisconnected: Remote end closed connection without res
-ukgov	probe_hp_batch	JO44_UK_HERRIARD_PC_GOV_UK		https://herriard-pc.gov.uk/feed/	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_SOUTHKIRKBYANDMOORTHORPETOWNCOUNCIL_GOV_		https://southkirkbyandmoorthorpetowncouncil.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_FINCHAMPSTEAD_PC_GOV_UK		https://www.finchampstead-pc.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_WHITEHILLTOWNCOUNCIL_GOV_UK		https://www.whitehilltowncouncil.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_WILSDENPARISHCOUNCIL_GOV_UK		https://www.wilsdenparishcouncil.gov.uk/feed/	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_EARLEY_TC_GOV_UK		https://www.earley-tc.gov.uk/feed/	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_HAGLEYPARISHCOUNCIL_GOV_UK		https://hagleyparishcouncil.gov.uk/feed/	HTTP_ERR	Forbidden
 ukgov	probe_hp_batch	JO44_UK_MELTON_SUFFOLK_PC_GOV_UK		https://melton-suffolk-pc.gov.uk/feed/	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_PEMBRIDGEPARISHCOUNCIL_GOV_UK		https://pembridgeparishcouncil.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_OAKENGATES_TC_GOV_UK		https://www.oakengates-tc.gov.uk/feed/	HTTP_ERR	Forbidden
 ukgov	probe_hp_batch	JO44_UK_RAMSEYPARKESTON_PC_GOV_UK		https://www.ramseyparkeston-pc.gov.uk/feed/	HTTP_ERR	Forbidden
 ukgov	probe_hp_batch	JO44_UK_CAMPARISHCOUNCIL_GOV_UK		https://camparishcouncil.gov.uk/feed/	ERR	RemoteDisconnected: Remote end closed connection without res
-ukgov	probe_hp_batch	JO44_UK_STAPELEYPARISHCOUNCIL_GOV_UK		https://stapeleyparishcouncil.gov.uk/feed/	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_STEEP_PC_GOV_UK		https://www.steep-pc.gov.uk/feed	HTTP_ERR	Forbidden
 ukgov	probe_hp_batch	JO44_UK_RHUDDLANTOWNCOUNCIL_GOV_UK		https://rhuddlantowncouncil.gov.uk/feed/	TIMEOUT	timeout
-ukgov	probe_hp_batch	JO44_UK_BECKLEY_AND_STOWOOD_PC_GOV_UK		https://beckley-and-stowood-pc.gov.uk/?q=rss.xml	HTTP_ERR	Forbidden
 ukgov	probe_hp_batch	JO44_UK_EVESHAMTOWNCOUNCIL_GOV_UK		https://eveshamtowncouncil.gov.uk/feed/	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_RUCKINGE_PC_GOV_UK		https://ruckinge-pc.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_STROUD_PC_GOV_UK		https://stroud-pc.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_LOUGHTONANDGREATHOLM_PC_GOV_UK		https://loughtonandgreatholm-pc.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_BOURNHEATH_PC_GOV_UK		https://www.bournheath-pc.gov.uk/feed/	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_TWYFORDPARISHCOUNCIL_GOV_UK		https://www.twyfordparishcouncil.gov.uk/feed/	HTTP_ERR	Forbidden
 ukgov	probe_hp_batch	JO44_UK_ALMONDSBURYPARISHCOUNCIL_GOV_UK		https://almondsburyparishcouncil.gov.uk/feed/	TIMEOUT	timeout
 ukgov	probe_hp_batch	JO44_UK_CHISELDON_PC_GOV_UK		https://www.chiseldon-pc.gov.uk/feed/	ERR	RemoteDisconnected: Remote end closed connection without res
 ukgov	probe_hp_batch	JO44_UK_CENTRALSWINDONNORTH_PC_GOV_UK		https://centralswindonnorth-pc.gov.uk/feed/	ERR	RemoteDisconnected: Remote end closed connection without res
 ukgov	probe_hp_batch	JO44_UK_SOUTHSWINDON_PC_GOV_UK		https://southswindon-pc.gov.uk/feed/	ERR	RemoteDisconnected: Remote end closed connection without res
-ukgov	probe_hp_batch	JO44_UK_BATTLETOWNCOUNCIL_GOV_UK		https://battletowncouncil.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_CHEVELEY_PC_GOV_UK		https://cheveley-pc.gov.uk/feed/	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_SHERINGHAMTOWNCOUNCIL_GOV_UK		https://sheringhamtowncouncil.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_HAWKHURST_PC_GOV_UK		https://hawkhurst-pc.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_HIGHCLIFFEWALKFORD_PC_GOV_UK		https://highcliffewalkford-pc.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_WANSTROWPARISHCOUNCIL_GOV_UK		https://wanstrowparishcouncil.gov.uk/feed	HTTP_ERR	Forbidden
 ukgov	probe_hp_batch	JO44_UK_MUCHMARCLEPARISHCOUNCIL_GOV_UK		https://muchmarcleparishcouncil.gov.uk/feed/	ERR	RemoteDisconnected: Remote end closed connection without res
-ukgov	probe_hp_batch	JO44_UK_MORETONINMARSHTOWNCOUNCIL_GOV_UK		https://moretoninmarshtowncouncil.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_SHALDONPARISHCOUNCIL_GOV_UK		https://shaldonparishcouncil.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_FULFORDPARISHCOUNCIL_GOV_UK		https://fulfordparishcouncil.gov.uk/feed/	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_NIPOLICEFUND_GOV_UK		https://www.nipolicefund.gov.uk/feed/	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_CHENIESPARISHCOUNCIL_GOV_UK		https://cheniesparishcouncil.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_KINGSKERSWELL_PC_GOV_UK		https://kingskerswell-pc.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_WOODBURYPARISHCOUNCIL_GOV_UK		https://woodburyparishcouncil.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_PEASEMORE_PC_GOV_UK		https://peasemore-pc.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_BRANSTONPARISHCOUNCIL_GOV_UK		https://branstontowncouncil.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_LILBOURNE_PC_GOV_UK		https://lilbourne-pc.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_SIBBERTOFTPARISHCOUNCIL_GOV_UK		https://sibbertoftparishcouncil.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_MAMBLEPARISHCOUNCIL_GOV_UK		https://mambleparishcouncil.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_STILTONPARISHCOUNCIL_GOV_UK		https://stiltonparishcouncil.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_NORTONCANESPARISHCOUNCIL_GOV_UK		https://nortoncanesparishcouncil.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_STOCKANDBRADLEY_PC_GOV_UK		https://stockandbradley-pc.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_DALTONTOWNCOUNCIL_GOV_UK		https://daltontowncouncil.gov.uk/feed/	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_RIXTONWITHGLAZEBROOK_PC_GOV_UK		https://rixtonwithglazebrook-pc.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_WESTWOODPARISHCOUNCIL_GOV_UK		https://westwoodparishcouncil.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_OLDCLEEVEPARISHCOUNCIL_GOV_UK		https://www.oldcleeveparishcouncil.gov.uk/feed/	HTTP_ERR	Forbidden
 ukgov	probe_hp_batch	JO44_UK_ENSTONE_PC_GOV_UK		https://enstone-pc.gov.uk/feed/	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_RANSKILLPARISHCOUNCIL_GOV_UK		https://ranskillparishcouncil.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_MERIDENPARISHCOUNCIL_GOV_UK		https://meridenparishcouncil.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_MINSTERONSEAPARISHCOUNCIL_GOV_UK		https://minsteronseaparishcouncil.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_MORTEHOE_PC_GOV_UK		https://www.mortehoe-pc.gov.uk/feed/	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_WALTONSOMERSET_PC_GOV_UK		https://waltonsomerset-pc.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_FENSTANTONPARISHCOUNCIL_GOV_UK		https://fenstantonparishcouncil.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_ATWORTHPARISHCOUNCIL_GOV_UK		https://atworthparishcouncil.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_SNAILWELLPARISHCOUNCIL_GOV_UK		https://snailwellparishcouncil.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_MARKFIELDPARISHCOUNCIL_GOV_UK		https://markfieldparishcouncil.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_SELWOODPARISHCOUNCIL_GOV_UK		https://selwoodparishcouncil.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_HUNSTONPARISHCOUNCIL_GOV_UK		https://www.hunstonparishcouncil.gov.uk/feed	HTTP_ERR	Forbidden
 ukgov	probe_hp_batch	JO44_UK_THORRINGTONPARISHCOUNCIL_GOV_UK		https://thorringtonparishcouncil.gov.uk/feed/	HTTP_ERR	<none>
-ukgov	probe_hp_batch	JO44_UK_WESTITCHENORPARISH_GOV_UK		https://westitchenorparish.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_TANWORTH_PC_GOV_UK		https://tanworth-pc.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_BADDESLEYENSOR_PC_GOV_UK		https://baddesleyensor-pc.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_LEAGARSDONCLEVERTON_PC_GOV_UK		https://leagarsdoncleverton-pc.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_STRETTON_ON_DUNSMORE_PARISHCOUNCIL_GOV_U		https://stretton-on-dunsmore-parishcouncil.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_MILTONABBOTGROUPEDPARISHCOUNCIL_GOV_UK		https://www.miltonabbotgroupedparishcouncil.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_SWELLPARISHCOUNCIL_GOV_UK		https://swellparishcouncil.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_WERRINGTONPARISHCOUNCIL_GOV_UK		https://www.werringtonparishcouncil.gov.uk/feed/	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_FORSBROOKPARISHCOUNCIL_GOV_UK		https://www.forsbrookparishcouncil.gov.uk/feed/	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_DILHORNEPARISHCOUNCIL_GOV_UK		https://www.dilhorneparishcouncil.gov.uk/feed/	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_MILWICHFRADSWELLPARISHCOUNCIL_GOV_UK		https://www.milwichfradswellparishcouncil.gov.uk/feed/	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_NORTONPARISH_GOV_UK		https://nortonparish.gov.uk/feed/	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_BARLASTONPARISHCOUNCIL_GOV_UK		https://barlastonparishcouncil.gov.uk/feed/	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_LOGGERHEADSPARISHCOUNCIL_GOV_UK		https://www.loggerheadsparishcouncil.gov.uk/feed/	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_NORTHMYMMS_PC_GOV_UK		https://northmymms-pc.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_WARNDONVILLAGESPARISHCOUNCIL_GOV_UK		https://warndonvillagesparishcouncil.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_HALLOWPARISHCOUNCIL_GOV_UK		https://hallowparishcouncil.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_DEFFORDBESFORDPARISHCOUNCIL_GOV_UK		https://deffordbesfordparishcouncil.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_NEWTONPARISHCOUNCIL_GOV_UK		https://newtonparishcouncil.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_LYTCHETTMATRAVERSPARISHCOUNCIL_GOV_UK		https://lytchettmatraversparishcouncil.gov.uk/feed/	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_ALLCANNINGS_PC_GOV_UK		https://allcannings-pc.gov.uk/?format=feed&amp;type=rss	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_ALLCANNINGS_PC_GOV_UK_2		https://allcannings-pc.gov.uk/?format=feed&amp;type=atom	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_BOSHAM_PC_GOV_UK		https://bosham-pc.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_LITTLESHELFORDPARISH_GOV_UK		https://littleshelfordparish.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_COTLEIGHPARISHCOUNCIL_GOV_UK		https://cotleighparishcouncil.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_SEDGEHILLSEMLEY_PC_GOV_UK		https://sedgehillsemley-pc.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_BBH_PC_GOV_UK		https://bbh-pc.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_NORTHMUNDHAMPARISH_GOV_UK		https://northmundhamparish.gov.uk/feed/	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_HINTONANDASTONSOMERVILLE_PC_GOV_UK		https://hintonandastonsomerville-pc.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_CHISLETPARISH_GOV_UK		https://chisletparish.gov.uk/feed	HTTP_ERR	Forbidden
 ukgov	probe_hp_batch	JO44_UK_TILLSIDEPARISHCOUNCIL_GOV_UK		https://www.tillsideparishcouncil.gov.uk/feed/	HTTP_ERR	Forbidden
-ukgov	probe_hp_batch	JO44_UK_MALTBYTOWNCOUNCIL_GOV_UK		https://maltbytowncouncil.gov.uk/feed	HTTP_ERR	Forbidden
-ukgov	engine	JO44_UK_ALLCANNINGS_PC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_ALLCANNINGS_PC_GOV_UK_2			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 ukgov	engine	JO44_UK_ALMONDSBURYPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_ATWORTHPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_BADDESLEYENSOR_PC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_BARLASTONPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_BATTLETOWNCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_BBH_PC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_BECKLEY_AND_STOWOOD_PC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_BOSHAM_PC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_BOURNHEATH_PC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_BRANSTONPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 ukgov	engine	JO44_UK_CAMPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_CASTLEBROMWICHPC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 ukgov	engine	JO44_UK_CENTRALSWINDONNORTH_PC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_CHENIESPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_CHEVELEY_PC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 ukgov	engine	JO44_UK_CHISELDON_PC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_CHISLETPARISH_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_COTLEIGHPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_DALTONTOWNCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_DEFFORDBESFORDPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_DILHORNEPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_EARLEY_TC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 ukgov	engine	JO44_UK_ENSTONE_PC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 ukgov	engine	JO44_UK_EVESHAMTOWNCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 ukgov	engine	JO44_UK_EXMOUTH_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_FENSTANTONPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_FINCHAMPSTEAD_PC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_FORSBROOKPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_FULFORDPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_HAGLEYPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_HALLOWPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_HAWKHURST_PC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 ukgov	engine	JO44_UK_HAYDONWICK_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_HERRIARD_PC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_HIGHCLIFFEWALKFORD_PC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_HINTONANDASTONSOMERVILLE_PC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_HUNSTONPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_KINGSKERSWELL_PC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_LEAGARSDONCLEVERTON_PC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_LILBOURNE_PC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_LITTLESHELFORDPARISH_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_LOGGERHEADSPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_LOUGHTONANDGREATHOLM_PC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_LYTCHETTMATRAVERSPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_MALTBYTOWNCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_MAMBLEPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_MARKFIELDPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 ukgov	engine	JO44_UK_MELTON_SUFFOLK_PC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_MERIDENPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_MILTONABBOTGROUPEDPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_MILWICHFRADSWELLPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_MINSTERONSEAPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_MORETONINMARSHTOWNCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_MORTEHOE_PC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 ukgov	engine	JO44_UK_MUCHMARCLEPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_NEWTONPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_NIPOLICEFUND_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_NORTHMUNDHAMPARISH_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_NORTHMYMMS_PC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_NORTONCANESPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_NORTONPARISH_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_OAKENGATES_TC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_OLDCLEEVEPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_PEASEMORE_PC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_PEMBRIDGEPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 ukgov	engine	JO44_UK_RAMSEYPARKESTON_PC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_RANSKILLPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_RIXTONWITHGLAZEBROOK_PC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_RUCKINGE_PC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_SEDGEHILLSEMLEY_PC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_SELWOODPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_SHALDONPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_SHERINGHAMTOWNCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_SIBBERTOFTPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_SNAILWELLPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_SOUTHKIRKBYANDMOORTHORPETOWNCOUNCIL_GOV_			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 ukgov	engine	JO44_UK_SOUTHSWINDON_PC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_STAPELEYPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_STEEP_PC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_STILTONPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_STOCKANDBRADLEY_PC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_STRETTON_ON_DUNSMORE_PARISHCOUNCIL_GOV_U			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_STROUD_PC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_SWELLPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_TANWORTH_PC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 ukgov	engine	JO44_UK_THORRINGTONPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 ukgov	engine	JO44_UK_TILLSIDEPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_TWYFORDPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_WALTONSOMERSET_PC_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_WANSTROWPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_WARNDONVILLAGESPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_WERRINGTONPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_WESTITCHENORPARISH_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_WESTWOODPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_WHITEHILLTOWNCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_WILSDENPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_WINNERSH_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-ukgov	engine	JO44_UK_WOODBURYPARISHCOUNCIL_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 ukgov	engine	JO44_UK_WROUGHTON_GOV_UK			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)

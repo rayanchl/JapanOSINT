@@ -5,7 +5,27 @@ was seeded from, what it measured and what it taught. Moved out of `CLAUDE.md`
 on 2026-10-19 so that file keeps the rules and the current number; the lessons
 that a new batch must not relearn are summarised there. Newest first.
 
-**The registered count is 56,955** (2026-10-21): main's 53,739 (its batch 49, PR #55) − 6 − 25 + 3,247 (batch 50).
+**The registered count is 57,409** (2026-10-21, later the same day): 57,408
+plus one. `ELIA_RENEWABLE_INTRADAY_FORECAST` (batch 19, ods147) was a guess at
+its dataset's content: ods147's own metadata — the first answer
+opendata.elia.be gave in two days — titles it "System imbalance forecast next
+quarter hour (near real-time)", one record a minute since 2023-10-06,
+1,576,655 of them, time field `predictiontimeutc`. The row is replaced by the
+deliberate pair `ELIA_SI_FORECAST_NEXT_QH` (last six hours, newest first,
+every 15 minutes) and `ELIA_SI_FORECAST_NEXT_QH_HISTORY` (the whole series on
+a keyset cursor, `next_path=results.$last.predictiontimeutc`, 100 pages an
+hour over a `page_resume` cycle, because the records endpoint caps `offset`
+at 10,000). Both floors re-recorded at 57,409.
+
+**The count was 57,408** (2026-10-21): main's 56,955 (its batch 50, the
+six dead feeds and the 25 takeovers, below) plus this branch's 453 — the 491
+rows recovered from bot walls, less 19 whose feed batch 50 already reads and
+one the same takeover scan caught (`bnm.mg`, casino spam; the other 490 were
+clean), plus `PLOS_CORPUS`, less 19 rows batches 34 and 35 lost to their
+first measurement — composed in one merge; the cadence policy and the adaptive
+interval compose in `sched_row_interval()`.
+
+**The count was 56,955 on main** (2026-10-21): main's 53,739 (its batch 49, PR #55) − 6 − 25 + 3,247 (batch 50).
 
 * **−6**: `jp_feeds_batch43/44` feeds measured dead on the 2026-10-20 emit
   sweep (game-i.daa.jp serves XHTML, peco-japan.com an S3 AccessDenied,
@@ -44,7 +64,49 @@ that a new batch must not relearn are summarised there. Newest first.
   government tables; the `jp_feeds` measurements are
   `verified-sources-batch4{3,4}.jp_feeds.tsv`.
 
-**The registered count was 48,343** (2026-10-19): the 47,178 below merged with
+**The count was 54,212 on this branch** (2026-10-21, before main's batch 50 landed): two sessions' 2026-10-20 work
+merged. Main's 53,739 — batch 49's 5,393 federation-member WordPress
+collections (`docs/verified-sources-batch49.tsv`,
+`native/collectors/OSINT_SOURCES_BATCH_49_JPWPFEDERATIONS.md`; 518,813 emitted
+/ 518,827 stored, 12 rows removed on two readings) on 48,346, with the
+system-wide cadence policy (PR #52) and the osint collectors split by category
+(PR #53) — plus this branch's 473 below on the same base. The merge composed
+the cadence policy with the adaptive interval (`sched_row_interval()`, see
+CLAUDE.md's "Cadence policy") and found one defect in doing so: the adaptive
+measurement could give an entity pivot a schedule; it cannot now.
+
+**The count was 48,819** (2026-10-20): 48,346 (the 48,343 below plus
+the infrastructure audit's three embedding maintenance pods, PR #42) **plus 491
+rows recovered from bot walls, plus `PLOS_CORPUS`, less 19 rows batches 34 and
+35 lost to their first measurement.** No new batch: a day of measuring what
+was already registered.
+
+* **491 of the rows batches 44–48 had dropped as 403s are back** — 86 UK, 328
+  French, 58 Italian, 8 Wikidata, 4 IGO, 7 press. The 523 rows that had
+  answered 403 to the engine's client were re-probed with a declared
+  `header1=User-Agent: Mozilla/5.0 (compatible\; JapanOSINT/1.0\; +repo)`:
+  495 answered the probe and 491 store their feed in the engine (11,159
+  emitted, 11,159 stored); four Italian school sites refused twice. The walls
+  key on the default User-Agent, not on the reader; the header is on each
+  row, so the condition a row was proven under is the one it runs under.
+* **Batches 34 and 35, authored unfetched on 2026-10-04, measured**: 139 → 122
+  and 100 → 98. Zero `FILTER_IGNORED` across their 122 pivots; three FDSN event
+  rows on nodes without that service and 14 CKAN portals refusing twice left;
+  two WEKO repositories answering 5xx twice left. The 81 CKAN bulk rows moved
+  from `current_package_list_with_resources` (no sort — three collisions that
+  were skips) to `package_search?sort=id+asc` with a cycle, re-measured.
+* **`PLOS_CORPUS`**: the ascending twin `PLOS_RECENT`'s own note asked for,
+  418,125 articles read over a daily cycle (2,000 a run, resumes at
+  `start=2000`, `start=4000` — measured).
+* Not a count change, but the day's other measurements: the four feed batches
+  (25,920 rows) re-measure their own cadence after every run
+  (`adaptive_interval`); `count`/`start` joined `lib/jsonlist.c`'s page-size
+  pairs, so six GOV.UK search rows that read one page of three a run page and
+  cycle (2,000 a run) and MAIB/RAIB read their whole registers (1,106 / 604);
+  the probe paces per host; ELIA's grid rows are windowed on their measured
+  publication lag (`ods031`: 41 hours).
+
+**The count was 48,343** (2026-10-19): the 47,178 below merged with
 main's 22,408 (21,789 plus PR #50's batch 45) (its own `jp_feeds_batch41..44.c` beats of Japanese RSS sources,
 PR #48's paging cycle of 533 rows, PR #49's collector labels), less six news
 feeds both sessions had added — `make lint-sources` named them at merge time

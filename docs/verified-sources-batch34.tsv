@@ -1,2 +1,124 @@
-id	url	verdict	kind	items	http	bytes	note
-GO_MODULE_INDEX	https://index.golang.org/index?since=2026-10-05T02:00:00Z&limit=2000	PASS	ndjson	2000	200	255974	
+id	beat	probe_verdict	probe_items	emit_verdict	emitted	stored	db_stored	note
+JO34_CKANRES_ADMIN_OPENDATA_AZ	ckanbulk	HTTP_ERR	0	OK	1970	1971	1970	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_ADMIN_OPENDATA_DK	ckanbulk	PASS	100	OK	631	631	631	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_API_NESO_ENERGY	ckanbulk	PASS	100	OK	131	131	131	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_CATALOG_DATA_CITY_KANAZAWA_ISHIKAWA_JP	ckanbulk	PASS	100	OK	320	320	320	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_CATALOG_CITY_KOBE_LG_JP	ckanbulk	PASS	99	OK	99	99	99	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_CATALOG_CITY_UTSUNOMIYA_TOCHIGI_JP	ckanbulk	PASS	100	OK	295	295	295	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_CATALOG_DATA_METRO_TOKYO_LG_JP	ckanbulk	PASS	100	OK	2000	2001	2000	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_CATALOG_OPENDATA_PREF_KANAGAWA_JP	ckanbulk	PASS	100	OK	814	814	814	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_CKAN_GOVDATA_DE	ckanbulk	PASS	100	OK	2000	2001	2000	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_CKAN_HODA_JP	ckanbulk	PASS	100	OK	458	458	458	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_CKAN_MONTEVIDEO_GUB_UY	ckanbulk	PASS	100	OK	159	159	159	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_CKAN_OPENDATA_SWISS	ckanbulk	PASS	100	OK	2000	2001	2000	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_CKAN_PF_SAPPORO_JP	ckanbulk	PASS	100	OK	262	262	262	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_CKAN_PREF_AKITA_LG_JP	ckanbulk	PASS	100	OK	264	264	264	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_CKAN_PREF_MIYAZAKI_LG_JP	ckanbulk	PASS	100	OK	2000	2001	2000	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_CKAN_PUBLISHING_SERVICE_GOV_UK	ckanbulk	HTTP_ERR	0	OK	2000	2001	2000	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DADESOBERTES_GVA_ES	ckanbulk	PASS	100	OK	1311	1311	1311	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DADOS_PBH_GOV_BR	ckanbulk	PASS	100	OK	614	614	614	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DADOS_PE_GOV_BR	ckanbulk	PASS	47	OK	47	47	47	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DADOSABERTOS_BNDES_GOV_BR	ckanbulk	PASS	47	OK	47	47	47	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DADOSABERTOS_POA_BR	ckanbulk	PASS	62	OK	62	62	62	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATA_BODIK_JP	ckanbulk	PASS	100	OK	2000	2001	2000	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATA_BOSTON_GOV	ckanbulk	HTTP_ERR	0	OK	235	235	235	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATA_CA_GOV	ckanbulk	PASS	100	OK	2000	2001	2000	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATA_CITY_FUKUYAMA_HIROSHIMA_JP	ckanbulk	PASS	58	OK	58	58	58	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATA_CITY_SENDAI_JP	ckanbulk	PASS	16	OK	16	16	16	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATA_CITY_YOKOHAMA_LG_JP	ckanbulk	PASS	100	OK	648	648	648	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATA_CORKCITY_IE	ckanbulk	PASS	34	OK	34	34	34	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATA_DATA4CITIZEN_JP	ckanbulk	PASS	100	OK	411	411	411	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATA_GOV_IE	ckanbulk	PASS	100	OK	2000	2001	2000	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATA_GOV_IL	ckanbulk	HTTP_ERR	0	OK	1203	1203	1203	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATA_GOV_KG	ckanbulk	PASS	100	OK	1412	1412	1412	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATA_GOV_LV	ckanbulk	PASS	100	OK	1570	1570	1570	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATA_GOV_ME	ckanbulk	PASS	100	OK	923	923	923	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATA_GOV_UK	ckanbulk	HTTP_ERR	0	OK	2000	2001	2000	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATA_GOVMU_ORG	ckanbulk	PASS	100	OK	856	856	856	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATA_KYIVCITY_GOV_UA	ckanbulk	PASS	98	OK	98	98	98	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATA_NT_GOV_AU	ckanbulk	PASS	100	OK	1077	1077	1077	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATA_OPENDEVELOPMENTCAMBODIA_NET	ckanbulk	PASS	100	OK	2000	2001	2000	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATA_OPENDEVELOPMENTMEKONG_NET	ckanbulk	PASS	100	OK	2000	2001	2000	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATA_OPENDEVELOPMENTMYANMAR_NET	ckanbulk	PASS	100	OK	2000	2001	2000	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATA_RENFE_COM	ckanbulk	PASS	44	OK	44	44	44	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATA_SANJOSECA_GOV	ckanbulk	HTTP_ERR	0	OK	170	170	170	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATA_SMARTDUBLIN_IE	ckanbulk	PASS	100	OK	935	935	935	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATA_STADT_ZUERICH_CH	ckanbulk	PASS	100	OK	942	942	942	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATA_ZAGREB_HR	ckanbulk	PASS	100	OK	199	199	199	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATASET_GOV_MD	ckanbulk	PASS	100	COLLISION	1299	1296	1296	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATENREGISTER_BERLIN_DE	ckanbulk	PASS	100	OK	2000	2001	2000	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATI_COMUNE_MILANO_IT	ckanbulk	PASS	100	OK	2000	2001	2000	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATI_TOSCANA_IT	ckanbulk	PASS	100	OK	2000	2001	2000	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATI_TRENTINO_IT	ckanbulk	PASS	100	OK	1378	1378	1378	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATOS_BAHIA_GOB_AR	ckanbulk	PASS	100	OK	222	222	222	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATOS_JUS_GOB_AR	ckanbulk	PASS	63	OK	63	63	63	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATOS_MADRID_ES	ckanbulk	PASS	100	OK	674	674	674	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATOS_MAGYP_GOB_AR	ckanbulk	PASS	100	OK	152	152	152	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATOS_MININTERIOR_GOB_AR	ckanbulk	PASS	15	OK	15	15	15	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATOS_OSE_COM_UY	ckanbulk	PASS	28	OK	28	28	28	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATOS_TRANSPORTE_GOB_AR	ckanbulk	PASS	48	OK	48	48	48	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATOSABIERTOS_MALAGA_EU	ckanbulk	PASS	100	OK	1377	1377	1377	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_DATOSABIERTOS_MENDOZA_GOV_AR	ckanbulk	PASS	100	OK	204	204	204	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_GEOSCIENCE_DATA_QLD_GOV_AU	ckanbulk	PASS	100	OK	2000	2001	2000	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_GIFU_OPENDATA_PREF_GIFU_LG_JP	ckanbulk	PASS	100	OK	1883	1883	1883	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_OPDT_CITY_TOYAMA_LG_JP	ckanbulk	PASS	100	OK	133	133	133	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_OPENDATA_ARAGON_ES	ckanbulk	PASS	100	OK	2000	2001	2000	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_OPENDATA_CITY_IMIZU_TOYAMA_JP	ckanbulk	PASS	100	OK	169	169	169	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_OPENDATA_CITY_MACHIDA_TOKYO_JP	ckanbulk	PASS	100	OK	144	144	144	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_OPENDATA_CITY_MINATO_TOKYO_JP	ckanbulk	PASS	100	OK	560	560	560	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_OPENDATA_CITY_SAGAMIHARA_KANAGAWA_JP	ckanbulk	PASS	100	OK	114	114	114	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_OPENDATA_COMUNE_BARI_IT	ckanbulk	PASS	100	OK	171	171	171	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_OPENDATA_MUENCHEN_DE	ckanbulk	PASS	100	OK	337	337	337	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_OPENDATA_NHSBSA_NET	ckanbulk	PASS	100	OK	2000	2001	2000	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_OPENDATA_SCHLESWIG_HOLSTEIN_DE	ckanbulk	PASS	100	OK	2000	2001	2000	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_OPENDATA_UGR_ES	ckanbulk	PASS	65	OK	65	65	65	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_PODATKI_GOV_SI	ckanbulk	PASS	100	OK	2000	2001	2000	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_PORTAL_OPENDATA_DK	ckanbulk	PASS	100	OK	631	631	631	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_SUCHE_TRANSPARENZ_HAMBURG_DE	ckanbulk	PASS	100	OK	2000	2001	2000	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_TRANSPARENZ_KARLSRUHE_DE	ckanbulk	PASS	100	OK	151	151	151	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_WWW_OFFENESDATENPORTAL_DE	ckanbulk	PASS	100	OK	1097	1097	1097	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_WWW_OPENDATA_HRO_DE	ckanbulk	PASS	100	OK	281	281	281	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_WWW_OPENDATA_HU	ckanbulk	PASS	71	OK	71	71	71	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_CKANRES_WWW_OPENDATA_NHS_SCOT	ckanbulk	PASS	100	OK	105	105	105	engine reading on package_search?sort=id+asc (the shipped endpoint; the first sweep measured current_package_list_with_resources)
+JO34_FDSNEVT_EIDA_ETHZ_CH	fdsnevent	PASS	1000	OK	20000	20001	20000	
+JO34_FDSNEVT_SERVICE_SCEDC_CALTECH_EDU	fdsnevent	PASS	1000	OK	20000	20001	20000	
+JO34_FDSNSTA_AUSPASS_EDU_AU	fdsnstation	PASS	4167	OK	4167	4167	4167	
+JO34_FDSNSTA_EIDA_BGR_DE	fdsnstation	PASS	593	OK	593	593	593	
+JO34_FDSNSTA_EIDA_BGS_AC_UK	fdsnstation	PASS	392	OK	392	392	392	
+JO34_FDSNSTA_EIDA_ETHZ_CH	fdsnstation	PASS	2215	OK	2215	2215	2215	
+JO34_FDSNSTA_EIDA_GEIN_NOA_GR	fdsnstation	PASS	732	COLLISION	732	728	728	
+JO34_FDSNSTA_EIDA_GEO_UIB_NO	fdsnstation	PASS	364	OK	364	364	364	
+JO34_FDSNSTA_EIDA_KOERI_BOUN_EDU_TR	fdsnstation	PASS	351	OK	351	351	351	
+JO34_FDSNSTA_ERDE_GEOPHYSIK_UNI_MUENCHEN_DE	fdsnstation	PASS	582	OK	582	582	582	
+JO34_FDSNSTA_GEOFON_GFZ_DE	fdsnstation	PASS	20044	OK	20044	20044	20044	
+JO34_FDSNSTA_SEISDATA_EPOS_FRANCE_FR	fdsnstation	PASS	6594	OK	6594	6594	6594	
+JO34_FDSNSTA_SERVICE_SCEDC_CALTECH_EDU	fdsnstation	PASS	6897	OK	6897	6897	6897	
+JO34_FDSNSTA_WEBSERVICES_INGV_IT	fdsnstation	ERR	0	OK	1788	1788	1788	
+JO34_FDSNSTA_WS_ICGC_CAT	fdsnstation	PASS	402	OK	402	402	402	
+JO34_FDSNSTA_WS_RESIF_FR	fdsnstation	PASS	6594	OK	6594	6594	6594	
+JO34_FDSNSTA_WWW_ORFEUS_EU_ORG	fdsnstation	PASS	2324	OK	2324	2324	2324	
+GO_MODULE_INDEX	ndjson	PASS	2000					probe reading of 2026-10-04, when this beat (ndjson) was measured end to end; not re-run on 2026-10-20 (its own batch note has the emit reading)
+JO34_SOCCAT_ANALISI_TRANSPARENCIACATALUNYA_CAT	socratacat	PASS	15	OK	15			
+JO34_SOCCAT_COS_DATA_SEATTLE_GOV	socratacat	PASS	6	OK	6			
+JO34_SOCCAT_DATA_BRLA_GOV	socratacat	PASS	3	OK	3			
+JO34_SOCCAT_DATA_CALGARY_CA	socratacat	PASS	22	OK	22			
+JO34_SOCCAT_DATA_CITYOFGAINESVILLE_ORG	socratacat	PASS	1	OK	1			
+JO34_SOCCAT_DATA_EDMONTON_CA	socratacat	PASS	32	OK	32			
+JO34_SOCCAT_DATA_MESAAZ_GOV	socratacat	PASS	100	OK	126			
+JO34_SOCCAT_DATA_NORFOLK_GOV	socratacat	PASS	27	OK	27			
+JO34_SOCCAT_DATA_NOVASCOTIA_CA	socratacat	PASS	8	OK	8			
+JO34_SOCCAT_DATA_PRINCEGEORGESCOUNTYMD_GOV	socratacat	PASS	21	OK	21			
+JO34_SOCCAT_DATA_SANDIEGOCOUNTY_GOV	socratacat	PASS	11	OK	11			
+JO34_SOCCAT_DATA_SCCGOV_ORG	socratacat	PASS	15	OK	15			
+JO34_SOCCAT_DATA_SFGOV_ORG	socratacat	PASS	14	OK	14			
+JO34_SOCCAT_DATA_USAID_GOV	socratacat	NET_ERR	0	TRANSPORT_FAIL	0	0	0	UNMEASURABLE FROM HERE: this session's egress proxy refused the tunnel (502) on every attempt; not a reading of the source
+JO34_SOCCAT_DATA_VERMONT_GOV	socratacat	PASS	3	OK	3			
+JO34_SOCCAT_DATA_WINNIPEG_CA	socratacat	PASS	23	OK	23			
+JO34_SOCCAT_DATAHUB_AUSTINTEXAS_GOV	socratacat	PASS	81	OK	81			
+JO34_SOCCAT_DATAHUB_TRANSPORTATION_GOV	socratacat	PASS	14	OK	14			
+JO34_SOCCAT_HICSCDATA_HAWAII_GOV	socratacat	EMPTY_RESULTSET	0	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO34_SOCCAT_ILLINOIS_EDP_DATA_SOCRATA_COM	socratacat	PASS	2	OK	2			
+JO34_SOCCAT_OPENDATA_RDW_NL	socratacat	EMPTY_RESULTSET	0	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO34_SOCCAT_PUBLICREPORTING_CFTC_GOV	socratacat	EMPTY_RESULTSET	0	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO34_SOCCAT_SHAREFULTON_FULTONCOUNTYGA_GOV	socratacat	PASS	9	OK	9			
+JO34_SOCCAT_WWW_DATI_FRIULIVENEZIAGIULIA_IT	socratacat	EMPTY_RESULTSET	0	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
