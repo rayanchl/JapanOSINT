@@ -164,7 +164,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 #define FR_DEF(sym, ID, NM, CAT, DESC) \
-  static const source_def sym = { .id = ID, .collector = "osint", .name = NM, \
+  static const source_def sym = { .id = ID, .collector = "osint_" CAT, .name = NM, \
     .name_ja = NM, .update_interval_sec = 0, .run = run, .category = CAT, \
     .type = "api", .url = "internal://osint/fr", .description = DESC, \
     .layer = NULL, .free_tier = 1 }; \

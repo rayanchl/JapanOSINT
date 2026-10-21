@@ -147,7 +147,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def cz_ares_def = {
-  .id = "CZ_ARES", .collector = "osint",
+  .id = "CZ_ARES", .collector = "osint_" "government",
   .name = "Czech ARES Business Registry", .name_ja = "チェコ ARES 企業登記",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "api",

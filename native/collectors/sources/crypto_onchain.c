@@ -132,7 +132,7 @@ static int flow_run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def defi_def = {
-  .id = "DEFI_TRACKER", .collector = "osint", .name = "DeFi/On-chain Tracker", .run = defi_run,
+  .id = "DEFI_TRACKER", .collector = "osint_" "investigation", .name = "DeFi/On-chain Tracker", .run = defi_run,
   .category = "investigation", .type = "api", .url = "https://api.etherscan.io/",
   .description = "Ethereum address balance + recent activity via Etherscan (requires ETHERSCAN_API_KEY).",
   .free_tier = 0,
@@ -140,7 +140,7 @@ static const source_def defi_def = {
 REGISTER_SOURCE(defi_def)
 
 static const source_def flow_def = {
-  .id = "EXCHANGE_FLOW", .collector = "osint", .name = "Exchange Flow", .run = flow_run,
+  .id = "EXCHANGE_FLOW", .collector = "osint_" "investigation", .name = "Exchange Flow", .run = flow_run,
   .category = "investigation", .type = "api", .url = "https://api.etherscan.io/",
   .description = "Recent in/out transfers for an Ethereum address (requires ETHERSCAN_API_KEY).",
   .free_tier = 0,

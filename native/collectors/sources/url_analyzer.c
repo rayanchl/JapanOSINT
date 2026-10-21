@@ -206,7 +206,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def url_analyzer_def = {
-  .id = "URL_ANALYZER", .collector = "osint",
+  .id = "URL_ANALYZER", .collector = "osint_" "cyber",
   .name = "URL Analyzer", .name_ja = "URL解析",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",

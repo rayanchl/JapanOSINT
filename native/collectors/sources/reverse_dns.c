@@ -90,7 +90,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def reverse_dns_def = {
-  .id = "REVERSE_DNS", .collector = "osint",
+  .id = "REVERSE_DNS", .collector = "osint_" "cyber",
   .name = "Reverse DNS", .name_ja = "逆引きDNS",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",

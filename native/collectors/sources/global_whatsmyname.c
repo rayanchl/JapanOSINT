@@ -129,7 +129,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def whatsmyname_def = {
-  .id = "WHATSMYNAME", .collector = "osint",
+  .id = "WHATSMYNAME", .collector = "osint_" "investigation",
   .name = "WhatsMyName Username Check", .name_ja = "WhatsMyName ユーザー名調査",
   .update_interval_sec = 0, .run = run,
   .category = "investigation", .type = "api",

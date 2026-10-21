@@ -209,7 +209,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def cyi_rdap_asn_def = {
-  .id = "RDAP_ASN", .collector = "osint",
+  .id = "RDAP_ASN", .collector = "osint_" "cyber",
   .name = "RDAP autnum lookup (RIPE)",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",

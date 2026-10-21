@@ -98,7 +98,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def aisstream_def = {
-  .id = "AISSTREAM", .collector = "osint",
+  .id = "AISSTREAM", .collector = "osint_" "transport",
   .name = "aisstream.io Live AIS", .name_ja = "aisstream.io ライブAIS",
   .update_interval_sec = 0, .run = run,
   .category = "transport", .type = "api",
@@ -109,7 +109,7 @@ static const source_def aisstream_def = {
 REGISTER_SOURCE(aisstream_def)
 
 static const source_def equasis_def = {
-  .id = "EQUASIS", .collector = "osint",
+  .id = "EQUASIS", .collector = "osint_" "transport",
   .name = "Equasis Ship Database", .name_ja = "Equasis 船舶データベース",
   .update_interval_sec = 0, .run = run,
   .category = "transport", .type = "scraped",
@@ -120,7 +120,7 @@ static const source_def equasis_def = {
 REGISTER_SOURCE(equasis_def)
 
 static const source_def imo_gisis_def = {
-  .id = "IMO_GISIS", .collector = "osint",
+  .id = "IMO_GISIS", .collector = "osint_" "transport",
   .name = "IMO GISIS Ship Search", .name_ja = "IMO GISIS 船舶検索",
   .update_interval_sec = 0, .run = run,
   .category = "transport", .type = "scraped",

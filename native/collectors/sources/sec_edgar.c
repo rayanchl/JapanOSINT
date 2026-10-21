@@ -537,7 +537,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def sec_edgar_def = {
-  .id = "SEC_EDGAR_SEARCH", .collector = "osint",
+  .id = "SEC_EDGAR_SEARCH", .collector = "osint_" "government",
   .name = "SEC EDGAR Search", .name_ja = "SEC EDGAR検索",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "api",

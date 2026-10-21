@@ -501,7 +501,7 @@ static int run_contract_expiry(const source_ctx *ctx, intel_sink *sink) {
 /* ------------------------------------------------------------- definitions */
 
 static const source_def sam_gov_def = {
-  .id = "SAM_GOV_OPPORTUNITIES", .collector = "osint",
+  .id = "SAM_GOV_OPPORTUNITIES", .collector = "osint_" "government",
   .name = "SAM.gov Contract Opportunities", .name_ja = "米国連邦調達公告",
   .update_interval_sec = 0, .run = run_sam,
   .category = "government", .type = "api",
@@ -513,7 +513,7 @@ static const source_def sam_gov_def = {
 REGISTER_SOURCE(sam_gov_def)
 
 static const source_def ted_eu_def = {
-  .id = "TED_EU_TENDERS", .collector = "osint",
+  .id = "TED_EU_TENDERS", .collector = "osint_" "government",
   .name = "TED EU Tenders", .name_ja = "EU官報 入札公告",
   .update_interval_sec = 0, .run = run_ted,
   .category = "government", .type = "api",
@@ -525,7 +525,7 @@ static const source_def ted_eu_def = {
 REGISTER_SOURCE(ted_eu_def)
 
 static const source_def award_supplier_def = {
-  .id = "AWARD_SUPPLIER_SEARCH", .collector = "osint",
+  .id = "AWARD_SUPPLIER_SEARCH", .collector = "osint_" "government",
   .name = "US Federal Awards by Supplier", .name_ja = "米国連邦調達 受注企業検索",
   .update_interval_sec = 0, .run = run_award_supplier,
   .category = "government", .type = "api",
@@ -537,7 +537,7 @@ static const source_def award_supplier_def = {
 REGISTER_SOURCE(award_supplier_def)
 
 static const source_def contract_expiry_def = {
-  .id = "CONTRACT_EXPIRY_WATCH", .collector = "osint",
+  .id = "CONTRACT_EXPIRY_WATCH", .collector = "osint_" "government",
   .name = "Incumbent Contract Expiry", .name_ja = "現行契約 満了ウォッチ",
   .update_interval_sec = 0, .run = run_contract_expiry,
   .category = "government", .type = "api",

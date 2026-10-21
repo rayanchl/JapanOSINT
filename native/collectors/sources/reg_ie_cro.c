@@ -172,7 +172,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def reg_ie_cro_def = {
-  .id = "IE_CRO", .collector = "osint",
+  .id = "IE_CRO", .collector = "osint_" "government",
   .name = "Ireland CRO Company Search", .name_ja = "アイルランド企業登記 (CRO)",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "api",

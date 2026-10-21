@@ -375,7 +375,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def code_search_def = {
-  .id = "GITHUB_CODE_SEARCH", .collector = "osint",
+  .id = "GITHUB_CODE_SEARCH", .collector = "osint_" "cyber",
   .name = "Code Search", .name_ja = "コード検索",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",

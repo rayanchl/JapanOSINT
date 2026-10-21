@@ -153,17 +153,20 @@ int hostgate_host_check(const char *host, int strict);
  * proxy, the stills pod and ffmpeg then dial it on behalf of any signed-in
  * user. At the floor strength that let one poisoned record aim the server at
  * 127.0.0.1 or the operator's LAN, with the proxy's "upstream <status>" error
- * text acting as a port/status oracle. So these paths use the STRICT ruleset
- * unless the operator opts in with JO_CAMERA_ALLOW_LAN=1 (LAN cameras are a
- * real deployment, just not a default one). Metadata and link-local stay
- * refused either way; JO_HTTP_BLOCK_PRIVATE=1 forces strict regardless.
+ * text acting as a port/status oracle. So these paths ALWAYS use the STRICT
+ * ruleset: loopback, RFC1918, metadata and link-local are refused, and there
+ * is no operator opt-in (JO_CAMERA_ALLOW_LAN existed and was removed on
+ * 2026-10-20 — this deployment reads public cameras only).
  *
  * hostgate_camera_url_check() takes any "scheme://host" (rtsp, rtmp, tcp …) —
  * the CALLER pins the scheme set. `resolve` = 1 also resolves the name and
  * judges every answer: for ffmpeg, which owns its socket, that is the only
  * resolved-address check there is. curl paths pass 0 and rely on
  * hostgate_camera_addr_check() in their CURLOPT_PREREQFUNCTION. */
-int hostgate_camera_lan_allowed(void);
+/* UNIT TESTS ONLY: admit loopback/LAN (never metadata or link-local) so a
+ * test can dial its own fixture server on 127.0.0.1. Nothing in the product
+ * calls it, and no environment variable or route reaches it. */
+void hostgate_camera_test_allow_lan(int on);
 int hostgate_camera_url_check(const char *url, int resolve);
 int hostgate_camera_addr_check(const char *ip_text);
 

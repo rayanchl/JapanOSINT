@@ -172,7 +172,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def pl_krs_def = {
-  .id = "PL_KRS", .collector = "osint",
+  .id = "PL_KRS", .collector = "osint_" "government",
   .name = "Poland KRS Registry Lookup", .name_ja = "ポーランド KRS 企業登記",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "api",

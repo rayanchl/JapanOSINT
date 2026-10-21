@@ -195,7 +195,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def opendata_ckan_def = {
-  .id = "OPENDATA_CKAN", .collector = "osint",
+  .id = "OPENDATA_CKAN", .collector = "osint_" "government",
   .name = "CKAN Open-Data Portals", .name_ja = "CKAN オープンデータポータル",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "dataset",

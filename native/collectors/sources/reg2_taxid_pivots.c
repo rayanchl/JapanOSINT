@@ -359,7 +359,7 @@ static int vn_run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def reg2_pl_vat_def = {
-  .id = "PL_VAT_WHITELIST", .collector = "osint",
+  .id = "PL_VAT_WHITELIST", .collector = "osint_" "economy",
   .name = "Poland MF VAT taxpayer whitelist (biala lista)",
   .update_interval_sec = 0, .run = pl_run,
   .category = "economy", .type = "api",
@@ -374,7 +374,7 @@ static const source_def reg2_pl_vat_def = {
 REGISTER_SOURCE(reg2_pl_vat_def)
 
 static const source_def reg2_ro_anaf_def = {
-  .id = "RO_ANAF_VAT", .collector = "osint",
+  .id = "RO_ANAF_VAT", .collector = "osint_" "economy",
   .name = "Romania ANAF taxpayer register (CUI lookup)",
   .update_interval_sec = 0, .run = ro_run,
   .category = "economy", .type = "api",
@@ -388,7 +388,7 @@ static const source_def reg2_ro_anaf_def = {
 REGISTER_SOURCE(reg2_ro_anaf_def)
 
 static const source_def reg2_vn_taxcode_def = {
-  .id = "VN_TAXCODE_LOOKUP", .collector = "osint",
+  .id = "VN_TAXCODE_LOOKUP", .collector = "osint_" "economy",
   .name = "Vietnam business tax-code lookup",
   .update_interval_sec = 0, .run = vn_run,
   .category = "economy", .type = "api",

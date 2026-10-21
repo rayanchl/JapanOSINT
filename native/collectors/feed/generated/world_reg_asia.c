@@ -184,7 +184,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def world_reg_asia_def = {
-  .id = "ASIA_REGISTRY", .collector = "osint",
+  .id = "ASIA_REGISTRY", .collector = "osint_" "government",
   .name = "Asia Company & Court Registries", .name_ja = "アジア企業・裁判所登記",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "scraped",

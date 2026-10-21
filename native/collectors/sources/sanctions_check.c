@@ -241,7 +241,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def sanctions_check_def = {
-  .id = "SANCTIONS_CHECK", .collector = "osint",
+  .id = "SANCTIONS_CHECK", .collector = "osint_" "government",
   .name = "Sanctions Check", .name_ja = "制裁チェック",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "api",

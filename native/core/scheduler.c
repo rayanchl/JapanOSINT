@@ -1,6 +1,7 @@
 /* core/scheduler.c — timer-wheel cron (scheduleGuardedRun parity: per-source
  * interval, skip-if-running). P4: minimal single-thread loop; the bulk waves
  * (P5) reuse it unchanged. */
+#include "cadence.h"
 #include "scheduler.h"
 #include "../source.h"
 #include "intel.h"
@@ -366,8 +367,8 @@ static void sched_state_record(db_handle *db, const source_def *d,
   time_t now = time(NULL);
   if (sched_state_load_one(db, d->id, &st) < 0) return;   /* no table: say nothing */
   int was_q = st.quarantined;
-  sched_state_apply(&st, &pol, d->update_interval_sec, status, records, now);
-  if (sched_state_save(db, d->id, &st, d->update_interval_sec, now) != 0)
+  sched_state_apply(&st, &pol, cadence_apply(d->update_interval_sec), status, records, now);
+  if (sched_state_save(db, d->id, &st, cadence_apply(d->update_interval_sec), now) != 0)
     fprintf(stderr, "[sched] %s: could not persist sched state\n", d->id);
   if (st.consecutive_failures > 0)
     fprintf(stderr, "[sched] %s backoff: %d consecutive failure(s), next in %lds%s\n",
@@ -936,7 +937,7 @@ void scheduler_stop_background(int wait_ms) {
  * own interval is different — skip-if-running is already costing it whole
  * cycles — so that is when the flag is set: max(deadline, interval). */
 static long cancel_after(int i) {
-  long iv = g_all[i]->update_interval_sec;
+  long iv = cadence_apply(g_all[i]->update_interval_sec);   /* the policy's interval, not the declared one */
   return iv > g_deadline_sec ? iv : g_deadline_sec;
 }
 
@@ -1104,7 +1105,7 @@ void scheduler_loop(db_handle *db) {
     if (hold && hold[i] > now0) continue;
     int ln = lane_of(d);
     long off = sched_boot_offset(k[ln]++, m[ln], g_q.lane[ln].workers, stag,
-                                 ramp, d->update_interval_sec);
+                                 ramp, cadence_apply(d->update_interval_sec));
     if (off > last[ln]) last[ln] = off;
     next[i] = now0 + (time_t)off;
   }
@@ -1127,9 +1128,24 @@ void scheduler_loop(db_handle *db) {
                   "worker(s)\n", n, workers, mworkers);
 
   unsigned long tick = 0;
+  unsigned cad_gen = cadence_generation();
   for (;;) {
     if (atomic_load(&g_shutdown)) { sleep(1); continue; }
     time_t now = time(NULL);
+    /* The cadence policy changed (PUT /api/sources/cadence): a row whose next
+     * due time is further away than its NEW interval is pulled in to
+     * now + interval, so a faster policy takes effect within one interval and
+     * a slower one lets the already-planned run happen and then stretches. */
+    if (cadence_generation() != cad_gen) {
+      cad_gen = cadence_generation();
+      long pulled = 0;
+      for (int i = 0; i < n; i++) {
+        long e = cadence_apply(g_all[i]->update_interval_sec);
+        if (e <= 0) continue;
+        if (next[i] > now + (time_t)e) { next[i] = now + (time_t)e; pulled++; }
+      }
+      fprintf(stderr, "[sched] cadence policy changed: %ld row(s) re-planned\n", pulled);
+    }
     for (int i = 0; i < n; i++) {
       const source_def *d = g_all[i];
       /* Unified: schedule any source with an interval; on-demand sources
@@ -1139,10 +1155,10 @@ void scheduler_loop(db_handle *db) {
       if (now < next[i]) continue;
       /* User-set per-source mode: search_only sources don't cron for the
        * map (the search tab triggers them on demand). */
-      if (is_search_only(db, d->id)) { next[i] = now + d->update_interval_sec; continue; }
+      if (is_search_only(db, d->id)) { next[i] = now + cadence_apply(d->update_interval_sec); continue; }
       /* Circuit breaker: a quarantined source is benched until the cooldown
        * lapses (a later probe past quarantined_until runs and may clear it). */
-      if (is_quarantined_impl(db, d->id)) { next[i] = now + d->update_interval_sec; continue; }
+      if (is_quarantined_impl(db, d->id)) { next[i] = now + cadence_apply(d->update_interval_sec); continue; }
       /* Cadence is measured from the DUE time, not from completion: a source
        * that takes 90 s on a 60 s interval stays due immediately rather than
        * silently drifting to 150 s. q_push's skip-if-running is what stops
@@ -1152,7 +1168,11 @@ void scheduler_loop(db_handle *db) {
       pthread_mutex_lock(&g_q.mu);
       sched_state st = g_state[i];
       pthread_mutex_unlock(&g_q.mu);
-      long declared = d->update_interval_sec;
+      /* "declared" here is the POLICY's interval for this row (cadence.h): the
+       * operator's global cadence or clamp when one is set, the row's own
+       * value otherwise. Backoff doubles from it and the overdue ratio is
+       * measured against it. */
+      long declared = cadence_apply(d->update_interval_sec);
       double overdue = (double)(now - next[i]) / (double)(declared > 0 ? declared : 1);
       q_push(i, sched_priority(&st, source_trust_score(db, d->id), overdue));
       next[i] = now + sched_state_interval(&st, &g_pol, declared);

@@ -378,7 +378,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def threat_feed_def = {
-  .id = "THREAT_FEED_LOOKUP", .collector = "osint",
+  .id = "THREAT_FEED_LOOKUP", .collector = "osint_" "cyber",
   .name = "Threat Feed Lookup", .name_ja = "脅威フィード照会",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",

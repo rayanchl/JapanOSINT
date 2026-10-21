@@ -201,7 +201,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def vessel_tracker_def = {
-  .id = "VESSEL_TRACKER", .collector = "osint",
+  .id = "VESSEL_TRACKER", .collector = "osint_" "transport",
   .name = "Vessel Tracker", .name_ja = "船舶追跡",
   .update_interval_sec = 0, .run = run,
   .category = "transport", .type = "api",

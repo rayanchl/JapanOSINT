@@ -243,7 +243,7 @@ static int run_news(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def news_aggregator_def = {
-  .id = "NEWS_AGGREGATOR", .collector = "osint",
+  .id = "NEWS_AGGREGATOR", .collector = "osint_" "news",
   .name = "News Aggregator", .name_ja = "ニュース集約",
   .update_interval_sec = 0, .run = run_news,
   .category = "news", .type = "api",

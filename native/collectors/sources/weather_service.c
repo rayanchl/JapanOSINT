@@ -429,7 +429,7 @@ static int run_weather(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def weather_service_def = {
-  .id = "WEATHER_SERVICE", .collector = "osint",
+  .id = "WEATHER_SERVICE", .collector = "osint_" "environment",
   .name = "Weather Service", .name_ja = "気象サービス",
   .update_interval_sec = 0, .run = run_weather,
   .category = "environment", .type = "api",

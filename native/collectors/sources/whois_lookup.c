@@ -120,7 +120,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def whois_lookup_def = {
-  .id = "DOMAIN_WHOIS", .collector = "osint",
+  .id = "DOMAIN_WHOIS", .collector = "osint_" "cyber",
   .name = "Domain WHOIS", .name_ja = "ドメインWHOIS",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",

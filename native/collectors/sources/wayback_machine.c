@@ -115,7 +115,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def wayback_machine_def = {
-  .id = "WAYBACK_MACHINE", .collector = "osint",
+  .id = "WAYBACK_MACHINE", .collector = "osint_" "news",
   .name = "Wayback Machine", .name_ja = "ウェイバックマシン",
   .update_interval_sec = 0, .run = run,
   .category = "news", .type = "api",

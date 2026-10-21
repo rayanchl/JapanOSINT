@@ -146,7 +146,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def cyi_bgp_prefix_search_def = {
-  .id = "BGP_PREFIX_SEARCH", .collector = "osint",
+  .id = "BGP_PREFIX_SEARCH", .collector = "osint_" "cyber",
   .name = "RIPE BGP API — longest-match prefix search",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",

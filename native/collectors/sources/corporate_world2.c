@@ -79,7 +79,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def opencorporates_def = {
-  .id = "OPENCORPORATES", .collector = "osint",
+  .id = "OPENCORPORATES", .collector = "osint_" "government",
   .name = "OpenCorporates Company Search", .name_ja = "OpenCorporates 企業検索",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "api",

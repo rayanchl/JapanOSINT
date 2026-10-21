@@ -259,7 +259,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def latam2_registry_def = {
-  .id = "LATAM2_REGISTRY", .collector = "osint",
+  .id = "LATAM2_REGISTRY", .collector = "osint_" "government",
   .name = "Latin America Registry Search (cohort 2)",
   .name_ja = "ラテンアメリカ 登記検索 (第2群)",
   .update_interval_sec = 0, .run = run,

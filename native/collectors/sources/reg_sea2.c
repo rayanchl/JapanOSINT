@@ -133,7 +133,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def reg_sea2_def = {
-  .id = "SEA2_REGISTRY", .collector = "osint",
+  .id = "SEA2_REGISTRY", .collector = "osint_" "government",
   .name = "SE/South Asia Company Registries", .name_ja = "東南・南アジア企業登記",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "scraped",

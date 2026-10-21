@@ -399,7 +399,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def wikidata_sparql_def = {
-  .id = "WIKIDATA_SPARQL", .collector = "osint",
+  .id = "WIKIDATA_SPARQL", .collector = "osint_" "investigation",
   .name = "Wikidata SPARQL Relationships", .name_ja = "Wikidata SPARQL 関係",
   .update_interval_sec = 0, .run = run,
   .category = "investigation", .type = "api",
@@ -410,7 +410,7 @@ static const source_def wikidata_sparql_def = {
 REGISTER_SOURCE(wikidata_sparql_def)
 
 static const source_def dbpedia_def = {
-  .id = "DBPEDIA", .collector = "osint",
+  .id = "DBPEDIA", .collector = "osint_" "investigation",
   .name = "DBpedia Resource Lookup", .name_ja = "DBpedia リソース検索",
   .update_interval_sec = 0, .run = run,
   .category = "investigation", .type = "api",
@@ -421,7 +421,7 @@ static const source_def dbpedia_def = {
 REGISTER_SOURCE(dbpedia_def)
 
 static const source_def wikimedia_commons_def = {
-  .id = "WIKIMEDIA_COMMONS", .collector = "osint",
+  .id = "WIKIMEDIA_COMMONS", .collector = "osint_" "investigation",
   .name = "Wikimedia Commons Media Search", .name_ja = "Wikimedia Commons メディア検索",
   .update_interval_sec = 0, .run = run,
   .category = "investigation", .type = "api",
