@@ -41,12 +41,12 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 
 **The registered count is 51,562** (2026-10-20): main's 48,346, less six
 `jp_feeds_batch43/44` feeds measured dead, less 25 rows of batches 44/47/48
-whose official domains now publish gambling spam (below), plus **batch 49's
+whose official domains now publish gambling spam (below), plus **batch 50's
 3,247 government and institutional RSS/Atom feeds** for Japan, the US, the UK,
-France and China (`collectors/sources/{jp,us,uk,fr,cn,intl}_feeds_batch49.c`,
-`docs/verified-sources-batch49.tsv`, 3,237 OK on the emit sweep, 54,800 emitted
-/ 54,802 stored). Authored as batch 45 and renumbered at merge time when main's
-45, 47 and 48 had all landed. Details: `docs/SOURCE_COUNT_LEDGER.md`.
+France and China (`collectors/sources/{jp,us,uk,fr,cn,intl}_feeds_batch50.c`,
+`docs/verified-sources-batch50.tsv`, 3,237 OK on the emit sweep, 54,800 emitted
+/ 54,802 stored). Authored as batch 45 and renumbered twice at merge time — to 49, then 50 —
+because main's 45, 47, 48 and 49 all landed first. Details: `docs/SOURCE_COUNT_LEDGER.md`.
 
 * **An official domain is not forever, and no record count can see it lapse.**
   Wikidata's `P856` official website — and any register like it — lists the

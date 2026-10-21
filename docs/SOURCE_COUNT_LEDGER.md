@@ -17,7 +17,7 @@ that a new batch must not relearn are summarised there. Newest first.
   official WordPress sites with injected casino posts.
   `docs/removed-sources-2026-10-20-takeovers.tsv` keeps the item titles that
   convicted each one; manifests are trimmed to match.
-* **+3,247 — batch 49**, government and institutional RSS/Atom: Japan 883,
+* **+3,247 — batch 50**, government and institutional RSS/Atom: Japan 883,
   US 915, UK 1,111, France 261, China/HK 39, international 38. Two seeds.
   Research agents proposed 1,744 feeds, 1,371 of them live (gov.uk's
   per-organisation `.atom` is most of the UK). Then **autodiscovery**: ~20,000
@@ -28,7 +28,7 @@ that a new batch must not relearn are summarised there. Newest first.
   their own `<link rel="alternate">` declarations read: 3,641 declared feeds,
   2,729 live. 802 were already registered after merging main (its batch 44 and
   47 seed from the same kind of list) and are not duplicated. Rejected rows,
-  each with a reason, are `docs/rejected-sources-batch49.tsv`: 25 domain
+  each with a reason, are `docs/rejected-sources-batch50.tsv`: 25 domain
   takeovers (27 found; the other two were already main's rows and are in the
   removal file), 16 hosts that refuse every honest agent, 5 comment feeds, 4
   misattributions, 1 ccTLD contradiction. Emit sweep: 3,237 OK, 2 collisions
@@ -38,8 +38,8 @@ that a new batch must not relearn are summarised there. Newest first.
 * Two engine fixes came out of it: `lib/rss_atom.c` waits 25 s instead of 8
   (ipu-japan.ac.jp's 4.6 MB feed went from 0 to 500 records), and 48 more hosts
   get the no-"collector" agent in `core/httpclient.c` (86 rows recovered).
-* Batch number 49, not 45: main merged its own 45, 47 and 48 while this one was
-  open. 46 is absent from main and was left alone in case an open branch holds
+* Batch number 50, not 45: main merged its own 45, 47, 48 and then 49 (PR #55)
+  while this one was open — it was renumbered at two merges. 46 is absent from main and was left alone in case an open branch holds
   it. Batches 43 and 44 now also name main's `JO43_` municipal and `JO44_` US
   government tables; the `jp_feeds` measurements are
   `verified-sources-batch4{3,4}.jp_feeds.tsv`.

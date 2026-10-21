@@ -409,16 +409,16 @@ static const struct { const char *host, *ua; } UA_OVERRIDE[] = {
     "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
     "contact via repo issues)" },
 
-  /* Batch 45: the same "collector" word filter, on 48 more hosts — mostly French
+  /* Batch 50: the same "collector" word filter, on 48 more hosts — mostly French
    * commune sites (WordPress behind one nginx bot rule, answering 444/403) and
    * small US city sites. Bisected 2026-10-20 per host, on the registered feed URL:
    *     the full engine UA                                       403 / 444 / 0 items
    *     "JapanOSINT/1.0 (collector)"                           403 / 444
    *     "JapanOSINT/1.0 (contact via repo issues)"             200 + items
    *     the agent below                                          200 + items
-   * 88 batch-45 rows stored nothing on the emit sweep until this. Hosts that
+   * 88 batch-50 rows (authored as 45) stored nothing on the emit sweep until this. Hosts that
    * refused EVERY honest agent (only a browser string passed) were not added
-   * here and their rows were not shipped: docs/rejected-sources-batch45.tsv. */
+   * here and their rows were not shipped: docs/rejected-sources-batch50.tsv. */
   { "ajaccio.corsica",
     "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
     "contact via repo issues)" },
