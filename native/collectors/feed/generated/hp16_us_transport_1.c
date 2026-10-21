@@ -28,22 +28,44 @@ static const hp_source T[] = {
     .collector = "us_transport", .category = "transport",
     .description = "MAIB reports naming the vessel and its registration (e.g. fishing vessel Silver Cloud II WK 80), date_of_occurrence and vessel type. Content API detail hop returns the full investigation report with owner/operator, causal analysis and recommendations. NOTE: country should read GB.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "transport-record", .tags = "\"us\",\"transport\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://www.gov.uk/api/search.json?filter_format=maib_report&count=3&fields=title,link,description,date_of_occurrence,vessel_type",
+    /* count=100, newest first, measured 2026-10-20: 1,106 reports in 12
+     * pages, inside the 20-page ceiling, so every run reads the whole
+     * register — it used to read ONE page of 3 (count was not a page size
+     * lib/jsonlist.c knew, so page_walk never moved) at 369 pages' worth of
+     * truncation. A branch that publishes a few reports a month is re-read
+     * 6-hourly, the same bucket batches 43–48 give a ≤30-day newest item.
+     *
+     * Measured in the engine the same day: 1,106 emitted, 1,102 stored + 1
+     * notice — and the upstream holds 1,106 DISTINCT links, read in one pass
+     * by hand, so those 4 are not its duplicates: they are ties. GOV.UK's
+     * search API sorts on one field and several reports share a
+     * public_timestamp to the second, so a tie can swap sides of a page
+     * boundary between two requests, serving one twice and the other not
+     * at all (the unstable-sort hazard CLAUDE.md names). There is no second
+     * sort key to ask for (`order=link` is a 500). What makes it tolerable
+     * here and not in a cycling row: every run re-reads the WHOLE register,
+     * so a report a tie hid this run is served on the next, and the sink
+     * keeps everything ever stored. A per-run loss of ~0.4% that heals on
+     * the next run is disclosed by the run line's UID-COLLISION, not by a
+     * notice; it is NOT a key defect, so do not widen id_keys for it. */
+    .url = "https://www.gov.uk/api/search.json?filter_format=maib_report&count=100&order=-public_timestamp&fields=title,link,description,date_of_occurrence,vessel_type",
     .array_path = "results",
     .detail_url = "https://www.gov.uk/api/content{v}", .detail_key = "link",
     .page_walk = 1,
-    .interval = 3600, .free_tier = 1 },
+    .interval = 21600, .free_tier = 1 },
 
   { .id = "uk-govuk-search-raib-reports",
     .name = "GOV.UK Search API - Rail Accident Investigation Branch reports",
     .collector = "us_transport", .category = "transport",
     .description = "RAIB investigation reports: report number, incident description, date_of_occurrence, railway type. Content API detail hop returns the full report page with the PDF, findings, causal factors and safety recommendations addressed to named operators and infrastructure managers. NOTE: country should read GB.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "transport-record", .tags = "\"us\",\"transport\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://www.gov.uk/api/search.json?filter_format=raib_report&count=3&fields=title,link,description,date_of_occurrence,railway_type",
+    /* count=100, newest first, measured 2026-10-20: 604 reports in 7 pages,
+     * the whole register every run (see the MAIB row above). */
+    .url = "https://www.gov.uk/api/search.json?filter_format=raib_report&count=100&order=-public_timestamp&fields=title,link,description,date_of_occurrence,railway_type",
     .array_path = "results",
     .detail_url = "https://www.gov.uk/api/content{v}", .detail_key = "link",
     .page_walk = 1,
-    .interval = 3600, .free_tier = 1 },
+    .interval = 21600, .free_tier = 1 },
 
   { .id = "us-fmcsa-carrier-census",
     .name = "FMCSA — motor carrier census (SAFER replacement)",

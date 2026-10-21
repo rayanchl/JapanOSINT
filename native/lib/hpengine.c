@@ -5044,6 +5044,7 @@ void hp_register(const hp_source *specs, int n, source_def *defs,
       .layer               = s->layer,
       .free_tier           = s->free_tier,
       .engine              = "hpengine",
+      .adaptive_interval   = s->adaptive_interval,
     };
     registry_add(&defs[i]);
   }
@@ -5236,6 +5237,9 @@ char *hp_describe_json(const char *id) {
   hp_desc_str(o, "portal", s->portal);
   hp_desc_str(o, "layer", s->layer);
   cJSON_AddNumberToObject(o, "interval", s->interval);
+  /* The declared interval is the cadence only when this is 0; with it set,
+   * the scheduler's measured freshness interval (source_sched_state) is. */
+  cJSON_AddBoolToObject(o, "adaptive_interval", s->adaptive_interval != 0);
   cJSON_AddBoolToObject(o, "free_tier", s->free_tier != 0);
 
   char *js = cJSON_PrintUnformatted(o);

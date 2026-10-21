@@ -507,6 +507,39 @@ static const hp_source HP3B20_SCHOLARLY[] = {
       "feed over a fully open-access corpus, so every hit resolves to "
       "readable full text" },
 
+  /* The second row PLOS_RECENT's own note asks for: the WHOLE corpus, read
+   * over a cycle. Ascending publication date (oldest first, from PLoS
+   * Biology's 2003-08-18 launch issue) is the sort a cycle needs — new
+   * papers land at the TAIL, where a resumed walk has not been yet, so a run
+   * boundary never re-reads or skips a page (the 22 rows re-sorted on
+   * 2026-10-18). `id asc` second, because thousands of articles share one
+   * publication date. Measured 2026-10-20: numFound 418,125 at 100 a page =
+   * 4,182 pages; at 20 pages a daily run the cycle is ~209 days, and the
+   * notice says where it is. PLOS_RECENT keeps the newest; this row owns the
+   * back catalogue. */
+  { .id = "PLOS_CORPUS", .name = "PLOS - every article across all journals, read over a cycle",
+    .name_ja = "PLOS 全論文（巡回読み）",
+    .category = "research", .portal = "https://plos.org",
+    .record_type = "publication-record",
+    .tags = "\"research\",\"plos\",\"openaccess\",\"corpus\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://api.plos.org/search?q=doc_type%3Afull&rows=100&wt=json&sort=publication_date%20asc,id%20asc",
+    .array_path = "response.docs",
+    .body_keys = "abstract",
+    .date_keys = "publication_date",
+    .id_keys = "id",
+    .interval = 86400,
+    .page_param = "start",
+    .page_resume = 1,   /* 418,125 records, measured 2026-10-20: read over a cycle, 20 pages a run */
+    .page_size = 100,
+    .page_zero_based = 1,
+    .title_keys = "title_display,title",
+    .description = "Every full article PLOS has published across all eleven "
+      "journals, oldest first, with DOI, title, journal, article type, "
+      "author list, subject terms and abstract. Read over a cycle of daily "
+      "runs so the whole open-access corpus is stored, not only the newest "
+      "two thousand that PLOS_RECENT keeps current" },
+
   { .id = "INSPIRE_SEMINARS", .name = "INSPIRE-HEP - seminars",
     .name_ja = "INSPIRE-HEP セミナー",
     .category = "research", .portal = "https://inspirehep.net",

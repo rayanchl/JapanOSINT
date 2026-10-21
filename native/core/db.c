@@ -422,6 +422,10 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
    * One row per scheduled source already exists here; this is one more column
    * on it, not a table of its own. */
   ensure_column(db, "source_sched_state", "resume_token", "TEXT");
+  /* The cadence an adaptive row re-measured from its newest stored item
+   * (source_def.adaptive_interval, core/scheduler.c sched_freshness_measure).
+   * NULL = not measured / undated rows: the declared interval stands. */
+  ensure_column(db, "source_sched_state", "freshness_interval", "INTEGER");
 
   /* Notification inbox (roadmap item 11): read/unread state per event. */
   ensure_column(db, "alert_events", "read_at", "TEXT");

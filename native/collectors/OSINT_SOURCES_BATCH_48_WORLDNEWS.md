@@ -62,6 +62,7 @@ India 286, Korea 252, Germany 220, Mexico 206, France 206.
 | reachability / pagination | 0 / 0 | 0 / 5 SPIP `?page=backend` rows, `pagination_ok` |
 | `probe_hp_batch.py` | 492 PASS | 3,851 PASS |
 | generated with EVERY row; `audit_registry_emit.py` + one re-run of each FETCH_FAILED | → 492 (8 failed twice) | → 3,980 (208 failed twice) |
+| 2026-10-20: the rows dropped as 403s re-probed with an identified browser-compatible `User-Agent` header (see batch 44's note) | 4 of 4 back → 498 | 7 of 14 back → 4,007 |
 
 **175 rows the probe refused ship on the engine's measurement** (2 igo, 173
 news) and carry both readings. The 10 collisions were each measured against
