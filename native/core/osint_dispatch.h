@@ -86,7 +86,8 @@ int osint_resolve_near(const char *canon, char *out, size_t n);
  * embedding fallback: the name (as words) is asked of the service router
  * (service_vec_catalogue) for its RESOLVE_EMB_K nearest pivots, each is
  * scored by cosine to the name, and the best is accepted only when it clears
- * RESOLVE_EMB_MIN_COS AND beats the runner-up by RESOLVE_EMB_MARGIN. *by_emb
+ * resolve_emb_min_cos AND beats the runner-up by resolve_emb_margin (both
+ * core/thresholds.c, defaults 0.60 / 0.10). *by_emb
  * (may be NULL) is set to 1 when the embedding path chose. Without an
  * embedding server or a ready service index this IS osint_resolve_near(). */
 int osint_resolve_near_db(db_handle *db, const char *canon, char *out, size_t n,

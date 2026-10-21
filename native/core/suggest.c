@@ -1,5 +1,6 @@
 /* core/suggest.c — see suggest.h. */
 #include "suggest.h"
+#include "thresholds.h"         /* operator-tunable similarity cut-offs */
 #include "qembed.h"
 #include "service_vec.h"
 #include "pipeline.h"
@@ -184,10 +185,9 @@ static int by_score(const void *a, const void *b) {
   return strcmp(x->text, y->text);
 }
 
+/* core/thresholds.c: runtime override > JO_SUGGEST_MIN_COS > SUGGEST_MIN_COS. */
 static double min_cos(void) {
-  const char *e = getenv("JO_SUGGEST_MIN_COS");
-  double v = (e && *e) ? atof(e) : 0;
-  return v > 0 && v < 1 ? v : SUGGEST_MIN_COS;
+  return threshold_get("suggest_min_cos");
 }
 
 char *suggest_build(db_handle *db, llm_client *llm, const char *tenant,
