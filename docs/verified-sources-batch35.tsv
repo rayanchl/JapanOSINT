@@ -1,5 +1,103 @@
-id	url	verdict	kind	items	http	bytes	note
-MCR_IMAGE_CATALOG	https://mcr.microsoft.com/v2/_catalog	PASS	json:repositories	3851	200	162277	
-NUGET_PACKAGE_VERSIONS_FLAT	https://api.nuget.org/v3-flatcontainer/newtonsoft.json/index.json	PASS	json:versions	86	200	1462	
-PACKAGIST_ALL_PACKAGE_NAMES	https://packagist.org/packages/list.json	PASS	json:packageNames	464521	200	12239904	
-PUBDEV_ALL_PACKAGE_NAMES	https://pub.dev/api/package-names	PASS	json:packages	91388	200	1707054	
+id	beat	probe_verdict	probe_items	emit_verdict	emitted	stored	db_stored	note
+JO35_WEKO_TEIKYO_U	jpweko	PASS	100	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_OSAKA_KYOIKU	jpweko	PASS	100	OK	26			
+JO35_WEKO_TOHOKU	jpweko	PASS	100	OK	53			
+JO35_WEKO_WASEDA	jpweko	PASS	100	OK	184			
+JO35_WEKO_TSUKUBA	jpweko	HTTP_ERR	0	OK	173			
+JO35_WEKO_HIT_U	jpweko	HTTP_ERR	0	OK	123			
+JO35_WEKO_KANAZAWA_U	jpweko	HTTP_ERR	0	OK	7			
+JO35_WEKO_HIROSHIMA	jpweko	HTTP_ERR	0	OK	35			
+JO35_WEKO_NAGASAKI_U	jpweko	HTTP_ERR	0	OK	9			
+JO35_WEKO_KEK	jpweko	PASS	100	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_KINDAI	jpweko	PASS	100	OK	3			
+JO35_WEKO_KANSAI_U	jpweko	PASS	100	OK	7			
+JO35_WEKO_SOPHIA	jpweko	PASS	100	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_U_GAKUGEI	jpweko	PASS	100	OK	2			
+JO35_WEKO_TWINKLE	jpweko	PASS	100	OK	4			
+JO35_WEKO_RIKKYO	jpweko	PASS	100	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_KOMAZAWA_U	jpweko	PASS	100	OK	2			
+JO35_WEKO_DOSHISHA	jpweko	PASS	100	OK	43			
+JO35_WEKO_REDCROSS	jpweko	PASS	100	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_TOYAMA	jpweko	PASS	100	OK	17			
+JO35_WEKO_OCU_OMU	jpweko	PASS	100	OK	6			
+JO35_WEKO_KONAN_WU	jpweko	PASS	100	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_MEIJI	jpweko	PASS	100	OK	3			
+JO35_WEKO_KWANSEI	jpweko	PASS	100	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_KAISEI	jpweko	HTTP_ERR	0	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_OMU	jpweko	PASS	100	OK	22			
+JO35_WEKO_MIE_U	jpweko	PASS	100	OK	3			
+JO35_WEKO_GIFU_U	jpweko	PASS	100	OK	4			
+JO35_WEKO_IWATEMED	jpweko	PASS	100	OK	1			
+JO35_WEKO_KANAGAWA_U	jpweko	ERR	0	OK	3			
+JO35_WEKO_SHIZUOKA	jpweko	PASS	100	OK	71			
+JO35_WEKO_TOHO	jpweko	PASS	100	OK	13			
+JO35_WEKO_SHIGA_U	jpweko	PASS	100	OK	2			
+JO35_WEKO_SENSHU_U	jpweko	PASS	100	OK	3			
+JO35_WEKO_YNU	jpweko	PASS	100	OK	28			
+JO35_WEKO_TOKUSHIMA_U	jpweko	PASS	100	OK	16			
+JO35_WEKO_CHUO_U	jpweko	HTTP_ERR	0	OK	16			
+JO35_WEKO_TOYO	jpweko	PASS	100	OK	2			
+JO35_WEKO_NAIST	jpweko	PASS	100	OK	11			
+JO35_WEKO_NIFS_REPOSITORY	jpweko	PASS	100	OK	3			
+JO35_WEKO_SAGA_U	jpweko	PASS	100	OK	3			
+JO35_WEKO_AICHIU	jpweko	PASS	100	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_CHUKYO_U	jpweko	PASS	100	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_KAIT	jpweko	HTTP_ERR	0	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_TKU	jpweko	PASS	100	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_RISSHO	jpweko	PASS	100	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_OTANI	jpweko	HTTP_ERR	0	OK	2			
+JO35_WEKO_KAGAWA_U	jpweko	PASS	100	OK	6			
+JO35_WEKO_TMU	jpweko	PASS	100	OK	3			
+JO35_WEKO_GUNMA_U	jpweko	PASS	100	OK	5			
+JO35_WEKO_U_FUKUI	jpweko	PASS	100	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_KYUTECH	jpweko	PASS	100	OK	4			
+JO35_WEKO_UUAIR	jpweko	PASS	100	OK	6			
+JO35_WEKO_AUE	jpweko	PASS	100	OK	3			
+JO35_WEKO_UEC	jpweko	PASS	100	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_BUNKYO	jpweko	PASS	100	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_STARS	jpweko	PASS	100	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_MIYAZAKI_U	jpweko	PASS	100	OK	54			
+JO35_WEKO_SAPMED	jpweko	PASS	100	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_RAKUNO	jpweko	PASS	100	OK	5			
+JO35_WEKO_IWATE_U	jpweko	HTTP_ERR	0	OK	6			
+JO35_WEKO_HIROSAKI	jpweko	PASS	100	OK	7			
+JO35_WEKO_SAPPORO_U	jpweko	PASS	100	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_HYOGO_U	jpweko	PASS	100	OK	7			
+JO35_WEKO_WAKAYAMA_U	jpweko	PASS	100	OK	23			
+JO35_WEKO_TOYO_BUNKO	jpweko	PASS	100	OK	4			
+JO35_WEKO_YAMAGATA	jpweko	PASS	100	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_NIHON_U	jpweko	PASS	100	OK	6			
+JO35_WEKO_ASAHIKAWA_MED	jpweko	PASS	100	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_NARA_WU	jpweko	PASS	100	OK	12			
+JO35_WEKO_SEIJO	jpweko	PASS	100	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_ASIA_U	jpweko	PASS	100	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_MARIANNA_U	jpweko	PASS	100	OK	4			
+JO35_WEKO_BEPPU_U	jpweko	PASS	100	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_NARA_EDU	jpweko	PASS	100	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_EHIME_U	jpweko	PASS	100	OK	7			
+JO35_WEKO_YCU	jpweko	PASS	100	OK	8			
+JO35_WEKO_SOKA	jpweko	PASS	100	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_MURORAN_IT	jpweko	PASS	100	OK	1			
+JO35_WEKO_NANZAN_U	jpweko	PASS	100	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_RKU	jpweko	PASS	100	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_OUJ	jpweko	PASS	100	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_FUN	jpweko	PASS	100	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_YAMANASHI	jpweko	PASS	100	OK	1			
+JO35_WEKO_GIFU_PU	jpweko	PASS	100	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_FUKUOKA_U	jpweko	PASS	100	OK	1			
+JO35_WEKO_KONAN_U	jpweko	PASS	100	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_NITECH	jpweko	PASS	100	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_NARUTO	jpweko	PASS	100	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_OBIHIRO	jpweko	PASS	100	OK	7			
+JO35_WEKO_SHIGA_MED	jpweko	PASS	100	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_AGU	jpweko	PASS	100	OK	1			
+JO35_WEKO_HAMA_MED	jpweko	PASS	100	OK	2			
+JO35_WEKO_CUC	jpweko	PASS	100	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_MEIGAKU	jpweko	PASS	100	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_OUS	jpweko	PASS	100	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_ATOMI	jpweko	PASS	100	EMPTY_UPSTREAM	0			the endpoint answered and held nothing for the probe entity — honest empty, not dead
+JO35_WEKO_K_RAIN	jpweko	PASS	100	OK	5			
+MCR_IMAGE_CATALOG	strings	PASS	3851					probe reading of 2026-10-04, when this beat (strings) was measured end to end; not re-run on 2026-10-20 (its own batch note has the emit reading)
+NUGET_PACKAGE_VERSIONS_FLAT	strings	PASS	86					probe reading of 2026-10-04, when this beat (strings) was measured end to end; not re-run on 2026-10-20 (its own batch note has the emit reading)
+PACKAGIST_ALL_PACKAGE_NAMES	strings	PASS	464521					probe reading of 2026-10-04, when this beat (strings) was measured end to end; not re-run on 2026-10-20 (its own batch note has the emit reading)
+PUBDEV_ALL_PACKAGE_NAMES	strings	PASS	91388					probe reading of 2026-10-04, when this beat (strings) was measured end to end; not re-run on 2026-10-20 (its own batch note has the emit reading)

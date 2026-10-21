@@ -283,18 +283,10 @@ igo	batch_exclusions	JO48_IGO_Q7768			DUP_ENDPOINT	in collectors/feed/generated/
 igo	batch_exclusions	JO48_IGO_Q499039			DUP_ENDPOINT	in collectors/feed/generated/vsrc13_africa_gov_3.c
 igo	batch_exclusions	JO48_IGO_Q10341236_2			DUP_ENDPOINT	in (this
 igo	batch_exclusions	JO48_IGO_Q24256223_2			DUP_ENDPOINT	in (this
-igo	probe_hp_batch	JO48_IGO_Q4806270		https://asiapacificgreens.org/feed/	HTTP_ERR	Forbidden
-igo	probe_hp_batch	JO48_IGO_Q115802473		https://www.cighci.org/feed/	HTTP_ERR	Forbidden
 igo	probe_hp_batch	JO48_IGO_Q124246335		https://www.tinygames.it/feed/	ERR	RemoteDisconnected: Remote end closed connection without res
 igo	probe_hp_batch	JO48_IGO_Q109969389		https://www.ivproductions.it/feed/	ERR	RemoteDisconnected: Remote end closed connection without res
-igo	probe_hp_batch	JO48_IGO_Q1371744		https://www.banpresto.es/feed/	HTTP_ERR	Forbidden
-igo	probe_hp_batch	JO48_IGO_Q107291476		https://www.psychoflux.com/feed/	HTTP_ERR	Forbidden
-igo	engine	JO48_IGO_Q107291476			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 igo	engine	JO48_IGO_Q109969389			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-igo	engine	JO48_IGO_Q115802473			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 igo	engine	JO48_IGO_Q124246335			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-igo	engine	JO48_IGO_Q1371744			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-igo	engine	JO48_IGO_Q4806270			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 news	builder	Q2544289	The National (newspaper, AE)	https://www.thenationalnews.com/opinion/feedback/	NOT_FEED	kind= items=0
 news	builder	Q5372553	Emirates 24/7 (online-newspaper, AE)	https://www.emirates247.com/rss	NOT_FEED	kind= items=0
 news	builder	Q19690087	Arabic IT News Portal (online-newspaper, AE)	https://aitnews.com/قصص-إخبارية/feed/	HTTP_410	kind= items=0
@@ -2002,15 +1994,9 @@ news	probe_hp_batch	JO48_NEWS_Q88966545_2		https://ponte.org/stories/feed/	HTTP_
 news	probe_hp_batch	JO48_NEWS_Q3522909		http://www.thesuburban.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
 news	probe_hp_batch	JO48_NEWS_Q3987193		http://westerngazette.ca/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
 news	probe_hp_batch	JO48_NEWS_Q130266979		https://www.lanacion.com.co/feed/	ERR	RemoteDisconnected: Remote end closed connection without res
-news	probe_hp_batch	JO48_NEWS_Q1975835		https://www.deccanchronicle.com/google_feeds.xml	HTTP_ERR	Forbidden
-news	probe_hp_batch	JO48_NEWS_Q31328038		https://www.pratahkal.com/google_feeds.xml	HTTP_ERR	Forbidden
-news	probe_hp_batch	JO48_NEWS_Q12623966		http://www.ihalla.com/rss.php?section=73	HTTP_ERR	Forbidden
 news	probe_hp_batch	JO48_NEWS_Q18550812		http://fpn119.co.kr/rss/rss_news.php	HTTP_ERR	Forbidden
-news	probe_hp_batch	JO48_NEWS_Q105967298		https://wayka.pe/feed/	HTTP_ERR	Forbidden
-news	probe_hp_batch	JO48_NEWS_Q6398798		https://www.thepost.com.pk/feed/	HTTP_ERR	Forbidden
 news	probe_hp_batch	JO48_NEWS_Q62571830		https://ropravda.ru/feed/	HTTP_ERR	Unsupported Media Type
 news	probe_hp_batch	JO48_NEWS_Q4329488		https://www.obozrevatel.com/ukr/api/media/out/rss/lastnews.xml	HTTP_ERR	Forbidden
-news	probe_hp_batch	JO48_NEWS_Q116785970		https://ain.ua/feed/	HTTP_ERR	Forbidden
 news	probe_hp_batch	JO48_NEWS_Q5314263		http://www.duncanbanner.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
 news	probe_hp_batch	JO48_NEWS_Q5347491		http://www.effinghamdailynews.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
 news	probe_hp_batch	JO48_NEWS_Q5517248		http://www.gainesvilleregister.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
@@ -2152,7 +2138,6 @@ news	probe_hp_batch	JO48_NEWS_Q16466590_2		http://www.hannapub.com/search/?f=rss
 news	probe_hp_batch	JO48_NEWS_Q16824499		http://www.abilene-rc.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
 news	probe_hp_batch	JO48_NEWS_Q16895790		http://herald-zeitung.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
 news	probe_hp_batch	JO48_NEWS_Q16939014		http://www.chetekalert.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	probe_hp_batch	JO48_NEWS_Q16966127		https://mountvernonnews.com/stories.rss	HTTP_ERR	Forbidden
 news	probe_hp_batch	JO48_NEWS_Q19866020		http://www.owassoreporter.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
 news	probe_hp_batch	JO48_NEWS_Q19867767		http://tulsaworld.com/search/?f=rss&amp;t=article&amp;c=news/community/skiatook&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
 news	probe_hp_batch	JO48_NEWS_Q23074316		http://www.cameronherald.com/search/?f=rss&amp;t=article&amp;c=marlin&amp;l=50&amp;s=start_time&amp;sd=desc	HTTP_ERR	Too Many Requests
@@ -2161,10 +2146,7 @@ news	probe_hp_batch	JO48_NEWS_Q55623273		http://www.timescitizen.com/search/?f=r
 news	probe_hp_batch	JO48_NEWS_Q55642329		http://www.sandmountainreporter.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
 news	probe_hp_batch	JO48_NEWS_Q129800569		http://www.cachevalleydaily.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
 news	probe_hp_batch	JO48_NEWS_Q5392199		http://www.mvariety.com/search/?f=rss&amp;t=article&amp;l=50&amp;s=start_time&amp;sd=desc&amp;k%5B%5D=%23topstory	HTTP_ERR	Too Many Requests
-news	engine	JO48_NEWS_Q105967298			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 news	engine	JO48_NEWS_Q107723017			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO48_NEWS_Q116785970			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO48_NEWS_Q12623966			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 news	engine	JO48_NEWS_Q129800569			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 news	engine	JO48_NEWS_Q130266979			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 news	engine	JO48_NEWS_Q1324287			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
@@ -2176,7 +2158,6 @@ news	engine	JO48_NEWS_Q16824499			FETCH_FAILED	stored nothing in the engine on t
 news	engine	JO48_NEWS_Q16839239			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 news	engine	JO48_NEWS_Q16895790			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 news	engine	JO48_NEWS_Q16939014			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO48_NEWS_Q16966127			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 news	engine	JO48_NEWS_Q16975655			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 news	engine	JO48_NEWS_Q16992375			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 news	engine	JO48_NEWS_Q16993678			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
@@ -2192,12 +2173,10 @@ news	engine	JO48_NEWS_Q17513048			FETCH_FAILED	stored nothing in the engine on t
 news	engine	JO48_NEWS_Q18150648			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 news	engine	JO48_NEWS_Q18152760			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 news	engine	JO48_NEWS_Q18550812			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO48_NEWS_Q1975835			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 news	engine	JO48_NEWS_Q19866020			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 news	engine	JO48_NEWS_Q19867767			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 news	engine	JO48_NEWS_Q2164240			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 news	engine	JO48_NEWS_Q23074316			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO48_NEWS_Q31328038			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 news	engine	JO48_NEWS_Q3402472			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 news	engine	JO48_NEWS_Q3481254			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 news	engine	JO48_NEWS_Q3987193			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
@@ -2280,7 +2259,6 @@ news	engine	JO48_NEWS_Q6146255			FETCH_FAILED	stored nothing in the engine on th
 news	engine	JO48_NEWS_Q62571830			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 news	engine	JO48_NEWS_Q6382196			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 news	engine	JO48_NEWS_Q6395343			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
-news	engine	JO48_NEWS_Q6398798			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 news	engine	JO48_NEWS_Q6426766			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 news	engine	JO48_NEWS_Q6472166			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)
 news	engine	JO48_NEWS_Q6475499			FETCH_FAILED	stored nothing in the engine on the sweep and again on a re-run (refused, timed out, or served HTML to the engine's client)

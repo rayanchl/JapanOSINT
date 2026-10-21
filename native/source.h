@@ -164,6 +164,12 @@ typedef struct source_def {
    * client can show HOW a source is fetched and parsed without guessing from
    * the run pointer; nothing dispatches on it. */
   const char *engine;
+  /* 1 = the scheduler re-measures this row's cadence from the age of the
+   * newest item it stored (core/scheduler.c sched_freshness_measure) and uses
+   * that in place of update_interval_sec; 0 = the declared interval is the
+   * cadence. Set from hp_source.adaptive_interval by hp_register; a
+   * hand-written source may set it too. */
+  int  adaptive_interval;
 } source_def;
 
 /* The `category` vocabulary — ONE list, for both registries.

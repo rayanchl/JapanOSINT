@@ -161,6 +161,122 @@ static void test_policy_env(void) {
   assert(p.quarantine_probe_sec == 7L * 86400L);
 }
 
+/* 8. freshness: the bucket rule is the one tune_intervals.py applied at
+ *    authoring time, the base is the measured bucket only for an adaptive
+ *    row that has one, and the measurement reads the newest ISO date and
+ *    nothing that merely sits in the column. */
+static void test_freshness_bucket(void) {
+  assert(sched_freshness_bucket(-1)     == 0);        /* no date: unmeasured */
+  assert(sched_freshness_bucket(0)      == 3600);
+  assert(sched_freshness_bucket(3)      == 3600);
+  assert(sched_freshness_bucket(3.01)   == 21600);
+  assert(sched_freshness_bucket(30)     == 21600);
+  assert(sched_freshness_bucket(30.5)   == 86400);
+  assert(sched_freshness_bucket(365)    == 86400);
+  assert(sched_freshness_bucket(366)    == 604800);
+  assert(sched_freshness_bucket(4000)   == 604800);
+}
+
+static void test_freshness_base(void) {
+  sched_state st = {0};
+  assert(sched_state_base(&st, 3600, 1) == 3600);     /* unmeasured: declared */
+  st.freshness_interval = 604800;
+  assert(sched_state_base(&st, 3600, 1) == 604800);   /* adaptive: the bucket */
+  assert(sched_state_base(&st, 3600, 0) == 3600);     /* not adaptive: declared */
+  st.freshness_interval = 3600;
+  assert(sched_state_base(&st, 604800, 1) == 3600);   /* both directions */
+  /* the backoff arithmetic works from the base: a failure doubles the
+   * MEASURED cadence, and a success resets to it, not to the declared one */
+  sched_policy p = { .backoff_cap_sec = 86400, .quarantine_after = 12,
+                     .quarantine_probe_sec = 7 * 86400 };
+  st.freshness_interval = 21600; st.effective_interval = 0;
+  long base = sched_state_base(&st, 3600, 1);
+  sched_state_apply(&st, &p, base, "error", 0, 1000);
+  assert(st.effective_interval == 43200);
+  sched_state_apply(&st, &p, base, "ok", 5, 2000);
+  assert(st.effective_interval == 21600);
+  assert(sched_state_interval(&st, &p, base) == 21600);
+}
+
+static void test_freshness_measure(db_handle *db) {
+  static const char *rows[][3] = {
+    /* uid, source, published_at */
+    { "fr|1", "UNIT_FRESH_A", "2026-10-18T09:00:00Z" },   /* 2 days: hourly */
+    { "fr|2", "UNIT_FRESH_A", "2025-01-01" },
+    { "fr|3", "UNIT_FRESH_A", "1760000000" },             /* epoch: not a date */
+    { "fr|4", "UNIT_FRESH_B", "2026-09-01T00:00:00Z" },   /* 49 days: daily */
+    { "fr|5", "UNIT_FRESH_C", "Tue, 20 Oct 2026 09:00:00 GMT" }, /* RFC 822 only */
+    { "fr|6", "UNIT_FRESH_D", "2024-01-01" },             /* > 1 year: weekly */
+    { "fr|7", "UNIT_FRESH_E", "2026-10-21T09:00:00Z" },   /* tomorrow: fresh */
+  };
+  sqlite3_exec(db->h, "DELETE FROM intel_items WHERE uid LIKE 'fr|%'", 0, 0, 0);
+  for (size_t i = 0; i < sizeof rows / sizeof rows[0]; i++) {
+    sqlite3_stmt *s;
+    assert(sqlite3_prepare_v2(db->h,
+        "INSERT INTO intel_items(uid,source_id,title,published_at,fetched_at) "
+        "VALUES(?1,?2,'t',?3,'2026-10-20T10:00:00Z')", -1, &s, NULL) == SQLITE_OK);
+    sqlite3_bind_text(s, 1, rows[i][0], -1, SQLITE_STATIC);
+    sqlite3_bind_text(s, 2, rows[i][1], -1, SQLITE_STATIC);
+    sqlite3_bind_text(s, 3, rows[i][2], -1, SQLITE_STATIC);
+    assert(sqlite3_step(s) == SQLITE_DONE);
+    sqlite3_finalize(s);
+  }
+  time_t now = 1792407600;   /* 2026-10-20T10:00:00Z: 1792407600 = (2026-10-20 epoch days)*86400 + 36000 */
+  {
+    /* pin the fake clock against the real calendar rather than trusting the
+     * constant above: a wrong constant would make every assert below a
+     * statement about the wrong day */
+    struct tm tm = {0}; tm.tm_year = 126; tm.tm_mon = 9; tm.tm_mday = 20; tm.tm_hour = 10;
+    now = timegm(&tm);
+  }
+  assert(sched_freshness_measure(db, "UNIT_FRESH_A", now) == 3600);
+  assert(sched_freshness_measure(db, "UNIT_FRESH_B", now) == 86400);
+  assert(sched_freshness_measure(db, "UNIT_FRESH_C", now) == 0);      /* undated: no change */
+  assert(sched_freshness_measure(db, "UNIT_FRESH_D", now) == 604800);
+  assert(sched_freshness_measure(db, "UNIT_FRESH_E", now) == 3600);
+  assert(sched_freshness_measure(db, "UNIT_FRESH_NONE", now) == 0);
+  /* persistence: the measured bucket survives a save/load round trip, and
+   * an unmeasured one is NULL, not 0, in the table */
+  sched_state st = { .effective_interval = 21600, .freshness_interval = 21600 };
+  assert(sched_state_save(db, "UNIT_FRESH_A", &st, 3600, now) == 0);
+  sched_state back;
+  assert(sched_state_load_one(db, "UNIT_FRESH_A", &back) == 1);
+  assert(back.freshness_interval == 21600);
+  st.freshness_interval = 0;
+  assert(sched_state_save(db, "UNIT_FRESH_A", &st, 3600, now) == 0);
+  assert(sched_state_load_one(db, "UNIT_FRESH_A", &back) == 1);
+  assert(back.freshness_interval == 0);
+  sqlite3_exec(db->h, "DELETE FROM intel_items WHERE uid LIKE 'fr|%'", 0, 0, 0);
+}
+
+/* 9. the two cadence mechanisms compose in ONE order: the row's measurement
+ *    inside, the operator's system-wide policy (core/cadence.h) outside. A
+ *    floor outranks a measurement, a global outranks both, and a row that is
+ *    not adaptive gets the policy applied to its declared interval. */
+static void test_row_interval_composition(db_handle *db) {
+  const char *err = NULL;
+  cadence_init(db);
+  cadence_policy none = {0, 0, 0};
+  assert(cadence_set(db, &none, "test", &err) == 0);
+  source_def d = { .id = "UNIT_COMPOSE", .update_interval_sec = 604800, .adaptive_interval = 1 };
+  sched_state st = { .freshness_interval = 3600 };
+  assert(sched_row_interval(&st, &d) == 3600);              /* no policy: the measurement */
+  d.adaptive_interval = 0;
+  assert(sched_row_interval(&st, &d) == 604800);            /* not adaptive: declared */
+  d.adaptive_interval = 1;
+  cadence_policy floor6h = {0, 21600, 0};
+  assert(cadence_set(db, &floor6h, "test", &err) == 0);
+  assert(sched_row_interval(&st, &d) == 21600);             /* a person's floor outranks hourly */
+  st.freshness_interval = 86400;
+  assert(sched_row_interval(&st, &d) == 86400);             /* ...and lets a slower measurement stand */
+  cadence_policy global = {900, 0, 0};
+  assert(cadence_set(db, &global, "test", &err) == 0);
+  assert(sched_row_interval(&st, &d) == 900);               /* a global outranks both */
+  source_def pivot = { .id = "UNIT_PIVOT", .update_interval_sec = 0, .adaptive_interval = 1 };
+  assert(sched_row_interval(&st, &pivot) == 0);             /* an entity pivot passes through */
+  assert(cadence_set(db, &none, "test", &err) == 0);        /* leave no policy behind */
+}
+
 int main(void) {
   db_handle db = {0};
   const char *path = getenv("JO_DB");
@@ -174,6 +290,10 @@ int main(void) {
   test_persistence(&db);
   test_priority();
   test_policy_env();
+  test_freshness_bucket();
+  test_freshness_base();
+  test_freshness_measure(&db);
+  test_row_interval_composition(&db);
 
   db_close(&db);
   printf("test_sched_backoff: ok\n");

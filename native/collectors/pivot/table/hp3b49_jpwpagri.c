@@ -20906,6 +20906,63 @@ static const hp_source HP3B49_JPWPAGRI[] = {
       "Discovered from this host's own REST root (/wp/v2/types), not "
       "guessed. Post-shaped: title.rendered, date, link and "
       "content.rendered are kept." },
+  /* JO49_WP_JAHS_PAGES: restored 2026-10-21 — see the description's last sentence; the readings are in docs/rejected-sources-batch49.emit.tsv */
+  { .id = "JO49_WP_JAHS_PAGES", .name = "JAハウスサービス — pages (WordPress REST)",
+    .name_ja = "JAハウスサービス 固定ページ（WordPress REST）",
+    .category = "agriculture", .portal = "https://www.jahs.co.jp/",
+    .record_type = "site-page",
+    .tags = "\"japan\",\"wordpress\",\"pages\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.jahs.co.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc",
+    .array_path = ".",
+    .body_keys = "content.rendered",
+    .date_keys = "date",
+    .id_keys = "id",
+    .interval = 21600,
+    .link_keys = "link",
+    .page_max = 60,
+    .page_param = "page",
+    .page_start = 1,
+    .headers = { "User-Agent: Mozilla/5.0 (compatible; JapanOSINT/1.0)" },
+    .timeout_ms = 30000,
+    .title_keys = "title.rendered",
+    .description = "WordPress REST pages of JAハウスサービス (www.jahs.co.jp). Fetched "
+      "2026-10-20: the collection answered with 15 record(s) and "
+      "declares 15 in X-WP-Total. Discovered from this host's own REST "
+      "root (/wp/v2/types), not guessed. Post-shaped: title.rendered, "
+      "date, link and content.rendered are kept."
+      "Removed 2026-10-20 after two FETCH_FAILED readings; re-probed "
+      "2026-10-21: HTTP 403 (118-byte nginx page) to the engine UA and to "
+      "curl, HTTP 200 with 15 records to a browser-style UA, on every "
+      "reading — a user-agent bot wall, so the row declares its "
+      "User-Agent." },
+  /* JO49_WP_MIDORINETFUKUSHIMA_PAGES: restored 2026-10-21 — see the description's last sentence; the readings are in docs/rejected-sources-batch49.emit.tsv */
+  { .id = "JO49_WP_MIDORINETFUKUSHIMA_PAGES", .name = "www.midorinet-fukushima.jp — pages (WordPress REST)",
+    .name_ja = "www.midorinet-fukushima.jp 固定ページ（WordPress REST）",
+    .category = "agriculture", .portal = "https://www.midorinet-fukushima.jp/",
+    .record_type = "site-page",
+    .tags = "\"japan\",\"wordpress\",\"pages\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.midorinet-fukushima.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc",
+    .array_path = ".",
+    .body_keys = "content.rendered",
+    .date_keys = "date",
+    .id_keys = "id",
+    .interval = 21600,
+    .link_keys = "link",
+    .page_max = 60,
+    .page_param = "page",
+    .page_start = 1,
+    .timeout_ms = 30000,
+    .title_keys = "title.rendered",
+    .description = "WordPress REST pages of www.midorinet-fukushima.jp "
+      "(www.midorinet-fukushima.jp). Fetched 2026-10-20: the collection "
+      "answered with 67 record(s) and declares 67 in X-WP-Total. "
+      "Discovered from this host's own REST root (/wp/v2/types), not "
+      "guessed. Post-shaped: title.rendered, date, link and "
+      "content.rendered are kept."
+      "Removed 2026-10-20 after two FETCH_FAILED readings; re-probed "
+      "2026-10-21: HTTP 200, 67 records, 658,789 bytes — transient." },
 };
 
 HP_REGISTER_TABLE(HP3B49_JPWPAGRI)

@@ -116,39 +116,6 @@ static const hp_source HP3B34_FDSNEVENT[] = {
       "by the FDSN specification. Walked by the specification's own "
       "limit/offset, whose offset is 1-based." },
 
-  { .id = "JO34_FDSNEVT_EIDA_KOERI_BOUN_EDU_TR", .name = "KOERI, Bogazici University, Turkey — FDSN event catalogue",
-    .name_ja = "トルコ KOERI 地震カタログ（FDSN）",
-    .category = "surveillance", .portal = "https://eida.koeri.boun.edu.tr",
-    .record_type = "seismic-event",
-    .tags = "\"sensor\",\"seismic\",\"hazard\",\"fdsn\",\"event-catalogue\"",
-    .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
-    .url = "https://eida.koeri.boun.edu.tr/fdsnws/event/1/query?format=text&nodata=404&orderby=time&limit=1000",
-    .csv_comment = "#",
-    .csv_delim = "pipe",
-    .csv_no_header = 1,
-    .date_keys = "col1",
-    .id_keys = "col0",
-    .interval = 86400,
-    .lat_key = "col2",
-    .lon_key = "col3",
-    .page_max = 20,
-    .page_param = "offset",
-    .page_size = 1000,
-    .page_start = 1,
-    .timeout_ms = 120000,
-    .title_keys = "col12,col10",
-    .description = "MEASURED 2026-10-21: this host does NOT run event/1. "
-      "/fdsnws/event/1/version is 404 over https and http and "
-      "application.wadl is 404, while /fdsnws/station/1/version "
-      "answers 200 — KOERI serves station and waveform data, not a "
-      "catalogue, which is the batch-34 review's own rule (the FDSN "
-      "spec defines services; a node runs only some) landing on a "
-      "host the review had kept. Its station service is already "
-      "wired in hp3b34_fdsnstation.c, so there is nothing here to "
-      "re-point to: this row has no endpoint that exists. It stays "
-      "registered and files a collector-fetch-failure record naming "
-      "the 404 rather than failing silently." },
-
   { .id = "JO34_FDSNEVT_SERVICE_SCEDC_CALTECH_EDU", .name = "SCEDC, Caltech (Southern California) — FDSN event catalogue",
     .name_ja = "南カリフォルニア地震データセンター 地震カタログ（FDSN）",
     .category = "surveillance", .portal = "https://service.scedc.caltech.edu",
@@ -185,38 +152,6 @@ static const hp_source HP3B34_FDSNEVENT[] = {
       "by the FDSN specification. Walked by the specification's own "
       "limit/offset, whose offset is 1-based." },
 
-  { .id = "JO34_FDSNEVT_WS_ICGC_CAT", .name = "ICGC, Catalonia — FDSN event catalogue",
-    .name_ja = "カタルーニャ ICGC 地震カタログ（FDSN）",
-    .category = "surveillance", .portal = "https://ws.icgc.cat",
-    .record_type = "seismic-event",
-    .tags = "\"sensor\",\"seismic\",\"hazard\",\"fdsn\",\"event-catalogue\"",
-    .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ws.icgc.cat/fdsnws/event/1/query?format=text&nodata=404&orderby=time&limit=1000",
-    .csv_comment = "#",
-    .csv_delim = "pipe",
-    .csv_no_header = 1,
-    .date_keys = "col1",
-    .id_keys = "col0",
-    .interval = 86400,
-    .lat_key = "col2",
-    .lon_key = "col3",
-    .page_max = 20,
-    .page_param = "offset",
-    .page_size = 1000,
-    .page_start = 1,
-    .timeout_ms = 120000,
-    .title_keys = "col12,col10",
-    .description = "MEASURED 2026-10-21, and the earlier reading was wrong about "
-      "WHY. /fdsnws/event/1/version answers 200 (1.2.4), so the "
-      "service IS deployed; it returns 'no matching events found' "
-      "for every window asked, including starttime=1900-01-01, so "
-      "its catalogue holds nothing to serve. The original 404 was "
-      "the row's own nodata=404 doing its job — an FDSN service "
-      "answers an empty result that way, which means NO DATA MATCHED "
-      "and not NO SUCH SERVICE. Rule 1's honest empty, permanent: "
-      "ICGC's station service is already wired in "
-      "hp3b34_fdsnstation.c and its seismic catalogue is not "
-      "published through FDSN event. Registered and disclosing." },
 };
 
 HP_REGISTER_TABLE(HP3B34_FDSNEVENT)

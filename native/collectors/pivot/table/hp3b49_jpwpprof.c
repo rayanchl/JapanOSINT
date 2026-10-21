@@ -10684,6 +10684,35 @@ static const hp_source HP3B49_JPWPPROF[] = {
       "Discovered from this host's own REST root (/wp/v2/types), not "
       "guessed. Keyed on the user id with name as the title: a user "
       "record carries no date field." },
+  /* JO49_WP_HTK_PAGES: restored 2026-10-21 — see the description's last sentence; the readings are in docs/rejected-sources-batch49.emit.tsv */
+  { .id = "JO49_WP_HTK_PAGES", .name = "www.htk.or.jp — pages (WordPress REST)",
+    .name_ja = "www.htk.or.jp 固定ページ（WordPress REST）",
+    .category = "legal", .portal = "https://www.htk.or.jp/",
+    .record_type = "site-page",
+    .tags = "\"japan\",\"wordpress\",\"pages\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.htk.or.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc",
+    .array_path = ".",
+    .body_keys = "content.rendered",
+    .date_keys = "date",
+    .id_keys = "id",
+    .interval = 21600,
+    .link_keys = "link",
+    .page_max = 60,
+    .page_param = "page",
+    .page_start = 1,
+    .timeout_ms = 30000,
+    .title_keys = "title.rendered",
+    .description = "WordPress REST pages of www.htk.or.jp (www.htk.or.jp). Fetched "
+      "2026-10-20: the collection answered with 55 record(s) and "
+      "declares 55 in X-WP-Total. Discovered from this host's own REST "
+      "root (/wp/v2/types), not guessed. Post-shaped: title.rendered, "
+      "date, link and content.rendered are kept."
+      "Removed 2026-10-20 after two FETCH_FAILED readings (the host reset "
+      "the connection); re-probed 2026-10-21: HTTP 200, 55 records, "
+      "584,372 bytes — the host answers intermittently, and a reset run "
+      "files a collector-fetch-failure notice rather than a quiet "
+      "nothing." },
 };
 
 HP_REGISTER_TABLE(HP3B49_JPWPPROF)

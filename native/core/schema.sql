@@ -1056,7 +1056,11 @@ CREATE TABLE IF NOT EXISTS source_sched_state (
   quarantined          INTEGER NOT NULL DEFAULT 0,
   quarantined_at       INTEGER,
   last_probe           INTEGER,
-  updated_at           INTEGER);
+  updated_at           INTEGER,
+  -- the cadence an adaptive row re-measured from its newest stored item
+  -- (core/scheduler.c); NULL = the declared interval stands. db.c adds it to
+  -- a database created before it existed.
+  freshness_interval   INTEGER);
 -- GET /api/sources/:id/summary — the small-model description of one source,
 -- cached by (source, a fingerprint of the facts it was shown, the model). A
 -- row is a GENERATED summary; the route never stores a failure here, it

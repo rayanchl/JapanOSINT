@@ -39,7 +39,18 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 56,955** (2026-10-21): main's 53,739, less six
+**The registered count is 57,415** (2026-10-21): 57,409 plus the six batch-49 rows
+the next-day retry pass restored (below). 57,409 was main's 56,955 (below) plus
+this branch's 453 on the same base — the 491 rows the User-Agent header
+recovered from bot walls, less 19 of them whose feed main's batch 50 reads
+(merged first, so its rows stay) and one whose domain the takeover scan below
+caught (`bnm.mg`, casino spam under Madagascar's standards bureau — the other
+490 were clean), plus `PLOS_CORPUS`, less the 19 rows batches 34 and 35 lost to
+their first measurement — then plus one, the ods147 pair that replaced a
+misnamed row (the ELIA paragraph under "Cadence policy"). The ledger has both
+sessions' days.
+
+**The count was 56,955** (2026-10-21): main's 53,739, less six
 `jp_feeds_batch43/44` feeds measured dead, less 25 rows of batches 44/47/48
 whose official domains now publish gambling spam (below), plus **batch 50's
 3,247 government and institutional RSS/Atom feeds** for Japan, the US, the UK,
@@ -68,7 +79,8 @@ because main's 45, 47, 48 and 49 all landed first. Details: `docs/SOURCE_COUNT_L
 
 **The registered count was 53,739** (2026-10-20): batch 49's 5,393 measured rows
 (`docs/verified-sources-batch49.tsv`,
-`native/collectors/OSINT_SOURCES_BATCH_49_JPWPFEDERATIONS.md`) on 48,346.
+`native/collectors/OSINT_SOURCES_BATCH_49_JPWPFEDERATIONS.md`) on 48,346 — 5,393
+on 2026-10-20 and six restored by the next-day retry pass.
 **Batch 49 is batch 45's staging set registered** — the WordPress collections of
 the member organisations of Japan's nationwide federations (medical and
 pharmacist associations, JA, chambers of commerce, 法人会, co-ops, JC, the 士業
@@ -78,7 +90,16 @@ REST root; eleven beats named after the federation that listed the host.
 5,405 rows were generated and the engine decided: 5,371 OK on the first pass,
 28 given a second reading of which 16 recovered, 12 removed
 (`docs/rejected-sources-batch49.emit.tsv`); 518,813 emitted / 518,827 stored
-over one pass. Their declared interval is 21600 as data; the cadence that runs
+over one pass. **The next-day look at the 12 restored six** (749 / 749): three
+were transient, two hosts are user-agent bot walls — and `newspromotion.jp`
+resets the HTTP/2 stream for **any User-Agent containing the word
+`collector`**, which `JO_USER_AGENT` does ("feed collector"), so what the
+engine logged as a transport error was a refusal. A transport failure that
+reproduces only with one header is a bot wall; `header1=User-Agent: Mozilla/5.0
+(compatible; JapanOSINT/1.0)` is the remedy, URL-free because `lint-sources`
+reads a URL inside a header as an endpoint. The six that stay out are a
+disabled REST API (401 `rest_disabled`), a disabled route (404) and two
+collections that hold nothing. Their declared interval is 21600 as data; the cadence that runs
 is the system-wide policy (see "Cadence policy" below).
 
 **The registered count was 48,346** (2026-10-19; 48,343 plus the three
@@ -97,7 +118,7 @@ manifests, TSVs, docs and collector keys — exactly as the batch-41 note below
 predicts. The count ledger — every
 batch from 37 to 48, main's 45 included, what seeded it, what it measured and what it taught — is
 `docs/SOURCE_COUNT_LEDGER.md`; this file keeps the rules and the current number.
-Both floors are re-recorded at 48,343 and `make source-count` agrees. The
+Both floors are re-recorded at 57,408 and `make source-count` agrees. The
 lessons from batches 43–48 that a new batch must not relearn:
 
 * **A registration count is not a website, and a build is not a registry.**
@@ -113,6 +134,16 @@ lessons from batches 43–48 that a new batch must not relearn:
   fails twice leaves — and a retry pass a day later recovers a few: 63 of the
   2,724 rows batches 44–46 dropped were alive on 2026-10-19 and are back in
   their beats. Never rebuild the binary while an audit runs.
+  **And a 403 is usually a wall against the default User-Agent, not against
+  us** (2026-10-20): of the 523 dropped rows that had answered 403 to the
+  engine's client, 495 answered the probe and **491 store their feed in the
+  engine** — 11,159 emitted, 11,159 stored — under a declared
+  `header1=User-Agent: Mozilla/5.0 (compatible\; JapanOSINT/1.0\; +https://github.com/rayanchl/JapanOSINT)`:
+  the same identified client with the browser-compatible prefix the walls
+  key on, nothing hidden. They are back in their beats (86 UK, 328 FR, 58 IT,
+  8 Wikidata, 4 IGO, 7 press) WITH the header on the row, so the condition a
+  row was proven under is the one it runs under; the four that refused twice
+  stay out. Try the header before calling a 403 dead.
 * **A URL changed after validation is unvalidated** (an unescaped `&amp;`
   made Joomla serve Atom where rows declared RSS), **a well-formed feed with
   zero items is `EMPTY_RESULTSET`**, **a substring count of `<item` counts the
@@ -127,7 +158,24 @@ lessons from batches 43–48 that a new batch must not relearn:
   whitespace-normalised and pipe-free; a URL carrying a credential is dropped.
 * **The interval follows the measured freshness** of each feed (newest item
   within 3 days → hourly, 30 days → 6 h, a year → daily, else weekly); the
-  press stays hourly.
+  press stays hourly. **And the scheduler re-measures it** (2026-10-20): the
+  four feed batches carry `adaptive_interval=1` (`hpengine.h`, through
+  `source_def`), and after every run that WORKED `core/scheduler.c` re-reads
+  the newest ISO `published_at` the row has stored and re-buckets it by the
+  same rule (`sched_freshness_measure`, persisted as
+  `source_sched_state.freshness_interval`, and what the row's
+  `effective_interval` then shows). Both directions, bounded by the buckets:
+  a parish council that goes quiet drifts to weekly, one that wakes before an
+  election is hourly on its next run. An undated feed keeps its declared
+  weekly (no evidence, no change) and a refused fetch changes nothing (a 403
+  says nothing about how often the upstream publishes). It is opt-in because
+  a row's author may have set a cadence the item dates cannot see — a
+  forecast feed, a window the row exists to be fresh for.
+  `tools/tune_intervals.py` is the authoring-time half of the same rule and
+  marks the rows it tunes; `test_sched_backoff.c` pins the bucket, the base
+  and the measurement. The operator's system-wide cadence policy (the
+  "Cadence policy" section) applies ON TOP of this measurement, never under
+  it: `sched_row_interval()` is the one composition.
 
 **Batch 45's method is worth more than its 619 rows.** Every `.jp` host a
 registered row already fetched was asked whether it also runs WordPress REST —
@@ -158,8 +206,10 @@ from it, so it stays unprobed.
 **Batch numbers 34 and 35 each hold beats from TWO sessions, and the
 `verified-sources-batch3{4,5}.tsv` files describe only one of them.** Batch 34
 is `ndjson` (1 row, measured) plus `ckanbulk`/`fdsnstation`/`fdsnevent`/
-`socratacat` (139 rows, unverified); batch 35 is `strings` (4 rows, measured)
-plus `jpweko` (100 rows, unverified). Nothing collides — the beat names keep
+`socratacat` (122 rows, measured 2026-10-20 — see below); batch 35 is `strings`
+(4 rows, measured) plus `jpweko` (98 rows, measured 2026-10-20). Since that
+day the per-batch TSVs cover every beat of the number, each row saying which
+measurement it carries. Nothing collides — the beat names keep
 every file, id and table symbol distinct — but a per-batch TSV or note is no
 longer a statement about the whole number, so read the BEAT, not the batch.
 This is the same hazard the paragraph below is about, hit a second time by the
@@ -185,122 +235,68 @@ merged under first, and so to **batch 37** (`docs/batch37/STAGING_README.md`,
 unprobed). Before picking `<N>`:
 `git ls-tree -r --name-only origin/main | grep -oE '(batch|hp3b)[0-9]+' | sort -u`.
 
-**Batches 34 and 35 were authored unverified and are now MEASURED
-(2026-10-20): `docs/emit-sources-batch34-35.tsv`.** They were written
-2026-10-04 in a session whose network policy allowed only Anthropic APIs,
-package registries and GitHub, so nothing was fetched; both were then built to
-be as close to provable as an unprobed batch can be — **every host proven live
-by a different row already in the tree**, every path, parameter set, paging rule
-and envelope fixed by a specification or copied from a row that passed the emit
-audit — and both got manifests, so the emit tools pointed straight at them.
+**Batches 34 and 35 were authored unfetched (2026-10-04, a session whose
+network policy allowed only Anthropic APIs, package registries and GitHub) and
+MEASURED on 2026-10-20** — probe with `--check-filter`, the registry sweep for
+the scheduled rows, `audit_batch_emit.py` with the manifest for the pivots, one
+re-run of each `FETCH_FAILED`. `docs/verified-sources-batch3{4,5}.tsv` now
+carry every beat of both numbers, one reading per row;
+`docs/rejected-sources-batch3{4,5}.tsv` the rows that left.
 
-All 244 rows were run through the real binary, each failure re-run once:
-**179 OK, 266,390 records emitted**, 42 `EMPTY_UPSTREAM` (the honest empty of
-rule 1 — the endpoint answered and held nothing for that entity), 22 failing
-twice. Three lessons, in order of how much they generalise:
+* **Batch 34: 139 → 122 rows** (`hp3b34_{ckanbulk,fdsnstation,fdsnevent,socratacat}.c`,
+  `native/collectors/OSINT_SOURCES_BATCH_34_SPEC_FAMILIES.md`). Rule 4d
+  held: 0 `FILTER_IGNORED` across the 24 Socrata pivots. Removed: the three
+  FDSN `event/1` rows whose node does not run that service (the batch's own
+  review warned of the shape), and 14 CKAN portals that refused twice. **The
+  three COLLISION verdicts were skips**: `current_package_list_with_resources`
+  orders by `metadata_modified desc` with no sort parameter, so an edit during
+  the walk shifts every later page. All 81 surviving CKAN rows read
+  `package_search?sort=id+asc&rows=100` with `page_resume=1` now, re-measured
+  the same day: Zürich 942 / 942 (was 942 / 926), govdata's 169,254 datasets
+  over a cycle instead of its first 2,000 forever.
+* **Batch 35: 100 → 98 rows** (`hp3b35_jpweko.c`,
+  `native/collectors/OSINT_SOURCES_BATCH_35_JPWEKO.md`): 0 `FILTER_IGNORED`;
+  59 store records for the probe entity, 39 answer an honest empty for it,
+  two repositories answered 5xx twice and left. JAIRO Cloud's shared hosting
+  answers a burst with 5xx — the probe at twelve saw twelve, the engine at six
+  saw five — the reason the probe now paces per host.
 
-* **"A row that fails twice leaves" would have deleted three national
-  catalogues — they are re-pointed instead, and now work.**
-  `current_package_list_with_resources` is an expensive bulk action a large
-  CKAN portal disables (403) or never exposes (404) while `package_search` on
-  the same host is served: `data.gov.uk` holds **59,370** datasets,
-  `admin.opendata.az` 2,017, `data.gov.il` 1,203 — 62,590 behind a verdict that
-  read as dead. **An HTTP status is a reading about one REQUEST, not about a
-  host**, so ask the host a second question before believing it is gone.
+Three things this branch measured on 2026-10-21 that the readings above predate:
 
-  All three were re-pointed on 2026-10-21 after measuring that the replacement
-  answers the same question, not merely that it answers: `result.count`, the
-  **resources inline** (url/format/size/name per file — the whole purpose of
-  these rows, and the thing a careless re-point would silently drop), `rows`,
-  `start` and `sort=id asc` all honoured, the same start stable across requests
-  and consecutive pages disjoint. The original rows' own note that
-  package_search "answers a query with dataset summaries" was an assumption and
-  is measurably false.
-
-  **And check what a whole-catalogue row duplicates before adding one**: the
-  tree already held 18 per-organization package_search rows for data.gov.uk and
-  19 for data.gov.il. Those are not the catalogue — data.gov.uk publishes
-  **1,044 organizations**, so its org rows reach under 2% of its publishers,
-  and 42 of Israel's 61 have no row at all. The gap is what makes the
-  re-pointed row worth having; the count that settles it is
-  `organization_list`.
-
-  **The other 19 were then taken one at a time too (2026-10-21), and only one
-  more could be made to work.** Six are a single `ogopendata.com` 502 inside
-  the same minutes, so the host was never shown dead; four are transport
-  failures from this container alone; one is a 500. Of the eight that were
-  individually diagnosed, each answer is a different KIND of dead and only the
-  first is a row defect:
-  * **NOA** — a mis-queried live service; fixed, 0 → 1,985 events (above).
-  * **`ckan.publishing.service.gov.uk`** — `package_search` works and reports
-    **59,371** datasets, which is `data.gov.uk`'s 59,370 the same hour: this
-    host IS that catalogue's CKAN backend. Making it work would fetch 59k
-    identical datasets twice a day, so it is deliberately NOT re-pointed.
-    **A row that can be made to work and should not be is still a finding** —
-    dropping one of the two is the end state, and that is a human's call.
-  * **`catalog.data.gov`** — the whole CKAN Action API is gone (package_search,
-    package_list and the legacy `/api/action/` path all 404). Not an action a
-    portal disabled; a platform the row was written for. Reaching it again is
-    new work, not a repair.
-  * **`catalogue.data.govt.nz`** — a bot wall answering **200** with an Imperva
-    "Pardon Our Interruption" page, with a browser User-Agent as much as ours.
-    That is why the emit audit said UNPARSEABLE: a 200 whose body is a
-    challenge. No declarative row can answer a JS challenge.
-  * **`data.go.th`** 403 on both actions, **`datosabiertos.gob.pe`** 418 then
-    404 with no API at that address, **ICGC** and **KOERI** as above.
-* **An FDSN `nodata=404` means NO DATA MATCHED, not NO SUCH SERVICE — and a
-  400 can mean the query was too broad.** This correction is the useful part.
-  On 2026-10-20 three kept event catalogues answered 400/404/404 and were
-  written up as "the node does not run `event/1`", which was the batch-34
-  review's own rule (the spec defines services; a node runs only some) applied
-  to a reading that did not support it. **The status came from the row's own
-  `nodata=404` parameter and from an unbounded query**, not from a missing
-  service. The test that settles it is `/fdsnws/<service>/1/version`, and on
-  2026-10-21 it gave three different answers:
-  * **NOA serves it** (version 1.2.4) and REFUSES an unbounded query with 400.
-    A rolling 30-day window — `starttime={date:%Y-%m-%d:-30}`, never a frozen
-    date — takes it from 0 records to **1,985 events**, `stored == emitted`,
-    three requests, the trailing 404 being `nodata=404` reporting the end of
-    data after a short page. One of the three was simply mis-queried.
-  * **ICGC serves it** (version 1.2.4) and answers "no matching events found"
-    for every window including `starttime=1900-01-01`: deployed, and holding
-    nothing. Rule 1's honest empty, permanently.
-  * **KOERI does not** — 404 on `version` over https and http and on
-    `application.wadl` — while `station/1/version` answers 200.
-
-  So the original rule was right and its application was 1-for-3. Both ICGC's
-  and KOERI's station services were already wired in `hp3b34_fdsnstation.c`,
-  so neither event row has anywhere to be re-pointed; they stay registered and
-  disclose. **Ask the `version` endpoint before concluding a service is
-  absent**, and read a status against the parameters the row itself sent.
-* **The copied keys reached, and are still not verified.** Batch 35's 61 live
-  WEKO pivots prove the endpoint and key set carried over from batch 25 produce
-  records. They prove nothing about identity: this audit reads EMITTED, and a
-  rule-4b collision is invisible to it. Its 1,204 records are also one
-  entity's worth per repository, not a corpus size — they move with the
-  question, as a pivot's counts do.
-
-Nothing was removed on this reading: the removals are ~8 rows rather than 22,
-and that moves the registry count and both floors.
-
-* **Batch 34, 139 rows** (`hp3b34_{ckanbulk,fdsnstation,fdsnevent,socratacat}.c`):
-  95 CKAN `current_package_list_with_resources`, 15 FDSN `station/1`
-  inventories, 5 FDSN `event/1` catalogues, 24 Socrata Discovery pivots.
-  `native/collectors/OSINT_SOURCES_BATCH_34_SPEC_FAMILIES.md`.
-* **Batch 35, 100 rows** (`hp3b35_jpweko.c`): WEKO3 `/api/records/?q=` entity
-  pivots on the 100 largest JAIRO Cloud repositories that were wired for OAI
-  harvesting but could not be ASKED about an entity — endpoint and keys copied
-  from batch 25, which ran them through the emit audit and `--check-filter`.
-
-What is still unrun on them — the emit audit above answers neither question:
-
-```sh
-# rule 4b: do the 179 OK rows STORE what they emit, or key onto each other?
-python3 native/tools/audit_registry_emit.py --bin ./bin/japanosint \
-        --match '^JO3[45]_' --jobs 6 --timeout 220 --out sweep3435.tsv
-# rule 4d: does each pivot's filter actually filter? (doubles the requests)
-python3 native/tools/probe_hp_batch.py docs/candidate-sources-batch3{4,5}.*.txt --check-filter
-```
+* **A `page_max` of 20 on every surviving CKAN row reads 2,000 datasets a run
+  and cycles, and 14 of them do not need to.** `package_search?rows=0` answers
+  `result.count` on the same endpoint those rows now read, so the pages each
+  needs is arithmetic: 19 portals measured, **792,984 datasets**, 14 needing
+  ≤200 pages and now completing in ONE run (opendata.nhsbsa 2,166, Berlin
+  2,627, Aragón 2,425, data.ca.gov 4,675 — each its declared total exactly,
+  `stored == emitted`), 5 keeping the cycle at a 200-page cost ceiling
+  (Hamburg 246,666, geoscience QLD 192,703, govdata.de 169,142). `page_resume`
+  stays on all of them: a walk that completes stores no position, so it is a
+  genuine no-op. `docs/measured-page-ceilings-batch34-2026-10-21.tsv`.
+* **A `page_max` set to EXACTLY the pages the total needs manufactures a FALSE
+  truncation notice.** data.ca.gov at `page_max = 47` stored all 4,675 records
+  *and* filed "the page ceiling or a cancel stopped the walk" with
+  `more_pages_pending: true`: its last page was short (75 of 100, the
+  upstream's own end of data) and our ceiling bit in the same breath, which the
+  engine cannot distinguish. At 52 the same 4,675 arrive with no notice. Leave
+  headroom — a notice that fires when nothing was lost teaches a reader to
+  ignore notices, and that is the one thing rule 2's disclosures cannot afford.
+* **NOA was removed as "does not run event/1" and it does.** An FDSN
+  `nodata=404` means NO DATA MATCHED, not NO SUCH SERVICE, and that parameter
+  is in the row's own URL; a 400 can mean the query was too broad. The test is
+  `/fdsnws/<service>/1/version`: NOA answers **1.2.4** and refuses an unbounded
+  query with 400, so a rolling 30-day window — `starttime={date:%Y-%m-%d:-30}`,
+  never a frozen date — stores **1,985 events** where the row stored nothing.
+  The row is back. KOERI really has no event service (404 on `version` over
+  https and http and on `application.wadl`, while `station/1/version` is 200)
+  and ICGC's is deployed but answers "no matching events found" for every
+  window including `starttime=1900-01-01`; both stay removed, and both hosts'
+  station services were already wired. **Ask the `version` endpoint before
+  concluding a service is absent**, and read a status against the parameters
+  the row itself sent. The two surviving catalogues were also still
+  `orderby=time` (FDSN's newest-first) at `page_max = 20`: ETHZ is `time-asc`
+  at 52 now and stores **46,620 events**, exactly the count an offset bisection
+  predicted, and SCEDC cycles ascending.
 
 **21 of the 179 stopped dead on the ceiling, and all 21 are now measured and
 fixed** (2026-10-21, `docs/measured-page-ceilings-batch34-2026-10-21.tsv`): 19
@@ -993,6 +989,19 @@ window, search-only and quarantine holds), and re-plans on a change without a
 restart: a row whose next due time is further away than its new interval is
 pulled in to now + interval. Entity pivots (interval 0) are never touched.
 
+**It composes with the adaptive interval in ONE order** (the two met in a
+merge on 2026-10-20, each written without knowing the other existed):
+`sched_row_interval()` in `core/scheduler.c` is
+`cadence_apply(sched_state_base(...))` — the row's own measurement inside,
+the operator's policy outside. A feed whose items say "hourly" runs hourly
+under no policy, six-hourly under an operator floor of six hours, and at the
+global cadence when one is set; a person's floor outranks a measurement, a
+global outranks both, and the measurement is still taken and stored so the
+page can say "measured hourly, held at 6 h by policy". Every site the
+scheduler reads a row's interval goes through that one function; the source
+pages show `declaredInterval`, `measuredInterval`, `policyInterval` and
+`effectiveInterval` side by side; `test_sched_backoff.c` pins the order.
+
 What a choice costs is in the response, measured over the registry, not
 guessed: `estimate.runs_per_day_declared` against
 `estimate.runs_per_day_effective`. Measured 2026-10-20 on 19,954 scheduled
@@ -1107,7 +1116,13 @@ says why.
 | tool | what it enforces |
 | --- | --- |
 | `tools/manifest.py` | THE manifest parser — line split, field count, and `opts` resolution — imported by every tool below. It is one file because it used to be seven, and they disagreed: see rule 4c |
-| `tools/probe_hp_batch.py` | proof of life: 2xx, parses in its declared mode, ≥1 real record. Honours each row's own headers, handles JSON/CSV/XML/HTML, rejects empty result sets, HTTP-200 refusals, one-element error arrays and bot-wall challenge pages. A **declared `array_path` is resolved and judged** — it used to hunt for the densest array and once counted a response's own 252-key *schema block* as records, passing a row whose result set was empty. **`--check-filter`** additionally asks each pivot row about an IMPOSSIBLE entity and fails it `FILTER_IGNORED` when the answer is the same size — see rule 4d. Both answers are judged by the same counter (XML/CSV/HTML/xlsx/`array_path` aware); a comparison that could not be made is `FILTER_UNCHECKED`, never PASS. It waits each row's own `timeout_ms`, renders `{date:}` tokens and matches keys case-insensitively, as the engine does |
+| `tools/probe_hp_batch.py` | proof of life: 2xx, parses in its declared mode, ≥1 real record. Honours each row's own headers, handles JSON/CSV/XML/HTML, rejects empty result sets, HTTP-200 refusals, one-element error arrays and bot-wall challenge pages. A **declared `array_path` is resolved and judged** — it used to hunt for the densest array and once counted a response's own 252-key *schema block* as records, passing a row whose result set was empty. **`--check-filter`** additionally asks each pivot row about an IMPOSSIBLE entity and fails it `FILTER_IGNORED` when the answer is the same size — see rule 4d. Both answers are judged by the same counter (XML/CSV/HTML/xlsx/`array_path` aware); a comparison that could not be made is `FILTER_UNCHECKED`, never PASS. It waits each row's own `timeout_ms`, renders `{date:}` tokens and matches keys case-insensitively, as the engine does. **Paced per host** (2026-10-20, `--host-gap-ms`, default 1000): one request per host per gap across all workers, a 429 or `Retry-After` widening that host's gap for the rest of the run — the probe used to put every worker on one shared host at once and then report ITS OWN burst (502s, 403s) as the row's verdict. Rows on distinct hosts are not slowed |
+| `tools/tune_intervals.py` | the authoring-time interval rule (newest item ≤3 d → hourly, ≤30 d → 6 h, ≤1 y → daily, else weekly), applied from the `newest <date>` each feed row's description records, and `adaptive_interval=1` so the scheduler keeps re-measuring it |
+| `tools/feed_batch_tsv.py` | assembles `docs/verified-sources-batch<N>.tsv` (the probe's AND the engine's reading per shipped row) and `docs/rejected-sources-batch<N>.tsv` (every candidate that did not ship, by stage) from a feed batch's per-beat artefacts |
+| `tools/feed_collision_check.py` | measures a feed row's COLLISION verdict against the feed itself — distinct keys, repeated keys, byte-identical surplus — so a collision is read as the upstream's own duplicate or as a wrong key, never guessed (rule 4b) |
+| `tools/feed_reclassify.py` | re-fetches rows whose URL changed after validation and rewrites kind/opts/description from what the server serves NOW (the `&amp;` lesson) |
+| `tools/manifest_repair_rows.py` | re-joins manifest rows a multi-line field split, and names the ones still malformed |
+| `tools/discover_feeds.py`, `tools/build_feed_manifest.py`, `tools/wd_harvest.py` | the discovery half of batches 43–48: a register of official domains (or a Wikidata class per country) → each root fetched once → declared/linked feeds validated live and written as manifest rows |
 | `tools/batch_exclusions.py` | no duplicate id or endpoint against the existing tree or within the batch (normalising `{q}` and `%s` to one form; `.portal` is documentation and is excluded). Sees **runtime-composed** endpoints too — it resolves string macros, joins adjacent literals, follows `#include "*.inc"`, and matches a `%s` URL family on its layer/dataset NAME. Pass **`--bin ./bin/japanosint`**: without it the id set is a regex approximation (4,754 of 13,193) and it says so |
 | `tools/audit_batch_pagination.py` | a paged endpoint declares `page_param` or `next_path` — read from the parsed opts, not as a substring of the whole field |
 | `tools/audit_batch_reachable.py` | rule 3 above. A row whose opts are ambiguous is reported UNVERIFIABLE, never "never runs" |
@@ -1435,6 +1450,18 @@ Engine subtleties worth knowing before writing a row:
   the one copy of that decision. The 322 batch-16/17 rows moved onto hpengine for
   their detail hops (`collectors/gen_detail_hop_upgrade.py`) carry it so they
   did not trade their later pages for the second hop.
+* **`page_walk` moves only a cursor whose page-size sibling it KNOWS**
+  (`PAGERS` in `lib/jsonlist.c`: `rows`/`start`, `limit`/`offset`,
+  `per_page`/`page` …). `count`/`start` — the GOV.UK Search API's pair, also
+  J-STAGE's and CiNii's, with WFS 2.0's `startIndex` as the alternate — was
+  not in it until 2026-10-20, so six GOV.UK rows declaring `page_walk=1` AND
+  `page_resume=1` read ONE page of three records a run, and cycled nothing,
+  because a one-page walk "completes". The ceiling audit had said so
+  (`pages_read 1` against `pages_needed 44,885` for the employment-tribunal
+  row) and it read as a row waiting for its cycle. Measured after:
+  `uk-govuk-search-cma-cases` resumes at `start=60`, then `start=120`; the
+  six are at `count=100` with an ascending sort now. **A walk that reads
+  exactly one page of a declared size deserves one look at that table.**
 * **The page ceiling is one number with one knob: `jo_page_max()`, 20, under
   `$JO_PAGE_MAX`** (`lib/pagewalk.c`). It was three, with two numbers and two
   knobs, one of which did not exist — `pagewalk.c` 20/`$JO_PAGE_MAX`,
@@ -1503,14 +1530,59 @@ Engine subtleties worth knowing before writing a row:
   stored position whose HOST is not the row's own — a reading position moves us
   through a collection, never to another server.
 
-  **Two things a cycle does not fix, so they were left alone.** Five ELIA grid
-  rows run every 900–3,600 s over millions of quarter-hourly points: a cycle
-  would blind them to the current grid for days, and a date window is the right
-  shape. Two GOV.UK report searches are the same cadence and fell under the
-  same rule. And `PLOS_RECENT` — 417,719 records against a 20-page ceiling —
+  **Two things a cycle does not fix, and what each got instead (2026-10-20).**
+  Five ELIA grid rows ran every 900–3,600 s over millions of quarter-hourly
+  points, where a cycle would blind them to the current grid for days: four
+  now carry a **date window** sized on their MEASURED publication lag
+  (`where=datetime>=now(days=-5)` for wind, whose newest record was 41 hours
+  old when read; 48 hours for asset loading, published ~14 hours behind in
+  ~6,000-record days; three days for recent generation and for the system
+  imbalance) with `order_by=datetime desc`, 100 a page and a `page_max` that
+  holds the window. Engine readings the same day: asset loading 7,003 / 7,003
+  in its 48 hours, recent generation 2,115 / 2,115 in its three days; the wind
+  and imbalance windows were validated by direct reads (2,068,300 total and
+  212 in-window records respectively) because opendata.elia.be refused the
+  engine's two attempts from the measuring environment, as it refused nine
+  requests in ten all day — a reading of that path, not of the rows. One of
+  the five was not truncated at all: **`ods045` ENDED
+  in May 2024** (newest record 2024-05-21, total unchanged between audits) and
+  the row had re-read its first 150 points of 2019 every 15 minutes for 17
+  months — it reads the successor `ods134` now, 212 records in its three-day
+  window, measured. The fifth, `ods147`, was not the dataset its row said it
+  was (2026-10-21): the row called it a renewable intraday forecast; its own
+  metadata — the first answer the host gave in two days — titles it "System
+  imbalance forecast next quarter hour (near real-time)", one record a
+  MINUTE since 2023-10-06 (1,437 in the last day, 1,576,655 in all), time
+  field `predictiontimeutc`, which is why `datetime` was "Unknown field".
+  It is now the deliberate pair `ELIA_SI_FORECAST_NEXT_QH` (the last six
+  hours newest first, every 15 minutes: 359 of 359 stored across four pages)
+  and `ELIA_SI_FORECAST_NEXT_QH_HISTORY`, the whole series — and because the
+  records endpoint caps `offset` at 10,000, an offset walk could never reach
+  past the first 10,000 of 1.58 million, so the history row is a **keyset
+  cursor**: `order_by=predictiontimeutc asc` with
+  `next_path=results.$last.predictiontimeutc` spent through a `next_tmpl`
+  whose `where=predictiontimeutc>date'{v}'` asks for everything strictly
+  after the last record (the Go-module-index shape), 100 pages an hour under
+  `page_resume=1`. Measured: 10,000 of 10,000 in 77 s, 2023-10-06T12:57 to
+  2023-10-13T11:36, the resume URL stored; the second run resumed from that
+  URL and stored the next 10,000 (to 2023-10-20T10:32) — 20,000 distinct
+  rows over two runs against one database, no overlap, 72 s each. About a
+  week per cycle against 1,440 new records a day. The
+  `/exports/csv` route (the whole dataset as one ~210 MB stream, read to three
+  rows) is the other complete read; the cursor was chosen because a cut walk
+  resumes where it stopped and a cut export starts over. **A row's name is a
+  claim about its dataset too — read the metadata endpoint once**, and
+  **before windowing a row, read its newest record: a frozen series looks
+  exactly like a truncated one from the count alone.** The two GOV.UK report
+  searches (MAIB, RAIB) were not a window problem but the `count`/`start`
+  pager above: at `count=100` each reads its whole register in 12 / 7 pages.
+  And `PLOS_RECENT` — 417,719 records against a 20-page ceiling —
   deliberately does NOT cycle: its name, tags and `publication_date desc` sort
-  all say recency is the point, and a cycle would cost it exactly that. The
-  whole PLOS corpus wants a second row with an ascending sort.
+  all say recency is the point, and a cycle would cost it exactly that.
+  `PLOS_CORPUS` is the second row that note asked for: the same query with
+  `publication_date asc,id asc` and `page_resume`, 418,125 articles over a
+  daily cycle (2,000 a run, resuming at `start=2000`, then `start=4000` —
+  measured).
 
   **A descending sort and a cycle do not compose, and the fix is the sort.**
   New items land at the HEAD of a newest-first collection, so every page
