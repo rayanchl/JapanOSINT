@@ -762,14 +762,6 @@ RSSX(jp_b43_filmaga_filmarks_com, "jp-b43-filmaga-filmarks-com",
      3600,
      "Filmaga (FILMAGA) — film")
 
-RSSX(jp_b43_game_i_daa_jp, "jp-b43-game-i-daa-jp",
-     "Game-i", "ゲームi",
-     "jp_webmedia", "media",
-     "https://game-i.daa.jp/feed",
-     "ja", "[\"news\",\"publisher:Game-i\",\"gaming\"]",
-     3600,
-     "Game-i (ゲームi) — game")
-
 RSSX(jp_b43_hon_hikidashi_jp, "jp-b43-hon-hikidashi-jp",
      "Hon Hikidashi", "ほんのひきだし",
      "jp_webmedia", "media",
@@ -1249,14 +1241,6 @@ RSSX(jp_b43_oggi_jp, "jp-b43-oggi-jp",
      "ja", "[\"news\",\"publisher:Oggi\",\"fashion\"]",
      3600,
      "Oggi — fashion")
-
-RSSX(jp_b43_peco_japan_com, "jp-b43-peco-japan-com",
-     "PECO", "PECO",
-     "jp_webmedia", "lifestyle",
-     "https://peco-japan.com/feed/",
-     "ja", "[\"news\",\"publisher:PECO\",\"pets\"]",
-     3600,
-     "PECO — pets")
 
 RSSX(jp_b43_psnews_jp, "jp-b43-psnews-jp",
      "PS News Dog", "PS保険ニュース 犬",

@@ -39,7 +39,34 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 53,739** (2026-10-20): batch 49's 5,393 measured rows
+**The registered count is 56,955** (2026-10-21): main's 53,739, less six
+`jp_feeds_batch43/44` feeds measured dead, less 25 rows of batches 44/47/48
+whose official domains now publish gambling spam (below), plus **batch 50's
+3,247 government and institutional RSS/Atom feeds** for Japan, the US, the UK,
+France and China (`collectors/sources/{jp,us,uk,fr,cn,intl}_feeds_batch50.c`,
+`docs/verified-sources-batch50.tsv`, 3,237 OK on the emit sweep, 54,800 emitted
+/ 54,802 stored). Authored as batch 45 and renumbered twice at merge time — to 49, then 50 —
+because main's 45, 47, 48 and 49 all landed first. Details: `docs/SOURCE_COUNT_LEDGER.md`.
+
+* **An official domain is not forever, and no record count can see it lapse.**
+  Wikidata's `P856` official website — and any register like it — lists the
+  domain a body USED to hold. Scanning the ITEM TITLES of 2,729 autodiscovered
+  feeds found 27 that serve Vietnamese/Indonesian betting, crypto-casino or
+  pharma spam under a city's name (Hudson, Madison, South Houston, Yokohama's
+  `kaikou.yokohama`…), and the same scan over main's batches 44/47/48 found 25
+  more, including a hacked `pinelandtx.gov` and `ffc.gov.pk`. Every one passed
+  probe AND emit with healthy numbers. Page titles are not enough — South
+  Houston's homepage title was its own name while its feed was slot spam. Scan
+  item titles for gambling vocabulary and for a script the source has no reason
+  to publish in, then read the hits: "cialis" is inside "Commercialisti" and
+  "casino" inside "Liceo Pascasino". Removals and their evidence:
+  `docs/removed-sources-2026-10-20-takeovers.tsv`.
+* **Ask the homepage for its feeds.** Probing `/rss/`, `/feed/` on Japanese
+  government hosts found 27 feeds; reading each official homepage's own
+  `<link rel="alternate" type="application/rss+xml">` found 961 — the batch-42
+  lesson again, one level up.
+
+**The registered count was 53,739** (2026-10-20): batch 49's 5,393 measured rows
 (`docs/verified-sources-batch49.tsv`,
 `native/collectors/OSINT_SOURCES_BATCH_49_JPWPFEDERATIONS.md`) on 48,346.
 **Batch 49 is batch 45's staging set registered** — the WordPress collections of
