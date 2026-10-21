@@ -592,6 +592,57 @@ struct API: Sendable {
         return env.jobs.first
     }
 
+    // ── Similarity thresholds (operator only) ──────────────────────────────
+    // Every embedding cut-off the server judges a vector comparison against,
+    // resolved runtime override > env var > default (core/thresholds.c). A
+    // PUT applies on the server's next comparison — no restart — and is
+    // written to the audit chain server-side.
+
+    func similarityThresholds() async throws -> SimilarityThresholdsEnvelope {
+        try await get("/api/admin/thresholds")
+    }
+
+    /// Set a runtime override. The server refuses a value outside the key's
+    /// [min, max] with 400 rather than clamping it.
+    func setSimilarityThreshold(_ key: String, value: Double) async throws -> SimilarityThreshold {
+        let body = try JSONSerialization.data(withJSONObject: ["value": value])
+        let env: SimilarityThresholdEnvelope = try await put(
+            "/api/admin/thresholds/\(API.thresholdPathSegment(key))", body: body)
+        return env.data
+    }
+
+    /// Remove the runtime override; the env var or the default takes over.
+    func resetSimilarityThreshold(_ key: String) async throws -> SimilarityThreshold {
+        let body = try JSONSerialization.data(withJSONObject: ["reset": true])
+        let env: SimilarityThresholdEnvelope = try await put(
+            "/api/admin/thresholds/\(API.thresholdPathSegment(key))", body: body)
+        return env.data
+    }
+
+    /// Threshold keys are `[a-z_]`, but a path segment is escaped anyway.
+    private static func thresholdPathSegment(_ s: String) -> String {
+        s.addingPercentEncoding(withAllowedCharacters: .alphanumerics
+            .union(CharacterSet(charactersIn: "-._~"))) ?? s
+    }
+
+    /// The thresholds routes' refusals, named: 400 carries the server's own
+    /// range message, 403 is the operator allowlist.
+    static func thresholdErrorMessage(_ error: Error) -> String {
+        guard case let APIError.http(code, body) = error else {
+            return error.localizedDescription
+        }
+        struct Body: Decodable { let error: String?; let detail: String? }
+        let parsed = body.data(using: .utf8)
+            .flatMap { try? JSONDecoder().decode(Body.self, from: $0) }
+        switch code {
+        case 403 where body.contains("not configured"):
+            return "Operator access is not configured on the server (set PLATFORM_OPERATOR_EMAILS)."
+        case 403: return "Platform operator access required."
+        case 404: return "The server does not know this threshold (\(parsed?.detail ?? "unknown key"))."
+        default:  return parsed?.detail ?? parsed?.error ?? (body.isEmpty ? "HTTP \(code)" : body)
+        }
+    }
+
     /// Operator-surface errors worth naming. A 409 is the server's one-job-at-a-
     /// time guard, not a failure; a 403 here almost always means
     /// PLATFORM_OPERATOR_EMAILS is unset, which fails closed for everyone and is

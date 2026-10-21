@@ -1420,9 +1420,28 @@ never put two models' vectors in one index — image vectors have their own.
 `embed_hook_register()` (core/embed_pod.h) runs after each committed batch
 with the vectors in hand — stories (`story_id`, separate from simhash's
 `cluster_id`), `novelty`, and natural-language alert rules are evaluated
-there, never by an embed call on the ingest path. Every threshold (entity
-0.80, story 0.85, alert 0.82, relevance, resolver margin) is a named constant
-with an env override, and **none has been measured on the production model**:
+there, never by an embed call on the ingest path. **Every similarity threshold
+lives in ONE registry, `core/thresholds.{c,h}`** (2026-10-21), and is read
+through `threshold_get("<key>")` — never a module-local `getenv()` or a bare
+constant at the comparison. Resolution per key: a runtime override in
+`settings_thresholds` > its env var (the same names as before; an unparsable or
+out-of-range value is ignored, as it always was) > the module's compiled
+constant, which stays in its header as the documented default. The DB layer is
+cached in memory (loaded by `threshold_migrate()` from `db_open`, refreshed on
+every write), so a hot path never touches SQLite. Ten keys:
+`entity_vec_cos_floor` 0.80, `story_tau` 0.85, `alert_sem_threshold` 0.82 (a
+rule's own `threshold` still wins), `relevance_sim_min` 0.40,
+`suggest_min_cos` 0.50, `resolve_emb_min_cos` 0.60, `resolve_emb_margin` 0.10,
+`camera_dup_cosine_min` 0.97, `repair_sem_cos_floor` 0.70 and
+`corpus_vec_max_distance` √2 (an L2 distance — lower is stricter). Operators
+move them live, without a restart, through `GET /api/admin/thresholds` (value,
+`source` db|env|default, default, min, max, env) and
+`PUT /api/admin/thresholds/:key` `{value}` | `{reset:true}` — platform-operator
+gate, a value outside [min,max] is a 400 not a clamp, every change an
+audit-chain row (`threshold.set` / `threshold.reset`, old and new value) — from
+Admin › Thresholds in the web client and Admin › Similarity thresholds on iOS.
+**A new similarity cut-off gets a row in that table**, not its own getenv.
+And **none has been measured on the production model**:
 they were chosen from typical multilingual-e5 scores and tested against a stub.
 Without `JO_EMBED_URL` every feature falls back to its pre-embedding
 behaviour byte for byte; that is pinned per feature in `tests/unit/`.
