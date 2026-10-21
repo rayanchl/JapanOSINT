@@ -24,6 +24,7 @@
 #define RESOLVE_EMB_MARGIN_DEFAULT     0.10
 #define REPAIR_SEM_COS_FLOOR_DEFAULT   0.70
 #define CORPUS_VEC_MAX_DISTANCE_DEFAULT 1.41421356
+#define ROUTE_MIN_COS_DEFAULT          0.55
 
 static const threshold_def DEFS[] = {
   { "entity_vec_cos_floor", "JO_ENTITY_VEC_COS_FLOOR", ENTITY_VEC_COS_FLOOR,
@@ -67,6 +68,11 @@ static const threshold_def DEFS[] = {
     "Corpus lookup: a KNN neighbour at or past this L2 distance is not a "
     "candidate (sqrt(2) = cosine 0 on unit vectors; lower is stricter) "
     "(collectors/sources/jp_corpus_lookup.c)." },
+  { "route_min_cos", "JO_ROUTE_MIN_COS", ROUTE_MIN_COS_DEFAULT, 0.01, 1.0,
+    "cosine",
+    "Question routing: a question with no entity reads the stored records of "
+    "every scheduled source whose card is at least this similar; lower reads "
+    "more sources (collectors/sources/jp_corpus_lookup.c)." },
 };
 #define NDEFS ((int)(sizeof DEFS / sizeof DEFS[0]))
 

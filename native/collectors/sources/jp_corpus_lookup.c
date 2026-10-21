@@ -251,12 +251,10 @@ static double corpus_vec_max_distance(void) {
  * still passed the floor, more may exist, and the run says so in the data.
  * The vector arm stays over the whole corpus, as for an entity. */
 #define ROUTE_KNN_MAX 4096          /* sqlite-vec's ceiling on a KNN's k      */
-#define ROUTE_MIN_COS_DEFAULT 0.55  /* cosine, unit vectors (d^2 = 2 - 2cos)  */
-
+/* core/thresholds.c ("route_min_cos", default 0.55 cosine on unit vectors,
+ * d^2 = 2 - 2cos): runtime override > JO_ROUTE_MIN_COS > default. */
 static double route_min_cos(void) {
-  const char *e = getenv("JO_ROUTE_MIN_COS");
-  double v = (e && *e) ? atof(e) : 0;
-  return (v > 0 && v <= 1) ? v : ROUTE_MIN_COS_DEFAULT;
+  return threshold_get("route_min_cos");
 }
 
 typedef struct { int routed, knn_full; double floor; } corpus_route;

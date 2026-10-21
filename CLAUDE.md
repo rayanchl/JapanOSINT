@@ -1428,12 +1428,14 @@ constant at the comparison. Resolution per key: a runtime override in
 out-of-range value is ignored, as it always was) > the module's compiled
 constant, which stays in its header as the documented default. The DB layer is
 cached in memory (loaded by `threshold_migrate()` from `db_open`, refreshed on
-every write), so a hot path never touches SQLite. Ten keys:
+every write), so a hot path never touches SQLite. Eleven keys:
 `entity_vec_cos_floor` 0.80, `story_tau` 0.85, `alert_sem_threshold` 0.82 (a
 rule's own `threshold` still wins), `relevance_sim_min` 0.40,
 `suggest_min_cos` 0.50, `resolve_emb_min_cos` 0.60, `resolve_emb_margin` 0.10,
 `camera_dup_cosine_min` 0.97, `repair_sem_cos_floor` 0.70 and
-`corpus_vec_max_distance` √2 (an L2 distance — lower is stricter). Operators
+`corpus_vec_max_distance` √2 (an L2 distance — lower is stricter) and
+`route_min_cos` 0.55 (which scheduled sources a question with no entity is
+routed to — every one at or above it, no count cap). Operators
 move them live, without a restart, through `GET /api/admin/thresholds` (value,
 `source` db|env|default, default, min, max, env) and
 `PUT /api/admin/thresholds/:key` `{value}` | `{reset:true}` — platform-operator

@@ -73,6 +73,7 @@ int main(void) {
   assert(near(threshold_get("camera_dup_cosine_min"), 0.97));
   assert(near(threshold_get("repair_sem_cos_floor"), 0.70));
   assert(near(threshold_get("corpus_vec_max_distance"), 1.41421356));
+  assert(near(threshold_get("route_min_cos"), 0.55));
   for (int i = 0; i < n; i++) {
     double v; threshold_src s;
     assert(threshold_resolve(defs[i].key, &v, &s) == 0);
