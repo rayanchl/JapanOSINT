@@ -131,6 +131,46 @@ job (44) and a decision already taken once in this tree for the walls (36): the
 than quietly evading", and they do disclose, one `collector-fetch-failure` row
 each.
 
+**The 44 have now had their measurement pass** (2026-10-21,
+`docs/b2-path-stale-triage-2026-10-21.md`), and it changes the shape of the
+remaining work from "44 path edits" to "44 decisions".
+
+* **A third reading** confirms the paths: 43 still 404,
+  1 `LOCAL_EGRESS` (unmeasured from here). Not a deploy.
+* **Each host was asked what it serves** rather than probed for paths we can
+  name — its own search form with the field names a pivot must send, its API
+  and developer links, its declared sitemaps
+  (`tools/discover_search_endpoints.py`,
+  `docs/b2-path-stale-discovery-2026-10-21.txt`). Candidates on 24 of 43.
+* **And a 200 IS NOT A FIX: rule 4d killed six of the first eight candidates.**
+  Asked about an impossible entity beside a real one, `IE_LOBBYING_REGISTER`
+  answered within 20 bytes, `IFC_PROJECT_DISCLOSURES` within ONE, and
+  `APG_FATF_STYLE_BODIES` — whose own search form declares
+  `GET /documents?keys=` and which returns 76 anchors — ignores `keys`
+  completely. Those pages render results in the browser; the server hands back
+  the same shell for any query. Re-pointing there trades a 404 that discloses
+  itself for navigation chrome attributed to the entity asked about.
+* **Seven rows have a measured replacement**, three of them documented
+  open-data APIs that are a straight upgrade on the HTML scrape they replace
+  (Eduskunta's `avoindata` API, Stortinget's JSON export, the Austrian
+  Parliament's filter API), plus the ECB's server-rendered list of supervised
+  entities, Copernicus EMS's moved activations host, Municipal Money's own API
+  and two search paths whose filter measurably works.
+* **Four rows must NOT be re-pointed**, and each is a different lesson:
+  `WORLDBANK_CONTRACT_AWARDS`'s Socrata domain is EMPTY with no query at all
+  (a re-point there fetches 200 and emits nothing for ever);
+  `JP_KANPO_GAZETTE` is behind a login now, so it is credential-gated rather
+  than moved; and `JP_MHLW_LABOUR_VIOLATIONS` and `JP_PMDA_APPROVALS` offer a
+  Google Custom Search as their site search, which is Google's data about the
+  ministry and not the ministry's register.
+
+Outstanding: re-point the seven, resolve `FR_ASSEMBLEE_NATIONALE` and
+`CZ_CUZK_CADASTRE` (both name an API nobody has queried yet), find the real
+register for the four above — **and then a decision that is the operator's**,
+for the rows with no server-rendered replacement reachable from here: keep them
+disclosing, or remove them. Both are defensible and the faa.gov precedent
+argues for keeping.
+
 The original item read:
 
 ### B2 (as written). Batch 31's 90 refused rows have never been re-run
