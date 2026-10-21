@@ -5,7 +5,84 @@ was seeded from, what it measured and what it taught. Moved out of `CLAUDE.md`
 on 2026-10-19 so that file keeps the rules and the current number; the lessons
 that a new batch must not relearn are summarised there. Newest first.
 
-**The registered count is 57,886** (2026-10-21, after merging main's
+**The registered count is 58,016** (2026-10-21): main's 57,536 merged with
+this branch's 57,886, on the 57,415 base they share. Measured with `make
+source-count`, not computed, and then cross-checked: 57,415 + 477 + 121 =
+58,013, **+2** for the two FAA rows restored and **+1** because both sides had
+subtracted `FAA_NNUMBER_REGISTRY`, so the sum had removed it twice. A merge of
+two branches that both removed rows double-subtracts every row they both took. Both days' entries are kept below under the branch that
+measured them.
+
+Renumbering, for the sixth time: main claimed 51 for `cn_feeds_batch51.c` and
+its own `docs/verified-sources-batch51.tsv`, an add/add on that file, so this
+branch's ArcGIS beat moved 51 → **53** (290 ids, the table symbol, the
+collector key, the manifest, the TSV, the batch note and both page-two
+measurement records) BEFORE the merge rather than after — which is again what
+kept the merge to one round.
+
+**The registered count is 57,536** (2026-10-21): main's 57,415 + this branch's
+121 (+136 batch 51, −29 takeovers, +15 browser-profile feeds, −1 duplicate FAA
+row), both on 56,955. The merge kept main's `adaptive_interval` on every row
+and this branch's removal of the 29 taken-over rows, whose ids main had
+edited; no removed id is back in any table or manifest.
+
+**This branch's count was 57,076** (2026-10-21): 57,062 + 15 − 1.
+
+* **+15**: the batch-50 feeds that refused every honest agent, restored with
+  the per-host browser profile (`BROWSER_HOSTS`, `core/httpclient.c`): five
+  NOAA offices, BLS Latest Numbers and CPI, NASA JPL news (100 items), State's
+  Office of Fine Arts, San Diego County Water Authority, the UK Government
+  Cyber Coordination Centre, the Intelligence and Security Committee, NHS 24,
+  METI Hokkaido's Atom feed and the Japan Writers' Association. All 15 OK
+  through the binary.
+* **−1**: `FAA_NNUMBER_REGISTRY` (`hp_americas_deep.c`), a duplicate of
+  `FAA_REGISTRY` that read the N-number page as anchors.
+* Two existing pivots recovered by the same host entry: `FAA_REGISTRY` (one
+  31-field record per N-number) and `US_FAA_AIRCRAFT_REGISTRY` (re-pointed at
+  the GET form of the owner search; 1,729 emitted / 1,729 stored for one
+  operator). `sec-reliefweb-headlines` re-pointed at its final https URL: 20.
+
+**The registered count was 57,062** (2026-10-21): 56,955 + 136 (batch 51) − 29 (takeovers).
+
+* **+136 — batch 51**, Hong Kong and Macao government feeds plus China News
+  Service (`collectors/sources/cn_feeds_batch51.c`): news.gov.hk by category,
+  HKMA (20), the Centre for Health Protection (12), RTHK, Census and Statistics,
+  OFCA, the Marine Department, EPD and the AQHI, Macao's transport, labour,
+  statistics, meteorological and cultural bureaux, and chinanews.com.cn (23).
+  Read off the publishers' own feed directories — GovHK's RSS list, the HKMA's,
+  China News Service's `/rss/`, and the page each of 306 HK/Macao government
+  homepages (Wikidata P856) links as "RSS". Mainland ministries publish on
+  WeChat rather than RSS, which is why the mainland share is one news agency.
+  Emit: 135 OK + 1 collision that is the upstream's own 16 byte-identical
+  repeats (Macao's events feed lists one event under several dates); 5,051
+  emitted / 5,037 stored. LegCo's 39 feeds refuse the connection from here.
+* **−29 — a sweep of every feed in the tree for domain takeovers**
+  (2026-10-21): the item titles of 42,593 distinct feed and WordPress-collection
+  URLs were read and 52 flagged; each flag was read by hand. 29 were taken over
+  or injected and are removed with their evidence in
+  `docs/removed-sources-2026-10-21-takeovers.tsv` — Ghana's national CERT
+  publishing casino posts, Visit The Gambia, 11 French commune and Mission
+  Locale sites (three of them COMMENT feeds full of pharma spam), five Italian
+  public bodies, a Miyawaka chamber of commerce in main's batch 49, the Belize
+  Reporter now a Vietnamese lottery site, `japanesecreations` from batch 42,
+  and two of batch 50's own rows found after shipping (`pcsa.jp`, City of
+  Hazard). 23 were kept: Vietnamese papers reporting lottery results, Indonesian
+  news on gambling raids, the Horserace Betting Levy Board, Korean and Japanese
+  bodies publishing in Vietnamese for migrant residents, Serbian and Bosnian
+  `đ`, and four real outlets carrying a sponsored post (The Coast, INFO.FR,
+  Asian Journal, The Village Voice) — a sponsored post is the publisher's own,
+  a takeover is not.
+* Batch 50's retry pass: 15 of the 16 hosts that refused every honest agent
+  still do; Camden County, NJ refuses only the contact URL and is back with the
+  PIB-style agent; Edinburg ND is another "collector" block; Ballwin's feed is
+  still empty and left (`EMPTY_RESULTSET`). Batch 50 now reads 3,243 OK + 2
+  byte-identical collisions.
+
+**The registered count was 56,955** (2026-10-21): main's 53,739 (its batch 49, PR #55) − 6 − 25 + 3,247 (batch 50).
+
+**Main's count was 57,409** (2026-10-21, later the same day): 57,408
+
+**This branch's count was 57,886** (2026-10-21, after merging main's
 57,409): this branch's 57,423 — 57,403 + 19 (batch 52) + 4 (jpcorpwp recovered)
 − 3 (registry.faa.gov) — composed with main's day, plus the seven CKAN rows the
 merge restored (below).
@@ -22,12 +99,16 @@ merge restored (below).
   (`docs/rejected-sources-batch52.tsv`). One REGISTERED row,
   `NI_MARENA_PUBLICACIONES`, came back for free on an intermediate the bundle
   already carried.
-* **−3 — `registry.faa.gov`.** `US_FAA_AIRCRAFT_REGISTRY`,
-  `FAA_NNUMBER_REGISTRY` and `FAA_REGISTRY`. The host answers 403 to any agent
-  carrying a parenthetical contact route and 200 to a bare name or none at all,
-  so recovering them would mean dropping our contact route for that host. The
-  measurement is beside the first of the three rows in
-  `collectors/pivot/table/hp3b31_usfed.c`.
+* **−3 — `registry.faa.gov`, OVERTURNED by the next merge.**
+  `US_FAA_AIRCRAFT_REGISTRY`, `FAA_NNUMBER_REGISTRY` and `FAA_REGISTRY` were
+  removed because the host answers 403 to any agent carrying a parenthetical
+  contact route and 200 to a bare name or none at all, so recovering them
+  looked like it meant dropping our contact route. Main measured the same host
+  and added an explicit per-host browser profile instead (`BROWSER_HOSTS`),
+  which this container confirms: 200 and 52 data rows where the engine agent
+  gets 403. Two of the three are back (net −1, main's own reading); the third
+  stays out because once the 403 lifted it stored navigation links as
+  aircraft.
 
 * **+7 restored in the merge with main.** Main removed 14 batch-34 CKAN rows
   that had failed twice, and SIX of them are the very hosts this branch

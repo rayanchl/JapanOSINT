@@ -1,5 +1,6 @@
 /* core/story.c — see story.h. */
 #include "story.h"
+#include "thresholds.h"         /* operator-tunable similarity cut-offs */
 #include "embed_pod.h"
 #include "../lib/vecindex.h"
 #include "../third_party/sqlite3.h"
@@ -11,20 +12,14 @@
 /* Pending rows drained per hook call, at most (each costs two KNNs). */
 #define STORY_DRAIN_MAX 64
 
-static double env_double(const char *k, double dflt, double lo, double hi) {
-  const char *e = getenv(k);
-  if (!e || !*e) return dflt;
-  char *end = NULL;
-  double v = strtod(e, &end);
-  return (end && end != e && v >= lo && v <= hi) ? v : dflt;
-}
 static int env_int(const char *k, int dflt) {
   const char *e = getenv(k);
   int v = (e && *e) ? atoi(e) : 0;
   return v > 0 ? v : dflt;
 }
 
-double story_tau(void)        { return env_double("JO_STORY_TAU", STORY_TAU_DEFAULT, 0.01, 1.0); }
+/* core/thresholds.c: runtime override > JO_STORY_TAU > STORY_TAU_DEFAULT. */
+double story_tau(void)        { return threshold_get("story_tau"); }
 int    story_max_members(void){ return env_int("JO_STORY_MAX_MEMBERS", STORY_MAX_MEMBERS_DEFAULT); }
 int    novelty_days(void)     { return env_int("JO_NOVELTY_DAYS", NOVELTY_DAYS_DEFAULT); }
 static int budget_ms(void)    { return env_int("JO_STORY_BUDGET_MS", STORY_BUDGET_MS_DEFAULT); }

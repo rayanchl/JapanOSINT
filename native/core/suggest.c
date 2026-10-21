@@ -1,5 +1,6 @@
 /* core/suggest.c — see suggest.h. */
 #include "suggest.h"
+#include "thresholds.h"         /* operator-tunable similarity cut-offs */
 #include "qembed.h"
 #include "service_vec.h"
 #include "pipeline.h"
@@ -184,10 +185,9 @@ static int by_score(const void *a, const void *b) {
   return strcmp(x->text, y->text);
 }
 
+/* core/thresholds.c: runtime override > JO_SUGGEST_MIN_COS > SUGGEST_MIN_COS. */
 static double min_cos(void) {
-  const char *e = getenv("JO_SUGGEST_MIN_COS");
-  double v = (e && *e) ? atof(e) : 0;
-  return v > 0 && v < 1 ? v : SUGGEST_MIN_COS;
+  return threshold_get("suggest_min_cos");
 }
 
 char *suggest_build(db_handle *db, llm_client *llm, const char *tenant,
@@ -259,6 +259,7 @@ char *suggest_build(db_handle *db, llm_client *llm, const char *tenant,
   for (int i = keep; i < l.n; i++) { free(l.v[i].text); free(l.v[i].service_id); }
   l.n = keep;                     /* below the floor: not suggestions at all */
   int candidates = keep;
+  int retrieved = keep;
 
   /* The LLM, only when asked: after the retrieved suggestions. */
   int llm_n = 0;
@@ -284,8 +285,14 @@ char *suggest_build(db_handle *db, llm_client *llm, const char *tenant,
   cJSON *o = cJSON_CreateObject();
   cJSON *sug = cJSON_AddArrayToObject(o, "suggestions");
   cJSON *items = cJSON_AddArrayToObject(o, "items");
-  int shown = keep < SUGGEST_MAX ? keep : SUGGEST_MAX;
-  for (int i = 0; i < shown; i++) {
+  /* The cut applies to the RETRIEVED list. Extra ideas a caller asked for with
+   * expand=1 come after it in full: cutting at 9 overall dropped every one of
+   * them whenever retrieval had already filled the list, so "more ideas"
+   * answered with exactly what it had before. */
+  int shown_ret = retrieved < SUGGEST_MAX ? retrieved : SUGGEST_MAX;
+  int shown = shown_ret + (keep - retrieved);
+  for (int k = 0; k < shown; k++) {
+    int i = k < shown_ret ? k : retrieved + (k - shown_ret);
     sg_cand *c = &l.v[i];
     cJSON_AddItemToArray(sug, cJSON_CreateString(c->text));
     cJSON *it = cJSON_CreateObject();

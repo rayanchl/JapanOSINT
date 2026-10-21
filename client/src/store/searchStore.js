@@ -166,6 +166,35 @@ export async function fetchSuggestions(query) {
   } catch { return []; }
 }
 
+/**
+ * One whole /api/search/suggest answer (core/suggest.h), or null when the
+ * request failed or was aborted — a failure is not "no suggestions".
+ *
+ * `suggestions` is always the array of strings. `items` says where each one
+ * came from (`source`: history | saved | service | llm) and `meta` is the
+ * retrieval arm's own account of the list ({retrieval, candidates, shown,
+ * truncated, llm}); both are absent when the server answered by generation
+ * only, and `items` is then derived from `suggestions` with `source: null`.
+ *
+ * `expand: true` adds `&expand=1`, which also asks the suggest LLM — slow and
+ * paid, so callers send it once per query on an explicit action or a long
+ * typing pause, never per keystroke. Without an embedding server the server
+ * ignores it (every answer is already generated). `signal` aborts it.
+ */
+export async function fetchSuggestionSet(query, { expand = false, signal } = {}) {
+  const url = apiUrl(`/api/search/suggest?q=${encodeURIComponent(query)}${expand ? '&expand=1' : ''}`);
+  try {
+    const res = await (signal ? fetch(url, { signal }) : fetch(url));
+    if (!res.ok) return null;
+    const j = await res.json();
+    const suggestions = Array.isArray(j.suggestions) ? j.suggestions.filter((s) => typeof s === 'string') : [];
+    const items = Array.isArray(j.items)
+      ? j.items.filter((it) => it && typeof it.text === 'string').map((it) => ({ text: it.text, source: it.source || null }))
+      : suggestions.map((text) => ({ text, source: null }));
+    return { suggestions, items, meta: j.meta && typeof j.meta === 'object' ? j.meta : null };
+  } catch { return null; }
+}
+
 export function getRun(requestId) {
   return state.active.find((s) => s.request_id === requestId)
     || state.completed.find((s) => s.request_id === requestId) || null;

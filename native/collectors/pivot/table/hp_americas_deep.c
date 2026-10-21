@@ -139,12 +139,6 @@ static const hp_source HP_AMERICAS[] = {
       "status, grant and expiry dates; a licence list is a hard link between a "
       "corporate name and physical transmitting infrastructure" },
 
-  /* FAA_NNUMBER_REGISTRY was here and was REMOVED on 2026-10-21 —
-   * registry.faa.gov refuses an agent that carries a contact route, and
-   * recovering it would mean dropping ours for that host. The measurement
-   * and the reasoning are recorded once, beside the sibling row, in
-   * collectors/pivot/table/hp3b31_usfed.c. */
-
   { .id = "NPI_REGISTRY", .name = "NPPES — US healthcare provider registry",
     .name_ja = "米国 医療従事者登録(NPI)", .category = "health",
     .portal = "https://npiregistry.cms.hhs.gov", .record_type = "us-npi",

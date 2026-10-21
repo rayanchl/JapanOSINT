@@ -95,6 +95,7 @@
 #endif
 #include "ffmpeg.h"
 #include "hostgate.h"        /* the destination policy for network inputs     */
+#include "hls_check.h"       /* ...and for every URL an HLS playlist names     */
 #include "../third_party/cJSON.h"
 #include <ctype.h>
 #include <errno.h>
@@ -345,13 +346,15 @@ static const char *whitelist_for(const char *scheme) {
  * input this module is handed today is a camera feed URL some third-party
  * registry wrote, and the name is resolved and EVERY answer judged.
  *
- * WHAT THIS DOES NOT COVER, stated so nobody assumes it does: an HLS playlist
- * (and an RTSP server's redirect) names further URLs that ffmpeg fetches by
- * itself. Those are constrained only by -protocol_whitelist — the scheme, never
- * the host — so a public playlist listing http://10.0.0.5/seg.ts makes ffmpeg
- * request it. Likewise a name re-resolved by ffmpeg can answer differently
- * than it did here. Closing that needs ffmpeg's network in a sandbox, not a
- * check in this process. */
+ * An HLS playlist names further URLs that ffmpeg fetches by itself, which
+ * -protocol_whitelist constrains by scheme only — so a public playlist listing
+ * http://10.0.0.5/seg.ts made ffmpeg request it. Every http(s) input is
+ * therefore read first by core/hls_check.c, which judges each URI a playlist
+ * names (and the playlists it names) under the same camera policy, and fails
+ * closed. WHAT REMAINS, stated so nobody assumes it is covered: an RTSP
+ * server's redirect, segments a LIVE playlist adds after that read, and a
+ * name ffmpeg re-resolves to a different answer. Those need ffmpeg's network
+ * in a sandbox, not a check in this process. */
 static int classify(const char *input, char *sc, size_t cap, const char **wl) {
   int rc = ffmpeg_input_allowed(input);
   if (rc != FFMPEG_OK) return rc;
@@ -363,6 +366,14 @@ static int classify(const char *input, char *sc, size_t cap, const char **wl) {
       fprintf(stderr, "[ffmpeg] refused input %s: %s\n", input,
               hostgate_url_reason(hg));
       return FFMPEG_ERR_BLOCKED;
+    }
+    if (!strcmp(sc, "http") || !strcmp(sc, "https") || !strcmp(sc, "hls")) {
+      char why[512] = "";
+      int hr = hls_check_input(input, why, sizeof why);
+      if (hr != HLS_OK) {
+        fprintf(stderr, "[ffmpeg] refused input %s: %s\n", input, why);
+        return FFMPEG_ERR_BLOCKED;
+      }
     }
   }
   *wl = whitelist_for(sc);

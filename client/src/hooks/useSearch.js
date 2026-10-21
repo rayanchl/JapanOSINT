@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
-import { subscribe, startSearch, fetchSuggestions, attachRun, getRun } from '../store/searchStore.js';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { subscribe, startSearch, fetchSuggestions, fetchSuggestionSet, attachRun, getRun } from '../store/searchStore.js';
 import apiUrl from '../utils/apiUrl.js';
 
 /** Subscribe to the live search store (active + completed runs). */
@@ -7,6 +7,94 @@ export function useSearchStore() {
   const [s, setS] = useState({ active: [], completed: [], lastError: null });
   useEffect(() => subscribe(setS), []);
   return { ...s, startSearch, fetchSuggestions, attachRun };
+}
+
+/** Settled typing before the ordinary (non-expanded) suggest request. The
+ *  iOS tab waits 3s before asking the LLM; the web used 350ms, which spammed
+ *  the suggest model on every keystroke. */
+export const SUGGEST_DEBOUNCE_MS = 1500;
+/** A typing pause this long, on a query of SUGGEST_MIN_CHARS or more, asks
+ *  once with `expand=1` (the LLM's extra ideas). Well above the debounce, so
+ *  the ordinary answer has landed and been read before the model is asked. */
+export const SUGGEST_EXPAND_PAUSE_MS = 4000;
+export const SUGGEST_MIN_CHARS = 3;
+
+/**
+ * Search-box suggestions: the debounced fast path, plus `expand=1` (the LLM's
+ * ideas, core/suggest.h) on an explicit action — `expand()` — or once after a
+ * SUGGEST_EXPAND_PAUSE_MS pause.
+ *
+ * At most ONE expand request per distinct query, ever (`asked`); a query
+ * change aborts the one in flight, and a late answer for an older query is
+ * dropped. Expansion is offered only when the server answered by retrieval
+ * (`meta.retrieval`): without it the ordinary answer already IS the LLM's and
+ * the server ignores `expand`, so asking again would only repeat it.
+ *
+ * Nothing here records search history — these are not committed searches.
+ */
+export function useSearchSuggestions(query) {
+  const q = (query || '').trim();
+  // { q, suggestions, items, meta, expanded, failed } — the answer on show.
+  const [set, setSet] = useState(null);
+  const [expanding, setExpanding] = useState(null);
+  const [pausedOn, setPausedOn] = useState(null);
+  const asked = useRef(new Set());
+  const inflight = useRef(null);
+  const current = useRef(q);
+  current.current = q;
+
+  // The fast path: one non-expanded request per settled query.
+  useEffect(() => {
+    if (q.length < SUGGEST_MIN_CHARS) { setSet(null); return undefined; }
+    let alive = true;
+    const t = setTimeout(async () => {
+      const s = await fetchSuggestionSet(q);
+      if (alive) setSet({ q, suggestions: [], items: [], meta: null, ...s, expanded: false, failed: false });
+    }, SUGGEST_DEBOUNCE_MS);
+    return () => { alive = false; clearTimeout(t); };
+  }, [q]);
+
+  // A changed query abandons the expand in flight for the old one.
+  useEffect(() => () => { inflight.current?.abort(); inflight.current = null; }, [q]);
+
+  const expand = useCallback(async (raw) => {
+    const eq = (raw ?? current.current).trim();
+    if (!eq || asked.current.has(eq)) return;
+    asked.current.add(eq);
+    inflight.current?.abort();
+    const ctl = new AbortController();
+    inflight.current = ctl;
+    setExpanding(eq);
+    try {
+      const s = await fetchSuggestionSet(eq, { expand: true, signal: ctl.signal });
+      if (ctl.signal.aborted || current.current !== eq) return;   // stale: dropped
+      // A failed expand keeps the ordinary answer on show and says so.
+      setSet((prev) => (s
+        ? { q: eq, ...s, expanded: true, failed: false }
+        : { ...(prev && prev.q === eq ? prev : { q: eq, suggestions: [], items: [], meta: null }), expanded: true, failed: true }));
+    } finally {
+      if (inflight.current === ctl) { inflight.current = null; setExpanding(null); }
+    }
+  }, []);
+
+  // The long pause, noted per query and reset by every change.
+  useEffect(() => {
+    setPausedOn(null);
+    if (q.length < SUGGEST_MIN_CHARS) return undefined;
+    const t = setTimeout(() => setPausedOn(q), SUGGEST_EXPAND_PAUSE_MS);
+    return () => clearTimeout(t);
+  }, [q]);
+
+  const canExpand = !!set && set.q === q && !!set.meta?.retrieval && !set.expanded
+    && expanding !== q && !asked.current.has(q);
+
+  // Paused on this query and its ordinary answer is in (either order): ask once.
+  useEffect(() => {
+    if (pausedOn && pausedOn === q && canExpand) expand(q);
+  }, [pausedOn, q, canExpand, expand]);
+
+  const clear = useCallback(() => setSet(null), []);
+  return { set, expanding: expanding === q, canExpand, expand, clear };
 }
 
 /** One run by request id, live-updated; re-attaches through the results

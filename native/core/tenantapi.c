@@ -339,98 +339,79 @@ static long count_unchained(sqlite3 *h, const char *tenant_id) {
   return n;
 }
 
+/* Walks the WHOLE chain, streamed. It used to materialise the oldest 100,000
+ * rows (`LIMIT 100000`) and answer ok:true over them, so tampering past the
+ * 100,000th row was invisible and the answer did not say it had stopped —
+ * the one check an operator reaches for when something looks wrong reporting
+ * a partial reading as a clean one. Streaming needs only the previous row's
+ * hash, so memory is constant at any length; the route runs on a worker
+ * (core/httpd.c) so a long walk never holds the event loop. */
 char *tenantapi_audit_verify(db_handle *db, const char *tenant_id) {
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(db->h,
         "SELECT id,tenant_id,user_id,action,target,payload_json,ts,ip,ua,"
         "prev_hash,row_hash,chain_seq FROM audit_events "
         "WHERE tenant_id=?1 AND row_hash IS NOT NULL "
-        "ORDER BY chain_seq ASC LIMIT 100000", -1, &s, NULL) != SQLITE_OK)
+        "ORDER BY chain_seq ASC", -1, &s, NULL) != SQLITE_OK)
     return NULL;
   sqlite3_bind_text(s, 1, tenant_id, -1, SQLITE_TRANSIENT);
 
-  /* materialise rows (need count up-front for the broken-case payload) */
-  typedef struct { char *id,*tid,*uid,*act,*tgt,*pj,*ts,*ip,*ua,*ph,*rh;
-                   long seq; } row_t;
-  row_t *R = NULL; int n = 0, cap = 0;
-  while (sqlite3_step(s) == SQLITE_ROW) {
-    if (n == cap) {
-      int ncap = cap ? cap*2 : 64;
-      row_t *nr = realloc(R, ncap*sizeof *nr);
-      /* Unchecked, a failed realloc here NULLs R (leaking the old block) and
-       * the next line writes through &R[n] anyway — a crash on the tamper-
-       * evidence audit-chain verifier is a worse failure than most, since it
-       * is the one path an operator reaches for specifically when something
-       * looks wrong. Stop short and report what was actually read, the same
-       * way the prepare-failure path above answers NULL rather than guessing. */
-      if (!nr) {
-        sqlite3_finalize(s);
-        for (int i = 0; i < n; i++) {
-          free(R[i].id); free(R[i].tid); free(R[i].uid); free(R[i].act);
-          free(R[i].tgt); free(R[i].pj); free(R[i].ts); free(R[i].ip);
-          free(R[i].ua); free(R[i].ph); free(R[i].rh);
-        }
-        free(R);
-        return NULL;
-      }
-      R = nr; cap = ncap;
+  #define COL(idx) ((const char *)sqlite3_column_text(s, idx))
+  char expected_prev[80] = "GENESIS";
+  long expected_seq = 1, n = 0, broken = -1;
+  const char *reason = NULL; char rbuf[96];
+  char *broken_id = NULL;
+  int rc;
+  while ((rc = sqlite3_step(s)) == SQLITE_ROW) {
+    if (broken >= 0) { n++; continue; }      /* count = every chained row */
+    long seq = (long)sqlite3_column_int64(s, 11);
+    const char *ph = COL(9), *rhs = COL(10);
+    if (seq != expected_seq) {
+      snprintf(rbuf, sizeof rbuf, "chain_seq gap (expected %ld, got %ld)",
+               expected_seq, seq);
+      reason = rbuf;
+    } else if (strcmp(ph ? ph : "", expected_prev) != 0) {
+      reason = "prev_hash linkage mismatch (row inserted/removed)";
+    } else {
+      char rh[65];
+      audit_row_hash(COL(0), COL(1), COL(2), COL(3), COL(4), COL(5), COL(6),
+                     COL(7), COL(8), ph, seq, rh);
+      if (strcmp(rh, rhs ? rhs : "") != 0) reason = "row_hash mismatch (row altered)";
     }
-    row_t *r = &R[n++];
-    #define DUP(idx) (ctext(s,idx) ? strdup((const char*)sqlite3_column_text(s,idx)) : NULL)
-    r->id=DUP(0); r->tid=DUP(1); r->uid=DUP(2); r->act=DUP(3); r->tgt=DUP(4);
-    r->pj=DUP(5); r->ts=DUP(6); r->ip=DUP(7); r->ua=DUP(8); r->ph=DUP(9);
-    r->rh=DUP(10); r->seq=sqlite3_column_int64(s,11);
-    #undef DUP
+    if (reason) {
+      broken = n;
+      broken_id = COL(0) ? strdup(COL(0)) : NULL;
+      n++;
+      continue;
+    }
+    snprintf(expected_prev, sizeof expected_prev, "%s", rhs ? rhs : "");
+    expected_seq += 1;
+    n++;
   }
+  #undef COL
+  /* A step that failed mid-walk is not a clean chain: say it was unreadable. */
+  int read_error = rc != SQLITE_DONE;
   sqlite3_finalize(s);
+  if (read_error) { free(broken_id); return NULL; }
 
   cJSON *o = cJSON_CreateObject();
-  const char *expected_prev = "GENESIS";
-  long expected_seq = 1;
-  int broken = -1; const char *reason = NULL; char rbuf[96];
-  for (int i = 0; i < n; i++) {
-    row_t *r = &R[i];
-    if (r->seq != expected_seq) {
-      snprintf(rbuf, sizeof rbuf, "chain_seq gap (expected %ld, got %ld)",
-               expected_seq, r->seq);
-      reason = rbuf; broken = i; break;
-    }
-    if (strcmp(r->ph ? r->ph : "", expected_prev) != 0) {
-      reason = "prev_hash linkage mismatch (row inserted/removed)";
-      broken = i; break;
-    }
-    char rh[65];
-    audit_row_hash(r->id, r->tid, r->uid, r->act, r->tgt, r->pj, r->ts,
-                   r->ip, r->ua, r->ph, r->seq, rh);
-    if (strcmp(rh, r->rh ? r->rh : "") != 0) {
-      reason = "row_hash mismatch (row altered)"; broken = i; break;
-    }
-    expected_prev = r->rh;
-    expected_seq += 1;
-  }
-
   long unchained = count_unchained(db->h, tenant_id);
   if (unchained < 0) cJSON_AddNullToObject(o, "unchained");    /* unmeasured */
   else cJSON_AddNumberToObject(o, "unchained", (double)unchained);
   if (broken >= 0) {
     cJSON_AddBoolToObject(o, "ok", 0);
-    cJSON_AddNumberToObject(o, "count", n);
-    cJSON_AddNumberToObject(o, "brokenAt", broken);
-    add_str_or_null(o, "brokenId", R[broken].id);
+    cJSON_AddNumberToObject(o, "count", (double)n);
+    cJSON_AddNumberToObject(o, "brokenAt", (double)broken);
+    add_str_or_null(o, "brokenId", broken_id);
     cJSON_AddStringToObject(o, "reason", reason);
   } else {
     cJSON_AddBoolToObject(o, "ok", 1);
-    cJSON_AddNumberToObject(o, "count", n);
+    cJSON_AddNumberToObject(o, "count", (double)n);
     cJSON_AddItemToObject(o, "tip",
       strcmp(expected_prev, "GENESIS") == 0 ? cJSON_CreateNull()
                                             : cJSON_CreateString(expected_prev));
   }
-  for (int i = 0; i < n; i++) {
-    free(R[i].id); free(R[i].tid); free(R[i].uid); free(R[i].act);
-    free(R[i].tgt); free(R[i].pj); free(R[i].ts); free(R[i].ip);
-    free(R[i].ua); free(R[i].ph); free(R[i].rh);
-  }
-  free(R);
+  free(broken_id);
   char *js = cJSON_PrintUnformatted(o);
   cJSON_Delete(o);
   return js;

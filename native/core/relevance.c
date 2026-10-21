@@ -1,5 +1,6 @@
 /* core/relevance.c — see relevance.h. */
 #include "relevance.h"
+#include "thresholds.h"         /* operator-tunable similarity cut-offs */
 #include "qembed.h"
 #include "../lib/jpnorm.h"
 #include <stdio.h>
@@ -95,10 +96,9 @@ static int carries(const char *text, const char *fe) {
   return words > 1 && all;
 }
 
+/* core/thresholds.c: runtime override > JO_RELEVANCE_SIM_MIN > RELEV_SIM_MIN. */
 static double sim_min(void) {
-  const char *e = getenv("JO_RELEVANCE_SIM_MIN");
-  double v = (e && *e) ? atof(e) : 0;
-  return v > 0 && v < 1 ? v : RELEV_SIM_MIN;
+  return threshold_get("relevance_sim_min");
 }
 
 cJSON *relev_check(const relev_sample *s, const char *entity, long records) {

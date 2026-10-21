@@ -801,6 +801,47 @@ struct BreachJob: Decodable, Identifiable, Hashable {
 
 struct BreachJobsEnvelope: Decodable { let jobs: [BreachJob] }
 
+// ── Similarity thresholds (operator only) ─────────────────────────────────
+
+/// One row of `GET /api/admin/thresholds` (core/thresholds.c). `source` is
+/// where the value in force came from — "db" (a runtime override written by
+/// PUT /api/admin/thresholds/:key), "env" (the key's environment variable) or
+/// "default" (the compiled constant). The server owns resolution and range;
+/// the client only displays them and sends what the operator chose.
+struct SimilarityThreshold: Decodable, Identifiable, Hashable {
+    let key: String
+    let value: Double
+    let source: String
+    let defaultValue: Double
+    let min: Double
+    let max: Double
+    let env: String
+    let envValue: Double?
+    let metric: String?
+    let description: String?
+    let updatedBy: String?
+    let updatedAt: String?
+
+    var id: String { key }
+    var isOverridden: Bool { source == "db" }
+
+    private enum CodingKeys: String, CodingKey {
+        case key, value, source, defaultValue = "default", min, max, env
+        case envValue = "env_value", metric, description
+        case updatedBy = "updated_by", updatedAt = "updated_at"
+    }
+}
+
+/// `GET /api/admin/thresholds` — `{data:[…], meta:{count, order}}`.
+struct SimilarityThresholdsEnvelope: Decodable {
+    struct Meta: Decodable { let count: Int?; let order: String? }
+    let data: [SimilarityThreshold]
+    let meta: Meta?
+}
+
+/// `PUT /api/admin/thresholds/:key` — `{data:{…}}`, the row as now resolved.
+struct SimilarityThresholdEnvelope: Decodable { let data: SimilarityThreshold }
+
 /// `GET /api/admin/breach/catalog/preview` — what the seed parser produced,
 /// without writing anything.
 struct BreachCatalogPreview: Decodable {

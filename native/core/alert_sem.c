@@ -1,5 +1,6 @@
 /* core/alert_sem.c — see alert_sem.h. */
 #include "alert_sem.h"
+#include "thresholds.h"         /* operator-tunable similarity cut-offs */
 #include "embed_pod.h"
 #include "qembed.h"
 #include "../lib/vecindex.h"
@@ -38,7 +39,9 @@ double alert_sem_threshold(const cJSON *pred) {
   const cJSON *t = pred ? cJSON_GetObjectItem(pred, "threshold") : NULL;
   if (t && cJSON_IsNumber(t) && t->valuedouble > 0 && t->valuedouble <= 1)
     return t->valuedouble;
-  return ALERT_SEM_THRESHOLD_DEFAULT;
+  /* No per-rule threshold: the operator-tunable default (core/thresholds.c:
+   * runtime override > JO_ALERT_SEM_THRESHOLD > ALERT_SEM_THRESHOLD_DEFAULT). */
+  return threshold_get("alert_sem_threshold");
 }
 
 static void text_hash(const char *s, char out[20]) {

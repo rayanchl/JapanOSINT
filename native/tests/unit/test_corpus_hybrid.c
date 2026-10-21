@@ -10,6 +10,10 @@
  *   3. Tenancy holds inside the KNN: another tenant's row is never returned,
  *      however close it is.
  *   4. The 15 cap and its "of N" truncation notice survive the fusion.
+ *   5. A QUESTION with no entity (entity_type "question", the pipeline's
+ *      fallback) reads the sources the service index routes it to: the
+ *      keyword arm matches ANY word, only in routed sources' records, every
+ *      routed source above the floor is read, and each hit says so.
  *
  * Includes jp_corpus_lookup.c directly to reach run(), so run.sh links every
  * object EXCEPT obj/collectors/sources/jp_corpus_lookup.o and obj/main.o. */
@@ -20,6 +24,7 @@
 #include "embed_stub.h"
 
 #include <assert.h>
+#include <math.h>
 
 static db_handle g_db;
 
@@ -38,13 +43,35 @@ static int cap_emit(intel_sink *s, const intel_item *it) {
   return 1;
 }
 
-static cJSON *lookup(const char *entity, const char *tenant) {
+static cJSON *lookup_t(const char *entity, const char *type, const char *tenant) {
   cap_t c = { cJSON_CreateArray() };
   intel_sink s = { .ctx = &c, .emit = cap_emit };
   source_ctx ctx = { .source_id = "JP_CORPUS_LOOKUP", .entity = entity,
-                     .db = &g_db, .tenant_id = tenant };
+                     .entity_type = type, .db = &g_db, .tenant_id = tenant };
   assert(run(&ctx, &s) == 0);
   return c.rows;
+}
+static cJSON *lookup(const char *entity, const char *tenant) {
+  return lookup_t(entity, NULL, tenant);
+}
+
+/* A fixed service-index answer: two sources close to the question (cos 0.9
+ * and 0.6), one far (cos 0.2), so the floor (0.55) keeps two. */
+static int fake_route(db_handle *db, const char *q, const service_vec_filter *f,
+                      int k, service_vec_hit **out, service_vec_info *info) {
+  (void)db; (void)q; (void)k;
+  assert(f && !strcmp(f->kind, "scheduled") && "a question routes to scheduled sources");
+  if (info) memset(info, 0, sizeof *info);
+  static const struct { const char *id; double cos; } H[] = {
+    { "river-gauges", 0.9 }, { "jma-warnings", 0.6 }, { "insurance-news", 0.2 } };
+  service_vec_hit *h = calloc(3, sizeof *h);
+  for (int i = 0; i < 3; i++) {
+    h[i].id = strdup(H[i].id);
+    h[i].vrank = i + 1;
+    h[i].distance = sqrt(2.0 - 2.0 * H[i].cos);
+  }
+  *out = h;
+  return 3;
 }
 
 static int count_type(cJSON *rows, const char *rt) {
@@ -61,8 +88,9 @@ static int has_title(cJSON *rows, const char *t) {
   return 0;
 }
 
-static void put(const char *tenant, const char *key, const char *title) {
-  intel_sink s = intel_sink_make(&g_db, "corpus-test-src", tenant);
+static void put_src(const char *src, const char *tenant, const char *key,
+                    const char *title) {
+  intel_sink s = intel_sink_make(&g_db, src, tenant);
   intel_item it = {0};
   it.remote_key = key;
   it.title = title;
@@ -70,6 +98,9 @@ static void put(const char *tenant, const char *key, const char *title) {
   it.record_type = "news";
   assert(s.emit(&s, &it) >= 0);
   intel_sink_free(&s);
+}
+static void put(const char *tenant, const char *key, const char *title) {
+  put_src("corpus-test-src", tenant, key, title);
 }
 
 static void build_index(void) {
@@ -172,6 +203,42 @@ int main(void) {
   assert(strstr(s, "keyword + semantic rank fusion"));
   free(s); cJSON_Delete(a);
   printf("  cap %d kept, \"of N\" notice states the fusion: ok\n", CORPUS_LIMIT);
+
+  /* 5. a question routed to its sources */
+  put_src("river-gauges",   "legacy", "q1", "kamo river level rising");
+  put_src("jma-warnings",   "legacy", "q2", "heavy rain warning kyoto");
+  put_src("insurance-news", "legacy", "q3", "kyoto river insurance premium");
+  build_index();
+  corpus_route_search = fake_route;
+  /* As an ENTITY the AND of the words matches nothing in those sources. */
+  a = lookup_t("kyoto river flood", NULL, "t-me");
+  { cJSON *row; int fts = 0;
+    cJSON_ArrayForEach(row, a) {
+      cJSON *ret = cJSON_GetObjectItem(cJSON_GetObjectItem(row, "props"), "retrieval");
+      if (ret && cJSON_IsNumber(cJSON_GetObjectItem(ret, "fts_rank"))) fts++;
+    }
+    assert(fts == 0); }
+  cJSON_Delete(a);
+  a = lookup_t("kyoto river flood", "question", "t-me");
+  int routed_kw = 0;
+  cJSON_ArrayForEach(r, a) {
+    cJSON *p = cJSON_GetObjectItem(r, "props");
+    cJSON *ret = cJSON_GetObjectItem(p, "retrieval");
+    if (!ret) continue;
+    assert(cJSON_GetObjectItem(ret, "routed_sources")->valueint == 2);
+    if (!cJSON_IsNumber(cJSON_GetObjectItem(ret, "fts_rank"))) continue;
+    const char *t = cJSON_GetObjectItem(r, "title")->valuestring;
+    assert(strcmp(t, "kyoto river insurance premium") &&
+           "a source below the floor is not read by the keyword arm");
+    routed_kw++;
+  }
+  assert(routed_kw == 2 && "any word, in both routed sources");
+  assert(has_title(a, "kamo river level rising"));
+  assert(has_title(a, "heavy rain warning kyoto"));
+  cJSON_Delete(a);
+  corpus_route_search = service_vec_search;
+  printf("  question routed to 2 of 3 sources by the floor; any word, routed "
+         "records only: ok\n");
 
   free(inert);
   estub_stop();
