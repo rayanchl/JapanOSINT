@@ -109,9 +109,9 @@ time. On main's 48,346:
   and 25 rows of batches 44/47/48 whose official domains now publish gambling
   spam (below). It was authored as batch 45 and renumbered TWICE, to 49 and
   then 50;
-* **this branch's batch 46 (164 ArcGIS layers) and batch 51 (290)**, batch 51
+* **this branch's batch 46 (164 ArcGIS layers) and batch 53 (290)**, batch 53
   being the rest of batch 46's own probed pool
-  (`docs/verified-sources-batch51.tsv`). It was generated as 49, renumbered to
+  (`docs/verified-sources-batch53.tsv`). It was generated as 49, renumbered to
   50 when main's PR #55 took 49, and to 51 when main's PR #58 renumbered its
   own 49 to 50 — so BOTH branches moved to the same free number, and the
   add/add on `verified-sources-batch50.tsv` is the collision this rule names,
@@ -278,12 +278,12 @@ The lessons from batches 43–48 that a new batch must not relearn:
   nobody can hold for the two hours a 290-row sweep takes — a `make` in another
   shell replaces the file underneath it and every remaining row comes back
   shell `rc=126`, reported as `NO_RUN_LINE`, "the process died before the run
-  returned". Measured 2026-10-20: **229 of 290 batch-51 rows read that way**
+  returned". Measured 2026-10-20: **229 of 290 batch-53 rows read that way**
   from one unrelated rebuild made in the middle, and the output looks exactly
   like a batch of broken sources.
 
   **And when the GATE and the ENGINE disagree, the upstream can be the answer.**
-  Batch 51's audit called `JO51_AGS_GIS_COASTAL_COVERAGE_AREA` `EMITS_NOTHING`
+  Batch 51's audit called `JO53_AGS_GIS_COASTAL_COVERAGE_AREA` `EMITS_NOTHING`
   while a direct `--run` stored 371 of 371 — the dangerous direction, since a
   gate that contradicts the engine is how a working row gets "fixed".
   Reproducing the audit's exact invocation (its `ulimit`, its env, its scratch
@@ -295,7 +295,7 @@ The lessons from batches 43–48 that a new batch must not relearn:
   row, and a single verdict is still not a diagnosis.
 
   The other 289 of that batch account for themselves in
-  `docs/verified-sources-batch51.tsv`: 259 store exactly their upstream count,
+  `docs/verified-sources-batch53.tsv`: 259 store exactly their upstream count,
   25 cycle because their layer exceeds one cycle's 40,000, and 5 store slightly
   MORE because the discovery-pass count is a day stale and the layers grew
   (`returnCountOnly` re-asked agrees with the engine exactly). **1,706,171

@@ -76,7 +76,7 @@ COLLECTOR("hp3b43_jprss", "jprss (batch 43)", NULL, NULL, "grp_government")  /* 
 COLLECTOR("us_local", "United States — local", NULL, NULL, "grp_government")  /* 598 src; government 501, opendata 29, transport 25 */
 COLLECTOR("hp3b48_igo", "igo (batch 48)", NULL, NULL, "grp_government")  /* 495 src; international 489, government 6 */
 COLLECTOR("fr_government", "France — government", NULL, NULL, "grp_government")  /* 317 src; government 246, education 8, environment 6 */
-COLLECTOR("hp3b51_arcgislayers", "arcgislayers (batch 51)", NULL, NULL, "grp_government")  /* 290 src; government 57, infrastructure 57, geospatial 54 */
+COLLECTOR("hp3b53_arcgislayers", "arcgislayers (batch 53)", NULL, NULL, "grp_government")  /* 290 src; government 57, infrastructure 57, geospatial 54 */
 COLLECTOR("us_state", "United States — states", "米国 州", NULL, "grp_government")  /* 195 src; opendata 57, registry 33, transport 19 */
 COLLECTOR("hp3b23_jpmuni", "Japan — municipalities (batch 23)", "日本 市区町村", NULL, "grp_government")  /* 190 src; government 190 */
 COLLECTOR("us_government", "United States — government", NULL, NULL, "grp_government")  /* 189 src; government 189 */
