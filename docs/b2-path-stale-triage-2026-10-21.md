@@ -62,6 +62,28 @@ documented open-data APIs:
 | `NO_STORTINGET_DATA` | `data.stortinget.no/eksport/saker?...&format=json` | JSON export API |
 | `AT_PARLAMENT_RECORDS` | `parlament.gv.at/Filter/api/filter/data/101?...&export=true` | JSON |
 
+**And those three APIs were then asked whether they take an ENTITY**, because
+these rows are interval-0 pivots and a bulk table API that cannot filter is not
+a pivot replacement — it is a different KIND of row:
+
+* **Eduskunta filters, measured.** `?columnName=&columnValue=` returns
+  `rowData[1]` unfiltered and `rowData[0]` for a value that matches nothing, so
+  the parameter is honoured and this row can stay a pivot. 19 tables, each with
+  `page`/`perPage`/`hasMore` paging the engine already speaks.
+* **The Austrian filter API is a bulk export, and a large one**:
+  `/Filter/api/filter/data/101?...&export=true` answers
+  `{"pages":4,"count":391268,"header":[...]}` — 391,268 rows of the parliament's
+  document index, machine-readable. That wants to be a SCHEDULED row, not a
+  pivot.
+* **Stortinget's export is per SESSION** (`?sesjonid=2024-2025&format=json`
+  answers `saker_liste`); `?sakid=` alone answers HTTP 500. Also a scheduled
+  row rather than a pivot.
+
+So two of the three are a change of KIND as well as of path — interval 0 to a
+real interval, which rule 3 and the collector-label rule both have opinions
+about. That is a deliberate repair (the openFDA nine went the other way and
+this file records what it cost), not a path edit.
+
 And four more have a server-rendered page that works:
 
 | row | measured replacement | reading |
