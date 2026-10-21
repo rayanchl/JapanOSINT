@@ -89,7 +89,9 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 57,403** (2026-10-21), and it is the sum of three
+**The registered count is 57,423** (2026-10-21): 57,403 plus batch 52's 19 rows
+and the four jpcorpwp rows that a TLS chain fault had rejected, less the three
+`registry.faa.gov` rows (both below). The 57,403 is the sum of three
 batches authored at the same time, two of which had to be renumbered at merge
 time. On main's 48,346:
 
@@ -1047,6 +1049,7 @@ native/collectors/feed/generated/  generated scheduled feed collectors (vsrc*)
 native/collectors/pivot/table/*.c  hpengine tables (hp*, hp2*, hp3*) — the strict set
 native/collectors/pod/*.c          enrichment/maintenance pods
 native/core/                       db, http, intel sink, dispatcher, pipeline, HTTP API
+native/data/tls/                   the intermediates our upstreams omit (core/catrust.c)
 native/tools/                      lint_sources.py, gen_hp_batch.py, probe_hp_batch.py
 docs/                              plans, pipeline notes, and the two house rules above
 ```
@@ -1356,6 +1359,57 @@ probe is the tool that decides whether a row ships:
   fetch-failure record). Worth both numbers: the defect was real and was
   mislabelling 20 live registered rows as dead, and it had cost no source its
   place.
+
+  **And that "30 still failing" was wrong about 24 of them, because it read one
+  MESSAGE as one cause** (2026-10-21,
+  `docs/tls-intermediates-2026-10-21.md`). `unable to get local issuer
+  certificate` does not say the certificate is untrustworthy; it says no client
+  here could find the certificate that SIGNED it. A public CA signs a leaf with
+  an intermediate and the server is supposed to send that intermediate too —
+  nine hosts send only the leaf, and neither OpenSSL nor libcurl will go and
+  fetch the missing link, which is why a browser accepts the same page. The
+  link is public and the leaf itself names it, in its AIA `CA Issuers`
+  extension. Seven distinct intermediates, each verified against the SYSTEM
+  root store before it was kept, now live in
+  **`native/data/tls/extra-intermediates.pem`** with their provenance, loaded by the
+  engine (`core/catrust.c`, through `CURLOPT_SSL_CTX_FUNCTION`) and by the
+  tools (`tools/jo_tls.py`). Measured through `http_request()` itself: **nine
+  of nine hosts go from `rc=1 status=0` to HTTP 200**, and the 24 candidates on
+  them re-probe 24 of 24 PASS.
+
+  **It cannot widen trust, and that is structural rather than promised.** Every
+  entry is an intermediate — signed by another CA, never self-signed — and
+  OpenSSL accepts a chain only when it ends at a self-signed certificate that
+  was already trusted (`X509_V_FLAG_PARTIAL_CHAIN` is not set). So an entry can
+  COMPLETE a chain and never ANCHOR one. `tests/unit/test_catrust.c` fails the
+  build on a self-signed, expired or unchainable entry, checks the
+  self-signed discriminator against 50 real roots so it cannot pass vacuously,
+  and all three refusals were confirmed by hand rather than assumed.
+
+  So: **read the TLS error, not the word "TLS".** "No local issuer",
+  "expired", "hostname mismatch" and "self-signed in chain" are four findings
+  with four remedies, and only one is about a certificate we should not trust.
+  Of the original thirty, 24 were a missing intermediate, 2 re-point to another
+  name (`www.ip.kyusan-u.ac.jp` → `www.kyusan-u.ac.jp`; `matrix.kde.org`
+  delegates to `kde.modular.im`), 1 was this container's own egress, 1 was the
+  already-refuted Yamaguchi 409, and **2 are genuinely unreachable** — an SNI
+  mismatch at `dataverse.openscholar.org` and `nesstar.statssa.gov.za`, which
+  only not checking the hostname would reach. The engine still cannot TELL
+  these apart in its fetch-failure record; that is open item D1-bis.
+
+* **`registry.faa.gov` is gone, and the measurement is why.** Three rows read
+  it — `US_FAA_AIRCRAFT_REGISTRY`, `FAA_NNUMBER_REGISTRY` and `FAA_REGISTRY`
+  (a bespoke collector in `collectors/sources/vehicles_world.c`) — and all
+  three are removed as of 2026-10-21. One request per agent that day: the
+  engine's `JO_USER_AGENT` 403, the same agent with `feed collector` stripped
+  403, `curl/8.5.0` 403, **`JapanOSINT/1.0` alone 200**, no User-Agent at all
+  200. So it is neither a one-word token filter nor a block on identifying
+  ourselves: it refuses an agent that carries a parenthetical contact route.
+  Recovering those rows would mean dropping our contact route for that host,
+  which is the one thing `core/httpclient.c`'s UA_OVERRIDE table is not for —
+  and that table's own comment had already declined to list the host for a
+  weaker version of the same reason. Three sources removed rather than left
+  registered and failing every run.
 
 Unifying the parser immediately found three live defects of the same family, where a
 stray `\;` escaped the separator and the following opt was swallowed into the
@@ -1869,6 +1923,32 @@ Engine subtleties worth knowing before writing a row:
   a server reorders it, and the failure mode is the engine refetching page 1
   until the page ceiling — every later page lost, with the run still looking
   successful.
+* **A KEY MAY CONTAIN A DOT, and a dotted-path resolver that always splits
+  cannot see one.** `lib/jsonlist.c`'s `dotted()` split every path
+  unconditionally, so `"@odata.nextLink"` — which sat in its next-link list,
+  under a comment naming OData as a supported dialect — was looked up as
+  `doc["@odata"]["nextLink"]`, which no OData server has ever published. Every
+  OData v4 row in the tree stopped at page 1, with the capability claimed in a
+  comment two lines above the code that could not deliver it; the same split
+  hid `odata.count`, so no OData row could state its remainder either. Both
+  resolvers now fall back to the literal key **after** the split fails, and
+  only for a path that had a dot to split, which makes it strictly additive:
+  every path that resolved before resolves to the same node. Both OData
+  spellings of the total are in the declared-total list. Measured on LegCo
+  Hong Kong, whose `$inlinecount=allpages` answers `odata.count: 551619`
+  beside 200 rows.
+
+  **And `hp_path` in `lib/hpengine.c` is the OTHER COPY**, fixed in the same
+  change rather than left to be found later — it resolves the path a ROW
+  declares, so `next_path = "@odata.nextLink"` would have split identically.
+  This file already records the uid-collision guard existing in three record
+  paths and being repaired in one; look for the other copies.
+
+  `hptest` 47, 47b and 47c, all three confirmed to fail under the old
+  behaviour — and 47's FIRST version passed under both, because `$top`/`$skip`
+  let the cursor inference reach page 2 without the link at all. It names a
+  URL with no size parameter now, so the published link is the only route
+  there.
 * A "CSV" feed is often not comma-separated. DataPlane.org publishes
   `ASN | AS name | ip | lastseen | category`; declare **`csv_delim=pipe`** (or
   `tab`, or `semi` — named, because the manifest is itself pipe-delimited) or

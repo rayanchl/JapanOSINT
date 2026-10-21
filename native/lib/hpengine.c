@@ -631,6 +631,18 @@ static cJSON *hp_path(cJSON *root, const char *path) {
     if (allnum && cJSON_IsArray(cur)) cur = cJSON_GetArrayItem(cur, atoi(seg));
     else                              cur = cJSON_GetObjectItem(cur, seg);
   }
+  /* A KEY MAY CONTAIN A LITERAL DOT. OData names its envelope fields
+   * `odata.count` and `@odata.nextLink` — single keys, dots and all — so a row
+   * declaring `next_path = "@odata.nextLink"` would have had it split into
+   * `["@odata"]["nextLink"]`, which no OData server publishes. The same defect
+   * was live in lib/jsonlist.c's dotted(), where it had kept the OData next
+   * link unreachable since that key list was written; this is the OTHER COPY,
+   * fixed in the same change rather than left to be found later.
+   *
+   * Only after the split fails, and only when there was a dot to split, so it
+   * is strictly additive: every path that resolves today resolves to the same
+   * node. */
+  if (!cur && strchr(path, '.')) cur = cJSON_GetObjectItem(root, path);
   return cur;
 }
 

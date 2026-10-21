@@ -225,15 +225,83 @@ the row was meant to be.
 
 ## D. Unmeasurable from this container — record, do not guess
 
-### D1. 31 rows fail certificate verification, for the engine too
+### D1. ~~31 rows fail certificate verification, for the engine too~~ — FIXED for 24, and the premise was wrong
 
-`docs/tls-rejects-revisited-2026-10-20.tsv`. Untrusted or incomplete chains,
-which a cipher security level does not address and which must not be bypassed.
-Measured on six (IODA ×3, Dataverse UCLA, NADA Nepal, NI MARENA): each answers
-`rc=-1` and files a `collector-fetch-failure`.
+This item read one MESSAGE as one cause. `unable to get local issuer
+certificate` does not mean the certificate is untrustworthy; it means no client
+here could find the certificate that SIGNED it, which on these hosts is because
+the server sends its leaf WITHOUT the public intermediate that signed it.
 
-**This needs a decision, not a measurement**: keep them disclosing, or remove
-them under "fails twice leaves". They are currently honest and useless.
+Measured 2026-10-21, nine hosts, each leaf's own AIA `CA Issuers` URL fetched
+and the chain verified against the SYSTEM root store: nine of nine OK, seven
+distinct intermediates, every one chaining to a root already trusted. They are
+in `native/data/tls/extra-intermediates.pem`, loaded by the engine
+(`core/catrust.c`) and the tools (`tools/jo_tls.py`); verification stays on
+throughout, and `tests/unit/test_catrust.c` fails the build if any entry is
+self-signed, expired or unchainable. Through `http_request()` itself: all nine
+go from `rc=1 status=0` to HTTP 200.
+
+**23 sources registered as a result** — batch 52's 19 (`hp3b52_{ansd,hklegco,
+statsgov}.c`) plus four `JO41_WP_CORP_*` rows spliced back into
+`hp3b41_jpcorpwp.c`. Two of the 24 recovered candidates were still not
+registered, for reasons no record count can see
+(`docs/rejected-sources-batch52.tsv`). Full account:
+`docs/tls-intermediates-2026-10-21.md`.
+
+What is LEFT of the original thirty: **2 genuinely unreachable** — an SNI
+mismatch at `dataverse.openscholar.org` and `nesstar.statssa.gov.za`, where
+only not checking the hostname would get in, which is not on offer — 1 that was
+this container's own egress, 1 already-refuted Yamaguchi 409, and 2 that
+re-point rather than need a certificate (`www.ip.kyusan-u.ac.jp` →
+`www.kyusan-u.ac.jp`; `matrix.kde.org` delegates to `kde.modular.im`, which its
+`*.modular.im` certificate covers). The six rows this item cited by name —
+IODA ×3, Dataverse UCLA, NADA Nepal, NI MARENA — are registered rows on hosts
+whose chains are a DIFFERENT fault and were not re-measured here; they are
+D1-ter below.
+
+### D1-bis. The engine cannot tell four TLS faults apart
+
+A chain fault arrives as `rc=-1` and one `collector-fetch-failure` naming a
+transport error. "No local issuer", "expired", "hostname mismatch" and
+"self-signed in chain" want four different remedies — fetch the intermediate,
+wait for the operator, re-point the row, refuse — and only the last is about a
+certificate we should not trust. Writing the libcurl/OpenSSL verify result into
+that record would have made D1 self-diagnosing instead of costing 24 live
+publishers a near-miss with deletion.
+
+### D1-ter. ~~The six registered rows D1 cited were not re-measured~~ — MEASURED, three distinct faults
+
+IODA ×3, Dataverse UCLA, NADA Nepal, NI MARENA — REGISTERED rows, not
+candidates, whose 2026-10-20 reading was `rc=-1`. All four hosts were asked the
+same question on 2026-10-21, and they are **three different faults**, which is
+the whole point of D1-bis:
+
+* **`www.marena.gob.ni` — RECOVERED, for free.** Its leaf is signed by the same
+  `Sectigo Public Server Authentication CA DV R36` that `www.ons.dz` omits, so
+  the bundle already carried it. Measured through `http_request()`:
+  `rc=1 status=0` → **HTTP 200, 203,652 bytes**. `NI_MARENA_PUBLICACIONES`
+  works again with no change of its own.
+* **`microdata.nsonepal.gov.np` — the leaf EXPIRED on 2026-10-16**, five days
+  before this reading (`error 10 at 0 depth: certificate has expired`). Nothing
+  here fixes that and nothing should; it resolves when Nepal's statistics
+  office renews. Leave it disclosing.
+* **IODA (`api.ioda.inetintel.cc.gatech.edu`) and `dataverse.ucla.edu` — the
+  ROOT is not trusted in this container.** Both serve an InCommon intermediate
+  whose own issuer is `emSign Root TLS CA - G3` / `G1` (eMudhra), and
+  `/etc/ssl/certs/ca-certificates.crt` holds **zero** emSign certificates, so
+  the failure is `error 20 at 1 depth` — the INTERMEDIATE's issuer is missing,
+  not the leaf's. Fetching the intermediate therefore changes nothing, and
+  making it work would mean adding a new TRUST ANCHOR, which
+  `native/data/tls/extra-intermediates.pem` forbids by construction and
+  `tests/unit/test_catrust.c` fails the build over. **This is an OS trust-store
+  question for the container image, not a source question** — record it, do not
+  work around it.
+
+One method note, because it cost two findings before it was caught: an AIA
+extension lists its OCSP responder FIRST and `CA Issuers` second, so a read of
+the line after the extension header finds only the responder. Both IODA and
+UCLA first came back `NO_AIA` from exactly that, and so did
+`www.kanamic.net` among the nine. Read the whole block.
 
 ### D2. A set of hosts answer HTTP 000 through this container's proxy
 

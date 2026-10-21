@@ -1108,6 +1108,19 @@ int jsonlist_emit_ex(intel_sink *sink, const char *source_id, cJSON *doc,
  * actually said, and never from an assumption. */
 
 /* Dotted lookup that tolerates a missing level, for probing candidate keys. */
+/* A KEY MAY CONTAIN A LITERAL DOT, and splitting every path unconditionally
+ * made such a key unreachable. OData spells its envelope fields `odata.count`
+ * and `@odata.nextLink` — single keys, dots and all — so the split looked for
+ * `doc["odata"]["count"]` and `doc["@odata"]["nextLink"]`, which no OData
+ * server has ever published. `"@odata.nextLink"` therefore sat in
+ * next_link()'s key list, under a comment naming OData as a supported
+ * dialect, matching nothing: every OData v4 row in the tree stopped at page 1
+ * with the capability claimed two lines above the code that could not deliver
+ * it, and the same split hid the declared total.
+ *
+ * The literal is tried only AFTER the split fails, and only for a path that
+ * has a dot to split. That makes it strictly additive: a path that resolves
+ * today resolves to the same node, so nothing that works can change. */
 static cJSON *dotted(cJSON *doc, const char *path) {
   char buf[128];
   snprintf(buf, sizeof buf, "%s", path);
@@ -1116,6 +1129,7 @@ static cJSON *dotted(cJSON *doc, const char *path) {
   for (char *tok = strtok_r(buf, ".", &save); tok && cur;
        tok = strtok_r(NULL, ".", &save))
     cur = cJSON_GetObjectItem(cur, tok);
+  if (!cur && strchr(path, '.')) cur = cJSON_GetObjectItem(doc, path);
   return cur;
 }
 
@@ -1251,6 +1265,11 @@ static long declared_total(cJSON *doc) {
      * the row read 50 of 2,425 and nothing could say so. Added because a live
      * row needed it, not on the chance that something might. */
     "totalItems",
+    /* OData's own spelling of the same number, v4 and v3: single keys whose
+     * name contains a dot, which is why dotted() tries the literal first.
+     * LegCo Hong Kong answers `odata.count: 551619` beside 200 rows when the
+     * request carries `$inlinecount=allpages`. */
+    "@odata.count", "odata.count",
     NULL };
   for (int i = 0; KEYS[i]; i++) {
     cJSON *v = dotted(doc, KEYS[i]);

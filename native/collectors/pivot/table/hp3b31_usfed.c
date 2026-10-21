@@ -317,16 +317,23 @@ static const hp_source HP3B31_USFED[] = {
       "parte notices naming who met which commissioner, comments, and the "
       "docket each belongs to. The clearest record of telecom lobbying" },
 
-  { .id = "US_FAA_AIRCRAFT_REGISTRY", .name = "FAA — N-number aircraft registry",
-    .name_ja = "米国FAA 航空機登録", .category = "transport",
-    .portal = "https://registry.faa.gov", .record_type = "us-aircraft",
-    .tags = "\"us\",\"aviation\",\"registry\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://registry.faa.gov/aircraftinquiry/Search/NameResult?Nametxt={q}",
-    .base = "https://registry.faa.gov", .filter_query = 1,
-    .description = "Aircraft registered to a named owner — N-number, serial, "
-      "make and model, airworthiness class and the registered address. Corporate "
-      "aircraft ownership is one of the few asset classes with a public index" },
+  /* US_FAA_AIRCRAFT_REGISTRY was here and was REMOVED on 2026-10-21, with
+   * FAA_NNUMBER_REGISTRY (hp_americas_deep.c) and FAA_REGISTRY
+   * (collectors/sources/vehicles_world.c). registry.faa.gov refuses this
+   * client. Measured that day, one request each:
+   *     the engine's JO_USER_AGENT                          403
+   *     the same agent with "feed collector" removed        403
+   *     "JapanOSINT/1.0" alone                              200
+   *     "curl/8.5.0"                                        403
+   *     no User-Agent header at all                         200
+   * So it is neither a one-word token filter (the stripped agent is refused
+   * too) nor a block on identifying ourselves (our bare name and version is
+   * admitted): it refuses an agent carrying a parenthetical contact route.
+   * Recovering these rows would therefore mean dropping the contact route
+   * from the agent for this host — which is the one thing the UA_OVERRIDE
+   * table in core/httpclient.c is not for, and the reason that table's
+   * comment had already declined to list this host. Removed rather than left
+   * registered and failing on every run. */
 
   { .id = "US_NARA_CATALOG", .name = "US National Archives — catalog records",
     .name_ja = "米国国立公文書館 目録", .category = "government",

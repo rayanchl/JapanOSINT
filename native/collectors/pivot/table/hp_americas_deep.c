@@ -139,16 +139,11 @@ static const hp_source HP_AMERICAS[] = {
       "status, grant and expiry dates; a licence list is a hard link between a "
       "corporate name and physical transmitting infrastructure" },
 
-  { .id = "FAA_NNUMBER_REGISTRY", .name = "FAA — N-number aircraft registry",
-    .name_ja = "米国FAA — 航空機登録(N番号)", .category = "transport",
-    .type = "scraped", .mode = HP_HTML,
-    .portal = "https://registry.faa.gov", .record_type = "us-aircraft",
-    .tags = "\"us\",\"aviation\",\"ownership\"", .free_tier = 1,
-    .url = "https://registry.faa.gov/AircraftInquiry/Search/NNumberResult?nNumberTxt={qn}",
-    .base = "https://registry.faa.gov", .filter_query = 0,
-    .description = "FAA aircraft registration for an N-number — registered owner, "
-      "address, aircraft make/model/serial and certificate dates. Aircraft "
-      "ownership is one of the few asset registries that is fully public" },
+  /* FAA_NNUMBER_REGISTRY was here and was REMOVED on 2026-10-21 —
+   * registry.faa.gov refuses an agent that carries a contact route, and
+   * recovering it would mean dropping ours for that host. The measurement
+   * and the reasoning are recorded once, beside the sibling row, in
+   * collectors/pivot/table/hp3b31_usfed.c. */
 
   { .id = "NPI_REGISTRY", .name = "NPPES — US healthcare provider registry",
     .name_ja = "米国 医療従事者登録(NPI)", .category = "health",

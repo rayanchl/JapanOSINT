@@ -19,17 +19,50 @@ and the engine, asked the same question, stores 102 records across 3 requests.
 So the host is alive, the row works, and only the tool could not see it. The
 page-2 sweep reported 27 rows this way, 24 of them that one host.
 
+It also supplies the intermediates that nine upstreams OMIT from their own
+handshake — `native/data/tls/extra-intermediates.pem`, the same bundle the engine
+loads through `core/catrust.c`. Without them, a host whose leaf is signed by a
+public CA answers "unable to get local issuer certificate" and reads as a dead
+endpoint; 24 probed candidates were rejected that way. Every certificate in
+that file is an intermediate, so it can complete a chain and cannot anchor one;
+`core/catrust.h` has the argument in full.
+
 CERTIFICATE VERIFICATION STAYS ON. This lowers OpenSSL's cipher *security
-level* so an older server's handshake is acceptable; it does not skip
-verification, and it must not be changed to. The three rows that still fail
-after this (IODA, Dataverse UCLA, NADA Nepal) fail for the engine too, with
-`rc=-1` and a collector-fetch-failure record naming it — which is the honest
-outcome rather than a tool artefact.
+level* so an older server's handshake is acceptable, and adds the middle of
+some chains; it does not skip verification, and it must not be changed to.
+
+What still fails after this fails for the engine too, and for three DIFFERENT
+reasons — read the error, not the word "TLS" (measured 2026-10-21):
+
+    api.ioda.inetintel.cc.gatech.edu   error 20 at depth 1 — the INTERMEDIATE's
+    dataverse.ucla.edu                 issuer is an emSign root this store does
+                                       not hold. Fixing it would mean a new
+                                       trust ANCHOR, which is not on offer.
+    microdata.nsonepal.gov.np          error 10 at depth 0 — the leaf expired on
+                                       2026-10-16. The operator's to renew.
+    dataverse.openscholar.org          the certificate is for another name; only
+    nesstar.statssa.gov.za             not checking the hostname would get in.
+
+Each of those answers `rc=-1` with a collector-fetch-failure record, which is
+the honest outcome rather than a tool artefact.
 """
 import os
 import ssl
 
 _CA = "/root/.ccr/ca-bundle.crt"
+_EXTRA_REL = "../data/tls/extra-intermediates.pem"
+
+
+def extra_intermediates_path():
+    """The bundle core/catrust.c resolves, resolved the same way."""
+    e = os.environ.get("JO_CA_EXTRA")
+    if e:
+        return e
+    r = os.environ.get("JO_REPO_ROOT")
+    if r:
+        return os.path.join(r, "native/data/tls/extra-intermediates.pem")
+    return os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                        _EXTRA_REL))
 
 
 def context():
@@ -38,6 +71,12 @@ def context():
     if os.path.exists(_CA):
         try:
             ctx.load_verify_locations(_CA)
+        except Exception:
+            pass
+    extra = extra_intermediates_path()
+    if os.path.exists(extra):
+        try:
+            ctx.load_verify_locations(extra)
         except Exception:
             pass
     try:
@@ -53,4 +92,5 @@ def context():
 
 if __name__ == "__main__":
     c = context()
-    print("verify_mode=%s check_hostname=%s" % (c.verify_mode, c.check_hostname))
+    print("verify_mode=%s check_hostname=%s extra=%s"
+          % (c.verify_mode, c.check_hostname, extra_intermediates_path()))

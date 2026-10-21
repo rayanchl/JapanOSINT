@@ -1,0 +1,24 @@
+id	verdict	shell_rc	sched_rc	emitted	stored	db_rows	available	secs	note
+JO41_WP_CORP_6696	OK	0	0	76	76	76	76	5.2	
+JO41_WP_CORP_6444	OK	0	0	107	107	107	107	5.9	
+JO41_WP_CORP_5983	OK	0	0	423	423	423	423	8.4	
+ansd-appel-offre	OK	0	0	8	8	8	8	1.7	
+JO41_WP_CORP_7480	OK	0	0	253	253	253	253	6.3	
+ansd-concours-formations	OK	0	0	3	3	3	3	2.5	
+ansd-evenements	OK	0	0	5	5	5	5	1.8	
+ansd-actualite	OK	0	0	65	65	65	65	10.0	
+ansd-indicateur-economique	OK	0	0	4	4	4	4	2.1	
+ansd-enquete-etude	OK	0	0	101	101	101	101	10.2	
+ansd-lois-rapport-activite	OK	0	0	19	19	19	19	5.1	
+ansd-lois-reglements	OK	0	0	28	28	28	28	2.5	
+ansd-procedures	OK	0	0	7	7	7	7	2.9	
+ansd-rapport-recensement	OK	0	0	5	5	5	5	2.2	
+ansd-ressource	OK	0	0	5	5	5	5	2.0	
+ansd-statistique-theme	OK	0	0	1	1	1	1	1.5	
+ansd-situation-eco-sociale	OK	0	0	570	570	570	570	33.9	
+ansd-flash-stat	OK	0	0	581	581	581	581	51.3	
+hk-legco-bills	OK	0	0	6884	6884	6884	6884	58.6	
+ons-algerie-rss	OK	0	0	10	10	10	10	1.5	
+pk-pcrwr-posts	OK	0	0	134	134	134	134	7.2	
+hk-legco-voting-results	OK	0	0	20000	20001	20000	20000	199.4	
+hk-legco-hansard-speeches	SLOW	-1	0	-1	-1	12400	-1	600.1	hit --timeout 600.1s; 12400 rows already stored

@@ -1,4 +1,5 @@
 #include "httpclient.h"
+#include "catrust.h"
 #include "url_override.h"
 #include "evidence.h"
 #include "content_change.h"
@@ -156,6 +157,10 @@ void http_easy_harden(void *curl_easy) {
   curl_easy_setopt(e, CURLOPT_PREREQFUNCTION, on_prereq);
   curl_easy_setopt(e, CURLOPT_PREREQDATA, (void *)0);
 #endif
+  /* Supply the intermediates nine upstreams omit from their own handshake.
+   * This ADDS links to the verification store; it cannot add a trust anchor
+   * and does not touch VERIFYPEER or VERIFYHOST. See core/catrust.h. */
+  catrust_install(e);
 }
 
 /* usleep() takes a 32-bit useconds_t and POSIX allows EINVAL past one second;

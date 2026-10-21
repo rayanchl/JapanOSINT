@@ -1,0 +1,10 @@
+# Batch 52 — the candidates recovered from the TLS chain fault that were NOT
+# registered, and why. Kept as data rather than dropped silently.
+#
+# All 24 of the candidates on the nine missing-intermediate hosts answered
+# HTTP 200 and parsed once native/data/tls/extra-intermediates.pem made them reachable
+# (docs/tls-intermediates-2026-10-21.md). Two were still not registered, both
+# for a reason a record count cannot see.
+id	host	verdict	measured	reason
+JO41_WP_CORP_3939	www.kanamic.net	DEMO_INSTALL_ONLY	HTTP 200, 2,264 bytes, 1 record	The host's WordPress REST answers, and its whole posts collection is ONE post, dated 2025-10-16 and titled "Hello world!" at /hello-world/ — the installer's default. Live endpoint, parses, one real record, so every gate passes; what it would store is the WordPress sample post for ever, attributed to カナミックネットワーク (証券コード 3939) as its corporate notices. The company's actual notices are not on this REST root. Same shape as the 21st row of docs/tls-rejects-revisited-2026-10-20.tsv, which serves five posts titled "Sample post5".
+pk-pcrwr-search	www.pcrwr.gov.pk	SUPERSEDED_BY_COLLECTION	HTTP 200, 26,113 bytes, 50 records	A keyword search frozen at `search=water`: /wp/v2/search returns 50 ranked hits carrying only id, title, url, type and subtype. The same site's /wp/v2/posts holds 134 complete posts (X-WP-Total 134, 2 pages) with content.rendered, and those 50 are a ranked subset of them. Registered as `pk-pcrwr-posts` instead; keeping both would re-fetch the same records under two ids, the thinner one re-reading one frozen query for ever.

@@ -5,7 +5,29 @@ was seeded from, what it measured and what it taught. Moved out of `CLAUDE.md`
 on 2026-10-19 so that file keeps the rules and the current number; the lessons
 that a new batch must not relearn are summarised there. Newest first.
 
-**The registered count is 56,955** (2026-10-21): main's 53,739 (its batch 49, PR #55) − 6 − 25 + 3,247 (batch 50).
+**The registered count is 57,423** (2026-10-21): 57,403 + 19 (batch 52) + 4
+(jpcorpwp recovered) − 3 (registry.faa.gov).
+
+* **+19 — batch 52**, and **+4 into batch 41's `jpcorpwp` table**, all 23 of
+  them rows that nine servers had made unreachable by serving a leaf without
+  the public intermediate that signed it. The chain fault, the bundle that
+  fixes it and the proof it cannot widen trust are
+  `docs/tls-intermediates-2026-10-21.md`; the rows are
+  `native/collectors/OSINT_SOURCES_BATCH_52_TLSRECOVERED.md`. 24 candidates
+  re-probed 24 of 24 PASS; **2 were still not registered** — a live WordPress
+  whose entire collection is the installer's "Hello world!" post, and a
+  keyword search superseded by the collection it is a subset of
+  (`docs/rejected-sources-batch52.tsv`). One REGISTERED row,
+  `NI_MARENA_PUBLICACIONES`, came back for free on an intermediate the bundle
+  already carried.
+* **−3 — `registry.faa.gov`.** `US_FAA_AIRCRAFT_REGISTRY`,
+  `FAA_NNUMBER_REGISTRY` and `FAA_REGISTRY`. The host answers 403 to any agent
+  carrying a parenthetical contact route and 200 to a bare name or none at all,
+  so recovering them would mean dropping our contact route for that host. The
+  measurement is beside the first of the three rows in
+  `collectors/pivot/table/hp3b31_usfed.c`.
+
+**The registered count was 56,955** (2026-10-21): main's 53,739 (its batch 49, PR #55) − 6 − 25 + 3,247 (batch 50).
 
 * **−6**: `jp_feeds_batch43/44` feeds measured dead on the 2026-10-20 emit
   sweep (game-i.daa.jp serves XHTML, peco-japan.com an S3 AccessDenied,

@@ -1,0 +1,39 @@
+# Batch 52 — the engine's own reading of every row, 2026-10-21.
+#
+# `walked` is the collection size measured independently before the row was
+# written (each ANSD collection walked to its end; each LegCo service's own
+# $inlinecount=allpages). `emitted`/`stored`/`db_rows` are from
+# audit_registry_emit.py against a fresh scratch database — two independent
+# readings, the run line and the database. Raw:
+# docs/emit-sources-batch52-2026-10-21.tsv
+#
+# 22 OK, 0 records lost to uid collision over 29,289 emitted and 29,289 stored.
+# 1 SLOW, which is UNMEASURED and not failed: see the note on its row.
+#
+# The four JO41_WP_CORP_* rows are in this file because they were recovered by
+# the same fix, but they live in collectors/pivot/table/hp3b41_jpcorpwp.c under
+# their original batch-41 ids, not in a batch-52 table.
+id	table	verdict	walked	emitted	stored	db_rows	secs	note
+ansd-actualite	hp3b52_ansd	OK	65	65	65	65	10.0	complete; page 1 alone gives 47, with meta.omitted explaining the withheld nodes
+ansd-appel-offre	hp3b52_ansd	OK	8	8	8	8	1.7	complete
+ansd-concours-formations	hp3b52_ansd	OK	3	3	3	3	2.5	complete
+ansd-enquete-etude	hp3b52_ansd	OK	101	101	101	101	10.2	complete
+ansd-evenements	hp3b52_ansd	OK	5	5	5	5	1.8	complete
+ansd-flash-stat	hp3b52_ansd	OK	581	581	581	581	51.3	complete; page 1 alone gives 50, the page limit
+ansd-indicateur-economique	hp3b52_ansd	OK	4	4	4	4	2.1	complete
+ansd-lois-rapport-activite	hp3b52_ansd	OK	19	19	19	19	5.1	complete
+ansd-lois-reglements	hp3b52_ansd	OK	28	28	28	28	2.5	complete
+ansd-procedures	hp3b52_ansd	OK	7	7	7	7	2.9	complete
+ansd-rapport-recensement	hp3b52_ansd	OK	5	5	5	5	2.2	complete
+ansd-ressource	hp3b52_ansd	OK	5	5	5	5	2.0	complete
+ansd-situation-eco-sociale	hp3b52_ansd	OK	570	570	570	570	33.9	complete; page 1 alone gives 50, the page limit
+ansd-statistique-theme	hp3b52_ansd	OK	1	1	1	1	1.5	complete
+hk-legco-bills	hp3b52_hklegco	OK	6884	6884	6884	6884	58.6	complete over 36 pages, exactly the service's own odata.count, no notice
+hk-legco-hansard-speeches	hp3b52_hklegco	SLOW	551619	-1	-1	12400	600.1	UNMEASURED, not failed: hit the tool's 600 s kill line with 12,400 of this cycle's 20,000 already in the database. A kill line is a property of the tool. Speech bodies are the largest payload in the batch and the run was sharing app.legco.gov.hk with hk-legco-voting-results.
+hk-legco-voting-results	hp3b52_hklegco	OK	542641	20000	20001	20000	199.4	one cycle slice of 100 pages; stored is 20,000 records plus the 1 truncation notice that discloses the rest of the collection
+ons-algerie-rss	hp3b52_statsgov	OK	10	10	10	10	1.5	complete; SPIP publishes the newest ten and no paging at all
+pk-pcrwr-posts	hp3b52_statsgov	OK	134	134	134	134	7.2	complete, exactly its own X-WP-Total
+JO41_WP_CORP_5983	hp3b41_jpcorpwp	OK	-	423	423	423	8.4	iwabuchi.co.jp; 100 on page 1, 423 over the walk
+JO41_WP_CORP_6444	hp3b41_jpcorpwp	OK	-	107	107	107	5.9	sanden.co.jp
+JO41_WP_CORP_6696	hp3b41_jpcorpwp	OK	-	76	76	76	5.2	traas.co.jp; one short page, complete
+JO41_WP_CORP_7480	hp3b41_jpcorpwp	OK	-	253	253	253	6.3	suzuden.co.jp

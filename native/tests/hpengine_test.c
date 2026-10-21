@@ -488,6 +488,25 @@ static const hp_source T[] = {
     .page_walk = 1,
     .record_type = "t-total-page", .free_tier = 1, .description = "d" },
 
+  /* OData spells both envelope fields as ONE key containing a dot, so a
+   * dotted-path resolver that splits unconditionally could never find them —
+   * `@odata.nextLink` sat in jsonlist.c's next-link list, named in its comment
+   * as the OData spelling, matching nothing. Both resolvers now fall back to
+   * the literal key AFTER the split fails, so nothing that resolved before
+   * resolves differently. T_ODATA_DECL is the hp_path copy of the same fix:
+   * the row names the dotted key itself, in next_path. */
+  { .id = "T_ODATA", .name = "OData envelope: dotted KEYS, not dotted paths",
+    .url = "https://x.test/od?select=all", .array_path = "value",
+    .title_keys = "name", .id_keys = "id", .interval = 3600,
+    .page_walk = 1,
+    .record_type = "t-odata", .free_tier = 1, .description = "d" },
+
+  { .id = "T_ODATA_DECL", .name = "a row DECLARING a dotted key as next_path",
+    .url = "https://x.test/odd?select=all", .array_path = "value",
+    .title_keys = "name", .id_keys = "id", .interval = 3600,
+    .next_path = "@odata.nextLink",
+    .record_type = "t-odata-decl", .free_tier = 1, .description = "d" },
+
   { .id = "T_PAGE_SET", .name = "page_param replaces, never appends",
     .url = "https://x.test/pset?page=1&per=2", .array_path = "items",
     .title_keys = "name", .id_keys = "id", .page_param = "page", .interval = 3600,
@@ -3960,6 +3979,53 @@ int main(void) {
   ok(rc == 0 && g_res_set && strcmp(g_res_out, "w=2020-02-12") == 0,
      "46d: a window whose upstream declares it EMPTY advances to the next "
      "window rather than stalling on it");
+
+  /* 47. AN ODATA ENVELOPE'S KEYS CONTAIN A DOT, and dotted() used to split
+   *     every path unconditionally — so `@odata.nextLink` was looked up as
+   *     doc["@odata"]["nextLink"], which no OData server publishes. The key
+   *     had been in the next-link list, with the comment above it naming
+   *     OData as supported, since that list was written. */
+  fx_reset();
+  fx_add("/od2?page=2", 200,
+    "{\"odata.count\":3,\"value\":[{\"name\":\"o3\",\"id\":\"3\"}]}");
+  fx_add("/od?select=all", 200,
+    "{\"odata.count\":3,"
+    "\"@odata.nextLink\":\"https://x.test/od2?page=2\","
+    "\"value\":[{\"name\":\"o1\",\"id\":\"1\"},{\"name\":\"o2\",\"id\":\"2\"}]}");
+  rc = run_source("T_ODATA", NULL);
+  ok(rc == 0 && g_ncalls == 2 && g_ncap >= 3,
+     "47: the server's own @odata.nextLink is followed — a key whose NAME "
+     "contains a dot resolves after the dotted split fails");
+
+  /* 47b. and `odata.count` reaches the declared-total read, so a row that
+   *      stops short of what the upstream says it holds discloses the real
+   *      remainder instead of inferring one from the page it got. */
+  fx_reset();
+  fx_add("/od?select=all", 200,
+    "{\"odata.count\":551619,"
+    "\"value\":[{\"name\":\"p1\",\"id\":\"1\"},{\"name\":\"p2\",\"id\":\"2\"}]}");
+  rc = run_source("T_ODATA", NULL);
+  { const cap *nt = NULL;
+    ok(rc == 0 && cap_count("collector-truncation-notice", &nt) == 1 && nt &&
+       strstr(nt->props, "\"records_available\":551619") != NULL &&
+       strstr(nt->props, "\"records_available_basis\":\"upstream declared this "
+                         "total\"") != NULL,
+       "47b: odata.count is read as the upstream's declared total"); }
+
+  /* 47c. THE OTHER COPY: hp_path, which resolves a path the ROW declares. A
+   *      row whose upstream is OData names `@odata.nextLink` in next_path, and
+   *      splitting that is the identical defect one file over. Fixed in the
+   *      same change rather than left for a later session to find — CLAUDE.md
+   *      records the uid-collision guard existing in three record paths and
+   *      being repaired in one. */
+  fx_reset();
+  fx_add("/odd2?page=2", 200, "{\"value\":[{\"name\":\"q3\",\"id\":\"3\"}]}");
+  fx_add("/odd?select=all", 200,
+    "{\"@odata.nextLink\":\"https://x.test/odd2?page=2\","
+    "\"value\":[{\"name\":\"q1\",\"id\":\"1\"},{\"name\":\"q2\",\"id\":\"2\"}]}");
+  rc = run_source("T_ODATA_DECL", NULL);
+  ok(rc == 0 && g_ncalls == 2 && g_ncap >= 3,
+     "47c: a row that DECLARES a dotted key as next_path resolves it too");
 
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;
