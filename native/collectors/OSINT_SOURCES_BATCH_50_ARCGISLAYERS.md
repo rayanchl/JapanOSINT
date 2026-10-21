@@ -1,9 +1,9 @@
-# Batch 49 — the rest of batch 46's ArcGIS pool
+# Batch 50 — the rest of batch 46's ArcGIS pool
 
 **290 rows** (2026-10-20).
-Manifest: `docs/candidate-sources-batch49.arcgislayers.txt`.
-Table: `native/collectors/pivot/table/hp3b49_arcgislayers.c`, ids `JO49_*`.
-Collector key: `hp3b49_arcgislayers`, under `grp_geo` in `core/collectors.def`.
+Manifest: `docs/candidate-sources-batch50.arcgislayers.txt`.
+Table: `native/collectors/pivot/table/hp3b50_arcgislayers.c`, ids `JO50_*`.
+Collector key: `hp3b50_arcgislayers`, under `grp_geo` in `core/collectors.def`.
 
 ## What this batch is, and why it is not a new discovery pass
 
@@ -25,7 +25,7 @@ per root, so the per-root selection cap was buying almost nothing.
 | rows | 290 |
 | distinct hosts | 37 |
 | probe | **290/290 PASS** (289 in the batch run, 1 on a clean retry) |
-| emit | **289 OK, 1 EMITS_NOTHING** (a flapping upstream) — `docs/verified-sources-batch49.tsv` |
+| emit | **289 OK, 1 EMITS_NOTHING** (a flapping upstream) — `docs/verified-sources-batch50.tsv` |
 | stored in one pass | **1,706,171** records, against 25,132,703 the layers declare |
 | registry | 48,507 → 48,797, exactly +290 |
 
@@ -83,7 +83,7 @@ measurements batch 46 made are the measurements behind these 290:
 
 ## The batch number
 
-Generated as batch 49 after checking the tree at generation time — the check
+Generated as batch 50 after checking the tree at generation time — the check
 CLAUDE.md says to make at MERGE time, because 45 was claimed by PR #50 while
 PR #51 was open and main's own 45 and 46 had been renumbered to 47 and 48. 49
 was free then and is free now. Re-check before merging:
@@ -96,8 +96,8 @@ git ls-tree -r --name-only origin/main | grep -oE '(batch|hp3b)[0-9]+' | sort -u
 
 ```sh
 cd native
-python3 tools/audit_batch_reachable.py ../docs/candidate-sources-batch49.arcgislayers.txt
-python3 tools/audit_registry_emit.py --bin ./bin/japanosint --match '^JO49_' --jobs 4 --timeout 220
+python3 tools/audit_batch_reachable.py ../docs/candidate-sources-batch50.arcgislayers.txt
+python3 tools/audit_registry_emit.py --bin ./bin/japanosint --match '^JO50_' --jobs 4 --timeout 220
 ```
 
 `audit_batch_reachable.py`: **0 of 290 rows can never run** — every row

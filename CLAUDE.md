@@ -91,7 +91,7 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 
 **The registered count is 48,792** (2026-10-20): main's 48,346 — 48,343 plus
 the three embedding maintenance pods of the infrastructure audit — plus batch
-46's 164 measured ArcGIS layers and batch 49's 290, which are the rest of batch
+46's 164 measured ArcGIS layers and batch 50's 290, which are the rest of batch
 46's own probed pool, then a net −5 from a day spent measuring rows rather than
 adding them: +1 KKJ prefecture that had been missing, +5 Setagaya layers
 recovered from a rename, −2 IDESCA San Carlos layers measured as withdrawn,
@@ -177,12 +177,12 @@ The lessons from batches 43–48 that a new batch must not relearn:
   nobody can hold for the two hours a 290-row sweep takes — a `make` in another
   shell replaces the file underneath it and every remaining row comes back
   shell `rc=126`, reported as `NO_RUN_LINE`, "the process died before the run
-  returned". Measured 2026-10-20: **229 of 290 batch-49 rows read that way**
+  returned". Measured 2026-10-20: **229 of 290 batch-50 rows read that way**
   from one unrelated rebuild made in the middle, and the output looks exactly
   like a batch of broken sources.
 
   **And when the GATE and the ENGINE disagree, the upstream can be the answer.**
-  Batch 49's audit called `JO49_AGS_GIS_COASTAL_COVERAGE_AREA` `EMITS_NOTHING`
+  Batch 50's audit called `JO50_AGS_GIS_COASTAL_COVERAGE_AREA` `EMITS_NOTHING`
   while a direct `--run` stored 371 of 371 — the dangerous direction, since a
   gate that contradicts the engine is how a working row gets "fixed".
   Reproducing the audit's exact invocation (its `ulimit`, its env, its scratch
@@ -194,7 +194,7 @@ The lessons from batches 43–48 that a new batch must not relearn:
   row, and a single verdict is still not a diagnosis.
 
   The other 289 of that batch account for themselves in
-  `docs/verified-sources-batch49.tsv`: 259 store exactly their upstream count,
+  `docs/verified-sources-batch50.tsv`: 259 store exactly their upstream count,
   25 cycle because their layer exceeds one cycle's 40,000, and 5 store slightly
   MORE because the discovery-pass count is a day stale and the layers grew
   (`returnCountOnly` re-asked agrees with the engine exactly). **1,706,171

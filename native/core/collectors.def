@@ -621,11 +621,11 @@ COLLECTOR("hp3b32_jparcgis", "jparcgis (batch 32)", NULL, NULL, "grp_geo")  /* 5
  * sits under grp_geo all the same: what the 164 rows have in common is the
  * ArcGIS feature layer, which is how they were found and how they are read. */
 COLLECTOR("hp3b46_arcgislayers", "ArcGIS feature layers, from each service root's own directory (batch 46)", "ArcGIS フィーチャレイヤー（サービス一覧由来）", NULL, "grp_geo")  /* 164 src; transport 35, infrastructure 34, government 28 */
-/* Batch 49 is the rest of batch 46's probed pool: the 290 candidates that
+/* Batch 50 is the rest of batch 46's probed pool: the 290 candidates that
  * passed the same dedupe, the same 50-record floor and the same cartography
  * drop, and were held back only by a 2-per-root cap that was a batch-size
  * decision rather than a quality one. Same beat, same collector group. */
-COLLECTOR("hp3b49_arcgislayers", "ArcGIS feature layers, the rest of the probed directories (batch 49)", "ArcGIS フィーチャレイヤー（サービス一覧由来・残り）", NULL, "grp_geo")  /* 290 src; government 57, geospatial 54, infrastructure 52 */
+COLLECTOR("hp3b50_arcgislayers", "ArcGIS feature layers, the rest of the probed directories (batch 50)", "ArcGIS フィーチャレイヤー（サービス一覧由来・残り）", NULL, "grp_geo")  /* 290 src; government 57, geospatial 54, infrastructure 52 */
 COLLECTOR("hp3b19_osm", "osm (batch 19)", NULL, NULL, "grp_geo")  /* 33 src; reference 13, transport 8, osint 6 */
 COLLECTOR("hp3b40_jpgeo3", "jpgeo3 (batch 40)", NULL, NULL, "grp_geo")  /* 29 src; environment 7, registry 4, economy 3 */
 COLLECTOR("osint_geospatial", "OSINT pivots — geospatial", "OSINTピボット — geospatial", "Hand-written entity pivots whose category is geospatial (collectors/sources/, DEFR/DEF rows).", "grp_geo")  /* 28 src; geospatial 28 */

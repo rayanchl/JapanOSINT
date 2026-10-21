@@ -8,13 +8,13 @@ that a new batch must not relearn are summarised there. Newest first.
 **The registered count is 48,794** (2026-10-20): the 48,507 below, plus batch
 49's **290 ArcGIS feature layers** — the remainder of batch 46's own probed
 pool, through the same filters and the same live probe
-(`native/collectors/OSINT_SOURCES_BATCH_49_ARCGISLAYERS.md`,
-`docs/verified-sources-batch49.tsv`) — and then a net −3 from a day of
+(`native/collectors/OSINT_SOURCES_BATCH_50_ARCGISLAYERS.md`,
+`docs/verified-sources-batch50.tsv`) — and then a net −3 from a day of
 measuring rows rather than adding them:
 
 | change | rows | why |
 | --- | --- | --- |
-| batch 49 | +290 | batch 46's pool finished; its 164 were a batch-size cap, not a quality one |
+| batch 50 | +290 | batch 46's pool finished; its 164 were a batch-size cap, not a quality one |
 | KKJ 三重県 | +1 | the set covered 46 of Japan's 47 prefectures and nobody had counted them |
 | Setagaya street fire extinguishers | +5 | one dead row, looking for the name we expected, became five ward layers (4,951 records) plus the ward's earthquake-well register (1,148) |
 | IDESCA San Carlos | −2 | `patentes` and `licores` withdrawn — 38 feature types and 0 catalogue hits for `patente`, `licores` AND `comercial`, so absent rather than renamed |
