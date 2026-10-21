@@ -131,24 +131,6 @@ static const hp_source HP3B44_USGOV[] = {
       "12:48:43 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_ALAMOTOWNSHIPMI_GOV_2", .name = "Alamo Township (City, Kalamazoo, MI) - Comments on: Home",
-    .name_ja = "Alamo Township (City, Kalamazoo, MI) - Comments on: Home",
-    .category = "government", .portal = "https://alamotownshipmi.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://alamotownshipmi.gov/sample-page/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 604800,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 4 items, RSS2 feed, newest Tue, 11 Mar 2025 "
-      "06:36:54 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO44_US_ALBERTTWPMI_GOV", .name = "Township of Albert (City, Lewiston, MI) - Albert Township – "
       "Lewiston Michigan",
     .name_ja = "Township of Albert (City, Lewiston, MI) - Albert Township – Lewiston Michigan",
@@ -13761,24 +13743,6 @@ static const hp_source HP3B44_USGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-17: 10 items, RSS2 feed, newest Thu, 10 Sep 2026 "
       "17:01:18 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO44_US_PINELANDTX_GOV", .name = "City of Pineland (City, Pineland, TX) - City Of Pineland",
-    .name_ja = "City of Pineland (City, Pineland, TX) - City Of Pineland",
-    .category = "government", .portal = "https://pinelandtx.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://pinelandtx.gov/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "17:07:46 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO44_US_PINELEVELAL_GOV", .name = "Town of Pine Level, Alabama (City, Prattville, AL) - Town of "

@@ -593,7 +593,7 @@ COLLECTOR("np_logistics", "Nepal — logistics", NULL, NULL, "grp_transport")  /
 COLLECTOR("hp3b48_news", "news (batch 48)", NULL, NULL, "grp_media")  /* 4000 src; news 4000 */
 COLLECTOR("gnews", "Google News editions", "Google ニュース 国別・トピック別", "Google News RSS by country and topic (gnews-top-*, gnews-<cc>-<topic>).", "grp_media")  /* 545 src; news 545 */
 COLLECTOR("hp3b45_jpwpmedia", "Japan — online media & magazines, WordPress collections (batch 45)", "日本 ウェブメディア WordPress", NULL, "grp_media")  /* 426 src; media 394, wire 32 */
-COLLECTOR("jp_webmedia", "Japan — web media & blogs, RSS (batches 43/44)", "日本 ウェブメディア・ブログ RSS", "400 Japanese online magazines, tech and lifestyle blogs, tourism and business sites (jp-b43-*, jp-b44-*).", "grp_media")  /* 400 src; media 134, technology 117, lifestyle 60 */
+COLLECTOR("jp_webmedia", "Japan — web media & blogs, RSS (batches 41-44)", "日本 ウェブメディア・ブログ RSS", "544 Japanese online magazines, tech and lifestyle blogs, tourism and business sites (jp-*, jp-b43-*, jp-b44-*).", "grp_media")  /* 544 src; media 134, technology 117, lifestyle 60 */
 COLLECTOR("news", "News", "ニュース", NULL, "grp_media")  /* 193 src; wire 190,  3 */
 COLLECTOR("world_outlets", "News outlets worldwide", "世界の報道機関", "National and regional newspapers, broadcasters and wires.", "grp_media")  /* 161 src; news 161 */
 COLLECTOR("europe_news", "European news", "欧州ニュース", NULL, "grp_media")  /* 150 src; news 150 */

@@ -8230,24 +8230,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "22:50:15 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q2824321", .name = "ADETEF (government-agency, FR) - Adetef.fr",
-    .name_ja = "ADETEF (government-agency, FR) - Adetef.fr",
-    .category = "government", .portal = "https://www.adetef.fr/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.adetef.fr/feed",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 86400,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 02 Sep 2026 "
-      "11:09:20 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO47_WD_Q2972371", .name = "International Centre for Advanced Mediterranean Agronomic "
       "Studies (government-agency, FR) - CIHEAM",
     .name_ja = "International Centre for Advanced Mediterranean Agronomic Studies (government-agency, FR) - CIHEAM",
@@ -10878,25 +10860,6 @@ static const hp_source HP3B47_WDGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
       "13:57:13 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO47_WD_Q132803390", .name = "Nabarangpur College (government-agency, IN) - ନବରଙ୍ଗପୁର କଲେଜ  "
-      "Nabarangpur College",
-    .name_ja = "Nabarangpur College (government-agency, IN) - ନବରଙ୍ଗପୁର କଲେଜ  Nabarangpur College",
-    .category = "government", .portal = "https://nabarangpurcollege.ac.in/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://nabarangpurcollege.ac.in/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "10:54:38 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO47_WD_Q140907366", .name = "Directorate of Agricultural Research (government-agency, IQ) - "
@@ -13993,26 +13956,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "16:52:09 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q139771320", .name = "Forestry Research Institute of Malawi (government-agency, MW) - "
-      "SpinBoss Casino: bezpieczne płatności i szybkie wypłaty dla "
-      "graczy",
-    .name_ja = "Forestry Research Institute of Malawi (government-agency, MW) - SpinBoss Casino: bezpieczne płatności i szybkie wypłaty dla graczy",
-    .category = "government", .portal = "https://www.frim.org.mw/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.frim.org.mw/?feed=rss2",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "12:19:52 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO47_WD_Q137204471", .name = "Consejo Veracruzano de Investigación Científica y Desarrollo "
       "Tecnológico (government-agency, MX) - Consejo Veracruzano de "
       "Investigación Científica y Desarrollo Tecnológico",
@@ -17064,25 +17007,6 @@ static const hp_source HP3B47_WDGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
       "08:57:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO47_WD_Q25231168", .name = "Federal Flood Commission (government-agency, PK) - Federal Flood "
-      "Commison",
-    .name_ja = "Federal Flood Commission (government-agency, PK) - Federal Flood Commison",
-    .category = "government", .portal = "https://ffc.gov.pk/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ffc.gov.pk/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 21600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 05 Oct 2026 "
-      "13:30:36 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO47_WD_Q109236559", .name = "Khyber Pakhtunkhwa Elementary and Secondary Education Department "
@@ -21565,25 +21489,6 @@ static const hp_source HP3B47_WDGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 12 items, RSS2 feed, newest Wed, 14 Oct 2026 "
       "06:40:01 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO47_WD_Q16304226", .name = "Royal Thai Army Ordnance Department (government-agency, TH) - "
-      "789k",
-    .name_ja = "Royal Thai Army Ordnance Department (government-agency, TH) - 789k",
-    .category = "government", .portal = "https://kingfruits.com.co/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://kingfruits.com.co/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 86400,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 22 May 2026 "
-      "04:56:23 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO47_WD_Q20570807", .name = "Institute of Community Colleges (government-agency, TH) - "

@@ -89,16 +89,27 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 54,187** (2026-10-21), and it is the sum of two
-batches that were authored at the same time under the same number — see the
-renumbering note below. On main's 48,346:
+**The registered count is 57,403** (2026-10-21), and it is the sum of three
+batches authored at the same time, two of which had to be renumbered at merge
+time. On main's 48,346:
 
-* **main's batch 49, 5,393 measured rows** (`docs/verified-sources-batch49.tsv`,
-  `native/collectors/OSINT_SOURCES_BATCH_49_JPWPFEDERATIONS.md`);
+* **main's batch 49, 5,393 measured rows** — batch 45's staging set registered
+  (`docs/verified-sources-batch49.tsv`);
+* **main's batch 50, 3,247 government and institutional RSS/Atom feeds** for
+  Japan, the US, the UK, France and China
+  (`collectors/sources/{jp,us,uk,fr,cn,intl}_feeds_batch50.c`,
+  `docs/verified-sources-batch50.tsv`, 3,237 OK on the emit sweep, 54,800
+  emitted / 54,802 stored), less six `jp_feeds_batch43/44` feeds measured dead
+  and 25 rows of batches 44/47/48 whose official domains now publish gambling
+  spam (below). It was authored as batch 45 and renumbered TWICE, to 49 and
+  then 50;
 * **this branch's batch 46 (164 ArcGIS layers) and batch 51 (290)**, batch 51
   being the rest of batch 46's own probed pool
-  (`docs/verified-sources-batch51.tsv`) — it was generated as 49 and
-  renumbered at merge time, which is the fourth session that has happened to;
+  (`docs/verified-sources-batch51.tsv`). It was generated as 49, renumbered to
+  50 when main's PR #55 took 49, and to 51 when main's PR #58 renumbered its
+  own 49 to 50 — so BOTH branches moved to the same free number, and the
+  add/add on `verified-sources-batch50.tsv` is the collision this rule names,
+  hit for the fifth time;
 * then a net −5 from a day spent measuring rows rather than adding them: +1 KKJ
   prefecture that had been missing, +5 Setagaya layers recovered from a rename,
   −2 IDESCA San Carlos layers measured as withdrawn, −10 behind a closed
@@ -109,6 +120,34 @@ renumbering note below. On main's 48,346:
 * and +2 for two backfill siblings measured into existence, `PLOS_CORPUS` and
   `ENERGINET_PRODCONSUM_SETTLEMENT_HISTORY`.
 
+**And the UA word filter was found TWICE, independently, on 55 hosts with no
+overlap**: this branch bisected six US municipal CKAN portals plus
+planelogger.com, main bisected 48 French commune, small US city and Scottish
+NHS hosts. Same word in the agent, same remedy, different hosts. Two
+independent measurements make it a product people deploy rather than a few
+local policies, so bisect the agent before writing off any 403/444/502 row.
+
+* **An official domain is not forever, and no record count can see it lapse.**
+  Wikidata's `P856` official website — and any register like it — lists the
+  domain a body USED to hold. Scanning the ITEM TITLES of 2,729 autodiscovered
+  feeds found 27 that serve Vietnamese/Indonesian betting, crypto-casino or
+  pharma spam under a city's name (Hudson, Madison, South Houston, Yokohama's
+  `kaikou.yokohama`…), and the same scan over main's batches 44/47/48 found 25
+  more, including a hacked `pinelandtx.gov` and `ffc.gov.pk`. Every one passed
+  probe AND emit with healthy numbers. Page titles are not enough — South
+  Houston's homepage title was its own name while its feed was slot spam. Scan
+  item titles for gambling vocabulary and for a script the source has no reason
+  to publish in, then read the hits: "cialis" is inside "Commercialisti" and
+  "casino" inside "Liceo Pascasino". Removals and their evidence:
+  `docs/removed-sources-2026-10-20-takeovers.tsv`.
+* **Ask the homepage for its feeds.** Probing `/rss/`, `/feed/` on Japanese
+  government hosts found 27 feeds; reading each official homepage's own
+  `<link rel="alternate" type="application/rss+xml">` found 961 — the batch-42
+  lesson again, one level up.
+
+**The registered count was 53,739** (2026-10-20): batch 49's 5,393 measured rows
+(`docs/verified-sources-batch49.tsv`,
+`native/collectors/OSINT_SOURCES_BATCH_49_JPWPFEDERATIONS.md`) on 48,346.
 **Batch 49 is batch 45's staging set registered** — the WordPress collections of
 the member organisations of Japan's nationwide federations (medical and
 pharmacist associations, JA, chambers of commerce, 法人会, co-ops, JC, the 士業
