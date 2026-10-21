@@ -39,13 +39,15 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 57,408** (2026-10-21): main's 56,955 (below) plus
+**The registered count is 57,409** (2026-10-21): main's 56,955 (below) plus
 this branch's 453 on the same base — the 491 rows the User-Agent header
 recovered from bot walls, less 19 of them whose feed main's batch 50 reads
 (merged first, so its rows stay) and one whose domain the takeover scan below
 caught (`bnm.mg`, casino spam under Madagascar's standards bureau — the other
 490 were clean), plus `PLOS_CORPUS`, less the 19 rows batches 34 and 35 lost to
-their first measurement. The ledger has both sessions' days.
+their first measurement — then plus one, the ods147 pair that replaced a
+misnamed row (the ELIA paragraph under "Cadence policy"). The ledger has both
+sessions' days.
 
 **The count was 56,955** (2026-10-21): main's 53,739, less six
 `jp_feeds_batch43/44` feeds measured dead, less 25 rows of batches 44/47/48
@@ -1412,10 +1414,31 @@ Engine subtleties worth knowing before writing a row:
   in May 2024** (newest record 2024-05-21, total unchanged between audits) and
   the row had re-read its first 150 points of 2019 every 15 minutes for 17
   months — it reads the successor `ods134` now, 212 records in its three-day
-  window, measured. The fifth, `ods147`, has no `datetime` field and the host
-  answered none of twelve requests for one record of it, so its time field is
-  unnamed, its row says so, and its notice still discloses the 20-page read.
-  **Before windowing a row, read its newest record: a frozen series looks
+  window, measured. The fifth, `ods147`, was not the dataset its row said it
+  was (2026-10-21): the row called it a renewable intraday forecast; its own
+  metadata — the first answer the host gave in two days — titles it "System
+  imbalance forecast next quarter hour (near real-time)", one record a
+  MINUTE since 2023-10-06 (1,437 in the last day, 1,576,655 in all), time
+  field `predictiontimeutc`, which is why `datetime` was "Unknown field".
+  It is now the deliberate pair `ELIA_SI_FORECAST_NEXT_QH` (the last six
+  hours newest first, every 15 minutes: 359 of 359 stored across four pages)
+  and `ELIA_SI_FORECAST_NEXT_QH_HISTORY`, the whole series — and because the
+  records endpoint caps `offset` at 10,000, an offset walk could never reach
+  past the first 10,000 of 1.58 million, so the history row is a **keyset
+  cursor**: `order_by=predictiontimeutc asc` with
+  `next_path=results.$last.predictiontimeutc` spent through a `next_tmpl`
+  whose `where=predictiontimeutc>date'{v}'` asks for everything strictly
+  after the last record (the Go-module-index shape), 100 pages an hour under
+  `page_resume=1`. Measured: 10,000 of 10,000 in 77 s, 2023-10-06T12:57 to
+  2023-10-13T11:36, the resume URL stored; the second run resumed from that
+  URL and stored the next 10,000 (to 2023-10-20T10:32) — 20,000 distinct
+  rows over two runs against one database, no overlap, 72 s each. About a
+  week per cycle against 1,440 new records a day. The
+  `/exports/csv` route (the whole dataset as one ~210 MB stream, read to three
+  rows) is the other complete read; the cursor was chosen because a cut walk
+  resumes where it stopped and a cut export starts over. **A row's name is a
+  claim about its dataset too — read the metadata endpoint once**, and
+  **before windowing a row, read its newest record: a frozen series looks
   exactly like a truncated one from the count alone.** The two GOV.UK report
   searches (MAIB, RAIB) were not a window problem but the `count`/`start`
   pager above: at `count=100` each reads its whole register in 12 / 7 pages.

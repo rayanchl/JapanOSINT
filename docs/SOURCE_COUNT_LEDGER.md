@@ -5,7 +5,19 @@ was seeded from, what it measured and what it taught. Moved out of `CLAUDE.md`
 on 2026-10-19 so that file keeps the rules and the current number; the lessons
 that a new batch must not relearn are summarised there. Newest first.
 
-**The registered count is 57,408** (2026-10-21): main's 56,955 (its batch 50, the
+**The registered count is 57,409** (2026-10-21, later the same day): 57,408
+plus one. `ELIA_RENEWABLE_INTRADAY_FORECAST` (batch 19, ods147) was a guess at
+its dataset's content: ods147's own metadata — the first answer
+opendata.elia.be gave in two days — titles it "System imbalance forecast next
+quarter hour (near real-time)", one record a minute since 2023-10-06,
+1,576,655 of them, time field `predictiontimeutc`. The row is replaced by the
+deliberate pair `ELIA_SI_FORECAST_NEXT_QH` (last six hours, newest first,
+every 15 minutes) and `ELIA_SI_FORECAST_NEXT_QH_HISTORY` (the whole series on
+a keyset cursor, `next_path=results.$last.predictiontimeutc`, 100 pages an
+hour over a `page_resume` cycle, because the records endpoint caps `offset`
+at 10,000). Both floors re-recorded at 57,409.
+
+**The count was 57,408** (2026-10-21): main's 56,955 (its batch 50, the
 six dead feeds and the 25 takeovers, below) plus this branch's 453 — the 491
 rows recovered from bot walls, less 19 whose feed batch 50 already reads and
 one the same takeover scan caught (`bnm.mg`, casino spam; the other 490 were
