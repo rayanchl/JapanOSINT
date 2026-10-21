@@ -190,7 +190,8 @@ COLLECTOR("np_policy", "Nepal — policy", NULL, NULL, "grp_government")  /* 1 s
 COLLECTOR("np_projects", "Nepal — projects", NULL, NULL, "grp_government")  /* 1 src; projects 1 */
 COLLECTOR("np_regulator", "Nepal — regulator", NULL, NULL, "grp_government")  /* 1 src; regulator 1 */
 
-/* Law, courts, legislation & IP: 28 collector(s), 548 sources */
+/* Law, courts, legislation & IP: 29 collector(s), 978 sources */
+COLLECTOR("hp3b49_jpwpprof", "Japan — professional bodies: tax, legal, labour, architects, realtors (batch 49)", "日本 士業団体", NULL, "grp_legal")  /* 430 src; legal 430 */
 COLLECTOR("legal", "Legal", "法務", NULL, "grp_legal")  /* 147 src; parliament 81, courts 46, gazette 7 */
 COLLECTOR("us_legal", "United States — legal", NULL, NULL, "grp_legal")  /* 101 src; legal 101 */
 COLLECTOR("hp3b19_legalip", "legalip (batch 19)", NULL, NULL, "grp_legal")  /* 63 src; legal 25, reference 20, telecom 14 */
@@ -220,11 +221,14 @@ COLLECTOR("int_legal", "International — legal", NULL, NULL, "grp_legal")  /* 1
 COLLECTOR("nl_legal", "Netherlands — legal", NULL, NULL, "grp_legal")  /* 1 src; legal 1 */
 COLLECTOR("sk_legal", "Slovakia — legal", NULL, NULL, "grp_legal")  /* 1 src; legal 1 */
 
-/* Companies, finance & markets: 72 collector(s), 3393 sources */
+/* Companies, finance & markets: 75 collector(s), 5062 sources */
+COLLECTOR("hp3b49_jpwpcci", "Japan — chambers of commerce & industry (batch 49)", "日本 商工会議所", NULL, "grp_corporate")  /* 1021 src; business 1021 */
 COLLECTOR("hp3b42_jpcptcorp", "Japan — company sites, WordPress custom post types (batch 42)", "日本 企業サイト カスタム投稿", NULL, "grp_corporate")  /* 912 src; corporate 912 */
 COLLECTOR("hp3b42_jppages", "Japan — company sites, WordPress pages (batch 42)", "日本 企業サイト 固定ページ", NULL, "grp_corporate")  /* 409 src; corporate 356, research 24, finance 15 */
+COLLECTOR("hp3b49_jpwpcoop", "Japan — consumer, fishery & labour co-operatives (batch 49)", "日本 生協・漁協・労金", NULL, "grp_corporate")  /* 389 src; commerce 389 */
 COLLECTOR("hp3b41_jpcorpwp", "Japan — company websites, WordPress feeds (batch 41)", "日本 企業サイト WordPress", NULL, "grp_corporate")  /* 380 src; corporate 380 */
 COLLECTOR("hp3b42_jpusers", "Japan — company sites, WordPress authors (batch 42)", "日本 企業サイト 投稿者", NULL, "grp_corporate")  /* 347 src; corporate 306, research 18, government 14 */
+COLLECTOR("hp3b49_jpwpcommerce", "Japan — corporate-tax associations 法人会 (batch 49)", "日本 法人会", NULL, "grp_corporate")  /* 259 src; business 259 */
 COLLECTOR("hp3b30_jpbank2", "Japan — banks (batch 30)", "日本 銀行", NULL, "grp_corporate")  /* 122 src; finance 122 */
 COLLECTOR("hp3b45_jpwpcorp", "Japan — company sites, WordPress collections (batch 45)", "日本 企業サイト WordPress（45）", NULL, "grp_corporate")  /* 116 src; business 63, corporate 33, commerce 9 */
 COLLECTOR("hp3b25_jpbizreg", "jpbizreg (batch 25)", NULL, NULL, "grp_corporate")  /* 104 src; government 50, business 25, health 19 */
@@ -410,7 +414,7 @@ COLLECTOR("qa_statistics", "Qatar — statistics", NULL, NULL, "grp_opendata")  
 COLLECTOR("sl_statistics", "Sierra Leone — statistics", NULL, NULL, "grp_opendata")  /* 1 src; statistics 1 */
 COLLECTOR("tn_microdata", "Tunisia — microdata", NULL, NULL, "grp_opendata")  /* 1 src; microdata 1 */
 
-/* Science, research & academia: 22 collector(s), 1586 sources */
+/* Science, research & academia: 23 collector(s), 1589 sources */
 COLLECTOR("academic", "Academic and research feeds", "学術・研究フィード", NULL, "grp_science")  /* 371 src; literature 134, clinical 61, genomics 41 */
 COLLECTOR("science", "Science feeds", "科学フィード", NULL, "grp_science")  /* 340 src; earthobs 60, spaceweather 51, genomics 42 */
 COLLECTOR("hp3b42_jpcptuni", "Japan — university sites, WordPress custom post types (batch 42)", "日本 大学サイト カスタム投稿", NULL, "grp_science")  /* 205 src; research 205 */
@@ -431,10 +435,14 @@ COLLECTOR("us_research", "United States — research", NULL, NULL, "grp_science"
 COLLECTOR("hp3b45_jpwpscience", "Japan — research institutions, WordPress collections (batch 45)", "日本 研究機関 WordPress", NULL, "grp_science")  /* 11 src; physics 11 */
 COLLECTOR("de_research", "Germany — research", NULL, NULL, "grp_science")  /* 9 src; research 9 */
 COLLECTOR("fr_research", "France — research", NULL, NULL, "grp_science")  /* 3 src; research 3 */
+COLLECTOR("hp3b49_jpwpedu", "Japan — junior-college & private-university associations (batch 49)", "日本 短大協会・私大協", NULL, "grp_science")  /* 3 src; education 3 */
 COLLECTOR("it_research", "Italy — research", NULL, NULL, "grp_science")  /* 2 src; research 2 */
 COLLECTOR("hp3b28_jpdb", "Japan — CiNii Research (batch 28)", "日本 CiNii Research", NULL, "grp_science")  /* 1 src; reference 1 */
 
-/* Health, food & agriculture: 24 collector(s), 394 sources */
+/* Health, food & agriculture: 27 collector(s), 2463 sources */
+COLLECTOR("hp3b49_jpwpmedical", "Japan — medical, pharmacist, nursing & veterinary associations (batch 49)", "日本 医師会・薬剤師会・看護協会・獣医師会", NULL, "grp_health")  /* 1041 src; health 1041 */
+COLLECTOR("hp3b49_jpwpagri", "Japan — JA cooperatives, NOSAI & agricultural committees (batch 49)", "日本 JA・NOSAI・農業委員会", NULL, "grp_health")  /* 847 src; agriculture 847 */
+COLLECTOR("hp3b49_jpwpwelfare", "Japan — social welfare councils (batch 49)", "日本 社会福祉協議会", NULL, "grp_health")  /* 181 src; health 181 */
 COLLECTOR("health", "Health", "保健・医療", NULL, "grp_health")  /* 125 src; clinical 53, literature 25, outbreak 16 */
 COLLECTOR("hp3b19_health", "health (batch 19)", NULL, NULL, "grp_health")  /* 115 src; health 115 */
 COLLECTOR("hp3b25_jpkaigo", "jpkaigo (batch 25)", NULL, NULL, "grp_health")  /* 35 src; health 35 */
@@ -603,7 +611,8 @@ COLLECTOR("osint_news", "OSINT pivots — news", "OSINTピボット — news", "
 COLLECTOR("osint_media", "OSINT pivots — media", "OSINTピボット — media", "Hand-written entity pivots whose category is media (collectors/sources/, DEFR/DEF rows).", "grp_media")  /* 9 src; media 9 */
 COLLECTOR("hp3b19_media", "media (batch 19)", NULL, NULL, "grp_media")  /* 8 src; government 6, archive 1, media 1 */
 
-/* Social, web & communities: 9 collector(s), 331 sources */
+/* Social, web & communities: 10 collector(s), 1076 sources */
+COLLECTOR("hp3b49_jpwpjc", "Japan — Junior Chamber local organisations (batch 49)", "日本 青年会議所", NULL, "grp_social")  /* 745 src; social 745 */
 COLLECTOR("social", "Social platforms", "ソーシャル", NULL, "grp_social")  /* 204 src; media 104, technology 50,  24 */
 COLLECTOR("hp3b23_jpsocial", "jpsocial (batch 23)", NULL, NULL, "grp_social")  /* 42 src; social 34, media 7, infrastructure 1 */
 COLLECTOR("hp_people_ident", "people_ident (hp table)", NULL, NULL, "grp_social")  /* 25 src; social 16, cyber 4, investigation 3 */
@@ -633,7 +642,8 @@ COLLECTOR("vn_geography", "Vietnam — geography", NULL, NULL, "grp_geo")  /* 3 
 COLLECTOR("br_geography", "Brazil — geography", NULL, NULL, "grp_geo")  /* 2 src; geography 2 */
 COLLECTOR("osm", "OpenStreetMap — taginfo & changesets", "OpenStreetMap タグ・変更セット", NULL, "grp_geo")  /* 2 src; civilian 2 */
 
-/* Crime, policing, defense & conflict: 15 collector(s), 484 sources */
+/* Crime, policing, defense & conflict: 16 collector(s), 661 sources */
+COLLECTOR("hp3b49_jpwpfire", "Japan — fire departments & fire-chief associations (batch 49)", "日本 消防本部・消防長会", NULL, "grp_safety")  /* 177 src; public-safety 177 */
 COLLECTOR("hp3b25_jppolice", "Japan — prefectural police (batch 25)", "日本 都道府県警察", NULL, "grp_safety")  /* 117 src; police 107, government 5, cyber 3 */
 COLLECTOR("geopolitics", "Geopolitics, defence & conflict", "地政学・防衛・紛争", NULL, "grp_safety")  /* 102 src; defence 32, advisory 18, conflict 18 */
 COLLECTOR("hp30tokyo_tokyocrime", "Tokyo — crime and police", "東京 犯罪・警察", NULL, "grp_safety")  /* 82 src; police 82 */
@@ -656,7 +666,8 @@ COLLECTOR("hp_sanctions_deep", "sanctions_deep (hp table)", NULL, NULL, "grp_san
 COLLECTOR("br_sanctions", "Brazil — sanctions", NULL, NULL, "grp_sanctions")  /* 2 src; sanctions 2 */
 COLLECTOR("hp3_worldbank_sanctions", "worldbank_sanctions (hp3 table)", NULL, NULL, "grp_sanctions")  /* 1 src; sanctions 1 */
 
-/* Culture, heritage, libraries & archives: 8 collector(s), 449 sources */
+/* Culture, heritage, libraries & archives: 9 collector(s), 749 sources */
+COLLECTOR("hp3b49_jpwpculture", "Japan — public cultural facilities, zoos & aquariums (batch 49)", "日本 公立文化施設・動物園・水族館", NULL, "grp_culture")  /* 300 src; culture 300 */
 COLLECTOR("hp3b30_jplibrary", "Japan — libraries (batch 30)", "日本 図書館", NULL, "grp_culture")  /* 189 src; library 189 */
 COLLECTOR("hp3b25_jparchive", "jparchive (batch 25)", NULL, NULL, "grp_culture")  /* 108 src; research 63, archive 43, culture 1 */
 COLLECTOR("hp3b32_jpsearch2", "jpsearch2 (batch 32)", NULL, NULL, "grp_culture")  /* 66 src; archive 66 */
