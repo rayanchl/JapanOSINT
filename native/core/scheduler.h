@@ -85,10 +85,12 @@ long sched_freshness_bucket(double age_days);
  * freshness interval when the source is adaptive and one has been measured,
  * else the declared one. Pure, for tests. */
 long sched_state_base(const sched_state *st, long declared, int adaptive);
-/* The row's cadence under BOTH mechanisms: the measured base above, with the
- * operator's system-wide cadence policy (core/cadence.h) applied on top —
- * cadence_apply(sched_state_base(...)). What the due-time loop and the
- * backoff work from. */
+/* The row's cadence under all THREE mechanisms: an interval the operator set
+ * for this one source (core/source_interval.h) when there is one; else the
+ * measured base above with the operator's system-wide cadence policy
+ * (core/cadence.h) applied on top — cadence_apply(sched_state_base(...)).
+ * What the due-time loop, the boot ramp, the cancel window and the backoff
+ * work from. */
 long sched_row_interval(const sched_state *st, const source_def *d);
 /* Newest ISO `published_at` among the source's stored intel_items, aged
  * against `now` and bucketed; 0 when the source stored nothing dated. One

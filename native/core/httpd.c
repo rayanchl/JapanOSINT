@@ -32,7 +32,8 @@
 #include "camera_stills.h"
 #include "visualsearchapi.h"   /* GET /api/cameras/visual-search */
 #include "camera_dupes.h"
-#include "cadence.h"         /* GET/PUT /api/sources/cadence */      /* GET /api/admin/cameras/duplicates */
+#include "cadence.h"         /* GET/PUT /api/sources/cadence */
+#include "source_interval.h" /* GET/PUT/DELETE /api/sources/:id/interval */      /* GET /api/admin/cameras/duplicates */
 #include "cameraproxy.h"
 #include "uploadapi.h"
 #include "ffmpeg.h"
@@ -2693,6 +2694,45 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
     }
     /* ---- P7 Wave 1: self-contained DB-read routes ---- */
     char p[1024];
+
+    /* GET /api/sources/:id/interval — how often THIS source runs and what
+     * decided it (declared, measured, policy, override); PUT (platform
+     * operator) {"interval_sec":N,"enabled":true|false} sets an interval for
+     * this one source that outranks the system-wide policy; DELETE clears
+     * it. Takes effect in the running scheduler without a restart
+     * (core/source_interval.h). */
+    if (seg(u, "/api/sources/", "/interval", p, sizeof p)) {
+      int is_put = (hm->method.len == 3 && memcmp(hm->method.buf, "PUT", 3) == 0) ||
+                   (hm->method.len == 4 && memcmp(hm->method.buf, "POST", 4) == 0);
+      int is_del = hm->method.len == 6 && memcmp(hm->method.buf, "DELETE", 6) == 0;
+      int oc = opgate_check(&usr);
+      if (is_put || is_del) {
+        if (oc == -401)  { reply_json(c,401,"{\"error\":\"Auth required\"}"); return; }
+        if (oc == -1403) { reply_json(c,403,"{\"error\":\"Platform operator access not configured\"}"); return; }
+        if (oc != 0)     { reply_json(c,403,"{\"error\":\"Platform operator role required\"}"); return; }
+        const char *err = NULL; int rc;
+        if (is_del) rc = source_interval_clear(g_db, p, &err);
+        else {
+          char b[512] = {0};
+          if (hm->body.len && hm->body.len < sizeof b) memcpy(b, hm->body.buf, hm->body.len);
+          cJSON *j = cJSON_Parse(b);
+          cJSON *iv = j ? cJSON_GetObjectItemCaseSensitive(j, "interval_sec") : NULL;
+          cJSON *en = j ? cJSON_GetObjectItemCaseSensitive(j, "enabled") : NULL;
+          cJSON *cl = j ? cJSON_GetObjectItemCaseSensitive(j, "clear") : NULL;
+          if (cl && cJSON_IsTrue(cl)) rc = source_interval_clear(g_db, p, &err);
+          else if (!iv || !cJSON_IsNumber(iv)) { err = "interval_sec (seconds, a number) is required"; rc = -1; }
+          else rc = source_interval_set(g_db, p, (long)iv->valuedouble, en ? cJSON_IsTrue(en) : 1, usr.email, &err);
+          cJSON_Delete(j);
+        }
+        if (rc != 0) {
+          char eb[320]; snprintf(eb, sizeof eb, "{\"error\":\"%s\"}", err ? err : "invalid interval");
+          reply_json(c, registry_get(p) ? 400 : 404, eb); return;
+        }
+      }
+      char *body = source_interval_json(g_db, p, oc == 0);
+      if (!body) { reply_json(c, 404, "{\"error\":\"Source not found\"}"); return; }
+      reply_json(c, 200, body); free(body); return;
+    }
 
     /* PUT /api/sources/:id/schedule  {"mode":"map_cron"|"search_only"} */
     if (seg(u, "/api/sources/", "/schedule", p, sizeof p)) {
