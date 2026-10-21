@@ -1,5 +1,5 @@
 id	verdict	retry_verdict	emitted	available	entity	diagnosis
-JO34_CKANRES_ADMIN_OPENDATA_AZ	HTTP_403	HTTP_403	0	0		ALIVE: package_search returns 1,970 datasets; bulk action refused (403) — re-point, do not remove
+JO34_CKANRES_ADMIN_OPENDATA_AZ	HTTP_403	HTTP_403	0	0		RE-POINTED 2026-10-21 to package_search (measured: 2,017 datasets, resources inline); the bulk action is 403 here
 JO34_CKANRES_ADMIN_OPENDATA_DK	OK	-	631	631		-
 JO34_CKANRES_API_NESO_ENERGY	OK	-	131	131		-
 JO34_CKANRES_CATALOG_DATA_CITY_KANAZAWA_ISHIKAWA_JP	OK	-	319	319		-
@@ -33,12 +33,12 @@ JO34_CKANRES_DATA_CORKCITY_IE	OK	-	34	34		-
 JO34_CKANRES_DATA_DATA4CITIZEN_JP	OK	-	411	411		-
 JO34_CKANRES_DATA_GO_TH	HTTP_403	HTTP_403	0	0		bot wall: 403 to the engine too
 JO34_CKANRES_DATA_GOV_IE	OK	-	2000	2000		-
-JO34_CKANRES_DATA_GOV_IL	HTTP_404	HTTP_404	0	0		ALIVE: package_search returns 1,203 datasets; bulk action 404 — re-point, do not remove
+JO34_CKANRES_DATA_GOV_IL	HTTP_404	HTTP_404	0	0		RE-POINTED 2026-10-21 to package_search (measured: 1,203 datasets, resources inline); the bulk action is 404 here
 JO34_CKANRES_DATA_GOV_KG	OK	-	1412	1412		-
 JO34_CKANRES_DATA_GOV_LV	OK	-	1570	1570		-
 JO34_CKANRES_DATA_GOV_ME	OK	-	923	923		-
 JO34_CKANRES_DATA_GOV_RO	TRANSPORT_FAIL	TRANSPORT_FAIL	0	0		unmeasurable from here (transport failure both passes)
-JO34_CKANRES_DATA_GOV_UK	HTTP_403	HTTP_403	0	0		ALIVE: package_search returns 59,370 datasets; bulk action refused (403) — re-point, do not remove
+JO34_CKANRES_DATA_GOV_UK	HTTP_403	HTTP_403	0	0		RE-POINTED 2026-10-21 to package_search (measured: 59,370 datasets, resources inline, sort/start honoured); the bulk action is 403 here
 JO34_CKANRES_DATA_GOVMU_ORG	OK	-	856	856		-
 JO34_CKANRES_DATA_HOUSTONTX_GOV	HTTP_502	HTTP_502	0	0		ogopendata shared hosting 502 (one outage, 6 rows) — host alive, action untested
 JO34_CKANRES_DATA_KYIVCITY_GOV_UA	OK	-	98	98		-

@@ -218,8 +218,8 @@ Still open on this batch, and not done here:
   collision between records keying onto each other is invisible to it. Batch 35
   inherited its keys from batch 25 and is the first to distrust.
 * ~~21 rows sit at exactly 2,000 or 20,000~~ — **done 2026-10-21**, see below.
-* the three alive CKAN rows want re-pointing onto the `package_search` shape
-  `od_ckan_walk` already serves.
+* ~~the three alive CKAN rows want re-pointing~~ — **done 2026-10-21**, see
+  below.
 
 ## The page ceilings, measured and fixed (2026-10-21)
 
@@ -275,3 +275,39 @@ Both carried `orderby=time`, which is FDSN's **newest-first**, so every new
 event lands at the head of the collection the walk is reading — one arrival
 mid-walk shifts the boundaries, re-reads one record and skips another. Both are
 `orderby=time-asc` now, measured accepted on each host.
+
+## The three alive catalogues, re-pointed (2026-10-21)
+
+`data.gov.uk`, `admin.opendata.az` and `data.gov.il` each failed two readings on
+`current_package_list_with_resources` — 403, 403, 404 — and each is alive on
+`package_search`. They are re-pointed rather than removed. 62,590 datasets.
+
+**What was measured before changing anything**, because a re-point is only
+honest if the replacement answers the same question:
+
+| check | why it matters | result |
+| --- | --- | --- |
+| `result.count` | the total the row must reach | 59,370 / 2,017 / 1,203 |
+| **resources inline** | the entire purpose of these rows is the dataset PLUS the url/format/size of every file under it; a re-point that dropped them would quietly change what the source holds | present on all three (363 / 169 / 343 resource rows on page 0) |
+| `rows` honoured | else the server's default size silently governs | 100 returned for `rows=100` |
+| `sort=id asc` honoured | an offset walk with no stable order skips records invisibly | yes |
+| stable / disjoint | same `start` twice gives the same ids; consecutive pages share none | yes |
+
+Ceilings follow the measured counts: data.gov.uk 594 pages, so `page_max = 200`
+with `page_resume = 1` (the catalogue over ~3 runs); Azerbaijan 21 pages and
+Israel 13, so complete reads at 26 and 18. Azerbaijan's count had moved from
+1,970 to 2,017 in a day, which is what the five pages of headroom are for.
+
+Two things this cost that reasoning would not have caught:
+
+* **The rows' own description was wrong about the alternative.** Each said
+  package_search "answers a query with dataset summaries", which is why the
+  expensive bulk action was chosen. package_search returns whole package dicts
+  with resources inline. An assumption written into a description reads like a
+  finding a year later.
+* **A whole-catalogue row can duplicate rows already in the tree, and here it
+  does not.** data.gov.uk already had 18 per-organization package_search rows
+  and data.gov.il 19. But `organization_list` says data.gov.uk publishes
+  **1,044** organizations — those rows reach under 2% of its publishers — and 42
+  of Israel's 61 have no row at all. Ask `organization_list` before assuming
+  either redundancy or coverage.

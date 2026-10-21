@@ -200,13 +200,30 @@ rule 1 — the endpoint answered and held nothing for that entity), 22 failing
 twice. Three lessons, in order of how much they generalise:
 
 * **"A row that fails twice leaves" would have deleted three national
-  catalogues.** `current_package_list_with_resources` is an expensive bulk
-  action a large CKAN portal disables (403) or never exposes (404) while
-  `package_search` on the same host is served: `data.gov.uk` holds **59,370**
-  datasets, `admin.opendata.az` 1,970, `data.gov.il` 1,203 — 62,543 behind a
-  verdict that read as dead. **An HTTP status is a reading about one REQUEST,
-  not about a host**, so ask the host a second question before believing it is
-  gone. Of the other 19: six are one `ogopendata.com` 502 inside the same
+  catalogues — they are re-pointed instead, and now work.**
+  `current_package_list_with_resources` is an expensive bulk action a large
+  CKAN portal disables (403) or never exposes (404) while `package_search` on
+  the same host is served: `data.gov.uk` holds **59,370** datasets,
+  `admin.opendata.az` 2,017, `data.gov.il` 1,203 — 62,590 behind a verdict that
+  read as dead. **An HTTP status is a reading about one REQUEST, not about a
+  host**, so ask the host a second question before believing it is gone.
+
+  All three were re-pointed on 2026-10-21 after measuring that the replacement
+  answers the same question, not merely that it answers: `result.count`, the
+  **resources inline** (url/format/size/name per file — the whole purpose of
+  these rows, and the thing a careless re-point would silently drop), `rows`,
+  `start` and `sort=id asc` all honoured, the same start stable across requests
+  and consecutive pages disjoint. The original rows' own note that
+  package_search "answers a query with dataset summaries" was an assumption and
+  is measurably false.
+
+  **And check what a whole-catalogue row duplicates before adding one**: the
+  tree already held 18 per-organization package_search rows for data.gov.uk and
+  19 for data.gov.il. Those are not the catalogue — data.gov.uk publishes
+  **1,044 organizations**, so its org rows reach under 2% of its publishers,
+  and 42 of Israel's 61 have no row at all. The gap is what makes the
+  re-pointed row worth having; the count that settles it is
+  `organization_list`. Of the other 19: six are one `ogopendata.com` 502 inside the same
   minutes, three are bot walls, three the FDSN rows below, one moved, one
   answers a shape it does not declare, four are transport failures from this
   container alone, one is a 500.
