@@ -1683,6 +1683,16 @@ static void *sem_thread(void *vp) {
   return NULL;
 }
 
+/* GET /api/audit/verify as a semsearch_route_fn, so sem_spawn runs it. */
+static char *audit_verify_route(db_handle *db, const char *tenant,
+                                const char *id, const char *qs,
+                                int is_operator, int *status) {
+  (void)id; (void)qs; (void)is_operator;
+  char *body = tenantapi_audit_verify(db, tenant ? tenant : "");
+  *status = body ? 200 : 500;
+  return body;
+}
+
 /* Run `fn` on a worker; always replies (now, or deferred to MG_EV_WAKEUP). */
 static void sem_spawn(struct mg_connection *c, struct mg_http_message *hm,
                       semsearch_route_fn fn, const char *tenant, const char *id,
@@ -4551,9 +4561,13 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
       if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
 
+      /* The chain walk is the whole log, streamed: off the event loop. */
+      if (eq(u, "/api/audit/verify")) {
+        sem_spawn(c, hm, audit_verify_route, tc.tenant_id, "", 0);
+        return;
+      }
       char *body;
       if (eq(u, "/api/me"))                body = tenantapi_me(g_db, &tc);
-      else if (eq(u, "/api/audit/verify")) body = tenantapi_audit_verify(g_db, tc.tenant_id);
       else {
         char lv[16] = {0}, ov[16] = {0};
         int hl = mg_http_get_var(&hm->query, "limit", lv, sizeof lv);

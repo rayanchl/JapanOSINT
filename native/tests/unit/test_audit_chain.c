@@ -121,6 +121,45 @@ int main(void) {
     assert(rc != SQLITE_OK && "UNIQUE(tenant_id, chain_seq) refuses a fork");
     sqlite3_free(e); }
 
+  /* Past the old 100,000-row cap: a 100,050-row chain verifies over all of it,
+   * and an edit at row 100,040 is FOUND. The walk used to stop at 100,000 and
+   * answer ok:true, so this edit was invisible. Rows go in directly with their
+   * real hashes, in one transaction, so the test stays fast. */
+  { const long N = 100050;
+    sqlite3_stmt *ins;
+    exec_ok(&db, "BEGIN");
+    assert(sqlite3_prepare_v2(db.h, "INSERT INTO audit_events(id,tenant_id,"
+             "user_id,action,target,payload_json,ts,ip,ua,prev_hash,row_hash,"
+             "chain_seq) VALUES(?1,'tD','u','bulk',?2,NULL,'2026-10-21T00:00:00Z',"
+             "NULL,NULL,?3,?4,?5)", -1, &ins, NULL) == SQLITE_OK);
+    char prev[65] = "GENESIS", rh[65], id[32], tgt[32];
+    for (long i = 1; i <= N; i++) {
+      snprintf(id, sizeof id, "bulk-%ld", i);
+      snprintf(tgt, sizeof tgt, "t%ld", i);
+      audit_row_hash(id, "tD", "u", "bulk", tgt, NULL, "2026-10-21T00:00:00Z",
+                     NULL, NULL, prev, i, rh);
+      sqlite3_bind_text(ins, 1, id, -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text(ins, 2, tgt, -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text(ins, 3, prev, -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text(ins, 4, rh, -1, SQLITE_TRANSIENT);
+      sqlite3_bind_int64(ins, 5, i);
+      assert(sqlite3_step(ins) == SQLITE_DONE);
+      sqlite3_reset(ins);
+      memcpy(prev, rh, sizeof prev);
+    }
+    sqlite3_finalize(ins);
+    exec_ok(&db, "COMMIT");
+    o = verify(&db, "tD");
+    assert(cJSON_IsTrue(cJSON_GetObjectItem(o, "ok")) && num(o, "count") == N);
+    cJSON_Delete(o);
+    exec_ok(&db, "UPDATE audit_events SET target='edited' WHERE tenant_id='tD'"
+                 " AND chain_seq=100040");
+    o = verify(&db, "tD");
+    assert(cJSON_IsFalse(cJSON_GetObjectItem(o, "ok")) && "found past 100,000");
+    assert(num(o, "brokenAt") == 100039 && num(o, "count") == N);
+    cJSON_Delete(o);
+    printf("  100,050-row chain walked whole; an edit at row 100,040 found: ok\n"); }
+
   /* Four connections, one tenant, 50 writes each: one unbroken chain of 200. */
   pthread_t th[4]; wr_arg wa[4];
   for (int i = 0; i < 4; i++) {
