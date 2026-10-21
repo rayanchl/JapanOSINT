@@ -5,7 +5,7 @@ was seeded from, what it measured and what it taught. Moved out of `CLAUDE.md`
 on 2026-10-19 so that file keeps the rules and the current number; the lessons
 that a new batch must not relearn are summarised there. Newest first.
 
-**The registered count is 51,562** (2026-10-20): main's 48,346 − 6 − 25 + 3,247.
+**The registered count is 56,955** (2026-10-21): main's 53,739 (its batch 49, PR #55) − 6 − 25 + 3,247 (batch 50).
 
 * **−6**: `jp_feeds_batch43/44` feeds measured dead on the 2026-10-20 emit
   sweep (game-i.daa.jp serves XHTML, peco-japan.com an S3 AccessDenied,

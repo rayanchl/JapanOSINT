@@ -343,7 +343,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def btc_mempool_def = {
-  .id = "BTC_MEMPOOL", .collector = "osint",
+  .id = "BTC_MEMPOOL", .collector = "osint_" "cyber",
   .name = "mempool.space BTC Address", .name_ja = "mempool.space BTCアドレス",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",
@@ -354,7 +354,7 @@ static const source_def btc_mempool_def = {
 REGISTER_SOURCE(btc_mempool_def)
 
 static const source_def blockchair_def = {
-  .id = "BLOCKCHAIR", .collector = "osint",
+  .id = "BLOCKCHAIR", .collector = "osint_" "cyber",
   .name = "Blockchair Address Dashboard", .name_ja = "Blockchair アドレス",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",
@@ -365,7 +365,7 @@ static const source_def blockchair_def = {
 REGISTER_SOURCE(blockchair_def)
 
 static const source_def ofac_crypto_def = {
-  .id = "OFAC_CRYPTO", .collector = "osint",
+  .id = "OFAC_CRYPTO", .collector = "osint_" "cyber",
   .name = "OFAC Crypto SDN Check", .name_ja = "OFAC 暗号資産制裁リスト照合",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "dataset",
@@ -746,7 +746,7 @@ static int c2_run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 #define C2_DEF(SYM, ID, NAME, NAMEJA, URL, DESC) \
-  static const source_def SYM = { .id = ID, .collector = "osint", .name = NAME, \
+  static const source_def SYM = { .id = ID, .collector = "osint_" "cyber", .name = NAME, \
     .name_ja = NAMEJA, .update_interval_sec = 0, .run = c2_run, \
     .category = "cyber", .type = "api", .url = URL, .description = DESC, \
     .layer = NULL, .free_tier = 1 }; \

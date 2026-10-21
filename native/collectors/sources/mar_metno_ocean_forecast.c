@@ -153,7 +153,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def mar_metno_ocean_forecast_def = {
-  .id = "METNO_OCEAN_FORECAST", .collector = "osint",
+  .id = "METNO_OCEAN_FORECAST", .collector = "osint_" "transport",
   .name = "MET Norway ocean forecast (wave, current, SST) by coordinate",
   .update_interval_sec = 0, .run = run,
   .category = "transport", .type = "api",

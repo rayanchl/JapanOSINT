@@ -198,7 +198,7 @@ static int vat_run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def lei_def = {
-  .id = "LEI_SEARCH", .collector = "osint", .name = "LEI Search", .run = lei_run,
+  .id = "LEI_SEARCH", .collector = "osint_" "investigation", .name = "LEI Search", .run = lei_run,
   .category = "investigation", .type = "api", .url = "https://api.gleif.org/",
   .description = "Company name → Legal Entity Identifier (LEI) records from GLEIF (free).",
   .free_tier = 1,
@@ -206,7 +206,7 @@ static const source_def lei_def = {
 REGISTER_SOURCE(lei_def)
 
 static const source_def vat_def = {
-  .id = "VAT_VALIDATOR", .collector = "osint", .name = "VAT Validator", .run = vat_run,
+  .id = "VAT_VALIDATOR", .collector = "osint_" "investigation", .name = "VAT Validator", .run = vat_run,
   .category = "investigation", .type = "api",
   .url = "https://ec.europa.eu/taxation_customs/vies/",
   .description = "EU VAT number validation + registered name/address via VIES (free).",

@@ -120,7 +120,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def company_lookup_def = {
-  .id = "COMPANY_LOOKUP", .collector = "osint",
+  .id = "COMPANY_LOOKUP", .collector = "osint_" "government",
   .name = "Company Lookup", .name_ja = "企業検索",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "api",

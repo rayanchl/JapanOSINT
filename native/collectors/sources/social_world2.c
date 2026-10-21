@@ -71,7 +71,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def youtube_search_def = {
-  .id = "YOUTUBE_SEARCH", .collector = "osint",
+  .id = "YOUTUBE_SEARCH", .collector = "osint_" "social",
   .name = "YouTube Search", .name_ja = "YouTube 検索",
   .update_interval_sec = 0, .run = run,
   .category = "social", .type = "api",

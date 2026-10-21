@@ -122,7 +122,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def ip_geolocation_def = {
-  .id = "IP_GEOLOCATION", .collector = "osint",
+  .id = "IP_GEOLOCATION", .collector = "osint_" "cyber",
   .name = "IP Geolocation", .name_ja = "IPジオロケーション",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",

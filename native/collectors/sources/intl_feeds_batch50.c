@@ -281,27 +281,27 @@ RSSX(intl_b50_theguardian_com_uk_technology, "intl-b50-theguardian-com-uk-techno
 
 RSSX(intl_b50_globalvoices_org, "intl-b50-globalvoices-org",
      "Global Voices", "Global Voices",
-     "osint", "osint",
+     "world_outlets", "media",
      "https://globalvoices.org/feed/",
-     "en", "[\"gov\",\"country:intl\",\"publisher:Global Voices\",\"osint\",\"batch:50\"]",
+     "en", "[\"news\",\"country:intl\",\"publisher:Global Voices\",\"media\",\"batch:50\"]",
      3600,
-     "Global Voices — osint feed (15 entries at probe)")
+     "Global Voices — news feed (15 entries at probe)")
 
 RSSX(intl_b50_hrw_org, "intl-b50-hrw-org",
      "Human Rights Watch", "Human Rights Watch",
-     "osint", "osint",
+     "ngo_rights", "media",
      "https://www.hrw.org/rss",
-     "en", "[\"gov\",\"country:intl\",\"publisher:Human Rights Watch\",\"osint\",\"batch:50\"]",
+     "en", "[\"news\",\"country:intl\",\"publisher:Human Rights Watch\",\"media\",\"batch:50\"]",
      3600,
-     "Human Rights Watch — osint feed (20 entries at probe)")
+     "Human Rights Watch — news feed (20 entries at probe)")
 
 RSSX(intl_b50_opendemocracy_net_en, "intl-b50-opendemocracy-net-en",
      "OpenDemocracy", "OpenDemocracy",
-     "osint", "osint",
+     "world_outlets", "media",
      "https://www.opendemocracy.net/en/rss/",
-     "en", "[\"gov\",\"country:intl\",\"publisher:OpenDemocracy\",\"osint\",\"batch:50\"]",
+     "en", "[\"news\",\"country:intl\",\"publisher:OpenDemocracy\",\"media\",\"batch:50\"]",
      3600,
-     "OpenDemocracy — osint feed (15 entries at probe)")
+     "OpenDemocracy — news feed (15 entries at probe)")
 
 /* ── science ─────────────────────────────────────────────────────────── */
 

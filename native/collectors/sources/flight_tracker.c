@@ -169,7 +169,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def flight_tracker_def = {
-  .id = "FLIGHT_TRACKER", .collector = "osint",
+  .id = "FLIGHT_TRACKER", .collector = "osint_" "transport",
   .name = "Flight Tracker", .name_ja = "フライト追跡",
   .update_interval_sec = 0, .run = run,
   .category = "transport", .type = "api",

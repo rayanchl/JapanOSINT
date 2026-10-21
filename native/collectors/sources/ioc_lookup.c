@@ -126,7 +126,7 @@ static int ioc_run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def ioc_def = {
-  .id = "IOC_LOOKUP", .collector = "osint", .name = "IOC Lookup", .run = ioc_run,
+  .id = "IOC_LOOKUP", .collector = "osint_" "investigation", .name = "IOC Lookup", .run = ioc_run,
   .category = "investigation", .type = "api", .url = "https://threatfox.abuse.ch/",
   .description = "Indicator-of-compromise enrichment: hashes (CIRCL) + IP/domain/URL (ThreatFox), free.",
   .free_tier = 1,

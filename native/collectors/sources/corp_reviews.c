@@ -55,7 +55,7 @@ static int run_jobtalk(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def openwork_def = {
-  .id = "OPENWORK", .collector = "osint",
+  .id = "OPENWORK", .collector = "osint_" "commercial",
   .name = "OpenWork Reviews", .name_ja = "OpenWork 企業口コミ",
   .update_interval_sec = 0, .run = run_openwork,
   .category = "commercial", .type = "scraped", .url = "https://www.openwork.jp/",
@@ -65,7 +65,7 @@ static const source_def openwork_def = {
 REGISTER_SOURCE(openwork_def)
 
 static const source_def lighthouse_def = {
-  .id = "EN_LIGHTHOUSE", .collector = "osint",
+  .id = "EN_LIGHTHOUSE", .collector = "osint_" "commercial",
   .name = "en Lighthouse Reviews", .name_ja = "エン ライトハウス 企業口コミ",
   .update_interval_sec = 0, .run = run_lighthouse,
   .category = "commercial", .type = "scraped", .url = "https://en-hyouban.com/",
@@ -75,7 +75,7 @@ static const source_def lighthouse_def = {
 REGISTER_SOURCE(lighthouse_def)
 
 static const source_def jobtalk_def = {
-  .id = "TENSHOKU_KAIGI", .collector = "osint",
+  .id = "TENSHOKU_KAIGI", .collector = "osint_" "commercial",
   .name = "Tenshoku-kaigi Reviews", .name_ja = "転職会議 企業口コミ",
   .update_interval_sec = 0, .run = run_jobtalk,
   .category = "commercial", .type = "scraped", .url = "https://jobtalk.jp/",

@@ -154,7 +154,7 @@ static int run_addr(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def address_resolver_def = {
-  .id = "ADDRESS_RESOLVER", .collector = "osint",
+  .id = "ADDRESS_RESOLVER", .collector = "osint_" "geospatial",
   .name = "Address Resolver", .name_ja = "住所解決",
   .update_interval_sec = 0, .run = run_addr,
   .category = "geospatial", .type = "api",

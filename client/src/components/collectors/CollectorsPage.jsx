@@ -4,7 +4,7 @@ import { LuRefreshCw, LuChevronDown, LuChevronRight } from 'react-icons/lu';
 import { useApi } from '../../hooks/useApi.js';
 import { Page, Card, Pill, Button, Input, Segmented, ErrorNotice, EmptyState, LoadingState, BoundNote, cx } from '../ui/kit.jsx';
 import { relativeTime } from '../../utils/time.js';
-import { fmtCount } from '../../utils/sourceFormat.js';
+import { fmtCount, statusTone } from '../../utils/sourceFormat.js';
 
 /* /console/collectors — the registry's collectors under natural-language GROUP
  * headings (GET /api/collectors: `groups` = every grp_* key with its member
@@ -102,11 +102,48 @@ function GroupSection({ g, open, onToggle }) {
         </div>
       </button>
       {open && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 p-3 pt-0">
-          {g.members.map((c) => <CollectorCard key={c.key} c={c} />)}
+        <div className="p-3 pt-0 space-y-2">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+            {g.members.filter((c) => c.sources !== 1).map((c) => <CollectorCard key={c.key} c={c} />)}
+          </div>
+          <SingletonFold items={g.members.filter((c) => c.sources === 1)} groupKey={g.key} />
         </div>
       )}
     </section>
+  );
+}
+
+/* Collectors that hold exactly ONE source — the per-country hand-written beats
+ * (bf_health, bh_company-registry, …) — are folded into one row per group so a
+ * group with 26 of them reads as a list, not 26 cards. Nothing is hidden: the
+ * fold states its count, opens in place, and every entry links to its page. */
+/* a one-source collector's health IS its source's last run */
+function singleStatus(c) {
+  const st = c.status || {};
+  return st.online ? 'online' : st.offline ? 'offline' : st.degraded ? 'degraded' : 'pending';
+}
+
+export function SingletonFold({ items, groupKey }) {
+  const [open, setOpen] = useState(false);
+  if (!items.length) return null;
+  return (
+    <div className="rounded-[10px] border border-osint-border/40">
+      <button type="button" onClick={() => setOpen((o) => !o)} className="w-full text-left px-3 py-2 text-[11px] text-osint-muted hover:bg-white/5 flex items-center gap-2" data-testid={`singletons-${groupKey}`}>
+        {open ? <LuChevronDown size={12} /> : <LuChevronRight size={12} />}
+        <span>{fmtCount(items.length)} single-source collector{items.length === 1 ? '' : 's'}</span>
+      </button>
+      {open && (
+        <ul className="px-3 pb-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-1 text-xs">
+          {items.map((c) => (
+            <li key={c.key} className="flex items-baseline gap-2 min-w-0">
+              <Pill tone={statusTone(singleStatus(c))} className="shrink-0">{singleStatus(c)}</Pill>
+              <Link to={`/console/collectors/${encodeURIComponent(c.key)}`} className="text-osint-text hover:text-accent truncate">{c.label || c.key}</Link>
+              <span className="font-mono text-[10px] text-osint-muted truncate">{c.key}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }
 

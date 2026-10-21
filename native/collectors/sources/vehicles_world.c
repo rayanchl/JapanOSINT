@@ -287,7 +287,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 #define VEH_DEF(SYM, ID, NAME, NAMEJA, TYPE, URL, DESC) \
-  static const source_def SYM = { .id = ID, .collector = "osint", .name = NAME, \
+  static const source_def SYM = { .id = ID, .collector = "osint_" "transport", .name = NAME, \
     .name_ja = NAMEJA, .update_interval_sec = 0, .run = run, \
     .category = "transport", .type = TYPE, .url = URL, .description = DESC, \
     .layer = NULL, .free_tier = 1 }; \

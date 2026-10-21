@@ -511,7 +511,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def crossref_def = {
-  .id = "CROSSREF", .collector = "osint",
+  .id = "CROSSREF", .collector = "osint_" "government",
   .name = "Crossref Works Search", .name_ja = "Crossref 文献検索",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "api",
@@ -522,7 +522,7 @@ static const source_def crossref_def = {
 REGISTER_SOURCE(crossref_def)
 
 static const source_def semantic_scholar_def = {
-  .id = "SEMANTIC_SCHOLAR", .collector = "osint",
+  .id = "SEMANTIC_SCHOLAR", .collector = "osint_" "government",
   .name = "Semantic Scholar Search", .name_ja = "Semantic Scholar 検索",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "api",
@@ -533,7 +533,7 @@ static const source_def semantic_scholar_def = {
 REGISTER_SOURCE(semantic_scholar_def)
 
 static const source_def arxiv_def = {
-  .id = "ARXIV", .collector = "osint",
+  .id = "ARXIV", .collector = "osint_" "government",
   .name = "arXiv Preprint Search", .name_ja = "arXiv プレプリント検索",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "api",
@@ -544,7 +544,7 @@ static const source_def arxiv_def = {
 REGISTER_SOURCE(arxiv_def)
 
 static const source_def pubmed_def = {
-  .id = "PUBMED", .collector = "osint",
+  .id = "PUBMED", .collector = "osint_" "government",
   .name = "PubMed E-utilities Search", .name_ja = "PubMed 文献検索",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "api",
@@ -555,7 +555,7 @@ static const source_def pubmed_def = {
 REGISTER_SOURCE(pubmed_def)
 
 static const source_def openlibrary_def = {
-  .id = "OPENLIBRARY", .collector = "osint",
+  .id = "OPENLIBRARY", .collector = "osint_" "government",
   .name = "OpenLibrary Book Search", .name_ja = "OpenLibrary 書籍検索",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "api",
@@ -1071,7 +1071,7 @@ static int ac2_run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 #define AC2_DEF(SYM, ID, NAME, NAMEJA, URL, DESC) \
-  static const source_def SYM = { .id = ID, .collector = "osint", .name = NAME, \
+  static const source_def SYM = { .id = ID, .collector = "osint_" "government", .name = NAME, \
     .name_ja = NAMEJA, .update_interval_sec = 0, .run = ac2_run, \
     .category = "government", .type = "api", .url = URL, .description = DESC, \
     .layer = NULL, .free_tier = 1 }; \

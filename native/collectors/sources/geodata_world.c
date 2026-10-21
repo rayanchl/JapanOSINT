@@ -386,7 +386,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def overpass_global_def = {
-  .id = "OVERPASS_GLOBAL", .collector = "osint",
+  .id = "OVERPASS_GLOBAL", .collector = "osint_" "geospatial",
   .name = "Overpass Global POI", .name_ja = "Overpass 世界POI検索",
   .update_interval_sec = 0, .run = run,
   .category = "geospatial", .type = "api",
@@ -397,7 +397,7 @@ static const source_def overpass_global_def = {
 REGISTER_SOURCE(overpass_global_def)
 
 static const source_def nominatim_global_def = {
-  .id = "NOMINATIM_GLOBAL", .collector = "osint",
+  .id = "NOMINATIM_GLOBAL", .collector = "osint_" "geospatial",
   .name = "Nominatim Global Geocode", .name_ja = "Nominatim 世界ジオコーディング",
   .update_interval_sec = 0, .run = run,
   .category = "geospatial", .type = "api",
@@ -408,7 +408,7 @@ static const source_def nominatim_global_def = {
 REGISTER_SOURCE(nominatim_global_def)
 
 static const source_def wikimapia_global_def = {
-  .id = "WIKIMAPIA_GLOBAL", .collector = "osint",
+  .id = "WIKIMAPIA_GLOBAL", .collector = "osint_" "geospatial",
   .name = "Wikimapia Global Places", .name_ja = "Wikimapia 世界地物検索",
   .update_interval_sec = 0, .run = run,
   .category = "geospatial", .type = "api",

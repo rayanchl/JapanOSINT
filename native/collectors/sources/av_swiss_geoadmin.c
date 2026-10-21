@@ -157,7 +157,7 @@ static int run_zone(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def av_swiss_obstacle_def = {
-  .id = "SWISS_AIR_OBSTACLE", .collector = "osint",
+  .id = "SWISS_AIR_OBSTACLE", .collector = "osint_" "transport",
   .name = "Swiss BAZL Aviation Obstacles (coordinate pivot)",
   .update_interval_sec = 0, .run = run_obstacle,
   .category = "transport", .type = "api",
@@ -168,7 +168,7 @@ static const source_def av_swiss_obstacle_def = {
 REGISTER_SOURCE(av_swiss_obstacle_def)
 
 static const source_def av_swiss_zone_def = {
-  .id = "SWISS_DRONE_ZONE", .collector = "osint",
+  .id = "SWISS_DRONE_ZONE", .collector = "osint_" "transport",
   .name = "Swiss BAZL Drone Restriction Zones (coordinate pivot)",
   .update_interval_sec = 0, .run = run_zone,
   .category = "transport", .type = "api",

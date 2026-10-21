@@ -132,7 +132,7 @@ static int run_satellite(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def satellite_tracker_def = {
-  .id = "SATELLITE_TRACKER", .collector = "osint",
+  .id = "SATELLITE_TRACKER", .collector = "osint_" "transport",
   .name = "Satellite Tracker", .name_ja = "衛星追跡",
   .update_interval_sec = 0, .run = run_satellite,
   .category = "transport", .type = "api",

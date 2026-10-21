@@ -138,7 +138,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def ee_ariregister_def = {
-  .id = "EE_ARIREGISTER", .collector = "osint",
+  .id = "EE_ARIREGISTER", .collector = "osint_" "government",
   .name = "Estonia e-Business Register", .name_ja = "エストニア企業登記",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "api",

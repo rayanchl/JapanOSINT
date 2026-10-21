@@ -87,7 +87,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def datalastic_def = {
-  .id = "DATALASTIC_VESSEL", .collector = "osint",
+  .id = "DATALASTIC_VESSEL", .collector = "osint_" "infrastructure",
   .name = "Datalastic Vessel Find", .name_ja = "Datalastic 船舶検索",
   .update_interval_sec = 0, .run = run,
   .category = "infrastructure", .type = "api",

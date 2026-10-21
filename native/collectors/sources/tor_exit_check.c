@@ -150,7 +150,7 @@ static int run_tor(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def tor_exit_check_def = {
-  .id = "TOR_EXIT_CHECK", .collector = "osint",
+  .id = "TOR_EXIT_CHECK", .collector = "osint_" "cyber",
   .name = "Tor Exit Check", .name_ja = "Tor出口ノード判定",
   .update_interval_sec = 0, .run = run_tor,
   .category = "cyber", .type = "api",

@@ -187,7 +187,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def uk_registry_def = {
-  .id = "UK_REGISTRY", .collector = "osint",
+  .id = "UK_REGISTRY", .collector = "osint_" "government",
   .name = "UK & Ireland Registry Sweep",
   .name_ja = "英国・アイルランド 登記/司法検索",
   .update_interval_sec = 0, .run = run,

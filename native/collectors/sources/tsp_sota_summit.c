@@ -162,7 +162,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def tsp_sota_summit_def = {
-  .id = "SOTA_SUMMIT", .collector = "osint",
+  .id = "SOTA_SUMMIT", .collector = "osint_" "telecom",
   .name = "SOTA summit lookup (association/summit reference pivot)",
   .update_interval_sec = 0, .run = run,
   .category = "telecom", .type = "api",

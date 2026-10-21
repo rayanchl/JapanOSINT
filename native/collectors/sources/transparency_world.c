@@ -370,7 +370,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def eu_transparency_def = {
-  .id = "EU_TRANSPARENCY", .collector = "osint",
+  .id = "EU_TRANSPARENCY", .collector = "osint_" "government",
   .name = "EU Transparency Register", .name_ja = "EU 透明性登録簿",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "api",
@@ -381,7 +381,7 @@ static const source_def eu_transparency_def = {
 REGISTER_SOURCE(eu_transparency_def)
 
 static const source_def uk_donations_def = {
-  .id = "UK_DONATIONS", .collector = "osint",
+  .id = "UK_DONATIONS", .collector = "osint_" "government",
   .name = "UK Electoral Commission Donations", .name_ja = "英国 選挙管理委員会 献金",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "api",
@@ -392,7 +392,7 @@ static const source_def uk_donations_def = {
 REGISTER_SOURCE(uk_donations_def)
 
 static const source_def opensecrets_def = {
-  .id = "OPENSECRETS", .collector = "osint",
+  .id = "OPENSECRETS", .collector = "osint_" "government",
   .name = "OpenSecrets Campaign Finance", .name_ja = "OpenSecrets 政治資金",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "api",
