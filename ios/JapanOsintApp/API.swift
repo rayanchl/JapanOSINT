@@ -713,6 +713,16 @@ struct API: Sendable {
             "/api/search/suggest", query: [URLQueryItem(name: "q", value: q)])
         return (env.suggestions, env.meta?.retrieval != nil)
     }
+    /// The same route with `expand=1`, which also asks the suggest LLM for
+    /// extra ideas (items with source "llm", after the retrieved ones). Slow
+    /// and paid: send it once per query on an explicit action or a long
+    /// typing pause, never per keystroke. Cancelling the calling Task
+    /// cancels the request.
+    func searchSuggestExpanded(_ q: String) async throws -> SuggestEnvelope {
+        try await get("/api/search/suggest", query: [
+            URLQueryItem(name: "q", value: q), URLQueryItem(name: "expand", value: "1"),
+        ])
+    }
     func searchResults(_ id: String) async throws -> SearchSnapshot {
         try await get("/api/search/results/\(id)")
     }
