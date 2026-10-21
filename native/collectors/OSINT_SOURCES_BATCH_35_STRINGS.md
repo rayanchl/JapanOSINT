@@ -105,14 +105,15 @@ different tool than the obvious one.
 answer it for a pivot: it runs every row with no entity, so all 100 came back
 `NEEDS_ENTITY` in the registry sweep, a verdict that reads like a pass and is an
 abstention. Asking the binary directly instead — `--run <id> 研究`, which prints
-both numbers — gives, over **76 of the 100** rows (the run was stopped twice at
-a background time limit, not by a failure):
+both numbers — gives, over **all 100** rows (run in three chunks, because a
+background task is stopped at thirty minutes):
 
-    76 rows   68,278 emitted   68,312 stored   0 rows losing records
+    100 rows   112,328 emitted   112,379 stored   0 rows losing records
 
 `docs/sweep-stored-batch35-pivots-2026-10-21.tsv`. Stored runs slightly ABOVE
 emitted because each truncation notice is itself a stored uid. **The keys copied
-from batch 25 hold**, which is what this batch could not check when it shipped.
+from batch 25 hold on every row of the beat**, which is what this batch could
+not check when it shipped — and the reading is complete, not a sample.
 
 Note how much larger these numbers are than the 1,204 records the first emit
 audit reported for all 100 rows: that pass used a narrower probe entity. **A
