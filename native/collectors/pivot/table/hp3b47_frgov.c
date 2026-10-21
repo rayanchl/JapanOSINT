@@ -22877,26 +22877,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "13:21:01 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_D93AF5F2_0E61_493D_ADF9_F191319926BB", .name = "Mairie - Littenheim (SL, INSEE 67269) - Mairie Littenheim "
-      "officiel",
-    .name_ja = "Mairie - Littenheim (SL, INSEE 67269) - Mairie Littenheim officiel",
-    .category = "government", .portal = "https://www.littenheim.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.littenheim.fr/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 08 Sep 2026 "
-      "20:16:47 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
-
   { .id = "JO47_FR_D96DC9BF_49A8_412C_9166_5FA8ECA630BE", .name = "Point-justice du CH de Rouffach (SL, INSEE 68287) - CDAD du "
       "Haut-Rhin",
     .name_ja = "Point-justice du CH de Rouffach (SL, INSEE 68287) - CDAD du Haut-Rhin",
@@ -131502,26 +131482,6 @@ static const hp_source HP3B47_FRGOV[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 4 items, RSS2 feed, newest Wed, 30 Sep 2026 "
       "08:02:02 GMT. A feed the organisation itself declares or links "
-      "on its site root." },
-
-  { .id = "JO47_FR_7E67DC58_2A42_4FAC_A084_5E7EF0853B70", .name = "Mairie - Morschwiller-le-Bas (SL, INSEE 68218) - "
-      "Morschwiller-le-bas",
-    .name_ja = "Mairie - Morschwiller-le-Bas (SL, INSEE 68218) - Morschwiller-le-bas",
-    .category = "government", .portal = "https://morschwiller-le-bas.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://morschwiller-le-bas.fr/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "08:39:37 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
   { .id = "JO47_FR_7EC53F3D_F780_43E6_9CE2_A27C8A41D7C6", .name = "Mairie - Muespach (SL, INSEE 68221) - Muespach",

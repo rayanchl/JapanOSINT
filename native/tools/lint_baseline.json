@@ -120,6 +120,7 @@
       "find-and-update.company-information.service.gov.uk": 1,
       "github.com": 1,
       "github.com/%s": 1,
+      "github.com/RCorp/OSINTsaas;": 1,
       "github.com/{}": 1,
       "gitlab.com/{}": 1,
       "globe.adsbexchange.com?icao=%s": 1,
@@ -749,9 +750,9 @@
     "unresolved-id": 0
   },
   "registered_sources": {
-    "direct": 1178,
-    "macro_expanded": 47641,
-    "total": 48819,
+    "direct": 1175,
+    "macro_expanded": 20608,
+    "total": 21783,
     "unresolved": 0
   }
 }

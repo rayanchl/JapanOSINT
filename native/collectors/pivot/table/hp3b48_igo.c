@@ -427,26 +427,6 @@ static const hp_source HP3B48_IGO[] = {
       "on its site root. Wikidata classes it as "
       "international-organization." },
 
-  { .id = "JO48_IGO_Q4806404", .name = "Asia Pacific Adaptation Network - APAN",
-    .name_ja = "Asia Pacific Adaptation Network - APAN",
-    .category = "international", .portal = "https://asiapacificadapt.net/",
-    .record_type = "organisation-notice",
-    .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://asiapacificadapt.net/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "17:09:31 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as "
-      "international-organization." },
-
   { .id = "JO48_IGO_Q4809530", .name = "Association for Uncrewed Vehicle Systems International - AUVSI",
     .name_ja = "Association for Uncrewed Vehicle Systems International - AUVSI",
     .category = "international", .portal = "https://www.auvsi.org/",
@@ -3068,26 +3048,6 @@ static const hp_source HP3B48_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 31 Mar 2025 "
       "07:00:53 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as "
-      "international-organization." },
-
-  { .id = "JO48_IGO_Q20819414", .name = "Extraordinary African Chambers - chambresafricaines.org",
-    .name_ja = "Extraordinary African Chambers - chambresafricaines.org",
-    .category = "international", .portal = "https://chambresafricaines.org/",
-    .record_type = "organisation-notice",
-    .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://chambresafricaines.org/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "09:41:00 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as "
       "international-organization." },
 
@@ -7016,25 +6976,6 @@ static const hp_source HP3B48_IGO[] = {
     .title_keys = "title",
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 29 Apr 2019 "
       "12:35:01 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as think-tank." },
-
-  { .id = "JO48_IGO_Q54308709", .name = "Super Evil Megacorp - Super Evil Megacorp",
-    .name_ja = "Super Evil Megacorp - Super Evil Megacorp",
-    .category = "international", .portal = "https://superevilmegacorp.com/",
-    .record_type = "organisation-notice",
-    .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://superevilmegacorp.com/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 29 Sep 2026 "
-      "13:01:15 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as think-tank." },
 
   { .id = "JO48_IGO_Q54309902", .name = "Tapps Games - TappsGames",

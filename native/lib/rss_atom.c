@@ -348,7 +348,11 @@ int rss_collect(const source_ctx *ctx, intel_sink *sink,
                          ovr ? uahdr :
                          "User-Agent: JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
                          "feed collector; contact via repo issues)", NULL };
-  int rc = http_request(ctx->http, "GET", url, hdrs, NULL, 0, 8000, 2, &r);
+  /* 25 s, not 8: a full-content feed is a large single response, and 8 s failed
+   * every run for the big ones — ipu-japan.ac.jp/feed is 4.6 MB in ~9 s,
+   * tokyogirlsupdate.com/feed 437 KB on a slow origin — while their hosts answer
+   * fine. Measured 2026-10-20; they read as "rc=-1 records=0" forever. */
+  int rc = http_request(ctx->http, "GET", url, hdrs, NULL, 0, 25000, 2, &r);
   if (rc != 0 || r.status < 200 || r.status >= 300 || !r.body) {
     /* Say WHY. This path used to return -1 in silence, so a feed behind a bot
      * wall, a moved feed and a dead host all surfaced as the same bare
