@@ -32,6 +32,7 @@
 #include "camera_stills.h"
 #include "visualsearchapi.h"   /* GET /api/cameras/visual-search */
 #include "camera_dupes.h"      /* GET /api/admin/cameras/duplicates */
+#include "thresholds.h"        /* /api/admin/thresholds */
 #include "cameraproxy.h"
 #include "uploadapi.h"
 #include "ffmpeg.h"
@@ -2994,6 +2995,30 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         char *body = ffmpeg_capabilities();
         if (!body) { reply_json(c, 500, "{\"error\":\"server_error\"}"); return; }
         reply_json(c, 200, body); free(body); return;
+      }
+
+      /* Embedding-similarity thresholds (core/thresholds.h): list every
+       * registered cut-off with the value in force and where it came from,
+       * and set or reset an operator override. Applies on the next
+       * threshold_get() — no restart. Audited ("threshold.set"/".reset"). */
+      if (eq(u,"/api/admin/thresholds")) {
+        if (mg_strcmp(hm->method, mg_str("GET")) != 0) {
+          reply_json(c,405,"{\"error\":\"method_not_allowed\"}"); return; }
+        char *b = threshold_list_json();
+        if (!b) { reply_json(c,500,"{\"error\":\"server_error\"}"); return; }
+        reply_json(c,200,b); free(b); return;
+      }
+      {
+        char tkey[64] = {0};
+        if (seg(u,"/api/admin/thresholds/","",tkey,sizeof tkey)) {
+          if (mg_strcmp(hm->method, mg_str("PUT")) != 0) {
+            reply_json(c,405,"{\"error\":\"method_not_allowed\"}"); return; }
+          int st = 200;
+          char *b = thresholds_api_put(g_db, tkey, hm->body.buf, hm->body.len,
+                                       usr.id, &st);
+          if (!b) { reply_json(c,500,"{\"error\":\"server_error\"}"); return; }
+          reply_json(c,st,b); free(b); return;
+        }
       }
 
       if (eq(u,"/api/admin/restart")) {

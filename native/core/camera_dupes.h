@@ -53,7 +53,9 @@
 #include "db.h"
 
 #define CAM_DUP_PHASH_MAX     6       /* Hamming bits of 64                  */
-#define CAM_DUP_COSINE_MIN    0.97    /* whole-frame embedding cosine        */
+#define CAM_DUP_COSINE_MIN    0.97    /* whole-frame embedding cosine — the
+                                        * DEFAULT of camera_dup_cosine_min,
+                                        * core/thresholds.h (JO_CAM_DUP_COSINE_MIN) */
 #define CAM_DUP_RADIUS_M      1000.0  /* candidate pairs, metres             */
 #define CAM_DUP_SHA_GROUP_MAX 8       /* more sharing one frame = placeholder */
 

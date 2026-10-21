@@ -31,6 +31,7 @@
  * ctx->db but no longer surfaced as a row. If nothing matches, emits nothing
  * and returns 0 (honest empty). */
 #include "core/dbutil.h"
+#include "core/thresholds.h"   /* corpus_vec_max_distance */
 #include "source.h"
 #include "lib/jocore.h"          /* jo_trunc_notice: the in-band "shown N of M" */
 #include "core/fts.h"
@@ -226,10 +227,10 @@ static int emit_hit(intel_sink *sink, cJSON *hit, const cJSON *retrieval) {
  * tightens it. */
 #define CORPUS_VEC_MAX_DISTANCE 1.41421356
 
+/* core/thresholds.c ("corpus_vec_max_distance"): runtime override >
+ * JO_CORPUS_VEC_MAX_DISTANCE > CORPUS_VEC_MAX_DISTANCE. */
 static double corpus_vec_max_distance(void) {
-  const char *e = getenv("JO_CORPUS_VEC_MAX_DISTANCE");
-  double v = (e && *e) ? atof(e) : 0;
-  return v > 0 ? v : CORPUS_VEC_MAX_DISTANCE;
+  return threshold_get("corpus_vec_max_distance");
 }
 
 static int corpus_hybrid(const source_ctx *ctx, intel_sink *sink, sqlite3 *db,

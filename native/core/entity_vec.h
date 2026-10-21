@@ -46,7 +46,9 @@ struct http_client;
 
 extern const vecindex_spec entity_vec_spec;
 
-/* JO_ENTITY_VEC_COS_FLOOR when set to a number in (0,1], else the default. */
+/* threshold_get("entity_vec_cos_floor"): a runtime override (PUT
+ * /api/admin/thresholds/entity_vec_cos_floor), else JO_ENTITY_VEC_COS_FLOOR
+ * when set to a number in [0.01,1], else the default. core/thresholds.h. */
 double entity_vec_cos_floor(void);
 
 /* "canonical (romaji)" — the romaji only when present and different from the
