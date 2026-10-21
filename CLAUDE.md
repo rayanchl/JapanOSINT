@@ -89,17 +89,43 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 48,792** (2026-10-20): main's 48,346 — 48,343 plus
-the three embedding maintenance pods of the infrastructure audit — plus batch
-46's 164 measured ArcGIS layers and batch 50's 290, which are the rest of batch
-46's own probed pool, then a net −5 from a day spent measuring rows rather than
-adding them: +1 KKJ prefecture that had been missing, +5 Setagaya layers
-recovered from a rename, −2 IDESCA San Carlos layers measured as withdrawn,
-−10 behind a closed WordPress REST API with nothing behind it, and −2 from the
-batch-34/35 emit audit: a `data.gov.uk` row that is a PROXY in front of the
-`ckan.publishing.service.gov.uk` row beside it (same 59,370, same `help` URL),
-and an FDSN event row on a node that serves dataselect and not event. The
-ledger has the table. Main's 22,408 was its own
+**The registered count is 54,187** (2026-10-21), and it is the sum of two
+batches that were authored at the same time under the same number — see the
+renumbering note below. On main's 48,346:
+
+* **main's batch 49, 5,393 measured rows** (`docs/verified-sources-batch49.tsv`,
+  `native/collectors/OSINT_SOURCES_BATCH_49_JPWPFEDERATIONS.md`);
+* **this branch's batch 46 (164 ArcGIS layers) and batch 50 (290)**, batch 50
+  being the rest of batch 46's own probed pool
+  (`docs/verified-sources-batch50.tsv`) — it was generated as 49 and
+  renumbered at merge time, which is the fourth session that has happened to;
+* then a net −5 from a day spent measuring rows rather than adding them: +1 KKJ
+  prefecture that had been missing, +5 Setagaya layers recovered from a rename,
+  −2 IDESCA San Carlos layers measured as withdrawn, −10 behind a closed
+  WordPress REST API with nothing behind it, and −2 from the batch-34/35 emit
+  audit: a `data.gov.uk` row that is a PROXY in front of the
+  `ckan.publishing.service.gov.uk` row beside it (same 59,370, same `help`
+  URL), and an FDSN event row on a node that serves dataselect and not event;
+* and +2 for two backfill siblings measured into existence, `PLOS_CORPUS` and
+  `ENERGINET_PRODCONSUM_SETTLEMENT_HISTORY`.
+
+**Batch 49 is batch 45's staging set registered** — the WordPress collections of
+the member organisations of Japan's nationwide federations (medical and
+pharmacist associations, JA, chambers of commerce, 法人会, co-ops, JC, the 士業
+bodies, fire chiefs, welfare councils, public cultural facilities), found by
+reading the federations' own link pages for hosts and asking each host for its
+REST root; eleven beats named after the federation that listed the host.
+5,405 rows were generated and the engine decided: 5,371 OK on the first pass,
+28 given a second reading of which 16 recovered, 12 removed
+(`docs/rejected-sources-batch49.emit.tsv`); 518,813 emitted / 518,827 stored
+over one pass. Their declared interval is 21600 as data; the cadence that runs
+is the system-wide policy (see "Cadence policy" below).
+
+**The registered count was 48,346** (2026-10-19; 48,343 plus the three
+embedding maintenance pods of the infrastructure audit): main's 22,408 — its own
+
+**The registered count was 48,346** (2026-10-19; 48,343 plus the three
+embedding maintenance pods of the infrastructure audit): main's 22,408 — its own
 `jp_feeds_batch41..44.c` beats, PR #48's paging cycle and PR #50's batch 45 of
 619 WordPress collections — merged with PR #47's 47,178, less six news
 feeds both sessions had added (main merged first, so its rows stay). **Batch numbers 43 and 44 now name two things**: main's

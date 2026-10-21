@@ -1,4 +1,4 @@
-# collector census - ./bin/japanosint --collector-census (registry 48346 sources)
+# collector census - ./bin/japanosint --collector-census (registry 53739 sources)
 key	sources	categories
 _breach	1	breach:1
 _enrich	3	enrichment:3
@@ -350,6 +350,17 @@ hp3b47_itgov	5665	government:5665
 hp3b47_wdgov	1562	government:1562
 hp3b48_igo	494	international:492;government:2
 hp3b48_news	4000	news:4000
+hp3b49_jpwpagri	847	agriculture:847
+hp3b49_jpwpcci	1021	business:1021
+hp3b49_jpwpcommerce	259	business:259
+hp3b49_jpwpcoop	389	commerce:389
+hp3b49_jpwpculture	300	culture:300
+hp3b49_jpwpedu	3	education:3
+hp3b49_jpwpfire	177	public-safety:177
+hp3b49_jpwpjc	745	social:745
+hp3b49_jpwpmedical	1041	health:1041
+hp3b49_jpwpprof	430	legal:430
+hp3b49_jpwpwelfare	181	health:181
 hp_americas_deep	22	government:15;economy:3;health:2
 hp_apac_deep	21	government:16;economy:3;cyber:1
 hp_chain_finance	20	cyber:12;economy:8
