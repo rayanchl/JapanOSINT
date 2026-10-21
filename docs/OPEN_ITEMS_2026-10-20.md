@@ -178,16 +178,19 @@ answers above. Six rows ship, three of them NEW, and the registry goes
 | `NO_STORTINGET_DATA` | → daily | `/eksport/horinger`, 76 of 76 |
 | `NO_STORTINGET_INTERPELLATIONS` | NEW | `/eksport/interpellasjoner`, 5 of 5 |
 | `NO_STORTINGET_QUESTION_TIME` | NEW | `/eksport/sporretimesporsmal`, 60 of 60 |
-| `EU_ECB_SUPERVISED_ENTITIES` | → weekly | the monthly workbook, sheet `SIs` (844 rows) |
-| `EU_ECB_SUPERVISED_ENTITIES_LSI` | NEW | the same workbook, sheet `LSIs` (2,175) |
+| `EU_ECB_SUPERVISED_ENTITIES` | → weekly | the monthly workbook, sheet `SIs` — 831 emitted / 830 stored, the one collision being ECB's own duplicate LEI |
+| `EU_ECB_SUPERVISED_ENTITIES_LSI` | NEW | the same workbook, sheet `LSIs` — 2,166 of 2,166 |
 
 Five of those answers are not what the triage predicted, and the corrections
-are the part worth keeping — all four generalise and are in CLAUDE.md:
+are the part worth keeping — all five generalise and are in CLAUDE.md:
 `filter_query` on a server-filtered row discarding the upstream's own matches
 (1 of 8 kept); `hp_register()` dropping a url-less row in SILENCE; the
 dup-endpoint lint catching a "re-point" onto a URL the tree already read every
-six hours; and an anchor COUNT being mistaken for the data on two separate
-rows.
+six hours; an anchor COUNT being mistaken for the data on two separate rows;
+and a spreadsheet laid out for HUMANS needing `csv_no_header = 1`, which took
+four readings because the ECB workbook's first run reported 831 records and
+rc=0 while storing its own title block as supervised banks — and because the
+two sheets of one workbook turned out to have different column geometry.
 
 Still outstanding:
 

@@ -331,7 +331,32 @@ static const hp_source HP3B31_EUTRANS[] = {
     .index_url = "https://www.bankingsupervision.europa.eu/framework/"
       "supervised-banks/html/index.en.html",
     .index_href_must = ".en.xlsx",
-    .xlsx_sheet = "SIs", .interval = 604800,
+    .xlsx_sheet = "SIs", .csv_no_header = 1, .csv_skip_lines = 13,
+    .interval = 604800,
+    /* Positional keys, because this workbook has no header the CSV path can
+     * use: the names sit in MERGED cells, so most of the header row's columns
+     * are empty and the parser reads the file headerless (colN), exactly as
+     * `csv_no_header` does. At csv_skip_lines=11 the header row itself came
+     * through AS A RECORD, named col2/col7/col8/col11/col17/col19 — which is
+     * what identified the columns, and 12 drops it. MEASURED 2026-10-21 from
+     * that record: col2 = "LEI / MFI code for branches", col7 = Type,
+     * col8 = "(M)FH status", col11 = Name, col17 = country of establishment,
+     * col19 = ground for significance.
+     * The dependency this buys is real and worth stating: the row is pinned to
+     * ECB's column POSITIONS, so a re-laid-out workbook would mis-name fields
+     * without changing the record count. A branch carries an MFI code rather
+     * than an LEI, so identity falls back to the name. */
+    .title_keys = "col11", .id_keys = "col2,col11",
+    /* MEASURED 2026-10-21 through the binary: 831 emitted, 830 stored, and the
+     * one collision is ECB'S OWN DUPLICATE — LEI 9598006VA7CEUXXG2H60
+     * ("Santander CACEIS Latam Holding 1") appears at sheet rows 160 AND 372,
+     * identical in LEI, type, name and country, because the workbook lists it
+     * under two supervised groups. The key is right; a collision is a
+     * question, and this one was asked of the file.
+     * 28 of the 831 records carry no LEI: the sheet interleaves COUNTRY
+     * SECTION rows ("Belgium") among the entities, and nothing declarative can
+     * drop a row for lacking a field, so they arrive as records titled with a
+     * country name. Written down rather than hidden. */
     .description = "Every bank the ECB supervises DIRECTLY — the significant "
       "institutions, with the significance criterion applied to each and the "
       "group it sits in — from the ECB's own monthly workbook" },
@@ -357,7 +382,19 @@ static const hp_source HP3B31_EUTRANS[] = {
     .index_url = "https://www.bankingsupervision.europa.eu/framework/"
       "supervised-banks/html/index.en.html",
     .index_href_must = ".en.xlsx",
-    .xlsx_sheet = "LSIs", .interval = 604800,
+    .xlsx_sheet = "LSIs", .csv_no_header = 1, .csv_skip_lines = 9,
+    .interval = 604800,
+    /* Same workbook, same headerless shape, DIFFERENT geometry: its header is
+     * at sheet row 8 and its columns sit elsewhere — col1 is the LEI and col9
+     * the name, against col2 and col11 on the SIs sheet. Declaring the SIs
+     * positions here emitted 2,166 records titled by their LEI and two shape
+     * notices saying 0 of 2,166 carried the declared keys, which is the engine
+     * catching it rather than me. Two sheets of one workbook are two
+     * geometries. */
+    .title_keys = "col9", .id_keys = "col1,col9",
+    /* MEASURED 2026-10-21: 2,166 emitted, 2,166 stored, no collision — and 41
+     * of them are this sheet's country section rows, same characteristic as
+     * the SIs row above. */
     .description = "The euro-area banks supervised by their NATIONAL "
       "authority under ECB oversight rather than by the ECB directly — the "
       "long tail of the same monthly workbook, about three times as many "

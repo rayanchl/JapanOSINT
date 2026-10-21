@@ -2130,6 +2130,25 @@ Engine subtleties worth knowing before writing a row:
   one feed the page declares is two news items rather than the activation
   register.
 
+* **A spreadsheet laid out for HUMANS needs `csv_no_header = 1`, and a record
+  count cannot see that it does not.** The ECB's supervised-entity workbook
+  took four readings to parse (2026-10-21): the first run reported 831 records
+  and `rc=0` with every field named `col6` and the workbook's TITLE BLOCK
+  stored as supervised banks. Three things had to be measured, none of them
+  guessable: the header is not row 1 (sheet row **12** on one sheet, **8** on
+  the other) and `csv_skip_lines` counts PHYSICAL lines, so the header's own
+  quoted `\r\n` — the cell reads "LEI / MFI code for branches" — makes it span
+  two of them; **the two sheets of ONE workbook have different geometry** (LEI
+  `col2` / name `col11` on `SIs`, `col1` / `col9` on `LSIs`), and declaring one
+  sheet's positions on the other emitted 2,166 records titled by their LEI plus
+  two shape notices saying 0 of 2,166 carried the declared keys; and the header
+  must not be read as a header at all, because its names live in MERGED cells,
+  so depending on which row the skip landed on the parser alternated between
+  positional `colN` names and a field literally named `""`. `csv_no_header = 1`
+  makes it deterministic. The cost is a row pinned to column POSITIONS, which a
+  re-laid-out workbook would change without changing the record count — so the
+  row says so.
+
 * **A deep-paging cap is the upstream's, and it is disclosed by name.** GLEIF
   refuses `page[number]=51` with HTTP 400 — 50 pages × 200 = 10,000 records —
   so `GLEIF_LEI_HK` reaches 10,000 of 13,419 and the rest needs a narrower
