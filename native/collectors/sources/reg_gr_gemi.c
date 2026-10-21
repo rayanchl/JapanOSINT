@@ -47,7 +47,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def gr_gemi_def = {
-  .id = "GR_GEMI", .collector = "osint",
+  .id = "GR_GEMI", .collector = "osint_" "government",
   .name = "Greece GEMI Business Registry",
   .name_ja = "ギリシャ GEMI 商業登記検索",
   .update_interval_sec = 0, .run = run,

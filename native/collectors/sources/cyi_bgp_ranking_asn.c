@@ -93,7 +93,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def cyi_bgp_ranking_asn_def = {
-  .id = "BGP_RANKING_ASN", .collector = "osint",
+  .id = "BGP_RANKING_ASN", .collector = "osint_" "cyber",
   .name = "CIRCL BGP Ranking",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api", .url = CYI_URL,

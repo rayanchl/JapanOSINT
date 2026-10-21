@@ -39,11 +39,29 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 48,819** (2026-10-20: 48,346 plus the 491 rows the
-User-Agent header recovered from bot walls, plus `PLOS_CORPUS`, less the 19
-rows batches 34 and 35 lost to their first measurement — the ledger has the
-day). 48,346 (2026-10-19) was 48,343 plus the three
-embedding maintenance pods of the infrastructure audit: main's 22,408 — its own
+**The registered count is 54,212** (2026-10-21): two sessions' days on
+2026-10-20 merged — main's 53,739 (batch 49 below on 48,346) plus this
+branch's 473 on the same base: the 491 rows the User-Agent header recovered
+from bot walls, plus `PLOS_CORPUS`, less the 19 rows batches 34 and 35 lost to
+their first measurement (the ledger has both days).
+
+**The count was 53,739** (2026-10-20): batch 49's 5,393 measured rows
+(`docs/verified-sources-batch49.tsv`,
+`native/collectors/OSINT_SOURCES_BATCH_49_JPWPFEDERATIONS.md`) on 48,346.
+**Batch 49 is batch 45's staging set registered** — the WordPress collections of
+the member organisations of Japan's nationwide federations (medical and
+pharmacist associations, JA, chambers of commerce, 法人会, co-ops, JC, the 士業
+bodies, fire chiefs, welfare councils, public cultural facilities), found by
+reading the federations' own link pages for hosts and asking each host for its
+REST root; eleven beats named after the federation that listed the host.
+5,405 rows were generated and the engine decided: 5,371 OK on the first pass,
+28 given a second reading of which 16 recovered, 12 removed
+(`docs/rejected-sources-batch49.emit.tsv`); 518,813 emitted / 518,827 stored
+over one pass. Their declared interval is 21600 as data; the cadence that runs
+is the system-wide policy (see "Cadence policy" below).
+
+**The registered count was 48,346** (2026-10-19; 48,343 plus the three
+embedding maintenance pods of the infrastructure audit): main's 22,408 — its own
 `jp_feeds_batch41..44.c` beats, PR #48's paging cycle and PR #50's batch 45 of
 619 WordPress collections — merged into this branch's 47,178, less six news
 feeds both sessions had added (main merged first, so its rows stay). **Batch numbers 43 and 44 now name two things**: main's
@@ -58,7 +76,7 @@ manifests, TSVs, docs and collector keys — exactly as the batch-41 note below
 predicts. The count ledger — every
 batch from 37 to 48, main's 45 included, what seeded it, what it measured and what it taught — is
 `docs/SOURCE_COUNT_LEDGER.md`; this file keeps the rules and the current number.
-Both floors are re-recorded at 48,819 and `make source-count` agrees. The
+Both floors are re-recorded at 54,212 and `make source-count` agrees. The
 lessons from batches 43–48 that a new batch must not relearn:
 
 * **A registration count is not a website, and a build is not a registry.**
@@ -735,17 +753,22 @@ underneath them that older notes in this file predate:
   (2026-10-19, round 4); `core/collectors.def` labels and groups them (below).
   Round 4 also moved batches 43/44's 400 Japanese web-media RSS feeds off
   `social` (their macro's label) onto `jp_webmedia` under News & media.
-  **`osint` is the collector of hand-written entity PIVOTS only** since round 3:
-  968 scheduled feeds had been authored under that label (Google News
-  editions and keyword monitors, world outlets, arXiv, think tanks, threat
-  feeds, Reddit multireddits) and sat under "Investigation pivots" as one
-  1,443-row collector. They now carry `gnews`, `gnews_monitors`,
+  **There is no `osint` collector any more** (round 5, 2026-10-20). Round 3
+  moved 968 scheduled feeds that had been authored under that label (Google
+  News editions and keyword monitors, world outlets, arXiv, think tanks,
+  threat feeds, Reddit multireddits) onto `gnews`, `gnews_monitors`,
   `world_outlets`, `conflict_press`, `trade_press`, `thinktanks`,
-  `ngo_rights`, `arxiv`, `science_press`, `finance_press`, `reddit`, `cyber`
-  — the collector of what they are — and `osint` holds its 492 pivots and
-  nothing scheduled. Safe because the pivot rule below never read the label;
-  check that a scheduled row's `collector` names its beat, not the macro's
-  default.
+  `ngo_rights`, `arxiv`, `science_press`, `finance_press`, `reddit`, `cyber`;
+  round 5 split the 492 hand-written entity pivots that remained by their
+  CATEGORY: `DEFR`/`DEF` in `_source_macros.inc` label a pivot
+  `"osint_" CAT` (string concatenation, so a file-level `#define CAT` works
+  too) and every explicit `.collector = "osint"` row became
+  `"osint_" <its category>` — `osint_government` 143, `osint_cyber` 120,
+  `osint_investigation` 62, … The generator files `osint_<cat>` under the
+  category's topical group (`CATEGORY_GROUP`), else under Investigation
+  pivots, and labels it "OSINT pivots — <cat>". Safe because the pivot rule
+  below never read the label; a scheduled row's `collector` must name its
+  beat, not a macro's default.
 * **"Entity pivot" is `registry_is_entity_pivot()`** in `registry.c`, the one
   rule both the dispatcher and `service_vec` use: interval 0, not a `_` pod,
   and (hpengine) an entity token in the URL/body OR `filter_query=1` (a bulk
@@ -1610,7 +1633,8 @@ failing tests repaired. What it guarantees, and the knobs it adds:
   a per-user budget.
 * **Outbound politeness / SSRF** (`core/hostgate.c`): per-host capacity and
   `Retry-After`; the camera proxy refuses LAN, metadata and link-local
-  targets (`JO_CAMERA_ALLOW_LAN=1` reopens LAN only).
+  targets, always — there is no LAN opt-in (`JO_CAMERA_ALLOW_LAN` was removed
+  2026-10-20; tests use `hostgate_camera_test_allow_lan()`).
 * **LLM queue**: bounded lanes (`JO_LLM_QUEUE_MAX`, default 64 waiting; a job
   waits at most `JO_LLM_QUEUE_WAIT_FACTOR` × its timeout, default 4), no retry
   after a timeout, queue time reported apart from model time;

@@ -426,7 +426,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def ourairports_def = {
-  .id = "OURAIRPORTS", .collector = "osint",
+  .id = "OURAIRPORTS", .collector = "osint_" "transport",
   .name = "OurAirports Directory", .name_ja = "OurAirports 空港検索",
   .update_interval_sec = 0, .run = run,
   .category = "transport", .type = "dataset",
@@ -437,7 +437,7 @@ static const source_def ourairports_def = {
 REGISTER_SOURCE(ourairports_def)
 
 static const source_def hexdb_aircraft_def = {
-  .id = "HEXDB_AIRCRAFT", .collector = "osint",
+  .id = "HEXDB_AIRCRAFT", .collector = "osint_" "transport",
   .name = "hexdb Aircraft Lookup", .name_ja = "hexdb 機体検索",
   .update_interval_sec = 0, .run = run,
   .category = "transport", .type = "api",
@@ -448,7 +448,7 @@ static const source_def hexdb_aircraft_def = {
 REGISTER_SOURCE(hexdb_aircraft_def)
 
 static const source_def adsb_fi_def = {
-  .id = "ADSB_FI", .collector = "osint",
+  .id = "ADSB_FI", .collector = "osint_" "transport",
   .name = "adsb.fi Live Aircraft", .name_ja = "adsb.fi ライブ航空機",
   .update_interval_sec = 0, .run = run,
   .category = "transport", .type = "api",

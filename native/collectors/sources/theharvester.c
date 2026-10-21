@@ -249,7 +249,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def theharvester_def = {
-  .id = "EMAIL_HARVESTER", .collector = "osint",
+  .id = "EMAIL_HARVESTER", .collector = "osint_" "cyber",
   .name = "theHarvester", .name_ja = "theHarvester",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",

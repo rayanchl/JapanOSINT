@@ -53,7 +53,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def be_kbo_def = {
-  .id = "BE_KBO", .collector = "osint",
+  .id = "BE_KBO", .collector = "osint_" "government",
   .name = "Belgium KBO/BCE Enterprise Register",
   .name_ja = "ベルギー KBO/BCE 企業登記検索",
   .update_interval_sec = 0, .run = run,

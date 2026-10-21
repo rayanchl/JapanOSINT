@@ -149,7 +149,7 @@ static int run_maven(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def soc_maven_def = {
-  .id = "MAVEN_CENTRAL_SEARCH", .collector = "osint",
+  .id = "MAVEN_CENTRAL_SEARCH", .collector = "osint_" "social",
   .name = "Maven Central Coordinate Search",
   .update_interval_sec = 0, .run = run_maven,
   .category = "social", .type = "api",
@@ -219,7 +219,7 @@ static int run_nuget(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def soc_nuget_def = {
-  .id = "NUGET_PACKAGE_SEARCH", .collector = "osint",
+  .id = "NUGET_PACKAGE_SEARCH", .collector = "osint_" "social",
   .name = "NuGet Gallery Package Search",
   .update_interval_sec = 0, .run = run_nuget,
   .category = "social", .type = "api",
@@ -359,7 +359,7 @@ static int run_hexpm(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def soc_hexpm_def = {
-  .id = "HEXPM_PACKAGE_SEARCH", .collector = "osint",
+  .id = "HEXPM_PACKAGE_SEARCH", .collector = "osint_" "social",
   .name = "Hex.pm (Elixir/Erlang) Package Search",
   .update_interval_sec = 0, .run = run_hexpm,
   .category = "social", .type = "api",
@@ -451,7 +451,7 @@ static int run_aur(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def soc_aur_def = {
-  .id = "AUR_PACKAGE_SEARCH", .collector = "osint",
+  .id = "AUR_PACKAGE_SEARCH", .collector = "osint_" "social",
   .name = "Arch User Repository RPC Search",
   .update_interval_sec = 0, .run = run_aur,
   .category = "social", .type = "api",
@@ -535,7 +535,7 @@ static int run_depsdev(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def soc_depsdev_def = {
-  .id = "DEPSDEV_PACKAGE", .collector = "osint",
+  .id = "DEPSDEV_PACKAGE", .collector = "osint_" "social",
   .name = "deps.dev Package Version Graph",
   .update_interval_sec = 0, .run = run_depsdev,
   .category = "social", .type = "api",
@@ -598,7 +598,7 @@ static int run_npm_downloads(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def soc_npm_downloads_def = {
-  .id = "NPM_DOWNLOADS", .collector = "osint",
+  .id = "NPM_DOWNLOADS", .collector = "osint_" "social",
   .name = "npm Download Counts",
   .update_interval_sec = 0, .run = run_npm_downloads,
   .category = "social", .type = "api",

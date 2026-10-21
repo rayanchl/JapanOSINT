@@ -454,7 +454,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 #define PEOPLE_DEF(SYM, ID, NAME, NAMEJA, URL, DESC) \
-  static const source_def SYM = { .id = ID, .collector = "osint", .name = NAME, \
+  static const source_def SYM = { .id = ID, .collector = "osint_" "investigation", .name = NAME, \
     .name_ja = NAMEJA, .update_interval_sec = 0, .run = run, \
     .category = "investigation", .type = "api", .url = URL, .description = DESC, \
     .layer = NULL, .free_tier = 1 }; \

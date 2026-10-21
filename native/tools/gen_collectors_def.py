@@ -90,6 +90,11 @@ OVERRIDES = {
     "hp3b45_jpwpmedia": "grp_media", "hp3b45_jpwpcorp": "grp_corporate", "hp3b45_jpwporg": "grp_legal",
     "hp3b45_jpwpculture": "grp_culture", "hp3b45_jpwpcyber": "grp_cyber", "hp3b45_jpwpscience": "grp_science",
     "hp3b45_jpwpenv": "grp_environment", "hp3b45_jpwpgov": "grp_government",
+    # batch 49: federation-member sites (the staging set of batch 45), by federation
+    "hp3b49_jpwpmedical": "grp_health", "hp3b49_jpwpagri": "grp_health", "hp3b49_jpwpcci": "grp_corporate",
+    "hp3b49_jpwpcommerce": "grp_corporate", "hp3b49_jpwpcoop": "grp_corporate", "hp3b49_jpwpjc": "grp_social",
+    "hp3b49_jpwpprof": "grp_legal", "hp3b49_jpwpfire": "grp_safety", "hp3b49_jpwpwelfare": "grp_health",
+    "hp3b49_jpwpculture": "grp_culture", "hp3b49_jpwpedu": "grp_science",
     "_maint": "grp_internal", "_enrich": "grp_internal", "_test": "grp_internal", "_probe": "grp_internal",
     "_breach": "grp_cyber",
     "camera-discovery": "grp_surveillance", "us_cameras": "grp_surveillance",
@@ -354,6 +359,18 @@ LABELS = {
     "hp3b45_jpwpscience": ("Japan — research institutions, WordPress collections (batch 45)", "日本 研究機関 WordPress", None),
     "hp3b45_jpwpenv": ("Japan — hazard & geospatial sites, WordPress collections (batch 45)", "日本 防災・地理空間 WordPress", None),
     "hp3b45_jpwpgov": ("Japan — government sites, WordPress collections (batch 45)", "日本 政府サイト WordPress", None),
+    # batch 49: member organisations of nationwide federations, asked for their WordPress REST root
+    "hp3b49_jpwpmedical": ("Japan — medical, pharmacist, nursing & veterinary associations (batch 49)", "日本 医師会・薬剤師会・看護協会・獣医師会", None),
+    "hp3b49_jpwpagri": ("Japan — JA cooperatives, NOSAI & agricultural committees (batch 49)", "日本 JA・NOSAI・農業委員会", None),
+    "hp3b49_jpwpcci": ("Japan — chambers of commerce & industry (batch 49)", "日本 商工会議所", None),
+    "hp3b49_jpwpcommerce": ("Japan — corporate-tax associations 法人会 (batch 49)", "日本 法人会", None),
+    "hp3b49_jpwpcoop": ("Japan — consumer, fishery & labour co-operatives (batch 49)", "日本 生協・漁協・労金", None),
+    "hp3b49_jpwpjc": ("Japan — Junior Chamber local organisations (batch 49)", "日本 青年会議所", None),
+    "hp3b49_jpwpprof": ("Japan — professional bodies: tax, legal, labour, architects, realtors (batch 49)", "日本 士業団体", None),
+    "hp3b49_jpwpfire": ("Japan — fire departments & fire-chief associations (batch 49)", "日本 消防本部・消防長会", None),
+    "hp3b49_jpwpwelfare": ("Japan — social welfare councils (batch 49)", "日本 社会福祉協議会", None),
+    "hp3b49_jpwpculture": ("Japan — public cultural facilities, zoos & aquariums (batch 49)", "日本 公立文化施設・動物園・水族館", None),
+    "hp3b49_jpwpedu": ("Japan — junior-college & private-university associations (batch 49)", "日本 短大協会・私大協", None),
 }
 
 COUNTRY = {
@@ -389,6 +406,11 @@ def beat_of(key):
 def assign(key, cats):
     if key in OVERRIDES:
         return OVERRIDES[key]
+    # osint_<category>: the hand-written entity pivots, split by their category
+    # (round 5, 2026-10-20). The category decides the topical group; a category
+    # the map does not know stays under the pivots group rather than unassigned.
+    if key.startswith("osint_"):
+        return CATEGORY_GROUP.get(key[len("osint_"):], "grp_osint")
     beat = beat_of(key)
     for kw, grp in sorted(KEYWORDS, key=lambda kv: -len(kv[0])):
         if kw == beat or beat.endswith("_" + kw) or beat.endswith("-" + kw) or beat.startswith(kw + "_"):
@@ -402,6 +424,8 @@ def assign(key, cats):
 def humanise(key):
     if key in LABELS:
         return LABELS[key][0]
+    if key.startswith("osint_"):
+        return f"OSINT pivots — {key[len('osint_'):].replace('-', ' ').replace('_', ' ')}"
     if key.startswith("hp") and "_" in key:
         pfx, beat = key.split("_", 1)
         batch = pfx.replace("hp3b", "").replace("hp3", "").replace("hp2", "").replace("hp", "")
@@ -477,6 +501,9 @@ def main():
         out.append(f"/* {label}: {len(members)} collector(s), {sum(m[1] for m in members)} sources */")
         for key, n, cats in members:
             lab, lj, desc = LABELS.get(key, (humanise(key), None, None))
+            if key.startswith("osint_") and key not in LABELS:
+                lj = f"OSINTピボット — {key[len('osint_'):]}"
+                desc = f"Hand-written entity pivots whose category is {key[len('osint_'):]} (collectors/sources/, DEFR/DEF rows)."
             top = ", ".join(f"{c} {cnt}" for c, cnt in cats[:3])
             comment = f"  /* {n} src; {top} */" if top else f"  /* {n} src */"
             out.append(f"COLLECTOR({cstr(key)}, {cstr(lab)}, {cstr(lj)}, {cstr(desc)}, {cstr(grp)}){comment}")

@@ -355,7 +355,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def hash_lookup_def = {
-  .id = "HASH_LOOKUP", .collector = "osint",
+  .id = "HASH_LOOKUP", .collector = "osint_" "cyber",
   .name = "Hash Lookup", .name_ja = "ハッシュ照会",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",

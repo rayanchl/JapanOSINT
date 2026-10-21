@@ -75,7 +75,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def dns_records_def = {
-  .id = "DNS_RECORDS", .collector = "osint",
+  .id = "DNS_RECORDS", .collector = "osint_" "cyber",
   .name = "DNS Records", .name_ja = "DNSレコード",
    .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",

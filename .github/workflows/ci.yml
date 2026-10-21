@@ -27,6 +27,19 @@ on:
   pull_request:
   workflow_dispatch:
 
+# One run per branch at a time, and the newest push wins. Without this every
+# push to a PR branch ran the workflow TWICE (the push event and the
+# pull_request event, two macOS jobs each) and nothing cancelled a run whose
+# commit had already been superseded — measured 2026-10-20: 68 queued runs,
+# 136 macOS jobs ahead of a PR whose head was mergeable, hours behind five
+# free-plan macOS runners. The group is the branch name under both events
+# (head_ref on pull_request, ref_name on push), so the pull_request run that
+# follows a push by a few seconds supersedes the push run of the same commit.
+# main is never cancelled: a run there is the record of what merged.
+concurrency:
+  group: ci-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest

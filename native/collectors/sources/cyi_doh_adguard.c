@@ -130,7 +130,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def cyi_doh_adguard_def = {
-  .id = "DOH_ADGUARD", .collector = "osint",
+  .id = "DOH_ADGUARD", .collector = "osint_" "cyber",
   .name = "AdGuard filtered DNS resolution (DoH JSON)",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",

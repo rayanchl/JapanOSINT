@@ -361,7 +361,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def openmeteo_def = {
-  .id = "OPENMETEO_GLOBAL", .collector = "osint",
+  .id = "OPENMETEO_GLOBAL", .collector = "osint_" "environment",
   .name = "Open-Meteo Weather Forecast", .name_ja = "Open-Meteo 気象予報",
   .update_interval_sec = 0, .run = run,
   .category = "environment", .type = "api",
@@ -372,7 +372,7 @@ static const source_def openmeteo_def = {
 REGISTER_SOURCE(openmeteo_def)
 
 static const source_def nws_def = {
-  .id = "NWS_US", .collector = "osint",
+  .id = "NWS_US", .collector = "osint_" "environment",
   .name = "US NWS Weather Forecast", .name_ja = "米国 NWS 気象予報",
   .update_interval_sec = 0, .run = run,
   .category = "environment", .type = "api",
@@ -383,7 +383,7 @@ static const source_def nws_def = {
 REGISTER_SOURCE(nws_def)
 
 static const source_def metar_def = {
-  .id = "AVIATION_METAR", .collector = "osint",
+  .id = "AVIATION_METAR", .collector = "osint_" "environment",
   .name = "Aviation Weather METAR", .name_ja = "航空気象 METAR",
   .update_interval_sec = 0, .run = run,
   .category = "environment", .type = "api",

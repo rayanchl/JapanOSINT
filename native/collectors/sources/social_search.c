@@ -257,7 +257,7 @@ static int run_email(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def social_email_def = {
-  .id = "SOCIAL_EMAIL", .collector = "osint",
+  .id = "SOCIAL_EMAIL", .collector = "osint_" "social",
   .name = "Email OSINT", .name_ja = "メールOSINT",
   .update_interval_sec = 0, .run = run_email,
   .category = "social", .type = "api",

@@ -5,7 +5,18 @@ was seeded from, what it measured and what it taught. Moved out of `CLAUDE.md`
 on 2026-10-19 so that file keeps the rules and the current number; the lessons
 that a new batch must not relearn are summarised there. Newest first.
 
-**The registered count is 48,819** (2026-10-20): 48,346 (the 48,343 below plus
+**The registered count is 54,212** (2026-10-21): two sessions' 2026-10-20 work
+merged. Main's 53,739 — batch 49's 5,393 federation-member WordPress
+collections (`docs/verified-sources-batch49.tsv`,
+`native/collectors/OSINT_SOURCES_BATCH_49_JPWPFEDERATIONS.md`; 518,813 emitted
+/ 518,827 stored, 12 rows removed on two readings) on 48,346, with the
+system-wide cadence policy (PR #52) and the osint collectors split by category
+(PR #53) — plus this branch's 473 below on the same base. The merge composed
+the cadence policy with the adaptive interval (`sched_row_interval()`, see
+CLAUDE.md's "Cadence policy") and found one defect in doing so: the adaptive
+measurement could give an entity pivot a schedule; it cannot now.
+
+**The count was 48,819** (2026-10-20): 48,346 (the 48,343 below plus
 the infrastructure audit's three embedding maintenance pods, PR #42) **plus 491
 rows recovered from bot walls, plus `PLOS_CORPUS`, less 19 rows batches 34 and
 35 lost to their first measurement.** No new batch: a day of measuring what

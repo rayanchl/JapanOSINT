@@ -366,7 +366,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def sec_risk_diff_def = {
-  .id = "SEC_RISK_FACTOR_DIFF", .collector = "osint",
+  .id = "SEC_RISK_FACTOR_DIFF", .collector = "osint_" "economy",
   .name = "SEC 10-K Risk Factor Diff", .name_ja = "SEC 10-K リスク要因 差分",
   .update_interval_sec = 0, .run = run,
   .category = "economy", .type = "api",

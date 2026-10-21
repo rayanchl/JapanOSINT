@@ -94,7 +94,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def wikidata_def = {
-  .id = "WIKIDATA", .collector = "osint",
+  .id = "WIKIDATA", .collector = "osint_" "investigation",
   .name = "Wikidata Entity Search", .name_ja = "Wikidata エンティティ検索",
   .update_interval_sec = 0, .run = run,
   .category = "investigation", .type = "api",

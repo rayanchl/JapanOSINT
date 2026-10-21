@@ -395,7 +395,7 @@ static int run_gitea_search(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def soc_gitea_search_def = {
-  .id = "GITEA_REPO_SEARCH", .collector = "osint",
+  .id = "GITEA_REPO_SEARCH", .collector = "osint_" "social",
   .name = "Gitea.com Repository Search",
   .update_interval_sec = 0, .run = run_gitea_search,
   .category = "social", .type = "api",
@@ -529,7 +529,7 @@ static int run_sourcegraph(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def soc_sourcegraph_def = {
-  .id = "SOURCEGRAPH_CODE_SEARCH", .collector = "osint",
+  .id = "SOURCEGRAPH_CODE_SEARCH", .collector = "osint_" "social",
   .name = "Sourcegraph Public Code Search",
   .update_interval_sec = 0, .run = run_sourcegraph,
   .category = "social", .type = "api",

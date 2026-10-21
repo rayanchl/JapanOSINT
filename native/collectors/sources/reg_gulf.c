@@ -115,7 +115,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def gulf_registry_def = {
-  .id = "GULF_REGISTRY", .collector = "osint",
+  .id = "GULF_REGISTRY", .collector = "osint_" "government",
   .name = "Gulf / Turkey / Israel Registries",
   .name_ja = "湾岸・トルコ・イスラエル 企業登記検索",
   .update_interval_sec = 0, .run = run,

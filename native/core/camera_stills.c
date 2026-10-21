@@ -536,7 +536,7 @@ static int cam_prereq(void *ud, char *primary_ip, char *local_ip,
 /* THE DESTINATION check for this module's own sockets, at the CAMERA strength
  * (hostgate.h): every camera URL in the corpus was written by a discovery
  * collector from whatever its upstream reported, so loopback and RFC1918 are
- * refused unless the operator set JO_CAMERA_ALLOW_LAN=1. This used to be the
+ * always refused (there is no opt-in; JO_CAMERA_ALLOW_LAN was removed). This used to be the
  * floor ("LAN cameras are a shipped feature"), which let one poisoned record
  * point the pod — and capture_one, on a user's request — at the server's own
  * network.

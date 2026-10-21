@@ -119,7 +119,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def cyi_subdomain_center_def = {
-  .id = "SUBDOMAIN_CENTER", .collector = "osint",
+  .id = "SUBDOMAIN_CENTER", .collector = "osint_" "cyber",
   .name = "Subdomain Center (ARPSyndicate)",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",

@@ -244,7 +244,7 @@ static int run_reputation(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def phone_lookup_def = {
-  .id = "PHONE_LOOKUP", .collector = "osint",
+  .id = "PHONE_LOOKUP", .collector = "osint_" "investigation",
   .name = "Phone Lookup", .run = run_lookup,
   .category = "investigation", .type = "api", .url = "http://apilayer.net/",
   .description = "E.164 phone validation, country/region, carrier & line type (NumVerify).",
@@ -253,7 +253,7 @@ static const source_def phone_lookup_def = {
 REGISTER_SOURCE(phone_lookup_def)
 
 static const source_def carrier_lookup_def = {
-  .id = "CARRIER_LOOKUP", .collector = "osint",
+  .id = "CARRIER_LOOKUP", .collector = "osint_" "investigation",
   .name = "Carrier Lookup", .run = run_carrier,
   .category = "investigation", .type = "api", .url = "http://apilayer.net/",
   .description = "Phone carrier and line-type identification (NumVerify).",
@@ -262,7 +262,7 @@ static const source_def carrier_lookup_def = {
 REGISTER_SOURCE(carrier_lookup_def)
 
 static const source_def phone_reputation_def = {
-  .id = "PHONE_REPUTATION", .collector = "osint",
+  .id = "PHONE_REPUTATION", .collector = "osint_" "investigation",
   .name = "Phone Reputation", .run = run_reputation,
   .category = "investigation", .type = "api", .url = "http://apilayer.net/",
   .description = "Phone validity + line-type risk signal (VoIP/invalid).",

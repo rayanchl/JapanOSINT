@@ -452,7 +452,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def openaq_def = {
-  .id = "OPENAQ_GLOBAL", .collector = "osint",
+  .id = "OPENAQ_GLOBAL", .collector = "osint_" "environment",
   .name = "OpenAQ Air Quality", .name_ja = "OpenAQ 大気質",
   .update_interval_sec = 0, .run = run,
   .category = "environment", .type = "api",
@@ -463,7 +463,7 @@ static const source_def openaq_def = {
 REGISTER_SOURCE(openaq_def)
 
 static const source_def waqi_def = {
-  .id = "WAQI_GLOBAL", .collector = "osint",
+  .id = "WAQI_GLOBAL", .collector = "osint_" "environment",
   .name = "WAQI Air Quality Index", .name_ja = "WAQI 大気質指数",
   .update_interval_sec = 0, .run = run,
   .category = "environment", .type = "api",
@@ -474,7 +474,7 @@ static const source_def waqi_def = {
 REGISTER_SOURCE(waqi_def)
 
 static const source_def openmeteo_aq_def = {
-  .id = "OPENMETEO_AQ", .collector = "osint",
+  .id = "OPENMETEO_AQ", .collector = "osint_" "environment",
   .name = "Open-Meteo Air Quality", .name_ja = "Open-Meteo 大気質",
   .update_interval_sec = 0, .run = run,
   .category = "environment", .type = "api",

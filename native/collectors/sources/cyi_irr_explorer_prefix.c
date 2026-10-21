@@ -203,7 +203,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def cyi_irr_explorer_prefix_def = {
-  .id = "IRR_EXPLORER_PREFIX", .collector = "osint",
+  .id = "IRR_EXPLORER_PREFIX", .collector = "osint_" "cyber",
   .name = "IRR Explorer — IRR vs RPKI vs BGP consistency",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",

@@ -331,7 +331,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def document_analyzer_def = {
-  .id = "DOCUMENT_ANALYZER", .collector = "osint",
+  .id = "DOCUMENT_ANALYZER", .collector = "osint_" "cyber",
   .name = "Document Analyzer", .name_ja = "ドキュメント解析",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",

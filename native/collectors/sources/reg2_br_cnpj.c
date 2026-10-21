@@ -255,7 +255,7 @@ static int ws_run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def reg2_br_minhareceita_def = {
-  .id = "BR_MINHARECEITA", .collector = "osint",
+  .id = "BR_MINHARECEITA", .collector = "osint_" "economy",
   .name = "Brazil Minha Receita CNPJ service",
   .update_interval_sec = 0, .run = mr_run,
   .category = "economy", .type = "api",
@@ -270,7 +270,7 @@ static const source_def reg2_br_minhareceita_def = {
 REGISTER_SOURCE(reg2_br_minhareceita_def)
 
 static const source_def reg2_br_cnpj_ws_def = {
-  .id = "BR_CNPJ_WS", .collector = "osint",
+  .id = "BR_CNPJ_WS", .collector = "osint_" "economy",
   .name = "Brazil CNPJ open API (with shareholders)",
   .update_interval_sec = 0, .run = ws_run,
   .category = "economy", .type = "api",

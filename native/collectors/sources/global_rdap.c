@@ -188,7 +188,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def global_rdap_def = {
-  .id = "RDAP_LOOKUP", .collector = "osint",
+  .id = "RDAP_LOOKUP", .collector = "osint_" "cyber",
   .name = "RDAP Domain WHOIS", .name_ja = "RDAP ドメイン WHOIS",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",

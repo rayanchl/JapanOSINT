@@ -484,7 +484,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def jp_corpus_lookup_def = {
-  .id = "JP_CORPUS_LOOKUP", .collector = "osint",
+  .id = "JP_CORPUS_LOOKUP", .collector = "osint_" "investigation",
   .name = "Japan Corpus Lookup", .name_ja = "日本コーパス照会",
   .update_interval_sec = 0, .run = run,
   .category = "investigation", .type = "api",

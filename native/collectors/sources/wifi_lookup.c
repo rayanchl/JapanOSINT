@@ -320,7 +320,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def wifi_lookup_def = {
-  .id = "WIFI_LOOKUP", .collector = "osint",
+  .id = "WIFI_LOOKUP", .collector = "osint_" "cyber",
   .name = "WiFi Lookup", .name_ja = "WiFi照会",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",

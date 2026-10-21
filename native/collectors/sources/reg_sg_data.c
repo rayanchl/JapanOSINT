@@ -118,7 +118,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def reg_sg_acra_def = {
-  .id = "SG_ACRA", .collector = "osint",
+  .id = "SG_ACRA", .collector = "osint_" "government",
   .name = "Singapore ACRA Entity Lookup", .name_ja = "シンガポール ACRA 企業検索",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "api",

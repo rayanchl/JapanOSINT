@@ -245,7 +245,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def dehashed_search_def = {
-  .id = "DEHASHED_SEARCH", .collector = "osint",
+  .id = "DEHASHED_SEARCH", .collector = "osint_" "cyber",
   .name = "Dehashed Search", .name_ja = "Dehashed検索",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",

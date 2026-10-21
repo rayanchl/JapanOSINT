@@ -268,7 +268,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def procurement_ocds_def = {
-  .id = "PROCUREMENT_OCDS", .collector = "osint",
+  .id = "PROCUREMENT_OCDS", .collector = "osint_" "government",
   .name = "OCDS Procurement Search", .name_ja = "OCDS 公共調達検索",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "api",

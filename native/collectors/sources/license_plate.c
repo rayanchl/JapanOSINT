@@ -62,7 +62,7 @@ static int plate_run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def plate_def = {
-  .id = "LICENSE_PLATE_LOOKUP", .collector = "osint", .name = "License Plate Lookup", .run = plate_run,
+  .id = "LICENSE_PLATE_LOOKUP", .collector = "osint_" "investigation", .name = "License Plate Lookup", .run = plate_run,
   .category = "investigation", .type = "api", .url = "internal://plate",
   .description = "Plate → vehicle/owner via a configured DMV endpoint (PLATE_LOOKUP_URL); no public source.",
   .free_tier = 0,
