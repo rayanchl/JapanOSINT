@@ -157,7 +157,7 @@ manifests, TSVs, docs and collector keys — exactly as the batch-41 note below
 predicts. The count ledger — every
 batch from 37 to 48, main's 45 included, what seeded it, what it measured and what it taught — is
 `docs/SOURCE_COUNT_LEDGER.md`; this file keeps the rules and the current number.
-Both floors are re-recorded at 57,415 and `make source-count` agrees. The
+Both floors are re-recorded at 57,536 and `make source-count` agrees. The
 lessons from batches 43–48 that a new batch must not relearn:
 
 * **A registration count is not a website, and a build is not a registry.**
