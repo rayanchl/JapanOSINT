@@ -118,7 +118,7 @@ static int run_shikiho(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def ufocatch_def = {
-  .id = "UFOCATCH", .collector = "osint",
+  .id = "UFOCATCH", .collector = "osint_" "government",
   .name = "UFOCatch (EDINET filings)", .name_ja = "有報キャッチャー",
   .update_interval_sec = 0, .run = run_ufocatch,
   .category = "government", .type = "api", .url = "https://ufocatch.com/",
@@ -128,7 +128,7 @@ static const source_def ufocatch_def = {
 REGISTER_SOURCE(ufocatch_def)
 
 static const source_def buffett_def = {
-  .id = "BUFFETT_CODE", .collector = "osint",
+  .id = "BUFFETT_CODE", .collector = "osint_" "economy",
   .name = "Buffett Code Financials", .name_ja = "Buffett Code 財務指標",
   .update_interval_sec = 0, .run = run_buffett,
   .category = "economy", .type = "api", .url = "https://buffett-code.com/",
@@ -138,7 +138,7 @@ static const source_def buffett_def = {
 REGISTER_SOURCE(buffett_def)
 
 static const source_def shikiho_def = {
-  .id = "SHIKIHO", .collector = "osint",
+  .id = "SHIKIHO", .collector = "osint_" "economy",
   .name = "Kaisha Shikiho", .name_ja = "会社四季報オンライン",
   .update_interval_sec = 0, .run = run_shikiho,
   .category = "economy", .type = "api", .url = "https://shikiho.toyokeizai.net/",

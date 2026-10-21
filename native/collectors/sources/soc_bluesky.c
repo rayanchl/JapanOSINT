@@ -132,7 +132,7 @@ static int run_actor_search(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def soc_bsky_actor_def = {
-  .id = "BLUESKY_ACTOR_SEARCH", .collector = "osint",
+  .id = "BLUESKY_ACTOR_SEARCH", .collector = "osint_" "social",
   .name = "Bluesky Public Actor Search (AT Protocol)",
   .update_interval_sec = 0, .run = run_actor_search,
   .category = "social", .type = "api",
@@ -246,7 +246,7 @@ static int run_author_feed(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def soc_bsky_feed_def = {
-  .id = "BLUESKY_AUTHOR_FEED", .collector = "osint",
+  .id = "BLUESKY_AUTHOR_FEED", .collector = "osint_" "social",
   .name = "Bluesky Public Author Feed (AT Protocol)",
   .update_interval_sec = 0, .run = run_author_feed,
   .category = "social", .type = "api",

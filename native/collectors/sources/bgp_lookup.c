@@ -129,7 +129,7 @@ static int bgp_run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def bgp_def = {
-  .id = "BGP_LOOKUP", .collector = "osint", .name = "BGP Lookup", .run = bgp_run,
+  .id = "BGP_LOOKUP", .collector = "osint_" "investigation", .name = "BGP Lookup", .run = bgp_run,
   .category = "investigation", .type = "api", .url = "https://stat.ripe.net/",
   .description = "IP/ASN → BGP prefix, announcing ASN(s) and holder via RIPEstat (free).",
   .free_tier = 1,

@@ -521,7 +521,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def whale_monitor_def = {
-  .id = "WHALE_ALERT", .collector = "osint",
+  .id = "WHALE_ALERT", .collector = "osint_" "economy",
   .name = "Crypto Whale Monitor", .name_ja = "暗号資産ホエール監視",
   .update_interval_sec = 0, .run = run,
   .category = "economy", .type = "api",

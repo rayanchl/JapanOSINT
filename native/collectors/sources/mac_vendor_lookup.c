@@ -87,7 +87,7 @@ static int run_mac(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def mac_vendor_lookup_def = {
-  .id = "MAC_VENDOR_LOOKUP", .collector = "osint",
+  .id = "MAC_VENDOR_LOOKUP", .collector = "osint_" "cyber",
   .name = "MAC Vendor Lookup", .name_ja = "MACベンダー照会",
   .update_interval_sec = 0, .run = run_mac,
   .category = "cyber", .type = "api",

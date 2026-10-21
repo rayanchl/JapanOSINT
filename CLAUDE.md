@@ -39,7 +39,49 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 48,346** (2026-10-19; 48,343 plus the three
+**The registered count is 56,955** (2026-10-21): main's 53,739, less six
+`jp_feeds_batch43/44` feeds measured dead, less 25 rows of batches 44/47/48
+whose official domains now publish gambling spam (below), plus **batch 50's
+3,247 government and institutional RSS/Atom feeds** for Japan, the US, the UK,
+France and China (`collectors/sources/{jp,us,uk,fr,cn,intl}_feeds_batch50.c`,
+`docs/verified-sources-batch50.tsv`, 3,237 OK on the emit sweep, 54,800 emitted
+/ 54,802 stored). Authored as batch 45 and renumbered twice at merge time — to 49, then 50 —
+because main's 45, 47, 48 and 49 all landed first. Details: `docs/SOURCE_COUNT_LEDGER.md`.
+
+* **An official domain is not forever, and no record count can see it lapse.**
+  Wikidata's `P856` official website — and any register like it — lists the
+  domain a body USED to hold. Scanning the ITEM TITLES of 2,729 autodiscovered
+  feeds found 27 that serve Vietnamese/Indonesian betting, crypto-casino or
+  pharma spam under a city's name (Hudson, Madison, South Houston, Yokohama's
+  `kaikou.yokohama`…), and the same scan over main's batches 44/47/48 found 25
+  more, including a hacked `pinelandtx.gov` and `ffc.gov.pk`. Every one passed
+  probe AND emit with healthy numbers. Page titles are not enough — South
+  Houston's homepage title was its own name while its feed was slot spam. Scan
+  item titles for gambling vocabulary and for a script the source has no reason
+  to publish in, then read the hits: "cialis" is inside "Commercialisti" and
+  "casino" inside "Liceo Pascasino". Removals and their evidence:
+  `docs/removed-sources-2026-10-20-takeovers.tsv`.
+* **Ask the homepage for its feeds.** Probing `/rss/`, `/feed/` on Japanese
+  government hosts found 27 feeds; reading each official homepage's own
+  `<link rel="alternate" type="application/rss+xml">` found 961 — the batch-42
+  lesson again, one level up.
+
+**The registered count was 53,739** (2026-10-20): batch 49's 5,393 measured rows
+(`docs/verified-sources-batch49.tsv`,
+`native/collectors/OSINT_SOURCES_BATCH_49_JPWPFEDERATIONS.md`) on 48,346.
+**Batch 49 is batch 45's staging set registered** — the WordPress collections of
+the member organisations of Japan's nationwide federations (medical and
+pharmacist associations, JA, chambers of commerce, 法人会, co-ops, JC, the 士業
+bodies, fire chiefs, welfare councils, public cultural facilities), found by
+reading the federations' own link pages for hosts and asking each host for its
+REST root; eleven beats named after the federation that listed the host.
+5,405 rows were generated and the engine decided: 5,371 OK on the first pass,
+28 given a second reading of which 16 recovered, 12 removed
+(`docs/rejected-sources-batch49.emit.tsv`); 518,813 emitted / 518,827 stored
+over one pass. Their declared interval is 21600 as data; the cadence that runs
+is the system-wide policy (see "Cadence policy" below).
+
+**The registered count was 48,346** (2026-10-19; 48,343 plus the three
 embedding maintenance pods of the infrastructure audit): main's 22,408 — its own
 `jp_feeds_batch41..44.c` beats, PR #48's paging cycle and PR #50's batch 45 of
 619 WordPress collections — merged into this branch's 47,178, less six news
@@ -86,6 +128,16 @@ lessons from batches 43–48 that a new batch must not relearn:
 * **The interval follows the measured freshness** of each feed (newest item
   within 3 days → hourly, 30 days → 6 h, a year → daily, else weekly); the
   press stays hourly.
+
+**Batch 45's method is worth more than its 619 rows.** Every `.jp` host a
+registered row already fetched was asked whether it also runs WordPress REST —
+the homepage's `Link: rel="https://api.w.org/"` names the root (232 of 245),
+a bare `/wp-json` only 13 — then for its post types and one page of each
+collection; the tool is `tools/wp_routes_sweep.py`. The same sweep over 5,123
+federation-member hosts (chambers of commerce, JA, medical associations, fire
+chiefs, welfare councils, co-ops, professional bodies) found 5,678 live
+collections on 1,372 hosts, kept in `docs/staging-sources-batch45.federations.tsv`
+until they are registered as their own batch.
 
 **Batch 33 is the one batch measured end to end against live upstreams** —
 43 supply-chain and package-registry rows
@@ -691,17 +743,22 @@ underneath them that older notes in this file predate:
   (2026-10-19, round 4); `core/collectors.def` labels and groups them (below).
   Round 4 also moved batches 43/44's 400 Japanese web-media RSS feeds off
   `social` (their macro's label) onto `jp_webmedia` under News & media.
-  **`osint` is the collector of hand-written entity PIVOTS only** since round 3:
-  968 scheduled feeds had been authored under that label (Google News
-  editions and keyword monitors, world outlets, arXiv, think tanks, threat
-  feeds, Reddit multireddits) and sat under "Investigation pivots" as one
-  1,443-row collector. They now carry `gnews`, `gnews_monitors`,
+  **There is no `osint` collector any more** (round 5, 2026-10-20). Round 3
+  moved 968 scheduled feeds that had been authored under that label (Google
+  News editions and keyword monitors, world outlets, arXiv, think tanks,
+  threat feeds, Reddit multireddits) onto `gnews`, `gnews_monitors`,
   `world_outlets`, `conflict_press`, `trade_press`, `thinktanks`,
-  `ngo_rights`, `arxiv`, `science_press`, `finance_press`, `reddit`, `cyber`
-  — the collector of what they are — and `osint` holds its 492 pivots and
-  nothing scheduled. Safe because the pivot rule below never read the label;
-  check that a scheduled row's `collector` names its beat, not the macro's
-  default.
+  `ngo_rights`, `arxiv`, `science_press`, `finance_press`, `reddit`, `cyber`;
+  round 5 split the 492 hand-written entity pivots that remained by their
+  CATEGORY: `DEFR`/`DEF` in `_source_macros.inc` label a pivot
+  `"osint_" CAT` (string concatenation, so a file-level `#define CAT` works
+  too) and every explicit `.collector = "osint"` row became
+  `"osint_" <its category>` — `osint_government` 143, `osint_cyber` 120,
+  `osint_investigation` 62, … The generator files `osint_<cat>` under the
+  category's topical group (`CATEGORY_GROUP`), else under Investigation
+  pivots, and labels it "OSINT pivots — <cat>". Safe because the pivot rule
+  below never read the label; a scheduled row's `collector` must name its
+  beat, not a macro's default.
 * **"Entity pivot" is `registry_is_entity_pivot()`** in `registry.c`, the one
   rule both the dispatcher and `service_vec` use: interval 0, not a `_` pod,
   and (hpengine) an entity token in the URL/body OR `filter_query=1` (a bulk
@@ -724,11 +781,49 @@ underneath them that older notes in this file predate:
   cyber, telecom, infrastructure, transport, media, social, geo, safety,
   sanctions, culture, surveillance, OSINT pivots, internal). **A new beat
   needs a line there**: a collector the def does not list shows under
-  `grp_unassigned` on every page and `test_sourceapi.c` fails. Re-run the
-  generator on a fresh census (`GET /api/collectors` → TSV) or add the line
-  by hand; the rules live in the script (OVERRIDES, KEYWORDS, CATEGORY_GROUP).
+  `grp_unassigned` on every page and `test_sourceapi.c` fails. **`make
+  collectors-def`** (2026-10-20) takes the census from the binary itself
+  (`./bin/japanosint --collector-census`, which agrees key-for-key and
+  count-for-count with `GET /api/collectors`), writes it under
+  `docs/source-pages-revamp/` and regenerates the def — rebuild afterwards,
+  the def is compiled in; **`make collectors-def-check`** fails while any
+  registered key has no line. The rules live in the script (OVERRIDES,
+  KEYWORDS, CATEGORY_GROUP).
 
 Plan, audit and as-built notes: `docs/source-pages-revamp/`.
+
+## Cadence policy (2026-10-20)
+
+Every source still declares its own `update_interval_sec` — that is the
+measured value it was authored with — but ONE policy sits above all of them:
+`core/cadence.{c,h}`. It is the operator's, system-wide, and lives in the
+database (`app_settings`, keys `sched.global_interval_sec`,
+`sched.min_interval_sec`, `sched.max_interval_sec`), so it survives restarts
+and is edited from the Sources page (`GET`/`PUT /api/sources/cadence`, PUT
+gated like `/api/sources/:id/schedule`: platform operator). Three shapes:
+
+* **global** — every scheduled row runs at one interval;
+* **clamped** — a floor and/or a ceiling the declared values are held inside;
+* **declared** — nothing set, each row as authored (the default).
+
+`JO_SCHED_INTERVAL_SEC` / `JO_SCHED_MIN_INTERVAL_SEC` /
+`JO_SCHED_MAX_INTERVAL_SEC` bootstrap an EMPTY database only; a stored policy
+always wins. The scheduler reads `cadence_apply(declared)` at every site that
+used the declared value (due time, boot ramp, backoff base, cancellation
+window, search-only and quarantine holds), and re-plans on a change without a
+restart: a row whose next due time is further away than its new interval is
+pulled in to now + interval. Entity pivots (interval 0) are never touched.
+
+What a choice costs is in the response, measured over the registry, not
+guessed: `estimate.runs_per_day_declared` against
+`estimate.runs_per_day_effective`. Measured 2026-10-20 on 19,954 scheduled
+rows: 240,318 runs/day as declared; a global 1 h would be 479,000, 6 h 80,000,
+daily 20,000. The 25 rows under 5 min (webcams, grid telemetry, Tor exits)
+alone make 42,000 of today's runs, which is what a global cadence trades away.
+Every source's pages show `declaredInterval`, `policyInterval` and `policy`
+(`/api/sources/:id/detail` → `sched`, `/api/status` rows → `policyInterval`).
+`tests/unit/test_cadence.c` pins the rules, the persistence and the refusals.
+
 
 ## Where things live
 
@@ -844,6 +939,7 @@ says why.
 | `tools/audit_registry_emit.py` | rule 4 **and** 4b for the whole REGISTRY, manifest or not — `--list-sources` is the source list, so nothing registered can hide. Measures emitted *and* stored, per run, against a fresh copy of a warm template DB. `--scheduled`/`--match`/`--only`/`--ids-file`, `--jobs`, `--timeout`, TSV out, `--resume` |
 | `tools/diagnose_emit_keys.py` | why a row emitted nothing, and which `title_keys`/`id_keys` fix it |
 | `tools/cleanup_stale_uids.py` | the rows identity fixes left in an OLD database: a plain-key row whose qualified siblings now hold the same record (the keyqual collectors and FRA), and wayback_jp's captures from before digest+timestamp+URL. Reports by default. `--delete` removes, in one transaction, only rows whose replacement is proven to exist and that nothing references. `--self-test` runs it on a scratch DB (also from `make unit`) |
+| `tools/wp_routes_sweep.py` | the WordPress method as a tool: `sweep` asks each host for its REST root (the homepage's `Link rel="https://api.w.org/"`, else `/wp-json`), its post types and one page of each collection, writing routes.tsv/probe.tsv; `manifest` turns probe.tsv into host-type beats and a rejected TSV. Hosts are normalised (`www.` dropped, one row per REST root) because `funq.jp` and `www.funq.jp` reached the same site and only `batch_exclusions.py` noticed |
 | `tools/gen_hp_batch.py` | manifest → C, one table per beat, `--prefix`/`--batch` so batches never collide — but the batch NUMBER is yours to keep unique: main shipped a batch 32 while a branch was open with its own, both created `docs/verified-sources-batch32.tsv`, and renumbering the branch to 33 after the fact meant touching the manifest, both TSVs, the table, its array name and two batch citations that had landed in `lib/hpengine.h` and `core/hostgate.c`. Rejects duplicate opts, non-integer int opts, and an opt whose value **swallowed the next one** through a stray `\;` |
 
 ## 4. Fetching is not emitting — prove the second one
@@ -857,8 +953,8 @@ real records and stored none** — `DATAPLANE_TELNET` fetched 36,166 and emitted
 an `EMPTY_RESULTSET` source.
 
 ```sh
-python3 native/tools/audit_batch_emit.py docs/candidate-sources-batch<N>.*.txt \
-        --bin ./bin/japanosint --jobs 6
+cd native && make batch-gates MANIFEST='../docs/candidate-sources-batch<N>.*.txt'   # exclusions, pagination, reachability, probe → .run/batch-gates/pass-ids.txt
+python3 tools/audit_batch_emit.py ../docs/candidate-sources-batch<N>.*.txt --bin ./bin/japanosint --jobs 6
 ```
 
 Run it before believing a batch. `DROPS_EVERYTHING` is the verdict that matters;
@@ -1413,7 +1509,7 @@ never put two models' vectors in one index — image vectors have their own.
 | index | holds | read by |
 | --- | --- | --- |
 | `intel_vec_v2` | items; `tenant_id` partition, `source_id`/`ts`/`record_type` filter INSIDE the search (the old `intel_vec` is migrated by copy, not re-embedded) | `/api/intel/semantic` (+filters), `sort=hybrid`, `/items/:uid/similar`, `/cases/:id/related`, Nearby `q`, `/timeline?q=`, the corpus lookup, prompt record ranking, stories/novelty, semantic alerts |
-| `service_vec` | every registered source's card (kind pivot/scheduled/pod, aliases from `core/service_aliases.c`), incremental | phase-1 and per-round routing (pivots only), `/api/sources/search`, `service_vec_route_sources`, canonical category votes, layer review, `batch_exclusions.py --semantic` |
+| `service_vec` | every registered source's card (kind pivot/scheduled/pod, aliases from `core/service_aliases.c`), incremental | phase-1 and per-round routing (pivots only), `/api/sources/semantic`, `service_vec_route_sources`, canonical category votes, layer review, `batch_exclusions.py --semantic` |
 | `entity_vec` | entity name + romaji, partitioned by type | merge candidates for the LLM judge (nothing auto-merges), `/api/entities/search?mode=hybrid` |
 | `fewshot_vec`, `anomaly_vec` | the analysis examples (`grammars/fewshot_analysis.jsonl`), past anomalies | per-query few-shot selection, triage memory |
 

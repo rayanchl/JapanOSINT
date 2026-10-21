@@ -81,7 +81,7 @@ static const hp_source HP3B45_JPWPCULTURE[] = {
     .record_type = "cpt-car",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://current.ndl.go.jp/wp-json/wp/v2/car?per_page=100&orderby=date&order=desc",
+    .url = "https://current.ndl.go.jp/wp-json/wp/v2/car?per_page=100&orderby=date&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -89,6 +89,10 @@ static const hp_source HP3B45_JPWPCULTURE[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_max = 60,
+    /* 43487 declared, 435 pages: read over a CYCLE (1.8 days at 4 runs/day),
+     * oldest first so new posts land at the tail the walk has not reached yet.
+     * order=asc verified against this host 2026-10-20: same X-WP-Total. */
+    .page_resume = 1,
     .page_param = "page",
     .page_start = 1,
     .timeout_ms = 30000,

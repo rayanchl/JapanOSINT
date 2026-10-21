@@ -103,7 +103,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def littlesis_def = {
-  .id = "LITTLESIS", .collector = "osint",
+  .id = "LITTLESIS", .collector = "osint_" "investigation",
   .name = "LittleSis Power Network", .name_ja = "LittleSis 影響力ネットワーク",
   .update_interval_sec = 0, .run = run,
   .category = "investigation", .type = "api",

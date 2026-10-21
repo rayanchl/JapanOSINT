@@ -194,7 +194,7 @@ static const source_def av_al_ladd_def = {
 REGISTER_SOURCE(av_al_ladd_def)
 
 static const source_def av_al_point_def = {
-  .id = "AIRCRAFT_NEARBY", .collector = "osint",
+  .id = "AIRCRAFT_NEARBY", .collector = "osint_" "transport",
   .name = "Aircraft Overhead (radius pivot)",
   .update_interval_sec = 0, .run = run_point,
   .category = "transport", .type = "api",

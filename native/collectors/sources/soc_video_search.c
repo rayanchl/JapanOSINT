@@ -119,7 +119,7 @@ static int run_sepia(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def soc_sepia_def = {
-  .id = "SEPIASEARCH_PEERTUBE", .collector = "osint",
+  .id = "SEPIASEARCH_PEERTUBE", .collector = "osint_" "media",
   .name = "SepiaSearch Federated PeerTube Video Search",
   .update_interval_sec = 0, .run = run_sepia,
   .category = "media", .type = "api",
@@ -209,7 +209,7 @@ static int run_tvmaze(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def soc_tvmaze_def = {
-  .id = "TVMAZE_SHOW_SEARCH", .collector = "osint",
+  .id = "TVMAZE_SHOW_SEARCH", .collector = "osint_" "media",
   .name = "TVmaze Show and Schedule Index",
   .update_interval_sec = 0, .run = run_tvmaze,
   .category = "media", .type = "api",
@@ -278,7 +278,7 @@ static int run_dailymotion(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def soc_dailymotion_def = {
-  .id = "DAILYMOTION_SEARCH", .collector = "osint",
+  .id = "DAILYMOTION_SEARCH", .collector = "osint_" "media",
   .name = "Dailymotion Public Video Search",
   .update_interval_sec = 0, .run = run_dailymotion,
   .category = "media", .type = "api",
@@ -337,7 +337,7 @@ static int run_odysee(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def soc_odysee_def = {
-  .id = "ODYSEE_SEARCH", .collector = "osint",
+  .id = "ODYSEE_SEARCH", .collector = "osint_" "media",
   .name = "Odysee/LBRY Lighthouse Claim Search",
   .update_interval_sec = 0, .run = run_odysee,
   .category = "media", .type = "api",

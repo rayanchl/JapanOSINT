@@ -274,7 +274,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def us_states_sos_def = {
-  .id = "US_STATES_SOS", .collector = "osint",
+  .id = "US_STATES_SOS", .collector = "osint_" "government",
   .name = "US State Secretary-of-State Business Search",
   .name_ja = "米国 州務長官 企業登記検索",
   .update_interval_sec = 0, .run = run,

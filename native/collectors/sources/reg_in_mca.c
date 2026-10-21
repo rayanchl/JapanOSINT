@@ -140,7 +140,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def in_mca_def = {
-  .id = "IN_MCA", .collector = "osint",
+  .id = "IN_MCA", .collector = "osint_" "government",
   .name = "India MCA Company Lookup", .name_ja = "インド企業登記 (MCA)",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "api",

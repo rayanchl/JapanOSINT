@@ -1,0 +1,1684 @@
+host	rest_root	rest_base	type_name	status	count	x_wp_total	shape
+ageoyeg.jp	https://ageoyeg.jp/wp-json	pages	page	200	0	0	empty
+asakuchi-ishikai.or.jp	https://asakuchi-ishikai.or.jp/wp-json	posts	post	200	0	0	empty
+aizuyotuba.jp	https://aizuyotuba.jp/wp-json	posts	post	-1	0		
+ahoujin.jp	https://ahoujin.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+802yeg.jp	https://802yeg.jp/wp-json	btp-megamenu	btp-megamenu	200	0	0	empty
+ahoujin.jp	https://ahoujin.jp/wp-json	users	user	401	0		
+802yeg.jp	https://802yeg.jp/wp-json	btp-widget-contents	btp-widget-contents	200	0	0	empty
+arsk.jp	https://arsk.jp/wp-json	posts	post	200	0	0	empty
+arida-ma.org	https://arida-ma.org/wp-json	users	user	404	0		
+amami-cci.or.jp	https://amami-cci.or.jp/wp-json	lp	lp	200	0	0	empty
+aridacity-ma.org	https://aridacity-ma.org/wp-json	users	user	404	0		
+agatsuma.gunma.med.or.jp	https://agatsuma.gunma.med.or.jp/wp-json	posts	post	-1	0		
+amami-cci.or.jp	https://amami-cci.or.jp/wp-json	blog_parts	blog_parts	200	0	0	empty
+acma.or.jp	https://www.acma.or.jp/wp-json	link_collection	link_collection	200	100	107	machinery
+asahi-jc.net	https://asahi-jc.net/wp-json	jet-menu	jet-menu	200	0	0	empty
+cci.nakatsugawa.gifu.jp	https://cci.nakatsugawa.gifu.jp/wp-json	posts	post	200	0	0	empty
+asahi-jc.net	https://asahi-jc.net/wp-json	e-floating-buttons	e-floating-buttons	200	0	0	empty
+cci.nakatsugawa.gifu.jp	https://cci.nakatsugawa.gifu.jp/wp-json	users	user	403	0		
+chiba-cci.or.jp	https://chiba-cci.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+cte.jp	https://cte.jp/wp-json	posts	post	200	0	0	empty
+chiba-cci.or.jp	https://chiba-cci.or.jp/wp-json	vk-managing-patterns	vk-managing-patterns	200	0	0	empty
+comp.co.jp	https://comp.co.jp/wp/wp-json	posts	post	200	0	0	empty
+ashibetsu-cci.or.jp	https://ashibetsu-cci.or.jp/wp-json	blog_parts	blog_parts	200	4	4	machinery
+bk-cci.or.jp	https://bk-cci.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+chiba-cci.or.jp	https://chiba-cci.or.jp/wp-json	cta	cta	200	0	0	empty
+ashibetsu-cci.or.jp	https://ashibetsu-cci.or.jp/wp-json	users	user	403	0		
+egao-park.net	https://egao-park.net/wp-json	posts	post	200	0	0	empty
+bk-cci.or.jp	https://bk-cci.or.jp/wp-json	ltg-template-parts	ltg-template-parts	200	0	0	empty
+chiba-cci.or.jp	https://chiba-cci.or.jp/wp-json	post_type_404	post_type_404	200	0	0	empty
+e-matsuura.jp	https://e-matsuura.jp/wp-json	slide	slide	200	3	3	machinery
+chikugoyeg.com	https://chikugoyeg.com/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+chigasaki-jc.com	https://chigasaki-jc.com/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+bk-cci.or.jp	https://bk-cci.or.jp/wp-json	cta	cta	200	0	0	empty
+chikugoyeg.com	https://chikugoyeg.com/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+e-matsuura.jp	https://e-matsuura.jp/wp-json	banner	banner	200	3	3	machinery
+ehimedas.com	https://ehimedas.com/wp-json	users	user	401	0		
+asahi-jc.net	https://asahi-jc.net/wp-json	banner_link	banner_link	200	0	0	empty
+e-matsuura.jp	https://e-matsuura.jp/wp-json	side_banner	side_banner	200	12	12	machinery
+chigasaki-jc.com	https://chigasaki-jc.com/wp-json	ltg-template-parts	ltg-template-parts	200	0	0	empty
+atami-jc.com	https://atami-jc.com/wp-json	posts	post	-1	0		
+bk-cci.or.jp	https://bk-cci.or.jp/wp-json	post_type_404	post_type_404	200	0	0	empty
+fdsankan.jp	https://fdsankan.jp/wp-json	posts	post	200	0	0	empty
+chikugo-jc.or.jp	https://chikugo-jc.or.jp/wp-json	post_grid	post_grid	200	1	1	machinery
+fujioka-yeg.com	https://fujioka-yeg.com/wp-json	posts	post	200	0	0	empty
+fujisawa-yeg.com	https://fujisawa-yeg.com/wp-json	posts	post	200	0	0	empty
+chigasaki-jc.com	https://chigasaki-jc.com/wp-json	cta	cta	-1	0		
+asahi-jc.net	https://asahi-jc.net/wp-json	menu	menu	200	0	0	empty
+chikugo-jc.or.jp	https://chikugo-jc.or.jp/wp-json	feedback	feedback	401	0		
+chigasaki-jc.com	https://chigasaki-jc.com/wp-json	post_type_404	post_type_404	200	0	0	empty
+chikugo-jc.or.jp	https://chikugo-jc.or.jp/wp-json	post_grid_template	post_grid_template	200	0	0	empty
+fujiyoshida-yeg.jp	https://fujiyoshida-yeg.jp/wp-json	posts	post	200	0	0	empty
+asahi-jc.net	https://asahi-jc.net/wp-json	top-view-changing	top-view-changing	200	3	3	machinery
+chikugo-jc.or.jp	https://chikugo-jc.or.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+fdim119.jp	https://fdim119.jp/wp-json	recruit	recruit	200	0	0	empty
+fujisawa-yeg.com	https://fujisawa-yeg.com/wp-json	salient_g_sections	salient_g_sections	200	0	0	empty
+chikugo-jc.or.jp	https://chikugo-jc.or.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+fdim119.jp	https://fdim119.jp/wp-json	tender	tender	200	0	0	empty
+fukaya-jc.org	http://fukaya-jc.org/wp-json	lazyblocks	lazyblocks	200	2	2	machinery
+chikugo-jc.or.jp	https://chikugo-jc.or.jp/wp-json	post_grid_layout	post_grid_layout	200	0	0	empty
+fujisawa-yeg.com	https://fujisawa-yeg.com/wp-json	wpb_gutenberg_param	wpb_gutenberg_param	200	0	0	empty
+chinocci.or.jp	https://chinocci.or.jp/wp-json	cta	cta	200	0	0	empty
+fukaya-jc.org	http://fukaya-jc.org/wp-json	lazyblocks_templates	lazyblocks_templates	200	0	0	empty
+fdim119.jp	https://fdim119.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+gt9.or.jp	https://gt9.or.jp/wp-json	posts	post	200	0	0	empty
+fdsankan.jp	https://fdsankan.jp/wp-json	info_shoubou	info_shoubou	-1	0		
+chinocci.or.jp	https://chinocci.or.jp/wp-json	users	user	403	0		
+atami-jc.com	https://atami-jc.com/wp-json	lp	lp	200	0	0	empty
+fdim119.jp	https://fdim119.jp/wp-json	cta	cta	200	0	0	empty
+ashikaga.info	https://www.ashikaga.info/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+ginowan-jc.org	https://ginowan-jc.org/wp-json	users	user	404	0		
+atami-jc.com	https://atami-jc.com/wp-json	blog_parts	blog_parts	200	0	0	empty
+fukushima-nosainet.jp	https://fukushima-nosainet.jp/wp-json	workflows	ppfuture_workflow	200	0	0	empty
+gotsujc.org	https://gotsujc.org/wp-json	xo_liteslider	xo_liteslider	200	0	0	empty
+chigasaki-yeg.com	https://chigasaki-yeg.com/wp-json	posts	post	-1	0		
+gokatsura.jp	https://gokatsura.jp/wp-json	lp	lp	200	0	0	empty
+fdsankan.jp	https://fdsankan.jp/wp-json	users	user	200	0		not-a-list
+greencoop-nagasaki.jp	https://greencoop-nagasaki.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+fukuoka-ariake.com	https://fukuoka-ariake.com/wp-json	slider	slider	200	1	1	machinery
+gokatsura.jp	https://gokatsura.jp/wp-json	blog_parts	blog_parts	200	15	15	machinery
+ashikaga.info	https://www.ashikaga.info/wp-json	feedback	feedback	401	0		
+greencoop-nagasaki.jp	https://greencoop-nagasaki.jp/wp-json	xo_liteslider	xo_liteslider	200	1	1	machinery
+hasima-city.gifu.med.or.jp	https://hasima-city.gifu.med.or.jp/wp-json	posts	post	200	0	0	empty
+gyoda-med.org	https://gyoda-med.org/index.php/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+greencoop-nagasaki.jp	https://greencoop-nagasaki.jp/wp-json	cta	cta	200	0	0	empty
+fussajc.tokyo	https://fussajc.tokyo/wp-json	news	news	200	0	0	empty
+gyoda-med.org	https://gyoda-med.org/index.php/wp-json	cta	cta	200	0	0	empty
+hashima-jc.net	https://hashima-jc.net/wp-json	users	user	403	0		
+hadano-yeg.com	https://hadano-yeg.com/wp-json	report	report	200	0	0	empty
+hanyu-jc.org	https://hanyu-jc.org/wp-json	cta	cta	200	0	0	empty
+ashikaga.info	https://www.ashikaga.info/wp-json	jetpack-forms	jetpack_form	401	0		
+hino-med.or.jp	https://www.hino-med.or.jp/wp-json	posts	post	200	0	0	empty
+hatsukaichi-yeg.com	https://hatsukaichi-yeg.com/wp-json	content_block	content_block	200	0	0	empty
+hannomed.or.jp	https://hannomed.or.jp/wp-json	cta	cta	200	0	0	empty
+higashiyamato-jc.com	https://higashiyamato-jc.com/wp-json	content_block	content_block	200	0	0	empty
+gyosei-oita.jp	https://gyosei-oita.jp/wp-json	discipline	discipline	200	8	8	other
+hidakaishikai.or.jp	https://hidakaishikai.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+hatsukaichi-yeg.com	https://hatsukaichi-yeg.com/wp-json	visibility_preset	visibility_preset	200	0	0	empty
+hino-med.or.jp	https://www.hino-med.or.jp/wp-json	users	user	404	0		
+chigasaki-yeg.com	https://chigasaki-yeg.com/wp-json	cta	cta	200	0	0	empty
+hanamaki-jc.com	https://hanamaki-jc.com/wp-json	slideshows	slideshow	200	2	2	machinery
+hachioji-jc.com	https://hachioji-jc.com/wp-json	pages	page	500	0		
+ashikaga.info	https://www.ashikaga.info/wp-json	activity-log-events	jp_act_log_event	401	0		
+ichikawayeg.com	https://ichikawayeg.com/wp-json	posts	post	200	0	0	empty
+hachioji-jc.com	https://hachioji-jc.com/wp-json	e-floating-buttons	e-floating-buttons	200	0	0	empty
+higashiomi-ishikai.jp	https://higashiomi-ishikai.jp/wp-json	vk-block-patterns	vk-block-patterns	200	1	1	machinery
+iidajc.org	https://iidajc.org/wp-json	posts	post	200	0	0	empty
+hirakawazoo.jp	https://hirakawazoo.jp/wp-json	importantinformation	importantinformation	200	2	2	machinery
+higashiomi-ishikai.jp	https://higashiomi-ishikai.jp/wp-json	ltg-template-parts	ltg-template-parts	200	1	1	machinery
+hojin.or.jp	https://hojin.or.jp/wp-json	posts	post	401	0		
+hojin.or.jp	https://hojin.or.jp/wp-json	pages	page	401	0		
+higashiomi-ishikai.jp	https://higashiomi-ishikai.jp/wp-json	xo_event	xo_event	200	100	257	machinery
+ashikaga.info	https://www.ashikaga.info/wp-json	jp_pay_order	jp_pay_order	401	0		
+higashiomi-ishikai.jp	https://higashiomi-ishikai.jp/wp-json	cta	cta	200	0	0	empty
+hojin.or.jp	https://hojin.or.jp/wp-json	activity-log-events	jp_act_log_event	401	0		
+hachioji-jc.com	https://hachioji-jc.com/wp-json	kubio_section	kubio_section	200	4	4	machinery
+higashiomi-ishikai.jp	https://higashiomi-ishikai.jp/wp-json	post_type_404	post_type_404	200	0	0	empty
+hyogo-arts.or.jp	https://hyogo-arts.or.jp/wp-json	artist	artist	200	0	0	empty
+hojin.or.jp	https://hojin.or.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+ashikaga.info	https://www.ashikaga.info/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+isahaya-jc.jp	https://isahaya-jc.jp/wp-json	ys-parts	ys-parts	200	1	1	machinery
+isahaya-jc.jp	https://isahaya-jc.jp/wp-json	xo_liteslider	xo_liteslider	200	3	3	machinery
+hitoyoshi-cci.or.jp	https://hitoyoshi-cci.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+hojin.or.jp	https://hojin.or.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+hitoyoshi-cci.or.jp	https://hitoyoshi-cci.or.jp/wp-json	cta	cta	200	0	0	empty
+hitacci.com	https://hitacci.com/wp-json	activity-log-events	jp_act_log_event	401	0		
+iyo-med.jp	https://iyo-med.jp/wp-json	posts	post	200	0	0	empty
+hachioji-jc.com	https://hachioji-jc.com/wp-json	kubio_recommend_page	kubio_recommend_page	200	0	0	empty
+hyogo.med.or.jp	https://hyogo.med.or.jp/wp-json	e-floating-buttons	e-floating-buttons	200	0	0	empty
+hojin.or.jp	https://hojin.or.jp/wp-json	users	user	401	0		
+hitoyoshi-cci.or.jp	https://hitoyoshi-cci.or.jp/wp-json	users	user	401	0		
+hitacci.com	https://hitacci.com/wp-json	jp_pay_order	jp_pay_order	401	0		
+hirakawazoo.jp	https://hirakawazoo.jp/wp-json	users	user	401	0		
+izumo-med.or.jp	https://www.izumo-med.or.jp/wp-json	posts	post	200	0	0	empty
+hitacci.com	https://hitacci.com/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+hyogo.med.or.jp	https://hyogo.med.or.jp/wp-json	tribe_venue	tribe_venue	200	0	0	empty
+ashikaga.info	https://www.ashikaga.info/wp-json	cta	cta	200	0	0	empty
+izumisano-cci.or.jp	https://izumisano-cci.or.jp/wp-json	pages	page	200	0		not-a-list
+hyogo.med.or.jp	https://hyogo.med.or.jp/wp-json	tribe_organizer	tribe_organizer	200	0	0	empty
+iwate-gyosei.jp	https://iwate-gyosei.jp/wp-json	ditty	ditty	200	0	0	empty
+imizucci.jp	https://imizucci.jp/wp-json	banner	banner	200	28	28	machinery
+ichoice-coop.com	https://ichoice-coop.com/wp-json	mixnuts_banner	mixnuts_banner	200	3	3	machinery
+ja-ehimetaiki.or.jp	https://www.ja-ehimetaiki.or.jp/wp-json	posts	post	200	0	0	empty
+iwate-gyosei.jp	https://iwate-gyosei.jp/wp-json	ditty_layout	ditty_layout	200	0	0	empty
+hyogo.med.or.jp	https://hyogo.med.or.jp/wp-json	tribe_events	tribe_events	200	0	0	empty
+ja-ehimetaiki.or.jp	https://www.ja-ehimetaiki.or.jp/wp-json	pages	page	200	0	0	empty
+iwate-gyosei.jp	https://iwate-gyosei.jp/wp-json	ditty_display	ditty_display	200	0	0	empty
+ja-gp-kagoshima.jp	https://ja-gp-kagoshima.jp/wp-json	posts	post	200	0	0	empty
+iwaki-ishikawa-jc.com	https://iwaki-ishikawa-jc.com/wp-json	banner	banner	200	1	1	machinery
+iwate-gyosei.jp	https://iwate-gyosei.jp/wp-json	easy-google-fonts	tt_font_control	200	0	0	empty
+isahaya-yeg.jp	https://isahaya-yeg.jp/wp-json	posts	post	-1	0		
+ichoice-coop.com	https://ichoice-coop.com/wp-json	interview	interview	200	6	6	other
+ja-ehimetaiki.or.jp	https://www.ja-ehimetaiki.or.jp/wp-json	users	user	200	0	0	empty
+iwaki-ishikawa-jc.com	https://iwaki-ishikawa-jc.com/wp-json	users	user	401	0		
+ja-kochi.or.jp	https://ja-kochi.or.jp/wp-json	posts	post	200	0	0	empty
+izumi-jc.com	https://izumi-jc.com/wp-json	cta	cta	200	0	0	empty
+izumi-med.jp	https://izumi-med.jp/wp-json	getwid_template_part	getwid_template_part	200	0	0	empty
+ja-hibikino.jp	https://ja-hibikino.jp/wp-json	users	user	401	0		
+ja-koshimizu.jp	https://ja-koshimizu.jp/wp-json	posts	post	200	0	0	empty
+ja-ibusuki.or.jp	https://ja-ibusuki.or.jp/wp-json	pmb_content	pmb_content	200	0	0	empty
+ja-gp-kagoshima.jp	https://ja-gp-kagoshima.jp/wp-json	activity-log-events	jp_act_log_event	401	0		
+ja-iwatechuoh.or.jp	https://ja-iwatechuoh.or.jp/wp-json	top_banner	top_banner	200	42	42	machinery
+ja-kitaosaka.or.jp	https://ja-kitaosaka.or.jp/wp-json	pages	page	500	0		
+ja-horonobecho.or.jp	https://ja-horonobecho.or.jp/wp-json	workflows	ppfuture_workflow	200	0	0	empty
+isyoubou.jp	http://isyoubou.jp/wp-json	cta	cta	200	0	0	empty
+ja-imakane.or.jp	https://ja-imakane.or.jp/wp-json	arunda	arunda	200	0	0	empty
+hyogoku-ishikai.jp	https://hyogoku-ishikai.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+ja-imakane.or.jp	https://ja-imakane.or.jp/wp-json	users	user	403	0		
+ja-horonobecho.or.jp	https://ja-horonobecho.or.jp/wp-json	users	user	401	0		
+hyogoku-ishikai.jp	https://hyogoku-ishikai.jp/wp-json	ltg-template-parts	ltg-template-parts	200	1	1	machinery
+hyogo.med.or.jp	https://hyogo.med.or.jp/wp-json	tec_calendar_embed	tec_calendar_embed	-1	0		
+hyogoku-ishikai.jp	https://hyogoku-ishikai.jp/wp-json	cta	cta	200	0	0	empty
+hyogo.med.or.jp	https://hyogo.med.or.jp/wp-json	users	user	401	0		
+ja-sarabetsu.jp	https://ja-sarabetsu.jp/wp-json	users	user	403	0		
+hyogoku-ishikai.jp	https://hyogoku-ishikai.jp/wp-json	post_type_404	post_type_404	200	0	0	empty
+ja-satsumahioki.or.jp	https://ja-satsumahioki.or.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+ja-shizuoka-kouseiren.jp	https://ja-shizuoka-kouseiren.jp/wp-json	posts	post	-1	0		
+isahaya-yeg.jp	https://isahaya-yeg.jp/wp-json	activity-log-events	jp_act_log_event	401	0		
+ja-satsumahioki.or.jp	https://ja-satsumahioki.or.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+isahaya-yeg.jp	https://isahaya-yeg.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+jahonbetsu.jp	https://jahonbetsu.jp/wp-json	users	user	403	0		
+ja-iwatechuoh.or.jp	https://ja-iwatechuoh.or.jp/wp-json	loos-cbp	loos-cbp	200	5	5	machinery
+jalam.jp	https://www.jalam.jp/wp-json	pages	page	200	0	0	empty
+ja-yokohama.or.jp	https://ja-yokohama.or.jp/wp-json	pages	page	200	0	367	not-a-list
+isahaya-yeg.jp	https://isahaya-yeg.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+ja-yamamoto.or.jp	https://ja-yamamoto.or.jp/wp-json	snow-monkey-forms	snow-monkey-forms	200	2	2	machinery
+ja-iwatechuoh.or.jp	https://ja-iwatechuoh.or.jp/wp-json	users	user	404	0		
+jc.yurihonjo.info	https://jc.yurihonjo.info/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+jaoita.or.jp	https://jaoita.or.jp/wp-json	pages	page	200	0	169	not-a-list
+jakyosairen-shimane.jp	https://jakyosairen-shimane.jp/wp-json	users	user	401	0		
+ja-kouka.shinobi.or.jp	https://ja-kouka.shinobi.or.jp/wp-json	farming_information	farming_information	200	3	3	machinery
+jc.yurihonjo.info	https://jc.yurihonjo.info/wp-json	cta	cta	200	0	0	empty
+ja-shizuoka-kouseiren.jp	https://ja-shizuoka-kouseiren.jp/wp-json	users	user	401	0		
+jci-fujisawa.com	https://jci-fujisawa.com/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+jc582.net	https://jc582.net/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+jushojisha.jp	https://jushojisha.jp/wp-json	posts	post	200	0	0	empty
+jci-asaka.net	https://jci-asaka.net/wp-json	feedback	feedback	401	0		
+ja-nagasakisaikai.com	https://ja-nagasakisaikai.com/wp-json	elementskit-template	elementskit_template	200	0	0	empty
+jc582.net	https://jc582.net/wp-json	cta	cta	200	0	0	empty
+jci-asaka.net	https://jci-asaka.net/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+ja-minamisatsuma.or.jp	https://ja-minamisatsuma.or.jp/wp-json	slider	slider	200	1	1	machinery
+jci-fujisawa.com	https://jci-fujisawa.com/wp-json	cta	cta	200	0	0	empty
+kagyosei.or.jp	https://kagyosei.or.jp/wp-json	posts	post	200	0	0	empty
+jf-kumiaigakkou.com	https://jf-kumiaigakkou.com/wp-json	what new	whatnew	-1	0		
+jci-asaka.net	https://jci-asaka.net/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+jaoita.or.jp	https://jaoita.or.jp/wp-json	users	user	401	0		
+kaga-yeg.jp	http://kaga-yeg.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+jc.373info.com	http://jc.373info.com/wp-json	cta	cta	200	0	0	empty
+jf-kumiaigakkou.com	https://jf-kumiaigakkou.com/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+joyocci.or.jp	https://joyocci.or.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+kaga-yeg.jp	http://kaga-yeg.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+joyocci.or.jp	https://joyocci.or.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+ji-institute.com	https://ji-institute.com/wp-json	users	user	403	0		
+k-jc.com	https://k-jc.com/wp-json	feedback	feedback	401	0		
+jf-kumiaigakkou.com	https://jf-kumiaigakkou.com/wp-json	visibility_preset	visibility_preset	200	0	0	empty
+k-jc.com	https://k-jc.com/wp-json	jetpack-forms	jetpack_form	401	0		
+kagyosei.or.jp	https://kagyosei.or.jp/wp-json	link	link	200	1	1	machinery
+ichoice-coop.com	https://ichoice-coop.com/wp-json	top_slider	top_slider	200	9	9	machinery
+kanoya-yeg.jp	https://kanoya-yeg.jp/wp-json	posts	post	200	0	0	empty
+k-jc.com	https://k-jc.com/wp-json	activity-log-events	jp_act_log_event	401	0		
+kagawa-kango.com	https://kagawa-kango.com/wp-json	sp_eap_template	sp_eap_template	200	0	0	empty
+k-jc.com	https://k-jc.com/wp-json	lp	lp	200	0	0	empty
+kaniishikai.com	https://kaniishikai.com/wp-json	iryoinformation	iryoinformation	200	50	50	machinery
+k-jc.com	https://k-jc.com/wp-json	blog_parts	blog_parts	200	0	0	empty
+ja-shimabaraunzen.com	https://ja-shimabaraunzen.com/wp-json	e-floating-buttons	e-floating-buttons	200	0	0	empty
+kanagawa-totiren.or.jp	https://kanagawa-totiren.or.jp/wp-json	um_form	um_form	200	1	1	machinery
+kagawa-kango.com	https://kagawa-kango.com/wp-json	sp_accordion_faqs	sp_accordion_faqs	200	0	0	empty
+kariya-jc.org	https://kariya-jc.org/wp-json	information	information	200	0	0	empty
+k-jc.com	https://k-jc.com/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+kantou-yeg.com	https://kantou-yeg.com/wp-json	footerbanner	footerbanner	200	5	5	machinery
+k-jc.com	https://k-jc.com/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+kasii.jp	https://kasii.jp/wp-json	posts	post	401	0		
+kantou-yeg.com	https://kantou-yeg.com/wp-json	topslider	topslider	200	2	2	machinery
+ja-shimabaraunzen.com	https://ja-shimabaraunzen.com/wp-json	kadence_form	kadence_form	500	0		
+kaigo.izumi.coop	https://kaigo.izumi.coop/wp-json	users	user	401	0		
+joetsujc.com	https://joetsujc.com/2026/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+kagyosei.or.jp	https://kagyosei.or.jp/wp-json	manual	manual	200	0	0	empty
+kantou-yeg.com	https://kantou-yeg.com/wp-json	users	user	401	0		
+gifu-syarousi.or.jp	https://gifu-syarousi.or.jp/wp-json	koukikansatsu	koukikansatsu	200	0	0	empty
+katanojc.or.jp	https://katanojc.or.jp/wp-json	cta	cta	200	0	0	empty
+joetsujc.com	https://joetsujc.com/2026/wp-json	cta	cta	200	0	0	empty
+kagoshima-sakana.com	https://kagoshima-sakana.com/wp-json	market_price	market_price	200	0	0	empty
+kasii.jp	https://kasii.jp/wp-json	pages	page	401	0		
+kasumi-seinenkaigisyo.info	https://kasumi-seinenkaigisyo.info/wp-json	pochipps	pochipps	200	0	0	empty
+ja-shimabaraunzen.com	https://ja-shimabaraunzen.com/wp-json	kadence_navigation	kadence_navigation	500	0		
+kasumi-seinenkaigisyo.info	https://kasumi-seinenkaigisyo.info/wp-json	lp	lp	200	0	0	empty
+kanagawa-totiren.or.jp	https://kanagawa-totiren.or.jp/wp-json	format	format	200	8	8	machinery
+kasumi-seinenkaigisyo.info	https://kasumi-seinenkaigisyo.info/wp-json	blog_parts	blog_parts	200	0	0	empty
+kita-med.com	https://kita-med.com/wp-json	e-floating-buttons	e-floating-buttons	200	0	0	empty
+kasii.jp	https://kasii.jp/wp-json	forfacility_sent	forfacility_sent	401	0		
+ja-kagayaki.or.jp	https://ja-kagayaki.or.jp/wp-json	section	section	200	34	34	machinery
+kichinan-jc.com	https://kichinan-jc.com/wp-json	st_block_pattern	st_block_pattern	200	0	0	empty
+kita-med.com	https://kita-med.com/wp-json	jet-engine	jet-engine	200	0	0	empty
+kinunet.jp	https://kinunet.jp/wp-json	cta	cta	200	0	0	empty
+kita-med.com	https://kita-med.com/wp-json	members	members	200	0	0	empty
+ja-shimabaraunzen.com	https://ja-shimabaraunzen.com/wp-json	kadence_header	kadence_header	500	0		
+kasii.jp	https://kasii.jp/wp-json	formember_sent	formember_sent	401	0		
+kirishima-jc.jp	https://kirishima-jc.jp/wp-json	feedback	feedback	401	0		
+kobe-sumasui.jp	https://www.kobesuma-seaworld.jp/wp-json	posts	post	200	0	0	empty
+kirishima-jc.jp	https://kirishima-jc.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+kasii.jp	https://kasii.jp/wp-json	tounyou	tounyou	401	0		
+kobe-sumasui.jp	https://www.kobesuma-seaworld.jp/wp-json	pages	page	500	0		
+ja-shimabaraunzen.com	https://ja-shimabaraunzen.com/wp-json	vk-block-patterns	vk-block-patterns	200	4	4	machinery
+kirishima-jc.jp	https://kirishima-jc.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+kasii.jp	https://kasii.jp/wp-json	member_info	member_info	401	0		
+kenren.miyagi.coop	https://kenren.miyagi.coop/wp-json	signature	signature	200	0	0	empty
+ja-nagasakisaikai.com	https://ja-nagasakisaikai.com/wp-json	information	information	200	100	227	machinery
+kawaguchi-med.or.jp	https://kawaguchi-med.or.jp/wp-json	kaiho	kaiho	200	0	0	empty
+koto-med.or.jp	https://koto-med.or.jp/wp-json	posts	post	200	0	0	empty
+kenren.miyagi.coop	https://kenren.miyagi.coop/wp-json	zyoseinews	zyoseinews	200	0	0	empty
+koshigaya-cci-yg.com	https://koshigaya-cci-yg.com/wp-json	emanon-cta	emanon-cta	200	0	0	empty
+ichoice-coop.com	https://ichoice-coop.com/wp-json	videos	videos	-1	0		
+kasii.jp	https://kasii.jp/wp-json	vk-block-patterns	vk-block-patterns	200	1	1	machinery
+koshigaya-cci-yg.com	https://koshigaya-cci-yg.com/wp-json	emanon-floating	emanon-floating	200	0	0	empty
+ichoice-coop.com	https://ichoice-coop.com/wp-json	lp	lp	200	2	2	machinery
+kuriharajc.org	https://kuriharajc.org/wp-json	posts	post	200	0	0	empty
+kawaguchi-med.or.jp	https://kawaguchi-med.or.jp/wp-json	member_post	member_post	200	0	0	empty
+ichoice-coop.com	https://ichoice-coop.com/wp-json	news_important	news_important	200	0	0	empty
+kasii.jp	https://kasii.jp/wp-json	ltg-template-parts	ltg-template-parts	200	1	1	machinery
+kyosai.coopdeli.coop	https://kyosai.coopdeli.coop/wp-json	posts	post	200	0	0	empty
+kobe-sumasui.jp	https://www.kobesuma-seaworld.jp/wp-json	notice	notice	-1	0		
+kyosai.coopdeli.coop	https://kyosai.coopdeli.coop/wp-json	pages	page	200	0	0	empty
+kobe-sumasui.jp	https://www.kobesuma-seaworld.jp/wp-json	notice_en	notice_en	200	0	0	empty
+kyosai.coopdeli.coop	https://kyosai.coopdeli.coop/wp-json	users	user	200	0	0	empty
+kawaguchi-med.or.jp	https://kawaguchi-med.or.jp/wp-json	soumu	soumu	200	0	0	empty
+kuriharajc.org	https://kuriharajc.org/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+gifu-syarousi.or.jp	https://gifu-syarousi.or.jp/wp-json	users	user	403	0		
+koganeijc.com	https://koganeijc.com/wp-json	users	user	401	0		
+kyoto-ns-med.com	https://kyoto-ns-med.com/wp/wp-json	users	user	403	0		
+kuriharajc.org	https://kuriharajc.org/wp-json	cta	cta	200	0	0	empty
+ichoice-coop.com	https://ichoice-coop.com/wp-json	item_renew	item_renew	-1	0		
+kawaguchi-med.or.jp	https://kawaguchi-med.or.jp/wp-json	rizikaihoukoku	rizikaihoukoku	200	0	0	empty
+kuriharajc.org	https://kuriharajc.org/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+kasii.jp	https://kasii.jp/wp-json	post_type_404	post_type_404	200	0	0	empty
+km-fire.jp	https://km-fire.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+kuriharajc.org	https://kuriharajc.org/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+kvma.jp	https://kvma.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+kasii.jp	https://kasii.jp/wp-json	users	user	401	0		
+kusudrs.com	https://kusudrs.com/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+kusiro-s.jpn.org	https://kusiro-s.jpn.org/wp-json	snow-monkey-forms	snow-monkey-forms	200	1	1	machinery
+km-fire.jp	https://km-fire.jp/wp-json	cta	cta	200	0	0	empty
+kusudrs.com	https://kusudrs.com/wp-json	ltg-template-parts	ltg-template-parts	200	0	0	empty
+kvma.jp	https://kvma.jp/wp-json	ltg-template-parts	ltg-template-parts	200	2	2	machinery
+kobe-sumasui.jp	https://www.kobesuma-seaworld.jp/wp-json	specialnews_en	specialnews_en	200	0	0	empty
+maizuruyeg.com	https://maizuruyeg.com/wp-json	feedback	feedback	401	0		
+kvma.jp	https://kvma.jp/wp-json	member	member	401	0		
+kawaguchi-med.or.jp	https://kawaguchi-med.or.jp/wp-json	hukusi	hukusi	200	0	0	empty
+km-fire.jp	https://km-fire.jp/wp-json	users	user	404	0		
+minamiawaji-med.or.jp	https://minamiawaji-med.or.jp/wp-json	posts	post	200	0	0	empty
+kusudrs.com	https://kusudrs.com/wp-json	cta	cta	200	0	0	empty
+maizuruyeg.com	https://maizuruyeg.com/wp-json	jetpack-forms	jetpack_form	401	0		
+kitanagoyajc.or.jp	http://kitanagoyajc.or.jp/wp-json	pages	page	-1	0		
+kvma.jp	https://kvma.jp/wp-json	cta	cta	200	0	0	empty
+maizuruyeg.com	https://maizuruyeg.com/wp-json	participant	participant	200	0	0	empty
+kutchan-cci.com	https://kutchan-cci.com/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+matsumoto-yeg.jp	https://matsumoto-yeg.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+kusudrs.com	https://kusudrs.com/wp-json	post_type_404	post_type_404	200	0	0	empty
+maizuruyeg.com	https://maizuruyeg.com/wp-json	activity-log-events	jp_act_log_event	401	0		
+kitanagoyajc.or.jp	http://kitanagoyajc.or.jp/wp-json	cta	cta	200	0	0	empty
+matsumoto-yeg.jp	https://matsumoto-yeg.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+kvma.jp	https://kvma.jp/wp-json	post_type_404	post_type_404	200	0	0	empty
+mimasakajc581.com	https://mimasakajc581.com/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+maizuruyeg.com	https://maizuruyeg.com/wp-json	st_block_pattern	st_block_pattern	200	0	0	empty
+mkzei.or.jp	https://mkzei.or.jp/wpedit/wp-json	posts	post	200	0	0	empty
+kutchan-cci.com	https://kutchan-cci.com/wp-json	mailpoet_email	mailpoet_email	200	0	0	empty
+mkzei.or.jp	https://mkzei.or.jp/wpedit/wp-json	pages	page	200	0	0	empty
+maizuruyeg.com	https://maizuruyeg.com/wp-json	jp_pay_order	jp_pay_order	401	0		
+maizuruyeg.com	https://maizuruyeg.com/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+mkzei.or.jp	https://mkzei.or.jp/wpedit/wp-json	users	user	200	0	0	empty
+kutchan-cci.com	https://kutchan-cci.com/wp-json	users	user	401	0		
+moka-yeg.net	http://moka-yeg.net/wp-json	users	user	403	0		
+mk-yeg.com	https://mk-yeg.com/wp-json	posts	post	200	0	0	empty
+mino-cci.or.jp	https://mino-cci.or.jp/wp-json	posts	post	200	0	0	empty
+midorinet-sagatoubu.jp	https://midorinet-sagatoubu.jp/wp-json	lp	lp	200	0	0	empty
+midorinet-sagatoubu.jp	https://midorinet-sagatoubu.jp/wp-json	blog_parts	blog_parts	200	2	2	machinery
+mizunami-jc.com	https://mizunami-jc.com/wp-json	info	info	200	0	0	empty
+munakatajc.com	https://munakatajc.com/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+ja-nagasakisaikai.com	https://ja-nagasakisaikai.com/wp-json	live	live	200	0	0	empty
+kobe-sumasui.jp	https://www.kobesuma-seaworld.jp/wp-json	protection	protection	200	0	0	empty
+midorihoujinkai.or.jp	https://midorihoujinkai.or.jp/wp-json	posts	post	-1	0		
+nagano-yeg.com	https://nagano-yeg.com/wp-json	e-floating-buttons	e-floating-buttons	200	0	0	empty
+nahacci.com	https://nahacci.com/wp-json	posts	post	200	0	0	empty
+mino-cci.or.jp	https://mino-cci.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+nago-jc.com	https://nago-jc.com/wp-json	users	user	404	0		
+miyagi-kango.or.jp	https://miyagi-kango.or.jp/wp-json	healthroom	healthroom	200	0	0	empty
+mk-yeg.com	https://mk-yeg.com/wp-json	activity-log-events	jp_act_log_event	401	0		
+miyagi-kango.or.jp	https://miyagi-kango.or.jp/wp-json	education_search	education_search	200	0	0	empty
+mino-cci.or.jp	https://mino-cci.or.jp/wp-json	cta	cta	200	0	0	empty
+kobe-sumasui.jp	https://www.kobesuma-seaworld.jp/wp-json	hotel_notice_en	hotel_notice_en	200	0	0	empty
+mk-yeg.com	https://mk-yeg.com/wp-json	jp_pay_order	jp_pay_order	401	0		
+nara.med.or.jp	https://nara.med.or.jp/wp-json	users	user	403	0		
+mnjc.jp	https://mnjc.jp/wp-json	posts	post	-1	0		
+narutoitano-jc.com	https://narutoitano-jc.com/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+kawaguchi-med.or.jp	https://kawaguchi-med.or.jp/wp-json	coronavirus	coronavirus	200	0	0	empty
+nikkocci.or.jp	https://nikkocci.or.jp/wp-json	posts	post	200	0	0	empty
+nahacci.com	https://nahacci.com/wp-json	adbnr	adbnr	200	4	4	machinery
+narutoitano-jc.com	https://narutoitano-jc.com/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+nobeoka-jc.com	https://nobeoka-jc.com/wp-json	posts	post	200	0	0	empty
+mk-yeg.com	https://mk-yeg.com/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+kawaguchi-med.or.jp	https://kawaguchi-med.or.jp/wp-json	cta	cta	200	0	0	empty
+ninohehoujinkai.jp	https://ninohehoujinkai.jp/wp-json	emanon-premium-bp	emanon-premium-bp	200	0	0	empty
+ninohehoujinkai.jp	https://ninohehoujinkai.jp/wp-json	emanon-cta	emanon-cta	200	0	0	empty
+nahacci.com	https://nahacci.com/wp-json	other	other	200	100	756	machinery
+ja-shimabaraunzen.com	https://ja-shimabaraunzen.com/wp-json	lazyblocks	lazyblocks	200	2	2	machinery
+ninohehoujinkai.jp	https://ninohehoujinkai.jp/wp-json	emanon-floating	emanon-floating	200	0	0	empty
+nagareyama.or.jp	https://nagareyama.or.jp/wp-json	users	user	401	0		
+nni-med.jp	https://nni-med.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+nahacci.com	https://nahacci.com/wp-json	adbnr2	adbnr2	200	6	6	machinery
+nni-med.jp	https://nni-med.jp/wp-json	ltg-template-parts	ltg-template-parts	200	2	2	machinery
+oitagunshi-ishikai.jp	https://oitagunshi-ishikai.jp/wp-json	posts	post	200	0	0	empty
+midorihoujinkai.or.jp	https://midorihoujinkai.or.jp/wp-json	e-floating-buttons	e-floating-buttons	200	0	0	empty
+ja-shimabaraunzen.com	https://ja-shimabaraunzen.com/wp-json	lazyblocks_templates	lazyblocks_templates	200	0	0	empty
+ohta-houjinkai.com	https://ohta-houjinkai.com/wp-json	member	member	200	0	0	empty
+nni-med.jp	https://nni-med.jp/wp-json	cta	cta	200	0	0	empty
+midorihoujinkai.or.jp	https://midorihoujinkai.or.jp/wp-json	post_grid	post_grid	200	2	2	machinery
+okazaki-yeg.jp	https://okazaki-yeg.jp/wp-json	posts	post	200	0	0	empty
+numatayeg.com	https://numatayeg.com/wp-json	feedback	feedback	401	0		
+nni-med.jp	https://nni-med.jp/wp-json	post_type_404	post_type_404	200	0	0	empty
+oitahigashi-ishikai.com	https://oitahigashi-ishikai.com/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+nosai-hiroshima.or.jp	https://nosai-hiroshima.or.jp/wp-json	magazine	magazine	200	0	0	empty
+midorihoujinkai.or.jp	https://midorihoujinkai.or.jp/wp-json	post_grid_template	post_grid_template	200	0	0	empty
+ono-yeg.main.jp	https://ono-yeg.main.jp/wp-json	posts	post	200	0	0	empty
+numatayeg.com	https://numatayeg.com/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+oitahigashi-ishikai.com	https://oitahigashi-ishikai.com/wp-json	ltg-template-parts	ltg-template-parts	200	0	0	empty
+ja-shimabaraunzen.com	https://ja-shimabaraunzen.com/wp-json	kadence_lottie	kadence_lottie	200	0	0	empty
+opca.or.jp	https://opca.or.jp/wp-json	posts	post	200	0	0	empty
+midorihoujinkai.or.jp	https://midorihoujinkai.or.jp/wp-json	activity-log-events	jp_act_log_event	401	0		
+nankoku.aomori.med.or.jp	http://nankoku.aomori.med.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+omagarijc.jp	https://omagarijc.jp/wp-json	pages	page	200	0	0	empty
+oitahigashi-ishikai.com	https://oitahigashi-ishikai.com/wp-json	cta	cta	200	0	0	empty
+numatayeg.com	https://numatayeg.com/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+oitahigashi-ishikai.com	https://oitahigashi-ishikai.com/wp-json	post_type_404	post_type_404	200	0	0	empty
+nankoku.aomori.med.or.jp	http://nankoku.aomori.med.or.jp/wp-json	ltg-template-parts	ltg-template-parts	200	0	0	empty
+obama-yeg.jp	https://obama-yeg.jp/wp/wp-json	pages	page	200	0	0	empty
+kobe-sumasui.jp	https://www.kobesuma-seaworld.jp/wp-json	users	user	404	0		
+midorihoujinkai.or.jp	https://midorihoujinkai.or.jp/wp-json	amazon_auto_links	amazon_auto_links	200	0	0	empty
+oki-takken.com	https://oki-takken.com/wp-json	case	case	200	0	0	empty
+ja-shimabaraunzen.com	https://ja-shimabaraunzen.com/wp-json	kadence_vector	kadence_vector	200	0	0	empty
+nankoku.aomori.med.or.jp	http://nankoku.aomori.med.or.jp/wp-json	cta	cta	200	0	0	empty
+mnjc.jp	https://mnjc.jp/wp-json	workflows	ppfuture_workflow	200	0	0	empty
+obama-yeg.jp	https://obama-yeg.jp/wp/wp-json	keni_cc	keni_cc	200	0	0	empty
+midorihoujinkai.or.jp	https://midorihoujinkai.or.jp/wp-json	protected_areas	protected_areas	401	0		
+nankoku.aomori.med.or.jp	http://nankoku.aomori.med.or.jp/wp-json	post_type_404	post_type_404	200	0	0	empty
+pipitt.jp	https://pipitt.jp/wp-json	posts	post	200	0	0	empty
+midorihoujinkai.or.jp	https://midorihoujinkai.or.jp/wp-json	xo_event	xo_event	200	0	0	empty
+mnjc.jp	https://mnjc.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+numazuyeg.com	https://numazuyeg.com/wp-json	pages	page	200	0	10	not-a-list
+ja-shimabaraunzen.com	https://ja-shimabaraunzen.com/wp-json	visibility_preset	visibility_preset	200	0	0	empty
+midorihoujinkai.or.jp	https://midorihoujinkai.or.jp/wp-json	jp_pay_order	jp_pay_order	401	0		
+otakecci.or.jp	https://otakecci.or.jp/wp-json	fvslide	fvslide	200	3	3	machinery
+numazuyeg.com	https://numazuyeg.com/wp-json	canvas_layout	canvas_layout	200	0	0	empty
+ozu-yeg.main.jp	https://ozu-yeg.main.jp/wp-json	posts	post	200	0	0	empty
+midorihoujinkai.or.jp	https://midorihoujinkai.or.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+mnjc.jp	https://mnjc.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+osakihojinkai.com	https://osakihojinkai.com/wp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+midorihoujinkai.or.jp	https://midorihoujinkai.or.jp/wp-json	post_grid_layout	post_grid_layout	200	1	1	machinery
+saitama-chosashi.jp	https://saitama-chosashi.jp/wp-json	posts	post	200	0	0	empty
+numazuyeg.com	https://numazuyeg.com/wp-json	project	project	200	0	0	empty
+omutacityzoo.org	https://omutacityzoo.org/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+ramsa24.com	https://ramsa24.com/wp-json	posts	post	200	0	0	empty
+otayeg.net	https://otayeg.net/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+numazuyeg.com	https://numazuyeg.com/wp-json	sight-projects	sight-projects	200	0	0	empty
+otayeg.net	https://otayeg.net/wp-json	cta	cta	200	0	0	empty
+omutacityzoo.org	https://omutacityzoo.org/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+otakecci.or.jp	https://otakecci.or.jp/wp-json	important	important	200	0	0	empty
+saga-yeg.com	https://saga-yeg.com/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+ozu-yeg.main.jp	https://ozu-yeg.main.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+ramsa24.com	https://ramsa24.com/wp-json	e-floating-buttons	e-floating-buttons	200	0	0	empty
+saga-yeg.com	https://saga-yeg.com/wp-json	ltg-template-parts	ltg-template-parts	200	0	0	empty
+sendai-ishikai.jp	https://sendai-ishikai.jp/wp-json	posts	post	200	0	0	empty
+saga-yeg.com	https://saga-yeg.com/wp-json	cta	cta	200	0	0	empty
+ozu-yeg.main.jp	https://ozu-yeg.main.jp/wp-json	feedback	feedback	401	0		
+shiga-takken.or.jp	https://shiga-takken.or.jp/wp-json	posts	post	200	0	0	empty
+saitama-chosashi.jp	https://saitama-chosashi.jp/wp-json	information_item	information_item	200	54	54	machinery
+saga-yeg.com	https://saga-yeg.com/wp-json	post_type_404	post_type_404	200	0	0	empty
+saga-shikai.com	https://saga-shikai.com/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+ozu-yeg.main.jp	https://ozu-yeg.main.jp/wp-json	jetpack-forms	jetpack_form	401	0		
+saiki-med.jp	https://saiki-med.jp/wp-json	coblocks_pattern	coblocks_pattern	200	0	0	empty
+saga-shikai.com	https://saga-shikai.com/wp-json	sp_post_carousel	sp_post_carousel	200	1	1	machinery
+sapporo-jc.or.jp	https://sapporo-jc.or.jp/2026/wp-json	news	news	200	0	0	empty
+shibukawa-yeg.com	https://shibukawa-yeg.com/wp-json	cta	cta	200	0	0	empty
+saga-shikai.com	https://saga-shikai.com/wp-json	sp_post_template	sp_post_template	200	0	0	empty
+pastorale.jp	https://pastorale.jp/wp-json	pages	page	-1	0		
+ozu-yeg.main.jp	https://ozu-yeg.main.jp/wp-json	activity-log-events	jp_act_log_event	401	0		
+seikatsuclub-kyosai.coop	https://seikatsuclub-kyosai.coop/wp-json	top_slider	top_slider	200	5	5	machinery
+saiki-med.jp	https://saiki-med.jp/wp-json	users	user	404	0		
+sakurajc.org	https://sakurajc.org/wp-json	cta	cta	200	0	0	empty
+saga-shikai.com	https://saga-shikai.com/wp-json	cta	cta	200	0	0	empty
+shiwa-med.jp	https://shiwa-med.jp/wp-json	pages	page	200	0		not-a-list
+ozu-yeg.main.jp	https://ozu-yeg.main.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+shiga-takken.or.jp	https://shiga-takken.or.jp/wp-json	banner	banner	200	1	1	machinery
+sr-toyama.jp	https://sr-toyama.jp/wp-json	posts	post	200	0	0	empty
+ozu-yeg.main.jp	https://ozu-yeg.main.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+showa-nagoya.aichi.med.or.jp	https://showa-nagoya.aichi.med.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+saikicci.or.jp	https://saikicci.or.jp/wp-json	foogallery	foogallery	200	0	0	empty
+shiojiri-jc.jp	https://shiojiri-jc.jp/wp-json	users	user	401	0		
+shimodate-cci.or.jp	https://www.shimodate-cci.or.jp/wp/wp-json	users	user	401	0		
+shinjuku-hojinkai.or.jp	https://www.shinjuku-hojinkai.or.jp/wp-json	users	user	401	0		
+sabaemed.jp	https://sabaemed.jp/wp-json	users	user	401	0		
+showa-nagoya.aichi.med.or.jp	https://showa-nagoya.aichi.med.or.jp/wp-json	cta	cta	200	0	0	empty
+tagawajc.com	https://tagawajc.com/wp-json	posts	post	200	0	0	empty
+sendai-ishikai.jp	https://sendai-ishikai.jp/wp-json	banner	banner	200	7	7	machinery
+saikicci.or.jp	https://saikicci.or.jp/wp-json	cta	cta	200	0	0	empty
+sojajc.com	https://sojajc.com/wp-json	lazyblocks	lazyblocks	200	1	1	machinery
+takayama-med.com	https://takayama-med.com/wp-json	posts	post	200	0	0	empty
+saikicci.or.jp	https://saikicci.or.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+ta-platform.co.jp	https://ta-platform.co.jp/wp-json	activity-log-events	jp_act_log_event	401	0		
+suzaka-yeg.jp	https://suzaka-yeg.jp/wp-json	slideshows	slideshow	200	1	1	machinery
+takasaki.gunma.med.or.jp	https://takasaki.gunma.med.or.jp/wp-json	posts	post	200	0	0	empty
+sojajc.com	https://sojajc.com/wp-json	lazyblocks_templates	lazyblocks_templates	200	0	0	empty
+sumuz.jp	https://sumuz.jp/wp-json	posts	post	200	0	179	not-a-list
+ta-platform.co.jp	https://ta-platform.co.jp/wp-json	jp_pay_order	jp_pay_order	401	0		
+sr-toyama.jp	https://sr-toyama.jp/wp-json	workflows	ppfuture_workflow	200	0	0	empty
+takamatsu-jc.com	https://takamatsu-jc.com/wp-json	pages	page	200	0		not-a-list
+shiga-takken.or.jp	https://shiga-takken.or.jp/wp-json	topslide	topslide	-1	0		
+saikicci.or.jp	https://saikicci.or.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+ta-platform.co.jp	https://ta-platform.co.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+sr-toyama.jp	https://sr-toyama.jp/wp-json	cta	cta	200	0	0	empty
+tanabe-yeg.com	https://tanabe-yeg.com/wp-json	posts	post	200	0	0	empty
+takarazukajc.com	https://takarazukajc.com/wp-json	posts	post	500	0		
+t-houjin.jp	https://t-houjin.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+sojajc.com	https://sojajc.com/wp-json	snow-monkey-forms	snow-monkey-forms	200	1	1	machinery
+t-houjin.jp	https://t-houjin.jp/wp-json	ltg-template-parts	ltg-template-parts	200	0	0	empty
+species360.org	https://species360.org/wp-json	posts	post	-1	0		
+t-houjin.jp	https://t-houjin.jp/wp-json	cta	cta	200	0	0	empty
+takaishi-yeg.com	https://takaishi-yeg.com/wp-json	former	former	200	3	3	machinery
+tanabeshi-ishikai.org	https://tanabeshi-ishikai.org/wp-json	m-chart	m-chart	200	0	0	empty
+tamanocci.jp	https://tamanocci.jp/wp-json	activity-log-events	jp_act_log_event	401	0		
+sumoto-yeg.gr.jp	https://sumoto-yeg.gr.jp/wp-json	activity-log-events	jp_act_log_event	401	0		
+sumuz.jp	https://sumuz.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+sr-miyazaki.jp	https://sr-miyazaki.jp/wp-json	e-floating-buttons	e-floating-buttons	200	0	0	empty
+t-houjin.jp	https://t-houjin.jp/wp-json	post_type_404	post_type_404	200	0	0	empty
+suita-yeg.com	https://suita-yeg.com/wp-json	spectra-popup	spectra-popup	401	0		
+takarazukajc.com	https://takarazukajc.com/wp-json	e-floating-buttons	e-floating-buttons	200	0	0	empty
+tanabe-yeg.com	https://tanabe-yeg.com/wp-json	information	information	200	3	3	machinery
+pastorale.jp	https://pastorale.jp/wp-json	ml-galleries	ml_gallery	200	0	0	empty
+sendai-ishikai.jp	https://sendai-ishikai.jp/wp-json	users	user	-1	0		
+tanabe-yeg.com	https://tanabe-yeg.com/wp-json	users	user	404	0		
+takarazukajc.com	https://takarazukajc.com/wp-json	product	product	200	0	0	empty
+shiga-takken.or.jp	https://shiga-takken.or.jp/wp-json	kikanshi	kikanshi	-1	0		
+takarazukajc.com	https://takarazukajc.com/wp-json	cta	cta	200	0	0	empty
+shiga-takken.or.jp	https://shiga-takken.or.jp/wp-json	banner_top	banner_top	200	1	1	machinery
+sumuz.jp	https://sumuz.jp/wp-json	ctas	pum_cta	404	0		
+touroku.kenchikushikai.or.jp	https://touroku.kenchikushikai.or.jp/wp-json	web	web	200	0	0	empty
+sumuz.jp	https://sumuz.jp/wp-json	snow-monkey-forms	snow-monkey-forms	200	1	1	machinery
+sr-miyazaki.jp	https://sr-miyazaki.jp/wp-json	activity-log-events	jp_act_log_event	401	0		
+towada-jc.com	https://towada-jc.com/wp-json	e-floating-buttons	e-floating-buttons	200	0	0	empty
+totsuka-houjinkai.com	https://totsuka-houjinkai.com/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+tottori-kai.gyosei.or.jp	https://tottori-kai.gyosei.or.jp/wp-json	um_form	um_form	200	5	5	machinery
+shiga-takken.or.jp	https://shiga-takken.or.jp/wp-json	users	user	-1	0		
+tsurugayeg.com	https://tsurugayeg.com/wp-json	feedback	feedback	401	0		
+totsuka-houjinkai.com	https://totsuka-houjinkai.com/wp-json	cta	cta	200	0	0	empty
+sr-miyazaki.jp	https://sr-miyazaki.jp/wp-json	jp_pay_order	jp_pay_order	401	0		
+tsurugayeg.com	https://tsurugayeg.com/wp-json	jetpack-forms	jetpack_form	401	0		
+species360.org	https://species360.org/wp-json	pages	page	-1	0		
+tsurugayeg.com	https://tsurugayeg.com/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+tsuruoka-yeg.org	https://tsuruoka-yeg.org/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+species360.org	https://species360.org/wp-json	e-floating-buttons	e-floating-buttons	200	0	0	empty
+welcome-kyodai.com	https://welcome-kyodai.com/wp-json	posts	post	200	0	0	empty
+wakayama-yeg.com	http://wakayama-yeg.com/wp-json	posts	post	200	0	0	empty
+tsurugayeg.com	https://tsurugayeg.com/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+species360.org	https://species360.org/wp-json	users	user	200	0		not-a-list
+sr-miyazaki.jp	https://sr-miyazaki.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+tsuruoka-yeg.org	https://tsuruoka-yeg.org/wp-json	cta	cta	200	0	0	empty
+touroku.kenchikushikai.or.jp	https://touroku.kenchikushikai.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+toyoake-med.com	https://toyoake-med.com/wp-json	feedback	feedback	401	0		
+uozu.ccis-toyama.or.jp	https://uozu.ccis-toyama.or.jp/wp-json	banner	banner	200	5	5	machinery
+wakayama-yeg.com	http://wakayama-yeg.com/wp-json	pages	page	200	0	28	not-a-list
+tatsuno-ibo.or.jp	https://tatsuno-ibo.or.jp/wp-json	easy-google-fonts	tt_font_control	200	0	0	empty
+toyoake-med.com	https://toyoake-med.com/wp-json	jetpack-forms	jetpack_form	401	0		
+www.abeno-med.or.jp	https://abeno-med.or.jp/wp-json	posts	post	200	0	0	empty
+toyoake-med.com	https://toyoake-med.com/wp-json	activity-log-events	jp_act_log_event	401	0		
+sr-saga.com	https://sr-saga.com/wp-json	lp	lp	200	0	0	empty
+uozu.ccis-toyama.or.jp	https://uozu.ccis-toyama.or.jp/wp-json	banner2	banner2	200	5	5	machinery
+touroku.kenchikushikai.or.jp	https://touroku.kenchikushikai.or.jp/wp-json	cta	cta	200	0	0	empty
+toyoake-med.com	https://toyoake-med.com/wp-json	jp_pay_order	jp_pay_order	401	0		
+wakasa-jc.jp	https://wakasa-jc.jp/wp-json	kadence_form	kadence_form	500	0		
+toyoake-med.com	https://toyoake-med.com/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+wakasa-jc.jp	https://wakasa-jc.jp/wp-json	kadence_navigation	kadence_navigation	500	0		
+www.africansafari.co.jp	https://africansafari.co.jp/wp-json	topslide	topslide	200	1	1	machinery
+vet-epi.org	https://vet-epi.org/wp-json	vk-block-patterns	vk-block-patterns	200	3	3	machinery
+www.119nishiiruma.jp	http://119nishiiruma.jp/wp-json	attention	attention	200	0	0	empty
+sr-saga.com	https://sr-saga.com/wp-json	blog_parts	blog_parts	200	6	6	machinery
+toyoake-med.com	https://toyoake-med.com/wp-json	cta	cta	200	0	0	empty
+uedajc.com	https://uedajc.com/2026/wp-json	posts	post	200	0	0	empty
+tsushima-cci.or.jp	https://tsushima-cci.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	21	21	machinery
+www.aichi.med.or.jp	https://www.aichi.med.or.jp/wp-json	posts	post	200	0	0	empty
+uozu.ccis-toyama.or.jp	https://uozu.ccis-toyama.or.jp/wp-json	users	user	403	0		
+wakasa-jc.jp	https://wakasa-jc.jp/wp-json	kadence_header	kadence_header	500	0		
+www.africansafari.co.jp	https://africansafari.co.jp/wp-json	junglebus	junglebus	200	0	0	empty
+www.aichi.med.or.jp	https://www.aichi.med.or.jp/wp-json	pages	page	500	0		
+wakasa-jc.jp	https://wakasa-jc.jp/wp-json	kadence_lottie	kadence_lottie	200	0	0	empty
+tsushima-cci.or.jp	https://tsushima-cci.or.jp/wp-json	ltg-template-parts	ltg-template-parts	200	2	2	machinery
+www.aizu-cci.or.jp	https://www.aizu-cci.or.jp/wp-json	posts	post	200	0	0	empty
+www.aichi.med.or.jp	https://www.aichi.med.or.jp/wp-json	users	user	500	0		
+wakasa-jc.jp	https://wakasa-jc.jp/wp-json	kadence_vector	kadence_vector	200	0	0	empty
+www.africansafari.co.jp	https://africansafari.co.jp/wp-json	roadconditions	roadconditions	200	0	0	empty
+tsushima-cci.or.jp	https://tsushima-cci.or.jp/wp-json	snow-monkey-forms	snow-monkey-forms	200	2	2	machinery
+welcome-kyodai.com	https://welcome-kyodai.com/wp-json	column-s	column-s	200	0	0	empty
+www.a.u-tokyo.ac.jp	https://www.a.u-tokyo.ac.jp/wp-json	guest-author	guest-author	200	0	0	empty
+tsushima-cci.or.jp	https://tsushima-cci.or.jp/wp-json	post_type_404	post_type_404	200	0	0	empty
+www.aizu-ho.or.jp	https://aizu-ho.or.jp/wp-json	event	event	200	0	0	empty
+www.aizu-ho.or.jp	https://aizu-ho.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.akune-cci.or.jp	http://www.akune-cci.or.jp/wp-json	filter-search	filter-search	200	0	0	empty
+www.akita-takken.jp	https://www.akita-takken.jp/wp-json	posts	post	200	0	0	empty
+www.aizu-ho.or.jp	https://aizu-ho.or.jp/wp-json	cta	cta	200	0	0	empty
+www.akitakenshakyo.or.jp	https://www.akitakenshakyo.or.jp/wp-json	banner_slider	banner_slider	200	5	5	machinery
+www.akune-cci.or.jp	http://www.akune-cci.or.jp/wp-json	kankou	kankou	200	0	0	empty
+www.asahisousa.jp	http://www.asahisousa.jp/wp-json	posts	post	200	0	0	empty
+www.akune-cci.or.jp	http://www.akune-cci.or.jp/wp-json	cta	cta	200	0	0	empty
+www.akirunojc.gr.jp	https://www.akirunojc.gr.jp/wp-json	lp	lp	200	0	0	empty
+www.akitakenshakyo.or.jp	https://www.akitakenshakyo.or.jp/wp-json	banner_ad	banner_ad	200	4	4	machinery
+www.akirunojc.gr.jp	https://www.akirunojc.gr.jp/wp-json	blog_parts	blog_parts	200	2	2	machinery
+www.amgyoren.or.jp	https://www.amgyoren.or.jp/wp-json	users	user	403	0		
+www.arao-med.or.jp	https://arao-med.or.jp/wp-json	fl-builder-template	fl-builder-template	200	16	16	machinery
+www.arao-med.or.jp	https://arao-med.or.jp/wp-json	users	user	404	0		
+www.ashiya.hyogo.med.or.jp	https://www.ashiya.hyogo.med.or.jp/wp-json	users	user	404	0		
+www.atsugi-jc.com	https://atsugi-jc.com/wp-json	lp	lp	200	0	0	empty
+www.atsugi-jc.com	https://atsugi-jc.com/wp-json	blog_parts	blog_parts	200	0	0	empty
+www.cfcci.or.jp	http://www.cfcci.or.jp/wp-json	posts	post	200	0	0	empty
+www.araicci.jp	https://www.araicci.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.axis.or.jp	https://axis.or.jp/wp-json	e-floating-buttons	e-floating-buttons	200	0	0	empty
+www.buntakacci.or.jp	https://www.buntakacci.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.aomori-shihoshoshi.or.jp	https://aomori-shihoshoshi.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	2	2	machinery
+www.awaji119.jp	https://www.awaji119.jp/wp-json	lazyblocks	lazyblocks	200	4	4	machinery
+www.chiba.med.or.jp	https://www.chiba.med.or.jp/wp-json	posts	post	200	0	0	empty
+www.aichi-doren.or.jp	https://www.aichi-doren.or.jp/wp-json	visibility_preset	visibility_preset	200	0	0	empty
+www.araicci.jp	https://www.araicci.jp/wp-json	feedback	feedback	401	0		
+www.awaji119.jp	https://www.awaji119.jp/wp-json	lazyblocks_templates	lazyblocks_templates	200	0	0	empty
+www.aomori-shihoshoshi.or.jp	https://aomori-shihoshoshi.or.jp/wp-json	cta	cta	200	0	0	empty
+www.amatsushima-jc.com	https://amatsushima-jc.com/wp-json	portfolio_item	portfolio_item	200	0	0	empty
+www.awaji119.jp	https://www.awaji119.jp/wp-json	users	user	401	0		
+www.ama-med.or.jp	https://ama-med.or.jp/wp-json	blog_parts	blog_parts	200	4	4	machinery
+www.araicci.jp	https://www.araicci.jp/wp-json	jetpack-forms	jetpack_form	401	0		
+www.amatsushima-jc.com	https://amatsushima-jc.com/wp-json	portfolio_layout	portfolio_layout	200	0	0	empty
+www.araicci.jp	https://www.araicci.jp/wp-json	activity-log-events	jp_act_log_event	401	0		
+www.chiba-gyosei.or.jp	https://www.chiba-gyosei.or.jp/wp-json	members_information	members_information	200	100	426	machinery
+www.choshi-ishikai.jp	http://www.choshi-ishikai.jp/wp-json	ltg-template-parts	ltg-template-parts	200	0	0	empty
+www.choshi-ishikai.jp	http://www.choshi-ishikai.jp/wp-json	post_type_404	post_type_404	200	0	0	empty
+www.araicci.jp	https://www.araicci.jp/wp-json	jp_pay_order	jp_pay_order	401	0		
+www.beppu-cci.or.jp	https://www.beppu-cci.or.jp/wp-json	banner	banner	200	0	0	empty
+www.chubu-ishikai.or.jp	https://www.chubu-ishikai.or.jp/wp-json	users	user	404	0		
+www.araicci.jp	https://www.araicci.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.chitagun-ishikai.jp	https://www.chitagun-ishikai.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.chiba.med.or.jp	https://www.chiba.med.or.jp/wp-json	users	user	-1	0		
+www.araicci.jp	https://www.araicci.jp/wp-json	users	user	403	0		
+www.chitagun-ishikai.jp	https://www.chitagun-ishikai.jp/wp-json	xo_event	xo_event	200	0	0	empty
+www.city.kumamoto.med.or.jp	https://www.city.kumamoto.med.or.jp/wp-json	posts	post	200	0	0	empty
+www.chuokai.or.jp	https://www.chuokai.or.jp/index.php/wp-json	pages	page	200	0	125	not-a-list
+www.chitagun-ishikai.jp	https://www.chitagun-ishikai.jp/wp-json	users	user	401	0		
+www.chikugo.or.jp	https://www.chikugo.or.jp/wp-json	users	user	403	0		
+www.comp.co.jp	https://comp.co.jp/wp/wp-json	posts	post	200	0	0	empty
+www.city.fukuoka.med.or.jp	https://www.city.fukuoka.med.or.jp/wp-json	posts	post	200	0	245	not-a-list
+www.chuokai.com	https://www.chuokai.com/wp-json	users	user	404	0		
+www.daihoku-ishikai.jp	https://daihoku-ishikai.jp/wp-json	posts	post	200	0	0	empty
+www.comp.co.jp	https://comp.co.jp/wp/wp-json	pages	page	200	30	30	duplicate-endpoint
+www.buzenjc.com	https://www.buzenjc.com/wp-json	feedback	feedback	401	0		
+www.beppu-cci.or.jp	https://www.beppu-cci.or.jp/wp-json	kyosai	kyosai	200	0	0	empty
+www.buzenjc.com	https://www.buzenjc.com/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+www.comp.co.jp	https://comp.co.jp/wp/wp-json	news	news	200	18	18	duplicate-endpoint
+www.chuokai-niigata.or.jp	https://www.chuokai-niigata.or.jp/wp-json	feedback	feedback	401	0		
+www.central-park.co.jp	https://www.central-park.co.jp/wp-json	users	user	404	0		
+www.beppu-cci.or.jp	https://www.beppu-cci.or.jp/wp-json	member_news	member_news	200	0	0	empty
+www.buzenjc.com	https://www.buzenjc.com/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.chubu-furusato-tottori.jp	https://www.chubu-furusato-tottori.jp/wp-json	users	user	404	0		
+www.comp.co.jp	https://comp.co.jp/wp/wp-json	recruit	recruit	200	2	2	duplicate-endpoint
+www.chuokai-niigata.or.jp	https://www.chuokai-niigata.or.jp/wp-json	jetpack-forms	jetpack_form	401	0		
+www.chuokai-yamanashi.or.jp	https://www.chuokai-yamanashi.or.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+www.chuokai-hiroshima.or.jp	https://chuokai-hiroshima.or.jp/wp-json	snow-monkey-forms	snow-monkey-forms	200	1	1	machinery
+www.comp.co.jp	https://comp.co.jp/wp/wp-json	users	user	200	2	2	duplicate-endpoint
+www.chuokai-yamanashi.or.jp	https://www.chuokai-yamanashi.or.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.akita-takken.jp	https://www.akita-takken.jp/wp-json	disaster_areas	disaster_areas	-1	0		
+www.city.fukuoka.med.or.jp	https://www.city.fukuoka.med.or.jp/wp-json	cta	cta	200	0	0	empty
+www.ecf.or.jp	https://www.ecf.or.jp/wp-json	posts	post	200	0	0	empty
+www.coop-gifukenren.jp	https://www.coop-gifukenren.jp/wp-json	pages	page	-1	0		
+www.chuokai-niigata.or.jp	https://www.chuokai-niigata.or.jp/wp-json	activity-log-events	jp_act_log_event	401	0		
+www.ebr-med.or.jp	https://www.ebr-med.or.jp/wp-json	posts	post	200	0	0	empty
+www.chuokai-hiroshima.or.jp	https://chuokai-hiroshima.or.jp/wp-json	users	user	401	0		
+www.chuokai-yamanashi.or.jp	https://www.chuokai-yamanashi.or.jp/wp-json	users	user	401	0		
+www.city.kumamoto.med.or.jp	https://www.city.kumamoto.med.or.jp/wp-json	top_slide	top_slide	200	9	9	machinery
+www.eyemate.org	https://www.eyemate.org/wp-json	posts	post	200	0	0	empty
+www.doyu.jp	https://www.doyu.jp/wp-json	ys-parts	ys-parts	200	5	5	machinery
+www.city.kumamoto.med.or.jp	https://www.city.kumamoto.med.or.jp/wp-json	top_important_bns	top_important_bns	200	1	1	machinery
+www.ebetsu-jc.com	https://ebetsu-jc.com/wp-json	lp	lp	200	0	0	empty
+www.enchiku-med.jp	https://www.enchiku-med.jp/wp-json	feedback	feedback	401	0		
+www.ebetsu-jc.com	https://ebetsu-jc.com/wp-json	blog_parts	blog_parts	200	0	0	empty
+www.enchiku-med.jp	https://www.enchiku-med.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+www.enacci.or.jp	https://www.enacci.or.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+www.chuokai-niigata.or.jp	https://www.chuokai-niigata.or.jp/wp-json	jp_pay_order	jp_pay_order	401	0		
+www.enchiku-med.jp	https://www.enchiku-med.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.enacci.or.jp	https://www.enacci.or.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.f-jc.or.jp	https://f-jc.or.jp/2026/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.ebetsu-jc.com	https://ebetsu-jc.com/wp-json	users	user	404	0		
+www.chuokai-niigata.or.jp	https://www.chuokai-niigata.or.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.f-jc.or.jp	https://f-jc.or.jp/2026/wp-json	cta	cta	200	0	0	empty
+www.e-fukujyu.com	https://e-fukujyu.com/wp-json	banner	banner	200	4	4	machinery
+www.fire-shioya.jp	https://www.fire-shioya.jp/wp-json	users	user	403	0		
+www.fma.or.jp	https://www.fma.or.jp/wp-json	cta	cta	200	0	0	empty
+www.fujiidera-med.or.jp	http://www.fujiidera-med.or.jp/wp-json	posts	post	200	0	0	empty
+www.e-fukujyu.com	https://e-fukujyu.com/wp-json	banner_b	banner_b	200	1	1	machinery
+www.fujisafari.co.jp	https://www.fujisafari.co.jp/wp-json	posts	post	200	0	0	empty
+www.fm-bansyuishi.net	https://fm-bansyuishi.net/wp-json	lp	lp	200	0	0	empty
+www.fire119-hitosho.com	https://fire119-hitosho.com/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.fm-bansyuishi.net	https://fm-bansyuishi.net/wp-json	blog_parts	blog_parts	200	0	0	empty
+www.fish-isj.jp	https://www.fish-isj.jp/wp-json	information	information	200	7	7	machinery
+www.fire119-hitosho.com	https://fire119-hitosho.com/wp-json	ltg-template-parts	ltg-template-parts	200	0	0	empty
+www.fire.miyako.iwate.jp	https://fire.miyako.iwate.jp/wp-json	announce_a	announce_a	200	0	0	empty
+www.fukuoka-chousashi.or.jp	https://www.fukuoka-chousashi.or.jp/wp-json	posts	post	200	0	0	empty
+www.ebara.or.jp	https://www.ebara.or.jp/wp-json	pages	page	500	0		
+www.fire119-hitosho.com	https://fire119-hitosho.com/wp-json	feedback	feedback	401	0		
+www.doyu.jp	https://www.doyu.jp/wp-json	ystdtb-patterns	ystdtb-patterns	200	2	2	machinery
+www.fujisafari.co.jp	https://www.fujisafari.co.jp/wp-json	pages	page	500	0		
+www.fire.miyako.iwate.jp	https://fire.miyako.iwate.jp/wp-json	announce_b	announce_b	200	0	0	empty
+www.fuji-jc.or.jp	https://fuji-jc.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.fire119-hitosho.com	https://fire119-hitosho.com/wp-json	jetpack-forms	jetpack_form	401	0		
+www.fukushima.med.or.jp	https://www.fukushima.med.or.jp/wp-json	posts	post	200	0	0	empty
+www.fujieda.or.jp	https://www.fujieda.or.jp/wp-json	pressrelease	pressrelease	200	0	0	empty
+www.fire.miyako.iwate.jp	https://fire.miyako.iwate.jp/wp-json	announce_c	announce_c	200	0	0	empty
+www.fire119-hitosho.com	https://fire119-hitosho.com/wp-json	activity-log-events	jp_act_log_event	401	0		
+www.fukushima-gyosei.jp	https://fukushima-gyosei.jp/wp-json	posts	post	401	0		
+www.fuji-jc.or.jp	https://fuji-jc.or.jp/wp-json	material	material	200	0	0	empty
+www.fukushima-gyosei.jp	https://fukushima-gyosei.jp/wp-json	pages	page	401	0		
+www.fire119-hitosho.com	https://fire119-hitosho.com/wp-json	jp_pay_order	jp_pay_order	401	0		
+www.fujisafari.co.jp	https://www.fujisafari.co.jp/wp-json	users	user	401	0		
+www.fukushima-gyosei.jp	https://fukushima-gyosei.jp/wp-json	users	user	401	0		
+www.fuji-jc.or.jp	https://fuji-jc.or.jp/wp-json	jc_times	jc_times	200	0	0	empty
+www.fire119-hitosho.com	https://fire119-hitosho.com/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.fukushima-nosainet.jp	https://fukushima-nosainet.jp/wp-json	posts	post	200	100	493	duplicate-endpoint
+www.gao-aqua.jp	https://www.gao-aqua.jp/wp-json	posts	post	200	0	0	empty
+www.fire119-hitosho.com	https://fire119-hitosho.com/wp-json	cta	cta	200	0	0	empty
+www.fuji-jc.or.jp	https://fuji-jc.or.jp/wp-json	history_item	history_item	200	0	0	empty
+www.fire119-hitosho.com	https://fire119-hitosho.com/wp-json	post_type_404	post_type_404	200	0	0	empty
+www.gamajc.com	https://gamajc.com/wp-json	posts	post	200	0	0	empty
+www.england-hill.com	https://www.england-hill.com/wp-json	menu_moomoobbq	menu_moomoobbq	-1	0		
+www.gamagori.aichi.med.or.jp	http://gamagori.aichi.med.or.jp/wp-json	posts	post	200	0	0	empty
+www.fire119-hitosho.com	https://fire119-hitosho.com/wp-json	users	user	403	0		
+www.fuji-jc.or.jp	https://fuji-jc.or.jp/wp-json	cta	cta	200	0	0	empty
+www.fukushima-nosainet.jp	https://fukushima-nosainet.jp/wp-json	pages	page	200	28	28	duplicate-endpoint
+www.england-hill.com	https://www.england-hill.com/wp-json	menu_pizza	menu_pizza	-1	0		
+www.funabashijc.or.jp	https://funabashijc.or.jp/wp-json	cta	cta	200	0	0	empty
+www.fukushima-nosainet.jp	https://fukushima-nosainet.jp/wp-json	workflows	ppfuture_workflow	200	0	0	empty
+www.fukushiniigata.or.jp	https://www.fukushiniigata.or.jp/wp-json	posts	post	-1	0		
+www.fukushima-takken.or.jp	https://www.fukushima-takken.or.jp/wp-json	users	user	-1	0		
+www.fukushima-nosainet.jp	https://fukushima-nosainet.jp/wp-json	users	user	200	4	4	duplicate-endpoint
+www.gifuminami.jp	https://www.gifuminami.jp/wp-json	banner_left	banner_left	200	11	11	machinery
+www.fujieda.or.jp	https://www.fujieda.or.jp/wp-json	users	user	404	0		
+www.fukaya-cci.or.jp	https://www.fukaya-cci.or.jp/wp-json	member	member	-1	0		
+www.fukushima.med.or.jp	https://www.fukushima.med.or.jp/wp-json	users	user	403	0		
+www.gyosei-shiga.or.jp	https://www.gyosei-shiga.or.jp/wp-json	posts	post	200	0	0	empty
+www.gifuminami.jp	https://www.gifuminami.jp/wp-json	homeslide	homeslide	200	13	13	machinery
+www.gyosei-shiga.or.jp	https://www.gyosei-shiga.or.jp/wp-json	pages	page	200	0		not-a-list
+www.gamagoricci.or.jp	https://www.gamagoricci.or.jp/wp-json	popups	popup	404	0		
+www.gyoda-jc.or.jp	http://gyoda-jc.or.jp/wp-json	xo_liteslider	xo_liteslider	200	1	1	machinery
+www.fukuyama.or.jp	https://www.fukuyama.or.jp/wp-json	news	news	-1	0		
+www.gyoda-jc.or.jp	http://gyoda-jc.or.jp/wp-json	users	user	403	0		
+www.gamagoricci.or.jp	https://www.gamagoricci.or.jp/wp-json	popup-themes	popup_theme	404	0		
+www.gosenjc.com	https://www.gosenjc.com/wp-json	activity-log-events	jp_act_log_event	401	0		
+www.hachinohe-jc.com	http://hachinohe-jc.com/wp-json	feedback	feedback	401	0		
+www.hatomark.or.jp	https://www.hatomark.or.jp/wp-json	posts	post	200	0	0	empty
+www.england-hill.com	https://www.england-hill.com/wp-json	attention	attention	200	0	0	empty
+www.gamagoricci.or.jp	https://www.gamagoricci.or.jp/wp-json	ctas	pum_cta	404	0		
+www.gosenjc.com	https://www.gosenjc.com/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+www.hachinohe-jc.com	http://hachinohe-jc.com/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+www.geidankyo.or.jp	https://geidankyo.or.jp/wp-json	lazyblocks	lazyblocks	200	5	5	machinery
+www.h-yeg.com	https://www.h-yeg.com/wp-json	users	user	401	0		
+www.hasima-city.gifu.med.or.jp	https://hasima-city.gifu.med.or.jp/wp-json	posts	post	200	0	0	empty
+www.hachinohe-jc.com	http://hachinohe-jc.com/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.fukuyama.or.jp	https://www.fukuyama.or.jp/wp-json	member-information	member-information	200	100	1074	machinery
+www.gosenjc.com	https://www.gosenjc.com/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.fukaya-cci.or.jp	https://www.fukaya-cci.or.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+www.england-hill.com	https://www.england-hill.com/wp-json	slider_handmade	slider_handmade	200	1	1	machinery
+www.hars.gr.jp	http://hars.gr.jp/wp-json	pages	page	200	0		not-a-list
+www.fukaya-cci.or.jp	https://www.fukaya-cci.or.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.handa-cci.or.jp	https://handa-cci.or.jp/wp-json	users	user	403	0		
+www.geidankyo.or.jp	https://geidankyo.or.jp/wp-json	lazyblocks_templates	lazyblocks_templates	200	0	0	empty
+www.hars.gr.jp	http://hars.gr.jp/wp-json	parts	parts	200	5	5	machinery
+www.hasima-city.gifu.med.or.jp	https://hasima-city.gifu.med.or.jp/wp-json	pages	page	200	20	20	duplicate-endpoint
+www.hato-web.or.jp	https://www.hato-web.or.jp/wp-json	users	user	403	0		
+www.higashiomi-jc.or.jp	https://higashiomi-jc.or.jp/wp-json	posts	post	200	0	0	empty
+www.hatomark.or.jp	https://www.hatomark.or.jp/wp-json	pt_topics	pt_topics	-1	0		
+www.hasima-city.gifu.med.or.jp	https://hasima-city.gifu.med.or.jp/wp-json	info	info	200	10	10	duplicate-endpoint
+www.himejijc.or.jp	https://www.himejijc.or.jp/wp-json	posts	post	200	0	0	empty
+www.hhyeg.jp	https://www.hhyeg.jp/wp-json	bnr	bnr	200	0	0	empty
+www.higashinari-med.or.jp	https://www.higashinari-med.or.jp/wp-json	cta	cta	200	0	0	empty
+www.higashikurume-med.or.jp	https://www.higashikurume-med.or.jp/wp-json	users	user	200	0		not-a-list
+www.hasima-city.gifu.med.or.jp	https://hasima-city.gifu.med.or.jp/wp-json	medical	medical	200	35	35	duplicate-endpoint
+www.hesocci.or.jp	https://hesocci.or.jp/wp-json	pages	page	200	0	56	not-a-list
+www.higashiosakajc.jp	https://www.higashiosakajc.jp/wp-json	portfolio	portfolio	200	0	0	empty
+www.higashiomi-jc.or.jp	https://higashiomi-jc.or.jp/wp-json	activity	activity	200	0	0	empty
+www.england-hill.com	https://www.england-hill.com/wp-json	tribe_venue	tribe_venue	200	0	0	empty
+www.hesocci.or.jp	https://hesocci.or.jp/wp-json	cta	cta	200	0	0	empty
+www.hasima-city.gifu.med.or.jp	https://hasima-city.gifu.med.or.jp/wp-json	medical_conference	medical_conference	200	8	8	duplicate-endpoint
+www.england-hill.com	https://www.england-hill.com/wp-json	tribe_organizer	tribe_organizer	200	0	0	empty
+www.himijc.or.jp	https://himijc.or.jp/wp-json	cta	cta	200	0	0	empty
+www.hasima-city.gifu.med.or.jp	https://hasima-city.gifu.med.or.jp/wp-json	users	user	200	2	2	duplicate-endpoint
+www.himijc.or.jp	https://himijc.or.jp/wp-json	dlm_download	dlm_download	200	0	0	empty
+www.houryuji-jc.org	https://www.houryuji-jc.org/wp-json	posts	post	200	0	0	empty
+www.hokuishi.com	https://hokuishi.com/hkb/wp-json	posts	post	200	0	0	empty
+www.england-hill.com	https://www.england-hill.com/wp-json	xo_event	xo_event	200	0	0	empty
+www.england-hill.com	https://www.england-hill.com/wp-json	tec_calendar_embed	tec_calendar_embed	200	0	0	empty
+www.hyogo-aba.or.jp	https://www.hyogo-aba.or.jp/wp-json	posts	post	200	0	0	empty
+www.honjohojinkai.jp	https://www.honjohojinkai.jp/wp-json	posts	post	200	0	0	empty
+www.ibaraki-welfare.or.jp	https://www.ibaraki-welfare.or.jp/wp-json	posts	post	200	0	0	empty
+www.england-hill.com	https://www.england-hill.com/wp-json	users	user	401	0		
+www.ib-ja.or.jp	https://www.ib-ja.or.jp/wp-json	information	information	200	52	52	machinery
+www.i-takken.or.jp	https://i-takken.or.jp/wp-json	posts	post	200	100	123	duplicate-endpoint
+www.himejijc.or.jp	https://www.himejijc.or.jp/wp-json	link_banner	link_banner	200	7	7	machinery
+www.hyogo.med.or.jp	https://hyogo.med.or.jp/wp-json	posts	post	200	100	456	duplicate-endpoint
+www.honjohojinkai.jp	https://www.honjohojinkai.jp/wp-json	users	user	401	0		
+www.himejijc.or.jp	https://www.himejijc.or.jp/wp-json	lp	lp	200	0	0	empty
+www.ibaraki-welfare.or.jp	https://www.ibaraki-welfare.or.jp/wp-json	cta	cta	200	0	0	empty
+www.fukushi-club.net	https://www.fukushi-club.net/wp-json	recruit	recruit	200	0	0	empty
+www.i-takken.or.jp	https://i-takken.or.jp/wp-json	pages	page	200	43	43	duplicate-endpoint
+www.imic.or.jp	https://www.imic.or.jp/wp-json	posts	post	200	0	0	empty
+www.himejijc.or.jp	https://www.himejijc.or.jp/wp-json	blog_parts	blog_parts	200	0	0	empty
+www.fukushi-club.net	https://www.fukushi-club.net/wp-json	users	user	404	0		
+www.htk.or.jp	https://www.htk.or.jp/wp-json	posts	post	-1	0		
+www.i-takken.or.jp	https://i-takken.or.jp/wp-json	users	user	200	1	1	duplicate-endpoint
+www.ichikawa-cci.or.jp	https://www.ichikawa-cci.or.jp/wp-json	users	user	401	0		
+www.isahayacci.com	https://www.isahayacci.com/wp-json	posts	post	200	0	0	empty
+www.hyogo.med.or.jp	https://hyogo.med.or.jp/wp-json	pages	page	200	100	124	duplicate-endpoint
+www.inazawa-cci.or.jp	https://inazawa-cci.or.jp/wp-json	posts	post	200	96	96	duplicate-endpoint
+www.inazawa-cci.or.jp	https://inazawa-cci.or.jp/wp-json	pages	page	200	7	7	duplicate-endpoint
+www.iidacci.or.jp	https://www.iidacci.or.jp/wp-json	feedback	feedback	401	0		
+www.hyogo.med.or.jp	https://hyogo.med.or.jp/wp-json	e-floating-buttons	e-floating-buttons	200	0	0	empty
+www.iiyamacci.jp	https://www.iiyamacci.jp/wp-json	users	user	401	0		
+www.imic.or.jp	https://www.imic.or.jp/wp-json	home-banner	home-banner	200	5	5	machinery
+www.inazawa-cci.or.jp	https://inazawa-cci.or.jp/wp-json	users	user	200	7	7	duplicate-endpoint
+www.hyogo.med.or.jp	https://hyogo.med.or.jp/wp-json	tribe_venue	tribe_venue	200	0	0	empty
+www.iidacci.or.jp	https://www.iidacci.or.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+www.ink.or.jp	https://www.ink.or.jp/wp-json	snow-monkey-forms	snow-monkey-forms	200	2	2	machinery
+www.inacci.or.jp	https://www.inacci.or.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+www.imic.or.jp	https://www.imic.or.jp/wp-json	home-banner-en	home-banner-en	200	4	4	machinery
+www.hyogo.med.or.jp	https://hyogo.med.or.jp/wp-json	tribe_organizer	tribe_organizer	200	0	0	empty
+www.ioworld.jp	https://ioworld.jp/wp-json	users	user	401	0		
+www.iidacci.or.jp	https://www.iidacci.or.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.inacci.or.jp	https://www.inacci.or.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.ichinomiya-jc.or.jp	http://www.ichinomiya-jc.or.jp/wp-json	posts	post	-1	0		
+www.hyogo.med.or.jp	https://hyogo.med.or.jp/wp-json	tribe_events	tribe_events	200	0	0	empty
+www.ishikawa.coop	https://www.ishikawa.coop/wp-json	posts	post	200	0	0	empty
+www.ise-cci.or.jp	https://www.ise-cci.or.jp/wp-json	users	user	404	0		
+www.ichinomiya-jc.or.jp	http://www.ichinomiya-jc.or.jp/wp-json	pages	page	500	0		
+www.ikukokawai.com	https://www.ikukokawai.com/wp-json	slider	slider	200	3	3	machinery
+www.hyogo.med.or.jp	https://hyogo.med.or.jp/wp-json	jet-engine	jet-engine	200	2	2	duplicate-endpoint
+www.htk.or.jp	https://www.htk.or.jp/wp-json	mov	mov	-1	0		
+www.internationalmidwives.org	https://www.internationalmidwives.org/wp-json	pages	page	200	0	87	not-a-list
+www.hyogo.med.or.jp	https://hyogo.med.or.jp/wp-json	tec_calendar_embed	tec_calendar_embed	200	0	0	empty
+www.ishikawa.coop	https://www.ishikawa.coop/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+www.iida-ishikai.net	https://iida-ishikai.net/wp-json	wpb_gutenberg_param	wpb_gutenberg_param	200	0	0	empty
+www.hyogo.med.or.jp	https://hyogo.med.or.jp/wp-json	users	user	401	0		
+www.iizuka-cci.org	https://www.iizuka-cci.org/wp-json	finance	finance	200	0	0	empty
+www.ishikawa.coop	https://www.ishikawa.coop/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.iida-ishikai.net	https://iida-ishikai.net/wp-json	activity-log-events	jp_act_log_event	401	0		
+www.htk.or.jp	https://www.htk.or.jp/wp-json	users	user	-1	0		
+www.ishiokajc.org	https://www.ishiokajc.org/wp-json	e-floating-buttons	e-floating-buttons	200	0	0	empty
+www.izumo119.or.jp	https://www.izumo119.or.jp/wp-json	posts	post	200	0	0	empty
+www.iida-ishikai.net	https://iida-ishikai.net/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+www.izumo119.or.jp	https://www.izumo119.or.jp/wp-json	pages	page	200	0	0	empty
+www.iwate-sr.jp	https://www.iwate-sr.jp/wp-json	coblocks_pattern	coblocks_pattern	200	0	0	empty
+www.izumo119.or.jp	https://www.izumo119.or.jp/wp-json	users	user	200	0	0	empty
+www.iida-ishikai.net	https://iida-ishikai.net/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.iyoyeg.com	https://www.iyoyeg.com/wp-json	blog_parts	blog_parts	200	0	0	empty
+www.itoigawa-cci.or.jp	https://www.itoigawa-cci.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.isesaki-jc.jp	https://www.isesaki-jc.jp/wp-json	news	news	200	0	0	empty
+www.j-chicken.jp	https://www.j-chicken.jp/wp-json	banner	banner	200	3	3	machinery
+www.itoigawa-cci.or.jp	https://www.itoigawa-cci.or.jp/wp-json	cta	cta	200	0	0	empty
+www.iwaki.or.jp	https://iwaki.or.jp/wp-json	news	news	200	0	0	empty
+www.iwakicci.or.jp	http://www.iwakicci.or.jp/wp-json	event-recurring	event-recurring	200	0	0	empty
+www.iwate.coop	https://www.iwate.coop/wp-json	visibility_preset	visibility_preset	200	0	0	empty
+www.ja-awajishima.or.jp	https://ja-awajishima.or.jp/wp-json	posts	post	200	0	0	empty
+www.ja-aichiama.com	https://www.ja-aichiama.com/wp-json	spectra-popup	spectra-popup	200	0	0	empty
+www.iwatochi.com	https://www.iwatochi.com/wp-json	cta	cta	200	0	0	empty
+www.izumisanojc.com	https://www.izumisanojc.com/wp-json	feedback	feedback	401	0		
+www.j-poison-ic.jp	https://www.j-poison-ic.jp/wp-json	jb_store_css	jb_store_css	200	0	0	empty
+www.iwakicci.or.jp	http://www.iwakicci.or.jp/wp-json	easy-google-fonts	tt_font_control	200	0	0	empty
+www.iwate-takken.or.jp	https://www.iwate-takken.or.jp/wp-json	top-linkban	top-linkban	200	9	9	machinery
+www.internationalmidwives.org	https://www.internationalmidwives.org/wp-json	tribe_rsvp_tickets	tribe_rsvp_tickets	200	0	0	empty
+www.iwate.coop	https://www.iwate.coop/wp-json	keppin	keppin	200	0	0	empty
+www.iwate-takken.or.jp	https://www.iwate-takken.or.jp/wp-json	top-pickup	top-pickup	200	5	5	machinery
+www.iwate.coop	https://www.iwate.coop/wp-json	emergency	emergency	200	0	0	empty
+www.j-poison-ic.jp	https://www.j-poison-ic.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.ja-awajishima.or.jp	https://ja-awajishima.or.jp/wp-json	users	user	401	0		
+www.iwate.med.or.jp	https://www.iwate.med.or.jp/wp-json	banner	banner	200	18	18	machinery
+www.j-poison-ic.jp	https://www.j-poison-ic.jp/wp-json	feedback	feedback	401	0		
+www.internationalmidwives.org	https://www.internationalmidwives.org/wp-json	tec_calendar_embed	tec_calendar_embed	200	0	0	empty
+www.j-poison-ic.jp	https://www.j-poison-ic.jp/wp-json	jetpack-forms	jetpack_form	401	0		
+www.iwate.med.or.jp	https://www.iwate.med.or.jp/wp-json	users	user	404	0		
+www.ja-bibai.or.jp	https://www.ja-bibai.or.jp/wp-json	widgetopts_snippet	widgetopts_snippet	200	0	0	empty
+www.j-poison-ic.jp	https://www.j-poison-ic.jp/wp-json	visualizer	visualizer	200	0	0	empty
+www.ja-fukaya.jp	https://www.ja-fukaya.jp/wp-json	content_block	content_block	200	0	0	empty
+www.ja-bibai.or.jp	https://www.ja-bibai.or.jp/wp-json	users	user	403	0		
+www.ja-biei.or.jp	https://ja-biei.or.jp/wp-json	posts	post	200	0	0	empty
+www.ja-fukaya.jp	https://www.ja-fukaya.jp/wp-json	users	user	401	0		
+www.izumisanojc.com	https://www.izumisanojc.com/wp-json	topslider	topslider	200	2	2	machinery
+www.isad.or.jp	https://www.isad.or.jp/wp-json	users	user	401	0		
+www.izumisanojc.com	https://www.izumisanojc.com/wp-json	press_release	press_release	200	0	0	empty
+www.j-poison-ic.jp	https://www.j-poison-ic.jp/wp-json	ctas	pum_cta	404	0		
+www.ja-bihoro.or.jp	https://www.ja-bihoro.or.jp/wp-json	e-floating-buttons	e-floating-buttons	200	0	0	empty
+www.ja-dateshi.or.jp	https://www.ja-dateshi.or.jp/wp-json	users	user	403	0		
+www.isumi-kouiki.com	https://www.isumi-kouiki.com/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.ja-higashikagura.com	https://www.ja-higashikagura.com/wp-json	pages	page	500	0		
+www.j-poison-ic.jp	https://www.j-poison-ic.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+www.izumisanojc.com	https://www.izumisanojc.com/wp-json	popups	popup	404	0		
+www.ja-hiroo.or.jp	http://www.ja-hiroo.or.jp/wp-json	snow-monkey-forms	snow-monkey-forms	200	2	2	machinery
+www.ja-higashikagura.com	https://www.ja-higashikagura.com/wp-json	avada_portfolio	avada_portfolio	200	0	0	empty
+www.izumisanojc.com	https://www.izumisanojc.com/wp-json	popup-themes	popup_theme	404	0		
+www.j-poison-ic.jp	https://www.j-poison-ic.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.ja-hareoka.or.jp	https://www.ja-hareoka.or.jp/wp-json	workflows	ppfuture_workflow	200	0	0	empty
+www.isumi-kouiki.com	https://www.isumi-kouiki.com/wp-json	cta	cta	200	0	0	empty
+www.ja-kamoto.or.jp	http://ja-kamoto.or.jp/wp-json	posts	post	200	0	0	empty
+www.ja-esoya.com	https://www.ja-esoya.com/wp-json	blog_parts	blog_parts	200	9	9	machinery
+www.j-poison-ic.jp	https://www.j-poison-ic.jp/wp-json	cta	cta	200	0	0	empty
+www.izumisanojc.com	https://www.izumisanojc.com/wp-json	ctas	pum_cta	404	0		
+www.ja-higashikagura.com	https://www.ja-higashikagura.com/wp-json	avada_faq	avada_faq	200	0	0	empty
+www.ja-hareoka.or.jp	https://www.ja-hareoka.or.jp/wp-json	visibility_preset	visibility_preset	200	0	0	empty
+www.ja-hareoka.or.jp	https://www.ja-hareoka.or.jp/wp-json	users	user	403	0		
+www.izumisanojc.com	https://www.izumisanojc.com/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+www.ja-esoya.com	https://www.ja-esoya.com/wp-json	users	user	403	0		
+www.ja-biei.or.jp	https://ja-biei.or.jp/wp-json	campaign	campaign	200	0	0	empty
+www.ja-itoshima.or.jp	https://ja-itoshima.or.jp/wp-json	slider	slider	200	4	4	machinery
+www.ja-higashimino.or.jp	https://ja-higashimino.or.jp/wp-json	posts	post	200	0	0	empty
+www.j-poison-ic.jp	https://www.j-poison-ic.jp/wp-json	users	user	401	0		
+www.ja-kamoto.or.jp	http://ja-kamoto.or.jp/wp-json	top-slider	top-slider	200	4	4	machinery
+www.ja-kiso.iijan.or.jp	https://www.ja-kiso.iijan.or.jp/wp-json	posts	post	200	0	0	empty
+www.izumisanojc.com	https://www.izumisanojc.com/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.ja-kamoto.or.jp	http://ja-kamoto.or.jp/wp-json	slider	slider	200	7	7	machinery
+www.ja-iwatekouseiren.or.jp	https://www.ja-iwatekouseiren.or.jp/wp-json	live	live	200	0	0	empty
+www.ja-iwatekouseiren.or.jp	https://www.ja-iwatekouseiren.or.jp/wp-json	campaign	campaign	200	0	0	empty
+www.ja-irumano.or.jp	https://www.ja-irumano.or.jp/wp-json	post-emergency	post-emergency	200	0	0	empty
+www.ja-kamimashiki.or.jp	https://www.ja-kamimashiki.or.jp/wp-json	posts	post	200	0	0	empty
+www.ja-kyosai-okayama.jp	https://www.ja-kyosai-okayama.jp/wp-json	posts	post	200	0	0	empty
+www.ja-fukutou.or.jp	https://ja-fukutou.or.jp/wp-json	users	user	403	0		
+www.ja-lsupport.co.jp	https://ja-lsupport.co.jp/wp-json	posts	post	200	0	0	empty
+www.ja-kei.or.jp	https://www.ja-kei.or.jp/wp-json	posts	post	-1	0		
+www.ja-higashimino.or.jp	https://ja-higashimino.or.jp/wp-json	cta	cta	200	0	0	empty
+www.ja-kitasouya.jp	https://ja-kitasouya.jp/wp-json	disaster_info	disaster_info	200	0	0	empty
+www.ja-kitahibiki.or.jp	https://www.ja-kitahibiki.or.jp/wp-json	users	user	401	0		
+www.iwate.coop	https://www.iwate.coop/wp-json	users	user	403	0		
+www.ja-kitaharuka.or.jp	https://www.ja-kitaharuka.or.jp/wp-json	users	user	403	0		
+www.ja-kagoshimakimotsuki.or.jp	https://ja-kagoshimakimotsuki.or.jp/wp-json	slider	slider	200	1	1	machinery
+www.ja-kamoto.or.jp	http://ja-kamoto.or.jp/wp-json	ctas	pum_cta	404	0		
+www.ja-kyosai-okayama.jp	https://www.ja-kyosai-okayama.jp/wp-json	contribution-okayama	contribution-okayama	200	0	0	empty
+www.ja-maku.com	https://www.ja-maku.com/wp-json	widgetopts_snippet	widgetopts_snippet	200	0	0	empty
+www.ja-kurobe.jp	https://www.ja-kurobe.jp/wp-json	users	user	403	0		
+www.ja-kyosai-okayama.jp	https://www.ja-kyosai-okayama.jp/wp-json	users	user	403	0		
+www.ja-maku.com	https://www.ja-maku.com/wp-json	snow-monkey-forms	snow-monkey-forms	200	1	1	machinery
+www.ja-kyotocity.or.jp	http://www.ja-kyotocity.or.jp/wp-json	pages	page	500	0		
+www.ja-maku.com	https://www.ja-maku.com/wp-json	xo_liteslider	xo_liteslider	200	4	4	machinery
+www.iizuka-cci.org	https://www.iizuka-cci.org/wp-json	information	information	200	2	2	machinery
+www.ja-naganuma.or.jp	http://www.ja-naganuma.or.jp/wp-json	users	user	403	0		
+www.ja-maku.com	https://www.ja-maku.com/wp-json	blog_parts	blog_parts	200	4	4	machinery
+www.ja-nishiuwa.jp	https://www.ja-nishiuwa.jp/wp-json	posts	post	200	0	0	empty
+www.ja-maku.com	https://www.ja-maku.com/wp-json	users	user	403	0		
+www.ja-printing.com	http://ja-printing.com/wp-json	posts	post	200	0	0	empty
+www.ja-kei.or.jp	https://www.ja-kei.or.jp/wp-json	post_grid	post_grid	200	1	1	machinery
+www.ja-kumagaya.or.jp	https://www.ja-kumagaya.or.jp/wp-json	feedback	feedback	401	0		
+www.ja-kiso.iijan.or.jp	https://www.ja-kiso.iijan.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.ja-sapporo.or.jp	https://www.ja-sapporo.or.jp/wp-json	posts	post	200	0	0	empty
+www.ja-kei.or.jp	https://www.ja-kei.or.jp/wp-json	newstopics	newstopics	200	0	0	empty
+www.ja-minori.jp	https://www.ja-minori.jp/wp-json	users	user	403	0		
+www.ja-sakai.or.jp	https://www.ja-sakai.or.jp/wp-json	posts	post	200	0	0	empty
+www.ja-kiso.iijan.or.jp	https://www.ja-kiso.iijan.or.jp/wp-json	ltg-template-parts	ltg-template-parts	200	0	0	empty
+www.ja-kiso.iijan.or.jp	https://www.ja-kiso.iijan.or.jp/wp-json	cta	cta	200	0	0	empty
+www.ja-nagasakiseihi.or.jp	https://ja-nagasakiseihi.or.jp/wp-json	recruit_funeral	recruit_funeral	200	0	0	empty
+www.ja-taisho.com	https://www.ja-taisho.com/wp-json	posts	post	200	0	0	empty
+www.ja-nagasakiseihi.or.jp	https://ja-nagasakiseihi.or.jp/wp-json	agri_machine_center	agri_machine_center	200	0	0	empty
+www.ja-nagano.iijan.or.jp	https://www.ja-nagano.iijan.or.jp/wp-json	information	information	200	100	210	machinery
+www.ja-kiso.iijan.or.jp	https://www.ja-kiso.iijan.or.jp/wp-json	post_type_404	post_type_404	200	0	0	empty
+www.ja-nanporo.or.jp	https://www.ja-nanporo.or.jp/wp-json	users	user	403	0		
+www.ja-rumoi.jp	https://www.ja-rumoi.jp/wp-json	posts	post	200	0	0	empty
+www.ja-pippu.or.jp	https://www.ja-pippu.or.jp/wp-json	snow-monkey-forms	snow-monkey-forms	200	1	1	machinery
+www.ja-tonamino.jp	https://www.ja-tonamino.jp/wp-json	posts	post	200	0	0	empty
+www.ja-pippu.or.jp	https://www.ja-pippu.or.jp/wp-json	blog_parts	blog_parts	200	3	3	machinery
+www.ja-pippu.or.jp	https://www.ja-pippu.or.jp/wp-json	users	user	403	0		
+www.ja-nagasakiseihi.or.jp	https://ja-nagasakiseihi.or.jp/wp-json	users	user	401	0		
+www.ja-tonamino.jp	https://www.ja-tonamino.jp/wp-json	users	user	403	0		
+www.ja-tohma.jp	https://kureka-cash.jp/wp-json	lp	lp	200	0	0	empty
+www.ja-sakai.or.jp	https://www.ja-sakai.or.jp/wp-json	bank-information	bank-information	200	3	3	machinery
+www.ja-tohma.jp	https://kureka-cash.jp/wp-json	blog_parts	blog_parts	200	31	31	machinery
+www.ja-tagawa.or.jp	https://ja-tagawa.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.ja-ymg.or.jp	https://www.ja-ymg.or.jp/wp-json	event	event	200	0	0	empty
+www.ja-kei.or.jp	https://www.ja-kei.or.jp/wp-json	post_grid_template	post_grid_template	200	0	0	empty
+www.ja-tagawa.or.jp	https://ja-tagawa.or.jp/wp-json	ltg-template-parts	ltg-template-parts	200	0	0	empty
+www.jabank-kagoshima.or.jp	https://www.jabank-kagoshima.or.jp/wp-json	posts	post	200	0	0	empty
+www.jabank-shizuoka.gr.jp	https://www.jabank-shizuoka.gr.jp/wp-json	posts	post	200	0	0	empty
+www.ja-shinshinotsu.or.jp	https://www.ja-shinshinotsu.or.jp/wp-json	users	user	403	0		
+www.ja-tagawa.or.jp	https://ja-tagawa.or.jp/wp-json	cta	cta	200	0	0	empty
+www.ja-sapporo.or.jp	https://www.ja-sapporo.or.jp/wp-json	information	information	200	7	7	machinery
+www.ja-kei.or.jp	https://www.ja-kei.or.jp/wp-json	post_grid_layout	post_grid_layout	200	1	1	machinery
+www.ja-sorachiminami.or.jp	http://www.ja-sorachiminami.or.jp/wp-json	users	user	403	0		
+www.ja-tagawa.or.jp	https://ja-tagawa.or.jp/wp-json	post_type_404	post_type_404	200	0	0	empty
+www.ja-ymg.or.jp	https://www.ja-ymg.or.jp/wp-json	real_estate	real_estate	200	0	0	empty
+www.ja-yoichi.or.jp	https://ja-yoichi.or.jp/wp-json	users	user	401	0		
+www.ja-taisho.com	https://www.ja-taisho.com/wp-json	new-graduate	new-graduate	200	0	0	empty
+www.jahs.co.jp	https://www.jahs.co.jp/wp-json	posts	post	404	0		
+www.jabank-kagoshima.or.jp	https://www.jabank-kagoshima.or.jp/wp-json	activity-log-events	jp_act_log_event	401	0		
+www.ja-taisho.com	https://www.ja-taisho.com/wp-json	link	link	200	1	1	machinery
+www.jahs.co.jp	https://www.jahs.co.jp/wp-json	visibility_preset	visibility_preset	200	0	0	empty
+www.jabank-kagoshima.or.jp	https://www.jabank-kagoshima.or.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+www.ja-kumagaya.or.jp	https://www.ja-kumagaya.or.jp/wp-json	loan-home	loan-home	-1	0		
+www.ja-tomakomaikouiki.com	https://www.ja-tomakomaikouiki.com/wp-json	pages	page	-1	0		
+www.jaesashi.or.jp	https://www.jaesashi.or.jp/wp-json	schedule	schedule	200	0	0	empty
+www.jahs.co.jp	https://www.jahs.co.jp/wp-json	snow-monkey-forms	snow-monkey-forms	200	1	1	machinery
+www.jahs.co.jp	https://www.jahs.co.jp/wp-json	users	user	404	0		
+www.jabank-kagoshima.or.jp	https://www.jabank-kagoshima.or.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.ja-kumagaya.or.jp	https://www.ja-kumagaya.or.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+www.ja-shikaoi.com	https://www.ja-shikaoi.com/wp-json	for_members	for_members	200	0	0	empty
+www.ja-tomakomaikouiki.com	https://www.ja-tomakomaikouiki.com/wp-json	widgetopts_snippet	widgetopts_snippet	200	0	0	empty
+www.jaise.jp	https://www.jaise.jp/wp-json	users	user	403	0		
+www.ja-yatsushiro.or.jp	https://www.ja-yatsushiro.or.jp/wp-json	top-slider	top-slider	200	3	3	machinery
+www.ja-kumagaya.or.jp	https://www.ja-kumagaya.or.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.ja-yatsushiro.or.jp	https://www.ja-yatsushiro.or.jp/wp-json	top-fixed	top-fixed	200	1	1	machinery
+www.ja-tomakomaikouiki.com	https://www.ja-tomakomaikouiki.com/wp-json	users	user	403	0		
+www.jakk.or.jp	https://www.jakk.or.jp/wp-json	users	user	401	0		
+www.jasatoura.com	https://jasatoura.com/wp-json	posts	post	200	0	0	empty
+www.jataiki.com	https://www.jataiki.com/wp-json	posts	post	200	0	0	empty
+www.ja-yatsushiro.or.jp	https://www.ja-yatsushiro.or.jp/wp-json	users	user	404	0		
+www.jataiki.com	https://www.jataiki.com/wp-json	users	user	401	0		
+www.jayamagata.or.jp	https://www.jayamagata.or.jp/wp-json	e-floating-buttons	e-floating-buttons	200	0	0	empty
+www.janic.org	https://www.janic.org/wp-json	sp_eap_template	sp_eap_template	200	0	0	empty
+www.jatamana.or.jp	https://jatamana.or.jp/wp-json	users	user	404	0		
+www.jea-net.jp	https://www.jea-net.jp/wp-json	posts	post	200	0	0	empty
+www.janic.org	https://www.janic.org/wp-json	sp_easy_accordion	sp_easy_accordion	200	0	0	empty
+www.jayamagata.or.jp	https://www.jayamagata.or.jp/wp-json	topslide	topslide	200	5	5	machinery
+www.janic.org	https://www.janic.org/wp-json	sp_accordion_faqs	sp_accordion_faqs	200	0	0	empty
+www.jayamagata.or.jp	https://www.jayamagata.or.jp/wp-json	bnr	bnr	200	9	9	machinery
+www.ja-sapporo.or.jp	https://www.ja-sapporo.or.jp/wp-json	ppwp-section	ppwp-section	200	0	0	empty
+www.jau.or.jp	https://www.jau.or.jp/wp-json	posts	post	200	0	0	empty
+www.jocci.jp	https://www.jocci.jp/wp-json	posts	post	200	0	0	empty
+www.ja-sapporo.or.jp	https://www.ja-sapporo.or.jp/wp-json	widgetopts_snippet	widgetopts_snippet	200	0	0	empty
+www.jasatoura.com	https://jasatoura.com/wp-json	users	user	404	0		
+www.joso-jc.jp	https://www.joso-jc.jp/wp-json	posts	post	200	0	0	empty
+www.ja-sapporo.or.jp	https://www.ja-sapporo.or.jp/wp-json	users	user	401	0		
+www.janic.org	https://www.janic.org/wp-json	ctas	pum_cta	404	0		
+www.jci763.or.jp	https://jci763.or.jp/wp-json	jc_member	jc_member	200	0	0	empty
+www.jf-kosya.co.jp	https://jf-kosya.co.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.jsphcs.jp	https://www.jsphcs.jp/wp-json	posts	post	200	0	0	empty
+www.janic.org	https://www.janic.org/wp-json	users	user	401	0		
+www.jci763.or.jp	https://jci763.or.jp/wp-json	lp	lp	200	0	0	empty
+www.jf-kosya.co.jp	https://jf-kosya.co.jp/wp-json	cta	cta	200	0	0	empty
+www.jci763.or.jp	https://jci763.or.jp/wp-json	blog_parts	blog_parts	200	0	0	empty
+www.jocci.jp	https://www.jocci.jp/wp-json	cta	cta	200	0	0	empty
+www.jpc.or.jp	https://www.jpc.or.jp/wp-json	popupbanner	popupbanner	200	11	11	machinery
+www.janagasakiken-ou.or.jp	https://www.janagasakiken-ou.or.jp/wp-json	e-floating-buttons	e-floating-buttons	200	0	0	empty
+www.japanarts.co.jp	https://www.japanarts.co.jp/wp-json	slideshow	slideshow	200	6	6	machinery
+www.kagoshima.med.or.jp	https://www.kagoshima.med.or.jp/wp-json	posts	post	200	0	0	empty
+www.janagasakiken-ou.or.jp	https://www.janagasakiken-ou.or.jp/wp-json	elementskit-content	elementskit_content	200	0	0	empty
+www.kagoshima.coop	https://www.kagoshima.coop/wp-json	posts	post	200	0	0	empty
+www.janagasakiken-ou.or.jp	https://www.janagasakiken-ou.or.jp/wp-json	elementskit-template	elementskit_template	200	0	0	empty
+www.kakamigahara.gifu.med.or.jp	https://kakamigahara.gifu.med.or.jp/wp-json	posts	post	200	0	0	empty
+www.kamaishi-med.or.jp	https://www.kamaishi-med.or.jp/wp-json	pages	page	200	0	19	not-a-list
+www.joetsuarea-firedept.jp	https://www.joetsuarea-firedept.jp/wp-json	users	user	403	0		
+www.kagoshima.med.or.jp	https://www.kagoshima.med.or.jp/wp-json	important_p	important_p	200	0	0	empty
+www.jotoishikai.or.jp	http://www.jotoishikai.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.kachiku-eisei.jp	https://kachiku-eisei.jp/wp-json	e-floating-buttons	e-floating-buttons	200	0	0	empty
+www.jssw.jp	https://www.jssw.jp/wp-json	feedback	feedback	401	0		
+www.kachiku-eisei.jp	https://kachiku-eisei.jp/wp-json	users	user	403	0		
+www.k-ishikai.jp	https://k-ishikai.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.jssw.jp	https://www.jssw.jp/wp-json	jetpack-forms	jetpack_form	401	0		
+www.jotoishikai.or.jp	http://www.jotoishikai.or.jp/wp-json	cta	cta	200	0	0	empty
+www.jongara.net	https://jongara.net/wp-json	feedback	feedback	401	0		
+www.k-ishikai.jp	https://k-ishikai.jp/wp-json	ltg-template-parts	ltg-template-parts	200	0	0	empty
+www.kamakura-cci.or.jp	https://www.kamakura-cci.or.jp/wp-json	users	user	403	0		
+www.k-ishikai.jp	https://k-ishikai.jp/wp-json	post_type_404	post_type_404	200	0	0	empty
+www.kana-gyosei.or.jp	https://www.kana-gyosei.or.jp/wp-json	pages	page	200	0	20	not-a-list
+www.kaizuka-yeg.jp	https://www.kaizuka-yeg.jp/wp-json	astra-portfolio	astra-portfolio	200	0	0	empty
+www.kaizuka-yeg.jp	https://www.kaizuka-yeg.jp/wp-json	slider	slider	200	3	3	machinery
+www.kago-ksr.or.jp	https://kago-ksr.or.jp/wp-json	pages	page	200	0	177	not-a-list
+www.kamiokacci.or.jp	https://www.kamiokacci.or.jp/wp-json	widgetopts_snippet	widgetopts_snippet	200	0	0	empty
+www.kamocci.or.jp	https://kamocci.or.jp/wp-json	activity-log-events	jp_act_log_event	401	0		
+www.kasugai-med.or.jp	https://www.kasugai-med.or.jp/wp-json	posts	post	200	0	0	empty
+www.kamiokacci.or.jp	https://www.kamiokacci.or.jp/wp-json	users	user	403	0		
+www.kamocci.or.jp	https://kamocci.or.jp/wp-json	slide	slide	200	11	11	machinery
+www.jssw.jp	https://www.jssw.jp/wp-json	activity-log-events	jp_act_log_event	-1	0		
+www.kagawa.coop.or.jp	https://www.kagawa.coop.or.jp/wp-json	users	user	404	0		
+www.kaizuka-yeg.jp	https://www.kaizuka-yeg.jp/wp-json	spectra-popup	spectra-popup	401	0		
+www.jssw.jp	https://www.jssw.jp/wp-json	jp_pay_order	jp_pay_order	401	0		
+www.kaizuka-yeg.jp	https://www.kaizuka-yeg.jp/wp-json	astra-advanced-hook	astra-advanced-hook	200	0	0	empty
+www.kawagoe.or.jp	https://www.kawagoe.or.jp/wp-json	feedback	feedback	401	0		
+www.jssw.jp	https://www.jssw.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.kawagoe.or.jp	https://www.kawagoe.or.jp/wp-json	jetpack-forms	jetpack_form	401	0		
+www.kago-ksr.or.jp	https://kago-ksr.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.kashiwarajc.or.jp	https://www.kashiwarajc.or.jp/wp-json	e-floating-buttons	e-floating-buttons	200	0	0	empty
+www.kanagawa-chousashi.or.jp	https://kanagawa-chousashi.or.jp/wp-json	links	links	200	4	4	machinery
+www.jau.or.jp	https://www.jau.or.jp/wp-json	users	user	404	0		
+www.kango-renmei.gr.jp	https://kango-renmei.gr.jp/wp-json	informations	informations	200	16	16	machinery
+www.kashiwazaki-jc.or.jp	https://kashiwazaki-jc.or.jp/wp-json	essential_grid	essential_grid	200	0	0	empty
+www.kasuya.fukuoka.med.or.jp	https://www.kasuya.fukuoka.med.or.jp/wp-json	posts	post	-1	0		
+www.kago-ksr.or.jp	https://kago-ksr.or.jp/wp-json	ltg-template-parts	ltg-template-parts	200	0	0	empty
+www.kawagoe.or.jp	https://www.kawagoe.or.jp/wp-json	activity-log-events	jp_act_log_event	401	0		
+www.kago-ksr.or.jp	https://kago-ksr.or.jp/wp-json	post_type_404	post_type_404	200	0	0	empty
+www.kanda-hojinkai.com	https://kanda-hojinkai.com/wp-json	cta	cta	200	0	0	empty
+www.kawagoe.or.jp	https://www.kawagoe.or.jp/wp-json	xo_event	xo_event	200	100	357	machinery
+www.kanda-cci.com	http://www.kanda-cci.com/wp-json	posts	post	503	0		
+www.kitaho.or.jp	https://kitaho.or.jp/wp-json	posts	post	200	0	0	empty
+www.kinoshita-zaidan.or.jp	https://www.kinoshita-zaidan.or.jp/wp-json	posts	post	-1	0		
+www.kawagoe.or.jp	https://www.kawagoe.or.jp/wp-json	jp_pay_order	jp_pay_order	401	0		
+www.kago-ksr.or.jp	https://kago-ksr.or.jp/wp-json	getwid_template_part	getwid_template_part	200	0	0	empty
+www.kakogawa.hyogo.med.or.jp	https://www.kakogawa.hyogo.med.or.jp/wp-json	users	user	404	0		
+www.kawagoe.or.jp	https://www.kawagoe.or.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.jongara.net	https://jongara.net/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+www.kitakyu-vet.com	https://kitakyu-vet.com/wp-json	posts	post	200	0	0	empty
+www.kihoku-med.or.jp	http://kihoku-med.or.jp/wp-json	pages	page	200	0	139	not-a-list
+www.kcci.komoro.org	https://www.kcci.komoro.org/wp-json	pages	page	-1	0		
+www.kanda-cci.com	http://www.kanda-cci.com/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.kawagoe.or.jp	https://www.kawagoe.or.jp/wp-json	users	user	403	0		
+www.kawasakinishihojinkai.or.jp	https://www.kawasakinishihojinkai.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.kasuya.fukuoka.med.or.jp	https://www.kasuya.fukuoka.med.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.kawasaki.kanagawa.med.or.jp	https://www.kawasaki.kanagawa.med.or.jp/wp-json	mailnews	mailnews	200	100	280	machinery
+www.jongara.net	https://jongara.net/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.kawasakinishihojinkai.or.jp	https://www.kawasakinishihojinkai.or.jp/wp-json	cta	cta	200	0	0	empty
+www.kna.or.jp	https://www.kna.or.jp/wp-json	posts	post	200	0	0	empty
+www.ja-sakai.or.jp	https://www.ja-sakai.or.jp/wp-json	users	user	403	0		
+www.kishuarida-cci.or.jp	https://kishuarida-cci.jp/wp-json	users	user	404	0		
+www.kitakyu-vet.com	https://kitakyu-vet.com/wp-json	users	user	403	0		
+www.kanda-cci.com	http://www.kanda-cci.com/wp-json	cta	cta	200	0	0	empty
+www.kobe-cci.or.jp	https://www.kobe-cci.or.jp/wp-json	posts	post	200	0	0	empty
+www.km-hojinkai.or.jp	https://km-hojinkai.or.jp/index.php/wp-json	blog_parts	blog_parts	200	3	3	machinery
+www.kcci.komoro.org	https://www.kcci.komoro.org/wp-json	jp_pay_order	jp_pay_order	-1	0		
+www.kawa-kita.or.jp	https://www.kawa-kita.or.jp/wp-json	banner	banner	200	15	15	machinery
+www.kesennuma.or.jp	https://www.kesennuma.or.jp/wp-json	pages	page	200	0		not-a-list
+www.khfd-119.koga.fukuoka.jp	https://khfd-119.koga.fukuoka.jp/wp-json	product	product	200	0	0	empty
+www.kasuya.fukuoka.med.or.jp	https://www.kasuya.fukuoka.med.or.jp/wp-json	ltg-template-parts	ltg-template-parts	-1	0		
+www.kimitsucci.or.jp	https://www.kimitsucci.or.jp/wp-json	users	user	401	0		
+www.kcci.komoro.org	https://www.kcci.komoro.org/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.khfd-119.koga.fukuoka.jp	https://khfd-119.koga.fukuoka.jp/wp-json	feedback	feedback	401	0		
+www.kokubunji-jc.jp	https://kokubunji-jc.jp/wp-json	posts	post	200	0	0	empty
+www.kasuya.fukuoka.med.or.jp	https://www.kasuya.fukuoka.med.or.jp/wp-json	ppwp-section	ppwp-section	-1	0		
+www.khfd-119.koga.fukuoka.jp	https://khfd-119.koga.fukuoka.jp/wp-json	jetpack-forms	jetpack_form	401	0		
+www.kochicoop.or.jp	https://www.kochicoop.or.jp/wp-json	users	user	401	0		
+www.koten.co.jp	https://www.koten.co.jp/wp-json	posts	post	200	0	0	empty
+www.kcci.komoro.org	https://www.kcci.komoro.org/wp-json	users	user	-1	0		
+www.koten.co.jp	https://www.koten.co.jp/wp-json	pages	page	200	0	0	empty
+www.khfd-119.koga.fukuoka.jp	https://khfd-119.koga.fukuoka.jp/wp-json	activity-log-events	jp_act_log_event	401	0		
+www.koten.co.jp	https://www.koten.co.jp/wp-json	users	user	200	0	0	empty
+www.khfd-119.koga.fukuoka.jp	https://khfd-119.koga.fukuoka.jp/wp-json	jp_pay_order	jp_pay_order	401	0		
+www.kochiken-shakyo.or.jp	https://www.kochiken-shakyo.or.jp/wp-json	urgent-notice	urgent-notice	200	0	0	empty
+www.kasuya.fukuoka.med.or.jp	https://www.kasuya.fukuoka.med.or.jp/wp-json	post_type_404	post_type_404	200	0	0	empty
+www.kawasaki.kanagawa.med.or.jp	https://www.kawasaki.kanagawa.med.or.jp/wp-json	citizens_info	citizens_info	200	0	0	empty
+www.khfd-119.koga.fukuoka.jp	https://khfd-119.koga.fukuoka.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.koshigaya-jc.com	https://koshigaya-jc.com/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.konan-cci.or.jp	https://www.konan-cci.or.jp/wp-json	posts	post	200	0	0	empty
+www.koshigaya-jc.com	https://koshigaya-jc.com/wp-json	cta	cta	200	0	0	empty
+www.kawasaki.kanagawa.med.or.jp	https://www.kawasaki.kanagawa.med.or.jp/wp-json	kanagawa_fax	kanagawa_fax	200	0	0	empty
+www.khfd-119.koga.fukuoka.jp	https://khfd-119.koga.fukuoka.jp/wp-json	rm_content_editor	rm_content_editor	200	0	0	empty
+www.kohokuishikai.jp	https://kohokuishikai.jp/wp-json	vk-block-patterns	vk-block-patterns	200	5	5	machinery
+www.kohokuishikai.jp	https://kohokuishikai.jp/wp-json	cta	cta	200	0	0	empty
+www.kumagaya-med.or.jp	https://www.kumagaya-med.or.jp/wp-json	users	user	401	0		
+www.konan-cci.or.jp	https://www.konan-cci.or.jp/wp-json	kmd_business	kmd_business	200	0	0	empty
+www.kousei-ehime.or.jp	https://www.kousei-ehime.or.jp/wp-json	recommend	recommend	200	38	38	machinery
+www.kumagayahoujinkai.jp	https://www.kumagayahoujinkai.jp/wp-json	recruit	recruit	200	0	0	empty
+www.kuroisonasu-jc.com	https://www.kuroisonasu-jc.com/wp-json	cta	cta	200	0	0	empty
+www.kujicci-iwate.jp	https://www.kujicci-iwate.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.kushiro-chosashi.jp	https://www.kushiro-chosashi.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.kushiro-chosashi.jp	https://www.kushiro-chosashi.jp/wp-json	cta	cta	200	0	0	empty
+www.koshigaya-houjinkai.or.jp	https://www.koshigaya-houjinkai.or.jp/wp-json	posts	post	-1	0		
+www.kogaishikai.com	https://www.kogaishikai.com/wp-json	users	user	-1	0		
+www.kyoto-jc.or.jp	https://www.kyoto-jc.or.jp/2026/wp-json	posts	post	200	0	0	empty
+www.kyohoku-koiki.jp	https://www.kyohoku-koiki.jp/wp-json	users	user	404	0		
+www.m-kouiki119.jp	https://www.m-kouiki119.jp/wp-json	posts	post	200	0	0	empty
+www.koriyama-jc.or.jp	http://www.koriyama-jc.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.kurashiki-jc.or.jp	http://kurashiki-jc.or.jp/wp-json	entry	entry	200	0	0	empty
+www.kuki-jc.com	https://kuki-jc.com/wp-json	post_grid	post_grid	200	4	4	machinery
+www.kyoto-jc.or.jp	https://www.kyoto-jc.or.jp/2026/wp-json	information	information	200	10	10	machinery
+www.m-kouiki119.jp	https://www.m-kouiki119.jp/wp-json	um_form	um_form	200	6	6	machinery
+www.maido.or.jp	https://www.maido.or.jp/wp-json	posts	post	-1	0		
+www.kesennuma.or.jp	https://www.kesennuma.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.kumagayacci.or.jp	https://www.kumagayacci.or.jp/wp-json	slideshow	slideshow	200	8	8	machinery
+www.matsue-med.or.jp	https://www.matsue-med.or.jp/wp-json	posts	post	200	0	0	empty
+www.kyoto.med.or.jp	https://www.kyoto.med.or.jp/wp-json	users	user	403	0		
+www.kumashi.jp	https://www.kumashi.jp/wp-json	discipline	discipline	200	0	0	empty
+www.m-kouiki119.jp	https://www.m-kouiki119.jp/wp-json	medical_notice_info	medical_notice_info	200	0	0	empty
+www.kuki-jc.com	https://kuki-jc.com/wp-json	ma-template	master_template	200	0	0	empty
+www.kesennuma.or.jp	https://www.kesennuma.or.jp/wp-json	cta	cta	200	0	0	empty
+www.kousei-ehime.or.jp	https://www.kousei-ehime.or.jp/wp-json	users	user	401	0		
+www.marugame-yeg.jp	https://www.marugame-yeg.jp/wp-json	users	user	404	0		
+www.marugame.or.jp	https://www.marugame.or.jp/wp-json	users	user	404	0		
+www.kuki-jc.com	https://kuki-jc.com/wp-json	post_grid_template	post_grid_template	200	0	0	empty
+www.maizuru.or.jp	https://www.maizuru.or.jp/wp-json	ml-galleries	ml_gallery	200	0	0	empty
+www.masuda-med.or.jp	https://www.masuda-med.or.jp/wp-json	health_information	health_information	200	34	34	machinery
+www.kawa-kita.or.jp	https://www.kawa-kita.or.jp/wp-json	video	video	-1	0		
+www.kusatsu-ritto.shiga.med.or.jp	https://kusatsu-ritto.shiga.med.or.jp/wp-json	filter-search	filter-search	200	0	0	empty
+www.masuda-med.or.jp	https://www.masuda-med.or.jp/wp-json	information	information	200	7	7	machinery
+www.midori-med.com	https://www.midori-med.com/wp-json	posts	post	200	0	0	empty
+www.kusatsu-ritto.shiga.med.or.jp	https://kusatsu-ritto.shiga.med.or.jp/wp-json	info	info	200	0	0	empty
+www.kyoto-chubu119.jp	https://www.kyoto-chubu119.jp/wp-json	ctas	pum_cta	404	0		
+www.kyoshakyo.or.jp	https://www.kyoshakyo.or.jp/wp-json	shikinkanri	shikinkanri	200	0	0	empty
+www.maido.or.jp	https://www.maido.or.jp/wp-json	top_slider	top_slider	200	5	5	machinery
+www.kuki-jc.com	https://kuki-jc.com/wp-json	jltma_popup	jltma_popup	200	0	0	empty
+www.kumagayacci.or.jp	https://www.kumagayacci.or.jp/wp-json	users	user	403	0		
+www.maido.or.jp	https://www.maido.or.jp/wp-json	top_slider_sp	top_slider_sp	200	5	5	machinery
+www.mcci.jp	https://www.mcci.jp/wp-json	users	user	404	0		
+www.masuda-med.or.jp	https://www.masuda-med.or.jp/wp-json	snow-monkey-forms	snow-monkey-forms	200	1	1	machinery
+www.med.yamanashi.ac.jp	https://www.med.yamanashi.ac.jp/wp-json	post_ycu_news	post_ycu_news	200	0	0	empty
+www.kuki-jc.com	https://kuki-jc.com/wp-json	jltma_widget	jltma_widget	200	0	0	empty
+www.mafd119.com	https://www.mafd119.com/wp-json	pages	page	-1	0		
+www.maido.or.jp	https://www.maido.or.jp/wp-json	top_banner	top_banner	200	15	15	machinery
+www.meijiza.co.jp	https://www.meijiza.co.jp/wp-json	everest_form	everest_form	200	3	3	other
+www.kawa-kita.or.jp	https://www.kawa-kita.or.jp/wp-json	xo_event	xo_event	200	65	65	machinery
+www.kawa-kita.or.jp	https://www.kawa-kita.or.jp/wp-json	users	user	401	0		
+www.kuki-jc.com	https://kuki-jc.com/wp-json	post_grid_layout	post_grid_layout	200	1	1	machinery
+www.mikicci.or.jp	https://www.mikicci.or.jp/wp-json	posts	post	200	0	0	empty
+www.midorinet-kagoshima.jp	https://www.midorinet-kagoshima.jp/wp-json	users	user	404	0		
+www.kyoshakyo.or.jp	https://www.kyoshakyo.or.jp/wp-json	users	user	401	0		
+www.midorinet-miyazaki.com	https://midorinet-miyazaki.com/wp-json	users	user	404	0		
+www.med.yamanashi.ac.jp	https://www.med.yamanashi.ac.jp/wp-json	users	user	404	0		
+www.matsumoto-jc.jp	https://www.matsumoto-jc.jp/wp-json	memberonly	memberonly	200	0	0	empty
+www.matsumoto-jc.jp	https://www.matsumoto-jc.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+www.mito-med.or.jp	https://www.mito-med.or.jp/wp-json	search	search	200	100	191	machinery
+www.matsumoto-jc.jp	https://www.matsumoto-jc.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.miyazaki-city-zoo.jp	https://www.miyazaki-city-zoo.jp/wp-json	posts	post	200	0	0	empty
+www.minamihoujinkai.com	https://minamihoujinkai.com/wp-json	information	information	200	100	286	machinery
+www.miyazaki-aba.or.jp	https://miyazaki-aba.or.jp/wp-json	posts	post	200	0	0	empty
+www.kusatsu-ritto.shiga.med.or.jp	https://kusatsu-ritto.shiga.med.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	1	1	machinery
+www.mcishikai.com	https://www.mcishikai.com/wp-json	link_new	link_new	200	3	3	machinery
+www.miyakotikuishikai.com	https://www.miyakotikuishikai.com/wp-json	posts	post	200	0	0	empty
+www.kusatsu-ritto.shiga.med.or.jp	https://kusatsu-ritto.shiga.med.or.jp/wp-json	ltg-template-parts	ltg-template-parts	200	0	0	empty
+www.mokahojin.net	https://mokahojin.net/wp-json	posts	post	200	0	0	empty
+www.miyawakacci.or.jp	http://www.miyawakacci.or.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+www.mikicci.or.jp	https://www.mikicci.or.jp/wp-json	banner	banner	200	4	4	machinery
+www.miyawakacci.or.jp	http://www.miyawakacci.or.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.miyagino-rakunou.or.jp	https://www.miyagino-rakunou.or.jp/wp-json	farm	farm	200	0	0	empty
+www.meijiza.co.jp	https://www.meijiza.co.jp/wp-json	info	info	200	0	212	not-a-list
+www.motosu.gifu.med.or.jp	https://motosu.gifu.med.or.jp/wp-json	posts	post	200	0	0	empty
+www.mobara-yeg.com	https://www.mobara-yeg.com/wp-json	pages	page	200	0	0	empty
+www.mcishikai.com	https://www.mcishikai.com/wp-json	homecare_topics	homecare_topics	200	0	0	empty
+www.miyazaki-aba.or.jp	https://miyazaki-aba.or.jp/wp-json	service	service	200	0	0	empty
+www.kusatsu-ritto.shiga.med.or.jp	https://kusatsu-ritto.shiga.med.or.jp/wp-json	cta	cta	200	0	0	empty
+www.miyazaki-aba.or.jp	https://miyazaki-aba.or.jp/wp-json	works	works	200	0	0	empty
+www.mu-cci.or.jp	https://www.mu-cci.or.jp/wp-json	lp	lp	200	0	0	empty
+www.miyakotikuishikai.com	https://www.miyakotikuishikai.com/wp-json	users	user	403	0		
+www.mu-cci.or.jp	https://www.mu-cci.or.jp/wp-json	blog_parts	blog_parts	200	0	0	empty
+www.mishima-cci.or.jp	https://www.mishima-cci.or.jp/wp-json	activity-log-events	jp_act_log_event	401	0		
+www.nagano-afa.or.jp	https://www.nagano-afa.or.jp/wp-json	posts	post	200	0	0	empty
+www.miyagi-sfk.net	https://www.miyagi-sfk.net/wp-json	emergency	emergency	200	0	0	empty
+www.murocci.or.jp	https://www.murocci.or.jp/wp-json	pages	page	200	0	78	not-a-list
+www.mnf21.com	https://www.mnf21.com/wp-json	users	user	404	0		
+www.mishima-cci.or.jp	https://www.mishima-cci.or.jp/wp-json	floating_banner	floating_banner	200	1	1	machinery
+www.nagano-takken.or.jp	https://www.nagano-takken.or.jp/wp-json	posts	post	200	0	0	empty
+www.mishima-cci.or.jp	https://www.mishima-cci.or.jp/wp-json	jp_pay_order	jp_pay_order	401	0		
+www.miyazaki.coop	https://www.miyazaki.coop/wp-json	important	important	200	0	0	empty
+www.nagoyaaqua.jp	https://nagoyaaqua.jp/wp-json	posts	post	200	0	0	empty
+www.nagoyajc.or.jp	https://nagoyajc.or.jp/wp-json	posts	post	200	0	0	empty
+www.mzcci.or.jp	https://www.mzcci.or.jp/wp-json	posts	post	-1	0		
+www.miyazaki-city-zoo.jp	https://www.miyazaki-city-zoo.jp/wp-json	xo_event	xo_event	200	6	6	machinery
+www.mishima-cci.or.jp	https://www.mishima-cci.or.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.nagai-cci.or.jp	https://www.nagai-cci.or.jp/wp-json	users	user	403	0		
+www.nagoyakitaku-med.com	https://nagoyakitaku-med.com/wp-json	posts	post	200	0	0	empty
+www.nagasaki-jc.jp	https://nagasaki-jc.jp/wp-json	posts	post	200	0	0	empty
+www.nagano-takken.or.jp	https://www.nagano-takken.or.jp/wp-json	slide	slide	200	6	6	machinery
+www.musashino-cci.or.jp	https://www.musashino-cci.or.jp/wp-json	pages	page	-1	0		
+www.mikicci.or.jp	https://www.mikicci.or.jp/wp-json	visibility_preset	visibility_preset	200	0	0	empty
+www.naradoren.or.jp	https://www.naradoren.or.jp/wp-json	posts	post	200	0	0	empty
+www.munakata119.jp	https://munakatajimu.or.jp/wp-json	fire_announcement	fire_announcement	200	0	0	empty
+www.nagasaki-kenoukumiai.jp	https://www.nagasaki-kenoukumiai.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.nagoyakitaku-med.com	https://nagoyakitaku-med.com/wp-json	informations	informations	200	2	2	machinery
+www.mikicci.or.jp	https://www.mikicci.or.jp/wp-json	users	user	404	0		
+www.nakatsugawa-jc.com	https://nakatsugawa-jc.com/wp-json	liquid_block	liquid_block	200	0	0	empty
+www.nagasaki-kenoukumiai.jp	https://www.nagasaki-kenoukumiai.jp/wp-json	cta	cta	200	0	0	empty
+www.nagano-takken.or.jp	https://www.nagano-takken.or.jp/wp-json	footer-banner	footer-banner	200	10	10	machinery
+www.nagasaki-kenoukumiai.jp	https://www.nagasaki-kenoukumiai.jp/wp-json	ghostkit_template	ghostkit_template	200	0	0	empty
+www.nakatsugawa-jc.com	https://nakatsugawa-jc.com/wp-json	information	information	200	11	11	machinery
+www.nakatsugawa-jc.com	https://nakatsugawa-jc.com/wp-json	works	works	200	0	0	empty
+www.nagano-takken.or.jp	https://www.nagano-takken.or.jp/wp-json	lazyblocks	lazyblocks	200	11	11	machinery
+www.nantoishikai.org	http://www.nantoishikai.org/wp-json	cta	cta	200	0	0	empty
+www.nakatsugawa-jc.com	https://nakatsugawa-jc.com/wp-json	users	user	403	0		
+www.naganohoujinkai.or.jp	https://www.naganohoujinkai.or.jp/wp-json	users	user	404	0		
+www.nagano-takken.or.jp	https://www.nagano-takken.or.jp/wp-json	lazyblocks_templates	lazyblocks_templates	200	0	0	empty
+www.nagano-takken.or.jp	https://www.nagano-takken.or.jp/wp-json	print_page	print_page	200	0	0	empty
+www.munakata119.jp	https://munakatajimu.or.jp/wp-json	form_manage	form_manage	200	1	1	machinery
+www.nippon-foundation.or.jp	https://www.nippon-foundation.or.jp/wp-json	posts	post	200	0	0	empty
+www.newspromotion.jp	https://www.newspromotion.jp/wp-json	users	user	401	0		
+www.munakata119.jp	https://munakatajimu.or.jp/wp-json	form_bouka	form_bouka	200	1	1	machinery
+www.ncawb.org	https://www.ncawb.org/wp-json	posts	post	200	0	75	not-a-list
+www.nishimoro-chikuren.or.jp	http://www.nishimoro-chikuren.or.jp/wp-json	posts	post	200	0	0	empty
+www.nerimanishi-houjinkai.or.jp	https://nerimanishi-houjinkai.or.jp/wp-json	posts	post	200	0	261	not-a-list
+www.nippon-foundation.or.jp	https://www.nippon-foundation.or.jp/wp-json	pages	page	200	0	558	not-a-list
+www.niigata-jc.com	https://niigata-jc.com/2026/wp-json	users	user	403	0		
+www.nishimoro-chikuren.or.jp	http://www.nishimoro-chikuren.or.jp/wp-json	users	user	404	0		
+www.nagano-takken.or.jp	https://www.nagano-takken.or.jp/wp-json	chushin-branch	chushin-branch	200	0	0	empty
+www.neopark.co.jp	https://www.neopark.co.jp/wp-json	information	information	200	1	1	machinery
+www.niicci.or.jp	https://www.niicci.or.jp/wp-json	users	user	401	0		
+www.nagoyakitaku-med.com	https://nagoyakitaku-med.com/wp-json	informationss	informationss	200	5	5	machinery
+www.nishikyo-med.or.jp	https://www.nishikyo-med.or.jp/wp-json	information	information	200	7	7	machinery
+www.ncawb.org	https://www.ncawb.org/wp-json	introduce	introduce	200	0	0	empty
+www.nosai-fukuoka.or.jp	https://nosai-fukuoka.or.jp/wp-json	posts	post	200	39	39	duplicate-endpoint
+www.ncawb.org	https://www.ncawb.org/wp-json	off-news	off-news	200	0	0	empty
+www.niihama-med.or.jp	https://www.niihama-med.or.jp/wp-json	rm_content_editor	rm_content_editor	200	0	0	empty
+www.nosai-hyogo.or.jp	https://www.nosai-hyogo.or.jp/wp-json	posts	post	200	0	0	empty
+www.nosai-fukuoka.or.jp	https://nosai-fukuoka.or.jp/wp-json	pages	page	200	48	48	duplicate-endpoint
+www.nonhoi.jp	https://www.nonhoi.jp/wp-json	pages	page	200	0	0	empty
+www.nosai-fukuoka.or.jp	https://nosai-fukuoka.or.jp/wp-json	users	user	200	1	1	duplicate-endpoint
+www.niihamajc.jp	http://www.niihamajc.jp/wp-json	users	user	401	0		
+www.nagano-takken.or.jp	https://www.nagano-takken.or.jp/wp-json	soumu-zaisei-news	soumu-zaisei-news	200	0	0	empty
+www.nosaimiyagi.or.jp	https://www.nosaimiyagi.or.jp/wp-json	posts	post	200	0	0	empty
+www.nobeoka-yeg.com	https://www.nobeoka-yeg.com/wp-json	ml-galleries	ml_gallery	200	0	0	empty
+www.nagano-cci.or.jp	https://www.nagano-cci.or.jp/wp-json	region-list	region-list	-1	0		
+www.nagano-takken.or.jp	https://www.nagano-takken.or.jp/wp-json	koho-keihatsu-news	koho-keihatsu-news	200	0	0	empty
+www.nagano-takken.or.jp	https://www.nagano-takken.or.jp/wp-json	kouki-kenshu-news	kouki-kenshu-news	200	0	0	empty
+www.nippon-foundation.or.jp	https://www.nippon-foundation.or.jp/wp-json	journal	journal	200	0	842	not-a-list
+www.nagano-takken.or.jp	https://www.nagano-takken.or.jp/wp-json	joho-teikyo-news	joho-teikyo-news	200	0	0	empty
+www.nagano-takken.or.jp	https://www.nagano-takken.or.jp/wp-json	senkyo-kanjicho-news	senkyo-kanjicho-news	200	0	0	empty
+www.nishikyo-med.or.jp	https://www.nishikyo-med.or.jp/wp-json	users	user	403	0		
+www.nippon-foundation.or.jp	https://www.nippon-foundation.or.jp/wp-json	emergency	emergency	200	0	0	empty
+www.nosaimiyagi.or.jp	https://www.nosaimiyagi.or.jp/wp-json	slider	slider	200	1	1	machinery
+www.ntr.or.jp	https://www.ntr.or.jp/wp-json	posts	post	200	0	0	empty
+www.nippon-foundation.or.jp	https://www.nippon-foundation.or.jp/wp-json	customcard	customcard	200	0	0	empty
+www.nosaimiyagi.or.jp	https://www.nosaimiyagi.or.jp/wp-json	index_info	index_info	200	0	0	empty
+www.nagano-takken.or.jp	https://www.nagano-takken.or.jp/wp-json	kansakai-news	kansakai-news	200	0	0	empty
+www.nosai46.jp	https://www.nosai46.jp/wp-json	easy-google-fonts	tt_font_control	200	0	0	empty
+www.nagano-takken.or.jp	https://www.nagano-takken.or.jp/wp-json	next-bukai-news	next-bukai-news	200	0	0	empty
+www.nurse-hiroshima.or.jp	https://www.nurse-hiroshima.or.jp/wp-json	posts	post	200	0	0	empty
+www.nagano-takken.or.jp	https://www.nagano-takken.or.jp/wp-json	nyukai-shinsa-news	nyukai-shinsa-news	200	0	0	empty
+www.nosai-tokushima.jp	https://www.nosai-tokushima.jp/wp-json	users	user	401	0		
+www.nvlu.ac.jp	https://www.nvlu.ac.jp/wp-json	posts	post	200	0	0	empty
+www.obamacci.or.jp	https://www.obamacci.or.jp/wp-json	lp	lp	200	0	0	empty
+www.nagano-takken.or.jp	https://www.nagano-takken.or.jp/wp-json	kanjikai-news	kanjikai-news	200	0	0	empty
+www.obamacci.or.jp	https://www.obamacci.or.jp/wp-json	blog_parts	blog_parts	200	0	0	empty
+www.oec.co.jp	https://www.oec.co.jp/wp-json	posts	post	200	0	0	empty
+www.ogaki.gifu.med.or.jp	https://www.ogaki.gifu.med.or.jp/wp-json	posts	post	200	0	0	empty
+www.nurse-hiroshima.or.jp	https://www.nurse-hiroshima.or.jp/wp-json	event	event	200	0	0	empty
+www.ohtawaracci.or.jp	http://www.ohtawaracci.or.jp/wp-json	posts	post	200	0	0	empty
+www.occi.jp	https://occi.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.odatecci.or.jp	https://www.odatecci.or.jp/wp-json	users	user	401	0		
+www.nogata-cci.or.jp	https://www.nogata-cci.or.jp/wp-json	new1111	new1111	200	0	0	empty
+www.occi.jp	https://occi.jp/wp-json	cta	cta	200	0	0	empty
+www.nurse-hiroshima.or.jp	https://www.nurse-hiroshima.or.jp/wp-json	users	user	403	0		
+www.oitajc.or.jp	https://www.oitajc.or.jp/wp-json	sightseeing	sightseeing	200	0	0	empty
+www.nogata-cci.or.jp	https://www.nogata-cci.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.ok-nosai.or.jp	https://www.ok-nosai.or.jp/wp-json	feedback	feedback	401	0		
+www.ok-nosai.or.jp	https://www.ok-nosai.or.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+www.nogata-cci.or.jp	https://www.nogata-cci.or.jp/wp-json	ltg-template-parts	ltg-template-parts	200	0	0	empty
+www.ok-nosai.or.jp	https://www.ok-nosai.or.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.okinawa-shiho-shoshi.net	https://www.okinawa-shiho-shoshi.net/wp-json	posts	post	200	0	0	empty
+www.nogata-cci.or.jp	https://www.nogata-cci.or.jp/wp-json	gsm_styles	gsm_styles	200	0	0	empty
+www.ome-hojinkai.or.jp	https://www.ome-hojinkai.or.jp/wp-json	posts	post	200	0	0	empty
+www.okachu.or.jp	https://www.okachu.or.jp/wp-json	feedback	feedback	401	0		
+www.omecci.jp	https://www.omecci.jp/wp-json	posts	post	200	0	0	empty
+www.okjc.org	https://www.okjc.org/public/wp-json	posts	post	200	0	0	empty
+www.nogata-cci.or.jp	https://www.nogata-cci.or.jp/wp-json	popups	popup	404	0		
+www.okachu.or.jp	https://www.okachu.or.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+www.okinawa-shiho-shoshi.net	https://www.okinawa-shiho-shoshi.net/wp-json	pages	page	200	0	48	not-a-list
+www.okachu.or.jp	https://www.okachu.or.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.numata-cci.or.jp	https://www.numata-cci.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.okayama-chousashikai.or.jp	https://www.okayama-chousashikai.or.jp/wp-json	ys-parts	ys-parts	200	2	2	machinery
+www.nogata-cci.or.jp	https://www.nogata-cci.or.jp/wp-json	popup-themes	popup_theme	404	0		
+www.okyeg.org	https://www.okyeg.org/wp-json	posts	post	200	0	0	empty
+www.osaka-sishakyo.jp	https://www.osaka-sishakyo.jp/wp-json	posts	post	200	0	0	empty
+www.okayama-chousashikai.or.jp	https://www.okayama-chousashikai.or.jp/wp-json	ystdtb-patterns	ystdtb-patterns	200	6	6	machinery
+www.nogata-cci.or.jp	https://www.nogata-cci.or.jp/wp-json	ctas	pum_cta	404	0		
+www.numata-cci.or.jp	https://www.numata-cci.or.jp/wp-json	cta	cta	200	0	0	empty
+www.ome-hojinkai.or.jp	https://www.ome-hojinkai.or.jp/wp-json	topslider	topslider	200	5	5	machinery
+www.okayama-chousashikai.or.jp	https://www.okayama-chousashikai.or.jp/wp-json	users	user	403	0		
+www.nogata-cci.or.jp	https://www.nogata-cci.or.jp/wp-json	visibility_preset	visibility_preset	200	0	0	empty
+www.numata-cci.or.jp	https://www.numata-cci.or.jp/wp-json	post_type_404	post_type_404	200	0	0	empty
+www.omutahojinkai.com	https://www.omutahojinkai.com/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.okazakicci.or.jp	https://www.okazakicci.or.jp/wp-json	lp	lp	200	0	0	empty
+www.omutahojinkai.com	https://www.omutahojinkai.com/wp-json	cta	cta	200	0	0	empty
+www.otsu.jrc.or.jp	https://www.otsu.jrc.or.jp/wp-json	posts	post	200	0	0	empty
+www.omecci.jp	https://www.omecci.jp/wp-json	feedback	feedback	401	0		
+www.okazakicci.or.jp	https://www.okazakicci.or.jp/wp-json	blog_parts	blog_parts	200	3	3	machinery
+www.osaka-sishakyo.jp	https://www.osaka-sishakyo.jp/wp-json	important	important	200	0	0	empty
+www.otakecci.or.jp	https://otakecci.or.jp/wp-json	posts	post	200	34	34	duplicate-endpoint
+www.omecci.jp	https://www.omecci.jp/wp-json	jetpack-forms	jetpack_form	401	0		
+www.palsystem-ibaraki.coop	https://www.palsystem-ibaraki.coop/wp-json	posts	post	200	0	0	empty
+www.omecci.jp	https://www.omecci.jp/wp-json	activity-log-events	jp_act_log_event	401	0		
+www.osaka-jc.or.jp	https://www.osaka-jc.or.jp/wp-json	information	information	200	100	228	machinery
+www.otmed.or.jp	https://www.otmed.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.otakecci.or.jp	https://otakecci.or.jp/wp-json	pages	page	200	20	20	duplicate-endpoint
+www.palsystem-tokyo.coop	https://www.palsystem-tokyo.coop/wp-json	posts	post	200	0	0	empty
+www.omecci.jp	https://www.omecci.jp/wp-json	jp_pay_order	jp_pay_order	401	0		
+www.otmed.or.jp	https://www.otmed.or.jp/wp-json	cta	cta	200	0	0	empty
+www.otakecci.or.jp	https://otakecci.or.jp/wp-json	fvslide	fvslide	200	3	3	machinery
+www.omecci.jp	https://www.omecci.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.omutajc.org	https://omutajc.org/wp-json	ltg-template-parts	ltg-template-parts	200	2	2	machinery
+www.omecci.jp	https://www.omecci.jp/wp-json	users	user	401	0		
+www.osaka-sishakyo.jp	https://www.osaka-sishakyo.jp/wp-json	volunteer	volunteer	200	0	0	empty
+www.omutajc.org	https://omutajc.org/wp-json	feedback	feedback	401	0		
+www.otakecci.or.jp	https://otakecci.or.jp/wp-json	seminar	seminar	200	14	14	duplicate-endpoint
+www.otsu.jrc.or.jp	https://www.otsu.jrc.or.jp/wp-json	users	user	404	0		
+www.okikou.or.jp	https://www.okikou.or.jp/wp-json	users	user	403	0		
+www.omutajc.org	https://omutajc.org/wp-json	jetpack-forms	jetpack_form	401	0		
+www.oyama-cci.or.jp	https://www.oyama-cci.or.jp/wp-json	users	user	401	0		
+www.onocci.or.jp	https://www.onocci.or.jp/web/wp-json	e-floating-buttons	e-floating-buttons	200	0	0	empty
+www.okinawa.med.or.jp	https://www.okinawa.med.or.jp/wp-json	users	user	404	0		
+www.otakecci.or.jp	https://otakecci.or.jp/wp-json	magazine	magazine	200	21	21	duplicate-endpoint
+www.omutajc.org	https://omutajc.org/wp-json	activity-log-events	jp_act_log_event	401	0		
+www.palsystem-fukushima.coop	https://www.palsystem-fukushima.coop/wp-json	location	location	404	0		
+www.onocci.or.jp	https://www.onocci.or.jp/web/wp-json	visibility_preset	visibility_preset	200	0	0	empty
+www.osaka-sishakyo.jp	https://www.osaka-sishakyo.jp/wp-json	kushakyo_information	kushakyo_information	200	13	13	machinery
+www.otakecci.or.jp	https://otakecci.or.jp/wp-json	important	important	200	0	0	empty
+www.omutajc.org	https://omutajc.org/wp-json	jp_pay_order	jp_pay_order	401	0		
+www.palsystem-fukushima.coop	https://www.palsystem-fukushima.coop/wp-json	event	event	404	0		
+www.otsucci.or.jp	https://www.otsucci.or.jp/wp-json	users	user	200	0		not-a-list
+www.palsystem-yamanashi.coop	https://www.palsystem-yamanashi.coop/wp-json	workflows	ppfuture_workflow	200	0	0	empty
+www.oshucci.com	https://oshucci.com/wp-json	vk-block-patterns	vk-block-patterns	-1	0		
+www.onocci.or.jp	https://www.onocci.or.jp/web/wp-json	xo_liteslider	xo_liteslider	200	2	2	machinery
+www.osaka-sishakyo.jp	https://www.osaka-sishakyo.jp/wp-json	disaster_news	disaster_news	200	0	0	empty
+www.palsystem-yamanashi.coop	https://www.palsystem-yamanashi.coop/wp-json	users	user	404	0		
+www.omutajc.org	https://omutajc.org/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.palsystem-fukushima.coop	https://www.palsystem-fukushima.coop/wp-json	users	user	401	0		
+www.otakecci.or.jp	https://otakecci.or.jp/wp-json	users	user	200	2	2	duplicate-endpoint
+www.oshucci.com	https://oshucci.com/wp-json	cta	cta	200	0	0	empty
+www.onocci.or.jp	https://www.onocci.or.jp/web/wp-json	users	user	404	0		
+www.ryoso-lid.or.jp	https://www.ryoso-lid.or.jp/wp-json	snow-monkey-forms	snow-monkey-forms	200	1	1	machinery
+www.osaka-sishakyo.jp	https://www.osaka-sishakyo.jp/wp-json	ghostkit_template	ghostkit_template	200	35	35	machinery
+www.oita-kango.com	https://www.oita-kango.com/wp-json	users	user	401	0		
+www.omutajc.org	https://omutajc.org/wp-json	post_type_404	post_type_404	200	0	0	empty
+www.safari.co.jp	https://safari.co.jp/wp-json	posts	post	404	0		
+www.saiseikai.or.jp	https://www.saiseikai.or.jp/wp-json	posts	post	200	0	0	empty
+www.pref-fukui-coop.or.jp	https://www.pref-fukui-coop.or.jp/wp-json	feedback	feedback	401	0		
+www.s-va.or.jp	https://s-va.or.jp/wp-json	test	test	200	0	0	empty
+www.pref-fukui-coop.or.jp	https://www.pref-fukui-coop.or.jp/wp-json	jetpack-forms	jetpack_form	401	0		
+www.safari.co.jp	https://safari.co.jp/wp-json	xo_event	xo_event	200	57	57	machinery
+www.pref-fukui-coop.or.jp	https://www.pref-fukui-coop.or.jp/wp-json	activity-log-events	jp_act_log_event	401	0		
+www.rakuno.ac.jp	https://www.rakuno.ac.jp/wp-json	optout_research	optout_research	200	0	0	empty
+www.saijo-jc.jp	https://saijo-jc.jp/wp-json	kubio_section	kubio_section	200	0	0	empty
+www.ogaki.gifu.med.or.jp	https://www.ogaki.gifu.med.or.jp/wp-json	doc-ogakietc	doc-ogakietc	200	0	0	empty
+www.pref-fukui-coop.or.jp	https://www.pref-fukui-coop.or.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+www.saijo-jc.jp	https://saijo-jc.jp/wp-json	kubio_favorites	kubio_favorites	200	0	0	empty
+www.ogaki.gifu.med.or.jp	https://www.ogaki.gifu.med.or.jp/wp-json	doc-etc	doc-etc	200	0	0	empty
+www.pref-fukui-coop.or.jp	https://www.pref-fukui-coop.or.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.saijo-jc.jp	https://saijo-jc.jp/wp-json	kubio_recommend_page	kubio_recommend_page	200	0	0	empty
+www.sakatahoujinkai.jp	https://www.sakatahoujinkai.jp/wp-json	easy-google-fonts	tt_font_control	200	0	0	empty
+www.palsystem-saitama.coop	https://www.palsystem-saitama.coop/wp-json	lazyblocks	lazyblocks	200	1	1	machinery
+www.sakatahoujinkai.jp	https://www.sakatahoujinkai.jp/wp-json	cta	cta	200	0	0	empty
+www.sagamihara-cci.or.jp	https://www.sagamihara-cci.or.jp/wp-json	cp_giins	cp_giins	200	0	0	empty
+www.saiseikai.or.jp	https://www.saiseikai.or.jp/wp-json	recipe	recipe	200	0	0	empty
+www.palsystem-saitama.coop	https://www.palsystem-saitama.coop/wp-json	lazyblocks_templates	lazyblocks_templates	200	0	0	empty
+www.sakyo.kyoto.med.or.jp	https://www.sakyo.kyoto.med.or.jp/wp-json	e-floating-buttons	e-floating-buttons	200	0	0	empty
+www.sennanho.or.jp	http://www.sennanho.or.jp/wp-json	posts	post	200	0	0	empty
+www.sakurajima.or.jp	https://sakurajima.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.sakurajima.or.jp	https://sakurajima.or.jp/wp-json	news-members	news-members	200	0	0	empty
+www.settsujc.jp	https://settsujc.jp/wp-json	posts	post	200	0	0	empty
+www.seaza.asia	https://www.seaza.asia/wp-json	um_form	um_form	200	4	4	machinery
+www.sakurajima.or.jp	https://sakurajima.or.jp/wp-json	cta	cta	200	0	0	empty
+www.seaza.asia	https://www.seaza.asia/wp-json	coblocks_pattern	coblocks_pattern	200	0	0	empty
+www.seaza.asia	https://www.seaza.asia/wp-json	icb	icb	200	0	0	empty
+www.shaboten.co.jp	https://shaboten.co.jp/wp-json	soliloquy	soliloquy	200	0	0	empty
+www.saiseikai.or.jp	https://www.saiseikai.or.jp/wp-json	users	user	404	0		
+www.seto-yeg.jp	https://www.seto-yeg.jp/wp-json	top_mv_slide	top_mv_slide	200	3	3	machinery
+www.sasayama-jc.or.jp	https://www.sasayama-jc.or.jp/wp-json	feedback	feedback	401	0		
+www.shimizu-kikin.or.jp	https://www.shimizu-kikin.or.jp/wp-json	posts	post	200	0	0	empty
+www.sekijc.or.jp	http://sekijc.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.shida119.jp	https://www.shida119.jp/wp-json	activity-log-events	jp_act_log_event	401	0		
+www.shima-roumu.or.jp	https://www.shima-roumu.or.jp/wp-json	users	user	404	0		
+www.shida119.jp	https://www.shida119.jp/wp-json	jp_pay_order	jp_pay_order	401	0		
+www.sekijc.or.jp	http://sekijc.or.jp/wp-json	activity-log-events	jp_act_log_event	401	0		
+www.shida119.jp	https://www.shida119.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.shimada-houjinkai.or.jp	https://shimada-houjinkai.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.safari.co.jp	https://safari.co.jp/wp-json	users	user	404	0		
+www.shimodate-cci.or.jp	https://www.shimodate-cci.or.jp/wp/wp-json	posts	post	200	100	421	duplicate-endpoint
+www.sekijc.or.jp	http://sekijc.or.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+www.shimada-houjinkai.or.jp	https://shimada-houjinkai.or.jp/wp-json	ltg-template-parts	ltg-template-parts	200	0	0	empty
+www.rakuno.ac.jp	https://www.rakuno.ac.jp/wp-json	wp_registered_template	wp_registered_template	401	0		
+www.sakatsuru-ishikai.jp	https://www.sakatsuru-ishikai.jp/wp-json	pages	page	-1	0		
+www.sasayama-jc.or.jp	https://www.sasayama-jc.or.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+www.shimada-houjinkai.or.jp	https://shimada-houjinkai.or.jp/wp-json	cta	cta	200	0	0	empty
+www.sekijc.or.jp	http://sekijc.or.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.rakuno.ac.jp	https://www.rakuno.ac.jp/wp-json	popups	popup	200	0	0	empty
+www.shimada-houjinkai.or.jp	https://shimada-houjinkai.or.jp/wp-json	post_type_404	post_type_404	200	0	0	empty
+www.shimodate-cci.or.jp	https://www.shimodate-cci.or.jp/wp/wp-json	pages	page	200	41	41	duplicate-endpoint
+www.shinkei.com	https://shinkei.com/wp-json	users	user	403	0		
+www.shizenha.net	https://www.shizenha.net/wp-json	posts	post	200	0	0	empty
+www.rakuno.ac.jp	https://www.rakuno.ac.jp/wp-json	users	user	404	0		
+www.sekijc.or.jp	http://sekijc.or.jp/wp-json	cta	cta	200	0	0	empty
+www.sasayama-jc.or.jp	https://www.sasayama-jc.or.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.saitama-vma.org	https://www.saitama-vma.org/wp-json	users	user	401	0		
+www.shimodate-cci.or.jp	https://www.shimodate-cci.or.jp/wp/wp-json	users	user	401	0		
+www.shimoho.com	https://www.shimoho.com/wp-json	cta	cta	200	0	0	empty
+www.shunan-jc.com	https://www.shunan-jc.com/wp-json	lp	lp	200	0	0	empty
+www.shunan-jc.com	https://www.shunan-jc.com/wp-json	blog_parts	blog_parts	200	3	3	machinery
+www.shiojiri.or.jp	https://www.shiojiri.or.jp/wp-json	feedback	feedback	401	0		
+www.sizdoren.jp	https://www.sizdoren.jp/wp-json	users	user	404	0		
+www.shiojiri.or.jp	https://www.shiojiri.or.jp/wp-json	jetpack-forms	jetpack_form	401	0		
+www.suntoizufd119.jp	https://www.suntoizufd119.jp/wp-json	posts	post	200	0	0	empty
+www.sharifd.jp	https://www.sharifd.jp/wp-json	users	user	401	0		
+www.shizenha.net	https://www.shizenha.net/wp-json	notices	notices	200	5		other
+www.shiojiri.or.jp	https://www.shiojiri.or.jp/wp-json	slide	slide	200	7	7	machinery
+www.sakatsuru-ishikai.jp	https://www.sakatsuru-ishikai.jp/wp-json	booking	booking	200	0	0	empty
+www.tagata-ishikai.jp	https://www.tagata-ishikai.jp/wp-json	posts	post	200	0	0	empty
+www.sr-kagoshima.jp	https://www.sr-kagoshima.jp/wp-json	users	user	-1	0		
+www.t-kaitaku.jp	https://www.t-kaitaku.jp/wp-json	pgc_simply_gallery	pgc_simply_gallery	200	0	0	empty
+www.tadotsucci.net	https://www.tadotsucci.net/wp-json	posts	post	200	0	0	empty
+www.sr-hyogo.gr.jp	https://www.sr-hyogo.gr.jp/wp-json	workflows	ppfuture_workflow	200	0	0	empty
+www.t-yeg.com	https://t-yeg.com/wp-json	lp	lp	200	0	0	empty
+www.tagata-ishikai.jp	https://www.tagata-ishikai.jp/wp-json	e-floating-buttons	e-floating-buttons	200	0	0	empty
+www.t-yeg.com	https://t-yeg.com/wp-json	blog_parts	blog_parts	200	1	1	machinery
+www.shiojiri.or.jp	https://www.shiojiri.or.jp/wp-json	banner	banner	200	12	12	machinery
+www.tadotsu-yeg.com	https://www.tadotsu-yeg.com/wp-json	emanon-premium-bp	emanon-premium-bp	200	0	0	empty
+www.shizuoka-na.jp	https://www.shizuoka-na.jp/wp-json	post_forms	post_forms	200	1	1	machinery
+www.tama-med.or.jp	http://www.tama-med.or.jp/wp-json	posts	post	200	0	0	empty
+www.tachikawajc.or.jp	https://tachikawajc.or.jp/wp-json	e-floating-buttons	e-floating-buttons	200	0	0	empty
+www.sr-shiga.com	https://www.sr-shiga.com/wp-json	training_archive	training_archive	200	0	0	empty
+www.tadotsucci.net	https://www.tadotsucci.net/wp-json	xo_event	xo_event	200	0	0	empty
+www.tadotsu-yeg.com	https://www.tadotsu-yeg.com/wp-json	emanon-cta	emanon-cta	200	0	0	empty
+www.tachikawajc.or.jp	https://tachikawajc.or.jp/wp-json	committee_introducti	committee_introducti	200	0	0	empty
+www.takasakicci.or.jp	https://www.takasakicci.or.jp/wp-json	posts	post	200	0	0	empty
+www.tachikawajc.or.jp	https://tachikawajc.or.jp/wp-json	members_introduction	members_introduction	200	0	0	empty
+www.tadotsu-yeg.com	https://www.tadotsu-yeg.com/wp-json	emanon-floating	emanon-floating	200	0	0	empty
+www.takacci.or.jp	https://www.takacci.or.jp/wp-json	posts	post	200	0	0	empty
+www.tachikawajc.or.jp	https://tachikawajc.or.jp/wp-json	voice_of_graduates	voice_of_graduates	200	0	0	empty
+www.tadotsu-yeg.com	https://www.tadotsu-yeg.com/wp-json	users	user	401	0		
+www.sakatsuru-ishikai.jp	https://www.sakatsuru-ishikai.jp/wp-json	footer	footer	200	0	0	empty
+www.tachikawajc.or.jp	https://tachikawajc.or.jp/wp-json	templately_library	templately_library	200	0	0	empty
+www.shiojiri.or.jp	https://www.shiojiri.or.jp/wp-json	pshiori	pshiori	200	0	0	empty
+www.tagata-ishikai.jp	https://www.tagata-ishikai.jp/wp-json	users	user	401	0		
+www.tagawa-fd-fukuoka.jp	https://www.tagawa-fd-fukuoka.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.sr-shiga.com	https://www.sr-shiga.com/wp-json	users	user	200	0		not-a-list
+www.tambajc.jp	http://tambajc.jp/wp-json	posts	post	200	0	0	empty
+www.takasakicci.or.jp	https://www.takasakicci.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	22	22	machinery
+www.tagawa-fd-fukuoka.jp	https://www.tagawa-fd-fukuoka.jp/wp-json	ltg-template-parts	ltg-template-parts	200	1	1	machinery
+www.shizenha.net	https://www.shizenha.net/wp-json	recommend	recommend	200	100	1042	machinery
+www.tagawa.or.jp	https://www.tagawa.or.jp/wp-json	activity-log-events	jp_act_log_event	401	0		
+www.sakatsuru-ishikai.jp	https://www.sakatsuru-ishikai.jp/wp-json	header	header	200	0	0	empty
+www.tagawa-fd-fukuoka.jp	https://www.tagawa-fd-fukuoka.jp/wp-json	post_type_404	post_type_404	200	0	0	empty
+www.tadotsucci.net	https://www.tadotsucci.net/wp-json	service	service	200	0	0	empty
+www.tama5cci.or.jp	https://www.tama5cci.or.jp/wp-json	cta	cta	200	0	0	empty
+www.tagawa.or.jp	https://www.tagawa.or.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+www.tama5cci.or.jp	https://www.tama5cci.or.jp/wp-json	lp	lp	200	0	0	empty
+www.tagawa.or.jp	https://www.tagawa.or.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.sumoto-cci.org	https://www.sumoto-cci.org/wp-json	saiyo	saiyo	200	0	0	empty
+www.tcci.jp	https://www.tcci.jp/wp-json	pages	page	200	0	149	not-a-list
+www.takken-kagawa.jp	https://www.takken-kagawa.jp/wp-json	users	user	403	0		
+www.tna.or.jp	https://www.tna.or.jp/wp-json	posts	post	200	0	0	empty
+www.shiojiri.or.jp	https://www.shiojiri.or.jp/wp-json	activity-log-events	jp_act_log_event	401	0		
+www.takacci.or.jp	https://www.takacci.or.jp/wp-json	jb_store_css	jb_store_css	200	0	0	empty
+www.tama5cci.or.jp	https://www.tama5cci.or.jp/wp-json	common	common	200	0	0	empty
+www.tama5cci.or.jp	https://www.tama5cci.or.jp/wp-json	cat-page	cat-page	200	0	0	empty
+www.takacci.or.jp	https://www.takacci.or.jp/wp-json	feedback	feedback	401	0		
+www.tamana-cci.or.jp	https://www.tamana-cci.or.jp/wp-json	banners	banners	200	26	26	machinery
+www.tanabe-cci.or.jp	https://www.tanabe-cci.or.jp/wp-json	cta	cta	200	0	0	empty
+www.tennojizoo.jp	https://www.tennojizoo.jp/wp-json	feedback	feedback	401	0		
+www.shizuoka-na.jp	https://www.shizuoka-na.jp/wp-json	users	user	-1	0		
+www.takasakicci.or.jp	https://www.takasakicci.or.jp/wp-json	insurance	insurance	200	0	0	empty
+www.tkc.or.jp	https://www.tkc.or.jp/wp-json	activity-log-events	jp_act_log_event	401	0		
+www.sumoto-cci.org	https://www.sumoto-cci.org/wp-json	lazyblocks	lazyblocks	200	2	2	machinery
+www.tennojizoo.jp	https://www.tennojizoo.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+www.tochitaku.or.jp	https://www.tochitaku.or.jp/wp-json	posts	post	-1	0		
+www.temakizushi.com	https://www.temakizushi.com/wp-json	top_info	top_info	200	1	1	machinery
+www.sumoto-cci.org	https://www.sumoto-cci.org/wp-json	lazyblocks_templates	lazyblocks_templates	200	1	1	machinery
+www.tennojizoo.jp	https://www.tennojizoo.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.tkc.or.jp	https://www.tkc.or.jp/wp-json	jp_pay_order	jp_pay_order	401	0		
+www.temakizushi.com	https://www.temakizushi.com/wp-json	banner	banner	200	4	4	machinery
+www.sumoto-cci.org	https://www.sumoto-cci.org/wp-json	users	user	401	0		
+www.tochigi-cci.or.jp	https://tochigi-cci.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.tohoren.or.jp	https://www.tohoren.or.jp/wp-json	feedback	feedback	401	0		
+www.tkc.or.jp	https://www.tkc.or.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.tohoren.or.jp	https://www.tohoren.or.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+www.shiojiri.or.jp	https://www.shiojiri.or.jp/wp-json	jp_pay_order	jp_pay_order	-1	0		
+www.tna.or.jp	https://www.tna.or.jp/wp-json	users	user	401	0		
+www.tochigi-cci.or.jp	https://tochigi-cci.or.jp/wp-json	post_type_404	post_type_404	200	0	0	empty
+www.tokai-med.or.jp	https://tokai-med.or.jp/wp-json	zaitaku	zaitaku	200	0	0	empty
+www.tokicci.or.jp	https://www.tokicci.or.jp/wp-json	pages	page	-1	0		
+www.tohoren.or.jp	https://www.tohoren.or.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.tokai-cci.or.jp	https://www.tokai-cci.or.jp/wp-json	users	user	403	0		
+www.shiojiri.or.jp	https://www.shiojiri.or.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.tohoren.or.jp	https://www.tohoren.or.jp/wp-json	users	user	404	0		
+www.tokicci.or.jp	https://www.tokicci.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.shiojiri.or.jp	https://www.shiojiri.or.jp/wp-json	users	user	404	0		
+www.takacci.or.jp	https://www.takacci.or.jp/wp-json	workflows	ppfuture_workflow	200	0	0	empty
+www.tokicci.or.jp	https://www.tokicci.or.jp/wp-json	cta	cta	200	0	0	empty
+www.toubu.tottori.med.or.jp	https://www.toubu.tottori.med.or.jp/wp-json	posts	post	200	0	0	empty
+www.tottori.med.or.jp	https://www.tottori.med.or.jp/wp-json	posts	post	200	0	0	empty
+www.tottori.coop	https://www.tottori.coop/wp-json	posts	post	200	0	0	empty
+www.tokorozawa-jc.or.jp	https://tokorozawa-jc.or.jp/wp-json	gsm_styles	gsm_styles	200	0	0	empty
+www.tokushimaseikyou.or.jp	https://www.tokushimaseikyou.or.jp/wp-json	store_info	store_info	200	0	0	empty
+www.tokushimacci.or.jp	https://www.tokushimacci.or.jp/wp-json	users	user	401	0		
+www.togane-hojinkai.or.jp	https://togane-hojinkai.or.jp/wp-json	posts	post	-1	0		
+www.tokorozawa-jc.or.jp	https://tokorozawa-jc.or.jp/wp-json	lp	lp	200	2	2	machinery
+www.tokorozawa-jc.or.jp	https://tokorozawa-jc.or.jp/wp-json	blog_parts	blog_parts	200	2	2	machinery
+www.tosu-jc.or.jp	https://tosu-jc.or.jp/wp-json	users	user	404	0		
+www.toubu.tottori.med.or.jp	https://www.toubu.tottori.med.or.jp/wp-json	pages	page	-1	0		
+www.toyotajc.jp	https://toyotajc.jp/wp-json	posts	post	200	0	0	empty
+www.touyako.jp	https://www.touyako.jp/wp-json	users	user	403	0		
+www.toyama-yeg.jp	https://www.toyama-yeg.jp/wp-json	pages	page	-1	0		
+www.toyama-familypark.jp	https://www.toyama-familypark.jp/wp-json	xo_event	xo_event	200	9	9	machinery
+www.toyama-familypark.jp	https://www.toyama-familypark.jp/wp-json	users	user	404	0		
+www.tottori-kangokyokai.or.jp	https://www.tottori-kangokyokai.or.jp/wp-json	aam_policy	aam_policy	200	0	0	empty
+www.toyamahj.com	https://www.toyamahj.com/wp-json	posts	post	200	0	0	empty
+www.tym-midori.net	https://www.tym-midori.net/wp-json	posts	post	200	0	0	empty
+www.takacci.or.jp	https://www.takacci.or.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+www.tsurumi.osaka.med.or.jp	https://www.tsurumi.osaka.med.or.jp/wp-json	users	user	200	0		not-a-list
+www.u-yeg.jp	https://u-yeg.jp/wp-json	popups	popup	404	0		
+www.ukihajc.com	https://www.ukihajc.com/wp-json	posts	post	200	0	0	empty
+www.tottori.coop	https://www.tottori.coop/wp-json	important	important	200	0	0	empty
+www.tottori-kangokyokai.or.jp	https://www.tottori-kangokyokai.or.jp/wp-json	index-slides	index-slides	200	3	3	machinery
+www.ttservice.co.jp	https://ttservice.co.jp/wp-json	users	user	-1	0		
+www.u-yeg.jp	https://u-yeg.jp/wp-json	popup-themes	popup_theme	404	0		
+www.u-yeg.jp	https://u-yeg.jp/wp-json	ctas	pum_cta	404	0		
+www.umitamago.jp	https://www.umitamago.jp/wp-json	slide	slide	200	6	6	machinery
+www.tym-midori.net	https://www.tym-midori.net/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.umitonagisa.or.jp	https://www.umitonagisa.or.jp/wp-json	pages	page	500	0		
+www.utcoop.or.jp	https://www.utcoop.or.jp/wp-json	posts	post	200	0	0	empty
+www.urasoe-yeg.com	https://urasoe-yeg.com/wp-json	posts	post	200	0	0	empty
+www.takacci.or.jp	https://www.takacci.or.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.uoduhj.com	https://www.uoduhj.com/wp-json	cta	cta	200	0	0	empty
+www.tym-midori.net	https://www.tym-midori.net/wp-json	cta	cta	200	0	0	empty
+www.tym-midori.net	https://www.tym-midori.net/wp-json	users	user	403	0		
+www.uwajima-jc.or.jp	http://www.uwajima-jc.or.jp/wp-json	events	events	200	0	0	empty
+www.uonuma-jc.com	https://www.uonuma-jc.com/wp-json	feedback	feedback	401	0		
+www.umitamago.jp	https://www.umitamago.jp/wp-json	important_notice	important_notice	200	0	0	empty
+www.uwajima-cci.or.jp	https://www.uwajima-cci.or.jp/wp-json	xo_liteslider	xo_liteslider	200	1	1	machinery
+www.umitamago.jp	https://www.umitamago.jp/wp-json	users	user	401	0		
+www.urayasu-cci.or.jp	https://www.urayasu-cci.or.jp/wp-json	contents-bnr01	contents-bnr01	200	8	8	machinery
+www.urayasu-cci.or.jp	https://www.urayasu-cci.or.jp/wp-json	contents-bnr02	contents-bnr02	200	1	1	machinery
+www.uonuma-jc.com	https://www.uonuma-jc.com/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+www.umitonagisa.or.jp	https://www.umitonagisa.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	1	1	machinery
+www.usuki-yeg.jp	https://usuki-yeg.jp/wp-json	spectra-popup	spectra-popup	200	0	0	empty
+www.uonuma-jc.com	https://www.uonuma-jc.com/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.urayasu-cci.or.jp	https://www.urayasu-cci.or.jp/wp-json	contents-bnr03	contents-bnr03	200	9	9	machinery
+www.umitonagisa.or.jp	https://www.umitonagisa.or.jp/wp-json	cta	cta	200	0	0	empty
+www.usuki-yeg.jp	https://usuki-yeg.jp/wp-json	sureforms_form	sureforms_form	200	1	1	machinery
+www.uonuma-jc.com	https://www.uonuma-jc.com/wp-json	news	news	200	0	0	empty
+www.tsukushi.or.jp	https://tsukushi.or.jp/wp-json	posts	post	-1	0		
+www.usuki-yeg.jp	https://usuki-yeg.jp/wp-json	rm_content_editor	rm_content_editor	200	0	0	empty
+www.toyamahj.com	https://www.toyamahj.com/wp-json	pages	page	-1	0		
+www.urayasu-jc.net	https://urayasu-jc.com/wp-json	support-member	support-member	200	0	0	empty
+www.vet.iwate-u.ac.jp	https://www.vet.iwate-u.ac.jp/wp-json	lazyblocks	lazyblocks	200	7	7	machinery
+www.winc.or.jp	https://www.winc.or.jp/wp-json	cities_form	cities_form	200	4	4	machinery
+www.toyamahj.com	https://www.toyamahj.com/wp-json	cta	cta	200	0	0	empty
+www.vet.iwate-u.ac.jp	https://www.vet.iwate-u.ac.jp/wp-json	lazyblocks_templates	lazyblocks_templates	200	2	2	machinery
+www.tsukushi.or.jp	https://tsukushi.or.jp/wp-json	activity-log-events	jp_act_log_event	401	0		
+www.wakayama-aba.jp	https://www.wakayama-aba.jp/wp-json	tec_calendar_embed	tec_calendar_embed	200	0	0	empty
+www.yao-yeg.net	https://www.yao-yeg.net/wp-json	posts	post	403	0		
+www.waza.org	https://www.waza.org/wp-json	posts	post	-1	0		
+www.vecof.or.jp	https://www.vecof.or.jp/wp-json	activity_info	activity_info	200	0	0	empty
+www.winc.or.jp	https://www.winc.or.jp/wp-json	member_pass	member_pass	200	0	0	empty
+www.yanagawa-med.com	http://www.yanagawa-med.com/wp-json	posts	post	200	0	0	empty
+www.tottori.coop	https://www.tottori.coop/wp-json	directorate	directorate	-1	0		
+www.tsukushi.or.jp	https://tsukushi.or.jp/wp-json	ctas	pum_cta	404	0		
+www.yao-yeg.net	https://www.yao-yeg.net/wp-json	workflows	ppfuture_workflow	200	0	0	empty
+www.with-kobe.or.jp	https://www.with-kobe.or.jp/wp-json	users	user	-1	0		
+www.yamatojc.jp	https://www.yamatojc.jp/wp-json	xo_liteslider	xo_liteslider	200	1	1	machinery
+www.ym-houjinkai.or.jp	https://www.ym-houjinkai.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.yamecci.or.jp	https://yamecci.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.yawatahamacci.jp	https://www.yawatahamacci.jp/wp-json	xo_liteslider	xo_liteslider	200	1	1	machinery
+www.yanagawa-med.com	http://www.yanagawa-med.com/wp-json	xo_event	xo_event	200	100	573	machinery
+www.yatsushiro-med.or.jp	https://www.yatsushiro-med.or.jp/wp-json	member	member	200	0	0	empty
+www.vecof.or.jp	https://www.vecof.or.jp/wp-json	news	news	200	0	0	empty
+www.ym-houjinkai.or.jp	https://www.ym-houjinkai.or.jp/wp-json	cta	cta	200	0	0	empty
+www.yamecci.or.jp	https://yamecci.or.jp/wp-json	cta	cta	200	0	0	empty
+www.tottori.coop	https://www.tottori.coop/wp-json	financial	financial	-1	0		
+www.yamanashi-shiho.or.jp	https://yamanashi-shiho.or.jp/wp-json	recruit	recruit	200	0	0	empty
+www.yachiyocci.jp	https://www.yachiyocci.jp/wp-json	carousel	carousel	200	9	9	machinery
+www.yna.or.jp	https://www.yna.or.jp/wp-json	posts	post	200	0	0	empty
+www.ycci.or.jp	https://www.ycci.or.jp/wp-json	users	user	401	0		
+www.yokohama-nishiku-med.org	https://yokohama-nishiku-med.org/wp-json	lp	lp	200	0	0	empty
+www.yamatotakada-cci.or.jp	https://www.yamatotakada-cci.or.jp/wp-json	economic_hall	economic_hall	200	0	0	empty
+www.yachiyocci.jp	https://www.yachiyocci.jp/wp-json	adbnr	adbnr	200	16	16	machinery
+www.yokohama-nishiku-med.org	https://yokohama-nishiku-med.org/wp-json	blog_parts	blog_parts	200	0	0	empty
+www.yame-houjinkai.com	https://yame-houjinkai.com/wp-json	post_grid	post_grid	200	0	0	empty
+www.winc.or.jp	https://www.winc.or.jp/wp-json	users	user	404	0		
+www.yame-houjinkai.com	https://yame-houjinkai.com/wp-json	post_grid_template	post_grid_template	200	0	0	empty
+www.tottori.coop	https://www.tottori.coop/wp-json	banner	banner	-1	0		
+www.ykenchikushi.org	https://www.ykenchikushi.org/wp-json	product	product	200	0	0	empty
+www.tottori.coop	https://www.tottori.coop/wp-json	recommend	recommend	200	2	2	machinery
+www.yame-houjinkai.com	https://yame-houjinkai.com/wp-json	xo_liteslider	xo_liteslider	200	1	1	machinery
+www.yna.or.jp	https://www.yna.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	25	25	machinery
+www.wakayama-kangokyokai.or.jp	https://www.wakayama-kangokyokai.or.jp/wp-json	training-data	training-data	200	0	0	empty
+www.waza.org	https://www.waza.org/wp-json	pages	page	-1	0		
+www.yokotecci.or.jp	https://www.yokotecci.or.jp/wp-json	ys-parts	ys-parts	200	3	3	machinery
+www.yokaichiba-jc.com	https://yokaichiba-jc.com/wp-json	e-floating-buttons	e-floating-buttons	200	0	0	empty
+www.yonago.net	https://www.yonago.net/wp-json	feedback	feedback	401	0		
+www.zenshinhoren.or.jp	https://www.zenshinhoren.or.jp/wp-json	posts	post	200	0	0	empty
+www.yame-houjinkai.com	https://yame-houjinkai.com/wp-json	post_grid_layout	post_grid_layout	200	0	0	empty
+www.waza.org	https://www.waza.org/wp-json	e-floating-buttons	e-floating-buttons	200	0	0	empty
+www.wakayama-kangokyokai.or.jp	https://www.wakayama-kangokyokai.or.jp/wp-json	users	user	401	0		
+www.yokaichiba-jc.com	https://yokaichiba-jc.com/wp-json	astra-advanced-hook	astra-advanced-hook	200	0	0	empty
+www.yamaguchikensyakyo.jp	https://www.yamaguchikensyakyo.jp/wp-json	pages	page	-1	0		
+www.yonago.net	https://www.yonago.net/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+www.yanagawa-cci.or.jp	https://www.yanagawa-cci.or.jp/wp-json	latest_information	latest_information	200	6	6	machinery
+www.waza.org	https://www.waza.org/wp-json	um_form	um_form	200	4	4	machinery
+www.yonago.net	https://www.yonago.net/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.tvma.or.jp	https://tvma.or.jp/wp-json	clinic	clinic	-1	0		
+www.zenshinhoren.or.jp	https://www.zenshinhoren.or.jp/wp-json	topvisual	topvisual	200	4	4	machinery
+www.zenrakuren.or.jp	https://www.zenrakuren.or.jp/wp-json	bnrlist	bnrlist	200	17	17	machinery
+www.waza.org	https://www.waza.org/wp-json	users	user	200	0		not-a-list
+www.yna.or.jp	https://www.yna.or.jp/wp-json	information	information	200	100	260	machinery
+yatsushirogun-med.com	https://yatsushirogun-med.com/wp-json	pages	page	200	0		not-a-list
+yodomed.jp	https://yodomed.jp/wp-json	posts	post	200	0	0	empty
+www.yokaichiba-jc.com	https://yokaichiba-jc.com/wp-json	banner_link	banner_link	200	6	6	machinery
+yashio-jc.com	https://yashio-jc.com/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+yokote-yeg.com	https://yokote-yeg.com/wp-json	posts	post	200	0	0	empty
+www.zenrakuren.or.jp	https://www.zenrakuren.or.jp/wp-json	bnrlistb	bnrlistb	200	1	1	machinery
+yashio-jc.com	https://yashio-jc.com/wp-json	cta	cta	200	0	0	empty
+www.zenshinhoren.or.jp	https://www.zenshinhoren.or.jp/wp-json	links	links	200	62	62	machinery
+yatsushirogun-med.com	https://yatsushirogun-med.com/wp-json	um_form	um_form	200	3	3	machinery
+yamaguchi-jc.com	https://www.yamaguchi-jc.com/wp-json	spectra-popup	spectra-popup	401	0		
+yeg.ibara.info	https://yeg.ibara.info/wp-json	feedback	feedback	401	0		
+www.zoosafrica.com	https://bcre.africa/wp-json	advanced_page	kadence_adv_page	200	0	0	empty
+yamato-yeg.com	https://yamato-yeg.com/wp-json	activity-log-events	jp_act_log_event	401	0		
+www.zoosafrica.com	https://bcre.africa/wp-json	kadence_form	kadence_form	500	0		
+yokohama-nakaku-med.org	https://yokohama-nakaku-med.org/wp-json	users	user	403	0		
+www.yueki.com	https://www.yueki.com/wp-json	xo_event	xo_event	200	100	160	machinery
+yeg.ibara.info	https://yeg.ibara.info/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+www.zoosafrica.com	https://bcre.africa/wp-json	kadence_navigation	kadence_navigation	500	0		
+yeg.ibara.info	https://yeg.ibara.info/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+www.zoosafrica.com	https://bcre.africa/wp-json	kadence_header	kadence_header	500	0		
+yamato-yeg.com	https://yamato-yeg.com/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+www.zoosafrica.com	https://bcre.africa/wp-json	kadence_custom_svg	kadence_custom_svg	200	0	0	empty
+www.yubari-melon.or.jp	http://www.yubari-melon.or.jp/wp-json	users	user	403	0		
+yamato-yeg.com	https://yamato-yeg.com/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+yotsubacoop.jp	https://yotsubacoop.jp/wp-json	information	information	200	100	228	machinery
+www.zoosafrica.com	https://bcre.africa/wp-json	kadence_query	kadence_query	200	0	0	empty
+yamato-yeg.com	https://yamato-yeg.com/wp-json	users	user	404	0		
+zushi-hayamajc.jp	https://zushi-hayamajc.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www.zoosafrica.com	https://bcre.africa/wp-json	kadence_query_card	kadence_query_card	200	0	0	empty
+www.yamaguchikensyakyo.jp	https://www.yamaguchikensyakyo.jp/wp-json	vk-block-patterns	vk-block-patterns	200	1	1	machinery
+zushi-hayamajc.jp	https://zushi-hayamajc.jp/wp-json	cta	cta	200	0	0	empty
+www.zoosafrica.com	https://bcre.africa/wp-json	kadence_lottie	kadence_lottie	200	0	0	empty
+www.yna.or.jp	https://www.yna.or.jp/wp-json	links	links	200	4	4	machinery
+zoomo.co.jp	https://zoomo.co.jp/wp-json	banner	banner	200	5	5	machinery
+www.zoosafrica.com	https://bcre.africa/wp-json	kadence_vector	kadence_vector	200	0	0	empty
+www.zoosafrica.com	https://bcre.africa/wp-json	kb_icon	kb_icon	200	0	0	empty
+zama-jc.or.jp	https://zama-jc.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+zoomo.co.jp	https://zoomo.co.jp/wp-json	top-movie	top-movie	200	13	13	machinery
+www.zoosafrica.com	https://bcre.africa/wp-json	rm_content_editor	rm_content_editor	200	0	0	empty
+www.zoosafrica.com	https://bcre.africa/wp-json	rank_math_schema	rank_math_schema	200	0	0	empty
+zoomo.co.jp	https://zoomo.co.jp/wp-json	lazyblocks	lazyblocks	200	0	0	empty
+zoomo.co.jp	https://zoomo.co.jp/wp-json	lazyblocks_templates	lazyblocks_templates	200	1	1	machinery
+www.yna.or.jp	https://www.yna.or.jp/wp-json	banner_nurse	banner_nurse	200	8	8	machinery
+www.yna.or.jp	https://www.yna.or.jp/wp-json	banner_footer	banner_footer	200	4	4	machinery
+www.yna.or.jp	https://www.yna.or.jp/wp-json	users	user	-1	0		

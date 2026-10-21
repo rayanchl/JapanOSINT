@@ -250,7 +250,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def tsp_pskreporter_callsign_def = {
-  .id = "PSKREPORTER_CALLSIGN", .collector = "osint",
+  .id = "PSKREPORTER_CALLSIGN", .collector = "osint_" "telecom",
   .name = "PSKReporter reception reports by callsign",
   .update_interval_sec = 0, .run = run,
   .category = "telecom", .type = "api",

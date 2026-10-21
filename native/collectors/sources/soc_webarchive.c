@@ -210,7 +210,7 @@ static int run_archive_it(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def soc_archive_it_def = {
-  .id = "ARCHIVE_IT_TIMEMAP", .collector = "osint",
+  .id = "ARCHIVE_IT_TIMEMAP", .collector = "osint_" "media",
   .name = "Archive-It Memento TimeMap",
   .update_interval_sec = 0, .run = run_archive_it,
   .category = "media", .type = "api",

@@ -148,7 +148,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def tech_stack_def = {
-  .id = "TECH_STACK_DETECTION", .collector = "osint",
+  .id = "TECH_STACK_DETECTION", .collector = "osint_" "cyber",
   .name = "Tech Stack Detection", .name_ja = "技術スタック検出",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",

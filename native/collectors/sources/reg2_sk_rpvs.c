@@ -381,7 +381,7 @@ static int rpvs_ubo_run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def reg2_sk_rpvs_partners_def = {
-  .id = "SK_RPVS_PARTNERS", .collector = "osint",
+  .id = "SK_RPVS_PARTNERS", .collector = "osint_" "government",
   .name = "Slovakia Register of Public Sector Partners (partners)",
   .update_interval_sec = 0, .run = rpvs_partners_run,
   .category = "government", .type = "api",
@@ -396,7 +396,7 @@ static const source_def reg2_sk_rpvs_partners_def = {
 REGISTER_SOURCE(reg2_sk_rpvs_partners_def)
 
 static const source_def reg2_sk_rpvs_ubo_def = {
-  .id = "SK_RPVS_UBO", .collector = "osint",
+  .id = "SK_RPVS_UBO", .collector = "osint_" "government",
   .name = "Slovakia RPVS beneficial owners",
   .update_interval_sec = 0, .run = rpvs_ubo_run,
   .category = "government", .type = "api",

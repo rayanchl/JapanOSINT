@@ -14,6 +14,7 @@
 #include "statusapi.h"
 #include "collectortab.h"
 #include "hostgate.h"
+#include "cadence.h"
 #include "../lib/hpengine.h"
 #include "../lib/jocore.h"
 #include "../third_party/cJSON.h"
@@ -289,6 +290,9 @@ static cJSON *sched_json(const sched_t *r, long declared, long long now) {
   cJSON *o = cJSON_CreateObject();
   cJSON_AddBoolToObject(o, "tracked", r != NULL);
   cJSON_AddNumberToObject(o, "declaredInterval", (double)declared);
+  /* the system-wide cadence policy (core/cadence.h) applied to this row */
+  cJSON_AddNumberToObject(o, "policyInterval", (double)cadence_apply(declared));
+  cJSON_AddStringToObject(o, "policy", cadence_mode_for(declared));
   if (r && r->effective > 0) cJSON_AddNumberToObject(o, "effectiveInterval", (double)r->effective);
   else cJSON_AddNullToObject(o, "effectiveInterval");
   cJSON_AddNumberToObject(o, "consecutiveFailures", r ? r->failures : 0);

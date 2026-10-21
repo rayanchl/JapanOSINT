@@ -97,7 +97,7 @@ static int run_watchlist(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def pep_def = {
-  .id = "PEP_CHECK", .collector = "osint", .name = "PEP Check", .run = run_pep,
+  .id = "PEP_CHECK", .collector = "osint_" "investigation", .name = "PEP Check", .run = run_pep,
   .category = "investigation", .type = "api", .url = "https://api.opensanctions.org/",
   .description = "Politically-exposed-person screening via OpenSanctions (requires OPENSANCTIONS_API_KEY).",
   .free_tier = 0,
@@ -105,7 +105,7 @@ static const source_def pep_def = {
 REGISTER_SOURCE(pep_def)
 
 static const source_def watchlist_def = {
-  .id = "WATCHLIST_CHECK_NEW", .collector = "osint", .name = "Watchlist Check", .run = run_watchlist,
+  .id = "WATCHLIST_CHECK_NEW", .collector = "osint_" "investigation", .name = "Watchlist Check", .run = run_watchlist,
   .category = "investigation", .type = "api", .url = "https://api.opensanctions.org/",
   .description = "Sanctions / watchlist screening via OpenSanctions (requires OPENSANCTIONS_API_KEY).",
   .free_tier = 0,

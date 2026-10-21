@@ -102,7 +102,7 @@ static int cred_run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def credential_leak_def = {
-  .id = "CREDENTIAL_LEAK_SEARCH", .collector = "osint",
+  .id = "CREDENTIAL_LEAK_SEARCH", .collector = "osint_" "investigation",
   .name = "Credential Leak Search", .run = cred_run,
   .category = "investigation", .type = "api", .url = "https://api.github.com/",
   .description = "Searches public GitHub code for an entity in credential contexts (requires GITHUB_TOKEN).",

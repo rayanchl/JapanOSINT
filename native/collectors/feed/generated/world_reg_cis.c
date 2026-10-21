@@ -155,7 +155,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def cis_registry_def = {
-  .id = "CIS_REGISTRY", .collector = "osint",
+  .id = "CIS_REGISTRY", .collector = "osint_" "government",
   .name = "Russia/CIS Company & Court Registry Sweep",
   .name_ja = "ロシア・CIS 企業・裁判所レジストリ横断検索",
   .update_interval_sec = 0, .run = run,

@@ -32,6 +32,7 @@
 #include "camera_stills.h"
 #include "visualsearchapi.h"   /* GET /api/cameras/visual-search */
 #include "camera_dupes.h"      /* GET /api/admin/cameras/duplicates */
+#include "cadence.h"           /* GET/PUT /api/sources/cadence */
 #include "thresholds.h"        /* /api/admin/thresholds */
 #include "cameraproxy.h"
 #include "uploadapi.h"
@@ -2416,11 +2417,38 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         reply_json(c, 200, body); free(body); return;
       } }
 
+    /* GET /api/sources/cadence — the system-wide cadence policy, its
+     * provenance and what it costs in runs/day; PUT (platform operator) sets
+     * it: {"global_interval_sec":N,"min_interval_sec":N,"max_interval_sec":N},
+     * 0 clears a field, a field left out keeps its value. Takes effect in the
+     * running scheduler without a restart (cadence.h). */
+    if (eq(u, "/api/sources/cadence")) {
+      int is_put = (hm->method.len == 3 && memcmp(hm->method.buf, "PUT", 3) == 0) ||
+                   (hm->method.len == 4 && memcmp(hm->method.buf, "POST", 4) == 0);
+      if (is_put) {
+        int oc = opgate_check(&usr);
+        if (oc == -401)  { reply_json(c,401,"{\"error\":\"Auth required\"}"); return; }
+        if (oc == -1403) { reply_json(c,403,"{\"error\":\"Platform operator access not configured\"}"); return; }
+        if (oc != 0)     { reply_json(c,403,"{\"error\":\"Platform operator role required\"}"); return; }
+        char b[512] = {0};
+        if (hm->body.len && hm->body.len < sizeof b) memcpy(b, hm->body.buf, hm->body.len);
+        cadence_policy cur = cadence_get(), np; const char *err = NULL;
+        if (cadence_parse(b, &cur, &np, &err) != 0 || cadence_set(g_db, &np, usr.email, &err) != 0) {
+          char eb[256]; snprintf(eb, sizeof eb, "{\"error\":\"%s\"}", err ? err : "invalid policy");
+          reply_json(c, 400, eb); return;
+        }
+      }
+      char *body = cadence_json(g_db);
+      reply_json(c, 200, body); free(body); return;
+    }
     if (eq(u, "/api/sources/stats")) { route_sources_stats(c); return; }
-    /* GET /api/sources/search?q=&kind=&k= — the registry by meaning
-     * (core/sourceindexapi.h). Embeds the query: off the loop. Matched
-     * before /api/sources/:id, which would read "search" as an id. */
-    if (eq(u, "/api/sources/search")) {
+    /* GET /api/sources/semantic?q=&kind=&k= — the registry by MEANING
+     * (core/sourceindexapi.h). Embeds the query: off the loop. It was
+     * registered as /api/sources/search, which shadowed the Sources page's
+     * filtered, paged search of the same name (sourceapi.c, below) — two
+     * sessions, one path. The semantic route lives beside /api/intel/semantic
+     * now; the page keeps the name its filters are documented under. */
+    if (eq(u, "/api/sources/semantic")) {
       sem_spawn(c, hm, sourceindexapi_search, "", "", opgate_check(&usr) == 0);
       return;
     }

@@ -6,6 +6,8 @@ import { usePagedList } from '../../hooks/usePagedList.js';
 import { Page, Card, Pill, Button, Input, Select, Segmented, Toggle, ErrorNotice, EmptyState, LoadingState, BoundNote, PagedFooter, cx } from '../ui/kit.jsx';
 import SourcesPanel from '../panels/SourcesPanel.jsx';
 import { relativeTime } from '../../utils/time.js';
+import CadenceCard from './CadenceCard.jsx';
+import { useAuthOptional } from '../../auth/AuthContext.jsx';
 import { fmtInterval, fmtCount, statusTone, gradeTone, searchPath, SEARCH_KEYS, NOT_MEASURED } from '../../utils/sourceFormat.js';
 
 /* /console/sources — the registry, searched and paged on the server
@@ -67,6 +69,8 @@ export default function SourcesListPage() {
   const summary = useApi('/api/status?summary=1', { poll: 30000 });
   const collectors = useApi('/api/collectors');
   const sum = summary.data?.summary;
+  const auth = useAuthOptional();
+  const canEditCadence = Boolean(auth?.isPlatformOperator || auth?.canManageWorkspace);
   const facets = list.meta?.facets;
 
   return (
@@ -78,6 +82,7 @@ export default function SourcesListPage() {
       </div>}
     >
       {showProbe && <div className="absolute top-3 right-3 z-40"><SourcesPanel onClose={() => setShowProbe(false)} /></div>}
+      <CadenceCard canEdit={canEditCadence} />
 
       {summary.error && <ErrorNotice error={summary.error} title="Could not load the fleet summary" onRetry={summary.reload} />}
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2">

@@ -263,7 +263,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def propublica_nonprofit_def = {
-  .id = "PROPUBLICA_NONPROFIT", .collector = "osint",
+  .id = "PROPUBLICA_NONPROFIT", .collector = "osint_" "investigation",
   .name = "ProPublica Nonprofit Explorer", .name_ja = "ProPublica 非営利団体検索",
   .update_interval_sec = 0, .run = run,
   .category = "investigation", .type = "api",
@@ -274,7 +274,7 @@ static const source_def propublica_nonprofit_def = {
 REGISTER_SOURCE(propublica_nonprofit_def)
 
 static const source_def uk_charities_def = {
-  .id = "UK_CHARITIES", .collector = "osint",
+  .id = "UK_CHARITIES", .collector = "osint_" "investigation",
   .name = "UK Charity Commission Register", .name_ja = "英国慈善団体登録",
   .update_interval_sec = 0, .run = run,
   .category = "investigation", .type = "api",
@@ -285,7 +285,7 @@ static const source_def uk_charities_def = {
 REGISTER_SOURCE(uk_charities_def)
 
 static const source_def canada_charities_def = {
-  .id = "CANADA_CHARITIES", .collector = "osint",
+  .id = "CANADA_CHARITIES", .collector = "osint_" "investigation",
   .name = "Canada Registered Charities", .name_ja = "カナダ登録慈善団体",
   .update_interval_sec = 0, .run = run,
   .category = "investigation", .type = "api",

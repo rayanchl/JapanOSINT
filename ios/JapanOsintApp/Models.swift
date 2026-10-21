@@ -440,6 +440,11 @@ struct StatusRow: Decodable, Identifiable, Hashable {
     let engine: String?
     /// scheduled | pivot | unreachable | internal | corpus
     let kind: String?
+    /// Seconds between scheduled runs as the source declares them (null for a
+    /// pivot), and the SYSTEM-WIDE cadence policy's interval for this row
+    /// (core/cadence.h; GET /api/sources/cadence). Optional: older servers.
+    let updateInterval: Double?
+    let policyInterval: Double?
     let status: String?
     let lastCheck: String?
     let lastSuccess: String?

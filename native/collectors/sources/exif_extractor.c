@@ -166,7 +166,7 @@ static int exif_run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def exif_def = {
-  .id = "EXIF_EXTRACTOR", .collector = "osint", .name = "EXIF Extractor", .run = exif_run,
+  .id = "EXIF_EXTRACTOR", .collector = "osint_" "investigation", .name = "EXIF Extractor", .run = exif_run,
   .category = "investigation", .type = "api", .url = "internal://exif",
   .description = "Image URL → EXIF camera make/model/timestamp + GPS geolocation (free).",
   .free_tier = 1,

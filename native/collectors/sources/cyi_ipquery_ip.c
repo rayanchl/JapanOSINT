@@ -155,7 +155,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def cyi_ipquery_ip_def = {
-  .id = "IPQUERY_IP", .collector = "osint",
+  .id = "IPQUERY_IP", .collector = "osint_" "cyber",
   .name = "ipquery.io IP intelligence with risk flags",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api", .url = "https://api.ipquery.io/",

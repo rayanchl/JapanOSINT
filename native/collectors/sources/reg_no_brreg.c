@@ -138,7 +138,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def no_brreg_def = {
-  .id = "NO_BRREG", .collector = "osint",
+  .id = "NO_BRREG", .collector = "osint_" "government",
   .name = "Norway Brønnøysund Company Registry",
   .name_ja = "ノルウェー ブレンネイスン企業登記",
   .update_interval_sec = 0, .run = run,

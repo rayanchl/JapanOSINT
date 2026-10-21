@@ -157,7 +157,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def ua_prozorro_def = {
-  .id = "UA_PROZORRO", .collector = "osint",
+  .id = "UA_PROZORRO", .collector = "osint_" "government",
   .name = "Prozorro Procurement (Ukraine)", .name_ja = "プロゾロ 公共調達（ウクライナ）",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "api",

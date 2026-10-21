@@ -206,7 +206,7 @@ static int query_portal(const source_ctx *ctx, intel_sink *sink,
 
     /* A portal that ignores `start` serves page 1 again: stop rather than
      * re-emit it until the ceiling and report the multiple as coverage. */
-    const cJSON *f = cJSON_GetArrayItem(results, 0);
+    const cJSON *f = cJSON_GetArrayItem(results, 0);  /* exhaustive-ok: repeated-page guard reads page 1's first id; every record is emitted below */
     const char *fid = f ? jo_sv(f, "id") : NULL;
     if (!fid && f) fid = jo_sv(f, "name");
     if (fid && pages > 0 && !strcmp(fid, prev_first)) {
@@ -312,7 +312,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def opendata_ckan_def = {
-  .id = "OPENDATA_CKAN", .collector = "osint",
+  .id = "OPENDATA_CKAN", .collector = "osint_" "government",
   .name = "CKAN Open-Data Portals", .name_ja = "CKAN オープンデータポータル",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "dataset",
