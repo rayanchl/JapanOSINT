@@ -71,3 +71,27 @@ re-derive work already done. That only helps if the entries are measurements.
 This one was an inference, it was wrong, and it cost four sources. The batch-34
 entry is now marked `CORRECTED` in place rather than deleted, because the
 mistake is the useful part of the record.
+
+## MEASURED, 2026-10-20 — the 100 WEKO pivots answer
+
+`hp3b35_jpweko.c`'s rows shipped unprobed on an endpoint and key set copied from
+batch 25. All 100 were asked about one entity (`研究`) through the real binary on
+2026-10-20; the readings are in **`docs/emit-sources-batch34-35.tsv`** beside
+batch 34's.
+
+**61 OK, 38 `EMPTY_UPSTREAM`, 1 HTTP 500** (`asahikawa-med`, its own error on
+both passes). The copied endpoint and keys hold: every one of the 61 turned a
+WEKO3 `/api/records/?q=` body into records, which is what this batch could not
+check when it was written.
+
+Read the counts for what they are. 1,204 records across the 61, 184 at the
+largest (`JO35_WEKO_WASEDA`), is **one entity's worth from each repository**, not
+a corpus size — these are on-demand pivots and the number moves with the
+question. A repository holding nothing for `研究` is an honest empty, not a dead
+row; a different entity moves rows between the two columns. What the pass proves
+is reach and shape, not how much any repository holds.
+
+The identity question is still open: this audit reads EMITTED, so records keying
+onto each other inside a run would not show. Batch 35's keys are inherited
+rather than measured, which makes them the first to put through
+`audit_registry_emit.py`'s stored reading.

@@ -143,14 +143,47 @@ merged under first, and so to **batch 37** (`docs/batch37/STAGING_README.md`,
 unprobed). Before picking `<N>`:
 `git ls-tree -r --name-only origin/main | grep -oE '(batch|hp3b)[0-9]+' | sort -u`.
 
-**Batches 34 and 35 are unverified, for the same reason as batch 31:**
-authored 2026-10-04 in a session whose network policy allowed only Anthropic
-APIs, package registries and GitHub, so nothing was fetched and there is no
-`verified-sources-batch3{4,5}.tsv`. Both are built to be as close to provable as
-an unprobed batch can be — **every host is proven live by a different row
-already in the tree**, and every path, parameter set, paging rule and envelope
-is fixed by a specification or copied from a row that passed the emit audit —
-and **both have manifests**, so the probe and emit tools point straight at them.
+**Batches 34 and 35 were authored unverified and are now MEASURED
+(2026-10-20): `docs/emit-sources-batch34-35.tsv`.** They were written
+2026-10-04 in a session whose network policy allowed only Anthropic APIs,
+package registries and GitHub, so nothing was fetched; both were then built to
+be as close to provable as an unprobed batch can be — **every host proven live
+by a different row already in the tree**, every path, parameter set, paging rule
+and envelope fixed by a specification or copied from a row that passed the emit
+audit — and both got manifests, so the emit tools pointed straight at them.
+
+All 244 rows were run through the real binary, each failure re-run once:
+**179 OK, 266,390 records emitted**, 42 `EMPTY_UPSTREAM` (the honest empty of
+rule 1 — the endpoint answered and held nothing for that entity), 22 failing
+twice. Three lessons, in order of how much they generalise:
+
+* **"A row that fails twice leaves" would have deleted three national
+  catalogues.** `current_package_list_with_resources` is an expensive bulk
+  action a large CKAN portal disables (403) or never exposes (404) while
+  `package_search` on the same host is served: `data.gov.uk` holds **59,370**
+  datasets, `admin.opendata.az` 1,970, `data.gov.il` 1,203 — 62,543 behind a
+  verdict that read as dead. **An HTTP status is a reading about one REQUEST,
+  not about a host**, so ask the host a second question before believing it is
+  gone. Of the other 19: six are one `ogopendata.com` 502 inside the same
+  minutes, three are bot walls, three the FDSN rows below, one moved, one
+  answers a shape it does not declare, four are transport failures from this
+  container alone, one is a 500.
+* **Reasoning from what an operator DOES got 3 of 5 wrong.** The batch-34
+  review applied its own rule correctly — the FDSN spec defines services and a
+  node runs only some — dropped 11 rows on it, and kept five event catalogues
+  on the reasoning that those operators run monitoring networks. NOA (400),
+  KOERI (404) and ICGC (404) do not serve `event/1`. The doc said so itself:
+  "a probe may still find one of the kept five unimplemented". One request each
+  settled what a paragraph of inference could not.
+* **The copied keys reached, and are still not verified.** Batch 35's 61 live
+  WEKO pivots prove the endpoint and key set carried over from batch 25 produce
+  records. They prove nothing about identity: this audit reads EMITTED, and a
+  rule-4b collision is invisible to it. Its 1,204 records are also one
+  entity's worth per repository, not a corpus size — they move with the
+  question, as a pivot's counts do.
+
+Nothing was removed on this reading: the removals are ~8 rows rather than 22,
+and that moves the registry count and both floors.
 
 * **Batch 34, 139 rows** (`hp3b34_{ckanbulk,fdsnstation,fdsnevent,socratacat}.c`):
   95 CKAN `current_package_list_with_resources`, 15 FDSN `station/1`
@@ -161,11 +194,23 @@ and **both have manifests**, so the probe and emit tools point straight at them.
   harvesting but could not be ASKED about an entity — endpoint and keys copied
   from batch 25, which ran them through the emit audit and `--check-filter`.
 
+What is still unrun on them — the emit audit above answers neither question:
+
 ```sh
-python3 native/tools/audit_registry_emit.py --bin ./bin/japanosint --match JO34_ --jobs 6 --timeout 220
-python3 native/tools/audit_registry_emit.py --bin ./bin/japanosint --match JO35_ --jobs 6 --timeout 220
+# rule 4b: do the 179 OK rows STORE what they emit, or key onto each other?
+python3 native/tools/audit_registry_emit.py --bin ./bin/japanosint \
+        --match '^JO3[45]_' --jobs 6 --timeout 220 --out sweep3435.tsv
+# rule 4d: does each pivot's filter actually filter? (doubles the requests)
 python3 native/tools/probe_hp_batch.py docs/candidate-sources-batch3{4,5}.*.txt --check-filter
 ```
+
+And **21 of the 179 stop dead on the ceiling**: 19 CKAN portals at exactly
+2,000 (20 pages x 100) — Tokyo Metro, govdata.de, opendata.swiss, data.ca.gov,
+Berlin, Hamburg, Toscana, Milano, data.gov.ie among them — and the two
+surviving FDSN event catalogues (ETHZ, SCEDC) at exactly 20,000 (20 x 1,000).
+A round number equal to ceiling x page size is never the upstream's own total;
+each wants a per-row `page_max` measured against its `result.count`, which the
+same envelope already carries.
 
 Two review findings from batch 34 that generalise:
 

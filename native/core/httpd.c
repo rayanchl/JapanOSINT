@@ -32,8 +32,8 @@
 #include "sourceindexapi.h"
 #include "camera_stills.h"
 #include "visualsearchapi.h"   /* GET /api/cameras/visual-search */
-#include "camera_dupes.h"
-#include "cadence.h"         /* GET/PUT /api/sources/cadence */      /* GET /api/admin/cameras/duplicates */
+#include "camera_dupes.h"     /* GET /api/admin/cameras/duplicates */
+#include "cadence.h"          /* GET/PUT /api/sources/cadence */
 #include "cameraproxy.h"
 #include "uploadapi.h"
 #include "ffmpeg.h"

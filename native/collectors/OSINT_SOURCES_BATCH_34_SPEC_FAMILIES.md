@@ -160,3 +160,64 @@ id-set diff against HEAD confirmed exactly the 11 intended ids were gone after
 the footers were restored.
 
 Counts after review: ckanbulk 95, fdsnstation 15, fdsnevent 5, socratacat 24.
+
+## MEASURED, 2026-10-20 — and the reasoning above was 3-for-5 wrong
+
+This batch shipped unprobed (the authoring session's network policy reached
+Anthropic APIs, package registries and GitHub, nothing else). Both batches were
+run through the real binary on 2026-10-20 — 244 rows of 34 and 35 together, each
+against a fresh copy of a warm template DB, then every failure re-run once:
+**`docs/emit-sources-batch34-35.tsv`**.
+
+```sh
+python3 native/tools/audit_registry_emit.py --bin ./bin/japanosint \
+        --match '^JO3[45]_' --jobs 6 --timeout 220
+```
+
+**179 OK, 266,390 records emitted.** 42 `EMPTY_UPSTREAM` — the endpoint
+answered and held nothing for that particular entity, which is rule 1's honest
+empty and not a defect. 23 rows failed the first pass; one (`PACKAGIST_ALL_PACKAGE_NAMES`)
+was SLOW and completed on the retry at 468,791, so **22 failed twice**.
+
+The section above closes with "A probe may still find one of the kept five
+unimplemented, or one of the dropped eleven live." It found three:
+
+| kept row | reading |
+| --- | --- |
+| `JO34_FDSNEVT_EIDA_GEIN_NOA_GR` | HTTP 400 — no `event/1` |
+| `JO34_FDSNEVT_EIDA_KOERI_BOUN_EDU_TR` | HTTP 404 — no `event/1` |
+| `JO34_FDSNEVT_WS_ICGC_CAT` | HTTP 404 — no `event/1` |
+
+So the review's own lesson — "the FDSN spec defines services; a node runs only
+some of them" — was applied correctly as a rule and got the membership wrong for
+three of the five it kept. Reasoning from what an operator *does* narrowed 15
+rows to 5 and could not get past that; one request each settled it.
+
+**The headline finding is a CKAN one, and it is the reason nothing was removed
+on this reading.** `current_package_list_with_resources` is an expensive bulk
+dump that a large portal disables or never exposes, while `package_search` on
+the same host is served normally. Three rows that failed twice are alive:
+
+* `data.gov.uk` — 403 on the bulk action, **59,370 datasets** via package_search
+* `admin.opendata.az` — 403 on the bulk action, **1,970**
+* `data.gov.il` — 404 on the bulk action, **1,203**
+
+A literal reading of CLAUDE.md's "a row that fails twice leaves" would have
+deleted three national catalogues and 62,543 datasets for using the wrong verb.
+The remaining 19: six are one `ogopendata.com` 502 outage inside the same
+minutes (Houston, Milwaukee, Oklahoma, San Antonio, Virginia, Hawaii — the host
+is alive and its action untested), three are bot walls that refuse the engine
+too, three are the FDSN rows above, `catalog.data.gov` has moved,
+`catalogue.data.govt.nz` answers 200 in a shape that is not the declared one,
+four are transport failures from this container alone, and `asahikawa-med`'s
+WEKO answers 500. Each row's diagnosis is the TSV's last column.
+
+Still open on this batch, and not done here:
+
+* **rule 4b is unmeasured** for the 179 OK rows. This audit reads EMITTED; a
+  collision between records keying onto each other is invisible to it. Batch 35
+  inherited its keys from batch 25 and is the first to distrust.
+* **21 rows sit at exactly 2,000 or 20,000** — the 20-page ceiling — and need a
+  per-row `page_max` measured against each portal's own `result.count`.
+* the three alive CKAN rows want re-pointing onto the `package_search` shape
+  `od_ckan_walk` already serves.
