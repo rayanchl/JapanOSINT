@@ -95,3 +95,46 @@ The identity question is still open: this audit reads EMITTED, so records keying
 onto each other inside a run would not show. Batch 35's keys are inherited
 rather than measured, which makes them the first to put through
 `audit_registry_emit.py`'s stored reading.
+
+## Rules 4b and 4d measured on the 100 WEKO pivots (2026-10-21)
+
+Both questions this doc left open are now answered, and the first one needed a
+different tool than the obvious one.
+
+**Rule 4b — do they STORE what they emit?** `audit_registry_emit.py` cannot
+answer it for a pivot: it runs every row with no entity, so all 100 came back
+`NEEDS_ENTITY` in the registry sweep, a verdict that reads like a pass and is an
+abstention. Asking the binary directly instead — `--run <id> 研究`, which prints
+both numbers — gives, over **76 of the 100** rows (the run was stopped twice at
+a background time limit, not by a failure):
+
+    76 rows   68,278 emitted   68,312 stored   0 rows losing records
+
+`docs/sweep-stored-batch35-pivots-2026-10-21.tsv`. Stored runs slightly ABOVE
+emitted because each truncation notice is itself a stored uid. **The keys copied
+from batch 25 hold**, which is what this batch could not check when it shipped.
+
+Note how much larger these numbers are than the 1,204 records the first emit
+audit reported for all 100 rows: that pass used a narrower probe entity. **A
+pivot's record count is a property of the question asked, not of the source.**
+
+**Several rows stop at exactly 2,000** — the 20-page ceiling x 100 — and each
+files a truncation notice, which is why stored is one higher than emitted on
+those rows. That is rule 2's bounded view, disclosed in band: WEKO publishes
+`hits.total` (nara-edu holds 3,132 for 研究), so a per-row `page_max` would
+complete *this* entity's answer while another entity could hold half a million.
+Entity runs are excluded from cycling for the same reason. Left bounded and
+disclosed deliberately.
+
+**Rule 4d — does the filter filter?** `probe_hp_batch.py --check-filter`:
+**100/100 PASS, no `FILTER_IGNORED` and no `FILTER_UNCHECKED`.** Zero findings
+from a check written to find confident wrong answers deserves one suspicious
+look, so two hosts were then compared by hand:
+
+    nara-edu   研究  707,325 bytes  100 records  hits.total 3,132
+               impossible entity   149 bytes    0 records  total 0
+    ehime-u    研究  532,588 bytes  100 records  hits.total 1,372
+               impossible entity   148 bytes    0 records  total 0
+
+A real search API, not a collection handed back whatever is asked. For context,
+65 of batch 31's 360 rows failed this same check.
