@@ -7346,3 +7346,87 @@ RSSX(us_b50_gov_texas_gov_news, "us-b50-gov-texas-gov-news",
      "en", "[\"gov\",\"country:us\",\"publisher:Texas Governor News\",\"government\",\"batch:50\"]",
      3600,
      "Texas Governor News — state government feed (10 entries at probe)")
+
+/* ── browser-profile hosts (restored 2026-10-21) ─────────────────────
+ * Rejected at authoring for refusing every self-identifying agent; fetched
+ * now with the per-host browser profile in core/httpclient.c BROWSER_HOSTS. */
+
+RSSX(us_b50_cpo_noaa_gov, "us-b50-cpo-noaa-gov",
+     "NOAA Climate Program Office", "NOAA Climate Program Office",
+     "us_government", "government",
+     "https://cpo.noaa.gov/feed/",
+     "en", "[\"gov\",\"country:us\",\"publisher:NOAA Climate Program Office\",\"government\",\"batch:50\"]",
+     3600,
+     "NOAA Climate Program Office — official feed; the host admits browser-profile requests only (core/httpclient.c BROWSER_HOSTS)")
+
+RSSX(us_b50_globalocean_noaa_gov, "us-b50-globalocean-noaa-gov",
+     "NOAA Global Ocean Monitoring and Observing Program", "NOAA Global Ocean Monitoring and Observing Program",
+     "us_government", "government",
+     "https://globalocean.noaa.gov/feed/",
+     "en", "[\"gov\",\"country:us\",\"publisher:NOAA Global Ocean Monitoring and Observing Program\",\"government\",\"batch:50\"]",
+     3600,
+     "NOAA Global Ocean Monitoring and Observing Program — official feed; the host admits browser-profile requests only (core/httpclient.c BROWSER_HOSTS)")
+
+RSSX(us_b50_oss_research_noaa_gov, "us-b50-oss-research-noaa-gov",
+     "NOAA Office of Science Support", "NOAA Office of Science Support",
+     "us_government", "government",
+     "https://oss.research.noaa.gov/feed/",
+     "en", "[\"gov\",\"country:us\",\"publisher:NOAA Office of Science Support\",\"government\",\"batch:50\"]",
+     3600,
+     "NOAA Office of Science Support — official feed; the host admits browser-profile requests only (core/httpclient.c BROWSER_HOSTS)")
+
+RSSX(us_b50_wpo_noaa_gov, "us-b50-wpo-noaa-gov",
+     "NOAA Weather Program Office", "NOAA Weather Program Office",
+     "us_government", "government",
+     "https://wpo.noaa.gov/feed/",
+     "en", "[\"gov\",\"country:us\",\"publisher:NOAA Weather Program Office\",\"government\",\"batch:50\"]",
+     3600,
+     "NOAA Weather Program Office — official feed; the host admits browser-profile requests only (core/httpclient.c BROWSER_HOSTS)")
+
+RSSX(us_b50_noaa_gov_rss, "us-b50-noaa-gov-rss",
+     "NOAA News", "NOAA News",
+     "us_government", "government",
+     "https://www.noaa.gov/rss",
+     "en", "[\"gov\",\"country:us\",\"publisher:NOAA News\",\"government\",\"batch:50\"]",
+     3600,
+     "NOAA News — official feed; the host admits browser-profile requests only (core/httpclient.c BROWSER_HOSTS)")
+
+RSSX(us_b50_bls_gov_bls_latest, "us-b50-bls-gov-bls-latest",
+     "BLS — Latest Numbers (Major Economic Indicators)", "BLS — Latest Numbers (Major Economic Indicators)",
+     "statistics", "statistics",
+     "https://www.bls.gov/feed/bls_latest.rss",
+     "en", "[\"gov\",\"country:us\",\"publisher:BLS — Latest Numbers (Major Economic Indicators)\",\"statistics\",\"batch:50\"]",
+     3600,
+     "BLS — Latest Numbers (Major Economic Indicators) — official feed; the host admits browser-profile requests only (core/httpclient.c BROWSER_HOSTS)")
+
+RSSX(us_b50_bls_gov_cpi, "us-b50-bls-gov-cpi",
+     "BLS — Consumer Price Index", "BLS — Consumer Price Index",
+     "statistics", "statistics",
+     "https://www.bls.gov/feed/cpi.rss",
+     "en", "[\"gov\",\"country:us\",\"publisher:BLS — Consumer Price Index\",\"statistics\",\"batch:50\"]",
+     3600,
+     "BLS — Consumer Price Index — official feed; the host admits browser-profile requests only (core/httpclient.c BROWSER_HOSTS)")
+
+RSSX(us_b50_diplomaticrooms_state_gov, "us-b50-diplomaticrooms-state-gov",
+     "US Department of State — Office of Fine Arts (Diplomatic Reception Rooms)", "US Department of State — Office of Fine Arts (Diplomatic Reception Rooms)",
+     "us_government", "government",
+     "https://www.diplomaticrooms.state.gov/feed/",
+     "en", "[\"gov\",\"country:us\",\"publisher:US Department of State — Office of Fine Arts (Diplomatic Reception Rooms)\",\"government\",\"batch:50\"]",
+     3600,
+     "US Department of State — Office of Fine Arts (Diplomatic Reception Rooms) — official feed; the host admits browser-profile requests only (core/httpclient.c BROWSER_HOSTS)")
+
+RSSX(us_b50_jpl_nasa_gov_news, "us-b50-jpl-nasa-gov-news",
+     "NASA JPL News", "NASA JPL News",
+     "us_research", "science",
+     "https://www.jpl.nasa.gov/feeds/news/",
+     "en", "[\"gov\",\"country:us\",\"publisher:NASA JPL News\",\"science\",\"batch:50\"]",
+     3600,
+     "NASA JPL News — official feed; the host admits browser-profile requests only (core/httpclient.c BROWSER_HOSTS)")
+
+RSSX(us_b50_sdcwa_org, "us-b50-sdcwa-org",
+     "San Diego County Water Authority", "San Diego County Water Authority",
+     "us_local", "government",
+     "https://www.sdcwa.org/feed/",
+     "en", "[\"gov\",\"country:us\",\"publisher:San Diego County Water Authority\",\"government\",\"batch:50\"]",
+     3600,
+     "San Diego County Water Authority — official feed; the host admits browser-profile requests only (core/httpclient.c BROWSER_HOSTS)")

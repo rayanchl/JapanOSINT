@@ -39,7 +39,32 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 57,062** (2026-10-21): the 56,955 below, plus
+**The registered count is 57,076** (2026-10-21): the 57,062 below plus 15
+batch-50 feeds restored, less one duplicate FAA row.
+
+**Browser profile for hosts that refuse every honest agent** (2026-10-21, the
+repository owner's decision, reversing the earlier "never impersonate a
+browser" rule FOR LISTED HOSTS ONLY): `BROWSER_HOSTS` in `core/httpclient.c`.
+`http_request()` gives a request to a listed host a browser User-Agent plus
+`Accept-Language` and `Sec-Fetch-*` (replacing any `User-Agent` the caller set)
+and keeps the caller's `Accept` — NOAA answers an HTML `Accept` with a 202
+challenge, and `www.bls.gov` needs the `Sec-Fetch-*` headers, not just the
+agent. Every other host still identifies itself. Admit a host only after
+bisecting it: engine agent, the agent without "collector", a bare
+`JapanOSINT/1.0` — the per-host `UA_OVERRIDE` table is the answer when one of
+those passes. Listing `registry.faa.gov` revived `FAA_REGISTRY` (31 fields:
+owner, address, Mode S) and `US_FAA_AIRCRAFT_REGISTRY`, which was asking for
+`Nametxt=` (the form) where `nametxt=…&sort_option=1` returns results: 1,729
+aircraft for one operator over 36 pages, keyed `N-Number+Serial Number` because
+an N-number can hold a reservation row and an aircraft row. A third FAA row,
+`FAA_NNUMBER_REGISTRY`, read the same page as anchors — once the 403 lifted it
+stored the site's navigation links as aircraft, a confident wrong answer — and
+is removed as a duplicate of `FAA_REGISTRY`. **When a fix lets a refused row
+through, read what it stores**: a 403 notice is honest, a page of nav links is
+not. And `sec-reliefweb-headlines` was never an agent problem: its URL 301s to
+plain `http://`, where a firewall answers a zero-byte 202; the curl CLI hid it.
+
+**The registered count was 57,062** (2026-10-21): the 56,955 below, plus
 **batch 51's 136** Hong Kong and Macao government feeds and China News Service
 (`collectors/sources/cn_feeds_batch51.c`, read off the publishers' own RSS
 directories), less **29 rows found taken over or injected by a sweep of every

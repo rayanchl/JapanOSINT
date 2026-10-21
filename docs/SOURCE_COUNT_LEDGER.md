@@ -5,7 +5,23 @@ was seeded from, what it measured and what it taught. Moved out of `CLAUDE.md`
 on 2026-10-19 so that file keeps the rules and the current number; the lessons
 that a new batch must not relearn are summarised there. Newest first.
 
-**The registered count is 57,062** (2026-10-21): 56,955 + 136 (batch 51) − 29 (takeovers).
+**The registered count is 57,076** (2026-10-21): 57,062 + 15 − 1.
+
+* **+15**: the batch-50 feeds that refused every honest agent, restored with
+  the per-host browser profile (`BROWSER_HOSTS`, `core/httpclient.c`): five
+  NOAA offices, BLS Latest Numbers and CPI, NASA JPL news (100 items), State's
+  Office of Fine Arts, San Diego County Water Authority, the UK Government
+  Cyber Coordination Centre, the Intelligence and Security Committee, NHS 24,
+  METI Hokkaido's Atom feed and the Japan Writers' Association. All 15 OK
+  through the binary.
+* **−1**: `FAA_NNUMBER_REGISTRY` (`hp_americas_deep.c`), a duplicate of
+  `FAA_REGISTRY` that read the N-number page as anchors.
+* Two existing pivots recovered by the same host entry: `FAA_REGISTRY` (one
+  31-field record per N-number) and `US_FAA_AIRCRAFT_REGISTRY` (re-pointed at
+  the GET form of the owner search; 1,729 emitted / 1,729 stored for one
+  operator). `sec-reliefweb-headlines` re-pointed at its final https URL: 20.
+
+**The registered count was 57,062** (2026-10-21): 56,955 + 136 (batch 51) − 29 (takeovers).
 
 * **+136 — batch 51**, Hong Kong and Macao government feeds plus China News
   Service (`collectors/sources/cn_feeds_batch51.c`): news.gov.hk by category,
