@@ -1962,26 +1962,6 @@ static const hp_source HP3B19_CYBER[] = {
       "telecoms regulator and its advisories carry operator-level "
       "detail that a general national CERT would not publish" },
 
-  { .id = "CERTGH_WP_POSTS", .name = "CERT-GH Ghana — advisories as structured records",
-    .name_ja = "ガーナCERT 勧告",
-    .category = "threat", .portal = "https://cert-gh.org",
-    .record_type = "advisory-record",
-    .tags = "\"cert\",\"csirt\",\"ghana\",\"advisory\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cert-gh.org/wp-json/wp/v2/posts?per_page=50",
-    .headers = { "User-Agent: JapanOSINT-research/1.0 (+https://github.com/)" },
-    .body_keys = "content.rendered",
-    .date_keys = "date",
-    .detail_key = "id",
-    .detail_url = "https://cert-gh.org/wp-json/wp/v2/posts/{v}",
-    .interval = 86400,
-    .page_param = "offset",
-    .page_size = 50,
-    .title_keys = "title.rendered",
-    .description = "Ghana's national CERT advisories and alerts as structured "
-      "records with timestamps and full body text. West African CERT "
-      "output is almost entirely absent from aggregated threat feeds "
-      "despite the region's fraud and mobile-money attack volume" },
 };
 
 HP_REGISTER_TABLE(HP3B19_CYBER)

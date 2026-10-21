@@ -932,18 +932,20 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   cJSON *features = cJSON_CreateArray();
   int budget = (int)stop_cap;
-  long done = 0, failed = 0;
+  long done = 0, failed = 0, malformed = 0;
+  int cancelled = 0, limited = 0;
+  long catalogue = cJSON_GetArraySize(body);
   feedstat tot; memset(&tot, 0, sizeof tot);
 
   cJSON *row;
   cJSON_ArrayForEach(row, body) {
-    if (feed_limit > 0 && done >= feed_limit) break;
-    if (ctx->cancel && *ctx->cancel) break;
+    if (feed_limit > 0 && done >= feed_limit) { limited = 1; break; }
+    if (ctx->cancel && *ctx->cancel) { cancelled = 1; break; }
 
     const char *org = jo_sv(row, "organization_id");
     const char *feed = jo_sv(row, "feed_id");
     const char *url = jo_sv(row, "file_url");
-    if (!org || !feed || !url) continue;
+    if (!org || !feed || !url) { malformed++; continue; }
     const char *org_name = jo_sv(row, "organization_name");
     const char *feed_name = jo_sv(row, "feed_name");
 
@@ -1045,6 +1047,40 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int n = geojson_emit_features(sink, ctx->source_id, features);
   cJSON_Delete(features);
   fprintf(stderr, "[gtfs-jp] emitted %d stop features\n", n);
+
+  /* Rule 2: a run that did not ingest the whole catalogue says so in the data.
+   * It used to stop silently on a cancel or GTFS_JP_FEED_LIMIT, skip failed
+   * downloads without a trace, and cap the stop LAYER at GTFS_JP_STOP_CAP —
+   * so a partial read looked identical to a complete one. Every stop is still
+   * written to gtfs_stops; the cap bounds only the map features emitted. */
+  long not_reached = catalogue - done - failed - malformed;
+  int stop_capped = budget <= 0 && tot.stops > n;
+  if (cancelled || limited || failed || malformed || stop_capped) {
+    char why[320];
+    snprintf(why, sizeof why,
+             "%ld of %ld catalogue feeds ingested: %ld not reached%s, %ld failed "
+             "to download or commit, %ld catalogue rows without a feed URL%s",
+             done, catalogue, not_reached,
+             cancelled ? " (run cancelled)" : limited ? " (GTFS_JP_FEED_LIMIT)" : "",
+             failed, malformed,
+             stop_capped ? "; stop map features capped by GTFS_JP_STOP_CAP" : "");
+    cJSON *extra = cJSON_CreateObject();
+    if (extra) {
+      cJSON_AddNumberToObject(extra, "feeds_catalogue", (double)catalogue);
+      cJSON_AddNumberToObject(extra, "feeds_ingested", (double)done);
+      cJSON_AddNumberToObject(extra, "feeds_failed", (double)failed);
+      cJSON_AddNumberToObject(extra, "feeds_not_reached", (double)not_reached);
+      cJSON_AddNumberToObject(extra, "catalogue_rows_malformed", (double)malformed);
+      cJSON_AddBoolToObject(extra, "cancelled", cancelled);
+      cJSON_AddNumberToObject(extra, "stops_ingested", tot.stops);
+      cJSON_AddNumberToObject(extra, "stop_features_emitted", n);
+    }
+    jo_truncation_notice_ex(sink, ctx->source_id, NULL, done, catalogue, why,
+                            cancelled ? "the next scheduled run re-reads the catalogue"
+                            : stop_capped ? "raise GTFS_JP_STOP_CAP (stops are all in gtfs_stops)"
+                            : limited ? "unset GTFS_JP_FEED_LIMIT"
+                            : "failed feeds are retried on the next run", extra);
+  }
   return (done > 0) ? 0 : -1;
 }
 

@@ -5,7 +5,67 @@ was seeded from, what it measured and what it taught. Moved out of `CLAUDE.md`
 on 2026-10-19 so that file keeps the rules and the current number; the lessons
 that a new batch must not relearn are summarised there. Newest first.
 
-**The registered count is 57,409** (2026-10-21, later the same day): 57,408
+**The registered count is 57,536** (2026-10-21): main's 57,415 + this branch's
+121 (+136 batch 51, −29 takeovers, +15 browser-profile feeds, −1 duplicate FAA
+row), both on 56,955. The merge kept main's `adaptive_interval` on every row
+and this branch's removal of the 29 taken-over rows, whose ids main had
+edited; no removed id is back in any table or manifest.
+
+**This branch's count was 57,076** (2026-10-21): 57,062 + 15 − 1.
+
+* **+15**: the batch-50 feeds that refused every honest agent, restored with
+  the per-host browser profile (`BROWSER_HOSTS`, `core/httpclient.c`): five
+  NOAA offices, BLS Latest Numbers and CPI, NASA JPL news (100 items), State's
+  Office of Fine Arts, San Diego County Water Authority, the UK Government
+  Cyber Coordination Centre, the Intelligence and Security Committee, NHS 24,
+  METI Hokkaido's Atom feed and the Japan Writers' Association. All 15 OK
+  through the binary.
+* **−1**: `FAA_NNUMBER_REGISTRY` (`hp_americas_deep.c`), a duplicate of
+  `FAA_REGISTRY` that read the N-number page as anchors.
+* Two existing pivots recovered by the same host entry: `FAA_REGISTRY` (one
+  31-field record per N-number) and `US_FAA_AIRCRAFT_REGISTRY` (re-pointed at
+  the GET form of the owner search; 1,729 emitted / 1,729 stored for one
+  operator). `sec-reliefweb-headlines` re-pointed at its final https URL: 20.
+
+**The registered count was 57,062** (2026-10-21): 56,955 + 136 (batch 51) − 29 (takeovers).
+
+* **+136 — batch 51**, Hong Kong and Macao government feeds plus China News
+  Service (`collectors/sources/cn_feeds_batch51.c`): news.gov.hk by category,
+  HKMA (20), the Centre for Health Protection (12), RTHK, Census and Statistics,
+  OFCA, the Marine Department, EPD and the AQHI, Macao's transport, labour,
+  statistics, meteorological and cultural bureaux, and chinanews.com.cn (23).
+  Read off the publishers' own feed directories — GovHK's RSS list, the HKMA's,
+  China News Service's `/rss/`, and the page each of 306 HK/Macao government
+  homepages (Wikidata P856) links as "RSS". Mainland ministries publish on
+  WeChat rather than RSS, which is why the mainland share is one news agency.
+  Emit: 135 OK + 1 collision that is the upstream's own 16 byte-identical
+  repeats (Macao's events feed lists one event under several dates); 5,051
+  emitted / 5,037 stored. LegCo's 39 feeds refuse the connection from here.
+* **−29 — a sweep of every feed in the tree for domain takeovers**
+  (2026-10-21): the item titles of 42,593 distinct feed and WordPress-collection
+  URLs were read and 52 flagged; each flag was read by hand. 29 were taken over
+  or injected and are removed with their evidence in
+  `docs/removed-sources-2026-10-21-takeovers.tsv` — Ghana's national CERT
+  publishing casino posts, Visit The Gambia, 11 French commune and Mission
+  Locale sites (three of them COMMENT feeds full of pharma spam), five Italian
+  public bodies, a Miyawaka chamber of commerce in main's batch 49, the Belize
+  Reporter now a Vietnamese lottery site, `japanesecreations` from batch 42,
+  and two of batch 50's own rows found after shipping (`pcsa.jp`, City of
+  Hazard). 23 were kept: Vietnamese papers reporting lottery results, Indonesian
+  news on gambling raids, the Horserace Betting Levy Board, Korean and Japanese
+  bodies publishing in Vietnamese for migrant residents, Serbian and Bosnian
+  `đ`, and four real outlets carrying a sponsored post (The Coast, INFO.FR,
+  Asian Journal, The Village Voice) — a sponsored post is the publisher's own,
+  a takeover is not.
+* Batch 50's retry pass: 15 of the 16 hosts that refused every honest agent
+  still do; Camden County, NJ refuses only the contact URL and is back with the
+  PIB-style agent; Edinburg ND is another "collector" block; Ballwin's feed is
+  still empty and left (`EMPTY_RESULTSET`). Batch 50 now reads 3,243 OK + 2
+  byte-identical collisions.
+
+**The registered count was 56,955** (2026-10-21): main's 53,739 (its batch 49, PR #55) − 6 − 25 + 3,247 (batch 50).
+
+**Main's count was 57,409** (2026-10-21, later the same day): 57,408
 plus one. `ELIA_RENEWABLE_INTRADAY_FORECAST` (batch 19, ods147) was a guess at
 its dataset's content: ods147's own metadata — the first answer
 opendata.elia.be gave in two days — titles it "System imbalance forecast next

@@ -33,6 +33,7 @@
 #include "core/uploadapi.h"
 #include "core/evidence.h"
 #include "core/source_card.h"
+#include "core/feeddisc.h"
 #include "source.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -92,6 +93,11 @@ static void usage(FILE *out) {
     "  --dump-source-cards        print id<TAB>kind<TAB>category<TAB>card for every\n"
     "                             source: the exact text the service index embeds\n"
     "                             (\\n \\t \\\\ escaped), for tools/batch_exclusions.py\n"
+    "  --discover-feeds <file> [--jobs N]\n"
+    "                             ask each site in <file> (URL or host per line) which\n"
+    "                             RSS/Atom feeds its homepage declares, fetch them and\n"
+    "                             print a TSV verdict per feed (PASS, TAKEOVER_SUSPECT,\n"
+    "                             REGISTERED, ...); no database\n"
     "  --ingest <id> <file> [--type email|username|phone|password|auto]\n"
     "           [--materialize] [--dry-run]\n"
     "                             offline breach-dump ingest (no DB, no network)\n"
@@ -155,6 +161,7 @@ int main(int argc, char **argv) {
    * an explicit request for the run that used to happen by accident. */
   static const char *KNOWN[] = {
     "--serve", "--sched", "--list-sources", "--collector-census", "--dump-source-cards",
+    "--discover-feeds", "--jobs",
     "--run", "--dispatch",
     "--ingest", "--type", "--materialize", "--dry-run",
     "--selftest", "--help", "-h", NULL
@@ -187,6 +194,17 @@ int main(int argc, char **argv) {
         return 2;
       }
     }
+  }
+
+  /* --discover-feeds <file> [--jobs N]: no database. core/feeddisc.c. */
+  for (int i = 1; i < argc; i++) {
+    if (strcmp(argv[i], "--discover-feeds")) continue;
+    if (i + 1 >= argc) { fprintf(stderr, "usage: --discover-feeds <file> [--jobs N]\n"); return 2; }
+    int jobs = 16;
+    for (int j = 1; j + 1 < argc; j++)
+      if (!strcmp(argv[j], "--jobs")) jobs = atoi(argv[j + 1]);
+    http_client_global_init();
+    return feeddisc_main(argv[i + 1], jobs);
   }
 
   /* --dump-source-cards: no database, no network — the registry and the one

@@ -1,5 +1,6 @@
 /* core/entity_vec.c — see entity_vec.h. */
 #include "entity_vec.h"
+#include "thresholds.h"         /* operator-tunable similarity cut-offs */
 #include "entitystore.h"
 #include "../source.h"
 #include "../third_party/sqlite3.h"
@@ -28,14 +29,9 @@ const vecindex_spec entity_vec_spec = {
                   "entity_vec_failed, entity_vec_meta; the pod re-embeds)" };
 VECINDEX_REGISTER(entity_vec_spec)
 
+/* core/thresholds.c: runtime override > JO_ENTITY_VEC_COS_FLOOR > default. */
 double entity_vec_cos_floor(void) {
-  const char *e = getenv("JO_ENTITY_VEC_COS_FLOOR");
-  if (e && *e) {
-    char *end = NULL;
-    double v = strtod(e, &end);
-    if (end && end != e && v > 0.0 && v <= 1.0) return v;
-  }
-  return ENTITY_VEC_COS_FLOOR;
+  return threshold_get("entity_vec_cos_floor");
 }
 
 char *entity_vec_text(const char *canonical, const char *romaji) {

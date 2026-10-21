@@ -778,14 +778,6 @@ RSSX(jp_japanese_station, "jp-japanese-station",
      3600,
      "Japanese Station — J-pop, anime and Japanese pop culture")
 
-RSSX(jp_japanese_creations, "jp-japanese-creations",
-     "Japanese Creations", "Japanese Creations",
-     "jp_webmedia", "media",
-     "https://japanesecreations.com/feed/",
-     "en", "[\"news\",\"publisher:Japanese Creations\",\"craft\",\"culture\"]",
-     7200,
-     "Japanese Creations — traditional crafts, food and culture")
-
 RSSX(jp_sustainablejp, "jp-sustainablejp",
      "Sustainable Japan", "Sustainable Japan",
      "jp_webmedia", "media",

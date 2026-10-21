@@ -5,6 +5,7 @@ import { api, ApiError } from '../../api/client.js';
 import { useApi } from '../../hooks/useApi.js';
 import { useMoreRows } from '../../hooks/usePagedList.js';
 import { useAuth } from '../../auth/AuthContext.jsx';
+import ThresholdsTab from './ThresholdsTab.jsx';
 import {
   Page, Section, Row, Card, Pill, Button, Input, Field, Segmented, Sheet, Toggle,
   ConfirmDialog, ErrorNotice, EmptyState, LoadingState, BoundNote, PagedFooter, KV, Spinner, cx, toast,
@@ -20,6 +21,7 @@ const TABS = [
   { value: 'maintenance', label: 'Maintenance' },
   { value: 'breach', label: 'Breach corpus' },
   { value: 'pagination', label: 'Pagination' },
+  { value: 'thresholds', label: 'Thresholds' },
   { value: 'server', label: 'Server' },
 ];
 
@@ -85,7 +87,7 @@ export default function AdminPage() {
   return (
     <Page
       title="Admin panel"
-      subtitle="Operator tools that affect every workspace on this host: the self-healing pipeline, the breach corpus, the pagination survey and the server itself."
+      subtitle="Operator tools that affect every workspace on this host: the self-healing pipeline, the breach corpus, the pagination survey, the embedding-similarity thresholds and the server itself."
       actions={<Segmented value={tab} onChange={setTab} options={TABS} />}
       wide
     >
@@ -93,6 +95,7 @@ export default function AdminPage() {
       {tab === 'maintenance' && <MaintenanceTab onOpenSource={setPipelineId} />}
       {tab === 'breach' && <BreachTab />}
       {tab === 'pagination' && <PaginationTab />}
+      {tab === 'thresholds' && <ThresholdsTab />}
       {tab === 'server' && <ServerTab />}
       <SourcePipelineSheet sourceId={pipelineId} onClose={() => setPipelineId(null)} />
       {auth.isPlatformAdmin === false && (

@@ -1,5 +1,6 @@
 /* core/osint_dispatch.c — see header. Registry-filtered OSINT dispatcher. */
 #include "osint_dispatch.h"
+#include "thresholds.h"         /* operator-tunable similarity cut-offs */
 #include "httpclient.h"
 #include "llm.h"
 #include "prompts.h"
@@ -202,8 +203,9 @@ int osint_resolve_near(const char *canon, char *out, size_t n) {
  * are the router's stored ones, read through lib/vecindex; service_vec.c is
  * not touched. */
 #define RESOLVE_EMB_K        5      /* candidates asked of the router        */
-#define RESOLVE_EMB_MIN_COS  0.60   /* the winner must be at least this near */
-#define RESOLVE_EMB_MARGIN   0.10   /* … and this much nearer than #2        */
+/* The winner must be at least resolve_emb_min_cos near (default 0.60) and
+ * resolve_emb_margin nearer than #2 (default 0.10) — both operator-tunable,
+ * core/thresholds.c (JO_RESOLVE_EMB_MIN_COS / JO_RESOLVE_EMB_MARGIN). */
 
 /* A read-only view of the router's table (never registered, never written). */
 static const vecindex_spec resolve_svec_view = {
@@ -250,8 +252,8 @@ static int resolve_by_embedding(db_handle *db, const char *canon, char *out,
     else if (c > second) second = c;
   }
   free(qv);
-  int ok = bi >= 0 && best >= RESOLVE_EMB_MIN_COS &&
-           (second < -1 || best - second >= RESOLVE_EMB_MARGIN);
+  int ok = bi >= 0 && best >= threshold_get("resolve_emb_min_cos") &&
+           (second < -1 || best - second >= threshold_get("resolve_emb_margin"));
   const source_def *hit = ok ? registry_get(ids[bi]) : NULL;
   ok = hit && is_entity_pivot(hit);
   if (bi >= 0)

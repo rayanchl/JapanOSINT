@@ -39,7 +39,46 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 57,415** (2026-10-21): 57,409 plus the six batch-49 rows
+**The registered count is 57,536** (2026-10-21): main's 57,415 (below) plus
+this branch's 121 on the same 56,955 base — batch 51's 136, less 29
+takeovers, plus 15 browser-profile feeds, less one duplicate FAA row — merged
+with no shared endpoint. On this branch alone the count was **57,076**.
+
+**Browser profile for hosts that refuse every honest agent** (2026-10-21, the
+repository owner's decision, reversing the earlier "never impersonate a
+browser" rule FOR LISTED HOSTS ONLY): `BROWSER_HOSTS` in `core/httpclient.c`.
+`http_request()` gives a request to a listed host a browser User-Agent plus
+`Accept-Language` and `Sec-Fetch-*` (replacing any `User-Agent` the caller set)
+and keeps the caller's `Accept` — NOAA answers an HTML `Accept` with a 202
+challenge, and `www.bls.gov` needs the `Sec-Fetch-*` headers, not just the
+agent. Every other host still identifies itself. Admit a host only after
+bisecting it: engine agent, the agent without "collector", a bare
+`JapanOSINT/1.0` — the per-host `UA_OVERRIDE` table is the answer when one of
+those passes. Listing `registry.faa.gov` revived `FAA_REGISTRY` (31 fields:
+owner, address, Mode S) and `US_FAA_AIRCRAFT_REGISTRY`, which was asking for
+`Nametxt=` (the form) where `nametxt=…&sort_option=1` returns results: 1,729
+aircraft for one operator over 36 pages, keyed `N-Number+Serial Number` because
+an N-number can hold a reservation row and an aircraft row. A third FAA row,
+`FAA_NNUMBER_REGISTRY`, read the same page as anchors — once the 403 lifted it
+stored the site's navigation links as aircraft, a confident wrong answer — and
+is removed as a duplicate of `FAA_REGISTRY`. **When a fix lets a refused row
+through, read what it stores**: a 403 notice is honest, a page of nav links is
+not. And `sec-reliefweb-headlines` was never an agent problem: its URL 301s to
+plain `http://`, where a firewall answers a zero-byte 202; the curl CLI hid it.
+
+**The registered count was 57,062** (2026-10-21): the 56,955 below, plus
+**batch 51's 136** Hong Kong and Macao government feeds and China News Service
+(`collectors/sources/cn_feeds_batch51.c`, read off the publishers' own RSS
+directories), less **29 rows found taken over or injected by a sweep of every
+feed in the tree** (42,593 URLs, 52 flagged, each read by hand —
+`docs/removed-sources-2026-10-21-takeovers.tsv`). New tool:
+`./bin/japanosint --discover-feeds <sites> [--jobs N]` (`core/feeddisc.c`)
+asks each homepage which feeds it declares and verifies them through the
+engine's own client, flagging `TAKEOVER_SUSPECT` on item titles.
+
+**The registered count was 56,955** (2026-10-21): main's 53,739, less six
+
+**Main's count was 57,415** (2026-10-21): 57,409 plus the six batch-49 rows
 the next-day retry pass restored (below). 57,409 was main's 56,955 (below) plus
 this branch's 453 on the same base — the 491 rows the User-Agent header
 recovered from bot walls, less 19 of them whose feed main's batch 50 reads
@@ -1030,6 +1069,7 @@ says why.
 | `tools/diagnose_emit_keys.py` | why a row emitted nothing, and which `title_keys`/`id_keys` fix it |
 | `tools/cleanup_stale_uids.py` | the rows identity fixes left in an OLD database: a plain-key row whose qualified siblings now hold the same record (the keyqual collectors and FRA), and wayback_jp's captures from before digest+timestamp+URL. Reports by default. `--delete` removes, in one transaction, only rows whose replacement is proven to exist and that nothing references. `--self-test` runs it on a scratch DB (also from `make unit`) |
 | `tools/wp_routes_sweep.py` | the WordPress method as a tool: `sweep` asks each host for its REST root (the homepage's `Link rel="https://api.w.org/"`, else `/wp-json`), its post types and one page of each collection, writing routes.tsv/probe.tsv; `manifest` turns probe.tsv into host-type beats and a rejected TSV. Hosts are normalised (`www.` dropped, one row per REST root) because `funq.jp` and `www.funq.jp` reached the same site and only `batch_exclusions.py` noticed |
+| `./bin/japanosint --discover-feeds <sites> [--jobs N]` | RSS/Atom autodiscovery in C (`core/feeddisc.c`, `test_feeddisc`): reads each homepage's own `<link rel="alternate">` declarations (relative hrefs resolve against the URL asked for, so a homepage redirecting to a squatter's domain yields nothing), skips WordPress comment feeds, decodes `&amp;`, then fetches every feed through the engine's HTTP client — same agent, per-host overrides and pacing — and prints a TSV verdict per feed: `PASS`, `TAKEOVER_SUSPECT` (gambling/pharma phrases or an unexpected script in the item titles — a question for a human, not a verdict), `REGISTERED` (any source's portal or hp row URL), or the failure. No database |
 | `tools/gen_hp_batch.py` | manifest → C, one table per beat, `--prefix`/`--batch` so batches never collide — but the batch NUMBER is yours to keep unique: main shipped a batch 32 while a branch was open with its own, both created `docs/verified-sources-batch32.tsv`, and renumbering the branch to 33 after the fact meant touching the manifest, both TSVs, the table, its array name and two batch citations that had landed in `lib/hpengine.h` and `core/hostgate.c`. Rejects duplicate opts, non-integer int opts, and an opt whose value **swallowed the next one** through a stray `\;` |
 
 ## 4. Fetching is not emitting — prove the second one
@@ -1663,9 +1703,30 @@ never put two models' vectors in one index — image vectors have their own.
 `embed_hook_register()` (core/embed_pod.h) runs after each committed batch
 with the vectors in hand — stories (`story_id`, separate from simhash's
 `cluster_id`), `novelty`, and natural-language alert rules are evaluated
-there, never by an embed call on the ingest path. Every threshold (entity
-0.80, story 0.85, alert 0.82, relevance, resolver margin) is a named constant
-with an env override, and **none has been measured on the production model**:
+there, never by an embed call on the ingest path. **Every similarity threshold
+lives in ONE registry, `core/thresholds.{c,h}`** (2026-10-21), and is read
+through `threshold_get("<key>")` — never a module-local `getenv()` or a bare
+constant at the comparison. Resolution per key: a runtime override in
+`settings_thresholds` > its env var (the same names as before; an unparsable or
+out-of-range value is ignored, as it always was) > the module's compiled
+constant, which stays in its header as the documented default. The DB layer is
+cached in memory (loaded by `threshold_migrate()` from `db_open`, refreshed on
+every write), so a hot path never touches SQLite. Eleven keys:
+`entity_vec_cos_floor` 0.80, `story_tau` 0.85, `alert_sem_threshold` 0.82 (a
+rule's own `threshold` still wins), `relevance_sim_min` 0.40,
+`suggest_min_cos` 0.50, `resolve_emb_min_cos` 0.60, `resolve_emb_margin` 0.10,
+`camera_dup_cosine_min` 0.97, `repair_sem_cos_floor` 0.70 and
+`corpus_vec_max_distance` √2 (an L2 distance — lower is stricter) and
+`route_min_cos` 0.55 (which scheduled sources a question with no entity is
+routed to — every one at or above it, no count cap). Operators
+move them live, without a restart, through `GET /api/admin/thresholds` (value,
+`source` db|env|default, default, min, max, env) and
+`PUT /api/admin/thresholds/:key` `{value}` | `{reset:true}` — platform-operator
+gate, a value outside [min,max] is a 400 not a clamp, every change an
+audit-chain row (`threshold.set` / `threshold.reset`, old and new value) — from
+Admin › Thresholds in the web client and Admin › Similarity thresholds on iOS.
+**A new similarity cut-off gets a row in that table**, not its own getenv.
+And **none has been measured on the production model**:
 they were chosen from typical multilingual-e5 scores and tested against a stub.
 Without `JO_EMBED_URL` every feature falls back to its pre-embedding
 behaviour byte for byte; that is pinned per feature in `tests/unit/`.
