@@ -311,3 +311,25 @@ Two things this cost that reasoning would not have caught:
   **1,044** organizations — those rows reach under 2% of its publishers — and 42
   of Israel's 61 have no row at all. Ask `organization_list` before assuming
   either redundancy or coverage.
+
+### Verified after the re-point (2026-10-21)
+
+    data.gov.il          0 ->  1,203   = its declared count, 14 requests
+    admin.opendata.az    0 ->  2,017   = its declared count, 22 requests
+    data.gov.uk          0 -> 40,000 over two runs, of 59,370
+
+All three stored NOTHING before — a `collector-fetch-failure` notice and no
+records. `stored == emitted` on every run; 1,197 of Israel's 1,203 records and
+15,845 of the UK's first 20,000 carry `resources.0.url`, so the inline files are
+parsed and flattened rather than merely fetched (the rest are datasets the
+portals publish with no files, which page 0's 72/100 already predicted).
+
+**The data.gov.uk cycle is additive, which is the hard thing to show.** Two runs
+against one database stored 20,000 and 20,000 for **40,000 DISTINCT** records,
+and the stored position reads
+`...package_search?rows=100&start=40000&sort=id%20asc` — exactly where run 3
+resumes. Nothing was re-read at the seam and nothing skipped: a cycle that
+re-read records would show fewer than 40,000 distinct, and the skip CLAUDE.md
+warns about (the invisible half of a collision) would too. The truncation notice
+on each run is TRUE — 594 pages are needed and 200 were read — and says where it
+stopped.
