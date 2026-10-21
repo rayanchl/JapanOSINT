@@ -14,8 +14,24 @@ struct SuggestEnvelope: Codable, Sendable {
     /// Present when the server answered from its retrieval arm (history,
     /// saved searches, service index) rather than an LLM completion.
     let meta: SuggestMeta?
+    /// Where each suggestion came from (core/suggest.h), retrieval arm only.
+    let items: [SuggestItem]?
 }
-struct SuggestMeta: Codable, Sendable { let retrieval: String? }
+struct SuggestMeta: Codable, Sendable {
+    let retrieval: String?
+    let candidates: Int?
+    let shown: Int?
+    let cut_at: Int?
+    let truncated: Bool?
+    /// "not_requested (…)", "included", or "requested, nothing usable returned".
+    let llm: String?
+}
+struct SuggestItem: Codable, Sendable {
+    let text: String
+    /// "history" | "saved" | "service" | "llm" — "llm" is an AI suggestion,
+    /// only ever present on an `expand=1` answer.
+    let source: String?
+}
 
 struct EntityRef: Codable, Hashable, Sendable, Identifiable {
     let value: String
