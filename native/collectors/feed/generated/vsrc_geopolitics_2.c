@@ -186,7 +186,10 @@ VRSS(sec_reliefweb_disasters_rss, "sec-reliefweb-disasters-rss", "ReliefWeb Disa
 
 VRSS(sec_reliefweb_headlines, "sec-reliefweb-headlines", "ReliefWeb Headlines", "ReliefWeb ヘッドライン",
   "geopolitics", "conflict",
-  "https://reliefweb.int/headlines/rss.xml",
+  /* The old /headlines/rss.xml 301s to a plain-http URL; libcurl follows it
+   * to http, where the firewall answers a zero-byte 202 (measured 2026-10-21;
+   * curl's CLI hid it by upgrading through HSTS). The final https URL: */
+  "https://reliefweb.int/updates/rss.xml?view=headlines",
   "en", "[\"reliefweb\",\"headlines\",\"humanitarian\"]", 3600,
   "Curated ReliefWeb headlines — the fastest of the ReliefWeb channels.");
 

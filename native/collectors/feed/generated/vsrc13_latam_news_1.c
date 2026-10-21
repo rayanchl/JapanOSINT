@@ -85,12 +85,6 @@ VRSS(lat_br_uol, "lat-br-uol", "UOL - breaking news", "ブラジル：ニュー�
   "pt", "[\"bra\",\"news\",\"news\"]", 3600,
   "Publisher-own news feed from UOL; article headlines, timestamps, links and summaries.");
 
-VRSS(lat_bz_reporter, "lat-bz-reporter", "The Reporter Belize - news", "ベリーズ：ニュース - The Reporter Belize - news",
-  "latam_news", "news",
-  "https://www.reporter.bz/feed/",
-  "en", "[\"blz\",\"news\",\"news\"]", 3600,
-  "Publisher-own news feed from The Reporter Belize; article headlines, timestamps, links and summaries.");
-
 VRSS(lat_cl_ciperchile, "lat-cl-ciperchile", "CIPER Chile - investigative journalism", "チリ：ニュース - CIPER Chile - investigative journalism",
   "latam_news", "news",
   "https://www.ciperchile.cl/feed/",

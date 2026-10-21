@@ -331,7 +331,16 @@ int rss_collect(const source_ctx *ctx, intel_sink *sink,
    * the UA) or to spoof (refused). ~10 humanitarian feeds — reliefweb.int,
    * unocha.org, data.humdata.org — are unreachable as a result and are
    * recorded as such rather than quietly worked around. Asking those
-   * publishers for an allowlist entry is the real fix. */
+   * publishers for an allowlist entry is the real fix.
+   *
+   * SUPERSEDED (2026-10-21), twice over. ReliefWeb's four registered feeds
+   * all store records under the agent below today; the one that did not
+   * (sec-reliefweb-headlines) was following a 301 to a plain-http URL and
+   * meeting a firewall's zero-byte 202 there, fixed by naming the final https
+   * URL. And hosts that refuse EVERY honest agent are fetched with a browser
+   * profile by the repository owner's decision: BROWSER_HOSTS in
+   * core/httpclient.c, applied by http_request(). Every other host still gets
+   * the agent below. */
   /* One exception to the paragraph above: core/httpclient.c keeps a per-host
    * table for the handful of publishers whose filter objects to ONE token in
    * an otherwise honest agent, each entry carrying the bisection that proved
