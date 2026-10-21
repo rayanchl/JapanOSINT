@@ -102,6 +102,13 @@ static void test_vocabulary(void) {
   size_t n = fread(buf, 1, sizeof buf - 1, f);
   fclose(f);
   buf[n] = 0;
+  /* A Windows checkout holds source.h with CRLF line endings (.gitattributes
+   * forces LF for *.sh / *.py only), and the " word\n" probe below then misses
+   * every word that closes a line of the list — `wildlife` on 2026-10-21. The
+   * vocabulary is the same text either way, so the CRs are dropped first. */
+  { size_t w = 0;
+    for (size_t r = 0; r < n; r++) if (buf[r] != '\r') buf[w++] = buf[r];
+    buf[w] = 0; }
   const char *start = strstr(buf, "The `category` vocabulary");
   assert(start);
   for (int i = 0; i < SOURCE_CATEGORY_COUNT; i++) {
