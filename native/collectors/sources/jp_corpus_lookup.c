@@ -35,6 +35,7 @@
 #include "lib/jocore.h"          /* jo_trunc_notice: the in-band "shown N of M" */
 #include "core/fts.h"
 #include "core/qembed.h"         /* the vector arm (inert without JO_EMBED_URL) */
+#include "core/service_vec.h"    /* routing a question to its sources */
 #include "third_party/cJSON.h"
 #include "third_party/sqlite3.h"
 #include <string.h>
@@ -232,6 +233,84 @@ static double corpus_vec_max_distance(void) {
   return v > 0 ? v : CORPUS_VEC_MAX_DISTANCE;
 }
 
+/* ── 3. a QUESTION with no entity: read the sources it is about ────────────
+ *
+ * The pipeline's no-entity fallback (core/pipeline.c) sends the raw question
+ * here with entity_type "question" ("flooding near Osaka"). A scheduled source
+ * cannot be dispatched on it — osint_dispatch refuses non-pivots by design —
+ * but its STORED records are what such a question is answered from, and the
+ * service index (core/service_vec.h) can say which sources those are by
+ * meaning. So the keyword arm stops being an AND of every word over the whole
+ * corpus (a sentence matches almost nothing that way) and becomes an OR of the
+ * words over the records of every scheduled source the index ranks as related.
+ *
+ * NO COUNT CAP on the sources: every scheduled source whose card is at least
+ * ROUTE_MIN_COS similar to the question is read. The only bound is the KNN's
+ * own maximum (ROUTE_KNN_MAX); when that many came back and the farthest
+ * still passed the floor, more may exist, and the run says so in the data.
+ * The vector arm stays over the whole corpus, as for an entity. */
+#define ROUTE_KNN_MAX 4096          /* sqlite-vec's ceiling on a KNN's k      */
+#define ROUTE_MIN_COS_DEFAULT 0.55  /* cosine, unit vectors (d^2 = 2 - 2cos)  */
+
+static double route_min_cos(void) {
+  const char *e = getenv("JO_ROUTE_MIN_COS");
+  double v = (e && *e) ? atof(e) : 0;
+  return (v > 0 && v <= 1) ? v : ROUTE_MIN_COS_DEFAULT;
+}
+
+typedef struct { int routed, knn_full; double floor; } corpus_route;
+
+/* The index query, through a pointer so tests/unit/test_corpus_hybrid.c can
+ * stand in a fixed ranking instead of indexing all 48k source cards. */
+static int (*corpus_route_search)(db_handle *, const char *,
+                                  const service_vec_filter *, int,
+                                  service_vec_hit **, service_vec_info *) =
+  service_vec_search;
+
+/* Fill temp.corpus_route with the routed source ids. 0 on success (routed may
+ * be 0: no source is related enough), -1 when the index cannot answer. */
+static int route_question(const source_ctx *ctx, sqlite3 *db, const char *q,
+                          corpus_route *r) {
+  memset(r, 0, sizeof *r);
+  r->floor = route_min_cos();
+  service_vec_filter f = { .kind = "scheduled" };
+  service_vec_hit *h = NULL;
+  service_vec_info info;
+  memset(&info, 0, sizeof info);
+  int n = corpus_route_search(ctx->db, q, &f, ROUTE_KNN_MAX, &h, &info);
+  if (n < 0) {
+    fprintf(stderr, "[corpus] routing unavailable (%s) — whole corpus\n", info.reason);
+    return -1;
+  }
+  if (sqlite3_exec(db, "CREATE TEMP TABLE IF NOT EXISTS corpus_route"
+                       "(id TEXT PRIMARY KEY); DELETE FROM temp.corpus_route;",
+                   NULL, NULL, NULL) != SQLITE_OK) {
+    service_vec_hits_free(h, n);
+    return -1;
+  }
+  sqlite3_stmt *ins = NULL;
+  sqlite3_prepare_v2(db, "INSERT OR IGNORE INTO temp.corpus_route(id) VALUES(?1)",
+                     -1, &ins, NULL);
+  int vec = 0, far_passed = 0;
+  double maxd = 0;
+  for (int i = 0; i < n && ins; i++) {
+    if (h[i].vrank <= 0) continue;          /* keyword-only card match: no score */
+    vec++;
+    double cos = 1.0 - h[i].distance * h[i].distance / 2.0;
+    if (h[i].distance > maxd) { maxd = h[i].distance; far_passed = cos >= r->floor; }
+    if (cos < r->floor) continue;
+    sqlite3_reset(ins);
+    sqlite3_bind_text(ins, 1, h[i].id, -1, SQLITE_TRANSIENT);
+    if (sqlite3_step(ins) == SQLITE_DONE) r->routed++;
+  }
+  sqlite3_finalize(ins);
+  r->knn_full = vec >= ROUTE_KNN_MAX && far_passed;
+  service_vec_hits_free(h, n);
+  fprintf(stderr, "[corpus] question routed to %d scheduled sources (cos >= %.2f%s)\n",
+          r->routed, r->floor, r->knn_full ? ", KNN maximum reached" : "");
+  return 0;
+}
+
 static int corpus_hybrid(const source_ctx *ctx, intel_sink *sink, sqlite3 *db,
                          const char *segq, const char *entity) {
   const char *tenant = ctx->tenant_id;
@@ -249,18 +328,44 @@ static int corpus_hybrid(const source_ctx *ctx, intel_sink *sink, sqlite3 *db,
     return -1;
   }
 
+  /* A question with no entity: the keyword arm reads the routed sources'
+   * records for ANY of its words (section 3 above). When nothing could be
+   * routed it stays the AND over the whole corpus, as for an entity. */
+  corpus_route route = {0};
+  int routed = 0;
+  char *orq = NULL;
+  if (ctx->entity_type && !strcmp(ctx->entity_type, "question") &&
+      route_question(ctx, db, entity, &route) == 0 && route.routed > 0) {
+    orq = malloc(strlen(segq) + 1);
+    if (orq) {
+      /* fts_query_expr joins quoted, space-free tokens with " AND ", so the
+       * separator cannot occur inside a token. */
+      const char *in = segq; char *o = orq;
+      while (*in) {
+        if (!strncmp(in, " AND ", 5)) { memcpy(o, " OR ", 4); o += 4; in += 5; }
+        else *o++ = *in++;
+      }
+      *o = 0;
+      segq = orq;
+      routed = 1;
+    }
+  }
+  const char *rclause = routed
+    ? " AND intel_items.source_id IN (SELECT id FROM temp.corpus_route) " : " ";
+
   /* Keyword total, the same capped count the FTS-only path reports. */
   long fts_total = -1;
   {
-    static const char *C_ANY =
+    char C_ANY[512], C_TEN[512];
+    snprintf(C_ANY, sizeof C_ANY,
       "SELECT COUNT(*) FROM (SELECT 1 FROM intel_items_fts "
       "JOIN intel_items ON intel_items.uid = intel_items_fts.uid "
-      "WHERE intel_items_fts MATCH ?1 LIMIT ?2)";
-    static const char *C_TEN =
+      "WHERE intel_items_fts MATCH ?1%sLIMIT ?2)", rclause);
+    snprintf(C_TEN, sizeof C_TEN,
       "SELECT COUNT(*) FROM (SELECT 1 FROM intel_items_fts "
       "JOIN intel_items ON intel_items.uid = intel_items_fts.uid "
       "WHERE intel_items_fts MATCH ?1 "
-      "AND intel_items.tenant_id IN (?3,'legacy') LIMIT ?2)";
+      "AND intel_items.tenant_id IN (?3,'legacy')%sLIMIT ?2)", rclause);
     sqlite3_stmt *c = NULL;
     if (sqlite3_prepare_v2(db, tf ? C_TEN : C_ANY, -1, &c, NULL) == SQLITE_OK) {
       sqlite3_bind_text(c, 1, segq, -1, SQLITE_TRANSIENT);
@@ -276,16 +381,19 @@ static int corpus_hybrid(const source_ctx *ctx, intel_sink *sink, sqlite3 *db,
   {
     /* The keyword arm: the same bm25 weights as the FTS-only path, so its
      * ranks are the ranks that path would have shown. */
-    static const char *F_ANY =
+    char F_ANY[512], F_TEN[512];
+    snprintf(F_ANY, sizeof F_ANY,
       "SELECT intel_items.uid FROM intel_items_fts "
       "JOIN intel_items ON intel_items.uid = intel_items_fts.uid "
-      "WHERE intel_items_fts MATCH ?1 "
-      "ORDER BY bm25(intel_items_fts,0,10,1,3,2,1,1,2,1), intel_items.uid LIMIT ?2";
-    static const char *F_TEN =
+      "WHERE intel_items_fts MATCH ?1%s"
+      "ORDER BY bm25(intel_items_fts,0,10,1,3,2,1,1,2,1), intel_items.uid LIMIT ?2",
+      rclause);
+    snprintf(F_TEN, sizeof F_TEN,
       "SELECT intel_items.uid FROM intel_items_fts "
       "JOIN intel_items ON intel_items.uid = intel_items_fts.uid "
-      "WHERE intel_items_fts MATCH ?1 AND intel_items.tenant_id IN (?3,'legacy') "
-      "ORDER BY bm25(intel_items_fts,0,10,1,3,2,1,1,2,1), intel_items.uid LIMIT ?2";
+      "WHERE intel_items_fts MATCH ?1 AND intel_items.tenant_id IN (?3,'legacy')%s"
+      "ORDER BY bm25(intel_items_fts,0,10,1,3,2,1,1,2,1), intel_items.uid LIMIT ?2",
+      rclause);
     sqlite3_stmt *f = NULL;
     if (sqlite3_prepare_v2(db, tf ? F_TEN : F_ANY, -1, &f, NULL) == SQLITE_OK) {
       sqlite3_bind_text(f, 1, segq, -1, SQLITE_TRANSIENT);
@@ -320,8 +428,16 @@ static int corpus_hybrid(const source_ctx *ctx, intel_sink *sink, sqlite3 *db,
   sqlite3_stmt *get = NULL, *snip = NULL;
   if (sqlite3_prepare_v2(db, tf ? G_TEN : G_ANY, -1, &get, NULL) != SQLITE_OK) {
     vecindex_fused_free(&L);
+    free(orq);
     return -1;                                   /* → FTS-only path */
   }
+  /* Routed: a semantic neighbour is in the keyword set only if its source was
+   * routed too, or N would count it twice. */
+  sqlite3_stmt *inroute = NULL;
+  if (routed && sqlite3_prepare_v2(db,
+        "SELECT 1 FROM intel_items WHERE uid=?1 AND source_id IN "
+        "(SELECT id FROM temp.corpus_route)", -1, &inroute, NULL) != SQLITE_OK)
+    inroute = NULL;
   if (sqlite3_prepare_v2(db,
         "SELECT snippet(intel_items_fts,-1,'<mark>','</mark>','\xE2\x80\xA6',12) "
         "FROM intel_items_fts WHERE intel_items_fts MATCH ?1 AND rowid = "
@@ -343,6 +459,14 @@ static int corpus_hybrid(const source_ctx *ctx, intel_sink *sink, sqlite3 *db,
         kw = 1;
         const char *x = db_ctext(snip, 0);
         if (x) excerpt = strdup(x);
+      }
+      if (kw && routed && c->frank <= 0) {
+        kw = 0;
+        if (inroute) {
+          sqlite3_reset(inroute);
+          sqlite3_bind_text(inroute, 1, c->key, -1, SQLITE_STATIC);
+          kw = sqlite3_step(inroute) == SQLITE_ROW;
+        }
       }
     }
     if (c->vrank > 0 && !kw) vec_only++;
@@ -378,6 +502,12 @@ static int corpus_hybrid(const source_ctx *ctx, intel_sink *sink, sqlite3 *db,
       cJSON_AddNullToObject(ret, "vector_distance");
     }
     cJSON_AddNumberToObject(ret, "rrf_score", c->score);
+    if (routed) {
+      /* Which sources the keyword arm read, for a question with no entity. */
+      cJSON_AddStringToObject(ret, "keyword_arm", "any word, routed sources only");
+      cJSON_AddNumberToObject(ret, "routed_sources", route.routed);
+      cJSON_AddNumberToObject(ret, "route_min_cos", route.floor);
+    }
     if (c->frank > 0 && c->vrank > 0) both++;
     emitted += emit_hit(sink, r, ret);
     cJSON_Delete(ret);
@@ -385,7 +515,23 @@ static int corpus_hybrid(const source_ctx *ctx, intel_sink *sink, sqlite3 *db,
   }
   sqlite3_finalize(get);
   if (snip) sqlite3_finalize(snip);
+  sqlite3_finalize(inroute);
   vecindex_fused_free(&L);
+  free(orq);
+  segq = NULL;                      /* it may have pointed at orq */
+
+  /* Rule 2: when the KNN's own maximum came back and its farthest still
+   * passed the floor, more sources may be related than were read. */
+  if (routed && route.knn_full) {
+    char scope[140];
+    snprintf(scope, sizeof scope, "route: %.100s", entity);
+    jo_trunc_notice_scoped(sink, ctx->source_id, scope,
+                           "internal://osint/jp-corpus-lookup", route.routed, -1,
+                           "the question was routed to the 4096 nearest scheduled "
+                           "sources the index can return, and the farthest of them "
+                           "still passed the similarity floor, so more may be related",
+                           "raise JO_ROUTE_MIN_COS to narrow the routing");
+  }
 
   fprintf(stderr, "[corpus] hybrid %s: %d emitted (fts arm %d, vector arm %d, "
                   "both %d, semantic-only %d, keyword total %ld)\n",
