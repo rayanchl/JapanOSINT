@@ -333,3 +333,40 @@ re-read records would show fewer than 40,000 distinct, and the skip CLAUDE.md
 warns about (the invisible half of a collision) would too. The truncation notice
 on each run is TRUE — 594 pages are needed and 200 were read — and says where it
 stopped.
+
+## Rule 4b measured (2026-10-21) — and the tool chose what got measured
+
+`docs/sweep-stored-batch34-35-2026-10-21.tsv`, 239 rows through
+`audit_registry_emit.py`. **261,438 emitted / 261,228 stored over the rows with
+a comparable pair: 210 records lost, 0.08%.**
+
+**124 of the 239 came back `NEEDS_ENTITY` and were therefore NOT measured** —
+batch 35's 100 WEKO pivots and batch 34's 24 Socrata pivots. The registry sweep
+runs every row with no entity, which is the trap CLAUDE.md already names ("use
+`audit_batch_emit.py` with the MANIFEST for pivot rows, never the registry
+sweep"). Worth recording that it was walked into anyway, and that the first
+reading of this sweep was reported as "batch 35's keys show zero collisions"
+when those keys had never been exercised. **A verdict of NEEDS_ENTITY is not a
+clean bill of health**; the pivots were then run individually with their probe
+entity, which is the only way to get both numbers for them.
+
+Five scheduled rows lost records, and each was measured against its own body
+before any key was touched — a collision is a question:
+
+| row | lost | reading |
+| --- | --- | --- |
+| `ckan.govdata.de` | 162 of 20,000 | 22 repeated ids in 2,000 records, **22 of 22 byte-identical** — the portal lists the same dataset twice |
+| `FDSNSTA` NOA | 4 of 733 | 733 lines, 729 distinct Network+Station+StartTime, **4 of 4 byte-identical lines** — `col0+col1+col6` is the right key |
+| `data.bodik.jp` | 6 of 18,622 | first 1,000 records hold zero repeats, so these are deeper and unverified |
+| `data.stadt.zuerich.ch` | 20 of 942 | host unreachable at verification time — unverified |
+| Kanazawa | 1 of 320 | host unreachable at verification time — unverified |
+
+Byte-identical duplicates are what the sink's collision guard is *for*: they
+collapse as real dedupe and are not loss. So no key is wrong here, and 27 of the
+210 records remain unverified rather than explained.
+
+**Nine rows hit the 220 s timeout — unmeasured, not failed — and eight of them
+are rows whose ceilings were raised the same day.** That is the cost of the
+fix, not a regression: `data.gov.uk` had 19,728 rows stored when the clock cut
+it, consistent with its 20,000-a-run cycle. Re-measuring them needs a larger
+`--timeout` than a whole-registry sweep can afford.
