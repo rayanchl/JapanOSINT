@@ -15,6 +15,7 @@
 #include "collectortab.h"
 #include "hostgate.h"
 #include "cadence.h"
+#include "source_interval.h"
 #include "../lib/hpengine.h"
 #include "../lib/jocore.h"
 #include "../third_party/cJSON.h"
@@ -288,7 +289,7 @@ static const source_trust *snap_trust(const snapshot *s, const char *id) {
 
 /* ── the compact row every list shares ──────────────────────────────────── */
 
-static cJSON *sched_json(const sched_t *r, long declared, int adaptive, long long now) {
+static cJSON *sched_json(const sched_t *r, const char *id, long declared, int adaptive, long long now) {
   cJSON *o = cJSON_CreateObject();
   cJSON_AddBoolToObject(o, "tracked", r != NULL);
   cJSON_AddNumberToObject(o, "declaredInterval", (double)declared);
@@ -306,6 +307,14 @@ static cJSON *sched_json(const sched_t *r, long declared, int adaptive, long lon
   else cJSON_AddNullToObject(o, "measuredInterval");
   cJSON_AddNumberToObject(o, "policyInterval", (double)cadence_apply(base));
   cJSON_AddStringToObject(o, "policy", cadence_mode_for(base));
+  /* And the one figure that outranks them (core/source_interval.h): an
+   * interval the operator set for THIS source. Null when none is enabled. */
+  long ov = declared > 0 ? source_interval_for(id) : 0;
+  if (ov > 0) cJSON_AddNumberToObject(o, "overrideInterval", (double)ov);
+  else cJSON_AddNullToObject(o, "overrideInterval");
+  cJSON_AddStringToObject(o, "cadenceBasis", declared <= 0 ? "on demand" : ov > 0 ? "override"
+                          : strcmp(cadence_mode_for(base), "declared") ? "policy"
+                          : (adaptive && r && r->freshness > 0) ? "measured" : "declared");
   if (r && r->effective > 0) cJSON_AddNumberToObject(o, "effectiveInterval", (double)r->effective);
   else cJSON_AddNullToObject(o, "effectiveInterval");
   cJSON_AddNumberToObject(o, "consecutiveFailures", r ? r->failures : 0);
@@ -366,7 +375,7 @@ static cJSON *row_json(const reg_ent *e, const snapshot *s, long long now) {
     cJSON_AddStringToObject(tr, "grade", t->grade);
   } else { cJSON_AddNullToObject(tr, "reliability"); cJSON_AddNullToObject(tr, "grade"); }
   cJSON_AddItemToObject(o, "trust", tr);
-  cJSON_AddItemToObject(o, "sched", sched_json(sc, d->update_interval_sec, d->adaptive_interval, now));
+  cJSON_AddItemToObject(o, "sched", sched_json(sc, d->id, d->update_interval_sec, d->adaptive_interval, now));
   return o;
 }
 
@@ -1249,7 +1258,7 @@ char *sourceapi_detail(db_handle *db, const char *id) {
   const source_trust *t = snap_trust(s, id);
   const agg_t *a = snap_agg(s, id);
 
-  cJSON *schedule = sched_json(sc, d->update_interval_sec, d->adaptive_interval, now);
+  cJSON *schedule = sched_json(sc, d->id, d->update_interval_sec, d->adaptive_interval, now);
   add_str_or_null(schedule, "schedule_mode", r && r->schedule_mode[0] ? r->schedule_mode : NULL);
   cJSON_AddStringToObject(schedule, "kind", e ? e->kind : derive_kind(d));
   cJSON_AddItemToObject(o, "schedule", schedule);

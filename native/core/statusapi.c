@@ -1,4 +1,5 @@
 #include "cadence.h"
+#include "source_interval.h"
 #include "statusapi.h"
 #include "collectortab.h"
 #include "intelapi.h"           /* intelapi_is_intel_id — INTEL_SOURCE_IDS */
@@ -363,7 +364,9 @@ static cJSON *status_row(sqlite3_stmt *s, agg_t *A, int na,
   { const source_def *pd = registry_get(id);   /* the system-wide cadence policy applied to this row */
     cJSON_AddItemToObject(o,"policyInterval",
       (pd && pd->update_interval_sec > 0) ? cJSON_CreateNumber((double)cadence_apply(pd->update_interval_sec))
-                                          : cJSON_CreateNull()); }
+                                          : cJSON_CreateNull());
+    long ov = (pd && pd->update_interval_sec > 0) ? source_interval_for(id) : 0;   /* set for this one source */
+    cJSON_AddItemToObject(o,"overrideInterval", ov > 0 ? cJSON_CreateNumber((double)ov) : cJSON_CreateNull()); }
   add_str_or_null(o,"status", status);
   add_str_or_null(o,"lastCheck", ctext(s,6));
   add_str_or_null(o,"lastSuccess", ctext(s,7));

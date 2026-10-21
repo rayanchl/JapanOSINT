@@ -445,6 +445,9 @@ struct StatusRow: Decodable, Identifiable, Hashable {
     /// (core/cadence.h; GET /api/sources/cadence). Optional: older servers.
     let updateInterval: Double?
     let policyInterval: Double?
+    /// An interval the operator set for THIS source (core/source_interval.h;
+    /// PUT /api/sources/:id/interval), which outranks the policy. Optional.
+    let overrideInterval: Double?
     let status: String?
     let lastCheck: String?
     let lastSuccess: String?
