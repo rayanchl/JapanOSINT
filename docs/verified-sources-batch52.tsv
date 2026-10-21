@@ -7,8 +7,9 @@
 # readings, the run line and the database. Raw:
 # docs/emit-sources-batch52-2026-10-21.tsv
 #
-# 22 OK, 0 records lost to uid collision over 29,289 emitted and 29,289 stored.
-# 1 SLOW, which is UNMEASURED and not failed: see the note on its row.
+# 23 OK, 0 records lost to uid collision over 49,289 emitted and 49,289 stored.
+# One row first read SLOW at the tool's 600 s default and was re-measured alone
+# at 2,400 s (docs/emit-sources-batch52-slow-2026-10-21.tsv); see its note.
 #
 # The four JO41_WP_CORP_* rows are in this file because they were recovered by
 # the same fix, but they live in collectors/pivot/table/hp3b41_jpcorpwp.c under
@@ -29,7 +30,7 @@ ansd-ressource	hp3b52_ansd	OK	5	5	5	5	2.0	complete
 ansd-situation-eco-sociale	hp3b52_ansd	OK	570	570	570	570	33.9	complete; page 1 alone gives 50, the page limit
 ansd-statistique-theme	hp3b52_ansd	OK	1	1	1	1	1.5	complete
 hk-legco-bills	hp3b52_hklegco	OK	6884	6884	6884	6884	58.6	complete over 36 pages, exactly the service's own odata.count, no notice
-hk-legco-hansard-speeches	hp3b52_hklegco	SLOW	551619	-1	-1	12400	600.1	UNMEASURED, not failed: hit the tool's 600 s kill line with 12,400 of this cycle's 20,000 already in the database. A kill line is a property of the tool. Speech bodies are the largest payload in the batch and the run was sharing app.legco.gov.hk with hk-legco-voting-results.
+hk-legco-hansard-speeches	hp3b52_hklegco	OK	551619	20000	20001	20000	919.0	one cycle slice of 100 pages; stored is 20,000 records plus the 1 truncation notice. It read SLOW at the tool's 600 s default with 12,400 already stored, and alone on the host at a 2,400 s kill line it completes the slice in 919.0 s — a kill line is a property of the tool, and the first reading was it plus contention with hk-legco-voting-results.
 hk-legco-voting-results	hp3b52_hklegco	OK	542641	20000	20001	20000	199.4	one cycle slice of 100 pages; stored is 20,000 records plus the 1 truncation notice that discloses the rest of the collection
 ons-algerie-rss	hp3b52_statsgov	OK	10	10	10	10	1.5	complete; SPIP publishes the newest ten and no paging at all
 pk-pcrwr-posts	hp3b52_statsgov	OK	134	134	134	134	7.2	complete, exactly its own X-WP-Total

@@ -84,8 +84,9 @@ static const hp_source HP3B52_HKLEGCO[] = {
       "minutes, so it crosses the scheduler's 300 s warning deadline and "
       "logs [sched] WARN while it runs; it is NOT cancelled, because "
       "cancel_after() is max(deadline, interval) and the interval is a "
-      "day. Measured 2026-10-21: 12,400 of the slice's 20,000 at 600 s "
-      "while sharing the host with hk-legco-voting-results." },
+      "day. Measured 2026-10-21, alone on the host: the slice completes "
+      "in 919.0 s, 20,000 of 20,000. Sharing the host with "
+      "hk-legco-voting-results it had reached 12,400 at 600 s." },
 
   { .id = "hk-legco-voting-results", .name = "LegCo Hong Kong — voting results (OData)",
     .name_ja = "香港立法会 採決結果（OData）",

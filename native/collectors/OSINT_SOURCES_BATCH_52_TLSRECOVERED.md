@@ -67,8 +67,8 @@ comment naming OData as supported. Both are fixed; `hptest` 47 and 47b.
     row                        upstream total   this run
     hk-legco-bills                      6,884   6,884 of 6,884 over 36 pages,
                                                 complete, no notice
-    hk-legco-hansard-speeches         551,619   20,000 a run, cycling
-    hk-legco-voting-results           542,641   20,000 a run, cycling
+    hk-legco-hansard-speeches         551,619   20,000 a run, cycling, 919.0s
+    hk-legco-voting-results           542,641   20,000 a run, cycling, 199.4s
 
 An OFFSET walk with no stable sort silently skips records, so each row asks for
 `$orderby` on its own key and page 2 was checked against page 1 for overlap:
@@ -110,7 +110,12 @@ count:
     audit_batch_pagination.py    0 of 19 declare no pagination but look paged
     batch_exclusions.py --check  0 collisions, 0 near-misses (id set from the binary)
     probe_hp_batch.py --check-filter   19/19 PASS
-    audit_registry_emit.py       docs/emit-sources-batch52-2026-10-21.tsv
+    audit_registry_emit.py       23 OK, 49,289 emitted = 49,289 stored, 0 uid
+                                 collisions. docs/emit-sources-batch52-2026-10-21.tsv,
+                                 and -slow- for the one row re-measured alone:
+                                 SLOW at the tool's 600 s default with 12,400
+                                 already stored, OK at 2,400 s in 919.0 s. A
+                                 kill line is a property of the tool.
 
 `core/collectors.def` gained `hp3b52_ansd`, `hp3b52_hklegco` and
 `hp3b52_statsgov` through `make collectors-def`; 600 collectors, 0 unassigned.
