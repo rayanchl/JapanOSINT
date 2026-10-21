@@ -442,7 +442,11 @@ Where the tree actually stands, as `make audit-sources` reports it:
   after adding a table: batch 18 introduced two `single-page` findings here (a
   paged endpoint declared without `page_param`) and they had to be fixed before
   the gate would pass again.
-* **the rest of the tree — 0 findings** (1,678 files scanned, 2026-10-07; it
+* **the rest of the tree — 0 findings** (1,736 files scanned, 2026-10-21; it
+  had drifted to 50, all false: 49 URLs handed to `pw_walk_max`,
+  `od_walk_rows_max`, `od_ckan_walk` or `od_ods_catalog_walk` — walkers the
+  scanner did not name — plus the `.url` copy of each in its `source_def`;
+  1,678 files on 2026-10-07; it
   first reached zero on 2026-08-24, from ~127 across ~74 files). Every first-only, single-page, record-cap, loop-break,
   limit-one and dedupe-ring finding has been read and closed one of three ways:
   the discard was real and was fixed, the line carries an `exhaustive-ok`

@@ -190,8 +190,14 @@ PAGED_MACROS = ('VJSON', 'VJSONBIG', 'VGEO', 'VJSON_KEYED',
 # to one of these far below; the ±16-line window cannot see that, and the
 # `$offset=0` seed is exactly what pw_walk advances (lib/pagewalk.c only ever
 # advances a parameter the URL already carries). od_walk_rows is a thin
-# wrapper over pw_walk (collectors/sources/od_shared.inc).
-_WALKER_CALL = re.compile(r'\b(?:pw_walk|od_walk_rows|jsonlist_emit_paged\w*|'
+# wrapper over pw_walk (collectors/sources/od_shared.inc). pw_walk_max and
+# od_walk_rows_max are the same walks with an explicit page ceiling, and
+# od_ckan_walk / od_ods_catalog_walk hand their URL to pw_walk_max / pw_walk
+# (od_shared.inc). The suffixes were missing until 2026-10-21, so every URL
+# handed to a ceilinged walk read as a single-page discard — 49 findings.
+_WALKER_CALL = re.compile(r'\b(?:pw_walk(?:_max)?|od_walk_rows(?:_max)?|'
+                          r'od_ckan_walk|od_ods_catalog_walk|'
+                          r'jsonlist_emit_paged\w*|'
                           r'geojson_emit_paged\w*)\s*\(')
 
 
@@ -233,8 +239,35 @@ def _handed_to_walker(lines, n):
     name = _url_binding(lines, n)
     if not name:
         return False
+    if name == 'url' and _restates_walked_url(lines, n):
+        return True
     pat = re.compile(r'\b' + re.escape(name) + r'\b')
     return any(pat.search(a) for a in _walker_call_args(lines))
+
+
+_LITERAL = re.compile(r'"((?:[^"\\]|\\.)*)"')
+
+
+def _restates_walked_url(lines, n):
+    """A source_def's `.url = "…"` is the human-facing copy of the URL the
+    collector's run() walks. It is excused only when its text ENDS WITH the
+    literal of another line in the file whose URL is handed to a walker (the
+    walked URL may be split over adjacent literals, so the last fragment is
+    what both lines share)."""
+    m = _LITERAL.search(lines[n - 1])
+    if not m:
+        return False
+    restated = m.group(1)
+    for i, other in enumerate(lines, 1):
+        if i == n or SKIP_LINE.match(other):
+            continue
+        lm = _LITERAL.search(other)
+        if not lm or '.url' in other or len(lm.group(1)) < 12:
+            continue
+        if restated.endswith(lm.group(1)) and _url_binding(lines, i) != 'url' \
+                and _handed_to_walker(lines, i):
+            return True
+    return False
 MACRO_OPEN = re.compile(r'^\s*([A-Z][A-Z0-9_]*)\s*\(')
 
 
@@ -448,6 +481,25 @@ SELFTEST = [
      "       + one_fetch(c, s, FETCHED);\n"
      "}\n",
      {("single-page", 2)}, {("single-page", 1)}),
+    # single-page: pw_walk_max / od_ckan_walk walk too, and a source_def's
+    # `.url` restating a walked (split) URL is not a second read — but a
+    # `.url` restating a URL nothing walks still is.
+    ("static const char *URL =\n"
+     "  \"https://x.example/api/\"\n"
+     "  \"records?limit=100&offset=0&order_by=id\";\n"
+     "#define BARE \"https://x.example/other?limit=100&offset=0\"\n"
+     "static int run(const source_ctx *c, intel_sink *s) {\n"
+     "  return pw_walk_max(c, s, \"id\", URL, pw_fetch_json, pg, NULL, 9)\n"
+     "       + od_ckan_walk(c, s, \"id\", BARE2, \"b\", NULL, \"t\", 9);\n"
+     "}\n"
+     "static const source_def d = {\n"
+     "  .url = \"https://x.example/api/records?limit=100&offset=0&order_by=id\",\n"
+     "};\n"
+     "static const source_def e = {\n"
+     "  .url = \"https://x.example/other?limit=100&offset=0\",\n"
+     "};\n",
+     {("single-page", 4), ("single-page", 13)},
+     {("single-page", 3), ("single-page", 10)}),
 ]
 
 
