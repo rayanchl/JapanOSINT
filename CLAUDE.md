@@ -894,6 +894,13 @@ That is the native job in `.github/workflows/ci.yml`; CI also runs TSan and
 ASan builds and the client's `vitest` and `vite build`. Run gates with `JO_DB`
 pointing at a scratch file — several of them open the default DB otherwise.
 
+**A macOS job the runner cancels at 15 minutes is the runner's, not the
+PR's** (seen 2026-10-21 on `main`'s own run for PR #57 and on two PRs the
+same day; the owner's rule of 2026-10-22): when the other five jobs are green,
+the same cancellation shows on `main`'s own run and the native change was
+macOS-green on a previous head of the PR, merge and say so in one comment on
+the PR. Never an empty commit to re-trigger it; a real code change may.
+
 **And treat "CI is red" as a question, not an answer.** `ci.yml` carried
 `JO_DB: ${{ runner.temp }}/ci.db` as a JOB-LEVEL `env:` entry, where the
 `runner` context does not exist yet. That is an unrecognised named-value, which
@@ -1064,9 +1071,17 @@ gated like `/api/sources/:id/schedule`: platform operator). Three shapes:
 
 * **global** — every scheduled row runs at one interval;
 * **clamped** — a floor and/or a ceiling the declared values are held inside;
-* **declared** — nothing set, each row as authored (the default).
+* **declared** — zeros saved, each row as authored.
 
-`JO_SCHED_INTERVAL_SEC` / `JO_SCHED_MIN_INTERVAL_SEC` /
+**The compiled default is global 6 h** (`CAD_DEFAULT_GLOBAL_SEC`, the owner's
+decision of 2026-10-22: "this interval system should be osint software wide").
+An empty database with a silent environment runs every scheduled row every
+21600 s and the pages say `source: default`; "declared" is a choice an operator
+makes by saving zeros from the Sources page, not the silence of an unset knob.
+A source that must be fresher is set from its own page (Settings › Collection
+interval), which outranks the policy. Measured when it shipped (2026-10-22, the registry at 57,529 with 55,174
+scheduled rows): 594,367 runs/day as declared against 220,696 under this
+default — the figure `GET /api/sources/cadence` reports on an empty database. `JO_SCHED_INTERVAL_SEC` / `JO_SCHED_MIN_INTERVAL_SEC` /
 `JO_SCHED_MAX_INTERVAL_SEC` bootstrap an EMPTY database only; a stored policy
 always wins. The scheduler reads `cadence_apply(declared)` at every site that
 used the declared value (due time, boot ramp, backoff base, cancellation
