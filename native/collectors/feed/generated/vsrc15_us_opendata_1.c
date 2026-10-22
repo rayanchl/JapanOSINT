@@ -74,7 +74,7 @@ VJSON(us_data_bloomington_in_gov_views, "us-data-bloomington-in-gov-views", "dat
  *     "Foo/1.0 (… feed collector …)"                                   502
  *
  * — the rejected token is the single word "collector", exactly the
- * servicios.ine.es case already documented in core/httpclient.c's UA_OVERRIDE
+ * servicios.ine.es case already documented in core/host_agents.def
  * table, and the agent that table already carries for INE returns 200 here on
  * package_search, group_list, organization_list, tag_list,
  * recently_changed_packages_activity_list and the per-organisation

@@ -5,7 +5,12 @@ was seeded from, what it measured and what it taught. Moved out of `CLAUDE.md`
 on 2026-10-19 so that file keeps the rules and the current number; the lessons
 that a new batch must not relearn are summarised there. Newest first.
 
-**The registered count is 57,538** (2026-10-22, later): 57,540 − 3 + 1. The
+**The registered count is 57,529** (2026-10-22, merged): main's 57,527 (its
+`&amp;` pass, below) plus this branch's +2 on the shared 57,536 base: +4
+tuberculosis windows, +1 Elia imbalance-price row, −3 ODS rows whose datasets
+no longer exist. No id is in both sides' changes; both floors re-recorded.
+
+**This branch's count was 57,538** (2026-10-22, later): 57,540 − 3 + 1. The
 ods147 lesson applied to every OpenDataSoft row
 (`docs/measured-ods-titles-2026-10-22.tsv`): the metadata endpoint of all
 237 datasets the tree's 245 ODS rows read was asked for its title; 118 rows
@@ -21,7 +26,7 @@ engine), and ods134 is its own row now, `ELIA_IMBALANCE_PRICES_QH` (241 of
 241). Every other low-overlap pair was a language or wording difference,
 read by hand.
 
-**The count was 57,540** (2026-10-22): main's 57,536 (below) plus
+**This branch's count was 57,540** (2026-10-22): 57,536 (below) plus
 four. `tools/audit_cycle_advance.py` ran all 669 `page_resume` rows under
 `JO_PAGE_MAX_CAP=2` and read their notices back
 (`docs/measured-cycle-advance-2026-10-22.tsv`): 600 advance, 20 complete
@@ -37,7 +42,25 @@ single-request windows on `first_public` because one `limit=0` read of the
 whole 360,690 came back 8% short in every date half (a silent cut), while
 each window answers exactly its count. +4 rows; both floors re-recorded.
 
-**The count was 57,536** (2026-10-21): main's 57,415 + this branch's
+**Main's count was 57,527** (2026-10-22): 57,536 less nine rows that
+became exact duplicates when the `&amp;` in 1,076 row URLs was decoded
+(`docs/removed-sources-2026-10-22-amp-duplicates.tsv`): four batch-43 municipal
+feeds batch 25 already reads, four batch-44 US feeds batch 50 reads, one CNRS
+job feed. Each of the 1,076 was measured twice through the engine, URL as
+registered and URL decoded (`docs/amp-decode-2026-10-22.tsv`): 698 store
+as much or more decoded (7,009 records as registered, 9,153 decoded), 16 store
+only once decoded, 147 failed both ways, and 206 were worse decoded and keep their `&amp;` with a marker
+saying why: batch 48's newspaper search feeds, where the decoded filter
+applies and finds nothing (the mangled URL fell back to the site's headlines),
+Joomla `type=atom` rows that then really serve Atom against a row declared RSS,
+and municipal CMS feeds that then honour a smaller `displayCount`. The 147 that
+failed both ways keep the decoded URL. Also on this day:
+`jp-b43-tokyogirlsupdate-com` moved onto hpengine (a 2 MB feed at 23 KB/s,
+84 s against the RSS path's 25 s: 0 → 150 stored) and `JO48_IGO_Q1371744`
+was reclassified from IGO to Japanese web media (Banpresto Spain's figure
+news). Same count; same ids.
+
+**The registered count was 57,536** (2026-10-21): main's 57,415 + this branch's
 121 (+136 batch 51, −29 takeovers, +15 browser-profile feeds, −1 duplicate FAA
 row), both on 56,955. The merge kept main's `adaptive_interval` on every row
 and this branch's removal of the 29 taken-over rows, whose ids main had

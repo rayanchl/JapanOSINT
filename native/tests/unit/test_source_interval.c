@@ -105,5 +105,6 @@ int main(void) {
   cadence_policy none = {0, 0, 0};
   assert(cadence_set(&db, &none, NULL, &err) == 0);
   printf("all passed\n");
+  db_close(&db);
   return 0;
 }

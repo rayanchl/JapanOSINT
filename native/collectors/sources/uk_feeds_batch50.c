@@ -8925,7 +8925,7 @@ RSSX(uk_b50_govuk_uk_statistics_authority, "uk-b50-govuk-uk-statistics-authority
 
 /* ── browser-profile hosts (restored 2026-10-21) ─────────────────────
  * Rejected at authoring for refusing every self-identifying agent; fetched
- * now with the per-host browser profile in core/httpclient.c BROWSER_HOSTS. */
+ * now with the per-host browser profile in core/host_agents.def, HA_BROWSER. */
 
 RSSX(uk_b50_isc_independent_gov_uk, "uk-b50-isc-independent-gov-uk",
      "Intelligence and Security Committee of Parliament", "Intelligence and Security Committee of Parliament",
@@ -8933,7 +8933,7 @@ RSSX(uk_b50_isc_independent_gov_uk, "uk-b50-isc-independent-gov-uk",
      "https://isc.independent.gov.uk/feed/",
      "en", "[\"gov\",\"country:uk\",\"publisher:Intelligence and Security Committee of Parliament\",\"intelligence\",\"batch:50\"]",
      3600,
-     "Intelligence and Security Committee of Parliament — official feed; the host admits browser-profile requests only (core/httpclient.c BROWSER_HOSTS)")
+     "Intelligence and Security Committee of Parliament — official feed; the host admits browser-profile requests only (core/host_agents.def, HA_BROWSER)")
 
 RSSX(uk_b50_security_gov_uk, "uk-b50-security-gov-uk",
      "Government Cyber Coordination Centre (security.gov.uk)", "Government Cyber Coordination Centre (security.gov.uk)",
@@ -8941,7 +8941,7 @@ RSSX(uk_b50_security_gov_uk, "uk-b50-security-gov-uk",
      "https://www.security.gov.uk/feed/",
      "en", "[\"gov\",\"country:uk\",\"publisher:Government Cyber Coordination Centre (security.gov.uk)\",\"cyber\",\"batch:50\"]",
      3600,
-     "Government Cyber Coordination Centre (security.gov.uk) — official feed; the host admits browser-profile requests only (core/httpclient.c BROWSER_HOSTS)")
+     "Government Cyber Coordination Centre (security.gov.uk) — official feed; the host admits browser-profile requests only (core/host_agents.def, HA_BROWSER)")
 
 RSSX(uk_b50_nhs24_scot, "uk-b50-nhs24-scot",
      "NHS 24", "NHS 24",
@@ -8949,4 +8949,4 @@ RSSX(uk_b50_nhs24_scot, "uk-b50-nhs24-scot",
      "https://www.nhs24.scot/feed/",
      "en", "[\"gov\",\"country:uk\",\"publisher:NHS 24\",\"health\",\"batch:50\"]",
      3600,
-     "NHS 24 — official feed; the host admits browser-profile requests only (core/httpclient.c BROWSER_HOSTS)")
+     "NHS 24 — official feed; the host admits browser-profile requests only (core/host_agents.def, HA_BROWSER)")

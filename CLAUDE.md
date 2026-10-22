@@ -39,11 +39,23 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 57,538** (2026-10-22): 57,536 (below) plus the
-four tuberculosis windows and the Elia imbalance-price row, less the three
-OpenDataSoft rows whose datasets no longer exist — the cycle-advance sweep
-and the ODS title sweep, both under "Cadence policy" / `page_resume`, and in
-the ledger.
+**The registered count is 57,529** (2026-10-22, merged): main's 57,527 (below)
+plus this branch's two on the same 57,536 base — the four tuberculosis
+windows and the Elia imbalance-price row, less the three OpenDataSoft rows
+whose datasets no longer exist (the cycle-advance sweep and the ODS title
+sweep, both under "Cadence policy" / `page_resume`, and in the ledger). None
+of main's nine `&amp;` duplicates was a row this branch touched.
+
+**Main's count was 57,527** (2026-10-22): 57,536 less nine rows that
+duplicated another row once their URL's `&amp;` was decoded. **A literal
+`&amp;` in a row URL is not always a bug to fix**: it sends `amp;type=…`,
+which the server ignores, and 1,076 rows had one. Decoded and re-measured
+(`docs/amp-decode-2026-10-22.tsv`), 714 store as much or more (16 of them
+only once decoded), but 206 stored
+LESS — a newspaper search whose real filter finds nothing, a Joomla row then
+served the Atom it asked for against an RSS declaration, a CMS honouring a
+small `displayCount` — and keep the `&amp;` with a marker on the row. Measure
+both URLs before changing one. Ledger: `docs/SOURCE_COUNT_LEDGER.md`.
 
 **The count was 57,536** (2026-10-21): main's 57,415 (below) plus
 this branch's 121 on the same 56,955 base — batch 51's 136, less 29
@@ -52,25 +64,50 @@ with no shared endpoint. On this branch alone the count was **57,076**.
 
 **Browser profile for hosts that refuse every honest agent** (2026-10-21, the
 repository owner's decision, reversing the earlier "never impersonate a
-browser" rule FOR LISTED HOSTS ONLY): `BROWSER_HOSTS` in `core/httpclient.c`.
-`http_request()` gives a request to a listed host a browser User-Agent plus
+browser" rule FOR LISTED HOSTS ONLY): `HA_BROWSER` entries in
+`core/host_agents.def` (below). `http_request()` gives a request to such a host a browser User-Agent plus
 `Accept-Language` and `Sec-Fetch-*` (replacing any `User-Agent` the caller set)
 and keeps the caller's `Accept` — NOAA answers an HTML `Accept` with a 202
 challenge, and `www.bls.gov` needs the `Sec-Fetch-*` headers, not just the
 agent. Every other host still identifies itself. Admit a host only after
 bisecting it: engine agent, the agent without "collector", a bare
-`JapanOSINT/1.0` — the per-host `UA_OVERRIDE` table is the answer when one of
-those passes. Listing `registry.faa.gov` revived `FAA_REGISTRY` (31 fields:
+`JapanOSINT/1.0`, the `Mozilla/5.0 (compatible; JapanOSINT/1.0; …)` prefix —
+and give the host the cheapest agent that passes. Listing `registry.faa.gov` revived `FAA_REGISTRY` (31 fields:
 owner, address, Mode S) and `US_FAA_AIRCRAFT_REGISTRY`, which was asking for
 `Nametxt=` (the form) where `nametxt=…&sort_option=1` returns results: 1,729
 aircraft for one operator over 36 pages, keyed `N-Number+Serial Number` because
-an N-number can hold a reservation row and an aircraft row. A third FAA row,
+an N-number can hold a reservation row and an aircraft row. Since 2026-10-21
+each hit also fetches its own N-number page (`detail_html_kv`, below), so a
+record carries the full registration (37 fields for an aircraft: owner and
+address, Mode S octal and hex, engine, airworthiness, certificate dates; a
+reservation's own fields for a reserved number). Measured: one operator's
+aircraft, 37 of 37 fields; SOUTHWEST AIRLINES, 743 pages fetched in the
+120 s detail budget and 986 marked `_detail_pending` with the notice saying so. A third FAA row,
 `FAA_NNUMBER_REGISTRY`, read the same page as anchors — once the 403 lifted it
 stored the site's navigation links as aircraft, a confident wrong answer — and
 is removed as a duplicate of `FAA_REGISTRY`. **When a fix lets a refused row
 through, read what it stores**: a 403 notice is honest, a page of nav links is
 not. And `sec-reliefweb-headlines` was never an agent problem: its URL 301s to
 plain `http://`, where a firewall answers a zero-byte 202; the curl CLI hid it.
+
+**One per-host User-Agent table: `core/host_agents.def`** (2026-10-21). It was
+three mechanisms with three precedences — `UA_OVERRIDE` and `BROWSER_HOSTS` in
+`core/httpclient.c`, and 471 per-row `.headers` User-Agents on 320 hosts
+(batches 44–48), where the row's header beat `UA_OVERRIDE` and `BROWSER_HOSTS`
+beat both. Now one line per host names one agent kind (`HA_NOCOLLECTOR`,
+`HA_CONTACT`, `HA_RCORP`, `HA_COMPAT`, `HA_BROWSER`), and for a listed host the
+table's agent goes on the wire whatever a row set; an unlisted host keeps a
+row's own header, else `JO_USER_AGENT`. 403 hosts. `./bin/japanosint
+--host-agents` prints it (host, kind, agent, extra headers), and
+`tools/probe_hp_batch.py` reads the same file, so the probe sends what the
+engine sends. Measured before the move: no other source fetches from the 320
+compat hosts, so the wire did not change, and the emit sweep of all 586 rows on
+listed hosts read 562 OK; the rest failed under every agent tried, including
+the old one (down hosts, 403 walls, two browser-profile hosts refusing this
+environment that day). The move dropped `midjourneyvideo.net`: a gambling site
+on a city's lapsed domain, whose row had already been removed as a takeover,
+was still in `UA_OVERRIDE`. `tests/unit/test_host_agents.c` pins the
+resolution.
 
 **The registered count was 57,062** (2026-10-21): the 56,955 below, plus
 **batch 51's 136** Hong Kong and Macao government feeds and China News Service
@@ -186,9 +223,10 @@ lessons from batches 43–48 that a new batch must not relearn:
   `header1=User-Agent: Mozilla/5.0 (compatible\; JapanOSINT/1.0\; +https://github.com/rayanchl/JapanOSINT)`:
   the same identified client with the browser-compatible prefix the walls
   key on, nothing hidden. They are back in their beats (86 UK, 328 FR, 58 IT,
-  8 Wikidata, 4 IGO, 7 press) WITH the header on the row, so the condition a
-  row was proven under is the one it runs under; the four that refused twice
-  stay out. Try the header before calling a 403 dead.
+  8 Wikidata, 4 IGO, 7 press) with the agent their hosts were proven under —
+  first as a header on each row, since 2026-10-21 as an `HA_COMPAT` line in
+  `core/host_agents.def`; the four that refused twice stay out. Try that
+  agent before calling a 403 dead.
 * **A URL changed after validation is unvalidated** (an unescaped `&amp;`
   made Joomla serve Atom where rows declared RSS), **a well-formed feed with
   zero items is `EMPTY_RESULTSET`**, **a substring count of `<item` counts the
@@ -1210,6 +1248,7 @@ says why.
 | `tools/diagnose_emit_keys.py` | why a row emitted nothing, and which `title_keys`/`id_keys` fix it |
 | `tools/cleanup_stale_uids.py` | the rows identity fixes left in an OLD database: a plain-key row whose qualified siblings now hold the same record (the keyqual collectors and FRA), and wayback_jp's captures from before digest+timestamp+URL. Reports by default. `--delete` removes, in one transaction, only rows whose replacement is proven to exist and that nothing references. `--self-test` runs it on a scratch DB (also from `make unit`) |
 | `tools/wp_routes_sweep.py` | the WordPress method as a tool: `sweep` asks each host for its REST root (the homepage's `Link rel="https://api.w.org/"`, else `/wp-json`), its post types and one page of each collection, writing routes.tsv/probe.tsv; `manifest` turns probe.tsv into host-type beats and a rejected TSV. Hosts are normalised (`www.` dropped, one row per REST root) because `funq.jp` and `www.funq.jp` reached the same site and only `batch_exclusions.py` noticed |
+| `./bin/japanosint --host-agents` | the per-host User-Agent table (`core/host_agents.def`) as the engine resolved it: host, agent kind, the agent string, and the extra headers an `HA_BROWSER` host gets. The probe reads the same `.def`, so what it prints is what both send |
 | `./bin/japanosint --discover-feeds <sites> [--jobs N]` | RSS/Atom autodiscovery in C (`core/feeddisc.c`, `test_feeddisc`): reads each homepage's own `<link rel="alternate">` declarations (relative hrefs resolve against the URL asked for, so a homepage redirecting to a squatter's domain yields nothing), skips WordPress comment feeds, decodes `&amp;`, then fetches every feed through the engine's HTTP client — same agent, per-host overrides and pacing — and prints a TSV verdict per feed: `PASS`, `TAKEOVER_SUSPECT` (gambling/pharma phrases or an unexpected script in the item titles — a question for a human, not a verdict), `REGISTERED` (any source's portal or hp row URL), or the failure. No database |
 | `tools/gen_hp_batch.py` | manifest → C, one table per beat, `--prefix`/`--batch` so batches never collide — but the batch NUMBER is yours to keep unique: main shipped a batch 32 while a branch was open with its own, both created `docs/verified-sources-batch32.tsv`, and renumbering the branch to 33 after the fact meant touching the manifest, both TSVs, the table, its array name and two batch citations that had landed in `lib/hpengine.h` and `core/hostgate.c`. Rejects duplicate opts, non-integer int opts, and an opt whose value **swallowed the next one** through a stray `\;` |
 
@@ -1514,6 +1553,15 @@ Engine subtleties worth knowing before writing a row:
 * **A detail hop carries the row's headers** (token, UA, Accept), minus the
   POST body's content type. It used to carry none, so a header-authenticated
   row stored `_detail_error` on every record (PY_AIP: 500 without, 200 with).
+* **A detail hop that answers HTML** is `detail_html_kv=1`: the record page's
+  label/value cells merge under `detail.` — every cell with a non-empty
+  `data-label` (the accessible responsive-table pattern; an EMPTY data-label
+  is the visible label column and is skipped), and a `<th>` paired with the
+  `<td>` after it. A repeated label is indexed (`Expiration Date.1`), never
+  overwritten; a page with no such cells is `_detail_error` on the record.
+  Opt-in, because navigation tables are cells too. Without it an HTML detail
+  body is "not JSON; nothing merged", which is why the FAA owner search
+  stored a summary row and no registration. `hptest` 41 pins it.
 * **XML records keep every field**: repeated children are indexed (`name`,
   `name.1`, `author.1.name`), text beside children is `<key>.#text`, and
   whatever the depth (32) / field (`HP_MAX_PROPS`) bounds keep out is counted
@@ -1977,6 +2025,19 @@ failing tests repaired. What it guarantees, and the knobs it adds:
   `Retry-After`; the camera proxy refuses LAN, metadata and link-local
   targets, always — there is no LAN opt-in (`JO_CAMERA_ALLOW_LAN` was removed
   2026-10-20; tests use `hostgate_camera_test_allow_lan()`).
+  **ffmpeg's own sockets are boxed too** (2026-10-22, `core/netjail.{c,h}`):
+  every network run of ffmpeg/ffprobe goes through a per-child forward proxy
+  (http/https/hls) or a pinned relay (rtsp/rtsps) that resolves each name once,
+  judges every answer under the camera policy and connects to what it judged —
+  so a live playlist's later segments and a re-resolved name are judged, not
+  just the first URL. On Linux the child also runs in its own network
+  namespace (a user namespace when not root) whose only listener is that
+  proxy, so an RTSP redirect or a `tcp://` segment has no route at all. Where
+  namespaces are unavailable it degrades to proxy-only, and
+  `GET /api/admin/ffmpeg/capabilities` → `network_sandbox` says which.
+  rtmp/tcp/udp network inputs have no boxed path and are refused.
+  `test_netjail.c` decodes a real HLS frame through the box when ffmpeg is
+  installed (CI installs it), as root and as an unprivileged user.
 * **LLM queue**: bounded lanes (`JO_LLM_QUEUE_MAX`, default 64 waiting; a job
   waits at most `JO_LLM_QUEUE_WAIT_FACTOR` × its timeout, default 4), no retry
   after a timeout, queue time reported apart from model time;
