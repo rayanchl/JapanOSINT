@@ -179,3 +179,233 @@ id-set diff against HEAD confirmed exactly the 11 intended ids were gone after
 the footers were restored.
 
 Counts after review: ckanbulk 95, fdsnstation 15, fdsnevent 5, socratacat 24.
+
+## MEASURED, 2026-10-20 — and the reasoning above was 3-for-5 wrong
+
+This batch shipped unprobed (the authoring session's network policy reached
+Anthropic APIs, package registries and GitHub, nothing else). Both batches were
+run through the real binary on 2026-10-20 — 244 rows of 34 and 35 together, each
+against a fresh copy of a warm template DB, then every failure re-run once:
+**`docs/emit-sources-batch34-35.tsv`**.
+
+```sh
+python3 native/tools/audit_registry_emit.py --bin ./bin/japanosint \
+        --match '^JO3[45]_' --jobs 6 --timeout 220
+```
+
+**179 OK, 266,390 records emitted.** 42 `EMPTY_UPSTREAM` — the endpoint
+answered and held nothing for that particular entity, which is rule 1's honest
+empty and not a defect. 23 rows failed the first pass; one (`PACKAGIST_ALL_PACKAGE_NAMES`)
+was SLOW and completed on the retry at 468,791, so **22 failed twice**.
+
+The section above closes with "A probe may still find one of the kept five
+unimplemented, or one of the dropped eleven live." It found three:
+
+| kept row | reading |
+| --- | --- |
+| `JO34_FDSNEVT_EIDA_GEIN_NOA_GR` | HTTP 400 — no `event/1` |
+| `JO34_FDSNEVT_EIDA_KOERI_BOUN_EDU_TR` | HTTP 404 — no `event/1` |
+| `JO34_FDSNEVT_WS_ICGC_CAT` | HTTP 404 — no `event/1` |
+
+So the review's own lesson — "the FDSN spec defines services; a node runs only
+some of them" — was applied correctly as a rule and got the membership wrong for
+three of the five it kept. Reasoning from what an operator *does* narrowed 15
+rows to 5 and could not get past that; one request each settled it.
+
+**The headline finding is a CKAN one, and it is the reason nothing was removed
+on this reading.** `current_package_list_with_resources` is an expensive bulk
+dump that a large portal disables or never exposes, while `package_search` on
+the same host is served normally. Three rows that failed twice are alive:
+
+* `data.gov.uk` — 403 on the bulk action, **59,370 datasets** via package_search
+* `admin.opendata.az` — 403 on the bulk action, **1,970**
+* `data.gov.il` — 404 on the bulk action, **1,203**
+
+A literal reading of CLAUDE.md's "a row that fails twice leaves" would have
+deleted three national catalogues and 62,543 datasets for using the wrong verb.
+The remaining 19: six are one `ogopendata.com` 502 outage inside the same
+minutes (Houston, Milwaukee, Oklahoma, San Antonio, Virginia, Hawaii — the host
+is alive and its action untested), three are bot walls that refuse the engine
+too, three are the FDSN rows above, `catalog.data.gov` has moved,
+`catalogue.data.govt.nz` answers 200 in a shape that is not the declared one,
+four are transport failures from this container alone, and `asahikawa-med`'s
+WEKO answers 500. Each row's diagnosis is the TSV's last column.
+
+Still open on this batch, and not done here:
+
+* **rule 4b is unmeasured** for the 179 OK rows. This audit reads EMITTED; a
+  collision between records keying onto each other is invisible to it. Batch 35
+  inherited its keys from batch 25 and is the first to distrust.
+* ~~21 rows sit at exactly 2,000 or 20,000~~ — **done 2026-10-21**, see below.
+* ~~the three alive CKAN rows want re-pointing~~ — **done 2026-10-21**, see
+  below.
+
+## The page ceilings, measured and fixed (2026-10-21)
+
+`docs/measured-page-ceilings-batch34-2026-10-21.tsv`. Twenty-one rows read
+exactly `page_max x page_size` records — 19 CKAN portals at 2,000 and the two
+live FDSN event catalogues at 20,000 — which is never an upstream's own total.
+
+**The count had to come from a different endpoint.** These rows use
+`current_package_list_with_resources`, which returns a BARE LIST: no
+`result.count`, no envelope, nothing for a gate to compare a run against. That
+is why 19 rows sat at 2,000 looking healthy through the emit audit. The same
+hosts' `package_search?rows=0` publishes `result.count`, and that is where every
+total below comes from. 792,984 datasets across the 19.
+
+Offset safety was measured on all 19 before any ceiling was raised, because
+CLAUDE.md's worst shape is a walk whose order drifts: the same offset asked
+twice returns the same ids (STABLE), page 0 and page 1 share none (DISJOINT),
+and the offset is honoured. All 19 passed all three.
+
+| fix | rows | examples |
+| --- | --- | --- |
+| complete read (`page_max` = pages needed + 5) | 14 | NHSBSA 2,000 → **2,166**; Berlin → **2,627**; Aragón → **2,425**; data.ca.gov → **4,675** — each its declared total exactly, `stored == emitted` |
+| cycle (`page_max = 200`, `page_resume = 1`) | 5 | Hamburg 246,666 declared (2,467 pages); geoscience QLD 192,703; govdata.de 169,142; Schleswig-Holstein 33,062; data.gov.ie 22,881 |
+
+`data.gov.ie` is the cycle proof: two runs against one database stored 20,000
+and then 2,881 — 22,881, its declared count exactly — and run 2 filed no notice
+because the cycle completed and cleared.
+
+### The headroom is not padding
+
+Set `page_max` to exactly the pages the total needs and the row files a
+**false truncation notice on a complete read**. Measured here: at `page_max = 47`
+data.ca.gov stored all 4,675 records *and* filed `"the page ceiling or a cancel
+stopped the walk"` with `more_pages_pending: true`. Page 47 was short — 75 of
+100, the upstream's own end of data — but our ceiling bit in the same breath and
+the engine cannot distinguish them. At 52: the same 4,675, **no notice**. Five
+pages also absorb ~500 datasets of growth. A disclosure that fires when nothing
+was lost is worse than no disclosure, because it teaches the reader to skip them.
+
+### The two FDSN rows
+
+FDSN publishes no total, so the catalogues were sized by **bisecting the
+offset** — about twenty one-row requests each.
+
+* **ETHZ** ~46,620 events, oldest ECOS-09's year-0250 entry. `page_max = 52`,
+  and the walk then emitted **exactly 46,620** — the probe's arithmetic and the
+  engine's walk agreeing to the record. 20,000 → 46,620.
+* **SCEDC** answers at offset 200,000 with a 1987 event and times out at
+  1,000,000, so the depth below that is recorded as **unmeasured, not absent**.
+  `page_max = 200` + `page_resume = 1`.
+
+Both carried `orderby=time`, which is FDSN's **newest-first**, so every new
+event lands at the head of the collection the walk is reading — one arrival
+mid-walk shifts the boundaries, re-reads one record and skips another. Both are
+`orderby=time-asc` now, measured accepted on each host.
+
+## The three alive catalogues, re-pointed (2026-10-21)
+
+`data.gov.uk`, `admin.opendata.az` and `data.gov.il` each failed two readings on
+`current_package_list_with_resources` — 403, 403, 404 — and each is alive on
+`package_search`. They are re-pointed rather than removed. 62,590 datasets.
+
+**What was measured before changing anything**, because a re-point is only
+honest if the replacement answers the same question:
+
+| check | why it matters | result |
+| --- | --- | --- |
+| `result.count` | the total the row must reach | 59,370 / 2,017 / 1,203 |
+| **resources inline** | the entire purpose of these rows is the dataset PLUS the url/format/size of every file under it; a re-point that dropped them would quietly change what the source holds | present on all three (363 / 169 / 343 resource rows on page 0) |
+| `rows` honoured | else the server's default size silently governs | 100 returned for `rows=100` |
+| `sort=id asc` honoured | an offset walk with no stable order skips records invisibly | yes |
+| stable / disjoint | same `start` twice gives the same ids; consecutive pages share none | yes |
+
+Ceilings follow the measured counts: data.gov.uk 594 pages, so `page_max = 200`
+with `page_resume = 1` (the catalogue over ~3 runs); Azerbaijan 21 pages and
+Israel 13, so complete reads at 26 and 18. Azerbaijan's count had moved from
+1,970 to 2,017 in a day, which is what the five pages of headroom are for.
+
+Two things this cost that reasoning would not have caught:
+
+* **The rows' own description was wrong about the alternative.** Each said
+  package_search "answers a query with dataset summaries", which is why the
+  expensive bulk action was chosen. package_search returns whole package dicts
+  with resources inline. An assumption written into a description reads like a
+  finding a year later.
+* **A whole-catalogue row can duplicate rows already in the tree, and here it
+  does not.** data.gov.uk already had 18 per-organization package_search rows
+  and data.gov.il 19. But `organization_list` says data.gov.uk publishes
+  **1,044** organizations — those rows reach under 2% of its publishers — and 42
+  of Israel's 61 have no row at all. Ask `organization_list` before assuming
+  either redundancy or coverage.
+
+### Verified after the re-point (2026-10-21)
+
+    data.gov.il          0 ->  1,203   = its declared count, 14 requests
+    admin.opendata.az    0 ->  2,017   = its declared count, 22 requests
+    data.gov.uk          0 -> 40,000 over two runs, of 59,370
+
+All three stored NOTHING before — a `collector-fetch-failure` notice and no
+records. `stored == emitted` on every run; 1,197 of Israel's 1,203 records and
+15,845 of the UK's first 20,000 carry `resources.0.url`, so the inline files are
+parsed and flattened rather than merely fetched (the rest are datasets the
+portals publish with no files, which page 0's 72/100 already predicted).
+
+**The data.gov.uk cycle is additive, which is the hard thing to show.** Two runs
+against one database stored 20,000 and 20,000 for **40,000 DISTINCT** records,
+and the stored position reads
+`...package_search?rows=100&start=40000&sort=id%20asc` — exactly where run 3
+resumes. Nothing was re-read at the seam and nothing skipped: a cycle that
+re-read records would show fewer than 40,000 distinct, and the skip CLAUDE.md
+warns about (the invisible half of a collision) would too. The truncation notice
+on each run is TRUE — 594 pages are needed and 200 were read — and says where it
+stopped.
+
+## Rule 4b measured (2026-10-21) — and the tool chose what got measured
+
+`docs/sweep-stored-batch34-35-2026-10-21.tsv`, 239 rows through
+`audit_registry_emit.py`. **261,438 emitted / 261,228 stored over the rows with
+a comparable pair: 210 records lost, 0.08%.**
+
+**124 of the 239 came back `NEEDS_ENTITY` and were therefore NOT measured** —
+batch 35's 100 WEKO pivots and batch 34's 24 Socrata pivots. The registry sweep
+runs every row with no entity, which is the trap CLAUDE.md already names ("use
+`audit_batch_emit.py` with the MANIFEST for pivot rows, never the registry
+sweep"). Worth recording that it was walked into anyway, and that the first
+reading of this sweep was reported as "batch 35's keys show zero collisions"
+when those keys had never been exercised. **A verdict of NEEDS_ENTITY is not a
+clean bill of health**; the pivots were then run individually with their probe
+entity, which is the only way to get both numbers for them.
+
+Five scheduled rows lost records, and each was measured against its own body
+before any key was touched — a collision is a question:
+
+| row | lost | reading |
+| --- | --- | --- |
+| `ckan.govdata.de` | 162 of 20,000 | 22 repeated ids in 2,000 records, **22 of 22 byte-identical** — the portal lists the same dataset twice |
+| `FDSNSTA` NOA | 4 of 733 | 733 lines, 729 distinct Network+Station+StartTime, **4 of 4 byte-identical lines** — `col0+col1+col6` is the right key |
+| `data.bodik.jp` | 6 of 18,622 | first 1,000 records hold zero repeats, so these are deeper and unverified |
+| `data.stadt.zuerich.ch` | 20 of 942 | host unreachable at verification time — unverified |
+| Kanazawa | 1 of 320 | host unreachable at verification time — unverified |
+
+**CORRECTED 2026-10-21 — that reading was wrong, and it was wrong in the exact
+way CLAUDE.md warns about.** Byte-identical duplicates ARE what the collision
+guard is for, so "no key is wrong" was true; "nothing to fix" was not. Work on
+main diagnosed the cause: `current_package_list_with_resources` orders by
+**`metadata_modified desc` with no sort parameter**, so a dataset edited during
+a walk jumps to the head, one record is served twice (the byte-identical
+duplicate measured above) and another is pushed past a page boundary and
+**never read at all**. The visible half is harmless; the invisible half is lost
+data. That is the shape this repo calls the worst in the file, and the first
+diagnosis of it here repeated the same mistake the original note records.
+
+The stability check that cleared these rows was too weak: it asked the same
+offset twice about a second apart and got the same ids. That measures a second,
+not the minutes a 200-page walk takes, and an edit mid-walk is exactly what
+breaks it. **To test a walk's order, the interval that matters is the walk's
+own duration.**
+
+The fix is main's and it is already in: all 81 surviving CKAN rows read
+`package_search?sort=id+asc&rows=100`, a key that cannot be reordered by an
+edit. Re-measured the same day, Zürich went 942 / 926 → **942 / 942**.
+
+Byte-identical duplicates are what the sink's collision guard is *for*: they
+collapse as real dedupe and are not loss. No key was wrong; the SORT was.
+
+**Nine rows hit the 220 s timeout — unmeasured, not failed — and eight of them
+are rows whose ceilings were raised the same day.** That is the cost of the
+fix, not a regression: `data.gov.uk` had 19,728 rows stored when the clock cut
+it, consistent with its 20,000-a-run cycle. Re-measuring them needs a larger
+`--timeout` than a whole-registry sweep can afford.

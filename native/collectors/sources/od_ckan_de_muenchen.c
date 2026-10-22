@@ -7,7 +7,7 @@
 
 #define SID "ckan-de-muenchen"
 static const char *URL =
-  "https://opendata.muenchen.de/api/3/action/package_search?rows=200&start=0&sort=id%20asc";
+  "https://opendata.muenchen.de/api/3/action/package_search?rows=200&start=0&sort=id%20asc";  /* exhaustive-ok: walked by pw_walk/pw_walk_max below, which advances the offset or page this URL carries */
 static const char *const EXTRA[] = { "notes", "frequency", "spatial_uri",
                                      "temporal_start", "temporal_end", NULL };
 
@@ -23,7 +23,7 @@ static const source_def od_ckan_de_muenchen_def = {
   .name = "Munich opendata.muenchen.de CKAN",
   .update_interval_sec = 86400, .run = run,
   .category = "government", .type = "dataset",
-  .url = "https://opendata.muenchen.de/api/3/action/package_search?rows=200&start=0&sort=id%20asc",
+  .url = "https://opendata.muenchen.de/api/3/action/package_search?rows=200&start=0&sort=id%20asc",  /* exhaustive-ok: metadata field, not a fetch; the row is walked by pw_walk below, which advances the offset this URL carries */
   .description = "City of Munich open-data catalogue (336 datasets) with departmental owner emails and DCAT-AP update frequencies",
   .license = "CC-BY 4.0 / DL-DE-BY",
   .free_tier = 1,

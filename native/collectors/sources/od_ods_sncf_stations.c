@@ -12,7 +12,7 @@
 #define SID "ods-sncf-stations"
 static const char *URL =
   "https://data.sncf.com/api/explore/v2.1/catalog/datasets/"
-  "gares-de-voyageurs/records?limit=100&offset=0&order_by=id";
+  "gares-de-voyageurs/records?limit=100&offset=0&order_by=id";  /* exhaustive-ok: walked by pw_walk/pw_walk_max below, which advances the offset or page this URL carries */
 /* PAGED 2026-10-12. This made ONE request:
  * 2,792 passenger stations (total_count, measured 2026-10-12), 100 stored.
  */
@@ -49,7 +49,7 @@ static const source_def od_ods_sncf_stations_def = {
   .name = "SNCF Open Data - passenger stations",
   .update_interval_sec = 604800, .run = run,
   .category = "government", .type = "dataset",
-  .url = "https://data.sncf.com/api/explore/v2.1/catalog/datasets/gares-de-voyageurs/records?limit=100&offset=0&order_by=id",
+  .url = "https://data.sncf.com/api/explore/v2.1/catalog/datasets/gares-de-voyageurs/records?limit=100&offset=0&order_by=id",  /* exhaustive-ok: metadata field, not a fetch; the row is walked by pw_walk below, which advances the offset this URL carries */
   .description = "French passenger rail stations with UIC codes, INSEE commune codes and upstream coordinates",
   .license = "Licence Ouverte / ODbL (SNCF open-data terms)",
   .free_tier = 1,

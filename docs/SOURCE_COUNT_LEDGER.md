@@ -5,7 +5,30 @@ was seeded from, what it measured and what it taught. Moved out of `CLAUDE.md`
 on 2026-10-19 so that file keeps the rules and the current number; the lessons
 that a new batch must not relearn are summarised there. Newest first.
 
-**The registered count is 58,055** (2026-10-22): 58,052 plus the three rows
+**The registered count is 58,045** (2026-10-22): main's 57,527 merged with this
+branch's 58,055, on the **57,536** base they share. Measured with `make
+source-count` and cross-checked against the binary's own `--list-sources`
+(58,045 both ways, 0 duplicates / 0 dropped / 0 never-runs), never added up —
+and the arithmetic then agrees to the row: 57,536 + 519 − 9 − 1 = 58,045, the
+519 this branch's day of B2 and batch-54 work, the 9 main's `&amp;` duplicates
+below, and the 1 `JO34_CKANRES_CKAN_PUBLISHING_SERVICE_GOV_UK`.
+
+Nine conflicts, and four of them were the same situation: **both branches had
+found the same defect on the same day and fixed it differently.** Each was
+settled by asking which reading the tree's own documents support, not which
+diff was larger.
+
+| conflict | both sides | taken |
+| --- | --- | --- |
+| `hp3b34_fdsnevent.c` | both re-added `JO34_FDSNEVT_EIDA_GEIN_NOA_GR` after measuring that the node needs a time window | main's **30-day** window over this branch's 2-day one. The narrow window is safe — a quiet window answers 404 with FDSN's own "no matching events found", which `hp_status_is_declared_empty` reads as an honest empty — but it is one day of slack against a daily interval, so one missed run loses events permanently |
+| `audit_source_exhaustiveness.py` `_WALKER_CALL` | both found that `pw_walk_max` / `od_walk_rows_max` / `od_ckan_walk` / `od_ods_catalog_walk` never reached the walker list — 49 findings each | this branch's `\w*` suffixes over main's exact `(?:_max)?`. The lesson of the bug is that a new walker arrives without reaching the tool; a pattern that already matches the next suffix is the fix that survives it |
+| the `source_def.url` false positive | both excused it; **this branch outright, main only when the `.url` restates a URL handed to a walker** | this branch's categorical skip. `source.h` calls the field "canonical/base or internal:// sentinel", rule 3 says nothing at that layer can see an entity token, and no code fetches it for records (its one reader, `core/pagination_probe.c`, probes it for a page parameter). Main's narrower rule still flagged a `.url` whose collector pages in a `while` loop of its own — `od_udata_collect` is exactly that shape |
+| `htmlparse.c` `int cap = 0` | both marked it `exhaustive-ok` | this branch's wording, which names `hardcap` as the real ceiling |
+| `hp3b34_ckanbulk.c` | this branch added 7 rows; main measured 17 rows' `result.count` and raised their `page_max`, and removed the gov.uk backend | **both**: every row main measured carries main's ceiling, the 7 new rows keep `page_max = 20` because nobody has measured them, and the backend row is gone |
+| `httpclient.c` | this branch added 7 UA_OVERRIDE hosts; main **replaced the whole mechanism** with `core/host_agents.def` | main's refactor, with this branch's 7 hosts and their bisections ported into the def. One table that the engine and the probe both read beats two tables and 471 per-row headers, and the 7 entries are worth more inside it |
+| `CLAUDE.md`, the ledger, both floors | each side prepended its own day | both days, each labelled with the branch that measured it; the floors re-recorded from the merged binary |
+
+**This branch's count was 58,055** (2026-10-22): 58,052 plus the three rows
 that close open item B2's long tail, each a publisher's own bulk file standing
 in for a search that is gone, and two of them needing an engine affordance
 before they could ship at all:
@@ -77,7 +100,25 @@ collector key, the manifest, the TSV, the batch note and both page-two
 measurement records) BEFORE the merge rather than after — which is again what
 kept the merge to one round.
 
-**The registered count is 57,536** (2026-10-21): main's 57,415 + this branch's
+**Main's count was 57,527** (2026-10-22): 57,536 less nine rows that
+became exact duplicates when the `&amp;` in 1,076 row URLs was decoded
+(`docs/removed-sources-2026-10-22-amp-duplicates.tsv`): four batch-43 municipal
+feeds batch 25 already reads, four batch-44 US feeds batch 50 reads, one CNRS
+job feed. Each of the 1,076 was measured twice through the engine, URL as
+registered and URL decoded (`docs/amp-decode-2026-10-22.tsv`): 698 store
+as much or more decoded (7,009 records as registered, 9,153 decoded), 16 store
+only once decoded, 147 failed both ways, and 206 were worse decoded and keep their `&amp;` with a marker
+saying why: batch 48's newspaper search feeds, where the decoded filter
+applies and finds nothing (the mangled URL fell back to the site's headlines),
+Joomla `type=atom` rows that then really serve Atom against a row declared RSS,
+and municipal CMS feeds that then honour a smaller `displayCount`. The 147 that
+failed both ways keep the decoded URL. Also on this day:
+`jp-b43-tokyogirlsupdate-com` moved onto hpengine (a 2 MB feed at 23 KB/s,
+84 s against the RSS path's 25 s: 0 → 150 stored) and `JO48_IGO_Q1371744`
+was reclassified from IGO to Japanese web media (Banpresto Spain's figure
+news). Same count; same ids.
+
+**Main's count was 57,536** (2026-10-21): main's 57,415 + this branch's
 121 (+136 batch 51, −29 takeovers, +15 browser-profile feeds, −1 duplicate FAA
 row), both on 56,955. The merge kept main's `adaptive_interval` on every row
 and this branch's removal of the 29 taken-over rows, whose ids main had

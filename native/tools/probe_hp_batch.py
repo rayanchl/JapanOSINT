@@ -97,6 +97,32 @@ def _engine_user_agent():
 DEFAULT_UA = _engine_user_agent() or \
     "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; feed collector; contact via repo issues)"
 
+
+def _host_agents():
+    """core/host_agents.def — the engine's per-host User-Agent table — as
+    {host: (agent, extra_headers)}, parsed from the same file the C includes so
+    the probe sends what the engine sends. A listed host's agent replaces any
+    User-Agent the row declares, exactly as http_request() does."""
+    try:
+        src = open(os.path.join(NATIVE, "core", "host_agents.def"), encoding="utf-8").read()
+        cli = open(os.path.join(NATIVE, "core", "httpclient.c"), encoding="utf-8").read()
+    except OSError:
+        return {}
+    src = re.sub(r"/\*.*?\*/", "", src, flags=re.S)
+    kinds = dict(re.findall(r'HOST_AGENT_KIND\(\s*(\w+)\s*,\s*"([^"]*)"\s*\)', src))
+    m = re.search(r"BROWSER_EXTRA_HEADERS\[\]\s*=\s*\{(.*?)NULL", cli, re.S)
+    extra = {}
+    for h in re.findall(r'"([^"]+)"', m.group(1) if m else ""):
+        k, _, v = h.partition(":")
+        extra[k.strip()] = v.strip()
+    out = {}
+    for host, kind in re.findall(r'HOST_AGENT\(\s*"([^"]+)"\s*,\s*(\w+)\s*\)', src):
+        out[host.lower()] = (kinds[kind], extra if kind == "HA_BROWSER" else {})
+    return out
+
+
+HOST_AGENTS = _host_agents()
+
 # verify_feeds caps a body at 8 MB on the reasoning that "a feed that big is not
 # a feed". That was true of the RSS-shaped sources it was written for, but this
 # tree has since grown lib/jsonstream.c precisely so that bulk registers in the
@@ -392,6 +418,12 @@ def fetch(url, extra, timeout=None, body=None):
         "Accept-Encoding": "gzip",
     }
     headers.update(extra)
+    ha = HOST_AGENTS.get((urllib.parse.urlsplit(url).hostname or "").lower())
+    if ha:
+        for k in [k for k in headers if k.lower() == "user-agent"]:
+            del headers[k]
+        headers["User-Agent"] = ha[0]
+        headers.update(ha[1])
     data = body.encode("utf-8") if body is not None else None
     req = urllib.request.Request(VF.encode_url(url), headers=headers, data=data,
                                  method="POST" if data is not None else "GET")

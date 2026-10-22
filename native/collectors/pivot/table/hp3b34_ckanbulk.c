@@ -291,7 +291,7 @@ static const hp_source HP3B34_CKANBULK[] = {
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
-    .page_max = 20,
+    .page_max = 103,   /* 9,709 datasets declared by result.count (2026-10-21) = 98 pages of 100, +5 so the walk ends on the short page */
     .page_param = "start",
     /* package_search with sort=id asc, not current_package_list_with_resources:
      * that action has no sort parameter and orders by metadata_modified desc,
@@ -370,7 +370,7 @@ static const hp_source HP3B34_CKANBULK[] = {
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
-    .page_max = 20,
+    .page_max = 200,   /* 169,142 datasets declared by result.count (2026-10-21) = 1,692 pages of 100: over 200, so the cycle reads a slice a run */
     .page_param = "start",
     /* package_search with sort=id asc, not current_package_list_with_resources:
      * that action has no sort parameter and orders by metadata_modified desc,
@@ -487,7 +487,7 @@ static const hp_source HP3B34_CKANBULK[] = {
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
-    .page_max = 20,
+    .page_max = 167,   /* 16,123 datasets declared by result.count (2026-10-21) = 162 pages of 100, +5 so the walk ends on the short page */
     .page_param = "start",
     /* package_search with sort=id asc, not current_package_list_with_resources:
      * that action has no sort parameter and orders by metadata_modified desc,
@@ -604,46 +604,7 @@ static const hp_source HP3B34_CKANBULK[] = {
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
-    .page_max = 20,
-    .page_param = "start",
-    /* package_search with sort=id asc, not current_package_list_with_resources:
-     * that action has no sort parameter and orders by metadata_modified desc,
-     * so a dataset edited during the walk shifts every later page — measured
-     * 2026-10-20 as 3 of 2,000 (govdata), 16 of 942 (Zürich) collapsing at
-     * the sink, which on an unstable order means the same number SKIPPED.
-     * The id sort is stable, and page_resume reads a catalogue larger than
-     * the ceiling over a cycle instead of its first 2,000 forever. */
-    .page_resume = 1,
-    .page_size = 100,
-    .timeout_ms = 90000,
-    .title_keys = "title,name",
-    .description = "UNPROBED. The CKAN Action API endpoint that returns whole "
-      "package dicts WITH their resources inline, so each record "
-      "carries the dataset plus the URL, format and size of every "
-      "downloadable file under it. package_search (already wired for "
-      "this host) answers a query with dataset summaries; this answers "
-      "\"what does this body publish, and where are the actual files\". "
-      "Host and CKAN base path are proven live by the existing "
-      "package_search row; the action path is fixed by the CKAN Action "
-      "API. Response is {success, result:[...]}; some CKAN builds "
-      "disable or deprecate this action, in which case the row is an "
-      "honest empty." },
-
-  { .id = "JO34_CKANRES_CKAN_PUBLISHING_SERVICE_GOV_UK", .name = "ckan.publishing.service.gov.uk — every dataset with its resource "
-      "files (CKAN package_search, id-sorted)",
-    .name_ja = "ckan.publishing.service.gov.uk データセット・リソース全件（CKAN）",
-    .category = "government", .portal = "https://ckan.publishing.service.gov.uk",
-    .record_type = "dataset-inventory",
-    .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"uk\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.publishing.service.gov.uk/api/3/action/package_search?sort=id+asc&rows=100",
-    .array_path = "result.results",
-    .body_keys = "notes",
-    .date_keys = "metadata_modified",
-    .id_keys = "id",
-    .interval = 86400,
-    .link_keys = "url",
-    .page_max = 20,
+    .page_max = 55,   /* 4,937 datasets declared by result.count (2026-10-21) = 50 pages of 100, +5 so the walk ends on the short page */
     .page_param = "start",
     /* package_search with sort=id asc, not current_package_list_with_resources:
      * that action has no sort parameter and orders by metadata_modified desc,
@@ -877,7 +838,7 @@ static const hp_source HP3B34_CKANBULK[] = {
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
-    .page_max = 20,
+    .page_max = 192,   /* 18,622 datasets declared by result.count (2026-10-21) = 187 pages of 100, +5 so the walk ends on the short page */
     .page_param = "start",
     /* package_search with sort=id asc, not current_package_list_with_resources:
      * that action has no sort parameter and orders by metadata_modified desc,
@@ -955,7 +916,7 @@ static const hp_source HP3B34_CKANBULK[] = {
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
-    .page_max = 20,
+    .page_max = 52,   /* 4,675 datasets declared by result.count (2026-10-21) = 47 pages of 100, +5 so the walk ends on the short page */
     .page_param = "start",
     /* package_search with sort=id asc, not current_package_list_with_resources:
      * that action has no sort parameter and orders by metadata_modified desc,
@@ -1191,7 +1152,7 @@ static const hp_source HP3B34_CKANBULK[] = {
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
-    .page_max = 20,
+    .page_max = 200,   /* 22,881 datasets declared by result.count (2026-10-21) = 229 pages of 100: over 200, so the cycle reads a slice a run */
     .page_param = "start",
     /* package_search with sort=id asc, not current_package_list_with_resources:
      * that action has no sort parameter and orders by metadata_modified desc,
@@ -1627,7 +1588,7 @@ static const hp_source HP3B34_CKANBULK[] = {
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
-    .page_max = 20,
+    .page_max = 148,   /* 14,290 datasets declared by result.count (2026-10-21) = 143 pages of 100, +5 so the walk ends on the short page */
     .page_param = "start",
     /* package_search with sort=id asc, not current_package_list_with_resources:
      * that action has no sort parameter and orders by metadata_modified desc,
@@ -1666,7 +1627,7 @@ static const hp_source HP3B34_CKANBULK[] = {
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
-    .page_max = 20,
+    .page_max = 148,   /* 14,289 datasets declared by result.count (2026-10-21) = 143 pages of 100, +5 so the walk ends on the short page */
     .page_param = "start",
     /* package_search with sort=id asc, not current_package_list_with_resources:
      * that action has no sort parameter and orders by metadata_modified desc,
@@ -1705,7 +1666,7 @@ static const hp_source HP3B34_CKANBULK[] = {
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
-    .page_max = 20,
+    .page_max = 148,   /* 14,290 datasets declared by result.count (2026-10-21) = 143 pages of 100, +5 so the walk ends on the short page */
     .page_param = "start",
     /* package_search with sort=id asc, not current_package_list_with_resources:
      * that action has no sort parameter and orders by metadata_modified desc,
@@ -2050,7 +2011,7 @@ static const hp_source HP3B34_CKANBULK[] = {
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
-    .page_max = 20,
+    .page_max = 32,   /* 2,627 datasets declared by result.count (2026-10-21) = 27 pages of 100, +5 so the walk ends on the short page */
     .page_param = "start",
     /* package_search with sort=id asc, not current_package_list_with_resources:
      * that action has no sort parameter and orders by metadata_modified desc,
@@ -2117,7 +2078,7 @@ static const hp_source HP3B34_CKANBULK[] = {
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
-    .page_max = 20,
+    .page_max = 32,   /* 2,602 datasets declared by result.count (2026-10-21) = 27 pages of 100, +5 so the walk ends on the short page */
     .page_param = "start",
     /* package_search with sort=id asc, not current_package_list_with_resources:
      * that action has no sort parameter and orders by metadata_modified desc,
@@ -2156,7 +2117,7 @@ static const hp_source HP3B34_CKANBULK[] = {
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
-    .page_max = 20,
+    .page_max = 130,   /* 12,493 datasets declared by result.count (2026-10-21) = 125 pages of 100, +5 so the walk ends on the short page */
     .page_param = "start",
     /* package_search with sort=id asc, not current_package_list_with_resources:
      * that action has no sort parameter and orders by metadata_modified desc,
@@ -2585,7 +2546,7 @@ static const hp_source HP3B34_CKANBULK[] = {
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
-    .page_max = 20,
+    .page_max = 200,   /* 192,703 datasets declared by result.count (2026-10-21) = 1,928 pages of 100: over 200, so the cycle reads a slice a run */
     .page_param = "start",
     /* package_search with sort=id asc, not current_package_list_with_resources:
      * that action has no sort parameter and orders by metadata_modified desc,
@@ -2702,7 +2663,7 @@ static const hp_source HP3B34_CKANBULK[] = {
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
-    .page_max = 20,
+    .page_max = 30,   /* 2,425 datasets declared by result.count (2026-10-21) = 25 pages of 100, +5 so the walk ends on the short page */
     .page_param = "start",
     /* package_search with sort=id asc, not current_package_list_with_resources:
      * that action has no sort parameter and orders by metadata_modified desc,
@@ -3004,7 +2965,7 @@ static const hp_source HP3B34_CKANBULK[] = {
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
-    .page_max = 20,
+    .page_max = 27,   /* 2,166 datasets declared by result.count (2026-10-21) = 22 pages of 100, +5 so the walk ends on the short page */
     .page_param = "start",
     /* package_search with sort=id asc, not current_package_list_with_resources:
      * that action has no sort parameter and orders by metadata_modified desc,
@@ -3043,7 +3004,7 @@ static const hp_source HP3B34_CKANBULK[] = {
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
-    .page_max = 20,
+    .page_max = 200,   /* 33,062 datasets declared by result.count (2026-10-21) = 331 pages of 100: over 200, so the cycle reads a slice a run */
     .page_param = "start",
     /* package_search with sort=id asc, not current_package_list_with_resources:
      * that action has no sort parameter and orders by metadata_modified desc,
@@ -3121,7 +3082,7 @@ static const hp_source HP3B34_CKANBULK[] = {
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
-    .page_max = 20,
+    .page_max = 98,   /* 9,282 datasets declared by result.count (2026-10-21) = 93 pages of 100, +5 so the walk ends on the short page */
     .page_param = "start",
     /* package_search with sort=id asc, not current_package_list_with_resources:
      * that action has no sort parameter and orders by metadata_modified desc,
@@ -3199,7 +3160,7 @@ static const hp_source HP3B34_CKANBULK[] = {
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
-    .page_max = 20,
+    .page_max = 200,   /* 246,666 datasets declared by result.count (2026-10-21) = 2,467 pages of 100: over 200, so the cycle reads a slice a run */
     .page_param = "start",
     /* package_search with sort=id asc, not current_package_list_with_resources:
      * that action has no sort parameter and orders by metadata_modified desc,

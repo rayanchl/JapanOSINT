@@ -89,7 +89,21 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 58,055** (2026-10-22): 58,052 plus the three rows
+**The registered count is 58,045** (2026-10-22): main's 57,527 merged with this
+branch's 58,055 on the **57,536** base they share, MEASURED with `make
+source-count` rather than computed — and the arithmetic cross-checks it to the
+row: 57,536 + this branch's 519, less main's 9 `&amp;` duplicates, less **1**
+for `JO34_CKANRES_CKAN_PUBLISHING_SERVICE_GOV_UK`, which main removed and this
+merge takes. That last row is the merge's one real decision: this branch had
+flagged it as "could be made to work and should not be" and left it
+registered, while main measured both ends — `ckan.publishing.service.gov.uk`
+and `data.gov.uk` answer 59,371 and 59,370 datasets within the same hour, so
+the first host IS the CKAN instance behind the second and exposes no drafts it
+hides. **Keep the canonical public endpoint, not the backend**: `data.gov.uk`
+is the name that survives an internal re-platform, and it is the row that was
+re-pointed and measured. A flag is not a decision; main's is.
+
+**This branch's count was 58,055** (2026-10-22): 58,052 plus the three rows
 open item B2's long tail ends with, each a publisher's own bulk file standing in
 for a search that is gone —
 `JP_PMDA_NEW_DRUG_APPROVALS` (the annual drug-approval workbook, 95 of 95 over
@@ -153,6 +167,17 @@ stored the page's NAVIGATION LINKS as aircraft. **A row that was failing
 honestly can start answering wrongly the moment a fix lets it through — read
 what it stores, not that it stores.**
 
+**Main's count was 57,527** (2026-10-22): 57,536 less nine rows that
+duplicated another row once their URL's `&amp;` was decoded. **A literal
+`&amp;` in a row URL is not always a bug to fix**: it sends `amp;type=…`,
+which the server ignores, and 1,076 rows had one. Decoded and re-measured
+(`docs/amp-decode-2026-10-22.tsv`), 714 store as much or more (16 of them
+only once decoded), but 206 stored
+LESS — a newspaper search whose real filter finds nothing, a Joomla row then
+served the Atom it asked for against an RSS declaration, a CMS honouring a
+small `displayCount` — and keep the `&amp;` with a marker on the row. Measure
+both URLs before changing one. Ledger: `docs/SOURCE_COUNT_LEDGER.md`.
+
 **Main's count was 57,536** (2026-10-21): main's 57,415 (below) plus
 this branch's 121 on the same 56,955 base — batch 51's 136, less 29
 takeovers, plus 15 browser-profile feeds, less one duplicate FAA row — merged
@@ -160,25 +185,50 @@ with no shared endpoint. On this branch alone the count was **57,076**.
 
 **Browser profile for hosts that refuse every honest agent** (2026-10-21, the
 repository owner's decision, reversing the earlier "never impersonate a
-browser" rule FOR LISTED HOSTS ONLY): `BROWSER_HOSTS` in `core/httpclient.c`.
-`http_request()` gives a request to a listed host a browser User-Agent plus
+browser" rule FOR LISTED HOSTS ONLY): `HA_BROWSER` entries in
+`core/host_agents.def` (below). `http_request()` gives a request to such a host a browser User-Agent plus
 `Accept-Language` and `Sec-Fetch-*` (replacing any `User-Agent` the caller set)
 and keeps the caller's `Accept` — NOAA answers an HTML `Accept` with a 202
 challenge, and `www.bls.gov` needs the `Sec-Fetch-*` headers, not just the
 agent. Every other host still identifies itself. Admit a host only after
 bisecting it: engine agent, the agent without "collector", a bare
-`JapanOSINT/1.0` — the per-host `UA_OVERRIDE` table is the answer when one of
-those passes. Listing `registry.faa.gov` revived `FAA_REGISTRY` (31 fields:
+`JapanOSINT/1.0`, the `Mozilla/5.0 (compatible; JapanOSINT/1.0; …)` prefix —
+and give the host the cheapest agent that passes. Listing `registry.faa.gov` revived `FAA_REGISTRY` (31 fields:
 owner, address, Mode S) and `US_FAA_AIRCRAFT_REGISTRY`, which was asking for
 `Nametxt=` (the form) where `nametxt=…&sort_option=1` returns results: 1,729
 aircraft for one operator over 36 pages, keyed `N-Number+Serial Number` because
-an N-number can hold a reservation row and an aircraft row. A third FAA row,
+an N-number can hold a reservation row and an aircraft row. Since 2026-10-21
+each hit also fetches its own N-number page (`detail_html_kv`, below), so a
+record carries the full registration (37 fields for an aircraft: owner and
+address, Mode S octal and hex, engine, airworthiness, certificate dates; a
+reservation's own fields for a reserved number). Measured: one operator's
+aircraft, 37 of 37 fields; SOUTHWEST AIRLINES, 743 pages fetched in the
+120 s detail budget and 986 marked `_detail_pending` with the notice saying so. A third FAA row,
 `FAA_NNUMBER_REGISTRY`, read the same page as anchors — once the 403 lifted it
 stored the site's navigation links as aircraft, a confident wrong answer — and
 is removed as a duplicate of `FAA_REGISTRY`. **When a fix lets a refused row
 through, read what it stores**: a 403 notice is honest, a page of nav links is
 not. And `sec-reliefweb-headlines` was never an agent problem: its URL 301s to
 plain `http://`, where a firewall answers a zero-byte 202; the curl CLI hid it.
+
+**One per-host User-Agent table: `core/host_agents.def`** (2026-10-21). It was
+three mechanisms with three precedences — `UA_OVERRIDE` and `BROWSER_HOSTS` in
+`core/httpclient.c`, and 471 per-row `.headers` User-Agents on 320 hosts
+(batches 44–48), where the row's header beat `UA_OVERRIDE` and `BROWSER_HOSTS`
+beat both. Now one line per host names one agent kind (`HA_NOCOLLECTOR`,
+`HA_CONTACT`, `HA_RCORP`, `HA_COMPAT`, `HA_BROWSER`), and for a listed host the
+table's agent goes on the wire whatever a row set; an unlisted host keeps a
+row's own header, else `JO_USER_AGENT`. 403 hosts. `./bin/japanosint
+--host-agents` prints it (host, kind, agent, extra headers), and
+`tools/probe_hp_batch.py` reads the same file, so the probe sends what the
+engine sends. Measured before the move: no other source fetches from the 320
+compat hosts, so the wire did not change, and the emit sweep of all 586 rows on
+listed hosts read 562 OK; the rest failed under every agent tried, including
+the old one (down hosts, 403 walls, two browser-profile hosts refusing this
+environment that day). The move dropped `midjourneyvideo.net`: a gambling site
+on a city's lapsed domain, whose row had already been removed as a takeover,
+was still in `UA_OVERRIDE`. `tests/unit/test_host_agents.c` pins the
+resolution.
 
 **The registered count was 57,062** (2026-10-21): the 56,955 below, plus
 **batch 51's 136** Hong Kong and Macao government feeds and China News Service
@@ -422,9 +472,10 @@ The lessons from batches 43–48 that a new batch must not relearn:
   `header1=User-Agent: Mozilla/5.0 (compatible\; JapanOSINT/1.0\; +https://github.com/rayanchl/JapanOSINT)`:
   the same identified client with the browser-compatible prefix the walls
   key on, nothing hidden. They are back in their beats (86 UK, 328 FR, 58 IT,
-  8 Wikidata, 4 IGO, 7 press) WITH the header on the row, so the condition a
-  row was proven under is the one it runs under; the four that refused twice
-  stay out. Try the header before calling a 403 dead.
+  8 Wikidata, 4 IGO, 7 press) with the agent their hosts were proven under —
+  first as a header on each row, since 2026-10-21 as an `HA_COMPAT` line in
+  `core/host_agents.def`; the four that refused twice stay out. Try that
+  agent before calling a 403 dead.
 * **A URL changed after validation is unvalidated** (an unescaped `&amp;`
   made Joomla serve Atom where rows declared RSS), **a well-formed feed with
   zero items is `EMPTY_RESULTSET`**, **a substring count of `<item` counts the
@@ -545,6 +596,87 @@ carry every beat of both numbers, one reading per row;
   two repositories answered 5xx twice and left. JAIRO Cloud's shared hosting
   answers a burst with 5xx — the probe at twelve saw twelve, the engine at six
   saw five — the reason the probe now paces per host.
+
+Three things this branch measured on 2026-10-21 that the readings above predate:
+
+* **A `page_max` of 20 on every surviving CKAN row reads 2,000 datasets a run
+  and cycles, and 14 of them do not need to.** `package_search?rows=0` answers
+  `result.count` on the same endpoint those rows now read, so the pages each
+  needs is arithmetic: 19 portals measured, **792,984 datasets**, 14 needing
+  ≤200 pages and now completing in ONE run (opendata.nhsbsa 2,166, Berlin
+  2,627, Aragón 2,425, data.ca.gov 4,675 — each its declared total exactly,
+  `stored == emitted`), 5 keeping the cycle at a 200-page cost ceiling
+  (Hamburg 246,666, geoscience QLD 192,703, govdata.de 169,142). `page_resume`
+  stays on all of them: a walk that completes stores no position, so it is a
+  genuine no-op. `docs/measured-page-ceilings-batch34-2026-10-21.tsv`.
+* **A `page_max` set to EXACTLY the pages the total needs manufactures a FALSE
+  truncation notice.** data.ca.gov at `page_max = 47` stored all 4,675 records
+  *and* filed "the page ceiling or a cancel stopped the walk" with
+  `more_pages_pending: true`: its last page was short (75 of 100, the
+  upstream's own end of data) and our ceiling bit in the same breath, which the
+  engine cannot distinguish. At 52 the same 4,675 arrive with no notice. Leave
+  headroom — a notice that fires when nothing was lost teaches a reader to
+  ignore notices, and that is the one thing rule 2's disclosures cannot afford.
+* **NOA was removed as "does not run event/1" and it does.** An FDSN
+  `nodata=404` means NO DATA MATCHED, not NO SUCH SERVICE, and that parameter
+  is in the row's own URL; a 400 can mean the query was too broad. The test is
+  `/fdsnws/<service>/1/version`: NOA answers **1.2.4** and refuses an unbounded
+  query with 400, so a rolling 30-day window — `starttime={date:%Y-%m-%d:-30}`,
+  never a frozen date — stores **1,985 events** where the row stored nothing.
+  The row is back. KOERI really has no event service (404 on `version` over
+  https and http and on `application.wadl`, while `station/1/version` is 200)
+  and ICGC's is deployed but answers "no matching events found" for every
+  window including `starttime=1900-01-01`; both stay removed, and both hosts'
+  station services were already wired. **Ask the `version` endpoint before
+  concluding a service is absent**, and read a status against the parameters
+  the row itself sent. The two surviving catalogues were also still
+  `orderby=time` (FDSN's newest-first) at `page_max = 20`: ETHZ is `time-asc`
+  at 52 now and stores **46,620 events**, exactly the count an offset bisection
+  predicted, and SCEDC cycles ascending.
+
+**21 of the 179 stopped dead on the ceiling, and all 21 are now measured and
+fixed** (2026-10-21, `docs/measured-page-ceilings-batch34-2026-10-21.tsv`): 19
+CKAN portals at exactly 2,000 (20 pages x 100) and the two surviving FDSN event
+catalogues at exactly 20,000 (20 x 1,000). **A round number equal to ceiling x
+page size is never the upstream's own total.** Their declared totals come to
+**792,984 datasets** for the CKAN 19 alone.
+
+Finding them needed a count the row's own endpoint does not publish:
+`current_package_list_with_resources` returns a BARE LIST, which is precisely
+why 19 rows could sit at 2,000 looking healthy — there was no total in the
+envelope for any gate to compare against. `package_search?rows=0` on the same
+host answers `result.count`, so the total comes from the upstream itself.
+Offset safety was measured too, not assumed, on all 19: stable (the same
+offset twice gives the same ids), disjoint, and the offset honoured.
+
+Fixes follow this file's own 200-page split: 14 rows ≤200 pages get a measured
+`page_max` (opendata.nhsbsa 2,000 → 2,166, Berlin → 2,627, Aragón → 2,425,
+data.ca.gov → 4,675 — each its declared total exactly, `stored == emitted`);
+5 rows over 200 get `page_max = 200` plus **`page_resume = 1`**, so the per-run
+cost stays at the count this file calls sane and the collection is read over a
+cycle. Verified over two runs against one database: `data.gov.ie` 20,000 then
+2,881 = **22,881, its declared total exactly**, and run 2 filed no notice
+because the cycle completed and cleared.
+
+* **A `page_max` set to EXACTLY the pages the total needs manufactures a false
+  truncation notice.** Measured on `data.ca.gov`: at `page_max = 47` the walk
+  stored all 4,675 records and filed `"the page ceiling or a cancel stopped the
+  walk"` with `more_pages_pending: true`. The last page was SHORT (75 of 100) —
+  the upstream's own end of data — but our ceiling bit in the same breath, and
+  the engine cannot tell the two apart. At 52 the same 4,675 records arrive with
+  **no notice at all**. So leave headroom above the measured need: a notice that
+  fires when nothing was lost teaches a reader to ignore notices, which is the
+  one thing rule 2's disclosures cannot afford. (The cycling rows' notices are
+  TRUE — they really did stop mid-collection — and say where.)
+* **FDSN publishes no total, so the catalogue was sized by bisecting the
+  offset** — ~20 one-row requests. ETHZ holds ~46,620 events, oldest ECOS-09's
+  year-0250 entry; the walk then emitted exactly 46,620, so the probe and the
+  engine agree to the record. SCEDC answers at offset 200,000 with a 1987 event
+  and times out at 1,000,000, so its depth is recorded as **unmeasured rather
+  than absent** and it cycles. Both were `orderby=time` — FDSN's newest-first —
+  which is the drift hazard this file names: new events land at the HEAD of the
+  collection the walk is reading. Both are `time-asc` now, verified accepted
+  per host.
 
 Two review findings from batch 34 that generalise:
 
@@ -689,10 +821,14 @@ Where the tree actually stands, as `make audit-sources` reports it:
   after adding a table: batch 18 introduced two `single-page` findings here (a
   paged endpoint declared without `page_param`) and they had to be fixed before
   the gate would pass again.
-* **the rest of the tree — 0 findings** (2026-10-20; 1,678 files on 2026-10-07;
-  it first reached zero on 2026-08-24, from ~127 across ~74 files). **It had
-  drifted to 50 findings across 27 files and nobody noticed**, which is the
-  exact property this entry exists to protect — see the note below. Every first-only, single-page, record-cap, loop-break,
+* **the rest of the tree — 0 findings** (1,744 files scanned, 2026-10-22; 1,678
+  files on 2026-10-07; it first reached zero on 2026-08-24, from ~127 across
+  ~74 files). **It had drifted to 50 findings across 27 files and nobody
+  noticed**, which is the exact property this entry exists to protect — and
+  TWO sessions found the same 50 on the same day, independently: 49 URLs handed
+  to `pw_walk_max`, `od_walk_rows_max`, `od_ckan_walk` or `od_ods_catalog_walk`
+  — walkers the scanner did not name — plus the `.url` copy of each in its
+  `source_def`. See the note below. Every first-only, single-page, record-cap, loop-break,
   limit-one and dedupe-ring finding has been read and closed one of three ways:
   the discard was real and was fixed, the line carries an `exhaustive-ok`
   marker with a reason, or it was a scanner false positive and is marked as
@@ -1224,6 +1360,48 @@ underneath them that older notes in this file predate:
   registered key has no line. The rules live in the script (OVERRIDES,
   KEYWORDS, CATEGORY_GROUP).
 
+* **Per-source operator settings** (2026-10-20): `core/source_settings.c`,
+  `GET`/`PUT /api/sources/:id/settings`, and a Settings section on the source
+  page. The key set is **CLOSED** — a table in the .c file declares each key's
+  type, bounds, default and help text, a `PUT` of anything else is refused by
+  name, and the bound is re-checked on every READ because a row can arrive
+  from an older build or a hand-edited database. A free key/value store hung
+  off every source would be a configuration surface nobody can audit: a typo
+  would read as a setting that is silently ignored.
+
+  **`enabled` is separate from the value on purpose**: switching a knob off
+  keeps the number an operator tuned, so a re-enable does not start from a
+  guess, and a disabled row resolves exactly as an absent one. The payload
+  carries `effective` — what the code will actually use — because the toggle
+  and the number do not say that between them, and `can_write` from the route
+  that enforces the gate, so the page states who may change a thing instead of
+  offering a form and then refusing it with 403. Reads are plain-auth; writes
+  are operator-gated and audited (`source.setting.put`).
+
+  The one key it ships with is **`http_body_ceiling_bytes`**, which raises
+  `core/httpclient.c`'s 64 MB response ceiling for ONE source. That ceiling is
+  a security bound — `CURLOPT_ACCEPT_ENCODING ""` means libcurl inflates
+  before we see a byte, so a small gzip bomb expands without limit — and it
+  fails CLOSED (the transfer aborts, body NULL), which is why
+  `ods-public-geonames` needed it: 171,176 records in a ~111 MB
+  `exports/jsonl` the ODS records API refuses to page past 10,000. Measured
+  2026-10-20: 10,000 → **171,176 stored**, `stored == emitted`, 111,298,693
+  bytes. How much memory one run may hold is a decision about the machine it
+  runs on, so it belongs to the operator and not to a `#define` in a
+  collector. `http_request_max()` carries it per call, thread-local and
+  restored on return so it never widens another worker's fetch, it is still
+  enforced on the decompressed stream, and **an explicit `$JO_HTTP_MAX_BODY`
+  clamps it** — an operator who lowers the ceiling to bound a small deployment
+  is not overruled by a collector. It reaches the collector on
+  `source_ctx.body_ceiling` (0 = the default), for the reason `resume_in`/
+  `resume_out` do: `lib/` and the collectors hold no database code.
+
+  `tests/unit/test_source_settings.c` pins the unknown key, the out-of-range
+  write AND read, disabled-is-not-unset, and a setting for a source nobody
+  registers; the client's `sourcePages.test.jsx` pins that the page states the
+  server's bounds rather than its own, reads a disabled knob as the default,
+  and disables the controls for a non-operator.
+
 Plan, audit and as-built notes: `docs/source-pages-revamp/`.
 
 ## Cadence policy (2026-10-20)
@@ -1276,7 +1454,14 @@ every tick, disabling keeps the number, clearing deletes the row, and a change
 re-plans the running scheduler exactly as a policy change does. The source
 page's Frequency card shows declared, measured, policy and "set for this
 source" side by side and names which one decided (`schedule.cadenceBasis`);
-`/api/status` rows carry `overrideInterval`. `tests/unit/test_source_interval.c`
+`/api/status` rows carry `overrideInterval`. **It is edited from the page's
+Settings section as the key `interval_sec`** (2026-10-22): `core/source_settings.c`
+lists it beside the body ceiling, but as a FACADE — reads, writes and the JSON
+for that key delegate to `source_interval.{c,h}`, so there is one row, one
+cache and one generation, not a copy in `source_settings`. Its "default" in
+the JSON is per source (what runs without an override), the key is absent for
+an entity pivot, and the same `PUT /api/sources/:id/settings` the body ceiling
+uses writes it (audited `source.setting.put`). `tests/unit/test_source_interval.c`
 pins the refusals, the precedence under a global policy, disable, persistence
 and clear.
 
@@ -1416,6 +1601,7 @@ says why.
 | `tools/diagnose_emit_keys.py` | why a row emitted nothing, and which `title_keys`/`id_keys` fix it |
 | `tools/cleanup_stale_uids.py` | the rows identity fixes left in an OLD database: a plain-key row whose qualified siblings now hold the same record (the keyqual collectors and FRA), and wayback_jp's captures from before digest+timestamp+URL. Reports by default. `--delete` removes, in one transaction, only rows whose replacement is proven to exist and that nothing references. `--self-test` runs it on a scratch DB (also from `make unit`) |
 | `tools/wp_routes_sweep.py` | the WordPress method as a tool: `sweep` asks each host for its REST root (the homepage's `Link rel="https://api.w.org/"`, else `/wp-json`), its post types and one page of each collection, writing routes.tsv/probe.tsv; `manifest` turns probe.tsv into host-type beats and a rejected TSV. Hosts are normalised (`www.` dropped, one row per REST root) because `funq.jp` and `www.funq.jp` reached the same site and only `batch_exclusions.py` noticed |
+| `./bin/japanosint --host-agents` | the per-host User-Agent table (`core/host_agents.def`) as the engine resolved it: host, agent kind, the agent string, and the extra headers an `HA_BROWSER` host gets. The probe reads the same `.def`, so what it prints is what both send |
 | `./bin/japanosint --discover-feeds <sites> [--jobs N]` | RSS/Atom autodiscovery in C (`core/feeddisc.c`, `test_feeddisc`): reads each homepage's own `<link rel="alternate">` declarations (relative hrefs resolve against the URL asked for, so a homepage redirecting to a squatter's domain yields nothing), skips WordPress comment feeds, decodes `&amp;`, then fetches every feed through the engine's HTTP client — same agent, per-host overrides and pacing — and prints a TSV verdict per feed: `PASS`, `TAKEOVER_SUSPECT` (gambling/pharma phrases or an unexpected script in the item titles — a question for a human, not a verdict), `REGISTERED` (any source's portal or hp row URL), or the failure. No database |
 | `tools/gen_hp_batch.py` | manifest → C, one table per beat, `--prefix`/`--batch` so batches never collide — but the batch NUMBER is yours to keep unique: main shipped a batch 32 while a branch was open with its own, both created `docs/verified-sources-batch32.tsv`, and renumbering the branch to 33 after the fact meant touching the manifest, both TSVs, the table, its array name and two batch citations that had landed in `lib/hpengine.h` and `core/hostgate.c`. Rejects duplicate opts, non-integer int opts, and an opt whose value **swallowed the next one** through a stray `\;`. **Its opt table is a THIRD place a new engine field has to be added**, and it is the one that gets forgotten: `page_resume` reached the engine and 533 rows of C without reaching here, so batch 46 — the first batch to need it — had every such row rejected as an unknown opt. `page_walk` had been missed the same way before it. When you add an `hp_source` field, add it to `STR_OPTS`/`INT_OPTS` in the same change |
 
@@ -1907,6 +2093,15 @@ Engine subtleties worth knowing before writing a row:
 * **A detail hop carries the row's headers** (token, UA, Accept), minus the
   POST body's content type. It used to carry none, so a header-authenticated
   row stored `_detail_error` on every record (PY_AIP: 500 without, 200 with).
+* **A detail hop that answers HTML** is `detail_html_kv=1`: the record page's
+  label/value cells merge under `detail.` — every cell with a non-empty
+  `data-label` (the accessible responsive-table pattern; an EMPTY data-label
+  is the visible label column and is skipped), and a `<th>` paired with the
+  `<td>` after it. A repeated label is indexed (`Expiration Date.1`), never
+  overwritten; a page with no such cells is `_detail_error` on the record.
+  Opt-in, because navigation tables are cells too. Without it an HTML detail
+  body is "not JSON; nothing merged", which is why the FAA owner search
+  stored a summary row and no registration. `hptest` 41 pins it.
 * **XML records keep every field**: repeated children are indexed (`name`,
   `name.1`, `author.1.name`), text beside children is `<key>.#text`, and
   whatever the depth (32) / field (`HP_MAX_PROPS`) bounds keep out is counted
@@ -1947,6 +2142,15 @@ Engine subtleties worth knowing before writing a row:
   than ignored. Twenty-two comments in 14 collector files cite measurements made
   under "the default 10-page ceiling": those are dated records, not claims about
   today.
+
+  **`$JO_PAGE_MAX` moves the DEFAULT; a row's own `page_max` is final.**
+  `hpengine.c` reads `s->page_max > 0 ? s->page_max : jo_page_max(NULL)`, so
+  the variable cannot lower OR raise a row that declares a ceiling — it only
+  decides what a row WITHOUT one gets. "Overrides in both directions" above is
+  about that default. Read the other way it costs a whole run: an attempt to
+  shrink `JO34_FDSNEVT_SERVICE_SCEDC_CALTECH_EDU`'s declared 200 pages to 5 for
+  a quick cycle test read **80 pages** before the clock stopped it
+  (2026-10-21). To bound a declared row for a test, change the row.
 * **The ceiling is now MEASURED across every paged scheduled row**
   (2026-10-12, `docs/measured-page-ceilings-2026-10-12.tsv`): 2,137 rows,
   3-page probe. 1,111 COMPLETE, 534 `CEILING_UNKNOWN` (the upstream publishes
@@ -2655,6 +2859,19 @@ failing tests repaired. What it guarantees, and the knobs it adds:
   `Retry-After`; the camera proxy refuses LAN, metadata and link-local
   targets, always — there is no LAN opt-in (`JO_CAMERA_ALLOW_LAN` was removed
   2026-10-20; tests use `hostgate_camera_test_allow_lan()`).
+  **ffmpeg's own sockets are boxed too** (2026-10-22, `core/netjail.{c,h}`):
+  every network run of ffmpeg/ffprobe goes through a per-child forward proxy
+  (http/https/hls) or a pinned relay (rtsp/rtsps) that resolves each name once,
+  judges every answer under the camera policy and connects to what it judged —
+  so a live playlist's later segments and a re-resolved name are judged, not
+  just the first URL. On Linux the child also runs in its own network
+  namespace (a user namespace when not root) whose only listener is that
+  proxy, so an RTSP redirect or a `tcp://` segment has no route at all. Where
+  namespaces are unavailable it degrades to proxy-only, and
+  `GET /api/admin/ffmpeg/capabilities` → `network_sandbox` says which.
+  rtmp/tcp/udp network inputs have no boxed path and are refused.
+  `test_netjail.c` decodes a real HLS frame through the box when ffmpeg is
+  installed (CI installs it), as root and as an unprivileged user.
 * **LLM queue**: bounded lanes (`JO_LLM_QUEUE_MAX`, default 64 waiting; a job
   waits at most `JO_LLM_QUEUE_WAIT_FACTOR` × its timeout, default 4), no retry
   after a timeout, queue time reported apart from model time;

@@ -144,6 +144,9 @@ INT_OPTS = {"detail_max", "page_start", "page_size", "page_max", "max_items",
             # the scheduler re-buckets the cadence from the newest stored
             # item's age after every run (hpengine.h adaptive_interval)
             "adaptive_interval",
+            # the detail hop answers an HTML record page: merge its
+            # label/value cells (hpengine.h detail_html_kv)
+            "detail_html_kv",
             # {date…} tokens: rendered in UTC+tz_minutes; a dated row whose
             # first page is a 4xx or empty steps the date back up to date_back.
             "tz_minutes", "date_back",

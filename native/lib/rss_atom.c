@@ -338,8 +338,8 @@ int rss_collect(const source_ctx *ctx, intel_sink *sink,
    * (sec-reliefweb-headlines) was following a 301 to a plain-http URL and
    * meeting a firewall's zero-byte 202 there, fixed by naming the final https
    * URL. And hosts that refuse EVERY honest agent are fetched with a browser
-   * profile by the repository owner's decision: BROWSER_HOSTS in
-   * core/httpclient.c, applied by http_request(). Every other host still gets
+   * profile by the repository owner's decision: HA_BROWSER entries in
+   * core/host_agents.def, applied by http_request(). Every other host still gets
    * the agent below. */
   /* One exception to the paragraph above: core/httpclient.c keeps a per-host
    * table for the handful of publishers whose filter objects to ONE token in

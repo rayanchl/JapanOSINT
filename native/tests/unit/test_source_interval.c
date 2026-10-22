@@ -113,5 +113,6 @@ int main(void) {
    * finding: nothing in the product code was leaking. */
   db_close(&db);
   printf("all passed\n");
+  db_close(&db);
   return 0;
 }

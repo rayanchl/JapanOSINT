@@ -11,6 +11,7 @@
 #include "maint_detect.h"
 #include "hostgate.h"
 #include "source_trust.h"
+#include "source_settings.h"
 #include "../third_party/sqlite3.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -583,6 +584,13 @@ int scheduler_run_source(db_handle *db, const source_def *d,
   if (!entity && sched_resume_load(db, d->id, resume_tok, sizeof resume_tok))
     ctx.resume_in = resume_tok;
   if (!entity) ctx.resume_out = sched_resume_out;
+  /* The operator's per-source body ceiling, resolved once per run. 0 when the
+   * setting is absent or switched off, which every caller reads as "use the
+   * process default" — so a deployment that sets nothing is byte-identical to
+   * before this field existed. Resolved HERE rather than inside the collector
+   * because lib/ and the collectors hold no database code (source.h). */
+  ctx.body_ceiling = (size_t)source_settings_int(db, d->id,
+                                                 SRCSET_BODY_CEILING, 0);
 
   struct timespec t0, t1;
   clock_gettime(CLOCK_MONOTONIC, &t0);

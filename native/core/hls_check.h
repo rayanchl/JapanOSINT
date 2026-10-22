@@ -20,11 +20,12 @@
  * It FAILS CLOSED: a playlist that cannot be read, is too large, nests too
  * deep or names too many playlists is refused, never waved through.
  *
- * WHAT IT CANNOT COVER, stated so nobody assumes it does: a LIVE playlist adds
- * segments after it was read here, and ffmpeg resolves names again itself, so
- * an answer can differ from the one judged here (DNS rebinding). Closing those
- * needs ffmpeg's network in a sandbox. The window is the few seconds one frame
- * takes to read.
+ * WHAT IT CANNOT COVER on its own: a LIVE playlist adds segments after it was
+ * read here, and ffmpeg resolves names again itself, so an answer can differ
+ * from the one judged here (DNS rebinding). Those are closed one layer down,
+ * by core/netjail.c (2026-10-22): every request ffmpeg then makes goes through
+ * a proxy that judges and pins it, inside a network namespace with no other
+ * route. This read stays as the cheap first refusal, before any process.
  */
 #ifndef JO_HLS_CHECK_H
 #define JO_HLS_CHECK_H

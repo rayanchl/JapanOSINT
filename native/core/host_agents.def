@@ -1,0 +1,642 @@
+/* core/host_agents.def — THE per-host User-Agent table: one line per host whose
+ * server refuses the engine's default agent (JO_USER_AGENT), naming the agent
+ * that host gets instead. Included by core/httpclient.c (the engine) and read
+ * by tools/probe_hp_batch.py (the probe), so both send the same thing;
+ * `./bin/japanosint --host-agents` prints it.
+ *
+ * PRECEDENCE: for a host listed here the table's agent goes on the wire,
+ * whatever User-Agent a row or a collector set — one rule everywhere. A host
+ * not listed keeps the row's own header if it declared one, else JO_USER_AGENT.
+ *
+ * Admit a host only after bisecting it, cheapest change first: the engine
+ * agent; HA_NOCOLLECTOR (the same agent minus the word "collector");
+ * HA_CONTACT (minus the contact URL); HA_COMPAT (a browser-compatible prefix,
+ * still naming us); HA_BROWSER only when every agent naming us is refused —
+ * the repository owner's decision of 2026-10-21. Keep the measurement beside
+ * the entry.
+ *
+ * Until 2026-10-21 this was three mechanisms with three precedences: the
+ * UA_OVERRIDE and BROWSER_HOSTS tables in httpclient.c, and 471 per-row
+ * `.headers` on 320 hosts (batches 44-48). The per-row header beat
+ * UA_OVERRIDE; BROWSER_HOSTS beat both. Measured before the move: no other
+ * source fetches from those 320 hosts, so the wire did not change.
+ * midjourneyvideo.net was dropped in the move: a gambling site squatting on a
+ * city's lapsed domain, whose row had been rejected as a takeover. */
+
+/* The agents. HA_BROWSER also gets BROWSER_EXTRA_HEADERS (httpclient.c). */
+HOST_AGENT_KIND(HA_NOCOLLECTOR, "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; contact via repo issues)")
+HOST_AGENT_KIND(HA_CONTACT,     "JapanOSINT/1.0 (contact via repo issues)")
+HOST_AGENT_KIND(HA_RCORP,       "RCorp-feeds/1.0 (+https://github.com/RCorp; feed collector; contact via repo issues)")
+HOST_AGENT_KIND(HA_COMPAT,      "Mozilla/5.0 (compatible; JapanOSINT/1.0; +https://github.com/rayanchl/JapanOSINT)")
+HOST_AGENT_KIND(HA_BROWSER,     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36")
+
+/* ── token and contact-URL blocks (was UA_OVERRIDE) ────────────────────── */
+  HOST_AGENT("data.humdata.org", HA_RCORP)
+  /* Same token block as HDX. Measured 2026-08-24:
+   *     engine UA (contains "OSINT")  520
+   *     the agent below                200
+   *     no User-Agent at all           200
+   * We still identify ourselves and still offer a contact route, so this is
+   * the documented remedy rather than an evasion. */
+  HOST_AGENT("www.oasis-open.org", HA_CONTACT)
+  /* Spain's INE web service (servicios.ine.es/wstempus). Measured 2026-09-07
+   * against /wstempus/js/ES/CLASIFICACIONES:
+   *     engine UA                                                403
+   *     "JapanOSINT/1.0"                                         200
+   *     "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas)"   200
+   *     "JapanOSINT/1.0 (contact via repo issues)"               200
+   *     "JapanOSINT/1.0 (feed collector)"                        403
+   *     the RCorp-feeds agent above                              403
+   * The rejected token is the word "collector", not "OSINT" — which is why
+   * the two agents already in this table do not help. The agent below is the
+   * engine's own, with that one word removed: it still names the product,
+   * still gives the repository and still offers a contact route. All eleven
+   * eur-ine-* sources were storing nothing on every scheduled run; with this
+   * agent CLASIFICACIONES, ESCALAS, PERIODICIDADES, UNIDADES, VARIABLES,
+   * PUBLICACIONES, OPERACIONES_DISPONIBLES and TABLAS_OPERACION/{EPA,IPC,IPRI}
+   * all answer 200 with real records. */
+  HOST_AGENT("servicios.ine.es", HA_NOCOLLECTOR)
+
+  /* Boston's CKAN portal, behind the same class of filter. Bisected
+   * 2026-09-11 against data.boston.gov/api/3/action/package_search:
+   *     "JapanOSINT/1.0"                                         200
+   *     "JapanOSINT/1.0 (… feed)"                                200
+   *     "JapanOSINT/1.0 (… collector)"                           502
+   *     the full engine UA                                       502
+   * So it is the word "collector" again, exactly as at INE, and the same
+   * agent clears it — verified on package_search, group_list,
+   * organization_list, tag_list, recently_changed_packages_activity_list and
+   * the per-organization `fq=organization:…` searches, which also honour the
+   * filter (9 of 235 packages for one org, so rule 4d is satisfied). 35
+   * registered us-data-boston-gov-* sources were storing nothing on every
+   * scheduled run. */
+  HOST_AGENT("data.boston.gov", HA_NOCOLLECTOR)
+
+  /* India's Press Information Bureau. Here the rejected token is the contact
+   * URL itself, not a word in the product name. Measured 2026-09-11 on
+   * pib.gov.in/RssMain.aspx?ModId=6&Lang=1&Regid=3 (following its 302):
+   *     "JapanOSINT/1.0"                                       200, 20 items
+   *     "JapanOSINT/1.0 (contact via repo issues)"             200, 20 items
+   *     the feed agent carrying "(+https://github.com/…)"      403
+   * The agent below therefore keeps BOTH the product identity and a contact
+   * route, and drops only the URL its filter refuses. Note this is the RSS
+   * path, which sets its own User-Agent header: it reaches this table through
+   * http_ua_override(), not through CURLOPT_USERAGENT. */
+  HOST_AGENT("pib.gov.in", HA_CONTACT)
+
+  /* Camden County, NJ: the contact URL is the refused token, as at PIB.
+   * Measured 2026-10-21 on www.camdencounty.com/feed/:
+   *     the full engine UA                                       403
+   *     "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas)"   403
+   *     "JapanOSINT/1.0 (contact via repo issues)"               200, 10 items
+   *     "JapanOSINT/1.0"                                          200
+   * us-b50-camdencounty-com was rejected in batch 50 for this until the
+   * retry pass bisected it. */
+  HOST_AGENT("www.camdencounty.com", HA_CONTACT)
+
+  /* The "collector" word filter again, on four more hosts. Measured 2026-09-14
+   * by comparing the engine agent against the same agent with that one word
+   * removed (the INE / Boston agent above):
+   *     data.sanjoseca.gov (OpenGov CKAN)   502 -> 200   15 us-data-sanjoseca-gov-* rows
+   *     www.madamasr.com   (RSS)            520 -> 200   afr-eg-madamasr
+   *     www.telegram.hr    (RSS)            520 -> 200   eur-news-telegram-hr
+   *     www.jornalnoticias.co.mz (RSS)      406 -> 200   afr-mz-jornalnoticias
+   * Every one of those sources was storing nothing on every scheduled run. The
+   * agent still names the product, the repository and a contact route. */
+  HOST_AGENT("data.sanjoseca.gov", HA_NOCOLLECTOR)
+  HOST_AGENT("www.madamasr.com", HA_NOCOLLECTOR)
+  HOST_AGENT("www.telegram.hr", HA_NOCOLLECTOR)
+  HOST_AGENT("www.jornalnoticias.co.mz", HA_NOCOLLECTOR)
+
+  /* SIX MORE, and the "collector" filter now looks like a FAMILY rather than a
+   * run of coincidences. Bisected 2026-10-20 against each host's own
+   * /api/3/action/package_search?rows=1:
+   *
+   *     host                   engine UA   without "collector"   bare
+   *     data.ok.gov              502            200               200
+   *     data.virginia.gov        502            200               200
+   *     opendata.hawaii.gov      502            200               200
+   *     data.houstontx.gov       502            200               200
+   *     data.milwaukee.gov       502            200               200
+   *     data.sanantonio.gov      502            200               200
+   *
+   * Six for six, the same status and the same single word as data.boston.gov
+   * and data.sanjoseca.gov above — two OpenGov-hosted CKAN portals, which these
+   * six also are. So a 502 from a US municipal CKAN is worth bisecting the
+   * agent on BEFORE it is read as a dead endpoint or as load.
+   *
+   * How they were found is the part worth keeping. The batch-34 emit audit
+   * reported all six FETCH_FAILED at three parallel jobs, and this tree's own
+   * rule ("a verdict that changes with --jobs is not a measurement") said to
+   * re-run them serially. They failed again, serially — which ruled concurrency
+   * OUT and left the client as the only difference, since the same URLs answer
+   * 200 in half a second to a hand request.
+   *
+   * AND THE TREE ALREADY KNEW, one row at a time. Each of these six hosts
+   * carries a second registered row from an earlier batch — five JO29A_FGT_*
+   * and SOCRATA_HAWAII — and every one of them carried a per-ROW
+   * `User-Agent: JapanOSINT/1.0` header, which is why those six store records
+   * today (data.ok.gov: 397, its whole package_search count; San Antonio 166,
+   * Milwaukee 186, Houston 96). So an earlier session met this same filter on
+   * these same hosts and solved it in the row rather than in a table, and
+   * batch 34 could not inherit what was written there. A host-level entry
+   * fixes every row on the host, including the next one somebody adds — which
+   * is this file's whole argument, reached independently. */
+  HOST_AGENT("data.ok.gov", HA_NOCOLLECTOR)
+  HOST_AGENT("data.virginia.gov", HA_NOCOLLECTOR)
+  HOST_AGENT("opendata.hawaii.gov", HA_NOCOLLECTOR)
+  HOST_AGENT("data.houstontx.gov", HA_NOCOLLECTOR)
+  HOST_AGENT("data.milwaukee.gov", HA_NOCOLLECTOR)
+  HOST_AGENT("data.sanantonio.gov", HA_NOCOLLECTOR)
+
+  /* planelogger.com, found by re-asking batch 31's twice-refused rows what they
+   * actually answer rather than removing them under "fails twice leaves".
+   * Measured 2026-10-20 on /Aircraft/Search?searchterm=Toyota, twice each:
+   *     engine UA        403, 403
+   *     HA_NOCOLLECTOR   200, 200  (19,742 bytes, the aircraft table)
+   *     "JapanOSINT/1.0" 200, 200
+   * so it is the word filter again, and OFFSHORE_AIRCRAFT_REGISTRIES was one
+   * table entry away from working rather than dead. Worth noting what the
+   * triage that found it ALSO found: of the other 89 rows, 36 answer 403 at the
+   * host ROOT as well as on the path, which no agent naming us clears — a
+   * wall, not a word filter. This entry is the one row where the bisection
+   * changed the answer, which is the measurement being worth making and not a
+   * reason to expect it often. */
+  HOST_AGENT("www.planelogger.com", HA_NOCOLLECTOR)
+
+  /* OCHA Financial Tracking Service (api.hpc.tools) — the HDX "OSINT" token
+   * block, same operator family. Measured 2026-09-14: engine agent 406, the
+   * RCorp-feeds agent HDX already uses 200. Four ocha-fts-* rows. */
+  HOST_AGENT("api.hpc.tools", HA_RCORP)
+
+  /* Seven more, bisected with libcurl on 2026-09-15 (engine agent → the agent
+   * below; statuses as measured):
+   *   reliefweb.int      406 "Blocked" (also without "collector", also bare
+   *                      JapanOSINT/1.0)            → RCorp-feeds 200, 66 KB RSS
+   *   www.unocha.org     406 for any agent containing "OSINT"
+   *                                                 → RCorp-feeds 301→200, 10 items
+   *   hapi.humdata.org   406 "Blocked due to bot activity" (HDX's API host)
+   *                                                 → RCorp-feeds 200, 33 KB records
+   *   jamestown.org      403, also without "collector" or the repo URL
+   *                                                 → RCorp-feeds 200, 10 items
+   *   www.bsi.bund.de    403 (5 feeds) — the word "collector"
+   *                                                 → engine agent minus it 200, 50 items
+   *   container-news.com 403 — the word "collector" → same agent 200, 88 KB
+   *   www.ftc.gov        403 for every agent carrying a github URL
+   *                                                 → product + contact route 200, 10 items
+   * Same remedy as the entries above: each agent still names the client and a
+   * contact route and drops only the token the filter rejects. Hosts that
+   * refused EVERY agent (Europarl 202-empty, Tel Aviv GIS 571, CISA/FEMA/ICE
+   * fingerprinting libcurl itself) are deliberately NOT listed. */
+  HOST_AGENT("reliefweb.int", HA_RCORP)
+  HOST_AGENT("www.unocha.org", HA_RCORP)
+  HOST_AGENT("hapi.humdata.org", HA_RCORP)
+  HOST_AGENT("jamestown.org", HA_RCORP)
+  HOST_AGENT("www.bsi.bund.de", HA_NOCOLLECTOR)
+  HOST_AGENT("container-news.com", HA_NOCOLLECTOR)
+  HOST_AGENT("www.ftc.gov", HA_CONTACT)
+  /* The "collector" word filter once more (decided 2026-10-09 to route
+   * around it). Measured against /en/bycountry/JP/:
+   *     engine UA                                              403, 153 B
+   *     "RCorp-feeds/1.0 (…; feed collector; …)"               403
+   *     "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas;
+   *      contact via repo issues)"                             200, 19,850 B
+   * cam-insecam-scrape had failed every run since 2026-10-06 on the 403. */
+  HOST_AGENT("www.insecam.org", HA_NOCOLLECTOR)
+
+  /* INGV's FDSN event service, the same one-word filter. Measured 2026-10-06
+   * against fdsnws/event/1/query?format=geojson:
+   *     "JapanOSINT/1.0"                                         200
+   *     "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas)"   200
+   *     "JapanOSINT/1.0 (feed collector)"                        connection dropped
+   *     the full engine UA                                       connection dropped
+   *     the agent below                                          200 (61 KB)
+   * geo-ingv-events-30d and geo-italy-ingv-last100 failed every run with
+   * "fetch failed" — before and after their date windows were rolled. */
+  HOST_AGENT("webservices.ingv.it", HA_NOCOLLECTOR)
+
+  /* Batch 50: the same "collector" word filter, on 48 more hosts — mostly French
+   * commune sites (WordPress behind one nginx bot rule, answering 444/403) and
+   * small US city sites. Bisected 2026-10-20 per host, on the registered feed URL:
+   *     the full engine UA                                       403 / 444 / 0 items
+   *     "JapanOSINT/1.0 (collector)"                           403 / 444
+   *     "JapanOSINT/1.0 (contact via repo issues)"             200 + items
+   *     the agent below                                          200 + items
+   * 88 batch-50 rows (authored as 45) stored nothing on the emit sweep until this. Hosts that
+   * refused EVERY honest agent (only a browser string passed) were not added
+   * here and their rows were not shipped: docs/rejected-sources-batch50.tsv. */
+  /* edinburgnd.com: added 2026-10-21 by the retry pass: engine UA 403, this agent 200 */
+  HOST_AGENT("edinburgnd.com", HA_NOCOLLECTOR)
+  HOST_AGENT("ajaccio.corsica", HA_NOCOLLECTOR)
+  HOST_AGENT("avicenne.eu", HA_NOCOLLECTOR)
+  HOST_AGENT("beverlyhillstexas.net", HA_NOCOLLECTOR)
+  HOST_AGENT("cityofelcenizo.com", HA_NOCOLLECTOR)
+  HOST_AGENT("cityofganado.com", HA_NOCOLLECTOR)
+  HOST_AGENT("cityofmauldin.org", HA_NOCOLLECTOR)
+  HOST_AGENT("cityofpickens.com", HA_NOCOLLECTOR)
+  HOST_AGENT("cityofstafford.com", HA_NOCOLLECTOR)
+  HOST_AGENT("denisonia.com", HA_NOCOLLECTOR)
+  HOST_AGENT("douanier-rousseau.paysdelaloire.e-lyco.fr", HA_NOCOLLECTOR)
+  HOST_AGENT("interfor.fr", HA_NOCOLLECTOR)
+  HOST_AGENT("laconcity.com", HA_NOCOLLECTOR)
+  HOST_AGENT("luverne.org", HA_NOCOLLECTOR)
+  HOST_AGENT("metropole.rennes.fr", HA_NOCOLLECTOR)
+  HOST_AGENT("millcreekut.org", HA_NOCOLLECTOR)
+  HOST_AGENT("njn.net", HA_NOCOLLECTOR)
+  HOST_AGENT("www.brignoles.fr", HA_NOCOLLECTOR)
+  HOST_AGENT("www.carquefou.fr", HA_NOCOLLECTOR)
+  HOST_AGENT("www.chemille-en-anjou.fr", HA_NOCOLLECTOR)
+  HOST_AGENT("www.cso.scot.nhs.uk", HA_NOCOLLECTOR)
+  HOST_AGENT("www.fresnes94.fr", HA_NOCOLLECTOR)
+  HOST_AGENT("www.healthcareimprovementscotland.scot", HA_NOCOLLECTOR)
+  HOST_AGENT("www.hico-tx.com", HA_NOCOLLECTOR)
+  HOST_AGENT("www.landerneau.bzh", HA_NOCOLLECTOR)
+  HOST_AGENT("www.loire-authion.fr", HA_NOCOLLECTOR)
+  HOST_AGENT("www.lunel.com", HA_NOCOLLECTOR)
+  HOST_AGENT("www.mairie-balma.fr", HA_NOCOLLECTOR)
+  HOST_AGENT("www.mairie-begles.fr", HA_NOCOLLECTOR)
+  HOST_AGENT("www.mairie-orly.fr", HA_NOCOLLECTOR)
+  HOST_AGENT("www.mauges-sur-loire.fr", HA_NOCOLLECTOR)
+  HOST_AGENT("www.montrevaultsurevre.fr", HA_NOCOLLECTOR)
+  HOST_AGENT("www.morsang.fr", HA_NOCOLLECTOR)
+  HOST_AGENT("www.moundcity.org", HA_NOCOLLECTOR)
+  HOST_AGENT("www.saint-ouen.fr", HA_NOCOLLECTOR)
+  HOST_AGENT("www.sainte-luce-loire.com", HA_NOCOLLECTOR)
+  HOST_AGENT("www.scot.nhs.uk", HA_NOCOLLECTOR)
+  HOST_AGENT("www.scotblood.co.uk", HA_NOCOLLECTOR)
+  HOST_AGENT("www.staubinlasalle.fr", HA_NOCOLLECTOR)
+  HOST_AGENT("www.ville-avrille.fr", HA_NOCOLLECTOR)
+  HOST_AGENT("www.ville-biscarrosse.fr", HA_NOCOLLECTOR)
+  HOST_AGENT("www.ville-bressuire.fr", HA_NOCOLLECTOR)
+  HOST_AGENT("www.ville-cesson-sevigne.fr", HA_NOCOLLECTOR)
+  HOST_AGENT("www.ville-chilly-mazarin.fr", HA_NOCOLLECTOR)
+  HOST_AGENT("www.ville-cormeilles95.fr", HA_NOCOLLECTOR)
+  HOST_AGENT("www.ville-grasse.fr", HA_NOCOLLECTOR)
+  HOST_AGENT("www.ville-petitbourg.fr", HA_NOCOLLECTOR)
+  HOST_AGENT("www.ville-viroflay.fr", HA_NOCOLLECTOR)
+
+  /* registry.faa.gov refuses every self-identifying agent (engine UA 403, the
+   * agent above 403, no User-Agent 200). It is now in BROWSER_HOSTS below. */
+
+/* ── HA_COMPAT: the batch 44-48 bot walls (were 471 per-row headers) ─────
+ * 2026-10-20: of 523 dropped rows that answered 403 to the engine, 491 store
+ * their feed under this agent (11,159 emitted / 11,159 stored), and every row
+ * on these hosts carried it. CLAUDE.md: "a 403 is usually a wall against the
+ * default User-Agent, not against us". */
+  HOST_AGENT("ain.ua", HA_COMPAT)
+  HOST_AGENT("allcannings-pc.gov.uk", HA_COMPAT)
+  HOST_AGENT("archivesdepartementales.lotetgaronne.fr", HA_COMPAT)
+  HOST_AGENT("asiapacificgreens.org", HA_COMPAT)
+  HOST_AGENT("ateraq.it", HA_COMPAT)
+  HOST_AGENT("atworthparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("aziendacasa.fc.it", HA_COMPAT)
+  HOST_AGENT("baddesleyensor-pc.gov.uk", HA_COMPAT)
+  HOST_AGENT("balbronn.fr", HA_COMPAT)
+  HOST_AGENT("barlastonparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("battletowncouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("bbh-pc.gov.uk", HA_COMPAT)
+  HOST_AGENT("beckley-and-stowood-pc.gov.uk", HA_COMPAT)
+  HOST_AGENT("boisseuil87.fr", HA_COMPAT)
+  HOST_AGENT("bosham-pc.gov.uk", HA_COMPAT)
+  HOST_AGENT("branstontowncouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("castlebromwichpc.gov.uk", HA_COMPAT)
+  HOST_AGENT("cehro.org", HA_COMPAT)
+  HOST_AGENT("cheniesparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("cheveley-pc.gov.uk", HA_COMPAT)
+  HOST_AGENT("chiefs-of-ontario.org", HA_COMPAT)
+  HOST_AGENT("chisletparish.gov.uk", HA_COMPAT)
+  HOST_AGENT("cnla.mr", HA_COMPAT)
+  HOST_AGENT("communededyo.fr", HA_COMPAT)
+  HOST_AGENT("cotleighparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("daltontowncouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("deffordbesfordparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("fenstantonparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("fulfordparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("gondrecourt-le-chateau.fr", HA_COMPAT)
+  HOST_AGENT("hagleyparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("hallowparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("hawkhurst-pc.gov.uk", HA_COMPAT)
+  HOST_AGENT("herriard-pc.gov.uk", HA_COMPAT)
+  HOST_AGENT("highcliffewalkford-pc.gov.uk", HA_COMPAT)
+  HOST_AGENT("hintonandastonsomerville-pc.gov.uk", HA_COMPAT)
+  HOST_AGENT("kingskerswell-pc.gov.uk", HA_COMPAT)
+  HOST_AGENT("leagarsdoncleverton-pc.gov.uk", HA_COMPAT)
+  HOST_AGENT("lilbourne-pc.gov.uk", HA_COMPAT)
+  HOST_AGENT("littleshelfordparish.gov.uk", HA_COMPAT)
+  HOST_AGENT("loughtonandgreatholm-pc.gov.uk", HA_COMPAT)
+  HOST_AGENT("lytchettmatraversparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("mairie-lognes.fr", HA_COMPAT)
+  HOST_AGENT("mairierenneville08.fr", HA_COMPAT)
+  HOST_AGENT("maltbytowncouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("mambleparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("markfieldparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("meridenparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("midsp.gov.mg", HA_COMPAT)
+  HOST_AGENT("minsteronseaparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("moretoninmarshtowncouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("mountvernonnews.com", HA_COMPAT)
+  HOST_AGENT("newtonparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("northmundhamparish.gov.uk", HA_COMPAT)
+  HOST_AGENT("northmymms-pc.gov.uk", HA_COMPAT)
+  HOST_AGENT("nortoncanesparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("nortonparish.gov.uk", HA_COMPAT)
+  HOST_AGENT("peasemore-pc.gov.uk", HA_COMPAT)
+  HOST_AGENT("pembridgeparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("ranskillparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("ribeograd.ac.rs", HA_COMPAT)
+  HOST_AGENT("rixtonwithglazebrook-pc.gov.uk", HA_COMPAT)
+  HOST_AGENT("ruckinge-pc.gov.uk", HA_COMPAT)
+  HOST_AGENT("saint-vincent-de-mercuze.fr", HA_COMPAT)
+  HOST_AGENT("sedgehillsemley-pc.gov.uk", HA_COMPAT)
+  HOST_AGENT("selwoodparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("shaldonparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("sheringhamtowncouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("sibbertoftparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("snailwellparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("southkirkbyandmoorthorpetowncouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("st-colomban.fr", HA_COMPAT)
+  HOST_AGENT("stapeleyparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("stiltonparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("stockandbradley-pc.gov.uk", HA_COMPAT)
+  HOST_AGENT("stretton-on-dunsmore-parishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("stroud-pc.gov.uk", HA_COMPAT)
+  HOST_AGENT("swellparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("tanworth-pc.gov.uk", HA_COMPAT)
+  HOST_AGENT("vaucresson.fr", HA_COMPAT)
+  HOST_AGENT("waltonsomerset-pc.gov.uk", HA_COMPAT)
+  HOST_AGENT("wanstrowparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("warndonvillagesparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("wayka.pe", HA_COMPAT)
+  HOST_AGENT("westitchenorparish.gov.uk", HA_COMPAT)
+  HOST_AGENT("westwoodparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("woodburyparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("www.agglo-cobas.fr", HA_COMPAT)
+  HOST_AGENT("www.agglo-lepuyenvelay.fr", HA_COMPAT)
+  HOST_AGENT("www.aizenay.fr", HA_COMPAT)
+  HOST_AGENT("www.altapianuraveneta.eu", HA_COMPAT)
+  HOST_AGENT("www.audierne.bzh", HA_COMPAT)
+  HOST_AGENT("www.banpresto.es", HA_COMPAT)
+  HOST_AGENT("www.beaurepaire85.fr", HA_COMPAT)
+  HOST_AGENT("www.belin-beliet.fr", HA_COMPAT)
+  HOST_AGENT("www.berneuil-en-bray.com", HA_COMPAT)
+  HOST_AGENT("www.binic-etables-sur-mer.fr", HA_COMPAT)
+  HOST_AGENT("www.bolsenheim.fr", HA_COMPAT)
+  HOST_AGENT("www.bourgachard.fr", HA_COMPAT)
+  HOST_AGENT("www.bournheath-pc.gov.uk", HA_COMPAT)
+  HOST_AGENT("www.cadorescuola.edu.it", HA_COMPAT)
+  HOST_AGENT("www.carqueiranne.fr", HA_COMPAT)
+  HOST_AGENT("www.caumont-sur-durance.fr", HA_COMPAT)
+  HOST_AGENT("www.cc-autourdechenonceaux.fr", HA_COMPAT)
+  HOST_AGENT("www.cc-beauceloiretaine.fr", HA_COMPAT)
+  HOST_AGENT("www.cc-lalbenque-limogne.fr", HA_COMPAT)
+  HOST_AGENT("www.cc-nordestbearn.fr", HA_COMPAT)
+  HOST_AGENT("www.cc-paysdesachards.fr", HA_COMPAT)
+  HOST_AGENT("www.cc-paysdesecrins.fr", HA_COMPAT)
+  HOST_AGENT("www.cc-paysfouesnantais.fr", HA_COMPAT)
+  HOST_AGENT("www.cc-sudmarnais.fr", HA_COMPAT)
+  HOST_AGENT("www.ccvl.fr", HA_COMPAT)
+  HOST_AGENT("www.cdgreunion.fr", HA_COMPAT)
+  HOST_AGENT("www.ch-perigueux.fr", HA_COMPAT)
+  HOST_AGENT("www.chambornaylesbellevaux.fr", HA_COMPAT)
+  HOST_AGENT("www.chasseneuildupoitou.fr", HA_COMPAT)
+  HOST_AGENT("www.chateaubourg.fr", HA_COMPAT)
+  HOST_AGENT("www.chaumesenbrie.fr", HA_COMPAT)
+  HOST_AGENT("www.chaumesenretz.fr", HA_COMPAT)
+  HOST_AGENT("www.chavagnes-en-paillers.fr", HA_COMPAT)
+  HOST_AGENT("www.chevreuse.fr", HA_COMPAT)
+  HOST_AGENT("www.chmayotte.fr", HA_COMPAT)
+  HOST_AGENT("www.cighci.org", HA_COMPAT)
+  HOST_AGENT("www.clcl.bzh", HA_COMPAT)
+  HOST_AGENT("www.coeurcoteaux-comminges.fr", HA_COMPAT)
+  HOST_AGENT("www.comune.brancaleone.rc.it", HA_COMPAT)
+  HOST_AGENT("www.comune.piario.bg.it", HA_COMPAT)
+  HOST_AGENT("www.comune.villadogna.bg.it", HA_COMPAT)
+  HOST_AGENT("www.comunescillato.pa.it", HA_COMPAT)
+  HOST_AGENT("www.convittocorreggio.edu.it", HA_COMPAT)
+  HOST_AGENT("www.convittoliceoannessopz.edu.it", HA_COMPAT)
+  HOST_AGENT("www.cosswiller.fr", HA_COMPAT)
+  HOST_AGENT("www.couvron.fr", HA_COMPAT)
+  HOST_AGENT("www.crastatt.fr", HA_COMPAT)
+  HOST_AGENT("www.crossac.fr", HA_COMPAT)
+  HOST_AGENT("www.cuzieu.fr", HA_COMPAT)
+  HOST_AGENT("www.dahlenheim.fr", HA_COMPAT)
+  HOST_AGENT("www.dangesaintromain.fr", HA_COMPAT)
+  HOST_AGENT("www.dangolsheim.fr", HA_COMPAT)
+  HOST_AGENT("www.ddgabelli.edu.it", HA_COMPAT)
+  HOST_AGENT("www.ddsangiovannibosco.edu.it", HA_COMPAT)
+  HOST_AGENT("www.deccanchronicle.com", HA_COMPAT)
+  HOST_AGENT("www.deville-les-rouen.fr", HA_COMPAT)
+  HOST_AGENT("www.dilhorneparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("www.dizy.fr", HA_COMPAT)
+  HOST_AGENT("www.drancy.fr", HA_COMPAT)
+  HOST_AGENT("www.earley-tc.gov.uk", HA_COMPAT)
+  HOST_AGENT("www.ecully.fr", HA_COMPAT)
+  HOST_AGENT("www.egletons.fr", HA_COMPAT)
+  HOST_AGENT("www.elven.bzh", HA_COMPAT)
+  HOST_AGENT("www.empolese-valdelsa.it", HA_COMPAT)
+  HOST_AGENT("www.finchampstead-pc.gov.uk", HA_COMPAT)
+  HOST_AGENT("www.flexbourg.fr", HA_COMPAT)
+  HOST_AGENT("www.fondazionemontagnasicura.org", HA_COMPAT)
+  HOST_AGENT("www.forsbrookparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("www.gaillard.fr", HA_COMPAT)
+  HOST_AGENT("www.ganges.fr", HA_COMPAT)
+  HOST_AGENT("www.gigasrete.it", HA_COMPAT)
+  HOST_AGENT("www.givrand.fr", HA_COMPAT)
+  HOST_AGENT("www.gouvieux.fr", HA_COMPAT)
+  HOST_AGENT("www.grand-figeac.fr", HA_COMPAT)
+  HOST_AGENT("www.grandsud82.fr", HA_COMPAT)
+  HOST_AGENT("www.grandsudcaraibe.fr", HA_COMPAT)
+  HOST_AGENT("www.graveson-provence.fr", HA_COMPAT)
+  HOST_AGENT("www.gundolsheim.fr", HA_COMPAT)
+  HOST_AGENT("www.hattstatt.fr", HA_COMPAT)
+  HOST_AGENT("www.hohengoeft.fr", HA_COMPAT)
+  HOST_AGENT("www.hunstonparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("www.ic-philippone.edu.it", HA_COMPAT)
+  HOST_AGENT("www.icbrunobiancavilla.edu.it", HA_COMPAT)
+  HOST_AGENT("www.iccarlodelbalzo.edu.it", HA_COMPAT)
+  HOST_AGENT("www.iccuneooltrestura.edu.it", HA_COMPAT)
+  HOST_AGENT("www.icfloriosanlorenzo.edu.it", HA_COMPAT)
+  HOST_AGENT("www.icfrancescogiorgio.edu.it", HA_COMPAT)
+  HOST_AGENT("www.icgaetanodonizetti.edu.it", HA_COMPAT)
+  HOST_AGENT("www.icgoldonimartellago.edu.it", HA_COMPAT)
+  HOST_AGENT("www.icgpagoto.edu.it", HA_COMPAT)
+  HOST_AGENT("www.iclioni.edu.it", HA_COMPAT)
+  HOST_AGENT("www.icliviobassi.edu.it", HA_COMPAT)
+  HOST_AGENT("www.icpascolidestefano.edu.it", HA_COMPAT)
+  HOST_AGENT("www.icpieraccini.edu.it", HA_COMPAT)
+  HOST_AGENT("www.icpollinasanmaurocastelverde.edu.it", HA_COMPAT)
+  HOST_AGENT("www.icsbuonarroti.edu.it", HA_COMPAT)
+  HOST_AGENT("www.icsdegasperipecoraro.edu.it", HA_COMPAT)
+  HOST_AGENT("www.icspoliteama.edu.it", HA_COMPAT)
+  HOST_AGENT("www.icvalbrembilla.edu.it", HA_COMPAT)
+  HOST_AGENT("www.ihalla.com", HA_COMPAT)
+  HOST_AGENT("www.iissanluri.edu.it", HA_COMPAT)
+  HOST_AGENT("www.iisvicodevivo.edu.it", HA_COMPAT)
+  HOST_AGENT("www.isisgiorgiovasari.edu.it", HA_COMPAT)
+  HOST_AGENT("www.istitutochecchi.edu.it", HA_COMPAT)
+  HOST_AGENT("www.istitutocomprensivocassara.edu.it", HA_COMPAT)
+  HOST_AGENT("www.istitutocomprensivochiusasclafani.edu.it", HA_COMPAT)
+  HOST_AGENT("www.istitutoremobrindisi.edu.it", HA_COMPAT)
+  HOST_AGENT("www.istitutosuperiorecrispiribera.edu.it", HA_COMPAT)
+  HOST_AGENT("www.itoriani.edu.it", HA_COMPAT)
+  HOST_AGENT("www.jauldes.fr", HA_COMPAT)
+  HOST_AGENT("www.jaunay-marigny.fr", HA_COMPAT)
+  HOST_AGENT("www.jetterswiller.fr", HA_COMPAT)
+  HOST_AGENT("www.kirchheim.fr", HA_COMPAT)
+  HOST_AGENT("www.knoersheim.fr", HA_COMPAT)
+  HOST_AGENT("www.lachapelleduloudulac.fr", HA_COMPAT)
+  HOST_AGENT("www.laclusaz.org", HA_COMPAT)
+  HOST_AGENT("www.lacouardesurmer.fr", HA_COMPAT)
+  HOST_AGENT("www.lamenitre.fr", HA_COMPAT)
+  HOST_AGENT("www.landujan.fr", HA_COMPAT)
+  HOST_AGENT("www.laplainesurmer.fr", HA_COMPAT)
+  HOST_AGENT("www.lavilledubois.fr", HA_COMPAT)
+  HOST_AGENT("www.le-cloitre-saint-thegonnec.bzh", HA_COMPAT)
+  HOST_AGENT("www.lecannetdesmaures.com", HA_COMPAT)
+  HOST_AGENT("www.lecrouais.bzh", HA_COMPAT)
+  HOST_AGENT("www.les-ecrennes.com", HA_COMPAT)
+  HOST_AGENT("www.les-epesses.com", HA_COMPAT)
+  HOST_AGENT("www.levalsaintpere.fr", HA_COMPAT)
+  HOST_AGENT("www.liceoaprosio.edu.it", HA_COMPAT)
+  HOST_AGENT("www.liceodecosmi.edu.it", HA_COMPAT)
+  HOST_AGENT("www.liceomazara.edu.it", HA_COMPAT)
+  HOST_AGENT("www.liceomegara.edu.it", HA_COMPAT)
+  HOST_AGENT("www.liceomontalcini.edu.it", HA_COMPAT)
+  HOST_AGENT("www.liceoscientificopasolinipz.edu.it", HA_COMPAT)
+  HOST_AGENT("www.limersheim.fr", HA_COMPAT)
+  HOST_AGENT("www.linselles.fr", HA_COMPAT)
+  HOST_AGENT("www.locoal-mendon.bzh", HA_COMPAT)
+  HOST_AGENT("www.loggerheadsparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("www.lotetgaronne.fr", HA_COMPAT)
+  HOST_AGENT("www.louhans-chateaurenaud.fr", HA_COMPAT)
+  HOST_AGENT("www.luzy.fr", HA_COMPAT)
+  HOST_AGENT("www.mairie-ballainvilliers.fr", HA_COMPAT)
+  HOST_AGENT("www.mairie-bohars.fr", HA_COMPAT)
+  HOST_AGENT("www.mairie-confolens.fr", HA_COMPAT)
+  HOST_AGENT("www.mairie-hanvec.fr", HA_COMPAT)
+  HOST_AGENT("www.mairie-pipriac.fr", HA_COMPAT)
+  HOST_AGENT("www.mairie-saintjouan.fr", HA_COMPAT)
+  HOST_AGENT("www.mairie-thoiry.fr", HA_COMPAT)
+  HOST_AGENT("www.mairie-vue.fr", HA_COMPAT)
+  HOST_AGENT("www.marlenheim.fr", HA_COMPAT)
+  HOST_AGENT("www.maussanelesalpilles.fr", HA_COMPAT)
+  HOST_AGENT("www.mene.fr", HA_COMPAT)
+  HOST_AGENT("www.miltonabbotgroupedparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("www.milwichfradswellparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("www.mornac.fr", HA_COMPAT)
+  HOST_AGENT("www.mortehoe-pc.gov.uk", HA_COMPAT)
+  HOST_AGENT("www.mossigvignoble.fr", HA_COMPAT)
+  HOST_AGENT("www.msm-normandie.fr", HA_COMPAT)
+  HOST_AGENT("www.nemours.fr", HA_COMPAT)
+  HOST_AGENT("www.nipolicefund.gov.uk", HA_COMPAT)
+  HOST_AGENT("www.nordheim.fr", HA_COMPAT)
+  HOST_AGENT("www.normandiesudeure.fr", HA_COMPAT)
+  HOST_AGENT("www.oakengates-tc.gov.uk", HA_COMPAT)
+  HOST_AGENT("www.odcecbenevento.it", HA_COMPAT)
+  HOST_AGENT("www.odratzheim.fr", HA_COMPAT)
+  HOST_AGENT("www.oldcleeveparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("www.oliveboard.org.il", HA_COMPAT)
+  HOST_AGENT("www.ordineveterinaribenevento.it", HA_COMPAT)
+  HOST_AGENT("www.ording.tp.it", HA_COMPAT)
+  HOST_AGENT("www.osthouse.fr", HA_COMPAT)
+  HOST_AGENT("www.ottmarsheim.fr", HA_COMPAT)
+  HOST_AGENT("www.pascalroma.edu.it", HA_COMPAT)
+  HOST_AGENT("www.pays-chataigneraie.fr", HA_COMPAT)
+  HOST_AGENT("www.pfaffenheim.alsace", HA_COMPAT)
+  HOST_AGENT("www.plateaupicard.fr", HA_COMPAT)
+  HOST_AGENT("www.plelo.fr", HA_COMPAT)
+  HOST_AGENT("www.plonevez-porzay.bzh", HA_COMPAT)
+  HOST_AGENT("www.plougoumelen.bzh", HA_COMPAT)
+  HOST_AGENT("www.plouhinec.bzh", HA_COMPAT)
+  HOST_AGENT("www.ponts.fr", HA_COMPAT)
+  HOST_AGENT("www.pratahkal.com", HA_COMPAT)
+  HOST_AGENT("www.psychoflux.com", HA_COMPAT)
+  HOST_AGENT("www.randaccio-tuveri-donmilani-colombo.edu.it", HA_COMPAT)
+  HOST_AGENT("www.rangen.fr", HA_COMPAT)
+  HOST_AGENT("www.redon.fr", HA_COMPAT)
+  HOST_AGENT("www.remiremont.fr", HA_COMPAT)
+  HOST_AGENT("www.rodariscuola.edu.it", HA_COMPAT)
+  HOST_AGENT("www.romanswiller.fr", HA_COMPAT)
+  HOST_AGENT("www.saint-evarzec.bzh", HA_COMPAT)
+  HOST_AGENT("www.saint-marcellin.fr", HA_COMPAT)
+  HOST_AGENT("www.saint-maurin.fr", HA_COMPAT)
+  HOST_AGENT("www.saint-thonan.fr", HA_COMPAT)
+  HOST_AGENT("www.saint-uniac.fr", HA_COMPAT)
+  HOST_AGENT("www.saintcyrsurmer.fr", HA_COMPAT)
+  HOST_AGENT("www.saintdidier35.fr", HA_COMPAT)
+  HOST_AGENT("www.saintmarslareorthe.fr", HA_COMPAT)
+  HOST_AGENT("www.saintpaulenpareds.com", HA_COMPAT)
+  HOST_AGENT("www.saintquayportrieux.fr", HA_COMPAT)
+  HOST_AGENT("www.scharrachbergheim-irmstett.fr", HA_COMPAT)
+  HOST_AGENT("www.sdis82.fr", HA_COMPAT)
+  HOST_AGENT("www.sille-le-philippe.fr", HA_COMPAT)
+  HOST_AGENT("www.steep-pc.gov.uk", HA_COMPAT)
+  HOST_AGENT("www.sud-nivernais-communaute.fr", HA_COMPAT)
+  HOST_AGENT("www.thepost.com.pk", HA_COMPAT)
+  HOST_AGENT("www.tonnay-charente.fr", HA_COMPAT)
+  HOST_AGENT("www.tredion.fr", HA_COMPAT)
+  HOST_AGENT("www.twyfordparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("www.unionebelice.it", HA_COMPAT)
+  HOST_AGENT("www.unionecomunitrexenta.ca.it", HA_COMPAT)
+  HOST_AGENT("www.valdanast.fr", HA_COMPAT)
+  HOST_AGENT("www.vallonsdevilaine.fr", HA_COMPAT)
+  HOST_AGENT("www.varces.fr", HA_COMPAT)
+  HOST_AGENT("www.vendargues.fr", HA_COMPAT)
+  HOST_AGENT("www.vieux-vy-sur-couesnon.fr", HA_COMPAT)
+  HOST_AGENT("www.ville-beauchamp.fr", HA_COMPAT)
+  HOST_AGENT("www.ville-chaville.fr", HA_COMPAT)
+  HOST_AGENT("www.ville-corenc.fr", HA_COMPAT)
+  HOST_AGENT("www.ville-hautmont.fr", HA_COMPAT)
+  HOST_AGENT("www.ville-lamorlaye.fr", HA_COMPAT)
+  HOST_AGENT("www.ville-marseillan.fr", HA_COMPAT)
+  HOST_AGENT("www.ville-monnaie.fr", HA_COMPAT)
+  HOST_AGENT("www.villegouge.fr", HA_COMPAT)
+  HOST_AGENT("www.villehoudan.fr", HA_COMPAT)
+  HOST_AGENT("www.villemoisson.fr", HA_COMPAT)
+  HOST_AGENT("www.virgiliomussomeli.edu.it", HA_COMPAT)
+  HOST_AGENT("www.vitrecommunaute.org", HA_COMPAT)
+  HOST_AGENT("www.werringtonparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("www.westhalten.fr", HA_COMPAT)
+  HOST_AGENT("www.whitehilltowncouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("www.wilsdenparishcouncil.gov.uk", HA_COMPAT)
+  HOST_AGENT("www.winnersh.gov.uk", HA_COMPAT)
+  HOST_AGENT("www.yokak.gov.tr", HA_COMPAT)
+  HOST_AGENT("www.zehnacker67.fr", HA_COMPAT)
+  HOST_AGENT("www.zeinheim.fr", HA_COMPAT)
+
+/* ── HA_BROWSER (was BROWSER_HOSTS) ──────────────────────────────────────
+ * Hosts that refuse EVERY self-identifying client — the engine agent, the
+ * agent without "collector", a bare "JapanOSINT/1.0" — and admit a request
+ * that looks like a browser's. Until 2026-10-21 the rule here was to leave
+ * them honestly failing; the repository owner changed it for these hosts:
+ * public government feeds and registers are worth reading, and a per-host
+ * table keeps the other ~57,000 sources identifying themselves. A request to
+ * a host listed here carries JO_BROWSER_UA and the headers below INSTEAD of
+ * any User-Agent the caller set (hpengine rows and lib/rss_atom.c set their
+ * own), so it never sends two.
+ *
+ * Measured 2026-10-21, each on its registered URL: engine UA 403, browser UA +
+ * feed Accept + Accept-Language + Sec-Fetch-* 200 with items. www.bls.gov
+ * needs the Sec-Fetch-* headers, not just the agent; the NOAA hosts answer an
+ * HTML Accept with a 202 challenge page, so the caller's own Accept is kept.
+ * registry.faa.gov returns the full N-number record (owner, manufacturer,
+ * serial number, Mode S) where both FAA pivots stored only a 403 notice. */
+  HOST_AGENT("cpo.noaa.gov", HA_BROWSER)
+  HOST_AGENT("globalocean.noaa.gov", HA_BROWSER)
+  HOST_AGENT("oss.research.noaa.gov", HA_BROWSER)
+  HOST_AGENT("wpo.noaa.gov", HA_BROWSER)
+
+  HOST_AGENT("www.noaa.gov", HA_BROWSER)
+  HOST_AGENT("www.bls.gov", HA_BROWSER)
+  HOST_AGENT("www.jpl.nasa.gov", HA_BROWSER)
+  HOST_AGENT("www.diplomaticrooms.state.gov", HA_BROWSER)
+
+  HOST_AGENT("registry.faa.gov", HA_BROWSER)
+  HOST_AGENT("www.sdcwa.org", HA_BROWSER)
+
+  HOST_AGENT("www.security.gov.uk", HA_BROWSER)
+  HOST_AGENT("isc.independent.gov.uk", HA_BROWSER)
+  HOST_AGENT("www.nhs24.scot", HA_BROWSER)
+
+  HOST_AGENT("www.hkd.meti.go.jp", HA_BROWSER)
+  HOST_AGENT("www.bungeika.or.jp", HA_BROWSER)

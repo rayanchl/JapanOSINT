@@ -252,6 +252,23 @@ def _handed_to_walker(lines, n):
         return False
     pat = re.compile(r'\b' + re.escape(name) + r'\b')
     return any(pat.search(a) for a in _walker_call_args(lines))
+
+
+# Two sessions fixed the source_def `.url` false positive on the same day and
+# disagreed about what the field IS, which decides the rule rather than the
+# other way round. The narrower reading excused a `.url` only when it restated,
+# character for character, a URL handed to a walker elsewhere in the file, and
+# kept the finding otherwise. That treats a `.url` nothing walks as a request —
+# and it is not one: `source.h` calls the field "canonical/base or internal://
+# sentinel", rule 3 of CLAUDE.md says nothing at that layer can even see an
+# entity token, and no code in this tree fetches it for records (the one reader,
+# core/pagination_probe.c, probes it for a page parameter). A bespoke collector
+# names its request in its own `#define` or `static const char *URL`, which
+# _handed_to_walker reads separately. So a def's `.url` is skipped outright
+# (_in_source_def), including where the collector pages in a `while` loop of its
+# own rather than through a named walker — the case the narrower rule would
+# still have flagged. An hp_source TABLE row keeps its finding: the engine
+# really does fetch its `.url`.
 MACRO_OPEN = re.compile(r'^\s*([A-Z][A-Z0-9_]*)\s*\(')
 
 

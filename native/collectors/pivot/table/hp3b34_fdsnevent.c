@@ -48,7 +48,13 @@ static const hp_source HP3B34_FDSNEVENT[] = {
     .record_type = "seismic-event",
     .tags = "\"sensor\",\"seismic\",\"hazard\",\"fdsn\",\"event-catalogue\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
-    .url = "https://eida.ethz.ch/fdsnws/event/1/query?format=text&nodata=404&orderby=time&limit=1000",
+    /* `orderby=time` is FDSN's newest-first, which puts every new event at the
+     * HEAD of the collection a 47-page walk is reading: one arrival mid-walk
+     * shifts the boundaries and the walk re-reads one record and skips another
+     * (CLAUDE.md's worst shape, visible only as a collision). Ascending puts
+     * arrivals at the TAIL, where the walk has not been. Measured accepted on
+     * this host 2026-10-21; its oldest event is ECOS-09's year-0250 entry. */
+    .url = "https://eida.ethz.ch/fdsnws/event/1/query?format=text&nodata=404&orderby=time-asc&limit=1000",
     .csv_comment = "#",
     .csv_delim = "pipe",
     .csv_no_header = 1,
@@ -57,7 +63,7 @@ static const hp_source HP3B34_FDSNEVENT[] = {
     .interval = 86400,
     .lat_key = "col2",
     .lon_key = "col3",
-    .page_max = 20,
+    .page_max = 52,   /* ~46,620 events (offset bisection, 2026-10-21) = 47 pages of 1,000, +5 headroom */
     .page_param = "offset",
     .page_size = 1000,
     .page_start = 1,
@@ -79,21 +85,21 @@ static const hp_source HP3B34_FDSNEVENT[] = {
     .record_type = "seismic-event",
     .tags = "\"sensor\",\"seismic\",\"hazard\",\"fdsn\",\"event-catalogue\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
-    /* MEASURED 2026-10-20: this node REQUIRES a time range. Without one it
-     * answers HTTP 400 and the row stored nothing on every run since it
-     * shipped; with `starttime` two days back it answers 200 with 249 events
-     * in 39 KB, one request, comfortably inside limit=1000. The other nodes in
-     * this beat do not need it (SCEDC serves 20,000 with no window), so this
-     * is a property of this endpoint rather than of the FDSN spec — which is
-     * why it is a per-row window and not a beat-wide change. A quiet two days
-     * answers 404 with FDSN's own "no matching events found", which the engine
-     * now reads as the honest empty it is (hp_status_is_declared_empty).
-     * Main removed this row on the pre-repair reading (it stored nothing on
-     * every run) while this branch was measuring the window; re-measured
-     * 2026-10-21 with the window, it answers 200 with 232 events in 36 KB,
-     * so the repair stands and the removal is superseded. */
-    .url = "https://eida.gein.noa.gr/fdsnws/event/1/query?format=text&nodata=404"
-           "&orderby=time&limit=1000&starttime={date:%Y-%m-%d:-2}",
+    /* This service REFUSES an unbounded query with HTTP 400 and answers a
+     * bounded one: measured 2026-10-21, a one-week window returned five real
+     * events (`noa2024aaaak|2024-01-01T00:00:28…`). So it needs a window, and
+     * a rolling one rather than a frozen date — 30 days back, re-rendered
+     * every run, with the records' own origin time as the date. Ascending for
+     * the same drift reason as the ETHZ row.
+     *
+     * Two branches re-added this row independently, with a two-day window and
+     * this thirty-day one, and the wider window is kept. The narrow one is
+     * SAFE — a quiet window answers 404 carrying FDSN's own "no matching
+     * events found", which hp_status_is_declared_empty reads as the honest
+     * empty it is rather than a refusal — but it is one day of slack against a
+     * daily interval, so a single missed run loses events permanently, where
+     * thirty days re-reads what we already hold at the cost of a few pages. */
+    .url = "https://eida.gein.noa.gr/fdsnws/event/1/query?format=text&nodata=404&starttime={date:%Y-%m-%d:-30}&orderby=time-asc&limit=1000",
     .csv_comment = "#",
     .csv_delim = "pipe",
     .csv_no_header = 1,
@@ -102,7 +108,7 @@ static const hp_source HP3B34_FDSNEVENT[] = {
     .interval = 86400,
     .lat_key = "col2",
     .lon_key = "col3",
-    .page_max = 20,
+    .page_max = 20,   /* 20,000 events per 30-day window; Greek seismicity runs a few thousand a month */
     .page_param = "offset",
     .page_size = 1000,
     .page_start = 1,
@@ -118,28 +124,17 @@ static const hp_source HP3B34_FDSNEVENT[] = {
       "by the FDSN specification. Walked by the specification's own "
       "limit/offset, whose offset is 1-based." },
 
-  /* REMOVED 2026-10-20: JO34_FDSNEVT_EIDA_KOERI_BOUN_EDU_TR, which asked
-   * eida.koeri.boun.edu.tr for an event service that node does not run.
-   * Measured directly rather than inferred from the query's failure:
-   *     /fdsnws/event/1/version        404
-   *     /fdsnws/event/1/application.wadl   404
-   *     /fdsnws/dataselect/1/version   200 "1.1.1"
-   * so the node is alive and serves dataselect, and event/1 is simply not
-   * there. That is CLAUDE.md's own batch-34 lesson — "the FDSN spec defines
-   * services; a node runs only some of them", which dropped 11 rows before any
-   * probe — hit a twelfth time by a row that survived it. Note what the row
-   * looked like until it was asked the right question: HTTP 404 to the query,
-   * identical in the fetch-failure record to ws.icgc.cat's 404, which IS a live
-   * service with an empty catalogue. The status could not tell them apart; the
-   * bodies could ("The requested resource does not exist on this server" vs
-   * "no matching events found"), and /version settles it outright. */
   { .id = "JO34_FDSNEVT_SERVICE_SCEDC_CALTECH_EDU", .name = "SCEDC, Caltech (Southern California) — FDSN event catalogue",
     .name_ja = "南カリフォルニア地震データセンター 地震カタログ（FDSN）",
     .category = "surveillance", .portal = "https://service.scedc.caltech.edu",
     .record_type = "seismic-event",
     .tags = "\"sensor\",\"seismic\",\"hazard\",\"fdsn\",\"event-catalogue\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
-    .url = "https://service.scedc.caltech.edu/fdsnws/event/1/query?format=text&nodata=404&orderby=time&limit=1000",
+    /* Ascending for the same reason as the ETHZ row above, and here it is load
+     * bearing: this catalogue is read over a CYCLE, so a newest-first order
+     * would shift the page boundaries under a walk that resumes hours later.
+     * Measured accepted 2026-10-21; its oldest event is 1932-01-01. */
+    .url = "https://service.scedc.caltech.edu/fdsnws/event/1/query?format=text&nodata=404&orderby=time-asc&limit=1000",
     .csv_comment = "#",
     .csv_delim = "pipe",
     .csv_no_header = 1,
@@ -148,7 +143,8 @@ static const hp_source HP3B34_FDSNEVENT[] = {
     .interval = 86400,
     .lat_key = "col2",
     .lon_key = "col3",
-    .page_max = 20,
+    .page_max = 200,   /* >=200,000 events: offset 200,000 answers with a 1987 event (2026-10-21). The service times out at offset 1,000,000, so the depth below that is UNMEASURED, not absent */
+    .page_resume = 1,  /* so 200 pages a run walks the catalogue forward instead of re-reading its newest 20,000 daily */
     .page_param = "offset",
     .page_size = 1000,
     .page_start = 1,

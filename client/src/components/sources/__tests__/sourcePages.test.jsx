@@ -15,10 +15,9 @@ import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, cleanup, screen, waitFor, fireEvent } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import SourcesListPage, { readFilters, writeFilters } from '../SourcesListPage.jsx';
-import SourceDetailPage, { SummaryCard } from '../SourceDetailPage.jsx';
+import SourceDetailPage, { SummaryCard, SettingsSection } from '../SourceDetailPage.jsx';
 import CollectorsPage, { groupCollectors } from '../../collectors/CollectorsPage.jsx';
 import CadenceCard, { describePolicy } from '../CadenceCard.jsx';
-import IntervalOverrideCard, { describeBasis } from '../IntervalOverrideCard.jsx';
 import { fmtInterval, fmtBytes, measured, kindLabel, splitTemplate, searchPath, NOT_MEASURED } from '../../../utils/sourceFormat.js';
 
 vi.mock('../../panels/SourcesPanel.jsx', () => ({ default: () => null }));
@@ -253,6 +252,88 @@ describe('CollectorsPage', () => {
   });
 });
 
+// The per-source settings section (core/source_settings.c). The knob that
+// motivated it raises one source's response-body ceiling past the 64 MB
+// default so ods-public-geonames can read a ~111 MB export it cannot page.
+// Three things must hold on the page, because each of them is a way for a
+// settings UI to mislead:
+//   - bounds, help and the EFFECTIVE value come from the server, so the page
+//     never states a range or an outcome of its own;
+//   - a disabled knob reads as the default even while it holds a tuned value,
+//     which the toggle and the number do not say between them;
+//   - a non-operator is told so and gets disabled controls, rather than a form
+//     that is offered and then refused with 403.
+describe('SettingsSection', () => {
+  const KNOB = {
+    key: 'http_body_ceiling_bytes',
+    label: 'Large response allowance',
+    help: 'How large a single response body this source may hold in memory.',
+    unit: 'bytes',
+    min: 67108864, max: 536870912, default: 67108864,
+    value: 201326592, enabled: true, configured: true,
+    effective: 201326592,
+    updated_at: '2026-10-20T12:00:00Z', updated_by: 'ray',
+  };
+
+  it('shows the server bounds and the effective value, and saves a PUT', async () => {
+    const calls = [];
+    globalThis.fetch = vi.fn(async (input, init) => {
+      const url = typeof input === 'string' ? input : input.url;
+      calls.push({ url, method: init?.method || 'GET', body: init?.body });
+      return new Response(JSON.stringify({ can_write: true, settings: [KNOB] }),
+                          { status: 200, headers: { 'content-type': 'application/json' } });
+    });
+    render(<MemoryRouter><SettingsSection sourceId="ods-public-geonames" /></MemoryRouter>);
+    await waitFor(() => expect(screen.getByText('Large response allowance')).toBeTruthy());
+    // the range the SERVER declared, not one the client invented
+    expect(screen.getByText(/64 MB – 512 MB, default 64 MB/)).toBeTruthy();
+    expect(screen.getByText('192 MB')).toBeTruthy();          // in effect
+
+    // Save is inert until something actually changes.
+    const save = screen.getByRole('button', { name: /Save/ });
+    expect(save.disabled).toBe(true);
+    fireEvent.change(screen.getByRole('spinbutton'), { target: { value: '268435456' } });
+    expect(screen.getByRole('button', { name: /Save/ }).disabled).toBe(false);
+    fireEvent.click(screen.getByRole('button', { name: /Save/ }));
+    await waitFor(() => expect(calls.some((c) => c.method === 'PUT')).toBe(true));
+    const put = calls.find((c) => c.method === 'PUT');
+    expect(JSON.parse(put.body)).toEqual({
+      key: 'http_body_ceiling_bytes', value: 268435456, enabled: true,
+    });
+  });
+
+  it('reads a disabled knob as the default while keeping the tuned value', async () => {
+    const off = { ...KNOB, enabled: false, effective: KNOB.default };
+    mockFetch(() => ({ can_write: true, settings: [off] }));
+    render(<MemoryRouter><SettingsSection sourceId="s" /></MemoryRouter>);
+    await waitFor(() => expect(screen.getByText('Large response allowance')).toBeTruthy());
+    expect(screen.getByText(/the default, because this setting is off/)).toBeTruthy();
+    // the operator's number is still in the box, ready to re-enable
+    expect(screen.getByRole('spinbutton').value).toBe('201326592');
+  });
+
+  it('tells a non-operator why, and disables the controls', async () => {
+    mockFetch(() => ({ can_write: false, settings: [KNOB] }));
+    render(<MemoryRouter><SettingsSection sourceId="s" /></MemoryRouter>);
+    await waitFor(() => expect(screen.getByText(/Read-only/)).toBeTruthy());
+    expect(screen.getByRole('spinbutton').disabled).toBe(true);
+    expect(screen.getByRole('button', { name: /Save/ }).disabled).toBe(true);
+  });
+});
+
+describe('SettingsSection — interval_sec', () => {
+  it('reads a seconds knob as an interval, with the per-source default and its basis', async () => {
+    const knob = { key: 'interval_sec', label: 'Collection interval', help: 'How often this source runs, set for this source alone.', unit: 'seconds',
+      min: 10, max: 31622400, default: 21600, default_basis: 'the system-wide policy', value: 900, enabled: true, configured: true, effective: 900, updated_at: '2026-10-22T08:00:00Z', updated_by: 'ray' };
+    mockFetch(() => ({ can_write: true, settings: [knob] }));
+    render(<MemoryRouter><SettingsSection sourceId="T_FEED" /></MemoryRouter>);
+    await waitFor(() => expect(screen.getByText('Collection interval')).toBeTruthy());
+    expect(screen.getByText(/default 6h \(the system-wide policy\)|default 6 h \(the system-wide policy\)/)).toBeTruthy();
+    expect(screen.getByText(/^15m|^15 min/)).toBeTruthy();                 // in effect, as an interval not a byte count
+    expect(screen.getByRole('spinbutton').value).toBe('900');
+  });
+});
+
 describe('CadenceCard', () => {
   it('states the policy and what it costs, and only an operator can change it', async () => {
     expect(describePolicy({ global_interval_sec: 21600 })).toMatch(/every 6h|every 6 h|21600/);
@@ -270,34 +351,5 @@ describe('CadenceCard', () => {
     await waitFor(() => expect(screen.getByText('Change')).toBeTruthy());
     fireEvent.click(screen.getByText('Change'));
     expect(screen.getByText('Save')).toBeTruthy();
-  });
-});
-
-describe('IntervalOverrideCard', () => {
-  const base = { source: 'T_FEED', scheduled: true, declared_interval_sec: 3600, measured_interval_sec: 86400, policy_interval_sec: 21600, policy: 'global', override: null, effective_interval_sec: 21600, effective_basis: 'policy', min_interval_sec: 10, max_interval_sec: 31622400, can_write: false };
-  it('names what decided the cadence, and offers the form only to a writer', async () => {
-    expect(describeBasis({ ...base, override: { interval_sec: 900, enabled: true }, effective_interval_sec: 900, effective_basis: 'override' })).toMatch(/set for this source/);
-    expect(describeBasis({ ...base, scheduled: false })).toMatch(/on demand/);
-    mockFetch(() => base);
-    render(<MemoryRouter><IntervalOverrideCard id="T_FEED" /></MemoryRouter>);
-    await waitFor(() => expect(screen.getByText(/the system-wide policy \(global\)/)).toBeTruthy());
-    expect(screen.getByText(/no per-source interval set/)).toBeTruthy();
-    expect(screen.queryByText('Set')).toBeNull();
-    cleanup();
-    const calls = mockFetch(() => ({ ...base, can_write: true }));
-    render(<MemoryRouter><IntervalOverrideCard id="T_FEED" /></MemoryRouter>);
-    await waitFor(() => expect(screen.getByText('Set')).toBeTruthy());
-    fireEvent.click(screen.getByText('Set'));
-    expect(screen.getByText('Save')).toBeTruthy();
-    fireEvent.click(screen.getByText('Save'));
-    await waitFor(() => expect(calls.some((u) => /\/api\/sources\/T_FEED\/interval$/.test(path(u)))).toBe(true));
-  });
-  it('shows an enabled override with disable and clear', async () => {
-    mockFetch(() => ({ ...base, can_write: true, override: { interval_sec: 900, enabled: true, updated_at: '2026-10-21T10:00:00Z', updated_by: 'ops@example.test' }, effective_interval_sec: 900, effective_basis: 'override' }));
-    render(<MemoryRouter><IntervalOverrideCard id="T_FEED" /></MemoryRouter>);
-    await waitFor(() => expect(screen.getByText(/set for this source/)).toBeTruthy());
-    expect(screen.getByText('Disable')).toBeTruthy();
-    expect(screen.getByText('Clear')).toBeTruthy();
-    expect(screen.getByText(/by ops@example.test/)).toBeTruthy();
   });
 });
