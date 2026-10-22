@@ -1968,6 +1968,19 @@ failing tests repaired. What it guarantees, and the knobs it adds:
   `Retry-After`; the camera proxy refuses LAN, metadata and link-local
   targets, always — there is no LAN opt-in (`JO_CAMERA_ALLOW_LAN` was removed
   2026-10-20; tests use `hostgate_camera_test_allow_lan()`).
+  **ffmpeg's own sockets are boxed too** (2026-10-22, `core/netjail.{c,h}`):
+  every network run of ffmpeg/ffprobe goes through a per-child forward proxy
+  (http/https/hls) or a pinned relay (rtsp/rtsps) that resolves each name once,
+  judges every answer under the camera policy and connects to what it judged —
+  so a live playlist's later segments and a re-resolved name are judged, not
+  just the first URL. On Linux the child also runs in its own network
+  namespace (a user namespace when not root) whose only listener is that
+  proxy, so an RTSP redirect or a `tcp://` segment has no route at all. Where
+  namespaces are unavailable it degrades to proxy-only, and
+  `GET /api/admin/ffmpeg/capabilities` → `network_sandbox` says which.
+  rtmp/tcp/udp network inputs have no boxed path and are refused.
+  `test_netjail.c` decodes a real HLS frame through the box when ffmpeg is
+  installed (CI installs it), as root and as an unprivileged user.
 * **LLM queue**: bounded lanes (`JO_LLM_QUEUE_MAX`, default 64 waiting; a job
   waits at most `JO_LLM_QUEUE_WAIT_FACTOR` × its timeout, default 4), no retry
   after a timeout, queue time reported apart from model time;

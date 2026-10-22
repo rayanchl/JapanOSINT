@@ -76,7 +76,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
             libcurl4-openssl-dev libssl-dev libmecab-dev mecab zlib1g-dev \
-            mecab-ipadic-utf8
+            mecab-ipadic-utf8 ffmpeg
+        # ffmpeg: tests/unit/test_netjail.c decodes a real HLS frame through
+        # core/netjail.c's sandbox, and skips that step without it.
         # mecab-ipadic-utf8 is the dictionary MeCab needs at runtime. core/fts.c
         # degrades gracefully without it (g_init_failed, Latin passthrough), but
         # then the Japanese FTS path is never exercised at all, which is the
