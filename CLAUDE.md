@@ -39,7 +39,18 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 57,536** (2026-10-21): main's 57,415 (below) plus
+**The registered count is 57,527** (2026-10-22): 57,536 less nine rows that
+duplicated another row once their URL's `&amp;` was decoded. **A literal
+`&amp;` in a row URL is not always a bug to fix**: it sends `amp;type=…`,
+which the server ignores, and 1,076 rows had one. Decoded and re-measured
+(`docs/amp-decode-2026-10-22.tsv`), 714 store as much or more (16 of them
+only once decoded), but 206 stored
+LESS — a newspaper search whose real filter finds nothing, a Joomla row then
+served the Atom it asked for against an RSS declaration, a CMS honouring a
+small `displayCount` — and keep the `&amp;` with a marker on the row. Measure
+both URLs before changing one. Ledger: `docs/SOURCE_COUNT_LEDGER.md`.
+
+**The registered count was 57,536** (2026-10-21): main's 57,415 (below) plus
 this branch's 121 on the same 56,955 base — batch 51's 136, less 29
 takeovers, plus 15 browser-profile feeds, less one duplicate FAA row — merged
 with no shared endpoint. On this branch alone the count was **57,076**.
