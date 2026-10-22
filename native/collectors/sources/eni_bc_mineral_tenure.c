@@ -79,7 +79,7 @@ static int poly_point(const cJSON *geom, double *olat, double *olon) {
 #define BC_MT_URL \
   "https://openmaps.gov.bc.ca/geo/pub/wfs?service=WFS&version=2.0.0" \
   "&request=GetFeature&typeName=WHSE_MINERAL_TENURE.MTA_ACQUIRED_TENURE_SVW" \
-  "&count=1000&startIndex=0&sortBy=TENURE_NUMBER_ID" \
+  "&count=1000&startIndex=0&sortBy=TENURE_NUMBER_ID"  /* exhaustive-ok: walked by pw_walk/pw_walk_max below, which advances the offset or page this URL carries */ \
   "&outputFormat=application/json&srsName=EPSG:4326"
 /* 42,234 tenures at 1,000 a page = 43 (1.4 MB each); 60 is that with
  * headroom, on a weekly schedule. */

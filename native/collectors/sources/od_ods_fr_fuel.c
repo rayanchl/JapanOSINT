@@ -20,7 +20,7 @@
 #define SID "ods-fr-fuel-prices"
 static const char *URL =
   "https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/"
-  "prix-des-carburants-en-france-flux-instantane-v2/records?limit=100&offset=0&order_by=id";
+  "prix-des-carburants-en-france-flux-instantane-v2/records?limit=100&offset=0&order_by=id";  /* exhaustive-ok: walked by pw_walk/pw_walk_max below, which advances the offset or page this URL carries */
 /* 9,814 stations at 100 a page = 99; 120 is that with headroom. */
 /* ORDER_BY IS NOT COSMETIC ON AN OFFSET WALK (measured 2026-10-12). ODS
  * returns records in no guaranteed order, and this dataset updates live, so
@@ -104,7 +104,7 @@ static const source_def od_ods_fr_fuel_def = {
   .name = "data.economie.gouv.fr - instantaneous fuel prices",
   .update_interval_sec = 3600, .run = run,
   .category = "government", .type = "api",
-  .url = "https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/prix-des-carburants-en-france-flux-instantane-v2/records?limit=100&offset=0&order_by=id",
+  .url = "https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/prix-des-carburants-en-france-flux-instantane-v2/records?limit=100&offset=0&order_by=id",  /* exhaustive-ok: metadata field, not a fetch; the row is walked by pw_walk below, which advances the offset this URL carries */
   .description = "Live per-station fuel prices at French filling stations with address, opening hours and decoded station coordinates",
   .license = "Licence Ouverte (Etalab) - reuse with attribution",
   .free_tier = 1,

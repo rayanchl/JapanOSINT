@@ -78,6 +78,24 @@ CREATE TABLE IF NOT EXISTS collector_url_overrides (
     anomaly_id INTEGER,
     created_at TEXT NOT NULL DEFAULT (datetime('now'))
   );
+-- Per-source operator settings: a named knob, its value, and whether it is
+-- ACTIVE. Two columns rather than one because "off" and "unset" must be
+-- distinguishable: an operator who turns a setting off keeps the value they
+-- had tuned, and the next enable does not start from a guess.
+--
+-- The key set is NOT open. core/source_settings.c holds the whitelist with a
+-- type and bounds per key, and a PUT of an unknown key is refused — a free
+-- key/value store attached to every collector is a configuration surface
+-- nobody can audit, and a typo would read as a silently ignored setting.
+CREATE TABLE IF NOT EXISTS source_settings (
+    source_id  TEXT NOT NULL,
+    key        TEXT NOT NULL,
+    value      TEXT NOT NULL,
+    enabled    INTEGER NOT NULL DEFAULT 0,
+    updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_by TEXT,
+    PRIMARY KEY (source_id, key)
+  );
 CREATE TABLE IF NOT EXISTS collector_ttls (
     key        TEXT PRIMARY KEY,
     ttl_ms     INTEGER NOT NULL,

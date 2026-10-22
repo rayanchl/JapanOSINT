@@ -103,7 +103,7 @@ static const source_def od_arcgis_featureserver_def = {
   .name = "ArcGIS REST FeatureServer query",
   .update_interval_sec = 21600, .run = run,
   .category = "government", .type = "api",
-  .url = "https://services.arcgis.com/ePKBjXrBZ2vEEgWd/arcgis/rest/services/Emails_to_the_City_Council_Hotline/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&resultOffset=0&f=json",
+  .url = "https://services.arcgis.com/ePKBjXrBZ2vEEgWd/arcgis/rest/services/Emails_to_the_City_Council_Hotline/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&resultOffset=0&f=json",  /* exhaustive-ok: metadata field, not a fetch; the row is walked by pw_walk below, which advances the offset this URL carries */
   .description = "Attribute rows from a public ArcGIS FeatureServer layer (Boulder city council hotline correspondence), the query pattern every Hub dataset resolves to",
   .license = "Public unauthenticated service; layer licence per owning agency",
   .free_tier = 1,

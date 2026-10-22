@@ -1,0 +1,240 @@
+id	verdict	shell_rc	sched_rc	emitted	stored	db_rows	available	secs	note
+JO34_CKANRES_API_NESO_ENERGY	OK	0	0	131	131	131	131	3.4	
+JO34_CKANRES_CATALOG_DATA_GOV	FETCH_FAILED	0	0	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO34_CKANRES_CATALOG_CITY_KOBE_LG_JP	OK	0	0	99	99	99	99	5.3	
+JO34_CKANRES_CATALOG_CITY_UTSUNOMIYA_TOCHIGI_JP	OK	0	0	295	295	295	295	6.2	
+JO34_CKANRES_CATALOG_DATA_CITY_KANAZAWA_ISHIKAWA_JP	COLLISION	0	0	320	319	319	320	7.1	1 of 320 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JO34_CKANRES_CATALOGUE_DATA_GOVT_NZ	FETCH_FAILED	0	0	1	1	0	-1	1.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO34_CKANRES_ADMIN_OPENDATA_DK	OK	0	0	631	631	631	631	8.1	
+JO34_CKANRES_CKAN_MONTEVIDEO_GUB_UY	OK	0	0	159	159	159	159	4.4	
+JO34_CKANRES_CKAN_HODA_JP	OK	0	0	458	458	458	458	6.4	
+JO34_CKANRES_CATALOG_OPENDATA_PREF_KANAGAWA_JP	OK	0	0	815	815	815	815	9.2	
+JO34_CKANRES_CKAN_PF_SAPPORO_JP	OK	0	0	262	262	262	262	4.6	
+JO34_CKANRES_ADMIN_OPENDATA_AZ	OK	0	0	2017	2017	2017	2017	18.7	
+JO34_CKANRES_CKAN_PREF_AKITA_LG_JP	OK	0	0	264	264	264	264	4.6	
+JO34_CKANRES_CKAN_PUBLISHING_SERVICE_GOV_UK	FETCH_FAILED	0	0	1	1	0	-1	1.2	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO34_CKANRES_DADOS_PBH_GOV_BR	OK	0	0	614	614	614	614	16.3	
+JO34_CKANRES_DADOS_PE_GOV_BR	OK	0	0	47	47	47	47	11.9	
+JO34_CKANRES_DADOSABERTOS_BNDES_GOV_BR	OK	0	0	47	47	47	47	3.6	
+JO34_CKANRES_DADOSABERTOS_POA_BR	OK	0	0	62	62	62	62	3.2	
+JO34_CKANRES_DADESOBERTES_GVA_ES	OK	0	0	1311	1311	1311	1311	41.1	
+JO34_CKANRES_DATA_BOSTON_GOV	OK	0	0	235	235	235	235	2.4	
+JO34_CKANRES_DATA_CA_GOV	OK	0	0	4675	4675	4675	4675	32.1	
+JO34_CKANRES_DATA_CITY_FUKUYAMA_HIROSHIMA_JP	OK	0	0	58	58	58	58	2.4	
+JO34_CKANRES_DATA_CITY_SENDAI_JP	OK	0	0	16	16	16	16	3.0	
+JO34_CKANRES_DATA_CITY_TENDO_YAMAGATA_JP	FETCH_FAILED	1	-1	1	1	0	-1	2.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO34_CKANRES_CATALOG_DATA_METRO_TOKYO_LG_JP	OK	0	0	9709	9709	9709	9709	99.1	
+JO34_CKANRES_DATA_CORKCITY_IE	OK	0	0	34	34	34	34	2.0	
+JO34_CKANRES_DATA_CITY_YOKOHAMA_LG_JP	OK	0	0	648	648	648	648	8.2	
+JO34_CKANRES_DATA_GO_TH	FETCH_FAILED	0	0	1	1	0	-1	0.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO34_CKANRES_DATA_DATA4CITIZEN_JP	FETCH_FAILED	1	-1	1	1	0	-1	6.2	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO34_CKANRES_DATA_GOV_IL	OK	0	0	1203	1203	1203	1203	13.5	
+JO34_CKANRES_CKAN_PREF_MIYAZAKI_LG_JP	OK	0	0	4937	4937	4937	4937	161.4	
+JO34_CKANRES_CKAN_GOVDATA_DE	COLLISION	0	0	20000	19839	19838	20000	176.4	162 of 20000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JO34_CKANRES_DATA_GOV_ME	OK	0	0	923	923	923	923	14.7	
+JO34_CKANRES_DATA_GOV_LV	OK	0	0	1570	1570	1570	1570	29.1	
+JO34_CKANRES_DATA_GOV_RO	FETCH_FAILED	1	-1	1	1	0	-1	25.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO34_CKANRES_DATA_GOV_IE	OK	0	0	20000	20001	20000	20000	117.5	
+JO34_CKANRES_DATA_HOUSTONTX_GOV	FETCH_FAILED	1	-1	1	1	0	-1	1.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO34_CKANRES_CKAN_OPENDATA_SWISS	SLOW	-1	0	-1	-1	10070	-1	220.1	hit --timeout 220.1s; 10070 rows already stored
+JO34_CKANRES_DATA_KYIVCITY_GOV_UA	OK	0	0	98	98	98	98	2.0	
+JO34_CKANRES_DATA_MILWAUKEE_GOV	FETCH_FAILED	1	-1	1	1	0	-1	1.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO34_CKANRES_DATA_OK_GOV	FETCH_FAILED	1	-1	1	1	0	-1	1.1	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO34_CKANRES_DATA_BODIK_JP	COLLISION	0	0	18622	18616	18616	18622	191.1	6 of 18622 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JO34_CKANRES_DATA_NT_GOV_AU	OK	0	0	1077	1077	1077	1077	18.1	
+JO34_CKANRES_DATA_GOVMU_ORG	OK	0	0	856	856	856	856	44.5	
+JO34_CKANRES_DATA_RENFE_COM	OK	0	0	44	44	44	44	1.6	
+JO34_CKANRES_DATA_SANANTONIO_GOV	FETCH_FAILED	1	-1	1	1	0	-1	1.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO34_CKANRES_DATA_SANJOSECA_GOV	OK	0	0	170	170	170	170	1.6	
+JO34_CKANRES_DATA_SMARTDUBLIN_IE	OK	0	0	935	935	935	935	6.1	
+JO34_CKANRES_DATA_STADT_ZUERICH_CH	COLLISION	0	0	942	922	922	942	7.1	20 of 942 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JO34_CKANRES_DATA_VIRGINIA_GOV	FETCH_FAILED	1	-1	1	1	0	-1	1.6	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO34_CKANRES_DATA_ZAGREB_HR	OK	0	0	199	199	199	199	2.8	
+JO34_CKANRES_DATASET_GOV_MD	OK	0	0	1292	1292	1292	1292	19.6	
+JO34_CKANRES_DATENREGISTER_BERLIN_DE	OK	0	0	2627	2627	2627	2627	16.2	
+JO34_CKANRES_DATI_COMUNE_MATERA_IT	OK	0	0	249	249	249	249	6.9	
+JO34_CKANRES_DATA_GOV_KG	SLOW	-1	0	-1	-1	1300	-1	220.1	hit --timeout 220.1s; 1300 rows already stored
+JO34_CKANRES_DATA_OPENDEVELOPMENTCAMBODIA_NET	OK	0	0	14290	14290	14290	14290	149.0	
+JO34_CKANRES_DATA_OPENDEVELOPMENTMEKONG_NET	OK	0	0	14289	14289	14289	14289	147.1	
+JO34_CKANRES_DATI_COMUNE_MILANO_IT	OK	0	0	2602	2602	2602	2602	61.5	
+JO34_CKANRES_DATOS_BAHIA_GOB_AR	OK	0	0	222	222	222	222	3.8	
+JO34_CKANRES_DATA_OPENDEVELOPMENTMYANMAR_NET	OK	0	0	14290	14290	14290	14290	148.2	
+JO34_CKANRES_DATOS_JUS_GOB_AR	OK	0	0	63	63	63	63	4.6	
+JO34_CKANRES_DATOS_MININTERIOR_GOB_AR	OK	0	0	15	15	15	15	2.5	
+JO34_CKANRES_DATOS_MAGYP_GOB_AR	OK	0	0	152	152	152	152	3.4	
+JO34_CKANRES_DATOS_OSE_COM_UY	OK	0	0	28	28	28	28	3.6	
+JO34_CKANRES_DATOS_TRANSPORTE_GOB_AR	OK	0	0	48	48	48	48	3.1	
+JO34_CKANRES_DATOS_MADRID_ES	OK	0	0	674	674	674	674	8.9	
+JO34_CKANRES_DATOSABIERTOS_MENDOZA_GOV_AR	OK	0	0	204	204	204	204	4.2	
+JO34_CKANRES_DATOSABIERTOS_MALAGA_EU	OK	0	0	1377	1377	1377	1377	6.7	
+JO34_CKANRES_OPDT_CITY_TOYAMA_LG_JP	OK	0	0	133	133	133	133	6.9	
+JO34_CKANRES_DATA_GOV_UK	SLOW	-1	0	-1	-1	19728	-1	220.1	hit --timeout 220.1s; 19728 rows already stored
+JO34_CKANRES_DATI_TRENTINO_IT	OK	0	0	1378	1378	1378	1378	46.8	
+JO34_CKANRES_OPENDATA_CITY_MACHIDA_TOKYO_JP	OK	0	0	144	144	144	144	3.8	
+JO34_CKANRES_OPENDATA_CITY_IMIZU_TOYAMA_JP	OK	0	0	169	169	169	169	7.8	
+JO34_CKANRES_OPENDATA_CITY_NIIGATA_LG_JP	FETCH_FAILED	1	-1	1	1	0	-1	1.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO34_CKANRES_OPENDATA_CITY_SAGAMIHARA_KANAGAWA_JP	OK	0	0	114	114	114	114	3.5	
+JO34_CKANRES_OPENDATA_CITY_MINATO_TOKYO_JP	OK	0	0	560	560	560	560	10.4	
+JO34_CKANRES_OPENDATA_HAWAII_GOV	FETCH_FAILED	1	-1	1	1	0	-1	1.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO34_CKANRES_GIFU_OPENDATA_PREF_GIFU_LG_JP	OK	0	0	1883	1883	1883	1883	39.3	
+JO34_CKANRES_OPENDATA_MUENCHEN_DE	OK	0	0	337	337	337	337	4.0	
+JO34_CKANRES_OPENDATA_ARAGON_ES	OK	0	0	2425	2425	2425	2425	31.3	
+JO34_CKANRES_OPENDATA_UGR_ES	OK	0	0	65	65	65	65	2.1	
+JO34_CKANRES_OPENDATA_COMUNE_BARI_IT	OK	0	0	171	171	171	171	13.1	
+JO34_CKANRES_PORTAL_OPENDATA_DK	OK	0	0	631	631	631	631	8.1	
+JO34_CKANRES_OPENDATA_NHSBSA_NET	OK	0	0	2168	2168	2168	2168	29.2	
+JO34_CKANRES_TRANSPARENZ_KARLSRUHE_DE	OK	0	0	151	151	151	151	2.5	
+JO34_CKANRES_WWW_DATOSABIERTOS_GOB_PE	FETCH_FAILED	0	0	1	1	0	-1	1.6	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO34_CKANRES_WWW_OFFENESDATENPORTAL_DE	OK	0	0	1084	1084	1084	1084	5.9	
+JO34_CKANRES_WWW_OPENDATA_HRO_DE	OK	0	0	281	281	281	281	3.2	
+JO34_CKANRES_WWW_OPENDATA_HU	OK	0	0	71	71	71	71	3.0	
+JO34_CKANRES_WWW_OPENDATA_NHS_SCOT	OK	0	0	105	105	105	105	2.7	
+JO34_CKANRES_DATI_TOSCANA_IT	SLOW	-1	0	-1	-1	7900	-1	220.0	hit --timeout 220.0s; 7900 rows already stored
+JO34_FDSNEVT_EIDA_GEIN_NOA_GR	OK	0	0	1985	1985	1985	1985	39.1	
+JO34_FDSNEVT_EIDA_KOERI_BOUN_EDU_TR	FETCH_FAILED	0	0	1	1	0	-1	4.1	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO34_CKANRES_GEOSCIENCE_DATA_QLD_GOV_AU	SLOW	-1	0	-1	-1	14600	-1	220.1	hit --timeout 220.1s; 14600 rows already stored
+JO34_FDSNEVT_WS_ICGC_CAT	FETCH_FAILED	0	0	1	1	0	-1	1.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO34_FDSNSTA_AUSPASS_EDU_AU	OK	0	0	4168	4168	4168	4168	3.7	
+JO34_FDSNSTA_EIDA_BGR_DE	OK	0	0	593	593	593	593	6.8	
+JO34_FDSNSTA_EIDA_BGS_AC_UK	OK	0	0	392	392	392	392	1.4	
+JO34_FDSNSTA_EIDA_ETHZ_CH	OK	0	0	2215	2215	2215	2215	3.6	
+JO34_FDSNSTA_EIDA_GEIN_NOA_GR	COLLISION	0	0	733	729	729	733	1.6	4 of 733 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JO34_FDSNSTA_EIDA_GEO_UIB_NO	OK	0	0	364	364	364	364	1.9	
+JO34_FDSNSTA_EIDA_KOERI_BOUN_EDU_TR	OK	0	0	351	351	351	351	3.6	
+JO34_FDSNSTA_ERDE_GEOPHYSIK_UNI_MUENCHEN_DE	OK	0	0	582	582	582	582	1.7	
+JO34_FDSNEVT_EIDA_ETHZ_CH	OK	0	0	46620	46620	46620	46620	155.1	
+JO34_FDSNSTA_SEISDATA_EPOS_FRANCE_FR	OK	0	0	6594	6594	6594	6594	5.4	
+JO34_FDSNSTA_SERVICE_SCEDC_CALTECH_EDU	OK	0	0	6897	6897	6897	6897	10.0	
+JO34_FDSNSTA_WEBSERVICES_INGV_IT	OK	0	0	1788	1788	1788	1788	2.3	
+JO34_CKANRES_OPENDATA_SCHLESWIG_HOLSTEIN_DE	SLOW	-1	0	-1	-1	18200	-1	220.1	hit --timeout 220.1s; 18200 rows already stored
+JO34_FDSNSTA_WS_ICGC_CAT	OK	0	0	402	402	402	402	1.2	
+JO34_CKANRES_PODATKI_GOV_SI	SLOW	-1	0	-1	-1	1900	-1	220.1	hit --timeout 220.1s; 1900 rows already stored
+JO34_SOCCAT_ANALISI_TRANSPARENCIACATALUNYA_CAT	NEEDS_ENTITY	0	0	0	0	0	-1	0.6	on-demand pivot: reachable only with an entity (rule 3)
+JO34_FDSNSTA_WWW_ORFEUS_EU_ORG	OK	0	0	2324	2324	2324	2324	2.2	
+JO34_SOCCAT_COS_DATA_SEATTLE_GOV	NEEDS_ENTITY	0	0	0	0	0	-1	0.7	on-demand pivot: reachable only with an entity (rule 3)
+JO34_SOCCAT_DATA_BRLA_GOV	NEEDS_ENTITY	0	0	0	0	0	-1	0.9	on-demand pivot: reachable only with an entity (rule 3)
+JO34_SOCCAT_DATA_CALGARY_CA	NEEDS_ENTITY	0	0	0	0	0	-1	0.6	on-demand pivot: reachable only with an entity (rule 3)
+JO34_SOCCAT_DATA_EDMONTON_CA	NEEDS_ENTITY	0	0	0	0	0	-1	0.6	on-demand pivot: reachable only with an entity (rule 3)
+JO34_SOCCAT_DATA_CITYOFGAINESVILLE_ORG	NEEDS_ENTITY	0	0	0	0	0	-1	0.8	on-demand pivot: reachable only with an entity (rule 3)
+JO34_FDSNSTA_WS_RESIF_FR	OK	0	0	6594	6594	6594	6594	5.2	
+JO34_SOCCAT_DATA_NORFOLK_GOV	NEEDS_ENTITY	0	0	0	0	0	-1	0.7	on-demand pivot: reachable only with an entity (rule 3)
+JO34_SOCCAT_DATA_MESAAZ_GOV	NEEDS_ENTITY	0	0	0	0	0	-1	0.9	on-demand pivot: reachable only with an entity (rule 3)
+JO34_SOCCAT_DATA_NOVASCOTIA_CA	NEEDS_ENTITY	0	0	0	0	0	-1	0.7	on-demand pivot: reachable only with an entity (rule 3)
+JO34_SOCCAT_DATA_PRINCEGEORGESCOUNTYMD_GOV	NEEDS_ENTITY	0	0	0	0	0	-1	0.7	on-demand pivot: reachable only with an entity (rule 3)
+JO34_SOCCAT_DATA_SANDIEGOCOUNTY_GOV	NEEDS_ENTITY	0	0	0	0	0	-1	0.8	on-demand pivot: reachable only with an entity (rule 3)
+JO34_SOCCAT_DATA_SCCGOV_ORG	NEEDS_ENTITY	0	0	0	0	0	-1	0.7	on-demand pivot: reachable only with an entity (rule 3)
+JO34_SOCCAT_DATA_SFGOV_ORG	NEEDS_ENTITY	0	0	0	0	0	-1	0.8	on-demand pivot: reachable only with an entity (rule 3)
+JO34_SOCCAT_DATA_USAID_GOV	NEEDS_ENTITY	0	0	0	0	0	-1	0.8	on-demand pivot: reachable only with an entity (rule 3)
+JO34_SOCCAT_DATA_VERMONT_GOV	NEEDS_ENTITY	0	0	0	0	0	-1	0.7	on-demand pivot: reachable only with an entity (rule 3)
+JO34_SOCCAT_DATA_WINNIPEG_CA	NEEDS_ENTITY	0	0	0	0	0	-1	0.6	on-demand pivot: reachable only with an entity (rule 3)
+JO34_SOCCAT_DATAHUB_AUSTINTEXAS_GOV	NEEDS_ENTITY	0	0	0	0	0	-1	0.7	on-demand pivot: reachable only with an entity (rule 3)
+JO34_SOCCAT_DATAHUB_TRANSPORTATION_GOV	NEEDS_ENTITY	0	0	0	0	0	-1	0.7	on-demand pivot: reachable only with an entity (rule 3)
+JO34_SOCCAT_HICSCDATA_HAWAII_GOV	NEEDS_ENTITY	0	0	0	0	0	-1	0.7	on-demand pivot: reachable only with an entity (rule 3)
+JO34_SOCCAT_ILLINOIS_EDP_DATA_SOCRATA_COM	NEEDS_ENTITY	0	0	0	0	0	-1	0.6	on-demand pivot: reachable only with an entity (rule 3)
+JO34_SOCCAT_OPENDATA_RDW_NL	NEEDS_ENTITY	0	0	0	0	0	-1	0.5	on-demand pivot: reachable only with an entity (rule 3)
+JO34_SOCCAT_PUBLICREPORTING_CFTC_GOV	NEEDS_ENTITY	0	0	0	0	0	-1	0.7	on-demand pivot: reachable only with an entity (rule 3)
+JO34_SOCCAT_SHAREFULTON_FULTONCOUNTYGA_GOV	NEEDS_ENTITY	0	0	0	0	0	-1	0.6	on-demand pivot: reachable only with an entity (rule 3)
+JO34_SOCCAT_WWW_DATI_FRIULIVENEZIAGIULIA_IT	NEEDS_ENTITY	0	0	0	0	0	-1	0.6	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_TEIKYO_U	NEEDS_ENTITY	0	0	0	0	0	-1	0.7	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_TOHOKU	NEEDS_ENTITY	0	0	0	0	0	-1	0.6	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_OSAKA_KYOIKU	NEEDS_ENTITY	0	0	0	0	0	-1	0.7	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_HIT_U	NEEDS_ENTITY	0	0	0	0	0	-1	0.7	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_WASEDA	NEEDS_ENTITY	0	0	0	0	0	-1	0.9	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_TSUKUBA	NEEDS_ENTITY	0	0	0	0	0	-1	0.8	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_KANAZAWA_U	NEEDS_ENTITY	0	0	0	0	0	-1	0.6	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_HIROSHIMA	NEEDS_ENTITY	0	0	0	0	0	-1	0.7	on-demand pivot: reachable only with an entity (rule 3)
+JO34_FDSNSTA_GEOFON_GFZ_DE	OK	0	0	20044	20044	20044	20044	30.3	
+JO35_WEKO_NIIGATA_U	NEEDS_ENTITY	0	0	0	0	0	-1	0.8	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_NAGASAKI_U	NEEDS_ENTITY	0	0	0	0	0	-1	0.6	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_KEK	NEEDS_ENTITY	0	0	0	0	0	-1	0.7	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_KINDAI	NEEDS_ENTITY	0	0	0	0	0	-1	0.6	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_KANSAI_U	NEEDS_ENTITY	0	0	0	0	0	-1	0.8	on-demand pivot: reachable only with an entity (rule 3)
+JO34_CKANRES_SUCHE_TRANSPARENZ_HAMBURG_DE	SLOW	-1	0	-1	-1	16500	-1	220.1	hit --timeout 220.1s; 16500 rows already stored
+JO35_WEKO_SOPHIA	NEEDS_ENTITY	0	0	0	0	0	-1	0.8	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_TWINKLE	NEEDS_ENTITY	0	0	0	0	0	-1	0.7	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_U_GAKUGEI	NEEDS_ENTITY	0	0	0	0	0	-1	1.0	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_KOMAZAWA_U	NEEDS_ENTITY	0	0	0	0	0	-1	0.7	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_RIKKYO	NEEDS_ENTITY	0	0	0	0	0	-1	0.7	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_DOSHISHA	NEEDS_ENTITY	0	0	0	0	0	-1	0.8	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_REDCROSS	NEEDS_ENTITY	0	0	0	0	0	-1	0.8	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_TOYAMA	NEEDS_ENTITY	0	0	0	0	0	-1	0.8	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_KONAN_WU	NEEDS_ENTITY	0	0	0	0	0	-1	0.9	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_OCU_OMU	NEEDS_ENTITY	0	0	0	0	0	-1	1.0	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_MEIJI	NEEDS_ENTITY	0	0	0	0	0	-1	0.7	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_KWANSEI	NEEDS_ENTITY	0	0	0	0	0	-1	0.7	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_U_RYUKYU	NEEDS_ENTITY	0	0	0	0	0	-1	0.9	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_KAISEI	NEEDS_ENTITY	0	0	0	0	0	-1	1.1	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_OMU	NEEDS_ENTITY	0	0	0	0	0	-1	1.0	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_MIE_U	NEEDS_ENTITY	0	0	0	0	0	-1	1.0	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_GIFU_U	NEEDS_ENTITY	0	0	0	0	0	-1	1.2	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_IWATEMED	NEEDS_ENTITY	0	0	0	0	0	-1	0.9	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_KANAGAWA_U	NEEDS_ENTITY	0	0	0	0	0	-1	0.8	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_SHIZUOKA	NEEDS_ENTITY	0	0	0	0	0	-1	0.8	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_TOHO	NEEDS_ENTITY	0	0	0	0	0	-1	1.0	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_YNU	NEEDS_ENTITY	0	0	0	0	0	-1	0.7	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_SHIGA_U	NEEDS_ENTITY	0	0	0	0	0	-1	0.9	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_SENSHU_U	NEEDS_ENTITY	0	0	0	0	0	-1	0.9	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_TOKUSHIMA_U	NEEDS_ENTITY	0	0	0	0	0	-1	0.8	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_CHUO_U	NEEDS_ENTITY	0	0	0	0	0	-1	0.9	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_NAIST	NEEDS_ENTITY	0	0	0	0	0	-1	0.8	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_TOYO	NEEDS_ENTITY	0	0	0	0	0	-1	0.9	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_NIFS_REPOSITORY	NEEDS_ENTITY	0	0	0	0	0	-1	0.9	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_SAGA_U	NEEDS_ENTITY	0	0	0	0	0	-1	0.8	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_AICHIU	NEEDS_ENTITY	0	0	0	0	0	-1	0.6	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_CHUKYO_U	NEEDS_ENTITY	0	0	0	0	0	-1	0.8	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_KAIT	NEEDS_ENTITY	0	0	0	0	0	-1	0.9	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_RISSHO	NEEDS_ENTITY	0	0	0	0	0	-1	1.0	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_TKU	NEEDS_ENTITY	0	0	0	0	0	-1	1.0	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_OTANI	NEEDS_ENTITY	0	0	0	0	0	-1	0.9	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_KAGAWA_U	NEEDS_ENTITY	0	0	0	0	0	-1	0.9	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_TMU	NEEDS_ENTITY	0	0	0	0	0	-1	0.9	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_U_FUKUI	NEEDS_ENTITY	0	0	0	0	0	-1	0.9	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_GUNMA_U	NEEDS_ENTITY	0	0	0	0	0	-1	1.0	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_KYUTECH	NEEDS_ENTITY	0	0	0	0	0	-1	1.0	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_UUAIR	NEEDS_ENTITY	0	0	0	0	0	-1	1.0	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_AUE	NEEDS_ENTITY	0	0	0	0	0	-1	1.0	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_BUNKYO	NEEDS_ENTITY	0	0	0	0	0	-1	0.9	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_UEC	NEEDS_ENTITY	0	0	0	0	0	-1	1.1	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_STARS	NEEDS_ENTITY	0	0	0	0	0	-1	1.2	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_MIYAZAKI_U	NEEDS_ENTITY	0	0	0	0	0	-1	0.9	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_SAPMED	NEEDS_ENTITY	0	0	0	0	0	-1	0.8	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_RAKUNO	NEEDS_ENTITY	0	0	0	0	0	-1	0.7	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_IWATE_U	NEEDS_ENTITY	0	0	0	0	0	-1	1.0	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_HIROSAKI	NEEDS_ENTITY	0	0	0	0	0	-1	0.7	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_SAPPORO_U	NEEDS_ENTITY	0	0	0	0	0	-1	0.9	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_HYOGO_U	NEEDS_ENTITY	0	0	0	0	0	-1	0.9	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_WAKAYAMA_U	NEEDS_ENTITY	0	0	0	0	0	-1	0.9	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_TOYO_BUNKO	NEEDS_ENTITY	0	0	0	0	0	-1	0.9	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_YAMAGATA	NEEDS_ENTITY	0	0	0	0	0	-1	0.9	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_NIHON_U	NEEDS_ENTITY	0	0	0	0	0	-1	0.8	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_ASAHIKAWA_MED	NEEDS_ENTITY	0	0	0	0	0	-1	0.9	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_NARA_WU	NEEDS_ENTITY	0	0	0	0	0	-1	0.8	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_SEIJO	NEEDS_ENTITY	0	0	0	0	0	-1	0.8	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_ASIA_U	NEEDS_ENTITY	0	0	0	0	0	-1	1.0	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_BEPPU_U	NEEDS_ENTITY	0	0	0	0	0	-1	0.8	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_NARA_EDU	NEEDS_ENTITY	0	0	0	0	0	-1	0.8	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_MARIANNA_U	NEEDS_ENTITY	0	0	0	0	0	-1	1.1	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_EHIME_U	NEEDS_ENTITY	0	0	0	0	0	-1	1.2	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_YCU	NEEDS_ENTITY	0	0	0	0	0	-1	1.0	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_SOKA	NEEDS_ENTITY	0	0	0	0	0	-1	0.9	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_MURORAN_IT	NEEDS_ENTITY	0	0	0	0	0	-1	0.9	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_NANZAN_U	NEEDS_ENTITY	0	0	0	0	0	-1	0.8	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_RKU	NEEDS_ENTITY	0	0	0	0	0	-1	0.9	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_OUJ	NEEDS_ENTITY	0	0	0	0	0	-1	0.8	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_GIFU_PU	NEEDS_ENTITY	0	0	0	0	0	-1	0.8	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_FUN	NEEDS_ENTITY	0	0	0	0	0	-1	1.0	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_YAMANASHI	NEEDS_ENTITY	0	0	0	0	0	-1	0.9	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_FUKUOKA_U	NEEDS_ENTITY	0	0	0	0	0	-1	0.7	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_KONAN_U	NEEDS_ENTITY	0	0	0	0	0	-1	0.9	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_NITECH	NEEDS_ENTITY	0	0	0	0	0	-1	0.8	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_NARUTO	NEEDS_ENTITY	0	0	0	0	0	-1	0.8	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_OBIHIRO	NEEDS_ENTITY	0	0	0	0	0	-1	0.9	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_SHIGA_MED	NEEDS_ENTITY	0	0	0	0	0	-1	0.7	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_CUC	NEEDS_ENTITY	0	0	0	0	0	-1	0.7	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_HAMA_MED	NEEDS_ENTITY	0	0	0	0	0	-1	1.0	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_MEIGAKU	NEEDS_ENTITY	0	0	0	0	0	-1	0.8	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_AGU	NEEDS_ENTITY	0	0	0	0	0	-1	1.1	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_OUS	NEEDS_ENTITY	0	0	0	0	0	-1	0.8	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_ATOMI	NEEDS_ENTITY	0	0	0	0	0	-1	0.6	on-demand pivot: reachable only with an entity (rule 3)
+JO35_WEKO_K_RAIN	NEEDS_ENTITY	0	0	0	0	0	-1	0.9	on-demand pivot: reachable only with an entity (rule 3)
+JO34_FDSNEVT_SERVICE_SCEDC_CALTECH_EDU	SLOW	-1	0	-1	-1	23000	-1	220.1	hit --timeout 220.1s; 23000 rows already stored
