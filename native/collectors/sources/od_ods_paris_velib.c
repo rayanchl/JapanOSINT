@@ -14,7 +14,7 @@
 #define SID "ods-paris-velib"
 static const char *URL =
   "https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/"
-  "velib-disponibilite-en-temps-reel/records?limit=100&offset=0&order_by=stationcode";
+  "velib-disponibilite-en-temps-reel/records?limit=100&offset=0&order_by=stationcode";  /* exhaustive-ok: walked by pw_walk/pw_walk_max below, which advances the offset or page this URL carries */
 /* PAGED 2026-10-12. This made ONE request:
  * 1,519 Velib stations (total_count, measured 2026-10-12), 100 stored.
  */
@@ -52,7 +52,7 @@ static const source_def od_ods_paris_velib_def = {
   .name = "Paris Open Data - Velib station availability (real time)",
   .update_interval_sec = 900, .run = run,
   .category = "government", .type = "api",
-  .url = "https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/velib-disponibilite-en-temps-reel/records?limit=100&offset=0&order_by=stationcode",
+  .url = "https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/velib-disponibilite-en-temps-reel/records?limit=100&offset=0&order_by=stationcode",  /* exhaustive-ok: metadata field, not a fetch; the row is walked by pw_walk below, which advances the offset this URL carries */
   .description = "Live Velib bike-share telemetry for Paris stations: capacity, docks and bikes available, per-station coordinates and reading timestamp",
   .license = "ODbL / Licence Ouverte (Paris open-data terms)",
   .free_tier = 1,

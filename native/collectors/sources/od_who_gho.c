@@ -27,7 +27,7 @@
 #include "lib/pagewalk.h"
 
 #define SID "who-gho-indicator"
-static const char *URL = "https://ghoapi.azureedge.net/api/WHOSIS_000001?$top=1000&$skip=0&$count=true";
+static const char *URL = "https://ghoapi.azureedge.net/api/WHOSIS_000001?$top=1000&$skip=0&$count=true";  /* exhaustive-ok: walked by pw_walk/pw_walk_max below, which advances the offset or page this URL carries */
 /* 14,112 observations at 1,000 a page = 15; 30 is that with headroom. */
 #define WHO_PAGE_MAX 30  /* exhaustive-ok: page ceiling handed to pw_walk_max(); a stop at it files a collector-truncation-notice */
 
@@ -85,7 +85,7 @@ static const source_def od_who_gho_def = {
   .name = "WHO Global Health Observatory OData",
   .update_interval_sec = 604800, .run = run,
   .category = "statistics", .type = "api",
-  .url = "https://ghoapi.azureedge.net/api/WHOSIS_000001?$top=1000&$skip=0&$count=true",
+  .url = "https://ghoapi.azureedge.net/api/WHOSIS_000001?$top=1000&$skip=0&$count=true",  /* exhaustive-ok: metadata field, not a fetch; the row is walked by pw_walk below, which advances the offset this URL carries */
   .description = "WHO GHO country-year health observations (life expectancy at birth) with ISO3 country, WHO region and numeric value",
   .license = "CC BY-NC-SA 3.0 IGO (WHO) - non-commercial, share-alike",
   .free_tier = 1,

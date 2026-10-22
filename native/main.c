@@ -17,6 +17,7 @@
  * silent fall-through to the self-test — see the validation block in main(). */
 #include "core/db.h"
 #include "core/cadence.h"
+#include "core/source_interval.h"
 #include "core/url_override.h"
 #include "core/httpclient.h"
 #include "core/llm.h"
@@ -309,6 +310,7 @@ int main(int argc, char **argv) {
   db_handle db = {0};
   if (db_open(&db, NULL, NULL) != 0) return 1;
   cadence_init(&db);          /* the system-wide cadence policy (core/cadence.h) */
+  source_interval_init(&db);  /* per-source interval overrides (core/source_interval.h) */
   url_override_reload(&db);   /* apply any verified collector URL-swap repairs */
 
   /* P4: --run <source_id> [entity]  → run one source through the real sink. */

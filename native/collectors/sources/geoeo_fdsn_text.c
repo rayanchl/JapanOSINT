@@ -27,8 +27,8 @@
  * honours it: 50 events, no paging parameter in the spec's `event` service to
  * follow, and the rest of the bulletin dropped in silence on every 5-minute
  * run (tools/audit_url_limits.py; docs/measured-url-limits-2026-10-11.tsv —
- * both answered more when asked for more). The service HAS no offset, so the
- * fix is not paging but asking a question with a complete answer: `starttime`
+ * both answered more when asked for more). The fix is not paging but asking a
+ * question with a complete answer: `starttime`
  * bounds the request by TIME instead of by count, and the whole window comes
  * back in one request. Measured 2026-10-12 over seven days: GEOFON 162 events
  * (18 KB), NRCan 42 (5.5 KB). Seven days against a 5-minute (GEOFON) and

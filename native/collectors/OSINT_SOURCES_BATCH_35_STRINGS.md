@@ -71,3 +71,71 @@ re-derive work already done. That only helps if the entries are measurements.
 This one was an inference, it was wrong, and it cost four sources. The batch-34
 entry is now marked `CORRECTED` in place rather than deleted, because the
 mistake is the useful part of the record.
+
+## MEASURED, 2026-10-20 — the 100 WEKO pivots answer
+
+`hp3b35_jpweko.c`'s rows shipped unprobed on an endpoint and key set copied from
+batch 25. All 100 were asked about one entity (`研究`) through the real binary on
+2026-10-20; the readings are in **`docs/emit-sources-batch34-35.tsv`** beside
+batch 34's.
+
+**61 OK, 38 `EMPTY_UPSTREAM`, 1 HTTP 500** (`asahikawa-med`, its own error on
+both passes). The copied endpoint and keys hold: every one of the 61 turned a
+WEKO3 `/api/records/?q=` body into records, which is what this batch could not
+check when it was written.
+
+Read the counts for what they are. 1,204 records across the 61, 184 at the
+largest (`JO35_WEKO_WASEDA`), is **one entity's worth from each repository**, not
+a corpus size — these are on-demand pivots and the number moves with the
+question. A repository holding nothing for `研究` is an honest empty, not a dead
+row; a different entity moves rows between the two columns. What the pass proves
+is reach and shape, not how much any repository holds.
+
+The identity question is still open: this audit reads EMITTED, so records keying
+onto each other inside a run would not show. Batch 35's keys are inherited
+rather than measured, which makes them the first to put through
+`audit_registry_emit.py`'s stored reading.
+
+## Rules 4b and 4d measured on the 100 WEKO pivots (2026-10-21)
+
+Both questions this doc left open are now answered, and the first one needed a
+different tool than the obvious one.
+
+**Rule 4b — do they STORE what they emit?** `audit_registry_emit.py` cannot
+answer it for a pivot: it runs every row with no entity, so all 100 came back
+`NEEDS_ENTITY` in the registry sweep, a verdict that reads like a pass and is an
+abstention. Asking the binary directly instead — `--run <id> 研究`, which prints
+both numbers — gives, over **all 100** rows (run in three chunks, because a
+background task is stopped at thirty minutes):
+
+    100 rows   112,328 emitted   112,379 stored   0 rows losing records
+
+`docs/sweep-stored-batch35-pivots-2026-10-21.tsv`. Stored runs slightly ABOVE
+emitted because each truncation notice is itself a stored uid. **The keys copied
+from batch 25 hold on every row of the beat**, which is what this batch could
+not check when it shipped — and the reading is complete, not a sample.
+
+Note how much larger these numbers are than the 1,204 records the first emit
+audit reported for all 100 rows: that pass used a narrower probe entity. **A
+pivot's record count is a property of the question asked, not of the source.**
+
+**Several rows stop at exactly 2,000** — the 20-page ceiling x 100 — and each
+files a truncation notice, which is why stored is one higher than emitted on
+those rows. That is rule 2's bounded view, disclosed in band: WEKO publishes
+`hits.total` (nara-edu holds 3,132 for 研究), so a per-row `page_max` would
+complete *this* entity's answer while another entity could hold half a million.
+Entity runs are excluded from cycling for the same reason. Left bounded and
+disclosed deliberately.
+
+**Rule 4d — does the filter filter?** `probe_hp_batch.py --check-filter`:
+**100/100 PASS, no `FILTER_IGNORED` and no `FILTER_UNCHECKED`.** Zero findings
+from a check written to find confident wrong answers deserves one suspicious
+look, so two hosts were then compared by hand:
+
+    nara-edu   研究  707,325 bytes  100 records  hits.total 3,132
+               impossible entity   149 bytes    0 records  total 0
+    ehime-u    研究  532,588 bytes  100 records  hits.total 1,372
+               impossible entity   148 bytes    0 records  total 0
+
+A real search API, not a collection handed back whatever is asked. For context,
+65 of batch 31's 360 rows failed this same check.

@@ -11,7 +11,7 @@
 
 #define SID "ckan-london-datastore"
 static const char *URL =
-  "https://data.london.gov.uk/api/action/package_search?rows=200&start=0";
+  "https://data.london.gov.uk/api/action/package_search?rows=200&start=0";  /* exhaustive-ok: walked by pw_walk/pw_walk_max below, which advances the offset or page this URL carries */
 /* 1,306 datasets (result.count, measured 2026-10-12) at 200 a page
  * = 7; 20 is that with headroom. */
 #define CKAN_PAGE_MAX 20  /* exhaustive-ok: page ceiling handed to pw_walk_max(); a stop at it files a collector-truncation-notice */
@@ -30,7 +30,7 @@ static const source_def od_ckan_london_datastore_def = {
   .name = "London Datastore (GLA)",
   .update_interval_sec = 86400, .run = run,
   .category = "government", .type = "dataset",
-  .url = "https://data.london.gov.uk/api/action/package_search?rows=200&start=0",
+  .url = "https://data.london.gov.uk/api/action/package_search?rows=200&start=0",  /* exhaustive-ok: metadata field, not a fetch; the row is walked by pw_walk below, which advances the offset this URL carries */
   .description = "Greater London Authority datastore: 1,301 London datasets (rough sleeping, crime, housing, transport) with named maintainer teams and contact emails",
   .license = "UK Open Government Licence v3 (most datasets)",
   .free_tier = 1,

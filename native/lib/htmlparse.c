@@ -539,7 +539,7 @@ int html_table_parse(const char *html, const char *must, int table_index,
   for (int r = 0; r < nrow && out->rows; r++) {
     int a = row_start[r], b = r + 1 < nrow ? row_start[r + 1] : ncell;
     html_row *row = &out->rows[out->nrows];
-    int cap = 0;
+    int cap = 0;  /* exhaustive-ok: allocated capacity of this row's growing cell array (ht_row_grow), not a bound on records */
     int col = 0;
     for (int i = a; i <= b; i++) {
       while (col < hardcap && pend && pend[col].left > 0) {   /* rowspan from above */

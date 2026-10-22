@@ -1,0 +1,25 @@
+id	host	declared_total	basis	page_size	page_max_before	pages_needed	page_max_after	fix	verified_records	note
+JO34_CKANRES_ADMIN_OPENDATA_AZ	admin.opendata.az	2017	upstream's own package_search result.count	100	20	21	26	complete-read	2017	re-pointed from the 403 bulk action; count had moved 1,970 -> 2,017 in a day
+JO34_CKANRES_CATALOG_DATA_METRO_TOKYO_LG_JP	catalog.data.metro.tokyo.lg.jp	9709	upstream's own package_search result.count	100	20	98	103	complete-read	not-run	
+JO34_CKANRES_CKAN_GOVDATA_DE	ckan.govdata.de	169142	upstream's own package_search result.count	100	20	1692	200	cycle	not-run	
+JO34_CKANRES_CKAN_OPENDATA_SWISS	ckan.opendata.swiss	16123	upstream's own package_search result.count	100	20	162	167	complete-read	not-run	
+JO34_CKANRES_CKAN_PREF_MIYAZAKI_LG_JP	ckan.pref.miyazaki.lg.jp	4937	upstream's own package_search result.count	100	20	50	55	complete-read	not-run	
+JO34_CKANRES_DATA_BODIK_JP	data.bodik.jp	18622	upstream's own package_search result.count	100	20	187	192	complete-read	not-run	
+JO34_CKANRES_DATA_CA_GOV	data.ca.gov	4675	upstream's own package_search result.count	100	20	47	52	complete-read	4675	the row that found the false-notice trap: page_max 47 (= pages needed) filed a truncation notice on a COMPLETE read, 52 files none
+JO34_CKANRES_DATA_GOV_IE	data.gov.ie	22881	upstream's own package_search result.count	100	20	229	200	cycle	22881	cycle verified over two runs against one DB: 20,000 then 2,881 = its declared 22,881 exactly; run 2 filed no notice, so the cycle cleared
+JO34_CKANRES_DATA_GOV_IL	data.gov.il	1203	upstream's own package_search result.count	100	20	13	18	complete-read	1203	re-pointed from the 404 bulk action; 1,197 of 1,203 stored records carry resources.0.url
+JO34_CKANRES_DATA_GOV_UK	data.gov.uk	59370	upstream's own package_search result.count	100	20	594	200	cycle	40000-over-2-runs	re-pointed from the 403 bulk action; cycle verified additive — 20,000 then 20,000 = 40,000 DISTINCT, resume token at start=40000
+JO34_CKANRES_DATA_OPENDEVELOPMENTCAMBODIA_NET	data.opendevelopmentcambodia.net	14290	upstream's own package_search result.count	100	20	143	148	complete-read	not-run	
+JO34_CKANRES_DATA_OPENDEVELOPMENTMEKONG_NET	data.opendevelopmentmekong.net	14289	upstream's own package_search result.count	100	20	143	148	complete-read	not-run	
+JO34_CKANRES_DATA_OPENDEVELOPMENTMYANMAR_NET	data.opendevelopmentmyanmar.net	14290	upstream's own package_search result.count	100	20	143	148	complete-read	not-run	
+JO34_CKANRES_DATENREGISTER_BERLIN_DE	datenregister.berlin.de	2627	upstream's own package_search result.count	100	20	27	32	complete-read	2627	
+JO34_CKANRES_DATI_COMUNE_MILANO_IT	dati.comune.milano.it	2602	upstream's own package_search result.count	100	20	27	32	complete-read	not-run	
+JO34_CKANRES_DATI_TOSCANA_IT	dati.toscana.it	12493	upstream's own package_search result.count	100	20	125	130	complete-read	not-run	
+JO34_CKANRES_GEOSCIENCE_DATA_QLD_GOV_AU	geoscience.data.qld.gov.au	192703	upstream's own package_search result.count	100	20	1928	200	cycle	not-run	
+JO34_CKANRES_OPENDATA_ARAGON_ES	opendata.aragon.es	2425	upstream's own package_search result.count	100	20	25	30	complete-read	2425	
+JO34_CKANRES_OPENDATA_NHSBSA_NET	opendata.nhsbsa.net	2166	upstream's own package_search result.count	100	20	22	27	complete-read	2166	
+JO34_CKANRES_OPENDATA_SCHLESWIG_HOLSTEIN_DE	opendata.schleswig-holstein.de	33062	upstream's own package_search result.count	100	20	331	200	cycle	not-run	
+JO34_CKANRES_PODATKI_GOV_SI	podatki.gov.si	9282	upstream's own package_search result.count	100	20	93	98	complete-read	not-run	
+JO34_CKANRES_SUCHE_TRANSPARENZ_HAMBURG_DE	suche.transparenz.hamburg.de	246666	upstream's own package_search result.count	100	20	2467	200	cycle	not-run	
+JO34_FDSNEVT_EIDA_ETHZ_CH	eida.ethz.ch	46620	offset bisection (no total published)	1000	20	47	52	complete-read	46620	also re-sorted orderby=time -> time-asc; the walk emitted exactly the bisected count
+JO34_FDSNEVT_SERVICE_SCEDC_CALTECH_EDU	service.scedc.caltech.edu	>=200000	offset 200,000 answers (1987 event); 1,000,000 times out, so the depth below is UNMEASURED	1000	20	>200	200	cycle	63000-partial	also re-sorted orderby=time -> time-asc, which a cycle needs. Run stopped by hand at 63,000 records mid-walk (already 3x the old 20,000 ceiling, advancing correctly); the pace is ~21 s per 1,000-record page, so 200 pages is ~70 min a run. The cycle MECHANISM is measured on data.gov.ie and data.gov.uk, not here

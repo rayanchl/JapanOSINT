@@ -11,7 +11,7 @@
 
 #define SID "ods-fr-toulouse"
 static const char *URL =
-  "https://data.toulouse-metropole.fr/api/explore/v2.1/catalog/datasets?limit=100&offset=0&order_by=dataset_id";
+  "https://data.toulouse-metropole.fr/api/explore/v2.1/catalog/datasets?limit=100&offset=0&order_by=dataset_id";  /* exhaustive-ok: walked by pw_walk/pw_walk_max below, which advances the offset or page this URL carries */
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   return od_rc(SID, od_ods_catalog_walk(ctx, sink, SID, URL,
@@ -24,7 +24,7 @@ static const source_def od_ods_fr_toulouse_def = {
   .name = "Toulouse Metropole open data (OpenDataSoft)",
   .update_interval_sec = 86400, .run = run,
   .category = "government", .type = "dataset",
-  .url = "https://data.toulouse-metropole.fr/api/explore/v2.1/catalog/datasets?limit=100&offset=0&order_by=dataset_id",
+  .url = "https://data.toulouse-metropole.fr/api/explore/v2.1/catalog/datasets?limit=100&offset=0&order_by=dataset_id",  /* exhaustive-ok: metadata field, not a fetch; the row is walked by pw_walk below, which advances the offset this URL carries */
   .description = "Toulouse Metropole open-data catalogue (842 datasets) including subsidy registers with SIRET identifiers",
   .license = "Licence Ouverte (Etalab)",
   .free_tier = 1,
