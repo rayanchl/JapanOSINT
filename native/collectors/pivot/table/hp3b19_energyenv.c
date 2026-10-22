@@ -359,12 +359,30 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "renewable-capacity",
     .tags = "\"energy\",\"capacity\",\"denmark\",\"municipal\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.energidataservice.dk/dataset/CapacityPerMunicipality?limit=50",
+    /* ONE request for the whole dataset, not a 50-record offset walk.
+     * Measured 2026-10-22: this host rate-limits by request FREQUENCY, not by
+     * response size — it answered HTTP 429 to `limit=1000` and to
+     * `limit=10000` and then served `limit=50000` in full, 4.5 MB. At
+     * limit=50 the cycle's page 2 was 429'd, and a failed page clears the
+     * position rather than bookmarking a refused page, so the row re-read the
+     * same 50 rows of 12,771 every day at rc=0.
+     *
+     * The dataset is 12,771 records (its own envelope `total`), one per
+     * municipality per month, growing by ~1,176 a year — so one request is
+     * both complete and decades from the limit, and if it ever did exceed it
+     * the envelope's total would exceed records_used and the engine would
+     * file a truncation notice saying so.
+     *
+     * id_keys is the PAIR: all 12,771 (Month, MunicipalityNo) combinations
+     * are distinct (measured over the full response), and the row declared no
+     * key at all, so the engine was keying on whatever came first — `Month`,
+     * a dimension shared by every municipality in that month. */
+    .url = "https://api.energidataservice.dk/dataset/CapacityPerMunicipality?limit=50000",   /* exhaustive-ok: one request IS the whole dataset — 12,771 of a 50,000 limit, measured 2026-10-22 */
     .array_path = "records",
+    .id_keys = "Month+MunicipalityNo",
+    .date_keys = "Month",
+    .title_keys = "MunicipalityNo",
     .interval = 86400,
-    .page_param = "offset",
-    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
-    .page_size = 50,
     .description = "Installed generation capacity per Danish municipality per month "
       "split by offshore wind, onshore wind, solar and plant size band. "
       "Municipal granularity turns a national capacity headline into a "
@@ -1033,19 +1051,29 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "mineral-tenure",
     .tags = "\"mining\",\"canada\",\"tenure\",\"cadastre\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://openmaps.gov.bc.ca/geo/pub/WHSE_MINERAL_TENURE.MTA_ACQUIRED_TENURE_SVW/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=pub:WHSE_MINERAL_TENURE.MTA_ACQUIRED_TENURE_SVW&outputFormat=application/json&count=50&sortBy=TENURE_NUMBER_ID",
+    /* `sortBy` is not optional on this WFS, it is the price of paging at all:
+     * without it `startIndex=50` answers an ows:ExceptionReport carrying
+     * "java.lang.RuntimeException Cannot do natural order without a primary
+     * key" (reproduced 2026-10-22). So the walk never got past page 1, and a
+     * failed page clears the cycle position rather than bookmarking a refused
+     * one — this row re-read the same 50 tenures of 42,327 every day at rc=0.
+     *
+     * Measured the same day, all against this host: TENURE_NUMBER_ID sorts
+     * (page 1 ends 220440, page 2 begins 220441 — disjoint, ordered, no
+     * overlap and no gap), it is UNIQUE per feature (1,000 distinct in 1,000,
+     * 10,000 in 10,000, so it is the record's identity and not a dimension),
+     * `count=10000` is honoured at 15.2 MB and 1.8 s a page, and the layer's
+     * own numberMatched is 42,327. Five pages read the cadastre whole. */
+    .url = "https://openmaps.gov.bc.ca/geo/pub/WHSE_MINERAL_TENURE.MTA_ACQUIRED_TENURE_SVW/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=pub:WHSE_MINERAL_TENURE.MTA_ACQUIRED_TENURE_SVW&outputFormat=application/json&sortBy=TENURE_NUMBER_ID&count=10000",
     .array_path = "features",
+    .id_keys = "properties.TENURE_NUMBER_ID",
+    .title_keys = "properties.CLAIM_NAME,properties.TENURE_NUMBER_ID",
+    .date_keys = "properties.ISSUE_DATE",
     .interval = 86400,
     .page_param = "startIndex",
-    /* GeoServer refuses `startIndex` without `sortBy` ("Cannot do natural
-     * order without a primary key"), so page 2 answered HTTP 400 and this row
-     * read its first 50 tenures every day while the cycle never advanced —
-     * found by tools/audit_cycle_advance.py on 2026-10-22, the ENA shape.
-     * `sortBy=TENURE_NUMBER_ID` (the row's own id) is in the URL now:
-     * startIndex 0 / 50 / 100 answer 50 disjoint tenures each, ascending
-     * 201320 → 201919, numberMatched 42,327 (measured the same day). */
-    .page_resume = 1,   /* 42,327 records (2026-10-22; 42,234 on 2026-10-12): read over a cycle, 50 pages a run */
-    .page_size = 50,
+    .page_max = 10,     /* 42,327 (numberMatched, 2026-10-22) = 5 pages of 10,000, +5 so the walk ends on the upstream's short page */
+    .page_resume = 1,   /* a no-op while five pages cover the layer; kept so a growing cadastre degrades to a cycle rather than to silent truncation */
+    .page_size = 10000,
     .description = "Mineral, placer and coal tenures in British Columbia with the "
       "tenure number, the owner name, the issue and expiry dates, the "
       "area and the claim polygon. A mining cadastre names the holder, "

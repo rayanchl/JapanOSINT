@@ -1946,6 +1946,10 @@ static const hp_source HP3B19_HEALTH[] = {
     .date_keys = "first_public",
     .id_keys = "run_accession",
     .interval = 86400,
+    /* 120 s, not the engine's 20 s default: the other session that fixed this
+     * row the same day measured the COLD query at 38.6 s (3.8 s warm) and saw
+     * the first fixed run time out at bytes=0 under the default. */
+    .timeout_ms = 120000,
     .title_keys = "run_accession",
     .description = "Every SARS-CoV-2 sequencing run deposited in the European "
       "Nucleotide Archive with the fields that carry the OSINT rather "
@@ -1972,6 +1976,7 @@ static const hp_source HP3B19_HEALTH[] = {
     .array_path = ".",
     .id_keys = "sample_accession",
     .interval = 86400,
+    .timeout_ms = 300000,   /* 18.9 MB in 82 s through the engine; the 20 s default is not for a whole-collection read */
     .title_keys = "sample_accession",
     .description = "Influenza A virus samples registered in the European Nucleotide "
       "Archive with host species, isolate and strain names, serotype, "

@@ -119,8 +119,6 @@ feed in the tree** (42,593 URLs, 52 flagged, each read by hand —
 asks each homepage which feeds it declares and verifies them through the
 engine's own client, flagging `TAKEOVER_SUSPECT` on item titles.
 
-**The registered count was 56,955** (2026-10-21): main's 53,739, less six
-
 **Main's count was 57,415** (2026-10-21): 57,409 plus the six batch-49 rows
 the next-day retry pass restored (below). 57,409 was main's 56,955 (below) plus
 this branch's 453 on the same base — the 491 rows the User-Agent header
@@ -1241,7 +1239,7 @@ says why.
 | `tools/audit_batch_reachable.py` | rule 3 above. A row whose opts are ambiguous is reported UNVERIFIABLE, never "never runs" |
 | `tools/audit_url_limits.py` | the seventh discard shape — a record limit asked of the UPSTREAM in a URL, with no paging to follow it. Read, not gated: 103 narrow candidates, unmeasured, and a limit on a ranked pivot is legitimate |
 | `tools/audit_page_ceiling.py` | which scheduled rows stop at the PAGE CEILING, and how many pages their own upstream says they need. Probes SHALLOW (`--probe-pages`, default 3) and then does arithmetic, because the engine's truncation notice already carries the only number that settles it: a `records_available` whose basis is "upstream declared this total". `CEILING_DECLARED` is measured (pages_needed = total / page_size, the page size derived from the probe when the row declares none); `CEILING_UNKNOWN` means the upstream publishes no total and only a full walk can size it, which is a decision to take deliberately, not a finding. Reads `collector-fetch-failure` too, so a 429 is `FETCH_FAILED` and not "this source returns nothing" |
-| `tools/audit_cycle_advance.py` | which `page_resume` rows can never advance. Runs every cycling row through the real binary under **`JO_PAGE_MAX_CAP=2`** (a ceiling over the row's own ceiling, measurement only, `lib/hpengine.c`, hptest 40b-iv) and reads the truncation notice back: `STUCK` (page 2 refused with a 4xx that is the endpoint's — re-point the paging), `CUT` (transport/5xx/429/wall — re-run, then a hostgate gap), `ADVANCES`, `COMPLETES`, `FETCH_FAILED`, `NEEDS_ENTITY`, `SLOW`. The engine has disclosed the stuck shape per run since 2026-10-18; this is the first thing that READS the disclosures across the registry. `--from-tables collectors` takes the ids from the C, `--ids-file` for a re-run |
+| `tools/audit_cycle_advance.py` | which `page_resume` rows can never advance. Runs every cycling row through the real binary under **`JO_PAGE_MAX=2`** (which brakes a declared `page_max` too since 2026-10-22: `jo_page_max_for`, hptest 40f) and reads the truncation notice back: `STUCK` (page 2 refused with a 4xx that is the endpoint's — re-point the paging), `CUT` (transport/5xx/429/wall — re-run, then a hostgate gap), `ADVANCES`, `COMPLETES`, `FETCH_FAILED`, `NEEDS_ENTITY`, `SLOW`. The engine has disclosed the stuck shape per run since 2026-10-18; this is the first thing that READS the disclosures across the registry. `--from-tables collectors` takes the ids from the C, `--ids-file` for a re-run |
 | `tools/audit_page_param.py` | rows whose URL already binds their own `page_param`. The engine used to APPEND (`…&pagina=1&pagina=2`) and a server binding the first occurrence then served page 1 for the whole walk — N pages emitted, one stored, `rc=0`. Fixed in `hp_url_set_param` and pinned by `hptest` "9f-bis"; the lint stays because 103 of 1,431 paged rows are that shape and their paging depends on the replacement being right |
 | `tools/audit_batch_emit.py` | rule 4 below: runs each MANIFEST row through the real binary and reads back `emitted N of M`. `--timeout S` moves the kill line; a run that hits it is **`SLOW`**, carrying its partial counts — unmeasured, not failed. Each run gets a scratch DB from a warm template (it used to write the developer's live DB), and it exits non-zero on UNREGISTERED, UNPARSEABLE, NO_RUN_LINE or when nothing was measured |
 | `tools/audit_registry_emit.py` | rule 4 **and** 4b for the whole REGISTRY, manifest or not — `--list-sources` is the source list, so nothing registered can hide. Measures emitted *and* stored, per run, against a fresh copy of a warm template DB. `--scheduled`/`--match`/`--only`/`--ids-file`, `--jobs`, `--timeout`, TSV out, `--resume` |
@@ -1603,14 +1601,24 @@ Engine subtleties worth knowing before writing a row:
   under "the default 10-page ceiling": those are dated records, not claims about
   today.
 
-  **`$JO_PAGE_MAX` moves the DEFAULT; a row's own `page_max` is final.**
-  `hpengine.c` reads `s->page_max > 0 ? s->page_max : jo_page_max(NULL)`, so
-  the variable cannot lower OR raise a row that declares a ceiling — it only
-  decides what a row WITHOUT one gets. "Overrides in both directions" above is
-  about that default. Read the other way it costs a whole run: an attempt to
-  shrink `JO34_FDSNEVT_SERVICE_SCEDC_CALTECH_EDU`'s declared 200 pages to 5 for
-  a quick cycle test read **80 pages** before the clock stopped it
-  (2026-10-21). To bound a declared row for a test, change the row.
+  **`$JO_PAGE_MAX` is the operator's brake and reaches a row that declares its
+  own ceiling — in both directions** (fixed 2026-10-22; it is one function,
+  `jo_page_max_for(declared)` in `lib/pagewalk.c`, called by `pagewalk.c` and
+  `hpengine.c` alike). It did not until that day: `hpengine.c` read
+  `s->page_max > 0 ? s->page_max : jo_page_max(NULL)`, so the variable decided
+  only what a row WITHOUT a ceiling got, while `hpengine.h`'s own comment said
+  `page_max` was "raised or lowered for the whole tree by `$JO_PAGE_MAX`" and
+  `pagewalk.c`'s `pw_page_max` implemented exactly that for its rows — **a
+  capability two headers claimed and one of the two engines did not have**, the
+  unification of the three ceilings having missed the DOWNWARD direction.
+  It cost a whole run once (an attempt to shrink
+  `JO34_FDSNEVT_SERVICE_SCEDC_CALTECH_EDU`'s declared 200 pages to 5 read
+  **80 pages** before the clock stopped it, 2026-10-21) and, worse, it silently
+  defeated `tools/audit_page_ceiling.py`, whose entire shallow-probe design is
+  to bound a run by setting this variable: all 669 rows that cycle declare a
+  `page_max`, so a probe whose flag said 3 pages would have walked up to 200
+  per row. That is why the 114 SLOW verdicts of 2026-10-12 are SLOW. `hptest`
+  40f pins the brake, the resume position it leaves behind, and the unset case.
 * **The ceiling is now MEASURED across every paged scheduled row**
   (2026-10-12, `docs/measured-page-ceilings-2026-10-12.tsv`): 2,137 rows,
   3-page probe. 1,111 COMPLETE, 534 `CEILING_UNKNOWN` (the upstream publishes
@@ -1788,9 +1796,9 @@ Engine subtleties worth knowing before writing a row:
   and **the sweep that reads those disclosures across the registry now
   exists** (2026-10-22, `tools/audit_cycle_advance.py`,
   `docs/measured-cycle-advance-2026-10-22.tsv`): every one of the 669
-  `page_resume` rows run through the binary under `JO_PAGE_MAX_CAP=2` — a
-  ceiling over the row's own ceiling, for measurement only, so a run is page
-  1 plus the attempt at page 2 (`lib/hpengine.c`, hptest 40b-iv) — and its
+  `page_resume` rows run through the binary under `JO_PAGE_MAX=2` — the
+  operator's brake, which reaches a declared ceiling too, so a run is page
+  1 plus the attempt at page 2 (`jo_page_max_for`, hptest 40f) — and its
   notice read back. 600 advance, 20 complete inside two pages, 43 were
   refused page 1 from the measuring environment (39 of them on a second
   pass; ODS hosts and a few others reset this path), **2 answered 429 to
@@ -1824,6 +1832,68 @@ Engine subtleties worth knowing before writing a row:
     hand-maintained `7` while it held nine** — the same `1`-for-two trap
     its own comment recorded in September — so the two new gaps were
     compiled in and never consulted; the count is sizeof arithmetic now.
+
+  **That sweep is done: 669 cycling rows measured, SEVEN stalled, and all
+  seven are fixed** (2026-10-22, `docs/measured-cycle-stalls-2026-10-22.tsv`;
+  `tools/audit_page_ceiling.py` gained the `CYCLE_STALLED` verdict — a notice
+  carrying `failed_page` on a `page_resume` row — and `WALK_CUT` for the same
+  failed page on a row that does not cycle). 467 `CEILING_UNKNOWN`, 136
+  `CEILING_DECLARED`, 15 COMPLETE, 43 `FETCH_FAILED`, 1 SLOW. **Read the
+  FETCH_FAILED against the path, not the row**: the agent proxy's own
+  `recentRelayFailures` listed tunnel closures for five of those hosts while
+  the sweep ran.
+
+  The seven say something the stall count does not: **a refused page 2 is
+  rarely a page-2 problem.** Each needed a different fix, and five of them were
+  wrong in a way no ceiling arithmetic could reach.
+  * **ENA ×3** — `www.ebi.ac.uk` does not refuse `offset=1000`, it refuses
+    `offset` at all: `offset=1` answers the same 400
+    `{"message":"Unsupported param offset"}`. The note above was written from
+    one boundary reading and generalised wrongly. The three rows now read a
+    rolling 30-day `first_public` window (ENA's own `api/count` sizes it, and
+    the archive behind them is 7,556,500 / 360,690 / 61,625 records) and store
+    6,362 / 3,436 / 289 — each exactly the count declared for its window. They
+    also needed an explicit `timeout_ms`: the SARS-CoV-2 query measured
+    **38.6 s cold** against the engine's 20 s `HP_HTTP_TIMEOUT`, so the first
+    fixed run timed out at `bytes=0` and filed a fetch-failure for a query
+    that works.
+  * **`BC_MINERAL_TENURE`** — the WFS refuses `startIndex` without `sortBy`
+    ("Cannot do natural order without a primary key", the hazard this file
+    already records from the other side). With `sortBy=TENURE_NUMBER_ID` and
+    `count=10000`: 50 records → **42,327**, its own `numberMatched`.
+  * **`ENERGINET_CAPACITY_MUNICIPALITY`** and **`TRONSCAN_TOP_ACCOUNTS`** both
+    answered 429 and wanted OPPOSITE fixes. Energinet limits by request
+    FREQUENCY, not size — 429 at `limit=1000` and `limit=10000`, then
+    `limit=50000` served in full — so it stopped paging and reads its whole
+    12,771-record dataset in one request. TronScan's cost is per RECORD (a
+    detail hop per listed account, so a page of 50 is 51 requests in a burst):
+    measured 2 of 10 requests 429 at the global 150 ms gap and 0 of 10 at
+    1,000 ms, so it got that gap in `core/hostgate.c` and KEPT its cycle,
+    because the per-run detail budget of 1,000 reaches all 10,000 accounts only
+    if the slice moves.
+  * **`SI_GURS_CADASTRAL_MUN`** was not broken: the 404 was transient and a
+    re-read stores 2,698 / 2,698. One probe is one reading, in this direction
+    too.
+
+  **Two of the seven had no `id_keys` at all** (BC's GeoJSON features, and
+  Energinet, which was keying on `Month` — a dimension every municipality in
+  that month shares). A stalled cycle hides a key defect behind it, because a
+  row that only ever reads one page never shows the collision.
+
+  **Two sessions ran this sweep on the same day and merged the same evening**
+  (PR #68 first, with `audit_page_ceiling.py`'s `CYCLE_STALLED`; then this
+  branch's `audit_cycle_advance.py`, above). Where their fixes differed, the
+  better-measured one stands: BC reads 10,000 a page in five pages (theirs),
+  Energinet reads its 12,771 rows in one request (theirs), Tronscan's gap is
+  the 1,000 ms measured ten-for-ten (theirs); the ENA influenza samples read
+  the WHOLE set at `limit=0` (61,625 = the count, ours) and the tuberculosis
+  runs read whole as five windows (ours), because a 30-day slice of a
+  collection the API hands over complete in one request is a discard; the
+  SARS-CoV-2 row is a 30-day window in both, at `limit=0` with their cold
+  timeout. And `$JO_PAGE_MAX` now brakes a declared `page_max` (theirs,
+  `jo_page_max_for`, hptest 40f), which is what this branch's
+  `JO_PAGE_MAX_CAP` existed for — so that knob is gone and
+  `audit_cycle_advance.py` sets `JO_PAGE_MAX=2`.
 
   533 rows cycled when this was written; 669 do on 2026-10-22, and the sweep
   above is how to know they still can. One shape to keep in mind: `interval = 2592000` is

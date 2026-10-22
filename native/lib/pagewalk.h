@@ -78,6 +78,14 @@ typedef int (*pw_emit_fn)(const source_ctx *c, intel_sink *s, const char *id,
  * them had no knob at all — see jo_page_max() in pagewalk.c. */
 int jo_page_max(const char *legacy_env);
 
+/* The same ceiling for a caller that carries a source's own DECLARED page_max
+ * (0 for none): $JO_PAGE_MAX when set — in both directions, because it is the
+ * operator's brake — else the declared value, else the default above. Call
+ * this rather than `declared > 0 ? declared : jo_page_max(NULL)`, which is
+ * what hpengine did, and which left the knob unable to bound the 669 rows that
+ * declare a ceiling of their own. */
+int jo_page_max_for(int declared);
+
 int pw_walk(const source_ctx *c, intel_sink *s, const char *id,
             const char *url, pw_fetch_fn fetch, pw_emit_fn emit_page, void *ud);
 

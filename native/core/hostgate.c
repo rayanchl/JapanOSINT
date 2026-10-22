@@ -143,16 +143,17 @@ static const hg_override g_over_builtin[] = {
   { "data.qld.gov.au", 1500 },
   /* data.nsw.gov.au is the same shape at 17,192 datasets / ~86 pages. */
   { "data.nsw.gov.au", 250 },
-  /* Two cycling rows whose SECOND page answered HTTP 429 when asked straight
-   * after the first (tools/audit_cycle_advance.py, 2026-10-22):
-   * ENERGINET_CAPACITY_MUNICIPALITY on Energinet's data service and
-   * TRONSCAN_TOP_ACCOUNTS on Tronscan's list API. A 429 on page 2 is not a
-   * dead source and not a cap — it is a burst the host refuses, which is
-   * what a per-host gap is for. The 429 clears the resume position (a
-   * refused page is never bookmarked), so without a gap the cycle re-read
-   * page 1 forever with rc=0. */
-  { "api.energidataservice.dk", 1000 },
-  { "apilist.tronscanapi.com", 1500 },
+  /* apilist.tronscanapi.com rate-limits per IP close to the global 150 ms gap,
+   * and TRONSCAN_TOP_ACCOUNTS is the worst shape for it: a list page of 50
+   * accounts is followed by a DETAIL HOP PER ACCOUNT, so one page is 51
+   * requests to this host in a burst.
+   *
+   * Measured 2026-10-22, ten sequential requests at each spacing: at 150 ms
+   * two of ten answered HTTP 429; at 1,000 ms ten of ten answered 200. The
+   * row's own cycle had been stalled by exactly that — page 2 was 429'd, and
+   * a failed page clears the cycle position rather than bookmarking a refused
+   * page, so it re-read the same 25 accounts of 10,000 every day. */
+  { "apilist.tronscanapi.com", 1000 },
 };
 #define HG_N_BUILTIN ((int)(sizeof g_over_builtin / sizeof g_over_builtin[0]))
 static hg_override g_over[HG_MAX_OVERRIDES];

@@ -13,8 +13,8 @@ DISCLOSES it per run; nothing READS the disclosures across the registry. This
 is that sweep.
 
 Method: run each cycling row through the real binary under
-`JO_PAGE_MAX_CAP=<cap>` (default 2 — a ceiling over the row's own ceiling, for
-measurement only, lib/hpengine.c), so a run is page 1 plus the attempt at page
+`JO_PAGE_MAX=<cap>` (default 2 — since 2026-10-22 the operator's brake reaches a
+row's own declared ceiling too, jo_page_max_for in lib/pagewalk.c), so a run is page 1 plus the attempt at page
 2 rather than a hundred pages, against a fresh copy of a warm template DB, and
 read the truncation notice back out of that database. Verdicts, from the
 notice's own fields:
@@ -120,7 +120,7 @@ def run_one(a, tmpl, sid, slot):
             pass
     shutil.copyfile(tmpl, db)
     env = dict(os.environ, JO_DB=db, JO_FTS_REBUILD="0", JO_SHAPE_NOTICES="0",
-               JO_PAGE_MAX_CAP=str(a.cap))
+               JO_PAGE_MAX=str(a.cap))
     t0 = time.time(); timed_out = False; blob = ""
     try:
         p = subprocess.run([a.bin, "--run", sid], capture_output=True,
@@ -146,7 +146,7 @@ def main():
     ap.add_argument("--bin", default="./bin/japanosint")
     ap.add_argument("--ids-file")
     ap.add_argument("--from-tables", help="scan this collectors dir for page_resume rows")
-    ap.add_argument("--cap", type=int, default=2, help="JO_PAGE_MAX_CAP for each run (default 2)")
+    ap.add_argument("--cap", type=int, default=2, help="JO_PAGE_MAX for each run (default 2)")
     ap.add_argument("--jobs", type=int, default=6)
     ap.add_argument("--timeout", type=int, default=220)
     ap.add_argument("--workdir", default=".run/cycle-advance")

@@ -3483,27 +3483,6 @@ int main(void) {
        "40b-iii: and the notice says the position was not advanced, NOT that "
        "the cycle completed"); }
 
-  /* 40b-iv. $JO_PAGE_MAX_CAP is a ceiling over the row's OWN ceiling, for
-   *         measurement: tools/audit_cycle_advance.py runs every cycling row
-   *         under cap 2 to learn what its second page answers, and must not
-   *         read a hundred pages of a row that declares a hundred to do it.
-   *         T_RESUME declares page_max 2; under cap 1 one run is ONE page, and
-   *         the walk still stores the page it did not reach, so the cap
-   *         changes the slice size and nothing else. Unlike $JO_PAGE_MAX it
-   *         lowers a declared page_max too — that is the whole point, and why
-   *         it is a separate variable. */
-  fx_reset();
-  fx_add("offset=2", 200, "{\"items\":[{\"name\":\"c\",\"id\":\"3\"},{\"name\":\"d\",\"id\":\"4\"}]}");
-  fx_add("/rz?all=1", 200, "{\"items\":[{\"name\":\"a\",\"id\":\"1\"},{\"name\":\"b\",\"id\":\"2\"}]}");
-  setenv("JO_PAGE_MAX_CAP", "1", 1);
-  rc = run_source_resume("T_RESUME", NULL, NULL);
-  unsetenv("JO_PAGE_MAX_CAP");
-  ok(rc == 0 && cap_count("t-page", NULL) == 2 && g_cap_ids_has("1") &&
-     !g_cap_ids_has("3"),
-     "40b-iv: JO_PAGE_MAX_CAP=1 reads ONE page of a row that declares two");
-  ok(g_res_set && strstr(g_res_out, "offset=2") != NULL,
-     "40b-iv: and the position stored is the page the cap kept it from");
-
   /* 40c. A row whose URL carries a date token must not cycle: the stored URL
    *      would pin one day forever. Refused, and nothing is stored. */
   fx_reset();
@@ -3530,6 +3509,34 @@ int main(void) {
   rc = run_source_resume("T_RESUME", "somebody", saved);
   ok(rc == 0 && g_cap_ids_has("1") && !g_res_set,
      "40e: an entity run neither resumes nor stores a position");
+
+  /* 40f. $JO_PAGE_MAX reaches a row that declares its own ceiling, DOWNWARDS.
+   *      T_RESUME declares page_max = 2; under JO_PAGE_MAX=1 it must read one
+   *      page, not two. The engine used to resolve this as
+   *      `s->page_max > 0 ? s->page_max : jo_page_max(NULL)` — the knob
+   *      reaching only rows WITHOUT a ceiling — while hpengine.h's own comment
+   *      said page_max was "raised or lowered for the whole tree by
+   *      $JO_PAGE_MAX". The cost was not theoretical: it made
+   *      tools/audit_page_ceiling.py's shallow probe (which bounds a run by
+   *      setting this variable) walk 200 pages for every cycling row that
+   *      declares 200, so the one tool that measures ceilings could not
+   *      cheaply measure the rows most likely to be stuck at one. */
+  fx_reset();
+  fx_add("offset=2", 200, "{\"items\":[{\"name\":\"c\",\"id\":\"3\"},{\"name\":\"d\",\"id\":\"4\"}]}");
+  fx_add("/rz?all=1", 200, "{\"items\":[{\"name\":\"a\",\"id\":\"1\"},{\"name\":\"b\",\"id\":\"2\"}]}");
+  setenv("JO_PAGE_MAX", "1", 1);
+  rc = run_source_resume("T_RESUME", NULL, NULL);
+  ok(rc == 0 && cap_count("t-page", NULL) == 2 && g_ncalls == 1,
+     "40f: JO_PAGE_MAX=1 bounds a row whose own page_max is 2");
+  ok(g_res_set && strstr(g_res_out, "offset=2") != NULL,
+     "40f: and the cycle resumes from the page the brake stopped before");
+  unsetenv("JO_PAGE_MAX");
+  fx_reset();
+  fx_add("offset=2", 200, "{\"items\":[{\"name\":\"c\",\"id\":\"3\"},{\"name\":\"d\",\"id\":\"4\"}]}");
+  fx_add("/rz?all=1", 200, "{\"items\":[{\"name\":\"a\",\"id\":\"1\"},{\"name\":\"b\",\"id\":\"2\"}]}");
+  rc = run_source_resume("T_RESUME", NULL, NULL);
+  ok(rc == 0 && cap_count("t-page", NULL) == 4 && g_ncalls == 2,
+     "40f: with the variable unset the row's declared 2 pages are read again");
 
   /* 41. detail_html_kv: an HTML record page's label/value cells merge under
    *     "detail." — data-label cells, a <th>/<td> pair, entities decoded, a

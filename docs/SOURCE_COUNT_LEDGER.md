@@ -28,7 +28,7 @@ read by hand.
 
 **This branch's count was 57,540** (2026-10-22): 57,536 (below) plus
 four. `tools/audit_cycle_advance.py` ran all 669 `page_resume` rows under
-`JO_PAGE_MAX_CAP=2` and read their notices back
+`JO_PAGE_MAX=2` and read their notices back
 (`docs/measured-cycle-advance-2026-10-22.tsv`): 600 advance, 20 complete
 inside two pages, 43 were refused page 1 from this environment (39 of them
 twice), 2 answered 429 to page 2 (Energinet, Tronscan — per-host gaps in
