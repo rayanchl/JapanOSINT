@@ -5,7 +5,44 @@ was seeded from, what it measured and what it taught. Moved out of `CLAUDE.md`
 on 2026-10-19 so that file keeps the rules and the current number; the lessons
 that a new batch must not relearn are summarised there. Newest first.
 
-**The registered count is 57,527** (2026-10-22): 57,536 less nine rows that
+**The registered count is 57,529** (2026-10-22, merged): main's 57,527 (its
+`&amp;` pass, below) plus this branch's +2 on the shared 57,536 base: +4
+tuberculosis windows, +1 Elia imbalance-price row, −3 ODS rows whose datasets
+no longer exist. No id is in both sides' changes; both floors re-recorded.
+
+**This branch's count was 57,538** (2026-10-22, later): 57,540 − 3 + 1. The
+ods147 lesson applied to every OpenDataSoft row
+(`docs/measured-ods-titles-2026-10-22.tsv`): the metadata endpoint of all
+237 datasets the tree's 245 ODS rows read was asked for its title; 118 rows
+got one, 124 never got an answer (the platform resets this environment's
+path on nearly every try — a reading of the path), 3 datasets no longer
+exist (`NotFoundResource`; the three `vsrc13_europe_data` rows are gone),
+one row was named for a different measure than its dataset holds (Qatar's
+"paramedic workforce" is paramedics' PATIENTS by gender; renamed), and
+`ELIA_SYSTEM_IMBALANCE` — re-pointed only two days earlier — had been
+pointed at the imbalance-PRICE dataset: the one-minute successor of ods045
+is ods126 by Elia's own titles (3,622 of 3,622 in its window through the
+engine), and ods134 is its own row now, `ELIA_IMBALANCE_PRICES_QH` (241 of
+241). Every other low-overlap pair was a language or wording difference,
+read by hand.
+
+**This branch's count was 57,540** (2026-10-22): 57,536 (below) plus
+four. `tools/audit_cycle_advance.py` ran all 669 `page_resume` rows under
+`JO_PAGE_MAX=2` and read their notices back
+(`docs/measured-cycle-advance-2026-10-22.tsv`): 600 advance, 20 complete
+inside two pages, 43 were refused page 1 from this environment (39 of them
+twice), 2 answered 429 to page 2 (Energinet, Tronscan — per-host gaps in
+`core/hostgate.c`, whose live-entry count is sizeof arithmetic now rather
+than the `7` that had been hiding the two new gaps), and **4 could never
+advance**: `BC_MINERAL_TENURE` (GeoServer wants `sortBy`; added) and the
+three ENA Portal API rows, whose `offset` the API refuses outright. ENA's
+complete read is `limit=0` in one request; influenza samples (61,625) and a
+30-day SARS-CoV-2 tail fit in one, and the tuberculosis runs became FIVE
+single-request windows on `first_public` because one `limit=0` read of the
+whole 360,690 came back 8% short in every date half (a silent cut), while
+each window answers exactly its count. +4 rows; both floors re-recorded.
+
+**Main's count was 57,527** (2026-10-22): 57,536 less nine rows that
 became exact duplicates when the `&amp;` in 1,076 row URLs was decoded
 (`docs/removed-sources-2026-10-22-amp-duplicates.tsv`): four batch-43 municipal
 feeds batch 25 already reads, four batch-44 US feeds batch 50 reads, one CNRS

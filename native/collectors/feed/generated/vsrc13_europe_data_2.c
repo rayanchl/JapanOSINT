@@ -161,12 +161,6 @@ VJSON(eur_ods_amp_fr_contenu_de_la_page_nos_visualis, "eur-ods-amp-fr-contenu-de
   "fr", "[\"fra\",\"opendata\"]", 86400,
   "Records of the '[Archive 2026] Contenu de la page nos visualisations' dataset published by Aix-Marseille-Provence Metropole open data.");
 
-VJSON(eur_ods_amp_fr_reseau_de_transports_aix_marsei, "eur-ods-amp-fr-reseau-de-transports-aix-marsei", "Aix-Marseille-Provence Metropole open data — Ensemble des données concernant les réseaux de transports en commun (GTFS et temps réel)", "Aix-Marseille-Provence Metropole open data — Ensemble des données concernant les réseaux de transports en commun (GTFS et temps réel)",
-  "europe_data", "opendata",
-  "https://data.ampmetropole.fr/api/explore/v2.1/catalog/datasets/fr-reseau-de-transports-aix-marseille-provence-issus-de-data-gouv/records?limit=100",
-  "results",
-  "fr", "[\"fra\",\"opendata\"]", 86400,
-  "Records of the 'Ensemble des données concernant les réseaux de transports en commun (GTFS et temps réel)' dataset published by Aix-Marseille-Provence Metropole open data.");
 
 VJSON(eur_ods_amp_parc_et_jardin_bd_topo_zone_dactiv, "eur-ods-amp-parc-et-jardin-bd-topo-zone-dactiv", "Aix-Marseille-Provence Metropole open data — Espaces publics (parcs, jardins, places...)", "Aix-Marseille-Provence Metropole open data — Espaces publics (parcs, jardins, places...)",
   "europe_data", "opendata",

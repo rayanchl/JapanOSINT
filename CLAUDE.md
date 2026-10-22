@@ -39,7 +39,14 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 57,527** (2026-10-22): 57,536 less nine rows that
+**The registered count is 57,529** (2026-10-22, merged): main's 57,527 (below)
+plus this branch's two on the same 57,536 base — the four tuberculosis
+windows and the Elia imbalance-price row, less the three OpenDataSoft rows
+whose datasets no longer exist (the cycle-advance sweep and the ODS title
+sweep, both under "Cadence policy" / `page_resume`, and in the ledger). None
+of main's nine `&amp;` duplicates was a row this branch touched.
+
+**Main's count was 57,527** (2026-10-22): 57,536 less nine rows that
 duplicated another row once their URL's `&amp;` was decoded. **A literal
 `&amp;` in a row URL is not always a bug to fix**: it sends `amp;type=…`,
 which the server ignores, and 1,076 rows had one. Decoded and re-measured
@@ -50,7 +57,7 @@ served the Atom it asked for against an RSS declaration, a CMS honouring a
 small `displayCount` — and keep the `&amp;` with a marker on the row. Measure
 both URLs before changing one. Ledger: `docs/SOURCE_COUNT_LEDGER.md`.
 
-**The registered count was 57,536** (2026-10-21): main's 57,415 (below) plus
+**The count was 57,536** (2026-10-21): main's 57,415 (below) plus
 this branch's 121 on the same 56,955 base — batch 51's 136, less 29
 takeovers, plus 15 browser-profile feeds, less one duplicate FAA row — merged
 with no shared endpoint. On this branch alone the count was **57,076**.
@@ -1232,6 +1239,7 @@ says why.
 | `tools/audit_batch_reachable.py` | rule 3 above. A row whose opts are ambiguous is reported UNVERIFIABLE, never "never runs" |
 | `tools/audit_url_limits.py` | the seventh discard shape — a record limit asked of the UPSTREAM in a URL, with no paging to follow it. Read, not gated: 103 narrow candidates, unmeasured, and a limit on a ranked pivot is legitimate |
 | `tools/audit_page_ceiling.py` | which scheduled rows stop at the PAGE CEILING, and how many pages their own upstream says they need. Probes SHALLOW (`--probe-pages`, default 3) and then does arithmetic, because the engine's truncation notice already carries the only number that settles it: a `records_available` whose basis is "upstream declared this total". `CEILING_DECLARED` is measured (pages_needed = total / page_size, the page size derived from the probe when the row declares none); `CEILING_UNKNOWN` means the upstream publishes no total and only a full walk can size it, which is a decision to take deliberately, not a finding. Reads `collector-fetch-failure` too, so a 429 is `FETCH_FAILED` and not "this source returns nothing" |
+| `tools/audit_cycle_advance.py` | which `page_resume` rows can never advance. Runs every cycling row through the real binary under **`JO_PAGE_MAX=2`** (which brakes a declared `page_max` too since 2026-10-22: `jo_page_max_for`, hptest 40f) and reads the truncation notice back: `STUCK` (page 2 refused with a 4xx that is the endpoint's — re-point the paging), `CUT` (transport/5xx/429/wall — re-run, then a hostgate gap), `ADVANCES`, `COMPLETES`, `FETCH_FAILED`, `NEEDS_ENTITY`, `SLOW`. The engine has disclosed the stuck shape per run since 2026-10-18; this is the first thing that READS the disclosures across the registry. `--from-tables collectors` takes the ids from the C, `--ids-file` for a re-run |
 | `tools/audit_page_param.py` | rows whose URL already binds their own `page_param`. The engine used to APPEND (`…&pagina=1&pagina=2`) and a server binding the first occurrence then served page 1 for the whole walk — N pages emitted, one stored, `rc=0`. Fixed in `hp_url_set_param` and pinned by `hptest` "9f-bis"; the lint stays because 103 of 1,431 paged rows are that shape and their paging depends on the replacement being right |
 | `tools/audit_batch_emit.py` | rule 4 below: runs each MANIFEST row through the real binary and reads back `emitted N of M`. `--timeout S` moves the kill line; a run that hits it is **`SLOW`**, carrying its partial counts — unmeasured, not failed. Each run gets a scratch DB from a warm template (it used to write the developer's live DB), and it exits non-zero on UNREGISTERED, UNPARSEABLE, NO_RUN_LINE or when nothing was measured |
 | `tools/audit_registry_emit.py` | rule 4 **and** 4b for the whole REGISTRY, manifest or not — `--list-sources` is the source list, so nothing registered can hide. Measures emitted *and* stored, per run, against a fresh copy of a warm template DB. `--scheduled`/`--match`/`--only`/`--ids-file`, `--jobs`, `--timeout`, TSV out, `--resume` |
@@ -1701,7 +1709,17 @@ Engine subtleties worth knowing before writing a row:
   2023-10-13T11:36, the resume URL stored; the second run resumed from that
   URL and stored the next 10,000 (to 2023-10-20T10:32) — 20,000 distinct
   rows over two runs against one database, no overlap, 72 s each. About a
-  week per cycle against 1,440 new records a day. The
+  week per cycle against 1,440 new records a day. **And the same question
+  asked of every ODS row the next day** (2026-10-22,
+  `docs/measured-ods-titles-2026-10-22.tsv`: 237 datasets, 118 titles read,
+  124 unanswered through this path, 3 gone and removed) caught the row
+  re-pointed two days earlier: `ELIA_SYSTEM_IMBALANCE` had been moved onto
+  ods134, whose own title is "Imbalance prices per quarter-hour"; the
+  one-minute successor of ods045 is ods126 ("Current system imbalance
+  (Historical data as of 22/05/2024)", 1,271,520 minutes, a day behind),
+  and ods134 is `ELIA_IMBALANCE_PRICES_QH` now. A repair made from a
+  dataset's FIELDS is still a guess about its subject; the title is one
+  request. The
   `/exports/csv` route (the whole dataset as one ~210 MB stream, read to three
   rows) is the other complete read; the cursor was chosen because a cut walk
   resumes where it stopped and a cut export starts over. **A row's name is a
@@ -1774,8 +1792,46 @@ Engine subtleties worth knowing before writing a row:
   exactly the kind of tidy falsehood these notices exist to prevent. It now
   distinguishes the three outcomes, and a failed page says the position was NOT
   advanced and the row re-reads the same slice until its paging is re-pointed
-  (`hptest` 40b-iii). Any other row in this shape says so on its next run; a
-  sweep for them is the obvious next measurement.
+  (`hptest` 40b-iii). Any other row in this shape says so on its next run —
+  and **the sweep that reads those disclosures across the registry now
+  exists** (2026-10-22, `tools/audit_cycle_advance.py`,
+  `docs/measured-cycle-advance-2026-10-22.tsv`): every one of the 669
+  `page_resume` rows run through the binary under `JO_PAGE_MAX=2` — the
+  operator's brake, which reaches a declared ceiling too, so a run is page
+  1 plus the attempt at page 2 (`jo_page_max_for`, hptest 40f) — and its
+  notice read back. 600 advance, 20 complete inside two pages, 43 were
+  refused page 1 from the measuring environment (39 of them on a second
+  pass; ODS hosts and a few others reset this path), **2 answered 429 to
+  page 2** and **4 could never advance**:
+  * `BC_MINERAL_TENURE` — GeoServer refuses `startIndex` without `sortBy`,
+    the very hazard noted above for BC's WFS, in a row that never got the
+    sort. `sortBy=TENURE_NUMBER_ID`: startIndex 0/50/100 answer disjoint
+    ascending pages, 150 of 150 across three pages in the engine, resumes.
+  * the three **ENA Portal API** rows — `offset` answers HTTP 400
+    "Unsupported param offset", full stop; no cycle can exist. The API's
+    complete read is **`limit=0`**: ONE request, the whole result set.
+    `ENA_PATHOGEN_INFLUENZA_SAMPLES` reads 61,625 of 61,625 (= its count,
+    19 MB, 82 s in the engine). `ENA_PATHOGEN_SARSCOV2_RUNS` is 7.5 million
+    runs (~2 GB), so it is a 30-day `first_public` window at `limit=0`
+    (6,362 of 6,362 in the engine; 0 runs in the last week, 47,270 in a
+    year — the trade is stated in the row). And `ENA_PATHOGEN_MTB_RUNS`
+    found a third shape: **one `limit=0` read of 360,690 runs came back
+    HTTP 200 with 331,580 rows — 8% short in EVERY date half**, a silent
+    cut of an accession-ordered stream, not a tail. Split on `first_public`
+    the same day, every block answers exactly its count (76,189 / 95,032 /
+    85,283 / 57,476 / 46,710, summing to 360,690), so it is FIVE
+    single-request TSV rows now: four static history blocks weekly and the
+    live 90-day tail daily (10,255 of 10,255 in the engine), the 2025-on
+    block ending at `{date-90d}` where the tail begins. **A 200 with fewer
+    rows than the count endpoint is a cut; a window that equals its count
+    is complete** — measure both before trusting a bulk read.
+  * `ENERGINET_CAPACITY_MUNICIPALITY` and `TRONSCAN_TOP_ACCOUNTS` — 429 on
+    page 2, so per-host gaps in `core/hostgate.c` (1,000 / 1,500 ms; both
+    read three pages and resume now, Tronscan's 78 requests with its detail
+    hops in 116 s). **Which found that the table's live-entry count was a
+    hand-maintained `7` while it held nine** — the same `1`-for-two trap
+    its own comment recorded in September — so the two new gaps were
+    compiled in and never consulted; the count is sizeof arithmetic now.
 
   **That sweep is done: 669 cycling rows measured, SEVEN stalled, and all
   seven are fixed** (2026-10-22, `docs/measured-cycle-stalls-2026-10-22.tsv`;
@@ -1824,7 +1880,23 @@ Engine subtleties worth knowing before writing a row:
   that month shares). A stalled cycle hides a key defect behind it, because a
   row that only ever reads one page never shows the collision.
 
-  533 rows cycle in total. One shape to keep in mind: `interval = 2592000` is
+  **Two sessions ran this sweep on the same day and merged the same evening**
+  (PR #68 first, with `audit_page_ceiling.py`'s `CYCLE_STALLED`; then this
+  branch's `audit_cycle_advance.py`, above). Where their fixes differed, the
+  better-measured one stands: BC reads 10,000 a page in five pages (theirs),
+  Energinet reads its 12,771 rows in one request (theirs), Tronscan's gap is
+  the 1,000 ms measured ten-for-ten (theirs); the ENA influenza samples read
+  the WHOLE set at `limit=0` (61,625 = the count, ours) and the tuberculosis
+  runs read whole as five windows (ours), because a 30-day slice of a
+  collection the API hands over complete in one request is a discard; the
+  SARS-CoV-2 row is a 30-day window in both, at `limit=0` with their cold
+  timeout. And `$JO_PAGE_MAX` now brakes a declared `page_max` (theirs,
+  `jo_page_max_for`, hptest 40f), which is what this branch's
+  `JO_PAGE_MAX_CAP` existed for — so that knob is gone and
+  `audit_cycle_advance.py` sets `JO_PAGE_MAX=2`.
+
+  533 rows cycled when this was written; 669 do on 2026-10-22, and the sweep
+  above is how to know they still can. One shape to keep in mind: `interval = 2592000` is
   monthly, so a 500-page collection on that cadence takes about two years to
   come round — better than never, and the notice says where it is.
 * **A deep-paging cap is the upstream's, and it is disclosed by name.** GLEIF
