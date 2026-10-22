@@ -39,7 +39,13 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 57,536** (2026-10-21): main's 57,415 (below) plus
+**The registered count is 57,538** (2026-10-22): 57,536 (below) plus the
+four tuberculosis windows and the Elia imbalance-price row, less the three
+OpenDataSoft rows whose datasets no longer exist — the cycle-advance sweep
+and the ODS title sweep, both under "Cadence policy" / `page_resume`, and in
+the ledger.
+
+**The count was 57,536** (2026-10-21): main's 57,415 (below) plus
 this branch's 121 on the same 56,955 base — batch 51's 136, less 29
 takeovers, plus 15 browser-profile feeds, less one duplicate FAA row — merged
 with no shared endpoint. On this branch alone the count was **57,076**.
@@ -1640,7 +1646,17 @@ Engine subtleties worth knowing before writing a row:
   2023-10-13T11:36, the resume URL stored; the second run resumed from that
   URL and stored the next 10,000 (to 2023-10-20T10:32) — 20,000 distinct
   rows over two runs against one database, no overlap, 72 s each. About a
-  week per cycle against 1,440 new records a day. The
+  week per cycle against 1,440 new records a day. **And the same question
+  asked of every ODS row the next day** (2026-10-22,
+  `docs/measured-ods-titles-2026-10-22.tsv`: 237 datasets, 118 titles read,
+  124 unanswered through this path, 3 gone and removed) caught the row
+  re-pointed two days earlier: `ELIA_SYSTEM_IMBALANCE` had been moved onto
+  ods134, whose own title is "Imbalance prices per quarter-hour"; the
+  one-minute successor of ods045 is ods126 ("Current system imbalance
+  (Historical data as of 22/05/2024)", 1,271,520 minutes, a day behind),
+  and ods134 is `ELIA_IMBALANCE_PRICES_QH` now. A repair made from a
+  dataset's FIELDS is still a guess about its subject; the title is one
+  request. The
   `/exports/csv` route (the whole dataset as one ~210 MB stream, read to three
   rows) is the other complete read; the cursor was chosen because a cut walk
   resumes where it stopped and a cut export starts over. **A row's name is a

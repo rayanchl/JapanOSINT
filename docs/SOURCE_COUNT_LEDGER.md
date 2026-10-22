@@ -5,7 +5,23 @@ was seeded from, what it measured and what it taught. Moved out of `CLAUDE.md`
 on 2026-10-19 so that file keeps the rules and the current number; the lessons
 that a new batch must not relearn are summarised there. Newest first.
 
-**The registered count is 57,540** (2026-10-22): main's 57,536 (below) plus
+**The registered count is 57,538** (2026-10-22, later): 57,540 − 3 + 1. The
+ods147 lesson applied to every OpenDataSoft row
+(`docs/measured-ods-titles-2026-10-22.tsv`): the metadata endpoint of all
+237 datasets the tree's 245 ODS rows read was asked for its title; 118 rows
+got one, 124 never got an answer (the platform resets this environment's
+path on nearly every try — a reading of the path), 3 datasets no longer
+exist (`NotFoundResource`; the three `vsrc13_europe_data` rows are gone),
+one row was named for a different measure than its dataset holds (Qatar's
+"paramedic workforce" is paramedics' PATIENTS by gender; renamed), and
+`ELIA_SYSTEM_IMBALANCE` — re-pointed only two days earlier — had been
+pointed at the imbalance-PRICE dataset: the one-minute successor of ods045
+is ods126 by Elia's own titles (3,622 of 3,622 in its window through the
+engine), and ods134 is its own row now, `ELIA_IMBALANCE_PRICES_QH` (241 of
+241). Every other low-overlap pair was a language or wording difference,
+read by hand.
+
+**The count was 57,540** (2026-10-22): main's 57,536 (below) plus
 four. `tools/audit_cycle_advance.py` ran all 669 `page_resume` rows under
 `JO_PAGE_MAX_CAP=2` and read their notices back
 (`docs/measured-cycle-advance-2026-10-22.tsv`): 600 advance, 20 complete
