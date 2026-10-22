@@ -18,6 +18,8 @@
  * Plus: the JSON the settings page reads states bounds, the stored value, and
  * the EFFECTIVE value, so the page needs no second opinion about any of it. */
 #include "../../core/source_settings.c"
+#include "../../core/source_interval.h"
+#include "../../source.h"
 
 #include <assert.h>
 #include <stdio.h>
@@ -152,6 +154,49 @@ int main(void) {
   assert(json_has(j, "\"effective\":67108864"));   /* the 64 MB default */
   assert(json_has(j, "\"can_write\":false"));
   free(j);
+
+  /* ---- 5. the interval key is a FACADE over core/source_interval.c ------ */
+  /* It wants a REGISTERED, SCHEDULED source: find one and one entity pivot. */
+  const source_def **all = registry_all(); int n = registry_count();
+  const source_def *sched = NULL, *pivot = NULL;
+  for (int i = 0; i < n && (!sched || !pivot); i++) {
+    if (!sched && all[i]->update_interval_sec > 0 && all[i]->collector && all[i]->collector[0] != '_') sched = all[i];
+    if (!pivot && all[i]->update_interval_sec == 0 && registry_is_entity_pivot(all[i])) pivot = all[i];
+  }
+  assert(sched && pivot);
+  source_interval_init(&db);
+  /* the fake row above is in `sources` but not in the registry: -3 */
+  assert(source_settings_put(&db, SID, SRCSET_INTERVAL, "3600", 1, "unit") == -3);
+  /* a pivot has no schedule to set: refused as a value that cannot apply */
+  assert(source_settings_put(&db, pivot->id, SRCSET_INTERVAL, "3600", 1, "unit") == -2);
+  /* bounds: the module's, enforced here too */
+  assert(source_settings_put(&db, sched->id, SRCSET_INTERVAL, "5", 1, "unit") == -2);
+  assert(source_settings_put(&db, sched->id, SRCSET_INTERVAL, "99999999", 1, "unit") == -2);
+  assert(source_interval_for(sched->id) == 0);
+  /* the happy path writes THROUGH to the interval module, not to this table */
+  assert(source_settings_put(&db, sched->id, SRCSET_INTERVAL, "900", 1, "unit") == 0);
+  assert(source_interval_for(sched->id) == 900);
+  assert(source_settings_int(&db, sched->id, SRCSET_INTERVAL, 0) == 900);
+  { sqlite3_stmt *s2 = NULL;
+    assert(sqlite3_prepare_v2(db.h, "SELECT count(*) FROM source_settings WHERE key='interval_sec'", -1, &s2, NULL) == SQLITE_OK);
+    assert(sqlite3_step(s2) == SQLITE_ROW && sqlite3_column_int(s2, 0) == 0 && "no copy in source_settings");
+    sqlite3_finalize(s2); }
+  /* disabled keeps the number, the policy decides again */
+  assert(source_settings_put(&db, sched->id, SRCSET_INTERVAL, "900", 0, "unit") == 0);
+  assert(source_interval_for(sched->id) == 0);
+  assert(source_settings_int(&db, sched->id, SRCSET_INTERVAL, 42) == 42);
+  /* the JSON: present for the scheduled row with a per-source default, absent for the pivot */
+  j = source_settings_json(&db, sched->id, 1);
+  assert(j && json_has(j, SRCSET_INTERVAL) && json_has(j, "\"default_basis\":"));
+  assert(json_has(j, "\"value\":900") && json_has(j, "\"enabled\":false") && json_has(j, "\"configured\":true"));
+  { char want[64]; snprintf(want, sizeof want, "\"effective\":%d", sched->update_interval_sec);
+    assert(json_has(j, want) && "disabled: the effective figure is the row's own under no policy"); }
+  free(j);
+  j = source_settings_json(&db, pivot->id, 1);
+  assert(j && !json_has(j, SRCSET_INTERVAL) && json_has(j, SRCSET_BODY_CEILING));
+  free(j);
+  const char *e = NULL; assert(source_interval_clear(&db, sched->id, &e) == 0);
+  printf("  interval_sec: facade over source_interval (write-through, no copy), per-source default, absent for a pivot\n");
 
   db_close(&db);
   printf("test_source_settings: ok\n");

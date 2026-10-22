@@ -1,6 +1,10 @@
 /* core/source_settings.c — see source_settings.h for why the key set is
  * closed and why `enabled` is separate from the value. */
 #include "source_settings.h"
+#include "source_interval.h"
+#include "cadence.h"
+#include "scheduler.h"
+#include "../source.h"
 #include "../third_party/cJSON.h"
 
 #include <stdio.h>
@@ -36,8 +40,23 @@ static const srcset_key KEYS[] = {
     "~111 MB for the 171,176-record export it cannot page. The ceiling is "
     "still enforced on the decompressed stream, and an explicit "
     "$JO_HTTP_MAX_BODY caps this." },
+  { SRCSET_INTERVAL, SI_MIN_SEC, SI_MAX_SEC, 0, "seconds",
+    "Collection interval",
+    "How often this source runs, set for this source alone. It outranks the "
+    "system-wide cadence policy (the Sources page) and the interval the "
+    "source declares or measures from its own items — specific beats "
+    "general. Off, the policy decides; the number is kept. Takes effect in "
+    "the running scheduler without a restart. Not offered for an entity "
+    "pivot, which runs when asked." },
 };
 static const int NKEYS = (int)(sizeof KEYS / sizeof KEYS[0]);
+
+/* The interval key is a FACADE over core/source_interval.c: that module owns
+ * the row, the cache the scheduler reads every tick and the generation that
+ * re-plans it. Storing a copy here would be two truths about one cadence. */
+static int delegated(const srcset_key *k) {
+  return k && strcmp(k->key, SRCSET_INTERVAL) == 0;
+}
 
 static const srcset_key *find_key(const char *key) {
   if (!key) return NULL;
@@ -61,6 +80,7 @@ long source_settings_int(db_handle *db, const char *source_id,
                          const char *key, long def) {
   const srcset_key *k = find_key(key);
   if (!k || !db || !db->h || !source_id || !*source_id) return def;
+  if (delegated(k)) { long ov = source_interval_for(source_id); return ov > 0 ? ov : def; }
 
   sqlite3_stmt *s = NULL;
   if (sqlite3_prepare_v2(db->h,
@@ -98,6 +118,17 @@ int source_settings_put(db_handle *db, const char *source_id, const char *key,
 
   long v = 0;
   if (parse_long(value, &v) != 0 || v < k->lo || v > k->hi) return -2;
+
+  if (delegated(k)) {
+    /* source_interval_set validates the id against the REGISTRY (a setting for
+     * an id nobody registers is -3 here too), refuses an entity pivot (no
+     * schedule to set: -2, the value cannot apply) and the same bounds. */
+    const char *err = NULL;
+    if (source_interval_set(db, source_id, v, enabled, who, &err) == 0) return 0;
+    if (err && strstr(err, "no registered source")) return -3;
+    if (err && (strstr(err, "no schedule") || strstr(err, "under 10 s") || strstr(err, "longer than a year"))) return -2;
+    return -4;
+  }
 
   /* The source must exist. Storing a setting for an id nobody registers is a
    * knob that can never apply, which reads as configured and is not. */
@@ -140,8 +171,39 @@ char *source_settings_json(db_handle *db, const char *source_id,
   cJSON_AddBoolToObject(root, "can_write", can_write ? 1 : 0);
   cJSON *arr = cJSON_AddArrayToObject(root, "settings");
 
+  const source_def *sd = (source_id && *source_id) ? registry_get(source_id) : NULL;
   for (int i = 0; i < NKEYS; i++) {
     const srcset_key *k = &KEYS[i];
+    if (delegated(k)) {
+      /* The interval knob exists only for a row that has a schedule, and its
+       * "default" is not a constant: it is what runs WITHOUT an override —
+       * the declared or measured interval under the system-wide policy
+       * (sched_state_base + cadence_apply), which differs per source. */
+      if (!sd || sd->update_interval_sec <= 0) continue;
+      sched_state st = {0};
+      if (db && db->h) sched_state_load_one(db, source_id, &st);
+      long base   = cadence_apply(sched_state_base(&st, sd->update_interval_sec, sd->adaptive_interval));
+      source_interval ov; source_interval_get(db, source_id, &ov);
+      long eff = (ov.present && ov.enabled && ov.interval_sec > 0) ? ov.interval_sec : base;
+      cJSON *o = cJSON_CreateObject();
+      cJSON_AddStringToObject(o, "key", k->key);
+      cJSON_AddStringToObject(o, "label", k->label);
+      cJSON_AddStringToObject(o, "help", k->help);
+      cJSON_AddStringToObject(o, "unit", k->unit);
+      cJSON_AddNumberToObject(o, "min", (double)k->lo);
+      cJSON_AddNumberToObject(o, "max", (double)k->hi);
+      cJSON_AddNumberToObject(o, "default", (double)base);
+      cJSON_AddStringToObject(o, "default_basis", strcmp(cadence_mode_for(sched_state_base(&st, sd->update_interval_sec, sd->adaptive_interval)), "declared")
+                              ? "the system-wide policy" : (sd->adaptive_interval && st.freshness_interval > 0) ? "measured from its newest item" : "as declared");
+      cJSON_AddNumberToObject(o, "value", (double)(ov.present ? ov.interval_sec : base));
+      cJSON_AddBoolToObject(o, "enabled", ov.present && ov.enabled);
+      cJSON_AddBoolToObject(o, "configured", ov.present);
+      cJSON_AddNumberToObject(o, "effective", (double)eff);
+      if (ov.present && ov.updated_at[0]) cJSON_AddStringToObject(o, "updated_at", ov.updated_at);
+      if (ov.present && ov.updated_by[0]) cJSON_AddStringToObject(o, "updated_by", ov.updated_by);
+      cJSON_AddItemToArray(arr, o);
+      continue;
+    }
     cJSON *o = cJSON_CreateObject();
     cJSON_AddStringToObject(o, "key", k->key);
     cJSON_AddStringToObject(o, "label", k->label);
