@@ -1294,6 +1294,12 @@ static const hp_source HP3B19_HEALTH[] = {
     .record_type = "food-alert-notice",
     .tags = "\"uk\",\"fsa\",\"food-safety\",\"allergen\",\"recall\",\"alert\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    /* `-created` stays. The register is COMPLETE inside the 20-page ceiling, so
+     * newest-first costs nothing: the FSA publishes no total, so its size was
+     * measured by bisecting `_offset` on 2026-10-22 — 1,370 alerts, 14 pages of
+     * 100, the oldest 2018-01-09. (`_sort=created` is honoured, and would be the
+     * fix if the register ever outgrew the ceiling.) An hourly row over a
+     * register that fits in one run has no cycle to compose with. */
     .url = "https://data.food.gov.uk/food-alerts/id?_limit=100&_sort=-created",
     .array_path = "items",
     .date_keys = "created",

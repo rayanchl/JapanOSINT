@@ -49,7 +49,17 @@ static const hp_source HP3B25_JPBIZREG[] = {
       "hits — which is a window over the newest records rather than an "
       "arbitrary slice (the default order is newest first, checked), and "
       "the run states how many of how many it used. The prefecture rows "
-      "below read the same corpus exhaustively by date instead." },
+      "below read the same corpus exhaustively by date instead — 97.7% of "
+      "it, measured 2026-10-22: 清掃 answers 62,308 hits and the same query "
+      "summed over LG_Code 01..47 answers 60,902, so about one notice in "
+      "forty-four carries no prefecture code at all. Those are national "
+      "bodies (日本中央競馬会, 林野庁, the national research institutes, JST), and "
+      "no value of LG_Code selects them — 00, 0, 000000, 48 and 99 each "
+      "answer 0 hits. CFT_Issue_Date does compose with this pivot's own "
+      "Query (清掃 in 2026: 13,406 of the 62,308), so slicing an entity's "
+      "answer by date is possible; it is not done because a busy keyword "
+      "needs windows near a week to fit under the 1,000 cap, which is "
+      "several hundred requests for one question a person is waiting on." },
 
   { .id = "JP25_JPBIZ_KKJ_ORG", .name = "KKJ public procurement portal - by issuing organisation",
     .name_ja = "官公需情報ポータルサイト 発注機関名検索",

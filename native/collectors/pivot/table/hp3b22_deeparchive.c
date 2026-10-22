@@ -1667,12 +1667,38 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
       "Dataverse exist, and each hostname is a search API that answers "
       "the same query shape as the rows above." },
 
+  /* The eleven NADA catalogues below were authored with
+   * `sort_by=created&sort_order=desc`, which puts a newly published study at the
+   * HEAD of an offset walk — the drift CLAUDE.md names, since a study catalogued
+   * between page 3 and page 4 shifts every later page under the walk. Each host
+   * was asked the same question twice on 2026-10-22 (`sort_by=idno`, asc against
+   * desc) rather than fixed on reasoning:
+   *
+   *   HONOURS IT, now ascending by the row's own `idno`: UNHCR (1,108 studies),
+   *   FAO (1,783), Zambia (25), Cambodia (45), ERF MENA (211), Somalia (11).
+   *   NADA reads `idno` asc as nation ascending, year descending; that is a
+   *   deterministic key on a field we already key records by, so an insertion
+   *   lands beside its own country instead of at the head.
+   *
+   *   IGNORES IT — identical first rows for asc, for desc and for
+   *   `sort_by=created&sort_order=desc`: DataFirst South Africa (605) and
+   *   Armenia (26). The parameters are dropped rather than left declaring an
+   *   ordering the server does not give.
+   *
+   *   UNMEASURED FROM HERE, so left exactly as authored: Nepal, Palestine and
+   *   Costa Rica, each `rc=-1` with zero bytes through the engine's own client
+   *   the same day (Palestine serves a leaf without its intermediate). A row we
+   *   cannot reach is not a row we may re-point on inference.
+   *
+   * None of the eight reachable ones is truncated: the largest is 18 pages
+   * against the 20-page ceiling, so the ordering is about the seams within one
+   * run and not about a cycle. */
   { .id = "NADA_UNHCR_CATALOG", .name = "UNHCR Microdata Library - survey catalogue",
     .category = "government", .portal = "https://microdata.unhcr.org",
     .record_type = "microdata-survey",
     .tags = "\"nada\",\"microdata\",\"survey\",\"catalogue\",\"unhcr\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://microdata.unhcr.org/index.php/api/catalog/search?ps=100&sort_by=created&sort_order=desc",
+    .url = "https://microdata.unhcr.org/index.php/api/catalog/search?ps=100&sort_by=idno&sort_order=asc",
     .array_path = "result.rows",
     .date_keys = "created",
     .id_keys = "idno,id",
@@ -1693,7 +1719,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .record_type = "microdata-survey",
     .tags = "\"nada\",\"microdata\",\"survey\",\"catalogue\",\"fao\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://microdata.fao.org/index.php/api/catalog/search?ps=100&sort_by=created&sort_order=desc",
+    .url = "https://microdata.fao.org/index.php/api/catalog/search?ps=100&sort_by=idno&sort_order=asc",
     .array_path = "result.rows",
     .date_keys = "created",
     .id_keys = "idno,id",
@@ -1714,7 +1740,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .record_type = "microdata-survey",
     .tags = "\"nada\",\"microdata\",\"survey\",\"catalogue\",\"zambia\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://nada.zamstats.gov.zm/index.php/api/catalog/search?ps=100&sort_by=created&sort_order=desc",
+    .url = "https://nada.zamstats.gov.zm/index.php/api/catalog/search?ps=100&sort_by=idno&sort_order=asc",
     .array_path = "result.rows",
     .date_keys = "created",
     .id_keys = "idno,id",
@@ -1734,7 +1760,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .record_type = "microdata-survey",
     .tags = "\"nada\",\"microdata\",\"survey\",\"catalogue\",\"datafirst_sa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.datafirst.uct.ac.za/dataportal/index.php/api/catalog/search?ps=100&sort_by=created&sort_order=desc",
+    .url = "https://www.datafirst.uct.ac.za/dataportal/index.php/api/catalog/search?ps=100",
     .array_path = "result.rows",
     .date_keys = "created",
     .id_keys = "idno,id",
@@ -1756,7 +1782,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .record_type = "microdata-survey",
     .tags = "\"nada\",\"microdata\",\"survey\",\"catalogue\",\"cambodia\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://microdata.nis.gov.kh/index.php/api/catalog/search?ps=100&sort_by=created&sort_order=desc",
+    .url = "https://microdata.nis.gov.kh/index.php/api/catalog/search?ps=100&sort_by=idno&sort_order=asc",
     .array_path = "result.rows",
     .date_keys = "created",
     .id_keys = "idno,id",
@@ -1796,7 +1822,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .record_type = "microdata-survey",
     .tags = "\"nada\",\"microdata\",\"survey\",\"catalogue\",\"erf_mena\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://erfdataportal.com/index.php/api/catalog/search?ps=100&sort_by=created&sort_order=desc",
+    .url = "https://erfdataportal.com/index.php/api/catalog/search?ps=100&sort_by=idno&sort_order=asc",
     .array_path = "result.rows",
     .date_keys = "created",
     .id_keys = "idno,id",
@@ -1838,7 +1864,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .record_type = "microdata-survey",
     .tags = "\"nada\",\"microdata\",\"survey\",\"catalogue\",\"somalia\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://microdata.nbs.gov.so/index.php/api/catalog/search?ps=100&sort_by=created&sort_order=desc",
+    .url = "https://microdata.nbs.gov.so/index.php/api/catalog/search?ps=100&sort_by=idno&sort_order=asc",
     .array_path = "result.rows",
     .date_keys = "created",
     .id_keys = "idno,id",
@@ -1858,7 +1884,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .record_type = "microdata-survey",
     .tags = "\"nada\",\"microdata\",\"survey\",\"catalogue\",\"armenia\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://microdata.armstat.am/index.php/api/catalog/search?ps=100&sort_by=created&sort_order=desc",
+    .url = "https://microdata.armstat.am/index.php/api/catalog/search?ps=100",
     .array_path = "result.rows",
     .date_keys = "created",
     .id_keys = "idno,id",

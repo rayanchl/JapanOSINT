@@ -242,13 +242,30 @@ twice leaves", and the second reading was never taken. A retry pass on batches
 
 ## C. Rows with a measured shortfall and a known next step
 
-### C1. KKJ's two entity pivots read 1,000 of 62,255
+### C1. ~~KKJ's two entity pivots read 1,000 of 62,255~~ — MEASURED, declined, and it found a corpus hole
 
 `JP25_JPBIZ_KKJ_QUERY` and `_ORG` are bounded at the portal's hard `Count` cap.
-That is legitimate for a pivot and is now disclosed, and the order is
-newest-first so the bound is a window rather than an arbitrary slice. But the
-47 prefecture rows now read the same corpus exhaustively by date, so the pivots
-could slice per entity the same way instead of bounding.
+The open question was whether they could slice per entity by date the way the 47
+prefecture rows do. Measured 2026-10-22, in both directions:
+
+**The slice is possible.** `CFT_Issue_Date` composes with the pivots' own
+parameters — 清掃 answers 62,308 hits in all and 13,406 for 2026; 東京都 answers
+3,312 and 946.
+
+**It is declined, on the arithmetic.** A busy keyword holds ~13,400 notices a
+year against a 1,000-record cap, so fitting a window under the cap means windows
+near a week — several hundred requests to answer one question a person is
+waiting on. The pivot's bound is a view bound over the NEWEST records, which is
+what rule 2 permits so long as the view says how much of how much it is showing,
+and it does.
+
+**And the premise that the prefecture rows cover the corpus is 97.7% true.**
+清掃 answers 62,308 hits; the same query summed over `LG_Code` 01..47 answers
+**60,902**. So about one notice in forty-four carries no prefecture code, and
+nothing below reads it. Reading 1,000 records of that query, 9 of them carry no
+`LgCode`, and they are national bodies: 日本中央競馬会, 林野庁, 国立研究開発法人
+医薬基盤・健康・栄養研究所, 科学技術振興機構, 国立研究開発法人森林研究・整備機構.
+See E5 — this is now its own item, because no filter was found for them.
 
 ### C2. Toyama's dump days are unreachable by any means currently available
 
@@ -262,12 +279,61 @@ a day). ~460 records.
 4-day windows, 530 of them, at a 6-hour cadence. Deliberate and disclosed, and
 the notice says where it is. On the list so nobody reads it later as a stall.
 
-### C4. Eight cycling rows still carry a declared descending sort
+### C4. ~~Eight cycling rows still carry a declared descending sort~~ — all measured per host
 
 CLAUDE.md: a descending sort and a cycle do not compose, and the fix is an
 ascending sort **verified per host**. 22 rows were done that way on 2026-10-18;
-these 8 were deliberately left rather than changed on reasoning. Each needs its
-own host checked.
+the rest were deliberately left rather than changed on reasoning.
+
+The eight were never named here, so the set was rebuilt from the tree on
+2026-10-22 rather than guessed at: every row with a declared descending sort
+whose ceiling the 2026-10-12 audit could not establish, less the ones whose
+identity IS recency (the 15 `DATAVERSE_*_LATEST_DATASETS`, the five
+`NB_NO_LATEST_*`, `DIGITAL_COMMONWEALTH_LATEST`), plus the three rows that carry
+`page_resume` AND a descending sort — which is the non-composition itself.
+Each host was then asked. What came back:
+
+**Changed, each measured.**
+
+* **The two US Treasury rows** both cycle on an append-only series, so every new
+  day landed at the HEAD of the walk. `api.fiscaldata.treasury.gov` honours
+  `sort=record_date` and declares `meta.total-count`:
+  `US_FISCAL_CASH_BALANCE` 16,710 records over 168 pages — ascending now, cycle
+  verified over two runs against one database (2,000 a run, 2,001 → 4,001
+  distinct, no overlap, position page 21 → 41, dates walking forward
+  2005-10-03 → 2009-04-13 → 2011-06-06, about 2 days per cycle at six-hourly);
+  and `US_FISCAL_MTS` 3,145 records over 32 pages, which does not need a cycle
+  at all — `page_max = 40`, `page_resume` dropped, measured **3,145 / 3,145
+  stored in 33 requests**, complete every day instead of two thirds of it a day
+  stale.
+* **The NADA microdata catalogues**, eleven rows, all authored
+  `sort_by=created&sort_order=desc`. Six honour `sort_by=idno` and are ascending
+  now (UNHCR 1,108, FAO 1,783, Zambia 25, Cambodia 45, ERF MENA 211, Somalia
+  11); **two ignore the parameters entirely** — DataFirst South Africa and
+  Armenia return identical first rows for asc, for desc and for the original
+  sort, so the parameters are dropped rather than left claiming an order the
+  server does not give; three are unreachable from here (Nepal, Palestine,
+  Costa Rica, each `rc=-1` with zero bytes through the engine's own client the
+  same day) and are left exactly as authored. Re-measured after: FAO 1,783 /
+  1,783, UNHCR 1,108 / 1,108, ERF 211 / 211, DataFirst 605 / 605, each equal to
+  its own `found`.
+
+**Deliberately kept descending, with the reason measured rather than asserted.**
+
+* `UK_EC_DONATIONS` — ascending leads with records whose `AcceptedDate` is null,
+  so that sort is not a stable ordering. Already documented.
+* `TAGINFO_TAGS_POPULAR` — "popular" is the question; the sort IS the ranking,
+  and the endpoint returns all 14,546 tags in one response anyway.
+* `ENERGINET_PRODCONSUM_SETTLEMENT` — the live-tail half of a deliberate pair
+  with `ENERGINET_PRODCONSUM_SETTLEMENT_HISTORY`, the same shape as
+  `PLOS_RECENT`/`PLOS_CORPUS`.
+* `UK_FSA_FOOD_ALERTS` — COMPLETE inside the ceiling, so newest-first costs
+  nothing. The FSA publishes no total, so the register's size was measured by
+  bisecting `_offset`: **1,370 alerts**, 14 pages of 100, the oldest
+  2018-01-09. `_sort=created` is honoured and is the fix if it ever outgrows
+  the ceiling.
+* The 21 rows whose id says `LATEST` — reading the newest page is the question
+  they exist to ask.
 
 ### C5. ~~`PLOS_RECENT` wants a sibling~~ — DONE
 
@@ -498,11 +564,96 @@ were chosen from typical multilingual-e5 scores and tested against a stub.
 Each one decides whether two entities merge, whether two items are one story,
 and whether an alert fires.
 
-### E2. One sortBy-less WFS row is unaccounted for
+### E2. ~~One sortBy-less WFS row is unaccounted for~~ — all thirteen named, and one was losing a parcel every run
 
 Of 16 other WFS `startIndex` rows without `sortBy`, CLAUDE.md records that "12
-of the 13 reachable ones serve page 2 fine". The 13th is not named, and neither
-are the 3 unreachable. Four rows with no recorded verdict.
+of the 13 reachable ones serve page 2 fine". The 13th was not named and neither
+were the 3 unreachable.
+
+The set was rebuilt from the tree on 2026-10-22 — 20 rows page on
+`page_param = "startIndex"`, **13 without `sortBy`** — and every one was asked
+for page 2 directly. The verdicts in full:
+
+**Eight are COMPLETE on page 1**, with `numberMatched`/`totalFeatures` at or
+under the page size and page 2 honestly empty, so the sort question is moot for
+them: `AR_IGN_AEROPUERTOS` 60, `AR_IGN_COMPLEJOS_FRONTERIZOS` 144,
+`AR_IGN_ENERGIA` 445, `CR_SANCARLOS_TORRES` 48, `PY_MADES_ESTACIONES` 34,
+`SI_GURS_MUNICIPALITIES` 212, `UY_MIDES_HOSPITALES` 25,
+`UY_MTOP_AEROPUERTOS` 25.
+
+**Four page — and two of them were skipping a feature.** The four Lechner
+Hungary INSPIRE layers serve a different page 2, but
+`HU_INSPIRE_CADASTRAL_PARCELS` returned `CP.CadastralParcels.107` on BOTH page 1
+and page 2, the same feature on every one of four readings, and the engine
+reported **1,774 emitted / 1,773 stored** — one parcel served twice and one
+never served at all. `LC.LandCoverSurfaces.190` did the same.
+
+The cause is not instability but a seam: **`GetFeature` without `startIndex` is
+not the same page as `startIndex=0`** on this GeoServer, so page 1 of the walk
+sat on a different ordering from pages 2..N. Walking the whole 18-page cadastre
+by hand: as shipped 1,774 emitted / **1,773** distinct; with an explicit
+`startIndex=0` 1,774 / 1,774; with a declared `sortBy` and no `startIndex=0`
+1,774 / 1,774. Both are declared now, because two of these rows cycle and a
+cycle needs the order to hold between runs as well as within one walk. The
+engine agrees after: **1,774 / 1,774**.
+
+The sort key had to be measured per layer. `sortBy=id` is HTTP 400 from the
+backend — the host is a PHP proxy in front of a local GeoServer and reports that
+400 inside an HTTP **200** as a PHP warning page naming `localhost:8085`, which
+is rule 1's refusal-wearing-a-success-status in a new place. `id_localid` and
+`objectid` are unique identifiers; land cover exposes five attributes of which
+`kod` is a 20-value class code, so it sorts on `kod,area,perimeter` — 5,000
+distinct triples over 5,000 consecutive features.
+
+Two of the four also carried a comment that the code did not back: "read over a
+cycle, 100 pages a run" with no `page_max`, so they read the 20-page default —
+2,000 of 90,463 names and 2,000 of 170,058 surfaces a week, 45 and 85 weekly
+runs per cycle. The host serves `count=1000` (800 KB and 2.9 s against 94 KB and
+2.2 s for 100), so both are at 1,000 × 100 now. Measured:
+**`HU_INSPIRE_PLACE_NAMES` 90,463 / 90,463 in one run**, 92 requests, position
+cleared — the whole Hungarian gazetteer, where it had been reading 2,000 of it.
+
+**One is DEAD, and its sibling with it.** `SI_GURS_HOUSE_NUMBERS` answers 404 —
+and so does `GetCapabilities` for the whole `wfs-si-gurs-kn` service, while
+`wfs-si-gurs-rpe` on the same host answers 200 with 112 KB of capabilities. So
+Slovenia's cadastre WFS has gone from that path and its register of place names
+has not. `SI_GURS_CADASTRAL_MUN` reads the same dead service. No replacement was
+found from here: the host's root redirects to an auth page with no service
+directory, and probing for the name we expected (`wfs-si-gurs-kat`, `-ku`,
+`-kn-slo`, `/ows`) is what CLAUDE.md warns against — six guesses, six 404s.
+Both rows are KEPT and disclose themselves through the health projection; see
+E6.
+
+### E5. 2.3% of the KKJ procurement corpus carries no prefecture code, and nothing reads it
+
+Found while settling C1 (2026-10-22). The 47 `JP25_JPBIZ_KKJ_PREF_*` rows slice
+the portal by `LG_Code` 01..47 and were taken to read the corpus exhaustively.
+They read 97.7% of it: 清掃 answers **62,308** hits, the same query summed over
+all 47 codes answers **60,902**. The missing 1,406 are national bodies —
+日本中央競馬会, 林野庁, the national research institutes, 科学技術振興機構 — whose
+records carry an empty `LgCode`.
+
+No filter for them was found. `LG_Code` = 00, 0, 000000, 48 and 99 each answer 0
+hits; `Category` (工事/物品/役務) is refused unless another parameter is present;
+`CFT_Issue_Date` alone is refused. `Organization_Name` does substring-match
+(`省` → 211,575 hits, `庁` → 71,889), so a handful of broad rows could in
+principle enumerate the national space — but a single agency already overflows
+the cap (`林野庁` + 2026 = 4,771 against 1,000), and choosing the strings would
+be a guess about coverage that nothing here can verify. The API guide
+(`kkj.go.jp/doc/ja/api_guide.pdf`, 334 KB) is CID-encoded, so its parameter list
+could not be read with what this container has; reading it is the next step and
+it is cheap.
+
+### E6. Slovenia's cadastre WFS has moved and two rows cannot find it
+
+`ipi.eprostor.gov.si/wfs-si-gurs-kn` answers 404 to `GetCapabilities`, where
+`wfs-si-gurs-rpe` on the same host answers 200 (2026-10-22). `SI_GURS_HOUSE_NUMBERS`
+(580,213 house numbers, as measured on 2026-10-12) and `SI_GURS_CADASTRAL_MUN`
+both read the dead service. Both are KEPT, per the standing decision to disclose
+rather than remove, and the engine's fetch-failure record plus the health
+projection now say so on their pages. Finding the new path needs the host's own
+service register, which is behind the auth page at its root; guessing the name
+was tried and is recorded in E2 as six 404s.
 
 ---
 

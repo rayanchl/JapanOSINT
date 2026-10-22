@@ -3127,13 +3127,37 @@ static const hp_source HP3B19_EURASIA[] = {
       "construction is the main channel through which Hungarian EU "
       "funds reach the domestic economy" },
 
+  /* The four Lechner rows below page by `startIndex` and declared no `sortBy`,
+   * and that cost a parcel on every run. GetFeature WITHOUT `startIndex` is not
+   * the same page as `startIndex=0` on this GeoServer, so page 1 of the walk sat
+   * on a different ordering from pages 2..N: measured 2026-10-22, the cadastre
+   * served `CP.CadastralParcels.107` on BOTH page 1 and page 2, the same feature
+   * every one of four readings, and the engine reported 1,774 emitted / 1,773
+   * stored — one parcel served twice and one never served at all, the skip
+   * CLAUDE.md calls the worst shape, wearing a one-record collision as its only
+   * symptom. `LC.LandCoverSurfaces.190` did the same on the land-cover layer.
+   *
+   * Both halves are fixed and each was measured on its own: an explicit
+   * `startIndex=0` takes the full 18-page cadastre walk from 1,773 distinct to
+   * 1,774, and so does a declared `sortBy` without it. Both are declared, since
+   * two of these rows CYCLE and a cycle needs the order to hold between runs as
+   * well as across one walk.
+   *
+   * The sort key is per layer, because `sortBy=id` is HTTP 400 from the backend
+   * (the host is a PHP proxy in front of a local GeoServer and reports the 400
+   * inside a 200 as a PHP warning page — read the body, not the status): the
+   * feature id is not a sortable attribute. Measured per layer, with its own
+   * uniqueness: `id_localid` and `objectid` are unique identifiers; land cover
+   * exposes only five attributes and `kod` is a 20-value class code, so it sorts
+   * on `kod,area,perimeter`, which is 5,000 distinct triples over 5,000
+   * consecutive features. */
   { .id = "HU_INSPIRE_CADASTRAL_PARCELS", .name = "Lechner Knowledge Centre Hungary — INSPIRE cadastral parcels",
     .name_ja = "レヒネル情報センター 地籍筆界",
     .category = "reference", .portal = "https://inspire.lechnerkozpont.hu",
     .record_type = "cadastral-unit",
     .tags = "\"hungary\",\"cadastre\",\"land\",\"parcel\",\"inspire\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://inspire.lechnerkozpont.hu/geoserver/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=CP%3ACP.CadastralParcels&count=100&outputFormat=application%2Fjson",
+    .url = "https://inspire.lechnerkozpont.hu/geoserver/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=CP%3ACP.CadastralParcels&count=100&outputFormat=application%2Fjson&sortBy=id_localid&startIndex=0",
     .array_path = "features",
     .id_keys = "properties.id_localid",
     .interval = 604800,
@@ -3154,7 +3178,7 @@ static const hp_source HP3B19_EURASIA[] = {
     .record_type = "building-record",
     .tags = "\"hungary\",\"cadastre\",\"building\",\"inspire\",\"geospatial\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://inspire.lechnerkozpont.hu/geoserver/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=BU%3ABuilding&count=100&outputFormat=application%2Fjson",
+    .url = "https://inspire.lechnerkozpont.hu/geoserver/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=BU%3ABuilding&count=100&outputFormat=application%2Fjson&sortBy=objectid&startIndex=0",
     .array_path = "features",
     .interval = 604800,
     .page_param = "startIndex",
@@ -3197,12 +3221,20 @@ static const hp_source HP3B19_EURASIA[] = {
     .record_type = "place-name",
     .tags = "\"hungary\",\"toponym\",\"gazetteer\",\"inspire\",\"geospatial\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://inspire.lechnerkozpont.hu/geoserver/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=GN.2026%3AGeographicalNames.2026&count=100&outputFormat=application%2Fjson",
+    .url = "https://inspire.lechnerkozpont.hu/geoserver/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=GN.2026%3AGeographicalNames.2026&count=1000&outputFormat=application%2Fjson&sortBy=localid&startIndex=0",
     .array_path = "features",
     .interval = 604800,
     .page_param = "startIndex",
-    .page_resume = 1,   /* 90,463 records, measured 2026-10-12: read over a cycle, 100 pages a run */
-    .page_size = 100,
+    /* 90,463 names. The comment here used to say "100 pages a run" with no
+     * page_max behind it, so the row read the 20-page default — 2,000 a run,
+     * 45 weekly runs to come round once. Measured 2026-10-22: this GeoServer
+     * serves count=1000 (800 KB and 2.9 s against 94 KB and 2.2 s for 100), so
+     * 91 pages of 1,000 read the whole gazetteer in ONE run and the cycle is
+     * the measured no-op that leaves the position cleared. page_resume stays
+     * for the day the layer outgrows it. */
+    .page_max = 100,
+    .page_resume = 1,
+    .page_size = 1000,
     .page_start = 0,
     .description = "The Hungarian national gazetteer as INSPIRE features: every "
       "official geographical name with its spelling, name status, the "
@@ -3216,7 +3248,7 @@ static const hp_source HP3B19_EURASIA[] = {
     .record_type = "land-cover",
     .tags = "\"hungary\",\"landcover\",\"environment\",\"inspire\",\"geospatial\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://inspire.lechnerkozpont.hu/geoserver/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LC%3ALC.LandCoverSurfaces&count=100&outputFormat=application%2Fjson",
+    .url = "https://inspire.lechnerkozpont.hu/geoserver/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LC%3ALC.LandCoverSurfaces&count=1000&outputFormat=application%2Fjson&sortBy=kod%2Carea%2Cperimeter&startIndex=0",
     .array_path = "features",
     /* No id_keys meant the engine keyed each surface on its first scalar and a
      * later startIndex page's repeat upserted over a different polygon (1000
@@ -3226,8 +3258,12 @@ static const hp_source HP3B19_EURASIA[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "startIndex",
-    .page_resume = 1,   /* 170,058 records, measured 2026-10-12: read over a cycle, 100 pages a run */
-    .page_size = 100,
+    /* 170,058 surfaces, and the same unbacked "100 pages a run" comment: the
+     * row read 2,000 of them a week. At the measured count=1000 (above) 100
+     * pages store 100,000 a run and the cycle comes round in two. */
+    .page_max = 100,
+    .page_resume = 1,
+    .page_size = 1000,
     .page_start = 0,
     .description = "Hungarian land cover surfaces as INSPIRE features with their "
       "classification and polygon geometry. Land cover change over an "
