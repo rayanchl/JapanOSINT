@@ -18,6 +18,7 @@ import SourcesListPage, { readFilters, writeFilters } from '../SourcesListPage.j
 import SourceDetailPage, { SummaryCard } from '../SourceDetailPage.jsx';
 import CollectorsPage, { groupCollectors } from '../../collectors/CollectorsPage.jsx';
 import CadenceCard, { describePolicy } from '../CadenceCard.jsx';
+import IntervalOverrideCard, { describeBasis } from '../IntervalOverrideCard.jsx';
 import { fmtInterval, fmtBytes, measured, kindLabel, splitTemplate, searchPath, NOT_MEASURED } from '../../../utils/sourceFormat.js';
 
 vi.mock('../../panels/SourcesPanel.jsx', () => ({ default: () => null }));
@@ -132,6 +133,7 @@ describe('SourceDetailPage', () => {
   it('renders every section from the detail body and says not measured for nulls', async () => {
     mockFetch((url) => {
       if (/\/detail$/.test(path(url))) return DETAIL;
+      if (/\/interval$/.test(path(url))) return { source: 'T_JSON', scheduled: false, declared_interval_sec: 0, measured_interval_sec: null, policy_interval_sec: 0, policy: 'declared', override: null, effective_interval_sec: 0, effective_basis: 'on demand', min_interval_sec: 10, max_interval_sec: 31622400, can_write: false };
       if (/\/summary$/.test(path(url))) return { summary: 'A test row that yields companies.', result_type: 'company records', caveats: ['never run'], model: 'tiny.gguf', facts_used: 20, generated_at: '2026-10-12T00:00:00Z', cached: false };
       if (path(url) === '/api/intel/items') return { data: [{ uid: 'T_JSON|1', title: 'Acme AS', record_type: 't-company' }], page: {} };
       return {};
@@ -226,5 +228,34 @@ describe('CadenceCard', () => {
     await waitFor(() => expect(screen.getByText('Change')).toBeTruthy());
     fireEvent.click(screen.getByText('Change'));
     expect(screen.getByText('Save')).toBeTruthy();
+  });
+});
+
+describe('IntervalOverrideCard', () => {
+  const base = { source: 'T_FEED', scheduled: true, declared_interval_sec: 3600, measured_interval_sec: 86400, policy_interval_sec: 21600, policy: 'global', override: null, effective_interval_sec: 21600, effective_basis: 'policy', min_interval_sec: 10, max_interval_sec: 31622400, can_write: false };
+  it('names what decided the cadence, and offers the form only to a writer', async () => {
+    expect(describeBasis({ ...base, override: { interval_sec: 900, enabled: true }, effective_interval_sec: 900, effective_basis: 'override' })).toMatch(/set for this source/);
+    expect(describeBasis({ ...base, scheduled: false })).toMatch(/on demand/);
+    mockFetch(() => base);
+    render(<MemoryRouter><IntervalOverrideCard id="T_FEED" /></MemoryRouter>);
+    await waitFor(() => expect(screen.getByText(/the system-wide policy \(global\)/)).toBeTruthy());
+    expect(screen.getByText(/no per-source interval set/)).toBeTruthy();
+    expect(screen.queryByText('Set')).toBeNull();
+    cleanup();
+    const calls = mockFetch(() => ({ ...base, can_write: true }));
+    render(<MemoryRouter><IntervalOverrideCard id="T_FEED" /></MemoryRouter>);
+    await waitFor(() => expect(screen.getByText('Set')).toBeTruthy());
+    fireEvent.click(screen.getByText('Set'));
+    expect(screen.getByText('Save')).toBeTruthy();
+    fireEvent.click(screen.getByText('Save'));
+    await waitFor(() => expect(calls.some((u) => /\/api\/sources\/T_FEED\/interval$/.test(path(u)))).toBe(true));
+  });
+  it('shows an enabled override with disable and clear', async () => {
+    mockFetch(() => ({ ...base, can_write: true, override: { interval_sec: 900, enabled: true, updated_at: '2026-10-21T10:00:00Z', updated_by: 'ops@example.test' }, effective_interval_sec: 900, effective_basis: 'override' }));
+    render(<MemoryRouter><IntervalOverrideCard id="T_FEED" /></MemoryRouter>);
+    await waitFor(() => expect(screen.getByText(/set for this source/)).toBeTruthy());
+    expect(screen.getByText('Disable')).toBeTruthy();
+    expect(screen.getByText('Clear')).toBeTruthy();
+    expect(screen.getByText(/by ops@example.test/)).toBeTruthy();
   });
 });

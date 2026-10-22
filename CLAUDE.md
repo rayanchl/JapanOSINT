@@ -1187,6 +1187,25 @@ scheduler reads a row's interval goes through that one function; the source
 pages show `declaredInterval`, `measuredInterval`, `policyInterval` and
 `effectiveInterval` side by side; `test_sched_backoff.c` pins the order.
 
+**And ONE source can be set by hand, from its own page** (2026-10-21,
+`core/source_interval.{c,h}`; `GET`/`PUT`/`DELETE /api/sources/:id/interval`,
+PUT and DELETE platform-operator like the policy). An enabled per-source
+interval outranks both the measurement and the system-wide policy — specific
+beats general: a floor of six hours is a statement about the fleet, "this one
+source every hour" is a statement about that source made by the same operator,
+later and more precisely, and it would be useless if the floor silently held
+it. So `sched_row_interval()` is now: the override when one is enabled, else
+`cadence_apply(sched_state_base(...))`. It cannot create a schedule (a pivot is
+refused, as the measurement cannot create one either), it is stored in
+`source_interval_override` and cached because the scheduler asks for every row
+every tick, disabling keeps the number, clearing deletes the row, and a change
+re-plans the running scheduler exactly as a policy change does. The source
+page's Frequency card shows declared, measured, policy and "set for this
+source" side by side and names which one decided (`schedule.cadenceBasis`);
+`/api/status` rows carry `overrideInterval`. `tests/unit/test_source_interval.c`
+pins the refusals, the precedence under a global policy, disable, persistence
+and clear.
+
 What a choice costs is in the response, measured over the registry, not
 guessed: `estimate.runs_per_day_declared` against
 `estimate.runs_per_day_effective`. Measured 2026-10-20 on 19,954 scheduled
@@ -2354,6 +2373,23 @@ Admin › Thresholds in the web client and Admin › Similarity thresholds on iO
 **A new similarity cut-off gets a row in that table**, not its own getenv.
 And **none has been measured on the production model**:
 they were chosen from typical multilingual-e5 scores and tested against a stub.
+**The harness that would measure them exists** (2026-10-22,
+`tools/measure_thresholds.py`): it reads the eleven keys out of
+`core/thresholds.c` rather than copying the table, asks a real server on the
+same `/v1/embeddings` contract `core/llm.c` uses, and reports each key's
+positive/negative score distributions, the best-F1 cut-off, and the precision
+and recall the value IN FORCE achieves. It refuses to run without a real
+server and says why — a stub is what produced the numbers it exists to
+replace. Three keys have a label that is not circular (`story_tau` from
+simhash `cluster_id`, since `story_id` was assigned BY `story_tau`;
+`entity_vec_cos_floor` from `norm_key`; `camera_dup_cosine_min` from
+`sha256`); the other eight judge a query against a record, no stored human
+verdict exists, and they read UNLABELLED with a distribution only. No label
+file is shipped on purpose: invented verdicts fed to the tool would turn the
+guess into a "measurement". `resolve_emb_margin` is a GAP between a best match
+and a runner-up, so it cannot be measured from pairs at all and says so.
+`--self-test` runs from `make unit` and pins the one error that inverts a
+reading silently — that an L2 distance is swept the opposite way to a cosine.
 Without `JO_EMBED_URL` every feature falls back to its pre-embedding
 behaviour byte for byte; that is pinned per feature in `tests/unit/`.
 

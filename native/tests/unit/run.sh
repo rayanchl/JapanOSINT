@@ -102,4 +102,14 @@ done
 echo "--- cleanup_stale_uids self-test ---"
 python3 tools/cleanup_stale_uids.py --self-test || { echo "FAILED"; fail=1; }
 
+# tools/measure_thresholds.py is the harness for open item E1 — the eleven
+# embedding thresholds that have never been measured on the production model.
+# It needs a real embedding server to measure anything and refuses a stub for
+# that, so what runs here is its own self-test: a stub server in-process, which
+# tests THE TOOL. It pins the one thing that would silently invert a reading —
+# that an L2 distance is swept the other way round from a cosine — and that it
+# reads all eleven keys out of core/thresholds.c rather than keeping a copy.
+echo "--- measure_thresholds self-test ---"
+python3 tools/measure_thresholds.py --self-test || { echo "FAILED"; fail=1; }
+
 exit $fail

@@ -443,7 +443,54 @@ since the engine sends its own headers. Nobody has measured that.
 
 ## E. Correctness nobody has measured
 
-### E1. Every embedding threshold is a guess from the literature
+### E1. Every embedding threshold is a guess from the literature — THE HARNESS EXISTS NOW
+
+`native/tools/measure_thresholds.py` (2026-10-22) is the tool that measures
+them. It changes nothing: it reads the eleven keys out of `core/thresholds.c`
+rather than keeping a second copy of the table, asks a real embedding server
+for vectors on the same `/v1/embeddings` contract `core/llm.c` uses, and
+reports per key the positive and negative score distributions, the cut-off
+with the best F1, and the precision and recall THE VALUE IN FORCE achieves —
+which is the number that says whether today's guess is wrong and in which
+direction.
+
+**It refuses to run without a real server** (`--embed-url`, else
+`$JO_EMBED_URL`) and says why: a stub is what produced the numbers it exists
+to replace, so measuring against one would report a stub's agreement with
+itself. This container has no embedding server, so **nothing has been measured
+yet** — the harness is ready and the reading is still owed.
+
+It records the model `/v1/models` names in every output row, because a
+threshold is only meaningful for one model.
+
+**The hard part is labels, and three keys already have one that is not
+circular:**
+
+| key | label | why it is not circular |
+| --- | --- | --- |
+| `story_tau` | `intel_items.cluster_id` | simhash clustering, computed without embeddings. `story_id` is NOT usable: it was assigned using `story_tau`, so measuring against it would confirm whatever it already does |
+| `entity_vec_cos_floor` | `entities.norm_key` and each row's aliases | string normalisation, not a vector |
+| `camera_dup_cosine_min` | `camera_stills.sha256` | byte identity |
+
+The other eight judge a QUERY against a record or a source and no human
+verdict on such a pair is stored anywhere, so they read **UNLABELLED** and
+carry a distribution only. A human has to author the label file; its format is
+in the tool's docstring (`{"key", "a", "b", "same", "note"}`, one JSON object
+per line). **No label file is shipped on purpose** — a file of invented
+verdicts fed to this tool would turn the guess it is meant to replace into a
+measurement, which is rule 1 at the level of the gate.
+
+One key cannot be measured from pairs at all and says so rather than
+approximating: `resolve_emb_margin` is the GAP between the best match and the
+runner-up, so it needs a triple.
+
+`--self-test` exercises the tool against a stub server in this process (the
+`cleanup_stale_uids.py` precedent) and runs from `make unit`: 16 checks,
+including that an L2 distance is swept the other way round from a cosine and
+that reading a distance as a similarity cannot reach F1 1.0 — the one mistake
+that would invert a reading silently.
+
+### E1 (as written). Every embedding threshold is a guess from the literature
 
 CLAUDE.md says it plainly: entity 0.80, story 0.85, alert 0.82, relevance, the
 resolver margin — "**none has been measured on the production model**". They

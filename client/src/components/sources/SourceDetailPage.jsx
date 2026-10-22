@@ -10,6 +10,7 @@ import {
   measured, fmtInterval, fmtBytes, fmtCount, fmtPct, kindLabel, engineLabel,
   statusTone, gradeTone, splitTemplate, NOT_MEASURED,
 } from '../../utils/sourceFormat.js';
+import IntervalOverrideCard from './IntervalOverrideCard.jsx';
 
 /* /console/sources/:id — one source, in the order the audit asked for: what
  * it is (small-model summary), engine and mechanism, parsing, frequency,
@@ -221,7 +222,8 @@ export default function SourceDetailPage() {
             ['declared interval', fmtInterval(sch.declaredInterval)],
             ['measured interval', sch.adaptive ? (sch.measuredInterval != null ? `${fmtInterval(sch.measuredInterval)} (from the newest stored item)` : 'adaptive — no dated item yet') : 'not adaptive'],
             ['policy interval', sch.policyInterval != null ? `${fmtInterval(sch.policyInterval)} (${sch.policy || 'declared'})` : 'not reported'],
-            ['effective interval', sch.effectiveInterval != null ? fmtInterval(sch.effectiveInterval) : 'as declared'],
+            ['set for this source', sch.overrideInterval != null ? `${fmtInterval(sch.overrideInterval)} (outranks the policy)` : 'no'],
+            ['effective interval', sch.effectiveInterval != null ? `${fmtInterval(sch.effectiveInterval)}${sch.cadenceBasis ? ` (${sch.cadenceBasis})` : ''}` : 'as declared'],
             ['next due', sch.next_due ? `${when(sch.next_due)}${sch.overdue ? ' — overdue' : ''}` : (sch.declaredInterval > 0 ? 'not yet run' : 'on demand')],
             ['schedule mode', sch.schedule_mode || 'default'],
             ['backed off', sch.backedOff ? `until ${when(sch.backoffUntil)}` : 'no'],
@@ -231,6 +233,7 @@ export default function SourceDetailPage() {
             ['average duration (30 d)', sch.stats_30d?.avg_duration_ms != null ? `${Math.round(sch.stats_30d.avg_duration_ms)} ms` : NOT_MEASURED],
             ['last run', when(sch.stats_30d?.last_run_at)],
           ]} />
+          <IntervalOverrideCard id={reg.id} />
         </Card>
       </Section>
 

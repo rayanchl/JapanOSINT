@@ -238,3 +238,50 @@ reading here is from 2026-10-21, taken with the engine's own agent.
   the owner's. Note what is NOT in question: a browser profile is a remedy for
   a host that REFUSES us, and every row in this group answers 404 or renders
   client-side, so no agent reaches them.
+
+---
+
+# The long tail, 2026-10-22
+
+## `FR_ASSEMBLEE_NATIONALE` — the pivot path is dead, the publisher is not
+
+The row's path is gone, measured both ways (rule 4d):
+
+    /dyn/recherche?texte=Toyota             404, 64,552 bytes, 148 anchors
+    /dyn/recherche?texte=zzqqxxjjwwvv7731   404, 64,562 bytes, 148 anchors
+
+Identical anchor counts because both are the 404 page's own navigation. There
+is nothing there to re-point to.
+
+`data.assemblee-nationale.fr` is NOT an open-data platform in the sense the
+item assumed — `/api/v2/catalog/datasets` 404s and `/api/explore/v2.1/...`
+answers an **Ibexa CMS** error, so it is a CMS, not Opendatasoft. Asking the
+host what it SERVES instead (batch 42's lesson) found its real shape: the
+portal links **static files** per section, under
+`/static/openData/repository/17/amo/…`:
+
+| file | what it is | engine can read it? |
+| --- | --- | --- |
+| `collaborateurs_csv_opendata/liste_collaborateurs_excel.csv` | every sitting deputy's parliamentary STAFF, by name | **yes** — measured below |
+| `AMO50_acteurs_mandats_organes_divises.{csv,json,xml}.zip` | actors, mandates and bodies | no: a CSV or JSON **inside a zip**, and the engine has no mode for that (`lib/zipread.c` exists but only `HP_XLSX` uses it) |
+| `AMO10_deputes_actifs_mandats_actifs_organes.json.zip` | sitting deputies with their mandates | no, same reason |
+
+**Measured 2026-10-22** on the one file that is readable: HTTP 200, 109,317
+bytes, `text/csv`, **2,077 data rows**, SEMICOLON-delimited (5 fields on
+semicolons, 1 on commas), and **not UTF-8** — `windows-1252`, which is why the
+header reads `Identifiant du d?put?` to a UTF-8 reader. Five columns: the
+deputy's identifier, the deputy's surname and forename, and the
+collaborator's surname and forename. One deputy holds many staff, so the
+identity is the pair, not the deputy.
+
+That is a real source the tree does not have, and it is registered as its own
+row rather than by bending this pivot, whose description is about bills,
+amendments and questions — the material that is in the zips.
+
+Two things left behind deliberately, each written down rather than guessed:
+
+* the pivot keeps failing honestly. Its register is the debates and
+  amendments, which live in the `.zip` files above.
+* **a CSV or JSON inside a ZIP is an engine gap worth one line in the backlog.**
+  `lib/zipread.c` already exists and `HP_XLSX` already goes through it, so the
+  distance is short; the AMO files are the case that wants it.
