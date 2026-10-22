@@ -224,9 +224,31 @@ jobs:
   # seed the 48k-row registry), and test_service_vec reached at minute 42 —
   # then cancelled inside it with 14 tests queued, a timeout and never a
   # result. vecindex_items_state() halved that test; this is the headroom.
+  #
+  # 150, not 90 (2026-10-22): the suite is 84 tests and the 90 is spent. A
+  # TIMED-OUT JOB IS REPORTED `cancelled`, NOT `failure`, which is why this
+  # needed measuring rather than reading — the run that hit it looks on the
+  # PR exactly like a job somebody stopped. Four consecutive runs, oldest
+  # first:
+  #
+  #     7d13e707  success    50.8 min
+  #     d163738a  success    70.0 min
+  #     4306358d  success    85.4 min   <- 4.6 min of headroom, green by luck
+  #     8a91a064  cancelled  90.4 min   <- the wall, with the suite unfinished
+  #
+  # So this is not a flaky job and not the commit that hit it: the budget was
+  # exhausted and the last green was already inside the noise. That is this
+  # tree's own rule about a kill line — SLOW means unmeasured, not failed, and
+  # the limit is a property of the tool rather than of what it measures.
+  #
+  # The number is the symptom. The cost driver is tests/unit/run.sh linking
+  # EVERY object for each of the 84 tests, so the job grows with the product
+  # and not with what a change touches — a per-test link under TSan, 84 times.
+  # Fixing that is worth more than any ceiling, and this raise buys the room
+  # to do it rather than standing in for it.
   thread-sanitizer:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 150
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:
