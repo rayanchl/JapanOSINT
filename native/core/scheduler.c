@@ -2,6 +2,7 @@
  * interval, skip-if-running). P4: minimal single-thread loop; the bulk waves
  * (P5) reuse it unchanged. */
 #include "cadence.h"
+#include "source_interval.h"
 #include "scheduler.h"
 #include "../source.h"
 #include "intel.h"
@@ -277,6 +278,15 @@ long sched_state_base(const sched_state *st, long declared, int adaptive) {
  * from this figure. An entity pivot (interval 0) passes through untouched. */
 long sched_row_interval(const sched_state *st, const source_def *d) {
   if (!d) return 0;
+  /* Third mechanism (2026-10-21, core/source_interval.h): an interval the
+   * operator set for THIS source outranks both the measurement and the
+   * system-wide policy — specific beats general. It cannot create a
+   * schedule: source_interval_set refuses a row with interval 0, and the
+   * guard here keeps a stale row from doing so either. */
+  if (d->update_interval_sec > 0) {
+    long ov = source_interval_for(d->id);
+    if (ov > 0) return ov;
+  }
   return cadence_apply(sched_state_base(st, d->update_interval_sec, d->adaptive_interval));
 }
 
@@ -1058,7 +1068,7 @@ void scheduler_stop_background(int wait_ms) {
  * own interval is different — skip-if-running is already costing it whole
  * cycles — so that is when the flag is set: max(deadline, interval). */
 static long cancel_after(int i) {
-  long iv = cadence_apply(g_all[i]->update_interval_sec);   /* the policy's interval, not the declared one */
+  long iv = sched_row_interval(&g_state[i], g_all[i]);   /* the row's cadence as it runs, not the declared one */
   return iv > g_deadline_sec ? iv : g_deadline_sec;
 }
 
@@ -1226,7 +1236,7 @@ void scheduler_loop(db_handle *db) {
     if (hold && hold[i] > now0) continue;
     int ln = lane_of(d);
     long off = sched_boot_offset(k[ln]++, m[ln], g_q.lane[ln].workers, stag,
-                                 ramp, cadence_apply(d->update_interval_sec));
+                                 ramp, sched_row_interval(&g_state[i], d));
     if (off > last[ln]) last[ln] = off;
     next[i] = now0 + (time_t)off;
   }
@@ -1250,15 +1260,19 @@ void scheduler_loop(db_handle *db) {
 
   unsigned long tick = 0;
   unsigned cad_gen = cadence_generation();
+  unsigned ovr_gen = source_interval_generation();
   for (;;) {
     if (atomic_load(&g_shutdown)) { sleep(1); continue; }
     time_t now = time(NULL);
-    /* The cadence policy changed (PUT /api/sources/cadence): a row whose next
-     * due time is further away than its NEW interval is pulled in to
-     * now + interval, so a faster policy takes effect within one interval and
-     * a slower one lets the already-planned run happen and then stretches. */
-    if (cadence_generation() != cad_gen) {
+    /* The cadence policy changed (PUT /api/sources/cadence), or a per-source
+     * interval was set or cleared (PUT/DELETE /api/sources/:id/interval): a
+     * row whose next due time is further away than its NEW interval is
+     * pulled in to now + interval, so a faster cadence takes effect within
+     * one interval and a slower one lets the already-planned run happen and
+     * then stretches. */
+    if (cadence_generation() != cad_gen || source_interval_generation() != ovr_gen) {
       cad_gen = cadence_generation();
+      ovr_gen = source_interval_generation();
       long pulled = 0;
       for (int i = 0; i < n; i++) {
         pthread_mutex_lock(&g_q.mu);
@@ -1267,7 +1281,7 @@ void scheduler_loop(db_handle *db) {
         if (e <= 0) continue;
         if (next[i] > now + (time_t)e) { next[i] = now + (time_t)e; pulled++; }
       }
-      fprintf(stderr, "[sched] cadence policy changed: %ld row(s) re-planned\n", pulled);
+      fprintf(stderr, "[sched] cadence changed (policy or a per-source interval): %ld row(s) re-planned\n", pulled);
     }
     for (int i = 0; i < n; i++) {
       const source_def *d = g_all[i];

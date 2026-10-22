@@ -157,7 +157,7 @@ manifests, TSVs, docs and collector keys — exactly as the batch-41 note below
 predicts. The count ledger — every
 batch from 37 to 48, main's 45 included, what seeded it, what it measured and what it taught — is
 `docs/SOURCE_COUNT_LEDGER.md`; this file keeps the rules and the current number.
-Both floors are re-recorded at 57,408 and `make source-count` agrees. The
+Both floors are re-recorded at 57,536 and `make source-count` agrees. The
 lessons from batches 43–48 that a new batch must not relearn:
 
 * **A registration count is not a website, and a build is not a registry.**
@@ -1040,6 +1040,25 @@ page can say "measured hourly, held at 6 h by policy". Every site the
 scheduler reads a row's interval goes through that one function; the source
 pages show `declaredInterval`, `measuredInterval`, `policyInterval` and
 `effectiveInterval` side by side; `test_sched_backoff.c` pins the order.
+
+**And ONE source can be set by hand, from its own page** (2026-10-21,
+`core/source_interval.{c,h}`; `GET`/`PUT`/`DELETE /api/sources/:id/interval`,
+PUT and DELETE platform-operator like the policy). An enabled per-source
+interval outranks both the measurement and the system-wide policy — specific
+beats general: a floor of six hours is a statement about the fleet, "this one
+source every hour" is a statement about that source made by the same operator,
+later and more precisely, and it would be useless if the floor silently held
+it. So `sched_row_interval()` is now: the override when one is enabled, else
+`cadence_apply(sched_state_base(...))`. It cannot create a schedule (a pivot is
+refused, as the measurement cannot create one either), it is stored in
+`source_interval_override` and cached because the scheduler asks for every row
+every tick, disabling keeps the number, clearing deletes the row, and a change
+re-plans the running scheduler exactly as a policy change does. The source
+page's Frequency card shows declared, measured, policy and "set for this
+source" side by side and names which one decided (`schedule.cadenceBasis`);
+`/api/status` rows carry `overrideInterval`. `tests/unit/test_source_interval.c`
+pins the refusals, the precedence under a global policy, disable, persistence
+and clear.
 
 What a choice costs is in the response, measured over the registry, not
 guessed: `estimate.runs_per_day_declared` against
