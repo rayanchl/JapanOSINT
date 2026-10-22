@@ -136,6 +136,16 @@ static struct { char host[HG_HOSTLEN]; int gap_ms; } g_over[HG_MAX_OVERRIDES] = 
   { "data.qld.gov.au", 1500 },
   /* data.nsw.gov.au is the same shape at 17,192 datasets / ~86 pages. */
   { "data.nsw.gov.au", 250 },
+  /* Two cycling rows whose SECOND page answered HTTP 429 when asked straight
+   * after the first (tools/audit_cycle_advance.py, 2026-10-22):
+   * ENERGINET_CAPACITY_MUNICIPALITY on Energinet's data service and
+   * TRONSCAN_TOP_ACCOUNTS on Tronscan's list API. A 429 on page 2 is not a
+   * dead source and not a cap — it is a burst the host refuses, which is
+   * what a per-host gap is for. The 429 clears the resume position (a
+   * refused page is never bookmarked), so without a gap the cycle re-read
+   * page 1 forever with rc=0. */
+  { "api.energidataservice.dk", 1000 },
+  { "apilist.tronscanapi.com", 1500 },
 };
 /* The number of LIVE entries above. This was `1` while the table held two, so
  * gap_for_host() — which scans only the first g_nover entries — never saw the

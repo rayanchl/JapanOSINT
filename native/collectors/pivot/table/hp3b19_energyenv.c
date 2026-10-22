@@ -1033,11 +1033,18 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "mineral-tenure",
     .tags = "\"mining\",\"canada\",\"tenure\",\"cadastre\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://openmaps.gov.bc.ca/geo/pub/WHSE_MINERAL_TENURE.MTA_ACQUIRED_TENURE_SVW/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=pub:WHSE_MINERAL_TENURE.MTA_ACQUIRED_TENURE_SVW&outputFormat=application/json&count=50",
+    .url = "https://openmaps.gov.bc.ca/geo/pub/WHSE_MINERAL_TENURE.MTA_ACQUIRED_TENURE_SVW/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=pub:WHSE_MINERAL_TENURE.MTA_ACQUIRED_TENURE_SVW&outputFormat=application/json&count=50&sortBy=TENURE_NUMBER_ID",
     .array_path = "features",
     .interval = 86400,
     .page_param = "startIndex",
-    .page_resume = 1,   /* 42,234 records, measured 2026-10-12: read over a cycle, 50 pages a run */
+    /* GeoServer refuses `startIndex` without `sortBy` ("Cannot do natural
+     * order without a primary key"), so page 2 answered HTTP 400 and this row
+     * read its first 50 tenures every day while the cycle never advanced —
+     * found by tools/audit_cycle_advance.py on 2026-10-22, the ENA shape.
+     * `sortBy=TENURE_NUMBER_ID` (the row's own id) is in the URL now:
+     * startIndex 0 / 50 / 100 answer 50 disjoint tenures each, ascending
+     * 201320 → 201919, numberMatched 42,327 (measured the same day). */
+    .page_resume = 1,   /* 42,327 records (2026-10-22; 42,234 on 2026-10-12): read over a cycle, 50 pages a run */
     .page_size = 50,
     .description = "Mineral, placer and coal tenures in British Columbia with the "
       "tenure number, the owner name, the issue and expiry dates, the "
