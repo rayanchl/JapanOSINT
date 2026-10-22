@@ -34,6 +34,12 @@ int main(void) {
   { ffmpeg_media_info mi; char err[128];
     assert(ffmpeg_info("rtsp://127.0.0.1/x", 1000, &mi, err, sizeof err) == FFMPEG_ERR_BLOCKED); }
 
+  /* A network scheme with no sandboxed path (core/netjail.c) is refused even
+   * at a public address: rtmp/tcp/udp would run with ffmpeg's network
+   * unconfined, and no camera feed uses them. */
+  assert(frame("rtmp://93.184.216.34/live/x") == FFMPEG_ERR_BLOCKED);
+  assert(frame("tcp://93.184.216.34:9000") == FFMPEG_ERR_BLOCKED);
+
   /* Public literal addresses and local files reach the (disabled) gate. */
   assert(frame("rtsp://93.184.216.34/live") == FFMPEG_ERR_DISABLED);
   assert(frame("/tmp/some-upload.mp4") == FFMPEG_ERR_DISABLED);
@@ -50,6 +56,9 @@ int main(void) {
   assert(strcmp(wr, "rtsp,rtsps,tcp,tls") == 0);
   assert(!strstr(wr, "udp") && !strstr(wr, "rtp,") && !strstr(wr, "file"));
   assert(!strstr(whitelist_for("https"), "file"));
+  /* ffmpeg reaches an https origin through the box's proxy with CONNECT,
+   * which is the httpproxy protocol: without it every https feed fails. */
+  assert(strstr(whitelist_for("https"), "httpproxy"));
 
   printf("test_ffmpeg_dest: OK\n");
   return 0;
