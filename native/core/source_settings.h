@@ -43,9 +43,16 @@
  * declare a different, incomplete type and conflict at every include site. */
 #include "db.h"
 
-/* The one key this ships with. A string rather than an enum so the API, the
- * client and the audit log all name the same thing. */
+/* The keys. Strings rather than an enum so the API, the client and the audit
+ * log all name the same thing. */
 #define SRCSET_BODY_CEILING "http_body_ceiling_bytes"
+/* The per-source collection interval (core/source_interval.h), offered here
+ * so one Settings section holds every per-source knob. It is NOT stored in
+ * source_settings: reads, writes and the JSON for this key delegate to the
+ * source_interval module, whose cache the scheduler reads every tick and whose
+ * generation makes it re-plan. Absent from the JSON for an entity pivot,
+ * which has no schedule to set. */
+#define SRCSET_INTERVAL     "interval_sec"
 
 /* The ENABLED value of `key` for `source_id`, or `def` when the source has no
  * row, the row is disabled, the key is unknown, or the stored value is out of

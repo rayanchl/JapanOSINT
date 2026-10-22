@@ -488,6 +488,16 @@ typedef struct hp_source {
    * dates cannot see (a forecast feed, a window the row exists to be fresh
    * for). Appended last so no existing initializer moves. */
   int         adaptive_interval;
+  /* detail_html_kv=1: the detail hop answers an HTML record page, not JSON —
+   * the FAA's N-number page, a register's profile page. Its label/value cells
+   * are merged under "detail." instead of the hop failing as "not JSON":
+   * every cell carrying a non-empty `data-label` attribute (the accessible
+   * responsive-table pattern), and in rows without one, each <th> paired with
+   * the <td> after it. A label that repeats is indexed (`Expiration Date`,
+   * `Expiration Date.1`), as repeated XML children are; nothing is dropped.
+   * Opt-in, because a page's navigation and layout tables are cells too.
+   * Appended last so no existing initializer moves. */
+  int         detail_html_kv;
 } hp_source;
 
 /* Register `n` rows. `defs` must be static storage of at least n entries owned

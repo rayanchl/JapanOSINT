@@ -11,7 +11,7 @@
  * every non-browser client — verified from the engine and from a plain probe
  * with an honest client string. The only thing that would make it fetch is a
  * browser User-Agent, and this tree does not impersonate browsers (see the
- * UA_OVERRIDE note in core/httpclient.c: those twelve entries are honest
+ * token-block entries in core/host_agents.def: those twelve entries are honest
  * product/contact strings). A row that can never return a record is the
  * silent-nothing house rule 1 names, so it is removed rather than left to
  * fail forever. The id stays listed in collectors/existing_ids.txt so it is

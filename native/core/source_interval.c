@@ -12,8 +12,6 @@
 #include <string.h>
 #include <time.h>
 
-#define SI_MIN_SEC 10L
-#define SI_MAX_SEC (366L * 86400L)
 
 typedef struct { char id[160]; long sec; } si_entry;
 

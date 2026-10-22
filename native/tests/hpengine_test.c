@@ -834,6 +834,11 @@ static const hp_source T[] = {
     .mode = HP_HTML, .href_must = "/hrec/", .base = "https://x.test",
     .detail_url = "{v}", .detail_key = "url",
     .interval = 3600, .record_type = "t-htmldeep", .free_tier = 1, .description = "d" },
+  /* A detail hop that answers an HTML record page (the FAA N-number shape). */
+  { .id = "T_DEEP_HTMLKV", .name = "html label/value detail", .url = "https://x.test/kvl",
+    .array_path = "items", .title_keys = "name", .id_keys = "num",
+    .detail_url = "https://x.test/kvd/{v}", .detail_key = "num", .detail_html_kv = 1,
+    .interval = 3600, .record_type = "t-htmlkv", .free_tier = 1, .description = "d" },
   /* No declared detail_max: the default count and the clock bound it. */
   { .id = "T_DEEP_TIME", .name = "detail time budget", .url = "https://x.test/tl",
     .array_path = "items", .title_keys = "name", .id_keys = "num",
@@ -3532,6 +3537,38 @@ int main(void) {
   rc = run_source_resume("T_RESUME", NULL, NULL);
   ok(rc == 0 && cap_count("t-page", NULL) == 4 && g_ncalls == 2,
      "40f: with the variable unset the row's declared 2 pages are read again");
+
+  /* 41. detail_html_kv: an HTML record page's label/value cells merge under
+   *     "detail." — data-label cells, a <th>/<td> pair, entities decoded, a
+   *     repeated label indexed rather than overwritten, the empty-data-label
+   *     label column skipped. A page with no such cells is an error on the
+   *     record, not an empty detail. */
+  fx_reset();
+  fx_add("/kvd/A", 200,
+    "<html><table><caption>Aircraft</caption><tr><td data-label=\"\">Serial</td>"
+    "<td data-label=\"Serial Number\">R172 </td><td data-label=\"\">Exp</td>"
+    "<td data-label=\"Expiration Date\">08/31/2028</td></tr></table>"
+    "<table><tr><th>Owner</th><td>SMITH &amp; SONS <b>LLC</b></td></tr>"
+    "<tr><td data-label=\"Expiration Date\">07/05/2019</td></tr></table></html>");
+  fx_add("/kvd/B", 200, "<html><p>No record</p></html>");
+  fx_add("/kvl", 200, "{\"items\":[{\"num\":\"A\",\"name\":\"a\"},{\"num\":\"B\",\"name\":\"b\"}]}");
+  rc = run_source("T_DEEP_HTMLKV", "");
+  {
+    const cap *a = NULL, *b = NULL;
+    for (int i = 0; i < g_ncap; i++) {
+      if (strcmp(g_cap[i].rtype, "t-htmlkv")) continue;
+      if (!strcmp(g_cap[i].title, "a")) a = &g_cap[i];
+      if (!strcmp(g_cap[i].title, "b")) b = &g_cap[i];
+    }
+    ok(rc == 0 && a && strstr(a->props, "\"detail.Serial Number\":\"R172\"") &&
+       strstr(a->props, "\"detail.Expiration Date\":\"08/31/2028\"") &&
+       strstr(a->props, "\"detail.Expiration Date.1\":\"07/05/2019\"") &&
+       strstr(a->props, "\"detail.Owner\":\"SMITH & SONS LLC\"") &&
+       !strstr(a->props, "detail.Serial\"") && !strstr(a->props, "_detail_error"),
+       "41: detail_html_kv merges data-label cells and th/td pairs; a repeated label is indexed");
+    ok(b && strstr(b->props, "no label/value cells"),
+       "41: an HTML detail page with no label/value cells is an error on the record");
+  }
 
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;

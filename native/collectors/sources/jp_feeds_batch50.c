@@ -7081,7 +7081,7 @@ RSSX(jp_b50_zuyo_med_jp, "jp-b50-zuyo-med-jp",
 
 /* ── browser-profile hosts (restored 2026-10-21) ─────────────────────
  * Rejected at authoring for refusing every self-identifying agent; fetched
- * now with the per-host browser profile in core/httpclient.c BROWSER_HOSTS. */
+ * now with the per-host browser profile in core/host_agents.def, HA_BROWSER. */
 
 RSSX(jp_b50_hkd_meti_go_jp_indexatom, "jp-b50-hkd-meti-go-jp-indexatom",
      "経済産業省北海道経済産業局 — 新着情報 (Atom)", "経済産業省北海道経済産業局 — 新着情報 (Atom)",
@@ -7089,7 +7089,7 @@ RSSX(jp_b50_hkd_meti_go_jp_indexatom, "jp-b50-hkd-meti-go-jp-indexatom",
      "https://www.hkd.meti.go.jp/rss/indexatom.xml",
      "ja", "[\"gov\",\"country:jp\",\"publisher:経済産業省北海道経済産業局 — 新着情報 (Atom)\",\"government\",\"batch:50\"]",
      3600,
-     "経済産業省北海道経済産業局 — 新着情報 (Atom) — official feed; the host admits browser-profile requests only (core/httpclient.c BROWSER_HOSTS)")
+     "経済産業省北海道経済産業局 — 新着情報 (Atom) — official feed; the host admits browser-profile requests only (core/host_agents.def, HA_BROWSER)")
 
 RSSX(jp_b50_bungeika_or_jp, "jp-b50-bungeika-or-jp",
      "日本文藝家協会 (Japan Writers’ Association)", "日本文藝家協会 (Japan Writers’ Association)",
@@ -7097,4 +7097,4 @@ RSSX(jp_b50_bungeika_or_jp, "jp-b50-bungeika-or-jp",
      "https://www.bungeika.or.jp/feed/",
      "ja", "[\"news\",\"country:jp\",\"publisher:日本文藝家協会 (Japan Writers’ Association)\",\"media\",\"batch:50\"]",
      3600,
-     "日本文藝家協会 (Japan Writers’ Association) — official feed; the host admits browser-profile requests only (core/httpclient.c BROWSER_HOSTS)")
+     "日本文藝家協会 (Japan Writers’ Association) — official feed; the host admits browser-profile requests only (core/host_agents.def, HA_BROWSER)")
