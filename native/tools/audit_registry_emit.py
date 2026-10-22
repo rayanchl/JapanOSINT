@@ -96,8 +96,20 @@ LIST = re.compile(r"^(\S+)\s+collector=(\S+)\s+interval=(-?\d+)\s*$")
 HP_EMIT = re.compile(r"\[hp:[^\]]+\] emitted (\d+) of (\d+) available")
 # The engine's own stderr when it was refused, so the FETCH_FAILED verdict is
 # corroborated by the run output and not inferred from a row count alone.
+#
+# The `[sched]` alternative is the SCHEDULER's own disclosure (2026-10-22), and
+# it exists because this pattern only ever matched hpengine. Until the scheduler
+# filed a fetch-failure for collectors that file none themselves, a refused
+# VJSON or bespoke row had no notice and no `[hp:…]` line, so it fell through to
+# `EMITS_NOTHING` — a verdict about a source that FETCHED and stored none, which
+# is a different defect wanting a different fix. Measured on this tool's own
+# first registry-wide run: 288 of 3,612 rows were that, 18 of 18 sampled being
+# vsrc rows, against 34 that disclosed and were all hp16_*. One more instance of
+# the rule this repo keeps relearning — when you fix something, look for the
+# other copies — and the tool was the third copy.
 FETCH_FAILURE = re.compile(r'\[hp:[^\]]+\]\s+(?:status=\d+|transport failure|'
-                           r'non-JSON body)')
+                           r'non-JSON body)'
+                           r'|\[sched\]\s+\S+\s+fetch-failure:')
 # The engine's three ways of saying "this row was never asked a question".
 # The third was added 2026-10-11 after the second-largest misreading in this
 # tool's history: an on-demand pivot with no entity returned silently, so 268
@@ -600,7 +612,20 @@ def main():
     # difference the first time this ran: a SLOW row contributes 33,249 stored
     # rows and no emit count, which made the fleet look like it stored 25,582
     # records more than it emitted.
-    measured = [r for r in res if r[4] >= 0 and r[6] >= 0]
+    #
+    # A FETCH_FAILED row is excluded from the pair as well, and that is not
+    # tidiness: its `emitted` is 1 because the engine's own fetch-failure
+    # record goes through emit() and is NOT a `collector-*-notice`, while
+    # `db_rows_for` excludes that record_type from the row count by design. So
+    # the pair reads 1 emitted against 0 stored and the difference tallies as a
+    # record "lost to uid collision" — a disclosure counted as a discard. It
+    # was invisible while only hpengine disclosed (34 rows of the first 3,612);
+    # the scheduler-side disclosure of 2026-10-22 would have turned it into the
+    # headline number, since every refused row in the fleet now files one.
+    # Counted and named separately instead.
+    failed = [r for r in res if r[1] == "FETCH_FAILED"]
+    measured = [r for r in res
+                if r[4] >= 0 and r[6] >= 0 and r[1] != "FETCH_FAILED"]
     tot_e = sum(r[4] for r in measured)
     tot_s = sum(r[6] for r in measured)
     # Per-source, and floored at zero: a collector that makes its own sink can
@@ -610,10 +635,15 @@ def main():
     print("over the %d sources where both numbers are known — records emitted: "
           "%s, rows stored: %s, records lost to uid collision: %s"
           % (len(measured), f"{tot_e:,}", f"{tot_s:,}", f"{lost:,}"))
-    if len(measured) != len(res):
+    if failed:
+        print("(%d source(s) stored a fetch-failure disclosure and no records; "
+              "that row is a disclosure, not a discard, so they are not in "
+              "those totals)" % len(failed))
+    skipped = len(res) - len(measured) - len(failed)
+    if skipped > 0:
         print("(%d source(s) contributed no comparable pair — SLOW, "
               "NO_RUN_LINE or UNREADABLE_DB — and are excluded from those "
-              "totals rather than counted as zero)" % (len(res) - len(measured)))
+              "totals rather than counted as zero)" % skipped)
 
     coll = sorted([r for r in res if r[1] == "COLLISION"],
                   key=lambda r: r[6] - r[4])

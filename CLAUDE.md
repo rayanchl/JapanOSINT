@@ -80,6 +80,65 @@ separately from records and has a `FETCH_FAILED` verdict; and `hptest`'s
 404/5xx assertions now pin zero RECORDS plus one disclosure, which is what they
 always meant.
 
+**AND FOR SIXTEEN DAYS IT WAS hpengine's DISCLOSURE AND NOBODY ELSE'S.** The
+notice above is written by `lib/hpengine.c`, so the 44,017 hp table rows
+disclosed a refused fetch and the **~7,350 VJSON/VGEO rows and ~1,250 bespoke
+`REGISTER_SOURCE` collectors kept the old silence** — `records=0 stored=0`,
+indistinguishable from a source that ran and found nothing, which is this rule's
+whole subject. This is the lesson this file already records twice, hit a third
+time: the uid-collision guard existed in three record paths and was repaired in
+one, the page ceiling lived in three places with two knobs, and **when you fix
+something, look for the other copies.**
+
+Measured 2026-10-22 by the registry-wide sweep: of its first 3,612 rows, **288
+came back `rc=-1` having emitted nothing and stored no notice** — 18 of 18
+sampled were `vsrc` rows — against 34 that DID disclose, every one an `hp16_*`
+row. About one row in twelve, failing in silence, and the sweep could only
+report them `EMITS_NOTHING`: a verdict about a source that FETCHED and stored
+none, a different defect wanting a different fix.
+
+`core/scheduler.c` files it for every collector now (`sched_disclose_fetch_failure`),
+because the scheduler is the ONE place that sees every run. Four things about it
+are deliberate, each pinned by a fixture that fails without it
+(`test_sched_runline` 3–3f, and the over-broad variants were checked too):
+
+* **It states only what the run exposed** — the return code, hosts contacted
+  and hosts that answered, bytes, requests, the thread's last transport-error
+  class, and which hosts never answered. **There is no `http_status`**, because
+  a bespoke collector never reported one, and naming a status nobody measured
+  would be this notice inventing the cause — the mistake it has already made
+  three times above (Archive-It, the Imperva wall, FDSN's `nodata=404`). The
+  remedy says where to look, including that in this container a peer reset can
+  be OUR egress.
+* **An honest empty stays silent**, which is what makes it safe to ship: the
+  test is `run_status()`'s verdict — the same classifier `fetch_log` and the
+  dashboards use, not a second one beside it (rule 4c) — so a collector that
+  returns non-zero on a quiet hour while every host answered is "ok" here
+  exactly as it is there. A failure notice on every quiet feed would be noise,
+  and noise is the one thing these disclosures cannot afford.
+* **A row that disclosed anything itself gets nothing more**, which is also
+  what keeps every hpengine row out of this path without naming one: the
+  engine's own record goes through the same sink and counts into `records=`.
+* **A maintenance pod is exempt** (`_` collector), or this would make the very
+  confusion `audit_registry_emit.py`'s `POD` verdict exists to expose.
+
+`audit_registry_emit.py` is the third copy and was fixed in the same change:
+its `FETCH_FAILURE` pattern matched `[hp:…]` lines only, so a scheduler-filed
+disclosure would still have read `EMITS_NOTHING`. Extending it exposed a
+quieter defect in the same tool — a FETCH_FAILED row reads `emitted=1` (the
+disclosure counts as a record on the run line) against `db=0` (the database
+reading excludes `collector-fetch-failure` by design), so the difference was
+tallied as a record **"lost to uid collision"**: a disclosure counted as a
+discard. Invisible at 34 rows; it would have become the headline number once
+every refused row in the fleet files one. Those rows are counted and named
+separately now.
+
+One consistency worth knowing rather than discovering: a disclosed dead source
+reads `records_count = 1` on its sources row and the dashboards, because the
+disclosure is not a `collector-*-notice` and `stored_data` does not subtract
+it. That is exactly what the 44,017 hp rows have done since 2026-10-06, so the
+new path matches them rather than inventing a second convention.
+
 Full audit of how each collector behaves today:
 `native/collectors/SOURCE_REALITY_REPORT.md`.
 

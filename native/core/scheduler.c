@@ -13,6 +13,7 @@
 #include "source_trust.h"
 #include "source_settings.h"
 #include "../third_party/sqlite3.h"
+#include "../third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdatomic.h>
@@ -554,6 +555,128 @@ static void sources_row_record(db_handle *db, const char *id, const char *status
 }
 static volatile int *sched_cancel_slot(const char *id);
 
+/* ── house rule 1 for EVERY collector, not only the declarative engine ────
+ *
+ * `collector-fetch-failure` is lib/hpengine.c's answer to the invisible
+ * nothing: before it, a refused fetch stored NOTHING, which is identical in the
+ * database to a source that ran and found nothing — `records=0 stored=0 rc=0`
+ * either way. That fixed it for the 44,017 rows the engine runs, AND FOR
+ * NOTHING ELSE. The generated VJSON/VGEO fleet and the bespoke collectors,
+ * about 8,600 rows, kept the old silence. This is the lesson this tree already
+ * records twice, hit a third time: the uid-collision guard existed in three
+ * record paths and was repaired in one, and the page ceiling lived in three
+ * places with two knobs. Look for the other copies of any bug you fix.
+ *
+ * MEASURED 2026-10-22 by the registry-wide sweep: of its first 3,612 rows, 288
+ * came back rc=-1 having emitted nothing and stored no notice — 18 of 18
+ * sampled were vsrc rows — against 34 that DID disclose, every one an hp16_*
+ * row. Roughly one row in twelve was failing in silence, and the sweep could
+ * only report them as `EMITS_NOTHING`, a verdict about a source that fetched
+ * and stored none, which is a different defect with a different remedy.
+ *
+ * The scheduler is the ONE place that sees every collector's run, which is why
+ * this lives here rather than in each of the three record paths.
+ *
+ * WHAT IT MUST NOT DO is claim a cause it cannot see. hpengine knows the HTTP
+ * status, whether the body parsed, and whether a 200 was really a rate-limit
+ * page or a bot wall; here there is no status at all, because a bespoke
+ * collector never reported one. Naming one would be this very notice inventing
+ * the cause — the mistake it has already made three times in this tree
+ * (Archive-It's rate limit behind a 200, Imperva's bot wall behind a 200, and
+ * FDSN's `nodata=404` read back as a refusal when it means "nothing matched").
+ * So the record states only what the run itself exposed: the return code, how
+ * many hosts were contacted and how many answered, the bytes and request
+ * count, the thread's last transport-error class, and the hosts that never
+ * answered. The remedy says where to look; it does not say which door is shut.
+ *
+ * It also must not fire on an HONEST EMPTY, which is the whole point of the
+ * rule. The test is `run_status()`'s verdict — the same classifier fetch_log
+ * and the dashboards use, not a second one beside it (rule 4c) — so a
+ * collector that returns non-zero on a quiet hour while every host answered is
+ * "ok" here exactly as it is there, and stays silent. */
+static void sched_disclose_fetch_failure(intel_sink *sink, const source_def *d,
+                                         const char *entity, int rc, int hosts,
+                                         int hosts_ok, const char *hosts_failed,
+                                         unsigned long long bytes, int requests,
+                                         const char *why) {
+  int te = http_last_transport_error();
+  const char *te_name = te == HTTP_TE_CONNECT ? "connect"
+                      : te == HTTP_TE_TIMEOUT ? "timeout"
+                      : te == HTTP_TE_OTHER   ? "other"
+                                              : "none recorded";
+  const char *outcome =
+      hosts == 0
+        ? "the run made no HTTP request at all — it stopped before reaching the "
+          "network, or it could not build the request it needed"
+      : hosts_ok == 0
+        ? "no host answered: every request this run made failed or was refused"
+        : "some of the hosts contacted answered and some did not, and nothing "
+          "was stored";
+  cJSON *p = cJSON_CreateObject();
+  cJSON_AddStringToObject(p, "source_id", d->id);
+  cJSON_AddStringToObject(p, "collector", d->collector ? d->collector : "");
+  cJSON_AddStringToObject(p, "query", entity ? entity : "");
+  cJSON_AddNumberToObject(p, "run_rc", (double)rc);
+  cJSON_AddNumberToObject(p, "hosts_contacted", (double)hosts);
+  cJSON_AddNumberToObject(p, "hosts_answered", (double)hosts_ok);
+  if (hosts_failed && *hosts_failed)
+    cJSON_AddStringToObject(p, "hosts_no_answer", hosts_failed);
+  cJSON_AddNumberToObject(p, "bytes_fetched", (double)bytes);
+  cJSON_AddNumberToObject(p, "requests", (double)requests);
+  cJSON_AddStringToObject(p, "transport_error", te_name);
+  cJSON_AddStringToObject(p, "run_status_reason", why ? why : "");
+  cJSON_AddStringToObject(p, "outcome", outcome);
+  cJSON_AddStringToObject(p, "note",
+    "NOTHING was stored for this run. This record exists so that a refused "
+    "fetch cannot be mistaken for a source that ran and found nothing — the "
+    "two are identical in the data without it. It is filed by the SCHEDULER, "
+    "for a collector that files no disclosure of its own, so it carries no "
+    "HTTP status: this collector never reported one, and naming a status "
+    "nobody measured would make this notice the fabrication it exists to "
+    "prevent.");
+  cJSON_AddStringToObject(p, "remedy",
+    hosts == 0
+      ? "no request was attempted, so this is not an upstream problem: run the "
+        "source directly (`--run <id>`) and read its stderr. A row that needs "
+        "a credential (key_env) or an entity it was not given stops here"
+      : "run the source directly (`--run <id>`) and read its stderr for the "
+        "status the collector saw. Then: a 401/403 wants a credential or the "
+        "per-host agent table in core/host_agents.def; a 429 wants a per-host "
+        "gap in core/hostgate.c, measured rather than guessed; a transport "
+        "error may be OURS rather than the upstream's — in a container behind "
+        "an egress proxy a peer reset can be the tunnel closing, so check "
+        "$HTTPS_PROXY/__agentproxy/status before writing the host off");
+  char *pj = cJSON_PrintUnformatted(p);
+  cJSON_Delete(p);
+  /* Upsert-keyed on (source, entity) exactly as hpengine's is: a permanently
+   * dead source carries ONE row that updates every run, not one row per run. */
+  char key[320], title[256];
+  snprintf(key, sizeof key, "%.150s|fetch-failure:%.120s", d->id,
+           entity ? entity : "");
+  if (hosts == 0)
+    snprintf(title, sizeof title,
+             "%s stored nothing: the run made no request", d->id);
+  else
+    snprintf(title, sizeof title,
+             "%s stored nothing: %d host(s) contacted, %d answered", d->id,
+             hosts, hosts_ok);
+  intel_item note = {0};
+  note.remote_key      = key;
+  note.title           = title;
+  note.lang            = "en";
+  note.record_type     = "collector-fetch-failure";
+  note.properties_json = pj ? pj : "{}";
+  note.tags_json       = "[\"osint-search\",\"fetch-failure\"]";
+  sink->emit(sink, &note);
+  free(pj);
+  /* Say it on stderr too, for the same reason hpengine does: the registry
+   * sweep corroborates a FETCH_FAILED verdict against the run's own output
+   * rather than inferring it from a row count, and it has no `[hp:…]` line to
+   * match for a collector that is not an hpengine row. */
+  fprintf(stderr, "[sched] %s fetch-failure: %s (rc=%d, hosts %d/%d answered)\n",
+          d->id, outcome, rc, hosts_ok, hosts);
+}
+
 int scheduler_run_source(db_handle *db, const source_def *d,
                          const char *entity) {
   intel_sink inner = intel_sink_make(db, d->id, "legacy");
@@ -607,15 +730,46 @@ int scheduler_run_source(db_handle *db, const source_def *d,
   clock_gettime(CLOCK_MONOTONIC, &t1);
   long duration_ms = (t1.tv_sec - t0.tv_sec) * 1000L +
                      (t1.tv_nsec - t0.tv_nsec) / 1000000L;
-  /* Read the transport evidence BEFORE the client is freed. */
+  /* Read the transport evidence BEFORE the client is freed. The names of the
+   * hosts that never answered are copied out here for the same reason: the
+   * client owns those strings and is about to be freed. */
   int hosts = http_client_host_count(http), hosts_ok = 0;
+  char hosts_failed[256]; hosts_failed[0] = '\0';
   for (int i = 0; i < hosts; i++) {
     int ok = 0;
-    if (http_client_host_at(http, i, NULL, &ok) && ok) hosts_ok++;
+    const char *h = http_client_host_at(http, i, NULL, &ok);
+    if (h && ok) { hosts_ok++; continue; }
+    if (!h) continue;
+    size_t have = strlen(hosts_failed);
+    size_t need = strlen(h) + (have ? 2 : 0);
+    if (have + need < sizeof hosts_failed - 1) {
+      if (have) strcat(hosts_failed, ", ");
+      strcat(hosts_failed, h);
+    }
   }
   unsigned long long bytes_in = http_client_bytes_in(http);
   int requests = http_client_request_count(http);
   http_client_free(http);
+
+  /* The run's verdict, computed ONCE and used twice: here, to decide whether
+   * the run owes a disclosure, and below for fetch_log and the sources row.
+   * It was computed only below until 2026-10-22, which is why the disclosure
+   * could not live anywhere but inside each engine — see
+   * sched_disclose_fetch_failure for what that cost. */
+  const char *run_why = NULL;
+  const char *run_st = run_status(rc, cs.n, hosts, hosts_ok, &run_why);
+  int real_collector = d->collector && d->collector[0] != '_';
+  /* `cs.n == 0 && cs.notices == 0` is "the run left NOTHING behind", which is
+   * also what excludes every hpengine row without naming one: the engine's own
+   * collector-fetch-failure is emitted through this same sink and counts into
+   * cs.n (it is not a `collector-*-notice`, so intel_item_is_notice is false
+   * for it, which is deliberate — CLAUDE.md records that a dead hp source
+   * reports records=1 stored=1). A row that disclosed anything at all is left
+   * alone rather than given a second, thinner notice on top. */
+  if (real_collector && strcmp(run_st, "ok") != 0 && cs.n == 0 &&
+      cs.notices == 0)
+    sched_disclose_fetch_failure(&sink, d, entity, rc, hosts, hosts_ok,
+                                 hosts_failed, bytes_in, requests, run_why);
   /* Read the distinct-row count BEFORE the sink is freed — it lives in the
    * sink_state that free() is about to release. */
   int stored_exact = 1;
@@ -674,9 +828,9 @@ int scheduler_run_source(db_handle *db, const source_def *d,
   /* Stage 0+1: log the run and detect anomalies — but only for real data
    * collectors. The internal pods (_maint, _enrich) emit nothing and would
    * otherwise trip duration_outlier on their own LLM calls. */
-  if (d->collector && d->collector[0] != '_') {
-    const char *why = NULL;
-    const char *status = run_status(rc, cs.n, hosts, hosts_ok, &why);
+  if (real_collector) {
+    const char *why = run_why;
+    const char *status = run_st;
     /* A run whose records partly failed to store is still the run it was
      * (status unchanged), but its fetch_log row must not read as whole. */
     char whybuf[160];

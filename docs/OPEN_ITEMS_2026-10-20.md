@@ -683,9 +683,39 @@ hour a complete pass is a two-day job, and the file is committed as it
 accumulates rather than held back.
 
 The point of the sweep is to FILL the health disclosure, not to gate anything:
-every scheduled run already files a `collector-fetch-failure` record of its own,
-so a source's page acquires its reason and remedy as the scheduler reaches it.
-The sweep just front-loads that.
+every scheduled run files a `collector-fetch-failure` record of its own, so a
+source's page acquires its reason and remedy as the scheduler reaches it. The
+sweep just front-loads that.
+
+**That sentence was FALSE when it was written, and the sweep is what proved
+it.** It said "every scheduled run already files" — true only of the 44,017
+hpengine rows, because `lib/hpengine.c` is where that record is written. The
+~7,350 VJSON/VGEO rows and ~1,250 bespoke collectors filed nothing, so a
+refused fetch stored `records=0 stored=0` and was indistinguishable from an
+honest empty: rule 1's invisible nothing, for about a sixth of the fleet,
+underneath an open item that assumed the opposite.
+
+The sweep found it as an arithmetic oddity rather than as a failure. Of its 310
+`EMITS_NOTHING` verdicts, **288 carry `sched_rc=-1`** — a run that could not
+fetch, not a run that fetched and stored none — and the tool had no way to tell
+them apart, because its `FETCH_FAILED` test is corroborated against `[hp:…]`
+stderr and these rows produce none. 18 of 18 sampled resolve to `vsrc*` files;
+all 34 that did disclose are `hp16_*`. So the verdict distribution was reading
+"301 sources that fetch and store nothing" where most of it was "288 sources
+that cannot fetch and never said so".
+
+Fixed in `core/scheduler.c`, which is the one place that sees every collector's
+run — see rule 1 in `CLAUDE.md` for the four deliberate limits on what that
+record may claim, and why an honest empty must stay silent. Re-measured on
+three of the 288 afterwards: two now read `FETCH_FAILED` with a disclosure in
+the database, and the third stores 10 of 10 — it had been a transient failure,
+which is "one probe is one reading" arriving from the useful direction.
+
+**So the remaining `EMITS_NOTHING` count is not a to-do list of 301 broken
+rows.** It needs re-reading after this change: the ones that were really fetch
+failures now say so, and what is left — roughly 22 of the first 3,612 — are the
+rows that genuinely fetch and store nothing, which is the defect that verdict
+names and the one worth triaging.
 
 What the first 2,390 rows say: **1,502 OK, 161 EMITS_NOTHING, 88 SLOW (hit the
 90 s kill line — unmeasured, not failed), 34 FETCH_FAILED, 16 COLLISION.**
