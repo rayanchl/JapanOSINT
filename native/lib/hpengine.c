@@ -1238,6 +1238,81 @@ static int hp_icontains(const char *hay, const char *needle) {
   return 0;
 }
 
+/* detail_html_kv: one label/value pair into the record as "detail.<label>",
+ * indexed when the label is already there (".1", ".2" …) — a repeated label is
+ * a second field, never a replacement of the first. */
+static void hp_html_kv_put(cJSON *flat, const char *label, const char *value) {
+  char key[320];
+  snprintf(key, sizeof key, "detail.%s", label);
+  for (int i = 1; hp_flat_get(flat, key) && i < 1000; i++)
+    snprintf(key, sizeof key, "detail.%s.%d", label, i);
+  cJSON_AddStringToObject(flat, key, value);
+}
+
+/* Where a <td>/<th> opened at `c` (just past its '>') ends: its own close
+ * tag, else the next cell or row boundary (HTML lets both be omitted). */
+static const char *hp_html_cell_end(const char *c) {
+  for (const char *q = c; (q = strchr(q, '<')); q++) {
+    const char *t = q + 1 + (q[1] == '/');
+    if ((!strncasecmp(t, "td", 2) || !strncasecmp(t, "th", 2) ||
+         !strncasecmp(t, "tr", 2)) && !isalnum((unsigned char)t[2]))
+      return q;
+    if (!strncasecmp(q, "</table", 7)) return q;
+  }
+  return c + strlen(c);
+}
+
+/* Harvest an HTML record page's label/value cells into `flat` (see
+ * hp_source.detail_html_kv). A cell with a non-empty data-label is a value
+ * under that label; a cell with an EMPTY data-label is the visible label
+ * column of the same pattern and is skipped (the value cell names itself); in
+ * cells without the attribute a <th> pairs with the next <td> in its row.
+ * Text has tags stripped and entities decoded. Returns the pairs merged. */
+static int hp_html_kv(const char *html, cJSON *flat) {
+  int n = 0;
+  char *th = NULL;                       /* a <th> waiting for its <td> */
+  for (const char *p = html; (p = strchr(p, '<')); ) {
+    const char *t = p + 1 + (p[1] == '/');
+    int close = p[1] == '/';
+    if (!strncasecmp(t, "tr", 2) && !isalnum((unsigned char)t[2])) {
+      free(th); th = NULL; p = t + 2; continue;
+    }
+    int is_th = !strncasecmp(t, "th", 2) && !isalnum((unsigned char)t[2]);
+    int is_td = !strncasecmp(t, "td", 2) && !isalnum((unsigned char)t[2]);
+    const char *gt = strchr(t, '>');
+    if (close || !(is_th || is_td) || !gt) { p = t; continue; }
+    char tag[1024];
+    size_t tl = (size_t)(gt - p) < sizeof tag - 1 ? (size_t)(gt - p) : sizeof tag - 1;
+    memcpy(tag, p, tl); tag[tl] = 0;
+    char label[256] = "";
+    int has_label = 0;
+    for (const char *q = tag; *q && !has_label; q++)
+      has_label = !strncasecmp(q, "data-label=", 11);
+    if (has_label) { html_attr(tag, "data-label", label, sizeof label); hp_xml_decode(label); }
+    const char *e = hp_html_cell_end(gt + 1);
+    size_t rl = (size_t)(e - (gt + 1));
+    char *raw = malloc(rl + 1);
+    if (raw) { memcpy(raw, gt + 1, rl); raw[rl] = 0; }
+    char *text = raw ? html_strip(raw) : NULL;
+    free(raw);
+    if (text) hp_xml_decode(text);
+    if (text && label[0]) {
+      hp_html_kv_put(flat, label, text); n++;
+      free(th); th = NULL;
+    } else if (text && !has_label) {
+      if (is_th) { free(th); th = text; text = NULL; }
+      else if (th) {
+        if (th[0]) { hp_html_kv_put(flat, th, text); n++; }
+        free(th); th = NULL;
+      }
+    }
+    free(text);
+    p = e;
+  }
+  free(th);
+  return n;
+}
+
 /* Second hop: pull the full record behind a list hit and merge it in under
  * "detail.". Never silent: a missing id, a failed fetch or an un-reached record
  * is stamped on the record (`_detail_error`, `_detail_pending`) so an absent
@@ -1282,13 +1357,21 @@ static void hp_deepen(hp_run_state *st, cJSON *flat) {
      * Shift_JIS would otherwise merge mojibake into the record it enriches. */
     char *dutf8 = hp_body_to_utf8(s, url, hr.body, hr.body_len);
     char *djp = hp_jsonp_inner(dutf8 ? dutf8 : hr.body);
-    cJSON *doc = cJSON_Parse(djp ? djp : dutf8 ? dutf8 : hr.body);
+    cJSON *doc = s->detail_html_kv ? NULL
+                                   : cJSON_Parse(djp ? djp : dutf8 ? dutf8 : hr.body);
+    int kv = s->detail_html_kv ? hp_html_kv(dutf8 ? dutf8 : hr.body, flat) : 0;
     free(djp);
     free(dutf8);
     if (doc) {
       cJSON *node = s->detail_path ? hp_path(doc, s->detail_path) : doc;
       if (node) hp_flatten(node, "detail", flat, 1);
       cJSON_Delete(doc);
+    } else if (s->detail_html_kv) {
+      if (kv == 0) {
+        st->deep_failed++;
+        cJSON_AddStringToObject(flat, "_detail_error",
+                                "detail page carries no label/value cells; nothing merged");
+      }
     } else {
       /* A 200 whose body is not JSON (an HTML profile page behind an HTML
        * row's anchor) used to merge nothing and stamp only `detail_url` — read
@@ -5197,6 +5280,7 @@ char *hp_describe_json(const char *id) {
   hp_desc_str(dh, "detail_key", s->detail_key);
   hp_desc_str(dh, "detail_path", s->detail_path);
   hp_desc_int(dh, "detail_max", s->detail_max);
+  hp_desc_int(dh, "detail_html_kv", s->detail_html_kv);
   cJSON_AddItemToObject(o, "detail_hop", dh);
 
   /* paging */
