@@ -42,18 +42,33 @@ int jo_page_max(const char *legacy_env) {
   return JO_PAGE_MAX_DEFAULT;
 }
 
-/* `declared` is a source's own MEASURED ceiling (pw_walk_max), 0 for "use the
- * tree's one default above". JO_PAGE_MAX always wins, because it is the
- * operator's brake and a source is not allowed to talk past it — including
- * downwards: an operator who sets JO_PAGE_MAX=1 to make a run cheap must get
- * one page from every source, not 160 from the ones that asked for more. */
-static int pw_page_max(int declared) {
+/* `declared` is a source's own MEASURED ceiling (pw_walk_max, or an hp row's
+ * page_max), 0 for "use the tree's one default above". JO_PAGE_MAX always
+ * wins, because it is the operator's brake and a source is not allowed to talk
+ * past it — including downwards: an operator who sets JO_PAGE_MAX=1 to make a
+ * run cheap must get one page from every source, not 160 from the ones that
+ * asked for more.
+ *
+ * This lives here, exported, because hpengine resolved the same question with
+ * its own expression — `s->page_max > 0 ? s->page_max : jo_page_max(NULL)` —
+ * which honoured the knob only when a row declared NO ceiling. So the brake
+ * did not reach the rows most in need of it, while hpengine.h's own comment
+ * said page_max was "raised or lowered for the whole tree by $JO_PAGE_MAX":
+ * a capability a comment claims and nothing implements. It cost a whole run
+ * (an attempt to bound SCEDC's declared 200 pages to 5 read 80 pages before
+ * the clock stopped it, 2026-10-21) and it silently defeated
+ * tools/audit_page_ceiling.py, whose entire shallow-probe design rests on
+ * JO_PAGE_MAX bounding EVERY row: a cycling row declaring page_max = 200 was
+ * walked 200 pages deep by a tool whose flag says 3. One function now, called
+ * from both engines. */
+int jo_page_max_for(int declared) {
   const char *e = getenv("JO_PAGE_MAX");
   int v = (e && *e) ? atoi(e) : 0;
   if (v > 0) return v;
   if (declared > 0) return declared;
   return jo_page_max(NULL);
 }
+static int pw_page_max(int declared) { return jo_page_max_for(declared); }
 static int pw_walk_enabled(void) {
   const char *e = getenv("JO_PAGE_WALK");
   return !(e && e[0] == '0' && e[1] == 0);

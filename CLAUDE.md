@@ -76,8 +76,6 @@ feed in the tree** (42,593 URLs, 52 flagged, each read by hand —
 asks each homepage which feeds it declares and verifies them through the
 engine's own client, flagging `TAKEOVER_SUSPECT` on item titles.
 
-**The registered count was 56,955** (2026-10-21): main's 53,739, less six
-
 **Main's count was 57,415** (2026-10-21): 57,409 plus the six batch-49 rows
 the next-day retry pass restored (below). 57,409 was main's 56,955 (below) plus
 this branch's 453 on the same base — the 491 rows the User-Agent header
@@ -1541,14 +1539,24 @@ Engine subtleties worth knowing before writing a row:
   under "the default 10-page ceiling": those are dated records, not claims about
   today.
 
-  **`$JO_PAGE_MAX` moves the DEFAULT; a row's own `page_max` is final.**
-  `hpengine.c` reads `s->page_max > 0 ? s->page_max : jo_page_max(NULL)`, so
-  the variable cannot lower OR raise a row that declares a ceiling — it only
-  decides what a row WITHOUT one gets. "Overrides in both directions" above is
-  about that default. Read the other way it costs a whole run: an attempt to
-  shrink `JO34_FDSNEVT_SERVICE_SCEDC_CALTECH_EDU`'s declared 200 pages to 5 for
-  a quick cycle test read **80 pages** before the clock stopped it
-  (2026-10-21). To bound a declared row for a test, change the row.
+  **`$JO_PAGE_MAX` is the operator's brake and reaches a row that declares its
+  own ceiling — in both directions** (fixed 2026-10-22; it is one function,
+  `jo_page_max_for(declared)` in `lib/pagewalk.c`, called by `pagewalk.c` and
+  `hpengine.c` alike). It did not until that day: `hpengine.c` read
+  `s->page_max > 0 ? s->page_max : jo_page_max(NULL)`, so the variable decided
+  only what a row WITHOUT a ceiling got, while `hpengine.h`'s own comment said
+  `page_max` was "raised or lowered for the whole tree by `$JO_PAGE_MAX`" and
+  `pagewalk.c`'s `pw_page_max` implemented exactly that for its rows — **a
+  capability two headers claimed and one of the two engines did not have**, the
+  unification of the three ceilings having missed the DOWNWARD direction.
+  It cost a whole run once (an attempt to shrink
+  `JO34_FDSNEVT_SERVICE_SCEDC_CALTECH_EDU`'s declared 200 pages to 5 read
+  **80 pages** before the clock stopped it, 2026-10-21) and, worse, it silently
+  defeated `tools/audit_page_ceiling.py`, whose entire shallow-probe design is
+  to bound a run by setting this variable: all 669 rows that cycle declare a
+  `page_max`, so a probe whose flag said 3 pages would have walked up to 200
+  per row. That is why the 114 SLOW verdicts of 2026-10-12 are SLOW. `hptest`
+  40f pins the brake, the resume position it leaves behind, and the unset case.
 * **The ceiling is now MEASURED across every paged scheduled row**
   (2026-10-12, `docs/measured-page-ceilings-2026-10-12.tsv`): 2,137 rows,
   3-page probe. 1,111 COMPLETE, 534 `CEILING_UNKNOWN` (the upstream publishes
