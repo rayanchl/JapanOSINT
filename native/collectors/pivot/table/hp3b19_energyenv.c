@@ -1033,12 +1033,29 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "mineral-tenure",
     .tags = "\"mining\",\"canada\",\"tenure\",\"cadastre\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://openmaps.gov.bc.ca/geo/pub/WHSE_MINERAL_TENURE.MTA_ACQUIRED_TENURE_SVW/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=pub:WHSE_MINERAL_TENURE.MTA_ACQUIRED_TENURE_SVW&outputFormat=application/json&count=50",
+    /* `sortBy` is not optional on this WFS, it is the price of paging at all:
+     * without it `startIndex=50` answers an ows:ExceptionReport carrying
+     * "java.lang.RuntimeException Cannot do natural order without a primary
+     * key" (reproduced 2026-10-22). So the walk never got past page 1, and a
+     * failed page clears the cycle position rather than bookmarking a refused
+     * one — this row re-read the same 50 tenures of 42,327 every day at rc=0.
+     *
+     * Measured the same day, all against this host: TENURE_NUMBER_ID sorts
+     * (page 1 ends 220440, page 2 begins 220441 — disjoint, ordered, no
+     * overlap and no gap), it is UNIQUE per feature (1,000 distinct in 1,000,
+     * 10,000 in 10,000, so it is the record's identity and not a dimension),
+     * `count=10000` is honoured at 15.2 MB and 1.8 s a page, and the layer's
+     * own numberMatched is 42,327. Five pages read the cadastre whole. */
+    .url = "https://openmaps.gov.bc.ca/geo/pub/WHSE_MINERAL_TENURE.MTA_ACQUIRED_TENURE_SVW/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=pub:WHSE_MINERAL_TENURE.MTA_ACQUIRED_TENURE_SVW&outputFormat=application/json&sortBy=TENURE_NUMBER_ID&count=10000",
     .array_path = "features",
+    .id_keys = "properties.TENURE_NUMBER_ID",
+    .title_keys = "properties.CLAIM_NAME,properties.TENURE_NUMBER_ID",
+    .date_keys = "properties.ISSUE_DATE",
     .interval = 86400,
     .page_param = "startIndex",
-    .page_resume = 1,   /* 42,234 records, measured 2026-10-12: read over a cycle, 50 pages a run */
-    .page_size = 50,
+    .page_max = 10,     /* 42,327 (numberMatched, 2026-10-22) = 5 pages of 10,000, +5 so the walk ends on the upstream's short page */
+    .page_resume = 1,   /* a no-op while five pages cover the layer; kept so a growing cadastre degrades to a cycle rather than to silent truncation */
+    .page_size = 10000,
     .description = "Mineral, placer and coal tenures in British Columbia with the "
       "tenure number, the owner name, the issue and expiry dates, the "
       "area and the claim polygon. A mining cadastre names the holder, "
