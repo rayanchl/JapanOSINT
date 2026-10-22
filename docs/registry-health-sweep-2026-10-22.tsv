@@ -3597,3 +3597,17 @@ fr-entreprises-cybersecurite	OK	0	0	99	99	99	-1	12.3
 fr-entreprises-biotechnologie	OK	0	0	192	192	192	-1	16.9	
 fr-entreprises-armement	OK	0	0	500	501	500	-1	20.6	
 fr-entreprises-aeronautique	OK	0	0	500	501	500	-1	20.7	
+fr-entreprises-informatique	EMITS_NOTHING	1	-1	0	0	0	-1	14.6	no records reached intel_items
+fr-entreprises-energie	EMITS_NOTHING	1	-1	0	0	0	-1	20.9	no records reached intel_items
+fr-entreprises-defense	EMITS_NOTHING	1	-1	0	0	0	-1	31.3	no records reached intel_items
+fr-entreprises-laboratoire	EMITS_NOTHING	1	-1	0	0	0	-1	18.9	no records reached intel_items
+fr-entreprises-nucleaire	EMITS_NOTHING	1	-1	0	0	0	-1	15.3	no records reached intel_items
+fr-entreprises-logiciel	EMITS_NOTHING	1	-1	0	0	0	-1	22.0	no records reached intel_items
+fr-entreprises-pharmaceutique	OK	0	0	500	501	500	-1	18.4	
+nam-md-md-criticalareas-critical-areas-counties	OK	0	0	4000	4001	4000	-1	75.2	
+fr-entreprises-chimie	OK	0	0	250	251	250	-1	75.9	
+fr-entreprises-semiconducteur	EMITS_NOTHING	1	-1	0	0	0	-1	14.8	no records reached intel_items
+fr-entreprises-datacenter	OK	0	0	25	26	25	-1	65.9	
+fr-entreprises-spatial	EMITS_NOTHING	1	-1	0	0	0	-1	20.0	no records reached intel_items
+fr-entreprises-telecom	EMITS_NOTHING	1	-1	0	0	0	-1	18.3	no records reached intel_items
+fr-schools-annuaire-973	OK	0	0	325	325	325	-1	22.8	
