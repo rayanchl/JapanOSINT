@@ -1546,11 +1546,82 @@ static void hp_seed_declared_keys(const hp_source *s, cJSON *rec, cJSON *flat) {
   }
 }
 
+/* The column names for a record that is an ARRAY, resolved once per page from
+ * the row's `row_header_path`.
+ *
+ * A JSON "table" — an array of arrays, with the column names in a SIBLING
+ * array — is the CSV `csv_no_header` shape in JSON clothing, and two unrelated
+ * national parliaments publish it: Finland's Eduskunta answers
+ * {columnNames:[...], rowData:[[...],[...]]} and the Austrian Parliament
+ * {header:[{label,...}], rows:[[...]]}. Without this the engine flattens such
+ * a record POSITIONALLY (".0", ".1", …), so a row's title_keys and id_keys
+ * would be POSITIONS whose meaning the upstream can change without anything
+ * here noticing — the hazard this file records for batch 46's generator and
+ * for the ECB workbook, where two sheets of one file have different geometry.
+ *
+ * _Thread_local for exactly the reason g_flat_drops below is: "per page" is
+ * only true per THREAD, because pipeline.c dispatches collectors concurrently.
+ * It is set before a page's records are touched and cleared after, so a row
+ * that declares no header path behaves byte for byte as before.
+ *
+ * Kept out of hp_flat_fn's signature deliberately: hp_collision_map() takes
+ * that function pointer, and widening it would mean changing a callback shape
+ * for a field almost no row uses. */
+static _Thread_local const cJSON *g_row_header = NULL;
+
+/* The header's name for column `i`, or NULL when the header does not reach
+ * that far. A cell past the end is still kept, under its positional name:
+ * dropping it would be a discard, and a table whose rows are longer than its
+ * header is the upstream's business, not ours (house rule 2). */
+static const char *hp_header_name(int i) {
+  if (!g_row_header) return NULL;
+  const cJSON *h = cJSON_GetArrayItem((cJSON *)g_row_header, i);
+  if (!h) return NULL;
+  if (cJSON_IsString(h) && h->valuestring && h->valuestring[0]) return h->valuestring;
+  /* Austria names its columns as objects: {"label":"GP_CODE", ...}. `label` is
+   * the human name and `feld_name` the short one; label first, because that is
+   * what the publisher shows a reader. */
+  if (cJSON_IsObject(h)) {
+    const cJSON *v = cJSON_GetObjectItem((cJSON *)h, "label");
+    if (!cJSON_IsString(v) || !v->valuestring[0]) v = cJSON_GetObjectItem((cJSON *)h, "feld_name");
+    if (!cJSON_IsString(v) || !v->valuestring[0]) v = cJSON_GetObjectItem((cJSON *)h, "name");
+    if (cJSON_IsString(v) && v->valuestring[0]) return v->valuestring;
+  }
+  return NULL;
+}
+
+/* An array record whose columns the header names. Falls through to the ordinary
+ * flatten when there is no header, so this is strictly additive. */
+static int hp_flat_table_row(cJSON *rec, cJSON *flat) {
+  if (!g_row_header || !cJSON_IsArray(rec)) return 0;
+  int i = 0;
+  cJSON *cell;
+  char key[128];
+  cJSON_ArrayForEach(cell, rec) {
+    const char *nm = hp_header_name(i);
+    if (nm) snprintf(key, sizeof key, "%s", nm);
+    else    snprintf(key, sizeof key, "col%d", i);   /* past the header's end */
+    i++;
+    if (cJSON_IsString(cell) && cell->valuestring && cell->valuestring[0])
+      cJSON_AddStringToObject(flat, key, cell->valuestring);
+    else if (cJSON_IsNumber(cell))
+      cJSON_AddNumberToObject(flat, key, cell->valuedouble);
+    else if (cJSON_IsBool(cell))
+      cJSON_AddBoolToObject(flat, key, cJSON_IsTrue(cell));
+    else if (cJSON_IsObject(cell) || cJSON_IsArray(cell))
+      hp_flatten(cell, key, flat, 1);
+    /* a null or an empty string is absent, as everywhere else in this file */
+  }
+  return 1;
+}
+
 static cJSON *hp_json_flat(const hp_source *s, cJSON *rec) {
   cJSON *flat = cJSON_CreateObject();
   if (!flat) return NULL;
   hp_flat_reset();          /* a bare-string element never reaches hp_flatten */
-  if (cJSON_IsObject(rec) || cJSON_IsArray(rec)) {
+  if (hp_flat_table_row(rec, flat)) {
+    hp_seed_declared_keys(s, rec, flat);
+  } else if (cJSON_IsObject(rec) || cJSON_IsArray(rec)) {
     hp_flatten(rec, "", flat, 0);
     hp_seed_declared_keys(s, rec, flat);
   } else if (cJSON_IsString(rec) && rec->valuestring[0])
@@ -2165,6 +2236,18 @@ static int hp_run_json(hp_run_state *st, const char *body) {
     st->rec_fp_set = 1;
   }
   st->available += arr_n;
+  /* The column names for this page, if the row declares where they are. Set
+   * BEFORE hp_collision_map, because that function flattens every record to
+   * compute its fallback key: a header visible to the emit loop but not to the
+   * collision map would key records one way and emit them another. */
+  if (s->row_header_path && s->row_header_path[0]) {
+    cJSON *hdr = hp_path(doc, s->row_header_path);
+    g_row_header = cJSON_IsArray(hdr) ? hdr : NULL;
+    if (!g_row_header)
+      fprintf(stderr, "[hp:%s] row_header_path '%s' is not an array in this "
+                      "response — records keep their positional names\n",
+              s->id, s->row_header_path);
+  }
   /* Flag the records whose fallback key is shared with a sibling on this page,
    * before any of them is emitted — see hp_collision_map(). */
   unsigned char *dupmap = hp_collision_map(st, arr, arr_n, hp_json_flat);
@@ -2186,6 +2269,10 @@ static int hp_run_json(hp_run_state *st, const char *body) {
   st->dup_map = NULL;
   st->rec_idx = 0;
   free(dupmap);
+  /* The header described THIS page's `doc`, which is freed below. Clearing it
+   * here is what keeps a detail hop, a later page or the next row from reading
+   * a dangling pointer — the same reason dup_map is cleared one line up. */
+  g_row_header = NULL;
   /* The upstream's own count of what exists, read the way jsonlist reads it
    * (first page), so a truncation notice can report the real remainder and a
    * page_walk row stops exactly where its VJSON form stopped. */

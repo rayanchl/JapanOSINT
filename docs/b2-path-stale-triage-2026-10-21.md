@@ -320,3 +320,48 @@ Two things about its shape worth knowing before anyone adds the key:
   missing object is 404, while a search matching nothing is **200 with an empty
   `data` list and an informational message**. Whoever wires the key should
   check the engine reads the second as an empty rather than a failure.
+
+## B2-bis resolved for Finland, and DELIBERATELY NOT for Austria
+
+Both needed the same thing the engine did not have: a way to key a JSON
+**table** — records that are arrays, with the column names in a sibling array.
+`row_header_path` is that (hpengine, 2026-10-22; `hptest` 49–49f, six of the
+eight fixtures confirmed to fail without it and the two that pass being the
+controls that assert the OLD behaviour is preserved).
+
+**`FI_EDUSKUNTA_RECORDS` ships.** Measured through the engine the same day:
+
+    Marin               1 of 1 emitted, 1 stored, 2 requests, 20,312 bytes
+    zzqqxxjjwwvv7731    0 records, 289 bytes — an honest empty (rule 4d)
+
+and the stored record proves the affordance did its job, carrying
+`personId`, `lastname`, `firstname` and `minister` by NAME rather than `.0`,
+`.1`, `.2`. It stays an entity pivot because the API's filter is real, measured
+both ways.
+
+**`AT_PARLAMENT_RECORDS` does not ship, and the reason is a measurement.**
+Three readings of `/Filter/api/filter/data/101`:
+
+* **`showAll` is a presence, not a value.** `showAll=false` behaves exactly
+  like `showAll=true`: 4 pages of 100,000 rows at **58 MB a page**. Omit the
+  parameter entirely and the same endpoint pages **20 rows at a time over
+  19,565 pages** at 17 KB a request, which is the shape a cycle would want.
+* **`pageSize` is ignored** — a request for 3 rows returned 100,000.
+* **and the index has NO STABLE ORDERING.** Two identical requests for the
+  unpaged first page returned different rows — `5,7,9,314,512` then
+  `1,3,4,8,2` — while `page=2` returned the same five rows on two reads. Of ten
+  parameter spellings probed, six appeared to "move" the answer and most moved
+  it to the same place, which is what an unstable index looks like rather than
+  six working parameters.
+
+CLAUDE.md is explicit about this: an offset or page walk with no stable sort
+silently SKIPS records, and the only visible symptom is a collision — "the
+worst shape in this file", because the visible half is harmless and the
+invisible half is lost data. 19,565 pages over an index whose head reshuffles
+between two requests would do exactly that, and `page_resume` would carry the
+damage across runs.
+
+So the row keeps failing honestly. What it needs is one **measured** sort
+parameter, not a guess: the engine affordance is in place, the endpoint and its
+391,283 rows are known, and the remaining question is whether that filter API
+accepts a sort at all. Written down rather than shipped on an unstable reading.

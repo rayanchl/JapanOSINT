@@ -2197,6 +2197,38 @@ Engine subtleties worth knowing before writing a row:
   re-laid-out workbook would change without changing the record count — so the
   row says so.
 
+* **A JSON TABLE needs `row_header_path`, or its row keys are POSITIONS.**
+  Some APIs answer an array of ARRAYS with the column names in a sibling array
+  — Finland's Eduskunta (`rowData` + `columnNames`) and the Austrian Parliament
+  (`rows` + `header`, whose entries are objects carrying a `label`). The engine
+  flattened such a record positionally (`.0`, `.1`, …), so a row's
+  `title_keys`/`id_keys` would be positions whose meaning the upstream can
+  change without anything here noticing — the hazard this file already records
+  for batch 46's generator and for the ECB workbook, where two sheets of ONE
+  file have different geometry. `row_header_path` names where the header is; a
+  cell past its end keeps its positional name rather than being dropped, and a
+  row that declares no header path behaves byte for byte as before. It is
+  registered in `gen_hp_batch.py`'s `STR_OPTS` in the same change, which is the
+  third place this file keeps saying gets forgotten. `hptest` 49–49f, six of
+  the eight confirmed to fail without it and the two that pass being the
+  controls for the additive guarantee.
+
+  **Finland ships on it and Austria deliberately does not**, and the difference
+  is one measurement. `FI_EDUSKUNTA_RECORDS` stores 1 of 1 for a real surname
+  and an honest empty for an impossible one, its record carrying `personId`,
+  `lastname`, `firstname` and `minister` by name. The Austrian filter API has
+  **no stable ordering**: two identical requests for its unpaged first page
+  returned different rows (`5,7,9,314,512`, then `1,3,4,8,2`) while `page=2`
+  was stable across two reads, and of ten parameter spellings probed six
+  appeared to "move" the answer with most moving it to the same place — which
+  is what an unstable index looks like, not six working parameters. Its
+  `showAll` is a PRESENCE and not a value (`showAll=false` behaves like `true`:
+  4 pages of 100,000 at 58 MB, against 19,565 pages of 20 with the parameter
+  omitted) and its `pageSize` is ignored. A 19,565-page cycle over a head that
+  reshuffles is exactly the skip-with-a-collision-as-its-only-symptom shape
+  this file calls the worst it records, so the row keeps failing honestly until
+  a sort parameter is MEASURED.
+
 * **A deep-paging cap is the upstream's, and it is disclosed by name.** GLEIF
   refuses `page[number]=51` with HTTP 400 — 50 pages × 200 = 10,000 records —
   so `GLEIF_LEI_HK` reaches 10,000 of 13,419 and the rest needs a narrower

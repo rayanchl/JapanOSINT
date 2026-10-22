@@ -105,6 +105,14 @@ WANT = {"any": "HP_ANY", "domain": "HP_DOMAIN", "ip": "HP_IP",
 
 STR_OPTS = {"array_path", "title_keys", "id_keys", "link_keys", "link_tmpl",
             "charset", "next_tmpl",
+            # A JSON "table": records that are ARRAYS, with the column names in
+            # a sibling array this names. Without it such rows key on POSITIONS.
+            # Added here in the same change as the engine field, because this
+            # table is the third place an hp_source field has to reach and the
+            # one that gets forgotten -- page_resume and page_walk were both
+            # missed this way, and batch 46 had every page_resume row rejected
+            # as an unknown opt because of it.
+            "row_header_path",
             "csv_delim", "csv_comment", "xlsx_sheet",
             "date_keys", "body_keys", "lat_key", "lon_key",
             "latlon_key", "lonlat_key", "href_must",

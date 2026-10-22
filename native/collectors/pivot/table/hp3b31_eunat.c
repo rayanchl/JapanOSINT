@@ -320,13 +320,37 @@ static const hp_source HP3B31_EUNAT[] = {
   { .id = "FI_EDUSKUNTA_RECORDS", .name = "Finland Eduskunta — parliamentary documents",
     .name_ja = "フィンランド議会 文書", .category = "government",
     .portal = "https://www.eduskunta.fi", .record_type = "fi-parliamentary-record",
-    .tags = "\"fi\",\"parliament\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.eduskunta.fi/FI/search/Sivut/results.aspx?k={q}",
-    .base = "https://www.eduskunta.fi", .filter_query = 1,
-    .description = "Finnish bills, written questions and committee statements, "
-      "plus the members' declarations of interests and the register of "
-      "election-campaign funding by donor" },
+    .tags = "\"fi\",\"parliament\"", .mode = HP_JSON, .free_tier = 1,
+    /* RE-POINTED 2026-10-22 (open item B2-bis). The scraped SharePoint search
+     * path is gone; Eduskunta publishes a documented open-data API instead,
+     * and the row stays an entity pivot because that API FILTERS — measured
+     * both ways, which is the only reading that settles it (rule 4d):
+     *     columnName=lastname&columnValue=Marin              1 row
+     *     columnName=lastname&columnValue=zzqqxxjjwwvv7731   0 rows
+     *     no filter at all                                 100 rows, hasMore
+     *
+     * It needed an ENGINE AFFORDANCE, not just a path. The API answers a JSON
+     * TABLE — `rowData` is an array of ARRAYS and the column names are in a
+     * sibling `columnNames` — so without `row_header_path` the engine would
+     * name the cells by POSITION and this row's keys would be positions whose
+     * meaning the API can change without anything here noticing. That is the
+     * same hazard the ECB workbook taught, where two sheets of one file have
+     * different geometry. `row_header_path` was added for this row and for the
+     * Austrian one below; hptest 49-49f pin it, including that a row
+     * declaring no header path still behaves exactly as before.
+     *
+     * MemberOfParliament is the table a name can be looked up in: 19 tables
+     * exist and the others key on ids and technical keys. `page` is a page
+     * NUMBER and 0-based, so page_zero_based is set and page_size is NOT (that
+     * would make it an offset — see lint-sources page-size-on-page-number). */
+    .url = "https://avoindata.eduskunta.fi/api/v1/tables/MemberOfParliament/"
+      "rows?perPage=100&page=0&columnName=lastname&columnValue={q}",
+    .array_path = "rowData", .row_header_path = "columnNames",
+    .title_keys = "lastname", .id_keys = "personId",
+    .page_param = "page", .page_zero_based = 1,
+    .description = "Every member of the Finnish parliament the surname matches "
+      "— the person id the rest of Eduskunta's open data keys on, their party, "
+      "and whether they hold a ministerial post. Ask it for a surname" },
 
   /* ── Iberia and Italy ─────────────────────────────────────────────────── */
   { .id = "ES_PORTAL_TRANSPARENCIA", .name = "Spain — transparency portal & subsidy database",

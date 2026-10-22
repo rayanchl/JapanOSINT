@@ -931,6 +931,37 @@ static const hp_source TNOURL[] = {
 };
 HP_REGISTER_TABLE(TNOURL)
 
+/* A JSON "table": records that are ARRAYS, with the column names in a sibling
+ * array. Two national parliaments publish exactly this (Finland's Eduskunta
+ * and the Austrian Parliament), and without row_header_path the engine names
+ * such a record's cells POSITIONALLY — so a row would key on positions whose
+ * meaning the upstream can change silently. */
+static const hp_source TTBL[] = {
+  { .id = "T_JTBL", .name = "json table with a header array",
+    .url = "https://x.test/tbl",
+    .array_path = "rowData", .row_header_path = "columnNames",
+    .title_keys = "lastname", .id_keys = "personId",
+    .interval = 3600, .record_type = "t-table", .free_tier = 1, .description = "d" },
+  /* The same response with NO header path declared: the control. */
+  { .id = "T_JTBL_NOHDR", .name = "json table without a declared header",
+    .url = "https://x.test/tbl",
+    .array_path = "rowData",
+    .interval = 3600, .record_type = "t-table", .free_tier = 1, .description = "d" },
+  /* Austria's shape: the header entries are OBJECTS naming the column. */
+  { .id = "T_JTBL_OBJHDR", .name = "json table whose header entries are objects",
+    .url = "https://x.test/tbl2",
+    .array_path = "rows", .row_header_path = "header",
+    .title_keys = "ITYP", .id_keys = "GP_CODE",
+    .interval = 3600, .record_type = "t-table", .free_tier = 1, .description = "d" },
+  /* A header that is not an array at all: the row must still emit, under
+   * positional names, rather than lose the page. */
+  { .id = "T_JTBL_BADHDR", .name = "json table whose header path is not an array",
+    .url = "https://x.test/tbl3",
+    .array_path = "rowData", .row_header_path = "columnNames",
+    .interval = 3600, .record_type = "t-table", .free_tier = 1, .description = "d" },
+};
+HP_REGISTER_TABLE(TTBL)
+
 /* A ZIP of `n` STORED entries (no compression, so the test needs no zlib and
  * the payload bytes appear in the archive verbatim), with a central directory
  * and end record. CRCs are 0: nothing in the engine checks them. Caller frees;
@@ -4057,6 +4088,75 @@ int main(void) {
      "48: a row with no url is NOT registered");
   ok(find_def("T_URL_PRESENT") != NULL,
      "48b: the complete row beside it still registers");
+
+  /* 49. A JSON TABLE — records that are arrays, with the column names in a
+   *     sibling array. Finland's Eduskunta and the Austrian Parliament both
+   *     publish this and nothing else in the engine could key it: without a
+   *     declared header the cells are named by POSITION, so a row's keys would
+   *     be positions whose meaning the upstream can change silently. */
+  fx_reset();
+  fx_add("/tbl", 200,
+    "{\"columnNames\":[\"personId\",\"lastname\",\"party\"],"
+    "\"rowData\":[[\"1\",\"Marin\",\"SDP\"],[\"2\",\"Orpo\",\"KOK\"]]}");
+  rc = run_source("T_JTBL", NULL);
+  ok(rc == 0 && g_ncap == 2 &&
+     strstr(g_cap[0].props, "\"lastname\":\"Marin\"") != NULL &&
+     strstr(g_cap[0].props, "\"party\":\"SDP\"") != NULL,
+     "49: an array record is named by the header the row points at");
+  ok(g_ncap == 2 && !strcmp(g_cap[0].title, "Marin"),
+     "49b: title_keys resolves against the header's names");
+  ok(g_ncap == 2 && strstr(g_cap[0].key, "|1") != NULL,
+     "49b-ii: id_keys too, so the uid is the upstream's own key");
+
+  /* 49c. The control: the SAME response with no header path declared keeps the
+   *      positional names, so this change is strictly additive. */
+  fx_reset();
+  fx_add("/tbl", 200,
+    "{\"columnNames\":[\"personId\",\"lastname\",\"party\"],"
+    "\"rowData\":[[\"1\",\"Marin\",\"SDP\"]]}");
+  rc = run_source("T_JTBL_NOHDR", NULL);
+  ok(rc == 0 && g_ncap == 1 &&
+     strstr(g_cap[0].props, "\"lastname\"") == NULL &&
+     strstr(g_cap[0].props, "\".1\":\"Marin\"") != NULL,
+     "49c: with no declared header the cells keep their positional names");
+
+  /* 49d. Austria names its columns as OBJECTS: {"label":...}. */
+  fx_reset();
+  fx_add("/tbl2", 200,
+    "{\"header\":[{\"label\":\"GP_CODE\",\"feld_name\":\"GP\"},"
+    "{\"label\":\"ITYP\",\"feld_name\":\"ITYP\"}],"
+    "\"rows\":[[\"XXII\",\"VER\"]]}");
+  rc = run_source("T_JTBL_OBJHDR", NULL);
+  ok(rc == 0 && g_ncap == 1 &&
+     strstr(g_cap[0].props, "\"GP_CODE\":\"XXII\"") != NULL &&
+     strstr(g_cap[0].props, "\"ITYP\":\"VER\"") != NULL,
+     "49d: a header entry that is an object is read by its label");
+
+  /* 49e. A row longer than its header keeps the surplus cell under its
+   *      positional name. Dropping it would be a discard (house rule 2). */
+  fx_reset();
+  fx_add("/tbl", 200,
+    "{\"columnNames\":[\"personId\"],"
+    "\"rowData\":[[\"1\",\"extra\"]]}");
+  rc = run_source("T_JTBL", NULL);
+  /* This fixture has no `lastname`, which the row declares as its title key,
+   * so the engine ALSO files a shape notice saying so — correct behaviour, and
+   * the reason this asserts on the record rather than on the capture count. */
+  { const cap *c = NULL;
+    ok(rc == 0 && cap_count("t-table", &c) == 1 && c &&
+       strstr(c->props, "\"personId\":\"1\"") != NULL &&
+       strstr(c->props, "\"col1\":\"extra\"") != NULL,
+       "49e: a cell past the header's end is kept, not dropped");
+    ok(cap_count("collector-shape-notice", NULL) == 1,
+       "49e-ii: and the missing declared title key is disclosed, not silent"); }
+
+  /* 49f. A header path that resolves to something that is not an array must
+   *      not lose the page: the records emit under positional names. */
+  fx_reset();
+  fx_add("/tbl3", 200, "{\"columnNames\":\"oops\",\"rowData\":[[\"1\",\"x\"]]}");
+  rc = run_source("T_JTBL_BADHDR", NULL);
+  ok(rc == 0 && g_ncap == 1,
+     "49f: a header path that is not an array still emits, positionally");
 
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;

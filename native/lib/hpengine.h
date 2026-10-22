@@ -306,6 +306,27 @@ typedef struct hp_source {
    * $JO_PAGE_MAX or the legacy $JO_JSONLIST_PAGE_MAX. */
   int         page_walk;
 
+  /* HP_JSON: the path to a sibling array of COLUMN NAMES, for a response whose
+   * records are themselves ARRAYS — a JSON "table". Two national parliaments
+   * publish exactly this and nothing else could key it:
+   *
+   *   Eduskunta  {"columnNames":["personId","lastname",…],
+   *               "rowData":[["1","Marin",…], …]}
+   *     array_path=rowData   row_header_path=columnNames
+   *   Austria    {"header":[{"label":"GP_CODE",…},…],
+   *               "rows":[["XXII","VER",…], …]}
+   *     array_path=rows      row_header_path=header
+   *
+   * Without it such a record flattens POSITIONALLY (".0", ".1", …), so a row's
+   * title_keys and id_keys would be positions whose meaning the upstream can
+   * change silently — the hazard this tree records for batch 46's generator and
+   * for the ECB workbook's two differently-shaped sheets. A header entry may be
+   * a bare string or an object naming the column (`label`, else `feld_name`,
+   * else `name`). A cell past the header's end keeps its positional name
+   * rather than being dropped (house rule 2). Ignored for every other mode and
+   * for records that are not arrays, so it is strictly additive. */
+  const char *row_header_path;
+
   int csv_no_header;          /* CSV mode: file has no header row → col0..colN */
   /* CSV mode: field delimiter, if not a comma. DataPlane.org's feeds are
    * `ASN | AS name | ip | lastseen | category`; parsed on commas the whole line
