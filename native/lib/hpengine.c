@@ -4115,6 +4115,20 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
   int page_walk = !paged && s->page_walk && s->mode == HP_JSON;
   if (page_walk && s->page_max <= 0) page_max = jsonlist_page_max();
   if (!paged && !page_walk) page_max = 1;
+  /* $JO_PAGE_MAX_CAP is a ceiling OVER every ceiling, declared or default,
+   * for MEASUREMENT only: a sweep that wants to know what each row's second
+   * page answers (a 400 to `offset=1000` is a cycle that can never advance,
+   * the ENA shape below) must not read 100 pages of a row that declares 100
+   * to find out. Unlike $JO_PAGE_MAX it also lowers a row's own page_max,
+   * which is why it is a separate variable: an operator raising the tree's
+   * default must not silently shorten the rows that measured their depth.
+   * Never set in production — the ceiling it imposes is disclosed like any
+   * other, but it is this process's, not the row's. */
+  {
+    const char *cap = getenv("JO_PAGE_MAX_CAP");
+    int capn = cap && *cap ? atoi(cap) : 0;
+    if (capn > 0 && page_max > capn) page_max = capn;
+  }
   int pw_stuck = 0;       /* the walk could not continue past a full page */
   int pw_repeat = 0;      /* the server's next link pointed at this page  */
 

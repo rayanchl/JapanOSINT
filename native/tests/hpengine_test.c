@@ -3478,6 +3478,27 @@ int main(void) {
        "40b-iii: and the notice says the position was not advanced, NOT that "
        "the cycle completed"); }
 
+  /* 40b-iv. $JO_PAGE_MAX_CAP is a ceiling over the row's OWN ceiling, for
+   *         measurement: tools/audit_cycle_advance.py runs every cycling row
+   *         under cap 2 to learn what its second page answers, and must not
+   *         read a hundred pages of a row that declares a hundred to do it.
+   *         T_RESUME declares page_max 2; under cap 1 one run is ONE page, and
+   *         the walk still stores the page it did not reach, so the cap
+   *         changes the slice size and nothing else. Unlike $JO_PAGE_MAX it
+   *         lowers a declared page_max too — that is the whole point, and why
+   *         it is a separate variable. */
+  fx_reset();
+  fx_add("offset=2", 200, "{\"items\":[{\"name\":\"c\",\"id\":\"3\"},{\"name\":\"d\",\"id\":\"4\"}]}");
+  fx_add("/rz?all=1", 200, "{\"items\":[{\"name\":\"a\",\"id\":\"1\"},{\"name\":\"b\",\"id\":\"2\"}]}");
+  setenv("JO_PAGE_MAX_CAP", "1", 1);
+  rc = run_source_resume("T_RESUME", NULL, NULL);
+  unsetenv("JO_PAGE_MAX_CAP");
+  ok(rc == 0 && cap_count("t-page", NULL) == 2 && g_cap_ids_has("1") &&
+     !g_cap_ids_has("3"),
+     "40b-iv: JO_PAGE_MAX_CAP=1 reads ONE page of a row that declares two");
+  ok(g_res_set && strstr(g_res_out, "offset=2") != NULL,
+     "40b-iv: and the position stored is the page the cap kept it from");
+
   /* 40c. A row whose URL carries a date token must not cycle: the stored URL
    *      would pin one day forever. Refused, and nothing is stored. */
   fx_reset();

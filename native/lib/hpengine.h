@@ -261,7 +261,11 @@ typedef struct hp_source {
    * page_max bounds the walk (default jo_page_max(), 20 pages, raised or
    * lowered for the whole tree by $JO_PAGE_MAX — lib/pagewalk.c) so a runaway
    * feed cannot spin forever — when that bound bites it is stamped on every record, never
-   * silent. */
+   * silent. $JO_PAGE_MAX_CAP (measurement only, never in production) caps
+   * EVERY row's ceiling, a declared page_max included: it is how
+   * tools/audit_cycle_advance.py asks each cycling row what its second page
+   * answers without reading a hundred pages of the rows that declare a
+   * hundred (hptest 40b-iv). */
   /* Dotted path to the next-page cursor or URL in the response. A segment of
    * `$last` is the final element of an array, for an upstream whose cursor is
    * the last record's own field rather than anything in an envelope: the Go
