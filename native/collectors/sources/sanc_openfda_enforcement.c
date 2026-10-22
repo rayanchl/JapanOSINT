@@ -33,7 +33,7 @@
 #include "sanc_common.inc"
 #include "lib/pagewalk.h"
 
-#define FDA_URL "https://api.fda.gov/drug/enforcement.json?limit=1000&skip=0"
+#define FDA_URL "https://api.fda.gov/drug/enforcement.json?limit=1000&skip=0"  /* exhaustive-ok: walked by pw_walk/pw_walk_max below, which advances the offset or page this URL carries */
 /* 18,002 reports at 1,000 a page = 19; 26 is both headroom and the API's own
  * skip ceiling of 25,000, past which a page is a 400 rather than data. */
 #define FDA_PAGE_MAX 26  /* exhaustive-ok: page ceiling handed to pw_walk_max(); a stop at it files a collector-truncation-notice */

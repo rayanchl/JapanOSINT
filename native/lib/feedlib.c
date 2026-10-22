@@ -66,6 +66,26 @@ int feed_url_host_is_jp(const char *url) {
          (end[-1] == 'p' || end[-1] == 'P');
 }
 
+char *feed_get_text_max(http_client *http, const char *url, int timeout_ms,
+                        size_t max_body) {
+  int own = 0;
+  if (!http) { http = http_client_new(); own = 1; }
+  http_response r = {0};
+  int rc = http_request_max(http, "GET", url, NULL, NULL, 0,
+                            timeout_ms > 0 ? timeout_ms : 15000, 2,
+                            max_body, &r);
+  char *body = NULL;
+  if (rc == 0 && r.status >= 200 && r.status < 300 && r.body) {
+    size_t n = strlen(r.body);
+    if (n && feed_url_host_is_jp(url) && !csv_is_utf8(r.body, n))
+      body = csv_decode_sjis(r.body, n);
+    if (!body) body = strdup(r.body);
+  }
+  http_response_free(&r);
+  if (own) http_client_free(http);
+  return body;
+}
+
 char *feed_get_text(http_client *http, const char *url, int timeout_ms) {
   int own = 0;
   if (!http) { http = http_client_new(); own = 1; }

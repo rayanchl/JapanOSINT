@@ -300,6 +300,87 @@ carry every beat of both numbers, one reading per row;
   answers a burst with 5xx — the probe at twelve saw twelve, the engine at six
   saw five — the reason the probe now paces per host.
 
+Three things this branch measured on 2026-10-21 that the readings above predate:
+
+* **A `page_max` of 20 on every surviving CKAN row reads 2,000 datasets a run
+  and cycles, and 14 of them do not need to.** `package_search?rows=0` answers
+  `result.count` on the same endpoint those rows now read, so the pages each
+  needs is arithmetic: 19 portals measured, **792,984 datasets**, 14 needing
+  ≤200 pages and now completing in ONE run (opendata.nhsbsa 2,166, Berlin
+  2,627, Aragón 2,425, data.ca.gov 4,675 — each its declared total exactly,
+  `stored == emitted`), 5 keeping the cycle at a 200-page cost ceiling
+  (Hamburg 246,666, geoscience QLD 192,703, govdata.de 169,142). `page_resume`
+  stays on all of them: a walk that completes stores no position, so it is a
+  genuine no-op. `docs/measured-page-ceilings-batch34-2026-10-21.tsv`.
+* **A `page_max` set to EXACTLY the pages the total needs manufactures a FALSE
+  truncation notice.** data.ca.gov at `page_max = 47` stored all 4,675 records
+  *and* filed "the page ceiling or a cancel stopped the walk" with
+  `more_pages_pending: true`: its last page was short (75 of 100, the
+  upstream's own end of data) and our ceiling bit in the same breath, which the
+  engine cannot distinguish. At 52 the same 4,675 arrive with no notice. Leave
+  headroom — a notice that fires when nothing was lost teaches a reader to
+  ignore notices, and that is the one thing rule 2's disclosures cannot afford.
+* **NOA was removed as "does not run event/1" and it does.** An FDSN
+  `nodata=404` means NO DATA MATCHED, not NO SUCH SERVICE, and that parameter
+  is in the row's own URL; a 400 can mean the query was too broad. The test is
+  `/fdsnws/<service>/1/version`: NOA answers **1.2.4** and refuses an unbounded
+  query with 400, so a rolling 30-day window — `starttime={date:%Y-%m-%d:-30}`,
+  never a frozen date — stores **1,985 events** where the row stored nothing.
+  The row is back. KOERI really has no event service (404 on `version` over
+  https and http and on `application.wadl`, while `station/1/version` is 200)
+  and ICGC's is deployed but answers "no matching events found" for every
+  window including `starttime=1900-01-01`; both stay removed, and both hosts'
+  station services were already wired. **Ask the `version` endpoint before
+  concluding a service is absent**, and read a status against the parameters
+  the row itself sent. The two surviving catalogues were also still
+  `orderby=time` (FDSN's newest-first) at `page_max = 20`: ETHZ is `time-asc`
+  at 52 now and stores **46,620 events**, exactly the count an offset bisection
+  predicted, and SCEDC cycles ascending.
+
+**21 of the 179 stopped dead on the ceiling, and all 21 are now measured and
+fixed** (2026-10-21, `docs/measured-page-ceilings-batch34-2026-10-21.tsv`): 19
+CKAN portals at exactly 2,000 (20 pages x 100) and the two surviving FDSN event
+catalogues at exactly 20,000 (20 x 1,000). **A round number equal to ceiling x
+page size is never the upstream's own total.** Their declared totals come to
+**792,984 datasets** for the CKAN 19 alone.
+
+Finding them needed a count the row's own endpoint does not publish:
+`current_package_list_with_resources` returns a BARE LIST, which is precisely
+why 19 rows could sit at 2,000 looking healthy — there was no total in the
+envelope for any gate to compare against. `package_search?rows=0` on the same
+host answers `result.count`, so the total comes from the upstream itself.
+Offset safety was measured too, not assumed, on all 19: stable (the same
+offset twice gives the same ids), disjoint, and the offset honoured.
+
+Fixes follow this file's own 200-page split: 14 rows ≤200 pages get a measured
+`page_max` (opendata.nhsbsa 2,000 → 2,166, Berlin → 2,627, Aragón → 2,425,
+data.ca.gov → 4,675 — each its declared total exactly, `stored == emitted`);
+5 rows over 200 get `page_max = 200` plus **`page_resume = 1`**, so the per-run
+cost stays at the count this file calls sane and the collection is read over a
+cycle. Verified over two runs against one database: `data.gov.ie` 20,000 then
+2,881 = **22,881, its declared total exactly**, and run 2 filed no notice
+because the cycle completed and cleared.
+
+* **A `page_max` set to EXACTLY the pages the total needs manufactures a false
+  truncation notice.** Measured on `data.ca.gov`: at `page_max = 47` the walk
+  stored all 4,675 records and filed `"the page ceiling or a cancel stopped the
+  walk"` with `more_pages_pending: true`. The last page was SHORT (75 of 100) —
+  the upstream's own end of data — but our ceiling bit in the same breath, and
+  the engine cannot tell the two apart. At 52 the same 4,675 records arrive with
+  **no notice at all**. So leave headroom above the measured need: a notice that
+  fires when nothing was lost teaches a reader to ignore notices, which is the
+  one thing rule 2's disclosures cannot afford. (The cycling rows' notices are
+  TRUE — they really did stop mid-collection — and say where.)
+* **FDSN publishes no total, so the catalogue was sized by bisecting the
+  offset** — ~20 one-row requests. ETHZ holds ~46,620 events, oldest ECOS-09's
+  year-0250 entry; the walk then emitted exactly 46,620, so the probe and the
+  engine agree to the record. SCEDC answers at offset 200,000 with a 1987 event
+  and times out at 1,000,000, so its depth is recorded as **unmeasured rather
+  than absent** and it cycles. Both were `orderby=time` — FDSN's newest-first —
+  which is the drift hazard this file names: new events land at the HEAD of the
+  collection the walk is reading. Both are `time-asc` now, verified accepted
+  per host.
+
 Two review findings from batch 34 that generalise:
 
 * **A Socrata domain's own `/api/catalog/v1` is NOT scoped to that domain.**
@@ -881,6 +962,48 @@ underneath them that older notes in this file predate:
   registered key has no line. The rules live in the script (OVERRIDES,
   KEYWORDS, CATEGORY_GROUP).
 
+* **Per-source operator settings** (2026-10-20): `core/source_settings.c`,
+  `GET`/`PUT /api/sources/:id/settings`, and a Settings section on the source
+  page. The key set is **CLOSED** — a table in the .c file declares each key's
+  type, bounds, default and help text, a `PUT` of anything else is refused by
+  name, and the bound is re-checked on every READ because a row can arrive
+  from an older build or a hand-edited database. A free key/value store hung
+  off every source would be a configuration surface nobody can audit: a typo
+  would read as a setting that is silently ignored.
+
+  **`enabled` is separate from the value on purpose**: switching a knob off
+  keeps the number an operator tuned, so a re-enable does not start from a
+  guess, and a disabled row resolves exactly as an absent one. The payload
+  carries `effective` — what the code will actually use — because the toggle
+  and the number do not say that between them, and `can_write` from the route
+  that enforces the gate, so the page states who may change a thing instead of
+  offering a form and then refusing it with 403. Reads are plain-auth; writes
+  are operator-gated and audited (`source.setting.put`).
+
+  The one key it ships with is **`http_body_ceiling_bytes`**, which raises
+  `core/httpclient.c`'s 64 MB response ceiling for ONE source. That ceiling is
+  a security bound — `CURLOPT_ACCEPT_ENCODING ""` means libcurl inflates
+  before we see a byte, so a small gzip bomb expands without limit — and it
+  fails CLOSED (the transfer aborts, body NULL), which is why
+  `ods-public-geonames` needed it: 171,176 records in a ~111 MB
+  `exports/jsonl` the ODS records API refuses to page past 10,000. Measured
+  2026-10-20: 10,000 → **171,176 stored**, `stored == emitted`, 111,298,693
+  bytes. How much memory one run may hold is a decision about the machine it
+  runs on, so it belongs to the operator and not to a `#define` in a
+  collector. `http_request_max()` carries it per call, thread-local and
+  restored on return so it never widens another worker's fetch, it is still
+  enforced on the decompressed stream, and **an explicit `$JO_HTTP_MAX_BODY`
+  clamps it** — an operator who lowers the ceiling to bound a small deployment
+  is not overruled by a collector. It reaches the collector on
+  `source_ctx.body_ceiling` (0 = the default), for the reason `resume_in`/
+  `resume_out` do: `lib/` and the collectors hold no database code.
+
+  `tests/unit/test_source_settings.c` pins the unknown key, the out-of-range
+  write AND read, disabled-is-not-unset, and a setting for a source nobody
+  registers; the client's `sourcePages.test.jsx` pins that the page states the
+  server's bounds rather than its own, reads a disabled knob as the default,
+  and disables the controls for a non-operator.
+
 Plan, audit and as-built notes: `docs/source-pages-revamp/`.
 
 ## Cadence policy (2026-10-20)
@@ -1413,6 +1536,15 @@ Engine subtleties worth knowing before writing a row:
   than ignored. Twenty-two comments in 14 collector files cite measurements made
   under "the default 10-page ceiling": those are dated records, not claims about
   today.
+
+  **`$JO_PAGE_MAX` moves the DEFAULT; a row's own `page_max` is final.**
+  `hpengine.c` reads `s->page_max > 0 ? s->page_max : jo_page_max(NULL)`, so
+  the variable cannot lower OR raise a row that declares a ceiling — it only
+  decides what a row WITHOUT one gets. "Overrides in both directions" above is
+  about that default. Read the other way it costs a whole run: an attempt to
+  shrink `JO34_FDSNEVT_SERVICE_SCEDC_CALTECH_EDU`'s declared 200 pages to 5 for
+  a quick cycle test read **80 pages** before the clock stopped it
+  (2026-10-21). To bound a declared row for a test, change the row.
 * **The ceiling is now MEASURED across every paged scheduled row**
   (2026-10-12, `docs/measured-page-ceilings-2026-10-12.tsv`): 2,137 rows,
   3-page probe. 1,111 COMPLETE, 534 `CEILING_UNKNOWN` (the upstream publishes

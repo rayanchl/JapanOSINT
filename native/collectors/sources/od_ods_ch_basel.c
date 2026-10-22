@@ -9,7 +9,7 @@
 
 #define SID "ods-ch-basel"
 static const char *URL =
-  "https://data.bs.ch/api/explore/v2.1/catalog/datasets?limit=100&offset=0&order_by=dataset_id";
+  "https://data.bs.ch/api/explore/v2.1/catalog/datasets?limit=100&offset=0&order_by=dataset_id";  /* exhaustive-ok: walked by pw_walk/pw_walk_max below, which advances the offset or page this URL carries */
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   return od_rc(SID, od_ods_catalog_walk(ctx, sink, SID, URL,
@@ -22,7 +22,7 @@ static const source_def od_ods_ch_basel_def = {
   .name = "Kanton Basel-Stadt open data (OpenDataSoft)",
   .update_interval_sec = 86400, .run = run,
   .category = "government", .type = "dataset",
-  .url = "https://data.bs.ch/api/explore/v2.1/catalog/datasets?limit=100&offset=0&order_by=dataset_id",
+  .url = "https://data.bs.ch/api/explore/v2.1/catalog/datasets?limit=100&offset=0&order_by=dataset_id",  /* exhaustive-ok: metadata field, not a fetch; the row is walked by pw_walk below, which advances the offset this URL carries */
   .description = "Canton Basel-Stadt open-data catalogue (352 datasets) with row counts and last-modified stamps",
   .license = "CC-BY / OGD Basel-Stadt terms",
   .free_tier = 1,

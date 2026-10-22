@@ -8,7 +8,7 @@
 
 #define SID "ckan-ch-zurich"
 static const char *URL =
-  "https://data.stadt-zuerich.ch/api/3/action/package_search?rows=200&start=0&sort=id%20asc";
+  "https://data.stadt-zuerich.ch/api/3/action/package_search?rows=200&start=0&sort=id%20asc";  /* exhaustive-ok: walked by pw_walk/pw_walk_max below, which advances the offset or page this URL carries */
 /* 942 datasets (result.count, measured 2026-10-12) at 200 a page
  * = 5; 20 is that with headroom. */
 #define CKAN_PAGE_MAX 20  /* exhaustive-ok: page ceiling handed to pw_walk_max(); a stop at it files a collector-truncation-notice */
@@ -28,7 +28,7 @@ static const source_def od_ckan_ch_zurich_def = {
   .name = "Stadt Zurich open-data CKAN",
   .update_interval_sec = 86400, .run = run,
   .category = "government", .type = "dataset",
-  .url = "https://data.stadt-zuerich.ch/api/3/action/package_search?rows=200&start=0&sort=id%20asc",
+  .url = "https://data.stadt-zuerich.ch/api/3/action/package_search?rows=200&start=0&sort=id%20asc",  /* exhaustive-ok: metadata field, not a fetch; the row is walked by pw_walk below, which advances the offset this URL carries */
   .description = "City of Zurich open-data catalogue (937 datasets) from the city statistics office",
   .license = "CC-BY / City of Zurich open-data terms",
   .free_tier = 1,
