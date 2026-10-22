@@ -1930,14 +1930,34 @@ static const hp_source HP3B19_HEALTH[] = {
     .record_type = "sequence-metadata-record",
     .tags = "\"ena\",\"ebi\",\"genomics\",\"sars-cov-2\",\"sequencing\",\"provenance\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ebi.ac.uk/ena/portal/api/search?result=read_run&query=tax_tree(2697049)&fields=run_accession,sample_accession,study_accession,country,location,collection_date,center_name,instrument_platform,library_strategy,first_public&format=json&limit=1000",
+    /* A ROLLING 30-DAY WINDOW, not an offset walk, because this API has no
+     * offset: `offset=1` and `offset=1000` both answer HTTP 400
+     * {"message":"Unsupported param offset"} (measured 2026-10-22). So the
+     * walk could never leave page 1, and since a failed page CLEARS the cycle
+     * position rather than bookmarking a refused page, the row re-read the
+     * same 1,000 runs of 7,556,500 every day — rc=0, records=1000,
+     * stored=1000, the cycle advancing nowhere.
+     *
+     * ENA does filter on `first_public`, and publishes its own total through
+     * /ena/portal/api/count: 7,556,500 runs in the tax tree, 6,362 of them
+     * first public in the last 30 days (both measured 2026-10-22). So the
+     * window is the live deposit tail, re-rendered every run, and `limit`
+     * holds it with room to grow — this row accumulates the archive in the
+     * database rather than re-reading one arbitrary slice of it.
+     *
+     * The 7.5 million already in the archive are NOT backfilled here: that
+     * needs a second row walking first_public month by month, which the date
+     * tokens cannot express (they step back on failure, they do not iterate).
+     * Recorded rather than implied. */
+    .url = "https://www.ebi.ac.uk/ena/portal/api/search?result=read_run&query=tax_tree(2697049)%20AND%20first_public%3E={date:%Y-%m-%d:-30}&fields=run_accession,sample_accession,study_accession,country,location,collection_date,center_name,instrument_platform,library_strategy,first_public&format=json&limit=25000",   /* exhaustive-ok: one request covers the measured 30-day window (6,362 of a 25,000 limit, 2026-10-22); the archive depth is in the comment above */
     .date_keys = "first_public",
     .id_keys = "run_accession",
     .interval = 86400,
-    .page_param = "offset",
-    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
-    .page_size = 1000,
-    .page_start = 0,
+    /* 120 s, not the engine's 20 s default: this query is computed over a
+     * 7.5-million-run tax tree and the COLD request measured 38.6 s (3.8 s
+     * warm, 1.83 MB, 2026-10-22). At the default the row timed out with
+     * bytes=0 and filed a fetch-failure for a query that works. */
+    .timeout_ms = 120000,
     .title_keys = "run_accession",
     .description = "Every SARS-CoV-2 sequencing run deposited in the European "
       "Nucleotide Archive with the fields that carry the OSINT rather "
@@ -1952,13 +1972,20 @@ static const hp_source HP3B19_HEALTH[] = {
     .record_type = "sequence-metadata-record",
     .tags = "\"ena\",\"ebi\",\"genomics\",\"influenza\",\"sample\",\"provenance\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ebi.ac.uk/ena/portal/api/search?result=sample&query=tax_tree(11320)&fields=sample_accession,description,country,location,collection_date,center_name,host,isolate,strain,serotype&format=json&limit=1000",
+    /* The same rolling window as the two read_run rows above, for the same
+     * measured reason (`offset` is refused by this API). 61,625 influenza-A
+     * samples in the tax tree, 289 first public in the last 30 days
+     * (api/count, 2026-10-22). `first_public` is added to the field list as
+     * well as to the query: a record stamped with the date it became public
+     * is what lets date_keys order this feed at all — without it the window
+     * would filter on a field the stored record does not carry. */
+    .url = "https://www.ebi.ac.uk/ena/portal/api/search?result=sample&query=tax_tree(11320)%20AND%20first_public%3E={date:%Y-%m-%d:-30}&fields=sample_accession,description,country,location,collection_date,center_name,host,isolate,strain,serotype,first_public&format=json&limit=5000",   /* exhaustive-ok: one request covers the measured 30-day window (289 of a 5,000 limit, 2026-10-22) */
+    .date_keys = "first_public",
     .id_keys = "sample_accession",
     .interval = 86400,
-    .page_param = "offset",
-    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
-    .page_size = 1000,
-    .page_start = 0,
+    /* 3.5 s measured, but the same archive and the same cold-query cost as
+     * its two read_run siblings above. */
+    .timeout_ms = 120000,
     .title_keys = "sample_accession",
     .description = "Influenza A virus samples registered in the European Nucleotide "
       "Archive with host species, isolate and strain names, serotype, "
@@ -1973,14 +2000,17 @@ static const hp_source HP3B19_HEALTH[] = {
     .record_type = "sequence-metadata-record",
     .tags = "\"ena\",\"ebi\",\"genomics\",\"tuberculosis\",\"amr\",\"provenance\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ebi.ac.uk/ena/portal/api/search?result=read_run&query=tax_tree(1773)&fields=run_accession,sample_accession,study_accession,country,location,collection_date,center_name,instrument_platform,first_public&format=json&limit=1000",
+    /* The same rolling window as ENA_PATHOGEN_SARSCOV2_RUNS above, and for the
+     * same measured reason — this API refuses `offset` outright, so the row
+     * re-read one slice of 1,000 for ever. 360,690 runs in the tax tree,
+     * 3,436 first public in the last 30 days (api/count, 2026-10-22). */
+    .url = "https://www.ebi.ac.uk/ena/portal/api/search?result=read_run&query=tax_tree(1773)%20AND%20first_public%3E={date:%Y-%m-%d:-30}&fields=run_accession,sample_accession,study_accession,country,location,collection_date,center_name,instrument_platform,first_public&format=json&limit=15000",   /* exhaustive-ok: one request covers the measured 30-day window (3,436 of a 15,000 limit, 2026-10-22) */
     .date_keys = "first_public",
     .id_keys = "run_accession",
     .interval = 86400,
-    .page_param = "offset",
-    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
-    .page_size = 1000,
-    .page_start = 0,
+    /* 17 s measured cold for this window (2026-10-22), under the engine's
+     * 20 s default by three seconds — too close to leave to chance. */
+    .timeout_ms = 120000,
     .title_keys = "run_accession",
     .description = "Mycobacterium tuberculosis sequencing runs in the European "
       "Nucleotide Archive with submitting centre, collection country "

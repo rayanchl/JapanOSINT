@@ -1,0 +1,670 @@
+id	verdict	records	pages_read	available	basis	mechanism	page_param	page_size	page_max	interval	file	note
+BC_MINERAL_TENURE	CYCLE_STALLED	50	1	42327	declared	page_param	startIndex	50	0	86400	pivot/table/hp3b19_energyenv.c	page 2 answered 400; the cycle cannot advance past it
+ENA_PATHOGEN_INFLUENZA_SAMPLES	CYCLE_STALLED	1000	1	1000	counted	page_param	offset	1000	0	86400	pivot/table/hp3b19_health.c	page 2 answered 400; the cycle cannot advance past it
+ENA_PATHOGEN_MTB_RUNS	CYCLE_STALLED	1000	1	1000	counted	page_param	offset	1000	0	86400	pivot/table/hp3b19_health.c	page 2 answered 400; the cycle cannot advance past it
+ENA_PATHOGEN_SARSCOV2_RUNS	CYCLE_STALLED	1000	1	1000	counted	page_param	offset	1000	0	86400	pivot/table/hp3b19_health.c	page 2 answered 400; the cycle cannot advance past it
+ENERGINET_CAPACITY_MUNICIPALITY	CYCLE_STALLED	50	1	50	counted	page_param	offset	50	0	86400	pivot/table/hp3b19_energyenv.c	page 2 answered 429; the cycle cannot advance past it
+SI_GURS_CADASTRAL_MUN	CYCLE_STALLED	1000	1	2698	declared	page_param	startIndex	1000	0	604800	pivot/table/hp3b19_eurasia.c	page 2 answered 404; the cycle cannot advance past it
+TRONSCAN_TOP_ACCOUNTS	CYCLE_STALLED	25	1	10000	declared	page_param	start	25	0	86400	pivot/table/hp3b19_finance.c	page 2 answered 429; the cycle cannot advance past it
+ACMA_RRL_DEVICE_REGISTER	CEILING_UNKNOWN	4000	2	4000	counted	page_param	resultOffset	2000	0	86400	pivot/table/hp3b19_sigint.c	upstream declares no total; only a full walk can size it
+AK_DNR_LAND_PERMITS_LEASES	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+AK_DNR_MINERAL_PERMITS_LEASES	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+AK_DNR_OIL_GAS_LEASE_SALE_TRACTS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	604800	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+AK_DNR_WATER_WELL_LOGS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	604800	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+AM_OPENDATA_BULK	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	86400	pivot/table/hp3b19_eurasia.c	upstream declares no total; only a full walk can size it
+ANFR_EMF_PROBE_MEASUREMENTS	FETCH_FAILED	0				page_param	start	1000	0	86400	pivot/table/hp3b19_sigint.c	ANFR_EMF_PROBE_MEASUREMENTS stored nothing: upstream answered 503
+ANFR_MARITIME_STATIONS	FETCH_FAILED	0				page_param	start	1000	0	86400	pivot/table/hp3b19_sigint.c	ANFR_MARITIME_STATIONS stored nothing: upstream answered 503
+AP19_AU_ACT_SOCRATA	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	86400	pivot/table/hp3b19_apac.c	upstream declares no total; only a full walk can size it
+AP19_AU_AODN_CATALOGUE	CEILING_UNKNOWN	200	2	200	counted	page_param	from	100	0	86400	pivot/table/hp3b19_apac.c	upstream declares no total; only a full walk can size it
+AP19_AU_MELB_CAFES	FETCH_FAILED	0				page_param	offset	100	0	86400	pivot/table/hp3b19_apac.c	AP19_AU_MELB_CAFES stored nothing: the request failed at the transport level
+AP19_AU_MELB_ODS_CAT	FETCH_FAILED	0				page_param	offset	100	0	86400	pivot/table/hp3b19_apac.c	AP19_AU_MELB_ODS_CAT stored nothing: the request failed at the transport level
+AP19_AU_MELB_PEDESTRIAN	CEILING_DECLARED	200	2	1627138	declared	page_param	offset	100	0	86400	pivot/table/hp3b19_apac.c	200 of 1627138 records, 100 a page
+ARTIFACTHUB_REPOSITORY_SEARCH	CEILING_UNKNOWN	120	2	120	counted	page_param	offset	60	0	86400	pivot/table/hp3b19_cyber.c	upstream declares no total; only a full walk can size it
+AR_DATOS_BAHIA_BLANCA	CEILING_DECLARED	200	2	222	declared	page_param	start	100	0	86400	pivot/table/hp3b19_latam.c	200 of 222 records, 100 a page
+ASF_STAC_HAND_ITEMS	CEILING_UNKNOWN	1000	2	1000	counted	next_path		0	0	21600	pivot/table/hp3b19_energyenv.c	upstream declares no total; only a full walk can size it
+BGS_AEROMAGNETIC_SURVEY	CEILING_DECLARED	200	2	541508	declared	next_path		0	0	604800	pivot/table/hp3b19_science.c	200 of 541508 records, 100 a page
+BGS_AGS_BOREHOLE_INDEX	CEILING_DECLARED	200	2	75134	declared	next_path		0	0	86400	pivot/table/hp3b19_science.c	200 of 75134 records, 100 a page
+BGS_GENERIC_SAMPLES_REGISTER	CEILING_DECLARED	200	2	791803	declared	next_path		0	0	604800	pivot/table/hp3b19_science.c	200 of 791803 records, 100 a page
+BGS_HISTORICAL_EARTHQUAKES	CEILING_UNKNOWN	200	2	200	counted	next_path		0	0	604800	pivot/table/hp3b19_science.c	upstream declares no total; only a full walk can size it
+BGS_MINE_PLANS	CEILING_DECLARED	200	2	131768	declared	next_path		0	0	86400	pivot/table/hp3b19_science.c	200 of 131768 records, 100 a page
+BGS_OFFSHORE_GEOPHYSICAL_LINES	CEILING_DECLARED	200	2	23756	declared	next_path		0	0	604800	pivot/table/hp3b19_science.c	200 of 23756 records, 100 a page
+BGS_ONSHORE_BOREHOLE_INDEX	CEILING_DECLARED	200	2	1358851	declared	next_path		0	0	86400	pivot/table/hp3b19_science.c	200 of 1358851 records, 100 a page
+BGS_WORLD_MINERAL_STATISTICS	CEILING_DECLARED	200	2	410021	declared	next_path		0	0	604800	pivot/table/hp3b19_science.c	200 of 410021 records, 100 a page
+BR_BCB_IFDATA_CADASTRO	FETCH_FAILED	0				page_param	%24skip	100	0	86400	pivot/table/hp3b19_latam.c	BR_BCB_IFDATA_CADASTRO stored nothing: upstream answered 500
+BR_BCB_TAXAS_JUROS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24skip	1000	0	21600	pivot/table/hp3b19_latam.c	upstream declares no total; only a full walk can size it
+BR_CNES_ESTABELECIMENTOS	FETCH_FAILED	0				page_param	offset	100	0	86400	pivot/table/hp3b19_latam.c	BR_CNES_ESTABELECIMENTOS stored nothing: the request failed at the transport level
+BR_DADOS_PERNAMBUCO	CEILING_DECLARED	40	2	47	declared	page_param	start	20	0	86400	pivot/table/hp3b19_latam.c	40 of 47 records, 20 a page
+BR_PNCP_CONTRATACOES	CEILING_UNKNOWN	20	2	20	counted	page_param	pagina	0	0	21600	pivot/table/hp3b19_latam.c	upstream declares no total; only a full walk can size it
+BTS_T100_SEGMENT_CARRIER	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_transport.c	upstream declares no total; only a full walk can size it
+CA_CALGEM_FACILITY_TANKS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	604800	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+CA_CALGEM_NOTICES	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	43200	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+CDC_DEATHS_BY_COUNTY_WEEK	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24offset	1000	0	86400	pivot/table/hp3b19_health.c	upstream declares no total; only a full walk can size it
+CDC_EXCESS_DEATHS_BY_WEEK	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24offset	1000	0	86400	pivot/table/hp3b19_health.c	upstream declares no total; only a full walk can size it
+CDC_NNDSS_WEEKLY_TABLES	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24offset	1000	0	86400	pivot/table/hp3b19_health.c	upstream declares no total; only a full walk can size it
+CDC_NWSS_WASTEWATER_CONCENTRATION	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24offset	1000	0	86400	pivot/table/hp3b19_health.c	upstream declares no total; only a full walk can size it
+CERT_KH_WP_POSTS	CEILING_UNKNOWN	100	2	100	counted	page_param	offset	50	0	86400	pivot/table/hp3b19_cyber.c	upstream declares no total; only a full walk can size it
+CERT_PH_WP_POSTS	FETCH_FAILED	0				page_param	offset	50	0	86400	pivot/table/hp3b19_cyber.c	CERT_PH_WP_POSTS stored nothing: upstream answered 401
+CFS_EXPORT_FLOWS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	604800	pivot/table/hp3b19_transport.c	upstream declares no total; only a full walk can size it
+CFS_HAZMAT_FLOWS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	604800	pivot/table/hp3b19_transport.c	upstream declares no total; only a full walk can size it
+CFTC_COT_DISAGGREGATED	CEILING_UNKNOWN	1000	2	1000	counted	page_param	$offset	500	0	21600	pivot/table/hp3b19_finance.c	upstream declares no total; only a full walk can size it
+CFTC_COT_FINANCIAL	CEILING_UNKNOWN	1000	2	1000	counted	page_param	$offset	500	0	21600	pivot/table/hp3b19_finance.c	upstream declares no total; only a full walk can size it
+CH_BAKOM_BROADCAST_TX	CEILING_UNKNOWN	100	2	100	counted	page_param	offset	50	0	86400	pivot/table/hp3b19_sigint.c	upstream declares no total; only a full walk can size it
+CH_BAKOM_MOBILE_SITES	CEILING_UNKNOWN	100	2	100	counted	page_param	offset	50	0	86400	pivot/table/hp3b19_sigint.c	upstream declares no total; only a full walk can size it
+CMR_STAC_ASF_COLLECTIONS	CEILING_UNKNOWN	100	2	100	counted	next_path		0	0	86400	pivot/table/hp3b19_science.c	upstream declares no total; only a full walk can size it
+CMR_STAC_GESDISC_COLLECTIONS	CEILING_UNKNOWN	100	2	100	counted	next_path		0	0	86400	pivot/table/hp3b19_science.c	upstream declares no total; only a full walk can size it
+CMR_STAC_GHRC_DAAC_COLLECTIONS	CEILING_UNKNOWN	100	2	100	counted	next_path		0	0	86400	pivot/table/hp3b19_science.c	upstream declares no total; only a full walk can size it
+CMR_STAC_OB_DAAC_COLLECTIONS	CEILING_UNKNOWN	100	2	100	counted	next_path		0	0	86400	pivot/table/hp3b19_science.c	upstream declares no total; only a full walk can size it
+CMS_HOSPITAL_HAI_MEASURES	CEILING_DECLARED	1000	2	172440	declared	page_param	offset	500	0	604800	pivot/table/hp3b19_health.c	1000 of 172440 records, 500 a page
+CN_HK_CKAN_CURRENT_PACKAGE_LIST_WITH_RESOURCES	CEILING_UNKNOWN	20	2	20	counted	page_param	offset	100	0	86400	pivot/table/hp3b36_china.c	upstream declares no total; only a full walk can size it
+CO_ANM_REGALIAS_VOLUMEN	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24offset	1000	0	21600	pivot/table/hp3b19_latam.c	upstream declares no total; only a full walk can size it
+CO_ANM_TITULOS_ANOTACIONES	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24offset	1000	0	86400	pivot/table/hp3b19_latam.c	upstream declares no total; only a full walk can size it
+CO_CHARITY_REGISTRATIONS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+CO_CHILD_CARE_FACILITIES	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+CO_CONTRALORIA_FUNCIONARIOS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24offset	1000	0	21600	pivot/table/hp3b19_latam.c	upstream declares no total; only a full walk can size it
+CO_LIQUOR_LICENSES	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+CO_LOBBYIST_CLIENTS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+CO_LOBBYIST_EXPENDITURES	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+CO_LOBBYIST_INCOME	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+CO_MEDICINA_LEGAL_DESAPARECIDOS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24offset	1000	0	86400	pivot/table/hp3b19_latam.c	upstream declares no total; only a full walk can size it
+CO_PETROLEUM_RELEASES	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+CO_REAL_ESTATE_LICENSEES	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	604800	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+CO_REGALIAS_EJECUCION	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24offset	1000	0	21600	pivot/table/hp3b19_latam.c	upstream declares no total; only a full walk can size it
+CO_REGISTRADURIA_RESULTADOS_2018	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24offset	1000	0	21600	pivot/table/hp3b19_latam.c	upstream declares no total; only a full walk can size it
+CO_REGULATED_STORAGE_TANKS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	604800	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+CO_RETHUS_TALENTO_SALUD	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24offset	1000	0	86400	pivot/table/hp3b19_latam.c	upstream declares no total; only a full walk can size it
+CO_SECOP_DEFENCE_CONTRACTS	CEILING_UNKNOWN	200	2	200	counted	page_param	%24offset	100	0	21600	pivot/table/hp3b19_defence.c	upstream declares no total; only a full walk can size it
+CO_SECOP_II_OFERTAS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24offset	1000	0	21600	pivot/table/hp3b19_latam.c	upstream declares no total; only a full walk can size it
+CO_SECOP_I_PROPONENTES	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24offset	1000	0	21600	pivot/table/hp3b19_latam.c	upstream declares no total; only a full walk can size it
+CO_TOBACCO_LICENSES	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	604800	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+CR_HEREDIA_PATENTES	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	86400	pivot/table/hp3b19_latam.c	upstream declares no total; only a full walk can size it
+CSIRT_TT_WP_POSTS	CEILING_UNKNOWN	100	2	100	counted	page_param	offset	50	0	86400	pivot/table/hp3b19_cyber.c	upstream declares no total; only a full walk can size it
+CT_BUSINESS_FILING_HISTORY	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	43200	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+CT_INSURANCE_COMPLAINTS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+CT_SPILL_INCIDENTS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	21600	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+CZ_CRO_PUBLIC_OFFICIALS	CEILING_DECLARED	20	2	39176	declared	page_param	page	0	0	86400	pivot/table/hp3b19_eurasia.c	20 of 39176 records, 10 a page
+DERIB_LEGISLATION_ALL	CEILING_UNKNOWN	200	2	200	counted	page_param	pageIndex	0	0	604800	pivot/table/hp3b21_delaw.c	upstream declares no total; only a full walk can size it
+DE_CENTRAL_CONTRACT_SPEND	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+DE_FOOD_INSPECTION_VIOLATIONS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+DE_PROFESSIONAL_LICENSING	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+DE_PUBLIC_CRASH_DATA	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+DE_WELL_PERMITS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+EC_GOBEC_REGULACIONES	CEILING_UNKNOWN	500	2	500	counted	page_param	page	0	0	86400	pivot/table/hp3b19_latam.c	upstream declares no total; only a full walk can size it
+EE_AVAANDMED_DATASETS	CEILING_UNKNOWN	50	2	50	counted	page_param	page	0	0	86400	pivot/table/hp3b19_eurasia.c	upstream declares no total; only a full walk can size it
+ELIA_GENERATION_BY_FUEL_HIST	FETCH_FAILED	0				page_param	offset	50	0	21600	pivot/table/hp3b19_energyenv.c	ELIA_GENERATION_BY_FUEL_HIST stored nothing: the request failed at the transport level
+ELIA_SI_FORECAST_NEXT_QH_HISTORY	FETCH_FAILED	0				next_path		100	100	3600	pivot/table/hp3b19_energyenv.c	ELIA_SI_FORECAST_NEXT_QH_HISTORY stored nothing: the request failed at the transport level
+ENTSOG_CONNECTION_POINTS	CEILING_UNKNOWN	100	2	100	counted	page_param	offset	50	0	86400	pivot/table/hp3b19_energyenv.c	upstream declares no total; only a full walk can size it
+EPSS_SCORE_PAGE	CEILING_DECLARED	200	2	393867	declared	page_param	offset	100	0	86400	pivot/table/hp3b19_cyber.c	200 of 393867 records, 100 a page
+EUROPEPMC_BOOKS	CEILING_UNKNOWN	200	2	200	counted	next_path		0	0	86400	pivot/table/hp3b20_scholarly.c	upstream declares no total; only a full walk can size it
+FAA_AMD_BUILDING	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	604800	pivot/table/hp3b20_airspace.c	upstream declares no total; only a full walk can size it
+FAA_AMD_PENDING_APRON	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	86400	pivot/table/hp3b20_airspace.c	upstream declares no total; only a full walk can size it
+FAA_AMD_PENDING_BUILDING	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	86400	pivot/table/hp3b20_airspace.c	upstream declares no total; only a full walk can size it
+FAA_AMD_PENDING_TAXIWAY	CEILING_UNKNOWN	1999	2	2000	counted	page_param	resultOffset	1000	0	86400	pivot/table/hp3b20_airspace.c	upstream declares no total; only a full walk can size it
+FAA_ARCGIS_MILITARY_TRAINING_ROUTES	CEILING_UNKNOWN	1000	2	1000	counted	page_param	resultOffset	500	0	91800	pivot/table/hp3b19_transport.c	upstream declares no total; only a full walk can size it
+FAA_ARCGIS_NAVAIDS	CEILING_UNKNOWN	1000	2	1000	counted	page_param	resultOffset	500	0	88200	pivot/table/hp3b19_transport.c	upstream declares no total; only a full walk can size it
+FAA_ARCGIS_OBSTACLES	CEILING_UNKNOWN	1000	2	1000	counted	page_param	resultOffset	500	0	93600	pivot/table/hp3b19_transport.c	upstream declares no total; only a full walk can size it
+FAA_ARCGIS_RUNWAYS	CEILING_UNKNOWN	1000	2	1000	counted	page_param	resultOffset	500	0	86400	pivot/table/hp3b19_transport.c	upstream declares no total; only a full walk can size it
+FAA_ARCGIS_SPECIAL_USE_AIRSPACE	CEILING_UNKNOWN	1000	2	1000	counted	page_param	resultOffset	500	0	90000	pivot/table/hp3b19_transport.c	upstream declares no total; only a full walk can size it
+FAA_ARCGIS_US_AIRPORTS	CEILING_UNKNOWN	1000	2	1000	counted	page_param	resultOffset	500	0	95400	pivot/table/hp3b19_transport.c	upstream declares no total; only a full walk can size it
+FAA_NASR_ATS_ROUTE_AIXM	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	604800	pivot/table/hp3b20_airspace.c	upstream declares no total; only a full walk can size it
+FAA_NASR_CLEARANCE	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	604800	pivot/table/hp3b20_airspace.c	upstream declares no total; only a full walk can size it
+FAA_NASR_FIX	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	604800	pivot/table/hp3b20_airspace.c	upstream declares no total; only a full walk can size it
+FAA_NASR_PENDING_AIRPORT	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	86400	pivot/table/hp3b20_airspace.c	upstream declares no total; only a full walk can size it
+FAA_NASR_PENDING_ATS_ROUTE	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	86400	pivot/table/hp3b20_airspace.c	upstream declares no total; only a full walk can size it
+FAA_NASR_PENDING_CLASS_AIRSPACE	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	86400	pivot/table/hp3b20_airspace.c	upstream declares no total; only a full walk can size it
+FAA_NASR_PENDING_ENROUTE_INFO	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	86400	pivot/table/hp3b20_airspace.c	upstream declares no total; only a full walk can size it
+FAA_NASR_PENDING_FIX	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	86400	pivot/table/hp3b20_airspace.c	upstream declares no total; only a full walk can size it
+FAA_NASR_PENDING_FREQUENCY	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	86400	pivot/table/hp3b20_airspace.c	upstream declares no total; only a full walk can size it
+FAA_NASR_PENDING_MTR	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	86400	pivot/table/hp3b20_airspace.c	upstream declares no total; only a full walk can size it
+FAA_NASR_PENDING_NAVAID_COMPONENT	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	86400	pivot/table/hp3b20_airspace.c	upstream declares no total; only a full walk can size it
+FAA_NASR_PENDING_RADIAL_BEARING	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	86400	pivot/table/hp3b20_airspace.c	upstream declares no total; only a full walk can size it
+FAA_NASR_PENDING_ROUTE_AIRSPACE	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	86400	pivot/table/hp3b20_airspace.c	upstream declares no total; only a full walk can size it
+FAA_NASR_PENDING_ROUTE_PORTION	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	86400	pivot/table/hp3b20_airspace.c	upstream declares no total; only a full walk can size it
+FAA_NASR_PENDING_RUNWAY	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	86400	pivot/table/hp3b20_airspace.c	upstream declares no total; only a full walk can size it
+FCC_EAS_GRANTEE_REG	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	21600	pivot/table/hp3b19_sigint.c	upstream declares no total; only a full walk can size it
+FDIC_BRANCH_DEPOSITS	CEILING_DECLARED	200	2	2898836	declared	page_param	offset	100	0	604800	pivot/table/hp3b19_finance.c	200 of 2898836 records, 100 a page
+FDIC_FINANCIALS	CEILING_DECLARED	200	2	1682616	declared	page_param	offset	100	0	604800	pivot/table/hp3b19_finance.c	200 of 1682616 records, 100 a page
+FDIC_STRUCTURE_HISTORY	CEILING_DECLARED	200	2	585127	declared	page_param	offset	100	0	86400	pivot/table/hp3b19_finance.c	200 of 585127 records, 100 a page
+FINRA_ATS_WEEKLY	CEILING_UNKNOWN	400	2	400	counted	page_param	offset	200	0	604800	pivot/table/hp3b19_finance.c	upstream declares no total; only a full walk can size it
+FINRA_OTC_BLOCKS	CEILING_UNKNOWN	400	2	400	counted	page_param	offset	200	0	604800	pivot/table/hp3b19_finance.c	upstream declares no total; only a full walk can size it
+FMCSA_CARRIER_CENSUS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_transport.c	upstream declares no total; only a full walk can size it
+FMCSA_MOTUS_AUTHORITY_HISTORY	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_transport.c	upstream declares no total; only a full walk can size it
+FOI_FRAGDENSTAAT_AT	CEILING_UNKNOWN	100	2	100	counted	next_path		0	0	21600	pivot/table/hp3b19_media.c	upstream declares no total; only a full walk can size it
+FOI_FRAGDENSTAAT_DE	CEILING_UNKNOWN	100	2	100	counted	next_path		0	0	21600	pivot/table/hp3b19_media.c	upstream declares no total; only a full walk can size it
+FPDS_AWARD_AIRFORCE	CEILING_UNKNOWN	20	2	20	counted	page_param	start	10	0	21600	pivot/table/hp3b19_defence.c	upstream declares no total; only a full walk can size it
+FPDS_AWARD_ARMY	CEILING_UNKNOWN	20	2	20	counted	page_param	start	10	0	21600	pivot/table/hp3b19_defence.c	upstream declares no total; only a full walk can size it
+FPDS_AWARD_DLA	CEILING_UNKNOWN	20	2	20	counted	page_param	start	10	0	21600	pivot/table/hp3b19_defence.c	upstream declares no total; only a full walk can size it
+FPDS_AWARD_NAVY	CEILING_UNKNOWN	20	2	20	counted	page_param	start	10	0	21600	pivot/table/hp3b19_defence.c	upstream declares no total; only a full walk can size it
+FPDS_AWARD_OSD	CEILING_UNKNOWN	20	2	20	counted	page_param	start	10	0	21600	pivot/table/hp3b19_defence.c	upstream declares no total; only a full walk can size it
+FPDS_PSC_AIRCRAFT_FIXED	CEILING_UNKNOWN	20	2	20	counted	page_param	start	10	0	21600	pivot/table/hp3b19_defence.c	upstream declares no total; only a full walk can size it
+FPDS_PSC_AIRCRAFT_ROTARY	CEILING_UNKNOWN	20	2	20	counted	page_param	start	10	0	21600	pivot/table/hp3b19_defence.c	upstream declares no total; only a full walk can size it
+FPDS_PSC_CBRN_DETECT	CEILING_UNKNOWN	20	2	20	counted	page_param	start	10	0	21600	pivot/table/hp3b19_defence.c	upstream declares no total; only a full walk can size it
+FPDS_PSC_COMBAT_SHIPS	CEILING_UNKNOWN	20	2	20	counted	page_param	start	10	0	21600	pivot/table/hp3b19_defence.c	upstream declares no total; only a full walk can size it
+FPDS_PSC_ECM	CEILING_UNKNOWN	20	2	20	counted	page_param	start	10	0	21600	pivot/table/hp3b19_defence.c	upstream declares no total; only a full walk can size it
+FPDS_PSC_GUIDED_MISSILES	CEILING_UNKNOWN	20	2	20	counted	page_param	start	10	0	21600	pivot/table/hp3b19_defence.c	upstream declares no total; only a full walk can size it
+FPDS_PSC_GUNS_SMALL	CEILING_UNKNOWN	20	2	20	counted	page_param	start	10	0	21600	pivot/table/hp3b19_defence.c	upstream declares no total; only a full walk can size it
+FPDS_PSC_MISSILE_COMPONENTS	CEILING_UNKNOWN	20	2	20	counted	page_param	start	10	0	21600	pivot/table/hp3b19_defence.c	upstream declares no total; only a full walk can size it
+FPDS_PSC_RADAR	CEILING_UNKNOWN	20	2	20	counted	page_param	start	10	0	21600	pivot/table/hp3b19_defence.c	upstream declares no total; only a full walk can size it
+FPDS_PSC_SPACE_VEHICLES	CEILING_UNKNOWN	20	2	20	counted	page_param	start	10	0	21600	pivot/table/hp3b19_defence.c	upstream declares no total; only a full walk can size it
+FPDS_PSC_UAV	CEILING_UNKNOWN	20	2	20	counted	page_param	start	10	0	21600	pivot/table/hp3b19_defence.c	upstream declares no total; only a full walk can size it
+FRA_CROSSING_INVENTORY	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_transport.c	upstream declares no total; only a full walk can size it
+FRA_GRADE_CROSSING_INCIDENTS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_transport.c	upstream declares no total; only a full walk can size it
+FRA_RAILROAD_REFERENCE	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_transport.c	upstream declares no total; only a full walk can size it
+FRA_RAIL_EQUIPMENT_ACCIDENTS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_transport.c	upstream declares no total; only a full walk can size it
+FR_BODACC_COLLECTIVE	FETCH_FAILED	0				page_param	offset	100	0	21600	pivot/table/hp3b19_finance.c	FR_BODACC_COLLECTIVE stored nothing: the request failed at the transport level
+FR_BODACC_CREATION	FETCH_FAILED	0				page_param	offset	100	0	86400	pivot/table/hp3b19_finance.c	FR_BODACC_CREATION stored nothing: the request failed at the transport level
+FR_BODACC_RADIATION	FETCH_FAILED	0				page_param	offset	100	0	86400	pivot/table/hp3b19_finance.c	FR_BODACC_RADIATION stored nothing: the request failed at the transport level
+FR_BODACC_VENTE	FETCH_FAILED	0				page_param	offset	100	0	86400	pivot/table/hp3b19_finance.c	FR_BODACC_VENTE stored nothing: the request failed at the transport level
+FR_ODS2_OPENDATA_CLERM	FETCH_FAILED	0				page_param	offset	50	0	86400	pivot/table/hp3b36_france.c	FR_ODS2_OPENDATA_CLERM stored nothing: the request failed at the transport level
+FR_ODS_ROUEN	FETCH_FAILED	0				page_param	offset	50	0	86400	pivot/table/hp3b36_france.c	FR_ODS_ROUEN stored nothing: the request failed at the transport level
+FSA_ESTABLISHMENT_ZERO_RATED	CEILING_UNKNOWN	200	2	200	counted	page_param	pageNumber	0	0	86400	pivot/table/hp3b21_foodhygiene.c	upstream declares no total; only a full walk can size it
+GBIF_OCC_CM	CEILING_DECLARED	600	2	800838	declared	page_param	offset	300	0	604800	pivot/table/hp3b38_africa.c	600 of 800838 records, 300 a page
+GBIF_OCC_CN	CEILING_DECLARED	600	2	12623252	declared	page_param	offset	300	0	604800	pivot/table/hp3b38_china.c	600 of 12623252 records, 300 a page
+GBIF_OCC_ET	CEILING_DECLARED	600	2	1078713	declared	page_param	offset	300	0	604800	pivot/table/hp3b38_africa.c	600 of 1078713 records, 300 a page
+GBIF_OCC_FR	CEILING_DECLARED	600	2	212492921	declared	page_param	offset	300	0	604800	pivot/table/hp3b38_france.c	600 of 212492921 records, 300 a page
+GBIF_OCC_GB	CEILING_DECLARED	600	2	264702326	declared	page_param	offset	300	0	604800	pivot/table/hp3b38_uk.c	600 of 264702326 records, 300 a page
+GBIF_OCC_HK	CEILING_DECLARED	600	2	2329017	declared	page_param	offset	300	0	604800	pivot/table/hp3b38_china.c	600 of 2329017 records, 300 a page
+GBIF_OCC_KE	CEILING_DECLARED	600	2	5816952	declared	page_param	offset	300	0	604800	pivot/table/hp3b38_africa.c	600 of 5816952 records, 300 a page
+GBIF_OCC_TZ	CEILING_DECLARED	600	2	3064097	declared	page_param	offset	300	0	604800	pivot/table/hp3b38_africa.c	600 of 3064097 records, 300 a page
+GBIF_OCC_UG	CEILING_DECLARED	600	2	2741843	declared	page_param	offset	300	0	604800	pivot/table/hp3b38_africa.c	600 of 2741843 records, 300 a page
+GBIF_OCC_US	CEILING_DECLARED	600	2	1280859315	declared	page_param	offset	300	0	604800	pivot/table/hp3b38_usa.c	600 of 1280859315 records, 300 a page
+GBIF_OCC_ZA	CEILING_DECLARED	600	2	47623790	declared	page_param	offset	300	0	604800	pivot/table/hp3b38_africa.c	600 of 47623790 records, 300 a page
+GLEIF_LEI_CN	CEILING_DECLARED	400	2	107255	declared	page_param	page%5Bnumber%5D	0	0	604800	pivot/table/hp3b38_china.c	400 of 107255 records, 200 a page
+GLEIF_LEI_FR	CEILING_DECLARED	400	2	193170	declared	page_param	page%5Bnumber%5D	0	0	604800	pivot/table/hp3b38_france.c	400 of 193170 records, 200 a page
+GLEIF_LEI_GB	CEILING_DECLARED	400	2	233452	declared	page_param	page%5Bnumber%5D	0	0	604800	pivot/table/hp3b38_uk.c	400 of 233452 records, 200 a page
+GR_EOF_NOTICES	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	21600	pivot/table/hp3b19_eurasia.c	upstream declares no total; only a full walk can size it
+HHS_HOSPITAL_CAPACITY_FACILITY	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24offset	1000	0	604800	pivot/table/hp3b19_health.c	upstream declares no total; only a full walk can size it
+HHS_HOSPITAL_CAPACITY_STATE	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24offset	1000	0	86400	pivot/table/hp3b19_health.c	upstream declares no total; only a full walk can size it
+HN_ONCAE_CIRCULARES	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	21600	pivot/table/hp3b19_latam.c	upstream declares no total; only a full walk can size it
+HR_ZAGREB_STREETS	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	604800	pivot/table/hp3b19_eurasia.c	upstream declares no total; only a full walk can size it
+HU_INSPIRE_LAND_COVER	CEILING_DECLARED	199	2	170058	declared	page_param	startIndex	100	0	604800	pivot/table/hp3b19_eurasia.c	200 of 170058 records, 100 a page
+HU_INSPIRE_PLACE_NAMES	CEILING_DECLARED	200	2	90463	declared	page_param	startIndex	100	0	604800	pivot/table/hp3b19_eurasia.c	200 of 90463 records, 100 a page
+IA_COLLECTION_ARCHIVETEAM	CEILING_DECLARED	1000	2	5442634	declared	page_param	page	0	0	86400	pivot/table/hp3b22_deeparchive.c	1000 of 5442634 records, 500 a page
+IA_COLLECTION_DOCUMENTCLOUD	CEILING_DECLARED	1000	2	758305	declared	page_param	page	0	0	86400	pivot/table/hp3b22_deeparchive.c	1000 of 758305 records, 500 a page
+IA_COLLECTION_FEDLINK	CEILING_DECLARED	1000	2	393951	declared	page_param	page	0	0	86400	pivot/table/hp3b22_deeparchive.c	1000 of 393951 records, 500 a page
+IA_COLLECTION_INLIBRARY	CEILING_DECLARED	1000	2	4427179	declared	page_param	page	0	0	86400	pivot/table/hp3b22_deeparchive.c	1000 of 4427179 records, 500 a page
+IA_COLLECTION_JSTOR_EARLY_JOURNALS	CEILING_DECLARED	1000	2	452031	declared	page_param	page	0	0	86400	pivot/table/hp3b22_deeparchive.c	1000 of 452031 records, 500 a page
+IA_COLLECTION_MAGAZINE_RACK	CEILING_DECLARED	1000	2	661764	declared	page_param	page	0	0	86400	pivot/table/hp3b22_deeparchive.c	1000 of 661764 records, 500 a page
+IA_COLLECTION_NASA	CEILING_DECLARED	1000	2	208899	declared	page_param	page	0	0	86400	pivot/table/hp3b22_deeparchive.c	1000 of 208899 records, 500 a page
+IA_COLLECTION_PODCASTS	CEILING_DECLARED	1000	2	1311005	declared	page_param	page	0	0	86400	pivot/table/hp3b22_deeparchive.c	1000 of 1311005 records, 500 a page
+IA_COLLECTION_SOFTWARE_LIBRARY	CEILING_DECLARED	1000	2	277684	declared	page_param	page	0	0	86400	pivot/table/hp3b22_deeparchive.c	1000 of 277684 records, 500 a page
+IA_COLLECTION_TVNEWS	CEILING_DECLARED	1000	2	4616743	declared	page_param	page	0	0	86400	pivot/table/hp3b22_deeparchive.c	1000 of 4616743 records, 500 a page
+IA_COLLECTION_UNIVERSAL_LIBRARY	CEILING_DECLARED	1000	2	119427	declared	page_param	page	0	0	86400	pivot/table/hp3b22_deeparchive.c	1000 of 119427 records, 500 a page
+IA_COLLECTION_WEBWIDECRAWL	CEILING_DECLARED	1000	2	2185812	declared	page_param	page	0	0	86400	pivot/table/hp3b22_deeparchive.c	1000 of 2185812 records, 500 a page
+IA_COLLECTION_WEB_COLLECTION	CEILING_DECLARED	1000	2	17526154	declared	page_param	page	0	0	86400	pivot/table/hp3b22_deeparchive.c	1000 of 17526154 records, 500 a page
+IA_COLLECTION_WIKITEAM	CEILING_DECLARED	1000	2	455225	declared	page_param	page	0	0	86400	pivot/table/hp3b22_deeparchive.c	1000 of 455225 records, 500 a page
+IA_TEXTS_AR	CEILING_DECLARED	1000	2	229050	declared	page_param	page	0	0	86400	pivot/table/hp3b22_deeparchive.c	1000 of 229050 records, 500 a page
+IA_TEXTS_RU	CEILING_DECLARED	1000	2	124522	declared	page_param	page	0	0	86400	pivot/table/hp3b22_deeparchive.c	1000 of 124522 records, 500 a page
+IA_TEXTS_ZH	CEILING_DECLARED	1000	2	664023	declared	page_param	page	0	0	86400	pivot/table/hp3b22_deeparchive.c	1000 of 664023 records, 500 a page
+IETF_DOCUMENT_RELATIONS	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	86400	pivot/table/hp3b19_legalip.c	upstream declares no total; only a full walk can size it
+IETF_DRAFT_SUBMISSIONS	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	21600	pivot/table/hp3b19_legalip.c	upstream declares no total; only a full walk can size it
+IETF_DT_DOCEVENT	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	21600	pivot/table/hp3b20_standards.c	upstream declares no total; only a full walk can size it
+IETF_DT_PERSON	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	86400	pivot/table/hp3b20_standards.c	upstream declares no total; only a full walk can size it
+IETF_DT_REVIEWREQUEST	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	86400	pivot/table/hp3b20_standards.c	upstream declares no total; only a full walk can size it
+IETF_GROUP_ROLES	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	86400	pivot/table/hp3b19_legalip.c	upstream declares no total; only a full walk can size it
+IETF_IESG_BALLOT_POSITIONS	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	21600	pivot/table/hp3b19_legalip.c	upstream declares no total; only a full walk can size it
+IETF_IPR_DOCUMENT_LINKS	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	86400	pivot/table/hp3b19_legalip.c	upstream declares no total; only a full walk can size it
+IETF_IPR_EVENTS	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	86400	pivot/table/hp3b19_legalip.c	upstream declares no total; only a full walk can size it
+IETF_IPR_GENERIC_DISCLOSURES	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	86400	pivot/table/hp3b19_legalip.c	upstream declares no total; only a full walk can size it
+IETF_IPR_HOLDER_DISCLOSURES	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	86400	pivot/table/hp3b19_legalip.c	upstream declares no total; only a full walk can size it
+IETF_IPR_THIRDPARTY_DISCLOSURES	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	86400	pivot/table/hp3b19_legalip.c	upstream declares no total; only a full walk can size it
+IETF_LIAISON_STATEMENTS	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	21600	pivot/table/hp3b19_legalip.c	upstream declares no total; only a full walk can size it
+IETF_MEETING_SESSIONS	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	21600	pivot/table/hp3b19_legalip.c	upstream declares no total; only a full walk can size it
+IE_FINGAL_PLANNING	CEILING_UNKNOWN	200	2	200	counted	page_param	resultOffset	100	0	21600	pivot/table/hp3b19_eurasia.c	upstream declares no total; only a full walk can size it
+IE_HPSC_HEALTH_PROFILE	CEILING_UNKNOWN	200	2	200	counted	page_param	resultOffset	100	0	21600	pivot/table/hp3b19_eurasia.c	upstream declares no total; only a full walk can size it
+IE_NATIONAL_MONUMENTS	CEILING_UNKNOWN	200	2	200	counted	page_param	resultOffset	100	0	604800	pivot/table/hp3b19_eurasia.c	upstream declares no total; only a full walk can size it
+IL_COMPANIES_REGISTER	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	86400	pivot/table/hp3b19_finance.c	upstream declares no total; only a full walk can size it
+IMF_PORTWATCH_AIRPORTS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	86400	pivot/table/hp3b19_transport.c	upstream declares no total; only a full walk can size it
+IMF_PORTWATCH_FR24_AIRPORTS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	86400	pivot/table/hp3b19_transport.c	upstream declares no total; only a full walk can size it
+IMF_PORTWATCH_PORT_SPILLOVERS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	86400	pivot/table/hp3b19_transport.c	upstream declares no total; only a full walk can size it
+IODA_ENTITIES_ASN	FETCH_FAILED	0				page_param	page	0	0	86400	pivot/table/hp3b19_cyber.c	IODA_ENTITIES_ASN stored nothing: the request failed at the transport level
+ISTANBUL_OPENDATA_BULK	FETCH_FAILED	0				page_param	offset	100	0	86400	pivot/table/hp3b19_mena.c	ISTANBUL_OPENDATA_BULK stored nothing: the request failed at the transport level
+IT_FVG_EMF_MONITORING	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_sigint.c	upstream declares no total; only a full walk can size it
+IT_FVG_MOBILE_SITES	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_sigint.c	upstream declares no total; only a full walk can size it
+IZMIR_ARTERIAL_SPEEDS	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	21600	pivot/table/hp3b19_mena.c	upstream declares no total; only a full walk can size it
+IZMIR_BUILDINGS_BY_NEIGHBOURHOOD	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	86400	pivot/table/hp3b19_mena.c	upstream declares no total; only a full walk can size it
+IZMIR_OPENDATA_BULK	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	86400	pivot/table/hp3b19_mena.c	upstream declares no total; only a full walk can size it
+IZMIR_ROADS_BY_DISTRICT	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	86400	pivot/table/hp3b19_mena.c	upstream declares no total; only a full walk can size it
+IZMIR_VEHICLE_COUNTS	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	21600	pivot/table/hp3b19_mena.c	upstream declares no total; only a full walk can size it
+JO28_MIYAZAKI_NENKAN_CKAN	CEILING_UNKNOWN	40	2	40	counted	page_param	page	0	0	604800	pivot/table/hp3b28_jpforgotten.c	upstream declares no total; only a full walk can size it
+JO28_NPMH_KOMONJO_CATALOG	CEILING_UNKNOWN	18	2	18	counted	page_param	p	0	0	604800	pivot/table/hp3b28_jpforgotten.c	upstream declares no total; only a full walk can size it
+JO29A_CAM_CALOES_CALIFORNIA_WEBCAMS	CEILING_UNKNOWN	4000	2	4000	counted	page_param	resultOffset	2000	0	86400	pivot/table/hp3b29a_webcams.c	upstream declares no total; only a full walk can size it
+JO29A_CAM_CA_BC_VANCOUVER	CEILING_DECLARED	200	2	219	declared	page_param	offset	100	0	86400	pivot/table/hp3b29a_webcams.c	200 of 219 records, 100 a page
+JO29A_CAM_GEMA_GDOT_511_CAMERAS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	86400	pivot/table/hp3b29a_webcams.c	upstream declares no total; only a full walk can size it
+JO29A_CAM_IDOT_TRAFFIC_CAMERAS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	86400	pivot/table/hp3b29a_webcams.c	upstream declares no total; only a full walk can size it
+JO29A_CAM_PEMA_HIVIS_CAMERAS	CEILING_UNKNOWN	1000	2	1000	counted	page_param	resultOffset	500	0	86400	pivot/table/hp3b29a_webcams.c	upstream declares no total; only a full walk can size it
+JO29A_FGT_ACT_GOV_SOCRATA	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	86400	pivot/table/hp3b29a_forgotten.c	upstream declares no total; only a full walk can size it
+JO29A_FGT_BATONROUGE_SOCRATA	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	86400	pivot/table/hp3b29a_forgotten.c	upstream declares no total; only a full walk can size it
+JO29A_FGT_BLOOMINGTON_SOCRATA	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	86400	pivot/table/hp3b29a_forgotten.c	upstream declares no total; only a full walk can size it
+JO29A_FGT_BRUXELLES_VILLE_ODS	FETCH_FAILED	0				page_param	offset	100	0	86400	pivot/table/hp3b29a_forgotten.c	JO29A_FGT_BRUXELLES_VILLE_ODS stored nothing: the request failed at the transport level
+JO29A_FGT_EVERETT_SOCRATA	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	86400	pivot/table/hp3b29a_forgotten.c	upstream declares no total; only a full walk can size it
+JO29A_FGT_GAINESVILLE_SOCRATA	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	86400	pivot/table/hp3b29a_forgotten.c	upstream declares no total; only a full walk can size it
+JO29A_FGT_HAUTS_DE_SEINE_ODS	FETCH_FAILED	0				page_param	offset	100	0	86400	pivot/table/hp3b29a_forgotten.c	JO29A_FGT_HAUTS_DE_SEINE_ODS stored nothing: the request failed at the transport level
+JO29A_FGT_HONOLULU_SOCRATA	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	86400	pivot/table/hp3b29a_forgotten.c	upstream declares no total; only a full walk can size it
+JO29A_FGT_NEW_ORLEANS_SOCRATA	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	86400	pivot/table/hp3b29a_forgotten.c	upstream declares no total; only a full walk can size it
+JO29A_FGT_NORFOLK_SOCRATA	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	86400	pivot/table/hp3b29a_forgotten.c	upstream declares no total; only a full walk can size it
+JO29A_FGT_ORLEANS_METROPOLE_ODS	FETCH_FAILED	0				page_param	offset	100	0	86400	pivot/table/hp3b29a_forgotten.c	JO29A_FGT_ORLEANS_METROPOLE_ODS stored nothing: the request failed at the transport level
+JO29A_FGT_PRINCE_GEORGES_SOCRATA	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	86400	pivot/table/hp3b29a_forgotten.c	upstream declares no total; only a full walk can size it
+JO29A_FGT_PROVIDENCE_SOCRATA	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	86400	pivot/table/hp3b29a_forgotten.c	upstream declares no total; only a full walk can size it
+JO29A_FGT_ROSEVILLE_SOCRATA	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	86400	pivot/table/hp3b29a_forgotten.c	upstream declares no total; only a full walk can size it
+JO29A_FGT_VERMONT_SOCRATA	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	86400	pivot/table/hp3b29a_forgotten.c	upstream declares no total; only a full walk can size it
+JO29A_FGT_WINNIPEG_SOCRATA	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	86400	pivot/table/hp3b29a_forgotten.c	upstream declares no total; only a full walk can size it
+JO30_TOKYO_FMT_ZIP	CEILING_DECLARED	200	2	210	declared	page_param	start	100	0	86400	pivot/table/hp30tokyo_tokyo.c	200 of 210 records, 100 a page
+JO30_TOKYO_GRP_KANKO	CEILING_DECLARED	200	2	208	declared	page_param	start	100	0	86400	pivot/table/hp30tokyo_tokyo.c	200 of 208 records, 100 a page
+JO30_TOKYO_GRP_SUIDO	CEILING_DECLARED	200	2	210	declared	page_param	start	100	0	86400	pivot/table/hp30tokyo_tokyo.c	200 of 210 records, 100 a page
+JO30_TOKYO_TAG_STANDARD	CEILING_DECLARED	200	2	259	declared	page_param	start	100	0	86400	pivot/table/hp30tokyo_tokyo.c	200 of 259 records, 100 a page
+JO30_TOKYO_WARD_T131032	CEILING_DECLARED	200	2	268	declared	page_param	start	100	0	86400	pivot/table/hp30tokyo_tokyo.c	200 of 268 records, 100 a page
+JO30_TOKYO_WARD_T131113	CEILING_DECLARED	200	2	280	declared	page_param	start	100	0	86400	pivot/table/hp30tokyo_tokyo.c	200 of 280 records, 100 a page
+JO30_TOKYO_WARD_T131199	CEILING_DECLARED	200	2	211	declared	page_param	start	100	0	86400	pivot/table/hp30tokyo_tokyo.c	200 of 211 records, 100 a page
+JO30_TOKYO_WARD_T131237	CEILING_DECLARED	200	2	266	declared	page_param	start	100	0	86400	pivot/table/hp30tokyo_tokyo.c	200 of 266 records, 100 a page
+JO34_CKANRES_ADMIN_OPENDATA_AZ	FETCH_FAILED	0				page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	JO34_CKANRES_ADMIN_OPENDATA_AZ stored nothing: the request failed at the transport level
+JO34_CKANRES_ADMIN_OPENDATA_DK	CEILING_DECLARED	200	2	631	declared	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	200 of 631 records, 100 a page
+JO34_CKANRES_API_NESO_ENERGY	CEILING_UNKNOWN	131	2	131	counted	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	upstream declares no total; only a full walk can size it
+JO34_CKANRES_CATALOG_CITY_KOBE_LG_JP	COMPLETE	99				page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	walk ended inside the 2-page probe
+JO34_CKANRES_CATALOG_CITY_UTSUNOMIYA_TOCHIGI_JP	CEILING_DECLARED	200	2	295	declared	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	200 of 295 records, 100 a page
+JO34_CKANRES_CATALOG_DATA_CITY_KANAZAWA_ISHIKAWA_JP	CEILING_DECLARED	200	2	320	declared	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	200 of 320 records, 100 a page
+JO34_CKANRES_CATALOG_DATA_METRO_TOKYO_LG_JP	CEILING_DECLARED	200	2	9671	declared	page_param	start	100	103	86400	pivot/table/hp3b34_ckanbulk.c	200 of 9671 records, 100 a page
+JO34_CKANRES_CATALOG_OPENDATA_PREF_KANAGAWA_JP	CEILING_DECLARED	200	2	815	declared	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	200 of 815 records, 100 a page
+JO34_CKANRES_CKAN_GOVDATA_DE	CEILING_DECLARED	200	2	168615	declared	page_param	start	100	200	86400	pivot/table/hp3b34_ckanbulk.c	200 of 168615 records, 100 a page
+JO34_CKANRES_CKAN_HODA_JP	CEILING_DECLARED	200	2	458	declared	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	200 of 458 records, 100 a page
+JO34_CKANRES_CKAN_MONTEVIDEO_GUB_UY	CEILING_UNKNOWN	159	2	159	counted	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	upstream declares no total; only a full walk can size it
+JO34_CKANRES_CKAN_OPENDATA_SWISS	CEILING_DECLARED	200	2	16130	declared	page_param	start	100	167	86400	pivot/table/hp3b34_ckanbulk.c	200 of 16130 records, 100 a page
+JO34_CKANRES_CKAN_PF_SAPPORO_JP	CEILING_DECLARED	200	2	262	declared	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	200 of 262 records, 100 a page
+JO34_CKANRES_CKAN_PREF_AKITA_LG_JP	CEILING_DECLARED	200	2	264	declared	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	200 of 264 records, 100 a page
+JO34_CKANRES_CKAN_PREF_MIYAZAKI_LG_JP	CEILING_DECLARED	200	2	4937	declared	page_param	start	100	55	86400	pivot/table/hp3b34_ckanbulk.c	200 of 4937 records, 100 a page
+JO34_CKANRES_DADESOBERTES_GVA_ES	CEILING_DECLARED	200	2	1311	declared	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	200 of 1311 records, 100 a page
+JO34_CKANRES_DADOSABERTOS_BNDES_GOV_BR	COMPLETE	47				page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	walk ended inside the 2-page probe
+JO34_CKANRES_DADOSABERTOS_POA_BR	COMPLETE	62				page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	walk ended inside the 2-page probe
+JO34_CKANRES_DADOS_PBH_GOV_BR	CEILING_DECLARED	200	2	614	declared	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	200 of 614 records, 100 a page
+JO34_CKANRES_DADOS_PE_GOV_BR	FETCH_FAILED	0				page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	JO34_CKANRES_DADOS_PE_GOV_BR stored nothing: upstream answered 502
+JO34_CKANRES_DATASET_GOV_MD	CEILING_DECLARED	200	2	1291	declared	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	200 of 1291 records, 100 a page
+JO34_CKANRES_DATA_BODIK_JP	CEILING_DECLARED	200	2	18623	declared	page_param	start	100	192	86400	pivot/table/hp3b34_ckanbulk.c	200 of 18623 records, 100 a page
+JO34_CKANRES_DATA_BOSTON_GOV	CEILING_DECLARED	200	2	235	declared	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	200 of 235 records, 100 a page
+JO34_CKANRES_DATA_CA_GOV	CEILING_DECLARED	200	2	4678	declared	page_param	start	100	52	86400	pivot/table/hp3b34_ckanbulk.c	200 of 4678 records, 100 a page
+JO34_CKANRES_DATA_CITY_FUKUYAMA_HIROSHIMA_JP	COMPLETE	58				page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	walk ended inside the 2-page probe
+JO34_CKANRES_DATA_CITY_SENDAI_JP	COMPLETE	16				page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	walk ended inside the 2-page probe
+JO34_CKANRES_DATA_CITY_YOKOHAMA_LG_JP	CEILING_DECLARED	200	2	647	declared	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	200 of 647 records, 100 a page
+JO34_CKANRES_DATA_CORKCITY_IE	COMPLETE	34				page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	walk ended inside the 2-page probe
+JO34_CKANRES_DATA_DATA4CITIZEN_JP	FETCH_FAILED	0				page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	O34_CKANRES_DATA_DATA4CITIZEN_JP stored nothing: the request failed at the transport level
+JO34_CKANRES_DATA_GOVMU_ORG	CEILING_DECLARED	200	2	856	declared	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	200 of 856 records, 100 a page
+JO34_CKANRES_DATA_GOV_IE	CEILING_DECLARED	200	2	22883	declared	page_param	start	100	200	86400	pivot/table/hp3b34_ckanbulk.c	200 of 22883 records, 100 a page
+JO34_CKANRES_DATA_GOV_IL	CEILING_DECLARED	200	2	1203	declared	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	200 of 1203 records, 100 a page
+JO34_CKANRES_DATA_GOV_KG	CEILING_DECLARED	200	2	1412	declared	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	200 of 1412 records, 100 a page
+JO34_CKANRES_DATA_GOV_LV	FETCH_FAILED	0				page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	JO34_CKANRES_DATA_GOV_LV stored nothing: the request failed at the transport level
+JO34_CKANRES_DATA_GOV_ME	CEILING_DECLARED	200	2	923	declared	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	200 of 923 records, 100 a page
+JO34_CKANRES_DATA_GOV_UK	CEILING_DECLARED	200	2	59417	declared	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	200 of 59417 records, 100 a page
+JO34_CKANRES_DATA_KYIVCITY_GOV_UA	COMPLETE	98				page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	walk ended inside the 2-page probe
+JO34_CKANRES_DATA_NT_GOV_AU	CEILING_DECLARED	200	2	1077	declared	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	200 of 1077 records, 100 a page
+JO34_CKANRES_DATA_OPENDEVELOPMENTCAMBODIA_NET	CEILING_DECLARED	200	2	14290	declared	page_param	start	100	148	86400	pivot/table/hp3b34_ckanbulk.c	200 of 14290 records, 100 a page
+JO34_CKANRES_DATA_OPENDEVELOPMENTMEKONG_NET	CEILING_DECLARED	200	2	14289	declared	page_param	start	100	148	86400	pivot/table/hp3b34_ckanbulk.c	200 of 14289 records, 100 a page
+JO34_CKANRES_DATA_OPENDEVELOPMENTMYANMAR_NET	CEILING_DECLARED	200	2	14290	declared	page_param	start	100	148	86400	pivot/table/hp3b34_ckanbulk.c	200 of 14290 records, 100 a page
+JO34_CKANRES_DATA_RENFE_COM	COMPLETE	44				page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	walk ended inside the 2-page probe
+JO34_CKANRES_DATA_SANJOSECA_GOV	CEILING_UNKNOWN	170	2	170	counted	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	upstream declares no total; only a full walk can size it
+JO34_CKANRES_DATA_SMARTDUBLIN_IE	CEILING_DECLARED	200	2	935	declared	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	200 of 935 records, 100 a page
+JO34_CKANRES_DATA_STADT_ZUERICH_CH	CEILING_DECLARED	200	2	942	declared	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	200 of 942 records, 100 a page
+JO34_CKANRES_DATA_ZAGREB_HR	CEILING_UNKNOWN	200	2	200	counted	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	upstream declares no total; only a full walk can size it
+JO34_CKANRES_DATENREGISTER_BERLIN_DE	CEILING_DECLARED	200	2	2627	declared	page_param	start	100	32	86400	pivot/table/hp3b34_ckanbulk.c	200 of 2627 records, 100 a page
+JO34_CKANRES_DATI_COMUNE_MILANO_IT	CEILING_DECLARED	200	2	2595	declared	page_param	start	100	32	86400	pivot/table/hp3b34_ckanbulk.c	200 of 2595 records, 100 a page
+JO34_CKANRES_DATI_TOSCANA_IT	CEILING_DECLARED	200	2	12493	declared	page_param	start	100	130	86400	pivot/table/hp3b34_ckanbulk.c	200 of 12493 records, 100 a page
+JO34_CKANRES_DATI_TRENTINO_IT	CEILING_DECLARED	200	2	1378	declared	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	200 of 1378 records, 100 a page
+JO34_CKANRES_DATOSABIERTOS_MALAGA_EU	CEILING_DECLARED	200	2	1377	declared	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	200 of 1377 records, 100 a page
+JO34_CKANRES_DATOSABIERTOS_MENDOZA_GOV_AR	CEILING_DECLARED	200	2	204	declared	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	200 of 204 records, 100 a page
+JO34_CKANRES_DATOS_BAHIA_GOB_AR	CEILING_DECLARED	200	2	222	declared	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	200 of 222 records, 100 a page
+JO34_CKANRES_DATOS_JUS_GOB_AR	COMPLETE	63				page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	walk ended inside the 2-page probe
+JO34_CKANRES_DATOS_MADRID_ES	CEILING_DECLARED	200	2	675	declared	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	200 of 675 records, 100 a page
+JO34_CKANRES_DATOS_MAGYP_GOB_AR	CEILING_UNKNOWN	152	2	152	counted	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	upstream declares no total; only a full walk can size it
+JO34_CKANRES_DATOS_MININTERIOR_GOB_AR	COMPLETE	15				page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	walk ended inside the 2-page probe
+JO34_CKANRES_DATOS_OSE_COM_UY	COMPLETE	28				page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	walk ended inside the 2-page probe
+JO34_CKANRES_DATOS_TRANSPORTE_GOB_AR	COMPLETE	48				page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	walk ended inside the 2-page probe
+JO34_CKANRES_GEOSCIENCE_DATA_QLD_GOV_AU	CEILING_DECLARED	200	2	192711	declared	page_param	start	100	200	86400	pivot/table/hp3b34_ckanbulk.c	200 of 192711 records, 100 a page
+JO34_CKANRES_GIFU_OPENDATA_PREF_GIFU_LG_JP	CEILING_DECLARED	200	2	1883	declared	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	200 of 1883 records, 100 a page
+JO34_CKANRES_OPDT_CITY_TOYAMA_LG_JP	CEILING_UNKNOWN	133	2	133	counted	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	upstream declares no total; only a full walk can size it
+JO34_CKANRES_OPENDATA_ARAGON_ES	CEILING_DECLARED	200	2	2425	declared	page_param	start	100	30	86400	pivot/table/hp3b34_ckanbulk.c	200 of 2425 records, 100 a page
+JO34_CKANRES_OPENDATA_CITY_IMIZU_TOYAMA_JP	CEILING_UNKNOWN	169	2	169	counted	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	upstream declares no total; only a full walk can size it
+JO34_CKANRES_OPENDATA_CITY_MACHIDA_TOKYO_JP	CEILING_UNKNOWN	144	2	144	counted	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	upstream declares no total; only a full walk can size it
+JO34_CKANRES_OPENDATA_CITY_MINATO_TOKYO_JP	CEILING_DECLARED	200	2	560	declared	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	200 of 560 records, 100 a page
+JO34_CKANRES_OPENDATA_CITY_SAGAMIHARA_KANAGAWA_JP	CEILING_UNKNOWN	114	2	114	counted	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	upstream declares no total; only a full walk can size it
+JO34_CKANRES_OPENDATA_COMUNE_BARI_IT	CEILING_UNKNOWN	171	2	171	counted	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	upstream declares no total; only a full walk can size it
+JO34_CKANRES_OPENDATA_MUENCHEN_DE	CEILING_DECLARED	200	2	337	declared	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	200 of 337 records, 100 a page
+JO34_CKANRES_OPENDATA_NHSBSA_NET	CEILING_DECLARED	200	2	2171	declared	page_param	start	100	27	86400	pivot/table/hp3b34_ckanbulk.c	200 of 2171 records, 100 a page
+JO34_CKANRES_OPENDATA_SCHLESWIG_HOLSTEIN_DE	CEILING_DECLARED	200	2	33073	declared	page_param	start	100	200	86400	pivot/table/hp3b34_ckanbulk.c	200 of 33073 records, 100 a page
+JO34_CKANRES_OPENDATA_UGR_ES	COMPLETE	65				page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	walk ended inside the 2-page probe
+JO34_CKANRES_PODATKI_GOV_SI	CEILING_DECLARED	200	2	9302	declared	page_param	start	100	98	86400	pivot/table/hp3b34_ckanbulk.c	200 of 9302 records, 100 a page
+JO34_CKANRES_PORTAL_OPENDATA_DK	CEILING_DECLARED	200	2	631	declared	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	200 of 631 records, 100 a page
+JO34_CKANRES_SUCHE_TRANSPARENZ_HAMBURG_DE	CEILING_DECLARED	200	2	246722	declared	page_param	start	100	200	86400	pivot/table/hp3b34_ckanbulk.c	200 of 246722 records, 100 a page
+JO34_CKANRES_TRANSPARENZ_KARLSRUHE_DE	CEILING_UNKNOWN	151	2	151	counted	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	upstream declares no total; only a full walk can size it
+JO34_CKANRES_WWW_OFFENESDATENPORTAL_DE	CEILING_DECLARED	200	2	1082	declared	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	200 of 1082 records, 100 a page
+JO34_CKANRES_WWW_OPENDATA_HRO_DE	CEILING_DECLARED	200	2	281	declared	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	200 of 281 records, 100 a page
+JO34_CKANRES_WWW_OPENDATA_HU	COMPLETE	71				page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	walk ended inside the 2-page probe
+JO34_CKANRES_WWW_OPENDATA_NHS_SCOT	CEILING_UNKNOWN	105	2	105	counted	page_param	start	100	20	86400	pivot/table/hp3b34_ckanbulk.c	upstream declares no total; only a full walk can size it
+JO34_FDSNEVT_SERVICE_SCEDC_CALTECH_EDU	CEILING_UNKNOWN	2000	2	2000	counted	page_param	offset	1000	200	86400	pivot/table/hp3b34_fdsnevent.c	upstream declares no total; only a full walk can size it
+JO45_WP_ASWEB_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_AUTOMESSEWEB_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_BARKS_ARTIST	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_BASEBALLKING_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_BASKETBALLKING_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_BESTCARWEB_IMAGES	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_BESTCARWEB_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_BRUTUS_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_BUZZMAG_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_CANCAM_PAGES	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_CANCAM_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_CURRENTNDL_CAR	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpculture.c	upstream declares no total; only a full walk can size it
+JO45_WP_DAILYSHINCHO_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_DIGIDAY_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_DOOPE_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_GETNAVI_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_IOTNEWS_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_IPHONEMANIA_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_ISENP_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_JBJA_MEDIA	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_JISIN_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_KYODO_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_LISANI_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_MENSEX_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_MOSHIMOSHINIPPON_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_NEWECONOMY_POSTS	FETCH_FAILED	0				page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	JO45_WP_NEWECONOMY_POSTS stored nothing: upstream answered 403
+JO45_WP_NEWSCAREERCONNECTION_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_NEWSNISSYOKU_FOODSNEWS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_NEWSNISSYOKU_HYAKUSAI	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_NEWSNISSYOKU_KOJOCHO	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_NEWSNISSYOKU_RESTAURANT	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_NIKKANSPA_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_OGGI_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_OMOCORO_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_OTOCOTO_NEWS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_OVOKYODO_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpcorp.c	upstream declares no total; only a full walk can size it
+JO45_WP_REALSOUND_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_RENSAI_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_ROOMIE_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_SEIKATSU110_SERVICEREVIEWS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_SEIKATSU110_SHOP	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_SEIKATSU110_SHOPSERVICE	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_SERAI_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_SOTOKOTOONLINE_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_THEBRIDGE_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_THEMIYANICHI_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_TVFANKYODO_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpcorp.c	upstream declares no total; only a full walk can size it
+JO45_WP_VIDEOSALON_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_VOLLEYBALLKING_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_WASEDA_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_WEBCARTOP_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JO45_WP_WIRED_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpcorp.c	upstream declares no total; only a full walk can size it
+JO45_WP_WOMANMYNAVI_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	60	21600	pivot/table/hp3b45_jpwpmedia.c	upstream declares no total; only a full walk can size it
+JP25_JPFIN_HOWABANK_WPJSON	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	0	43200	pivot/table/hp3b25_jpfinance.c	upstream declares no total; only a full walk can size it
+JP25_JPFIN_ROKIN_KINKI_WPJSON	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	0	43200	pivot/table/hp3b25_jpfinance.c	upstream declares no total; only a full walk can size it
+JP25_JPFIN_SSE_WPJSON	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	0	43200	pivot/table/hp3b25_jpfinance.c	upstream declares no total; only a full walk can size it
+JP25_JPINFRA_HERP_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	0	43200	pivot/table/hp3b25_jpinfra.c	upstream declares no total; only a full walk can size it
+JP25_JPINFRA_SORABATAKE_POSTS	CEILING_UNKNOWN	100	2	100	counted	page_param	page	0	0	86400	pivot/table/hp3b25_jpinfra.c	upstream declares no total; only a full walk can size it
+JP25_JPINFRA_YOKOHAMAPORT_POSTS	CEILING_UNKNOWN	100	2	100	counted	page_param	page	0	0	21600	pivot/table/hp3b25_jpinfra.c	upstream declares no total; only a full walk can size it
+JP25_JPMEDIA_DECN_WP	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	0	21600	pivot/table/hp3b25_jpmedia.c	upstream declares no total; only a full walk can size it
+JP25_JPMEDIA_DEMPA_WP	FETCH_FAILED	0				page_param	page	0	0	21600	pivot/table/hp3b25_jpmedia.c	JP25_JPMEDIA_DEMPA_WP stored nothing: upstream answered 503
+JP25_JPMEDIA_ISHIKAWA_TV_WP	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	0	21600	pivot/table/hp3b25_jpmedia.c	upstream declares no total; only a full walk can size it
+JP25_JPMEDIA_JAPANMETAL_WP	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	0	21600	pivot/table/hp3b25_jpmedia.c	upstream declares no total; only a full walk can size it
+JP25_JPMEDIA_KENSETSUNEWS_WP	FETCH_FAILED	0				page_param	page	0	0	21600	pivot/table/hp3b25_jpmedia.c	JP25_JPMEDIA_KENSETSUNEWS_WP stored nothing: upstream answered 502
+JP25_JPMEDIA_KYOIKU_PRESS_WP	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	0	21600	pivot/table/hp3b25_jpmedia.c	upstream declares no total; only a full walk can size it
+JP25_JPMEDIA_LNEWS_WP	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	0	21600	pivot/table/hp3b25_jpmedia.c	upstream declares no total; only a full walk can size it
+JP25_JPMEDIA_YAKUJI_WP	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	0	21600	pivot/table/hp3b25_jpmedia.c	upstream declares no total; only a full walk can size it
+JP25_JPMUNI2_BODIK_ODCS_NEWS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	0	86400	pivot/table/hp3b25_jpmuni2.c	upstream declares no total; only a full walk can size it
+JP25_JPMUNI2_HIROSHIMA_DATAEYE	FETCH_FAILED	0				page_param	page	0	0	86400	pivot/table/hp3b25_jpmuni2.c	JP25_JPMUNI2_HIROSHIMA_DATAEYE stored nothing: upstream answered 503
+JP25_JPMUNI2_TSUYAMA_DATAEYE	FETCH_FAILED	0				page_param	page	0	0	86400	pivot/table/hp3b25_jpmuni2.c	JP25_JPMUNI2_TSUYAMA_DATAEYE stored nothing: upstream answered 503
+JP25_JPMUNI2_UTSUNOMIYA_CKAN	CEILING_DECLARED	200	2	295	declared	page_param	start	100	0	86400	pivot/table/hp3b25_jpmuni2.c	200 of 295 records, 100 a page
+JP25_JPNATGOV_JISHIN_HQ_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	0	21600	pivot/table/hp3b25_jpnatgov.c	upstream declares no total; only a full walk can size it
+JP25_JPNATGOV_NISE_POSTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	0	86400	pivot/table/hp3b25_jpnatgov.c	upstream declares no total; only a full walk can size it
+JPN_EGOV_DATA_ORG_ORG_0600	CEILING_DECLARED	200	2	273	declared	page_param	start	100	0	86400	pivot/table/hp3b23_jpnational.c	200 of 273 records, 100 a page
+JPN_EGOV_DATA_ORG_ORG_0800	CEILING_DECLARED	200	2	218	declared	page_param	start	100	0	86400	pivot/table/hp3b23_jpnational.c	200 of 218 records, 100 a page
+JPN_EGOV_DATA_ORG_ORG_1300	CEILING_DECLARED	200	2	259	declared	page_param	start	100	0	86400	pivot/table/hp3b23_jpnational.c	200 of 259 records, 100 a page
+JPN_EGOV_DATA_ORG_ORG_2100	CEILING_DECLARED	200	2	280	declared	page_param	start	100	0	86400	pivot/table/hp3b23_jpnational.c	200 of 280 records, 100 a page
+JSTAGE_CORPUS_BULK	CEILING_UNKNOWN	200	2	200	counted	page_param	start	100	0	86400	pivot/table/hp3b24_jpbulk.c	upstream declares no total; only a full walk can size it
+KAPSARC_JODI_CHINA_OIL	FETCH_FAILED	0				page_param	offset	100	0	21600	pivot/table/hp3b19_mena.c	KAPSARC_JODI_CHINA_OIL stored nothing: the request failed at the transport level
+KAPSARC_SAUDI_IO_TABLE	FETCH_FAILED	0				page_param	offset	100	0	21600	pivot/table/hp3b19_mena.c	KAPSARC_SAUDI_IO_TABLE stored nothing: the request failed at the transport level
+KAPSARC_SAUDI_LABOUR_ADMIN	FETCH_FAILED	0				page_param	offset	100	0	86400	pivot/table/hp3b19_mena.c	KAPSARC_SAUDI_LABOUR_ADMIN stored nothing: the request failed at the transport level
+LC_STATISTICS_RELEASES	CEILING_UNKNOWN	199	2	199	counted	page_param	offset	100	0	86400	pivot/table/hp3b19_latam.c	upstream declares no total; only a full walk can size it
+LEMMY_COMMUNITIES_ANI_SOCIAL	CEILING_UNKNOWN	100	2	100	counted	page_param	page	0	0	86400	pivot/table/hp3b22_pastechat.c	upstream declares no total; only a full walk can size it
+LEMMY_COMMUNITIES_DISCUSS_TCHNCS_DE	CEILING_UNKNOWN	100	2	100	counted	page_param	page	0	0	86400	pivot/table/hp3b22_pastechat.c	upstream declares no total; only a full walk can size it
+LEMMY_COMMUNITIES_FEDDIT_NL	CEILING_UNKNOWN	100	2	100	counted	page_param	page	0	0	86400	pivot/table/hp3b22_pastechat.c	upstream declares no total; only a full walk can size it
+LEMMY_COMMUNITIES_JLAI_LU	CEILING_UNKNOWN	100	2	100	counted	page_param	page	0	0	86400	pivot/table/hp3b22_pastechat.c	upstream declares no total; only a full walk can size it
+LEMMY_COMMUNITIES_LEMMY_BLAHAJ_ZONE	CEILING_UNKNOWN	100	2	100	counted	page_param	page	0	0	86400	pivot/table/hp3b22_pastechat.c	upstream declares no total; only a full walk can size it
+LEMMY_COMMUNITIES_LEMMY_CA	CEILING_UNKNOWN	100	2	100	counted	page_param	page	0	0	86400	pivot/table/hp3b22_pastechat.c	upstream declares no total; only a full walk can size it
+LEMMY_COMMUNITIES_LEMMY_DBZER0_COM	CEILING_UNKNOWN	100	2	100	counted	page_param	page	0	0	86400	pivot/table/hp3b22_pastechat.c	upstream declares no total; only a full walk can size it
+LEMMY_COMMUNITIES_LEMMY_ML	CEILING_UNKNOWN	100	2	100	counted	page_param	page	0	0	86400	pivot/table/hp3b22_pastechat.c	upstream declares no total; only a full walk can size it
+LEMMY_COMMUNITIES_LEMMY_SDF_ORG	CEILING_UNKNOWN	100	2	100	counted	page_param	page	0	0	86400	pivot/table/hp3b22_pastechat.c	upstream declares no total; only a full walk can size it
+LEMMY_COMMUNITIES_LEMMY_WORLD	CEILING_UNKNOWN	100	2	100	counted	page_param	page	0	0	86400	pivot/table/hp3b22_pastechat.c	upstream declares no total; only a full walk can size it
+LEMMY_COMMUNITIES_LEMMY_ZIP	CEILING_UNKNOWN	100	2	100	counted	page_param	page	0	0	86400	pivot/table/hp3b22_pastechat.c	upstream declares no total; only a full walk can size it
+LEMMY_COMMUNITIES_PROGRAMMING_DEV	CEILING_UNKNOWN	100	2	100	counted	page_param	page	0	0	86400	pivot/table/hp3b22_pastechat.c	upstream declares no total; only a full walk can size it
+LEMMY_COMMUNITIES_REDDTHAT_COM	CEILING_UNKNOWN	100	2	100	counted	page_param	page	0	0	86400	pivot/table/hp3b22_pastechat.c	upstream declares no total; only a full walk can size it
+LEMMY_COMMUNITIES_SH_ITJUST_WORKS	CEILING_UNKNOWN	100	2	100	counted	page_param	page	0	0	86400	pivot/table/hp3b22_pastechat.c	upstream declares no total; only a full walk can size it
+LEMMY_COMMUNITIES_SLRPNK_NET	CEILING_UNKNOWN	100	2	100	counted	page_param	page	0	0	86400	pivot/table/hp3b22_pastechat.c	upstream declares no total; only a full walk can size it
+LEMMY_COMMUNITIES_SOPULI_XYZ	CEILING_UNKNOWN	100	2	100	counted	page_param	page	0	0	86400	pivot/table/hp3b22_pastechat.c	upstream declares no total; only a full walk can size it
+LEMMY_COMMUNITIES_SZMER_INFO	CEILING_UNKNOWN	100	2	100	counted	page_param	page	0	0	86400	pivot/table/hp3b22_pastechat.c	upstream declares no total; only a full walk can size it
+LEMMY_COMMUNITIES_THELEMMY_CLUB	CEILING_UNKNOWN	100	2	100	counted	page_param	page	0	0	86400	pivot/table/hp3b22_pastechat.c	upstream declares no total; only a full walk can size it
+LV_BENEFICIAL_OWNERS	FETCH_FAILED	0				page_param	offset	100	0	86400	pivot/table/hp3b19_eurasia.c	LV_BENEFICIAL_OWNERS stored nothing: the request failed at the transport level
+LV_IPPC_PERMITS	FETCH_FAILED	0				page_param	offset	100	0	86400	pivot/table/hp3b19_eurasia.c	LV_IPPC_PERMITS stored nothing: the request failed at the transport level
+LV_WASTE_OPERATORS	FETCH_FAILED	0				page_param	offset	100	0	86400	pivot/table/hp3b19_eurasia.c	LV_WASTE_OPERATORS stored nothing: the request failed at the transport level
+LV_WATER_PERMITS	FETCH_FAILED	0				page_param	offset	100	0	86400	pivot/table/hp3b19_eurasia.c	LV_WATER_PERMITS stored nothing: the request failed at the transport level
+MAPROULETTE_CHALLENGES	CEILING_UNKNOWN	200	2	200	counted	page_param	page	100	0	86400	pivot/table/hp3b19_osm.c	upstream declares no total; only a full walk can size it
+MASTR_UNIT_REGISTER_EXTENDED	CEILING_DECLARED	100	2	9652254	declared	page_param	page	0	0	86400	pivot/table/hp3b19_energyenv.c	100 of 9652254 records, 50 a page
+MD_LOBBYIST_ACTIVITY_REPORTS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+MD_LOBBYIST_CAMPAIGN_CONTRIBUTIONS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+MD_MDE_WATER_VIOLATIONS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+MD_STATE_PAYMENTS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+ME_MEDICINES	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	86400	pivot/table/hp3b19_eurasia.c	upstream declares no total; only a full walk can size it
+ME_REGAGEN_NOTICES	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	21600	pivot/table/hp3b19_eurasia.c	upstream declares no total; only a full walk can size it
+ME_TRADE_UNIONS	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	86400	pivot/table/hp3b19_eurasia.c	upstream declares no total; only a full walk can size it
+MISSKEY_IO_FEDERATION	CEILING_UNKNOWN	60	2	60	counted	page_param	offset	30	0	86400	pivot/table/hp3b23_jpsocial.c	upstream declares no total; only a full walk can size it
+MK_AEK_PUBLICATIONS	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	21600	pivot/table/hp3b19_eurasia.c	upstream declares no total; only a full walk can size it
+MO_ALCOHOL_LICENSES	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+MO_OIL_GAS_PERMITS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+MSRC_SUG_VULNERABILITY	CEILING_UNKNOWN	200	2	200	counted	page_param	$skip	100	0	43200	pivot/table/hp3b19_cyber.c	upstream declares no total; only a full walk can size it
+MSTDNJP_DIRECTORY	CEILING_UNKNOWN	80	2	80	counted	page_param	offset	40	0	86400	pivot/table/hp3b23_jpsocial.c	upstream declares no total; only a full walk can size it
+NAVCAN_UAS_FACILITY_MAP	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	604800	pivot/table/hp3b20_airspace.c	upstream declares no total; only a full walk can size it
+NESO_CAPACITY_MARKET_CMU	CEILING_UNKNOWN	100	2	100	counted	page_param	offset	50	0	86400	pivot/table/hp3b19_energyenv.c	upstream declares no total; only a full walk can size it
+NESO_CAPACITY_MARKET_COMPONENTS	CEILING_UNKNOWN	100	2	100	counted	page_param	offset	50	0	86400	pivot/table/hp3b19_energyenv.c	upstream declares no total; only a full walk can size it
+NESO_CONSTRAINT_FLOWS_LIMITS	CEILING_UNKNOWN	100	2	100	counted	page_param	offset	50	0	21600	pivot/table/hp3b19_energyenv.c	upstream declares no total; only a full walk can size it
+NESO_EMBEDDED_REGISTER	CEILING_UNKNOWN	100	2	100	counted	page_param	offset	50	0	86400	pivot/table/hp3b19_energyenv.c	upstream declares no total; only a full walk can size it
+NESO_INTERCONNECTOR_AUCTION	CEILING_UNKNOWN	100	2	100	counted	page_param	offset	50	0	21600	pivot/table/hp3b19_energyenv.c	upstream declares no total; only a full walk can size it
+NESO_TEC_REGISTER	CEILING_UNKNOWN	100	2	100	counted	page_param	offset	50	0	86400	pivot/table/hp3b19_energyenv.c	upstream declares no total; only a full walk can size it
+NI_TELCOR_PUBLICACIONES	FETCH_FAILED	0				page_param	offset	100	0	21600	pivot/table/hp3b19_latam.c	NI_TELCOR_PUBLICACIONES stored nothing: upstream answered 403
+NJ_LICENSED_CHILD_CARE_CENTERS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+NL_OVERHEID_SRU_LOKAAL	CEILING_UNKNOWN	200	2	200	counted	page_param	startRecord	100	0	21600	pivot/table/hp3b19_legalip.c	upstream declares no total; only a full walk can size it
+NL_OVERHEID_SRU_OFFICIAL	CEILING_UNKNOWN	200	2	200	counted	page_param	startRecord	100	0	21600	pivot/table/hp3b19_legalip.c	upstream declares no total; only a full walk can size it
+NL_OVERHEID_SRU_SGD	CEILING_UNKNOWN	200	2	200	counted	page_param	startRecord	100	0	86400	pivot/table/hp3b19_legalip.c	upstream declares no total; only a full walk can size it
+NL_OVERHEID_SRU_TUCHTRECHT	CEILING_UNKNOWN	200	2	200	counted	page_param	startRecord	100	0	21600	pivot/table/hp3b19_legalip.c	upstream declares no total; only a full walk can size it
+NOAA_FOSS_AFSC_GROUNDFISH	CEILING_UNKNOWN	50	2	50	counted	page_param	offset	100	0	604800	pivot/table/hp3b19_fisheries.c	upstream declares no total; only a full walk can size it
+NOAA_FOSS_LANDINGS	CEILING_UNKNOWN	100	2	100	counted	page_param	offset	50	0	86400	pivot/table/hp3b19_energyenv.c	upstream declares no total; only a full walk can size it
+NOAA_FOSS_TRADE	CEILING_UNKNOWN	100	2	100	counted	page_param	offset	50	0	86400	pivot/table/hp3b19_energyenv.c	upstream declares no total; only a full walk can size it
+NS_LICENSED_FOOD_ESTABLISHMENTS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+NS_PERMANENT_LIQUOR_LICENSES	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+NY_AUTHORITY_PROCUREMENT	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+NY_CANNABIS_LICENSES	COMPLETE	698				page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	walk ended inside the 2-page probe
+NY_DOS_CONSTITUENT_ENTITIES	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+NY_DOS_FILING_STOCK	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+NY_FOOD_SAFETY_RATINGS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+NY_LIQUOR_ACTIVE_LICENSES	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+NY_LOBBYING_CLIENT_DISCLOSURES	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+NY_LOBBYIST_DISCLOSURES	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+NY_LOBBYIST_REGISTRATIONS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	43200	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+NY_OIL_GAS_PRODUCTION	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	604800	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+NY_OIL_GAS_WELLS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+NY_PROPERTY_ASSESSMENT_ROLLS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	604800	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+NY_REAL_ESTATE_APPRAISERS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	604800	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+NY_STATE_TITLE_SALARY	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	604800	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+OPENAERIALMAP_IMAGERY	SLOW	15				page_param	page	0	0	86400	pivot/table/hp3b19_osm.c	hit --timeout at 90.0s with a 2-page probe
+OR_ACTIVE_NONPROFIT_CORPORATIONS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+OR_BCD_TRADE_LICENSES	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+OR_CCB_CONTRACTOR_LICENSES	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+OR_OLCC_CANNABIS_LICENSES	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+OR_OLCC_LIQUOR_LICENSES	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+OR_PROCUREMENT_ORDERS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+OR_STATE_SALARIES	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	604800	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+OSF_SUBJECTS	CEILING_UNKNOWN	200	2	200	counted	next_path		0	0	604800	pivot/table/hp3b22_deeparchive.c	upstream declares no total; only a full walk can size it
+PAWOO_DIRECTORY	CEILING_UNKNOWN	80	2	80	counted	page_param	offset	40	0	86400	pivot/table/hp3b23_jpsocial.c	upstream declares no total; only a full walk can size it
+PA_FOOD_INSPECTIONS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+PA_NEW_WELL_INSPECTIONS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+PA_NON_DEPOSITORY_LICENSEES	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	604800	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+PA_OPIOID_SEIZURES_ARRESTS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+PE_SERNANP_ZONIFICACION	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	21600	pivot/table/hp3b19_latam.c	upstream declares no total; only a full walk can size it
+PLOS_CORPUS	CEILING_DECLARED	200	2	418246	declared	page_param	start	100	0	86400	pivot/table/hp3b20_scholarly.c	200 of 418246 records, 100 a page
+PNCP_BR_ARMY_CONTRACTS	CEILING_UNKNOWN	1000	2	1000	counted	page_param	pagina	0	0	21600	pivot/table/hp3b19_defence.c	upstream declares no total; only a full walk can size it
+PORTWATCH_MARITIME_LINKS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	21600	pivot/table/hp3b19_mena.c	upstream declares no total; only a full walk can size it
+PY_VUE_MIPYMES	CEILING_DECLARED	200	2	611598	declared	page_param	page	0	0	86400	pivot/table/hp3b19_latam.c	200 of 611598 records, 100 a page
+PY_VUE_REGISTRO_EMPRESAS	CEILING_DECLARED	200	2	598422	declared	page_param	page	0	0	86400	pivot/table/hp3b19_latam.c	200 of 598422 records, 100 a page
+QATAR_DISTRICT_COOLING	FETCH_FAILED	0				page_param	offset	100	0	86400	pivot/table/hp3b19_mena.c	QATAR_DISTRICT_COOLING stored nothing: the request failed at the transport level
+QATAR_HOMICIDE_SDG	CEILING_DECLARED	200	2	256	declared	page_param	offset	100	0	86400	pivot/table/hp3b19_mena.c	200 of 256 records, 100 a page
+QATAR_MME_IZBAH	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	21600	pivot/table/hp3b19_mena.c	upstream declares no total; only a full walk can size it
+QATAR_PSA_MAJOR_ROADS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	21600	pivot/table/hp3b19_mena.c	upstream declares no total; only a full walk can size it
+QIITA_TAGS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	0	86400	pivot/table/hp3b23_jpsocial.c	upstream declares no total; only a full walk can size it
+RO_ANCOM_DECISIONS	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	21600	pivot/table/hp3b19_eurasia.c	upstream declares no total; only a full walk can size it
+RO_ANM_MEDICINES	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	21600	pivot/table/hp3b19_eurasia.c	upstream declares no total; only a full walk can size it
+SCIELO_ISSUES_BR	CEILING_DECLARED	200	2	31650	declared	page_param	offset	100	0	604800	pivot/table/hp3b20_scholarly.c	200 of 31650 records, 100 a page
+SCIELO_JOURNALS_MX	CEILING_DECLARED	200	2	281	declared	page_param	offset	100	0	604800	pivot/table/hp3b20_scholarly.c	200 of 281 records, 100 a page
+SI_BUSINESS_REGISTER	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	86400	pivot/table/hp3b19_eurasia.c	upstream declares no total; only a full walk can size it
+SI_GURS_HOUSE_NUMBERS	CEILING_DECLARED	2000	2	580311	declared	page_param	startIndex	1000	0	604800	pivot/table/hp3b19_eurasia.c	2000 of 580311 records, 1000 a page
+SI_HEALER_LICENCES	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	86400	pivot/table/hp3b19_eurasia.c	upstream declares no total; only a full walk can size it
+SK_RPVS_AUTHORISED	CEILING_UNKNOWN	40	2	40	counted	page_param	$skip	0	0	86400	pivot/table/hp3b19_finance.c	upstream declares no total; only a full walk can size it
+SK_RPVS_OFFICIALS	CEILING_UNKNOWN	40	2	40	counted	page_param	$skip	0	0	86400	pivot/table/hp3b19_finance.c	upstream declares no total; only a full walk can size it
+STAC_EODATAHUB_UK_COLLECTIONS	CEILING_UNKNOWN	20	2	20	counted	next_path		0	0	86400	pivot/table/hp3b19_science.c	upstream declares no total; only a full walk can size it
+STAC_EODC_GFM_ITEMS	CEILING_DECLARED	200	2	5618762	declared	next_path		0	0	21600	pivot/table/hp3b19_science.c	200 of 5618762 records, 100 a page
+STAC_SWISSTOPO_SWISSALTI3D_ITEMS	CEILING_UNKNOWN	200	2	200	counted	next_path		0	0	86400	pivot/table/hp3b19_science.c	upstream declares no total; only a full walk can size it
+STAC_TERRABYTE_LANDSAT_ITEMS	CEILING_UNKNOWN	200	2	200	counted	next_path		0	0	21600	pivot/table/hp3b19_science.c	upstream declares no total; only a full walk can size it
+STAC_TERRABYTE_SENTINEL1_GRD_ITEMS	CEILING_UNKNOWN	200	2	200	counted	next_path		0	0	21600	pivot/table/hp3b19_science.c	upstream declares no total; only a full walk can size it
+STAC_TERRABYTE_SENTINEL2_ITEMS	CEILING_UNKNOWN	200	2	200	counted	next_path		0	0	21600	pivot/table/hp3b19_science.c	upstream declares no total; only a full walk can size it
+SV_COMPRASAL_ADJUDICACIONES	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	0	21600	pivot/table/hp3b19_latam.c	upstream declares no total; only a full walk can size it
+SYKE_HYDRO_SITES	CEILING_UNKNOWN	100	2	100	counted	page_param	$skip	50	0	21600	pivot/table/hp3b19_energyenv.c	upstream declares no total; only a full walk can size it
+TELAVIV_BUILDING_PERMITS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	21600	pivot/table/hp3b19_mena.c	upstream declares no total; only a full walk can size it
+TELAVIV_BUSINESSES	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	86400	pivot/table/hp3b19_mena.c	upstream declares no total; only a full walk can size it
+TERRAFORM_MODULES	CEILING_UNKNOWN	100	2	100	counted	page_param	offset	50	0	86400	pivot/table/hp3b19_cyber.c	upstream declares no total; only a full walk can size it
+TERRAFORM_PROVIDERS	CEILING_UNKNOWN	100	2	100	counted	page_param	offset	50	0	86400	pivot/table/hp3b19_cyber.c	upstream declares no total; only a full walk can size it
+TRAFICOM_AMATEUR_CALLSIGN	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$skip	1000	0	86400	pivot/table/hp3b19_sigint.c	upstream declares no total; only a full walk can size it
+TRAFICOM_FREQ_TABLE	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$skip	1000	0	86400	pivot/table/hp3b19_sigint.c	upstream declares no total; only a full walk can size it
+TRAFICOM_RADIO_TX	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$skip	1000	0	86400	pivot/table/hp3b19_sigint.c	upstream declares no total; only a full walk can size it
+TX_HOTEL_TAX_PERMITS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	604800	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+TX_INSURANCE_COMPLAINTS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+TX_MIXED_BEVERAGE_PERMITS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	604800	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+TX_PUC_INFORMAL_COMPLAINTS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+TX_REAL_ESTATE_LICENSEES	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	604800	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+TX_RRC_PIPELINES	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	604800	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+TX_RRC_WELL_BOTTOM_LOCATIONS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	604800	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+TX_RRC_WELL_LOCATIONS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	resultOffset	1000	0	604800	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+TX_TABC_LICENSES	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+TX_TCEQ_COMPLAINTS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+TX_TCEQ_NOTICES_OF_ENFORCEMENT	CEILING_UNKNOWN	1997	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+TX_TCEQ_VIOLATION_CITATIONS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+TZ_PPRA_NEST_OCDS_RELEASES	CEILING_UNKNOWN	99	2	100	counted	next_path		0	0	21600	pivot/table/hp3b19_africa.c	upstream declares no total; only a full walk can size it
+UKPARL_LDA_BILLS	CEILING_UNKNOWN	1000	2	1000	counted	page_param	_page	0	0	21600	pivot/table/hp3b20_parliament.c	upstream declares no total; only a full walk can size it
+UKPARL_LDA_COMMONS_ANSWERS	CEILING_UNKNOWN	1000	2	1000	counted	page_param	_page	0	0	21600	pivot/table/hp3b20_parliament.c	upstream declares no total; only a full walk can size it
+UKPARL_LDA_COMMONS_DIVISIONS	CEILING_UNKNOWN	1000	2	1000	counted	page_param	_page	0	0	21600	pivot/table/hp3b20_parliament.c	upstream declares no total; only a full walk can size it
+UKPARL_LDA_COMMONS_ORAL_Q	CEILING_UNKNOWN	1000	2	1000	counted	page_param	_page	0	0	21600	pivot/table/hp3b20_parliament.c	upstream declares no total; only a full walk can size it
+UKPARL_LDA_COMMONS_WRITTEN_Q	CEILING_UNKNOWN	1000	2	1000	counted	page_param	_page	0	0	21600	pivot/table/hp3b20_parliament.c	upstream declares no total; only a full walk can size it
+UKPARL_LDA_CONSTITUENCIES	CEILING_UNKNOWN	1000	2	1000	counted	page_param	_page	0	0	2592000	pivot/table/hp3b20_parliament.c	upstream declares no total; only a full walk can size it
+UKPARL_LDA_EDMS	CEILING_UNKNOWN	200	2	200	counted	page_param	_page	0	0	21600	pivot/table/hp3b20_parliament.c	upstream declares no total; only a full walk can size it
+UKPARL_LDA_ELECTION_RESULTS	CEILING_UNKNOWN	1000	2	1000	counted	page_param	_page	0	0	86400	pivot/table/hp3b20_parliament.c	upstream declares no total; only a full walk can size it
+UKPARL_LDA_LORDS_DIVISIONS	CEILING_UNKNOWN	1000	2	1000	counted	page_param	_page	0	0	21600	pivot/table/hp3b20_parliament.c	upstream declares no total; only a full walk can size it
+UKPARL_LDA_LORDS_WRITTEN_Q	CEILING_UNKNOWN	1000	2	1000	counted	page_param	_page	0	0	21600	pivot/table/hp3b20_parliament.c	upstream declares no total; only a full walk can size it
+UKPARL_LDA_MEMBERS	CEILING_UNKNOWN	1000	2	1000	counted	page_param	_page	0	0	604800	pivot/table/hp3b20_parliament.c	upstream declares no total; only a full walk can size it
+UKPARL_LDA_ORAL_Q_TIMES	CEILING_UNKNOWN	1000	2	1000	counted	page_param	_page	0	0	86400	pivot/table/hp3b20_parliament.c	upstream declares no total; only a full walk can size it
+UKPARL_LDA_RESEARCH_BRIEFINGS	CEILING_UNKNOWN	1000	2	1000	counted	page_param	_page	0	0	86400	pivot/table/hp3b20_parliament.c	upstream declares no total; only a full walk can size it
+UKPARL_LDA_TERMS	CEILING_UNKNOWN	1000	2	1000	counted	page_param	_page	0	0	2592000	pivot/table/hp3b20_parliament.c	upstream declares no total; only a full walk can size it
+UKTRADEINFO_COMMODITY	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$skip	1000	0	2592000	pivot/table/hp3b20_tradestat.c	upstream declares no total; only a full walk can size it
+UKTRADEINFO_OTS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$skip	1000	0	86400	pivot/table/hp3b20_tradestat.c	upstream declares no total; only a full walk can size it
+UKTRADEINFO_SITC	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$skip	1000	0	2592000	pivot/table/hp3b20_tradestat.c	upstream declares no total; only a full walk can size it
+UKTRADEINFO_TRADER	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$skip	1000	0	604800	pivot/table/hp3b20_tradestat.c	upstream declares no total; only a full walk can size it
+UK_ASSET_MGMT	CEILING_UNKNOWN	200	2	200	counted	page_param	_offset	100	0	86400	pivot/table/hp3b36_uk.c	upstream declares no total; only a full walk can size it
+UK_EA_ECOLOGY	CEILING_UNKNOWN	500	2	500	counted	page_param	skip	250	0	86400	pivot/table/hp3b36_uk.c	upstream declares no total; only a full walk can size it
+UK_EC_DONATIONS	CEILING_DECLARED	100	2	82195	declared	page_param	start	100	0	86400	pivot/table/hp3b19_finance.c	100 of 82195 records, 50 a page
+UK_FLOOD_AREAS	CEILING_UNKNOWN	1000	2	1000	counted	page_param	_offset	500	0	86400	pivot/table/hp3b36_uk.c	upstream declares no total; only a full walk can size it
+UK_FLOOD_MEASURES	CEILING_UNKNOWN	1000	2	1000	counted	page_param	_offset	500	0	86400	pivot/table/hp3b36_uk.c	upstream declares no total; only a full walk can size it
+UK_FLOOD_READINGS	CEILING_UNKNOWN	1000	2	1000	counted	page_param	_offset	500	0	86400	pivot/table/hp3b36_uk.c	upstream declares no total; only a full walk can size it
+UK_FLOOD_STATIONS	CEILING_UNKNOWN	285	2	285	counted	page_param	_offset	200	0	86400	pivot/table/hp3b36_uk.c	upstream declares no total; only a full walk can size it
+UK_GAZETTE_ALL_NOTICES	CEILING_UNKNOWN	200	2	200	counted	page_param	results-page	0	0	21600	pivot/table/hp3b19_legalip.c	upstream declares no total; only a full walk can size it
+UK_GAZETTE_BELFAST	CEILING_UNKNOWN	200	2	200	counted	page_param	results-page	0	0	21600	pivot/table/hp3b19_legalip.c	upstream declares no total; only a full walk can size it
+UK_GAZETTE_CORPORATE_INSOLVENCY	CEILING_UNKNOWN	200	2	200	counted	page_param	results-page	0	0	21600	pivot/table/hp3b19_legalip.c	upstream declares no total; only a full walk can size it
+UK_GAZETTE_EDINBURGH	CEILING_UNKNOWN	200	2	200	counted	page_param	results-page	0	0	21600	pivot/table/hp3b19_legalip.c	upstream declares no total; only a full walk can size it
+UK_GAZETTE_WILLS_PROBATE	CEILING_UNKNOWN	200	2	200	counted	page_param	results-page	0	0	21600	pivot/table/hp3b19_legalip.c	upstream declares no total; only a full walk can size it
+UK_GOVUK_MOD_PUBS	CEILING_DECLARED	100	2	14459	declared	page_param	start	50	0	21600	pivot/table/hp3b19_defence.c	100 of 14459 records, 50 a page
+UK_HYDROLOGY_MEASURES	CEILING_UNKNOWN	1000	2	1000	counted	page_param	_offset	500	0	86400	pivot/table/hp3b36_uk.c	upstream declares no total; only a full walk can size it
+UK_HYDROLOGY_STATIONS	CEILING_UNKNOWN	1000	2	1000	counted	page_param	_offset	500	0	86400	pivot/table/hp3b36_uk.c	upstream declares no total; only a full walk can size it
+UK_LANDREG_PPI_ADDRESS	CEILING_UNKNOWN	200	2	200	counted	next_path		0	0	86400	pivot/table/hp3b19_legalip.c	upstream declares no total; only a full walk can size it
+UK_LAND_REGISTRY_PPI	CEILING_UNKNOWN	200	2	200	counted	page_param	_page	0	0	86400	pivot/table/hp3b19_landreg.c	upstream declares no total; only a full walk can size it
+UK_NHSBSA_PRESCRIBING_EPD	CEILING_UNKNOWN	200	2	200	counted	page_param	offset	100	0	604800	pivot/table/hp3b19_health.c	upstream declares no total; only a full walk can size it
+UNHCR_ASYLUM_APPLICATIONS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	0	86400	pivot/table/hp3b19_humanrights.c	upstream declares no total; only a full walk can size it
+UNHCR_POPULATION_FOOTNOTES	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	0	604800	pivot/table/hp3b19_humanrights.c	upstream declares no total; only a full walk can size it
+USASPEND_DOD_PROGRAM_ACTIVITY	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	0	21600	pivot/table/hp3b19_defence.c	upstream declares no total; only a full walk can size it
+US_FISCAL_CASH_BALANCE	CEILING_UNKNOWN	200	2	200	counted	page_param	page[number]	0	0	21600	pivot/table/hp3b19_finance.c	upstream declares no total; only a full walk can size it
+US_FISCAL_MTS	CEILING_UNKNOWN	200	2	200	counted	page_param	page[number]	0	0	86400	pivot/table/hp3b19_finance.c	upstream declares no total; only a full walk can size it
+VT_STATE_POLICE_DUI_ARRESTS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+WA_AGENCY_CONTRACTS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+WA_CONTRACTOR_BONDS	CEILING_UNKNOWN	1999	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+WA_CONTRACTOR_INSURANCE	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+WA_CONTRACTOR_PRINCIPALS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+WA_CRIME_NIBRS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	604800	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+WA_LOBBYIST_AGENT_EMPLOYERS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+WA_LOBBYIST_COMPENSATION	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+WA_PDC_ENFORCEMENT_CASES	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+WA_PDC_INDEPENDENT_EXPENDITURES	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	43200	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+WA_STATEWIDE_CONTRACT_SALES	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	86400	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+WA_WEBS_VENDORS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	$offset	1000	0	604800	pivot/table/hp3b19_usstate.c	upstream declares no total; only a full walk can size it
+WHO_XMART_FLUNET_SENTINEL	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24skip	1000	0	86400	pivot/table/hp3b19_health.c	upstream declares no total; only a full walk can size it
+WHO_XMART_FOODBORNE_BURDEN	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24skip	1000	0	604800	pivot/table/hp3b19_health.c	upstream declares no total; only a full walk can size it
+WHO_XMART_GHE_FULL	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24skip	1000	0	604800	pivot/table/hp3b19_health.c	upstream declares no total; only a full walk can size it
+WHO_XMART_NCD_ALCOHOL	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24skip	1000	0	604800	pivot/table/hp3b19_health.c	upstream declares no total; only a full walk can size it
+WHO_XMART_NCD_CANCER	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24skip	1000	0	604800	pivot/table/hp3b19_health.c	upstream declares no total; only a full walk can size it
+WHO_XMART_NCD_HYPERTENSION	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24skip	1000	0	604800	pivot/table/hp3b19_health.c	upstream declares no total; only a full walk can size it
+WHO_XMART_NCD_MORTALITY	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24skip	1000	0	604800	pivot/table/hp3b19_health.c	upstream declares no total; only a full walk can size it
+WHO_XMART_NUTRITION_GTT_SURVEY	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24skip	1000	0	604800	pivot/table/hp3b19_health.c	upstream declares no total; only a full walk can size it
+WHO_XMART_NUTRITION_VMNIS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24skip	1000	0	604800	pivot/table/hp3b19_health.c	upstream declares no total; only a full walk can size it
+WHO_XMART_POPULATION_COUNT	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24skip	1000	0	604800	pivot/table/hp3b19_health.c	upstream declares no total; only a full walk can size it
+WHO_XMART_TOBACCO_FACT	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24skip	1000	0	604800	pivot/table/hp3b19_health.c	upstream declares no total; only a full walk can size it
+WHO_XMART_TOBACCO_PREVALENCE	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24skip	1000	0	604800	pivot/table/hp3b19_health.c	upstream declares no total; only a full walk can size it
+WHO_XMART_WHSA_FACT	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24skip	1000	0	604800	pivot/table/hp3b19_health.c	upstream declares no total; only a full walk can size it
+WHO_XMART_WIISE_AEFI	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24skip	1000	0	604800	pivot/table/hp3b19_health.c	upstream declares no total; only a full walk can size it
+WHO_XMART_WIISE_COVERAGES	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24skip	1000	0	604800	pivot/table/hp3b19_health.c	upstream declares no total; only a full walk can size it
+WHO_XMART_WIISE_HPV_ADMIN	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24skip	1000	0	604800	pivot/table/hp3b19_health.c	upstream declares no total; only a full walk can size it
+WHO_XMART_WIISE_INCIDENCES	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24skip	1000	0	604800	pivot/table/hp3b19_health.c	upstream declares no total; only a full walk can size it
+WHO_XMART_WIISE_MNTE	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24skip	1000	0	604800	pivot/table/hp3b19_health.c	upstream declares no total; only a full walk can size it
+WHO_XMART_WIISE_OUTBREAKS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24skip	1000	0	86400	pivot/table/hp3b19_health.c	upstream declares no total; only a full walk can size it
+WHO_XMART_WIISE_SCHEDULES	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24skip	1000	0	604800	pivot/table/hp3b19_health.c	upstream declares no total; only a full walk can size it
+WHO_XMART_WIISE_SIA_CONDUCTED	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24skip	1000	0	604800	pivot/table/hp3b19_health.c	upstream declares no total; only a full walk can size it
+WHO_XMART_WIISE_SURVEY_RESULTS	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24skip	1000	0	604800	pivot/table/hp3b19_health.c	upstream declares no total; only a full walk can size it
+WHO_XMART_WIISE_VACCINE_INTRO	CEILING_UNKNOWN	2000	2	2000	counted	page_param	%24skip	1000	0	604800	pivot/table/hp3b19_health.c	upstream declares no total; only a full walk can size it
+WORDPRESS_PLUGIN_REGISTRY	CEILING_UNKNOWN	200	2	200	counted	page_param	request[page]	0	0	86400	pivot/table/hp3b19_cyber.c	upstream declares no total; only a full walk can size it
+WORDPRESS_THEME_REGISTRY	CEILING_UNKNOWN	200	2	200	counted	page_param	request[page]	0	0	86400	pivot/table/hp3b19_cyber.c	upstream declares no total; only a full walk can size it
+WORLDBANK_INDICATOR_CATALOGUE	CEILING_UNKNOWN	1000	2	1000	counted	page_param	page	0	0	604800	pivot/table/hp3b19_intlorg.c	upstream declares no total; only a full walk can size it
+ZA_MUNIMONEY_AGED_DEBTORS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	0	21600	pivot/table/hp3b19_africa.c	upstream declares no total; only a full walk can size it
+ZA_MUNIMONEY_AUDIT_OPINIONS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	0	21600	pivot/table/hp3b19_africa.c	upstream declares no total; only a full walk can size it
+ZA_MUNIMONEY_CAPITAL	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	0	86400	pivot/table/hp3b19_africa.c	upstream declares no total; only a full walk can size it
+ZA_MUNIMONEY_CASHFLOW	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	0	21600	pivot/table/hp3b19_africa.c	upstream declares no total; only a full walk can size it
+ZA_MUNIMONEY_INCOME_EXPENDITURE	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	0	21600	pivot/table/hp3b19_africa.c	upstream declares no total; only a full walk can size it
+ZA_MUNIMONEY_MUNICIPALITIES	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	0	21600	pivot/table/hp3b19_africa.c	upstream declares no total; only a full walk can size it
+ZA_MUNIMONEY_OFFICIALS	CEILING_UNKNOWN	200	2	200	counted	page_param	page	0	0	21600	pivot/table/hp3b19_africa.c	upstream declares no total; only a full walk can size it
+au-asic-afs-licensees	CEILING_UNKNOWN	200	2	200	counted	page_walk		0	0	86400	feed/generated/hp17_au_finance_1.c	upstream declares no total; only a full walk can size it
+au-asic-credit-licensees	CEILING_UNKNOWN	200	2	200	counted	page_walk		0	0	86400	feed/generated/hp17_au_finance_1.c	upstream declares no total; only a full walk can size it
+au-asic-credit-representatives	CEILING_UNKNOWN	200	2	200	counted	page_walk		0	0	86400	feed/generated/hp17_au_finance_1.c	upstream declares no total; only a full walk can size it
+au-asic-financial-advisers	CEILING_UNKNOWN	200	2	200	counted	page_walk		0	0	86400	feed/generated/hp17_au_finance_1.c	upstream declares no total; only a full walk can size it
+au-asic-smsf-auditors	CEILING_UNKNOWN	200	2	200	counted	page_walk		0	0	86400	feed/generated/hp17_au_finance_1.c	upstream declares no total; only a full walk can size it
+au-government-organisations-register	CEILING_UNKNOWN	200	2	200	counted	page_walk		0	0	86400	feed/generated/hp17_au_government_1.c	upstream declares no total; only a full walk can size it
+datacite-dois-by-client	CEILING_DECLARED	10	2	9075	declared	page_walk		0	0	86400	feed/generated/hp16_de_research_1.c	10 of 9075 records, 5 a page
+datacite-dois-title-query	CEILING_DECLARED	10	2	33146	declared	page_walk		0	0	86400	feed/generated/hp16_de_research_1.c	10 of 33146 records, 5 a page
+esma-solr-upreg	CEILING_DECLARED	6	2	101621	declared	page_walk		0	0	86400	feed/generated/hp16_eu_corporate_1.c	6 of 101621 records, 3 a page
+gleif-lei-filter-lapsed	CEILING_DECLARED	20	2	1212296	declared	page_walk		0	0	86400	feed/generated/hp16_ch_corporate_1.c	20 of 1212296 records, 10 a page
+gleif-lei-filter-nonconforming	CEILING_DECLARED	20	2	1323208	declared	page_walk		0	0	86400	feed/generated/hp16_ch_corporate_1.c	20 of 1323208 records, 10 a page
+np-bipad-earthquake	FETCH_FAILED	0				page_walk		0	0	86400	feed/generated/hp17_np_disaster_1.c	np-bipad-earthquake stored nothing: the request failed at the transport level
+np-bipad-municipality	FETCH_FAILED	0				page_walk		0	0	86400	feed/generated/hp17_np_geospatial_1.c	np-bipad-municipality stored nothing: the request failed at the transport level
+np-bipad-organization	FETCH_FAILED	0				page_walk		0	0	86400	feed/generated/hp17_np_organizations_1.c	np-bipad-organization stored nothing: the request failed at the transport level
+np-bipad-resource	FETCH_FAILED	0				page_walk		0	0	43200	feed/generated/hp17_np_infrastructure_1.c	np-bipad-resource stored nothing: the request failed at the transport level
+openaire-organizations-search	CEILING_UNKNOWN	10	2	10	counted	page_walk		0	0	86400	feed/generated/hp16_eu_research_1.c	upstream declares no total; only a full walk can size it
+openaire-products-by-project	CEILING_UNKNOWN	10	2	10	counted	page_walk		0	0	86400	feed/generated/hp16_eu_research_1.c	upstream declares no total; only a full walk can size it
+openaire-projects-search	CEILING_UNKNOWN	20	2	20	counted	page_walk		0	0	86400	feed/generated/hp16_eu_research_1.c	upstream declares no total; only a full walk can size it
+openaire-research-products	CEILING_UNKNOWN	20	2	20	counted	page_walk		0	0	86400	feed/generated/hp16_eu_research_1.c	upstream declares no total; only a full walk can size it
+uk-govuk-search-cma-cases	CEILING_DECLARED	200	2	2590	declared	page_walk		0	0	43200	feed/generated/hp16_us_legal_1.c	200 of 2590 records, 100 a page
+uk-govuk-search-drug-safety-update	CEILING_DECLARED	200	2	869	declared	page_walk		0	0	43200	feed/generated/hp16_us_health_1.c	200 of 869 records, 100 a page
+uk-govuk-search-employment-tribunal	CEILING_DECLARED	200	2	134891	declared	page_walk		0	0	43200	feed/generated/hp16_us_legal_1.c	200 of 134891 records, 100 a page
+uk-govuk-search-medical-safety-alerts	CEILING_DECLARED	200	2	1457	declared	page_walk		0	0	43200	feed/generated/hp16_us_health_1.c	200 of 1457 records, 100 a page
+uk-govuk-search-tax-tribunal	CEILING_DECLARED	200	2	1452	declared	page_walk		0	0	43200	feed/generated/hp16_us_legal_1.c	200 of 1452 records, 100 a page
+uk-govuk-search-utaac-decisions	CEILING_DECLARED	200	2	2098	declared	page_walk		0	0	43200	feed/generated/hp16_us_legal_1.c	200 of 2098 records, 100 a page
+us-austin-apd-crime-arcgis	CEILING_UNKNOWN	26	1	26	counted	page_walk		0	0	21600	feed/generated/hp16_us_civilian_1.c	upstream declares no total; only a full walk can size it
+us-courtlistener-search-recap-dockets	FETCH_FAILED	0				page_walk		0	0	43200	feed/generated/hp16_us_legal_1.c	us-courtlistener-search-recap-dockets stored nothing: upstream answered 429
+us-federalregister-by-cfr	CEILING_DECLARED	10	2	1534	declared	page_walk		0	0	43200	feed/generated/hp16_us_legal_1.c	10 of 1534 records, 5 a page
+us-legistar-seattle-events	CEILING_UNKNOWN	2	2	2	counted	page_walk		0	0	43200	feed/generated/hp16_us_legal_1.c	upstream declares no total; only a full walk can size it
+us-oyez-advocates	CEILING_UNKNOWN	6	2	6	counted	page_walk		0	0	43200	feed/generated/hp16_us_legal_1.c	upstream declares no total; only a full walk can size it
+us-oyez-cases-by-term	CEILING_UNKNOWN	6	2	6	counted	page_walk		0	0	43200	feed/generated/hp16_us_legal_1.c	upstream declares no total; only a full walk can size it
+us-sf-311-open311-requests	CEILING_UNKNOWN	9	2	10	counted	page_walk		0	0	21600	feed/generated/hp16_us_civilian_1.c	upstream declares no total; only a full walk can size it
