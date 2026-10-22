@@ -136,12 +136,23 @@ static struct { char host[HG_HOSTLEN]; int gap_ms; } g_over[HG_MAX_OVERRIDES] = 
   { "data.qld.gov.au", 1500 },
   /* data.nsw.gov.au is the same shape at 17,192 datasets / ~86 pages. */
   { "data.nsw.gov.au", 250 },
+  /* apilist.tronscanapi.com rate-limits per IP close to the global 150 ms gap,
+   * and TRONSCAN_TOP_ACCOUNTS is the worst shape for it: a list page of 50
+   * accounts is followed by a DETAIL HOP PER ACCOUNT, so one page is 51
+   * requests to this host in a burst.
+   *
+   * Measured 2026-10-22, ten sequential requests at each spacing: at 150 ms
+   * two of ten answered HTTP 429; at 1,000 ms ten of ten answered 200. The
+   * row's own cycle had been stalled by exactly that — page 2 was 429'd, and
+   * a failed page clears the cycle position rather than bookmarking a refused
+   * page, so it re-read the same 25 accounts of 10,000 every day. */
+  { "apilist.tronscanapi.com", 1000 },
 };
 /* The number of LIVE entries above. This was `1` while the table held two, so
  * gap_for_host() — which scans only the first g_nover entries — never saw the
  * news.google.com gap its comment describes: the 615 gnews-* rows kept firing
  * together (found 2026-09-15). Keep it equal to the initialiser count. */
-static int g_nover = 7;
+static int g_nover = 8;
 
 static void override_set(const char *host, int gap_ms) {
   for (int i = 0; i < g_nover; i++)

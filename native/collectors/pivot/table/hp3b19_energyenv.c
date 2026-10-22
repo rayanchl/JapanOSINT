@@ -359,12 +359,30 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "renewable-capacity",
     .tags = "\"energy\",\"capacity\",\"denmark\",\"municipal\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.energidataservice.dk/dataset/CapacityPerMunicipality?limit=50",
+    /* ONE request for the whole dataset, not a 50-record offset walk.
+     * Measured 2026-10-22: this host rate-limits by request FREQUENCY, not by
+     * response size — it answered HTTP 429 to `limit=1000` and to
+     * `limit=10000` and then served `limit=50000` in full, 4.5 MB. At
+     * limit=50 the cycle's page 2 was 429'd, and a failed page clears the
+     * position rather than bookmarking a refused page, so the row re-read the
+     * same 50 rows of 12,771 every day at rc=0.
+     *
+     * The dataset is 12,771 records (its own envelope `total`), one per
+     * municipality per month, growing by ~1,176 a year — so one request is
+     * both complete and decades from the limit, and if it ever did exceed it
+     * the envelope's total would exceed records_used and the engine would
+     * file a truncation notice saying so.
+     *
+     * id_keys is the PAIR: all 12,771 (Month, MunicipalityNo) combinations
+     * are distinct (measured over the full response), and the row declared no
+     * key at all, so the engine was keying on whatever came first — `Month`,
+     * a dimension shared by every municipality in that month. */
+    .url = "https://api.energidataservice.dk/dataset/CapacityPerMunicipality?limit=50000",   /* exhaustive-ok: one request IS the whole dataset — 12,771 of a 50,000 limit, measured 2026-10-22 */
     .array_path = "records",
+    .id_keys = "Month+MunicipalityNo",
+    .date_keys = "Month",
+    .title_keys = "MunicipalityNo",
     .interval = 86400,
-    .page_param = "offset",
-    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
-    .page_size = 50,
     .description = "Installed generation capacity per Danish municipality per month "
       "split by offshore wind, onshore wind, solar and plant size band. "
       "Municipal granularity turns a national capacity headline into a "

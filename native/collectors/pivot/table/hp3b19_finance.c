@@ -1484,14 +1484,28 @@ static const hp_source HP3B19_FINANCE[] = {
     .record_type = "blockchain-account",
     .tags = "\"crypto\",\"tron\",\"blockchain\",\"whales\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://apilist.tronscanapi.com/api/account/list?limit=25",
+    /* limit=50 because that is the most this endpoint will give: it answers
+     * `limit=100` and `limit=200` with 50 records (measured 2026-10-22), so
+     * asking for 25 was paying two requests for one page of accounts. The
+     * ranked list is 10,000 accounts deep (the envelope's own `total`) and
+     * `start=9900` is honoured, so the depth is real and reachable.
+     *
+     * The cycle is kept at the 20-page default DELIBERATELY, which is 1,000
+     * accounts a run and ten days to come round, and the reason is the detail
+     * hop: every listed account costs one further request, and hp_detail_admit
+     * spends a budget of 1,000 per run. A row that re-read the top of the
+     * ranking every day would detail the same first 1,000 accounts for ever
+     * and never reach the rest; a cycle moves the slice, so over a cycle every
+     * one of the 10,000 gets its full account record. The pacing below makes
+     * that affordable rather than 429'd. */
+    .url = "https://apilist.tronscanapi.com/api/account/list?limit=50",
     .array_path = "data",
     .detail_key = "address",
     .detail_url = "https://apilist.tronscanapi.com/api/account?address={v}",
     .interval = 86400,
     .page_param = "start",
-    .page_resume = 1,   /* 10,000 records, measured 2026-10-12: read over a cycle, 25 pages a run */
-    .page_size = 25,
+    .page_resume = 1,   /* 10,000 ranked accounts (envelope total, re-measured 2026-10-22): 1,000 a run, ten runs a cycle, paired with the per-run detail budget above */
+    .page_size = 50,
     .page_start = 0,
     .page_zero_based = 1,
     /* "address" is the account's real unique key (already used for the
