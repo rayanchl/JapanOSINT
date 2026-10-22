@@ -2068,7 +2068,23 @@ static const hp_source HP3B19_EURASIA[] = {
     .record_type = "regulator-decision",
     .tags = "\"northmacedonia\",\"telecom\",\"regulator\",\"spectrum\",\"licence\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.aek.mk/wp-json/wp/v2/posts?per_page=100",
+    /* ASCENDING BY ID, because this row CYCLES and the collection is
+     * bigger than one run reads. WordPress's default order is
+     * `orderby=date&order=desc` (verified live 2026-10-22), so every new
+     * post pushes the whole collection down one place: a walk that
+     * resumes at page 14 tomorrow re-reads records it already had AND
+     * skips the ones that crossed the boundary, which is the shape
+     * CLAUDE.md calls the worst in the file — the overlap is visible as
+     * a small collision and the skip leaves no trace at all.
+     * X-WP-Total says 3,138 items here (2 runs of 2,000 to a cycle), and
+     * `orderby=id&order=asc` is accepted by this host (measured, ids
+     * ascending). Ascending puts new posts at the TAIL, where a forward
+     * walk has not been yet.
+     *
+     * Recency is NOT covered for this host by another row: the pair this
+     * wants (a desc, non-cycling recency row beside this archive one, the
+     * PLOS_RECENT/PLOS_CORPUS shape) is a follow-up, not done here. */
+    .url = "https://www.aek.mk/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .date_keys = "date",
     .id_keys = "id",
     .interval = 21600,
@@ -2323,7 +2339,22 @@ static const hp_source HP3B19_EURASIA[] = {
     .record_type = "regulator-decision",
     .tags = "\"romania\",\"telecom\",\"regulator\",\"spectrum\",\"licence\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ancom.ro/wp-json/wp/v2/posts?per_page=100",
+    /* ASCENDING BY ID, because this row CYCLES and the collection is
+     * bigger than one run reads. WordPress's default order is
+     * `orderby=date&order=desc` (verified live 2026-10-22), so every new
+     * post pushes the whole collection down one place: a walk that
+     * resumes at page 14 tomorrow re-reads records it already had AND
+     * skips the ones that crossed the boundary, which is the shape
+     * CLAUDE.md calls the worst in the file — the overlap is visible as
+     * a small collision and the skip leaves no trace at all.
+     * X-WP-Total says 5,705 items here (3 runs of 2,000 to a cycle), and
+     * `orderby=id&order=asc` is accepted by this host (measured, ids
+     * ascending). Ascending puts new posts at the TAIL, where a forward
+     * walk has not been yet.
+     *
+     * Recency is covered for this host by its registered RSS feed row, so
+     * reading the archive forward is exactly this row's job. */
+    .url = "https://www.ancom.ro/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .headers = { "User-Agent: Mozilla/5.0 (compatible;JapanOSINT-research/1.0;+https://github.com/)" },
     .date_keys = "date",
     .id_keys = "id",
@@ -2345,7 +2376,23 @@ static const hp_source HP3B19_EURASIA[] = {
     .record_type = "regulator-decision",
     .tags = "\"romania\",\"medicine\",\"regulator\",\"recall\",\"health\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.anm.ro/wp-json/wp/v2/posts?per_page=100",
+    /* ASCENDING BY ID, because this row CYCLES and the collection is
+     * bigger than one run reads. WordPress's default order is
+     * `orderby=date&order=desc` (verified live 2026-10-22), so every new
+     * post pushes the whole collection down one place: a walk that
+     * resumes at page 14 tomorrow re-reads records it already had AND
+     * skips the ones that crossed the boundary, which is the shape
+     * CLAUDE.md calls the worst in the file — the overlap is visible as
+     * a small collision and the skip leaves no trace at all.
+     * X-WP-Total says 3,831 items here (2 runs of 2,000 to a cycle), and
+     * `orderby=id&order=asc` is accepted by this host (measured, ids
+     * ascending). Ascending puts new posts at the TAIL, where a forward
+     * walk has not been yet.
+     *
+     * Recency is NOT covered for this host by another row: the pair this
+     * wants (a desc, non-cycling recency row beside this archive one, the
+     * PLOS_RECENT/PLOS_CORPUS shape) is a follow-up, not done here. */
+    .url = "https://www.anm.ro/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .date_keys = "date",
     .id_keys = "id",
     .interval = 21600,
