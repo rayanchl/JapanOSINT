@@ -29,6 +29,18 @@ answer is read out of the notice:
   NO_PAGING         the row declares no paging; one request per run. Whether
                     that discards anything depends on the endpoint, which is
                     exactly what tools/audit_url_limits.py cannot decide either
+  CYCLE_STALLED     a page_resume row whose walk was cut by a FAILED page. The
+                    engine clears the position rather than bookmarking a page
+                    that is refused, so the cycle can never advance: the row
+                    re-reads the same first slice every run, forever, and its
+                    records/stored counts look healthy. This is the
+                    ENA_PATHOGEN_SARSCOV2_RUNS shape (ebi.ac.uk answers HTTP 400
+                    to `offset=1000`, so page 2 does not exist for it) and the
+                    only verdict here that is a defect on its own
+  WALK_CUT          the same failed page on a row that does NOT cycle: the tail
+                    after `failed_page` is dropped each run. Read the status
+                    before acting — a 429 is pacing (core/hostgate.c), a 400 is
+                    usually paging the upstream refuses
   EMPTY / FETCH_FAILED / NEEDS_ENTITY / SLOW / UNREGISTERED
 
 A CEILING verdict is a question, not a diagnosis — the same caution the detail
@@ -154,6 +166,22 @@ def classify(sid, blob, rc, rows, note, fail, secs, timed_out, probe, page_size)
     basis = note.get("records_available_basis", "")
     out["basis"] = "declared" if basis.startswith("upstream declared") else "counted"
     used = int(note.get("records_used") or 0)
+
+    # A FAILED page outranks any ceiling arithmetic: the walk did not stop at a
+    # bound we chose, it stopped because the upstream refused the next request.
+    # On a cycling row that is fatal to the cycle — the engine clears the
+    # position rather than bookmark a refused page, so the row re-reads its
+    # first slice every run with records and stored agreeing, which is why none
+    # of the other verdicts can see it.
+    if note.get("failed_page"):
+        cycles = bool(note.get("reads_over_a_cycle"))
+        out["verdict"] = "CYCLE_STALLED" if cycles else "WALK_CUT"
+        out["note"] = ("page %s answered %s%s; %s" % (
+            note.get("failed_page"), note.get("failed_page_status", "?"),
+            " (unreadable body)" if note.get("failed_page_unreadable") else "",
+            "the cycle cannot advance past it" if cycles
+            else "the pages after it are dropped each run"))
+        return out
 
     # The authoritative signal is the UPSTREAM'S OWN total exceeding what was
     # stored — not `more_pages_pending`, which reports whether the walk still
@@ -306,6 +334,14 @@ def main():
     print("\n== verdicts")
     for k in sorted(counts, key=lambda k: -counts[k]):
         print("  %-18s %5d" % (k, counts[k]))
+    # Printed before the ceiling list because it is the only verdict here that
+    # is a defect rather than a question: these rows cannot advance at all.
+    stalled = [r for r in results if r["verdict"] == "CYCLE_STALLED"]
+    if stalled:
+        print("\n== %d cycling row(s) whose next page is REFUSED, so the cycle "
+              "re-reads one slice forever" % len(stalled))
+        for r in stalled:
+            print("  %-40s %s" % (r["id"], r["note"]))
     need = [r for r in results if r["suggest_page_max"]]
     if need:
         print("\n== %d row(s) whose own upstream total needs more than 20 pages"

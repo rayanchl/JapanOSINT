@@ -831,15 +831,30 @@ static const hp_source HP3B34_CKANBULK[] = {
     .record_type = "dataset-inventory",
     .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"japan\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bodik.jp/api/3/action/package_search?sort=id+asc&rows=100",
+    /* rows=1000, not 100, and that is a measurement rather than a preference.
+     * At 100 this host answered 153 pages and then refused page 154 with HTTP
+     * 403 (`start=15300`, measured 2026-10-22): 15,300 of its 18,623
+     * datasets, and because a failed page CLEARS the cycle position rather
+     * than bookmarking a refused page, the row re-read those same 15,300
+     * every run and never reached the last 3,323. The run looked healthy —
+     * rc=0, records=15300, stored=15300 — which is the shape
+     * tools/audit_page_ceiling.py now reports as CYCLE_STALLED.
+     *
+     * A per-host gap in core/hostgate.c is the usual remedy for a 403 of that
+     * kind, but the cheaper and more exhaustive one is to stop making 187
+     * requests: this CKAN honours rows=1000 (verified live, 1,000 results in
+     * one body ~9 MB), so the whole catalogue is 19 pages. Fewer requests
+     * against a public portal AND a complete read in one run. */
+    .url = "https://data.bodik.jp/api/3/action/package_search?sort=id+asc&rows=1000",
     .array_path = "result.results",
     .body_keys = "notes",
     .date_keys = "metadata_modified",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
-    .page_max = 192,   /* 18,622 datasets declared by result.count (2026-10-21) = 187 pages of 100, +5 so the walk ends on the short page */
+    .page_max = 24,   /* 18,623 datasets declared by result.count (2026-10-22) = 19 pages of 1,000, +5 so the walk ends on the upstream's short page rather than on our ceiling */
     .page_param = "start",
+    .page_size = 1000,   /* must track the rows= above: page_size IS the offset stride */
     /* package_search with sort=id asc, not current_package_list_with_resources:
      * that action has no sort parameter and orders by metadata_modified desc,
      * so a dataset edited during the walk shifts every later page — measured
@@ -848,7 +863,6 @@ static const hp_source HP3B34_CKANBULK[] = {
      * The id sort is stable, and page_resume reads a catalogue larger than
      * the ceiling over a cycle instead of its first 2,000 forever. */
     .page_resume = 1,
-    .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
     .description = "UNPROBED. The CKAN Action API endpoint that returns whole "
