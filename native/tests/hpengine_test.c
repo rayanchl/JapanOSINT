@@ -962,6 +962,56 @@ static const hp_source TTBL[] = {
 };
 HP_REGISTER_TABLE(TTBL)
 
+/* ── a workbook whose sheets ARE the collection (fixtures 50–50e) ──────────
+ * PMDA publishes its annual drug approvals as one workbook with one sheet per
+ * month, and a new sheet appears every month. A row reading one sheet of it
+ * drops the rest at a seam, which is rule 2; a row pinned to a sheet NAME goes
+ * stale in weeks and a row pinned to index 0 reads the first month for ever. */
+static const hp_source TXLS[] = {
+  /* The default: one sheet, the way every xlsx row behaved before. */
+  { .id = "T_XLS_ONE", .name = "workbook, first sheet only",
+    .url = "https://x.test/wb.xlsx", .mode = HP_XLSX,
+    .title_keys = "name", .id_keys = "code",
+    .interval = 3600, .record_type = "t-xls", .free_tier = 1, .description = "d" },
+  /* Every sheet. */
+  { .id = "T_XLS_ALL", .name = "workbook, every sheet",
+    .url = "https://x.test/wb.xlsx", .mode = HP_XLSX, .xlsx_sheet_all = 1,
+    .title_keys = "name", .id_keys = "code",
+    .interval = 3600, .record_type = "t-xls", .free_tier = 1, .description = "d" },
+  /* xlsx_sheet_all OVERRIDES a declared sheet name rather than combining with
+   * it — including a name the workbook does not have, which the single-sheet
+   * path fails the whole run on. */
+  { .id = "T_XLS_ALL_NAMED", .name = "workbook, every sheet, name also declared",
+    .url = "https://x.test/wb.xlsx", .mode = HP_XLSX, .xlsx_sheet_all = 1,
+    .xlsx_sheet = "no-such-sheet",
+    .title_keys = "name", .id_keys = "code",
+    .interval = 3600, .record_type = "t-xls", .free_tier = 1, .description = "d" },
+};
+HP_REGISTER_TABLE(TXLS)
+
+/* ── an archive whose MEMBERS are the collection (fixtures 51–51c) ────────
+ * The Assemblée nationale publishes its 19,165 written questions as one JSON
+ * document each inside a single ZIP, so the first-entry read is 19,164 records
+ * dropped at a seam. */
+static const hp_source TZIPALL[] = {
+  /* The default: the first member only, with the extra-entries notice. */
+  { .id = "T_ZIPALL_ONE", .name = "zip of json records, first member only",
+    .url = "https://x.test/za.zip", .array_path = "rec",
+    .title_keys = "name", .id_keys = "id",
+    .interval = 3600, .record_type = "t-zipall", .free_tier = 1, .description = "d" },
+  /* zip_all_entries declared on a mode it does not serve. */
+  { .id = "T_ZIPALL_CSV", .name = "zip of json records, declared csv",
+    .url = "https://x.test/za.zip", .mode = HP_CSV, .zip_all_entries = 1,
+    .title_keys = "name", .id_keys = "id",
+    .interval = 3600, .record_type = "t-zipall", .free_tier = 1, .description = "d" },
+  /* Every member. */
+  { .id = "T_ZIPALL", .name = "zip of json records, every member",
+    .url = "https://x.test/za.zip", .zip_all_entries = 1, .array_path = "rec",
+    .title_keys = "name", .id_keys = "id",
+    .interval = 3600, .record_type = "t-zipall", .free_tier = 1, .description = "d" },
+};
+HP_REGISTER_TABLE(TZIPALL)
+
 /* A ZIP of `n` STORED entries (no compression, so the test needs no zlib and
  * the payload bytes appear in the archive verbatim), with a central directory
  * and end record. CRCs are 0: nothing in the engine checks them. Caller frees;
@@ -1000,6 +1050,59 @@ static char *mk_zip(const char *const *names, const char *const *datas,
   w += 22;
   *len = (size_t)(w - z);
   return (char *)z;
+}
+
+/* A minimal .xlsx: `nsheets` worksheets named "m1".."mN", each holding a header
+ * row (name,code) and two data rows, built with mk_zip above so the test needs
+ * no fixture file and no Python. Cells are inline strings, so there is no
+ * sharedStrings member to keep in step.
+ *
+ * `drop` (1-based, 0 for none) declares a sheet in xl/workbook.xml and then
+ * does NOT write its zip member, which is a workbook that converts every sheet
+ * but one — the shape the disclosure exists for. Caller frees. */
+static char *mk_xlsx(int nsheets, int drop, size_t *len) {
+  static char wbx[1024], rels[1024], sh[8][512];
+  const char *names[8]; const char *datas[8]; size_t lens[8];
+  size_t w = 0;
+  w = (size_t)snprintf(wbx, sizeof wbx,
+      "<?xml version=\"1.0\"?><workbook xmlns=\"http://schemas.openxmlformats.org"
+      "/spreadsheetml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org"
+      "/officeDocument/2006/relationships\"><sheets>");
+  for (int i = 1; i <= nsheets; i++)
+    w += (size_t)snprintf(wbx + w, sizeof wbx - w,
+        "<sheet name=\"m%d\" sheetId=\"%d\" r:id=\"rId%d\"/>", i, i, i);
+  snprintf(wbx + w, sizeof wbx - w, "</sheets></workbook>");
+
+  w = (size_t)snprintf(rels, sizeof rels,
+      "<?xml version=\"1.0\"?><Relationships xmlns=\"http://schemas.openxmlformats"
+      ".org/package/2006/relationships\">");
+  for (int i = 1; i <= nsheets; i++)
+    w += (size_t)snprintf(rels + w, sizeof rels - w,
+        "<Relationship Id=\"rId%d\" Type=\"http://schemas.openxmlformats.org"
+        "/officeDocument/2006/relationships/worksheet\" "
+        "Target=\"worksheets/sheet%d.xml\"/>", i, i);
+  snprintf(rels + w, sizeof rels - w, "</Relationships>");
+
+  int n = 0;
+  names[n] = "xl/workbook.xml";            datas[n] = wbx;  lens[n] = strlen(wbx);  n++;
+  names[n] = "xl/_rels/workbook.xml.rels"; datas[n] = rels; lens[n] = strlen(rels); n++;
+  static char path[8][40];
+  for (int i = 1; i <= nsheets && n < 8; i++) {
+    if (i == drop) continue;
+    snprintf(sh[i - 1], sizeof sh[0],
+        "<?xml version=\"1.0\"?><worksheet xmlns=\"http://schemas.openxmlformats"
+        ".org/spreadsheetml/2006/main\"><sheetData>"
+        "<row r=\"1\"><c r=\"A1\" t=\"inlineStr\"><is><t>name</t></is></c>"
+                     "<c r=\"B1\" t=\"inlineStr\"><is><t>code</t></is></c></row>"
+        "<row r=\"2\"><c r=\"A2\" t=\"inlineStr\"><is><t>row %d-1</t></is></c>"
+                     "<c r=\"B2\" t=\"inlineStr\"><is><t>m%d-1</t></is></c></row>"
+        "<row r=\"3\"><c r=\"A3\" t=\"inlineStr\"><is><t>row %d-2</t></is></c>"
+                     "<c r=\"B3\" t=\"inlineStr\"><is><t>m%d-2</t></is></c></row>"
+        "</sheetData></worksheet>", i, i, i, i);
+    snprintf(path[i - 1], sizeof path[0], "xl/worksheets/sheet%d.xml", i);
+    names[n] = path[i - 1]; datas[n] = sh[i - 1]; lens[n] = strlen(sh[i - 1]); n++;
+  }
+  return mk_zip(names, datas, lens, n, len);
 }
 
 /* Number of captured rows of a given record_type, and the first of them. */
@@ -4157,6 +4260,161 @@ int main(void) {
   rc = run_source("T_JTBL_BADHDR", NULL);
   ok(rc == 0 && g_ncap == 1,
      "49f: a header path that is not an array still emits, positionally");
+
+  /* ── 50. A workbook's OTHER SHEETS are records too ───────────────────────
+   * One fetch buys the whole workbook, so reading one of its three sheets
+   * discards two at a seam. PMDA's annual approval workbook adds a sheet every
+   * month, which is why a name and an index are both wrong there. */
+  { size_t zl = 0;
+    char *wb = mk_xlsx(3, 0, &zl);
+
+    /* 50. The default is unchanged: the first sheet, two records. */
+    fx_reset();
+    fx_add_bin("/wb.xlsx", 200, wb, zl);
+    rc = run_source("T_XLS_ONE", "");
+    ok(rc == 0 && cap_count("t-xls", NULL) == 2 && cap_count(NOTICE, NULL) == 0,
+       "50: without xlsx_sheet_all a workbook still reads its first sheet only");
+
+    /* 50b. Every sheet, each with its own header: 3 x 2 records, no notice. */
+    fx_reset();
+    fx_add_bin("/wb.xlsx", 200, wb, zl);
+    rc = run_source("T_XLS_ALL", "");
+    ok(rc == 0 && cap_count("t-xls", NULL) == 6 && cap_count(NOTICE, NULL) == 0,
+       "50b: xlsx_sheet_all reads all three sheets (6 records, no header row among them)");
+
+    /* 50b-ii. The header of sheet 2 and 3 was consumed as a header, not stored
+     *         as a record — the ECB mistake in miniature. Every id is a real
+     *         code and none of them is the literal "code". */
+    { int hdr = 0;
+      for (int i = 0; i < g_ncap; i++)
+        if (strstr(g_cap[i].props, "\"code\":\"code\"")) hdr++;
+      ok(hdr == 0, "50b-ii: no sheet's header row was stored as a record"); }
+
+    /* 50c. xlsx_sheet_all overrides a declared sheet name. The same name on
+     *      the single-sheet path fails the whole run, so this pins that the
+     *      override is deliberate rather than an accident of ordering. */
+    fx_reset();
+    fx_add_bin("/wb.xlsx", 200, wb, zl);
+    rc = run_source("T_XLS_ALL_NAMED", "");
+    ok(rc == 0 && cap_count("t-xls", NULL) == 6,
+       "50c: xlsx_sheet_all overrides xlsx_sheet rather than combining with it");
+    free(wb);
+  }
+
+  /* 50d. A sheet the workbook declares and the zip does not carry: the other
+   *      sheets' records still emit AND the loss is disclosed by name. A month
+   *      of approvals missing must not be a silent four-of-six. */
+  { size_t zl = 0;
+    char *wb = mk_xlsx(3, 2, &zl);
+    fx_reset();
+    fx_add_bin("/wb.xlsx", 200, wb, zl);
+    rc = run_source("T_XLS_ALL", "");
+    const cap *n = NULL;
+    ok(rc == 0 && cap_count("t-xls", NULL) == 4 && cap_count(NOTICE, &n) == 1 && n &&
+       strstr(n->props, "\"sheets_declared\":3") != NULL &&
+       strstr(n->props, "\"sheets_failed\":1") != NULL &&
+       strstr(n->props, "#1") != NULL,
+       "50d: an unreadable sheet costs its records and is disclosed, naming it");
+    free(wb);
+  }
+
+  /* 50e. No sheet readable at all is the single-sheet path's honest failure,
+   *      not a successful run that happened to emit nothing (rule 1). */
+  { size_t zl = 0;
+    char *wb = mk_xlsx(1, 1, &zl);
+    fx_reset();
+    fx_add_bin("/wb.xlsx", 200, wb, zl);
+    rc = run_source("T_XLS_ALL", "");
+    ok(rc != 0 && cap_count("t-xls", NULL) == 0,
+       "50e: a workbook whose every sheet is unreadable fails, it does not succeed empty");
+    free(wb);
+  }
+
+  /* ── 51. A ZIP's OTHER MEMBERS are records too ───────────────────────────
+   * One archive, one JSON document per record — the Assemblée nationale's
+   * shape. Reading member 0 is every other record dropped at a seam, and the
+   * engine's own zip-extra notice had been saying so without a remedy that
+   * reaches 19,165 members. */
+  { const char *nm[3] = { "json/a.json", "json/b.json", "json/c.json" };
+    const char *dt[3] = { "{\"rec\":{\"id\":\"1\",\"name\":\"one\"}}",
+                          "{\"rec\":{\"id\":\"2\",\"name\":\"two\"}}",
+                          "{\"rec\":{\"id\":\"3\",\"name\":\"three\"}}" };
+    size_t ln[3] = { strlen(dt[0]), strlen(dt[1]), strlen(dt[2]) };
+    size_t zl = 0;
+    char *z = mk_zip(nm, dt, ln, 3, &zl);
+
+    /* 51. The default is unchanged: one record, and the loss is disclosed. */
+    fx_reset();
+    fx_add_bin("/za.zip", 200, z, zl);
+    rc = run_source("T_ZIPALL_ONE", "");
+    ok(rc == 0 && cap_count("t-zipall", NULL) == 1 && cap_count(NOTICE, NULL) == 1,
+       "51: without zip_all_entries a ZIP still reads its first member, and says so");
+
+    /* 51b. Every member, each parsed on its own: three records, no notice. */
+    fx_reset();
+    fx_add_bin("/za.zip", 200, z, zl);
+    rc = run_source("T_ZIPALL", "");
+    ok(rc == 0 && cap_count("t-zipall", NULL) == 3 && cap_count(NOTICE, NULL) == 0,
+       "51b: zip_all_entries reads all three members (3 records, no extra-entries notice)");
+
+    /* 51b-ii. Each member's own declared array_path resolved, so the records
+     *         carry their real keys rather than a positional guess. */
+    { int keyed = 0;
+      for (int i = 0; i < g_ncap; i++)
+        if (strstr(g_cap[i].props, "\"name\":\"one\"") ||
+            strstr(g_cap[i].props, "\"name\":\"two\"") ||
+            strstr(g_cap[i].props, "\"name\":\"three\"")) keyed++;
+      ok(keyed == 3, "51b-ii: every member's array_path resolved, not just the first's"); }
+    free(z);
+  }
+
+  /* 51c. A member the archive declares and cannot inflate: the others' records
+   *      still emit AND the loss is disclosed, naming the member. */
+  { const char *nm[2] = { "json/a.json", "json/bad.json" };
+    const char *dt[2] = { "{\"rec\":{\"id\":\"1\",\"name\":\"one\"}}", "x" };
+    size_t ln[2] = { strlen(dt[0]), 1 };
+    size_t zl = 0;
+    char *z = mk_zip(nm, dt, ln, 2, &zl);
+    /* Claim DEFLATE for the second member while its bytes are stored, so the
+     * inflate fails the way an unsupported method would. Its central-directory
+     * record is the one zip_entry_at reads. */
+    unsigned char *u = (unsigned char *)z;
+    int patched = 0;
+    for (size_t i = 0; i + 46 < zl; i++)
+      if (u[i] == 0x50 && u[i+1] == 0x4b && u[i+2] == 0x01 && u[i+3] == 0x02) {
+        if (patched++) { u[i + 10] = 8; u[i + 11] = 0; break; }
+      }
+    fx_reset();
+    fx_add_bin("/za.zip", 200, z, zl);
+    rc = run_source("T_ZIPALL", "");
+    const cap *n = NULL;
+    ok(rc == 0 && cap_count("t-zipall", NULL) == 1 && cap_count(NOTICE, &n) == 1 && n &&
+       strstr(n->props, "\"entries_declared\":2") != NULL &&
+       strstr(n->props, "\"entries_failed\":1") != NULL,
+       "51c: an unreadable member costs its records and is disclosed, naming it");
+    free(z);
+  }
+
+  /* 51d. zip_all_entries on a mode it does not serve is REFUSED, not read as
+   *      JSON anyway and not a quiet empty: concatenating CSV members would
+   *      read the second member's header as a record, and a row that declared
+   *      the flag on the wrong mode would otherwise emit nothing with rc=0. */
+  { const char *nm[2] = { "json/a.json", "json/b.json" };
+    const char *dt[2] = { "{\"rec\":{\"id\":\"1\",\"name\":\"one\"}}",
+                          "{\"rec\":{\"id\":\"2\",\"name\":\"two\"}}" };
+    size_t ln[2] = { strlen(dt[0]), strlen(dt[1]) };
+    size_t zl = 0;
+    char *z = mk_zip(nm, dt, ln, 2, &zl);
+    fx_reset();
+    fx_add_bin("/za.zip", 200, z, zl);
+    rc = run_source("T_ZIPALL_CSV", "");
+    /* rc=-1, no records, and ONE collector-fetch-failure: the refusal is
+     * disclosed as data rather than left on stderr (rule 1). */
+    ok(rc != 0 && cap_count("t-zipall", NULL) == 0 &&
+       cap_count("collector-fetch-failure", NULL) == 1,
+       "51d: zip_all_entries on a non-JSON mode is refused and disclosed, not a silent empty");
+    free(z);
+  }
 
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;

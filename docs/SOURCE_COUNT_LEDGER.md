@@ -5,7 +5,35 @@ was seeded from, what it measured and what it taught. Moved out of `CLAUDE.md`
 on 2026-10-19 so that file keeps the rules and the current number; the lessons
 that a new batch must not relearn are summarised there. Newest first.
 
-**The registered count is 58,052** (2026-10-22): 58,019 plus batch 54's 32
+**The registered count is 58,055** (2026-10-22): 58,052 plus the three rows
+that close open item B2's long tail, each a publisher's own bulk file standing
+in for a search that is gone, and two of them needing an engine affordance
+before they could ship at all:
+
+| row | measured |
+| --- | --- |
+| `JP_PMDA_NEW_DRUG_APPROVALS` | 95 / 95 in 2 requests — the annual drug-approval workbook, whose sheets are MONTHS and grow by one every month, read whole on the new `xlsx_sheet_all`. The sum of the four sheets' data rows (11 + 29 + 23 + 32) exactly |
+| `FR_AN_QUESTIONS_ECRITES` | 19,165 / 19,165 in ONE request, 50,197,713 bytes, 126 s — every written question of the 17th legislature, published as 19,165 JSON documents inside one ZIP, read on the new `zip_all_entries`. 0 notices, 3 records undated because the Journal officiel has not published them yet |
+| `JP_KANPO_DAILY_CONTENTS` | 25 / 25 in 1 request — the official gazette's daily table of contents, free for 90 days where the SEARCH went behind a paid member login. The day's 43 anchors become 25 records because several notices share one gazette page; 9 of the 25 carry the others as `other_labels` |
+
+Three existing rows stay registered and failing honestly, which is the standing
+decision rather than an oversight: PMDA's search answers the FORM PAGE to every
+POST constructible from here (session cookie, referer, the image button's x/y,
+the column checkboxes), the Assemblée's `/dyn/recherche` 404s for a real name
+and an impossible one alike with no search form on its homepage, and the
+gazette's search redirects to `/kanpou/auth/login/LoginStartUp.form` — a member
+account, not an API key, so no `key_env` opens it. Each discloses itself once
+per run and the source pages read the reason back.
+
+Also measured and NOT re-pointed, with the reason recorded rather than a guess
+shipped: `JP_MHLW_LABOUR_VIOLATIONS` (the ministry's own site search is a
+Google Custom Search — Google's index of the ministry, not its register — and
+the labour-standards section of its own sitemap lists no disclosure page) and
+`WORLDBANK_CONTRACT_AWARDS` (its Socrata API answers 404 outright now, the
+portal has moved to financesone.worldbank.org, and the Bank's data-catalogue
+API answered 429 to both attempts from here — unmeasured, not dead).
+
+**The registered count was 58,052** (2026-10-22): 58,019 plus batch 54's 32
 rows and `FR_AN_DEPUTY_STAFF` (2,077 of 2,077 French parliamentary staff,
 measured). Batch 54 is the part of batch 45's staging set that batch 49 left
 behind, recovered by fixing two over-broad alternatives in

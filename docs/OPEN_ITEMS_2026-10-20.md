@@ -192,24 +192,74 @@ four readings because the ECB workbook's first run reported 831 records and
 rc=0 while storing its own title block as supervised banks — and because the
 two sheets of one workbook turned out to have different column geometry.
 
-Still outstanding:
+**The long tail is now closed too** (2026-10-22). Every row named below was
+asked what its publisher actually serves, and the answer was an engine
+affordance twice over rather than a path:
 
-* **`FI_EDUSKUNTA_RECORDS` and `AT_PARLAMENT_RECORDS` need an engine
-  affordance, not a path** — see item B2-bis below.
-* `FR_ASSEMBLEE_NATIONALE` and `CZ_CUZK_CADASTRE` still name an API nobody has
-  queried.
-* the real register for the four that must not be re-pointed.
-* **and then a decision that is the operator's**, for the rows with no
-  server-rendered replacement reachable from here — now including
-  `COPERNICUS_EMS_ACTIVATIONS`, whose "31 anchors" were chrome and whose only
-  declared feed is two news items: keep them disclosing, or remove them. Both
-  are defensible. **The faa.gov precedent that argued for keeping has since
-  been overturned by its own author** (`BROWSER_HOSTS`, and two FAA rows are
-  live again), so it no longer points one way. What is NOT in question: a
-  browser profile is a remedy for a host that REFUSES us, and every row in
-  this group answers 404 or renders client-side, so no agent reaches them.
+| row | outcome | measured |
+| --- | --- | --- |
+| `FI_EDUSKUNTA_RECORDS` | re-pointed | the `avoindata` API, on the new `row_header_path` — `Marin` 1 of 1, an impossible value 0 |
+| `AT_PARLAMENT_RECORDS` | NOT shipped | its index has no stable ordering, and it ignores `pageSize` (3 rows asked, 100,000 rows and 58 MB served). One measured sort parameter away |
+| `CZ_CUZK_CADASTRE` | re-pointed | `/api/v1/Parcely/Vyhledani`, `ApiKey` header, `JO_CUZK_API_KEY` — a credential disclosure until a key exists |
+| `FR_ASSEMBLEE_NATIONALE` | kept failing + NEW row | /dyn/recherche 404s for a real name and an impossible one alike, and the homepage has no search form. `FR_AN_QUESTIONS_ECRITES` reads the open data instead: **19,165 of 19,165 written questions stored** in one request, 50 MB, on the new `zip_all_entries` |
+| `JP_PMDA_APPROVALS` | kept failing + NEW row | the search is `POST /PmdaSearch/iyakuSearch` and answers the FORM PAGE for every POST constructible here (session cookie, referer, the image button's x/y, the column checkboxes). `JP_PMDA_NEW_DRUG_APPROVALS` reads the annual workbook: **95 of 95** across four monthly sheets, on the new `xlsx_sheet_all` |
+| `JP_KANPO_GAZETTE` | kept failing + NEW row | the search is behind a paid MEMBER LOGIN (`/kanpou/auth/login/LoginStartUp.form`), which no `key_env` opens. But the gazette itself is free: `JP_KANPO_DAILY_CONTENTS` reads each day's table of contents, **25 of 25** carrying 43 notice titles |
+| `JP_MHLW_LABOUR_VIOLATIONS` | kept failing, no replacement | the index 404s, the ministry's site search is a Google Custom Search (Google's index of the ministry, not its register), and the labour-standards section of the ministry's own sitemap lists no disclosure page |
+| `WORLDBANK_CONTRACT_AWARDS` | kept failing, unmeasured | its Socrata API answers 404 outright now (it was "empty" in the earlier reading), the portal has moved to financesone.worldbank.org (200), and `datacatalogapi.worldbank.org` answered 429 to both attempts from here. Not a verdict about the dataset |
 
-### B2-bis. Two national parliaments publish a JSON TABLE the engine cannot key
+**And the operator's decision has been taken: keep every one of them,
+disclosing.** The rows with no reachable replacement — the 36 walls, the 404s
+that render client-side, `COPERNICUS_EMS_ACTIVATIONS` whose "31 anchors" were
+chrome — stay registered and file one `collector-fetch-failure` each, which the
+source pages now read back as a reason and a remedy beside the status. Nothing
+is removed for failing honestly. (The faa.gov precedent that used to argue for
+keeping had been overturned by its own author, so this rests on the decision
+rather than on that precedent.)
+
+### B2-bis. ~~Two national parliaments publish a JSON TABLE the engine cannot key~~ — `row_header_path` SHIPPED
+
+`hp_source.row_header_path` names the sibling array holding the column names,
+and the engine keys each array record by NAME rather than by position; where the
+header runs out, the surplus cells keep their positional names rather than being
+dropped. `hptest` 49–49f pin it, six of the eight confirmed to fail with the
+path disabled and the other two being the controls that pin the old behaviour.
+`FI_EDUSKUNTA_RECORDS` ships on it, measured through the engine. The Austrian
+row still does not, for the reason below: its index has no stable ordering.
+
+### B2-ter. A workbook's other sheets and an archive's other members — both shipped
+
+The same shape twice, found while closing B2's long tail (2026-10-22): one fetch
+buys a container, and the engine read one thing out of it.
+
+* **`xlsx_sheet_all`** reads every worksheet, each with its own header. PMDA
+  publishes its annual drug approvals as one workbook with ONE SHEET PER MONTH
+  and a new sheet every month, so a row pinned to a name goes stale in weeks and
+  a row pinned to index 0 reads May for ever — neither visible in a record
+  count. `JP_PMDA_NEW_DRUG_APPROVALS`: 95 of 95, the sum of the four sheets'
+  data rows exactly.
+* **`zip_all_entries`** reads every archive member, each parsed on its own.
+  The Assemblée nationale publishes its written questions as 19,165 JSON
+  documents inside one 50 MB ZIP, so the first-entry read was 19,164 records
+  dropped — and the engine's own `zip-extra-entries` notice had been saying so
+  for as long as the row existed, with remedies ("a named-entry read, or one row
+  per member") that do not reach 19,165 members. `FR_AN_QUESTIONS_ECRITES`:
+  19,165 of 19,165 in one request.
+
+Both disclose a container member they could not read, by name, instead of
+leaving a silent shortfall; `hptest` 50–50e and 51–51c pin them, each confirmed
+to fail with the new path disabled.
+
+**And finding them found a real bug in the OLD path.** HP_XLSX's single-sheet
+failure set `out = -1` under a comment calling it an honest failure, and
+`out = st.emitted` three lines below overwrites every mode driver's return —
+deliberately, so a later page's failure cannot erase the earlier pages' count.
+So a workbook that would not convert AT ALL reported `rc=0 records=0`, the
+invisible nothing rule 1 exists to prevent. The run's own error flag is what
+survives; `hptest` 50e fails under the old line.
+
+The original item read:
+
+### B2-bis (as written). Two national parliaments publish a JSON TABLE the engine cannot key
 
 Measured 2026-10-21. Eduskunta's `avoindata` API and the Austrian Parliament's
 filter API both answer with an array of ARRAYS — `rowData` / `rows` — and put
@@ -623,6 +673,105 @@ directory, and probing for the name we expected (`wfs-si-gurs-kat`, `-ku`,
 `-kn-slo`, `/ows`) is what CLAUDE.md warns against — six guesses, six 404s.
 Both rows are KEPT and disclose themselves through the health projection; see
 E6.
+
+### E7. The registry-wide health sweep is running, and its first 2,400 rows already found 14,060 records a run
+
+`docs/registry-health-sweep-2026-10-22.tsv`, `audit_registry_emit.py
+--scheduled --jobs 6 --timeout 90 --resume`. **It covers a fraction of the
+55,699 scheduled rows and must be read as that** — at roughly 1,000 rows an
+hour a complete pass is a two-day job, and the file is committed as it
+accumulates rather than held back.
+
+The point of the sweep is to FILL the health disclosure, not to gate anything:
+every scheduled run already files a `collector-fetch-failure` record of its own,
+so a source's page acquires its reason and remedy as the scheduler reaches it.
+The sweep just front-loads that.
+
+What the first 2,390 rows say: **1,502 OK, 161 EMITS_NOTHING, 88 SLOW (hit the
+90 s kill line — unmeasured, not failed), 34 FETCH_FAILED, 16 COLLISION.**
+
+**Two of the collisions were a 70% loss and are fixed.** `eur-soc-cat-tqdx-tz5i`
+read 15,152 emitted / 4,615 stored and `eur-soc-cat-9ehv-pmf5` 3,788 / 1,265 —
+Catalonia's climate atlases, where the record is a MUNICIPALITY × VARIABLE and
+VJSON's id precedence list finds no field at all (`codi_municipi`,
+`nom_municipi`, `cap_municipi`, `variable`, `unitat`, `valor`), so it fell back
+and collapsed each municipality's whole series. Measured against the upstream
+before touching the key, as a collision verdict requires: 947 municipalities,
+which is Catalonia's own count, × 16 and × 4 variables = 15,152 and 3,788 rows
+exactly, and `codi_municipi+variable` is distinct on 5,000 of 5,000 and 3,788 of
+3,788. `VJSON_IDKEYS` composes with `+`, so it is a one-line change each. Both
+re-measured after: **15,152 / 15,152 and 3,788 / 3,788** — 14,060 records a run
+that were being discarded.
+
+Both still file a label-keys notice (every record is titled from its first
+scalar, a numeric municipality code). That is disclosed and is not a loss;
+fixing it needs a title override VJSON has no macro for.
+
+**And then the sweep reached Colombia: eleven more of the same shape, and ten
+are fixed.** `datos.gov.co` Socrata rows, the same cause — VJSON's id
+precedence list finds no field in the record, so it falls back and keys on the
+first scalar, which is a dimension. Every key below was measured over two pages
+(1,000 records) BEFORE it was changed, and the row re-measured through the
+engine after:
+
+| row | key, measured | before | after |
+| --- | --- | --- | --- |
+| `lat-co-runt-actores` | `id_empresa+a_o+mes_nombre+tipo_actor` | 10,000 / 5,111 | **10,000 / 10,000** |
+| `lat-co-medicamentos` | `expediente+expedientecum+consecutivocum+principioactivo+nombrerol` | 10,000 / 6,245 | 10,000 / 9,937 |
+| `lat-co-secop2-contratos` | `id_contrato` | 10,000 / 6,789 | **10,000 / 10,000** |
+| `lat-co-ideam-precip` | `codigoestacion+codigosensor+fechaobservacion` | 10,000 / 7,591 | **10,000 / 10,000** |
+| `lat-co-ideam-presion` | same | 10,000 / 9,075 | **10,000 / 10,000** |
+| `lat-co-procuraduria` | `correo_electronico+cargo` | 4,986 / 4,166 | **4,986 / 4,986** |
+| `lat-co-ideam-temp` | same as precip | 10,000 / 9,653 | **10,000 / 10,000** |
+| `lat-co-secop1-multas` | `ruta_de_proceso` | 1,716 / 1,619 | **1,716 / 1,716** |
+| `lat-co-trm` | `vigenciadesde` | 8,372 / 8,288 | **8,372 / 8,372** |
+| `lat-co-ideam-estaciones` | `codigo` | 10,000 / 9,917 | 10,000 / 9,986 |
+
+**16,545 records a run** recovered there, **30,605 with Catalonia's two.**
+
+Three measurements in that table are worth keeping for the next person:
+
+* **`fechaobservacion` alone is unique over 1,000 IDEAM observations and is the
+  WRONG key.** A station network records many stations at one instant; the
+  sample only looks unique because it is ordered by `:id`. The minimal key a
+  search finds is not the same thing as the record's identity — this is the
+  generator mistake that keyed batch 36 on each record's first field, arrived at
+  by a different route.
+* **INVIMA repeats a medicine's CUM row per ACTIVE INGREDIENT and per role.**
+  The natural three-part key (`expediente+expedientecum+consecutivocum`)
+  reaches only 983 of 1,000; the 15 remaining groups differ on
+  `principioactivo`, `cantidad`, `nombrerol` and `tiporol`, so those belong in
+  the identity.
+* **A longer key is not automatically a better one.**
+  `lat-co-dispositivos-med` is the one row left unchanged: its best reachable
+  key (`expediente+presentacion_comercial+nombre_rol+marca+rol`) is 961 of
+  1,000, no better than the 3.85% the row already loses, and reaching 1,000 of
+  1,000 needs nine fields of which **539 of 1,000 rows are missing at least
+  one** — a key that degrades for half the collection. The duplicates differ
+  only in `pais_rol` / `ciudad_rol`, often blank. INVIMA's device register does
+  not expose its own record granularity, and that is the finding.
+
+The residuals are sub-1% (63 of 10,000 and 14 of 10,000) and are past what a
+4,000-row sample can see — `codigo` is distinct on all 4,000 sampled station
+rows. A byte-identical repeat upserting onto itself is correct dedupe, not
+loss; whether these are that is unmeasured.
+
+The other 14 collisions are 1–4 records each out of hundreds or thousands,
+which is the shape of an upstream's own duplicate rather than a wrong key — but
+each is a question until measured, and they are not measured yet.
+
+**And eight of the 161 EMITS_NOTHING rows were the TOOL's own confusion.**
+`_camera_refframe`, `_image_embed`, `camera-stills`, `media-analyze`,
+`_entity_vec`, `embedding-backfill`, `translate`, `_svec_index` are maintenance
+pods: they write their own tables and nothing to `intel_items`, by design, so
+asking them whether they emit records is exactly the mistake the EMITS_NOTHING
+verdict exists to expose — a verdict about a source that was never asked the
+question. `audit_registry_emit.py` now reports a collector whose name begins
+with `_` (the convention `source.h` documents) as **POD** and does not run it:
+19 of them in the registry, listed rather than dropped so nothing registered
+hides, and never counted as a finding. **The committed TSV was produced by the
+tool BEFORE that fix**, so its `_`-collector rows still read EMITS_NOTHING;
+read them as POD.
 
 ### E5. 2.3% of the KKJ procurement corpus carries no prefecture code, and nothing reads it
 

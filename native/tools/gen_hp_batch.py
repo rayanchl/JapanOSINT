@@ -139,6 +139,7 @@ STR_OPTS = {"array_path", "title_keys", "id_keys", "link_keys", "link_tmpl",
 INT_OPTS = {"detail_max", "page_start", "page_size", "page_max", "max_items",
             "timeout_ms",
             "page_zero_based", "csv_skip_lines", "xlsx_sheet_index",
+            "xlsx_sheet_all", "zip_all_entries",
             "filter_query", "csv_no_header", "free_tier", "interval",
             # the scheduler re-buckets the cadence from the newest stored
             # item's age after every run (hpengine.h adaptive_interval)

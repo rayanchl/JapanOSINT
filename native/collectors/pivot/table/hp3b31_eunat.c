@@ -131,7 +131,55 @@ static const hp_source HP3B31_EUNAT[] = {
     .base = "https://www.assemblee-nationale.fr", .filter_query = 1,
     .description = "Bills, amendments with their authors, written questions and "
       "ministerial answers, committee hearings and the audition of named "
-      "company executives — which is a public, on-record statement by them" },
+      "company executives — which is a public, on-record statement by them. "
+      "THIS PATH IS DEAD: measured 2026-10-22, /dyn/recherche answers 404 for "
+      "a real company name and for an impossible one alike, and the homepage "
+      "carries no search form at all (the site renders its search in the "
+      "browser). The row is kept and discloses its 404 once per run; "
+      "FR_AN_QUESTIONS_ECRITES below reads the part of this record the "
+      "Assemblée publishes as open data." },
+
+  /* What the Assemblée nationale does publish, asked of its own open-data site
+   * rather than guessed at (2026-10-22): every written question of the current
+   * legislature, as ONE ZIP holding 19,165 JSON documents — one question each.
+   *
+   * This is the row zip_all_entries exists for. The engine read the first
+   * member of a ZIP and disclosed the rest as lost, and its own remedy ("a
+   * named-entry read, or one row per member") does not reach 19,165 members.
+   * Each member is `{"question": {...}}`, so array_path resolves to one object
+   * and each member contributes exactly one record.
+   *
+   * The file is the whole legislature every time (50 MB compressed), so the
+   * cadence is weekly rather than daily: the Journal officiel publishes
+   * questions most weekdays, and a daily row would re-download 50 MB to find
+   * them. Every record upserts on its own `uid`, so a re-read costs nothing. */
+  { .id = "FR_AN_QUESTIONS_ECRITES",
+    .name = "France Assemblée nationale — written questions to ministers",
+    .name_ja = "フランス国民議会 書面質問",
+    .category = "government",
+    .portal = "https://data.assemblee-nationale.fr/questions/questions-ecrites",
+    .record_type = "fr-parliamentary-question",
+    .tags = "\"fr\",\"parliament\",\"question\",\"minister\",\"open-data\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://data.assemblee-nationale.fr/static/openData/repository/17/"
+           "questions/questions_ecrites/Questions_ecrites.json.zip",
+    .zip_all_entries = 1,
+    .array_path = "question",
+    .title_keys = "indexationAN.analyses.analyse,indexationAN.rubrique",
+    .id_keys = "uid",
+    .body_keys = "textesQuestion.texteQuestion.texte",
+    .date_keys = "textesQuestion.texteQuestion.infoJO.dateJO",
+    .interval = 604800,
+    .timeout_ms = 180000,
+    .description = "Every written question a French deputy has put to a "
+      "minister this legislature, with the minister's answer where one has "
+      "been given: the question's identifier and number, the subject heading "
+      "the Assemblée indexes it under, the deputy who asked it with their "
+      "parliamentary group, the ministry it was addressed to, the Journal "
+      "officiel issue and page it was published in, and the full text. A "
+      "written question is the cheapest way a deputy puts a company, a site "
+      "closure or a contract on the public record, so the text is a primary "
+      "source naming firms that no company register would." },
 
   { .id = "NL_DATA_OVERHEID_CKAN", .name = "Netherlands data.overheid.nl — dataset catalog",
     .name_ja = "オランダ オープンデータ目録", .category = "government",

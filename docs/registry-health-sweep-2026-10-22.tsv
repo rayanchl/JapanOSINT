@@ -711,3 +711,2570 @@ sk-rpvs-pvs-expand-partner	OK	0	0	400	401	400	400	64.8
 us-sf-311-open311-services	OK	0	0	7	7	7	7	10.0	
 us-ca-dcc-cannabis-detail	OK	0	0	1	1	1	1	1.3	
 ua-prozorro-contracts	SLOW	-1	0	-1	-1	169	-1	90.0	hit --timeout 90.0s; 169 rows already stored
+us-epa-envirofacts-br-reporting	OK	0	0	1	1	1	1	3.1	
+us-epa-envirofacts-pcs-permit-facility	OK	0	0	1	1	1	1	2.2	
+us-epa-envirofacts-tri-facility	OK	0	0	3	3	3	3	3.5	
+us-sdwis-water-system	OK	0	0	2	2	2	2	2.6	
+ua-prozorro-tenders	SLOW	-1	0	-1	-1	176	-1	90.1	hit --timeout 90.1s; 176 rows already stored
+us-ma-ocpf-filer	OK	0	0	17	17	17	17	3.8	
+us-ma-ocpf-report-detail	OK	0	0	8	8	8	8	2.1	
+us-ma-ocpf-report-list	OK	0	0	50	50	50	50	8.4	
+us-phl-carto-311	OK	0	0	5	5	5	5	3.4	
+us-brookline-311-open311-requests	SLOW	-1	0	-1	-1	21	-1	90.0	hit --timeout 90.0s; 21 rows already stored
+us-phl-carto-li-permits	OK	0	0	5	5	5	5	1.7	
+us-sf-311-open311-requests	SLOW	-1	0	-1	-1	35	-1	90.0	hit --timeout 90.0s; 35 rows already stored
+us-phl-carto-opa-properties	OK	0	0	5	5	5	5	3.0	
+us-usaspending-agency-overview	EMITS_NOTHING	0	0	0	0	0	-1	2.0	no records reached intel_items
+us-ma-ocpf-iepacs	OK	0	0	132	132	132	132	21.6	
+global-peeringdb-org-list	SLOW	-1	0	-1	-1	41	-1	90.0	hit --timeout 90.0s; 41 rows already stored
+us-ca-dcc-cannabis-search	SLOW	-1	0	-1	-1	502	-1	90.0	hit --timeout 90.0s; 502 rows already stored
+us-cms-open-payments-catalog	OK	0	0	74	74	74	74	1.3	
+us-usaspending-reporting-agencies-overview	OK	0	0	111	112	111	111	25.8	
+us-usaspending-agency-federal-account	OK	0	0	157	158	157	157	32.3	
+uk-govuk-search-drug-safety-update	OK	0	0	300	301	300	300	61.6	
+uk-govuk-search-medical-safety-alerts	OK	0	0	300	301	300	300	64.0	
+us-cpsc-recall-by-product-name	OK	0	0	88	88	88	88	15.7	
+global-peeringdb-carrierfac	OK	0	0	9	9	9	9	2.2	
+us-cpsc-recall-by-date-range	OK	0	0	295	295	295	295	51.1	
+global-peeringdb-ixlan-by-ix	OK	0	0	1	1	1	1	1.0	
+us-cms-provider-enrollment	OK	0	0	200	201	200	200	57.4	
+global-peeringdb-ixfac-by-ix	OK	0	0	15	15	15	15	3.6	
+us-arin-rdap-autnum	OK	0	0	3	3	3	3	0.8	
+us-arin-rdap-entity	OK	0	0	55	55	55	55	0.9	
+us-cms-data-catalog	SLOW	-1	0	-1	-1	585	-1	90.0	hit --timeout 90.0s; 585 rows already stored
+us-cms-provider-data-catalog	SLOW	-1	0	-1	-1	13	-1	90.1	hit --timeout 90.1s; 13 rows already stored
+global-peeringdb-campus-list	SLOW	-1	0	-1	-1	42	-1	90.0	hit --timeout 90.0s; 42 rows already stored
+uk-govuk-search-cma-cases	OK	0	0	300	301	300	300	76.8	
+uk-govuk-search-employment-tribunal	OK	0	0	300	301	300	300	72.9	
+us-cap-volume-cases	OK	0	0	20	20	20	20	1.3	
+us-courtlistener-financial-disclosures	FETCH_FAILED	0	0	1	1	0	-1	1.1	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+us-courtlistener-people-by-lastname	FETCH_FAILED	0	0	1	1	0	-1	0.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+us-courtlistener-search-recap-dockets	FETCH_FAILED	0	0	1	1	0	-1	0.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+global-peeringdb-netfac-by-fac	SLOW	-1	0	-1	-1	41	-1	90.0	hit --timeout 90.0s; 41 rows already stored
+uk-govuk-search-tax-tribunal	OK	0	0	300	301	300	300	70.1	
+us-federalregister-by-docket	OK	0	0	1	1	1	1	1.4	
+global-peeringdb-netixlan-by-ix	SLOW	-1	0	-1	-1	21	-1	90.0	hit --timeout 90.0s; 21 rows already stored
+us-ecfr-titles	OK	0	0	50	50	50	50	10.3	
+us-legistar-seattle-eventitems	OK	0	0	8	8	8	8	1.1	
+us-federalregister-public-inspection-by-date	OK	0	0	99	99	99	99	16.3	
+us-federalregister-by-cfr	OK	0	0	200	201	200	200	32.2	
+us-ma-ocpf-barred-filers	OK	0	0	4	4	4	4	1.7	
+uk-govuk-search-utaac-decisions	OK	0	0	300	301	300	300	75.3	
+us-cap-reporter-volumes	SLOW	-1	0	-1	-1	335	-1	90.1	hit --timeout 90.1s; 335 rows already stored
+us-oyez-case-detail	OK	0	0	9	9	9	9	3.5	
+us-federalregister-executive-orders	SLOW	-1	0	-1	-1	581	-1	90.0	hit --timeout 90.0s; 581 rows already stored
+us-oyez-cases-by-term	OK	0	0	62	62	62	62	10.3	
+us-oyez-natural-court	OK	0	0	9	9	9	9	3.4	
+us-scotus-docket-json	OK	0	0	53	53	53	53	1.1	
+us-oyez-advocates	OK	0	0	200	201	200	200	37.8	
+us-ustaxcourt-case-detail	OK	0	0	15	15	15	15	3.3	
+us-legistar-seattle-events	SLOW	-1	0	-1	-1	529	-1	90.1	hit --timeout 90.1s; 529 rows already stored
+openalex-institution-associated	OK	0	0	16	16	16	16	3.3	
+openalex-institution-by-ror	FETCH_FAILED	0	0	1	1	0	-1	0.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+crossref-work-detail	OK	0	0	30	30	30	30	5.1	
+openalex-work-by-doi	OK	0	0	1	1	1	1	1.0	
+openalex-works-by-author	FETCH_FAILED	0	0	1	1	0	-1	0.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+openalex-works-by-ror	FETCH_FAILED	0	0	1	1	0	-1	0.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+openalex-institution-detail	OK	0	0	25	25	25	25	4.6	
+us-legistar-seattle-matters	SLOW	-1	0	-1	-1	580	-1	90.1	hit --timeout 90.1s; 580 rows already stored
+semanticscholar-paper-by-doi-graph	OK	0	0	1000	1000	1000	1000	2.7	
+unpaywall-doi	OK	0	0	9	9	9	9	0.8	
+us-ma-ocpf-legal-actions	SLOW	-1	0	-1	-1	592	-1	90.0	hit --timeout 90.0s; 592 rows already stored
+ror-search-v2	OK	0	0	20	21	20	20	32.3	
+ror-org-detail-v2	OK	0	0	51	51	51	51	58.3	
+ror-org-detail-v1	OK	0	0	51	51	51	51	61.5	
+us-ustaxcourt-order-search	SLOW	-1	0	-1	-1	525	-1	90.1	hit --timeout 90.1s; 525 rows already stored
+us-fmcsa-carrier-census	OK	0	0	200	201	200	200	33.4	
+global-gbfs-systems-catalog	SLOW	-1	0	-1	-1	384	-1	90.0	hit --timeout 90.0s; 384 rows already stored
+ar-georef-departamentos	OK	0	0	3	4	3	3	2.2	
+us-fmcsa-crash-file	OK	0	0	200	201	200	200	41.3	
+au-asic-banned-disqualified-organisations	OK	0	0	15	15	15	15	6.7	
+uk-govuk-search-maib-reports	SLOW	-1	0	-1	-1	358	-1	90.0	hit --timeout 90.0s; 358 rows already stored
+uk-govuk-search-raib-reports	SLOW	-1	0	-1	-1	371	-1	90.0	hit --timeout 90.0s; 371 rows already stored
+us-fmcsa-vehicle-inspection-file	OK	0	0	200	201	200	200	64.9	
+au-asic-afs-licensees	OK	0	0	200	201	200	200	67.4	
+au-asic-credit-representatives	OK	0	0	100	101	100	100	30.9	
+au-asic-financial-advisers	FETCH_FAILED	0	0	1	1	0	-1	0.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+au-asic-smsf-auditors	FETCH_FAILED	0	0	1	1	0	-1	0.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+au-government-organisations-register	FETCH_FAILED	0	0	1	1	0	-1	0.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+au-ipgod-ip-rights-2022	FETCH_FAILED	0	0	1	1	0	-1	0.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+au-asic-business-names	FETCH_FAILED	0	0	1	1	0	-1	1.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+au-asic-liquidators	FETCH_FAILED	0	0	1	1	0	-1	0.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+au-asic-registered-auditors	FETCH_FAILED	0	0	1	1	0	-1	0.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+us-nhtsa-vpic-manufacturers	SLOW	-1	0	-1	-1	364	-1	90.0	hit --timeout 90.0s; 364 rows already stored
+au-asic-credit-licensees	OK	0	0	200	201	200	200	59.5	
+au-asic-banned-disqualified-persons	OK	0	0	300	301	300	300	81.3	
+au-asic-afs-authorised-representatives	OK	0	0	300	301	300	300	80.9	
+ihsn-microdata-bf	OK	0	0	50	50	50	50	12.9	
+bh-national-exports-2025	FETCH_FAILED	1	-1	1	1	0	-1	15.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+ihsn-microdata-bj	OK	0	0	50	50	50	50	12.0	
+br-cnpja-open-office	OK	0	0	5	5	5	5	1.0	
+br-cnpjws-publica	OK	0	0	5	5	5	5	1.1	
+br-ibge-censo-nomes	OK	0	0	9	9	9	9	1.6	
+bo-ine-anda-microdatos	OK	0	0	50	50	50	50	10.8	
+undp-projects-bf	OK	0	0	114	114	114	114	29.5	
+br-ibge-municipio-detalhe	OK	0	0	1	1	1	1	1.6	
+undp-projects-bj	OK	0	0	125	125	125	125	27.9	
+af-ihsn-bw	OK	0	0	50	50	50	50	10.9	
+af-gleif-lei-bw	OK	0	0	77	77	77	77	23.5	
+af-wbmicro-bw	OK	0	0	50	50	50	50	13.8	
+af-nada-bw-statsbots-microdata	OK	0	0	47	47	47	47	25.6	
+dportal-iati-bf	SLOW	-1	0	-1	-1	541	-1	90.1	hit --timeout 90.1s; 541 rows already stored
+dportal-iati-bj	SLOW	-1	0	-1	-1	519	-1	90.1	hit --timeout 90.1s; 519 rows already stored
+ihsn-microdata-cd	OK	0	0	97	97	97	97	22.3	
+af-dportal-act-bw	SLOW	-1	0	-1	-1	582	-1	90.0	hit --timeout 90.0s; 582 rows already stored
+af-dportal-trans-bw	SLOW	-1	0	-1	-1	521	-1	90.1	hit --timeout 90.1s; 521 rows already stored
+ihsn-microdata-ci	OK	0	0	50	50	50	50	13.6	
+undp-projects-ci	OK	0	0	114	114	114	114	32.3	
+ihsn-microdata-cm	OK	0	0	50	50	50	50	12.2	
+dportal-iati-cd	SLOW	-1	0	-1	-1	558	-1	90.1	hit --timeout 90.1s; 558 rows already stored
+undp-projects-cd	SLOW	-1	0	-1	-1	260	-1	90.1	hit --timeout 90.1s; 260 rows already stored
+undp-projects-cm	OK	0	0	90	90	90	90	30.6	
+co-dane-microdatos-nada	OK	0	0	50	50	50	50	9.0	
+ihsn-microdata-dz	OK	0	0	50	50	50	50	12.2	
+undp-projects-dz	OK	0	0	85	85	85	85	22.3	
+dportal-iati-ci	SLOW	-1	0	-1	-1	530	-1	90.1	hit --timeout 90.1s; 530 rows already stored
+ihsn-microdata-eg	OK	0	0	50	50	50	50	12.1	
+dportal-iati-cm	SLOW	-1	0	-1	-1	552	-1	90.1	hit --timeout 90.1s; 552 rows already stored
+af-gleif-lei-et	OK	0	0	16	16	16	16	6.0	
+undp-projects-eg	OK	0	0	184	184	184	184	43.0	
+af-ihsn-et	OK	0	0	50	50	50	50	11.1	
+af-dhs-data-et	COLLISION	0	0	100	99	99	100	16.4	1 of 100 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+af-wbmicro-et	OK	0	0	50	50	50	50	18.1	
+dportal-iati-dz	SLOW	-1	0	-1	-1	535	-1	90.1	hit --timeout 90.1s; 535 rows already stored
+dportal-iati-eg	SLOW	-1	0	-1	-1	524	-1	90.1	hit --timeout 90.1s; 524 rows already stored
+af-dhs-data-gh	COLLISION	0	0	100	98	98	100	17.4	2 of 100 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+af-dportal-act-et	SLOW	-1	0	-1	-1	572	-1	90.0	hit --timeout 90.0s; 572 rows already stored
+af-ihsn-gh	OK	0	0	50	50	50	50	9.9	
+il-knesset-israel-law	FETCH_FAILED	0	0	1	1	0	-1	2.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+af-dportal-trans-et	SLOW	-1	0	-1	-1	391	-1	90.1	hit --timeout 90.1s; 391 rows already stored
+il-knesset-law	FETCH_FAILED	0	0	1	1	0	-1	1.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+af-wbmicro-gh	OK	0	0	50	50	50	50	14.0	
+il-knesset-agenda	FETCH_FAILED	0	0	1	1	0	-1	2.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+il-knesset-bill-name	FETCH_FAILED	0	0	1	1	0	-1	2.1	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+il-knesset-cmt-session-item	FETCH_FAILED	0	0	1	1	0	-1	2.2	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+il-knesset-committee-session	FETCH_FAILED	0	0	1	1	0	-1	1.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+il-knesset-faction	FETCH_FAILED	0	0	1	1	0	-1	1.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+il-knesset-query	FETCH_FAILED	0	0	1	1	0	-1	1.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+af-gleif-lei-gh	OK	0	0	141	141	141	141	47.3	
+unsd-sdg-goal-list	OK	0	0	17	17	17	17	3.9	
+af-dportal-act-gh	SLOW	-1	0	-1	-1	579	-1	90.1	hit --timeout 90.1s; 579 rows already stored
+af-dportal-trans-gh	SLOW	-1	0	-1	-1	521	-1	90.0	hit --timeout 90.0s; 521 rows already stored
+unsd-sdg-indicator-list	OK	0	0	251	251	251	251	43.0	
+pdh-microdata-catalog	FETCH_FAILED	0	0	1	1	0	-1	1.1	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+worldbank-microdata-catalog	OK	0	0	100	100	100	100	27.9	
+who-collaborating-centres	OK	0	0	50	50	50	50	14.7	
+ifrc-go-country	OK	0	0	281	281	281	281	67.1	
+af-dhs-data-ke	COLLISION	0	0	100	98	98	100	17.1	2 of 100 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+ifrc-go-field-report	SLOW	-1	0	-1	-1	311	-1	90.0	hit --timeout 90.0s; 311 rows already stored
+ifrc-go-project	SLOW	-1	0	-1	-1	353	-1	90.1	hit --timeout 90.1s; 353 rows already stored
+af-ihsn-ke	OK	0	0	50	50	50	50	11.0	
+kr-constitutional-court-decisions	OK	0	0	20	20	20	20	14.1	
+af-wbmicro-ke	OK	0	0	50	50	50	50	18.9	
+af-nada-ke-knbs-microdata	OK	0	0	100	100	100	100	25.9	
+kr-supreme-court-precedents	OK	0	0	20	20	20	20	10.7	
+kr-legal-interpretations	OK	0	0	20	20	20	20	15.0	
+kr-administrative-appeal-rulings	OK	0	0	20	20	20	20	25.8	
+af-dportal-act-ke	SLOW	-1	0	-1	-1	581	-1	90.1	hit --timeout 90.1s; 581 rows already stored
+af-dportal-trans-ke	SLOW	-1	0	-1	-1	534	-1	90.1	hit --timeout 90.1s; 534 rows already stored
+af-gleif-lei-ke	SLOW	-1	0	-1	-1	297	-1	90.1	hit --timeout 90.1s; 297 rows already stored
+kr-law-english-statutes	OK	0	0	20	20	20	20	40.3	
+kr-local-ordinances	OK	0	0	20	20	20	20	27.8	
+ihsn-microdata-ma	OK	0	0	50	50	50	50	12.7	
+ihsn-microdata-mg	OK	0	0	50	50	50	50	12.2	
+undp-projects-ma	OK	0	0	121	121	121	121	51.3	
+ihsn-microdata-ml	OK	0	0	50	50	50	50	12.6	
+undp-projects-mg	OK	0	0	133	133	133	133	55.9	
+dportal-iati-ma	SLOW	-1	0	-1	-1	513	-1	90.0	hit --timeout 90.0s; 513 rows already stored
+undp-projects-mu	OK	0	0	85	85	85	85	25.6	
+ihsn-microdata-mu	OK	0	0	50	50	50	50	12.6	
+mx-dof-sidof-notas	FETCH_FAILED	0	0	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+undp-projects-ml	OK	0	0	146	146	146	146	65.5	
+dportal-iati-mg	SLOW	-1	0	-1	-1	519	-1	90.1	hit --timeout 90.1s; 519 rows already stored
+dportal-iati-ml	SLOW	-1	0	-1	-1	529	-1	90.0	hit --timeout 90.0s; 529 rows already stored
+af-ihsn-na	OK	0	0	50	50	50	50	11.3	
+af-wbmicro-na	OK	0	0	50	50	50	50	15.1	
+af-gleif-lei-na	OK	0	0	109	109	109	109	34.1	
+dportal-iati-mu	SLOW	-1	0	-1	-1	553	-1	90.1	hit --timeout 90.1s; 553 rows already stored
+af-dhs-data-ng	COLLISION	0	0	100	99	99	100	17.4	1 of 100 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+af-ihsn-ng	OK	0	0	50	50	50	50	11.1	
+af-dportal-act-na	SLOW	-1	0	-1	-1	584	-1	90.1	hit --timeout 90.1s; 584 rows already stored
+af-dportal-trans-na	SLOW	-1	0	-1	-1	382	-1	90.1	hit --timeout 90.1s; 382 rows already stored
+af-wbmicro-ng	OK	0	0	50	50	50	50	15.6	
+af-dportal-act-ng	SLOW	-1	0	-1	-1	585	-1	90.0	hit --timeout 90.0s; 585 rows already stored
+np-bipad-municipality	FETCH_FAILED	1	-1	1	1	0	-1	21.2	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+np-bipad-earthquake	FETCH_FAILED	1	-1	1	1	0	-1	22.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+np-bipad-resource	FETCH_FAILED	1	-1	1	1	0	-1	16.2	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+af-dportal-trans-ng	SLOW	-1	0	-1	-1	485	-1	90.1	hit --timeout 90.1s; 485 rows already stored
+af-gleif-lei-ng	SLOW	-1	0	-1	-1	289	-1	90.1	hit --timeout 90.1s; 289 rows already stored
+np-bipad-organization	FETCH_FAILED	1	-1	1	1	0	-1	21.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+af-gleif-lei-rw	OK	0	0	28	28	28	28	10.6	
+af-nada-sl-stats-microdata	OK	0	0	13	13	13	13	4.2	
+af-ihsn-rw	OK	0	0	50	50	50	50	11.4	
+af-dhs-data-rw	COLLISION	0	0	100	99	99	100	18.0	1 of 100 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+ansd-nada-microdata	EMITS_NOTHING	0	0	0	0	0	-1	1.6	no records reached intel_items
+af-wbmicro-rw	OK	0	0	50	50	50	50	13.5	
+ihsn-microdata-sn	OK	0	0	50	50	50	50	11.8	
+undp-projects-sn	OK	0	0	118	118	118	118	29.8	
+ihsn-microdata-tn	OK	0	0	50	50	50	50	11.9	
+tw-gcis-company-business-scope	OK	0	0	17	17	17	17	1.7	
+tw-gcis-company-by-ubn	OK	0	0	1	1	1	1	1.8	
+tw-gcis-ubn-name-resolver	OK	0	0	1	1	1	1	2.2	
+undp-projects-tn	OK	0	0	132	132	132	132	38.2	
+af-dportal-act-rw	SLOW	-1	0	-1	-1	583	-1	90.1	hit --timeout 90.1s; 583 rows already stored
+af-dportal-trans-rw	SLOW	-1	0	-1	-1	515	-1	90.1	hit --timeout 90.1s; 515 rows already stored
+af-dhs-data-tz	COLLISION	0	0	100	99	99	100	17.6	1 of 100 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+dportal-iati-sn	SLOW	-1	0	-1	-1	519	-1	90.1	hit --timeout 90.1s; 519 rows already stored
+af-gleif-lei-tz	OK	0	0	85	85	85	85	25.0	
+dportal-iati-tn	SLOW	-1	0	-1	-1	518	-1	90.1	hit --timeout 90.1s; 518 rows already stored
+af-ihsn-tz	OK	0	0	50	50	50	50	11.0	
+af-wbmicro-tz	OK	0	0	50	50	50	50	15.9	
+af-nada-tz-nbs-microdata	OK	0	0	65	65	65	65	30.7	
+af-dhs-data-ug	COLLISION	0	0	100	98	98	100	17.7	2 of 100 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+af-gleif-lei-ug	OK	0	0	99	99	99	99	30.3	
+af-dportal-act-tz	SLOW	-1	0	-1	-1	580	-1	90.0	hit --timeout 90.0s; 580 rows already stored
+af-dportal-trans-tz	SLOW	-1	0	-1	-1	367	-1	90.1	hit --timeout 90.1s; 367 rows already stored
+af-ihsn-ug	OK	0	0	50	50	50	50	11.6	
+af-wbmicro-ug	OK	0	0	50	50	50	50	14.3	
+af-dportal-act-ug	SLOW	-1	0	-1	-1	578	-1	90.0	hit --timeout 90.0s; 578 rows already stored
+af-dportal-trans-ug	SLOW	-1	0	-1	-1	524	-1	90.0	hit --timeout 90.0s; 524 rows already stored
+af-dportal-act-za	SLOW	-1	0	-1	-1	583	-1	90.0	hit --timeout 90.0s; 583 rows already stored
+af-dportal-trans-za	SLOW	-1	0	-1	-1	481	-1	90.1	hit --timeout 90.1s; 481 rows already stored
+af-gleif-lei-za	SLOW	-1	0	-1	-1	282	-1	90.0	hit --timeout 90.0s; 282 rows already stored
+af-pmg-briefings	SLOW	-1	0	-1	-1	254	-1	90.1	hit --timeout 90.1s; 254 rows already stored
+af-pmg-ministers	OK	0	0	41	41	41	41	14.1	
+af-pmg-calls-for-comment	SLOW	-1	0	-1	-1	277	-1	90.1	hit --timeout 90.1s; 277 rows already stored
+af-pmg-gazettes	SLOW	-1	0	-1	-1	285	-1	90.1	hit --timeout 90.1s; 285 rows already stored
+af-ihsn-za	OK	0	0	50	50	50	50	11.5	
+af-dhs-data-za	COLLISION	0	0	100	99	99	100	17.8	1 of 100 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+af-wbmicro-za	OK	0	0	50	50	50	50	13.4	
+af-pmg-hansard	SLOW	-1	0	-1	-1	236	-1	90.1	hit --timeout 90.1s; 236 rows already stored
+af-pmg-policy-documents	SLOW	-1	0	-1	-1	278	-1	90.1	hit --timeout 90.1s; 278 rows already stored
+af-pmg-question-replies	SLOW	-1	0	-1	-1	231	-1	90.1	hit --timeout 90.1s; 231 rows already stored
+af-pmg-tabled-committee-reports	SLOW	-1	0	-1	-1	252	-1	90.1	hit --timeout 90.1s; 252 rows already stored
+af-gleif-lei-zm	OK	0	0	69	69	69	69	21.7	
+afr-comesa-news	OK	0	0	10	10	10	-1	2.5	
+af-ihsn-zm	OK	0	0	50	50	50	50	11.1	
+af-dhs-data-zm	COLLISION	0	0	100	99	99	100	17.5	1 of 100 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+af-wbmicro-zm	OK	0	0	50	50	50	50	13.6	
+afr-cpt-layers-sl-film-srvc-area-film-service-areas-0	OK	0	0	9	9	9	-1	6.9	
+afr-cpt-background-maps-base-data-terrain-ext-dams-1	OK	0	0	17	17	17	-1	21.1	
+afr-cpt-hosted-odp-split-1-electricity-public-lighti-1	OK	0	0	10000	10001	10000	-1	19.9	
+afr-cpt-search-layers-sl-cgis-sub-cncl-sub-council-0	OK	0	0	20	20	20	-1	4.6	
+afr-cpt-search-layers-sl-evnt-prmt-line-events-permi-0	OK	0	0	427	427	427	-1	7.1	
+af-dportal-act-zm	SLOW	-1	0	-1	-1	581	-1	90.1	hit --timeout 90.1s; 581 rows already stored
+afr-cpt-search-layers-sl-fclt-bkng-community-centres-0	OK	0	0	202	202	202	-1	6.3	
+afr-cpt-search-layers-sl-fclt-bkng-resorts-1	OK	0	0	14	14	14	-1	5.5	
+afr-cpt-search-layers-esmsfeatureupdate-lines-events-0	OK	0	0	427	427	427	-1	31.3	
+af-dportal-trans-zm	SLOW	-1	0	-1	-1	522	-1	90.0	hit --timeout 90.0s; 522 rows already stored
+afr-cpt-search-layers-sl-hrtg-prsd-area-proposed-her-0	OK	0	0	38	38	38	-1	7.0	
+afr-cpt-search-layers-sl-pbdm-rgn-planning-and-build-0	EMITS_NOTHING	0	0	0	0	0	-1	7.1	no records reached intel_items
+afr-cpt-search-layers-sl-mjr-sbrb-major-suburbs-0	OK	0	0	79	79	79	-1	12.8	
+afr-ecowas-news	OK	0	0	20	20	20	-1	4.0	
+afr-cpt-search-layers-sl-rgdb-ward-tm-wards-0	OK	0	0	116	116	116	-1	13.2	
+afr-cpt-background-maps-base-data-terrain-ext-wetlan-0	OK	0	0	4324	4324	4324	-1	74.0	
+afr-ekur-covid19-coe-covid-data-cases-per-suburb-0	OK	0	0	482	482	482	-1	8.3	
+afr-cpt-search-layers-sl-wgdb-ofc-sbrb-official-subu-0	OK	0	0	778	778	778	-1	22.7	
+afr-ekur-ekurhuleni-ekurhuleni-poi-map-nature-1	OK	0	0	45	45	45	-1	3.4	
+afr-ekur-cif-procap-procapman-masterlist-0	OK	0	0	227	227	227	-1	17.9	
+afr-ekur-ekurhuleni-gridlayout-current-tile-layout-0	OK	0	0	279	279	279	-1	4.4	
+afr-ekur-covid19-coe-covid-data-cases-per-ward-1	OK	0	0	112	112	112	-1	18.4	
+afr-ekur-ekurhuleni-ekurhuleni-propety-data-map-stand-1	OK	0	0	10000	10001	10000	-1	18.0	
+afr-cpt-search-layers-gen-property-info-servitude-3	OK	0	0	6500	6500	6500	-1	78.9	
+afr-ekur-enviromental-final-cba-draft3-gauteng-reserv-0	OK	0	0	372	372	372	-1	5.7	
+afr-ekur-ekurhuleni-ekurhuleni-transportation-map-v1--0	OK	0	0	10000	10001	10000	-1	24.5	
+afr-ekur-mdb-map-mil1-wards-2021-0	OK	0	0	112	112	112	-1	3.8	
+afr-eskom-news	OK	0	0	10	10	10	-1	3.2	
+afr-ekur-ekurhuleni-servitudes-servitude-area-1	OK	0	0	10000	10001	10000	-1	18.9	
+afr-grid3-africa-country-boundary-africa-country-bound-35	OK	0	0	57	57	57	-1	2.3	
+afr-grid3-communications-lga-communications-access-ris-0	OK	0	0	774	774	774	-1	3.9	
+afr-ekur-engineering-services-stormwater-network-stor-0	OK	0	0	10000	10001	10000	-1	17.5	
+afr-grid3-energy-and-electricity-substations-in-nigeri-0	OK	0	0	1253	1253	1253	-1	2.2	
+afr-grid3-churches-in-nigeria-fc-poi-church-0	OK	0	0	10000	10001	10000	-1	9.2	
+afr-grid3-comorbidities-risk-profile-profile-by-lga-co-0	OK	0	0	774	774	774	-1	4.0	
+afr-grid3-cod-grid3-health-facilities-v8-0-cod-grid3-h-0	OK	0	0	10000	10001	10000	-1	9.9	
+afr-grid3-grid3-admin-0-global-admin-0-0	OK	0	0	53	53	53	-1	1.3	
+afr-grid3-factories-and-industrial-sites-in-nigeria-gr-0	OK	0	0	7979	7979	7979	-1	5.5	
+afr-grid3-farms-in-nigeria-grid3-nga-poi-farm-0	OK	0	0	10000	10001	10000	-1	9.0	
+afr-cpt-search-layers-sl-hrtg-inv-un-heritage-invent-0	OK	0	0	9500	9500	9500	-1	82.9	
+afr-grid3-grid3-ago-settlement-extents-v3-0-grid3-ago--0	OK	0	0	10000	10001	10000	-1	16.4	
+afr-grid3-grid3-ben-settlement-extents-v3-0-grid3-ben--0	OK	0	0	10000	10001	10000	-1	17.0	
+afr-grid3-grid3-bdi-settlement-extents-v3-0-grid3-bdi--0	OK	0	0	10000	10001	10000	-1	22.4	
+afr-grid3-grid3-bfa-settlement-extents-v3-0-grid3-bfa--0	OK	0	0	10000	10001	10000	-1	17.4	
+afr-grid3-accessibility-profile-by-lga-health-faciliti-0	OK	0	0	774	774	774	-1	39.5	
+afr-grid3-grid3-bwa-settlement-extents-v3-0-grid3-bwa--0	OK	0	0	10000	10001	10000	-1	18.6	
+afr-grid3-grid3-bfa-preeas-v1-grid3-bfa-preeas-v1-0	OK	0	0	10000	10001	10000	-1	27.6	
+afr-grid3-grid3-civ-settlement-extents-v3-0-grid3-civ--0	OK	0	0	10000	10001	10000	-1	14.2	
+afr-grid3-grid3-cod-religious-centers-v1-0-grid3-cod-r-0	OK	0	0	10000	10001	10000	-1	10.6	
+afr-grid3-grid3-caf-settlement-extents-v3-0-grid3-caf--0	OK	0	0	10000	10001	10000	-1	18.4	
+afr-grid3-grid3-com-settlement-extents-v3-0-grid3-com--0	OK	0	0	982	982	982	-1	5.3	
+afr-grid3-grid3-cod-schools-v1-0-grid3-cod-schools-v1--0	OK	0	0	10000	10001	10000	-1	8.9	
+afr-grid3-grid3-cod-roads-v1-0-main-grid3-cod-roads-v1-0	OK	0	0	10000	10001	10000	-1	10.3	
+afr-grid3-grid3-dji-settlement-extents-v3-0-grid3-dji--0	OK	0	0	3518	3518	3518	-1	7.4	
+afr-grid3-grid3-cod-settlement-extents-v4-main-grid3-c-0	OK	0	0	10000	10001	10000	-1	16.6	
+afr-grid3-grid3-cmr-settlement-extents-v3-0-grid3-cmr--0	OK	0	0	10000	10001	10000	-1	27.7	
+afr-grid3-grid3-cpv-settlement-extents-v3-0-grid3-cpv--0	OK	0	0	4821	4821	4821	-1	12.6	
+afr-grid3-grid3-eri-settlement-extents-v3-0-grid3-eri--0	OK	0	0	10000	10001	10000	-1	20.0	
+afr-grid3-grid3-cog-settlement-extents-v3-0-grid3-cog--0	OK	0	0	10000	10001	10000	-1	27.9	
+afr-grid3-grid3-eth-settlement-extents-v3-0-grid3-eth--0	OK	0	0	10000	10001	10000	-1	22.9	
+afr-grid3-grid3-gha-settlement-extents-v3-0-grid3-gha--0	OK	0	0	10000	10001	10000	-1	20.6	
+afr-grid3-grid3-gin-settlement-extents-v3-0-grid3-gin--0	OK	0	0	10000	10001	10000	-1	21.3	
+afr-grid3-grid3-gmb-settlement-extents-v3-0-grid3-gmb--0	OK	0	0	4088	4088	4088	-1	16.2	
+afr-grid3-grid3-gnq-settlement-extents-v3-0-grid3-gnq--0	OK	0	0	3127	3127	3127	-1	9.6	
+afr-grid3-grid3-gnb-settlement-extents-v3-0-grid3-gnb--0	OK	0	0	10000	10001	10000	-1	21.9	
+afr-grid3-grid3-gab-settlement-extents-v3-0-grid3-gab--0	OK	0	0	9068	9068	9068	-1	36.1	
+afr-grid3-grid3-lbr-settlement-extents-v3-0-grid3-lbr--0	OK	0	0	10000	10001	10000	-1	25.7	
+afr-grid3-grid3-mdg-settlement-extents-v3-0-grid3-mdg--0	OK	0	0	10000	10001	10000	-1	20.0	
+afr-grid3-grid3-mli-settlement-extents-v3-0-grid3-mli--0	OK	0	0	10000	10001	10000	-1	22.1	
+afr-grid3-grid3-lso-settlement-extents-v3-0-grid3-lso--0	OK	0	0	10000	10001	10000	-1	29.5	
+afr-grid3-grid3-moz-settlement-extents-v3-0-grid3-moz--0	OK	0	0	10000	10001	10000	-1	21.0	
+afr-grid3-grid3-ken-settlement-extents-v3-0-grid3-ken--0	OK	0	0	10000	10001	10000	-1	39.3	
+afr-grid3-grid3-nga-ambulances-ambulances-70	OK	0	0	34	34	34	-1	1.4	
+afr-grid3-grid3-nga-government-buildings-grid3-nga-poi-0	OK	0	0	3612	3612	3612	-1	3.0	
+afr-grid3-grid3-mus-settlement-extents-v3-0-grid3-mus--0	OK	0	0	2647	2647	2647	-1	15.3	
+afr-grid3-grid3-mrt-settlement-extents-v3-0-grid3-mrt--0	OK	0	0	10000	10001	10000	-1	18.5	
+afr-grid3-grid3-nga-hiv-statistics-by-state-hiv-statis-0	OK	0	0	37	37	37	-1	4.1	
+afr-grid3-grid3-nga-post-offices-grid3-nga-poi-post-of-0	OK	0	0	225	225	225	-1	1.2	
+afr-grid3-grid3-nga-police-stations-grid3-nga-poi-poli-0	OK	0	0	802	802	802	-1	3.1	
+afr-grid3-grid3-mwi-settlement-extents-v3-0-grid3-mwi--0	OK	0	0	10000	10001	10000	-1	16.1	
+afr-grid3-grid3-nga-prisons-grid3-nga-poi-prison-0	OK	0	0	34	34	34	-1	1.2	
+afr-hdx-ago	OK	0	0	222	222	222	-1	2.2	
+afr-hdx-bwa	OK	0	0	160	160	160	-1	1.8	
+afr-grid3-grid3-nam-settlement-extents-v3-0-grid3-nam--0	OK	0	0	10000	10001	10000	-1	17.4	
+afr-grid3-grid3-nga-health-facilities-v2-0-grid3-nga-h-0	OK	0	0	10000	10001	10000	-1	10.2	
+afr-hdx-bfa	OK	0	0	350	350	350	-1	3.9	
+afr-grid3-grid3-ner-settlement-extents-v3-0-grid3-ner--0	OK	0	0	10000	10001	10000	-1	18.8	
+afr-hdx-civ	OK	0	0	198	198	198	-1	2.5	
+afr-hdx-caf	OK	0	0	339	339	339	-1	3.4	
+afr-hdx-dza	OK	0	0	183	183	183	-1	2.0	
+afr-hdx-egy	OK	0	0	180	180	180	-1	2.1	
+afr-hdx-cmr	OK	0	0	328	328	328	-1	3.9	
+afr-hdx-eri	OK	0	0	189	189	189	-1	2.0	
+afr-hdx-cod	OK	0	0	463	463	463	-1	3.7	
+afr-hdx-mar	OK	0	0	167	167	167	-1	1.8	
+afr-hdx-gha	OK	0	0	207	207	207	-1	2.6	
+afr-hdx-eth	OK	0	0	566	566	566	-1	3.5	
+afr-hdx-lby	OK	0	0	230	230	230	-1	2.6	
+afr-hdx-ken	OK	0	0	564	564	564	-1	3.4	
+afr-hdx-mdg	OK	0	0	304	304	304	-1	3.3	
+afr-hdx-nam	OK	0	0	172	172	172	-1	2.1	
+afr-hdx-mwi	OK	0	0	299	299	299	-1	2.8	
+afr-hdx-moz	OK	0	0	417	417	417	-1	3.3	
+afr-hdx-mli	OK	0	0	368	368	368	-1	4.3	
+afr-hdx-org-fao	OK	0	0	233	233	233	-1	1.9	
+afr-hdx-org-ocha-roswa	OK	0	0	100	100	100	-1	1.1	
+afr-hdx-ner	OK	0	0	365	365	365	-1	4.5	
+afr-hdx-nga	OK	0	0	453	453	453	-1	4.5	
+afr-hdx-org-iom	OK	0	0	274	274	274	-1	3.0	
+afr-hdx-rwa	OK	0	0	278	278	278	-1	2.6	
+afr-hdx-org-wfp	OK	0	0	457	457	457	-1	3.8	
+afr-hdx-sdn	OK	0	0	465	465	465	-1	3.1	
+afr-hdx-sen	OK	0	0	259	259	259	-1	2.6	
+afr-hdx-som	OK	0	0	537	537	537	-1	3.1	
+afr-hdx-org-fews	OK	0	0	882	882	882	-1	7.1	
+afr-hdx-tun	OK	0	0	159	159	159	-1	1.8	
+afr-hdx-ssd	OK	0	0	504	504	504	-1	2.9	
+afr-hdx-tza	OK	0	0	275	275	275	-1	2.5	
+afr-hdx-tcd	OK	0	0	391	391	391	-1	3.9	
+afr-hdx-zaf	OK	0	0	198	198	198	-1	1.8	
+afr-hdx-uga	OK	0	0	369	369	369	-1	3.1	
+afr-hdx-zmb	OK	0	0	256	256	256	-1	2.6	
+afr-hdx-yem	OK	0	0	270	270	270	-1	3.5	
+afr-igad-news	OK	0	0	10	10	10	-1	1.2	
+afr-hdx-zwe	OK	0	0	283	283	283	-1	2.6	
+afr-magov-grp-cartographie	OK	0	0	18	18	18	-1	3.0	
+afr-magov-grp-agriculture	OK	0	0	11	11	11	-1	3.5	
+afr-magov-grp-sante	OK	0	0	18	18	18	-1	2.9	
+afr-magov-grp-transport	OK	0	0	3	3	3	-1	1.4	
+afr-magov-grp-transparence	OK	0	0	15	15	15	-1	2.7	
+afr-magov-grp-emploi	OK	0	0	59	59	59	-1	5.9	
+afr-magov-org-agence-du-bassin-hydraulique-de-so	OK	0	0	7	7	7	-1	3.1	
+afr-magov-grp-securite-routiere	OK	0	0	4	4	4	-1	5.9	
+afr-magov-grp-finance	OK	0	0	208	208	208	-1	6.8	
+afr-magov-org-ammc	OK	0	0	11	11	11	-1	3.2	
+afr-magov-org-anrt	OK	0	0	16	16	16	-1	2.4	
+afr-magov-org-bank-al-maghrib	OK	0	0	43	43	43	-1	1.9	
+afr-magov-org-cnss	OK	0	0	12	12	12	-1	1.6	
+afr-magov-org-departement-de-la-peche-maritime	OK	0	0	9	9	9	-1	1.6	
+afr-magov-org-autorite-de-controle-des-assurance	OK	0	0	34	34	34	-1	2.7	
+afr-magov-org-l-instance-nationale-de-la-probite	OK	0	0	15	15	15	-1	2.0	
+afr-magov-org-haut-commissariat-au-plan	OK	0	0	79	79	79	-1	2.6	
+afr-magov-org-ministere-de-l-industrie-du-commer	OK	0	0	10	10	10	-1	1.8	
+afr-magov-org-ministere-de-la-reforme-de-l-admin	OK	0	0	20	20	20	-1	1.8	
+afr-magov-org-narsa	OK	0	0	7	7	7	-1	1.3	
+afr-magov-org-ministere-de-la-sante	OK	0	0	8	8	8	-1	1.9	
+afr-magov-org-ministere-de-l-economie-et-des-fin	OK	0	0	75	75	75	-1	3.2	
+afr-magov-org-parlement	OK	0	0	11	11	11	-1	2.0	
+afr-magov-org-ministere-de-la-justice-et-des-lib	OK	0	0	84	84	84	-1	3.4	
+afr-uneca-news	OK	0	0	10	10	10	-1	2.0	
+afr-p-sarb-cur	OK	0	0	24	24	24	-1	3.0	
+afr-nicd-za	OK	0	0	10	10	10	-1	3.3	
+afr-p-sarb-rates	OK	0	0	13	13	13	-1	3.1	
+afr-moh-gh	OK	0	0	10	10	10	-1	4.2	
+afr-grid3-grid3-nga-fire-stations-nga-fire-stations-gr-0	OK	0	0	44	44	44	-1	1.3	
+afr-gdacs-eq	OK	0	0	18	18	18	-1	1.8	
+afr-grid3-exposure-profile-by-state-nga-exposure-profi-0	OK	0	0	37	37	37	-1	2.5	
+afr-ekur-ekurhuleni-ekurhuleni-firehydrants-fire-hydr-0	OK	0	0	6224	6224	6224	-1	12.6	
+afr-ilgov-org-firefightingcommission	OK	0	0	9	9	9	-1	1.9	
+afr-ilgov-org-meteorological-service	OK	0	0	5	5	5	-1	2.0	
+afr-izmir-ds-afet-ve-acil-durum-toplanma-e62687	OK	0	0	2000	2001	2000	-1	9.6	
+afr-ibb-ds-cankurtaran-verisi-aebcd2	EMITS_NOTHING	1	-1	0	0	0	-1	23.9	no records reached intel_items
+afr-ibb-ds-itfai-istatistikler-yangin-794a5d	EMITS_NOTHING	1	-1	0	0	0	-1	23.9	no records reached intel_items
+afr-izmir-org-afet-isleri-daires	OK	0	0	3	3	3	-1	2.1	
+afr-izmir-grp-afet-ve-acil-durum-yonetimi	OK	0	0	15	15	15	-1	2.7	
+afr-izmir-org-itfaiye-dairesi-baskanligi	OK	0	0	6	6	6	-1	2.6	
+afr-qa-sdg-11-5-3-damage-to-critical-infrastr	OK	0	0	48	48	48	-1	1.1	
+afr-bbc-africa	OK	0	0	33	33	33	-1	1.0	
+afr-za-cgs-eq	EMITS_NOTHING	1	-1	0	0	0	-1	2.0	no records reached intel_items
+afr-bi-iwacu	OK	0	0	10	10	10	-1	1.2	
+afr-ibb-org-afet-isleri-dairesi-baskanligi	EMITS_NOTHING	1	-1	0	0	0	-1	28.9	no records reached intel_items
+afr-bj-lanouvelletribune	OK	0	0	80	80	80	-1	1.4	
+afr-ibb-org-deprem-risk-yonetimi-ve-kentsel-iy	EMITS_NOTHING	1	-1	0	0	0	-1	29.1	no records reached intel_items
+afr-ibb-org-itfaiye-daire-baskanligi	EMITS_NOTHING	1	-1	0	0	0	-1	28.4	no records reached intel_items
+afr-cg-adiac	OK	0	0	10	10	10	-1	1.4	
+afr-bw-sundaystandard	OK	0	0	10	10	10	-1	1.9	
+afr-dw-africa	OK	0	0	5	5	5	-1	1.4	
+afr-dz-echorouk	OK	0	0	10	10	10	-1	1.0	
+afr-dz-elkhabar	OK	0	0	15	15	15	-1	1.0	
+afr-dz-tsa	OK	0	0	10	10	10	-1	1.0	
+afr-eg-madamasr	OK	0	0	10	10	10	-1	1.0	
+afr-cm-237online	OK	0	0	25	25	25	-1	3.2	
+afr-et-addisfortune	OK	0	0	12	12	12	-1	1.5	
+afr-eg-egyptindependent	OK	0	0	10	10	10	-1	2.5	
+afr-gh-3news	OK	0	0	50	50	50	-1	1.4	
+afr-ga-gabonreview	OK	0	0	30	30	30	-1	1.5	
+afr-gh-graphic-b	OK	0	0	25	25	25	-1	0.9	
+afr-gm-standard	EMITS_NOTHING	1	-1	0	0	0	-1	1.1	no records reached intel_items
+afr-ke-kenyans	OK	0	0	20	20	20	-1	0.9	
+afr-gn-guineenews	OK	0	0	31	31	31	-1	1.0	
+afr-ke-ntv	OK	0	0	100	100	100	-1	1.7	
+afr-lr-frontpageafrica	OK	0	0	10	10	10	-1	1.4	
+afr-ly-libyaherald	OK	0	0	50	50	50	-1	1.6	
+afr-ma-lnt	OK	0	0	50	50	50	-1	1.0	
+afr-ma-yabiladi	OK	0	0	3	3	3	-1	1.0	
+afr-ly-libyareview	OK	0	0	10	10	10	-1	1.9	
+afr-ke-president	OK	0	0	10	10	10	-1	3.6	
+afr-mr-lecalame	OK	0	0	10	10	10	-1	1.3	
+afr-mu-defimedia	OK	0	0	119	119	119	-1	1.2	
+afr-mg-madagascartribune	OK	0	0	10	10	10	-1	2.2	
+afr-mu-lemauricien	OK	0	0	10	10	10	-1	1.9	
+afr-mz-opais	OK	0	0	5	5	5	-1	1.4	
+afr-mw-times	OK	0	0	10	10	10	-1	2.8	
+afr-ng-arise	OK	0	0	20	20	20	-1	0.9	
+afr-ng-dailypost	OK	0	0	20	20	20	-1	1.1	
+afr-ng-dailytrust	OK	0	0	14	14	14	-1	0.9	
+afr-mz-jornalnoticias	OK	0	0	10	10	10	-1	4.1	
+afr-ng-saharareporters-b	OK	0	0	10	10	10	-1	1.0	
+afr-ng-thisday	OK	0	0	25	25	25	-1	1.0	
+afr-ng-tribuneonline	OK	0	0	20	20	20	-1	0.9	
+afr-na-newera	OK	0	0	10	10	10	-1	5.4	
+afr-sd-dabanga	OK	0	0	12	12	12	-1	1.7	
+afr-ng-leadership	OK	0	0	10	10	10	-1	3.8	
+afr-sl-sierraloaded	OK	0	0	10	10	10	-1	1.0	
+afr-sn-aps	OK	0	0	10	10	10	-1	1.2	
+afr-sn-dakaractu	OK	0	0	20	20	20	-1	1.9	
+afr-sn-lesoleil	OK	0	0	24	24	24	-1	2.1	
+afr-sn-pressafrik	OK	0	0	20	20	20	-1	1.7	
+afr-ss-eyeradio	OK	0	0	10	10	10	-1	1.9	
+afr-so-radiodalsan	OK	0	0	12	12	12	-1	2.5	
+afr-ss-radiotamazuj	OK	0	0	12	12	12	-1	2.1	
+afr-st-telanon	OK	0	0	10	10	10	-1	1.3	
+afr-tn-kapitalis	OK	0	0	10	10	10	-1	1.4	
+afr-tn-mosaique	OK	0	0	40	40	40	-1	0.9	
+afr-ug-eagle	OK	0	0	10	10	10	-1	1.4	
+afr-sz-times	OK	0	0	10	10	10	-1	3.5	
+afr-tz-dailynews	OK	0	0	10	10	10	-1	2.9	
+afr-za-iol-c	OK	0	0	30	30	30	-1	1.2	
+afr-za-moneyweb	OK	0	0	10	10	10	-1	1.4	
+afr-ug-softpower	OK	0	0	10	10	10	-1	3.0	
+afr-rw-ktpress	OK	0	0	10	10	10	-1	13.5	
+afr-za-sabcnews	OK	0	0	10	10	10	-1	2.3	
+afr-za-sanews	OK	0	0	10	10	10	-1	2.0	
+afr-za-thesouthafrican	OK	0	0	100	100	100	-1	2.0	
+afr-zw-zimeye	OK	0	0	10	10	10	-1	1.7	
+afr-zm-mwebantu	OK	0	0	10	10	10	-1	2.9	
+nam-ags-fatals-ksi-fatals-ksi	OK	0	0	976	976	976	-1	1.7	
+afr-qa-deaths-and-injuries-in-traffic-acciden	EMITS_NOTHING	1	-1	0	0	0	-1	38.5	no records reached intel_items
+nam-bc-municipalities-wfs	OK	0	0	100	101	100	-1	3.1	
+nam-bc-mine-permits-wfs	OK	0	0	65	65	65	-1	6.1	
+nam-ags-killed-and-seriously-injured-total-ksi	OK	0	0	10000	10001	10000	-1	9.7	
+nam-bc-parks-wfs	OK	0	0	200	201	200	-1	8.0	
+nam-calgary-air-quality-data-near-real-time	OK	0	0	8000	8001	8000	-1	7.9	
+nam-ckan-bcgov-air	OK	0	0	76	76	76	-1	1.8	
+nam-ags-traffic-collisions-collisions	OK	0	0	10000	10001	10000	-1	13.5	
+nam-ckan-bcgov-emergency	OK	0	0	91	91	91	-1	1.7	
+nam-calgary-historical-air-quality	OK	0	0	8000	8001	8000	-1	7.5	
+nam-ckan-bcgov-health	OK	0	0	139	139	139	-1	3.5	
+nam-calgary-traffic-incidents	OK	0	0	8000	8001	8000	-1	8.6	
+nam-ckan-bcgov-water	OK	0	0	322	322	322	-1	3.7	
+nam-ckan-ontario-air	OK	0	0	58	58	58	-1	1.4	
+afr-ci-aip	OK	0	0	10	10	10	-1	50.6	
+nam-ckan-montreal-packages	OK	0	0	405	405	405	-1	4.6	
+nam-ckan-ontario-water	OK	0	0	147	147	147	-1	1.8	
+nam-ckan-montreal-recent	OK	0	0	405	405	405	-1	5.5	
+nam-ckan-bcgov-packages	OK	0	0	3364	3364	3364	-1	12.1	
+nam-ckan-ontario-packages	OK	0	0	2000	2001	2000	-1	7.1	
+nam-ckan-bcgov-recent	OK	0	0	2000	2001	2000	-1	13.2	
+nam-ckan-ontario-recent	OK	0	0	2000	2001	2000	-1	7.6	
+nam-ckan-toronto-health	OK	0	0	60	60	60	-1	1.2	
+nam-drivebc-areas	EMITS_NOTHING	1	-1	0	0	0	-1	1.5	no records reached intel_items
+nam-ckan-toronto-packages	OK	0	0	555	555	555	-1	2.6	
+nam-ckan-toronto-recent	OK	0	0	555	555	555	-1	2.7	
+nam-ckan-quebec-air	OK	0	0	310	310	310	-1	9.9	
+nam-manitoba-news-rss	OK	0	0	30	30	30	-1	0.9	
+nam-edmonton-traffic-disruptions	OK	0	0	1829	1829	1829	-1	6.8	
+nam-edmonton-bylaw-infractions	OK	0	0	8000	8001	8000	-1	13.0	
+nam-edmonton-edmonton-area-air-quality-readings	OK	0	0	8000	8001	8000	-1	12.8	
+nam-novascotia-nova-scotia-topographic-database-utiliti	OK	0	0	1353	1353	1353	-1	6.9	
+nam-novascotia-nova-scotia-topographic-database-roads-t	COLLISION	0	0	8000	7996	7995	-1	14.9	5 of 8000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-novascotia-nova-scotia-topographic-database-roads-t-2	OK	0	0	8000	8001	8000	-1	10.9	
+nam-sask-aboriginallands-indian-reserve-nrcan	OK	0	0	823	823	823	-1	4.2	
+nam-sask-aboriginallands-indian-reserve-isc	OK	0	0	829	829	829	-1	7.2	
+nam-sask-forestry-sfvi-forest-inventory-index	OK	0	0	410	410	410	-1	1.8	
+nam-novascotia-nova-scotia-topographic-database-designa	OK	0	0	8000	8001	8000	-1	25.2	
+nam-sask-canadiangeonameswater-canadian-geographic-names-wa	OK	0	0	4000	4001	4000	-1	6.3	
+nam-ckan-quebec-packages	OK	0	0	1614	1614	1614	-1	37.1	
+nam-sask-crownland-ag-crownland-ag	OK	0	0	4000	4001	4000	-1	5.1	
+nam-ckan-quebec-recent	OK	0	0	1614	1614	1614	-1	37.2	
+nam-sask-gis-services	OK	0	0	106	106	106	-1	3.6	
+nam-sask-sasknamesdatabasewater-sask-names-database-water-f	OK	0	0	4000	4001	4000	-1	6.1	
+nam-sask-watersaturatedsoils-string-bog	OK	0	0	306	306	306	-1	6.8	
+nam-sask-geology-faults-250k	OK	0	0	4000	4001	4000	-1	12.5	
+nam-sask-wastemanagementareas-domestic-waste	OK	0	0	472	472	472	-1	8.6	
+sci-aq-eea-country	OK	0	0	39	39	39	-1	1.5	
+sci-aq-eea-pollutant	OK	0	0	648	648	648	-1	1.6	
+sci-aq-londonair-index	OK	0	0	33	33	33	-1	1.8	
+sci-aq-londonair-la	OK	0	0	33	33	33	-1	1.3	
+nam-sask-geology-surficial-geology-linear-landforms-250k	OK	0	0	4000	4001	4000	-1	15.1	
+sci-aq-londonair-london	OK	0	0	258	258	258	-1	2.0	
+sci-aq-londonair-sites	OK	0	0	391	391	391	-1	1.9	
+sci-aq-londonair-species	OK	0	0	6	6	6	-1	1.7	
+nam-sask-soils-saskatchewan-soils	OK	0	0	4000	4001	4000	-1	14.9	
+sci-aq-ni-stations	EMITS_NOTHING	1	-1	0	0	0	-1	1.4	no records reached intel_items
+sci-aq-irceline-timeseries	OK	0	0	686	686	686	-1	5.4	
+sci-aq-ukair-phenomena	EMITS_NOTHING	1	-1	0	0	0	-1	1.4	no records reached intel_items
+sci-aq-ukair-timeseries	EMITS_NOTHING	1	-1	0	0	0	-1	1.6	no records reached intel_items
+sci-clim-ncei-datasets	OK	0	0	100	100	100	-1	1.6	
+sci-clim-brightsky-radar	OK	0	0	25	25	25	-1	4.0	
+sci-aq-sensorcommunity-temp	OK	0	0	7758	7758	7758	-1	6.2	
+sci-aq-sensorcommunity-dust	OK	0	0	9644	9644	9644	-1	7.4	
+sci-geosphere-station-historical-histalp-v1-1y	OK	0	0	91	91	91	-1	2.0	
+sci-aq-smartcitizen-map	OK	0	0	5275	5275	5275	-1	8.0	
+sci-geosphere-station-historical-klima-v1-10min	OK	0	0	261	261	261	-1	2.3	
+sci-geosphere-station-historical-klima-v1-1d	OK	0	0	958	958	958	-1	2.9	
+sci-geosphere-station-historical-klima-v2-10min	OK	0	0	530	530	530	-1	2.1	
+sci-geosphere-station-historical-synop-v1-1h	OK	0	0	163	163	163	-1	1.9	
+sci-geosphere-station-historical-klima-v2-1y	OK	0	0	1141	1141	1141	-1	2.7	
+sci-geosphere-station-historical-tawes-v1-10min	OK	0	0	288	288	288	-1	1.8	
+sci-clim-noaa-co2-mlo	OK	0	0	16007	16007	16007	-1	8.1	
+sci-hydro-existenz-smn	OK	0	0	1747	1747	1747	-1	2.2	
+sci-oscar-arg	OK	0	0	180	180	180	-1	4.2	
+sci-oscar-bra	OK	0	0	1272	1272	1272	-1	5.3	
+sci-oscar-can	OK	0	0	3100	3100	3100	-1	6.9	
+sci-oscar-chn	OK	0	0	1142	1142	1142	-1	5.1	
+sci-hub-arcgis-airquality	OK	0	0	1000	1001	1000	-1	10.0	
+sci-oscar-deu	OK	0	0	2486	2486	2486	-1	5.5	
+sci-oscar-idn	OK	0	0	136	136	136	-1	4.2	
+sci-oscar-gbr	OK	0	0	1692	1692	1692	-1	5.1	
+sci-oscar-fra	OK	0	0	2301	2301	2301	-1	6.2	
+sci-oscar-aus	OK	0	0	2521	2521	2521	-1	14.2	
+sci-oscar-ind	OK	0	0	1180	1180	1180	-1	4.9	
+sci-oscar-mex	OK	0	0	111	111	111	-1	4.3	
+sci-sta-hamburg-datastreams	OK	0	0	100	100	100	-1	1.5	
+sci-oscar-nga	OK	0	0	145	145	145	-1	4.3	
+sci-sta-hamburg-locations	OK	0	0	500	500	500	-1	1.5	
+sci-sta-hamburg-obsprops	OK	0	0	30	30	30	-1	1.3	
+sci-sta-hamburg-sensors	OK	0	0	16	16	16	-1	1.4	
+sci-oscar-rus	OK	0	0	1324	1324	1324	-1	5.8	
+sci-sta-hamburg-things	OK	0	0	100	100	100	-1	1.4	
+nam-sask-watersaturatedsoils-wetland	OK	0	0	4000	4001	4000	-1	41.4	
+sci-sta-rivm-datastreams	OK	0	0	100	100	100	-1	1.9	
+sci-sta-rivm-locations	OK	0	0	200	200	200	-1	1.9	
+sci-sta-rivm-obsprops	OK	0	0	9	9	9	-1	1.6	
+sci-sta-rivm-sensors	OK	0	0	52	52	52	-1	1.4	
+sci-oscar-zaf	OK	0	0	1806	1806	1806	-1	7.3	
+sci-sta-rivm-things	OK	0	0	100	100	100	-1	1.5	
+cyb-datadog-security-labs-rss	OK	0	0	30	30	30	-1	1.0	
+cyb-checkmarx-blog-rss	OK	0	0	10	10	10	-1	1.0	
+cyb-alpine-secdb-edge-community	OK	0	0	494	494	494	-1	1.8	
+cyb-certpl-feed	OK	0	0	100	100	100	-1	1.6	
+cyb-alpine-secdb-edge-main	OK	0	0	292	292	292	-1	1.7	
+cyb-debian-dla-long-rdf	OK	0	0	29	29	29	-1	1.3	
+cyb-debian-dla-rdf2	OK	0	0	29	29	29	-1	1.0	
+cyb-drupal-psa-rss	OK	0	0	20	20	20	-1	1.0	
+cyb-foxit-blog-rss	OK	0	0	10	10	10	-1	1.3	
+cyb-googlesecurity-blog-rss	OK	0	0	25	25	25	-1	1.5	
+cyb-mozilla-security-blog	EMITS_NOTHING	1	-1	0	0	0	-1	1.3	no records reached intel_items
+cyb-industrialcyber-rss	EMITS_NOTHING	1	-1	0	0	0	-1	1.4	no records reached intel_items
+cyb-gentoo-glsa-atom	OK	0	0	50	50	50	-1	1.9	
+cyb-emsisoft-blog-rss	OK	0	0	12	12	12	-1	2.4	
+cyb-nviso-blog-rss	OK	0	0	10	10	10	-1	1.5	
+cyb-rustsec-feed	OK	0	0	19	19	19	-1	1.4	
+cyb-trendmicro-feedburner	OK	0	0	50	50	50	-1	1.4	
+cyb-truesec-blog-rss	OK	0	0	9	9	9	-1	1.4	
+cyb-sentinelone-labs-rss	OK	0	0	10	10	10	-1	1.8	
+cyb-securityweek-rss	OK	0	0	10	10	10	-1	2.0	
+cyb-ubuntu-releases-json	OK	0	0	47	47	47	-1	1.4	
+cyb-volexity-feed	OK	0	0	10	10	10	-1	1.5	
+cyb-wordfence-feed	OK	0	0	10	10	10	-1	2.3	
+sci-bio-gbif-network	OK	0	0	23	23	23	-1	1.5	
+cyb-zscaler-research-rss	OK	0	0	50	50	50	-1	2.8	
+sci-bio-gbif-installation	OK	0	0	734	734	734	-1	4.8	
+sci-bio-gbif-dataset-search	OK	0	0	2000	2001	2000	-1	7.6	
+sci-bio-gbif-node	OK	0	0	169	169	169	-1	6.1	
+sci-bio-checklistbank	OK	0	0	2000	2001	2000	-1	10.2	
+sci-bio-obis-institutes	OK	0	0	3718	3718	3718	-1	3.1	
+sci-bio-obis-nodes	OK	0	0	39	39	39	-1	1.3	
+sci-bio-gbif-organization	OK	0	0	2000	2001	2000	-1	12.6	
+sci-bio-obis-occurrence-recent	OK	0	0	200	200	200	-1	7.1	
+sci-bio-worms-aphia	OK	0	0	50	50	50	-1	6.9	
+sci-fdsn-datacenters	OK	0	0	33	33	33	-1	1.1	
+sci-fdsn-networks	OK	0	0	2860	2860	2860	-1	2.3	
+sci-feed-bgs-news	OK	0	0	8	8	8	-1	1.9	
+sci-fdsn-resif-event	OK	0	0	200	201	200	-1	3.3	
+sci-feed-carbonbrief	OK	0	0	12	12	12	-1	1.3	
+sci-feed-eo-hazards	OK	0	0	10	10	10	-1	1.2	
+sci-feed-eo-iotd	OK	0	0	10	10	10	-1	1.4	
+sci-feed-eumetsat	OK	0	0	10	10	10	-1	1.2	
+sci-feed-ipcc	OK	0	0	10	10	10	-1	1.2	
+sci-feed-nature-climate	OK	0	0	8	8	8	-1	0.9	
+sci-feed-nature-geoscience	OK	0	0	8	8	8	-1	0.8	
+sci-feed-nsf-news	OK	0	0	15	15	15	-1	0.8	
+sci-feed-phys-earth	OK	0	0	30	30	30	-1	0.9	
+sci-feed-sciencedaily-earth	OK	0	0	60	60	60	-1	1.0	
+sci-feed-sciencedaily-geology	OK	0	0	60	60	60	-1	1.2	
+sci-feed-volcanocafe	OK	0	0	50	50	50	-1	4.3	
+sci-hub-arcgis-landslide	OK	0	0	1000	1001	1000	-1	5.1	
+sci-hub-arcgis-earthquake	OK	0	0	1000	1001	1000	-1	6.4	
+sci-macrostrat-columns-bare	EMITS_NOTHING	1	-1	0	0	0	-1	1.9	no records reached intel_items
+sci-bio-obis-checklist	OK	0	0	100	100	100	-1	25.0	
+sci-macrostrat-econs	OK	0	0	23	23	23	-1	1.1	
+sci-macrostrat-environments	OK	0	0	87	87	87	-1	1.2	
+sci-hub-arcgis-volcano	OK	0	0	1000	1001	1000	-1	5.0	
+sci-macrostrat-intervals	OK	0	0	1716	1716	1716	-1	1.6	
+sci-macrostrat-groups	EMITS_NOTHING	1	-1	0	0	0	-1	1.9	no records reached intel_items
+sci-macrostrat-lithologies	OK	0	0	214	214	214	-1	1.3	
+sci-macrostrat-timescales	OK	0	0	37	37	37	-1	1.1	
+sci-ngdc-earthquakes	OK	0	0	200	201	200	-1	1.5	
+sci-noaa-mapsvc-eventdriven	OK	0	0	7	7	7	-1	1.6	
+sci-macrostrat-minerals	OK	0	0	6363	6363	6363	-1	3.0	
+sci-noaa-mapsvc-raster	OK	0	0	31	31	31	-1	2.3	
+sci-noaa-mapsvc-static	OK	0	0	224	224	224	-1	1.6	
+sci-macrostrat-measurements	OK	0	0	124	124	124	-1	4.9	
+sci-noaa-mapsvc-vector	OK	0	0	35	35	35	-1	2.0	
+sci-ogc-idee-spain	OK	0	0	38	38	38	-1	1.6	
+sci-bio-gbif-occ-northamerica	OK	0	0	6000	6001	6000	-1	40.2	
+sci-bio-gbif-occ-europe	OK	0	0	6000	6001	6000	-1	43.4	
+sci-ogcf-idee-hydronode	OK	0	0	4000	4001	4000	-1	7.8	
+sci-pbdb-colls-holocene	OK	0	0	3914	3914	3914	-1	4.8	
+sci-ogcf-idee-watercourselink	OK	0	0	2000	2001	2000	-1	11.9	
+sci-quake-geofon-geojson	OK	0	0	40	40	40	-1	1.7	
+sci-pbdb-colls-pleistocene	OK	0	0	10000	10001	10000	-1	9.3	
+sci-quake-geofon-rss	OK	0	0	20	20	20	-1	1.2	
+sci-res-crossref-funders	OK	0	0	100	101	100	-1	1.0	
+sci-res-crossref-journals	OK	0	0	100	101	100	-1	1.1	
+sci-res-crossref-members	OK	0	0	100	101	100	-1	1.3	
+sci-pbdb-strata	OK	0	0	29655	29655	29655	-1	13.4	
+sci-res-datacite-clients	OK	0	0	2000	2001	2000	-1	11.1	
+sci-res-datacite-climate	COLLISION	0	0	2000	1998	1997	-1	16.6	3 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+sci-pbdb-occs-mammalia	OK	0	0	10000	10001	10000	-1	30.1	
+sci-res-datacite-providers	OK	0	0	1863	1863	1863	-1	13.4	
+sci-res-datacite-earthquake	OK	0	0	2000	2001	2000	-1	20.2	
+sci-res-openalex-funders	EMITS_NOTHING	1	-1	0	0	0	-1	0.8	no records reached intel_items
+sci-res-openalex-institutions	EMITS_NOTHING	1	-1	0	0	0	-1	0.8	no records reached intel_items
+sci-res-openalex-sources	EMITS_NOTHING	1	-1	0	0	0	-1	0.8	no records reached intel_items
+sci-res-europepmc-climate	OK	0	0	2000	2001	2000	-1	21.6	
+sci-res-europepmc-seismic	OK	0	0	2000	2001	2000	-1	20.9	
+sci-ogcf-idee-existinglanduseobject	EMITS_NOTHING	1	-1	0	0	0	-1	76.4	no records reached intel_items
+sci-res-recherche-data-gouv	OK	0	0	100	100	100	-1	20.4	
+sci-ogcf-idee-landcoverunit	SLOW	-1	0	-1	-1	2400	-1	90.0	hit --timeout 90.0s; 2400 rows already stored
+sci-stac-cdse-ccm-optical	OK	0	0	2000	2001	2000	-1	19.3	
+sci-stac-cdse-clms-ba-global-300m-daily-v3-cog	OK	0	0	855	855	855	-1	7.8	
+sci-stac-cdse-clms-ba-global-300m-daily-v3-nc	OK	0	0	855	855	855	-1	7.2	
+sci-stac-cdse-clms-ba-global-300m-daily-v4-cog	OK	0	0	658	658	658	-1	4.7	
+sci-stac-cdse-ccm-sar	OK	0	0	2000	2001	2000	-1	20.9	
+sci-res-osf-eartharxiv	OK	0	0	1649	1649	1649	-1	60.5	
+sci-stac-ceda-ceda-flights	OK	0	0	880	880	880	-1	3.6	
+sci-stac-ceda-cordex	OK	0	0	280	280	280	-1	2.1	
+sci-stac-ceda-clms-lcm-global-10m-yearly-v1-cog	OK	0	0	2000	2001	2000	-1	5.5	
+sci-stac-ceda-cmip6	OK	0	0	2000	2001	2000	-1	6.3	
+sci-stac-ceda-search	OK	0	0	2000	2001	2000	-1	5.5	
+sci-stac-ceda-eocis-aerosol-slstr-daily-s3a	OK	0	0	2000	2001	2000	-1	7.0	
+sci-stac-cdse-clms-ba-global-300m-daily-v4-nc	OK	0	0	658	658	658	-1	13.5	
+sci-stac-dlr	OK	0	0	69	69	69	-1	2.3	
+sci-res-dryad-search	SLOW	-1	0	-1	-1	1200	-1	90.1	hit --timeout 90.1s; 1200 rows already stored
+sci-stac-cmr-usgs	OK	0	0	2000	2001	2000	-1	14.1	
+sci-stac-cmr-ornl	OK	0	0	2000	2001	2000	-1	20.6	
+sci-res-osf-preprints	SLOW	-1	0	-1	-1	1600	-1	90.1	hit --timeout 90.1s; 1600 rows already stored
+sci-stac-dlr-s5p-tropomi-l3-p1d-o3	OK	0	0	3512	3512	3512	-1	55.8	
+sci-stac-dlr-s5p-tropomi-l3-p1d-cf	OK	0	0	3514	3514	3514	-1	72.0	
+sci-stac-eoapi-maxar-afghanistan-earthquake22	OK	0	0	383	383	383	-1	4.2	
+sci-stac-eoapi-maxar-bayofbengal-cyclone-mocha-may-23	OK	0	0	121	121	121	-1	2.0	
+sci-stac-eoapi-copernicus-dem	OK	0	0	2000	2001	2000	-1	9.7	
+sci-stac-eoapi-maxar-emilia-romagna-italy-flooding-may2	OK	0	0	245	245	245	-1	3.1	
+sci-stac-eoapi-maxar-gambia-flooding-8-11-2022	OK	0	0	80	80	80	-1	1.5	
+sci-stac-dlr-s5p-tropomi-l3-p1d-cth	OK	0	0	3528	3528	3528	-1	77.7	
+sci-stac-dlr-s5p-tropomi-l3-p1d-hcho	OK	0	0	3527	3527	3527	-1	73.9	
+sci-stac-dlr-s5p-tropomi-l3-p1d-cot	OK	0	0	3527	3527	3527	-1	85.1	
+sci-stac-eoapi-maxar-cyclone-emnati22	OK	0	0	794	794	794	-1	12.1	
+sci-stac-es84-cop-dem-glo-30	OK	0	0	2000	2001	2000	-1	6.0	
+sci-stac-dlr-s5p-tropomi-l3-p1d-so2	OK	0	0	4362	4362	4362	-1	59.4	
+sci-stac-es84-cop-dem-glo-90	OK	0	0	2000	2001	2000	-1	7.0	
+sci-stac-geobon	COLLISION	0	0	35	34	34	-1	1.6	1 of 35 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+sci-stac-es84-naip	OK	0	0	2000	2001	2000	-1	9.1	
+sci-stac-eurac-ado-evap-et-mod16-500m-3035	OK	0	0	869	869	869	-1	3.7	
+sci-stac-geobon-chelsa-clim	OK	0	0	19	19	19	-1	1.2	
+sci-stac-eurac	OK	0	0	154	154	154	-1	4.3	
+sci-stac-geobon-soilgrids	OK	0	0	79	79	79	-1	1.1	
+sci-stac-geobon-gfw-gain	OK	0	0	504	504	504	-1	2.8	
+sci-stac-geobon-gfw-lossyear	OK	0	0	504	504	504	-1	2.9	
+sci-stac-geobon-gfw-treecover2000	OK	0	0	504	504	504	-1	3.1	
+sci-stac-inpe-collections	OK	0	0	79	79	79	-1	2.4	
+sci-stac-inpe-mosaic-landsat-sp-6m-1	OK	0	0	6	6	6	-1	1.9	
+sci-stac-inpe-modisa-ocsmart-poc-daily-1	EMITS_NOTHING	0	0	0	0	0	-1	4.4	no records reached intel_items
+sci-stac-es84-sentinel-2-pre-c1-l2a	OK	0	0	2000	2001	2000	-1	14.8	
+sci-stac-inpe-s3-olci-rrs-water-1	OK	0	0	855	855	855	-1	6.3	
+sci-stac-landsat-landsat-c2l2alb-bt	EMITS_NOTHING	1	-1	0	0	0	-1	0.9	no records reached intel_items
+sci-stac-inpe-mod13q1-6-1	OK	0	0	2000	2001	2000	-1	9.8	
+sci-stac-swisstopo-ch-are-agglomerationsverkehr	OK	0	0	3	3	3	-1	1.3	
+sci-stac-landsat-landsat-c2ard-st	OK	0	0	2000	2001	2000	-1	13.1	
+sci-stac-landsat-landsat-c2l2-sr	OK	0	0	2000	2001	2000	-1	15.8	
+sci-stac-landsat-landsat-c2l2-st	OK	0	0	2000	2001	2000	-1	15.6	
+sci-volcano-eonet-sources	OK	0	0	33	33	33	-1	2.9	
+sci-volcano-eonet-open	OK	0	0	269	270	269	-1	4.2	
+sci-volcano-gvp-e3-eruptions	OK	0	0	1000	1001	1000	-1	1.6	
+sci-stac-openveda-search	OK	0	0	2000	2001	2000	-1	18.3	
+eas-datagojp-recent	OK	0	0	10	10	10	-1	2.3	
+eas-datagojp-topic-aed	OK	0	0	10	11	10	-1	2.5	
+eas-datagojp-topic-bus	OK	0	0	10	11	10	-1	2.0	
+eas-datagojp-topic-disaster-prevention	OK	0	0	10	11	10	-1	1.8	
+sci-usgs-sciencebase-quake	OK	0	0	100	101	100	-1	18.3	
+sci-usgs-sciencebase-volcano	OK	0	0	100	101	100	-1	14.6	
+eas-datagojp-topic-earthquake	OK	0	0	10	11	10	-1	2.5	
+eas-datagojp-topic-fire-service	OK	0	0	10	11	10	-1	2.5	
+eas-datagojp-topic-landslide	OK	0	0	10	11	10	-1	2.7	
+eas-datagojp-topic-evacuation-shelters	OK	0	0	10	11	10	-1	2.9	
+eas-datagojp-topic-medical	OK	0	0	10	11	10	-1	1.6	
+eas-datagojp-topic-public-facilities	OK	0	0	10	11	10	-1	1.9	
+eas-datagojp-topic-population	OK	0	0	10	11	10	-1	2.6	
+eas-datagojp-topic-roads	OK	0	0	10	11	10	-1	1.9	
+eas-datagojp-topic-rivers	OK	0	0	10	11	10	-1	2.0	
+eas-datagojp-topic-schools	OK	0	0	10	11	10	-1	2.4	
+eas-datagojp-topic-tourism	OK	0	0	10	11	10	-1	1.6	
+eas-estat-dashboard-regions	OK	0	0	48	48	48	-1	1.4	
+eas-estat-dashboard-indicator	OK	0	0	1	1	1	-1	1.9	
+eas-gkukan-aigid	OK	0	0	61	61	61	-1	2.5	
+eas-gkukan-fuchu-city	OK	0	0	89	89	89	-1	2.0	
+eas-gkukan-cao-japan-trench	OK	0	0	88	88	88	-1	4.2	
+eas-gkukan-ichikawa-city	OK	0	0	56	56	56	-1	2.7	
+sci-stac-eoapi-search	OK	0	0	2000	2001	2000	-1	54.5	
+eas-gkukan-cao-tokai-nankai	OK	0	0	190	190	190	-1	6.5	
+eas-gkukan-itami-city	OK	0	0	62	62	62	-1	4.5	
+eas-gkukan-aigid-mobility	OK	0	0	106	106	106	-1	13.2	
+eas-gkukan-aist	OK	0	0	1000	1001	1000	-1	15.6	
+eas-gkukan-mojmap-01hokkaido	OK	0	0	189	189	189	-1	3.6	
+eas-gkukan-maff-farm-polygons	OK	0	0	188	188	188	-1	10.4	
+eas-gkukan-mojmap-07fukushima	OK	0	0	60	60	60	-1	1.8	
+eas-gkukan-mojmap-11saitama	OK	0	0	80	80	80	-1	2.0	
+eas-gkukan-mojmap-12chiba	OK	0	0	63	63	63	-1	1.6	
+eas-gkukan-mojmap-13tokyo	OK	0	0	62	62	62	-1	1.6	
+eas-gkukan-mojmap-14kanagawa	OK	0	0	59	59	59	-1	1.4	
+eas-gkukan-mojmap-20nagano	OK	0	0	77	77	77	-1	1.6	
+eas-gkukan-maff-statistics	OK	0	0	565	565	565	-1	13.9	
+eas-gkukan-mlit-real-estate	OK	0	0	1000	1001	1000	-1	13.6	
+eas-gkukan-mojmap-23aichi	OK	0	0	77	77	77	-1	1.9	
+eas-gkukan-mojmap-28hyogo	OK	0	0	49	49	49	-1	1.7	
+eas-gkukan-mojmap-27osaka	OK	0	0	73	73	73	-1	2.2	
+eas-gkukan-mojmap-46kagoshima	OK	0	0	49	49	49	-1	1.1	
+eas-gkukan-mojmap-43kumamoto	OK	0	0	51	51	51	-1	1.9	
+eas-gkukan-mojmap-40fukuoka	OK	0	0	80	80	80	-1	2.0	
+eas-gkukan-otawara-city	OK	0	0	60	60	60	-1	1.3	
+eas-gkukan-sano-city	OK	0	0	106	106	106	-1	1.7	
+eas-gkukan-setagaya-ward	OK	0	0	58	58	58	-1	1.7	
+eas-gkukan-topic-aed	OK	0	0	63	63	63	-1	1.4	
+eas-gkukan-topic-bus	OK	0	0	13	13	13	-1	1.8	
+eas-gkukan-topic-evacuation-shelters	OK	0	0	64	64	64	-1	3.9	
+eas-gkukan-topic-fire-service	OK	0	0	83	83	83	-1	3.0	
+eas-gkukan-topic-medical	OK	0	0	110	110	110	-1	1.6	
+eas-gkukan-topic-landslide	OK	0	0	17	17	17	-1	2.2	
+eas-gkukan-topic-public-facilities	OK	0	0	159	159	159	-1	2.6	
+eas-gkukan-topic-population	OK	0	0	148	148	148	-1	4.7	
+eas-gkukan-shizuoka-pref	OK	0	0	405	405	405	-1	11.9	
+eas-gkukan-topic-rivers	OK	0	0	106	106	106	-1	3.9	
+eas-gkukan-topic-schools	OK	0	0	142	142	142	-1	2.5	
+eas-gkukan-topic-roads	OK	0	0	143	143	143	-1	3.8	
+eas-hk-aqhi-current	OK	0	0	18	18	18	-1	1.7	
+eas-gkukan-topic-tourism	OK	0	0	96	96	96	-1	2.4	
+eas-gkukan-moj-registry-maps	OK	0	0	1000	1001	1000	-1	31.4	
+eas-gkukan-topic-earthquake	OK	0	0	164	164	164	-1	16.9	
+eas-hk-carpark-vacancy-lgv	OK	0	0	58	58	58	-1	1.8	
+eas-hk-carpark-vacancy	OK	0	0	573	573	573	-1	2.1	
+eas-hk-carpark-info	OK	0	0	573	573	573	-1	2.9	
+eas-hk-ckan-topic-energy	OK	0	0	13	13	13	-1	1.9	
+eas-hk-ckan-topic-education	OK	0	0	58	58	58	-1	2.4	
+eas-hk-ckan-topic-environment	OK	0	0	21	21	21	-1	2.0	
+eas-gkukan-topic-bousai	OK	0	0	177	177	177	-1	21.1	
+eas-hk-ckan-topic-health	OK	0	0	33	33	33	-1	1.8	
+eas-hk-ckan-topic-land	OK	0	0	12	12	12	-1	1.9	
+eas-hk-ckan-topic-housing	OK	0	0	27	27	27	-1	2.1	
+eas-hk-ckan-topic-planning	OK	0	0	8	8	8	-1	1.5	
+eas-hk-ckan-topic-marine	OK	0	0	2	2	2	-1	3.0	
+eas-hk-ckan-page3	OK	0	0	588	589	588	-1	6.1	
+eas-hk-ckan-topic-police	OK	0	0	1	1	1	-1	1.8	
+eas-hk-ckan-page2	OK	0	0	688	689	688	-1	6.6	
+eas-hk-ckan-topic-population	OK	0	0	86	86	86	-1	2.1	
+eas-hk-ckan-topic-safety	OK	0	0	2	2	2	-1	1.4	
+eas-hk-gia-english	OK	0	0	100	100	100	-1	1.2	
+eas-hk-gia-chinese	OK	0	0	100	100	100	-1	1.2	
+eas-hk-ckan-topic-water	OK	0	0	24	24	24	-1	2.1	
+eas-hk-gmb-routes	OK	0	0	1	1	1	-1	1.7	
+eas-hk-ckan-topic-transport	OK	0	0	36	36	36	-1	2.3	
+eas-hk-hko-9day-tc	OK	0	0	9	9	9	-1	2.0	
+eas-hk-hko-flw	OK	0	0	1	1	1	-1	3.3	
+eas-hk-hko-current-tc	OK	0	0	27	27	27	-1	3.4	
+eas-hk-hko-rss-current	OK	0	0	1	1	1	-1	2.2	
+eas-hk-hko-rss-9day	OK	0	0	1	1	1	-1	3.7	
+eas-hk-hko-rss-current-tc	OK	0	0	1	1	1	-1	2.6	
+eas-hk-hko-rss-forecast	OK	0	0	1	1	1	-1	1.5	
+eas-hk-hko-rss-forecast-tc	OK	0	0	1	1	1	-1	1.9	
+eas-hk-hko-rss-warnbul-tc	OK	0	0	1	1	1	-1	1.6	
+eas-hk-hko-rss-warnsum	OK	0	0	1	1	1	-1	1.4	
+eas-hk-hko-rss-warnbul	OK	0	0	1	1	1	-1	3.2	
+eas-hk-hko-special-tips	EMITS_NOTHING	0	0	0	0	0	-1	1.7	no records reached intel_items
+eas-hk-hko-rss-warnsum-tc	OK	0	0	1	1	1	-1	3.4	
+eas-hk-hko-warning-detail	EMITS_NOTHING	0	0	0	0	0	-1	1.7	no records reached intel_items
+eas-hk-kmb-routes	OK	0	0	1609	1609	1609	-1	1.4	
+eas-hk-hko-visibility	OK	0	0	4	4	4	-1	5.7	
+eas-hk-kmb-stops	OK	0	0	6779	6779	6779	-1	3.5	
+eas-hk-kmb-route-stops	OK	0	0	36373	36373	36373	-1	13.0	
+eas-hk-legco-votes	OK	0	0	2000	2001	2000	-1	15.7	
+eas-hk-mtr-eta-ael	OK	0	0	1	1	1	-1	1.9	
+eas-hk-mtr-eta-tml	OK	0	0	1	1	1	-1	1.2	
+eas-hk-nlb-routes	OK	0	0	66	66	66	-1	2.2	
+eas-hk-legco-bills	OK	0	0	2000	2001	2000	-1	31.5	
+eas-hk-gmb-routes-hki	OK	0	0	143	143	143	-1	64.1	
+eur-api-dane-pl-inst	OK	0	0	2000	2001	2000	-1	34.2	
+eur-api-dane-pl	OK	0	0	2000	2001	2000	-1	36.4	
+eur-api-datagovlt	EMITS_NOTHING	1	-1	0	0	0	-1	4.2	no records reached intel_items
+eur-ckan-andal-trans	OK	0	0	30	30	30	-1	2.1	
+eas-hk-gmb-routes-kln	SLOW	-1	0	-1	-1	133	-1	90.1	hit --timeout 90.1s; 133 rows already stored
+eas-hk-gmb-routes-nt	SLOW	-1	0	-1	-1	196	-1	90.1	hit --timeout 90.1s; 196 rows already stored
+eur-ckan-andal-recent	OK	0	0	833	833	833	-1	12.2	
+eur-ckan-berlin-budget	OK	0	0	3	3	3	-1	1.7	
+eur-ckan-berlin-health	OK	0	0	13	13	13	-1	1.3	
+eur-ckan-berlin	OK	0	0	1300	1301	1300	-1	8.7	
+eur-ckan-berlin-trans	OK	0	0	1	1	1	-1	1.3	
+eur-ckan-andalucia	OK	0	0	833	833	833	-1	12.5	
+eur-ckan-berlin-recent	OK	0	0	700	701	700	-1	5.7	
+eur-api-dane-pl-res	OK	0	0	2000	2001	2000	-1	42.0	
+eur-ckan-datagovie-budget	OK	0	0	288	288	288	-1	3.0	
+eur-ckan-bcn	OK	0	0	555	555	555	-1	17.5	
+eas-hk-legco-speeches	SLOW	-1	0	-1	-1	599	-1	90.1	hit --timeout 90.1s; 599 rows already stored
+eur-ckan-datagovie	OK	0	0	2000	2001	2000	-1	9.2	
+eur-ckan-datagovie-trans	OK	0	0	824	824	824	-1	4.9	
+eur-ckan-datagovhr2	OK	0	0	2000	2001	2000	-1	13.9	
+eur-ckan-datagovie-env	OK	0	0	2000	2001	2000	-1	10.3	
+eur-ckan-datagovie-health	OK	0	0	2000	2001	2000	-1	8.8	
+eur-ckan-datagovie-recent	OK	0	0	2000	2001	2000	-1	10.6	
+eur-ckan-datagovlv-health	EMITS_NOTHING	1	-1	0	0	0	-1	23.7	no records reached intel_items
+eur-ckan-datagovlv	EMITS_NOTHING	1	-1	0	0	0	-1	33.8	no records reached intel_items
+eur-ckan-datagovlv-trans	EMITS_NOTHING	1	-1	0	0	0	-1	29.0	no records reached intel_items
+eur-ckan-datagovro	EMITS_NOTHING	1	-1	0	0	0	-1	28.8	no records reached intel_items
+eur-ckan-datagovua-health	OK	0	0	10	10	10	-1	1.9	
+eur-ckan-datagovlv-env	EMITS_NOTHING	1	-1	0	0	0	-1	33.7	no records reached intel_items
+eur-ckan-datagovro-trans	EMITS_NOTHING	1	-1	0	0	0	-1	28.9	no records reached intel_items
+eur-ckan-datagovua-budget	OK	0	0	119	119	119	-1	4.3	
+eur-ckan-datagovua-trans	OK	0	0	85	85	85	-1	2.8	
+eur-ckan-datigovit-budget	OK	0	0	9	9	9	-1	2.1	
+eur-ckan-datigovit-env	OK	0	0	40	40	40	-1	3.0	
+eur-ckan-datigovit-health	OK	0	0	47	47	47	-1	3.4	
+eur-ckan-govdata-budget	OK	0	0	23	23	23	-1	1.8	
+eur-ckan-datigovit-trans	OK	0	0	84	84	84	-1	3.5	
+eur-ckan-govdata-health	OK	0	0	134	134	134	-1	2.4	
+eur-ckan-govdata-env	OK	0	0	270	270	270	-1	2.8	
+eur-ckan-govdata-de	OK	0	0	2000	2001	2000	-1	9.1	
+eur-ckan-govdata-trans	OK	0	0	1105	1105	1105	-1	6.1	
+eur-ckan-govdata-recent	OK	0	0	2000	2001	2000	-1	9.2	
+eur-ckan-hr-env	OK	0	0	47	47	47	-1	2.2	
+eur-ckan-hr-trans	OK	0	0	99	99	99	-1	2.8	
+eur-ckan-hr-recent	OK	0	0	2000	2001	2000	-1	13.4	
+eur-ckan-hamburg	OK	0	0	2000	2001	2000	-1	19.9	
+eur-ckan-datagovua	OK	0	0	2000	2001	2000	-1	37.0	
+eur-ckan-malaga-trans	OK	0	0	40	40	40	-1	1.7	
+eur-ckan-malaga	OK	0	0	1377	1377	1377	-1	5.7	
+eur-ckan-muenchen	EMITS_NOTHING	1	-1	0	0	0	-1	2.3	no records reached intel_items
+eur-ckan-malaga-recent	OK	0	0	1377	1377	1377	-1	5.6	
+eur-ckan-muenchen-recent	EMITS_NOTHING	1	-1	0	0	0	-1	2.2	no records reached intel_items
+eur-ckan-odpde-budget	OK	0	0	1	1	1	-1	1.8	
+eur-ckan-odpde-trans	OK	0	0	71	71	71	-1	2.3	
+eur-ckan-odp-de	OK	0	0	1080	1080	1080	-1	5.4	
+eur-ckan-datigovit	OK	0	0	2000	2001	2000	-1	38.4	
+eur-ckan-overheid-budget	OK	0	0	135	135	135	-1	2.4	
+eur-ckan-overheid-env	OK	0	0	70	70	70	-1	1.9	
+eur-ckan-odpde-recent	OK	0	0	1080	1080	1080	-1	5.7	
+eur-ckan-overheid-health	OK	0	0	182	182	182	-1	3.0	
+eur-ckan-lv-recent	EMITS_NOTHING	1	-1	0	0	0	-1	28.4	no records reached intel_items
+eur-ckan-podatki-env	OK	0	0	42	42	42	-1	5.6	
+eur-ckan-podatki-health	OK	0	0	38	38	38	-1	5.0	
+eur-ckan-overheid-trans	OK	0	0	1091	1091	1091	-1	11.1	
+eur-ckan-overheid-nl	OK	0	0	2000	2001	2000	-1	12.5	
+eur-ckan-it-recent	OK	0	0	2000	2001	2000	-1	37.8	
+eur-ckan-overheid-recent	OK	0	0	2000	2001	2000	-1	14.2	
+eur-ckan-shde-env	OK	0	0	1	1	1	-1	1.2	
+eur-ckan-podatki-trans	OK	0	0	34	34	34	-1	4.3	
+eur-ckan-shde-trans	OK	0	0	86	86	86	-1	1.6	
+eur-ckan-sh-de	OK	0	0	2000	2001	2000	-1	9.3	
+eur-ckan-shde-recent	OK	0	0	2000	2001	2000	-1	8.8	
+eur-ckan-trentino-budget	OK	0	0	2	2	2	-1	1.9	
+eur-ckan-trentino-env	OK	0	0	2	2	2	-1	1.9	
+eur-ckan-ro-recent	EMITS_NOTHING	1	-1	0	0	0	-1	28.5	no records reached intel_items
+eur-ckan-trentino	OK	0	0	1378	1378	1378	-1	41.0	
+eur-dane-showcases	OK	0	0	121	121	121	-1	4.3	
+eur-dane-new	OK	0	0	2000	2001	2000	-1	34.1	
+eur-ckan-ua-recent	OK	0	0	2000	2001	2000	-1	50.3	
+eur-ods-amp-fr-contenu-de-la-page-nos-visualis	OK	0	0	29	29	29	-1	1.5	
+eur-ckan-trentino-recent	OK	0	0	1378	1378	1378	-1	54.1	
+eur-ods-amp-amest-hab-agence-energie-amp	EMITS_NOTHING	1	-1	0	0	0	-1	29.4	no records reached intel_items
+eur-ods-amp-parc-et-jardin-bd-topo-zone-dactiv	OK	0	0	1307	1307	1307	-1	18.5	
+eur-ckan-podatki-si	SLOW	-1	0	-1	-1	1400	-1	90.1	hit --timeout 90.1s; 1400 rows already stored
+eur-ckan-si-recent	SLOW	-1	0	-1	-1	1400	-1	90.0	hit --timeout 90.0s; 1400 rows already stored
+eur-ods-amp-fr-reseau-de-transports-aix-marsei	EMITS_NOTHING	1	-1	0	0	0	-1	29.4	no records reached intel_items
+eur-ods-amp-communes-conseils-territoire	EMITS_NOTHING	1	-1	0	0	0	-1	35.0	no records reached intel_items
+eur-ods-amp-programme-national-pour-la-renovat	EMITS_NOTHING	1	-1	0	0	0	-1	23.7	no records reached intel_items
+eur-ods-angers-201-alm-vilan-2nd14munip	EMITS_NOTHING	1	-1	0	0	0	-1	23.7	no records reached intel_items
+eur-ods-angers-alm-boundary	EMITS_NOTHING	1	-1	0	0	0	-1	28.6	no records reached intel_items
+eur-ods-angers	OK	0	0	100	101	100	-1	37.8	
+eur-ods-basel	EMITS_NOTHING	1	-1	0	0	0	-1	33.9	no records reached intel_items
+eur-ods-baselland	EMITS_NOTHING	1	-1	0	0	0	-1	34.3	no records reached intel_items
+eur-ods-bdx-fi-eta14-p	OK	0	0	2000	2001	2000	-1	20.8	
+eur-ods-ampmetropole	EMITS_NOTHING	1	-1	0	0	0	-1	62.3	no records reached intel_items
+eur-ods-bl-10070	OK	0	0	2000	2001	2000	-1	6.4	
+eur-ods-bdx-bor-voirietaxeouvrage	EMITS_NOTHING	1	-1	0	0	0	-1	34.0	no records reached intel_items
+eur-ods-bdx-eg-geothermie-s	EMITS_NOTHING	1	-1	0	0	0	-1	34.0	no records reached intel_items
+eur-ods-bdx-leh-statistiques-etat-civil-annee	EMITS_NOTHING	1	-1	0	0	0	-1	23.9	no records reached intel_items
+eur-ods-bdx-leh-sites-et-espaces-municipaux	EMITS_NOTHING	1	-1	0	0	0	-1	38.8	no records reached intel_items
+eur-ods-bl-11080	EMITS_NOTHING	1	-1	0	0	0	-1	24.1	no records reached intel_items
+eur-ods-bl-11300	EMITS_NOTHING	1	-1	0	0	0	-1	28.3	no records reached intel_items
+eur-ods-bl-4bb74943-8e36-4a63-a6f9-cb8afecd0d	OK	0	0	186	186	186	-1	9.3	
+eur-ods-bl-12820	OK	0	0	2000	2001	2000	-1	32.0	
+eur-ods-bru-bornes-d-eau-potable-gerees-par-la	OK	0	0	13	13	13	-1	1.6	
+eur-ods-bl-12850	EMITS_NOTHING	1	-1	0	0	0	-1	24.1	no records reached intel_items
+eur-ods-bl-12830	EMITS_NOTHING	1	-1	0	0	0	-1	29.2	no records reached intel_items
+eur-ods-bordeaux	OK	0	0	565	565	565	-1	13.1	
+eur-ods-bl-df5befc9-9d5b-40ae-9310-84db9480f0	EMITS_NOTHING	1	-1	0	0	0	-1	34.2	no records reached intel_items
+eur-ods-bretagne	EMITS_NOTHING	1	-1	0	0	0	-1	28.6	no records reached intel_items
+eur-ods-bru-bxl-demographie-140306-annee	EMITS_NOTHING	1	-1	0	0	0	-1	23.9	no records reached intel_items
+eur-ods-bru-cimetieres	EMITS_NOTHING	1	-1	0	0	0	-1	23.4	no records reached intel_items
+eur-ods-bru-bxl-consommation-energetique	EMITS_NOTHING	1	-1	0	0	0	-1	28.5	no records reached intel_items
+eur-ods-bru-comites-proprete	EMITS_NOTHING	1	-1	0	0	0	-1	39.3	no records reached intel_items
+eur-ods-bru-informatiedragers-in-de-nederlands	EMITS_NOTHING	1	-1	0	0	0	-1	28.5	no records reached intel_items
+eur-ods-bs-100125	EMITS_NOTHING	1	-1	0	0	0	-1	23.9	no records reached intel_items
+eur-ods-bs-100058	EMITS_NOTHING	1	-1	0	0	0	-1	28.6	no records reached intel_items
+eur-ods-bs-100393	OK	0	0	32	32	32	-1	1.6	
+eur-ods-bs-100282	EMITS_NOTHING	1	-1	0	0	0	-1	28.9	no records reached intel_items
+eur-ods-bs-100076	EMITS_NOTHING	1	-1	0	0	0	-1	33.3	no records reached intel_items
+eur-ods-bs-100380	OK	0	0	288	288	288	-1	15.1	
+eur-ods-bs-100387	EMITS_NOTHING	1	-1	0	0	0	-1	28.5	no records reached intel_items
+eur-ods-bs-100307	EMITS_NOTHING	1	-1	0	0	0	-1	33.7	no records reached intel_items
+eur-ods-bzh-aires-et-produits-aocaop-et-igp	EMITS_NOTHING	1	-1	0	0	0	-1	28.4	no records reached intel_items
+eur-ods-bzh-canaux-de-bretagne-offices-du-tour	EMITS_NOTHING	1	-1	0	0	0	-1	28.7	no records reached intel_items
+eur-ods-bzh-associations-les-donnees-du-journa	EMITS_NOTHING	1	-1	0	0	0	-1	33.5	no records reached intel_items
+eur-ods-bzh-ips-lycee	EMITS_NOTHING	1	-1	0	0	0	-1	28.1	no records reached intel_items
+eur-ods-econ-concession-de-service-public-gesti	OK	0	0	15	15	15	-1	1.6	
+eur-ods-bzh-lineotim	OK	0	0	1	1	1	-1	17.3	
+eur-ods-bzh-korrigo	EMITS_NOTHING	1	-1	0	0	0	-1	33.6	no records reached intel_items
+eur-ods-bzh-lannion-tilt	EMITS_NOTHING	1	-1	0	0	0	-1	33.9	no records reached intel_items
+eur-ods-cvl	EMITS_NOTHING	1	-1	0	0	0	-1	29.2	no records reached intel_items
+eur-ods-econ-plf25-ressources-et-charges-selon	EMITS_NOTHING	1	-1	0	0	0	-1	23.4	no records reached intel_items
+eur-ods-datahub	EMITS_NOTHING	1	-1	0	0	0	-1	28.5	no records reached intel_items
+eur-ods-economie	OK	0	0	617	617	617	-1	22.6	
+eur-ods-gent	OK	0	0	311	311	311	-1	16.2	
+eur-ods-gent-locaties-bioscopen-gent	OK	0	0	3	3	3	-1	9.2	
+eur-ods-gent-duurzame-voeding-gent	EMITS_NOTHING	1	-1	0	0	0	-1	23.7	no records reached intel_items
+eur-ods-gent-bloklocaties-gent	EMITS_NOTHING	1	-1	0	0	0	-1	29.3	no records reached intel_items
+eur-ods-gent-donkey-republic-deelfietsen-prijze	EMITS_NOTHING	1	-1	0	0	0	-1	29.1	no records reached intel_items
+eur-ods-idf-chomage-nombre-de-chomeurs-exhaust	OK	0	0	1287	1287	1287	-1	5.4	
+eur-ods-idf-formations-sanitaires-sociales	OK	0	0	390	390	390	-1	2.5	
+eur-ods-idfm-actualites-locales-idfm	COLLISION	0	0	216	215	215	-1	2.3	1 of 216 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+eur-ods-gent-schoolstraten-gent	EMITS_NOTHING	1	-1	0	0	0	-1	23.5	no records reached intel_items
+eur-ods-idfm-sanitaires-reseau-ratp	OK	0	0	48	48	48	-1	1.2	
+eur-ods-gent-inname-openbaar-domein-werken-gent	EMITS_NOTHING	1	-1	0	0	0	-1	33.7	no records reached intel_items
+eur-ods-idfm-schema-gares-pf	OK	0	0	554	554	554	-1	2.3	
+eur-ods-gent-wegen-north-sea-port	EMITS_NOTHING	1	-1	0	0	0	-1	33.8	no records reached intel_items
+eur-ods-idf-emprise-des-parcs-et-jardins-geres	EMITS_NOTHING	1	-1	0	0	0	-1	28.9	no records reached intel_items
+eur-ods-idf-sections-des-continuites-ecologiqu	EMITS_NOTHING	1	-1	0	0	0	-1	33.8	no records reached intel_items
+eur-ods-idfm-traces-des-lignes-de-transport-en	EMITS_NOTHING	1	-1	0	0	0	-1	28.9	no records reached intel_items
+eur-ods-idfm-validations-reseau-ferre-profils-h	EMITS_NOTHING	1	-1	0	0	0	-1	28.4	no records reached intel_items
+eur-ods-idfm-gares-routieres-idf	EMITS_NOTHING	1	-1	0	0	0	-1	38.5	no records reached intel_items
+eur-ods-issy-conseillers-info-energie	OK	0	0	8	8	8	-1	1.9	
+eur-ods-idfm-validations-reseau-surface-nombre	EMITS_NOTHING	1	-1	0	0	0	-1	28.7	no records reached intel_items
+eur-ods-iledefrance	EMITS_NOTHING	1	-1	0	0	0	-1	23.8	no records reached intel_items
+eur-ods-issy	OK	0	0	327	327	327	-1	24.8	
+eur-ods-issy-bornes-de-recharge-electriques-acc	EMITS_NOTHING	1	-1	0	0	0	-1	28.4	no records reached intel_items
+eur-ods-issy-composteur-pavillon	EMITS_NOTHING	1	-1	0	0	0	-1	33.4	no records reached intel_items
+eur-ods-issy-les-parcs-et-jardins-a-issy-les-mo	EMITS_NOTHING	1	-1	0	0	0	-1	23.3	no records reached intel_items
+eur-ods-issy-gpe-gar-ligne15sud	EMITS_NOTHING	1	-1	0	0	0	-1	29.0	no records reached intel_items
+eur-ods-issy-stations-de-gonflage-velos	EMITS_NOTHING	1	-1	0	0	0	-1	28.6	no records reached intel_items
+eur-ods-laregion	EMITS_NOTHING	1	-1	0	0	0	-1	33.4	no records reached intel_items
+eur-ods-laregion-consultation-lycee-de-demain	EMITS_NOTHING	1	-1	0	0	0	-1	28.8	no records reached intel_items
+eur-ods-laregion-gares-routieres-autocar-en-occitan	EMITS_NOTHING	1	-1	0	0	0	-1	23.6	no records reached intel_items
+eur-ods-laregion-contrat-de-projets-etat-region-mas	EMITS_NOTHING	1	-1	0	0	0	-1	28.7	no records reached intel_items
+eur-ods-lda-224400028-nb-aides-educ-admin-sout	OK	0	0	233	233	233	-1	2.2	
+eur-ods-laregion-individus-presumes-emigres-revolut	EMITS_NOTHING	1	-1	0	0	0	-1	33.7	no records reached intel_items
+eur-ods-lda-224400028-donnees-essentielles-com	OK	0	0	478	478	478	-1	14.8	
+eur-ods-laregion-scot-occitanie	EMITS_NOTHING	1	-1	0	0	0	-1	33.5	no records reached intel_items
+eur-ods-lda-395131295-clubs-de-gymnastique-en	OK	0	0	23	23	23	-1	4.4	
+eur-ods-lda-224400028-nb-consult-enfants-prote	OK	0	0	2000	2001	2000	-1	17.2	
+eur-ods-lda-224400028-budget-primitif-budget-a	EMITS_NOTHING	1	-1	0	0	0	-1	28.6	no records reached intel_items
+eur-ods-lda-224400028-contributions-participat	EMITS_NOTHING	1	-1	0	0	0	-1	34.1	no records reached intel_items
+eur-ods-namur	OK	0	0	294	294	294	-1	11.3	
+eur-ods-namur-cim-sepultures-sihl-citoyen	OK	0	0	1469	1469	1469	-1	3.2	
+eur-ods-lda-224400028-pistes-cyclables-en-loir	EMITS_NOTHING	1	-1	0	0	0	-1	29.0	no records reached intel_items
+eur-ods-lda-224400028-suivi-qualite-eaux-super	EMITS_NOTHING	1	-1	0	0	0	-1	28.8	no records reached intel_items
+eur-ods-odre-odre-ptc-gaz	OK	0	0	100	101	100	-1	9.0	
+eur-ods-loireatlantique	EMITS_NOTHING	1	-1	0	0	0	-1	33.2	no records reached intel_items
+eur-ods-namur-namur-budget-extraordinaire-prelev	OK	0	0	13	13	13	-1	21.9	
+eur-ods-namur-namur-college-communal	OK	0	0	11	11	11	-1	17.3	
+eur-ods-namur-namur-balades-nature	EMITS_NOTHING	1	-1	0	0	0	-1	28.9	no records reached intel_items
+eur-ods-namur-carte1-espvie	EMITS_NOTHING	1	-1	0	0	0	-1	38.7	no records reached intel_items
+eur-ods-nantes	OK	0	0	593	593	593	-1	7.8	
+eur-ods-namur-namur-plan-de-secteur-affectations	OK	0	0	2021	2021	2021	-1	16.5	
+eur-ods-namur-population-mouv-indic-tbnatalite	EMITS_NOTHING	1	-1	0	0	0	-1	28.9	no records reached intel_items
+eur-ods-nantes-244400404-nombre-annuel-naissances	EMITS_NOTHING	1	-1	0	0	0	-1	23.9	no records reached intel_items
+eur-ods-namur-regionsgeweste-belgium	EMITS_NOTHING	1	-1	0	0	0	-1	33.8	no records reached intel_items
+eur-ods-odre	EMITS_NOTHING	1	-1	0	0	0	-1	23.1	no records reached intel_items
+eur-ods-nantes-244400404-ilot-fraicheur-nantes-me	EMITS_NOTHING	1	-1	0	0	0	-1	29.1	no records reached intel_items
+eur-ods-nantes-323266205-episodes-pollution-air-l	EMITS_NOTHING	1	-1	0	0	0	-1	29.2	no records reached intel_items
+eur-ods-odre-parc-prod-par-filiere	OK	0	0	19	19	19	-1	9.5	
+eur-ods-odre-consommation-annuelle-brute	EMITS_NOTHING	1	-1	0	0	0	-1	28.4	no records reached intel_items
+eur-ods-odre-consommation-journaliere-maximale	OK	0	0	2000	2001	2000	-1	28.7	
+eur-ods-odre-debit-quotidien-stockages-gaz	EMITS_NOTHING	1	-1	0	0	0	-1	28.3	no records reached intel_items
+eur-ods-odre-equilibre-national-mensuel-rpt-inj	EMITS_NOTHING	1	-1	0	0	0	-1	28.3	no records reached intel_items
+eur-ods-odshub-224400028-nb-fonds-solidarite-loge	EMITS_NOTHING	1	-1	0	0	0	-1	23.3	no records reached intel_items
+eur-ods-odre-projet-commerciaux-et-demonstrateu	EMITS_NOTHING	1	-1	0	0	0	-1	33.4	no records reached intel_items
+eur-ods-odshub-interest-rates-and-sama-average-bi	OK	0	0	2000	2001	2000	-1	24.6	
+eur-ods-odspub-buildingref-france-sitadel-logemen	OK	0	0	100	101	100	-1	1.5	
+eur-ods-odshub-statistique-mutation-immobiliere-d	EMITS_NOTHING	1	-1	0	0	0	-1	23.5	no records reached intel_items
+eur-ods-odshub-pneumopathie-passages-aux-urgences	EMITS_NOTHING	1	-1	0	0	0	-1	28.3	no records reached intel_items
+eur-ods-odshub-fr-en-inserjeunes-lycee-pro-agri-f	EMITS_NOTHING	1	-1	0	0	0	-1	33.3	no records reached intel_items
+eur-ods-odshub-testparts-pib-france-ue27-drees2-s	EMITS_NOTHING	1	-1	0	0	0	-1	33.5	no records reached intel_items
+eur-ods-odspub-healthref-france-sentinelles-yearl	EMITS_NOTHING	1	-1	0	0	0	-1	23.4	no records reached intel_items
+eur-ods-odshub-budget-participatif-rennes-rennes	EMITS_NOTHING	1	-1	0	0	0	-1	61.2	no records reached intel_items
+eur-ods-odspub-economicref-france-nomenclature-ca	EMITS_NOTHING	1	-1	0	0	0	-1	28.1	no records reached intel_items
+eur-ods-odspub-georef-netherlands-gemeente	EMITS_NOTHING	1	-1	0	0	0	-1	28.5	no records reached intel_items
+eur-ods-paris-beneficiaires	OK	0	0	280	280	280	-1	2.1	
+eur-ods-odspub-emplacement-des-forets-publiques	EMITS_NOTHING	1	-1	0	0	0	-1	33.1	no records reached intel_items
+eur-ods-odspub-osm-australia-defibrillator	EMITS_NOTHING	1	-1	0	0	0	-1	28.4	no records reached intel_items
+eur-ods-paris	EMITS_NOTHING	1	-1	0	0	0	-1	23.6	no records reached intel_items
+eur-ods-paris-bilan-social-positions-statutaires	OK	0	0	87	87	87	-1	22.2	
+eur-ods-odspub-osm-australia-food-service	EMITS_NOTHING	1	-1	0	0	0	-1	28.3	no records reached intel_items
+eur-ods-odspub-osm-australia-public-service	EMITS_NOTHING	1	-1	0	0	0	-1	33.1	no records reached intel_items
+eur-ods-paris-lineaire-cyclable-km	EMITS_NOTHING	1	-1	0	0	0	-1	33.6	no records reached intel_items
+eur-ods-paris-plan-de-voirie-repere-de-nivelleme	OK	0	0	2000	2001	2000	-1	24.3	
+eur-ods-paris-paris-logement-familles-monoparent	EMITS_NOTHING	1	-1	0	0	0	-1	38.3	no records reached intel_items
+eur-ods-paris-plan-de-voirie-details-de-batis0	OK	0	0	2000	2001	2000	-1	27.6	
+eur-ods-paysdelaloire	OK	0	0	215	215	215	-1	3.7	
+eur-ods-pdl-234400034-005-001-fonds-documentai	OK	0	0	3885	3885	3885	-1	3.3	
+eur-ods-paris-plan-de-voirie-trottoirs	EMITS_NOTHING	1	-1	0	0	0	-1	28.5	no records reached intel_items
+eur-ods-paris-parissetransforme	EMITS_NOTHING	1	-1	0	0	0	-1	38.4	no records reached intel_items
+eur-ods-paris-plub-ess	EMITS_NOTHING	1	-1	0	0	0	-1	33.2	no records reached intel_items
+eur-ods-pdl-234400034-culture-au-futur-1-l-inc	OK	0	0	5	5	5	-1	19.0	
+eur-ods-paris-traces-cheminement-vers-les-sites	EMITS_NOTHING	1	-1	0	0	0	-1	28.4	no records reached intel_items
+eur-ods-public	OK	0	0	420	420	420	-1	5.6	
+eur-ods-ratp-commerces-de-proximite-agrees-ratp	OK	0	0	911	911	911	-1	1.7	
+eur-ods-pdl-234400034-effectifs-prives	EMITS_NOTHING	1	-1	0	0	0	-1	28.3	no records reached intel_items
+eur-ods-pdl-234400034-emploi-lieu-travail	EMITS_NOTHING	1	-1	0	0	0	-1	33.7	no records reached intel_items
+eur-ods-pdl-arrets-horaires-et-circuits-des-li	EMITS_NOTHING	1	-1	0	0	0	-1	34.7	no records reached intel_items
+eur-ods-pdl-close-data-10-plus-importantes-rem	EMITS_NOTHING	1	-1	0	0	0	-1	23.5	no records reached intel_items
+eur-ods-rennes-naissances-noyal-chatillon-sur-sei	OK	0	0	5	5	5	-1	9.5	
+eur-ods-ratp-fontaines-a-eau-dans-le-reseau-rat	EMITS_NOTHING	1	-1	0	0	0	-1	23.5	no records reached intel_items
+eur-ods-ratp-frequentation-du-pole-de-la-defens	EMITS_NOTHING	1	-1	0	0	0	-1	22.1	no records reached intel_items
+eur-ods-ratp	EMITS_NOTHING	1	-1	0	0	0	-1	29.0	no records reached intel_items
+eur-ods-sncf	OK	0	0	163	163	163	-1	2.3	
+eur-ods-ratp-qualite-de-lair-mesuree-dans-la-st	OK	0	0	2000	2001	2000	-1	19.0	
+eur-ods-sncf-at-taux	OK	0	0	103	103	103	-1	9.2	
+eur-ods-rennes	EMITS_NOTHING	1	-1	0	0	0	-1	28.6	no records reached intel_items
+eur-ods-sncf-paniers-fraicheur	OK	0	0	27	27	27	-1	13.7	
+eur-ods-sncf-agents-nationalite-etrangere	OK	0	0	138	138	138	-1	22.3	
+eur-ods-stras-equipement-sport	OK	0	0	808	808	808	-1	4.9	
+eur-ods-sncf-nuage-points-3d	EMITS_NOTHING	1	-1	0	0	0	-1	28.4	no records reached intel_items
+eur-ods-rennes-resultats-elections-cumul-municipa	EMITS_NOTHING	1	-1	0	0	0	-1	33.7	no records reached intel_items
+eur-ods-stras-signal-longitudinale	COLLISION	0	0	2000	1981	1980	-1	18.1	20 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+eur-ods-sncf-repartition-genre-effectif	EMITS_NOTHING	1	-1	0	0	0	-1	28.5	no records reached intel_items
+eur-ods-strasbourg	OK	0	0	400	400	400	-1	12.5	
+eur-ods-sncf-previweb-direction-des-achats-grou	EMITS_NOTHING	1	-1	0	0	0	-1	38.3	no records reached intel_items
+eur-ods-stras-prenom-nouveaux-nes	EMITS_NOTHING	1	-1	0	0	0	-1	28.5	no records reached intel_items
+eur-ods-stras-usages-ephemeres	EMITS_NOTHING	1	-1	0	0	0	-1	33.5	no records reached intel_items
+eur-ods-tg-dek-aa-1	EMITS_NOTHING	1	-1	0	0	0	-1	23.5	no records reached intel_items
+eur-ods-tg-sk-stat-30	OK	0	0	2000	2001	2000	-1	22.8	
+eur-ods-tg-sk-stat-28	EMITS_NOTHING	1	-1	0	0	0	-1	29.2	no records reached intel_items
+eur-ods-tg-sk-stat-130	EMITS_NOTHING	1	-1	0	0	0	-1	33.7	no records reached intel_items
+eur-ods-tg-sk-stat-5	EMITS_NOTHING	1	-1	0	0	0	-1	38.8	no records reached intel_items
+eur-ods-tg-sk-stat-83	EMITS_NOTHING	1	-1	0	0	0	-1	28.6	no records reached intel_items
+eur-ods-tg-sk-stat-96	OK	0	0	14	14	14	-1	22.3	
+eur-soc-cat-3gwy-ph5m	OK	0	0	324	324	324	-1	2.1	
+eur-soc-cat-66ws-y4xs	OK	0	0	75	75	75	-1	1.7	
+eur-soc-cat-6uq2-k222	OK	0	0	425	425	425	-1	2.3	
+eur-ods-tg-sk-stat-85	EMITS_NOTHING	1	-1	0	0	0	-1	33.8	no records reached intel_items
+eur-soc-cat-6zwt-zrnz	OK	0	0	405	405	405	-1	2.0	
+eur-soc-cat-7gqm-722r	OK	0	0	602	602	602	-1	2.3	
+eur-soc-cat-8anv-dihv	OK	0	0	21	21	21	-1	1.6	
+eur-ods-thurgau	OK	0	0	467	467	467	-1	27.7	
+eur-soc-cat-8dfw-h858	OK	0	0	315	315	315	-1	1.5	
+eur-soc-cat-a389-y4d5	OK	0	0	156	156	156	-1	1.7	
+eur-soc-cat-b94f-7wk8	OK	0	0	48	48	48	-1	1.5	
+eur-soc-cat-9ehv-pmf5	COLLISION	0	0	3788	1265	1265	-1	4.6	2523 of 3788 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+eur-soc-cat-ceif-iu68	OK	0	0	204	204	204	-1	1.5	
+eur-soc-cat-ijf5-uiur	OK	0	0	204	204	204	-1	1.3	
+eur-soc-cat-cf9d-y6x4	OK	0	0	532	532	532	-1	1.7	
+eur-soc-cat-jshe-z7mt	OK	0	0	150	150	150	-1	1.6	
+eur-soc-cat-jsgs-5iiu	COLLISION	0	0	4141	4113	4113	-1	4.1	28 of 4141 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+eur-soc-cat-63re-p88u	OK	0	0	20000	20001	20000	-1	19.0	
+eur-ods-toulouse	OK	0	0	845	845	845	-1	34.5	
+eur-ods-vendee	EMITS_NOTHING	1	-1	0	0	0	-1	23.8	no records reached intel_items
+eur-soc-cat-tg6d-kufh	OK	0	0	36	36	36	-1	1.7	
+eur-soc-cat-b5rw-yz3c	COLLISION	0	0	20000	19614	19613	-1	17.0	387 of 20000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+eur-soc-cat-m7bp-hncj	OK	0	0	20000	20001	20000	-1	11.3	
+eur-soc-cat-wrch-dn23	OK	0	0	253	253	253	-1	1.6	
+eur-soc-cat-ygq5-mccp	OK	0	0	219	219	219	-1	1.7	
+eur-soc-cat-nh2x-3jq4	OK	0	0	13552	13552	13552	-1	10.9	
+eur-soc-lomb-45i7-2vvv	OK	0	0	270	270	270	-1	2.2	
+eur-soc-cat-tqdx-tz5i	COLLISION	0	0	15152	4615	4615	-1	11.2	10537 of 15152 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+eur-soc-lomb-5h55-74d7	OK	0	0	3	3	3	-1	1.6	
+eur-soc-cat-s3uc-x9bq	COLLISION	0	0	15562	15561	15561	-1	15.2	1 of 15562 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+eur-soc-lomb-64ew-ksvg	OK	0	0	30	30	30	-1	1.9	
+eur-soc-lomb-6rbr-vjip	OK	0	0	645	645	645	-1	2.5	
+eur-soc-lomb-7evz-wdcy	OK	0	0	194	194	194	-1	2.3	
+eur-soc-lomb-8iff-w3mt	OK	0	0	416	416	416	-1	1.8	
+eur-soc-lomb-8vp9-gj8g	OK	0	0	20	20	20	-1	1.8	
+eur-soc-catalunya	OK	0	0	100	100	100	-1	13.8	
+eur-soc-lomb-8w97-9wic	OK	0	0	203	203	203	-1	2.4	
+eur-soc-lomb-8wru-ja7m	OK	0	0	210	210	210	-1	2.2	
+eur-soc-lomb-9tx2-nfj4	OK	0	0	147	147	147	-1	1.4	
+eur-soc-lomb-8qzg-7d93	OK	0	0	3807	3807	3807	-1	8.2	
+eur-soc-lomb-9nyr-86xn	OK	0	0	4323	4323	4323	-1	4.5	
+eur-soc-lomb-adzy-fbiz	OK	0	0	563	563	563	-1	2.3	
+eur-soc-lomb-aiti-ppdx	OK	0	0	230	230	230	-1	1.7	
+eur-soc-lomb-b2s3-zctx	OK	0	0	14	14	14	-1	1.6	
+eur-soc-lomb-crqv-7wf7	OK	0	0	154	154	154	-1	1.5	
+eur-soc-lomb-dn4s-jx87	OK	0	0	440	440	440	-1	2.3	
+eur-soc-lomb-g3un-bcya	OK	0	0	15	15	15	-1	1.6	
+eur-soc-lomb-ji52-5j3s	OK	0	0	194	194	194	-1	1.5	
+eur-soc-lomb-uhvm-8snb	OK	0	0	390	390	390	-1	2.4	
+eur-soc-lomb-k77y-v5zz	OK	0	0	4503	4503	4503	-1	4.2	
+eur-soc-lomb-jhpe-btug	COLLISION	0	0	3027	3026	3026	-1	6.4	1 of 3027 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+eur-soc-lomb-3f6i-nxxr	OK	0	0	563	563	563	-1	27.6	
+eur-soc-rdw	OK	0	0	100	100	100	-1	5.2	
+eur-soc-cat-qa4t-5ptr	COLLISION	0	0	20000	19992	19991	-1	43.4	9 of 20000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+eur-soc-rdw-3xwf-ince	OK	0	0	574	574	574	-1	1.3	
+eur-soc-rdw-3rhp-hrx5	OK	0	0	51	51	51	-1	2.8	
+eur-soc-lomb-y856-h426	OK	0	0	20000	20001	20000	-1	10.9	
+eur-soc-rdw-2ba7-embk	OK	0	0	20000	20001	20000	-1	10.3	
+eur-soc-lomb-5gfm-gsfr	OK	0	0	20000	20001	20000	-1	36.7	
+eur-soc-rdw-9s6a-b42z	OK	0	0	8448	8448	8448	-1	5.5	
+eur-soc-rdw-7rjk-eycs	COLLISION	0	0	20000	20000	19999	-1	11.6	1 of 20000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+eur-soc-rdw-b2fs-9ymw	OK	0	0	139	139	139	-1	2.2	
+eur-soc-rdw-4by9-ammk	COLLISION	0	0	20000	20000	19999	-1	12.9	1 of 20000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+eur-soc-rdw-7ug8-2dtt	OK	0	0	20000	20001	20000	-1	11.6	
+eur-soc-rdw-8wbe-pu7d	OK	0	0	20000	20001	20000	-1	11.4	
+eur-soc-rdw-gfb5-nkdy	OK	0	0	22	22	22	-1	1.7	
+eur-soc-rdw-jqs4-4kvw	OK	0	0	9	9	9	-1	1.3	
+eur-soc-rdw-gwux-2dqa	OK	0	0	1932	1932	1932	-1	1.8	
+eur-soc-rdw-d3ex-xghj	OK	0	0	20000	20001	20000	-1	11.0	
+eur-soc-rdw-byxc-wwua	OK	0	0	20000	20001	20000	-1	15.3	
+eur-soc-rdw-kyri-nuah	COLLISION	0	0	20000	20000	19999	-1	11.5	1 of 20000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+eur-soc-rdw-ky2r-jqad	OK	0	0	20000	20001	20000	-1	12.0	
+eur-soc-lombardia	OK	0	0	100	100	100	-1	37.4	
+eur-soc-rdw-xn6e-huse	OK	0	0	131	131	131	-1	1.4	
+eur-soc-rdw-yefi-qfiq	OK	0	0	6679	6679	6679	-1	5.1	
+eur-soc-rdw-m692-vvff	OK	0	0	20000	20001	20000	-1	11.0	
+eur-soc-rdw-gr7t-qfnb	COLLISION	0	0	20000	20000	19999	-1	21.1	1 of 20000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+eur-soc-rdw-x5v3-sewk	OK	0	0	20000	20001	20000	-1	11.8	
+eur-soc-rdw-xhyb-w7xt	COLLISION	0	0	20000	20000	19999	-1	12.3	1 of 20000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+eur-udata-lu-orgs	OK	0	0	219	219	219	-1	2.3	
+eur-udata-dadosgovpt	OK	0	0	2000	2001	2000	-1	12.9	
+eur-udata-pt-orgs	OK	0	0	100	101	100	-1	3.1	
+eur-udata-pt-reuses	OK	0	0	117	117	117	-1	2.3	
+eur-udata-pt-new	OK	0	0	2000	2001	2000	-1	12.6	
+eur-udata-rs-orgs	OK	0	0	219	219	219	-1	11.4	
+eur-dataforsyningen-kommuner2	EMITS_NOTHING	1	-1	0	0	0	-1	1.3	no records reached intel_items
+eur-udata-rs-reuses	OK	0	0	97	97	97	-1	5.2	
+eur-dataforsyningen-postnumre	EMITS_NOTHING	1	-1	0	0	0	-1	1.8	no records reached intel_items
+eur-dataforsyningen-regioner	EMITS_NOTHING	1	-1	0	0	0	-1	1.4	no records reached intel_items
+eur-dataforsyningen-vejnavne	EMITS_NOTHING	1	-1	0	0	0	-1	1.7	no records reached intel_items
+eur-dataforsyningen-sogne	EMITS_NOTHING	1	-1	0	0	0	-1	2.4	no records reached intel_items
+eur-geoadmin-faq	OK	0	0	898	898	898	-1	2.3	
+eur-efas-rss	OK	0	0	10	10	10	-1	2.9	
+eur-geoapi-departements	OK	0	0	101	101	101	-1	1.1	
+eur-geoapi-communes	OK	0	0	200	200	200	-1	2.1	
+eur-geoapi-regions	OK	0	0	18	18	18	-1	1.1	
+eur-geonorge-wfs	OK	0	0	3	3	3	-1	1.1	
+eur-geosphere-klima-meta	OK	0	0	1101	1101	1101	-1	2.2	
+eur-udata-rs	OK	0	0	2000	2001	2000	-1	26.2	
+eur-geosphere-tawes-meta	OK	0	0	288	288	288	-1	1.8	
+eur-hubeau-ecoulement	OK	0	0	3548	3548	3548	-1	6.4	
+eur-udata-datapubliclu	OK	0	0	2000	2001	2000	-1	42.8	
+eur-hubeau-indicateurs2	EMITS_NOTHING	1	-1	0	0	0	-1	1.7	no records reached intel_items
+eur-hubeau-hydrobio	OK	0	0	4000	4001	4000	-1	12.0	
+eur-geoapi-epcis	EMITS_NOTHING	1	-1	0	0	0	-1	23.2	no records reached intel_items
+eur-hubeau-nappes-stations	OK	0	0	4000	4001	4000	-1	10.2	
+eur-hubeau-poisson	COLLISION	0	0	4000	4000	3999	-1	9.0	1 of 4000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+eur-hubeau-nappes-chron	OK	0	0	4000	4001	4000	-1	16.8	
+eur-ingv-shakemap	OK	0	0	16	16	16	-1	1.4	
+eur-hubeau-prelev-chron	OK	0	0	4000	4001	4000	-1	6.7	
+eur-ipma-cities	OK	0	0	27	27	27	-1	1.5	
+eur-ipma-cities-d1	OK	0	0	27	27	27	-1	1.4	
+eur-ipma-cities-d2	OK	0	0	27	27	27	-1	1.5	
+eur-ipma-sea-d1	OK	0	0	12	12	12	-1	1.3	
+eur-ipma-seaforecast	OK	0	0	12	12	12	-1	1.2	
+eur-irceline-offerings	OK	0	0	686	686	686	-1	2.0	
+eur-irceline-phenomena	OK	0	0	23	23	23	-1	1.6	
+eur-irceline-procedures	OK	0	0	686	686	686	-1	2.1	
+eur-luchtmeetnet-comp	OK	0	0	13	13	13	-1	1.5	
+eur-luchtmeetnet-org	OK	0	0	8	8	8	-1	1.5	
+eur-meteoswiss-stations	OK	0	0	300	300	300	-1	1.4	
+eur-irceline-stations	OK	0	0	139	139	139	-1	3.7	
+eur-mfe-emsc	OK	0	0	100	101	100	-1	1.2	
+eur-nve-avalanche-detail	OK	0	0	46	46	46	-1	1.5	
+eur-renass-events	OK	0	0	100	101	100	-1	1.8	
+eur-uba-components	OK	0	0	12	12	12	-1	2.1	
+eur-pdok-suggest	OK	0	0	2000	2001	2000	-1	6.1	
+eur-pdok-locatieserver	OK	0	0	2000	2001	2000	-1	6.3	
+eur-uba-de-stations	OK	0	0	492	492	492	-1	2.2	
+eur-uba-networks2	OK	0	0	17	17	17	-1	2.0	
+eur-uba-scopes	OK	0	0	6	6	6	-1	1.9	
+eur-varsom-avalanche	OK	0	0	46	46	46	-1	1.7	
+eur-wfs-bkg-vg250-vg250-lan	EMITS_NOTHING	1	-1	0	0	0	-1	1.4	no records reached intel_items
+eur-wfs-bkg-vg250-vg250-li	EMITS_NOTHING	1	-1	0	0	0	-1	1.2	no records reached intel_items
+eur-udata-datagouv-new	OK	0	0	850	851	850	-1	83.9	
+eur-wfs-bkg-vg250-vg250-pk	OK	0	0	4000	4001	4000	-1	6.8	
+eur-wfs-bkg-vg250-vg250-sta	EMITS_NOTHING	1	-1	0	0	0	-1	1.3	no records reached intel_items
+eur-wfs-bkg-vg250-vg250-rbz	OK	0	0	21	21	21	-1	4.5	
+eur-udata-datagouv-reuses	SLOW	-1	0	-1	-1	300	-1	90.0	hit --timeout 90.0s; 300 rows already stored
+eur-wfs-cuzk-cz-administrativeboundary	OK	0	0	20	21	20	-1	2.1	
+eur-wfs-bkg-vg250-vg250-krs	OK	0	0	433	433	433	-1	14.4	
+eur-wfs-dk-dataforsyning-ans18	OK	0	0	50	51	50	-1	1.4	
+eur-wfs-dk-dataforsyning-ansoegere17	OK	0	0	50	51	50	-1	1.6	
+eur-wfs-geopf-a-1-limite-administrative	OK	0	0	20	21	20	-1	1.7	
+eur-wfs-geopf-a-2-surface-administrative	OK	0	0	20	21	20	-1	2.1	
+eur-wfs-bkg-vg250-vg250-gem	OK	0	0	4000	4001	4000	-1	17.7	
+eur-wfs-geopf-acte-sup	OK	0	0	20	21	20	-1	1.3	
+eur-wfs-geopf-arrondissement-municipal	OK	0	0	20	21	20	-1	1.5	
+eur-wfs-geopf-assiette-sup-l	OK	0	0	20	21	20	-1	1.2	
+eur-wfs-geopf-acces-skidder	OK	0	0	20	21	20	-1	3.9	
+eur-wfs-geopf-b-1-troncon-de-route	OK	0	0	20	21	20	-1	1.3	
+eur-wfs-geopf-b-2-troncon-de-voie-ferree	OK	0	0	20	21	20	-1	1.3	
+eur-wfs-geopf-chef-lieu-d-arrondissement	OK	0	0	20	21	20	-1	1.2	
+eur-wfs-geopf-chef-lieu-d-arrondissement-municipal	OK	0	0	20	21	20	-1	1.1	
+eur-wfs-geopf-acces-porteur	OK	0	0	20	21	20	-1	8.7	
+eur-wfs-geopf-canton	OK	0	0	20	21	20	-1	3.1	
+eur-wfs-geopf-chef-lieu-d-epci	OK	0	0	20	21	20	-1	1.2	
+eur-wfs-geopf-chef-lieu-de-canton	OK	0	0	20	21	20	-1	1.1	
+eur-wfs-geopf-chef-lieu-de-collectivite-territoria	OK	0	0	20	21	20	-1	1.2	
+eur-wfs-geopf-chef-lieu-de-commune	OK	0	0	20	21	20	-1	1.7	
+eur-wfs-geopf-chef-lieu-de-commune-associee-ou-del	OK	0	0	20	21	20	-1	1.3	
+eur-wfs-geopf-chef-lieu-de-region	OK	0	0	18	18	18	-1	1.2	
+eur-wfs-geopf-commune	OK	0	0	20	21	20	-1	1.4	
+eur-wfs-geopf-chef-lieu-de-departement	OK	0	0	20	21	20	-1	2.9	
+eur-wfs-geopf-assiette-sup-s	OK	0	0	20	21	20	-1	9.6	
+eur-wfs-geopf-data-aubiet-25-05	OK	0	0	20	21	20	-1	1.2	
+eur-wfs-geopf-commune-associee-ou-deleguee	OK	0	0	20	21	20	-1	1.6	
+eur-wfs-geopf-ignf-geodesie-site-rdf	OK	0	0	200	201	200	-1	2.3	
+eur-wfs-geopf-limites-administratives-express-latest	OK	0	0	45	45	45	-1	2.0	
+eur-wfs-geopf-epci	OK	0	0	20	21	20	-1	3.0	
+eur-wfs-geopf-limites-administratives-express-latest-10	OK	0	0	200	201	200	-1	2.3	
+eur-wfs-geopf-limites-administratives-express-latest-2	OK	0	0	200	201	200	-1	1.4	
+eur-wfs-geopf-limites-administratives-express-latest-3	OK	0	0	45	45	45	-1	1.6	
+eur-wfs-geopf-limites-administratives-express-latest-4	OK	0	0	200	201	200	-1	1.8	
+eur-wfs-geopf-limites-administratives-express-latest-5	OK	0	0	200	201	200	-1	1.3	
+eur-wfs-geopf-limites-administratives-express-latest-11	OK	0	0	200	201	200	-1	3.2	
+eur-wfs-geopf-limites-administratives-express-latest-6	OK	0	0	200	201	200	-1	1.3	
+eur-wfs-geopf-limites-administratives-express-latest-7	OK	0	0	200	201	200	-1	1.2	
+eur-wfs-geopf-limites-administratives-express-latest-9	OK	0	0	18	18	18	-1	1.1	
+eur-wfs-geopf-limites-administratives-express-latest-8	OK	0	0	101	101	101	-1	1.3	
+eur-wfs-pdok-bag-bag-ligplaats	OK	0	0	200	201	200	-1	1.3	
+eur-wfs-pdok-bag-bag-pand	OK	0	0	200	201	200	-1	1.3	
+eur-wfs-pdok-bag-bag-standplaats	OK	0	0	200	201	200	-1	1.4	
+eur-wfs-geopf-site-rdf	OK	0	0	20	21	20	-1	3.2	
+eur-wfs-pdok-bag-bag-verblijfsobject	OK	0	0	200	201	200	-1	1.5	
+eur-wfs-pdok-bag-ligplaats	OK	0	0	50	51	50	-1	1.2	
+eur-wfs-pdok-bag-pand	OK	0	0	50	51	50	-1	1.2	
+eur-wfs-pdok-bag-standplaats	OK	0	0	50	51	50	-1	1.2	
+eur-wfs-pdok-bag-verblijfsobject	OK	0	0	50	51	50	-1	1.1	
+eur-wfs-pdok-nwb-nwbwegen-hectopunten	OK	0	0	200	201	200	-1	1.4	
+eur-wfs-pdok-nwb-nwbwegen-wegvakken	OK	0	0	200	201	200	-1	1.7	
+eur-wfs-pdok-bag-woonplaats	OK	0	0	50	51	50	-1	2.4	
+eur-wfs-pdok-bag-bag-woonplaats	OK	0	0	200	201	200	-1	5.5	
+eur-wfs-bkg-vg250-vg250-vwg	OK	0	0	4000	4001	4000	-1	30.9	
+eur-wfs-sandre-bassindce-guf	OK	0	0	1	1	1	-1	4.3	
+eur-wfs-sandre-bassindce-mtq	OK	0	0	1	1	1	-1	4.1	
+eur-wfs-sandre-bassindce-reu	OK	0	0	1	1	1	-1	3.8	
+eur-wfs-sandre-bassindce-glp	OK	0	0	1	1	1	-1	5.8	
+eur-wfs-sandre-bassindce-myt	OK	0	0	1	1	1	-1	4.0	
+eur-wfs-sandre-lieusurv-massedeau	OK	0	0	50	51	50	-1	2.1	
+eur-wfs-sandre-lieusurvrsx	OK	0	0	50	51	50	-1	2.1	
+eur-wfs-sandre-lieusurvponctuel	OK	0	0	50	51	50	-1	2.4	
+eur-hubeau-qualite-nappes	OK	0	0	4000	4001	4000	-1	70.2	
+eur-wfs-sandre-sousbassindce-communes	OK	0	0	50	51	50	-1	1.9	
+eur-wfs-sandre-lieusurvlineaire	OK	0	0	50	51	50	-1	4.1	
+eur-aw-candidacies	OK	0	0	100	100	100	-1	2.4	
+eur-wfs-sandre-ssbassindceadmin-guf	OK	0	0	1	1	1	-1	3.9	
+eur-wfs-sandre-ssbassindceadmin-reu	OK	0	0	1	1	1	-1	3.4	
+eur-wfs-sandre-ssbassindceadmin-mtq	OK	0	0	1	1	1	-1	4.7	
+eur-wfs-sandre-ssbassindceadmin-glp	OK	0	0	1	1	1	-1	5.7	
+eur-aw-constituencies	OK	0	0	100	100	100	-1	1.8	
+eur-aw-committees	OK	0	0	100	100	100	-1	2.4	
+eur-aw-electoral	OK	0	0	100	100	100	-1	2.1	
+eur-aw-fractions	OK	0	0	100	100	100	-1	2.2	
+eur-aw-parties	OK	0	0	100	100	100	-1	1.8	
+eur-aw-polls-de	OK	0	0	53	53	53	-1	1.7	
+eur-aw-parliament-periods	OK	0	0	100	100	100	-1	2.9	
+eur-aw-polls2	OK	0	0	100	100	100	-1	2.0	
+eur-aw-sidejob-orgs	OK	0	0	100	100	100	-1	1.7	
+eur-bdl-aggregates	OK	0	0	8	8	8	-1	1.3	
+eur-aw-sidejobs	OK	0	0	100	100	100	-1	2.0	
+eur-bdl-measures	OK	0	0	76	76	76	-1	1.4	
+eur-bdl-attributes	OK	0	0	18	18	18	-1	1.5	
+eur-bdl-subjects	OK	0	0	33	33	33	-1	2.5	
+eur-brreg-kommuner	OK	0	0	20	20	20	-1	1.5	
+eur-brreg-orgformer	OK	0	0	42	42	42	-1	1.6	
+eur-wfs-sandre-lieusurvsurfacique	OK	0	0	50	51	50	-1	14.1	
+eur-bundesregierung-rss	OK	0	0	20	20	20	-1	1.6	
+eur-cbs-datasets	OK	0	0	100	101	100	-1	2.5	
+eur-bdl-units	OK	0	0	2000	2001	2000	-1	8.0	
+eur-cnb-rates	OK	0	0	30	30	30	-1	1.6	
+eur-cnb-rates-cz	OK	0	0	30	30	30	-1	1.2	
+eur-brreg-underenheter	OK	0	0	2000	2001	2000	-1	7.9	
+eur-brreg-enheter	OK	0	0	2000	2001	2000	-1	10.2	
+eur-diavgeia-types	OK	0	0	43	43	43	-1	1.1	
+eur-hnb-tecajn	OK	0	0	13	13	13	-1	1.4	
+eur-hnb-tecajn-hist	OK	0	0	1	1	1	-1	1.3	
+eur-ine-clasificaciones	OK	0	0	106	106	106	-1	3.2	
+eur-cbs-catalog-datasets	OK	0	0	4000	4001	4000	-1	16.3	
+eur-cbs-catalog2	OK	0	0	4000	4001	4000	-1	16.8	
+eur-ine-es-ops	OK	0	0	166	166	166	-1	3.0	
+eur-ine-es-vars	OK	0	0	879	879	879	-1	1.8	
+eur-ine-escalas	OK	0	0	28	28	28	-1	1.2	
+eur-ine-periodicidades	OK	0	0	23	23	23	-1	1.1	
+eur-ine-tablas-ipc	OK	0	0	59	59	59	-1	2.1	
+eur-ine-es-publ	OK	0	0	466	466	466	-1	7.5	
+eur-ine-tablas-ipri	OK	0	0	35	35	35	-1	1.7	
+eur-nbp-gold	OK	0	0	60	60	60	-1	1.3	
+eur-ine-unidades	OK	0	0	255	255	255	-1	1.5	
+eur-diavgeia-dapani	OK	0	0	2000	2001	2000	-1	19.9	
+eur-nbp-tablea	OK	0	0	30	30	30	-1	1.3	
+eur-nbp-tableb	OK	0	0	10	10	10	-1	1.4	
+eur-nbu-exchangenew	OK	0	0	45	45	45	-1	1.0	
+eur-nbu-exchange	OK	0	0	45	45	45	-1	1.3	
+eur-nbp-tablec	OK	0	0	30	30	30	-1	1.4	
+eur-diavgeia-anathesi	COLLISION	0	0	2000	1997	1996	-1	22.5	4 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+eur-oda-ft-aktstykke	OK	0	0	68	68	68	-1	1.2	
+eur-oda-ft-aktortype	OK	0	0	13	13	13	-1	1.3	
+eur-oda-ft-dokumenttype	OK	0	0	28	28	28	-1	1.4	
+eur-diavgeia-decisions	COLLISION	0	0	2000	1949	1948	-1	24.7	52 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+eur-oda-ft-periode	OK	0	0	163	163	163	-1	1.6	
+eur-oda-ft-emneord	OK	0	0	2000	2001	2000	-1	4.4	
+eur-oda-ft-dokument	OK	0	0	2000	2001	2000	-1	6.0	
+eur-oda-ft-sagskategori	OK	0	0	31	31	31	-1	1.4	
+eur-ine-tablas-epa	OK	0	0	1039	1039	1039	-1	17.6	
+eur-parlch-committees	OK	0	0	100	101	100	-1	1.2	
+eur-parlch-council	OK	0	0	15	15	15	-1	1.2	
+eur-parlch-party	OK	0	0	100	101	100	-1	1.1	
+eur-privatbank-rates	OK	0	0	2	2	2	-1	1.2	
+eur-parl-ch-votes	OK	0	0	1000	1001	1000	-1	7.6	
+eur-parl-ch-councillors	OK	0	0	1000	1001	1000	-1	8.0	
+eur-pxweb-ee-stat	OK	0	0	7	7	7	-1	1.6	
+eur-pxweb-ee-stat-et	OK	0	0	7	7	7	-1	1.1	
+eur-pxweb-fi-statfin	OK	0	0	135	135	135	-1	1.6	
+eur-pxweb-fi-statfin-fi	OK	0	0	135	135	135	-1	1.6	
+eur-pxweb-is-en	OK	0	0	7	7	7	-1	1.5	
+eur-pxweb-is-hagstofa	OK	0	0	7	7	7	-1	1.6	
+eur-pxweb-lv-stat	OK	0	0	11	11	11	-1	1.6	
+eur-pxweb-no-ssb	OK	0	0	23	23	23	-1	1.4	
+eur-nosdeputes-json	OK	0	0	618	618	618	-1	19.7	
+eur-pxweb-se-scb	OK	0	0	9	9	9	-1	1.3	
+eur-riksdagen-bet	OK	0	0	50	50	50	-1	1.5	
+eur-riksdagen-frs	OK	0	0	50	50	50	-1	1.8	
+eur-riksdagen-ip	OK	0	0	50	50	50	-1	1.7	
+eur-riksdagen-mot	OK	0	0	50	50	50	-1	1.6	
+eur-pxweb-si-stat	OK	0	0	4869	4869	4869	-1	5.9	
+eur-riksdagen-prop	OK	0	0	50	50	50	-1	1.8	
+eur-riksdagen-sfs	OK	0	0	50	50	50	-1	1.6	
+eur-scb-am	OK	0	0	24	24	24	-1	1.3	
+eur-riksdagen-votering	OK	0	0	50	50	50	-1	1.9	
+eur-scb-be	OK	0	0	4	4	4	-1	1.3	
+eur-riksdagen-ledamot	OK	0	0	349	349	349	-1	7.8	
+eur-scb-en	OK	0	0	7	7	7	-1	1.6	
+eur-scb-mi	OK	0	0	21	21	21	-1	1.3	
+eur-scb-root	OK	0	0	18	18	18	-1	1.5	
+eur-sejm-eli-acts	OK	0	0	2	2	2	-1	2.3	
+eur-oda-ft-sagstrin	OK	0	0	2000	2001	2000	-1	25.0	
+eur-nosdeputes-synthese	OK	0	0	586	586	586	-1	36.7	
+eur-ssb-klass2	OK	0	0	152	152	152	-1	1.8	
+eur-sejm-term9-mp	OK	0	0	475	475	475	-1	6.3	
+eur-statbank-subjects	OK	0	0	10	10	10	-1	1.2	
+eur-ssb-klassfam	OK	0	0	22	22	22	-1	2.1	
+eur-rada-mps	OK	0	0	471	471	471	-1	22.6	
+eur-statfin-hinta	OK	0	0	17	17	17	-1	1.8	
+eur-statbank-tables	OK	0	0	2310	2310	2310	-1	3.1	
+eur-statfin-kans	OK	0	0	19	19	19	-1	1.5	
+eur-statfin-rikos	OK	0	0	52	52	52	-1	1.6	
+eur-statfin-tyti	OK	0	0	39	39	39	-1	1.9	
+eur-statfin-vaerak	OK	0	0	32	32	32	-1	1.8	
+eur-stortinget-emner	OK	0	0	27	27	27	-1	1.8	
+eur-stortinget-komiteer	OK	0	0	169	169	169	-1	1.5	
+eur-stortinget-moter2	OK	0	0	164	164	164	-1	1.4	
+eur-stortinget-partier	OK	0	0	9	9	9	-1	1.7	
+eur-stortinget-publikasjoner	OK	0	0	12	12	12	-1	1.5	
+eur-stortinget-saker	OK	0	0	204	204	204	-1	1.9	
+eur-tk-activiteit	OK	0	0	1000	1001	1000	-1	4.8	
+eur-tk-agendapunt	OK	0	0	1000	1001	1000	-1	5.0	
+eur-statistics-sk-sk	EMITS_NOTHING	1	-1	0	0	0	-1	24.0	no records reached intel_items
+eur-tk-commissie	OK	0	0	234	234	234	-1	2.0	
+eur-tk-fractie	OK	0	0	160	160	160	-1	1.6	
+eur-statistics-sk-collection	EMITS_NOTHING	1	-1	0	0	0	-1	29.3	no records reached intel_items
+eur-tk-vergadering	OK	0	0	1000	1001	1000	-1	4.7	
+eur-tk-verslag	OK	0	0	1000	1001	1000	-1	4.7	
+eur-tk-zaal	OK	0	0	64	64	64	-1	1.7	
+eur-news-15min-lt	OK	0	0	20	20	20	-1	1.1	
+eur-news-20min-ch	OK	0	0	110	110	110	-1	1.5	
+eur-news-20minutes-fr	OK	0	0	30	30	30	-1	1.2	
+eur-sejm-term10-committees-sits	OK	0	0	2000	2001	2000	-1	48.6	
+eur-news-24ur-si	EMITS_NOTHING	1	-1	0	0	0	-1	0.9	no records reached intel_items
+eur-news-24hu	OK	0	0	10	10	10	-1	1.0	
+eur-news-24chasa-bg	OK	0	0	100	100	100	-1	1.7	
+eur-news-444hu	OK	0	0	30	30	30	-1	1.0	
+eur-news-abc-es	OK	0	0	25	25	25	-1	1.0	
+eur-news-adevarul	OK	0	0	50	50	50	-1	1.1	
+eur-news-aftenposten	OK	0	0	42	42	42	-1	1.2	
+eur-news-actualno-bg	OK	0	0	50	50	50	-1	2.2	
+eur-news-ansa-top	OK	0	0	10	10	10	-1	1.3	
+eur-news-aktuality-sk	OK	0	0	15	15	15	-1	1.9	
+eur-news-atlatszo	OK	0	0	25	25	25	-1	1.3	
+eur-news-b92	OK	0	0	20	20	20	-1	2.5	
+eur-news-blic	OK	0	0	70	70	70	-1	1.6	
+eur-news-capital-bg	OK	0	0	30	30	30	-1	1.4	
+eur-news-cdm-me	EMITS_NOTHING	1	-1	0	0	0	-1	1.0	no records reached intel_items
+eur-news-ceskenoviny	OK	0	0	50	50	50	-1	1.6	
+eur-news-corriere	OK	0	0	69	69	69	-1	1.1	
+eur-news-ct24	OK	0	0	30	30	30	-1	2.2	
+eur-news-cyprusmail	OK	0	0	20	20	20	-1	1.2	
+eur-news-danas-rs	OK	0	0	50	50	50	-1	1.4	
+eur-tk-besluit	OK	0	0	1000	1001	1000	-1	36.4	
+eur-news-delo-si	OK	0	0	60	60	60	-1	1.8	
+eur-news-denikn-cz	OK	0	0	40	40	40	-1	1.8	
+eur-news-dennikn	OK	0	0	10	10	10	-1	1.6	
+eur-news-derstandard	OK	0	0	156	156	156	-1	1.4	
+eur-news-digi24	OK	0	0	286	286	286	-1	2.1	
+eur-news-dn-se	OK	0	0	115	115	115	-1	1.5	
+eur-news-dr-dk	OK	0	0	20	20	20	-1	1.1	
+eur-news-dw-de	OK	0	0	74	74	74	-1	1.4	
+eur-news-eco-pt	OK	0	0	22	22	22	-1	1.3	
+eur-news-economica-ro	OK	0	0	10	10	10	-1	1.4	
+eur-news-efsyn	OK	0	0	90	90	90	-1	1.5	
+eur-news-agerpres	OK	0	0	21	21	21	-1	26.6	
+eur-news-elconfidencial	OK	0	0	15	15	15	-1	2.0	
+eur-news-eldiario	OK	0	0	109	109	109	-1	2.1	
+eur-news-err-ee2	OK	0	0	50	50	50	-1	1.4	
+eur-news-europapress	OK	0	0	10	10	10	-1	1.2	
+eur-news-ertnews	OK	0	0	35	35	35	-1	1.8	
+eur-news-expressen	OK	0	0	20	20	20	-1	1.3	
+eur-news-fattoquotidiano	OK	0	0	25	25	25	-1	1.2	
+eur-news-faz	OK	0	0	158	158	158	-1	1.0	
+eur-news-france24-fr	OK	0	0	24	24	24	-1	0.8	
+eur-news-heise	OK	0	0	157	157	157	-1	2.0	
+eur-news-francetvinfo	OK	0	0	30	30	30	-1	2.1	
+eur-news-handelsblatt	OK	0	0	50	50	50	-1	2.1	
+eur-news-hvg	OK	0	0	60	60	60	-1	1.2	
+eur-news-hs-fi	OK	0	0	100	100	100	-1	1.7	
+eur-news-hnonline-sk	OK	0	0	50	50	50	-1	1.8	
+eur-news-iltalehti	OK	0	0	20	20	20	-1	1.2	
+eur-news-in-gr	OK	0	0	50	50	50	-1	1.1	
+eur-news-idnes	OK	0	0	30	30	30	-1	2.1	
+eur-news-incyprus	EMITS_NOTHING	1	-1	0	0	0	-1	0.9	no records reached intel_items
+eur-news-indexhr	OK	0	0	150	150	150	-1	1.2	
+eur-news-insajder	OK	0	0	100	100	100	-1	1.1	
+eur-sejm-eli-du	SLOW	-1	0	-1	-1	15531	-1	90.1	hit --timeout 90.1s; 15531 rows already stored
+eur-sejm-eli-mp	SLOW	-1	0	-1	-1	17824	-1	90.1	hit --timeout 90.1s; 17824 rows already stored
+eur-news-irishtimes	OK	0	0	100	100	100	-1	1.4	
+eur-news-irozhlas	OK	0	0	20	20	20	-1	1.2	
+eur-news-is-fi	OK	0	0	100	100	100	-1	1.4	
+eur-news-kallxo	EMITS_NOTHING	1	-1	0	0	0	-1	1.0	no records reached intel_items
+eur-news-interia-pl	OK	0	0	50	50	50	-1	2.7	
+eur-news-klix-ba2	OK	0	0	30	30	30	-1	1.2	
+eur-news-koha-net	OK	0	0	20	20	20	-1	1.4	
+eur-news-kurier-at	OK	0	0	20	20	20	-1	1.1	
+eur-news-la-lv	OK	0	0	40	40	40	-1	1.5	
+eur-news-lavanguardia2	OK	0	0	136	136	136	-1	1.3	
+eur-news-lacroix	EMITS_NOTHING	1	-1	0	0	0	-1	1.4	no records reached intel_items
+eur-news-leparisien2	OK	0	0	100	100	100	-1	1.5	
+eur-news-liberation	OK	0	0	50	50	50	-1	1.4	
+eur-news-mbl-is	OK	0	0	13	13	13	-1	1.1	
+eur-news-magyarnemzet	OK	0	0	25	25	25	-1	1.2	
+eur-news-lsm-lv	OK	0	0	50	50	50	-1	1.2	
+eur-news-mediapart	OK	0	0	10	10	10	-1	1.3	
+eur-news-mediapool-bg	OK	0	0	10	10	10	-1	1.6	
+eur-news-naftemporiki	OK	0	0	30	30	30	-1	1.3	
+eur-news-n1info-ba	OK	0	0	50	50	50	-1	1.6	
+eur-news-belta	EMITS_NOTHING	1	-1	0	0	0	-1	40.0	no records reached intel_items
+eur-news-nepszava	OK	0	0	20	20	20	-1	1.2	
+eur-news-newsit-gr	OK	0	0	50	50	50	-1	1.8	
+eur-news-nouvelobs	OK	0	0	200	200	200	-1	1.5	
+eur-news-nos	OK	0	0	20	20	20	-1	1.9	
+eur-news-nova-rs	OK	0	0	50	50	50	-1	1.4	
+eur-news-napi-hu	OK	0	0	5	5	5	-1	3.8	
+eur-news-novinky	OK	0	0	30	30	30	-1	2.0	
+eur-news-nrk	OK	0	0	99	99	99	-1	1.3	
+eur-news-nv-ua	OK	0	0	40	40	40	-1	1.2	
+eur-news-nrc	OK	0	0	160	160	160	-1	1.6	
+eur-news-ntv	OK	0	0	50	50	50	-1	1.5	
+eur-news-nzz	OK	0	0	16	16	16	-1	1.1	
+eur-news-onet-pl	OK	0	0	20	20	20	-1	1.6	
+eur-news-philenews-cy	OK	0	0	20	20	20	-1	1.5	
+eur-news-ouestfrance	OK	0	0	10	10	10	-1	1.6	
+eur-news-orf	OK	0	0	26	26	26	-1	2.0	
+eur-news-politika-rs	OK	0	0	20	20	20	-1	1.5	
+eur-news-politiken	OK	0	0	20	20	20	-1	1.8	
+eur-news-polsatnews	OK	0	0	50	50	50	-1	1.6	
+eur-news-profit-ro	OK	0	0	10	10	10	-1	1.2	
+eur-news-postimees	OK	0	0	25	25	25	-1	1.7	
+eur-news-pravda-sk	OK	0	0	20	20	20	-1	1.8	
+eur-news-protothema	OK	0	0	100	100	100	-1	2.0	
+eur-news-rainews	OK	0	0	40	40	40	-1	1.7	
+eur-news-rp-pl	OK	0	0	20	20	20	-1	1.1	
+eur-news-rte-business	OK	0	0	40	40	40	-1	1.0	
+eur-news-rtcg	OK	0	0	20	20	20	-1	1.5	
+eur-news-rtbf2	OK	0	0	20	20	20	-1	1.8	
+eur-news-rte-ie	OK	0	0	60	60	60	-1	1.5	
+eur-news-reporter-al	OK	0	0	10	10	10	-1	2.8	
+eur-news-rtp	OK	0	0	50	50	50	-1	1.4	
+eur-news-ruv-is	OK	0	0	40	40	40	-1	1.5	
+eur-news-slobodenpecat	EMITS_NOTHING	1	-1	0	0	0	-1	1.6	no records reached intel_items
+eur-news-seznamzpravy	OK	0	0	30	30	30	-1	2.0	
+eur-news-sme-sk	OK	0	0	22	22	22	-1	1.8	
+eur-news-rtvslo	OK	0	0	20	20	20	-1	2.9	
+eur-news-sole24	OK	0	0	12	12	12	-1	1.5	
+eur-news-rtvs-sk	OK	0	0	100	100	100	-1	3.3	
+eur-news-spotmedia	OK	0	0	10	10	10	-1	1.2	
+eur-news-srf	OK	0	0	80	80	80	-1	1.1	
+eur-news-sueddeutsche	OK	0	0	15	15	15	-1	1.6	
+eur-news-suspilne	EMITS_NOTHING	1	-1	0	0	0	-1	1.1	no records reached intel_items
+eur-news-tagesspiegel	OK	0	0	100	100	100	-1	1.2	
+eur-news-svt	OK	0	0	100	100	100	-1	1.7	
+eur-news-tagesschau	OK	0	0	68	68	68	-1	1.6	
+eur-news-tagesanzeiger	OK	0	0	63	63	63	-1	2.3	
+eur-news-tasr	OK	0	0	15	15	15	-1	1.6	
+eur-news-taz	OK	0	0	50	50	50	-1	1.7	
+eur-news-telegram-hr	OK	0	0	10	10	10	-1	1.0	
+eur-news-telegraaf	OK	0	0	50	50	50	-1	1.4	
+eur-news-telegrafi	OK	0	0	30	30	30	-1	1.2	
+eur-news-thejournal-ie	OK	0	0	30	30	30	-1	1.4	
+eur-news-tovima	OK	0	0	50	50	50	-1	1.3	
+eur-news-tvn24	OK	0	0	24	24	24	-1	1.1	
+eur-news-telma-mk	OK	0	0	10	10	10	-1	2.3	
+eur-news-tportal	OK	0	0	20	20	20	-1	1.8	
+eur-news-tv8-md	OK	0	0	10	10	10	-1	1.9	
+eur-news-tvnet-lv	OK	0	0	24	24	24	-1	1.3	
+eur-news-ukrinform	OK	0	0	30	30	30	-1	1.5	
+eur-news-vijesti-me	OK	0	0	30	30	30	-1	1.4	
+eur-news-vecernji	OK	0	0	20	20	20	-1	1.6	
+eur-news-vrt	OK	0	0	50	50	50	-1	1.1	
+eur-news-unian	OK	0	0	100	100	100	-1	3.4	
+eur-news-valaszonline	OK	0	0	25	25	25	-1	3.0	
+eur-news-volkskrant	OK	0	0	84	84	84	-1	1.8	
+eur-news-visir-is	OK	0	0	170	170	170	-1	2.7	
+eur-news-vilaweb	OK	0	0	25	25	25	-1	2.9	
+eur-news-welt	OK	0	0	30	30	30	-1	1.4	
+eur-news-yle	OK	0	0	13	13	13	-1	1.4	
+eur-news-wort-lu	OK	0	0	50	50	50	-1	1.7	
+eur-news-zeit	OK	0	0	15	15	15	-1	1.4	
+eur-news-yle-uutiset	OK	0	0	20	20	20	-1	1.6	
+eur-news-zdg-md	OK	0	0	10	10	10	-1	1.9	
+cyb-boc-bond-yields	OK	0	0	10	10	10	-1	1.7	
+cyb-boc-valet-fx-daily	OK	0	0	30	30	30	-1	1.7	
+cyb-fca-warnings-rss	OK	0	0	20	20	20	-1	1.0	
+cyb-ecb-hicp-series	OK	0	0	1	1	1	-1	2.0	
+cyb-ecb-mrr-series	OK	0	0	1	1	1	-1	2.3	
+cyb-ecb-yieldcurve-series	OK	0	0	1	1	1	-1	2.2	
+cyb-gleif-countries	OK	0	0	250	250	250	-1	1.7	
+cyb-riksbank-series	OK	0	0	117	117	117	-1	2.2	
+cyb-snb-cube-devkum	OK	0	0	54	54	54	-1	2.4	
+cyb-gleif-entity-legal-forms	OK	0	0	2000	2001	2000	-1	7.3	
+cyb-snb-cube-rendoblim	OK	0	0	13	13	13	-1	2.0	
+cyb-gleif-regions	OK	0	0	2000	2001	2000	-1	7.3	
+cyb-snb-cube-zimoma	OK	0	0	13	13	13	-1	1.8	
+eas-eri-utokyo-news	OK	0	0	10	10	10	-1	1.8	
+eas-isct-news	OK	0	0	20	20	20	-1	1.6	
+eas-jma-forecast-011000	OK	0	0	2	2	2	-1	1.4	
+eas-jma-forecast-012000	OK	0	0	2	2	2	-1	1.2	
+eas-jma-forecast-014100	OK	0	0	2	2	2	-1	0.8	
+eas-jma-forecast-013000	OK	0	0	2	2	2	-1	1.5	
+eas-jma-forecast-015000	OK	0	0	2	2	2	-1	0.8	
+eas-jma-forecast-016000	OK	0	0	2	2	2	-1	0.9	
+eas-jma-forecast-017000	OK	0	0	2	2	2	-1	1.3	
+eas-jma-forecast-020000	OK	0	0	2	2	2	-1	1.4	
+eas-jma-forecast-040000	OK	0	0	2	2	2	-1	0.8	
+eas-jma-forecast-030000	OK	0	0	2	2	2	-1	1.3	
+eas-jma-forecast-050000	OK	0	0	2	2	2	-1	1.3	
+eas-jma-forecast-060000	OK	0	0	2	2	2	-1	1.2	
+eas-jma-forecast-070000	OK	0	0	2	2	2	-1	1.3	
+eas-jma-forecast-080000	OK	0	0	2	2	2	-1	1.3	
+eas-jma-forecast-090000	OK	0	0	2	2	2	-1	1.3	
+eas-jma-forecast-100000	OK	0	0	2	2	2	-1	1.4	
+eas-jma-forecast-110000	OK	0	0	2	2	2	-1	0.9	
+eas-jma-forecast-120000	OK	0	0	2	2	2	-1	1.2	
+eas-jma-forecast-150000	OK	0	0	2	2	2	-1	0.8	
+eas-jma-forecast-140000	OK	0	0	2	2	2	-1	1.3	
+eas-jma-forecast-160000	OK	0	0	2	2	2	-1	1.2	
+eas-jma-forecast-180000	OK	0	0	2	2	2	-1	1.1	
+eas-jma-forecast-170000	OK	0	0	2	2	2	-1	1.3	
+eas-jma-forecast-200000	OK	0	0	2	2	2	-1	0.8	
+eas-jma-forecast-210000	OK	0	0	2	2	2	-1	0.8	
+eas-jma-forecast-190000	OK	0	0	2	2	2	-1	1.2	
+eas-jma-forecast-220000	OK	0	0	2	2	2	-1	0.8	
+eas-jma-forecast-230000	OK	0	0	2	2	2	-1	0.9	
+eas-jma-forecast-240000	OK	0	0	2	2	2	-1	1.3	
+cyb-gleif-lei-inactive	OK	0	0	2000	2001	2000	-1	21.1	
+cyb-gleif-lei-us	OK	0	0	2000	2001	2000	-1	20.4	
+eas-jma-forecast-250000	OK	0	0	2	2	2	-1	1.3	
+eas-jma-forecast-260000	OK	0	0	2	2	2	-1	1.4	
+eas-jma-forecast-290000	OK	0	0	2	2	2	-1	0.9	
+eas-jma-forecast-270000	OK	0	0	2	2	2	-1	1.3	
+eas-jma-forecast-280000	OK	0	0	2	2	2	-1	1.3	
+eas-jma-forecast-300000	OK	0	0	2	2	2	-1	1.4	
+eas-jma-forecast-310000	OK	0	0	2	2	2	-1	1.3	
+eas-jma-forecast-330000	OK	0	0	2	2	2	-1	1.2	
+eas-jma-forecast-320000	OK	0	0	2	2	2	-1	1.3	
+eas-jma-forecast-340000	OK	0	0	2	2	2	-1	1.2	
+eas-jma-forecast-350000	OK	0	0	2	2	2	-1	1.3	
+eas-jma-forecast-360000	OK	0	0	2	2	2	-1	1.3	
+eas-jma-forecast-370000	OK	0	0	2	2	2	-1	0.9	
+eas-jma-forecast-390000	OK	0	0	2	2	2	-1	0.8	
+eas-jma-forecast-380000	OK	0	0	2	2	2	-1	1.2	
+eas-jma-forecast-400000	OK	0	0	2	2	2	-1	1.3	
+eas-jma-forecast-410000	OK	0	0	2	2	2	-1	1.3	
+eas-jma-forecast-420000	OK	0	0	2	2	2	-1	1.3	
+eas-jma-forecast-430000	OK	0	0	2	2	2	-1	1.3	
+eas-jma-forecast-440000	OK	0	0	2	2	2	-1	1.6	
+eas-jma-forecast-450000	OK	0	0	2	2	2	-1	0.9	
+eas-jma-forecast-471000	OK	0	0	2	2	2	-1	0.8	
+eas-jma-forecast-460100	OK	0	0	2	2	2	-1	1.2	
+eas-jma-forecast-472000	OK	0	0	2	2	2	-1	1.3	
+eas-jma-forecast-473000	OK	0	0	2	2	2	-1	0.9	
+eas-jma-forecast-474000	OK	0	0	2	2	2	-1	1.2	
+eas-jma-nowcast-times-n2	OK	0	0	12	12	12	-1	0.8	
+eas-jma-information-list	OK	0	0	94	94	94	-1	1.3	
+eas-jma-nowcast-times-n3	OK	0	0	43	43	43	-1	0.8	
+eas-jma-overview-020000	OK	0	0	1	1	1	-1	1.3	
+eas-jpnews-asahi	OK	0	0	40	40	40	-1	1.3	
+eas-jma-risk-times	OK	0	0	37	37	37	-1	1.7	
+eas-jma-snow-times	OK	0	0	31	31	31	-1	1.7	
+eas-jpnews-impress	OK	0	0	20	20	20	-1	1.9	
+cyb-gleif-lei-issuers-page2	OK	0	0	2000	2001	2000	-1	29.8	
+eas-jpnews-itmedia	OK	0	0	50	50	50	-1	1.5	
+eas-jpnews-jetro	EMITS_NOTHING	1	-1	0	0	0	-1	1.3	no records reached intel_items
+eas-jpnews-jiji	OK	0	0	10	10	10	-1	1.2	
+eas-jpnews-kyodo	OK	0	0	10	10	10	-1	1.8	
+eas-kyoto-u-news	OK	0	0	50	50	50	-1	2.0	
+eas-nhk-news-cat0	OK	0	0	7	7	7	-1	2.0	
+eas-nhk-news-cat3	OK	0	0	30	30	30	-1	1.8	
+eas-nhk-news-cat1	OK	0	0	139	139	139	-1	2.1	
+eas-nhk-news-cat4	OK	0	0	105	105	105	-1	2.0	
+eas-nhk-news-cat5	OK	0	0	91	91	91	-1	1.8	
+eas-nhk-news-cat6	OK	0	0	133	133	133	-1	2.0	
+eas-nhk-news-cat7	OK	0	0	59	59	59	-1	2.3	
+eas-nict-press	OK	0	0	50	50	50	-1	2.9	
+eas-nied-news	OK	0	0	10	10	10	-1	2.9	
+eas-sapporo-od-sbi	OK	0	0	12	12	12	-1	2.1	
+eas-sapporo-od-city	OK	0	0	232	232	232	-1	3.6	
+eas-sapporo-od-recent	OK	0	0	262	262	262	-1	4.1	
+eas-tokyo-od-t000013	OK	0	0	38	38	38	-1	1.4	
+eas-tokyo-od-t000008	OK	0	0	112	112	112	-1	3.4	
+eas-tokyo-od-t000012	OK	0	0	68	68	68	-1	2.6	
+eas-tokyo-od-t000009	OK	0	0	124	124	124	-1	2.9	
+eas-tokyo-od-t000014	OK	0	0	70	70	70	-1	1.8	
+eas-tokyo-od-t000015	OK	0	0	63	63	63	-1	2.0	
+eas-tokyo-od-t000018	OK	0	0	50	50	50	-1	2.2	
+eas-tokyo-od-t000019	OK	0	0	54	54	54	-1	1.4	
+eas-tokyo-od-t000017	OK	0	0	36	36	36	-1	3.2	
+eas-tokyo-od-t000020	OK	0	0	119	119	119	-1	2.0	
+eas-tokyo-od-t000022	OK	0	0	22	22	22	-1	1.1	
+eas-tokyo-od-t000023	OK	0	0	84	84	84	-1	1.9	
+eas-tokyo-od-t000029	OK	0	0	28	28	28	-1	1.4	
+eas-tokyo-od-t000021	OK	0	0	196	196	196	-1	2.8	
+eas-tokyo-od-t131016	OK	0	0	29	29	29	-1	1.3	
+eas-tokyo-od-t131024	OK	0	0	47	47	47	-1	1.4	
+eas-tokyo-od-t000055	OK	0	0	260	260	260	-1	4.1	
+eas-tokyo-od-t131041	OK	0	0	137	137	137	-1	2.8	
+eas-tokyo-od-t000054	OK	0	0	345	345	345	-1	6.3	
+eas-tokyo-od-t131059	OK	0	0	57	57	57	-1	1.3	
+eas-tokyo-od-t131032	OK	0	0	268	268	268	-1	4.4	
+eas-tokyo-od-t131067	OK	0	0	187	187	187	-1	2.0	
+eas-tokyo-od-t131083	OK	0	0	97	97	97	-1	1.7	
+eas-tokyo-od-t131091	OK	0	0	138	138	138	-1	1.8	
+eas-tokyo-od-t131075	OK	0	0	199	199	199	-1	2.9	
+eas-tokyo-od-t131105	OK	0	0	188	188	188	-1	1.9	
+eas-tokyo-od-t131121	OK	0	0	25	25	25	-1	1.3	
+eas-tokyo-od-t131130	OK	0	0	17	17	17	-1	1.1	
+eas-tokyo-od-t131113	OK	0	0	280	280	280	-1	2.6	
+eas-tokyo-od-t131148	OK	0	0	167	167	167	-1	2.0	
+eas-tokyo-od-t131164	OK	0	0	32	32	32	-1	1.1	
+eas-tokyo-od-t131156	OK	0	0	103	103	103	-1	1.6	
+eas-tokyo-od-t131181	OK	0	0	33	33	33	-1	1.1	
+eas-tokyo-od-t131229	OK	0	0	32	32	32	-1	1.1	
+eas-tokyo-od-t131202	OK	0	0	79	79	79	-1	1.7	
+eas-tokyo-od-t131199	OK	0	0	211	211	211	-1	2.4	
+eas-tokyo-od-t132012	OK	0	0	79	79	79	-1	1.4	
+eas-tokyo-od-t132021	OK	0	0	35	35	35	-1	1.0	
+eas-tokyo-od-t131237	OK	0	0	266	266	266	-1	2.6	
+eas-tokyo-od-t132047	OK	0	0	31	31	31	-1	1.1	
+eas-tokyo-od-t132063	OK	0	0	35	35	35	-1	1.3	
+eas-tokyo-od-recent	OK	0	0	2000	2001	2000	-1	24.5	
+eas-tokyo-od-t132098	OK	0	0	127	127	127	-1	2.1	
+eas-yokohama-od-o0030	OK	0	0	49	49	49	-1	2.3	
+eas-tokyo-od-t132195	OK	0	0	399	399	399	-1	2.8	
+eas-yokohama-od-o0060	OK	0	0	58	58	58	-1	2.7	
+eas-yokohama-od-o0130	OK	0	0	22	22	22	-1	2.3	
+eas-yokohama-od-o0160	OK	0	0	43	43	43	-1	2.1	
+eas-tokyo-od-t000003	OK	0	0	2000	2001	2000	-1	28.5	
+eas-yokohama-od-o0220	OK	0	0	24	24	24	-1	2.4	
+eas-yokohama-od-o0260	OK	0	0	21	21	21	-1	2.2	
+eas-yokohama-od-o0350	OK	0	0	12	12	12	-1	2.2	
+eas-yokohama-od-o0200	OK	0	0	232	232	232	-1	4.3	
+eas-yokohama-od-o0360	OK	0	0	14	14	14	-1	2.5	
+eas-tokyo-od-t132080	OK	0	0	1450	1450	1450	-1	8.9	
+eas-kma-forecast-2600	OK	0	0	1	1	1	-1	2.8	
+eas-kma-forecast-2700	OK	0	0	1	1	1	-1	1.8	
+eas-kma-forecast-2900	OK	0	0	1	1	1	-1	1.7	
+eas-kma-forecast-2800	OK	0	0	1	1	1	-1	2.6	
+eas-kma-forecast-3000	OK	0	0	1	1	1	-1	2.3	
+eas-kma-forecast-3600	OK	0	0	1	1	1	-1	1.5	
+eas-kma-forecast-3100	OK	0	0	1	1	1	-1	2.1	
+eas-kma-forecast-4100	OK	0	0	1	1	1	-1	1.8	
+eas-kma-forecast-4300	OK	0	0	1	1	1	-1	2.0	
+eas-kma-forecast-4500	OK	0	0	1	1	1	-1	2.2	
+eas-kma-forecast-4400	OK	0	0	1	1	1	-1	2.5	
+eas-kma-forecast-4700	OK	0	0	1	1	1	-1	1.6	
+eas-yokohama-od-recent	OK	0	0	647	647	647	-1	7.1	
+eas-kma-forecast-4600	OK	0	0	1	1	1	-1	2.1	
+eas-kma-forecast-4800	OK	0	0	1	1	1	-1	2.1	
+eas-kma-forecast-5100	OK	0	0	1	1	1	-1	2.1	
+eas-kma-forecast-5000	OK	0	0	1	1	1	-1	3.0	
+eas-korea-kr-policy	OK	0	0	50	50	50	-1	5.0	
+eas-krnews-boannews	OK	0	0	50	50	50	-1	12.1	
+eas-krnews-khan-all	OK	0	0	50	50	50	-1	1.5	
+eas-krnews-khan-economy	OK	0	0	50	50	50	-1	1.8	
+eas-krnews-khan-politics	OK	0	0	50	50	50	-1	1.3	
+eas-krnews-donga-international	EMITS_NOTHING	1	-1	0	0	0	-1	16.0	no records reached intel_items
+eas-krnews-khan-society	OK	0	0	50	50	50	-1	1.5	
+eas-krnews-mk-politics	OK	0	0	50	50	50	-1	1.2	
+eas-krnews-mk-economy	OK	0	0	50	50	50	-1	1.5	
+eas-krnews-mk-society	OK	0	0	50	50	50	-1	1.3	
+eas-krnews-mk-world	OK	0	0	50	50	50	-1	1.3	
+eas-krnews-sbs-news	OK	0	0	29	29	29	-1	1.1	
+eas-krnews-yonhap-economy	OK	0	0	120	120	120	-1	2.1	
+eas-krnews-yonhap-health	OK	0	0	120	120	120	-1	2.6	
+eas-krnews-yonhap-industry	OK	0	0	120	120	120	-1	2.4	
+eas-krnews-yonhap-international	OK	0	0	120	120	120	-1	2.2	
+eas-krnews-yonhap-local	OK	0	0	120	120	120	-1	2.0	
+eas-krnews-yonhap-main	OK	0	0	120	120	120	-1	2.1	
+eas-krnews-yonhap-northkorea	OK	0	0	99	99	99	-1	2.2	
+eas-krnews-yonhap-politics	OK	0	0	120	120	120	-1	2.2	
+eas-krnews-yonhap-society	OK	0	0	120	120	120	-1	1.9	
+eas-krnews-donga-all	OK	0	0	50	50	50	-1	31.6	
+lat-ar-ckan-agro	OK	0	0	162	162	162	-1	2.2	
+lat-ar-ckan-ambiente	OK	0	0	90	90	90	-1	2.1	
+lat-aneel-recent	OK	0	0	72	72	72	-1	3.4	
+lat-ar-ckan-covid	OK	0	0	55	55	55	-1	1.9	
+lat-ar-ckan-energia	OK	0	0	201	201	201	-1	2.7	
+lat-ar-ckan-justicia	OK	0	0	75	75	75	-1	2.0	
+lat-ar-ckan-economia	OK	0	0	499	499	499	-1	4.0	
+eas-krnews-donga-national	EMITS_NOTHING	1	-1	0	0	0	-1	36.1	no records reached intel_items
+lat-ar-ckan-seguridad	OK	0	0	102	102	102	-1	2.2	
+lat-ar-ckan-salud	OK	0	0	129	129	129	-1	2.7	
+lat-ar-ckan-transporte	OK	0	0	107	107	107	-1	2.2	
+lat-bcb-ptax	OK	0	0	10	10	10	-1	1.5	
+lat-ar-ckan-recent	OK	0	0	1295	1295	1295	-1	7.3	
+lat-br-dados-poa	OK	0	0	62	62	62	-1	2.7	
+lat-br-dados-go	OK	0	0	444	444	444	-1	7.6	
+lat-br-dados-sc	OK	0	0	111	111	111	-1	3.1	
+lat-br-dados-es	OK	0	0	511	511	511	-1	13.8	
+lat-brasilapi-banks	OK	0	0	470	470	470	-1	1.3	
+lat-br-dados-pbh	OK	0	0	614	614	614	-1	14.4	
+lat-brasilapi-corretoras	OK	0	0	375	375	375	-1	1.1	
+eas-krnews-donga-economy	EMITS_NOTHING	1	-1	0	0	0	-1	56.5	no records reached intel_items
+lat-brasilapi-cambio	OK	0	0	10	10	10	-1	2.0	
+lat-brasilapi-ddd	OK	0	0	1	1	1	-1	1.0	
+lat-brasilapi-pix	OK	0	0	880	880	880	-1	1.5	
+lat-br-data-rio	OK	0	0	2069	2069	2069	-1	10.5	
+lat-brasilapi-taxas	OK	0	0	3	3	3	-1	0.9	
+lat-br-tse-ckan	OK	0	0	188	188	188	-1	9.6	
+eas-krnews-donga-politics	EMITS_NOTHING	1	-1	0	0	0	-1	56.2	no records reached intel_items
+lat-brasilapi-ncm	OK	0	0	15157	15157	15157	-1	5.0	
+lat-ckan-aneel	OK	0	0	72	72	72	-1	3.6	
+lat-ckan-datos-ar	OK	0	0	1295	1295	1295	-1	7.8	
+lat-ckan-hcdn-ar	OK	0	0	29	29	29	-1	2.4	
+lat-ckan-datos-do	OK	0	0	1068	1068	1068	-1	9.6	
+lat-ckan-ibama	OK	0	0	79	79	79	-1	2.2	
+lat-ckan-mg-br	OK	0	0	101	101	101	-1	2.6	
+lat-ckan-mma-cl	OK	0	0	18	18	18	-1	2.6	
+lat-ckan-datos-cl	COLLISION	0	0	2000	1997	1996	-1	15.0	4 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-ckan-datos-pa	OK	0	0	2000	2001	2000	-1	13.2	
+lat-cl-ckan-agua	OK	0	0	54	54	54	-1	1.8	
+lat-ckan-fortaleza	OK	0	0	636	636	636	-1	13.8	
+lat-ckan-recife	OK	0	0	223	223	223	-1	5.6	
+lat-cl-ckan-ambiente	OK	0	0	140	140	140	-1	2.8	
+lat-cl-ckan-educacion	OK	0	0	165	165	165	-1	3.0	
+lat-cl-ckan-energia	OK	0	0	32	32	32	-1	2.0	
+lat-ckan-rs-br	OK	0	0	415	415	415	-1	6.6	
+lat-cl-ckan-mineria	OK	0	0	77	77	77	-1	1.8	
+lat-cl-ckan-orgs2	OK	0	0	165	165	165	-1	2.7	
+lat-cl-ckan-seguridad	OK	0	0	102	103	102	-1	2.7	
+lat-cl-ckan-sismo	OK	0	0	55	55	55	-1	1.8	
+lat-cl-ckan-salud	OK	0	0	343	343	343	-1	4.3	
+lat-cl-ckan-vivienda	OK	0	0	35	35	35	-1	2.3	
+lat-cl-gael-monedas	OK	0	0	61	61	61	-1	1.4	
+lat-ckan-datos-uy	OK	0	0	2000	2001	2000	-1	24.1	
+lat-cl-ckan-transporte	OK	0	0	199	199	199	-1	3.2	
+lat-cl-mindicador-ipc	OK	0	0	31	31	31	-1	1.2	
+lat-cl-mindicador-dolar	OK	0	0	31	31	31	-1	1.3	
+lat-cl-mindicador-uf	OK	0	0	31	31	31	-1	1.1	
+lat-co-beneficio-animal	OK	0	0	820	820	820	-1	1.7	
+lat-ckan-sp-br	OK	0	0	486	486	486	-1	15.1	
+lat-co-cod-postal	COLLISION	0	0	3681	3678	3678	-1	4.4	3 of 3681 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-cuadrantes-policia	OK	0	0	4805	4805	4805	-1	4.0	
+lat-co-cobertura-movil	OK	0	0	10000	10001	10000	-1	8.5	
+lat-co-covid	COLLISION	0	0	10000	9999	9998	-1	8.5	2 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-cl-ckan-recent	COLLISION	0	0	2000	1994	1993	-1	18.5	7 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-datos-cat	OK	0	0	2000	2001	2000	-1	6.3	
+lat-co-cartera	OK	0	0	10000	10001	10000	-1	11.8	
+lat-co-divipola	OK	0	0	1122	1122	1122	-1	1.8	
+lat-co-detenidos-ext	OK	0	0	10000	10001	10000	-1	9.2	
+lat-co-empresas-grandes	OK	0	0	10000	10001	10000	-1	8.4	
+lat-co-eva-agro	COLLISION	0	0	10000	9987	9986	-1	7.6	14 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-extranjeros	OK	0	0	10000	10001	10000	-1	7.6	
+lat-co-dispositivos-med	COLLISION	0	0	10000	9615	9614	-1	11.5	386 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-inspeccion-sanitaria	COLLISION	0	0	10000	9996	9995	-1	9.6	5 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-ips-nivel	OK	0	0	10000	10001	10000	-1	10.5	
+lat-co-fic	OK	0	0	10000	10001	10000	-1	13.0	
+lat-co-ideam-estaciones	COLLISION	0	0	10000	9917	9916	-1	12.0	84 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-labs-ambientales	COLLISION	0	0	10000	9992	9991	-1	11.4	9 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-pdet	OK	0	0	170	170	170	-1	2.1	
+lat-co-procuraduria	COLLISION	0	0	4986	4166	4166	-1	4.7	820 of 4986 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-pep	COLLISION	0	0	10000	9994	9993	-1	8.9	7 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-precio-max-medic	OK	0	0	10000	10001	10000	-1	9.6	
+lat-co-medicamentos	COLLISION	0	0	10000	6245	6244	-1	12.7	3756 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-precios-medic	COLLISION	0	0	10000	10000	9999	-1	9.2	1 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-datos-cat2	OK	0	0	100	100	100	-1	36.4	
+lat-co-secop1-multas	COLLISION	0	0	1716	1619	1619	-1	2.8	97 of 1716 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-runt-actores	COLLISION	0	0	10000	5111	5110	-1	8.7	4890 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-reps	COLLISION	0	0	10000	9997	9996	-1	11.8	4 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-rups	COLLISION	0	0	10000	9978	9977	-1	11.4	23 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-secop-integrado	COLLISION	0	0	10000	10000	9999	-1	15.6	1 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-simit	COLLISION	0	0	10000	9975	9974	-1	8.3	26 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-secop2-proveedores	COLLISION	0	0	10000	9985	9984	-1	12.1	16 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-superfin-vigiladas	OK	0	0	456	456	456	-1	1.4	
+lat-co-secop1-procesos	OK	0	0	10000	10001	10000	-1	22.6	
+lat-co-secop2-procesos	OK	0	0	10000	10001	10000	-1	19.8	
+lat-co-siri	COLLISION	0	0	10000	10000	9999	-1	11.7	1 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-secop2-contratos	COLLISION	0	0	10000	6789	6788	-1	26.1	3212 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-tarifas-gas	OK	0	0	10000	10001	10000	-1	9.8	
+lat-co-tarjetas	OK	0	0	10000	10001	10000	-1	9.5	
+lat-co-tratados	COLLISION	0	0	1115	1105	1105	-1	3.0	10 of 1115 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-tasas-captacion	OK	0	0	10000	10001	10000	-1	9.3	
+lat-co-trm	COLLISION	0	0	8372	8288	8288	-1	6.9	84 of 8372 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-vacunas	OK	0	0	50	50	50	-1	1.4	
+lat-co-trafico-portuario	OK	0	0	9683	9683	9683	-1	8.8	
+lat-co-zonas-militares	OK	0	0	72	72	72	-1	1.2	
+lat-co-tasas-activas	OK	0	0	10000	10001	10000	-1	17.3	
+lat-do-ckan-economia	OK	0	0	208	208	208	-1	3.9	
+lat-co-tienda-virtual	COLLISION	0	0	10000	9994	9993	-1	15.2	7 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-turismo-rnt	OK	0	0	10000	10001	10000	-1	10.2	
+lat-do-ckan-educacion	OK	0	0	113	113	113	-1	2.9	
+lat-do-ckan-salud	OK	0	0	127	127	127	-1	2.5	
+lat-do-ckan-seguridad	OK	0	0	123	123	123	-1	2.6	
+lat-co-vehiculos-recuperados	OK	0	0	10000	10001	10000	-1	8.7	
+lat-fortaleza-ckan-search	OK	0	0	13	13	13	-1	2.4	
+lat-geo-hub-rio2	OK	0	0	217	217	217	-1	2.6	
+lat-hcdn-recent	OK	0	0	29	29	29	-1	2.4	
+lat-do-ckan-recent	OK	0	0	1068	1068	1068	-1	10.5	
+lat-datos-ar-series	OK	0	0	10000	10001	10000	-1	16.1	
+lat-ibge-agregados	OK	0	0	70	70	70	-1	1.9	
+lat-es-ckan-recent	OK	0	0	511	511	511	-1	11.8	
+lat-ibge-calendario	OK	0	0	100	101	100	-1	1.4	
+lat-go-ckan-recent	OK	0	0	444	444	444	-1	7.8	
+lat-ibama-recent	OK	0	0	79	79	79	-1	6.1	
+lat-ibge-cnae-divisoes	OK	0	0	87	87	87	-1	1.7	
+lat-ibge-cnae	OK	0	0	673	673	673	-1	2.6	
+lat-fortaleza-ckan-recent	OK	0	0	636	636	636	-1	12.2	
+lat-ibge-cnae-grupos	OK	0	0	285	285	285	-1	1.9	
+lat-ibge-cnae-secoes	OK	0	0	21	21	21	-1	1.8	
+lat-ibge-imediatas	OK	0	0	510	510	510	-1	1.7	
+lat-ibge-intermediarias	OK	0	0	133	133	133	-1	1.5	
+lat-ibge-meso	OK	0	0	137	137	137	-1	1.8	
+lat-ibge-metadados	OK	0	0	4	4	4	-1	1.7	
+lat-ibge-micro	OK	0	0	558	558	558	-1	2.2	
+lat-ibge-paises	OK	0	0	193	193	193	-1	1.9	
+lat-ibge-pesquisas	OK	0	0	94	94	94	-1	1.9	
+lat-ibge-ufs	OK	0	0	27	27	27	-1	1.6	
+lat-ibge-regioes	OK	0	0	5	5	5	-1	1.7	
+lat-ibge-distritos	OK	0	0	10751	10751	10751	-1	5.4	
+lat-mx-wscatgeo-estados	OK	0	0	32	32	32	-1	1.8	
+lat-mx-wscatgeo-mun	OK	0	0	16	16	16	-1	1.8	
+lat-mg-ckan-recent	OK	0	0	101	101	101	-1	2.9	
+lat-mx-wscatgeo-mun2	OK	0	0	125	125	125	-1	1.9	
+lat-mg-ckan-search	OK	0	0	46	46	46	-1	2.7	
+lat-mx-wscatgeo-mun3	OK	0	0	125	125	125	-1	1.6	
+lat-mx-wscatgeo-mun4	OK	0	0	51	51	51	-1	2.0	
+lat-mx-wscatgeo-mun5	OK	0	0	212	212	212	-1	2.4	
+lat-pa-ckan-seguridad	OK	0	0	90	90	90	-1	2.3	
+lat-pa-ckan-economia	OK	0	0	154	154	154	-1	3.9	
+lat-pe-bcrp-ipc	OK	0	0	60	60	60	-1	1.2	
+lat-pe-bcrp-pbi	OK	0	0	60	60	60	-1	1.2	
+lat-pa-ckan-salud	OK	0	0	301	301	301	-1	5.1	
+lat-pa-ckan-transporte	OK	0	0	321	321	321	-1	4.1	
+lat-pe-bcrp-reservas	OK	0	0	60	60	60	-1	1.5	
+lat-pe-bcrp-tc	OK	0	0	96	96	96	-1	1.3	
+lat-retc-recent	OK	0	0	18	18	18	-1	2.9	
+lat-rs-ckan-search	OK	0	0	35	35	35	-1	3.0	
+lat-recife-ckan-recent	OK	0	0	223	223	223	-1	5.9	
+lat-sc-ckan-recent	OK	0	0	111	111	111	-1	2.9	
+lat-rs-ckan-recent	OK	0	0	415	415	415	-1	5.8	
+lat-pa-ckan-recent	OK	0	0	2000	2001	2000	-1	14.4	
+lat-sp-ckan-search	OK	0	0	23	23	23	-1	3.3	
+lat-socrata-co-cat	OK	0	0	2000	2001	2000	-1	6.9	
+lat-tse-ckan-recent	OK	0	0	188	188	188	-1	9.1	
+lat-sp-ckan-recent	OK	0	0	486	486	486	-1	14.1	
+lat-uy-ckan-ambiente	OK	0	0	130	130	130	-1	19.7	
+lat-uy-ckan-economia	OK	0	0	117	117	117	-1	19.2	
+lat-uy-ckan-seguridad	OK	0	0	143	143	143	-1	7.4	
+lat-pbh-ckan-recent	OK	0	0	614	614	614	-1	41.4	
+lat-anvisa-rss	EMITS_NOTHING	1	-1	0	0	0	-1	1.5	no records reached intel_items
+lat-uy-ckan-transporte	OK	0	0	53	53	53	-1	4.4	
+lat-banrep-rss	EMITS_NOTHING	1	-1	0	0	0	-1	2.2	no records reached intel_items
+lat-br-camara-legislaturas	OK	0	0	57	57	57	-1	1.7	
+lat-br-camara-grupos	OK	0	0	118	118	118	-1	2.9	
+lat-br-camara-referencias	OK	0	0	544	544	544	-1	2.0	
+lat-br-cvm-rss	OK	0	0	15	15	15	-1	1.2	
+lat-socrata-co-views	OK	0	0	100	100	100	-1	40.6	
+lat-camara-blocos-json	OK	0	0	4	4	4	-1	1.7	
+lat-camara-eventos-json	OK	0	0	3	3	3	-1	2.3	
+lat-camara-partidos-json	OK	0	0	22	22	22	-1	1.2	
+lat-uy-ckan-salud	OK	0	0	307	307	307	-1	21.4	
+lat-camara-frentes-json	OK	0	0	1443	1443	1443	-1	5.1	
+lat-uy-ckan-educacion	OK	0	0	422	422	422	-1	34.1	
+lat-co-banrep-feed	OK	0	0	10	10	10	-1	1.2	
+lat-camara-orgaos-json	OK	0	0	1659	1659	1659	-1	6.0	
+lat-ec-inec	OK	0	0	10	10	10	-1	2.2	
+lat-gaz-boletin-cl	EMITS_NOTHING	1	-1	0	0	0	-1	1.9	no records reached intel_items
+lat-gaz-dca-gt	OK	0	0	10	10	10	-1	2.5	
+lat-govbr-defesa	OK	0	0	100	100	100	-1	1.8	
+lat-gaz-impo-uy2	OK	0	0	10	10	10	-1	2.4	
+lat-govbr-receita	OK	0	0	10	10	10	-1	1.4	
+lat-camara-votacoes-json	OK	0	0	902	902	902	-1	7.0	
+lat-jm-jis-feed	OK	0	0	10	10	10	-1	1.4	
+lat-gy-dpi-feed	OK	0	0	20	20	20	-1	2.0	
+lat-ni-bcn	OK	0	0	10	10	10	-1	1.3	
+lat-pa-canal	OK	0	0	12	12	12	-1	1.1	
+lat-reg-idbinvest	OK	0	0	10	10	10	-1	1.0	
+lat-reg-paho-es	OK	0	0	10	10	10	-1	0.9	
+lat-mercosur-rss	OK	0	0	10	10	10	-1	3.0	
+lat-py-ip-paraguay	OK	0	0	10	10	10	-1	2.2	
+lat-sv-bcr	OK	0	0	3	3	3	-1	2.0	
+lat-reg-r4v	OK	0	0	10	10	10	-1	3.1	
+lat-cl-gael-clima	OK	0	0	26	26	26	-1	1.5	
+lat-cemaden-rss	OK	0	0	10	10	10	-1	3.0	
+lat-camara-props-json	OK	0	0	2000	2001	2000	-1	16.4	
+lat-co-ideam-precip	COLLISION	0	0	10000	7591	7590	-1	8.3	2410 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-ideam-presion	COLLISION	0	0	10000	9075	9074	-1	8.7	926 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-uy-ckan-recent	OK	0	0	2000	2001	2000	-1	55.2	
+lat-co-ideam-temp	COLLISION	0	0	10000	9653	9652	-1	8.0	348 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-insivumeh-gt	OK	0	0	10	10	10	-1	2.5	
+lat-geo-arcgis-sgc	OK	0	0	157	157	157	-1	9.6	
+lat-pa-sinaproc-feed	OK	0	0	10	10	10	-1	2.2	
+lat-wp-odpm-tt	OK	0	0	120	120	120	-1	19.9	
+lat-wp-conred-gt	OK	0	0	1000	1001	1000	-1	24.6	
+lat-cl-xor-sismo	EMITS_NOTHING	1	-1	0	0	0	-1	60.1	no records reached intel_items
+lat-ar-perfil	OK	0	0	50	50	50	-1	1.1	
+lat-ar-tiempoar	OK	0	0	10	10	10	-1	1.9	
+lat-belize-breaking	OK	0	0	10	10	10	-1	3.1	
+lat-bo-eldeber2	OK	0	0	25	25	25	-1	1.4	
+lat-bo-eldiario	OK	0	0	10	10	10	-1	3.2	
+lat-bo-lostiempos3	OK	0	0	10	10	10	-1	0.9	
+lat-bo-oxigeno	OK	0	0	50	50	50	-1	1.8	
+lat-br-cnnbrasil	OK	0	0	60	60	60	-1	2.0	
+lat-br-congresso-focus	OK	0	0	20	20	20	-1	1.3	
+lat-br-intercept	OK	0	0	40	40	40	-1	2.4	
+lat-wp-sinaproc-pa	OK	0	0	1000	1001	1000	-1	38.0	
+lat-br-metropoles	OK	0	0	20	20	20	-1	1.3	
+lat-br-uol	OK	0	0	15	15	15	-1	1.4	
+lat-cl-interferencia	OK	0	0	10	10	10	-1	0.9	
+lat-cnc3-tt	OK	0	0	10	10	10	-1	1.0	
+lat-co-verdadabierta	OK	0	0	15	15	15	-1	0.9	
+lat-cl-ciperchile	OK	0	0	16	16	16	-1	3.6	
+lat-cr-elobservador	OK	0	0	12	12	12	-1	0.9	
+lat-cr-delfino	OK	0	0	21	21	21	-1	1.5	
+lat-wp-dpi-gy	SLOW	-1	0	-1	-1	250	-1	90.1	hit --timeout 90.1s; 250 rows already stored
+lat-wp-pancanal	SLOW	-1	0	-1	-1	650	-1	90.0	hit --timeout 90.0s; 650 rows already stored
+lat-cu-14ymedio	OK	0	0	116	116	116	-1	1.4	
+lat-cu-diariodecuba	OK	0	0	10	10	10	-1	1.6	
+lat-cr-semanario	OK	0	0	10	10	10	-1	2.0	
+lat-geo-arcgis-snirh	EMITS_NOTHING	1	-1	0	0	0	-1	76.6	no records reached intel_items
+lat-cu-periodismobarrio	OK	0	0	99	99	99	-1	2.1	
+lat-diariolibre-do	OK	0	0	40	40	40	-1	1.6	
+lat-do-elnuevodiario	OK	0	0	10	10	10	-1	1.7	
+lat-ec-expreso	EMITS_NOTHING	0	0	0	0	0	-1	1.7	no records reached intel_items
+lat-ec-eluniverso	OK	0	0	100	100	100	-1	2.0	
+lat-efectococuyo-ve	OK	0	0	10	10	10	-1	1.7	
+lat-ec-larepublica	OK	0	0	10	10	10	-1	2.1	
+lat-elsalvador-com	EMITS_NOTHING	1	-1	0	0	0	-1	1.7	no records reached intel_items
+lat-elcomercio-ec	OK	0	0	20	20	20	-1	2.1	
+lat-eltiempo-rss	OK	0	0	10	10	10	-1	2.5	
+lat-g1-brasil	OK	0	0	100	100	100	-1	2.4	
+lat-folha-rss	OK	0	0	100	100	100	-1	2.9	
+lat-gt-lahora	OK	0	0	10	10	10	-1	1.9	
+lat-g1-mundo	OK	0	0	100	100	100	-1	2.5	
+lat-gt-republica	OK	0	0	25	25	25	-1	2.0	
+lat-gy-inews	OK	0	0	10	10	10	-1	1.4	
+lat-hn-elpais	EMITS_NOTHING	1	-1	0	0	0	-1	1.4	no records reached intel_items
+lat-hn-contracorriente	OK	0	0	15	15	15	-1	2.1	
+lat-hn-hondudiario	OK	0	0	10	10	10	-1	1.7	
+lat-ht-gazette	OK	0	0	10	10	10	-1	1.2	
+lat-hn-proceso	OK	0	0	100	100	100	-1	2.0	
+lat-ht-alterpresse	EMITS_NOTHING	0	0	0	0	0	-1	1.8	no records reached intel_items
+lat-ht-juno7	OK	0	0	10	10	10	-1	1.6	
+lat-jornada-rss	OK	0	0	102	102	102	-1	1.3	
+lat-kaieteur-gy	OK	0	0	25	25	25	-1	1.4	
+lat-ibge-noticias	OK	0	0	30	31	30	-1	1.8	
+lat-lasillavacia	OK	0	0	10	10	10	-1	1.4	
+lat-latercera2	OK	0	0	100	100	100	-1	1.5	
+lat-lenouvelliste-ht	OK	0	0	27	27	27	-1	1.5	
+lat-montevideo-uy	OK	0	0	52	52	52	-1	1.7	
+lat-guyana-chronicle	OK	0	0	10	10	10	-1	7.1	
+lat-mx-elfinanciero	OK	0	0	100	100	100	-1	1.6	
+lat-mx-expansion	OK	0	0	39	39	39	-1	1.4	
+lat-mx-jornada-politica	OK	0	0	31	31	31	-1	1.5	
+lat-mx-jornada-estados	OK	0	0	10	10	10	-1	1.9	
+lat-mx-jornada-mundo	OK	0	0	11	11	11	-1	1.9	
+lat-mx-mexiconews	OK	0	0	10	10	10	-1	1.6	
+lat-mx-zetatijuana	OK	0	0	10	10	10	-1	1.1	
+lat-ni-canal10	OK	0	0	20	20	20	-1	1.4	
+lat-pe-elcomercio-politica	OK	0	0	37	37	37	-1	1.4	
+lat-pe-gestion-economia	OK	0	0	62	62	62	-1	1.5	
+lat-ni-despacho505	OK	0	0	10	10	10	-1	2.8	
+lat-ni-investiga	OK	0	0	13	13	13	-1	2.7	
+lat-mx-quinto	OK	0	0	3	3	3	-1	4.3	
+lat-reg-americas-quarterly	EMITS_NOTHING	1	-1	0	0	0	-1	1.5	no records reached intel_items
+lat-pe-idl	OK	0	0	10	10	10	-1	2.2	
+lat-reg-dominica-news	OK	0	0	10	10	10	-1	1.7	
+lat-py-abc-politica	OK	0	0	69	69	69	-1	2.0	
+lat-reg-elpais-america	OK	0	0	109	109	109	-1	2.0	
+lat-reg-stluciatimes	OK	0	0	10	10	10	-1	1.7	
+lat-reg-latinnews	OK	0	0	20	20	20	-1	2.7	
+lat-reg-panampost	OK	0	0	10	10	10	-1	2.8	
+lat-reg-svg-searchlight	COLLISION	0	0	87	73	73	-1	2.6	14 of 87 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-semana-rss	OK	0	0	100	100	100	-1	1.6	
+lat-reg-grenada-now	OK	0	0	10	10	10	-1	3.8	
+lat-sr-dwt	OK	0	0	10	10	10	-1	1.5	
+lat-sr-suriname-herald	OK	0	0	10	10	10	-1	2.1	
+lat-starbroek-sr	OK	0	0	10	10	10	-1	1.9	
+lat-sv-gatoencerrado	OK	0	0	10	10	10	-1	2.0	
+lat-sv-contrapunto	OK	0	0	25	25	25	-1	2.4	
+lat-sv-lapagina	OK	0	0	10	10	10	-1	2.0	
+lat-ve-cronica-uno	OK	0	0	10	10	10	-1	1.0	
+lat-talcualdigital-ve	OK	0	0	20	20	20	-1	2.0	
+lat-ve-elnacional	EMITS_NOTHING	1	-1	0	0	0	-1	0.9	no records reached intel_items
+lat-ve-armando	OK	0	0	6	6	6	-1	1.5	
+lat-uy-labdiaria	EMITS_NOTHING	1	-1	0	0	0	-1	2.5	no records reached intel_items
+lat-ve-runrunes	OK	0	0	8	8	8	-1	1.6	
+lat-ve-tal-cual2	OK	0	0	20	20	20	-1	1.7	
+afr-hdx-irn	OK	0	0	124	124	124	-1	2.3	
+afr-hdx-irq	OK	0	0	262	262	262	-1	2.4	
+afr-hdx-jor	OK	0	0	155	155	155	-1	2.6	
+afr-hdx-lbn	OK	0	0	224	224	224	-1	2.8	
+afr-hdx-sau	OK	0	0	101	101	101	-1	2.1	
+afr-hdx-pse	OK	0	0	255	255	255	-1	2.7	
+lat-amandala-bz	EMITS_NOTHING	1	-1	0	0	0	-1	76.4	no records reached intel_items
+afr-hdx-tur	OK	0	0	179	179	179	-1	2.6	
+afr-hdx-syr	OK	0	0	386	386	386	-1	3.6	
+lat-ve-elpitazo	OK	0	0	10	10	10	-1	14.4	
+afr-ibb-ds-muzelerimiz-ve-ziyaretci-say-66753e	EMITS_NOTHING	1	-1	0	0	0	-1	23.5	no records reached intel_items
+afr-ibb-ds-istanbul-ili-balikci-bulunma-c80b92	EMITS_NOTHING	1	-1	0	0	0	-1	29.1	no records reached intel_items
+afr-ibb-ds-cozum-merkezi-konumlari-c2f23d	EMITS_NOTHING	1	-1	0	0	0	-1	29.7	no records reached intel_items
+afr-ibb-ds-sehir-hatlari-a-s-denizyolu-dbe63c	EMITS_NOTHING	1	-1	0	0	0	-1	34.8	no records reached intel_items
+afr-ibb-grp-cevre-hizmetleri	EMITS_NOTHING	1	-1	0	0	0	-1	33.5	no records reached intel_items
+afr-ibb-grp-enerji-hizmetleri	EMITS_NOTHING	1	-1	0	0	0	-1	24.1	no records reached intel_items
+afr-ibb-grp-ekonomi	EMITS_NOTHING	1	-1	0	0	0	-1	28.4	no records reached intel_items
+afr-ibb-grp-guvenlik	EMITS_NOTHING	1	-1	0	0	0	-1	28.4	no records reached intel_items
+afr-ibb-grp-ulasim-hizmetleri	EMITS_NOTHING	1	-1	0	0	0	-1	23.8	no records reached intel_items
+afr-ibb-org-cevre-koruma-ve-kontrol-daire-bask	EMITS_NOTHING	1	-1	0	0	0	-1	23.8	no records reached intel_items
+afr-ibb-org-igdas	EMITS_NOTHING	1	-1	0	0	0	-1	23.5	no records reached intel_items
+afr-ibb-org-i-s-k-i	EMITS_NOTHING	1	-1	0	0	0	-1	28.8	no records reached intel_items
+lat-wp-elcomercio-ec	SLOW	-1	0	-1	-1	950	-1	90.1	hit --timeout 90.1s; 950 rows already stored
+afr-ibb-org-iett-genel-mudurlugu	EMITS_NOTHING	1	-1	0	0	0	-1	38.7	no records reached intel_items
+afr-ibb-org-istanbul-istatistik-ofisi	EMITS_NOTHING	1	-1	0	0	0	-1	28.7	no records reached intel_items
+afr-ibb-org-istanbul-enerji-a-s	EMITS_NOTHING	1	-1	0	0	0	-1	33.8	no records reached intel_items
+afr-ibb-org-rayli-sistem-daire-baskanligi	EMITS_NOTHING	1	-1	0	0	0	-1	23.6	no records reached intel_items
+afr-ibb-org-saglik-daire-baskanligi	EMITS_NOTHING	1	-1	0	0	0	-1	23.7	no records reached intel_items
+afr-ibb-org-metro-istanbul-a-s	EMITS_NOTHING	1	-1	0	0	0	-1	28.3	no records reached intel_items
+afr-ilgov-ds-driving-shcool-3f06e2	OK	0	0	399	399	399	-1	2.1	
+afr-ilgov-ds-batei-esek-42e73a	OK	0	0	2000	2001	2000	-1	9.9	
+afr-ilgov-ds-database-of-doctors-licenses-9c64c5	OK	0	0	2000	2001	2000	-1	10.0	
+afr-ilgov-ds-flydata-e83f76	OK	0	0	2000	2001	2000	-1	8.8	
+afr-ibb-org-ulasim-daire-baskanligi	EMITS_NOTHING	1	-1	0	0	0	-1	28.4	no records reached intel_items
+afr-ilgov-ds-gemelnet-91c849	OK	0	0	2000	2001	2000	-1	9.5	
+afr-ibb-org-tuik	EMITS_NOTHING	1	-1	0	0	0	-1	33.7	no records reached intel_items
+afr-ilgov-ds-goverment-domesticdebt-c92fdd	OK	0	0	1942	1942	1942	-1	9.4	
+afr-ilgov-ds-list-measles-vaccination-sta-545337	OK	0	0	191	191	191	-1	1.9	
+afr-ilgov-ds-kli-rechev-ciburiim-cf2986	OK	0	0	2000	2001	2000	-1	10.3	
+afr-ilgov-ds-insurance-584e6b	OK	0	0	2000	2001	2000	-1	11.8	
+afr-ibb-org-zabita-daire-baskanligi	EMITS_NOTHING	1	-1	0	0	0	-1	38.3	no records reached intel_items
+afr-ilgov-org-airport-authority	OK	0	0	4	4	4	-1	1.4	
+afr-ilgov-org-bank-israel	OK	0	0	30	30	30	-1	1.5	
+afr-ilgov-org-central-election-committee	OK	0	0	2	2	2	-1	1.5	
+afr-ilgov-org-cma	OK	0	0	9	9	9	-1	1.5	
+afr-ilgov-org-energy-and-water	OK	0	0	8	8	8	-1	1.1	
+afr-ilgov-org-interior-affairs	OK	0	0	13	13	13	-1	1.4	
+afr-ilgov-org-iplan	OK	0	0	13	13	13	-1	1.3	
+afr-ilgov-ds-recall-2c3352	OK	0	0	2000	2001	2000	-1	9.4	
+afr-ilgov-org-israel-mapping-center	OK	0	0	117	117	117	-1	2.0	
+afr-ilgov-org-israel-police	OK	0	0	4	4	4	-1	1.3	
+afr-ilgov-org-knesset	OK	0	0	8	8	8	-1	1.4	
+afr-ilgov-org-lamas	OK	0	0	14	14	14	-1	1.3	
+afr-ilgov-org-ministry-of-agriculture	OK	0	0	18	18	18	-1	1.1	
+afr-ilgov-org-ministry-health	OK	0	0	54	54	54	-1	2.1	
+afr-ilgov-org-ministry-of-justice	OK	0	0	81	81	81	-1	2.2	
+afr-ilgov-org-ministry-of-the-environment	OK	0	0	85	85	85	-1	1.9	
+afr-ilgov-ds-pensia-net-a66926	OK	0	0	2000	2001	2000	-1	13.5	
+afr-ilgov-org-population-authority	OK	0	0	9	9	9	-1	1.3	
+afr-ilgov-org-social-security	OK	0	0	21	21	21	-1	1.3	
+afr-ilgov-org-mof	OK	0	0	60	60	60	-1	2.5	
+afr-ilgov-org-the-israel-lands-administration	OK	0	0	3	3	3	-1	1.6	
+afr-ilgov-org-ministry-of-transport	OK	0	0	189	189	189	-1	3.4	
+afr-ilgov-ds-private-and-commercial-vehic-053cea	OK	0	0	2000	2001	2000	-1	15.9	
+afr-izmir-ds-co2-emisyon-degerleri-ton-ve-d2ec44	EMITS_NOTHING	1	-1	0	0	0	-1	24.0	no records reached intel_items
+afr-izmir-ds-taksi-durak-bilgileri-64a725	EMITS_NOTHING	1	-1	0	0	0	-1	23.9	no records reached intel_items
+afr-izmir-ds-eshot-otobus-hat-listesi-bd6c84	EMITS_NOTHING	1	-1	0	0	0	-1	24.4	no records reached intel_items
+afr-izmir-grp-altyapi	EMITS_NOTHING	1	-1	0	0	0	-1	24.2	no records reached intel_items
+afr-izmir-grp-cografi-bilgi-sistemleri	EMITS_NOTHING	1	-1	0	0	0	-1	29.1	no records reached intel_items
+afr-izmir-ds-izmir-ili-arizali-kazali-ara-e48328	EMITS_NOTHING	1	-1	0	0	0	-1	35.0	no records reached intel_items
+afr-izmir-org-iklim-degisikligi-ve-sifir-atik-da	EMITS_NOTHING	1	-1	0	0	0	-1	29.1	no records reached intel_items
+afr-izmir-org-izsu	EMITS_NOTHING	1	-1	0	0	0	-1	28.7	no records reached intel_items
+afr-izmir-org-eshot	EMITS_NOTHING	1	-1	0	0	0	-1	29.8	no records reached intel_items
+afr-p-boi-rates	OK	0	0	14	14	14	-1	1.6	
+afr-qa-crude-birth-rate-crude-death-rates-and	OK	0	0	20	20	20	-1	1.2	
+afr-qa-deposits-at-commercial-banks	OK	0	0	55	55	55	-1	1.5	
+afr-izmir-org-izmir-metro-a-s	EMITS_NOTHING	1	-1	0	0	0	-1	34.0	no records reached intel_items
+afr-izmir-org-kentbilgi-dairesi-baskanligi	EMITS_NOTHING	1	-1	0	0	0	-1	28.7	no records reached intel_items
+afr-izmir-org-ulasim-dairesi-baskanligi	EMITS_NOTHING	1	-1	0	0	0	-1	23.6	no records reached intel_items
+afr-qa-cargo-and-mail-activity-at-doha-intern	OK	0	0	10	10	10	-1	9.2	
+afr-qa-education-statistics-number-of-student	OK	0	0	256	256	256	-1	10.4	
+afr-qa-phcc-patient-visits-by-health-center-a	OK	0	0	35	35	35	-1	13.8	
+afr-qa-average-monthly-of-the-air-pollutants-	EMITS_NOTHING	1	-1	0	0	0	-1	33.6	no records reached intel_items
+afr-qa-number-of-arrivals-departures-and-tran	EMITS_NOTHING	1	-1	0	0	0	-1	28.5	no records reached intel_items
+afr-qa-health-statistics-number-of-paramedics	EMITS_NOTHING	1	-1	0	0	0	-1	28.9	no records reached intel_items
+afr-qa-economically-active-population-15-year	EMITS_NOTHING	1	-1	0	0	0	-1	33.2	no records reached intel_items
+afr-qa-poultry-and-eggs-production	EMITS_NOTHING	1	-1	0	0	0	-1	23.1	no records reached intel_items
+afr-bbc-me	OK	0	0	27	27	27	-1	1.0	
+afr-il-arutzsheva	OK	0	0	10	10	10	-1	0.8	
+afr-il-globes-en	OK	0	0	93	93	93	-1	1.4	
+afr-il-israelhayom	OK	0	0	10	10	10	-1	1.5	
+afr-qa-sectoral-report-for-national-greenhous	OK	0	0	25	25	25	-1	8.7	
+afr-il-jpost-israel	OK	0	0	30	30	30	-1	0.8	
+afr-il-jpost-mideast	OK	0	0	30	30	30	-1	0.8	
+afr-il-ynetnews	OK	0	0	30	30	30	-1	0.9	
+afr-il-maariv	OK	0	0	20	20	20	-1	1.2	
+afr-iq-iraqinews	OK	0	0	10	10	10	-1	1.1	
+afr-qa-special-needs-statistics-number-of-peo	OK	0	0	1000	1001	1000	-1	13.0	
+afr-lb-nna-en	EMITS_NOTHING	1	-1	0	0	0	-1	1.1	no records reached intel_items
+afr-qa-qatar-exchange0	EMITS_NOTHING	1	-1	0	0	0	-1	28.3	no records reached intel_items
+afr-qa-dohanews	OK	0	0	9	9	9	-1	1.1	
+afr-mena-middleeastmonitor	OK	0	0	50	50	50	-1	1.9	
+afr-rfi-mo	OK	0	0	30	30	30	-1	1.0	
+afr-sa-saudigazette	OK	0	0	50	50	50	-1	0.8	
+afr-sy-syriahr	EMITS_NOTHING	1	-1	0	0	0	-1	1.1	no records reached intel_items
+afr-sy-sana-en	OK	0	0	10	10	10	-1	1.8	
+afr-tr-cumhuriyet	OK	0	0	100	100	100	-1	1.1	
+afr-tr-evrensel	OK	0	0	100	100	100	-1	1.0	
+afr-tr-hurriyet	OK	0	0	70	70	70	-1	0.9	
+afr-tr-haberturk	OK	0	0	100	100	100	-1	1.4	
+afr-tr-milliyet	OK	0	0	20	20	20	-1	1.5	
+afr-tr-ntv	OK	0	0	20	20	20	-1	1.1	
+afr-tr-trthaber	OK	0	0	50	50	50	-1	1.2	
+afr-ye-yemenonline	OK	0	0	20	20	20	-1	1.3	
+afr-qa-registered-live-births-by-month-gender	EMITS_NOTHING	1	-1	0	0	0	-1	28.1	no records reached intel_items
+afr-qa-sdg-7-2-1-renewable-energy-share-in-to	EMITS_NOTHING	1	-1	0	0	0	-1	28.7	no records reached intel_items
+afr-ir-isna-en	EMITS_NOTHING	1	-1	0	0	0	-1	19.8	no records reached intel_items
+nam-ags-dams-nys-dec-dams	OK	0	0	5980	5980	5980	-1	5.9	
+nam-ags-evacuation-zones-public-em-evacuationzones	OK	0	0	1592	1592	1592	-1	5.9	
+nam-ags-maine-stream-habitat-viewer-dams	OK	0	0	973	973	973	-1	1.9	
+nam-ags-climate-vulnerability-and-risk-assessment-wildfire-r	OK	0	0	10000	10001	10000	-1	9.4	
+nam-ags-landslide-susceptibility-landslide-susceptibility	OK	0	0	10000	10001	10000	-1	11.2	
+nam-ags-tens-predefined-areas-public-tens-predefined-areas	OK	0	0	512	512	512	-1	1.7	
+nam-ags-state-hazard-mitigation-plan-building-footprints-cen	OK	0	0	10000	10001	10000	-1	9.3	
+afr-ir-irna-en	EMITS_NOTHING	1	-1	0	0	0	-1	34.6	no records reached intel_items
+nam-ags-usa-current-wildfires-california-current-incidents	OK	0	0	421	421	421	-1	1.2	
+nam-ags-road-closure-active-roadclosuresnapshot	OK	0	0	10000	10001	10000	-1	18.7	
+nam-bc-fire-danger-wfs	OK	0	0	114	114	114	-1	1.8	
+nam-ags-wildfire-1000m-hazard-extent-dcrra-hazard-wildfire-d	OK	0	0	10000	10001	10000	-1	9.3	
+nam-bcwildfire-active-points-wfs	OK	0	0	500	501	500	-1	1.9	
+nam-austin-traffic-incidents	OK	0	0	10000	10001	10000	-1	10.4	
+nam-calfire-active-incidents	OK	0	0	3	3	3	-1	1.7	
+nam-bcwildfire-active-polys-wfs	OK	0	0	314	314	314	-1	3.7	
+nam-calfire-incidents-geojson	OK	0	0	3	3	3	-1	1.8	
+nam-ags-wildfire-hazard-extent-dcrra-hazard-wildfire-dissolv	OK	0	0	10000	10001	10000	-1	15.7	
+nam-brla-baton-rouge-fire-department-occupancy-in	COLLISION	0	0	8000	7929	7928	-1	10.3	72 of 8000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-caltrans-ccvra-coastal-flood-risk-ccvr-coastal-flood-risk	OK	0	0	4000	4001	4000	-1	8.6	
+nam-dc-ddoe-watershed-municipal-separate-storm-sewer-syst	OK	0	0	556	556	556	-1	3.0	
+nam-caltrans-ccvra-riverine-flood-risk-ccvra-riverine-flood-ris	OK	0	0	4000	4001	4000	-1	9.2	
+nam-dc-environment-flood-webmercator-community-rating-sys	OK	0	0	314	314	314	-1	1.8	
+nam-ags-sra-for-fhsz-in-lra-sra-for-fhsz-in-lra	OK	0	0	10000	10001	10000	-1	39.4	
+nam-caltrans-ccvra-wildfire-risk-ccvra-wildfire-risk	OK	0	0	4000	4001	4000	-1	7.4	
+nam-caltrans-ccvra-landslide-risk-ccvra-landslide-risk	OK	0	0	4000	4001	4000	-1	14.4	
+nam-dc-evacuation-route-map-evacuation-route-block-group	OK	0	0	455	455	455	-1	3.1	
+nam-dc-evacuation-route-map-evacuation-route-points	OK	0	0	813	813	813	-1	1.8	
+nam-drivebc-events	EMITS_NOTHING	1	-1	0	0	0	-1	1.6	no records reached intel_items
+nam-montgomerycountymd-floodplain-district-permit	OK	0	0	1037	1037	1037	-1	2.1	
+nam-md-md-coastalresiliencyassessment-hazard-reduction-by	OK	0	0	4000	4001	4000	-1	4.9	
+nam-md-md-coastalresiliencyassessment-shoreline-hazard-in	OK	0	0	4000	4001	4000	-1	4.9	
+nam-dc-environment-flood-webmercator-floodplains	OK	0	0	652	652	652	-1	11.1	
+nam-delaware-storm-water-notices-of-intent	COLLISION	0	0	7275	7273	7273	-1	14.4	2 of 7275 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-norfolk-storm-system-to-track-organize-record-an	COLLISION	0	0	7895	7894	7894	-1	11.1	1 of 7895 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-vermont-fs-vcgi-opendata-emergency-esite-point-s	OK	0	0	8000	8001	8000	-1	14.9	
+cyb-atlas-probes-100	OK	0	0	2000	2001	2000	-1	7.3	
+cyb-atlassian-status	OK	0	0	34	34	34	-1	0.9	
+cyb-cloudflare-status-components	OK	0	0	483	483	483	-1	1.0	
+cyb-bgpkit-broker-collectors	OK	0	0	82	82	82	-1	1.6	
+cyb-crates-status	OK	0	0	48	48	48	-1	1.4	
+cyb-datadog-status	OK	0	0	50	50	50	-1	0.9	
+cyb-atlas-anchor-measurements	OK	0	0	2000	2001	2000	-1	17.8	
+cyb-digitalocean-status	OK	0	0	50	50	50	-1	0.9	
+nam-texas-texas-commission-on-environmental-qualit	OK	0	0	8000	8001	8000	-1	20.2	
+cyb-discord-status	OK	0	0	50	50	50	-1	1.0	
+cyb-heroku-status	OK	0	0	3	3	3	-1	1.1	
+cyb-icann-gtlds-v2	OK	0	0	1276	1276	1276	-1	1.3	
+cyb-iana-service-names-csv	OK	0	0	14540	14540	14540	-1	6.3	
+cyb-ietf-documents	OK	0	0	1000	1001	1000	-1	6.5	
+cyb-ietf-groups	OK	0	0	1000	1001	1000	-1	6.4	
+cyb-linode-status	OK	0	0	50	50	50	-1	1.0	
+cyb-mongodb-status	OK	0	0	50	50	50	-1	1.0	
+cyb-ihr-countries-nofmt	OK	0	0	253	253	253	-1	2.3	
+cyb-mlab-hostnames	OK	0	0	7056	7056	7056	-1	2.3	
+cyb-npm-status-incidents	OK	0	0	50	50	50	-1	1.1	
+cyb-onionoo-details-bridge	OK	0	0	48	48	48	-1	1.4	
+cyb-python-status	OK	0	0	50	50	50	-1	0.9	
+cyb-ietf-meetings	OK	0	0	1000	1001	1000	-1	10.7	
+cyb-ripe-atlas-anchors-p2	OK	0	0	1722	1723	1722	-1	7.5	
+nam-ags-firm-flood-zones-firm	SLOW	-1	0	-1	-1	4840	-1	90.1	hit --timeout 90.1s; 4840 rows already stored
+cyb-ripe-ncc-news-rss	OK	0	0	20	20	20	-1	1.8	
+cyb-ripe-atlas-probes-asn	OK	0	0	2000	2001	2000	-1	7.6	
+cyb-sendgrid-status	OK	0	0	50	50	50	-1	1.8	
+cyb-ripe-rpki-roas	OK	0	0	13	13	13	-1	2.3	
+cyb-statuspage-meta	OK	0	0	50	50	50	-1	1.8	
+cyb-tor-bridges-summary	OK	0	0	2000	2001	2000	-1	3.9	
+cyb-tor-clients	OK	0	0	1000	1001	1000	-1	4.1	
+cyb-twilio-status	OK	0	0	50	50	50	-1	0.9	
+cyb-tor-metrics-relay-summary	OK	0	0	4000	4001	4000	-1	5.1	
+cyb-vercel-status	OK	0	0	50	50	50	-1	1.1	
+cyb-zoom-status	OK	0	0	50	50	50	-1	1.4	
+sci-cryo-regobs-kdv	OK	0	0	47	47	47	-1	1.5	
+cyb-tor-weights	OK	0	0	1000	1001	1000	-1	6.1	
+sci-erddap-cwcgom-grid	OK	0	0	55	55	55	-1	1.1	
+sci-erddap-apdrc-grid	EMITS_NOTHING	1	-1	0	0	0	-1	3.8	no records reached intel_items
+sci-erddap-pifsc-grid	OK	0	0	159	159	159	-1	1.8	
+sci-eu-emodnet-humanact-wfs	OK	0	0	500	501	500	-1	2.2	
+cyb-ripe-atlas-measurement-types	OK	0	0	1000	1001	1000	-1	26.4	
+sci-hub-arcgis-glacier	COLLISION	0	0	1000	1000	999	-1	8.0	1 of 1000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+sci-hydro-existenz-hydro	OK	0	0	525	525	525	-1	1.4	
+sci-hydro-pegelonline-waters	OK	0	0	786	786	786	-1	1.8	
+sci-hydro-smhi-hydroobs	OK	0	0	10	10	10	-1	1.3	
+sci-hub-arcgis-sealevel	OK	0	0	1000	1001	1000	-1	12.5	
+sci-erddap-upwell-grid	OK	0	0	8520	8520	8520	-1	16.8	
+sci-hydro-smhi-ocobs	OK	0	0	15	15	15	-1	1.4	
+sci-ocean-coops-currents	OK	0	0	85	85	85	-1	0.8	
+sci-ocean-coops-harcon	OK	0	0	1373	1373	1373	-1	1.6	
+sci-ocean-coops-waterlevels	OK	0	0	302	302	302	-1	1.2	
+sci-ocean-coops-historicwl	OK	0	0	2924	2924	2924	-1	2.2	
+sci-noaa-coast-services	OK	0	0	365	365	365	-1	4.3	
+sci-ogcf-usgswater-channel-measurements	OK	0	0	4000	4001	4000	-1	6.9	
+sci-ocean-ioc-sealevel-tab	COLLISION	0	0	1921	1340	1340	-1	7.9	581 of 1921 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+sci-ogcf-usgswater-continuous	OK	0	0	4000	4001	4000	-1	6.3	
+sci-ogcf-usgswater-daily	OK	0	0	4000	4001	4000	-1	6.1	
+cyb-atlas-measurements-100	OK	0	0	2000	2001	2000	-1	84.0	
+sci-ogcf-usgswater-field-measurements	OK	0	0	4000	4001	4000	-1	6.1	
+sci-ogcf-usgswater-latest-field-measurements	OK	0	0	4000	4001	4000	-1	6.1	
+sci-ogcf-usgswater-latest-daily	OK	0	0	4000	4001	4000	-1	7.2	
+sci-ogcf-usgswater-latest-continuous	OK	0	0	4000	4001	4000	-1	12.5	
+sci-polar-aadc-datasets	OK	0	0	10	10	10	-1	2.2	
+sci-tsunami-ngdc-sources	OK	0	0	200	201	200	-1	1.6	
+sci-polar-aadc-search	OK	0	0	10	10	10	-1	2.1	
+sci-cryo-geus-dataverse	OK	0	0	100	100	100	-1	56.7	
+sas-arc-nsw-bfpl	OK	0	0	1000	1001	1000	-1	8.6	
+sas-arc-nsw-emergfac	OK	0	0	352	352	352	-1	1.9	
+sci-usgs-sciencebase-glacier	OK	0	0	100	101	100	-1	16.6	
+sas-arc-nsw-edufac	OK	0	0	2294	2294	2294	-1	13.5	
+sci-usgs-sciencebase-water	OK	0	0	100	101	100	-1	17.0	
+cyb-publicdns-nameservers-csv	OK	0	0	62790	62790	62790	-1	89.2	
+sas-arc-nsw-justfac	OK	0	0	192	192	192	-1	1.3	
+sas-arc-nsw-healthfac	OK	0	0	316	316	316	-1	2.2	
+sas-arc-nsw-env	OK	0	0	193	193	193	-1	11.3	
+sas-arc-nsw-transfac	OK	0	0	109	109	109	-1	1.1	
+sas-arc-nsw-spatial	OK	0	0	140	140	140	-1	4.7	
+sas-arc-nsw-fire-hist	OK	0	0	1000	1001	1000	-1	8.7	
+sas-arc-nsw-reef	OK	0	0	1000	1001	1000	-1	8.8	
+sas-arc-nsw-foi	OK	0	0	4000	4001	4000	-1	11.8	
+sas-arc-qld-floodgauge	OK	0	0	395	395	395	-1	2.1	
+sas-arc-qld-lga	OK	0	0	77	77	77	-1	5.9	
+sas-arc-qld-firescar	OK	0	0	1000	1001	1000	-1	10.4	
+sas-arc-qld-towns	OK	0	0	761	761	761	-1	2.5	
+sas-arc-tas-geol	OK	0	0	266	266	266	-1	2.2	
+sas-arc-tas	OK	0	0	76	76	76	-1	4.0	
+sas-arc-qld-parksfire	OK	0	0	1000	1001	1000	-1	10.3	
+sas-arc-qld	OK	0	0	158	158	158	-1	17.2	
+sas-arc-tas-marine	OK	0	0	66	66	66	-1	2.2	
+sas-arc-vicorg	OK	0	0	1	1	1	-1	0.9	
+sas-arc-tas-natenv	EMITS_NOTHING	0	0	0	0	0	-1	1.6	no records reached intel_items
+sas-arc-wa-edu	OK	0	0	1123	1123	1123	-1	6.1	
+sas-arc-wa-bounds	OK	0	0	18	18	18	-1	6.9	
+sas-arc-wa-health	OK	0	0	490	490	490	-1	1.7	
+sas-arc-tas-infra	OK	0	0	4000	4001	4000	-1	11.4	
+sas-arc-wa-marine	OK	0	0	29	29	29	-1	1.3	
+sas-arc-wa-env	OK	0	0	772	772	772	-1	10.3	
+sas-arc-wa-slip	OK	0	0	65	65	65	-1	3.3	
+sas-arc-qld-basins	OK	0	0	220	220	220	-1	30.8	
+sas-arc-wa-infra	OK	0	0	4000	4001	4000	-1	9.6	
+sas-arc-wa-mining	OK	0	0	4000	4001	4000	-1	10.1	
+sas-ckan-au-cyclone	OK	0	0	716	716	716	-1	9.3	
+sci-ogcf-usgswater-combined-metadata	SLOW	-1	0	-1	-1	3000	-1	90.1	hit --timeout 90.1s; 3000 rows already stored
+sas-ckan-au-emerg	OK	0	0	2000	2001	2000	-1	18.8	
+sas-ckan-au-recent	OK	0	0	1000	1001	1000	-1	12.5	
+sas-ckan-au-energy	OK	0	0	2000	2001	2000	-1	22.0	
+sas-ckan-au-env	OK	0	0	2000	2001	2000	-1	19.4	
+sas-ckan-au-health	OK	0	0	2000	2001	2000	-1	18.8	
+sas-ckan-au-transport	OK	0	0	2000	2001	2000	-1	19.4	
+sas-ckan-datansw-hazard	OK	0	0	336	336	336	-1	5.1	
+sas-ckan-au-water	OK	0	0	2000	2001	2000	-1	14.5	
+sas-ckan-dataqld-flood	OK	0	0	141	141	141	-1	3.2	
+sas-ckan-datagovau-flood	OK	0	0	2000	2001	2000	-1	15.6	
+sas-ckan-datagovau	OK	0	0	2000	2001	2000	-1	20.4	
+sas-ckan-datasa-fire	OK	0	0	15	15	15	-1	2.1	
+sas-ckan-datant	OK	0	0	1077	1077	1077	-1	16.0	
+sas-ckan-datansw	OK	0	0	2000	2001	2000	-1	20.6	
+sas-ckan-nsw-crime	OK	0	0	81	81	81	-1	2.6	
+sas-ckan-datasa	OK	0	0	1930	1930	1930	-1	12.5	
+sas-ckan-datavic	OK	0	0	2000	2001	2000	-1	14.1	
+sas-ckan-nsw-health	OK	0	0	468	468	468	-1	6.3	
+sas-ckan-dataqld	OK	0	0	2000	2001	2000	-1	30.7	
+sas-ckan-nsw-flood	OK	0	0	2000	2001	2000	-1	20.2	
+sas-ckan-nsw-transport	OK	0	0	1162	1162	1162	-1	12.7	
+sas-ckan-nt-flood	OK	0	0	2	2	2	-1	1.5	
+sas-ckan-nt-env	OK	0	0	464	464	464	-1	8.0	
+sas-ckan-nt-health	OK	0	0	56	56	56	-1	3.0	
+sas-ckan-nsw-env	OK	0	0	2000	2001	2000	-1	32.3	
+sas-ckan-nt-marine	OK	0	0	8	8	8	-1	1.8	
+sas-ckan-qld-fire	OK	0	0	40	40	40	-1	2.5	
+sas-ckan-nsw-recent	OK	0	0	1000	1001	1000	-1	20.7	
+sas-ckan-qld-coast	OK	0	0	109	109	109	-1	4.4	
+sas-ckan-qld-health	OK	0	0	618	618	618	-1	12.9	
+sas-ckan-qld-transport	OK	0	0	569	569	569	-1	12.7	
+sas-ckan-sa-env	OK	0	0	424	424	424	-1	4.5	
+sas-ckan-sa-transport	OK	0	0	123	123	123	-1	3.2	
+sas-ckan-sa-water	OK	0	0	399	399	399	-1	4.5	
+sas-ckan-sa-recent	OK	0	0	1000	1001	1000	-1	10.3	
+sas-ckan-vic-fire	OK	0	0	34	34	34	-1	2.7	
+sas-ckan-vic-flood	OK	0	0	22	22	22	-1	3.8	
+sas-ckan-datawa-fire	OK	0	0	1504	1504	1504	-1	65.6	
+sas-ckan-qld-mining	OK	0	0	2000	2001	2000	-1	31.5	
+sas-ckan-datawa	OK	0	0	2000	2001	2000	-1	73.1	
+sas-ckan-qld-recent	OK	0	0	1000	1001	1000	-1	32.9	
+sas-ckan-vic-transport	OK	0	0	710	710	710	-1	10.2	
+sas-ckan-vic-recent	OK	0	0	1000	1001	1000	-1	11.1	
+sas-ckan-vic-health	OK	0	0	1564	1564	1564	-1	13.8	
+sas-geonet-quake1	OK	0	0	100	100	100	-1	1.0	
+sas-geonet-quake2	OK	0	0	94	94	94	-1	1.0	
+sas-geonet-quake5	OK	0	0	34	34	34	-1	1.0	
+sas-geonet-quake6	OK	0	0	7	7	7	-1	1.4	
+sas-geonet-stats	OK	0	0	369	369	369	-1	1.1	
+sas-hdx-fji	OK	0	0	145	145	145	-1	1.4	
+sas-hdx-png	OK	0	0	175	175	175	-1	1.6	
+sas-ckan-wa-flood	OK	0	0	493	493	493	-1	16.5	
+sas-hdx-slb	OK	0	0	132	132	132	-1	1.5	
+sas-hdx-vut	OK	0	0	167	167	167	-1	1.7	
+sas-ckan-wa-env	OK	0	0	633	633	633	-1	19.1	
+sas-linz-cats	OK	0	0	13	13	13	-1	2.4	
+sas-koordinates-layers	OK	0	0	100	100	100	-1	3.4	
+sas-linz-data	OK	0	0	100	100	100	-1	3.8	
+sas-ckan-wa-mining	OK	0	0	705	705	705	-1	16.3	
+sas-linz-sets	OK	0	0	33	33	33	-1	2.2	
+sas-linz-pubs	OK	0	0	70	70	70	-1	2.9	
+sas-lris-sets	OK	0	0	23	23	23	-1	1.9	
+sas-linz-tables	OK	0	0	100	100	100	-1	4.2	
+sas-mfe-sets	OK	0	0	4	4	4	-1	2.2	
+sas-lris-layers	OK	0	0	100	100	100	-1	4.9	
+sas-news-abc-au-just	OK	0	0	25	25	25	-1	1.1	
+sas-news-abc-au-world	OK	0	0	25	25	25	-1	1.1	
+sas-mfe-layers	OK	0	0	100	100	100	-1	5.3	
+sas-news-afr	OK	0	0	20	20	20	-1	1.0	
+sas-news-canberratimes	OK	0	0	20	20	20	-1	0.9	
+sas-news-brisbanetimes	OK	0	0	20	20	20	-1	1.3	
+sas-mfe-tables	OK	0	0	100	100	100	-1	3.3	
+sas-news-cookislandsnews	OK	0	0	10	10	10	-1	1.4	
+sas-news-crikey	OK	0	0	10	10	10	-1	1.2	
+sas-news-interest-nz	OK	0	0	20	20	20	-1	1.1	
+sas-news-newsroomnz	OK	0	0	15	15	15	-1	1.4	
+sas-news-pina	OK	0	0	1	1	1	-1	1.1	
+sas-news-rnz-national	OK	0	0	44	44	44	-1	1.2	
+sas-news-rnz-political	OK	0	0	16	16	16	-1	1.3	
+sas-news-samoanews	OK	0	0	10	10	10	-1	1.6	
+sas-news-smh-national	OK	0	0	20	20	20	-1	1.2	
+sas-news-stuffnz	OK	0	0	77	77	77	-1	1.0	
+sas-news-theage	OK	0	0	20	20	20	-1	1.2	
+sas-news-sbs	OK	0	0	25	25	25	-1	2.5	
+sas-news-watoday	OK	0	0	20	20	20	-1	1.4	
+sas-news-thespinoff	EMITS_NOTHING	1	-1	0	0	0	-1	1.7	no records reached intel_items
+sas-nz-police	OK	0	0	10	10	10	-1	1.8	
+sas-ods-nc-facets	OK	0	0	5	5	5	-1	1.2	
+sas-nz-linz-ogc	OK	0	0	100	100	100	-1	3.0	
+sas-pac-islandsun	OK	0	0	10	10	10	-1	1.0	
+sas-pac-la1ere-nc	OK	0	0	30	30	30	-1	1.8	
+sas-pac-rnz-teaomaori	OK	0	0	15	15	15	-1	1.0	
+sas-ckan-wa-recent	OK	0	0	1000	1001	1000	-1	33.6	
+sas-ckan-wa-marine	OK	0	0	1601	1601	1601	-1	39.9	
+sas-pac-tahitiinfos	OK	0	0	20	20	20	-1	1.1	
+sas-socrata-act	OK	0	0	785	785	785	-1	2.5	
+sas-statsnz-layers	OK	0	0	100	100	100	-1	3.6	
+sas-statsnz-tables	OK	0	0	31	31	31	-1	2.5	
+sas-socrata-actb	OK	0	0	100	100	100	-1	5.0	
+sas-tt-aspi	OK	0	0	100	100	100	-1	3.3	
+sas-bd-dailystar-front	OK	0	0	10	10	10	-1	0.9	
+sas-tt-devpolicy	OK	0	0	20	20	20	-1	3.6	
+sas-bd-prothomalo-bn	OK	0	0	67	67	67	-1	1.2	
+sas-cbsl-rss	OK	0	0	10	10	10	-1	1.8	
+sas-in-indiatoday	OK	0	0	20	20	20	-1	1.6	
+sas-in-newindianexpress	OK	0	0	42	42	42	-1	1.1	
+sas-news-brecorder	OK	0	0	30	30	30	-1	0.9	
+sas-news-arynews	OK	0	0	104	104	104	-1	1.7	
+sas-news-geotv	OK	0	0	20	20	20	-1	1.0	
+sas-news-hindustantimes	OK	0	0	100	100	100	-1	0.9	
+sas-news-islandlk	EMITS_NOTHING	1	-1	0	0	0	-1	0.9	no records reached intel_items
+sas-news-livemint	OK	0	0	35	35	35	-1	0.8	
+sas-news-ndtv	OK	0	0	20	20	20	-1	0.9	
+sas-news-onlinekhabar	OK	0	0	55	55	55	-1	1.1	
+sas-news-prothomalo-en	OK	0	0	11	11	11	-1	0.9	
+sas-news-setopati	OK	0	0	5	5	5	-1	1.1	
+sas-news-toi-india	OK	0	0	20	20	20	-1	1.2	
+sas-news-tribunepk	COLLISION	0	0	73	55	55	-1	0.9	18 of 73 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+sas-ods-nc-list2	OK	0	0	284	285	284	-1	24.1	
+sas-news-tolonews	OK	0	0	30	30	30	-1	3.2	
+sas-news-zeenews	OK	0	0	20	20	20	-1	2.4	
+sas-rbi-press	OK	0	0	10	10	10	-1	1.0	
+sas-rbi-notif	OK	0	0	10	10	10	-1	1.8	
+sas-ods-nc	EMITS_NOTHING	1	-1	0	0	0	-1	28.7	no records reached intel_items
+sas-rbi-speeches	OK	0	0	10	10	10	-1	2.1	
+sas-hdx-afg	OK	0	0	486	486	486	-1	2.8	
+sas-pac-lnc-nc2	EMITS_NOTHING	1	-1	0	0	0	-1	30.4	no records reached intel_items
+sas-hdx-ind	OK	0	0	161	161	161	-1	1.7	
+sas-hdx-bgd	OK	0	0	380	380	380	-1	2.6	
+sas-hdx-lka	OK	0	0	158	158	158	-1	1.8	
+sas-hdx-mdv	OK	0	0	113	113	113	-1	1.6	
+sas-hdx-npl	OK	0	0	376	376	376	-1	2.4	
+sas-hdx-pak	OK	0	0	262	262	262	-1	2.2	
+sas-wp-8am	OK	0	0	1000	1001	1000	-1	13.9	
+sas-in-sachet	EMITS_NOTHING	1	-1	0	0	0	-1	5.5	no records reached intel_items
+sas-ckan-kh-forest	OK	0	0	1606	1606	1606	-1	13.3	
+sas-nrb-np	EMITS_NOTHING	1	-1	0	0	0	-1	36.9	no records reached intel_items
+sas-np-bipad	EMITS_NOTHING	1	-1	0	0	0	-1	24.6	no records reached intel_items
+sas-ckan-kh-water	OK	0	0	851	851	851	-1	8.1	
+sas-np-bipad2	EMITS_NOTHING	1	-1	0	0	0	-1	29.7	no records reached intel_items
+sas-ckan-kh-land	OK	0	0	2000	2001	2000	-1	16.3	
+sas-ckan-mekong-dam	OK	0	0	537	537	537	-1	4.9	
+sas-ckan-mekong-agri	OK	0	0	1893	1893	1893	-1	14.5	
+sas-ckan-mm-conflict	OK	0	0	219	219	219	-1	3.6	
+sas-ckan-mekong-mining	OK	0	0	676	676	676	-1	6.9	
+sas-ckan-mekong-forest	OK	0	0	1606	1606	1606	-1	13.3	
+sas-ckan-mm-health	OK	0	0	825	825	825	-1	8.3	
+sas-ckan-mm-land	OK	0	0	2000	2001	2000	-1	15.4	
+sas-id-antara-hukum	OK	0	0	20	20	20	-1	1.7	
+sas-ckan-odc-kh	OK	0	0	2000	2001	2000	-1	15.8	
+sas-id-antara-politik	OK	0	0	20	20	20	-1	1.6	
+sas-wp-thenationalpg	OK	0	0	1000	1001	1000	-1	86.7	
+sas-kh-rfa	OK	0	0	29	29	29	-1	1.2	
+sas-la-rfa	OK	0	0	22	22	22	-1	1.0	
+sas-my-malaysianow	OK	0	0	10	10	10	-1	0.9	
+sas-mm-rfa-my	OK	0	0	30	30	30	-1	1.0	
+sas-ckan-odc-mekong	OK	0	0	2000	2001	2000	-1	14.9	
+sas-news-antara	OK	0	0	50	50	50	-1	1.8	
+sas-news-antara-en	OK	0	0	50	50	50	-1	1.8	
+sas-ckan-odc-mm	OK	0	0	2000	2001	2000	-1	14.6	
+sas-news-bkkpost-biz	OK	0	0	10	10	10	-1	2.4	
+sas-news-cnnindonesia	OK	0	0	100	100	100	-1	1.1	
+sas-news-businesstimes-sg	OK	0	0	52	52	52	-1	1.2	
+sas-news-bkkpost-th	OK	0	0	10	10	10	-1	2.2	
+sas-news-gmanetwork	OK	0	0	15	15	15	-1	1.5	
+sas-news-malaysiakini	OK	0	0	10	10	10	-1	1.0	
+sas-news-detik2	OK	0	0	100	100	100	-1	1.9	
+sas-news-khaosod-en	OK	0	0	5	5	5	-1	1.5	
+sas-news-inquirer	OK	0	0	20	20	20	-1	1.6	
+sas-news-nstmy	OK	0	0	50	50	50	-1	1.1	
+sas-news-prachatai	OK	0	0	10	10	10	-1	1.4	
+sas-news-republika	OK	0	0	15	15	15	-1	1.3	
+sas-news-tempo2	OK	0	0	50	50	50	-1	1.2	
+sas-news-thethaiger	OK	0	0	10	10	10	-1	0.9	
+sas-news-thanhnien	OK	0	0	60	60	60	-1	1.8	
+sas-news-tienphong	OK	0	0	50	50	50	-1	1.7	
+sas-news-tuoitre	OK	0	0	50	50	50	-1	1.8	
+sas-news-vnexpress-int	OK	0	0	60	60	60	-1	1.9	
+sas-news-vnexpress-kd	OK	0	0	60	60	60	-1	1.7	
+sas-news-vietnamnet	OK	0	0	500	501	500	-1	3.1	
+sas-org-unescap	OK	0	0	10	10	10	-1	1.0	
+sas-sg-24hr	OK	0	0	1	1	1	-1	1.0	
+sas-news-vnexpress-ts	OK	0	0	60	60	60	-1	1.9	
+sas-sg-2hr	OK	0	0	47	47	47	-1	1.0	
+sas-sg-4day2	OK	0	0	1	1	1	-1	1.0	
+sas-sg-airtemp	OK	0	0	18	18	18	-1	1.0	
+sas-sg-datasets2	OK	0	0	10	10	10	-1	1.1	
+sas-org-asean	OK	0	0	10	10	10	-1	3.1	
+sas-sg-datasets3	OK	0	0	10	10	10	-1	1.2	
+sas-sg-humidity	OK	0	0	18	18	18	-1	1.0	
+sas-sg-pm252	OK	0	0	5	5	5	-1	1.0	
+sas-sg-datasets4	OK	0	0	10	10	10	-1	1.2	
+sas-sg-psi2	OK	0	0	5	5	5	-1	1.3	
+sas-sg-st-asia	OK	0	0	50	50	50	-1	0.8	
+sas-sg-st-business	OK	0	0	50	50	50	-1	0.9	
+sas-sg-rainfall	OK	0	0	89	89	89	-1	1.1	
+sas-sg-winddir2	OK	0	0	18	18	18	-1	1.1	
+sas-sg-windspeed	OK	0	0	18	18	18	-1	1.1	
+sas-th-thairath	OK	0	0	20	20	20	-1	0.8	
+sas-th-matichon	OK	0	0	50	50	50	-1	1.0	
+sas-vn-rfa	OK	0	0	30	30	30	-1	1.5	
+sas-bmkg-adm-12	EMITS_NOTHING	1	-1	0	0	0	-1	0.9	no records reached intel_items
+sas-bmkg-adm-13	EMITS_NOTHING	1	-1	0	0	0	-1	1.0	no records reached intel_items
+sas-th-bkkpost-recent	OK	0	0	10	10	10	-1	2.5	
+sas-bmkg-adm-14	EMITS_NOTHING	1	-1	0	0	0	-1	0.9	no records reached intel_items
+sas-bmkg-adm-18	EMITS_NOTHING	1	-1	0	0	0	-1	0.8	no records reached intel_items
+sas-bmkg-adm-16	EMITS_NOTHING	1	-1	0	0	0	-1	1.1	no records reached intel_items
+sas-bmkg-adm-33	EMITS_NOTHING	1	-1	0	0	0	-1	0.8	no records reached intel_items
+sas-bmkg-adm-34	EMITS_NOTHING	1	-1	0	0	0	-1	0.8	no records reached intel_items
+sas-bmkg-adm-36	EMITS_NOTHING	1	-1	0	0	0	-1	0.9	no records reached intel_items
+sas-bmkg-adm-35	EMITS_NOTHING	1	-1	0	0	0	-1	0.9	no records reached intel_items
+sas-bmkg-adm-51	EMITS_NOTHING	1	-1	0	0	0	-1	0.8	no records reached intel_items
+sas-bmkg-adm-53	EMITS_NOTHING	1	-1	0	0	0	-1	0.8	no records reached intel_items
+sas-bmkg-adm-94	EMITS_NOTHING	1	-1	0	0	0	-1	0.8	no records reached intel_items
+sas-bmkg-adm-73	EMITS_NOTHING	1	-1	0	0	0	-1	0.9	no records reached intel_items
+sas-bmkg-cuaca-31	EMITS_NOTHING	1	-1	0	0	0	-1	0.9	no records reached intel_items
+sas-bmkg-cuaca-32	EMITS_NOTHING	1	-1	0	0	0	-1	0.8	no records reached intel_items
+sas-hdx-khm	OK	0	0	155	155	155	-1	1.6	
+sas-hdx-lao	OK	0	0	168	168	168	-1	1.6	
+sas-hdx-idn	OK	0	0	346	346	346	-1	2.1	
+sas-ckan-mm-disaster	OK	0	0	193	193	193	-1	3.2	
+sas-wp-ariananews	SLOW	-1	0	-1	-1	400	-1	90.1	hit --timeout 90.1s; 400 rows already stored
+sas-hdx-tls	OK	0	0	114	114	114	-1	1.4	
+sas-hdx-mmr	OK	0	0	353	353	353	-1	2.5	
+sas-hdx-vnm	OK	0	0	216	216	216	-1	1.7	
+sas-hdx-phl	OK	0	0	519	519	519	-1	3.1	
+sas-org-mrc	OK	0	0	10	10	10	-1	2.2	
+sas-org-ahacentre	OK	0	0	5	5	5	-1	2.6	
+sas-tmd-eq-inside	OK	0	0	10	10	10	-1	2.2	
+sas-tmd-eq-rss	OK	0	0	10	10	10	-1	2.4	
+sci-celestrak-analyst	OK	0	0	594	594	594	-1	1.5	
+sci-celestrak-cosmos2251	OK	0	0	586	586	586	-1	1.6	

@@ -48,6 +48,12 @@ Usage:
   audit_registry_emit.py --bin ./bin/japanosint --match '^vsrc19' --jobs 8
   audit_registry_emit.py --bin ./bin/japanosint --ids-file ids.txt --resume
 
+A maintenance pod (collector name beginning with `_`, the convention source.h
+documents) is reported POD and NOT run: it writes its own tables and nothing to
+intel_items, so asking it whether it emits records is the confusion the
+EMITS_NOTHING verdict exists to expose. The first registry-wide sweep reported
+eight of them as dead sources.
+
 Exit status: 1 if any selected source came back EMITS_NOTHING, COLLISION,
 SINK_MISMATCH, NO_RUN_LINE, UNREADABLE_DB or UNREGISTERED, or if an --only id
 is not registered; else 0. SLOW does not fail the run on its own — it is
@@ -410,7 +416,7 @@ def main():
         description="Prove registered sources EMIT and STORE, not merely fetch.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="verdicts: OK | EMITS_NOTHING | COLLISION | FETCH_FAILED | "
-               "SLOW | NEEDS_ENTITY"
+               "SLOW | NEEDS_ENTITY | POD"
                " | SINK_MISMATCH | UNREADABLE_DB | NO_RUN_LINE | UNREGISTERED")
     ap.add_argument("--bin", required=True, help="path to the japanosint binary")
     sel = ap.add_argument_group("source selection (combined with AND)")
@@ -519,6 +525,21 @@ def main():
             want = set(x.strip() for x in io.open(a.ids_file, encoding="utf-8")
                        if x.strip() and not x.startswith("#"))
             srcs = [s for s in srcs if s[0] in want]
+        # A MAINTENANCE POD IS NOT A RECORD SOURCE, and running one answers a
+        # question it was never asked. `source.h`'s convention is a collector
+        # name beginning with `_` (_maint, _enrich, _probe, _vec…), and the
+        # embedding backfill, the camera stills lane, the translator and the
+        # vector indexers all live there: they write their own tables and
+        # nothing to intel_items, by design. The first registry-wide sweep
+        # reported eight of them as EMITS_NOTHING, which is this tool making the
+        # confusion the EMITS_NOTHING verdict exists to expose. They are
+        # reported as POD and not run — listed, so nothing registered hides,
+        # and never counted as a finding.
+        pods = [s for s in srcs if s[1].startswith("_")]
+        srcs = [s for s in srcs if not s[1].startswith("_")]
+        if pods:
+            sys.stderr.write("pods: %d maintenance lane(s) reported POD, not "
+                             "run (collector name starts with '_')\n" % len(pods))
         ids = [s[0] for s in srcs]
         if a.resume and a.out:
             done = already_done(a.out)
@@ -544,6 +565,17 @@ def main():
         sys.stderr.write("running %d sources, jobs=%d timeout=%ds\n"
                          % (len(ids), a.jobs, a.timeout))
         res = []
+        done_ids = already_done(a.out) if (a.resume and a.out) else set()
+        for pid, pcoll, pival in pods:
+            if pid in done_ids:
+                continue
+            row = (pid, "POD", 0, 0, -1, -1, -1, -1, 0.0,
+                   "maintenance pod (collector %s): writes its own tables, not "
+                   "intel_items — not run" % pcoll)
+            res.append(row)
+            if a.out_fh:
+                a.out_fh.write("\t".join(str(x) for x in row) + "\n")
+                a.out_fh.flush()
         with ThreadPoolExecutor(max_workers=a.jobs) as ex:
             # The slot is the source's INDEX, not index % jobs: two tasks
             # sharing a slot can overlap (the pool does not hand work out in

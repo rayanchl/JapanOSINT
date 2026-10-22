@@ -89,7 +89,19 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 58,052** (2026-10-22): 58,019 plus **batch 54's 32
+**The registered count is 58,055** (2026-10-22): 58,052 plus the three rows
+open item B2's long tail ends with, each a publisher's own bulk file standing in
+for a search that is gone —
+`JP_PMDA_NEW_DRUG_APPROVALS` (the annual drug-approval workbook, 95 of 95 over
+four monthly sheets), `FR_AN_QUESTIONS_ECRITES` (19,165 of 19,165 written
+questions out of one 50 MB ZIP) and `JP_KANPO_DAILY_CONTENTS` (the official
+gazette's daily table of contents, 25 of 25 carrying 43 notice titles). The
+three dead pivots they stand in for are KEPT, disclosing: PMDA's search answers
+the form page to every POST constructible here, the Assemblée's search path
+404s with no form on the homepage, and the gazette's search is behind a paid
+member login that no `key_env` opens.
+
+**The registered count was 58,052** (2026-10-22): 58,019 plus **batch 54's 32
 rows** and `FR_AN_DEPUTY_STAFF`. Batch 54 exists because of a correction:
 **batch 45's staging set was ALREADY REGISTERED** — 5,392 of its 5,643
 endpoints are in the tree and 5,392 is batch 49's own row count, so batch 49
@@ -888,6 +900,39 @@ Where the tree actually stands, as `make audit-sources` reports it:
   otherwise. The four ODS records rows and OpenAerialMap carry it now; the CKAN
   rows already had `sort=id asc` and the ODS catalogues `order_by=dataset_id`.
 
+  **And a walk's FIRST page can sit on a different ordering from the rest, for
+  the plainest reason there is: it did not ask.** A row declaring
+  `page_param`/`page_size` makes request 1 with the URL AS WRITTEN and only
+  then starts advancing the parameter — so if the URL does not bind it, page 1
+  is "whatever you serve by default" while pages 2..N are offsets into
+  something else. Measured 2026-10-22 on the four Lechner Hungary INSPIRE
+  layers: GetFeature WITHOUT `startIndex` is not the same page as
+  `startIndex=0`, and `HU_INSPIRE_CADASTRAL_PARCELS` served
+  `CP.CadastralParcels.107` on BOTH page 1 and page 2 — the same feature on
+  every one of four readings — reporting 1,774 emitted / 1,773 stored. One
+  parcel of Hungary's cadastre served twice and one never served at all, every
+  run, with a one-record collision as the only symptom. The full 18-page walk
+  by hand: as shipped 1,773 distinct, with an explicit `startIndex=0` 1,774,
+  with a declared `sortBy` and no `startIndex=0` 1,774. **Bind the offset in
+  the row's own URL and declare the sort.**
+
+  **A sort parameter can be IGNORED, which is rule 4d wearing different
+  clothes.** Two of the eleven NADA microdata catalogues — DataFirst South
+  Africa and Armenia — return identical first rows for `sort_order=asc`, for
+  `desc` and for a different `sort_by` entirely. Those rows had been declaring
+  an ordering the server does not give for as long as they existed. Ask twice
+  with opposite directions before believing a sort, and drop the parameters
+  where it is ignored rather than leaving the row claiming it.
+
+  **And read the body on a 200 before trusting it: `sortBy=id` is a BACKEND
+  400** on inspire.lechnerkozpont.hu, reported inside an HTTP **200** as a PHP
+  warning page naming `localhost:8085`. That host is a proxy in front of a
+  local GeoServer, so every upstream error arrives as a successful fetch of an
+  error page — the Archive-It shape in a new place. The feature id is not a
+  sortable attribute there; the sort key has to be measured per layer, with its
+  own uniqueness (`kod,area,perimeter` is 5,000 distinct triples over 5,000
+  consecutive land-cover features, where `kod` alone is 20 values).
+
   **Two large portals got a hostgate gap rather than a lower ceiling — and the
   first gap was wrong.** `data.qld.gov.au` is a complete read of ~945 pages and
   `data.nsw.gov.au` ~86. At 250 ms the QLD walk got 76 pages in 47 s and page
@@ -1367,7 +1412,7 @@ says why.
 | `tools/audit_page_two.py` | whether page TWO actually returns something different from page 1 — the one question no record count asks. Page 1 is the row's URL as written; page 2 is that URL with the row's own parameter advanced the way `hp_url_set_param` advances it. `SAME_AS_PAGE1` is THE finding (an upstream that takes a page parameter and ignores it answers every page with page 1: N pages emitted, one stored, `rc=0`), `REFUSED` carries a remedy classification, and `PAGE1_IS_ALL` is the benign majority. **`LOCAL_EGRESS` is a verdict about THIS ENVIRONMENT and never about a source** — see the note below on what the first run did to itself. Full run: `docs/page-two-2026-10-20.tsv` |
 | `tools/discover_search_endpoints.py` | where a stale SEARCH path went, asked of the HOST rather than guessed: its own search form with the field names a pivot must send, its API/developer links, its declared sitemaps. Batch 42's and 46's lesson one level over. **Read, never gated, and a candidate is not a fix** — of the eight it found for B2's 44 rows that answered 200 with a plausible page, SIX ignore the query parameter (`docs/b2-path-stale-triage-2026-10-21.md`). Everything it finds goes through `--check-filter` first |
 | `tools/audit_batch_emit.py` | rule 4 below: runs each MANIFEST row through the real binary and reads back `emitted N of M`. `--timeout S` moves the kill line; a run that hits it is **`SLOW`**, carrying its partial counts — unmeasured, not failed. Each run gets a scratch DB from a warm template (it used to write the developer's live DB), and it exits non-zero on UNREGISTERED, UNPARSEABLE, NO_RUN_LINE or when nothing was measured |
-| `tools/audit_registry_emit.py` | rule 4 **and** 4b for the whole REGISTRY, manifest or not — `--list-sources` is the source list, so nothing registered can hide. Measures emitted *and* stored, per run, against a fresh copy of a warm template DB. `--scheduled`/`--match`/`--only`/`--ids-file`, `--jobs`, `--timeout`, TSV out, `--resume` |
+| `tools/audit_registry_emit.py` | rule 4 **and** 4b for the whole REGISTRY, manifest or not — `--list-sources` is the source list, so nothing registered can hide. Measures emitted *and* stored, per run, against a fresh copy of a warm template DB. `--scheduled`/`--match`/`--only`/`--ids-file`, `--jobs`, `--timeout`, TSV out, `--resume`. A MAINTENANCE POD is reported `POD` and not run (2026-10-22): a collector whose name begins with `_` writes its own tables and nothing to `intel_items` by design, so the first registry-wide sweep reported eight of them — the embedding backfill, the translator, the camera stills lane, the vector indexers — as EMITS_NOTHING, which is this tool making the very confusion that verdict exists to expose |
 | `tools/diagnose_emit_keys.py` | why a row emitted nothing, and which `title_keys`/`id_keys` fix it |
 | `tools/cleanup_stale_uids.py` | the rows identity fixes left in an OLD database: a plain-key row whose qualified siblings now hold the same record (the keyqual collectors and FRA), and wayback_jp's captures from before digest+timestamp+URL. Reports by default. `--delete` removes, in one transaction, only rows whose replacement is proven to exist and that nothing references. `--self-test` runs it on a scratch DB (also from `make unit`) |
 | `tools/wp_routes_sweep.py` | the WordPress method as a tool: `sweep` asks each host for its REST root (the homepage's `Link rel="https://api.w.org/"`, else `/wp-json`), its post types and one page of each collection, writing routes.tsv/probe.tsv; `manifest` turns probe.tsv into host-type beats and a rejected TSV. Hosts are normalised (`www.` dropped, one row per REST root) because `funq.jp` and `www.funq.jp` reached the same site and only `batch_exclusions.py` noticed |
@@ -1440,13 +1485,50 @@ registry sweep can.
 The generated `VJSON` fleet has the same question and a smaller answer:
 `VJSON` keys on a fixed precedence list (`id`, `uid`, `guid`, `uuid`, `_id`,
 `identifier`, `code`, `key`), and **`VJSON_KEYED(..., IDFIELD)`** overrides it
-with ONE named top-level field. There is no composite form: when a generated
-row needs a two-field key, hand-write a `run()` — the worked example is
-`geo_tidesandcurrents_currents` at the top of
-`collectors/feed/generated/vsrc_environment_3.c` (`pw_walk` +
-`jsonlist_emit_ex`, composing the id from two fields the record already
-carries). Delete the `VJSON(...)` block you replace; leaving both defines the
-source twice and breaks the build.
+with ONE named top-level field. **`VJSON_IDKEYS(..., IDKEYS)`** takes a
+COMPOSITE, with the same `+` semantics as hpengine's `id_keys`
+(`collectors/sources/_vjson_idkeys.inc`, a shim sink that replaces the uid and
+touches nothing else) — this paragraph used to say "there is no composite form:
+hand-write a `run()`", which was true when it was written and has been false
+since 2026-09-14. A stale capability claim costs a session the work of
+hand-writing what a macro already does. The hand-written form is still there
+for a row that needs more than an identity (`geo_tidesandcurrents_currents` at
+the top of `collectors/feed/generated/vsrc_environment_3.c`: `pw_walk` +
+`jsonlist_emit_ex`). Delete the `VJSON(...)` block you replace; leaving both
+defines the source twice and breaks the build.
+
+**And the precedence list finding NOTHING is the expensive case, because it
+then keys on the record's first scalar.** Measured 2026-10-22 by the
+registry-wide sweep: Catalonia's two climate atlases
+(`eur-soc-cat-tqdx-tz5i`, `eur-soc-cat-9ehv-pmf5`) carry
+`codi_municipi, nom_municipi, cap_municipi, variable, unitat, valor` and not one
+name on the list, so every municipality's whole series collapsed onto the
+municipality — 15,152 emitted / 4,615 stored and 3,788 / 1,265, **14,060
+records a run**, rc=0 both times. The upstream was measured before the key was
+touched, as a collision verdict requires: 947 municipalities (Catalonia's own
+count) x 16 and x 4 variables = exactly the emitted counts, and
+`codi_municipi+variable` is distinct on all of them. After:
+15,152 / 15,152 and 3,788 / 3,788.
+
+**The same sweep then found eleven more of it on one portal**, Colombia's
+`datos.gov.co`, and ten are fixed for **16,545 more records a run** — 30,605
+with Catalonia's two (`docs/OPEN_ITEMS_2026-10-20.md`, item E7). Three things
+from that pass generalise:
+
+* **The minimal key a search finds is not the record's identity.**
+  `fechaobservacion` alone is distinct over 1,000 IDEAM weather observations and
+  is the WRONG key: a station network records many stations at one instant, and
+  the sample only looks unique because it is ordered by `:id`. The right key is
+  `codigoestacion+codigosensor+fechaobservacion`, which is also 1,000 of 1,000.
+* **A longer key is not automatically a better one.** The one row left unchanged
+  is `lat-co-dispositivos-med`: its best reachable key is 961 of 1,000, no
+  better than the 3.85% it already loses, and reaching 1,000 of 1,000 needs nine
+  fields of which **539 of 1,000 rows are missing at least one** — a key that
+  degrades for half the collection. INVIMA's device register does not expose its
+  own record granularity, and writing that down is the result.
+* **Measure the key over TWO pages, not one.** A key unique inside one page and
+  repeating on the next is the exact shape rule 4b's comma-vs-plus note
+  describes, and a single `--run` cannot see it.
 
 If the second number is smaller than the first, the row's identity is wrong.
 
@@ -1722,6 +1804,49 @@ Engine subtleties worth knowing before writing a row:
   `cJSON_Parse` accepts `{"a":1} oops` and copying that line's text into the
   array then poisons the whole array, taking every good line down with the
   one bad one.
+* **A CONTAINER'S OTHER MEMBERS ARE RECORDS TOO: `xlsx_sheet_all = 1` and
+  `zip_all_entries = 1`** (2026-10-22). One fetch buys the whole container and
+  the engine was reading one thing out of it — the same shape twice, found while
+  closing open item B2's long tail:
+  * PMDA publishes its annual drug approvals as ONE WORKBOOK WITH ONE SHEET PER
+    MONTH, and a new sheet appears every month, so a row pinned to a sheet name
+    goes stale in weeks and a row pinned to index 0 reads May for ever. Neither
+    failure shows in a record count. `xlsx_sheet_all` reads every sheet, each
+    with its OWN header row — which matters because the two sheets of one
+    workbook can have different geometry, as the ECB's do.
+    `JP_PMDA_NEW_DRUG_APPROVALS` stores 95 of 95, the sum of its four sheets'
+    data rows exactly.
+  * The Assemblée nationale publishes its written questions as 19,165 JSON
+    documents inside one 50 MB ZIP, so `zip_first_entry` was 19,164 records
+    dropped — **and the engine's own `zip-extra-entries` notice had been saying
+    so for as long as the row existed**, offering remedies ("a named-entry read,
+    or one row per member") that do not reach 19,165 members. A notice nobody
+    acts on is not a disclosure. `zip_all_entries` (HP_JSON / HP_NDJSON only,
+    because concatenating CSV members would read the second header as a record)
+    reads every member, one inflate at a time: `FR_AN_QUESTIONS_ECRITES` stores
+    19,165 of 19,165 in one request. `lib/zipread.c`'s named and indexed lookups
+    are ONE central-directory walk, not two.
+
+  Both file a notice naming a member they could not read, and the records of
+  every member land in ONE page so the collision guard sees the whole container.
+  The row's `id_keys` must be unique across the whole container, not within one
+  sheet or member. `hptest` 50–50e and 51–51c.
+
+  **And looking for them found the old path lying.** HP_XLSX's single-sheet
+  failure set `out = -1` under a comment calling it an honest failure, and
+  `out = st.emitted` three lines below overwrites every mode driver's return —
+  deliberately, so a later page's failure cannot erase the earlier pages' count.
+  So a workbook that would not convert AT ALL reported `rc=0 records=0`. The
+  run's own `hard_error` flag is what survives a mode driver's return value;
+  `hptest` 50e fails under the old line.
+* **`row_header_path` keys a JSON TABLE by name** (2026-10-21). Eduskunta's
+  `avoindata` API and the Austrian Parliament's filter API both answer with an
+  array of ARRAYS and put the column names in a sibling array, and the engine
+  flattened such a record POSITIONALLY — so a row would key on positions whose
+  meaning the upstream can change silently. It is the `csv_no_header` shape in
+  JSON clothing. Name the sibling (`row_header_path = "columnNames"`) and the
+  cells are named; a cell past the header's end keeps its positional name rather
+  than being dropped. `hptest` 49–49f.
 * **`next_path` takes a `$last` segment** — the final element of an array —
   for an upstream whose cursor is the last record's own field rather than
   anything in an envelope. The Go module index publishes no next link at all

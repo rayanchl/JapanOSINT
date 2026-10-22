@@ -423,6 +423,51 @@ typedef struct hp_source {
    * existing initializer moves. */
   const char *xlsx_sheet;
   int         xlsx_sheet_index;
+  /* HP_XLSX: read EVERY worksheet of the workbook, not one.
+   *
+   * A workbook is one fetch, so under rule 2 a row that reads one of its four
+   * sheets has discarded three at a seam. The ECB's supervised-entity workbook
+   * is the measured case for a FIXED set — four sheets, 844 significant
+   * institutions and 2,175 less significant ones — and it ships as a
+   * deliberate PAIR of rows, which works because the sheet names do not move.
+   * PMDA's annual drug-approval workbook is the case this field exists for:
+   * its sheets are 承認品目5月分, 6月分, 8月分, 9月分 and a NEW ONE APPEARS EVERY
+   * MONTH, so a row pinned to a name goes stale in weeks and a row pinned to
+   * index 0 reads May for ever. Neither failure shows in a record count.
+   *
+   * Each sheet is converted and parsed on its own, so every sheet gets its own
+   * header row — which matters because the two sheets of one workbook can have
+   * different column geometry (the ECB's do). The records of all sheets land in
+   * one page, so the in-page collision guard sees the whole workbook, which is
+   * what catches a record repeated across two months. A sheet that will not
+   * convert does not fail the run and is not silently dropped either: it is
+   * counted and named in a `collector-shape-notice`.
+   *
+   * It overrides `xlsx_sheet` / `xlsx_sheet_index` rather than combining with
+   * them, and the row's `id_keys` must be unique across the WHOLE workbook —
+   * a key that is unique within one month and repeats in the next collapses at
+   * the sink, which is rule 4b and silent. */
+  int         xlsx_sheet_all;
+  /* Read EVERY member of a ZIP body, not just the first.
+   *
+   * The first-entry read is right for a GDELT export — one archive, one CSV —
+   * and wrong for a publisher who ships one file PER RECORD. The Assemblée
+   * nationale publishes its written questions that way: 19,165 JSON documents,
+   * one question each, inside a single 50 MB ZIP. The engine's own shape notice
+   * had been naming the loss for as long as the row existed, and the remedies
+   * it suggested (a named-entry read, or one row per member) do not reach
+   * 19,165 members.
+   *
+   * HP_JSON and HP_NDJSON only, because they are the modes where one member is
+   * self-describing. Concatenating CSV members would read the second member's
+   * header as a record, which is a different job (see xlsx_sheet_all, which
+   * does it per sheet). Every member is parsed on its own and all of their
+   * records land in ONE page, so the in-page collision guard sees the whole
+   * archive — which is what catches a publisher whose files repeat an id. A
+   * member that will not inflate is counted and disclosed, never passed over.
+   *
+   * It costs one inflate at a time, not the whole archive in memory. */
+  int         zip_all_entries;
   /* ── READ THE WHOLE COLLECTION OVER A CYCLE, one run's pages at a time.
    *
    * A page ceiling answers "how many requests may one run make". It does not

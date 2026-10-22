@@ -6,6 +6,7 @@
  * since — this file, not the manifest, is the current copy. The
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
+#include "_vjson_idkeys.inc"
 
 VJSON(eur_ods_sncf_nuage_points_3d, "eur-ods-sncf-nuage-points-3d", "SNCF open data — Nuage de points 3D des infrastructures ferroviaires", "SNCF open data — Nuage de points 3D des infrastructures ferroviaires",
   "europe_data", "opendata",
@@ -220,12 +221,16 @@ VJSON(eur_soc_cat_8dfw_h858, "eur-soc-cat-8dfw-h858", "Generalitat de Catalunya 
   "ca", "[\"esp\",\"opendata\"]", 86400,
   "Rows of the 'Llistat d’oficines de la Carta Base de Serveis d’Atenció Ciutadana' dataset published by Generalitat de Catalunya transparency portal.");
 
-VJSON(eur_soc_cat_9ehv_pmf5, "eur-soc-cat-9ehv-pmf5", "Generalitat de Catalunya transparency portal — Atles Climàtic de mitjanes per municipi", "Generalitat de Catalunya transparency portal — Atles Climàtic de mitjanes per municipi",
+/* Same shape as its sibling above: 15,152 -> 4,615 there, 3,788 -> 1,265 here.
+   Measured 2026-10-22: 947 municipalities x 4 variables = 3,788 rows, and
+   codi_municipi+variable is distinct on all 3,788 of them. */
+VJSON_IDKEYS(eur_soc_cat_9ehv_pmf5, "eur-soc-cat-9ehv-pmf5", "Generalitat de Catalunya transparency portal — Atles Climàtic de mitjanes per municipi", "Generalitat de Catalunya transparency portal — Atles Climàtic de mitjanes per municipi",
   "europe_data", "opendata",
   "https://analisi.transparenciacatalunya.cat/resource/9ehv-pmf5.json?$limit=1000&$order=:id",
   "",
   "ca", "[\"esp\",\"opendata\"]", 86400,
-  "Rows of the 'Atles Climàtic de mitjanes per municipi' dataset published by Generalitat de Catalunya transparency portal.");
+  "Rows of the 'Atles Climàtic de mitjanes per municipi' dataset published by Generalitat de Catalunya transparency portal.",
+  "codi_municipi+variable");
 
 VJSON(eur_soc_cat_a389_y4d5, "eur-soc-cat-a389-y4d5", "Generalitat de Catalunya transparency portal — Matrícula viva", "Generalitat de Catalunya transparency portal — Matrícula viva",
   "europe_data", "opendata",
@@ -321,12 +326,20 @@ VJSON(eur_soc_cat_tg6d_kufh, "eur-soc-cat-tg6d-kufh", "Generalitat de Catalunya 
   "ca", "[\"esp\",\"opendata\"]", 86400,
   "Rows of the 'Estabilitat i sostenibilitat de les finances públiques: regla de despesa per nivell d’administració' dataset published by Generalitat de Catalunya transparency portal.");
 
-VJSON(eur_soc_cat_tqdx_tz5i, "eur-soc-cat-tqdx-tz5i", "Generalitat de Catalunya transparency portal — Atles Climàtic d’extrems per municipi", "Generalitat de Catalunya transparency portal — Atles Climàtic d’extrems per municipi",
+/* The record is a MUNICIPALITY x CLIMATE VARIABLE, and VJSON's id precedence
+   list finds nothing here (codi_municipi, nom_municipi, cap_municipi, variable,
+   unitat, valor), so it fell back and collapsed the whole series: the registry
+   sweep of 2026-10-22 read 15,152 emitted / 4,615 stored, 10,537 records lost
+   every run with rc=0. Measured the same day: the upstream holds 947
+   municipalities (Catalonia's own count) x 16 variables = 15,152 rows, and
+   codi_municipi+variable is distinct on 5,000 of 5,000 consecutive rows. */
+VJSON_IDKEYS(eur_soc_cat_tqdx_tz5i, "eur-soc-cat-tqdx-tz5i", "Generalitat de Catalunya transparency portal — Atles Climàtic d’extrems per municipi", "Generalitat de Catalunya transparency portal — Atles Climàtic d’extrems per municipi",
   "europe_data", "opendata",
   "https://analisi.transparenciacatalunya.cat/resource/tqdx-tz5i.json?$limit=1000&$order=:id",
   "",
   "ca", "[\"esp\",\"opendata\"]", 86400,
-  "Rows of the 'Atles Climàtic d’extrems per municipi' dataset published by Generalitat de Catalunya transparency portal.");
+  "Rows of the 'Atles Climàtic d’extrems per municipi' dataset published by Generalitat de Catalunya transparency portal.",
+  "codi_municipi+variable");
 
 VJSON(eur_soc_cat_wrch_dn23, "eur-soc-cat-wrch-dn23", "Generalitat de Catalunya transparency portal — Incompliments de les resolucions de la Comissió de Garantia del Dret d’Accés a la Informació Pública (GAIP)", "Generalitat de Catalunya transparency portal — Incompliments de les resolucions de la Comissió de Garantia del Dret d’Accés a la Informació Pública (GAIP)",
   "europe_data", "opendata",

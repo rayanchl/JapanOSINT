@@ -29,6 +29,17 @@ char *zip_first_entry(const char *buf, size_t len, size_t *out_len);
 char *zip_find_entry(const char *buf, size_t len, const char *name,
                      size_t *out_len);
 
+/* The `index`-th entry (0-based, in central-directory order), as
+ * zip_find_entry returns a named one, with the entry's own path written into
+ * `name_out` — an indexed caller has no other way to learn what it read.
+ * NULL when the index is past the end or the entry's compression is
+ * unsupported. For an archive whose ENTRIES ARE THE COLLECTION: the Assemblée
+ * nationale publishes its 19,165 written questions as one JSON file each
+ * inside a single 50 MB ZIP, so reading the first entry is 19,164 records
+ * dropped at a seam. */
+char *zip_entry_at(const char *buf, size_t len, int index,
+                   char *name_out, size_t name_n, size_t *out_len);
+
 /* How many entries the archive holds, from its End Of Central Directory
  * record — the archive's own count, not a scan of the bytes. Searching the
  * body for "PK\3\4" signatures (what hpengine used to do) also matches those

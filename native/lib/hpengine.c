@@ -1221,6 +1221,16 @@ typedef struct {
    * upstream row that would otherwise have swallowed the lines after it. */
   int   sh_csv_repairs;
   int   sh_zip_extra;       /* the ZIP body held more than the one entry we read */
+  /* HP_XLSX with xlsx_sheet_all: sheets the workbook declared, sheets that
+   * would not convert, and the first few of their names. A sheet that fails is
+   * a whole month of records lost from a workbook we already paid to fetch, so
+   * it is disclosed rather than logged. */
+  int   sh_xlsx_sheets, sh_xlsx_sheets_failed;
+  char  sh_xlsx_failed[256];
+  /* The same, for a ZIP read with zip_all_entries: members the archive
+   * declared, members that would not inflate, and the first few indexes. */
+  int   sh_zip_entries, sh_zip_entries_failed;
+  char  sh_zip_failed[256];
   int   sh_table_capped;    /* HP_TABLE: 1 = rows, 2 = width, 3 = both hit a parser bound */
   int   sh_repeat_page;     /* 1-based page whose bytes equalled the previous page's */
   int   sh_repeat_skipped;  /* pages the walk would still have requested       */
@@ -4059,6 +4069,51 @@ static void hp_shape_notices(hp_run_state *st, intel_sink *sink,
     jo_shape_notice(sink, s->id, "zip-extra-entries", title, p, TAGS);
   }
 
+  if (st->sh_xlsx_sheets_failed) {                             /* (f-bis) */
+    p = cJSON_CreateObject();
+    cJSON_AddStringToObject(p, "query", q);
+    cJSON_AddNumberToObject(p, "sheets_declared", st->sh_xlsx_sheets);
+    cJSON_AddNumberToObject(p, "sheets_read",
+                            st->sh_xlsx_sheets - st->sh_xlsx_sheets_failed);
+    cJSON_AddNumberToObject(p, "sheets_failed", st->sh_xlsx_sheets_failed);
+    cJSON_AddStringToObject(p, "failures", st->sh_xlsx_failed);
+    cJSON_AddStringToObject(p, "reason",
+      "the row reads every worksheet (xlsx_sheet_all) and at least one would "
+      "not convert, so the records on it are missing from this run");
+    cJSON_AddStringToObject(p, "remedy",
+      "read the named failure: a sheet over JO_XLSX_MAX_CELLS needs its own "
+      "row, a missing zip member or relationship means the publisher shipped a "
+      "broken workbook, and either way the records on that sheet are not here");
+    cJSON_AddNumberToObject(p, "records_used", emitted);
+    snprintf(title, sizeof title,
+             "%s: %d of %d worksheet(s) would not convert (%s); %d record(s) "
+             "emitted from the rest", s->id, st->sh_xlsx_sheets_failed,
+             st->sh_xlsx_sheets, st->sh_xlsx_failed, emitted);
+    jo_shape_notice(sink, s->id, "xlsx-sheet-unreadable", title, p, TAGS);
+  }
+
+  if (st->sh_zip_entries_failed) {                             /* (f-ter) */
+    p = cJSON_CreateObject();
+    cJSON_AddStringToObject(p, "query", q);
+    cJSON_AddNumberToObject(p, "entries_declared", st->sh_zip_entries);
+    cJSON_AddNumberToObject(p, "entries_read",
+                            st->sh_zip_entries - st->sh_zip_entries_failed);
+    cJSON_AddNumberToObject(p, "entries_failed", st->sh_zip_entries_failed);
+    cJSON_AddStringToObject(p, "failures", st->sh_zip_failed);
+    cJSON_AddStringToObject(p, "reason",
+      "the row reads every archive member (zip_all_entries) and at least one "
+      "would not inflate, so the records in it are missing from this run");
+    cJSON_AddStringToObject(p, "remedy",
+      "an unsupported compression method or a corrupt member: check the "
+      "archive by hand before assuming the records are gone upstream");
+    cJSON_AddNumberToObject(p, "records_used", emitted);
+    snprintf(title, sizeof title,
+             "%s: %d of %d archive member(s) would not inflate (%s); %d "
+             "record(s) emitted from the rest", s->id, st->sh_zip_entries_failed,
+             st->sh_zip_entries, st->sh_zip_failed, emitted);
+    jo_shape_notice(sink, s->id, "zip-entry-unreadable", title, p, TAGS);
+  }
+
   if (st->sh_table_capped) {                                   /* (g) */
     p = cJSON_CreateObject();
     cJSON_AddStringToObject(p, "query", q);
@@ -4821,8 +4876,70 @@ dated_restart:;
      * notice rather than passed over in silence (house rule 2). */
     char *unz = NULL;
     const char *rawb = hr.body; size_t rawlen = hr.body_len;
-    if (s->mode != HP_XLSX && hr.body_len >= 4 &&
-        memcmp(hr.body, "PK\x03\x04", 4) == 0) {
+    int zip_body = s->mode != HP_XLSX && hr.body_len >= 4 &&
+                   memcmp(hr.body, "PK\x03\x04", 4) == 0;
+    /* ── An archive whose ENTRIES ARE THE COLLECTION.
+     *
+     * The single-entry read below is right for a GDELT export (one ZIP, one
+     * CSV) and wrong for a publisher who ships one file PER RECORD: the
+     * Assemblée nationale's written questions are 19,165 JSON files in one
+     * 50 MB ZIP, so reading the first entry is 19,164 records dropped at a
+     * seam. The shape notice has been telling us so ("if the other members
+     * carry records too, this row needs a named-entry read or one row per
+     * member") — and neither of those remedies scales to 19,165 members.
+     *
+     * Each entry is parsed on its own, so the record keys, the collision guard
+     * and the detail budget all behave as they do for one body; the records of
+     * every entry land in ONE page, so the guard sees the whole archive. An
+     * entry that will not inflate costs its records and is disclosed by name
+     * rather than skipped. */
+    if (zip_body && s->zip_all_entries && s->mode != HP_JSON &&
+        s->mode != HP_NDJSON) {
+      /* REFUSED LOUDLY rather than read as JSON anyway. Concatenating CSV
+       * members would read the second member's header as a record (that is
+       * xlsx_sheet_all's job, per sheet), and a row that declared this on the
+       * wrong mode would otherwise emit nothing with rc=0 — the invisible
+       * nothing rule 1 is about. */
+      fprintf(stderr, "[hp:%s] zip_all_entries is HP_JSON/HP_NDJSON only; this "
+                      "row declares another mode and reads NOTHING. Either "
+                      "drop the flag (the first member is read) or convert the "
+                      "row.\n", s->id);
+      if (page == 0) hard_error = 1;
+      http_response_free(&hr);
+      break;
+    }
+    if (zip_body && s->zip_all_entries) {
+      int nent = zip_entry_count(hr.body, hr.body_len);
+      st.sh_zip_entries = nent > 0 ? nent : 0;
+      for (int zi = 0; zi < nent; zi++) {
+        char zname[512]; size_t zn = 0;
+        char *one = zip_entry_at(hr.body, hr.body_len, zi, zname, sizeof zname, &zn);
+        if (!one) {
+          st.sh_zip_entries_failed++;
+          size_t w = strlen(st.sh_zip_failed);
+          if (w + 24 < sizeof st.sh_zip_failed)
+            snprintf(st.sh_zip_failed + w, sizeof st.sh_zip_failed - w,
+                     "%s#%d", w ? "; " : "", zi);
+          continue;
+        }
+        /* A member that is a directory entry, or empty, is not a record. */
+        if (zn == 0 || zname[strlen(zname) - 1] == '/') { free(one); continue; }
+        char *eutf8 = hp_body_to_utf8(s, page_url, one, zn);
+        const char *eb = eutf8 ? eutf8 : one;
+        if (s->mode == HP_NDJSON) hp_run_ndjson(&st, eb);
+        else                      hp_run_json(&st, eb);
+        free(eutf8);
+        free(one);
+      }
+      if (nent > 0 && st.sh_zip_entries_failed >= nent && page == 0) hard_error = 1;
+      out = st.emitted;
+      free(unz);
+      http_response_free(&hr);
+      if (page == 0) { first_page_records = st.page_records; first_status = 200; }
+      prev_page_records = st.page_records;
+      break;      /* one archive is one page; nothing here pages */
+    }
+    if (zip_body) {
       size_t unz_len = 0;
       unz = zip_first_entry(hr.body, hr.body_len, &unz_len);
       if (unz) {
@@ -4849,11 +4966,61 @@ dated_restart:;
       case HP_NDJSON: out = hp_run_ndjson(&st, pbody); break;
       case HP_XLSX: {
         char xerr[256]; size_t xn = 0;
+        if (s->xlsx_sheet_all) {
+          /* Every sheet, each with its own header. One fetch bought the whole
+           * workbook; reading one sheet of it is a discard at a seam.
+           *
+           * The sheet COUNT comes from the workbook rather than from walking
+           * the index until an error: xlsx_to_csv's out-of-range message and
+           * its "this sheet is unreadable" message are both failures, and
+           * telling them apart by their wording would make the end of the
+           * workbook and a lost month of records the same event. */
+          char nerr[256];
+          char *names = xlsx_sheet_names(hr.body, hr.body_len, nerr, sizeof nerr);
+          if (!names) {
+            fprintf(stderr, "[hp] %s: xlsx: %s\n", s->id, nerr);
+            if (page == 0) hard_error = 1;
+            break;
+          }
+          int nsheets = 1;
+          for (const char *p = names; *p; p++) if (*p == '\n') nsheets++;
+          st.sh_xlsx_sheets = nsheets;
+          for (int si = 0; si < nsheets; si++) {
+            char *one = NULL; size_t onen = 0;
+            if (xlsx_to_csv(hr.body, hr.body_len, si, NULL,
+                            &one, &onen, xerr, sizeof xerr) != 0) {
+              st.sh_xlsx_sheets_failed++;
+              size_t w = strlen(st.sh_xlsx_failed);
+              /* The reason is bounded explicitly: xlsx_to_csv's "sheet 'x' not
+               * found (have: …)" lists every sheet name and is as long as this
+               * whole field on a workbook with a dozen months in it. */
+              if (w + 24 < sizeof st.sh_xlsx_failed)
+                snprintf(st.sh_xlsx_failed + w, sizeof st.sh_xlsx_failed - w,
+                         "%s#%d: %.180s", w ? "; " : "", si, xerr);
+              fprintf(stderr, "[hp] %s: xlsx sheet %d of %d: %s\n",
+                      s->id, si, nsheets, xerr);
+              continue;
+            }
+            hp_run_csv(&st, one);
+            free(one);
+          }
+          free(names);
+          /* No sheet read at all is the single-sheet path's honest failure,
+           * not a run that emitted nothing. */
+          if (st.sh_xlsx_sheets_failed >= nsheets && page == 0) hard_error = 1;
+          break;
+        }
         if (xlsx_to_csv(hr.body, hr.body_len, s->xlsx_sheet_index, s->xlsx_sheet,
                         &xcsv, &xn, xerr, sizeof xerr) != 0) {
-          /* Honest failure: an error line and no records, never a partial sheet. */
+          /* Honest failure: an error line and no records, never a partial sheet.
+           * `out = -1` here was NOT that failure — `out = st.emitted` below
+           * overwrites every mode driver's return, deliberately, so that a
+           * later page's failure cannot erase the earlier pages' count. So a
+           * workbook that would not convert at all reported rc=0 records=0,
+           * which is the invisible nothing rule 1 is about. The run's own
+           * error flag is what survives. */
           fprintf(stderr, "[hp] %s: xlsx: %s\n", s->id, xerr);
-          out = -1;
+          if (page == 0) hard_error = 1;
           break;
         }
         /* csv_skip_lines / csv_comment / title_keys apply to the converted text. */
@@ -5781,6 +5948,8 @@ char *hp_describe_json(const char *id) {
   hp_desc_int(pa, "csv_skip_lines", s->csv_skip_lines);
   hp_desc_str(pa, "xlsx_sheet", s->xlsx_sheet);
   hp_desc_int(pa, "xlsx_sheet_index", s->xlsx_sheet_index);
+  hp_desc_int(pa, "xlsx_sheet_all", s->xlsx_sheet_all);
+  hp_desc_int(pa, "zip_all_entries", s->zip_all_entries);
   hp_desc_str(pa, "href_must", s->href_must);
   hp_desc_str(pa, "base", s->base);
   hp_desc_str(pa, "table_must", s->table_must);
