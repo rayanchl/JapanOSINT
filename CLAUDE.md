@@ -1713,10 +1713,49 @@ Engine subtleties worth knowing before writing a row:
   exactly the kind of tidy falsehood these notices exist to prevent. It now
   distinguishes the three outcomes, and a failed page says the position was NOT
   advanced and the row re-reads the same slice until its paging is re-pointed
-  (`hptest` 40b-iii). Any other row in this shape says so on its next run; a
-  sweep for them is the obvious next measurement.
+  (`hptest` 40b-iii). Any other row in this shape says so on its next run —
+  and **the sweep that reads those disclosures across the registry now
+  exists** (2026-10-22, `tools/audit_cycle_advance.py`,
+  `docs/measured-cycle-advance-2026-10-22.tsv`): every one of the 669
+  `page_resume` rows run through the binary under `JO_PAGE_MAX_CAP=2` — a
+  ceiling over the row's own ceiling, for measurement only, so a run is page
+  1 plus the attempt at page 2 (`lib/hpengine.c`, hptest 40b-iv) — and its
+  notice read back. 600 advance, 20 complete inside two pages, 43 were
+  refused page 1 from the measuring environment (39 of them on a second
+  pass; ODS hosts and a few others reset this path), **2 answered 429 to
+  page 2** and **4 could never advance**:
+  * `BC_MINERAL_TENURE` — GeoServer refuses `startIndex` without `sortBy`,
+    the very hazard noted above for BC's WFS, in a row that never got the
+    sort. `sortBy=TENURE_NUMBER_ID`: startIndex 0/50/100 answer disjoint
+    ascending pages, 150 of 150 across three pages in the engine, resumes.
+  * the three **ENA Portal API** rows — `offset` answers HTTP 400
+    "Unsupported param offset", full stop; no cycle can exist. The API's
+    complete read is **`limit=0`**: ONE request, the whole result set.
+    `ENA_PATHOGEN_INFLUENZA_SAMPLES` reads 61,625 of 61,625 (= its count,
+    19 MB, 82 s in the engine). `ENA_PATHOGEN_SARSCOV2_RUNS` is 7.5 million
+    runs (~2 GB), so it is a 30-day `first_public` window at `limit=0`
+    (6,362 of 6,362 in the engine; 0 runs in the last week, 47,270 in a
+    year — the trade is stated in the row). And `ENA_PATHOGEN_MTB_RUNS`
+    found a third shape: **one `limit=0` read of 360,690 runs came back
+    HTTP 200 with 331,580 rows — 8% short in EVERY date half**, a silent
+    cut of an accession-ordered stream, not a tail. Split on `first_public`
+    the same day, every block answers exactly its count (76,189 / 95,032 /
+    85,283 / 57,476 / 46,710, summing to 360,690), so it is FIVE
+    single-request TSV rows now: four static history blocks weekly and the
+    live 90-day tail daily (10,255 of 10,255 in the engine), the 2025-on
+    block ending at `{date-90d}` where the tail begins. **A 200 with fewer
+    rows than the count endpoint is a cut; a window that equals its count
+    is complete** — measure both before trusting a bulk read.
+  * `ENERGINET_CAPACITY_MUNICIPALITY` and `TRONSCAN_TOP_ACCOUNTS` — 429 on
+    page 2, so per-host gaps in `core/hostgate.c` (1,000 / 1,500 ms; both
+    read three pages and resume now, Tronscan's 78 requests with its detail
+    hops in 116 s). **Which found that the table's live-entry count was a
+    hand-maintained `7` while it held nine** — the same `1`-for-two trap
+    its own comment recorded in September — so the two new gaps were
+    compiled in and never consulted; the count is sizeof arithmetic now.
 
-  533 rows cycle in total. One shape to keep in mind: `interval = 2592000` is
+  533 rows cycled when this was written; 669 do on 2026-10-22, and the sweep
+  above is how to know they still can. One shape to keep in mind: `interval = 2592000` is
   monthly, so a 500-page collection on that cadence takes about two years to
   come round — better than never, and the notice says where it is.
 * **A deep-paging cap is the upstream's, and it is disclosed by name.** GLEIF

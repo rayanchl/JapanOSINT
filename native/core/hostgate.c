@@ -92,7 +92,14 @@ static void cfg_init(void) {
  * boot. An override is a GAP between starts, never a delay of the first
  * request. */
 #define HG_MAX_OVERRIDES 32
-static struct { char host[HG_HOSTLEN]; int gap_ms; } g_over[HG_MAX_OVERRIDES] = {
+typedef struct { char host[HG_HOSTLEN]; int gap_ms; } hg_override;
+/* The built-in table. It is copied into g_over[] at boot (overrides_init) so
+ * the live count is sizeof arithmetic and never a number a human maintains:
+ * that number read `1` while the table held two (2026-09-15) and `7` while
+ * it held nine (2026-10-22 — the Energinet and Tronscan gaps below were
+ * compiled in and never consulted, and the sweep that added them measured a
+ * 32-request run at 390 ms a request under a 1,500 ms gap). */
+static const hg_override g_over_builtin[] = {
   { "reddit.com", 30000 },
   /* 615 gnews-* rows share news.google.com; under a 4-worker sweep they
    * fire together and come back empty, alone every one emits (2026-08-25
@@ -147,11 +154,9 @@ static struct { char host[HG_HOSTLEN]; int gap_ms; } g_over[HG_MAX_OVERRIDES] = 
   { "api.energidataservice.dk", 1000 },
   { "apilist.tronscanapi.com", 1500 },
 };
-/* The number of LIVE entries above. This was `1` while the table held two, so
- * gap_for_host() — which scans only the first g_nover entries — never saw the
- * news.google.com gap its comment describes: the 615 gnews-* rows kept firing
- * together (found 2026-09-15). Keep it equal to the initialiser count. */
-static int g_nover = 7;
+#define HG_N_BUILTIN ((int)(sizeof g_over_builtin / sizeof g_over_builtin[0]))
+static hg_override g_over[HG_MAX_OVERRIDES];
+static int g_nover;   /* live entries in g_over[]: the built-ins, then the env */
 
 static void override_set(const char *host, int gap_ms) {
   for (int i = 0; i < g_nover; i++)
@@ -164,6 +169,7 @@ static void override_set(const char *host, int gap_ms) {
 }
 
 static void overrides_init(void) {
+  for (int i = 0; i < HG_N_BUILTIN && i < HG_MAX_OVERRIDES; i++) g_over[g_nover++] = g_over_builtin[i];
   const char *e = getenv("JO_HOST_MIN_GAP_OVERRIDES");
   if (!e || !*e) return;
   char buf[2048];

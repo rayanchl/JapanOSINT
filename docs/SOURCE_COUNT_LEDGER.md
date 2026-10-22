@@ -5,7 +5,23 @@ was seeded from, what it measured and what it taught. Moved out of `CLAUDE.md`
 on 2026-10-19 so that file keeps the rules and the current number; the lessons
 that a new batch must not relearn are summarised there. Newest first.
 
-**The registered count is 57,536** (2026-10-21): main's 57,415 + this branch's
+**The registered count is 57,540** (2026-10-22): main's 57,536 (below) plus
+four. `tools/audit_cycle_advance.py` ran all 669 `page_resume` rows under
+`JO_PAGE_MAX_CAP=2` and read their notices back
+(`docs/measured-cycle-advance-2026-10-22.tsv`): 600 advance, 20 complete
+inside two pages, 43 were refused page 1 from this environment (39 of them
+twice), 2 answered 429 to page 2 (Energinet, Tronscan — per-host gaps in
+`core/hostgate.c`, whose live-entry count is sizeof arithmetic now rather
+than the `7` that had been hiding the two new gaps), and **4 could never
+advance**: `BC_MINERAL_TENURE` (GeoServer wants `sortBy`; added) and the
+three ENA Portal API rows, whose `offset` the API refuses outright. ENA's
+complete read is `limit=0` in one request; influenza samples (61,625) and a
+30-day SARS-CoV-2 tail fit in one, and the tuberculosis runs became FIVE
+single-request windows on `first_public` because one `limit=0` read of the
+whole 360,690 came back 8% short in every date half (a silent cut), while
+each window answers exactly its count. +4 rows; both floors re-recorded.
+
+**The count was 57,536** (2026-10-21): main's 57,415 + this branch's
 121 (+136 batch 51, −29 takeovers, +15 browser-profile feeds, −1 duplicate FAA
 row), both on 56,955. The merge kept main's `adaptive_interval` on every row
 and this branch's removal of the 29 taken-over rows, whose ids main had

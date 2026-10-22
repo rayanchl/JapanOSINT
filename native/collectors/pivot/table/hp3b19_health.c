@@ -2057,7 +2057,8 @@ static const hp_source HP3B19_HEALTH[] = {
     .record_type = "sequence-metadata-record",
     .tags = "\"ena\",\"ebi\",\"genomics\",\"tuberculosis\",\"amr\",\"provenance\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
-    /* 95,032 runs, 10.5 MB in 17 s, equal to its count (2026-10-22). */
+    /* 95,032 runs, 10.5 MB in 17 s, equal to its count; the engine stores
+     * 95,032 of 95,032, first_public 2020-01-04 to 2022-12-24 (2026-10-22). */
     .url = "https://www.ebi.ac.uk/ena/portal/api/search?result=read_run&query=tax_tree(1773)%20AND%20first_public%3E%3D2020-01-01%20AND%20first_public%3C2023-01-01&fields=run_accession,sample_accession,study_accession,country,location,collection_date,center_name,instrument_platform,first_public&format=tsv&limit=0",
     .csv_delim = "tab",
     .timeout_ms = 600000,
