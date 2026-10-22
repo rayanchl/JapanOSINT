@@ -777,6 +777,69 @@ The other 14 collisions are 1–4 records each out of hundreds or thousands,
 which is the shape of an upstream's own duplicate rather than a wrong key — but
 each is a question until measured, and they are not measured yet.
 
+**Then a THIRD portal family, and this one taught the opposite lesson.**
+32 `nam-*` rows — North American Socrata city portals — read COLLISION for
+24,536 records a run between them. Same cause as Catalonia and Colombia, and
+the same two-page measurement on each. **19 ship for 22,676 records a run**,
+each keyed on the dataset's own documented row id and re-measured through the
+engine after:
+
+| row | key | before | after |
+| --- | --- | --- | --- |
+| `nam-cityofchicago-chicago-energy-benchmarking` | `id+data_year` | 8,000 / 3,915 | **8,000 / 8,000** |
+| `nam-la-crime-recent` | `dr_no` | 10,000 / 7,179 | **10,000 / 10,000** |
+| `nam-austin-311` | `sr_number` | 10,000 / 7,384 | **10,000 / 10,000** |
+| `nam-nyc-dob-permits` | `permit_si_no` | 10,000 / 7,470 | **10,000 / 10,000** |
+| `nam-nyc-collisions-recent` | `collision_id` | 10,000 / 7,422 | 10,000 / 9,867 |
+| `nam-chicago-food-inspections` | `inspection_id` | 10,000 / 7,778 | **10,000 / 10,000** |
+| `nam-chicago-traffic-crashes` | `crash_record_id` | 10,000 / 8,106 | 10,000 / 9,999 |
+| `nam-nyc-restaurant-inspections` | `camis+inspection_date+violation_code` | 10,000 / 8,113 | 10,000 / 9,996 |
+| `nam-chicago-311-requests` | `sr_number` | 10,000 / 8,511 | **10,000 / 10,000** |
+| `nam-sonomacounty-…-animal-shelter` | `impound_number` | 8,000 / 7,680 | **8,000 / 8,000** |
+| `nam-seattle-building-permits` | `permitnum` | 10,000 / 9,782 | **10,000 / 10,000** |
+| `nam-sf-311-cases`, `nam-sf-building-permits`, `nam-sf-fire-calls` | `service_request_id`, `record_id`, `rowid` | 73 / 60 / 2 lost | **0 lost** |
+| `nam-seattle-police-reports` | `offense_id` | 10,000 / 9,984 | **10,000 / 10,000** |
+| `nam-nyc-311-open`, `nam-nyc-noise-complaints` | `unique_key` | 7 / 1 lost | 1 / 0 lost |
+| `nam-delaware-storm-water-notices-of-intent` | `permitnumber` | 2 lost | 2 lost (unchanged count, the honest key) |
+| `nam-cityofnewyork-street-closures-…` | `uniqueid` | 4,343 / 4,152 | 4,343 / 4,152 — identical, and 4,152 is the sample's whole-record distinctness, so the remainder is the upstream's own duplicate. Kept because a closure that changes should UPDATE its row rather than appear twice |
+
+**53,281 records a run across the three families.**
+
+Three findings from this pass, and two of them cut against the other two
+families:
+
+* **TWO PAGES CAN BE TOO FEW.** `id` is distinct on all 800 sampled Chicago
+  energy-benchmarking records and collapses 4,500 of 8,000 in the engine,
+  because the first 800 records are all `data_year` 2019 and the dimension that
+  breaks the key does not appear until page four. `id+data_year` stores 8,000 of
+  8,000. A sample that does not reach the breaking dimension reads exactly like
+  a unique key.
+* **THE CONTENT-HASH FALLBACK CAN BEAT A REAL ID, and four rows prove it.**
+  Measured and then REVERTED: `nam-chicago-crimes-recent` (`case_number`: 6
+  collisions against the fallback's 2 — CPD files several offences under one
+  case), `nam-chicago-towed-vehicles` (`inventory_number` 140 against 78),
+  `nam-norfolk-streetlights-and-outages-reports` (`grid_address+fixture_style`
+  168 against 155) and `nam-providenceri-providence-tree-dataset` (a four-part
+  address composite 52 against 4). Where a record has no stable identity,
+  VJSON's fallback hash of (title, link, date) separates rows that a weak "real
+  id" merges. So compare the proposed key against the row's CURRENT loss and
+  keep the fallback when it wins — the opposite of what Catalonia and Colombia
+  needed, from the same starting symptom. All four reverts were re-measured and
+  restore the original counts exactly.
+* **And the minimal-key search offered `shape_len` (a geometry LENGTH),
+  `offense_date` (a timestamp) and `link` (a URL)** as "unique" keys on three
+  of these datasets. Each is the rule this file already states, in a new place:
+  the minimal key a search finds is not the record's identity.
+
+Nine of the 32 keep their fallback deliberately, each with the arithmetic:
+Delaware's school directory (a "real" key reaches 55% loss against the
+fallback's 9%), Delaware's septic permits (4% against 2%), Baton Rouge's
+occupancy register (20% against 0.9%), Norfolk's railroad and storm registers,
+Providence's tree inventory, Gainesville's reclaimed water, Nova Scotia's road
+geometry (no id field at all) and Oakland's parking zones — whose 742 rows hold
+**17 distinct whole records**, one per polygon part, so 17 is the correct count
+and not a loss.
+
 **The sweep was killed by a container worker restart at 3,343 rows** (2026-10-22
 10:32) and resumes with `--resume`, which skips what is already in the TSV. That
 is worth writing down as the shape of this job rather than as a result: a

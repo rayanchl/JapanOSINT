@@ -1530,6 +1530,35 @@ from that pass generalise:
   repeating on the next is the exact shape rule 4b's comma-vs-plus note
   describes, and a single `--run` cannot see it.
 
+**A THIRD portal family then taught the opposite lesson, from the same
+symptom** (2026-10-22): 32 North American Socrata city rows reading COLLISION
+for 24,536 records a run. Nineteen ship on the dataset's own documented row id
+for **22,676 records a run** — 53,281 across the three families — and the three
+findings that generalise are:
+
+* **TWO PAGES CAN BE TOO FEW.** `id` is distinct on all 800 sampled Chicago
+  energy-benchmarking records and collapses 4,500 of 8,000 in the engine,
+  because the first 800 are all `data_year` 2019 and the dimension that breaks
+  the key does not appear until page four. `id+data_year` stores 8,000 of 8,000.
+  A sample that never reaches the breaking dimension reads exactly like a unique
+  key.
+* **THE CONTENT-HASH FALLBACK CAN BEAT A "REAL" ID.** Four of the 32 were
+  changed, measured, and REVERTED because the id made it worse:
+  `nam-chicago-crimes-recent` (`case_number` 6 collisions against the
+  fallback's 2 — CPD files several offences under one case),
+  `nam-chicago-towed-vehicles` (140 against 78),
+  `nam-norfolk-streetlights-and-outages-reports` (168 against 155) and
+  `nam-providenceri-providence-tree-dataset` (52 against 4). Where a record has
+  no stable identity, VJSON's fallback hash of (title, link, date) separates
+  rows that a weak id merges. **Compare the proposed key against the row's
+  CURRENT loss and keep the fallback when it wins** — the opposite of what
+  Catalonia and Colombia needed, reached from an identical starting symptom.
+  Nine of the 32 keep their fallback for that reason, each with its arithmetic
+  in `docs/OPEN_ITEMS_2026-10-20.md`.
+* **A minimal-key search offered `shape_len` (a geometry LENGTH),
+  `offense_date` (a timestamp) and `link` (a URL)** as unique keys on three of
+  these datasets. Same rule as the IDEAM timestamps, three more times.
+
 If the second number is smaller than the first, the row's identity is wrong.
 
 **The run line says it without being asked.** `core/intel.c` counts the DISTINCT

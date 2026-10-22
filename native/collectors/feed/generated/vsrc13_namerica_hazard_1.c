@@ -6,6 +6,7 @@
  * since — this file, not the manifest, is the current copy. The
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
+#include "_vjson_idkeys.inc"
 
 VGEO(nam_ags_climate_vulnerability_and_risk_assessment_wildfire_r, "nam-ags-climate-vulnerability-and-risk-assessment-wildfire-r", "Climate Vulnerability and Risk Assessment Wildfire Risk — CCVRA Wildfire Risk", "Climate Vulnerability and Risk Assessment Wildfire Risk — CCVRA Wildfire Risk",
   "namerica_hazard", "hazard",
@@ -183,11 +184,16 @@ VGEO(nam_dc_evacuation_route_map_evacuation_route_points, "nam-dc-evacuation-rou
   "en", "[\"usa\",\"dc\",\"hazard\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer from District of Columbia (DC GIS): Evacuation Route Points, returned as GeoJSON with per-feature geometry.");
 
-VGEO(nam_delaware_storm_water_notices_of_intent, "nam-delaware-storm-water-notices-of-intent", "Delaware — Storm Water Notices of Intent", "Delaware — Storm Water Notices of Intent",
+/* Registry sweep 2026-10-22: 2 of 7275 records a run collapsed onto a uid
+   already written (0.0%). VJSON/VGEO's id precedence list finds no field in
+   this Socrata record, so it fell back and keyed on content. Measured over two
+   pages before the key was touched: 800 of 800 distinct — the permit number. */
+VGEO_IDKEYS(nam_delaware_storm_water_notices_of_intent, "nam-delaware-storm-water-notices-of-intent", "Delaware — Storm Water Notices of Intent", "Delaware — Storm Water Notices of Intent",
   "namerica_hazard", "hazard",
   "https://data.delaware.gov/resource/3s4n-3up9.geojson?$limit=400&$order=:id",
   "en", "[\"usa\",\"de\",\"hazard\",\"opendata\"]", 21600,
-  "Socrata open-data feed from Delaware: Storm Water Notices of Intent, one JSON record per row.");
+  "Socrata open-data feed from Delaware: Storm Water Notices of Intent, one JSON record per row.",
+  "permitnumber");
 
 VJSON(nam_drivebc_events, "nam-drivebc-events", "DriveBC — active road events (Open511)", "DriveBC — active road events (Open511)",
   "namerica_hazard", "transport",

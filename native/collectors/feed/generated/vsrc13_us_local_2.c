@@ -6,6 +6,7 @@
  * since — this file, not the manifest, is the current copy. The
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
+#include "_vjson_idkeys.inc"
 
 VGEO(nam_montgomerycountymd_crash_reporting_incidents_data, "nam-montgomerycountymd-crash-reporting-incidents-data", "Montgomery County, Maryland — Crash Reporting - Incidents Data", "Montgomery County, Maryland — Crash Reporting - Incidents Data",
   "us_local", "transport",
@@ -43,12 +44,17 @@ VGEO(nam_norfolk_streetlights_and_outages_reports, "nam-norfolk-streetlights-and
   "en", "[\"usa\",\"va\",\"energy\",\"opendata\"]", 3600,
   "Socrata open-data feed from City of Norfolk, Virginia: Streetlights and Outages Reports, one JSON record per row.");
 
-VJSON(nam_nyc_311_open, "nam-nyc-311-open", "City of New York — 311 service requests (most recent)", "City of New York — 311 service requests (most recent)",
+/* Registry sweep 2026-10-22: 7 of 10000 records a run collapsed onto a uid
+   already written (0.1%). VJSON/VGEO's id precedence list finds no field in
+   this Socrata record, so it fell back and keyed on content. Measured over two
+   pages before the key was touched: 1,000 of 1,000 distinct — 311's own unique key. */
+VJSON_IDKEYS(nam_nyc_311_open, "nam-nyc-311-open", "City of New York — 311 service requests (most recent)", "City of New York — 311 service requests (most recent)",
   "us_local", "opendata",
   "https://data.cityofnewyork.us/resource/erm2-nwe9.json?$limit=500&$order=created_date%20DESC",
   "",
   "en", "[\"usa\",\"ny\",\"311\",\"opendata\"]", 1800,
-  "The newest 311 complaints filed in New York City with type, agency, borough and coordinates.");
+  "The newest 311 complaints filed in New York City with type, agency, borough and coordinates.",
+  "unique_key");
 
 VJSON(nam_nyc_air_quality, "nam-nyc-air-quality", "City of New York — community air quality surveillance", "City of New York — community air quality surveillance",
   "us_local", "environment",
@@ -64,19 +70,29 @@ VJSON(nam_nyc_arrests_ytd, "nam-nyc-arrests-ytd", "City of New York — NYPD arr
   "en", "[\"usa\",\"ny\",\"crime\",\"police\"]", 21600,
   "Year-to-date NYPD arrest records with offence description, precinct and location.");
 
-VJSON(nam_nyc_collisions_recent, "nam-nyc-collisions-recent", "City of New York — motor vehicle collisions (most recent)", "City of New York — motor vehicle collisions (most recent)",
+/* Registry sweep 2026-10-22: 2578 of 10000 records a run collapsed onto a uid
+   already written (25.8%). VJSON/VGEO's id precedence list finds no field in
+   this Socrata record, so it fell back and keyed on content. Measured over two
+   pages before the key was touched: 1,000 of 1,000 distinct — NYPD's collision id. */
+VJSON_IDKEYS(nam_nyc_collisions_recent, "nam-nyc-collisions-recent", "City of New York — motor vehicle collisions (most recent)", "City of New York — motor vehicle collisions (most recent)",
   "us_local", "transport",
   "https://data.cityofnewyork.us/resource/h9gi-nx95.json?$limit=500&$order=crash_date%20DESC",
   "",
   "en", "[\"usa\",\"ny\",\"transport\",\"crashes\"]", 3600,
-  "Latest NYPD collision reports with injuries, fatalities, contributing factor and crash coordinates.");
+  "Latest NYPD collision reports with injuries, fatalities, contributing factor and crash coordinates.",
+  "collision_id");
 
-VJSON(nam_nyc_dob_permits, "nam-nyc-dob-permits", "City of New York — DOB permit issuance", "City of New York — DOB permit issuance",
+/* Registry sweep 2026-10-22: 2530 of 10000 records a run collapsed onto a uid
+   already written (25.3%). VJSON/VGEO's id precedence list finds no field in
+   this Socrata record, so it fell back and keyed on content. Measured over two
+   pages before the key was touched: 1,000 of 1,000 distinct — the permit sequence number. */
+VJSON_IDKEYS(nam_nyc_dob_permits, "nam-nyc-dob-permits", "City of New York — DOB permit issuance", "City of New York — DOB permit issuance",
   "us_local", "economy",
   "https://data.cityofnewyork.us/resource/ipu4-2q9a.json?$limit=500&$order=:id",
   "",
   "en", "[\"usa\",\"ny\",\"permits\",\"economy\"]", 21600,
-  "Building permits issued by the NYC Department of Buildings with work type, owner and address.");
+  "Building permits issued by the NYC Department of Buildings with work type, owner and address.",
+  "permit_si_no");
 
 VJSON(nam_nyc_hpd_violations, "nam-nyc-hpd-violations", "City of New York — HPD housing maintenance violations", "City of New York — HPD housing maintenance violations",
   "us_local", "economy",
@@ -85,12 +101,17 @@ VJSON(nam_nyc_hpd_violations, "nam-nyc-hpd-violations", "City of New York — HP
   "en", "[\"usa\",\"ny\",\"housing\",\"economy\"]", 21600,
   "Open housing-code violations issued against NYC buildings, with class, status and address.");
 
-VJSON(nam_nyc_noise_complaints, "nam-nyc-noise-complaints", "City of New York — 311 noise complaints", "City of New York — 311 noise complaints",
+/* Registry sweep 2026-10-22: 1 of 10000 records a run collapsed onto a uid
+   already written (0.0%). VJSON/VGEO's id precedence list finds no field in
+   this Socrata record, so it fell back and keyed on content. Measured over two
+   pages before the key was touched: 1,000 of 1,000 distinct — 311's own unique key; this row is the same resource as nam-nyc-311-open under a complaint_type filter. */
+VJSON_IDKEYS(nam_nyc_noise_complaints, "nam-nyc-noise-complaints", "City of New York — 311 noise complaints", "City of New York — 311 noise complaints",
   "us_local", "opendata",
   "https://data.cityofnewyork.us/resource/erm2-nwe9.json?$limit=500&$where=complaint_type%20like%20%27%25Noise%25%27&$order=:id",
   "",
   "en", "[\"usa\",\"ny\",\"311\",\"opendata\"]", 3600,
-  "311 records filtered to noise complaints, a fine-grained proxy for nightlife, construction and unrest activity.");
+  "311 records filtered to noise complaints, a fine-grained proxy for nightlife, construction and unrest activity.",
+  "unique_key");
 
 VRSS(nam_nyc_parks_events, "nam-nyc-parks-events", "NYC Parks — public events calendar", "NYC Parks — public events calendar",
   "us_local", "opendata",
@@ -98,12 +119,17 @@ VRSS(nam_nyc_parks_events, "nam-nyc-parks-events", "NYC Parks — public events 
   "en", "[\"usa\",\"ny\",\"events\",\"opendata\"]", 21600,
   "Scheduled events in New York City parks with location, borough and time, useful for crowd and gathering context.");
 
-VJSON(nam_nyc_restaurant_inspections, "nam-nyc-restaurant-inspections", "City of New York — restaurant inspection results", "City of New York — restaurant inspection results",
+/* Registry sweep 2026-10-22: 1887 of 10000 records a run collapsed onto a uid
+   already written (18.9%). VJSON/VGEO's id precedence list finds no field in
+   this Socrata record, so it fell back and keyed on content. Measured over two
+   pages before the key was touched: 1,000 of 1,000 distinct — the record is one VIOLATION of one inspection of one restaurant: camis alone is 968 of 1,000 and camis+inspection_date 988. The sample's whole-record distinctness is also 1,000, so nothing here is an upstream duplicate. */
+VJSON_IDKEYS(nam_nyc_restaurant_inspections, "nam-nyc-restaurant-inspections", "City of New York — restaurant inspection results", "City of New York — restaurant inspection results",
   "us_local", "health",
   "https://data.cityofnewyork.us/resource/43nn-pn8j.json?$limit=500&$order=:id",
   "",
   "en", "[\"usa\",\"ny\",\"health\",\"inspections\"]", 21600,
-  "DOHMH food-service inspection results with violation codes, scores and grades per establishment.");
+  "DOHMH food-service inspection results with violation codes, scores and grades per establishment.",
+  "camis+inspection_date+violation_code");
 
 VJSON(nam_nyc_shootings_ytd, "nam-nyc-shootings-ytd", "City of New York — NYPD shooting incidents year to date", "City of New York — NYPD shooting incidents year to date",
   "us_local", "crime",
@@ -173,19 +199,29 @@ VJSON(nam_seattle_911_fire, "nam-seattle-911-fire", "City of Seattle — real-ti
   "en", "[\"usa\",\"wa\",\"fire\",\"hazard\"]", 1800,
   "Seattle Fire Department 911 dispatches with incident type, address and coordinates.");
 
-VJSON(nam_seattle_building_permits, "nam-seattle-building-permits", "City of Seattle — building permits", "City of Seattle — building permits",
+/* Registry sweep 2026-10-22: 218 of 10000 records a run collapsed onto a uid
+   already written (2.2%). VJSON/VGEO's id precedence list finds no field in
+   this Socrata record, so it fell back and keyed on content. Measured over two
+   pages before the key was touched: 1,000 of 1,000 distinct — the permit number. NOT `link`, which a minimal-key search finds unique and which is a URL. */
+VJSON_IDKEYS(nam_seattle_building_permits, "nam-seattle-building-permits", "City of Seattle — building permits", "City of Seattle — building permits",
   "us_local", "economy",
   "https://data.seattle.gov/resource/76t5-zqzr.json?$limit=500&$order=:id",
   "",
   "en", "[\"usa\",\"wa\",\"permits\",\"economy\"]", 21600,
-  "Seattle construction permits with work type, value, status and location.");
+  "Seattle construction permits with work type, value, status and location.",
+  "permitnum");
 
-VJSON(nam_seattle_police_reports, "nam-seattle-police-reports", "City of Seattle — police report offences", "City of Seattle — police report offences",
+/* Registry sweep 2026-10-22: 16 of 10000 records a run collapsed onto a uid
+   already written (0.2%). VJSON/VGEO's id precedence list finds no field in
+   this Socrata record, so it fell back and keyed on content. Measured over two
+   pages before the key was touched: 1,000 of 1,000 distinct — the offense id. NOT `offense_date`, which a minimal-key search finds unique in one sample and which is a TIMESTAMP. */
+VJSON_IDKEYS(nam_seattle_police_reports, "nam-seattle-police-reports", "City of Seattle — police report offences", "City of Seattle — police report offences",
   "us_local", "crime",
   "https://data.seattle.gov/resource/tazs-3rd5.json?$limit=500&$order=:id",
   "",
   "en", "[\"usa\",\"wa\",\"crime\",\"police\"]", 21600,
-  "SPD offence records with NIBRS classification, precinct, beat and reporting time.");
+  "SPD offence records with NIBRS classification, precinct, beat and reporting time.",
+  "offense_id");
 
 VJSON(nam_septa_busdetours, "nam-septa-busdetours", "SEPTA — active bus detours", "SEPTA — active bus detours",
   "us_local", "transport",
@@ -194,12 +230,17 @@ VJSON(nam_septa_busdetours, "nam-septa-busdetours", "SEPTA — active bus detour
   "en", "[\"usa\",\"pa\",\"transit\",\"transport\"]", 1800,
   "Bus routes currently on detour with the reason, start date and affected street segments.");
 
-VJSON(nam_sf_311_cases, "nam-sf-311-cases", "City and County of San Francisco — 311 cases", "City and County of San Francisco — 311 cases",
+/* Registry sweep 2026-10-22: 73 of 10000 records a run collapsed onto a uid
+   already written (0.7%). VJSON/VGEO's id precedence list finds no field in
+   this Socrata record, so it fell back and keyed on content. Measured over two
+   pages before the key was touched: 1,000 of 1,000 distinct — the service-request id. */
+VJSON_IDKEYS(nam_sf_311_cases, "nam-sf-311-cases", "City and County of San Francisco — 311 cases", "City and County of San Francisco — 311 cases",
   "us_local", "opendata",
   "https://data.sf.gov/resource/vw6y-z8j6.json?$limit=500&$order=:id",
   "",
   "en", "[\"usa\",\"ca\",\"311\",\"opendata\"]", 3600,
-  "San Francisco 311 service cases with request type, responsible agency, status and location.");
+  "San Francisco 311 service cases with request type, responsible agency, status and location.",
+  "service_request_id");
 
 VJSON(nam_sf_air_traffic_passenger, "nam-sf-air-traffic-passenger", "City and County of San Francisco — SFO passenger traffic", "City and County of San Francisco — SFO passenger traffic",
   "us_local", "economy",
@@ -208,19 +249,29 @@ VJSON(nam_sf_air_traffic_passenger, "nam-sf-air-traffic-passenger", "City and Co
   "en", "[\"usa\",\"ca\",\"aviation\",\"economy\"]", 86400,
   "Monthly SFO passenger counts by airline, terminal and geographic region.");
 
-VJSON(nam_sf_building_permits, "nam-sf-building-permits", "City and County of San Francisco — building permits", "City and County of San Francisco — building permits",
+/* Registry sweep 2026-10-22: 60 of 10000 records a run collapsed onto a uid
+   already written (0.6%). VJSON/VGEO's id precedence list finds no field in
+   this Socrata record, so it fell back and keyed on content. Measured over two
+   pages before the key was touched: 1,000 of 1,000 distinct — the permit record id. */
+VJSON_IDKEYS(nam_sf_building_permits, "nam-sf-building-permits", "City and County of San Francisco — building permits", "City and County of San Francisco — building permits",
   "us_local", "economy",
   "https://data.sf.gov/resource/i98e-djp9.json?$limit=500&$order=:id",
   "",
   "en", "[\"usa\",\"ca\",\"permits\",\"economy\"]", 21600,
-  "San Francisco DBI permit records with proposed use, estimated cost and status.");
+  "San Francisco DBI permit records with proposed use, estimated cost and status.",
+  "record_id");
 
-VJSON(nam_sf_fire_calls, "nam-sf-fire-calls", "City and County of San Francisco — fire department calls for service", "City and County of San Francisco — fire department calls for service",
+/* Registry sweep 2026-10-22: 2 of 10000 records a run collapsed onto a uid
+   already written (0.0%). VJSON/VGEO's id precedence list finds no field in
+   this Socrata record, so it fell back and keyed on content. Measured over two
+   pages before the key was touched: 1,000 of 1,000 distinct — the dataset's own rowid. */
+VJSON_IDKEYS(nam_sf_fire_calls, "nam-sf-fire-calls", "City and County of San Francisco — fire department calls for service", "City and County of San Francisco — fire department calls for service",
   "us_local", "hazard",
   "https://data.sf.gov/resource/nuek-vuh3.json?$limit=500&$order=:id",
   "",
   "en", "[\"usa\",\"ca\",\"fire\",\"hazard\"]", 3600,
-  "SFFD calls for service including medical, alarm and fire responses with dispatch timing and neighbourhood.");
+  "SFFD calls for service including medical, alarm and fire responses with dispatch timing and neighbourhood.",
+  "rowid");
 
 VJSON(nam_sf_police_incidents, "nam-sf-police-incidents", "City and County of San Francisco — police incident reports", "City and County of San Francisco — police incident reports",
   "us_local", "crime",
@@ -229,11 +280,16 @@ VJSON(nam_sf_police_incidents, "nam-sf-police-incidents", "City and County of Sa
   "en", "[\"usa\",\"ca\",\"crime\",\"police\"]", 21600,
   "SFPD incident reports since 2018 with category, resolution, district and coordinates.");
 
-VGEO(nam_sonomacounty_ca_animal_shelter_intake_and_outcome, "nam-sonomacounty-ca-animal-shelter-intake-and-outcome", "Sonoma County, California — Animal Shelter Intake and Outcome", "Sonoma County, California — Animal Shelter Intake and Outcome",
+/* Registry sweep 2026-10-22: 320 of 8000 records a run collapsed onto a uid
+   already written (4.0%). VJSON/VGEO's id precedence list finds no field in
+   this Socrata record, so it fell back and keyed on content. Measured over two
+   pages before the key was touched: 800 of 800 distinct — the impound number. */
+VGEO_IDKEYS(nam_sonomacounty_ca_animal_shelter_intake_and_outcome, "nam-sonomacounty-ca-animal-shelter-intake-and-outcome", "Sonoma County, California — Animal Shelter Intake and Outcome", "Sonoma County, California — Animal Shelter Intake and Outcome",
   "us_local", "opendata",
   "https://data.sonomacounty.ca.gov/resource/924a-vesw.geojson?$limit=400&$order=:id",
   "en", "[\"usa\",\"ca\",\"opendata\",\"opendata\"]", 21600,
-  "Socrata open-data feed from Sonoma County, California: Animal Shelter Intake and Outcome, one JSON record per row.");
+  "Socrata open-data feed from Sonoma County, California: Animal Shelter Intake and Outcome, one JSON record per row.",
+  "impound_number");
 
 VGEO(nam_sonomacounty_ca_sonoma_county_rebuilding_permits, "nam-sonomacounty-ca-sonoma-county-rebuilding-permits", "Sonoma County, California — Sonoma County Rebuilding Permits", "Sonoma County, California — Sonoma County Rebuilding Permits",
   "us_local", "economy",

@@ -3386,3 +3386,209 @@ eas-tw-moa-travel-food	EMITS_NOTHING	1	-1	0	0	0	-1	36.0	no records reached intel
 cyb-eduskunta-mp	OK	0	0	1000	1001	1000	-1	5.3	
 cyb-datagouv-fr-marches	EMITS_NOTHING	1	-1	0	0	0	-1	19.9	no records reached intel_items
 cyb-folketing-afstemning	OK	0	0	50	50	50	-1	1.3	
+cyb-folketing-dokument	OK	0	0	50	50	50	-1	2.1	
+cyb-folketing-oda-aktor	OK	0	0	50	50	50	-1	1.4	
+cyb-folketing-oda-sag	OK	0	0	50	50	50	-1	1.3	
+cyb-folketing-sagstrin	OK	0	0	50	50	50	-1	1.2	
+cyb-folketing-stemme	OK	0	0	50	50	50	-1	1.2	
+cyb-oireachtas-constituencies	OK	0	0	8	8	8	-1	1.2	
+cyb-contractsfinder-ocds-award	OK	0	0	1999	2000	1999	-1	32.1	
+cyb-oireachtas-divisions	OK	0	0	50	50	50	-1	2.3	
+cyb-oireachtas-houses	OK	0	0	20	21	20	-1	1.0	
+cyb-oireachtas-questions	OK	0	0	50	50	50	-1	1.7	
+cyb-prh-fi-companies	OK	0	0	100	101	100	-1	2.1	
+cyb-prh-fi-companies-p2	OK	0	0	100	101	100	-1	2.0	
+cyb-europarl-corporate-bodies	OK	0	0	1000	1001	1000	-1	26.9	
+cyb-recherche-entreprises-fr	OK	0	0	500	501	500	-1	7.4	
+cyb-rechtspraak-nl-atom	OK	0	0	100	100	100	-1	1.3	
+cyb-rechtspraak-nl-recent	OK	0	0	50	50	50	-1	1.2	
+cyb-riksdagen-dokumentlista2	OK	0	0	50	50	50	-1	1.6	
+cyb-recherche-entreprises-fr-assoc	EMITS_NOTHING	1	-1	0	0	0	-1	12.4	no records reached intel_items
+cyb-rpvs-sk-plain	OK	0	0	400	401	400	-1	4.5	
+cyb-scotparl-committees	OK	0	0	169	169	169	-1	1.4	
+cyb-scotparl-constituencies	OK	0	0	223	223	223	-1	1.2	
+cyb-scotparl-memberparties	OK	0	0	977	977	977	-1	1.3	
+cyb-scotparl-parties	OK	0	0	14	14	14	-1	1.3	
+cyb-scotparl-regions	OK	0	0	29	29	29	-1	1.2	
+cyb-rpo-sk-search	OK	0	0	206	206	206	-1	9.3	
+cyb-sejm-pl-interpellations	OK	0	0	50	50	50	-1	1.9	
+cyb-sejm-pl-processes	OK	0	0	50	50	50	-1	1.8	
+cyb-tweedekamer-activiteit	OK	0	0	50	50	50	-1	1.2	
+cyb-tweedekamer-besluit	OK	0	0	50	50	50	-1	1.1	
+cyb-tweedekamer-document	OK	0	0	50	50	50	-1	1.0	
+cyb-tweedekamer-fractie	OK	0	0	50	50	50	-1	1.1	
+cyb-tweedekamer-stemming	OK	0	0	50	50	50	-1	1.2	
+cyb-tweedekamer-zaak	OK	0	0	50	50	50	-1	1.1	
+cyb-ukparl-committees	OK	0	0	50	51	50	-1	2.4	
+cyb-sejm-pl-prints	OK	0	0	3490	3490	3490	-1	8.3	
+cyb-ukparl-constituencies	OK	0	0	20	21	20	-1	1.8	
+cyb-ukparl-commons-divisions	OK	0	0	25	25	25	-1	2.6	
+cyb-ukparl-interests	OK	0	0	20	21	20	-1	1.1	
+cyb-ukparl-committee-publications	OK	0	0	50	51	50	-1	7.6	
+cyb-ukparl-members-search	OK	0	0	80	81	80	-1	1.5	
+cyb-ukparl-parties-commons	OK	0	0	17	17	17	-1	0.8	
+cyb-findtender-ocds-tender	OK	0	0	2000	2001	2000	-1	51.1	
+cyb-ukparl-edm-list	OK	0	0	50	50	50	-1	5.0	
+cyb-ukparl-lords-divisions	OK	0	0	50	50	50	-1	5.7	
+cyb-ukparl-treaties	OK	0	0	100	101	100	-1	2.3	
+cyb-usaspending-glossary	EMITS_NOTHING	1	-1	0	0	0	-1	2.5	no records reached intel_items
+cyb-ukparl-statutory-instruments	OK	0	0	100	101	100	-1	4.3	
+cyb-usaspending-recipient-count	EMITS_NOTHING	1	-1	0	0	0	-1	2.6	no records reached intel_items
+nam-ags-nibrs-group-a-crime-data-nibrs-group-a-crime-data	OK	0	0	10000	10001	10000	-1	6.5	
+nam-ags-metro-transportation-network-tnet-in-king-county-for	OK	0	0	10000	10001	10000	-1	9.2	
+nam-ags-road-centerlines-road-centerlines	OK	0	0	10000	10001	10000	-1	9.9	
+nam-austin-311	COLLISION	0	0	10000	7384	7383	-1	11.2	2617 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-austin-crime-reports	OK	0	0	10000	10001	10000	-1	7.8	
+nam-bloomington-in-nuisance-complaints	OK	0	0	8000	8001	8000	-1	7.4	
+cyb-europarl-meetings	OK	0	0	708	708	708	-1	70.1	
+nam-cambridgema-asbestos-removal-permits	OK	0	0	2860	2860	2860	-1	5.5	
+nam-brla-street-lighting	OK	0	0	8000	8001	8000	-1	9.0	
+nam-cambridgema-medical-events	OK	0	0	8000	8001	8000	-1	7.3	
+nam-cambridgema-sprinkler-and-standpipe-permits	OK	0	0	2253	2253	2253	-1	4.7	
+nam-cambridgema-commonwealth-connect-service-requests	OK	0	0	8000	8001	8000	-1	12.7	
+nam-cambridgema-police-department-crash-data-historical	OK	0	0	8000	8001	8000	-1	16.0	
+cyb-europarl-adopted-texts	SLOW	-1	0	-1	-1	1115	-1	90.1	hit --timeout 90.1s; 1115 rows already stored
+nam-chicago-crimes-recent	COLLISION	0	0	10000	9997	9996	-1	12.1	4 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-chicago-311-requests	COLLISION	0	0	10000	8511	8510	-1	17.5	1490 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-cityofchicago-beach-e-coli-predictions	OK	0	0	8000	8001	8000	-1	7.3	
+nam-chicago-building-permits	OK	0	0	10000	10001	10000	-1	21.0	
+nam-chicago-towed-vehicles	COLLISION	0	0	6935	6856	6856	-1	13.3	79 of 6935 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-cityofchicago-beach-lab-data	OK	0	0	8000	8001	8000	-1	9.4	
+nam-chicago-food-inspections	COLLISION	0	0	10000	7778	7777	-1	26.1	2223 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-cityofchicago-cdph-environmental-enforcement	OK	0	0	8000	8001	8000	-1	11.9	
+nam-cityofgainesville-311-service-requests-mygnv	OK	0	0	8000	8001	8000	-1	9.9	
+nam-cityofgainesville-code-complaints-violations-permits	OK	0	0	8000	8001	8000	-1	8.4	
+nam-chicago-traffic-crashes	COLLISION	0	0	10000	8106	8105	-1	21.8	1895 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-cityofchicago-chicago-energy-benchmarking	COLLISION	0	0	8000	3915	3914	-1	12.4	4086 of 8000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-cityofgainesville-gru-customer-reclaimed-water-consumption	COLLISION	0	0	8000	7991	7990	-1	6.7	10 of 8000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-cityofnewyork-street-closures-due-to-construction-acti	COLLISION	0	0	4343	4152	4152	-1	5.3	191 of 4343 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-ckan-wprdc-health	OK	0	0	67	67	67	-1	3.5	
+nam-cityofnewyork-parking-meters-locations-and-status	OK	0	0	8000	8001	8000	-1	9.5	
+nam-cityofgainesville-traffic-crashes	OK	0	0	8000	8001	8000	-1	10.7	
+nam-cta-routes-status	OK	0	0	8	8	8	-1	0.9	
+nam-cta-alerts-json	OK	0	0	58	58	58	-1	1.3	
+nam-cityofnewyork-nypd-complaint-data-current-year-to-date	OK	0	0	8000	8001	8000	-1	12.4	
+nam-cityofnewyork-nypd-complaint-data-historic	OK	0	0	8000	8001	8000	-1	13.8	
+nam-dc-arcgis-services	OK	0	0	451	451	451	-1	3.1	
+nam-dc-environment-energy-building-energy-performance-dat	OK	0	0	1967	1967	1967	-1	3.2	
+nam-dc-environment-energy-building-energy-benchmarks	OK	0	0	4000	4001	4000	-1	5.9	
+nam-dc-environment-energy-webmercator-building-energy-per	OK	0	0	1967	1967	1967	-1	3.0	
+nam-ckan-wprdc-packages	OK	0	0	371	371	371	-1	11.5	
+nam-ckan-wprdc-recent	OK	0	0	371	371	371	-1	10.6	
+nam-honolulu-bus-stop-locations	OK	0	0	3873	3873	3873	-1	4.6	
+nam-dc-floodmap-zoning-districts	OK	0	0	981	981	981	-1	8.9	
+nam-honolulu-agricultural-land-use-polygons	OK	0	0	530	530	530	-1	7.2	
+nam-dc-zoning-webmercator-dcgis-zoningply	OK	0	0	981	981	981	-1	8.5	
+nam-dc-zoning-dcgis-zoningply	OK	0	0	981	981	981	-1	8.8	
+nam-mbta-alerts	OK	0	0	133	133	133	-1	0.9	
+nam-kcmo-kcmo-food-permits	OK	0	0	3681	3681	3681	-1	3.9	
+nam-lacity-energy-and-water-use-municipal-buildings	OK	0	0	468	468	468	-1	1.6	
+nam-mbta-lines	OK	0	0	165	165	165	-1	0.8	
+nam-mbta-routes	OK	0	0	179	179	179	-1	1.4	
+nam-mbta-facilities	OK	0	0	1881	1881	1881	-1	4.3	
+nam-mbta-vehicles	OK	0	0	806	806	806	-1	2.7	
+nam-mbta-stops	OK	0	0	2000	2001	2000	-1	4.9	
+nam-mesaaz-bikepaths	OK	0	0	730	730	730	-1	1.8	
+nam-la-crime-recent	COLLISION	0	0	10000	7179	7178	-1	8.0	2822 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-dc-environment-energy-webmercator-building-energy-ben	OK	0	0	4000	4001	4000	-1	22.7	
+nam-la-311-requests	OK	0	0	10000	10001	10000	-1	15.2	
+nam-mesaaz-streetcenterline	OK	0	0	8000	8001	8000	-1	7.7	
+nam-montgomerycountymd-county-well-permits	OK	0	0	5842	5842	5842	-1	8.9	
+nam-montgomerycountymd-dps-general-permits	OK	0	0	2861	2861	2861	-1	3.3	
+nam-montgomerycountymd-crash-reporting-drivers-data	OK	0	0	8000	8001	8000	-1	10.1	
+nam-nola-truck-routes	OK	0	0	3604	3604	3604	-1	4.5	
+nam-norfolk-blocked-railroad-crossing-incident-repor	COLLISION	0	0	1828	1820	1820	-1	2.5	8 of 1828 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-montgomerycountymd-crash-reporting-incidents-data	OK	0	0	8000	8001	8000	-1	10.4	
+nam-mesaaz-overlay-districts-data	OK	0	0	7793	7793	7793	-1	18.4	
+nam-norfolk-better-buildings-challenge-properties	OK	0	0	8000	8001	8000	-1	9.1	
+nam-norfolk-streetlights-and-outages-reports	COLLISION	0	0	8000	7846	7845	-1	8.6	155 of 8000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-nyc-air-quality	OK	0	0	19827	19827	19827	-1	10.3	
+nam-nyc-arrests-ytd	OK	0	0	10000	10001	10000	-1	10.2	
+nam-nyc-parks-events	OK	0	0	500	501	500	-1	1.1	
+nam-nyc-311-open	COLLISION	0	0	10000	9993	9992	-1	15.1	8 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-nyc-collisions-recent	COLLISION	0	0	10000	7422	7421	-1	12.4	2579 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-oaklandca-blue-disabled-parking-zones	OK	0	0	846	846	846	-1	1.7	
+nam-nyc-dob-permits	COLLISION	0	0	10000	7470	7469	-1	15.9	2531 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-oaklandca-oakland-bike-parking	OK	0	0	2387	2387	2387	-1	3.4	
+nam-nyc-noise-complaints	COLLISION	0	0	10000	9999	9998	-1	12.4	2 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-oaklandca-residential-parking-permit-zones	COLLISION	0	0	842	840	840	-1	1.5	2 of 842 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-nyc-shootings-ytd	OK	0	0	10000	10001	10000	-1	9.0	
+nam-nyc-hpd-violations	OK	0	0	10000	10001	10000	-1	20.5	
+nam-nyc-restaurant-inspections	COLLISION	0	0	10000	8113	8112	-1	15.5	1888 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-sccgov-schools-areas	OK	0	0	570	570	570	-1	3.2	
+nam-princegeorgescountymd-county-click-311-qalert	OK	0	0	8000	8001	8000	-1	8.6	
+nam-providenceri-providence-tree-dataset	COLLISION	0	0	8000	7997	7996	-1	7.8	4 of 8000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-providenceri-providence-tree-inventory	COLLISION	0	0	8000	7356	7355	-1	8.5	645 of 8000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-septa-busdetours	OK	0	0	71	71	71	-1	0.9	
+nam-sccgov-zoning	OK	0	0	1087	1087	1087	-1	4.3	
+nam-providenceri-pvd-parcels	OK	0	0	8000	8001	8000	-1	9.7	
+nam-seattle-911-fire	COLLISION	0	0	10000	10000	9999	-1	8.4	1 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-seattle-police-reports	COLLISION	0	0	10000	9984	9983	-1	8.8	17 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-sf-311-cases	COLLISION	0	0	10000	9927	9926	-1	14.1	74 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-sf-air-traffic-passenger	OK	0	0	20000	20001	20000	-1	14.2	
+nam-sf-police-incidents	OK	0	0	10000	10001	10000	-1	10.0	
+nam-sonomacounty-ca-sonoma-county-rebuilding-permits	OK	0	0	2096	2096	2096	-1	2.8	
+nam-seattle-building-permits	COLLISION	0	0	10000	9782	9781	-1	19.7	219 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-sf-building-permits	COLLISION	0	0	10000	9940	9939	-1	17.9	61 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-sf-fire-calls	COLLISION	0	0	10000	9998	9997	-1	13.1	3 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-ags-arizona-social-vulnerability-index-azsvi-by-tracts-a	OK	0	0	1765	1765	1765	-1	5.7	
+nam-sonomacounty-ca-animal-shelter-intake-and-outcome	COLLISION	0	0	8000	7680	7679	-1	9.4	321 of 8000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-sonomacounty-ca-sonoma-county-sheriff-s-office-incident	OK	0	0	8000	8001	8000	-1	7.8	
+nam-ags-california-transit-stops-ca-transit-stops	OK	0	0	10000	10001	10000	-1	6.8	
+nam-ags-bpd-crimes-bpd-crimes	OK	0	0	10000	10001	10000	-1	8.1	
+nam-ags-cfp-priority-highway-freight-network-truck-crashes-a	OK	0	0	10000	10001	10000	-1	16.1	
+nam-ags-maine-stream-habitat-viewer-crossings	OK	0	0	10000	10001	10000	-1	11.0	
+nam-ags-indiana-trails-inventory-open-trails-allopentrails	OK	0	0	5502	5502	5502	-1	13.7	
+nam-ags-medical-authoritative-data-nursing-homes	OK	0	0	692	692	692	-1	1.7	
+nam-ags-cfp-priority-highway-freight-network-truck-crashes-p	OK	0	0	10000	10001	10000	-1	17.1	
+nam-ags-lion-bike-network-view-lion	OK	0	0	10000	10001	10000	-1	15.3	
+nam-ags-oahu-pedestrian-and-bicycle-crash-cluster-classified	OK	0	0	4343	4343	4343	-1	6.5	
+nam-ags-police-crime-mapping-crimedata	OK	0	0	10000	10001	10000	-1	8.5	
+nam-cageo-conservation-services	OK	0	0	181	181	181	-1	3.1	
+nam-calif-oal-rss	OK	0	0	4	4	4	-1	1.5	
+nam-ags-montana-air-quality-monitoring-data-montana-air-qual	EMITS_NOTHING	1	-1	0	0	0	-1	10.8	no records reached intel_items
+nam-ags-wv-efire-inform-view-perimeters	OK	0	0	3799	3799	3799	-1	6.7	
+nam-ags-wv-efire-inform-view-origins	OK	0	0	3815	3815	3815	-1	7.6	
+nam-caltrans-airport-runways-airport-runways	OK	0	0	852	852	852	-1	3.9	
+nam-caltrans-hospital-heliports-hospital-heliports	OK	0	0	170	170	170	-1	1.2	
+nam-caltrans-all-roads-all-roads	OK	0	0	4000	4001	4000	-1	5.6	
+nam-caltrans-crs-functional-classification-crs-functional-class	OK	0	0	4000	4001	4000	-1	6.0	
+nam-caltrans-public-airport-public-airports	OK	0	0	242	242	242	-1	1.4	
+nam-caltrans-local-bridges-local-bridges	OK	0	0	4000	4001	4000	-1	5.0	
+nam-caltrans-services	OK	0	0	236	236	236	-1	3.9	
+nam-caltrans-ccvra-erosion-risk-ccvra-erosion-risk	OK	0	0	4000	4001	4000	-1	10.8	
+nam-caltrans-cctv-cctv	OK	0	0	2936	2936	2936	-1	11.4	
+nam-colorado-alternative-fuels-and-electric-vehicle-c	OK	0	0	3067	3067	3067	-1	5.4	
+nam-ct-education-directory	OK	0	0	1232	1232	1232	-1	2.2	
+nam-delaware-firstmap-services	OK	0	0	183	183	183	-1	2.7	
+nam-delaware-delaware-public-education-organization-d	COLLISION	0	0	4299	3913	3913	-1	5.8	386 of 4299 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-fl-fdot-services	OK	0	0	144	144	144	-1	2.9	
+nam-colorado-boulder-county-building-footprints	OK	0	0	8000	8001	8000	-1	10.9	
+nam-delaware-permitted-septic-systems	COLLISION	0	0	8000	7840	7839	-1	11.2	161 of 8000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-md-imap-services	OK	0	0	261	261	261	-1	4.5	
+nam-ct-covid-19-reported-patient-impact-and-hos	OK	0	0	6627	6627	6627	-1	17.3	
+nam-mass-gis-services	OK	0	0	472	472	472	-1	11.1	
+nam-md-md-bepscoveredbuildings-maryland-beps-covered-buil	OK	0	0	4000	4001	4000	-1	7.1	
+nam-md-md-chesapeakebaydeadzones-chesapeake-bay-dead-zone	OK	0	0	4000	4001	4000	-1	4.7	
+nam-md-md-coastalresiliencyassessment-priority-shoreline	OK	0	0	4000	4001	4000	-1	6.6	
+nam-md-md-criticalareas-critical-areas-towns	OK	0	0	704	704	704	-1	4.7	
+nam-indiana-gis-services	OK	0	0	941	941	941	-1	22.8	
+nam-md-md-pointsourcedischarges-point-source-discharges	OK	0	0	863	863	863	-1	2.3	
+nam-md-md-focalareas-targeted-ecological-areas	OK	0	0	4000	4001	4000	-1	8.5	
+nam-md-md-nutrientmanagementsetbacksfromwaterways-rivers	OK	0	0	4000	4001	4000	-1	8.5	
+nam-michigan-hospitalization-by-county	OK	0	0	747	747	747	-1	1.7	
+nam-md-md-protectedlands-md-environmental-trust-easements	OK	0	0	1358	1358	1358	-1	6.1	
+nam-michigan-map-annual-hospitalization	OK	0	0	747	747	747	-1	1.9	
+nam-ags-land-ownership-land-ownership	OK	0	0	10000	10001	10000	-1	73.7	
+nam-md-md-censusdata-census-tracts	OK	0	0	1394	1394	1394	-1	26.1	
+nam-michigan-annual-hospitalization-by-county-filtere	OK	0	0	664	664	664	-1	8.6	
+nam-nh-geodata-services	EMITS_NOTHING	1	-1	0	0	0	-1	2.9	no records reached intel_items
+nam-nc-onemap-services	OK	0	0	136	136	136	-1	5.6	
+nam-pa-covid-19-unusable-vaccine-current-county	OK	0	0	2724	2724	2724	-1	4.2	
+nam-texas-texas-commission-on-environmental-qualit-2	OK	0	0	3127	3127	3127	-1	3.5	
+nam-texas-texas-commission-on-environmental-qualit-5	OK	0	0	1431	1431	1431	-1	2.1	
+nam-utah-gis-services	EMITS_NOTHING	1	-1	0	0	0	-1	1.4	no records reached intel_items
+nam-texas-texas-commission-on-environmental-qualit-6	OK	0	0	800	801	800	-1	2.5	
+nam-texas-texas-commission-on-environmental-qualit-3	OK	0	0	3600	3601	3600	-1	5.0	
+nam-texas-texas-commission-on-environmental-qualit-4	OK	0	0	3200	3201	3200	-1	4.3	
+nam-michigan-mdot-bureau-of-bridges-and-structures-co	OK	0	0	6400	6401	6400	-1	10.6	
