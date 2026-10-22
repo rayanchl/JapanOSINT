@@ -1723,6 +1723,53 @@ Engine subtleties worth knowing before writing a row:
   (`hptest` 40b-iii). Any other row in this shape says so on its next run; a
   sweep for them is the obvious next measurement.
 
+  **That sweep is done: 669 cycling rows measured, SEVEN stalled, and all
+  seven are fixed** (2026-10-22, `docs/measured-cycle-stalls-2026-10-22.tsv`;
+  `tools/audit_page_ceiling.py` gained the `CYCLE_STALLED` verdict — a notice
+  carrying `failed_page` on a `page_resume` row — and `WALK_CUT` for the same
+  failed page on a row that does not cycle). 467 `CEILING_UNKNOWN`, 136
+  `CEILING_DECLARED`, 15 COMPLETE, 43 `FETCH_FAILED`, 1 SLOW. **Read the
+  FETCH_FAILED against the path, not the row**: the agent proxy's own
+  `recentRelayFailures` listed tunnel closures for five of those hosts while
+  the sweep ran.
+
+  The seven say something the stall count does not: **a refused page 2 is
+  rarely a page-2 problem.** Each needed a different fix, and five of them were
+  wrong in a way no ceiling arithmetic could reach.
+  * **ENA ×3** — `www.ebi.ac.uk` does not refuse `offset=1000`, it refuses
+    `offset` at all: `offset=1` answers the same 400
+    `{"message":"Unsupported param offset"}`. The note above was written from
+    one boundary reading and generalised wrongly. The three rows now read a
+    rolling 30-day `first_public` window (ENA's own `api/count` sizes it, and
+    the archive behind them is 7,556,500 / 360,690 / 61,625 records) and store
+    6,362 / 3,436 / 289 — each exactly the count declared for its window. They
+    also needed an explicit `timeout_ms`: the SARS-CoV-2 query measured
+    **38.6 s cold** against the engine's 20 s `HP_HTTP_TIMEOUT`, so the first
+    fixed run timed out at `bytes=0` and filed a fetch-failure for a query
+    that works.
+  * **`BC_MINERAL_TENURE`** — the WFS refuses `startIndex` without `sortBy`
+    ("Cannot do natural order without a primary key", the hazard this file
+    already records from the other side). With `sortBy=TENURE_NUMBER_ID` and
+    `count=10000`: 50 records → **42,327**, its own `numberMatched`.
+  * **`ENERGINET_CAPACITY_MUNICIPALITY`** and **`TRONSCAN_TOP_ACCOUNTS`** both
+    answered 429 and wanted OPPOSITE fixes. Energinet limits by request
+    FREQUENCY, not size — 429 at `limit=1000` and `limit=10000`, then
+    `limit=50000` served in full — so it stopped paging and reads its whole
+    12,771-record dataset in one request. TronScan's cost is per RECORD (a
+    detail hop per listed account, so a page of 50 is 51 requests in a burst):
+    measured 2 of 10 requests 429 at the global 150 ms gap and 0 of 10 at
+    1,000 ms, so it got that gap in `core/hostgate.c` and KEPT its cycle,
+    because the per-run detail budget of 1,000 reaches all 10,000 accounts only
+    if the slice moves.
+  * **`SI_GURS_CADASTRAL_MUN`** was not broken: the 404 was transient and a
+    re-read stores 2,698 / 2,698. One probe is one reading, in this direction
+    too.
+
+  **Two of the seven had no `id_keys` at all** (BC's GeoJSON features, and
+  Energinet, which was keying on `Month` — a dimension every municipality in
+  that month shares). A stalled cycle hides a key defect behind it, because a
+  row that only ever reads one page never shows the collision.
+
   533 rows cycle in total. One shape to keep in mind: `interval = 2592000` is
   monthly, so a 500-page collection on that cadence takes about two years to
   come round — better than never, and the notice says where it is.
