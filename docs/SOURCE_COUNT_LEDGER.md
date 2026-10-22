@@ -5,7 +5,18 @@ was seeded from, what it measured and what it taught. Moved out of `CLAUDE.md`
 on 2026-10-19 so that file keeps the rules and the current number; the lessons
 that a new batch must not relearn are summarised there. Newest first.
 
-**The registered count is 58,019** (2026-10-21): 58,016 plus **3 rows from open
+**The registered count is 58,052** (2026-10-22): 58,019 plus batch 54's 32
+rows and `FR_AN_DEPUTY_STAFF` (2,077 of 2,077 French parliamentary staff,
+measured). Batch 54 is the part of batch 45's staging set that batch 49 left
+behind, recovered by fixing two over-broad alternatives in
+`tools/wp_routes_sweep.py`'s MACHINERY regex — and the headline finding is that
+**the staging set was already registered**, 5,392 of 5,643 endpoints, which is
+batch 49's own count. The note is
+`native/collectors/OSINT_SOURCES_BATCH_54_JPWPLEFTOVERS.md`; the readings are
+`docs/probe-sources-batch54.tsv`, `docs/emit-sources-batch54-2026-10-22.tsv`
+(35 of 35 OK, 4,454 records) and `docs/rejected-sources-batch54.tsv`.
+
+**The registered count was 58,019** (2026-10-21): 58,016 plus **3 rows from open
 item B2's re-pointing pass** — `EU_ECB_SUPERVISED_ENTITIES_LSI` (the LSIs sheet
 of the ECB's monthly workbook, 2,175 banks that `HP_XLSX`'s one-sheet read
 would otherwise have dropped at the seam) and two Stortinget exports the tree

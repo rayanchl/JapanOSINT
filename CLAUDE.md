@@ -89,7 +89,24 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 58,019** (2026-10-21): 58,016 plus three rows from
+**The registered count is 58,052** (2026-10-22): 58,019 plus **batch 54's 32
+rows** and `FR_AN_DEPUTY_STAFF`. Batch 54 exists because of a correction:
+**batch 45's staging set was ALREADY REGISTERED** — 5,392 of its 5,643
+endpoints are in the tree and 5,392 is batch 49's own row count, so batch 49
+*is* that staging set, while the file was still headed "NOT generated, NOT
+registered". Believing that header would have created 5,392 duplicate
+endpoints; it is a record now, not a to-do list. (Batch 37's file claimed
+"still unprobed" for a fortnight after it was probed — same trap, second
+time.) Of the 251 genuinely absent, 203 are machinery the sweep rejects by
+design, 1 is the Miyawaka casino takeover main already removed, and 48 were
+real content rejected by **two over-broad alternatives in one regex, both
+found by measuring**: `form` was unanchored so it matched in|form|ation,
+silently dropping the whole `information` family including a 1,074-record
+member-company register, and `^xo_` (written for a slider plugin) also matched
+`xo_event`, an event calendar. Details:
+`native/collectors/OSINT_SOURCES_BATCH_54_JPWPLEFTOVERS.md`.
+
+**The registered count was 58,019** (2026-10-21): 58,016 plus three rows from
 open item B2's re-pointing pass — the ECB workbook's LSIs sheet (2,175 banks
 `HP_XLSX`'s one-sheet read would have dropped at the seam) and two Stortinget
 exports the tree was not reading. Five more rows were re-pointed rather than
@@ -1134,6 +1151,18 @@ underneath them that older notes in this file predate:
   `collectorGroupLabel`, `engine`, `kind`; the iOS dashboard groups on
   `collector` under group headings (it grouped on `layer`, which ~1% of
   sources declare).
+* **A new beat's group goes in `tools/gen_collectors_def.py`, NOT in
+  `core/collectors.def`** — the def is GENERATED, so a hand-written line there
+  is overwritten by the next `make collectors-def` and meanwhile
+  `collectors-def-check` still fails, because the check regenerates from the
+  census and never reads the file. Hit 2026-10-22 with batch 54: three def
+  lines added by hand, the build clean, the def containing the key, and the
+  check still reporting `UNASSIGNED: hp3b54_jpwporg`. Two of the three keys
+  passed only because KEYWORDS matched the substrings "media" and "corp"; the
+  third's dominant category is `organization`, which no KEYWORD or
+  CATEGORY_GROUP rule covers. The fix is an `OVERRIDES` entry (and a label) in
+  the script, then `make collectors-def` and a rebuild.
+
 * **Collectors are grouped** (2026-10-17): `core/collectors.def` is GENERATED
   by `tools/gen_collectors_def.py` from the collector census and gives every
   collector key a `parent` among 22 `grp_*` groups (government, legal,

@@ -285,3 +285,38 @@ Two things left behind deliberately, each written down rather than guessed:
 * **a CSV or JSON inside a ZIP is an engine gap worth one line in the backlog.**
   `lib/zipread.c` already exists and `HP_XLSX` already goes through it, so the
   distance is short; the AMO files are the case that wants it.
+
+## `CZ_CUZK_CADASTRE` — resolved, and it is a credential gate
+
+Found by asking the host what it SERVES rather than guessing a path. The root
+of `api-kn.cuzk.gov.cz` is titled "REST API k datům KN" and links a Swagger UI;
+the UI's own `index.js` names the spec at `/swagger/v1.0/swagger.json`, and the
+spec gives everything the row needed:
+
+    base path     /api/v1              (every path I tried at the root 404s,
+                                        identically, which is why guessing failed)
+    paths         41
+    security      ApiKey, "in": "header"
+    searches      /api/v1/{Parcely,Stavby,Jednotky,Rizeni}/Vyhledani
+
+**Measured 2026-10-22, and the gate is clean:**
+
+    no ApiKey header         401, body {"title":"Unauthorized","status":401}
+    ApiKey: <bogus value>    401, the same body
+    /AplikacniSluzby/Health  200 — the service is UP; it is the DATA that is gated
+
+So the row carries `key_env = "JO_CUZK_API_KEY"` and an `ApiKey: {key}` header,
+and stores a "needs credential" notice naming what is missing until a key is
+set. That is rule 1's honest degradation, and it is a better state than a 404
+that reads like a dead publisher.
+
+Two things about its shape worth knowing before anyone adds the key:
+
+* **its searches take CODES, not names.** `KodKatastralnihoUzemi` is a
+  cadastral-area code and `KmenoveCisloParcely` a parcel number, so this is an
+  identifier pivot like the openFDA nine — asking it for a company name will
+  correctly return nothing.
+* **the API documents the honest-empty distinction this tree cares about**: a
+  missing object is 404, while a search matching nothing is **200 with an empty
+  `data` list and an informational message**. Whoever wires the key should
+  check the engine reads the second as an empty rather than a failure.

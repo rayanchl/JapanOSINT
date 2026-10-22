@@ -209,6 +209,44 @@ static const hp_source HP3B31_EUNAT[] = {
       "submissions and whether it is written-only. Who is invited to be heard "
       "on a bill is the earliest public signal of who is lobbying it" },
 
+  /* The one file of France's parliamentary open data the engine can read
+   * today (open item B2, 2026-10-22). The row above this beat's FR pivot
+   * stays failing honestly: its register is the debates and amendments, which
+   * data.assemblee-nationale.fr publishes as CSV or JSON INSIDE A ZIP, and no
+   * engine mode reads that (lib/zipread.c exists but only HP_XLSX uses it).
+   *
+   * MEASURED 2026-10-22: HTTP 200, 109,317 bytes, text/csv, 2,077 data rows,
+   * SEMICOLON-delimited (5 fields on semicolons, 1 on commas) and NOT UTF-8 —
+   * windows-1252, which is why a UTF-8 reader sees "Identifiant du d?put?".
+   * One deputy holds many staff, so the identity is the (deputy, collaborator)
+   * tuple and not the deputy: keying on the deputy alone would collapse 2,077
+   * rows onto the ~577 who have staff.
+   *
+   * `index_url` is not optional here. The path carries `/17/` — the
+   * LEGISLATURE number — which is a value frozen into a URL exactly like a
+   * date, and it will 404 when the 18th begins. The portal's own
+   * deputies-in-office page links the current file, so the engine follows it
+   * every run; `.url` is the edition seen today, which the engine replaces. */
+  { .id = "FR_AN_DEPUTY_STAFF",
+    .name = "France Assemblée nationale — deputies' parliamentary staff",
+    .name_ja = "フランス国民議会 議員秘書", .category = "government",
+    .portal = "https://data.assemblee-nationale.fr",
+    .record_type = "fr-parliamentary-staff",
+    .tags = "\"fr\",\"parliament\",\"staff\"", .mode = HP_CSV, .free_tier = 1,
+    .url = "https://data.assemblee-nationale.fr/static/openData/repository/17/"
+      "amo/collaborateurs_csv_opendata/liste_collaborateurs_excel.csv",
+    .index_url = "https://data.assemblee-nationale.fr/acteurs/deputes-en-exercice",
+    .index_href_must = "liste_collaborateurs_excel.csv",
+    .csv_delim = "semi", .charset = "windows-1252",
+    .interval = 604800,
+    .title_keys = "Nom du collaborateur",
+    .id_keys = "Identifiant du député+Nom du collaborateur+Prénom du collaborateur",
+    .description = "Every parliamentary assistant employed by a sitting French "
+      "deputy, by name, with the deputy they work for and that deputy's own "
+      "identifier — from the Assemblée nationale's own open data. Who staffs a "
+      "legislator's office is a public fact that is rarely published anywhere "
+      "else" },
+
   { .id = "NO_STORTINGET_INTERPELLATIONS",
     .name = "Norway Storting — interpellations to ministers",
     .name_ja = "ノルウェー議会 大臣への質問(緊急質問)", .category = "government",

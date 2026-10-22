@@ -1,0 +1,49 @@
+id	url	verdict	kind	items	http	bytes	note
+JO54_WP_NEOPARK_INFORMATION	https://www.neopark.co.jp/wp-json/wp/v2/information?per_page=100&orderby=date&order=desc	PASS	json:.	1	200	1417	
+JO54_WP_SAFARI_XOEVENT	https://safari.co.jp/wp-json/wp/v2/xo_event?per_page=100&orderby=date&order=desc	PASS	json:.	57	200	81490	
+JO54_WP_HACHIOJIJC_KUBIOGLOBALDATA	https://hachioji-jc.com/wp-json/wp/v2/kubio/global-data?per_page=100&orderby=date&order=desc	PASS	json:.	1	200	43770	
+JO54_WP_HACHIOJIJC_KUBIOPREVIEWCHANGESE	https://hachioji-jc.com/wp-json/wp/v2/kubio/preview-changeset?per_page=100&orderby=date&order=desc	EMPTY_RESULTSET	json:.	0	200	2	declared array_path resolved to an empty array
+JO54_WP_HIGASHIOMIISHIKAI_XOEVENT	https://higashiomi-ishikai.jp/wp-json/wp/v2/xo_event?per_page=100&orderby=date&order=desc	PASS	json:.	100	200	159152	
+JO54_WP_HIRAKAWAZOO_IMPORTANTINFORMATION	https://hirakawazoo.jp/wp-json/wp/v2/importantinformation?per_page=100&orderby=date&order=desc	PASS	json:.	2	200	52406	
+JO54_WP_JANAGASAKISAIKAI_INFORMATION	https://ja-nagasakisaikai.com/wp-json/wp/v2/information?per_page=100&orderby=date&order=desc	PASS	json:.	100	200	1668350	
+JO54_WP_KANIISHIKAI_IRYOINFORMATION	https://kaniishikai.com/wp-json/wp/v2/iryoinformation?per_page=100&orderby=date&order=desc	PASS	json:.	50	200	59623	
+JO54_WP_KUMACHO_USERS	https://kuma-cho.com/wp-json/wp/v2/users?per_page=100	HTTP_ERR		0	404	0	Not Found
+JO54_WP_SAITAMACHOSASHI_INFORMATIONITEM	https://saitama-chosashi.jp/wp-json/wp/v2/information_item?per_page=100&orderby=date&order=desc	PASS	json:.	54	200	870761	
+JO54_WP_TAKAISHIYEG_FORMER	https://takaishi-yeg.com/wp-json/wp/v2/former?per_page=100&orderby=date&order=desc	HTTP_ERR		0	503	0	Service Unavailable
+JO54_WP_TANABEYEG_INFORMATION	https://tanabe-yeg.com/wp-json/wp/v2/information?per_page=100&orderby=date&order=desc	PASS	json:.	3	200	56687	
+JO54_WP_FISHISJ_INFORMATION	https://www.fish-isj.jp/wp-json/wp/v2/information?per_page=100&orderby=date&order=desc	PASS	json:.	7	200	32398	
+JO54_WP_KANGORENMEI_INFORMATIONS	https://kango-renmei.gr.jp/wp-json/wp/v2/informations?per_page=100&orderby=date&order=desc	PASS	json:.	17	200	404337	
+JO54_WP_MINAMIHOUJINKAI_INFORMATION	https://minamihoujinkai.com/wp-json/wp/v2/information?per_page=100&orderby=date&order=desc	PASS	json:.	100	200	173573	
+JO54_WP_MIYAZAKICITYZOO_XOEVENT	https://www.miyazaki-city-zoo.jp/wp-json/wp/v2/xo_event?per_page=100&orderby=date&order=desc	PASS	json:.	6	200	7768	
+JO54_WP_NAGOYAKITAKUMED_INFORMATIONS	https://nagoyakitaku-med.com/wp-json/wp/v2/informations?per_page=100&orderby=date&order=desc	HTTP_ERR		0	404	0	Not Found
+JO54_WP_NAGOYAKITAKUMED_INFORMATIONSS	https://nagoyakitaku-med.com/wp-json/wp/v2/informationss?per_page=100&orderby=date&order=desc	HTTP_ERR		0	404	0	Not Found
+JO54_WP_NAKATSUGAWAJC_INFORMATION	https://nakatsugawa-jc.com/wp-json/wp/v2/information?per_page=100&orderby=date&order=desc	PASS	json:.	11	200	45412	
+JO54_WP_OSAKASISHAKYO_KUSHAKYOINFORMATION	https://www.osaka-sishakyo.jp/wp-json/wp/v2/kushakyo_information?per_page=100&orderby=date&order=desc	PASS	json:.	13	200	279655	
+JO54_WP_SAIJOJC_KUBIOGLOBALDATA	https://saijo-jc.jp/wp-json/wp/v2/kubio/global-data?per_page=100&orderby=date&order=desc	PASS	json:.	2	200	86168	
+JO54_WP_SAIJOJC_KUBIOPREVIEWCHANGESE	https://saijo-jc.jp/wp-json/wp/v2/kubio/preview-changeset?per_page=100&orderby=date&order=desc	PASS	json:.	1	200	1239	
+JO54_WP_TOYAMAFAMILYPARK_XOEVENT	https://www.toyama-familypark.jp/wp-json/wp/v2/xo_event?per_page=100&orderby=date&order=desc	NET_ERR		0	0	0	[Errno 104] Connection reset by peer
+JO54_WP_YANAGAWAMED_XOEVENT	http://www.yanagawa-med.com/wp-json/wp/v2/xo_event?per_page=100&orderby=date&order=desc	PASS	json:.	100	200	675446	
+JO54_WP_YUEKI_XOEVENT	https://www.yueki.com/wp-json/wp/v2/xo_event?per_page=100&orderby=date&order=desc	PASS	json:.	100	200	149395	
+JO54_WP_YOTSUBACOOP_INFORMATION	https://yotsubacoop.jp/wp-json/wp/v2/information?per_page=100&orderby=date&order=desc	PASS	json:.	100	200	252840	
+JO54_WP_8246CCI_PAGES	https://8246cci.or.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc	HTTP_ERR		0	401	0	Unauthorized
+JO54_WP_8246CCI_POSTS	https://8246cci.or.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc	HTTP_ERR		0	401	0	Unauthorized
+JO54_WP_8246CCI_USERS	https://8246cci.or.jp/wp-json/wp/v2/users?per_page=100	HTTP_ERR		0	401	0	Unauthorized
+JO54_WP_JAKOUKASHINOBI_FARMINGINFORMATION	https://ja-kouka.shinobi.or.jp/wp-json/wp/v2/farming_information?per_page=100&orderby=date&order=desc	PASS	json:.	3	200	49208	
+JO54_WP_KANAGAWATOTIREN_FORMAT	https://kanagawa-totiren.or.jp/wp-json/wp/v2/format?per_page=100&orderby=date&order=desc	PASS	json:.	8	200	161499	
+JO54_WP_CHIBAGYOSEI_MEMBERSINFORMATION	https://www.chiba-gyosei.or.jp/wp-json/wp/v2/members_information?per_page=100&orderby=date&order=desc	PASS	json:.	100	200	163852	
+JO54_WP_FUKUYAMA_MEMBERINFORMATION	https://www.fukuyama.or.jp/wp-json/wp/v2/member-information?per_page=100&orderby=date&order=desc	PASS	json:.	100	200	920396	
+JO54_WP_IBJA_INFORMATION	https://www.ib-ja.or.jp/wp-json/wp/v2/information?per_page=100&orderby=date&order=desc	NET_ERR		0	0	0	[Errno 104] Connection reset by peer
+JO54_WP_IIZUKACCI_INFORMATION	https://www.iizuka-cci.org/wp-json/wp/v2/information?per_page=100&orderby=date&order=desc	PASS	json:.	2	200	23894	
+JO54_WP_JANAGANOIIJAN_INFORMATION	https://www.ja-nagano.iijan.or.jp/wp-json/wp/v2/information?per_page=100&orderby=date&order=desc	HTTP_ERR		0	503	0	Service Unavailable
+JO54_WP_JASAKAI_BANKINFORMATION	https://www.ja-sakai.or.jp/wp-json/wp/v2/bank-information?per_page=100&orderby=date&order=desc	PASS	json:.	3	200	52461	
+JO54_WP_JASAPPORO_INFORMATION	https://www.ja-sapporo.or.jp/wp-json/wp/v2/information?per_page=100&orderby=date&order=desc	NET_ERR		0	0	0	[Errno 104] Connection reset by peer
+JO54_WP_KAWAKITA_XOEVENT	https://www.kawa-kita.or.jp/wp-json/wp/v2/xo_event?per_page=100&orderby=date&order=desc	PASS	json:.	65	200	1213075	
+JO54_WP_KAWAGOE_XOEVENT	https://www.kawagoe.or.jp/wp-json/wp/v2/xo_event?per_page=100&orderby=date&order=desc	PASS	json:.	100	200	600321	
+JO54_WP_KYOTOJC_INFORMATION	https://www.kyoto-jc.or.jp/2026/wp-json/wp/v2/information?per_page=100&orderby=date&order=desc	PASS	json:.	10	200	36788	
+JO54_WP_MASUDAMED_HEALTHINFORMATION	https://www.masuda-med.or.jp/wp-json/wp/v2/health_information?per_page=100&orderby=date&order=desc	PASS	json:.	34	200	467220	
+JO54_WP_MASUDAMED_INFORMATION	https://www.masuda-med.or.jp/wp-json/wp/v2/information?per_page=100&orderby=date&order=desc	PASS	json:.	7	200	16497	
+JO54_WP_NISHIKYOMED_INFORMATION	https://www.nishikyo-med.or.jp/wp-json/wp/v2/information?per_page=100&orderby=date&order=desc	PASS	json:.	7	200	81362	
+JO54_WP_OSAKAJC_INFORMATION	https://www.osaka-jc.or.jp/wp-json/wp/v2/information?per_page=100&orderby=date&order=desc	PASS	json:.	100	200	150284	
+JO54_WP_YANAGAWACCI_LATESTINFORMATION	https://www.yanagawa-cci.or.jp/wp-json/wp/v2/latest_information?per_page=100&orderby=date&order=desc	NET_ERR		0	0	0	[Errno 104] Connection reset by peer
+JO54_WP_YNA_INFORMATION	https://www.yna.or.jp/wp-json/wp/v2/information?per_page=100&orderby=date&order=desc	PASS	json:.	100	200	2246181	
+JO54_WP_RAKUNO_RECRUITINFO	https://www.rakuno.ac.jp/wp-json/wp/v2/recruit_info?per_page=100&orderby=date&order=desc	EMPTY_RESULTSET	json:.	0	200	2	declared array_path resolved to an empty array

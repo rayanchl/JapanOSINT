@@ -1,0 +1,265 @@
+# The 253 endpoints of batch 45's staging set that batch 49 did NOT register,
+# with the sample title the sweep recorded for each — which is what made the
+# classification a reading rather than a guess about the collection's name.
+#
+# Measured 2026-10-22. 203 are machinery, 1 is a domain takeover
+# (www.miyawakacci.or.jp, Polish casino spam), and 48 are real content that two
+# over-broad alternatives in tools/wp_routes_sweep.py's MACHINERY regex had
+# rejected: unanchored `form` matched in|form|ation, and `^xo_` matched the
+# xo_event calendar as well as the xo_liteslider it was written for.
+#
+# Batch 54 is what shipped from the 48. See
+# native/collectors/OSINT_SOURCES_BATCH_54_JPWPLEFTOVERS.md
+rest_base	total	host	type_label	sample_title
+member-information	1074	www.fukuyama.or.jp	会員情報	株式会社プレジデンツビジョン
+recommend	1042	www.shizenha.net	おすすめ商品	【食材セット】かぼちゃのミートパイ
+other	756	nahacci.com	新着-その他-	（11/6）『令和８年度 健康づくり講演会 ～働き盛り必見！脳のためにできること～』開催について
+xo_event	573	www.yanagawa-med.com	イベント	阿久根・辛島理事
+members_information	426	www.chiba-gyosei.or.jp	会員専用お知らせ	令和８年度 千葉支部 第２回研修会のご案内
+posts	386	8246cci.or.jp	投稿	令和8年熊本地震にかかる「くまもと事業者再出発支援補助金」の現地サポートセンターの開設のご案内
+xo_event	357	www.kawagoe.or.jp	イベント	【注意喚起】不正アクセスによる情報漏えい等の事案を踏まえたセキュリティ対策の徹底について
+information	286	www.minamihoujinkai.com	お知らせ	令和8年8月千葉豪雨で被災された中小企業向けの支援まとめ
+mailnews	280	www.kawasaki.kanagawa.med.or.jp	川医メールニュース	第33号（1009）
+information	260	www.yna.or.jp	お知らせ	《日本ACLS協会共催》「AHA ACLS プロバイダーコース」を開催します［募集中］
+posts	257	www.miyawakacci.or.jp	投稿	Kasyno online BLIK – jak ustalić budżet i kontrolować wydatk
+xo_event	257	higashiomi-ishikai.jp	イベント	うらべ在宅クリニック
+information	228	www.osaka-jc.or.jp	お知らせ	【第３８回なにわ淀川花火大会 翌日一斉清掃ボランティア募集のご案内】
+information	228	yotsubacoop.jp	インフォメーション	2026年10月19日 月曜日お届け情報
+information	227	ja-nagasakisaikai.com	お知らせ	【味まる館】10月の営業について（変更）
+information	210	www.ja-nagano.iijan.or.jp	営農技術情報	Vivid 2026/10
+search	191	www.mito-med.or.jp	医療機関検索	宮川内科クリニック
+xo_event	160	www.yueki.com	イベント	薬価基準検討部会
+link_collection	107	acma.or.jp	リンクコレクション	
+xo_event	65	www.kawa-kita.or.jp	イベント	決算法人説明会
+links	62	www.zenshinhoren.or.jp	支援事例リンク集	横浜市信用保証協会_経営支援事例のご紹介
+xo_event	57	www.safari.co.jp	イベント	群馬県民の日（10/28）
+information_item	54	saitama-chosashi.jp	お知らせ	暮らしと事業のよろず相談会を開催いたします。（予約不要）
+information	52	www.ib-ja.or.jp	最新情報	JAグループ茨城 業界研究会 就職相談セミナー（WEB）
+iryoinformation	50	kaniishikai.com	医療情報	森岡耳鼻咽喉科
+top_banner	42	ja-iwatechuoh.or.jp	トップページのバナー	田園風景
+recommend	38	www.kousei-ehime.or.jp	おすすめ健厚情報	爪トラブルを解消！
+ghostkit_template	35	www.osaka-sishakyo.jp	テンプレート	声で知る福祉の仕事
+health_information	34	www.masuda-med.or.jp	医師会からの健康情報	新型コロナウイルス診療・検査医療機関一覧
+section	34	ja-kagayaki.or.jp	生産組織	大蒲原ぶどう生産組合
+blog_parts	31	www.ja-tohma.jp	ブログパーツ	後払い現金化人気ランキング6社（カード型・1042の新デザイン版）
+pages	31	8246cci.or.jp	固定ページ	金融相談・マル経資金
+banner	28	imizucci.jp	バナー登録	印刷機・紙折機
+banners	26	www.tamana-cci.or.jp	バナー登録	INPIT熊本窓口
+vk-block-patterns	25	www.yna.or.jp	VK Block Patterns	アコーディオン
+vk-block-patterns	22	www.takasakicci.or.jp	VK Block Patterns	リンク+説明文
+vk-block-patterns	21	tsushima-cci.or.jp	VK Block Patterns	テーブル（3列）
+banner	18	www.iwate.med.or.jp	トップページのバナー登録	かまやち敏
+bnrlist	17	www.zenrakuren.or.jp	バナー一覧	ソーシャルメディア利用規約
+adbnr	16	www.yachiyocci.jp	バナー広告	バナー広告募集中
+fl-builder-template	16	www.arao-med.or.jp	Templates	ヘッダー202110
+informations	16	www.kango-renmei.gr.jp	INFORMATION	これからの看護はどう変わる？<br />日本看護連盟「政策セミナー」を開催します！
+banner	15	www.kawa-kita.or.jp	各種バナー	所得税の定額減税について
+blog_parts	15	gokatsura.jp	ブログパーツ	PC：寝室解放
+top_banner	15	www.maido.or.jp	トップ・バナー	【9/28~】「中小企業組合運営指導事業」Ｗeb研修会
+homeslide	13	www.gifuminami.jp	スライド	絵はがき展示
+kushakyo_information	13	www.osaka-sishakyo.jp	区社協の採用情報	老人福祉センター担当 常勤嘱託職員【 西 】区
+top-movie	13	zoomo.co.jp	トップページ動画	「山でゆったり暮らすクマ、街中出没する異常なクマ」vol.3
+banner	12	www.shiojiri.or.jp	トップバナー	12 長野県事業承継・引継ぎ支援センター
+side_banner	12	e-matsuura.jp	サイドバー バナー画像	日本商工会議所
+banner_left	11	www.gifuminami.jp	バナー 左	法人会 ビジネスマッチング
+information	11	www.nakatsugawa-jc.com	事業のお知らせ	DAY3 モデルツアー参加者募集！
+lazyblocks	11	www.nagano-takken.or.jp	ブロック	画面右追従バナー
+popupbanner	11	www.jpc.or.jp	ポップパップバナー	どうぶつ愛護フェスティバル
+slide	11	www.kamocci.or.jp	スライド	かもいろ秋号（R8.10）
+footer-banner	10	www.nagano-takken.or.jp	フッターバナー	長野県起業立地ガイド
+information	10	www.kyoto-jc.or.jp	事業・例会	10月例会「任務完遂 ～自衛隊流、組織をけん引する力～」
+blog_parts	9	www.ja-esoya.com	ブログパーツ	共済のスライダー
+bnr	9	www.jayamagata.or.jp	リンクバナー	ＱＲ伝票作成ツール
+carousel	9	www.yachiyocci.jp	スライドショー	LINE
+contents-bnr03	9	www.urayasu-cci.or.jp	フッターバナー(400×140)	商工会議所パソコン教室
+top-linkban	9	www.iwate-takken.or.jp	TOPリンクバナー	西警察 不動産業者注意喚起
+top_slide	9	www.city.kumamoto.med.or.jp	トップスライド	子宮頸がん予防（HPV）ワクチン定期接種 日曜・祝日実施医療機関
+top_slider	9	ichoice-coop.com	TOPページスライダー管理	おためしボックス
+xo_event	9	www.toyama-familypark.jp	イベント	休園日
+banner_nurse	8	www.yna.or.jp	バナー(看護職のみなさま)	看護協会WEB入会
+contents-bnr01	8	www.urayasu-cci.or.jp	コンテンツバナー(300×300)	CLUB CCI
+format	8	kanagawa-totiren.or.jp	各種様式	災害支援発注書
+slideshow	8	www.kumagayacci.or.jp	トップページスライドショー	創業塾
+banner	7	sendai-ishikai.jp	バナー	精神科医と一般かかりつけ医連携強化事業「川薩地区GーPネット」
+information	7	www.fish-isj.jp	information	ISJ meeting, Kagoshima, 17－20 September 2027
+information	7	www.ja-sapporo.or.jp	その他のお知らせ	ＡＴＭ休止のお知らせ
+information	7	www.masuda-med.or.jp	情報公開	「労働施策総合推進法」に基づく中途採用比率の公表
+information	7	www.nishikyo-med.or.jp	お知らせ	西京区における新型コロナウイルス感染症対策
+lazyblocks	7	www.vet.iwate-u.ac.jp	ブロック	研究室詳細
+link_banner	7	www.himejijc.or.jp	リンク	第31回国際アカデミーin姫路 開催地報告書
+slide	7	www.shiojiri.or.jp	トップ画像	しおじり生活応援券
+slider	7	www.ja-kamoto.or.jp	ストアスライダー	ＪＡかもとのギフト～熨斗承ります
+adbnr2	6	nahacci.com	広告バナー２	沖縄県内企業様限定 AI導入補助金自己負担1/2
+banner_link	6	www.yokaichiba-jc.com	バナーリンク集	メンバー募集
+blog_parts	6	sr-saga.com	ブログパーツ	会員名簿唐津
+latest_information	6	www.yanagawa-cci.or.jp	最新情報	雇用対策事業「ローカルキャリアビジョン」
+slide	6	www.nagano-takken.or.jp	画像スライド	ホームページリニューアル
+slide	6	www.umitamago.jp	バナー画像	うみたまカフェ_アフタヌーンティーのお知らせ
+slideshow	6	www.japanarts.co.jp	スライドショー管理	【アーティストサポート】プロジェクト
+um_form	6	www.m-kouiki119.jp	フォーム	電子申請アカウント設定
+xo_event	6	www.miyazaki-city-zoo.jp	イベント	うんちく大クイズ大会
+ystdtb-patterns	6	www.okayama-chousashikai.or.jp	ブロックパターン	岡山大学法学部講義用のお知らせテンプレート
+banner	5	uozu.ccis-toyama.or.jp	バナー	会員共済_アクサ生命
+banner	5	zoomo.co.jp	バナー	IWAYAMA HELLO FESTIVAL
+banner2	5	uozu.ccis-toyama.or.jp	広告バナー	株式会社 アイザック
+banner_slider	5	www.akitakenshakyo.or.jp	バナースライダー	秋田県保育士・保育所支援センター
+footerbanner	5	kantou-yeg.com	フッターバナー	会員手帳
+home-banner	5	www.imic.or.jp	トップ：バナー	IMIC 採用情報
+informationss	5	www.nagoyakitaku-med.com	会員ページ（新着情報）	■肺がん検診の二重読影会開催日変更のご案内
+lazyblocks	5	www.geidankyo.or.jp	Lazy Blocks	画像
+loos-cbp	5	ja-iwatechuoh.or.jp	ブロックパターン	test
+parts	5	www.hars.gr.jp	パーツ	トップページ：フッターリンク
+recruit_info	5	www.rakuno.ac.jp	採用情報	酪農学園大学・獣医学群の教員公募
+top-pickup	5	www.iwate-takken.or.jp	TOPメイン画像	令和8年度不動産業開業支援セミナー
+top_slider	5	seikatsuclub-kyosai.coop	トップスライダー	お誕生前申し込み
+top_slider	5	www.maido.or.jp	トップ・スライダー画像（PC）	育成就労
+top_slider_sp	5	www.maido.or.jp	トップ・スライダー画像（スマホ）	育成就労
+topslide	5	www.jayamagata.or.jp	トップページスライド	田んぼ（秋）
+topslider	5	www.ome-hojinkai.or.jp	トップスライダー	令和10年度税制改正要望
+um_form	5	tottori-kai.gyosei.or.jp	フォーム	新規登録 の複製
+vk-block-patterns	5	www.kohokuishikai.jp	VK ブロックパターン	理事会報告テーブル２列
+ys-parts	5	www.doyu.jp	[ys]パーツ	スライダー
+adbnr	4	nahacci.com	広告バナー	オンデマンドセミナー
+banner	4	www.e-fukujyu.com	バナー（小）管理	
+banner	4	www.mikicci.or.jp	バナー	BCP
+banner	4	www.temakizushi.com	外部バナー	PRIDE FISH
+banner_ad	4	www.akitakenshakyo.or.jp	広告	株式会社イチネン
+banner_footer	4	www.yna.or.jp	バナー(関係団体バナー)	公益社団法人日本看護協会 研修ポータルサイト
+blog_parts	4	ashibetsu-cci.or.jp	ブログパーツ	カレンダー（月表示）
+blog_parts	4	www.ama-med.or.jp	ブログパーツ	sidebar01
+blog_parts	4	www.ja-maku.com	ブログパーツ	ヘッダー背景 まーくんの観察日記
+cities_form	4	www.winc.or.jp	市町村社協（様式集）	日常生活自立支援事業関係
+home-banner-en	4	www.imic.or.jp	トップ：バナー（英語）	Medical Record Translation
+kubio/preview-changeset	4	hachioji-jc.com	Kubio Preview	afde5248-815a-489c-bbd1-9fe6c6e0d439
+kubio_section	4	hachioji-jc.com	Kubio Section	SNS
+lazyblocks	4	www.awaji119.jp	ブロック	関連ファイル一覧
+links	4	www.kanagawa-chousashi.or.jp	リンク	神奈川県内公共嘱託登記土地家屋調査士協会名簿
+links	4	www.yna.or.jp	関連リンク	日本看護協会関係
+post_grid	4	www.kuki-jc.com	Post Grid	会員拡大委員会の取り組み
+slider	4	www.ja-itoshima.or.jp	トップページ画像	topSlide04
+top-slider	4	www.ja-kamoto.or.jp	トップスライダー	栗
+topvisual	4	www.zenshinhoren.or.jp	トップページメインビジュアル	動画で分かる信用保証協会
+um_form	4	www.seaza.asia	Forms	SEAZA Members, Register Here!
+um_form	4	www.waza.org	Forms	Default Company Profile
+vk-block-patterns	4	ja-shimabaraunzen.com	VK Block Patterns	VK こぶれタイムズ
+xo_liteslider	4	www.ja-maku.com	スライダー	採用情報ヘッダー
+bank-information	3	www.ja-sakai.or.jp	JAバンク各種規定／お知らせ	手形・小切手の全面的な電子化に向けた対応について
+banner	3	e-matsuura.jp	バナー画像	松浦市歴史観光推進協議会
+banner	3	www.j-chicken.jp	バナー	トリスキサイト
+blog_parts	3	www.ja-pippu.or.jp	ブログパーツ	広報誌の説明文
+blog_parts	3	www.km-hojinkai.or.jp	ブログパーツ	スマホ開閉メニュー下
+blog_parts	3	www.okazakicci.or.jp	ブログパーツ	カスタム投稿の記事一覧をウィジェットに表示
+blog_parts	3	www.shunan-jc.com	ブログパーツ	委員会紹介2025
+farming_information	3	ja-kouka.shinobi.or.jp	営農情報	水稲育苗のポイント
+former	3	takaishi-yeg.com	過去の事業内容	令和7年度
+fvslide	3	otakecci.or.jp	FVスライド	大竹市
+fvslide	3	www.otakecci.or.jp	FVスライド	大竹市
+index-slides	3	www.tottori-kangokyokai.or.jp	スライダー	看護の将来ビジョン2024
+information	3	tanabe-yeg.com	新着情報	OWS南紀田辺･扇ヶ浜大会HP開設のお知らせ
+link_new	3	www.mcishikai.com	リンク	厚生労働省
+mixnuts_banner	3	ichoice-coop.com	アイチョイスをもっと知るバナー	アイチョイス自慢の逸品
+slide	3	e-matsuura.jp	スライド画像	LINEで相談も受け付けています！
+slider	3	www.ikukokawai.com	トップスライダー	スライダー3
+slider	3	www.kaizuka-yeg.jp	トップスライダー	moani
+top-slider	3	www.ja-yatsushiro.or.jp	トップスライドバナー	ミニトマト
+top-view-changing	3	asahi-jc.net	TOPビュー変更	トップビュー3枚目
+top_mv_slide	3	www.seto-yeg.jp	TOP MVスライド	第23回全国サッカー大会 ふくい大会
+um_form	3	yatsushirogun-med.com	フォーム	Default Profile
+vk-block-patterns	3	vet-epi.org	VK Block Patterns	学術集会-告知内容
+xo_liteslider	3	isahaya-jc.jp	スライダー	2026年トップページ
+ys-parts	3	www.yokotecci.or.jp	[ys]パーツ	原稿内によく挟まっているグループ(パーツ)
+blog_parts	2	midorinet-sagatoubu.jp	ブログパーツ	footerボタン
+blog_parts	2	www.akirunojc.gr.jp	ブログパーツ	ブログパーツ（中央）
+blog_parts	2	www.tokorozawa-jc.or.jp	ブログパーツ	ご挨拶
+importantinformation	2	hirakawazoo.jp	重要なお知らせ	園内での撮影時の注意事項について
+information	2	www.iizuka-cci.org	情報提供	今月の所報
+informations	2	www.nagoyakitaku-med.com	新着情報	北区休日急病診療所の院内掲示
+kubio/global-data	2	www.saijo-jc.jp	Kubio Globals	Kubio Globals
+lazyblocks	2	fukaya-jc.org	ブロック	事業報告
+lazyblocks	2	ja-shimabaraunzen.com	ブロック	画像リンク
+lazyblocks	2	www.sumoto-cci.org	ブロック	検定申込書
+lazyblocks_templates	2	www.vet.iwate-u.ac.jp	テンプレート	お知らせ
+lp	2	ichoice-coop.com	拡大チラシLP	1月拡大チラシLP_エラー
+lp	2	www.tokorozawa-jc.or.jp	LP	とこらぶフェス〜Make you happy〜
+ltg-template-parts	2	kvma.jp	Lightning Block Template Parts	フッター
+ltg-template-parts	2	nni-med.jp	Lightning Block Template Parts	フッター001
+ltg-template-parts	2	tsushima-cci.or.jp	Lightning Block Template Parts	フッター
+ltg-template-parts	2	www.omutajc.org	Lightning Block Template Parts	footer
+post_grid	2	midorihoujinkai.or.jp	Post Grid	最新の投稿 &#8211; 3&#215;4
+recommend	2	www.tottori.coop	おすすめ情報	生まれてきた日
+slideshows	2	hanamaki-jc.com	Slideshows	SlideShow1
+snow-monkey-forms	2	ja-yamamoto.or.jp	Snow Monkey Forms	米注文フォーム
+snow-monkey-forms	2	tsushima-cci.or.jp	Snow Monkey Forms	お問い合わせフォーム
+snow-monkey-forms	2	www.ink.or.jp	Snow Monkey Forms	メールアドレス追加申し込み
+snow-monkey-forms	2	www.ja-hiroo.or.jp	Snow Monkey Forms	農業青年の花嫁募集
+topslider	2	kantou-yeg.com	スライダー	スライダー１
+topslider	2	www.izumisanojc.com	トップスライダー	【りんくうSMILE２０２５～海風と音に揺られる幻想ナイト～ 】②
+users	2	8246cci.or.jp	Users	システム 管理者UPD
+vk-block-patterns	2	www.aomori-shihoshoshi.or.jp	VK Block Patterns	お問い合わせバナー
+xo_liteslider	2	www.onocci.or.jp	スライダー	FV_sp
+ys-parts	2	www.okayama-chousashikai.or.jp	[ys]パーツ	サブフッター
+ystdtb-patterns	2	www.doyu.jp	ブロックパターン	総会ベース
+banner	1	iwaki-ishikawa-jc.com	バナー	育LOMバナー
+banner	1	shiga-takken.or.jp	ページ下部バナー	バナー画像
+banner_b	1	www.e-fukujyu.com	バナー（大）管理	ふくおかのねこといぬ
+banner_top	1	shiga-takken.or.jp	TOP上部バナー	バナー画像
+blog_parts	1	www.t-yeg.com	ブログパーツ	共通フッター
+bnrlistb	1	www.zenrakuren.or.jp	大バナー一覧	全酪連OnlineShop
+contents-bnr02	1	www.urayasu-cci.or.jp	広告欄バナー(400×140)	東京湾岸法律事務所
+floating_banner	1	www.mishima-cci.or.jp	フローティングバナー	Web入会申込書
+form_bouka	1	www.munakata119.jp	防火管理講習フォーム表示切替	防火管理講習フォーム表示切替
+form_manage	1	www.munakata119.jp	採用フォーム表示切替	採用フォーム表示切替
+information	1	www.neopark.co.jp	AGT会員お知らせ	旅行代理店様 AGT会員ページ情報更新 2025.10.28
+kubio/global-data	1	hachioji-jc.com	Kubio Globals	Kubio Globals
+kubio/preview-changeset	1	www.saijo-jc.jp	Kubio Preview	55e1b859-c8a5-409b-8da4-563c815f7cb2
+lazyblocks	1	sojajc.com	ブロック	three-slider
+lazyblocks	1	www.palsystem-saitama.coop	ブロック	イベント詳細
+lazyblocks_templates	1	www.sumoto-cci.org	テンプレート	固定ページ
+lazyblocks_templates	1	zoomo.co.jp	テンプレート	固定ページ
+link	1	kagyosei.or.jp	リンク集	リンク集
+link	1	www.ja-taisho.com	link	リンク集
+ltg-template-parts	1	higashiomi-ishikai.jp	Lightning Block Template Parts	医療機関TP
+ltg-template-parts	1	hyogoku-ishikai.jp	Lightning Block Template Parts	ヘッダーカスタム
+ltg-template-parts	1	kasii.jp	Lightning Block Template Parts	TOP用メニュー
+ltg-template-parts	1	www.tagawa-fd-fukuoka.jp	Lightning Block Template Parts	フッター
+post_forms	1	www.shizuoka-na.jp	様式一覧	様式一覧
+post_grid	1	chikugo-jc.or.jp	Post Grid	会員の声一覧
+post_grid	1	www.ja-kei.or.jp	Post Grid	取材日記 一覧
+post_grid_layout	1	midorihoujinkai.or.jp	Saved Layouts	Layout &#8211; Flat
+post_grid_layout	1	www.ja-kei.or.jp	Saved Layouts	取材日記レイアウト
+post_grid_layout	1	www.kuki-jc.com	Saved Layouts	main
+slider	1	fukuoka-ariake.com	メイン画像スライダー	画像登録
+slider	1	ja-minamisatsuma.or.jp	TOPスライド画像	スライド画像
+slider	1	www.ja-kagoshimakimotsuki.or.jp	TOPスライド画像	スライドショー画像
+slider	1	www.nosaimiyagi.or.jp	トップページ写真	トップページ写真
+slider_handmade	1	www.england-hill.com	手作り体験スライド	画像スライダー
+slideshows	1	suzaka-yeg.jp	スライドショー	suzakayeg2020
+snow-monkey-forms	1	kusiro-s.jpn.org	Snow Monkey Forms	お問い合わせフォーム
+snow-monkey-forms	1	sojajc.com	Snow Monkey Forms	お問い合わせ
+snow-monkey-forms	1	sumuz.jp	Snow Monkey Forms	お問い合わせ
+snow-monkey-forms	1	www.chuokai-hiroshima.or.jp	Snow Monkey Forms	お問い合わせ
+snow-monkey-forms	1	www.ja-maku.com	Snow Monkey Forms	お問い合わせフォーム
+snow-monkey-forms	1	www.ja-pippu.or.jp	Snow Monkey Forms	お問い合わせフォーム
+snow-monkey-forms	1	www.jahs.co.jp	Snow Monkey Forms	お問い合わせフォーム
+snow-monkey-forms	1	www.masuda-med.or.jp	Snow Monkey Forms	お問い合わせ
+snow-monkey-forms	1	www.ryoso-lid.or.jp	Snow Monkey Forms	お問い合わせ
+sp_post_carousel	1	saga-shikai.com	Manage Shows	TOP
+sureforms_form	1	www.usuki-yeg.jp	Forms	Simple Contact Form
+top-fixed	1	www.ja-yatsushiro.or.jp	トップ固定バナー	JAやつしろ
+top_important_bns	1	www.city.kumamoto.med.or.jp	トップ重要リンク	【会員専用】令和8年熊本地震 関連情報
+top_info	1	www.temakizushi.com	トップインフォメーション	フォトコンテスト開始！
+topslide	1	www.africansafari.co.jp	トップスライド	トップスライド秋冬
+um_form	1	kanagawa-totiren.or.jp	フォーム	Default Login
+users	1	kuma-cho.com	Users	author
+vk-block-patterns	1	higashiomi-ishikai.jp	VK Block Patterns	医療機関テンプレート
+vk-block-patterns	1	kasii.jp	VK Block Patterns	医師会について下部メニュー
+vk-block-patterns	1	www.kusatsu-ritto.shiga.med.or.jp	VK Block Patterns	医療機関
+vk-block-patterns	1	www.umitonagisa.or.jp	VK Block Patterns	油濁情報
+vk-block-patterns	1	www.yamaguchikensyakyo.jp	VK ブロックパターン	アコーディオン
+xo_liteslider	1	greencoop-nagasaki.jp	スライダー	ヘッダー画像
+xo_liteslider	1	www.gyoda-jc.or.jp	スライダー	TOPスライダー
+xo_liteslider	1	www.uwajima-cci.or.jp	スライダー	メインスライダー
+xo_liteslider	1	www.yamatojc.jp	スライダー	
+xo_liteslider	1	www.yame-houjinkai.com	スライダー	フロントページ
+xo_liteslider	1	www.yawatahamacci.jp	スライダー	トップページのスライド
+ys-parts	1	isahaya-jc.jp	[ys]パーツ	フッター
