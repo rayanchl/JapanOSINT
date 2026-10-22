@@ -756,9 +756,35 @@ The residuals are sub-1% (63 of 10,000 and 14 of 10,000) and are past what a
 rows. A byte-identical repeat upserting onto itself is correct dedupe, not
 loss; whether these are that is unmeasured.
 
+**And the third large collision the sweep found is one where the KEY IS
+RIGHT.** `sci-ocean-ioc-sealevel-tab` reads 1,921 emitted / 1,340 stored, and
+`sensorid` was already measured as 1,336 of 1,336 distinct on 2026-09-07 — the
+feed has simply grown and now repeats rows. Measured on one body 2026-10-22:
+1,921 rows hold **1,635 distinct WHOLE records**, so 286 are the upstream's own
+byte-identical duplicates, which the sink's content hash collapses correctly;
+and of the 259 `sensorid` groups with more than one row, **167 differ only in
+`observations` / `first` / `last` / `timestampdata` / `updatedata`** — running
+counters and timestamps, the same sensor reported twice in one response with
+different totals. `sensorid+observations` would reach 1,602 of 1,921 and store
+one sensor several times, inflating a station INVENTORY. The longer key is the
+worse one again. The row now says so, so nobody re-litigates the verdict.
+
+So of the three large collisions this sweep has surfaced, two were a wrong
+identity worth 30,605 records a run and one is the upstream repeating itself.
+A collision verdict is a question; it took a measurement each time to say which.
+
 The other 14 collisions are 1–4 records each out of hundreds or thousands,
 which is the shape of an upstream's own duplicate rather than a wrong key — but
 each is a question until measured, and they are not measured yet.
+
+**The sweep was killed by a container worker restart at 3,343 rows** (2026-10-22
+10:32) and resumes with `--resume`, which skips what is already in the TSV. That
+is worth writing down as the shape of this job rather than as a result: a
+two-day sweep in a container that restarts will be interrupted, so the file is
+committed as it accumulates and the coverage is stated every time. Nothing
+depends on it finishing — every scheduled run files its own
+`collector-fetch-failure`, so a source's page gains its reason and remedy as the
+scheduler reaches it, and the sweep only front-loads that.
 
 **And eight of the 161 EMITS_NOTHING rows were the TOOL's own confusion.**
 `_camera_refframe`, `_image_embed`, `camera-stills`, `media-analyze`,
