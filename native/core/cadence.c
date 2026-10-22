@@ -11,6 +11,15 @@
 #include <time.h>
 
 #define CAD_MAX_SEC (366L * 86400L)   /* a year: anything slower is a typo */
+/* The compiled default when the database holds no policy and the environment
+ * sets none: ONE system-wide cadence of six hours, the repository owner's
+ * decision of 2026-10-22 ("this interval system should be osint software
+ * wide"). Measured when it shipped (2026-10-22, 55,174 scheduled rows):
+ * 594,367 runs/day as declared against 220,696 under this default. A row that must
+ * be fresher is set from its own page (core/source_interval.h), which
+ * outranks this; an operator who wants "declared" back saves zeros from the
+ * Sources page, which stores a policy and so wins over this default. */
+#define CAD_DEFAULT_GLOBAL_SEC 21600L
 
 static pthread_mutex_t g_mu = PTHREAD_MUTEX_INITIALIZER;
 static cadence_policy  g_pol;                 /* zeros = declared */
@@ -74,6 +83,7 @@ void cadence_init(db_handle *db) {
     p.min_sec    = env_long("JO_SCHED_MIN_INTERVAL_SEC");
     p.max_sec    = env_long("JO_SCHED_MAX_INTERVAL_SEC");
     if (p.global_sec || p.min_sec || p.max_sec) src = "env";
+    else p.global_sec = CAD_DEFAULT_GLOBAL_SEC;   /* the compiled default: global 6 h */
   }
   pthread_mutex_lock(&g_mu);
   g_pol = p; g_src = src;
