@@ -1060,7 +1060,14 @@ every tick, disabling keeps the number, clearing deletes the row, and a change
 re-plans the running scheduler exactly as a policy change does. The source
 page's Frequency card shows declared, measured, policy and "set for this
 source" side by side and names which one decided (`schedule.cadenceBasis`);
-`/api/status` rows carry `overrideInterval`. `tests/unit/test_source_interval.c`
+`/api/status` rows carry `overrideInterval`. **It is edited from the page's
+Settings section as the key `interval_sec`** (2026-10-22): `core/source_settings.c`
+lists it beside the body ceiling, but as a FACADE — reads, writes and the JSON
+for that key delegate to `source_interval.{c,h}`, so there is one row, one
+cache and one generation, not a copy in `source_settings`. Its "default" in
+the JSON is per source (what runs without an override), the key is absent for
+an entity pivot, and the same `PUT /api/sources/:id/settings` the body ceiling
+uses writes it (audited `source.setting.put`). `tests/unit/test_source_interval.c`
 pins the refusals, the precedence under a global policy, disable, persistence
 and clear.
 

@@ -10,7 +10,6 @@ import {
   measured, fmtInterval, fmtBytes, fmtCount, fmtPct, kindLabel, engineLabel,
   statusTone, gradeTone, splitTemplate, NOT_MEASURED,
 } from '../../utils/sourceFormat.js';
-import IntervalOverrideCard from './IntervalOverrideCard.jsx';
 
 /* /console/sources/:id — one source, in the order the audit asked for: what
  * it is (small-model summary), engine and mechanism, parsing, frequency,
@@ -34,6 +33,15 @@ function when(iso) {
  * Writing is operator-only. A non-operator gets 403 on the PUT, so the reason
  * is stated up front and the controls are disabled rather than offered and
  * then refused. */
+/* A knob's unit decides how its numbers read: bytes as MB, seconds as an
+ * interval, anything else as the plain number the server sent. */
+export function fmtSetting(unit, v) {
+  if (v == null) return NOT_MEASURED;
+  if (unit === 'bytes') return fmtBytes(v);
+  if (unit === 'seconds') return fmtInterval(v);
+  return String(v);
+}
+
 export function SettingsSection({ sourceId }) {
   const { data, error, loading, reload } = useApi(`/api/sources/${encodeURIComponent(sourceId)}/settings`);
   const [draft, setDraft] = useState({});      /* key -> {value, enabled} */
@@ -99,7 +107,7 @@ export function SettingsSection({ sourceId }) {
                 </div>
                 <p className="text-[11px] text-osint-muted mt-1">{s.help}</p>
                 <div className="flex items-end gap-2 mt-2">
-                  <Field label={`value (${s.unit})`} hint={`${fmtBytes(s.min)} – ${fmtBytes(s.max)}, default ${fmtBytes(s.default)}`}>
+                  <Field label={`value (${s.unit})`} hint={`${fmtSetting(s.unit, s.min)} – ${fmtSetting(s.unit, s.max)}, default ${fmtSetting(s.unit, s.default)}${s.default_basis ? ` (${s.default_basis})` : ''}`}>
                     <Input
                       mono
                       type="number"
@@ -124,7 +132,7 @@ export function SettingsSection({ sourceId }) {
                    * a tuned value in the box resolves to the default, and that
                    * is the thing an operator needs to read off the page. */
                   ['in effect', <span className={cx(s.enabled && s.effective !== s.default && 'text-accent')}>
-                    {fmtBytes(s.effective)}{!s.enabled && ' — the default, because this setting is off'}
+                    {fmtSetting(s.unit, s.effective)}{!s.enabled && ' — the default, because this setting is off'}
                   </span>],
                   s.configured && ['last changed', `${when(s.updated_at)}${s.updated_by ? ` by ${s.updated_by}` : ''}`],
                 ].filter(Boolean)} className="mt-2" />
@@ -347,7 +355,6 @@ export default function SourceDetailPage() {
             ['average duration (30 d)', sch.stats_30d?.avg_duration_ms != null ? `${Math.round(sch.stats_30d.avg_duration_ms)} ms` : NOT_MEASURED],
             ['last run', when(sch.stats_30d?.last_run_at)],
           ]} />
-          <IntervalOverrideCard id={reg.id} />
         </Card>
       </Section>
 

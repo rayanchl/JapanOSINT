@@ -31,6 +31,11 @@
 #define JO_SOURCE_INTERVAL_H
 #include "db.h"
 
+/* The bounds an interval may take; shared with core/source_settings.c, which
+ * offers the same knob as the `interval_sec` key of the Settings section. */
+#define SI_MIN_SEC 10L
+#define SI_MAX_SEC (366L * 86400L)
+
 typedef struct {
   int  present;          /* a row exists for this source                     */
   long interval_sec;     /* the stored number, kept while disabled           */
