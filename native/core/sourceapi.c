@@ -379,7 +379,16 @@ static int snap_ttl_ms(void) {
 }
 static snapshot *snap_lock(db_handle *db) {
   pthread_mutex_lock(&g_snap_mu);
-  if (!g_snap.built_ms || now_ms() - g_snap.built_ms > snap_ttl_ms()) {
+  /* `>=`, not `>`: a TTL of ZERO means "never serve a cached snapshot", and
+   * with `>` it meant "unless this call lands in the same MILLISECOND as the
+   * last one". That is not a theoretical difference — `test_sourceapi.c` sets
+   * the TTL to 0 precisely so a write it just made is visible to the next
+   * read, and on the macOS runner two consecutive sourceapi_detail() calls
+   * complete inside one millisecond, so the second one read the snapshot from
+   * before the write and the health assertion failed there while passing on
+   * Linux. An operator who disables the cache gets the same surprise, quietly.
+   * At the default 10 s the change is one millisecond of staleness. */
+  if (!g_snap.built_ms || now_ms() - g_snap.built_ms >= snap_ttl_ms()) {
     snapshot fresh;
     snap_load(db, &fresh);
     snap_free(&g_snap);

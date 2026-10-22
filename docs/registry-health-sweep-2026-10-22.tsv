@@ -3278,3 +3278,66 @@ sas-tmd-eq-inside	OK	0	0	10	10	10	-1	2.2
 sas-tmd-eq-rss	OK	0	0	10	10	10	-1	2.4	
 sci-celestrak-analyst	OK	0	0	594	594	594	-1	1.5	
 sci-celestrak-cosmos2251	OK	0	0	586	586	586	-1	1.6	
+sci-celestrak-cubesat	OK	0	0	84	84	84	-1	8.8	
+sci-celestrak-fengyun1c	OK	0	0	1983	1983	1983	-1	2.1	
+sci-celestrak-argos	OK	0	0	30	30	30	-1	13.8	
+sci-celestrak-galileo	OK	0	0	32	32	32	-1	1.4	
+sci-celestrak-glo-ops	OK	0	0	28	28	28	-1	1.2	
+sci-celestrak-geo	OK	0	0	568	568	568	-1	1.6	
+sci-celestrak-globalstar	OK	0	0	36	36	36	-1	1.3	
+sci-celestrak-gnss	OK	0	0	171	171	171	-1	1.7	
+sci-celestrak-gps-ops	OK	0	0	32	32	32	-1	1.3	
+sci-celestrak-intelsat	OK	0	0	55	55	55	-1	1.5	
+sci-celestrak-beidou	OK	0	0	54	54	54	-1	21.8	
+sas-wp-tatoli	OK	0	0	1000	1001	1000	-1	32.8	
+sci-celestrak-last30	OK	0	0	224	224	224	-1	1.5	
+sci-celestrak-military	OK	0	0	45	45	45	-1	1.1	
+sci-celestrak-nnss	OK	0	0	18	18	18	-1	1.3	
+sci-celestrak-oneweb	OK	0	0	651	651	651	-1	1.7	
+sci-celestrak-othercomm	OK	0	0	31	31	31	-1	1.3	
+sci-celestrak-amateur	EMITS_NOTHING	1	-1	0	0	0	-1	28.1	no records reached intel_items
+sci-celestrak-planet	OK	0	0	128	128	128	-1	1.5	
+sci-celestrak-resource	OK	0	0	167	167	167	-1	1.4	
+sci-celestrak-sarsat	OK	0	0	83	83	83	-1	1.6	
+sci-celestrak-satnogs	OK	0	0	627	627	627	-1	1.6	
+sci-celestrak-sbas	OK	0	0	21	21	21	-1	1.2	
+sci-celestrak-iridium-next	OK	0	0	80	80	80	-1	14.0	
+sci-celestrak-science	OK	0	0	46	46	46	-1	1.2	
+sci-celestrak-spire	OK	0	0	72	72	72	-1	1.3	
+sci-celestrak-stations	OK	0	0	21	21	21	-1	1.3	
+sci-celestrak-tdrss	OK	0	0	26	26	26	-1	1.2	
+sci-celestrak-visual	OK	0	0	155	155	155	-1	1.3	
+sci-celestrak-engineering	EMITS_NOTHING	1	-1	0	0	0	-1	33.3	no records reached intel_items
+sci-feed-esa-exploration	OK	0	0	15	15	15	-1	1.1	
+sci-feed-esa-spacescience	OK	0	0	15	15	15	-1	0.8	
+sci-feed-esa-technology	OK	0	0	15	15	15	-1	1.1	
+sci-feed-nasa-science	OK	0	0	10	10	10	-1	2.8	
+sci-feed-phys-space	OK	0	0	30	30	30	-1	0.8	
+sci-feed-sciencedaily-space	OK	0	0	60	60	60	-1	0.9	
+sci-feed-spaceweatherarchive	OK	0	0	10	10	10	-1	0.9	
+sci-jpl-cad-wide	OK	0	0	255	255	255	-1	1.1	
+sci-celestrak-iridium33	EMITS_NOTHING	1	-1	0	0	0	-1	28.0	no records reached intel_items
+sci-jpl-sbdb-apollo	OK	0	0	1000	1001	1000	-1	2.1	
+sci-jpl-nhats	OK	0	0	7154	7154	7154	-1	4.0	
+sci-jpl-scout	OK	0	0	46	46	46	-1	1.0	
+sci-celestrak-orbcomm	OK	0	0	14	14	14	-1	26.2	
+sci-jpl-sentry	OK	0	0	2223	2223	2223	-1	2.1	
+sci-celestrak-ses	OK	0	0	71	71	71	-1	21.6	
+sci-space-hapi-cdaweb	OK	0	0	3636	3636	3636	-1	1.5	
+sci-jpl-sbdb-pha	OK	0	0	1000	1001	1000	-1	6.5	
+sci-space-hapi-iswa	OK	0	0	326	326	326	-1	1.1	
+sci-celestrak-xcomm	OK	0	0	20	20	20	-1	21.6	
+sci-space-hapi-lisird	OK	0	0	29	29	29	-1	0.9	
+sci-ltd-agencies	OK	0	0	350	350	350	-1	4.7	
+sci-usgs-geomag-obs	OK	0	0	43	43	43	-1	1.3	
+sci-space-nasa-images	OK	0	0	100	100	100	-1	1.3	
+eas-cwa-forecast-rss	OK	0	0	2	2	2	-1	1.4	
+eas-ly-committees	OK	0	0	18	18	18	-1	1.4	
+eas-ly-bills	OK	0	0	100	100	100	-1	2.2	
+eas-ly-gazettes	OK	0	0	100	100	100	-1	1.5	
+sci-celestrak-weather	EMITS_NOTHING	1	-1	0	0	0	-1	25.0	no records reached intel_items
+eas-ly-interpellations	EMITS_NOTHING	1	-1	0	0	0	-1	2.2	no records reached intel_items
+sci-space-hapi-amda	EMITS_NOTHING	1	-1	0	0	0	-1	6.8	no records reached intel_items
+eas-ly-ivods	EMITS_NOTHING	1	-1	0	0	0	-1	1.3	no records reached intel_items
+eas-ly-laws	EMITS_NOTHING	1	-1	0	0	0	-1	1.4	no records reached intel_items
+eas-ly-legislators	EMITS_NOTHING	1	-1	0	0	0	-1	1.3	no records reached intel_items
