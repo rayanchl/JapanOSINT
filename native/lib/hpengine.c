@@ -4618,7 +4618,11 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
     if (!has_accept && s->mode != HP_JSON) detail_hdrs[nd++] = "Accept: application/json";
     detail_hdrs[nd] = NULL;
   }
-  int page_max = s->page_max > 0 ? s->page_max : jo_page_max(NULL);
+  /* $JO_PAGE_MAX is the operator's brake and reaches a row that declares its
+   * own ceiling too — see jo_page_max_for() in lib/pagewalk.c for why this
+   * used to read `s->page_max > 0 ? s->page_max : jo_page_max(NULL)` and what
+   * that cost. */
+  int page_max = jo_page_max_for(s->page_max);
   /* A `{page}` token left in the URL after entity expansion is path-segment
    * paging: the upstream numbers its pages in the path (kanpou.ai's
    * /tosan/p/N), which no query parameter can express. hp_expand leaves an

@@ -1924,12 +1924,38 @@ static const hp_source HP3B19_EURASIA[] = {
     .record_type = "address-record",
     .tags = "\"slovenia\",\"cadastre\",\"address\",\"building\",\"gurs\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ipi.eprostor.gov.si/wfs-si-gurs-kn/wfs?service=WFS&version=2.0.0&request=GetFeature&typeNames=SI.GURS.KN:HISNE_STEVILKE&count=1000&outputFormat=application/json",
+    /* `id_keys` named `HS_MID`, WHICH THIS LAYER DOES NOT HAVE. Its properties
+     * are FEATUREID, EID_HISNA_STEVILKA, HS_STEVILKA, HS_DODATEK, EID_STAVBA,
+     * EID_NASELJE, EID_ULICA, TIP_TABLICE, EID_POSTNI_OKOLIS, DATUM_SYS and
+     * ST_HS (read off the live response, 2026-10-22) — so the declared key
+     * matched nothing on every record and the engine fell back to keying on
+     * the first non-empty scalar, which happens to BE `FEATUREID`. It worked
+     * by luck: the fallback follows field ORDER, so a layer re-ordered
+     * upstream would have silently re-keyed 580,000 addresses. The sibling row
+     * above had the same class of defect in its `title_keys` (`KO_IME` for
+     * `NAZIV`). Named explicitly now.
+     *
+     * `sortBy=FEATUREID` for the rule this file states and the row above
+     * measured on this very service: an offset walk with no stable sort serves
+     * one record twice and another never, and the only symptom is a small
+     * collision. Measured 2026-10-22, three consecutive pages of 1,000 both
+     * ways: 3,000 of 3,000 distinct unsorted AND sorted, so no skip is
+     * demonstrable over three pages here — but this row cycles 581 pages
+     * across many runs, where the sibling layer DID re-serve 473 and lose 473
+     * unsorted, and the sort is accepted (200, same distinctness) at no cost.
+     * A sort on the record's own identity is the cheap half of that rule. */
+    .url = "https://ipi.eprostor.gov.si/wfs-si-gurs-kn/wfs?service=WFS&version=2.0.0&request=GetFeature&typeNames=SI.GURS.KN:HISNE_STEVILKE&count=1000&outputFormat=application/json&sortBy=FEATUREID",
     .array_path = "features",
-    .id_keys = "properties.HS_MID",
+    .id_keys = "properties.FEATUREID",
     .interval = 604800,
     .page_param = "startIndex",
-    .page_resume = 1,   /* 580,213 records, measured 2026-10-12: read over a cycle, 1000 pages a run */
+    /* 580,317 features declared by the layer's own numberMatched (2026-10-22;
+     * 580,213 on 2026-10-12, so it grows): read over a cycle, 1,000 a run.
+     * The service was recorded as RETIRED on 2026-10-22 after one 404 to
+     * GetCapabilities — re-asked the same day it answers 200 with 118,420
+     * bytes of capabilities, and both rows store. One probe is one reading in
+     * this direction too: a 404 looks exactly like a withdrawn service. */
+    .page_resume = 1,
     .page_size = 1000,
     .page_start = 0,
     .description = "Every registered house number in Slovenia as a point feature, "

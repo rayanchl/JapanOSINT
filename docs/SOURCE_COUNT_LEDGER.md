@@ -5,6 +5,49 @@ was seeded from, what it measured and what it taught. Moved out of `CLAUDE.md`
 on 2026-10-19 so that file keeps the rules and the current number; the lessons
 that a new batch must not relearn are summarised there. Newest first.
 
+**The count is still 58,045 after a SECOND merge of main the same day**
+(2026-10-22): main merged PR #68 while the first merge was being resolved, and
+it adds no rows — it re-measures existing ones. Four conflicts, three of them
+the same situation as the first round, and this time the two branches had
+reached *opposite* answers on the same endpoints:
+
+* **The three ENA rows.** Both branches measured that `www.ebi.ac.uk` refuses
+  `offset` outright. Main then gave them a rolling 30-day `first_public`
+  window; this branch gave them `window_days`, a forward cycle from
+  2020-01-01 and 2010-01-01. **This branch's rows are kept, and main's own
+  comment is the argument**: it records that the 7,556,500 runs already in the
+  archive are NOT backfilled by a rolling window, and that date tokens cannot
+  express the backfill because they step back on failure rather than iterate.
+  A row that reads only the tail drops the archive by design, which rule 2
+  does not allow when the engine can iterate. Two of main's findings are
+  ported in: `timeout_ms = 120000` on all three (the SARS-CoV-2 query measured
+  **38.6 s cold** against the 20 s default, so main's first fixed run timed out
+  at `bytes=0` and filed a fetch-failure for a query that works), and
+  `first_public` added to the influenza row's FIELD list — a field absent from
+  the list is absent from the stored record, so `date_keys` had nothing to
+  order on. That row stays unwindowed in both readings, because 1,324 of its
+  61,537 samples carry no `first_public` at all.
+* **`BC_MINERAL_TENURE`.** Both added `sortBy=TENURE_NUMBER_ID`. **Main's row
+  is kept wholesale**: it measured `count=10000` honoured at 15.2 MB / 1.8 s a
+  page and `numberMatched` 42,327, so five pages read the cadastre whole where
+  this branch's `count=50` cycled 1,000 a run for 42 runs — and main's row also
+  carries the `id_keys`, `title_keys` and `date_keys` this branch's lacked.
+  This branch's note on NOT applying the sort to the tree's other 17
+  sortBy-less WFS rows is appended, because that is the half that generalises.
+* **`hpengine_test.c`** — both fixture sets again; main's `40f` ($JO_PAGE_MAX
+  bounding a row that declares its own `page_max`) sits beside this branch's
+  41–51d.
+
+And main's sweep **refuted an open item of this branch's**: E6 said Slovenia's
+`wfs-si-gurs-kn` had been withdrawn, on one 404 to GetCapabilities. Re-measured
+here, the same URL answers 200 with 118,420 bytes and both rows store — 2,698
+and 580,317 features. Auditing the row that was believed dead then found
+`SI_GURS_HOUSE_NUMBERS` keyed on `properties.HS_MID`, **a field that layer does
+not have**; the engine's first-non-empty-scalar fallback happened to land on
+`FEATUREID`, the right answer by luck, and would have silently re-keyed 580,000
+addresses had the layer's field order changed. Named explicitly, with
+`sortBy=FEATUREID`. A row cannot be audited while it is believed to be dead.
+
 **The registered count is 58,045** (2026-10-22): main's 57,527 merged with this
 branch's 58,055, on the **57,536** base they share. Measured with `make
 source-count` and cross-checked against the binary's own `--list-sources`

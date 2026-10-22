@@ -1956,6 +1956,12 @@ static const hp_source HP3B19_HEALTH[] = {
     .interval = 86400,
     .window_days = 7,
     .window_from = "2020-01-01",
+    /* 120 s, not the engine's 20 s default. Main measured this query COLD at
+     * 38.6 s (3.8 s warm) — it is computed over a 7.5-million-run tax tree —
+     * and at the default the row timed out with bytes=0 and filed a
+     * fetch-failure for a query that works. A row whose remedy is "wait" must
+     * not disclose itself as broken. */
+    .timeout_ms = 120000,
     .title_keys = "run_accession",
     .description = "Every SARS-CoV-2 sequencing run deposited in the European "
       "Nucleotide Archive with the fields that carry the OSINT rather "
@@ -1982,9 +1988,19 @@ static const hp_source HP3B19_HEALTH[] = {
      * It does not need one: at `limit=0` the whole collection comes back in
      * one request — 61,537 records, 2.3 MB, 4.9 s, equal to the endpoint's own
      * /count. One request a day, complete, nothing to resume. */
-    .url = "https://www.ebi.ac.uk/ena/portal/api/search?result=sample&query=tax_tree(11320)&fields=sample_accession,description,country,location,collection_date,center_name,host,isolate,strain,serotype&format=json&limit=0",
+    .url = "https://www.ebi.ac.uk/ena/portal/api/search?result=sample&query=tax_tree(11320)&fields=sample_accession,description,country,location,collection_date,center_name,host,isolate,strain,serotype,first_public&format=json&limit=0",
+    /* `first_public` is in the FIELD list although nothing filters on it here,
+     * which is main's finding on its own version of this row: a record stamped
+     * with the date it became public is what lets `date_keys` order the feed at
+     * all, and a field absent from the list is absent from the stored record.
+     * The 1,324 samples that carry no first_public simply have no date, which
+     * is the honest answer and the very reason this row is not windowed. */
+    .date_keys = "first_public",
     .id_keys = "sample_accession",
     .interval = 86400,
+    /* Same archive and the same cold-query cost as its two read_run siblings
+     * (4.9 s warm here, 2026-10-19). */
+    .timeout_ms = 120000,
     .title_keys = "sample_accession",
     .description = "Influenza A virus samples registered in the European Nucleotide "
       "Archive with host species, isolate and strain names, serotype, "
@@ -2011,6 +2027,10 @@ static const hp_source HP3B19_HEALTH[] = {
     .interval = 86400,
     .window_days = 90,
     .window_from = "2010-01-01",
+    /* Same cold-query cost as the SARS-CoV-2 row: 17 s measured cold for a
+     * 30-day window, three seconds under the 20 s default, and a 90-day
+     * window is wider. Too close to leave to chance. */
+    .timeout_ms = 120000,
     .title_keys = "run_accession",
     .description = "Mycobacterium tuberculosis sequencing runs in the European "
       "Nucleotide Archive with submitting centre, collection country "

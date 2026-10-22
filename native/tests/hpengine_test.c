@@ -4421,6 +4421,34 @@ int main(void) {
     free(z);
   }
 
+  /* 40f. $JO_PAGE_MAX reaches a row that declares its own ceiling, DOWNWARDS.
+   *      T_RESUME declares page_max = 2; under JO_PAGE_MAX=1 it must read one
+   *      page, not two. The engine used to resolve this as
+   *      `s->page_max > 0 ? s->page_max : jo_page_max(NULL)` — the knob
+   *      reaching only rows WITHOUT a ceiling — while hpengine.h's own comment
+   *      said page_max was "raised or lowered for the whole tree by
+   *      $JO_PAGE_MAX". The cost was not theoretical: it made
+   *      tools/audit_page_ceiling.py's shallow probe (which bounds a run by
+   *      setting this variable) walk 200 pages for every cycling row that
+   *      declares 200, so the one tool that measures ceilings could not
+   *      cheaply measure the rows most likely to be stuck at one. */
+  fx_reset();
+  fx_add("offset=2", 200, "{\"items\":[{\"name\":\"c\",\"id\":\"3\"},{\"name\":\"d\",\"id\":\"4\"}]}");
+  fx_add("/rz?all=1", 200, "{\"items\":[{\"name\":\"a\",\"id\":\"1\"},{\"name\":\"b\",\"id\":\"2\"}]}");
+  setenv("JO_PAGE_MAX", "1", 1);
+  rc = run_source_resume("T_RESUME", NULL, NULL);
+  ok(rc == 0 && cap_count("t-page", NULL) == 2 && g_ncalls == 1,
+     "40f: JO_PAGE_MAX=1 bounds a row whose own page_max is 2");
+  ok(g_res_set && strstr(g_res_out, "offset=2") != NULL,
+     "40f: and the cycle resumes from the page the brake stopped before");
+  unsetenv("JO_PAGE_MAX");
+  fx_reset();
+  fx_add("offset=2", 200, "{\"items\":[{\"name\":\"c\",\"id\":\"3\"},{\"name\":\"d\",\"id\":\"4\"}]}");
+  fx_add("/rz?all=1", 200, "{\"items\":[{\"name\":\"a\",\"id\":\"1\"},{\"name\":\"b\",\"id\":\"2\"}]}");
+  rc = run_source_resume("T_RESUME", NULL, NULL);
+  ok(rc == 0 && cap_count("t-page", NULL) == 4 && g_ncalls == 2,
+     "40f: with the variable unset the row's declared 2 pages are read again");
+
   /* 52. detail_html_kv: an HTML record page's label/value cells merge under
    *     "detail." — data-label cells, a <th>/<td> pair, entities decoded, a
    *     repeated label indexed rather than overwritten, the empty-data-label

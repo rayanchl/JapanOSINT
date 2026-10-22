@@ -882,16 +882,47 @@ be a guess about coverage that nothing here can verify. The API guide
 could not be read with what this container has; reading it is the next step and
 it is cheap.
 
-### E6. Slovenia's cadastre WFS has moved and two rows cannot find it
+### E6. CLOSED — Slovenia's cadastre WFS never moved; the 404 was one reading
 
-`ipi.eprostor.gov.si/wfs-si-gurs-kn` answers 404 to `GetCapabilities`, where
-`wfs-si-gurs-rpe` on the same host answers 200 (2026-10-22). `SI_GURS_HOUSE_NUMBERS`
-(580,213 house numbers, as measured on 2026-10-12) and `SI_GURS_CADASTRAL_MUN`
-both read the dead service. Both are KEPT, per the standing decision to disclose
-rather than remove, and the engine's fetch-failure record plus the health
-projection now say so on their pages. Finding the new path needs the host's own
-service register, which is behind the auth page at its root; guessing the name
-was tried and is recorded in E2 as six 404s.
+**This item was wrong, and the way it was wrong is the finding.** It recorded
+that `ipi.eprostor.gov.si/wfs-si-gurs-kn` answers 404 to `GetCapabilities`
+while `wfs-si-gurs-rpe` on the same host answers 200, concluded the service had
+been withdrawn, and set about looking for its new path. Re-asked on 2026-10-22
+— the same day — that URL answers **HTTP 200 with 118,420 bytes** of
+capabilities listing 20 feature types, and both rows store:
+
+| row | measured 2026-10-22 |
+| --- | --- |
+| `SI_GURS_CADASTRAL_MUN` | 200, 12,913,325 bytes, 1,000 features, `numberMatched` **2,698** |
+| `SI_GURS_HOUSE_NUMBERS` | 200, 496,316 bytes, 1,000 features, `numberMatched` **580,317** (580,213 on 2026-10-12, so it grows) |
+
+Main reached the same conclusion independently, from the other end: its own
+cycle-stall sweep listed this row's 404 as transient and re-read 2,698 of
+2,698. Two sessions, two readings, one answer — and the item that said
+"withdrawn" rested on exactly one request. **A 404 looks exactly like a
+withdrawn service, and this tree already knows that from the FDSN side**, where
+a node that does not run `event/1` and a node with an empty catalogue answer the
+identical status and are told apart only by the body. The rule applies in this
+direction too: a transient 404 looks exactly like a retirement, and the remedy
+is the same one the batch-49 retry pass and the TLS re-probe both used — ask
+again a day later before writing anything down.
+
+Looking properly then found a defect the "dead service" framing had hidden.
+`SI_GURS_HOUSE_NUMBERS` declared `id_keys = "properties.HS_MID"` and **this
+layer has no `HS_MID`**: its properties are `FEATUREID`,
+`EID_HISNA_STEVILKA`, `HS_STEVILKA`, `HS_DODATEK`, `EID_STAVBA`,
+`EID_NASELJE`, `EID_ULICA`, `TIP_TABLICE`, `EID_POSTNI_OKOLIS`, `DATUM_SYS`,
+`ST_HS`. The declared key matched nothing on all 580,317 records, so the engine
+fell back to the first non-empty scalar — which happens to be `FEATUREID`, the
+right answer, reached by luck. The fallback follows field ORDER, so a layer
+re-ordered upstream would have silently re-keyed the whole address register.
+Named explicitly now, with `sortBy=FEATUREID` added for the stable-order rule:
+three consecutive pages of 1,000 are 3,000 of 3,000 distinct both sorted and
+unsorted, so no skip is demonstrable here over three pages, but this row cycles
+581 pages across many runs and the sibling layer on this same service measured
+473 re-served and 473 lost unsorted. **A row cannot be audited while it is
+believed to be dead** — which is the argument for the standing decision to keep
+and disclose rather than remove, made from the other side.
 
 ---
 
