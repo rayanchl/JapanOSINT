@@ -639,7 +639,7 @@ gleif-lei-filter-fulltext	SLOW	-1	0	-1	-1	284	-1	90.1	hit --timeout 90.1s; 284 r
 wikidata-backlinks	OK	0	0	10	10	10	10	5.7	
 gleif-lei-ultimate-children	SLOW	-1	0	-1	-1	240	-1	90.1	hit --timeout 90.1s; 240 rows already stored
 de-vbb-transport-rest-locations	OK	0	0	3	3	3	3	2.7	
-datacite-dois-title-query	COLLISION	0	0	100	100	99	100	20.8	1 of 100 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+datacite-dois-title-query	COLLISION	0	0	100	99	98	100	20.0	2 of 100 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 eu-transitous-map-stops	OK	0	0	79	79	79	79	13.8	
 europepmc-citations	OK	0	0	264	264	264	264	5.1	
 europepmc-references	OK	0	0	16	16	16	16	1.3	
@@ -674,7 +674,7 @@ gr-diavgeia-dictionaries	OK	0	0	19	19	19	19	4.7
 opencitations-meta-author	OK	0	0	9	9	9	9	1.1	
 opencitations-meta-doi	OK	0	0	14	14	14	14	1.3	
 uk-tfl-stoppoint-search	OK	0	0	50	50	50	50	13.1	
-openaire-research-products	COLLISION	0	0	200	200	199	200	40.8	1 of 200 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+openaire-research-products	OK	0	0	200	201	200	200	39.3	
 jp-ihr-networks	OK	0	0	1	1	1	1	4.0	
 jp-ndl-authority-person	OK	0	0	7	7	7	7	1.2	
 jp-ndl-authority-subject	OK	0	0	9	9	9	9	1.3	
@@ -839,11 +839,11 @@ dportal-iati-cm	SLOW	-1	0	-1	-1	552	-1	90.1	hit --timeout 90.1s; 552 rows alread
 af-gleif-lei-et	OK	0	0	16	16	16	16	6.0	
 undp-projects-eg	OK	0	0	184	184	184	184	43.0	
 af-ihsn-et	OK	0	0	50	50	50	50	11.1	
-af-dhs-data-et	COLLISION	0	0	100	99	99	100	16.4	1 of 100 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+af-dhs-data-et	COLLISION	0	0	100	99	99	100	18.0	1 of 100 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 af-wbmicro-et	OK	0	0	50	50	50	50	18.1	
 dportal-iati-dz	SLOW	-1	0	-1	-1	535	-1	90.1	hit --timeout 90.1s; 535 rows already stored
 dportal-iati-eg	SLOW	-1	0	-1	-1	524	-1	90.1	hit --timeout 90.1s; 524 rows already stored
-af-dhs-data-gh	COLLISION	0	0	100	98	98	100	17.4	2 of 100 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+af-dhs-data-gh	COLLISION	0	0	100	98	98	100	18.5	2 of 100 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 af-dportal-act-et	SLOW	-1	0	-1	-1	572	-1	90.0	hit --timeout 90.0s; 572 rows already stored
 af-ihsn-gh	OK	0	0	50	50	50	50	9.9	
 il-knesset-israel-law	FETCH_FAILED	0	0	1	1	0	-1	2.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
@@ -865,7 +865,7 @@ pdh-microdata-catalog	FETCH_FAILED	0	0	1	1	0	-1	1.1	the upstream refused the req
 worldbank-microdata-catalog	OK	0	0	100	100	100	100	27.9	
 who-collaborating-centres	OK	0	0	50	50	50	50	14.7	
 ifrc-go-country	OK	0	0	281	281	281	281	67.1	
-af-dhs-data-ke	COLLISION	0	0	100	98	98	100	17.1	2 of 100 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+af-dhs-data-ke	COLLISION	0	0	100	98	98	100	18.9	2 of 100 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 ifrc-go-field-report	SLOW	-1	0	-1	-1	311	-1	90.0	hit --timeout 90.0s; 311 rows already stored
 ifrc-go-project	SLOW	-1	0	-1	-1	353	-1	90.1	hit --timeout 90.1s; 353 rows already stored
 af-ihsn-ke	OK	0	0	50	50	50	50	11.0	
@@ -896,7 +896,7 @@ af-ihsn-na	OK	0	0	50	50	50	50	11.3
 af-wbmicro-na	OK	0	0	50	50	50	50	15.1	
 af-gleif-lei-na	OK	0	0	109	109	109	109	34.1	
 dportal-iati-mu	SLOW	-1	0	-1	-1	553	-1	90.1	hit --timeout 90.1s; 553 rows already stored
-af-dhs-data-ng	COLLISION	0	0	100	99	99	100	17.4	1 of 100 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+af-dhs-data-ng	COLLISION	0	0	100	99	99	100	18.5	1 of 100 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 af-ihsn-ng	OK	0	0	50	50	50	50	11.1	
 af-dportal-act-na	SLOW	-1	0	-1	-1	584	-1	90.1	hit --timeout 90.1s; 584 rows already stored
 af-dportal-trans-na	SLOW	-1	0	-1	-1	382	-1	90.1	hit --timeout 90.1s; 382 rows already stored
@@ -911,7 +911,7 @@ np-bipad-organization	FETCH_FAILED	1	-1	1	1	0	-1	21.9	the upstream refused the r
 af-gleif-lei-rw	OK	0	0	28	28	28	28	10.6	
 af-nada-sl-stats-microdata	OK	0	0	13	13	13	13	4.2	
 af-ihsn-rw	OK	0	0	50	50	50	50	11.4	
-af-dhs-data-rw	COLLISION	0	0	100	99	99	100	18.0	1 of 100 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+af-dhs-data-rw	COLLISION	0	0	100	99	99	100	17.6	1 of 100 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 ansd-nada-microdata	EMITS_NOTHING	0	0	0	0	0	-1	1.6	no records reached intel_items
 af-wbmicro-rw	OK	0	0	50	50	50	50	13.5	
 ihsn-microdata-sn	OK	0	0	50	50	50	50	11.8	
@@ -923,14 +923,14 @@ tw-gcis-ubn-name-resolver	OK	0	0	1	1	1	1	2.2
 undp-projects-tn	OK	0	0	132	132	132	132	38.2	
 af-dportal-act-rw	SLOW	-1	0	-1	-1	583	-1	90.1	hit --timeout 90.1s; 583 rows already stored
 af-dportal-trans-rw	SLOW	-1	0	-1	-1	515	-1	90.1	hit --timeout 90.1s; 515 rows already stored
-af-dhs-data-tz	COLLISION	0	0	100	99	99	100	17.6	1 of 100 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+af-dhs-data-tz	COLLISION	0	0	100	99	99	100	19.2	1 of 100 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 dportal-iati-sn	SLOW	-1	0	-1	-1	519	-1	90.1	hit --timeout 90.1s; 519 rows already stored
 af-gleif-lei-tz	OK	0	0	85	85	85	85	25.0	
 dportal-iati-tn	SLOW	-1	0	-1	-1	518	-1	90.1	hit --timeout 90.1s; 518 rows already stored
 af-ihsn-tz	OK	0	0	50	50	50	50	11.0	
 af-wbmicro-tz	OK	0	0	50	50	50	50	15.9	
 af-nada-tz-nbs-microdata	OK	0	0	65	65	65	65	30.7	
-af-dhs-data-ug	COLLISION	0	0	100	98	98	100	17.7	2 of 100 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+af-dhs-data-ug	COLLISION	0	0	100	98	98	100	19.3	2 of 100 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 af-gleif-lei-ug	OK	0	0	99	99	99	99	30.3	
 af-dportal-act-tz	SLOW	-1	0	-1	-1	580	-1	90.0	hit --timeout 90.0s; 580 rows already stored
 af-dportal-trans-tz	SLOW	-1	0	-1	-1	367	-1	90.1	hit --timeout 90.1s; 367 rows already stored
@@ -946,7 +946,7 @@ af-pmg-ministers	OK	0	0	41	41	41	41	14.1
 af-pmg-calls-for-comment	SLOW	-1	0	-1	-1	277	-1	90.1	hit --timeout 90.1s; 277 rows already stored
 af-pmg-gazettes	SLOW	-1	0	-1	-1	285	-1	90.1	hit --timeout 90.1s; 285 rows already stored
 af-ihsn-za	OK	0	0	50	50	50	50	11.5	
-af-dhs-data-za	COLLISION	0	0	100	99	99	100	17.8	1 of 100 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+af-dhs-data-za	COLLISION	0	0	100	99	99	100	19.1	1 of 100 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 af-wbmicro-za	OK	0	0	50	50	50	50	13.4	
 af-pmg-hansard	SLOW	-1	0	-1	-1	236	-1	90.1	hit --timeout 90.1s; 236 rows already stored
 af-pmg-policy-documents	SLOW	-1	0	-1	-1	278	-1	90.1	hit --timeout 90.1s; 278 rows already stored
@@ -955,7 +955,7 @@ af-pmg-tabled-committee-reports	SLOW	-1	0	-1	-1	252	-1	90.1	hit --timeout 90.1s;
 af-gleif-lei-zm	OK	0	0	69	69	69	69	21.7	
 afr-comesa-news	OK	0	0	10	10	10	-1	2.5	
 af-ihsn-zm	OK	0	0	50	50	50	50	11.1	
-af-dhs-data-zm	COLLISION	0	0	100	99	99	100	17.5	1 of 100 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+af-dhs-data-zm	COLLISION	0	0	100	99	99	100	17.8	1 of 100 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 af-wbmicro-zm	OK	0	0	50	50	50	50	13.6	
 afr-cpt-layers-sl-film-srvc-area-film-service-areas-0	OK	0	0	9	9	9	-1	6.9	
 afr-cpt-background-maps-base-data-terrain-ext-dams-1	OK	0	0	17	17	17	-1	21.1	
@@ -1226,7 +1226,7 @@ nam-edmonton-traffic-disruptions	OK	0	0	1829	1829	1829	-1	6.8
 nam-edmonton-bylaw-infractions	OK	0	0	8000	8001	8000	-1	13.0	
 nam-edmonton-edmonton-area-air-quality-readings	OK	0	0	8000	8001	8000	-1	12.8	
 nam-novascotia-nova-scotia-topographic-database-utiliti	OK	0	0	1353	1353	1353	-1	6.9	
-nam-novascotia-nova-scotia-topographic-database-roads-t	COLLISION	0	0	8000	7996	7995	-1	14.9	5 of 8000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-novascotia-nova-scotia-topographic-database-roads-t	COLLISION	0	0	8000	7996	7995	-1	11.2	5 of 8000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 nam-novascotia-nova-scotia-topographic-database-roads-t-2	OK	0	0	8000	8001	8000	-1	10.9	
 nam-sask-aboriginallands-indian-reserve-nrcan	OK	0	0	823	823	823	-1	4.2	
 nam-sask-aboriginallands-indian-reserve-isc	OK	0	0	829	829	829	-1	7.2	
@@ -1376,7 +1376,7 @@ sci-res-crossref-journals	OK	0	0	100	101	100	-1	1.1
 sci-res-crossref-members	OK	0	0	100	101	100	-1	1.3	
 sci-pbdb-strata	OK	0	0	29655	29655	29655	-1	13.4	
 sci-res-datacite-clients	OK	0	0	2000	2001	2000	-1	11.1	
-sci-res-datacite-climate	COLLISION	0	0	2000	1998	1997	-1	16.6	3 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+sci-res-datacite-climate	COLLISION	0	0	2000	1992	1991	-1	73.8	9 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 sci-pbdb-occs-mammalia	OK	0	0	10000	10001	10000	-1	30.1	
 sci-res-datacite-providers	OK	0	0	1863	1863	1863	-1	13.4	
 sci-res-datacite-earthquake	OK	0	0	2000	2001	2000	-1	20.2	
@@ -1420,7 +1420,7 @@ sci-stac-eoapi-maxar-cyclone-emnati22	OK	0	0	794	794	794	-1	12.1
 sci-stac-es84-cop-dem-glo-30	OK	0	0	2000	2001	2000	-1	6.0	
 sci-stac-dlr-s5p-tropomi-l3-p1d-so2	OK	0	0	4362	4362	4362	-1	59.4	
 sci-stac-es84-cop-dem-glo-90	OK	0	0	2000	2001	2000	-1	7.0	
-sci-stac-geobon	COLLISION	0	0	35	34	34	-1	1.6	1 of 35 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+sci-stac-geobon	COLLISION	0	0	35	34	34	-1	1.5	1 of 35 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 sci-stac-es84-naip	OK	0	0	2000	2001	2000	-1	9.1	
 sci-stac-eurac-ado-evap-et-mod16-500m-3035	OK	0	0	869	869	869	-1	3.7	
 sci-stac-geobon-chelsa-clim	OK	0	0	19	19	19	-1	1.2	
@@ -1686,7 +1686,7 @@ eur-ods-bzh-korrigo	FETCH_FAILED	1	-1	1	1	0	-1	28.4	the upstream refused the req
 eur-ods-bzh-lannion-tilt	OK	0	0	1	1	1	-1	1.3	
 eur-ods-cvl	FETCH_FAILED	1	-1	1	1	0	-1	23.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
 eur-ods-econ-plf25-ressources-et-charges-selon	OK	0	0	30	30	30	-1	1.3	
-eur-ods-datahub	COLLISION	0	0	2000	2000	1999	-1	16.0	1 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+eur-ods-datahub	COLLISION	0	0	2000	2000	1999	-1	16.4	1 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 eur-ods-economie	OK	0	0	617	617	617	-1	22.6	
 eur-ods-gent	OK	0	0	311	311	311	-1	16.2	
 eur-ods-gent-locaties-bioscopen-gent	OK	0	0	3	3	3	-1	9.2	
@@ -1695,7 +1695,7 @@ eur-ods-gent-bloklocaties-gent	FETCH_FAILED	1	-1	1	1	0	-1	28.8	the upstream refu
 eur-ods-gent-donkey-republic-deelfietsen-prijze	FETCH_FAILED	1	-1	1	1	0	-1	23.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
 eur-ods-idf-chomage-nombre-de-chomeurs-exhaust	OK	0	0	1287	1287	1287	-1	5.4	
 eur-ods-idf-formations-sanitaires-sociales	OK	0	0	390	390	390	-1	2.5	
-eur-ods-idfm-actualites-locales-idfm	COLLISION	0	0	216	215	215	-1	2.3	1 of 216 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+eur-ods-idfm-actualites-locales-idfm	COLLISION	0	0	216	212	212	-1	1.7	4 of 216 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 eur-ods-gent-schoolstraten-gent	OK	0	0	12	12	12	-1	1.5	
 eur-ods-idfm-sanitaires-reseau-ratp	OK	0	0	48	48	48	-1	1.2	
 eur-ods-gent-inname-openbaar-domein-werken-gent	FETCH_FAILED	1	-1	1	1	0	-1	28.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
@@ -1730,7 +1730,7 @@ eur-ods-lda-224400028-contributions-participat	OK	0	0	206	206	206	-1	10.1
 eur-ods-namur	OK	0	0	294	294	294	-1	11.3	
 eur-ods-namur-cim-sepultures-sihl-citoyen	OK	0	0	1469	1469	1469	-1	3.2	
 eur-ods-lda-224400028-pistes-cyclables-en-loir	FETCH_FAILED	1	-1	1	1	0	-1	24.2	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
-eur-ods-lda-224400028-suivi-qualite-eaux-super	COLLISION	0	0	2000	2000	1999	-1	5.9	1 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+eur-ods-lda-224400028-suivi-qualite-eaux-super	COLLISION	0	0	2000	2000	1999	-1	5.5	1 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 eur-ods-odre-odre-ptc-gaz	OK	0	0	100	101	100	-1	9.0	
 eur-ods-loireatlantique	OK	0	0	342	342	342	-1	3.5	
 eur-ods-namur-namur-budget-extraordinaire-prelev	OK	0	0	13	13	13	-1	21.9	
@@ -1799,7 +1799,7 @@ eur-ods-sncf-agents-nationalite-etrangere	OK	0	0	138	138	138	-1	22.3
 eur-ods-stras-equipement-sport	OK	0	0	808	808	808	-1	4.9	
 eur-ods-sncf-nuage-points-3d	FETCH_FAILED	1	-1	1	1	0	-1	33.6	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
 eur-ods-rennes-resultats-elections-cumul-municipa	FETCH_FAILED	1	-1	1	1	0	-1	28.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
-eur-ods-stras-signal-longitudinale	COLLISION	0	0	2000	1981	1980	-1	18.1	20 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+eur-ods-stras-signal-longitudinale	COLLISION	0	0	2000	1981	1980	-1	7.3	20 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 eur-ods-sncf-repartition-genre-effectif	FETCH_FAILED	1	-1	1	1	0	-1	33.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
 eur-ods-strasbourg	OK	0	0	400	400	400	-1	12.5	
 eur-ods-sncf-previweb-direction-des-achats-grou	FETCH_FAILED	1	-1	1	1	0	-1	28.6	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
@@ -1823,25 +1823,25 @@ eur-ods-thurgau	OK	0	0	467	467	467	-1	27.7
 eur-soc-cat-8dfw-h858	OK	0	0	315	315	315	-1	1.5	
 eur-soc-cat-a389-y4d5	OK	0	0	156	156	156	-1	1.7	
 eur-soc-cat-b94f-7wk8	OK	0	0	48	48	48	-1	1.5	
-eur-soc-cat-9ehv-pmf5	COLLISION	0	0	3788	1265	1265	-1	4.6	2523 of 3788 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+eur-soc-cat-9ehv-pmf5	OK	0	0	3788	3788	3788	-1	8.3	
 eur-soc-cat-ceif-iu68	OK	0	0	204	204	204	-1	1.5	
 eur-soc-cat-ijf5-uiur	OK	0	0	204	204	204	-1	1.3	
 eur-soc-cat-cf9d-y6x4	OK	0	0	532	532	532	-1	1.7	
 eur-soc-cat-jshe-z7mt	OK	0	0	150	150	150	-1	1.6	
-eur-soc-cat-jsgs-5iiu	COLLISION	0	0	4141	4113	4113	-1	4.1	28 of 4141 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+eur-soc-cat-jsgs-5iiu	COLLISION	0	0	4141	4113	4113	-1	11.9	28 of 4141 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 eur-soc-cat-63re-p88u	OK	0	0	20000	20001	20000	-1	19.0	
 eur-ods-toulouse	OK	0	0	845	845	845	-1	34.5	
 eur-ods-vendee	FETCH_FAILED	1	-1	1	1	0	-1	29.1	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
 eur-soc-cat-tg6d-kufh	OK	0	0	36	36	36	-1	1.7	
-eur-soc-cat-b5rw-yz3c	COLLISION	0	0	20000	19614	19613	-1	17.0	387 of 20000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+eur-soc-cat-b5rw-yz3c	COLLISION	0	0	20000	19614	19613	-1	36.7	387 of 20000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 eur-soc-cat-m7bp-hncj	OK	0	0	20000	20001	20000	-1	11.3	
 eur-soc-cat-wrch-dn23	OK	0	0	253	253	253	-1	1.6	
 eur-soc-cat-ygq5-mccp	OK	0	0	219	219	219	-1	1.7	
 eur-soc-cat-nh2x-3jq4	OK	0	0	13552	13552	13552	-1	10.9	
 eur-soc-lomb-45i7-2vvv	OK	0	0	270	270	270	-1	2.2	
-eur-soc-cat-tqdx-tz5i	COLLISION	0	0	15152	4615	4615	-1	11.2	10537 of 15152 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+eur-soc-cat-tqdx-tz5i	OK	0	0	15152	15152	15152	-1	9.9	
 eur-soc-lomb-5h55-74d7	OK	0	0	3	3	3	-1	1.6	
-eur-soc-cat-s3uc-x9bq	COLLISION	0	0	15562	15561	15561	-1	15.2	1 of 15562 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+eur-soc-cat-s3uc-x9bq	COLLISION	0	0	15562	15561	15561	-1	20.5	1 of 15562 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 eur-soc-lomb-64ew-ksvg	OK	0	0	30	30	30	-1	1.9	
 eur-soc-lomb-6rbr-vjip	OK	0	0	645	645	645	-1	2.5	
 eur-soc-lomb-7evz-wdcy	OK	0	0	194	194	194	-1	2.3	
@@ -1862,19 +1862,19 @@ eur-soc-lomb-g3un-bcya	OK	0	0	15	15	15	-1	1.6
 eur-soc-lomb-ji52-5j3s	OK	0	0	194	194	194	-1	1.5	
 eur-soc-lomb-uhvm-8snb	OK	0	0	390	390	390	-1	2.4	
 eur-soc-lomb-k77y-v5zz	OK	0	0	4503	4503	4503	-1	4.2	
-eur-soc-lomb-jhpe-btug	COLLISION	0	0	3027	3026	3026	-1	6.4	1 of 3027 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+eur-soc-lomb-jhpe-btug	COLLISION	0	0	3027	3026	3026	-1	15.2	1 of 3027 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 eur-soc-lomb-3f6i-nxxr	OK	0	0	563	563	563	-1	27.6	
 eur-soc-rdw	OK	0	0	100	100	100	-1	5.2	
-eur-soc-cat-qa4t-5ptr	COLLISION	0	0	20000	19992	19991	-1	43.4	9 of 20000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+eur-soc-cat-qa4t-5ptr	COLLISION	0	0	20000	19992	19991	-1	16.0	9 of 20000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 eur-soc-rdw-3xwf-ince	OK	0	0	574	574	574	-1	1.3	
 eur-soc-rdw-3rhp-hrx5	OK	0	0	51	51	51	-1	2.8	
 eur-soc-lomb-y856-h426	OK	0	0	20000	20001	20000	-1	10.9	
 eur-soc-rdw-2ba7-embk	OK	0	0	20000	20001	20000	-1	10.3	
 eur-soc-lomb-5gfm-gsfr	OK	0	0	20000	20001	20000	-1	36.7	
 eur-soc-rdw-9s6a-b42z	OK	0	0	8448	8448	8448	-1	5.5	
-eur-soc-rdw-7rjk-eycs	COLLISION	0	0	20000	20000	19999	-1	11.6	1 of 20000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+eur-soc-rdw-7rjk-eycs	COLLISION	0	0	20000	20000	19999	-1	11.5	1 of 20000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 eur-soc-rdw-b2fs-9ymw	OK	0	0	139	139	139	-1	2.2	
-eur-soc-rdw-4by9-ammk	COLLISION	0	0	20000	20000	19999	-1	12.9	1 of 20000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+eur-soc-rdw-4by9-ammk	COLLISION	0	0	20000	20000	19999	-1	30.5	1 of 20000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 eur-soc-rdw-7ug8-2dtt	OK	0	0	20000	20001	20000	-1	11.6	
 eur-soc-rdw-8wbe-pu7d	OK	0	0	20000	20001	20000	-1	11.4	
 eur-soc-rdw-gfb5-nkdy	OK	0	0	22	22	22	-1	1.7	
@@ -1882,15 +1882,15 @@ eur-soc-rdw-jqs4-4kvw	OK	0	0	9	9	9	-1	1.3
 eur-soc-rdw-gwux-2dqa	OK	0	0	1932	1932	1932	-1	1.8	
 eur-soc-rdw-d3ex-xghj	OK	0	0	20000	20001	20000	-1	11.0	
 eur-soc-rdw-byxc-wwua	OK	0	0	20000	20001	20000	-1	15.3	
-eur-soc-rdw-kyri-nuah	COLLISION	0	0	20000	20000	19999	-1	11.5	1 of 20000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+eur-soc-rdw-kyri-nuah	COLLISION	0	0	20000	20000	19999	-1	11.2	1 of 20000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 eur-soc-rdw-ky2r-jqad	OK	0	0	20000	20001	20000	-1	12.0	
 eur-soc-lombardia	OK	0	0	100	100	100	-1	37.4	
 eur-soc-rdw-xn6e-huse	OK	0	0	131	131	131	-1	1.4	
 eur-soc-rdw-yefi-qfiq	OK	0	0	6679	6679	6679	-1	5.1	
 eur-soc-rdw-m692-vvff	OK	0	0	20000	20001	20000	-1	11.0	
-eur-soc-rdw-gr7t-qfnb	COLLISION	0	0	20000	20000	19999	-1	21.1	1 of 20000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+eur-soc-rdw-gr7t-qfnb	COLLISION	0	0	20000	20000	19999	-1	35.6	1 of 20000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 eur-soc-rdw-x5v3-sewk	OK	0	0	20000	20001	20000	-1	11.8	
-eur-soc-rdw-xhyb-w7xt	COLLISION	0	0	20000	20000	19999	-1	12.3	1 of 20000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+eur-soc-rdw-xhyb-w7xt	COLLISION	0	0	20000	20000	19999	-1	35.7	1 of 20000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 eur-udata-lu-orgs	OK	0	0	219	219	219	-1	2.3	
 eur-udata-dadosgovpt	OK	0	0	2000	2001	2000	-1	12.9	
 eur-udata-pt-orgs	OK	0	0	100	101	100	-1	3.1	
@@ -1918,7 +1918,7 @@ eur-hubeau-indicateurs2	FETCH_FAILED	1	-1	1	1	0	-1	1.8	the upstream refused the 
 eur-hubeau-hydrobio	OK	0	0	4000	4001	4000	-1	12.0	
 eur-geoapi-epcis	OK	0	0	1255	1255	1255	-1	4.2	
 eur-hubeau-nappes-stations	OK	0	0	4000	4001	4000	-1	10.2	
-eur-hubeau-poisson	COLLISION	0	0	4000	4000	3999	-1	9.0	1 of 4000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+eur-hubeau-poisson	COLLISION	0	0	4000	4000	3999	-1	9.5	1 of 4000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 eur-hubeau-nappes-chron	OK	0	0	4000	4001	4000	-1	16.8	
 eur-ingv-shakemap	OK	0	0	16	16	16	-1	1.4	
 eur-hubeau-prelev-chron	OK	0	0	4000	4001	4000	-1	6.7	
@@ -2067,11 +2067,11 @@ eur-nbp-tableb	OK	0	0	10	10	10	-1	1.4
 eur-nbu-exchangenew	OK	0	0	45	45	45	-1	1.0	
 eur-nbu-exchange	OK	0	0	45	45	45	-1	1.3	
 eur-nbp-tablec	OK	0	0	30	30	30	-1	1.4	
-eur-diavgeia-anathesi	COLLISION	0	0	2000	1997	1996	-1	22.5	4 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+eur-diavgeia-anathesi	OK	0	0	2000	2001	2000	-1	16.3	
 eur-oda-ft-aktstykke	OK	0	0	68	68	68	-1	1.2	
 eur-oda-ft-aktortype	OK	0	0	13	13	13	-1	1.3	
 eur-oda-ft-dokumenttype	OK	0	0	28	28	28	-1	1.4	
-eur-diavgeia-decisions	COLLISION	0	0	2000	1949	1948	-1	24.7	52 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+eur-diavgeia-decisions	OK	0	0	2000	2001	2000	-1	20.3	
 eur-oda-ft-periode	OK	0	0	163	163	163	-1	1.6	
 eur-oda-ft-emneord	OK	0	0	2000	2001	2000	-1	4.4	
 eur-oda-ft-dokument	OK	0	0	2000	2001	2000	-1	6.0	
@@ -2518,7 +2518,7 @@ lat-ckan-datos-do	OK	0	0	1068	1068	1068	-1	9.6
 lat-ckan-ibama	OK	0	0	79	79	79	-1	2.2	
 lat-ckan-mg-br	OK	0	0	101	101	101	-1	2.6	
 lat-ckan-mma-cl	OK	0	0	18	18	18	-1	2.6	
-lat-ckan-datos-cl	COLLISION	0	0	2000	1997	1996	-1	15.0	4 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-ckan-datos-cl	OK	0	0	2000	2001	2000	-1	6.4	
 lat-ckan-datos-pa	OK	0	0	2000	2001	2000	-1	13.2	
 lat-cl-ckan-agua	OK	0	0	54	54	54	-1	1.8	
 lat-ckan-fortaleza	OK	0	0	636	636	636	-1	13.8	
@@ -2541,11 +2541,11 @@ lat-cl-mindicador-dolar	OK	0	0	31	31	31	-1	1.3
 lat-cl-mindicador-uf	OK	0	0	31	31	31	-1	1.1	
 lat-co-beneficio-animal	OK	0	0	820	820	820	-1	1.7	
 lat-ckan-sp-br	OK	0	0	486	486	486	-1	15.1	
-lat-co-cod-postal	COLLISION	0	0	3681	3678	3678	-1	4.4	3 of 3681 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-cod-postal	COLLISION	0	0	3681	3678	3678	-1	4.3	3 of 3681 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 lat-co-cuadrantes-policia	OK	0	0	4805	4805	4805	-1	4.0	
 lat-co-cobertura-movil	OK	0	0	10000	10001	10000	-1	8.5	
-lat-co-covid	COLLISION	0	0	10000	9999	9998	-1	8.5	2 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
-lat-cl-ckan-recent	COLLISION	0	0	2000	1994	1993	-1	18.5	7 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-covid	COLLISION	0	0	10000	9999	9998	-1	8.1	2 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-cl-ckan-recent	OK	0	0	2000	2001	2000	-1	7.5	
 lat-co-datos-cat	OK	0	0	2000	2001	2000	-1	6.3	
 lat-co-cartera	OK	0	0	10000	10001	10000	-1	11.8	
 lat-co-divipola	OK	0	0	1122	1122	1122	-1	1.8	
@@ -2553,42 +2553,42 @@ lat-co-detenidos-ext	OK	0	0	10000	10001	10000	-1	9.2
 lat-co-empresas-grandes	OK	0	0	10000	10001	10000	-1	8.4	
 lat-co-eva-agro	COLLISION	0	0	10000	9987	9986	-1	7.6	14 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 lat-co-extranjeros	OK	0	0	10000	10001	10000	-1	7.6	
-lat-co-dispositivos-med	COLLISION	0	0	10000	9615	9614	-1	11.5	386 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
-lat-co-inspeccion-sanitaria	COLLISION	0	0	10000	9996	9995	-1	9.6	5 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-dispositivos-med	COLLISION	0	0	10000	9615	9614	-1	9.7	386 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-inspeccion-sanitaria	COLLISION	0	0	10000	9996	9995	-1	6.5	5 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 lat-co-ips-nivel	OK	0	0	10000	10001	10000	-1	10.5	
 lat-co-fic	OK	0	0	10000	10001	10000	-1	13.0	
-lat-co-ideam-estaciones	COLLISION	0	0	10000	9917	9916	-1	12.0	84 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
-lat-co-labs-ambientales	COLLISION	0	0	10000	9992	9991	-1	11.4	9 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-ideam-estaciones	OK	0	0	9914	9914	9914	-1	9.7	
+lat-co-labs-ambientales	COLLISION	0	0	10000	9992	9991	-1	10.0	9 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 lat-co-pdet	OK	0	0	170	170	170	-1	2.1	
-lat-co-procuraduria	COLLISION	0	0	4986	4166	4166	-1	4.7	820 of 4986 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
-lat-co-pep	COLLISION	0	0	10000	9994	9993	-1	8.9	7 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-procuraduria	OK	0	0	4986	4986	4986	-1	3.7	
+lat-co-pep	COLLISION	0	0	10000	9994	9993	-1	7.3	7 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 lat-co-precio-max-medic	OK	0	0	10000	10001	10000	-1	9.6	
-lat-co-medicamentos	COLLISION	0	0	10000	6245	6244	-1	12.7	3756 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
-lat-co-precios-medic	COLLISION	0	0	10000	10000	9999	-1	9.2	1 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-medicamentos	COLLISION	0	0	10000	9938	9937	-1	10.9	63 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-precios-medic	COLLISION	0	0	10000	10000	9999	-1	7.8	1 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 lat-co-datos-cat2	OK	0	0	100	100	100	-1	36.4	
-lat-co-secop1-multas	COLLISION	0	0	1716	1619	1619	-1	2.8	97 of 1716 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
-lat-co-runt-actores	COLLISION	0	0	10000	5111	5110	-1	8.7	4890 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
-lat-co-reps	COLLISION	0	0	10000	9997	9996	-1	11.8	4 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
-lat-co-rups	COLLISION	0	0	10000	9978	9977	-1	11.4	23 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
-lat-co-secop-integrado	COLLISION	0	0	10000	10000	9999	-1	15.6	1 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
-lat-co-simit	COLLISION	0	0	10000	9975	9974	-1	8.3	26 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
-lat-co-secop2-proveedores	COLLISION	0	0	10000	9985	9984	-1	12.1	16 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-secop1-multas	OK	0	0	1716	1716	1716	-1	2.8	
+lat-co-runt-actores	OK	0	0	10000	10001	10000	-1	7.1	
+lat-co-reps	COLLISION	0	0	10000	9997	9996	-1	9.5	4 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-rups	COLLISION	0	0	10000	9978	9977	-1	9.0	23 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-secop-integrado	COLLISION	0	0	10000	10000	9999	-1	10.8	1 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-simit	COLLISION	0	0	10000	9975	9974	-1	6.6	26 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-secop2-proveedores	COLLISION	0	0	10000	9985	9984	-1	10.7	16 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 lat-co-superfin-vigiladas	OK	0	0	456	456	456	-1	1.4	
 lat-co-secop1-procesos	OK	0	0	10000	10001	10000	-1	22.6	
 lat-co-secop2-procesos	OK	0	0	10000	10001	10000	-1	19.8	
-lat-co-siri	COLLISION	0	0	10000	10000	9999	-1	11.7	1 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
-lat-co-secop2-contratos	COLLISION	0	0	10000	6789	6788	-1	26.1	3212 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-siri	COLLISION	0	0	10000	10000	9999	-1	10.4	1 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-secop2-contratos	OK	0	0	10000	10001	10000	-1	22.5	
 lat-co-tarifas-gas	OK	0	0	10000	10001	10000	-1	9.8	
 lat-co-tarjetas	OK	0	0	10000	10001	10000	-1	9.5	
-lat-co-tratados	COLLISION	0	0	1115	1105	1105	-1	3.0	10 of 1115 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-tratados	COLLISION	0	0	1115	1105	1105	-1	3.1	10 of 1115 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 lat-co-tasas-captacion	OK	0	0	10000	10001	10000	-1	9.3	
-lat-co-trm	COLLISION	0	0	8372	8288	8288	-1	6.9	84 of 8372 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-trm	OK	0	0	8373	8373	8373	-1	5.1	
 lat-co-vacunas	OK	0	0	50	50	50	-1	1.4	
 lat-co-trafico-portuario	OK	0	0	9683	9683	9683	-1	8.8	
 lat-co-zonas-militares	OK	0	0	72	72	72	-1	1.2	
 lat-co-tasas-activas	OK	0	0	10000	10001	10000	-1	17.3	
 lat-do-ckan-economia	OK	0	0	208	208	208	-1	3.9	
-lat-co-tienda-virtual	COLLISION	0	0	10000	9994	9993	-1	15.2	7 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-tienda-virtual	COLLISION	0	0	10000	9994	9993	-1	11.2	7 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 lat-co-turismo-rnt	OK	0	0	10000	10001	10000	-1	10.2	
 lat-do-ckan-educacion	OK	0	0	113	113	113	-1	2.9	
 lat-do-ckan-salud	OK	0	0	127	127	127	-1	2.5	
@@ -2685,10 +2685,10 @@ lat-reg-r4v	OK	0	0	10	10	10	-1	3.1
 lat-cl-gael-clima	OK	0	0	26	26	26	-1	1.5	
 lat-cemaden-rss	OK	0	0	10	10	10	-1	3.0	
 lat-camara-props-json	OK	0	0	2000	2001	2000	-1	16.4	
-lat-co-ideam-precip	COLLISION	0	0	10000	7591	7590	-1	8.3	2410 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
-lat-co-ideam-presion	COLLISION	0	0	10000	9075	9074	-1	8.7	926 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-ideam-precip	OK	0	0	10000	10001	10000	-1	7.9	
+lat-co-ideam-presion	OK	0	0	10000	10001	10000	-1	8.1	
 lat-uy-ckan-recent	OK	0	0	2000	2001	2000	-1	55.2	
-lat-co-ideam-temp	COLLISION	0	0	10000	9653	9652	-1	8.0	348 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-co-ideam-temp	OK	0	0	10000	10001	10000	-1	7.5	
 lat-insivumeh-gt	OK	0	0	10	10	10	-1	2.5	
 lat-geo-arcgis-sgc	OK	0	0	157	157	157	-1	9.6	
 lat-pa-sinaproc-feed	OK	0	0	10	10	10	-1	2.2	
@@ -2772,7 +2772,7 @@ lat-reg-elpais-america	OK	0	0	109	109	109	-1	2.0
 lat-reg-stluciatimes	OK	0	0	10	10	10	-1	1.7	
 lat-reg-latinnews	OK	0	0	20	20	20	-1	2.7	
 lat-reg-panampost	OK	0	0	10	10	10	-1	2.8	
-lat-reg-svg-searchlight	COLLISION	0	0	87	73	73	-1	2.6	14 of 87 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+lat-reg-svg-searchlight	COLLISION	0	0	84	71	71	-1	2.2	13 of 84 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 lat-semana-rss	OK	0	0	100	100	100	-1	1.6	
 lat-reg-grenada-now	OK	0	0	10	10	10	-1	3.8	
 lat-sr-dwt	OK	0	0	10	10	10	-1	1.5	
@@ -2923,7 +2923,7 @@ nam-calfire-active-incidents	OK	0	0	3	3	3	-1	1.7
 nam-bcwildfire-active-polys-wfs	OK	0	0	314	314	314	-1	3.7	
 nam-calfire-incidents-geojson	OK	0	0	3	3	3	-1	1.8	
 nam-ags-wildfire-hazard-extent-dcrra-hazard-wildfire-dissolv	OK	0	0	10000	10001	10000	-1	15.7	
-nam-brla-baton-rouge-fire-department-occupancy-in	COLLISION	0	0	8000	7929	7928	-1	10.3	72 of 8000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-brla-baton-rouge-fire-department-occupancy-in	COLLISION	0	0	8000	7929	7928	-1	7.6	72 of 8000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 nam-caltrans-ccvra-coastal-flood-risk-ccvr-coastal-flood-risk	OK	0	0	4000	4001	4000	-1	8.6	
 nam-dc-ddoe-watershed-municipal-separate-storm-sewer-syst	OK	0	0	556	556	556	-1	3.0	
 nam-caltrans-ccvra-riverine-flood-risk-ccvra-riverine-flood-ris	OK	0	0	4000	4001	4000	-1	9.2	
@@ -2938,8 +2938,8 @@ nam-montgomerycountymd-floodplain-district-permit	OK	0	0	1037	1037	1037	-1	2.1
 nam-md-md-coastalresiliencyassessment-hazard-reduction-by	OK	0	0	4000	4001	4000	-1	4.9	
 nam-md-md-coastalresiliencyassessment-shoreline-hazard-in	OK	0	0	4000	4001	4000	-1	4.9	
 nam-dc-environment-flood-webmercator-floodplains	OK	0	0	652	652	652	-1	11.1	
-nam-delaware-storm-water-notices-of-intent	COLLISION	0	0	7275	7273	7273	-1	14.4	2 of 7275 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
-nam-norfolk-storm-system-to-track-organize-record-an	COLLISION	0	0	7895	7894	7894	-1	11.1	1 of 7895 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-delaware-storm-water-notices-of-intent	COLLISION	0	0	7275	7273	7273	-1	7.5	2 of 7275 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-norfolk-storm-system-to-track-organize-record-an	COLLISION	0	0	7895	7894	7894	-1	8.9	1 of 7895 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 nam-vermont-fs-vcgi-opendata-emergency-esite-point-s	OK	0	0	8000	8001	8000	-1	14.9	
 cyb-atlas-probes-100	OK	0	0	2000	2001	2000	-1	7.3	
 cyb-atlassian-status	OK	0	0	34	34	34	-1	0.9	
@@ -2984,7 +2984,7 @@ sci-erddap-apdrc-grid	FETCH_FAILED	1	-1	1	1	0	-1	3.8	the upstream refused the re
 sci-erddap-pifsc-grid	OK	0	0	159	159	159	-1	1.8	
 sci-eu-emodnet-humanact-wfs	OK	0	0	500	501	500	-1	2.2	
 cyb-ripe-atlas-measurement-types	OK	0	0	1000	1001	1000	-1	26.4	
-sci-hub-arcgis-glacier	COLLISION	0	0	1000	1000	999	-1	8.0	1 of 1000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+sci-hub-arcgis-glacier	OK	0	0	1000	1001	1000	-1	8.2	
 sci-hydro-existenz-hydro	OK	0	0	525	525	525	-1	1.4	
 sci-hydro-pegelonline-waters	OK	0	0	786	786	786	-1	1.8	
 sci-hydro-smhi-hydroobs	OK	0	0	10	10	10	-1	1.3	
@@ -2997,7 +2997,7 @@ sci-ocean-coops-waterlevels	OK	0	0	302	302	302	-1	1.2
 sci-ocean-coops-historicwl	OK	0	0	2924	2924	2924	-1	2.2	
 sci-noaa-coast-services	OK	0	0	365	365	365	-1	4.3	
 sci-ogcf-usgswater-channel-measurements	OK	0	0	4000	4001	4000	-1	6.9	
-sci-ocean-ioc-sealevel-tab	COLLISION	0	0	1921	1340	1340	-1	7.9	581 of 1921 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+sci-ocean-ioc-sealevel-tab	OK	0	0	1338	1338	1338	-1	4.9	
 sci-ogcf-usgswater-continuous	OK	0	0	4000	4001	4000	-1	6.3	
 sci-ogcf-usgswater-daily	OK	0	0	4000	4001	4000	-1	6.1	
 cyb-atlas-measurements-100	OK	0	0	2000	2001	2000	-1	84.0	
@@ -3163,7 +3163,7 @@ sas-news-onlinekhabar	OK	0	0	55	55	55	-1	1.1
 sas-news-prothomalo-en	OK	0	0	11	11	11	-1	0.9	
 sas-news-setopati	OK	0	0	5	5	5	-1	1.1	
 sas-news-toi-india	OK	0	0	20	20	20	-1	1.2	
-sas-news-tribunepk	COLLISION	0	0	73	55	55	-1	0.9	18 of 73 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+sas-news-tribunepk	COLLISION	0	0	73	62	62	-1	0.9	11 of 73 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 sas-ods-nc-list2	OK	0	0	284	285	284	-1	24.1	
 sas-news-tolonews	OK	0	0	30	30	30	-1	3.2	
 sas-news-zeenews	OK	0	0	20	20	20	-1	2.4	
@@ -3369,12 +3369,12 @@ eas-twse-market-summary	OK	0	0	14	14	14	-1	0.8
 eas-twse-ipo-foreign	OK	0	0	124	124	124	-1	2.1	
 eas-twse-notices	OK	0	0	1	1	1	-1	1.2	
 eas-twse-market-index	OK	0	0	267	267	267	-1	2.2	
-eas-twse-sanctions	COLLISION	0	0	6	5	5	-1	0.8	1 of 6 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+eas-twse-sanctions	OK	0	0	5	5	5	-1	8.8	
 eas-twse-per-pbr-yield	OK	0	0	1084	1084	1084	-1	1.6	
 eas-twse-stock-day-all	OK	0	0	1383	1383	1383	-1	1.7	
 eas-twse-securities-lending	OK	0	0	1369	1369	1369	-1	2.9	
 eas-tpex-main-quotes	OK	0	0	13032	13032	13032	-1	15.6	
-cyb-brreg-enheter	COLLISION	0	0	2000	1999	1998	-1	9.3	2 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+cyb-brreg-enheter	OK	0	0	2000	2001	2000	-1	9.7	
 cyb-camara-br-votacoes2	OK	0	0	902	902	902	-1	7.6	
 cyb-annuaire-entreprises-near	FETCH_FAILED	1	-1	1	1	0	-1	14.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
 cyb-eduskunta-aanestys	OK	0	0	1000	1001	1000	-1	4.9	
@@ -3437,7 +3437,7 @@ cyb-usaspending-recipient-count	OK	0	0	56	56	56	-1	1.5
 nam-ags-nibrs-group-a-crime-data-nibrs-group-a-crime-data	OK	0	0	10000	10001	10000	-1	6.5	
 nam-ags-metro-transportation-network-tnet-in-king-county-for	OK	0	0	10000	10001	10000	-1	9.2	
 nam-ags-road-centerlines-road-centerlines	OK	0	0	10000	10001	10000	-1	9.9	
-nam-austin-311	COLLISION	0	0	10000	7384	7383	-1	11.2	2617 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-austin-311	OK	0	0	10000	10001	10000	-1	11.0	
 nam-austin-crime-reports	OK	0	0	10000	10001	10000	-1	7.8	
 nam-bloomington-in-nuisance-complaints	OK	0	0	8000	8001	8000	-1	7.4	
 cyb-europarl-meetings	OK	0	0	708	708	708	-1	70.1	
@@ -3448,20 +3448,20 @@ nam-cambridgema-sprinkler-and-standpipe-permits	OK	0	0	2253	2253	2253	-1	4.7
 nam-cambridgema-commonwealth-connect-service-requests	OK	0	0	8000	8001	8000	-1	12.7	
 nam-cambridgema-police-department-crash-data-historical	OK	0	0	8000	8001	8000	-1	16.0	
 cyb-europarl-adopted-texts	SLOW	-1	0	-1	-1	1115	-1	90.1	hit --timeout 90.1s; 1115 rows already stored
-nam-chicago-crimes-recent	COLLISION	0	0	10000	9997	9996	-1	12.1	4 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
-nam-chicago-311-requests	COLLISION	0	0	10000	8511	8510	-1	17.5	1490 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-chicago-crimes-recent	OK	0	0	10000	10001	10000	-1	9.9	
+nam-chicago-311-requests	COLLISION	0	0	10000	9999	9998	-1	48.6	2 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 nam-cityofchicago-beach-e-coli-predictions	OK	0	0	8000	8001	8000	-1	7.3	
 nam-chicago-building-permits	OK	0	0	10000	10001	10000	-1	21.0	
-nam-chicago-towed-vehicles	COLLISION	0	0	6935	6856	6856	-1	13.3	79 of 6935 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-chicago-towed-vehicles	COLLISION	0	0	6916	6837	6837	-1	5.1	79 of 6916 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 nam-cityofchicago-beach-lab-data	OK	0	0	8000	8001	8000	-1	9.4	
-nam-chicago-food-inspections	COLLISION	0	0	10000	7778	7777	-1	26.1	2223 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-chicago-food-inspections	OK	0	0	10000	10001	10000	-1	14.0	
 nam-cityofchicago-cdph-environmental-enforcement	OK	0	0	8000	8001	8000	-1	11.9	
 nam-cityofgainesville-311-service-requests-mygnv	OK	0	0	8000	8001	8000	-1	9.9	
 nam-cityofgainesville-code-complaints-violations-permits	OK	0	0	8000	8001	8000	-1	8.4	
-nam-chicago-traffic-crashes	COLLISION	0	0	10000	8106	8105	-1	21.8	1895 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
-nam-cityofchicago-chicago-energy-benchmarking	COLLISION	0	0	8000	3915	3914	-1	12.4	4086 of 8000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
-nam-cityofgainesville-gru-customer-reclaimed-water-consumption	COLLISION	0	0	8000	7991	7990	-1	6.7	10 of 8000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
-nam-cityofnewyork-street-closures-due-to-construction-acti	COLLISION	0	0	4343	4152	4152	-1	5.3	191 of 4343 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-chicago-traffic-crashes	COLLISION	0	0	10000	9998	9997	-1	18.0	3 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-cityofchicago-chicago-energy-benchmarking	OK	0	0	8000	8001	8000	-1	10.7	
+nam-cityofgainesville-gru-customer-reclaimed-water-consumption	COLLISION	0	0	8000	7991	7990	-1	6.5	10 of 8000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-cityofnewyork-street-closures-due-to-construction-acti	COLLISION	0	0	4343	4152	4152	-1	4.9	191 of 4343 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 nam-ckan-wprdc-health	OK	0	0	67	67	67	-1	3.5	
 nam-cityofnewyork-parking-meters-locations-and-status	OK	0	0	8000	8001	8000	-1	9.5	
 nam-cityofgainesville-traffic-crashes	OK	0	0	8000	8001	8000	-1	10.7	
@@ -3489,7 +3489,7 @@ nam-mbta-facilities	OK	0	0	1881	1881	1881	-1	4.3
 nam-mbta-vehicles	OK	0	0	806	806	806	-1	2.7	
 nam-mbta-stops	OK	0	0	2000	2001	2000	-1	4.9	
 nam-mesaaz-bikepaths	OK	0	0	730	730	730	-1	1.8	
-nam-la-crime-recent	COLLISION	0	0	10000	7179	7178	-1	8.0	2822 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-la-crime-recent	OK	0	0	10000	10001	10000	-1	7.8	
 nam-dc-environment-energy-webmercator-building-energy-ben	OK	0	0	4000	4001	4000	-1	22.7	
 nam-la-311-requests	OK	0	0	10000	10001	10000	-1	15.2	
 nam-mesaaz-streetcenterline	OK	0	0	8000	8001	8000	-1	7.7	
@@ -3497,42 +3497,42 @@ nam-montgomerycountymd-county-well-permits	OK	0	0	5842	5842	5842	-1	8.9
 nam-montgomerycountymd-dps-general-permits	OK	0	0	2861	2861	2861	-1	3.3	
 nam-montgomerycountymd-crash-reporting-drivers-data	OK	0	0	8000	8001	8000	-1	10.1	
 nam-nola-truck-routes	OK	0	0	3604	3604	3604	-1	4.5	
-nam-norfolk-blocked-railroad-crossing-incident-repor	COLLISION	0	0	1828	1820	1820	-1	2.5	8 of 1828 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-norfolk-blocked-railroad-crossing-incident-repor	COLLISION	0	0	1828	1820	1820	-1	2.2	8 of 1828 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 nam-montgomerycountymd-crash-reporting-incidents-data	OK	0	0	8000	8001	8000	-1	10.4	
 nam-mesaaz-overlay-districts-data	OK	0	0	7793	7793	7793	-1	18.4	
 nam-norfolk-better-buildings-challenge-properties	OK	0	0	8000	8001	8000	-1	9.1	
-nam-norfolk-streetlights-and-outages-reports	COLLISION	0	0	8000	7846	7845	-1	8.6	155 of 8000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-norfolk-streetlights-and-outages-reports	COLLISION	0	0	8000	7846	7845	-1	7.7	155 of 8000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 nam-nyc-air-quality	OK	0	0	19827	19827	19827	-1	10.3	
 nam-nyc-arrests-ytd	OK	0	0	10000	10001	10000	-1	10.2	
 nam-nyc-parks-events	OK	0	0	500	501	500	-1	1.1	
-nam-nyc-311-open	COLLISION	0	0	10000	9993	9992	-1	15.1	8 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
-nam-nyc-collisions-recent	COLLISION	0	0	10000	7422	7421	-1	12.4	2579 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-nyc-311-open	COLLISION	0	0	10000	10000	9999	-1	12.4	1 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-nyc-collisions-recent	COLLISION	0	0	10000	9888	9887	-1	11.2	113 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 nam-oaklandca-blue-disabled-parking-zones	OK	0	0	846	846	846	-1	1.7	
-nam-nyc-dob-permits	COLLISION	0	0	10000	7470	7469	-1	15.9	2531 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-nyc-dob-permits	OK	0	0	10000	10001	10000	-1	13.2	
 nam-oaklandca-oakland-bike-parking	OK	0	0	2387	2387	2387	-1	3.4	
-nam-nyc-noise-complaints	COLLISION	0	0	10000	9999	9998	-1	12.4	2 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
-nam-oaklandca-residential-parking-permit-zones	COLLISION	0	0	842	840	840	-1	1.5	2 of 842 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-nyc-noise-complaints	OK	0	0	10000	10001	10000	-1	13.1	
+nam-oaklandca-residential-parking-permit-zones	COLLISION	0	0	842	840	840	-1	1.8	2 of 842 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 nam-nyc-shootings-ytd	OK	0	0	10000	10001	10000	-1	9.0	
 nam-nyc-hpd-violations	OK	0	0	10000	10001	10000	-1	20.5	
-nam-nyc-restaurant-inspections	COLLISION	0	0	10000	8113	8112	-1	15.5	1888 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-nyc-restaurant-inspections	COLLISION	0	0	10000	9996	9995	-1	13.0	5 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 nam-sccgov-schools-areas	OK	0	0	570	570	570	-1	3.2	
 nam-princegeorgescountymd-county-click-311-qalert	OK	0	0	8000	8001	8000	-1	8.6	
-nam-providenceri-providence-tree-dataset	COLLISION	0	0	8000	7997	7996	-1	7.8	4 of 8000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
-nam-providenceri-providence-tree-inventory	COLLISION	0	0	8000	7356	7355	-1	8.5	645 of 8000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-providenceri-providence-tree-dataset	COLLISION	0	0	8000	7997	7996	-1	6.9	4 of 8000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-providenceri-providence-tree-inventory	COLLISION	0	0	8000	7356	7355	-1	6.5	645 of 8000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 nam-septa-busdetours	OK	0	0	71	71	71	-1	0.9	
 nam-sccgov-zoning	OK	0	0	1087	1087	1087	-1	4.3	
 nam-providenceri-pvd-parcels	OK	0	0	8000	8001	8000	-1	9.7	
-nam-seattle-911-fire	COLLISION	0	0	10000	10000	9999	-1	8.4	1 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
-nam-seattle-police-reports	COLLISION	0	0	10000	9984	9983	-1	8.8	17 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
-nam-sf-311-cases	COLLISION	0	0	10000	9927	9926	-1	14.1	74 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-seattle-911-fire	COLLISION	0	0	10000	10000	9999	-1	7.4	1 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-seattle-police-reports	OK	0	0	10000	10001	10000	-1	8.7	
+nam-sf-311-cases	OK	0	0	10000	10001	10000	-1	12.0	
 nam-sf-air-traffic-passenger	OK	0	0	20000	20001	20000	-1	14.2	
 nam-sf-police-incidents	OK	0	0	10000	10001	10000	-1	10.0	
 nam-sonomacounty-ca-sonoma-county-rebuilding-permits	OK	0	0	2096	2096	2096	-1	2.8	
-nam-seattle-building-permits	COLLISION	0	0	10000	9782	9781	-1	19.7	219 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
-nam-sf-building-permits	COLLISION	0	0	10000	9940	9939	-1	17.9	61 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
-nam-sf-fire-calls	COLLISION	0	0	10000	9998	9997	-1	13.1	3 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-seattle-building-permits	OK	0	0	10000	10001	10000	-1	17.7	
+nam-sf-building-permits	OK	0	0	10000	10001	10000	-1	16.2	
+nam-sf-fire-calls	OK	0	0	10000	10001	10000	-1	10.9	
 nam-ags-arizona-social-vulnerability-index-azsvi-by-tracts-a	OK	0	0	1765	1765	1765	-1	5.7	
-nam-sonomacounty-ca-animal-shelter-intake-and-outcome	COLLISION	0	0	8000	7680	7679	-1	9.4	321 of 8000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-sonomacounty-ca-animal-shelter-intake-and-outcome	OK	0	0	8000	8001	8000	-1	8.4	
 nam-sonomacounty-ca-sonoma-county-sheriff-s-office-incident	OK	0	0	8000	8001	8000	-1	7.8	
 nam-ags-california-transit-stops-ca-transit-stops	OK	0	0	10000	10001	10000	-1	6.8	
 nam-ags-bpd-crimes-bpd-crimes	OK	0	0	10000	10001	10000	-1	8.1	
@@ -3561,10 +3561,10 @@ nam-caltrans-cctv-cctv	OK	0	0	2936	2936	2936	-1	11.4
 nam-colorado-alternative-fuels-and-electric-vehicle-c	OK	0	0	3067	3067	3067	-1	5.4	
 nam-ct-education-directory	OK	0	0	1232	1232	1232	-1	2.2	
 nam-delaware-firstmap-services	OK	0	0	183	183	183	-1	2.7	
-nam-delaware-delaware-public-education-organization-d	COLLISION	0	0	4299	3913	3913	-1	5.8	386 of 4299 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-delaware-delaware-public-education-organization-d	COLLISION	0	0	4299	3913	3913	-1	4.7	386 of 4299 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 nam-fl-fdot-services	OK	0	0	144	144	144	-1	2.9	
 nam-colorado-boulder-county-building-footprints	OK	0	0	8000	8001	8000	-1	10.9	
-nam-delaware-permitted-septic-systems	COLLISION	0	0	8000	7840	7839	-1	11.2	161 of 8000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+nam-delaware-permitted-septic-systems	COLLISION	0	0	8000	7840	7839	-1	10.5	161 of 8000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
 nam-md-imap-services	OK	0	0	261	261	261	-1	4.5	
 nam-ct-covid-19-reported-patient-impact-and-hos	OK	0	0	6627	6627	6627	-1	17.3	
 nam-mass-gis-services	OK	0	0	472	472	472	-1	11.1	

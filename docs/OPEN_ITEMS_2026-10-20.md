@@ -746,8 +746,35 @@ mid-run, the rows measured before the change are stale data wearing the same
 column headings as fresh data — re-run them deliberately, or the file quietly
 reports the old behaviour for ever.
 
-Sweep totals after the merge, over 3,612 of 55,699 scheduled rows: **OK 3,155,
-FETCH_FAILED 226, SLOW 99, COLLISION 99, POD 19, EMITS_NOTHING 14.**
+**And the COLLISION column was stale the same way, for the same reason** — so
+all 99 were re-run too, and 33 of them are now `OK`. The arithmetic is the
+point: those 99 rows read **55,921 records lost per run** as the file stood,
+and **2,930** when re-measured. Nineteen times too high, because the rows
+Catalonia's atlases, Colombia's portal and the nineteen Socrata city datasets
+contributed were measured hours BEFORE their keys were repaired on the same
+day. The ~53,000-record difference is the recovery those repairs made, which
+independently cross-checks the 53,281 figure recorded for them under rule 4b.
+
+What is left is a small and largely DECIDED tail: 66 rows losing 2,930 records
+a run between them, the largest single row 645, and several of the biggest
+entries are rows where the content-hash fallback was MEASURED to beat any
+available key and deliberately kept — `lat-co-dispositivos-med` (386, whose
+best reachable key is no better than the loss), `nam-norfolk-streetlights-and-outages-reports`
+(155, reverted for exactly that reason) and a Providence tree row. So the
+collision tail is not 99 rows of unexamined loss; it is 2,930 records a run, a
+fraction of it already settled on the evidence.
+
+Sweep totals after both re-measures, over 3,612 of 55,699 scheduled rows:
+**OK 3,188, FETCH_FAILED 226, SLOW 99, COLLISION 66, POD 19,
+EMITS_NOTHING 14.**
+
+**The rule for whoever resumes this sweep:** re-run the rows that carry a
+finding before believing one. Three of this file's six verdict columns were
+wrong — `EMITS_NOTHING` 95% wrong, `COLLISION` overstated 19-fold, `POD`
+absent for eight rows — every time because the tool or the tree changed after
+the row was measured and `--resume` never revisits a row it already has. The
+verdicts that need no re-reading are the ones that claim nothing: `OK` and
+`SLOW`.
 
 What the first 2,390 rows say: **1,502 OK, 161 EMITS_NOTHING, 88 SLOW (hit the
 90 s kill line — unmeasured, not failed), 34 FETCH_FAILED, 16 COLLISION.**
