@@ -712,10 +712,42 @@ the database, and the third stores 10 of 10 — it had been a transient failure,
 which is "one probe is one reading" arriving from the useful direction.
 
 **So the remaining `EMITS_NOTHING` count is not a to-do list of 301 broken
-rows.** It needs re-reading after this change: the ones that were really fetch
-failures now say so, and what is left — roughly 22 of the first 3,612 — are the
-rows that genuinely fetch and store nothing, which is the defect that verdict
-names and the one worth triaging.
+rows** — and rather than estimate how many survive, all 310 were re-run under
+the fixed tool. **Fourteen of the 310 are real**, which makes that column 95%
+wrong as it stood:
+
+| re-read as | n | |
+| --- | --- | --- |
+| `FETCH_FAILED` | **192** | could not fetch, and until this change had no way to say so |
+| `OK` | **93** | works; the earlier reading was a one-off failure, which is "one probe is one reading" from the useful side |
+| `EMITS_NOTHING` | **14** | genuinely fetches and stores nothing — the defect the verdict names |
+| `POD` | 8 | maintenance pods, from before the tool learned to skip them |
+| `COLLISION` / `SLOW` | 2 / 1 | |
+
+The 14: `gnews-bg-health`, `gnews-ee-science`, `gnews-ee-technology`,
+`gnews-fi-science`, `gnews-fi-technology`, `us-usaspending-agency-overview`,
+`ansd-nada-microdata`, `sci-aq-ni-stations`, `sci-aq-ukair-phenomena`,
+`sci-aq-ukair-timeseries`, `sci-stac-inpe-modisa-ocsmart-poc-daily-1`,
+`eas-hk-hko-special-tips`, `lat-ec-expreso`, `sas-arc-tas-natenv`. Five are
+Google News editions in small languages, which may hold nothing honestly — a
+distinction the disclosure can now draw and the old verdict could not.
+`sci-ogcf-idee-existinglanduseobject` is SLOW at 120 s with 2,400 rows already
+stored, so it is unmeasured rather than failed.
+
+**A RESUME FILE CARRIES THE VERDICTS OF WHICHEVER VERSION OF THE TOOL WROTE
+EACH ROW**, and that is the lesson worth more than the re-count. `--resume`
+skips ids already present in `--out`, by design and correctly — but the tool
+was improved twice while this sweep was running (the `POD` verdict, then the
+`[sched]` fetch-failure match), so the file became a mixture of three tools'
+opinions with nothing in it saying which row came from which. The eight pods
+sat there reading `EMITS_NOTHING` under a tool that would now skip them, and
+resuming would never have revisited one of them. When a sweep's tool changes
+mid-run, the rows measured before the change are stale data wearing the same
+column headings as fresh data — re-run them deliberately, or the file quietly
+reports the old behaviour for ever.
+
+Sweep totals after the merge, over 3,612 of 55,699 scheduled rows: **OK 3,155,
+FETCH_FAILED 226, SLOW 99, COLLISION 99, POD 19, EMITS_NOTHING 14.**
 
 What the first 2,390 rows say: **1,502 OK, 161 EMITS_NOTHING, 88 SLOW (hit the
 90 s kill line — unmeasured, not failed), 34 FETCH_FAILED, 16 COLLISION.**
