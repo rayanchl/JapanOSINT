@@ -796,20 +796,29 @@ E6.
 hour a complete pass is a two-day job, and the file is committed as it
 accumulates rather than held back.
 
-**Where it stands at 2026-10-23: 11,666 of 55,699 rows** (20.9%), resumed
-across several invocations — each one runs until the harness's two-hour
-background limit and `--resume` picks up where it stopped, so the remainder is
-roughly ten more hours of wall clock:
+**Where it stands at 2026-10-23: 12,584 of 55,699 rows** (22.6%), resumed
+across several invocations — each runs until the harness's two-hour background
+limit (or, once, until the container restarted) and `--resume` picks up where it
+stopped, so the remainder is roughly nine more hours of wall clock:
 
 | verdict | n |
 | --- | --- |
-| OK | 9,933 |
-| FETCH_FAILED | 1,188 |
-| COLLISION | 294 |
-| SLOW | 147 |
-| EMITS_NOTHING | 81 |
+| OK | 10,603 |
+| FETCH_FAILED | 1,306 |
+| COLLISION | 298 |
+| SLOW | 222 |
+| EMITS_NOTHING | 132 |
 | POD | 19 |
 | GATED | 4 |
+
+**Read the SLOW column against the machine, not the sources.** It is 222 now
+against 147 at 11,666 rows: 75 of the last 918 rows hit the 200 s kill line, an
+8% rate where the first 11,666 ran at about 1%. That window is exactly when this
+container was also building llama.cpp and running the 85-test unit suite, and
+`SLOW` means UNMEASURED at this tool's kill line rather than a slow source — the
+same reasoning as the cycle-health sweep whose STUCK verdicts changed with
+`--jobs`. Those 75 rows need re-running on a quiet machine before any of them is
+read as a finding.
 
 Read those four non-OK columns with the corrections below rather than as
 counts of broken sources: `FETCH_FAILED` is a row that DISCLOSED its refusal
