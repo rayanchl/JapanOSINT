@@ -98,6 +98,47 @@ void http_response_free(http_response *r);
 enum { HTTP_TE_NONE = 0, HTTP_TE_CONNECT, HTTP_TE_TIMEOUT, HTTP_TE_OTHER };
 int http_last_transport_error(void);
 
+/* WHICH TLS FAILURE, ON THE CALLING THREAD — because "TLS error" is four
+ * findings with four remedies and only one of them is about a certificate we
+ * should not trust.
+ *
+ * `docs/tls-intermediates-2026-10-21.md` is the whole argument: of 30 hosts
+ * written off as "TLS refused", **24 were a missing intermediate** — a public
+ * CA signed the leaf and the server simply did not send the link, which
+ * `native/data/tls/extra-intermediates.pem` now completes, taking nine hosts
+ * from `rc=1 status=0` to HTTP 200. Two were a different hostname, one was
+ * this container's own egress, and only two were genuinely unreachable. The
+ * fetch-failure record could not tell any of them apart (open item D1-bis): it
+ * said "the request failed at the transport level", which sends a reader to
+ * guess.
+ *
+ * The discriminator is OpenSSL's own verify result (CURLINFO_SSL_VERIFYRESULT,
+ * an X509_V_ERR_* code), not the message text — a translated or reworded libcurl
+ * string would silently reclassify every host. The text is read only where the
+ * verify result cannot speak: some backends report a hostname mismatch with a
+ * verify result of 0, and a handshake that fails before verification (a
+ * protocol or cipher refusal) has no verify result at all.
+ *
+ * HTTP_TLS_NONE means the last attempt was not a TLS failure — including every
+ * successful fetch, so a caller must check the transport error first. */
+enum { HTTP_TLS_NONE = 0,
+       HTTP_TLS_NO_LOCAL_ISSUER,     /* the server omitted an intermediate     */
+       HTTP_TLS_EXPIRED,             /* the certificate's validity has passed  */
+       HTTP_TLS_NOT_YET_VALID,       /* notBefore is in the future / bad clock */
+       HTTP_TLS_HOSTNAME_MISMATCH,   /* a real certificate for another name    */
+       HTTP_TLS_SELF_SIGNED,         /* signed by nobody but itself            */
+       HTTP_TLS_REVOKED,             /* the CA withdrew it                     */
+       HTTP_TLS_UNRECOGNIZED_NAME,   /* the server does not serve this SNI name */
+       HTTP_TLS_HANDSHAKE,           /* refused before verification: protocol,
+                                      * cipher or security level              */
+       HTTP_TLS_OTHER };             /* a verification failure none of the above */
+int http_last_tls_cause(void);
+/* One clause naming the cause, and one naming what to do about it. Both are
+ * safe for any value, so a cause this build does not know still reads as a
+ * sentence rather than as an empty string in a stored record. */
+const char *http_tls_cause_label(int cause);
+const char *http_tls_cause_remedy(int cause);
+
 /* Per-client log of the distinct hosts contacted (every http_request goes
  * through one client). Lets the OSINT dispatcher attribute a service's output
  * to the real upstream providers it hit — automatic source attribution for

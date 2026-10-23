@@ -314,7 +314,23 @@ static const hp_source HP3B31_JPGOV[] = {
       "not the ministry's register, which is why it is not re-pointed there — "
       "and the labour-standards section of the ministry's own sitemap lists no "
       "public-disclosure page at all. The row is kept and discloses its 404 "
-      "once per run rather than being removed." },
+      "once per run rather than being removed. "
+      "THE REGISTER WAS THEN FOUND (2026-10-23), and it is still not "
+      "shippable — which is a better reason than \"no replacement\". It is not "
+      "on www.mhlw.go.jp at all, which is why a search of the ministry's site "
+      "and sitemap could not see it: each PREFECTURAL LABOUR BUREAU publishes "
+      "its own, on jsite.mhlw.go.jp — Tokyo's 労働基準関係法令違反に係る公表事案 "
+      "is at /tokyo-roudoukyoku/jirei_toukei/souken_jirei.html. Two things "
+      "stop it. The page is a wrapper whose only content is a link to a PDF "
+      "re-published under a new numeric content id each edition "
+      "(002861040.pdf when this was read), and hpengine has no PDF mode — so "
+      "an HP_HTML row here would store the page's NAVIGATION as enforcement "
+      "cases, the confident wrong answer FAA_NNUMBER_REGISTRY was removed for. "
+      "And the path is Tokyo's own: osaka, aichi, fukuoka and kanagawa all "
+      "404 on the same path (hokkaido 404s too, with two stale PDFs on its "
+      "error page), so this is 47 differently-shaped bureau sites and a "
+      "discovery beat of its own, not a re-point. What would make it "
+      "shippable is a PDF text mode in the engine" },
 
   { .id = "JP_PMDA_APPROVALS", .name = "PMDA — drug & device approval database",
     .name_ja = "PMDA 医薬品医療機器情報", .category = "health",

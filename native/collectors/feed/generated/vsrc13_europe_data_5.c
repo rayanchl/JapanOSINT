@@ -233,6 +233,25 @@ VJSON(eur_soc_cat_a389_y4d5, "eur-soc-cat-a389-y4d5", "Generalitat de Catalunya 
   "ca", "[\"esp\",\"opendata\"]", 86400,
   "Rows of the 'Matrícula viva' dataset published by Generalitat de Catalunya transparency portal.");
 
+/* 20,000 emitted / 19,614 stored (registry sweep). MEASURED AND LEFT ALONE,
+   2026-10-23, and the arithmetic is why. The dataset exposes no identifier —
+   twelve columns, none of them an id — so the only question is whether a
+   composite beats the content-hash fallback, and over the engine's whole
+   20,000-row read it does not:
+
+       distinct WHOLE records                            19,616
+       the fallback actually stores                      19,614
+       numero_ens+espai+detall_espai                     19,561
+       + via+numvia                                      19,576
+       + tipusus+superficie_construida+superficie_terreny 19,604
+
+   A 2,000-row sample said the opposite — 1,978 of an attainable 1,983, which
+   reads like a near-perfect key — and shipping on it cost 51 records a run in
+   the engine before the full walk was done. That is CLAUDE.md's own "two pages
+   can be too few" and "compare the proposed key against the row's CURRENT loss
+   and keep the fallback when it wins", both arriving at once. The ~386
+   collapsed rows are the portal repeating a row verbatim: 19,616 of 20,000
+   are distinct as whole records, and the fallback is within two of that. */
 VJSON(eur_soc_cat_b5rw_yz3c, "eur-soc-cat-b5rw-yz3c", "Generalitat de Catalunya transparency portal — Inventari de béns i drets de les entitats del Sector Públic", "Generalitat de Catalunya transparency portal — Inventari de béns i drets de les entitats del Sector Públic",
   "europe_data", "opendata",
   "https://analisi.transparenciacatalunya.cat/resource/b5rw-yz3c.json?$limit=1000&$order=:id",

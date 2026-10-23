@@ -89,12 +89,21 @@ static char g_call_hdrs[16][512];
  * cache on the path answering for a page it never fetched, and the one retry
  * that asks it to go back to the origin. */
 #define FX_304_UNLESS_NOCACHE 1304
+/* A fixture status that makes http_request RETURN NON-ZERO — a transport
+ * failure, where there is no HTTP status at all. The engine reads that as
+ * fst = -1, and it is the only way to reach the TLS branch of the
+ * fetch-failure record (test 53). */
+#define FX_TRANSPORT_FAIL     1999
+/* What http_last_tls_cause() reports. The real one is thread-local state in
+ * core/httpclient.c, which this harness does not link. */
+static int g_fx_tls = HTTP_TLS_NONE;
 /* Milliseconds every stub request takes — for the detail TIME budget, which
  * nothing else in this harness can exercise. 0 everywhere else. */
 static int  g_fx_delay_ms = 0;
 
 static void fx_reset(void) { g_nfx = 0; g_ncalls = 0; g_last_url[0] = 0;
                              g_last_body[0] = 0; g_last_hdrs[0] = 0;
+                             g_fx_tls = HTTP_TLS_NONE;
                              memset(g_call_hdrs, 0, sizeof g_call_hdrs); }
 static void fx_add(const char *match, long status, const char *body) {
   if (g_nfx < 16) g_fx[g_nfx++] = (fixture){ match, body, status, 0 };
@@ -129,6 +138,10 @@ int http_request(http_client *c, const char *method, const char *url,
               : strstr(url, g_fx[i].match) != NULL;
     if (hit) {
       out->status = g_fx[i].status;
+      /* No status, no body: the exchange never completed. */
+      if (out->status == FX_TRANSPORT_FAIL) {
+        out->status = 0; out->body = NULL; out->body_len = 0; return 1;
+      }
       if (out->status == FX_304_UNLESS_NOCACHE) {
         if (!strstr(g_last_hdrs, "Cache-Control: no-cache")) { out->status = 304; return 0; }
         out->status = 200;
@@ -150,6 +163,19 @@ int http_request(http_client *c, const char *method, const char *url,
   return 0;                     /* completed exchange, 404 */
 }
 void http_response_free(http_response *r) { if (r) { free(r->body); r->body = NULL; } }
+/* The TLS-cause accessors (open item D1-bis). core/httpclient.c is not linked
+ * here, so the cause is whatever a test set — and the LABEL and REMEDY are the
+ * real strings' SHAPE rather than their text, because what this harness can
+ * check is that the engine puts them in the record and keys them on the cause,
+ * not what a sentence in another file says. test_http_tls_cause.c owns the
+ * classifier and the wording. */
+int http_last_tls_cause(void) { return g_fx_tls; }
+const char *http_tls_cause_label(int cause) {
+  return cause == HTTP_TLS_NONE ? "" : "STUB-LABEL";
+}
+const char *http_tls_cause_remedy(int cause) {
+  return cause == HTTP_TLS_NONE ? "" : "STUB-REMEDY";
+}
 /* lib/jsonlist.c is linked for jsonlist_next_page(), the paging decision the
  * page_walk rows share with every VJSON collector (and lib/pagewalk.c because
  * jsonlist.c calls into it). The operator URL override and the feed key hash
@@ -4480,6 +4506,74 @@ int main(void) {
     ok(b && strstr(b->props, "no label/value cells"),
        "52: an HTML detail page with no label/value cells is an error on the record");
   }
+
+  /* 53. WHICH TLS FAILURE, in the fetch-failure record (open item D1-bis).
+   *     "The request failed at the transport level" is one sentence covering
+   *     four findings with four remedies — and docs/tls-intermediates-
+   *     2026-10-21.md measured what that cost: of 30 hosts written off as
+   *     "TLS refused", 24 were a MISSING INTERMEDIATE, which is ours to fix.
+   *     The record names the cause now. What this test owns is that the engine
+   *     attaches it, keys it on the cause, and attaches it ONLY to a transport
+   *     failure; tests/unit/test_http_tls_cause.c owns the classifier. */
+  fx_reset();
+  fx_add("/us?per_page=100", FX_TRANSPORT_FAIL, NULL);
+  rc = run_source("T_URLSIZE", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "failed at the transport level") != NULL &&
+       strstr(nt->props, "\"tls_cause\"") == NULL,
+       "53: a transport failure with no TLS verdict says so, and claims no "
+       "certificate finding it does not have");
+    (void)rc; }
+
+  /* 53b. The cause that matters most, because it is the fixable one. */
+  fx_reset();
+  fx_add("/us?per_page=100", FX_TRANSPORT_FAIL, NULL);
+  g_fx_tls = HTTP_TLS_NO_LOCAL_ISSUER;
+  rc = run_source("T_URLSIZE", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "\"tls_cause\":\"no_local_issuer\"") != NULL &&
+       strstr(nt->props, "\"tls_detail\":\"STUB-LABEL\"") != NULL &&
+       strstr(nt->props, "\"remedy\":\"STUB-REMEDY\"") != NULL &&
+       strstr(nt->props, "failed at the transport level") == NULL &&
+       strstr(nt->title, "TLS chain is incomplete") != NULL,
+       "53b: a missing intermediate is named in the cause, the detail, the "
+       "remedy AND the title — not filed as a generic transport failure");
+    (void)rc; }
+
+  /* 53c. Each cause gets its own title, because the title is what a human
+   *      scans; a reader who sees only "the TLS handshake was refused" is back
+   *      where D1-bis started. */
+  fx_reset();
+  fx_add("/us?per_page=100", FX_TRANSPORT_FAIL, NULL);
+  g_fx_tls = HTTP_TLS_HOSTNAME_MISMATCH;
+  rc = run_source("T_URLSIZE", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "\"tls_cause\":\"hostname_mismatch\"") != NULL &&
+       strstr(nt->title, "different hostname") != NULL,
+       "53c: a hostname mismatch is a different finding with a different title");
+    (void)rc; }
+
+  /* 53d. THE NEGATIVE THAT MATTERS. The cause is thread-local state about the
+   *      LAST attempt, so a row whose page 1 came back with an HTTP STATUS must
+   *      not pick up a certificate verdict left behind by something else — that
+   *      would be this record inventing the cause, which is the mistake it has
+   *      already made three times (Archive-It, the Imperva wall, FDSN's
+   *      nodata=404). */
+  fx_reset();
+  fx_add("/us?per_page=100", 503, "<html>upstream busy</html>");
+  g_fx_tls = HTTP_TLS_EXPIRED;          /* stale, from an unrelated fetch */
+  rc = run_source("T_URLSIZE", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "\"http_status\":503") != NULL &&
+       strstr(nt->props, "\"tls_cause\"") == NULL &&
+       strstr(nt->props, "STUB-REMEDY") == NULL,
+       "53d: a run that got an HTTP status carries no TLS cause, however the "
+       "thread-local was left");
+    (void)rc; }
 
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;

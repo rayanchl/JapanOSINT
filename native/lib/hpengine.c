@@ -4783,6 +4783,11 @@ dated_restart:;
    * asked, 200 = served, -1 = transport failure, otherwise the status. */
   long first_status = 0;
   int  first_nodata = 0;   /* page 1 was served and declared itself EMPTY */
+  /* WHICH TLS failure, if page 1 failed at the transport level (open item
+   * D1-bis). Captured here rather than read at notice time because
+   * http_last_tls_cause() is the LAST attempt on this thread, and a detail hop
+   * or a retry between the two would overwrite it. */
+  int  first_tls = HTTP_TLS_NONE;
   unsigned long long prev_hash = 0;   /* previous page's body, for notice (d) */
   char *prev_url = NULL;              /* the page read before this one         */
   /* Page 1's record count, the yardstick for "was the previous page full?" in
@@ -4865,6 +4870,7 @@ dated_restart:;
        * finding from a run that brought back nothing at all. */
       if (page == 0) {
         first_status = fst;
+        if (fst < 0) first_tls = http_last_tls_cause();
         /* hp_status_is_declared_empty(): the upstream said "nothing matched"
          * in its own words. The request WAS served; it held no records. */
         first_nodata = hp_status_is_declared_empty(fst, hr.body);
@@ -5681,9 +5687,28 @@ date_step_back:
     cJSON_AddStringToObject(p, "url", url ? url : "");
     cJSON_AddNumberToObject(p, "http_status", (double)first_status);
     cJSON_AddBoolToObject(p, "body_parsed", !st.unreadable);
+    /* D1-bis: "the request failed at the transport level" sent a reader to
+     * guess, and of 30 hosts written off that way 24 were one fixable cause.
+     * Named only when there IS a TLS verdict, so a connect refusal or a
+     * timeout does not acquire a certificate finding it never had. */
+    if (first_tls != HTTP_TLS_NONE) {
+      cJSON_AddStringToObject(p, "tls_cause",
+        first_tls == HTTP_TLS_NO_LOCAL_ISSUER   ? "no_local_issuer"
+      : first_tls == HTTP_TLS_EXPIRED           ? "expired"
+      : first_tls == HTTP_TLS_NOT_YET_VALID     ? "not_yet_valid"
+      : first_tls == HTTP_TLS_HOSTNAME_MISMATCH ? "hostname_mismatch"
+      : first_tls == HTTP_TLS_SELF_SIGNED       ? "self_signed"
+      : first_tls == HTTP_TLS_REVOKED           ? "revoked"
+      : first_tls == HTTP_TLS_UNRECOGNIZED_NAME ? "unrecognized_name"
+      : first_tls == HTTP_TLS_HANDSHAKE         ? "handshake"
+                                                : "other");
+      cJSON_AddStringToObject(p, "tls_detail", http_tls_cause_label(first_tls));
+    }
     cJSON_AddStringToObject(p, "outcome",
       first_status == 0
         ? "the request was never made — the row needed a token it could not build"
+      : first_status == -1 && first_tls != HTTP_TLS_NONE
+        ? http_tls_cause_label(first_tls)
       : first_status == -1
         ? "the request failed at the transport level"
       : first_status == 200 && st.unreadable_ratelimit
@@ -5703,7 +5728,9 @@ date_step_back:
       "fetch cannot be mistaken for a source that ran and found nothing — the "
       "two are identical in the data without it.");
     cJSON_AddStringToObject(p, "remedy",
-      first_status == 429
+      first_tls != HTTP_TLS_NONE
+        ? http_tls_cause_remedy(first_tls)
+      : first_status == 429
         ? "rate limited: give the host a per-host minimum gap in "
           "core/hostgate.c, as crates.io has"
       : first_status == 401 || first_status == 403
@@ -5737,6 +5764,24 @@ date_step_back:
       snprintf(title, sizeof title,
                "%s stored nothing: the body did not parse in its declared mode",
                s->id);
+    else if (first_status == -1 && first_tls == HTTP_TLS_NO_LOCAL_ISSUER)
+      snprintf(title, sizeof title,
+               "%s stored nothing: the TLS chain is incomplete — the server did "
+               "not send its intermediate", s->id);
+    else if (first_status == -1 && first_tls == HTTP_TLS_HOSTNAME_MISMATCH)
+      snprintf(title, sizeof title,
+               "%s stored nothing: the certificate is for a different hostname",
+               s->id);
+    else if (first_status == -1 && first_tls == HTTP_TLS_EXPIRED)
+      snprintf(title, sizeof title,
+               "%s stored nothing: the server's certificate has expired", s->id);
+    else if (first_status == -1 && first_tls == HTTP_TLS_SELF_SIGNED)
+      snprintf(title, sizeof title,
+               "%s stored nothing: the server's certificate is self-signed",
+               s->id);
+    else if (first_status == -1 && first_tls != HTTP_TLS_NONE)
+      snprintf(title, sizeof title,
+               "%s stored nothing: the TLS handshake was refused", s->id);
     else if (first_status == -1)
       snprintf(title, sizeof title,
                "%s stored nothing: the request failed at the transport level",

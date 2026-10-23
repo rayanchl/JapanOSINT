@@ -168,6 +168,25 @@ VGEO(nam_providenceri_providence_tree_dataset, "nam-providenceri-providence-tree
   "en", "[\"usa\",\"ri\",\"environment\",\"opendata\"]", 21600,
   "Socrata open-data feed from City of Providence, Rhode Island: Providence Tree Dataset, one JSON record per row.");
 
+/* 8,000 emitted / 7,356 stored (registry sweep). MEASURED AND LEFT ALONE,
+   2026-10-23. No id column, so the question is whether a composite beats the
+   content-hash fallback — and over the engine's whole 8,000-feature read it
+   does not:
+
+       distinct WHOLE features                                 7,355
+       distinct property sets                                  7,355
+       the fallback actually stores                            7,356
+       property_address_address+species+diameter_in_inches     7,323
+
+   An 800-feature sample said that key hit the maximum exactly (765 of 765);
+   shipping on it cost 32 records a run, confirmed in the engine (7,324 against
+   the fallback's 7,356). "Two pages can be too few", and the fallback wins.
+   One thing from the pass is worth keeping: the GEOMETRY is by far the weakest
+   key here, 5,261 distinct of 8,000, because the points look snapped to the
+   street address — so several trees share a coordinate and a geo row's
+   identity is not where it is.
+   Its sibling nam-providenceri-providence-tree-dataset (a different dataset)
+   keeps the fallback for the same reason, measured earlier. */
 VGEO(nam_providenceri_providence_tree_inventory, "nam-providenceri-providence-tree-inventory", "City of Providence, Rhode Island — Providence Tree Inventory", "City of Providence, Rhode Island — Providence Tree Inventory",
   "us_local", "environment",
   "https://data.providenceri.gov/resource/uv9w-h8i4.geojson?$limit=400&$order=:id",

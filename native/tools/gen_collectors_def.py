@@ -271,6 +271,9 @@ LABELS = {
     "osm": ("OpenStreetMap — taginfo & changesets", "OpenStreetMap タグ・変更セット", None),
     "reddit": ("Reddit regional & thematic multireddits", "Reddit 地域・テーマ別", "One feed per multireddit (reddit-group-*)."),
     "hp3b28_jpdb": ("Japan — CiNii Research (batch 28)", "日本 CiNii Research", None),
+    "hp3b55_atparl": ("Austria — Parliament materials (batch 55)", "オーストリア議会 資料",
+                      "The Austrian Parliament's whole materials index, read as seven "
+                      "complete legislative-period slices."),
     # hand-written family labels that had no human name
     "geopolitics": ("Geopolitics, defence & conflict", "地政学・防衛・紛争", None),
     "aviation": ("Aviation & airspace", "航空・空域", None),

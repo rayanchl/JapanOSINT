@@ -5,7 +5,37 @@ was seeded from, what it measured and what it taught. Moved out of `CLAUDE.md`
 on 2026-10-19 so that file keeps the rules and the current number; the lessons
 that a new batch must not relearn are summarised there. Newest first.
 
-**The registered count is 58,047** (2026-10-23): main's 57,529 merged with this
+**The registered count is 58,054** (2026-10-23): 58,047 plus **batch 55's seven
+rows** — the Austrian Parliament's whole materials index, 391,357 records read
+as seven complete slices (`collectors/pivot/table/hp3b55_atparl.c`,
+`docs/verified-sources-batch55.tsv`,
+`docs/at-parlament-filter-api-2026-10-23.md`). It closes the last line of open
+item B2, and the answer to "one measured sort parameter away" turned out to be
+that **there is no sort parameter** — the endpoint ignores its query string
+entirely, the filter is a POST body, and 14 of 26 sort spellings "worked"
+because the index itself reorders between reads. `frobnicate=7` moving the
+answer identically is what settled it.
+
+What ships is a PARTITION rather than a walk: `showAll=true` plus a `GP`
+(legislative-period) filter answers `pages: 1` with `rows == count`,
+byte-identical across two reads, and the 27 non-empty GP codes' counts sum to
+391,354 against an unfiltered 391,354 exactly. Seven rows because each must
+stay under the filter API's 100,000-row single-page cap and
+`core/httpclient.c`'s 64 MB body ceiling, with no group mixing a closed period
+with the open one. Engine readings, `stored == emitted` on all seven and no
+notice anywhere: 50,896 / 77,646 / 55,695 / 51,970 / 51,979 / 76,457 / 26,718,
+one request each, 222 MB a cycle.
+
+Three lessons, all in CLAUDE.md: **probe a control before believing a
+parameter**; **enumerate the dimension you slice on and check the slices sum to
+the whole** (the Roman numerals reach 389,139 of 391,354, and a 30-page sample
+found `KN` and `PN` but missed `BR`'s two rows); and **three keys agreeing on
+the same wrong answer is not corroboration** — `WENTRY_ID`, `HIS_URL` and
+`GP_CODE+ITYP+INR` all give 75,485 of 76,457, and all 972 "duplicates" differ,
+in `NRBR`, because a material that went through both chambers is served once
+per chamber under one web-item id.
+
+**The registered count was 58,047** (2026-10-23): main's 57,529 merged with this
 branch's 58,045. Third merge of main in one day, and the one where a conflict
 was decided by a measurement only the OTHER side had.
 

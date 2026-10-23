@@ -9150,3 +9150,706 @@ EPSS_SCORE_PAGE	OK	0	0	2000	2001	2000	2000	3.9
 FIRST_COUNTRIES	OK	0	0	1	1	1	1	1.3	
 D3FEND_MAPPINGS	OK	0	0	16164	16164	16164	16164	10.1	
 JENKINS_UPDATE_CENTER	OK	0	0	1567	1567	1567	1567	2.8	
+AP19_VN_VNDIRECT_STOCKS	COLLISION	0	0	14100	11363	11362	14100	113.2	2738 of 14100 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+NUGET_SERVICE_INDEX	OK	0	0	40	40	40	40	1.0	
+NUGET_CATALOG	OK	0	0	23379	23379	23379	23379	6.3	
+ENDOFLIFE_ALL	OK	0	0	1	1	1	1	0.8	
+REKOR_LOG_STATUS	OK	0	0	2	2	2	2	3.2	
+WORDPRESS_THEME_REGISTRY	OK	0	0	2000	2002	2000	2000	126.2	
+WORDPRESS_PLUGIN_REGISTRY	COLLISION	0	0	2000	1995	1993	2000	127.3	7 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+ARTIFACTHUB_REPOSITORY_SEARCH	OK	0	0	1200	1201	1200	1200	3.7	
+BREW_CASK_INDEX	OK	0	0	7803	7803	7803	7803	5.3	
+NODEJS_RELEASE_INDEX	OK	0	0	875	875	875	875	1.0	
+MSRC_SUG_VULNERABILITY	OK	0	0	2000	2002	2000	2000	132.9	
+CHROME_PLATFORMS	OK	0	0	14	14	14	14	1.0	
+RANSOMWATCH_GROUPS	OK	0	0	216	216	216	216	0.8	
+THREATFOX_CSV_RECENT	FETCH_FAILED	0	0	1	1	0	-1	0.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JENKINS_PLUGIN_SITE	OK	0	0	2128	2130	2128	2128	135.3	
+MALWAREBAZAAR_CSV_RECENT	FETCH_FAILED	0	0	1	1	0	-1	1.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+URLHAUS_TEXT_ONLINE	FETCH_FAILED	0	0	1	1	0	-1	0.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+FEODO_IPBLOCKLIST_RECOMMENDED	OK	0	0	1	1	1	1	0.9	
+RANSOMWATCH_POSTS	OK	0	0	16072	16072	16072	16072	4.5	
+BLOCKLIST_DE_SSH	OK	0	0	5094	5094	5094	5094	1.8	
+DSHIELD_THREATFEEDS	OK	0	0	31	31	31	31	1.1	
+FIREHOL_LEVEL2	OK	0	0	22150	22150	22150	22150	5.4	
+CT_ARGON_STH	FETCH_FAILED	0	0	1	1	0	-1	0.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+OONI_CIRCUMVENTION_STATS	OK	0	0	207	207	207	207	1.2	
+DSHIELD_BACKSCATTER	OK	0	0	1000	1000	1000	1000	9.4	
+OONI_GLOBAL_OVERVIEW	OK	0	0	1	1	1	1	1.2	
+IODA_ENTITIES_COUNTRY	FETCH_FAILED	1	-1	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+OONI_DOMAIN_INDEX	OK	0	0	29673	29673	29673	29673	7.5	
+TERRAFORM_PROVIDERS	OK	0	0	150	150	150	150	24.4	
+IODA_ENTITIES_ASN	FETCH_FAILED	1	-1	1	1	0	-1	1.2	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+IODA_OUTAGE_EVENTS	FETCH_FAILED	1	-1	1	1	0	-1	1.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+MLAB_SITE_SWITCHES	OK	0	0	1	1	1	1	1.1	
+MLAB_SITE_ANNOTATIONS	OK	0	0	1	1	1	1	1.0	
+CERTPL_DOMAINS_JSON	OK	0	0	125503	125503	125503	125503	30.9	
+TEAM_CYMRU_FULLBOGONS	OK	0	0	3036	3036	3036	3036	1.6	
+LACNIC_DELEGATED_STATS	OK	0	0	97558	97558	97558	97558	25.6	
+CERT_PH_WP_POSTS	FETCH_FAILED	0	0	1	1	0	-1	2.2	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+BW_UB_UBRISA_REPOSITORY	OK	0	0	981	983	981	981	184.4	
+ARIN_DELEGATED_STATS	OK	0	0	204295	204295	204295	204295	50.1	
+NPCERT_WP_POSTS	FETCH_FAILED	0	0	1	1	0	-1	5.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+RIPENCC_DELEGATED_STATS	SLOW	-25	0	-1	-1	199736	-1	56.9	no [sched] line — the process was killed before the run returned, but the database holds 199736 rows for it, so it was working: unmeasured, not failed
+FPDS_AWARD_NAVY	COLLISION	0	0	200	200	199	200	4.2	1 of 200 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+FPDS_AWARD_ARMY	OK	0	0	200	201	200	200	3.8	
+ECUCERT_WP_POSTS	OK	0	0	31	31	31	31	9.8	
+FPDS_AWARD_AIRFORCE	COLLISION	0	0	200	199	198	200	3.7	2 of 200 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+FPDS_AWARD_OSD	OK	0	0	200	201	200	200	3.7	
+FPDS_AWARD_DLA	OK	0	0	200	201	200	200	7.2	
+FPDS_PSC_AIRCRAFT_FIXED	COLLISION	0	0	200	197	196	200	3.9	4 of 200 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+FPDS_PSC_AIRCRAFT_ROTARY	COLLISION	0	0	200	200	199	200	3.9	1 of 200 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+FPDS_PSC_UAV	OK	0	0	200	201	200	200	3.7	
+FPDS_PSC_GUNS_SMALL	OK	0	0	200	201	200	200	3.7	
+FPDS_PSC_GUIDED_MISSILES	OK	0	0	200	201	200	200	3.7	
+FPDS_PSC_MISSILE_COMPONENTS	COLLISION	0	0	200	198	197	200	3.7	3 of 200 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+FPDS_PSC_SPACE_VEHICLES	OK	0	0	200	201	200	200	3.9	
+FPDS_PSC_COMBAT_SHIPS	OK	0	0	200	201	200	200	4.0	
+FPDS_PSC_RADAR	OK	0	0	200	201	200	200	4.1	
+FPDS_PSC_ECM	OK	0	0	200	201	200	200	3.9	
+TERRAFORM_MODULES	OK	0	0	1000	1002	1000	1000	121.6	
+FPDS_PSC_CBRN_DETECT	OK	0	0	200	201	200	200	3.9	
+USASPEND_DOD_PROGRAM_ACTIVITY	OK	0	0	209	209	209	209	4.1	
+USASPEND_DOD_FEDERAL_ACCOUNT	OK	0	0	149	149	149	149	4.6	
+USASPEND_DOD_BUDGET_FUNCTION	OK	0	0	6	6	6	6	1.2	
+USASPEND_DOD_OBJECT_CLASS	OK	0	0	35	35	35	35	1.5	
+USASPEND_DOD_BUDGETARY_RESOURCES	OK	0	0	11	11	11	11	1.9	
+USASPEND_DOD_AWARD_CATEGORY	OK	0	0	6	6	6	6	1.9	
+USASPEND_DOD_SUBAGENCY	OK	0	0	26	26	26	26	17.2	
+UK_GOVUK_DES_PUBS	OK	0	0	594	594	594	594	6.5	
+UK_GOVUK_SDA_PUBS	OK	0	0	50	50	50	50	1.1	
+UK_GOVUK_MOD_PUBS	OK	0	0	1000	1001	1000	1000	10.0	
+UK_GOVUK_DIO_PUBS	OK	0	0	722	722	722	722	5.9	
+UK_GOVUK_SSRO_PUBS	OK	0	0	436	436	436	436	4.7	
+UK_GOVUK_AWE_PUBS	OK	0	0	11	11	11	11	1.3	
+UK_GOVUK_DNO_PUBS	OK	0	0	28	28	28	28	1.1	
+UK_GOVUK_DSTL_PUBS	OK	0	0	1140	1141	1140	1140	12.4	
+UK_GOVUK_ONR_PUBS	OK	0	0	76	76	76	76	2.3	
+UK_GOVUK_DASA_PUBS	OK	0	0	627	627	627	627	6.4	
+UK_GOVUK_ECJU_PUBS	OK	0	0	502	502	502	502	6.1	
+ECFR_EAR_ENTITY_LIST_VERSIONS	OK	0	0	368	368	368	368	0.8	
+UK_GOVUK_DSA_PUBS	OK	0	0	72	72	72	72	1.8	
+ECFR_EAR_CCL_VERSIONS	OK	0	0	166	166	166	166	0.8	
+ECFR_EAR_EMBARGO_VERSIONS	OK	0	0	141	141	141	141	0.9	
+ECFR_EAR_EXCEPTIONS_VERSIONS	OK	0	0	281	281	281	281	1.0	
+ECFR_EAR_ENFORCEMENT_VERSIONS	OK	0	0	22	22	22	22	0.9	
+UK_GOVUK_UKHO_PUBS	OK	0	0	431	431	431	431	4.0	
+ECFR_ITAR_USML_VERSIONS	OK	0	0	65	65	65	65	0.8	
+ECFR_ITAR_EMBARGO_VERSIONS	OK	0	0	118	118	118	118	0.8	
+ECFR_ITAR_LICENCES_VERSIONS	OK	0	0	71	71	71	71	0.8	
+ECFR_ITAR_BROKERING_VERSIONS	OK	0	0	34	34	34	34	0.9	
+ECFR_NRC_NUCLEAR_EXPORT_VERSIONS	OK	0	0	213	213	213	213	1.0	
+ECFR_DOE_810_VERSIONS	OK	0	0	29	29	29	29	0.8	
+ECFR_USML_TEXT	OK	0	0	3	3	3	3	6.0	
+ECFR_CCL_TEXT	OK	0	0	2	2	2	2	6.1	
+ECFR_ENTITY_LIST_TEXT	OK	0	0	21	21	21	21	6.7	
+PNCP_BR_NAVY_CONTRACTS	OK	0	0	268	268	268	268	9.7	
+PNCP_BR_AIRFORCE_CONTRACTS	OK	0	0	158	158	158	158	9.9	
+IRIS_IMS_STATIONS	OK	0	0	385	385	385	385	1.1	
+IRIS_IMS_CHANNELS	COLLISION	0	0	985	983	983	985	1.4	2 of 985 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+NRC_EVENT_REPORTS_2026	EMITS_NOTHING	0	0	0	0	0	-1	1.4	no records reached intel_items
+IAEA_NDS_GROUND_STATES	OK	0	0	3386	3386	3386	3386	3.2	
+NRC_EVENT_REPORTS_2025	EMITS_NOTHING	0	0	0	0	0	-1	1.1	no records reached intel_items
+NRC_PART21_REPORTS_2026	EMITS_NOTHING	0	0	0	0	0	-1	1.3	no records reached intel_items
+SWISS_WARMATERIEL_DATASETS	OK	0	0	3	3	3	3	3.4	
+CERT_KH_WP_POSTS	OK	0	0	915	916	915	915	131.4	
+PNCP_BR_ARMY_CONTRACTS	OK	0	0	1383	1383	1383	1383	24.1	
+CSIRT_TT_WP_POSTS	OK	0	0	638	639	638	638	130.5	
+NESO_TEC_REGISTER	OK	0	0	1000	1001	1000	1000	4.9	
+NESO_CAPACITY_MARKET_CMU	OK	0	0	1000	1001	1000	1000	7.6	
+NESO_CAPACITY_MARKET_COMPONENTS	OK	0	0	1000	1001	1000	1000	6.2	
+NESO_EMBEDDED_REGISTER	OK	0	0	562	562	562	562	3.5	
+NESO_INTERCONNECTOR_REGISTER	OK	0	0	35	35	35	35	1.1	
+NESO_DFS_LIVE_REQUIREMENT	OK	0	0	5	5	5	5	1.2	
+CO_SECOP_DEFENCE_CONTRACTS	OK	0	0	2000	2001	2000	2000	18.8	
+NESO_CONSTRAINT_FLOWS_LIMITS	OK	0	0	1000	1001	1000	1000	6.0	
+NESO_HISTORIC_GENERATION_MIX	OK	0	0	1000	1001	1000	1000	6.9	
+NESO_CARBON_INTENSITY_FORECAST	OK	0	0	1000	1001	1000	1000	5.0	
+ELERING_NPS_PRICE	OK	0	0	40	40	40	40	1.2	
+NESO_EMBEDDED_SOLAR_WIND_FORECAST	OK	0	0	612	612	612	612	3.8	
+NESO_DAILY_WIND_AVAILABILITY	OK	0	0	1000	1001	1000	1000	5.0	
+NESO_DEMAND_DATA_UPDATE	OK	0	0	1000	1001	1000	1000	5.3	
+PSE_RCE_PLN	OK	0	0	1000	1001	1000	1000	9.8	
+PSE_PK5L_WP	OK	0	0	1000	1001	1000	1000	10.7	
+PSE_HIS_WLK_CAL	OK	0	0	1000	1001	1000	1000	9.0	
+PSE_POEB_RBN	COLLISION	0	0	1000	992	991	1000	12.7	9 of 1000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+ENERGINET_CAPACITY_MUNICIPALITY	OK	0	0	12771	12771	12771	12771	5.2	
+ENERGINET_GAS_COMPOSITION	OK	0	0	50	51	50	50	1.5	
+ENERGINET_ELECTRICITY_BALANCE	OK	0	0	50	51	50	50	1.3	
+CERT_PY_WP_POSTS	OK	0	0	1000	1002	1000	1000	185.5	
+ELIA_GENERATION_BY_FUEL_HIST	FETCH_FAILED	1	-1	1	1	0	-1	20.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+ELIA_WIND_PRODUCTION	FETCH_FAILED	1	-1	1	1	0	-1	26.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+ENERGINET_PRODCONSUM_SETTLEMENT_HISTORY	OK	0	0	20000	20001	20000	20000	44.1	
+ELIA_GENERATION_BY_FUEL_RECENT	OK	0	0	2484	2484	2484	2484	16.0	
+ELIA_SI_FORECAST_NEXT_QH	FETCH_FAILED	1	-1	1	1	0	-1	20.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+ENTSOG_BALANCING_ZONES	OK	0	0	48	48	48	48	2.3	
+ENTSOG_INTERRUPTIONS	OK	0	0	1000	1001	1000	1000	6.6	
+ELIA_SI_FORECAST_NEXT_QH_HISTORY	FETCH_FAILED	1	-1	1	1	0	-1	21.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+ENERGINET_CO2_PROGNOSIS	OK	0	0	1000	1001	1000	1000	65.1	
+IESO_DEMAND_HOURLY	OK	0	0	7060	7060	7060	7060	2.6	
+IESO_DEMAND_ZONAL	OK	0	0	7059	7059	7059	7059	3.1	
+IESO_GEN_OUTPUT_CAPABILITY	OK	0	0	8991	8991	8991	8991	4.4	
+TAIPOWER_SYSTEM_LOAD	OK	0	0	4	4	4	4	2.6	
+ENERGINET_PRODCONSUM_SETTLEMENT	OK	0	0	1000	1001	1000	1000	76.4	
+EM6_NZ_PRICE_GENERATION	OK	0	0	184	184	184	184	1.7	
+INMET_AUTOMATIC_STATIONS	OK	0	0	668	668	668	668	2.8	
+ICE_COSTARICA_DEMAND	OK	0	0	24	24	24	24	6.6	
+INMET_CONVENTIONAL_STATIONS	OK	0	0	86	86	86	86	2.9	
+METEO_LT_STATIONS	OK	0	0	52	52	52	52	14.7	
+MASTR_UNIT_REGISTER_EXTENDED	OK	0	0	1000	1001	1000	1000	42.0	
+RWS_WATER_DISCHARGE	OK	0	0	64	64	64	64	2.2	
+AIRGOV_GE_STATIONS	OK	0	0	525	525	525	525	3.4	
+LUCHTMEETNET_LKI	OK	0	0	506	506	506	506	3.6	
+AU_DATAGOV_DEFENCE_DATASETS	OK	0	0	1750	1752	1750	1750	154.9	
+NOAA_FOSS_LANDINGS	OK	0	0	1000	1001	1000	1000	4.8	
+NOAA_FOSS_TRADE	OK	0	0	1000	1001	1000	1000	4.7	
+WFIGS_INCIDENT_LOCATIONS	OK	0	0	626	626	626	626	17.0	
+SODIR_WELLBORE_EXPLORATION	OK	0	0	2200	2200	2200	2200	7.2	
+SODIR_FIELD_RESERVES	OK	0	0	2333	2333	2333	2333	2.9	
+SODIR_FACILITY_FIXED	OK	0	0	915	915	915	915	2.9	
+DATACUBE_CA_STAC_COLLECTIONS	OK	0	0	52	52	52	52	1.2	
+BC_MINERAL_TENURE	OK	0	0	42323	42323	42323	42323	30.1	
+DATACUBE_CA_STAC_SEARCH	OK	0	0	3196	3196	3196	3196	16.1	
+ASF_STAC_COLLECTIONS	OK	0	0	2	2	2	2	7.2	
+SMHI_HYDROOBS_STATIONS	OK	0	0	720	720	720	720	119.8	
+SMHI_METOBS_STATIONS	OK	0	0	1005	1006	1005	1005	121.8	
+NVE_HYDRO_POWERPLANTS	OK	0	0	1865	1865	1865	1865	2.7	
+SYKE_HYDRO_SITES	OK	0	0	1000	1002	1000	1000	123.2	
+ENTSOG_CONNECTION_POINTS	OK	0	0	789	789	789	789	164.2	
+PSE_CRB_ROZL	OK	0	0	1000	1001	1000	1000	13.8	
+PSE_CSDAC_PLN	OK	0	0	1000	1001	1000	1000	14.0	
+PSE_MBU_TU	OK	0	0	1000	1001	1000	1000	12.5	
+ASF_STAC_HAND_ITEMS	OK	0	0	10000	10001	10000	10000	53.7	
+ELIA_LOAD_AND_FORECAST	FETCH_FAILED	1	-1	1	1	0	-1	15.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+ELIA_SYSTEM_IMBALANCE	FETCH_FAILED	1	-1	1	1	0	-1	15.6	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+ELIA_IMBALANCE_PRICES_QH	OK	0	0	251	251	251	251	11.0	
+PSE_ZMB	OK	0	0	1000	1001	1000	1000	29.6	
+NESO_DAILY_OPMR	OK	0	0	1000	1001	1000	1000	7.4	
+ELIA_GRID_ASSET_LOADING	FETCH_FAILED	1	-1	1	1	0	-1	25.6	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+NESO_INTERCONNECTOR_AUCTION	OK	0	0	1000	1001	1000	1000	7.9	
+GTK_NORDIC_DEPOSITS_BASE	OK	0	0	562	562	562	562	2.4	
+GTK_NORDIC_DEPOSITS_FERROUS	OK	0	0	696	696	696	696	2.4	
+GTK_NORDIC_DEPOSITS_PRECIOUS	OK	0	0	131	131	131	131	11.0	
+GTK_NORDIC_DEPOSITS_ENERGY_METALS	OK	0	0	44	44	44	44	1.9	
+GTK_MINING_WASTE_TAILINGS	OK	0	0	31	31	31	31	2.0	
+GTK_MINING_WASTE_ROCK	OK	0	0	43	43	43	43	1.5	
+CZ_JUSTICE_DECISIONS	OK	0	0	7	7	7	7	2.6	
+HU_KSH_GDP	OK	0	0	32	32	32	32	1.7	
+HU_KSH_LABOUR	OK	0	0	18	18	18	18	3.5	
+HU_KSH_PRICES	OK	0	0	17	17	17	17	2.2	
+HU_KSH_ENERGY	OK	0	0	27	27	27	27	2.0	
+HU_KSH_TRANSPORT	OK	0	0	23	23	23	23	2.0	
+HU_KSH_ENVIRONMENT	OK	0	0	27	27	27	27	2.4	
+CZ_NKOD_SPARQL	OK	0	0	54989	54989	54989	54989	29.0	
+RO_TRANSELECTRICA_SEN	OK	0	0	61	61	61	61	1.1	
+EPA_GHG_SUBPART_EMISSIONS	SLOW	-25	0	-1	-1	212998	-1	78.4	no [sched] line — the process was killed before the run returned, but the database holds 212998 rows for it, so it was working: unmeasured, not failed
+RO_TEMPO_CONTEXT	FETCH_FAILED	1	-1	1	1	0	-1	41.1	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+OPENVEDA_STAC_SEARCH	SLOW	-25	0	-1	-1	35277	-1	186.7	no [sched] line — the process was killed before the run returned, but the database holds 35277 rows for it, so it was working: unmeasured, not failed
+MK_MAKSTAT_DB	OK	0	0	28	28	28	28	29.0	
+MD_STATBANK_ECON	OK	0	0	14	14	14	14	11.8	
+MD_STATBANK_DB	OK	0	0	7	7	7	7	28.3	
+CY_CYSTAT_DB	OK	0	0	1	1	1	1	1.9	
+IS_HAGSTOFA_INDUSTRY	OK	0	0	6	6	6	6	2.8	
+XK_ASKDATA_DB	OK	0	0	2	2	2	2	18.4	
+LT_SPINTA_REGISTERS	FETCH_FAILED	1	-1	1	1	0	-1	2.6	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+EE_AVAANDMED_DATASETS	OK	0	0	500	501	500	500	9.4	
+IE_CSO_COLLECTION	OK	0	0	13150	13150	13150	13150	13.7	
+LV_CONSUMER_CREDIT	OK	0	0	74	74	74	74	2.4	
+LV_DEBT_COLLECTORS	OK	0	0	52	52	52	52	1.9	
+LV_GHG_PERMITS	OK	0	0	47	47	47	47	2.1	
+LV_BENEFICIAL_OWNERS	OK	0	0	2000	2001	2000	2000	15.3	
+LV_WASTE_OPERATORS	OK	0	0	1965	1966	1965	1965	16.0	
+LV_WATER_PERMITS	OK	0	0	790	790	790	790	7.5	
+LV_IPPC_PERMITS	OK	0	0	2000	2001	2000	2000	16.7	
+HR_DETECTIVE_AGENCIES	OK	0	0	49	49	49	49	1.5	
+HR_RAIL_INFRASTRUCTURE	OK	0	0	56	56	56	56	1.6	
+HR_ZAGREB_LEASES	OK	0	0	195	195	195	195	2.0	
+HR_ZAGREB_COUNCILLORS	OK	0	0	48	48	48	48	1.7	
+SI_DISABILITY_COMPANIES	OK	0	0	71	71	71	71	1.8	
+HR_ZAGREB_STREETS	OK	0	0	2000	2001	2000	2000	4.6	
+ME_AUDITORS	OK	0	0	88	88	88	88	1.4	
+SI_PERSONAL_ASSISTANCE	OK	0	0	2	2	2	2	1.7	
+ME_TRADE_UNIONS	OK	0	0	523	523	523	523	3.1	
+ME_TEMP_WORK_AGENCIES	OK	0	0	26	26	26	26	1.5	
+IE_GAMING_LICENCES	OK	0	0	92	92	92	92	1.7	
+SI_BUSINESS_REGISTER	OK	0	0	2000	2001	2000	2000	10.9	
+ME_MEDICINES	OK	0	0	2000	2001	2000	2000	7.0	
+IE_DUBLIN_VACANT_SITES	OK	0	0	41	41	41	41	1.6	
+IE_DLR_DERELICT_SITES	OK	0	0	16	16	16	16	1.3	
+IE_DUBLIN_SOLVENT_REGISTER	OK	0	0	66	66	66	66	1.5	
+EPA_TRI_TRANSFER_QUANTITIES	SLOW	-25	0	-1	-1	113488	-1	180.8	no [sched] line — the process was killed before the run returned, but the database holds 113488 rows for it, so it was working: unmeasured, not failed
+LT_JAR_ENTITIES	FETCH_FAILED	1	-1	1	1	0	-1	3.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+UZ_CBU_RATES	FETCH_FAILED	1	-1	1	1	0	-1	15.1	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+LT_JAR_MANAGEMENT	FETCH_FAILED	1	-1	1	1	0	-1	2.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+LT_JAR_CAPITAL	FETCH_FAILED	1	-1	1	1	0	-1	2.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+LT_JAR_ACCOUNTS	FETCH_FAILED	1	-1	1	1	0	-1	2.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+LT_JAR_OFFICES	FETCH_FAILED	1	-1	1	1	0	-1	2.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+LT_JAR_NGO	FETCH_FAILED	1	-1	1	1	0	-1	2.1	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+SI_PXWEB_TABLES	OK	0	0	4869	4870	4869	4869	126.3	
+EPA_TRI_RELEASE_QUANTITIES	SLOW	-1	0	-1	-1	112000	-1	200.1	hit --timeout 200.1s; 112000 rows already stored
+UA_ADDRESS_REGISTER	OK	0	0	2000	2001	2000	2000	15.9	
+SI_HEALER_LICENCES	OK	0	0	340	340	340	340	2.7	
+HU_KSH_FOREST	OK	0	0	8	8	8	8	1.6	
+IE_CORK_GRAVEYARDS	OK	0	0	40	40	40	40	1.6	
+IE_FINGAL_PLANNING	COLLISION	0	0	2000	2000	1999	2000	10.5	1 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+IE_NATIONAL_MONUMENTS	OK	0	0	2000	2001	2000	2000	11.0	
+IE_EPA_AIR_SITES	OK	0	0	147	147	147	147	2.4	
+IE_EPA_BATHING_WATERS	OK	0	0	153	153	153	153	2.4	
+IE_MARINE_ERDDAP_DATASETS	OK	0	0	86	86	86	86	1.5	
+IE_SEAI_WIND_FARMS	OK	0	0	313	313	313	313	1.3	
+IE_GEOHIVE_CATALOGUE	FETCH_FAILED	0	0	1	1	0	-1	1.1	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+IE_HPSC_HEALTH_PROFILE	OK	0	0	1354	1354	1354	1354	6.5	
+IS_VEGAGERDIN_WEATHER	OK	0	0	204	204	204	204	1.9	
+IS_VEGAGERDIN_ROADS	OK	0	0	975	975	975	975	2.1	
+IS_REYKJAVIK_LIVE	OK	0	0	114	114	114	114	2.2	
+IS_HAGSTOFA_ECONOMY	OK	0	0	6	6	6	6	2.8	
+IS_HAGSTOFA_TRADE	OK	0	0	3	3	3	3	1.3	
+IS_HAGSTOFA_ENVIRONMENT	OK	0	0	6	6	6	6	1.4	
+UA_PROZORRO_MONITORINGS	OK	0	0	2000	2002	2000	2000	125.3	
+UA_OPENPROCUREMENT_TENDERS	OK	0	0	2000	2002	2000	2000	128.5	
+SI_GURS_MUNICIPALITIES	OK	0	0	212	212	212	212	10.5	
+SI_GURS_STREETS	OK	0	0	10499	10499	10499	10499	16.6	
+SI_GURS_SETTLEMENTS	OK	0	0	6035	6035	6035	6035	44.9	
+UA_OPENPROCUREMENT_PLANS	OK	0	0	2000	2002	2000	2000	127.2	
+HR_CSV_RESOURCES	OK	0	0	1381	1381	1381	1381	5.8	
+UA_OPENPROCUREMENT_AGREEMENTS	COLLISION	0	0	411	401	400	411	137.7	11 of 411 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+RS_EMS_NOTICES	OK	0	0	190	190	190	190	5.8	
+ME_PHARMACY_REGISTER	OK	0	0	55	55	55	55	1.6	
+UA_OPENPROCUREMENT_CONTRACTS	OK	0	0	2000	2002	2000	2000	145.8	
+MK_MAKSTAT_AGRICULTURE	OK	0	0	8	8	8	8	2.0	
+XK_ASKDATA_SUBJECTS	OK	0	0	26	26	26	26	6.0	
+SI_GURS_CADASTRAL_MUN	OK	0	0	2698	2698	2698	2698	35.9	
+XK_ASKDATA_ENERGY	OK	0	0	3	3	3	3	1.6	
+AL_OPENDATA_INSTITUTIONS	OK	0	0	22	22	22	22	1.8	
+AL_OPENDATA_POPULAR	OK	0	0	6	6	6	6	3.9	
+MK_AEK_PUBLICATIONS	OK	0	0	2000	2001	2000	2000	18.6	
+AL_AKEP_DECISIONS	OK	0	0	107	107	107	107	6.4	
+ME_REGAGEN_NOTICES	OK	0	0	1150	1150	1150	1150	23.7	
+SI_GURS_HOUSE_NUMBERS	OK	0	0	20000	20001	20000	20000	56.6	
+GR_EOF_NOTICES	OK	0	0	1200	1200	1200	1200	22.5	
+CY_CYSTAT_BUSINESS_REGISTER	OK	0	0	1	1	1	1	1.8	
+GR_OASA_LINES	FETCH_FAILED	1	-1	1	1	0	-1	26.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+CY_DATAGOV_DCAT	COLLISION	0	0	4055	4054	4054	4055	4.3	1 of 4055 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+RO_ANCOM_DECISIONS	OK	0	0	2000	2001	2000	2000	30.2	
+UA_SPENDING_CPV	OK	0	0	9458	9458	9458	9458	5.1	
+UA_NBU_STAT_DIRECTORY	OK	0	0	44	44	44	44	1.2	
+UA_SPENDING_KVED	OK	0	0	615	615	615	615	2.5	
+CY_CYSTAT_SUBJECTS	OK	0	0	22	22	22	22	25.8	
+RO_ANM_MEDICINES	OK	0	0	2000	2001	2000	2000	80.1	
+GE_GEOSTAT_PXWEB	OK	0	0	17	17	17	17	6.7	
+GE_GEOSTAT_POPULATION	OK	0	0	11	11	11	11	2.7	
+AM_ARMSTATBANK_INDEX	OK	0	0	8	8	8	8	4.5	
+AM_ARMSTATBANK_TRADE	OK	0	0	3	3	3	3	2.2	
+UA_DATAGOV_BULK	OK	0	0	2000	2001	2000	2000	58.3	
+LV_CSB_PXWEB	OK	0	0	11	11	11	11	3.7	
+AM_OPENDATA_BULK	OK	0	0	823	823	823	823	5.9	
+EE_STAT_ECONOMY	OK	0	0	19	19	19	19	7.0	
+CZ_CRO_PUBLIC_OFFICIALS	OK	0	0	200	201	200	200	16.2	
+HU_KOZBESZERZES_CPV	OK	0	0	45	45	45	45	2.2	
+HU_KOZBESZERZES_BULLETINS	OK	0	0	4392	4392	4392	4392	2.7	
+BG_GOVCERT_ADVISORIES	OK	0	0	395	395	395	395	102.7	
+HU_MEKH_DOCUMENTS	OK	0	0	10	10	10	10	1.6	
+HU_KSH_EDUCATION	OK	0	0	66	66	66	66	1.6	
+HU_KSH_HEALTH	OK	0	0	67	67	67	67	1.5	
+HU_KSH_HOUSING	OK	0	0	28	28	28	28	1.7	
+HU_KSH_INDUSTRY	OK	0	0	26	26	26	26	2.0	
+HU_KSH_AGRICULTURE	OK	0	0	32	32	32	32	2.0	
+HU_KSH_SOCIAL_PROTECTION	OK	0	0	27	27	27	27	1.6	
+HU_KSH_CONSTRUCTION	OK	0	0	37	37	37	37	3.3	
+HU_INSPIRE_CADASTRAL_PARCELS	OK	0	0	1774	1774	1774	1774	6.4	
+HU_INSPIRE_BUILDINGS	OK	0	0	921	921	921	921	4.7	
+HU_INSPIRE_ADMIN_UNITS	OK	0	0	3581	3582	3581	3581	23.3	
+HR_CERT_ADVISORIES	SLOW	-1	0	-1	-1	1700	-1	200.1	hit --timeout 200.1s; 1700 rows already stored
+UA_PROZORRO_QUALIFICATIONS	OK	0	0	2000	2002	2000	2000	132.8	
+HU_OMSZ_STATIONS	OK	0	0	349	349	349	349	2.0	
+HU_INSPIRE_ORTHOIMAGERY	OK	0	0	1589	1589	1589	1589	5.4	
+HU_HORTOBAGY_NATURA2000	OK	0	0	124	124	124	124	1.5	
+SK_DATACUBE_ELECTRICITY	FETCH_FAILED	1	-1	1	1	0	-1	20.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+SK_DATACUBE_BUSINESS_DEMOGRAPHY	FETCH_FAILED	1	-1	1	1	0	-1	20.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+SK_DATACUBE_CRIME	FETCH_FAILED	1	-1	1	1	0	-1	15.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+UA_PROZORRO_SUBMISSIONS	OK	0	0	2000	2002	2000	2000	175.5	
+SK_DATACUBE_WATER	FETCH_FAILED	1	-1	1	1	0	-1	20.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+TPEX_MAJOR_HOLDERS	OK	0	0	1011	1011	1011	1011	1.5	
+TPEX_LISTED_BASIC_R	OK	0	0	365	365	365	365	4.8	
+TPEX_INSIDER_TRANSFER	OK	0	0	1	1	1	1	2.0	
+TPEX_FSC_PENALTIES	OK	0	0	20	20	20	20	2.4	
+TPEX_DISCLOSURE_BREACH	OK	0	0	19	19	19	19	1.0	
+TPEX_CONTROL_CHANGE	OK	0	0	19	19	19	19	1.8	
+TPEX_SCOPE_CHANGE	OK	0	0	20	20	20	20	1.9	
+TPEX_PLEDGE_RATIO	OK	0	0	9	9	9	9	1.1	
+TPEX_CHAIRMAN_IS_GM	OK	0	0	894	894	894	894	2.9	
+SK_DATACUBE_TRANSPORT	FETCH_FAILED	1	-1	1	1	0	-1	20.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+TPEX_GISA_COMPANIES	OK	0	0	141	141	141	141	1.3	
+TPEX_LISTING_APPLICANTS	OK	0	0	35	35	35	35	1.4	
+TPEX_DIRECTOR_PAY	OK	0	0	851	851	851	851	3.5	
+TPEX_INTL_BONDS	OK	0	0	7	7	7	7	1.3	
+TPEX_ESB_DEALERS	OK	0	0	1132	1132	1132	1132	1.8	
+TPEX_BOND_GOVT	OK	0	0	199	199	199	199	1.6	
+TPEX_BOND_CONVERT	OK	0	0	424	424	424	424	3.0	
+TPEX_BROKER_STAFF	OK	0	0	4	4	4	4	1.1	
+TPEX_ESG_COMMITTEES	OK	0	0	886	886	886	886	2.2	
+TPEX_DIRECTOR_HOLDINGS	COLLISION	0	0	17580	17152	17152	17580	25.6	428 of 17580 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+TWSE_DIVIDENDS	OK	0	0	1231	1231	1231	1231	2.5	
+TWSE_FUND_MASTER	OK	0	0	273	273	273	273	2.0	
+TWSE_PUBCO_BALANCE	OK	0	0	213	213	213	213	1.0	
+TWSE_TRADING_HALTS	OK	0	0	1	1	1	1	1.7	
+TWSE_ALTERED_TRADING	OK	0	0	10	10	10	10	1.4	
+TWSE_QFII_TOP20	OK	0	0	20	20	20	20	1.5	
+TWSE_PUBCO_REVENUE	OK	0	0	302	302	302	302	7.5	
+TWSE_MARGIN_BALANCE	OK	0	0	1302	1302	1302	1302	2.0	
+TWSE_ETF_ACCOUNTS	OK	0	0	20	20	20	20	0.9	
+TWSE_BROKER_LICENCE	OK	0	0	22	22	22	22	2.3	
+TWSE_ESG_CONTROL	OK	0	0	1078	1078	1078	1078	1.2	
+TWSE_ESG_RISKPOLICY	FETCH_FAILED	0	0	1	1	0	-1	1.2	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+TPEX_WARRANT_ISSUE	FETCH_FAILED	1	-1	1	1	0	-1	25.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+IL_COMPANIES_REGISTER	OK	0	0	2000	2001	2000	2000	10.6	
+MK_CIRT_ADVISORIES	OK	0	0	1060	1061	1060	1060	151.8	
+FR_BODACC_CREATION	FETCH_FAILED	1	-1	1	1	0	-1	15.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+FR_BODACC_COLLECTIVE	FETCH_FAILED	1	-1	1	1	0	-1	20.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+FR_BODACC_RADIATION	FETCH_FAILED	1	-1	1	1	0	-1	20.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+SK_RPVS_OFFICIALS	OK	0	0	400	401	400	400	5.3	
+BR_CVM_ISSUERS	OK	0	0	2678	2678	2678	2678	3.0	
+FR_BODACC_VENTE	FETCH_FAILED	1	-1	1	1	0	-1	25.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+BCRA_MONETARY_SERIES	OK	0	0	1000	1000	1000	1000	2.7	
+HU_INSPIRE_PLACE_NAMES	OK	0	0	90463	90463	90463	90463	181.2	
+FDIC_FAILURES	OK	0	0	4117	4118	4117	4117	14.0	
+SK_RPVS_AUTHORISED	OK	0	0	400	401	400	400	65.4	
+FDIC_FINANCIALS	OK	0	0	2000	2001	2000	2000	12.7	
+FDIC_STRUCTURE_HISTORY	OK	0	0	2000	2001	2000	2000	10.5	
+FDIC_BRANCH_DEPOSITS	OK	0	0	2000	2001	2000	2000	12.6	
+HU_INSPIRE_LAND_COVER	SLOW	-1	0	-1	-1	54000	-1	200.1	hit --timeout 200.1s; 54000 rows already stored
+FINRA_ATS_WEEKLY	OK	0	0	4000	4001	4000	4000	9.7	
+FINRA_OTC_BLOCKS	OK	0	0	4000	4001	4000	4000	11.5	
+FINRA_REG_SHO_DAILY	OK	0	0	4000	4001	4000	4000	13.2	
+US_FISCAL_MTS	OK	0	0	3145	3145	3145	3145	10.5	
+BR_CVM_FUNDS	OK	0	0	46807	46807	46807	46807	104.5	
+CFTC_COT_FINANCIAL	OK	0	0	10000	10001	10000	10000	20.4	
+US_FISCAL_CASH_BALANCE	OK	0	0	2000	2001	2000	2000	8.3	
+BNM_FX_RATES	OK	0	0	27	27	27	27	1.9	
+RBA_MONEY_MARKET	OK	0	0	4010	4010	4010	4010	2.2	
+LLAMA_STABLECOINS	OK	0	0	426	426	426	426	1.3	
+LLAMA_HACKS	OK	0	0	1315	1315	1315	1315	1.4	
+NBG_CURRENCY_RATES	FETCH_FAILED	1	-1	1	1	0	-1	16.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+BLOCKSTREAM_RECENT_BLOCKS	OK	0	0	10	10	10	10	1.6	
+LLAMA_YIELD_POOLS	OK	0	0	15521	15521	15521	15521	7.9	
+CFTC_COT_DISAGGREGATED	OK	0	0	10000	10001	10000	10000	41.2	
+TPEX_TRADING_WARNINGS	OK	0	0	20	20	20	20	1.6	
+CBU_UZ_RATES	FETCH_FAILED	1	-1	1	1	0	-1	20.1	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+TPEX_MARGIN_UTILISATION	OK	0	0	20	20	20	20	2.0	
+TPEX_FOREIGN_OWNERSHIP	OK	0	0	895	895	895	895	2.2	
+UK_EC_DONATIONS	OK	0	0	1000	1001	1000	1000	6.1	
+TPEX_AUDIT_COMMITTEE	OK	0	0	894	894	894	894	2.5	
+TPEX_BOARD_SHORTFALL	OK	0	0	15	15	15	15	1.1	
+TPEX_GISA_FINANCING	OK	0	0	3	3	3	3	1.0	
+TWSE_ESG_INFOSEC	FETCH_FAILED	0	0	1	1	0	-1	1.6	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+TPEX_BOARD_ELECTION	COLLISION	0	0	3182	3173	3173	3182	5.4	9 of 3182 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+TR_TCMB_FX_XML	OK	0	0	22	22	22	22	1.3	
+BG_BNB_FX_XML	OK	0	0	30	30	30	30	1.8	
+TPEX_SHAREHOLDER_PROPOSALS	OK	0	0	897	897	897	897	11.2	
+FAO_FIFAO_MAJOR_AREAS	OK	0	0	194	194	194	194	7.1	
+FDIC_INSTITUTIONS	OK	0	0	2000	2002	2000	2000	128.3	
+FAO_FIRMS_FISHERY_POINTS	OK	0	0	378	378	378	378	1.6	
+FAO_FIRMS_RESOURCE_POINTS	OK	0	0	960	960	960	960	2.0	
+FAO_FIFAO_SUB_AREAS	OK	0	0	264	264	264	264	10.3	
+FAO_FIFAO_DIVISIONS	OK	0	0	201	201	201	201	9.1	
+NOAA_FOSS_AFSC_GROUNDFISH	OK	0	0	500	501	500	500	4.2	
+IRS_FATCA_GIIN_LIST	SLOW	-1	0	-1	-1	0	-1	200.1	hit --timeout 200.1s
+UK_OFSI_CONSOLIDATED_XML	COLLISION	0	0	19761	19721	19721	19761	45.2	40 of 19761 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+WHO_XMART_WIISE_SIA_CONDUCTED	OK	0	0	2075	2075	2075	2075	6.4	
+WHO_XMART_FLUID_EPI	FETCH_FAILED	1	-1	1	1	0	-1	41.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+WHO_XMART_WIISE_OUTBREAKS	OK	0	0	20000	20001	20000	20000	40.8	
+WHO_XMART_WIISE_AEFI	OK	0	0	12480	12480	12480	12480	23.1	
+WHO_XMART_WIISE_SURV_LAB	OK	0	0	980	980	980	980	3.3	
+WHO_XMART_WIISE_INCIDENCES	OK	0	0	20000	20001	20000	20000	33.1	
+WHO_XMART_WIISE_VACCINE_INTRO	OK	0	0	20000	20001	20000	20000	80.7	
+WHO_XMART_WIISE_SCHEDULES	OK	0	0	20000	20001	20000	20000	29.3	
+WHO_XMART_TOBACCO_TREATY_PARTIES	OK	0	0	1162	1162	1162	1162	3.3	
+WHO_XMART_WIISE_COVERAGES	OK	0	0	20000	20001	20000	20000	69.1	
+TRONSCAN_TOP_ACCOUNTS	OK	0	0	1000	1002	1000	1000	138.8	
+WHO_XMART_NCD_MORTALITY	OK	0	0	20000	20001	20000	20000	38.9	
+WHO_XMART_NCD_CANCER	OK	0	0	20000	20001	20000	20000	39.6	
+WHO_XMART_NUTRITION_GTT_SURVEY	OK	0	0	20000	20001	20000	20000	26.4	
+WHO_XMART_TOBACCO_FACT	OK	0	0	20000	20001	20000	20000	34.1	
+WHO_XMART_PIP_COUNTRY	OK	0	0	582	582	582	582	2.7	
+UKHSA_DASHBOARD_THEMES	OK	0	0	4	4	4	4	2.3	
+UKHSA_DASHBOARD_RESP_TOPICS	OK	0	0	14	14	14	14	4.4	
+UKHSA_COVID_CASES_ENGLAND	OK	0	0	2457	2457	2457	2457	2.6	
+UKHSA_DASHBOARD_ID_SUBTHEMES	OK	0	0	10	10	10	10	7.6	
+WHO_XMART_GHE_FULL	OK	0	0	20000	20001	20000	20000	32.1	
+UKHSA_INFLUENZA_HOSP_ENGLAND	OK	0	0	2949	2949	2949	2949	2.7	
+UKHSA_RSV_ADMISSIONS_ENGLAND	OK	0	0	2927	2927	2927	2927	2.9	
+UKHSA_MEASLES_CASES_ENGLAND	COLLISION	0	0	1112	1111	1111	1112	2.8	1 of 1112 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+UKHSA_CDIFFICILE_ENGLAND	OK	0	0	126	126	126	126	1.1	
+UKHSA_ECOLI_RESISTANCE_ENGLAND	OK	0	0	539	539	539	539	1.6	
+UKHSA_HEPATITIS_C_ENGLAND	OK	0	0	14	14	14	14	1.6	
+DELPHI_EPIDATA_FLUVIEW_CLINICAL	OK	0	0	523	523	523	523	1.6	
+DELPHI_EPIDATA_FLUVIEW	OK	0	0	888	888	888	888	2.2	
+DELPHI_EPIDATA_NIDSS_DENGUE	OK	0	0	532	532	532	532	1.2	
+DELPHI_EPIDATA_PAHO_DENGUE	OK	0	0	342	342	342	342	1.0	
+DELPHI_EPIDATA_NIDSS_FLU	OK	0	0	519	519	519	519	1.7	
+DELPHI_EPIDATA_KCDC_ILI	OK	0	0	843	843	843	843	1.4	
+DELPHI_EPIDATA_COVIDCAST_META	OK	0	0	324	324	324	324	1.5	
+WHO_XMART_NUTRITION_VMNIS	OK	0	0	20000	20001	20000	20000	58.1	
+WHO_XMART_WHSA_FACT	OK	0	0	20000	20001	20000	20000	39.1	
+NLM_DAILYMED_UNIIS	OK	0	0	7983	7983	7983	7983	12.9	
+WHO_XMART_FLUNET_SENTINEL	SLOW	-1	0	-1	-1	7000	-1	200.0	hit --timeout 200.0s; 7000 rows already stored
+NLM_DAILYMED_APPLICATION_NUMBERS	COLLISION	0	0	16156	16155	16155	16156	25.1	1 of 16156 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+NLM_DAILYMED_DRUGCLASSES	OK	0	0	1210	1210	1210	1210	2.9	
+NLM_DAILYMED_RXCUIS	OK	0	0	39100	39101	39100	39100	62.9	
+NLM_DAILYMED_DRUGNAMES	COLLISION	0	0	42300	42265	42264	42300	68.8	36 of 42300 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+CA_HC_DPD_DRUGPRODUCT_ALL	OK	0	0	58377	58377	58377	58377	21.6	
+CA_HC_DPD_COMPANY	OK	0	0	5253	5253	5253	5253	3.1	
+CA_HC_DPD_STATUS	OK	0	0	58377	58377	58377	58377	21.9	
+CA_HC_DPD_FORM	OK	0	0	62866	62866	62866	62866	18.3	
+CA_HC_DPD_ROUTE	OK	0	0	67168	67168	67168	67168	19.1	
+CA_HC_DPD_ACTIVEINGREDIENT	COLLISION	0	0	120927	120752	120752	120927	42.8	175 of 120927 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+CA_HC_DPD_PACKAGING	OK	0	0	58377	58377	58377	58377	17.2	
+CA_HC_DPD_VETERINARYSPECIES	OK	0	0	6547	6547	6547	6547	2.9	
+CA_HC_DPD_SCHEDULE	OK	0	0	59356	59356	59356	59356	17.3	
+CA_HC_DPD_THERAPEUTICCLASS	OK	0	0	48160	48160	48160	48160	17.9	
+CA_RECALLS_RECENT	OK	0	0	15	15	15	15	3.1	
+UK_FSA_FHRS_ESTABLISHMENTS	OK	0	0	1469	1469	1469	1469	1.9	
+CA_HC_DPD_PHARMACEUTICALSTD	OK	0	0	96575	96575	96575	96575	24.9	
+UK_NHSBSA_PRESCRIBING_EPD	OK	0	0	2000	2001	2000	2000	19.3	
+NLM_DAILYMED_NDCS	OK	0	0	66300	66301	66300	66300	124.4	
+DE_DIVI_INTENSIVREGISTER_SITES	OK	0	0	732	732	732	732	2.2	
+DE_DIVI_INTENSIVREGISTER_STATES	OK	0	0	16	16	16	16	1.5	
+UK_NHS_SCOTLAND_OPENDATA_PACKAGES	OK	0	0	105	105	105	105	20.1	
+NL_RIVM_TESTING	OK	0	0	13780	13780	13780	13780	8.9	
+NL_RIVM_INFECTIOUS_PREVALENCE	OK	0	0	504	504	504	504	1.3	
+ES_AEMPS_CIMA_REGISTRO_CAMBIOS	SLOW	-1	0	-1	-1	800	-1	200.0	hit --timeout 200.0s; 800 rows already stored
+NLM_DAILYMED_SPLS	SLOW	-1	0	-1	-1	37200	-1	200.1	hit --timeout 200.1s; 37200 rows already stored
+NL_RIVM_WASTEWATER_SARSCOV2	FETCH_FAILED	1	-1	1	1	0	-1	40.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+ECDC_ERVISS_ILI_ARI_RATES	OK	0	0	36046	36046	36046	36046	20.4	
+CDC_NWSS_WASTEWATER_CONCENTRATION	OK	0	0	20000	20001	20000	20000	21.1	
+ECDC_ERVISS_VARIANTS	OK	0	0	33913	33913	33913	33913	31.1	
+ECDC_ERVISS_SENTINEL_DETECTIONS	OK	0	0	50186	50186	50186	50186	55.4	
+UK_FSA_FOOD_ALERTS	OK	0	0	1370	1371	1370	1370	124.9	
+CDC_NNDSS_WEEKLY_TABLES	OK	0	0	20000	20001	20000	20000	21.2	
+CDC_EXCESS_DEATHS_BY_WEEK	OK	0	0	20000	20001	20000	20000	23.5	
+CDC_DEATHS_BY_COUNTY_WEEK	OK	0	0	20000	20001	20000	20000	17.6	
+UK_NHSBSA_OPENDATA_PACKAGES	OK	0	0	2175	2177	2175	2175	139.4	
+ECDC_ERVISS_NONSENTINEL_SEVERITY	OK	0	0	63277	63277	63277	63277	74.5	
+WOAH_WAHIS_COUNTRY_REGISTER	OK	0	0	245	245	245	245	1.9	
+CMS_HOSPITAL_GENERAL_INFORMATION	OK	0	0	5419	5419	5419	5419	14.4	
+NL_RIVM_IC_ADMISSIONS	OK	0	0	910	910	910	910	2.7	
+NL_RIVM_VARIANT_SURVEILLANCE	OK	0	0	12341	12341	12341	12341	12.3	
+NL_RIVM_REPRODUCTION_NUMBER	OK	0	0	644	644	644	644	2.5	
+NL_RIVM_ARI_INFECTIERADAR	OK	0	0	2180	2180	2180	2180	2.1	
+HHS_HOSPITAL_CAPACITY_STATE	OK	0	0	20000	20001	20000	20000	41.4	
+HHS_HOSPITAL_CAPACITY_FACILITY	OK	0	0	20000	20001	20000	20000	47.5	
+ENA_PATHOGEN_MTB_RUNS	OK	0	0	10261	10261	10261	10261	6.7	
+NL_RIVM_WASTEWATER_SAFETY_REGION	OK	0	0	42400	42400	42400	42400	26.4	
+CMS_HOSPITAL_HAI_MEASURES	OK	0	0	10000	10001	10000	10000	50.3	
+ENA_PATHOGEN_SARSCOV2_RUNS	EMITS_NOTHING	0	0	0	1	0	-1	31.4	no records reached intel_items
+ENA_PATHOGEN_INFLUENZA_SAMPLES	OK	0	0	61626	61626	61626	61626	42.9	
+UKHSA_COVID_DEATHS_ENGLAND	OK	0	0	1444	1444	1444	1444	3.6	
+UKHSA_COVID_ADMISSIONS_ENGLAND	OK	0	0	2250	2250	2250	2250	4.0	
+UKHSA_COVID_OCCUPIED_BEDS_ENGLAND	OK	0	0	2252	2252	2252	2252	4.9	
+UKHSA_COVID_POSITIVITY_ENGLAND	OK	0	0	2446	2446	2446	2446	4.3	
+UKHSA_COVID_LINEAGE_ENGLAND	OK	0	0	893	893	893	893	3.2	
+UKHSA_COVID_VACCINE_UPTAKE_ENGLAND	OK	0	0	1830	1830	1830	1830	4.8	
+UKHSA_INFLUENZA_ICU_ENGLAND	OK	0	0	2950	2950	2950	2950	5.1	
+UKHSA_INFLUENZA_POSITIVITY_ENGLAND	OK	0	0	3933	3933	3933	3933	5.1	
+UKHSA_INFLUENZA_SURVEY_ILI_ENGLAND	OK	0	0	66	66	66	66	2.3	
+UKHSA_MMR1_COVERAGE_ENGLAND	OK	0	0	34	34	34	34	1.3	
+WHO_XMART_NCD_HYPERTENSION	OK	0	0	20000	20001	20000	20000	50.0	
+WHO_XMART_NCD_ALCOHOL	OK	0	0	2358	2358	2358	2358	6.5	
+CMS_NURSING_HOME_PROVIDER_INFO	SLOW	-1	0	-1	-1	13774	-1	200.1	hit --timeout 200.1s; 13774 rows already stored
+WHO_XMART_TOBACCO_PREVALENCE	OK	0	0	20000	20001	20000	20000	51.9	
+ENA_PATHOGEN_MTB_RUNS_2023_2024	OK	0	0	85283	85283	85283	85283	185.1	
+ENA_PATHOGEN_MTB_RUNS_2025ON	SLOW	-1	0	-1	-1	56813	-1	200.1	hit --timeout 200.1s; 56813 rows already stored
+ENA_PATHOGEN_MTB_RUNS_TO_2019	OK	0	0	76189	76189	76189	76189	196.5	
+WHO_XMART_WIISE_SURVEY_RESULTS	OK	0	0	20000	20001	20000	20000	49.8	
+ENA_PATHOGEN_MTB_RUNS_2020_2022	SLOW	-1	0	-1	-1	80990	-1	200.1	hit --timeout 200.1s; 80990 rows already stored
+INFORM_RISK_WORKFLOWS	FETCH_FAILED	1	-1	1	1	0	-1	3.2	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+INFORM_RISK_COUNTRIES	OK	0	0	6887	6887	6887	6887	7.2	
+UNHCR_POPULATION_TOTALS	OK	0	0	75	75	75	75	3.9	
+UNHCR_SOLUTIONS	OK	0	0	67	67	67	67	2.1	
+WHO_XMART_WIISE_HPV_ADMIN	OK	0	0	20000	20001	20000	20000	40.9	
+UNHCR_IDMC_DISPLACEMENT	OK	0	0	36	36	36	36	1.3	
+WHO_XMART_WIISE_MNTE	OK	0	0	20000	20001	20000	20000	37.9	
+UNHCR_DEMOGRAPHICS	OK	0	0	25	25	25	25	6.7	
+UNHCR_POPULATION_FOOTNOTES	OK	0	0	658	658	658	658	3.3	
+IANA_AS_NUMBERS	OK	0	0	88	88	88	88	1.1	
+IANA_IPV4_SPACE	OK	0	0	256	256	256	256	1.0	
+IANA_MEDIA_TYPES	OK	0	0	1815	1815	1815	1815	1.2	
+MCC_MNC_TABLE	COLLISION	0	0	2599	2558	2558	2599	1.6	41 of 2599 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+IANA_LANGUAGE_SUBTAGS	OK	0	0	9297	9297	9297	9297	2.7	
+WHO_XMART_FOODBORNE_BURDEN	OK	0	0	20000	20001	20000	20000	32.4	
+WDID_SEC_CIK	OK	0	0	3905	3905	3905	3905	5.1	
+WHO_XMART_POPULATION_COUNT	OK	0	0	20000	20001	20000	20000	30.5	
+UNHCR_ASYLUM_APPLICATIONS	OK	0	0	676	676	676	676	19.8	
+WDID_LEI	OK	0	0	5000	5000	5000	5000	13.5	
+WDID_TICKER	OK	0	0	1027	1027	1027	1027	4.5	
+WDID_IMO_SHIP	OK	0	0	800	800	800	800	8.7	
+WDID_MMSI	OK	0	0	2000	2000	2000	2000	4.8	
+RIPE_DELEGATED_STATS	OK	0	0	167686	167686	167686	167686	44.0	
+WDID_OPENCORPORATES	FETCH_FAILED	1	-1	1	1	0	-1	40.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+WDID_SIREN_FR	FETCH_FAILED	1	-1	1	1	0	-1	40.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+WDID_CALLSIGN	OK	0	0	3000	3000	3000	3000	2.9	
+WDID_ISIN	OK	0	0	5000	5000	5000	5000	41.0	
+WDID_UK_COMPANY	OK	0	0	5000	5000	5000	5000	41.9	
+UNESCO_UIS_VERSIONS	OK	0	0	15	15	15	15	1.2	
+UNHCR_COUNTRY_LIST	OK	0	0	232	232	232	232	1.4	
+WORLDBANK_COUNTRY_REGISTER	OK	0	0	296	296	296	296	1.0	
+WORLDBANK_SOURCE_REGISTER	OK	0	0	71	71	71	71	0.7	
+WDID_ROR	OK	0	0	800	800	800	800	18.7	
+WHO_GHO_DIMENSIONS	OK	0	0	202	202	202	202	1.6	
+WDID_GRID	OK	0	0	5000	5000	5000	5000	21.9	
+WORLDBANK_INDICATOR_CATALOGUE	OK	0	0	10000	10001	10000	10000	9.3	
+WDID_ICAO_AIRPORT	OK	0	0	5000	5000	5000	5000	37.7	
+UK_LAND_REGISTRY_TRANSACTION_COUNT	OK	0	0	2	2	2	2	1.3	
+NO_GEONORGE_ADDRESS_POINT	OK	0	0	100	100	100	100	1.4	
+ES_CATASTRO_PROVINCIAS	OK	0	0	48	48	48	48	1.2	
+BR_IBGE_SIDRA_MUNICIPAL_POP	OK	0	0	5572	5572	5572	5572	3.4	
+UK_LAND_REGISTRY_PPI	OK	0	0	2000	2001	2000	2000	6.7	
+BR_BCB_IFDATA_CADASTRO	FETCH_FAILED	1	-1	1	1	0	-1	1.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+IEA_TES_BY_SOURCE	OK	0	0	34039	34039	34039	34039	13.3	
+BR_CNES_ESTABELECIMENTOS	FETCH_FAILED	1	-1	1	1	0	-1	3.1	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+BR_PNCP_CONTRATOS	FETCH_FAILED	1	-1	1	1	0	-1	1.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+BR_BCB_EXPECTATIVAS	OK	0	0	2000	2001	2000	2000	8.6	
+WDID_EU_TRANSPARENCY	OK	0	0	3000	3000	3000	3000	28.9	
+WDID_IATA_AIRPORT	FETCH_FAILED	1	-1	1	1	0	-1	41.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+BR_SICONFI_DCA	OK	0	0	301	301	301	301	3.3	
+BR_SICONFI_RREO	OK	0	0	619	619	619	619	4.0	
+BR_ANS_OPERADORAS	OK	0	0	1106	1106	1106	1106	3.0	
+BR_INPE_PRODES_YEARLY	OK	0	0	500	501	500	500	6.1	
+BR_ANEEL_AUTO_INFRACAO	OK	0	0	1620	1620	1620	1620	11.3	
+BR_BNDES_DADOS_ABERTOS	OK	0	0	47	47	47	47	15.5	
+BR_ANEEL_SIGA_GERACAO	OK	0	0	25045	25045	25045	25045	24.0	
+BR_INPE_DETER_ALERTS	FETCH_FAILED	1	-1	1	1	0	-1	41.2	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+AR_CAMMESA_REGIONES	OK	0	0	36	36	36	36	2.8	
+AR_BCRA_DIVISAS	OK	0	0	44	44	44	44	1.2	
+AR_BCRA_COTIZACIONES	OK	0	0	39	39	39	39	1.5	
+CR_HACIENDA_INDICADORES	OK	0	0	1	1	1	1	3.0	
+BR_DADOS_PERNAMBUCO	OK	0	0	47	47	47	47	33.9	
+CR_SNIT_DISTRITOS	FETCH_FAILED	1	-1	1	1	0	-1	2.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JM_DATA_GOV_JM_CATALOG	FETCH_FAILED	1	-1	1	1	0	-1	2.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+CO_ANM_RUCOM_TITULOS	COLLISION	0	0	12914	12913	12913	12914	9.5	1 of 12914 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+AR_DATOS_MENDOZA	OK	0	0	204	204	204	204	50.2	
+CO_ANM_REGALIAS_VOLUMEN	COLLISION	0	0	20000	20000	19999	20000	18.9	1 of 20000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+CO_SECOP_MULTAS_SANCIONES	OK	0	0	554	554	554	554	6.0	
+CO_UPME_PRECIOS_MINERALES	OK	0	0	5868	5868	5868	5868	6.4	
+AR_DATOS_JUSTICIA	OK	0	0	63	63	63	63	72.1	
+CO_ANI_CONCESIONES	OK	0	0	150	150	150	150	3.4	
+CO_INVIMA_SANCIONATORIOS	OK	0	0	3789	3789	3789	3789	4.9	
+BR_ANAC_AERONAVES	COLLISION	0	0	35068	35048	35048	35068	97.5	20 of 35068 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+CO_MINJUSTICIA_CANNABIS	OK	0	0	116	116	116	116	2.2	
+CO_ANM_TITULOS_ANOTACIONES	OK	0	0	20000	20001	20000	20000	52.5	
+CO_JCC_SANCIONES_CONTADORES	OK	0	0	86	86	86	86	3.4	
+CO_SECOP_I_PROPONENTES	OK	0	0	20000	20001	20000	20000	20.8	
+CO_CONTRALORIA_FUNCIONARIOS	OK	0	0	6636	6636	6636	6636	6.3	
+CO_REGALIAS_EJECUCION	OK	0	0	5334	5334	5334	5334	5.9	
+BR_PNCP_CONTRATACOES	FETCH_FAILED	1	-1	1	1	0	-1	1.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+BR_PNCP_ATAS	FETCH_FAILED	1	-1	1	1	0	-1	1.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+CO_SECOP_II_OFERTAS	OK	0	0	20000	20001	20000	20000	28.7	
+BR_IPEADATA_SERIES	OK	0	0	4072	4073	4072	4072	126.0	
+BR_BCB_TAXAS_JUROS	OK	0	0	5956	5956	5956	5956	7.0	
+SV_COMPRASAL_INSTITUCIONES	OK	0	0	568	568	568	568	1.5	
+CO_RETHUS_TALENTO_SALUD	OK	0	0	20000	20001	20000	20000	16.9	
+MX_CENACE_PZ_ZONAL	FETCH_FAILED	1	-1	1	1	0	-1	5.1	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+MX_CENACE_PML_NODAL	FETCH_FAILED	1	-1	1	1	0	-1	10.1	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+CO_MEDICINA_LEGAL_DESAPARECIDOS	OK	0	0	20000	20001	20000	20000	42.1	
+BR_IBAMA_TERMO_EMBARGO_ITENS	COLLISION	0	0	48776	48591	48591	48776	50.5	185 of 48776 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+BZ_ELECTIONS_OFICINAS	OK	0	0	15	15	15	15	21.0	
+SV_COMPRASAL_PROCESOS_ACTIVOS	OK	0	0	571	571	571	571	89.7	
+BZ_ELECTIONS_NOTICES	OK	0	0	80	80	80	80	68.9	
+CR_HEREDIA_PATENTES	FETCH_FAILED	0	0	1	1	0	-1	1.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+CR_HEREDIA_ANTENAS	FETCH_FAILED	0	0	1	1	0	-1	1.1	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+CR_HEREDIA_POZOS	FETCH_FAILED	0	0	1	1	0	-1	1.1	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GT_CNEE_AGENTES	OK	0	0	95	95	95	95	104.5	
+PA_PANAMACOMPRA_RUBROS	FETCH_FAILED	1	-1	1	1	0	-1	2.2	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+PA_PANAMACOMPRA_TIPOS	FETCH_FAILED	1	-1	1	1	0	-1	2.2	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+TT_CENTRAL_BANK_FOREX	OK	0	0	1827	1827	1827	1827	3.5	
+TT_CENTRAL_BANK_INTEREST	OK	0	0	1	1	1	1	1.9	
+HN_ONCAE_CIRCULARES	OK	0	0	235	235	235	235	39.9	
+GY_PETROLEUM_PROCUREMENT	OK	0	0	4	4	4	4	4.1	
+CR_SANCARLOS_PREDIOS	OK	0	0	20000	20001	20000	20000	38.5	
+GT_CNEE_RESOLUCIONES	OK	0	0	2000	2002	2000	2000	147.0	
+GY_PETROLEUM_WELLS	OK	0	0	106	106	106	106	60.1	
+BB_GEOPORTAL_DCAT	OK	0	0	10	10	10	10	1.4	
+BB_PARISH_BOUNDARIES	OK	0	0	11	11	11	11	1.3	
+HT_GEOPORTAL_DCAT	OK	0	0	196	196	196	196	2.1	
+CARIB_GEOPORTAL_DCAT	OK	0	0	160	160	160	160	1.5	
+PR_PRSN_EARTHQUAKES	OK	0	0	1	1	1	1	1.1	
+JM_DKAN_NODES	FETCH_FAILED	1	-1	1	1	0	-1	2.1	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+DO_HACIENDA_ESTADISTICAS	FETCH_FAILED	0	0	1	1	0	-1	1.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+DO_HACIENDA_MARCO_LEGAL	FETCH_FAILED	0	0	1	1	0	-1	0.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+SV_COMPRASAL_ADJUDICACIONES	SLOW	-1	0	-1	-1	1700	-1	200.1	hit --timeout 200.1s; 1700 rows already stored
+KY_JUDICIAL_DOCUMENTS	FETCH_FAILED	0	0	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+AI_STATISTICS_PUBLICATIONS	OK	0	0	435	435	435	435	1.5	
+VC_STATISTICS_RELEASES	FETCH_FAILED	0	0	1	1	0	-1	1.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+HN_TSC_DOCUMENTOS	OK	0	0	2000	2002	2000	2000	183.7	
+LC_STATISTICS_RELEASES	OK	0	0	232	232	232	232	67.2	
+SR_GOV_AANBESTEDINGEN	OK	0	0	100	102	100	100	140.8	
+BM_BDA_COMPANIES	OK	0	0	107	107	107	107	81.0	
+SR_GOV_BEKENDMAKING	OK	0	0	100	102	100	100	151.8	
+SR_ABS_PUBLICATIONS	COLLISION	0	0	1999	1999	1997	1999	144.2	2 of 1999 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+GF_GEO_COMMUNES	FETCH_FAILED	1	-1	1	1	0	-1	10.6	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GF_ATMO_GUYANE_DCAT	OK	0	0	22	22	22	22	1.5	
+BQ_CBS_CARIBBEAN_NL	OK	0	0	79	79	79	79	35.3	
+GP_ENTREPRISES_ANNUAIRE	FETCH_FAILED	1	-1	1	1	0	-1	15.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+CR_SANCARLOS_TORRES	OK	0	0	48	48	48	48	1.9	
+PE_SERNANP_ANP	OK	0	0	104	104	104	104	2.7	
+MQ_DATAGOUV_DATASETS	FETCH_FAILED	1	-1	1	1	0	-1	12.2	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+EC_IGEPN_SISMOS	OK	0	0	36	36	36	36	1.4	
+PE_SERNANP_ZONIFICACION	OK	0	0	5265	5265	5265	5265	7.2	
+DM_STATISTICS_RELEASES	OK	0	0	154	154	154	154	119.9	
+GD_STATISTICS_RELEASES	OK	0	0	227	228	227	227	138.0	
+BO_SEPREC_ARANCELES	FETCH_FAILED	0	0	1	1	0	-1	1.2	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+EC_GOBEC_REGULACIONES	OK	0	0	3016	3016	3016	3016	6.8	
+CO_ANH_TIERRAS_CONTRATOS	OK	0	0	470	470	470	470	2.0	
+CO_ANH_CUENCAS	OK	0	0	24	24	24	24	2.8	
+CW_LANDSCOURANT	OK	0	0	44	45	44	44	132.2	
+CO_SGC_ESTACIONES	OK	0	0	83	83	83	83	14.3	
+CO_RUNAP_ORGANIZACIONES	OK	0	0	47	47	47	47	1.1	
+CO_CRC_POSTDATA_INDICADORES	OK	0	0	5	5	5	5	3.4	
+CO_CRC_POSTDATA_OBI	OK	0	0	28	28	28	28	10.2	
+CO_XM_SIMEM_PRECIO_BOLSA	OK	0	0	432	432	432	432	5.3	
+CO_CRC_POSTDATA_OPERADORES	OK	0	0	92	92	92	92	13.1	
+UY_MTOP_AEROPUERTOS	OK	0	0	15	15	15	15	2.5	
+CW_VACATURES	OK	0	0	407	408	407	407	168.3	
+CO_XM_SIMEM_DESPACHO	OK	0	0	91032	91032	91032	91032	29.7	
+UY_DIPUTADOS_NOMINA	OK	0	0	350	350	350	350	2.9	
+UY_OSE_DATOS_ABIERTOS	OK	0	0	28	28	28	28	9.6	
+EC_GOBEC_INSTITUCIONES	OK	0	0	500	501	500	500	121.9	
+PY_AIP_INSTITUCIONES	OK	0	0	545	545	545	545	2.1	
+UY_CKAN_MONTEVIDEO	OK	0	0	159	159	159	159	45.7	
+PY_VUE_REGISTRO_EMPRESAS	OK	0	0	2000	2001	2000	2000	16.3	
+PY_VUE_MIPYMES	OK	0	0	2000	2001	2000	2000	15.8	
+EC_GOBEC_TRAMITES	OK	0	0	5000	5002	5000	5000	130.4	
+NI_TELCOR_PUBLICACIONES	FETCH_FAILED	0	0	1	1	0	-1	2.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+PY_MADES_ESTACIONES	OK	0	0	34	34	34	34	3.4	
+PY_CGR_FONACIDE	OK	0	0	3104	3104	3104	3104	4.9	
+PY_CGR_ONG_RENDICION	OK	0	0	4551	4551	4551	4551	6.9	
+BO_INE_PUBLICACIONES	OK	0	0	12	12	12	12	11.9	
+CO_REGISTRADURIA_RESULTADOS_2018	OK	0	0	20000	20001	20000	20000	12.2	
+AR_DATOS_MININTERIOR	OK	0	0	15	15	15	15	5.6	
+AR_DATOS_TRANSPORTE	OK	0	0	48	48	48	48	35.2	
+AR_DATOS_AGRICULTURA	OK	0	0	152	152	152	152	40.1	
+AR_IGN_COMPLEJOS_FRONTERIZOS	OK	0	0	144	144	144	144	3.1	
+CO_RUNAP_AREAS	COLLISION	0	0	2086	2084	2083	2086	129.1	3 of 2086 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+AR_IGN_ENERGIA	OK	0	0	445	445	445	445	2.4	
+AR_IGN_AEROPUERTOS	OK	0	0	60	60	60	60	2.4	
+AR_SEGEMAR_MINEROMETALOGENETICO	FETCH_FAILED	0	0	1	1	0	-1	2.2	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+CL_SNIFA_UNIDADES	FETCH_FAILED	1	-1	1	1	0	-1	3.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+CL_COORDINADOR_COSTO_MARGINAL	OK	0	0	192	192	192	192	2.6	
+AR_DATOS_BAHIA_BLANCA	OK	0	0	222	222	222	222	53.8	
+NI_MARENA_PUBLICACIONES	OK	0	0	288	289	288	288	124.7	
+AR_BCRA_MONETARIAS	OK	0	0	1610	1611	1610	1610	122.7	
+UY_MIDES_HOSPITALES	OK	0	0	25	25	25	25	2.7	
+PY_DNCP_PARAMETROS	OK	0	0	100	100	100	100	1.9	
+HT_BRH_PUBLICATIONS	OK	0	0	1333	1334	1333	1333	131.1	
+W3C_GROUPS	OK	0	0	324	324	324	324	2.2	
+CL_SUBTEL_DOCUMENTOS	OK	0	0	1978	1980	1978	1978	138.3	
+W3C_ECOSYSTEMS	OK	0	0	9	9	9	9	5.0	
+UY_MONTEVIDEO_GEONETWORK	OK	0	0	406	407	406	406	125.4	
+W3C_TR_SPECIFICATIONS	OK	0	0	1721	1722	1721	1721	128.1	
+CL_SEIA_PROYECTOS	SLOW	-1	0	-1	-1	600	-1	200.1	hit --timeout 200.1s; 600 rows already stored
+IETF_IPR_DOCUMENT_LINKS	OK	0	0	2000	2001	2000	2000	4.7	
+IETF_IPR_EVENTS	OK	0	0	2000	2001	2000	2000	5.3	
+CL_SERVEL_DOCUMENTOS	OK	0	0	8362	8363	8362	8362	172.3	
+IETF_LIAISON_STATEMENTS	OK	0	0	1997	1998	1997	1997	8.0	
+IETF_DOCUMENT_RELATIONS	OK	0	0	2000	2001	2000	2000	5.5	
+IETF_DRAFT_SUBMISSIONS	OK	0	0	2000	2001	2000	2000	5.8	

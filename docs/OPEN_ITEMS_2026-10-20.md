@@ -199,13 +199,84 @@ affordance twice over rather than a path:
 | row | outcome | measured |
 | --- | --- | --- |
 | `FI_EDUSKUNTA_RECORDS` | re-pointed | the `avoindata` API, on the new `row_header_path` — `Marin` 1 of 1, an impossible value 0 |
-| `AT_PARLAMENT_RECORDS` | NOT shipped | its index has no stable ordering, and it ignores `pageSize` (3 rows asked, 100,000 rows and 58 MB served). One measured sort parameter away |
+| `AT_PARLAMENT_RECORDS` | SHIPPED 2026-10-23, as batch 55 | there is no sort parameter — and none was needed. See below |
 | `CZ_CUZK_CADASTRE` | re-pointed | `/api/v1/Parcely/Vyhledani`, `ApiKey` header, `JO_CUZK_API_KEY` — a credential disclosure until a key exists |
 | `FR_ASSEMBLEE_NATIONALE` | kept failing + NEW row | /dyn/recherche 404s for a real name and an impossible one alike, and the homepage has no search form. `FR_AN_QUESTIONS_ECRITES` reads the open data instead: **19,165 of 19,165 written questions stored** in one request, 50 MB, on the new `zip_all_entries` |
 | `JP_PMDA_APPROVALS` | kept failing + NEW row | the search is `POST /PmdaSearch/iyakuSearch` and answers the FORM PAGE for every POST constructible here (session cookie, referer, the image button's x/y, the column checkboxes). `JP_PMDA_NEW_DRUG_APPROVALS` reads the annual workbook: **95 of 95** across four monthly sheets, on the new `xlsx_sheet_all` |
 | `JP_KANPO_GAZETTE` | kept failing + NEW row | the search is behind a paid MEMBER LOGIN (`/kanpou/auth/login/LoginStartUp.form`), which no `key_env` opens. But the gazette itself is free: `JP_KANPO_DAILY_CONTENTS` reads each day's table of contents, **25 of 25** carrying 43 notice titles |
-| `JP_MHLW_LABOUR_VIOLATIONS` | kept failing, no replacement | the index 404s, the ministry's site search is a Google Custom Search (Google's index of the ministry, not its register), and the labour-standards section of the ministry's own sitemap lists no disclosure page |
-| `WORLDBANK_CONTRACT_AWARDS` | kept failing, unmeasured | its Socrata API answers 404 outright now (it was "empty" in the earlier reading), the portal has moved to financesone.worldbank.org (200), and `datacatalogapi.worldbank.org` answered 429 to both attempts from here. Not a verdict about the dataset |
+| `JP_MHLW_LABOUR_VIOLATIONS` | kept failing; the register was FOUND and is still not shippable | see below |
+| `WORLDBANK_CONTRACT_AWARDS` | kept failing; the move is now measured, the successor is not | see below |
+
+### The three that were still open on 2026-10-22, settled 2026-10-23
+
+**`AT_PARLAMENT_RECORDS` — the answer was "no sort parameter exists", and the
+row ships anyway.** Full readings in
+`docs/at-parlament-filter-api-2026-10-23.md`; the short version is three
+measurements and a control.
+
+* **The query string is ignored.** `?GP=XXVII` answers the unfiltered 391,354
+  where the POST body `{"GP":["XXVII"]}` answers 76,457. Every sort spelling
+  the 2026-10-21 triage probed was being discarded before the server looked at
+  it, which is why 14 of 26 appeared to "work".
+* **The control settles it.** `frobnicate=7` and `sortColumn=99999` reorder the
+  first page exactly as `sort=28` does, and no reading is monotonic in the
+  column it names. Nine spellings inside the POST body behave the same; an
+  unknown body key there is silently ignored. *Probe a control before believing
+  a parameter works.*
+* **`pageNumber` is not the page parameter — `page` is, and it drifts.** Page 1
+  and page 2 of ONE filtered query overlap by **8 of 20 rows**, and two reads of
+  `page=1` return disjoint sets. No cycle can sit on that.
+* **But `showAll=true` plus a filter is a complete, deterministic, single-page
+  read**: `pages: 1`, `rows == count`, byte-identical across two reads, on
+  every slice. No ordering is involved because nothing is paged.
+
+So the row is a PARTITION, not a walk. `GP` (legislative period) has 27
+non-empty codes whose counts sum to **391,354 — the unfiltered count exactly**,
+and finding that needed two steps that generalise: enumerating I..XXVIII reaches
+only 389,139, and sampling 30 pages for the missing codes finds `KN` and `PN`
+but **misses `BR` (2 rows)**, which only a direct count found. *Enumerate the
+dimension, then check the slices sum to the whole; a sample finds the common
+gaps and not the rare ones.*
+
+Seven rows ship (`native/collectors/pivot/table/hp3b55_atparl.c`), grouped under
+the 100,000-row page cap and the 64 MB body ceiling, no group mixing a closed
+period with the open one. Engine readings, each `stored == emitted` with no
+notice: 50,896 / 77,646 / 55,695 / 51,970 / 51,979 / 76,457 / 26,718 — one
+request each. The record key was measured and the obvious one is wrong:
+`WENTRY_ID`, `HIS_URL` and `GP_CODE+ITYP+INR` all agree on 75,485 of XXVII's
+76,457, which invites writing the 972 off as the upstream's duplicates — and all
+972 **differ**, in exactly one column, `NRBR`: a material that went through both
+chambers is served once per chamber under one web-item id.
+`GP_CODE+ITYP+INR+NRBR` is 76,457 of 76,457.
+
+**`JP_MHLW_LABOUR_VIOLATIONS` — the register WAS found, and that is a better
+reason for not shipping than "no replacement".** It is not on
+`www.mhlw.go.jp` at all, which is why a search of the ministry's site and
+sitemap could not see it: each **prefectural labour bureau** publishes its own
+on `jsite.mhlw.go.jp` (Tokyo's 労働基準関係法令違反に係る公表事案 at
+`/tokyo-roudoukyoku/jirei_toukei/souken_jirei.html`). Two things stop it. The
+page's only content is a link to a **PDF re-published under a new numeric id
+each edition**, and hpengine has no PDF mode — so an `HP_HTML` row here would
+store the page's NAVIGATION as enforcement cases, which is what
+`FAA_NNUMBER_REGISTRY` was removed for. And the path is Tokyo's own: osaka,
+aichi, fukuoka, kanagawa and hokkaido all 404 on it, so this is 47
+differently-shaped bureau sites and a discovery beat of its own. What would
+make it shippable is a PDF text mode in the engine.
+
+**`WORLDBANK_CONTRACT_AWARDS` — the move is measured; the successor is not
+measurable from here.** `finances.worldbank.org` **302s to
+`financesone.worldbank.org` preserving the path**, and that host answers HTTP
+200 with its single-page-app HTML for every path — `/api/catalog/v1` and
+`/resource/<id>.json` alike. So the Socrata platform is retired and the row's
+fetch-failure note reads "a 200 that did not parse", the Archive-It shape: the
+move really happened, unlike the three cases CLAUDE.md records where that
+wording sent a reader hunting one. The successor is the Data Catalog API
+(`datacatalogapi.worldbank.org/ddhxext/`), which is where the new site's own
+dataset ids live (the awards page canonicalises to `DS00047`). It is **not**
+re-pointed there: four attempts across two sessions, one after **150 s of
+complete idleness**, all HTTP 429 from Cloudflare with a fresh `retry-after` of
+~45 s, so the quota is not ours to drain and the endpoint cannot be verified
+from this container. A candidate is not a fix.
 
 **And the operator's decision has been taken: keep every one of them,
 disclosing.** The rows with no reachable replacement — the 36 walls, the 404s
@@ -682,6 +753,26 @@ E6.
 hour a complete pass is a two-day job, and the file is committed as it
 accumulates rather than held back.
 
+**Where it stands at 2026-10-23: 9,854 of 55,699 rows** (17.7%), resumed across
+several invocations:
+
+| verdict | n |
+| --- | --- |
+| OK | 8,424 |
+| FETCH_FAILED | 965 |
+| COLLISION | 239 |
+| SLOW | 125 |
+| EMITS_NOTHING | 80 |
+| POD | 19 |
+| GATED | 2 |
+
+Read those four non-OK columns with the corrections below rather than as
+counts of broken sources: `FETCH_FAILED` is a row that DISCLOSED its refusal
+(which is the sweep working, not a defect), `SLOW` means unmeasured at this
+tool's kill line, `COLLISION` is a question and not a diagnosis, and
+`EMITS_NOTHING` was measured 95% wrong as a verdict before the scheduler
+disclosure landed.
+
 The point of the sweep is to FILL the health disclosure, not to gate anything:
 every scheduled run files a `collector-fetch-failure` record of its own, so a
 source's page acquires its reason and remedy as the scheduler reaches it. The
@@ -767,6 +858,71 @@ fraction of it already settled on the evidence.
 Sweep totals after both re-measures and a further run, over **9,151 of 55,699**
 scheduled rows (16.4%): **OK 7,841, FETCH_FAILED 891, COLLISION 213, SLOW 109,
 EMITS_NOTHING 76, POD 19, GATED 2.**
+
+#### The collision tail, worked from the top down (2026-10-23)
+
+At 9,854 rows the COLLISION column is **206 rows losing 40,366 records a run**,
+and the headline is that **86% of that number is correct dedupe somebody has
+already measured and written down.** Read from the largest loss downwards:
+
+| row | lost/run | what it is |
+| --- | --- | --- |
+| `gr-diavgeia-positions` | 25,054 | **correct dedupe, documented 2026-09-11.** 233 official post titles in a 1.6 MB file that repeats them 25,188 times, byte for byte; its own comment says "do not re-key this row" |
+| `sci-exoarchive-stellarhosts` | 3,015 | **correct dedupe, documented.** `select *` over all 136 columns gives 47,903 rows and 44,929 distinct, so the residual is the upstream's own duplicate rows |
+| `AP19_VN_VNDIRECT_STOCKS` | 2,737 | **REAL, and fixed** — see below |
+| `ifrc-go-appeal-document` | 1,896 | **correct dedupe, documented.** `ordering=id` repeats a document once per related row, byte-identical |
+| `AP19_TW_TWSE_AP11` | 675 | documented: 70 rows sharing a triple but differing are kept by the in-page guard; the rest are TWSE's verbatim repeats |
+| `nam-providenceri-providence-tree-inventory` | 644 | **correct dedupe, measured today** — a composite was tried and REVERTED, see below |
+| `TPEX_DIRECTOR_HOLDINGS` | 428 | documented: ~460 of 17,517 are TPEx repeating a row verbatim |
+| `eur-soc-cat-b5rw-yz3c` | 386 | **correct dedupe, measured today** — a composite was tried and REVERTED, see below |
+| `lat-co-dispositivos-med` | 385 | documented decision: its best reachable key is no better than the loss |
+| `geo-jrc-inform-scores` | 382 | **correct dedupe, measured today**: 46,461 rows, **46,079 distinct whole records — exactly what it stores**. And `Iso3+IndicatorId` would be WORSE (45,932), so the content-hash fallback stays |
+| `nam-norfolk-streetlights-and-outages-reports` | 154 | documented decision, reverted for the same reason |
+
+That is 34,770 of the 40,366 accounted for, and the residual ~5,600 is spread
+over ~195 rows averaging 29 records each.
+
+**One of the three candidates was real. The other two were SAMPLE ARTEFACTS,
+and that is the finding worth more than either fix.**
+
+* **`AP19_VN_VNDIRECT_STOCKS` — real, fixed, +203 records a run.** Page 1 has
+  100 distinct codes of 100, which is why a one-page check reads clean; across
+  the table **a large share of rows carry no `code` field at all** — OTC
+  instruments with no ticker, which sort together under `sort=code` and so
+  cluster on the later pages, the "two pages can be too few" shape with the
+  breaking dimension at the END of the collection rather than on page four.
+  With `code` alone, the engine fell back to the record's first non-empty
+  scalar, which for those rows is `type: "STOCK"` — identical for every one of
+  them. Measured over the WHOLE 145-page table (14,433 rows): **11,606 distinct
+  whole records, and `code` else `companyId` is 11,606 exactly** — the
+  attainable maximum, with every one of the 2,827 repeated-key groups
+  byte-identical. So `id_keys = "code,companyId"` (`,` CHOOSES; a 3-letter
+  ticker and a decimal companyId cannot collide), and the engine now stores
+  **11,566 of 14,433** against 11,363 before. The remaining gap is the API
+  serving the same record on more than one page, which must collapse.
+  Its `page_max` went 141 → 160 in the same change: the endpoint's own
+  `totalElements` has moved 14,061 → 14,433 since 2026-10-12, so 141 pages had
+  quietly become a ceiling that cuts.
+* **`nam-providenceri-providence-tree-inventory` — a composite was shipped and
+  REVERTED the same hour.** An 800-feature sample said
+  `property_address_address+species+diameter_in_inches` hit the attainable
+  maximum exactly (765 of 765). The engine disagreed: **7,324 stored against
+  the content-hash fallback's 7,356**, and the full 8,000-feature read says why
+  — 7,355 distinct whole features, 7,323 on that key. The fallback was already
+  within one record of the maximum. Reverted, with the arithmetic in the row.
+* **`eur-soc-cat-b5rw-yz3c` — same, 51 records a run.** A 2,000-row sample gave
+  `numero_ens+espai+detall_espai` 1,978 of an attainable 1,983; over the full
+  20,000 it gives 19,561 against the fallback's 19,614, with 19,616 distinct
+  whole records. Even an eight-column key reaches only 19,604. Reverted.
+
+So **a sample can say a key is perfect when it loses records, and the error
+runs in the direction that gets shipped** — the sample is drawn from the head
+of the collection, where the dimension that breaks the key has not appeared
+yet. The engine's own `stored` count against the row's CURRENT loss is the only
+reading that settles it, and it costs one `--run`. CLAUDE.md already says both
+halves ("two pages can be too few"; "compare the proposed key against the row's
+current loss and keep the fallback when it wins"); this is them being
+rediscovered from the other side, twice in one hour.
 
 **`FETCH_FAILED` is ~10% of the fleet now against 1% in the file's first
 3,612 rows, and that is the disclosure working rather than the fleet

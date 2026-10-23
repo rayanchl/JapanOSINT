@@ -624,6 +624,30 @@ static void sched_disclose_fetch_failure(intel_sink *sink, const source_def *d,
   cJSON_AddNumberToObject(p, "bytes_fetched", (double)bytes);
   cJSON_AddNumberToObject(p, "requests", (double)requests);
   cJSON_AddStringToObject(p, "transport_error", te_name);
+  /* D1-bis, the same addition hpengine's notice got: "other" covered TLS, and
+   * "TLS" covered four findings with four remedies, of which exactly one — a
+   * server that sent its leaf without the intermediate — is ours to fix. Same
+   * caveat as `transport_error` beside it: this is the LAST attempt on this
+   * thread, which for a bespoke collector making several requests is the last
+   * one, not necessarily the one that mattered. Named only when there is a TLS
+   * verdict at all. */
+  {
+    int tls = http_last_tls_cause();
+    if (tls != HTTP_TLS_NONE) {
+      cJSON_AddStringToObject(p, "tls_cause",
+        tls == HTTP_TLS_NO_LOCAL_ISSUER   ? "no_local_issuer"
+      : tls == HTTP_TLS_EXPIRED           ? "expired"
+      : tls == HTTP_TLS_NOT_YET_VALID     ? "not_yet_valid"
+      : tls == HTTP_TLS_HOSTNAME_MISMATCH ? "hostname_mismatch"
+      : tls == HTTP_TLS_SELF_SIGNED       ? "self_signed"
+      : tls == HTTP_TLS_REVOKED           ? "revoked"
+      : tls == HTTP_TLS_UNRECOGNIZED_NAME ? "unrecognized_name"
+      : tls == HTTP_TLS_HANDSHAKE         ? "handshake"
+                                          : "other");
+      cJSON_AddStringToObject(p, "tls_detail", http_tls_cause_label(tls));
+      cJSON_AddStringToObject(p, "tls_remedy", http_tls_cause_remedy(tls));
+    }
+  }
   cJSON_AddStringToObject(p, "run_status_reason", why ? why : "");
   cJSON_AddStringToObject(p, "outcome", outcome);
   cJSON_AddStringToObject(p, "note",

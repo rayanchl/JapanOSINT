@@ -77,14 +77,67 @@ prune_orphans() {                       # stdin: object paths, stdout: the live 
   done
 }
 
+under_of() {                            # a test's #included .c, as an object path
+  grep -oE '#include "\.\./\.\./[a-z_/]+\.c"' "$1" |
+    head -1 | sed 's|#include "../../||; s|"$||; s|\.c$|.o|'
+}
+
+# ONE PARTIAL LINK INSTEAD OF 84 FULL ONES.
+#
+# Every test links the whole tree, so the link line used to be ~1,860 objects
+# and the suite spent its time in ld rather than in the tests: measured
+# 2026-10-23 on this tree, 35.7 s per test — about fifty minutes of pure
+# linking, which is what made the TSan job hit its 90-minute ceiling.
+#
+# `ld -r` merges the objects NO test excludes into one relocatable object once
+# (1.2 s), and each test then links that plus the 53 objects some test does
+# exclude: 2.7 s, a 13x saving, for a binary 4 KB different from the old one.
+#
+# It is a PARTIAL link, not an archive, and that distinction is the whole
+# reason this is safe. An `ar` archive measured 0.27 s and produced a binary
+# 10.5 MB against 128.3 MB: archive members are pulled only to satisfy an
+# undefined symbol, and this tree's collectors self-register from constructors
+# that nothing references, so the test ran against an EMPTY registry (`[db]
+# seeded sources from registry (0 new … 58047 stale pruned)`) and still printed
+# "all passed", because the one it was checked with needs only *some* scheduled
+# row. A partial link keeps every section and every .init_array entry, so the
+# registry seeds the same 58,047 rows it does without this.
+#
+# It also keeps the duplicate-symbol check the prune_orphans note above exists
+# for — verified rather than assumed: `ld -r` over two objects defining one
+# function reports "multiple definition" and exits 1, exactly as the final link
+# does. So a stale object that redefines a symbol still fails the build, once
+# here instead of 84 times. A duplicate REGISTRATION (same id, different
+# symbol) is not a link error either way and is still caught by prune_orphans.
+live_objs="$SCRATCH/live.txt"
+find "$OBJDIR" -name '*.o' ! -name 'main.o' | prune_orphans | sort -u > "$live_objs"
+for src in tests/unit/test_*.c; do under_of "$src"; done |
+  sed '/^$/d' | sort -u | sed "s|^|$OBJDIR/|" > "$SCRATCH/under.txt"
+grep -vxFf "$SCRATCH/under.txt" "$live_objs" > "$SCRATCH/common.txt"
+
+COMMON=""
+# shellcheck disable=SC2046
+if ld -r -o "$SCRATCH/common.o" $(cat "$SCRATCH/common.txt") 2>"$SCRATCH/ldr.err"; then
+  COMMON="$SCRATCH/common.o"
+  echo "--- partial link: $(wc -l < "$SCRATCH/common.txt") objects -> common.o," \
+       "$(wc -l < "$SCRATCH/under.txt") kept separate ---"
+else
+  # Not fatal: fall back to the old full object list. A real duplicate symbol
+  # then fails every test's own link instead, so nothing is hidden by this.
+  echo "--- partial link unavailable, linking every object per test ---" >&2
+  sed -n '1,5p' "$SCRATCH/ldr.err" >&2
+fi
+
 fail=0
 for src in tests/unit/test_*.c; do
   name=$(basename "$src" .c)
   # Which object does this test include? (duplicate symbols if also linked.)
-  under=$(grep -oE '#include "\.\./\.\./[a-z_/]+\.c"' "$src" |
-          head -1 | sed 's|#include "../../||; s|"$||; s|\.c$|.o|')
-  objs=$(find "$OBJDIR" -name '*.o' ! -name 'main.o' \
-         ${under:+! -path "$OBJDIR/$under"} | prune_orphans | sort -u)
+  under=$(under_of "$src")
+  if [ -n "$COMMON" ]; then
+    objs="$COMMON $(grep -vxF "$OBJDIR/$under" "$SCRATCH/under.txt")"
+  else
+    objs=$(grep -vxF "$OBJDIR/$under" "$live_objs")
+  fi
 
   echo "--- $name ($OBJDIR, excludes ${under:-<none>}) ---"
   # shellcheck disable=SC2086
@@ -94,6 +147,7 @@ for src in tests/unit/test_*.c; do
   JO_DB="$SCRATCH/$name.db" $RUNNER "$SCRATCH/$name"
   rc=$?
   [ $rc -eq 0 ] || { echo "FAILED (exit $rc)"; fail=1; }
+  rm -f "$SCRATCH/$name" "$SCRATCH/$name.db"
 done
 
 # tools/cleanup_stale_uids.py deletes rows from a live database. Its self-test

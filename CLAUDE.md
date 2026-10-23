@@ -148,7 +148,46 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 58,047** (2026-10-23): main's 57,529 merged with this
+**The registered count is 58,054** (2026-10-23): 58,047 plus **batch 55's seven
+rows**, the Austrian Parliament's whole materials index read as seven complete
+slices (`collectors/pivot/table/hp3b55_atparl.c`,
+`docs/verified-sources-batch55.tsv`, `docs/at-parlament-filter-api-2026-10-23.md`).
+It closes open item B2's last line, and the answer to "one measured sort
+parameter away" was **there is no sort parameter**, with the row shipping anyway.
+Four things in it generalise:
+
+* **Probe a CONTROL before believing a parameter works.** 26 sort spellings were
+  sent in the query string and 14 "moved" the first page — which is what the
+  2026-10-21 triage reported as "six appeared to work". Then `frobnicate=7` and
+  `sortColumn=99999` moved it exactly the same way, and no reading was monotonic
+  in the column it named. The cause: **this endpoint ignores its query string
+  entirely** — the filter is a POST JSON body (`{"GP":["XXVII"]}` answers 76,457
+  where `?GP=XXVII` answers the unfiltered 391,354) — so every sort spelling was
+  discarded before the server looked at it. An unknown key in the BODY is
+  silently ignored too, so the same control was needed on both sides.
+* **A complete single-request read beats a sort.** `page` really pages (page
+  19,568 returns the last 14 rows) and really drifts: page 1 and page 2 of ONE
+  filtered query overlap by **8 of 20 rows**, and two reads of `page=1` return
+  disjoint sets. But `showAll=true` plus a filter answers `pages: 1` with
+  `rows == count`, byte-identical across two reads — so the row is a PARTITION
+  and no ordering is involved, the ENA `limit=0` shape again.
+* **Enumerate the dimension you slice on, then check the slices SUM to the
+  whole.** `GP` is the legislative period; enumerating I..XXVIII gives 24
+  non-empty codes summing to 389,139 against 391,354 — **2,215 rows no Roman
+  numeral reaches**. Sampling 30 pages for the missing codes found `KN` (1,897)
+  and `PN` (316) and **missed `BR` (2)**, which only a direct count found. A
+  sample finds the common gaps, not the rare ones; the 27 codes then sum to
+  391,354 exactly.
+* **Three keys agreeing on the same wrong answer is not corroboration.**
+  `WENTRY_ID` (the site's own web-item id), `HIS_URL` and `GP_CODE+ITYP+INR` all
+  give 75,485 of XXVII's 76,457, which invites writing the 972 off as the
+  upstream's own duplicates — and all 972 **differ**, in exactly one column,
+  `NRBR`: a material that went through both chambers is served once per chamber
+  under one web-item id. `GP_CODE+ITYP+INR+NRBR` is 76,457 of 76,457 and holds on
+  every slice. Measured through the engine: **391,357 emitted, 391,357 stored,
+  7 requests, 222 MB, zero notices.**
+
+**The registered count was 58,047** (2026-10-23): main's 57,529 merged with this
 branch's 58,045, MEASURED with `make source-count`. Third merge of main in a
 day; what it cost and what each side won is in `docs/SOURCE_COUNT_LEDGER.md`.
 
@@ -1128,6 +1167,14 @@ Where the tree actually stands, as `make audit-sources` reports it:
   with opposite directions before believing a sort, and drop the parameters
   where it is ignored rather than leaving the row claiming it.
 
+  **Asking twice is not enough where the ANSWER ITSELF drifts: send a control.**
+  The Austrian Parliament's filter API (batch 55, 2026-10-23) made 14 of 26 sort
+  spellings look like they worked — and `frobnicate=7` reordered the first page
+  identically, because that endpoint ignores its query string entirely and its
+  index has no stable ordering. A parameter no implementation could honour is
+  one request, and it is the only thing that separates "this sort works" from
+  "this answer moves".
+
   **And read the body on a 200 before trusting it: `sortBy=id` is a BACKEND
   400** on inspire.lechnerkozpont.hu, reported inside an HTTP **200** as a PHP
   warning page naming `localhost:8085`. That host is a proxy in front of a
@@ -1301,6 +1348,36 @@ tools/ci_concurrency_gate.sh ./bin/japanosint 1.0   # the event loop stays free 
 That is the native job in `.github/workflows/ci.yml`; CI also runs TSan and
 ASan builds and the client's `vitest` and `vite build`. Run gates with `JO_DB`
 pointing at a scratch file — several of them open the default DB otherwise.
+
+**`make unit` is ONE PARTIAL LINK now, not 84 full ones** (2026-10-23). Every
+test `#include`s the .c it tests, so the link line is every object except
+`main.o` and that one — and at 1,860 objects that cost **35.688 s per test**,
+about fifty minutes of pure linking a suite, which is what pushed the TSan job
+through its 90-minute ceiling (the duration series is in `ci.yml`).
+`tests/unit/run.sh` now `ld -r`s the 1,807 objects that NO test excludes into
+one relocatable object once (1.2 s) and links each test against that plus the
+53 objects some test does exclude: **2.674 s**, a 13x saving, for a binary
+4 KB different from the old one. The whole suite runs end to end in **494 s**.
+
+**An `ar` archive is the wrong tool here, and it passes the test while being
+wrong** — worth knowing because it is the obvious thing to reach for and it
+measured 0.274 s, another 10x. Archive members are pulled only to satisfy an
+undefined symbol, and this tree's collectors self-register from constructors
+that nothing references, so the archive link produced a **10.5 MB binary
+against 128.3 MB** and the test ran against an EMPTY REGISTRY — `[db] seeded
+sources from registry (0 new … 58,047 stale pruned)` — and still printed "all
+passed", because the test it was checked with needs only *some* scheduled row.
+A partial link keeps every section and every `.init_array` entry, so the
+registry seeds the same rows it does without this. **A 130x speedup deserves
+one suspicious look at what it stopped doing**; comparing the two binaries'
+SIZES is what exposed it, before any assertion did.
+
+It keeps the duplicate-symbol check `prune_orphans` exists for, verified rather
+than assumed: `ld -r` over two objects defining one function reports "multiple
+definition" and exits 1, exactly as the final link does — so a stale object
+that redefines a symbol still fails the build, once instead of 84 times. And
+run.sh now removes each test binary after running it: at 128 MB a test, the old
+script left **~10 GB** in `$TMPDIR` until the suite ended.
 
 **A macOS job the runner cancels at 15 minutes is the runner's, not the
 PR's** (seen 2026-10-21 on `main`'s own run for PR #57 and on two PRs the
@@ -1990,8 +2067,44 @@ probe is the tool that decides whether a row ships:
   delegates to `kde.modular.im`), 1 was this container's own egress, 1 was the
   already-refuted Yamaguchi 409, and **2 are genuinely unreachable** — an SNI
   mismatch at `dataverse.openscholar.org` and `nesstar.statssa.gov.za`, which
-  only not checking the hostname would reach. The engine still cannot TELL
-  these apart in its fetch-failure record; that is open item D1-bis.
+  only not checking the hostname would reach.
+
+  **THE ENGINE NOW TELLS THEM APART, which was open item D1-bis** (2026-10-23).
+  The disclosure used to read "the request failed at the transport level",
+  which is the paragraph above's own lesson un-learned at the one place a
+  reader meets it: 24 of 30 hosts were a fixable missing intermediate and
+  nothing in the record said so. `http_last_tls_cause()`
+  (`core/httpclient.{c,h}`) names nine causes — `no_local_issuer`, `expired`,
+  `not_yet_valid`, `hostname_mismatch`, `self_signed`, `revoked`,
+  `unrecognized_name`, `handshake`, `other` — and both fetch-failure records
+  (hpengine's and `core/scheduler.c`'s, since rule 1's "look for the other
+  copies" applies here too) carry `tls_cause`, `tls_detail` and a cause-specific
+  `remedy`. Three things about it are deliberate:
+
+  * **the discriminator is OpenSSL's own verify result**
+    (`CURLINFO_SSL_VERIFYRESULT`, an `X509_V_ERR_*` code), not the message
+    text, because a reworded or translated libcurl string would silently
+    reclassify every host. The text is read ONLY where there is no verify
+    result — a hostname mismatch arrives that way on some backends — and
+    `test_http_tls_cause.c` pins that the verify result wins when the two
+    disagree;
+  * **a handshake refused before any certificate was judged is not a trust
+    finding** and must not be reported as one, so `CURLE_SSL_CONNECT_ERROR`
+    with nothing to go on is `handshake`, whose remedy points at
+    `tools/jo_tls.py`'s cipher security level rather than at a certificate;
+  * **`unrecognized_name` is named apart from `handshake` although libcurl
+    reports both as CURLE 35**, because the remedies are opposite. Measured
+    2026-10-23: the two "genuinely unreachable" hosts above both answer
+    `tlsv1 unrecognized name` — OpenSSL alert 112, the server saying it does
+    not serve that hostname at all — and no cipher or trust change reaches
+    that. A remedy that names a knob which cannot move is worse than none.
+
+  The `[http]` log line now carries libcurl's own sentence
+  (`CURLOPT_ERRORBUFFER`) beside the class, because `curl_easy_strerror` gives
+  "SSL peer certificate … was not OK" where the buffer gives "unable to get
+  local issuer certificate". The nine causes' labels and remedies were checked
+  against the real messages on the wire the same day (badssl.com's expired,
+  wrong-host, self-signed and untrusted-root hosts, plus the two SNI hosts).
 
 * **`registry.faa.gov` is gone, and the measurement is why.** Three rows read
   it — `US_FAA_AIRCRAFT_REGISTRY`, `FAA_NNUMBER_REGISTRY` and `FAA_REGISTRY`
