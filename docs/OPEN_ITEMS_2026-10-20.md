@@ -764,9 +764,37 @@ best reachable key is no better than the loss), `nam-norfolk-streetlights-and-ou
 collision tail is not 99 rows of unexamined loss; it is 2,930 records a run, a
 fraction of it already settled on the evidence.
 
-Sweep totals after both re-measures, over 3,612 of 55,699 scheduled rows:
-**OK 3,188, FETCH_FAILED 226, SLOW 99, COLLISION 66, POD 19,
-EMITS_NOTHING 14.**
+Sweep totals after both re-measures and a further run, over **9,151 of 55,699**
+scheduled rows (16.4%): **OK 7,841, FETCH_FAILED 891, COLLISION 213, SLOW 109,
+EMITS_NOTHING 76, POD 19, GATED 2.**
+
+**`FETCH_FAILED` is ~10% of the fleet now against 1% in the file's first
+3,612 rows, and that is the disclosure working rather than the fleet
+degrading.** Those failures were always there; until the scheduler filed a
+record for collectors that file none, they stored `records=0 stored=0 rc=0` and
+were indistinguishable from an honest empty.
+
+**A third verdict column was wrong, and this one was a FALSE ACCUSATION** —
+the worst thing a gate can produce. Two rows read `SINK_MISMATCH`, whose note
+says "a collector emitting under another id, or a bug": `OPENEI_UTILITY_RATES`
+and `worldbank-debarred-firms`, both behaving exactly as designed. They are
+key-gated, so each stores one `collector-status-notice` naming the env var it
+needs — rule 1's gated note — and the tool's `ENGINE_NOTICES` list named only
+three notice kinds and not that one. So the run line counted the row as a
+NOTICE and the database read counted it as a RECORD, the two disagreed, and the
+verdict blamed the sink. Two rows in 9,151, which is exactly why nobody would
+have questioned it.
+
+Both halves are fixed. The database read now mirrors the engine's own rule
+(`collector-%-notice` plus `collector-fetch-failure`) instead of copying a list
+of kinds, so a notice kind added tomorrow is covered — the same rule-4c lesson
+as `tools/manifest.py`: two things that must agree should not be two copies.
+And a waiting-for-a-credential row gets its own verdict, **`GATED`**, naming
+the variable that would open it (`JO_OPENEI_KEY`,
+`WORLDBANK_SANCTIONS_APIKEY`), because a source doing the right thing does not
+belong in a defect bucket — the same reasoning as `NEEDS_ENTITY` and `POD`.
+Re-running all 93 `EMITS_NOTHING`/`SINK_MISMATCH` rows against the fix found no
+further gated rows and 15 more transients, leaving 76.
 
 **The rule for whoever resumes this sweep:** re-run the rows that carry a
 finding before believing one. Three of this file's six verdict columns were

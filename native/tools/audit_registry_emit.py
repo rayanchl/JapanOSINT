@@ -70,6 +70,7 @@ import io
 import os
 import re
 import shutil
+import json
 import sqlite3
 import subprocess
 import sys
@@ -202,6 +203,31 @@ ENGINE_NOTICES = (
     "collector-shape-notice",
 )
 
+# ...AND THAT LIST WAS A COPY OF A RULE, so it fell behind the rule. The engine
+# decides what a notice is in ONE place, intel_item_is_notice() in core/intel.c:
+# a record_type that starts `collector-` and ends `-notice`. The run line's
+# `notices=` counter uses it, this tool's three-name tuple did not, and the two
+# disagreed about `collector-status-notice` — the "needs credential" note rule 1
+# prescribes for a gated source.
+#
+# The cost was a FALSE ACCUSATION, which is the worst thing a gate can produce.
+# A key-gated row stores exactly one status notice, so the run line reads
+# `records=0 stored=1 notices=1` while this tool counted that same row as one
+# RECORD, the two numbers disagreed, and the verdict was SINK_MISMATCH: "a
+# collector emitting under another id, or a bug". Measured 2026-10-23 on
+# OPENEI_UTILITY_RATES and worldbank-debarred-firms, both behaving exactly as
+# designed. They are the only two in 9,151 rows, which is precisely why nobody
+# would have questioned the verdict.
+#
+# So the SQL mirrors the engine's rule instead of naming kinds: any
+# `collector-%-notice`, plus collector-fetch-failure, which is deliberately NOT
+# a `-notice` (a dead source reports records=1 so the run line cannot hide it)
+# and still is not a record from the upstream. A notice kind added tomorrow is
+# covered without touching this file — the tuple above stays only because the
+# epilog and the POD note name those three by hand.
+_NOTICE_SQL = ("(record_type LIKE 'collector-%-notice' "
+               "OR record_type = 'collector-fetch-failure')")
+
 
 def db_rows_for(db, sid):
     """-> (real_rows, notice_rows) or (None, None) when the DB is unreadable.
@@ -209,15 +235,13 @@ def db_rows_for(db, sid):
     Unreadable is NOT zero -- see verdict_for()."""
     try:
         con = sqlite3.connect("file:%s?mode=ro" % db, uri=True)
-        qs = ",".join("?" * len(ENGINE_NOTICES))
         real = con.execute(
             "SELECT COUNT(*) FROM intel_items WHERE source_id=? "
-            "AND (record_type IS NULL OR record_type NOT IN (%s))" % qs,
-            (sid,) + ENGINE_NOTICES).fetchone()[0]
+            "AND (record_type IS NULL OR NOT %s)" % _NOTICE_SQL,
+            (sid,)).fetchone()[0]
         notices = con.execute(
             "SELECT COUNT(*) FROM intel_items WHERE source_id=? "
-            "AND record_type IN (%s)" % qs,
-            (sid,) + ENGINE_NOTICES).fetchone()[0]
+            "AND %s" % _NOTICE_SQL, (sid,)).fetchone()[0]
         con.close()
         return real, notices
     except Exception:
@@ -259,6 +283,12 @@ def run_one(a, tmpl, sid, slot):
     secs = round(time.time() - t0, 1)
 
     rows, notices = db_rows_for(db, sid)
+    # Read the gated reason HERE, while the scratch database still exists: the
+    # unlink below is three lines away, and passing the PATH into verdict_for
+    # meant opening a file that had already been deleted — which failed
+    # silently and left a gated source reading EMITS_NOTHING, the very verdict
+    # this is meant to separate it from.
+    gated = status_notice_reason(db, sid)
     for suf in ("", "-wal", "-shm"):
         try:
             os.unlink(db + suf)
@@ -269,13 +299,46 @@ def run_one(a, tmpl, sid, slot):
         io.open(os.path.join(a.keep_logs, sid + ".log"), "w",
                 encoding="utf-8", newline="\n").write(blob[-40000:])
 
-    res = verdict_for(sid, blob, rc, rows, secs, timed_out, notices)
+    res = verdict_for(sid, blob, rc, rows, secs, timed_out, notices, gated)
     with _lock:
         emit_row(a, res)
     return res
 
 
-def verdict_for(sid, blob, rc, rows, secs, timed_out, notices=0):
+def status_notice_reason(db, sid):
+    """-> a one-line reason when this source stored a collector-status-notice
+    and nothing else, else None.
+
+    The notice is the engine's "I did not invent a record" record: for a gated
+    source it carries status=needs_credential and the env vars that would open
+    it, which is the remedy a reader needs. Read from the DATABASE rather than
+    matched on stderr, because a notice is data and the run line is not."""
+    if not db:
+        return None
+    try:
+        con = sqlite3.connect("file:%s?mode=ro" % db, uri=True)
+        row = con.execute(
+            "SELECT properties FROM intel_items WHERE source_id=? "
+            "AND record_type='collector-status-notice' LIMIT 1", (sid,)).fetchone()
+        con.close()
+    except Exception:
+        return None
+    if not row or not row[0]:
+        return None
+    try:
+        p = json.loads(row[0])
+    except Exception:
+        return "stored a collector-status-notice and no records"
+    st = p.get("status") or "status notice"
+    envs = p.get("env_vars_required") or []
+    if st == "needs_credential":
+        return ("waiting for a credential, and said so as data: needs %s "
+                "(rule 1's gated note, not a defect)"
+                % (", ".join(envs) if envs else "an unnamed credential"))
+    return ("stored a collector-status-notice saying %r and no records" % st)
+
+
+def verdict_for(sid, blob, rc, rows, secs, timed_out, notices=0, gated=None):
     sched = None
     for m in SCHED.finditer(blob):
         if m.group(1) == sid:
@@ -382,6 +445,18 @@ def verdict_for(sid, blob, rc, rows, secs, timed_out, notices=0):
             return (sid, "NEEDS_ENTITY", rc, sched_rc, emitted, stored, rows,
                     available, secs,
                     "on-demand pivot: reachable only with an entity (rule 3)")
+        # A row that is WAITING FOR A CREDENTIAL stored exactly what rule 1
+        # asks of it: a collector-status-notice naming the env vars it needs,
+        # and no invented records. Reporting that as EMITS_NOTHING puts a row
+        # doing the right thing in the same column as a row whose keys are
+        # wrong, and the remedy is not the same — one needs a key, the other
+        # needs title_keys/id_keys. Same reasoning as NEEDS_ENTITY above and
+        # POD below: a source behaving exactly as designed does not belong in
+        # a defect bucket. (Before this it read SINK_MISMATCH, for the
+        # notice-definition drift recorded at ENGINE_NOTICES.)
+        if gated:
+            return (sid, "GATED", rc, sched_rc, emitted, stored, rows,
+                    available, secs, gated)
         if available > 0:
             return (sid, "EMITS_NOTHING", rc, sched_rc, emitted, stored, rows,
                     available, secs,
@@ -428,7 +503,7 @@ def main():
         description="Prove registered sources EMIT and STORE, not merely fetch.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="verdicts: OK | EMITS_NOTHING | COLLISION | FETCH_FAILED | "
-               "SLOW | NEEDS_ENTITY | POD"
+               "SLOW | NEEDS_ENTITY | GATED | POD"
                " | SINK_MISMATCH | UNREADABLE_DB | NO_RUN_LINE | UNREGISTERED")
     ap.add_argument("--bin", required=True, help="path to the japanosint binary")
     sel = ap.add_argument_group("source selection (combined with AND)")
