@@ -90,13 +90,78 @@ THR_RE = re.compile(
 
 
 def read_registry(src):
-    """[(key, env, metric)] from core/thresholds.c, in file order."""
+    """[(key, env, metric, default_macro)] from core/thresholds.c, in file order."""
     text = open(src, encoding="utf-8").read()
-    out = [(m.group("key"), m.group("env"), m.group("metric"))
+    out = [(m.group("key"), m.group("env"), m.group("metric"), m.group("dflt"))
            for m in THR_RE.finditer(text)]
     if not out:
         sys.exit("could not read any threshold from %s — has the table moved?" % src)
     return out
+
+
+# A numeric #define, with an optional trailing `f` and an optional comment.
+_DEFINE_RE = re.compile(r"^\s*#\s*define\s+(\w+)\s+\(?\s*([0-9]*\.?[0-9]+)f?\s*\)?\s*(?:/\*|//|$)",
+                        re.M)
+
+
+def compiled_defaults(root):
+    """{macro: float} for every numeric #define under core/ and lib/.
+
+    WHY THIS EXISTS. core/thresholds.c names each default as a MACRO — the value
+    itself lives in the owning module's header, which CLAUDE.md calls "the
+    documented default". Without resolving it, `in_force` was blank on any run
+    without a live server, and `prec_at_in_force` / `rec_at_in_force` — the two
+    columns that answer "is the value we ship right?" — could not be computed at
+    all. That made the tool able to report a BETTER cut-off while saying nothing
+    about the one in force, which is most of the question.
+
+    A macro that does not resolve to a number is left out, and the row then
+    reads an empty in_force with source `unresolved`: a default this tool could
+    not read is not a default it may invent (rule 1 applied to the gate).
+
+    HEADERS ARE READ FIRST AND WIN, then .c files fill the gaps. Measured
+    2026-10-23: only six of the eleven defaults are in a header (relevance.h,
+    suggest.h, story.h, camera_dupes.h, entity_vec.h, alert_sem.h) — the other
+    five (RESOLVE_EMB_MIN_COS_DEFAULT, RESOLVE_EMB_MARGIN_DEFAULT,
+    REPAIR_SEM_COS_FLOOR_DEFAULT, CORPUS_VEC_MAX_DISTANCE_DEFAULT,
+    ROUTE_MIN_COS_DEFAULT) are in core/thresholds.c itself, so a header-only
+    read resolved none of them. A conflict is only reported between two HEADERS, because a macro
+    defined differently in two .c files is file-local to each and no conflict at
+    all: PROBE_TIMEOUT_MS is 20000 in core/pagination_probe.c and 10000 in
+    core/statusapi.c, and warning about that pair said nothing true.
+    """
+    vals, from_header = {}, set()
+    for headers_pass in (True, False):
+        for sub in ("core", "lib"):
+            d = os.path.join(root, sub)
+            if not os.path.isdir(d):
+                continue
+            for fn in sorted(os.listdir(d)):
+                if fn.endswith(".h") != headers_pass:
+                    continue
+                try:
+                    t = open(os.path.join(d, fn), encoding="utf-8",
+                             errors="replace").read()
+                except OSError:
+                    continue
+                for m in _DEFINE_RE.finditer(t):
+                    name, num = m.group(1), m.group(2)
+                    try:
+                        v = float(num)
+                    except ValueError:
+                        continue
+                    if name not in vals:
+                        vals[name] = v
+                        if headers_pass:
+                            from_header.add(name)
+                    elif headers_pass and name in from_header and vals[name] != v:
+                        # Two headers disagreeing about one default is the drift
+                        # rule 4c names, and guessing which is live hides it.
+                        print("  (%s is #defined in two headers with different "
+                              "values: %s and %s — not resolving it)"
+                              % (name, vals[name], v), file=sys.stderr)
+                        vals[name] = None
+    return {k: v for k, v in vals.items() if v is not None}
 
 
 def live_values(api):
@@ -200,26 +265,71 @@ def _text(title, body, limit=400):
 def pairs_story(db, cap):
     """Positives: two items sharing a simhash cluster_id. Negatives: items from
     different clusters AND different sources. cluster_id is simhash, so it is
-    independent of the embedding this measures."""
+    independent of the embedding this measures.
+
+    THE SAMPLE IS DRAWN PER SOURCE, not off the front of the table, and that is
+    not a refinement — it is the difference between a measurement and nothing.
+    This used to be `order by cluster_id limit cap*40`, which on a real database
+    returns a prefix of ONE corner of the corpus: measured 2026-10-23 against a
+    412,521-row database holding 31 sources, every one of the 8,000 rows it read
+    came from the same source, so the "different source" test for a negative
+    pair never once held and the key reported `n_neg = 0` — one class, no
+    cut-off, after a full embedding run. It is the same error this tree wrote up
+    the same day for a record key measured on a 2,000-row sample: a sample taken
+    off the head of a collection is not a sample of the collection.
+    """
     c = db.cursor()
     pos, neg = [], []
-    c.execute("""select cluster_id, uid, source_id, title, body from intel_items
-                 where cluster_id is not null and cluster_id != ''
-                   and title is not null and title != ''
-                 order by cluster_id limit ?""", (cap * 40,))
+    # Up to `cap * 4` rows per source, so a corpus dominated by one source
+    # cannot crowd the others out. row_number() needs SQLite 3.25+ (2018).
+    try:
+        c.execute("""with ranked as (
+                       select cluster_id, uid, source_id, title, body,
+                              row_number() over (partition by source_id
+                                                 order by uid) rn
+                       from intel_items
+                       where cluster_id is not null and cluster_id != ''
+                         and title is not null and title != '')
+                     select cluster_id, uid, source_id, title, body
+                     from ranked where rn <= ?""", (cap * 4,))
+        rows = c.fetchall()
+    except sqlite3.Error:
+        # No window functions: fall back to the old prefix read rather than
+        # measuring nothing, and the caller's label_source says which it was.
+        c.execute("""select cluster_id, uid, source_id, title, body from intel_items
+                     where cluster_id is not null and cluster_id != ''
+                       and title is not null and title != ''
+                     order by cluster_id limit ?""", (cap * 40,))
+        rows = c.fetchall()
     by = {}
-    for cid, uid, src, title, body in c.fetchall():
+    for cid, uid, src, title, body in rows:
         by.setdefault(cid, []).append((uid, src, _text(title, body)))
     multi = [v for v in by.values() if len(v) >= 2]
     for grp in multi[:cap]:
         pos.append((grp[0][2], grp[1][2], "same simhash cluster_id"))
-    flat = [(src, txt) for v in by.values() for _, src, txt in v]
-    for i in range(0, min(len(flat) - 1, cap * 2), 2):
-        a, b = flat[i], flat[i + 1]
-        if a[0] != b[0] and a[1] and b[1]:
-            neg.append((a[1], b[1], "different cluster and different source"))
-        if len(neg) >= cap:
+    # Negatives: one item per (source, cluster), then pair items whose source
+    # AND cluster both differ. Walking sources round-robin rather than in file
+    # order is what keeps a 400,000-row source from supplying both halves of
+    # every pair.
+    per_src = {}
+    for cid, v in by.items():
+        for _uid, src, txt in v:
+            if txt:
+                per_src.setdefault(src, []).append((cid, txt))
+    order = sorted(per_src)
+    i = 0
+    while len(neg) < cap and len(order) >= 2:
+        a_src = order[i % len(order)]
+        b_src = order[(i + 1 + (i // len(order))) % len(order)]
+        i += 1
+        if i > cap * 20:
             break
+        if a_src == b_src or not per_src[a_src] or not per_src[b_src]:
+            continue
+        acid, atxt = per_src[a_src].pop()
+        bcid, btxt = per_src[b_src].pop()
+        if acid != bcid:
+            neg.append((atxt, btxt, "different cluster and different source"))
     return pos, neg
 
 
@@ -426,10 +536,22 @@ def self_test():
     reg = read_registry(os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                      "..", "core", "thresholds.c"))
     ok(len(reg) >= 11, "the registry is read from core/thresholds.c (%d keys)" % len(reg))
-    ok(any(m == "l2_distance" for _k, _e, m in reg),
+    ok(any(m == "l2_distance" for _k, _e, m, _d in reg),
        "the one l2_distance key is seen as a distance")
-    ok(any(m == "cosine_margin" for _k, _e, m in reg),
+    ok(any(m == "cosine_margin" for _k, _e, m, _d in reg),
        "the one margin key is seen as a margin")
+
+    # Every key's compiled default must resolve to a number from its own
+    # header, or `in_force` is blank and the two columns that judge the value
+    # we ship cannot be computed — which is most of what this tool is for.
+    root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+    dfl = compiled_defaults(root)
+    unresolved = [k for k, _e, _m, d in reg if d not in dfl]
+    ok(not unresolved,
+       "every key's compiled default resolves from its own header%s"
+       % ("" if not unresolved else " (missing: %s)" % ", ".join(unresolved)))
+    ok(all(0.0 <= dfl[d] <= 2.0 for _k, _e, _m, d in reg if d in dfl),
+       "every resolved default is in the range a cosine or an L2 can take")
 
     srv.shutdown()
     print("\n%s" % ("all passed" if not fails else "%d FAILURES" % len(fails)))
@@ -460,6 +582,7 @@ def main():
                  "rather than reporting a stub's agreement with itself.")
 
     reg = read_registry(a.registry)
+    defaults = compiled_defaults(os.path.dirname(os.path.abspath(a.registry)) + "/..")
     emb = Embedder(a.embed_url)
     try:
         model = emb.identify()
@@ -488,7 +611,7 @@ def main():
                      "best_cutoff", "best_prec", "best_rec", "best_f1",
                      "prec_at_in_force", "rec_at_in_force", "verdict"]), file=out)
 
-    for key, env, metric in reg:
+    for key, env, metric, dflt_macro in reg:
         lower_is_same = (metric == "l2_distance")
         in_force = None
         src = "unknown"
@@ -499,6 +622,14 @@ def main():
                 in_force, src = float(os.environ[env]), "env"
             except ValueError:
                 pass
+        if in_force is None:
+            # The same precedence core/thresholds.c implements: db > env >
+            # the module's compiled constant. With no --api and no env var,
+            # the compiled constant IS the value in force.
+            if dflt_macro in defaults:
+                in_force, src = defaults[dflt_macro], "default (%s)" % dflt_macro
+            else:
+                src = "unresolved (%s)" % dflt_macro
 
         pos_t, neg_t, label_source = [], [], "NONE"
         if key in labels:

@@ -662,6 +662,47 @@ int rss_collect(const source_ctx *ctx, intel_sink *sink,
     fprintf(stderr, "[rss] %s capped at %d of %d items (disclosed)\n",
             ctx->source_id, max_items, scanned);
   }
+  /* A 2xx BODY THAT IS NOT A FEED AT ALL is not an empty feed either, and this
+   * is the same argument as the zero-byte case above taken one step further.
+   *
+   * Measured 2026-10-23, from the registry sweep's EMITS_NOTHING column:
+   * `https://www.fijitimes.com.fj/feed/` answers HTTP **200** with
+   * `Content-Type: text/html` and **128,800 bytes of the site's homepage** —
+   * the feed path is gone — and `nation-thailand` (107,639 B),
+   * `daily-mirror-lk` (70,103 B) and `cyb-cybereason` (106,845 B) do the same.
+   * The parser finds no `<item>`, emits 0 and returns 0, so the run reads
+   * `rc=0 records=0 stored=0`: byte for byte what a newspaper that published
+   * nothing today would look like. Four national press feeds, dead for who
+   * knows how long, and nothing anywhere said so. That is rule 1's invisible
+   * nothing arriving from a third direction, after the zero-byte body and the
+   * refused fetch.
+   *
+   * THE TEST RUNS ONLY WHEN THE PARSE FOUND NOTHING, which is what makes it
+   * safe: it cannot change any run that emitted a record. And the escape hatch
+   * is the parser's own vocabulary — a document carrying `<item` or `<entry`
+   * is a feed whatever its root element is called, so a namespace-prefixed or
+   * fragmentary feed that this parser handles is never failed here.
+   *
+   * It names HTML when it sees it, because that is the diagnosis a reader
+   * needs: a feed that has become a web page wants a new URL, not a retry. */
+  if (n == 0) {
+    int looks_feed = jo_strcasestr(xml, "<rss") || jo_strcasestr(xml, "<feed")
+                  || jo_strcasestr(xml, "<rdf:rdf") || jo_strcasestr(xml, "<item")
+                  || jo_strcasestr(xml, "<entry");
+    if (!looks_feed) {
+      int looks_html = jo_strcasestr(xml, "<!doctype html")
+                    || jo_strcasestr(xml, "<html");
+      fprintf(stderr, "[rss] %s: HTTP %ld returned %zu bytes that are %s — "
+                      "treating as a failed fetch, not an empty feed\n",
+              ctx->source_id ? ctx->source_id : url, r.status, body_len,
+              looks_html ? "an HTML page, not a feed"
+                         : "neither RSS, Atom nor RSS 1.0");
+      http_response_free(&r);
+      free(conv);
+      free(dupmap);
+      return -1;
+    }
+  }
   http_response_free(&r);
   free(conv);
   free(dupmap);

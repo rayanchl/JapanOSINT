@@ -111,11 +111,39 @@ are deliberate, each pinned by a fixture that fails without it
   remedy says where to look, including that in this container a peer reset can
   be OUR egress.
 * **An honest empty stays silent**, which is what makes it safe to ship: the
-  test is `run_status()`'s verdict — the same classifier `fetch_log` and the
-  dashboards use, not a second one beside it (rule 4c) — so a collector that
-  returns non-zero on a quiet hour while every host answered is "ok" here
-  exactly as it is there. A failure notice on every quiet feed would be noise,
-  and noise is the one thing these disclosures cannot afford.
+  first test is `run_status()`'s verdict — the same classifier `fetch_log` and
+  the dashboards use, not a second one beside it (rule 4c). A failure notice on
+  every quiet feed would be noise, and noise is the one thing these disclosures
+  cannot afford.
+
+  **AND THAT ALONE LEFT A THIRD OF THE SILENCE IN PLACE** (2026-10-23).
+  `run_status()` returns "ok" whenever `hosts > 0 && hosts_ok == hosts`, under
+  a comment reading "fetched fine, feed was empty". The sweep's
+  `EMITS_NOTHING` column says that comment is wrong for **32 of its 80 rows**:
+  `il-knesset-dates` returns rc=-1 after fetching **131,618 bytes** — the
+  OData service's HTML maintenance page — and `geo-defra-ukair-stations` and
+  `eco-511ny-events` do the same with 2,038 and 9,364 bytes. Every host
+  answered, so the run read "ok", so nothing was disclosed, and the database
+  again could not tell a refusal from an empty source. A refusal wearing a
+  success status, one layer up from the Archive-It case hpengine already names.
+
+  So there is a **second trigger**: the collector returned non-zero and left no
+  record and no notice of its own. That is not a second status classifier —
+  `run_status()` still decides red or green and `fetch_log` and the pages are
+  untouched — it is a different question: not "is this source healthy" but
+  "can the database tell what happened". The record distinguishes the two
+  triggers, and for the new one it **names both readings instead of picking**:
+  when every host answered, the run is either a refusal served as a success or
+  a collector that returns non-zero on a quiet hour, and the remedy says to
+  read the BODY and not the status (the byte count is on the run line and in
+  the record). In the second case the finding is the return code itself — a
+  source that published nothing should return 0. The ambiguity is affordable
+  because the record is upsert-keyed on (source, entity), so a quiet feed with
+  a sloppy return code carries ONE row that updates, and the class is 30 rows
+  in 10,252 measured. `test_sched_runline` 3g pins the disclosure and **3h
+  pins its control** — the same answering host with rc=0 stays silent — and
+  the over-broad variant (disclose whenever a run stored nothing) was checked
+  to fail 3c.
 * **A row that disclosed anything itself gets nothing more**, which is also
   what keeps every hpengine row out of this path without naming one: the
   engine's own record goes through the same sink and counts into `records=`.
@@ -139,6 +167,30 @@ disclosure is not a `collector-*-notice` and `stored_data` does not subtract
 it. That is exactly what the 44,017 hp rows have done since 2026-10-06, so the
 new path matches them rather than inventing a second convention.
 
+**A FEED URL THAT HAS STOPPED BEING A FEED IS A FOURTH SHAPE OF THE SAME
+NOTHING** (2026-10-23, `lib/rss_atom.c`, `make rsstest`). That file already
+argues the case for an empty BODY — "no RSS or Atom document is zero bytes
+long, so this is an error" — and the next step in the same argument had not been
+taken: a 2xx body that is not a feed AT ALL is not an empty feed either.
+`https://www.fijitimes.com.fj/feed/` answers HTTP **200**, `text/html`, and
+**128,800 bytes of the newspaper's homepage**; `nation-thailand` (107,639 B),
+`daily-mirror-lk` (70,103 B) and `cyb-cybereason` (106,845 B) do the same. The
+parser found no `<item>`, emitted 0 and returned 0, so each run read
+`rc=0 records=0 stored=0` — byte for byte what a newspaper that published
+nothing today looks like. Four national press feeds, dead, and nothing said so.
+
+The rule is deliberately narrow, and `rsstest`'s own controls are what keep it
+there: **it runs only when the parse found no items**, so it cannot change a run
+that emitted anything, and a body carrying `<item` or `<entry` is a feed
+whatever its root element is called, so the parser's own vocabulary decides
+rather than a list of root names. The over-broad variant (fail whenever a feed
+holds nothing) was checked and fails exactly the three honest-empty fixtures.
+
+The discriminating case is worth knowing: `news24-za` returns **424 bytes of
+valid RSS with today's `lastBuildDate` and zero items** — a feed that is being
+built and is serving nothing. It stays silent, correctly: the body IS a feed,
+and the finding there is the upstream's.
+
 Full audit of how each collector behaves today:
 `native/collectors/SOURCE_REALITY_REPORT.md`.
 
@@ -148,8 +200,12 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 58,054** (2026-10-23): 58,047 plus **batch 55's seven
-rows**, the Austrian Parliament's whole materials index read as seven complete
+**The registered count is 58,055** (2026-10-23): 58,054 plus `cyb-levelblue`,
+the successor of a press feed whose host now redirects to another company —
+see rule 1's note on a feed that has stopped being a feed.
+
+**The registered count was 58,054** (2026-10-23): 58,047 plus **batch 55's
+seven rows**, the Austrian Parliament's whole materials index read as seven complete
 slices (`collectors/pivot/table/hp3b55_atparl.c`,
 `docs/verified-sources-batch55.tsv`, `docs/at-parlament-filter-api-2026-10-23.md`).
 It closes open item B2's last line, and the answer to "one measured sort
@@ -1338,6 +1394,7 @@ make hptest          # offline check of the engine's guarantees
 make authtest        # JWT / tenant auth
 make pagewalktest    # offline check of the paging + disclosure engine
 make htmlparsetest   # the one anchor scanner
+make rsstest         # a dead feed is a failed fetch, an empty feed is not
 make lint-sources    # dup ids/endpoints, quarantine-empty, snprintf guards
 make source-floor    # fails if a collector stopped registering (tools/source-floor.txt)
 make registry-floor  # the same against the binary's registry (tools/registry-floor.txt)
@@ -3127,9 +3184,58 @@ gate, a value outside [min,max] is a 400 not a clamp, every change an
 audit-chain row (`threshold.set` / `threshold.reset`, old and new value) — from
 Admin › Thresholds in the web client and Admin › Similarity thresholds on iOS.
 **A new similarity cut-off gets a row in that table**, not its own getenv.
-And **none has been measured on the production model**:
-they were chosen from typical multilingual-e5 scores and tested against a stub.
-**The harness that would measure them exists** (2026-10-22,
+**THEY HAVE NOW BEEN MEASURED ON THE PRODUCTION MODEL** (2026-10-23 — this
+paragraph said "none has been measured" until then, and the values had been
+chosen from typical multilingual-e5 scores and tested against a stub). A real
+server was stood up for it: llama.cpp built from source and
+`multilingual-e5-large-q8_0.gguf`, the file this tree's own notes name as the
+production model, answering `/v1/embeddings` with 1024-d unit vectors and
+WITHOUT the e5 `query:`/`passage:` prefixes, because `core/service_vec.c`
+measured those worse here and defaults them off. Full readings:
+`docs/measured-thresholds-2026-10-23.{md,tsv}`. Three results:
+
+* **`story_tau = 0.85` is right, and now measured.** 200 positive pairs (two
+  items sharing a simhash `cluster_id`) against 200 negatives (different
+  cluster AND different source) separate COMPLETELY: positives 0.9395 at the
+  10th percentile and 1.0 at the median, negatives topping out at 0.8372. Best
+  F1 cut-off 0.8372 at F1 = 1.000, and the value in force achieves precision
+  1.000 and recall 1.000 with headroom on both sides.
+* **The UNRELATED band on this model starts at 0.69, and SIX of the eleven
+  cut-offs are below it.** 300 question ↔ unrelated-record pairs across 30
+  sources score **0.6874 to 0.8448** (median 0.7641) — so `relevance_sim_min`
+  0.40, `suggest_min_cos` 0.50, `route_min_cos` 0.55 and `resolve_emb_min_cos`
+  0.60 admit **100%** of unrelated pairs, `repair_sem_cos_floor` 0.70 admits
+  99.3%, and `corpus_vec_max_distance`'s L2 ceiling of √2 admits 100% (the
+  observed unrelated L2 range is 0.5572–0.7906, so √2 is twice the maximum).
+  `route_min_cos` was re-measured in its OWN space — a question against a
+  source CARD, not a record — and the minimum of 300 such pairs is 0.7261
+  against a cut-off of 0.55, so a question with no entity routes to every
+  scheduled source. `entity_vec_cos_floor` 0.80 admits 14% and
+  `alert_sem_threshold` 0.82 admits 2%: those two are real filters.
+* **What that does NOT license.** It says a cosine cut-off on this model must be
+  **above ~0.85** before it rejects anything, because that is where the
+  unrelated band ends (0.8448) and the known-same band begins (0.9395). It does
+  not say what each value should be: that needs positives — pairs a human marked
+  "these two SHOULD match" — which exist nowhere in this tree, and the tool
+  reads them from a `--labels` file exactly so nobody invents them. **Nothing
+  was changed.** `docs/threshold-labels.jsonl` is the next step and it is human
+  work.
+
+Running the harness for real also found three defects in it, the worst being
+that **its negative set was EMPTY on a real database**: `pairs_story` read a
+prefix `order by cluster_id` and then required two different sources, and on a
+412,521-row database holding 31 sources every row in that prefix came from ONE
+source — `n_neg = 0`, "ONE CLASS ONLY", after a full embedding run. A sample
+taken off the head of a collection is not a sample of the collection, which is
+the same error this tree recorded the same day for a record key measured on an
+800-row sample. It samples per source now. Also: `in_force` was blank on every
+key because nothing resolved the DEFAULT MACRO out of `core/thresholds.c`, so
+the two columns that judge the value we ship could not be computed at all; and
+only **six of the eleven defaults are in a header** — the other five are in
+`core/thresholds.c` itself — which this paragraph used to assert the other way
+round.
+
+**The harness itself** (2026-10-22,
 `tools/measure_thresholds.py`): it reads the eleven keys out of
 `core/thresholds.c` rather than copying the table, asks a real server on the
 same `/v1/embeddings` contract `core/llm.c` uses, and reports each key's

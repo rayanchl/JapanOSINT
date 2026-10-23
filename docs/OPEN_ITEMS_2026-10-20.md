@@ -630,7 +630,50 @@ since the engine sends its own headers. Nobody has measured that.
 
 ## E. Correctness nobody has measured
 
-### E1. Every embedding threshold is a guess from the literature — THE HARNESS EXISTS NOW
+### E1. CLOSED (2026-10-23): the eleven thresholds are MEASURED on the production model
+
+A real embedding server was stood up in this container for it — llama.cpp built
+from source and `multilingual-e5-large-q8_0.gguf`, the file this tree's notes
+name as the production model, serving `/v1/embeddings` with 1024-d unit vectors
+and without the e5 `query:`/`passage:` prefixes (which `core/service_vec.c`
+measured worse here and defaults off). Full readings and how to reproduce:
+**`docs/measured-thresholds-2026-10-23.md`**, raw output
+`docs/measured-thresholds-2026-10-23.tsv`.
+
+| | result |
+| --- | --- |
+| `story_tau` 0.85 | **MEASURED and correct.** 200 positives (same simhash `cluster_id`) vs 200 negatives (different cluster and source) separate completely — positives 0.9395 at p10, negatives max 0.8372. Best F1 0.8372 at F1 = 1.000; the value in force gives precision 1.000 and recall 1.000 |
+| `relevance_sim_min` 0.40, `suggest_min_cos` 0.50, `route_min_cos` 0.55, `resolve_emb_min_cos` 0.60 | **admit 100% of unrelated pairs** — not filters on this model |
+| `repair_sem_cos_floor` 0.70 | admits 99.3% |
+| `corpus_vec_max_distance` √2 (L2) | admits 100%; the observed unrelated L2 range is 0.5572–0.7906, so the ceiling is twice the maximum |
+| `entity_vec_cos_floor` 0.80 | admits 14% — a real but loose filter |
+| `alert_sem_threshold` 0.82 | admits 2% — a real filter |
+| `resolve_emb_margin`, `camera_dup_cosine_min` | not measurable this way, and the tool says so: a margin needs a triple, and the camera index is a different model with `camera_stills` empty here |
+
+The unrelated band on this model is **0.6874 to 0.8448** over 300 question ↔
+unrelated-record pairs across 30 sources (median 0.7641). `route_min_cos` was
+re-measured in its own space — a question against a source CARD — and the
+MINIMUM of 300 such pairs is 0.7261 against a cut-off of 0.55, so as shipped a
+question with no entity routes to every scheduled source.
+
+**Nothing was changed.** The measurement says what a cut-off cannot do, not what
+it should be: any cosine cut-off here has to be above ~0.85 before it rejects
+anything, and picking a value inside that window needs positives — pairs a human
+has marked "these SHOULD match" — which exist nowhere in this tree.
+`docs/threshold-labels.jsonl` is the next step and it is human work, not a
+measurement. That is the remaining item, and it is a much smaller one than
+"nothing has been measured".
+
+Three defects in the harness were found by running it for real, and they are
+written up in the .md. The worst: **its negative set came back EMPTY on a real
+database** — `pairs_story` read a prefix `order by cluster_id` and then required
+two different sources, and on a 412,521-row database holding 31 sources every
+row in that prefix came from one source, so `n_neg = 0` after a complete
+embedding run. A sample taken off the head of a collection is not a sample of
+the collection; it samples per source now. The self-test gained two cases, so a
+twelfth threshold whose default cannot be read fails `make unit`.
+
+#### E1 as it stood (the harness, 2026-10-22)
 
 `native/tools/measure_thresholds.py` (2026-10-22) is the tool that measures
 them. It changes nothing: it reads the eleven keys out of `core/thresholds.c`
@@ -753,18 +796,20 @@ E6.
 hour a complete pass is a two-day job, and the file is committed as it
 accumulates rather than held back.
 
-**Where it stands at 2026-10-23: 9,854 of 55,699 rows** (17.7%), resumed across
-several invocations:
+**Where it stands at 2026-10-23: 11,666 of 55,699 rows** (20.9%), resumed
+across several invocations — each one runs until the harness's two-hour
+background limit and `--resume` picks up where it stopped, so the remainder is
+roughly ten more hours of wall clock:
 
 | verdict | n |
 | --- | --- |
-| OK | 8,424 |
-| FETCH_FAILED | 965 |
-| COLLISION | 239 |
-| SLOW | 125 |
-| EMITS_NOTHING | 80 |
+| OK | 9,933 |
+| FETCH_FAILED | 1,188 |
+| COLLISION | 294 |
+| SLOW | 147 |
+| EMITS_NOTHING | 81 |
 | POD | 19 |
-| GATED | 2 |
+| GATED | 4 |
 
 Read those four non-OK columns with the corrections below rather than as
 counts of broken sources: `FETCH_FAILED` is a row that DISCLOSED its refusal
@@ -772,6 +817,61 @@ counts of broken sources: `FETCH_FAILED` is a row that DISCLOSED its refusal
 tool's kill line, `COLLISION` is a question and not a diagnosis, and
 `EMITS_NOTHING` was measured 95% wrong as a verdict before the scheduler
 disclosure landed.
+
+#### The 80 `EMITS_NOTHING` rows, re-measured twice (2026-10-23)
+
+All 80 were re-run against the fixed binary, then the 43 survivors re-run again
+after two further fixes the first pass itself provoked
+(`docs/empties-recheck-2026-10-23.tsv`, `docs/empties-recheck2-2026-10-23.tsv`):
+
+| | n | |
+| --- | --- | --- |
+| **FETCH_FAILED** | **39** | were failing in SILENCE and now disclose |
+| OK | 3 | transient — they store records |
+| **EMITS_NOTHING** | **38** | fetch and store nothing |
+
+So **half the column was a disclosure gap rather than an empty source**, and
+closing it took two fixes that generalise:
+
+* **32 of the 80 returned rc=-1 with every host answering**, which
+  `run_status()` reads as "ok" ("fetched fine, feed was empty") — so nothing
+  was disclosed. `il-knesset-dates` fetches **131,618 bytes** of the OData
+  service's HTML maintenance page and returns rc=-1;
+  `geo-defra-ukair-stations` and `eco-511ny-events` do the same with 2,038 and
+  9,364 bytes. `core/scheduler.c` now has a second disclosure trigger — the
+  collector returned non-zero and left no record and no notice — which names
+  BOTH readings (a refusal served as a success, or a collector with a sloppy
+  return code) rather than picking, and points the reader at the body and not
+  the status. `run_status()` is untouched, so no dashboard changes colour.
+* **Four national press feeds were serving their HTML homepage** and reporting
+  `rc=0 records=0`: `fiji-times` (128,800 bytes), `nation-thailand` (107,639),
+  `daily-mirror-lk` (70,103) and `cyb-cybereason` (106,845). `lib/rss_atom.c`
+  already argued that a zero-byte 2xx is not an empty feed; a 2xx that is not a
+  FEED is not one either. `make rsstest` pins the rule and, more importantly,
+  its controls: it fires only when the parse found no items, and a body
+  carrying `<item`/`<entry` is a feed whatever its root is called.
+  `news24-za` is the discriminating case and stays silent — **424 bytes of
+  valid RSS with today's `lastBuildDate` and zero items**, a feed being built
+  and serving nothing, where the finding is the upstream's.
+
+**One of the four recovered a live source.** Every feed path on
+`cybereason.com` 301s to `levelblue.com` — the publisher was absorbed — and
+`--discover-feeds` found that host's own declaration,
+`/blogs/levelblue-blog/rss.xml`, PASS with 10 items. It ships as a NEW row
+(`cyb-levelblue`) rather than a re-point, because a row named "Cybereason Blog"
+reading LevelBlue's feed would be a false claim about whose research it is.
+The other three have no replacement: all four homepages declare zero feeds, and
+fijitimes redirects every feed path to `/`.
+
+**And the 38 that remain are mostly SUPPOSED to be empty.** About a third are
+warning and alert feeds with nothing active — `geo-meteoalarm-{cyprus,czechia,
+poland}`, `geo-imgw-warnings-meteo`, `geo-hkobservatory-warnings`,
+`eas-hk-hko-special-tips`, `geo-eccc-thunderstorm-outlook`,
+`jpx-p2pquake-tsunami`, `geo-firms-{modis,viirs}-alaska-24h` (no fires in
+Alaska in late October), `sas-arc-tas-natenv` — plus `news24-za` above and
+`ENA_PATHOGEN_SARSCOV2_RUNS`, whose 30-day window holds 0 runs and whose row
+says so. That is the honest empty the whole disclosure machinery exists to
+distinguish, and after two passes it is what the column mostly contains.
 
 The point of the sweep is to FILL the health disclosure, not to gate anything:
 every scheduled run files a `collector-fetch-failure` record of its own, so a

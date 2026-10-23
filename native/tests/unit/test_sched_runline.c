@@ -108,6 +108,26 @@ static int run_fail_with_records(const source_ctx *ctx, intel_sink *sink) {
   emit_rec(sink, "wr1", NULL);
   return -1;
 }
+/* THE CASE `run_status()` CALLS "ok" AND THE DATABASE CANNOT READ. Every host
+ * answered (so the health verdict is green, and stays green — this test does
+ * not change it) and the collector still reported a failure, which is what a
+ * maintenance or rate-limit page served as a 200 looks like from here.
+ * Measured 2026-10-23: `il-knesset-dates` fetches 131,618 bytes of HTML and
+ * returns rc=-1, and 32 of the sweep's 80 EMITS_NOTHING rows came back rc=-1.
+ * The host log is only ever written by a real transfer, so it is seeded
+ * directly — see http_client_test_log_host(). */
+static int run_answered_then_failed(const source_ctx *ctx, intel_sink *sink) {
+  (void)sink;
+  http_client_test_log_host(ctx->http, "https://answered.example/odata", 200);
+  return -1;
+}
+/* The same host, answering, and a collector that says so: an honest empty must
+ * stay silent whatever the host did. This is the control for the one above. */
+static int run_answered_then_empty(const source_ctx *ctx, intel_sink *sink) {
+  (void)sink;
+  http_client_test_log_host(ctx->http, "https://answered.example/odata", 200);
+  return 0;
+}
 
 static const source_def D_SILENT = { .id = "UNIT_RL_SILENT", .collector = "unit",
   .name = "unit", .update_interval_sec = 3600, .run = run_silent_fail };
@@ -117,6 +137,10 @@ static const source_def D_OWNNOTE = { .id = "UNIT_RL_OWNNOTE", .collector = "uni
   .name = "unit", .update_interval_sec = 3600, .run = run_own_notice };
 static const source_def D_FAILREC = { .id = "UNIT_RL_FAILREC", .collector = "unit",
   .name = "unit", .update_interval_sec = 3600, .run = run_fail_with_records };
+static const source_def D_ANSFAIL = { .id = "UNIT_RL_ANSFAIL", .collector = "unit",
+  .name = "unit", .update_interval_sec = 3600, .run = run_answered_then_failed };
+static const source_def D_ANSEMPTY = { .id = "UNIT_RL_ANSEMPTY", .collector = "unit",
+  .name = "unit", .update_interval_sec = 3600, .run = run_answered_then_empty };
 /* A maintenance pod writes its own tables and nothing to intel_items by
  * design, so it must never be told it failed to fetch. */
 static const source_def D_POD = { .id = "UNIT_RL_POD", .collector = "_maint",
@@ -353,6 +377,41 @@ int main(void) {
   printf("  %s", l);
   assert(db_fetch_failures(&db, D_POD.id, NULL) == 0 &&
          "a maintenance pod was told it failed to fetch");
+  free(l);
+
+  /* 3g. THE SECOND TRIGGER (2026-10-23). Every host answered, so run_status()
+   * says "ok" and the dashboards stay green — and the collector still reported
+   * a failure and stored nothing, so the database could not tell this run from
+   * an empty source. 32 of the sweep's 80 EMITS_NOTHING rows came back rc=-1,
+   * `il-knesset-dates` fetching 131,618 bytes of HTML among them. The record
+   * must name BOTH readings rather than pick one, and must say what to look
+   * at: the body, not the status. */
+  add_source_row(&db, D_ANSFAIL.id);
+  l = run_line(&db, &D_ANSFAIL, cap);
+  printf("  %s", l);
+  { char *props = NULL;
+    assert(db_fetch_failures(&db, D_ANSFAIL.id, &props) == 1 && props &&
+           "a host that answered while the collector failed disclosed nothing");
+    assert(strstr(props, "EVERY host answered") &&
+           strstr(props, "success status") &&
+           strstr(props, "published nothing") &&
+           "the notice resolved an ambiguity it cannot see");
+    assert(strstr(props, "READ THE BODY, not the status") &&
+           "the remedy does not say where to look");
+    assert(strstr(props, "\"hosts_answered\":1") && strstr(props, "\"run_rc\":-1"));
+    free(props); }
+  free(l);
+
+  /* 3h. …and the control: the SAME answering host with a collector that says
+   * rc=0 is an honest empty and stays silent. Without this, 3g's trigger could
+   * be "any run that reached a host and stored nothing", which is every quiet
+   * feed in the fleet. */
+  add_source_row(&db, D_ANSEMPTY.id);
+  l = run_line(&db, &D_ANSEMPTY, cap);
+  printf("  %s", l);
+  assert(strstr(l, " records=0 ") && strstr(l, " stored=0"));
+  assert(db_fetch_failures(&db, D_ANSEMPTY.id, NULL) == 0 &&
+         "an honest empty from an answering host was reported as a failure");
   free(l);
 
   unlink(cap);

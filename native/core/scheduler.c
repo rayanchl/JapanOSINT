@@ -590,10 +590,39 @@ static volatile int *sched_cancel_slot(const char *id);
  * answered. The remedy says where to look; it does not say which door is shut.
  *
  * It also must not fire on an HONEST EMPTY, which is the whole point of the
- * rule. The test is `run_status()`'s verdict — the same classifier fetch_log
- * and the dashboards use, not a second one beside it (rule 4c) — so a
- * collector that returns non-zero on a quiet hour while every host answered is
- * "ok" here exactly as it is there, and stays silent. */
+ * rule. The first test is `run_status()`'s verdict — the same classifier
+ * fetch_log and the dashboards use, not a second one beside it (rule 4c).
+ *
+ * AND THAT ALONE LEFT A THIRD OF THE SILENCE IN PLACE, measured 2026-10-23.
+ * `run_status()` answers "should this run read red on a dashboard", and for
+ * `hosts > 0 && hosts_ok == hosts` it answers "ok" under a comment saying
+ * "fetched fine, feed was empty". The sweep's EMITS_NOTHING column says that
+ * comment is wrong for 32 of its 80 rows: `il-knesset-dates` returns rc=-1
+ * after fetching **131,618 bytes** — the OData service's HTML maintenance page
+ * — and `geo-defra-ukair-stations` and `eco-511ny-events` do the same with
+ * 2,038 and 9,364 bytes. Every host answered, so the run read "ok", so nothing
+ * was disclosed, and the database again could not tell a refusal from an empty
+ * source. A refusal wearing a success status, one layer up from the
+ * Archive-It case hpengine already names.
+ *
+ * So the disclosure has a SECOND trigger: the collector returned non-zero and
+ * brought back no record and no notice of its own. That is not a second status
+ * classifier — `run_status()` is still the only thing that decides red or
+ * green, and `fetch_log` and the pages are untouched. It is a different
+ * question: not "is this source healthy" but "can the database tell what
+ * happened". The two triggers are distinguished in the record, because from
+ * here they really are different situations and one of them is ambiguous:
+ * when every host answered, this run may be a refusal served as a success OR
+ * a collector that returns non-zero on a quiet hour, and the notice says so
+ * rather than picking. In the second case the finding is the collector's
+ * return code, which is worth surfacing too — a source that is simply quiet
+ * should return 0.
+ *
+ * Why the ambiguity is affordable: the record is upsert-keyed on
+ * (source, entity), so a quiet feed with a sloppy return code carries ONE row
+ * that updates rather than one per run, and the class is 30 rows in 10,252
+ * measured (0.3%). "A failure notice on every quiet feed" would be noise; this
+ * is not that number. */
 static void sched_disclose_fetch_failure(intel_sink *sink, const source_def *d,
                                          const char *entity, int rc, int hosts,
                                          int hosts_ok, const char *hosts_failed,
@@ -604,12 +633,25 @@ static void sched_disclose_fetch_failure(intel_sink *sink, const source_def *d,
                       : te == HTTP_TE_TIMEOUT ? "timeout"
                       : te == HTTP_TE_OTHER   ? "other"
                                               : "none recorded";
+  /* EVERY host answered and the collector still reported a failure: the one
+   * case this record must not resolve, because from the scheduler's seat a
+   * refusal served as a success and a collector with a sloppy return code look
+   * identical. Naming both is the honest answer; picking one would be this
+   * notice inventing the cause. */
+  int answered_all = hosts > 0 && hosts_ok == hosts;
   const char *outcome =
       hosts == 0
         ? "the run made no HTTP request at all — it stopped before reaching the "
           "network, or it could not build the request it needed"
       : hosts_ok == 0
         ? "no host answered: every request this run made failed or was refused"
+      : answered_all
+        ? "EVERY host answered and the collector still reported a failure, so "
+          "this is one of two things and the run cannot tell them apart: the "
+          "upstream served a refusal with a success status (a maintenance or "
+          "rate-limit page, which is why the byte count below matters), or the "
+          "collector returns non-zero on an hour when its source published "
+          "nothing"
         : "some of the hosts contacted answered and some did not, and nothing "
           "was stored";
   cJSON *p = cJSON_CreateObject();
@@ -663,6 +705,14 @@ static void sched_disclose_fetch_failure(intel_sink *sink, const source_def *d,
       ? "no request was attempted, so this is not an upstream problem: run the "
         "source directly (`--run <id>`) and read its stderr. A row that needs "
         "a credential (key_env) or an entity it was not given stops here"
+    : answered_all
+      ? "READ THE BODY, not the status: `--run <id>` and look at what came "
+        "back for the byte count on the run line. A maintenance or rate-limit "
+        "page served as 200 is the common case (il-knesset-dates fetches "
+        "131,618 bytes of HTML and reports a failure), and the remedy is to "
+        "re-point or pace the row. If the body really is an empty feed, the "
+        "finding is the COLLECTOR: a source that published nothing this hour "
+        "should return 0, and returning non-zero is what put this record here"
       : "run the source directly (`--run <id>`) and read its stderr for the "
         "status the collector saw. Then: a 401/403 wants a credential or the "
         "per-host agent table in core/host_agents.def; a 429 wants a per-host "
@@ -680,6 +730,10 @@ static void sched_disclose_fetch_failure(intel_sink *sink, const source_def *d,
   if (hosts == 0)
     snprintf(title, sizeof title,
              "%s stored nothing: the run made no request", d->id);
+  else if (answered_all)
+    snprintf(title, sizeof title,
+             "%s stored nothing: every host answered (%llu bytes) and the "
+             "collector reported a failure", d->id, bytes);
   else
     snprintf(title, sizeof title,
              "%s stored nothing: %d host(s) contacted, %d answered", d->id,
@@ -697,8 +751,13 @@ static void sched_disclose_fetch_failure(intel_sink *sink, const source_def *d,
    * sweep corroborates a FETCH_FAILED verdict against the run's own output
    * rather than inferring it from a row count, and it has no `[hp:…]` line to
    * match for a collector that is not an hpengine row. */
-  fprintf(stderr, "[sched] %s fetch-failure: %s (rc=%d, hosts %d/%d answered)\n",
-          d->id, outcome, rc, hosts_ok, hosts);
+  fprintf(stderr, "[sched] %s fetch-failure: %s (rc=%d, hosts %d/%d answered, "
+                  "%llu bytes)\n",
+          d->id,
+          answered_all ? "every host answered and the collector reported a "
+                         "failure — read the body, not the status"
+                       : outcome,
+          rc, hosts_ok, hosts, bytes);
 }
 
 int scheduler_run_source(db_handle *db, const source_def *d,
@@ -790,8 +849,13 @@ int scheduler_run_source(db_handle *db, const source_def *d,
    * for it, which is deliberate — CLAUDE.md records that a dead hp source
    * reports records=1 stored=1). A row that disclosed anything at all is left
    * alone rather than given a second, thinner notice on top. */
-  if (real_collector && strcmp(run_st, "ok") != 0 && cs.n == 0 &&
-      cs.notices == 0)
+  /* Two triggers, one record — see the comment on sched_disclose_fetch_failure.
+   * `run_status() != "ok"` is the health verdict; `rc < 0` is the collector's
+   * own, and it is the one that reaches the 32 rows in 10,252 whose host
+   * answered with a maintenance page. Both require that the run left NOTHING
+   * behind, which is what makes this a disclosure rather than a second status. */
+  if (real_collector && cs.n == 0 && cs.notices == 0 &&
+      (strcmp(run_st, "ok") != 0 || rc < 0))
     sched_disclose_fetch_failure(&sink, d, entity, rc, hosts, hosts_ok,
                                  hosts_failed, bytes_in, requests, run_why);
   /* Read the distinct-row count BEFORE the sink is freed — it lives in the

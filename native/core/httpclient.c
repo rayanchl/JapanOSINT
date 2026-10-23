@@ -57,6 +57,10 @@ static void log_host(http_client *c, const char *url, long status, int hard) {
   c->n_hosts++;
 }
 
+void http_client_test_log_host(http_client *c, const char *url, long status) {
+  log_host(c, url, status, 0);
+}
+
 int http_client_host_count(http_client *c) { return c ? c->n_hosts : 0; }
 
 const char *http_client_host_at(http_client *c, int i,

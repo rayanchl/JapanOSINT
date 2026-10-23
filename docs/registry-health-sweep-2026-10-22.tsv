@@ -9853,3 +9853,1815 @@ CL_SERVEL_DOCUMENTOS	OK	0	0	8362	8363	8362	8362	172.3
 IETF_LIAISON_STATEMENTS	OK	0	0	1997	1998	1997	1997	8.0	
 IETF_DOCUMENT_RELATIONS	OK	0	0	2000	2001	2000	2000	5.5	
 IETF_DRAFT_SUBMISSIONS	OK	0	0	2000	2001	2000	2000	5.8	
+IETF_IPR_THIRDPARTY_DISCLOSURES	OK	0	0	226	226	226	226	35.8	
+NL_OVERHEID_SRU_TUCHTRECHT	OK	0	0	2000	2001	2000	2000	18.6	
+W3C_AFFILIATIONS	OK	0	0	17968	17969	17968	17968	171.3	
+NL_OVERHEID_SRU_OFFICIAL	OK	0	0	2000	2001	2000	2000	28.4	
+NL_OVERHEID_SRU_LOKAAL	OK	0	0	2000	2001	2000	2000	18.6	
+IETF_IPR_GENERIC_DISCLOSURES	OK	0	0	409	409	409	409	63.6	
+UK_LANDREG_PPI_ADDRESS	OK	0	0	2000	2001	2000	2000	4.8	
+UK_GOVUK_ASYLUM_SUPPORT_DECISIONS	OK	0	0	101	101	101	101	1.4	
+UK_GAZETTE_CORPORATE_INSOLVENCY	OK	0	0	200	201	200	200	21.8	
+UK_GAZETTE_WILLS_PROBATE	OK	0	0	200	201	200	200	34.8	
+IETF_IPR_HOLDER_DISCLOSURES	OK	0	0	2000	2002	2000	2000	125.8	
+3GPP_SPEC_ARCHIVE	OK	0	0	46	46	46	46	1.0	
+3GPP_TSG_RAN	OK	0	0	9	9	9	9	1.3	
+3GPP_TSG_SA	OK	0	0	7	7	7	7	1.0	
+3GPP_TSG_CT	OK	0	0	7	7	7	7	1.0	
+ETSI_DELIVER_TS	OK	0	0	163	163	163	163	1.1	
+ETSI_DELIVER_EN	OK	0	0	50	50	50	50	0.9	
+ETSI_DELIVER_TR	OK	0	0	97	97	97	97	1.1	
+ETSI_IPR_DECLARATION_EXPORT	OK	0	0	2	2	2	2	1.3	
+ITU_T_REC_SERIES_G	OK	0	0	791	791	791	791	1.8	
+ITU_T_REC_SERIES_H	OK	0	0	460	460	460	460	1.9	
+ITU_T_REC_SERIES_X	OK	0	0	759	759	759	759	2.1	
+ITU_T_REC_SERIES_Y	OK	0	0	1074	1074	1074	1074	2.2	
+ITU_T_REC_SERIES_Q	OK	0	0	1021	1021	1021	1021	2.0	
+ITU_T_REC_SERIES_M	OK	0	0	325	325	325	325	1.7	
+WIPO_UDRP_GTLD_DECISIONS	OK	0	0	390	390	390	390	1.3	
+WIPO_UDRP_CCTLD_DECISIONS	OK	0	0	720	720	720	720	1.2	
+ICJ_CASE_LIST	OK	0	0	177	177	177	177	1.0	
+UK_GAZETTE_EDINBURGH	OK	0	0	200	201	200	200	42.5	
+ITLOS_CASE_LIST	OK	0	0	36	36	36	36	1.8	
+UK_GOVUK_EAT_DECISIONS	OK	0	0	2636	2637	2636	2636	17.7	
+W3C_SPECIFICATION_SERIES	OK	0	0	1495	1495	1495	1495	4.5	
+W3C_TRANSLATIONS	OK	0	0	637	637	637	637	5.6	
+IETF_GROUP_ROLES	OK	0	0	2000	2001	2000	2000	5.7	
+IETF_IESG_BALLOT_POSITIONS	OK	0	0	2000	2001	2000	2000	10.1	
+UK_GOVUK_INTERNATIONAL_TREATIES	OK	0	0	1721	1721	1721	1721	7.7	
+UK_GAZETTE_BELFAST	OK	0	0	200	201	200	200	52.5	
+OASIS_PUBLISHED_STANDARDS	OK	0	0	2672	2672	2672	2672	1.6	
+IETF_MEETING_SESSIONS	OK	0	0	2000	2001	2000	2000	22.4	
+FOI_FRAGDENSTAAT_DE	OK	0	0	1000	1001	1000	1000	16.0	
+NL_OVERHEID_SRU_SGD	OK	0	0	2000	2001	2000	2000	26.7	
+WIKIMEDIA_FEATURED_FEED	FETCH_FAILED	0	0	1	1	0	-1	0.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+PORTWATCH_CHOKEPOINTS_DB	OK	0	0	28	28	28	28	1.5	
+PORTWATCH_DISRUPTIONS_DB	OK	0	0	132	132	132	132	3.3	
+PORTWATCH_COUNTRIES_DB	OK	0	0	196	196	196	196	1.9	
+FOI_FRAGDENSTAAT_AT	COLLISION	0	0	1000	1000	999	1000	12.2	1 of 1000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+ECMA_PUBLISHED_STANDARDS	FETCH_FAILED	1	-1	1	1	0	-1	25.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+PORTWATCH_DAILY_TRADE_WLD	OK	0	0	481	481	481	481	1.8	
+PORTWATCH_PORTSFACTS	OK	0	0	540	540	540	540	2.1	
+PORTWATCH_CONTAINER_METRICS	OK	0	0	465	465	465	465	2.9	
+PORTWATCH_MONTHLY_TRADENOW	OK	0	0	18228	18228	18228	18228	16.0	
+PORTWATCH_DAILY_REGIONAL	OK	0	0	20000	20001	20000	20000	22.5	
+UK_GAZETTE_ALL_NOTICES	OK	0	0	300	301	300	300	45.6	
+PORTWATCH_MARITIME_LINKS	OK	0	0	20000	20001	20000	20000	17.9	
+KAPSARC_SAUDI_PORT_ARRIVALS	OK	0	0	2917	2918	2917	2917	10.6	
+KAPSARC_SAUDI_LABOUR_ADMIN	OK	0	0	2000	2001	2000	2000	7.4	
+KAPSARC_SAUDI_IO_TABLE	FETCH_FAILED	1	-1	1	1	0	-1	20.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+KAPSARC_SAMA_IIP	OK	0	0	2052	2053	2052	2052	8.0	
+KAPSARC_SAUDI_POWER_LOAD	FETCH_FAILED	1	-1	1	1	0	-1	20.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+KAPSARC_JODI_CHINA_OIL	OK	0	0	2000	2001	2000	2000	7.8	
+UK_GOVUK_RESIDENTIAL_PROPERTY_TRIBUNAL	OK	0	0	18300	18301	18300	18300	114.5	
+KAPSARC_SAMA_BOP	FETCH_FAILED	1	-1	1	1	0	-1	20.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+KAPSARC_SAUDI_WIND_SPEED	OK	0	0	2650	2651	2650	2650	17.6	
+KAPSARC_SAUDI_OPERATING_SURPLUS	FETCH_FAILED	1	-1	1	1	0	-1	20.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+KAPSARC_SAUDI_CONSTRUCTION_COST	FETCH_FAILED	1	-1	1	1	0	-1	20.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+QATAR_OPENDATA_FACETS	FETCH_FAILED	1	-1	1	1	0	-1	16.2	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+QATAR_OPENDATA_CATALOG	FETCH_FAILED	1	-1	1	1	0	-1	27.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+QATAR_CERTIFICATES_OF_ORIGIN	OK	0	0	974	974	974	974	17.6	
+QATAR_DISTRICT_COOLING	FETCH_FAILED	1	-1	1	1	0	-1	21.1	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+QATAR_HOMICIDE_SDG	FETCH_FAILED	1	-1	1	1	0	-1	20.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+QATAR_HIA_AIR_CARGO	FETCH_FAILED	1	-1	1	1	0	-1	21.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+QATAR_HEALTH_CENTRE_VISITS	FETCH_FAILED	1	-1	1	1	0	-1	21.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+QATAR_PSA_FACILITIES	OK	0	0	131	131	131	131	1.7	
+QATAR_PSA_EDUCATION	OK	0	0	762	762	762	762	2.1	
+QATAR_PSA_ARCHAEOLOGY	OK	0	0	9	9	9	9	1.2	
+QATAR_PSA_RAIL	OK	0	0	112	112	112	112	1.6	
+BAHRAIN_OPENDATA_CATALOG	FETCH_FAILED	1	-1	1	1	0	-1	26.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+BAHRAIN_OPENDATA_EXPORT	FETCH_FAILED	1	-1	1	1	0	-1	21.1	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+QATAR_PSA_FOREIGN_TRADE	OK	0	0	251	251	251	251	6.5	
+QATAR_PSA_MAJOR_ROADS	OK	0	0	16659	16659	16659	16659	15.5	
+BAHRAIN_OPENDATA_FACETS	FETCH_FAILED	1	-1	1	1	0	-1	26.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+QATAR_MME_IZBAH_MOBILE	OK	0	0	966	966	966	966	3.5	
+EAD_AIR_QUALITY_STATIONS	OK	0	0	20	20	20	20	1.8	
+EAD_PROTECTED_AREAS	OK	0	0	21	21	21	21	1.6	
+EAD_SPECIES_SIGHTINGS	OK	0	0	58	58	58	58	1.3	
+EAD_GAZETTEER	OK	0	0	763	763	763	763	2.2	
+QATAR_MME_IZBAH	OK	0	0	5001	5001	5001	5001	9.0	
+QATAR_MME_FARMS	OK	0	0	1179	1179	1179	1179	9.5	
+TELAVIV_CELL_ANTENNAS	OK	0	0	892	892	892	892	3.3	
+TELAVIV_ANTENNAS_PLANNED	OK	0	0	23	23	23	23	2.1	
+KAPSARC_DATA_CATALOG	OK	0	0	1317	1318	1317	1317	141.6	
+TELAVIV_FUEL_STATIONS	OK	0	0	49	49	49	49	21.7	
+TELAVIV_CONSTRUCTION_SITES	OK	0	0	1591	1591	1591	1591	10.1	
+TELAVIV_MEDICAL_INSTITUTIONS	OK	0	0	47	47	47	47	2.4	
+TELAVIV_DEFIBRILLATORS	OK	0	0	406	406	406	406	2.3	
+TELAVIV_SCHOOLS	OK	0	0	216	216	216	216	1.9	
+TELAVIV_CEMETERIES	OK	0	0	18	18	18	18	1.8	
+TELAVIV_ATMS	OK	0	0	450	450	450	450	2.3	
+BANK_OF_ISRAEL_INTEREST	OK	0	0	1	1	1	1	1.6	
+ISRAEL_DATAGOV_GROUPS	OK	0	0	2	2	2	2	1.2	
+ISRAEL_DATAGOV_TAGS	OK	0	0	1	1	1	1	1.9	
+ISRAEL_DATAGOV_ORGS	OK	0	0	61	61	61	61	5.2	
+JORDAN_OPENDATA_ORGS	OK	0	0	25	25	25	25	2.6	
+JORDAN_OPENDATA_GROUPS	OK	0	0	15	15	15	15	2.5	
+JORDAN_OPENDATA_PACKAGES	OK	0	0	1	1	1	1	3.2	
+JORDAN_OPENDATA_TAGS	OK	0	0	1	1	1	1	2.2	
+TELAVIV_BUSINESSES	OK	0	0	20000	20001	20000	20000	45.8	
+MOROCCO_OPENDATA_ORGS	OK	0	0	25	25	25	25	2.4	
+MOROCCO_OPENDATA_GROUPS	OK	0	0	23	23	23	23	2.4	
+MOROCCO_OPENDATA_PACKAGES	OK	0	0	1	1	1	1	3.0	
+IZMIR_OPENDATA_GROUPS	OK	0	0	10	10	10	10	2.0	
+IZMIR_OPENDATA_ORGS	OK	0	0	37	37	37	37	3.3	
+TELAVIV_BUILDING_PERMITS	OK	0	0	10618	10618	10618	10618	54.0	
+IZMIR_FIRE_SERVICE_2026	OK	0	0	2000	2001	2000	2000	9.9	
+IZMIR_OPENDATA_BULK	OK	0	0	250	250	250	250	11.5	
+IZMIR_SEARCH_RESCUE_2026	OK	0	0	2000	2001	2000	2000	10.6	
+IZMIR_VEHICLE_COUNTS	OK	0	0	2000	2001	2000	2000	9.6	
+IZMIR_IZMAR_PRICES	OK	0	0	1285	1285	1285	1285	4.9	
+IZMIR_ROADS_BY_DISTRICT	OK	0	0	2000	2001	2000	2000	6.9	
+IZMIR_ARTERIAL_SPEEDS	OK	0	0	2000	2001	2000	2000	8.8	
+IZMIR_BUILDINGS_BY_NEIGHBOURHOOD	OK	0	0	1295	1295	1295	1295	5.1	
+NHTSA_VPIC_MAKES	OK	0	0	12407	12407	12407	12407	4.4	
+OPENFEC_FILINGS	GATED	0	0	0	1	0	-1	0.5	waiting for a credential, and said so as data: needs FEC_API_KEY (rule 1's gated note, not a defect)
+GSA_PERDIEM_RATES	OK	0	0	353	353	353	353	1.6	
+FCC_ECFS_FILINGS	GATED	0	0	0	1	0	-1	0.8	waiting for a credential, and said so as data: needs FCC_API_KEY (rule 1's gated note, not a defect)
+ISTANBUL_OPENDATA_ORGS	FETCH_FAILED	1	-1	1	1	0	-1	16.1	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+OVERPASS_FERRY_TERMINAL	FETCH_FAILED	1	-1	1	1	0	-1	5.6	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+ISTANBUL_OPENDATA_GROUPS	FETCH_FAILED	1	-1	1	1	0	-1	15.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+ISTANBUL_OPENDATA_BULK	FETCH_FAILED	1	-1	1	1	0	-1	20.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+OVERPASS_GONDOLA_LINE	FETCH_FAILED	1	-1	1	1	0	-1	5.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+OVERPASS_BUS_STATION	FETCH_FAILED	1	-1	1	1	0	-1	10.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+OVERPASS_TAXIWAY	FETCH_FAILED	1	-1	1	1	0	-1	5.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+TELAVIV_GIS_LAYER_INDEX	OK	0	0	254	254	254	254	100.0	
+OVERPASS_AERIALWAY_STATION	FETCH_FAILED	1	-1	1	1	0	-1	15.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+OVERPASS_MOTORWAY_JUNCTION	FETCH_FAILED	1	-1	1	1	0	-1	6.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+OVERPASS_RAIL_TURNTABLE	FETCH_FAILED	1	-1	1	1	0	-1	10.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+OVERPASS_SIGNAL_BOX	FETCH_FAILED	1	-1	1	1	0	-1	15.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+OVERPASS_VEHICLE_INSPECTION	FETCH_FAILED	1	-1	1	1	0	-1	10.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+OVERPASS_MARINA	FETCH_FAILED	1	-1	1	1	0	-1	10.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+TAGINFO_TAGS_POPULAR	OK	0	0	14546	14546	14546	14546	8.4	
+OSM_API_CHANGESETS_BLACKSEA	OK	0	0	100	100	100	100	16.6	
+HOT_TASKING_MANAGER_ORGS	OK	0	0	252	252	252	252	1.1	
+JODI_OIL_PRIMARY_CURRENT	SLOW	-1	0	-1	-1	0	-1	200.1	hit --timeout 200.1s
+HOT_TASKING_MANAGER_CAMPAIGNS	OK	0	0	497	497	497	497	1.2	
+TAGINFO_KEYS_ALL	FETCH_FAILED	1	-1	1	1	0	-1	40.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+OSMOSE_ISSUES_BBOX	FETCH_FAILED	1	-1	1	1	0	-1	40.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+OSM_WIKI_RECENTCHANGES	OK	0	0	500	500	500	500	1.4	
+OHSOME_CONTRIBUTIONS_TIMESERIES	FETCH_FAILED	1	-1	1	1	0	-1	41.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+WD_MILITARY_BASES	COLLISION	0	0	5000	4984	4984	5000	41.5	16 of 5000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+OSM_API_NOTES_OPEN_BLACKSEA	OK	0	0	733	733	733	733	118.5	
+WD_NUCLEAR_PLANTS	OK	0	0	457	457	457	457	7.3	
+HOT_TASKING_MANAGER_PROJECTS	OK	0	0	867	868	867	867	126.7	
+MAPROULETTE_CHALLENGES	OK	0	0	2000	2002	2000	2000	126.8	
+WD_POWER_STATIONS	OK	0	0	1000	1000	1000	1000	23.3	
+OPENAERIALMAP_IMAGERY	OK	0	0	2000	2002	2000	2000	133.3	
+WD_AIR_BASES	OK	0	0	3844	3844	3844	3844	70.4	
+WD_SPACEPORTS	COLLISION	0	0	333	322	322	333	1.6	11 of 333 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+WD_INTELLIGENCE_AGENCIES	OK	0	0	59	59	59	59	1.1	
+WD_ARMED_ORGANISATIONS	COLLISION	0	0	520	519	519	520	1.3	1 of 520 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+WD_PORTS	COLLISION	0	0	5000	4999	4999	5000	16.8	1 of 5000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+WD_AIRPORTS	COLLISION	0	0	5000	4997	4997	5000	13.8	3 of 5000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+WD_MINES	OK	0	0	5000	5000	5000	5000	21.0	
+WD_CENTRAL_BANKS	OK	0	0	322	322	322	322	8.6	
+WD_DEFENCE_COMPANIES	FETCH_FAILED	1	-1	1	1	0	-1	21.2	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+WD_TELECOM_OPERATORS	COLLISION	0	0	1224	1142	1142	1224	13.9	82 of 1224 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+WD_OIL_REFINERIES	COLLISION	0	0	2000	1990	1990	2000	45.2	10 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+WD_NEWS_AGENCIES	OK	0	0	837	837	837	837	12.3	
+WD_BORDER_CROSSINGS	COLLISION	0	0	1084	1079	1079	1084	3.0	5 of 1084 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+WD_THINK_TANKS	COLLISION	0	0	2000	1955	1955	2000	14.5	45 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+WD_STOCK_EXCHANGES	FETCH_FAILED	1	-1	1	1	0	-1	40.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+WD_SEMICONDUCTOR_FABS	COLLISION	0	0	500	499	499	500	9.9	1 of 500 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+WD_NAVAL_BASES	COLLISION	0	0	3000	2981	2981	3000	118.7	19 of 3000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+WD_SHIPYARDS	COLLISION	0	0	1833	1829	1829	1833	9.4	4 of 1833 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+WD_TREATIES	OK	0	0	3000	3000	3000	3000	11.4	
+EARTHSCOPE_MUSTANG_METRICS	OK	0	0	48	48	48	48	1.3	
+WD_PRISONS	COLLISION	0	0	3000	2994	2994	3000	40.1	6 of 3000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+WD_LIGHTHOUSES	OK	0	0	5000	5000	5000	5000	56.0	
+WD_EMBASSIES	OK	0	0	5000	5000	5000	5000	42.4	
+WD_POLITICAL_PARTIES	OK	0	0	5000	5000	5000	5000	53.4	
+WD_RESEARCH_INSTITUTES	COLLISION	0	0	5000	4999	4999	5000	91.4	1 of 5000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+OCEANOPS_GLOSS_TIDE_GAUGES	OK	0	0	294	294	294	294	46.3	
+OCEANOPS_ARGO_FLOATS	OK	0	0	22481	22482	22481	22481	130.7	
+OCEANOPS_DBCP_BUOYS	OK	0	0	35190	35191	35190	35190	134.7	
+OCEANOPS_OCEANSITES_MOORINGS	OK	0	0	5816	5817	5816	5816	123.5	
+OCEANOPS_TSUNAMI_BUOYS	OK	0	0	92	92	92	92	15.0	
+OCEANOPS_NETWORKS	OK	0	0	327	327	327	327	1.8	
+OCEANOPS_PROGRAMMES	OK	0	0	883	883	883	883	1.6	
+OCEANOPS_AGENCIES	OK	0	0	889	889	889	889	1.7	
+OCEANOPS_COUNTRIES	OK	0	0	251	251	251	251	1.4	
+OCEANOPS_VARIABLES	OK	0	0	40	40	40	40	1.3	
+INTERMAGNET_GIN_OBSERVATORIES	OK	0	0	154	154	154	154	1.4	
+OCEANOPS_SOT_SHIPS	OK	0	0	16692	16693	16692	16692	127.6	
+STAC_EODC_COLLECTIONS	OK	0	0	57	57	57	57	1.6	
+OCEANOPS_OCEANGLIDERS	OK	0	0	4048	4049	4048	4048	123.1	
+STAC_TERRABYTE_COLLECTIONS	OK	0	0	29	29	29	29	1.5	
+STAC_SWISSTOPO_SWISSALTI3D_ITEMS	OK	0	0	2000	2001	2000	2000	21.4	
+STAC_EODATAHUB_UK_COLLECTIONS	OK	0	0	62	62	62	62	3.1	
+CMR_STAC_ASF_COLLECTIONS	OK	0	0	166	166	166	166	9.4	
+STAC_EODC_GFM_ITEMS	OK	0	0	2000	2001	2000	2000	38.7	
+STAC_TERRABYTE_SENTINEL1_GRD_ITEMS	OK	0	0	2000	2001	2000	2000	35.5	
+OCEANOPS_HF_RADAR	OK	0	0	410	410	410	410	63.8	
+OCEANOPS_DRIFTER_ARRAY	OK	0	0	29753	29754	29753	29753	132.2	
+BGS_AGS_BOREHOLE_INDEX	OK	0	0	2000	2001	2000	2000	9.5	
+BGS_HISTORICAL_EARTHQUAKES	OK	0	0	471	471	471	471	10.0	
+CMR_STAC_GESDISC_COLLECTIONS	OK	0	0	1000	1001	1000	1000	38.3	
+BGS_RECENT_EARTHQUAKES	OK	0	0	7834	7834	7834	7834	26.5	
+BGS_MINE_PLANS	OK	0	0	2000	2001	2000	2000	17.9	
+BGS_ONSHORE_BOREHOLE_INDEX	OK	0	0	2000	2001	2000	2000	39.6	
+BGS_WORLD_MINERAL_STATISTICS	OK	0	0	2000	2001	2000	2000	10.7	
+BGS_ERUPTION_SOURCE_PARAMETER	OK	0	0	2672	2672	2672	2672	12.1	
+OCEANOPS_TROPICAL_MOORED_ARRAY	OK	0	0	3209	3210	3209	3209	122.8	
+TLE_SATELLITE_ELEMENT_SETS	OK	0	0	2000	2001	2000	2000	6.8	
+NASA_EXOPLANET_ARCHIVE_PLANETS	OK	0	0	6451	6451	6451	6451	4.5	
+ANTARES_LOCI	FETCH_FAILED	1	-1	1	1	0	-1	21.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+BGS_OFFSHORE_CORE_SAMPLE_DATA	OK	0	0	3663	3663	3663	3663	23.7	
+BGS_GEOLOGY_625K_FAULTS	OK	0	0	2741	2741	2741	2741	26.7	
+BGS_AEROMAGNETIC_SURVEY	OK	0	0	2000	2001	2000	2000	29.3	
+BGS_MINE_PLANS_MINERALS	OK	0	0	63	63	63	63	1.6	
+BGS_LANDSLIDE_INDEX	COLLISION	0	0	18699	18630	18630	18699	71.4	69 of 18699 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+BGS_GENERIC_SAMPLES_REGISTER	OK	0	0	2000	2001	2000	2000	11.5	
+CMR_STAC_OB_DAAC_COLLECTIONS	OK	0	0	455	455	455	455	19.9	
+BGS_OFFSHORE_HYDROCARBON_WELLS	OK	0	0	13308	13308	13308	13308	69.1	
+CMR_STAC_GHRC_DAAC_COLLECTIONS	OK	0	0	696	696	696	696	24.2	
+OCEANOPS_UNMANNED_SURFACE_VEHICLES	OK	0	0	30	30	30	30	5.7	
+STAC_TERRABYTE_SENTINEL2_ITEMS	OK	0	0	2000	2001	2000	2000	27.4	
+OCEANOPS_ARGO_BGC	OK	0	0	10	10	10	10	2.5	
+OCEANOPS_GOSUD_UNDERWAY	OK	0	0	26	26	26	26	5.3	
+TRAFICOM_RADIO_TX	OK	0	0	2346	2346	2346	2346	9.4	
+STAC_TERRABYTE_LANDSAT_ITEMS	OK	0	0	2000	2001	2000	2000	47.5	
+TRAFICOM_TV_TX	OK	0	0	1066	1066	1066	1066	6.0	
+BGS_OFFSHORE_GEOPHYSICAL_LINES	OK	0	0	2000	2001	2000	2000	77.5	
+TRAFICOM_FREQ_TABLE	OK	0	0	5917	5917	5917	5917	8.4	
+TRAFICOM_AMATEUR_CALLSIGN	OK	0	0	7649	7649	7649	7649	5.5	
+TRAFICOM_MMSI_REGISTER	OK	0	0	14066	14066	14066	14066	9.1	
+DK_MASTEDB_ANTENNAS	FETCH_FAILED	1	-1	1	1	0	-1	41.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+OCEANOPS_ANTARCTIC_ICE_BUOYS	OK	0	0	620	620	620	620	95.3	
+CH_BAKOM_RADIO_COVERAGE	OK	0	0	34	34	34	34	11.1	
+FCC_PIRATE_RADIO_DB	OK	0	0	197	197	197	197	1.3	
+CH_BAKOM_TV_COVERAGE	OK	0	0	13	13	13	13	7.2	
+FCC_LINKED_STATION_NEIGHBORS	OK	0	0	1226	1226	1226	1226	1.8	
+FCC_EAS_TEST_FIRMS	OK	0	0	591	591	591	591	1.6	
+FCC_EAS_TCB	OK	0	0	309	309	309	309	1.5	
+DXSUMMIT_DX_SPOTS	OK	0	0	50	50	50	50	1.1	
+FCC_EAS_GRANTEE_REG	OK	0	0	20000	20001	20000	20000	12.3	
+WWFF_SPOTS	OK	0	0	40	40	40	40	1.6	
+BRANDMEISTER_TALKGROUPS	OK	0	0	1	1	1	1	1.6	
+DAPNET_TRANSMITTERS	OK	0	0	4113	4113	4113	4113	3.6	
+PISTAR_DMR_HOSTS	COLLISION	0	0	1277	1275	1275	1277	1.4	2 of 1277 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+PISTAR_P25_HOSTS	OK	0	0	453	453	453	453	1.0	
+PISTAR_YSF_HOSTS	OK	0	0	1585	1585	1585	1585	1.5	
+PISTAR_NXDN_HOSTS	OK	0	0	411	411	411	411	1.0	
+PISTAR_XLX_HOSTS	OK	0	0	915	915	915	915	1.2	
+KC2G_ESSN	OK	0	0	672	672	672	672	1.0	
+GIRO_DIDB_STATIONS	OK	0	0	131	131	131	131	1.1	
+KC2G_IONOSONDE_STATIONS	OK	0	0	101	101	101	101	3.8	
+OCEANOPS_ARCTIC_ICE_BUOYS	OK	0	0	1421	1422	1421	1421	121.8	
+SONDEHUB_SONDE_TELEMETRY	OK	0	0	1	1	1	1	1.0	
+SONDEHUB_LISTENER_TELEMETRY	OK	0	0	1	1	1	1	1.6	
+SONDEHUB_PREDICTIONS	OK	0	0	84	84	84	84	2.0	
+IGRA2_STATION_LIST	OK	0	0	2931	2931	2931	2931	1.8	
+NWS_RADAR_SERVERS	OK	0	0	6	6	6	6	1.0	
+VATSIM_NETWORK_DATA	OK	0	0	50	50	50	50	1.0	
+VATSIM_TRANSCEIVERS	OK	0	0	1043	1043	1043	1043	1.2	
+IVAO_WHAZZUP	OK	0	0	2	2	2	2	0.9	
+LL2_LOCATIONS	OK	0	0	54	54	54	54	1.1	
+GFZ_KP_INDEX	OK	0	0	34629	34629	34629	34629	12.3	
+OCEANOPS_ANIBOS_ANIMAL_BORNE	OK	0	0	2578	2579	2578	2578	122.1	
+PISTAR_DEXTRA_HOSTS	OK	0	0	924	924	924	924	1.2	
+GCAT_ORGS	OK	0	0	4144	4144	4144	4144	2.2	
+PISTAR_DCS_HOSTS	OK	0	0	1833	1833	1833	1833	1.2	
+PISTAR_DPLUS_HOSTS	OK	0	0	1509	1509	1509	1509	1.1	
+PISTAR_M17_HOSTS	OK	0	0	131	131	131	131	0.9	
+FCC_FSS_EARTH_STATION_DOCS	OK	0	0	220	220	220	220	1.1	
+PISTAR_FCS_HOSTS	OK	0	0	3001	3001	3001	3001	1.8	
+FCC_EAS_TFAB	OK	0	0	30	30	30	30	1.2	
+FCC_EAS_TCB_AUTHORITIES	OK	0	0	16	16	16	16	1.1	
+LL2_SPACE_STATIONS	OK	0	0	15	15	15	15	0.8	
+SOTA_ASSOCIATIONS	OK	0	0	227	227	227	227	1.3	
+ANFR_MOBILE_TRANSMITTERS	FETCH_FAILED	1	-1	1	1	0	-1	2.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+ANFR_MARITIME_STATIONS	FETCH_FAILED	1	-1	1	1	0	-1	2.1	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+ANFR_EMF_PROBE_MEASUREMENTS	FETCH_FAILED	1	-1	1	1	0	-1	1.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+ANFR_MOBILE_OBSERVATORY	FETCH_FAILED	1	-1	1	1	0	-1	1.6	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+ANFR_HANDSET_SAR	FETCH_FAILED	1	-1	1	1	0	-1	1.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+ANFR_SMARTMETER_MEASUREMENTS	FETCH_FAILED	1	-1	1	1	0	-1	1.6	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+LT_RRT_BROADCAST_TX	FETCH_FAILED	1	-1	1	1	0	-1	3.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+LT_RRT_SHIP_STATIONS	FETCH_FAILED	1	-1	1	1	0	-1	2.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+LT_RRT_AIRCRAFT_STATIONS	FETCH_FAILED	1	-1	1	1	0	-1	2.2	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+LT_RRT_AMATEUR_LICENCES	FETCH_FAILED	1	-1	1	1	0	-1	2.2	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+IT_FVG_RADIO_TX	OK	0	0	485	485	485	485	2.0	
+IT_FVG_TV_TX	OK	0	0	315	315	315	315	1.8	
+TLEAPI_SATELLITE_INDEX	FETCH_FAILED	1	-1	1	1	0	-1	40.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+CH_BAKOM_BROADCAST_TX	OK	0	0	441	442	441	441	128.1	
+CH_BAKOM_MOBILE_SITES	OK	0	0	1000	1002	1000	1000	137.5	
+IT_FVG_EMF_MONITORING	OK	0	0	20000	20001	20000	20000	21.9	
+IT_FVG_MOBILE_SITES	OK	0	0	6171	6171	6171	6171	33.8	
+OFCOM_NUMBERING_S5	OK	0	0	993	993	993	993	2.1	
+OFCOM_NUMBERING_S3	OK	0	0	13724	13724	13724	13724	6.5	
+OFCOM_NUMBERING_S7	OK	0	0	9745	9745	9745	9745	5.1	
+ACMA_RRL_DEVICE_REGISTER	OK	0	0	40000	40001	40000	40000	55.6	
+OFCOM_NUMBERING_S8	OK	0	0	12611	12611	12611	12611	6.5	
+NANPA_NPA_DATABASE	OK	0	0	801	801	801	801	2.0	
+OFCOM_NUMBERING_SABC	OK	0	0	8042	8042	8042	8042	4.9	
+OFCOM_NUMBERING_S9	OK	0	0	9030	9030	9030	9030	5.6	
+CNAC_CO_CODE_INDEX	OK	0	0	113	113	113	113	2.3	
+IXF_IXBR_SAOPAULO	OK	0	0	2413	2413	2413	2413	2.2	
+IXF_IXBR_RIO	OK	0	0	470	470	470	470	1.7	
+IXF_IXBR_FORTALEZA	OK	0	0	474	474	474	474	1.6	
+IXF_AMSIX	OK	0	0	1092	1092	1092	1092	2.1	
+IXF_LINX	OK	0	0	932	932	932	932	1.5	
+IXF_NLIX	OK	0	0	672	672	672	672	2.1	
+IXF_NAPAFRICA	OK	0	0	659	659	659	659	5.0	
+IXF_MSKIX	OK	0	0	644	644	644	644	1.9	
+IXF_EPIX_KATOWICE	OK	0	0	552	552	552	552	1.6	
+IXF_TPIX	OK	0	0	474	474	474	474	2.1	
+IXF_THINX	OK	0	0	193	193	193	193	4.7	
+IXF_KLEYREX	OK	0	0	472	472	472	472	4.1	
+IXF_BCIX	OK	0	0	147	147	147	147	1.9	
+IXF_MIXIT	OK	0	0	471	471	471	471	1.8	
+IXF_NAMEX	OK	0	0	288	288	288	288	2.7	
+IXF_MINAP	OK	0	0	118	118	118	118	2.0	
+MASTEDATABASEN_DK_BULK	FETCH_FAILED	1	-1	1	1	0	-1	41.2	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+IXF_TOPIX	OK	0	0	117	117	117	117	1.8	
+IXF_SEATTLEIX	OK	0	0	403	403	403	403	1.4	
+IXF_FLIX	OK	0	0	181	181	181	181	1.5	
+IXF_CIXATL	OK	0	0	121	121	121	121	1.5	
+IXF_TORIX	OK	0	0	262	262	262	262	1.5	
+IXF_ONIX	OK	0	0	208	208	208	208	1.8	
+IXF_NIXCZ	OK	0	0	208	208	208	208	1.7	
+IXF_PEERINGCZ	OK	0	0	209	209	209	209	2.0	
+IXF_VIX	OK	0	0	185	185	185	185	2.0	
+IXF_NETNOD	OK	0	0	204	204	204	204	1.8	
+IXF_INEX	OK	0	0	118	118	118	118	2.5	
+IXF_FRYSIX	OK	0	0	343	343	343	343	2.6	
+IXF_LONAP	OK	0	0	309	309	309	309	5.1	
+IXF_SPEEDIX	OK	0	0	289	289	289	289	2.2	
+GCAT_SATCAT	OK	0	0	69999	69999	69999	69999	134.4	
+IXF_INTERLAN	OK	0	0	153	153	153	153	3.5	
+IXF_BIXBG	OK	0	0	142	142	142	142	3.2	
+IXF_BIXHU	OK	0	0	121	121	121	121	2.2	
+IXF_IXPN_LAGOS	OK	0	0	160	160	160	160	3.1	
+IXF_MEGAPORT_IX	OK	0	0	649	649	649	649	3.1	
+IXF_INXZA	OK	0	0	289	289	289	289	4.4	
+IXF_IXAUSTRALIA	OK	0	0	272	272	272	272	1.7	
+IXF_THEIXP_INDIA	OK	0	0	346	346	346	346	3.2	
+IXF_GNMIX	OK	0	0	934	934	934	934	18.0	
+IXF_GETAFIX_MANILA	FETCH_FAILED	0	0	1	1	0	-1	1.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+IXF_DECIX_ASEAN	OK	0	0	137	137	137	137	1.6	
+IXF_UAEIX	OK	0	0	113	113	113	113	2.7	
+IXF_NINEIX	OK	0	0	165	165	165	165	1.5	
+MINTIC_CO_MOBILE_SUBS	OK	0	0	346	346	346	346	1.4	
+IXF_AIX_JAKARTA	OK	0	0	340	340	340	340	12.5	
+MINTIC_CO_MOBILE_INTERNET	OK	0	0	420	420	420	420	2.6	
+MINTIC_CO_UNIVERSAL_ACCESS	OK	0	0	1550	1550	1550	1550	2.5	
+FCC_PROVIDER_TABLE_2021	OK	0	0	7398	7398	7398	7398	5.9	
+FCC_PROVIDER_LOOKUP	OK	0	0	21737	21737	21737	21737	10.0	
+IXPDB_PROVIDER_LIST	OK	0	0	1137	1138	1137	1137	122.1	
+OFCOM_NUMBERING_S1	SLOW	-1	0	-1	-1	0	-1	200.1	hit --timeout 200.1s
+OFCOM_NUMBERING_S1CODE	SLOW	-1	0	-1	-1	0	-1	200.2	hit --timeout 200.2s
+IMF_PORTWATCH_AIRPORTS	OK	0	0	7033	7033	7033	7033	15.9	
+FCC_GEOGRAPHY_LOOKUP	SLOW	-25	0	-1	-1	172032	-1	98.8	no [sched] line — the process was killed before the run returned, but the database holds 172032 rows for it, so it was working: unmeasured, not failed
+MINTIC_CO_FIXED_BROADBAND	SLOW	-25	0	-1	-1	170465	-1	120.6	no [sched] line — the process was killed before the run returned, but the database holds 170465 rows for it, so it was working: unmeasured, not failed
+IMF_PORTWATCH_TRADE_REGIONAL	OK	0	0	20000	20001	20000	20000	19.5	
+IMF_PORTWATCH_FR24_AIRPORTS	OK	0	0	9332	9332	9332	9332	24.1	
+BTS_NCFO_VESSELS	OK	0	0	723	723	723	723	2.3	
+BTS_BRIDGE_AIR_DRAFT	OK	0	0	21	21	21	21	1.5	
+BTS_TOP_CONTAINER_PORTS	OK	0	0	25	25	25	25	1.4	
+IMF_PORTWATCH_PORTS	OK	0	0	2065	2066	2065	2065	124.3	
+BTS_PORT_TEU_MONTHLY	OK	0	0	44	44	44	44	8.0	
+BTS_TANKER_DWELL	OK	0	0	54	54	54	54	1.5	
+BTS_CONTAINER_DWELL	OK	0	0	54	54	54	54	8.1	
+BTS_CONTAINERSHIP_TEU_CAPACITY	OK	0	0	45	45	45	45	1.5	
+BTS_ONDOCK_RAIL_TERMINALS	OK	0	0	25	25	25	25	1.3	
+BTS_BARGE_GRAIN_RATES	OK	0	0	99	99	99	99	1.5	
+FAA_ARCGIS_NAVAIDS	OK	0	0	1375	1375	1375	1375	2.3	
+FAA_ARCGIS_MILITARY_TRAINING_ROUTES	OK	0	0	3654	3654	3654	3654	4.7	
+FAA_ARCGIS_RUNWAYS	OK	0	0	10000	10001	10000	10000	9.9	
+FAA_ARCGIS_OBSTACLES	OK	0	0	10000	10001	10000	10000	7.7	
+FAA_ARCGIS_SPECIAL_USE_AIRSPACE	OK	0	0	1542	1542	1542	1542	14.4	
+FAA_ARCGIS_US_AIRPORTS	OK	0	0	10000	10001	10000	10000	11.0	
+DOT_TOC_INCIDENTS	OK	0	0	4002	4002	4002	4002	9.9	
+DOT_TOC_INCIDENT_REPORTS	OK	0	0	5421	5421	5421	5421	6.1	
+IMF_PORTWATCH_PORT_SPILLOVERS	OK	0	0	20000	20001	20000	20000	56.9	
+AMTRAKER_STATIONS	OK	0	0	1	1	1	1	1.3	
+BTS_T100_SEGMENT_CARRIER	OK	0	0	20000	20001	20000	20000	30.3	
+INFRABEL_OPERATIONAL_POINTS	FETCH_FAILED	1	-1	1	1	0	-1	21.1	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+INFRABEL_LEVEL_CROSSINGS	FETCH_FAILED	1	-1	1	1	0	-1	20.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+INFRABEL_PORT_RAIL_CONNECTIONS	OK	0	0	104	104	104	104	3.0	
+IMF_PORTWATCH_CHOKEPOINT_DAILY	OK	0	0	20000	20002	20000	20000	146.2	
+INFRABEL_LINE_SECTIONS	OK	0	0	1210	1210	1210	1210	15.5	
+INFRABEL_GSMR_BASE_STATIONS	FETCH_FAILED	1	-1	1	1	0	-1	15.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+INFRABEL_MAJOR_INCIDENTS	FETCH_FAILED	1	-1	1	1	0	-1	21.2	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+INFRABEL_SIGNAL_BOXES	FETCH_FAILED	1	-1	1	1	0	-1	26.2	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+INFRABEL_DATASET_CATALOG	FETCH_FAILED	1	-1	1	1	0	-1	20.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+FRA_RAILROAD_REFERENCE	COLLISION	0	0	2982	2981	2981	2982	3.2	1 of 2982 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+TFL_JAMCAMS	OK	0	0	890	890	890	890	1.3	
+TFL_LIFT_DISRUPTIONS	COLLISION	0	0	28	27	27	28	1.1	1 of 28 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+TFL_JOURNEY_MODES	OK	0	0	30	30	30	30	0.9	
+ONEBUSAWAY_PS_AGENCIES	OK	0	0	12	12	12	12	3.0	
+FRA_CROSSING_INVENTORY	OK	0	0	20000	20001	20000	20000	33.1	
+FRA_RAIL_EQUIPMENT_ACCIDENTS	OK	0	0	14018	14018	14018	14018	54.4	
+DFT_COUNT_POINTS	FETCH_FAILED	1	-1	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+DFT_LOCAL_AUTHORITIES	FETCH_FAILED	1	-1	1	1	0	-1	1.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+FRA_GRADE_CROSSING_INCIDENTS	OK	0	0	12345	12345	12345	12345	50.0	
+DFT_TRAFFIC_REGIONS	FETCH_FAILED	1	-1	1	1	0	-1	1.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+FMCSA_MOTUS_AUTHORITY	OK	0	0	975	975	975	975	2.5	
+WEBTRIS_AREAS	OK	0	0	25	25	25	25	21.9	
+FMCSA_CARRIER_CENSUS	OK	0	0	20000	20001	20000	20000	21.8	
+FMCSA_MOTUS_AUTHORITY_HISTORY	COLLISION	0	0	20000	20000	19999	20000	19.7	1 of 20000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+IRAIL_STATIONS	OK	0	0	715	716	715	715	121.8	
+UKTT_SECTIONS	OK	0	0	21	21	21	21	5.0	
+UKTT_CHAPTERS	OK	0	0	98	98	98	98	16.2	
+TFL_ROAD_CORRIDORS	OK	0	0	24	24	24	24	23.1	
+UNLOCODE_CODELIST_MIRROR	OK	0	0	116272	116272	116272	116272	199.4	
+CFS_HAZMAT_FLOWS	OK	0	0	20000	20001	20000	20000	28.4	
+CFS_EXPORT_FLOWS	OK	0	0	11182	11182	11182	11182	22.2	
+NY_DOS_FILING_STOCK	COLLISION	0	0	20000	20000	19999	20000	13.6	1 of 20000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+UKTT_GEOGRAPHICAL_AREAS	OK	0	0	366	366	366	366	58.2	
+NY_DOS_CONSTITUENT_ENTITIES	OK	0	0	20000	20001	20000	20000	15.9	
+WEBTRIS_SITES	OK	0	0	20076	20077	20076	20076	130.2	
+NY_LOBBYIST_REGISTRATIONS	OK	0	0	20000	20001	20000	20000	22.1	
+NY_LOBBYIST_DISCLOSURES	OK	0	0	20000	20001	20000	20000	21.9	
+NY_STATE_TITLE_SALARY	OK	0	0	4729	4729	4729	4729	4.9	
+NY_LOBBYING_CLIENT_DISCLOSURES	COLLISION	0	0	20000	19986	19985	20000	20.9	15 of 20000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+NY_AUTHORITY_PROCUREMENT	OK	0	0	20000	20001	20000	20000	22.1	
+NY_TITLE_V_PERMITS	OK	0	0	297	297	297	297	1.5	
+NY_STATE_FACILITY_AIR_PERMITS	OK	0	0	644	644	644	644	5.0	
+NY_OIL_GAS_PRODUCTION	OK	0	0	20000	20001	20000	20000	20.5	
+NY_OIL_GAS_WELLS	OK	0	0	20000	20001	20000	20000	31.6	
+NY_REAL_ESTATE_APPRAISERS	OK	0	0	3604	3604	3604	3604	3.7	
+NY_CANNABIS_LICENSES	OK	0	0	3038	3038	3038	3038	6.8	
+TFL_FERRY_PORTS	OK	0	0	497	498	497	497	122.3	
+NY_RADIOACTIVE_MATERIALS_LICENSEES	OK	0	0	962	962	962	962	1.8	
+NY_LIQUOR_ACTIVE_LICENSES	OK	0	0	20000	20001	20000	20000	18.8	
+NY_FOOD_SAFETY_RATINGS	OK	0	0	20000	20001	20000	20000	19.4	
+NY_PROPERTY_ASSESSMENT_ROLLS	OK	0	0	20000	20001	20000	20000	24.1	
+CO_LOBBYIST_CLIENTS	OK	0	0	20000	20001	20000	20000	19.0	
+CO_LOBBYIST_INCOME	OK	0	0	20000	20001	20000	20000	17.2	
+CO_CHARITY_REGISTRATIONS	OK	0	0	20000	20001	20000	20000	35.3	
+CO_STATE_LOBBYIST_DIRECTORY	OK	0	0	238	238	238	238	2.3	
+CO_LOBBYIST_EXPENDITURES	OK	0	0	7421	7421	7421	7421	9.1	
+CO_REAL_ESTATE_LICENSEES	OK	0	0	20000	20001	20000	20000	15.9	
+CO_TOBACCO_LICENSES	OK	0	0	4910	4910	4910	4910	11.7	
+NY_DOS_DAILY_ENTITY_FILINGS	OK	0	0	20000	20002	20000	20000	145.3	
+CO_LIQUOR_LICENSES	OK	0	0	20000	20001	20000	20000	16.3	
+CO_CHILD_CARE_FACILITIES	OK	0	0	4531	4531	4531	4531	4.6	
+NY_CAMPAIGN_FILERS	OK	0	0	20000	20002	20000	20000	135.2	
+WA_PDC_LAST_MINUTE_CONTRIBUTIONS	OK	0	0	1311	1311	1311	1311	4.2	
+CO_PETROLEUM_RELEASES	OK	0	0	17285	17285	17285	17285	16.6	
+WA_PDC_ENFORCEMENT_CASES	OK	0	0	8150	8150	8150	8150	14.7	
+WA_PDC_INDEPENDENT_EXPENDITURES	OK	0	0	20000	20001	20000	20000	27.6	
+CO_REGULATED_STORAGE_TANKS	OK	0	0	19789	19790	19789	19789	40.4	
+WA_LOBBYIST_AGENT_EMPLOYERS	OK	0	0	20000	20001	20000	20000	29.8	
+WA_LOBBYIST_COMPENSATION	OK	0	0	20000	20001	20000	20000	37.2	
+WA_CONTRACTOR_PRINCIPALS	OK	0	0	20000	20001	20000	20000	22.7	
+CO_PROFESSIONAL_LOBBYIST_DIRECTORY	OK	0	0	5764	5765	5764	5764	127.6	
+WA_CONTRACTOR_INSURANCE	COLLISION	0	0	20000	19992	19991	20000	18.9	9 of 20000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+WA_CONTRACTOR_BONDS	COLLISION	0	0	20000	20000	19999	20000	23.4	1 of 20000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+WA_AGENCY_CONTRACTS	OK	0	0	20000	20001	20000	20000	20.3	
+WA_STATEWIDE_CONTRACT_SALES	OK	0	0	20000	20001	20000	20000	21.9	
+WA_CRIME_NIBRS	OK	0	0	3471	3471	3471	3471	10.6	
+WA_RESTAURANT_INSPECTIONS_ASOTIN	OK	0	0	84	84	84	84	7.6	
+WA_WEBS_VENDORS	OK	0	0	20000	20001	20000	20000	22.5	
+TX_REAL_ESTATE_LICENSEES	OK	0	0	20000	20001	20000	20000	16.1	
+TX_HOTEL_TAX_PERMITS	OK	0	0	20000	20001	20000	20000	20.9	
+TX_MIXED_BEVERAGE_PERMITS	OK	0	0	20000	20001	20000	20000	14.8	
+WA_LOBBYIST_AGENTS	OK	0	0	11788	11789	11788	11788	140.5	
+TX_RRC_WELL_BOTTOM_LOCATIONS	OK	0	0	20000	20001	20000	20000	12.9	
+TX_TABC_LICENSES	OK	0	0	20000	20001	20000	20000	44.9	
+TX_TCEQ_NOTICES_OF_ENFORCEMENT	COLLISION	0	0	20000	19633	19632	20000	18.1	368 of 20000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+WA_LOBBYIST_EMPLOYMENT_REGISTRATIONS	OK	0	0	20000	20002	20000	20000	152.1	
+TX_TCEQ_VIOLATION_CITATIONS	OK	0	0	20000	20001	20000	20000	20.0	
+WA_CONTRACTOR_LICENSES	OK	0	0	20000	20002	20000	20000	136.8	
+TX_DIR_COOP_CONTRACT_CUSTOMERS	OK	0	0	390	390	390	390	7.2	
+TX_TCEQ_COMPLAINTS	OK	0	0	20000	20001	20000	20000	26.8	
+TX_PUC_INFORMAL_COMPLAINTS	OK	0	0	20000	20001	20000	20000	15.5	
+TX_INSURANCE_COMPLAINTS	OK	0	0	20000	20001	20000	20000	23.4	
+OR_OLCC_CANNABIS_LICENSES	OK	0	0	3795	3795	3795	3795	4.3	
+OR_ACTIVE_NONPROFIT_CORPORATIONS	OK	0	0	20000	20001	20000	20000	14.8	
+OR_STATE_SALARIES	OK	0	0	20000	20001	20000	20000	13.7	
+OR_BCD_TRADE_LICENSES	OK	0	0	20000	20001	20000	20000	19.2	
+OR_CCB_CONTRACTOR_LICENSES	OK	0	0	20000	20001	20000	20000	25.5	
+CT_LOBBYIST_COMMUNICATORS	OK	0	0	782	782	782	782	2.2	
+CT_ENVIRONMENTAL_ENFORCEMENT	OK	0	0	243	243	243	243	1.4	
+OR_PROCUREMENT_ORDERS	OK	0	0	20000	20001	20000	20000	19.2	
+OR_OLCC_LIQUOR_LICENSES	OK	0	0	20000	20001	20000	20000	24.4	
+CT_SPILL_INCIDENTS	OK	0	0	16925	16925	16925	16925	11.2	
+CT_BUSINESS_FILING_HISTORY	OK	0	0	20000	20001	20000	20000	15.7	
+PA_OPIOID_SEIZURES_ARRESTS	OK	0	0	4414	4414	4414	4414	5.1	
+CT_INSURANCE_COMPLAINTS	OK	0	0	20000	20001	20000	20000	16.1	
+PA_NON_DEPOSITORY_LICENSEES	OK	0	0	20000	20001	20000	20000	24.9	
+PA_NEW_WELL_INSPECTIONS	OK	0	0	13920	13920	13920	13920	16.3	
+DE_PROFESSIONAL_LICENSING	OK	0	0	20000	20001	20000	20000	19.5	
+DE_CENTRAL_CONTRACT_SPEND	OK	0	0	20000	20001	20000	20000	11.5	
+DE_FOOD_INSPECTION_VIOLATIONS	OK	0	0	20000	20001	20000	20000	16.1	
+DE_LICENSED_CHILD_CARE	OK	0	0	1241	1241	1241	1241	2.2	
+PA_FOOD_INSPECTIONS	OK	0	0	20000	20001	20000	20000	43.4	
+TX_RRC_WELLBORE_PLUGGING	OK	0	0	20000	20002	20000	20000	137.3	
+DE_PUBLIC_CRASH_DATA	COLLISION	0	0	20000	19991	19990	20000	27.2	10 of 20000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+MD_LOBBYIST_CAMPAIGN_CONTRIBUTIONS	OK	0	0	20000	20001	20000	20000	18.0	
+MD_DISCHARGE_PERMITS_NONCOMPLIANCE	OK	0	0	510	510	510	510	1.5	
+MD_MDE_WATER_VIOLATIONS	OK	0	0	2867	2867	2867	2867	4.9	
+MD_LOBBYIST_ACTIVITY_REPORTS	OK	0	0	20000	20001	20000	20000	25.6	
+DE_WELL_PERMITS	OK	0	0	20000	20001	20000	20000	37.8	
+MO_TOBACCO_LICENSEES	OK	0	0	308	308	308	308	2.3	
+MO_LAW_ENFORCEMENT_AGENCIES	OK	0	0	592	592	592	592	1.8	
+VT_STATE_POLICE_DUI_ARRESTS	OK	0	0	3697	3697	3697	3697	4.6	
+NJ_LICENSED_CHILD_CARE_CENTERS	OK	0	0	4163	4163	4163	4163	4.7	
+MD_STATE_PAYMENTS	OK	0	0	20000	20001	20000	20000	15.7	
+NS_PERMANENT_LIQUOR_LICENSES	OK	0	0	2474	2474	2474	2474	2.5	
+MO_OIL_GAS_PERMITS	OK	0	0	10490	10490	10490	10490	8.9	
+NS_LICENSED_LENDERS	OK	0	0	228	228	228	228	1.6	
+NS_ONSHORE_PETROLEUM_WELLS	OK	0	0	131	131	131	131	1.6	
+NS_LICENSED_PAYDAY_LENDERS	OK	0	0	26	26	26	26	3.3	
+MO_ALCOHOL_LICENSES	OK	0	0	20000	20001	20000	20000	16.9	
+NS_LICENSED_COLLECTION_AGENCIES	OK	0	0	60	60	60	60	4.2	
+NS_LICENSED_FOOD_ESTABLISHMENTS	OK	0	0	7142	7142	7142	7142	8.1	
+AK_DNR_LAND_PERMITS_LEASES	OK	0	0	4246	4246	4246	4246	8.7	
+AK_DNR_MINERAL_PERMITS_LEASES	OK	0	0	2093	2093	2093	2093	8.6	
+AK_DNR_LAND_TRESPASS_CASES	OK	0	0	125	125	125	125	1.9	
+AK_DNR_RESOURCE_SALES	OK	0	0	966	966	966	966	3.1	
+AK_DNR_WELL_SITES	FETCH_FAILED	1	-1	1	1	0	-1	20.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+AK_DNR_OIL_GAS_LEASE_SALE_TRACTS	OK	0	0	6299	6299	6299	6299	27.7	
+CA_CALGEM_NOTICES	OK	0	0	8537	8537	8537	8537	7.1	
+CA_CALGEM_SURFACE_EXPRESSIONS	OK	0	0	59	59	59	59	2.7	
+TX_RRC_PIPELINES	OK	0	0	20000	20001	20000	20000	13.5	
+CA_CALGEM_FACILITY_TANKS	OK	0	0	15733	15733	15733	15733	19.8	
+AK_DNR_STATE_MINING_CLAIMS	OK	0	0	20000	20001	20000	20000	55.6	
+DE_LICENSE_DISCIPLINARY_ACTIONS	OK	0	0	8499	8500	8499	8499	127.5	
+TX_RRC_WELL_LOCATIONS	OK	0	0	20000	20001	20000	20000	13.7	
+FAA_AMD_STOPWAY	OK	0	0	583	583	583	583	1.5	
+FAA_NASR_FIX	OK	0	0	17256	17256	17256	17256	15.4	
+AK_DNR_WATER_WELL_LOGS	OK	0	0	20000	20001	20000	20000	54.2	
+FAA_NASR_CLEARANCE	OK	0	0	10076	10076	10076	10076	8.3	
+FAA_AMD_BUILDING	OK	0	0	6068	6068	6068	6068	5.1	
+NAVCAN_UAS_FACILITY_MAP	OK	0	0	2266	2266	2266	2266	3.9	
+FAA_NASR_PENDING_NAVAID	OK	0	0	1370	1370	1370	1370	3.0	
+FAA_NASR_PENDING_NAVAID_COMPONENT	OK	0	0	2404	2404	2404	2404	3.6	
+FAA_NASR_ATS_ROUTE_AIXM	OK	0	0	20000	20001	20000	20000	22.5	
+FAA_NASR_PENDING_AIRPORT	OK	0	0	19558	19559	19558	19558	16.4	
+FAA_NASR_PENDING_RUNWAY	OK	0	0	20000	20001	20000	20000	13.7	
+FAA_NASR_PENDING_BOUNDARY_AIRSPACE	OK	0	0	369	369	369	369	1.6	
+FAA_NASR_PENDING_FIX	OK	0	0	17228	17228	17228	17228	12.2	
+FAA_NASR_PENDING_ROUTE_AIRSPACE	OK	0	0	5263	5263	5263	5263	4.3	
+FAA_NASR_PENDING_SUA	OK	0	0	1545	1545	1545	1545	2.2	
+FAA_NASR_PENDING_ILS_COMPONENT	OK	0	0	1163	1163	1163	1163	2.3	
+FAA_NASR_PENDING_MTR	OK	0	0	4194	4194	4194	4194	3.5	
+FAA_NASR_PENDING_ILS_SYSTEM	OK	0	0	279	279	279	279	1.6	
+FAA_NASR_PENDING_CLASS_AIRSPACE	OK	0	0	6041	6041	6041	6041	7.2	
+FAA_NASR_PENDING_HOLDING	OK	0	0	549	549	549	549	2.3	
+FAA_NASR_PENDING_CHANGEOVER	OK	0	0	495	495	495	495	2.1	
+FAA_NASR_PENDING_NOTES	OK	0	0	1144	1144	1144	1144	2.3	
+FAA_NASR_PENDING_SERVICE	OK	0	0	1800	1800	1800	1800	2.8	
+FAA_NASR_PENDING_CLEARANCES_GRID	OK	0	0	1695	1695	1695	1695	2.9	
+FAA_NASR_PENDING_ENROUTE_INFO	OK	0	0	4651	4651	4651	4651	6.2	
+FAA_NASR_PENDING_ATS_ROUTE	COLLISION	0	0	18447	18445	18445	18447	25.2	2 of 18447 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+FAA_NASR_PENDING_FREQUENCY	OK	0	0	4688	4688	4688	4688	6.7	
+FAA_NASR_PENDING_ROUTE_PORTION	OK	0	0	5423	5423	5423	5423	6.2	
+FAA_AMD_PENDING_RUNWAY	OK	0	0	502	502	502	502	2.5	
+FAA_AMD_PENDING_STOPWAY	OK	0	0	626	626	626	626	2.5	
+FAA_NASR_PENDING_RADIAL_BEARING	OK	0	0	11650	11650	11650	11650	15.5	
+FAA_AMD_PENDING_APRON	COLLISION	0	0	4734	4731	4731	4734	5.5	3 of 4734 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+FAA_AMD_PENDING_BEACON	OK	0	0	227	227	227	227	2.1	
+FAA_AMD_PENDING_WIND_INDICATOR	OK	0	0	786	786	786	786	2.7	
+FAA_AMD_PENDING_HOTSPOT	OK	0	0	163	163	163	163	2.5	
+FAA_AMD_PENDING_SPECIAL_MOVEMENT	OK	0	0	270	270	270	270	2.6	
+FAA_AMD_PENDING_BUILDING	OK	0	0	7250	7250	7250	7250	6.7	
+FAA_PENDING_PART_TIME_NSUFR	OK	0	0	5	5	5	5	2.4	
+OURAIRPORTS_COUNTRIES	OK	0	0	249	249	249	249	2.4	
+FAA_UAS_NSR_PENDING	OK	0	0	4	4	4	4	2.6	
+OURAIRPORTS_REGIONS	OK	0	0	3987	3987	3987	3987	3.6	
+UKPARL_LDA_LORDS_DIVISIONS	OK	0	0	2089	2089	2089	2089	5.6	
+FAA_AMD_PENDING_TAXIWAY	COLLISION	0	0	20000	19994	19993	20000	18.5	7 of 20000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+UKPARL_LDA_COMMONS_DIVISIONS	OK	0	0	5553	5553	5553	5553	13.4	
+UKPARL_LDA_EDMS	OK	0	0	2000	2001	2000	2000	35.6	
+CA_CALGEM_WELLS	OK	0	0	20000	20002	20000	20000	135.4	
+UKPARL_LDA_COMMONS_WRITTEN_Q	FETCH_FAILED	1	-1	1	1	0	-1	41.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+UKPARL_LDA_ORAL_Q_TIMES	OK	0	0	4060	4060	4060	4060	8.6	
+UKPARL_LDA_BILLS	OK	0	0	2122	2122	2122	2122	5.2	
+UKPARL_LDA_MEMBERS	OK	0	0	4798	4798	4798	4798	10.2	
+UKPARL_LDA_SESSIONS	OK	0	0	12	12	12	12	1.6	
+UKPARL_LDA_CONSTITUENCIES	OK	0	0	3877	3877	3877	3877	7.7	
+UKPARL_LDA_ELECTIONS	OK	0	0	554	554	554	554	2.2	
+UKPARL_LDA_ELECTION_RESULTS	OK	0	0	2659	2659	2659	2659	5.5	
+RIKSDAG_SPEECHES	OK	0	0	1000	1000	1000	1000	2.8	
+CA_OURCOMMONS_MEMBERS	FETCH_FAILED	0	0	1	1	0	-1	0.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+EUROPEPMC_BOOKS	OK	0	0	2000	2001	2000	2000	21.9	
+SCIELO_COLLECTIONS	OK	0	0	36	36	36	36	4.5	
+UKPARL_LDA_COMMONS_ORAL_Q	COLLISION	0	0	10000	8983	8982	10000	74.8	1018 of 10000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+UKPARL_LDA_LORDS_WRITTEN_Q	OK	0	0	10000	10001	10000	10000	111.4	
+UKPARL_LDA_TERMS	OK	0	0	10000	10001	10000	10000	67.2	
+SCIELO_JOURNALS_MX	OK	0	0	281	281	281	281	48.6	
+SCIELO_JOURNALS_CL	OK	0	0	166	166	166	166	29.7	
+SCIELO_JOURNALS_AR	OK	0	0	198	198	198	198	35.6	
+SCIELO_JOURNALS_BR	OK	0	0	427	427	427	427	76.3	
+UKPARL_LDA_COMMONS_ANSWERS	OK	0	0	10000	10001	10000	10000	163.3	
+UKPARL_LDA_RESEARCH_BRIEFINGS	OK	0	0	2500	2501	2500	2500	138.0	
+SCIELO_ARTICLES_BR	OK	0	0	2000	2002	2000	2000	144.9	
+SCIELO_ARTICLES_MX	OK	0	0	2000	2002	2000	2000	131.8	
+SCIELO_ARTICLES_AR	OK	0	0	2000	2002	2000	2000	141.4	
+SCIELO_ARTICLES_CO	OK	0	0	2000	2002	2000	2000	130.0	
+SCIELO_ARTICLES_CL	OK	0	0	2000	2002	2000	2000	152.1	
+SCIELO_ARTICLES_ES	OK	0	0	2000	2002	2000	2000	128.9	
+PLOS_RECENT	OK	0	0	2000	2001	2000	2000	7.6	
+PLOS_CORPUS	OK	0	0	5000	5001	5000	5000	14.6	
+INSPIRE_SEMINARS	OK	0	0	3584	3585	3584	3584	10.0	
+SCIELO_ARTICLES_PT	OK	0	0	2000	2002	2000	2000	130.4	
+BIPM_KCDB_DOMAIN	OK	0	0	3	3	3	3	1.4	
+BIPM_KCDB_QUANTITY	OK	0	0	1908	1908	1908	1908	1.8	
+BIPM_KCDB_METROLOGY_AREA	OK	0	0	7	7	7	7	1.1	
+BIPM_KCDB_COUNTRY	OK	0	0	107	107	107	107	1.2	
+SCIELO_ARTICLES_CU	OK	0	0	2000	2002	2000	2000	136.2	
+RFC_EDITOR_INDEX	OK	0	0	9848	9848	9848	9848	5.0	
+SCIELO_ARTICLES_ZA	OK	0	0	2000	2002	2000	2000	129.8	
+SCIELO_ISSUES_BR	OK	0	0	2000	2002	2000	2000	125.3	
+INSPIRE_DATASETS	OK	0	0	10000	10001	10000	10000	78.3	
+RFC_EDITOR_ERRATA	OK	0	0	8103	8103	8103	8103	10.4	
+IETF_DT_PERSON	OK	0	0	2000	2001	2000	2000	4.7	
+IETF_DT_NOMCOM	OK	0	0	14	14	14	14	1.1	
+IETF_DT_DOCEVENT	OK	0	0	2000	2001	2000	2000	6.1	
+IETF_DT_REVIEWREQUEST	OK	0	0	2000	2001	2000	2000	5.1	
+UKTRADEINFO_PORT	OK	0	0	190	190	190	190	2.1	
+UKTRADEINFO_SITC	OK	0	0	3592	3592	3592	3592	4.9	
+UKTRADEINFO_COUNTRY	OK	0	0	263	263	263	263	1.8	
+UKTRADEINFO_REGION	OK	0	0	14	14	14	14	1.8	
+UKTRADEINFO_DATE	OK	0	0	320	320	320	320	1.8	
+UKTRADEINFO_FLOWTYPE	OK	0	0	4	4	4	4	1.6	
+UKTRADEINFO_TRADETYPE	OK	0	0	2	2	2	2	1.8	
+BIS_SDMX_DATAFLOW	OK	0	0	29	29	29	29	1.5	
+BIS_SDMX_DATASTRUCTURE	OK	0	0	27	27	27	27	1.2	
+SCIELO_PRESSRELEASES_BR	OK	0	0	727	727	727	727	126.1	
+UKTRADEINFO_TRADER	OK	0	0	20000	20001	20000	20000	14.7	
+SINGSTAT_TABLE_TRADE	OK	0	0	535	535	535	535	10.5	
+FSA_AUTHORITIES	OK	0	0	363	363	363	363	1.3	
+FSA_AUTHORITIES_BASIC	OK	0	0	363	363	363	363	1.3	
+DERIB_LEGISLATION_ALL	OK	0	0	2000	2001	2000	2000	6.6	
+FSA_BUSINESS_TYPES	OK	0	0	15	15	15	15	1.0	
+FSA_SCORE_DESCRIPTORS	OK	0	0	17	17	17	17	1.2	
+FSA_REGIONS	OK	0	0	12	12	12	12	1.0	
+UKTRADEINFO_COMMODITY	OK	0	0	16243	16243	16243	16243	25.5	
+FSA_ESTABLISHMENT_ZERO_RATED	COLLISION	0	0	2000	1998	1997	2000	6.2	3 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+HC_MDALL_COMPANY_ALL	OK	0	0	7678	7678	7678	7678	3.3	
+RDW_DEFECT_CODES	OK	0	0	1002	1002	1002	1002	2.0	
+WA_DATA_BREACH_NOTIFICATIONS	OK	0	0	1675	1675	1675	1675	2.4	
+DE_DATA_SECURITY_BREACH_DB	OK	0	0	468	468	468	468	1.4	
+GDPRHUB_ARTICLE_33_1_GDPR	FETCH_FAILED	1	-1	1	1	0	-1	2.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+HC_LNHPD_PRODUCT_PURPOSE	OK	0	0	5000	5001	5000	5000	9.6	
+GDPRHUB_ARTICLE_32_1_GDPR	FETCH_FAILED	1	-1	1	1	0	-1	1.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+UKTRADEINFO_OTS	OK	0	0	20000	20001	20000	20000	30.1	
+WA_DATA_BREACH_PERSONAL_INFO	OK	0	0	7517	7517	7517	7517	8.3	
+GDPRHUB_ARTICLE_5_1_F_GDPR	FETCH_FAILED	1	-1	1	1	0	-1	2.2	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_AKI_ESTONIA	FETCH_FAILED	1	-1	1	1	0	-1	2.1	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_APD_GBA_BELGIUM	FETCH_FAILED	1	-1	1	1	0	-1	1.6	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_ANSPDCP_ROMANIA	FETCH_FAILED	1	-1	1	1	0	-1	1.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_AN_SPAIN	FETCH_FAILED	1	-1	1	1	0	-1	1.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_APDCAT_CATALONIA	FETCH_FAILED	1	-1	1	1	0	-1	1.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_AP_THE_NETHERLANDS	FETCH_FAILED	1	-1	1	1	0	-1	1.6	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_BAG_GERMANY	FETCH_FAILED	1	-1	1	1	0	-1	1.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_AZOP_CROATIA	FETCH_FAILED	1	-1	1	1	0	-1	1.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_BFH_GERMANY	FETCH_FAILED	1	-1	1	1	0	-1	2.2	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_BGH_GERMANY	FETCH_FAILED	1	-1	1	1	0	-1	1.6	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_BVERWG_GERMANY	FETCH_FAILED	1	-1	1	1	0	-1	1.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_BVWG_AUSTRIA	FETCH_FAILED	1	-1	1	1	0	-1	2.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_BFDI_GERMANY	FETCH_FAILED	1	-1	1	1	0	-1	1.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_BLNBDI_BERLIN	FETCH_FAILED	1	-1	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_CNIL_FRANCE	FETCH_FAILED	1	-1	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_CE_FRANCE	FETCH_FAILED	1	-1	1	1	0	-1	1.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_CNPD_PORTUGAL	FETCH_FAILED	1	-1	1	1	0	-1	1.6	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_CNPD_LUXEMBOURG	FETCH_FAILED	1	-1	1	1	0	-1	1.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_CASS_CIV_ITALY	FETCH_FAILED	1	-1	1	1	0	-1	1.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_CPDP_BULGARIA	FETCH_FAILED	1	-1	1	1	0	-1	1.6	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_COURT_OF_APPEAL_OF_BRUSSELS_BELGIUM	FETCH_FAILED	1	-1	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_COMMISSIONER_CYPRUS	FETCH_FAILED	1	-1	1	1	0	-1	1.6	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_DPC_IRELAND	FETCH_FAILED	1	-1	1	1	0	-1	1.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_DSB_AUSTRIA	FETCH_FAILED	1	-1	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_DVI_LATVIA	FETCH_FAILED	1	-1	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_DATAINSPEKTIONEN_SWEDEN	FETCH_FAILED	1	-1	1	1	0	-1	1.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_DATATILSYNET_DENMARK	FETCH_FAILED	1	-1	1	1	0	-1	1.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_DATATILSYNET_NORWAY	FETCH_FAILED	1	-1	1	1	0	-1	1.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_EDOB_PFPDT_IFPDT_SWITZERLAND	FETCH_FAILED	1	-1	1	1	0	-1	1.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_EWCA_UK	FETCH_FAILED	1	-1	1	1	0	-1	1.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_EWHC_UK	FETCH_FAILED	1	-1	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_FIS_SWEDEN	FETCH_FAILED	1	-1	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_FIRST_TIER_TRIBUNAL_GENERAL_REGULATORY_CHAMBER	FETCH_FAILED	1	-1	1	1	0	-1	1.6	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_GC_EUROPEAN_UNION	FETCH_FAILED	1	-1	1	1	0	-1	1.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+BIS_SDMX_CODELIST	FETCH_FAILED	1	-1	1	1	0	-1	40.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_GHARL_NETHERLANDS	FETCH_FAILED	1	-1	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_GHAMS_NETHERLANDS	FETCH_FAILED	1	-1	1	1	0	-1	1.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_GARANTE_PER_LA_PROTEZIONE_DEI_DATI_PERSONALI_ITALY	FETCH_FAILED	1	-1	1	1	0	-1	1.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_HDPA_GREECE	FETCH_FAILED	1	-1	1	1	0	-1	1.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_HIGH_COURT_IRELAND	FETCH_FAILED	1	-1	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_HELSINGIN_HALLINTO_OIKEUS_FINLAND	FETCH_FAILED	1	-1	1	1	0	-1	1.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_HMBBFDI_HAMBURG	FETCH_FAILED	1	-1	1	1	0	-1	2.2	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_ICO_UK	FETCH_FAILED	1	-1	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_HOGE_RAAD_NETHERLANDS	FETCH_FAILED	1	-1	1	1	0	-1	1.6	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_IDPC_MALTA	FETCH_FAILED	1	-1	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_IMY_SWEDEN	FETCH_FAILED	1	-1	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+BIS_SDMX_CONCEPTSCHEME	FETCH_FAILED	1	-1	1	1	0	-1	40.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_IP_SLOVENIA	FETCH_FAILED	1	-1	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_KHO_FINLAND	FETCH_FAILED	1	-1	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_KAMR_STOCKHOLM_SWEDEN	FETCH_FAILED	1	-1	1	1	0	-1	1.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_LAG_BADEN_WURTTEMBERG_GERMANY	FETCH_FAILED	1	-1	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_LAG_DUSSELDORF_GERMANY	FETCH_FAILED	1	-1	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_LG_BERLIN_GERMANY	FETCH_FAILED	1	-1	1	1	0	-1	1.6	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_LG_KOLN_GERMANY	FETCH_FAILED	1	-1	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_LG_FRANKFURT_GERMANY	FETCH_FAILED	1	-1	1	1	0	-1	1.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_NAIH_HUNGARY	FETCH_FAILED	1	-1	1	1	0	-1	1.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_LG_MUNCHEN_GERMANY	FETCH_FAILED	1	-1	1	1	0	-1	1.6	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_NSA_POLAND	FETCH_FAILED	1	-1	1	1	0	-1	1.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_OGH_AUSTRIA	FETCH_FAILED	1	-1	1	1	0	-1	1.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_OLG_BRANDENBURG_GERMANY	FETCH_FAILED	1	-1	1	1	0	-1	1.6	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_OLG_DRESDEN_GERMANY	FETCH_FAILED	1	-1	1	1	0	-1	1.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_OLG_FRANKFURT_GERMANY	FETCH_FAILED	1	-1	1	1	0	-1	1.6	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_OLG_DUSSELDORF_GERMANY	FETCH_FAILED	1	-1	1	1	0	-1	1.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_OLG_HAMM_GERMANY	FETCH_FAILED	1	-1	1	1	0	-1	1.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_OLG_KOLN_GERMANY	FETCH_FAILED	1	-1	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_OLG_MUNCHEN_GERMANY	FETCH_FAILED	1	-1	1	1	0	-1	1.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_OLG_NURNBERG_GERMANY	FETCH_FAILED	1	-1	1	1	0	-1	1.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_OLG_SCHLESWIG_GERMANY	FETCH_FAILED	1	-1	1	1	0	-1	1.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_OLG_STUTTGART_GERMANY	FETCH_FAILED	1	-1	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_OLG_WIEN_AUSTRIA	FETCH_FAILED	1	-1	1	1	0	-1	1.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_PERSONVERNNEMNDA_NORWAY	FETCH_FAILED	1	-1	1	1	0	-1	1.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_PERSONUVERND_ICELAND	FETCH_FAILED	1	-1	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_RB_AMSTERDAM_NETHERLANDS	FETCH_FAILED	1	-1	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_PERSONUVERND_ISLAND	FETCH_FAILED	1	-1	1	1	0	-1	1.6	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_RB_DEN_HAAG_NETHERLANDS	FETCH_FAILED	1	-1	1	1	0	-1	1.6	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_RB_GELDERLAND_NETHERLANDS	FETCH_FAILED	1	-1	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_RB_MIDDEN_NEDERLAND_NETHERLANDS	FETCH_FAILED	1	-1	1	1	0	-1	1.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_RB_NOORD_HOLLAND_NETHERLANDS	FETCH_FAILED	1	-1	1	1	0	-1	1.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_RB_OOST_BRABANT_NETHERLANDS	FETCH_FAILED	1	-1	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_RB_NOORD_NEDERLAND_NETHERLANDS	FETCH_FAILED	1	-1	1	1	0	-1	1.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_RB_OVERIJSSEL_NETHERLANDS	FETCH_FAILED	1	-1	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_RB_ROTTERDAM_NETHERLANDS	FETCH_FAILED	1	-1	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_RB_ZEELAND_WEST_BRABANT_NETHERLANDS	FETCH_FAILED	1	-1	1	1	0	-1	1.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_RVS_NETHERLANDS	FETCH_FAILED	1	-1	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_SO_WARSZAWA_POLAND	FETCH_FAILED	1	-1	1	1	0	-1	1.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+GDPRHUB_TA_LUXEMBOURG_LUXEMBOURG	FETCH_FAILED	1	-1	1	1	0	-1	1.6	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+IA_COLLECTION_URLTEAM	OK	0	0	1716	1716	1716	1716	4.1	
+IA_COLLECTION_WEBWIDECRAWL	OK	0	0	10000	10001	10000	10000	13.4	
+IA_COLLECTION_WIKITEAM	OK	0	0	10000	10001	10000	10000	13.3	
+IA_COLLECTION_ARCHIVETEAM	OK	0	0	10000	10001	10000	10000	14.6	
+ARCHIVEIT_COLLECTIONS	OK	0	0	2000	2001	2000	2000	15.6	
+IA_COLLECTION_BITSAVERS	OK	0	0	10000	10001	10000	10000	11.9	
+IA_COLLECTION_TVNEWS	OK	0	0	10000	10001	10000	10000	12.9	
+IA_COLLECTION_FEDLINK	OK	0	0	10000	10001	10000	10000	14.6	
+IA_COLLECTION_NASA	OK	0	0	10000	10001	10000	10000	17.3	
+IA_COLLECTION_WEB_COLLECTION	OK	0	0	10000	10001	10000	10000	18.1	
+IA_COLLECTION_DOCUMENTCLOUD	OK	0	0	10000	10001	10000	10000	16.6	
+IA_COLLECTION_INLIBRARY	OK	0	0	10000	10001	10000	10000	20.0	
+IA_COLLECTION_JSTOR_EARLY_JOURNALS	OK	0	0	10000	10001	10000	10000	20.8	
+IA_COLLECTION_SOFTWARE_LIBRARY	OK	0	0	10000	10001	10000	10000	29.5	
+IA_COLLECTION_MAGAZINE_RACK	OK	0	0	10000	10001	10000	10000	37.5	
+IA_TEXTS_JP	OK	0	0	10000	10001	10000	10000	14.1	
+IA_TEXTS_AR	OK	0	0	10000	10001	10000	10000	12.3	
+IA_COLLECTION_RSS_ARCHIVETEAM	OK	0	0	50	50	50	50	1.1	
+IA_COLLECTION_PODCASTS	OK	0	0	10000	10001	10000	10000	39.1	
+IA_COLLECTION_UNIVERSAL_LIBRARY	OK	0	0	10000	10001	10000	10000	18.4	
+SWH_ARCHIVE_COUNTERS	OK	0	0	1	1	1	1	1.4	
+ZENODO_TOPIC_DARK_WEB	OK	0	0	217	217	217	217	10.5	
+IA_TEXTS_RU	OK	0	0	10000	10001	10000	10000	15.6	
+ZENODO_TOPIC_TOR	OK	0	0	35	35	35	35	3.8	
+IA_TEXTS_ZH	OK	0	0	10000	10001	10000	10000	20.7	
+ZENODO_TOPIC_OSINT	OK	0	0	543	543	543	543	22.5	
+ARCHIVEIT_SEEDS	OK	0	0	2000	2001	2000	2000	96.6	
+ZENODO_TOPIC_CRYPTO_ILLICIT	OK	0	0	50	51	50	50	3.6	
+ZENODO_TOPIC_TELEGRAM	OK	0	0	125	126	125	125	6.2	
+ZENODO_LICENSES	OK	0	0	444	444	444	444	3.9	
+FIGSHARE_CATEGORIES	OK	0	0	2180	2180	2180	2180	2.0	
+FIGSHARE_LICENSES	OK	0	0	7	7	7	7	1.1	
+ZENODO_TOPIC_PHISHING	OK	0	0	750	751	750	750	35.8	
+ZENODO_TOPIC_MALWARE	OK	0	0	750	751	750	750	27.4	
+OSF_INSTITUTIONS	OK	0	0	53	53	53	53	1.4	
+OSF_PREPRINT_PROVIDERS	OK	0	0	32	32	32	32	1.5	
+OSF_COLLECTION_PROVIDERS	OK	0	0	14	14	14	14	1.1	
+OSF_REGISTRATION_PROVIDERS	OK	0	0	16	16	16	16	1.3	
+ZENODO_TOPIC_THREAT_INTEL	OK	0	0	750	751	750	750	31.2	
+ZENODO_TOPIC_DISINFORMATION	OK	0	0	750	751	750	750	36.5	
+OSF_SUBJECTS	OK	0	0	1239	1239	1239	1239	17.7	
+DATAVERSE_HARVARD_DATAVERSES	OK	0	0	2000	2001	2000	2000	19.4	
+ZENODO_TOPIC_SANCTIONS	OK	0	0	750	751	750	750	34.2	
+DATAVERSE_AUSSDA_LATEST_DATASETS	OK	0	0	1623	1623	1623	1623	18.9	
+DATAVERSE_NL_LATEST_DATASETS	OK	0	0	2000	2001	2000	2000	27.1	
+DATAVERSE_UVA_LATEST_DATASETS	OK	0	0	794	794	794	794	28.9	
+DATAVERSE_IRD_FR_LATEST_DATASETS	OK	0	0	1381	1381	1381	1381	32.0	
+DATAVERSE_HEIDATA_LATEST_DATASETS	OK	0	0	802	802	802	802	15.5	
+DATAVERSE_UCLA_LATEST_DATASETS	FETCH_FAILED	1	-1	1	1	0	-1	1.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+DATAVERSE_YALE_LATEST_DATASETS	OK	0	0	367	367	367	367	9.0	
+DATAVERSE_ABACUS_UBC_LATEST_DATASETS	FETCH_FAILED	0	0	1	1	0	-1	1.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+DATAVERSE_DARUS_LATEST_DATASETS	OK	0	0	2000	2001	2000	2000	29.7	
+DATAVERSE_EDMOND_MPG_LATEST_DATASETS	OK	0	0	1914	1915	1914	1914	27.7	
+DATAVERSE_HARVARD_LATEST_DATASETS	OK	0	0	2000	2001	2000	2000	71.2	
+DATAVERSE_QDR_LATEST_DATASETS	OK	0	0	238	238	238	238	10.2	
+DATAVERSE_UCHILE_LATEST_DATASETS	FETCH_FAILED	1	-1	1	1	0	-1	20.6	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+DATAVERSE_CROSSDA_LATEST_DATASETS	OK	0	0	40	40	40	40	2.8	
+DATAVERSE_UNIMI_LATEST_DATASETS	OK	0	0	728	728	728	728	19.4	
+DATAVERSE_INSTALLATIONS_REGISTRY	OK	0	0	150	150	150	150	1.0	
+DATAVERSE_PUCP_LATEST_DATASETS	OK	0	0	833	833	833	833	23.2	
+NADA_UNHCR_CATALOG	OK	0	0	1108	1108	1108	1108	3.6	
+NADA_ZAMBIA_CATALOG	OK	0	0	25	25	25	25	2.9	
+NADA_FAO_CATALOG	OK	0	0	1786	1786	1786	1786	5.8	
+NADA_CAMBODIA_CATALOG	OK	0	0	45	45	45	45	1.8	
+DATAVERSE_KU_LEUVEN_LATEST_DATASETS	FETCH_FAILED	1	-1	1	1	0	-1	25.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+DATAVERSE_FIU_LATEST_DATASETS	OK	0	0	123	123	123	123	32.8	
+NADA_ERF_MENA_CATALOG	OK	0	0	211	211	211	211	2.8	
+DATAVERSE_BRIN_ID_LATEST_DATASETS	OK	0	0	2000	2001	2000	2000	38.6	
+NADA_PALESTINE_CATALOG	FETCH_FAILED	1	-1	1	1	0	-1	2.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+NADA_DATAFIRST_SA_CATALOG	OK	0	0	605	605	605	605	9.5	
+NADA_SOMALIA_CATALOG	FETCH_FAILED	1	-1	1	1	0	-1	3.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+NADA_ARMENIA_CATALOG	OK	0	0	26	26	26	26	3.3	
+NADA_COSTA_RICA_CATALOG	FETCH_FAILED	1	-1	1	1	0	-1	10.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+NB_NO_LATEST_NEWSPAPERS	COLLISION	0	0	2000	1997	1996	2000	12.9	4 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+NADA_NEPAL_CATALOG	FETCH_FAILED	1	-1	1	1	0	-1	21.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+NB_NO_LATEST_PHOTOS	COLLISION	0	0	2000	2000	1999	2000	22.6	1 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+DATAVERSE_RDG_FR_LATEST_DATASETS	OK	0	0	2000	2001	2000	2000	108.7	
+NB_NO_LATEST_PERIODICALS	COLLISION	0	0	2000	1972	1971	2000	15.6	29 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+NB_NO_LATEST_BOOKS	COLLISION	0	0	2000	1908	1907	2000	41.3	93 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+NB_NO_LATEST_MAPS	OK	0	0	2000	2001	2000	2000	34.9	
+LOC_FREE_TO_USE_SETS	OK	0	0	1	1	1	1	0.9	
+LOC_NOTATED_MUSIC_LATEST	OK	0	0	602	602	602	602	7.6	
+SEC_EDGAR_DAILY_INDEX_LISTING	OK	0	0	37	37	37	37	1.0	
+SEC_EDGAR_DAILY_INDEX_CURRENT_QTR_LISTING	OK	0	0	320	320	320	320	1.2	
+SEC_EDGAR_FULL_INDEX_LISTING	OK	0	0	53	53	53	53	1.0	
+LOC_WEB_ARCHIVES_LATEST	FETCH_FAILED	1	-1	1	1	0	-1	40.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+SEC_EDGAR_FEED_LISTING	OK	0	0	32	32	32	32	8.2	
+RIR_LISTING_RIPE_STATS	OK	0	0	10	10	10	10	1.0	
+RIR_LISTING_RIPE_DBASE_SPLIT	OK	0	0	42	42	42	42	1.0	
+RIR_LISTING_RIPE_MEMBERSHIP	OK	0	0	2	2	2	2	1.0	
+RIR_LISTING_ARIN_IRR	OK	0	0	3	3	3	3	1.0	
+LOC_COLLECTIONS_LATEST	FETCH_FAILED	1	-1	1	1	0	-1	40.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+RIR_LISTING_ARIN_STATS	OK	0	0	596	596	596	596	1.2	
+RIR_LISTING_APNIC_WHOIS	OK	0	0	27	27	27	27	1.5	
+SEC_EDGAR_OLDLOADS_LISTING	OK	0	0	31	31	31	31	11.1	
+RIR_LISTING_APNIC_STATS	OK	0	0	67	67	67	67	1.9	
+RIR_LISTING_AFRINIC_DBASE	OK	0	0	3	3	3	3	1.8	
+IANA_REGISTRAR_IDS_CSV	OK	0	0	4508	4508	4508	4508	2.3	
+RIR_LISTING_LACNIC_IRR	OK	0	0	5003	5003	5003	5003	3.2	
+IANA_ROOT_ZONE_DATABASE	OK	0	0	1603	1603	1603	1603	1.9	
+OPENALEX_WORKS_SDG16_LATEST	FETCH_FAILED	0	0	1	1	0	-1	1.2	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+RIPESTAT_RRC_INFO	OK	0	0	26	26	26	26	1.6	
+OPENALEX_WORKS_REPOSITORY_LATEST	FETCH_FAILED	0	0	1	1	0	-1	1.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+S2_DATASET_RELEASE_LATEST	FETCH_FAILED	0	0	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+MISPGAL_ATTACK_ENT_INTRUSION_SET	OK	0	0	69	69	69	69	0.9	
+MISPGAL_ATTACK_MOB_INTRUSION_SET	OK	0	0	1	1	1	1	0.8	
+MISPGAL_ATTACK_PRE_INTRUSION_SET	OK	0	0	7	7	7	7	0.8	
+MISPGAL_ATTACK_ICS_GROUPS	OK	0	0	10	10	10	10	0.9	
+MISPGAL_MS_ACTIVITY_GROUP	OK	0	0	179	179	179	179	0.9	
+DATACITE_DOIS_DARK_WEB_SUBJECT	COLLISION	0	0	438	437	437	438	5.7	1 of 438 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+DIGITAL_COMMONWEALTH_LATEST	OK	0	0	2000	2001	2000	2000	31.9	
+OPENLIBRARY_RECENT_CHANGES	OK	0	0	2000	2001	2000	2000	6.4	
+MISPGAL_CERTEU_GOVSECTOR	OK	0	0	6	6	6	6	0.9	
+MISPGAL_THREATACTOR_360	OK	0	0	42	42	42	42	1.2	
+MISPGAL_INTEL_AGENCIES	OK	0	0	436	436	436	436	1.4	
+MISPGAL_TIDAL_GROUPS	OK	0	0	281	281	281	281	1.3	
+MISPGAL_DISARM_ACTORTYPES	OK	0	0	33	33	33	33	1.3	
+MISPGAL_MALWARE_RAT	OK	0	0	270	270	270	270	1.4	
+MISPGAL_EXPLOIT_KIT	OK	0	0	54	54	54	54	1.0	
+MISPGAL_SURVEILLANCE_VENDOR	OK	0	0	615	615	615	615	2.3	
+MISPGAL_MALWARE_TDS	OK	0	0	11	11	11	11	1.4	
+MISPGAL_MALWARE_STEALER	OK	0	0	18	18	18	18	1.7	
+MISPGAL_MALWARE_BANKER	OK	0	0	53	53	53	53	1.4	
+MISPGAL_MALWARE_BACKDOOR	OK	0	0	30	30	30	30	1.6	
+MISPGAL_MALWARE_WIPER	OK	0	0	25	25	25	25	1.4	
+MISPGAL_MALWARE_CRYPTOMINER	OK	0	0	5	5	5	5	1.3	
+MISPGAL_MALWARE_ANDROID	OK	0	0	450	450	450	450	1.2	
+MISPGAL_MALWARE_STALKERWARE	OK	0	0	170	170	170	170	1.4	
+MISPGAL_ATTACK_MALWARE	OK	0	0	854	854	854	854	1.8	
+MISPGAL_ATTACK_MOB_MALWARE	OK	0	0	35	35	35	35	1.1	
+MISPGAL_ATTACK_ENT_MALWARE	OK	0	0	188	188	188	188	1.7	
+MISPGAL_MALWARE_MALPEDIA	OK	0	0	3683	3683	3683	3683	4.2	
+MISPGAL_ATTACK_TOOL	OK	0	0	97	97	97	97	1.5	
+MISPGAL_ATTACK_ENT_TOOL	OK	0	0	45	45	45	45	1.5	
+MISPGAL_ATTACK_ICS_SOFTWARE	OK	0	0	17	17	17	17	1.8	
+MISPGAL_ATTACK_MOB_TOOL	OK	0	0	1	1	1	1	1.3	
+MISPGAL_RMM_TOOL	OK	0	0	288	288	288	288	1.6	
+MISPGAL_BRANDED_VULN	OK	0	0	14	14	14	14	1.0	
+MISPGAL_MALWARE_AMMUNITIONS	OK	0	0	409	409	409	409	2.0	
+MISPGAL_MALWARE_CLOAK	OK	0	0	13	13	13	13	1.0	
+MISPGAL_TIDAL_SOFTWARE	OK	0	0	1321	1321	1321	1321	2.3	
+MISPGAL_ATTACK_ENT_PATTERN	OK	0	0	219	219	219	219	1.5	
+MISPGAL_AGENT_THREAT_RULES	OK	0	0	713	713	713	713	2.1	
+MISPGAL_ATTACK_PATTERN	OK	0	0	1414	1414	1414	1414	2.2	
+MISPGAL_ATTACK_MOB_PATTERN	OK	0	0	76	76	76	76	1.5	
+MISPGAL_ATTACK_ICS_TECHNIQUES	OK	0	0	78	78	78	78	1.4	
+MISPGAL_ATTACK_PRE_PATTERN	OK	0	0	174	174	174	174	1.5	
+MISPGAL_CMTMF_PATTERN	OK	0	0	93	93	93	93	1.4	
+MISPGAL_ATLAS_PATTERN	OK	0	0	197	197	197	197	1.6	
+MISPGAL_ATTCK4FRAUD	OK	0	0	71	71	71	71	1.2	
+MISPGAL_O365_TECHNIQUES	OK	0	0	62	62	62	62	1.4	
+MISPGAL_BHADRA_FRAMEWORK	OK	0	0	47	47	47	47	1.1	
+MISPGAL_ATRM_TECHNIQUES	OK	0	0	90	90	90	90	1.3	
+MISPGAL_DISARM_TECHNIQUES	OK	0	0	298	298	298	298	1.4	
+MISPGAL_AMITT_PATTERN	OK	0	0	61	61	61	61	1.3	
+MISPGAL_DIMA_TECHNIQUES	OK	0	0	44	44	44	44	1.3	
+MISPGAL_SPARTA_TECHNIQUES	OK	0	0	258	258	258	258	1.4	
+MISPGAL_TIDAL_TECHNIQUE	OK	0	0	211	211	211	211	1.5	
+MISPGAL_ATTACK_ICS_TACTICS	OK	0	0	9	9	9	9	1.3	
+MISPGAL_TIDAL_TACTIC	OK	0	0	14	14	14	14	1.1	
+MISPGAL_HUMAN_KILL_CHAIN	OK	0	0	17	17	17	17	1.6	
+MISPGAL_SPARTA_TACTICS	OK	0	0	9	9	9	9	0.9	
+MISPGAL_ATTACK_MOB_COA	OK	0	0	14	14	14	14	1.4	
+MISPGAL_ATTACK_COA	OK	0	0	335	335	335	335	1.6	
+MISPGAL_ATLAS_COA	OK	0	0	39	39	39	39	1.1	
+MISPGAL_ATTACK_ENT_COA	OK	0	0	215	215	215	215	1.9	
+MISPGAL_PREVENTIVE_MEASURE	OK	0	0	23	23	23	23	1.5	
+MISPGAL_D3FEND	OK	0	0	275	275	275	275	1.3	
+MISPGAL_DISARM_COUNTERMEASURES	OK	0	0	139	139	139	139	1.7	
+MISPGAL_DISARM_DETECTIONS	OK	0	0	94	94	94	94	1.4	
+MISPGAL_SPARTA_MITIGATIONS	OK	0	0	268	268	268	268	1.2	
+MISPGAL_ATTACK_DATA_SOURCE	OK	0	0	42	42	42	42	1.3	
+MISPGAL_ATTACK_DATA_COMPONENT	OK	0	0	123	123	123	123	1.6	
+MISPGAL_ATTACK_DETECTION_STRATEGY	OK	0	0	935	935	935	935	1.5	
+MISPGAL_FIRST_DNS	OK	0	0	21	21	21	21	1.0	
+MISPGAL_ATTACK_ANALYTIC	OK	0	0	2283	2283	2283	2283	2.7	
+MISPGAL_RSIT	OK	0	0	39	39	39	39	1.5	
+MISPGAL_TIDAL_CAMPAIGNS	OK	0	0	157	157	157	157	1.5	
+MISPGAL_TARGET_INFORMATION	OK	0	0	241	241	241	241	1.5	
+MISPGAL_SIGMA_RULES	OK	0	0	3144	3144	3144	3144	3.5	
+MISPGAL_MITRE_FRAUD_FRAMEWORK	OK	0	0	123	123	123	123	1.0	
+MISPGAL_SECTOR	OK	0	0	119	119	119	119	1.3	
+MISPGAL_TAXONOMY_OF_FRAUD	OK	0	0	206	206	206	206	1.7	
+MISPGAL_SOCIAL_DARK_PATTERNS	OK	0	0	19	19	19	19	1.3	
+MISPGAL_ATTACK_ICS_ASSETS	OK	0	0	7	7	7	7	1.2	
+MISPGAL_SCOR_INCIDENTS	OK	0	0	15	15	15	15	1.2	
+MISPGAL_SCOR_ATTACK_PATHS	OK	0	0	8	8	8	8	1.3	
+MISPGAL_ELECTION_GUIDELINES	OK	0	0	23	23	23	23	1.2	
+MISPGAL_INTERPOL_DWVA	OK	0	0	94	94	94	94	1.9	
+MISPGAL_GSMA_MOTIF	OK	0	0	50	50	50	50	1.5	
+MISPGAL_ATTACK_ENGAGE	OK	0	0	77	77	77	77	1.4	
+MISPGAL_PLOT4AI	OK	0	0	138	138	138	138	1.5	
+MISPGAL_FIRST_CSIRT_SERVICES	OK	0	0	97	97	97	97	1.3	
+MISPGAL_CYFUN_CONTROLS	OK	0	0	107	107	107	107	1.2	
+MISPGAL_CYFUN_ASSURANCE	OK	0	0	233	233	233	233	1.5	
+MISPGAL_ATTACK_ICS_LEVELS	OK	0	0	3	3	3	3	1.4	
+MISPGAL_CHINA_DEFENCE_UNIV	OK	0	0	159	159	159	159	1.3	
+MISPGAL_SOFTWARE_VENDOR	OK	0	0	1000	1000	1000	1000	2.1	
+SSLBL_JA3_FINGERPRINTS	OK	0	0	97	97	97	97	1.2	
+RANSOMLOOK_MARKETS	OK	0	0	1	1	1	1	1.7	
+APTNOTES_REPORTS	COLLISION	0	0	689	687	687	689	1.1	2 of 689 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+DISARM_STIX_BUNDLE	OK	0	0	698	698	698	698	1.3	
+ATTACK_TO_CVE_MAP	OK	0	0	839	839	839	839	1.5	
+MISPGAL_CTI_CMM	OK	0	0	199	199	199	199	1.2	
+MISPGAL_SCOR_TENS	OK	0	0	30	30	30	30	1.2	
+MISPGAL_SCOR_EXPOSURE	OK	0	0	5	5	5	5	1.3	
+TOR_METRICS_NETWORKSIZE	OK	0	0	6889	6889	6889	6889	5.0	
+TOR_METRICS_PLATFORMS	OK	0	0	6855	6855	6855	6855	4.8	
+TOR_METRICS_BANDWIDTH	OK	0	0	6905	6905	6905	6905	5.0	
+TOR_METRICS_HIDSERV_ONIONS_SEEN	OK	0	0	4285	4285	4285	4285	3.7	
+TOR_METRICS_DIRBYTES	OK	0	0	5848	5848	5848	5848	4.3	
+TOR_METRICS_HIDSERV_RELAYED_CELLS	OK	0	0	4287	4287	4287	4287	3.8	
+TOR_METRICS_WEBSTATS_TB	OK	0	0	3781	3781	3781	3781	3.1	
+TOR_METRICS_RELAYS_IPV6	OK	0	0	6855	6855	6855	6855	4.8	
+TOR_METRICS_BRIDGES_IPV6	OK	0	0	6625	6625	6625	6625	4.1	
+LOC_BOOKS_LATEST	COLLISION	0	0	2000	1968	1967	2000	103.0	33 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+TOR_COLLECTOR_INDEX	OK	0	0	2	2	2	2	3.1	
+CHAN_4CDN_BOARDS	OK	0	0	77	77	77	77	1.7	
+RANSOMWARELIVE_POSTS	OK	0	0	33132	33132	33132	33132	21.3	
+RANSOMLOOK_STATS	OK	0	0	1	1	1	1	3.6	
+LEMMY_COMMUNITIES_LEMMY_ZIP	OK	0	0	296	296	296	296	3.3	
+LEMMY_COMMUNITIES_SH_ITJUST_WORKS	OK	0	0	927	927	927	927	4.3	
+LEMMY_COMMUNITIES_LEMMY_DBZER0_COM	OK	0	0	324	324	324	324	2.9	
+LEMMY_COMMUNITIES_LEMMY_WORLD	OK	0	0	1000	1001	1000	1000	7.2	
+LEMMY_COMMUNITIES_PROGRAMMING_DEV	OK	0	0	440	440	440	440	3.0	
+LEMMY_COMMUNITIES_LEMMY_ML	OK	0	0	1000	1001	1000	1000	5.4	
+LEMMY_COMMUNITIES_LEMMY_CA	OK	0	0	925	925	925	925	4.4	
+LEMMY_COMMUNITIES_LEMMY_BLAHAJ_ZONE	OK	0	0	333	333	333	333	3.4	
+LEMMY_COMMUNITIES_DISCUSS_TCHNCS_DE	OK	0	0	304	304	304	304	2.8	
+LEMMY_COMMUNITIES_LEMMY_TODAY	OK	0	0	72	72	72	72	1.5	
+LEMMY_COMMUNITIES_BEEHAW_ORG	OK	0	0	39	39	39	39	1.1	
+LEMMY_COMMUNITIES_SOPULI_XYZ	OK	0	0	461	461	461	461	3.2	
+LEMMY_COMMUNITIES_REDDTHAT_COM	OK	0	0	238	238	238	238	1.7	
+LEMMY_COMMUNITIES_PAWB_SOCIAL	OK	0	0	89	89	89	89	1.7	
+LEMMY_COMMUNITIES_JLAI_LU	OK	0	0	137	137	137	137	1.9	
+LEMMY_COMMUNITIES_FEDDIT_NL	OK	0	0	137	137	137	137	1.8	
+LEMMY_COMMUNITIES_THELEMMY_CLUB	OK	0	0	139	139	139	139	1.5	
+LEMMY_COMMUNITIES_LEMMY_SDF_ORG	FETCH_FAILED	1	-1	1	1	0	-1	1.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+LEMMY_COMMUNITIES_TTRPG_NETWORK	OK	0	0	58	58	58	58	1.7	
+LEMMY_COMMUNITIES_FEDDIT_DK	OK	0	0	37	37	37	37	1.4	
+LEMMY_COMMUNITIES_ANI_SOCIAL	OK	0	0	110	110	110	110	1.6	
+LEMMY_COMMUNITIES_STARTREK_WEBSITE	OK	0	0	8	8	8	8	0.9	
+LEMMY_COMMUNITIES_LEMINAL_SPACE	OK	0	0	40	40	40	40	1.1	
+LEMMY_COMMUNITIES_FEDDIT_IT	OK	0	0	79	79	79	79	2.2	
+LEMMY_COMMUNITIES_LEMMY_WTF	OK	0	0	17	17	17	17	1.6	
+LEMMY_COMMUNITIES_LEMMUS_ORG	OK	0	0	2	2	2	2	1.2	
+LEMMY_COMMUNITIES_LEMMY_NZ	OK	0	0	9	9	9	9	2.5	
+LEMMY_COMMUNITIES_AWFUL_SYSTEMS	OK	0	0	9	9	9	9	1.6	
+LEMMY_COMMUNITIES_SZMER_INFO	OK	0	0	218	218	218	218	3.3	
+LEMMY_COMMUNITIES_SLRPNK_NET	FETCH_FAILED	1	-1	1	1	0	-1	12.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+PEERTUBE_CHANNELS_VOD_COMMUNITYBROADCASTING_UK	OK	0	0	32	32	32	32	1.5	
+PEERTUBE_CHANNELS_POSSON_ME	OK	0	0	2	2	2	2	1.6	
+PEERTUBE_CHANNELS_STREAM_UXD_UNI_BAMBERG_DE	OK	0	0	36	36	36	36	1.9	
+LEMMY_COMMUNITIES_MANDER_XYZ	FETCH_FAILED	1	-1	1	1	0	-1	11.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+PEERTUBE_CHANNELS_LIVE_VIRTUALABS_FR	OK	0	0	2	2	2	2	1.4	
+PEERTUBE_CHANNELS_TUBE_MARTINS_ALMEIDA_COM	OK	0	0	2	2	2	2	1.9	
+PEERTUBE_CHANNELS_PEER_SIARTC_ORG	FETCH_FAILED	1	-1	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+PEERTUBE_CHANNELS_VIDEO_SABATINO_CLOUD	OK	0	0	1000	1001	1000	1000	11.3	
+PEERTUBE_CHANNELS_VIDS_TEKDMN_ME	FETCH_FAILED	1	-1	1	1	0	-1	10.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+PEERTUBE_CHANNELS_VID_CULT9_XYZ	OK	0	0	11	11	11	11	1.3	
+PEERTUBE_CHANNELS_TUBE_BAEDDEL_SOCIAL	FETCH_FAILED	1	-1	1	1	0	-1	19.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+PEERTUBE_CHANNELS_TUBE_THELIBERATEDEDGE_ORG	OK	0	0	19	19	19	19	1.9	
+PEERTUBE_CHANNELS_VIDEO_GRENAT_ART	FETCH_FAILED	1	-1	1	1	0	-1	12.6	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+LOC_FILM_LATEST	COLLISION	0	0	2000	1997	1996	2000	145.6	4 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+PEERTUBE_CHANNELS_TUBE_RFC1149_NET	OK	0	0	956	957	956	956	6.2	
+PEERTUBE_CHANNELS_PEERTUBE_EASTER_FR	OK	0	0	7	7	7	7	1.9	
+PEERTUBE_CHANNELS_VIDEO_GREGTECH_EU	OK	0	0	5100	5101	5100	5100	29.1	
+PEERTUBE_CHANNELS_MONITOR_GROSSERMENSCH_EU	OK	0	0	2	2	2	2	1.5	
+PEERTUBE_CHANNELS_PEER_ADALTA_SOCIAL	OK	0	0	1000	1001	1000	1000	6.6	
+PEERTUBE_CHANNELS_VIDEOS_TBQDRN_DE	OK	0	0	4	4	4	4	1.5	
+PEERTUBE_CHANNELS_TUBE_FULDA_SOCIAL	OK	0	0	2825	2826	2825	2825	15.6	
+PEERTUBE_CHANNELS_TUBE_FJARDS_FR	FETCH_FAILED	1	-1	1	1	0	-1	11.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+PEERTUBE_CHANNELS_VIDEO_DRONEGENERATION_XYZ	OK	0	0	6	6	6	6	1.5	
+PEERTUBE_CHANNELS_MICANAL_ENCANARIAS_INFO	FETCH_FAILED	1	-1	1	1	0	-1	5.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+PEERTUBE_CHANNELS_VIDEOS_TFCCONNECTION_ORG	OK	0	0	2	2	2	2	1.2	
+PEERTUBE_CHANNELS_RAJITH_NETWORK	OK	0	0	5	5	5	5	2.8	
+MASTODON_ACTIVITY_MASTODON_SOCIAL	OK	0	0	12	12	12	12	1.0	
+PEERTUBE_CHANNELS_VIDEO_STEVESWORLD_CO	OK	0	0	3	3	3	3	1.2	
+PEERTUBE_CHANNELS_VIDEOS_SIDE_WAYS_NET	OK	0	0	4	4	4	4	2.0	
+MASTODON_ACTIVITY_MSTDN_SOCIAL	OK	0	0	12	12	12	12	1.0	
+MASTODON_ACTIVITY_MSTDN_JP	OK	0	0	12	12	12	12	1.1	
+MASTODON_ACTIVITY_MASTODON_WORLD	OK	0	0	12	12	12	12	1.1	
+MASTODON_ACTIVITY_UNIVERSEODON_COM	OK	0	0	12	12	12	12	1.0	
+MASTODON_ACTIVITY_TECHHUB_SOCIAL	OK	0	0	12	12	12	12	1.2	
+MASTODON_ACTIVITY_MASTODON_SDF_ORG	OK	0	0	12	12	12	12	1.5	
+MASTODON_ACTIVITY_MASTODONAPP_UK	OK	0	0	12	12	12	12	1.1	
+MASTODON_ACTIVITY_MSTDN_PARTY	OK	0	0	12	12	12	12	0.9	
+MASTODON_ACTIVITY_MASTODON_UNO	OK	0	0	12	12	12	12	1.1	
+MASTODON_ACTIVITY_INFOSEC_EXCHANGE	OK	0	0	12	12	12	12	1.0	
+MASTODON_ACTIVITY_HACHYDERM_IO	OK	0	0	12	12	12	12	1.1	
+MASTODON_ACTIVITY_SFBA_SOCIAL	OK	0	0	12	12	12	12	1.2	
+PEERTUBE_CHANNELS_VIDEO_FEELGOODTV_DE	OK	0	0	1044	1045	1044	1044	7.9	
+MASTODON_ACTIVITY_OHAI_SOCIAL	OK	0	0	12	12	12	12	1.7	
+MASTODON_ACTIVITY_MASTODON_NL	OK	0	0	12	12	12	12	1.3	
+MASTODON_ACTIVITY_MINDLY_SOCIAL	OK	0	0	12	12	12	12	1.4	
+MASTODON_ACTIVITY_TROET_CAFE	OK	0	0	12	12	12	12	1.6	
+PEERTUBE_CHANNELS_PEERTUBE_GET_RACING_DE	FETCH_FAILED	1	-1	1	1	0	-1	21.1	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+MASTODON_ACTIVITY_MSTDN_CA	OK	0	0	12	12	12	12	1.0	
+MASTODON_ACTIVITY_KOLEKTIVA_SOCIAL	OK	0	0	12	12	12	12	1.1	
+MASTODON_ACTIVITY_MASTODON_SCOT	OK	0	0	12	12	12	12	1.0	
+MASTODON_ACTIVITY_MASTODON_AU	OK	0	0	12	12	12	12	1.2	
+MASTODON_ACTIVITY_TKZ_ONE	OK	0	0	12	12	12	12	1.2	
+MASTODON_ACTIVITY_IOC_EXCHANGE	OK	0	0	12	12	12	12	1.3	
+MASTODON_ACTIVITY_NERDCULTURE_DE	OK	0	0	12	12	12	12	2.1	
+MASTODON_ACTIVITY_SOCIAL_VIVALDI_NET	OK	0	0	12	12	12	12	1.2	
+MASTODON_ACTIVITY_WXW_MOE	OK	0	0	12	12	12	12	1.3	
+MASTODON_ACTIVITY_PIAILLE_FR	OK	0	0	12	12	12	12	1.3	
+MASTODON_ACTIVITY_MASTODON_IE	OK	0	0	12	12	12	12	1.7	
+MASTODON_ACTIVITY_MASTODON_BIDA_IM	OK	0	0	12	12	12	12	1.7	
+MASTODON_ACTIVITY_MASTO_NU	OK	0	0	12	12	12	12	1.7	
+MASTODON_ACTIVITY_NRW_SOCIAL	OK	0	0	12	12	12	12	1.3	
+MASTODON_ACTIVITY_MASTODON_NU	OK	0	0	12	12	12	12	1.0	
+MASTODON_ACTIVITY_MASTODONTECH_DE	OK	0	0	12	12	12	12	1.6	
+DISCOURSE_CATEGORIES_DISCOURSE_JULIALANG_ORG	OK	0	0	13	13	13	13	1.1	
+DISCOURSE_CATEGORIES_DISCUSS_PYTORCH_ORG	OK	0	0	37	37	37	37	1.3	
+DISCOURSE_CATEGORIES_COMMUNITY_HOME_ASSISTANT_IO	OK	0	0	18	18	18	18	1.1	
+DISCOURSE_CATEGORIES_FORUM_OBSIDIAN_MD	OK	0	0	12	12	12	12	1.1	
+DISCOURSE_CATEGORIES_COMMUNITY_GRAFANA_COM	OK	0	0	12	12	12	12	1.1	
+DISCOURSE_CATEGORIES_FORUMS_DOCKER_COM	OK	0	0	9	9	9	9	1.0	
+DISCOURSE_CATEGORIES_DISCOURSE_MOZILLA_ORG	OK	0	0	19	19	19	19	1.2	
+DISCOURSE_CATEGORIES_COMMUNITY_OPENAI_COM	OK	0	0	12	12	12	12	1.2	
+DISCOURSE_CATEGORIES_FORUM_MANJARO_ORG	OK	0	0	11	11	11	11	1.7	
+DISCOURSE_CATEGORIES_FORUM_RCLONE_ORG	OK	0	0	11	11	11	11	1.3	
+DISCOURSE_CATEGORIES_DISCOURSE_OSGEO_ORG	OK	0	0	17	17	17	17	1.7	
+DISCOURSE_CATEGORIES_COMMUNITY_FRAME_WORK	OK	0	0	10	10	10	10	1.3	
+DISCOURSE_CATEGORIES_DISCUSS_ELASTIC_CO	OK	0	0	10	10	10	10	1.2	
+DISCOURSE_CATEGORIES_FORUM_GITLAB_COM	OK	0	0	10	10	10	10	1.1	
+DISCOURSE_CATEGORIES_FORUM_SNAPCRAFT_IO	OK	0	0	16	16	16	16	1.6	
+DISCOURSE_CATEGORIES_DISCOURSE_NIXOS_ORG	OK	0	0	10	10	10	10	1.2	
+DISCOURSE_CATEGORIES_FORUM_ENDEAVOUROS_COM	OK	0	0	8	8	8	8	1.6	
+DISCOURSE_CATEGORIES_DISCUSS_HASHICORP_COM	OK	0	0	20	20	20	20	1.3	
+DISCOURSE_CATEGORIES_COMMUNITY_N8N_IO	OK	0	0	17	17	17	17	1.3	
+DISCOURSE_CATEGORIES_FORUM_GOLANGBRIDGE_ORG	OK	0	0	6	6	6	6	1.3	
+DISCOURSE_CATEGORIES_DISCOURSE_GNOME_ORG	OK	0	0	9	9	9	9	1.0	
+DISCOURSE_CATEGORIES_COMMUNITY_WANIKANI_COM	OK	0	0	3	3	3	3	1.2	
+DISCOURSE_CATEGORIES_COMMUNITY_AUTH0_COM	OK	0	0	14	14	14	14	1.1	
+DISCOURSE_CATEGORIES_FORUM_GHOST_ORG	OK	0	0	14	14	14	14	1.3	
+DISCOURSE_CATEGORIES_DISCUSS_LINUXCONTAINERS_ORG	OK	0	0	10	10	10	10	1.1	
+DISCOURSE_CATEGORIES_DISCOURSE_UBUNTU_COM	OK	0	0	10	10	10	10	1.1	
+DISCOURSE_CATEGORIES_COMMUNITY_PLOTLY_COM	OK	0	0	9	9	9	9	1.3	
+NOSTR_RELAY_RELAY_DAMUS_IO	OK	0	0	1	1	1	1	1.1	
+NOSTR_RELAY_NOS_LOL	OK	0	0	1	1	1	1	1.1	
+NOSTR_RELAY_NOSTR_WINE	OK	0	0	1	1	1	1	1.0	
+NOSTR_RELAY_RELAY_SNORT_SOCIAL	OK	0	0	1	1	1	1	1.3	
+NOSTR_RELAY_RELAY_PRIMAL_NET	OK	0	0	1	1	1	1	1.0	
+NOSTR_RELAY_NOSTR_BITCOINER_SOCIAL	OK	0	0	1	1	1	1	1.0	
+NOSTR_RELAY_RELAY_ORANGEPILL_DEV	OK	0	0	1	1	1	1	0.9	
+NOSTR_RELAY_NOSTR_MOM	OK	0	0	1	1	1	1	1.2	
+NOSTR_RELAY_NOSTR_OXTR_DEV	OK	0	0	1	1	1	1	1.3	
+NOSTR_RELAY_NOSTR_PUB_WELLORDER_NET	OK	0	0	1	1	1	1	1.3	
+NOSTR_RELAY_OFFCHAIN_PUB	OK	0	0	1	1	1	1	1.0	
+NOSTR_RELAY_NOSTR21_COM	OK	0	0	1	1	1	1	0.9	
+NOSTR_RELAY_PURPLEPAG_ES	OK	0	0	1	1	1	1	1.2	
+NOSTR_RELAY_RELAY_MOSTR_PUB	OK	0	0	1	1	1	1	1.5	
+NOSTR_RELAY_RELAY_NOSTRPLEBS_COM	OK	0	0	1	1	1	1	1.1	
+NOSTR_RELAY_RELAY_NOSTR_WIREDNET_JP	OK	0	0	1	1	1	1	1.4	
+MATRIX_PUBLICROOMS_MATRIX_ORG	OK	0	0	93	93	93	93	1.2	
+MATRIX_PUBLICROOMS_MATRIX_TCHNCS_DE	OK	0	0	100	100	100	100	1.8	
+MATRIX_PUBLICROOMS_GLOWERS_CLUB	OK	0	0	10	10	10	10	1.7	
+MATRIX_PUBLICROOMS_MIDOV_PL	OK	0	0	100	100	100	100	1.9	
+JPC_JVN_JP_ADVISORIES_HTML	OK	0	0	178	178	178	178	1.1	
+JPC_JVN_EN_VU_ADVISORIES_HTML	OK	0	0	52	52	52	52	1.3	
+JPC_JVN_VU_ADVISORIES_HTML	OK	0	0	393	393	393	393	2.8	
+NOSTR_RELAY_YABU_ME	OK	0	0	1	1	1	1	4.9	
+PEERTUBE_CHANNELS_HOLM_VIDEO	OK	0	0	5800	5801	5800	5800	59.1	
+JPC_JVN_EN_JP_ADVISORIES_HTML	OK	0	0	178	178	178	178	1.5	
+JPC_JVN_TRNOTES_RSS	OK	0	0	262	262	262	262	2.3	
+JPC_MYJVN_OVERVIEW_SEVERITY_MEDIUM	FETCH_FAILED	1	-1	1	1	0	-1	1.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPC_MYJVN_OVERVIEW_SEVERITY_HIGH	FETCH_FAILED	1	-1	1	1	0	-1	1.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPC_MYJVN_OVERVIEW_SEVERITY_LOW	FETCH_FAILED	1	-1	1	1	0	-1	1.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPC_MYJVN_OVERVIEW_SEVERITY_HIGH_EN	FETCH_FAILED	1	-1	1	1	0	-1	1.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPC_MYJVN_OVERVIEW_SEVERITY_MEDIUM_EN	FETCH_FAILED	1	-1	1	1	0	-1	1.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPC_JPCERT_NEWSFLASH_HTML	OK	0	0	264	264	264	264	1.5	
+JPC_IPA_NEWSONLY_RSS	OK	0	0	30	30	30	30	1.1	
+JPC_IPA_SECURITY_ALERT_HTML	OK	0	0	101	101	101	101	1.1	
+JPC_JPCERT_WEEKLY_REPORT_HTML	OK	0	0	40	40	40	40	1.7	
+JPC_JPCERT_TSUBAME_REPORTS_HTML	OK	0	0	57	57	57	57	1.7	
+JPC_ICT_ISAC_NEWS_HTML	OK	0	0	106	106	106	106	1.8	
+JPC_NEC_CYBERSECURITY_BLOG_RSS	OK	0	0	319	319	319	319	1.3	
+JPC_MITSUBISHI_ELECTRIC_PSIRT_RSS	OK	0	0	5	5	5	5	1.0	
+JPC_NICTER_BLOG_HTML	OK	0	0	10	10	10	10	1.6	
+JPC_GMO_CYBERSECURITY_BLOG_RSS	EMITS_NOTHING	0	0	0	0	0	-1	1.1	no records reached intel_items
+JPC_ELECOM_SECURITY_NOTICES_HTML	OK	0	0	21	21	21	21	1.5	
+JPC_RUBY_LANG_JA_NEWS_RSS	OK	0	0	10	10	10	10	1.0	
+JPC_CYBOZU_IMPORTANT_RSS	OK	0	0	20	20	20	20	0.9	
+JPC_CYBOZU_CLOUD_TROUBLE_RSS	OK	0	0	20	20	20	20	1.0	
+JPC_CYBOZU_KINTONE_TROUBLE_RSS	OK	0	0	20	20	20	20	0.8	
+JPC_CYBOZU_ALL_NOTICES_RSS	OK	0	0	20	20	20	20	1.9	
+JPC_UNIT42_JP_RSS	OK	0	0	15	15	15	15	2.4	
+JPC_CYBOZU_COMSTORE_TROUBLE_RSS	OK	0	0	6	6	6	6	1.8	
+JPC_JPCERT_PHISHURL_202401	OK	0	0	5772	5772	5772	5772	2.6	
+JPC_JPCERT_PHISHURL_202403	OK	0	0	6248	6248	6248	6248	2.6	
+JPC_JPCERT_PHISHURL_202402	OK	0	0	7994	7994	7994	7994	3.3	
+JPC_JPCERT_PHISHURL_202405	OK	0	0	5166	5166	5166	5166	2.5	
+JPC_JPCERT_PHISHURL_202404	COLLISION	0	0	7267	7266	7266	7267	3.5	1 of 7267 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JPC_JPCERT_PHISHURL_202406	OK	0	0	3906	3906	3906	3906	2.3	
+JPC_JPCERT_PHISHURL_202407	OK	0	0	3561	3561	3561	3561	2.0	
+JPC_JPCERT_PHISHURL_202409	OK	0	0	2416	2416	2416	2416	1.5	
+JPC_JPCERT_PHISHURL_202408	OK	0	0	3752	3752	3752	3752	2.0	
+JPC_JPCERT_PHISHURL_202410	OK	0	0	4729	4729	4729	4729	2.2	
+JPC_JPCERT_PHISHURL_202411	COLLISION	0	0	3415	3414	3414	3415	2.1	1 of 3415 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JPC_JPCERT_PHISHURL_202412	COLLISION	0	0	2686	2685	2685	2686	1.7	1 of 2686 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JPC_JPCERT_PHISHURL_202501	OK	0	0	2582	2582	2582	2582	1.7	
+JPC_JPCERT_PHISHURL_202502	OK	0	0	1790	1790	1790	1790	1.5	
+JPC_JPCERT_PHISHURL_202503	OK	0	0	2344	2344	2344	2344	1.6	
+JPC_JPCERT_PHISHURL_202504	OK	0	0	2068	2068	2068	2068	1.6	
+JPC_JPCERT_PHISHURL_202505	COLLISION	0	0	2572	2571	2571	2572	2.5	1 of 2572 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JPC_JPCERT_PHISHURL_202506	COLLISION	0	0	3718	3717	3717	3718	3.7	1 of 3718 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JPC_JPCERT_PHISHURL_202508	COLLISION	0	0	3035	3034	3034	3035	3.2	1 of 3035 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JPC_JPCERT_PHISHURL_202507	OK	0	0	5118	5118	5118	5118	4.7	
+JPC_JPCERT_PHISHURL_202509	COLLISION	0	0	2783	2781	2781	2783	3.6	2 of 2783 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JPC_JPCERT_PHISHURL_202602	OK	0	0	1625	1625	1625	1625	2.5	
+JPC_JPCERT_PHISHURL_202510	COLLISION	0	0	5818	5817	5817	5818	5.6	1 of 5818 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JPC_JPCERT_PHISHURL_202512	COLLISION	0	0	4448	4447	4447	4448	3.9	1 of 4448 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JPC_JPCERT_PHISHURL_202601	OK	0	0	2830	2830	2830	2830	3.9	
+JPC_JPCERT_PHISHURL_202511	COLLISION	0	0	6158	6155	6155	6158	6.4	3 of 6158 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JPC_PEERINGDB_JP_ORGS	OK	0	0	235	235	235	235	1.6	
+JPC_JPCERT_PHISHURL_202605	COLLISION	0	0	1743	1735	1735	1743	2.6	8 of 1743 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JPC_JPCERT_PHISHURL_202604	COLLISION	0	0	3071	3061	3061	3071	3.3	10 of 3071 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JPC_JPCERT_PHISHURL_202603	COLLISION	0	0	2786	2778	2778	2786	3.9	8 of 2786 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JPC_IERAE_NEWS_RSS	FETCH_FAILED	1	-1	1	1	0	-1	20.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPC_KANSAI_AIRPORT_FLIGHTS_HTML	FETCH_FAILED	0	0	1	1	0	-1	1.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPC_JPX_MARKETS_NEWS_EN_RSS	OK	0	0	25	25	25	25	1.7	
+JPC_PEERINGDB_JP_NETWORKS	OK	0	0	249	249	249	249	2.3	
+JPC_JPX_EQUITIES_SUSPENDED_EN_RSS	OK	0	0	3	3	3	3	1.8	
+JPC_JPX_SITE_UPDATES_EN_RSS	OK	0	0	44	44	44	44	1.8	
+JPC_JPX_NEWS_EN_RSS	OK	0	0	2	2	2	2	2.1	
+JPC_METI_RELEASES_ATOM	OK	0	0	25	25	25	25	1.4	
+JPC_METI_RELEASES_EN_ATOM	OK	0	0	25	25	25	25	1.6	
+JPC_OTIT_NEWS_HTML	OK	0	0	347	347	347	347	2.7	
+JPC_EGOV_PUBLIC_COMMENT_RSS	OK	0	0	11	11	11	11	2.1	
+JPC_TDB_BANKRUPTCY_RSS	OK	0	0	40	40	40	40	3.3	
+JPC_DIGITAL_AGENCY_EN_RSS	OK	0	0	27	27	27	27	1.4	
+JPC_FSA_EN_NEWS_HTML	OK	0	0	45	45	45	45	1.3	
+JPC_FDMA_DISASTER_REPORTS_HTML	OK	0	0	30	30	30	30	1.7	
+JPC_JAXA_PRESS_2026_HTML	OK	0	0	69	69	69	69	1.7	
+JPC_OPEN2CH_BIZPLUS_SUBJECT	FETCH_FAILED	0	0	1	1	0	-1	1.2	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPC_OPEN2CH_ARMY_SUBJECT	FETCH_FAILED	0	0	1	1	0	-1	1.6	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPC_KANPO_ISSUE_INDEX_HTML	OK	0	0	212	212	212	212	5.4	
+JPC_OPEN2CH_EQ_SUBJECT	FETCH_FAILED	0	0	1	1	0	-1	1.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPC_OPEN2CH_CHINA_SUBJECT	FETCH_FAILED	0	0	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPC_OPEN2CH_INTERNET_SUBJECT	FETCH_FAILED	0	0	1	1	0	-1	1.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPC_OPEN2CH_LIVEPLUS_SUBJECT	FETCH_FAILED	0	0	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPC_OPEN2CH_MNEWSPLUS_SUBJECT	FETCH_FAILED	0	0	1	1	0	-1	1.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPC_OPEN2CH_PC_SUBJECT	FETCH_FAILED	0	0	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPC_OPEN2CH_KOKUSAI_SUBJECT	FETCH_FAILED	0	0	1	1	0	-1	1.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPC_OPEN2CH_SEIJINEWSPLUS_SUBJECT	FETCH_FAILED	0	0	1	1	0	-1	1.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPC_OPEN2CH_SCI_SUBJECT	FETCH_FAILED	0	0	1	1	0	-1	1.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPC_OPEN2CH_SOFTWARE_SUBJECT	FETCH_FAILED	0	0	1	1	0	-1	1.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPC_OPEN2CH_STOCK_SUBJECT	FETCH_FAILED	0	0	1	1	0	-1	1.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPC_WIKIDATA_TSE_LISTED_JSON	OK	0	0	2280	2280	2280	2280	7.0	
+JPL_AKITA_CKAN_ORGANIZATIONS	OK	0	0	12	12	12	12	8.6	
+JPL_AKITA_CKAN_ORG_AKITAMIRAISOUZOUBU	OK	0	0	28	28	28	28	16.1	
+JPL_AKITA_CKAN_ORG_SANGYOUROUDOUBU	OK	0	0	46	46	46	46	16.5	
+JPL_AKITA_CKAN_ORG_KIKAKUSINKOUBU	OK	0	0	64	64	64	64	16.8	
+JPL_AKITA_CKAN_ORG_SOUMUBU	OK	0	0	25	25	25	25	16.1	
+JPL_AKITA_CKAN_ORG_KENSETUBU	OK	0	0	22	22	22	22	17.0	
+JPL_AKITA_CKAN_ORG_SUITOUKYOKU	OK	0	0	18	18	18	18	17.4	
+JPL_AKITA_CKAN_ORG_NOURINSUISANBU	OK	0	0	3	3	3	3	18.4	
+JPL_AKITA_CKAN_ORG_KYOUIKUTYOU	OK	0	0	11	11	11	11	19.1	
+JPL_AKITA_CKAN_ORG_SEIKATUKANKYOUBU	OK	0	0	16	16	16	16	20.0	
+JPL_GIFU_CKAN_ORGANIZATIONS	OK	0	0	25	25	25	25	1.7	
+JPL_AKITA_CKAN_ORG_KEISATUHONBU	OK	0	0	10	10	10	10	19.7	
+JPL_AKITA_CKAN_ORG_KENKOUHUKUSIBU	OK	0	0	17	17	17	17	19.8	
+JPL_GIFU_CKAN_ORG_40290	OK	0	0	17	17	17	17	2.3	
+JPL_GIFU_CKAN_ORG_40270	OK	0	0	19	19	19	19	2.0	
+JPL_GIFU_CKAN_ORG_40280	OK	0	0	20	20	20	20	2.3	
+JPL_GIFU_CKAN_ORG_40220	OK	0	0	17	17	17	17	2.0	
+JPL_GIFU_CKAN_ORG_40230	OK	0	0	19	19	19	19	2.3	
+JPL_GIFU_CKAN_ORG_40090	OK	0	0	25	25	25	25	2.2	
+JPL_GIFU_CKAN_ORG_40200	OK	0	0	18	18	18	18	1.8	
+JPL_GIFU_CKAN_ORG_40340	OK	0	0	17	17	17	17	2.0	
+JPL_GIFU_CKAN_ORG_40370	OK	0	0	16	16	16	16	2.2	
+JPL_GIFU_CKAN_ORG_40360	OK	0	0	19	19	19	19	2.1	
+JPL_GIFU_CKAN_ORG_40400	OK	0	0	15	15	15	15	2.1	
+JPL_GIFU_CKAN_ORG_40390	OK	0	0	17	17	17	17	2.1	
+JPL_GIFU_CKAN_ORG_40380	OK	0	0	28	28	28	28	1.9	
+JPL_GIFU_CKAN_ORG_40410	OK	0	0	19	19	19	19	1.9	
+JPL_GIFU_CKAN_ORG_40350	OK	0	0	17	17	17	17	2.0	
+JPL_GIFU_CKAN_ORG_40210	OK	0	0	18	18	18	18	2.3	
+JPL_GIFU_CKAN_ORG_40140	OK	0	0	21	21	21	21	2.4	
+JPL_GIFU_CKAN_ORG_40130	OK	0	0	18	18	18	18	2.3	
+JPL_GIFU_CKAN_ORG_40050	OK	0	0	29	29	29	29	2.2	
+JPL_GIFU_CKAN_ORG_30040	OK	0	0	29	29	29	29	2.0	
+JPL_AKITA_CKAN_ORG_KANKOUBUNKASUPO_TUBU	OK	0	0	4	4	4	4	22.1	
+JPL_GIFU_CKAN_ORG_30190	OK	0	0	7	7	7	7	1.9	
+JPL_GIFU_CKAN_ORG_30051	OK	0	0	16	16	16	16	2.4	
+JPL_YAMAGUCHI_CKAN_ORGANIZATIONS	OK	0	0	20	20	20	20	2.3	
+JPL_GIFU_CKAN_ORG_30050	OK	0	0	174	174	174	174	4.9	
+JPL_YAMAGUCHI_CKAN_ORG_35502	OK	0	0	20	20	20	20	2.8	
+JPL_YAMAGUCHI_CKAN_ORG_35201	OK	0	0	47	47	47	47	3.4	
+JPL_YAMAGUCHI_CKAN_ORG_35207	OK	0	0	48	48	48	48	3.5	
+JPL_YAMAGUCHI_CKAN_ORG_35202	OK	0	0	76	76	76	76	3.6	
+JPL_YAMAGUCHI_CKAN_ORG_35208	OK	0	0	42	42	42	42	3.2	
+JPL_YAMAGUCHI_CKAN_ORG_35210	OK	0	0	22	22	22	22	3.1	
+JPL_YAMAGUCHI_CKAN_ORG_35203	OK	0	0	44	44	44	44	2.8	
+JPL_YAMAGUCHI_CKAN_ORG_35215	OK	0	0	62	62	62	62	3.4	
+JPL_YAMAGUCHI_CKAN_ORG_35216	OK	0	0	20	20	20	20	3.6	
+JPL_YAMAGUCHI_CKAN_ORG_35000	OK	0	0	102	102	102	102	4.7	
+JPL_YAMAGUCHI_CKAN_ORG_35305	OK	0	0	33	33	33	33	3.3	
+JPL_YAMAGUCHI_CKAN_ORG_35341	OK	0	0	33	33	33	33	3.3	
+JPL_YAMAGUCHI_CKAN_ORG_35211	OK	0	0	34	34	34	34	2.9	
+JPL_YAMAGUCHI_CKAN_ORG_35343	OK	0	0	22	22	22	22	2.8	
+JPL_YAMAGUCHI_CKAN_ORG_35213	OK	0	0	27	27	27	27	3.1	
+JPL_YAMAGUCHI_CKAN_ORG_35204	OK	0	0	35	35	35	35	3.4	
+JPL_YAMAGUCHI_CKAN_ORG_35206	OK	0	0	33	33	33	33	2.9	
+JPL_YAMAGUCHI_CKAN_ORG_35344	OK	0	0	36	36	36	36	3.8	
+JPL_KANAZAWA_CKAN_ORGANIZATIONS	OK	0	0	7	7	7	7	1.8	
+JPL_YAMAGUCHI_CKAN_ORG_35212	OK	0	0	31	31	31	31	3.1	
+JPL_YAMAGUCHI_CKAN_ORG_35321	OK	0	0	21	21	21	21	2.9	
+JPL_KANAZAWA_CKAN_ORG_UCHINADA	OK	0	0	14	14	14	14	2.2	
+JPL_KANAZAWA_CKAN_ORG_KAHOKU	OK	0	0	12	12	12	12	2.5	
+JPL_KANAZAWA_CKAN_ORG_TSUBATA	OK	0	0	42	42	42	42	2.3	
+JPL_KANAZAWA_CKAN_ORG_HAKUSAN	OK	0	0	25	25	25	25	2.0	
+JPL_KANAZAWA_CKAN_ORG_ISHIKAWA_CENTRAL	OK	0	0	16	16	16	16	2.2	
+JPL_KANAZAWA_CKAN_ORG_NONOICHI	OK	0	0	12	12	12	12	2.0	
+JPL_MIYAZAKI_CKAN_ORG_BOSAI_DATA	OK	0	0	10	10	10	10	2.0	
+JPL_KANAZAWA_CKAN_ORG_KANAZAWA	COLLISION	0	0	198	197	197	198	3.6	1 of 198 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JPL_EGOV_DATA_ORGANIZATIONS	OK	0	0	25	25	25	25	2.5	
+JPL_TOYAMACITY_CKAN_ORG_TOYAMA	OK	0	0	133	133	133	133	6.4	
+JPL_AOMORI_ODP_ALL_DATASETS	OK	0	0	223	224	223	223	10.6	
+JPL_TOTTORI_ODP_ALL_DATASETS	OK	0	0	190	191	190	190	12.0	
+JPL_EHIME_ODP_ALL_DATASETS	OK	0	0	1	2	1	1	1.7	
+JPL_SHIBUYA_HUB_DCAT	OK	0	0	122	122	122	122	1.8	
+JPL_KAGAWA_ODP_ALL_DATASETS	OK	0	0	115	116	115	115	6.7	
+JPL_AIZUWAKAMATSU_HUB_DCAT	OK	0	0	34	34	34	34	1.5	
+JPL_ESRIJ_GOV_HUB_DCAT	OK	0	0	186	186	186	186	2.0	
+JPL_HYOGO_POLICE_NEWS_RSS	OK	0	0	6	6	6	6	5.7	
+JPL_OKAYAMA_ORGCRIME_RSS	OK	0	0	1	1	1	1	2.3	
+JPL_SAITAMA_PREF_CHUMOKU_RSS	OK	0	0	5	5	5	5	1.5	
+JPL_KUMAMOTO_POLICE_RSS	OK	0	0	100	100	100	100	9.9	
+JPL_OKINAWA_GIS_OPENDATA_INDEX	OK	0	0	110	110	110	110	2.0	
+JPMUNI_KITAKYUSHU_UPDATE	OK	0	0	145	145	145	145	1.5	
+JPL_TOKUSHIMA_ODP_ALL_DATASETS	OK	0	0	878	879	878	878	28.9	
+JPMUNI_TSURUOKA_UPDATE	OK	0	0	100	100	100	100	2.2	
+JPMUNI_MAIZURU_UPDATE	OK	0	0	100	100	100	100	1.7	
+JPMUNI_FURANO_UPDATE	OK	0	0	100	100	100	100	2.2	
+JPMUNI_SAKATA_UPDATE	OK	0	0	100	100	100	100	1.5	
+JPMUNI_SAGAE_UPDATE	OK	0	0	100	100	100	100	1.2	
+JPMUNI_TAINAI_UPDATE	OK	0	0	100	100	100	100	2.5	
+JPMUNI_ODA_UPDATE	COLLISION	0	0	891	871	871	891	9.4	20 of 891 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JPMUNI_YUBARI_UPDATE	OK	0	0	100	100	100	100	2.1	
+JPMUNI_ASAHI_UPDATE	OK	0	0	100	100	100	100	2.0	
+JPMUNI_ABASHIRI_UPDATE	OK	0	0	100	100	100	100	2.6	
+JPMUNI_TOON_UPDATE	OK	0	0	100	100	100	100	3.2	
+JPMUNI_MATSUSAKA_UPDATE	OK	0	0	100	100	100	100	2.4	
+JPMUNI_MURAKAMI_UPDATE	FETCH_FAILED	1	-1	1	1	0	-1	2.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPMUNI_DAZAIFU_UPDATE	OK	0	0	100	100	100	100	2.1	
+JPMUNI_AGEO_UPDATE	OK	0	0	100	100	100	100	1.6	
+JPMUNI_KASHIMA_UPDATE	OK	0	0	100	100	100	100	2.1	
+JPMUNI_SHIMANTO_UPDATE	OK	0	0	100	100	100	100	1.4	
+JPMUNI_MIYAKONOJO_UPDATE	OK	0	0	100	100	100	100	2.3	
+JPMUNI_KONOSU_UPDATE	OK	0	0	100	100	100	100	1.5	
+JPMUNI_SHIJONAWATE_UPDATE	FETCH_FAILED	0	0	1	1	0	-1	1.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPMUNI_MARUGAME_UPDATE	OK	0	0	100	100	100	100	2.2	
+JPMUNI_SHUNAN_UPDATE	OK	0	0	100	100	100	100	1.5	
+JPMUNI_ZENTSUJI_UPDATE	OK	0	0	100	100	100	100	1.8	
+JPMUNI_KAMINOYAMA_UPDATE	OK	0	0	100	100	100	100	1.8	
+JPMUNI_KITAKATA_UPDATE	OK	0	0	100	100	100	100	1.9	
+JPMUNI_HACHIMANTAI_UPDATE	OK	0	0	100	100	100	100	2.7	
+JPMUNI_FUJIYOSHIDA_UPDATE	OK	0	0	100	100	100	100	2.6	
+JPMUNI_UJI_UPDATE	OK	0	0	100	100	100	100	2.4	
+JPMUNI_NATORI_UPDATE	OK	0	0	100	100	100	100	1.5	
+JPMUNI_SHIOGAMA_UPDATE	OK	0	0	99	99	99	99	1.5	
+JPMUNI_NOBEOKA_UPDATE	OK	0	0	100	100	100	100	2.3	
+JPMUNI_MISHIMA_UPDATE	OK	0	0	100	100	100	100	1.3	
+JPMUNI_YAMAGATA_UPDATE	OK	0	0	100	100	100	100	2.4	
+JPMUNI_MITSUKE_UPDATE	OK	0	0	100	100	100	100	2.1	
+JPMUNI_EBETSU_UPDATE	OK	0	0	100	100	100	100	2.6	
+JPMUNI_IWAKUNI_UPDATE	FETCH_FAILED	1	-1	1	1	0	-1	2.1	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPL_HOKKAIDO_HARP_ALL_DATASETS	OK	0	0	1037	1038	1037	1037	59.8	
+JPMUNI_SUMOTO_UPDATE	OK	0	0	100	100	100	100	2.6	
+JPMUNI_MAKURAZAKI_UPDATE	OK	0	0	100	100	100	100	2.0	
+JPMUNI_ANNAKA_UPDATE	OK	0	0	100	100	100	100	1.9	
+JPMUNI_TAKATSUKI_UPDATE	OK	0	0	100	100	100	100	3.2	
+JPMUNI_KAKUDA_UPDATE	OK	0	0	100	100	100	100	2.2	
+JPMUNI_KATSUURA_UPDATE	OK	0	0	100	100	100	100	2.0	
+JPMUNI_HITA_UPDATE	OK	0	0	100	100	100	100	2.9	
+JPMUNI_HAGI_UPDATE	OK	0	0	100	100	100	100	1.3	
+JPMUNI_GERO_UPDATE	OK	0	0	100	100	100	100	2.1	
+JPMUNI_MITO_UPDATE	OK	0	0	100	100	100	100	2.3	
+JPMUNI_IWADE_UPDATE	OK	0	0	100	100	100	100	2.1	
+JPMUNI_AWAJI_UPDATE	OK	0	0	100	100	100	100	2.9	
+JPMUNI_OWARIASAHI_UPDATE	OK	0	0	100	100	100	100	1.9	
+JPMUNI_GAMAGORI_UPDATE	OK	0	0	100	100	100	100	2.1	
+JPMUNI_KAWACHINAGANO_UPDATE	OK	0	0	100	100	100	100	2.4	
+JPMUNI_KAI_UPDATE	OK	0	0	100	100	100	100	2.2	
+JPMUNI_KAMOGAWA_UPDATE	OK	0	0	100	100	100	100	2.1	
+JPMUNI_YAMANASHI_UPDATE	OK	0	0	100	100	100	100	2.4	
+JPMUNI_OME_UPDATE	OK	0	0	100	100	100	100	1.9	
+JPMUNI_TSUKUMI_UPDATE	OK	0	0	100	100	100	100	1.9	
+JPMUNI_MIYOSHI_UPDATE	OK	0	0	100	100	100	100	1.7	
+JPMUNI_TODA_UPDATE	OK	0	0	100	100	100	100	1.4	
+JPMUNI_YUZAWA_UPDATE	OK	0	0	100	100	100	100	2.3	
+JPMUNI_HIGASHIMATSUYAMA_UPDATE	OK	0	0	100	100	100	100	1.7	
+JPMUNI_IIDA_UPDATE	FETCH_FAILED	1	-1	1	1	0	-1	2.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPMUNI_KASHIBA_UPDATE	OK	0	0	100	100	100	100	3.5	
+JPL_SHIZUOKA_ODP_ALL_DATASETS	OK	0	0	664	665	664	664	74.1	
+JPMUNI_TAKIKAWA_UPDATE	OK	0	0	100	100	100	100	2.6	
+JPMUNI_NAGATO_UPDATE	OK	0	0	100	100	100	100	1.7	
+JPMUNI_SUWA_UPDATE	OK	0	0	100	100	100	100	1.7	
+JPMUNI_DAITO_UPDATE	FETCH_FAILED	0	0	1	1	0	-1	6.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPMUNI_UEDA_UPDATE	OK	0	0	100	100	100	100	2.9	
+JPMUNI_YAMAGUCHI_UPDATE	FETCH_FAILED	1	-1	1	1	0	-1	2.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPMUNI_SHIROISHI_UPDATE	OK	0	0	100	100	100	100	2.2	
+JPMUNI_HIDA_UPDATE	OK	0	0	100	100	100	100	2.5	
+JPMUNI_ASAKURA_UPDATE	OK	0	0	100	100	100	100	3.1	
+JPMUNI_KATSUYAMA_UPDATE	OK	0	0	100	100	100	100	3.0	
+JPMUNI_TSURUGA_UPDATE	OK	0	0	100	100	100	100	3.2	
+JPMUNI_SAKADO_UPDATE	OK	0	0	100	100	100	100	2.5	
+JPMUNI_UONUMA_UPDATE	OK	0	0	100	100	100	100	1.7	
+JPMUNI_MAKINOHARA_UPDATE	OK	0	0	100	100	100	100	1.4	
+JPMUNI_GOTSU_UPDATE	OK	0	0	100	100	100	100	2.2	
+JPMUNI_MUKO_UPDATE	OK	0	0	100	100	100	100	2.3	
+JPL_MIYAZAKI_CKAN_ALL_DATASETS	OK	0	0	4937	4938	4937	4937	85.5	
+JPMUNI_KASAI_UPDATE	OK	0	0	100	100	100	100	2.5	
+JPMUNI_UENOHARA_UPDATE	OK	0	0	100	100	100	100	3.1	
+JPMUNI_YUKUHASHI_UPDATE	OK	0	0	100	100	100	100	2.8	
+JPMUNI_SAKAIDE_UPDATE	OK	0	0	100	100	100	100	1.7	
+JPMUNI_TAKAHASHI_UPDATE	OK	0	0	99	99	99	99	3.0	
+JPMUNI_ITOIGAWA_UPDATE	OK	0	0	100	100	100	100	1.8	
+JPMUNI_TOSU_UPDATE	OK	0	0	100	100	100	100	1.4	
+JPMUNI_GUJO_UPDATE	FETCH_FAILED	1	-1	1	1	0	-1	2.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPMUNI_SHIBUSHI_UPDATE	OK	0	0	100	100	100	100	2.3	
+JPMUNI_MINOKAMO_UPDATE	OK	0	0	100	100	100	100	2.5	
+JPMUNI_SHIOJIRI_UPDATE	OK	0	0	100	100	100	100	3.2	
+JPMUNI_MANIWA_UPDATE	OK	0	0	100	100	100	100	2.5	
+JPMUNI_SAN_YO_ONODA_UPDATE	OK	0	0	100	100	100	100	1.6	
+JPMUNI_MOTOMIYA_UPDATE	OK	0	0	100	100	100	100	1.9	
+JPMUNI_MINAMI_AWAJI_UPDATE	OK	0	0	100	100	100	100	2.4	
+JPMUNI_KASAOKA_UPDATE	OK	0	0	100	100	100	100	3.1	
+JPMUNI_BIZEN_UPDATE	OK	0	0	100	100	100	100	3.2	
+JPMUNI_SHIKI_UPDATE	OK	0	0	100	100	100	100	1.8	
+JPMUNI_KUNISAKI_UPDATE	OK	0	0	100	100	100	100	2.7	
+JPMUNI_SOJA_UPDATE	OK	0	0	100	100	100	100	3.0	
+JPMUNI_KAMI_UPDATE	OK	0	0	100	100	100	100	1.6	
+JPMUNI_MIKI_UPDATE	OK	0	0	100	100	100	100	2.6	
+JPMUNI_YAITA_UPDATE	OK	0	0	100	100	100	100	2.1	
+JPMUNI_HATSUKAICHI_UPDATE	FETCH_FAILED	1	-1	1	1	0	-1	2.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPMUNI_FUKUCHIYAMA_UPDATE	OK	0	0	100	100	100	100	2.6	
+JPMUNI_NONOICHI_UPDATE	OK	0	0	100	100	100	100	3.1	
+JPMUNI_MINOH_UPDATE	OK	0	0	80	80	80	80	2.1	
+JPMUNI_MIHARA_UPDATE	OK	0	0	76	76	76	76	2.4	
+JPMUNI_OJIYA_UPDATE	FETCH_FAILED	1	-1	1	1	0	-1	2.6	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPMUNI_SETOUCHI_UPDATE	OK	0	0	74	74	74	74	3.1	
+JPMUNI_ASAKUCHI_UPDATE	OK	0	0	100	100	100	100	6.5	
+JPMUNI_RYUGASAKI_UPDATE	OK	0	0	69	69	69	69	3.3	
+JPMUNI_ABIKO_UPDATE	OK	0	0	42	42	42	42	2.5	
+JPMUNI_KAHOKU_UPDATE	OK	0	0	42	42	42	42	2.1	
+JPMUNI_AMAMI_UPDATE	OK	0	0	50	50	50	50	2.3	
+JPMUNI_CHITOSE_UPDATE	OK	0	0	50	50	50	50	2.4	
+JPMUNI_KANUMA_UPDATE	OK	0	0	22	22	22	22	2.0	
+JPMUNI_KANOYA_UPDATE	OK	0	0	50	50	50	50	2.4	
+JPMUNI_IYO_UPDATE	OK	0	0	50	50	50	50	3.4	
+JPMUNI_YOSHIKAWA_UPDATE	OK	0	0	50	50	50	50	1.8	
+JPMUNI_AKO_HIGHLIGHTED	OK	0	0	50	50	50	50	2.7	
+JPMUNI_TAKU_UPDATE	OK	0	0	57	57	57	57	1.6	
+JPMUNI_NANTAN_UPDATE	OK	0	0	50	50	50	50	2.9	
+JPMUNI_ONO_UPDATE	OK	0	0	54	54	54	54	3.0	
+JPMUNI_JOETSU_UPDATE	OK	0	0	28	28	28	28	1.7	
+JPMUNI_CHIKUSHINO_UPDATE	OK	0	0	59	59	59	59	2.6	
+JPMUNI_ASHIKAGA_UPDATE	OK	0	0	32	32	32	32	1.5	
+JPMUNI_ANJO_UPDATE	OK	0	0	40	40	40	40	2.1	
+JPMUNI_NAYORO_UPDATE	OK	0	0	27	27	27	27	1.8	
+JPMUNI_NAKAGAWA_UPDATE	OK	0	0	54	54	54	54	2.6	
+JPMUNI_INZAI_UPDATE	OK	0	0	30	30	30	30	1.5	
+JPMUNI_TOGANE_UPDATE	OK	0	0	30	30	30	30	2.1	
+JPMUNI_TOMISATO_UPDATE	OK	0	0	30	30	30	30	1.8	
+JPMUNI_IWAKURA_UPDATE	OK	0	0	30	30	30	30	1.6	
+JPMUNI_IGA_UPDATE	OK	0	0	30	30	30	30	2.9	
+JPMUNI_IKOMA_UPDATE	FETCH_FAILED	0	0	1	1	0	-1	3.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPMUNI_AYABE_UPDATE	OK	0	0	30	30	30	30	2.1	
+JPMUNI_MOBARA_UPDATE	OK	0	0	30	30	30	30	2.1	
+JPMUNI_OGAKI_UPDATE	OK	0	0	30	30	30	30	1.8	
+JPMUNI_OMURA_UPDATE	OK	0	0	30	30	30	30	1.6	
+JPMUNI_FUTTSU_UPDATE	OK	0	0	30	30	30	30	3.2	
+JPMUNI_IZUNOKUNI_UPDATE	OK	0	0	50	50	50	50	11.0	
+JPMUNI_JOYO_UPDATE	OK	0	0	30	30	30	30	1.8	
+JPMUNI_AKIRUNO_UPDATE	OK	0	0	30	30	30	30	2.1	
+JPMUNI_YAWATA_UPDATE	OK	0	0	30	30	30	30	2.1	
+JPMUNI_INAZAWA_UPDATE	OK	0	0	30	30	30	30	1.3	
+JPMUNI_MOTOSU_UPDATE	OK	0	0	30	30	30	30	2.1	
+JPMUNI_HAMURA_UPDATE	OK	0	0	30	30	30	30	1.7	
+JPMUNI_KAIZU_UPDATE	OK	0	0	30	30	30	30	2.8	
+JPMUNI_OWASE_UPDATE	OK	0	0	30	30	30	30	1.9	
+JPMUNI_SEKI_UPDATE	OK	0	0	30	30	30	30	1.9	
+JPMUNI_NAGAHAMA_UPDATE	OK	0	0	30	30	30	30	3.0	
+JPMUNI_NAGAOKAKYO_UPDATE	OK	0	0	30	30	30	30	1.7	
+JPMUNI_MINAMIBOSO_UPDATE	OK	0	0	30	30	30	30	1.9	
+JPMUNI_KIZUGAWA_UPDATE	OK	0	0	30	30	30	30	1.7	
+JPMUNI_GOSE_UPDATE	OK	0	0	30	30	30	30	4.2	
+JPMUNI_OAMISHIRASATO_UPDATE	OK	0	0	30	30	30	30	1.8	
+JPMUNI_TOMI_UPDATE	OK	0	0	30	30	30	30	1.7	
+JPMUNI_TATEYAMA_UPDATE	OK	0	0	30	30	30	30	2.2	
+JPMUNI_RUMOI_UPDATE	OK	0	0	30	30	30	30	2.0	
+JPMUNI_HACHIOJI_UPDATE	OK	0	0	33	33	33	33	1.8	
+JPMUNI_SHIBUKAWA_UPDATE	OK	0	0	23	23	23	23	2.1	
+JPMUNI_FUKAGAWA_UPDATE	OK	0	0	22	22	22	22	1.7	
+JPMUNI_OITA_UPDATE	OK	0	0	25	25	25	25	2.9	
+JPMUNI_YANAI_UPDATE	FETCH_FAILED	1	-1	1	1	0	-1	2.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPMUNI_ASHIYA_UPDATE	OK	0	0	20	20	20	20	2.4	
+JPMUNI_KASHIMA_UPDATE_2	OK	0	0	20	20	20	20	1.4	
+JPMUNI_KUDAMATSU_UPDATE	OK	0	0	20	20	20	20	2.1	
+JPMUNI_HIGASHINE_UPDATE	OK	0	0	20	20	20	20	2.7	
+JPMUNI_CHIKUGO_UPDATE	OK	0	0	20	20	20	20	2.2	
+JPMUNI_SAKURA_UPDATE	OK	0	0	19	19	19	19	3.5	
+JPMUNI_SAPPORO_RECRUITMENT	OK	0	0	20	20	20	20	1.2	
+JPMUNI_NIIMI_UPDATE	FETCH_FAILED	0	0	1	1	0	-1	2.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPMUNI_NOSHIRO_UPDATE	OK	0	0	20	20	20	20	1.9	
+JPMUNI_KANZAKI_UPDATE	OK	0	0	20	20	20	20	2.0	
+JPMUNI_KOMAE_UPDATE	OK	0	0	15	15	15	15	2.0	
+JPMUNI_CHICHIBU_UPDATE	OK	0	0	15	15	15	15	1.9	
+JPMUNI_YONAGO_UPDATE	OK	0	0	15	15	15	15	2.4	
+JPMUNI_MISAWA_UPDATE	OK	0	0	15	15	15	15	1.3	
+JPMUNI_TOYOAKE_UPDATE	OK	0	0	15	15	15	15	1.3	
+JPMUNI_MIZUHO_UPDATE	OK	0	0	15	15	15	15	2.1	
+JPMUNI_KURAYOSHI_UPDATE	OK	0	0	15	15	15	15	2.7	
+JPMUNI_HASHIMA_UPDATE	OK	0	0	15	15	15	15	2.0	
+JPMUNI_KOKA_UPDATE	OK	0	0	15	15	15	15	2.3	
+JPMUNI_KANI_UPDATE	OK	0	0	15	15	15	15	2.1	
+JPMUNI_TAKEO_UPDATE	OK	0	0	14	14	14	14	1.5	
+JPMUNI_KIKUGAWA_UPDATE	OK	0	0	10	10	10	10	11.1	
+JPMUNI_IMARI_UPDATE	OK	0	0	15	15	15	15	2.6	
+JPMUNI_TSURUOKA_UPDATE_2	OK	0	0	10	10	10	10	1.6	
+JPMUNI_TONAMI_UPDATE	OK	0	0	12	12	12	12	4.5	
+JPMUNI_TORIDE_UPDATE	OK	0	0	10	10	10	10	11.1	
+JPN_NDL_OAIPMH_ONLINE_PUB_B00011	OK	0	0	10	10	10	10	9.0	
+JPN_NDL_OAIPMH_ONLINE_PUB_B00012	OK	0	0	9	9	9	9	9.2	
+JPN_NDL_OAIPMH_ONLINE_PUB_B00015	OK	0	0	24	24	24	24	5.6	
+JPN_NDL_OAIPMH_ONLINE_PUB_B00016	OK	0	0	80	80	80	80	8.6	
+JPN_NDL_OAIPMH_ONLINE_PUB_B00004	OK	0	0	55	55	55	55	26.3	
+JPN_NDL_OAIPMH_ONLINE_PUB_B00013	OK	0	0	440	440	440	440	17.8	
+JPN_NDL_OAIPMH_ONLINE_PUB_B00003	OK	0	0	507	507	507	507	42.3	
+JPN_NDL_OAIPMH_ONLINE_PUB_B00014	OK	0	0	321	321	321	321	33.9	
+JPN_NDL_OAIPMH_ONLINE_PUB_B00017	OK	0	0	268	268	268	268	40.0	
+JPN_NDL_OAIPMH_ONLINE_PUB_B00018	OK	0	0	348	348	348	348	40.5	
+JPN_NDL_OAIPMH_ONLINE_PUB_B00020	OK	0	0	601	601	601	601	42.6	
+JPN_NDL_OAIPMH_ONLINE_PUB_B00005	OK	0	0	419	419	419	419	86.1	
+JPN_NDL_OAIPMH_ONLINE_PUB_B00019	OK	0	0	1555	1555	1555	1555	67.1	
+JPN_NDL_OAIPMH_ONLINE_PUB_B00025	OK	0	0	33	33	33	33	8.3	
+JPN_NDL_OAIPMH_ONLINE_PUB_B00024	OK	0	0	302	302	302	302	39.9	
+JPN_NDL_CRD_NEW_CASES_RSS	OK	0	0	90	90	90	90	2.5	
+JPN_NDL_LAB_NEWS	OK	0	0	79	79	79	79	1.6	
+JPN_NDL_MINA_SEARCH_NEWS	OK	0	0	20	20	20	20	1.0	
+JPN_NDL_RNAVI_ARTICLES	OK	0	0	20	20	20	20	1.5	
+JPN_NDL_RNAVI_NEWS	OK	0	0	3	3	3	3	1.2	
+JPN_NDL_SEARCH_SERVICE_NEWS	OK	0	0	20	20	20	20	1.4	
+JPN_NDL_LIBRARY_SERVICES_NEWS	OK	0	0	20	20	20	20	1.2	
+JPN_NDL_OAIPMH_ONLINE_PUB_B00023	OK	0	0	609	609	609	609	68.9	
+JPN_NDL_PUBLISHER_NEWS	OK	0	0	18	18	18	18	1.5	
+JPN_NDL_HP_NEWS	OK	0	0	10	10	10	10	1.0	
+JPN_NDL_SUPPORTVISUAL_NEWS	OK	0	0	3	3	3	3	1.3	
+JPN_NDL_ILCL_NEWS	OK	0	0	10	10	10	10	1.6	
+JPN_NDL_ILCL_KODOMO_NEWS	OK	0	0	10	10	10	10	1.2	
+JPN_NDL_OAIPMH_ONLINE_PUB_B00021	OK	0	0	1575	1575	1575	1575	95.6	
+JPN_NDL_BUREAU_ISSUE_BRIEFS	OK	0	0	20	20	20	20	0.9	
+JPN_NDL_BUREAU_RESEARCH_DOCUMENTS	OK	0	0	20	20	20	20	8.9	
+JPN_JMA_VOLCANO_REGISTER	OK	0	0	120	120	120	120	0.9	
+JPN_NDL_BUREAU_REFERENCE_JOURNAL	OK	0	0	20	20	20	20	8.6	
+JPN_NDL_BUREAU_FOREIGN_LEGISLATION	OK	0	0	20	20	20	20	8.9	
+JPN_JMA_LATEST_OBS_PRECIP_1H	OK	0	0	1284	1284	1284	1284	1.4	
+JPN_JMA_LATEST_OBS_TEMP_MAX	OK	0	0	914	914	914	914	1.4	
+JPN_JMA_LATEST_OBS_PRECIP_24H	OK	0	0	1284	1284	1284	1284	1.4	
+JPN_JMA_LATEST_OBS_TEMP_MIN	OK	0	0	914	914	914	914	1.2	
+JPN_JMA_LATEST_OBS_WIND_MAX	OK	0	0	914	914	914	914	1.4	
+JPN_ESTAT_DASHBOARD_TOTAL_POPULATION	OK	0	0	696	696	696	696	2.0	
+JPN_ESTAT_DASHBOARD_FOREIGN_RESIDENTS	OK	0	0	13	13	13	13	2.0	
+JPN_ESTAT_DASHBOARD_BIRTHS	OK	0	0	629	629	629	629	2.7	
+JPN_ESTAT_DASHBOARD_UNEMPLOYMENT_RATE	OK	0	0	2088	2088	2088	2088	2.3	
+JPN_ESTAT_DASHBOARD_JOB_OPENINGS_RATIO	OK	0	0	1908	1908	1908	1908	2.9	
+JPN_ESTAT_DASHBOARD_INDUSTRIAL_PRODUCTION	OK	0	0	1642	1642	1642	1642	2.1	
+JPN_ESTAT_DASHBOARD_CORPORATE_BANKRUPTCIES	OK	0	0	383	383	383	383	2.2	
+JPN_ESTAT_DASHBOARD_MONEY_STOCK_M2	OK	0	0	282	282	282	282	1.6	
+JPN_ESTAT_DASHBOARD_NIKKEI_225	OK	0	0	321	321	321	321	1.7	
+JPN_ESTAT_DASHBOARD_CPI_ALL_ITEMS	OK	0	0	994	994	994	994	1.9	
+JPN_ESTAT_DASHBOARD_CPI_ALL_ITEMS_YOY	OK	0	0	779	779	779	779	2.2	
+JPN_ESTAT_DASHBOARD_GDP_NOMINAL_USD	OK	0	0	29	29	29	29	1.8	
+JPN_ESTAT_DASHBOARD_PENAL_CODE_OFFENCES	OK	0	0	49	49	49	49	2.2	
+JPN_ESTAT_DASHBOARD_HOUSING_STARTS	OK	0	0	1308	1308	1308	1308	3.7	
+JPN_ESTAT_DASHBOARD_TRAFFIC_ACCIDENTS	OK	0	0	50	50	50	50	2.7	
+JPN_ESTAT_DASHBOARD_SUICIDES	OK	0	0	49	49	49	49	1.6	
+JPN_EGOV_DATA_ORG_ORG_0100	OK	0	0	13	13	13	13	1.6	
+JPN_ESTAT_DASHBOARD_EXPORTS_TOTAL	OK	0	0	37	37	37	37	1.8	
+JPN_EGOV_DATA_ORG_ORG_0200	OK	0	0	148	148	148	148	4.4	
+JPN_EGOV_DATA_ORG_ORG_0300	OK	0	0	325	325	325	325	6.9	
+JPN_EGOV_DATA_ORG_ORG_0500	OK	0	0	189	189	189	189	3.2	
+JPN_EGOV_DATA_ORG_ORG_0600	OK	0	0	273	273	273	273	7.6	
+JPN_EGOV_DATA_ORG_ORG_0700	OK	0	0	806	806	806	806	10.5	
+JPN_EGOV_DATA_ORG_ORG_0800	OK	0	0	218	218	218	218	5.8	
+JPN_EGOV_DATA_ORG_ORG_0900	OK	0	0	179	179	179	179	4.7	
+JPN_EGOV_DATA_ORG_ORG_1000	OK	0	0	32	32	32	32	1.6	
+JPN_EGOV_DATA_ORG_ORG_0950	OK	0	0	620	620	620	620	9.1	
+JPN_EGOV_DATA_ORG_ORG_0400	OK	0	0	1741	1741	1741	1741	37.6	
+JPN_EGOV_DATA_ORG_ORG_1300	OK	0	0	259	259	259	259	8.2	
+JPN_EGOV_DATA_ORG_ORG_1100	OK	0	0	928	928	928	928	24.4	
+JPN_EGOV_DATA_ORG_ORG_1200	OK	0	0	847	847	847	847	20.1	
+JPN_NDL_OAIPMH_ONLINE_PUB_B00022	OK	0	0	1031	1031	1031	1031	148.6	
+JPN_EGOV_DATA_ORG_ORG_1400	OK	0	0	1006	1006	1006	1006	16.7	
+JPN_EGOV_DATA_ORG_ORG_1800	OK	0	0	41	41	41	41	2.2	
+JPN_EGOV_DATA_ORG_ORG_1500	OK	0	0	1986	1987	1986	1986	27.9	
+JPN_EGOV_DATA_ORG_ORG_1900	OK	0	0	1818	1818	1818	1818	24.1	
+JPN_EGOV_DATA_ORG_ORG_2100	OK	0	0	280	280	280	280	4.1	
+JPN_EGOV_DATA_ORG_ORG_2200	OK	0	0	21	21	21	21	1.9	
+JPN_MOE_WBGT_FORECAST_ALL_STATIONS	OK	0	0	841	841	841	841	1.7	
+JPN_PMDA_RSS_ABOUT_EN	OK	0	0	2	2	2	2	1.4	
+JPN_PMDA_RSS_INTERNATIONAL_EN	OK	0	0	4	4	4	4	1.4	
+JPN_PMDA_RSS_ABOUT_JA	OK	0	0	19	19	19	19	1.5	
+JPN_PMDA_RSS_REVIEWS_EN	OK	0	0	16	16	16	16	1.4	
+JPN_PMDA_RSS_REGULATORY_SCIENCE_EN	OK	0	0	9	9	9	9	1.4	
+JPN_PMDA_RSS_SAFETY_EN	OK	0	0	5	5	5	5	1.6	
+JPN_PMDA_RSS_TOP_ALL_EN	OK	0	0	46	46	46	46	1.5	
+JPN_EGOV_DATA_ORG_ORG_2000	OK	0	0	1679	1679	1679	1679	31.0	
+JPN_EGOV_DATA_ORG_ORG_1600	OK	0	0	2479	2480	2479	2479	58.1	
+JPN_PMDA_RSS_TOP_INTERNATIONAL_EN	OK	0	0	4	4	4	4	1.6	
+JPN_PMDA_RSS_TOP_REVIEWS_EN	OK	0	0	17	17	17	17	1.5	
+JPN_PMDA_RSS_TOP_RS_EN	OK	0	0	9	9	9	9	1.7	
+JPN_PMDA_RSS_TOP_SAFETY_EN	OK	0	0	5	5	5	5	1.5	
+JPN_PMDA_RSS_RS_JA	OK	0	0	1	1	1	1	1.5	
+JPN_PMDA_RSS_RS_ALL_JA	OK	0	0	35	35	35	35	1.5	
+JPN_PMDA_RSS_RS_OTHER_JA	OK	0	0	4	4	4	4	1.4	
+JPN_MHLW_PANDEMIC_INFLUENZA_NEWS	OK	0	0	10	10	10	10	1.2	
+JPN_MHLW_PANDEMIC_INFLUENZA_LOCALGOV	OK	0	0	10	10	10	10	1.0	
+JPN_MHLW_PANDEMIC_INFLUENZA_MEDICAL	OK	0	0	10	10	10	10	0.9	
+JPN_MHLW_EMERGENCY_INFO	OK	0	0	1	1	1	1	1.0	
+JPN_FDMA_WHATS_NEW	OK	0	0	15	15	15	15	1.0	
+JPN_FDMA_PRESS_RELEASES	OK	0	0	15	15	15	15	1.0	
+JPN_FDMA_DISASTER_INFO	OK	0	0	15	15	15	15	1.2	
+JPN_FDMA_NOTICES	OK	0	0	15	15	15	15	1.5	
+JPN_FSA_PROCUREMENT_RSS	OK	0	0	15	15	15	15	0.9	
+JPN_SESC_REPORTS_RSS	OK	0	0	6	6	6	6	0.8	
+JPN_CAA_WHATS_NEW	OK	0	0	20	20	20	20	1.4	
+JPN_JETRO_EVENTS_RSS	OK	0	0	20	20	20	20	1.4	
+JPN_CUSTOMS_WHATS_NEW	OK	0	0	100	100	100	100	1.7	
+JPN_JICA_NEWS_RSS	OK	0	0	30	30	30	30	1.2	
+JPN_BOJ_STATISTICS_EN_RSS	OK	0	0	58	58	58	58	1.2	
+JPN_NICT_LATEST_NEWS_RSS	OK	0	0	50	50	50	50	2.2	
+JPN_NICT_TOPICS_RSS	OK	0	0	50	50	50	50	2.3	
+JPN_JPX_EQUITIES_SUSPENDED_RSS	OK	0	0	5	5	5	5	1.2	
+JPN_NIMS_NEWS_RSS	OK	0	0	10	10	10	10	1.4	
+JPN_JPX_NEWS_RSS	OK	0	0	3	3	3	3	1.2	
+JPN_JPX_MARKETS_NEWS_RSS	OK	0	0	26	26	26	26	1.1	
+JPN_JPX_SITE_UPDATES_RSS	OK	0	0	47	47	47	47	1.1	
+JPN_CAA_RECALL_SITE_IMPORTANT	OK	0	0	15	15	15	15	3.7	
+JPN_CAA_RECALL_SITE_ELDERLY	OK	0	0	15	15	15	15	3.1	
+JPN_CAA_RECALL_SITE_NEW	OK	0	0	15	15	15	15	3.3	
+JPN_MAFF_PRESS_RELEASES	OK	0	0	13	13	13	13	1.0	
+JPN_MOD_PRESS_NOTICES	OK	0	0	636	636	636	636	1.3	
+JPOD_GSP_MOJ_02AOMORI	OK	0	0	40	40	40	40	2.1	
+JPOD_GSP_MOJ_03IWATE	OK	0	0	33	33	33	33	2.5	
+JPOD_GSP_MOJ_01HOKKAIDO	OK	0	0	189	189	189	189	3.8	
+JPOD_GSP_MOJ_04MIYAGI	OK	0	0	41	41	41	41	1.6	
+JPOD_GSP_MOJ_06YAMAGATA	OK	0	0	35	35	35	35	1.6	
+JPOD_GSP_MOJ_05AKITA	OK	0	0	26	26	26	26	2.0	
+JPOD_GSP_MOJ_07FUKUSHIMA	OK	0	0	60	60	60	60	1.6	
+JPN_NDL_OAIPMH_ONLINE_PUB_B00027	SLOW	-1	0	-1	-1	1600	-1	200.1	hit --timeout 200.1s; 1600 rows already stored
+JPN_NDL_OAIPMH_ONLINE_PUB_B00035	SLOW	-1	0	-1	-1	3000	-1	200.1	hit --timeout 200.1s; 3000 rows already stored
+JPOD_GSP_MOJ_09TOCHIGI	OK	0	0	29	29	29	29	1.8	
+JPOD_GSP_MOJ_08IBARAKI	OK	0	0	44	44	44	44	2.1	
+JPOD_GSP_MOJ_10GUNMA	OK	0	0	36	36	36	36	1.7	
+JPOD_GSP_MOJ_12CHIBA	OK	0	0	63	63	63	63	1.7	
+JPOD_GSP_MOJ_11SAITAMA	OK	0	0	80	80	80	80	2.5	
+JPOD_GSP_MOJ_20NAGANO	OK	0	0	77	77	77	77	2.3	
+JPOD_GSP_MOJ_21GIFU	OK	0	0	46	46	46	46	1.9	
+JPOD_GSP_MOJ_13TOKYO	OK	0	0	62	62	62	62	3.0	
+JPOD_GSP_MOJ_22SHIZUOKA	OK	0	0	48	48	48	48	1.9	
+JPOD_GSP_MOJ_23AICHI	OK	0	0	77	77	77	77	1.6	
+JPOD_GSP_MOJ_24MIE	OK	0	0	35	35	35	35	1.5	
+JPOD_GSP_MOJ_25SHIGA	OK	0	0	23	23	23	23	2.1	
+JPOD_GSP_MOJ_26KYOTO	OK	0	0	36	36	36	36	2.1	
+JPOD_GSP_MOJ_27OSAKA	OK	0	0	73	73	73	73	1.8	
+JPOD_GSP_MOJ_28HYOGO	OK	0	0	49	49	49	49	1.7	
+JPOD_GSP_MOJ_29NARA	OK	0	0	39	39	39	39	1.6	
+JPOD_GSP_MOJ_30WAKAYAMA	OK	0	0	31	31	31	31	1.4	
+JPOD_GSP_MOJ_32SHIMANE	OK	0	0	22	22	22	22	1.3	
+JPOD_GSP_MOJ_31TOTTORI	OK	0	0	20	20	20	20	1.4	
+JPOD_GSP_MOJ_33OKAYAMA	OK	0	0	44	44	44	44	1.7	
+JPOD_GSP_MOJ_34HIROSHIMA	OK	0	0	30	30	30	30	1.6	
+JPOD_GSP_MOJ_35YAMAGUCHI	OK	0	0	21	21	21	21	1.8	
+JPOD_GSP_MOJ_37KAGAWA	OK	0	0	17	17	17	17	1.6	
+JPOD_GSP_MOJ_38EHIME	OK	0	0	21	21	21	21	1.5	
+JPOD_GSP_MOJ_36TOKUSHIMA	OK	0	0	25	25	25	25	2.4	
+JPOD_GSP_MOJ_39KOCHI	OK	0	0	35	35	35	35	1.9	
+JPOD_GSP_MOJ_41SAGA	OK	0	0	24	24	24	24	1.4	
+JPOD_GSP_MOJ_42NAGASAKI	OK	0	0	25	25	25	25	1.3	
+JPOD_GSP_MOJ_43KUMAMOTO	OK	0	0	51	51	51	51	1.3	
+JPOD_GSP_MOJ_40FUKUOKA	OK	0	0	80	80	80	80	2.2	
+JPOD_GSP_MOJ_44OITA	OK	0	0	19	19	19	19	1.4	
+JPOD_GSP_MOJ_45MIYAZAKI	OK	0	0	31	31	31	31	1.5	
+JPOD_GSP_MOJ_46KAGOSHIMA	OK	0	0	49	49	49	49	1.8	
+JPOD_GSP_MOJ_47OKINAWA	OK	0	0	41	41	41	41	1.7	
+JPOD_GSP_DATA_XFORMER	OK	0	0	5	5	5	5	1.6	
+JPOD_GSP_AW3D	OK	0	0	5	5	5	5	2.1	
+JPOD_GSP_DCS_DATA_COLLABORATE	OK	0	0	5	5	5	5	1.6	
+JPOD_GSP_FUKUSHIMA_072044	OK	0	0	7	7	7	7	1.9	
+JPOD_GSP_CMJ	OK	0	0	6	6	6	6	4.6	
+JPOD_GSP_N2EM	OK	0	0	22	22	22	22	5.1	
+JPOD_GSP_KYOUGIKAI2020	OK	0	0	48	48	48	48	2.8	
+JPOD_GSP_ATC	OK	0	0	25	25	25	25	5.6	
+JPOD_GSP_SAITAMA_111007	OK	0	0	15	15	15	15	1.8	
+JPOD_GSP_SAKURA	OK	0	0	5	5	5	5	1.5	
+JPOD_GSP_TOCHIGI_092142	OK	0	0	25	25	25	25	1.8	
+JPN_EGOV_DATA_ORG_ORG_1700	OK	0	0	2210	2211	2210	2210	99.9	
+JPOD_GSP_KANAGAWA_DIV	OK	0	0	6	6	6	6	1.2	
+JPOD_GSP_GEOTECH	OK	0	0	10	10	10	10	2.1	
+JPOD_GSP_NEOPLANNINGLABO	OK	0	0	5	5	5	5	1.9	
+JPOD_GSP_TOKYO_133817	OK	0	0	5	5	5	5	1.1	
+JPOD_GSP_AIGID	OK	0	0	61	61	61	61	1.9	
+JPOD_GSP_IWATE_0232093	OK	0	0	38	38	38	38	1.4	
+JPOD_GSP_NIIGATA_152048	OK	0	0	10	10	10	10	1.2	
+JPOD_GSP_SHIZUOKA_22206	OK	0	0	7	7	7	7	1.5	
+JPOD_GSP_TOKYO_132047	OK	0	0	10	10	10	10	1.1	
+JPOD_GSP_TOKYO_SETAGAYA	OK	0	0	58	58	58	58	1.6	
+JPOD_GSP_TOKYO_131024	OK	0	0	15	15	15	15	1.8	
+JPOD_GSP_AAS	OK	0	0	81	81	81	81	11.5	
+JPOD_GSP_FUKUSHIMA_072028	OK	0	0	7	7	7	7	1.4	
+JPOD_GSP_NAGASAKI_42202	OK	0	0	40	40	40	40	1.3	
+JPOD_GSP_NNK	OK	0	0	9	9	9	9	3.4	
+JPOD_GSP_CHIBA_122122	OK	0	0	5	5	5	5	1.6	
+JPOD_GSP_HYOGO_ITAMI	OK	0	0	62	62	62	62	3.7	
+JPOD_GSP_TOCHIGI_092045	OK	0	0	106	106	106	106	1.9	
+JPOD_GSP_OKAYAMA_3320233	OK	0	0	5	5	5	5	1.3	
+JPOD_GSP_NAIKAKUFU_003	OK	0	0	17	17	17	17	1.9	
+JPOD_GSP_NAIKAKUFU_001	OK	0	0	14	14	14	14	2.0	
+JPOD_GSP_NAIKAKUFU_01	OK	0	0	24	24	24	24	1.6	
+JPOD_GSP_NAIKAKUFU_002	OK	0	0	88	88	88	88	3.9	
+JPOD_GSP_HYOGOPREF_OLDDATA	OK	0	0	7	7	7	7	5.6	
+JPOD_GSP_NAIKAKUFU_004	OK	0	0	190	190	190	190	5.2	
+JPOD_GSP_NAIKAKUFU_07	OK	0	0	11	11	11	11	2.6	
+JPOD_GSP_NAIKAKUFU_04	OK	0	0	47	47	47	47	1.8	
+JPOD_GSP_NAIKAKUFU_02	OK	0	0	12	12	12	12	1.5	
+JPOD_GSP_NAIKAKUFU_05	OK	0	0	9	9	9	9	2.0	
+JPOD_GSP_HOKKAIDO_012025	OK	0	0	12	12	12	12	1.5	
+JPOD_GSP_NAIKAKUFU_08	OK	0	0	11	11	11	11	2.5	
+JPOD_GSP_AOMORI_TOWADA	OK	0	0	15	15	15	15	1.2	
+JPOD_GSP_HOKKAIDOPREF	OK	0	0	44	44	44	44	1.4	
+JPOD_GSP_GUNMA_102016	OK	0	0	9	9	9	9	1.6	
+JPOD_GSP_NIIGATA_152102	OK	0	0	9	9	9	9	1.3	
+JPOD_GSP_SAITAMA_113476	OK	0	0	6	6	6	6	1.2	
+JPOD_GSP_SAITAMA_112291	OK	0	0	8	8	8	8	1.5	
+JPOD_GSP_TOKYO_131067	OK	0	0	34	34	34	34	1.8	
+JPOD_GSP_WAKAYAMAPREF	OK	0	0	8	8	8	8	1.2	
+JPOD_GSP_TOKYO_131091	OK	0	0	21	21	21	21	1.4	
+JPOD_GSP_PREF_IWATE	OK	0	0	9	9	9	9	1.2	
+JPOD_GSP_MLIT	OK	0	0	18	18	18	18	2.2	
+JPOD_GSP_GSI	OK	0	0	21	21	21	21	2.2	
+JPOD_GSP_SHIMANEPREF	OK	0	0	7	7	7	7	1.3	
+JPOD_GSP_SAITAMA_112038	OK	0	0	5	5	5	5	1.2	
+JPOD_GSP_KANAGAWA_142034	OK	0	0	7	7	7	7	1.3	
+JPOD_GSP_CHIBA_122033	OK	0	0	56	56	56	56	1.4	
+JPOD_GSP_SAITAMA_112119	OK	0	0	5	5	5	5	1.3	
+JPOD_GSP_HOKKAIDO_011002	OK	0	0	22	22	22	22	1.4	
+JPOD_GSP_TOKYO_131156	OK	0	0	11	11	11	11	1.6	
+JPOD_GSP_TOKYO_132136	OK	0	0	22	22	22	22	1.7	
+JPOD_GSP_FUDOSAN	OK	0	0	1603	1603	1603	1603	20.5	
+JPOD_GSP_SAITAMA_114651	OK	0	0	6	6	6	6	1.2	
+JPOD_GSP_TOKYOMETRO	OK	0	0	7	7	7	7	2.2	
+JPOD_GSP_NAIKAKUFU_03	OK	0	0	37	37	37	37	14.2	
+JPOD_GSP_OITAPREF_FOREST	OK	0	0	5	5	5	5	1.7	
+JPOD_GSP_EHIME_RINGYOU	OK	0	0	7	7	7	7	1.6	
+JPOD_GSP_HYOGOPREF_RINMU_CHISAN	OK	0	0	12	12	12	12	2.8	
+JPOD_GSP_TOTTORI_RINSEI_KIKAKU	OK	0	0	9	9	9	9	2.5	
+JPOD_GSP_TOCHIGIPREF	OK	0	0	12	12	12	12	1.9	
+JPOD_GSP_NAGANO_RINSEI	OK	0	0	16	16	16	16	4.3	
+JPOD_GSP_HOKKAIDO_013455	OK	0	0	10	10	10	10	1.3	
+JPOD_GSP_TOCHIGIPREF_SHINRIN_SEIBI	OK	0	0	7	7	7	7	3.1	
+JPOD_GSP_TOYAMA_SHINRINSEISAKU	OK	0	0	12	12	12	12	4.1	
+JPOD_GSP_KOCHIPREF_MORI	OK	0	0	9	9	9	9	4.5	
+JPOD_GSP_PASCO	OK	0	0	12	12	12	12	5.4	
+JPOD_GSP_AKITA_052035	OK	0	0	17	17	17	17	1.7	
+JPOD_GSP_KANAGAWA_141003	OK	0	0	13	13	13	13	1.4	
+JPOD_GSP_TOKYO_132233	OK	0	0	14	14	14	14	1.3	
+JPOD_GSP_HOKKAIDOPREF_SR	OK	0	0	19	19	19	19	1.6	
+JPOD_GSP_TOKYO_131237	OK	0	0	8	8	8	8	1.5	
+JPOD_GSP_RINYA	OK	0	0	40	40	40	40	8.1	
+JPOD_GSP_OKINAWAPREF	OK	0	0	23	23	23	23	1.8	
+JPOD_GSP_MOJ_08IBARAKI_2022_2023	OK	0	0	44	44	44	44	1.5	
+JPOD_GSP_MOJ_08IBARAKI_2024_2025	OK	0	0	44	44	44	44	1.3	
+JPOD_GSP_MOJ_09TOCHIGI_2022_2023	OK	0	0	31	31	31	31	1.5	
+JPOD_GSP_MOJ_09TOCHIGI_2024_2025	OK	0	0	29	29	29	29	1.5	
+JPOD_GSP_MOJ_10GUNMA_2022_2023	OK	0	0	38	38	38	38	1.4	
+JPOD_GSP_MOJ_10GUNMA_2024_2025	OK	0	0	36	36	36	36	1.4	
+JPOD_GSP_MOJ_01HOKKAIDO_2022_2023	OK	0	0	191	191	191	191	4.1	
+JPOD_GSP_MOJ_11SAITAMA_2022_2023	OK	0	0	83	83	83	83	2.0	
+JPOD_GSP_MOJ_12CHIBA_2024_2025	OK	0	0	63	63	63	63	1.8	
+JPOD_GSP_MOJ_12CHIBA_2022_2023	OK	0	0	63	63	63	63	2.1	
+JPOD_GSP_MOJ_11SAITAMA_2024_2025	OK	0	0	80	80	80	80	2.5	
+JPOD_GSP_MOJ_13TOKYO_2022_2023	OK	0	0	62	62	62	62	1.7	
+JPOD_GSP_MOJ_14KANAGAWA_2022_2023	OK	0	0	59	59	59	59	1.4	
+JPOD_GSP_MOJ_13TOKYO_2024_2025	OK	0	0	62	62	62	62	1.9	
+JPOD_GSP_MOJ_14KANAGAWA_2024_2025	OK	0	0	59	59	59	59	1.6	
+JPOD_GSP_MOJ_16YAMANASHI_2022_2023	OK	0	0	27	27	27	27	1.6	
+JPOD_GSP_MOJ_15NIIGATA_2024_2025	OK	0	0	44	44	44	44	1.7	
+JPOD_GSP_MOJ_15NIIGATA_2022_2023	OK	0	0	43	43	43	43	1.9	
+JPOD_GSP_MOJ_16YAMANASHI_2024_2025	OK	0	0	27	27	27	27	1.4	
+JPOD_GSP_MOJ_19TTOYAMA_2022_2023	OK	0	0	18	18	18	18	1.4	
+JPOD_GSP_MOJ_17NAGANO_2024_2025	OK	0	0	77	77	77	77	1.9	
+JPOD_GSP_MOJ_18SHIZUOKA_2022_2023	OK	0	0	50	50	50	50	1.7	
+JPOD_GSP_MOJ_17NAGANO_2022_2023	OK	0	0	79	79	79	79	2.5	
+JPOD_GSP_MOJ_18SHIZUOKA_2024_2025	OK	0	0	49	49	49	49	1.9	
+JPOD_GSP_MOJ_19TTOYAMA_2024_2025	OK	0	0	15	15	15	15	1.5	
+JPOD_GSP_MOJ_20ISHIKAWA_2024_2025	OK	0	0	21	21	21	21	1.5	
+JPOD_GSP_MOJ_20ISHIKAWA_2022_2023	OK	0	0	21	21	21	21	1.6	
+JPOD_GSP_MOJ_22GIFU_2022_2023	OK	0	0	49	49	49	49	1.6	
+JPOD_GSP_MOJ_21FUKUI_2022_2023	OK	0	0	18	18	18	18	2.2	
+JPOD_GSP_MOJ_21FUKUI_2024_2025	OK	0	0	18	18	18	18	2.1	
+YANOSHIN_TDNET_RECENT	OK	0	0	300	300	300	300	1.8	
+DREAMNEWS_FEED	OK	0	0	50	50	50	50	1.9	
+ESTAT_LOD_SPARQL	OK	0	0	100	100	100	100	2.5	
+MSTDNJP_LOCAL_TIMELINE	OK	0	0	40	40	40	40	1.6	
+MSTDNJP_TRENDING_TAGS	OK	0	0	10	10	10	10	1.0	
+PAWOO_LOCAL_TIMELINE	OK	0	0	40	40	40	40	1.6	
+P2PQUAKE_JMA_TSUNAMI	OK	0	0	72	72	72	72	7.0	
+VOCALODON_LOCAL	OK	0	0	40	40	40	40	2.0	
+OTOYA_LOCAL	OK	0	0	40	40	40	40	1.8	
+IMASTODON_LOCAL	OK	0	0	40	40	40	40	1.7	
+MISSKEY_IO_TRENDING_TAGS	OK	0	0	21	21	21	21	1.1	
+EGOV_LAW_LIST_ACT	OK	0	0	2165	2166	2165	2165	18.1	
+MISSKEY_IO_FEDERATION	OK	0	0	600	601	600	600	11.1	
+QIITA_TAGS	OK	0	0	2000	2001	2000	2000	14.2	
+MSTDNJP_DIRECTORY	OK	0	0	800	801	800	800	37.2	
+ZENN_ARTICLES_LATEST	OK	0	0	48	48	48	48	1.2	
+ZENN_ARTICLES_DAILY	OK	0	0	48	48	48	48	1.4	
+ZENN_BOOKS	OK	0	0	48	48	48	48	1.4	
+ZENN_TOPICS	OK	0	0	20	20	20	20	1.2	
+HATENA_ENTRYLIST_IT	OK	0	0	30	30	30	30	1.3	
+HATENA_ANOND_ENTRYLIST	OK	0	0	30	30	30	30	2.0	
+HATELABO_ANOND_FEED	OK	0	0	25	25	25	25	2.0	
+TOGETTER_HOT	OK	0	0	10	10	10	10	1.7	
+TOGETTER_RECENT	OK	0	0	10	10	10	10	1.5	
+ITMEDIA_BUSINESS_FEED	OK	0	0	20	20	20	20	1.6	
+ITMEDIA_ENTERPRISE_FEED	OK	0	0	50	50	50	50	1.5	
+IMPRESS_INTERNET_WATCH	OK	0	0	20	20	20	20	1.7	
+IMPRESS_PC_WATCH	OK	0	0	20	20	20	20	1.8	
+PUBLICKEY_FEED	OK	0	0	15	15	15	15	1.0	
+IMPRESS_KETAI_WATCH	OK	0	0	30	30	30	30	1.7	
+PAWOO_DIRECTORY	OK	0	0	800	801	800	800	46.5	
+GIGAZINE_FEED	OK	0	0	30	30	30	30	0.9	
+JPBBS_MACHI_CYUGOKU	FETCH_FAILED	0	0	1	1	0	-1	1.1	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPBBS_MACHI_HOKKAIDOU	FETCH_FAILED	0	0	1	1	0	-1	1.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPBBS_MACHI_KANA	FETCH_FAILED	0	0	1	1	0	-1	1.1	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPBBS_MACHI_KANTO	FETCH_FAILED	0	0	1	1	0	-1	0.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPBBS_MACHI_KINKI	FETCH_FAILED	0	0	1	1	0	-1	0.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPBBS_MACHI_KOUSINETU	FETCH_FAILED	0	0	1	1	0	-1	0.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPBBS_MACHI_KYUSYU	FETCH_FAILED	0	0	1	1	0	-1	1.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPBBS_MACHI_OKINAWA	FETCH_FAILED	0	0	1	1	0	-1	0.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+CKAN_GEOSPATIAL_RECENT	OK	0	0	400	401	400	400	54.7	
+JPBBS_MACHI_SIKOKU	FETCH_FAILED	0	0	1	1	0	-1	1.6	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPBBS_MACHI_OSAKA	FETCH_FAILED	0	0	1	1	0	-1	2.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPBBS_MACHI_TAMA	FETCH_FAILED	0	0	1	1	0	-1	1.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPBBS_MACHI_TAWARA	FETCH_FAILED	0	0	1	1	0	-1	1.1	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPBBS_MACHI_TOKYO	FETCH_FAILED	0	0	1	1	0	-1	1.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPBBS_MACHI_TOUHOKU	FETCH_FAILED	0	0	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPBBS_MACHI_TOUKAI	FETCH_FAILED	0	0	1	1	0	-1	1.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPBBS_OPEN2CH_LIVEJUPITER	FETCH_FAILED	0	0	1	1	0	-1	1.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPBBS_OPEN2CH_NEWS4VIP	FETCH_FAILED	0	0	1	1	0	-1	1.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPBBS_OPEN2CH_NEWSPLUS	FETCH_FAILED	0	0	1	1	0	-1	2.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JPOD_DATAGOJP_INDEX	OK	0	0	18833	18833	18833	18833	7.1	
+QIITA_ITEMS_RECENT	COLLISION	0	0	2000	2000	1999	2000	49.7	1 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JSTAGE_CORPUS_BULK	OK	0	0	2000	2001	2000	2000	37.4	
+P2PQUAKE_JMA_QUAKE	OK	0	0	2000	2001	2000	2000	116.9	
+JPREPO_BIWAKO_SEIKEI_OAI	OK	0	0	431	431	431	431	155.5	
+JPREPO_CHUKYO_U_OAI	SLOW	-1	0	-1	-1	600	-1	200.1	hit --timeout 200.1s; 600 rows already stored
+JPREPO_CHUO_U_OAI	SLOW	-1	0	-1	-1	500	-1	200.1	hit --timeout 200.1s; 500 rows already stored
+JPREPO_DOSHISHA_OAI	SLOW	-1	0	-1	-1	300	-1	200.1	hit --timeout 200.1s; 300 rows already stored
+JPREPO_EHIME_U_OAI	SLOW	-1	0	-1	-1	500	-1	200.1	hit --timeout 200.1s; 500 rows already stored
+JPREPO_FUKUOKA_EDU_OAI	SLOW	-1	0	-1	-1	500	-1	200.1	hit --timeout 200.1s; 500 rows already stored
+JPREPO_FUKUOKA_U_OAI	SLOW	-1	0	-1	-1	600	-1	200.1	hit --timeout 200.1s; 600 rows already stored
+JPREPO_GEIDAI_OAI	SLOW	-1	0	-1	-1	400	-1	200.1	hit --timeout 200.1s; 400 rows already stored
+JPREPO_GIFU_U_OAI	SLOW	-1	0	-1	-1	300	-1	200.1	hit --timeout 200.1s; 300 rows already stored
+JPREPO_GUNMA_U_OAI	SLOW	-1	0	-1	-1	400	-1	200.1	hit --timeout 200.1s; 400 rows already stored
+JPREPO_HIROSAKI_OAI	SLOW	-1	0	-1	-1	400	-1	200.1	hit --timeout 200.1s; 400 rows already stored
+JPREPO_HYOGO_U_OAI	SLOW	-1	0	-1	-1	400	-1	200.1	hit --timeout 200.1s; 400 rows already stored
+JPREPO_IWATE_U_OAI	SLOW	-1	0	-1	-1	400	-1	200.1	hit --timeout 200.1s; 400 rows already stored
+JPREPO_JISSEN_OAI	SLOW	-1	0	-1	-1	600	-1	200.1	hit --timeout 200.1s; 600 rows already stored
+JPREPO_KAGAWA_U_OAI	SLOW	-1	0	-1	-1	600	-1	200.1	hit --timeout 200.1s; 600 rows already stored
+JPREPO_KANAGAWA_U_OAI	SLOW	-1	0	-1	-1	700	-1	200.1	hit --timeout 200.1s; 700 rows already stored

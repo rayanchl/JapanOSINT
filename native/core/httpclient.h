@@ -157,4 +157,14 @@ const char *http_client_host_at(http_client *c, int i,
 unsigned long long http_client_bytes_in(const http_client *c);
 int                http_client_request_count(const http_client *c);
 
+/* TESTS ONLY: record a host in the log as though a request had been made,
+ * without making one. `core/scheduler.c`'s fetch-failure disclosure branches on
+ * "every host answered and the collector still returned non-zero", which is the
+ * case that reaches a maintenance page served as a 200 — and no unit test can
+ * reach it, because the host log is only ever written by a real transfer and
+ * these tests make no network calls. Same role as
+ * hostgate_camera_test_allow_lan(): a hook that exists so a decision can be
+ * pinned rather than only measured in production. */
+void http_client_test_log_host(http_client *c, const char *url, long status);
+
 #endif

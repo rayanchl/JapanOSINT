@@ -120,6 +120,15 @@ jobs:
         working-directory: native
         run: make htmlparsetest
 
+      # A feed URL that has stopped being a feed used to report rc=0 records=0 —
+      # indistinguishable from a newspaper that published nothing. Four national
+      # press feeds were serving their HTML homepage. rsstest pins that a 2xx
+      # body which is not a feed is a FAILED fetch, and — the half that keeps it
+      # safe — that a valid feed with no items is still an honest empty.
+      - name: RSS/Atom toolkit (a dead feed is not an empty feed)
+        working-directory: native
+        run: make rsstest
+
       - name: Lint collector sources
         working-directory: native
         run: make lint-sources
@@ -441,6 +450,15 @@ jobs:
       - name: HTML attribute scanner
         working-directory: native
         run: make htmlparsetest
+
+      # A feed URL that has stopped being a feed used to report rc=0 records=0 —
+      # indistinguishable from a newspaper that published nothing. Four national
+      # press feeds were serving their HTML homepage. rsstest pins that a 2xx
+      # body which is not a feed is a FAILED fetch, and — the half that keeps it
+      # safe — that a valid feed with no items is still an honest empty.
+      - name: RSS/Atom toolkit (a dead feed is not an empty feed)
+        working-directory: native
+        run: make rsstest
 
       # Deliberately NOT repeated here: lint-sources and audit-sources. Both
       # are pure python3 over the source text with no platform-dependent

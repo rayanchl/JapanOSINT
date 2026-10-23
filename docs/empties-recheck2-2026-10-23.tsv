@@ -1,0 +1,44 @@
+id	verdict	shell_rc	sched_rc	emitted	stored	db_rows	available	secs	note
+gnews-ee-technology	EMITS_NOTHING	0	0	0	0	0	-1	1.3	no records reached intel_items
+gnews-bg-health	EMITS_NOTHING	0	0	0	0	0	-1	1.6	no records reached intel_items
+gnews-fi-technology	EMITS_NOTHING	0	0	0	0	0	-1	1.8	no records reached intel_items
+us-usaspending-agency-overview	EMITS_NOTHING	0	0	0	0	0	-1	1.7	no records reached intel_items
+ansd-nada-microdata	EMITS_NOTHING	0	0	0	0	0	-1	1.9	no records reached intel_items
+eas-hk-hko-special-tips	EMITS_NOTHING	0	0	0	0	0	-1	1.9	no records reached intel_items
+lat-ec-expreso	EMITS_NOTHING	0	0	0	0	0	-1	1.5	no records reached intel_items
+es-opendata-aragon-es-org-consorcio-de-transportes-del-area-de-zar	EMITS_NOTHING	0	0	0	0	0	-1	1.4	no records reached intel_items
+sci-stac-inpe-modisa-ocsmart-poc-daily-1	EMITS_NOTHING	0	0	0	0	0	-1	4.6	no records reached intel_items
+sas-arc-tas-natenv	EMITS_NOTHING	0	0	0	0	0	-1	2.2	no records reached intel_items
+jpx-p2pquake-tsunami	EMITS_NOTHING	0	0	0	0	0	-1	1.2	no records reached intel_items
+us-usaspending-federal-account-detail	EMITS_NOTHING	0	0	0	0	0	-1	1.4	no records reached intel_items
+jpx-tdnet-recent	EMITS_NOTHING	0	0	0	0	0	-1	1.9	no records reached intel_items
+jpx-egov-laws-cabinet	EMITS_NOTHING	0	0	0	1	0	-1	15.7	no records reached intel_items
+jpx-egov-laws-ministerial	EMITS_NOTHING	0	0	0	1	0	-1	18.9	no records reached intel_items
+sci-ebi-interpro-entries	EMITS_NOTHING	0	0	0	1	0	-1	4.4	no records reached intel_items
+sci-ncbi-taxonomy-search	EMITS_NOTHING	0	0	0	0	0	-1	1.1	no records reached intel_items
+sci-ssd-cad-jupiter	EMITS_NOTHING	0	0	0	0	0	-1	1.2	no records reached intel_items
+sci-usgs-astro-pds	EMITS_NOTHING	0	0	0	1	0	-1	2.2	no records reached intel_items
+sci-ebi-interpro-proteins	EMITS_NOTHING	0	0	0	1	0	-1	6.8	no records reached intel_items
+geo-eccc-thunderstorm-outlook	EMITS_NOTHING	0	0	0	0	0	-1	1.2	no records reached intel_items
+geo-firms-viirs-alaska-24h	EMITS_NOTHING	0	0	0	0	0	-1	1.0	no records reached intel_items
+geo-firms-modis-alaska-24h	EMITS_NOTHING	0	0	0	0	0	-1	1.1	no records reached intel_items
+geo-imgw-warnings-meteo	EMITS_NOTHING	0	0	0	0	0	-1	1.7	no records reached intel_items
+jpx-egov-laws-v2	EMITS_NOTHING	0	0	0	1	0	-1	28.0	no records reached intel_items
+geo-meteoalarm-cyprus	EMITS_NOTHING	0	0	0	0	0	-1	1.3	no records reached intel_items
+geo-meteoalarm-czechia	EMITS_NOTHING	0	0	0	0	0	-1	1.1	no records reached intel_items
+geo-meteoalarm-poland	EMITS_NOTHING	0	0	0	0	0	-1	1.5	no records reached intel_items
+gov-occ-bulletins	FETCH_FAILED	1	-1	1	1	0	-1	1.6	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+geo-hkobservatory-warnings	EMITS_NOTHING	0	0	0	0	0	-1	8.9	no records reached intel_items
+gov-echr-hudoc	EMITS_NOTHING	0	0	0	1	0	-1	4.7	no records reached intel_items
+cyb-cybereason	FETCH_FAILED	1	-1	1	1	0	-1	1.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+geo-gfz-kp-nowcast	EMITS_NOTHING	0	0	0	0	0	-1	2.8	no records reached intel_items
+news24-za	EMITS_NOTHING	0	0	0	0	0	-1	0.9	no records reached intel_items
+nation-thailand	FETCH_FAILED	1	-1	1	1	0	-1	1.2	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+daily-mirror-lk	FETCH_FAILED	1	-1	1	1	0	-1	1.6	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+KE_MINING_CADASTRE_LICENCES	EMITS_NOTHING	0	0	0	0	0	-1	2.1	no records reached intel_items
+fiji-times	FETCH_FAILED	1	-1	1	1	0	-1	3.1	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+NRC_EVENT_REPORTS_2026	EMITS_NOTHING	0	0	0	0	0	-1	1.3	no records reached intel_items
+NRC_EVENT_REPORTS_2025	EMITS_NOTHING	0	0	0	0	0	-1	1.3	no records reached intel_items
+NRC_PART21_REPORTS_2026	EMITS_NOTHING	0	0	0	0	0	-1	1.3	no records reached intel_items
+gov-jp-egov-laws	EMITS_NOTHING	0	0	0	1	0	-1	25.0	no records reached intel_items
+ENA_PATHOGEN_SARSCOV2_RUNS	EMITS_NOTHING	0	0	0	1	0	-1	28.0	no records reached intel_items

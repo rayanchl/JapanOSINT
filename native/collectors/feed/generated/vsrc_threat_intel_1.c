@@ -94,11 +94,36 @@ VRSS(cyb_crowdstrike, "cyb-crowdstrike", "CrowdStrike Blog", "CrowdStrike ブロ
   "en", "[\"crowdstrike\",\"adversary\",\"ecrime\"]", 7200,
   "CrowdStrike adversary tracking and eCrime intelligence posts.");
 
+/* KEPT AND FAILING, with the reason measured (2026-10-23). Every path on
+   cybereason.com — /blog/rss.xml, /rss, /?feed=rss2, /feed/rss — 301s to
+   https://www.levelblue.com/, which answers HTTP 200 with 106,845 bytes of its
+   own HTML homepage. Until lib/rss_atom.c learned that a 200 which is not a
+   feed is a failed fetch, this row read `rc=0 records=0 stored=0` — identical
+   to a blog that published nothing — and the homepage declares no feed at all
+   (`--discover-feeds`: 0 declared). It is NOT re-pointed at the successor
+   below: the publisher has changed, so a row named "Cybereason Blog" reading
+   LevelBlue's feed would be a false claim about whose research it is, which is
+   the lesson this tree records for ELIA's renamed dataset. The dead row
+   discloses; the successor is its own row. */
 VRSS(cyb_cybereason, "cyb-cybereason", "Cybereason Blog", "Cybereason ブログ",
   "threat-intel", "research",
   "https://www.cybereason.com/blog/rss.xml",
   "en", "[\"cybereason\",\"malware\",\"research\"]", 21600,
-  "Cybereason Nocturnus malware and ransomware analysis.");
+  "Cybereason Nocturnus malware and ransomware analysis. DEAD: every feed path "
+  "on this host 301s to levelblue.com's homepage, which declares no feed — the "
+  "publisher was absorbed. cyb-levelblue reads the successor blog.");
+
+/* The successor, found by asking the host rather than guessing: the redirect
+   above lands on levelblue.com, whose /blogs page DECLARES
+   /blogs/levelblue-blog/rss.xml, and that feed answers with 10 items
+   (`--discover-feeds`, 2026-10-23, verdict PASS). A new row rather than a
+   re-point, so the name keeps saying whose research it is. */
+VRSS(cyb_levelblue, "cyb-levelblue", "LevelBlue Blog", "LevelBlue ブログ",
+  "threat-intel", "research",
+  "https://www.levelblue.com/blogs/levelblue-blog/rss.xml",
+  "en", "[\"levelblue\",\"malware\",\"research\"]", 21600,
+  "LevelBlue threat research and incident analysis — the successor publication "
+  "to the Cybereason blog, whose host now redirects here.");
 
 VRSS(cyb_cyberscoop, "cyb-cyberscoop", "CyberScoop", "CyberScoop",
   "threat-intel", "research",
