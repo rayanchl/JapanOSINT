@@ -154,12 +154,6 @@ VJSON(eur_ods_idf_chomage_nombre_de_chomeurs_exhaust, "eur-ods-idf-chomage-nombr
   "fr", "[\"fra\",\"opendata\"]", 86400,
   "Records of the 'Chômage : nombre de chômeurs (exhaustif) des communes d'Île-de-France (Donnée Insee)' dataset published by Region Ile-de-France open data.");
 
-VJSON(eur_ods_idf_emprise_des_parcs_et_jardins_geres, "eur-ods-idf-emprise-des-parcs-et-jardins-geres", "Region Ile-de-France open data — Emprises de gestion des parcs et jardins - Hauts-de-Seine", "Region Ile-de-France open data — Emprises de gestion des parcs et jardins - Hauts-de-Seine",
-  "europe_data", "opendata",
-  "https://data.iledefrance.fr/api/explore/v2.1/catalog/datasets/emprise-des-parcs-et-jardins-geres-par-le-conseil-general-des-hauts-de-seine/records?limit=100",
-  "results",
-  "fr", "[\"fra\",\"opendata\"]", 86400,
-  "Records of the 'Emprises de gestion des parcs et jardins - Hauts-de-Seine' dataset published by Region Ile-de-France open data.");
 
 VJSON(eur_ods_idf_formations_sanitaires_sociales, "eur-ods-idf-formations-sanitaires-sociales", "Region Ile-de-France open data — Formations sanitaires et sociales", "Region Ile-de-France open data — Formations sanitaires et sociales",
   "europe_data", "opendata",

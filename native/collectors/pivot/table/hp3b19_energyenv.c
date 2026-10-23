@@ -1406,22 +1406,56 @@ static const hp_source HP3B19_ENERGYENV[] = {
       "bands. Publishing the confidence band means forecast uncertainty "
       "is a measured quantity rather than a claim" },
 
-  { .id = "ELIA_SYSTEM_IMBALANCE", .name = "Elia — Belgian system imbalance at one minute resolution",
-    .name_ja = "Elia ベルギー系統インバランス",
+  { .id = "ELIA_SYSTEM_IMBALANCE", .name = "Elia — Belgian current system imbalance at one minute resolution (since May 2024)",
+    .name_ja = "Elia ベルギー系統インバランス（1分値、2024年5月以降）",
     .category = "energy", .portal = "https://opendata.elia.be",
     .record_type = "system-imbalance",
     .tags = "\"energy\",\"grid\",\"belgium\",\"balancing\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    /* ods045 ENDED. Measured 2026-10-20: its newest record is
-     * 2024-05-21T20:59 and its total (2,833,800) has not moved since the
-     * 2026-10-12 ceiling audit — Elia closed the one-minute series with the
-     * May 2024 balancing changes, and this row polled it every 15 minutes for
-     * 17 months, reading the first 150 points of 2019 each time. Its
-     * successor is ods134, the quarter-hourly current system imbalance:
-     * 84,576 records, newest 2026-10-19T21:45 when read at 15:00 on the 20th
-     * (~18 hours behind), fields datetime, resolutioncode, qualitystatus,
-     * ace, systemimbalance, alpha, imbalanceprice. A three-day window holds
-     * 212 records (measured), so one page of 100 and change, hourly. */
+    /* ods045 ENDED. Measured 2026-10-20: its newest record is 2024-05-21T20:59
+     * and its total (2,833,800) has not moved since the 2026-10-12 ceiling
+     * audit; Elia's own metadata titles it "Current system imbalance
+     * (Historical data - up to 22/05/2024)". This row polled it every 15
+     * minutes for 17 months, reading the first 150 points of 2019 each time.
+     * On 2026-10-20 it was re-pointed at ods134 — and the ODS metadata sweep
+     * of 2026-10-22 (tools: the ods147 lesson applied to every ODS row) read
+     * ods134's title as "Imbalance prices per quarter-hour", a different
+     * dataset, now ELIA_IMBALANCE_PRICES_QH below. The successor of ods045 is
+     * **ods126**, "Current system imbalance (Historical data as of
+     * 22/05/2024)": one record a MINUTE from 2024-05-21T22:00, 1,271,520 of
+     * them, newest 2026-10-21T21:59 when read at 2026-10-22 ~10:30
+     * (published once a day, data_processed 04:31 — about a day behind),
+     * fields datetime, resolutioncode, qualitystatus, systemimbalance, ace
+     * and the aFRR/mFRR/IGCC volumes. A three-day window (~4,320 minutes,
+     * 44 pages) every six hours covers the daily publication with margin. */
+    .url = "https://opendata.elia.be/api/explore/v2.1/catalog/datasets/ods126/records?limit=100&order_by=datetime%20desc&where=datetime%3E%3Dnow(days%3D-3)",
+    .array_path = "results",
+    .id_keys = "datetime+resolutioncode",
+    .date_keys = "datetime",
+    .interval = 21600,
+    .page_param = "offset",
+    .page_size = 100,
+    .page_max = 50,
+    .description = "One-minute Belgian current system imbalance (ods126, the series "
+      "that continued the one-minute ods045 after the May 2024 balancing "
+      "changes): system imbalance and area control error with the aFRR, "
+      "mFRR and IGCC activation volumes behind each minute, and Elia's own "
+      "quality status on each point. The closest published proxy to the "
+      "frequency deviation itself" },
+
+  { .id = "ELIA_IMBALANCE_PRICES_QH", .name = "Elia — Belgian imbalance prices per quarter hour (since May 2024)",
+    .name_ja = "Elia ベルギー インバランス価格（15分値、2024年5月以降）",
+    .category = "energy", .portal = "https://opendata.elia.be",
+    .record_type = "imbalance-price",
+    .tags = "\"energy\",\"grid\",\"belgium\",\"balancing\",\"price\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    /* ods134, "Imbalance prices per quarter-hour (Historical data as of
+     * 22/05/2024)" by its own metadata (read 2026-10-22): 84,576 records,
+     * newest 2026-10-19T21:45 when read at 15:00 on the 20th (~18 hours
+     * behind), fields datetime, resolutioncode, qualitystatus, ace,
+     * systemimbalance, alpha, imbalanceprice. ELIA_SYSTEM_IMBALANCE read it
+     * for two days under the wrong name; it is its own row now. A three-day
+     * window holds 212 records (measured 2026-10-20), hourly. */
     .url = "https://opendata.elia.be/api/explore/v2.1/catalog/datasets/ods134/records?limit=100&order_by=datetime%20desc&where=datetime%3E%3Dnow(days%3D-3)",
     .array_path = "results",
     .id_keys = "datetime+resolutioncode",
@@ -1430,11 +1464,10 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .page_param = "offset",
     .page_size = 100,
     .page_max = 10,
-    .description = "Quarter-hourly Belgian system imbalance (ods134, the series "
-      "that replaced the one-minute ods045 in May 2024): area control "
-      "error, system imbalance, the alpha components and the imbalance "
-      "price, with Elia's own quality status on each point. The closest "
-      "published proxy to the frequency deviation itself" },
+    .description = "Quarter-hourly Belgian imbalance prices (ods134) since the May "
+      "2024 balancing changes: the imbalance price and its alpha component "
+      "beside the system imbalance and area control error of the same "
+      "quarter hour, with Elia's quality status on each point" },
 
   { .id = "ELIA_GRID_ASSET_LOADING", .name = "Elia — Belgian transmission asset loading by line",
     .name_ja = "Elia ベルギー送電設備別潮流",

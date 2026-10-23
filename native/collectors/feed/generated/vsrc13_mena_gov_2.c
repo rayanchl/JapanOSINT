@@ -147,12 +147,12 @@ VJSON(afr_qa_education_statistics_number_of_student, "afr-qa-education-statistic
   "en", "[\"qat\",\"opendata\",\"opendatasoft\"]", 28800,
   "Qatar national open-data records for education statistics: student numbers, served as Opendatasoft JSON.");
 
-VJSON(afr_qa_health_statistics_number_of_paramedics, "afr-qa-health-statistics-number-of-paramedics", "data.gov.qa — health statistics: paramedic workforce", "data.gov.qa — health statistics: paramedic workforce",
+VJSON(afr_qa_health_statistics_number_of_paramedics, "afr-qa-health-statistics-number-of-paramedics", "data.gov.qa — health statistics: paramedics' patients by gender", "data.gov.qa — health statistics: paramedics' patients by gender",
   "mena_gov", "health",
   "https://www.data.gov.qa/api/explore/v2.1/catalog/datasets/health-statistics-number-of-paramedics-patients-by-gender/records?limit=50",
   "results",
   "en", "[\"qat\",\"opendata\",\"opendatasoft\"]", 43200,
-  "Qatar national open-data records for health statistics: paramedic workforce, served as Opendatasoft JSON.");
+  "Qatar national open-data records for health statistics: the number of patients attended by paramedics, by gender (the dataset's own title, read 2026-10-22 — the row had been named as a workforce count), served as Opendatasoft JSON.");
 
 VJSON(afr_qa_number_of_arrivals_departures_and_tran, "afr-qa-number-of-arrivals-departures-and-tran", "data.gov.qa — air passenger arrivals, departures and transits", "data.gov.qa — air passenger arrivals, departures and transits",
   "mena_gov", "transport",

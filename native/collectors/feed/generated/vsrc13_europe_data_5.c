@@ -57,12 +57,6 @@ VJSON(eur_ods_stras_signal_longitudinale, "eur-ods-stras-signal-longitudinale", 
   "fr", "[\"fra\",\"opendata\"]", 86400,
   "Records of the 'Signalisation longitudinale' dataset published by Eurometropole de Strasbourg open data.");
 
-VJSON(eur_ods_stras_usages_ephemeres, "eur-ods-stras-usages-ephemeres", "Eurometropole de Strasbourg open data — Usages éphémères", "Eurometropole de Strasbourg open data — Usages éphémères",
-  "europe_data", "opendata",
-  "https://data.strasbourg.eu/api/explore/v2.1/catalog/datasets/usages_ephemeres/records?limit=100",
-  "results",
-  "fr", "[\"fra\",\"opendata\"]", 86400,
-  "Records of the 'Usages éphémères' dataset published by Eurometropole de Strasbourg open data.");
 
 VJSON(eur_ods_strasbourg, "eur-ods-strasbourg", "Eurometropole de Strasbourg open data — dataset catalogue", "Eurometropole de Strasbourg open data — dataset catalogue",
   "europe_data", "opendata",

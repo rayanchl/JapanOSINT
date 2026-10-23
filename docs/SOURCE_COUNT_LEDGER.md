@@ -5,6 +5,32 @@ was seeded from, what it measured and what it taught. Moved out of `CLAUDE.md`
 on 2026-10-19 so that file keeps the rules and the current number; the lessons
 that a new batch must not relearn are summarised there. Newest first.
 
+**The registered count is 58,047** (2026-10-23): main's 57,529 merged with this
+branch's 58,045. Third merge of main in one day, and the one where a conflict
+was decided by a measurement only the OTHER side had.
+
+Both branches had rewritten ENA's three rows after finding independently that
+`www.ebi.ac.uk` refuses `offset` outright. This branch gave them `window_days`,
+a forward cycle that reads the archive; main gave them a 30-day tail and then —
+for tuberculosis — **four static era rows**, because main measured something
+this branch never saw: one `limit=0` read of all 360,690 MTB runs answers
+**HTTP 200 with 331,580 rows, 8% short in every date half**. A silent cut of an
+accession-ordered stream, invisible in the response, and the four era blocks
+each answer exactly their own count (76,189 / 95,032 / 85,283 / 57,476 /
+46,710 = 360,690).
+
+So MTB takes main's five-row set whole, and this is not deference: keeping both
+designs would have stored every MTB run TWICE under two source ids, which no
+record count shows as wrong because a second copy looks exactly like a second
+source. `window_days` stays on SARS-CoV-2, which has no era rows and whose 7.5
+million runs a 30-day tail never reaches — its windows are ~15k records, far
+under where that cut appears, and each measured equal to the endpoint's own
+`/count`. Main's `array_path = "."` is taken for the three JSON rows as well:
+ENA answers a bare root array, which must be declared, and these rows had been
+working only because their records are flat. It was NOT put on the four TSV
+rows, where it means nothing — the scripted edit that added it to all seven was
+caught by checking each row's mode.
+
 **The count is still 58,045 after a SECOND merge of main the same day**
 (2026-10-22): main merged PR #68 while the first merge was being resolved, and
 it adds no rows — it re-measures existing ones. Four conflicts, three of them
@@ -48,7 +74,7 @@ not have**; the engine's first-non-empty-scalar fallback happened to land on
 addresses had the layer's field order changed. Named explicitly, with
 `sortBy=FEATUREID`. A row cannot be audited while it is believed to be dead.
 
-**The registered count is 58,045** (2026-10-22): main's 57,527 merged with this
+**This branch's count was 58,045** (2026-10-22): main's 57,527 merged with this
 branch's 58,055, on the **57,536** base they share. Measured with `make
 source-count` and cross-checked against the binary's own `--list-sources`
 (58,045 both ways, 0 duplicates / 0 dropped / 0 never-runs), never added up —
@@ -142,6 +168,43 @@ branch's ArcGIS beat moved 51 → **53** (290 ids, the table symbol, the
 collector key, the manifest, the TSV, the batch note and both page-two
 measurement records) BEFORE the merge rather than after — which is again what
 kept the merge to one round.
+
+**Main's count was 57,529** (2026-10-22): main's 57,527 (its
+`&amp;` pass, below) plus this branch's +2 on the shared 57,536 base: +4
+tuberculosis windows, +1 Elia imbalance-price row, −3 ODS rows whose datasets
+no longer exist. No id is in both sides' changes; both floors re-recorded.
+
+**This branch's count was 57,538** (2026-10-22, later): 57,540 − 3 + 1. The
+ods147 lesson applied to every OpenDataSoft row
+(`docs/measured-ods-titles-2026-10-22.tsv`): the metadata endpoint of all
+237 datasets the tree's 245 ODS rows read was asked for its title; 118 rows
+got one, 124 never got an answer (the platform resets this environment's
+path on nearly every try — a reading of the path), 3 datasets no longer
+exist (`NotFoundResource`; the three `vsrc13_europe_data` rows are gone),
+one row was named for a different measure than its dataset holds (Qatar's
+"paramedic workforce" is paramedics' PATIENTS by gender; renamed), and
+`ELIA_SYSTEM_IMBALANCE` — re-pointed only two days earlier — had been
+pointed at the imbalance-PRICE dataset: the one-minute successor of ods045
+is ods126 by Elia's own titles (3,622 of 3,622 in its window through the
+engine), and ods134 is its own row now, `ELIA_IMBALANCE_PRICES_QH` (241 of
+241). Every other low-overlap pair was a language or wording difference,
+read by hand.
+
+**This branch's count was 57,540** (2026-10-22): 57,536 (below) plus
+four. `tools/audit_cycle_advance.py` ran all 669 `page_resume` rows under
+`JO_PAGE_MAX=2` and read their notices back
+(`docs/measured-cycle-advance-2026-10-22.tsv`): 600 advance, 20 complete
+inside two pages, 43 were refused page 1 from this environment (39 of them
+twice), 2 answered 429 to page 2 (Energinet, Tronscan — per-host gaps in
+`core/hostgate.c`, whose live-entry count is sizeof arithmetic now rather
+than the `7` that had been hiding the two new gaps), and **4 could never
+advance**: `BC_MINERAL_TENURE` (GeoServer wants `sortBy`; added) and the
+three ENA Portal API rows, whose `offset` the API refuses outright. ENA's
+complete read is `limit=0` in one request; influenza samples (61,625) and a
+30-day SARS-CoV-2 tail fit in one, and the tuberculosis runs became FIVE
+single-request windows on `first_public` because one `limit=0` read of the
+whole 360,690 came back 8% short in every date half (a silent cut), while
+each window answers exactly its count. +4 rows; both floors re-recorded.
 
 **Main's count was 57,527** (2026-10-22): 57,536 less nine rows that
 became exact duplicates when the `&amp;` in 1,076 row URLs was decoded
