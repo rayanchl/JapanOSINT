@@ -91,27 +91,6 @@ static const hp_source HP3B31_USSTATE[] = {
     .description = "North Carolina corporations and LLCs — SOSID, status, "
       "registered agent and the scanned filings behind each record" },
 
-  { .id = "US_AZ_CORP_COMMISSION", .name = "Arizona Corporation Commission — entity search",
-    .name_ja = "米アリゾナ州 法人委員会", .category = "government",
-    .portal = "https://ecorp.azcc.gov", .record_type = "us-entity",
-    .tags = "\"us\",\"az\",\"registry\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://ecorp.azcc.gov/EntitySearch/Index?searchTerm={q}",
-    .base = "https://ecorp.azcc.gov", .filter_query = 1,
-    .description = "Arizona entities — file number, statutory agent, principal "
-      "address and the members or managers disclosed for an LLC, which Arizona "
-      "requires and most states do not" },
-
-  { .id = "US_WI_DFI_CORP", .name = "Wisconsin DFI — corporate records",
-    .name_ja = "米ウィスコンシン州 法人記録", .category = "government",
-    .portal = "https://www.wdfi.org", .record_type = "us-entity",
-    .tags = "\"us\",\"wi\",\"registry\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.wdfi.org/apps/CorpSearch/Results.aspx?type=Simple&q={q}",
-    .base = "https://www.wdfi.org", .filter_query = 1,
-    .description = "Wisconsin corporate records — entity ID, registered agent, "
-      "principal office and the full index of filed documents" },
-
   { .id = "US_MN_SOS_BUSINESS", .name = "Minnesota — business filings search",
     .name_ja = "米ミネソタ州 事業登記", .category = "government",
     .portal = "https://mblsportal.sos.state.mn.us", .record_type = "us-entity",

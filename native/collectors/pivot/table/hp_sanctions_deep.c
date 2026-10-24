@@ -207,17 +207,6 @@ static const hp_source HP_SANCTIONS[] = {
       "query — Canada lists parties the US and EU sometimes do not, so it is a "
       "genuinely independent check" },
 
-  { .id = "UA_NAZK_SANCTIONS", .name = "Ukraine NAZK — war & sanctions register",
-    .name_ja = "ウクライナ 制裁登録(NAZK)", .category = "government",
-    .type = "scraped", .mode = HP_HTML,
-    .portal = "https://sanctions.nazk.gov.ua", .record_type = "ua-sanction",
-    .tags = "\"sanctions\",\"ua\"", .free_tier = 1,
-    .url = "https://sanctions.nazk.gov.ua/en/search/?search={q}",
-    .base = "https://sanctions.nazk.gov.ua", .filter_query = 1,
-    .description = "Ukraine's war-and-sanctions register — international sponsors of "
-      "war, sanctioned individuals, companies and vessels, with the evidence pages "
-      "NAZK publishes per listing" },
-
   /* ── Ransomware exposure ───────────────────────────────────────────────── */
   { .id = "RANSOMWARE_LIVE_VICTIMS", .name = "ransomware.live — victim disclosures",
     .name_ja = "ランサムウェア被害公開(ransomware.live)", .category = "cyber",

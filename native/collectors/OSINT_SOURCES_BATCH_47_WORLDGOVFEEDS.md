@@ -127,3 +127,60 @@ Tree gates after all three tables landed: build 0 warnings; `lint-sources` OK;
 `audit-sources` 0 findings across 329 strict-set files; `hptest`,
 `pagewalktest`, `htmlparsetest`, `authtest`, `unit`, `selftest` all pass;
 `source-floor` and `registry-floor` re-recorded at 42,643.
+
+## The split by body type (2026-10-24)
+
+The two national tables were one collector each — `hp3b47_frgov` 9,619 rows,
+`hp3b47_itgov` 5,716 — every row `category = "government"`, `record_type =
+"government-notice"`, under one heading on the Collectors pages and the iOS
+dashboard. The registers behind them are not one body type: the French
+directory lists 6,450 mairies beside 1,163 CCAS and care services, 612 youth
+and employment offices, 169 police and fire services, 130 professional orders;
+Italy's IPA lists 2,725 state schools and 821 professional orders filed as
+"public administration". Half the registry read as Government because of these
+two tables.
+
+Every row now names its collector explicitly (`.collector`, the field hpengine
+rows otherwise default to their table's name) and carries the category of its
+body type — `local-gov`, `education`, `legal`, `health`, `research`,
+`environment`, `culture`, `commerce`, `utility`, `public-safety` or
+`government`. The key is derived from the body's NAME by ordered regex rules
+(first match wins) in `tools/split_beats_by_body_type.py`: France by the type
+the service-public.fr directory puts first in the name ("Mairie - X",
+"Communauté de communes - Y", "Ordre des avocats - Z"), Italy by the name plus
+the IPA category in parentheses ("Gestori di Pubblici Servizi"). A row no rule
+types goes to the beat's honest residue (`itgov_altri`, 181 rows: agencies,
+consortia, commissioner structures); France's one unmatched row was an
+association and joins the social-action collector. The URL, id and identity of
+every row are untouched, so no emit measurement is invalidated, and the
+manifests mirror the same two facts (field 4 and a `collector=` opt).
+
+| collector | rows | group |
+| --- | --- | --- |
+| `frgov_mairies` | 6,450 | government |
+| `frgov_social` (CCAS/CIAS, MDPH, elder-care and family points) | 1,163 | government |
+| `frgov_services_citoyens` (missions locales, Info Jeunes, France services, GRETA) | 612 | government |
+| `frgov_intercommunal` (EPCI) | 410 | government |
+| `frgov_environnement` (hunting/fishing federations, nature parks, maritime) | 185 | environment |
+| `frgov_securite` (police municipale, SDIS, access to justice) | 169 | safety |
+| `frgov_sante` (hospitals, SAMU, occupational health) | 162 | health |
+| `frgov_ordres` (orders and chambers) | 130 | legal |
+| `frgov_enseignement` (universities, écoles, research) | 125 | science |
+| `frgov_etat` (prefectures, directions, councils, agencies) | 111 | government |
+| `frgov_culture` (Instituts français, museums, archives) | 102 | culture |
+| `itgov_scuole` | 2,725 | culture (education) |
+| `itgov_ordini` | 821 | legal |
+| `itgov_comuni` | 675 | government |
+| `itgov_servizi_pubblici` (utilities, transport, ports) | 463 | infrastructure |
+| `itgov_sanita` (ASL/ASP, hospitals, IPAB care) | 283 | health |
+| `itgov_territoriali` (unioni, province, regioni, GAL) | 209 | government |
+| `itgov_altri` (residue) | 181 | government |
+| `itgov_universita` | 150 | science |
+| `itgov_ambiente` (parks, bonifica, hunting districts) | 113 | environment |
+| `itgov_cultura` (theatres, sport federations, tourism) | 72 | culture |
+| `itgov_camere` | 24 | corporate |
+
+The rules are a reading of these two registers on 2026-10-24, spot-checked
+by sampling three names per collector. A future re-probe that regenerates a
+table re-runs `plan` and `apply`; a new body type that no rule names lands in
+the residue, visibly, where it can be read and given a rule.

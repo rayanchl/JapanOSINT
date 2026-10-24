@@ -55,3 +55,4 @@ http://www.archives.city.sakura.lg.jp/ja/	homepage links are only parameterized 
 https://matsudo-digital-museum.jp/	homepage links to a collection-items.html search page; fetched bare (no keyword) it returns "該当する資料はございません" (zero results)
 https://jmapps.ne.jp/abiko/	only 2 static "pick up" items even with list_count=50 requested; too thin, the rest requires a submitted search with zero default results otherwise
 https://www.kanpo.go.jp/	DUP_EXISTING_TREE: already registered as collectors/sources/kanpo_gazette.c
+https://d-museum.kokugakuin.ac.jp/database/	DEAD (JO28_KOKUGAKUIN_DMUSEUM_INDEX, removed 2026-10-25, docs/html-reachability-2026-10.md): 404 in both passes; page 404; bare path same; root 200

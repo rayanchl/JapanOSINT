@@ -11,16 +11,6 @@
 
 static const hp_source HP2_EU_SOUTH[] = {
   /* ── Italy ─────────────────────────────────────────────────────────────── */
-  { .id = "IT_REGISTRO_IMPRESE", .name = "Italy — Registro Imprese company search",
-    .name_ja = "イタリア 企業登記", .category = "government",
-    .portal = "https://www.registroimprese.it", .record_type = "it-entity",
-    .tags = "\"it\",\"registry\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.registroimprese.it/ricerca-libera?searchTerm={q}",
-    .base = "https://www.registroimprese.it", .filter_query = 1,
-    .description = "Italian chamber-of-commerce register — REA number, partita "
-      "IVA, legal form, registered office, the ATECO activity and the "
-      "administrators on file, with the index of visure available for each" },
 
   { .id = "IT_ANAC_OPENDATA", .name = "Italy ANAC — public contracts open data",
     .name_ja = "イタリア 反汚職庁 契約オープンデータ", .category = "government",
@@ -36,18 +26,6 @@ static const hp_source HP2_EU_SOUTH[] = {
       "operator, award procedure, amount and any subcontracts. This walks the "
       "whole catalogue with the resource files behind each dataset" },
 
-  { .id = "IT_ANAC_CASELLARIO", .name = "Italy ANAC — supplier annotations (casellario)",
-    .name_ja = "イタリア 事業者記録簿(除外事由)", .category = "government",
-    .portal = "https://www.anticorruzione.it", .record_type = "it-supplier-annotation",
-    .tags = "\"it\",\"debarment\",\"procurement\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.anticorruzione.it/ricerca?q={q}",
-    .base = "https://www.anticorruzione.it", .filter_query = 1,
-    .description = "The Italian computerised record of economic operators — "
-      "false declarations, grave professional misconduct, contract "
-      "terminations and interdiction measures. An annotation here is the "
-      "practical Italian equivalent of a debarment" },
-
   { .id = "IT_CONSOB_WARNINGS", .name = "Italy CONSOB — abusive intermediaries & sanctions",
     .name_ja = "イタリア CONSOB 無登録業者/制裁", .category = "government",
     .portal = "https://www.consob.it", .record_type = "it-regulator-warning",
@@ -58,17 +36,6 @@ static const hp_source HP2_EU_SOUTH[] = {
     .description = "CONSOB orders blacking out websites offering financial "
       "services abusively, its warning list of unauthorised intermediaries and "
       "its sanction resolutions against named firms and individuals" },
-
-  { .id = "IT_BANCA_ITALIA_ALBI", .name = "Italy Banca d'Italia — supervised intermediaries",
-    .name_ja = "イタリア中央銀行 監督対象", .category = "government",
-    .portal = "https://www.bancaditalia.it", .record_type = "it-financial-entity",
-    .tags = "\"it\",\"financial\",\"licence\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.bancaditalia.it/footer/ricerca/index.html?query={q}",
-    .base = "https://www.bancaditalia.it", .filter_query = 1,
-    .description = "Banks, payment institutions, confidi and financial "
-      "intermediaries entered in the Bank of Italy's albi and elenchi, plus "
-      "the sanctions and special-administration measures it has imposed" },
 
   { .id = "IT_GAZZETTA_UFFICIALE", .name = "Italy — Gazzetta Ufficiale",
     .name_ja = "イタリア 官報", .category = "government",
@@ -82,17 +49,6 @@ static const hp_source HP2_EU_SOUTH[] = {
       "and the ministerial decrees that name individual companies" },
 
   /* ── Spain ─────────────────────────────────────────────────────────────── */
-  { .id = "ES_BORME_MERCANTIL", .name = "Spain BORME — commercial register bulletin",
-    .name_ja = "スペイン 商業登記官報", .category = "government",
-    .portal = "https://www.boe.es", .record_type = "es-gazette-mercantil",
-    .tags = "\"es\",\"registry\",\"gazette\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.boe.es/buscar/borme.php?campo%5B0%5D=TIT&dato%5B0%5D={q}",
-    .base = "https://www.boe.es", .filter_query = 1,
-    .description = "The Spanish commercial register bulletin — incorporations, "
-      "director appointments and revocations, capital changes, mergers, "
-      "dissolutions and insolvency declarations, each entry tied to the "
-      "registry sheet. Spain's corporate event stream" },
 
   { .id = "ES_BOE_GAZETTE", .name = "Spain BOE — state official gazette",
     .name_ja = "スペイン 官報", .category = "government",
@@ -175,28 +131,7 @@ static const hp_source HP2_EU_SOUTH[] = {
       "regulatory decisions and the insolvency and corporate notices published "
       "in the second series" },
 
-  { .id = "PT_CMVM_ENTITIES", .name = "Portugal CMVM — supervised entities & warnings",
-    .name_ja = "ポルトガル CMVM 監督対象", .category = "government",
-    .portal = "https://www.cmvm.pt", .record_type = "pt-financial-entity",
-    .tags = "\"pt\",\"financial\",\"licence\",\"warning\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.cmvm.pt/pt/Pesquisa/Paginas/Resultados.aspx?k={q}",
-    .base = "https://www.cmvm.pt", .filter_query = 1,
-    .description = "Portuguese securities regulator registers, issuer "
-      "disclosures, qualified-holding notifications and the warning list of "
-      "entities offering investment services without authorisation" },
-
   /* ── Greece ────────────────────────────────────────────────────────────── */
-  { .id = "GR_GEMI_REGISTRY", .name = "Greece GEMI — general commercial register",
-    .name_ja = "ギリシャ 商業登記(GEMI)", .category = "government",
-    .portal = "https://publicity.businessportal.gr", .record_type = "gr-entity",
-    .tags = "\"gr\",\"registry\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://publicity.businessportal.gr/company-search?searchTerm={q}",
-    .base = "https://publicity.businessportal.gr", .filter_query = 1,
-    .description = "Greek commercial register publicity — GEMI number, AFM, "
-      "legal form, registered seat, the board and the announcements each "
-      "company is required to publish, including balance sheets" },
 
   { .id = "GR_PROMITHEUS_TENDERS", .name = "Greece — national procurement system (KIMDIS)",
     .name_ja = "ギリシャ 公共調達", .category = "government",
@@ -234,17 +169,6 @@ static const hp_source HP2_EU_SOUTH[] = {
       "and shareholders. Cyprus sits in the ownership chain of an enormous "
       "share of post-Soviet corporate structures" },
 
-  { .id = "CY_CYSEC_ENTITIES", .name = "Cyprus CySEC — regulated entities & warnings",
-    .name_ja = "キプロス CySEC 規制対象/警告", .category = "government",
-    .portal = "https://www.cysec.gov.cy", .record_type = "cy-financial-entity",
-    .tags = "\"cy\",\"financial\",\"licence\",\"warning\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.cysec.gov.cy/en-GB/entities/search/?q={q}",
-    .base = "https://www.cysec.gov.cy", .filter_query = 1,
-    .description = "Cypriot investment firms, fund managers, administrative "
-      "service providers and crypto asset providers, with licence status, "
-      "suspensions, withdrawals and the administrative fines CySEC has "
-      "imposed — the register behind most EU-passported retail brokerages" },
 };
 
 HP_REGISTER_TABLE(HP2_EU_SOUTH)

@@ -74,28 +74,6 @@ static const hp_source HP2_EU_WEST[] = {
       "designations France applies on top of the EU list, notably in "
       "counter-terrorism cases" },
 
-  { .id = "FR_AMF_DECISIONS", .name = "France AMF — sanctions & enforcement decisions",
-    .name_ja = "フランス AMF 制裁決定", .category = "government",
-    .portal = "https://www.amf-france.org", .record_type = "fr-enforcement",
-    .tags = "\"fr\",\"financial\",\"enforcement\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.amf-france.org/fr/recherche-globale?search={q}",
-    .base = "https://www.amf-france.org", .filter_query = 1,
-    .description = "French market authority sanction decisions, injunctions "
-      "and the blacklist of unauthorised investment and crypto websites — with "
-      "the firm, the breach found and the financial penalty" },
-
-  { .id = "FR_REGAFI_INSTITUTIONS", .name = "France REGAFI — authorised financial institutions",
-    .name_ja = "フランス 金融機関登録(REGAFI)", .category = "government",
-    .portal = "https://www.regafi.fr", .record_type = "fr-financial-institution",
-    .tags = "\"fr\",\"financial\",\"licence\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.regafi.fr/spip.php?page=results&type=advanced&denomination={q}",
-    .base = "https://www.regafi.fr", .filter_query = 1,
-    .description = "Institutions authorised by the ACPR — banks, payment and "
-      "e-money institutions, investment firms — with their CIB code, licence "
-      "categories, effective dates and any withdrawal of authorisation" },
-
   { .id = "FR_JUDILIBRE_DECISIONS", .name = "France — Cour de cassation & appeal decisions",
     .name_ja = "フランス 破毀院/控訴院 判決", .category = "government",
     .portal = "https://www.courdecassation.fr", .record_type = "fr-judgment",
@@ -219,29 +197,6 @@ static const hp_source HP2_EU_WEST[] = {
       "government for years at a time" },
 
   /* ── Luxembourg & Ireland ──────────────────────────────────────────────── */
-  { .id = "LU_RCS_ENTITIES", .name = "Luxembourg — trade & companies register (RCS)",
-    .name_ja = "ルクセンブルク 商業登記", .category = "government",
-    .portal = "https://www.lbr.lu", .record_type = "lu-entity",
-    .tags = "\"lu\",\"registry\",\"ownership\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.lbr.lu/mjrcs/jsp/IndexActionNotSecured.action?"
-      "time=0&currentMenuLabel=menuItemRcsl&FROM_MENU=true&q={q}",
-    .base = "https://www.lbr.lu", .filter_query = 1,
-    .description = "Luxembourg registered entities — RCS number, legal form, "
-      "managers, and the filed documents including articles and accounts. "
-      "Luxembourg holding and fund vehicles sit in the middle of most European "
-      "ownership chains, which makes this register a routing table" },
-
-  { .id = "LU_CSSF_ENTITIES", .name = "Luxembourg CSSF — supervised entities & warnings",
-    .name_ja = "ルクセンブルク CSSF 監督対象", .category = "government",
-    .portal = "https://www.cssf.lu", .record_type = "lu-financial-entity",
-    .tags = "\"lu\",\"financial\",\"licence\",\"warning\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.cssf.lu/en/entities-search/?searchterm={q}",
-    .base = "https://www.cssf.lu", .filter_query = 1,
-    .description = "Luxembourg supervised banks, investment firms, funds and "
-      "their management companies, with authorisation status — plus the CSSF "
-      "warnings naming entities that falsely claim Luxembourg supervision" },
 
   { .id = "IE_CBI_REGISTERS", .name = "Ireland — Central Bank registers",
     .name_ja = "アイルランド 中央銀行 登録簿", .category = "government",

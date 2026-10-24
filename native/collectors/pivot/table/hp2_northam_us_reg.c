@@ -82,17 +82,6 @@ static const hp_source HP2_US_REG[] = {
       "operator, aircraft or vessel, probable cause and the safety "
       "recommendations issued afterwards" },
 
-  { .id = "US_PHMSA_PIPELINE", .name = "PHMSA — pipeline incidents & operators",
-    .name_ja = "米国PHMSA — パイプライン事故", .category = "infrastructure",
-    .portal = "https://www.phmsa.dot.gov", .record_type = "us-pipeline-incident",
-    .tags = "\"us\",\"energy\",\"critical-infrastructure\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.phmsa.dot.gov/search/site/{q}",
-    .base = "https://www.phmsa.dot.gov", .filter_query = 1,
-    .description = "Pipeline and hazardous-materials incidents by operator — "
-      "release volume, cause, casualties and cost, plus enforcement actions "
-      "against the operator" },
-
   /* ── Health & food ─────────────────────────────────────────────────────── */
   { .id = "US_FDA_INSPECTIONS", .name = "openFDA — inspection classifications",
     .name_ja = "米国FDA — 査察結果分類", .category = "health",
@@ -268,28 +257,6 @@ static const hp_source HP2_US_REG[] = {
     .description = "FINRA's record for a brokerage or registered representative — "
       "registrations, exams, employment history and, critically, the disclosure "
       "events: customer complaints, regulatory actions and terminations" },
-
-  { .id = "US_CFTC_ACTIONS", .name = "CFTC — enforcement actions & RED list",
-    .name_ja = "米国CFTC — 執行措置", .category = "economy",
-    .portal = "https://www.cftc.gov", .record_type = "us-cftc-enforcement",
-    .tags = "\"us\",\"finance\",\"enforcement\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.cftc.gov/search/node?keys={q}",
-    .base = "https://www.cftc.gov", .filter_query = 1,
-    .description = "Commodity Futures Trading Commission enforcement actions and "
-      "the Registration Deficient list of unregistered foreign entities "
-      "soliciting US customers — the crypto-fraud surface in particular" },
-
-  { .id = "US_FTC_CASES", .name = "FTC — enforcement cases & refunds",
-    .name_ja = "米国FTC — 執行事件", .category = "government",
-    .portal = "https://www.ftc.gov", .record_type = "us-ftc-case",
-    .tags = "\"us\",\"consumer\",\"enforcement\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.ftc.gov/search?search={q}",
-    .base = "https://www.ftc.gov", .filter_query = 1,
-    .description = "Federal Trade Commission cases — deceptive practice actions, "
-      "consent orders and redress programmes naming the company and its "
-      "principals, who are often barred from the industry afterwards" },
 
   { .id = "US_CONSUMER_COMPLAINTS", .name = "CFPB — consumer complaint database",
     .name_ja = "米国CFPB — 消費者苦情", .category = "economy",
