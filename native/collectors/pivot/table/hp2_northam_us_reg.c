@@ -297,16 +297,15 @@ static const hp_source HP2_US_REG[] = {
       "deductible contributions, read directly — whether a US charity's exempt "
       "status is current, revoked or never existed" },
 
-  { .id = "US_FCC_ENFORCEMENT", .name = "FCC — enforcement actions & forfeitures",
-    .name_ja = "米国FCC — 執行措置", .category = "telecom",
-    .portal = "https://www.fcc.gov", .record_type = "us-fcc-enforcement",
-    .tags = "\"us\",\"telecom\",\"enforcement\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.fcc.gov/search/#q={q}",
-    .base = "https://www.fcc.gov", .filter_query = 1,
-    .description = "FCC notices of apparent liability, forfeiture orders and "
-      "consent decrees — robocall operations, pirate broadcasting and equipment "
-      "authorisation violations, with the penalty amounts" },
+  /* US_FCC_ENFORCEMENT removed 2026-10-25 (rule 4d). Its URL put the query
+   * after `#` (https://www.fcc.gov/search/#q={q}), which never reaches the
+   * server, so every "search" fetched the same page and filter_query matched
+   * links on it. No server-side search exists to re-point to: the enforcement
+   * orders listing (/enforcement/orders?search_api_fulltext=) and the content
+   * API (/api/content.json?query=) return the identical result set for a real
+   * term and an impossible one (25 and 225,206 rows), the content API honours
+   * no bureau filter, and no enforcement feed is published. Evidence:
+   * docs/removed-sources-2026-10-25-html-dead.tsv. */
 
   { .id = "US_GSA_EXCLUSIONS", .name = "SAM.gov — federal exclusions (debarment)",
     .name_ja = "米国 連邦調達除外リスト", .category = "government",
