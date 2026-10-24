@@ -796,32 +796,35 @@ E6.
 hour a complete pass is a two-day job, and the file is committed as it
 accumulates rather than held back.
 
-**Where it stands at 2026-10-24: 15,327 of 55,699 rows** (27.5%), resumed
+**Where it stands at 2026-10-24: 24,462 of 55,699 rows** (43.9%), resumed
 across several invocations — each runs until the harness's two-hour background
-limit (or, once, until the container restarted) and `--resume` picks up where it
-stopped, so the remainder is roughly eight more hours of wall clock:
+limit and `--resume` picks up where it stopped. The last pass added 9,135 rows,
+the fastest yet, so the remainder is roughly three more passes:
 
-| verdict | n | at 12,584 rows |
-| --- | --- | --- |
-| OK | 12,850 | 10,603 |
-| FETCH_FAILED | 1,473 | 1,306 |
-| COLLISION | 385 | 298 |
-| SLOW | 356 | 222 |
-| EMITS_NOTHING | 151 | 132 |
-| GATED | 93 | 4 |
-| POD | 19 | 19 |
+| verdict | n | at 15,327 rows | at 12,584 rows |
+| --- | --- | --- | --- |
+| OK | 20,635 | 12,850 | 10,603 |
+| FETCH_FAILED | 2,674 | 1,473 | 1,306 |
+| SLOW | 404 | 356 | 222 |
+| COLLISION | 398 | 385 | 298 |
+| EMITS_NOTHING | 239 | 151 | 132 |
+| GATED | 93 | 93 | 4 |
+| POD | 19 | 19 | 19 |
 
-**Read the SLOW column against the machine, not the sources, and the number
-keeps saying so.** It was 147 at 11,666 rows, 222 at 12,584 and is 356 now:
-134 of the last 2,743 rows hit the 200 s kill line, a 5% rate where the first
-11,666 ran at about 1%. Both of those windows are exactly when this container
-was busiest — building llama.cpp and running the unit suite for the first, two
-full `make`s, a 455-second unit suite and six live engine runs for the second —
-and `SLOW` means UNMEASURED at this tool's kill line rather than a slow source,
-the same reasoning as the cycle-health sweep whose STUCK verdicts changed with
-`--jobs`. **Those 134 rows need re-running on a quiet machine before any of
-them is read as a finding**, and a sweep sharing a container with a build is
-measuring the container.
+**FETCH_FAILED nearly doubled over this stretch and that is a property of the
+REGION the sweep is walking, not of the fleet.** Rows 15,327..24,462 are the
+`JO41_WP_CORP_*` and `JO47_FR_*` blocks — Japanese corporate WordPress
+installs and French commune portals, thousands of small self-hosted sites,
+where a dead host is the base rate rather than the exception. Each of those
+rows DISCLOSED its refusal, which is the sweep working: `FETCH_FAILED` is a row
+that filed a `collector-fetch-failure` record naming what happened, not a row
+that failed in silence. The verdict to read as a defect is `EMITS_NOTHING`.
+
+**SLOW has stopped growing with the machine**: 356 → 404 over 9,135 rows, about
+0.5%, against the 5% and 8% rates of the two earlier stretches that shared the
+container with a build and a unit suite. Those earlier 134 rows still need
+re-running on a quiet machine before any is read as a finding; this stretch
+does not.
 
 The `GATED` jump from 4 to 93 is not a change in the fleet: that stretch of the
 registry is where the key-gated rows sit, and `GATED` is the verdict
