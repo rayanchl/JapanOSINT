@@ -832,6 +832,23 @@ registry is where the key-gated rows sit, and `GATED` is the verdict
 `collector-status-notice` naming the env var it needs — a source behaving
 exactly as designed, which this tool used to call `SINK_MISMATCH`.
 
+#### The 87 `csv_delim = "comma"` rows, re-measured after the fix (2026-10-24)
+
+`docs/comma-delim-refix-2026-10-24.tsv`. **The main sweep's rows for these 87
+sources predate the fix and are superseded by that file** — they were swept
+while the engine was splitting those files on the letter `c`.
+
+Re-run through the same tool, all 87: **86 OK, 1 FETCH_FAILED, zero
+COLLISION**, against 24 COLLISION / 62 OK / 1 FETCH_FAILED before. **1,483
+records a run recovered**, 1,383 of them Japan Coast Guard vessel accidents
+(19,370 of 19,370 where it had stored 17,987).
+
+The count is the smaller half of it. Every one of the 87 now stores **20 to 24
+NAMED FIELDS a record** where it stored one cell holding the whole line, and no
+gate could see that: the record count was right throughout, which is why a
+careful hand triage of the same rows reasoned about "thirteen columns" in
+September while the engine was reading one.
+
 Read those four non-OK columns with the corrections below rather than as
 counts of broken sources: `FETCH_FAILED` is a row that DISCLOSED its refusal
 (which is the sweep working, not a defect), `SLOW` means unmeasured at this
