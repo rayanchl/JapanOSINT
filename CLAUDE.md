@@ -988,6 +988,33 @@ underneath them that older notes in this file predate:
   pivots, and labels it "OSINT pivots — <cat>". Safe because the pivot rule
   below never read the label; a scheduled row's `collector` must name its
   beat, not a macro's default.
+* **The table name is the wrong collector for a REGISTER** (2026-10-24). Half
+  the registry read as Government because three tables were one collector
+  each: `hp3b47_frgov` 9,619 rows, `hp3b47_itgov` 5,716, `hp3b48_news` 3,992,
+  every row `category = "government"` / `record_type = "government-notice"`
+  (or `news`). The rows themselves said otherwise — 6,450 "Mairie - X", 1,163
+  CCAS and care services, 2,725 Italian state schools and 821 professional
+  orders filed as public administration, 1,096 US newspapers in one world
+  bucket. Every row of the three tables now names its collector explicitly
+  (`.collector`, the field the default fills) and the category of its body
+  type, derived from the body's NAME by ordered regex rules in
+  `tools/split_beats_by_body_type.py` (`plan` → `apply` → `manifest`): France
+  by the type prefix the service-public.fr directory writes first, Italy by the
+  name plus the IPA category in parentheses, the press by the `(CC)` country
+  code into seven regions. 29 collectors replace 3 — `frgov_mairies` 6,450,
+  `frgov_social` 1,163, `itgov_scuole` 2,725 (education, under Culture),
+  `itgov_ordini` 821 (Legal), `news_europe_west` 1,251, `news_northam` 1,146 …
+  — and a row no rule types goes to an honest residue (`itgov_altri`, 181),
+  never a guessed type. Measured over the census: Government 29,746 → 24,222
+  (51.7% → 42.1%), Culture 751 → 3,650, Legal 980 → 1,931, Health 2,542 →
+  2,987, Infrastructure 633 → 1,096; 621 collectors, 0 unassigned; the id set
+  is byte-identical to main's (57,529 both ways), no URL or key changed, so no
+  emit measurement is invalidated. Both batch notes carry the per-collector
+  table. **When a beat is a register of everything a country's public sector
+  publishes, the file name is not a collector — read the names before
+  shipping it as one.** The 118 singleton collectors are the hand-written
+  one-family beats and stay: a collector is the beat a source was authored and
+  probed in, and that provenance is what a singleton records.
 * **"Entity pivot" is `registry_is_entity_pivot()`** in `registry.c`, the one
   rule both the dispatcher and `service_vec` use: interval 0, not a `_` pod,
   and (hpengine) an entity token in the URL/body OR `filter_query=1` (a bulk
