@@ -26,6 +26,12 @@
 /* The agents. HA_BROWSER also gets BROWSER_EXTRA_HEADERS (httpclient.c). */
 HOST_AGENT_KIND(HA_NOCOLLECTOR, "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; contact via repo issues)")
 HOST_AGENT_KIND(HA_CONTACT,     "JapanOSINT/1.0 (contact via repo issues)")
+/* HA_SEC carries a REAL MAILBOX, which is what SEC's automated-access policy
+ * asks for and what its filter enforces; $SEC_CONTACT_UA replaces this string
+ * for the SEC hosts (host_agent_ua() in httpclient.c), so an operator running
+ * their own deployment announces their own address. The address here is the
+ * repository owner's, by their decision of 2026-10-24. */
+HOST_AGENT_KIND(HA_SEC,         "JapanOSINT/1.0 (rayanchouialkessal@gmail.com)")
 HOST_AGENT_KIND(HA_RCORP,       "RCorp-feeds/1.0 (+https://github.com/RCorp; feed collector; contact via repo issues)")
 HOST_AGENT_KIND(HA_COMPAT,      "Mozilla/5.0 (compatible; JapanOSINT/1.0; +https://github.com/rayanchl/JapanOSINT)")
 HOST_AGENT_KIND(HA_BROWSER,     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36")
@@ -39,6 +45,27 @@ HOST_AGENT_KIND(HA_BROWSER,     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537
    * We still identify ourselves and still offer a contact route, so this is
    * the documented remedy rather than an evasion. */
   HOST_AGENT("www.oasis-open.org", HA_CONTACT)
+
+  /* SEC: the one host family in this table that refuses us for having NO
+   * contact mailbox rather than for a token it dislikes. Its automated-access
+   * policy asks every client to declare one, and the filter enforces it.
+   * Bisected 2026-10-24 against https://www.sec.gov/files/company_tickers.json
+   * and https://data.sec.gov/api/xbrl/frames/us-gaap/Assets/USD/CY2024Q1I.json:
+   *     the engine agent (repo URL, no mailbox)                www 403 data 403
+   *     "OSINTsaas/1.0 (contact@example.com)"                  www 200 data 200
+   *     "JapanOSINT/1.0 research crawler (<owner's address>)"   www 200 data 200
+   *     "JapanOSINT/1.0 (<owner's address>)"                    www 200 data 200
+   *     "JapanOSINT <owner's address>"                          www 200 data 200
+   * Three of those four pass, so the cheapest honest one wins: product,
+   * version and a mailbox that is read. The example.com default that
+   * sec_edgar.c and sec_filing_diff.c carried since they were written also
+   * passes the filter and is NOT a contact route — SEC's policy asks for an
+   * address someone answers, so it is gone. Before this entry the agent lived
+   * in nine places (two collector #defines and seven row headers) and the two
+   * collectors announced a placeholder. */
+  HOST_AGENT("www.sec.gov", HA_SEC)
+  HOST_AGENT("data.sec.gov", HA_SEC)
+  HOST_AGENT("efts.sec.gov", HA_SEC)
   /* Spain's INE web service (servicios.ine.es/wstempus). Measured 2026-09-07
    * against /wstempus/js/ES/CLASIFICACIONES:
    *     engine UA                                                403

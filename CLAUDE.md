@@ -109,6 +109,43 @@ on a city's lapsed domain, whose row had already been removed as a takeover,
 was still in `UA_OVERRIDE`. `tests/unit/test_host_agents.c` pins the
 resolution.
 
+**SEC is the one host family that refuses us for having NO contact mailbox**
+(2026-10-24, `HA_SEC` in that table). Bisected against
+`www.sec.gov/files/company_tickers.json` and `data.sec.gov/api/xbrl/frames/…`:
+the engine's own agent — product, version, repository URL — is **403 on both**
+("undeclared automated tool"), and every agent carrying an `@` address answers
+200. So it is not a token the filter dislikes (INE's "collector", HDX's
+"OSINT") but the absence of an address someone answers, which SEC's
+automated-access policy asks every client to declare. That agent had been in
+NINE places — a `#define` in `collectors/sources/sec_edgar.c`, another in
+`sec_filing_diff.c`, and a `.headers` User-Agent on each of seven rows — and
+the two collectors announced **`contact@example.com`**, which passes the filter
+and is not a contact route. One line per host now (the repository owner's
+address, their decision of 2026-10-24), and **`$SEC_CONTACT_UA` replaces it**
+for a deployment that is not this one. That variable used to be read inside
+`sec_filing_diff.c`, where the per-host table would then have overruled it —
+an operator knob a later change silently defeated, exactly the shape
+`$JO_PAGE_MAX` was in until 2026-10-22 — so it resolves in ONE function,
+`host_agent_ua()`, which the dump, the override accessor, the request builder
+and `probe_hp_batch.py` all read. Measured after, all nine SEC sources store:
+`SEC_EDGAR_FRAMES` 2,679, `SEC_EDGAR_CIK_DIRECTORY_PIVOT` 2,270,
+`SEC_EDGAR_SEARCH` 1,260, `SEC_COMPANY_FACTS` 338, the four EDGAR listings
+320/53/37/32/31, `SEC_RISK_FACTOR_DIFF` 1 — and unchanged with the variable
+set. **A 403 that every honest agent draws is not always a token: ask whether
+the host wants a contact address.**
+
+**And LegCo is not unreachable — its HTTPS is, from this container.** All four
+Hong Kong Legislative Council rows read `http://app.legco.gov.hk` OData and
+they answer (bills 500 and 2,000 records, votes 2,000, measured 2026-10-24
+through the engine). `https://app.legco.gov.hk` and `https://www.legco.gov.hk`
+both end in a TLS `unknown CA` alert under the session CA bundle AND the system
+bundle, and `http://www.legco.gov.hk/` 307s to that same unreachable https;
+the agent proxy reports `bundleCoversEveryHost: true` and no relay failure for
+the host, so that is a reading of this path. **Those four URLs are on plain
+`http` deliberately: "upgrading" the scheme on inference takes all four rows
+dark.** The rows carry the measurement, and it should be re-taken from an
+environment with ordinary egress before anyone changes them.
+
 **The registered count was 57,062** (2026-10-21): the 56,955 below, plus
 **batch 51's 136** Hong Kong and Macao government feeds and China News Service
 (`collectors/sources/cn_feeds_batch51.c`, read off the publishers' own RSS

@@ -114,6 +114,12 @@ def _host_agents():
     for h in re.findall(r'"([^"]+)"', m.group(1) if m else ""):
         k, _, v = h.partition(":")
         extra[k.strip()] = v.strip()
+    # HA_SEC's agent carries a contact mailbox and an operator may replace it
+    # with their own; host_agent_ua() in httpclient.c reads the same variable,
+    # so the probe keeps sending what the engine sends.
+    sec_env = os.environ.get("SEC_CONTACT_UA")
+    if sec_env and "HA_SEC" in kinds:
+        kinds["HA_SEC"] = sec_env
     out = {}
     for host, kind in re.findall(r'HOST_AGENT\(\s*"([^"]+)"\s*,\s*(\w+)\s*\)', src):
         out[host.lower()] = (kinds[kind], extra if kind == "HA_BROWSER" else {})

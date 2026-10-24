@@ -65,7 +65,6 @@ static const hp_source HP3_CORP[] = {
     .tags = "\"corporate\",\"sec\",\"financials\",\"xbrl\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.sec.gov/api/xbrl/frames/us-gaap/Revenues/USD/CY2023.json",
-    .headers = { "User-Agent: JapanOSINT-research/1.0 (contact: rayanchouialkessal@gmail.com)" },
     .array_path = "data",
     .id_keys = "accn",
     .interval = 86400,

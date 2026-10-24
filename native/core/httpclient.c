@@ -359,6 +359,23 @@ static int host_agent_index(const char *url) {
   return -1;
 }
 
+/* The agent a kind puts on the wire. One function, because a kind whose string
+ * an operator may replace must resolve the same way wherever it is read — the
+ * table dump, the override accessor and the request builder. HA_SEC is that
+ * case: SEC asks every client to declare a mailbox someone answers, so a
+ * deployment that is not this repository announces its own through
+ * $SEC_CONTACT_UA. Before this the variable was read inside
+ * collectors/sources/sec_filing_diff.c, which the per-host table then
+ * overruled by design — an operator knob a later change silently defeated,
+ * the shape $JO_PAGE_MAX was in until 2026-10-22. */
+static const char *host_agent_ua(host_agent_kind k) {
+  if (k == HA_SEC) {
+    const char *env = getenv("SEC_CONTACT_UA");
+    if (env && *env) return env;
+  }
+  return HOST_AGENT_STRING[k];
+}
+
 int http_browser_host(const char *url) {
   int i = host_agent_index(url);
   return i >= 0 && HOST_AGENTS[i].kind == HA_BROWSER;
@@ -366,14 +383,14 @@ int http_browser_host(const char *url) {
 
 const char *http_ua_override(const char *url) {
   int i = host_agent_index(url);
-  return i >= 0 ? HOST_AGENT_STRING[HOST_AGENTS[i].kind] : NULL;
+  return i >= 0 ? host_agent_ua(HOST_AGENTS[i].kind) : NULL;
 }
 
 void http_host_agents_dump(FILE *out) {
   fprintf(out, "host\tkind\tuser_agent\textra_headers\n");
   for (size_t i = 0; i < sizeof HOST_AGENTS / sizeof *HOST_AGENTS; i++) {
     host_agent_kind k = HOST_AGENTS[i].kind;
-    fprintf(out, "%s\t%s\t%s\t", HOST_AGENTS[i].host, HOST_AGENT_NAME[k], HOST_AGENT_STRING[k]);
+    fprintf(out, "%s\t%s\t%s\t", HOST_AGENTS[i].host, HOST_AGENT_NAME[k], host_agent_ua(k));
     if (k == HA_BROWSER)
       for (const char *const *x = BROWSER_EXTRA_HEADERS; *x; x++)
         fprintf(out, "%s%s", x == BROWSER_EXTRA_HEADERS ? "" : " | ", *x);
@@ -517,7 +534,8 @@ static int do_once(http_client *c, const char *method, const char *url,
     curl_easy_setopt(e, CURLOPT_CONNECTTIMEOUT_MS, ct);
   }
   curl_easy_setopt(e, CURLOPT_ACCEPT_ENCODING, "");
-  curl_easy_setopt(e, CURLOPT_USERAGENT, ha >= 0 ? HOST_AGENT_STRING[HOST_AGENTS[ha].kind] : JO_USER_AGENT);
+  curl_easy_setopt(e, CURLOPT_USERAGENT,
+                   ha >= 0 ? host_agent_ua(HOST_AGENTS[ha].kind) : JO_USER_AGENT);
   curl_easy_setopt(e, CURLOPT_NOSIGNAL, 1L);
   if (c->share) curl_easy_setopt(e, CURLOPT_SHARE, c->share);
   if (hl) curl_easy_setopt(e, CURLOPT_HTTPHEADER, hl);

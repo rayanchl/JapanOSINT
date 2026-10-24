@@ -196,3 +196,63 @@ batch-15 comment measured 2 of 100 records on page 2 repeating, with as many
 skipped), but it is still a bound over one end of the collection. Moving those
 eight onto an hpengine table with `page_resume = 1` is the fix, and it is not
 done here.
+
+## Two unrelated items measured the same day: SEC and LegCo
+
+**SEC's filter is about a contact mailbox, and the agent lived in nine
+places.** Bisected 2026-10-24 against `www.sec.gov/files/company_tickers.json`
+and `data.sec.gov/api/xbrl/frames/…`: the engine's own agent — which names the
+product and gives the repository — is **403 on both** ("your request
+originates from an undeclared automated tool"), while every agent carrying an
+`@` address answered 200. So this is not a token the filter dislikes (INE's
+"collector", HDX's "OSINT"): it is the absence of a mailbox, which SEC's
+automated-access policy asks every client to declare.
+
+Before this the agent was in nine places — `#define SEC_USER_AGENT` in
+`collectors/sources/sec_edgar.c`, `#define SEC_DEFAULT_UA` in
+`sec_filing_diff.c`, and a `.headers` User-Agent on each of seven rows — and
+the two collectors announced **`contact@example.com`**, which passes the filter
+and is not a contact route. It is now one line per host in
+`core/host_agents.def` (`HA_SEC`, carrying the repository owner's address by
+their decision), and `$SEC_CONTACT_UA` replaces it for a deployment that is not
+this one. That variable used to be read inside `sec_filing_diff.c`, where the
+per-host table would have overruled it — an operator knob a later change
+silently defeated, the shape `$JO_PAGE_MAX` was in until 2026-10-22 — so it is
+resolved in exactly one function now (`host_agent_ua()`), which the table dump,
+the override accessor, the request builder and `probe_hp_batch.py` all read.
+
+Measured after, all nine SEC sources, each against a scratch database:
+`SEC_EDGAR_FRAMES` 2,679 records, `SEC_EDGAR_CIK_DIRECTORY_PIVOT` 2,270,
+`SEC_EDGAR_DAILY_INDEX_CURRENT_QTR_LISTING` 320, `SEC_COMPANY_FACTS` 338 (for
+CIK 320193), `SEC_EDGAR_SEARCH` 1,260, `SEC_EDGAR_FULL_INDEX_LISTING` 53,
+`SEC_EDGAR_DAILY_INDEX_LISTING` 37, `SEC_EDGAR_FEED_LISTING` 32,
+`SEC_EDGAR_OLDLOADS_LISTING` 31, `SEC_RISK_FACTOR_DIFF` 1 (a diff is one
+record), and `SEC_EDGAR_FRAMES` again with `$SEC_CONTACT_UA` set, unchanged at
+2,679.
+
+**LegCo is not unreachable — its HTTPS is, from this container.** All four
+Hong Kong Legislative Council rows are `http://app.legco.gov.hk` OData, and
+they answer: `gov-hk-legco-bills` 500 records, `eas-hk-legco-bills` 2,000,
+`eas-hk-legco-votes` 2,000, `eas-hk-legco-speeches` 100 of one page in 13.3 s
+(each measured 2026-10-24 through the engine). The speeches row is simply
+SLOW, not broken: 13 s a page puts a full 20-page run past four minutes, which
+is why it did not finish inside a 560 s budget on the first attempt and why
+the 2026-08-24 health sweep had to put it in its own "slow-400s" pass.
+What fails is `https`: `curl` to `app.legco.gov.hk:443` and
+`www.legco.gov.hk:443` ends in a TLS `unknown CA` alert under the CCR bundle
+AND under the system bundle, while `http://www.legco.gov.hk/` 307s to that
+same unreachable `https`. The agent proxy reports `bundleCoversEveryHost:
+true` and lists no relay failure for the host, so this is a reading of this
+path, not of the source.
+
+One useful corollary: `api.data.gov.hk` IS reachable over https from here (it
+answers `{"message":"REQUEST ERROR: start parameter missing"}` to a malformed
+historical-archive request), so Hong Kong's own portal is a path that exists if
+LegCo's plain-http endpoints ever stop. Nothing is registered on it here —
+that would need the usual probe-and-emit measurement first.
+
+The operational point: **those four URLs are on plain `http` deliberately, and
+"upgrading" them to `https` would take all four rows dark.** A reader who sees
+`http://` in a 2026 collector will want to fix it; the measurement above is why
+not, and it should be re-taken from an environment with ordinary egress before
+anyone does.

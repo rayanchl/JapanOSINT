@@ -413,6 +413,10 @@ VRSS(gov_govuk_org_nca, "gov-govuk-org-nca", "National Crime Agency — Announce
   "en", "[\"uk\",\"nca\",\"organisedcrime\",\"lawenforcement\"]", 3600,
   "UK National Crime Agency operations against organised crime, trafficking and money laundering.");
 
+/* Plain `http` deliberately: https://app.legco.gov.hk ends in a TLS
+ * `unknown CA` alert from this environment under either CA bundle, while http
+ * answers 200 and this row stored 500 records on 2026-10-24. The note on the
+ * three sibling rows in vsrc13_eastasia_data_2.c has the full measurement. */
 VJSON(gov_hk_legco_bills, "gov-hk-legco-bills", "LegCo — Hong Kong Bills Database", "立法会 香港法案データベース",
   "legal", "parliament",
   "http://app.legco.gov.hk/BillsDB/odata/Vbills?$top=25&$format=json",
