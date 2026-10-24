@@ -1,2 +1,20 @@
-# id	url	reason  (rejected 2026-10-05 before any probe, on dedupe against the 18,457-id tree)
-JP_CKAN_YOKOHAMA	https://data.city.yokohama.lg.jp/api/3/action/package_search?rows=100&start=0	duplicate: an existing scheduled row already fetches this listing with the same non-paging parameters — vsrc13_jp_local_3.c :: https://data.city.yokohama.lg.jp/api/3/action/package_search?rows=100&sort=metadata_modified%20desc
+# Batch 37 candidates REJECTED by the live probe, 2026-10-12.
+# These were authored 2026-10-02 in a session with no egress to any of
+# these hosts, so every host and path was inferred from the family's
+# convention. This file is the measurement that inference needed.
+# id	verdict	http	url	note
+JP_CKAN_AOMORI	HTTP_ERR	404	https://opendata.pref.aomori.lg.jp/api/3/action/package_search?rows=100&start=0	Not Found
+JP_CKAN_FUKUI	NET_ERR	0	https://opendata.pref.fukui.lg.jp/api/3/action/package_search?rows=100&start=0	Tunnel connection failed: 502 Bad Gateway
+JP_CKAN_ISHIKAWA	NET_ERR	0	https://pref.ishikawa.lg.jp/opendata/api/3/action/package_search?rows=100&start=0	[Errno 104] Connection reset by peer
+JP_CKAN_NIIGATA	NET_ERR	0	https://opendata.pref.niigata.lg.jp/api/3/action/package_search?rows=100&start=0	Tunnel connection failed: 502 Bad Gateway
+JP_CKAN_SAITAMA	UNPARSEABLE	200	https://opendata.pref.saitama.lg.jp/api/3/action/package_search?rows=100&start=0	declared array_path but body is not JSON
+JP_CKAN_SHIZUOKA	HTTP_ERR	404	https://opendata.pref.shizuoka.jp/dataset/api/3/action/package_search?rows=100&start=0	Not Found
+JP_RSS_MLIT	HTTP_ERR	404	https://www.mlit.go.jp/page/kanbo01_hy_000061.rdf	Not Found
+JP_RSS_MOF	HTTP_ERR	404	https://www.mof.go.jp/rss/new.xml	Not Found
+JP_RSS_NDL_NEWS	HTTP_ERR	404	https://www.ndl.go.jp/jp/news/rss.xml	Not Found
+JP_RSS_NISC	UNPARSEABLE	200	https://www.nisc.go.jp/news/index.rss	<!DOCTYPE html>
+ <html lang="ja">
+ <head>
+   <meta charset="UTF-8">
+   <meta nam
+JP_CKAN_DATAGOJP	DUP_ENDPOINT	200	https://data.e-gov.go.jp/data/api/3/action/package_search?rows=100&start=0&sort=id%20asc	PASSED the probe and measured 18,826/18,826 complete, then REMOVED: hp3b23_jpnational.c already reads this exact endpoint per organisation (fq=organization:org_NNNN, 23 rows), so a full-catalogue row stores the same datasets twice under a second id. make lint-sources (dup-endpoint) caught it. The finding that matters survives: www.data.go.jp 301s to data.e-gov.go.jp and DROPS the query string, so the staged URL stored 10 of 18,826 at rc=0.

@@ -4,7 +4,8 @@ import SwiftUI
 ///
 /// Fields:
 ///   - Name + enabled toggle (toggle hidden on Create until first save)
-///   - Predicate: FTS query, comma-separated source-ids, comma-separated
+///   - Predicate: keywords (FTS) or a description in words (a semantic rule,
+///     matched by embedding similarity), plus comma-separated source-ids and
 ///     tags (any-of)
 ///   - Channels: dynamic list of (type, target) rows. Webhook also takes
 ///     a 16-char-minimum signing secret.
@@ -23,6 +24,8 @@ struct AlertEditor: View {
     @State private var enabled: Bool
     @State private var mode: String         // "fts" | "llm"
     @State private var nlQuery: String
+    /// Semantic rules: the cosine an item must reach (server default 0.82).
+    @State private var threshold: Double
     @State private var q: String
     @State private var sourcesCSV: String
     @State private var tagsCSV: String
@@ -31,7 +34,6 @@ struct AlertEditor: View {
     @State private var stormCap: Int
 
     @State private var saving = false
-    @State private var suggesting = false
     @State private var error: String?
 
     private let ruleId: String
@@ -70,16 +72,24 @@ struct AlertEditor: View {
     /// have it survive Create.
     private let loadedPredicate: AlertPredicate
 
+    /// The server's word on a saved semantic rule: whether it can fire yet.
+    private let loadedSemantic: AlertSemanticStatus?
+
+    /// The server's default similarity threshold (core/alert_sem.h).
+    private static let defaultThreshold = 0.82
+
     init(rule: AlertRule, onSave: @escaping (AlertRule) -> Void) {
         self.onSave = onSave
         self.ruleId = rule.id
         self.isCreate = rule.id.isEmpty
         self.loadedChannels = rule.channels
         self.loadedPredicate = rule.predicate
+        self.loadedSemantic = rule.semantic
         _name = State(initialValue: rule.name)
         _enabled = State(initialValue: rule.enabled)
         _mode = State(initialValue: rule.predicate.mode ?? "fts")
         _nlQuery = State(initialValue: rule.predicate.nl_query ?? "")
+        _threshold = State(initialValue: rule.predicate.threshold ?? Self.defaultThreshold)
         _q = State(initialValue: rule.predicate.q ?? "")
         _sourcesCSV = State(initialValue: (rule.predicate.source_ids ?? []).joined(separator: ", "))
         _tagsCSV = State(initialValue: (rule.predicate.tags_any ?? []).joined(separator: ", "))
@@ -99,27 +109,39 @@ struct AlertEditor: View {
                 }
 
                 Section {
-                    Picker("Query type", selection: $mode) {
-                        Text("FTS").tag("fts")
-                        Text("LLM pipeline").tag("llm")
+                    Picker("Match by", selection: $mode) {
+                        Text("Keywords").tag("fts")
+                        Text("Describe it in words").tag("llm")
                     }
                     .pickerStyle(.segmented)
 
                     if mode == "llm" {
-                        TextField("Natural-language query (e.g. phishing targeting JP banks)",
+                        TextField("What should fire this alert? (e.g. phishing aimed at Japanese banks)",
                                   text: $nlQuery)
                             .compatNoAutocap()
-                        Button {
-                            Task { await suggestFTS() }
-                        } label: {
-                            Label(suggesting ? "Suggesting…" : "Suggest FTS query",
-                                  systemImage: "sparkles")
+                        VStack(alignment: .leading, spacing: 2) {
+                            HStack {
+                                Text("Similarity needed")
+                                Spacer()
+                                Text(String(format: "%.2f", threshold))
+                                    .font(.caption.monospacedDigit())
+                                    .foregroundStyle(theme.textMuted)
+                            }
+                            Slider(value: $threshold, in: 0.50...0.99, step: 0.01)
+                                .accessibilityLabel("Similarity needed")
+                                .accessibilityValue(String(format: "%.2f", threshold))
                         }
-                        .disabled(suggesting ||
-                                  nlQuery.trimmingCharacters(in: .whitespaces).isEmpty)
+                        if let sem = loadedSemantic, sem.evaluable == false {
+                            Label(sem.reason ?? "This rule cannot fire yet.",
+                                  systemImage: "exclamationmark.triangle")
+                                .font(.caption)
+                                .foregroundStyle(theme.warning)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
                     }
 
-                    TextField("FTS query (e.g. phishing AND tld:.jp)", text: $q)
+                    TextField(mode == "llm" ? "Also require keywords (optional)"
+                                            : "FTS query (e.g. phishing AND tld:.jp)", text: $q)
                         .compatNoAutocap()
                         .autocorrectionDisabled()
                         .font(.system(.body, design: .monospaced))
@@ -136,7 +158,7 @@ struct AlertEditor: View {
                     Text("Match when…")
                 } footer: {
                     Text(mode == "llm"
-                         ? "LLM mode runs the agentic search pipeline on your natural-language query (ingesting new intel as usual) and fires on items matching the FTS query below. Tap “Suggest FTS query” to have the model draft it, then edit freely."
+                         ? "Fires on a new item that means what you described — its embedding is at least the similarity above to your description — and that also matches every other field filled in here. Items are checked after the server embeds them (minutes after ingest), and items outside the embedding window are never checked. Higher similarity fires less often."
                          : "All filled fields combine with AND. Leave everything blank to match every new item (use a tight throttle if you do).")
                         .font(.caption2)
                 }
@@ -336,6 +358,7 @@ struct AlertEditor: View {
         if mode == "llm" {
             let nl = nlQuery.trimmingCharacters(in: .whitespaces)
             if !nl.isEmpty { p["nl_query"] = nl }
+            p["threshold"] = roundedThreshold
         }
         return p
     }
@@ -409,6 +432,9 @@ struct AlertEditor: View {
         // than dropped when the user switches back to fts — switching modes is
         // not a request to throw the prompt away.
         predicate.nl_query = nl.isEmpty ? nil : nl
+        // The threshold belongs to the description: set in "words" mode, kept
+        // as loaded otherwise (switching modes is not a request to forget it).
+        if mode == "llm" { predicate.threshold = roundedThreshold }
 
         let rule = AlertRule(
             id: ruleId, name: trimmedName, enabled: enabled,
@@ -434,27 +460,10 @@ struct AlertEditor: View {
         }
     }
 
-    /// Ask the backend's LLM suggester to draft an FTS query from the
-    /// natural-language prompt; the user can then accept or edit it. This is
-    /// the "choose the FTS search done by the LLM" step.
-    private func suggestFTS() async {
-        let nl = nlQuery.trimmingCharacters(in: .whitespaces)
-        guard !nl.isEmpty else { return }
-        suggesting = true
-        defer { suggesting = false }
-        do {
-            let suggestions = try await apiClient.api.searchSuggest(nl)
-            if let first = suggestions.first(where: { !$0.trimmingCharacters(in: .whitespaces).isEmpty }) {
-                q = first
-                error = nil
-                Haptics.success()
-            } else {
-                error = "No FTS suggestion returned"
-            }
-        } catch let e {
-            error = e.localizedDescription
-            Haptics.error()
-        }
+    /// The slider's value as sent: two decimals, so a saved rule reads back
+    /// as the number the analyst saw.
+    private var roundedThreshold: Double {
+        (threshold * 100).rounded() / 100
     }
 
     private func splitCSV(_ s: String) -> [String] {

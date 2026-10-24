@@ -17,11 +17,26 @@
  * recompile. Honesty rule (kept from Node): only 'merged' when old_url is a
  * real http(s) URL the fetch layer can match; an internal:// or dynamically
  * built URL can't be matched by the override, so we record 'verified' (a human
- * suggestion) and leave the anomaly open — never a faked live fix. */
+ * suggestion) and leave the anomaly open — never a faked live fix.
+ *
+ * HEAD-OF-LINE. The batch is the oldest REPAIR_BATCH (3) triaged-open
+ * anomalies. Three kinds of row used to stay at its head for good, because
+ * attempt_repair() returned on them without resolving anything: an anomaly
+ * whose source is quarantined, one with a verified fix already staged for a
+ * human, and one whose proposal the LLM never answered. Three of those and no
+ * newer anomaly was ever looked at again. The first two are now excluded in
+ * the SELECT (they cannot progress until a human or the quarantine clock
+ * acts); the third is parked (repair_attempts, repair_next_at) when the model
+ * answered badly, and ends the tick without counting anything when the server
+ * itself is down (core/llm_fault.h). */
 #include "source.h"
 #include "core/prompts.h"
 #include "core/source_registry.h"
+#include "core/thresholds.h"   /* repair_sem_cos_floor */
 #include "core/url_override.h"
+#include "core/llm_fault.h"
+#include "core/embed_pod.h"
+#include "lib/vecindex.h"
 #include "third_party/cJSON.h"
 #include "third_party/sqlite3.h"
 #include <stdio.h>
@@ -354,10 +369,145 @@ static char *build_sample(const char *body) {
   return sample;
 }
 
-/* Gate (c): 4B-style sanity re-check. Returns 1 if looks_correct, sets reason. */
-static int sanity_ok(llm_client *llm, const char *name, const char *category,
+/* ── Gate (c'): does the new URL's payload look like THIS source? ──────────
+ *
+ * The sanity classifier asks "is this a healthy payload?" and a healthy
+ * payload of the WRONG dataset — a portal's other API, a sibling city's
+ * register at a guessed URL — passes it: records > 0, plausible JSON, and the
+ * swap makes the source report about something else under its own name, the
+ * confident wrong answer of CLAUDE.md 4d. The source's own history says what
+ * it is about: the centroid of its last REPAIR_SEM_CENTROID_N stored item
+ * vectors (intel_vec_v2). The new payload's sample is embedded and must reach
+ * REPAIR_SEM_COS_FLOOR cosine to that centroid.
+ *
+ * 0.70, not the 0.8x of item-to-item comparisons: the sample is raw payload
+ * (JSON keys and values, up to three records) while the stored vectors are of
+ * title + summary text, so even the right dataset scores lower than two items
+ * of it do. A payload of an unrelated dataset or an error/landing page falls
+ * well below it. JO_REPAIR_SEM_FLOOR overrides.
+ *
+ * SKIPPED, and said so in the gate record, when it cannot be measured: no
+ * embedding server, an index refused or built with another model, or fewer
+ * than REPAIR_SEM_MIN_VECTORS stored vectors for the source. Skipping is the
+ * old behaviour, never a pass the record pretends happened. */
+#define REPAIR_SEM_COS_FLOOR   0.70
+#define REPAIR_SEM_CENTROID_N  50
+#define REPAIR_SEM_MIN_VECTORS 5
+
+/* core/thresholds.c ("repair_sem_cos_floor"): runtime override >
+ * JO_REPAIR_SEM_FLOOR > REPAIR_SEM_COS_FLOOR (the default it registers). */
+static double repair_sem_floor(void) {
+  return threshold_get("repair_sem_cos_floor");
+}
+
+/* 1 pass, 0 fail, -1 skipped. Writes {cos, floor, vectors, skipped} to `g`. */
+static int semantic_gate(db_handle *db, http_client *http, const char *source_id,
+                         const char *body, cJSON *g) {
+  cJSON_AddNumberToObject(g, "floor", repair_sem_floor());
+  const char *why = NULL;
+  char buf[300];
+  const char *base = vecindex_base_url();
+  int dim = 0;
+  if (!base) why = "no embedding server configured (JO_EMBED_URL is unset)";
+  else if (!vecindex_exists(db, &embed_intel_spec)) why = "the intel embedding index has not been built";
+  else if (vecindex_refused(db, &embed_intel_spec, NULL, 0)) why = "the intel embedding index is refused";
+  else if ((dim = (int)vecindex_meta_long(db, &embed_intel_spec, "dim")) <= 0)
+    why = "the intel embedding index records no dimension";
+  char model[256], live[256];
+  if (!why) {
+    vecindex_meta_get(db, &embed_intel_spec, "model", model, sizeof model);
+    if (vecindex_detect_model(http, base, live, sizeof live) != 0 || strcmp(model, live) != 0) {
+      snprintf(buf, sizeof buf, "the embedding server does not serve the index's model");
+      why = buf;
+    }
+  }
+  /* the centroid of the source's most recent stored vectors */
+  double *cen = NULL;
+  int nv = 0;
+  if (!why) {
+    cen = calloc((size_t)dim, sizeof *cen);
+    sqlite3_stmt *s;
+    if (cen && sqlite3_prepare_v2(db->h, "SELECT d.uid FROM intel_vec_done d"
+          " JOIN intel_items i ON i.uid=d.uid WHERE i.source_id=?1"
+          " ORDER BY i.fetched_at DESC LIMIT ?2", -1, &s, NULL) == SQLITE_OK) {
+      sqlite3_bind_text(s, 1, source_id, -1, SQLITE_TRANSIENT);
+      sqlite3_bind_int(s, 2, REPAIR_SEM_CENTROID_N);
+      while (sqlite3_step(s) == SQLITE_ROW) {
+        float *v = NULL; int d = 0;
+        if (vecindex_load(db, &embed_intel_spec, (const char *)sqlite3_column_text(s, 0),
+                          &v, &d) == 0 && d == dim) {
+          for (int k = 0; k < dim; k++) cen[k] += v[k];
+          nv++;
+        }
+        free(v);
+      }
+      sqlite3_finalize(s);
+    }
+    if (nv < REPAIR_SEM_MIN_VECTORS) {
+      snprintf(buf, sizeof buf, "only %d stored item vector(s) for this source "
+               "(need %d)", nv, REPAIR_SEM_MIN_VECTORS);
+      why = buf;
+    }
+  }
+  cJSON_AddNumberToObject(g, "vectors", nv);
+  float *q = NULL;
+  int qd = 0;
+  if (!why) {
+    char *sample = build_sample(body);
+    char *bounded = sample ? embed_bound_text(sample) : NULL;
+    free(sample);
+    llm_client llm = { .http = http, .base_url = base, .interactive = 0 };
+    const char *texts[1] = { bounded ? bounded : "" };
+    llm_status st;
+    if (!bounded || llm_embed(&llm, texts, 1, &q, &qd, 30000, &st) != 0 || qd != dim) {
+      snprintf(buf, sizeof buf, "embedding the new payload failed");
+      why = buf;
+    }
+    free(bounded);
+  }
+  int rc = -1;
+  if (!why) {
+    float *cf = malloc((size_t)dim * sizeof *cf);
+    if (cf) {
+      for (int k = 0; k < dim; k++) cf[k] = (float)(cen[k] / nv);
+      double c = vec_cosine(q, cf, dim);
+      free(cf);
+      cJSON_AddNumberToObject(g, "cos", c);
+      rc = c >= repair_sem_floor() ? 1 : 0;
+    } else why = "out of memory";
+  }
+  if (why) {
+    cJSON_AddNullToObject(g, "cos");
+    cJSON_AddStringToObject(g, "skipped", why);
+  }
+  free(cen); free(q);
+  return rc;
+}
+
+/* Gate (c): 4B-style sanity re-check. Returns 1 if looks_correct AND the
+ * semantic gate did not fail (semantic_gate; skipped is stated in `sem`, not
+ * a failure), sets reason. */
+static int sanity_ok_llm(llm_client *llm, const char *name, const char *category,
+                         const char *type, const char *body, int records,
+                         char *reason_out, int reason_sz);
+static int sanity_ok(db_handle *db, http_client *http, const char *source_id,
+                     llm_client *llm, const char *name, const char *category,
                      const char *type, const char *body, int records,
-                     char *reason_out, int reason_sz) {
+                     char *reason_out, int reason_sz, cJSON *sem) {
+  if (!sanity_ok_llm(llm, name, category, type, body, records, reason_out, reason_sz))
+    return 0;
+  if (semantic_gate(db, http, source_id, body, sem) == 0) {
+    cJSON *c = cJSON_GetObjectItem(sem, "cos");
+    snprintf(reason_out, reason_sz, "payload unlike this source's stored items "
+             "(cosine %.3f < %.2f)", c ? c->valuedouble : 0.0, repair_sem_floor());
+    return 0;
+  }
+  return 1;
+}
+
+static int sanity_ok_llm(llm_client *llm, const char *name, const char *category,
+                         const char *type, const char *body, int records,
+                         char *reason_out, int reason_sz) {
   if (!body || !*body) { snprintf(reason_out, reason_sz, "empty body"); return 0; }
   char *sample = build_sample(body);
   size_t plen = strlen(SYS_SANITY) + strlen(sample) + 400;
@@ -393,8 +543,30 @@ static int sanity_ok(llm_client *llm, const char *name, const char *category,
 
 typedef struct {
   long id; char *source_id, *triage_class, *triage_evidence, *triage_fix, *created_at;
-  int escalation;
+  int escalation, park_attempts;
 } cand_row;
+
+/* The model answered but not usefully: retry after 2 min x 2^n, capped at a
+ * day. Not a collector_repair row — those feed the breaker, and a model that
+ * cannot produce JSON says nothing about the collector. */
+static void park_repair(sqlite3 *h, const cand_row *a) {
+  int n = a->park_attempts < 0 ? 0 : a->park_attempts;
+  long delay = 120L << (n > 10 ? 10 : n);
+  if (delay > 86400) delay = 86400;
+  char mod[40];
+  snprintf(mod, sizeof mod, "+%ld seconds", delay);
+  sqlite3_stmt *u;
+  if (sqlite3_prepare_v2(h, "UPDATE collector_anomaly SET"
+        " repair_attempts=COALESCE(repair_attempts,0)+1,"
+        " repair_next_at=datetime('now',?1) WHERE id=?2", -1, &u, NULL) == SQLITE_OK) {
+    sqlite3_bind_text(u, 1, mod, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_int64(u, 2, (sqlite3_int64)a->id);
+    sqlite3_step(u);
+    sqlite3_finalize(u);
+  }
+  fprintf(stderr, "[repair] anomaly #%ld: model output unparseable (attempt %d)"
+          " — parked %lds\n", a->id, n + 1, delay);
+}
 
 /* reject path: record + re-triage + maybe quarantine. gate is consumed. */
 static void do_reject(db_handle *db, const cand_row *a, const char *new_url,
@@ -415,16 +587,20 @@ static void do_reject(db_handle *db, const cand_row *a, const char *new_url,
   maybe_quarantine(db, a->source_id);
 }
 
-static void attempt_repair(db_handle *db, llm_client *llm, http_client *http,
-                           const cand_row *a) {
+/* Returns -1 when the LLM server is unreachable (the caller stops the tick),
+ * 0 otherwise. */
+static int attempt_repair(db_handle *db, llm_client *llm, http_client *http,
+                          const cand_row *a) {
   sqlite3 *h = db->h;
   const char *cls = a->triage_class;
-  if (!cls) return;
+  if (!cls) return 0;
 
   /* Guards: quarantined source, or a verified fix already staged for this
-   * anomaly (re-running would just re-derive the same patch). */
-  if (is_quarantined(h, a->source_id)) return;
-  if (has_staged_repair(h, a->id)) return;
+   * anomaly (re-running would just re-derive the same patch). The SELECT in
+   * run() already excludes both; these stay for a row that changed state
+   * between the SELECT and here. */
+  if (is_quarantined(h, a->source_id)) return 0;
+  if (has_staged_repair(h, a->id)) return 0;
 
   /* Give-up rails. */
   int max_esc = env_int("REPAIR_MAX_ESCALATION", 3);
@@ -443,7 +619,7 @@ static void attempt_repair(db_handle *db, llm_client *llm, http_client *http,
     snprintf(res, sizeof res, "needs_human: repair exhausted (esc %d, %d attempts)",
              a->escalation, attempts);
     resolve_anomaly(h, a->id, res);
-    return;
+    return 0;
   }
 
   /* transient: resolve only if the source actually recovered. */
@@ -468,7 +644,7 @@ static void attempt_repair(db_handle *db, llm_client *llm, http_client *http,
       free(gj);
       reopen_for_retriage(h, a->id);
     }
-    return;
+    return 0;
   }
 
   /* needs-human classes: fix lives in parsing/credentials/quota, out of scope. */
@@ -484,16 +660,17 @@ static void attempt_repair(db_handle *db, llm_client *llm, http_client *http,
     free(gj);
     char res[120]; snprintf(res, sizeof res, "needs_human: %s", cls);
     resolve_anomaly(h, a->id, res);
-    return;
+    return 0;
   }
 
   /* Only url_move / site_dead are actionable; anything else → re-triage. */
   if (strcmp(cls, "url_move") && strcmp(cls, "site_dead")) {
     reopen_for_retriage(h, a->id);
-    return;
+    return 0;
   }
 
   /* ── URL-swap flow ───────────────────────────────────────────────────── */
+  int rc = 0;
   int escalate_at = env_int("REPAIR_ESCALATE_AT", 1);
   int escalated = a->escalation >= escalate_at;
   const char *fast = getenv("LLM_REPAIR_MODEL");
@@ -559,16 +736,28 @@ static void attempt_repair(db_handle *db, llm_client *llm, http_client *http,
   free(bundle);
 
   const char *grammar = grammar_load("repair_proposal");
+  long t0 = llm_fault_now_ms();
   char *raw = prompt ? llm_complete(llm, prompt,
                                     grammar && *grammar ? grammar : NULL,
                                     512, 0.2, timeout) : NULL;
+  long elapsed = llm_fault_now_ms() - t0;
+  int transport = prompt && !raw &&
+                  llm_fault_is_transport(llm, elapsed, timeout);
   free(prompt);
   cJSON *prop = extract_json(raw);
   free(raw);
 
   if (!prop) {
-    /* LLM unreachable — no row, retry next tick (same contract as Node). */
-    fprintf(stderr, "[repair] anomaly #%ld: LLM null — retry next tick\n", a->id);
+    /* No row either way (same contract as Node) — but an unreachable server
+     * ends the tick, and a model that answered badly parks this anomaly so
+     * the ones behind it get their turn. */
+    if (transport) {
+      fprintf(stderr, "[repair] anomaly #%ld: LLM unreachable or timed out — "
+              "retry next tick\n", a->id);
+      rc = -1;
+    } else {
+      park_repair(h, a);
+    }
     goto cleanup;
   }
 
@@ -630,18 +819,22 @@ static void attempt_repair(db_handle *db, llm_client *llm, http_client *http,
 
   /* Gate (c): sanity re-check on the new payload. */
   char sreason[260];
-  int sok = sanity_ok(llm, name, cat, type, vr.body, got, sreason, sizeof sreason);
+  cJSON *sem = cJSON_CreateObject();
+  int sok = sanity_ok(db, http, a->source_id, llm, name, cat, type, vr.body, got,
+                      sreason, sizeof sreason, sem);
   http_response_free(&vr);
   if (!sok) {
     cJSON *g = cJSON_CreateObject();
     cJSON_AddStringToObject(g, "failed", "sanity re-check failed");
     cJSON_AddStringToObject(g, "sanity", sreason);
+    cJSON_AddItemToObject(g, "semantic", sem);
     do_reject(db, a, new_url, g, model);
     goto cleanup_prop;
   }
 
   /* ── Gate passed ─────────────────────────────────────────────────────── */
   cJSON *gp = cJSON_CreateObject();
+  cJSON_AddItemToObject(gp, "semantic", sem);
   cJSON_AddNumberToObject(gp, "records", got);
   if (have_base) cJSON_AddNumberToObject(gp, "baseline_mean", mean);
   else cJSON_AddNullToObject(gp, "baseline_mean");
@@ -699,6 +892,7 @@ cleanup_prop:
   if (prop) cJSON_Delete(prop);
 cleanup:
   free(old_url); free(name); free(type); free(cat); free(status); free(errmsg);
+  return rc;
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
@@ -709,15 +903,25 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     return 0;
   }
   int batch = env_int("REPAIR_BATCH", 3);
+  ensure_column(ctx->db, "collector_anomaly", "repair_attempts",
+                "INTEGER NOT NULL DEFAULT 0");
+  ensure_column(ctx->db, "collector_anomaly", "repair_next_at", "TEXT");
 
   cand_row *rows = calloc(batch, sizeof(cand_row));
   int nr = 0;
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(ctx->db->h,
-        "SELECT id,source_id,triage_class,triage_evidence,triage_suggested_fix,"
-        " created_at,escalation_level FROM collector_anomaly"
-        " WHERE resolved_at IS NULL AND triaged_at IS NOT NULL"
-        " ORDER BY created_at ASC LIMIT ?1", -1, &s, NULL) == SQLITE_OK) {
+        "SELECT a.id,a.source_id,a.triage_class,a.triage_evidence,"
+        " a.triage_suggested_fix,a.created_at,a.escalation_level,a.repair_attempts"
+        " FROM collector_anomaly a"
+        " WHERE a.resolved_at IS NULL AND a.triaged_at IS NOT NULL"
+        "   AND (a.repair_next_at IS NULL OR a.repair_next_at <= datetime('now'))"
+        "   AND NOT EXISTS (SELECT 1 FROM collector_repair r"
+        "                   WHERE r.anomaly_id=a.id AND r.status='verified')"
+        "   AND NOT EXISTS (SELECT 1 FROM sources q WHERE q.id=a.source_id"
+        "                   AND q.quarantined_until IS NOT NULL"
+        "                   AND q.quarantined_until>datetime('now'))"
+        " ORDER BY a.created_at ASC LIMIT ?1", -1, &s, NULL) == SQLITE_OK) {
     sqlite3_bind_int(s, 1, batch);
     while (nr < batch && sqlite3_step(s) == SQLITE_ROW) {
       rows[nr].id = (long)sqlite3_column_int64(s, 0);
@@ -727,18 +931,22 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       rows[nr].triage_fix = col_dup(s, 4);
       rows[nr].created_at = col_dup(s, 5);
       rows[nr].escalation = sqlite3_column_int(s, 6);
+      rows[nr].park_attempts = sqlite3_column_int(s, 7);
       if (rows[nr].source_id) nr++;
     }
     sqlite3_finalize(s);
   }
 
+  int down = 0;
   for (int i = 0; i < nr; i++) {
-    attempt_repair(ctx->db, ctx->llm, ctx->http, &rows[i]);
+    if (!down && attempt_repair(ctx->db, ctx->llm, ctx->http, &rows[i]) < 0)
+      down = 1;            /* the rest keep their place for the next tick */
     free(rows[i].source_id); free(rows[i].triage_class);
     free(rows[i].triage_evidence); free(rows[i].triage_fix); free(rows[i].created_at);
   }
   free(rows);
-  if (nr) fprintf(stderr, "[repair] tick: processed %d candidate(s)\n", nr);
+  if (nr) fprintf(stderr, "[repair] tick: processed %d candidate(s)%s\n", nr,
+                 down ? " (stopped: LLM unreachable)" : "");
   return 0;
 }
 

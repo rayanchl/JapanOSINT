@@ -248,7 +248,7 @@ static int epqs_run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def geoeo_otd_def = {
-  .id = "opentopodata-elevation", .collector = "geospatial",
+  .id = "opentopodata-elevation", .collector = "osint_" "geospatial",
   .name = "OpenTopoData Global Elevation and Bathymetry",
   .update_interval_sec = 0, .run = otd_run,
   .category = "geospatial", .type = "api",
@@ -260,7 +260,7 @@ static const source_def geoeo_otd_def = {
 REGISTER_SOURCE(geoeo_otd_def)
 
 static const source_def geoeo_epqs_def = {
-  .id = "usgs-epqs-elevation", .collector = "geospatial",
+  .id = "usgs-epqs-elevation", .collector = "osint_" "geospatial",
   .name = "USGS Elevation Point Query Service (3DEP)",
   .update_interval_sec = 0, .run = epqs_run,
   .category = "geospatial", .type = "api",

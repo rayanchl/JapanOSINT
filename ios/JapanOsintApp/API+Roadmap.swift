@@ -505,15 +505,39 @@ extension API {
 
     // ── Item 28: camera stills ─────────────────────────────────────────────
 
+    /// `cameraId` is an intel uid (every view of the record), a view target
+    /// "<uid>#view=<suffix>", or a bare camera_uid. `esc` percent-encodes the
+    /// '#' and '/' so the whole id reaches the server as one path segment.
     func cameraStills(_ cameraId: String,
-                      limit: Int = 50) async throws -> CameraStillsEnvelope {
-        try await get("/api/cameras/\(esc(cameraId))/stills",
-                      query: [URLQueryItem(name: "limit", value: String(limit))])
+                      limit: Int = 50,
+                      cursor: String? = nil) async throws -> CameraStillsEnvelope {
+        var q = [URLQueryItem(name: "limit", value: String(limit))]
+        if let cursor { q.append(URLQueryItem(name: "cursor", value: cursor)) }
+        return try await get("/api/cameras/\(esc(cameraId))/stills", query: q)
     }
 
     func cameraStillRaw(_ stillId: String) async throws -> Data {
         let url = try makeURL("/api/camera-stills/\(esc(stillId))/raw")
         return try await request(url, timeout: 60)
+    }
+
+    // ── Camera visual search (native/core/visualsearchapi.h) ───────────────
+
+    /// Cameras by what their frames SHOW. A 503 carries the server's reason
+    /// (no vision sidecar, index not built, a refused model change).
+    func cameraVisualSearch(_ q: String, k: Int = 12) async throws -> VisualSearchEnvelope {
+        try await get("/api/cameras/visual-search",
+                      query: [URLQueryItem(name: "q", value: q),
+                              URLQueryItem(name: "k", value: String(k))])
+    }
+
+    /// Image→image: cameras whose frames look like this still. The server
+    /// uses the still's stored vector; its own camera is left out.
+    func cameraVisualSearchSimilar(toStill stillId: String,
+                                   k: Int = 12) async throws -> VisualSearchEnvelope {
+        try await post("/api/cameras/visual-search/by-image",
+                       body: try enc(["still_id": stillId, "k": k]),
+                       timeout: API.userDefaultTimeout)
     }
 
     // ── Roadmap 17 / 28: the capture opt-ins ───────────────────────────────

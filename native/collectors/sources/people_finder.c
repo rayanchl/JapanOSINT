@@ -378,7 +378,7 @@ static int company_run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def person_search_def = {
-  .id = "PERSON_SEARCH", .collector = "osint",
+  .id = "PERSON_SEARCH", .collector = "osint_" "investigation",
   .name = "Person Search", .run = person_run,
   .category = "investigation", .type = "api",
   .url = "internal://osint/person-search",
@@ -388,7 +388,7 @@ static const source_def person_search_def = {
 REGISTER_SOURCE(person_search_def)
 
 static const source_def company_search_def = {
-  .id = "COMPANY_SEARCH", .collector = "osint",
+  .id = "COMPANY_SEARCH", .collector = "osint_" "investigation",
   .name = "Company / Business Search", .run = company_run,
   .category = "investigation", .type = "api",
   .url = "internal://osint/company-search",

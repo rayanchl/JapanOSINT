@@ -4,7 +4,7 @@
  * that shaking happened.
  *
  * Endpoint (keyless):
- *   https://www.seismicportal.eu/mtws/api/search?limit=50&format=json
+ *   https://www.seismicportal.eu/mtws/api/search?limit=500&offset=0&format=json
  * Emits: mt_id, ev_latitude/ev_longitude, ev_depth, ev_region, nodal plane 1
  *        (strike/dip/rake), scalar moment mt_m0, percent double-couple,
  *        mt_source_catalog, mt_centroid_time.
@@ -19,25 +19,36 @@
  *    per-record value) and is deliberately NOT emitted as a record field.
  *  - 'deltatime' is a human string ("@ 31 mins 31.662 secs"), so it is carried
  *    as text and never parsed as a number.
+ *
+ * PAGING (2026-10-12). `?limit=50` on its own stored 50 moment tensors of the
+ * 48,729 the service's own `full_count` declares — the seventh discard shape,
+ * a record limit asked of the upstream with nothing to follow it
+ * (tools/audit_url_limits.py, docs/measured-url-limits-2026-10-11.tsv). The
+ * service takes `offset` (measured: offset=5 opens on the 6th tensor, where
+ * `start=` and `page=` are both ignored and re-serve the first), so the URL now
+ * carries `limit=500&offset=0` and lib/pagewalk.c advances the offset it finds.
+ * The 100-page ceiling covers 50,000 against a measured 48,729 and still
+ * discloses, so a catalogue that outgrows it says so rather than going quiet.
  */
 #include "source.h"
 #include "lib/feedlib.h"
+#include "lib/pagewalk.h"
 #include "geoeo_common.inc"
 
 static const char *URL =
-    "https://www.seismicportal.eu/mtws/api/search?limit=50&format=json";
+    "https://www.seismicportal.eu/mtws/api/search?limit=500&offset=0&format=json";  /* exhaustive-ok: walked by lib/pagewalk.c, which advances the offset/page this URL carries */
 
-static int run(const source_ctx *ctx, intel_sink *sink) {
-  cJSON *doc = feed_get_json(ctx->http, URL, 30000);
-  if (!doc) {
-    fprintf(stderr, "[emsc-moment-tensors] fetch/parse failed\n");
-    return -1;
-  }
+/* 48,729 tensors at 500 a page = 98; 100 is that with headroom. */
+#define EMSC_PAGE_MAX 100  /* exhaustive-ok: page ceiling handed to pw_walk_max(); a stop at it files a collector-truncation-notice */
+
+static int emsc_emit_page(const source_ctx *ctx, intel_sink *sink,
+                          const char *sid, cJSON *doc, void *ud, int *seen) {
+  (void)ctx; (void)ud;
   cJSON *arr = cJSON_IsArray(doc) ? doc : cJSON_GetObjectItem(doc, "results");
+  *seen = cJSON_IsArray(arr) ? cJSON_GetArraySize(arr) : 0;
   if (!cJSON_IsArray(arr)) {
-    fprintf(stderr, "[emsc-moment-tensors] top level is not an array\n");
-    cJSON_Delete(doc);
-    return -1;
+    fprintf(stderr, "[%s] top level is not an array\n", sid);
+    return 0;
   }
 
   static const char *KEYS[] = { "mt_id", "ev_region", "ev_id", "mt_source_catalog",
@@ -129,8 +140,16 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(pj);
     free(gj);
   }
-  cJSON_Delete(doc);
-  fprintf(stderr, "[emsc-moment-tensors] emitted %d\n", n);
+  return n;
+}
+
+static int run(const source_ctx *ctx, intel_sink *sink) {
+  int n = pw_walk_max(ctx, sink, "emsc-moment-tensors", URL, pw_fetch_json,
+                      emsc_emit_page, NULL, EMSC_PAGE_MAX);
+  if (n < 0) {
+    fprintf(stderr, "[emsc-moment-tensors] fetch/parse failed\n");
+    return -1;
+  }
   return 0;
 }
 
@@ -139,7 +158,7 @@ static const source_def geoeo_emsc_mt_def = {
   .name = "EMSC Moment Tensor Web Service",
   .update_interval_sec = 1800, .run = run,
   .category = "environment", .type = "api",
-  .url = "https://www.seismicportal.eu/mtws/api/search?limit=50&format=json",
+  .url = "https://www.seismicportal.eu/mtws/api/search?limit=500&offset=0&format=json",  /* exhaustive-ok: documentation of the row, never fetched; the walk is pw_walk_max() above */
   .description = "Focal mechanisms (moment tensors) for significant global earthquakes aggregated by EMSC from GCMT, GFZ, INGV, USGS and regional agencies.",
   .license = "EMSC/CSEM seismicportal open web service; acknowledge the contributing agency in mt_source_catalog.",
   .free_tier = 1,

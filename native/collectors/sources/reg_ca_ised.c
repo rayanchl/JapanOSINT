@@ -134,7 +134,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def ca_corporations_def = {
-  .id = "CA_CORPORATIONS", .collector = "osint",
+  .id = "CA_CORPORATIONS", .collector = "osint_" "government",
   .name = "Corporations Canada Search", .name_ja = "カナダ法人登記検索",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "api",

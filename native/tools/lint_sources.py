@@ -1119,7 +1119,12 @@ def check_dup_endpoint():
     # to come from; it is never fetched. Batch 39 sends `Referer:
     # https://www.sse.com.cn/` from two tables (SSE's query API demands it),
     # and the check reported that as one endpoint fetched by two files.
-    header_re = re.compile(r'"(?:Referer|Origin)\s*:\s*[^"]*"', re.I)
+    # A `User-Agent:` value is the same shape: the 491 feed rows recovered from
+    # bot walls on 2026-10-20 declare `Mozilla/5.0 (compatible; JapanOSINT/1.0;
+    # +https://github.com/rayanchl/JapanOSINT)`, and that contact URL — never
+    # fetched, it is who to write to — read as one endpoint shared by six
+    # tables and failed this gate.
+    header_re = re.compile(r'"(?:Referer|Origin|User-Agent)\s*:\s*[^"]*"', re.I)
     by_url = {}
     for root, _dirs, names in os.walk(COLLECTORS):
         if os.sep + "obj" in root:
@@ -1208,7 +1213,17 @@ def check_phantom_index():
 
 _PAGENUM_NAME = re.compile(
     r"^(?:.*\.)?(?:page|pagina|pagenum|pagenumber|page_number|pageno|page_no|"
-    r"pageindex|page_index|pg|side|seite)$", re.I)
+    r"pageindex|page_index|pg|side|seite)"
+    # JSON:API spells it `page[number]`, and a row writes that parameter
+    # PERCENT-ENCODED because it sits in a URL: `page%5Bnumber%5D`. The `$`
+    # after the name list rejected both, so this check — added for exactly this
+    # family on 2026-10-05 — could not see 63 rows that shipped three days
+    # later, every one of them declaring page_size on a page NUMBER. GLEIF
+    # answered HTTP 400 to `page[number]=201` on its second request and stored
+    # 200 of 13,419 entities; the sixteen US Treasury Fiscal Data rows asked
+    # for page 501 and stored one page each. The spelling is a property of the
+    # API, so the name list has to carry it rather than the suffix.
+    r"(?:(?:%5B|\[)(?:number|no|num|index)(?:%5D|\]))?$", re.I)
 
 
 def check_page_size_on_page_number():

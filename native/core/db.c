@@ -11,6 +11,9 @@ int sqlite3_vec_init(sqlite3 *db, char **pzErrMsg, const sqlite3_api_routines *p
 #include "content_change.h"    /* content_change_ensure_schema (same reason) */
 #include "media.h"             /* media_migrate (same reason) */
 #include "camera_stills.h"     /* camera_stills_migrate (same reason) */
+#include "story.h"             /* story_migrate (story_id, novelty columns) */
+#include "alert_sem.h"         /* alert_sem_migrate (alert_rule_vec)        */
+#include "thresholds.h"        /* threshold_migrate (settings_thresholds)   */
 #include "fts_schema.h"        /* fts_schema_migrate (widens intel_items_fts) */
 #include "entitystore.h"       /* es_norm_migrate */
 #include "source_registry.h"   /* src_meta_get (merged metadata)        */
@@ -277,8 +280,12 @@ static void db_apply_pragmas(sqlite3 *h) {
    * instead of leaving it at its high-water mark. It changes no durability
    * guarantee: the limit applies after the checkpoint has already committed
    * those frames into the database. 256 MB is generous for the biggest single
-   * transaction this tree runs (the FTS rebuild's per-batch commits) while
-   * keeping the steady-state footprint bounded. */
+   * transaction this tree runs while keeping the steady-state footprint
+   * bounded. That is the FTS rebuild's FTS_REBUILD_BATCH-row commit
+   * (core/fts_schema.c) — and has been only since 2026-10-06: before that the
+   * rebuild was ONE transaction over the whole corpus, so this comment
+   * promised per-batch commits that did not exist, and a WAL that is still
+   * being appended to cannot be truncated at all. */
   sqlite3_exec(h, "PRAGMA journal_size_limit=268435456;", NULL, NULL, NULL);
 }
 
@@ -363,6 +370,8 @@ static void ensure_parent_dir(const char *path) {
   mkdir(buf, 0755);
 }
 
+static void alert_events_unique_migrate(db_handle *db);   /* below db_open */
+
 int db_open(db_handle *db, const char *db_path, const char *schema_path) {
   const char *dbp = db_path ? db_path
     : (getenv("JO_DB") ? getenv("JO_DB") : JO_REPO_ROOT "/data/japanmap.db");
@@ -408,11 +417,23 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
     "TEXT NOT NULL DEFAULT 'map_cron' "
     "CHECK(schedule_mode IN ('map_cron','search_only'))");
 
+  /* Where a collector stopped reading, so a collection larger than one run's
+   * page budget is read over a cycle rather than from page 1 forever
+   * (source.h's resume_in / resume_out, core/scheduler.c's resume load/store).
+   * One row per scheduled source already exists here; this is one more column
+   * on it, not a table of its own. */
+  ensure_column(db, "source_sched_state", "resume_token", "TEXT");
+  /* The cadence an adaptive row re-measured from its newest stored item
+   * (source_def.adaptive_interval, core/scheduler.c sched_freshness_measure).
+   * NULL = not measured / undated rows: the declared interval stands. */
+  ensure_column(db, "source_sched_state", "freshness_interval", "INTEGER");
+
   /* Notification inbox (roadmap item 11): read/unread state per event. */
   ensure_column(db, "alert_events", "read_at", "TEXT");
   /* The rule's name, stamped when the rule is deleted: events outlive their
    * rule (they are the inbox's history), and the inbox/export still name it. */
   ensure_column(db, "alert_events", "rule_name", "TEXT");
+  alert_events_unique_migrate(db);
 
   /* Correlation scoring (roadmap item 22): significance over co-mention
    * edges. NULL until the stats pod has run, and NULL for pairs below the
@@ -443,6 +464,9 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
    * A NEGATIVE value is a floor, not a count — see fetch_log_set_stored() in
    * core/scheduler.c. */
   ensure_column(db, "fetch_log", "stored", "INTEGER");
+  /* transfer size of the run (every response body, retries included); NULL
+   * on rows written before the column existed = not measured */
+  ensure_column(db, "fetch_log", "bytes_fetched", "INTEGER");
 
   /* Evidence capture (roadmap 17) is per-source OPT-IN and defaults OFF. 415
    * sources on schedules down to 60s would fill a disk in days otherwise, and
@@ -478,6 +502,17 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
    * created inside content_change_ensure_schema() for the same reason as
    * above — the column does not exist when schema.sql runs. */
   ensure_column(db, "sources", "watch_content", "INTEGER");
+  /* DERIVED labels, never renames (core/source_category.h): `category` stays
+   * what the source declared; these say which of source.h's 31 categories it
+   * belongs to and how that was decided ('declared' | 'derived'). */
+  ensure_column(db, "sources", "category_canonical", "TEXT");
+  ensure_column(db, "sources", "category_provenance", "TEXT");
+  ensure_column(db, "sources", "category_confidence", "REAL");
+  /* What a pivot can be asked about (core/source_card.h: a SC_ET_* mask
+   * derived from its declaration) and the facts it was derived from. NULL on
+   * a non-pivot; 0 with NULL provenance on an unlabelled pivot. */
+  ensure_column(db, "sources", "entity_types", "INTEGER");
+  ensure_column(db, "sources", "entity_types_provenance", "TEXT");
   /* The workspace run list names each run's query (searchapi_runs). */
   ensure_column(db, "search_run_owners", "query", "TEXT");
   content_change_ensure_schema(db);
@@ -493,6 +528,25 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
    * over it, for the usual schema.sql-ordering reason. */
   ensure_column(db, "intel_items", "capture_stills", "INTEGER NOT NULL DEFAULT 0");
   camera_stills_migrate(db);
+
+  /* The sink's unchanged-re-fetch path (core/intel.c, UNCHANGED RE-FETCH):
+   * content_hash is the 128-bit digest of what the upsert writes, compared on
+   * the next fetch of the same uid; last_seen_at is the one column a re-fetch
+   * of unchanged content still moves. Unindexed on purpose — that is what
+   * makes the write cheap. NULL on every row written before the column existed,
+   * which just means its first re-fetch is a full write, as before. */
+  ensure_column(db, "intel_items", "content_hash", "BLOB");
+  ensure_column(db, "intel_items", "last_seen_at", "TEXT");
+
+  /* Stories and novelty from the embedding pod's post-batch hook (core/
+   * story.h): intel_items.story_id (separate from simhash's cluster_id) and
+   * .novelty, plus the story index and the hook's pending queue. */
+  story_migrate(db);
+  /* Semantic alert rules' stored vectors (core/alert_sem.h). */
+  alert_sem_migrate(db);
+  /* Operator overrides of the similarity thresholds (core/thresholds.h):
+   * the table, then the in-memory cache every threshold_get() reads. */
+  threshold_migrate(db);
 
   /* Widen intel_items_fts to also index link/author/tags/properties. No-op
    * unless the live index is still the old column set. Deliberately LAST of
@@ -522,7 +576,10 @@ int db_open(db_handle *db, const char *db_path, const char *schema_path) {
 }
 
 void db_close(db_handle *db) {
-  if (db && db->h) { sqlite3_close(db->h); db->h = NULL; }
+  /* close_v2: a statement some caller forgot to finalize (an intel sink
+   * never freed) turns the connection into a zombie that closes with its last
+   * statement, instead of sqlite3_close()'s SQLITE_BUSY and a leaked handle. */
+  if (db && db->h) { sqlite3_close_v2(db->h); db->h = NULL; }
 }
 
 int db_integrity_ok(db_handle *db, char *out, int out_sz) {
@@ -539,6 +596,70 @@ int db_integrity_ok(db_handle *db, char *out, int out_sz) {
   }
   sqlite3_finalize(st);
   return ok;
+}
+
+/* ONE EVENT PER (rule, item), ENFORCED BY THE TABLE.
+ *
+ * Dedup used to be check-then-insert in core/alert_eval.c fire(): SELECT for
+ * a recent event, then INSERT. The ingest path (intel.c, on the collector's
+ * thread) and the entity sweep (its own thread, own connection) both reach
+ * fire() for the same rule and item, and nothing stopped both SELECTs from
+ * running before either INSERT — two events, two deliveries, one match. A
+ * UNIQUE index turns the race into an INSERT OR IGNORE that one side loses.
+ *
+ * Existing duplicates must go first or the index cannot be built. Kept per
+ * pair: the deliverable row (suppressed=0) over a storm marker, then the
+ * earliest; the deliveries queued for the dropped rows go with them, since
+ * they are the double notifications this exists to stop. Runs once: after
+ * the index exists there is nothing left to dedupe. breach_monitor.c already
+ * wrote at most one row per (rule, item) through its NOT EXISTS guard, so
+ * its rows are unaffected. */
+static void alert_events_unique_migrate(db_handle *db) {
+  sqlite3_stmt *st = NULL;
+  int have = 0;
+  if (sqlite3_prepare_v2(db->h,
+        "SELECT 1 FROM sqlite_master WHERE type='index' AND"
+        " name='ux_alert_events_rule_item'", -1, &st, NULL) == SQLITE_OK) {
+    have = sqlite3_step(st) == SQLITE_ROW;
+    sqlite3_finalize(st);
+  }
+  if (have) return;
+  static const char *MARK =
+    "BEGIN IMMEDIATE;"
+    "CREATE TEMP TABLE IF NOT EXISTS _ae_dup(id TEXT PRIMARY KEY);"
+    "DELETE FROM _ae_dup;"
+    "INSERT INTO _ae_dup(id) SELECT id FROM ("
+    "  SELECT id, ROW_NUMBER() OVER (PARTITION BY rule_id, item_uid"
+    "    ORDER BY suppressed ASC, matched_at ASC, rowid ASC) AS rn"
+    "  FROM alert_events) WHERE rn > 1;";
+  static const char *APPLY =
+    "DELETE FROM alert_deliveries WHERE event_id IN (SELECT id FROM _ae_dup);"
+    "DELETE FROM alert_events WHERE id IN (SELECT id FROM _ae_dup);"
+    "CREATE UNIQUE INDEX IF NOT EXISTS ux_alert_events_rule_item"
+    "  ON alert_events(rule_id, item_uid);"
+    "DROP TABLE _ae_dup;"
+    "COMMIT;";
+  char *err = NULL;
+  long dups = 0;
+  int rc = sqlite3_exec(db->h, MARK, NULL, NULL, &err);
+  if (rc == SQLITE_OK &&
+      sqlite3_prepare_v2(db->h, "SELECT count(*) FROM _ae_dup", -1, &st,
+                         NULL) == SQLITE_OK) {
+    if (sqlite3_step(st) == SQLITE_ROW) dups = (long)sqlite3_column_int64(st, 0);
+    sqlite3_finalize(st);
+  }
+  if (rc == SQLITE_OK) rc = sqlite3_exec(db->h, APPLY, NULL, NULL, &err);
+  if (rc != SQLITE_OK) {
+    fprintf(stderr, "[db] alert_events unique-index migration failed: %s — "
+                    "duplicate fires stay possible until it succeeds\n",
+            err ? err : "?");
+    sqlite3_free(err);
+    sqlite3_exec(db->h, "ROLLBACK", NULL, NULL, NULL);
+    return;
+  }
+  if (dups)
+    fprintf(stderr, "[db] alert_events: removed %ld duplicate (rule, item) "
+                    "event(s) before adding ux_alert_events_rule_item\n", dups);
 }
 
 int db_object_count(db_handle *db) {

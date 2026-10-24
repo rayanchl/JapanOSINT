@@ -16,6 +16,7 @@
 #include "audit.h"
 #include "docmeta.h"
 #include "evidence.h"
+#include "media.h"
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
 #include <openssl/rand.h>
@@ -810,8 +811,21 @@ static void add_docmeta(cJSON *d, db_handle *db, const char *id) {
 /* The committed response, rebuilt from the row. Shared by the first commit and
  * by a retried one, so a client that loses the reply to its commit and asks
  * again gets the SAME answer instead of a 409 it cannot act on. */
-static char *commit_response(db_handle *db, const up_row *r, const char *uid,
-                             const char *ev, int *st, int code) {
+/* Attach `media`: the media pipeline's rows for this upload (media.h, client
+ * uploads) — [] for a non-image, rows with analyzed_at null until the media
+ * pod has read the bytes back. This tenant's rows only. */
+static void add_media(cJSON *d, db_handle *db, const char *tid, const char *uid) {
+  char *js = media_list_for_upload(db, tid, uid, 0);
+  cJSON *j = js ? cJSON_Parse(js) : NULL;
+  free(js);
+  cJSON *data = j ? cJSON_DetachItemFromObject(j, "data") : NULL;
+  cJSON_Delete(j);
+  if (data) cJSON_AddItemToObject(d, "media", data);
+  else      cJSON_AddNullToObject(d, "media");
+}
+
+static char *commit_response(db_handle *db, const char *tid, const up_row *r,
+                             const char *uid, const char *ev, int *st, int code) {
   cJSON *d = cJSON_CreateObject();
   cJSON_AddStringToObject(d, "upload_id", r->id);
   cJSON_AddStringToObject(d, "sha256", r->sha);
@@ -828,6 +842,7 @@ static char *commit_response(db_handle *db, const up_row *r, const char *uid,
                         r->has_committed ? cJSON_CreateString(r->committed)
                                          : cJSON_CreateNull());
   add_docmeta(d, db, r->id);
+  add_media(d, db, tid, uid);
   return wrap(d, st, code);
 }
 
@@ -842,7 +857,7 @@ static char *h_commit(db_handle *db, const tenant_ctx *t, const char *id,
   snprintf(uid, sizeof uid, "upload:%s", id);
 
   if (strcmp(r.status, "committed") == 0)
-    return commit_response(db, &r, uid, "already_committed", st, 200);
+    return commit_response(db, t->tenant_id, &r, uid, "already_committed", st, 200);
   if (strcmp(r.status, "open") != 0)
     return err(st, 409, "upload_aborted");
 
@@ -953,6 +968,11 @@ static char *h_commit(db_handle *db, const tenant_ctx *t, const char *id,
   char *dm = docmeta_extract(buf, (size_t)assembled,
                              r.filename[0] ? r.filename : NULL,
                              r.has_ct ? r.ct : NULL);
+  /* An IMAGE also enters the media pipeline (media.h, client uploads): one
+   * pending media_assets row of THIS tenant, analysed by the media pod from
+   * the blob just preserved. What it is comes from its bytes, not the
+   * declared type. One insert; the pixel tools run on the pod, not here. */
+  const char *img = media_sniff_type(buf, (size_t)assembled);   /* static */
   free(buf);
 
   sqlite3_stmt *up;
@@ -975,6 +995,9 @@ static char *h_commit(db_handle *db, const tenant_ctx *t, const char *id,
     fprintf(stderr, "[upload] commit update: %s\n", sqlite3_errmsg(db->h));
     return err(st, 500, "server_error");
   }
+  if (img && media_record_upload(db, t->tenant_id, uid, curl, sha,
+                                 (size_t)assembled, img) < 0)
+    fprintf(stderr, "[upload] %s: media row not recorded\n", id);
 
   /* Ingress event. The filename is bounded to UP_AUDIT_NAME_MAX bytes on a
    * UTF-8 boundary — it is attacker-controlled and audit rows are read and
@@ -1005,7 +1028,7 @@ static char *h_commit(db_handle *db, const tenant_ctx *t, const char *id,
   up_row done;
   if (up_load(db, t->tenant_id, id, &done) != 1)
     return err(st, 500, "server_error");
-  return commit_response(db, &done, uid, ev_result(evrc), st, 200);
+  return commit_response(db, t->tenant_id, &done, uid, ev_result(evrc), st, 200);
 }
 
 /* ── GET /api/uploads/:id ─────────────────────────────────────────────────── */
@@ -1079,6 +1102,9 @@ static char *h_status(db_handle *db, const tenant_ctx *t, const char *id,
    * one fact about the document that the bytes no longer answer once they are
    * in the evidence store. Null until the upload is committed. */
   add_docmeta(d, db, r.id);
+  char muid[64];
+  snprintf(muid, sizeof muid, "upload:%s", r.id);
+  add_media(d, db, t->tenant_id, muid);
   return wrap(d, st, 200);
 }
 

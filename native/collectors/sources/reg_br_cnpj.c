@@ -142,7 +142,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def br_cnpj_def = {
-  .id = "BR_CNPJ", .collector = "osint",
+  .id = "BR_CNPJ", .collector = "osint_" "government",
   .name = "Brazil CNPJ Company Lookup", .name_ja = "ブラジル法人番号(CNPJ)照会",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "api",

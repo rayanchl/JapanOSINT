@@ -68,6 +68,7 @@ static const hp_source T[] = {
     .array_path = "results",
     .detail_url = "https://api.openaire.eu/graph/v1/organizations?search={v}&pageSize=50", .detail_key = "legalName",
     .page_walk = 1,
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .interval = 86400, .free_tier = 1 },
 
   { .id = "openaire-products-by-project",
@@ -79,6 +80,7 @@ static const hp_source T[] = {
     .array_path = "results",
     .detail_url = "https://api.openaire.eu/graph/v1/researchProducts?relProjectId={v}&pageSize=100", .detail_key = "id",
     .page_walk = 1,
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .interval = 86400, .free_tier = 1 },
 
   { .id = "openaire-project-by-id",
@@ -101,6 +103,7 @@ static const hp_source T[] = {
     .array_path = "results",
     .detail_url = "https://api.openaire.eu/graph/v1/projects?id={v}", .detail_key = "id",
     .page_walk = 1,
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .interval = 86400, .free_tier = 1 },
 
   { .id = "openaire-research-product-by-pid",
@@ -123,6 +126,7 @@ static const hp_source T[] = {
     .array_path = "results",
     .detail_url = "https://api.openaire.eu/graph/v1/researchProducts?pid={v}", .detail_key = "id",
     .page_walk = 1,
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .interval = 86400, .free_tier = 1 },
 
 };

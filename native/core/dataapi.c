@@ -578,6 +578,12 @@ static char *fc_from_intel(db_handle *db, const char *source_id,
 }
 
 char *dataapi_layer(db_handle *db, const char *id) {
+  return dataapi_layer_admit(db, id, NULL, NULL, NULL);
+}
+
+char *dataapi_layer_admit(db_handle *db, const char *id,
+                          int (*allow_run)(void *), void *arg, int *refused) {
+  if (refused) *refused = 0;
   if (!db || !id || !*id) return NULL;
 
   /* In the unified ABI collectorKey == sourceId == the registry id (data.js
@@ -672,7 +678,15 @@ char *dataapi_layer(db_handle *db, const char *id) {
 
   /* ── 2. Cache MISS — run the collector through the capture sink ─────────
    * data.js: broadcastLayerWorkStarted → collector() → mirror → respond.
-   * Capture-sink run reconstructs Features exactly like lib/unified.c. */
+   * Capture-sink run reconstructs Features exactly like lib/unified.c.
+   *
+   * The admission check sits HERE, and nowhere earlier, because this is the
+   * one point where a read becomes a live upstream fetch; a cache hit, a layer
+   * read or an unknown id costs a query and is never refused. */
+  if (allow_run && !allow_run(arg)) {
+    if (refused) *refused = 1;
+    return NULL;
+  }
   lw_started(id);
 
   cJSON *cap_arr = cJSON_CreateArray();

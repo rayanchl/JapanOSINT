@@ -290,7 +290,7 @@ static int run_airline(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def av_adsbdb_aircraft_def = {
-  .id = "ADSBDB_AIRCRAFT", .collector = "osint",
+  .id = "ADSBDB_AIRCRAFT", .collector = "osint_" "transport",
   .name = "adsbdb Aircraft Registry (hex / tail)",
   .update_interval_sec = 0, .run = run_aircraft,
   .category = "transport", .type = "api",
@@ -301,7 +301,7 @@ static const source_def av_adsbdb_aircraft_def = {
 REGISTER_SOURCE(av_adsbdb_aircraft_def)
 
 static const source_def av_adsbdb_callsign_def = {
-  .id = "ADSBDB_CALLSIGN", .collector = "osint",
+  .id = "ADSBDB_CALLSIGN", .collector = "osint_" "transport",
   .name = "adsbdb Callsign → Flight Route",
   .update_interval_sec = 0, .run = run_callsign,
   .category = "transport", .type = "api",
@@ -312,7 +312,7 @@ static const source_def av_adsbdb_callsign_def = {
 REGISTER_SOURCE(av_adsbdb_callsign_def)
 
 static const source_def av_adsbdb_airline_def = {
-  .id = "ADSBDB_AIRLINE", .collector = "osint",
+  .id = "ADSBDB_AIRLINE", .collector = "osint_" "transport",
   .name = "adsbdb Airline by Operator Code",
   .update_interval_sec = 0, .run = run_airline,
   .category = "transport", .type = "api",

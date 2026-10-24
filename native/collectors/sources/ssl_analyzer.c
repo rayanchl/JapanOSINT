@@ -371,7 +371,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def ssl_analyzer_def = {
-  .id = "SSL_ANALYZER", .collector = "osint",
+  .id = "SSL_ANALYZER", .collector = "osint_" "cyber",
   .name = "SSL Analyzer", .name_ja = "SSL解析",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",

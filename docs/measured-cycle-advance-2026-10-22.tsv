@@ -1,0 +1,670 @@
+id	verdict	emitted	stored	db_rows	available	secs	detail	rerun_verdict	rerun_detail
+esma-solr-upreg	ADVANCES	6	7	6	101621	4.9	https://registers.esma.europa.eu/solr/esma_registers_upreg/select?q=*:*&wt=json&rows=3&start=6		
+datacite-dois-title-query	ADVANCES	10	11	10	33146	5.8	https://api.datacite.org/dois?affiliation=true&page%5Bnumber%5D=3&page%5Bsize%5D=5&publisher=true&query=titles.title%3Agraphene		
+datacite-dois-by-client	ADVANCES	10	11	10	9075	6.0	https://api.datacite.org/dois?client-id=gesis.gesis&page%5Bnumber%5D=3&page%5Bsize%5D=5		
+openaire-organizations-search	ADVANCES	10	11	10	10	9.0	https://api.openaire.eu/graph/v1/organizations?search=Kyoto&pageSize=5&page=3		
+gleif-lei-filter-nonconforming	ADVANCES	20	21	20	1323208	9.4	https://api.gleif.org/api/v1/lei-records?filter%5BconformityFlag%5D=NON_CONFORMING&page%5Bnumber%5D=3&page%5Bsize%5D=10		
+openaire-products-by-project	ADVANCES	10	11	10	10	4.6	https://api.openaire.eu/graph/v1/researchProducts?relProjectId=corda__h2020::6c228bea4ee8a4ef22cd1d4fa079b63a&pageSize=5&page=3		
+us-austin-apd-crime-arcgis	COMPLETES	26	27	26	26	1.5	the start — this run completed the cycle		
+openaire-projects-search	ADVANCES	20	21	20	20	5.5	https://api.openaire.eu/graph/v1/projects?search=hydrogen&pageSize=10&page=3		
+gleif-lei-filter-lapsed	ADVANCES	20	21	20	1212296	11.4	https://api.gleif.org/api/v1/lei-records?filter%5Bregistration.status%5D=LAPSED&page%5Bnumber%5D=3&page%5Bsize%5D=10		
+openaire-research-products	ADVANCES	20	21	20	20	6.6	https://api.openaire.eu/graph/v1/researchProducts?search=climate&pageSize=10&page=3		
+us-sf-311-open311-requests	ADVANCES	10	11	10	10	15.4	https://mobile311.sfgov.org/open311/v2/requests.json?page_size=5&page=3		
+uk-govuk-search-drug-safety-update	ADVANCES	200	201	200	869	41.7	https://www.gov.uk/api/search.json?filter_format=drug_safety_update&count=100&order=public_timestamp&fields=title,link,description,first_published_at&start=200		
+us-courtlistener-search-recap-dockets	FETCH_FAILED	1	1	0		1.0	us-courtlistener-search-recap-dockets stored nothing: upstream answered 429	FETCH_FAILED	us-courtlistener-search-recap-dockets stored nothing: upstream answered 429
+uk-govuk-search-medical-safety-alerts	ADVANCES	200	201	200	1457	43.9	https://www.gov.uk/api/search.json?filter_format=medical_safety_alert&count=100&order=public_timestamp&fields=title,link,description,alert_type,issued_date,medical_specialism&start=200		
+us-federalregister-by-cfr	ADVANCES	10	11	10	1534	3.0	https://www.federalregister.gov/api/v1/documents.json?conditions%5Bcfr%5D%5Btitle%5D=40&conditions%5Bcfr%5D%5Bpart%5D=63&per_page=5&page=3		
+us-legistar-seattle-events	ADVANCES	2	3	2	2	2.9	https://webapi.legistar.com/v1/seattle/events?$top=1&$skip=2		
+uk-govuk-search-employment-tribunal	ADVANCES	200	201	200	134891	46.1	https://www.gov.uk/api/search.json?filter_format=employment_tribunal_decision&count=100&order=public_timestamp&fields=title,link,description,tribunal_decision_categories,tribunal_decision_decision_date&start=200		
+us-oyez-advocates	ADVANCES	6	7	6	6	3.6	https://api.oyez.org/advocates?per_page=3&page=2		
+uk-govuk-search-tax-tribunal	ADVANCES	200	201	200	1452	46.8	https://www.gov.uk/api/search.json?filter_format=tax_tribunal_decision&count=100&order=public_timestamp&fields=title,link,description,tribunal_decision_category,tribunal_decision_decision_date&start=200		
+uk-govuk-search-cma-cases	ADVANCES	200	201	200	2590	48.7	https://www.gov.uk/api/search.json?filter_format=cma_case&count=100&order=public_timestamp&fields=title,link,description,case_type,case_state,opened_date,closed_date,market_sector&start=200		
+us-oyez-cases-by-term	ADVANCES	6	7	6	6	3.9	https://api.oyez.org/cases?filter=term:2022&labels=true&per_page=3&page=2		
+uk-govuk-search-utaac-decisions	ADVANCES	200	201	200	2098	43.5	https://www.gov.uk/api/search.json?filter_format=utaac_decision&count=100&order=public_timestamp&fields=title,link,description,tribunal_decision_categories,tribunal_decision_decision_date,tribunal_decision_judges&start=200		
+au-asic-afs-licensees	ADVANCES	200	201	200	200	58.2	https://data.gov.au/data/api/3/action/datastore_search?resource_id=d98a113d-6b50-40e6-b65f-2612efc877f4&limit=100&offset=200		
+au-asic-credit-licensees	ADVANCES	200	201	200	200	58.4	https://data.gov.au/data/api/3/action/datastore_search?resource_id=35953a01-a9a8-4609-8566-c9fa7de465d3&limit=100&offset=200		
+au-asic-smsf-auditors	ADVANCES	200	201	200	200	56.5	https://data.gov.au/data/api/3/action/datastore_search?resource_id=13b12e77-8fda-42ca-aa43-23715036836b&limit=100&offset=200		
+au-asic-credit-representatives	ADVANCES	200	201	200	200	59.1	https://data.gov.au/data/api/3/action/datastore_search?resource_id=999d9e92-df2c-4d6d-b580-321dcd205292&limit=100&offset=200		
+au-asic-financial-advisers	ADVANCES	200	201	200	200	60.0	https://data.gov.au/data/api/3/action/datastore_search?resource_id=91d80440-5787-46fc-99de-0c1d93e6cc9f&limit=100&offset=200		
+au-government-organisations-register	ADVANCES	200	201	200	200	52.3	https://data.gov.au/data/api/3/action/datastore_search?resource_id=90b13a5b-fd2e-440c-b253-9cbf314d3da3&limit=100&offset=200		
+JO30_TOKYO_GRP_KANKO	ADVANCES	200	201	200	208	3.3	https://catalog.data.metro.tokyo.lg.jp/api/3/action/package_search?fq=groups:c023&rows=100&start=200&sort=id%20asc		
+JO30_TOKYO_GRP_SUIDO	ADVANCES	200	201	200	210	2.9	https://catalog.data.metro.tokyo.lg.jp/api/3/action/package_search?fq=groups:c027&rows=100&start=200&sort=id%20asc		
+JO30_TOKYO_WARD_T131113	ADVANCES	200	201	200	280	2.9	https://catalog.data.metro.tokyo.lg.jp/api/3/action/package_search?fq=organization:t131113&rows=100&start=200&sort=id%20asc		
+JO30_TOKYO_WARD_T131032	ADVANCES	200	201	200	268	4.5	https://catalog.data.metro.tokyo.lg.jp/api/3/action/package_search?fq=organization:t131032&rows=100&start=200&sort=id%20asc		
+JO30_TOKYO_WARD_T131199	ADVANCES	200	201	200	211	2.9	https://catalog.data.metro.tokyo.lg.jp/api/3/action/package_search?fq=organization:t131199&rows=100&start=200&sort=id%20asc		
+JO30_TOKYO_WARD_T131237	ADVANCES	200	201	200	266	2.3	https://catalog.data.metro.tokyo.lg.jp/api/3/action/package_search?fq=organization:t131237&rows=100&start=200&sort=id%20asc		
+JO30_TOKYO_TAG_STANDARD	ADVANCES	200	201	200	259	2.4	https://catalog.data.metro.tokyo.lg.jp/api/3/action/package_search?fq=tags:%E8%87%AA%E6%B2%BB%E4%BD%93%E6%A8%99%E6%BA%96%E3%82%AA%E3%83%BC%E3%83%97%E3%83%B3%E3%83%87%E3%83%BC%E3%82%BF%E3%82%BB%E3%83%83%E3%83%88&rows=100&start=200&sort=id%20asc		
+np-bipad-earthquake	FETCH_FAILED	1	1	0		17.1	np-bipad-earthquake stored nothing: the request failed at the transport level	FETCH_FAILED	np-bipad-earthquake stored nothing: the request failed at the transport level
+JO30_TOKYO_FMT_ZIP	ADVANCES	200	201	200	210	2.9	https://catalog.data.metro.tokyo.lg.jp/api/3/action/package_search?fq=res_format:ZIP&rows=100&start=200&sort=id%20asc		
+np-bipad-municipality	FETCH_FAILED	1	1	0		16.4	np-bipad-municipality stored nothing: the request failed at the transport level	FETCH_FAILED	np-bipad-municipality stored nothing: the request failed at the transport level
+np-bipad-resource	FETCH_FAILED	1	1	0		16.7	np-bipad-resource stored nothing: the request failed at the transport level	FETCH_FAILED	np-bipad-resource stored nothing: the request failed at the transport level
+ZA_MUNIMONEY_MUNICIPALITIES	ADVANCES	200	201	200	200	3.8	https://municipaldata.treasury.gov.za/api/cubes/municipalities/facts?pagesize=100&page=3		
+ZA_MUNIMONEY_AUDIT_OPINIONS	ADVANCES	200	201	200	200	4.2	https://municipaldata.treasury.gov.za/api/cubes/audit_opinions/facts?pagesize=100&page=3		
+np-bipad-organization	FETCH_FAILED	1	1	0		21.7	np-bipad-organization stored nothing: the request failed at the transport level	FETCH_FAILED	np-bipad-organization stored nothing: the request failed at the transport level
+TZ_PPRA_NEST_OCDS_RELEASES	ADVANCES	100	100	99	100	9.0	https://nest.go.tz/gateway/nest-data-portal-api/api/releases?since=2023-06-13T10:21:40.912&cursor=2320279		
+ZA_MUNIMONEY_CASHFLOW	ADVANCES	200	201	200	200	4.0	https://municipaldata.treasury.gov.za/api/cubes/cflow_v2/facts?pagesize=100&page=3		
+ZA_MUNIMONEY_OFFICIALS	ADVANCES	200	201	200	200	7.7	https://municipaldata.treasury.gov.za/api/cubes/officials/facts?pagesize=100&page=3		
+AP19_AU_ACT_SOCRATA	ADVANCES	200	201	200	200	2.3	https://www.data.act.gov.au/api/catalog/v1?limit=100&offset=200		
+ZA_MUNIMONEY_AGED_DEBTORS	ADVANCES	200	201	200	200	8.7	https://municipaldata.treasury.gov.za/api/cubes/aged_debtor_v2/facts?pagesize=100&page=3		
+AP19_AU_AODN_CATALOGUE	ADVANCES	200	201	200	200	5.1	https://catalogue-imos.aodn.org.au/geonetwork/srv/eng/q?_content_type=json&fast=index&from=201		
+ZA_MUNIMONEY_CAPITAL	ADVANCES	200	201	200	200	17.0	https://municipaldata.treasury.gov.za/api/cubes/capital_v2/facts?pagesize=100&page=3		
+EPSS_SCORE_PAGE	ADVANCES	200	201	200	393867	1.4	https://api.first.org/data/v1/epss?limit=100&offset=200		
+ZA_MUNIMONEY_INCOME_EXPENDITURE	ADVANCES	200	201	200	200	21.2	https://municipaldata.treasury.gov.za/api/cubes/incexp_v2/facts?pagesize=100&page=3		
+AP19_AU_MELB_ODS_CAT	FETCH_FAILED	1	1	0		20.4	AP19_AU_MELB_ODS_CAT stored nothing: the request failed at the transport level	FETCH_FAILED	AP19_AU_MELB_ODS_CAT stored nothing: the request failed at the transport level
+AP19_AU_MELB_PEDESTRIAN	FETCH_FAILED	1	1	0		20.3	AP19_AU_MELB_PEDESTRIAN stored nothing: the request failed at the transport level	FETCH_FAILED	AP19_AU_MELB_PEDESTRIAN stored nothing: the request failed at the transport level
+ARTIFACTHUB_REPOSITORY_SEARCH	ADVANCES	120	121	120	120	1.4	https://artifacthub.io/api/v1/repositories/search?limit=60&offset=120		
+AP19_AU_MELB_CAFES	FETCH_FAILED	1	1	0		25.8	AP19_AU_MELB_CAFES stored nothing: the request failed at the transport level	FETCH_FAILED	AP19_AU_MELB_CAFES stored nothing: the request failed at the transport level
+IODA_ENTITIES_ASN	FETCH_FAILED	1	1	0		1.7	IODA_ENTITIES_ASN stored nothing: the request failed at the transport level	FETCH_FAILED	IODA_ENTITIES_ASN stored nothing: the request failed at the transport level
+TERRAFORM_MODULES	ADVANCES	100	101	100	100	16.5	https://registry.terraform.io/v1/modules?limit=50&offset=100		
+TERRAFORM_PROVIDERS	ADVANCES	100	101	100	100	16.6	https://registry.terraform.io/v1/providers?limit=50&offset=100		
+CERT_PH_WP_POSTS	FETCH_FAILED	1	1	0		2.9	CERT_PH_WP_POSTS stored nothing: upstream answered 401	FETCH_FAILED	CERT_PH_WP_POSTS stored nothing: upstream answered 401
+FPDS_AWARD_NAVY	ADVANCES	20	21	20	20	1.6	https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=CONTRACTING_AGENCY_NAME%3A%22DEPT+OF+THE+NAVY%22&start=20		
+FPDS_AWARD_ARMY	ADVANCES	20	21	20	20	1.3	https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=CONTRACTING_AGENCY_NAME%3A%22DEPT+OF+THE+ARMY%22&start=20		
+FPDS_AWARD_AIRFORCE	ADVANCES	20	21	20	20	1.4	https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=CONTRACTING_AGENCY_NAME%3A%22DEPT+OF+THE+AIR+FORCE%22&start=20		
+FPDS_AWARD_DLA	ADVANCES	20	21	20	20	1.9	https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=CONTRACTING_AGENCY_NAME%3A%22DEFENSE+LOGISTICS+AGENCY%22&start=20		
+WORDPRESS_PLUGIN_REGISTRY	ADVANCES	200	201	200	200	31.4	https://api.wordpress.org/plugins/info/1.2/?action=query_plugins&request[per_page]=100&request[page]=3		
+FPDS_AWARD_OSD	ADVANCES	20	21	20	20	1.6	https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=CONTRACTING_AGENCY_NAME%3A%22DEPT+OF+DEFENSE%22&start=20		
+WORDPRESS_THEME_REGISTRY	ADVANCES	200	201	200	200	32.2	https://api.wordpress.org/themes/info/1.2/?action=query_themes&request[per_page]=100&request[page]=3		
+FPDS_PSC_AIRCRAFT_FIXED	ADVANCES	20	21	20	20	1.4	https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%221510%22&start=20		
+FPDS_PSC_AIRCRAFT_ROTARY	ADVANCES	20	21	20	20	1.3	https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%221520%22&start=20		
+MSRC_SUG_VULNERABILITY	ADVANCES	200	201	200	200	39.8	https://api.msrc.microsoft.com/sug/v2.0/en-US/vulnerability?$top=100&$skip=200		
+FPDS_PSC_GUNS_SMALL	ADVANCES	20	21	20	20	1.4	https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%221005%22&start=20		
+FPDS_PSC_UAV	ADVANCES	20	21	20	20	1.7	https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%221550%22&start=20		
+FPDS_PSC_MISSILE_COMPONENTS	ADVANCES	20	21	20	20	1.6	https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%221420%22&start=20		
+FPDS_PSC_GUIDED_MISSILES	ADVANCES	20	21	20	20	1.8	https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%221410%22&start=20		
+FPDS_PSC_SPACE_VEHICLES	ADVANCES	20	21	20	20	1.7	https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%221810%22&start=20		
+FPDS_PSC_COMBAT_SHIPS	ADVANCES	20	21	20	20	1.8	https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%221905%22&start=20		
+FPDS_PSC_RADAR	ADVANCES	20	21	20	20	1.4	https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%225840%22&start=20		
+FPDS_PSC_ECM	ADVANCES	20	21	20	20	1.5	https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%225865%22&start=20		
+FPDS_PSC_CBRN_DETECT	ADVANCES	20	21	20	20	1.2	https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%226665%22&start=20		
+UK_GOVUK_MOD_PUBS	ADVANCES	100	101	100	14459	2.0	https://www.gov.uk/api/search.json?filter_organisations=ministry-of-defence&count=50&start=100		
+USASPEND_DOD_PROGRAM_ACTIVITY	ADVANCES	200	201	200	200	2.9	https://api.usaspending.gov/api/v2/agency/097/program_activity/?fiscal_year=2025&limit=100&page=3		
+NESO_TEC_REGISTER	ADVANCES	100	101	100	100	1.5	https://api.neso.energy/api/3/action/datastore_search?resource_id=17becbab-e3e8-473f-b303-3806f43a6a10&limit=50&offset=100		
+NESO_CAPACITY_MARKET_CMU	ADVANCES	100	101	100	100	2.1	https://api.neso.energy/api/3/action/datastore_search?resource_id=25a5fa2e-873d-41c5-8aaf-fbc2b06d79e6&limit=50&offset=100		
+NESO_EMBEDDED_REGISTER	ADVANCES	100	101	100	100	1.5	https://api.neso.energy/api/3/action/datastore_search?resource_id=68b6f3a1-e1bf-403b-9062-0269fc758d77&limit=50&offset=100		
+CO_SECOP_DEFENCE_CONTRACTS	ADVANCES	200	201	200	200	5.6	https://www.datos.gov.co/resource/rpmr-utcd.json?%24limit=100&%24where=upper%28nombre_de_la_entidad%29%20like%20%27%25DEFENSA%25%27&%24select=*,:id&%24offset=200		
+ENERGINET_CAPACITY_MUNICIPALITY	CUT	50	51	50	50	2.1	page 2 answered 429: https://api.energidataservice.dk/dataset/CapacityPerMunicipality?limit=50&offset=50		
+ELIA_GENERATION_BY_FUEL_HIST	ADVANCES	100	101	100	1564388	2.2	https://opendata.elia.be/api/explore/v2.1/catalog/datasets/ods033/records?limit=50&offset=100		
+PNCP_BR_ARMY_CONTRACTS	COMPLETES	1000	1001	1000	1000	13.7			
+ENTSOG_CONNECTION_POINTS	ADVANCES	100	101	100	100	1.7	https://transparency.entsog.eu/api/v1/connectionpoints.json?limit=50&offset=100		
+NESO_CAPACITY_MARKET_COMPONENTS	ADVANCES	100	101	100	100	13.8	https://api.neso.energy/api/3/action/datastore_search?resource_id=790f5fa0-f8eb-4d82-b98d-0d34d3e404e8&limit=50&offset=100		
+NESO_CONSTRAINT_FLOWS_LIMITS	ADVANCES	100	101	100	100	14.5	https://api.neso.energy/api/3/action/datastore_search?resource_id=38a18ec1-9e40-465d-93fb-301e80fd1352&limit=50&offset=100		
+NOAA_FOSS_LANDINGS	ADVANCES	100	101	100	100	1.7	https://apps-st.fisheries.noaa.gov/ods/foss/landings/?limit=50&offset=100		
+CERT_KH_WP_POSTS	ADVANCES	100	101	100	100	36.3	https://www.camcert.gov.kh/wp-json/wp/v2/posts?per_page=50&offset=100		
+NOAA_FOSS_TRADE	ADVANCES	100	101	100	100	1.9	https://apps-st.fisheries.noaa.gov/ods/foss/trade_data/?limit=50&offset=100		
+BC_MINERAL_TENURE	STUCK	50	51	50	42327	2.2	page 2 answered 400: https://openmaps.gov.bc.ca/geo/pub/WHSE_MINERAL_TENURE.MTA_ACQUIRED_TENURE_SVW/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=pub:WHSE_MINERAL_TENURE.MTA_ACQUIRED_TENURE_SVW&outputFormat=application/json&count=50&startIndex=50		
+MASTR_UNIT_REGISTER_EXTENDED	ADVANCES	100	101	100	9652254	9.1	https://www.marktstammdatenregister.de/MaStR/Einheit/EinheitJson/GetErweiterteOeffentlicheEinheitStromerzeugung?sort=&pageSize=50&group=&filter=&page=3		
+NESO_INTERCONNECTOR_AUCTION	ADVANCES	100	101	100	100	3.2	https://api.neso.energy/api/3/action/datastore_search?resource_id=6a928369-bed3-445f-af8a-69cdb2cc5089&limit=50&offset=100		
+ELIA_SI_FORECAST_NEXT_QH_HISTORY	FETCH_FAILED	1	1	0		18.1	ELIA_SI_FORECAST_NEXT_QH_HISTORY stored nothing: the request failed at the transport level	FETCH_FAILED	ELIA_SI_FORECAST_NEXT_QH_HISTORY stored nothing: the request failed at the transport level
+EE_AVAANDMED_DATASETS	ADVANCES	50	51	50	50	3.9	https://avaandmed.eesti.ee/api/datasets?limit=25&page=3		
+CSIRT_TT_WP_POSTS	ADVANCES	100	101	100	100	47.2	https://ttcsirt.gov.tt/wp-json/wp/v2/posts?per_page=50&offset=100		
+SYKE_HYDRO_SITES	ADVANCES	100	101	100	100	18.5	https://rajapinnat.ymparisto.fi/api/Hydrologiarajapinta/1.1/odata/Paikka?$top=50&$skip=100		
+HR_ZAGREB_STREETS	ADVANCES	200	201	200	200	2.3	https://data.zagreb.hr/api/3/action/datastore_search?resource_id=b110b7b6-f9b6-4bbf-8db8-a9245895f316&limit=100&offset=200		
+ASF_STAC_HAND_ITEMS	ADVANCES	1000	1001	1000	1000	14.8	https://stac.asf.alaska.edu/collections/glo-30-hand/items?limit=500&token=1000		
+ME_TRADE_UNIONS	ADVANCES	200	201	200	200	2.2	https://data.gov.me/api/3/action/datastore_search?resource_id=02295121-60fc-450d-9e09-3da4c2030551&limit=100&offset=200		
+SI_BUSINESS_REGISTER	ADVANCES	200	201	200	200	3.0	https://podatki.gov.si/api/3/action/datastore_search?resource_id=beb70929-3d0d-41c6-9af2-25d525d906d3&limit=100&offset=200		
+ME_MEDICINES	ADVANCES	200	201	200	200	2.0	https://data.gov.me/api/3/action/datastore_search?resource_id=77c3018f-cc56-4532-992d-5b6a68f86f42&limit=100&offset=200		
+SI_HEALER_LICENCES	ADVANCES	200	201	200	200	2.4	https://podatki.gov.si/api/3/action/datastore_search?resource_id=c6408144-48f0-4e03-9d35-172a7779fece&limit=100&offset=200		
+LV_BENEFICIAL_OWNERS	FETCH_FAILED	1	1	0		16.0	LV_BENEFICIAL_OWNERS stored nothing: the request failed at the transport level	FETCH_FAILED	LV_BENEFICIAL_OWNERS stored nothing: the request failed at the transport level
+LV_WASTE_OPERATORS	FETCH_FAILED	1	1	0		16.0	LV_WASTE_OPERATORS stored nothing: the request failed at the transport level	FETCH_FAILED	LV_WASTE_OPERATORS stored nothing: the request failed at the transport level
+LV_IPPC_PERMITS	FETCH_FAILED	1	1	0		16.2	LV_IPPC_PERMITS stored nothing: the request failed at the transport level	FETCH_FAILED	LV_IPPC_PERMITS stored nothing: the request failed at the transport level
+IE_FINGAL_PLANNING	ADVANCES	200	201	200	200	2.4	https://services5.arcgis.com/CI1e5PKQXvJgmJK8/arcgis/rest/services/Fingal_Planning_Applications/FeatureServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=100&resultOffset=200		
+IE_HPSC_HEALTH_PROFILE	ADVANCES	200	201	200	200	2.1	https://services1.arcgis.com/eNO7HHeQ3rUcBllm/arcgis/rest/services/CovidStatisticsProfileHPSCIrelandOpenData/FeatureServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=100&resultOffset=200		
+IE_NATIONAL_MONUMENTS	ADVANCES	200	201	200	200	2.6	https://services-eu1.arcgis.com/HyjXgkV6KGMSF3jt/arcgis/rest/services/SMROpenData/FeatureServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=100&resultOffset=200		
+MK_AEK_PUBLICATIONS	ADVANCES	200	201	200	200	4.9	https://www.aek.mk/wp-json/wp/v2/posts?per_page=100&offset=200		
+ME_REGAGEN_NOTICES	ADVANCES	200	201	200	200	5.7	https://www.regagen.co.me/wp-json/wp/v2/posts?per_page=100&offset=200		
+GR_EOF_NOTICES	ADVANCES	200	201	200	200	6.1	https://www.eof.gr/wp-json/wp/v2/posts?per_page=100&offset=200		
+AM_OPENDATA_BULK	ADVANCES	200	201	200	200	2.6	https://data.opendata.am/api/3/action/current_package_list_with_resources?limit=100&offset=200		
+RO_ANM_MEDICINES	ADVANCES	200	201	200	200	4.1	https://www.anm.ro/wp-json/wp/v2/posts?per_page=100&offset=200		
+LV_WATER_PERMITS	FETCH_FAILED	1	1	0		21.0	LV_WATER_PERMITS stored nothing: the request failed at the transport level	FETCH_FAILED	LV_WATER_PERMITS stored nothing: the request failed at the transport level
+RO_ANCOM_DECISIONS	ADVANCES	200	201	200	200	5.6	https://www.ancom.ro/wp-json/wp/v2/posts?per_page=100&offset=200		
+HU_INSPIRE_PLACE_NAMES	ADVANCES	200	201	200	90463	2.4	https://inspire.lechnerkozpont.hu/geoserver/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=GN.2026%3AGeographicalNames.2026&count=100&outputFormat=application%2Fjson&startIndex=200		
+CZ_CRO_PUBLIC_OFFICIALS	ADVANCES	20	21	20	39176	3.8	https://cro.gov.cz/verejnost/api/funkcionari?order=ASC&size=100&sort=id&page=2		
+HU_INSPIRE_LAND_COVER	ADVANCES	200	200	199	170058	3.9	https://inspire.lechnerkozpont.hu/geoserver/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=LC%3ALC.LandCoverSurfaces&count=100&outputFormat=application%2Fjson&startIndex=200		
+IL_COMPANIES_REGISTER	ADVANCES	200	201	200	200	4.0	https://data.gov.il/api/3/action/datastore_search?resource_id=f004176c-b85f-4542-8901-7b3176f9a054&limit=100&offset=200		
+FR_BODACC_COLLECTIVE	FETCH_FAILED	1	1	0		20.4	FR_BODACC_COLLECTIVE stored nothing: the request failed at the transport level	FETCH_FAILED	FR_BODACC_COLLECTIVE stored nothing: the request failed at the transport level
+FR_BODACC_CREATION	FETCH_FAILED	1	1	0		20.7	FR_BODACC_CREATION stored nothing: the request failed at the transport level	FETCH_FAILED	FR_BODACC_CREATION stored nothing: the request failed at the transport level
+FR_BODACC_RADIATION	FETCH_FAILED	1	1	0		20.5	FR_BODACC_RADIATION stored nothing: the request failed at the transport level	FETCH_FAILED	FR_BODACC_RADIATION stored nothing: the request failed at the transport level
+SK_RPVS_OFFICIALS	ADVANCES	40	41	40	40	2.4	https://rpvs.gov.sk/opendatav2/VerejniFunkcionari?$skip=40		
+FR_BODACC_VENTE	FETCH_FAILED	1	1	0		20.3	FR_BODACC_VENTE stored nothing: the request failed at the transport level	FETCH_FAILED	FR_BODACC_VENTE stored nothing: the request failed at the transport level
+FDIC_FINANCIALS	ADVANCES	200	201	200	1682616	3.4	https://banks.data.fdic.gov/api/financials?limit=100&format=json&offset=200		
+FDIC_BRANCH_DEPOSITS	ADVANCES	200	201	200	2898836	3.5	https://banks.data.fdic.gov/api/sod?limit=100&format=json&offset=200		
+FDIC_STRUCTURE_HISTORY	ADVANCES	200	201	200	585127	3.4	https://banks.data.fdic.gov/api/history?limit=100&format=json&offset=200		
+FINRA_ATS_WEEKLY	ADVANCES	400	401	400	400	2.0	https://api.finra.org/data/group/otcMarket/name/weeklySummary?limit=200&offset=400		
+FINRA_OTC_BLOCKS	ADVANCES	400	401	400	400	2.2	https://api.finra.org/data/group/otcMarket/name/otcBlocksSummary?limit=200&offset=400		
+SK_RPVS_AUTHORISED	ADVANCES	40	41	40	40	8.3	https://rpvs.gov.sk/opendatav2/OpravneneOsoby?$skip=40		
+US_FISCAL_MTS	ADVANCES	200	201	200	200	2.0	https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/mts/mts_table_1?page[size]=100&sort=-record_date&page[number]=3		
+US_FISCAL_CASH_BALANCE	ADVANCES	200	201	200	200	2.1	https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/dts/operating_cash_balance?page[size]=100&sort=-record_date&page[number]=3		
+CFTC_COT_FINANCIAL	ADVANCES	1000	1001	1000	1000	4.7	https://publicreporting.cftc.gov/resource/gpe5-46if.json?$limit=500&$order=:id&$offset=1000		
+CFTC_COT_DISAGGREGATED	ADVANCES	1000	1001	1000	1000	5.8	https://publicreporting.cftc.gov/resource/kh3c-gbw2.json?$limit=500&$order=:id&$offset=1000		
+NOAA_FOSS_AFSC_GROUNDFISH	ADVANCES	50	51	50	50	1.8	https://apps-st.fisheries.noaa.gov/ods/foss/afsc_groundfish_survey_catch/?offset=200		
+UK_EC_DONATIONS	ADVANCES	100	101	100	82195	2.0	https://search.electoralcommission.org.uk/api/search/Donations?rows=100&et=pp&sort=AcceptedDate&order=desc&start=200		
+SI_GURS_HOUSE_NUMBERS	ADVANCES	2000	2001	2000	580311	48.5	https://ipi.eprostor.gov.si/wfs-si-gurs-kn/wfs?service=WFS&version=2.0.0&request=GetFeature&typeNames=SI.GURS.KN:HISNE_STEVILKE&count=1000&outputFormat=application/json&startIndex=2000		
+WHO_XMART_WIISE_VACCINE_INTRO	ADVANCES	2000	2001	2000	2000	6.7	https://xmart-api-public.who.int/WIISE/AD_VACCINE_INTRODUCTIONS?%24format=json&%24top=1000&%24orderby=_RecordID&%24skip=2000		
+WHO_XMART_WIISE_OUTBREAKS	ADVANCES	2000	2001	2000	2000	7.4	https://xmart-api-public.who.int/WIISE/AD_OUTBREAKS?%24format=json&%24top=1000&%24orderby=_RecordID&%24skip=2000		
+WHO_XMART_WIISE_SIA_CONDUCTED	ADVANCES	2000	2001	2000	2000	6.4	https://xmart-api-public.who.int/WIISE/AD_SIA_CONDUCTED?%24format=json&%24top=1000&%24orderby=_RecordID&%24skip=2000		
+WHO_XMART_FLUNET_SENTINEL	ADVANCES	2000	2001	2000	2000	11.6	https://xmart-api-public.who.int/FLUMART/VIW_FNT?%24format=json&%24top=1000&%24skip=2000		
+TRONSCAN_TOP_ACCOUNTS	CUT	25	26	25	10000	15.0	page 2 answered 429: https://apilist.tronscanapi.com/api/account/list?limit=25&start=25		
+WHO_XMART_WIISE_COVERAGES	ADVANCES	2000	2001	2000	2000	7.4	https://xmart-api-public.who.int/WIISE/AD_COVERAGES?%24format=json&%24top=1000&%24orderby=_RecordID&%24skip=2000		
+WHO_XMART_WIISE_INCIDENCES	ADVANCES	2000	2001	2000	2000	8.3	https://xmart-api-public.who.int/WIISE/AD_INCIDENCES?%24format=json&%24top=1000&%24orderby=_RecordID&%24skip=2000		
+WHO_XMART_WIISE_AEFI	ADVANCES	2000	2001	2000	2000	8.0	https://xmart-api-public.who.int/WIISE/AD_AEFI?%24format=json&%24top=1000&%24orderby=_RecordID&%24skip=2000		
+WHO_XMART_WIISE_SCHEDULES	ADVANCES	2000	2001	2000	2000	8.6	https://xmart-api-public.who.int/WIISE/AD_SCHEDULES?%24format=json&%24top=1000&%24orderby=_RecordID&%24skip=2000		
+WHO_XMART_NCD_MORTALITY	ADVANCES	2000	2001	2000	2000	8.1	https://xmart-api-public.who.int/NCD/FACT_NCD_MORTALITY?%24format=json&%24top=1000&%24skip=2000		
+WHO_XMART_NCD_CANCER	ADVANCES	2000	2001	2000	2000	7.2	https://xmart-api-public.who.int/NCD/FACT_NCD_CANCER?%24format=json&%24top=1000&%24orderby=_RecordID&%24skip=2000		
+WHO_XMART_TOBACCO_FACT	ADVANCES	2000	2001	2000	2000	6.6	https://xmart-api-public.who.int/TOBACCO/FACT_TOBACCO?%24format=json&%24top=1000&%24orderby=_RecordID&%24skip=2000		
+WHO_XMART_NUTRITION_GTT_SURVEY	ADVANCES	2000	2001	2000	2000	6.6	https://xmart-api-public.who.int/NUTRITION/GTT_SURVEY?%24format=json&%24top=1000&%24orderby=_RecordID&%24skip=2000		
+WHO_XMART_NUTRITION_VMNIS	ADVANCES	2000	2001	2000	2000	9.4	https://xmart-api-public.who.int/NUTRITION/VMNIS_MICRONUTS_PUBLIC?%24format=json&%24top=1000&%24orderby=Sys_PK&%24skip=2000		
+UK_NHSBSA_PRESCRIBING_EPD	ADVANCES	200	201	200	200	3.2	https://opendata.nhsbsa.net/api/3/action/datastore_search?resource_id=EPD_202301&limit=100&offset=200		
+WHO_XMART_GHE_FULL	ADVANCES	2000	2001	2000	2000	7.8	https://xmart-api-public.who.int/DEX_CMS/GHE_FULL?%24format=json&%24top=1000&%24orderby=_RecordID&%24skip=2000		
+WHO_XMART_WHSA_FACT	ADVANCES	2000	2001	2000	2000	7.8	https://xmart-api-public.who.int/DEX_CMS/WHSA_FACT?%24format=json&%24top=1000&%24orderby=_RecordID&%24skip=2000		
+CDC_NNDSS_WEEKLY_TABLES	ADVANCES	2000	2001	2000	2000	6.4	https://data.cdc.gov/resource/x9gk-5huc.json?%24limit=1000&%24offset=2000		
+CDC_NWSS_WASTEWATER_CONCENTRATION	ADVANCES	2000	2001	2000	2000	6.8	https://data.cdc.gov/resource/g653-rqe2.json?%24limit=1000&%24offset=2000		
+CDC_EXCESS_DEATHS_BY_WEEK	ADVANCES	2000	2001	2000	2000	7.1	https://data.cdc.gov/resource/r8kw-7aab.json?%24limit=1000&%24offset=2000		
+CDC_DEATHS_BY_COUNTY_WEEK	ADVANCES	2000	2001	2000	2000	6.0	https://data.cdc.gov/resource/ite7-j2w7.json?%24limit=1000&%24offset=2000		
+HHS_HOSPITAL_CAPACITY_FACILITY	ADVANCES	2000	2001	2000	2000	6.7	https://healthdata.gov/resource/anag-cw7u.json?%24limit=1000&%24select=*,(hospital_pk%20%7C%7C%20%27_%27%20%7C%7C%20collection_week)%20AS%20composite_id&%24offset=2000		
+HHS_HOSPITAL_CAPACITY_STATE	ADVANCES	2000	2001	2000	2000	7.0	https://healthdata.gov/resource/g62h-syeh.json?%24limit=1000&%24offset=2000		
+ENA_PATHOGEN_SARSCOV2_RUNS	STUCK	1000	1001	1000	1000	7.1	page 2 answered 400: https://www.ebi.ac.uk/ena/portal/api/search?result=read_run&query=tax_tree(2697049)&fields=run_accession,sample_accession,study_accession,country,location,collection_date,center_name,instrument_platform,library_strategy,first_public&format=json&limit=1000&offset=1000		
+ENA_PATHOGEN_MTB_RUNS	STUCK	1000	1001	1000	1000	4.4	page 2 answered 400: https://www.ebi.ac.uk/ena/portal/api/search?result=read_run&query=tax_tree(1773)&fields=run_accession,sample_accession,study_accession,country,location,collection_date,center_name,instrument_platform,first_public&format=json&limit=1000&offset=1000		
+ENA_PATHOGEN_INFLUENZA_SAMPLES	STUCK	1000	1001	1000	1000	8.6	page 2 answered 400: https://www.ebi.ac.uk/ena/portal/api/search?result=sample&query=tax_tree(11320)&fields=sample_accession,description,country,location,collection_date,center_name,host,isolate,strain,serotype&format=json&limit=1000&offset=1000		
+WHO_XMART_NCD_HYPERTENSION	ADVANCES	2000	2001	2000	2000	8.9	https://xmart-api-public.who.int/NCD/FACT_NCD_RISKFACTOR_HYPERTENSION?%24format=json&%24top=1000&%24orderby=_RecordID&%24skip=2000		
+WHO_XMART_TOBACCO_PREVALENCE	ADVANCES	2000	2001	2000	2000	7.6	https://xmart-api-public.who.int/TOBACCO/WHOTobPrev?%24format=json&%24top=1000&%24orderby=_RecordID&%24skip=2000		
+WHO_XMART_NCD_ALCOHOL	ADVANCES	2000	2001	2000	2000	8.3	https://xmart-api-public.who.int/NCD/FACT_NCD_ALCOHOL?%24format=json&%24top=1000&%24orderby=_RecordID&%24skip=2000		
+SI_GURS_CADASTRAL_MUN	ADVANCES	2000	2001	2000	2698	97.4	https://ipi.eprostor.gov.si/wfs-si-gurs-kn/wfs?service=WFS&version=2.0.0&request=GetFeature&typeNames=SI.GURS.KN:KATASTRSKE_OBCINE&count=1000&outputFormat=application/json&sortBy=KO_ID&startIndex=2000		
+WHO_XMART_WIISE_SURVEY_RESULTS	ADVANCES	2000	2001	2000	2000	8.7	https://xmart-api-public.who.int/WIISE/AD_SURVEYS_RESULTS?%24format=json&%24top=1000&%24orderby=_RecordID&%24skip=2000		
+WHO_XMART_WIISE_MNTE	ADVANCES	2000	2001	2000	2000	8.1	https://xmart-api-public.who.int/WIISE/AD_MNTE?%24format=json&%24top=1000&%24orderby=_RecordID&%24skip=2000		
+WHO_XMART_WIISE_HPV_ADMIN	ADVANCES	2000	2001	2000	2000	8.4	https://xmart-api-public.who.int/WIISE/AD_HPVADMINS?%24format=json&%24top=1000&%24orderby=_RecordID&%24skip=2000		
+WHO_XMART_FOODBORNE_BURDEN	ADVANCES	2000	2001	2000	2000	8.0	https://xmart-api-public.who.int/NUTRITION/FACT_FBD?%24format=json&%24top=1000&%24orderby=_RecordID&%24skip=2000		
+WHO_XMART_POPULATION_COUNT	ADVANCES	2000	2001	2000	2000	6.5	https://xmart-api-public.who.int/DEX_CMS/POP_COUNT?%24format=json&%24top=1000&%24skip=2000		
+UNHCR_ASYLUM_APPLICATIONS	ADVANCES	200	201	200	200	6.5	https://api.unhcr.org/population/v1/asylum-applications/?limit=100&yearFrom=2015&page=3		
+UNHCR_POPULATION_FOOTNOTES	ADVANCES	200	201	200	200	2.2	https://api.unhcr.org/population/v1/footnotes/?page=3		
+UK_LAND_REGISTRY_PPI	ADVANCES	200	201	200	200	2.4	https://landregistry.data.gov.uk/data/ppi/transaction-record.json?_pageSize=100&_page=2		
+WORLDBANK_INDICATOR_CATALOGUE	ADVANCES	1000	1001	1000	1000	2.8	https://api.worldbank.org/v2/indicator?format=json&per_page=500&page=3		
+BR_BCB_IFDATA_CADASTRO	FETCH_FAILED	1	1	0		2.7	BR_BCB_IFDATA_CADASTRO stored nothing: upstream answered 500	FETCH_FAILED	BR_BCB_IFDATA_CADASTRO stored nothing: upstream answered 500
+BR_CNES_ESTABELECIMENTOS	FETCH_FAILED	1	1	0		3.4	BR_CNES_ESTABELECIMENTOS stored nothing: the request failed at the transport level	FETCH_FAILED	BR_CNES_ESTABELECIMENTOS stored nothing: the request failed at the transport level
+CO_ANM_REGALIAS_VOLUMEN	ADVANCES	2000	2001	2000	2000	5.1	https://www.datos.gov.co/resource/r85m-vv6c.json?%24limit=1000&%24offset=2000		
+CO_SECOP_I_PROPONENTES	ADVANCES	2000	2001	2000	2000	5.5	https://www.datos.gov.co/resource/tauh-5jvn.json?%24limit=1000&%24select=*,:id&%24order=:id&%24offset=2000		
+CO_ANM_TITULOS_ANOTACIONES	ADVANCES	2000	2001	2000	2000	7.0	https://www.datos.gov.co/resource/si2v-pbq5.json?%24limit=1000&%24select=*,:id&%24order=:id&%24offset=2000		
+CO_SECOP_II_OFERTAS	ADVANCES	2000	2001	2000	2000	6.1	https://www.datos.gov.co/resource/wi7w-2nvm.json?%24limit=1000&%24select=*,:id&%24order=:id&%24offset=2000		
+CMS_HOSPITAL_HAI_MEASURES	ADVANCES	1000	1001	1000	172440	36.3	https://data.cms.gov/provider-data/api/1/datastore/query/77hc-ibv8/0?limit=500&offset=1000		
+BR_PNCP_CONTRATACOES	COMPLETES	20	21	20	20	1.9			
+CO_MEDICINA_LEGAL_DESAPARECIDOS	ADVANCES	2000	2001	2000	2000	6.4	https://www.datos.gov.co/resource/8hqm-7fdt.json?%24limit=1000&%24offset=2000		
+CO_CONTRALORIA_FUNCIONARIOS	ADVANCES	2000	2001	2000	2000	6.3	https://www.datos.gov.co/resource/7pn8-vpxh.json?%24limit=1000&%24offset=2000		
+CO_RETHUS_TALENTO_SALUD	ADVANCES	2000	2001	2000	2000	5.8	https://www.datos.gov.co/resource/my8c-6xkk.json?%24limit=1000&%24offset=2000		
+CO_REGALIAS_EJECUCION	ADVANCES	2000	2001	2000	2000	5.5	https://www.datos.gov.co/resource/g4qj-2p2e.json?%24limit=1000&%24offset=2000		
+BR_BCB_TAXAS_JUROS	ADVANCES	2000	2001	2000	2000	5.3	https://olinda.bcb.gov.br/olinda/servico/taxaJuros/versao/v2/odata/TaxasJurosMensalPorMes?%24top=1000&%24format=json&%24skip=2000		
+PE_SERNANP_ZONIFICACION	ADVANCES	2000	2001	2000	2000	5.8	https://geoservicios.sernanp.gob.pe/arcgis/rest/services/servicios_ogc/peru_sernanp_0213/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&resultRecordCount=1000&f=json&resultOffset=2000		
+EC_GOBEC_REGULACIONES	ADVANCES	500	501	500	500	2.9	https://www.gob.ec/api/v1/regulaciones?page=3		
+PY_VUE_REGISTRO_EMPRESAS	ADVANCES	200	201	200	598422	3.9	https://vueapp.vue.gov.py/datos_abiertos_backend/api/registro?pageSize=100&page=3		
+PY_VUE_MIPYMES	ADVANCES	200	201	200	611598	3.8	https://vueapp.vue.gov.py/datos_abiertos_backend/api/mipymes?pageSize=100&page=3		
+SV_COMPRASAL_ADJUDICACIONES	ADVANCES	200	201	200	200	23.4	https://www.comprasal.gob.sv/api/v1/publico/obtener/procesos/publicos?per_page=100&page=3		
+CR_HEREDIA_PATENTES	ADVANCES	2000	2001	2000	2000	25.4	https://sig.heredia.go.cr/server/rest/services/Patentes/PatentesVista/MapServer/0/query?where=1%3D1&outFields=*&f=json&returnGeometry=false&resultRecordCount=1000&resultOffset=2000		
+CO_REGISTRADURIA_RESULTADOS_2018	ADVANCES	2000	2001	2000	2000	4.1	https://www.datos.gov.co/resource/vkjr-c6fe.json?%24limit=1000&%24select=*,:id&%24order=:id&%24offset=2000		
+HN_ONCAE_CIRCULARES	ADVANCES	200	201	200	200	35.1	https://oncae.gob.hn/wp-json/wp/v2/knowledgebase?per_page=100&offset=200		
+IETF_IPR_HOLDER_DISCLOSURES	ADVANCES	200	201	200	200	32.1	https://datatracker.ietf.org/api/v1/ipr/holderiprdisclosure/?format=json&limit=100&offset=200		
+LC_STATISTICS_RELEASES	ADVANCES	199	200	199	199	62.2	https://stats.gov.lc/wp-json/wp/v2/media?media_type=application&per_page=100&offset=200		
+IETF_IPR_DOCUMENT_LINKS	ADVANCES	200	201	200	200	1.7	https://datatracker.ietf.org/api/v1/ipr/iprdocrel/?format=json&limit=100&offset=200		
+IETF_IPR_GENERIC_DISCLOSURES	ADVANCES	200	201	200	200	31.7	https://datatracker.ietf.org/api/v1/ipr/genericiprdisclosure/?format=json&limit=100&offset=200		
+IETF_IPR_EVENTS	ADVANCES	200	201	200	200	1.8	https://datatracker.ietf.org/api/v1/ipr/iprevent/?format=json&limit=100&offset=200		
+IETF_LIAISON_STATEMENTS	ADVANCES	200	201	200	200	1.9	https://datatracker.ietf.org/api/v1/liaisons/liaisonstatement/?format=json&limit=100&offset=200		
+IETF_DRAFT_SUBMISSIONS	ADVANCES	200	201	200	200	2.2	https://datatracker.ietf.org/api/v1/submit/submission/?format=json&limit=100&offset=200		
+IETF_DOCUMENT_RELATIONS	ADVANCES	200	201	200	200	1.6	https://datatracker.ietf.org/api/v1/doc/relateddocument/?format=json&limit=100&offset=200		
+NL_OVERHEID_SRU_OFFICIAL	ADVANCES	200	201	200	200	4.0	https://repository.overheid.nl/sru?operation=searchRetrieve&version=2.0&query=c.product-area==officielepublicaties&maximumRecords=100&startRecord=201		
+AR_DATOS_BAHIA_BLANCA	ADVANCES	200	201	200	222	47.5	https://datos.bahia.gob.ar/api/3/action/package_search?rows=100&sort=id%20asc&start=200		
+NL_OVERHEID_SRU_TUCHTRECHT	ADVANCES	200	201	200	200	3.5	https://repository.overheid.nl/sru?operation=searchRetrieve&version=2.0&query=c.product-area==tuchtrecht&maximumRecords=100&startRecord=201		
+NI_TELCOR_PUBLICACIONES	ADVANCES	153	154	153	153	55.1	https://www.telcor.gob.ni/wp-json/wp/v2/media?media_type=application&per_page=100&offset=200		
+NL_OVERHEID_SRU_LOKAAL	ADVANCES	200	201	200	200	3.4	https://repository.overheid.nl/sru?operation=searchRetrieve&version=2.0&query=c.product-area==lokalebekendmakingen&maximumRecords=100&startRecord=201		
+UK_GAZETTE_WILLS_PROBATE	ADVANCES	200	201	200	200	3.5	https://www.thegazette.co.uk/wills-and-probate/notice/data.json?results-page-size=100&results-page=3		
+UK_GAZETTE_EDINBURGH	ADVANCES	200	201	200	200	4.6	https://www.thegazette.co.uk/all-notices/notice/data.json?edition=edinburgh&results-page-size=100&results-page=3		
+UK_LANDREG_PPI_ADDRESS	ADVANCES	200	201	200	200	2.1	https://landregistry.data.gov.uk/data/ppi/address.json?_pageSize=100&_page=2		
+IETF_GROUP_ROLES	ADVANCES	200	201	200	200	1.5	https://datatracker.ietf.org/api/v1/group/role/?format=json&limit=100&offset=200		
+UK_GAZETTE_BELFAST	ADVANCES	200	201	200	200	4.7	https://www.thegazette.co.uk/all-notices/notice/data.json?edition=belfast&results-page-size=100&results-page=3		
+UK_GAZETTE_CORPORATE_INSOLVENCY	ADVANCES	200	201	200	200	4.4	https://www.thegazette.co.uk/all-notices/notice/data.json?noticetypes=2450&results-page-size=100&results-page=3		
+IETF_IESG_BALLOT_POSITIONS	ADVANCES	200	201	200	200	2.1	https://datatracker.ietf.org/api/v1/doc/ballotpositiondocevent/?format=json&limit=100&offset=200		
+IETF_MEETING_SESSIONS	ADVANCES	200	201	200	200	2.9	https://datatracker.ietf.org/api/v1/meeting/session/?format=json&limit=100&offset=200		
+FOI_FRAGDENSTAAT_DE	ADVANCES	100	101	100	100	2.7	https://fragdenstaat.de/api/v1/request/?limit=50&offset=100		
+NL_OVERHEID_SRU_SGD	ADVANCES	200	201	200	200	4.1	https://repository.overheid.nl/sru?operation=searchRetrieve&version=2.0&query=c.product-area==sgd&maximumRecords=100&startRecord=201		
+FOI_FRAGDENSTAAT_AT	ADVANCES	100	101	100	100	3.0	https://fragdenstaat.at/api/v1/request/?limit=50&offset=100		
+UK_GAZETTE_ALL_NOTICES	ADVANCES	200	201	200	200	4.9	https://www.thegazette.co.uk/all-notices/notice/data.json?results-page-size=100&results-page=3		
+PORTWATCH_MARITIME_LINKS	ADVANCES	2000	2001	2000	2000	5.4	https://services9.arcgis.com/weJ1QsnbMYJlCHdG/arcgis/rest/services/Spillover_Simulator_Maritime_Connections/FeatureServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=1000&resultOffset=2000		
+IETF_IPR_THIRDPARTY_DISCLOSURES	ADVANCES	200	201	200	200	31.7	https://datatracker.ietf.org/api/v1/ipr/thirdpartyiprdisclosure/?format=json&limit=100&offset=200		
+KAPSARC_SAUDI_IO_TABLE	FETCH_FAILED	1	1	0		20.7	KAPSARC_SAUDI_IO_TABLE stored nothing: the request failed at the transport level	ADVANCES	https://datasource.kapsarc.org/api/explore/v2.1/catalog/datasets/input-output-table-at-current-prices/records?limit=100&offset=200
+QATAR_PSA_MAJOR_ROADS	ADVANCES	2000	2001	2000	2000	5.0	https://services7.arcgis.com/mffQJB8rpVa5We20/arcgis/rest/services/Major_Roads/FeatureServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=1000&resultOffset=2000		
+KAPSARC_SAUDI_LABOUR_ADMIN	FETCH_FAILED	1	1	0		26.0	KAPSARC_SAUDI_LABOUR_ADMIN stored nothing: the request failed at the transport level	FETCH_FAILED	KAPSARC_SAUDI_LABOUR_ADMIN stored nothing: the request failed at the transport level
+KAPSARC_JODI_CHINA_OIL	FETCH_FAILED	1	1	0		26.2	KAPSARC_JODI_CHINA_OIL stored nothing: the request failed at the transport level	FETCH_FAILED	KAPSARC_JODI_CHINA_OIL stored nothing: the request failed at the transport level
+QATAR_DISTRICT_COOLING	FETCH_FAILED	1	1	0		26.4	QATAR_DISTRICT_COOLING stored nothing: the request failed at the transport level	ADVANCES	https://www.data.gov.qa/api/explore/v2.1/catalog/datasets/district-cooling-plants-by-economic-activity-water-source-and-quantity-used-m3/records?limit=100&offset=200
+QATAR_HOMICIDE_SDG	FETCH_FAILED	1	1	0		25.8	QATAR_HOMICIDE_SDG stored nothing: the request failed at the transport level	FETCH_FAILED	QATAR_HOMICIDE_SDG stored nothing: the request failed at the transport level
+TELAVIV_BUSINESSES	ADVANCES	2000	2001	2000	2000	5.0	https://gisn.tel-aviv.gov.il/arcgis/rest/services/IView2/MapServer/925/query?where=1%3D1&outFields=*&f=json&resultRecordCount=1000&resultOffset=2000		
+IZMIR_VEHICLE_COUNTS	ADVANCES	200	201	200	200	2.4	https://acikveri.bizizmir.com/api/3/action/datastore_search?resource_id=25866cc4-298a-4ee7-bfd3-719ea7f530b2&limit=100&offset=200		
+IZMIR_ARTERIAL_SPEEDS	ADVANCES	200	201	200	200	2.5	https://acikveri.bizizmir.com/api/3/action/datastore_search?resource_id=a3bd880f-dfc6-4f65-bbfd-5fcc998268c3&limit=100&offset=200		
+IZMIR_ROADS_BY_DISTRICT	ADVANCES	200	201	200	200	2.4	https://acikveri.bizizmir.com/api/3/action/datastore_search?resource_id=9bfbf3cd-ab9d-4fdc-8da8-3537467138ae&limit=100&offset=200		
+IZMIR_BUILDINGS_BY_NEIGHBOURHOOD	ADVANCES	200	201	200	200	2.4	https://acikveri.bizizmir.com/api/3/action/datastore_search?resource_id=54af6862-2d36-48d0-838f-a42133e8b943&limit=100&offset=200		
+TELAVIV_BUILDING_PERMITS	ADVANCES	2000	2001	2000	2000	11.4	https://gisn.tel-aviv.gov.il/arcgis/rest/services/IView2/MapServer/772/query?where=1%3D1&outFields=*&f=json&resultRecordCount=1000&resultOffset=2000		
+QATAR_MME_IZBAH	ADVANCES	2000	2001	2000	2000	14.9	https://gis.mme.gov.qa/giswai/rest/services/MCIT/IZBAH/MapServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=1000&resultOffset=2000		
+IZMIR_OPENDATA_BULK	ADVANCES	200	201	200	200	10.4	https://acikveri.bizizmir.com/api/3/action/current_package_list_with_resources?limit=100&offset=200		
+STAC_SWISSTOPO_SWISSALTI3D_ITEMS	ADVANCES	200	201	200	200	3.7	https://data.geo.admin.ch/api/stac/v0.9/collections/ch.swisstopo.swissalti3d/items?cursor=cD1zd2lzc2FsdGkzZF8yMDE5XzI0OTgtMTE0Mw%3D%3D&limit=100		
+STAC_EODC_GFM_ITEMS	ADVANCES	200	201	200	5618762	5.8	https://stac.eodc.eu/api/v1/collections/GFM/items?limit=100&token=next:GFM:ENSEMBLE_FLOOD_20261022T033521_VV_EU020M_E069N030T3		
+STAC_TERRABYTE_SENTINEL1_GRD_ITEMS	ADVANCES	200	201	200	200	4.9	https://stac.terrabyte.lrz.de/public/api/collections/sentinel-1-grd/items?limit=100&token=next:sentinel-1-grd:S1C_IW_GRDH_1SDV_20261022T015923_20261022T015948_009991_013ED8_1ABA		
+STAC_EODATAHUB_UK_COLLECTIONS	ADVANCES	20	21	20	20	1.8	https://eodatahub.org.uk/api/catalogue/stac/collections?token=WyJlb2Npcy1sc3QtczNiLWRheSJd		
+ISTANBUL_OPENDATA_BULK	FETCH_FAILED	1	1	0		14.1	ISTANBUL_OPENDATA_BULK stored nothing: the request failed at the transport level	FETCH_FAILED	ISTANBUL_OPENDATA_BULK stored nothing: the request failed at the transport level
+CMR_STAC_ASF_COLLECTIONS	ADVANCES	100	101	100	100	2.8	https://cmr.earthdata.nasa.gov/stac/ASF/collections?cursor=eyJqc29uIjoiWzAuMCwwLjAsXCJTRU5USU5FTC0xQ19NRVRBX09DTlwiLFwiMVwiLDM0ODQ2NzA1NTYsNF0iLCJ1bW0iOiJbMC4wLDAuMCxcIlNFTlRJTkVMLTFDX01FVEFfT0NOXCIsXCIxXCIsMzQ4NDY3MDU1Niw0XSJ9&limit=50		
+CMR_STAC_GESDISC_COLLECTIONS	ADVANCES	100	101	100	100	3.1	https://cmr.earthdata.nasa.gov/stac/GES_DISC/collections?cursor=eyJqc29uIjoiWzAuMCw3MjAwLjAsXCJPTUJST1wiLFwiNFwiLDQwODU0NTUwMTUsMTJdIiwidW1tIjoiWzAuMCw3MjAwLjAsXCJPTUJST1wiLFwiNFwiLDQwODU0NTUwMTUsMTJdIn0%3D&limit=50		
+BGS_AGS_BOREHOLE_INDEX	ADVANCES	200	201	200	75134	2.0	https://ogcapi.bgs.ac.uk/collections/agsboreholeindex/items?f=json&offset=200&limit=100		
+BGS_ONSHORE_BOREHOLE_INDEX	ADVANCES	200	201	200	1358851	3.4	https://ogcapi.bgs.ac.uk/collections/onshoreboreholeindex/items?f=json&offset=200&limit=100		
+BGS_MINE_PLANS	ADVANCES	200	201	200	131768	2.7	https://ogcapi.bgs.ac.uk/collections/mine_plans/items?f=json&offset=200&limit=100		
+BGS_WORLD_MINERAL_STATISTICS	ADVANCES	200	201	200	410021	3.2	https://ogcapi.bgs.ac.uk/collections/world-mineral-statistics/items?f=json&offset=200&limit=100		
+BGS_AEROMAGNETIC_SURVEY	ADVANCES	200	201	200	541508	2.6	https://ogcapi.bgs.ac.uk/collections/aeromag/items?f=json&offset=200&limit=100		
+BGS_HISTORICAL_EARTHQUAKES	ADVANCES	200	201	200	200	10.2	https://ogcapi.bgs.ac.uk/collections/historicalearthquakes/items?f=json&offset=200&limit=100		
+BGS_GENERIC_SAMPLES_REGISTER	ADVANCES	200	201	200	791803	3.4	https://ogcapi.bgs.ac.uk/collections/generic-samples-register/items?f=json&offset=200&limit=100		
+CMR_STAC_OB_DAAC_COLLECTIONS	ADVANCES	100	101	100	100	2.2	https://cmr.earthdata.nasa.gov/stac/OB_DAAC/collections?cursor=eyJqc29uIjoiWzAuMCwwLjAsXCJDb0pldFwiLFwiMFwiLDE2MzMzNjAxOTMsNDZdIiwidW1tIjoiWzAuMCwwLjAsXCJDb0pldFwiLFwiMFwiLDE2MzMzNjAxOTMsNDZdIn0%3D&limit=50		
+CMR_STAC_GHRC_DAAC_COLLECTIONS	ADVANCES	100	101	100	100	2.2	https://cmr.earthdata.nasa.gov/stac/GHRC_DAAC/collections?cursor=eyJqc29uIjoiWzAuMCwwLjAsXCJjb3NtaXJ2MndoeW1zaWVcIixcIjJcIiw0MjE3MzIwMjcxLDNdIiwidW1tIjoiWzAuMCwwLjAsXCJjb3NtaXJ2MndoeW1zaWVcIixcIjJcIiw0MjE3MzIwMjcxLDNdIn0%3D&limit=50		
+BGS_OFFSHORE_GEOPHYSICAL_LINES	ADVANCES	200	201	200	23756	9.0	https://ogcapi.bgs.ac.uk/collections/offshore-geophysical-survey-lines/items?f=json&offset=200&limit=100		
+STAC_TERRABYTE_SENTINEL2_ITEMS	ADVANCES	200	201	200	200	4.1	https://stac.terrabyte.lrz.de/public/api/collections/sentinel-2-c1-l2a/items?limit=100&token=next:sentinel-2-c1-l2a:S2B_MSIL2A_20261022T033809_N0513_R061_T49TEH_20261022T072633		
+STAC_TERRABYTE_LANDSAT_ITEMS	ADVANCES	200	201	200	200	5.3	https://stac.terrabyte.lrz.de/public/api/collections/landsat-ot-c2-l2/items?limit=100&token=next:landsat-ot-c2-l2:LC09_L2SP_223065_20261011_20261012_02_T1		
+MAPROULETTE_CHALLENGES	ADVANCES	200	201	200	200	31.8	https://maproulette.org/api/v2/challenges?limit=100&page=200		
+TRAFICOM_AMATEUR_CALLSIGN	ADVANCES	2000	2001	2000	2000	5.1	https://opendata.traficom.fi/api/v1/RadioamatoorienKutsumerkit?$top=1000&$skip=2000		
+TRAFICOM_FREQ_TABLE	ADVANCES	2000	2001	2000	2000	6.5	https://opendata.traficom.fi/api/v1/Taajuusjakotaulukko?$top=1000&$skip=2000		
+TRAFICOM_RADIO_TX	ADVANCES	2000	2001	2000	2000	11.5	https://opendata.traficom.fi/api/v1/Radioasematiedot?$top=1000&$skip=2000		
+FCC_EAS_GRANTEE_REG	ADVANCES	2000	2001	2000	2000	4.0	https://opendata.fcc.gov/resource/3b3k-34jp.json?$limit=1000&$order=:id&$offset=2000		
+ANFR_MARITIME_STATIONS	FETCH_FAILED	1	1	0		2.0	ANFR_MARITIME_STATIONS stored nothing: upstream answered 503	FETCH_FAILED	ANFR_MARITIME_STATIONS stored nothing: upstream answered 503
+ANFR_EMF_PROBE_MEASUREMENTS	FETCH_FAILED	1	1	0		2.0	ANFR_EMF_PROBE_MEASUREMENTS stored nothing: upstream answered 503	FETCH_FAILED	ANFR_EMF_PROBE_MEASUREMENTS stored nothing: upstream answered 503
+BR_DADOS_PERNAMBUCO	ADVANCES	40	42	40	47	183.6	https://dados.pe.gov.br/api/3/action/package_search?rows=20&sort=id%20asc&start=40		
+IT_FVG_MOBILE_SITES	ADVANCES	2000	2001	2000	2000	7.2	https://www.dati.friuliveneziagiulia.it/resource/28hy-b3b2.json?$select=DISTINCT%20impianto,operatore,data,stato_attivazione,comune,provincia,etrs89est,etrs89nord&$limit=1000&$offset=2000		
+CH_BAKOM_BROADCAST_TX	ADVANCES	100	101	100	100	18.5	https://api3.geo.admin.ch/rest/services/api/MapServer/identify?geometryType=esriGeometryEnvelope&geometry=2480000,1070000,2840000,1300000&layers=all:ch.bakom.radio-fernsehsender&mapExtent=2480000,1070000,2840000,1300000&imageDisplay=500,600,96&tolerance=0&sr=2056&geometryFormat=geojson&limit=50&offset=100		
+ACMA_RRL_DEVICE_REGISTER	ADVANCES	4000	4001	4000	4000	10.4	https://portal.data.nsw.gov.au/arcgis/rest/services/Hosted/Australian_Communication_and_Media_Authority_Data/FeatureServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=2000&resultOffset=4000		
+CH_BAKOM_MOBILE_SITES	ADVANCES	100	101	100	100	16.2	https://api3.geo.admin.ch/rest/services/api/MapServer/identify?geometryType=esriGeometryEnvelope&geometry=2480000,1070000,2840000,1300000&layers=all:ch.bakom.standorte-mobilfunkanlagen&mapExtent=2480000,1070000,2840000,1300000&imageDisplay=500,600,96&tolerance=0&sr=2056&geometryFormat=geojson&limit=50&offset=100		
+IMF_PORTWATCH_AIRPORTS	ADVANCES	2000	2001	2000	2000	4.1	https://services9.arcgis.com/weJ1QsnbMYJlCHdG/ArcGIS/rest/services/airports_latest/FeatureServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=1000&resultOffset=2000		
+IT_FVG_EMF_MONITORING	ADVANCES	2000	2001	2000	2000	7.8	https://www.dati.friuliveneziagiulia.it/resource/g844-avf4.json?$limit=1000&$order=:id&$offset=2000		
+IMF_PORTWATCH_FR24_AIRPORTS	ADVANCES	2000	2001	2000	2000	5.6	https://services9.arcgis.com/weJ1QsnbMYJlCHdG/ArcGIS/rest/services/FR24_airports/FeatureServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=1000&resultOffset=2000		
+FAA_ARCGIS_RUNWAYS	ADVANCES	1000	1001	1000	1000	3.6	https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Runways/FeatureServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=500&resultOffset=1000		
+IMF_PORTWATCH_PORT_SPILLOVERS	ADVANCES	2000	2001	2000	2000	5.5	https://services9.arcgis.com/weJ1QsnbMYJlCHdG/ArcGIS/rest/services/spillovers_port_level_impact/FeatureServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=1000&resultOffset=2000		
+FAA_ARCGIS_NAVAIDS	ADVANCES	1000	1001	1000	1000	3.4	https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/NAVAIDSystem/FeatureServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=500&resultOffset=1000		
+FAA_ARCGIS_MILITARY_TRAINING_ROUTES	ADVANCES	1000	1001	1000	1000	3.4	https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/MTRSegment/FeatureServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=500&resultOffset=1000		
+FAA_ARCGIS_OBSTACLES	ADVANCES	1000	1001	1000	1000	3.3	https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Digital_Obstacle_File/FeatureServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=500&resultOffset=1000		
+FAA_ARCGIS_SPECIAL_USE_AIRSPACE	ADVANCES	1000	1001	1000	1000	5.7	https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Special_Use_Airspace/FeatureServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=500&resultOffset=1000		
+FAA_ARCGIS_US_AIRPORTS	ADVANCES	1000	1001	1000	1000	3.7	https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/US_Airport/FeatureServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=500&resultOffset=1000		
+BTS_T100_SEGMENT_CARRIER	ADVANCES	2000	2001	2000	2000	6.7	https://data.transportation.gov/resource/q4tb-tbff.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+FRA_RAILROAD_REFERENCE	ADVANCES	2000	2001	2000	2000	4.6	https://data.transportation.gov/resource/ks5j-3hdj.json?$limit=1000&$order=:id&$offset=2000		
+FRA_RAIL_EQUIPMENT_ACCIDENTS	ADVANCES	2000	2001	2000	2000	8.3	https://data.transportation.gov/resource/jm8x-ccxs.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+FMCSA_CARRIER_CENSUS	ADVANCES	2000	2001	2000	2000	4.9	https://data.transportation.gov/resource/kjg3-diqy.json?$limit=1000&$order=:id&$offset=2000		
+FRA_GRADE_CROSSING_INCIDENTS	ADVANCES	2000	2001	2000	2000	9.8	https://data.transportation.gov/resource/uwah-u9bn.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+FMCSA_MOTUS_AUTHORITY_HISTORY	ADVANCES	2000	2001	2000	2000	5.5	https://data.transportation.gov/resource/inys-ebih.json?$limit=1000&$order=:id&$offset=2000		
+CFS_HAZMAT_FLOWS	ADVANCES	2000	2001	2000	2000	6.6	https://data.transportation.gov/resource/dkgi-gbeh.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+FRA_CROSSING_INVENTORY	ADVANCES	2000	2001	2000	2000	13.1	https://data.transportation.gov/resource/epxt-h7dt.json?$limit=1000&$order=:id&$offset=2000		
+NY_DOS_FILING_STOCK	ADVANCES	2000	2001	2000	2000	5.6	https://data.ny.gov/resource/kiwr-v7e8.json?$limit=1000&$order=:id&$offset=2000		
+CFS_EXPORT_FLOWS	ADVANCES	2000	2001	2000	2000	6.3	https://data.transportation.gov/resource/qq62-cjjy.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+NY_DOS_CONSTITUENT_ENTITIES	ADVANCES	2000	2001	2000	2000	5.5	https://data.ny.gov/resource/dnbf-xifz.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+NY_LOBBYIST_DISCLOSURES	ADVANCES	2000	2001	2000	2000	6.0	https://data.ny.gov/resource/djsm-9cw7.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+NY_LOBBYIST_REGISTRATIONS	ADVANCES	2000	2001	2000	2000	6.6	https://data.ny.gov/resource/se5j-cmbb.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+NY_LOBBYING_CLIENT_DISCLOSURES	ADVANCES	2000	2001	2000	2000	6.3	https://data.ny.gov/resource/8bmh-tuz3.json?$limit=1000&$order=:id&$offset=2000		
+NY_STATE_TITLE_SALARY	ADVANCES	2000	2001	2000	2000	6.3	https://data.ny.gov/resource/t3vp-5tka.json?$limit=1000&$order=:id&$offset=2000		
+NY_AUTHORITY_PROCUREMENT	ADVANCES	2000	2001	2000	2000	5.8	https://data.ny.gov/resource/ehig-g5x3.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+NY_CANNABIS_LICENSES	COMPLETES	698	698	698		2.4	no truncation notice: the walk ended inside the cap		
+NY_LIQUOR_ACTIVE_LICENSES	ADVANCES	2000	2001	2000	2000	5.1	https://data.ny.gov/resource/9s3h-dpkz.json?$limit=1000&$order=:id&$offset=2000		
+NY_REAL_ESTATE_APPRAISERS	ADVANCES	2000	2001	2000	2000	4.9	https://data.ny.gov/resource/3nr4-s9yt.json?$limit=1000&$order=:id&$offset=2000		
+NY_OIL_GAS_WELLS	ADVANCES	2000	2001	2000	2000	8.0	https://data.ny.gov/resource/szye-wmt3.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+NY_FOOD_SAFETY_RATINGS	ADVANCES	2000	2001	2000	2000	4.6	https://data.ny.gov/resource/d6dy-3h7r.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+NY_OIL_GAS_PRODUCTION	ADVANCES	2000	2001	2000	2000	13.5	https://data.ny.gov/resource/mxea-iw3u.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+CO_LOBBYIST_CLIENTS	ADVANCES	2000	2001	2000	2000	6.7	https://data.colorado.gov/resource/vp65-spyn.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+CO_CHARITY_REGISTRATIONS	ADVANCES	2000	2001	2000	2000	7.9	https://data.colorado.gov/resource/37wu-kn3g.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+NY_PROPERTY_ASSESSMENT_ROLLS	ADVANCES	2000	2001	2000	2000	8.6	https://data.ny.gov/resource/7vem-aaz7.json?$limit=1000&$order=:id&$offset=2000		
+CO_LOBBYIST_INCOME	ADVANCES	2000	2001	2000	2000	6.5	https://data.colorado.gov/resource/dxfk-9ifj.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+CO_LOBBYIST_EXPENDITURES	ADVANCES	2000	2001	2000	2000	6.2	https://data.colorado.gov/resource/synw-se9p.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+CO_REAL_ESTATE_LICENSEES	ADVANCES	2000	2001	2000	2000	6.4	https://data.colorado.gov/resource/4zse-6bnw.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+CO_TOBACCO_LICENSES	ADVANCES	2000	2001	2000	2000	6.5	https://data.colorado.gov/resource/ejz2-rwds.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+CO_CHILD_CARE_FACILITIES	ADVANCES	2000	2001	2000	2000	6.6	https://data.colorado.gov/resource/a9rr-k8mu.json?$limit=1000&$order=:id&$offset=2000		
+CO_LIQUOR_LICENSES	ADVANCES	2000	2001	2000	2000	7.6	https://data.colorado.gov/resource/ier5-5ms2.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+CO_PETROLEUM_RELEASES	ADVANCES	2000	2001	2000	2000	4.3	https://data.colorado.gov/resource/iimu-7683.json?$limit=1000&$order=:id&$offset=2000		
+WA_PDC_INDEPENDENT_EXPENDITURES	ADVANCES	2000	2001	2000	2000	7.9	https://data.wa.gov/resource/67cp-h962.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+WA_LOBBYIST_AGENT_EMPLOYERS	ADVANCES	2000	2001	2000	2000	7.0	https://data.wa.gov/resource/e7sd-jbuy.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+CO_REGULATED_STORAGE_TANKS	ADVANCES	2000	2001	2000	2000	9.4	https://data.colorado.gov/resource/iazk-c8xj.json?$limit=1000&$order=:id&$offset=2000		
+WA_LOBBYIST_COMPENSATION	ADVANCES	2000	2001	2000	2000	6.5	https://data.wa.gov/resource/9nnw-c693.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+WA_PDC_ENFORCEMENT_CASES	ADVANCES	2000	2001	2000	2000	9.7	https://data.wa.gov/resource/a4ma-dq6s.json?$limit=1000&$order=:id&$offset=2000		
+WA_CONTRACTOR_PRINCIPALS	ADVANCES	2000	2001	2000	2000	5.5	https://data.wa.gov/resource/4xk5-x9j6.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+WA_CONTRACTOR_INSURANCE	ADVANCES	2000	2001	2000	2000	6.8	https://data.wa.gov/resource/ciwg-agsx.json?$limit=1000&$order=:id&$offset=2000		
+WA_CONTRACTOR_BONDS	ADVANCES	2000	2000	1999	2000	6.2	https://data.wa.gov/resource/bzff-4fmt.json?$limit=1000&$order=:id&$offset=2000		
+WA_STATEWIDE_CONTRACT_SALES	ADVANCES	2000	2001	2000	2000	6.8	https://data.wa.gov/resource/n8q6-4twj.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+WA_AGENCY_CONTRACTS	ADVANCES	2000	2001	2000	2000	7.4	https://data.wa.gov/resource/6fx9-ncas.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+WA_WEBS_VENDORS	ADVANCES	2000	2001	2000	2000	6.0	https://data.wa.gov/resource/3kwi-7zsj.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+WA_CRIME_NIBRS	ADVANCES	2000	2001	2000	2000	6.5	https://data.wa.gov/resource/vvfu-ry7f.json?$limit=1000&$order=:id&$offset=2000		
+TX_REAL_ESTATE_LICENSEES	ADVANCES	2000	2001	2000	2000	6.3	https://data.texas.gov/resource/s7ft-44qi.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+TX_TABC_LICENSES	ADVANCES	2000	2001	2000	2000	6.0	https://data.texas.gov/resource/7hf9-qc9f.json?$limit=1000&$order=:id&$offset=2000		
+TX_HOTEL_TAX_PERMITS	ADVANCES	2000	2001	2000	2000	6.1	https://data.texas.gov/resource/hdzd-884n.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+TX_MIXED_BEVERAGE_PERMITS	ADVANCES	2000	2001	2000	2000	6.3	https://data.texas.gov/resource/8f4g-cpk9.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+TX_RRC_WELL_BOTTOM_LOCATIONS	ADVANCES	2000	2001	2000	2000	5.6	https://data.texas.gov/resource/uumf-5r4y.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+TX_TCEQ_NOTICES_OF_ENFORCEMENT	ADVANCES	2000	1998	1997	2000	6.2	https://data.texas.gov/resource/rua3-iswk.json?$limit=1000&$order=:id&$offset=2000		
+TX_TCEQ_VIOLATION_CITATIONS	ADVANCES	2000	2001	2000	2000	6.0	https://data.texas.gov/resource/gyd4-wuys.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+TX_TCEQ_COMPLAINTS	ADVANCES	2000	2001	2000	2000	7.8	https://data.texas.gov/resource/tdzs-qqjn.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+TX_INSURANCE_COMPLAINTS	ADVANCES	2000	2001	2000	2000	6.3	https://data.texas.gov/resource/ubdr-4uff.json?$limit=1000&$order=:id&$offset=2000		
+TX_PUC_INFORMAL_COMPLAINTS	ADVANCES	2000	2001	2000	2000	5.4	https://data.texas.gov/resource/cxnx-7tf4.json?$limit=1000&$order=:id&$offset=2000		
+OR_ACTIVE_NONPROFIT_CORPORATIONS	ADVANCES	2000	2001	2000	2000	6.0	https://data.oregon.gov/resource/8kyv-b2kw.json?$limit=1000&$order=:id&$offset=2000		
+OR_CCB_CONTRACTOR_LICENSES	ADVANCES	2000	2001	2000	2000	5.6	https://data.oregon.gov/resource/g77e-6bhs.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+OR_OLCC_LIQUOR_LICENSES	ADVANCES	2000	2001	2000	2000	6.1	https://data.oregon.gov/resource/srxe-qkm2.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+OR_OLCC_CANNABIS_LICENSES	ADVANCES	2000	2001	2000	2000	6.5	https://data.oregon.gov/resource/q32u-cmam.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+OR_STATE_SALARIES	ADVANCES	2000	2001	2000	2000	5.6	https://data.oregon.gov/resource/4cmg-5yp4.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+OR_BCD_TRADE_LICENSES	ADVANCES	2000	2001	2000	2000	10.1	https://data.oregon.gov/resource/vhbr-cuaq.json?$limit=1000&$order=:id&$offset=2000		
+OR_PROCUREMENT_ORDERS	ADVANCES	2000	2001	2000	2000	6.6	https://data.oregon.gov/resource/qyug-f2km.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+OPENAERIALMAP_IMAGERY	ADVANCES	200	202	200	200	145.6	https://api.openaerialmap.org/meta?limit=100&order_by=_id&sort=asc&page=3		
+CT_SPILL_INCIDENTS	ADVANCES	2000	2001	2000	2000	6.1	https://data.ct.gov/resource/ffju-s5c5.json?$limit=1000&$order=:id&$offset=2000		
+CT_BUSINESS_FILING_HISTORY	ADVANCES	2000	2001	2000	2000	6.6	https://data.ct.gov/resource/ah3s-bes7.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+CT_INSURANCE_COMPLAINTS	ADVANCES	2000	2001	2000	2000	6.7	https://data.ct.gov/resource/t64r-mt64.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+PA_NON_DEPOSITORY_LICENSEES	ADVANCES	2000	2001	2000	2000	6.8	https://data.pa.gov/resource/tyxc-jyug.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+DE_PROFESSIONAL_LICENSING	ADVANCES	2000	2001	2000	2000	6.6	https://data.delaware.gov/resource/pjnv-eaih.json?$limit=1000&$order=:id&$offset=2000		
+DE_CENTRAL_CONTRACT_SPEND	ADVANCES	2000	2001	2000	2000	5.6	https://data.delaware.gov/resource/sifm-293u.json?$limit=1000&$order=:id&$offset=2000		
+PA_OPIOID_SEIZURES_ARRESTS	ADVANCES	2000	2001	2000	2000	10.4	https://data.pa.gov/resource/wmgc-6qvd.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+PA_NEW_WELL_INSPECTIONS	ADVANCES	2000	2001	2000	2000	8.9	https://data.pa.gov/resource/f8fx-8zip.json?$limit=1000&$order=:id&$offset=2000		
+PA_FOOD_INSPECTIONS	ADVANCES	2000	2001	2000	2000	12.6	https://data.pa.gov/resource/etb6-jzdg.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+DE_FOOD_INSPECTION_VIOLATIONS	ADVANCES	2000	2001	2000	2000	8.1	https://data.delaware.gov/resource/384s-wygj.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+MD_LOBBYIST_ACTIVITY_REPORTS	ADVANCES	2000	2001	2000	2000	6.7	https://opendata.maryland.gov/resource/p6kr-u5k5.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+MD_STATE_PAYMENTS	ADVANCES	2000	2001	2000	2000	6.0	https://opendata.maryland.gov/resource/7syw-q4cy.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+DE_PUBLIC_CRASH_DATA	ADVANCES	2000	2001	2000	2000	9.7	https://data.delaware.gov/resource/827n-m6xc.json?$limit=1000&$order=:id&$offset=2000		
+MD_LOBBYIST_CAMPAIGN_CONTRIBUTIONS	ADVANCES	2000	2001	2000	2000	8.3	https://opendata.maryland.gov/resource/g76a-nfxj.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+MO_ALCOHOL_LICENSES	ADVANCES	2000	2001	2000	2000	6.5	https://data.mo.gov/resource/yyhn-562y.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+MD_MDE_WATER_VIOLATIONS	ADVANCES	2000	2001	2000	2000	10.4	https://opendata.maryland.gov/resource/jwx7-mgcz.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+DE_WELL_PERMITS	ADVANCES	2000	2001	2000	2000	14.9	https://data.delaware.gov/resource/2655-qn8j.json?$limit=1000&$order=:id&$offset=2000		
+MO_OIL_GAS_PERMITS	ADVANCES	2000	2001	2000	2000	8.3	https://data.mo.gov/resource/y64b-aec2.json?$limit=1000&$order=:id&$offset=2000		
+NJ_LICENSED_CHILD_CARE_CENTERS	ADVANCES	2000	2001	2000	2000	7.6	https://data.nj.gov/resource/cru5-4rmm.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+VT_STATE_POLICE_DUI_ARRESTS	ADVANCES	2000	2001	2000	2000	8.7	https://data.vermont.gov/resource/cgjb-4rbe.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+NS_PERMANENT_LIQUOR_LICENSES	ADVANCES	2000	2001	2000	2000	6.8	https://data.novascotia.ca/resource/en23-iwca.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+NS_LICENSED_FOOD_ESTABLISHMENTS	ADVANCES	2000	2001	2000	2000	6.5	https://data.novascotia.ca/resource/2shh-dv8p.json?$limit=1000&$select=*,:id&$order=:id&$offset=2000		
+AK_DNR_MINERAL_PERMITS_LEASES	ADVANCES	2000	2001	2000	2000	8.3	https://arcgis.dnr.alaska.gov/arcgis/rest/services/OpenData/MineralActivity_MineralPermitOrLease/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&f=json&resultRecordCount=1000&resultOffset=2000		
+AK_DNR_LAND_PERMITS_LEASES	ADVANCES	2000	2001	2000	2000	9.9	https://arcgis.dnr.alaska.gov/arcgis/rest/services/OpenData/LandActivity_LandPermitOrLease/MapServer/2/query?where=1%3D1&outFields=*&returnGeometry=false&f=json&resultRecordCount=1000&resultOffset=2000		
+AK_DNR_OIL_GAS_LEASE_SALE_TRACTS	ADVANCES	2000	2001	2000	2000	8.9	https://arcgis.dnr.alaska.gov/arcgis/rest/services/OpenData/MineralActivity_OGLeaseSaleTract/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&f=json&resultRecordCount=1000&resultOffset=2000		
+AK_DNR_WATER_WELL_LOGS	ADVANCES	2000	2001	2000	2000	8.4	https://arcgis.dnr.alaska.gov/arcgis/rest/services/OpenData/NaturalResource_WELTS/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&f=json&resultRecordCount=1000&resultOffset=2000		
+CA_CALGEM_NOTICES	ADVANCES	2000	2001	2000	2000	7.3	https://gis.conservation.ca.gov/server/rest/services/WellSTAR/Notices/MapServer/1/query?where=1%3D1&outFields=*&returnGeometry=false&f=json&resultRecordCount=1000&resultOffset=2000		
+TX_RRC_PIPELINES	ADVANCES	2000	2001	2000	2000	6.7	https://gis.rrc.texas.gov/server/rest/services/rrc_public/RRC_Public_Viewer_Srvs/MapServer/13/query?where=1%3D1&outFields=*&returnGeometry=false&f=json&resultRecordCount=1000&resultOffset=2000		
+TX_RRC_WELL_LOCATIONS	ADVANCES	2000	2001	2000	2000	6.4	https://gis.rrc.texas.gov/server/rest/services/rrc_public/RRC_Public_Viewer_Srvs/MapServer/1/query?where=1%3D1&outFields=*&returnGeometry=false&f=json&resultRecordCount=1000&resultOffset=2000		
+CA_CALGEM_FACILITY_TANKS	ADVANCES	2000	2001	2000	2000	10.3	https://gis.conservation.ca.gov/server/rest/services/WellSTAR/Facilities/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&f=json&resultRecordCount=1000&resultOffset=2000		
+FAA_NASR_FIX	ADVANCES	2000	2001	2000	2000	6.6	https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/DesignatedPoints/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&resultOffset=2000		
+FAA_NASR_ATS_ROUTE_AIXM	ADVANCES	2000	2001	2000	2000	7.7	https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/ATSRoute/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&resultOffset=2000		
+FAA_NASR_CLEARANCE	ADVANCES	2000	2001	2000	2000	7.5	https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Clearance/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&resultOffset=2000		
+FAA_NASR_PENDING_AIRPORT	ADVANCES	2000	2001	2000	2000	6.6	https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_Airports/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&resultOffset=2000		
+FAA_AMD_BUILDING	ADVANCES	2000	2001	2000	2000	7.4	https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/AM_Building/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&resultOffset=2000		
+NAVCAN_UAS_FACILITY_MAP	ADVANCES	2000	2001	2000	2000	8.2	https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Nav_Canada_UASFM_Publication/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&resultOffset=2000		
+FAA_NASR_PENDING_RUNWAY	ADVANCES	2000	2001	2000	2000	6.9	https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_Runway/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&resultOffset=2000		
+FAA_NASR_PENDING_NAVAID_COMPONENT	ADVANCES	2000	2001	2000	2000	7.6	https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_Navaid_Component/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&resultOffset=2000		
+FAA_NASR_PENDING_FIX	ADVANCES	2000	2001	2000	2000	7.7	https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_Designated_Point/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&resultOffset=2000		
+FAA_NASR_PENDING_ATS_ROUTE	ADVANCES	2000	2001	2000	2000	8.3	https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_ATS_Route/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&resultOffset=2000		
+FAA_NASR_PENDING_ROUTE_AIRSPACE	ADVANCES	2000	2001	2000	2000	7.8	https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_Route_Airspace/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&resultOffset=2000		
+FAA_NASR_PENDING_MTR	ADVANCES	2000	2001	2000	2000	7.6	https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_MTR_Segment/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&resultOffset=2000		
+FAA_NASR_PENDING_CLASS_AIRSPACE	ADVANCES	2000	2001	2000	2000	8.3	https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_Class_Airspace/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&resultOffset=2000		
+FAA_NASR_PENDING_RADIAL_BEARING	ADVANCES	2000	2001	2000	2000	7.0	https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_Radials_Bearing/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&resultOffset=2000		
+FAA_NASR_PENDING_ENROUTE_INFO	ADVANCES	2000	2001	2000	2000	7.4	https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/EnrouteInformationPending/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&resultOffset=2000		
+FAA_NASR_PENDING_FREQUENCY	ADVANCES	2000	2001	2000	2000	7.1	https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/FrequencyPending/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&resultOffset=2000		
+FAA_NASR_PENDING_ROUTE_PORTION	ADVANCES	2000	2001	2000	2000	7.6	https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/RoutePortionPending/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&resultOffset=2000		
+FAA_AMD_PENDING_APRON	ADVANCES	2000	2001	2000	2000	6.4	https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_AM_Apron/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&resultOffset=2000		
+FAA_AMD_PENDING_TAXIWAY	ADVANCES	2000	2000	1999	2000	6.7	https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_AM_Taxiway/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&resultOffset=2000		
+FAA_AMD_PENDING_BUILDING	ADVANCES	2000	2001	2000	2000	6.1	https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_AM_Building/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&resultOffset=2000		
+UKPARL_LDA_COMMONS_DIVISIONS	ADVANCES	1000	1001	1000	1000	4.8	https://lda.data.parliament.uk/commonsdivisions.json?_pageSize=500&_page=2		
+UKPARL_LDA_LORDS_DIVISIONS	ADVANCES	1000	1001	1000	1000	3.6	https://lda.data.parliament.uk/lordsdivisions.json?_pageSize=500&_page=2		
+UKPARL_LDA_EDMS	ADVANCES	200	201	200	200	4.1	https://lda.data.parliament.uk/edms.json?_pageSize=500&_page=2		
+UKPARL_LDA_ORAL_Q_TIMES	ADVANCES	1000	1001	1000	1000	4.0	https://lda.data.parliament.uk/commonsoralquestiontimes.json?_pageSize=500&_page=2		
+UKPARL_LDA_MEMBERS	ADVANCES	1000	1001	1000	1000	3.5	https://lda.data.parliament.uk/members.json?_pageSize=500&_page=2		
+UKPARL_LDA_COMMONS_ORAL_Q	ADVANCES	1000	1001	1000	1000	8.5	https://lda.data.parliament.uk/commonsoralquestions.json?_pageSize=500&_page=2		
+UKPARL_LDA_CONSTITUENCIES	ADVANCES	1000	1001	1000	1000	4.3	https://lda.data.parliament.uk/constituencies.json?_pageSize=500&_page=2		
+UKPARL_LDA_BILLS	ADVANCES	1000	1001	1000	1000	3.8	https://lda.data.parliament.uk/bills.json?_pageSize=500&_page=2		
+UKPARL_LDA_LORDS_WRITTEN_Q	ADVANCES	1000	1001	1000	1000	11.6	https://lda.data.parliament.uk/lordswrittenquestions.json?_pageSize=500&_page=2		
+UKPARL_LDA_ELECTION_RESULTS	ADVANCES	1000	1001	1000	1000	3.2	https://lda.data.parliament.uk/electionresults.json?_pageSize=500&_page=2		
+EUROPEPMC_BOOKS	ADVANCES	200	201	200	200	3.1	https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=SRC%3ACBA&cursorMark=AoIIPhiEtygyNzc0ODU4MQ%3D%3D&resultType=core&pageSize=100&format=json		
+UKPARL_LDA_RESEARCH_BRIEFINGS	ADVANCES	1000	1001	1000	1000	6.0	https://lda.data.parliament.uk/researchbriefings.json?_pageSize=500&_page=2		
+PLOS_CORPUS	ADVANCES	200	201	200	418246	1.7	https://api.plos.org/search?q=doc_type%3Afull&rows=100&wt=json&sort=publication_date%20asc,id%20asc&start=200		
+IETF_DT_PERSON	ADVANCES	200	201	200	200	1.4	https://datatracker.ietf.org/api/v1/person/person/?format=json&limit=100&offset=200		
+UKPARL_LDA_TERMS	ADVANCES	1000	1001	1000	1000	8.6	https://lda.data.parliament.uk/terms.json?_pageSize=500&_page=2		
+IETF_DT_DOCEVENT	ADVANCES	200	201	200	200	1.5	https://datatracker.ietf.org/api/v1/doc/docevent/?format=json&limit=100&offset=200		
+IETF_DT_REVIEWREQUEST	ADVANCES	200	201	200	200	1.5	https://datatracker.ietf.org/api/v1/review/reviewrequest/?format=json&limit=100&offset=200		
+UKPARL_LDA_COMMONS_ANSWERS	ADVANCES	1000	1001	1000	1000	22.7	https://lda.data.parliament.uk/commonsansweredquestions.json?_pageSize=500&_page=2		
+UKTRADEINFO_TRADER	ADVANCES	2000	2001	2000	2000	5.9	https://api.uktradeinfo.com/Trader?$top=1000&$skip=2000		
+UKTRADEINFO_COMMODITY	ADVANCES	2000	2001	2000	2000	6.0	https://api.uktradeinfo.com/Commodity?$top=1000&$skip=2000		
+UKTRADEINFO_SITC	ADVANCES	2000	2001	2000	2000	5.8	https://api.uktradeinfo.com/SITC?$top=1000&$skip=2000		
+DERIB_LEGISLATION_ALL	ADVANCES	200	201	200	200	2.4	https://testphase.rechtsinformationen.bund.de/v1/legislation?size=100&pageIndex=2		
+FSA_ESTABLISHMENT_ZERO_RATED	ADVANCES	200	201	200	200	1.8	https://api.ratings.food.gov.uk/Establishments?ratingKey=fhrs_0_en-gb&pageSize=100&pageNumber=3		
+IA_COLLECTION_ARCHIVETEAM	ADVANCES	1000	1001	1000	5442703	4.1	https://archive.org/advancedsearch.php?q=collection:archiveteam&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+asc&output=json&page=3		
+UKPARL_LDA_COMMONS_WRITTEN_Q	ADVANCES	1000	1001	1000	1000	34.5	https://lda.data.parliament.uk/commonswrittenquestions.json?_pageSize=500&_page=2		
+UKTRADEINFO_OTS	ADVANCES	2000	2001	2000	2000	9.0	https://api.uktradeinfo.com/OTS?$top=1000&$expand=Country,Commodity&$skip=2000		
+IA_COLLECTION_WEBWIDECRAWL	ADVANCES	1000	1001	1000	2185812	4.1	https://archive.org/advancedsearch.php?q=collection:webwidecrawl&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+asc&output=json&page=3		
+IA_COLLECTION_WIKITEAM	ADVANCES	1000	1001	1000	455225	4.0	https://archive.org/advancedsearch.php?q=collection:wikiteam&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+asc&output=json&page=3		
+IA_COLLECTION_NASA	ADVANCES	1000	1001	1000	208899	3.8	https://archive.org/advancedsearch.php?q=collection:nasa&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+asc&output=json&page=3		
+IA_COLLECTION_TVNEWS	ADVANCES	1000	1001	1000	4616756	3.7	https://archive.org/advancedsearch.php?q=collection:tvnews&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+asc&output=json&page=3		
+IA_COLLECTION_WEB_COLLECTION	ADVANCES	1000	1001	1000	17526156	4.4	https://archive.org/advancedsearch.php?q=collection:web&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+asc&output=json&page=3		
+IA_COLLECTION_FEDLINK	ADVANCES	1000	1001	1000	393952	3.3	https://archive.org/advancedsearch.php?q=collection:fedlink&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+asc&output=json&page=3		
+IA_COLLECTION_SOFTWARE_LIBRARY	ADVANCES	1000	1001	1000	277684	3.6	https://archive.org/advancedsearch.php?q=collection:softwarelibrary&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+asc&output=json&page=3		
+IA_COLLECTION_DOCUMENTCLOUD	ADVANCES	1000	1001	1000	758305	4.5	https://archive.org/advancedsearch.php?q=collection:documentcloud&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+asc&output=json&page=3		
+IA_COLLECTION_MAGAZINE_RACK	ADVANCES	1000	1001	1000	661765	3.6	https://archive.org/advancedsearch.php?q=collection:magazine_rack&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+asc&output=json&page=3		
+IA_COLLECTION_PODCASTS	ADVANCES	1000	1001	1000	1311003	3.6	https://archive.org/advancedsearch.php?q=collection:podcasts&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+asc&output=json&page=3		
+IA_COLLECTION_JSTOR_EARLY_JOURNALS	ADVANCES	1000	1001	1000	452031	3.2	https://archive.org/advancedsearch.php?q=collection:jstor_ejc&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+asc&output=json&page=3		
+IA_COLLECTION_INLIBRARY	ADVANCES	1000	1001	1000	4427178	4.1	https://archive.org/advancedsearch.php?q=collection:inlibrary&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+asc&output=json&page=3		
+IA_COLLECTION_UNIVERSAL_LIBRARY	ADVANCES	1000	1001	1000	119427	4.2	https://archive.org/advancedsearch.php?q=collection:universallibrary&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+asc&output=json&page=3		
+IA_TEXTS_AR	ADVANCES	1000	1001	1000	229050	3.5	https://archive.org/advancedsearch.php?q=mediatype:texts+AND+language:ara&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+asc&output=json&page=3		
+SCIELO_JOURNALS_MX	ADVANCES	200	201	200	281	34.6	https://articlemeta.scielo.org/api/v1/journal/identifiers/?collection=mex&limit=100&offset=200		
+IA_TEXTS_RU	ADVANCES	1000	1001	1000	124522	4.1	https://archive.org/advancedsearch.php?q=mediatype:texts+AND+language:rus&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+asc&output=json&page=3		
+LEMMY_COMMUNITIES_LEMMY_WORLD	ADVANCES	100	101	100	100	1.6	https://lemmy.world/api/v3/community/list?type_=Local&sort=New&limit=50&page=3		
+IA_TEXTS_ZH	ADVANCES	1000	1001	1000	664023	3.7	https://archive.org/advancedsearch.php?q=mediatype:texts+AND+language:chi&fl[]=identifier&fl[]=title&fl[]=date&fl[]=mediatype&fl[]=item_size&fl[]=collection&rows=500&sort[]=publicdate+asc&output=json&page=3		
+SCIELO_ISSUES_BR	ADVANCES	200	201	200	31650	35.7	https://articlemeta.scielo.org/api/v1/issue/identifiers/?collection=scl&limit=100&offset=200		
+LEMMY_COMMUNITIES_SH_ITJUST_WORKS	ADVANCES	100	101	100	100	2.1	https://sh.itjust.works/api/v3/community/list?type_=Local&sort=New&limit=50&page=3		
+OSF_SUBJECTS	ADVANCES	200	201	200	200	3.8	https://api.osf.io/v2/subjects/?page=3&page%5Bsize%5D=100		
+LEMMY_COMMUNITIES_LEMMY_ML	ADVANCES	100	101	100	100	1.9	https://lemmy.ml/api/v3/community/list?type_=Local&sort=New&limit=50&page=3		
+LEMMY_COMMUNITIES_LEMMY_ZIP	ADVANCES	100	101	100	100	2.1	https://lemmy.zip/api/v3/community/list?type_=Local&sort=New&limit=50&page=3		
+LEMMY_COMMUNITIES_LEMMY_CA	ADVANCES	100	101	100	100	1.8	https://lemmy.ca/api/v3/community/list?type_=Local&sort=New&limit=50&page=3		
+LEMMY_COMMUNITIES_LEMMY_DBZER0_COM	ADVANCES	100	101	100	100	2.0	https://lemmy.dbzer0.com/api/v3/community/list?type_=Local&sort=New&limit=50&page=3		
+LEMMY_COMMUNITIES_PROGRAMMING_DEV	ADVANCES	100	101	100	100	1.8	https://programming.dev/api/v3/community/list?type_=Local&sort=New&limit=50&page=3		
+LEMMY_COMMUNITIES_LEMMY_BLAHAJ_ZONE	ADVANCES	100	101	100	100	2.1	https://lemmy.blahaj.zone/api/v3/community/list?type_=Local&sort=New&limit=50&page=3		
+LEMMY_COMMUNITIES_REDDTHAT_COM	ADVANCES	100	101	100	100	1.4	https://reddthat.com/api/v3/community/list?type_=Local&sort=New&limit=50&page=3		
+LEMMY_COMMUNITIES_SOPULI_XYZ	ADVANCES	100	101	100	100	1.8	https://sopuli.xyz/api/v3/community/list?type_=Local&sort=New&limit=50&page=3		
+LEMMY_COMMUNITIES_DISCUSS_TCHNCS_DE	ADVANCES	100	101	100	100	1.9	https://discuss.tchncs.de/api/v3/community/list?type_=Local&sort=New&limit=50&page=3		
+LEMMY_COMMUNITIES_JLAI_LU	ADVANCES	100	101	100	100	1.8	https://jlai.lu/api/v3/community/list?type_=Local&sort=New&limit=50&page=3		
+LEMMY_COMMUNITIES_THELEMMY_CLUB	ADVANCES	100	101	100	100	1.4	https://thelemmy.club/api/v3/community/list?type_=Local&sort=New&limit=50&page=3		
+LEMMY_COMMUNITIES_FEDDIT_NL	ADVANCES	100	101	100	100	1.9	https://feddit.nl/api/v3/community/list?type_=Local&sort=New&limit=50&page=3		
+LEMMY_COMMUNITIES_SLRPNK_NET	ADVANCES	100	101	100	100	3.2	https://slrpnk.net/api/v3/community/list?type_=Local&sort=New&limit=50&page=3		
+LEMMY_COMMUNITIES_LEMMY_SDF_ORG	ADVANCES	100	101	100	100	1.7	https://lemmy.sdf.org/api/v3/community/list?type_=Local&sort=New&limit=50&page=3		
+LEMMY_COMMUNITIES_ANI_SOCIAL	ADVANCES	100	101	100	100	1.9	https://ani.social/api/v3/community/list?type_=Local&sort=New&limit=50&page=3		
+LEMMY_COMMUNITIES_SZMER_INFO	ADVANCES	100	101	100	100	2.4	https://szmer.info/api/v3/community/list?type_=Local&sort=New&limit=50&page=3		
+MSTDNJP_DIRECTORY	ADVANCES	80	81	80	80	2.7	https://mstdn.jp/api/v1/directory?limit=40&local=true&offset=80		
+JPN_EGOV_DATA_ORG_ORG_2100	ADVANCES	200	201	200	280	4.0	https://data.e-gov.go.jp/data/api/3/action/package_search?fq=organization:org_2100&rows=100&sort=id%20asc&start=200		
+MISSKEY_IO_FEDERATION	ADVANCES	60	61	60	60	1.8	https://misskey.io/api/federation/instances?offset=60		
+JPN_EGOV_DATA_ORG_ORG_0600	ADVANCES	200	201	200	273	5.5	https://data.e-gov.go.jp/data/api/3/action/package_search?fq=organization:org_0600&rows=100&sort=id%20asc&start=200		
+JPN_EGOV_DATA_ORG_ORG_0800	ADVANCES	200	201	200	218	5.8	https://data.e-gov.go.jp/data/api/3/action/package_search?fq=organization:org_0800&rows=100&sort=id%20asc&start=200		
+JPN_EGOV_DATA_ORG_ORG_1300	ADVANCES	200	201	200	259	6.1	https://data.e-gov.go.jp/data/api/3/action/package_search?fq=organization:org_1300&rows=100&sort=id%20asc&start=200		
+QIITA_TAGS	ADVANCES	200	201	200	200	2.0	https://qiita.com/api/v2/tags?per_page=100&sort=count&page=3		
+PAWOO_DIRECTORY	ADVANCES	80	81	80	80	4.8	https://pawoo.net/api/v1/directory?limit=40&local=true&offset=80		
+JSTAGE_CORPUS_BULK	ADVANCES	200	201	200	200	3.6	https://api.jstage.jst.go.jp/searchapi/do?service=3&text=%E6%97%A5%E6%9C%AC&count=100&start=201		
+JP25_JPINFRA_YOKOHAMAPORT_POSTS	ADVANCES	100	101	100	100	3.7	https://www.yokohamaport.co.jp/wp-json/wp/v2/posts?per_page=50&page=3		
+JP25_JPFIN_SSE_WPJSON	ADVANCES	200	201	200	200	3.9	https://www.sse.or.jp/wp-json/wp/v2/posts?per_page=100&page=3		
+JP25_JPFIN_ROKIN_KINKI_WPJSON	ADVANCES	200	201	200	200	4.9	https://www.rokin.or.jp/wp-json/wp/v2/posts?per_page=100&page=3		
+JP25_JPINFRA_HERP_POSTS	ADVANCES	200	201	200	200	4.6	https://www.jishin.go.jp/wp-json/wp/v2/posts?per_page=100&page=3		
+JP25_JPMEDIA_KENSETSUNEWS_WP	FETCH_FAILED	1	1	0		1.9	JP25_JPMEDIA_KENSETSUNEWS_WP stored nothing: upstream answered 502	FETCH_FAILED	JP25_JPMEDIA_KENSETSUNEWS_WP stored nothing: upstream answered 502
+JP25_JPINFRA_SORABATAKE_POSTS	ADVANCES	100	101	100	100	4.6	https://sorabatake.jp/wp-json/wp/v2/posts?per_page=50&page=3		
+JP25_JPMEDIA_DECN_WP	ADVANCES	200	201	200	200	4.2	https://www.decn.co.jp/wp-json/wp/v2/posts?per_page=100&page=3		
+JP25_JPMEDIA_ISHIKAWA_TV_WP	ADVANCES	200	201	200	200	4.3	https://www.ishikawa-tv.com/wp-json/wp/v2/posts?per_page=100&page=3		
+JP25_JPFIN_HOWABANK_WPJSON	ADVANCES	200	201	200	200	9.1	https://www.howabank.co.jp/wp-json/wp/v2/posts?per_page=100&page=3		
+JP25_JPMEDIA_YAKUJI_WP	ADVANCES	200	201	200	200	2.3	https://www.yakuji.co.jp/wp-json/wp/v2/posts?per_page=100&page=3		
+JP25_JPMEDIA_DEMPA_WP	FETCH_FAILED	1	1	0		2.2	JP25_JPMEDIA_DEMPA_WP stored nothing: upstream answered 503	FETCH_FAILED	JP25_JPMEDIA_DEMPA_WP stored nothing: upstream answered 503
+JP25_JPMUNI2_UTSUNOMIYA_CKAN	ADVANCES	200	201	200	295	3.3	https://catalog.city.utsunomiya.tochigi.jp/api/3/action/package_search?rows=100&sort=id%20asc&start=200		
+JP25_JPMEDIA_JAPANMETAL_WP	ADVANCES	200	201	200	200	5.3	https://www.japanmetal.com/wp-json/wp/v2/posts?per_page=100&page=3		
+JP25_JPMUNI2_HIROSHIMA_DATAEYE	FETCH_FAILED	1	1	0		2.1	JP25_JPMUNI2_HIROSHIMA_DATAEYE stored nothing: upstream answered 503	FETCH_FAILED	JP25_JPMUNI2_HIROSHIMA_DATAEYE stored nothing: upstream answered 503
+JP25_JPMUNI2_BODIK_ODCS_NEWS	ADVANCES	200	201	200	200	4.6	https://odcs.bodik.jp/wp-json/wp/v2/posts?per_page=100&page=3		
+JP25_JPMUNI2_TSUYAMA_DATAEYE	FETCH_FAILED	1	1	0		2.5	JP25_JPMUNI2_TSUYAMA_DATAEYE stored nothing: upstream answered 503	FETCH_FAILED	JP25_JPMUNI2_TSUYAMA_DATAEYE stored nothing: upstream answered 503
+JP25_JPMEDIA_KYOIKU_PRESS_WP	ADVANCES	200	201	200	200	6.0	https://www.kyoiku-press.com/wp-json/wp/v2/posts?per_page=100&page=3		
+JP25_JPMEDIA_LNEWS_WP	ADVANCES	200	201	200	200	9.8	https://www.lnews.jp/wp-json/wp/v2/posts?per_page=100&page=3		
+JO28_MIYAZAKI_NENKAN_CKAN	ADVANCES	40	41	40	40	2.3	https://data.stat.pref.miyazaki.lg.jp/group/nenkan?page=3		
+JO28_NPMH_KOMONJO_CATALOG	ADVANCES	18	19	18	18	2.7	https://www.npmh.net/books/komonjo/?p=3		
+JP25_JPNATGOV_JISHIN_HQ_POSTS	ADVANCES	200	201	200	200	4.6	https://www.jishin.go.jp/wp-json/wp/v2/posts?per_page=100&page=3		
+JP25_JPNATGOV_NISE_POSTS	ADVANCES	200	201	200	200	5.6	https://www.nise.go.jp/wp-json/wp/v2/posts?per_page=100&page=3		
+JO29A_FGT_ACT_GOV_SOCRATA	ADVANCES	200	201	200	200	2.1	https://api.us.socrata.com/api/catalog/v1?domains=data.act.gov.au&limit=100&offset=200&order=dataset_id		
+JO29A_FGT_VERMONT_SOCRATA	ADVANCES	200	201	200	200	2.2	https://api.us.socrata.com/api/catalog/v1?domains=data.vermont.gov&limit=100&offset=200&order=dataset_id		
+JO29A_FGT_NORFOLK_SOCRATA	ADVANCES	200	201	200	200	1.8	https://api.us.socrata.com/api/catalog/v1?domains=data.norfolk.gov&limit=100&offset=200&order=dataset_id		
+JO29A_FGT_GAINESVILLE_SOCRATA	ADVANCES	200	201	200	200	2.0	https://api.us.socrata.com/api/catalog/v1?domains=data.cityofgainesville.org&limit=100&offset=200&order=dataset_id		
+JO29A_FGT_PRINCE_GEORGES_SOCRATA	ADVANCES	200	201	200	200	1.7	https://api.us.socrata.com/api/catalog/v1?domains=data.princegeorgescountymd.gov&limit=100&offset=200&order=dataset_id		
+JO29A_FGT_WINNIPEG_SOCRATA	ADVANCES	200	201	200	200	1.6	https://api.us.socrata.com/api/catalog/v1?domains=data.winnipeg.ca&limit=100&offset=200&order=dataset_id		
+JO29A_FGT_HONOLULU_SOCRATA	ADVANCES	200	201	200	200	1.5	https://api.us.socrata.com/api/catalog/v1?domains=data.honolulu.gov&limit=100&offset=200&order=dataset_id		
+JO29A_FGT_NEW_ORLEANS_SOCRATA	ADVANCES	200	201	200	200	1.7	https://api.us.socrata.com/api/catalog/v1?domains=data.nola.gov&limit=100&offset=200&order=dataset_id		
+JO29A_FGT_PROVIDENCE_SOCRATA	ADVANCES	200	201	200	200	2.5	https://api.us.socrata.com/api/catalog/v1?domains=data.providenceri.gov&limit=100&offset=200&order=dataset_id		
+JO29A_FGT_ROSEVILLE_SOCRATA	ADVANCES	200	201	200	200	1.9	https://api.us.socrata.com/api/catalog/v1?domains=data.roseville.ca.us&limit=100&offset=200&order=dataset_id		
+JO29A_FGT_BATONROUGE_SOCRATA	ADVANCES	200	201	200	200	2.1	https://api.us.socrata.com/api/catalog/v1?domains=data.brla.gov&limit=100&offset=200&order=dataset_id		
+JO29A_FGT_BLOOMINGTON_SOCRATA	ADVANCES	200	201	200	200	1.8	https://api.us.socrata.com/api/catalog/v1?domains=data.bloomington.in.gov&limit=100&offset=200&order=dataset_id		
+JO29A_FGT_EVERETT_SOCRATA	ADVANCES	200	201	200	200	2.1	https://api.us.socrata.com/api/catalog/v1?domains=data.everettwa.gov&limit=100&offset=200&order=dataset_id		
+JO29A_FGT_ORLEANS_METROPOLE_ODS	FETCH_FAILED	1	1	0		16.1	JO29A_FGT_ORLEANS_METROPOLE_ODS stored nothing: the request failed at the transport level	FETCH_FAILED	JO29A_FGT_ORLEANS_METROPOLE_ODS stored nothing: the request failed at the transport level
+JO29A_CAM_GEMA_GDOT_511_CAMERAS	ADVANCES	2000	2001	2000	2000	4.9	https://services1.arcgis.com/2iUE8l8JKrP2tygQ/arcgis/rest/services/GDOT_511_Traffic_Cameras_Updated/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=ObjectId&resultRecordCount=1000&resultOffset=2000		
+JO29A_FGT_BRUXELLES_VILLE_ODS	FETCH_FAILED	1	1	0		15.9	JO29A_FGT_BRUXELLES_VILLE_ODS stored nothing: the request failed at the transport level	FETCH_FAILED	JO29A_FGT_BRUXELLES_VILLE_ODS stored nothing: the request failed at the transport level
+JO29A_CAM_IDOT_TRAFFIC_CAMERAS	ADVANCES	2000	2001	2000	2000	5.4	https://services2.arcgis.com/aIrBD8yn1TDTEXoz/arcgis/rest/services/TrafficCamerasTM_Public/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=2000		
+JO29A_CAM_CALOES_CALIFORNIA_WEBCAMS	ADVANCES	4000	4001	4000	4000	7.9	https://services.arcgis.com/BLN4oKB0N1YSgvY8/arcgis/rest/services/CalOES_California_Webcams/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=2000&resultOffset=4000		
+JO29A_CAM_PEMA_HIVIS_CAMERAS	ADVANCES	1000	1001	1000	1000	2.9	https://services2.arcgis.com/xtuWQvb2YQnp0z3F/arcgis/rest/services/HIVIS_Cameras/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=500&resultOffset=1000		
+JO29A_FGT_HAUTS_DE_SEINE_ODS	FETCH_FAILED	1	1	0		20.7	JO29A_FGT_HAUTS_DE_SEINE_ODS stored nothing: the request failed at the transport level	FETCH_FAILED	JO29A_FGT_HAUTS_DE_SEINE_ODS stored nothing: the request failed at the transport level
+JO34_CKANRES_API_NESO_ENERGY	ADVANCES	131	132	131	131	2.8	https://api.neso.energy/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_ADMIN_OPENDATA_DK	ADVANCES	200	201	200	631	3.8	https://admin.opendata.dk/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_CATALOG_DATA_CITY_KANAZAWA_ISHIKAWA_JP	ADVANCES	200	201	200	320	3.8	https://catalog-data.city.kanazawa.ishikawa.jp/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_CATALOG_CITY_KOBE_LG_JP	COMPLETES	99	99	99		3.0	no truncation notice: the walk ended inside the cap		
+JO34_CKANRES_CATALOG_CITY_UTSUNOMIYA_TOCHIGI_JP	ADVANCES	200	201	200	295	3.7	https://catalog.city.utsunomiya.tochigi.jp/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_CATALOG_DATA_METRO_TOKYO_LG_JP	ADVANCES	200	201	200	9671	3.8	https://catalog.data.metro.tokyo.lg.jp/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_CATALOG_OPENDATA_PREF_KANAGAWA_JP	ADVANCES	200	201	200	815	4.1	https://catalog.opendata.pref.kanagawa.jp/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_CKAN_GOVDATA_DE	ADVANCES	200	201	200	168615	3.5	https://ckan.govdata.de/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_CKAN_HODA_JP	ADVANCES	200	201	200	458	4.0	https://ckan.hoda.jp/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_CKAN_OPENDATA_SWISS	ADVANCES	200	201	200	16130	3.9	https://ckan.opendata.swiss/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_CKAN_PF_SAPPORO_JP	ADVANCES	200	201	200	262	4.3	https://ckan.pf-sapporo.jp/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO29A_CAM_CA_BC_VANCOUVER	FETCH_FAILED	1	1	0		15.5	JO29A_CAM_CA_BC_VANCOUVER stored nothing: the request failed at the transport level	ADVANCES	https://opendata.vancouver.ca/api/explore/v2.1/catalog/datasets/web-cam-url-links/records?limit=100&order_by=mapid&offset=200
+JO34_CKANRES_CKAN_MONTEVIDEO_GUB_UY	ADVANCES	159	160	159	159	8.1	https://ckan.montevideo.gub.uy/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_CKAN_PREF_AKITA_LG_JP	ADVANCES	200	201	200	264	4.5	https://ckan.pref.akita.lg.jp/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_CKAN_PREF_MIYAZAKI_LG_JP	ADVANCES	200	201	200	4937	5.0	https://ckan.pref.miyazaki.lg.jp/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_DADOS_PBH_GOV_BR	ADVANCES	200	201	200	614	7.3	https://dados.pbh.gov.br/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_DADOSABERTOS_BNDES_GOV_BR	COMPLETES	47	47	47		7.3	no truncation notice: the walk ended inside the cap		
+JO34_CKANRES_DADESOBERTES_GVA_ES	ADVANCES	200	201	200	1311	9.8	https://dadesobertes.gva.es/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_DATA_BOSTON_GOV	ADVANCES	200	201	200	235	2.0	https://data.boston.gov/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_DADOSABERTOS_POA_BR	COMPLETES	62	62	62		7.2	no truncation notice: the walk ended inside the cap		
+JO34_CKANRES_DATA_BODIK_JP	ADVANCES	200	201	200	18623	4.0	https://data.bodik.jp/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_ADMIN_OPENDATA_AZ	FETCH_FAILED	1	1	0		26.5	JO34_CKANRES_ADMIN_OPENDATA_AZ stored nothing: the request failed at the transport level	FETCH_FAILED	JO34_CKANRES_ADMIN_OPENDATA_AZ stored nothing: the request failed at the transport level
+JO34_CKANRES_DADOS_PE_GOV_BR	COMPLETES	47	47	47		10.7	no truncation notice: the walk ended inside the cap		
+JO34_CKANRES_DATA_CA_GOV	ADVANCES	200	201	200	4678	2.7	https://data.ca.gov/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_DATA_CITY_FUKUYAMA_HIROSHIMA_JP	COMPLETES	58	58	58		2.2	no truncation notice: the walk ended inside the cap		
+JO34_CKANRES_DATA_CITY_SENDAI_JP	COMPLETES	16	16	16		2.8	no truncation notice: the walk ended inside the cap		
+JO34_CKANRES_DATA_CORKCITY_IE	COMPLETES	34	34	34		2.2	no truncation notice: the walk ended inside the cap		
+JO34_CKANRES_DATA_GOV_IE	ADVANCES	200	201	200	22883	2.9	https://data.gov.ie/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_DATA_GOV_IL	ADVANCES	200	201	200	1203	3.1	https://data.gov.il/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_DATA_CITY_YOKOHAMA_LG_JP	ADVANCES	200	201	200	647	4.9	https://data.city.yokohama.lg.jp/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_DATA_GOV_ME	ADVANCES	200	201	200	923	3.9	https://data.gov.me/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_DATA_GOV_UK	ADVANCES	200	201	200	59417	3.9	https://data.gov.uk/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_DATA_GOV_KG	ADVANCES	200	201	200	1412	7.0	https://data.gov.kg/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_DATA_KYIVCITY_GOV_UA	COMPLETES	98	98	98		2.3	no truncation notice: the walk ended inside the cap		
+JO34_CKANRES_DATA_GOVMU_ORG	ADVANCES	200	201	200	856	6.0	https://data.govmu.org/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_DATA_DATA4CITIZEN_JP	FETCH_FAILED	1	1	0		11.5	JO34_CKANRES_DATA_DATA4CITIZEN_JP stored nothing: the request failed at the transport level	FETCH_FAILED	JO34_CKANRES_DATA_DATA4CITIZEN_JP stored nothing: the request failed at the transport level
+JO34_CKANRES_DATA_NT_GOV_AU	ADVANCES	200	201	200	1077	4.6	https://data.nt.gov.au/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_DATA_OPENDEVELOPMENTCAMBODIA_NET	ADVANCES	200	201	200	14290	4.4	https://data.opendevelopmentcambodia.net/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_DATA_RENFE_COM	COMPLETES	44	44	44		2.0	no truncation notice: the walk ended inside the cap		
+JO34_CKANRES_DATA_OPENDEVELOPMENTMYANMAR_NET	ADVANCES	200	201	200	14290	4.0	https://data.opendevelopmentmyanmar.net/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_DATA_OPENDEVELOPMENTMEKONG_NET	ADVANCES	200	201	200	14289	4.6	https://data.opendevelopmentmekong.net/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_DATA_SANJOSECA_GOV	ADVANCES	170	171	170	170	2.0	https://data.sanjoseca.gov/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_DATA_SMARTDUBLIN_IE	ADVANCES	200	201	200	935	3.0	https://data.smartdublin.ie/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_DATA_STADT_ZUERICH_CH	ADVANCES	200	201	200	942	3.1	https://data.stadt-zuerich.ch/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_DATA_ZAGREB_HR	ADVANCES	200	201	200	200	2.7	https://data.zagreb.hr/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_DATENREGISTER_BERLIN_DE	ADVANCES	200	201	200	2627	2.7	https://datenregister.berlin.de/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_DATASET_GOV_MD	ADVANCES	200	201	200	1292	3.8	https://dataset.gov.md/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_DATI_COMUNE_MILANO_IT	ADVANCES	200	201	200	2595	2.6	https://dati.comune.milano.it/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_DATOS_BAHIA_GOB_AR	ADVANCES	200	201	200	222	4.1	https://datos.bahia.gob.ar/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_DATOS_JUS_GOB_AR	COMPLETES	63	63	63		3.4	no truncation notice: the walk ended inside the cap		
+JO34_CKANRES_DATA_GOV_LV	FETCH_FAILED	1	1	0		21.2	JO34_CKANRES_DATA_GOV_LV stored nothing: the request failed at the transport level	FETCH_FAILED	JO34_CKANRES_DATA_GOV_LV stored nothing: the request failed at the transport level
+JO34_CKANRES_DATI_TOSCANA_IT	ADVANCES	200	201	200	12493	6.8	https://dati.toscana.it/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_DATOS_MADRID_ES	ADVANCES	200	201	200	675	4.9	https://datos.madrid.es/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_DATOS_MININTERIOR_GOB_AR	COMPLETES	15	15	15		3.2	no truncation notice: the walk ended inside the cap		
+JO34_CKANRES_DATOS_MAGYP_GOB_AR	ADVANCES	152	153	152	152	3.5	https://datos.magyp.gob.ar/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_DATOS_OSE_COM_UY	COMPLETES	28	28	28		3.1	no truncation notice: the walk ended inside the cap		
+JO34_CKANRES_DATI_TRENTINO_IT	ADVANCES	200	201	200	1378	9.2	https://dati.trentino.it/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_DATOSABIERTOS_MALAGA_EU	ADVANCES	200	201	200	1377	3.1	https://datosabiertos.malaga.eu/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_DATOS_TRANSPORTE_GOB_AR	COMPLETES	48	48	48		4.0	no truncation notice: the walk ended inside the cap		
+JO34_CKANRES_DATOSABIERTOS_MENDOZA_GOV_AR	ADVANCES	200	201	200	204	4.2	https://datosabiertos.mendoza.gov.ar/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_GEOSCIENCE_DATA_QLD_GOV_AU	ADVANCES	200	201	200	192711	4.4	https://geoscience.data.qld.gov.au/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_OPENDATA_ARAGON_ES	ADVANCES	200	201	200	2425	5.1	https://opendata.aragon.es/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_GIFU_OPENDATA_PREF_GIFU_LG_JP	ADVANCES	200	201	200	1883	5.8	https://gifu-opendata.pref.gifu.lg.jp/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_OPDT_CITY_TOYAMA_LG_JP	ADVANCES	133	134	133	133	6.5	https://opdt.city.toyama.lg.jp/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_OPENDATA_CITY_MACHIDA_TOKYO_JP	ADVANCES	144	145	144	144	5.2	https://opendata.city.machida.tokyo.jp/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_OPENDATA_CITY_IMIZU_TOYAMA_JP	ADVANCES	169	170	169	169	7.3	https://opendata.city.imizu.toyama.jp/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_OPENDATA_CITY_MINATO_TOKYO_JP	ADVANCES	200	201	200	560	5.2	https://opendata.city.minato.tokyo.jp/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_OPENDATA_CITY_SAGAMIHARA_KANAGAWA_JP	ADVANCES	114	115	114	114	3.3	https://opendata.city.sagamihara.kanagawa.jp/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_OPENDATA_MUENCHEN_DE	ADVANCES	200	201	200	337	3.9	https://opendata.muenchen.de/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_OPENDATA_UGR_ES	COMPLETES	65	65	65		2.3	no truncation notice: the walk ended inside the cap		
+JO34_CKANRES_OPENDATA_SCHLESWIG_HOLSTEIN_DE	ADVANCES	200	201	200	33073	2.9	https://opendata.schleswig-holstein.de/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_OPENDATA_NHSBSA_NET	ADVANCES	200	201	200	2171	4.5	https://opendata.nhsbsa.net/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_TRANSPARENZ_KARLSRUHE_DE	ADVANCES	151	152	151	151	3.0	https://transparenz.karlsruhe.de/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_SUCHE_TRANSPARENZ_HAMBURG_DE	ADVANCES	200	201	200	246722	4.1	https://suche.transparenz.hamburg.de/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_PORTAL_OPENDATA_DK	ADVANCES	200	201	200	631	4.9	https://portal.opendata.dk/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_WWW_OFFENESDATENPORTAL_DE	ADVANCES	200	201	200	1082	3.2	https://www.offenesdatenportal.de/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_OPENDATA_COMUNE_BARI_IT	ADVANCES	171	172	171	171	10.6	https://opendata.comune.bari.it/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_WWW_OPENDATA_HRO_DE	ADVANCES	200	201	200	281	3.1	https://www.opendata-hro.de/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+JO34_CKANRES_WWW_OPENDATA_HU	COMPLETES	71	71	71		2.7	no truncation notice: the walk ended inside the cap		
+JO34_CKANRES_WWW_OPENDATA_NHS_SCOT	ADVANCES	105	106	105	105	3.2	https://www.opendata.nhs.scot/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+CN_HK_CKAN_CURRENT_PACKAGE_LIST_WITH_RESOURCES	ADVANCES	20	21	20	20	3.1	https://data.gov.hk/en-data/api/3/action/current_package_list_with_resources?offset=200		
+UK_ASSET_MGMT	ADVANCES	200	201	200	200	2.8	https://environment.data.gov.uk/asset-management/id/asset?_limit=100&_offset=200		
+JO34_FDSNEVT_SERVICE_SCEDC_CALTECH_EDU	ADVANCES	2000	2001	2000	2000	6.9	https://service.scedc.caltech.edu/fdsnws/event/1/query?format=text&nodata=404&orderby=time-asc&limit=1000&offset=2001		
+UK_EA_ECOLOGY	ADVANCES	500	501	500	500	4.7	https://environment.data.gov.uk/ecology/api/v1/sites?skip=500		
+JO34_CKANRES_PODATKI_GOV_SI	ADVANCES	200	201	200	9302	17.3	https://podatki.gov.si/api/3/action/package_search?sort=id+asc&rows=100&start=200		
+UK_FLOOD_AREAS	ADVANCES	1000	1001	1000	1000	6.9	https://environment.data.gov.uk/flood-monitoring/id/floodAreas?_limit=500&_offset=1000		
+FR_ODS_ROUEN	ADVANCES	100	101	100	114	11.4	https://data.metropole-rouen-normandie.fr/api/explore/v2.1/catalog/datasets?limit=50&order_by=dataset_id&offset=100		
+UK_FLOOD_MEASURES	ADVANCES	1000	1001	1000	1000	7.3	https://environment.data.gov.uk/flood-monitoring/id/measures?_limit=500&_offset=1000		
+UK_FLOOD_READINGS	ADVANCES	1000	1001	1000	1000	6.5	https://environment.data.gov.uk/flood-monitoring/data/readings?latest&_limit=500&_offset=1000		
+UK_HYDROLOGY_MEASURES	ADVANCES	1000	1001	1000	1000	3.5	https://environment.data.gov.uk/hydrology/id/measures?_limit=500&_offset=1000		
+UK_FLOOD_STATIONS	ADVANCES	285	286	285	285	5.7	https://environment.data.gov.uk/flood-monitoring/id/stations?_limit=200&_offset=400		
+UK_HYDROLOGY_STATIONS	ADVANCES	1000	1001	1000	1000	5.4	https://environment.data.gov.uk/hydrology/id/stations?_limit=500&_offset=1000		
+GBIF_OCC_KE	ADVANCES	600	601	600	5816952	4.9	https://api.gbif.org/v1/occurrence/search?country=KE&hasCoordinate=true&limit=300&offset=600		
+GBIF_OCC_ZA	ADVANCES	600	601	600	47623790	5.7	https://api.gbif.org/v1/occurrence/search?country=ZA&hasCoordinate=true&limit=300&offset=600		
+GBIF_OCC_TZ	ADVANCES	600	601	600	3064097	5.9	https://api.gbif.org/v1/occurrence/search?country=TZ&hasCoordinate=true&limit=300&offset=600		
+GBIF_OCC_CM	ADVANCES	600	601	600	800838	5.8	https://api.gbif.org/v1/occurrence/search?country=CM&hasCoordinate=true&limit=300&offset=600		
+FR_ODS2_OPENDATA_CLERM	FETCH_FAILED	1	1	0		21.4	FR_ODS2_OPENDATA_CLERM stored nothing: the request failed at the transport level	FETCH_FAILED	FR_ODS2_OPENDATA_CLERM stored nothing: the request failed at the transport level
+GBIF_OCC_UG	ADVANCES	600	601	600	2741843	5.5	https://api.gbif.org/v1/occurrence/search?country=UG&hasCoordinate=true&limit=300&offset=600		
+GLEIF_LEI_CN	ADVANCES	400	401	400	107255	5.0	https://api.gleif.org/api/v1/lei-records?filter%5Bentity.legalAddress.country%5D=CN&page%5Bsize%5D=200&page%5Bnumber%5D=3		
+GBIF_OCC_ET	ADVANCES	600	601	600	1078713	5.4	https://api.gbif.org/v1/occurrence/search?country=ET&hasCoordinate=true&limit=300&offset=600		
+GBIF_OCC_CN	ADVANCES	600	601	600	12623252	5.8	https://api.gbif.org/v1/occurrence/search?country=CN&hasCoordinate=true&limit=300&offset=600		
+GBIF_OCC_HK	ADVANCES	600	601	600	2329017	5.5	https://api.gbif.org/v1/occurrence/search?country=HK&hasCoordinate=true&limit=300&offset=600		
+GLEIF_LEI_FR	ADVANCES	400	401	400	193170	4.8	https://api.gleif.org/api/v1/lei-records?filter%5Bentity.legalAddress.country%5D=FR&page%5Bsize%5D=200&page%5Bnumber%5D=3		
+GLEIF_LEI_GB	ADVANCES	400	401	400	233452	5.0	https://api.gleif.org/api/v1/lei-records?filter%5Bentity.legalAddress.country%5D=GB&page%5Bsize%5D=200&page%5Bnumber%5D=3		
+GBIF_OCC_FR	ADVANCES	600	601	600	212492921	5.8	https://api.gbif.org/v1/occurrence/search?country=FR&hasCoordinate=true&limit=300&offset=600		
+JO45_WP_WIRED_POSTS	ADVANCES	200	201	200	200	2.7	https://wired.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc&page=3		
+GBIF_OCC_GB	ADVANCES	600	601	600	264702326	6.1	https://api.gbif.org/v1/occurrence/search?country=GB&hasCoordinate=true&limit=300&offset=600		
+JO45_WP_CURRENTNDL_CAR	ADVANCES	200	201	200	200	3.8	https://current.ndl.go.jp/wp-json/wp/v2/car?per_page=100&orderby=date&order=asc&page=3		
+GBIF_OCC_US	ADVANCES	600	601	600	1280859315	6.3	https://api.gbif.org/v1/occurrence/search?country=US&hasCoordinate=true&limit=300&offset=600		
+JO45_WP_DAILYSHINCHO_POSTS	ADVANCES	200	201	200	200	3.3	https://www.dailyshincho.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_TVFANKYODO_POSTS	ADVANCES	200	201	200	200	7.3	https://tvfan.kyodo.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_WASEDA_POSTS	ADVANCES	200	201	200	200	2.6	https://www.waseda.jp/top/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_NEWECONOMY_POSTS	FETCH_FAILED	1	1	0		1.5	JO45_WP_NEWECONOMY_POSTS stored nothing: upstream answered 403	FETCH_FAILED	JO45_WP_NEWECONOMY_POSTS stored nothing: upstream answered 403
+JO45_WP_KYODO_POSTS	ADVANCES	200	201	200	200	8.5	https://www.kyodo.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_ROOMIE_POSTS	ADVANCES	200	201	200	200	4.0	https://www.roomie.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_THEMIYANICHI_POSTS	ADVANCES	200	201	200	200	6.3	https://www.the-miyanichi.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_WEBCARTOP_POSTS	ADVANCES	200	201	200	200	8.2	https://www.webcartop.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_LISANI_POSTS	ADVANCES	200	201	200	200	3.2	https://www.lisani.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_OVOKYODO_POSTS	ADVANCES	200	201	200	200	12.9	https://ovo.kyodo.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_MENSEX_POSTS	ADVANCES	200	201	200	200	5.1	https://www.mens-ex.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_SEIKATSU110_SHOP	ADVANCES	200	201	200	200	7.4	https://www.seikatsu110.jp/wp-json/wp/v2/shop?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_WOMANMYNAVI_POSTS	COMPLETES	1	1	1		2.7	no truncation notice: the walk ended inside the cap		
+JO45_WP_SEIKATSU110_SHOPSERVICE	ADVANCES	200	201	200	200	8.7	https://www.seikatsu110.jp/wp-json/wp/v2/shop_service?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_SEIKATSU110_SERVICEREVIEWS	ADVANCES	200	201	200	200	6.9	https://www.seikatsu110.jp/wp-json/wp/v2/service_reviews?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_ISENP_POSTS	ADVANCES	200	201	200	200	9.4	https://www.isenp.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_AUTOMESSEWEB_POSTS	ADVANCES	200	201	200	200	9.4	https://www.automesseweb.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_VIDEOSALON_POSTS	ADVANCES	200	201	200	200	5.4	https://videosalon.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_BARKS_ARTIST	ADVANCES	200	201	200	200	2.3	https://barks.jp/wp-json/wp/v2/artist?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_THEBRIDGE_POSTS	ADVANCES	200	201	200	200	6.0	https://thebridge.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_RENSAI_POSTS	ADVANCES	200	201	200	200	2.9	https://rensai.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_VOLLEYBALLKING_POSTS	ADVANCES	200	201	200	200	8.4	https://volleyballking.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_SERAI_POSTS	ADVANCES	200	201	200	200	4.7	https://serai.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_OGGI_POSTS	ADVANCES	200	201	200	200	4.4	https://oggi.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_ASWEB_POSTS	ADVANCES	200	201	200	200	10.4	https://www.as-web.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_NIKKANSPA_POSTS	ADVANCES	200	201	200	200	4.5	https://nikkan-spa.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_OMOCORO_POSTS	ADVANCES	200	201	200	200	5.2	https://omocoro.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_NEWSCAREERCONNECTION_POSTS	ADVANCES	200	201	200	200	3.8	https://news.careerconnection.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_SOTOKOTOONLINE_POSTS	ADVANCES	200	201	200	200	6.6	https://sotokoto-online.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_JISIN_POSTS	ADVANCES	200	201	200	200	4.7	https://jisin.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_IPHONEMANIA_POSTS	ADVANCES	200	201	200	200	3.9	https://iphone-mania.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_JBJA_MEDIA	ADVANCES	200	201	200	200	3.0	https://www.jbja.jp/wp-json/wp/v2/media?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_IOTNEWS_POSTS	ADVANCES	200	201	200	200	5.2	https://iotnews.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_REALSOUND_POSTS	ADVANCES	200	201	200	200	14.2	https://realsound.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_DOOPE_POSTS	ADVANCES	200	201	200	200	4.3	https://doope.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_GETNAVI_POSTS	ADVANCES	200	201	200	200	6.9	https://getnavi.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_BUZZMAG_POSTS	ADVANCES	200	201	200	200	5.1	https://buzzmag.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_DIGIDAY_POSTS	ADVANCES	200	201	200	200	7.3	https://digiday.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_OTOCOTO_NEWS	ADVANCES	200	201	200	200	14.3	https://otocoto.jp/wp-json/wp/v2/news?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_BASEBALLKING_POSTS	ADVANCES	200	201	200	200	7.4	https://baseballking.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_CANCAM_POSTS	ADVANCES	200	201	200	200	4.4	https://cancam.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_BRUTUS_POSTS	ADVANCES	200	201	200	200	10.4	https://brutus.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_CANCAM_PAGES	ADVANCES	200	201	200	200	4.3	https://cancam.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_BASKETBALLKING_POSTS	ADVANCES	200	201	200	200	10.7	https://basketballking.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_BESTCARWEB_IMAGES	ADVANCES	200	201	200	200	6.7	https://bestcarweb.jp/wp-json/wp/v2/images?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_BESTCARWEB_POSTS	ADVANCES	200	201	200	200	11.0	https://bestcarweb.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_MOSHIMOSHINIPPON_POSTS	FETCH_FAILED	1	1	0		61.1	JO45_WP_MOSHIMOSHINIPPON_POSTS stored nothing: the request failed at the transport level	ADVANCES	https://www.moshimoshi-nippon.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc&page=3
+JO45_WP_NEWSNISSYOKU_RESTAURANT	ADVANCES	200	201	200	200	21.0	https://news.nissyoku.co.jp/wp-json/wp/v2/restaurant?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_NEWSNISSYOKU_FOODSNEWS	ADVANCES	200	201	200	200	23.6	https://news.nissyoku.co.jp/wp-json/wp/v2/foodsnews?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_NEWSNISSYOKU_HYAKUSAI	ADVANCES	200	201	200	200	24.1	https://news.nissyoku.co.jp/wp-json/wp/v2/hyakusai?per_page=100&orderby=date&order=asc&page=3		
+JO45_WP_NEWSNISSYOKU_KOJOCHO	ADVANCES	200	201	200	200	26.9	https://news.nissyoku.co.jp/wp-json/wp/v2/kojocho?per_page=100&orderby=date&order=asc&page=3		

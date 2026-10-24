@@ -32,7 +32,7 @@ static const hp_source T[] = {
    * from_issue_date is narrowed back to six months by the server. */
   { .id = "gr-diavgeia-decision-search",
     .name = "Diavgeia (Greece) — decisions by issuing body",
-    .collector = "gr_government", .category = "government",
+    .collector = "osint_" "government", .category = "government",
     .description = "Every act a Greek public body published to Diavgeia in the last six months, for a body named by its Diavgeia uid or latin name (e.g. 6018 or dimos_alexandrias): expenditure approvals, procurement awards and payment orders. Each row gives the ADA (unique decision id), protocol number, full Greek subject line, decision type, issuing unit, signer, and thematic categories.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "government-record", .tags = "\"gr\",\"government\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "el",
     .url = "https://diavgeia.gov.gr/opendata/search.json?org={q}&size=500",

@@ -1,6 +1,8 @@
 /* core/scheduler.c — timer-wheel cron (scheduleGuardedRun parity: per-source
  * interval, skip-if-running). P4: minimal single-thread loop; the bulk waves
  * (P5) reuse it unchanged. */
+#include "cadence.h"
+#include "source_interval.h"
 #include "scheduler.h"
 #include "../source.h"
 #include "intel.h"
@@ -9,10 +11,12 @@
 #include "maint_detect.h"
 #include "hostgate.h"
 #include "source_trust.h"
+#include "source_settings.h"
 #include "../third_party/sqlite3.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdatomic.h>
+#include <stdint.h>
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
@@ -111,6 +115,16 @@ static const char *run_status(int rc, long records, int hosts, int hosts_ok,
  * column for "at least", and writing the floor as though it were the truth
  * would be exactly the quiet over-reporting rule 4b exists to stop; a reader
  * seeing stored < 0 knows the real value is >= -stored. */
+static void fetch_log_set_bytes(db_handle *db, long flid, unsigned long long bytes) {
+  if (flid <= 0) return;
+  sqlite3_stmt *s = NULL;
+  if (sqlite3_prepare_v2(db->h, "UPDATE fetch_log SET bytes_fetched=?1 WHERE id=?2",
+                         -1, &s, NULL) != SQLITE_OK) return;
+  sqlite3_bind_int64(s, 1, (sqlite3_int64)bytes);
+  sqlite3_bind_int64(s, 2, flid);
+  sqlite3_step(s);
+  sqlite3_finalize(s);
+}
 static void fetch_log_set_stored(db_handle *db, long flid, long stored,
                                  int exact) {
   if (!db || !db->h || flid < 0 || stored < 0) return;
@@ -205,6 +219,111 @@ long sched_state_interval(const sched_state *st, const sched_policy *p,
   return st->effective_interval > declared ? st->effective_interval : declared;
 }
 
+/* ── freshness-adaptive cadence ──────────────────────────────────────────
+ *
+ * WHY. Batches 43–48 (21,000 feeds declared by public bodies and the press)
+ * had their intervals SET from a measurement: the age of the newest item on
+ * the day each feed was validated, bucketed hourly / 6-hourly / daily /
+ * weekly. That reading was true on 2026-10-19 and nothing kept it true. A
+ * parish council that posts weekly in autumn and daily before an election,
+ * a ministry whose feed broke for a month and came back — every one keeps
+ * the cadence of one afternoon forever, which is the same frozen reading as
+ * a date written into a URL (hpengine.h's {date} note), on a different axis.
+ *
+ * WHAT. After every successful run of a source whose def says
+ * adaptive_interval, the scheduler reads the newest ISO published_at the
+ * source has stored and re-buckets it by the same rule, and that bucket is
+ * the base the backoff arithmetic above works from. Both directions: a
+ * quiet feed drifts to weekly, a feed that wakes comes back to hourly on
+ * its next run (which, at worst, is a week away — the cost of having gone
+ * quiet, not of the mechanism). Bounded by the buckets: never faster than
+ * hourly, never slower than weekly, whatever the declared interval was.
+ *
+ * WHAT IT DOES NOT DO. Nothing for a row whose records carry no ISO date
+ * (undated feeds keep their declared weekly; no evidence, no change), nothing
+ * for a row that is not adaptive, nothing on a failed run (a 403 says
+ * nothing about freshness, and the backoff already handles it), and it never
+ * reads a date that is not a date: an epoch number or dd/mm/yyyy in
+ * published_at is skipped by the GLOB, exactly as embed_pod's eligibility
+ * rule skips them. */
+long sched_freshness_bucket(double age_days) {
+  if (age_days < 0)   return 0;
+  if (age_days <= 3)   return 3600;
+  if (age_days <= 30)  return 21600;
+  if (age_days <= 365) return 86400;
+  return 604800;
+}
+
+long sched_state_base(const sched_state *st, long declared, int adaptive) {
+  /* An entity pivot (interval 0) is never scheduled, whatever its rows'
+   * dates say — the composition test caught the measurement giving one a
+   * cadence. The adaptive flag refines a schedule; it cannot create one. */
+  if (declared <= 0) return declared;
+  if (adaptive && st && st->freshness_interval > 0) return st->freshness_interval;
+  return declared;
+}
+
+/* The ONE composition of the two mechanisms that can move a row's cadence
+ * (2026-10-20, when they met in a merge): the row's own measurement inside,
+ * the operator's system-wide policy outside.
+ *
+ *   sched_row_interval = cadence_apply( sched_state_base(st, declared, adaptive) )
+ *
+ * So a feed whose items say "hourly" runs hourly under no policy, six-hourly
+ * under an operator floor of six hours, and at the global cadence when one is
+ * set — a person's floor outranks a measurement, a global outranks both, and
+ * the measurement is still taken and stored, so a page can say "measured
+ * hourly, held at 6 h by policy" rather than hiding one behind the other.
+ * The health backoff (sched_state_apply / sched_state_interval) then works
+ * from this figure. An entity pivot (interval 0) passes through untouched. */
+long sched_row_interval(const sched_state *st, const source_def *d) {
+  if (!d) return 0;
+  /* Third mechanism (2026-10-21, core/source_interval.h): an interval the
+   * operator set for THIS source outranks both the measurement and the
+   * system-wide policy — specific beats general. It cannot create a
+   * schedule: source_interval_set refuses a row with interval 0, and the
+   * guard here keeps a stale row from doing so either. */
+  if (d->update_interval_sec > 0) {
+    long ov = source_interval_for(d->id);
+    if (ov > 0) return ov;
+  }
+  return cadence_apply(sched_state_base(st, d->update_interval_sec, d->adaptive_interval));
+}
+
+long sched_freshness_measure(db_handle *db, const char *id, time_t now) {
+  if (!db || !db->h || !id) return 0;
+  sqlite3_stmt *s;
+  /* ORDER BY on the (source_id, published_at DESC) index rather than max():
+   * the GLOB keeps non-ISO values out, and the first row the index yields
+   * that passes it is the newest ISO date. */
+  if (sqlite3_prepare_v2(db->h,
+        "SELECT published_at FROM intel_items WHERE source_id=?1 AND "
+        "published_at GLOB '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]*' "
+        "ORDER BY published_at DESC LIMIT 1", -1, &s, NULL) != SQLITE_OK)
+    return 0;
+  sqlite3_bind_text(s, 1, id, -1, SQLITE_TRANSIENT);
+  long out = 0;
+  if (sqlite3_step(s) == SQLITE_ROW) {
+    const char *v = (const char *)sqlite3_column_text(s, 0);
+    struct tm tm; memset(&tm, 0, sizeof tm);
+    int Y, M, D, h = 0, m = 0, sec = 0;
+    if (v && sscanf(v, "%4d-%2d-%2d", &Y, &M, &D) == 3) {
+      if (strlen(v) >= 19 && (v[10] == 'T' || v[10] == ' '))
+        sscanf(v + 11, "%2d:%2d:%2d", &h, &m, &sec);
+      tm.tm_year = Y - 1900; tm.tm_mon = M - 1; tm.tm_mday = D;
+      tm.tm_hour = h; tm.tm_min = m; tm.tm_sec = sec;
+      time_t t = timegm(&tm);
+      double age = t == (time_t)-1 ? -1.0 : (double)(now - t) / 86400.0;
+      /* A date in the future (a scheduled post, a clock skew, a feed that
+       * stamps items with tomorrow) is "fresh", not "unmeasured". */
+      if (age < 0 && t != (time_t)-1) age = 0;
+      out = sched_freshness_bucket(age);
+    }
+  }
+  sqlite3_finalize(s);
+  return out;
+}
+
 /* Lower key runs first. Three bands that never interleave — healthy sources
  * always beat backed-off ones, which always beat quarantine probes — and
  * inside a band: better trust score first, then the MOST overdue first, so a
@@ -225,7 +344,7 @@ int sched_state_load_one(db_handle *db, const char *id, sched_state *st) {
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(db->h,
         "SELECT consecutive_failures,consecutive_empties,effective_interval,"
-        "backoff_until,quarantined,quarantined_at,last_probe "
+        "backoff_until,quarantined,quarantined_at,last_probe,freshness_interval "
         "FROM source_sched_state WHERE source_id=?1", -1, &s, NULL) != SQLITE_OK)
     return -1;
   sqlite3_bind_text(s, 1, id, -1, SQLITE_TRANSIENT);
@@ -238,10 +357,72 @@ int sched_state_load_one(db_handle *db, const char *id, sched_state *st) {
     st->quarantined          = sqlite3_column_int(s, 4);
     st->quarantined_at       = (time_t)sqlite3_column_int64(s, 5);
     st->last_probe           = (time_t)sqlite3_column_int64(s, 6);
+    st->freshness_interval   = (long)sqlite3_column_int64(s, 7);   /* NULL → 0 */
     rc = 1;
   }
   sqlite3_finalize(s);
   return rc;
+}
+
+/* ── WHERE A COLLECTOR STOPPED, kept across runs (source.h's resume_in /
+ * resume_out). Deliberately NOT part of `sched_state`: that struct is the
+ * scheduler's own health view — failures, backoff, quarantine — and a
+ * collector's reading position has nothing to do with whether the source is
+ * healthy. Writing them together would also mean every resume update rewrote
+ * the backoff columns.
+ *
+ * The column is on source_sched_state because that table is already one row
+ * per scheduled source with the same lifetime. A row that is not scheduled has
+ * no resume position by construction: only this path sets the callbacks. */
+#define SCHED_RESUME_MAX 1024
+
+static int sched_resume_load(db_handle *db, const char *id, char *out, size_t cap) {
+  if (out && cap) out[0] = 0;
+  if (!db || !db->h || !id || !out || !cap) return 0;
+  sqlite3_stmt *s;
+  if (sqlite3_prepare_v2(db->h,
+        "SELECT resume_token FROM source_sched_state WHERE source_id=?1",
+        -1, &s, NULL) != SQLITE_OK)
+    return 0;
+  sqlite3_bind_text(s, 1, id, -1, SQLITE_TRANSIENT);
+  int got = 0;
+  if (sqlite3_step(s) == SQLITE_ROW && sqlite3_column_type(s, 0) != SQLITE_NULL) {
+    const char *v = (const char *)sqlite3_column_text(s, 0);
+    if (v && v[0] && strlen(v) < cap) { snprintf(out, cap, "%s", v); got = 1; }
+  }
+  sqlite3_finalize(s);
+  return got;
+}
+
+/* The row may not exist yet (a first run that resumes before any save), so this
+ * inserts rather than updating — with the defaults the table declares. A NULL
+ * or empty token CLEARS the position, which is how a collector says its cycle
+ * completed and the next run should start over. */
+static void sched_resume_store(db_handle *db, const char *id, const char *token) {
+  if (!db || !db->h || !id) return;
+  if (token && strlen(token) >= SCHED_RESUME_MAX) {
+    fprintf(stderr, "[sched] %s resume token is %zu bytes (max %d); dropped, "
+                    "the next run starts over\n",
+            id, strlen(token), SCHED_RESUME_MAX - 1);
+    token = NULL;
+  }
+  sqlite3_stmt *s;
+  if (sqlite3_prepare_v2(db->h,
+        "INSERT INTO source_sched_state(source_id,resume_token,updated_at) "
+        "VALUES(?1,?2,?3) ON CONFLICT(source_id) DO UPDATE SET "
+        "resume_token=excluded.resume_token,updated_at=excluded.updated_at",
+        -1, &s, NULL) != SQLITE_OK)
+    return;
+  sqlite3_bind_text(s, 1, id, -1, SQLITE_TRANSIENT);
+  if (token && token[0]) sqlite3_bind_text(s, 2, token, -1, SQLITE_TRANSIENT);
+  else                   sqlite3_bind_null(s, 2);
+  sqlite3_bind_int64(s, 3, (sqlite3_int64)time(NULL));
+  sqlite3_step(s);
+  sqlite3_finalize(s);
+}
+
+static void sched_resume_out(const source_ctx *ctx, const char *token) {
+  if (ctx) sched_resume_store(ctx->db, ctx->source_id, token);
 }
 
 int sched_state_save(db_handle *db, const char *id, const sched_state *st,
@@ -251,16 +432,21 @@ int sched_state_save(db_handle *db, const char *id, const sched_state *st,
   if (sqlite3_prepare_v2(db->h,
         "INSERT INTO source_sched_state(source_id,consecutive_failures,"
         "consecutive_empties,declared_interval,effective_interval,backoff_until,"
-        "quarantined,quarantined_at,last_probe,updated_at) "
-        "VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9,?10) ON CONFLICT(source_id) DO UPDATE SET "
+        "quarantined,quarantined_at,last_probe,updated_at,freshness_interval) "
+        "VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11) ON CONFLICT(source_id) DO UPDATE SET "
         "consecutive_failures=excluded.consecutive_failures,"
         "consecutive_empties=excluded.consecutive_empties,"
         "declared_interval=excluded.declared_interval,"
         "effective_interval=excluded.effective_interval,"
         "backoff_until=excluded.backoff_until,quarantined=excluded.quarantined,"
         "quarantined_at=excluded.quarantined_at,last_probe=excluded.last_probe,"
-        "updated_at=excluded.updated_at", -1, &s, NULL) != SQLITE_OK)
+        "updated_at=excluded.updated_at,"
+        "freshness_interval=excluded.freshness_interval", -1, &s, NULL) != SQLITE_OK)
     return -1;
+  if (st->freshness_interval > 0)
+    sqlite3_bind_int64(s, 11, (sqlite3_int64)st->freshness_interval);
+  else
+    sqlite3_bind_null(s, 11);
   sqlite3_bind_text (s, 1, id, -1, SQLITE_TRANSIENT);
   sqlite3_bind_int  (s, 2, st->consecutive_failures);
   sqlite3_bind_int  (s, 3, st->consecutive_empties);
@@ -293,8 +479,27 @@ static void sched_state_record(db_handle *db, const source_def *d,
   time_t now = time(NULL);
   if (sched_state_load_one(db, d->id, &st) < 0) return;   /* no table: say nothing */
   int was_q = st.quarantined;
-  sched_state_apply(&st, &pol, d->update_interval_sec, status, records, now);
-  if (sched_state_save(db, d->id, &st, d->update_interval_sec, now) != 0)
+  /* An adaptive row re-measures its cadence from what it has stored — after
+   * a run that WORKED, because a refused fetch says nothing about how often
+   * the upstream publishes. The bucket replaces the declared interval as the
+   * base of the backoff arithmetic; the authored interval stays on the def. */
+  if (d->adaptive_interval && status && strcmp(status, "ok") == 0) {
+    long fr = sched_freshness_measure(db, d->id, now);
+    if (fr != st.freshness_interval)
+      fprintf(stderr, "[sched] %s freshness: newest stored item re-buckets the "
+                      "cadence %ld -> %ld s (declared %d)\n",
+              d->id, st.freshness_interval > 0 ? st.freshness_interval
+                                               : (long)d->update_interval_sec,
+              fr > 0 ? fr : (long)d->update_interval_sec, d->update_interval_sec);
+    st.freshness_interval = fr;
+  }
+  /* ONE composition, used here and in the due-time loop (sched_row_interval):
+   * the row's measured base inside, the operator's cadence policy outside.
+   * A person's floor outranks a measurement, a global cadence outranks both,
+   * and the health backoff then stretches from the result. */
+  long base = sched_row_interval(&st, d);
+  sched_state_apply(&st, &pol, base, status, records, now);
+  if (sched_state_save(db, d->id, &st, base, now) != 0)
     fprintf(stderr, "[sched] %s: could not persist sched state\n", d->id);
   if (st.consecutive_failures > 0)
     fprintf(stderr, "[sched] %s backoff: %d consecutive failure(s), next in %lds%s\n",
@@ -304,12 +509,64 @@ static void sched_state_record(db_handle *db, const source_def *d,
     fprintf(stderr, "[sched] %s released from health quarantine\n", d->id);
 }
 
+/* ── the sources table's operational columns ─────────────────────────────
+ *
+ * `sources.status / last_check / last_success / response_time_ms /
+ * records_count / error_message` are what GET /api/sources, GET /api/status
+ * and the iOS dashboard read as "is this source alive". Until 2026-10-12
+ * NOTHING wrote them after db_seed_sources() set status='pending': every one of
+ * 18,883 rows read pending / 0 records / no response time forever, the status
+ * tiles and pie pictured the seed, and /api/status's online/offline summary
+ * counted it. The run that just finished knows all five facts, so it writes
+ * them here, once, next to fetch_log — one more UPDATE on a row the run
+ * already touched. The vocabulary (schema CHECK): online = the run succeeded
+ * and stored at least one record; degraded = it succeeded and stored none (an
+ * honest empty, or a feed that only re-fetched what it had — not a failure,
+ * not health either); offline = the run failed; pending = never run, which
+ * only the seed writes. records_count is the DISTINCT uids this run stored
+ * (the run line's second number), falling back to emits when the sink could
+ * not count. last_success moves only on a successful run. */
+static void sources_row_record(db_handle *db, const char *id, const char *status,
+                               long records, long duration_ms, const char *why) {
+  int ok = status && !strcmp(status, "ok");
+  const char *st = !ok ? "offline" : (records > 0 ? "online" : "degraded");
+  sqlite3_stmt *s = NULL;
+  if (sqlite3_prepare_v2(db->h,
+        "UPDATE sources SET status=?1, last_check=datetime('now'),"
+        " last_success=CASE WHEN ?2 THEN datetime('now') ELSE last_success END,"
+        " response_time_ms=?3, records_count=?4, error_message=?5 WHERE id=?6",
+        -1, &s, NULL) != SQLITE_OK) {
+    fprintf(stderr, "[sched] %s: could not record run on sources row: %s\n",
+            id, sqlite3_errmsg(db->h));
+    return;
+  }
+  sqlite3_bind_text(s, 1, st, -1, SQLITE_STATIC);
+  sqlite3_bind_int(s, 2, ok);
+  sqlite3_bind_int64(s, 3, duration_ms);
+  sqlite3_bind_int64(s, 4, records < 0 ? 0 : records);
+  if (why && *why) sqlite3_bind_text(s, 5, why, -1, SQLITE_TRANSIENT);
+  else             sqlite3_bind_null(s, 5);
+  sqlite3_bind_text(s, 6, id, -1, SQLITE_TRANSIENT);
+  if (sqlite3_step(s) != SQLITE_DONE)
+    fprintf(stderr, "[sched] %s: could not record run on sources row: %s\n",
+            id, sqlite3_errmsg(db->h));
+  sqlite3_finalize(s);
+}
+static volatile int *sched_cancel_slot(const char *id);
+
 int scheduler_run_source(db_handle *db, const source_def *d,
                          const char *entity) {
   intel_sink inner = intel_sink_make(db, d->id, "legacy");
   count_sink cs = { .inner = &inner, .n = 0, .notices = 0, .failed = 0 };
   intel_sink sink = { .ctx = &cs, .emit = count_emit };
-  volatile int cancel = 0;
+  /* ctx->cancel used to point at a local nobody else could reach, so every
+   * `if (*ctx->cancel)` in the tree was dead code and the watchdog could only
+   * log. A run the pool or a manual /run claimed gets that source's slot
+   * (sched_cancel_slot), which the watchdog sets at the deadline and shutdown
+   * sets for everything; an unclaimed run (--run, a test) keeps a local. */
+  volatile int local_cancel = 0;
+  volatile int *cancel = entity ? NULL : sched_cancel_slot(d->id);
+  if (!cancel) cancel = &local_cancel;
   http_client *http = http_client_new();   /* sources expect ctx->http set */
   llm_client llm; llm_init(&llm, http);
   source_ctx ctx = {0};
@@ -318,7 +575,22 @@ int scheduler_run_source(db_handle *db, const source_def *d,
   ctx.db = db;
   ctx.http = http;
   ctx.llm = &llm;
-  ctx.cancel = &cancel;
+  ctx.cancel = cancel;
+  /* The reading position is for a SCHEDULED run only. An entity pivot must
+   * answer from the start of the result set for the entity it was just asked
+   * about — resuming there would hand back page 37 of whatever the previous
+   * caller asked. source.h says this; here is where it is true. */
+  char resume_tok[SCHED_RESUME_MAX];
+  if (!entity && sched_resume_load(db, d->id, resume_tok, sizeof resume_tok))
+    ctx.resume_in = resume_tok;
+  if (!entity) ctx.resume_out = sched_resume_out;
+  /* The operator's per-source body ceiling, resolved once per run. 0 when the
+   * setting is absent or switched off, which every caller reads as "use the
+   * process default" — so a deployment that sets nothing is byte-identical to
+   * before this field existed. Resolved HERE rather than inside the collector
+   * because lib/ and the collectors hold no database code (source.h). */
+  ctx.body_ceiling = (size_t)source_settings_int(db, d->id,
+                                                 SRCSET_BODY_CEILING, 0);
 
   struct timespec t0, t1;
   clock_gettime(CLOCK_MONOTONIC, &t0);
@@ -341,6 +613,8 @@ int scheduler_run_source(db_handle *db, const source_def *d,
     int ok = 0;
     if (http_client_host_at(http, i, NULL, &ok) && ok) hosts_ok++;
   }
+  unsigned long long bytes_in = http_client_bytes_in(http);
+  int requests = http_client_request_count(http);
   http_client_free(http);
   /* Read the distinct-row count BEFORE the sink is freed — it lives in the
    * sink_state that free() is about to release. */
@@ -390,8 +664,12 @@ int scheduler_run_source(db_handle *db, const source_def *d,
   if (cs.failed > 0)
     snprintf(fbuf, sizeof fbuf, " failed=%ld EMIT-FAILED: the sink refused %ld"
              " record(s); they are not stored", cs.failed, cs.failed);
-  fprintf(stderr, "[sched] %s run rc=%d records=%ld %ldms %s%s%s%s\n",
-          d->id, rc, cs.n, duration_ms, sbuf, nbuf, fbuf, note);
+  /* bytes= trails the other fields like stored= does: the eight run-line
+   * parsers match `records=N Nms` as one unit and ignore what follows. */
+  char bbuf[64];
+  snprintf(bbuf, sizeof bbuf, " bytes=%llu requests=%d", bytes_in, requests);
+  fprintf(stderr, "[sched] %s run rc=%d records=%ld %ldms %s%s%s%s%s\n",
+          d->id, rc, cs.n, duration_ms, sbuf, nbuf, fbuf, bbuf, note);
 
   /* Stage 0+1: log the run and detect anomalies — but only for real data
    * collectors. The internal pods (_maint, _enrich) emit nothing and would
@@ -410,6 +688,9 @@ int scheduler_run_source(db_handle *db, const source_def *d,
     long flid = fetch_log_write(db, d->id, status, (int)cs.n, duration_ms, why);
     anomaly_detect(db, d->id, flid, status, (int)cs.n, duration_ms);
     fetch_log_set_stored(db, flid, stored, stored_exact);
+    fetch_log_set_bytes(db, flid, bytes_in);
+    sources_row_record(db, d->id, status, stored >= 0 ? stored_data : cs.n,
+                       duration_ms, why);
     if (!entity) sched_state_record(db, d, status, cs.n);
   }
   return rc;
@@ -474,6 +755,17 @@ static int is_search_only(db_handle *db, const char *id) {
  * queue; N workers run them. A slow source now occupies one of N slots
  * instead of the whole fleet.
  *
+ * TWO LANES. The internal pods (collector id starting with '_': _maint,
+ * _enrich, _breach, …) used to share those N workers and the one priority set
+ * with the collectors. So the WAL checkpoint — the pod that exists BECAUSE
+ * writes are heavy — waited behind collectors exactly when writes were
+ * heaviest, and a fleet backlog could starve anomaly triage and repair
+ * indefinitely. Pods now have their own queue and their own
+ * JO_SCHED_MAINT_WORKERS threads (default 2): a collector never occupies a
+ * maintenance worker and a pod never occupies a collector worker. What the
+ * lanes still SHARE is the per-source running[] set, so skip-if-running holds
+ * across both — and, through scheduler_claim(), against a manual /run.
+ *
  * WHY EACH WORKER OWNS ITS DB HANDLE. Unchanged from the reason the loop got
  * its own connection in the first place: a sqlite transaction belongs to a
  * connection, not a thread, and core/intel.c wraps every emit in BEGIN/COMMIT.
@@ -494,75 +786,166 @@ static int is_search_only(db_handle *db, const char *id) {
 
 #define SCHED_QCAP 2048
 
+enum { LANE_COLLECT = 0, LANE_MAINT = 1, LANE_N = 2 };
+
 /* PRIORITY, NOT FIFO. The ring used to hand sources to workers in the order
  * the dispatcher walked the registry, so a healthy 60 s feed queued behind
- * 200 dead hosts waited for every one of their connect timeouts. The queue
- * is now an unordered set with a key per entry (sched_priority): pop takes the
+ * 200 dead hosts waited for every one of their connect timeouts. Each lane is
+ * an unordered set with a key per entry (sched_priority): pop takes the
  * lowest key. A linear scan of at most SCHED_QCAP entries per pop is ~2 µs
  * against runs that take seconds; a heap would buy nothing legible. */
 typedef struct {
   int          idx[SCHED_QCAP];      /* registry indices awaiting a worker    */
   double       key[SCHED_QCAP];      /* sched_priority() at push time         */
   int          count;
-  char        *running;              /* per-source: queued or in flight       */
-  time_t      *started;              /* wall-clock start, 0 = not running     */
+  int          workers;              /* threads serving this lane             */
+  long         dropped;              /* enqueues refused because it was full  */
+  pthread_cond_t cv;
+} sched_lane;
+
+typedef struct {
+  sched_lane   lane[LANE_N];
+  char        *running;              /* per-source: queued, in flight, or claimed */
+  char        *claimed;              /* per-source: held by scheduler_claim()  */
+  time_t      *started;              /* pool run start, 0 = not running in it  */
+  time_t      *warned;               /* last deadline warning for this run     */
+  /* ctx->cancel for a claimed or pooled run. Written only under `mu`, with
+   * __atomic stores; read by collectors through a volatile pointer. */
+  volatile int *cancel;
   pthread_mutex_t mu;
-  pthread_cond_t  cv;
 } sched_queue;
 
-static sched_queue    g_q;
+static sched_queue g_q = {
+  .lane = { [LANE_COLLECT] = { .cv = PTHREAD_COND_INITIALIZER },
+            [LANE_MAINT]   = { .cv = PTHREAD_COND_INITIALIZER } },
+  .mu = PTHREAD_MUTEX_INITIALIZER,
+};
 static const source_def **g_all;
 static int            g_n;
 static int            g_deadline_sec = 0;
+/* The file the dispatcher's connection is on; every worker attaches to the
+ * same one (NULL = db_attach's default, i.e. JO_DB). */
+static char           g_db_path[1024];
 /* Per-source health state, index-aligned with g_all. Written by the worker
  * that finished the run (under g_q.mu), read by the dispatcher. */
 static sched_state   *g_state;
 static sched_policy   g_pol;
 /* Shutdown coordination — see scheduler_stop_background(). g_inflight counts
- * collector runs currently executing, not queued ones. */
+ * runs currently executing, not queued ones. g_ready says the per-source
+ * arrays above exist (release-stored after they are allocated). */
 static atomic_int     g_shutdown = 0;
 static atomic_int     g_inflight = 0;
+static atomic_int     g_ready = 0;
+static atomic_long    g_attach_failures = 0;
 
-static long g_q_dropped;      /* enqueues refused because the queue was full */
+static int lane_of(const source_def *d) {
+  return (d && d->collector && d->collector[0] == '_') ? LANE_MAINT : LANE_COLLECT;
+}
+
+/* Allocate the per-source arrays for `all[0..n)`. Separate from
+ * scheduler_loop so tests/unit/test_sched_pool.c can drive the pool without
+ * the dispatcher. */
+static int sched_pool_init(const source_def **all, int n) {
+  g_all = all;
+  g_n   = n;
+  g_q.running = calloc((size_t)n, 1);
+  g_q.claimed = calloc((size_t)n, 1);
+  g_q.started = calloc((size_t)n, sizeof(time_t));
+  g_q.warned  = calloc((size_t)n, sizeof(time_t));
+  g_q.cancel  = calloc((size_t)n, sizeof(int));
+  g_state     = calloc((size_t)n, sizeof(sched_state));
+  if (!g_q.running || !g_q.claimed || !g_q.started || !g_q.warned ||
+      !g_q.cancel || !g_state)
+    return -1;
+  atomic_store(&g_ready, 1);
+  return 0;
+}
+
+static void set_cancel(int i, int v) {           /* caller holds g_q.mu */
+  __atomic_store_n((int *)&g_q.cancel[i], v, __ATOMIC_RELEASE);
+}
+
+/* The cancel slot of a run this module knows about, or NULL. */
+static volatile int *sched_cancel_slot(const char *id) {
+  if (!atomic_load(&g_ready) || !id) return NULL;
+  int i = registry_index(id);
+  if (i < 0 || i >= g_n) return NULL;
+  volatile int *slot = NULL;
+  pthread_mutex_lock(&g_q.mu);
+  if (g_q.running[i]) slot = &g_q.cancel[i];
+  pthread_mutex_unlock(&g_q.mu);
+  return slot;
+}
+
+int scheduler_claim(const char *id) {
+  if (!atomic_load(&g_ready) || !id) return 1;   /* no pool: nothing to share */
+  int i = registry_index(id);
+  if (i < 0 || i >= g_n) return 1;
+  int ok;
+  pthread_mutex_lock(&g_q.mu);
+  if (g_q.running[i]) ok = 0;
+  else { g_q.running[i] = 1; g_q.claimed[i] = 1; set_cancel(i, 0); ok = 1; }
+  pthread_mutex_unlock(&g_q.mu);
+  return ok;
+}
+
+void scheduler_release(const char *id) {
+  if (!atomic_load(&g_ready) || !id) return;
+  int i = registry_index(id);
+  if (i < 0 || i >= g_n) return;
+  pthread_mutex_lock(&g_q.mu);
+  if (g_q.claimed[i]) { g_q.claimed[i] = 0; g_q.running[i] = 0; }
+  pthread_mutex_unlock(&g_q.mu);
+}
 
 static void q_push(int i, double key) {
+  sched_lane *L = &g_q.lane[lane_of(g_all[i])];
   pthread_mutex_lock(&g_q.mu);
   if (g_q.running[i]) {
-    /* Already queued or in flight. Serial execution gave this for free (next[i]
-     * only advanced after the run returned); with a pool it has to be explicit
-     * or a source slower than its own interval re-queues itself forever. Not a
-     * drop — the run in flight IS this cycle's refresh. */
-  } else if (g_q.count >= SCHED_QCAP) {
+    /* Already queued, in flight, or claimed by a manual run. Serial execution
+     * gave this for free (next[i] only advanced after the run returned); with
+     * a pool it has to be explicit or a source slower than its own interval
+     * re-queues itself forever. Not a drop — the run in flight IS this
+     * cycle's refresh. */
+  } else if (L->count >= SCHED_QCAP) {
     /* Backlog deeper than the queue: this source loses a cycle. Counted and
      * logged rather than swallowed — a silently truncated refresh reads as
      * "the source is stale" with no way to tell it apart from a broken
      * upstream. A standing nonzero count means the pool is undersized. */
-    g_q_dropped++;
+    L->dropped++;
     fprintf(stderr, "[sched] queue full (%d), skipping this cycle of %s "
-                    "(dropped=%ld) — raise JO_SCHED_WORKERS\n",
-            SCHED_QCAP, g_all[i]->id, g_q_dropped);
+                    "(dropped=%ld) — raise %s\n",
+            SCHED_QCAP, g_all[i]->id, L->dropped,
+            L == &g_q.lane[LANE_MAINT] ? "JO_SCHED_MAINT_WORKERS"
+                                       : "JO_SCHED_WORKERS");
   } else {
     g_q.running[i] = 1;
-    g_q.idx[g_q.count] = i;
-    g_q.key[g_q.count] = key;
-    g_q.count++;
-    pthread_cond_signal(&g_q.cv);
+    L->idx[L->count] = i;
+    L->key[L->count] = key;
+    L->count++;
+    pthread_cond_signal(&L->cv);
   }
   pthread_mutex_unlock(&g_q.mu);
 }
 
-static int q_pop(void) {
+/* Next index for lane `ln`, or -1 once shutdown has begun. */
+static int q_pop(int ln) {
+  sched_lane *L = &g_q.lane[ln];
   pthread_mutex_lock(&g_q.mu);
-  while (g_q.count == 0) pthread_cond_wait(&g_q.cv, &g_q.mu);
+  while (L->count == 0 && !atomic_load(&g_shutdown))
+    pthread_cond_wait(&L->cv, &g_q.mu);
+  if (atomic_load(&g_shutdown)) { pthread_mutex_unlock(&g_q.mu); return -1; }
   int best = 0;
-  for (int k = 1; k < g_q.count; k++)
-    if (g_q.key[k] < g_q.key[best]) best = k;
-  int i = g_q.idx[best];
+  for (int k = 1; k < L->count; k++)
+    if (L->key[k] < L->key[best]) best = k;
+  int i = L->idx[best];
   /* swap-remove: order inside the array carries no meaning, the key does */
-  g_q.count--;
-  g_q.idx[best] = g_q.idx[g_q.count];
-  g_q.key[best] = g_q.key[g_q.count];
+  L->count--;
+  L->idx[best] = L->idx[L->count];
+  L->key[best] = L->key[L->count];
   g_q.started[i] = time(NULL);
+  g_q.warned[i]  = 0;
+  set_cancel(i, 0);
   pthread_mutex_unlock(&g_q.mu);
   return i;
 }
@@ -574,20 +957,39 @@ static void q_done(int i) {
   pthread_mutex_unlock(&g_q.mu);
 }
 
-static void *worker_thread(void *arg) {
-  (void)arg;
-  db_handle own = {0};
-  if (db_attach(&own, NULL) != 0) {
-    fprintf(stderr, "[sched] worker cannot open its own DB connection; exiting\n");
-    return NULL;
-  }
-  /* N concurrent writers contend for the WAL write lock far more than one
-   * did; 5 s (db_attach's default) starts returning SQLITE_BUSY on a busy
-   * fleet, which surfaces as a spurious emit failure. */
-  sqlite3_exec(own.h, "PRAGMA busy_timeout=30000;", NULL, NULL, NULL);
+/* A worker whose connection cannot be opened used to log once and EXIT, so
+ * one transient failure at boot (a locked file, a full fd table, the volume
+ * not yet mounted) shrank the pool for the life of the process — silently,
+ * since the heartbeat reported the configured worker count, not the live
+ * one. It now retries with backoff (1 s doubling to 60 s) until it attaches
+ * or shutdown begins, and every failure is counted on the heartbeat line. */
+static int worker_attach(db_handle *own, int ln) {
+  long wait = 1;
   for (;;) {
-    int i = q_pop();
-    if (atomic_load(&g_shutdown)) { q_done(i); break; }
+    if (atomic_load(&g_shutdown)) return -1;
+    if (db_attach(own, g_db_path[0] ? g_db_path : NULL) == 0) {
+      /* N concurrent writers contend for the WAL write lock far more than one
+       * did; 5 s (db_attach's default) starts returning SQLITE_BUSY on a busy
+       * fleet, which surfaces as a spurious emit failure. */
+      sqlite3_exec(own->h, "PRAGMA busy_timeout=30000;", NULL, NULL, NULL);
+      return 0;
+    }
+    long n = atomic_fetch_add(&g_attach_failures, 1) + 1;
+    fprintf(stderr, "[sched] %s worker cannot open its DB connection "
+                    "(attach failure #%ld); retrying in %lds\n",
+            ln == LANE_MAINT ? "maint" : "collector", n, wait);
+    for (long s = 0; s < wait && !atomic_load(&g_shutdown); s++) sleep(1);
+    if (wait < 60) wait = wait * 2 > 60 ? 60 : wait * 2;
+  }
+}
+
+static void *worker_thread(void *arg) {
+  int ln = (int)(intptr_t)arg;
+  db_handle own = {0};
+  if (worker_attach(&own, ln) != 0) return NULL;
+  for (;;) {
+    int i = q_pop(ln);
+    if (i < 0) break;                      /* shutdown */
     atomic_fetch_add(&g_inflight, 1);
     scheduler_run_source(&own, g_all[i], NULL);
     atomic_fetch_sub(&g_inflight, 1);
@@ -616,14 +1018,22 @@ static void *worker_thread(void *arg) {
  * shutdown could therefore exit by signal instead of 0, and a worker could be
  * torn down mid-emit().
  *
- * This does not pretend to join. It stops handing out new work and waits a
- * bounded time for in-flight fetches to land, which is the part that matters:
- * an emit() that has begun gets to finish its transaction. A worker parked in
- * a multi-second network call may still be running when the wait expires —
- * that is why main() must also skip the atexit teardown rather than rely on
- * this alone. */
+ * This does not pretend to join. It stops handing out new work, asks every
+ * run in flight to stop (ctx->cancel — cooperative, so a collector that never
+ * polls it still runs to its own end), wakes the idle workers so they leave
+ * q_pop and close their connections, and waits a bounded time for in-flight
+ * fetches to land, which is the part that matters: an emit() that has begun
+ * gets to finish its transaction. A worker parked in a multi-second network
+ * call may still be running when the wait expires — that is why main() must
+ * also skip the atexit teardown rather than rely on this alone. */
 void scheduler_stop_background(int wait_ms) {
   atomic_store(&g_shutdown, 1);
+  pthread_mutex_lock(&g_q.mu);
+  if (atomic_load(&g_ready))
+    for (int i = 0; i < g_n; i++)
+      if (g_q.started[i] || g_q.claimed[i]) set_cancel(i, 1);
+  for (int ln = 0; ln < LANE_N; ln++) pthread_cond_broadcast(&g_q.lane[ln].cv);
+  pthread_mutex_unlock(&g_q.mu);
   const int step = 25;
   for (int waited = 0; waited < wait_ms; waited += step) {
     if (atomic_load(&g_inflight) == 0) break;
@@ -637,14 +1047,31 @@ void scheduler_stop_background(int wait_ms) {
             left, wait_ms);
 }
 
-/* Reports sources that have outrun the deadline. There is no safe hard kill:
- * only 25 of 585 sources poll ctx->cancel, and no lib/ helper does, so a
- * cooperative cancel cannot be claimed as a guarantee — and cancelling a
- * thread mid-transaction would corrupt exactly what the per-worker connection
- * is there to protect. The real containment is the pool itself (an overrun
- * costs one slot, not the fleet); this makes the overrun visible and feeds
- * the operator the id to quarantine. Per-request ceilings still come from
- * httpclient's CURLOPT_TIMEOUT_MS and lib/overpass.c's own budget. */
+/* Sources that have outrun the deadline are reported, and once a run has
+ * also outrun its OWN interval its cancel flag is set. Cancellation is
+ * COOPERATIVE: only the sources and pods that poll ctx->cancel stop early (the
+ * WAL pod between TRUNCATE attempts, the retention pod between batches, the
+ * hpengine walkers between pages — which disclose the cut as a truncation
+ * notice). There is no safe hard kill — cancelling a thread mid-transaction
+ * would corrupt exactly what the per-worker connection is there to protect —
+ * so a source that never polls keeps its slot until its own HTTP timeouts end
+ * it, and keeps being reported once a minute. The real containment is still
+ * the pool (an overrun costs one slot, not the fleet). Before this, the flag
+ * the collectors poll was a local nobody else could reach, so the deadline
+ * only ever logged.
+ *
+ * WHY NOT CANCEL AT THE DEADLINE ITSELF. The deadline is one number (300 s)
+ * for a fleet whose legitimate run times reach many minutes — a daily bulk
+ * page walk can take longer than 300 s every single time. Cancelling it there
+ * would cut the same walk at the same page on every run, forever: a disclosed
+ * discard, but a permanent one (house rule 2). A run that has outlasted its
+ * own interval is different — skip-if-running is already costing it whole
+ * cycles — so that is when the flag is set: max(deadline, interval). */
+static long cancel_after(int i) {
+  long iv = sched_row_interval(&g_state[i], g_all[i]);   /* the row's cadence as it runs, not the declared one */
+  return iv > g_deadline_sec ? iv : g_deadline_sec;
+}
+
 static void watchdog_scan(void) {
   if (g_deadline_sec <= 0) return;
   time_t now = time(NULL);
@@ -652,27 +1079,92 @@ static void watchdog_scan(void) {
   for (int i = 0; i < g_n; i++) {
     if (!g_q.started[i]) continue;
     long over = (long)(now - g_q.started[i]);
-    if (over > g_deadline_sec)
+    if (over <= g_deadline_sec) continue;
+    int first = 0;
+    if (over > cancel_after(i) &&
+        !__atomic_load_n((int *)&g_q.cancel[i], __ATOMIC_ACQUIRE)) {
+      set_cancel(i, 1);
+      first = 1;
+    }
+    if (first || now - g_q.warned[i] >= 60) {
+      int asked = __atomic_load_n((int *)&g_q.cancel[i], __ATOMIC_ACQUIRE);
+      g_q.warned[i] = now;
       fprintf(stderr, "[sched] WARN %s has held a worker slot for %lds "
-                      "(deadline %ds)\n", g_all[i]->id, over, g_deadline_sec);
+                      "(deadline %ds, interval %ds)%s\n", g_all[i]->id, over,
+              g_deadline_sec, g_all[i]->update_interval_sec,
+              first ? " — cancel requested"
+                    : asked ? " — still running after cancel" : "");
+    }
   }
   pthread_mutex_unlock(&g_q.mu);
 }
 
+/* ── boot ramp ────────────────────────────────────────────────────────────
+ *
+ * The first-run offset of the k-th of m sources in one lane. The old ramp was
+ * `(i / workers) * stag` over EVERY registered source — interval-0 entity
+ * pivots included, which the scheduler never runs — so with 18,643 sources,
+ * 8 workers and 3 s, the last scheduled source first ran ~1.9 h after boot,
+ * and a 60 s feed registered late in the array was stale for most of that.
+ *
+ * Now k counts only the sources this lane will actually run at boot, the
+ * gentle `stag` per worker spacing is kept when it fits, the whole ramp is
+ * compressed into `ramp` seconds when it does not, and no source waits longer
+ * than its own interval for its first run (the offset is folded modulo the
+ * interval, which keeps short-interval sources spread out rather than piled at
+ * one instant). ramp <= 0 disables the compression; stag <= 0 disables the
+ * ramp altogether. Politeness per upstream is hostgate's job, which is what
+ * makes a tighter ramp safe. */
+long sched_boot_offset(int k, int m, int workers, long stag, long ramp,
+                       long interval) {
+  if (stag <= 0 || k <= 0 || m <= 1) return 0;
+  if (workers < 1) workers = 1;
+  long off  = (long)(k / workers) * stag;
+  long span = (long)((m - 1) / workers) * stag;
+  if (ramp > 0 && span > ramp)
+    off = (long)((double)off * (double)ramp / (double)span);
+  if (interval > 0 && off >= interval) off %= interval;
+  return off;
+}
+
+/* Sources the dispatcher will skip at boot anyway (search_only, or benched by
+ * the repair pod's breaker), marked in `skip`. One query, not two per source:
+ * this runs before the first dispatch and the per-source probes are what the
+ * dispatcher does later, once each source is actually due. */
+static void boot_skip_set(db_handle *db, char *skip, int n) {
+  static const char *Q[] = {
+    "SELECT id FROM sources WHERE schedule_mode='search_only' OR "
+    "(quarantined_until IS NOT NULL AND quarantined_until>datetime('now'))",
+    "SELECT id FROM sources WHERE "
+    "quarantined_until IS NOT NULL AND quarantined_until>datetime('now')",
+  };
+  for (size_t q = 0; q < sizeof Q / sizeof Q[0]; q++) {
+    sqlite3_stmt *s;
+    if (sqlite3_prepare_v2(db->h, Q[q], -1, &s, NULL) != SQLITE_OK) continue;
+    while (sqlite3_step(s) == SQLITE_ROW) {
+      int i = registry_index((const char *)sqlite3_column_text(s, 0));
+      if (i >= 0 && i < n) skip[i] = 1;
+    }
+    sqlite3_finalize(s);
+    return;
+  }
+}
+
+static int env_int_clamp(const char *name, int dflt, int lo, int hi) {
+  const char *v = getenv(name);
+  int x = (v && *v) ? atoi(v) : dflt;
+  return x < lo ? lo : (x > hi ? hi : x);
+}
+
 void scheduler_loop(db_handle *db) {
-  g_all = registry_all();
-  g_n   = registry_count();
-  int n = g_n;
-  time_t *next = calloc(n, sizeof(time_t));
-  g_q.running = calloc(n, 1);
-  g_q.started = calloc(n, sizeof(time_t));
-  g_state     = calloc(n, sizeof(sched_state));
-  if (!next || !g_q.running || !g_q.started || !g_state) {
+  int n = registry_count();
+  time_t *next = calloc((size_t)(n > 0 ? n : 1), sizeof(time_t));
+  if (!next || sched_pool_init(registry_all(), n) != 0) {
     fprintf(stderr, "[sched] out of memory; scheduler off\n");
     return;
   }
-  pthread_mutex_init(&g_q.mu, NULL);
-  pthread_cond_init(&g_q.cv, NULL);
+  const char *dbf = (db && db->h) ? sqlite3_db_filename(db->h, "main") : NULL;
+  if (dbf && *dbf) snprintf(g_db_path, sizeof g_db_path, "%s", dbf);
   sched_policy_load(&g_pol);
   /* Health state survives restarts: a source that was on its 11th failure
    * yesterday is on its 11th failure now, not its 0th. */
@@ -694,55 +1186,103 @@ void scheduler_loop(db_handle *db) {
    * 16 → 97 runs. The work is network-bound, not CPU-bound, so the ceiling is
    * upstream politeness (hostgate) and sqlite write contention, not cores. 8
    * is the conservative default for a first deploy; raise it once the
-   * heartbeat below shows a standing backlog. */
-  int workers = 8;
-  const char *w = getenv("JO_SCHED_WORKERS");
-  if (w) workers = atoi(w);
-  if (workers < 1)  workers = 1;      /* 1 = the old serial behaviour, exactly */
-  if (workers > 32) workers = 32;
+   * heartbeat below shows a standing backlog. 1 = the old serial behaviour. */
+  int workers = env_int_clamp("JO_SCHED_WORKERS", 8, 1, 32);
+  /* The pods are few, mostly short, and must never wait on the fleet. Two, so
+   * one long LLM-bound pod (repair, enrichment) cannot hold the WAL
+   * checkpoint or retention behind it. */
+  int mworkers = env_int_clamp("JO_SCHED_MAINT_WORKERS", 2, 1, 8);
+  g_q.lane[LANE_COLLECT].workers = workers;
+  g_q.lane[LANE_MAINT].workers   = mworkers;
   const char *dl = getenv("JO_SCHED_DEADLINE_SEC");
   g_deadline_sec = dl ? atoi(dl) : 300;
 
   time_t now0 = time(NULL);
   /* Stagger first runs so the fleet doesn't storm upstreams at boot (many do
-   * nationwide tiled Overpass). With `workers` running at once the old 3 s
-   * spacing would still admit `workers` sources per 3 s window, so scale the
-   * step: one source per worker per 3 s keeps boot as gentle as it was.
-   *
-   * The old flat 3 s-per-source ramp was its own freshness bug: at 1999
-   * registered sources it took ~100 minutes for the fleet to become due even
-   * ONCE after a restart, so a 60 s source was 60 s only in principle. The
-   * per-host gate (core/hostgate.h) is now what enforces politeness, which is
-   * what makes a tighter ramp safe — it throttles by upstream rather than by
-   * position in the registry. JO_SCHED_STAGGER_SEC=0 disables the ramp. */
-  int stag = 3;
-  const char *sg = getenv("JO_SCHED_STAGGER_SEC");
-  if (sg) stag = atoi(sg);
-  if (stag < 0) stag = 0;
+   * nationwide tiled Overpass): one source per worker per JO_SCHED_STAGGER_SEC
+   * (3 s), compressed into JO_SCHED_RAMP_SEC (900 s) and into each source's
+   * own interval — see sched_boot_offset(). JO_SCHED_STAGGER_SEC=0 disables
+   * the ramp. */
+  long stag = env_long("JO_SCHED_STAGGER_SEC", 3, 0);
+  long ramp = env_long("JO_SCHED_RAMP_SEC", 900, 0);
+  char *skip = calloc((size_t)(n > 0 ? n : 1), 1);
+  if (skip) boot_skip_set(db, skip, n);
+  /* Pass 1: which sources start on the ramp, per lane. A source with a
+   * restored backoff or quarantine hold starts at the hold instead, so it is
+   * not given a ramp slot — nor is anything the dispatcher will not run. */
+  time_t *hold = calloc((size_t)(n > 0 ? n : 1), sizeof(time_t));
+  int m[LANE_N] = {0};
   for (int i = 0; i < n; i++) {
-    next[i] = now0 + (time_t)(i / workers) * stag;
+    const sched_state *st = &g_state[i];
+    time_t h = 0;
     /* A restored backoff is honoured across the restart: the outage did not
      * end because the process did. A quarantined source waits out its probe
      * cadence from the last probe, not from boot. */
-    const sched_state *st = &g_state[i];
-    time_t hold = 0;
     if (st->quarantined && st->last_probe > 0)
-      hold = st->last_probe + (time_t)g_pol.quarantine_probe_sec;
+      h = st->last_probe + (time_t)g_pol.quarantine_probe_sec;
     else if (st->backoff_until > 0)
-      hold = st->backoff_until;
-    if (hold > next[i]) next[i] = hold;
+      h = st->backoff_until;
+    if (hold) hold[i] = h;
+    next[i] = h > now0 ? h : now0;
+    if (g_all[i]->update_interval_sec > 0 && !(skip && skip[i]) && h <= now0)
+      m[lane_of(g_all[i])]++;
   }
+  /* Pass 2: place them. */
+  int k[LANE_N] = {0};
+  long last[LANE_N] = {0};
+  for (int i = 0; i < n; i++) {
+    const source_def *d = g_all[i];
+    if (d->update_interval_sec <= 0 || (skip && skip[i])) continue;
+    if (hold && hold[i] > now0) continue;
+    int ln = lane_of(d);
+    long off = sched_boot_offset(k[ln]++, m[ln], g_q.lane[ln].workers, stag,
+                                 ramp, sched_row_interval(&g_state[i], d));
+    if (off > last[ln]) last[ln] = off;
+    next[i] = now0 + (time_t)off;
+  }
+  free(skip);
+  free(hold);
+  fprintf(stderr, "[sched] boot ramp: %d scheduled source(s) start within %lds, "
+                  "%d pod(s) within %lds (stagger %lds, ramp cap %lds)\n",
+          m[LANE_COLLECT], last[LANE_COLLECT], m[LANE_MAINT], last[LANE_MAINT],
+          stag, ramp);
 
-  for (int i = 0; i < workers; i++) {
-    pthread_t t;
-    if (pthread_create(&t, NULL, worker_thread, NULL) == 0) pthread_detach(t);
-    else fprintf(stderr, "[sched] worker %d failed to start\n", i);
-  }
-  fprintf(stderr, "[sched] %d sources registered, %d workers\n", n, workers);
+  for (int ln = 0; ln < LANE_N; ln++)
+    for (int i = 0; i < g_q.lane[ln].workers; i++) {
+      pthread_t t;
+      if (pthread_create(&t, NULL, worker_thread, (void *)(intptr_t)ln) == 0)
+        pthread_detach(t);
+      else fprintf(stderr, "[sched] %s worker %d failed to start\n",
+                   ln == LANE_MAINT ? "maint" : "collector", i);
+    }
+  fprintf(stderr, "[sched] %d sources registered, %d workers + %d maintenance "
+                  "worker(s)\n", n, workers, mworkers);
 
   unsigned long tick = 0;
+  unsigned cad_gen = cadence_generation();
+  unsigned ovr_gen = source_interval_generation();
   for (;;) {
+    if (atomic_load(&g_shutdown)) { sleep(1); continue; }
     time_t now = time(NULL);
+    /* The cadence policy changed (PUT /api/sources/cadence), or a per-source
+     * interval was set or cleared (PUT/DELETE /api/sources/:id/interval): a
+     * row whose next due time is further away than its NEW interval is
+     * pulled in to now + interval, so a faster cadence takes effect within
+     * one interval and a slower one lets the already-planned run happen and
+     * then stretches. */
+    if (cadence_generation() != cad_gen || source_interval_generation() != ovr_gen) {
+      cad_gen = cadence_generation();
+      ovr_gen = source_interval_generation();
+      long pulled = 0;
+      for (int i = 0; i < n; i++) {
+        pthread_mutex_lock(&g_q.mu);
+        long e = sched_row_interval(&g_state[i], g_all[i]);
+        pthread_mutex_unlock(&g_q.mu);
+        if (e <= 0) continue;
+        if (next[i] > now + (time_t)e) { next[i] = now + (time_t)e; pulled++; }
+      }
+      fprintf(stderr, "[sched] cadence changed (policy or a per-source interval): %ld row(s) re-planned\n", pulled);
+    }
     for (int i = 0; i < n; i++) {
       const source_def *d = g_all[i];
       /* Unified: schedule any source with an interval; on-demand sources
@@ -752,10 +1292,10 @@ void scheduler_loop(db_handle *db) {
       if (now < next[i]) continue;
       /* User-set per-source mode: search_only sources don't cron for the
        * map (the search tab triggers them on demand). */
-      if (is_search_only(db, d->id)) { next[i] = now + d->update_interval_sec; continue; }
+      if (is_search_only(db, d->id)) { next[i] = now + cadence_apply(d->update_interval_sec); continue; }
       /* Circuit breaker: a quarantined source is benched until the cooldown
        * lapses (a later probe past quarantined_until runs and may clear it). */
-      if (is_quarantined_impl(db, d->id)) { next[i] = now + d->update_interval_sec; continue; }
+      if (is_quarantined_impl(db, d->id)) { next[i] = now + cadence_apply(d->update_interval_sec); continue; }
       /* Cadence is measured from the DUE time, not from completion: a source
        * that takes 90 s on a 60 s interval stays due immediately rather than
        * silently drifting to 150 s. q_push's skip-if-running is what stops
@@ -765,7 +1305,12 @@ void scheduler_loop(db_handle *db) {
       pthread_mutex_lock(&g_q.mu);
       sched_state st = g_state[i];
       pthread_mutex_unlock(&g_q.mu);
-      long declared = d->update_interval_sec;
+      /* "declared" here is this row's interval under BOTH mechanisms
+       * (sched_row_interval): the cadence its own stored items measured when
+       * the row is adaptive — the worker refreshed that into g_state[i] —
+       * with the operator's cadence policy (cadence.h) applied on top.
+       * Backoff doubles from it and the overdue ratio is measured against it. */
+      long declared = sched_row_interval(&st, d);
       double overdue = (double)(now - next[i]) / (double)(declared > 0 ? declared : 1);
       q_push(i, sched_priority(&st, source_trust_score(db, d->id), overdue));
       next[i] = now + sched_state_interval(&st, &g_pol, declared);
@@ -779,18 +1324,22 @@ void scheduler_loop(db_handle *db) {
       long waits = 0, timeouts = 0, inflight = 0;
       hostgate_counters(&waits, &timeouts, &inflight);
       pthread_mutex_lock(&g_q.mu);
-      int queued = g_q.count, busy = 0, backed = 0, quar = 0;
+      int queued = g_q.lane[LANE_COLLECT].count, mqueued = g_q.lane[LANE_MAINT].count;
+      int busy = 0, mbusy = 0, backed = 0, quar = 0;
       for (int i = 0; i < n; i++) {
-        if (g_q.started[i]) busy++;
+        if (g_q.started[i]) { if (lane_of(g_all[i]) == LANE_MAINT) mbusy++; else busy++; }
         if (g_state[i].quarantined) quar++;
         else if (g_state[i].backoff_until > now) backed++;
       }
       pthread_mutex_unlock(&g_q.mu);
-      /* `backed_off`/`quarantined` are APPENDED so the existing parsers of this
-       * line keep matching (same reason `stored=` trails the run line). */
+      /* `backed_off`/`quarantined`, then the maintenance lane, are APPENDED so
+       * the existing parsers of this line keep matching (same reason `stored=`
+       * trails the run line). */
       fprintf(stderr, "[sched] busy=%d/%d queued=%d | hostgate inflight=%ld "
-                      "waited=%ld over_budget=%ld | backed_off=%d quarantined=%d\n",
-              busy, workers, queued, inflight, waits, timeouts, backed, quar);
+                      "waited=%ld over_budget=%ld | backed_off=%d quarantined=%d"
+                      " | maint busy=%d/%d queued=%d | attach_failures=%ld\n",
+              busy, workers, queued, inflight, waits, timeouts, backed, quar,
+              mbusy, mworkers, mqueued, atomic_load(&g_attach_failures));
     }
     sleep(1);
   }

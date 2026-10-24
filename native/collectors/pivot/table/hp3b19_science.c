@@ -915,6 +915,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .id_keys = "id",
     .interval = 86400,
     .next_path = "links.rel=next.href",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .title_keys = "id",
     .description = "Scene-level metadata for the Swiss national high-resolution "
       "digital elevation model, one record per tile with its footprint "
@@ -954,6 +955,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .id_keys = "id",
     .interval = 21600,
     .next_path = "links.rel=next.href",
+    .page_resume = 1,   /* 5,597,082 records, measured 2026-10-12: read over a cycle, 100~ pages a run */
     .title_keys = "id",
     .description = "Scene records from the Copernicus Global Flood Monitoring "
       "product, over five million of them, each with the observation "
@@ -993,6 +995,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .id_keys = "id",
     .interval = 21600,
     .next_path = "links.rel=next.href",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .title_keys = "id",
     .description = "Scene metadata for the Sentinel-1 ground range detected radar "
       "archive, one record per acquisition with its exact footprint "
@@ -1012,6 +1015,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .id_keys = "id",
     .interval = 86400,
     .next_path = "links.rel=next.href",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .title_keys = "title,id",
     .description = "The collections published by the UK Earth Observation DataHub, "
       "with title, description, licence, keywords, providers, item "
@@ -1031,6 +1035,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .id_keys = "id",
     .interval = 86400,
     .next_path = "links.rel=next.href",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .title_keys = "title,id",
     .description = "Every collection distributed by the Alaska Satellite Facility "
       "DAAC, the NASA archive for synthetic aperture radar, with title, "
@@ -1050,6 +1055,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .id_keys = "id",
     .interval = 86400,
     .next_path = "links.rel=next.href",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .title_keys = "title,id",
     .description = "Every collection distributed by the Goddard Earth Sciences Data "
       "and Information Services Center, the NASA archive for "
@@ -1071,6 +1077,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .lat_key = "geometry.coordinates.1",
     .lon_key = "geometry.coordinates.0",
     .next_path = "links.rel=next.href",
+    .page_resume = 1,   /* 1,358,830 records, measured 2026-10-12: read over a cycle, 100~ pages a run */
     .title_keys = "properties.name,properties.reference",
     .description = "One point record for each of over 1.35 million boreholes drilled "
       "onshore in Great Britain, with the BGS reference, borehole name, "
@@ -1093,6 +1100,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .lat_key = "geometry.coordinates.1",
     .lon_key = "geometry.coordinates.0",
     .next_path = "links.rel=next.href",
+    .page_resume = 1,   /* 75,134 records, measured 2026-10-12: read over a cycle, 100~ pages a run */
     .title_keys = "properties.loca_id,properties.proj_name",
     .description = "Boreholes for which BGS holds the digital AGS geotechnical data "
       "file, each with the project name, contractor and engineer names, "
@@ -1115,6 +1123,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .lat_key = "properties.latitude",
     .lon_key = "properties.longitude",
     .next_path = "links.rel=next.href",
+    .page_max = 79,   /* 7,834 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     .title_keys = "properties.earthquake_event_id",
     .description = "Every earthquake instrumentally recorded in and around the "
       "United Kingdom since 1970, with origin time, latitude, "
@@ -1140,6 +1149,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .lat_key = "properties.LAT",
     .lon_key = "properties.LON",
     .next_path = "links.rel=next.href",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .title_keys = "properties.LOCALITY",
     .description = "The UK pre-instrumental earthquake catalogue, one record per "
       "event with date, time to the second where known, latitude and "
@@ -1161,6 +1171,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .lat_key = "geometry.coordinates.1",
     .lon_key = "geometry.coordinates.0",
     .next_path = "links.rel=next.href",
+    .page_max = 187,   /* 18,698 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     .title_keys = "properties.landslide_name,properties.locality_details",
     .description = "Over eighteen thousand recorded landslides in Great Britain, "
       "each with a landslide number, survey number, name, locality "
@@ -1181,6 +1192,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .id_keys = "properties.plan_id",
     .interval = 86400,
     .next_path = "links.rel=next.href",
+    .page_resume = 1,   /* 131,770 records, measured 2026-10-12: read over a cycle, 100~ pages a run */
     .title_keys = "properties.plan_title,properties.mine_name",
     .description = "More than one hundred and thirty thousand archived mine plans "
       "with their outline geometry, plan and series identifiers, "
@@ -1203,6 +1215,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .lat_key = "geometry.coordinates.1",
     .lon_key = "geometry.coordinates.0",
     .next_path = "links.rel=next.href",
+    .page_max = 134,   /* 13,308 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     .title_keys = "properties.wellname",
     .description = "Thirteen thousand offshore hydrocarbon wells on the UK "
       "continental shelf, each with well identifier and name, licence, "
@@ -1223,6 +1236,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .id_keys = "properties.synthetic_id",
     .interval = 604800,
     .next_path = "links.rel=next.href",
+    .page_resume = 1,   /* 410,021 records, measured 2026-10-12: read over a cycle, 100~ pages a run */
     .title_keys = "properties.bgs_commodity_trans",
     .description = "Four hundred and ten thousand rows of national mineral "
       "production, import and export statistics by year, country with "
@@ -1244,6 +1258,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .lat_key = "geometry.coordinates.1",
     .lon_key = "geometry.coordinates.0",
     .next_path = "links.rel=next.href",
+    .page_max = 27,   /* 2,672 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     .title_keys = "properties.volcano_name",
     .description = "Eruption source parameters for volcanoes worldwide, each record "
       "naming the volcano and its alternative names, volcano type, "
@@ -1280,6 +1295,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .id_keys = "id",
     .interval = 3600,
     .next_path = "links.next",
+    .page_max = 100,   /* 10,000 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     .title_keys = "id",
     .description = "Alert loci from the NOIRLab ANTARES broker, each a JSON:API "
       "resource carrying the locus identifier, its aggregated alert "
@@ -1364,6 +1380,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .lat_key = "geometry.coordinates.1",
     .lon_key = "geometry.coordinates.0",
     .next_path = "links.rel=next.href",
+    .page_resume = 1,   /* 541,508 records, measured 2026-10-12: read over a cycle, 100~ pages a run */
     .title_keys = "id",
     .description = "Measurement records from the national aeromagnetic survey of "
       "Great Britain, each with its position and the observed magnetic "
@@ -1383,6 +1400,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .id_keys = "id",
     .interval = 604800,
     .next_path = "links.rel=next.href",
+    .page_max = 28,   /* 2,741 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     .title_keys = "id",
     .description = "Every mapped fault in the national 1:625000 bedrock geology of "
       "Great Britain as a geometry with its classification attributes. "
@@ -1404,6 +1422,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .lat_key = "geometry.coordinates.1",
     .lon_key = "geometry.coordinates.0",
     .next_path = "links.rel=next.href",
+    .page_max = 37,   /* 3,663 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     .title_keys = "id",
     .description = "Analytical results from core samples taken in offshore oil and "
       "gas wells on the UK continental shelf, each tied to its well and "
@@ -1422,6 +1441,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .id_keys = "id",
     .interval = 604800,
     .next_path = "links.rel=next.href",
+    .page_resume = 1,   /* 23,756 records, measured 2026-10-12: read over a cycle, 100~ pages a run */
     .title_keys = "id",
     .description = "The track of every offshore geophysical survey line BGS holds "
       "for UK waters, with the survey identifier and line attributes. A "
@@ -1440,6 +1460,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .id_keys = "id",
     .interval = 604800,
     .next_path = "links.rel=next.href",
+    .page_resume = 1,   /* 791,803 records, measured 2026-10-12: read over a cycle, 100~ pages a run */
     .title_keys = "id",
     .description = "The register of physical geological samples curated by BGS, each "
       "with its identifier, collection details and location. A "
@@ -1476,6 +1497,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .id_keys = "id",
     .interval = 86400,
     .next_path = "links.rel=next.href",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .title_keys = "title,id",
     .description = "Every collection distributed by the NASA Ocean Biology "
       "Distributed Active Archive Center, with title, description, "
@@ -1496,6 +1518,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .id_keys = "id",
     .interval = 86400,
     .next_path = "links.rel=next.href",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .title_keys = "title,id",
     .description = "Every collection distributed by the NASA Global Hydrometeorology "
       "Resource Center, with title, description, licence, providers, "
@@ -1515,6 +1538,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .id_keys = "id",
     .interval = 21600,
     .next_path = "links.rel=next.href",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .title_keys = "id",
     .description = "Scene metadata for the reprocessed Sentinel-2 collection 1 "
       "surface reflectance archive, one record per tile acquisition "
@@ -1535,6 +1559,7 @@ static const hp_source HP3B19_SCIENCE[] = {
     .id_keys = "id",
     .interval = 21600,
     .next_path = "links.rel=next.href",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .title_keys = "id",
     .description = "Scene metadata for the Landsat 8 and 9 collection 2 level 2 "
       "archive, one record per scene with path and row, footprint, "

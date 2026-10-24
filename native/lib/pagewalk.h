@@ -35,8 +35,11 @@
  * reads. Silence is the violation; a stated bound is not.
  *
  * ENV
- *   JO_PAGE_MAX   pages per run, default 20. 1 restores the old
- *                 single-fetch behaviour while KEEPING the disclosure.
+ *   JO_PAGE_MAX   pages per run, default 20, for EVERY walk in the tree — this
+ *                 module, lib/jsonlist.c and lib/hpengine.c alike. It used to
+ *                 reach only this one; see jo_page_max() in pagewalk.c for what
+ *                 the other two did instead. 1 restores the old single-fetch
+ *                 behaviour while KEEPING the disclosure.
  *   JO_PAGE_WALK  0 disables continuation entirely (disclosure still emitted).
  */
 #ifndef JO_PAGEWALK_H
@@ -69,8 +72,40 @@ typedef int (*pw_emit_fn)(const source_ctx *c, intel_sink *s, const char *id,
  *
  * Returns the number of records emitted (the notice is not counted), or -1 if
  * the FIRST fetch failed — a dead endpoint is an error, an empty one is not. */
+/* The page ceiling every walk in the tree uses: $JO_PAGE_MAX when set, else
+ * `legacy_env` when that name is set (NULL for none), else 20. One function
+ * because there were three bounds with two numbers and two knobs, and one of
+ * them had no knob at all — see jo_page_max() in pagewalk.c. */
+int jo_page_max(const char *legacy_env);
+
+/* The same ceiling for a caller that carries a source's own DECLARED page_max
+ * (0 for none): $JO_PAGE_MAX when set — in both directions, because it is the
+ * operator's brake — else the declared value, else the default above. Call
+ * this rather than `declared > 0 ? declared : jo_page_max(NULL)`, which is
+ * what hpengine did, and which left the knob unable to bound the 669 rows that
+ * declare a ceiling of their own. */
+int jo_page_max_for(int declared);
+
 int pw_walk(const source_ctx *c, intel_sink *s, const char *id,
             const char *url, pw_fetch_fn fetch, pw_emit_fn emit_page, void *ud);
+
+/* As pw_walk, with an explicit page ceiling for a source whose collection size
+ * has been MEASURED and is larger than the 20-page default.
+ *
+ * The default exists as a brake on a runaway walk against an unknown upstream,
+ * and raising it globally would lift that brake for all 2,727 of them. But a
+ * source whose total the upstream itself publishes — EMSC's 48,729 moment
+ * tensors, CBS's 159,120 CPI rows, OpenAerialMap's 21,437 images — is not
+ * unknown, and capping it at 20 pages turns a complete read into a permanently
+ * disclosed shortfall. Pass the number of pages that covers the measured total
+ * with headroom, and say in the caller where the measurement came from.
+ *
+ * 0 means "use the default". JO_PAGE_MAX still overrides, in both directions:
+ * it is the operator's brake, so a source cannot talk past it, and an operator
+ * who lowers it to make a run cheap gets that from every source. */
+int pw_walk_max(const source_ctx *c, intel_sink *s, const char *id,
+                const char *url, pw_fetch_fn fetch, pw_emit_fn emit_page,
+                void *ud, int page_max_declared);
 
 /* The default fetcher: feed_get_json with the 25 s timeout the macros used. */
 cJSON *pw_fetch_json(const source_ctx *c, const char *url, void *ud);

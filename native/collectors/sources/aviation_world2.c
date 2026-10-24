@@ -243,7 +243,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 #define AV_DEF(sym, ID, NM, DESC) \
-  static const source_def sym = { .id = ID, .collector = "osint", .name = NM, \
+  static const source_def sym = { .id = ID, .collector = "osint_" "infrastructure", .name = NM, \
     .name_ja = NM, .update_interval_sec = 0, .run = run, .category = "infrastructure", \
     .type = "api", .url = "internal://osint/aviation", .description = DESC, \
     .layer = NULL, .free_tier = 1 }; \

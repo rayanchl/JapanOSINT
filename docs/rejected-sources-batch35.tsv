@@ -1,0 +1,4 @@
+# Batch 35 jpweko rows REMOVED on the 2026-10-20 measurement: HTTP 5xx from the repository on the sweep AND on a re-run.
+id	beat	stage	verdict	note
+JO35_WEKO_NIIGATA_U	jpweko	engine	HTTP_500	probe HTTP_ERR 500; engine HTTP_500 then HTTP_500
+JO35_WEKO_U_RYUKYU	jpweko	engine	HTTP_502	probe HTTP_ERR 500; engine HTTP_502 then HTTP_502

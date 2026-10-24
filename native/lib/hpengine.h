@@ -232,10 +232,14 @@ typedef struct hp_source {
   const char *base;
 
   /* Second hop — the actual penetrancy. detail_max 0 (the default) deepens
-   * EVERY list record, bounded operationally by $JO_HP_DETAIL_MAX (default 25)
-   * so one pivot cannot fire thousands of requests. Records that were not
-   * deepened carry `_detail_pending: true` — an un-fetched detail is reported,
-   * not quietly treated as absent. */
+   * EVERY list record, bounded operationally by $JO_HP_DETAIL_MAX (default
+   * 1,000) and by $JO_HP_DETAIL_SEC of detail fetching per run (default 120;
+   * the host gate paces each hop, so time is the honest politeness unit).
+   * Records that were not deepened carry `_detail_pending: true`, and the run
+   * files ONE collector-truncation-notice counting fetched vs pending — an
+   * un-fetched detail is reported, not quietly treated as absent. Every mode
+   * deepens (JSON, XML, CSV/XLSX columns, HTML anchors' title/url/id), the hop
+   * carries the row's own headers ({key} expanded) and is parsed as JSON. */
   const char *detail_url;     /* template, {v} from detail_key              */
   const char *detail_key;     /* field in the list record holding the id    */
   const char *detail_path;    /* array_path for the detail doc (or NULL)    */
@@ -254,9 +258,12 @@ typedef struct hp_source {
    *                 empty or repeated page ends the walk). Mutually exclusive
    *                 with page_param: gen_hp_batch.py rejects a row with both.
    * page_size is what one page returns (needed for offset-style paging), and
-   * page_max bounds the walk (default 10 pages) so a runaway feed cannot spin
-   * forever — when that bound bites it is stamped on every record, never
-   * silent. */
+   * page_max bounds the walk (default jo_page_max(), 20 pages, raised or
+   * lowered for the whole tree by $JO_PAGE_MAX — lib/pagewalk.c) so a runaway
+   * feed cannot spin forever — when that bound bites it is stamped on every record, never
+   * silent. $JO_PAGE_MAX brakes a declared page_max too (jo_page_max_for, hptest
+   * 40f), which is how tools/audit_cycle_advance.py asks each cycling row
+   * what its second page answers without reading a hundred pages. */
   /* Dotted path to the next-page cursor or URL in the response. A segment of
    * `$last` is the final element of an array, for an upstream whose cursor is
    * the last record's own field rather than anything in an envelope: the Go
@@ -290,14 +297,15 @@ typedef struct hp_source {
    * `page_start` that happens to cancel out. */
   int         page_zero_based;/* 1 = the first page is numbered 0, not 1      */
   int         page_size;      /* records per page, for offset-style paging    */
-  int         page_max;       /* max pages to walk (default 10)              */
+  int         page_max;       /* max pages to walk (default jo_page_max())   */
   /* Walk pages the way a VJSON collector is walked, for a row that declares
    * none of next_path / page_param / {page}: the server's own next link, else
    * the cursor its declared page size pairs with, advanced only while pages
    * come back full (jsonlist_next_page — one decision for both engines).
    * Opt-in, and HP_JSON only: it exists so a verified list collector moved onto
    * this engine to walk its detail hop does not lose every page after the
-   * first. The ceiling is page_max when set, else $JO_JSONLIST_PAGE_MAX (20). */
+   * first. The ceiling is page_max when set, else jo_page_max() — 20, under
+   * $JO_PAGE_MAX or the legacy $JO_JSONLIST_PAGE_MAX. */
   int         page_walk;
 
   int csv_no_header;          /* CSV mode: file has no header row → col0..colN */
@@ -396,6 +404,40 @@ typedef struct hp_source {
    * existing initializer moves. */
   const char *xlsx_sheet;
   int         xlsx_sheet_index;
+  /* ── READ THE WHOLE COLLECTION OVER A CYCLE, one run's pages at a time.
+   *
+   * A page ceiling answers "how many requests may one run make". It does not
+   * answer "how is a collection bigger than that ever read", and for 89
+   * scheduled rows the honest answer was "it is not": measured 2026-10-12
+   * (docs/measured-page-ceilings-2026-10-12.tsv), they declare totals needing
+   * 201 to 55,971 pages — 1.93 billion records between them — so every run
+   * re-read the same first 20 pages and the rest was disclosed and never
+   * fetched. 534 more page past the ceiling without publishing a total at all.
+   * Raising page_max does not serve those rows; 55,971 requests a run against
+   * one host is not exhaustiveness, it is an outage.
+   *
+   * With `page_resume = 1` the walk starts where the previous run stopped and
+   * stores where this one stopped (source_ctx's resume_in / resume_out, which
+   * core/scheduler.c persists). When the walk reaches the end the position is
+   * CLEARED, so the next run starts over and the cycle repeats: the whole
+   * collection is read over ceiling-sized slices, and each notice says which
+   * slice this run read. collectors/sources/wayback_jp.c has done exactly this
+   * by hand since before the field existed — mhlw's 2,064-page index over ~207
+   * daily runs — and that row is the worked example.
+   *
+   * It is ignored, with a line on stderr, when:
+   *   - the run carries an ENTITY. "What do we have on X" must answer from the
+   *     start of X's results, not from page 37 of the last entity asked about.
+   *     The scheduler passes no resume on a pivot run for the same reason.
+   *   - the URL or body carries a {date…} or {ago:…} token. The stored
+   *     position is a URL, so resuming would re-fetch a stale day forever;
+   *     those rows are a live tail and already walk forward by date.
+   *   - the stored URL's host is not the row's own host. The token comes from
+   *     the database, and a reading position is not a licence to fetch
+   *     somewhere else.
+   * Appended last, like every field above it, so no existing initializer
+   * moves. */
+  int         page_resume;
   /* Date tokens. `{date}` in the url, post_body or a header is today's date
    * (YYYY-MM-DD); `{date-1d}`, `{date+2w}`, `{date-3m}`, `{date-1y}` shift it;
    * `{date-1d:%Y%m%d}` formats it (strftime); `{date:@s}` / `{date:@ms}` is
@@ -435,11 +477,70 @@ typedef struct hp_source {
   const char *table_must;
   int         table_index;
   int         table_skip_rows;
+  /* adaptive_interval=1: the declared `interval` is the cadence MEASURED when
+   * the row was authored (batches 43–48 set it from the newest item's age:
+   * ≤3 days → hourly, ≤30 → 6-hourly, ≤1 year → daily, else weekly), and a
+   * measurement ages. After every successful run core/scheduler.c re-reads
+   * the newest ISO `published_at` the row has stored and re-buckets the same
+   * way, so a municipal feed that goes quiet drifts to weekly and one that
+   * wakes up comes back to hourly — in BOTH directions, bounded by the
+   * buckets, never by a number nobody re-measured. A row whose records carry
+   * no ISO date keeps its declared interval: no evidence, no change. Off by
+   * default: a row's author may have set its cadence for a reason the item
+   * dates cannot see (a forecast feed, a window the row exists to be fresh
+   * for). Appended last so no existing initializer moves. */
+  int         adaptive_interval;
+  /* detail_html_kv=1: the detail hop answers an HTML record page, not JSON —
+   * the FAA's N-number page, a register's profile page. Its label/value cells
+   * are merged under "detail." instead of the hop failing as "not JSON":
+   * every cell carrying a non-empty `data-label` attribute (the accessible
+   * responsive-table pattern), and in rows without one, each <th> paired with
+   * the <td> after it. A label that repeats is indexed (`Expiration Date`,
+   * `Expiration Date.1`), as repeated XML children are; nothing is dropped.
+   * Opt-in, because a page's navigation and layout tables are cells too.
+   * Appended last so no existing initializer moves. */
+  int         detail_html_kv;
 } hp_source;
 
 /* Register `n` rows. `defs` must be static storage of at least n entries owned
  * by the caller (source_def pointers live for the process lifetime). */
-void hp_register(const hp_source *specs, int n, source_def *defs);
+/* `table` is the registering file's basename without `.c` (HP_REGISTER_TABLE
+ * passes __FILE__): it becomes the default `collector` of every row in the
+ * table that declares none. It used to be the literal "osint" for all of
+ * them, which put 8,445 rows from 183 unrelated tables into one collector —
+ * a Japanese media beat, a SCADA beat and a Brazilian registry beat
+ * indistinguishable in every client. The beat a row was authored and probed
+ * in IS its natural group, and the file name is the one spelling of that
+ * beat every gate already uses. A row that names its own collector keeps it.
+ * NULL/"" falls back to "osint" (the offline test harness, nothing live). */
+void hp_register(const hp_source *specs, int n, source_def *defs,
+                 const char *table);
+
+/* Serialise one registered row AS DECLARED, for the source detail API:
+ * every non-default field by name, enums as words, plus the derived facts a
+ * client would otherwise have to re-derive from the C — `kind`
+ * (pivot | scheduled | scheduled-pivot | unreachable), the entity tokens the
+ * URL and body use, the paging strategy as one word, whether a detail hop is
+ * declared and whether {date…}/{ago:} tokens are rendered. Header templates
+ * are shown verbatim: they carry `{env}` tokens, never values. malloc'd JSON,
+ * caller frees; NULL for an id this engine does not run. */
+char *hp_describe_json(const char *id);
+/* The declared row itself (read-only, lives for the process), or NULL when
+ * `id` is not an hpengine source. For callers that want one field, not JSON. */
+const hp_source *hp_source_get(const char *id);
+/* 1 when `id` is an hpengine row whose URL or POST body carries an entity
+ * token, or that declares filter_query (a bulk fetch filtered by the entity
+ * locally), i.e. it is dispatchable as an entity pivot. 0 for a fixed-endpoint
+ * row AND for an id this engine does not run — callers that need to tell
+ * those apart ask hp_describe_json(). */
+int hp_source_uses_entity(const char *id);
+
+/* The registered row behind source id `id`, or NULL when `id` is not an
+ * hpengine row (a hand-written collector). Read-only: for code that
+ * describes a row from its declaration (core/source_card.c reads `want` and
+ * the entity tokens of `url`/`post_body`). A linear scan; callers that need
+ * every row cache the answer. */
+const hp_source *hp_spec_get(const char *id);
 
 /* XML text → the characters it denotes, in place: unwraps every CDATA section
  * (payload verbatim), decodes the five predefined entities and numeric
@@ -453,7 +554,8 @@ void hp_xml_decode(char *s);
 #define HP_REGISTER_TABLE(TBL)                                                \
   static source_def TBL##_defs[sizeof(TBL) / sizeof((TBL)[0])];               \
   __attribute__((constructor)) static void hp_reg_##TBL(void) {               \
-    hp_register((TBL), (int)(sizeof(TBL) / sizeof((TBL)[0])), TBL##_defs);    \
+    hp_register((TBL), (int)(sizeof(TBL) / sizeof((TBL)[0])), TBL##_defs,    \
+                __FILE__);                                                    \
   }
 
 #endif

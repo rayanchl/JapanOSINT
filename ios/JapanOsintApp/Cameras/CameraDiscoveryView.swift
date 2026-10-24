@@ -177,6 +177,7 @@ struct CameraDiscoveryView: View {
         ScrollView {
             LazyVStack(spacing: 8) {
                 modePicker
+                CameraVisualSearchPanel()
                 if events.isEmpty {
                     emptyState
                 } else if filteredEvents.isEmpty {
@@ -791,6 +792,293 @@ struct CameraDiscoveryView: View {
             triggerError = nil
         } catch {
             triggerError = error.localizedDescription
+        }
+    }
+}
+
+// MARK: - Visual search
+//
+// "Search cameras by what they show" — GET /api/cameras/visual-search
+// (native/core/visualsearchapi.h). A sentence ("snow on the road",
+// "冠水した道路") is matched against whole camera frames by the server's
+// vision index; one row per camera. Public-infrastructure cameras only — the
+// server applies the policy; nothing here matches people or faces.
+//
+// Thumbnails come from the OPERATOR-GATED raw still route, fetched as bytes
+// and drawn only with a real image signature (CameraStillFrameView's
+// helpers), so a 401/403 shows its reason in place of an image. A camera that
+// matched on its weekly reference frame has no still: it says so, and has no
+// "find similar" action.
+
+enum VisualSearchPhase {
+    case idle
+    case loading
+    case loaded(VisualSearchEnvelope)
+    case failed(String)
+
+    var isLoading: Bool {
+        if case .loading = self { return true }
+        return false
+    }
+}
+
+enum VisualSearchText {
+    /// The server's reason, as a sentence; a 503 says WHY search is down.
+    static func message(_ error: Error) -> String {
+        guard let apiError = error as? APIError,
+              case let .http(code, body) = apiError else {
+            return "Search failed — \(error.localizedDescription)"
+        }
+        struct E: Decodable { let error: String?; let reason: String? }
+        let e = try? JSONDecoder().decode(E.self, from: Data(body.utf8))
+        let reason = e?.reason ?? ""
+        switch code {
+        case 401: return "Sign in to search cameras."
+        case 403: return reason.isEmpty ? "Not allowed (403)." : "Not allowed: \(reason)"
+        case 503:
+            return reason.isEmpty ? "Visual search is unavailable on this server (503)."
+                                  : "Visual search is unavailable: \(reason)"
+        default:
+            if !reason.isEmpty { return "\(reason) (\(e?.error ?? "HTTP \(code)"))" }
+            return "Search failed (HTTP \(code)\(e?.error.map { ": \($0)" } ?? ""))."
+        }
+    }
+
+    /// "N of M cameras indexed", and whether the candidate pool ran out first.
+    static func coverage(_ meta: VisualSearchMeta?) -> String {
+        guard let meta else { return "" }
+        var parts: [String] = []
+        if let note = meta.cameras?.note { parts.append(note) }
+        if meta.candidates?.exhausted == false {
+            parts.append("best of the \(meta.candidates?.examined ?? 0) nearest frames examined — more may match")
+        }
+        return parts.joined(separator: " · ")
+    }
+}
+
+struct CameraVisualSearchPanel: View {
+    @EnvironmentObject private var apiClient: APIClient
+    @Environment(\.theme) private var theme
+
+    @State private var query = ""
+    @State private var phase: VisualSearchPhase = .idle
+    /// The still hit being pivoted on ("find similar cameras").
+    @State private var similarTo: VisualSearchHit?
+
+    private var trimmed: String { query.trimmingCharacters(in: .whitespacesAndNewlines) }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 6) {
+                Image(systemName: "photo.on.rectangle.angled")
+                    .foregroundStyle(theme.textMuted)
+                    .accessibilityHidden(true)
+                TextField("Search cameras by what they show", text: $query)
+                    .textFieldStyle(.roundedBorder)
+                    .onSubmit { Task { await run() } }
+                    .accessibilityLabel("Search cameras by what they show")
+                Button("Search") { Task { await run() } }
+                    .font(.caption)
+                    .disabled(trimmed.isEmpty || phase.isLoading)
+            }
+            Text("Whole-frame scene matching over public-infrastructure cameras; no person or face matching.")
+                .font(.caption2)
+                .foregroundStyle(theme.textMuted)
+            if let hit = similarTo, let sid = hit.still?.id {
+                CameraSimilarList(stillId: sid,
+                                  label: hit.name ?? hit.camera_id,
+                                  onClose: { similarTo = nil },
+                                  onSimilar: { similarTo = $0 })
+                    .id(sid)
+            } else {
+                VisualSearchResults(phase: phase, onSimilar: { similarTo = $0 })
+            }
+        }
+        .padding(10)
+        .background(theme.surfaceElevated, in: RoundedRectangle(cornerRadius: 12))
+    }
+
+    private func run() async {
+        let q = trimmed
+        guard !q.isEmpty else { return }
+        similarTo = nil
+        phase = .loading
+        do {
+            phase = .loaded(try await apiClient.api.cameraVisualSearch(q))
+        } catch {
+            phase = .failed(VisualSearchText.message(error))
+        }
+    }
+}
+
+struct VisualSearchResults: View {
+    let phase: VisualSearchPhase
+    var onSimilar: ((VisualSearchHit) -> Void)? = nil
+
+    @Environment(\.theme) private var theme
+
+    var body: some View {
+        switch phase {
+        case .idle:
+            EmptyView()
+        case .loading:
+            ProgressView().frame(maxWidth: .infinity)
+        case .failed(let why):
+            Text(why)
+                .font(.caption)
+                .foregroundStyle(theme.warning)
+                .accessibilityLabel("Visual search failed: \(why)")
+        case .loaded(let env):
+            VStack(alignment: .leading, spacing: 6) {
+                let note = VisualSearchText.coverage(env.meta)
+                if !note.isEmpty {
+                    Text(note).font(.caption2).foregroundStyle(theme.textMuted)
+                }
+                if env.data.isEmpty {
+                    Text("No indexed camera matches.")
+                        .font(.caption)
+                        .foregroundStyle(theme.textMuted)
+                }
+                ForEach(env.data) { hit in
+                    VisualSearchRow(hit: hit, onSimilar: onSimilar)
+                }
+            }
+        }
+    }
+}
+
+struct VisualSearchRow: View {
+    let hit: VisualSearchHit
+    var onSimilar: ((VisualSearchHit) -> Void)? = nil
+
+    @Environment(\.theme) private var theme
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 8) {
+            VisualSearchThumb(hit: hit)
+            VStack(alignment: .leading, spacing: 2) {
+                Text((hit.name ?? hit.camera_id) + (hit.view.map { " · \($0)" } ?? ""))
+                    .font(.caption.bold())
+                    .foregroundStyle(theme.text)
+                    .lineLimit(1)
+                Text(detail)
+                    .font(.caption2.monospaced())
+                    .foregroundStyle(theme.textMuted)
+                    .lineLimit(2)
+                if let onSimilar = onSimilar, hit.still != nil {
+                    Button("Find similar cameras") { onSimilar(hit) }
+                        .font(.caption2)
+                }
+            }
+            Spacer(minLength: 0)
+        }
+    }
+
+    private var detail: String {
+        var parts: [String] = []
+        if let c = hit.cosine { parts.append(String(format: "cos %.3f", c)) }
+        let n = hit.frames_matched ?? 1
+        parts.append("\(n) frame\(n == 1 ? "" : "s")")
+        if let at = hit.still?.captured_at ?? hit.frame?.captured_at { parts.append("\(at) UTC") }
+        if hit.frame?.kind == "refframe" { parts.append("reference frame") }
+        return parts.joined(separator: " · ")
+    }
+}
+
+/// The matching still's bytes, from the operator-gated raw route.
+struct VisualSearchThumb: View {
+    let hit: VisualSearchHit
+
+    @EnvironmentObject private var apiClient: APIClient
+    @Environment(\.theme) private var theme
+
+    @State private var image: Image?
+    @State private var note: String?
+
+    var body: some View {
+        RoundedRectangle(cornerRadius: 8)
+            .fill(theme.surface)
+            .frame(width: 88, height: 56)
+            .overlay {
+                if let image {
+                    image.resizable().scaledToFill()
+                } else if hit.still == nil {
+                    caption("reference frame — no still")
+                } else if let note {
+                    caption(note)
+                } else {
+                    ProgressView().controlSize(.mini)
+                }
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .task(id: hit.still?.id) { await load() }
+    }
+
+    private func caption(_ s: String) -> some View {
+        Text(s)
+            .font(.system(size: 8))
+            .foregroundStyle(theme.textMuted)
+            .multilineTextAlignment(.center)
+            .padding(2)
+    }
+
+    private func load() async {
+        image = nil
+        note = nil
+        guard let sid = hit.still?.id else { return }
+        do {
+            let data = try await apiClient.api.cameraStillRaw(sid)
+            guard CameraStillFrameView.isImage(data),
+                  let img = CameraStillFrameView.decode(data) else {
+                note = "not a recognisable image"
+                return
+            }
+            image = img
+        } catch let APIError.http(code, body) {
+            note = CameraStillFrameView.message(code: code, body: body)
+        } catch {
+            note = error.localizedDescription
+        }
+    }
+}
+
+/// Cameras whose frames look like one still (POST .../by-image). Used by the
+/// panel above and by an opened frame in `CameraStillsSection`.
+struct CameraSimilarList: View {
+    let stillId: String
+    let label: String
+    var onClose: (() -> Void)? = nil
+    var onSimilar: ((VisualSearchHit) -> Void)? = nil
+
+    @EnvironmentObject private var apiClient: APIClient
+    @Environment(\.theme) private var theme
+
+    @State private var phase: VisualSearchPhase = .loading
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack {
+                Text("Cameras that look like \(label)")
+                    .font(.caption)
+                    .foregroundStyle(theme.textMuted)
+                Spacer()
+                if let onClose = onClose {
+                    Button(action: onClose) {
+                        Image(systemName: "xmark").font(.caption)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel("Close similar cameras")
+                }
+            }
+            VisualSearchResults(phase: phase, onSimilar: onSimilar)
+        }
+        .task(id: stillId) {
+            phase = .loading
+            do {
+                phase = .loaded(try await apiClient.api.cameraVisualSearchSimilar(toStill: stillId))
+            } catch {
+                phase = .failed(VisualSearchText.message(error))
+            }
         }
     }
 }

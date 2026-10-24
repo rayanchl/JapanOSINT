@@ -32,7 +32,7 @@ static const hp_source HP3B38_UK[] = {
     .id_keys = "id",
     .interval = 604800,
     .page_param = "page%5Bnumber%5D",
-    .page_size = 200,
+    .page_resume = 1,   /* 232,952 records, measured 2026-10-12: read over a cycle, 200 pages a run */
     .title_keys = "attributes.entity.legalName.name",
     .description = "Every Legal Entity Identifier whose registered legal address is "
       "in GB, from the GLEIF Level-1 register — legal name, LEI, "
@@ -54,6 +54,7 @@ static const hp_source HP3B38_UK[] = {
     .lat_key = "decimalLatitude",
     .lon_key = "decimalLongitude",
     .page_param = "offset",
+    .page_resume = 1,   /* 262,413,234 records, measured 2026-10-12: read over a cycle, 300 pages a run */
     .page_size = 300,
     .page_zero_based = 1,
     .title_keys = "scientificName",

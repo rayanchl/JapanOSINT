@@ -10,55 +10,55 @@
 
 #include "_source_macros.inc"
 
-RSSX(fin_coindesk, "coindesk", "CoinDesk", "CoinDesk", "osint", "economy",
+RSSX(fin_coindesk, "coindesk", "CoinDesk", "CoinDesk", "finance_press", "economy",
   "https://www.coindesk.com/arc/outboundfeeds/rss/", "en", "[\"economy\",\"crypto\",\"markets\"]", 3600,
   "CoinDesk — crypto market intelligence feed");
 
-RSSX(fin_cointelegraph, "cointelegraph", "Cointelegraph", "Cointelegraph", "osint", "economy",
+RSSX(fin_cointelegraph, "cointelegraph", "Cointelegraph", "Cointelegraph", "finance_press", "economy",
   "https://cointelegraph.com/rss", "en", "[\"economy\",\"crypto\",\"markets\"]", 3600,
   "Cointelegraph — crypto market intelligence feed");
 
-RSSX(fin_the_block, "the-block", "The Block", "The Block", "osint", "economy",
+RSSX(fin_the_block, "the-block", "The Block", "The Block", "finance_press", "economy",
   "https://www.theblock.co/rss.xml", "en", "[\"economy\",\"crypto\",\"markets\"]", 3600,
   "The Block — crypto market intelligence feed");
 
-RSSX(fin_decrypt, "decrypt", "Decrypt", "Decrypt", "osint", "economy",
+RSSX(fin_decrypt, "decrypt", "Decrypt", "Decrypt", "finance_press", "economy",
   "https://decrypt.co/feed", "en", "[\"economy\",\"crypto\",\"markets\"]", 3600,
   "Decrypt — crypto market intelligence feed");
 
-RSSX(fin_bitcoin_mag, "bitcoin-mag", "Bitcoin Magazine", "Bitcoin Magazine", "osint", "economy",
+RSSX(fin_bitcoin_mag, "bitcoin-mag", "Bitcoin Magazine", "Bitcoin Magazine", "finance_press", "economy",
   "https://bitcoinmagazine.com/feed", "en", "[\"economy\",\"crypto\",\"markets\"]", 3600,
   "Bitcoin Magazine — crypto market intelligence feed");
 
-RSSX(fin_cnbc_top, "cnbc-top", "CNBC Top News", "CNBC Top News", "osint", "economy",
+RSSX(fin_cnbc_top, "cnbc-top", "CNBC Top News", "CNBC Top News", "finance_press", "economy",
   "https://www.cnbc.com/id/100003114/device/rss/rss.html", "en", "[\"economy\",\"markets\",\"markets\"]", 3600,
   "CNBC Top News — markets market intelligence feed");
 
-RSSX(fin_cnbc_world, "cnbc-world", "CNBC World", "CNBC World", "osint", "economy",
+RSSX(fin_cnbc_world, "cnbc-world", "CNBC World", "CNBC World", "finance_press", "economy",
   "https://www.cnbc.com/id/100727362/device/rss/rss.html", "en", "[\"economy\",\"markets\",\"markets\"]", 3600,
   "CNBC World — markets market intelligence feed");
 
-RSSX(fin_cnbc_finance, "cnbc-finance", "CNBC Finance", "CNBC Finance", "osint", "economy",
+RSSX(fin_cnbc_finance, "cnbc-finance", "CNBC Finance", "CNBC Finance", "finance_press", "economy",
   "https://www.cnbc.com/id/10000664/device/rss/rss.html", "en", "[\"economy\",\"markets\",\"markets\"]", 3600,
   "CNBC Finance — markets market intelligence feed");
 
-RSSX(fin_investing_news, "investing-news", "Investing.com News", "Investing.com News", "osint", "economy",
+RSSX(fin_investing_news, "investing-news", "Investing.com News", "Investing.com News", "finance_press", "economy",
   "https://www.investing.com/rss/news.rss", "en", "[\"economy\",\"markets\",\"markets\"]", 3600,
   "Investing.com News — markets market intelligence feed");
 
-RSSX(fin_zerohedge, "zerohedge", "ZeroHedge", "ZeroHedge", "osint", "economy",
+RSSX(fin_zerohedge, "zerohedge", "ZeroHedge", "ZeroHedge", "finance_press", "economy",
   "https://feeds.feedburner.com/zerohedge/feed", "en", "[\"economy\",\"markets\",\"markets\"]", 3600,
   "ZeroHedge — markets market intelligence feed");
 
-RSSX(fin_ft_home, "ft-home", "Financial Times Home", "Financial Times Home", "osint", "economy",
+RSSX(fin_ft_home, "ft-home", "Financial Times Home", "Financial Times Home", "finance_press", "economy",
   "https://www.ft.com/rss/home", "en", "[\"economy\",\"markets\",\"markets\"]", 3600,
   "Financial Times Home — markets market intelligence feed");
 
-RSSX(fin_seeking_alpha, "seeking-alpha", "Seeking Alpha Market News", "Seeking Alpha Market News", "osint", "economy",
+RSSX(fin_seeking_alpha, "seeking-alpha", "Seeking Alpha Market News", "Seeking Alpha Market News", "finance_press", "economy",
   "https://seekingalpha.com/market_currents.xml", "en", "[\"economy\",\"markets\",\"markets\"]", 3600,
   "Seeking Alpha Market News — markets market intelligence feed");
 
-RSSX(fin_marketwatch_top, "marketwatch-top", "MarketWatch Top Stories", "MarketWatch Top Stories", "osint", "economy",
+RSSX(fin_marketwatch_top, "marketwatch-top", "MarketWatch Top Stories", "MarketWatch Top Stories", "finance_press", "economy",
   "http://feeds.marketwatch.com/marketwatch/topstories/", "en", "[\"economy\",\"markets\",\"markets\"]", 3600,
   "MarketWatch Top Stories — markets market intelligence feed");
 
@@ -67,11 +67,11 @@ RSSX(fin_marketwatch_top, "marketwatch-top", "MarketWatch Top Stories", "MarketW
  * and www.kitco.com/news exposes no <link rel=alternate> feed. The feed is
  * gone upstream; the URL is left in place so the failure stays visible
  * rather than being papered over with fabricated rows. */
-RSSX(fin_kitco_news, "kitco-news", "Kitco Metals News", "Kitco Metals News", "osint", "economy",
+RSSX(fin_kitco_news, "kitco-news", "Kitco Metals News", "Kitco Metals News", "finance_press", "economy",
   "https://www.kitco.com/rss/KitcoNews.xml", "en", "[\"economy\",\"commodities\",\"markets\"]", 3600,
   "Kitco Metals News — commodities market intelligence feed (RSS retired upstream)");
 
-RSSX(fin_oilprice_2, "oilprice-2", "OilPrice Energy News", "OilPrice Energy News", "osint", "economy",
+RSSX(fin_oilprice_2, "oilprice-2", "OilPrice Energy News", "OilPrice Energy News", "finance_press", "economy",
   "https://oilprice.com/rss/main", "en", "[\"economy\",\"energy\",\"markets\"]", 3600,
   "OilPrice Energy News — energy market intelligence feed");
 
@@ -194,7 +194,7 @@ static int run_fin_trading_econ(const source_ctx *c, intel_sink *s) {
 }
 
 static const source_def fin_trading_econ = {
-  .id = "trading-econ", .collector = "osint",
+  .id = "trading-econ", .collector = "finance_press",
   .name = "Trading Economics Stream", .name_ja = "Trading Economics Stream",
   .update_interval_sec = 3600, .run = run_fin_trading_econ,
   .category = "economy", .type = "api", .url = TE_URL,

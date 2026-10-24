@@ -92,7 +92,7 @@ static int run_itownpage(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def prtimes_def = {
-  .id = "PRTIMES", .collector = "osint",
+  .id = "PRTIMES", .collector = "commercial",
   .name = "PR TIMES Press Releases", .name_ja = "PR TIMES プレスリリース",
   .update_interval_sec = 1800, .run = run_prtimes,
   .category = "commercial", .type = "api", .url = "https://prtimes.jp/",
@@ -102,7 +102,7 @@ static const source_def prtimes_def = {
 REGISTER_SOURCE(prtimes_def)
 
 static const source_def jpx_short_def = {
-  .id = "JPX_SHORT_SELLING", .collector = "osint",
+  .id = "JPX_SHORT_SELLING", .collector = "osint_" "economy",
   .name = "JPX Short-Selling Balances", .name_ja = "JPX 空売り残高報告",
   .update_interval_sec = 0, .run = run_jpx_short,
   .category = "economy", .type = "scraped", .url = "https://www.jpx.co.jp/",
@@ -112,7 +112,7 @@ static const source_def jpx_short_def = {
 REGISTER_SOURCE(jpx_short_def)
 
 static const source_def fsa_registry_def = {
-  .id = "FSA_FINBIZ_REGISTRY", .collector = "osint",
+  .id = "FSA_FINBIZ_REGISTRY", .collector = "osint_" "government",
   .name = "FSA Financial Business Registry", .name_ja = "金融商品取引業者 登録一覧",
   .update_interval_sec = 0, .run = run_fsa_registry,
   .category = "government", .type = "scraped", .url = "https://www.fsa.go.jp/",
@@ -122,7 +122,7 @@ static const source_def fsa_registry_def = {
 REGISTER_SOURCE(fsa_registry_def)
 
 static const source_def itownpage_def = {
-  .id = "ITOWNPAGE", .collector = "osint",
+  .id = "ITOWNPAGE", .collector = "osint_" "commercial",
   .name = "iTownpage Directory", .name_ja = "iタウンページ",
   .update_interval_sec = 0, .run = run_itownpage,
   .category = "commercial", .type = "scraped", .url = "https://itp.ne.jp/",

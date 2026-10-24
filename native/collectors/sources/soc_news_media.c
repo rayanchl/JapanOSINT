@@ -46,6 +46,7 @@
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
+#include "lib/pagewalk.h"
 #include "third_party/cJSON.h"
 #include <ctype.h>
 #include <stdio.h>
@@ -120,7 +121,7 @@ static int run_guardian(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def soc_guardian_def = {
-  .id = "GUARDIAN_CONTENT_SEARCH", .collector = "osint",
+  .id = "GUARDIAN_CONTENT_SEARCH", .collector = "osint_" "media",
   .name = "Guardian Open Platform Content Search",
   .update_interval_sec = 0, .run = run_guardian,
   .category = "media", .type = "api",
@@ -133,14 +134,30 @@ REGISTER_SOURCE(soc_guardian_def)
 
 /* ---- spaceflight-news-api ----------------------------------------------- */
 
-static int run_spaceflight(const source_ctx *ctx, intel_sink *sink) {
-  cJSON *doc = feed_get_json_h(ctx->http,
-      "https://api.spaceflightnewsapi.net/v4/articles/?limit=20", SOC_UA, 25000);
-  if (!doc) { fprintf(stderr, "[spaceflight-news-api] fetch failed\n"); return -1; }
+/* `?limit=20` alone stored 20 articles of the 36,457 `count` declares, hourly,
+ * with the DRF `next` link sitting unread in the envelope — the seventh
+ * discard shape (tools/audit_url_limits.py;
+ * docs/measured-url-limits-2026-10-11.tsv). The order is newest-first
+ * (measured 2026-10-12), so the pagewalk default ceiling makes this the
+ * publish tail rather than a slice of the archive, and what it does not reach
+ * is disclosed against `count`. A news archive is not something to re-read
+ * whole every hour; a stated window is the honest read. */
+#define SFN_URL "https://api.spaceflightnewsapi.net/v4/articles/?limit=100"
+
+/* pw_fetch_fn: this API wants the shared user-agent. */
+static cJSON *sfn_fetch(const source_ctx *c, const char *url, void *ud) {
+  (void)ud;
+  return feed_get_json_h(c->http, url, SOC_UA, 25000);
+}
+
+static int sfn_emit_page(const source_ctx *ctx, intel_sink *sink,
+                         const char *sid, cJSON *doc, void *ud, int *seen) {
+  (void)ctx; (void)ud;
   const cJSON *res = cJSON_GetObjectItem(doc, "results");
+  *seen = cJSON_IsArray(res) ? cJSON_GetArraySize(res) : 0;
   if (!cJSON_IsArray(res)) {
-    fprintf(stderr, "[spaceflight-news-api] unexpected shape\n");
-    cJSON_Delete(doc); return -1;
+    fprintf(stderr, "[%s] unexpected shape\n", sid);
+    return 0;
   }
   int n = 0;
   const cJSON *a;
@@ -178,8 +195,16 @@ static int run_spaceflight(const source_ctx *ctx, intel_sink *sink) {
                   "[\"spaceflight\",\"news\",\"launch\"]",
                   rk, title, summary, url, jo_sv(a, "published_at"), "en");
   }
-  cJSON_Delete(doc);
-  fprintf(stderr, "[spaceflight-news-api] emitted %d\n", n);
+  return n;
+}
+
+static int run_spaceflight(const source_ctx *ctx, intel_sink *sink) {
+  int n = pw_walk(ctx, sink, "spaceflight-news-api", SFN_URL, sfn_fetch,
+                  sfn_emit_page, NULL);
+  if (n < 0) {
+    fprintf(stderr, "[spaceflight-news-api] fetch failed\n");
+    return -1;
+  }
   return 0;
 }
 
@@ -188,7 +213,7 @@ static const source_def soc_spaceflight_def = {
   .name = "Spaceflight News API",
   .update_interval_sec = 3600, .run = run_spaceflight,
   .category = "media", .type = "api",
-  .url = "https://api.spaceflightnewsapi.net/v4/articles/",
+  .url = "https://api.spaceflightnewsapi.net/v4/articles/?limit=100",
   .description = "Normalised aggregation of articles from every major space-and-launch outlet with publisher attribution, author and summary — a pre-deduplicated sector news corpus.",
   .license = "Free, keyless, open-source project (github.com/TheSpaceDevs), offered for reuse.",
   .layer = NULL, .free_tier = 1,
@@ -255,7 +280,7 @@ static int run_feedly(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def soc_feedly_def = {
-  .id = "FEEDLY_FEED_SEARCH", .collector = "osint",
+  .id = "FEEDLY_FEED_SEARCH", .collector = "osint_" "media",
   .name = "Feedly Feed Discovery Search",
   .update_interval_sec = 0, .run = run_feedly,
   .category = "media", .type = "api",
@@ -327,7 +352,7 @@ static int run_itunes(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def soc_itunes_def = {
-  .id = "ITUNES_PODCAST_SEARCH", .collector = "osint",
+  .id = "ITUNES_PODCAST_SEARCH", .collector = "osint_" "media",
   .name = "Apple Podcasts (iTunes Search API)",
   .update_interval_sec = 0, .run = run_itunes,
   .category = "media", .type = "api",
@@ -396,7 +421,7 @@ static int run_gpodder(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def soc_gpodder_def = {
-  .id = "GPODDER_SEARCH", .collector = "osint",
+  .id = "GPODDER_SEARCH", .collector = "osint_" "media",
   .name = "gPodder.net Podcast Directory Search",
   .update_interval_sec = 0, .run = run_gpodder,
   .category = "media", .type = "api",

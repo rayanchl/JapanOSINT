@@ -4,11 +4,12 @@ import { LuExternalLink, LuDownload, LuShieldCheck, LuEye } from 'react-icons/lu
 import { api } from '../../api/client.js';
 import { useApi } from '../../hooks/useApi.js';
 import { useAuth } from '../../auth/AuthContext.jsx';
-import { Page, Section, Pill, Button, ErrorNotice, LoadingState, KV, Segmented, BoundNote, PagedFooter, CopyButton, cx, toast } from '../ui/kit.jsx';
+import { Page, Section, Pill, Button, ErrorNotice, LoadingState, KV, Segmented, BoundNote, PagedFooter, CopyButton, Input, cx, toast } from '../ui/kit.jsx';
 import { usePagedList } from '../../hooks/usePagedList.js';
 import SaveStarButton from '../saved/SaveStarButton.jsx';
 import PinToCaseButton from '../cases/CasePickerSheet.jsx';
 import AnnotationsSection from './AnnotationsSection.jsx';
+import SimilarItems from './SimilarItems.jsx';
 import { entityVisual } from '../../utils/entityVisuals.js';
 import { isSafeUrl } from '../../utils/safeUrl.js';
 import { fmtAbs, relativeTime } from '../../utils/time.js';
@@ -81,6 +82,7 @@ export default function IntelItemPage() {
             <EvidenceSection uid={uid} />
             {isBreach && <RevealSection uid={uid} />}
             <AnnotationsSection refType="intel_item" refId={uid} />
+            {!isBreach && <SimilarItems path={`/api/intel/items/${enc}/similar?k=20`} />}
             <RawSection item={item} />
           </div>
 
@@ -277,15 +279,22 @@ export function EvidenceSection({ uid }) {
 function RevealSection({ uid }) {
   const [res, setRes] = useState(null);
   const [busy, setBusy] = useState(false);
+  // The server refuses a reveal without a reason (400 reason_required) and
+  // writes it into the breach.reveal audit row before decrypting anything.
+  const [reason, setReason] = useState('');
   const reveal = async () => {
     setBusy(true);
-    try { setRes({ data: await api.get(`/api/intel/items/${encodeURIComponent(uid)}/reveal`) }); }
+    try {
+      setRes({ data: await api.get(`/api/intel/items/${encodeURIComponent(uid)}/reveal?reason=${encodeURIComponent(reason.trim())}`) });
+    }
     catch (e) { setRes({ error: e }); }
     finally { setBusy(false); }
   };
   return (
-    <Section label="Leaked secret (operator)" right={<Button size="sm" variant="danger" busy={busy} onClick={reveal}><LuEye size={12} /> Reveal</Button>}>
-      <div className="text-xs text-osint-muted">Decrypts this breach record's secret server-side. Platform-operator role required; the request is audited.</div>
+    <Section label="Leaked secret (operator)" right={<Button size="sm" variant="danger" busy={busy} disabled={!reason.trim()} onClick={reveal}><LuEye size={12} /> Reveal</Button>}>
+      <div className="text-xs text-osint-muted">Decrypts this breach record's secret server-side. Platform-operator role required; every reveal is audited with your reason.</div>
+      <Input className="mt-2" maxLength={500} value={reason} onChange={(e) => setReason(e.target.value)}
+        placeholder="Reason (case / ticket reference) — required, recorded in the audit log" />
       {res?.error && <ErrorNotice error={res.error} title={res.error.status === 403 ? 'Reveal refused: platform operator role required' : 'Reveal failed'} className="mt-2" />}
       {res?.data && <div className="mt-2">{typeof res.data === 'object' ? <KV pairs={Object.entries(res.data)} /> : <pre className="text-xs">{String(res.data)}</pre>}</div>}
     </Section>

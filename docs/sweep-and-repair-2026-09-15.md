@@ -1049,6 +1049,16 @@ truncation notice. Both are now fixed (`$order=:id` in the loop, guard raised to
 600 with the measured count recorded), and the notice firing is what made the
 ceiling legible rather than silent.
 
+**Verified 2026-10-21: `records=438891 stored=438891`, nothing lost** — against
+400,000 emitted and 366,341 stored before, so **+72,550 records per pass**. The
+walk took 441 requests and ended on a short page, well inside the 600-page
+guard, with no `UID-COLLISION` line and no truncation notice: the ceiling was
+never the real limit once the sort was pinned. (438,891 against the 438,835
+counted in September is a month of inventory growth.) `AP19_TW_TWSE_AP09` was
+measured in the same pass at `records=9 stored=9`, up from 9 emitted and 1
+stored. Both numbers come from the run line; the DB-side cross-reading was not
+available (no sqlite3 in that distro), so they are one reading each, not two.
+
 The generalisation: **a constant that documents a URL is not the URL that gets
 requested.** Anywhere a collector has both a `#define` for its endpoint and a
 `snprintf` that rebuilds one, the two can drift, and the paged one is the one

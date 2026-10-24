@@ -33,6 +33,7 @@ static const hp_source HP3B20_SCHOLARLY[] = {
     .id_keys = "id",
     .interval = 86400,
     .next_path = "nextPageUrl",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .title_keys = "title",
     .description = "The NCBI Bookshelf stream inside Europe PMC: monographs, "
       "clinical reference works and government reports that carry no "
@@ -128,6 +129,7 @@ static const hp_source HP3B20_SCHOLARLY[] = {
     .id_keys = "code",
     .interval = 604800,
     .page_param = "offset",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_size = 100,
     .title_keys = "code",
     .description = "The Mexican SciELO journal register, deepened per record into "
@@ -381,6 +383,7 @@ static const hp_source HP3B20_SCHOLARLY[] = {
     .id_keys = "code",
     .interval = 604800,
     .page_param = "offset",
+    .page_resume = 1,   /* 31,637 records, measured 2026-10-12: read over a cycle, 100 pages a run */
     .page_size = 100,
     .title_keys = "code",
     .description = "Issue-level identifiers for the Brazilian collection, deepened "
@@ -487,6 +490,14 @@ static const hp_source HP3B20_SCHOLARLY[] = {
     .id_keys = "id",
     .interval = 21600,
     .page_param = "start",
+    /* NOT page_resume, although the measurement says 417,719 records against a
+     * 20-page ceiling. This row's name, tags and sort all say the same thing:
+     * it is the NEWEST articles. A cycling walk would spend most of a cycle
+     * deep in the back catalogue and stop seeing new papers for days, so the
+     * cycle would cost this row exactly what it exists for. The whole PLOS
+     * corpus wants its own row with an ascending sort; recency wants this one.
+     * The 20-page read is a ranked head, which rule 2's own carve-out allows,
+     * and the truncation notice states it. */
     .page_size = 100,
     .page_zero_based = 1,
     .title_keys = "title_display,title",
@@ -495,6 +506,39 @@ static const hp_source HP3B20_SCHOLARLY[] = {
       "author list, subject terms and abstract. A publication-order "
       "feed over a fully open-access corpus, so every hit resolves to "
       "readable full text" },
+
+  /* The second row PLOS_RECENT's own note asks for: the WHOLE corpus, read
+   * over a cycle. Ascending publication date (oldest first, from PLoS
+   * Biology's 2003-08-18 launch issue) is the sort a cycle needs — new
+   * papers land at the TAIL, where a resumed walk has not been yet, so a run
+   * boundary never re-reads or skips a page (the 22 rows re-sorted on
+   * 2026-10-18). `id asc` second, because thousands of articles share one
+   * publication date. Measured 2026-10-20: numFound 418,125 at 100 a page =
+   * 4,182 pages; at 20 pages a daily run the cycle is ~209 days, and the
+   * notice says where it is. PLOS_RECENT keeps the newest; this row owns the
+   * back catalogue. */
+  { .id = "PLOS_CORPUS", .name = "PLOS - every article across all journals, read over a cycle",
+    .name_ja = "PLOS 全論文（巡回読み）",
+    .category = "research", .portal = "https://plos.org",
+    .record_type = "publication-record",
+    .tags = "\"research\",\"plos\",\"openaccess\",\"corpus\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://api.plos.org/search?q=doc_type%3Afull&rows=100&wt=json&sort=publication_date%20asc,id%20asc",
+    .array_path = "response.docs",
+    .body_keys = "abstract",
+    .date_keys = "publication_date",
+    .id_keys = "id",
+    .interval = 86400,
+    .page_param = "start",
+    .page_resume = 1,   /* 418,125 records, measured 2026-10-20: read over a cycle, 20 pages a run */
+    .page_size = 100,
+    .page_zero_based = 1,
+    .title_keys = "title_display,title",
+    .description = "Every full article PLOS has published across all eleven "
+      "journals, oldest first, with DOI, title, journal, article type, "
+      "author list, subject terms and abstract. Read over a cycle of daily "
+      "runs so the whole open-access corpus is stored, not only the newest "
+      "two thousand that PLOS_RECENT keeps current" },
 
   { .id = "INSPIRE_SEMINARS", .name = "INSPIRE-HEP - seminars",
     .name_ja = "INSPIRE-HEP セミナー",
@@ -508,6 +552,7 @@ static const hp_source HP3B20_SCHOLARLY[] = {
     .interval = 21600,
     .page_param = "page",
     .page_start = 1,
+    .page_max = 36,   /* 3,571 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     .title_keys = "title",
     .description = "Every seminar announced through INSPIRE: title, abstract, "
       "speaker with their INSPIRE author identifier and affiliation, "
@@ -527,6 +572,7 @@ static const hp_source HP3B20_SCHOLARLY[] = {
     .interval = 86400,
     .page_param = "page",
     .page_start = 1,
+    .page_max = 117,   /* 11,637 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
     .title_keys = "title",
     .description = "The dataset records INSPIRE holds, mostly HEPData tables "
       "released alongside collaboration papers, each with the title, "

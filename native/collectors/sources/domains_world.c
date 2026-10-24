@@ -395,7 +395,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def certspotter_def = {
-  .id = "CERTSPOTTER", .collector = "osint",
+  .id = "CERTSPOTTER", .collector = "osint_" "cyber",
   .name = "Cert Spotter Issuances", .name_ja = "Cert Spotter 証明書発行",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",
@@ -406,7 +406,7 @@ static const source_def certspotter_def = {
 REGISTER_SOURCE(certspotter_def)
 
 static const source_def urlscan_search_def = {
-  .id = "URLSCAN_SEARCH", .collector = "osint",
+  .id = "URLSCAN_SEARCH", .collector = "osint_" "cyber",
   .name = "urlscan.io Domain Search", .name_ja = "urlscan.io ドメイン検索",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",
@@ -417,7 +417,7 @@ static const source_def urlscan_search_def = {
 REGISTER_SOURCE(urlscan_search_def)
 
 static const source_def circl_pdns_def = {
-  .id = "CIRCL_PDNS", .collector = "osint",
+  .id = "CIRCL_PDNS", .collector = "osint_" "cyber",
   .name = "CIRCL Passive DNS", .name_ja = "CIRCL パッシブDNS",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",
@@ -428,7 +428,7 @@ static const source_def circl_pdns_def = {
 REGISTER_SOURCE(circl_pdns_def)
 
 static const source_def hackertarget_def = {
-  .id = "HACKERTARGET", .collector = "osint",
+  .id = "HACKERTARGET", .collector = "osint_" "cyber",
   .name = "HackerTarget Host Search", .name_ja = "HackerTarget ホスト検索",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",

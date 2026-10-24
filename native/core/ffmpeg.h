@@ -249,6 +249,11 @@
  *     are sufficient for real streams (too NARROW is the plausible failure —
  *     "Protocol not on whitelist" — and it fails closed, which is the right
  *     direction, but it is untested).
+ *     PARTLY SUPERSEDED 2026-10-22: tests/unit/test_netjail.c runs REAL ffmpeg
+ *     6.1 (when installed) and decodes a JPEG out of an HLS stream from a
+ *     loopback fixture, through core/netjail.c's proxy, in both sandbox modes
+ *     — which is also how the http whitelist was found to need `httpproxy`.
+ *     RTSP against a real camera is still unobserved.
  *   - Real ffprobe output. The parser was driven against hand-written JSON
  *     shaped like ffprobe's, including the tag spellings iOS and Android
  *     actually write, but a genuine ffprobe document has never been seen here.
@@ -275,6 +280,11 @@
 #define FFMPEG_ERR_PARSE        (-10)
 #define FFMPEG_ERR_NO_DURATION  (-11)
 #define FFMPEG_ERR_OOM          (-12)
+/* A network input whose host is loopback/private/link-local/metadata under
+ * the camera destination policy (core/hostgate.h; always strict), or an HLS
+ * playlist that names one (or could not be read to be checked, see
+ * core/hls_check.h). Checked before spawning. */
+#define FFMPEG_ERR_BLOCKED      (-13)
 
 /* Stable snake_case token for a code — safe to store in a column or return in
  * an API body, and stable across releases. Returns a static string; never

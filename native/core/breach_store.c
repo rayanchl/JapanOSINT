@@ -57,8 +57,19 @@ static int store_flush(breach_store *s, int reopen) {
   return 0;
 }
 
+void breach_store_migrate(db_handle *db) {
+  if (!db || !db->h) return;
+  /* Column before index — the index cannot live in schema.sql for the reason
+   * breach_monitor_migrate() gives: schema.sql runs before ensure_column, and
+   * a CREATE INDEX on a missing column aborts the whole script. */
+  ensure_column(db, "breach_items", "lookup_hash", "TEXT");
+  exec1(db->h, "CREATE INDEX IF NOT EXISTS idx_breach_items_lookup "
+               "ON breach_items(lookup_hash) WHERE lookup_hash IS NOT NULL");
+}
+
 breach_store *breach_store_open(db_handle *db) {
   if (!db || !db->h) return NULL;
+  breach_store_migrate(db);
   breach_store *s = calloc(1, sizeof *s);
   if (!s) return NULL;
   s->db = db->h;
@@ -71,11 +82,12 @@ breach_store *breach_store_open(db_handle *db) {
   exec1(s->db, "PRAGMA cache_size=-262144");   /* ~256 MB page cache */
 
   static const char *SQL =
-    "INSERT INTO breach_items(keyid,type,value,source_id,hash,has_secret,count) "
-    "VALUES(?1,?2,?3,?4,?5,?6,?7) "
+    "INSERT INTO breach_items(keyid,type,value,source_id,hash,has_secret,count,"
+    "lookup_hash) VALUES(?1,?2,?3,?4,?5,?6,?7,?8) "
     "ON CONFLICT(keyid) DO UPDATE SET "
     "count = breach_items.count + excluded.count, "
-    "has_secret = MAX(breach_items.has_secret, excluded.has_secret)";
+    "has_secret = MAX(breach_items.has_secret, excluded.has_secret), "
+    "lookup_hash = COALESCE(excluded.lookup_hash, breach_items.lookup_hash)";
   if (sqlite3_prepare_v2(s->db, SQL, -1, &s->ins, NULL) != SQLITE_OK) {
     fprintf(stderr, "[breach_store] prepare failed: %s\n", sqlite3_errmsg(s->db));
     free(s);
@@ -91,7 +103,7 @@ breach_store *breach_store_open(db_handle *db) {
 
 int breach_store_put(breach_store *s, const char *keyid, const char *type,
                      const char *value, const char *source_id, const char *hash,
-                     int has_secret, long long count) {
+                     const char *lookup_hash, int has_secret, long long count) {
   if (!s) return -1;
   /* Once a batch has failed to commit there is no open transaction to write
    * into; stepping on regardless would dribble rows out in autocommit at a
@@ -108,6 +120,8 @@ int breach_store_put(breach_store *s, const char *keyid, const char *type,
   sqlite3_bind_text(st, 5, hash ? hash : "", -1, SQLITE_TRANSIENT);
   sqlite3_bind_int (st, 6, has_secret ? 1 : 0);
   sqlite3_bind_int64(st, 7, count > 0 ? count : 1);
+  if (lookup_hash && *lookup_hash) sqlite3_bind_text(st, 8, lookup_hash, -1, SQLITE_TRANSIENT);
+  else                             sqlite3_bind_null(st, 8);
 
   int rc = sqlite3_step(st);
   sqlite3_reset(st);
@@ -163,34 +177,48 @@ static void fts_phrase(const char *q, char *out, size_t cap) {
   out[o] = 0;
 }
 
-char *breach_search(db_handle *db, const char *q, const char *type, int limit) {
+/* Exact COUNT up to this many matches; past it the total is reported as a
+ * floor. A substring term over a corpus of "millions–billions of rows"
+ * (breach_store.h) can match a large fraction of it, and an unbounded COUNT
+ * is the same full walk the page itself was bounded to avoid. */
+#define BREACH_COUNT_CAP 100000
+
+char *breach_search(db_handle *db, const char *q, const char *type, int limit,
+                    long long offset) {
   if (!db || !db->h) return NULL;
   int has_q = (q && *q), has_type = (type && *type);
   if (!has_q && !has_type) return NULL;
   if (limit <= 0) limit = 50;
-  if (limit > 500) limit = 500;
+  if (limit > 500) limit = 500;      /* exhaustive-ok: page size; total + offset disclose the rest */
+  if (offset < 0) offset = 0;
 
-  char sql[512];
-  if (has_q) {
-    snprintf(sql, sizeof sql,
-      "SELECT b.keyid,b.type,b.value,b.source_id,b.has_secret,b.count "
-      "FROM breach_items b JOIN breach_fts ON breach_fts.rowid=b.id "
-      "WHERE breach_fts MATCH ?1%s LIMIT ?3",
-      has_type ? " AND b.type=?2" : "");
-  } else {
-    snprintf(sql, sizeof sql,
-      "SELECT keyid,type,value,source_id,has_secret,count "
-      "FROM breach_items WHERE type=?2 LIMIT ?3");
-  }
+  /* Ordered by rowid so ?offset= pages are stable: without an ORDER BY the
+   * order of a JOIN over FTS is whatever the planner picked, and page 2 could
+   * repeat or skip page 1's rows. */
+  const char *from = has_q
+    ? (has_type
+        ? "FROM breach_items b JOIN breach_fts ON breach_fts.rowid=b.id "
+          "WHERE breach_fts MATCH ?1 AND b.type=?2"
+        : "FROM breach_items b JOIN breach_fts ON breach_fts.rowid=b.id "
+          "WHERE breach_fts MATCH ?1")
+    : "FROM breach_items b WHERE b.type=?2";
+  char sql[640];
+  snprintf(sql, sizeof sql,
+    "SELECT b.keyid,b.type,b.value,b.source_id,b.has_secret,b.count %s "
+    "ORDER BY b.id LIMIT ?3 OFFSET ?4", from);
+  char csql[640];
+  snprintf(csql, sizeof csql,
+    "SELECT COUNT(*) FROM (SELECT 1 %s LIMIT %d)", from, BREACH_COUNT_CAP + 1);
+
+  char mq[600];
+  if (has_q) fts_phrase(q, mq, sizeof mq);
 
   sqlite3_stmt *st = NULL;
   if (sqlite3_prepare_v2(db->h, sql, -1, &st, NULL) != SQLITE_OK) return NULL;
-  if (has_q) {
-    char mq[600]; fts_phrase(q, mq, sizeof mq);
-    sqlite3_bind_text(st, 1, mq, -1, SQLITE_TRANSIENT);
-  }
+  if (has_q) sqlite3_bind_text(st, 1, mq, -1, SQLITE_TRANSIENT);
   if (has_type) sqlite3_bind_text(st, 2, type, -1, SQLITE_TRANSIENT);
   sqlite3_bind_int(st, 3, limit);
+  sqlite3_bind_int64(st, 4, offset);
 
   cJSON *arr = cJSON_CreateArray();
   int n = 0;
@@ -212,10 +240,36 @@ char *breach_search(db_handle *db, const char *q, const char *type, int limit) {
   }
   sqlite3_finalize(st);
 
+  /* The total, so a capped page says how much it is NOT showing (house rule
+   * 2). It used to return `count` = rows on this page and nothing else: a
+   * query matching 40,000 identifiers answered "count":500 with no way to
+   * see, or reach, the other 39,500. */
+  long long total = -1;
+  if (sqlite3_prepare_v2(db->h, csql, -1, &st, NULL) == SQLITE_OK) {
+    if (has_q) sqlite3_bind_text(st, 1, mq, -1, SQLITE_TRANSIENT);
+    if (has_type) sqlite3_bind_text(st, 2, type, -1, SQLITE_TRANSIENT);
+    if (sqlite3_step(st) == SQLITE_ROW) total = sqlite3_column_int64(st, 0);
+    sqlite3_finalize(st);
+  }
+  int is_floor = total > BREACH_COUNT_CAP;
+  if (is_floor) total = BREACH_COUNT_CAP;
+  /* A page past the count cap knows the total is at least where it is. */
+  if (total >= 0 && total < offset + n) total = offset + n;
+
   cJSON *root = cJSON_CreateObject();
   cJSON_AddStringToObject(root, "query", has_q ? q : "");
   if (has_type) cJSON_AddStringToObject(root, "type", type);
-  cJSON_AddNumberToObject(root, "count", n);
+  cJSON_AddNumberToObject(root, "count", n);        /* kept: rows on this page */
+  cJSON_AddNumberToObject(root, "shown", n);
+  cJSON_AddNumberToObject(root, "offset", (double)offset);
+  cJSON_AddNumberToObject(root, "limit", limit);
+  if (total >= 0) cJSON_AddNumberToObject(root, "total", (double)total);
+  else            cJSON_AddNullToObject(root, "total");
+  cJSON_AddBoolToObject(root, "total_is_floor", is_floor || total < 0);
+  /* A short page is the last one whatever the count says. */
+  int more = n == limit && (is_floor || total < 0 || offset + n < total);
+  cJSON_AddBoolToObject(root, "has_more", more);
+  if (more) cJSON_AddNumberToObject(root, "next_offset", (double)(offset + n));
   cJSON_AddItemToObject(root, "results", arr);
   char *out = cJSON_PrintUnformatted(root);
   cJSON_Delete(root);

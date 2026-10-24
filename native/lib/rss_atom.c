@@ -331,7 +331,16 @@ int rss_collect(const source_ctx *ctx, intel_sink *sink,
    * the UA) or to spoof (refused). ~10 humanitarian feeds — reliefweb.int,
    * unocha.org, data.humdata.org — are unreachable as a result and are
    * recorded as such rather than quietly worked around. Asking those
-   * publishers for an allowlist entry is the real fix. */
+   * publishers for an allowlist entry is the real fix.
+   *
+   * SUPERSEDED (2026-10-21), twice over. ReliefWeb's four registered feeds
+   * all store records under the agent below today; the one that did not
+   * (sec-reliefweb-headlines) was following a 301 to a plain-http URL and
+   * meeting a firewall's zero-byte 202 there, fixed by naming the final https
+   * URL. And hosts that refuse EVERY honest agent are fetched with a browser
+   * profile by the repository owner's decision: HA_BROWSER entries in
+   * core/host_agents.def, applied by http_request(). Every other host still gets
+   * the agent below. */
   /* One exception to the paragraph above: core/httpclient.c keeps a per-host
    * table for the handful of publishers whose filter objects to ONE token in
    * an otherwise honest agent, each entry carrying the bisection that proved
@@ -348,7 +357,11 @@ int rss_collect(const source_ctx *ctx, intel_sink *sink,
                          ovr ? uahdr :
                          "User-Agent: JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
                          "feed collector; contact via repo issues)", NULL };
-  int rc = http_request(ctx->http, "GET", url, hdrs, NULL, 0, 8000, 2, &r);
+  /* 25 s, not 8: a full-content feed is a large single response, and 8 s failed
+   * every run for the big ones — ipu-japan.ac.jp/feed is 4.6 MB in ~9 s,
+   * tokyogirlsupdate.com/feed 437 KB on a slow origin — while their hosts answer
+   * fine. Measured 2026-10-20; they read as "rc=-1 records=0" forever. */
+  int rc = http_request(ctx->http, "GET", url, hdrs, NULL, 0, 25000, 2, &r);
   if (rc != 0 || r.status < 200 || r.status >= 300 || !r.body) {
     /* Say WHY. This path used to return -1 in silence, so a feed behind a bot
      * wall, a moved feed and a dead host all surfaced as the same bare

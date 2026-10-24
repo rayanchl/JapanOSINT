@@ -196,7 +196,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def openalex_def = {
-  .id = "OPENALEX", .collector = "osint",
+  .id = "OPENALEX", .collector = "osint_" "investigation",
   .name = "OpenAlex Scholarly Search", .name_ja = "OpenAlex 学術検索",
   .update_interval_sec = 0, .run = run,
   .category = "investigation", .type = "api",

@@ -28,7 +28,7 @@
   static int run_##SYM(const source_ctx *c, intel_sink *s) {                 \
     int n = rss_collect(c, s, URL, LANG, TAGS); return n < 0 ? -1 : 0; }     \
   static const source_def SYM = {                                           \
-    .id = ID, .collector = COLL, .name = NAME, .name_ja = NAMEJA,            \
+    .id = ID, .collector = COLL, .engine = "rss", .name = NAME, .name_ja = NAMEJA,            \
     .update_interval_sec = IVAL, .run = run_##SYM,                           \
     .category = CAT, .type = "web_request", .url = URL,                      \
     .description = DESC, .layer = NULL, .free_tier = 1 };                    \
@@ -40,7 +40,7 @@
   static int run_##SYM(const source_ctx *c, intel_sink *s) {                 \
     int n = rss_collect(c, s, URL, LANG, TAGS); return n < 0 ? -1 : 0; }     \
   static const source_def SYM = {                                           \
-    .id = ID, .collector = COLL, .name = NAME, .name_ja = NAMEJA,            \
+    .id = ID, .collector = COLL, .engine = "rss", .name = NAME, .name_ja = NAMEJA,            \
     .update_interval_sec = INTERVAL, .run = run_##SYM,                       \
     .category = CAT, .type = "web_request", .url = URL,                      \
     .description = DESC, .layer = NULL, .free_tier = 1 };                    \
@@ -48,14 +48,14 @@
 
 /* On-demand OSINT service with an explicit run function. */
 #define DEFR(SYM, ID, NAME, NAMEJA, RUN, CAT, TYPE, URL, DESC, FREE) \
-  static const source_def SYM = { .id = ID, .collector = "osint", .name = NAME, \
+  static const source_def SYM = { .id = ID, .collector = "osint_" CAT, .name = NAME, \
     .name_ja = NAMEJA, .update_interval_sec = 0, .run = RUN, .category = CAT, \
     .type = TYPE, .url = URL, .description = DESC, .layer = NULL, .free_tier = FREE }; \
   REGISTER_SOURCE(SYM)
 
 /* On-demand scraped service; the file provides run_scrape(). */
 #define DEF(SYM, ID, NAME, NAMEJA, CAT, URL, DESC) \
-  static const source_def SYM = { .id = ID, .collector = "osint", .name = NAME, \
+  static const source_def SYM = { .id = ID, .collector = "osint_" CAT, .name = NAME, \
     .name_ja = NAMEJA, .update_interval_sec = 0, .run = run_scrape, \
     .category = CAT, .type = "scraped", .url = URL, .description = DESC, \
     .layer = NULL, .free_tier = 1 }; \

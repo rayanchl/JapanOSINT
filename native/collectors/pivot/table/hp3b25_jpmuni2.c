@@ -3417,6 +3417,7 @@ static const hp_source HP3B25_JPMUNI2[] = {
     .id_keys = "id,name",
     .interval = 86400,
     .page_param = "start",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_size = 100,
     .page_zero_based = 1,
     .title_keys = "title,name",
@@ -3735,6 +3736,7 @@ static const hp_source HP3B25_JPMUNI2[] = {
     .interval = 86400,
     .link_keys = "link",
     .page_param = "page",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .title_keys = "title.rendered",
     .description = "The announcement stream of BODIK ODCS, the shared catalogue "
@@ -3756,6 +3758,7 @@ static const hp_source HP3B25_JPMUNI2[] = {
     .href_must = "hiroshima-opendata.dataeye.jp/datasets/",
     .interval = 86400,
     .page_param = "page",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .description = "The dataset listing of the Hiroshima metropolitan area Dataeye "
       "open-data portal, 20 dataset links per page, walked with page=. "
@@ -3794,6 +3797,7 @@ static const hp_source HP3B25_JPMUNI2[] = {
     .href_must = "tsuyama.dataeye.jp/datasets/",
     .interval = 86400,
     .page_param = "page",
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .description = "The dataset listing of the Tsuyama Dataeye open-data portal, 20 "
       "dataset links per page, walked with page=. Dataeye exposes no "

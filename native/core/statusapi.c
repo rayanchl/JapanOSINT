@@ -1,9 +1,13 @@
+#include "cadence.h"
+#include "source_interval.h"
 #include "statusapi.h"
+#include "collectortab.h"
 #include "intelapi.h"           /* intelapi_is_intel_id — INTEL_SOURCE_IDS */
 #include "source_registry.h"
 #include "source_trust.h"
 #include "breach_meta.h"
 #include "credtab.h"
+#include "../lib/vecindex.h"  /* vectorIndexes: every registered vector index's coverage */
 #include "httpclient.h"       /* the probe fetch — hostgated, protocol-pinned */
 #include "../source.h"        /* registry_get — the probe URL comes from the registry */
 #include "../third_party/cJSON.h"
@@ -220,6 +224,7 @@ typedef struct {
  * Loaded once per build, like load_aggs(): one SELECT, not one per row. */
 typedef struct {
   char src[256]; int failures, empties, quarantined; long effective; long long backoff_until;
+  long freshness;   /* the adaptive measurement (freshness_interval), 0 = none */
 } sched_t;
 
 static sched_t *load_sched(db_handle *db, int *out_n) {
@@ -227,7 +232,7 @@ static sched_t *load_sched(db_handle *db, int *out_n) {
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(db->h,
         "SELECT source_id,consecutive_failures,consecutive_empties,quarantined,"
-        "effective_interval,backoff_until FROM source_sched_state",
+        "effective_interval,backoff_until,freshness_interval FROM source_sched_state",
         -1, &s, NULL) != SQLITE_OK) return NULL;
   int cap = 64, n = 0;
   sched_t *S = malloc((size_t)cap * sizeof *S);
@@ -246,6 +251,7 @@ static sched_t *load_sched(db_handle *db, int *out_n) {
     r->effective   = (long)sqlite3_column_int64(s,4);
     r->backoff_until = sqlite3_column_type(s,5) == SQLITE_NULL
                          ? 0 : sqlite3_column_int64(s,5);
+    r->freshness   = (long)sqlite3_column_int64(s,6);   /* NULL -> 0 */
   }
   sqlite3_finalize(s);
   *out_n = n;
@@ -275,6 +281,11 @@ static cJSON *sched_obj(const sched_t *S, int ns, const char *id,
                                   : cJSON_CreateNull());
   cJSON_AddItemToObject(o, "effectiveInterval",
     r ? cJSON_CreateNumber((double)r->effective) : cJSON_CreateNull());
+  /* what an adaptive row's own newest item re-bucketed it to (core/scheduler.c
+   * sched_freshness_measure); null when the row is not adaptive or has stored
+   * no dated item yet. The policy (below) applies on top of this figure. */
+  cJSON_AddItemToObject(o, "measuredInterval",
+    (r && r->freshness > 0) ? cJSON_CreateNumber((double)r->freshness) : cJSON_CreateNull());
   cJSON_AddNumberToObject(o, "consecutiveFailures", r ? r->failures : 0);
   cJSON_AddNumberToObject(o, "consecutiveEmpties",  r ? r->empties  : 0);
   int backed = r && r->backoff_until > (long long)now;
@@ -326,9 +337,36 @@ static cJSON *status_row(sqlite3_stmt *s, agg_t *A, int na,
   cJSON_AddItemToObject(o,"free",
     m ? cJSON_CreateBool(m->free) : cJSON_CreateNull());
   add_str_or_null(o,"layer", m && m->layer && m->layer[0] ? m->layer : NULL);
+  /* The collector a source belongs to (every registered source has exactly
+   * one; hpengine rows default to their table's name), its display label from
+   * core/collectors.def, the engine that runs it, and its kind. The iOS
+   * dashboard groups on `collector`; it used to group on `layer`, which only
+   * ~1% of sources declare, so 99% sat in one "Uncategorised" bucket. */
+  {
+    const source_def *d = registry_get(id);
+    const collector_meta *cm = d ? collector_meta_get(d->collector) : NULL;
+    add_str_or_null(o,"collector", d ? d->collector : NULL);
+    add_str_or_null(o,"collectorLabel", cm ? cm->label : NULL);
+    {
+      const char *g = d ? collector_group_of(d->collector) : NULL;
+      const collector_meta *gm = g ? collector_meta_get(g) : NULL;
+      add_str_or_null(o,"collectorGroup", g);
+      add_str_or_null(o,"collectorGroupLabel", gm ? gm->label : NULL);
+    }
+    add_str_or_null(o,"engine", d ? (d->engine && d->engine[0] ? d->engine : "native") : NULL);
+    add_str_or_null(o,"kind", d ? (d->collector && d->collector[0] == '_' ? "internal"
+                                 : d->update_interval_sec > 0 ? "scheduled"
+                                 : registry_is_entity_pivot(d) ? "pivot" : "unreachable") : NULL);
+  }
   cJSON_AddItemToObject(o,"updateInterval",
     (m && m->update_interval > 0) ? cJSON_CreateNumber((double)m->update_interval)
                                   : cJSON_CreateNull());
+  { const source_def *pd = registry_get(id);   /* the system-wide cadence policy applied to this row */
+    cJSON_AddItemToObject(o,"policyInterval",
+      (pd && pd->update_interval_sec > 0) ? cJSON_CreateNumber((double)cadence_apply(pd->update_interval_sec))
+                                          : cJSON_CreateNull());
+    long ov = (pd && pd->update_interval_sec > 0) ? source_interval_for(id) : 0;   /* set for this one source */
+    cJSON_AddItemToObject(o,"overrideInterval", ov > 0 ? cJSON_CreateNumber((double)ov) : cJSON_CreateNull()); }
   add_str_or_null(o,"status", status);
   add_str_or_null(o,"lastCheck", ctext(s,6));
   add_str_or_null(o,"lastSuccess", ctext(s,7));
@@ -424,6 +462,13 @@ static cJSON *breach_status_row(const breach_src_row *br) {
   cJSON_AddNullToObject(o, "nameJa");
   add_str_or_null(o, "type", "dataset");
   add_str_or_null(o, "category", "breach");
+  add_str_or_null(o, "collector", "_breach");
+  add_str_or_null(o, "collectorLabel", "Breach corpus");
+  add_str_or_null(o, "collectorGroup", collector_group_of("_breach"));
+  { const collector_meta *gm = collector_meta_get(collector_group_of("_breach"));
+    add_str_or_null(o, "collectorGroupLabel", gm ? gm->label : NULL); }
+  add_str_or_null(o, "engine", "breach");
+  add_str_or_null(o, "kind", "corpus");
   add_str_or_null(o, "url", br->domain[0] ? br->domain : NULL);
   add_str_or_null(o, "description", desc);
   cJSON_AddBoolToObject(o, "free", 1);
@@ -457,6 +502,12 @@ static cJSON *breach_status_row(const breach_src_row *br) {
   cJSON_AddNullToObject(o, "probeResponseHeaders");
   cJSON_AddNullToObject(o, "probeResponseBody");
   cJSON_AddNullToObject(o, "probeKind");
+  return o;
+}
+
+cJSON *statusapi_cred_json(const char *id) {
+  cJSON *o = cJSON_CreateObject();
+  add_cred_status(o, id);
   return o;
 }
 
@@ -679,6 +730,14 @@ char *statusapi_build_view(db_handle *db, int include_breach,
                    : "every registered source (no ?limit given)");
     cJSON_AddItemToObject(env, "view", view);
   }
+  /* Every vector index (lib/vecindex registry), compact: embedded / eligible
+   * / failed / refused / backlog / model / dim / state / last_run. Read from
+   * each index's meta table plus a count of its (small) fail table — no scan
+   * of a vector table and no request to the embedding server, so it costs a
+   * few point reads on a payload that is already 20 MB. A semantic search
+   * that answers from 40,000 of 12.9M rows is a coverage fact a client should
+   * be able to see without running a search first. */
+  cJSON_AddItemToObject(env, "vectorIndexes", vecindex_status_json(db));
   cJSON_AddStringToObject(env,"timestamp", ts);
   char *js = cJSON_PrintUnformatted(env);
   cJSON_Delete(env);

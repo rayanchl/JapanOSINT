@@ -10,11 +10,14 @@
 #include <strings.h>
 #include <unistd.h>
 #include <ctype.h>
+#include <errno.h>
+#include <time.h>
 #include <pthread.h>
 
 typedef struct { char *host; int requests; int ok; } host_log;
 
-struct http_client { CURLSH *share; host_log *hosts; int n_hosts, cap_hosts; };
+struct http_client { CURLSH *share; host_log *hosts; int n_hosts, cap_hosts;
+                     unsigned long long bytes_in; int requests; };
 
 /* Record one request's host (parsed from the effective URL) + outcome. */
 static void log_host(http_client *c, const char *url, long status, int hard) {
@@ -79,9 +82,14 @@ const char *http_client_host_at(http_client *c, int i,
  * idiom as curl_boot() below; the probe is one getenv, so the once costs
  * nothing after the first call. */
 static size_t g_max_body;
+/* Whether JO_HTTP_MAX_BODY was SET, as opposed to defaulted. An operator who
+ * names a ceiling has stated a policy, and a per-call override must not walk
+ * through it — see body_ceiling(). */
+static int g_max_body_explicit;
 static void max_body_probe(void) {
   const char *e = getenv("JO_HTTP_MAX_BODY");
   long long v = (e && *e) ? atoll(e) : -1;
+  g_max_body_explicit = (v >= 0);
   g_max_body = (v >= 0) ? (size_t)v : (size_t)HTTP_MAX_BODY_DEFAULT;
 }
 
@@ -89,6 +97,42 @@ static size_t max_body_bytes(void) {
   static pthread_once_t once = PTHREAD_ONCE_INIT;
   pthread_once(&once, max_body_probe);
   return g_max_body;
+}
+
+/* A ceiling for ONE request on THIS thread, set by http_request_max() and
+ * cleared when that call returns. 0 means "use the default above".
+ *
+ * Why a per-call ceiling exists at all: the 64 MB default is a security bound
+ * on an upstream we do not control, and a handful of rows legitimately need
+ * more. `ods-public-geonames` is the measured case — GeoNames cities with
+ * population >= 1,000 is 171,176 records, the ODS records API refuses
+ * offset+limit past 10,000, and the only complete answer is the ~111 MB
+ * /exports/jsonl file. Raising the DEFAULT to reach it would lift the bomb
+ * guard for all 48,343 sources to serve one; this raises it for that one row,
+ * for that one fetch.
+ *
+ * It is thread-local for the same reason g_last_te is: eight scheduler workers
+ * are inside http_request() at once, and a process-wide variable would let one
+ * row's generous ceiling apply to another row's fetch — exactly the bound this
+ * cap exists to hold. The ceiling still applies on the DECOMPRESSED stream in
+ * on_data(), so a row that asks for 192 MB still cannot be fed tens of GB. */
+static __thread size_t g_body_ceiling_once;
+
+/* An operator's EXPLICIT $JO_HTTP_MAX_BODY is a hard cap, and a per-call
+ * override is clamped to it rather than silently exceeding it. Without this,
+ * an operator who lowers the ceiling to 16 MB to bound a small deployment's
+ * memory would still have one collector pull 192 MB, with nothing anywhere
+ * saying so — the setting would read as honoured and not be. The override
+ * raises the DEFAULT, which is what it is for; it does not overrule a policy
+ * somebody set on purpose. */
+static size_t body_ceiling(void) {
+  size_t base = max_body_bytes();
+  if (!g_body_ceiling_once) return base;
+  if (g_max_body_explicit) {
+    if (base == 0) return g_body_ceiling_once;  /* 0 = the operator disabled it */
+    return g_body_ceiling_once < base ? g_body_ceiling_once : base;
+  }
+  return g_body_ceiling_once;
 }
 
 typedef struct { char *buf; size_t len, cap; int over; } sbuf;
@@ -131,6 +175,37 @@ static int on_prereq(void *ud, char *conn_primary_ip, char *conn_local_ip,
   return CURL_PREREQFUNC_OK;
 }
 #endif
+
+void http_easy_harden(void *curl_easy) {
+  CURL *e = (CURL *)curl_easy;
+  if (!e) return;
+  curl_easy_setopt(e, CURLOPT_FOLLOWLOCATION, 1L);
+  curl_easy_setopt(e, CURLOPT_MAXREDIRS, 5L);
+  /* Pin the protocol set on BOTH the initial request and the redirect chain.
+   * Without REDIR_PROTOCOLS a 302 can walk an http(s) fetch into file:// or
+   * scp:// — libcurl's redirect default has historically been permissive. */
+#if LIBCURL_VERSION_NUM >= 0x075500            /* 7.85.0 */
+  curl_easy_setopt(e, CURLOPT_PROTOCOLS_STR, "http,https");
+  curl_easy_setopt(e, CURLOPT_REDIR_PROTOCOLS_STR, "http,https");
+#else
+  curl_easy_setopt(e, CURLOPT_PROTOCOLS,
+                   (long)(CURLPROTO_HTTP | CURLPROTO_HTTPS));
+  curl_easy_setopt(e, CURLOPT_REDIR_PROTOCOLS,
+                   (long)(CURLPROTO_HTTP | CURLPROTO_HTTPS));
+#endif
+#if LIBCURL_VERSION_NUM >= 0x075000
+  curl_easy_setopt(e, CURLOPT_PREREQFUNCTION, on_prereq);
+  curl_easy_setopt(e, CURLOPT_PREREQDATA, (void *)0);
+#endif
+}
+
+/* usleep() takes a 32-bit useconds_t and POSIX allows EINVAL past one second;
+ * a 30 s Retry-After is 3e10 µs. */
+static void sleep_ms(long ms) {
+  if (ms <= 0) return;
+  struct timespec ts = { (time_t)(ms / 1000), (long)(ms % 1000) * 1000000L };
+  while (nanosleep(&ts, &ts) != 0 && errno == EINTR) {}
+}
 
 /* Header names that must not follow a URL rewrite onto a different host. */
 static int header_is_credential(const char *h) {
@@ -217,216 +292,179 @@ void http_client_free(http_client *c) {
  * rows were re-probed specifically "under the engine's own request conditions"
  * — so a host-specific problem gets a host-specific answer.
  *
- * A caller-supplied "User-Agent:" in `headers` still wins, because
- * CURLOPT_HTTPHEADER outranks CURLOPT_USERAGENT; that is how an hpengine row's
- * header1= continues to work. */
-static const struct { const char *host, *ua; } UA_OVERRIDE[] = {
-  { "data.humdata.org",
-    "RCorp-feeds/1.0 (+https://github.com/RCorp; feed collector; "
-    "contact via repo issues)" },
-  /* Same token block as HDX. Measured 2026-08-24:
-   *     engine UA (contains "OSINT")  520
-   *     the agent below                200
-   *     no User-Agent at all           200
-   * We still identify ourselves and still offer a contact route, so this is
-   * the documented remedy rather than an evasion. */
-  { "www.oasis-open.org",
-    "RCorp-feeds/1.0 (+https://github.com/RCorp; feed collector; "
-    "contact via repo issues)" },
-  /* Spain's INE web service (servicios.ine.es/wstempus). Measured 2026-09-07
-   * against /wstempus/js/ES/CLASIFICACIONES:
-   *     engine UA                                                403
-   *     "JapanOSINT/1.0"                                         200
-   *     "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas)"   200
-   *     "JapanOSINT/1.0 (contact via repo issues)"               200
-   *     "JapanOSINT/1.0 (feed collector)"                        403
-   *     the RCorp-feeds agent above                              403
-   * The rejected token is the word "collector", not "OSINT" — which is why
-   * the two agents already in this table do not help. The agent below is the
-   * engine's own, with that one word removed: it still names the product,
-   * still gives the repository and still offers a contact route. All eleven
-   * eur-ine-* sources were storing nothing on every scheduled run; with this
-   * agent CLASIFICACIONES, ESCALAS, PERIODICIDADES, UNIDADES, VARIABLES,
-   * PUBLICACIONES, OPERACIONES_DISPONIBLES and TABLAS_OPERACION/{EPA,IPC,IPRI}
-   * all answer 200 with real records. */
-  { "servicios.ine.es",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
+ * Since 2026-10-21 every per-host agent lives in core/host_agents.def, and a
+ * listed host's agent wins over a caller-supplied "User-Agent:" (the request
+ * builder below drops the caller's), so a row's own header1= now applies to
+ * hosts NOT in the table only. */
+/* THE per-host agent table: core/host_agents.def, also read by
+ * tools/probe_hp_batch.py. One X-macro file, three expansions. */
+typedef enum {
+#define HOST_AGENT_KIND(k, s) k,
+#define HOST_AGENT(h, k)
+#include "core/host_agents.def"
+#undef HOST_AGENT
+#undef HOST_AGENT_KIND
+  HA__COUNT
+} host_agent_kind;
 
-  /* Boston's CKAN portal, behind the same class of filter. Bisected
-   * 2026-09-11 against data.boston.gov/api/3/action/package_search:
-   *     "JapanOSINT/1.0"                                         200
-   *     "JapanOSINT/1.0 (… feed)"                                200
-   *     "JapanOSINT/1.0 (… collector)"                           502
-   *     the full engine UA                                       502
-   * So it is the word "collector" again, exactly as at INE, and the same
-   * agent clears it — verified on package_search, group_list,
-   * organization_list, tag_list, recently_changed_packages_activity_list and
-   * the per-organization `fq=organization:…` searches, which also honour the
-   * filter (9 of 235 packages for one org, so rule 4d is satisfied). 35
-   * registered us-data-boston-gov-* sources were storing nothing on every
-   * scheduled run. */
-  { "data.boston.gov",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-
-  /* India's Press Information Bureau. Here the rejected token is the contact
-   * URL itself, not a word in the product name. Measured 2026-09-11 on
-   * pib.gov.in/RssMain.aspx?ModId=6&Lang=1&Regid=3 (following its 302):
-   *     "JapanOSINT/1.0"                                       200, 20 items
-   *     "JapanOSINT/1.0 (contact via repo issues)"             200, 20 items
-   *     the feed agent carrying "(+https://github.com/…)"      403
-   * The agent below therefore keeps BOTH the product identity and a contact
-   * route, and drops only the URL its filter refuses. Note this is the RSS
-   * path, which sets its own User-Agent header: it reaches this table through
-   * http_ua_override(), not through CURLOPT_USERAGENT. */
-  { "pib.gov.in",
-    "JapanOSINT/1.0 (contact via repo issues)" },
-
-  /* The "collector" word filter again, on four more hosts. Measured 2026-09-14
-   * by comparing the engine agent against the same agent with that one word
-   * removed (the INE / Boston agent above):
-   *     data.sanjoseca.gov (OpenGov CKAN)   502 -> 200   15 us-data-sanjoseca-gov-* rows
-   *     www.madamasr.com   (RSS)            520 -> 200   afr-eg-madamasr
-   *     www.telegram.hr    (RSS)            520 -> 200   eur-news-telegram-hr
-   *     www.jornalnoticias.co.mz (RSS)      406 -> 200   afr-mz-jornalnoticias
-   * Every one of those sources was storing nothing on every scheduled run. The
-   * agent still names the product, the repository and a contact route. */
-  { "data.sanjoseca.gov",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.madamasr.com",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.telegram.hr",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.jornalnoticias.co.mz",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-
-  /* OCHA Financial Tracking Service (api.hpc.tools) — the HDX "OSINT" token
-   * block, same operator family. Measured 2026-09-14: engine agent 406, the
-   * RCorp-feeds agent HDX already uses 200. Four ocha-fts-* rows. */
-  { "api.hpc.tools",
-    "RCorp-feeds/1.0 (+https://github.com/RCorp; feed collector; "
-    "contact via repo issues)" },
-
-  /* Seven more, bisected with libcurl on 2026-09-15 (engine agent → the agent
-   * below; statuses as measured):
-   *   reliefweb.int      406 "Blocked" (also without "collector", also bare
-   *                      JapanOSINT/1.0)            → RCorp-feeds 200, 66 KB RSS
-   *   www.unocha.org     406 for any agent containing "OSINT"
-   *                                                 → RCorp-feeds 301→200, 10 items
-   *   hapi.humdata.org   406 "Blocked due to bot activity" (HDX's API host)
-   *                                                 → RCorp-feeds 200, 33 KB records
-   *   jamestown.org      403, also without "collector" or the repo URL
-   *                                                 → RCorp-feeds 200, 10 items
-   *   www.bsi.bund.de    403 (5 feeds) — the word "collector"
-   *                                                 → engine agent minus it 200, 50 items
-   *   container-news.com 403 — the word "collector" → same agent 200, 88 KB
-   *   www.ftc.gov        403 for every agent carrying a github URL
-   *                                                 → product + contact route 200, 10 items
-   * Same remedy as the entries above: each agent still names the client and a
-   * contact route and drops only the token the filter rejects. Hosts that
-   * refused EVERY agent (Europarl 202-empty, Tel Aviv GIS 571, CISA/FEMA/ICE
-   * fingerprinting libcurl itself) are deliberately NOT listed. */
-  { "reliefweb.int",
-    "RCorp-feeds/1.0 (+https://github.com/RCorp; feed collector; "
-    "contact via repo issues)" },
-  { "www.unocha.org",
-    "RCorp-feeds/1.0 (+https://github.com/RCorp; feed collector; "
-    "contact via repo issues)" },
-  { "hapi.humdata.org",
-    "RCorp-feeds/1.0 (+https://github.com/RCorp; feed collector; "
-    "contact via repo issues)" },
-  { "jamestown.org",
-    "RCorp-feeds/1.0 (+https://github.com/RCorp; feed collector; "
-    "contact via repo issues)" },
-  { "www.bsi.bund.de",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "container-news.com",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-  { "www.ftc.gov",
-    "JapanOSINT/1.0 (contact via repo issues)" },
-  /* The "collector" word filter once more (decided 2026-10-09 to route
-   * around it). Measured against /en/bycountry/JP/:
-   *     engine UA                                              403, 153 B
-   *     "RCorp-feeds/1.0 (…; feed collector; …)"               403
-   *     "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas;
-   *      contact via repo issues)"                             200, 19,850 B
-   * cam-insecam-scrape had failed every run since 2026-10-06 on the 403. */
-  { "www.insecam.org",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-
-  /* INGV's FDSN event service, the same one-word filter. Measured 2026-10-06
-   * against fdsnws/event/1/query?format=geojson:
-   *     "JapanOSINT/1.0"                                         200
-   *     "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas)"   200
-   *     "JapanOSINT/1.0 (feed collector)"                        connection dropped
-   *     the full engine UA                                       connection dropped
-   *     the agent below                                          200 (61 KB)
-   * geo-ingv-events-30d and geo-italy-ingv-last100 failed every run with
-   * "fetch failed" — before and after their date windows were rolled. */
-  { "webservices.ingv.it",
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-    "contact via repo issues)" },
-
-  /* NOT LISTED, deliberately: registry.faa.gov.
-   *
-   * It was reported alongside the two above as "answers 200 with no UA", which
-   * is true and is not the same thing. Measured:
-   *     engine UA        403
-   *     the agent above  403     <- so it is NOT a token block
-   *     no User-Agent    200
-   * It refuses every self-identifying client and admits only an anonymous or
-   * browser-shaped one. This table exists to route around a filter that objects
-   * to one WORD in an otherwise honest agent; it is not a place to stop
-   * identifying ourselves, and httpclient.h rules out presenting as a browser.
-   * The source stays honestly failing rather than quietly evading. */
+static const char *const HOST_AGENT_STRING[HA__COUNT] = {
+#define HOST_AGENT_KIND(k, s) [k] = s,
+#define HOST_AGENT(h, k)
+#include "core/host_agents.def"
+#undef HOST_AGENT
+#undef HOST_AGENT_KIND
 };
 
-/* Exact host match against the authority component of `url`. Substring
- * matching would be wrong: "data.humdata.org.evil.example" must not inherit
- * the override, and neither should an unrelated path containing the name. */
-/* The table entry for this URL's host, or NULL when there is none. */
-static const char *ua_override_lookup(const char *url) {
-  if (!url) return NULL;
+static const char *const HOST_AGENT_NAME[HA__COUNT] = {
+#define HOST_AGENT_KIND(k, s) [k] = #k,
+#define HOST_AGENT(h, k)
+#include "core/host_agents.def"
+#undef HOST_AGENT
+#undef HOST_AGENT_KIND
+};
+
+static const struct { const char *host; host_agent_kind kind; } HOST_AGENTS[] = {
+#define HOST_AGENT_KIND(k, s)
+#define HOST_AGENT(h, k) { h, k },
+#include "core/host_agents.def"
+#undef HOST_AGENT
+#undef HOST_AGENT_KIND
+};
+
+/* Sent beside HA_BROWSER's agent: www.bls.gov needs the Sec-Fetch-* headers,
+ * not just the agent. The caller's own Accept is kept — the NOAA hosts answer
+ * an HTML Accept with a 202 challenge page. */
+static const char *const BROWSER_EXTRA_HEADERS[] = {
+  "Accept-Language: en-US,en;q=0.9",
+  "Sec-Fetch-Dest: document",
+  "Sec-Fetch-Mode: navigate",
+  "Sec-Fetch-Site: none",
+  "Upgrade-Insecure-Requests: 1",
+  NULL };
+
+/* The entry for `url`'s host, or -1. Exact host match on the authority
+ * without :port: "data.humdata.org.evil.example" must not inherit an entry,
+ * and neither may a path that merely contains a listed name. */
+static int host_agent_index(const char *url) {
+  if (!url) return -1;
   const char *h = strstr(url, "://");
-  if (!h) return NULL;
+  if (!h) return -1;
   h += 3;
-  size_t n = strcspn(h, "/?#");            /* authority, may carry :port */
+  size_t n = strcspn(h, "/?#");
   const char *colon = memchr(h, ':', n);
-  if (colon) n = (size_t)(colon - h);      /* strip :port before comparing */
-  for (size_t i = 0; i < sizeof UA_OVERRIDE / sizeof *UA_OVERRIDE; i++) {
-    const char *want = UA_OVERRIDE[i].host;
-    if (strlen(want) == n && strncasecmp(h, want, n) == 0)
-      return UA_OVERRIDE[i].ua;
-  }
-  return NULL;
+  if (colon) n = (size_t)(colon - h);
+  for (size_t i = 0; i < sizeof HOST_AGENTS / sizeof *HOST_AGENTS; i++)
+    if (strlen(HOST_AGENTS[i].host) == n && strncasecmp(h, HOST_AGENTS[i].host, n) == 0)
+      return (int)i;
+  return -1;
 }
 
-/* Public because CURLOPT_HTTPHEADER outranks CURLOPT_USERAGENT: a caller that
- * sets its own "User-Agent:" header — lib/rss_atom.c does, for every feed in
- * the tree — never reaches ua_for_url() below, so this table silently did not
- * apply to the one code path with the most bot-wall trouble. Such callers ask
- * here and substitute only when an entry exists, which keeps every
- * already-verified feed on exactly the agent it was verified with. */
+int http_browser_host(const char *url) {
+  int i = host_agent_index(url);
+  return i >= 0 && HOST_AGENTS[i].kind == HA_BROWSER;
+}
+
 const char *http_ua_override(const char *url) {
-  return ua_override_lookup(url);
+  int i = host_agent_index(url);
+  return i >= 0 ? HOST_AGENT_STRING[HOST_AGENTS[i].kind] : NULL;
 }
 
-static const char *ua_for_url(const char *url) {
-  const char *o = ua_override_lookup(url);
-  return o ? o : JO_USER_AGENT;
+void http_host_agents_dump(FILE *out) {
+  fprintf(out, "host\tkind\tuser_agent\textra_headers\n");
+  for (size_t i = 0; i < sizeof HOST_AGENTS / sizeof *HOST_AGENTS; i++) {
+    host_agent_kind k = HOST_AGENTS[i].kind;
+    fprintf(out, "%s\t%s\t%s\t", HOST_AGENTS[i].host, HOST_AGENT_NAME[k], HOST_AGENT_STRING[k]);
+    if (k == HA_BROWSER)
+      for (const char *const *x = BROWSER_EXTRA_HEADERS; *x; x++)
+        fprintf(out, "%s%s", x == BROWSER_EXTRA_HEADERS ? "" : " | ", *x);
+    fputc('\n', out);
+  }
 }
+
+/* ── Retry-After ────────────────────────────────────────────────────────────
+ * The retry loop below used to answer every 429/503 with 250·2^n ms (capped at
+ * 4 s) and never looked at Retry-After, so a server that said "come back in
+ * 120 s" got up to `retries` more requests inside a few seconds — each one a
+ * fresh 429, and each one lengthening the ban on the shared IP for every other
+ * collector on that host.
+ *
+ * Now: the header is parsed in both of RFC 9110's forms (delta-seconds and an
+ * HTTP-date — curl_getdate() reads all three date spellings). A delay within
+ * HTTP_RETRY_AFTER_MAX_MS and within the caller's own timeout is slept before
+ * the retry; a longer one is NOT retried, and the 429/503 is returned for the
+ * caller to report. Either way the delay is recorded in the host gate
+ * (hostgate_penalize) so every other fetch to that host backs off too. */
+#define HTTP_RETRY_AFTER_MAX_MS 30000
+
+/* Retry-After value -> milliseconds from `now`, or -1 when the value is
+ * neither form. A date in the past is 0 ("now"). Bounded to a day so the
+ * arithmetic cannot overflow on a hostile value. */
+static long retry_after_parse_ms(const char *v, time_t now) {
+  if (!v) return -1;
+  while (*v == ' ' || *v == '\t') v++;
+  size_t n = strlen(v);
+  while (n && (v[n - 1] == ' ' || v[n - 1] == '\t' || v[n - 1] == '\r' ||
+               v[n - 1] == '\n')) n--;
+  if (n == 0 || n >= 128) return -1;
+  char buf[128];
+  memcpy(buf, v, n);
+  buf[n] = 0;
+  const long day_ms = 86400L * 1000L;
+  int digits = 1;
+  for (size_t i = 0; i < n; i++) if (!isdigit((unsigned char)buf[i])) { digits = 0; break; }
+  if (digits) {
+    if (n > 6) return day_ms;               /* > 999,999 s: clamp, no overflow */
+    long s = strtol(buf, NULL, 10);
+    return s * 1000L > day_ms ? day_ms : s * 1000L;
+  }
+  time_t t = curl_getdate(buf, NULL);
+  if (t == (time_t)-1) return -1;
+  if (t <= now) return 0;
+  double d = difftime(t, now) * 1000.0;
+  return d > (double)day_ms ? day_ms : (long)d;
+}
+
+/* What to do with a response's Retry-After: -2 not applicable (no header, or
+ * a status it does not govern here), -1 do not retry (longer than we will
+ * wait), else the milliseconds to sleep before retrying. */
+static long retry_after_decision(long status, long ra_ms, int timeout_ms) {
+  if (ra_ms < 0 || (status != 429 && status != 503)) return -2;
+  long bound = HTTP_RETRY_AFTER_MAX_MS;
+  if (timeout_ms > 0 && timeout_ms < bound) bound = timeout_ms;
+  return ra_ms > bound ? -1 : ra_ms;
+}
+
+typedef struct { long retry_after_ms; } hdr_state;
+
+/* Sees every header of every hop. A status line starts a new response, so a
+ * Retry-After from a redirect hop cannot leak onto the final one. */
+static size_t on_header(char *buf, size_t sz, size_t nm, void *ud) {
+  size_t n = sz * nm;
+  hdr_state *h = (hdr_state *)ud;
+  if (n >= 5 && strncmp(buf, "HTTP/", 5) == 0) { h->retry_after_ms = -1; return n; }
+  static const char K[] = "retry-after:";
+  if (n > sizeof K - 1 && n < 256 && strncasecmp(buf, K, sizeof K - 1) == 0) {
+    char v[256];
+    memcpy(v, buf + sizeof K - 1, n - (sizeof K - 1));
+    v[n - (sizeof K - 1)] = 0;
+    h->retry_after_ms = retry_after_parse_ms(v, time(NULL));
+  }
+  return n;
+}
+
+/* What the last do_once() on THIS thread failed on — see
+ * http_last_transport_error() in httpclient.h. Thread-local because the one
+ * caller that reads it (the LLM worker) reads it on the thread that fetched. */
+static __thread int g_last_te = HTTP_TE_NONE;
+
+int http_last_transport_error(void) { return g_last_te; }
 
 static int do_once(http_client *c, const char *method, const char *url,
                    const char *const *headers, const char *body,
-                   size_t body_len, int timeout_ms, http_response *out) {
+                   size_t body_len, int timeout_ms, http_response *out,
+                   long *retry_after_ms) {
+  *retry_after_ms = -1;
+  g_last_te = HTTP_TE_OTHER;            /* every early refusal below is "other" */
   /* Defensive: a NULL client/method/url must never segfault the process.
    * On-demand runs (e.g. dataapi_layer) may invoke an HTTP-backed collector
    * without a client wired up; treat that as a hard failure (rc=1 → caller
@@ -444,31 +482,26 @@ static int do_once(http_client *c, const char *method, const char *url,
   CURL *e = curl_easy_init();
   if (!e) return 1;
   sbuf b = {0};
-  b.cap = max_body_bytes();
+  b.cap = body_ceiling();
   struct curl_slist *hl = NULL;
-  for (const char *const *h = headers; h && *h; ++h) hl = curl_slist_append(hl, *h);
+  /* One precedence for every caller: a host in core/host_agents.def gets the
+   * table's agent whatever User-Agent the caller set; any other host keeps a
+   * caller's header, else JO_USER_AGENT. */
+  int ha = host_agent_index(url);
+  for (const char *const *h = headers; h && *h; ++h) {
+    if (ha >= 0 && !strncasecmp(*h, "User-Agent:", 11)) continue;
+    hl = curl_slist_append(hl, *h);
+  }
+  if (ha >= 0 && HOST_AGENTS[ha].kind == HA_BROWSER)
+    for (const char *const *h = BROWSER_EXTRA_HEADERS; *h; ++h) hl = curl_slist_append(hl, *h);
 
   curl_easy_setopt(e, CURLOPT_URL, url);
   curl_easy_setopt(e, CURLOPT_WRITEFUNCTION, on_data);
   curl_easy_setopt(e, CURLOPT_WRITEDATA, &b);
-  curl_easy_setopt(e, CURLOPT_FOLLOWLOCATION, 1L);
-  curl_easy_setopt(e, CURLOPT_MAXREDIRS, 5L);
-  /* Pin the protocol set on BOTH the initial request and the redirect chain.
-   * Without REDIR_PROTOCOLS a 302 can walk an http(s) fetch into file:// or
-   * scp:// — libcurl's redirect default has historically been permissive. */
-#if LIBCURL_VERSION_NUM >= 0x075500            /* 7.85.0 */
-  curl_easy_setopt(e, CURLOPT_PROTOCOLS_STR, "http,https");
-  curl_easy_setopt(e, CURLOPT_REDIR_PROTOCOLS_STR, "http,https");
-#else
-  curl_easy_setopt(e, CURLOPT_PROTOCOLS,
-                   (long)(CURLPROTO_HTTP | CURLPROTO_HTTPS));
-  curl_easy_setopt(e, CURLOPT_REDIR_PROTOCOLS,
-                   (long)(CURLPROTO_HTTP | CURLPROTO_HTTPS));
-#endif
-#if LIBCURL_VERSION_NUM >= 0x075000
-  curl_easy_setopt(e, CURLOPT_PREREQFUNCTION, on_prereq);
-  curl_easy_setopt(e, CURLOPT_PREREQDATA, (void *)0);
-#endif
+  hdr_state hs = { -1 };
+  curl_easy_setopt(e, CURLOPT_HEADERFUNCTION, on_header);
+  curl_easy_setopt(e, CURLOPT_HEADERDATA, &hs);
+  http_easy_harden(e);
   /* Belt to the write-callback's braces: when the server DOES advertise a
    * length, refuse before a single byte is transferred. */
   if (b.cap) curl_easy_setopt(e, CURLOPT_MAXFILESIZE_LARGE, (curl_off_t)b.cap);
@@ -484,7 +517,7 @@ static int do_once(http_client *c, const char *method, const char *url,
     curl_easy_setopt(e, CURLOPT_CONNECTTIMEOUT_MS, ct);
   }
   curl_easy_setopt(e, CURLOPT_ACCEPT_ENCODING, "");
-  curl_easy_setopt(e, CURLOPT_USERAGENT, ua_for_url(url));
+  curl_easy_setopt(e, CURLOPT_USERAGENT, ha >= 0 ? HOST_AGENT_STRING[HOST_AGENTS[ha].kind] : JO_USER_AGENT);
   curl_easy_setopt(e, CURLOPT_NOSIGNAL, 1L);
   if (c->share) curl_easy_setopt(e, CURLOPT_SHARE, c->share);
   if (hl) curl_easy_setopt(e, CURLOPT_HTTPHEADER, hl);
@@ -512,8 +545,22 @@ static int do_once(http_client *c, const char *method, const char *url,
   if (gated) hostgate_release(url);
   long code = 0;
   curl_easy_getinfo(e, CURLINFO_RESPONSE_CODE, &code);
+  {
+    /* A timeout before the connection completed is a host that is not there
+     * (black-holed), not a slow answer; the LLM worker retries the first and
+     * never the second, so the two must not share a verdict. */
+    double conn = 0;
+    curl_easy_getinfo(e, CURLINFO_CONNECT_TIME, &conn);
+    g_last_te = rc == CURLE_OK ? HTTP_TE_NONE
+              : rc == CURLE_OPERATION_TIMEDOUT ? (conn > 0 ? HTTP_TE_TIMEOUT
+                                                           : HTTP_TE_CONNECT)
+              : (rc == CURLE_COULDNT_CONNECT || rc == CURLE_COULDNT_RESOLVE_HOST ||
+                 rc == CURLE_COULDNT_RESOLVE_PROXY) ? HTTP_TE_CONNECT
+              : HTTP_TE_OTHER;
+  }
   if (hl) curl_slist_free_all(hl);
   curl_easy_cleanup(e);
+  *retry_after_ms = hs.retry_after_ms;
 
   if (rc != CURLE_OK) {
     if (b.over || rc == CURLE_FILESIZE_EXCEEDED)
@@ -589,8 +636,24 @@ int http_request(http_client *c, const char *method, const char *url,
   int attempt = 0;
   for (;;) {
     http_response r = {0};
-    int hard = do_once(c, method, url, headers, body, body_len, timeout_ms, &r);
+    long ra_ms = -1;
+    int hard = do_once(c, method, url, headers, body, body_len, timeout_ms, &r,
+                       &ra_ms);
+    /* Every attempt's body counts, retried ones included: transfer is what
+     * the upstream sent us, not what we kept. */
+    if (c) { c->bytes_in += (unsigned long long)r.body_len; c->requests++; }   /* NULL client: do_once answered a hard failure */
     int retryable = hard || (r.status >= 500 && r.status <= 599) || r.status == 429;
+    long ra_wait = hard ? -2 : retry_after_decision(r.status, ra_ms, timeout_ms);
+    if (ra_wait != -2) {
+      /* Every other fetch to this host honours the server's delay too. */
+      hostgate_penalize(url, ra_ms);
+      if (ra_wait == -1) {
+        if (retryable && attempt < retries)
+          fprintf(stderr, "[http] %s: %ld with Retry-After %ld s — longer than "
+                          "we wait, not retrying\n", url, r.status, ra_ms / 1000);
+        retryable = 0;
+      }
+    }
     if (!retryable || attempt >= retries) {
       *out = r;
       log_host(c, url, r.status, hard);   /* attribute to the real upstream host */
@@ -610,14 +673,40 @@ int http_request(http_client *c, const char *method, const char *url,
       return hard && attempt >= retries ? 1 : 0;
     }
     http_response_free(&r);
-    /* exponential backoff: 250ms, 500ms, 1s, ... capped at 4s */
-    int ms = 250 << attempt;
+    /* exponential backoff: 250ms, 500ms, 1s, ... capped at 4s — or the
+     * server's own Retry-After when it named one we are willing to wait. */
+    long ms = attempt < 5 ? 250L << attempt : 4000L;
     if (ms > 4000) ms = 4000;
-    usleep((useconds_t)ms * 1000);
+    if (ra_wait > ms) ms = ra_wait;
+    sleep_ms(ms);
     attempt++;
   }
+}
+
+/* http_request() with a body ceiling for this one call. See
+ * g_body_ceiling_once above for why this is per-call and thread-local rather
+ * than a bigger default. max_body of 0 means "the default", so a caller that
+ * does not care is identical to calling http_request() directly.
+ *
+ * The ceiling is restored on EVERY exit path, including the retry loop's and
+ * every early refusal, because it is restored here rather than inside
+ * http_request() — a leaked ceiling would silently widen the next fetch this
+ * worker makes, which is the failure mode the thread-local exists to avoid. */
+int http_request_max(http_client *c, const char *method, const char *url,
+                     const char *const *headers, const char *body,
+                     size_t body_len, int timeout_ms, int retries,
+                     size_t max_body, http_response *out) {
+  size_t prev = g_body_ceiling_once;
+  g_body_ceiling_once = max_body;
+  int rc = http_request(c, method, url, headers, body, body_len,
+                        timeout_ms, retries, out);
+  g_body_ceiling_once = prev;
+  return rc;
 }
 
 void http_response_free(http_response *r) {
   if (r && r->body) { free(r->body); r->body = NULL; r->body_len = 0; r->status = 0; }
 }
+
+unsigned long long http_client_bytes_in(const http_client *c) { return c ? c->bytes_in : 0; }
+int http_client_request_count(const http_client *c) { return c ? c->requests : 0; }

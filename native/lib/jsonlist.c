@@ -1333,6 +1333,14 @@ static const struct pager PAGERS[] = {
   { "num",       "p",      NULL,     1 },   /* CORDIS search API               */
   { "rows",      "start",  NULL,     0 },   /* Solr / CKAN package_search      */
   { "length",    "start",  NULL,     0 },   /* DataTables — HUDOC (ECHR)       */
+  /* GOV.UK Search API (`count` + `start`), J-STAGE and CiNii (the same two
+   * names); WFS 2.0 spells the cursor `startIndex`, used when the URL already
+   * carries it. Missing until 2026-10-20: 48 `www.gov.uk/api/search.json?
+   * ...&count=3` rows declared page_walk and read ONE page of three records
+   * a run — the ceiling audit's `pages_read 1` against `pages_needed 44,885`
+   * for the employment-tribunal row was that, and page_resume on them cycled
+   * nothing because a one-page walk "completes". */
+  { "count",     "start",  "startIndex", 0 },
   { "limit",     "offset", "skip",   0 },   /* Socrata, ODS, most REST; openFDA*/
   /* Socrata SODA's OWN spelling. `$limit` sat in the EXTRA list below for
    * "recognise a full page, but we cannot ask for the next one", and that cost
@@ -1376,14 +1384,11 @@ static long jl_declared_size(const char *url) {
   return -1;
 }
 
+/* One ceiling for the whole tree (jo_page_max, lib/pagewalk.c). $JO_PAGE_MAX is
+ * the knob; $JO_JSONLIST_PAGE_MAX still works, so an operator who set the older
+ * name is honoured rather than silently ignored. */
 int jsonlist_page_max(void) {
-  int page_max = 20;   /* exhaustive-ok: page-walk ceiling; an early stop is disclosed as a collector-truncation-notice and $JO_JSONLIST_PAGE_MAX raises it */
-  const char *env = getenv("JO_JSONLIST_PAGE_MAX");
-  if (env && *env) {
-    int v = atoi(env);
-    if (v > 0) page_max = v;
-  }
-  return page_max;
+  return jo_page_max("JO_JSONLIST_PAGE_MAX");   /* exhaustive-ok: page-walk ceiling, disclosed as a collector-truncation-notice */
 }
 
 /* The continuation decision this walk makes after every page, exported so

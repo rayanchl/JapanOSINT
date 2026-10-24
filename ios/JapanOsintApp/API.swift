@@ -339,6 +339,29 @@ struct API: Sendable {
         }
         return try await get("/api/intel/items", query: qs)
     }
+    // ── Vector search (core/semsearchapi.c) ───────────────────────────────
+    /// GET /api/intel/semantic — hybrid (RRF of vector + full-text) or
+    /// vector-only ranking over the embedding index. A 503 means the server
+    /// has no usable index — not an empty result; `SemanticErrorBody.message`
+    /// turns the body into the reason to show.
+    func intelSemantic(q: String, mode: String = "hybrid", limit: Int = 50) async throws -> SemanticEnvelope {
+        try await get("/api/intel/semantic", query: [
+            URLQueryItem(name: "q", value: q),
+            URLQueryItem(name: "mode", value: mode),
+            URLQueryItem(name: "limit", value: String(limit)),
+        ])
+    }
+    /// GET /api/intel/items/:uid/similar — the rows nearest this item's stored
+    /// vector (no embedding call on the server). 409 `not_embedded` when the
+    /// item has no vector yet. The uid is percent-encoded: uids carry `|` and
+    /// `:`, which a URL string cannot hold raw.
+    func similarItems(uid: String, k: Int = 20) async throws -> SemanticEnvelope {
+        let enc = uid.addingPercentEncoding(
+            withAllowedCharacters: .alphanumerics.union(CharacterSet(charactersIn: "-._~"))) ?? uid
+        return try await get("/api/intel/items/\(enc)/similar",
+                             query: [URLQueryItem(name: "k", value: String(k))])
+    }
+
     func intelItem(uid: String) async throws -> IntelItem {
         let env: IntelItemEnvelope = try await get("/api/intel/items/\(uid)")
         return env.data
@@ -351,8 +374,9 @@ struct API: Sendable {
     }
     /// Operator-gated: decrypt a breach record's leaked secret(s). Throws
     /// `.http(403, …)` for non-operators; the caller surfaces that inline.
-    func revealItem(uid: String) async throws -> RevealResult {
-        try await get("/api/intel/items/\(uid)/reveal")
+    func revealItem(uid: String, reason: String) async throws -> RevealResult {
+        try await get("/api/intel/items/\(uid)/reveal",
+                      query: [URLQueryItem(name: "reason", value: reason)])
     }
     /// User-initiated trigger. Server runs the named intel collector and
     /// upserts items synchronously; the response carries the result count.
@@ -568,6 +592,57 @@ struct API: Sendable {
         return env.jobs.first
     }
 
+    // ── Similarity thresholds (operator only) ──────────────────────────────
+    // Every embedding cut-off the server judges a vector comparison against,
+    // resolved runtime override > env var > default (core/thresholds.c). A
+    // PUT applies on the server's next comparison — no restart — and is
+    // written to the audit chain server-side.
+
+    func similarityThresholds() async throws -> SimilarityThresholdsEnvelope {
+        try await get("/api/admin/thresholds")
+    }
+
+    /// Set a runtime override. The server refuses a value outside the key's
+    /// [min, max] with 400 rather than clamping it.
+    func setSimilarityThreshold(_ key: String, value: Double) async throws -> SimilarityThreshold {
+        let body = try JSONSerialization.data(withJSONObject: ["value": value])
+        let env: SimilarityThresholdEnvelope = try await put(
+            "/api/admin/thresholds/\(API.thresholdPathSegment(key))", body: body)
+        return env.data
+    }
+
+    /// Remove the runtime override; the env var or the default takes over.
+    func resetSimilarityThreshold(_ key: String) async throws -> SimilarityThreshold {
+        let body = try JSONSerialization.data(withJSONObject: ["reset": true])
+        let env: SimilarityThresholdEnvelope = try await put(
+            "/api/admin/thresholds/\(API.thresholdPathSegment(key))", body: body)
+        return env.data
+    }
+
+    /// Threshold keys are `[a-z_]`, but a path segment is escaped anyway.
+    private static func thresholdPathSegment(_ s: String) -> String {
+        s.addingPercentEncoding(withAllowedCharacters: .alphanumerics
+            .union(CharacterSet(charactersIn: "-._~"))) ?? s
+    }
+
+    /// The thresholds routes' refusals, named: 400 carries the server's own
+    /// range message, 403 is the operator allowlist.
+    static func thresholdErrorMessage(_ error: Error) -> String {
+        guard case let APIError.http(code, body) = error else {
+            return error.localizedDescription
+        }
+        struct Body: Decodable { let error: String?; let detail: String? }
+        let parsed = body.data(using: .utf8)
+            .flatMap { try? JSONDecoder().decode(Body.self, from: $0) }
+        switch code {
+        case 403 where body.contains("not configured"):
+            return "Operator access is not configured on the server (set PLATFORM_OPERATOR_EMAILS)."
+        case 403: return "Platform operator access required."
+        case 404: return "The server does not know this threshold (\(parsed?.detail ?? "unknown key"))."
+        default:  return parsed?.detail ?? parsed?.error ?? (body.isEmpty ? "HTTP \(code)" : body)
+        }
+    }
+
     /// Operator-surface errors worth naming. A 409 is the server's one-job-at-a-
     /// time guard, not a failure; a 403 here almost always means
     /// PLATFORM_OPERATOR_EMAILS is unset, which fails closed for everyone and is
@@ -682,10 +757,22 @@ struct API: Sendable {
         let body = try JSONSerialization.data(withJSONObject: ["query": query])
         return try await post("/api/search/analyze", body: body, timeout: 20)
     }
-    func searchSuggest(_ q: String) async throws -> [String] {
+    /// `cheap` is true when the server answered by retrieval, so the caller
+    /// may ask again sooner; an LLM-generated answer is not cheap.
+    func searchSuggest(_ q: String) async throws -> (suggestions: [String], cheap: Bool) {
         let env: SuggestEnvelope = try await get(
             "/api/search/suggest", query: [URLQueryItem(name: "q", value: q)])
-        return env.suggestions
+        return (env.suggestions, env.meta?.retrieval != nil)
+    }
+    /// The same route with `expand=1`, which also asks the suggest LLM for
+    /// extra ideas (items with source "llm", after the retrieved ones). Slow
+    /// and paid: send it once per query on an explicit action or a long
+    /// typing pause, never per keystroke. Cancelling the calling Task
+    /// cancels the request.
+    func searchSuggestExpanded(_ q: String) async throws -> SuggestEnvelope {
+        try await get("/api/search/suggest", query: [
+            URLQueryItem(name: "q", value: q), URLQueryItem(name: "expand", value: "1"),
+        ])
     }
     func searchResults(_ id: String) async throws -> SearchSnapshot {
         try await get("/api/search/results/\(id)")

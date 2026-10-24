@@ -22,6 +22,7 @@ static const hp_source T[] = {
     .array_path = "results",
     .detail_url = "https://bipadportal.gov.np/api/v1/resource/{v}/?format=json", .detail_key = "id",
     .page_walk = 1,
+    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .interval = 43200, .free_tier = 1 },
 
 };

@@ -129,6 +129,12 @@ INT_OPTS = {"detail_max", "page_start", "page_size", "page_max", "max_items",
             "timeout_ms",
             "page_zero_based", "csv_skip_lines", "xlsx_sheet_index",
             "filter_query", "csv_no_header", "free_tier", "interval",
+            # the scheduler re-buckets the cadence from the newest stored
+            # item's age after every run (hpengine.h adaptive_interval)
+            "adaptive_interval",
+            # the detail hop answers an HTML record page: merge its
+            # label/value cells (hpengine.h detail_html_kv)
+            "detail_html_kv",
             # {date…} tokens: rendered in UTC+tz_minutes; a dated row whose
             # first page is a 4xx or empty steps the date back up to date_back.
             "tz_minutes", "date_back",
@@ -320,7 +326,9 @@ def emit_row(r):
     hdrs = [o.pop(h) for h in HDR_OPTS if h in o]
     L = ['  { .id = "%s", .name = %s,' % (r["id"], cstr(r["name"]))]
     if r["name_ja"]:
-        L.append('    .name_ja = "%s",' % r["name_ja"])
+        # escaped like .name: a feed title carrying a double quote (Medina NY's
+        # alerts feed is titled "Village of Medina") broke the build of batch 44
+        L.append('    .name_ja = "%s",' % r["name_ja"].replace("\\", "\\\\").replace('"', '\\"'))
     L.append('    .category = "%s", .portal = "%s",'
              % (r["category"], r["portal"]))
     L.append('    .record_type = "%s",' % r["record_type"])

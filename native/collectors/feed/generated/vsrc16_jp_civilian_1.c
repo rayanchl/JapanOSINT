@@ -61,7 +61,7 @@ static int run_global_taginfo_search_by_value(const source_ctx *c, intel_sink *s
   return 0;
 }
 static const source_def global_taginfo_search_by_value = {
-  .id = "global-taginfo-search-by-value", .collector = "jp_civilian",
+  .id = "global-taginfo-search-by-value", .collector = "osm",
   .name = "OSM taginfo search by tag value",
   .name_ja = "OSM taginfo search by tag value",
   .update_interval_sec = 21600, .run = run_global_taginfo_search_by_value,

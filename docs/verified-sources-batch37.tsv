@@ -1,0 +1,20 @@
+# Batch 37 -- emitted AND stored per row, through the real binary, 2026-10-12..17.
+# emitted = emit() calls; stored = DISTINCT uids written (rows + notices); db = rows read back out of the scratch DB.
+# A stored count one above db is one disclosure notice. JP_CKAN_DATAGOJP measured 18,826/18,826 and was then removed as a duplicate of hp3b23_jpnational's per-organisation rows (see rejected-sources-batch37.jp.tsv). An offset walk here carries a UNIQUE stable sort.
+id	emitted	stored	db_rows	declared_total	note
+CA_ALBERTA	37515	37515	37515	37515	complete, = declared total
+CA_EDMONTON	2088	2088	2088	2088	complete, = declared total
+CH_OPENDATASWISS	16521	16521	16521		
+CO_DATOSGOVCO	10000	10001	10000	10000	complete to Socrata's own 10,000 resultSetSize cap; order=dataset_id (was name: 9,934 stored)
+EU_DATAEUROPA	1000	1001	1000	1733660	bounded on purpose (17,000+ pages); the notice carries records_available=1,751,613 'upstream declared this total', so the bound is stated, not hidden
+EU_ECB_FXREF	1	1	1	29	one record per publication day holding all 29 rates as indexed fields; keyed Cube.@time
+FR_ODS_REUNION	285	285	285	285	complete, = declared total
+GR_DATAGOVGR	22780	22780	22780	22736	complete, = result.count (22,736 when measured; it grew)
+JP_CKAN_BODIK	18535	18535	18535	18535	complete, = declared total
+US_SOC_GAINESVILLE	201	201	201	201	complete, = declared total
+US_SOC_ILLINOIS	404	404	404	404	complete, = declared total
+US_SOC_MESA	1213	1213	1213	1213	complete, = declared total
+US_SOC_SF	1225	1225	1225	1225	complete, = declared total
+US_SOC_SOMERVILLE	53	53	53	53	complete, = declared total
+JPN_EGOV_DATA_ORG_ORG_221007	233	233	233	233	complete, = organization_list package_count; the organisation hp3b23 lacked (Shizuoka City)
+JPN_EGOV_DATA_ORG_ORG_401307	496	496	496	496	complete, = organization_list package_count; the organisation hp3b23 lacked (Fukuoka City)

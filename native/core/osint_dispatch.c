@@ -1,5 +1,6 @@
 /* core/osint_dispatch.c — see header. Registry-filtered OSINT dispatcher. */
 #include "osint_dispatch.h"
+#include "thresholds.h"         /* operator-tunable similarity cut-offs */
 #include "httpclient.h"
 #include "llm.h"
 #include "prompts.h"
@@ -8,9 +9,13 @@
 #include "evidence.h"       /* evidence_scope_begin/end */
 #include "content_change.h" /* content_change_scope_begin/end */
 #include "maint_detect.h"   /* anomaly_detect */
+#include "relevance.h"      /* run-time rule-4d check on a pivot's answer */
+#include "service_vec.h"    /* the resolver's embedding fallback asks the router */
+#include "qembed.h"
 #include <time.h>
 #include "../third_party/cJSON.h"
 #include <stdio.h>
+#include <strings.h>      /* strcasecmp — POSIX; see osint_lookup on id case */
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -18,7 +23,10 @@
 void osint_result_free(osint_result *r) {
   if (!r) return;
   free(r->data); free(r->error); free(r->sources_json); free(r->resolved_from);
+  free(r->relevance);
   r->data = r->error = r->sources_json = r->resolved_from = NULL;
+  r->relevance = NULL;
+  r->resolver = NULL;
 }
 
 int osint_canon(const char *name, char *out, size_t n) {
@@ -39,9 +47,41 @@ int osint_canon(const char *name, char *out, size_t n) {
 }
 
 /* Unified: ANY registered source is OSINT-dispatchable (a JapanOSINT
- * collector and an OSINTsaas service are indistinguishable here). */
+ * collector and an OSINTsaas service are indistinguishable here).
+ *
+ * CASE. `canon` has been UPPERCASED by osint_canon(), and registry_get() is a
+ * strcmp hash — so a source whose id contains a lower-case letter could never
+ * be found here at all. That held for 9,941 of 18,884 ids, and it was
+ * invisible because every hand-written service in the osint collector happens
+ * to be spelled in capitals, so the two conventions never met. They met when
+ * 16 generated entity pivots were admitted to this path (registry.c's
+ * NEVER-RUNS note): `cve-program-record-api` canonicalises to
+ * `CVE-PROGRAM-RECORD-API`, missed, and osint_resolve_near() could not rescue
+ * it either — a pure case difference has an edit distance of one per letter,
+ * 22 for that id, against a ceiling of 2.
+ *
+ * A case difference is not a near miss to be guessed at; it is the same id. So
+ * it is resolved HERE rather than in the near resolver, and the caller is not
+ * told its name was corrected. Exact match still wins, and the fallback
+ * resolves only a UNIQUE case-fold match — `RELIEFWEB` (an osint pivot) and
+ * `reliefweb` (a scheduled government feed) are two different sources that
+ * differ only in case, and guessing between them is exactly what this repo
+ * refuses to do elsewhere. The pivot gate in the caller still applies, so a
+ * case-resolved scheduled feed is refused as `not_a_pivot` — which is the
+ * accurate answer, where `not_implemented` was not. */
 static const source_def *osint_lookup(const char *canon) {
-  return registry_get(canon);
+  const source_def *exact = registry_get(canon);
+  if (exact) return exact;
+  if (!canon || !*canon) return NULL;
+  const source_def **all = registry_all();
+  int cnt = registry_count();
+  const source_def *fold = NULL;
+  for (int i = 0; i < cnt; i++) {
+    if (!all[i] || !all[i]->id || strcasecmp(all[i]->id, canon) != 0) continue;
+    if (fold) return NULL;                 /* ambiguous: refuse, never guess */
+    fold = all[i];
+  }
+  return fold;
 }
 
 /* ---- resolving a name the registry does not have -------------------------
@@ -150,6 +190,91 @@ int osint_resolve_near(const char *canon, char *out, size_t n) {
   return 1;
 }
 
+/* ── the embedding fallback ──────────────────────────────────────────────
+ *
+ * The note above keeps fuzzy matching out of this resolver because a fuzzy
+ * rule that picks by registry order is a coin flip. An embedding match is not
+ * registry order — but it is still a guess at what a name MEANT, so it runs
+ * only where spelling found nothing (or a tie), asks the router's own public
+ * query (service_vec_catalogue: the same index, the same model gate, entity
+ * pivots only) for a handful of candidates, and accepts one only when it is
+ * both close to the name and clearly closer than the runner-up. A near-tie is
+ * "we do not know", exactly as it is for edit distance. The vectors scored
+ * are the router's stored ones, read through lib/vecindex; service_vec.c is
+ * not touched. */
+#define RESOLVE_EMB_K        5      /* candidates asked of the router        */
+/* The winner must be at least resolve_emb_min_cos near (default 0.60) and
+ * resolve_emb_margin nearer than #2 (default 0.10) — both operator-tunable,
+ * core/thresholds.c (JO_RESOLVE_EMB_MIN_COS / JO_RESOLVE_EMB_MARGIN). */
+
+/* A read-only view of the router's table (never registered, never written). */
+static const vecindex_spec resolve_svec_view = {
+  .name = "service", .table = SVEC_TABLE, .key_col = "id",
+  .meta_table = SVEC_META_TABLE };
+
+static int resolve_by_embedding(db_handle *db, const char *canon, char *out,
+                                size_t n) {
+  if (!db || !qembed_enabled()) return 0;            /* inert */
+  char norm[128];
+  resolve_normalise(canon, norm, sizeof norm);
+  if (!*norm) return 0;
+  /* DOMAIN_WHOIS_OWNER -> "domain whois owner": the words the cards hold. */
+  char words[160];
+  const char *px = getenv("JO_EMBED_QUERY_PREFIX");  /* as service_vec.c does */
+  int w = snprintf(words, sizeof words, "%s", px ? px : "");
+  for (size_t i = 0; norm[i] && w + 1 < (int)sizeof words; i++)
+    words[w++] = norm[i] == '_' ? ' ' : (char)tolower((unsigned char)norm[i]);
+  words[w] = 0;
+
+  char **ids = NULL; int nids = 0;
+  char *cat = service_vec_catalogue(db, words + (px ? strlen(px) : 0),
+                                    RESOLVE_EMB_K, NULL, &ids, &nids);
+  free(cat);
+  if (!ids || nids <= 0) { service_vec_free_ids(ids, nids); return 0; }
+
+  const char *texts[1] = { words };
+  float *qv = NULL; int qd = 0; llm_status st;
+  if (qembed_texts(texts, 1, &qv, &qd, &st) != 0) {
+    service_vec_free_ids(ids, nids);
+    return 0;
+  }
+  double best = -2, second = -2;
+  int bi = -1;
+  for (int i = 0; i < nids; i++) {
+    float *v = NULL; int d = 0;
+    if (vecindex_load(db, &resolve_svec_view, ids[i], &v, &d) != 0 || d != qd) {
+      free(v);
+      continue;
+    }
+    double c = vec_cosine(qv, v, d);
+    free(v);
+    if (c > best) { second = best; best = c; bi = i; }
+    else if (c > second) second = c;
+  }
+  free(qv);
+  int ok = bi >= 0 && best >= threshold_get("resolve_emb_min_cos") &&
+           (second < -1 || best - second >= threshold_get("resolve_emb_margin"));
+  const source_def *hit = ok ? registry_get(ids[bi]) : NULL;
+  ok = hit && is_entity_pivot(hit);
+  if (bi >= 0)
+    fprintf(stderr, "[dispatch] embedding resolver: \"%s\" nearest %s "
+                    "cos=%.3f, runner-up %.3f — %s\n", canon, ids[bi], best,
+            second < -1 ? 0.0 : second, ok ? "accepted" : "not clear, refused");
+  if (ok) snprintf(out, n, "%s", hit->id);
+  service_vec_free_ids(ids, nids);
+  return ok;
+}
+
+int osint_resolve_near_db(db_handle *db, const char *canon, char *out, size_t n,
+                          int *by_emb) {
+  if (by_emb) *by_emb = 0;
+  if (osint_resolve_near(canon, out, n)) return 1;   /* spelling first */
+  if (!canon || !*canon || !out || n == 0) return 0;
+  if (!resolve_by_embedding(db, canon, out, n)) return 0;
+  if (by_emb) *by_emb = 1;
+  return 1;
+}
+
 int osint_is_implemented(const char *name) {
   char c[64];
   return osint_canon(name, c, sizeof c) && osint_lookup(c) != NULL;
@@ -190,8 +315,7 @@ static void sl_append(char **buf, size_t *len, size_t *cap, const char *s) {
  * an interval. update_interval_sec == 0 is the registry's own word for
  * "on-demand pivot", which is exactly the set this catalogue is for. */
 static int is_entity_pivot(const source_def *d) {
-  return d->collector && strcmp(d->collector, "osint") == 0
-         && d->update_interval_sec == 0;
+  return registry_is_entity_pivot(d);     /* the ONE rule — source.h */
 }
 
 /* THE PROMPT IS A CONSUMER THAT PHYSICALLY CANNOT TAKE EVERYTHING.
@@ -458,6 +582,55 @@ char *osint_analysis_schema_dynamic_ids(const char *const *ids, int n) {
   return osint_schema_with_ids(a);
 }
 
+/* The follow-up round's answer shape, built here rather than read from a
+ * file because its only variable part is the enum, and the enum is the point:
+ * what the model may name is exactly the menu it was shown that round. */
+static char *osint_phase2_schema_with_ids(cJSON *ids) {
+  if (!ids || cJSON_GetArraySize(ids) == 0) { cJSON_Delete(ids); return NULL; }
+  cJSON *s = cJSON_CreateObject();
+  cJSON_AddStringToObject(s, "type", "object");
+  cJSON *p = cJSON_AddObjectToObject(s, "properties");
+  cJSON_AddStringToObject(cJSON_AddObjectToObject(p, "needs_newphase"),
+                          "type", "boolean");
+  cJSON_AddStringToObject(cJSON_AddObjectToObject(p, "reason"), "type", "string");
+  cJSON *cs = cJSON_AddObjectToObject(p, "chain_services");
+  cJSON_AddStringToObject(cs, "type", "array");
+  cJSON *it = cJSON_AddObjectToObject(cs, "items");
+  cJSON_AddStringToObject(it, "type", "object");
+  cJSON *ip = cJSON_AddObjectToObject(it, "properties");
+  cJSON *svc = cJSON_AddObjectToObject(ip, "service");
+  cJSON_AddStringToObject(svc, "type", "string");
+  cJSON_AddItemToObject(svc, "enum", ids);              /* takes ownership */
+  static const char *const str_fields[] = { "entity", "entity_type",
+                                            "source_service" };
+  for (int i = 0; i < 3; i++)
+    cJSON_AddStringToObject(cJSON_AddObjectToObject(ip, str_fields[i]),
+                            "type", "string");
+  static const char *const ireq[] = { "service", "entity", "entity_type",
+                                      "source_service" };
+  cJSON_AddItemToObject(it, "required", cJSON_CreateStringArray(ireq, 4));
+  static const char *const req[] = { "needs_newphase", "reason",
+                                     "chain_services" };
+  cJSON_AddItemToObject(s, "required", cJSON_CreateStringArray(req, 3));
+  char *out = cJSON_PrintUnformatted(s);
+  cJSON_Delete(s);
+  return out;
+}
+
+char *osint_phase2_schema_dynamic_ids(const char *const *ids, int n) {
+  cJSON *a = cJSON_CreateArray();
+  for (int i = 0; i < n; i++) {
+    if (!ids[i]) continue;
+    const source_def *d = registry_get(ids[i]);
+    if (d && is_entity_pivot(d)) cJSON_AddItemToArray(a, cJSON_CreateString(ids[i]));
+  }
+  return osint_phase2_schema_with_ids(a);
+}
+
+char *osint_phase2_schema_dynamic_limited(int limit) {
+  return osint_phase2_schema_with_ids(osint_service_id_array(limit));
+}
+
 /* dual sink: persist through the real intel_sink (live intel_items) AND
  * capture the emitted result JSON for the pipeline's Phase-2 chaining. */
 typedef struct { char *name; int records; } src_acc;
@@ -484,6 +657,8 @@ typedef struct {
    * itself", resolved to the canonical id at finalize). */
   src_acc    *srcs;
   int         n_srcs, cap_srcs;
+  /* the first RELEV_SAMPLE_MAX accepted records, for relev_check() */
+  relev_sample rs;
 } dual_sink;
 
 /* Bump the record count for `name`, or append it. `name` may be "". */
@@ -545,6 +720,7 @@ static int dual_emit(struct intel_sink *s, const intel_item *it) {
   } else {
     acc_add(d, (it->sub_source_id && *it->sub_source_id) ? it->sub_source_id : "");
     d->n_emit++;
+    relev_sample_add(&d->rs, it);       /* no-op once the sample is full */
     if (rc > 0) d->any_new = 1;
   }
   return rc;
@@ -566,9 +742,27 @@ static const char *dispatch_run_status(int rc, long records, int hosts,
   return "error";
 }
 
+static int dispatch_impl(db_handle *db, llm_client *llm, const char *service,
+                         const char *entity, const char *entity_type,
+                         intel_sink *persist, osint_result *out,
+                         int operator_call);
+
 int osint_dispatch(db_handle *db, llm_client *llm, const char *service,
                    const char *entity, const char *entity_type,
                    intel_sink *persist, osint_result *out) {
+  return dispatch_impl(db, llm, service, entity, entity_type, persist, out, 0);
+}
+
+int osint_dispatch_operator(db_handle *db, llm_client *llm, const char *service,
+                            const char *entity, const char *entity_type,
+                            intel_sink *persist, osint_result *out) {
+  return dispatch_impl(db, llm, service, entity, entity_type, persist, out, 1);
+}
+
+static int dispatch_impl(db_handle *db, llm_client *llm, const char *service,
+                         const char *entity, const char *entity_type,
+                         intel_sink *persist, osint_result *out,
+                         int operator_call) {
   memset(out, 0, sizeof *out);
   char canon[64];
   if (!osint_canon(service, canon, sizeof canon)) {
@@ -578,17 +772,34 @@ int osint_dispatch(db_handle *db, llm_client *llm, const char *service,
   snprintf(out->service, sizeof out->service, "%s", canon);
 
   const source_def *def = osint_lookup(canon);
+  /* AN EXACT ID IS NOT PERMISSION TO RUN IT ON AN ENTITY. The near-name
+   * resolver below was already limited to entity pivots, but an exact hit was
+   * returned for ANY registered source — so a model (or a hand-written POST
+   * /api/search) naming a scheduled bulk feed got that whole feed back,
+   * attributed to the entity it was asked about (rule 4d), and naming
+   * PORT_SCANNER got a connect scan its collector="_probe" was meant to keep
+   * out of the request path. Refused by name, before anything runs. */
+  if (def && !operator_call && !is_entity_pivot(def)) {
+    fprintf(stderr, "[dispatch] \"%s\" is registered but is not an entity "
+                    "pivot (collector=%s, interval=%d); refused\n", canon,
+            def->collector ? def->collector : "(none)", def->update_interval_sec);
+    out->error = strdup("not_a_pivot");
+    return 0;
+  }
   if (!def && entity && *entity) {
     /* One clear candidate, or nothing: see osint_resolve_near(). The name the
      * caller used is kept so the answer can say what it actually ran. */
     char near[128];
-    if (osint_resolve_near(canon, near, sizeof near)) {
+    int by_emb = 0;
+    if (osint_resolve_near_db(db, canon, near, sizeof near, &by_emb)) {
       const source_def *nd = osint_lookup(near);
       if (nd) {
         out->resolved_from = strdup(canon);
+        if (by_emb) out->resolver = "embedding";
         snprintf(out->service, sizeof out->service, "%s", nd->id);
         fprintf(stderr, "[dispatch] \"%s\" is not registered; ran \"%s\" "
-                        "(reported as resolved_from)\n", canon, nd->id);
+                        "(reported as resolved_from%s)\n", canon, nd->id,
+                by_emb ? ", resolver embedding" : "");
         def = nd;
       }
     }
@@ -664,6 +875,19 @@ int osint_dispatch(db_handle *db, llm_client *llm, const char *service,
 
   out->success    = (rc >= 0 && ds.n_emit > 0) ? 1 : 0;
   out->confidence = out->success ? 70 : 0;     /* JS default */
+  /* House rule 4d at run time: did the upstream answer THE QUESTION, or hand
+   * back its whole collection? A disclosure beside the records, never a
+   * filter on them. NULL (no note) without an embedding server. */
+  if (out->success) {
+    cJSON *rv = relev_check(&ds.rs, entity, ds.n_emit);
+    if (rv) {
+      out->relevance = cJSON_PrintUnformatted(rv);
+      fprintf(stderr, "[osint] %s(%s) relevance-suspect: %s\n", def->id, entity,
+              cJSON_GetObjectItem(rv, "note")->valuestring);
+      cJSON_Delete(rv);
+    }
+  }
+  relev_sample_free(&ds.rs);
   /* Hand over EVERY captured record, with its own count so a consumer can
    * bound its view without guessing how much it is not seeing. Notices ride
    * alongside under their own key and count — kept, never counted as data. */

@@ -162,7 +162,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def court_world_def = {
-  .id = "COURT_WORLD", .collector = "osint",
+  .id = "COURT_WORLD", .collector = "osint_" "government",
   .name = "World Court & Case-Law Search", .name_ja = "世界の裁判所・判例横断検索",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "scraped",

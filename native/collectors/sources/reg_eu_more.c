@@ -269,7 +269,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 #define EUM_DEF(SYM, ID, NAME, NAMEJA, TYPE, URL, DESC) \
-  static const source_def SYM = { .id = ID, .collector = "osint", \
+  static const source_def SYM = { .id = ID, .collector = "osint_" "government", \
     .name = NAME, .name_ja = NAMEJA, .update_interval_sec = 0, .run = run, \
     .category = "government", .type = TYPE, .url = URL, .description = DESC, \
     .layer = NULL, .free_tier = 1 }; \

@@ -94,6 +94,9 @@
 #define _GNU_SOURCE
 #endif
 #include "ffmpeg.h"
+#include "hostgate.h"        /* the destination policy for network inputs     */
+#include "hls_check.h"       /* ...and for every URL an HLS playlist names     */
+#include "netjail.h"         /* ...and everything ffmpeg dials after that      */
 #include "../third_party/cJSON.h"
 #include <ctype.h>
 #include <errno.h>
@@ -184,6 +187,7 @@ const char *ffmpeg_strerror(int rc) {
     case FFMPEG_ERR_PARSE:         return "ffmpeg_parse_failed";
     case FFMPEG_ERR_NO_DURATION:   return "ffmpeg_no_duration";
     case FFMPEG_ERR_OOM:           return "ffmpeg_oom";
+    case FFMPEG_ERR_BLOCKED:       return "ffmpeg_blocked_destination";
     default:                       return "ffmpeg_failed";
   }
 }
@@ -319,9 +323,16 @@ static const char *whitelist_for(const char *scheme) {
   if (!scheme || !*scheme || strcmp(scheme, "file") == 0) return "file";
   if (strcmp(scheme, "http") == 0 || strcmp(scheme, "https") == 0 ||
       strcmp(scheme, "hls") == 0)
-    return "http,https,tcp,tls,crypto";
+    /* httpproxy: every network run goes through core/netjail.c's proxy, and
+     * ffmpeg reaches an https origin through it with a CONNECT, which is the
+     * httpproxy protocol. */
+    return "http,https,tcp,tls,crypto,httpproxy";
+  /* No rtp/udp/crypto: every rtsp input gets -rtsp_transport tcp (see the
+   * argv builders), so media arrives interleaved on the RTSP TCP connection
+   * and nothing else is ever opened. A smaller list is a smaller set of things
+   * a hostile DESCRIBE answer can make ffmpeg open on its own. */
   if (strcmp(scheme, "rtsp") == 0 || strcmp(scheme, "rtsps") == 0)
-    return "rtsp,rtsps,rtp,udp,tcp,tls,crypto";
+    return "rtsp,rtsps,tcp,tls";
   if (strcmp(scheme, "rtmp") == 0 || strcmp(scheme, "rtmps") == 0)
     return "rtmp,rtmps,tcp,tls";
   if (strcmp(scheme, "tcp") == 0) return "tcp";
@@ -329,12 +340,57 @@ static const char *whitelist_for(const char *scheme) {
   return "file";
 }
 
-/* Convenience: validate and classify in one step. */
-static int classify(const char *input, char *sc, size_t cap, const char **wl) {
+/* Convenience: validate and classify in one step — and, for a NETWORK input,
+ * judge the destination before anything is spawned.
+ *
+ * ffmpeg dials its own sockets, so no connect callback of ours ever sees the
+ * address it reaches; this is the only place a URL pointing at 127.0.0.1, the
+ * LAN or the metadata service can be refused. The policy is the camera one
+ * (hostgate.h: always strict) because every network
+ * input this module is handed today is a camera feed URL some third-party
+ * registry wrote, and the name is resolved and EVERY answer judged.
+ *
+ * An HLS playlist names further URLs that ffmpeg fetches by itself, which
+ * -protocol_whitelist constrains by scheme only — so a public playlist listing
+ * http://10.0.0.5/seg.ts made ffmpeg request it. Every http(s) input is
+ * therefore read first by core/hls_check.c, which judges each URI a playlist
+ * names (and the playlists it names) under the same camera policy, and fails
+ * closed. And what that read cannot see — segments a LIVE playlist adds later,
+ * a name ffmpeg re-resolves to a different answer, an RTSP server's redirect —
+ * is what core/netjail.c is for: `*plan` says how the run is boxed (a judging
+ * forward proxy for http(s), a pinned relay for rtsp), and a network scheme
+ * with no boxed path (rtmp, tcp, udp — none of which a camera feed uses) is
+ * refused here rather than run unconfined. */
+static int classify(const char *input, char *sc, size_t cap, const char **wl,
+                    int *plan) {
+  *plan = NJ_NONE;
   int rc = ffmpeg_input_allowed(input);
   if (rc != FFMPEG_OK) return rc;
   sc[0] = '\0';
   if (scheme_of(input, sc, cap) != 1) sc[0] = '\0';
+  if (sc[0] && strcmp(sc, "file") != 0) {
+    int hg = hostgate_camera_url_check(input, 1);
+    if (hg != HG_URL_OK) {
+      fprintf(stderr, "[ffmpeg] refused input %s: %s\n", input,
+              hostgate_url_reason(hg));
+      return FFMPEG_ERR_BLOCKED;
+    }
+    if (!strcmp(sc, "http") || !strcmp(sc, "https") || !strcmp(sc, "hls")) {
+      char why[512] = "";
+      int hr = hls_check_input(input, why, sizeof why);
+      if (hr != HLS_OK) {
+        fprintf(stderr, "[ffmpeg] refused input %s: %s\n", input, why);
+        return FFMPEG_ERR_BLOCKED;
+      }
+    }
+    char why[160] = "";
+    int p = netjail_plan(input, sc, why, sizeof why);
+    if (p < 0) {
+      fprintf(stderr, "[ffmpeg] refused input %s: %s\n", input, why);
+      return FFMPEG_ERR_BLOCKED;
+    }
+    *plan = p;
+  }
   *wl = whitelist_for(sc);
   return FFMPEG_OK;
 }
@@ -392,25 +448,58 @@ static int ff_pipe_cloexec(int fd[2]) {
   return 0;
 }
 
-static int ff_spawn(const char *const argv[], int timeout_ms, size_t max_bytes,
-                    ff_result *r) {
+/* `plan` (NJ_NONE for a local input) boxes the child's network: argv[in_idx]
+ * is the network input, which the box may rewrite (an rtsp URL is pointed at
+ * its relay), and the child is exec'd with the box's environment, after
+ * entering its namespace. See core/netjail.h. */
+static int ff_spawn_net(const char *const argv_in[], int plan, int in_idx,
+                        int timeout_ms, size_t max_bytes, ff_result *r) {
   memset(r, 0, sizeof *r);
-  if (!argv || !argv[0]) return FFMPEG_ERR_BAD_INPUT;
+  if (!argv_in || !argv_in[0]) return FFMPEG_ERR_BAD_INPUT;
   if (max_bytes == 0) max_bytes = cfg_max_bytes();
   if (timeout_ms <= 0) timeout_ms = cfg_timeout_ms();
 
+  const char *const *argv = argv_in;
+  const char *jav[48];
+  netjail *jail = NULL;
+  if (plan != NJ_NONE) {
+    int na = 0;
+    while (argv_in[na]) na++;
+    if (in_idx < 0 || in_idx >= na || na >= (int)(sizeof jav / sizeof jav[0]))
+      return FFMPEG_ERR_BAD_INPUT;
+    int blocked = 0;
+    char why[384] = "";
+    jail = netjail_new(argv_in[in_idx], plan, timeout_ms, &blocked, why, sizeof why);
+    if (!jail) {
+      snprintf(r->err, sizeof r->err, "network sandbox: %s", why);
+      fprintf(stderr, "[ffmpeg] %s\n", r->err);
+      return blocked ? FFMPEG_ERR_BLOCKED : FFMPEG_ERR_SPAWN;
+    }
+    for (int i = 0; i <= na; i++) jav[i] = argv_in[i];
+    jav[in_idx] = netjail_input(jail);
+    argv = jav;
+  }
+
   int op[2], ep[2];
-  if (ff_pipe_cloexec(op) != 0) return FFMPEG_ERR_SPAWN;
-  if (ff_pipe_cloexec(ep) != 0) { close(op[0]); close(op[1]); return FFMPEG_ERR_SPAWN; }
+  if (ff_pipe_cloexec(op) != 0) { netjail_free(jail); return FFMPEG_ERR_SPAWN; }
+  if (ff_pipe_cloexec(ep) != 0) {
+    close(op[0]); close(op[1]);
+    netjail_free(jail);
+    return FFMPEG_ERR_SPAWN;
+  }
 
   pid_t pid = fork();
   if (pid < 0) {
     close(op[0]); close(op[1]); close(ep[0]); close(ep[1]);
+    netjail_free(jail);
     return FFMPEG_ERR_SPAWN;
   }
   if (pid == 0) {
     close(op[0]);
     close(ep[0]);
+    /* Into the box first: if the namespace cannot be entered the child must
+     * not run at all, never run unconfined. 126 = "could not be set up". */
+    if (jail && netjail_child_enter(jail) != 0) _exit(126);
     /* stdin from /dev/null. -nostdin is also passed to ffmpeg, but ffprobe does
      * not accept that option, and this redirect covers BOTH tools and anything
      * else ffmpeg_run() is ever pointed at. A child that inherits the server's
@@ -421,11 +510,20 @@ static int ff_spawn(const char *const argv[], int timeout_ms, size_t max_bytes,
     dup2(ep[1], 2);
     if (op[1] > 2) close(op[1]);
     if (ep[1] > 2) close(ep[1]);
-    execvp(argv[0], (char *const *)argv);
+    /* A boxed run execs with the box's environment (http_proxy, and every
+     * inherited proxy variable removed). argv[0] is the probed ABSOLUTE tool
+     * path on every boxed path, so execve needs no PATH walk. */
+    if (jail) execve(argv[0], (char *const *)argv, netjail_envp(jail));
+    else      execvp(argv[0], (char *const *)argv);
     _exit(127);
   }
   close(op[1]);
   close(ep[1]);
+  int jail_failed = 0;
+  if (jail && netjail_parent_start(jail) != 0) {
+    kill(pid, SIGKILL);
+    jail_failed = 1;
+  }
 
   int fds[2] = { op[0], ep[0] };
   int live = 2;
@@ -506,6 +604,8 @@ static int ff_spawn(const char *const argv[], int timeout_ms, size_t max_bytes,
     nanosleep(&ts, NULL);
   }
 
+  netjail_free(jail);   /* the child is gone: end every proxied connection */
+
   r->buf = buf;
   r->len = len;
   r->killed = killed;
@@ -517,6 +617,10 @@ static int ff_spawn(const char *const argv[], int timeout_ms, size_t max_bytes,
     r->exit_code = -1;
   }
 
+  if (jail_failed || (jail && r->exit_code == 126 && len == 0)) {
+    snprintf(r->err, sizeof r->err, "network sandbox could not be set up");
+    return FFMPEG_ERR_SPAWN;
+  }
   if (oom)     return FFMPEG_ERR_OOM;
   if (capped)  return FFMPEG_ERR_TOO_LARGE;
   if (killed)  return FFMPEG_ERR_TIMEOUT;
@@ -529,6 +633,11 @@ static int ff_spawn(const char *const argv[], int timeout_ms, size_t max_bytes,
   if (r->exit_code != 0) return FFMPEG_ERR_EXIT;
   if (len == 0) return FFMPEG_ERR_EMPTY;
   return FFMPEG_OK;
+}
+
+static int ff_spawn(const char *const argv[], int timeout_ms, size_t max_bytes,
+                    ff_result *r) {
+  return ff_spawn_net(argv, NJ_NONE, -1, timeout_ms, max_bytes, r);
 }
 
 int ffmpeg_run(const char *const argv[], int timeout_ms, size_t max_bytes,
@@ -748,7 +857,8 @@ int ffmpeg_extract_frame_capped(const char *input, double at_sec, int max_width,
   }
   char sc[32];
   const char *wl = NULL;
-  int rc = classify(input, sc, sizeof sc, &wl);
+  int plan = NJ_NONE;
+  int rc = classify(input, sc, sizeof sc, &wl, &plan);
   if (rc != FFMPEG_OK) { ff_seterr(err, errcap, rc, input); return rc; }
   rc = gate(0, err, errcap);
   if (rc != FFMPEG_OK) return rc;
@@ -787,7 +897,9 @@ int ffmpeg_extract_frame_capped(const char *input, double at_sec, int max_width,
    * exact. For a still out of a 40-minute recording that is the right trade;
    * output seeking would decode every frame up to the mark. */
   if (at_sec >= 0) { av[n++] = "-ss"; av[n++] = sbuf; }
-  av[n++] = "-i"; av[n++] = input;
+  av[n++] = "-i";
+  int in_i = n;
+  av[n++] = input;
   av[n++] = "-frames:v"; av[n++] = "1";
   if (max_width > 0) { av[n++] = "-vf"; av[n++] = vbuf; }
   av[n++] = "-an";                  /* the image2 muxer takes no audio       */
@@ -798,7 +910,7 @@ int ffmpeg_extract_frame_capped(const char *input, double at_sec, int max_width,
   av[n] = NULL;
 
   ff_result r;
-  rc = ff_spawn(av, timeout_ms, max_bytes, &r);
+  rc = ff_spawn_net(av, plan, in_i, timeout_ms, max_bytes, &r);
 
   /* A child we KILLED that had already written a complete JPEG is a SUCCESS:
    * -frames:v 1 flushes the whole image before it exits, and a demuxer that
@@ -837,7 +949,8 @@ int ffmpeg_extract_series(const char *input, int count, int max_width,
   if (count > FF_MAX_SERIES) count = FF_MAX_SERIES;
   char sc[32];
   const char *wl = NULL;
-  int rc = classify(input, sc, sizeof sc, &wl);
+  int plan = NJ_NONE;
+  int rc = classify(input, sc, sizeof sc, &wl, &plan);
   if (rc != FFMPEG_OK) { ff_seterr(err, errcap, rc, input); return rc; }
   if (timeout_ms <= 0) timeout_ms = cfg_timeout_ms();
 
@@ -1149,12 +1262,13 @@ static cJSON *probe_root(const char *input, int timeout_ms, char *err,
   if (err && errcap) err[0] = '\0';
   char sc[32];
   const char *wl = NULL;
-  int rc = classify(input, sc, sizeof sc, &wl);
+  int plan = NJ_NONE;
+  int rc = classify(input, sc, sizeof sc, &wl, &plan);
   if (rc != FFMPEG_OK) { ff_seterr(err, errcap, rc, input); *rc_out = rc; return NULL; }
   rc = gate(1, err, errcap);
   if (rc != FFMPEG_OK) { *rc_out = rc; return NULL; }
 
-  const char *av[16];
+  const char *av[20];
   int n = 0;
   av[n++] = g_fp_path;
   /* NO -nostdin: ffprobe does not define that option and exits 1 on it. The
@@ -1163,14 +1277,21 @@ static cJSON *probe_root(const char *input, int timeout_ms, char *err,
   av[n++] = "-hide_banner";
   av[n++] = "-loglevel"; av[n++] = "error";
   av[n++] = "-protocol_whitelist"; av[n++] = wl;
+  /* Required, not cosmetic: the rtsp whitelist has no udp/rtp, so the
+   * default UDP-first transport would be refused (see whitelist_for). */
+  if (strcmp(sc, "rtsp") == 0 || strcmp(sc, "rtsps") == 0) {
+    av[n++] = "-rtsp_transport"; av[n++] = "tcp";
+  }
   av[n++] = "-print_format"; av[n++] = "json";
   av[n++] = "-show_format";
   av[n++] = "-show_streams";
-  av[n++] = "-i"; av[n++] = input;
+  av[n++] = "-i";
+  int in_i = n;
+  av[n++] = input;
   av[n] = NULL;
 
   ff_result r;
-  rc = ff_spawn(av, timeout_ms, FF_PROBE_MAX_BYTES, &r);
+  rc = ff_spawn_net(av, plan, in_i, timeout_ms, FF_PROBE_MAX_BYTES, &r);
   if (rc != FFMPEG_OK) {
     free(r.buf);
     ff_seterr(err, errcap, rc, r.err);
@@ -1283,19 +1404,25 @@ int ffmpeg_gray32(const char *input, int timeout_ms, unsigned char out[1024],
   }
   char sc[32];
   const char *wl = NULL;
-  int rc = classify(input, sc, sizeof sc, &wl);
+  int plan = NJ_NONE;
+  int rc = classify(input, sc, sizeof sc, &wl, &plan);
   if (rc != FFMPEG_OK) { ff_seterr(err, errcap, rc, input); return rc; }
   rc = gate(0, err, errcap);
   if (rc != FFMPEG_OK) return rc;
 
-  const char *av[24];
+  const char *av[28];               /* 25 used with -rtsp_transport           */
   int n = 0;
   av[n++] = g_ff_path;
   av[n++] = "-nostdin";
   av[n++] = "-hide_banner";
   av[n++] = "-loglevel"; av[n++] = "error";
   av[n++] = "-protocol_whitelist"; av[n++] = wl;
-  av[n++] = "-i"; av[n++] = input;
+  if (strcmp(sc, "rtsp") == 0 || strcmp(sc, "rtsps") == 0) {   /* as above */
+    av[n++] = "-rtsp_transport"; av[n++] = "tcp";
+  }
+  av[n++] = "-i";
+  int in_i = n;
+  av[n++] = input;
   av[n++] = "-frames:v"; av[n++] = "1";
   av[n++] = "-sws_flags"; av[n++] = "bilinear";
   av[n++] = "-vf"; av[n++] = "scale=32:32";
@@ -1309,7 +1436,7 @@ int ffmpeg_gray32(const char *input, int timeout_ms, unsigned char out[1024],
   /* 4 KiB rather than 1 KiB: a multi-frame or wrongly-scaled result must be
    * DETECTED and refused, not silently truncated to the first 1024 bytes and
    * hashed as though it were the image. */
-  rc = ff_spawn(av, timeout_ms, 4096, &r);
+  rc = ff_spawn_net(av, plan, in_i, timeout_ms, 4096, &r);
   if (rc != FFMPEG_OK) {
     free(r.buf);
     ff_seterr(err, errcap, rc, r.err);
@@ -1353,6 +1480,8 @@ char *ffmpeg_capabilities(void) {
   add_tool(d, "ffmpeg", ffmpeg_available(), ffmpeg_path(), ffmpeg_version());
   add_tool(d, "ffprobe", ffprobe_available(), ffprobe_path(), ffprobe_version());
   cJSON_AddBoolToObject(d, "disabled", dis);
+  /* Which guarantee network inputs have on this host — see core/netjail.h. */
+  cJSON_AddStringToObject(d, "network_sandbox", netjail_mode());
 
   cJSON *pr = cJSON_CreateArray();
   if (pr) {

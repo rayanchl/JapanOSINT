@@ -163,7 +163,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def il_companies_def = {
-  .id = "IL_COMPANIES", .collector = "osint",
+  .id = "IL_COMPANIES", .collector = "osint_" "government",
   .name = "Israel Companies Register", .name_ja = "\xe3\x82\xa4\xe3\x82\xb9\xe3\x83\xa9\xe3\x82\xa8\xe3\x83\xab\xe4\xbc\x81\xe6\xa5\xad\xe7\x99\xbb\xe8\xa8\x98",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "api",

@@ -96,6 +96,32 @@ def _engine_user_agent():
 DEFAULT_UA = _engine_user_agent() or \
     "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; feed collector; contact via repo issues)"
 
+
+def _host_agents():
+    """core/host_agents.def — the engine's per-host User-Agent table — as
+    {host: (agent, extra_headers)}, parsed from the same file the C includes so
+    the probe sends what the engine sends. A listed host's agent replaces any
+    User-Agent the row declares, exactly as http_request() does."""
+    try:
+        src = open(os.path.join(NATIVE, "core", "host_agents.def"), encoding="utf-8").read()
+        cli = open(os.path.join(NATIVE, "core", "httpclient.c"), encoding="utf-8").read()
+    except OSError:
+        return {}
+    src = re.sub(r"/\*.*?\*/", "", src, flags=re.S)
+    kinds = dict(re.findall(r'HOST_AGENT_KIND\(\s*(\w+)\s*,\s*"([^"]*)"\s*\)', src))
+    m = re.search(r"BROWSER_EXTRA_HEADERS\[\]\s*=\s*\{(.*?)NULL", cli, re.S)
+    extra = {}
+    for h in re.findall(r'"([^"]+)"', m.group(1) if m else ""):
+        k, _, v = h.partition(":")
+        extra[k.strip()] = v.strip()
+    out = {}
+    for host, kind in re.findall(r'HOST_AGENT\(\s*"([^"]+)"\s*,\s*(\w+)\s*\)', src):
+        out[host.lower()] = (kinds[kind], extra if kind == "HA_BROWSER" else {})
+    return out
+
+
+HOST_AGENTS = _host_agents()
+
 # verify_feeds caps a body at 8 MB on the reasoning that "a feed that big is not
 # a feed". That was true of the RSS-shaped sources it was written for, but this
 # tree has since grown lib/jsonstream.c precisely so that bulk registers in the
@@ -331,19 +357,82 @@ def row_body(r, entity=None, shift=0):
     return body, {name.strip(): val.strip()}
 
 
+# ── per-host pacing ───────────────────────────────────────────────────────
+# The probe used to send its --jobs threads at whatever hosts the rows named,
+# with no notion of a host: a beat whose rows share one server (a national
+# portal's 500 datasets, a WordPress host serving 60 parish councils) got
+# every worker at once, and the probe then reported 429s and 502s that were a
+# reading of ITS OWN burst, not of the row. CLAUDE.md records the symptom:
+# "shared hosting that answers 502/403 to twelve concurrent probes stores its
+# feed at six". core/hostgate.c paces the engine per host; this is the same
+# idea for the probe — one request per host per HOST_GAP_MS, enforced across
+# threads, with a Retry-After or a 429 widening that host's gap for the rest
+# of the run. Hosts the rows do not share pay nothing.
+HOST_GAP_MS = 1000
+_host_lock = __import__("threading").Lock()
+_host_next = {}          # host -> earliest monotonic time the next request may start
+_host_gap = {}           # host -> gap in seconds (grows on 429 / Retry-After)
+
+
+def _pace(url):
+    host = urllib.parse.urlsplit(url).netloc.lower()
+    if not host or HOST_GAP_MS <= 0:
+        return host
+    import time
+    while True:
+        with _host_lock:
+            now = time.monotonic()
+            due = _host_next.get(host, 0.0)
+            if now >= due:
+                _host_next[host] = now + _host_gap.get(host, HOST_GAP_MS / 1000.0)
+                return host
+            wait = due - now
+        time.sleep(min(wait, 5.0))
+
+
+def _throttled(host, status, retry_after):
+    """A 429 (or any Retry-After) is the host saying the gap is too small."""
+    if not host:
+        return
+    try:
+        ra = float(retry_after) if retry_after else 0.0
+    except ValueError:
+        ra = 0.0
+    with _host_lock:
+        g = _host_gap.get(host, HOST_GAP_MS / 1000.0)
+        g = max(g * 2, ra, 1.0)
+        _host_gap[host] = min(g, 60.0)
+        import time
+        _host_next[host] = time.monotonic() + _host_gap[host]
+    sys.stderr.write("  [pace] %s answered %s; gap now %.1fs\n" % (host, status, _host_gap[host]))
+
+
 def fetch(url, extra, timeout=None, body=None):
     """Same shape as verify_feeds.fetch, plus this row's declared headers and
-    timeout, and its POST body when it declares one."""
+    timeout, and its POST body when it declares one. Paced per host."""
+    host = _pace(url)
     headers = {
         "User-Agent": DEFAULT_UA,
         "Accept": "*/*",
         "Accept-Encoding": "gzip",
     }
     headers.update(extra)
+    ha = HOST_AGENTS.get((urllib.parse.urlsplit(url).hostname or "").lower())
+    if ha:
+        for k in [k for k in headers if k.lower() == "user-agent"]:
+            del headers[k]
+        headers["User-Agent"] = ha[0]
+        headers.update(ha[1])
     data = body.encode("utf-8") if body is not None else None
     req = urllib.request.Request(VF.encode_url(url), headers=headers, data=data,
                                  method="POST" if data is not None else "GET")
-    with urllib.request.urlopen(req, timeout=timeout or VF.TIMEOUT) as resp:
+    try:
+        resp_cm = urllib.request.urlopen(req, timeout=timeout or VF.TIMEOUT)
+    except urllib.error.HTTPError as e:
+        if e.code == 429 or e.headers.get("Retry-After"):
+            _throttled(host, e.code, e.headers.get("Retry-After"))
+        raise
+    with resp_cm as resp:
         raw = resp.read(MAXBYTES + 1)
         if resp.headers.get("Content-Encoding") == "gzip":
             import gzip
@@ -385,6 +474,19 @@ def count_xml(text):
     if best < 2:
         return None, 0
     return "xml:%s" % bestname, best
+
+
+_FEED_ROOT = re.compile(r"<(rss|rdf:RDF|feed)[\s>]", re.I)
+
+
+def _is_empty_feed(text):
+    """True for a feed document (RSS 2.0, RSS 1.0 rdf:RDF, Atom) whose root
+    is present but which carries no <item>/<entry>. Regex, like count_feed,
+    for the same reason: real government feeds are often not strict XML."""
+    head = text.lstrip()[:2000]
+    if not _FEED_ROOT.search(head):
+        return False
+    return not re.search(r"<(item|entry)[\s>]", text, re.I)
 
 
 def _looks_like_html(text):
@@ -1124,6 +1226,18 @@ def _judge(r, url, shift=0, entity=None):
 
     if not kind:
         kind, items = VF.count_feed(text)
+    if not kind and _is_empty_feed(text):
+        # A well-formed RSS 2.0 / RSS 1.0 (rdf:RDF) / Atom document holding no
+        # <item> or <entry> at all. count_feed scores it 0 and count_xml needs
+        # two same-tag children, so it used to fall through every branch and
+        # be reported UNPARSEABLE -- the wrong verdict for a body that parsed
+        # perfectly and simply held nothing. Batch 43 met 25 of them in one
+        # pass: Japanese municipal 緊急 (emergency) feeds, which are empty on
+        # every day there is no emergency. The verdict is the same one a JSON
+        # `{"results":[]}` gets, and the reason is the same: a feed verified
+        # live that emits nothing is not verified at all (CLAUDE.md rule 1).
+        return (sid, url, "EMPTY_RESULTSET", "feed", 0, status, nbytes,
+                "well-formed feed document with 0 items/entries")
     if not kind:
         kind, items = VF.count_json(text)
     if not kind and ("csv" in ctype.lower() or url.lower().endswith(".csv")):
@@ -1199,11 +1313,17 @@ def _judge(r, url, shift=0, entity=None):
 
 
 def main():
+    global CHECK_FILTER, HOST_GAP_MS
     ap = argparse.ArgumentParser()
     ap.add_argument("manifests", nargs="+")
     ap.add_argument("--out")
     ap.add_argument("--pass-ids")
     ap.add_argument("--jobs", type=int, default=8)
+    ap.add_argument("--host-gap-ms", type=int, default=HOST_GAP_MS,
+                    help="minimum gap between two requests to ONE host across "
+                         "all workers (default %d); a 429 or Retry-After widens "
+                         "that host's gap for the rest of the run. 0 disables. "
+                         "Rows on distinct hosts are not slowed." % HOST_GAP_MS)
     ap.add_argument("--only", help="comma-separated ids to probe")
     ap.add_argument("--check-filter", action="store_true",
                     help="for every entity-pivot row, ask the endpoint about an "
@@ -1222,8 +1342,8 @@ def main():
                          "under --check-filter still exits 3 -- that verdict "
                          "is fatal (house rule 4d).")
     a = ap.parse_args()
-    global CHECK_FILTER
     CHECK_FILTER = a.check_filter
+    HOST_GAP_MS = a.host_gap_ms
 
     rows = load(a.manifests)
     if a.only:

@@ -22,6 +22,7 @@ static const hp_source T[] = {
     .array_path = "data",
     .detail_url = "https://api.datacite.org/dois/{v}", .detail_key = "id",
     .page_walk = 1,
+    .page_resume = 1,   /* 9,059 records, measured 2026-10-12: read over a cycle, 5~ pages a run */
     .interval = 86400, .free_tier = 1 },
 
   { .id = "datacite-dois-by-orcid",
@@ -44,6 +45,7 @@ static const hp_source T[] = {
     .array_path = "data",
     .detail_url = "https://api.datacite.org/dois/{v}", .detail_key = "id",
     .page_walk = 1,
+    .page_max = 89,   /* 443 records at 5 a page, measured 2026-10-12; the 20-page default reached 100 */
     .interval = 86400, .free_tier = 1 },
 
   { .id = "datacite-dois-related-identifier",
@@ -66,6 +68,7 @@ static const hp_source T[] = {
     .array_path = "data",
     .detail_url = "https://api.datacite.org/dois/{v}", .detail_key = "id",
     .page_walk = 1,
+    .page_resume = 1,   /* 32,843 records, measured 2026-10-12: read over a cycle, 5~ pages a run */
     .interval = 86400, .free_tier = 1 },
 
   { .id = "datacite-prefixes",

@@ -173,7 +173,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def africa_registry_def = {
-  .id = "AFRICA_REGISTRY", .collector = "osint",
+  .id = "AFRICA_REGISTRY", .collector = "osint_" "government",
   .name = "Africa Company/Court/Registry Search",
   .name_ja = "アフリカ 企業・裁判所・登記検索",
   .update_interval_sec = 0, .run = run,

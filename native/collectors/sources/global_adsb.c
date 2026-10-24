@@ -145,7 +145,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def global_adsb_def = {
-  .id = "ADSB_GLOBAL", .collector = "osint",
+  .id = "ADSB_GLOBAL", .collector = "osint_" "transport",
   .name = "Global ADS-B Aircraft", .name_ja = "グローバルADS-B航空機",
   .update_interval_sec = 0, .run = run,
   .category = "transport", .type = "api",

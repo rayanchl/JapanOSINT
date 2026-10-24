@@ -15,9 +15,16 @@
 #include <openssl/evp.h>
 #include <openssl/kdf.h>
 #include <openssl/rand.h>
+#include <openssl/hmac.h>
 
+/* The Makefile -D's JO_REPO_ROOT to this checkout. A TU compiled without it
+ * (an IDE index, a hand-rolled cc line) used to fall back to
+ * "/Users/rayan/OSINTsaas" — a path on one developer's laptop — so ingest
+ * mkdir()ed shards there or failed, and lookups answered "not found" for every
+ * identifier. ".." is native/'s parent, the repo root, which is where the
+ * binary normally runs from (native/bin/japanosint, cwd native/). */
 #ifndef JO_REPO_ROOT
-#define JO_REPO_ROOT "/Users/rayan/OSINTsaas"
+#define JO_REPO_ROOT ".."
 #endif
 
 /* ── type helpers ─────────────────────────────────────────────────────── */
@@ -32,10 +39,22 @@ const char *breach_type_name(breach_type t) {
   return (t >= 0 && t <= 4) ? TYPE_NAME[t] : "auto";
 }
 
-static const char *root_dir(void) {
+/* <repo>/data/breach, like every other data path: $JO_BREACH_DIR wins, then
+ * a runtime $JO_REPO_ROOT (a relocated install), then the compiled-in root.
+ * breach_jobs.c confines caller paths to this same directory, so there is ONE
+ * copy of the rule — two used to exist and could disagree. */
+const char *breach_root_dir(void) {
   const char *e = getenv("JO_BREACH_DIR");
-  return (e && *e) ? e : JO_REPO_ROOT "/data/breach";
+  if (e && *e) return e;
+  const char *r = getenv("JO_REPO_ROOT");
+  if (r && *r) {
+    static __thread char buf[1024];
+    snprintf(buf, sizeof buf, "%s/data/breach", r);
+    return buf;
+  }
+  return JO_REPO_ROOT "/data/breach";
 }
+#define root_dir breach_root_dir
 
 /* ── SHA-1 uppercase hex ──────────────────────────────────────────────── */
 static void sha1_hex(const char *s, size_t n, char out[41]) {
@@ -94,7 +113,10 @@ static int master_key(unsigned char out[32]) {
   SHA256((const unsigned char *)raw, L, out);
   return 1;
 }
-static int derive_key(unsigned char out[32]) {
+/* HKDF-SHA256 from the master key. `info` separates the two subkeys: the
+ * AES-GCM secret key (v1, unchanged — every blob already at rest depends on
+ * it) and the identifier LOOKUP key below. One master, independent keys. */
+static int derive_key_info(const char *info, unsigned char out[32]) {
   unsigned char mk[32]; if (!master_key(mk)) return 0;
   EVP_PKEY_CTX *c = EVP_PKEY_CTX_new_id(EVP_PKEY_HKDF, NULL);
   if (!c) return 0;
@@ -103,11 +125,51 @@ static int derive_key(unsigned char out[32]) {
       EVP_PKEY_CTX_set_hkdf_md(c, EVP_sha256()) == 1 &&
       EVP_PKEY_CTX_set1_hkdf_key(c, mk, 32) == 1 &&
       EVP_PKEY_CTX_set1_hkdf_salt(c, (const unsigned char *)"breach_index", 12) == 1 &&
-      EVP_PKEY_CTX_add1_hkdf_info(c, (const unsigned char *)"JapanOSINT.breach_index.v1", 26) == 1 &&
+      EVP_PKEY_CTX_add1_hkdf_info(c, (const unsigned char *)info, strlen(info)) == 1 &&
       EVP_PKEY_derive(c, out, &ol) == 1 && ol == 32)
     ok = 1;
   EVP_PKEY_CTX_free(c);
   return ok;
+}
+static int derive_key(unsigned char out[32]) {
+  return derive_key_info("JapanOSINT.breach_index.v1", out);
+}
+
+/* ── keyed identifier lookup hash ───────────────────────────────────────────
+ * The shard key used to be SHA1(normalized identifier), unsalted. For an
+ * email address that is not "non-reversible" in any useful sense: the input
+ * space is a dictionary, and SHA-1 of every address in a mailing list is a
+ * second of CPU, so anyone holding a shard file holds the identifiers in it.
+ * The lookup key is now HMAC-SHA256 under a server secret derived from
+ * SECRETS_MASTER_KEY — without the key the shard file is not joinable to a
+ * list of candidate addresses. Type-prefixed so one address as an email and
+ * as a username key apart. 64 uppercase hex.
+ *
+ * Passwords stay on SHA-1: the Pwned Passwords corpus ARRIVES as SHA-1 (there
+ * is no plaintext to key), and it is a public list anyway.
+ *
+ * No master key → 0, and the caller keeps the SHA-1 path (the key is what
+ * makes it keyed; inventing one per process would make every shard written
+ * unreadable after a restart). */
+int breach_lookup_hash(breach_type t, const char *normalized, char out[65]) {
+  out[0] = 0;
+  if (t == BT_PASSWORD || t == BT_AUTO || !normalized) return 0;
+  unsigned char k[32];
+  if (!derive_key_info("JapanOSINT.breach_index.lookup.v1", k)) return 0;
+  const char *tn = breach_type_name(t);
+  size_t tl = strlen(tn), nl = strlen(normalized);
+  unsigned char *msg = malloc(tl + 1 + nl);
+  if (!msg) return 0;
+  memcpy(msg, tn, tl); msg[tl] = 0; memcpy(msg + tl + 1, normalized, nl);
+  unsigned char mac[32]; unsigned int ml = 0;
+  unsigned char *r = HMAC(EVP_sha256(), k, 32, msg, tl + 1 + nl, mac, &ml);
+  OPENSSL_cleanse(k, sizeof k);
+  free(msg);
+  if (!r || ml != 32) return 0;
+  static const char *H = "0123456789ABCDEF";
+  for (int i = 0; i < 32; i++) { out[i * 2] = H[mac[i] >> 4]; out[i * 2 + 1] = H[mac[i] & 15]; }
+  out[64] = 0;
+  return 1;
 }
 static char *tohex(const unsigned char *b, int n) {
   char *o = malloc((size_t)n * 2 + 1); if (!o) return NULL;
@@ -175,6 +237,17 @@ static void ensure_type_dir(breach_type t) {
 static void shard_path(breach_type t, const char *hash, char *out, size_t n) {
   snprintf(out, n, "%s/%s/%c%c.idx", root_dir(), breach_type_name(t),
            (char)tolower((unsigned char)hash[0]), (char)tolower((unsigned char)hash[1]));
+}
+/* Keyed shards live BESIDE the SHA-1 ones, in <type>/k/, so a corpus ingested
+ * before a master key was configured stays readable exactly where it is: the
+ * lookup reads both, and nothing is rewritten or deleted. */
+static void ensure_keyed_dir(breach_type t) {
+  char p[1024];
+  snprintf(p, sizeof p, "%s/%s/k", root_dir(), breach_type_name(t)); mkdir(p, 0755);
+}
+static void kshard_path(breach_type t, const char *lhash, char *out, size_t n) {
+  snprintf(out, n, "%s/%s/k/%c%c.idx", root_dir(), breach_type_name(t),
+           (char)tolower((unsigned char)lhash[0]), (char)tolower((unsigned char)lhash[1]));
 }
 
 void breach_index_keyid(breach_type t, const char *value, char *out, size_t n) {
@@ -364,7 +437,7 @@ int breach_index_ingest(const char *source_id, const char *path, breach_type typ
          * no length limit, so the cap bought nothing at all. */
         char keyid[64]; snprintf(keyid, sizeof keyid, "password:%s", hash);
         breach_store_put(store, keyid, "password", NULL /* hash-only */,
-                         source_id, hash, 0, count);
+                         source_id, hash, NULL, 0, count);
       }
       continue;
     }
@@ -384,6 +457,8 @@ int breach_index_ingest(const char *source_id, const char *path, breach_type typ
     free(copy);
     if (!nv) continue;
     char hash[41]; sha1_hex(nv, strlen(nv), hash);
+    char lhash[65];
+    int keyed = breach_lookup_hash(ct, nv, lhash);
     /* Keep the normalized cleartext only when materializing (it becomes the
      * searchable breach_items.value); the offline path frees it immediately. */
     char *val = store ? nv : NULL;
@@ -397,9 +472,14 @@ int breach_index_ingest(const char *source_id, const char *path, breach_type typ
     char *enc = (!dry_run && secret && *secret) ? enc_secret(secret) : NULL;
     if (!dry_run) {
       ensure_type_dir(ct);
-      char sp[1024]; shard_path(ct, hash, sp, sizeof sp);
+      /* With a master key the shard line carries the KEYED hash only; the
+       * SHA-1 shard is the no-key fallback (and the legacy corpus). */
+      char sp[1024];
+      if (keyed) { ensure_keyed_dir(ct); kshard_path(ct, lhash, sp, sizeof sp); }
+      else       shard_path(ct, hash, sp, sizeof sp);
       FILE *f = wc_get(&wc, sp);
-      if (f) { fprintf(f, "%s\t%s\t%s\n", hash, source_id ? source_id : "?", enc ? enc : "-"); rn++; }
+      if (f) { fprintf(f, "%s\t%s\t%s\n", keyed ? lhash : hash,
+                       source_id ? source_id : "?", enc ? enc : "-"); rn++; }
     } else rn++;
     if (store) {
       /* Per-(identifier, breach) keyid so each breach is a distinct source and
@@ -415,7 +495,7 @@ int breach_index_ingest(const char *source_id, const char *path, breach_type typ
       snprintf(keyid, sizeof keyid, "%s:%s|%.240s", breach_type_name(ct), hash,
                source_id ? source_id : "?");
       breach_store_put(store, keyid, breach_type_name(ct), val, source_id, hash,
-                       enc ? 1 : 0, 1);
+                       keyed ? lhash : NULL, enc ? 1 : 0, 1);
 
       /* Phase 3 — full entity materialization (deterministic, no LLM). Every
        * identity record's identifier becomes an entity + a mention keyed on the
@@ -477,44 +557,56 @@ int breach_index_lookup(breach_type type, const char *value, int reveal, cJSON *
   if (type == BT_AUTO) type = detect(value);
   char *nv = norm(type, value);
   if (!nv) return 0;
-  char hash[41]; sha1_hex(nv, strlen(nv), hash); free(nv);
-
-  char sp[1024]; shard_path(type, hash, sp, sizeof sp);
-  FILE *f = fopen(sp, "rb");
+  char hash[41]; sha1_hex(nv, strlen(nv), hash);
+  char lhash[65];
+  int keyed = breach_lookup_hash(type, nv, lhash);
+  free(nv);
 
   cJSON *root = cJSON_CreateObject();
   cJSON *arr = cJSON_CreateArray();
   int matches = 0; long long pw_count = 0;
 
-  if (f) {
-    char ln[16384];
-    while (fgets(ln, sizeof ln, f)) {
-      if (strncmp(ln, hash, 40) != 0 || ln[40] != '\t') continue;
-      matches++;
-      if (type == BT_PASSWORD) {
-        pw_count = atoll(ln + 41);
-        /* A password hash is unique within its shard by construction (the
-         * ingest dedups on the hash alone), so there is nothing further to
-         * find. Without this the scan always ran to EOF — and after a bulk
-         * ingest a shard is hundreds of MB, read line-by-line, on the single
-         * mongoose event-loop thread. */
-        break;
-      } else {
-        char *p = ln + 41;
-        char *tab = strchr(p, '\t');
-        char *breach = p, *enc = NULL;
-        if (tab) { *tab = 0; enc = tab + 1; char *nl = strpbrk(enc, "\r\n"); if (nl) *nl = 0; }
-        else { char *nl = strpbrk(breach, "\r\n"); if (nl) *nl = 0; }
-        cJSON *o = cJSON_CreateObject();
-        cJSON_AddStringToObject(o, "breach", breach);
-        if (reveal && enc && enc[0] != '-') {
-          char *pt = dec_secret(enc);
-          if (pt) { cJSON_AddStringToObject(o, "secret", pt); free(pt); }
+  /* Two passes: the keyed shard (when a key is configured) and the SHA-1
+   * shard, which holds everything ingested without one. Reading both is what
+   * makes turning the key on migration-safe: nothing is re-ingested, and an
+   * identifier present in either store is found. */
+  for (int pass = keyed ? 0 : 1; pass < 2; pass++) {
+    const char *want = pass == 0 ? lhash : hash;
+    size_t wl = pass == 0 ? 64 : 40;
+    char sp[1024];
+    if (pass == 0) kshard_path(type, lhash, sp, sizeof sp);
+    else           shard_path(type, hash, sp, sizeof sp);
+    FILE *f = fopen(sp, "rb");
+    if (f) {
+      char ln[16384];
+      while (fgets(ln, sizeof ln, f)) {
+        if (strncmp(ln, want, wl) != 0 || ln[wl] != '\t') continue;
+        matches++;
+        if (type == BT_PASSWORD) {
+          pw_count = atoll(ln + 41);
+          /* A password hash is unique within its shard by construction (the
+           * ingest dedups on the hash alone), so there is nothing further to
+           * find. Without this the scan always ran to EOF — and after a bulk
+           * ingest a shard is hundreds of MB, read line-by-line, on the single
+           * mongoose event-loop thread. */
+          break;
+        } else {
+          char *p = ln + wl + 1;
+          char *tab = strchr(p, '\t');
+          char *breach = p, *enc = NULL;
+          if (tab) { *tab = 0; enc = tab + 1; char *nl = strpbrk(enc, "\r\n"); if (nl) *nl = 0; }
+          else { char *nl = strpbrk(breach, "\r\n"); if (nl) *nl = 0; }
+          cJSON *o = cJSON_CreateObject();
+          cJSON_AddStringToObject(o, "breach", breach);
+          if (reveal && enc && enc[0] != '-') {
+            char *pt = dec_secret(enc);
+            if (pt) { cJSON_AddStringToObject(o, "secret", pt); free(pt); }
+          }
+          cJSON_AddItemToArray(arr, o);
         }
-        cJSON_AddItemToArray(arr, o);
       }
+      fclose(f);
     }
-    fclose(f);
   }
 
   cJSON_AddBoolToObject(root, "found", matches > 0);

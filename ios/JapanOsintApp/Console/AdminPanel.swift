@@ -110,6 +110,9 @@ struct AdminPanel: View {
         navRow(icon: "lock.trianglebadge.exclamationmark",
                title: "Breach corpus",
                subtitle: "Request, parse, ingest datasets") { BreachCorpusView() }
+        navRow(icon: "dial.medium",
+               title: "Similarity thresholds",
+               subtitle: "Embedding cut-offs, tunable live") { SimilarityThresholdsView() }
         navRow(icon: "key.horizontal.fill",
                title: "Platform API keys",
                subtitle: "Server-wide default credentials") {

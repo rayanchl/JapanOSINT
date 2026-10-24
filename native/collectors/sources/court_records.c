@@ -349,7 +349,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def court_records_def = {
-  .id = "COURT_RECORDS", .collector = "osint",
+  .id = "COURT_RECORDS", .collector = "osint_" "government",
   .name = "Court Records", .name_ja = "裁判記録",
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "api",

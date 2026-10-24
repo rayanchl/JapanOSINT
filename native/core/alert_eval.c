@@ -1,4 +1,8 @@
 #include "alert_eval.h"
+#include "alert_sem.h"
+#include "embed_pod.h"
+#include "story.h"
+#include "qembed.h"
 #include "fts.h"
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
@@ -369,6 +373,10 @@ const char *alert_eval_shape_check(const char *kind, const char *geometry_json,
 typedef struct {
   int      usable;    /* 0 → never matches (bad JSON / malformed constraint) */
   int      llm_only;  /* mode=="llm" + nl_query → not evaluable inline       */
+  char    *nl;        /* llm_only: the nl_query (keys the stored rule vector)  */
+  double   sem_thr;   /* llm_only: cosine threshold (alert_sem.h)            */
+  int      has_nov;   /* llm_only: novelty_min present                       */
+  double   nov_min;
   char    *fts_q;     /* MeCab-segmented MATCH expression; NULL when absent  */
   strlist  src, tany, tall;
   jo_shape geo;                     /* item 9; kind==SH_NONE → no spatial term */
@@ -378,6 +386,7 @@ typedef struct {
 
 static void pred_free(jo_pred *p) {
   free(p->fts_q); p->fts_q = NULL;
+  free(p->nl); p->nl = NULL;
   strlist_free(&p->src); strlist_free(&p->tany); strlist_free(&p->tall);
   strlist_free(&p->eids); strlist_free(&p->etypes);
   shape_free(&p->geo);
@@ -432,7 +441,21 @@ static int pred_compile(db_handle *db, const char *tenant_id,
   cJSON *x = cJSON_GetObjectItem(root, "mode");
   if (x && cJSON_IsString(x) && strcmp(x->valuestring, "llm") == 0) {
     cJSON *nl = cJSON_GetObjectItem(root, "nl_query");
-    if (nl && cJSON_IsString(nl) && nl->valuestring[0]) p->llm_only = 1;
+    if (nl && cJSON_IsString(nl) && nl->valuestring[0]) {
+      p->llm_only = 1;
+      /* The semantic rule's own terms; everything below still compiles and
+       * still has to hold (eval_semantic). A malformed novelty_min fails
+       * closed like every other malformed term. */
+      p->nl = strdup(nl->valuestring);
+      if (!p->nl) p->usable = 0;
+      p->sem_thr = alert_sem_threshold(root);
+      cJSON *nm = cJSON_GetObjectItem(root, "novelty_min");
+      if (nm && !cJSON_IsNull(nm)) {
+        if (!cJSON_IsNumber(nm) || nm->valuedouble < 0 || nm->valuedouble > 1)
+          p->usable = 0;
+        else { p->has_nov = 1; p->nov_min = nm->valuedouble; }
+      }
+    }
   }
   x = cJSON_GetObjectItem(root, "q");
   if (x && cJSON_IsString(x) && x->valuestring[0]) {
@@ -585,8 +608,16 @@ static void facts_from_row(item_facts *f, sqlite3_stmt *s, sqlite3 *h,
  *
  * Term order is cost order: in-memory string sets, then the two-stage spatial
  * test, then the entity terms — the only ones that can touch the database. */
+static int facts_match_terms(const jo_pred *p, item_facts *f);
 static int facts_match(const jo_pred *p, item_facts *f) {
   if (!p->usable || p->llm_only) return 0;
+  return facts_match_terms(p, f);
+}
+/* Every term but the mode: a semantic rule's cosine is decided by
+ * eval_semantic, and then the rest of its predicate must hold through here,
+ * exactly as an fts rule's does. */
+static int facts_match_terms(const jo_pred *p, item_facts *f) {
+  if (!p->usable) return 0;
   if (p->src.n && !strlist_has(&p->src, f->source_id)) return 0;
   if (p->tany.n || p->tall.n) {
     const strlist *t = facts_tags(f);
@@ -627,8 +658,11 @@ static int fts_probe(sqlite3 *h, const char *q, const char *uid) {
 
 /* ── refcounted rule-cache snapshot ───────────────────────────────────────── */
 
-typedef struct { char *id; char *tenant_id; jo_pred p; } rule_c;
-typedef struct { int refs; int n; rule_c *v; int any_ent; } rule_set;
+/* svec: a semantic rule's stored vector (alert_sem_load), loaded with the
+ * snapshot so the post-batch hook compares in memory; NULL = not evaluable. */
+typedef struct { char *id; char *tenant_id; jo_pred p;
+                 float *svec; int sdim; char *smodel; } rule_c;
+typedef struct { int refs; int n; rule_c *v; int any_ent; int any_sem; } rule_set;
 
 static pthread_mutex_t g_mu = PTHREAD_MUTEX_INITIALIZER;
 static rule_set       *g_set;          /* current snapshot; holds one ref  */
@@ -640,6 +674,7 @@ static void ruleset_free(rule_set *rs) {
   if (!rs) return;
   for (int i = 0; i < rs->n; i++) {
     free(rs->v[i].id); free(rs->v[i].tenant_id); pred_free(&rs->v[i].p);
+    free(rs->v[i].svec); free(rs->v[i].smodel);
   }
   free(rs->v); free(rs);
 }
@@ -654,15 +689,19 @@ static void ruleset_free(rule_set *rs) {
  * and running it separately means a database that predates the table (prepare
  * fails) simply loses AOI-change detection instead of pinning the whole cache. */
 static void read_generation(db_handle *db, char *out, size_t n) {
-  static const char *Q[2] = {
+  static const char *Q[3] = {
     "SELECT COALESCE(MAX(updated_at),'') || '|' || COUNT(*) || '|' ||"
     " COALESCE(MAX(id),'') FROM alert_rules",
     "SELECT COALESCE(MAX(COALESCE(updated_at,created_at)),'') || '|' ||"
-    " COUNT(*) || '|' || COALESCE(MAX(id),'') FROM areas_of_interest"
+    " COUNT(*) || '|' || COALESCE(MAX(id),'') FROM areas_of_interest",
+    /* a semantic rule's vector arriving (async, after the save) must reach
+     * the snapshot, or the rule would wait for an unrelated edit */
+    "SELECT COALESCE(MAX(embedded_at),'') || '|' || COUNT(vec) ||"
+    " '|' || COALESCE(MAX(text_hash),'') FROM alert_rule_vec"
   };
   out[0] = '\0';
   size_t used = 0;
-  for (int i = 0; i < 2; i++) {
+  for (int i = 0; i < 3; i++) {
     const char *g = "";
     sqlite3_stmt *s = NULL;
     if (sqlite3_prepare_v2(db->h, Q[i], -1, &s, NULL) == SQLITE_OK) {
@@ -708,6 +747,13 @@ static rule_set *ruleset_load(db_handle *db) {
      * always resolved under the tenant that owns the rule. */
     pred_compile(db, tid, ctext(s, 2), &r->p);
     if (r->p.has_ent) rs->any_ent = 1;
+    if (r->p.llm_only && r->p.usable && r->p.nl) {
+      char m[256];
+      if (alert_sem_load(db, r->id, r->p.nl, &r->svec, &r->sdim, m, sizeof m)) {
+        r->smodel = strdup(m);
+        rs->any_sem = 1;
+      }
+    }
     rs->n++;
   }
   sqlite3_finalize(s);
@@ -824,9 +870,17 @@ static void fire(db_handle *db, const char *rule_id, const char *tenant_id,
     sqlite3_finalize(s);
   }
 
+  /* OR IGNORE against ux_alert_events_rule_item (core/db.c). The window
+   * check above is a SELECT followed, a few statements later, by this
+   * INSERT; the ingest path and the entity sweep run fire() on different
+   * threads and connections, and both could pass the SELECT before either
+   * wrote — one match, two events, two deliveries. The index makes the
+   * second INSERT a no-op instead. It also means a (rule, item) pair fires
+   * at most once, whatever the window: ingest evaluates only NEW rows, so a
+   * repeat for the same pair was only ever this race or a sweep re-match. */
   char eid[37]; uuid4(eid);
   if (sqlite3_prepare_v2(h,
-        "INSERT INTO alert_events (id,tenant_id,rule_id,item_uid,matched_at,"
+        "INSERT OR IGNORE INTO alert_events (id,tenant_id,rule_id,item_uid,matched_at,"
         "delivered_channels_json,suppressed,reason)"
         " VALUES (?1,?2,?3,?4,datetime('now'),'[]',?5,?6)",
         -1, &s, NULL) != SQLITE_OK) return;
@@ -875,13 +929,29 @@ static void eval_item(db_handle *db, rule_set *rs, const char *tenant_hint,
   item_facts f;
   facts_from_row(&f, s, db->h, tid, 0, 1, 2, 3, 4);
 
+  /* THE SHARED CORPUS IS EVERY TENANT'S. Collector rows are written under
+   * 'legacy' and every tenant reads them (CLAUDE.md, "Embedding pipeline and
+   * tenancy"), but rules were matched only when the rule's tenant equalled
+   * the row's — so a rule any real tenant wrote could never fire on collected
+   * data, which is nearly all of it. A 'legacy' row is now offered to every
+   * tenant's rules, each fire recorded under the RULE's tenant; a row a
+   * tenant owns (a search-run summary, an upload) still meets only that
+   * tenant's rules. Entity facts are re-read per rule tenant, because the
+   * entities join is what keeps one tenant's private entities out of
+   * another's match. */
+  int shared = strcmp(tid, "legacy") == 0;
   for (int i = 0; i < rs->n; i++) {
     const rule_c *r = &rs->v[i];
-    if (strcmp(r->tenant_id, tid) != 0) continue;
+    if (!shared && strcmp(r->tenant_id, tid) != 0) continue;
     if (entity_only && !r->p.has_ent) continue;
+    if (strcmp(f.tenant, r->tenant_id) != 0 && r->p.has_ent) {
+      if (f.ents_ready) { strlist_free(&f.eids); strlist_free(&f.etypes); }
+      f.ents_ready = 0;
+      f.tenant = r->tenant_id;
+    }
     if (!facts_match(&r->p, &f)) continue;            /* in-memory terms first */
     if (r->p.fts_q && !fts_probe(db->h, r->p.fts_q, uid)) continue;
-    fire(db, r->id, tid, uid);
+    fire(db, r->id, r->tenant_id, uid);
   }
 
   facts_clear(&f);
@@ -896,11 +966,109 @@ void alert_eval_on_item(db_handle *db, const char *tenant_id,
   /* The overwhelmingly common case — a tenant with no enabled rules — costs
    * one mutex and a strcmp loop, and touches the database not at all. */
   if (rs->n == 0 ||
-      (tenant_id && *tenant_id && !ruleset_has_tenant(rs, tenant_id))) {
+      (tenant_id && *tenant_id && strcmp(tenant_id, "legacy") != 0 &&
+       !ruleset_has_tenant(rs, tenant_id))) {   /* legacy: every tenant's */
     ruleset_release(rs); return;
   }
   eval_item(db, rs, tenant_id, item_uid, 0);
   ruleset_release(rs);
+}
+
+/* ── semantic rules: the embedding pod's post-batch hook ──────────────────────
+ *
+ * mode "llm" rules cannot be matched at ingest (facts_match refuses them):
+ * an item has no vector until the backfill pod embeds it. So they are matched
+ * HERE, once per item, right after its vector is committed — the hook contract
+ * (embed_pod.h): fast, no embedding call, the pod's own connection. The rule
+ * vectors are in the snapshot (ruleset_load), so the cosine against every
+ * semantic rule is computed in memory and the item row is read only when
+ * some rule passes its threshold. What a pass then has to satisfy is the
+ * whole rest of the predicate through facts_match_terms + fts_probe — the
+ * same matcher the ingest path uses — and, when the rule asks, a novelty
+ * floor (story.h; read from the row, computed from the index when the story
+ * hook has not reached it yet). Tenancy is eval_item's verbatim: a 'legacy'
+ * row meets every tenant's rules, a tenant row only its owner's, and each fire
+ * is recorded under the RULE's tenant through fire() — mute, dedup, storm cap
+ * and the INSERT OR IGNORE pair guard included.
+ *
+ * A rule vector from a model other than the intel index's is never compared
+ * (alert_sem_status says so in the rule response). */
+static void eval_semantic(db_handle *db, rule_set *rs, const char *uid,
+                          const char *tenant_hint, long long ts,
+                          const float *vec, int dim, const char *index_model) {
+  int any = 0;
+  double *cs = calloc((size_t)rs->n, sizeof *cs);
+  if (!cs) return;
+  for (int i = 0; i < rs->n; i++) {
+    const rule_c *r = &rs->v[i];
+    cs[i] = -2;
+    if (!r->svec || r->sdim != dim || !r->smodel || strcmp(r->smodel, index_model) != 0)
+      continue;
+    cs[i] = vec_cosine(r->svec, vec, dim);
+    if (cs[i] >= r->p.sem_thr) any = 1;
+  }
+  if (!any) { free(cs); return; }
+
+  sqlite3_stmt *s = NULL;
+  if (sqlite3_prepare_v2(db->h,
+        "SELECT uid,source_id,lat,lon,tags,tenant_id FROM intel_items"
+        " WHERE uid=?1", -1, &s, NULL) != SQLITE_OK) { free(cs); return; }
+  sqlite3_bind_text(s, 1, uid, -1, SQLITE_TRANSIENT);
+  if (sqlite3_step(s) != SQLITE_ROW) { sqlite3_finalize(s); free(cs); return; }
+  const char *row_tid = ctext(s, 5);
+  const char *tid = (row_tid && *row_tid) ? row_tid
+                  : ((tenant_hint && *tenant_hint) ? tenant_hint : "legacy");
+  item_facts f;
+  facts_from_row(&f, s, db->h, tid, 0, 1, 2, 3, 4);
+  int shared = strcmp(tid, "legacy") == 0;
+  int nov_ready = 0, nov_ok = 0;
+  double nov = 0;
+  for (int i = 0; i < rs->n; i++) {
+    const rule_c *r = &rs->v[i];
+    if (cs[i] < r->p.sem_thr) continue;
+    if (!shared && strcmp(r->tenant_id, tid) != 0) continue;
+    if (strcmp(f.tenant, r->tenant_id) != 0 && r->p.has_ent) {
+      if (f.ents_ready) { strlist_free(&f.eids); strlist_free(&f.etypes); }
+      f.ents_ready = 0;
+      f.tenant = r->tenant_id;
+    }
+    if (!facts_match_terms(&r->p, &f)) continue;
+    if (r->p.fts_q && !fts_probe(db->h, r->p.fts_q, uid)) continue;
+    if (r->p.has_nov) {
+      if (!nov_ready) {
+        nov_ready = 1;
+        nov_ok = story_novelty(db, uid, tid, ts, vec, dim, &nov) == 0;
+      }
+      /* unmeasurable novelty fails the gate closed, never open */
+      if (!nov_ok || nov < r->p.nov_min) continue;
+    }
+    fire(db, r->id, r->tenant_id, uid);
+  }
+  facts_clear(&f);
+  sqlite3_finalize(s);
+  free(cs);
+}
+
+static void sem_hook(db_handle *db, int n, const char *const *uids,
+                     const float *vectors, int dim, const embed_row_meta *meta,
+                     void *user) {
+  (void)user;
+  if (!db || !db->h || n <= 0) return;
+  rule_set *rs = ruleset_acquire(db);
+  if (!rs) return;
+  if (rs->any_sem) {
+    char im[256] = "";
+    vecindex_meta_get(db, &embed_intel_spec, "model", im, sizeof im);
+    for (int i = 0; i < n; i++)
+      eval_semantic(db, rs, uids[i], meta[i].tenant_id, meta[i].ts,
+                    vectors + (size_t)i * dim, dim, im);
+  }
+  ruleset_release(rs);
+}
+
+__attribute__((constructor)) static void alert_sem_register(void) {
+  if (embed_hook_register(sem_hook, NULL) != 0)
+    fprintf(stderr, "[alert] could not register the semantic-rule hook\n");
 }
 
 /* ── public: item 21, the entity-mention reconciling sweep ────────────────── */
@@ -1079,6 +1247,9 @@ static void *sweep_thread(void *arg) {
   if (e && *e) { int v = atoi(e); if (v > 0) interval = v; }
   while (!g_sweep_stop) {
     alert_eval_sweep_entities(&own);
+    /* semantic rules saved while the embedding server was down, or whose
+     * vector is stale (text or model changed) — alert_sem.h */
+    alert_sem_embed_missing(&own);
     for (int i = 0; i < interval && !g_sweep_stop; i++) sleep(1);
   }
   db_close(&own);
@@ -1115,7 +1286,8 @@ void alert_eval_sweep_stop(void) {
 
 static char *preview_envelope(int *status, long matches, long scanned,
                               int truncated, const char *since_used,
-                              const char *skipped, cJSON *samples) {
+                              const char *skipped, cJSON *samples,
+                              cJSON *semantic) {
   cJSON *w = cJSON_CreateObject();
   cJSON_AddItemToObject(w, "data", samples ? samples : cJSON_CreateArray());
   cJSON *pg = cJSON_CreateObject();
@@ -1131,11 +1303,158 @@ static char *preview_envelope(int *status, long matches, long scanned,
   cJSON_AddBoolToObject(m, "writes_events", 0);
   cJSON_AddItemToObject(m, "skipped",
     skipped ? cJSON_CreateString(skipped) : cJSON_CreateNull());
+  if (semantic) cJSON_AddItemToObject(m, "semantic", semantic);
   cJSON_AddItemToObject(w, "meta", m);
   char *out = cJSON_PrintUnformatted(w);
   cJSON_Delete(w);
   *status = 200;
   return out ? out : strdup("{\"data\":[]}");
+}
+
+/* ── preview of a semantic rule (A2b) ─────────────────────────────────────────
+ *
+ * The live rule is "cos(rule, item) >= threshold AND the other terms", so
+ * the backtest is a KNN over intel_vec_v2 with the rule's description as the
+ * query: the PREVIEW_SEM_K nearest items of this tenant + the shared corpus
+ * (the live path's tenancy) dated inside the window, kept when the cosine
+ * clears the threshold, then put through the same facts_match_terms +
+ * fts_probe + novelty gate the hook applies. The description is embedded
+ * here (a saved rule's stored vector may be stale or absent; the text in
+ * the request is the rule being asked about), which is why httpd.c runs a
+ * semantic preview off the event loop.
+ *
+ * Stated in meta.semantic: the threshold and k, that the KNN window is on
+ * the row's DATE (the index's ts column) while the fetched_at bound is
+ * applied to each hit as well, the index coverage, and truncated=true when
+ * the k-th neighbour still cleared the threshold — more matches may exist
+ * beyond k, so match_count is a lower bound. Without a usable index the
+ * answer is skipped:"semantic_index_unavailable" with the reason, never a
+ * fabricated zero. */
+#define PREVIEW_SEM_K 1000
+
+static char *preview_semantic(db_handle *db, const char *tenant_id,
+                              const jo_pred *p, const char *bound, int *status) {
+  cJSON *sem = cJSON_CreateObject();
+  cJSON_AddNumberToObject(sem, "threshold", p->sem_thr);
+  cJSON_AddNumberToObject(sem, "k", PREVIEW_SEM_K);
+  if (p->has_nov) cJSON_AddNumberToObject(sem, "novelty_min", p->nov_min);
+  cJSON_AddStringToObject(sem, "window",
+      "the KNN is restricted to rows whose date (published_at when ISO, else "
+      "fetched_at) is inside the window, and each hit must also have been "
+      "fetched inside it");
+  cJSON_AddItemToObject(sem, "coverage", embed_coverage_json(db));
+  int dim = 0;
+  char why[512] = "";
+  if (!qembed_index_usable(db, &embed_intel_spec, &dim, why, sizeof why)) {
+    cJSON_AddStringToObject(sem, "reason", why);
+    return preview_envelope(status, 0, 0, 0, bound,
+                            "semantic_index_unavailable", NULL, sem);
+  }
+  const char *texts[1] = { p->nl };
+  float *qv = NULL; int qd = 0; llm_status st;
+  if (qembed_texts(texts, 1, &qv, &qd, &st) != 0 || qd != dim) {
+    snprintf(why, sizeof why, "embedding the description failed (%s)",
+             qv ? "dimension mismatch" : llm_status_code(st));
+    free(qv);
+    cJSON_AddStringToObject(sem, "reason", why);
+    return preview_envelope(status, 0, 0, 0, bound,
+                            "semantic_index_unavailable", NULL, sem);
+  }
+  /* the window bound as epoch seconds for the ts filter */
+  long long since_ts = 0;
+  {
+    sqlite3_stmt *s = NULL;
+    if (sqlite3_prepare_v2(db->h, "SELECT CAST(strftime('%s',?1) AS INTEGER)",
+                           -1, &s, NULL) == SQLITE_OK) {
+      sqlite3_bind_text(s, 1, bound, -1, SQLITE_TRANSIENT);
+      if (sqlite3_step(s) == SQLITE_ROW) since_ts = sqlite3_column_int64(s, 0);
+      sqlite3_finalize(s);
+    }
+  }
+  int legacy = !strcmp(tenant_id, "legacy");
+  vecindex_val tv[2] = { VI_S(tenant_id), VI_S("legacy") };
+  vecindex_val lo = VI_I(since_ts);
+  vecindex_filter f[2] = {
+    { .col = "tenant_id", .op = "IN", .vals = tv, .nvals = legacy ? 1 : 2 },
+    { .col = "ts", .op = ">=", .vals = &lo, .nvals = 1 },
+  };
+  vecindex_hit *h = NULL;
+  int nh = vecindex_knn(db, &embed_intel_spec, qv, qd, PREVIEW_SEM_K, f, 2, &h,
+                        why, sizeof why);
+  if (nh < 0) {
+    free(qv);
+    cJSON_AddStringToObject(sem, "reason", why);
+    return preview_envelope(status, 0, 0, 0, bound,
+                            "semantic_index_unavailable", NULL, sem);
+  }
+  sqlite3_stmt *s = NULL;
+  if (sqlite3_prepare_v2(db->h,
+        "SELECT uid, source_id, title, link, published_at, lat, lon, tags, ts_ok"
+        " FROM (SELECT uid, source_id, title, link, published_at, lat, lon, tags,"
+        "       fetched_at >= ?2 AS ts_ok, tenant_id FROM intel_items WHERE uid=?1)",
+        -1, &s, NULL) != SQLITE_OK) {
+    vecindex_hits_free(h, nh); free(qv); cJSON_Delete(sem);
+    return err(status, 500, "server_error");
+  }
+  cJSON *samples = cJSON_CreateArray();
+  long matches = 0, scanned = 0;
+  int last_cleared = 0;
+  for (int i = 0; i < nh; i++) {
+    float *v = NULL; int d = 0;
+    if (vecindex_load(db, &embed_intel_spec, h[i].key, &v, &d) != 0 || d != qd) {
+      free(v);
+      continue;
+    }
+    double c = vec_cosine(qv, v, qd);
+    if (c < p->sem_thr) { free(v); last_cleared = 0; continue; }
+    last_cleared = (i == nh - 1);
+    scanned++;
+    sqlite3_reset(s);
+    sqlite3_bind_text(s, 1, h[i].key, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(s, 2, bound, -1, SQLITE_TRANSIENT);
+    if (sqlite3_step(s) != SQLITE_ROW || !sqlite3_column_int(s, 8)) { free(v); continue; }
+    item_facts fa;
+    facts_from_row(&fa, s, db->h, tenant_id, 0, 1, 5, 6, 7);
+    int hit = facts_match_terms(p, &fa) &&
+              (!p->fts_q || fts_probe(db->h, p->fts_q, h[i].key));
+    facts_clear(&fa);
+    if (hit && p->has_nov) {
+      double nov;
+      long long ts = 0;
+      sqlite3_stmt *q = NULL;
+      if (sqlite3_prepare_v2(db->h, "SELECT ts, tenant_id FROM " EMBED_VEC_TABLE
+                             " WHERE uid=?1", -1, &q, NULL) == SQLITE_OK) {
+        sqlite3_bind_text(q, 1, h[i].key, -1, SQLITE_TRANSIENT);
+        if (sqlite3_step(q) == SQLITE_ROW) ts = sqlite3_column_int64(q, 0);
+        sqlite3_finalize(q);
+      }
+      hit = story_novelty(db, h[i].key, tenant_id, ts, v, d, &nov) == 0 &&
+            nov >= p->nov_min;
+    }
+    free(v);
+    if (!hit) continue;
+    matches++;
+    if (matches <= PREVIEW_SAMPLES) {
+      cJSON *o = cJSON_CreateObject();
+      const char *uid = ctext(s,0), *src = ctext(s,1), *ti = ctext(s,2),
+                 *lk = ctext(s,3), *pb = ctext(s,4);
+      cJSON_AddStringToObject(o, "uid", uid ? uid : "");
+      cJSON_AddItemToObject(o, "source_id", src ? cJSON_CreateString(src) : cJSON_CreateNull());
+      cJSON_AddItemToObject(o, "title", ti ? cJSON_CreateString(ti) : cJSON_CreateNull());
+      cJSON_AddItemToObject(o, "link", lk ? cJSON_CreateString(lk) : cJSON_CreateNull());
+      cJSON_AddItemToObject(o, "published_at", pb ? cJSON_CreateString(pb) : cJSON_CreateNull());
+      cJSON_AddNumberToObject(o, "cosine", c);
+      cJSON_AddItemToArray(samples, o);
+    }
+  }
+  sqlite3_finalize(s);
+  vecindex_hits_free(h, nh);
+  free(qv);
+  /* the k-th neighbour still cleared the bar: the KNN stopped, the matches
+   * did not — match_count is a lower bound */
+  int truncated = (nh == PREVIEW_SEM_K && last_cleared);
+  return preview_envelope(status, matches, scanned, truncated, bound, NULL,
+                          samples, sem);
 }
 
 char *alert_eval_preview(db_handle *db, const char *tenant_id,
@@ -1180,12 +1499,12 @@ char *alert_eval_preview(db_handle *db, const char *tenant_id,
   if (!bound[0]) { pred_free(&p); return err(status, 500, "server_error"); }
 
   if (p.llm_only) {
-    /* Same verdict the live path reaches, for the same reason — reporting a
-     * match count computed from a predicate MINUS its nl_query would be a
-     * preview of a rule that does not exist. */
+    /* A semantic rule: the KNN drives (preview_semantic). Never a preview
+     * of the predicate MINUS its nl_query — that would be a rule that does
+     * not exist. */
+    char *out = preview_semantic(db, tenant_id, &p, bound, status);
     pred_free(&p);
-    return preview_envelope(status, 0, 0, 0, bound,
-                            "llm_mode_unsupported", NULL);
+    return out;
   }
 
   /* Same eight columns, same order, both drivers: with q, FTS drives and the
@@ -1249,5 +1568,5 @@ char *alert_eval_preview(db_handle *db, const char *tenant_id,
   sqlite3_finalize(s);
   pred_free(&p);
   return preview_envelope(status, matches, scanned,
-                          scanned >= PREVIEW_SCAN_CAP, bound, NULL, samples);
+                          scanned >= PREVIEW_SCAN_CAP, bound, NULL, samples, NULL);
 }

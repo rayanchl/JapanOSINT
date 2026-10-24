@@ -1,0 +1,18 @@
+id	url	verdict	http	bytes	note
+JO42_WP_CITY_203068_RECEPTION	https://www.minamiaiki.jp/wp-json/wp/v2/reception?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_CITY_203068_SUBSIDYS	https://www.minamiaiki.jp/wp-json/wp/v2/subsidys?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_CITY_223026_CATIMPORTANT	https://www.town.kawazu.shizuoka.jp/wp-json/wp/v2/cat_important?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_CITY_223026_GIKAIDAYORIYEA	https://www.town.kawazu.shizuoka.jp/wp-json/wp/v2/gikaidayori_year?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_CITY_223026_IPPANHAIKIBUTS2	https://www.town.kawazu.shizuoka.jp/wp-json/wp/v2/ippanhaikibutsu_year?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_CITY_223026_KAIGIROKUYEAR	https://www.town.kawazu.shizuoka.jp/wp-json/wp/v2/kaigiroku_year?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_CITY_223026_KAIRANBANYEAR	https://www.town.kawazu.shizuoka.jp/wp-json/wp/v2/kairanban_year?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_CITY_223026_KOSAIHIYEAR	https://www.town.kawazu.shizuoka.jp/wp-json/wp/v2/kosaihi_year?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_CITY_223026_KOUHOUYEAR	https://www.town.kawazu.shizuoka.jp/wp-json/wp/v2/kouhou_year?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_CITY_113611_ANZENDETAIL	https://www.town.yokoze.saitama.jp/wp-json/wp/v2/anzen_detail?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_CITY_113611_JIGYOSHADETAIL	https://www.town.yokoze.saitama.jp/wp-json/wp/v2/jigyosha_detail?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_CITY_113611_KOSODATEKYOIKU2	https://www.town.yokoze.saitama.jp/wp-json/wp/v2/kosodate-kyoiku_detail?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_CITY_113611_KURASHIDETAIL	https://www.town.yokoze.saitama.jp/wp-json/wp/v2/kurashi_detail?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_CITY_113611_PEOPLEDETAIL	https://www.town.yokoze.saitama.jp/wp-json/wp/v2/people_detail?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_CITY_113611_SCENE	https://www.town.yokoze.saitama.jp/wp-json/wp/v2/scene?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_CITY_113611_SHISETUBUNKADE	https://www.town.yokoze.saitama.jp/wp-json/wp/v2/shisetu-bunka_detail?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request
+JO42_WP_CITY_113611_YOKOZEDETAIL	https://www.town.yokoze.saitama.jp/wp-json/wp/v2/yokoze_detail?per_page=100&orderby=date&order=desc	HTTP_ERR	400	0	Bad Request

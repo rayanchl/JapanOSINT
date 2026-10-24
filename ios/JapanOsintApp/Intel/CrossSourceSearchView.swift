@@ -14,6 +14,12 @@ import SwiftUI
 /// same way `IntelSourceItemsView` pages a single source. The first page also
 /// asks for the capped total so the header can say "N of M" instead of
 /// pretending the first 100 rows were the whole answer.
+///
+/// Semantic: the toggle above the results sends the query to
+/// `/api/intel/semantic` (hybrid vector + full-text ranking) instead. That
+/// answer is one bounded page — the header says "N of M" from the server's
+/// meta — and a server without an embedding index says so (503), which is
+/// shown as the reason, never as "no matches".
 struct CrossSourceSearchView: View {
     let bilingual: BilingualQuery
 
@@ -29,17 +35,25 @@ struct CrossSourceSearchView: View {
     @State private var loadingMore = false
     @State private var error: String?
     @State private var lastKey: String?
+    @State private var semantic = false
 
     private static let pageSize = 50
 
     /// Composite of (original, translated) so the search task re-fires when
     /// either side changes — e.g. when the translation resolves a beat after
     /// the user typed.
-    private var taskKey: String { "\(bilingual.original)|\(bilingual.translated ?? "")" }
+    private var taskKey: String { "\(bilingual.original)|\(bilingual.translated ?? "")|\(semantic)" }
 
     var body: some View {
         VStack(spacing: 0) {
-            if bilingual.hasTranslation {
+            Picker("Search mode", selection: $semantic) {
+                Text("Full-text").tag(false)
+                Text("Semantic").tag(true)
+            }
+            .pickerStyle(.segmented)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 6)
+            if bilingual.hasTranslation && !semantic {
                 translationBanner
             }
             content
@@ -56,7 +70,9 @@ struct CrossSourceSearchView: View {
         } else if items.isEmpty {
             OfflineStateView(
                 kind: .empty,
-                title: "No matches for \"\(bilingual.original)\"",
+                title: semantic && error != nil
+                    ? "Semantic search failed"
+                    : "No matches for \"\(bilingual.original)\"",
                 message: error,
                 systemImage: "magnifyingglass"
             )
@@ -169,7 +185,8 @@ struct CrossSourceSearchView: View {
         let q = bilingual.original.trimmingCharacters(in: .whitespaces)
         let n = totalLabel.flatMap { Int($0) } ?? items.count
         Task { await apiClient.api.recordSearch(kind: "intel",
-            params: ["view": "search", "mode": "fts", "q": q], resultCount: n) }
+            params: ["view": "search", "mode": semantic ? "semantic" : "fts", "q": q],
+            resultCount: n) }
     }
 
     private func search() async {
@@ -186,6 +203,10 @@ struct CrossSourceSearchView: View {
         defer { loading = false }
         try? await Task.sleep(for: .milliseconds(250))    // debounce
         guard taskKey == lastKey else { return }
+        if semantic {
+            await semanticSearch(trimmed)
+            return
+        }
         do {
             let env = try await apiClient.api.intelItems(
                 q: trimmed,
@@ -202,6 +223,25 @@ struct CrossSourceSearchView: View {
             error = nil
         } catch let err {
             error = err.localizedDescription
+        }
+    }
+
+    /// One bounded page from /api/intel/semantic; no cursor (the server ranks
+    /// a fixed candidate set), so the header carries its "N of M".
+    private func semanticSearch(_ trimmed: String) async {
+        do {
+            let env = try await apiClient.api.intelSemantic(q: trimmed)
+            guard taskKey == lastKey else { return }
+            items = env.data
+            nextCursor = nil
+            totalLabel = env.meta?.total.map { $0.formatted() }
+            error = nil
+        } catch let err {
+            guard taskKey == lastKey else { return }
+            items = []
+            nextCursor = nil
+            totalLabel = nil
+            error = SemanticErrorBody.message(err)
         }
     }
 

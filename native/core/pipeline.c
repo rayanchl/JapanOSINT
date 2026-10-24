@@ -4,6 +4,9 @@
 #include "progress.h"
 #include "osint_dispatch.h"
 #include "service_vec.h"
+#include "prompt_rank.h"
+#include "fewshot.h"
+#include "llmcache.h"
 #include "intel.h"
 #include "entitystore.h"
 #include "../source.h"
@@ -88,7 +91,22 @@ static int note_llm_stage(osint_request *rp, const char *stage,
                           const char *raw, int parsed_ok) {
   char detail[384];
   if (st != LLM_OK) {
-    if (st == LLM_ERR_HTTP)
+    /* Queue time and HTTP time, separately: "ran out its budget" after 200 s
+     * in the queue and 2 s on the wire is a contention problem, not a slow
+     * model, and the two used to be one number. */
+    long qms = 0, hms = 0;
+    llm_last_call_timing(&qms, &hms);
+    if (st == LLM_ERR_QUEUE_TIMEOUT || st == LLM_ERR_QUEUE_FULL)
+      snprintf(detail, sizeof detail,
+               "%s was never asked: %s (waited %ld ms) — other LLM jobs on "
+               "this server were ahead of it; fewer concurrent searches, a "
+               "second --parallel slot or JO_LLM_QUEUE_MAX/"
+               "JO_LLM_QUEUE_WAIT_FACTOR are the levers, not the model",
+               base_url ? base_url : "(unset)",
+               st == LLM_ERR_QUEUE_FULL ? "its queue was full"
+                                        : "its queue deadline passed",
+               qms);
+    else if (st == LLM_ERR_HTTP)
       snprintf(detail, sizeof detail,
                "llama-server at %s answered HTTP %ld for this stage — if it is "
                "%d, the prompt did not fit the server's --ctx-size; the server "
@@ -98,15 +116,16 @@ static int note_llm_stage(osint_request *rp, const char *stage,
     else if (st == LLM_ERR_TIMEOUT)
       snprintf(detail, sizeof detail,
                "the call to %s ran out its %d ms budget "
-               "(JO_LLM_TIMEOUT_MS) — llama-server is reachable but did not "
+               "(JO_LLM_TIMEOUT_MS) after %ld ms in HTTP (%ld ms queued "
+               "before it) — llama-server is reachable but did not "
                "finish in time; a CPU-only host needs far longer than a "
                "GPU-offloaded one for a prompt this size",
-               base_url ? base_url : "(unset)", llm_timeout_ms());
+               base_url ? base_url : "(unset)", llm_timeout_ms(), hms, qms);
     else if (st == LLM_ERR_UNREACHABLE)
       snprintf(detail, sizeof detail,
                "no LLM reachable at %s (LLM_BASE_URL) — llama-server is not "
-               "running or is not listening there",
-               base_url ? base_url : "(unset)");
+               "running or is not listening there (%ld ms queued, %ld ms "
+               "HTTP)", base_url ? base_url : "(unset)", qms, hms);
     else if (st == LLM_ERR_BAD_REQUEST)
       /* Ours, not the model host's — the prompt could not even be built into a
        * request. Saying "llama-server returned no content" here would send an
@@ -299,6 +318,10 @@ static void dispatch_one(disp_pool *p, disp_job *job, db_handle *db,
   cJSON_AddStringToObject(sr, "name", r.resolved_from ? r.service : t->service);
   if (r.resolved_from)
     cJSON_AddStringToObject(sr, "resolved_from", r.resolved_from);
+  /* Only when the match was by meaning rather than spelling: a weaker kind
+   * of evidence, so it is named (core/osint_dispatch.h). */
+  if (r.resolved_from && r.resolver)
+    cJSON_AddStringToObject(sr, "resolver", r.resolver);
   cJSON_AddStringToObject(sr, "entity", t->entity);
   cJSON_AddBoolToObject(sr, "success", r.success);
   cJSON_AddNumberToObject(sr, "confidence", r.confidence);
@@ -309,6 +332,13 @@ static void dispatch_one(disp_pool *p, disp_job *job, db_handle *db,
   /* Every record the service emitted is inside data.records; carry the count
    * up here too so a client can see at a glance that nothing was dropped. */
   cJSON_AddNumberToObject(sr, "record_count", r.records);
+  /* Rule 4d, in-band: the records are kept, and the reader (model or human)
+   * is told they look like an unfiltered collection. Absent in the ordinary
+   * case and always without an embedding server (core/relevance.h). */
+  if (r.relevance) {
+    cJSON *rv = cJSON_Parse(r.relevance);
+    if (rv) cJSON_AddItemToObject(sr, "relevance", rv);
+  }
   cJSON_AddItemToObject(sr, "error",
     r.error ? cJSON_CreateString(r.error) : cJSON_CreateNull());
   /* underlying sources the service hit (provider/endpoint/corpus-source) */
@@ -363,7 +393,11 @@ static int prompt_records_per_service(void) {
   return v > 0 ? v : 8;
 }
 
-static char *results_view_for_prompt(const cJSON *results) {
+/* WHICH records fill the bound: the first ones (positional, the upstream's
+ * order) unless `pr` is a live ranker (core/prompt_rank.h), in which case the
+ * ones most similar to the query — and the view says which rule chose them.
+ * `pr` NULL is the positional path byte for byte. */
+static char *results_view_for_prompt(const cJSON *results, prompt_rank *pr) {
   cJSON *wrap = cJSON_CreateObject();
   cJSON *svcs = cJSON_Duplicate(results, 1);
   int keep = prompt_records_per_service();
@@ -375,11 +409,26 @@ static char *results_view_for_prompt(const cJSON *results) {
     int total = cJSON_GetArraySize(recs);
     cJSON_AddNumberToObject(data, "records_shown", total > keep ? keep : total);
     if (total > keep) {
-      for (int i = total - 1; i >= keep; i--) cJSON_DeleteItemFromArray(recs, i);
+      int ranked = 0;
+      int by_sim = prompt_rank_select(pr, recs, keep, &ranked);
+      for (int i = cJSON_GetArraySize(recs) - 1; i >= keep; i--)
+        cJSON_DeleteItemFromArray(recs, i);
       cJSON_AddBoolToObject(data, "prompt_truncated", 1);
-      cJSON_AddStringToObject(data, "prompt_truncated_note",
-        "only the first records are shown here; ALL record_count records were "
-        "fetched, stored and are served by /api/search/results");
+      if (by_sim) {
+        cJSON_AddStringToObject(data, "records_selected_by", "similarity_to_query");
+        cJSON_AddNumberToObject(data, "records_ranked", ranked);
+        cJSON_AddStringToObject(data, "prompt_truncated_note",
+          ranked < total
+            ? "the records shown are the most similar to the query among the "
+              "first records_ranked, best first; ALL record_count records were "
+              "fetched, stored and are served by /api/search/results"
+            : "the records shown are the most similar to the query, best "
+              "first; ALL record_count records were fetched, stored and are "
+              "served by /api/search/results");
+      } else
+        cJSON_AddStringToObject(data, "prompt_truncated_note",
+          "only the first records are shown here; ALL record_count records were "
+          "fetched, stored and are served by /api/search/results");
     }
   }
   cJSON_AddItemToObject(wrap, "services", svcs);
@@ -449,6 +498,135 @@ static void run_tasks(osint_request *rp, db_handle *db, llm_client *llm,
   free(p.jobs);
 }
 
+/* ── the follow-up round's menu ─────────────────────────────────────────
+ *
+ * A follow-up round used to be briefed with the PHASE-1 catalogue and sent
+ * with NO schema. Both were wrong for the same reason: phase 1's menu was
+ * chosen for the query as typed, and the whole point of a follow-up is that
+ * the investigation now knows things it did not — an email found in a breach
+ * row, a domain from a WHOIS answer. A "company" query's menu has no
+ * DOMAIN_WHOIS on it, so the model either could not chain to it or, with no
+ * schema, named it (or anything else, scheduled bulk feeds included) without
+ * having been shown what it does.
+ *
+ * So each round rebuilds the menu from the original query PLUS every entity
+ * known so far, falls back to registry order exactly as phase 1 does, sends
+ * the schema whose chain_services[].service enum is that menu's ids, and says
+ * in-band — to the model and on the run record — what drove it. */
+typedef struct {
+  char *menu;                 /* prefix line + catalogue, what the prompt gets */
+  char *schema;               /* NULL: no enum could be built (said on record) */
+  int semantic;               /* 1: ranked by the embedding index */
+  osint_catalogue_note cat;
+} round_menu;
+
+/* "query\nentities known so far: type: value; type: value…" — what the
+ * service index is asked about. Entities are listed once each, query
+ * entities first. Bounded: embed_bound_text cuts it again at
+ * JO_EMBED_MAX_CHARS, and a list that long has stopped describing a topic. */
+static char *round_drive_text(const char *query, cJSON *qents,
+                              cJSON *discovered, int *n_out) {
+  size_t cap = (query ? strlen(query) : 0) + 2048;
+  char *b = malloc(cap);
+  if (!b) return NULL;
+  int w = snprintf(b, cap, "%s\nentities known so far:", query ? query : "");
+  if (w < 0 || w >= (int)cap) { free(b); return NULL; }
+  const char *ents_at = b + w;          /* dedupe within the list, not the query */
+  int n = 0;
+  cJSON *lists[2] = { qents, discovered };
+  for (int l = 0; l < 2; l++) {
+    cJSON *e;
+    if (!lists[l] || !cJSON_IsArray(lists[l])) continue;
+    cJSON_ArrayForEach(e, lists[l]) {
+      cJSON *v = cJSON_GetObjectItem(e, "value");
+      cJSON *t = cJSON_GetObjectItem(e, "type");
+      if (!cJSON_IsString(v) || !v->valuestring[0]) continue;
+      const char *ty = cJSON_IsString(t) ? t->valuestring : "unknown";
+      if (strstr(ents_at, v->valuestring)) continue;   /* once each */
+      int k = snprintf(b + w, cap - (size_t)w, "%s %s: %s", n ? ";" : "", ty,
+                       v->valuestring);
+      if (k < 0 || k >= (int)cap - w) { b[w] = 0; break; }   /* bounded, see above */
+      w += k;
+      n++;
+    }
+  }
+  *n_out = n;
+  return b;
+}
+
+static void round_menu_build(round_menu *m, db_handle *db, llm_client *llm,
+                             const char *request_id, int round,
+                             const char *query, const char *rj,
+                             cJSON *qents, cJSON *discovered) {
+  memset(m, 0, sizeof *m);
+  int nent = 0;
+  char *drive = round_drive_text(query, qents, discovered, &nent);
+
+  /* The same measured budget phase 1 uses, against THIS prompt: the results
+   * block is in the preamble now, so the menu gets what is left after it. */
+  long allow = 0;
+  size_t ctx_chars = llm_ctx_chars(llm, 2048);
+  if (ctx_chars > 0) {
+    char *probe = prompt_phase2(query, rj, "");
+    size_t preamble = probe ? strlen(probe) : 0;
+    free(probe);
+    long room = (long)ctx_chars - (long)preamble - 512;   /* 512: prefix line */
+    allow = room > 0 ? (room * 9) / 10 : 0;
+    if (allow < 2048) allow = 2048;
+  }
+
+  char **ids = NULL; int nids = 0;
+  char *svcs = drive ? service_vec_catalogue_bounded(db, drive, 0, (size_t)allow,
+                                                     &m->cat, &ids, &nids)
+                     : NULL;
+  if (svcs && nids > 0) {
+    m->semantic = 1;
+    m->schema = osint_phase2_schema_dynamic_ids((const char *const *)ids, nids);
+  } else {
+    free(svcs);
+    service_vec_free_ids(ids, nids);
+    ids = NULL; nids = 0;
+    memset(&m->cat, 0, sizeof m->cat);
+    if (allow > 0) osint_set_catalogue_budget((int)allow);
+    svcs = osint_services_list_bounded(&m->cat);
+    m->schema = osint_phase2_schema_dynamic_limited(m->cat.shown);
+  }
+  service_vec_free_ids(ids, nids);
+
+  char prefix[512];
+  if (m->semantic)
+    snprintf(prefix, sizeof prefix,
+      "[MENU FOR FOLLOW-UP ROUND %d: %d of %d entity-pivot services, chosen by "
+      "embedding similarity to the original query plus the %d entit%s found "
+      "so far. Only services listed here may be named in chain_services.]\n",
+      round, m->cat.shown, m->cat.total, nent, nent == 1 ? "y" : "ies");
+  else
+    snprintf(prefix, sizeof prefix,
+      "[MENU FOR FOLLOW-UP ROUND %d: %d of %d entity-pivot services in "
+      "registry order — the service index was unavailable, so this menu was "
+      "NOT chosen from the entities found so far. Only services listed here "
+      "may be named in chain_services.]\n",
+      round, m->cat.shown, m->cat.total);
+  size_t pl = strlen(prefix), sl = svcs ? strlen(svcs) : 0;
+  m->menu = malloc(pl + sl + 1);
+  if (m->menu) {
+    memcpy(m->menu, prefix, pl);
+    if (sl) memcpy(m->menu + pl, svcs, sl);
+    m->menu[pl + sl] = 0;
+  }
+  free(svcs);
+  free(drive);
+  fprintf(stderr, "[pipeline] %s round %d menu: %d of %d services (%s, %d "
+                  "entities), %s\n", request_id, round, m->cat.shown,
+          m->cat.total, m->semantic ? "semantic" : "registry order", nent,
+          m->schema ? "enum-constrained" : "UNCONSTRAINED (no schema)");
+}
+
+static void round_menu_free(round_menu *m) {
+  free(m->menu); free(m->schema);
+  m->menu = m->schema = NULL;
+}
+
 void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
                         const char *request_id, const char *query,
                         int max_rounds) {
@@ -468,6 +646,10 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
   if (max_rounds <= 0) max_rounds = 5;
 
   progress_set_phase(rp, "queued", 5);
+  /* One ranker per run: phase-2 rounds and the synthesis reuse the vectors
+   * the first view embedded. NULL (no embedding server) = positional views,
+   * exactly as before. See core/prompt_rank.h. */
+  prompt_rank *prank = prompt_rank_new(query);
 
   /* ── Phase 1: analysis ─────────────────────────────────────────────── */
   progress_set_phase(rp, "gpt_analyzing", 15);
@@ -489,11 +671,27 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
    * costs today, then hand the catalogue whatever the server's real context
    * leaves over. The measurement is done on every call, so the preamble can
    * grow again without anyone having to remember this comment exists. */
+  /* The routing examples nearest this query (plus the spine) when an
+   * embedding server is up, else NULL = all of them, as before. Chosen first
+   * so the preamble measured below is the preamble actually sent: whatever
+   * the retrieval saves goes to the service catalogue. See core/fewshot.h. */
+  fewshot_note fsn;
+  char *fsblock = fewshot_select(db, query, &fsn);
+  if (fsblock) {
+    char d[300];
+    snprintf(d, sizeof d,
+      "the analysis model was shown %d of %d routing examples: the %d whose "
+      "query is nearest this one by embedding similarity, plus %d always "
+      "included (multi-entity, typos)", fsn.chosen, fsn.total,
+      fsn.by_similarity, fsn.spine);
+    progress_stage_note(rp, "analysis", "fewshot_examples_selected", d);
+    fprintf(stderr, "[pipeline] %s %s\n", request_id, d);
+  }
   long allow = 0;
   size_t ctx_chars = llm_ctx_chars(llm, 2048);     /* 2048 reserved for the answer */
   size_t preamble = 0;
   if (ctx_chars > 0) {
-    char *probe = prompt_analysis(query, "");
+    char *probe = prompt_analysis_with(query, "", fsblock);
     preamble = probe ? strlen(probe) : 0;
     free(probe);
     /* 90% of what is left, so a tokenizer that does slightly worse than the
@@ -530,7 +728,8 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
     }
     svcs = osint_services_list_bounded(&cat);
   }
-  char *p1 = prompt_analysis(query, svcs ? svcs : "");
+  char *p1 = prompt_analysis_with(query, svcs ? svcs : "", fsblock);
+  free(fsblock);
   /* The size of the request we are about to make, on the record. The analysis
    * call failed for months with "request (207353 tokens) exceeds the available
    * context size (16384 tokens)" and the only place that number existed was
@@ -656,12 +855,18 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
    * working model genuinely found no entity, the user is owed the distinction
    * between "one service was the right answer" and "one service is all we
    * could manage". */
+  /* Type "question": JP_CORPUS_LOOKUP then routes it through the service index
+   * to EVERY scheduled source related by meaning (no count cap, a similarity
+   * floor) and reads those sources' stored records — scheduled feeds cannot
+   * be dispatched on a question, but their records answer it. Without an
+   * embedding server it is the same single keyword search as before. */
   if (tasks.n == 0 && query && *query) {
-    add_task(&tasks, &executed, "JP_CORPUS_LOOKUP", query, "keyword");
+    add_task(&tasks, &executed, "JP_CORPUS_LOOKUP", query, "question");
     progress_stage_error(rp, "services_assigned", "no_entities_extracted",
-      "no entities came out of the analysis stage, so no service could be "
-      "routed to one; falling back to a single JP_CORPUS_LOOKUP keyword "
-      "search over the stored corpus using the raw query text");
+      "no entities came out of the analysis stage, so no pivot could be "
+      "dispatched; falling back to JP_CORPUS_LOOKUP over the stored corpus, "
+      "routed to the related sources by meaning when the service index can "
+      "answer, else a keyword search on the raw query text");
   }
   assign_services(rp, &tasks);
 
@@ -681,16 +886,34 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
     int pct = 60 + round * 6; if (pct > 85) pct = 85;
     progress_set_phase(rp, "followup_analyzing", pct);
 
-    char *rj = results_view_for_prompt(results);   /* labelled, bounded view */
-    char *p2 = prompt_phase2(query, rj, svcs ? svcs : "");
+    char *rj = results_view_for_prompt(results, prank);   /* labelled, bounded view */
+    round_menu rm;
+    round_menu_build(&rm, db, llm, request_id, round, query, rj, qents,
+                     discovered);
+    char *p2 = prompt_phase2(query, rj, rm.menu ? rm.menu : "");
     free(rj);
     char *m2 = prompt_to_messages(p2);
     free(p2);
+    { char stage[32], d[400];
+      snprintf(stage, sizeof stage, "followup_round_%d", round);
+      snprintf(d, sizeof d,
+        rm.semantic
+          ? "the model was shown %d of %d entity-pivot services for this round, "
+            "selected by embedding similarity to the original query plus the "
+            "entities discovered so far; it could only chain to those%s"
+          : "the model was shown %d of %d entity-pivot services for this round "
+            "in registry order (the service index was unavailable), not a menu "
+            "chosen from the entities discovered so far%s",
+        rm.cat.shown, rm.cat.total,
+        rm.schema ? "" : " — and no schema could be built, so its choice was "
+                         "not constrained to that menu");
+      progress_stage_note(rp, stage, "followup_menu", d); }
     llm_status p2st = LLM_ERR_BAD_REQUEST;
     long p2http = 0;
-    char *p2raw = m2 ? llm_chat_ex(llm, m2, NULL, 2048, 0.2, llm_timeout_ms(), &p2st,
-                                   &p2http) : NULL;
+    char *p2raw = m2 ? llm_chat_ex(llm, m2, rm.schema, 2048, 0.2, llm_timeout_ms(),
+                                   &p2st, &p2http) : NULL;
     free(m2);
+    round_menu_free(&rm);
     cJSON *ph2 = extract_json(p2raw);
     /* Per ROUND, not once for the loop. A run that pivots successfully for two
      * rounds and then loses the model has done two thirds of an investigation,
@@ -778,7 +1001,7 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
    * schema. Any failure falls back to the counts template. */
   char *synth_llm = NULL;
   {
-    char *rj = results_view_for_prompt(results);   /* labelled, bounded view */
+    char *rj = results_view_for_prompt(results, prank);   /* labelled, bounded view */
     char *ps = rj ? prompt_synthesis(query, rj) : NULL;
     free(rj);
     char *ms = ps ? prompt_to_messages(ps) : NULL;
@@ -934,6 +1157,13 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
   if (analysis) cJSON_Delete(analysis);
   strset_free(&executed);
   intel_sink_free(&sink);          /* make() heap-allocates; nothing freed it */
+  if (prank)
+    fprintf(stderr, "[pipeline] %s prompt record selection: %s, %ld text(s) "
+                    "embedded\n", request_id,
+            prompt_rank_active(prank) ? "similarity to query"
+                                      : "positional (embedding failed)",
+            prompt_rank_sent(prank));
+  prompt_rank_free(prank);
   db_worker_close(&own);           /* no-op if we fell back to shared_db */
   fprintf(stderr, "[pipeline] %s done: %d svc, %d ok, %d round(s)%s\n",
           request_id, total, ok, round + 1,
@@ -941,6 +1171,10 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
 }
 
 char *osint_suggest(llm_client *llm, const char *query) {
+  return osint_suggest_db(NULL, llm, query);
+}
+
+char *osint_suggest_db(db_handle *db, llm_client *llm, const char *query) {
   /* Native /completion path (raw few-shot prompt + GBNF), NOT llm_chat:
      prompt_suggestions() is a completion-style few-shot prompt. Routed
      through the chat template, gpt-oss's harmony scaffolding primes channel
@@ -948,10 +1182,32 @@ char *osint_suggest(llm_client *llm, const char *query) {
      into dot-spam. Raw /completion has no harmony wrapper, so the grammar
      agrees with the model's natural continuation. */
   char *p = prompt_suggestions(query);
-  char *out = llm_complete(llm, p, grammar_load("suggestions"), 1024, 0.3, 20000);
+  const char *grammar = grammar_load("suggestions");
+  /* The exact-response cache (core/llmcache.h): off unless
+   * JO_LLM_CACHE_TTL_SEC is set, and then keyed on the model the server says
+   * it serves plus every byte of the request that shapes the answer. */
+  char model[256], key[65] = "";
+  int cacheable = db && p && llmcache_ttl() > 0 &&
+                  llmcache_model(llm, model, sizeof model) == 0;
+  char *out = NULL;
+  if (cacheable) {
+    char params[160];
+    snprintf(params, sizeof params,
+             "completion|max_tokens=1024|temperature=0.3|grammar=%016llx",
+             vecindex_hash(grammar ? grammar : ""));
+    llmcache_key_prompt(p, params, key);
+    cacheable = key[0] != 0;
+    if (cacheable) out = llmcache_get(db, model, key);
+  }
+  int hit = out != NULL;
+  if (!out) out = llm_complete(llm, p, grammar, 1024, 0.3, 20000);
   free(p);
   cJSON *arr = extract_json(out);            /* tolerant; may be [...] too */
   if (!arr && out) arr = cJSON_Parse(out);
+  /* Only an answer that parsed into suggestions is worth reusing; a broken
+   * one cached would be served broken for the whole TTL. */
+  if (cacheable && !hit && arr && cJSON_IsArray(arr) && cJSON_GetArraySize(arr) > 0)
+    llmcache_put(db, model, key, out);
   free(out);
   cJSON *result = cJSON_CreateArray();
   if (arr && cJSON_IsArray(arr)) {

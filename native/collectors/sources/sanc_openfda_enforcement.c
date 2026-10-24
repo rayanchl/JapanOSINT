@@ -1,6 +1,6 @@
 /* openFDA drug enforcement (recall) reports.
  *
- * Endpoint : https://api.fda.gov/drug/enforcement.json?limit=100
+ * Endpoint : https://api.fda.gov/drug/enforcement.json?limit=1000&skip=0
  * Format   : JSON, {"meta":{"results":{"skip","limit","total"}}, "results":[…]}.
  * Verified : HTTP 200, meta.results.total 17,832; sample record "Kalman Health & Wellness, Inc.
  *            dba Essential Wellness Pharma", Peoria IL US, Class II, Terminated, event_id 72241.
@@ -14,23 +14,46 @@
  *            rely on openFDA to make decisions regarding medical care". This is used as a
  *            corporate-conduct signal alongside financial-regulator actions, nothing more.
  *
- * Notes    : the URL is used EXACTLY as verified. meta.results.total supports skip/limit paging
- *            (skip caps at 25,000; walk further with date-range filters) and
+ * Notes    : meta.results.total supports skip/limit paging, and
  *            device/enforcement.json and food/enforcement.json share this schema if the fleet
  *            wants them later.
+ *
+ * PAGED 2026-10-12. The note above used to end "the URL is used EXACTLY as
+ * verified" and say that total "supports skip/limit paging" — a capability
+ * named and not used. One request for `limit=100` stored 100 of the 18,002
+ * reports meta.results.total declares, daily, forever: the seventh discard
+ * shape (tools/audit_url_limits.py), with the shortfall carried on every row
+ * as `upstream_total` where anyone could have compared it. Measured
+ * 2026-10-12: `limit=1000` is honoured and `skip` works to the API's documented
+ * ceiling of 25,000 (26,000 is a 400 naming it), so 18,002 records are 19
+ * pages of 1,000 and the whole set fits inside that ceiling with room. If this
+ * corpus grows past 25,000, the walk will stop at the ceiling and disclose it;
+ * the remedy is then a date-range filter, as the note always said.
  */
 #include "sanc_common.inc"
+#include "lib/pagewalk.h"
 
-static int run(const source_ctx *ctx, intel_sink *sink) {
-  cJSON *doc = sanc_http_json(ctx, "https://api.fda.gov/drug/enforcement.json?limit=100",
-                              NULL, 40000, "openfda-enforcement");
-  if (!doc) return -1;
+#define FDA_URL "https://api.fda.gov/drug/enforcement.json?limit=1000&skip=0"  /* exhaustive-ok: walked by pw_walk/pw_walk_max below, which advances the offset or page this URL carries */
+/* 18,002 reports at 1,000 a page = 19; 26 is both headroom and the API's own
+ * skip ceiling of 25,000, past which a page is a 400 rather than data. */
+#define FDA_PAGE_MAX 26  /* exhaustive-ok: page ceiling handed to pw_walk_max(); a stop at it files a collector-truncation-notice */
 
+/* pw_fetch_fn: this family fetches through sanc_http_json for its UA and
+ * error logging. */
+static cJSON *fda_fetch(const source_ctx *ctx, const char *url, void *ud) {
+  (void)ud;
+  return sanc_http_json(ctx, url, NULL, 40000, "openfda-enforcement");
+}
+
+static int fda_page(const source_ctx *ctx, intel_sink *sink, const char *sid,
+                    cJSON *doc, void *ud, int *seen) {
+  (void)ctx; (void)sid; (void)ud;
   const cJSON *meta = cJSON_GetObjectItem(
       cJSON_GetObjectItem(doc, "meta"), "results");
   const cJSON *total = cJSON_GetObjectItem(meta, "total");
 
   cJSON *results = cJSON_GetObjectItem(doc, "results");
+  *seen = cJSON_IsArray(results) ? cJSON_GetArraySize(results) : 0;
   int n = 0;
   const cJSON *r;
   cJSON_ArrayForEach(r, results) {
@@ -111,8 +134,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(bj);
     free(pj);
   }
-  cJSON_Delete(doc);
-  fprintf(stderr, "[openfda-enforcement] emitted %d\n", n);
+  return n;
+}
+
+static int run(const source_ctx *ctx, intel_sink *sink) {
+  if (pw_walk_max(ctx, sink, "openfda-enforcement-reports", FDA_URL, fda_fetch,
+                  fda_page, NULL, FDA_PAGE_MAX) < 0)
+    return -1;
   return 0;
 }
 
@@ -121,7 +149,7 @@ static const source_def sanc_openfda_enforcement_def = {
   .name = "openFDA drug enforcement (recall) reports",
   .update_interval_sec = 86400, .run = run,
   .category = "safety", .type = "api",
-  .url = "https://api.fda.gov/drug/enforcement.json?limit=100",
+  .url = FDA_URL,
   .description = "FDA regulatory enforcement reports naming the firm, the hazard classification and the reason for the recall — a corporate-conduct signal alongside financial-regulator actions.",
   .license = "openFDA: public domain data, no warranty. Do not rely on openFDA to make decisions regarding medical care.",
   .layer = NULL, .free_tier = 1,

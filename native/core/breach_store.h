@@ -20,13 +20,22 @@ typedef struct breach_store breach_store;
  * and begins the first batch transaction. Returns NULL on error. */
 breach_store *breach_store_open(db_handle *db);
 
-/* Upsert one datapoint keyed by the non-reversible keyid ("<type>:<sha1prefix>").
- * `value` is the cleartext identifier for email/username/phone and MUST be NULL
- * for passwords (hash-only — plaintext never enters the DB). `hash` is the full
- * SHA-1 hex. Batches internally; commits every BREACH_BATCH rows. 0 on success. */
+/* Upsert one datapoint keyed by keyid ("<type>:<SHA1>|<source>"). The SHA-1 is
+ * UNSALTED and so dictionary-reversible for identifiers — and `value` stores
+ * the cleartext identifier for email/username/phone anyway (FTS substring
+ * search over it is the feature; docs/breach-check-pipeline.md §2a). `value`
+ * MUST be NULL for passwords (hash-only — plaintext never enters the DB).
+ * `hash` is the full SHA-1 hex; `lookup_hash` the keyed HMAC hash or NULL.
+ * Batches internally; commits every BREACH_BATCH rows. 0 on success. */
 int breach_store_put(breach_store *s, const char *keyid, const char *type,
                      const char *value, const char *source_id, const char *hash,
-                     int has_secret, long long count);
+                     const char *lookup_hash, int has_secret, long long count);
+
+/* breach_items.lookup_hash (the keyed HMAC identifier hash — see
+ * breach_lookup_hash() in breach_index.h; NULL when no master key was set at
+ * ingest, and for passwords) plus its partial index. Idempotent; called by
+ * breach_store_open(). */
+void breach_store_migrate(db_handle *db);
 
 /* Commit the final batch, rebuild the FTS index over the loaded rows, restore
  * durable pragmas, and free s. Returns 0 on success. */
@@ -34,9 +43,14 @@ int breach_store_finish(breach_store *s);
 
 /* Search materialized breach datapoints. `q` is a full-text term matched against
  * breach_fts (value); `type` optionally filters (email/username/phone/password).
- * At least one of q/type must be non-empty. Returns a malloc'd JSON string
- * {query,type?,count,results:[{keyid,type,value,source_id,has_secret,count}]} —
- * metadata only, never leaked secrets. NULL on bad args / error. Caller frees. */
-char *breach_search(db_handle *db, const char *q, const char *type, int limit);
+ * At least one of q/type must be non-empty. One page of `limit` (<=0 → 50,
+ * max 500) rows from `offset`, in rowid order. Returns a malloc'd JSON string
+ * {query,type?,count,shown,offset,limit,total,total_is_floor,has_more,
+ *  next_offset?,results:[{keyid,type,value,source_id,has_secret,count}]} —
+ * `total` is exact up to 100,000 matches and a floor past that
+ * (total_is_floor). Metadata only, never leaked secrets. NULL on bad args /
+ * error. Caller frees. */
+char *breach_search(db_handle *db, const char *q, const char *type, int limit,
+                    long long offset);
 
 #endif

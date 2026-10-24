@@ -48,7 +48,13 @@ static const hp_source HP3B34_FDSNEVENT[] = {
     .record_type = "seismic-event",
     .tags = "\"sensor\",\"seismic\",\"hazard\",\"fdsn\",\"event-catalogue\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
-    .url = "https://eida.ethz.ch/fdsnws/event/1/query?format=text&nodata=404&orderby=time&limit=1000",
+    /* `orderby=time` is FDSN's newest-first, which puts every new event at the
+     * HEAD of the collection a 47-page walk is reading: one arrival mid-walk
+     * shifts the boundaries and the walk re-reads one record and skips another
+     * (CLAUDE.md's worst shape, visible only as a collision). Ascending puts
+     * arrivals at the TAIL, where the walk has not been. Measured accepted on
+     * this host 2026-10-21; its oldest event is ECOS-09's year-0250 entry. */
+    .url = "https://eida.ethz.ch/fdsnws/event/1/query?format=text&nodata=404&orderby=time-asc&limit=1000",
     .csv_comment = "#",
     .csv_delim = "pipe",
     .csv_no_header = 1,
@@ -57,7 +63,7 @@ static const hp_source HP3B34_FDSNEVENT[] = {
     .interval = 86400,
     .lat_key = "col2",
     .lon_key = "col3",
-    .page_max = 20,
+    .page_max = 52,   /* ~46,620 events (offset bisection, 2026-10-21) = 47 pages of 1,000, +5 headroom */
     .page_param = "offset",
     .page_size = 1000,
     .page_start = 1,
@@ -79,7 +85,13 @@ static const hp_source HP3B34_FDSNEVENT[] = {
     .record_type = "seismic-event",
     .tags = "\"sensor\",\"seismic\",\"hazard\",\"fdsn\",\"event-catalogue\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
-    .url = "https://eida.gein.noa.gr/fdsnws/event/1/query?format=text&nodata=404&orderby=time&limit=1000",
+    /* This service REFUSES an unbounded query with HTTP 400 and answers a
+     * bounded one: measured 2026-10-21, a one-week window returned five real
+     * events (`noa2024aaaak|2024-01-01T00:00:28…`). So it needs a window, and
+     * a rolling one rather than a frozen date — 30 days back, re-rendered
+     * every run, with the records' own origin time as the date. Ascending for
+     * the same drift reason as the ETHZ row. */
+    .url = "https://eida.gein.noa.gr/fdsnws/event/1/query?format=text&nodata=404&starttime={date:%Y-%m-%d:-30}&orderby=time-asc&limit=1000",
     .csv_comment = "#",
     .csv_delim = "pipe",
     .csv_no_header = 1,
@@ -88,38 +100,7 @@ static const hp_source HP3B34_FDSNEVENT[] = {
     .interval = 86400,
     .lat_key = "col2",
     .lon_key = "col3",
-    .page_max = 20,
-    .page_param = "offset",
-    .page_size = 1000,
-    .page_start = 1,
-    .timeout_ms = 120000,
-    .title_keys = "col12,col10",
-    .description = "UNPROBED. FDSN event/1: one pipe-delimited row per located event "
-      "with event id, origin time, latitude, longitude, depth, the "
-      "contributing agency and catalogue, magnitude and magnitude type, "
-      "and the region name. Each data centre authoritative for its own "
-      "region, so the national catalogues carry events the global feeds "
-      "never list. Host and /fdsnws/ base are proven live by an "
-      "existing wired row on this host; the path and schema are fixed "
-      "by the FDSN specification. Walked by the specification's own "
-      "limit/offset, whose offset is 1-based." },
-
-  { .id = "JO34_FDSNEVT_EIDA_KOERI_BOUN_EDU_TR", .name = "KOERI, Bogazici University, Turkey — FDSN event catalogue",
-    .name_ja = "トルコ KOERI 地震カタログ（FDSN）",
-    .category = "surveillance", .portal = "https://eida.koeri.boun.edu.tr",
-    .record_type = "seismic-event",
-    .tags = "\"sensor\",\"seismic\",\"hazard\",\"fdsn\",\"event-catalogue\"",
-    .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
-    .url = "https://eida.koeri.boun.edu.tr/fdsnws/event/1/query?format=text&nodata=404&orderby=time&limit=1000",
-    .csv_comment = "#",
-    .csv_delim = "pipe",
-    .csv_no_header = 1,
-    .date_keys = "col1",
-    .id_keys = "col0",
-    .interval = 86400,
-    .lat_key = "col2",
-    .lon_key = "col3",
-    .page_max = 20,
+    .page_max = 20,   /* 20,000 events per 30-day window; Greek seismicity runs a few thousand a month */
     .page_param = "offset",
     .page_size = 1000,
     .page_start = 1,
@@ -141,7 +122,11 @@ static const hp_source HP3B34_FDSNEVENT[] = {
     .record_type = "seismic-event",
     .tags = "\"sensor\",\"seismic\",\"hazard\",\"fdsn\",\"event-catalogue\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
-    .url = "https://service.scedc.caltech.edu/fdsnws/event/1/query?format=text&nodata=404&orderby=time&limit=1000",
+    /* Ascending for the same reason as the ETHZ row above, and here it is load
+     * bearing: this catalogue is read over a CYCLE, so a newest-first order
+     * would shift the page boundaries under a walk that resumes hours later.
+     * Measured accepted 2026-10-21; its oldest event is 1932-01-01. */
+    .url = "https://service.scedc.caltech.edu/fdsnws/event/1/query?format=text&nodata=404&orderby=time-asc&limit=1000",
     .csv_comment = "#",
     .csv_delim = "pipe",
     .csv_no_header = 1,
@@ -150,7 +135,8 @@ static const hp_source HP3B34_FDSNEVENT[] = {
     .interval = 86400,
     .lat_key = "col2",
     .lon_key = "col3",
-    .page_max = 20,
+    .page_max = 200,   /* >=200,000 events: offset 200,000 answers with a 1987 event (2026-10-21). The service times out at offset 1,000,000, so the depth below that is UNMEASURED, not absent */
+    .page_resume = 1,  /* so 200 pages a run walks the catalogue forward instead of re-reading its newest 20,000 daily */
     .page_param = "offset",
     .page_size = 1000,
     .page_start = 1,
@@ -166,36 +152,6 @@ static const hp_source HP3B34_FDSNEVENT[] = {
       "by the FDSN specification. Walked by the specification's own "
       "limit/offset, whose offset is 1-based." },
 
-  { .id = "JO34_FDSNEVT_WS_ICGC_CAT", .name = "ICGC, Catalonia — FDSN event catalogue",
-    .name_ja = "カタルーニャ ICGC 地震カタログ（FDSN）",
-    .category = "surveillance", .portal = "https://ws.icgc.cat",
-    .record_type = "seismic-event",
-    .tags = "\"sensor\",\"seismic\",\"hazard\",\"fdsn\",\"event-catalogue\"",
-    .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ws.icgc.cat/fdsnws/event/1/query?format=text&nodata=404&orderby=time&limit=1000",
-    .csv_comment = "#",
-    .csv_delim = "pipe",
-    .csv_no_header = 1,
-    .date_keys = "col1",
-    .id_keys = "col0",
-    .interval = 86400,
-    .lat_key = "col2",
-    .lon_key = "col3",
-    .page_max = 20,
-    .page_param = "offset",
-    .page_size = 1000,
-    .page_start = 1,
-    .timeout_ms = 120000,
-    .title_keys = "col12,col10",
-    .description = "UNPROBED. FDSN event/1: one pipe-delimited row per located event "
-      "with event id, origin time, latitude, longitude, depth, the "
-      "contributing agency and catalogue, magnitude and magnitude type, "
-      "and the region name. Each data centre authoritative for its own "
-      "region, so the national catalogues carry events the global feeds "
-      "never list. Host and /fdsnws/ base are proven live by an "
-      "existing wired row on this host; the path and schema are fixed "
-      "by the FDSN specification. Walked by the specification's own "
-      "limit/offset, whose offset is 1-based." },
 };
 
 HP_REGISTER_TABLE(HP3B34_FDSNEVENT)

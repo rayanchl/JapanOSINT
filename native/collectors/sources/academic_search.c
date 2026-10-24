@@ -453,7 +453,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def academic_search_def = {
-  .id = "ACADEMIC_SEARCH", .collector = "osint",
+  .id = "ACADEMIC_SEARCH", .collector = "osint_" "news",
   .name = "Academic Search", .name_ja = "学術検索",
   .update_interval_sec = 0, .run = run,
   .category = "news", .type = "api",

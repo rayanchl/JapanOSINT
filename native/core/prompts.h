@@ -30,6 +30,12 @@
  * failure. */
 char *prompt_analysis(const char *query, const char *services_list);
 
+/* prompt_analysis() with the routing examples supplied by the caller — a
+ * block in fewshot_static_block()'s format, normally fewshot_select()'s
+ * retrieval. NULL = every example (exactly prompt_analysis()). */
+char *prompt_analysis_with(const char *query, const char *services_list,
+                           const char *examples);
+
 /* Phase 2 service-chaining prompt over Phase 1 results JSON. `results_json`
  * is fenced as untrusted (it is what third-party services returned, and this
  * prompt decides the NEXT outbound calls); NULL services_list ->
@@ -65,6 +71,14 @@ char *prompt_entity_extraction(const char *title, const char *body,
  * llm_complete (raw /completion path). Caller frees. */
 char *prompt_entity_dedup(const char *type, const char *canon_a,
                           const char *canon_b);
+
+/* The standing SECURITY RULE followed by `value` inside a BEGIN/END fence
+ * named `name` and carrying a fresh random id, exactly as the builders in
+ * prompts.c fence their untrusted inputs. For prompts assembled elsewhere
+ * that embed text a third party controls — a re-fetched upstream body, a
+ * scraped page — so that text is DATA to the model rather than instructions.
+ * The value's bytes are unchanged. Caller frees; NULL on OOM. */
+char *prompt_fence_untrusted(const char *name, const char *value);
 
 /* Returns the cached GBNF text for one of
  * "osint_analysis" / "entity_extraction" / "page_analysis" / "suggestions"

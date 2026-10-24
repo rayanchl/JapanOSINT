@@ -229,7 +229,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def data_extractor_def = {
-  .id = "DATA_EXTRACTOR", .collector = "osint",
+  .id = "DATA_EXTRACTOR", .collector = "osint_" "cyber",
   .name = "Data Extractor", .name_ja = "データ抽出",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",

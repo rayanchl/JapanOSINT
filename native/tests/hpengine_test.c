@@ -13,6 +13,7 @@
  * are covered too. */
 #include "../lib/hpengine.h"
 #include "../lib/jsonlist.h"
+#include "../lib/pagewalk.h"   /* jo_page_max — 18d derives the ceiling, not a literal */
 #include "../lib/feedlib.h"
 #include "../lib/csv.h"
 #include "../core/httpclient.h"
@@ -87,6 +88,9 @@ static char g_call_hdrs[16][512];
  * cache on the path answering for a page it never fetched, and the one retry
  * that asks it to go back to the origin. */
 #define FX_304_UNLESS_NOCACHE 1304
+/* Milliseconds every stub request takes — for the detail TIME budget, which
+ * nothing else in this harness can exercise. 0 everywhere else. */
+static int  g_fx_delay_ms = 0;
 
 static void fx_reset(void) { g_nfx = 0; g_ncalls = 0; g_last_url[0] = 0;
                              g_last_body[0] = 0; g_last_hdrs[0] = 0;
@@ -103,6 +107,10 @@ int http_request(http_client *c, const char *method, const char *url,
                  int timeout_ms, int retries, http_response *out) {
   (void)c; (void)method; (void)timeout_ms; (void)retries;
   g_ncalls++;
+  if (g_fx_delay_ms > 0) {
+    struct timespec d = { g_fx_delay_ms / 1000, (long)(g_fx_delay_ms % 1000) * 1000000L };
+    nanosleep(&d, NULL);
+  }
   snprintf(g_last_url, sizeof g_last_url, "%s", url);
   snprintf(g_last_body, sizeof g_last_body, "%.*s", (int)body_len, body ? body : "");
   g_last_hdrs[0] = 0;
@@ -212,6 +220,29 @@ static int run_source(const char *id, const char *entity) {
   return d->run(&ctx, &sink);
 }
 
+/* The reading position a run stored (source.h's resume_out). `g_res_set` tells
+ * "stored nothing" apart from "was never asked", which is the difference
+ * between a completed cycle and a row that does not cycle at all. */
+static char g_res_out[1024];
+static int  g_res_set;
+static void res_capture(const struct source_ctx *ctx, const char *token) {
+  (void)ctx;
+  g_res_set = 1;
+  snprintf(g_res_out, sizeof g_res_out, "%s", token ? token : "");
+}
+static int run_source_resume(const char *id, const char *entity,
+                             const char *resume_in) {
+  g_ncap = 0;
+  g_res_set = 0;
+  g_res_out[0] = 0;
+  const source_def *d = find_def(id);
+  if (!d) { printf("FAIL  no such source %s\n", id); g_fail++; return -99; }
+  intel_sink sink = { .ctx = NULL, .emit = cap_emit };
+  source_ctx ctx = { .source_id = id, .entity = entity,
+                     .resume_in = resume_in, .resume_out = res_capture };
+  return d->run(&ctx, &sink);
+}
+
 /* ── the table under test ────────────────────────────────────────────────── */
 static const hp_source T[] = {
   /* One "lon,lat" field (CALIL's geocode), and the lat,lon order for the
@@ -286,6 +317,22 @@ static const hp_source T[] = {
   { .id = "T_PAGE_PARAM", .name = "offset pagination", .url = "https://x.test/po?q={q}",
     .array_path = "items", .title_keys = "name", .id_keys = "id",
     .page_param = "offset", .page_size = 2,
+    .record_type = "t-page", .free_tier = 1, .description = "d" },
+  /* A collection read over a CYCLE: the same offset walk, bounded to two pages
+   * a run, storing where it stopped (test 40). */
+  { .id = "T_RESUME", .name = "cycled offset pagination",
+    .url = "https://x.test/rz?all=1",
+    .array_path = "items", .title_keys = "name", .id_keys = "id",
+    .page_param = "offset", .page_size = 2, .page_max = 2, .page_resume = 1,
+    .interval = 3600,
+    .record_type = "t-page", .free_tier = 1, .description = "d" },
+  /* Same row with a date token: a stored URL would pin one day, so the engine
+   * must refuse to cycle it (test 40c). */
+  { .id = "T_RESUME_DATED", .name = "cycled walk with a date token",
+    .url = "https://x.test/rd?day={date:%Y-%m-%d}",
+    .array_path = "items", .title_keys = "name", .id_keys = "id",
+    .page_param = "offset", .page_size = 2, .page_max = 2, .page_resume = 1,
+    .interval = 3600,
     .record_type = "t-page", .free_tier = 1, .description = "d" },
   /* The same walk with a row-declared conditional header: it belongs to the
    * first request only (test 9f-sexies). */
@@ -760,12 +807,43 @@ static const hp_source T[] = {
     .interval = 3600, .record_type = "t-xmldeep", .free_tier = 1, .description = "d" },
   /* A POSTed search authenticated by header, with a detail hop: gBizINFO's
    * shape (X-hojinInfo-api-token). The hop must carry the token. */
-  { .id = "T_DEEP_HDR", .name = "detail hop with the row's headers",
+  { .id = "T_DEEP_HDR_POST", .name = "POSTed detail hop with the row's headers",
     .url = "https://x.test/hlist", .post_body = "{\"q\":\"{Q}\"}",
     .headers = { "X-Api-Token: tok-123", "User-Agent: jo-test/1 (ops@x.test)", NULL },
     .array_path = "items", .title_keys = "name", .id_keys = "num",
     .detail_url = "https://x.test/hdetail/{v}", .detail_key = "num", .detail_max = 1,
-    .record_type = "t-deephdr", .free_tier = 1, .description = "d" },
+    .record_type = "t-deephdr-post", .free_tier = 1, .description = "d" },
+  /* A header-authenticated row with a detail hop (the UK_CQC_PROVIDERS shape). */
+  { .id = "T_DEEP_HDR", .name = "header auth + detail", .url = "https://x.test/hl",
+    .key_env = "HP_TEST_DKEY", .headers = { "Ocp-Apim-Subscription-Key: {key}", NULL },
+    .array_path = "items", .title_keys = "name", .id_keys = "num",
+    .detail_url = "https://x.test/hd/{v}", .detail_key = "num",
+    .interval = 3600, .record_type = "t-deephdr", .free_tier = 1, .description = "d" },
+  /* A CSV row whose detail hop is keyed on a column. */
+  { .id = "T_CSV_DEEP", .name = "csv with a detail hop", .url = "https://x.test/cd.csv",
+    .mode = HP_CSV, .title_keys = "name", .id_keys = "id",
+    .detail_url = "https://x.test/cdd/{v}", .detail_key = "id",
+    .interval = 3600, .record_type = "t-csvdeep", .free_tier = 1, .description = "d" },
+  /* A CSV whose column IS the detail URL (GBFS systems.csv's Auto-Discovery URL). */
+  { .id = "T_CSV_WHOLE", .name = "csv column is the detail url", .url = "https://x.test/cw.csv",
+    .mode = HP_CSV, .title_keys = "name", .id_keys = "id",
+    .detail_url = "{v}", .detail_key = "disc",
+    .interval = 3600, .record_type = "t-csvwhole", .free_tier = 1, .description = "d" },
+  /* HTML anchors deepen on their resolved url. */
+  { .id = "T_HTML_DEEP", .name = "html anchors with a detail hop", .url = "https://x.test/hdp",
+    .mode = HP_HTML, .href_must = "/hrec/", .base = "https://x.test",
+    .detail_url = "{v}", .detail_key = "url",
+    .interval = 3600, .record_type = "t-htmldeep", .free_tier = 1, .description = "d" },
+  /* A detail hop that answers an HTML record page (the FAA N-number shape). */
+  { .id = "T_DEEP_HTMLKV", .name = "html label/value detail", .url = "https://x.test/kvl",
+    .array_path = "items", .title_keys = "name", .id_keys = "num",
+    .detail_url = "https://x.test/kvd/{v}", .detail_key = "num", .detail_html_kv = 1,
+    .interval = 3600, .record_type = "t-htmlkv", .free_tier = 1, .description = "d" },
+  /* No declared detail_max: the default count and the clock bound it. */
+  { .id = "T_DEEP_TIME", .name = "detail time budget", .url = "https://x.test/tl",
+    .array_path = "items", .title_keys = "name", .id_keys = "num",
+    .detail_url = "https://x.test/td/{v}", .detail_key = "num",
+    .interval = 3600, .record_type = "t-deeptime", .free_tier = 1, .description = "d" },
 };
 HP_REGISTER_TABLE(T)
 
@@ -819,6 +897,19 @@ static int cap_count(const char *rtype, const cap **first) {
 }
 #define NOTICE "collector-shape-notice"
 
+/* Did the run capture a record whose id_keys value was `id`? The engine keys a
+ * record's uid as "<source>|<id>", so the key's tail is the identity — which is
+ * what distinguishes "this run read records 5-8" from "it read 1-4 again". */
+static int g_cap_ids_has(const char *id) {
+  size_t n = strlen(id);
+  for (int i = 0; i < g_ncap; i++) {
+    const char *k = g_cap[i].key, *bar = strrchr(k, '|');
+    const char *tail = bar ? bar + 1 : k;
+    if (strlen(tail) == n && !strcmp(tail, id)) return 1;
+  }
+  return 0;
+}
+
 int main(void) {
   printf("hpengine test\n");
 
@@ -859,7 +950,7 @@ int main(void) {
   fx_reset();
   fx_add("/hlist", 200, "{\"items\":[{\"name\":\"A\",\"num\":\"7\"}]}");
   fx_add("/hdetail/7", 200, "{\"role\":\"chair\"}");
-  rc = run_source("T_DEEP_HDR", "acme");
+  rc = run_source("T_DEEP_HDR_POST", "acme");
   ok(rc == 0 && g_ncap == 1 && g_ncalls == 2 &&
      strstr(g_cap[0].props, "\"detail.role\":\"chair\"") != NULL &&
      !strstr(g_cap[0].props, "_detail_error"),
@@ -2009,7 +2100,13 @@ int main(void) {
    *      page 1. The walk stops there (every further page is the same bytes)
    *      and says how many pages it did not request. T_PAGE_PARAM has
    *      page_size=2, so page 1's two full records used to trigger a walk to
-   *      the 10-page ceiling, re-emitting the same two records ten times. */
+   *      the ceiling, re-emitting the same two records that many times.
+   *
+   *      The ceiling is read from jo_page_max() rather than written here. It
+   *      was 10 — a private constant in hpengine.c with no environment knob,
+   *      where the rest of the tree used 20 — and this assertion pinned that
+   *      10, so unifying the three ceilings failed a test that was checking a
+   *      number rather than the disclosure. Derived, it holds either way. */
   fx_reset();
   fx_add("/po?q=", 200, "{\"items\":[{\"name\":\"P1\",\"id\":\"1\"},{\"name\":\"P2\",\"id\":\"2\"}]}");
   rc = run_source("T_PAGE_PARAM", "x");
@@ -2019,11 +2116,16 @@ int main(void) {
      "18d: the repeated page's records are not re-emitted");
   ok(cap_count(NOTICE, &nt) == 1 && nt && strstr(nt->key, "shape:page-param-ignored:") != NULL,
      "18d: one page-param-ignored notice");
-  ok(nt && strstr(nt->title, "page 2 was byte-identical to page 1") != NULL &&
-           strstr(nt->props, "\"pages_skipped\":8") != NULL &&
-           strstr(nt->props, "\"page_ceiling\":10") != NULL &&
-           strstr(nt->props, "\"page_param\":\"offset\"") != NULL,
-     "18d: the notice states the repeated page, the pages skipped and the ceiling");
+  { char want_skip[48], want_ceil[48];
+    snprintf(want_skip, sizeof want_skip, "\"pages_skipped\":%d",
+             jo_page_max(NULL) - 2);
+    snprintf(want_ceil, sizeof want_ceil, "\"page_ceiling\":%d",
+             jo_page_max(NULL));
+    ok(nt && strstr(nt->title, "page 2 was byte-identical to page 1") != NULL &&
+             strstr(nt->props, want_skip) != NULL &&
+             strstr(nt->props, want_ceil) != NULL &&
+             strstr(nt->props, "\"page_param\":\"offset\"") != NULL,
+       "18d: the notice states the repeated page, the pages skipped and the ceiling"); }
   /* ...and a walk whose pages differ is untouched: no notice. */
   fx_reset();
   fx_add("offset=4", 404, NULL);      /* the upstream's end of the collection */
@@ -2851,9 +2953,99 @@ int main(void) {
   rc = run_source("T_XML_DEEP", "");
   {
     int pend = 0;
-    for (int i = 0; i < g_ncap; i++) if (strstr(g_cap[i].props, "_detail_pending")) pend++;
-    ok(rc == 0 && g_ncap == 3 && g_ncalls == 2 && pend == 2,
+    for (int i = 0; i < g_ncap; i++)
+      if (!strcmp(g_cap[i].rtype, "t-xmldeep") &&
+          strstr(g_cap[i].props, "\"_detail_pending\":true")) pend++;
+    const cap *dn = NULL;
+    int recs = cap_count("t-xmldeep", NULL);
+    int notes = cap_count("collector-truncation-notice", &dn);
+    ok(rc == 0 && recs == 3 && g_ncalls == 2 && pend == 2,
        "35: detail_max=1 on an XML row makes ONE detail request; the rest are marked pending");
+    /* 35b. The shortfall is a truncation notice, not just a per-record flag. */
+    ok(notes == 1 && dn && strstr(dn->key, "T_XML_DEEP|detail-truncation:") &&
+       strstr(dn->props, "\"detail_fetched\":1") &&
+       strstr(dn->props, "\"detail_pending\":2") &&
+       strstr(dn->props, "\"detail_budget_hit\":\"count\""),
+       "35b: un-deepened records are counted into ONE collector-truncation-notice (1 fetched, 2 pending)");
+  }
+  /* 35c. A budget that reaches every record files no notice at all. */
+  fx_reset();
+  fx_add("/list?q=", 200, "{\"items\":[{\"name\":\"A\",\"num\":\"1\"},{\"name\":\"B\",\"num\":\"2\"}]}");
+  fx_add("/detail/", 200, "{\"role\":\"x\"}");
+  rc = run_source("T_DEEP", "acme");
+  ok(rc == 0 && g_ncap == 2 && cap_count("collector-truncation-notice", NULL) == 0,
+     "35c: every record deepened -> no detail notice (a notice is never invented)");
+
+  /* 36. The detail hop carries the row's headers, {key} expanded. It passed
+   * NULL, so a header-authenticated row lost every hop to a 401. */
+  setenv("HP_TEST_DKEY", "s3cret", 1);
+  fx_reset();
+  fx_add("/hd/", 200, "{\"role\":\"registered\"}");
+  fx_add("/hl", 200, "{\"items\":[{\"name\":\"P\",\"num\":\"9\"}]}");
+  rc = run_source("T_DEEP_HDR", "");
+  ok(rc == 0 && g_ncalls == 2 && strstr(g_last_url, "/hd/9") != NULL &&
+     strstr(g_last_hdrs, "Ocp-Apim-Subscription-Key: s3cret") != NULL,
+     "36: the detail GET sends the row's own header with {key} expanded");
+  ok(strstr(g_last_hdrs, "Content-Type") == NULL,
+     "36: and no Content-Type on a bodiless GET");
+  ok(g_ncap == 1 && strstr(g_cap[0].props, "\"detail.role\":\"registered\"") != NULL,
+     "36: so the authenticated detail merges");
+  unsetenv("HP_TEST_DKEY");
+
+  /* 37. CSV records deepen (they were stamped pending and never hopped). */
+  fx_reset();
+  fx_add("/cdd/r2", 200, "{\"owner\":\"Bo\"}");
+  fx_add("/cdd/r1", 200, "{\"owner\":\"Al\"}");
+  fx_add("/cd.csv", 200, "id,name\nr1,one\nr2,two\n");
+  rc = run_source("T_CSV_DEEP", "");
+  ok(rc == 0 && cap_count("t-csvdeep", NULL) == 2 && g_ncalls == 3,
+     "37: a CSV row with detail_url makes one hop per record");
+  ok(strstr(g_cap[0].props, "\"detail.owner\":\"Al\"") != NULL &&
+     strstr(g_cap[1].props, "\"detail.owner\":\"Bo\"") != NULL &&
+     !strstr(g_cap[0].props, "_detail_pending"),
+     "37: the detail merges keyed on the CSV column; nothing is stamped pending");
+
+  /* 37b. A column holding the whole detail URL is used as-is, not encoded. */
+  fx_reset();
+  fx_add("/gbfs/a.json", 200, "{\"ttl\":60}");
+  fx_add("/cw.csv", 200, "id,name,disc\ns1,one,https://x.test/gbfs/a.json\n");
+  rc = run_source("T_CSV_WHOLE", "");
+  ok(rc == 0 && !strcmp(g_last_url, "https://x.test/gbfs/a.json") &&
+     g_ncap >= 1 && strstr(g_cap[0].props, "\"detail.ttl\":60") != NULL,
+     "37b: detail_url \"{v}\" with an absolute URL fetches that URL verbatim");
+
+  /* 37c. HTML anchors deepen on their resolved url; a non-JSON detail body is
+   * stamped as such rather than read as an empty detail. */
+  fx_reset();
+  fx_add("/hrec/2", 200, "<html>not json</html>");
+  fx_add("/hrec/1", 200, "{\"kind\":\"profile\"}");
+  fx_add("/hdp", 200, "<a href=\"/hrec/1\">Record one</a><a href=\"/hrec/2\">Record two</a>");
+  rc = run_source("T_HTML_DEEP", "");
+  ok(rc == 0 && cap_count("t-htmldeep", NULL) == 2 && g_ncalls == 3,
+     "37c: an HTML row with detail_url hops once per anchor");
+  ok(strstr(g_cap[0].props, "\"detail.kind\":\"profile\"") != NULL &&
+     strstr(g_cap[1].props, "detail body is not JSON") != NULL,
+     "37c: JSON merges; an HTML detail body is stamped, not passed off as empty");
+
+  /* 38. The TIME budget: 3 records, 600 ms per request, a 1 s clock armed at
+   * the first hop. Hops 1 and 2 start inside it, the third does not. */
+  setenv("JO_HP_DETAIL_SEC", "1", 1);
+  fx_reset();
+  fx_add("/td/", 200, "{\"ok\":1}");
+  fx_add("/tl", 200, "{\"items\":[{\"name\":\"a\",\"num\":\"1\"},"
+         "{\"name\":\"b\",\"num\":\"2\"},{\"name\":\"c\",\"num\":\"3\"}]}");
+  g_fx_delay_ms = 600;
+  rc = run_source("T_DEEP_TIME", "");
+  g_fx_delay_ms = 0;
+  unsetenv("JO_HP_DETAIL_SEC");
+  {
+    const cap *tn = NULL;
+    int notes = cap_count("collector-truncation-notice", &tn);
+    ok(rc == 0 && cap_count("t-deeptime", NULL) == 3 && g_ncalls == 3,
+       "38: the clock stops the hops (list + 2 detail requests, not 3)");
+    ok(notes == 1 && tn && strstr(tn->props, "\"detail_budget_hit\":\"time\"") &&
+       strstr(tn->props, "\"detail_pending\":1"),
+       "38: and the notice says the TIME budget bit, with 1 pending");
   }
 
   /* Two transactions of the SAME activity, differing only in later parts of the
@@ -3174,6 +3366,209 @@ int main(void) {
      "37: an image-only link keeps its alt text — a weak label is still a record");
   ok(g_ncap >= 4 && !strcmp(g_cap[1].link, "https://x.test/articles/-/409812"),
      "37: records keep first-appearance order and their resolved link");
+
+  /* 38. hp_describe_json says what a row DECLARES, in words a client can show:
+   * the mode and entity shape as names, the entity tokens the URL carries,
+   * the kind (pivot: takes an entity, no interval), the paging strategy, and
+   * whether a detail hop exists. An id this engine does not run is NULL, not
+   * an empty object — a client must be able to tell "not hpengine" from
+   * "hpengine with nothing declared". */
+  {
+    char *d = hp_describe_json("T_JSON");
+    ok(d != NULL, "38: describe returns JSON for a registered row");
+    ok(d && strstr(d, "\"mode\":\"json\""), "38: mode as a word");
+    ok(d && strstr(d, "\"want\":\"any\""), "38: want as a word");
+    ok(d && strstr(d, "\"kind\":\"pivot\""), "38: interval 0 + entity token = pivot");
+    ok(d && strstr(d, "\"entity_tokens\":[\"{q}\",\"{qd}\"]"), "38: entity tokens listed once each");
+    ok(d && strstr(d, "\"strategy\":\"single_request\""), "38: no paging declared = single_request");
+    ok(d && strstr(d, "\"url\":\"https://x.test/s?q={q}&d={qd}\""), "38: url template verbatim");
+    ok(d && strstr(d, "\"engine\":\"hpengine\""), "38: engine named");
+    free(d);
+    char *dd = hp_describe_json("T_DEEP");
+    ok(dd && strstr(dd, "\"detail_hop\":{\"declared\":true"), "38: detail hop declared");
+    free(dd);
+    ok(hp_describe_json("NOT_A_ROW") == NULL, "38: unknown id is NULL, not {}");
+    ok(hp_source_uses_entity("T_JSON") == 1 && hp_source_uses_entity("nope") == 0,
+       "38: uses_entity is 1 for a {q} row and 0 for an unknown id");
+    /* A cycling row has to describe itself as one: page_max is the size of a
+     * SLICE there, not of what the row reads, and a client shown only the
+     * number would describe a 5-million-item catalogue as 20 pages. */
+    char *dr = hp_describe_json("T_RESUME");
+    ok(dr && strstr(dr, "\"page_resume\":1") &&
+       strstr(dr, "reads the collection over a cycle"),
+       "38: a page_resume row says it reads over a cycle, not just page_max");
+    free(dr);
+    char *dn = hp_describe_json("T_PAGE_PARAM");
+    ok(dn && !strstr(dn, "page_resume"),
+       "38: and a row that does not cycle says nothing about it");
+    free(dn);
+  }
+
+  /* 40. A collection larger than one run's page budget is read over a CYCLE.
+   *     T_RESUME walks an offset parameter two pages a run over four pages of
+   *     two records. Three runs should read 4, then 4, then find the end —
+   *     and the third must CLEAR the position so the fourth starts over. */
+  fx_reset();
+  fx_add("offset=6", 200, "{\"items\":[{\"name\":\"g\",\"id\":\"7\"},{\"name\":\"h\",\"id\":\"8\"}]}");
+  fx_add("offset=4", 200, "{\"items\":[{\"name\":\"e\",\"id\":\"5\"},{\"name\":\"f\",\"id\":\"6\"}]}");
+  fx_add("offset=2", 200, "{\"items\":[{\"name\":\"c\",\"id\":\"3\"},{\"name\":\"d\",\"id\":\"4\"}]}");
+  fx_add("/rz?all=1", 200, "{\"items\":[{\"name\":\"a\",\"id\":\"1\"},{\"name\":\"b\",\"id\":\"2\"}]}");
+  rc = run_source_resume("T_RESUME", NULL, NULL);
+  ok(rc == 0 && cap_count("t-page", NULL) == 4,
+     "40: a cycling row reads its ceiling's worth on the first run");
+  ok(g_res_set && strstr(g_res_out, "offset=4") != NULL,
+     "40: and stores the page it did not reach");
+  { const cap *nt = NULL;
+    ok(cap_count("collector-truncation-notice", &nt) == 1 && nt &&
+       strstr(nt->props, "\"reads_over_a_cycle\":true") != NULL &&
+       strstr(nt->props, "\"resumed_this_run\":false") != NULL &&
+       strstr(nt->props, "offset=4") != NULL,
+       "40: the notice says it cycles, that this run did not resume, and where "
+       "the next one starts");
+    ok(nt && strstr(nt->title, "the next run continues the cycle") != NULL,
+       "40: and the TITLE says so, not just the properties — \"used 4 of 4\" "
+       "read alone is a ceiling nobody passes"); }
+
+  /* 40b. The second run continues where the first stopped — and must not walk
+   *      BACKWARDS, which is what resuming by URL alone does when the next
+   *      page is computed from page_start rather than from the page fetched. */
+  char saved[1024];
+  snprintf(saved, sizeof saved, "%s", g_res_out);
+  rc = run_source_resume("T_RESUME", NULL, saved);
+  ok(rc == 0 && cap_count("t-page", NULL) == 4,
+     "40b: the next run reads the next slice");
+  ok(g_cap_ids_has("5") && g_cap_ids_has("8") &&
+     !g_cap_ids_has("1") && !g_cap_ids_has("3"),
+     "40b: records 5-8, not 1-4 again and not 3-6 going backwards");
+  ok(g_res_set && strstr(g_res_out, "offset=8") != NULL,
+     "40b: and stores the page after the slice it read — it stopped at its own "
+     "ceiling, and cannot know the collection ends there without asking");
+
+  /* 40b-ii. The run that ASKS finds the end: an empty page is the upstream
+   *         saying so, and the position is CLEARED, which is what makes this a
+   *         cycle rather than a walk that parks at the end forever. */
+  /* Re-registered in specificity order: the matcher takes the FIRST fixture
+   * whose string appears in the URL, and "/rz?all=1" appears in every one of
+   * them — so the catch-all has to come last or it answers for offset=8 with
+   * page 1's body. */
+  fx_reset();
+  fx_add("offset=8", 200, "{\"items\":[]}");
+  fx_add("offset=6", 200, "{\"items\":[{\"name\":\"g\",\"id\":\"7\"},{\"name\":\"h\",\"id\":\"8\"}]}");
+  fx_add("offset=4", 200, "{\"items\":[{\"name\":\"e\",\"id\":\"5\"},{\"name\":\"f\",\"id\":\"6\"}]}");
+  fx_add("offset=2", 200, "{\"items\":[{\"name\":\"c\",\"id\":\"3\"},{\"name\":\"d\",\"id\":\"4\"}]}");
+  fx_add("/rz?all=1", 200, "{\"items\":[{\"name\":\"a\",\"id\":\"1\"},{\"name\":\"b\",\"id\":\"2\"}]}");
+  snprintf(saved, sizeof saved, "%s", g_res_out);
+  rc = run_source_resume("T_RESUME", NULL, saved);
+  ok(rc == 0 && cap_count("t-page", NULL) == 0 && g_res_set && g_res_out[0] == 0,
+     "40b-ii: the run that reaches the end stores nothing, so the next starts "
+     "the cycle over");
+
+  /* 40b-iii. A page that FAILS also clears the position — bookmarking a page
+   *          that answered 400 would retry that one page forever — but the
+   *          notice must not then claim the cycle completed. ENA answers 400 to
+   *          `offset=1000`, so that row reads 1,000 of millions every run; a
+   *          disclosure that reported a tidy completion for it would be false. */
+  fx_reset();
+  fx_add("offset=2", 400, NULL);
+  fx_add("/rz?all=1", 200, "{\"items\":[{\"name\":\"a\",\"id\":\"1\"},{\"name\":\"b\",\"id\":\"2\"}]}");
+  rc = run_source_resume("T_RESUME", NULL, NULL);
+  { const cap *nt = NULL;
+    ok(rc == 0 && g_res_set && g_res_out[0] == 0,
+       "40b-iii: a failed page clears the position rather than bookmarking a "
+       "page that is refused");
+    ok(cap_count("collector-truncation-notice", &nt) == 1 && nt &&
+       strstr(nt->props, "\"failed_page_status\":400") != NULL &&
+       strstr(nt->props, "NOT advanced") != NULL &&
+       strstr(nt->props, "completed the cycle") == NULL,
+       "40b-iii: and the notice says the position was not advanced, NOT that "
+       "the cycle completed"); }
+
+  /* 40c. A row whose URL carries a date token must not cycle: the stored URL
+   *      would pin one day forever. Refused, and nothing is stored. */
+  fx_reset();
+  fx_add("/rd?day=", 200, "{\"items\":[{\"name\":\"a\",\"id\":\"1\"},{\"name\":\"b\",\"id\":\"2\"}]}");
+  rc = run_source_resume("T_RESUME_DATED", NULL, NULL);
+  ok(rc == 0 && !g_res_set,
+     "40c: a {date…} row is refused the cycle and stores no position");
+
+  /* 40d. A stored position on a DIFFERENT host is dropped, not followed: a
+   *      reading position moves us through a collection, never to another
+   *      server. */
+  fx_reset();
+  fx_add("offset=2", 200, "{\"items\":[{\"name\":\"c\",\"id\":\"3\"},{\"name\":\"d\",\"id\":\"4\"}]}");
+  fx_add("/rz?all=1", 200, "{\"items\":[{\"name\":\"a\",\"id\":\"1\"},{\"name\":\"b\",\"id\":\"2\"}]}");
+  rc = run_source_resume("T_RESUME", NULL, "https://evil.test/rz?all=1&offset=4");
+  ok(rc == 0 && g_cap_ids_has("1"),
+     "40d: a position on another host is dropped and the run starts from the "
+     "row's own URL");
+  ok(strstr(g_last_url, "evil.test") == NULL,
+     "40d: and that host is never requested");
+
+  /* 40e. An ENTITY run ignores the position entirely: "what do we have on X"
+   *      answers from the start of X's results, not from page 37. */
+  rc = run_source_resume("T_RESUME", "somebody", saved);
+  ok(rc == 0 && g_cap_ids_has("1") && !g_res_set,
+     "40e: an entity run neither resumes nor stores a position");
+
+  /* 40f. $JO_PAGE_MAX reaches a row that declares its own ceiling, DOWNWARDS.
+   *      T_RESUME declares page_max = 2; under JO_PAGE_MAX=1 it must read one
+   *      page, not two. The engine used to resolve this as
+   *      `s->page_max > 0 ? s->page_max : jo_page_max(NULL)` — the knob
+   *      reaching only rows WITHOUT a ceiling — while hpengine.h's own comment
+   *      said page_max was "raised or lowered for the whole tree by
+   *      $JO_PAGE_MAX". The cost was not theoretical: it made
+   *      tools/audit_page_ceiling.py's shallow probe (which bounds a run by
+   *      setting this variable) walk 200 pages for every cycling row that
+   *      declares 200, so the one tool that measures ceilings could not
+   *      cheaply measure the rows most likely to be stuck at one. */
+  fx_reset();
+  fx_add("offset=2", 200, "{\"items\":[{\"name\":\"c\",\"id\":\"3\"},{\"name\":\"d\",\"id\":\"4\"}]}");
+  fx_add("/rz?all=1", 200, "{\"items\":[{\"name\":\"a\",\"id\":\"1\"},{\"name\":\"b\",\"id\":\"2\"}]}");
+  setenv("JO_PAGE_MAX", "1", 1);
+  rc = run_source_resume("T_RESUME", NULL, NULL);
+  ok(rc == 0 && cap_count("t-page", NULL) == 2 && g_ncalls == 1,
+     "40f: JO_PAGE_MAX=1 bounds a row whose own page_max is 2");
+  ok(g_res_set && strstr(g_res_out, "offset=2") != NULL,
+     "40f: and the cycle resumes from the page the brake stopped before");
+  unsetenv("JO_PAGE_MAX");
+  fx_reset();
+  fx_add("offset=2", 200, "{\"items\":[{\"name\":\"c\",\"id\":\"3\"},{\"name\":\"d\",\"id\":\"4\"}]}");
+  fx_add("/rz?all=1", 200, "{\"items\":[{\"name\":\"a\",\"id\":\"1\"},{\"name\":\"b\",\"id\":\"2\"}]}");
+  rc = run_source_resume("T_RESUME", NULL, NULL);
+  ok(rc == 0 && cap_count("t-page", NULL) == 4 && g_ncalls == 2,
+     "40f: with the variable unset the row's declared 2 pages are read again");
+
+  /* 41. detail_html_kv: an HTML record page's label/value cells merge under
+   *     "detail." — data-label cells, a <th>/<td> pair, entities decoded, a
+   *     repeated label indexed rather than overwritten, the empty-data-label
+   *     label column skipped. A page with no such cells is an error on the
+   *     record, not an empty detail. */
+  fx_reset();
+  fx_add("/kvd/A", 200,
+    "<html><table><caption>Aircraft</caption><tr><td data-label=\"\">Serial</td>"
+    "<td data-label=\"Serial Number\">R172 </td><td data-label=\"\">Exp</td>"
+    "<td data-label=\"Expiration Date\">08/31/2028</td></tr></table>"
+    "<table><tr><th>Owner</th><td>SMITH &amp; SONS <b>LLC</b></td></tr>"
+    "<tr><td data-label=\"Expiration Date\">07/05/2019</td></tr></table></html>");
+  fx_add("/kvd/B", 200, "<html><p>No record</p></html>");
+  fx_add("/kvl", 200, "{\"items\":[{\"num\":\"A\",\"name\":\"a\"},{\"num\":\"B\",\"name\":\"b\"}]}");
+  rc = run_source("T_DEEP_HTMLKV", "");
+  {
+    const cap *a = NULL, *b = NULL;
+    for (int i = 0; i < g_ncap; i++) {
+      if (strcmp(g_cap[i].rtype, "t-htmlkv")) continue;
+      if (!strcmp(g_cap[i].title, "a")) a = &g_cap[i];
+      if (!strcmp(g_cap[i].title, "b")) b = &g_cap[i];
+    }
+    ok(rc == 0 && a && strstr(a->props, "\"detail.Serial Number\":\"R172\"") &&
+       strstr(a->props, "\"detail.Expiration Date\":\"08/31/2028\"") &&
+       strstr(a->props, "\"detail.Expiration Date.1\":\"07/05/2019\"") &&
+       strstr(a->props, "\"detail.Owner\":\"SMITH & SONS LLC\"") &&
+       !strstr(a->props, "detail.Serial\"") && !strstr(a->props, "_detail_error"),
+       "41: detail_html_kv merges data-label cells and th/td pairs; a repeated label is indexed");
+    ok(b && strstr(b->props, "no label/value cells"),
+       "41: an HTML detail page with no label/value cells is an error on the record");
+  }
 
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;

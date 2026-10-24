@@ -78,6 +78,24 @@ CREATE TABLE IF NOT EXISTS collector_url_overrides (
     anomaly_id INTEGER,
     created_at TEXT NOT NULL DEFAULT (datetime('now'))
   );
+-- Per-source operator settings: a named knob, its value, and whether it is
+-- ACTIVE. Two columns rather than one because "off" and "unset" must be
+-- distinguishable: an operator who turns a setting off keeps the value they
+-- had tuned, and the next enable does not start from a guess.
+--
+-- The key set is NOT open. core/source_settings.c holds the whitelist with a
+-- type and bounds per key, and a PUT of an unknown key is refused — a free
+-- key/value store attached to every collector is a configuration surface
+-- nobody can audit, and a typo would read as a silently ignored setting.
+CREATE TABLE IF NOT EXISTS source_settings (
+    source_id  TEXT NOT NULL,
+    key        TEXT NOT NULL,
+    value      TEXT NOT NULL,
+    enabled    INTEGER NOT NULL DEFAULT 0,
+    updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_by TEXT,
+    PRIMARY KEY (source_id, key)
+  );
 CREATE TABLE IF NOT EXISTS collector_ttls (
     key        TEXT PRIMARY KEY,
     ttl_ms     INTEGER NOT NULL,
@@ -599,6 +617,12 @@ CREATE INDEX IF NOT EXISTS idx_apikeys_tenant ON tenant_api_keys(tenant_id);
 CREATE INDEX IF NOT EXISTS idx_audit_chain
       ON audit_events(tenant_id, chain_seq)
       WHERE row_hash IS NOT NULL;
+-- One row per (tenant, chain position): two audit writers that read the same
+-- chain tail cannot both append to it (core/audit.c retries the loser).
+-- Partial on chain_seq IS NOT NULL so legacy unchained rows are untouched.
+CREATE UNIQUE INDEX IF NOT EXISTS idx_audit_chain_seq_uniq
+      ON audit_events(tenant_id, chain_seq)
+      WHERE chain_seq IS NOT NULL;
 CREATE INDEX IF NOT EXISTS idx_audit_tenant_ts
       ON audit_events(tenant_id, ts DESC);
 CREATE INDEX IF NOT EXISTS idx_collector_cache_fetched
@@ -891,6 +915,13 @@ CREATE TABLE IF NOT EXISTS evidence (
 CREATE INDEX IF NOT EXISTS idx_evidence_item ON evidence(item_uid, captured_at DESC);
 -- Load-bearing: the insert is ON CONFLICT(content_sha256,item_uid) DO NOTHING.
 CREATE UNIQUE INDEX IF NOT EXISTS idx_evidence_sha ON evidence(content_sha256, item_uid);
+-- The chain tail (ORDER BY chain_seq DESC LIMIT 1 WHERE row_hash IS NOT NULL)
+-- is read on EVERY capture under evidence.c's process-wide mutex; without
+-- this it was a scan + sort of the whole table each time. The UNIQUE twin
+-- (idx_evidence_chain_seq_uniq) is created by evidence.c, not here: on a DB
+-- that already holds a forked chain it would fail and abort the schema.
+CREATE INDEX IF NOT EXISTS idx_evidence_chain
+  ON evidence(chain_seq) WHERE row_hash IS NOT NULL;
 
 -- Items 9/21 — geofence AOIs + entity watchlists.
 -- updated_at is load-bearing on both: alert_eval's rule cache keys its
@@ -1025,4 +1056,21 @@ CREATE TABLE IF NOT EXISTS source_sched_state (
   quarantined          INTEGER NOT NULL DEFAULT 0,
   quarantined_at       INTEGER,
   last_probe           INTEGER,
-  updated_at           INTEGER);
+  updated_at           INTEGER,
+  -- the cadence an adaptive row re-measured from its newest stored item
+  -- (core/scheduler.c); NULL = the declared interval stands. db.c adds it to
+  -- a database created before it existed.
+  freshness_interval   INTEGER);
+-- GET /api/sources/:id/summary — the small-model description of one source,
+-- cached by (source, a fingerprint of the facts it was shown, the model). A
+-- row is a GENERATED summary; the route never stores a failure here, it
+-- returns the llm status and the facts instead (core/sourceapi_summary.c).
+CREATE TABLE IF NOT EXISTS source_summary (
+    source_id    TEXT NOT NULL,
+    fingerprint  TEXT NOT NULL,
+    model        TEXT NOT NULL,
+    summary_json TEXT NOT NULL,
+    facts_used   INTEGER,
+    generated_at TEXT NOT NULL DEFAULT (datetime('now')),
+    PRIMARY KEY (source_id, fingerprint, model)
+  );

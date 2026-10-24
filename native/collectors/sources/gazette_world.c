@@ -243,7 +243,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def gazette_world_def = {
-  .id = "GAZETTE_WORLD", .collector = "osint",
+  .id = "GAZETTE_WORLD", .collector = "osint_" "government",
   .name = "World Official Gazettes",
   .name_ja = "世界 官報検索",
   .update_interval_sec = 0, .run = run,

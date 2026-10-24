@@ -27,6 +27,19 @@ on:
   pull_request:
   workflow_dispatch:
 
+# One run per branch at a time, and the newest push wins. Without this every
+# push to a PR branch ran the workflow TWICE (the push event and the
+# pull_request event, two macOS jobs each) and nothing cancelled a run whose
+# commit had already been superseded — measured 2026-10-20: 68 queued runs,
+# 136 macOS jobs ahead of a PR whose head was mergeable, hours behind five
+# free-plan macOS runners. The group is the branch name under both events
+# (head_ref on pull_request, ref_name on push), so the pull_request run that
+# follows a push by a few seconds supersedes the push run of the same commit.
+# main is never cancelled: a run there is the record of what merged.
+concurrency:
+  group: ci-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -63,7 +76,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
             libcurl4-openssl-dev libssl-dev libmecab-dev mecab zlib1g-dev \
-            mecab-ipadic-utf8
+            mecab-ipadic-utf8 ffmpeg
+        # ffmpeg: tests/unit/test_netjail.c decodes a real HLS frame through
+        # core/netjail.c's sandbox, and skips that step without it.
         # mecab-ipadic-utf8 is the dictionary MeCab needs at runtime. core/fts.c
         # degrades gracefully without it (g_init_failed, Latin passthrough), but
         # then the Japanese FTS path is never exercised at all, which is the
@@ -143,6 +158,40 @@ jobs:
         working-directory: native
         run: make audit-sources
 
+      # THE MANIFEST GATES, offline. Each reads docs/candidate-sources-batch*
+      # through tools/manifest.py and needs no network; they were run by hand
+      # and by nothing else. Wired in only as far as they pass on the commit
+      # that added them (2026-10-06) — a gate red on day one is a gate nobody
+      # reads.
+      #
+      # House rule 3: a row with no entity token and no interval never runs.
+      # 0 of 7,685 rows across 147 manifests; exit 1 on any such row, an
+      # ambiguous opt, or a malformed line.
+      - name: Manifest reachability (house rule 3)
+        working-directory: native
+        run: python3 tools/audit_batch_reachable.py --quiet ../docs/candidate-sources-batch*.txt
+
+      # Duplicate ids/endpoints against the binary's registry is only meaningful
+      # for a set NOT YET GENERATED into C — on a shipped manifest every row is
+      # its own DUP-ID. The step checked batch 37's staging set until main
+      # generated it (5d5e1f99, hp3b37_*.c), after which it failed 28 rows on
+      # their own C. No staging set is pending; run
+      #   python3 tools/batch_exclusions.py --bin ./bin/japanosint --check <new manifest>
+      # on the next one, and restore a step pointing at it while it stages.
+
+      # NOT GATING, deliberately and visibly. On 2026-10-06 this reports 104 of
+      # 7,685 rows "declare no pagination but look paged" — all of them in the
+      # batch 18 (96) and batch 19 (8) manifests, 29 in 18.portals alone. Those beats shipped long ago and
+      # CLAUDE.md is explicit that the C, not the manifest, is the maintained
+      # copy, so a flag here may already be fixed in the table (make
+      # audit-sources gates the C for `single-page`). Each needs a human read
+      # against its .c before this can gate; until then it is printed on every
+      # run instead of not at all.
+      - name: Manifest pagination (report only — 104 rows untriaged)
+        working-directory: native
+        continue-on-error: true
+        run: python3 tools/audit_batch_pagination.py ../docs/candidate-sources-batch*.txt
+
       # THE SERVER MUST STAY ANSWERABLE WHILE IT IS BUSY.
       #
       # Twice now a route has been found holding the single mongoose event
@@ -151,13 +200,16 @@ jobs:
       # were found by a human running a benchmark by hand, months apart, and
       # both had been true since the code was written. This checks the property
       # on every push: while three /api/status calls are in flight,
-      # /api/health must still answer inside a second. Post-fix it answers in
+      # /api/health must still answer inside half a second. Post-fix it answers in
       # 0.014 s, so the limit is not tight — a failure means a route went back
       # on the loop, not that the runner was busy. No network: the scheduler is
       # staggered out and the DB is a fresh schema.
       - name: Event loop stays free under load
         working-directory: native
-        run: tools/ci_concurrency_gate.sh ./bin/japanosint 1.0
+        # 0.5 s, not 1.0: a /api/status build now takes ~0.25 s, so a build back
+        # on the event loop would hold a probe behind up to three of them
+        # (~0.75 s) and slip under 1.0. Healthy probes measure ~0.01 s.
+        run: tools/ci_concurrency_gate.sh ./bin/japanosint 0.5
 
   # The race class this repo has already been bitten by — a strtok() cursor
   # shared between 8 scheduler workers and the HTTP thread, and transactions
@@ -166,9 +218,15 @@ jobs:
   # ThreadSanitizer, which is the offline half (tsan-sched drives real
   # collectors and would need network). Separate job because the TSan object
   # tree is a second full build.
+  # 90, not 60: the suite is 74 tests (48 on 2026-10-19 main, whose job took
+  # 37 min). Measured from the run that hit 60: build 2.5 min, ~28 s a test,
+  # test_alert_tenancy 17.5 min on its own (as on main: racer threads each
+  # seed the 48k-row registry), and test_service_vec reached at minute 42 —
+  # then cancelled inside it with 14 tests queued, a timeout and never a
+  # result. vecindex_items_state() halved that test; this is the headroom.
   thread-sanitizer:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 90
     env:
       DEBIAN_FRONTEND: noninteractive
     steps:

@@ -53,9 +53,28 @@ int  hostgate_acquire(const char *url, int max_wait_ms);
 /* Releases the slot taken by a hostgate_acquire that returned 1. */
 void hostgate_release(const char *url);
 
-/* Observability for /api/status: how many acquisitions timed out (i.e. how
- * often we exceeded a host's budget) and how many are in flight right now. */
+/* Observability for the scheduler heartbeat: how many acquisitions failed
+ * open — waited out their budget OR found the host table full of live hosts —
+ * and how many are in flight right now. */
 void hostgate_counters(long *out_waits, long *out_timeouts, long *out_inflight);
+
+/* The same, split by cause, plus table occupancy. */
+typedef struct {
+  long waits;        /* grants that had to wait                              */
+  long timeouts;     /* fail-opens: wait budget exhausted                    */
+  long table_full;   /* fail-opens: every slot held a live host              */
+  long inflight;
+  long hosts;        /* hosts holding a slot now                             */
+  long capacity;     /* slots                                                */
+  long evictions;    /* idle slots reclaimed for a new host                  */
+  long penalties;    /* hostgate_penalize() calls that landed                */
+} hostgate_stats_t;
+void hostgate_stats(hostgate_stats_t *out);
+
+/* The server told us to back off (Retry-After on a 429/503): no request to
+ * `url`'s host starts for `ms` (capped at 60 s), across every caller. Waiters
+ * wait it out rather than failing open, as for an override host. */
+void hostgate_penalize(const char *url, long ms);
 
 /* ── SSRF destination check ────────────────────────────────────────────────
  * This lives here, next to url_host(), because this file already owns "what
@@ -67,8 +86,9 @@ void hostgate_counters(long *out_waits, long *out_timeouts, long *out_inflight);
  *                               range (169.254.0.0/16, fe80::/10, and the
  *                               metadata hostnames). Loopback and RFC1918 are
  *                               ALLOWED here — llama-server is reached over
- *                               127.0.0.1 through this same http_client, and
- *                               LAN cameras are a shipped feature. Set
+ *                               127.0.0.1 through this same http_client.
+ *                               (Camera fetches are stricter — see the
+ *                               camera policy below.) Set
  *                               JO_HTTP_BLOCK_PRIVATE=1 to raise this to the
  *                               strict check for every collector fetch.
  *
@@ -127,10 +147,38 @@ int hostgate_addr_check_floor(const char *ip_text);
  * our own network. Call it AFTER resolution is needed and BEFORE connect(). */
 int hostgate_host_check(const char *host, int strict);
 
+/* ── camera / media destinations ───────────────────────────────────────────
+ * Camera URLs are NOT ours: shodan_api, insecam_scrape and friends write
+ * whatever their upstream reported into intel_items.properties, and the camera
+ * proxy, the stills pod and ffmpeg then dial it on behalf of any signed-in
+ * user. At the floor strength that let one poisoned record aim the server at
+ * 127.0.0.1 or the operator's LAN, with the proxy's "upstream <status>" error
+ * text acting as a port/status oracle. So these paths ALWAYS use the STRICT
+ * ruleset: loopback, RFC1918, metadata and link-local are refused, and there
+ * is no operator opt-in (JO_CAMERA_ALLOW_LAN existed and was removed on
+ * 2026-10-20 — this deployment reads public cameras only).
+ *
+ * hostgate_camera_url_check() takes any "scheme://host" (rtsp, rtmp, tcp …) —
+ * the CALLER pins the scheme set. `resolve` = 1 also resolves the name and
+ * judges every answer: for ffmpeg, which owns its socket, that is the only
+ * resolved-address check there is. curl paths pass 0 and rely on
+ * hostgate_camera_addr_check() in their CURLOPT_PREREQFUNCTION. */
+/* UNIT TESTS ONLY: admit loopback/LAN (never metadata or link-local) so a
+ * test can dial its own fixture server on 127.0.0.1. Nothing in the product
+ * calls it, and no environment variable or route reaches it. */
+void hostgate_camera_test_allow_lan(int on);
+int hostgate_camera_url_check(const char *url, int resolve);
+int hostgate_camera_addr_check(const char *ip_text);
+
 /* Textual (lowercased, port/userinfo/brackets stripped) host of `url` into
  * out[], including loopback — url_host()'s politeness exemption is NOT applied.
  * Returns 1 on success, 0 if there is no parseable host. */
 int hostgate_url_host(const char *url, char *out, size_t cap);
+/* The per-host minimum gap, in ms, this process paces `host` at: the override
+ * table (reddit 30 s, news.google.com 1.5 s, …) by longest dotted-suffix
+ * match, else the global default gap. Read-only; for the source detail API, so
+ * a row's pacing is a fact on its page rather than a comment in this file. */
+int hostgate_pace_ms(const char *host);
 
 /* True when `a` and `b` have the same (lowercased) host. Used to decide
  * whether a URL rewrite may keep carrying the original request's credentials.

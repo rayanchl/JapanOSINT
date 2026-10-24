@@ -52,8 +52,12 @@ username index, a phone index, and the corpus metadata catalog.
 Two-tier access, so a user can actually **see their own leaked password** (the whole point) without
 building an anonymous plaintext-lookup engine (the WeLeakInfo model — illegal and catastrophic):
 
-- **Identifier → hash.** Emails/usernames/phones are indexed by `SHA-1` only; the anonymous lookup
-  path returns **hit / count / which-breach**, never plaintext.
+- **Identifier → hash (on-disk shards).** Emails/usernames/phones are shard-keyed by a hash; the
+  anonymous lookup path returns **hit / count / which-breach**, never plaintext. *This line used to
+  say "`SHA-1` only" and imply that was the whole story. It is not: an unsalted SHA-1 of an email
+  address is reversible by dictionary in seconds, and the materialized DB copy keeps the identifier
+  in cleartext on purpose. See [§2a](#2a-what-is-actually-stored-in-cleartext-2026-10-06) for what
+  is stored where.*
 - **Leaked secret → encrypted at rest.** The actual leaked password/credential is stored
   **AES-256-GCM encrypted** (HKDF from `SECRETS_MASTER_KEY`, mirroring `keysapi.c`). It is decrypted
   and returned **only** on an authenticated, **ownership-verified** request for the requester's *own*
@@ -97,6 +101,62 @@ On-disk shard record (identity types): `SHA1HEX \t breach_id \t enc_hex|-`; pass
 `breach_id` is the ingest source label, so a hit returns *which* breach directly — no join needed
 (the `breach-corpus.json` manifest supplies human titles/dates for display). Note: the existing
 `password_checker.c` persists full digests in its body JSON — keep that off the served path (§7).
+
+---
+
+## 2a. What is actually stored in cleartext (2026-10-06)
+
+The table above describes the shard files. The **materialized** copy (`--ingest … --materialize`,
+`core/breach_store.c`) is a different store with different properties, and the doc used to describe
+only the first. Stated plainly:
+
+| Where | What | Reversible? |
+|---|---|---|
+| `breach_items.value` | the **normalized identifier in cleartext** (email / username / phone; NULL for passwords) | it *is* the plaintext |
+| `breach_fts` | an FTS5 index **over `value`** — substring search across identifiers | indexes the plaintext |
+| `entities` / `entity_mentions` (tenant `ES_BREACH_TENANT`) | the cleartext identifier as an entity, for "entity → its breaches" | plaintext |
+| `breach_items.hash`, `breach_items.keyid` | **unsalted SHA-1** of the identifier (keyid = `type:SHA1\|source`) | yes, by dictionary — SHA-1 of every address on a list is seconds of CPU |
+| `breach_monitors.value_hash` | unsalted SHA-1 of each monitored identifier (matches `breach_items.hash`) | yes, by dictionary |
+| `breach_items.lookup_hash` (**new**) | **HMAC-SHA256** under a key HKDF-derived from `SECRETS_MASTER_KEY` (info `JapanOSINT.breach_index.lookup.v1`) over `type\0value`; NULL when no key was configured at ingest, and for passwords | not without the server key |
+| shard files `data/breach/<type>/<xx>.idx` (legacy) | unsalted SHA-1 → breach id → `enc(secret)` | yes, by dictionary |
+| shard files `data/breach/<type>/k/<xx>.idx` (**new**) | HMAC lookup hash → breach id → `enc(secret)`; written instead of the SHA-1 shard whenever a master key is configured | not without the server key |
+| leaked secrets | AES-256-GCM, key HKDF-derived from `SECRETS_MASTER_KEY` (info `…breach_index.v1`) | only through the audited reveal |
+| password corpus | SHA-1 + count (Pwned Passwords ships pre-hashed; it is public) | as public as HIBP |
+
+**Why the cleartext is there.** It is a feature, not an accident: `/api/breach/search`, the intel
+adapter (`?source=<breach>`) and domain monitors (`breach_items.value_domain`) all search or
+match *over identifiers* — substring search and "everything at `@acme.co.jp`" cannot be done over a
+hash of any kind. Every one of those doors is gated to the platform operator (`breach_gate()` in
+`core/httpd.c`).
+
+**What changed (safe, migration-safe, nothing deleted).**
+- With `SECRETS_MASTER_KEY` set, ingest writes the shard line under the keyed HMAC hash in
+  `<type>/k/`, and stores it in `breach_items.lookup_hash` (indexed). Lookups read **both** the
+  keyed shard and the legacy SHA-1 shard, so a corpus ingested before the key existed stays found
+  exactly where it is; nothing is rewritten. Without a key the SHA-1 path is unchanged.
+- Revealing a leaked secret (`GET /api/intel/items/:uid/reveal`) now requires `?reason=` and writes
+  a chained `audit_events` row (`platform`, action `breach.reveal`, target the uid, payload
+  `{requester, requester_email, reason}`) **before** decrypting; if the row cannot be written,
+  nothing is revealed.
+
+**The remaining decision — for the owner, not made here.** The keyed hash only buys privacy once
+the reversible copies go. The options, roughly in order of cost:
+1. **Keep cleartext + FTS** (status quo) and say so: the materialized DB is identifier-plaintext
+   and must be protected as such (disk encryption, backups, who has DB access). The SHA-1 columns
+   add nothing an attacker with the DB does not already have from `value`.
+2. **Drop the SHA-1 columns, keep cleartext.** Backfill `lookup_hash` from `value` (possible
+   because `value` is cleartext), move monitors to a keyed `value_lkey`, then drop `hash` / the
+   SHA-1 inside `keyid`. Removes the dictionary-reversible copies of *rows whose plaintext is
+   already beside them* — a small gain alone, but a prerequisite for 3.
+3. **Drop cleartext + FTS.** Exact lookup only (keyed hash), no substring search, no domain
+   monitors unless `value_domain` is kept (it is low-sensitivity on its own), no identifier entity
+   chips, and the reveal path must resolve through the keyed shard instead of `value`. This is the
+   only option under which "non-reversible" is a true sentence about the database.
+4. **Re-key the legacy shards** (`<type>/<xx>.idx` → `<type>/k/`) — needs the original
+   identifiers, i.e. either `value` (before option 3) or a re-ingest from staging.
+
+Until one is chosen, read every "non-reversible" elsewhere in this doc and in code comments as
+"non-reversible on the shard path under a configured key", not as a property of the database.
 
 ---
 
@@ -158,7 +218,10 @@ The credential index is large and write-once-read-many, so keep it **out of** `j
   `data/breach/<type>/<xx>.idx`, where `<xx>` is the first 2 hex of the SHA-1 (256 files per
   type). Records are `SHA1HEX \t breach_id \t enc_hex|-` for the identity types and
   `SHA1HEX \t count` for passwords. Lookup opens one shard and scans it. `$JO_BREACH_DIR`
-  overrides the root.
+  overrides the root; otherwise it is `$JO_REPO_ROOT/data/breach` (runtime env, else the
+  Makefile's compiled-in repo root — the old fallback was a path on one developer's laptop).
+  With `SECRETS_MASTER_KEY` set, identity rows go to `data/breach/<type>/k/<xx>.idx` keyed by the
+  HMAC lookup hash instead (§2a); lookup reads the keyed and the legacy shard.
 - **Planned upgrade (NOT built — do not cite this as existing):** a sorted binary store — for each
   SHA-1 prefix a sorted array of `{suffix(35 hex→bytes), breach_bitset}`, binary-searched and
   memory-mapped read-only, at `data/breach/<type>/<prefix>.bin`. This is the HIBP model and is
@@ -208,7 +271,12 @@ each `run()` normalizes `ctx->entity`, hashes, does the shard lookup, emits `int
    verification) may see them.
 4. **Data-subject rights** — support delete-by-hash and a suppression list.
 5. **Access control + audit** — multi-tenant quotas already exist; every check writes an
-   `audit_events` row (already hash-chained).
+   `audit_events` row (already hash-chained). *As built:* the operator reveal
+   (`/api/intel/items/:uid/reveal`) requires `?reason=` and writes `breach.reveal` before
+   decrypting (fails closed); `/api/breach/search` pages with `offset`/`limit` and reports
+   `total` (a floor past 100,000, `total_is_floor`), `shown`, `has_more`, `next_offset`, and runs
+   off the event loop, as does `POST /api/breach-monitors/:id/rescan`. At most one corpus rescan
+   runs at a time; a second gets `409 rescan_in_progress` (or `meta.scan: "busy"` on create).
 6. **Lawful acquisition only.** Because everything is pre-downloaded and self-hosted, *where the data
    comes from* is the whole legal exposure. Ingest only: the Pwned Passwords bulk file (licensed for
    this), commercial feeds under contract, your own breach data, or datasets you are otherwise

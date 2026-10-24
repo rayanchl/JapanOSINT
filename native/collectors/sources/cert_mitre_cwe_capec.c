@@ -258,7 +258,7 @@ static int run(const source_ctx *c, intel_sink *s) {
 }
 
 static const source_def cert_cwe_api_def = {
-  .id = "mitre-cwe-weakness-api", .collector = "cyber",
+  .id = "mitre-cwe-weakness-api", .collector = "osint_" "cyber",
   .name = "MITRE CWE Weakness API",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",

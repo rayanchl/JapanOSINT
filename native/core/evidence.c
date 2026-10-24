@@ -457,18 +457,64 @@ static void warn_budget(long long used, long long budget) {
 
 /* ── chain + capture ──────────────────────────────────────────────────────── */
 
-static void chain_tail(db_handle *db, char prev[65], long long *seq) {
+/* Tail of the (global) evidence chain. Reads the partial index
+ * idx_evidence_chain (schema.sql) — without it this was a full scan plus a
+ * sort of the whole evidence table on EVERY capture, under g_chain, which is
+ * the mutex every collector thread's http_request() funnels through. */
+static int chain_tail(db_handle *db, char prev[65], long long *seq) {
+  snprintf(prev, 65, "GENESIS");
+  *seq = 1;
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(db->h,
         "SELECT row_hash,chain_seq FROM evidence WHERE row_hash IS NOT NULL "
-        "ORDER BY chain_seq DESC LIMIT 1", -1, &s, NULL) != SQLITE_OK) return;
-  if (sqlite3_step(s) == SQLITE_ROW) {
+        "ORDER BY chain_seq DESC LIMIT 1", -1, &s, NULL) != SQLITE_OK) return -1;
+  int rc = sqlite3_step(s);
+  if (rc == SQLITE_ROW) {
     const char *rh = ctext(s, 0);
     if (rh) snprintf(prev, 65, "%s", rh);
     *seq = sqlite3_column_int64(s, 1) + 1;
   }
   sqlite3_finalize(s);
+  return (rc == SQLITE_ROW || rc == SQLITE_DONE) ? 0 : -1;
 }
+
+/* ONE row per chain position, across processes.
+ *
+ * g_chain serialises the tail-read/insert pair inside this process only. The
+ * CLI (`--run`, `--ingest`), the audit tools' scratch runs and the server can
+ * all open the same database file, and two processes reading tail N and both
+ * writing N+1 fork the chain — which evidence_verify() then reports as
+ * tampering, forever, because the reaper never deletes a row. So:
+ *   - the tail is read inside BEGIN IMMEDIATE (the database write lock), so
+ *     another connection cannot interleave between read and insert;
+ *   - UNIQUE(chain_seq) makes a fork impossible regardless; the loser fails
+ *     SQLITE_CONSTRAINT and retries against the new tail.
+ * The UNIQUE index is created here, not in schema.sql: a database that
+ * ALREADY holds a forked chain would fail the CREATE, and schema.sql failing
+ * aborts boot. Here it degrades to a warning and the lock alone. Once per
+ * connection — the statement is a no-op after the first, but not free. */
+static sqlite3 *g_uniq_done_for;      /* guarded by g_chain */
+static void chain_ensure_unique(db_handle *db) {
+  if (g_uniq_done_for == db->h) return;
+  g_uniq_done_for = db->h;
+  char *err = NULL;
+  if (sqlite3_exec(db->h,
+        "CREATE UNIQUE INDEX IF NOT EXISTS idx_evidence_chain_seq_uniq "
+        "ON evidence(chain_seq) WHERE chain_seq IS NOT NULL",
+        NULL, NULL, &err) != SQLITE_OK) {
+    fprintf(stderr, "[evidence] cannot enforce one row per chain_seq (%s) — "
+                    "the chain already holds a fork; /api/evidence/verify "
+                    "will show where. Writes still serialise on the lock.\n",
+            err ? err : "?");
+    sqlite3_free(err);
+  }
+}
+
+static int ev_exec(sqlite3 *h, const char *sql) {
+  return sqlite3_exec(h, sql, NULL, NULL, NULL);
+}
+
+#define EV_CHAIN_TRIES 8
 
 int evidence_capture(db_handle *db, const char *item_uid, const char *source_id,
                      const char *url, const char *method,
@@ -517,55 +563,80 @@ int evidence_capture(db_handle *db, const char *item_uid, const char *source_id,
   const char *ct = (content_type && *content_type)
                      ? content_type : sniff_ct(body, body_len);
 
-  int rc = EV_CAPTURED;
+  int rc = EV_ERR;
   pthread_mutex_lock(&g_chain);
-  char prev[65] = "GENESIS";
-  long long seq = 1;
-  chain_tail(db, prev, &seq);
-
-  char rh[65];
-  row_hash_of(rel, ts, seq, (long long)body_len, sha, ct, id, uid, prev,
-              rhj, method, rurl, shj, (long long)status, source_id, rh);
-
-  sqlite3_stmt *s;
-  if (sqlite3_prepare_v2(db->h,
-        "INSERT INTO evidence(id,item_uid,source_id,captured_at,request_url,"
-        "request_method,request_headers,response_status,response_headers,"
-        "content_sha256,content_bytes,content_type,blob_path,prev_hash,"
-        "row_hash,chain_seq) VALUES"
-        "(?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16) "
-        "ON CONFLICT(content_sha256,item_uid) DO NOTHING",
-        -1, &s, NULL) == SQLITE_OK) {
-    sqlite3_bind_text (s,  1, id,        -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text (s,  2, uid,       -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text (s,  3, source_id, -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text (s,  4, ts,        -1, SQLITE_TRANSIENT);
-    if (rurl) sqlite3_bind_text(s, 5, rurl, -1, SQLITE_TRANSIENT);
-    else      sqlite3_bind_null(s, 5);
-    if (method) sqlite3_bind_text(s, 6, method, -1, SQLITE_TRANSIENT);
-    else        sqlite3_bind_null(s, 6);
-    if (rhj) sqlite3_bind_text(s, 7, rhj, -1, SQLITE_TRANSIENT);
-    else     sqlite3_bind_null(s, 7);
-    sqlite3_bind_int64(s, 8, (sqlite3_int64)status);
-    if (shj) sqlite3_bind_text(s, 9, shj, -1, SQLITE_TRANSIENT);
-    else     sqlite3_bind_null(s, 9);
-    sqlite3_bind_text (s, 10, sha, -1, SQLITE_TRANSIENT);
-    sqlite3_bind_int64(s, 11, (sqlite3_int64)body_len);
-    sqlite3_bind_text (s, 12, ct,  -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text (s, 13, rel, -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text (s, 14, prev, -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text (s, 15, rh,   -1, SQLITE_TRANSIENT);
-    sqlite3_bind_int64(s, 16, (sqlite3_int64)seq);
-    if (sqlite3_step(s) != SQLITE_DONE) {
-      fprintf(stderr, "[evidence] insert: %s\n", sqlite3_errmsg(db->h));
-      rc = EV_ERR;
-    } else if (sqlite3_changes(db->h) == 0) {
-      rc = EV_SKIP_DUP;      /* same bytes already recorded for this uid */
+  chain_ensure_unique(db);
+  for (int attempt = 0; attempt < EV_CHAIN_TRIES; attempt++) {
+    /* A caller already inside a transaction on this connection gets a
+     * SAVEPOINT; its outer transaction holds or will take the write lock. */
+    int sp = 0;
+    if (ev_exec(db->h, "BEGIN IMMEDIATE") != SQLITE_OK) {
+      if (sqlite3_get_autocommit(db->h) ||
+          ev_exec(db->h, "SAVEPOINT ev_chain") != SQLITE_OK) {
+        fprintf(stderr, "[evidence] chain lock busy: %s\n", sqlite3_errmsg(db->h));
+        break;
+      }
+      sp = 1;
     }
-    sqlite3_finalize(s);
-  } else {
-    fprintf(stderr, "[evidence] prepare insert: %s\n", sqlite3_errmsg(db->h));
+    char prev[65];
+    long long seq = 1;
+    int src = chain_tail(db, prev, &seq) == 0 ? SQLITE_OK : SQLITE_ERROR;
+
+    char rh[65];
+    row_hash_of(rel, ts, seq, (long long)body_len, sha, ct, id, uid, prev,
+                rhj, method, rurl, shj, (long long)status, source_id, rh);
+
+    sqlite3_stmt *s;
+    if (src == SQLITE_OK && sqlite3_prepare_v2(db->h,
+          "INSERT INTO evidence(id,item_uid,source_id,captured_at,request_url,"
+          "request_method,request_headers,response_status,response_headers,"
+          "content_sha256,content_bytes,content_type,blob_path,prev_hash,"
+          "row_hash,chain_seq) VALUES"
+          "(?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16) "
+          "ON CONFLICT(content_sha256,item_uid) DO NOTHING",
+          -1, &s, NULL) == SQLITE_OK) {
+      sqlite3_bind_text (s,  1, id,        -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text (s,  2, uid,       -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text (s,  3, source_id, -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text (s,  4, ts,        -1, SQLITE_TRANSIENT);
+      if (rurl) sqlite3_bind_text(s, 5, rurl, -1, SQLITE_TRANSIENT);
+      else      sqlite3_bind_null(s, 5);
+      if (method) sqlite3_bind_text(s, 6, method, -1, SQLITE_TRANSIENT);
+      else        sqlite3_bind_null(s, 6);
+      if (rhj) sqlite3_bind_text(s, 7, rhj, -1, SQLITE_TRANSIENT);
+      else     sqlite3_bind_null(s, 7);
+      sqlite3_bind_int64(s, 8, (sqlite3_int64)status);
+      if (shj) sqlite3_bind_text(s, 9, shj, -1, SQLITE_TRANSIENT);
+      else     sqlite3_bind_null(s, 9);
+      sqlite3_bind_text (s, 10, sha, -1, SQLITE_TRANSIENT);
+      sqlite3_bind_int64(s, 11, (sqlite3_int64)body_len);
+      sqlite3_bind_text (s, 12, ct,  -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text (s, 13, rel, -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text (s, 14, prev, -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text (s, 15, rh,   -1, SQLITE_TRANSIENT);
+      sqlite3_bind_int64(s, 16, (sqlite3_int64)seq);
+      src = sqlite3_step(s);
+      if (src == SQLITE_DONE) {
+        src = SQLITE_OK;
+        /* 0 changes = same bytes already recorded for this uid */
+        rc = sqlite3_changes(db->h) == 0 ? EV_SKIP_DUP : EV_CAPTURED;
+      }
+      sqlite3_finalize(s);
+    } else if (src == SQLITE_OK) {
+      src = sqlite3_errcode(db->h);
+    }
+    if (src == SQLITE_OK &&
+        ev_exec(db->h, sp ? "RELEASE ev_chain" : "COMMIT") == SQLITE_OK)
+      break;
+    if (sp) { ev_exec(db->h, "ROLLBACK TO ev_chain"); ev_exec(db->h, "RELEASE ev_chain"); }
+    else if (!sqlite3_get_autocommit(db->h)) ev_exec(db->h, "ROLLBACK");
     rc = EV_ERR;
+    /* Only a lost race on chain_seq is worth another lap: another process took
+     * the position, and re-reading the tail fixes it. */
+    if ((src & 0xFF) != SQLITE_CONSTRAINT) {
+      fprintf(stderr, "[evidence] insert: %s\n", sqlite3_errmsg(db->h));
+      break;
+    }
   }
   /* The blob occupies disk whether or not the row was new (a re-capture after
    * an eviction legitimately restores the bytes under the surviving row). */

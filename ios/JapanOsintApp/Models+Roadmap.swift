@@ -31,6 +31,12 @@ struct CaseSummary: Codable, Identifiable, Hashable {
     /// Served per-row by `GET /api/cases` (casesapi.c:563) so the list can
     /// show a pin count on first paint without opening each case.
     let item_count: Int?
+    /// The signed-in user's role on this case's roster — "lead",
+    /// "contributor" or "viewer" — or nil when they are not on it. Every row
+    /// of `GET /api/cases` carries it, as does `GET /api/cases/:id`, so the
+    /// list can offer status changes exactly where the server accepts them
+    /// (`CaseAccess.canWrite`).
+    let my_case_role: String?
 
     var isOpen: Bool { status == "open" }
 }
@@ -92,6 +98,10 @@ struct CaseDetail: Codable, Hashable {
     let closed_at: String?
     let item_counts: [String: Int]?
     let members: [CaseMemberRef]?
+    /// The signed-in user's role on this case, or nil (see `CaseSummary`).
+    /// Carried into the list row a PATCH reply replaces, so a contributor's
+    /// status buttons do not vanish after their first change.
+    let my_case_role: String?
 }
 
 struct CasesEnvelope: Decodable { let data: [CaseSummary]; let page: PageInfo? }
@@ -276,7 +286,17 @@ struct AlertPreviewMeta: Decodable, Hashable {
     let truncated: Bool?
     let scanned: Int?
     let since: String?
-    let skipped: String?          // e.g. "llm_mode_unsupported"
+    let skipped: String?          // e.g. "semantic_index_unavailable"
+    /// Present for a semantic ("Describe it in words") predicate: the
+    /// threshold and KNN size the backtest used, and — when it was skipped —
+    /// why the vector index could not answer.
+    let semantic: AlertPreviewSemantic?
+}
+struct AlertPreviewSemantic: Decodable, Hashable {
+    let threshold: Double?
+    let k: Int?
+    let window: String?
+    let reason: String?
 }
 
 // ── Item 9: areas of interest ──────────────────────────────────────────────
@@ -593,17 +613,113 @@ struct CameraStill: Codable, Identifiable, Hashable {
     let width: Int?
     let height: Int?
     /// nil means "cannot tell" (no image decoder on the server), NOT "no
-    /// change". The UI must not render nil as unchanged.
-    let scene_changed: Int?
+    /// change". The UI must not render nil as unchanged. The server writes a
+    /// JSON BOOLEAN (true/false/null) — this was declared `Int?`, which failed
+    /// the decode of the whole envelope on the first frame that had one.
+    let scene_changed: Bool?
     let blob_present: Bool?
+    /// 16-hex pHash string, or nil when no decoder hashed this frame.
+    let phash: String?
+    let ocr_text: String?
+    /// The capture target this frame belongs to; `view` is nil for the
+    /// record's own feed and "views/<id>" for one view of a multi-view record.
+    let camera_id: String?
+    let view: String?
 }
 struct CameraStillsEnvelope: Decodable {
     let data: [CameraStill]
+    let page: CameraStillsPage?
     let meta: CameraStillsMeta?
+}
+struct CameraStillsPage: Decodable, Hashable {
+    let limit: Int?
+    let count: Int?
+    /// Opaque keyset cursor for the next (older) page; nil at the end.
+    let cursor: String?
 }
 struct CameraStillsMeta: Decodable, Hashable {
     let scene_change_available: Bool?
     let bytes_preserved: Bool?
+    let camera_id: String?
+    let record_uid: String?
+    let capture_stills: Bool?
+    let total: Int?
+    let changed: Int?
+    let unknown: Int?
+    let blobs_present: Int?
+    let oldest: String?
+    let newest: String?
+    let last_error: String?
+    let indexable: Bool?
+    let targets: [CameraStillTarget]?
+    /// Can exceed `targets.count`: views beyond the per-record capture limit
+    /// are counted here rather than silently dropped.
+    let targets_total: Int?
+}
+// ── Camera visual search (native/core/visualsearchapi.h) ───────────────────
+
+/// One camera matched by what its frames show. `still` is nil when the match
+/// was the camera's weekly REFERENCE frame (frame.kind "refframe"): there is
+/// no still to show or to pivot "find similar" on.
+struct VisualSearchHit: Decodable, Identifiable, Hashable {
+    let camera_id: String
+    let item_uid: String?
+    let view: String?
+    let name: String?
+    let lat: Double?
+    let lon: Double?
+    let distance: Double?
+    let cosine: Double?
+    let still: VisualSearchStill?
+    let frame: VisualSearchFrame?
+    let frames_matched: Int?
+    var id: String { camera_id }
+}
+struct VisualSearchStill: Decodable, Hashable {
+    let id: String
+    let captured_at: String?
+    let sha256: String?
+}
+struct VisualSearchFrame: Decodable, Hashable {
+    let kind: String?
+    let ref_id: String?
+    let captured_at: String?
+    let sha256: String?
+    let evidence_id: String?
+}
+/// `meta.query` is a string for a text search and an object for an image
+/// search, so it is deliberately not decoded.
+struct VisualSearchEnvelope: Decodable {
+    let data: [VisualSearchHit]
+    let meta: VisualSearchMeta?
+}
+struct VisualSearchMeta: Decodable, Hashable {
+    let model: String?
+    let cameras: VisualSearchCameraCounts?
+    let candidates: VisualSearchCandidates?
+}
+struct VisualSearchCameraCounts: Decodable, Hashable {
+    let indexed: Int?
+    let eligible: Int?
+    let excluded_by_policy: Int?
+    /// "N of M cameras indexed" — shown as-is.
+    let note: String?
+}
+struct VisualSearchCandidates: Decodable, Hashable {
+    let examined: Int?
+    let limit: Int?
+    /// false = the candidate pool ran out before k cameras were found.
+    let exhausted: Bool?
+}
+
+struct CameraStillTarget: Decodable, Hashable, Identifiable {
+    let camera_id: String
+    let view: String?
+    let kind: String?
+    let fail_count: Int?
+    let next_attempt_at: String?
+    let last_error: String?
+    var id: String { camera_id }
 }
 
 // ── Item 25 / 29: dedup + translation, as they ride on intel items ─────────

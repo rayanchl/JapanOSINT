@@ -22,6 +22,7 @@ static const hp_source T[] = {
     .array_path = "data",
     .detail_url = "https://api.gleif.org/api/v1/lei-records/{v}/direct-child-relationships?page[size]=50", .detail_key = "lei",
     .page_walk = 1,
+    .page_max = 22,   /* 324 records at 15 a page, measured 2026-10-12; the 20-page default reached 300 */
     .interval = 86400, .free_tier = 1 },
 
   { .id = "gleif-lei-field-modifications",
@@ -44,6 +45,7 @@ static const hp_source T[] = {
     .array_path = "data",
     .detail_url = "https://api.gleif.org/api/v1/lei-records/{v}", .detail_key = "lei",
     .page_walk = 1,
+    .page_max = 30,   /* 294 records at 10 a page, measured 2026-10-12; the 20-page default reached 200 */
     .interval = 86400, .free_tier = 1 },
 
   { .id = "gleif-lei-filter-fulltext",
@@ -55,6 +57,7 @@ static const hp_source T[] = {
     .array_path = "data",
     .detail_url = "https://api.gleif.org/api/v1/lei-records/{v}", .detail_key = "lei",
     .page_walk = 1,
+    .page_max = 42,   /* 415 records at 10 a page, measured 2026-10-12; the 20-page default reached 200 */
     .interval = 86400, .free_tier = 1 },
 
   { .id = "gleif-lei-filter-isin",
@@ -77,6 +80,7 @@ static const hp_source T[] = {
     .array_path = "data",
     .detail_url = "https://api.gleif.org/api/v1/lei-records/{v}", .detail_key = "lei",
     .page_walk = 1,
+    .page_resume = 1,   /* 1,208,986 records, measured 2026-10-12: read over a cycle, 10~ pages a run */
     .interval = 86400, .free_tier = 1 },
 
   { .id = "gleif-lei-filter-nonconforming",
@@ -88,6 +92,7 @@ static const hp_source T[] = {
     .array_path = "data",
     .detail_url = "https://api.gleif.org/api/v1/lei-records/{v}/direct-parent-relationship", .detail_key = "lei",
     .page_walk = 1,
+    .page_resume = 1,   /* 1,318,962 records, measured 2026-10-12: read over a cycle, 10~ pages a run */
     .interval = 86400, .free_tier = 1 },
 
   { .id = "gleif-lei-filter-owns",
@@ -110,6 +115,7 @@ static const hp_source T[] = {
     .array_path = "data",
     .detail_url = "https://api.gleif.org/api/v1/lei-records/{v}/ultimate-children?page[size]=50", .detail_key = "lei",
     .page_walk = 1,
+    .page_max = 28,   /* 410 records at 15 a page, measured 2026-10-12; the 20-page default reached 300 */
     .interval = 86400, .free_tier = 1 },
 
 };

@@ -322,8 +322,25 @@ static const hp_source HP3B31_USFED[] = {
     .portal = "https://registry.faa.gov", .record_type = "us-aircraft",
     .tags = "\"us\",\"aviation\",\"registry\"", .type = "scraped", .mode = HP_HTML,
     .free_tier = 1,
-    .url = "https://registry.faa.gov/aircraftinquiry/Search/NameResult?Nametxt={q}",
-    .base = "https://registry.faa.gov", .filter_query = 1,
+    /* GET with lowercase `nametxt` plus `sort_option` returns the result
+     * table; `Nametxt` alone returns the search form (measured 2026-10-21, and
+     * why this row stored nothing once the host stopped answering 403). The
+     * host admits browser-profile requests only (core/host_agents.def,
+     * HA_BROWSER). Pages run past the links the page shows and end with an
+     * empty page (SOUTHWEST AIRLINES: 30 pages of 50). */
+    .url = "https://registry.faa.gov/aircraftinquiry/Search/NameResult?nametxt={q}&sort_option=1&Page=1",
+    .base = "https://registry.faa.gov",
+    .table_must = "N-Number", .page_param = "Page", .page_start = 1, .page_max = 100,
+    /* An N-number can hold two rows, the reservation (no serial) and the
+     * assigned aircraft: 47 of SOUTHWEST AIRLINES' 1,729 rows, all distinct.
+     * Keying on the N-number alone collapsed them. */
+    .title_keys = "N-Number", .id_keys = "N-Number+Serial Number",
+    /* The result table is a summary; each N-number's own page holds the
+     * record — owner and address, Mode S code (octal and hex), engine,
+     * airworthiness class and date, certificate dates. It is HTML
+     * (`<td data-label="…">`), hence detail_html_kv. */
+    .detail_url = "https://registry.faa.gov/AircraftInquiry/Search/NNumberResult?NNumberTxt={v}",
+    .detail_key = "N-Number", .detail_html_kv = 1,
     .description = "Aircraft registered to a named owner — N-number, serial, "
       "make and model, airworthiness class and the registered address. Corporate "
       "aircraft ownership is one of the few asset classes with a public index" },

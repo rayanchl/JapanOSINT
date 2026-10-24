@@ -424,6 +424,30 @@ struct StatusRow: Decodable, Identifiable, Hashable {
     let description: String?
     let free: Bool?
     let layer: String?
+    /// The collector this source belongs to — every registered source has
+    /// exactly one (hpengine rows default to their table's name), so grouping
+    /// on it shows EVERY source. `layer` is declared by ~1% of sources and
+    /// was what the dashboard used to group on, leaving the other 99% in one
+    /// "Uncategorised" bucket. Optional so cached JSON predating the field
+    /// still decodes; a row without it groups under its own id.
+    let collector: String?
+    let collectorLabel: String?
+    /// The natural-language GROUP the collector sits under (core/collectors.def,
+    /// `grp_*`): the heading the dashboard sections collectors by.
+    let collectorGroup: String?
+    let collectorGroupLabel: String?
+    /// hpengine | vjson | vrss | vgeo | vcsv | rss | socrata | native | breach
+    let engine: String?
+    /// scheduled | pivot | unreachable | internal | corpus
+    let kind: String?
+    /// Seconds between scheduled runs as the source declares them (null for a
+    /// pivot), and the SYSTEM-WIDE cadence policy's interval for this row
+    /// (core/cadence.h; GET /api/sources/cadence). Optional: older servers.
+    let updateInterval: Double?
+    let policyInterval: Double?
+    /// An interval the operator set for THIS source (core/source_interval.h;
+    /// PUT /api/sources/:id/interval), which outranks the policy. Optional.
+    let overrideInterval: Double?
     let status: String?
     let lastCheck: String?
     let lastSuccess: String?
@@ -780,6 +804,47 @@ struct BreachJob: Decodable, Identifiable, Hashable {
 
 struct BreachJobsEnvelope: Decodable { let jobs: [BreachJob] }
 
+// ── Similarity thresholds (operator only) ─────────────────────────────────
+
+/// One row of `GET /api/admin/thresholds` (core/thresholds.c). `source` is
+/// where the value in force came from — "db" (a runtime override written by
+/// PUT /api/admin/thresholds/:key), "env" (the key's environment variable) or
+/// "default" (the compiled constant). The server owns resolution and range;
+/// the client only displays them and sends what the operator chose.
+struct SimilarityThreshold: Decodable, Identifiable, Hashable {
+    let key: String
+    let value: Double
+    let source: String
+    let defaultValue: Double
+    let min: Double
+    let max: Double
+    let env: String
+    let envValue: Double?
+    let metric: String?
+    let description: String?
+    let updatedBy: String?
+    let updatedAt: String?
+
+    var id: String { key }
+    var isOverridden: Bool { source == "db" }
+
+    private enum CodingKeys: String, CodingKey {
+        case key, value, source, defaultValue = "default", min, max, env
+        case envValue = "env_value", metric, description
+        case updatedBy = "updated_by", updatedAt = "updated_at"
+    }
+}
+
+/// `GET /api/admin/thresholds` — `{data:[…], meta:{count, order}}`.
+struct SimilarityThresholdsEnvelope: Decodable {
+    struct Meta: Decodable { let count: Int?; let order: String? }
+    let data: [SimilarityThreshold]
+    let meta: Meta?
+}
+
+/// `PUT /api/admin/thresholds/:key` — `{data:{…}}`, the row as now resolved.
+struct SimilarityThresholdEnvelope: Decodable { let data: SimilarityThreshold }
+
 /// `GET /api/admin/breach/catalog/preview` — what the seed parser produced,
 /// without writing anything.
 struct BreachCatalogPreview: Decodable {
@@ -877,6 +942,44 @@ struct IntelItemEnvelope: Decodable {
     let data: IntelItem
 }
 
+/// /api/intel/semantic and /api/intel/items/:uid/similar (core/semsearchapi.c).
+/// Rows have the feed's item shape; the per-row `semantic` scores are not
+/// decoded. `meta.shown` of `meta.total` is the bound the server states.
+struct SemanticEnvelope: Decodable {
+    let data: [IntelItem]
+    let meta: SemanticMeta?
+}
+
+struct SemanticMeta: Decodable {
+    let mode: String?
+    let shown: Int?
+    let total: Int?
+    let k: Int?
+    let vector_hits: Int?
+    let fts_hits: Int?
+}
+
+/// The `{error, detail}` body of a refused vector query, so a view can say WHY
+/// (no index, no vector yet) instead of showing an empty list.
+struct SemanticErrorBody: Decodable {
+    let error: String?
+    let detail: String?
+
+    static func message(_ err: Error) -> String {
+        if case .http(let code, let body)? = err as? APIError,
+           let d = body.data(using: .utf8),
+           let e = try? JSONDecoder().decode(SemanticErrorBody.self, from: d) {
+            let what = e.detail ?? e.error ?? "HTTP \(code)"
+            switch code {
+            case 409: return "No vector yet: \(what)"
+            case 503: return "Vector search is unavailable on this server: \(what)"
+            default: return what
+            }
+        }
+        return err.localizedDescription
+    }
+}
+
 // ── Alerts ─────────────────────────────────────────────────────────────────
 
 struct AlertChannel: Codable, Hashable, Identifiable {
@@ -916,10 +1019,30 @@ struct AlertPredicate: Codable, Hashable {
     /// filter that silently does nothing is worse than a missing one.
     var record_types: [String]?
     /// Query authoring mode. `nil`/"fts" ⇒ the FTS predicate `q` matches new
-    /// items; "llm" ⇒ `nl_query` drives the agentic search pipeline (which
-    /// also produces an FTS `q` the user chose). Round-trips opaquely.
+    /// items; "llm" ⇒ a SEMANTIC rule ("Describe it in words"): the server
+    /// embeds `nl_query` and fires on an item whose embedding is within
+    /// `threshold` cosine of it, AND every other term (q, sources, tags, …)
+    /// also holds. Evaluated after the server embeds each item
+    /// (core/alert_sem.h), so it fires minutes after ingest, not at ingest.
     var mode: String?
     var nl_query: String?
+    /// Semantic rules only: cosine in (0, 1]; nil ⇒ the server default (0.82).
+    var threshold: Double?
+    /// Semantic rules only: fire only when the item's novelty (1 − its
+    /// similarity to the previous week's items) is at least this.
+    var novelty_min: Double?
+}
+
+/// The server's in-band word on a semantic rule (`semantic` on every rule
+/// response for mode "llm" + nl_query): whether it can fire and, if not, why.
+struct AlertSemanticStatus: Codable, Hashable {
+    var threshold: Double?
+    var novelty_min: Double?
+    var embedded: Bool?
+    var evaluable: Bool?
+    var reason: String?
+    var evaluates: String?
+    var model: String?
 }
 
 struct AlertCircle: Codable, Hashable {
@@ -939,6 +1062,9 @@ struct AlertRule: Codable, Identifiable, Hashable {
     var muted_until: String?
     let created_at: String?
     let updated_at: String?
+    /// Read-only server status for a semantic rule; nil for every other rule.
+    /// Ignored by the server when echoed back on a save.
+    var semantic: AlertSemanticStatus? = nil
 }
 
 struct AlertRuleEnvelope: Decodable { let data: AlertRule }

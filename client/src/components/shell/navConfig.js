@@ -2,7 +2,7 @@ import {
   LuMap, LuNewspaper, LuSearch, LuFolder, LuNetwork, LuStar, LuChartBar,
   LuChartPie, LuVideo, LuInbox, LuBellRing, LuMapPin, LuEye, LuShieldHalf,
   LuBookmark, LuKey, LuUsers, LuSettings, LuLockKeyhole, LuDatabase, LuClock, LuScrollText,
-  LuSlidersHorizontal,
+  LuSlidersHorizontal, LuLayers,
 } from 'react-icons/lu';
 
 /**
@@ -22,7 +22,8 @@ export const WORKSPACE_NAV = [
 ];
 
 export const CONSOLE_NAV = [
-  { group: 'Operations', to: '/console/sources', label: 'Sources', subtitle: 'Status, charts, collectors', icon: LuChartPie },
+  { group: 'Operations', to: '/console/sources', label: 'Sources', subtitle: 'Every registered source, searched on the server', icon: LuChartPie },
+  { group: 'Operations', to: '/console/collectors', label: 'Collectors', subtitle: 'Sources grouped by the beat they were authored in', icon: LuLayers },
 
   { group: 'Discovery', to: '/console/cameras', label: 'Camera discovery', subtitle: 'Probe public webcams', icon: LuVideo },
   { group: 'Discovery', to: '/console/inbox', label: 'Inbox', subtitle: 'Everything the workspace’s rules matched', icon: LuInbox, badge: 'unread' },
@@ -37,7 +38,7 @@ export const CONSOLE_NAV = [
   { group: 'Configuration', to: '/console/workspace', label: 'Workspace', subtitle: 'Switch workspace · members & queries (owner/admin)', icon: LuUsers },
   { group: 'Configuration', to: '/console/settings', label: 'Settings', subtitle: 'Appearance, limits, schedules', icon: LuSettings },
 
-  { group: 'Admin', to: '/console/admin', label: 'Admin panel', subtitle: 'Maintenance, breach corpus, server', icon: LuLockKeyhole, requires: 'operator' },
+  { group: 'Admin', to: '/console/admin', label: 'Admin panel', subtitle: 'Maintenance, breach corpus, thresholds, server', icon: LuLockKeyhole, requires: 'operator' },
   { group: 'Admin', to: '/console/database', label: 'Database', subtitle: 'Raw table browser', icon: LuDatabase, requires: 'operator' },
   { group: 'Admin', to: '/console/scheduler', label: 'Scheduler', subtitle: 'Run history and intervals', icon: LuClock, requires: 'operator' },
   { group: 'Admin', to: '/console/follow', label: 'Follow log', subtitle: 'Live collector output', icon: LuScrollText, requires: 'operator' },

@@ -210,7 +210,7 @@ static const source_def reg2_tw_pcc_daily_def = {
 REGISTER_SOURCE(reg2_tw_pcc_daily_def)
 
 static const source_def reg2_tw_pcc_company_def = {
-  .id = "TW_PCC_COMPANY_TENDERS", .collector = "osint",
+  .id = "TW_PCC_COMPANY_TENDERS", .collector = "osint_" "industry",
   .name = "Taiwan procurement — contracts won by a company",
   .update_interval_sec = 0, .run = tw_company_run,
   .category = "industry", .type = "api",

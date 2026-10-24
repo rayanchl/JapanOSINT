@@ -12,6 +12,25 @@ struct SearchTab: View {
     @State private var query = ""
     @State private var suggestions: [String] = []
     @State private var suggestTask: Task<Void, Never>?
+    /// Set from the last answer: true once the server shows it answers by
+    /// retrieval. Until then every suggestion may be an LLM completion.
+    @State private var suggestCheap = false
+    /// The trimmed query `suggestions` answer ("" = none on show).
+    @State private var suggestFor = ""
+    /// The `suggestions` that are AI ideas (source "llm" on an expand answer).
+    @State private var aiSuggestions: Set<String> = []
+    /// Queries that have had their ONE expand=1 request — never a second.
+    @State private var expandAsked: Set<String> = []
+    @State private var expandTask: Task<Void, Never>?
+    @State private var expanding = false
+    /// In-band account of the list: a cut, or an expand that failed / added nothing.
+    @State private var suggestNote: String?
+    /// A typing pause this long (measured from the last keystroke) asks once
+    /// with expand=1 for the LLM's extra ideas. Well above the 300 ms
+    /// retrieval debounce, and only offered when the server answers by
+    /// retrieval: otherwise every suggestion already is an LLM completion and
+    /// the server ignores expand.
+    private static let suggestExpandPauseNanos: UInt64 = 4_000_000_000
     /// True from the instant a query is submitted until the run is registered
     /// in `store.active` — see `auraIntensity`.
     @State private var launching = false
@@ -21,7 +40,22 @@ struct SearchTab: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 14) {
                     if !suggestions.isEmpty {
-                        FlowChips(items: suggestions) { s in Task { await run(s) } }
+                        FlowChips(items: suggestions, marked: aiSuggestions) { s in Task { await run(s) } }
+                    }
+                    if canExpand || expanding {
+                        Button { startExpand(trimmedQuery) } label: {
+                            Label(expanding ? "Asking the model…" : "More ideas", systemImage: "sparkles")
+                                .font(.caption2)
+                                .padding(.horizontal, 8).padding(.vertical, 4)
+                                .background(Capsule().stroke(theme.accent.opacity(0.5)))
+                                .foregroundColor(theme.accent)
+                        }
+                        .buttonStyle(.plain)
+                        .disabled(expanding)
+                        .accessibilityHint("Asks the model for more search ideas")
+                    }
+                    if let note = suggestNote {
+                        Text(note).font(.caption2).foregroundColor(theme.textMuted)
                     }
                     if let e = store.lastError {
                         Text(e).font(.caption).foregroundColor(theme.danger)
@@ -83,17 +117,38 @@ struct SearchTab: View {
             .onSubmit(of: .search) { Task { await run(query) } }
         }
         .onChange(of: query) { _, q in
-            // Debounce: only ask the LLM to suggest once the entry has settled
-            // for 3s. Cancel any in-flight wait on each keystroke so a new one
-            // restarts the clock; short/empty queries clear immediately.
+            // Debounce: 300 ms once the server has shown it answers by
+            // retrieval (history, saved searches, service index — meta.retrieval
+            // in the reply), 3 s otherwise, because without an embedding server
+            // every suggestion is still a full LLM completion. Cancel any
+            // in-flight wait on each keystroke so a new one restarts the clock;
+            // short/empty queries clear immediately.
+            //
+            // A keystroke also cancels any expand=1 request in flight (its
+            // answer is for an older query), and the long pause below is part
+            // of the same task, so it restarts with every keystroke too.
             suggestTask?.cancel()
-            guard q.trimmingCharacters(in: .whitespaces).count >= 3 else { suggestions = []; return }
+            expandTask?.cancel(); expandTask = nil; expanding = false
+            let trimmed = q.trimmingCharacters(in: .whitespaces)
+            guard trimmed.count >= 3 else { clearSuggestions(); return }
             suggestTask = Task {
-                try? await Task.sleep(nanoseconds: 3_000_000_000)
+                let debounce: UInt64 = suggestCheap ? 300_000_000 : 3_000_000_000
+                try? await Task.sleep(nanoseconds: debounce)
                 if Task.isCancelled { return }
-                let result = (try? await apiClient.api.searchSuggest(q)) ?? []
+                guard let result = try? await apiClient.api.searchSuggest(q) else { return }
                 if Task.isCancelled { return }
-                suggestions = result
+                suggestCheap = result.cheap
+                suggestions = result.suggestions
+                aiSuggestions = []
+                suggestNote = nil
+                suggestFor = trimmed
+                // The long pause: still this query once the pause has passed
+                // since the last keystroke → ask the model, once (startExpand
+                // refuses a query already asked).
+                guard result.cheap, Self.suggestExpandPauseNanos > debounce else { return }
+                try? await Task.sleep(nanoseconds: Self.suggestExpandPauseNanos - debounce)
+                if Task.isCancelled { return }
+                startExpand(trimmed)
             }
         }
         // Query handed in by an App Intent / Siri / Shortcuts / the share-queue
@@ -143,8 +198,54 @@ struct SearchTab: View {
         (launching || !store.active.isEmpty) ? 1.0 : 0.0
     }
 
-    private func run(_ q: String) async {
+    private var trimmedQuery: String { query.trimmingCharacters(in: .whitespaces) }
+
+    /// "More ideas" is offered for the query on show, when the server answers
+    /// by retrieval, and only until that query has had its one expand request.
+    private var canExpand: Bool {
+        suggestCheap && !suggestFor.isEmpty && suggestFor == trimmedQuery
+            && !expandAsked.contains(suggestFor) && !expanding
+    }
+
+    private func clearSuggestions() {
         suggestions = []
+        aiSuggestions = []
+        suggestFor = ""
+        suggestNote = nil
+    }
+
+    /// The one expand=1 request for `q` — from "More ideas" or the long pause.
+    /// A query already asked is refused; a keystroke cancels the Task (and with
+    /// it the request), and an answer for anything but the current query is
+    /// dropped. Nothing here records search history.
+    private func startExpand(_ q: String) {
+        guard q.count >= 3, q == suggestFor, suggestCheap, !expandAsked.contains(q) else { return }
+        expandAsked.insert(q)
+        expandTask?.cancel()
+        expanding = true
+        expandTask = Task {
+            let env = try? await apiClient.api.searchSuggestExpanded(q)
+            if Task.isCancelled || q != trimmedQuery { return }
+            expanding = false
+            expandTask = nil
+            guard let env else {
+                suggestNote = "The model could not be asked for more ideas (request failed)."
+                return
+            }
+            suggestions = env.suggestions
+            aiSuggestions = Set((env.items ?? []).filter { $0.source == "llm" }.map(\.text))
+            if let m = env.meta, m.truncated == true, let shown = m.shown, let total = m.candidates {
+                suggestNote = "Showing \(shown) of \(total) suggestions (the list is cut at \(m.cut_at ?? shown))."
+            } else if let llm = env.meta?.llm, llm != "included" {
+                suggestNote = "More ideas: \(llm)."
+            } else {
+                suggestNote = nil
+            }
+        }
+    }
+
+    private func run(_ q: String) async {
+        clearSuggestions()
         launching = true
         defer { launching = false }
         await store.start(q, api: apiClient.api)
@@ -208,18 +309,26 @@ private struct SearchRunCard: View {
 
 struct FlowChips: View {
     let items: [String]
+    /// Items shown as AI suggestions (sparkles, accent, dashed capsule).
+    var marked: Set<String> = []
     let onTap: (String) -> Void
     @Environment(\.theme) private var theme
     var body: some View {
         FlowLayout(spacing: 6) {
             ForEach(items, id: \.self) { s in
+                let ai = marked.contains(s)
                 Button { onTap(s) } label: {
-                    Text(s).font(.caption2).lineLimit(1)
-                        .padding(.horizontal, 8).padding(.vertical, 4)
-                        .background(Capsule().stroke(theme.textMuted.opacity(0.4)))
-                        .foregroundColor(theme.textMuted)
+                    HStack(spacing: 3) {
+                        if ai { Image(systemName: "sparkles").font(.caption2) }
+                        Text(s).font(.caption2).lineLimit(1)
+                    }
+                    .padding(.horizontal, 8).padding(.vertical, 4)
+                    .background(Capsule().stroke(ai ? theme.accent.opacity(0.5) : theme.textMuted.opacity(0.4),
+                                                 style: StrokeStyle(lineWidth: 1, dash: ai ? [3] : [])))
+                    .foregroundColor(ai ? theme.accent : theme.textMuted)
                 }
                 .buttonStyle(.plain)   // avoid macOS default button chrome behind the chip
+                .accessibilityLabel(ai ? "AI suggestion: \(s)" : s)
             }
         }
     }

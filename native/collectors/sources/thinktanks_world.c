@@ -27,23 +27,23 @@
 
 #include "_source_macros.inc"
 
-RSSX(tank_csis, "csis", "CSIS Analysis", "CSIS Analysis", "osint", "news",
+RSSX(tank_csis, "csis", "CSIS Analysis", "CSIS Analysis", "thinktanks", "news",
   "https://www.csis.org/rss.xml", "en", "[\"osint\",\"think-tank\",\"analysis\"]", 10800,
   "CSIS Analysis — geopolitical/security research and analysis");
 
-RSSX(tank_brookings, "brookings", "Brookings Institution", "Brookings Institution", "osint", "news",
+RSSX(tank_brookings, "brookings", "Brookings Institution", "Brookings Institution", "thinktanks", "news",
   "https://www.brookings.edu/feed/", "en", "[\"osint\",\"think-tank\",\"analysis\"]", 10800,
   "Brookings Institution — geopolitical/security research and analysis");
 
-RSSX(tank_atlantic_council, "atlantic-council", "Atlantic Council", "Atlantic Council", "osint", "news",
+RSSX(tank_atlantic_council, "atlantic-council", "Atlantic Council", "Atlantic Council", "thinktanks", "news",
   "https://www.atlanticcouncil.org/feed/", "en", "[\"osint\",\"think-tank\",\"analysis\"]", 10800,
   "Atlantic Council — geopolitical/security research and analysis");
 
-RSSX(tank_carnegie_endow, "carnegie-endow", "Carnegie Endowment", "Carnegie Endowment", "osint", "news",
+RSSX(tank_carnegie_endow, "carnegie-endow", "Carnegie Endowment", "Carnegie Endowment", "thinktanks", "news",
   "https://carnegieendowment.org/posts/rss/", "en", "[\"osint\",\"think-tank\",\"analysis\"]", 10800,
   "Carnegie Endowment — geopolitical/security research and analysis");
 
-RSSX(tank_chatham_house, "chatham-house", "Chatham House", "Chatham House", "osint", "news",
+RSSX(tank_chatham_house, "chatham-house", "Chatham House", "Chatham House", "thinktanks", "news",
   "https://www.chathamhouse.org/rss/publications.xml", "en", "[\"osint\",\"think-tank\",\"analysis\"]", 10800,
   "Chatham House — geopolitical/security research and analysis");
 
@@ -59,81 +59,81 @@ RSSX(tank_chatham_house, "chatham-house", "Chatham House", "Chatham House", "osi
  * The old /rss.xml really is gone, so this row stays dead and is reported as
  * such; the CONTENT is not lost, it arrives via sec-rusi-whatsnew. Retire this
  * row or alias it to that id — both are decisions, not repairs. */
-RSSX(tank_rusi, "rusi", "RUSI", "RUSI", "osint", "news",
+RSSX(tank_rusi, "rusi", "RUSI", "RUSI", "thinktanks", "news",
   "https://www.rusi.org/rss.xml", "en", "[\"osint\",\"think-tank\",\"analysis\"]", 10800,
   "RUSI — geopolitical/security research and analysis");
 
-RSSX(tank_iiss, "iiss", "IISS", "IISS", "osint", "news",
+RSSX(tank_iiss, "iiss", "IISS", "IISS", "thinktanks", "news",
   "https://www.iiss.org/rss", "en", "[\"osint\",\"think-tank\",\"analysis\"]", 10800,
   "IISS — geopolitical/security research and analysis");
 
 /* 2026-09-08 EMITS_NOTHING fix: /rss.xml 404s. SIPRI's own /rss landing page links to
    /rss/combined.xml, which is the real feed. Verified live: HTTP 200,
    application/rss+xml, 10 populated item elements. */
-RSSX(tank_sipri, "sipri", "SIPRI", "SIPRI", "osint", "news",
+RSSX(tank_sipri, "sipri", "SIPRI", "SIPRI", "thinktanks", "news",
   "https://www.sipri.org/rss/combined.xml", "en", "[\"osint\",\"think-tank\",\"analysis\"]", 10800,
   "SIPRI — geopolitical/security research and analysis");
 
-RSSX(tank_fpri, "fpri", "Foreign Policy Research Institute", "Foreign Policy Research Institute", "osint", "news",
+RSSX(tank_fpri, "fpri", "Foreign Policy Research Institute", "Foreign Policy Research Institute", "thinktanks", "news",
   "https://www.fpri.org/feed/", "en", "[\"osint\",\"think-tank\",\"analysis\"]", 10800,
   "Foreign Policy Research Institute — geopolitical/security research and analysis");
 
-RSSX(tank_wilson_center, "wilson-center", "Wilson Center", "Wilson Center", "osint", "news",
+RSSX(tank_wilson_center, "wilson-center", "Wilson Center", "Wilson Center", "thinktanks", "news",
   "https://www.wilsoncenter.org/rss.xml", "en", "[\"osint\",\"think-tank\",\"analysis\"]", 10800,
   "Wilson Center — geopolitical/security research and analysis");
 
-RSSX(tank_cnas, "cnas", "Center for a New American Security", "Center for a New American Security", "osint", "news",
+RSSX(tank_cnas, "cnas", "Center for a New American Security", "Center for a New American Security", "thinktanks", "news",
   "https://www.cnas.org/rss", "en", "[\"osint\",\"think-tank\",\"analysis\"]", 10800,
   "Center for a New American Security — geopolitical/security research and analysis");
 
-RSSX(tank_ecfr, "ecfr", "European Council on Foreign Relations", "European Council on Foreign Relations", "osint", "news",
+RSSX(tank_ecfr, "ecfr", "European Council on Foreign Relations", "European Council on Foreign Relations", "thinktanks", "news",
   "https://ecfr.eu/feed/", "en", "[\"osint\",\"think-tank\",\"analysis\"]", 10800,
   "European Council on Foreign Relations — geopolitical/security research and analysis");
 
-RSSX(tank_merics, "merics", "MERICS (China)", "MERICS (China)", "osint", "news",
+RSSX(tank_merics, "merics", "MERICS (China)", "MERICS (China)", "thinktanks", "news",
   "https://merics.org/en/rss", "en", "[\"osint\",\"think-tank\",\"analysis\"]", 10800,
   "MERICS (China) — geopolitical/security research and analysis");
 
-RSSX(tank_lowy_interpreter, "lowy-interpreter", "Lowy Institute Interpreter", "Lowy Institute Interpreter", "osint", "news",
+RSSX(tank_lowy_interpreter, "lowy-interpreter", "Lowy Institute Interpreter", "Lowy Institute Interpreter", "thinktanks", "news",
   "https://www.lowyinstitute.org/the-interpreter/rss.xml", "en", "[\"osint\",\"think-tank\",\"analysis\"]", 10800,
   "Lowy Institute Interpreter — geopolitical/security research and analysis");
 
-RSSX(tank_stimson, "stimson", "Stimson Center", "Stimson Center", "osint", "news",
+RSSX(tank_stimson, "stimson", "Stimson Center", "Stimson Center", "thinktanks", "news",
   "https://www.stimson.org/feed/", "en", "[\"osint\",\"think-tank\",\"analysis\"]", 10800,
   "Stimson Center — geopolitical/security research and analysis");
 
-RSSX(tank_jamestown, "jamestown", "Jamestown Foundation", "Jamestown Foundation", "osint", "news",
+RSSX(tank_jamestown, "jamestown", "Jamestown Foundation", "Jamestown Foundation", "thinktanks", "news",
   "https://jamestown.org/feed/", "en", "[\"osint\",\"think-tank\",\"analysis\"]", 10800,
   "Jamestown Foundation — geopolitical/security research and analysis");
 
-RSSX(tank_cepa, "cepa", "Center for European Policy Analysis", "Center for European Policy Analysis", "osint", "news",
+RSSX(tank_cepa, "cepa", "Center for European Policy Analysis", "Center for European Policy Analysis", "thinktanks", "news",
   "https://cepa.org/feed/", "en", "[\"osint\",\"think-tank\",\"analysis\"]", 10800,
   "Center for European Policy Analysis — geopolitical/security research and analysis");
 
-RSSX(tank_hudson, "hudson", "Hudson Institute", "Hudson Institute", "osint", "news",
+RSSX(tank_hudson, "hudson", "Hudson Institute", "Hudson Institute", "thinktanks", "news",
   "https://www.hudson.org/rss.xml", "en", "[\"osint\",\"think-tank\",\"analysis\"]", 10800,
   "Hudson Institute — geopolitical/security research and analysis");
 
-RSSX(tank_heritage, "heritage", "Heritage Foundation", "Heritage Foundation", "osint", "news",
+RSSX(tank_heritage, "heritage", "Heritage Foundation", "Heritage Foundation", "thinktanks", "news",
   "https://www.heritage.org/rss", "en", "[\"osint\",\"think-tank\",\"analysis\"]", 10800,
   "Heritage Foundation — geopolitical/security research and analysis");
 
-RSSX(tank_rand_pubs, "rand-pubs", "RAND Corporation", "RAND Corporation", "osint", "news",
+RSSX(tank_rand_pubs, "rand-pubs", "RAND Corporation", "RAND Corporation", "thinktanks", "news",
   "https://www.rand.org/pubs/new.xml", "en", "[\"osint\",\"think-tank\",\"analysis\"]", 10800,
   "RAND Corporation — geopolitical/security research and analysis");
 
-RSSX(tank_csis_china, "csis-china", "CSIS ChinaPower", "CSIS ChinaPower", "osint", "news",
+RSSX(tank_csis_china, "csis-china", "CSIS ChinaPower", "CSIS ChinaPower", "thinktanks", "news",
   "https://chinapower.csis.org/feed/", "en", "[\"osint\",\"think-tank\",\"analysis\"]", 10800,
   "CSIS ChinaPower — geopolitical/security research and analysis");
 
-RSSX(tank_mei, "mei", "Middle East Institute", "Middle East Institute", "osint", "news",
+RSSX(tank_mei, "mei", "Middle East Institute", "Middle East Institute", "thinktanks", "news",
   "https://www.mei.edu/rss.xml", "en", "[\"osint\",\"think-tank\",\"analysis\"]", 10800,
   "Middle East Institute — geopolitical/security research and analysis");
 
-RSSX(tank_carnegie_china, "carnegie-china", "Carnegie China", "Carnegie China", "osint", "news",
+RSSX(tank_carnegie_china, "carnegie-china", "Carnegie China", "Carnegie China", "thinktanks", "news",
   "https://carnegieendowment.org/china/rss/", "en", "[\"osint\",\"think-tank\",\"analysis\"]", 10800,
   "Carnegie China — geopolitical/security research and analysis");
 
-RSSX(tank_gmfus, "gmfus", "German Marshall Fund", "German Marshall Fund", "osint", "news",
+RSSX(tank_gmfus, "gmfus", "German Marshall Fund", "German Marshall Fund", "thinktanks", "news",
   "https://www.gmfus.org/rss.xml", "en", "[\"osint\",\"think-tank\",\"analysis\"]", 10800,
   "German Marshall Fund — geopolitical/security research and analysis");

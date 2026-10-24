@@ -143,7 +143,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def cyi_ripe_whois_search_def = {
-  .id = "RIPE_WHOIS_SEARCH", .collector = "osint",
+  .id = "RIPE_WHOIS_SEARCH", .collector = "osint_" "cyber",
   .name = "RIPE database REST search (whois objects)",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",

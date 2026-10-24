@@ -314,7 +314,7 @@ static int run(const source_ctx *c, intel_sink *s) {
 }
 
 static const source_def cert_cve_record_def = {
-  .id = "cve-program-record-api", .collector = "cyber",
+  .id = "cve-program-record-api", .collector = "osint_" "cyber",
   .name = "CVE Program CVE Record API (cveawg)",
   .update_interval_sec = 0, .run = run,
   .category = "cyber", .type = "api",

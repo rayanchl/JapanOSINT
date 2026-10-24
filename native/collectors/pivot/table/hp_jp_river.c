@@ -114,7 +114,7 @@ static const hp_source HP_JP_RIVER[] = {
   { .id = "JP_MLIT_KAWABOU_OBS_DETAIL",
     .name = "MLIT Kawabou — observatory detail by gauge code",
     .name_ja = "国土交通省 川の防災情報 — 観測所詳細",
-    .collector = "jp_river", .category = "disaster", .type = "api",
+    .collector = "osint_" "disaster", .category = "disaster", .type = "api",
     .portal = KWB_PORTAL, .record_type = "jp-river-observatory", .tags = KWB_TAGS,
     .mode = HP_JSON, .want = HP_NUMERIC,
     .url = KWB_FILES "/info/obslist/obs/{qd}.json", .headers = KWB_HDRS,

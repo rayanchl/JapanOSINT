@@ -211,7 +211,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def geoeo_power_def = {
-  .id = "nasa-power-climate", .collector = "environment",
+  .id = "nasa-power-climate", .collector = "osint_" "environment",
   .name = "NASA POWER Climate and Solar Point API",
   .update_interval_sec = 0, .run = run,
   .category = "environment", .type = "api",

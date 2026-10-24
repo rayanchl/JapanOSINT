@@ -596,11 +596,18 @@ char *casesapi(db_handle *db, const tenant_ctx *t, const char *method,
         out = err(st, 400, "invalid_status"); goto done;
       }
       int have_cur = cursor_split(q ? q->cursor : NULL, cp, sizeof cp, cu, sizeof cu);
-      char sql[768];
+      /* my_case_role: the CALLER's role on each case, or null when they are
+       * not on its roster — the value GET /api/cases/:id carries, read in
+       * this one query (a correlated primary-key probe of case_members per
+       * row) rather than one my_case_role() call per row. Without it a client
+       * cannot tell a workspace viewer which cases they lead or contribute
+       * to, so it cannot offer them the status change can_write() accepts. */
+      char sql[1024];
       snprintf(sql, sizeof sql,
         "SELECT c.id,c.name,c.summary,c.status,c.priority,c.created_by,"
         "c.created_at,c.updated_at,c.closed_at,"
-        "(SELECT COUNT(*) FROM case_items ci WHERE ci.case_id=c.id) "
+        "(SELECT COUNT(*) FROM case_items ci WHERE ci.case_id=c.id),"
+        "(SELECT cm.role FROM case_members cm WHERE cm.case_id=c.id AND cm.user_id=?) "
         "FROM cases c WHERE c.tenant_id=?%s%s "
         "ORDER BY c.updated_at DESC, c.id ASC LIMIT ?",
         fstatus  ? " AND c.status=?" : "",
@@ -610,6 +617,11 @@ char *casesapi(db_handle *db, const tenant_ctx *t, const char *method,
         sqlite3_finalize(s); out = err(st, 500, "server_error"); goto done;
       }
       int bi = 1;
+      /* Placeholders are numbered in textual order, so the roster
+       * subquery's user id is first. No user id (my_case_role() answers
+       * NULL for one) binds NULL, which matches no roster row. */
+      if (t->user_id[0]) sqlite3_bind_text(s, bi++, t->user_id, -1, SQLITE_TRANSIENT);
+      else               sqlite3_bind_null(s, bi++);
       sqlite3_bind_text(s, bi++, t->tenant_id, -1, SQLITE_TRANSIENT);
       if (fstatus)  sqlite3_bind_text(s, bi++, fstatus, -1, SQLITE_TRANSIENT);
       if (have_cur) {
@@ -624,6 +636,7 @@ char *casesapi(db_handle *db, const tenant_ctx *t, const char *method,
       while (sqlite3_step(s) == SQLITE_ROW) {
         cJSON *r = case_row(s);
         cJSON_AddNumberToObject(r, "item_count", (double)sqlite3_column_int64(s,9));
+        add_str_or_null(r, "my_case_role", ctext(s,10));
         cJSON_AddItemToArray(data, r);
         snprintf(lp, sizeof lp, "%s", ctext(s,7) ? ctext(s,7) : "");
         snprintf(lu, sizeof lu, "%s", ctext(s,0) ? ctext(s,0) : "");

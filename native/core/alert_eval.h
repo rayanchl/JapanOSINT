@@ -38,15 +38,14 @@
  *    being ignored. Ignoring a constraint you failed to parse silently WIDENS
  *    the rule, which is how an alert rule turns into a firehose.
  *
- *  - mode=="llm" + nl_query rules are SKIPPED, live and in preview alike.
- *    Synchronous LLM inference on every ingested row is not viable: it would
- *    put a multi-hundred-millisecond network call inside the collector loop,
- *    multiplied by rules × items, and make ingest throughput a function of an
- *    external API's latency. Those rules need an out-of-band evaluator
- *    (batch/queue) — deliberately out of scope here. Preview reports them as
- *    {"meta":{"skipped":"llm_mode_unsupported"}} rather than silently
- *    evaluating a *different* (nl_query-less) predicate, so the two paths
- *    keep telling the same story.
+ *  - mode=="llm" + nl_query rules are SEMANTIC rules (core/alert_sem.h) and
+ *    are SKIPPED on the ingest path: an item has no vector at ingest, and a
+ *    network call per row per rule inside the collector loop is not viable.
+ *    They are evaluated out of band, in the embedding pod's post-batch hook
+ *    (eval_semantic below): the stored rule vector against the item's new
+ *    vector, then every other term through the same facts_match_terms +
+ *    fts_probe. Preview runs them as a KNN over intel_vec_v2 (preview_semantic).
+ *    Each rule response states the limits in-band (alert_sem_status).
  *
  *  - No audit_events rows are written. audit_write() is for tenant-initiated
  *    mutations; alert_events are machine-generated at ingest and one audit
@@ -213,8 +212,8 @@
  *   -- — entity_mentions has no tenant column, and tenant isolation is
  *   -- enforced where it belongs: eval_item() selects rules by the ITEM row's
  *   -- own tenant_id, so a swept item can only ever reach its own tenant's
- *   -- rules. A per-tenant watermark would add a scan per tenant and buy
- *   -- nothing.
+ *   -- rules (every tenant's, for a shared-corpus 'legacy' row). A
+ *   -- per-tenant watermark would add a scan per tenant and buy nothing.
  *   CREATE TABLE IF NOT EXISTS alert_eval_cursor (
  *     k          TEXT PRIMARY KEY,
  *     v          TEXT NOT NULL,
@@ -402,7 +401,11 @@ void alert_eval_init(db_handle *db);
  *
  * `tenant_id` is a hint used to skip work early; the item row's own tenant_id
  * is authoritative for rule selection, so a mislabelled call can never leak
- * one tenant's items into another tenant's alerts. */
+ * one tenant's items into another tenant's alerts. A row in the shared
+ * corpus (tenant 'legacy', every collector row) is readable by every tenant
+ * and so meets every tenant's rules, each event written under the RULE's
+ * tenant; a tenant-owned row meets only its owner's. One (rule, item) is one
+ * event: ux_alert_events_rule_item + INSERT OR IGNORE. */
 void alert_eval_on_item(db_handle *db, const char *tenant_id,
                         const char *item_uid);
 

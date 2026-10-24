@@ -122,6 +122,8 @@ static void test_llm_failures_are_named_not_collapsed(void) {
     { LLM_ERR_HTTP,        "llm_http_error"  },
     { LLM_ERR_EMPTY,       "llm_empty_response" },
     { LLM_ERR_BAD_REQUEST, "llm_bad_request" },
+    { LLM_ERR_QUEUE_TIMEOUT, "llm_queue_timeout" },
+    { LLM_ERR_QUEUE_FULL,  "llm_queue_full" },
   };
   for (unsigned i = 0; i < sizeof cases / sizeof *cases; i++) {
     char id[64];
@@ -181,9 +183,9 @@ static void test_catalogue_excludes_scheduled_feeds(void) {
   int pivots = 0, scheduled_osint = 0;
   const source_def **all = registry_all();
   for (int i = 0; i < registry_count(); i++) {
-    if (!all[i]->collector || strcmp(all[i]->collector, "osint")) continue;
-    if (all[i]->update_interval_sec == 0) pivots++;
-    else scheduled_osint++;
+    if (registry_is_entity_pivot(all[i])) pivots++;
+    else if (all[i]->update_interval_sec > 0 && all[i]->collector
+             && all[i]->collector[0] != '_') scheduled_osint++;
   }
   assert(note.total == pivots &&
          "catalogue total must be the on-demand pivots, not every osint row");
@@ -191,8 +193,8 @@ static void test_catalogue_excludes_scheduled_feeds(void) {
     /* Spot-check that a known scheduled row is absent from the text. */
     for (int i = 0; i < registry_count(); i++) {
       const source_def *d = all[i];
-      if (!d->collector || strcmp(d->collector, "osint")) continue;
-      if (d->update_interval_sec == 0) continue;
+      if (d->update_interval_sec <= 0 || registry_is_entity_pivot(d)) continue;
+      if (!d->collector || d->collector[0] == '_') continue;
       assert(!strstr(list, d->id) &&
              "a scheduled feed must not be offered as an entity pivot");
       break;
@@ -326,8 +328,54 @@ static void test_source_attribution_states_only_what_was_measured(void) {
   db_close(&db);
 }
 
+/* ── 8. a follow-up round gets its own menu, its own enum, and says why ──── */
+static void test_followup_round_menu(void) {
+  /* No embedding server: the registry-order fallback, which phase 1 also
+   * takes, and which must say it was NOT driven by the entities found. */
+  unsetenv("JO_EMBED_URL");
+  db_handle db = {0};
+  assert(db_open(&db, NULL, NULL) == 0);
+  llm_client llm = { .http = NULL, .base_url = "http://127.0.0.1:1",
+                     .interactive = 1 };
+  cJSON *qents = cJSON_Parse("[{\"value\":\"Acme Corp\",\"type\":\"company\"}]");
+  cJSON *disc = cJSON_Parse("[{\"value\":\"acme.example\",\"type\":\"domain\"},"
+                            "{\"value\":\"Acme Corp\",\"type\":\"company\"}]");
+  int nent = 0;
+  char *drive = round_drive_text("who runs acme", qents, disc, &nent);
+  assert(drive && nent == 2 && "each entity once, query entities first");
+  assert(strstr(drive, "company: Acme Corp") && strstr(drive, "domain: acme.example"));
+  free(drive);
+
+  round_menu m;
+  round_menu_build(&m, &db, &llm, "unit-round", 2, "who runs acme", "[]",
+                   qents, disc);
+  assert(m.menu && !m.semantic);
+  assert(strstr(m.menu, "[MENU FOR FOLLOW-UP ROUND 2:") &&
+         strstr(m.menu, "registry order") &&
+         strstr(m.menu, "NOT chosen from the entities"));
+  assert(m.schema && "the round is sent WITH a schema");
+  cJSON *s = cJSON_Parse(m.schema);
+  cJSON *en = cJSON_GetObjectItem(cJSON_GetObjectItem(cJSON_GetObjectItem(
+      cJSON_GetObjectItem(cJSON_GetObjectItem(cJSON_GetObjectItem(s,
+      "properties"), "chain_services"), "items"), "properties"), "service"),
+      "enum");
+  assert(en && cJSON_GetArraySize(en) == m.cat.shown &&
+         "the round's enum is exactly the round's menu");
+  /* every enum entry is listed in the menu text */
+  cJSON *e;
+  cJSON_ArrayForEach(e, en) assert(strstr(m.menu, e->valuestring));
+  cJSON_Delete(s);
+  round_menu_free(&m);
+  cJSON_Delete(qents);
+  cJSON_Delete(disc);
+  db_close(&db);
+  printf("  ok: follow-up round menu rebuilt with entities, enum == menu, "
+         "driver stated in-band\n");
+}
+
 int main(void) {
   printf("test_search_degradation\n");
+  test_followup_round_menu();
   test_severity_separates_failure_from_disclosure();
   test_snapshot_always_states_degradation();
   test_llm_failures_are_named_not_collapsed();

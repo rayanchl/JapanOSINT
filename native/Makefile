@@ -93,6 +93,7 @@ OBJS     := $(patsubst %.c,$(OBJ)/%.o,$(SRCS)) \
             $(OBJ)/third_party/mongoose.o $(OBJ)/third_party/sqlite-vec.o
 
 .PHONY: all clean selftest unit authtest pagewalktest htmlparsetest tsan tsan-test tsan-sched asan asan-test \
+        collectors-def collectors-def-check batch-gates \
         lint-sources lint-baseline source-count
 all: $(BIN)
 
@@ -121,7 +122,25 @@ $(OBJ)/%.o: %.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(BIN): $(OBJS)
+# DELETING A COLLECTOR MUST RELINK. `$(BIN): $(OBJS)` only notices a
+# prerequisite that is NEWER than the binary; one that disappeared from the
+# list is not a prerequisite any more, so `make` said "up to date" and kept
+# serving a binary that still registered the deleted sources — and
+# registry-floor, --list-sources and every audit then measured a tree that no
+# longer existed. The object list itself is now a prerequisite: rewritten on
+# every run, but only REPLACED (new mtime) when its content changed, so an
+# unchanged tree does not relink and an added or removed .c always does.
+# (printf, not $(file ...): macOS still ships GNU make 3.81, which has no
+# $(file) and would expand it to nothing.)
+OBJLIST := $(OBJ)/.objlist
+.PHONY: FORCE
+FORCE:
+$(OBJLIST): FORCE
+	@mkdir -p $(dir $@)
+	@printf '%s\n' $(OBJS) > $@.tmp
+	@if cmp -s $@.tmp $@; then rm -f $@.tmp; else mv -f $@.tmp $@; fi
+
+$(BIN): $(OBJS) $(OBJLIST)
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(OBJS) -o $@ $(LDLIBS)
 	@echo "built $@"
@@ -318,6 +337,46 @@ lint-baseline:
 source-count:
 	@python3 tools/lint_sources.py --count
 
+# Regenerate core/collectors.def from the binary's OWN registry. The census
+# used to mean: start a server on a scratch DB, GET /api/collectors, convert
+# it to TSV, run the generator by hand, rebuild — a manual loop that let a
+# stale OVERRIDES entry through once (round 4). Now:
+#
+#   make && make collectors-def && make      # the def is compiled in, so rebuild
+#
+# The census TSV is kept under docs/source-pages-revamp/ as the record the
+# generator ran from. collectors-def-check runs the generator WITHOUT writing:
+# it exits non-zero while any registered collector key has no def line.
+CENSUS_DIR := ../docs/source-pages-revamp
+collectors-def: $(BIN)
+	@mkdir -p .run; d=$$(date +%F); f=$(CENSUS_DIR)/collector-census-$$d.tsv; \
+	JO_DB=.run/census.db ./$(BIN) --collector-census > $$f && \
+	python3 tools/gen_collectors_def.py $$f > core/collectors.def && \
+	echo "core/collectors.def regenerated from $$f -- run make again to compile it in"
+collectors-def-check: $(BIN)
+	@mkdir -p .run && JO_DB=.run/census.db ./$(BIN) --collector-census > .run/census-check.tsv && \
+	python3 tools/gen_collectors_def.py .run/census-check.tsv > /dev/null && \
+	echo "collectors-def-check: every registered collector has a def line"
+
+# Every manifest gate in one command, in the order they are meant to run:
+# duplicate ids/endpoints against the tree, paging declared where the endpoint
+# pages, reachability (rule 3), then the live probe. The probe's pass list is
+# what gen_hp_batch.py --pass-ids takes.
+#
+#   make batch-gates MANIFEST='../docs/candidate-sources-batch46.*.txt'
+#   python3 tools/gen_hp_batch.py ../docs/candidate-sources-batch46.*.txt \
+#           --pass-ids .run/batch-gates/pass-ids.txt --prefix hp3b46 --batch 46 --outdir collectors/pivot/table
+OUT        ?= .run/batch-gates
+PROBE_JOBS ?= 8
+batch-gates: $(BIN)
+	@test -n "$(MANIFEST)" || { echo "usage: make batch-gates MANIFEST='../docs/candidate-sources-batchNN.*.txt' [OUT=dir] [PROBE_JOBS=8]"; exit 2; }
+	@mkdir -p $(OUT)
+	python3 tools/batch_exclusions.py --bin ./$(BIN) --check $(MANIFEST)
+	python3 tools/audit_batch_pagination.py $(MANIFEST)
+	python3 tools/audit_batch_reachable.py $(MANIFEST)
+	python3 tools/probe_hp_batch.py $(MANIFEST) --jobs $(PROBE_JOBS) --report-only --out $(OUT)/probe.tsv --pass-ids $(OUT)/pass-ids.txt
+	@echo "batch-gates: pass list at $(OUT)/pass-ids.txt ($$(wc -l < $(OUT)/pass-ids.txt) ids)"
+
 # Assert the fleet did not shrink. `make source-count` is a number nobody
 # diffs, which is exactly how a silently-dropped collector survives a refactor:
 # the build succeeds, the binary links, and the only trace is a smaller count.
@@ -338,8 +397,11 @@ source-count:
 # binary.
 #
 # It also asserts that registration was CLEAN. A DUPLICATE id means the second
-# definition is unreachable; an OVERFLOW means a row was discarded outright.
-# Neither should ever be non-zero, so neither is merely reported.
+# definition is unreachable; an OVERFLOW means a row was discarded outright; a
+# NEVER-RUNS row is registered under a collector that neither the scheduler nor
+# is_entity_pivot() will pick (registry.c explains the shape, and it was hiding
+# 16 live entity pivots). None should ever be non-zero, so none is merely
+# reported.
 #
 # --list-sources boots the binary, which opens, migrates and seeds a database.
 # It runs against a throwaway JO_DB: the default is $(REPO_ROOT)/data/japanmap.db
@@ -363,6 +425,7 @@ registry-floor: $(BIN)
 	@now=$$(cat tools/.reg.count); floor=$$(cat tools/registry-floor.txt); \
 	 dup=$$(grep -c DUPLICATE tools/.reg.log || true); \
 	 ovf=$$(grep -c OVERFLOW tools/.reg.log || true); \
+	 dead=$$(grep -c NEVER-RUNS tools/.reg.log || true); \
 	 rm -f tools/.reg.log tools/.reg.count; \
 	 if [ "$$now" -lt "$$floor" ]; then \
 	   echo "REGISTRY REGRESSED: $$now < $$floor (floor in tools/registry-floor.txt)"; \
@@ -374,7 +437,12 @@ registry-floor: $(BIN)
 	 if [ "$$ovf" -ne 0 ]; then \
 	   echo "$$ovf row(s) DROPPED at registration — a table cap is eating sources"; exit 1; \
 	 fi; \
-	 echo "registry ok: $$now >= $$floor, 0 duplicates, 0 dropped"
+	 if [ "$$dead" -ne 0 ]; then \
+	   echo "$$dead row(s) NEVER RUN — interval 0 under a collector that is not"; \
+	   echo "  \"osint\" and not an internal \"_\" lane, so neither the scheduler"; \
+	   echo "  nor is_entity_pivot() reaches them (house rule 3)"; exit 1; \
+	 fi; \
+	 echo "registry ok: $$now >= $$floor, 0 duplicates, 0 dropped, 0 never-runs"
 
 # The floor is committed (tools/source-floor.txt) so CI and a reviewer see the
 # same number the author did.

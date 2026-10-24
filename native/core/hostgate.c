@@ -11,20 +11,57 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 
-#define HG_SLOTS   1024          /* open-addressed; hosts are never evicted   */
-#define HG_HOSTLEN 128
+/* Capacity. This was 1,024 open-addressed slots with no eviction, and the
+ * collectors name ~6,500 distinct hosts: once 1,024 had been seen, slot_for()
+ * returned NULL and acquire() returned 0 — UNGATED and uncounted — so every
+ * host first contacted after the table filled was fetched with no politeness
+ * at all, and nothing on the heartbeat line said so. Each lookup of a new host
+ * on the full table also walked all 1,024 slots under the global mutex.
+ *
+ * Now: 16,384 slots (2.5x the registry's host count) in STABLE storage, found
+ * through a chained hash index, so a lookup costs one short chain, never a
+ * table walk. A slot is reclaimed only when it is provably idle — nothing in
+ * flight, nobody waiting on it, and its gap and any server-requested penalty
+ * over by HG_IDLE_TTL_MS — at which point a fresh slot for that host behaves
+ * identically, so eviction loses no politeness. Reclaim is a clock sweep. A
+ * table genuinely full of live hosts still fails open, but COUNTED
+ * (hostgate_counters' over_budget, hostgate_stats' table_full). */
+#define HG_SLOTS    16384
+#define HG_BUCKETS  32768          /* power of two; load factor <= 0.5         */
+#define HG_HOSTLEN  128
+/* A slot idle this long past its ready time may be reclaimed. Generous on
+ * purpose: reclaiming is only ever needed past 16,384 live hosts. A variable,
+ * not a constant, only so the unit test can shrink it. */
+static long long g_idle_ttl_ms = 60000;
+/* After a sweep finds NOTHING reclaimable, new hosts fail open (counted) for
+ * this long without sweeping again, so a table full of live hosts costs one
+ * walk per second rather than one walk per request. */
+#define HG_FULL_RESCAN_MS 1000
+/* Ceiling on a server-requested back-off (hostgate_penalize). A Retry-After of
+ * an hour must not park every worker that touches that host for an hour; a
+ * minute stops a burst from walking into the same 429 wall, and the fetch that
+ * received the long Retry-After surfaces the status to its own caller. */
+#define HG_PENALTY_MAX_MS 60000
 
 typedef struct {
-  char      host[HG_HOSTLEN];    /* empty => free slot                        */
+  char      host[HG_HOSTLEN];    /* empty => never claimed                    */
   int       in_flight;
+  int       waiters;             /* threads parked in acquire() on THIS slot  */
   long long last_start_ms;       /* monotonic ms of the most recent grant     */
+  long long penalty_until_ms;    /* the server asked us to stay away until    */
   int       gap_ms;              /* min gap for THIS host (override or global)*/
+  int       next;                /* hash chain: slot index + 1, 0 = end       */
 } hg_slot;
 
 static hg_slot         g_slots[HG_SLOTS];
+static int             g_bucket[HG_BUCKETS];   /* slot index + 1, 0 = empty   */
+static int             g_used;                 /* slots ever handed out       */
+static int             g_hand;                 /* clock-sweep position        */
+static long long       g_full_until_ms;        /* see HG_FULL_RESCAN_MS       */
 static pthread_mutex_t g_mu  = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t  g_cv  = PTHREAD_COND_INITIALIZER;
 static long            g_waits, g_timeouts, g_inflight;
+static long            g_table_full, g_evictions, g_penalties, g_hosts;
 
 static int g_max_conc, g_min_gap_ms;
 
@@ -55,7 +92,14 @@ static void cfg_init(void) {
  * boot. An override is a GAP between starts, never a delay of the first
  * request. */
 #define HG_MAX_OVERRIDES 32
-static struct { char host[HG_HOSTLEN]; int gap_ms; } g_over[HG_MAX_OVERRIDES] = {
+typedef struct { char host[HG_HOSTLEN]; int gap_ms; } hg_override;
+/* The built-in table. It is copied into g_over[] at boot (overrides_init) so
+ * the live count is sizeof arithmetic and never a number a human maintains:
+ * that number read `1` while the table held two (2026-09-15) and `7` while
+ * it held nine (2026-10-22 — the Energinet and Tronscan gaps below were
+ * compiled in and never consulted, and the sweep that added them measured a
+ * 32-request run at 390 ms a request under a 1,500 ms gap). */
+static const hg_override g_over_builtin[] = {
   { "reddit.com", 30000 },
   /* 615 gnews-* rows share news.google.com; under a 4-worker sweep they
    * fire together and come back empty, alone every one emits (2026-08-25
@@ -82,12 +126,38 @@ static struct { char host[HG_HOSTLEN]; int gap_ms; } g_over[HG_MAX_OVERRIDES] = 
    * "TRUNCATED: a later page failed", and 5 of 20 records collapsed — the
    * engine's own truncation notice pointed here for the remedy. */
   { "mobile311.sfgov.org", 1200 },
+  /* data.qld.gov.au publishes 188,879 datasets through CKAN package_search
+   * (result.count, measured 2026-10-12 — Queensland registers individual
+   * borehole and core records as datasets), so ckan-au-qld's complete read is
+   * ~945 pages of 200.
+   *
+   * 250 ms was the first guess and the portal refused it: measured 2026-10-12,
+   * the walk got 76 pages in 47 s and page 77 answered HTTP 429, which
+   * lib/pagewalk.c disclosed as a truncation notice naming the status and
+   * pointing here. The budget is not a simple per-second rate — twelve
+   * requests at 250 ms all answered 200 — so it is a longer window, and the
+   * run that got furthest (427 pages, no 429) was pacing at about 3.5 s a
+   * page. 1,500 ms is inside that and puts the complete daily read at roughly
+   * 24 minutes. If it still 429s, the walk stops and SAYS SO; it does not
+   * pretend to be complete. */
+  { "data.qld.gov.au", 1500 },
+  /* data.nsw.gov.au is the same shape at 17,192 datasets / ~86 pages. */
+  { "data.nsw.gov.au", 250 },
+  /* apilist.tronscanapi.com rate-limits per IP close to the global 150 ms gap,
+   * and TRONSCAN_TOP_ACCOUNTS is the worst shape for it: a list page of 50
+   * accounts is followed by a DETAIL HOP PER ACCOUNT, so one page is 51
+   * requests to this host in a burst.
+   *
+   * Measured 2026-10-22, ten sequential requests at each spacing: at 150 ms
+   * two of ten answered HTTP 429; at 1,000 ms ten of ten answered 200. The
+   * row's own cycle had been stalled by exactly that — page 2 was 429'd, and
+   * a failed page clears the cycle position rather than bookmarking a refused
+   * page, so it re-read the same 25 accounts of 10,000 every day. */
+  { "apilist.tronscanapi.com", 1000 },
 };
-/* The number of LIVE entries above. This was `1` while the table held two, so
- * gap_for_host() — which scans only the first g_nover entries — never saw the
- * news.google.com gap its comment describes: the 615 gnews-* rows kept firing
- * together (found 2026-09-15). Keep it equal to the initialiser count. */
-static int g_nover = 5;
+#define HG_N_BUILTIN ((int)(sizeof g_over_builtin / sizeof g_over_builtin[0]))
+static hg_override g_over[HG_MAX_OVERRIDES];
+static int g_nover;   /* live entries in g_over[]: the built-ins, then the env */
 
 static void override_set(const char *host, int gap_ms) {
   for (int i = 0; i < g_nover; i++)
@@ -100,6 +170,7 @@ static void override_set(const char *host, int gap_ms) {
 }
 
 static void overrides_init(void) {
+  for (int i = 0; i < HG_N_BUILTIN && i < HG_MAX_OVERRIDES; i++) g_over[g_nover++] = g_over_builtin[i];
   const char *e = getenv("JO_HOST_MIN_GAP_OVERRIDES");
   if (!e || !*e) return;
   char buf[2048];
@@ -139,10 +210,14 @@ static int gap_for_host(const char *host) {
 static void cfg_init_all(void) { cfg_init(); overrides_init(); }
 static void cfg_once(void) { pthread_once(&g_cfg_once, cfg_init_all); }
 
+/* Always 0 in the product; the unit test advances it to age slots without
+ * sleeping. */
+static long long g_clock_skew_ms;
+
 static long long mono_ms(void) {
   struct timespec t;
   clock_gettime(CLOCK_MONOTONIC, &t);
-  return (long long)t.tv_sec * 1000LL + t.tv_nsec / 1000000LL;
+  return (long long)t.tv_sec * 1000LL + t.tv_nsec / 1000000LL + g_clock_skew_ms;
 }
 
 /* Lowercased hostname of `url` into out[]. Returns 0 if there is nothing to
@@ -188,22 +263,68 @@ static unsigned hg_hash(const char *s) {
   return h;
 }
 
-/* Slot for `host`, claiming a free one if needed. Caller holds g_mu.
- * NULL only when the table is full, which needs >1024 distinct hosts in one
- * process; callers treat that as "ungated" rather than blocking forever. */
-static hg_slot *slot_for(const char *host) {
-  unsigned h = hg_hash(host) % HG_SLOTS;
-  for (unsigned i = 0; i < HG_SLOTS; i++) {
-    hg_slot *s = &g_slots[(h + i) % HG_SLOTS];
-    if (s->host[0] == 0) {                 /* free -> claim                   */
-      snprintf(s->host, sizeof s->host, "%s", host);
-      s->in_flight = 0; s->last_start_ms = 0;
-      s->gap_ms = gap_for_host(host);
-      return s;
-    }
-    if (strcmp(s->host, host) == 0) return s;
-  }
+/* The earliest instant this slot may start another request. */
+static long long slot_ready_at(const hg_slot *s) {
+  long long r = s->last_start_ms + s->gap_ms;
+  return s->penalty_until_ms > r ? s->penalty_until_ms : r;
+}
+
+/* Existing slot for `host`, or NULL. Never claims. Caller holds g_mu. */
+static hg_slot *slot_lookup(const char *host) {
+  for (int i = g_bucket[hg_hash(host) & (HG_BUCKETS - 1)]; i; i = g_slots[i - 1].next)
+    if (strcmp(g_slots[i - 1].host, host) == 0) return &g_slots[i - 1];
   return NULL;
+}
+
+/* Reclaimable: nothing in flight, nobody parked on it (acquire() holds `s`
+ * across its cond waits — reclaiming under a waiter would hand that thread
+ * another host's slot), and idle well past its gap and any penalty. */
+static int slot_evictable(const hg_slot *s, long long now) {
+  return s->in_flight == 0 && s->waiters == 0 &&
+         now >= slot_ready_at(s) + g_idle_ttl_ms;
+}
+
+static void slot_unlink(int idx) {
+  int *pp = &g_bucket[hg_hash(g_slots[idx].host) & (HG_BUCKETS - 1)];
+  while (*pp && *pp != idx + 1) pp = &g_slots[*pp - 1].next;
+  if (*pp) *pp = g_slots[idx].next;
+  g_slots[idx].next = 0;
+}
+
+/* One clock sweep for a reclaimable slot; its index, or -1. Caller holds g_mu. */
+static int slot_reclaim(long long now) {
+  if (now < g_full_until_ms) return -1;
+  for (int k = 0; k < HG_SLOTS; k++) {
+    int idx = g_hand;
+    g_hand = (g_hand + 1) % HG_SLOTS;
+    if (slot_evictable(&g_slots[idx], now)) {
+      slot_unlink(idx);
+      g_evictions++;
+      g_hosts--;
+      return idx;
+    }
+  }
+  g_full_until_ms = now + HG_FULL_RESCAN_MS;
+  return -1;
+}
+
+/* Slot for `host`, claiming (or reclaiming) one if needed. Caller holds g_mu.
+ * NULL only when all HG_SLOTS hold hosts that are live right now; the caller
+ * fails open and COUNTS it rather than blocking forever. */
+static hg_slot *slot_for(const char *host) {
+  hg_slot *s = slot_lookup(host);
+  if (s) return s;
+  int idx = g_used < HG_SLOTS ? g_used++ : slot_reclaim(mono_ms());
+  if (idx < 0) return NULL;
+  s = &g_slots[idx];
+  memset(s, 0, sizeof *s);
+  snprintf(s->host, sizeof s->host, "%s", host);
+  s->gap_ms = gap_for_host(host);
+  unsigned b = hg_hash(host) & (HG_BUCKETS - 1);
+  s->next = g_bucket[b];
+  g_bucket[b] = idx + 1;
+  g_hosts++;
+  return s;
 }
 
 int hostgate_acquire(const char *url, int max_wait_ms) {
@@ -217,20 +338,32 @@ int hostgate_acquire(const char *url, int max_wait_ms) {
 
   pthread_mutex_lock(&g_mu);
   hg_slot *s = slot_for(host);
-  if (!s) { pthread_mutex_unlock(&g_mu); return 0; }
+  if (!s) {                                /* fail open — but COUNTED         */
+    if (g_table_full++ % 1000 == 0)
+      fprintf(stderr, "[hostgate] table full (%d live hosts): %s fetched "
+                      "ungated (%ld so far)\n", HG_SLOTS, host, g_table_full);
+    pthread_mutex_unlock(&g_mu);
+    return 0;
+  }
   const int gap_ms = s->gap_ms;
   if (gap_ms > g_min_gap_ms) {             /* override host: wait for the gap */
     long long floor = mono_ms() + HG_OVERRIDE_MAX_WAIT_MS;
     if (floor > deadline) deadline = floor;
   }
+  /* A server-requested back-off is waited out for the same reason an override
+   * gap is: going in early is a guaranteed 429. hostgate_penalize() caps it at
+   * HG_PENALTY_MAX_MS, so this wait is bounded too. */
+  if (s->penalty_until_ms > deadline) deadline = s->penalty_until_ms;
 
+  s->waiters++;                            /* pins `s`: see slot_evictable()  */
   for (;;) {
     long long now = mono_ms();
     int conc_ok = (g_max_conc == 0) || (s->in_flight < g_max_conc);
-    long long ready_at = s->last_start_ms + gap_ms;
-    int gap_ok  = (gap_ms == 0) || (now >= ready_at);
+    long long ready_at = slot_ready_at(s);
+    int gap_ok  = (now >= ready_at);
 
     if (conc_ok && gap_ok) {
+      s->waiters--;
       s->in_flight++;
       s->last_start_ms = now;
       g_inflight++;
@@ -239,6 +372,7 @@ int hostgate_acquire(const char *url, int max_wait_ms) {
       return 1;
     }
     if (now >= deadline) {                 /* fail open — see header          */
+      s->waiters--;
       g_timeouts++;
       pthread_mutex_unlock(&g_mu);
       return 0;
@@ -259,7 +393,8 @@ int hostgate_acquire(const char *url, int max_wait_ms) {
     ts.tv_nsec += (long)(delta % 1000) * 1000000L;
     if (ts.tv_nsec >= 1000000000L) { ts.tv_sec++; ts.tv_nsec -= 1000000000L; }
     pthread_cond_timedwait(&g_cv, &g_mu, &ts);
-    /* `s` stays valid: slots are never evicted or moved once claimed. */
+    /* `s` stays valid: slots never move, and our waiters count keeps
+     * slot_reclaim() from handing it to another host while we sleep. */
   }
 }
 
@@ -267,17 +402,52 @@ void hostgate_release(const char *url) {
   char host[HG_HOSTLEN];
   if (!url_host(url, host, sizeof host)) return;
   pthread_mutex_lock(&g_mu);
-  hg_slot *s = slot_for(host);
+  /* Lookup, never claim: a release for a host we hold no slot for (acquire
+   * failed open) must not consume a slot — that used to be slot_for(). */
+  hg_slot *s = slot_lookup(host);
   if (s && s->in_flight > 0) { s->in_flight--; g_inflight--; }
   pthread_mutex_unlock(&g_mu);
   pthread_cond_broadcast(&g_cv);
 }
 
+void hostgate_penalize(const char *url, long ms) {
+  char host[HG_HOSTLEN];
+  if (ms <= 0 || !url_host(url, host, sizeof host)) return;
+  cfg_once();
+  if (ms > HG_PENALTY_MAX_MS) ms = HG_PENALTY_MAX_MS;
+  pthread_mutex_lock(&g_mu);
+  hg_slot *s = slot_for(host);
+  if (s) {
+    long long until = mono_ms() + ms;
+    if (until > s->penalty_until_ms) s->penalty_until_ms = until;
+    g_penalties++;
+  }
+  pthread_mutex_unlock(&g_mu);
+}
+
+/* `over_budget` on the scheduler heartbeat is every fail-open, whatever the
+ * cause: a wait that ran out of budget AND a host the table had no room for.
+ * The second used to be invisible, which is how ~5,000 hosts went ungated
+ * without the heartbeat moving. hostgate_stats() splits them. */
 void hostgate_counters(long *out_waits, long *out_timeouts, long *out_inflight) {
   pthread_mutex_lock(&g_mu);
   if (out_waits)    *out_waits    = g_waits;
-  if (out_timeouts) *out_timeouts = g_timeouts;
+  if (out_timeouts) *out_timeouts = g_timeouts + g_table_full;
   if (out_inflight) *out_inflight = g_inflight;
+  pthread_mutex_unlock(&g_mu);
+}
+
+void hostgate_stats(hostgate_stats_t *out) {
+  if (!out) return;
+  pthread_mutex_lock(&g_mu);
+  out->waits      = g_waits;
+  out->timeouts   = g_timeouts;
+  out->table_full = g_table_full;
+  out->inflight   = g_inflight;
+  out->hosts      = g_hosts;
+  out->capacity   = HG_SLOTS;
+  out->evictions  = g_evictions;
+  out->penalties  = g_penalties;
   pthread_mutex_unlock(&g_mu);
 }
 
@@ -438,6 +608,45 @@ int hostgate_url_check_strict(const char *url) {
   return hostgate_host_check(host, 1);
 }
 
+/* ── camera / media destination policy (see header) ───────────────────────── */
+
+/* Unit tests serve fixture frames from 127.0.0.1; nothing else sets this.
+ * There is deliberately no environment variable, config key or route for it
+ * (JO_CAMERA_ALLOW_LAN was one, and was removed 2026-10-20). */
+static int g_camera_test_lan;
+
+void hostgate_camera_test_allow_lan(int on) { g_camera_test_lan = on ? 1 : 0; }
+
+/* Always strict for camera destinations, except under a unit test's fixture
+ * server — and strict even then when JO_HTTP_BLOCK_PRIVATE raised the floor. */
+static int camera_strict(void) {
+  return floor_is_strict() || !g_camera_test_lan;
+}
+
+int hostgate_camera_addr_check(const char *ip_text) {
+  return hostgate_addr_check(ip_text, camera_strict());
+}
+
+int hostgate_camera_url_check(const char *url, int resolve) {
+  if (!url) return HG_URL_BAD_HOST;
+  const char *sep = strstr(url, "://");
+  if (!sep || sep == url) return HG_URL_BAD_SCHEME;
+  for (const char *p = url; p < sep; p++)
+    if (!isalnum((unsigned char)*p) && *p != '+' && *p != '-' && *p != '.')
+      return HG_URL_BAD_SCHEME;
+  char host[HG_HOSTLEN];
+  if (!hostgate_url_host(url, host, sizeof host)) return HG_URL_BAD_HOST;
+  if (metadata_hostname(host)) return HG_URL_PRIVATE;
+  int strict = camera_strict();
+  size_t hl = strlen(host);
+  if (strict && (!strcmp(host, "localhost") ||
+                 (hl > 10 && !strcmp(host + hl - 10, ".localhost"))))
+    return HG_URL_PRIVATE;
+  int rc = hostgate_addr_check(host, strict);
+  if (rc != HG_URL_OK || !resolve) return rc;
+  return hostgate_host_check(host, strict);
+}
+
 const char *hostgate_url_reason(int rc) {
   switch (rc) {
     case HG_URL_OK:         return "ok";
@@ -454,4 +663,12 @@ int hostgate_same_host(const char *a, const char *b) {
   if (!hostgate_url_host(a, ha, sizeof ha)) return 0;
   if (!hostgate_url_host(b, hb, sizeof hb)) return 0;
   return strcmp(ha, hb) == 0;
+}
+
+int hostgate_pace_ms(const char *host) {
+  if (!host || !*host) return 0;
+  pthread_mutex_lock(&g_mu);
+  int gap = gap_for_host(host);
+  pthread_mutex_unlock(&g_mu);
+  return gap;
 }

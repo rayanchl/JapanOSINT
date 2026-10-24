@@ -152,7 +152,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 }
 
 static const source_def global_aleph_def = {
-  .id = "ALEPH_SEARCH", .collector = "osint",
+  .id = "ALEPH_SEARCH", .collector = "osint_" "investigation",
   .name = "OCCRP Aleph Search", .name_ja = "OCCRP Aleph 検索",
   .update_interval_sec = 0, .run = run,
   .category = "investigation", .type = "api",

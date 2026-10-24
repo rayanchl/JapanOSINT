@@ -612,6 +612,35 @@ int breach_monitor_rescan_all(db_handle *shared_db, const char *tenant_id,
  * process-lifetime, so there is nothing here to outlive. */
 typedef struct { db_handle *db; char tenant[64], monitor[64]; } rescan_job;
 
+/* ONE corpus rescan at a time, process-wide. Each one is a walk of the whole
+ * of breach_items (plus the value_domain backfill), and nothing bounded them:
+ * N creates of a domain monitor, or N POST .../rescan, started N concurrent
+ * full-corpus walks on N connections — each a detached thread nobody could
+ * cancel, all competing for the same write lock. A second walk adds no
+ * information the first is not already producing (every scan is idempotent),
+ * so the honest answer to a second request is "one is running", not a queue. */
+static pthread_mutex_t g_rescan_mu = PTHREAD_MUTEX_INITIALIZER;
+static int g_rescan_live = 0;
+
+int breach_monitor_rescan_try_begin(void) {
+  pthread_mutex_lock(&g_rescan_mu);
+  int ok = g_rescan_live == 0;
+  if (ok) g_rescan_live = 1;
+  pthread_mutex_unlock(&g_rescan_mu);
+  return ok;
+}
+void breach_monitor_rescan_end(void) {
+  pthread_mutex_lock(&g_rescan_mu);
+  g_rescan_live = 0;
+  pthread_mutex_unlock(&g_rescan_mu);
+}
+int breach_monitor_rescan_busy(void) {
+  pthread_mutex_lock(&g_rescan_mu);
+  int b = g_rescan_live;
+  pthread_mutex_unlock(&g_rescan_mu);
+  return b;
+}
+
 static void *rescan_job_thread(void *p) {
   rescan_job *j = (rescan_job *)p;
   long long mons = 0, hits = 0;
@@ -621,19 +650,24 @@ static void *rescan_job_thread(void *p) {
                   "hits=%lld%s\n",
           j->monitor, mons, hits, rc ? " (INCOMPLETE — see above)" : "");
   free(j);
+  breach_monitor_rescan_end();
   return NULL;
 }
 
 /* 1 when the scan is now running on its own thread, 0 when it could not be
- * started (the caller must then not claim it was). */
+ * started, -1 when another rescan already holds the slot (the caller must
+ * then not claim either way that it ran). */
 static int rescan_async(db_handle *db, const char *tenant, const char *monitor) {
+  if (!breach_monitor_rescan_try_begin()) return -1;
   rescan_job *j = calloc(1, sizeof *j);
-  if (!j) return 0;
+  if (!j) { breach_monitor_rescan_end(); return 0; }
   j->db = db;
   snprintf(j->tenant,  sizeof j->tenant,  "%s", tenant  ? tenant  : "");
   snprintf(j->monitor, sizeof j->monitor, "%s", monitor ? monitor : "");
   pthread_t th;
-  if (pthread_create(&th, NULL, rescan_job_thread, j) != 0) { free(j); return 0; }
+  if (pthread_create(&th, NULL, rescan_job_thread, j) != 0) {
+    free(j); breach_monitor_rescan_end(); return 0;
+  }
   pthread_detach(th);
   return 1;
 }
@@ -877,6 +911,11 @@ static char *one_monitor(db_handle *db, const char *tid, const char *id,
         cJSON_AddStringToObject(meta, "note",
           "the monitor is stored but the existing corpus has NOT been "
           "matched; run POST /api/breach-monitors/<id>/rescan");
+      else if (!strcmp(scan, "busy"))
+        cJSON_AddStringToObject(meta, "note",
+          "the monitor is stored but another corpus rescan is running, so the "
+          "existing corpus has NOT been matched yet; run POST "
+          "/api/breach-monitors/<id>/rescan once it finishes (409 until then)");
       else if (!strcmp(scan, "failed"))
         cJSON_AddStringToObject(meta, "note",
           "the initial match did not commit and no count is available; "
@@ -1380,7 +1419,8 @@ char *breach_monitors_api(db_handle *db, const tenant_ctx *t,
       } else {
         int started = rescan_async(db, tid, nid);
         out = one_monitor(db, tid, nid, 201, 1, NULL,
-                          started ? "running" : "not_started", status);
+                          started > 0 ? "running"
+                          : started < 0 ? "busy" : "not_started", status);
       }
     }
 post_done:
@@ -1427,12 +1467,28 @@ post_done:
     mon_row m;
     if (!load_mon(db, tid, seg, &m)) return err(status, 404, "not_found");
     long long mons = 0, hits = 0;
-    /* This route runs inline on purpose — the operator asked for the corpus
-     * walk and is waiting for its result, which is the difference between it
-     * and the create path above. It is still not allowed to report a count it
-     * did not commit: a scan whose events were rolled back is a 500, and the
-     * re-run is safe because every scan is idempotent. */
+    /* The operator asked for the corpus walk and is waiting for its result,
+     * which is the difference between this and the create path above — but
+     * it is waited for on an httpd WORKER (httpd.c offloads this route), not
+     * on the event loop, and it shares the one rescan slot. A busy slot is a
+     * 409 the client can retry, never a second concurrent walk. It is still
+     * not allowed to report a count it did not commit: a scan whose events
+     * were rolled back is a 500, and the re-run is safe because every scan is
+     * idempotent. */
+    if (!breach_monitor_rescan_try_begin()) {
+      *status = 409;
+      cJSON *e = cJSON_CreateObject();
+      cJSON_AddStringToObject(e, "error", "rescan_in_progress");
+      cJSON_AddStringToObject(e, "rescan", "running");
+      cJSON_AddStringToObject(e, "detail",
+        "another breach-corpus rescan is running; one runs at a time. "
+        "Retry when it finishes — scans are idempotent.");
+      cJSON_AddNumberToObject(e, "retry_after_sec", 30);
+      char *o = cJSON_PrintUnformatted(e); cJSON_Delete(e);
+      return o;
+    }
     int rc = breach_monitor_rescan_all(db, tid, seg, NULL, &mons, &hits);
+    breach_monitor_rescan_end();
     char *pl = audit_payload(m.kind, NULL, m.rule_id[0] ? m.rule_id : NULL,
                              m.domain[0] ? m.domain : NULL, m.hash);
     audit_write(db, tid, t->user_id, "breach_monitor.rescan", seg, pl);
