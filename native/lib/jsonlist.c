@@ -9,6 +9,7 @@
 #include <strings.h>   /* strcasecmp: POSIX declares it here, not in string.h */
 #include <math.h>
 #include <limits.h>
+#include <ctype.h>     /* isalnum: the language-subtag test in lang_map_pick */
 
 /* Field-name precedence. Order matters: the first hit wins, so the most
  * specific name has to come first. These lists are deliberately short — a
@@ -59,10 +60,64 @@ static const char *K_BODY[] = { "body", "content", "description", "summary",
 /* cJSON's object lookup is case-insensitive already, but only for an exact
  * spelling; walk the candidate list and take the first that is present AND
  * carries a usable scalar. */
+/* Is this object a LANGUAGE MAP — `{"en": "...", "fr": "...", ...}` — and if
+ * so, which member should the label come from?
+ *
+ * DCAT publishes a dataset's title and description as one string per language,
+ * which is the right data model and the wrong shape for `pick()` below: the
+ * value is an object, so it was skipped, and since `description` is the same
+ * shape there was nothing further down the list either. Measured 2026-10-24 on
+ * `gov-dataeuropa-search`: 100 of 100 records emitted under the fallback label
+ * — every row in the EU open data portal titled "procurement <slug>", every
+ * day, with the engine's own shape notice saying so.
+ *
+ * The test has to be narrow, because `pick()`'s whole reason for skipping
+ * objects is that `{"lat":…,"lon":…}` must not become a title. So: at least
+ * two members, EVERY value a non-empty string (lat/lon are numbers, and
+ * `country` is `{"label":…,"id":…,"resource":…}` whose keys are too long), and
+ * EVERY key a bare language subtag — two or three lower-case letters, with an
+ * optional region suffix (`pt-BR`). `id` is excluded by name: it is two
+ * letters and would otherwise let `{"id":"x","label":"y"}` through.
+ *
+ * `en` wins when present, else the first member in document order, so the
+ * choice is deterministic rather than whatever the server happened to serialise
+ * first. Returns NULL when the object is not a language map, leaving every
+ * record that resolved before resolving identically. */
+static cJSON *lang_map_pick(const cJSON *o) {
+  if (!cJSON_IsObject(o)) return NULL;
+  int n = 0;
+  cJSON *first = NULL, *en = NULL;
+  for (cJSON *m = o->child; m; m = m->next) {
+    const char *k = m->string;
+    if (!k || !cJSON_IsString(m) || !m->valuestring || !*m->valuestring)
+      return NULL;
+    size_t L = strlen(k), i = 0;
+    while (i < L && k[i] >= 'a' && k[i] <= 'z') i++;
+    if (i < 2 || i > 3) return NULL;                 /* not a language subtag */
+    if (i < L) {                                     /* an optional -REGION */
+      if (k[i] != '-' || L - i - 1 < 2 || L - i - 1 > 8) return NULL;
+      for (size_t j = i + 1; j < L; j++)
+        if (!isalnum((unsigned char)k[j])) return NULL;
+    }
+    if (!strcmp(k, "id")) return NULL;               /* not a language */
+    if (!first) first = m;
+    if (!strcmp(k, "en")) en = m;
+    n++;
+  }
+  if (n < 2) return NULL;
+  return en ? en : first;
+}
+
 static cJSON *pick(cJSON *o, const char *const *keys) {
   for (int i = 0; keys[i]; i++) {
     cJSON *v = cJSON_GetObjectItemCaseSensitive(o, keys[i]);
     if (!v) v = cJSON_GetObjectItem(o, keys[i]);
+    /* A language map resolves to one of its own strings; anything else that is
+     * nested is still skipped by the rule below. */
+    if (v && cJSON_IsObject(v)) {
+      cJSON *lm = lang_map_pick(v);
+      if (lm) return lm;
+    }
     /* "carries a usable scalar" has to be enforced HERE, not left to
      * scalar_dup: returning the first present-but-nested value stops the walk
      * dead, and scalar_dup then yields NULL, so the record loses a field it
@@ -1647,7 +1702,30 @@ int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
   free(prev_url);
   free(page_url);
 
-  if (truncated || full_unadvanced) {
+  /* A THIRD trigger: the upstream's own total exceeds what this walk fetched,
+   * and nothing above noticed.
+   *
+   * `truncated` is our ceiling and `full_unadvanced` is a full last page with
+   * no cursor; neither fires when the walk ENDS for another reason — and the
+   * commonest other reason is the repeat-page guard, which `break`s out of the
+   * loop above before `truncated` can be set. So a row whose upstream says it
+   * holds 9,079 records and which read 100 of them disclosed NOTHING.
+   *
+   * This is the same gap hpengine closed on 2026-10-20, in the other engine,
+   * and CLAUDE.md's "when you fix something, look for the other copies" names
+   * precisely this file. Measured on `gov-dataeuropa-search`: data.europa.eu's
+   * search answers `result.count: 9079` beside the 100 records it hands over,
+   * its deeper pages are not stable between reads, and every sort spelling it
+   * accepts is ignored — so one page is all that can be read SAFELY, and the
+   * remainder is a fact about the source that belongs in the database.
+   *
+   * It cannot cry wolf: a walk that read everything has `available == fetched`
+   * and files nothing, which is the property that makes a notice worth
+   * reading at all. */
+  int declared_short = !failed && !truncated && !full_unadvanced &&
+                       available >= 0 && available > fetched;
+
+  if (truncated || full_unadvanced || declared_short) {
     /* Same disclosure hpengine makes, same record_type, so a partial result is
      * mechanically detectable from either engine. A ceiling stop leaves an
      * UNKNOWN remainder — we never fetched those pages — so records_available
@@ -1656,11 +1734,23 @@ int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
     cJSON_AddStringToObject(p, "source_id", source_id);
     cJSON_AddStringToObject(p, "endpoint", url);
     cJSON_AddNumberToObject(p, "records_used", total);
-    if (available >= 0) cJSON_AddNumberToObject(p, "records_available", available);
+    if (available >= 0) {
+      cJSON_AddNumberToObject(p, "records_available", available);
+      /* Where that number came from, because a reader cannot otherwise tell
+       * the upstream's own count from our floor — the same field, and the same
+       * reason for it, as hpengine's notice. */
+      cJSON_AddStringToObject(p, "records_available_basis",
+                              "upstream declared this total");
+    }
     else cJSON_AddStringToObject(p, "records_available", "unknown — upstream declared no total");
+    cJSON_AddNumberToObject(p, "records_fetched", fetched);
     cJSON_AddNumberToObject(p, "pages_read", pages);
     cJSON_AddNumberToObject(p, "page_ceiling", page_max);
-    cJSON_AddBoolToObject(p, "more_pages_pending", 1);
+    /* FALSE on the declared-short path, and that is the point: the walk held
+     * no next-page URL when it stopped, so a checker keyed on this flag must
+     * not read it as "more is coming". The authoritative signal is the pair
+     * records_available / records_fetched above. */
+    cJSON_AddBoolToObject(p, "more_pages_pending", declared_short ? 0 : 1);
     char fdesc[64] = "", freason[256] = "";
     if (failed) {
       feed_status_describe(failed_status, fdesc, sizeof fdesc);
@@ -1672,6 +1762,10 @@ int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
     }
     cJSON_AddStringToObject(p, "reason", failed ? freason : truncated
       ? "the page ceiling stopped the walk while the upstream still had pages"
+      : declared_short
+      ? "the walk ended without reaching the upstream's own declared total — "
+        "either it re-served a page it had already given (the repeat guard) or "
+        "it ran out of pages to offer, so the remainder was never requested"
       : "the last page came back full (or the upstream declared more than was "
         "read) and neither the response nor this URL offers a way to ask for "
         "the next page, so records may remain unread");
@@ -1680,6 +1774,13 @@ int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
         "per-host minimum gap (core/hostgate.c) — see docs/SOURCE_EXHAUSTIVENESS.md"
       : truncated
       ? "raise $JO_JSONLIST_PAGE_MAX — see docs/SOURCE_EXHAUSTIVENESS.md"
+      : declared_short
+      ? "ask the endpoint what ordering it HONOURS before paging it, with a "
+        "control (an unknown field in a well-typed sort value): where a sort "
+        "is only type-checked and then ignored, a page walk re-reads and skips, "
+        "and one stable page plus this notice is the honest read. Where a sort "
+        "does work, give the row an ascending one on its own id and a cursor — "
+        "see docs/SOURCE_EXHAUSTIVENESS.md"
       : "give this source a cursor the walk can advance (for Socrata: $offset "
         "with a stable $order=:id) — see docs/SOURCE_EXHAUSTIVENESS.md");
     char *pj = cJSON_PrintUnformatted(p);

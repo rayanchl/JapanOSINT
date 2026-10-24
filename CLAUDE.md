@@ -1231,6 +1231,64 @@ Where the tree actually stands, as `make audit-sources` reports it:
   one request, and it is the only thing that separates "this sort works" from
   "this answer moves".
 
+  **AND A PARAMETER THAT VALIDATES IS NOT A PARAMETER THAT WORKS** (2026-10-24,
+  `gov-dataeuropa-search`). An hour after using "a bad spelling answers 400, so
+  this endpoint checks its query string" as the evidence that UK Parliament's
+  `_sort` is real — where it held — data.europa.eu's search showed the other
+  half. Its GET ignores `sort` outright; its POST form **type-checks the key and
+  then discards the value**: `{"sort":"id"}` answers a 400 naming the schema
+  ("input don't match type ARRAY"), which reads like proof the parameter is
+  live, and `{"sort":["id+asc"]}`, `["id+desc"]` and the control
+  `["frobnicate+asc"]` then all return the identical first three records. A 400
+  tells you a SHAPE was rejected; only an unknown field inside a well-typed
+  value tells you the ordering is honoured.
+
+  **The cost of not asking is a record count that measures the drift, not the
+  source.** That row paged on the portal's own 0-based `page`, verified in
+  September as "page=0 and page=1 are 100 distinct ids" — one lucky draw. Page 0
+  IS stable across two reads; **page 1 is not**. So the walk's length came to
+  depend on whether a reshuffled page happened to come back byte-identical and
+  trip the repeat guard, and three CONSECUTIVE runs of the unchanged row
+  emitted **500, 200 and 100 records, storing 103, 102 and 101** — same binary,
+  same URL, same minute. It reads one stable page now (`pw_walk_max(…, 1)`,
+  100 of 100 stored, one request, two runs identical) and discloses the rest.
+
+  Closing it found three things in shared code, each the "other copies" lesson:
+
+  * **VJSON could not disclose a declared remainder at all.**
+    `jsonlist_emit_paged`'s notice fires on OUR ceiling or a full last page with
+    no cursor — and the commonest other ending, the repeat-page guard, `break`s
+    out before either is set. So a row whose upstream said it held 9,079 and
+    which read 100 said NOTHING. That is the same gap hpengine closed on
+    2026-10-20, in the other engine. There is a third trigger now
+    (`available > fetched`), with `more_pages_pending: false` because the walk
+    held no next page, and `records_available_basis` beside it. **Measured
+    quiet**: of 14 healthy rows sampled from the registry sweep, 13 file no
+    notice and the 14th was already filing one for a page-3 HTTP 500.
+  * **`lib/pagewalk.c` keeps a THIRD declared-total list** beside jsonlist's and
+    hpengine's XML one, and it reached neither `result.count` (CKAN's and
+    data.europa's envelope) nor `result.totalResults` (the Linked Data API's) —
+    so its notice read `records_available: null` with the number in the body.
+    Both spellings were added to both lists in one change.
+  * **A remedy must not name a knob that cannot move**, which this file already
+    says and pagewalk still did: "give this source an offset/page parameter" is
+    wrong for a row that declares a one-page ceiling ON PURPOSE. A
+    `page_max_declared == 1` walk now says so and points at the row's comment.
+
+  **And DCAT titles are language maps, which `pick()` was built to skip.**
+  `title: {"en": …, "fr": …}` is an object, so the title picker skipped it, and
+  `description` is the same shape, so nothing further down the list resolved
+  either: 100 of 100 records a day stored as "procurement &lt;slug&gt;", with the
+  engine's own shape notice saying so and nobody reading it.
+  `lang_map_pick()` reads one such object — `en`, else the first member — and
+  the discriminator is deliberately narrow, because `pick()`'s whole reason for
+  skipping objects is that `{"lat":…,"lon":…}` must not become a title: at
+  least two members, every value a non-empty STRING, every key a bare language
+  subtag (two or three lower-case letters, optional region), and `id` excluded
+  by name because it is two letters. `tests/unit/test_jsonlist_title.c` pins all
+  of that plus the additive guarantee, and the 14-row sample re-run after the
+  change is identical row for row.
+
   **And read the body on a 200 before trusting it: `sortBy=id` is a BACKEND
   400** on inspire.lechnerkozpont.hu, reported inside an HTTP **200** as a PHP
   warning page naming `localhost:8085`. That host is a proxy in front of a
