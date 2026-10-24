@@ -15,7 +15,7 @@ VGEO(us_bostonopendata_boston_opendata_arcgis_co_datasets, "us-bostonopendata-bo
 
 VJSON(us_chronicdata_cdc_gov_catalog, "us-chronicdata-cdc-gov-catalog", "chronicdata.cdc.gov — catalog (United States)", "chronicdata.cdc.gov — catalog (United States)",
   "us_opendata", "opendata",
-  "https://chronicdata.cdc.gov/api/catalog/v1?limit=100",
+  "https://chronicdata.cdc.gov/api/catalog/v1?limit=100&domains=chronicdata.cdc.gov&search_context=chronicdata.cdc.gov&order=createdAt",
   "results",
   "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at chronicdata.cdc.gov.");
@@ -29,7 +29,7 @@ VJSON(us_chronicdata_cdc_gov_views, "us-chronicdata-cdc-gov-views", "chronicdata
 
 VJSON(us_data_austintexas_gov_catalog, "us-data-austintexas-gov-catalog", "data.austintexas.gov — catalog (United States)", "data.austintexas.gov — catalog (United States)",
   "us_opendata", "opendata",
-  "https://data.austintexas.gov/api/catalog/v1?limit=100",
+  "https://data.austintexas.gov/api/catalog/v1?limit=100&domains=data.austintexas.gov&search_context=data.austintexas.gov&order=createdAt",
   "results",
   "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at data.austintexas.gov.");
@@ -48,7 +48,7 @@ VGEO(us_data_baltimorecity_gov_datasets, "us-data-baltimorecity-gov-datasets", "
 
 VJSON(us_data_bloomington_in_gov_catalog, "us-data-bloomington-in-gov-catalog", "data.bloomington.in.gov — catalog (United States)", "data.bloomington.in.gov — catalog (United States)",
   "us_opendata", "opendata",
-  "https://data.bloomington.in.gov/api/catalog/v1?limit=100",
+  "https://data.bloomington.in.gov/api/catalog/v1?limit=100&domains=data.bloomington.in.gov&search_context=data.bloomington.in.gov&order=createdAt",
   "results",
   "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at data.bloomington.in.gov.");
@@ -329,7 +329,7 @@ VJSON(us_data_boston_gov_tags, "us-data-boston-gov-tags", "Analyze Boston — ta
 
 VJSON(us_data_bts_gov_catalog, "us-data-bts-gov-catalog", "data.bts.gov — catalog (United States)", "data.bts.gov — catalog (United States)",
   "us_opendata", "opendata",
-  "https://data.bts.gov/api/catalog/v1?limit=100",
+  "https://data.bts.gov/api/catalog/v1?limit=100&domains=data.bts.gov&search_context=data.bts.gov&order=createdAt",
   "results",
   "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at data.bts.gov.");
@@ -343,7 +343,7 @@ VJSON(us_data_bts_gov_views, "us-data-bts-gov-views", "data.bts.gov — views (U
 
 VJSON(us_data_cambridgema_gov_catalog, "us-data-cambridgema-gov-catalog", "data.cambridgema.gov — catalog (United States)", "data.cambridgema.gov — catalog (United States)",
   "us_opendata", "opendata",
-  "https://data.cambridgema.gov/api/catalog/v1?limit=100",
+  "https://data.cambridgema.gov/api/catalog/v1?limit=100&domains=data.cambridgema.gov&search_context=data.cambridgema.gov&order=createdAt",
   "results",
   "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at data.cambridgema.gov.");
@@ -357,7 +357,7 @@ VJSON(us_data_cambridgema_gov_views, "us-data-cambridgema-gov-views", "data.camb
 
 VJSON(us_data_cdc_gov_catalog, "us-data-cdc-gov-catalog", "data.cdc.gov — catalog (United States)", "data.cdc.gov — catalog (United States)",
   "us_opendata", "opendata",
-  "https://data.cdc.gov/api/catalog/v1?limit=100",
+  "https://data.cdc.gov/api/catalog/v1?limit=100&domains=data.cdc.gov&search_context=data.cdc.gov&order=createdAt",
   "results",
   "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at data.cdc.gov.");
@@ -371,7 +371,7 @@ VJSON(us_data_cdc_gov_views, "us-data-cdc-gov-views", "data.cdc.gov — views (U
 
 VJSON(us_data_cityofchicago_org_catalog, "us-data-cityofchicago-org-catalog", "Chicago, Illinois — catalog (United States)", "Chicago, Illinois — catalog (United States)",
   "us_opendata", "opendata",
-  "https://data.cityofchicago.org/api/catalog/v1?limit=100",
+  "https://data.cityofchicago.org/api/catalog/v1?limit=100&domains=data.cityofchicago.org&search_context=data.cityofchicago.org&order=createdAt",
   "results",
   "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at data.cityofchicago.org.");
@@ -385,7 +385,7 @@ VJSON(us_data_cityofchicago_org_views, "us-data-cityofchicago-org-views", "Chica
 
 VJSON(us_data_cityofnewyork_us_catalog, "us-data-cityofnewyork-us-catalog", "data.cityofnewyork.us — catalog (United States)", "data.cityofnewyork.us — catalog (United States)",
   "us_opendata", "opendata",
-  "https://data.cityofnewyork.us/api/catalog/v1?limit=100",
+  "https://data.cityofnewyork.us/api/catalog/v1?limit=100&domains=data.cityofnewyork.us&search_context=data.cityofnewyork.us&order=createdAt",
   "results",
   "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at data.cityofnewyork.us.");
@@ -411,7 +411,7 @@ VGEO(us_data_cityofsacramento_org_datasets, "us-data-cityofsacramento-org-datase
 
 VJSON(us_data_colorado_gov_catalog, "us-data-colorado-gov-catalog", "Colorado Information Marketplace — catalog (United States)", "Colorado Information Marketplace — catalog (United States)",
   "us_opendata", "opendata",
-  "https://data.colorado.gov/api/catalog/v1?limit=100",
+  "https://data.colorado.gov/api/catalog/v1?limit=100&domains=data.colorado.gov&search_context=data.colorado.gov&order=createdAt",
   "results",
   "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at data.colorado.gov.");
@@ -425,7 +425,7 @@ VJSON(us_data_colorado_gov_views, "us-data-colorado-gov-views", "Colorado Inform
 
 VJSON(us_data_ct_gov_catalog, "us-data-ct-gov-catalog", "data.ct.gov — catalog (United States)", "data.ct.gov — catalog (United States)",
   "us_opendata", "opendata",
-  "https://data.ct.gov/api/catalog/v1?limit=100",
+  "https://data.ct.gov/api/catalog/v1?limit=100&domains=data.ct.gov&search_context=data.ct.gov&order=createdAt",
   "results",
   "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at data.ct.gov.");
@@ -439,7 +439,7 @@ VJSON(us_data_ct_gov_views, "us-data-ct-gov-views", "data.ct.gov — views (Unit
 
 VJSON(us_data_delaware_gov_catalog, "us-data-delaware-gov-catalog", "data.delaware.gov — catalog (United States)", "data.delaware.gov — catalog (United States)",
   "us_opendata", "opendata",
-  "https://data.delaware.gov/api/catalog/v1?limit=100",
+  "https://data.delaware.gov/api/catalog/v1?limit=100&domains=data.delaware.gov&search_context=data.delaware.gov&order=createdAt",
   "results",
   "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at data.delaware.gov.");

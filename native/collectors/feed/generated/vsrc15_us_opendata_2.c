@@ -9,7 +9,7 @@
 
 VJSON(us_data_honolulu_gov_catalog, "us-data-honolulu-gov-catalog", "data.honolulu.gov — catalog (United States)", "data.honolulu.gov — catalog (United States)",
   "us_opendata", "opendata",
-  "https://data.honolulu.gov/api/catalog/v1?limit=100",
+  "https://data.honolulu.gov/api/catalog/v1?limit=100&domains=data.honolulu.gov&search_context=data.honolulu.gov&order=createdAt",
   "results",
   "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at data.honolulu.gov.");
@@ -23,7 +23,7 @@ VJSON(us_data_honolulu_gov_views, "us-data-honolulu-gov-views", "data.honolulu.g
 
 VJSON(us_data_kcmo_org_catalog, "us-data-kcmo-org-catalog", "Open Data KC — catalog (United States)", "Open Data KC — catalog (United States)",
   "us_opendata", "opendata",
-  "https://data.kcmo.org/api/catalog/v1?limit=100",
+  "https://data.kcmo.org/api/catalog/v1?limit=100&domains=data.kcmo.org&search_context=data.kcmo.org&order=createdAt",
   "results",
   "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at data.kcmo.org.");
@@ -37,7 +37,7 @@ VJSON(us_data_kcmo_org_views, "us-data-kcmo-org-views", "Open Data KC — views 
 
 VJSON(us_data_kingcounty_gov_catalog, "us-data-kingcounty-gov-catalog", "data.kingcounty.gov — catalog (United States)", "data.kingcounty.gov — catalog (United States)",
   "us_opendata", "opendata",
-  "https://data.kingcounty.gov/api/catalog/v1?limit=100",
+  "https://data.kingcounty.gov/api/catalog/v1?limit=100&domains=data.kingcounty.gov&search_context=data.kingcounty.gov&order=createdAt",
   "results",
   "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at data.kingcounty.gov.");
@@ -51,7 +51,7 @@ VJSON(us_data_kingcounty_gov_views, "us-data-kingcounty-gov-views", "data.kingco
 
 VJSON(us_data_lacity_org_catalog, "us-data-lacity-org-catalog", "DataLA — catalog (United States)", "DataLA — catalog (United States)",
   "us_opendata", "opendata",
-  "https://data.lacity.org/api/catalog/v1?limit=100",
+  "https://data.lacity.org/api/catalog/v1?limit=100&domains=data.lacity.org&search_context=data.lacity.org&order=createdAt",
   "results",
   "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at data.lacity.org.");
@@ -71,7 +71,7 @@ VGEO(us_data_lexingtonky_gov_datasets, "us-data-lexingtonky-gov-datasets", "data
 
 VJSON(us_data_michigan_gov_catalog, "us-data-michigan-gov-catalog", "data.michigan.gov — catalog (United States)", "data.michigan.gov — catalog (United States)",
   "us_opendata", "opendata",
-  "https://data.michigan.gov/api/catalog/v1?limit=100",
+  "https://data.michigan.gov/api/catalog/v1?limit=100&domains=data.michigan.gov&search_context=data.michigan.gov&order=createdAt",
   "results",
   "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at data.michigan.gov.");
@@ -85,7 +85,7 @@ VJSON(us_data_michigan_gov_views, "us-data-michigan-gov-views", "data.michigan.g
 
 VJSON(us_data_mo_gov_catalog, "us-data-mo-gov-catalog", "data.mo.gov — catalog (United States)", "data.mo.gov — catalog (United States)",
   "us_opendata", "opendata",
-  "https://data.mo.gov/api/catalog/v1?limit=100",
+  "https://data.mo.gov/api/catalog/v1?limit=100&domains=data.mo.gov&search_context=data.mo.gov&order=createdAt",
   "results",
   "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at data.mo.gov.");
@@ -99,7 +99,7 @@ VJSON(us_data_mo_gov_views, "us-data-mo-gov-views", "data.mo.gov — views (Unit
 
 VJSON(us_data_montgomerycountymd_gov_catalog, "us-data-montgomerycountymd-gov-catalog", "data.montgomerycountymd.gov — catalog (United States)", "data.montgomerycountymd.gov — catalog (United States)",
   "us_opendata", "opendata",
-  "https://data.montgomerycountymd.gov/api/catalog/v1?limit=100",
+  "https://data.montgomerycountymd.gov/api/catalog/v1?limit=100&domains=data.montgomerycountymd.gov&search_context=data.montgomerycountymd.gov&order=createdAt",
   "results",
   "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at data.montgomerycountymd.gov.");
@@ -113,7 +113,7 @@ VJSON(us_data_montgomerycountymd_gov_views, "us-data-montgomerycountymd-gov-view
 
 VJSON(us_data_nj_gov_catalog, "us-data-nj-gov-catalog", "data.nj.gov — catalog (United States)", "data.nj.gov — catalog (United States)",
   "us_opendata", "opendata",
-  "https://data.nj.gov/api/catalog/v1?limit=100",
+  "https://data.nj.gov/api/catalog/v1?limit=100&domains=data.nj.gov&search_context=data.nj.gov&order=createdAt",
   "results",
   "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at data.nj.gov.");
@@ -127,7 +127,7 @@ VJSON(us_data_nj_gov_views, "us-data-nj-gov-views", "data.nj.gov — views (Unit
 
 VJSON(us_data_nola_gov_catalog, "us-data-nola-gov-catalog", "New Orleans, Louisiana — catalog (United States)", "New Orleans, Louisiana — catalog (United States)",
   "us_opendata", "opendata",
-  "https://data.nola.gov/api/catalog/v1?limit=100",
+  "https://data.nola.gov/api/catalog/v1?limit=100&domains=data.nola.gov&search_context=data.nola.gov&order=createdAt",
   "results",
   "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at data.nola.gov.");
@@ -141,14 +141,14 @@ VJSON(us_data_nola_gov_views, "us-data-nola-gov-views", "New Orleans, Louisiana 
 
 VJSON(us_data_ny_gov_catalog, "us-data-ny-gov-catalog", "Open New York — catalog (United States)", "Open New York — catalog (United States)",
   "us_opendata", "opendata",
-  "https://data.ny.gov/api/catalog/v1?limit=100",
+  "https://data.ny.gov/api/catalog/v1?limit=100&domains=data.ny.gov&search_context=data.ny.gov&order=createdAt",
   "results",
   "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at data.ny.gov.");
 
 VJSON(us_data_oaklandca_gov_catalog, "us-data-oaklandca-gov-catalog", "data.oaklandca.gov — catalog (United States)", "data.oaklandca.gov — catalog (United States)",
   "us_opendata", "opendata",
-  "https://data.oaklandca.gov/api/catalog/v1?limit=100",
+  "https://data.oaklandca.gov/api/catalog/v1?limit=100&domains=data.oaklandca.gov&search_context=data.oaklandca.gov&order=createdAt",
   "results",
   "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at data.oaklandca.gov.");
@@ -162,7 +162,7 @@ VJSON(us_data_oaklandca_gov_views, "us-data-oaklandca-gov-views", "data.oaklandc
 
 VJSON(us_data_oregon_gov_catalog, "us-data-oregon-gov-catalog", "Oregon — catalog (United States)", "Oregon — catalog (United States)",
   "us_opendata", "opendata",
-  "https://data.oregon.gov/api/catalog/v1?limit=100",
+  "https://data.oregon.gov/api/catalog/v1?limit=100&domains=data.oregon.gov&search_context=data.oregon.gov&order=createdAt",
   "results",
   "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at data.oregon.gov.");
@@ -176,7 +176,7 @@ VJSON(us_data_oregon_gov_views, "us-data-oregon-gov-views", "Oregon — views (U
 
 VJSON(us_data_pa_gov_catalog, "us-data-pa-gov-catalog", "data.pa.gov — catalog (United States)", "data.pa.gov — catalog (United States)",
   "us_opendata", "opendata",
-  "https://data.pa.gov/api/catalog/v1?limit=100",
+  "https://data.pa.gov/api/catalog/v1?limit=100&domains=data.pa.gov&search_context=data.pa.gov&order=createdAt",
   "results",
   "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at data.pa.gov.");
@@ -190,7 +190,7 @@ VJSON(us_data_pa_gov_views, "us-data-pa-gov-views", "data.pa.gov — views (Unit
 
 VJSON(us_data_providenceri_gov_catalog, "us-data-providenceri-gov-catalog", "City of Providence Open Data Portal — catalog (United States)", "City of Providence Open Data Portal — catalog (United States)",
   "us_opendata", "opendata",
-  "https://data.providenceri.gov/api/catalog/v1?limit=100",
+  "https://data.providenceri.gov/api/catalog/v1?limit=100&domains=data.providenceri.gov&search_context=data.providenceri.gov&order=createdAt",
   "results",
   "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at data.providenceri.gov.");
@@ -210,7 +210,7 @@ VGEO(us_data_raleighnc_gov_datasets, "us-data-raleighnc-gov-datasets", "Open Ral
 
 VJSON(us_data_richmondgov_com_catalog, "us-data-richmondgov-com-catalog", "City of Richmond Open Data Portal — catalog (United States)", "City of Richmond Open Data Portal — catalog (United States)",
   "us_opendata", "opendata",
-  "https://data.richmondgov.com/api/catalog/v1?limit=100",
+  "https://data.richmondgov.com/api/catalog/v1?limit=100&domains=data.richmondgov.com&search_context=data.richmondgov.com&order=createdAt",
   "results",
   "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at data.richmondgov.com.");
@@ -329,7 +329,7 @@ VJSON(us_data_sanjoseca_gov_tags, "us-data-sanjoseca-gov-tags", "City of San Jos
 
 VJSON(us_data_seattle_gov_catalog, "us-data-seattle-gov-catalog", "Seattle — catalog (United States)", "Seattle — catalog (United States)",
   "us_opendata", "opendata",
-  "https://data.seattle.gov/api/catalog/v1?limit=100",
+  "https://data.seattle.gov/api/catalog/v1?limit=100&domains=data.seattle.gov&search_context=data.seattle.gov&order=createdAt",
   "results",
   "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at data.seattle.gov.");
@@ -343,7 +343,7 @@ VJSON(us_data_seattle_gov_views, "us-data-seattle-gov-views", "Seattle — views
 
 VJSON(us_data_sonomacounty_ca_gov_catalog, "us-data-sonomacounty-ca-gov-catalog", "data.sonomacounty.ca.gov — catalog (United States)", "data.sonomacounty.ca.gov — catalog (United States)",
   "us_opendata", "opendata",
-  "https://data.sonomacounty.ca.gov/api/catalog/v1?limit=100",
+  "https://data.sonomacounty.ca.gov/api/catalog/v1?limit=100&domains=data.sonomacounty.ca.gov&search_context=data.sonomacounty.ca.gov&order=createdAt",
   "results",
   "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at data.sonomacounty.ca.gov.");
@@ -357,7 +357,7 @@ VJSON(us_data_sonomacounty_ca_gov_views, "us-data-sonomacounty-ca-gov-views", "d
 
 VJSON(us_data_texas_gov_catalog, "us-data-texas-gov-catalog", "data.texas.gov — catalog (United States)", "data.texas.gov — catalog (United States)",
   "us_opendata", "opendata",
-  "https://data.texas.gov/api/catalog/v1?limit=100",
+  "https://data.texas.gov/api/catalog/v1?limit=100&domains=data.texas.gov&search_context=data.texas.gov&order=createdAt",
   "results",
   "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at data.texas.gov.");
@@ -371,7 +371,7 @@ VJSON(us_data_texas_gov_views, "us-data-texas-gov-views", "data.texas.gov — vi
 
 VJSON(us_data_transportation_gov_catalog, "us-data-transportation-gov-catalog", "data.transportation.gov — catalog (United States)", "data.transportation.gov — catalog (United States)",
   "us_opendata", "opendata",
-  "https://data.transportation.gov/api/catalog/v1?limit=100",
+  "https://data.transportation.gov/api/catalog/v1?limit=100&domains=data.transportation.gov&search_context=data.transportation.gov&order=createdAt",
   "results",
   "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at data.transportation.gov.");
@@ -385,7 +385,7 @@ VJSON(us_data_transportation_gov_views, "us-data-transportation-gov-views", "dat
 
 VJSON(us_data_wa_gov_catalog, "us-data-wa-gov-catalog", "Washington — catalog (United States)", "Washington — catalog (United States)",
   "us_opendata", "opendata",
-  "https://data.wa.gov/api/catalog/v1?limit=100",
+  "https://data.wa.gov/api/catalog/v1?limit=100&domains=data.wa.gov&search_context=data.wa.gov&order=createdAt",
   "results",
   "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at data.wa.gov.");
@@ -399,14 +399,14 @@ VJSON(us_data_wa_gov_views, "us-data-wa-gov-views", "Washington — views (Unite
 
 VJSON(us_data_weho_org_catalog, "us-data-weho-org-catalog", "City of West Hollywood Open Data — catalog (United States)", "City of West Hollywood Open Data — catalog (United States)",
   "us_opendata", "opendata",
-  "https://data.weho.org/api/catalog/v1?limit=100",
+  "https://data.weho.org/api/catalog/v1?limit=100&domains=data.weho.org&search_context=data.weho.org&order=createdAt",
   "results",
   "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at data.weho.org.");
 
 VJSON(us_datacatalog_cookcountyil_gov_catalog, "us-datacatalog-cookcountyil-gov-catalog", "Open Data Portal for Cook County Government — catalog (United States)", "Open Data Portal for Cook County Government — catalog (United States)",
   "us_opendata", "opendata",
-  "https://datacatalog.cookcountyil.gov/api/catalog/v1?limit=100",
+  "https://datacatalog.cookcountyil.gov/api/catalog/v1?limit=100&domains=datacatalog.cookcountyil.gov&search_context=datacatalog.cookcountyil.gov&order=createdAt",
   "results",
   "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at datacatalog.cookcountyil.gov.");

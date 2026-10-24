@@ -27,7 +27,10 @@ static const hp_source HP3B19_SIGINT[] = {
     .record_type = "broadcast-transmitter",
     .tags = "\"sigint\",\"spectrum\",\"broadcast\",\"finland\",\"register\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.traficom.fi/api/v1/Radioasematiedot?$top=1000",
+    /* `$orderby=ID` — the entity's own sequential id; this row cycles.
+     * Measured 2026-10-24: $skip=0 answers ID 1067, $skip=1 answers 1068,
+     * `ID desc` answers 3430. */
+    .url = "https://opendata.traficom.fi/api/v1/Radioasematiedot?$top=1000&$orderby=ID",
     .array_path = "value",
     .date_keys = "EndingDate",
     /* exhaustive-ok: LicenseNumber is the broadcaster's umbrella licence, not
@@ -78,7 +81,10 @@ static const hp_source HP3B19_SIGINT[] = {
     .record_type = "frequency-allocation",
     .tags = "\"sigint\",\"spectrum\",\"allocation\",\"finland\",\"reference\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.traficom.fi/api/v1/Taajuusjakotaulukko?$top=1000",
+    /* `$orderby=ID` — the entity's own sequential id; this row cycles.
+     * Measured 2026-10-24: $skip=0 answers ID 1, $skip=1 answers ID 2,
+     * and `ID desc` answers 5917, so the sort is honoured. */
+    .url = "https://opendata.traficom.fi/api/v1/Taajuusjakotaulukko?$top=1000&$orderby=ID",
     .array_path = "value",
     .interval = 86400,
     .page_param = "$skip",
@@ -123,7 +129,12 @@ static const hp_source HP3B19_SIGINT[] = {
     .record_type = "radio-licence",
     .tags = "\"sigint\",\"amateur\",\"callsign\",\"finland\",\"register\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.traficom.fi/api/v1/RadioamatoorienKutsumerkit?$top=1000",
+    /* `$orderby=ID` because this row cycles and OData guarantees no order
+     * without it. `ID` is the entity's own sequential id (the callsign is
+     * not: it is the row's identity but not monotone, so a new licence
+     * would land mid-collection). Measured 2026-10-24: accepted, honoured,
+     * $skip 0/1 answer consecutive ids. */
+    .url = "https://opendata.traficom.fi/api/v1/RadioamatoorienKutsumerkit?$top=1000&$orderby=ID",
     .array_path = "value",
     .id_keys = "CallSign",
     .interval = 86400,

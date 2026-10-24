@@ -2008,6 +2008,83 @@ Engine subtleties worth knowing before writing a row:
   before and after — a total that moves means the parameter was not read as a
   sort, and the row is now about a different collection.
 
+  **The long tail is measured too, and 19 more rows carry a sort** (2026-10-24,
+  `docs/measured-seam-tail-2026-10-24.tsv`). The 62 single-host rows no family
+  covers were each sent their own URL with a BOGUS sort value under nine
+  candidate parameter names: 29 parse such a parameter, 28 answer the baseline
+  byte for byte, 5 were unreachable. **The error body is the part worth
+  reading** — DERIB, USAspending and Misskey each hand over their whole allowed
+  set in it, and the OData services answer "could not find a property named …
+  on type …", which doubles as a schema check. Applied, each verified accepted,
+  honoured, total-preserving and disjoint over two runs against one database:
+  twelve OData rows on `$orderby=<the entity's own key>`, GOV.UK Search on
+  `order=public_timestamp` (the same ascending order the six rows in
+  `hp16_us_legal_1.c` carry), AODN on `sortBy=_id`, Miyazaki's CKAN group page
+  on `sort=metadata_created asc`, ACT's Socrata catalogue on `order=createdAt`,
+  Misskey on `sort=+firstRetrievedAt` (its enum's only append-at-tail order; a
+  page is its own 30), DERIB on `sort=legislationIdentifier` and USAspending on
+  `sort=name&order=asc` (209 of 209, its declared total). Twelve are measured
+  and NOT changed: GLEIF ×3 (`page[number]=51` is refused, so they are bounded
+  at 10,000 whatever the order — France declares 193,375 — and a stable sort
+  would only freeze which 10,000; the fix is a narrower filter per request), UK
+  Land Registry's PPI (`_sort` answers nothing in 35 s and an internal-error
+  page at 95 s, against a sub-second unsorted page), TronScan (only the
+  volatile `balance` is accepted, and that ranking is the row's subject), the
+  two Mastodon directories (`order` is `active|new`), ENTSOG (parsed, not
+  honoured), the two PNCP rows, and the two WordPress.org registries, whose
+  `request[browse]` offers rankings and a descending recency and no ascending
+  key. Three lessons:
+
+  * **Ask for the row's own `id_keys` and you check the row as well as the
+    order.** `$orderby=_RecordID` on WHO's FluNet answered "Could not find a
+    property named '_RecordID' on type 'FLUMART.VIW_FNT'" — the field that row
+    had keyed every record on since it shipped. The engine was already saying
+    so: the run files a `shape:id-keys-unmatched` notice and content-hashes
+    each uid, so a week WHO later revises is stored as a NEW row instead of
+    updating the one it corrects. Identity measured on 1,000 mid-collection
+    records: `ISO2+ISOYW` is 795 distinct of 1,000, `ISO2+ISOYW+ORIGIN_SOURCE`
+    is 1,000, and the row carries that now (2,000 + 2,000 = 4,000 distinct over
+    two runs). **A sweep of that one notice across the registry is the obvious
+    next thing and has not been done**:
+    `select source_id, count(*) from intel_items where record_type like
+    'collector-shape-notice%' and title like '%id-keys-unmatched%'`.
+  * **Prefer a key whose ties are impossible over one whose ties reshuffle.**
+    MSRC takes `releaseDate` or `id`, not both (the composite is refused).
+    Hundreds of advisories share a release date and the order inside a tie is
+    undefined, so a tie block can reorder under a resumed walk and lose a
+    record for good; a guid order is total, and an advisory inserted
+    mid-collection is simply read next cycle.
+  * **A measurement is not a code change.** The applier appended `&sort=…` to
+    the one row whose URL had no query string, so Misskey asked for
+    `/instances&sort=…`: one record, 135 bytes, `rc=0`, and only the two-run
+    engine reading caught it. A sweep of every URL literal for a `&` before any
+    `?` found nine more, all correct — five JMA `#fragment` portal links, an
+    open-meteo docs link, and two N2YO calls whose API really does document
+    `&apiKey=` appended to the path.
+
+  **And it found a rule-4d defect in 40 rows: a Socrata domain's own
+  `/api/catalog/v1` is not scoped to that domain** (2026-10-24,
+  `docs/measured-socrata-scope-2026-10-24.tsv`). This is the batch-34 finding
+  in 39 rows that shipped after it plus one that predates it, and the ACT row's
+  probe gave it away by answering in Spanish. Measured both ways on all 40:
+  unscoped each answers `resultSetSize` 10000 and 39 of 40 answer another
+  portal's dataset FIRST (Dallas, for 38); scoped each answers its own
+  catalogue — Honolulu 453, ACT 784, NYC 3,022, Maryland 3,606. Every record
+  they stored was attributed to the domain in the row's name whoever owned it,
+  with every gate green. All 40 carry `domains=`, `search_context=` and
+  `order=createdAt` now (the order, and the reason, that the cross-portal rows
+  in `vsrc14_us_state_3.c` already carry); the cross-portal rows on
+  `api.us.socrata.com` are deliberately unscoped and were left alone, because
+  they claim no domain. Two things to know about that set: **eight of the 40
+  hold more datasets than one run reads** and, being VJSON rows, they cannot
+  declare `page_resume` — they read the oldest-created 2,000 and file a
+  truncation notice, and moving them onto hpengine for a cycle is the named
+  follow-up; and **`chronicdata.cdc.gov` is now an alias of `data.cdc.gov`**
+  (same 1,478 ids at offset 0 and 1000, identical `/api/views/metadata/v1`), so
+  the five chronicdata rows collect what the data.cdc.gov rows collect. They
+  are recorded rather than removed: identical data, duplicate requests, and the
+  removal is a registry-count decision for the repository owner.
+
   **And the 44 unresolved verdicts of the first sweep were re-run**
   (`docs/measured-cycle-retry-2026-10-22.tsv`), because "re-run each
   FETCH_FAILED once" is this file's own rule and inferring 44 rows from five

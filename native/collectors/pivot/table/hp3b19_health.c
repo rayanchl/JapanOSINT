@@ -27,10 +27,22 @@ static const hp_source HP3B19_HEALTH[] = {
     .record_type = "influenza-surveillance-record",
     .tags = "\"who\",\"influenza\",\"surveillance\",\"flunet\",\"gisrs\",\"virology\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://xmart-api-public.who.int/FLUMART/VIW_FNT?%24format=json&%24top=1000",
+    /* `_RecordID` was not a field this mart has, and the row had been keying
+     * on it since it shipped: `$orderby=_RecordID` answers "Could not find a
+     * property named '_RecordID' on type 'FLUMART.VIW_FNT'", and a run filed
+     * a `shape:id-keys-unmatched` notice and content-hashed every uid — so a
+     * week WHO later revises was stored as a new row instead of updating the
+     * one it corrects. Identity measured 2026-10-24 on 1,000 mid-collection
+     * records: ISO2+ISOYW is 795 distinct of 1,000 (three origin sources
+     * report the same country-week), ISO2+ISOYW+ORIGIN_SOURCE is 1,000.
+     * `$orderby=ISOYW,ISO2` for the cycle: accepted and honoured (desc answers
+     * a different first record, $skip 0/1/2 answer consecutive ISO weeks),
+     * @odata.count unchanged at 189,825. The other two xMart rows in this
+     * table DO have _RecordID — the key is per mart, not per service. */
+    .url = "https://xmart-api-public.who.int/FLUMART/VIW_FNT?%24format=json&%24top=1000&%24orderby=ISOYW,ISO2",
     .array_path = "value",
     .date_keys = "ISO_WEEKSTARTDATE",
-    .id_keys = "_RecordID",
+    .id_keys = "ISO2+ISOYW+ORIGIN_SOURCE",
     .interval = 86400,
     .page_param = "%24skip",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -274,7 +286,12 @@ static const hp_source HP3B19_HEALTH[] = {
     .record_type = "mortality-observation",
     .tags = "\"who\",\"ncd\",\"mortality\",\"cancer\",\"cardiovascular\",\"statistics\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://xmart-api-public.who.int/NCD/FACT_NCD_MORTALITY?%24format=json&%24top=1000",
+    /* `$orderby=_RecordID` because this row CYCLES and xMart promises no
+     * order without it. `_RecordID` is the mart's own row id. Measured
+     * 2026-10-24: accepted, honoured (desc answers a different first
+     * record) and $skip 0/1 are disjoint. Note FLUMART has no such
+     * property — the key is per mart, not per service. */
+    .url = "https://xmart-api-public.who.int/NCD/FACT_NCD_MORTALITY?%24format=json&%24top=1000&%24orderby=_RecordID",
     .array_path = "value",
     .id_keys = "_RecordID",
     .interval = 604800,
@@ -2473,7 +2490,9 @@ static const hp_source HP3B19_HEALTH[] = {
     .record_type = "reference-record",
     .tags = "\"who\",\"population\",\"denominator\",\"demography\",\"reference\",\"statistics\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://xmart-api-public.who.int/DEX_CMS/POP_COUNT?%24format=json&%24top=1000",
+    /* `$orderby=_RecordID` — the mart's own row id, this row cycles.
+     * Measured 2026-10-24: accepted, honoured, $skip pages disjoint. */
+    .url = "https://xmart-api-public.who.int/DEX_CMS/POP_COUNT?%24format=json&%24top=1000&%24orderby=_RecordID",
     .array_path = "value",
     .id_keys = "_RecordID",
     .interval = 604800,

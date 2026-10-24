@@ -786,7 +786,10 @@ static const hp_source HP3B19_FINANCE[] = {
     .record_type = "politically-exposed",
     .tags = "\"slovakia\",\"beneficial-ownership\",\"pep\",\"registry\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://rpvs.gov.sk/opendatav2/VerejniFunkcionari",
+    /* `$orderby=Id` — the entity's own key; see the authorised-persons row
+     * above for the measurement and for the $skiptoken cursor this service
+     * publishes and the engine cannot yet follow. */
+    .url = "https://rpvs.gov.sk/opendatav2/VerejniFunkcionari?$orderby=Id",
     .array_path = "value",
     .interval = 86400,
     .page_param = "$skip",
@@ -804,7 +807,15 @@ static const hp_source HP3B19_FINANCE[] = {
     .record_type = "verification-record",
     .tags = "\"slovakia\",\"beneficial-ownership\",\"verification\",\"registry\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://rpvs.gov.sk/opendatav2/OpravneneOsoby",
+    /* `$orderby=Id` — the entity's own key (the service's $metadata names
+     * it), because this row cycles. Measured 2026-10-24: honoured (`Id
+     * desc` answers 299363 where ascending answers 29948) and $skip is
+     * honoured with it. $top is refused outright ("the limit of '0' for
+     * Top query has been exceeded"), so the page size is the service's own
+     * 20. It also publishes an `@odata.nextLink` $skiptoken cursor, which
+     * would need no sort at all — hp_path cannot address a key containing
+     * a dot, so that is a better paging this engine cannot express yet. */
+    .url = "https://rpvs.gov.sk/opendatav2/OpravneneOsoby?$orderby=Id",
     .array_path = "value",
     .detail_key = "Id",
     .detail_url = "https://rpvs.gov.sk/opendatav2/OpravneneOsoby({v})?$expand=Partner,Adresa",

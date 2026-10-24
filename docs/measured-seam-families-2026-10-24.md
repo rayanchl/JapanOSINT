@@ -62,11 +62,138 @@ Gazette it silently narrowed the corpus by 4.4 million notices. So when a sort
 is added to a row, compare the upstream's own total before and after — if the
 total moves, the parameter was not read as a sort.
 
+## The long tail: 62 single-host rows, asked the same question
+
+No family covers these, so each was asked the one question that is cheap and
+mechanical: send the row's own URL with a DELIBERATELY BOGUS sort value under
+nine candidate parameter names, and read what comes back. **29 answered that
+they parse such a parameter, 28 answered the baseline byte for byte, and 5
+were unreachable.** Per-row readings: `docs/measured-seam-tail-2026-10-24.tsv`.
+
+**The error body is the part worth reading.** The probe established only that
+the server READ the parameter; the body it answered names the field it will
+sort on, which is the one thing a per-row guess cannot supply. Three APIs
+handed over their whole allowed set — DERIB
+(`must match "^-?(|default|date|temporalCoverageFrom|legislationIdentifier|
+DATUM)$"`), USAspending (`Field 'sort' is outside valid values ['name',
+'obligated_amount', 'gross_outlay_amount']`) and Misskey (an enum validation
+error) — and the OData services each answered "could not find a property named
+… on type …", which doubles as a schema check.
+
+**19 rows carry a measured sort now**, each verified accepted, honoured (ASC
+and DESC answer different records), total-preserving, and disjoint across two
+real runs against one database:
+
+| family | rows | parameter |
+| --- | --- | --- |
+| OData (WHO xMart, Traficom, SK RPVS, BR BCB, SYKE, MSRC) | 12 | `$orderby=<the entity's own key>` |
+| GOV.UK Search | 1 | `order=public_timestamp` |
+| GeoNetwork (AODN) | 1 | `sortBy=_id` |
+| CKAN group listing (Miyazaki, HTML) | 1 | `sort=metadata_created asc` |
+| Socrata discovery (ACT) | 1 | `order=createdAt` + the domain scope below |
+| Misskey federation | 1 | `sort=+firstRetrievedAt` |
+| DERIB legislation | 1 | `sort=legislationIdentifier` |
+| USAspending | 1 | `sort=name&order=asc` |
+
+Three readings from that set generalise:
+
+* **The row's own `id_keys` is usually the sort key**, and asking for it twice
+  checks the row as well as the order. `$orderby=_RecordID` on WHO's FluNet
+  answered *"Could not find a property named '_RecordID' on type
+  'FLUMART.VIW_FNT'"* — the field the row had been keying every record on since
+  it shipped. The engine was already saying so: the run files a
+  `shape:id-keys-unmatched` notice and content-hashes each uid, so a week WHO
+  later revises is stored as a NEW row instead of updating the one it corrects.
+  Identity measured on 1,000 mid-collection records: `ISO2+ISOYW` is 795
+  distinct of 1,000 (three origin sources report the same country-week),
+  `ISO2+ISOYW+ORIGIN_SOURCE` is 1,000. **A notice nobody reads is still true,
+  for the second time in three days** — and a sweep of that one notice across
+  the registry is the obvious follow-up this did not do.
+* **Prefer a key whose ties are impossible over a key whose ties reshuffle.**
+  MSRC's advisories sort by `releaseDate` or by `id`, not both (the composite
+  is refused). Hundreds share a release date and the order inside a tie is
+  undefined, so a tie block can reorder under a resumed walk and lose a record
+  for good; a guid order is total, and an advisory inserted mid-collection is
+  simply read on the next cycle. `id` it is.
+* **A measurement is not a code change.** The applier appended `&sort=…` to
+  the one row whose URL had no query string at all, so Misskey's row asked for
+  `/instances&sort=+firstRetrievedAt` — one record, 135 bytes, `rc=0`. Only
+  the two-run engine reading caught it. A sweep of every URL literal in the
+  tree for a `&` preceding any `?` found nine more and all nine are correct:
+  five JMA portal links with `#fragment` parameters, an open-meteo docs link,
+  and two N2YO calls whose API genuinely documents `&apiKey=` appended to the
+  path.
+
+**12 rows were measured and deliberately not changed**: GLEIF ×3 (the API
+refuses `page[number]=51`, so these are bounded at 10,000 whatever the order —
+France alone declares 193,375 — and a stable sort would merely freeze which
+10,000 are read; the fix is a narrower filter per request), UK Land Registry's
+PPI (`_sort` answers nothing in 35 s and an internal-error page at 95 s against
+a sub-second unsorted page), TronScan (only `balance` is accepted, the most
+volatile field on the record, and the ranking is the row's subject), the two
+Mastodon directories (`order` takes only `active` or `new`), ENTSOG
+(`orderBy` parsed — a bogus value draws a 500 — and not honoured), the two
+PNCP rows, and the two WordPress.org registries, whose `request[browse]`
+offers rankings and a descending recency but no ascending key.
+
+**Two of the five "unreachable" rows were the probe's own fault**, which is
+worth more than the two rows: `curl` reads the brackets in
+`request[per_page]` as a glob range without `-g`, so both WordPress.org rows
+came back as transport failures on a URL that answers 200 with 76,587 plugins
+over 766 pages. The remaining three (IODA's unverifiable certificate chain, an
+empty reply, a reset) are readings of this path, not of the rows.
+
+## A rule-4d defect found while probing: 40 Socrata rows were answering about
+## every portal
+
+`AP19_AU_ACT_SOCRATA`'s probe answered in Spanish. A Socrata domain's own
+`/api/catalog/v1` is **not** scoped to that domain — the batch-34 finding —
+and 40 rows named after one domain passed no `domains=`/`search_context=`.
+Measured both ways on every one of them
+(`docs/measured-socrata-scope-2026-10-24.tsv`): unscoped, each answers
+`resultSetSize` 10000 and 39 of the 40 answer another portal's dataset first
+(Dallas, for 38 of them); scoped, each answers its own catalogue — Honolulu
+453, ACT 784, NYC 3,022, Maryland 3,606. Every record those rows stored was
+attributed to the domain in the row's name, whoever owned it, with every gate
+green: that is rule 4d exactly, and no record count could see it.
+
+All 40 now carry `domains=`, `search_context=` and `order=createdAt` (the
+order the cross-portal rows in `vsrc14_us_state_3.c` already carry, with its
+own measurement). The cross-portal rows on `api.us.socrata.com` are
+deliberately unscoped and were left alone — they claim no domain.
+
+**And `chronicdata.cdc.gov` is now an alias of `data.cdc.gov`.** Scoped to
+itself it answers 1,478 datasets whose owning domain is `data.cdc.gov`, with
+the same ids as `data.cdc.gov` at offset 0 and at offset 1000, and
+`/api/views/metadata/v1` answers identically on both hosts. So the five
+chronicdata rows in the tree collect what the data.cdc.gov rows collect. They
+are left registered and recorded here rather than removed: the data is
+identical, the cost is duplicate requests and duplicate rows under a second
+`source_id`, and the removal is a registry-count decision for the repository
+owner.
+
 ## Still unexamined
 
-~60 single-host rows, listed with their host and URL in
-`docs/measured-seam-risk-2026-10-22.tsv`. Nothing about them is claimed here.
+The 166 `OK_NODIR` rows below, and nothing else from the 273: every family and
+every single-host row above has a reading now.
 
 The 166 `OK_NODIR` rows — an order parameter with no direction — are a separate
 and smaller question: most APIs default such a sort to ascending, but "most"
 is not a measurement either.
+
+## One thing the Socrata scope fix does not fix
+
+Those 40 are VJSON rows (except ACT's), and `page_resume` is an hpengine
+field, so they cannot read a catalogue over a cycle: two runs against one
+database store the same 200 twice, which is correct for a non-cycling row and
+is what the truncation notice says. Scoped, 32 of the 40 hold fewer datasets
+than one run reads and are now complete. **Eight do not** — healthdata.gov
+10,000+, www.dati.lombardia.it 5,073, opendata.maryland.gov 3,606,
+data.cityofnewyork.us 3,022, data.austintexas.gov 2,285, data.wa.gov 2,178,
+data.colorado.gov 2,109, data.cityofchicago.org 2,036 — and under
+`order=createdAt` they read the oldest-created 2,000 each run. That is a
+coherent, disclosed read where the unsorted walk was an incoherent one (the
+batch-15 comment measured 2 of 100 records on page 2 repeating, with as many
+skipped), but it is still a bound over one end of the collection. Moving those
+eight onto an hpengine table with `page_resume = 1` is the fix, and it is not
+done here.

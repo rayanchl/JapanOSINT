@@ -107,7 +107,10 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "financial-institution",
     .tags = "\"brazil\",\"centralbank\",\"bank\",\"register\",\"finance\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://olinda.bcb.gov.br/olinda/servico/IFDATA/versao/v1/odata/IfDataCadastro(AnoMes=@AnoMes)?@AnoMes=202403&%24top=100&%24format=json",
+    /* `$orderby=CodInst` — the institution code, one row per institution
+     * in this month's snapshot; this row cycles. Measured 2026-10-24:
+     * accepted, honoured, $skip pages disjoint. */
+    .url = "https://olinda.bcb.gov.br/olinda/servico/IFDATA/versao/v1/odata/IfDataCadastro(AnoMes=@AnoMes)?@AnoMes=202403&%24top=100&%24format=json&%24orderby=CodInst",
     .array_path = "value",
     .interval = 86400,
     .page_param = "%24skip",
@@ -990,7 +993,10 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "interest-rate",
     .tags = "\"brazil\",\"centralbank\",\"bank\",\"interestrate\",\"finance\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://olinda.bcb.gov.br/olinda/servico/taxaJuros/versao/v2/odata/TaxasJurosMensalPorMes?%24top=1000&%24format=json",
+    /* `$orderby` on exactly this row's own `id_keys`, because it cycles.
+     * Measured 2026-10-24: Olinda accepts the three-field form (MSRC's
+     * OData does not), honours it, and the pages are disjoint. */
+    .url = "https://olinda.bcb.gov.br/olinda/servico/taxaJuros/versao/v2/odata/TaxasJurosMensalPorMes?%24top=1000&%24format=json&%24orderby=anoMes,Modalidade,cnpj8",
     .array_path = "value",
     .interval = 21600,
     .page_param = "%24skip",

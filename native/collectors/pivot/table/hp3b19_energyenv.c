@@ -954,7 +954,10 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "river-gauge",
     .tags = "\"water\",\"finland\",\"hydrology\",\"station\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://rajapinnat.ymparisto.fi/api/Hydrologiarajapinta/1.1/odata/Paikka?$top=50",
+    /* `$orderby=Paikka_Id` — the entity's own key; this row cycles and
+     * OData promises no order without it. Measured 2026-10-24: accepted,
+     * honoured, $skip pages disjoint. */
+    .url = "https://rajapinnat.ymparisto.fi/api/Hydrologiarajapinta/1.1/odata/Paikka?$top=50&$orderby=Paikka_Id",
     .array_path = "value",
     .detail_key = "Paikka_Id",
     .detail_url = "https://rajapinnat.ymparisto.fi/api/Hydrologiarajapinta/1.1/odata/Vedenkorkeus?$filter=Paikka_Id%20eq%20{v}&$top=500",

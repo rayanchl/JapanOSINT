@@ -1,0 +1,63 @@
+id	family	verdict	parameter	measurement
+WHO_XMART_FLUNET_SENTINEL	odata_xmart	APPLIED	$orderby=ISOYW,ISO2	accepted, honoured (desc differs), $skip 0/1/2 answer consecutive ISO weeks; @odata.count 189,825 unchanged. Also fixed the row's identity: _RecordID is not a property of FLUMART.VIW_FNT (the run filed shape:id-keys-unmatched and content-hashed every uid); measured on 1,000 mid-collection records, ISO2+ISOYW is 795 distinct and ISO2+ISOYW+ORIGIN_SOURCE is 1,000. Engine, two runs one DB: 2,000 + 2,000 = 4,000 distinct, no overlap
+WHO_XMART_NCD_MORTALITY	odata_xmart	APPLIED	$orderby=_RecordID	accepted, honoured, $skip pages disjoint; the mart's own row id
+WHO_XMART_POPULATION_COUNT	odata_xmart	APPLIED	$orderby=_RecordID	accepted, honoured, $skip pages disjoint
+TRAFICOM_AMATEUR_CALLSIGN	odata	APPLIED	$orderby=ID	accepted, honoured, $skip 0/1 consecutive ids. ID and not CallSign: the callsign is the row's identity but not monotone
+TRAFICOM_FREQ_TABLE	odata	APPLIED	$orderby=ID	$skip=0 answers ID 1, $skip=1 answers ID 2, ID desc answers 5917
+TRAFICOM_RADIO_TX	odata	APPLIED	$orderby=ID	$skip=0 answers ID 1067, $skip=1 answers 1068, ID desc answers 3430. Engine, two runs one DB: 2,000 + 364 = 2,364 distinct — the whole collection, cycle cleared
+SYKE_HYDRO_SITES	odata	APPLIED	$orderby=Paikka_Id	the entity's own key; accepted, honoured, pages disjoint
+SK_RPVS_AUTHORISED	odata	APPLIED	$orderby=Id	$metadata names Id as the entity key; honoured (Id desc answers 299363 against 29948 ascending). $top is refused outright ("the limit of '0' for Top query has been exceeded"), so the page size is the service's own 20. Engine, two runs one DB: 40 + 40 = 80 distinct, resuming $skip=40 then 80. The service also publishes an @odata.nextLink $skiptoken cursor, which would need no sort — hp_path cannot address a key containing a dot, so the engine cannot follow it yet
+SK_RPVS_OFFICIALS	odata	APPLIED	$orderby=Id	as above, same service
+BR_BCB_TAXAS_JUROS	odata	APPLIED	$orderby=anoMes,Modalidade,cnpj8	exactly the row's own id_keys; Olinda accepts the three-field form, honours it, pages disjoint
+BR_BCB_IFDATA_CADASTRO	odata	APPLIED	$orderby=CodInst	the institution code, one row per institution in the snapshot; accepted, honoured, pages disjoint
+MSRC_SUG_VULNERABILITY	odata	APPLIED	$orderby=id	honoured (asc, desc and $skip=1 answer three different records) over 31,340 advisories. id and not releaseDate: hundreds share a release date and the order inside a tie is undefined, so a tie block can reshuffle under a resumed walk; a guid order is total, and a newly inserted advisory is read next cycle instead of being lost. releaseDate,id is refused ("An exception was thrown")
+DERIB_LEGISLATION_ALL	bund_legal	APPLIED	sort=legislationIdentifier	the row's own id_keys, and the API names its allowed set in its own error for a bogus value: must match ^-?(|default|date|temporalCoverageFrom|legislationIdentifier|DATUM)$. totalItems unchanged at 5,534. Engine, two runs one DB: 200 + 200 = 400 distinct
+USASPEND_DOD_PROGRAM_ACTIVITY	usaspending	APPLIED	sort=name&order=asc	the API names its allowed set: Field 'sort' is outside valid values ['name', 'obligated_amount', 'gross_outlay_amount'] — the money columns move between runs, the name does not. total unchanged at 209. Engine, two runs one DB: 200 + 9 = 209, its declared total exactly
+MISSKEY_IO_FEDERATION	misskey	APPLIED	sort=+firstRetrievedAt	Misskey validates against an enum (+id refused); of what it allows this is the only append-at-tail order. Page size is its own 30 (limit=100 refused, "must be <= 30"). Engine, two runs one DB: 60 + 60 = 120 distinct
+AP19_AU_ACT_SOCRATA	socrata_discovery	APPLIED	domains=+search_context=+order=createdAt	the scope is the batch-34 finding in an older row: unscoped this URL answers resultSetSize 10000 with a Dallas dataset first; scoped it answers 784, all ACT's. order=createdAt accepted, honoured, scoped count unchanged. Engine, two runs one DB: 200 + 200 = 400 distinct
+AP19_AU_AODN_CATALOGUE	geonetwork	APPLIED	sortBy=_id	GeoNetwork defaults to relevance; _id accepted, honoured (sortOrder=reverse answers different records), catalogue count unchanged at 1,841. Engine, two runs one DB: 200 + 200 = 400 distinct
+JO28_MIYAZAKI_NENKAN_CKAN	ckan_html	APPLIED	sort=metadata_created asc	honoured: ascending answers nenkan-1,2,3 and descending nenkan-1215,1214,1213; group count unchanged at 319. Created-ascending rather than name asc so a new dataset lands at the tail. Engine, two runs one DB: 40 + 40 = 80 distinct
+UK_GOVUK_MOD_PUBS	govuk_search	APPLIED	order=public_timestamp	the same ascending order the six GOV.UK Search rows in hp16_us_legal_1.c carry; accepted, honoured, search total unchanged at 14,465. The sorted page's first record carries an extra optional display_type field and is otherwise the same shape — not UK Parliament's degradation. Engine, two runs one DB: 100 + 100 = 200 distinct
+GLEIF_LEI_CN	gleif	NOT_CHANGED	sort=lei accepted	GLEIF refuses page[number]=51, so these rows are bounded at 10,000 records whatever the order (FR alone declares 193,375), and that cap is already named in the row's own truncation notice. A stable sort would freeze WHICH 10,000 are read; the fix is a narrower filter per request, not an order
+GLEIF_LEI_FR	gleif	NOT_CHANGED	sort=lei accepted	as above; declared total measured 2026-10-24 at 193,375 for France
+GLEIF_LEI_GB	gleif	NOT_CHANGED	sort=lei accepted	as above
+UK_LAND_REGISTRY_PPI	linked_data_api	NOT_CHANGED	_sort times out	_sort=transactionId answers nothing in 35 s and an "internal error" page at 95 s, against a sub-second unsorted page: this Linked Data API cannot sort a ~30 million row dataset. (sort, unprefixed, draws "unrecognised short name or literal: sort")
+TRONSCAN_TOP_ACCOUNTS	tronscan	NOT_CHANGED	only sort=balance exists	sort=address is refused ("some parameters are invalid or out of range"); balance is the one accepted key and it is the most volatile field on the record. The row's subject IS the balance ranking, and the API caps the list at its own total of 10,000
+MSTDNJP_DIRECTORY	mastodon	NOT_CHANGED	order=active|new only	Mastodon's directory takes no id order: active is a volatile ranking and new is descending by creation. (The first probe read PAWOO as PARSED on a byte-size change — that directory's content changes between two requests, which is the same volatility.)
+PAWOO_DIRECTORY	mastodon	NOT_CHANGED	order=active|new only	as above
+ENTSOG_CONNECTION_POINTS	entsog	NOT_CHANGED	orderBy not honoured	a bogus sort draws HTTP 500, so something reads the parameter, but orderBy=pointKey and orderBy=-pointKey answer the same first record
+BR_PNCP_CONTRATACOES	pncp	NOT_CHANGED	no sort honoured	sort and -sort answer the same first record. (The first probe's baseline was an error body — the probe sent the row's unrendered {date} token — so this row was re-probed with real dates.)
+PNCP_BR_ARMY_CONTRACTS	pncp	NOT_CHANGED	no sort honoured	as above
+WORDPRESS_PLUGIN_REGISTRY	wordpress_org	NOT_CHANGED	browse ranks, never orders	76,587 plugins over 766 pages (its own envelope), and request[browse] offers only popular/featured/recommended/new/updated — a ranking or a descending recency, no ascending key. (The first probe read this UNREACHABLE: curl treats request[per_page]'s brackets as a glob range without -g. The row is fine.)
+WORDPRESS_THEME_REGISTRY	wordpress_org	NOT_CHANGED	browse ranks, never orders	as above
+IODA_ENTITIES_ASN	ioda	UNMEASURED	-	api.ioda.inetintel.cc.gatech.edu presents a certificate chain this container cannot verify, with the proxy CA bundle as without it. A reading of this path, not of the row
+BR_CNES_ESTABELECIMENTOS	-	UNMEASURED	-	empty reply from server
+JO28_NPMH_KOMONJO_CATALOG	-	UNMEASURED	-	connection reset by peer
+ARTIFACTHUB_REPOSITORY_SEARCH	-	IGNORED	-	every candidate parameter name answered the baseline byte for byte
+CMS_HOSPITAL_HAI_MEASURES	-	IGNORED	-	as above
+EC_GOBEC_REGULACIONES	-	IGNORED	-	as above
+EE_AVAANDMED_DATASETS	-	IGNORED	-	as above
+EPSS_SCORE_PAGE	-	IGNORED	-	as above
+FDIC_BRANCH_DEPOSITS	-	IGNORED	-	as above
+FDIC_FINANCIALS	-	IGNORED	-	as above
+FDIC_STRUCTURE_HISTORY	-	IGNORED	-	as above
+FINRA_ATS_WEEKLY	-	IGNORED	-	as above
+FINRA_OTC_BLOCKS	-	IGNORED	-	as above
+FSA_ESTABLISHMENT_ZERO_RATED	-	IGNORED	-	as above
+JP25_JPMUNI2_HIROSHIMA_DATAEYE	-	IGNORED	-	as above
+JP25_JPMUNI2_TSUYAMA_DATAEYE	-	IGNORED	-	as above
+JSTAGE_CORPUS_BULK	-	IGNORED	-	as above
+MAPROULETTE_CHALLENGES	-	IGNORED	-	as above
+NOAA_FOSS_AFSC_GROUNDFISH	-	IGNORED	-	as above
+NOAA_FOSS_LANDINGS	-	IGNORED	-	as above
+NOAA_FOSS_TRADE	-	IGNORED	-	as above
+PY_VUE_MIPYMES	-	IGNORED	-	as above
+PY_VUE_REGISTRO_EMPRESAS	-	IGNORED	-	as above
+SCIELO_ISSUES_BR	-	IGNORED	-	as above
+SCIELO_JOURNALS_MX	-	IGNORED	-	as above
+SV_COMPRASAL_ADJUDICACIONES	-	IGNORED	-	as above
+TERRAFORM_MODULES	-	IGNORED	-	as above
+TERRAFORM_PROVIDERS	-	IGNORED	-	as above
+UNHCR_ASYLUM_APPLICATIONS	-	IGNORED	-	as above
+UNHCR_POPULATION_FOOTNOTES	-	IGNORED	-	as above
+WORLDBANK_INDICATOR_CATALOGUE	-	IGNORED	-	as above

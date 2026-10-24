@@ -62,7 +62,13 @@ static const hp_source HP3B28_JPFORGOTTEN[] = {
     .record_type = "dataset-record",
     .tags = "\"japan\",\"statistics\",\"archive\",\"miyazaki\",\"ckan\",\"opendata\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.stat.pref.miyazaki.lg.jp/group/nenkan",
+    /* `sort=metadata_created asc` because this row cycles and CKAN's
+     * group listing defaults to relevance. Created-ascending and not
+     * `name asc`: a new dataset lands at the tail where a resumed walk has
+     * not been. Measured 2026-10-24: the first page answers nenkan-1,2,3
+     * ascending, desc answers nenkan-1215,1214,1213, and the group's own
+     * count is unchanged at 319. */
+    .url = "https://data.stat.pref.miyazaki.lg.jp/group/nenkan?sort=metadata_created+asc",
     .base = "https://data.stat.pref.miyazaki.lg.jp",
     .href_must = "/dataset/nenkan-",
     .interval = 604800,
