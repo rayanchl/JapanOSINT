@@ -143,8 +143,7 @@ came back as transport failures on a URL that answers 200 with 76,587 plugins
 over 766 pages. The remaining three (IODA's unverifiable certificate chain, an
 empty reply, a reset) are readings of this path, not of the rows.
 
-## A rule-4d defect found while probing: 40 Socrata rows were answering about
-## every portal
+## A rule-4d defect found while probing: 40 Socrata rows answering about every portal
 
 `AP19_AU_ACT_SOCRATA`'s probe answered in Spanish. A Socrata domain's own
 `/api/catalog/v1` is **not** scoped to that domain — the batch-34 finding —
