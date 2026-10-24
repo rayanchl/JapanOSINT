@@ -1951,6 +1951,50 @@ Engine subtleties worth knowing before writing a row:
   are ranked and NOT fixed — ArcGIS needs each layer's own `objectIdField`,
   which is one metadata read per row.
 
+  **The families behind those 273 are now measured one by one, and 99 rows
+  carry a stable sort** (2026-10-24,
+  `docs/measured-seam-families-2026-10-24.md`, per-layer readings in
+  `docs/measured-arcgis-oid-2026-10-24.tsv`). One verdict per API family, each
+  from a live probe, because a family's answer covers dozens of rows where a
+  per-row guess covers none:
+  * **ArcGIS, 47 of 50** — `orderByFields=<the layer's own objectIdField> ASC`.
+    The field is NOT assumable: across the 50 it is `OBJECTID` forty times but
+    also `ObjectId`, `objectid`, `FID` and `oid_permit`, so the probe reads
+    each layer's metadata first and then checks that offsets 0 and 1 answer
+    different records. `IMF_PORTWATCH_AIRPORTS`, two runs: 4,000 distinct.
+  * **CKAN `datastore_search`, 21** — `sort=_id asc`, the datastore's own
+    sequential row id. **Socrata, 13** — `$order=:id`, and DESC answering a
+    different set is what proves the parameter is honoured rather than
+    ignored. **IETF datatracker, 14** — `order_by=id`, the Django primary key.
+    **CKAN bulk list, 3** — re-pointed to `package_search?sort=id+asc`, each
+    now storing its portal's declared count exactly (823, 797, 250).
+    **One WFS**, Slovenia's 580,322 house numbers, on its own EID.
+  * **Three things the re-points taught.** A URL changed after validation is
+    unvalidated AND ITS SIBLINGS MOVE WITH IT: the CKAN re-point stored ONE
+    record on all three rows until `array_path` went `result` →
+    `result.results` and `page_param` `offset` → `start`. A notice nobody
+    reads is still true: the Hong Kong row's `title_keys = "author"` matched
+    nothing — present on every package, null on every one — so every dataset
+    was titled from the fallback list while the shape notice asked for this
+    exact repair. And the applier reads each URL out of the C, because the
+    risk TSV truncates its url column and the match failed on the one row
+    longer than 200 characters.
+
+  **54 rows were measured and deliberately NOT changed**, which is the part of
+  this pass worth keeping. **UK Parliament's Linked Data API degrades the
+  RECORD when sorted**: `bills.json?_sort=identifier` answers page 0 as bare
+  URI strings where the unsorted page answers full bill objects — a sort there
+  would have turned 14 rows' records into hyperlinks. GBIF exposes no sort at
+  all; FPDS's ATOM feed has none either, so stability there means deciding
+  whether the row is a recency feed, not adding a parameter. OpenDataSoft's 9
+  are 7-of-9 unreachable from this environment and need a per-dataset field.
+  SA Treasury's `order=` is parsed (a malformed spec returns zero rows) but the
+  host stopped answering before HONOURED could be established — one undecided
+  reading is not grounds to change seven rows. Hungary's INSPIRE WFS accepts
+  `sortBy=name` and that name has TIES, so it is not a total order.
+  `environment.data.gov.uk` (8 rows) is the same Linked Data API as
+  Parliament's: **read what it stores before sorting it.**
+
   **And the 44 unresolved verdicts of the first sweep were re-run**
   (`docs/measured-cycle-retry-2026-10-22.tsv`), because "re-run each
   FETCH_FAILED once" is this file's own rule and inferring 44 rows from five

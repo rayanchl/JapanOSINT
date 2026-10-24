@@ -2008,7 +2008,16 @@ static const hp_source HP3B19_EURASIA[] = {
     .record_type = "address-record",
     .tags = "\"slovenia\",\"cadastre\",\"address\",\"building\",\"gurs\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ipi.eprostor.gov.si/wfs-si-gurs-kn/wfs?service=WFS&version=2.0.0&request=GetFeature&typeNames=SI.GURS.KN:HISNE_STEVILKE&count=1000&outputFormat=application/json",
+    /* `sortBy=EID_HISNA_STEVILKA` because this row CYCLES over 580,322
+     * features (its own numberMatched) and a WFS `startIndex` walk has no
+     * guaranteed order without a sort — the sibling SI_GURS_CADASTRAL_MUN
+     * already carries one. The key is the house number's own EID, unique
+     * per feature. Measured 2026-10-24, three pages of two: startIndex 0,
+     * 2 and 4 answer …284894/…284977, …285198/…285271, …285354/…285438 —
+     * strictly ascending and disjoint. (This host answers slowly and drops
+     * a request now and then, so those three readings took five tries;
+     * each one that answered agreed with the others.) */
+    .url = "https://ipi.eprostor.gov.si/wfs-si-gurs-kn/wfs?service=WFS&version=2.0.0&request=GetFeature&typeNames=SI.GURS.KN:HISNE_STEVILKE&count=1000&outputFormat=application/json&sortBy=EID_HISNA_STEVILKA",
     .array_path = "features",
     .id_keys = "properties.HS_MID",
     .interval = 604800,
