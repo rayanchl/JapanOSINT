@@ -1,6 +1,7 @@
 /* tests/unit/test_cadence.c — the system-wide cadence policy (core/cadence.h).
  *
- * Pins: a pivot (interval 0) is never touched; "declared" when no policy;
+ * Pins: a pivot (interval 0) is never touched; the compiled default is a
+ * global 6 h and "declared" is a saved choice of zeros;
  * a global interval replaces every declared value; a floor/ceiling clamps;
  * the policy persists and comes back after a re-init; the environment
  * bootstraps only an empty database; bad values are refused by name; the
@@ -23,8 +24,19 @@ int main(void) {
   cadence_init(&db);
   assert(!strcmp(cadence_source(), "default"));
   assert(cadence_apply(0) == 0 && cadence_apply(-1) == -1);          /* pivots untouched */
+  /* The compiled default is ONE system-wide cadence of six hours (the owner's
+   * decision of 2026-10-22): an empty database and a silent environment run
+   * every scheduled row every 21600 s, and the pages say so. */
+  assert(cadence_apply(3600) == 21600 && cadence_apply(604800) == 21600);
+  assert(!strcmp(cadence_mode_for(3600), "global"));
+  printf("  empty db, no env: the compiled default is global 21600\n");
+  /* "declared" is a CHOICE now: an operator saves zeros, which stores a policy
+   * that outranks the compiled default. */
+  { const char *e0 = NULL; cadence_policy z = {0, 0, 0};
+    assert(cadence_set(&db, &z, "ops@example.test", &e0) == 0); }
+  assert(!strcmp(cadence_source(), "db"));
   assert(cadence_apply(3600) == 3600 && !strcmp(cadence_mode_for(3600), "declared"));
-  printf("  no policy: declared stands\n");
+  printf("  zeros saved: declared stands, from the db\n");
 
   const char *err = NULL;
   cadence_policy p = {21600, 0, 0};

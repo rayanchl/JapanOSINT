@@ -10,7 +10,10 @@
  * Stored in app_settings (one row per key) so it survives restarts and is
  * editable from the Sources page; JO_SCHED_INTERVAL_SEC /
  * JO_SCHED_MIN_INTERVAL_SEC / JO_SCHED_MAX_INTERVAL_SEC bootstrap it when the
- * database holds no policy. The scheduler reads cadence_apply() for every
+ * database holds no policy; and when neither says anything the COMPILED
+ * default is a global cadence of six hours (CAD_DEFAULT_GLOBAL_SEC in
+ * cadence.c, the owner's decision of 2026-10-22). "Declared" is therefore a
+ * choice an operator makes by saving zeros, not the silence of an unset knob. The scheduler reads cadence_apply() for every
  * row, so a change takes effect without a restart: a row whose next due time
  * is further away than the new interval is pulled in to now + interval.
  * The declared value stays as data — the source pages show both. */
@@ -25,7 +28,8 @@ typedef struct {
 } cadence_policy;
 
 /* Load the policy from the database (creating app_settings if it is missing),
- * else from the environment, else "declared". Safe to call more than once. */
+ * else from the environment, else the compiled default (global 6 h). Safe to
+ * call more than once. */
 void cadence_init(db_handle *db);
 
 /* The interval the scheduler uses for a row declaring `declared`. <= 0 (an
