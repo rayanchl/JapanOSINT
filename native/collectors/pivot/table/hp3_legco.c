@@ -19,8 +19,11 @@
  *     runs. But the server's throughput swings: the same 7.5 MB 5,000-row page
  *     took 27 s, 172 s and then stalled at 416 KB after 300 s within an hour,
  *     and the engine's 180 s timeout failed it twice. So pages of 1,000
- *     (1.5 MB, 18 s when measured), 60 a run, a 300 s timeout: ~9 six-hourly
- *     runs a cycle;
+ *     (1.5 MB, 18 s when measured) with a 300 s timeout. A 60-page run then
+ *     stored 25,000 in ~2 h of 300 s timeouts and retries (2026-10-25), so
+ *     20 pages a run: ~10 min on a healthy server, bounded on a sick one,
+ *     and a failed page is the next run's first. ~28 six-hourly runs (about
+ *     a week) a cycle;
  *   - speeches: a keyset filter is unusable (`RundownID gt …` took 1,818 s
  *     for ONE page), but offset paging in the server's natural order is
  *     stable (the same 100 rows in the same order on a repeat at $skip
@@ -80,7 +83,7 @@ static const hp_source HP3_LEGCO[] = {
     .array_path = "value",
     .next_path = "value.$last.id",
     .next_tmpl = "http://app.legco.gov.hk/vrdb/odata/vVotingResult?$format=json&$orderby=id&$top=1000&$filter=id%20gt%20{v}",
-    .page_max = 60, .page_resume = 1,
+    .page_max = 20, .page_resume = 1,
     .id_keys = "id",
     .title_keys = "motion_en,motion_ch",
     .date_keys = "vote_date",
@@ -90,6 +93,6 @@ static const hp_source HP3_LEGCO[] = {
       "(542,997 member votes): committee or council, term, vote number, "
       "date and time, the motion in English and Chinese, mover, the "
       "separate-mechanism flag and the per-constituency and overall "
-      "counts and results. Read whole across runs, 60,000 votes a run." },
+      "counts and results. Read whole across runs, 20,000 votes a run." },
 };
 HP_REGISTER_TABLE(HP3_LEGCO)
