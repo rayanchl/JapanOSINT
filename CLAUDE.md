@@ -39,7 +39,11 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 57,529** (2026-10-22, merged): main's 57,527 (below)
+**The registered count is 57,395** (2026-10-25): 57,529 less 134 dead HTML
+rows found by the reachability sweep — the page and its bare path 404/410
+while the site answers, or the domain gone — each with its evidence in
+`docs/removed-sources-2026-10-25-html-dead.tsv` (the sweep itself:
+`docs/html-reachability-2026-10.md`). 57,529 (2026-10-22, merged) was main's 57,527 (below)
 plus this branch's two on the same 57,536 base — the four tuberculosis
 windows and the Elia imbalance-price row, less the three OpenDataSoft rows
 whose datasets no longer exist (the cycle-advance sweep and the ODS title
