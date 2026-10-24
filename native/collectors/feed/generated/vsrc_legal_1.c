@@ -413,12 +413,7 @@ VRSS(gov_govuk_org_nca, "gov-govuk-org-nca", "National Crime Agency — Announce
   "en", "[\"uk\",\"nca\",\"organisedcrime\",\"lawenforcement\"]", 3600,
   "UK National Crime Agency operations against organised crime, trafficking and money laundering.");
 
-VJSON(gov_hk_legco_bills, "gov-hk-legco-bills", "LegCo — Hong Kong Bills Database", "立法会 香港法案データベース",
-  "legal", "parliament",
-  "http://app.legco.gov.hk/BillsDB/odata/Vbills?$top=25&$format=json",
-  "value",
-  "en", "[\"hongkong\",\"parliament\",\"bills\",\"asia\"]", 86400,
-  "Bills before the Hong Kong Legislative Council with reading dates and ordinance numbers.");
+/* gov-hk-legco-bills: removed 2026-10-25: it read the same bills feed as eas-hk-legco-bills at 25 a page (docs/removed-sources-2026-10-25-legco.tsv). */
 
 VRSS(gov_icc_press, "gov-icc-press", "International Criminal Court — News", "国際刑事裁判所 ニュース",
   "legal", "courts",
