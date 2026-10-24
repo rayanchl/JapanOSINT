@@ -2019,7 +2019,16 @@ static const hp_source HP3B19_EURASIA[] = {
      * each one that answered agreed with the others.) */
     .url = "https://ipi.eprostor.gov.si/wfs-si-gurs-kn/wfs?service=WFS&version=2.0.0&request=GetFeature&typeNames=SI.GURS.KN:HISNE_STEVILKE&count=1000&outputFormat=application/json&sortBy=EID_HISNA_STEVILKA",
     .array_path = "features",
-    .id_keys = "properties.HS_MID",
+    /* `properties.HS_MID` was not a field this layer publishes, and had not
+     * been since the row shipped: the engine filed `shape:id-keys-unmatched`
+     * and content-hashed every uid, so a house number whose record GURS later
+     * corrects was stored as a NEW address rather than an update. The
+     * properties are FEATUREID, EID_HISNA_STEVILKA, HS_STEVILKA, HS_DODATEK,
+     * EID_STAVBA, EID_NASELJE, EID_ULICA, TIP_TABLICE, EID_POSTNI_OKOLIS,
+     * DATUM_SYS and ST_HS (read 2026-10-24); the EID is the one the feature's
+     * own `id` is built from (`HISNE_STEVILKE.100400000110284894`) and the one
+     * this row already sorts on, so identity and order now agree. */
+    .id_keys = "properties.EID_HISNA_STEVILKA",
     .interval = 604800,
     .page_param = "startIndex",
     .page_resume = 1,   /* 580,213 records, measured 2026-10-12: read over a cycle, 1000 pages a run */

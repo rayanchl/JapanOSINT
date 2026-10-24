@@ -2081,10 +2081,36 @@ Engine subtleties worth knowing before writing a row:
     updating the one it corrects. Identity measured on 1,000 mid-collection
     records: `ISO2+ISOYW` is 795 distinct of 1,000, `ISO2+ISOYW+ORIGIN_SOURCE`
     is 1,000, and the row carries that now (2,000 + 2,000 = 4,000 distinct over
-    two runs). **A sweep of that one notice across the registry is the obvious
-    next thing and has not been done**:
-    `select source_id, count(*) from intel_items where record_type like
-    'collector-shape-notice%' and title like '%id-keys-unmatched%'`.
+    two runs). **That sweep is now done: 538 rows, 5 real hits**
+    (`docs/measured-idkeys-2026-10-24.tsv`) — every cycling JSON row that
+    declares an `id_keys`, one page each, the first record flattened as
+    `hp_json_flat` flattens it and each key token looked up as `hp_flat_get`
+    looks it up. 494 OK, 21 unmeasured (hosts that reset this path), 15
+    unparsed (POST-only rows a GET probe cannot ask), 3 with no record array.
+    The five: four Municipal Money v2 cubes keyed on
+    `municipality.demarcation_code`, which no cube publishes (the engine had
+    been saying `matched 0 of 100 record(s)` on every run), now on each cube's
+    own dimension tuple, measured 1,000 distinct of 1,000 facts; and
+    `SI_GURS_HOUSE_NUMBERS` on `properties.HS_MID`, which that layer does not
+    publish, now on `properties.EID_HISNA_STEVILKA` — the EID the feature's
+    own `id` is built from and the field the row already sorts on.
+    **And the first run of that sweep said 35, of which 30 were the checker's
+    fault**: `hp_flat_get()` falls back from an exact flat-key miss to any key
+    whose LAST dotted segment matches (case-insensitively, skipping a leading
+    `@`), so `iata_code` resolves against an ArcGIS record's
+    `attributes.iata_code` — `IMF_PORTWATCH_AIRPORTS` stores uids `RFN`,
+    `YOA`, `MVA` and files no notice. A checker that does not mirror that rule
+    indicts most of the ArcGIS and GeoJSON fleet. What the fallback cannot
+    save is a key token that itself contains a dot: it compares the whole
+    token against one segment, which is why the Municipal Money rows were real.
+    **The sweep asks whether a field EXISTS, not whether it is unique**, and
+    two rows it passed were wrong the other way: `ZA_MUNIMONEY_AUDIT_OPINIONS`
+    keyed on `demarcation.code` (one row per municipality per YEAR) and
+    `ZA_MUNIMONEY_OFFICIALS` on the municipality (one official per ROLE), both
+    measured composites now. A minimal-distinct-key search over one page would
+    have dropped `demarcation.code` entirely, because a Municipal Money page
+    covers one municipality — **the key is the cube's dimensions, not the
+    smallest tuple that separates one page**.
   * **Prefer a key whose ties are impossible over one whose ties reshuffle.**
     MSRC takes `releaseDate` or `id`, not both (the composite is refused).
     Hundreds of advisories share a release date and the order inside a tie is

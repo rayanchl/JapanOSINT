@@ -256,3 +256,51 @@ The operational point: **those four URLs are on plain `http` deliberately, and
 `http://` in a 2026 collector will want to fix it; the measurement above is why
 not, and it should be re-taken from an environment with ordinary egress before
 anyone does.
+
+## The id_keys sweep this file asked for, done — 538 rows, 5 real hits
+
+The FluNet finding above named its own follow-up: a sweep for rows whose
+`id_keys` names a field the upstream does not publish. It is checkable without
+the engine — fetch one page, flatten the first record, look up each key token —
+so all 538 cycling JSON rows that declare an `id_keys` were measured
+(`docs/measured-idkeys-2026-10-24.tsv`): **494 OK, 5 ID_KEYS_UNMATCHED**, 21
+unmeasured (hosts that reset this path, the ODS set among them), 15 unparsed
+(POST-only rows a GET probe cannot ask), 3 with no record array.
+
+**The first run of that sweep said 35, and 30 of them were my checker's fault.**
+`IMF_PORTWATCH_AIRPORTS` was flagged for keying on `iata_code` when the ArcGIS
+feature nests every field under `attributes` — and the engine stores uids
+`RFN`, `YOA`, `MVA`, real IATA codes, filing no notice at all. The reason is
+`hp_flat_get()`: an exact flat-key miss falls back to **any key whose LAST
+dotted segment matches**, case-insensitively, skipping a leading `@`. So
+`iata_code` resolves against `attributes.iata_code`, and a checker without that
+rule indicts most of the ArcGIS and GeoJSON fleet. Both readings are kept
+(`idkeys_check.prefix-only.tsv` in the scratch set) rather than the first
+quietly replaced. Third time in this session that a new check's first number
+needed verifying before it needed acting on.
+
+Note what the fallback canNOT save: a key token that itself contains a dot
+(`municipality.demarcation_code`) only ever matches an exact flat key, because
+the fallback compares the whole token against one segment.
+
+The five real hits, and what the measurement said:
+
+| row | was | is | measured |
+| --- | --- | --- | --- |
+| `ZA_MUNIMONEY_{INCOME_EXPENDITURE,CAPITAL,CASHFLOW,AGED_DEBTORS}` | `municipality.demarcation_code` | the cube's own dimension tuple | no v2 cube publishes that field; the engine said so per run (`id_keys … matched 0 of 100 record(s)`) and content-hashed every uid, so a figure National Treasury restates landed as a NEW row. Each cube's dimensions were read from the cube: the full tuple is 1,000 distinct of 1,000 facts |
+| `SI_GURS_HOUSE_NUMBERS` | `properties.HS_MID` | `properties.EID_HISNA_STEVILKA` | that layer publishes FEATUREID, EID_HISNA_STEVILKA, HS_STEVILKA, HS_DODATEK, EID_STAVBA, EID_NASELJE, EID_ULICA, TIP_TABLICE, EID_POSTNI_OKOLIS, DATUM_SYS, ST_HS. The EID is what the feature's own `id` is built from and what this row already sorts on, so identity and order now agree |
+
+**A page can hide the dimension that matters.** A minimal-distinct-key search
+over one Municipal Money page returns a tuple WITHOUT `demarcation.code`,
+because a page covers one municipality. The key has to be the cube's
+dimensions, not the smallest tuple that happens to separate one page.
+
+And two rows the sweep passed were still wrong, which marks the sweep's limit:
+it asks whether a field EXISTS, not whether it is unique.
+`ZA_MUNIMONEY_AUDIT_OPINIONS` keyed on `demarcation.code` (one row per
+municipality per year, so every year but one was being overwritten) and
+`ZA_MUNIMONEY_OFFICIALS` on `municipality.demarcation_code` (one official per
+role per municipality). Both are measured composites now —
+`+financial_year_end.year` and `+role.role`, each distinct over 1,000 facts.
+Uniqueness is the registry sweep's COLLISION verdict, and these two would
+never have shown it while their cubes' pages each covered one municipality.
