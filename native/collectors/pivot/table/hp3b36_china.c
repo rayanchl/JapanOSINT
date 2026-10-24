@@ -27,15 +27,38 @@ static const hp_source HP3B36_CHINA[] = {
     .record_type = "ckan-record",
     .tags = "\"hongkong\",\"china\",\"opendata\",\"ckan\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.gov.hk/en-data/api/3/action/current_package_list_with_resources",
-    .array_path = "result",
+    /* package_search?sort=id+asc, NOT current_package_list_with_resources:
+     * that action takes no sort parameter and orders by
+     * `metadata_modified desc`, so a dataset edited during the walk jumps
+     * to the head — one record served twice and another pushed past a page
+     * boundary and never read. Batch 34 measured that loss on this same
+     * action (3 of 2,000 on govdata, 16 of 942 on Zürich) and re-pointed
+     * its 81 rows; these four were the ones it did not reach, and the id
+     * sort is stable. package_search returns the resources inline too
+     * (checked on this host, 2026-10-24), so the row keeps its subject.
+     * 797 datasets declared by result.count the same day = 13 pages of
+     * 100 with headroom, so the walk ends on the upstream's short page.     *
+     * The two fields below move WITH the URL, which is the whole of the
+     * "a URL changed after validation is unvalidated" rule: the bulk
+     * action answers `result` as a bare array and pages on `offset`,
+     * package_search answers `result.results` and pages on `start`. Left
+     * as they were, the re-pointed row stored ONE record — measured, on
+     * all three rows, which is how this was caught. */
+    .url = "https://data.gov.hk/en-data/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .id_keys = "id",
     .interval = 86400,
-    .page_param = "offset",
+    .page_max = 13,   /* 797 datasets / 100 a page, +headroom (2026-10-24) */
+    .page_param = "start",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_size = 100,
     .page_zero_based = 1,
-    .title_keys = "author",
+    /* `author` is PRESENT on every package and NULL on every one of them
+     * (measured 2026-10-24: 797 records seen, 0 matched), so the engine was
+     * titling each dataset from its fallback list while the shape notice
+     * asked for this line to be re-pointed — on every run, since the row
+     * shipped. `title` is the dataset's own name and `name` its slug. */
+    .title_keys = "title,name",
     .description = "data.gov.hk on data.gov.hk. Fetched live 2026-10-05 under the "
       "engine's own User-Agent: 10 records in 758253 bytes. First "
       "record's fields: "

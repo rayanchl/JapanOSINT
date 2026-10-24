@@ -132,7 +132,15 @@ static const hp_source HP3B20_STANDARDS[] = {
     .record_type = "person-record",
     .tags = "\"standards\",\"ietf\",\"datatracker\",\"person\",\"participant\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://datatracker.ietf.org/api/v1/person/person/?format=json&limit=100",
+    /* `order_by=id` because this row CYCLES and the datatracker's Tastypie
+     * API has no guaranteed order without it: a resumed `offset` walk lands
+     * where it meant to only if the order is stable between runs, and `id`
+     * is the Django primary key every one of these collections carries.
+     * Measured 2026-10-24 on five of the endpoints (relateddocument,
+     * person, reviewrequest, iprevent, session): offsets 0 and 2 answer ids
+     * 1,2 then 3,4 — ordered and disjoint — and `meta.total_count` is
+     * published, which is what the truncation notice reads. */
+    .url = "https://datatracker.ietf.org/api/v1/person/person/?format=json&limit=100&order_by=id",
     .array_path = "objects",
     .id_keys = "id",
     .interval = 86400,
@@ -153,7 +161,15 @@ static const hp_source HP3B20_STANDARDS[] = {
     .record_type = "event-record",
     .tags = "\"standards\",\"ietf\",\"datatracker\",\"docevent\",\"process\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://datatracker.ietf.org/api/v1/doc/docevent/?format=json&limit=100",
+    /* `order_by=id` because this row CYCLES and the datatracker's Tastypie
+     * API has no guaranteed order without it: a resumed `offset` walk lands
+     * where it meant to only if the order is stable between runs, and `id`
+     * is the Django primary key every one of these collections carries.
+     * Measured 2026-10-24 on five of the endpoints (relateddocument,
+     * person, reviewrequest, iprevent, session): offsets 0 and 2 answer ids
+     * 1,2 then 3,4 — ordered and disjoint — and `meta.total_count` is
+     * published, which is what the truncation notice reads. */
+    .url = "https://datatracker.ietf.org/api/v1/doc/docevent/?format=json&limit=100&order_by=id",
     .array_path = "objects",
     .date_keys = "time",
     .id_keys = "id",
@@ -175,7 +191,15 @@ static const hp_source HP3B20_STANDARDS[] = {
     .record_type = "review-record",
     .tags = "\"standards\",\"ietf\",\"datatracker\",\"review\",\"directorate\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://datatracker.ietf.org/api/v1/review/reviewrequest/?format=json&limit=100",
+    /* `order_by=id` because this row CYCLES and the datatracker's Tastypie
+     * API has no guaranteed order without it: a resumed `offset` walk lands
+     * where it meant to only if the order is stable between runs, and `id`
+     * is the Django primary key every one of these collections carries.
+     * Measured 2026-10-24 on five of the endpoints (relateddocument,
+     * person, reviewrequest, iprevent, session): offsets 0 and 2 answer ids
+     * 1,2 then 3,4 — ordered and disjoint — and `meta.total_count` is
+     * published, which is what the truncation notice reads. */
+    .url = "https://datatracker.ietf.org/api/v1/review/reviewrequest/?format=json&limit=100&order_by=id",
     .array_path = "objects",
     .date_keys = "time",
     .id_keys = "id",

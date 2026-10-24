@@ -1910,6 +1910,119 @@ Engine subtleties worth knowing before writing a row:
   `JO_PAGE_MAX_CAP` existed for — so that knob is gone and
   `audit_cycle_advance.py` sets `JO_PAGE_MAX=2`.
 
+  **ADVANCING IS NOT ADVANCING CORRECTLY, and 273 cycling rows cannot say
+  which they do** (2026-10-22, `docs/measured-seam-risk-2026-10-22.tsv`). Both
+  sweeps above ask whether page 2 can be fetched. Neither asks the other half:
+  a resumed walk only lands where it meant to if the collection's ORDER is
+  stable between runs. If the upstream reorders, a record moves out of the
+  slice the next run will read into the slice the last run already read, and it
+  is never stored — the skip this file calls its worst shape, whose visible
+  half is a small collision and whose invisible half is the loss. That is a
+  property of the row's URL, so it is readable without a request: of the 665
+  rows that cycle, **273 page by offset or page number with NO order parameter
+  at all** (ArcGIS 50, WordPress REST 28, CKAN 25, Socrata 13, ODS 9, WFS 3,
+  145 other), 166 name an order with no direction, 52 are keyset cursors (safe
+  by construction) and 173 sort ascending already.
+
+  **The first version of that count said 388, and 115 of them were false.**
+  The pattern matched `order`/`sort` after `?` or `&` and so could not see
+  Socrata's `&$order=`, OData's `&%24orderby=` or ArcGIS's `&orderByFields=` —
+  a third of the finding was rows that already sort. A new check's big number
+  deserves the same suspicious look this file gives a new check's zero.
+
+  **WordPress REST is the family measured end to end** (28 of those 273,
+  `docs/measured-wordpress-cycle-totals-2026-10-22.tsv`). Its default order is
+  `orderby=date&order=desc` — verified live, newest first — so every new post
+  pushes the whole collection down one place under a cycling walk. But a risk
+  ranking does not say which rows HAVE a seam, and `X-WP-Total` does: **8 of
+  the 28 hold more than one run reads** (kyoiku-press 77,291 posts, lnews
+  71,028, yakuji 58,422, japanmetal 57,496, ANCOM 5,705, ANM 3,831, AEK 3,138,
+  sorabatake 2,521) and 15 complete inside one run, where the cycle is a
+  genuine no-op and the descending order costs nothing. The 8 carry
+  `orderby=id&order=asc` now (accepted on every host, measured, ids ascending
+  — and note the dates are NOT monotonic with id, which is its own reason to
+  key the order on the id). Two runs against one database on sorabatake:
+  1,000 then 1,000, **2,000 distinct rows, zero overlap at the seam**. Four
+  rows answer no `X-WP-Total` at all and are recorded as unmeasured.
+  Recency is the trade: three of the 8 hosts have a registered RSS row that
+  covers it, so reading their archive forward is exactly the row's job; for the
+  other five the pair this wants (the `PLOS_RECENT`/`PLOS_CORPUS` shape) is
+  named in the row as a follow-up rather than implied. The other six families
+  are ranked and NOT fixed — ArcGIS needs each layer's own `objectIdField`,
+  which is one metadata read per row.
+
+  **The families behind those 273 are now measured one by one, and 99 rows
+  carry a stable sort** (2026-10-24,
+  `docs/measured-seam-families-2026-10-24.md`, per-layer readings in
+  `docs/measured-arcgis-oid-2026-10-24.tsv`). One verdict per API family, each
+  from a live probe, because a family's answer covers dozens of rows where a
+  per-row guess covers none:
+  * **ArcGIS, 47 of 50** — `orderByFields=<the layer's own objectIdField> ASC`.
+    The field is NOT assumable: across the 50 it is `OBJECTID` forty times but
+    also `ObjectId`, `objectid`, `FID` and `oid_permit`, so the probe reads
+    each layer's metadata first and then checks that offsets 0 and 1 answer
+    different records. `IMF_PORTWATCH_AIRPORTS`, two runs: 4,000 distinct.
+  * **CKAN `datastore_search`, 21** — `sort=_id asc`, the datastore's own
+    sequential row id. **Socrata, 13** — `$order=:id`, and DESC answering a
+    different set is what proves the parameter is honoured rather than
+    ignored. **IETF datatracker, 14** — `order_by=id`, the Django primary key.
+    **CKAN bulk list, 3** — re-pointed to `package_search?sort=id+asc`, each
+    now storing its portal's declared count exactly (823, 797, 250).
+    **One WFS**, Slovenia's 580,322 house numbers, on its own EID.
+  * **Three things the re-points taught.** A URL changed after validation is
+    unvalidated AND ITS SIBLINGS MOVE WITH IT: the CKAN re-point stored ONE
+    record on all three rows until `array_path` went `result` →
+    `result.results` and `page_param` `offset` → `start`. A notice nobody
+    reads is still true: the Hong Kong row's `title_keys = "author"` matched
+    nothing — present on every package, null on every one — so every dataset
+    was titled from the fallback list while the shape notice asked for this
+    exact repair. And the applier reads each URL out of the C, because the
+    risk TSV truncates its url column and the match failed on the one row
+    longer than 200 characters.
+
+  **54 rows were measured and deliberately NOT changed**, which is the part of
+  this pass worth keeping. **UK Parliament's Linked Data API degrades the
+  RECORD when sorted**: `bills.json?_sort=identifier` answers page 0 as bare
+  URI strings where the unsorted page answers full bill objects — a sort there
+  would have turned 14 rows' records into hyperlinks. GBIF exposes no sort at
+  all; FPDS's ATOM feed has none either, so stability there means deciding
+  whether the row is a recency feed, not adding a parameter. OpenDataSoft's 9
+  are 7-of-9 unreachable from this environment and need a per-dataset field.
+  SA Treasury's `order=` is parsed (a malformed spec returns zero rows) but the
+  host stopped answering before HONOURED could be established — one undecided
+  reading is not grounds to change seven rows. Hungary's INSPIRE WFS accepts
+  `sortBy=name` and that name has TIES, so it is not a total order.
+  `environment.data.gov.uk`'s flood-monitoring `_sort` is accepted and
+  IGNORED (`notation` and `-notation` answer the same records), and the
+  `asset-management` row among those 8 is the same Linked Data API as
+  Parliament's: **read what it stores before sorting it.** `api.uktradeinfo.com`
+  REFUSES OData's own `$orderby` with HTTP 403 ("use only the allowed
+  operations"), and `repository.overheid.nl`'s SRU ignores `sortKeys` in both
+  directions while drawing no diagnostic for a bogus key at all.
+
+  **And an unrecognised parameter is not always ignored — on some APIs it
+  FILTERS.** The Gazette dropped `sort=publication-date` silently, but
+  `sort-by=id` took its own declared total from **9,321,677 notices to
+  4,882,776** and returned nothing: the parameter was read as a search term,
+  not a sort. So when a sort goes onto a row, compare the upstream's own total
+  before and after — a total that moves means the parameter was not read as a
+  sort, and the row is now about a different collection.
+
+  **And the 44 unresolved verdicts of the first sweep were re-run**
+  (`docs/measured-cycle-retry-2026-10-22.tsv`), because "re-run each
+  FETCH_FAILED once" is this file's own rule and inferring 44 rows from five
+  proxy log lines is not a measurement. 12 recovered on the second reading (one
+  of them, `ELIA_GENERATION_BY_FUEL_HIST`, only when run ALONE — its failure
+  was the sweep's own concurrency), 7 are the upstream speaking (4 × 503, a
+  429, a 403 and a 401 that wants a credential), and **22 fail for plain `curl`
+  from this container exactly as they fail for the engine** — connection reset,
+  empty reply, an untrusted certificate — so they are a reading of this path,
+  not of the rows, and nothing is retired on them. Three flap: they answered
+  `curl` 200 once and 000 minutes later, which is why the first reading's
+  "answered curl but failed in the engine" theory was dropped rather than
+  built on. **A second probe of a host that just answered is the cheapest way
+  to find out whether you measured the host or the moment.**
+
   533 rows cycled when this was written; 669 do on 2026-10-22, and the sweep
   above is how to know they still can. One shape to keep in mind: `interval = 2592000` is
   monthly, so a 500-page collection on that cadence takes about two years to
