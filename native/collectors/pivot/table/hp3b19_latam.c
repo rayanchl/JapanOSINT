@@ -2125,7 +2125,17 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "zoning-record",
     .tags = "\"peru\",\"protected\",\"sernanp\",\"zoning\",\"environment\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://geoservicios.sernanp.gob.pe/arcgis/rest/services/servicios_ogc/peru_sernanp_0213/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&resultRecordCount=1000&f=json",
+    /* `orderByFields=objectid ASC` because this row CYCLES and an ArcGIS
+     * `query` with `resultOffset` has no guaranteed order without it — a
+     * resumed walk lands where it meant to only if the order is stable
+     * between runs. The field is NOT assumed: this layer's own metadata
+     * names `objectid` as its objectIdField (read 2026-10-24; across the 50
+     * ArcGIS rows the name is OBJECTID 40 times but also ObjectId,
+     * objectid, FID and oid_permit, so assuming one would have broken
+     * eight rows). Verified the same day: objectIdField absent; took the esriFieldTypeOID field — two single-record
+     * pages at offsets 0 and 1 answer different records, so the sort is
+     * honoured and the pages are disjoint. */
+    .url = "https://geoservicios.sernanp.gob.pe/arcgis/rest/services/servicios_ogc/peru_sernanp_0213/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&resultRecordCount=1000&f=json&orderByFields=objectid%20ASC",
     .array_path = "features",
     .interval = 21600,
     .page_param = "resultOffset",

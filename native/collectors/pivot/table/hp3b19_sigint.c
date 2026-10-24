@@ -1313,7 +1313,17 @@ static const hp_source HP3B19_SIGINT[] = {
     .record_type = "radio-licence",
     .tags = "\"sigint\",\"spectrum\",\"licence\",\"australia\",\"register\",\"geo\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://portal.data.nsw.gov.au/arcgis/rest/services/Hosted/Australian_Communication_and_Media_Authority_Data/FeatureServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=2000",
+    /* `orderByFields=objectid ASC` because this row CYCLES and an ArcGIS
+     * `query` with `resultOffset` has no guaranteed order without it — a
+     * resumed walk lands where it meant to only if the order is stable
+     * between runs. The field is NOT assumed: this layer's own metadata
+     * names `objectid` as its objectIdField (read 2026-10-24; across the 50
+     * ArcGIS rows the name is OBJECTID 40 times but also ObjectId,
+     * objectid, FID and oid_permit, so assuming one would have broken
+     * eight rows). Verified the same day: offsets 0,1 -> [1, 2] — two single-record
+     * pages at offsets 0 and 1 answer different records, so the sort is
+     * honoured and the pages are disjoint. */
+    .url = "https://portal.data.nsw.gov.au/arcgis/rest/services/Hosted/Australian_Communication_and_Media_Authority_Data/FeatureServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=2000&orderByFields=objectid%20ASC",
     .array_path = "features",
     .date_keys = "attributes.authorisation_date",
     .id_keys = "attributes.licence_no",

@@ -1601,7 +1601,17 @@ static const hp_source HP3B19_EURASIA[] = {
     .record_type = "planning-application",
     .tags = "\"ireland\",\"fingal\",\"planning\",\"permit\",\"arcgis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://services5.arcgis.com/CI1e5PKQXvJgmJK8/arcgis/rest/services/Fingal_Planning_Applications/FeatureServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=100",
+    /* `orderByFields=OBJECTID ASC` because this row CYCLES and an ArcGIS
+     * `query` with `resultOffset` has no guaranteed order without it — a
+     * resumed walk lands where it meant to only if the order is stable
+     * between runs. The field is NOT assumed: this layer's own metadata
+     * names `OBJECTID` as its objectIdField (read 2026-10-24; across the 50
+     * ArcGIS rows the name is OBJECTID 40 times but also ObjectId,
+     * objectid, FID and oid_permit, so assuming one would have broken
+     * eight rows). Verified the same day: offsets 0,1 -> [85555, 85556] — two single-record
+     * pages at offsets 0 and 1 answer different records, so the sort is
+     * honoured and the pages are disjoint. */
+    .url = "https://services5.arcgis.com/CI1e5PKQXvJgmJK8/arcgis/rest/services/Fingal_Planning_Applications/FeatureServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=100&orderByFields=OBJECTID%20ASC",
     .array_path = "features",
     .id_keys = "attributes.Planning_Reference",
     .interval = 21600,
@@ -1625,7 +1635,17 @@ static const hp_source HP3B19_EURASIA[] = {
     .record_type = "heritage-site",
     .tags = "\"ireland\",\"heritage\",\"archaeology\",\"monument\",\"arcgis\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://services-eu1.arcgis.com/HyjXgkV6KGMSF3jt/arcgis/rest/services/SMROpenData/FeatureServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=100",
+    /* `orderByFields=OBJECTID ASC` because this row CYCLES and an ArcGIS
+     * `query` with `resultOffset` has no guaranteed order without it — a
+     * resumed walk lands where it meant to only if the order is stable
+     * between runs. The field is NOT assumed: this layer's own metadata
+     * names `OBJECTID` as its objectIdField (read 2026-10-24; across the 50
+     * ArcGIS rows the name is OBJECTID 40 times but also ObjectId,
+     * objectid, FID and oid_permit, so assuming one would have broken
+     * eight rows). Verified the same day: offsets 0,1 -> [1, 2] — two single-record
+     * pages at offsets 0 and 1 answer different records, so the sort is
+     * honoured and the pages are disjoint. */
+    .url = "https://services-eu1.arcgis.com/HyjXgkV6KGMSF3jt/arcgis/rest/services/SMROpenData/FeatureServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=100&orderByFields=OBJECTID%20ASC",
     .array_path = "features",
     .id_keys = "attributes.SMRS",
     .interval = 604800,
@@ -1752,7 +1772,17 @@ static const hp_source HP3B19_EURASIA[] = {
     .record_type = "health-statistic",
     .tags = "\"ireland\",\"health\",\"epidemiology\",\"surveillance\",\"hpsc\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://services1.arcgis.com/eNO7HHeQ3rUcBllm/arcgis/rest/services/CovidStatisticsProfileHPSCIrelandOpenData/FeatureServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=100",
+    /* `orderByFields=FID ASC` because this row CYCLES and an ArcGIS
+     * `query` with `resultOffset` has no guaranteed order without it — a
+     * resumed walk lands where it meant to only if the order is stable
+     * between runs. The field is NOT assumed: this layer's own metadata
+     * names `FID` as its objectIdField (read 2026-10-24; across the 50
+     * ArcGIS rows the name is OBJECTID 40 times but also ObjectId,
+     * objectid, FID and oid_permit, so assuming one would have broken
+     * eight rows). Verified the same day: offsets 0,1 -> [1, 2] — two single-record
+     * pages at offsets 0 and 1 answer different records, so the sort is
+     * honoured and the pages are disjoint. */
+    .url = "https://services1.arcgis.com/eNO7HHeQ3rUcBllm/arcgis/rest/services/CovidStatisticsProfileHPSCIrelandOpenData/FeatureServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=100&orderByFields=FID%20ASC",
     .array_path = "features",
     .date_keys = "attributes.Date",
     .interval = 21600,

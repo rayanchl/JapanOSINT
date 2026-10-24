@@ -2803,7 +2803,17 @@ static const hp_source HP3B19_USSTATE[] = {
     .record_type = "land-authorisation",
     .tags = "\"us\",\"alaska\",\"land\",\"lease\",\"permit\",\"dnr\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://arcgis.dnr.alaska.gov/arcgis/rest/services/OpenData/LandActivity_LandPermitOrLease/MapServer/2/query?where=1%3D1&outFields=*&returnGeometry=false&f=json&resultRecordCount=1000",
+    /* `orderByFields=OBJECTID ASC` because this row CYCLES and an ArcGIS
+     * `query` with `resultOffset` has no guaranteed order without it — a
+     * resumed walk lands where it meant to only if the order is stable
+     * between runs. The field is NOT assumed: this layer's own metadata
+     * names `OBJECTID` as its objectIdField (read 2026-10-24; across the 50
+     * ArcGIS rows the name is OBJECTID 40 times but also ObjectId,
+     * objectid, FID and oid_permit, so assuming one would have broken
+     * eight rows). Verified the same day: objectIdField absent; took the esriFieldTypeOID field — two single-record
+     * pages at offsets 0 and 1 answer different records, so the sort is
+     * honoured and the pages are disjoint. */
+    .url = "https://arcgis.dnr.alaska.gov/arcgis/rest/services/OpenData/LandActivity_LandPermitOrLease/MapServer/2/query?where=1%3D1&outFields=*&returnGeometry=false&f=json&resultRecordCount=1000&orderByFields=OBJECTID%20ASC",
     .array_path = "features",
     .id_keys = "OBJECTID",
     .interval = 86400,
@@ -2827,7 +2837,17 @@ static const hp_source HP3B19_USSTATE[] = {
     .record_type = "mineral-lease",
     .tags = "\"us\",\"alaska\",\"mining\",\"oil\",\"gas\",\"lease\",\"dnr\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://arcgis.dnr.alaska.gov/arcgis/rest/services/OpenData/MineralActivity_MineralPermitOrLease/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&f=json&resultRecordCount=1000",
+    /* `orderByFields=OBJECTID ASC` because this row CYCLES and an ArcGIS
+     * `query` with `resultOffset` has no guaranteed order without it — a
+     * resumed walk lands where it meant to only if the order is stable
+     * between runs. The field is NOT assumed: this layer's own metadata
+     * names `OBJECTID` as its objectIdField (read 2026-10-24; across the 50
+     * ArcGIS rows the name is OBJECTID 40 times but also ObjectId,
+     * objectid, FID and oid_permit, so assuming one would have broken
+     * eight rows). Verified the same day: objectIdField absent; took the esriFieldTypeOID field — two single-record
+     * pages at offsets 0 and 1 answer different records, so the sort is
+     * honoured and the pages are disjoint. */
+    .url = "https://arcgis.dnr.alaska.gov/arcgis/rest/services/OpenData/MineralActivity_MineralPermitOrLease/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&f=json&resultRecordCount=1000&orderByFields=OBJECTID%20ASC",
     .array_path = "features",
     .id_keys = "OBJECTID",
     .interval = 86400,
@@ -2871,7 +2891,17 @@ static const hp_source HP3B19_USSTATE[] = {
     .record_type = "lease-sale",
     .tags = "\"us\",\"alaska\",\"oil\",\"gas\",\"leasing\",\"dnr\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://arcgis.dnr.alaska.gov/arcgis/rest/services/OpenData/MineralActivity_OGLeaseSaleTract/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&f=json&resultRecordCount=1000",
+    /* `orderByFields=OBJECTID ASC` because this row CYCLES and an ArcGIS
+     * `query` with `resultOffset` has no guaranteed order without it — a
+     * resumed walk lands where it meant to only if the order is stable
+     * between runs. The field is NOT assumed: this layer's own metadata
+     * names `OBJECTID` as its objectIdField (read 2026-10-24; across the 50
+     * ArcGIS rows the name is OBJECTID 40 times but also ObjectId,
+     * objectid, FID and oid_permit, so assuming one would have broken
+     * eight rows). Verified the same day: objectIdField absent; took the esriFieldTypeOID field — two single-record
+     * pages at offsets 0 and 1 answer different records, so the sort is
+     * honoured and the pages are disjoint. */
+    .url = "https://arcgis.dnr.alaska.gov/arcgis/rest/services/OpenData/MineralActivity_OGLeaseSaleTract/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&f=json&resultRecordCount=1000&orderByFields=OBJECTID%20ASC",
     .array_path = "features",
     .id_keys = "OBJECTID",
     .interval = 604800,
@@ -2955,7 +2985,17 @@ static const hp_source HP3B19_USSTATE[] = {
     .record_type = "water-well",
     .tags = "\"us\",\"alaska\",\"water\",\"wells\",\"groundwater\",\"dnr\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://arcgis.dnr.alaska.gov/arcgis/rest/services/OpenData/NaturalResource_WELTS/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&f=json&resultRecordCount=1000",
+    /* `orderByFields=OBJECTID ASC` because this row CYCLES and an ArcGIS
+     * `query` with `resultOffset` has no guaranteed order without it — a
+     * resumed walk lands where it meant to only if the order is stable
+     * between runs. The field is NOT assumed: this layer's own metadata
+     * names `OBJECTID` as its objectIdField (read 2026-10-24; across the 50
+     * ArcGIS rows the name is OBJECTID 40 times but also ObjectId,
+     * objectid, FID and oid_permit, so assuming one would have broken
+     * eight rows). Verified the same day: objectIdField absent; took the esriFieldTypeOID field — two single-record
+     * pages at offsets 0 and 1 answer different records, so the sort is
+     * honoured and the pages are disjoint. */
+    .url = "https://arcgis.dnr.alaska.gov/arcgis/rest/services/OpenData/NaturalResource_WELTS/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&f=json&resultRecordCount=1000&orderByFields=OBJECTID%20ASC",
     .array_path = "features",
     .id_keys = "attributes.LogId",
     .interval = 604800,
@@ -3008,7 +3048,17 @@ static const hp_source HP3B19_USSTATE[] = {
     .record_type = "drilling-permit",
     .tags = "\"us\",\"california\",\"oil\",\"gas\",\"permit\",\"calgem\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://gis.conservation.ca.gov/server/rest/services/WellSTAR/Notices/MapServer/1/query?where=1%3D1&outFields=*&returnGeometry=false&f=json&resultRecordCount=1000",
+    /* `orderByFields=OBJECTID ASC` because this row CYCLES and an ArcGIS
+     * `query` with `resultOffset` has no guaranteed order without it — a
+     * resumed walk lands where it meant to only if the order is stable
+     * between runs. The field is NOT assumed: this layer's own metadata
+     * names `OBJECTID` as its objectIdField (read 2026-10-24; across the 50
+     * ArcGIS rows the name is OBJECTID 40 times but also ObjectId,
+     * objectid, FID and oid_permit, so assuming one would have broken
+     * eight rows). Verified the same day: objectIdField absent; took the esriFieldTypeOID field — two single-record
+     * pages at offsets 0 and 1 answer different records, so the sort is
+     * honoured and the pages are disjoint. */
+    .url = "https://gis.conservation.ca.gov/server/rest/services/WellSTAR/Notices/MapServer/1/query?where=1%3D1&outFields=*&returnGeometry=false&f=json&resultRecordCount=1000&orderByFields=OBJECTID%20ASC",
     .array_path = "features",
     .id_keys = "attributes.NoticePermitNumber",
     .interval = 43200,
@@ -3033,7 +3083,17 @@ static const hp_source HP3B19_USSTATE[] = {
     .record_type = "storage-tank",
     .tags = "\"us\",\"california\",\"oil\",\"tanks\",\"facility\",\"calgem\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://gis.conservation.ca.gov/server/rest/services/WellSTAR/Facilities/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&f=json&resultRecordCount=1000",
+    /* `orderByFields=OBJECTID ASC` because this row CYCLES and an ArcGIS
+     * `query` with `resultOffset` has no guaranteed order without it — a
+     * resumed walk lands where it meant to only if the order is stable
+     * between runs. The field is NOT assumed: this layer's own metadata
+     * names `OBJECTID` as its objectIdField (read 2026-10-24; across the 50
+     * ArcGIS rows the name is OBJECTID 40 times but also ObjectId,
+     * objectid, FID and oid_permit, so assuming one would have broken
+     * eight rows). Verified the same day: objectIdField absent; took the esriFieldTypeOID field — two single-record
+     * pages at offsets 0 and 1 answer different records, so the sort is
+     * honoured and the pages are disjoint. */
+    .url = "https://gis.conservation.ca.gov/server/rest/services/WellSTAR/Facilities/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&f=json&resultRecordCount=1000&orderByFields=OBJECTID%20ASC",
     .array_path = "features",
     .id_keys = "OBJECTID",
     .interval = 604800,
@@ -3083,7 +3143,17 @@ static const hp_source HP3B19_USSTATE[] = {
     .record_type = "pipeline",
     .tags = "\"us\",\"texas\",\"pipeline\",\"energy\",\"infrastructure\",\"rrc\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://gis.rrc.texas.gov/server/rest/services/rrc_public/RRC_Public_Viewer_Srvs/MapServer/13/query?where=1%3D1&outFields=*&returnGeometry=false&f=json&resultRecordCount=1000",
+    /* `orderByFields=OBJECTID ASC` because this row CYCLES and an ArcGIS
+     * `query` with `resultOffset` has no guaranteed order without it — a
+     * resumed walk lands where it meant to only if the order is stable
+     * between runs. The field is NOT assumed: this layer's own metadata
+     * names `OBJECTID` as its objectIdField (read 2026-10-24; across the 50
+     * ArcGIS rows the name is OBJECTID 40 times but also ObjectId,
+     * objectid, FID and oid_permit, so assuming one would have broken
+     * eight rows). Verified the same day: objectIdField absent; took the esriFieldTypeOID field — two single-record
+     * pages at offsets 0 and 1 answer different records, so the sort is
+     * honoured and the pages are disjoint. */
+    .url = "https://gis.rrc.texas.gov/server/rest/services/rrc_public/RRC_Public_Viewer_Srvs/MapServer/13/query?where=1%3D1&outFields=*&returnGeometry=false&f=json&resultRecordCount=1000&orderByFields=OBJECTID%20ASC",
     .array_path = "features",
     .id_keys = "OBJECTID",
     .interval = 604800,
@@ -3107,7 +3177,17 @@ static const hp_source HP3B19_USSTATE[] = {
     .record_type = "well-location",
     .tags = "\"us\",\"texas\",\"oil\",\"gas\",\"wells\",\"rrc\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://gis.rrc.texas.gov/server/rest/services/rrc_public/RRC_Public_Viewer_Srvs/MapServer/1/query?where=1%3D1&outFields=*&returnGeometry=false&f=json&resultRecordCount=1000",
+    /* `orderByFields=OBJECTID ASC` because this row CYCLES and an ArcGIS
+     * `query` with `resultOffset` has no guaranteed order without it — a
+     * resumed walk lands where it meant to only if the order is stable
+     * between runs. The field is NOT assumed: this layer's own metadata
+     * names `OBJECTID` as its objectIdField (read 2026-10-24; across the 50
+     * ArcGIS rows the name is OBJECTID 40 times but also ObjectId,
+     * objectid, FID and oid_permit, so assuming one would have broken
+     * eight rows). Verified the same day: objectIdField absent; took the esriFieldTypeOID field — two single-record
+     * pages at offsets 0 and 1 answer different records, so the sort is
+     * honoured and the pages are disjoint. */
+    .url = "https://gis.rrc.texas.gov/server/rest/services/rrc_public/RRC_Public_Viewer_Srvs/MapServer/1/query?where=1%3D1&outFields=*&returnGeometry=false&f=json&resultRecordCount=1000&orderByFields=OBJECTID%20ASC",
     .array_path = "features",
     .id_keys = "OBJECTID",
     .interval = 604800,
