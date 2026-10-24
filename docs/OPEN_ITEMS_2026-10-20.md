@@ -796,29 +796,38 @@ E6.
 hour a complete pass is a two-day job, and the file is committed as it
 accumulates rather than held back.
 
-**Where it stands at 2026-10-23: 12,584 of 55,699 rows** (22.6%), resumed
+**Where it stands at 2026-10-24: 15,327 of 55,699 rows** (27.5%), resumed
 across several invocations — each runs until the harness's two-hour background
 limit (or, once, until the container restarted) and `--resume` picks up where it
-stopped, so the remainder is roughly nine more hours of wall clock:
+stopped, so the remainder is roughly eight more hours of wall clock:
 
-| verdict | n |
-| --- | --- |
-| OK | 10,603 |
-| FETCH_FAILED | 1,306 |
-| COLLISION | 298 |
-| SLOW | 222 |
-| EMITS_NOTHING | 132 |
-| POD | 19 |
-| GATED | 4 |
+| verdict | n | at 12,584 rows |
+| --- | --- | --- |
+| OK | 12,850 | 10,603 |
+| FETCH_FAILED | 1,473 | 1,306 |
+| COLLISION | 385 | 298 |
+| SLOW | 356 | 222 |
+| EMITS_NOTHING | 151 | 132 |
+| GATED | 93 | 4 |
+| POD | 19 | 19 |
 
-**Read the SLOW column against the machine, not the sources.** It is 222 now
-against 147 at 11,666 rows: 75 of the last 918 rows hit the 200 s kill line, an
-8% rate where the first 11,666 ran at about 1%. That window is exactly when this
-container was also building llama.cpp and running the 85-test unit suite, and
-`SLOW` means UNMEASURED at this tool's kill line rather than a slow source — the
-same reasoning as the cycle-health sweep whose STUCK verdicts changed with
-`--jobs`. Those 75 rows need re-running on a quiet machine before any of them is
-read as a finding.
+**Read the SLOW column against the machine, not the sources, and the number
+keeps saying so.** It was 147 at 11,666 rows, 222 at 12,584 and is 356 now:
+134 of the last 2,743 rows hit the 200 s kill line, a 5% rate where the first
+11,666 ran at about 1%. Both of those windows are exactly when this container
+was busiest — building llama.cpp and running the unit suite for the first, two
+full `make`s, a 455-second unit suite and six live engine runs for the second —
+and `SLOW` means UNMEASURED at this tool's kill line rather than a slow source,
+the same reasoning as the cycle-health sweep whose STUCK verdicts changed with
+`--jobs`. **Those 134 rows need re-running on a quiet machine before any of
+them is read as a finding**, and a sweep sharing a container with a build is
+measuring the container.
+
+The `GATED` jump from 4 to 93 is not a change in the fleet: that stretch of the
+registry is where the key-gated rows sit, and `GATED` is the verdict
+`audit_registry_emit.py` gained on 2026-10-23 for a row that stores one
+`collector-status-notice` naming the env var it needs — a source behaving
+exactly as designed, which this tool used to call `SINK_MISMATCH`.
 
 Read those four non-OK columns with the corrections below rather than as
 counts of broken sources: `FETCH_FAILED` is a row that DISCLOSED its refusal
