@@ -169,15 +169,6 @@ static const hp_source HP2_ASIA_CENTRAL[] = {
       "registration date and liquidation status; sanctioned-entity work on "
       "Belarus starts here" },
 
-  { .id = "MD_COMPANY_REGISTRY", .name = "Moldova — state register of legal entities",
-    .name_ja = "モルドバ 法人登記", .category = "government",
-    .portal = "https://date.gov.md", .record_type = "md-company",
-    .tags = "\"md\",\"registry\"", .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://date.gov.md/ckan/en/dataset?q={q}",
-    .base = "https://date.gov.md", .filter_query = 1,
-    .description = "Moldovan open-data register entries — company identifiers, "
-      "founders and state-contract participation; the jurisdiction at the centre "
-      "of the Laundromat cases" },
 };
 
 HP_REGISTER_TABLE(HP2_ASIA_CENTRAL)

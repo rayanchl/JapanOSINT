@@ -252,17 +252,6 @@ static const hp_source HP3B31_UKIE[] = {
       "the debates attached to each stage — the whole legislative record as "
       "structured data rather than PDFs" },
 
-  { .id = "IE_LOBBYING_REGISTER", .name = "Ireland — register of lobbying",
-    .name_ja = "アイルランド ロビー活動登録", .category = "government",
-    .portal = "https://www.lobbying.ie", .record_type = "ie-lobbying-return",
-    .tags = "\"ie\",\"lobbying\",\"influence\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.lobbying.ie/app/search?query={q}",
-    .base = "https://www.lobbying.ie", .filter_query = 1,
-    .description = "Statutory lobbying returns — who lobbied which Designated "
-      "Public Official, about what, on whose behalf, and whether the lobbyist "
-      "is a former public official inside the cooling-off period" },
-
   { .id = "IE_CHARITIES_REGULATOR", .name = "Ireland — register of charities",
     .name_ja = "アイルランド 慈善団体登録", .category = "government",
     .portal = "https://www.charitiesregulator.ie", .record_type = "ie-charity",

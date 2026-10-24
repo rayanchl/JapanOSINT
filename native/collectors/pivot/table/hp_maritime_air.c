@@ -117,28 +117,6 @@ static const hp_source HP_MARAIR[] = {
       "thumbnail links — livery changes over time are how re-registrations and quiet "
       "operator changes get caught" },
 
-  { .id = "TC_CCARCS_REGISTRY", .name = "Transport Canada — civil aircraft register",
-    .name_ja = "カナダ 航空機登録", .category = "transport",
-    .type = "scraped", .mode = HP_HTML,
-    .portal = "https://wwwapps.tc.gc.ca", .record_type = "aircraft",
-    .tags = "\"ca\",\"aviation\",\"ownership\"", .free_tier = 1,
-    .url = "https://wwwapps.tc.gc.ca/saf-sec-sur/2/ccarcs-riacc/RchSimpRes.aspx?cn={q}",
-    .base = "https://wwwapps.tc.gc.ca", .filter_query = 1,
-    .description = "Canadian Civil Aircraft Register search by mark or owner name — "
-      "registered owner, address, aircraft type and certificate status, published "
-      "free of charge" },
-
-  { .id = "UK_GINFO_REGISTRY", .name = "UK CAA G-INFO — aircraft register",
-    .name_ja = "英国 航空機登録(G-INFO)", .category = "transport",
-    .type = "scraped", .mode = HP_HTML,
-    .portal = "https://siteapps.caa.co.uk", .record_type = "aircraft",
-    .tags = "\"uk\",\"aviation\",\"ownership\"", .free_tier = 1,
-    .url = "https://siteapps.caa.co.uk/g-info/?regmark={qU}",
-    .base = "https://siteapps.caa.co.uk", .filter_query = 0,
-    .description = "UK aircraft register entries — registered owner or operator, "
-      "address, aircraft type, certificate of airworthiness and previous "
-      "registrations for a G- mark" },
-
   { .id = "OURAIRPORTS_LOOKUP", .name = "OurAirports — global airport & heliport data",
     .name_ja = "OurAirports — 世界の空港データ", .category = "transport",
     .type = "dataset", .mode = HP_CSV,

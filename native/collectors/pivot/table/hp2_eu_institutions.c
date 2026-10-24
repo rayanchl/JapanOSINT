@@ -96,18 +96,6 @@ static const hp_source HP2_EU_INSTITUTIONS[] = {
       "authorisation and withdrawal dates and the passporting notifications "
       "that show which other member states the firm operates into" },
 
-  { .id = "EU_EIOPA_REGISTER", .name = "EIOPA — insurance & pension undertakings register",
-    .name_ja = "欧州保険年金監督機構 登録簿", .category = "government",
-    .portal = "https://register.eiopa.europa.eu", .record_type = "eu-insurer",
-    .tags = "\"eu\",\"insurance\",\"licence\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://register.eiopa.europa.eu/search?q={q}",
-    .base = "https://register.eiopa.europa.eu", .filter_query = 1,
-    .description = "Authorised European insurers, reinsurers, intermediaries "
-      "and occupational pension funds, with their cross-border activity. "
-      "Insurance cover is a sanctions chokepoint, so knowing which EEA insurer "
-      "is authorised to write a risk matters" },
-
   /* ── EU money, exclusions and influence ────────────────────────────────── */
   { .id = "EU_EDES_EXCLUSIONS", .name = "EU EDES — early detection & exclusion database",
     .name_ja = "EU 早期発見/排除データベース", .category = "government",
@@ -121,19 +109,6 @@ static const hp_source HP2_EU_INSTITUTIONS[] = {
       "the ground for exclusion (fraud, corruption, grave professional "
       "misconduct, serious contract breach), the duration and the scope. The "
       "EU's own debarment list, and it is not mirrored in the US SAM data" },
-
-  { .id = "EU_TRANSPARENCY_REGISTER", .name = "EU Transparency Register — lobbying entities",
-    .name_ja = "EU 透明性登録簿(ロビー)", .category = "government",
-    .portal = "https://ec.europa.eu/transparencyregister", .record_type = "eu-lobbyist",
-    .tags = "\"eu\",\"lobbying\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://ec.europa.eu/transparencyregister/public/consultation/"
-      "search.do?locale=en&name={q}",
-    .base = "https://ec.europa.eu", .filter_query = 1,
-    .description = "Organisations registered to lobby the EU institutions — "
-      "declared annual lobbying budget, clients, the legislative files they "
-      "work on, the accredited passholders they employ and the logged meetings "
-      "with commissioners and directors-general" },
 
   { .id = "EU_FTS_BENEFICIARIES", .name = "EU Financial Transparency System — fund beneficiaries",
     .name_ja = "EU 資金受益者データベース", .category = "government",

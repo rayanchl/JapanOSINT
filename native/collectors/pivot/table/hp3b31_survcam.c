@@ -134,17 +134,6 @@ static const hp_source HP3B31_SURVCAM[] = {
       "tunnel portal and ferry-quay cameras with their road reference and "
       "coordinates, a network built for winter closure decisions" },
 
-  { .id = "CAM_CZ_RSD_KAMERY", .name = "Czech Republic ŘSD — motorway camera network",
-    .name_ja = "チェコ 高速道路カメラ", .category = "surveillance",
-    .portal = "https://kamery.rsd.cz", .record_type = "road-camera",
-    .tags = "\"cz\",\"camera\",\"traffic\",\"surveillance\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://kamery.rsd.cz/?q={q}",
-    .base = "https://kamery.rsd.cz", .filter_query = 1,
-    .description = "The Czech road and motorway directorate's camera network "
-      "— device location by kilometre marker on each D-numbered motorway, with "
-      "the live still images" },
-
   { .id = "CAM_EE_TARKTEE", .name = "Estonia Tark Tee — road cameras & conditions",
     .name_ja = "エストニア 道路カメラ", .category = "surveillance",
     .portal = "https://tarktee.mnt.ee", .record_type = "road-camera",
