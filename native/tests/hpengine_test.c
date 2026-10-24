@@ -807,6 +807,14 @@ static const hp_source T[] = {
     .interval = 3600, .record_type = "t-xmldeep", .free_tier = 1, .description = "d" },
   /* A POSTed search authenticated by header, with a detail hop: gBizINFO's
    * shape (X-hojinInfo-api-token). The hop must carry the token. */
+  /* A GET row that DECLARES a Content-Type, with a detail hop: PY_AIP's shape
+   * (its /detalle answers HTTP 500 without application/json). Kept on the hop. */
+  { .id = "T_DEEP_CTYPE", .name = "detail hop keeps a declared Content-Type",
+    .url = "https://x.test/clist?q={q}",
+    .headers = { "Content-Type: application/json", NULL },
+    .array_path = "items", .title_keys = "name", .id_keys = "num",
+    .detail_url = "https://x.test/cdetail/{v}", .detail_key = "num", .detail_max = 1,
+    .record_type = "t-deepctype", .free_tier = 1, .description = "d" },
   { .id = "T_DEEP_HDR_POST", .name = "POSTed detail hop with the row's headers",
     .url = "https://x.test/hlist", .post_body = "{\"q\":\"{Q}\"}",
     .headers = { "X-Api-Token: tok-123", "User-Agent: jo-test/1 (ops@x.test)", NULL },
@@ -960,6 +968,14 @@ int main(void) {
      "2b: the detail hop carries the row's token and User-Agent");
   ok(!strstr(g_call_hdrs[1], "Content-Type:") && strstr(g_call_hdrs[0], "Content-Type: application/json"),
      "2b: the POST's content type rides on the list call only, not the GET hop");
+
+  /* 2c. a Content-Type the ROW declares stays on the hop (PY_AIP: 500 without) */
+  fx_reset();
+  fx_add("/clist?q=", 200, "{\"items\":[{\"name\":\"A\",\"num\":\"9\"}]}");
+  fx_add("/cdetail/9", 200, "{\"role\":\"x\"}");
+  rc = run_source("T_DEEP_CTYPE", "acme");
+  ok(rc == 0 && g_ncalls == 2 && strstr(g_call_hdrs[1], "Content-Type: application/json") != NULL,
+     "2c: a row-declared Content-Type is sent on the detail hop too");
 
   /* 3. array auto-discovery when no array_path is declared */
   fx_reset();

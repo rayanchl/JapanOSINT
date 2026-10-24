@@ -1159,11 +1159,11 @@ typedef struct {
   const char *prev_url;     /* the URL of the page read before this one      */
   int   pw_probe, pw_probed;
   /* What a detail hop is sent with: the row's own headers (token, UA, Accept,
-   * {key} expanded) minus conditional ones and minus ANY Content-Type — the
-   * hop is a bodiless GET, and a row's own Content-Type describes its POST —
-   * plus the JSON Accept default the hop's parser needs, also for a row whose
-   * list is XML/CSV/HTML. NULL-ended. (Fixed on two branches at once; both
-   * cases are in hptest: 2b, and the branch's UK_CQC-shaped case.) */
+   * Content-Type, {key} expanded) minus conditional ones and minus the
+   * content type the engine itself adds for a POST body — plus the JSON Accept
+   * default the hop's parser needs, also for a row whose list is
+   * XML/CSV/HTML. NULL-ended. hptest 2b (a POST row: no engine content type
+   * on the hop), 2c (a GET row that declares one: kept) and the UK_CQC case. */
   const char *const *detail_hdrs;
 } hp_run_state;
 
@@ -4164,13 +4164,18 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
     }
     nocache_hdrs[nn] = NULL;
   }
-  /* Detail hops (see hp_run_state.detail_hdrs): later_hdrs without any
-   * Content-Type, plus the JSON Accept the hop's parser needs. */
+  /* Detail hops (see hp_run_state.detail_hdrs): later_hdrs without the
+   * content type the ENGINE added for a POST body, plus the JSON Accept the
+   * hop's parser needs. A Content-Type the ROW declares is kept: some servers
+   * demand it on a bodiless GET — PY_AIP's /detalle answers HTTP 500 without
+   * `Content-Type: application/json` — and the 2026-10-12 merge that dropped
+   * every Content-Type turned all of that row's hops into 500s. */
   const char *detail_hdrs[13];
   {
     int nd = 0;
     for (int i = 0; later_hdrs[i]; i++) {
-      if (!strncasecmp(later_hdrs[i], "Content-Type:", 13)) continue;
+      if (body && !has_ctype && !strncasecmp(later_hdrs[i], "Content-Type:", 13))
+        continue;
       detail_hdrs[nd++] = later_hdrs[i];
     }
     if (!has_accept && s->mode != HP_JSON) detail_hdrs[nd++] = "Accept: application/json";
