@@ -15326,3 +15326,301 @@ JO40_JPGEO_KOBE_PORT_CARGO_BY_COUNTRY	OK	0	0	30408	30408	30408	30408	28.3
 JO40_JPGEO_MLIT_WAREHOUSE_REGISTRATIONS	OK	0	0	4876	4876	4876	4876	7.1	
 JO40_JPGEO_SAPPORO_FOOD_PERMITS	OK	0	0	25163	25163	25163	25163	38.4	
 JO40_JPGEO_TOKYO_STREET_TREES_TAMA	OK	0	0	83875	83875	83875	83875	136.3	
+JO40_JPGEO_HIDAKA_BUILDING_CONFIRMATIONS	OK	0	0	9235	9235	9235	9235	6.6	
+JO40_JPGEO_SAITAMA_BOREHOLES	OK	0	0	6415	6415	6415	6415	4.1	
+JO40_JPGEO_KOSAI_PARCELS	OK	0	0	129237	129237	129237	129237	137.0	
+JO40_JPGEO_ITAMI_WATCH_CAMERAS	OK	0	0	1247	1247	1247	1247	7.4	
+JO40_JPGEO_AKITA_POPULATION_FLOW	OK	0	0	64350	64350	64350	64350	148.3	
+JO40_JPGEO_OMIHACHIMAN_PARCELS	OK	0	0	133745	133745	133745	133745	166.5	
+JO40_JPGEO_KOSAI_PARCELS	OK	0	0	129237	129237	129237	129237	155.2	
+JO40_JPGEO_ITAMI_WATCH_CAMERAS	OK	0	0	1247	1247	1247	1247	3.4	
+JO40_JPGEO_TOKYO_STREET_TREES_23KU	SLOW	-1	0	-1	-1	0	-1	200.3	hit --timeout 200.3s
+JO40_JPGEO_MLIT_MOTOR_CARRIER_ACCIDENTS	SLOW	-1	0	-1	-1	0	-1	200.3	hit --timeout 200.3s
+JO40_JPGEO_TSUKUBA_SEWER_MANHOLES	SLOW	-1	0	-1	-1	25469	-1	200.1	hit --timeout 200.1s; 25469 rows already stored
+JO40_JPGEO_AKITA_POPULATION_FLOW	OK	0	0	64350	64350	64350	64350	188.0	
+JO40_JPGEO_OMIHACHIMAN_PARCELS	OK	0	0	133745	133745	133745	133745	189.2	
+JO40_JPNAT_KAIGO_DEMENTIA_GROUP_HOMES	OK	0	0	14236	14236	14236	14236	26.5	
+JO40_JPGEO_TOKYO_STREET_TREES_23KU	SLOW	-1	0	-1	-1	0	-1	200.1	hit --timeout 200.1s
+JO40_JPGEO_MLIT_MOTOR_CARRIER_ACCIDENTS	SLOW	-1	0	-1	-1	0	-1	200.2	hit --timeout 200.2s
+JO40_JPGEO_TSUKUBA_SEWER_MANHOLES	SLOW	-1	0	-1	-1	23027	-1	200.2	hit --timeout 200.2s; 23027 rows already stored
+JO40_JPNAT_KAIGO_SHORT_STAY	OK	0	0	11275	11275	11275	11275	21.6	
+JO40_JPNAT_KAIGO_COMMUNITY_DAY_CARE	OK	0	0	18023	18023	18023	18023	37.9	
+JO40_JPNAT_KAIGO_SPECIAL_NURSING_HOMES	OK	0	0	8527	8527	8527	8527	13.1	
+JO40_JPNAT_KAIGO_SHORT_STAY	OK	0	0	11275	11275	11275	11275	19.9	
+JO40_JPNAT_KAIGO_DEMENTIA_GROUP_HOMES	OK	0	0	14236	14236	14236	14236	24.3	
+JO40_JPNAT_KAIGO_SPECIAL_NURSING_HOMES	OK	0	0	8527	8527	8527	8527	13.5	
+JO40_JPNAT_KAIGO_COMMUNITY_DAY_CARE	OK	0	0	18023	18023	18023	18023	36.0	
+JO40_JPNAT_KAIGO_CARE_MANAGEMENT	OK	0	0	36212	36212	36212	36212	132.4	
+JO40_JPNAT_ANZEN_FATALITY_DB_R06	OK	0	0	747	747	747	747	3.5	
+JO40_JPNAT_FOOD_POISONING_CASES_2025	COLLISION	0	0	1176	1174	1174	1176	1.6	2 of 1176 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JO40_JPNAT_ROAD_TRAFFIC_CENSUS_AICHI	OK	0	0	4684	4684	4684	4684	10.1	
+JO40_JPNAT_ROAD_TRAFFIC_CENSUS_HOKKAIDO	OK	0	0	4883	4883	4883	4883	10.8	
+JO40_JPNAT_TEIKOKU_GIKAI_PEERS	SLOW	-1	0	-1	-1	6600	-1	200.1	hit --timeout 200.1s; 6600 rows already stored
+JO40_JPNAT_KAIGO_CARE_MANAGEMENT	OK	0	0	36212	36212	36212	36212	130.6	
+JO40_JPNAT_TEIKOKU_GIKAI_REPRESENTATIVES	SLOW	-1	0	-1	-1	5500	-1	200.2	hit --timeout 200.2s; 5500 rows already stored
+JO40_JPNAT_ANZEN_FATALITY_DB_R06	OK	0	0	747	747	747	747	3.4	
+JO40_JPNAT_FOOD_POISONING_CASES_2025	COLLISION	0	0	1176	1174	1174	1176	1.3	2 of 1176 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+JO40_JPNAT_ROAD_TRAFFIC_CENSUS_AICHI	OK	0	0	4684	4684	4684	4684	9.7	
+JO40_JPNAT_ROAD_TRAFFIC_CENSUS_HOKKAIDO	OK	0	0	4883	4883	4883	4883	11.8	
+JO40_JPNAT_TEIKOKU_GIKAI_PEERS	SLOW	-1	0	-1	-1	6605	-1	200.1	hit --timeout 200.1s; 6605 rows already stored
+JO40_JPNAT_TEIKOKU_GIKAI_REPRESENTATIVES	SLOW	-1	0	-1	-1	5700	-1	200.2	hit --timeout 200.2s; 5700 rows already stored
+JO40_JPNAT_GEOSHAPE_HISTORICAL_SITES	OK	0	0	32038	32038	32038	32038	72.8	
+JO40_JPNAT_ANZEN_INJURY_DB_R03	SLOW	-1	0	-1	-1	22391	-1	200.2	hit --timeout 200.2s; 22391 rows already stored
+JO40_JPNAT_GEOSHAPE_HISTORICAL_MUNICIPALITIES	OK	0	0	16756	16756	16756	16756	16.5	
+JO40_JPNAT_ANZEN_INJURY_DB_R02	SLOW	-1	0	-1	-1	22270	-1	200.2	hit --timeout 200.2s; 22270 rows already stored
+JO40_JPNAT_EGOV_PUBLIC_COMMENT_RESULTS	OK	0	0	12	12	12	12	0.7	
+JO40_JPNAT_ANZEN_INJURY_DB_R01	SLOW	-1	0	-1	-1	21543	-1	200.2	hit --timeout 200.2s; 21543 rows already stored
+JO40_JPNAT_CODH_EDO_MAP_PLACES	OK	0	0	8788	8788	8788	8788	8.6	
+JO41_WP_BANK_FUKUECB	OK	0	0	44	44	44	44	4.2	
+JO40_JPNAT_MOFA_OVERSEAS_SAFETY_ALL	OK	0	0	4247	4247	4247	4247	11.4	
+JO41_WP_BANK_HYOGOKENSHIN	FETCH_FAILED	0	0	1	1	0	-1	1.6	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_BANK_ITOIGAWASHINKUMI	OK	0	0	206	206	206	206	6.9	
+JO41_WP_BANK_ISHISHIN	OK	0	0	54	54	54	54	2.0	
+JO41_WP_BANK_GIFU	OK	0	0	21	21	21	21	4.7	
+JO41_WP_BANK_JAIWATE	OK	0	0	2	2	2	2	2.4	
+JO41_WP_BANK_JABANKKAGAWA	FETCH_FAILED	1	-1	1	1	0	-1	2.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_BANK_JFNAGISA	FETCH_FAILED	1	-1	1	1	0	-1	3.2	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO40_JPNAT_ANZEN_INJURY_DB_R03	SLOW	-1	0	-1	-1	24113	-1	200.2	hit --timeout 200.2s; 24113 rows already stored
+JO41_WP_BANK_KAKOUSIN	OK	0	0	144	144	144	144	4.4	
+JO40_JPNAT_GEOSHAPE_HISTORICAL_SITES	OK	0	0	32038	32038	32038	32038	67.1	
+JO41_WP_BANK_NANAIROLIFE	OK	0	0	139	139	139	139	3.8	
+JO41_WP_BANK_TOYOHASHISHOKO	OK	0	0	337	337	337	337	4.7	
+JO40_JPNAT_ANZEN_INJURY_DB_R02	SLOW	-1	0	-1	-1	23202	-1	200.2	hit --timeout 200.2s; 23202 rows already stored
+JO40_JPNAT_ANZEN_INJURY_DB_R01	SLOW	-1	0	-1	-1	22306	-1	200.2	hit --timeout 200.2s; 22306 rows already stored
+JO41_WP_BANK_TOYAMAKENSHIN	OK	0	0	344	344	344	344	12.1	
+JO41_WP_BANK_TSURUOKASK	OK	0	0	1	1	1	1	5.4	
+JO40_JPNAT_EGOV_PUBLIC_COMMENT_RESULTS	OK	0	0	12	12	12	12	1.1	
+JO41_WP_BANK_JABANKIBARAKI	FETCH_FAILED	1	-1	1	1	0	-1	20.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO40_JPNAT_MOFA_OVERSEAS_SAFETY_ALL	OK	0	0	4247	4247	4247	4247	12.0	
+JO41_WP_BANK_KONOSHINKIN	OK	0	0	580	580	580	580	18.5	
+JO40_JPNAT_GEOSHAPE_HISTORICAL_MUNICIPALITIES	OK	0	0	16756	16756	16756	16756	15.2	
+JO41_WP_CORP_166A	OK	0	0	1	1	1	1	1.6	
+JO41_WP_CORP_138A	OK	0	0	95	95	95	95	3.9	
+JO41_WP_CORP_1438	OK	0	0	5	5	5	5	3.3	
+JO40_JPNAT_CODH_EDO_MAP_PLACES	OK	0	0	8788	8788	8788	8788	7.5	
+JO41_WP_BANK_FUKUECB	OK	0	0	44	44	44	44	3.3	
+JO41_WP_CORP_175A	FETCH_FAILED	0	0	1	1	0	-1	1.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_BANK_HYOGOKENSHIN	FETCH_FAILED	0	0	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_BANK_ITOIGAWASHINKUMI	OK	0	0	206	206	206	206	6.9	
+JO41_WP_BANK_GIFU	OK	0	0	21	21	21	21	4.5	
+JO41_WP_BANK_ISHISHIN	OK	0	0	54	54	54	54	2.5	
+JO41_WP_CORP_1383	OK	0	0	131	131	131	131	8.4	
+JO41_WP_CORP_1770	OK	0	0	11	11	11	11	3.2	
+JO41_WP_BANK_JAIWATE	OK	0	0	2	2	2	2	2.1	
+JO41_WP_BANK_JABANKKAGAWA	FETCH_FAILED	1	-1	1	1	0	-1	2.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_BANK_JFNAGISA	FETCH_FAILED	1	-1	1	1	0	-1	2.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_1738	OK	0	0	99	99	99	99	6.6	
+JO41_WP_CORP_1807	OK	0	0	1	1	1	1	2.6	
+JO41_WP_BANK_KAKOUSIN	OK	0	0	144	144	144	144	4.0	
+JO41_WP_BANK_NANAIROLIFE	OK	0	0	139	139	139	139	3.9	
+JO41_WP_CORP_1758	OK	0	0	363	363	363	363	10.4	
+JO41_WP_CORP_1828	OK	0	0	260	260	260	260	3.1	
+JO41_WP_CORP_1840	OK	0	0	50	50	50	50	2.6	
+JO40_JPNAT_GEOSHAPE_EDO_VILLAGES	OK	0	0	56589	56589	56589	56589	133.8	
+JO41_WP_CORP_1844	OK	0	0	1	1	1	1	1.6	
+JO41_WP_BANK_TOYOHASHISHOKO	OK	0	0	337	337	337	337	4.4	
+JO41_WP_CORP_1887	OK	0	0	1	1	1	1	1.4	
+JO41_WP_CORP_1909	OK	0	0	1	1	1	1	1.9	
+JO41_WP_CORP_1898	OK	0	0	1	1	1	1	2.4	
+JO41_WP_CORP_197A	FETCH_FAILED	1	-1	1	1	0	-1	1.6	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_BANK_TSURUOKASK	OK	0	0	1	1	1	1	5.3	
+JO41_WP_CORP_1783	OK	0	0	656	656	656	656	15.4	
+JO41_WP_BANK_TOYAMAKENSHIN	OK	0	0	344	344	344	344	10.7	
+JO41_WP_BANK_KONOSHINKIN	OK	0	0	580	580	580	580	14.7	
+JO41_WP_BANK_JABANKIBARAKI	FETCH_FAILED	1	-1	1	1	0	-1	20.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_1999	FETCH_FAILED	1	-1	1	1	0	-1	2.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_166A	OK	0	0	1	1	1	1	1.3	
+JO41_WP_CORP_1438	OK	0	0	5	5	5	5	3.2	
+JO41_WP_CORP_138A	OK	0	0	95	95	95	95	3.5	
+JO41_WP_CORP_1950	OK	0	0	201	201	201	201	9.7	
+JO41_WP_CORP_175A	FETCH_FAILED	0	0	1	1	0	-1	1.1	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_2114	OK	0	0	1	1	1	1	2.3	
+JO41_WP_CORP_2137	OK	0	0	1	1	1	1	0.9	
+JO41_WP_CORP_215A	OK	0	0	1	1	1	1	1.8	
+JO41_WP_CORP_1738	OK	0	0	99	99	99	99	3.6	
+JO41_WP_CORP_1965	OK	0	0	949	949	949	949	12.0	
+JO41_WP_CORP_1770	OK	0	0	11	11	11	11	2.8	
+JO41_WP_CORP_2185	FETCH_FAILED	0	0	1	1	0	-1	1.1	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_1383	OK	0	0	131	131	131	131	8.4	
+JO41_WP_CORP_2207	FETCH_FAILED	1	-1	1	1	0	-1	1.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_1997	OK	0	0	308	308	308	308	11.7	
+JO41_WP_CORP_220A	OK	0	0	12	12	12	12	2.4	
+JO41_WP_CORP_2164	OK	0	0	337	337	337	337	5.3	
+JO41_WP_CORP_1807	OK	0	0	1	1	1	1	2.7	
+JO41_WP_CORP_1787	FETCH_FAILED	1	-1	1	1	0	-1	25.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_2303	OK	0	0	13	13	13	13	1.8	
+JO41_WP_CORP_231A	OK	0	0	62	62	62	62	2.6	
+JO41_WP_CORP_1828	OK	0	0	260	260	260	260	3.0	
+JO41_WP_CORP_2335	OK	0	0	29	29	29	29	2.9	
+JO41_WP_CORP_1758	OK	0	0	363	363	363	363	10.0	
+JO41_WP_CORP_2393	OK	0	0	98	98	98	98	2.9	
+JO41_WP_CORP_2480	FETCH_FAILED	0	0	1	1	0	-1	1.1	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_1844	OK	0	0	1	1	1	1	1.4	
+JO41_WP_CORP_1840	OK	0	0	50	50	50	50	2.4	
+JO41_WP_CORP_1887	OK	0	0	1	1	1	1	1.2	
+JO41_WP_CORP_254A	OK	0	0	1	1	1	1	1.9	
+JO41_WP_CORP_245A	OK	0	0	119	119	119	119	4.2	
+JO41_WP_CORP_2221	OK	0	0	159	159	159	159	8.3	
+JO41_WP_CORP_1909	OK	0	0	1	1	1	1	1.8	
+JO41_WP_CORP_1898	OK	0	0	1	1	1	1	2.1	
+JO41_WP_CORP_2573	FETCH_FAILED	0	0	1	1	0	-1	1.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_2664	FETCH_FAILED	0	0	1	1	0	-1	0.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_2668	FETCH_FAILED	0	0	1	1	0	-1	0.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_250A	OK	0	0	194	194	194	194	5.9	
+JO41_WP_CORP_265A	OK	0	0	190	190	190	190	3.4	
+JO41_WP_CORP_2674	OK	0	0	1	1	1	1	1.3	
+JO41_WP_CORP_1783	OK	0	0	656	656	656	656	15.0	
+JO41_WP_CORP_2721	OK	0	0	1	1	1	1	1.6	
+JO41_WP_CORP_2683	OK	0	0	147	147	147	147	3.6	
+JO41_WP_CORP_197A	FETCH_FAILED	1	-1	1	1	0	-1	2.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO40_JPNAT_GEOSHAPE_EDO_VILLAGES	OK	0	0	56589	56589	56589	56589	97.3	
+JO41_WP_CORP_2694	OK	0	0	126	126	126	126	5.9	
+JO41_WP_CORP_274A	OK	0	0	8	8	8	8	3.2	
+JO41_WP_CORP_2654	OK	0	0	1078	1078	1078	1078	9.8	
+JO41_WP_CORP_1950	OK	0	0	201	201	201	201	9.1	
+JO41_WP_CORP_1999	FETCH_FAILED	1	-1	1	1	0	-1	2.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_1787	FETCH_FAILED	1	-1	1	1	0	-1	20.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_2137	OK	0	0	1	1	1	1	0.8	
+JO41_WP_CORP_2776	OK	0	0	34	34	34	34	2.0	
+JO41_WP_CORP_215A	OK	0	0	1	1	1	1	1.6	
+JO41_WP_CORP_2315	OK	0	0	1781	1781	1781	1781	19.4	
+JO41_WP_CORP_1965	OK	0	0	949	949	949	949	11.7	
+JO41_WP_CORP_2795	FETCH_FAILED	0	0	1	1	0	-1	1.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_2114	OK	0	0	1	1	1	1	3.3	
+JO41_WP_CORP_2185	FETCH_FAILED	0	0	1	1	0	-1	1.1	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_2207	FETCH_FAILED	1	-1	1	1	0	-1	1.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_286A	OK	0	0	1	1	1	1	1.4	
+JO41_WP_CORP_2813	OK	0	0	42	42	42	42	2.5	
+JO41_WP_CORP_220A	OK	0	0	12	12	12	12	2.3	
+JO41_WP_CORP_2303	OK	0	0	13	13	13	13	1.7	
+JO41_WP_CORP_2164	OK	0	0	337	337	337	337	5.2	
+JO41_WP_CORP_2876	OK	0	0	178	178	178	178	2.7	
+JO41_WP_CORP_1997	OK	0	0	308	308	308	308	11.1	
+JO41_WP_CORP_231A	OK	0	0	62	62	62	62	2.5	
+JO41_WP_CORP_2749	OK	0	0	1727	1727	1727	1727	13.3	
+JO40_JPNAT_GEOSHAPE_HISTORICAL_PLACE_NAMES	SLOW	-1	0	-1	-1	30978	-1	200.1	hit --timeout 200.1s; 30978 rows already stored
+JO41_WP_CORP_2883	OK	0	0	1	1	1	1	4.5	
+JO41_WP_CORP_2894	OK	0	0	1	1	1	1	1.7	
+JO41_WP_CORP_2884	OK	0	0	2	2	2	2	3.3	
+JO41_WP_CORP_2927	FETCH_FAILED	0	0	1	1	0	-1	1.2	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_2393	OK	0	0	98	98	98	98	3.0	
+JO41_WP_CORP_2930	FETCH_FAILED	0	0	1	1	0	-1	0.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_2221	OK	0	0	159	159	159	159	8.2	
+JO41_WP_CORP_2997	OK	0	0	1	1	1	1	1.4	
+JO41_WP_CORP_2480	FETCH_FAILED	0	0	1	1	0	-1	1.1	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_245A	OK	0	0	119	119	119	119	4.6	
+JO41_WP_CORP_2573	FETCH_FAILED	0	0	1	1	0	-1	0.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_254A	OK	0	0	1	1	1	1	1.9	
+JO41_WP_CORP_2924	OK	0	0	482	482	482	482	5.1	
+JO41_WP_CORP_2753	OK	0	0	423	423	423	423	15.2	
+JO41_WP_CORP_2999	OK	0	0	26	26	26	26	3.6	
+JO41_WP_CORP_2335	OK	0	0	29	29	29	29	10.2	
+JO41_WP_CORP_2664	FETCH_FAILED	0	0	1	1	0	-1	0.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_250A	OK	0	0	194	194	194	194	5.7	
+JO41_WP_CORP_2668	FETCH_FAILED	0	0	1	1	0	-1	0.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_3047	OK	0	0	22	22	22	22	2.5	
+JO41_WP_CORP_265A	OK	0	0	190	190	190	190	3.7	
+JO41_WP_CORP_2315	OK	0	0	1781	1781	1781	1781	12.2	
+JO41_WP_CORP_3035	OK	0	0	235	235	235	235	6.1	
+JO41_WP_CORP_3041	OK	0	0	287	287	287	287	4.0	
+JO41_WP_CORP_2674	OK	0	0	1	1	1	1	1.8	
+JO41_WP_CORP_2721	OK	0	0	1	1	1	1	1.5	
+JO41_WP_CORP_3054	OK	0	0	10	10	10	10	2.5	
+JO41_WP_CORP_3063	OK	0	0	1	1	1	1	2.5	
+JO41_WP_CORP_274A	OK	0	0	8	8	8	8	1.8	
+JO41_WP_CORP_2683	OK	0	0	147	147	147	147	4.0	
+JO41_WP_CORP_3083	OK	0	0	5	5	5	5	2.3	
+JO41_WP_CORP_2654	OK	0	0	1078	1078	1078	1078	9.0	
+JO41_WP_CORP_2694	OK	0	0	126	126	126	126	5.6	
+JO41_WP_CORP_2795	FETCH_FAILED	0	0	1	1	0	-1	1.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_3067	OK	0	0	10	10	10	10	6.3	
+JO41_WP_CORP_2776	OK	0	0	34	34	34	34	2.0	
+JO41_WP_CORP_3111	OK	0	0	255	255	255	255	2.6	
+JO41_WP_CORP_3193	OK	0	0	1	1	1	1	1.4	
+JO41_WP_CORP_286A	OK	0	0	1	1	1	1	1.6	
+JO41_WP_CORP_2961	FETCH_FAILED	1	-1	1	1	0	-1	16.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_2813	OK	0	0	42	42	42	42	2.3	
+JO41_WP_CORP_3201	OK	0	0	1	1	1	1	1.6	
+JO41_WP_CORP_2876	OK	0	0	178	178	178	178	2.5	
+JO41_WP_CORP_3248	OK	0	0	5	5	5	5	2.5	
+JO41_WP_CORP_2883	OK	0	0	1	1	1	1	4.4	
+JO41_WP_CORP_3154	OK	0	0	233	233	233	233	7.1	
+JO41_WP_CORP_2884	OK	0	0	2	2	2	2	3.0	
+JO41_WP_CORP_2767	OK	0	0	1642	1642	1642	1642	33.3	
+JO41_WP_CORP_3091	OK	0	0	822	822	822	822	11.8	
+JO41_WP_CORP_2894	OK	0	0	1	1	1	1	1.5	
+JO41_WP_CORP_3260	OK	0	0	1	1	1	1	2.6	
+JO41_WP_CORP_2749	OK	0	0	1727	1727	1727	1727	14.1	
+JO41_WP_CORP_2927	FETCH_FAILED	0	0	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_3276	FETCH_FAILED	1	-1	1	1	0	-1	1.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_2930	FETCH_FAILED	0	0	1	1	0	-1	0.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_3277	FETCH_FAILED	1	-1	1	1	0	-1	1.6	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_2753	OK	0	0	423	423	423	423	13.2	
+JO41_WP_CORP_3267	OK	0	0	184	184	184	184	3.0	
+JO41_WP_CORP_3246	OK	0	0	368	368	368	368	8.5	
+JO41_WP_CORP_2997	OK	0	0	1	1	1	1	1.9	
+JO41_WP_CORP_3320	OK	0	0	12	12	12	12	2.1	
+JO41_WP_CORP_2924	OK	0	0	482	482	482	482	5.3	
+JO41_WP_CORP_3315	OK	0	0	65	65	65	65	2.9	
+JO41_WP_CORP_2999	OK	0	0	26	26	26	26	3.4	
+JO41_WP_CORP_3300	OK	0	0	1	1	1	1	5.0	
+JO41_WP_CORP_3306	OK	0	0	541	541	541	541	4.3	
+JO41_WP_CORP_3045	OK	0	0	350	350	350	350	24.4	
+JO41_WP_CORP_3415	OK	0	0	1	1	1	1	2.8	
+JO41_WP_CORP_3435	OK	0	0	10	10	10	10	3.5	
+JO41_WP_CORP_3035	OK	0	0	235	235	235	235	6.3	
+JO41_WP_CORP_3384	OK	0	0	221	221	221	221	5.4	
+JO41_WP_CORP_3419	OK	0	0	3	3	3	3	4.8	
+JO41_WP_CORP_3486	OK	0	0	1	1	1	1	1.2	
+JO41_WP_CORP_3461	OK	0	0	1	1	1	1	1.6	
+JO41_WP_CORP_3047	OK	0	0	22	22	22	22	2.7	
+JO41_WP_CORP_352A	OK	0	0	1	1	1	1	2.1	
+JO41_WP_CORP_3491	OK	0	0	2	2	2	2	2.9	
+JO41_WP_CORP_3054	OK	0	0	10	10	10	10	1.6	
+JO41_WP_CORP_3426	OK	0	0	818	818	818	818	9.8	
+JO41_WP_CORP_3302	FETCH_FAILED	1	-1	1	1	0	-1	15.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_3580	OK	0	0	1	1	1	1	1.2	
+JO41_WP_CORP_3490	OK	0	0	247	247	247	247	7.8	
+JO41_WP_CORP_3446	OK	0	0	236	236	236	236	10.8	
+JO41_WP_CORP_3566	OK	0	0	10	10	10	10	3.1	
+JO41_WP_CORP_3045	OK	0	0	350	350	350	350	13.7	
+JO41_WP_CORP_3612	FETCH_FAILED	0	0	1	1	0	-1	1.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_3664	FETCH_FAILED	0	0	1	1	0	-1	1.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_3652	OK	0	0	1	1	1	1	1.3	
+JO41_WP_CORP_3041	FETCH_FAILED	1	-1	1	1	0	-1	15.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_3671	OK	0	0	1	1	1	1	1.5	
+JO41_WP_CORP_3680	FETCH_FAILED	0	0	1	1	0	-1	0.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_3712	OK	0	0	24	24	24	24	1.5	
+JO41_WP_CORP_368A	OK	0	0	1	1	1	1	2.3	
+JO41_WP_CORP_3083	OK	0	0	5	5	5	5	2.0	
+JO41_WP_CORP_2767	OK	0	0	1642	1642	1642	1642	33.8	
+JO41_WP_CORP_3625	OK	0	0	397	397	397	397	5.2	
+JO41_WP_CORP_3067	OK	0	0	10	10	10	10	4.4	
+JO41_WP_CORP_3558	OK	0	0	652	652	652	652	9.6	
+JO41_WP_CORP_3063	OK	0	0	1	1	1	1	10.2	
+JO41_WP_CORP_3854	OK	0	0	2	2	2	2	2.2	
+JO41_WP_CORP_3111	OK	0	0	255	255	255	255	2.3	
+JO41_WP_CORP_3913	OK	0	0	1	1	1	1	1.1	
+JO40_JPNAT_GEOSHAPE_HISTORICAL_PLACE_NAMES	SLOW	-1	0	-1	-1	58317	-1	200.1	hit --timeout 200.1s; 58317 rows already stored
+JO41_WP_CORP_3193	OK	0	0	1	1	1	1	1.5	
+JO41_WP_CORP_3849	OK	0	0	48	48	48	48	4.3	
+JO41_WP_CORP_3201	OK	0	0	1	1	1	1	1.6	
+JO41_WP_CORP_353A	FETCH_FAILED	1	-1	1	1	0	-1	13.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_2961	FETCH_FAILED	1	-1	1	1	0	-1	25.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_3248	FETCH_FAILED	1	-1	1	1	0	-1	1.2	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_3933	FETCH_FAILED	1	-1	1	1	0	-1	0.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_3260	FETCH_FAILED	1	-1	1	1	0	-1	0.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_3922	FETCH_FAILED	1	-1	1	1	0	-1	1.5	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_3246	FETCH_FAILED	1	-1	1	1	0	-1	1.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_3948	FETCH_FAILED	1	-1	1	1	0	-1	0.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_3267	FETCH_FAILED	1	-1	1	1	0	-1	0.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_3276	FETCH_FAILED	1	-1	1	1	0	-1	0.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_3970	FETCH_FAILED	1	-1	1	1	0	-1	0.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_4012	FETCH_FAILED	1	-1	1	1	0	-1	0.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_3277	FETCH_FAILED	1	-1	1	1	0	-1	0.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_3300	FETCH_FAILED	1	-1	1	1	0	-1	0.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_402A	FETCH_FAILED	1	-1	1	1	0	-1	0.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_3302	FETCH_FAILED	1	-1	1	1	0	-1	0.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_3306	FETCH_FAILED	1	-1	1	1	0	-1	0.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_4047	FETCH_FAILED	1	-1	1	1	0	-1	0.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO41_WP_CORP_4055	FETCH_FAILED	1	-1	1	1	0	-1	0.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)

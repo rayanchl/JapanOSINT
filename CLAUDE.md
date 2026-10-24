@@ -1492,6 +1492,14 @@ pass are tests that open a second database of their own.
 of not matching a stamp, the stale-row case and both readings of
 `JO_DB_RESEED`.
 
+**CI then measured it: the TSan job is 36.0 min, from 82.8** (run 576,
+2026-10-24, all six jobs green), and the whole workflow got cheaper with it
+because `build-and-test` runs the same suite without the sanitiser:
+**34.7 min → 10.4 min**. 117 minutes of CI time a run, from two levers, both
+found by reading the job's own timestamps rather than by guessing — and the
+first of the two (the link) would have looked like the whole answer if the
+second had not been measured against it.
+
 **The next driver is already named, so nobody has to find it twice**:
 `test_source_category` spends 765 s on a 15-nearest vote over 42,255 declared
 sources and `test_service_vec` indexes all 58,055 source cards five times at

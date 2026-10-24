@@ -307,6 +307,13 @@ jobs:
   # passing, with 129 of the 152 opens taking the fast path and
   # test_alert_tenancy taking it 82 times out of 82.
   #
+  # MEASURED AFTER: **36.0 min** (run 576, 2026-10-24, all six jobs green),
+  # from 82.8. So the second lever was the right one, and this ceiling now has
+  # 2.5x headroom rather than 7 min. The whole workflow got cheaper with it,
+  # because `build-and-test` runs the same suite without the sanitiser:
+  # **34.7 min -> 10.4 min**. Two levers, both measured from the job's own
+  # timestamps rather than guessed, 117 min of CI time a run.
+  #
   # The next driver after this one is named for whoever reads the log next:
   # test_source_category spends 765 s on a 15-nearest vote over 42,255
   # declared sources, and test_service_vec indexes all 58,055 source cards
