@@ -16,9 +16,21 @@ static const hp_source HP2_EU_CENTRAL[] = {
     .name_ja = "ポーランド 個人事業者登録", .category = "government",
     .portal = "https://aplikacja.ceidg.gov.pl", .record_type = "pl-sole-trader",
     .tags = "\"pl\",\"registry\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://aplikacja.ceidg.gov.pl/ceidg/ceidg.public.ui/Search.aspx?q={q}",
-    .base = "https://aplikacja.ceidg.gov.pl", .filter_query = 1,
+    /* Re-pointed 2026-10-25 from the public Search.aspx page. That page is an
+     * ASP.NET form: a GET with ?q= answers the empty search form (200, 50 KB)
+     * and results need a viewstate POST the engine does not make, so the row
+     * fetched and stored nothing for every query (and filter_query matched
+     * the form's own echo of the term). The register's real query surface is
+     * the official CEIDG API, which needs a free token from the CEIDG account
+     * (dane.biznes.gov.pl): unauthenticated v3 answers 401, so until
+     * CEIDG_API_TOKEN is set this row files a needs-credential note, never
+     * an empty success. The response keys below follow the published v3
+     * schema and are unmeasured until a token exists — the engine's shape
+     * notices say so if they differ. */
+    .type = "api", .mode = HP_JSON, .free_tier = 0,
+    .key_env = "CEIDG_API_TOKEN", .headers = { "Authorization: Bearer {key}", NULL },
+    .url = "https://dane.biznes.gov.pl/api/ceidg/v3/firmy?nazwa={q}",
+    .array_path = "firmy", .title_keys = "nazwa", .id_keys = "id", .page_walk = 1,
     .description = "Polish sole traders and their businesses — NIP, REGON, "
       "business address, PKD activity codes, start and suspension dates and "
       "the licences held. KRS covers companies; this covers the far larger "
