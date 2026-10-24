@@ -601,12 +601,11 @@ HOST_AGENT_KIND(HA_SEC,         "JapanOSINT/1.0 research (rayanchouialkessal@gma
    * headers (without them all four answer 403 to every agent):
    *   kansai-airport  HA_CONTACT 200, 31 KB after its redirect to /flight/search
    *   ceidg           HA_CONTACT 200, 12 KB
-   *   fcc.gov         HA_CONTACT 200, 17 KB (the row's #q= search is
-   *                   client-side, so expect few hits)
+   * (www.fcc.gov measured the same, HA_CONTACT 200, but its one row was then
+   * removed under rule 4d and nothing else fetches from it, so it is not listed.)
    *   allabolag       HA_CONTACT 403; HA_COMPAT 200, 105 KB after its redirect */
   HOST_AGENT("www.kansai-airport.or.jp", HA_CONTACT)
   HOST_AGENT("aplikacja.ceidg.gov.pl", HA_CONTACT)
-  HOST_AGENT("www.fcc.gov", HA_CONTACT)
   HOST_AGENT("www.allabolag.se", HA_COMPAT)
   /* SEC: see HA_SEC above. */
   HOST_AGENT("www.sec.gov", HA_SEC)
