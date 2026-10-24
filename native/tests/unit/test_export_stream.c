@@ -30,6 +30,9 @@
  *     wakeup here goes through that closed door; mgr is NULL). */
 static void (*g_pump_window)(void *x);  /* runs inside xs_pump's window, see httpd.c */
 #define XS_PUMP_WINDOW(x) do { if (g_pump_window) g_pump_window(x); } while (0)
+static int g_spawn_fail;                /* 1: export_offload's worker cannot start */
+#define XS_THREAD_CREATE(th, fn, arg) \
+  (g_spawn_fail ? 11 /* EAGAIN */ : pthread_create((th), NULL, (fn), (arg)))
 #include "../../core/httpd.c"
 
 #include <assert.h>
@@ -233,6 +236,30 @@ int main(void) {
     finish(x, 200, 1);                   /* the worker's share; frees the stream */
     drop_conn(c);
     printf("  hang-up unblocks a worker waiting on the high-water mark: ok\n"); }
+
+  /* 6. no worker could be started. The route used to fall back to an INLINE
+   *    export on the event loop — every other request stalled for its length
+   *    and the whole body buffered in c->send. Now: export_offload says 0,
+   *    leaves the request body with the caller (who frees it), and the reply
+   *    is a 503 the client can retry, never a 200 and never a partial file. */
+  { struct mg_connection *c = fake_conn(6);
+    exp_arg *ea = calloc(1, sizeof *ea);
+    assert(ea);
+    char *body = strdup("{\"sections\":[\"summary\"]}");
+    ea->body = body;
+    snprintf(ea->fname, sizeof ea->fname, "%s", "x.json");
+    g_spawn_fail = 1;
+    int r = export_offload(c, ea);       /* frees ea, not ea->body */
+    g_spawn_fail = 0;
+    assert(r == 0 && "no worker: the caller must refuse");
+    assert(g_xs_live == NULL && "the half-built stream is unregistered");
+    assert(!strcmp(body, "{\"sections\":[\"summary\"]}") && "the body is still the caller's");
+    free(body);
+    reply_export_unstartable(c, "report");
+    assert(has(c, "HTTP/1.1 503") && has(c, "Retry-After: 5") &&
+           has(c, "export_worker_unavailable") && !has(c, "200 OK") && !has(c, "chunked"));
+    drop_conn(c);
+    printf("  no worker: 503 with Retry-After, the body handed back, nothing streamed: ok\n"); }
 
   printf("\nall passed\n");
   return 0;
