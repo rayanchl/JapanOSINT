@@ -65,8 +65,18 @@ static cJSON *bl_fetch(const source_ctx *c, const char *url, void *ud) {
 /* Emit one row. `data` is TAKEN OVER (printed, then deleted). `lat`/`lon` are
  * used only when `has_geo` is non-zero — the caller decides, from what the
  * upstream actually returned. */
+/* `text` is the record's human-readable body: the names, address and kind of
+ * business. It used to be the record's raw JSON, which is wrong twice over.
+ * Every licence's JSON shares the same keys, so core/simhash.c fingerprinted
+ * all of them as near-duplicates — one ever-growing cluster, and a band
+ * bucket each insert had to scan. San Francisco's walk crawled at 23 records
+ * a second (75,000 in 53 min, measured 2026-10-24) while the same sink took
+ * San Francisco's fire calls at ~1,100 a second. And "near-duplicate" was a
+ * false statement about unrelated businesses. The full record is still
+ * stored whole, in properties. */
 static int bl_emit(intel_sink *sink, cJSON *data, const char *record_type,
                    const char *rk, const char *title, const char *summary,
+                   const char *text,
                    const char *link, const char *published, const char *tags,
                    int has_geo, double lat, double lon) {
   if (!data) return 0;
@@ -88,7 +98,7 @@ static int bl_emit(intel_sink *sink, cJSON *data, const char *record_type,
   it.published_at    = published;
   it.lang            = "en";
   it.record_type     = record_type;
-  it.body            = pj;
+  it.body            = text;
   it.properties_json = pj;
   it.tags_json       = tags;
   if (has_geo) { it.has_geo = 1; it.lat = lat; it.lon = lon; }
@@ -166,7 +176,13 @@ static int chi_emit_page(const source_ctx *ctx, intel_sink *sink,
     snprintf(title, sizeof title, "%s — %s%s%s", name,
              kind ? kind : "business licence",
              addr ? " @ " : "", addr ? addr : "");
-    n += bl_emit(sink, data, "business-licence", rk, title, kind,
+    char text[1024];
+    snprintf(text, sizeof text, "%s%s%s%s%s%s%s", name,
+             legal && dba && strcmp(legal, dba) ? " — " : "",
+             legal && dba && strcmp(legal, dba) ? legal : "",
+             addr ? " — " : "", addr ? addr : "",
+             kind ? " — " : "", kind ? kind : "");
+    n += bl_emit(sink, data, "business-licence", rk, title, kind, text,
                  "https://data.cityofchicago.org/d/r5kz-chrr",
                  issued[0] ? issued : NULL,
                  "[\"commercial\",\"business-licence\",\"chicago\"]",
@@ -187,10 +203,16 @@ static int run_chicago(const source_ctx *ctx, intel_sink *sink) {
 /* Seeded the same way as CHI_LIC_URL above. The upstream row count could not be
  * read: data.sfgov.org answered a `$select=count(1)` probe with an nginx 403 on
  * 2026-09-19, so the total is honestly unknown and pw_walk publishes
- * records_available as null rather than guessing one. */
+ * records_available as null rather than guessing one.
+ *
+ * $limit=25000 (2026-10-13): the register holds 368,178 rows (data.sf.gov
+ * answers the count now), and at 500 a page the 20-page walk ceiling stopped
+ * at 10,000 — 3% of it, every run. 25,000 reads all of it in 15 pages of
+ * ~30 MB, under the 64 MB body cap; past 500,000 rows the ceiling would bite
+ * again and pw_walk's truncation notice says so. */
 #define SF_BIZ_URL \
   "https://data.sf.gov/resource/g8m3-pdis.json" \
-  "?$limit=500&$offset=0&$order=dba_start_date%20DESC,:id"
+  "?$limit=25000&$offset=0&$order=dba_start_date%20DESC,:id"
 
 /* pw_emit_fn: one page, reporting what it CONTAINED in `seen`. */
 static int sf_emit_page(const source_ctx *ctx, intel_sink *sink,
@@ -240,8 +262,14 @@ static int sf_emit_page(const source_ctx *ctx, intel_sink *sink,
     snprintf(title, sizeof title, "%s — %s%s%s", name,
              closed ? "closed" : "registered",
              addr ? " @ " : "", addr ? addr : "");
+    char text[1024];
+    snprintf(text, sizeof text, "%s%s%s%s%s%s%s", name,
+             own && dba && strcmp(own, dba) ? " — " : "",
+             own && dba && strcmp(own, dba) ? own : "",
+             addr ? " — " : "", addr ? addr : "",
+             naic ? " — " : "", naic ? naic : "");
     n += bl_emit(sink, data, "business-licence", rk, title,
-                 naic ? naic : own,
+                 naic ? naic : own, text,
                  "https://data.sf.gov/d/g8m3-pdis",
                  closed ? ended : (started[0] ? started : NULL),
                  "[\"commercial\",\"business-licence\",\"san-francisco\"]",

@@ -249,52 +249,29 @@ VJSON(nam_septa_busdetours, "nam-septa-busdetours", "SEPTA — active bus detour
   "en", "[\"usa\",\"pa\",\"transit\",\"transport\"]", 1800,
   "Bus routes currently on detour with the reason, start date and affected street segments.");
 
-/* Registry sweep 2026-10-22: 73 of 10000 records a run collapsed onto a uid
-   already written (0.7%). VJSON/VGEO's id precedence list finds no field in
-   this Socrata record, so it fell back and keyed on content. Measured over two
-   pages before the key was touched: 1,000 of 1,000 distinct — the service-request id. */
-VJSON_IDKEYS(nam_sf_311_cases, "nam-sf-311-cases", "City and County of San Francisco — 311 cases", "City and County of San Francisco — 311 cases",
-  "us_local", "opendata",
-  "https://data.sf.gov/resource/vw6y-z8j6.json?$limit=500&$order=:id",
-  "",
-  "en", "[\"usa\",\"ca\",\"311\",\"opendata\"]", 3600,
-  "San Francisco 311 service cases with request type, responsible agency, status and location.",
-  "service_request_id");
+/* nam-sf-311-cases: moved to collectors/pivot/table/hp3_sfopendata.c (2026-10-13), read whole across runs.
+   This branch had keyed the VJSON row on `service_request_id` from the registry
+   sweep (73 of 10,000 collapsing, then 1,000 of 1,000 distinct over two pages);
+   the hp row it moved to keys on the same field, measured independently. */
 
 VJSON(nam_sf_air_traffic_passenger, "nam-sf-air-traffic-passenger", "City and County of San Francisco — SFO passenger traffic", "City and County of San Francisco — SFO passenger traffic",
   "us_local", "economy",
-  "https://data.sf.gov/resource/rkru-6vcg.json?$limit=1000&$order=:id",
+  "https://data.sf.gov/resource/rkru-6vcg.json?$limit=5000&$order=:id",
   "",
   "en", "[\"usa\",\"ca\",\"aviation\",\"economy\"]", 86400,
   "Monthly SFO passenger counts by airline, terminal and geographic region.");
 
-/* Registry sweep 2026-10-22: 60 of 10000 records a run collapsed onto a uid
-   already written (0.6%). VJSON/VGEO's id precedence list finds no field in
-   this Socrata record, so it fell back and keyed on content. Measured over two
-   pages before the key was touched: 1,000 of 1,000 distinct — the permit record id. */
-VJSON_IDKEYS(nam_sf_building_permits, "nam-sf-building-permits", "City and County of San Francisco — building permits", "City and County of San Francisco — building permits",
-  "us_local", "economy",
-  "https://data.sf.gov/resource/i98e-djp9.json?$limit=500&$order=:id",
-  "",
-  "en", "[\"usa\",\"ca\",\"permits\",\"economy\"]", 21600,
-  "San Francisco DBI permit records with proposed use, estimated cost and status.",
-  "record_id");
+/* nam-sf-building-permits: moved to collectors/pivot/table/hp3_sfopendata.c (2026-10-13), read whole across runs.
+   This branch had keyed the VJSON row on `record_id` (60 of 10,000 collapsing,
+   then 1,000 of 1,000 distinct); the hp row keys on the same field. */
 
-/* Registry sweep 2026-10-22: 2 of 10000 records a run collapsed onto a uid
-   already written (0.0%). VJSON/VGEO's id precedence list finds no field in
-   this Socrata record, so it fell back and keyed on content. Measured over two
-   pages before the key was touched: 1,000 of 1,000 distinct — the dataset's own rowid. */
-VJSON_IDKEYS(nam_sf_fire_calls, "nam-sf-fire-calls", "City and County of San Francisco — fire department calls for service", "City and County of San Francisco — fire department calls for service",
-  "us_local", "hazard",
-  "https://data.sf.gov/resource/nuek-vuh3.json?$limit=500&$order=:id",
-  "",
-  "en", "[\"usa\",\"ca\",\"fire\",\"hazard\"]", 3600,
-  "SFFD calls for service including medical, alarm and fire responses with dispatch timing and neighbourhood.",
-  "rowid");
+/* nam-sf-fire-calls: moved to collectors/pivot/table/hp3_sfopendata.c (2026-10-13), read whole across runs.
+   This branch had keyed the VJSON row on `rowid` (2 of 10,000 collapsing, then
+   1,000 of 1,000 distinct); the hp row keys on the same field. */
 
 VJSON(nam_sf_police_incidents, "nam-sf-police-incidents", "City and County of San Francisco — police incident reports", "City and County of San Francisco — police incident reports",
   "us_local", "crime",
-  "https://data.sf.gov/resource/wg3w-h783.json?$limit=500&$order=:id",
+  "https://data.sf.gov/resource/wg3w-h783.json?$limit=5000&$order=:id",
   "",
   "en", "[\"usa\",\"ca\",\"crime\",\"police\"]", 21600,
   "SFPD incident reports since 2018 with category, resolution, district and coordinates.");

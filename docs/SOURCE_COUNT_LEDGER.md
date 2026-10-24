@@ -5,6 +5,28 @@ was seeded from, what it measured and what it taught. Moved out of `CLAUDE.md`
 on 2026-10-19 so that file keeps the rules and the current number; the lessons
 that a new batch must not relearn are summarised there. Newest first.
 
+**The count stays 58,055 across main's merge of 2026-10-24** (main at
+`2c846ac3`, seven commits), and the one conflict is worth recording because of
+how it resolved. Main MOVED three San Francisco Socrata rows —
+`nam-sf-311-cases`, `nam-sf-building-permits`, `nam-sf-fire-calls` — out of
+`collectors/feed/generated/vsrc13_us_local_2.c` onto hpengine
+(`collectors/pivot/table/hp3_sfopendata.c`) so each is keyset-paged and read
+whole across runs, leaving a tombstone comment where the VJSON row had been.
+This branch had, the same week, given those same three VJSON rows measured
+`id_keys` off the registry health sweep. Same ids either way, so the count does
+not move and `lint-sources` reports no duplicate.
+
+**Main's move wins and this branch's measurement corroborates it**, which is
+the useful part: the two sessions reached `service_request_id`, `record_id` and
+`rowid` from different directions — main from the datasets' own documented row
+ids while re-pointing them onto hpengine, this branch from a collision verdict
+measured over two pages (73, 60 and 2 of 10,000 collapsing, then 1,000 of 1,000
+distinct). Note what makes that corroboration rather than the trap CLAUDE.md
+records for batch 55, where "three keys agreeing on the same wrong answer" was
+not evidence: there the three keys were read off the SAME response, here the
+two readings are independent methods on independent runs. The tombstones carry
+this branch's numbers so the evidence is not lost with the rows.
+
 **The registered count is 58,054** (2026-10-23): 58,047 plus **batch 55's seven
 rows** — the Austrian Parliament's whole materials index, 391,357 records read
 as seven complete slices (`collectors/pivot/table/hp3b55_atparl.c`,
