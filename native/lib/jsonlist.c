@@ -1270,6 +1270,15 @@ static long declared_total(cJSON *doc) {
      * LegCo Hong Kong answers `odata.count: 551619` beside 200 rows when the
      * request carries `$inlinecount=allpages`. */
     "@odata.count", "odata.count",
+    /* The Linked Data API's envelope puts it one level down, at
+     * `result.totalResults`, and `totalResults` at the root could not reach
+     * it: every lda.data.parliament.uk row in the tree read "the upstream
+     * declares no total" while the number sat beside the items it was holding
+     * back (71,323 Commons oral questions against the 10,000 a run reaches).
+     * Here rather than in the row, because it is the API family's envelope and
+     * not one row's quirk — the same reason `response.numFound` is here for
+     * Solr. Measured 2026-10-23. */
+    "result.totalResults",
     NULL };
   for (int i = 0; KEYS[i]; i++) {
     cJSON *v = dotted(doc, KEYS[i]);

@@ -17,6 +17,51 @@
  * This file is the maintained copy from here on; regenerating over it
  * reverts repairs, so the generator refuses without --force. See
  * CLAUDE.md, "Batch tooling".
+ *
+ * ── lda.data.parliament.uk, measured 2026-10-23 ───────────────────────────
+ *
+ * Three properties of this API were measured together, because each one makes
+ * the next question answerable, and `UKPARL_LDA_EDMS` below had already found
+ * the first of them a month earlier for ONE row while six siblings kept the
+ * defect — this file's own copy of CLAUDE.md's "look for the other copies".
+ *
+ * 1. `uin` IS REUSED. It is the Commons/Lords unique identifying number, and
+ *    it restarts with each session, so it identifies a question WITHIN a
+ *    session and not a record. The upstream proves it on its own filter
+ *    endpoint: `commonsoralquestions.json?uin=901763` answers totalResults=8,
+ *    eight different questions tabled 2024-02-27 .. 2026-10-22; `uin=HL1000`
+ *    answers 11 Lords written questions; `uin=100000` two Commons written
+ *    questions and two answers. `_about` — the LDA resource URI the envelope
+ *    gives every record — is distinct in all of those answers and over a
+ *    10,000-record walk (10,000 of 10,000 under the ascending sort, against
+ *    8,090 for `uin`). So the four question/answer rows are keyed on `_about`.
+ *    `(dateTabled,uin)` reaches 9,990 of 10,000 and is NOT enough.
+ *
+ *    The two divisions rows are the CONTROL and keep `uin`: their collections
+ *    are small enough to read whole (5,553 and 2,089, each equal to its own
+ *    declared total) and `uin` is distinct across every record of both. A
+ *    division number does not restart.
+ *
+ * 2. THE DEFAULT ORDER IS NEWEST-FIRST, which does not compose with a cycle.
+ *    Every row here carries `page_resume`, and a walk halfway down a
+ *    descending collection has its page boundaries shifted by each new record
+ *    at the head. `_sort` is honoured and VALIDATED — `_sort=notacolumn` and
+ *    `frobnicate=7` are both HTTP 400, which is the control that separates a
+ *    working parameter from an answer that merely moves (CLAUDE.md, batch 55)
+ *    — so each row now declares an ascending sort on its own date field with
+ *    `uin` (or `edmNumber`) breaking ties: `_sort=dateTabled` leads with
+ *    2013-08-27 where the default leads with today, page 0 is byte-identical
+ *    across two reads, and page 0 and page 1 are disjoint.
+ *
+ * 3. THE TOTAL IS DECLARED, at `result.totalResults`, which the engine was
+ *    blind to: the shared declared-total list in `lib/jsonlist.c` carried
+ *    `totalResults` at the document root and `result.count`, not this
+ *    envelope's spelling, so these rows read "the upstream declares no total"
+ *    for as long as they have existed. Added there, not here, because it is
+ *    the Linked Data API's envelope and not one row's quirk. Measured:
+ *    71,323 Commons oral questions, 649,660 Commons written, 107,034 Lords
+ *    written, 604,935 answers, 45,235 early day motions, 5,553 and 2,089
+ *    divisions.
  */
 #include "lib/hpengine.h"
 
@@ -30,10 +75,14 @@ static const hp_source HP3B20_PARLIAMENT[] = {
     .url = "https://lda.data.parliament.uk/commonsdivisions.json?_pageSize=500",
     .array_path = "result.items",
     .date_keys = "date",
+    /* `uin` kept, and measured rather than assumed: the whole collection is
+     * 5,553 records (= its own result.totalResults) and all 5,553 uins are
+     * distinct, so a division number is a record identity where a question's
+     * uin is not. This row is the control for the `_about` repair below. */
     .id_keys = "uin",
     .interval = 21600,
     .page_param = "_page",
-    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
+    .page_resume = 1,   /* a no-op here: the 5,553 records fit inside the ceiling, so the walk completes and stores no position (measured 2026-10-23) */
     .page_zero_based = 1,
     .title_keys = "title",
     .description = "Every recorded division in the House of Commons with the "
@@ -51,10 +100,12 @@ static const hp_source HP3B20_PARLIAMENT[] = {
     .url = "https://lda.data.parliament.uk/lordsdivisions.json?_pageSize=500",
     .array_path = "result.items",
     .date_keys = "date",
+    /* `uin` kept, measured: 2,089 records (= its own result.totalResults),
+     * 2,089 distinct uins. See the Commons divisions row above. */
     .id_keys = "uin",
     .interval = 21600,
     .page_param = "_page",
-    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
+    .page_resume = 1,   /* a no-op here: 2,089 records fit inside the ceiling, so the walk completes and stores no position (measured 2026-10-23) */
     .page_zero_based = 1,
     .title_keys = "title",
     .description = "Recorded divisions in the House of Lords with the division "
@@ -68,15 +119,28 @@ static const hp_source HP3B20_PARLIAMENT[] = {
     .record_type = "motion-record",
     .tags = "\"parliament\",\"uk\",\"commons\",\"edm\",\"motion\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://lda.data.parliament.uk/edms.json?_pageSize=500",
+    /* `_pageSize` IS IGNORED HERE, and this is the only row in the file where
+     * it is: edms echoes `itemsPerPage: 100` back for every value from 100 to
+     * 1000, while commonsoralquestions honours 500 and 1000 (measured
+     * 2026-10-23). So the row declared 500, got 100, and twenty pages came to
+     * 2,000 records — a round number equal to ceiling x page size, which
+     * CLAUDE.md says is never the upstream's own total, and the upstream's own
+     * total is 45,235. At 453 pages this is over the 200-page cost ceiling, so
+     * it keeps its cycle with `page_max = 200`: 20,000 records a run, three
+     * runs to the whole series, instead of 2,000 a run and twenty-three.
+     * `_pageSize` is left at the honoured 100 rather than a value the server
+     * discards. */
+    .url = "https://lda.data.parliament.uk/edms.json?_pageSize=100"
+           "&_sort=dateTabled,edmNumber",
     .array_path = "result.items",
     .date_keys = "dateTabled",
     /* edmNumber restarts every session; `_about` is the LDA resource URI and
      * is the one field unique per record across the whole walk. */
     .id_keys = "_about",
     .interval = 21600,
+    .page_max = 200,
     .page_param = "_page",
-    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
+    .page_resume = 1,   /* 453 pages against a 200-page cost ceiling: read over a cycle, ascending so new motions land at the tail */
     .page_zero_based = 1,
     .title_keys = "title",
     .description = "Early day motions with the EDM number, the date tabled, the "
@@ -91,14 +155,15 @@ static const hp_source HP3B20_PARLIAMENT[] = {
     .record_type = "question-record",
     .tags = "\"parliament\",\"uk\",\"commons\",\"question\",\"written\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://lda.data.parliament.uk/commonswrittenquestions.json?_pageSize=500",
+    .url = "https://lda.data.parliament.uk/commonswrittenquestions.json?_pageSize=500"
+           "&_sort=dateTabled,uin",
     .array_path = "result.items",
     .body_keys = "questionText",
     .date_keys = "dateTabled",
-    .id_keys = "uin",
+    .id_keys = "_about",   /* uin restarts each session: see the file header */
     .interval = 21600,
     .page_param = "_page",
-    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
+    .page_resume = 1,   /* 1,300 pages of a declared 649,660 records: read over a cycle, ascending so new questions land at the tail */
     .page_zero_based = 1,
     .title_keys = "title",
     .description = "Written questions tabled in the Commons: the unique identifying "
@@ -113,14 +178,15 @@ static const hp_source HP3B20_PARLIAMENT[] = {
     .record_type = "question-record",
     .tags = "\"parliament\",\"uk\",\"lords\",\"question\",\"written\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://lda.data.parliament.uk/lordswrittenquestions.json?_pageSize=500",
+    .url = "https://lda.data.parliament.uk/lordswrittenquestions.json?_pageSize=500"
+           "&_sort=dateTabled,uin",
     .array_path = "result.items",
     .body_keys = "questionText",
     .date_keys = "dateTabled",
-    .id_keys = "uin",
+    .id_keys = "_about",   /* HL numbers restart each session: see the header */
     .interval = 21600,
     .page_param = "_page",
-    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
+    .page_resume = 1,   /* 215 pages of a declared 107,034 records: read over a cycle, ascending so new questions land at the tail */
     .page_zero_based = 1,
     .title_keys = "title",
     .description = "Written questions tabled in the House of Lords with the "
@@ -135,14 +201,18 @@ static const hp_source HP3B20_PARLIAMENT[] = {
     .record_type = "answer-record",
     .tags = "\"parliament\",\"uk\",\"commons\",\"answer\",\"written\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://lda.data.parliament.uk/commonsansweredquestions.json?_pageSize=500",
+    /* Sorted on dateOfAnswer, which four records in the ascending head do not
+     * carry at all (an answer recorded without its date); nulls lead, each
+     * with a distinct uin, so the order is still total. */
+    .url = "https://lda.data.parliament.uk/commonsansweredquestions.json?_pageSize=500"
+           "&_sort=dateOfAnswer,uin",
     .array_path = "result.items",
     .body_keys = "answerText",
     .date_keys = "dateOfAnswer",
-    .id_keys = "uin",
+    .id_keys = "_about",   /* uin restarts each session: see the file header */
     .interval = 21600,
     .page_param = "_page",
-    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
+    .page_resume = 1,   /* 1,210 pages of a declared 604,935 records: read over a cycle, ascending so new answers land at the tail */
     .page_zero_based = 1,
     .title_keys = "uin",
     .description = "The answers themselves: the full text a minister gave, the "
@@ -157,14 +227,21 @@ static const hp_source HP3B20_PARLIAMENT[] = {
     .record_type = "question-record",
     .tags = "\"parliament\",\"uk\",\"commons\",\"question\",\"oral\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://lda.data.parliament.uk/commonsoralquestions.json?_pageSize=500",
+    /* This is the row the defect was MEASURED on, by the registry-wide sweep:
+     * 10,000 emitted / 8,983 stored, 1,018 oral questions a run collapsing
+     * onto a uin already written. The ascending walk makes it worse, not
+     * better (8,090 distinct uins of 10,000), because sorting by date groups
+     * each session's reused numbers together — so the symptom's size depended
+     * on the page order and the key was wrong either way. */
+    .url = "https://lda.data.parliament.uk/commonsoralquestions.json?_pageSize=500"
+           "&_sort=dateTabled,uin",
     .array_path = "result.items",
     .body_keys = "questionText",
     .date_keys = "dateTabled",
-    .id_keys = "uin",
+    .id_keys = "_about",   /* uin restarts each session: see the file header */
     .interval = 21600,
     .page_param = "_page",
-    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
+    .page_resume = 1,   /* 143 pages of a declared 71,323 records: read over a cycle, ascending so new questions land at the tail */
     .page_zero_based = 1,
     .title_keys = "uin",
     .description = "Oral questions tabled for Commons question time, with the ballot "

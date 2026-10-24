@@ -1963,6 +1963,67 @@ findings that generalise are:
   `offense_date` (a timestamp) and `link` (a URL)** as unique keys on three of
   these datasets. Same rule as the IDEAM timestamps, three more times.
 
+**A FIELD CALLED "UNIQUE IDENTIFYING NUMBER" IS UNIQUE WITHIN A SESSION**
+(2026-10-24, `collectors/pivot/table/hp3b20_parliament.c`). UK Parliament's
+linked-data API gives every question a `uin`, which is what Hansard calls it
+and what the row keyed on — and it RESTARTS each parliamentary session, so it
+identifies a question within a session and not a record. The upstream proves it
+on its own filter endpoint in one request: `commonsoralquestions.json?uin=901763`
+answers `totalResults: 8`, eight different questions tabled between 2024-02-27
+and 2026-10-22; `uin=HL1000` answers 11 Lords written questions. `_about` — the
+resource URI the envelope gives every record — is distinct in each of those
+answers and over a 10,000-record walk. **Ask the upstream for ONE value of the
+key you are about to trust**; a name is not a measurement, and a dimension that
+is genuinely unique per session looks unique in every sample taken from one.
+
+Three things about it generalise past Westminster:
+
+* **The fix already existed, in the same file, for one of seven rows.**
+  `UKPARL_LDA_EDMS` carried `id_keys = "_about"` under the comment "edmNumber
+  restarts every session" — written a month earlier, applied to that row, and
+  not to its six siblings, four of which key on `uin`. This file's "look for
+  the other copies" lesson at its smallest scale: the other copies were
+  twenty lines away.
+* **The symptom's SIZE depends on the page order, so it is not a measure of
+  the defect.** The sweep read 1,018 of 10,000 collapsing under the upstream's
+  default (newest-first) order; the ascending walk the cycle needs makes it
+  **1,910**, because sorting by date groups each session's reused numbers
+  together. A collision count is a signal that the key is wrong, never a
+  budget of what it costs.
+* **Three of the four rows read OK, and were just as broken.** Their first
+  twenty pages are one chronological slice where a session's numbers do not
+  repeat, so `stored == emitted` on run 1 of a cycle whose later runs would
+  collapse. A `page_resume` row's key must be unique over the WHOLE
+  collection; measuring run 1 cannot see that.
+
+Measured after: 10,000 of 10,000 on all four, and 20,000 distinct over two
+consecutive runs of the oral-questions row against one database with the
+position advancing `_page=20` → `_page=40`.
+
+**AND THE DECLARED TOTAL WAS ONE LEVEL DOWN IN THE ENVELOPE.** All seven rows
+said "the upstream declares no total", which was true of what the ENGINE could
+see: `lib/jsonlist.c`'s shared list carried `totalResults` at the document root
+and `result.count`, not the Linked Data API's `result.totalResults`. Added
+there rather than in a row, for the reason `response.numFound` is there — it is
+the API family's envelope — and the rows now disclose their real remainder:
+71,323 Commons oral questions, 649,660 Commons written, 107,034 Lords written,
+604,935 answers, 45,235 early day motions. It also exposed a page ceiling that
+had been invisible for exactly the reason this file names: **`_pageSize` is
+IGNORED on the `edms` endpoint alone** (it echoes `itemsPerPage: 100` for every
+value from 100 to 1,000, where `commonsoralquestions` honours 1,000), so the
+row asked for 500, got 100, and twenty pages came to **2,000 — ceiling x page
+size, never an upstream's own total** — against the 45,235 it now names. At 453
+pages that is over the 200-page cost ceiling, so it keeps its cycle with
+`page_max = 200`: 20,000 records a run and three runs to the whole series,
+measured at 200 requests and 8.3 MB.
+
+The two divisions rows are the **control** and keep `uin`: their collections
+read whole (5,553 and 2,089, each equal to its own declared total) with every
+uin distinct, so a division number IS a record identity. The sort parameter was
+confirmed the way batch 55's was — `_sort=notacolumn` and `frobnicate=7` are
+both HTTP 400, so this endpoint validates its query string and an accepted
+`_sort` is being honoured rather than ignored.
+
 If the second number is smaller than the first, the row's identity is wrong.
 
 **The run line says it without being asked.** `core/intel.c` counts the DISTINCT
