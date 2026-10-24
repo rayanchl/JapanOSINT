@@ -1384,9 +1384,18 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "nuclear-event-report",
     .tags = "\"nuclear\",\"regulator\",\"incident\",\"usa\",\"nrc\",\"safety\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.nrc.gov/reading-rm/doc-collections/event-status/event/2026/",
+    /* MOVED (2026-10-25, docs/html-reachability-2026-10.md): the old
+     * reading-rm path 301s here and the day links are now
+     * /event-notification-reports/2026/2026MMDDen, so the old href_must
+     * matched none of the page's 229 anchors. STILL STORES NOTHING: the new
+     * page is a calendar whose day links are labelled "1".."31", and
+     * hp_run_html skips an anchor whose label is under 3 characters when
+     * nothing beside it names it either — an engine rule, not this row's.
+     * The URL and href_must are right for the day links. */
+    .url = "https://www.nrc.gov/documents-reports/document-collections/"
+      "events-reports-associated-with/event-notification-reports/2026",
     .base = "https://www.nrc.gov",
-    .href_must = "/event-status/event/2026/",
+    .href_must = "/event-notification-reports/2026/",
     .interval = 3600,
     .description = "The Nuclear Regulatory Commission daily event notification "
       "listing for the year, one entry per operational day. Each linked "
@@ -1406,9 +1415,13 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "nuclear-event-report",
     .tags = "\"nuclear\",\"regulator\",\"incident\",\"usa\",\"nrc\",\"safety\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.nrc.gov/reading-rm/doc-collections/event-status/event/2025/",
+    /* MOVED (2026-10-25): same move, and the same 2-character day labels,
+     * as the 2026 listing above — still stores nothing until the engine
+     * labels such links. */
+    .url = "https://www.nrc.gov/documents-reports/document-collections/"
+      "events-reports-associated-with/event-notification-reports/2025",
     .base = "https://www.nrc.gov",
-    .href_must = "/event-status/event/2025/",
+    .href_must = "/event-notification-reports/2025/",
     .interval = 86400,
     .description = "The Nuclear Regulatory Commission daily event notification "
       "listing for 2025, one entry per operational day, each resolving "
@@ -1424,9 +1437,14 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "nuclear-defect-report",
     .tags = "\"nuclear\",\"regulator\",\"defect\",\"supplychain\",\"usa\",\"nrc\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.nrc.gov/reading-rm/doc-collections/event-status/part21/2026/",
+    /* MOVED (2026-10-25): the old path 301s to the page below, which links
+     * each report straight to its ADAMS PDF (/docs/ML26xx/ML26…pdf, 41 on
+     * the page that day, every one a 2026 report); nothing else on the
+     * page links under /docs/ML. */
+    .url = "https://www.nrc.gov/regulations-legislation/"
+      "reports-associated-with-events/part-21-reports/2026",
     .base = "https://www.nrc.gov",
-    .href_must = "/event-status/part21/2026/",
+    .href_must = "/docs/ML",
     .interval = 21600,
     .description = "The Nuclear Regulatory Commission listing of reports filed under "
       "10 CFR Part 21, the rule requiring suppliers and licensees to "

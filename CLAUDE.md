@@ -39,7 +39,13 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 57,529** (2026-10-22, merged): main's 57,527 (below)
+**The registered count is 57,394** (2026-10-25): 57,395 less US_FCC_ENFORCEMENT,
+a search whose query never reached the server and that has nothing to re-point
+to (rule 4d, same evidence file). 57,395 was 57,529 less 134 dead HTML
+rows found by the reachability sweep — the page and its bare path 404/410
+while the site answers, or the domain gone — each with its evidence in
+`docs/removed-sources-2026-10-25-html-dead.tsv` (the sweep itself:
+`docs/html-reachability-2026-10.md`). 57,529 (2026-10-22, merged) was main's 57,527 (below)
 plus this branch's two on the same 57,536 base — the four tuberculosis
 windows and the Elia imbalance-price row, less the three OpenDataSoft rows
 whose datasets no longer exist (the cycle-advance sweep and the ODS title
@@ -984,6 +990,33 @@ underneath them that older notes in this file predate:
   pivots, and labels it "OSINT pivots — <cat>". Safe because the pivot rule
   below never read the label; a scheduled row's `collector` must name its
   beat, not a macro's default.
+* **The table name is the wrong collector for a REGISTER** (2026-10-24). Half
+  the registry read as Government because three tables were one collector
+  each: `hp3b47_frgov` 9,619 rows, `hp3b47_itgov` 5,716, `hp3b48_news` 3,992,
+  every row `category = "government"` / `record_type = "government-notice"`
+  (or `news`). The rows themselves said otherwise — 6,450 "Mairie - X", 1,163
+  CCAS and care services, 2,725 Italian state schools and 821 professional
+  orders filed as public administration, 1,096 US newspapers in one world
+  bucket. Every row of the three tables now names its collector explicitly
+  (`.collector`, the field the default fills) and the category of its body
+  type, derived from the body's NAME by ordered regex rules in
+  `tools/split_beats_by_body_type.py` (`plan` → `apply` → `manifest`): France
+  by the type prefix the service-public.fr directory writes first, Italy by the
+  name plus the IPA category in parentheses, the press by the `(CC)` country
+  code into seven regions. 29 collectors replace 3 — `frgov_mairies` 6,450,
+  `frgov_social` 1,163, `itgov_scuole` 2,725 (education, under Culture),
+  `itgov_ordini` 821 (Legal), `news_europe_west` 1,251, `news_northam` 1,146 …
+  — and a row no rule types goes to an honest residue (`itgov_altri`, 181),
+  never a guessed type. Measured over the census: Government 29,746 → 24,222
+  (51.7% → 42.1%), Culture 751 → 3,650, Legal 980 → 1,931, Health 2,542 →
+  2,987, Infrastructure 633 → 1,096; 621 collectors, 0 unassigned; the id set
+  is byte-identical to main's (57,529 both ways), no URL or key changed, so no
+  emit measurement is invalidated. Both batch notes carry the per-collector
+  table. **When a beat is a register of everything a country's public sector
+  publishes, the file name is not a collector — read the names before
+  shipping it as one.** The 118 singleton collectors are the hand-written
+  one-family beats and stay: a collector is the beat a source was authored and
+  probed in, and that provenance is what a singleton records.
 * **"Entity pivot" is `registry_is_entity_pivot()`** in `registry.c`, the one
   rule both the dispatcher and `service_vec` use: interval 0, not a `_` pod,
   and (hpengine) an entity token in the URL/body OR `filter_query=1` (a bulk
@@ -1985,6 +2018,17 @@ Engine subtleties worth knowing before writing a row:
   (`csv_parse_wellformed()` skips the repair entirely, for xlsx-written text).
   Blanks before an opening quote are padding in every mode: abuse.ch writes
   `"a", "b"`, and comma mode used to keep the quotes and split tags on commas.
+* **A record's `body` is text, never its JSON.** `core/simhash.c`
+  fingerprints the body to cluster near-duplicate items, and a register's
+  records all share the same JSON keys — so a collector that passed
+  `it.body = <the record's JSON>` made every record a near-duplicate of every
+  other: one false cluster, and a band bucket each insert had to scan.
+  `socrata-sf-business-registrations` crawled at 23 records a second
+  (75,000 in 53 min) until its body became the business's name, owner,
+  address and industry; it then read all 368,735 in 28 min, in 26,883 real
+  clusters. The full record still belongs in `properties_json`. About 19
+  hand-written collectors still pass the JSON as body
+  (`grep -rn "\.body *= *pj" collectors`), unmeasured.
 * Use `jo_strcasestr`/`jo_memmem` (`lib/jocore.h`), never `strcasestr`/`memmem`:
   glibc declares them only under `_GNU_SOURCE`, which this tree never defines,
   so on Linux CI they were implicitly declared with a truncated return.

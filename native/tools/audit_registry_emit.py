@@ -159,15 +159,24 @@ def warm_template(binpath, path):
 def build_cmd(a, sid):
     """The per-source command, with its file-size ceiling.
 
+    With --entities, an id listed there is run as `--run <id> <entity>`: an
+    entity pivot asked nothing answers NEEDS_ENTITY, which is a verdict about
+    the tool, not the source (rule 3). audit_batch_emit.py recovers the entity
+    from a manifest's probe URL; this is the same for rows with no manifest.
+
     The ceiling is imposed by `ulimit` in a shell that then `exec`s the binary,
     NOT by subprocess's preexec_fn: preexec_fn is documented as unsafe in the
     presence of threads, and this tool is a thread pool. `exec` means the shell
     is REPLACED, so the pid subprocess waits on and kills at --timeout is the
     binary itself and nothing is left orphaned holding a 14 GB WAL."""
+    ent = (a.entities or {}).get(sid)
     if a.file_limit_kb and os.path.exists("/bin/sh"):
+        if ent:
+            return ["/bin/sh", "-c", 'ulimit -f %d; exec "$0" --run "$1" "$2"'
+                    % a.file_limit_kb, a.bin, sid, ent]
         return ["/bin/sh", "-c", 'ulimit -f %d; exec "$0" --run "$1"'
                 % a.file_limit_kb, a.bin, sid]
-    return [a.bin, "--run", sid]
+    return [a.bin, "--run", sid] + ([ent] if ent else [])
 
 
 # Record types the ENGINE writes about itself. They are real rows and they are
@@ -423,6 +432,10 @@ def main():
     sel.add_argument("--collector", help="regex the collector name must match")
     sel.add_argument("--limit", type=int, default=0,
                      help="stop after N selected sources (0 = no limit)")
+    ap.add_argument("--entities",
+                    help="TSV of <id>\\t<entity>[\\t...]: run those ids as entity "
+                         "pivots with that entity (rows with no manifest to "
+                         "recover one from)")
     ap.add_argument("--jobs", type=int, default=6, help="parallel runs (6)")
     ap.add_argument("--timeout", type=int, default=220,
                     help="seconds before a run is killed and called SLOW (220)")
@@ -442,6 +455,13 @@ def main():
     a = ap.parse_args()
 
     a.bin = os.path.abspath(a.bin)
+    ents = {}
+    if a.entities:
+        for line in io.open(a.entities, encoding="utf-8"):
+            f = line.rstrip("\n").split("\t")
+            if len(f) >= 2 and f[0] and f[1] and not f[0].startswith("#"):
+                ents[f[0]] = f[1]
+    a.entities = ents
     if not os.access(a.bin, os.X_OK):
         raise SystemExit("not executable: %s" % a.bin)
     a.file_limit_kb = a.file_limit * 1024      # `ulimit -f` counts 1K blocks

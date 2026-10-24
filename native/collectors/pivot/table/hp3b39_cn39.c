@@ -547,12 +547,24 @@ static const hp_source HP3B39_CN39[] = {
     .tags = "\"china\",\"palace-museum\",\"cultural-heritage\",\"museum-collection\",\"beijing\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://zm-digicol.dpm.org.cn/cultural/queryList?page={page}&pageSize=200",
-    .page_delay_ms = 3000,   /* 2026-10-06: the museum's firewall answered 403 after 31 unpaced pages (6,200 objects stored, walk disclosed as cut short) and kept the address blocked for over an hour; 3 s between pages makes the 9,300-page walk ~8 h, monthly. The pace that clears it is NOT yet measured. */
+    /* A RESUMED walk (lib/hpengine.h page_resume=1), 2026-10-13. The firewall
+     * answered 403 after 31 unpaced pages on 2026-10-06 — about 15 requests a
+     * minute, since each page takes 3.7 s to serve — and then refused every
+     * request from this address, the home page included, until 2026-10-13.
+     * One 9,301-page walk cannot be paced under a threshold nobody has
+     * measured without running for days, and a ban in the middle used to lose
+     * the walk. So: 300 pages a day at 10 s apart (~4 requests a minute, under
+     * a third of the pace that was refused), the next page's URL kept across
+     * runs by the scheduler's resume store — a full cycle every 31 days, as
+     * the monthly walk was meant to be. Measured 2026-10-13: 131 pages (26,200
+     * objects) at this pace with no 403 before the test was stopped. */
+    .page_delay_ms = 10000,
+    .page_resume = 1,
     .array_path = "rows",
     .id_keys = "uuid",
-    .interval = 2592000,
+    .interval = 86400,
     .link_keys = "dbgUrl",
-    .page_max = 9500,
+    .page_max = 300,
     .page_size = 200,
     .post_body = "{}",
     .timeout_ms = 60000,
@@ -566,7 +578,8 @@ static const hp_source HP3B39_CN39[] = {
       "uuids were all distinct. Each object has uuid, name, cultural "
       "relic number (e.g. 故00117912), category, dynasty, an image flag "
       "and its dpm.org.cn page. A full walk is about 9,300 requests, so "
-      "it runs monthly." },
+      "it is read across runs: 300 pages a day, every object once a "
+      "31-day cycle." },
 
   { .id = "JO39_CN_AMAC_PRIVATE_FUND_MANAGERS", .name = "Asset Management Association of China: register of private fund "
       "managers",

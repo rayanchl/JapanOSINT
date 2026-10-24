@@ -11,17 +11,6 @@
 
 static const hp_source HP2_EU_DACH[] = {
   /* ── Germany ───────────────────────────────────────────────────────────── */
-  { .id = "DE_UNTERNEHMENSREGISTER", .name = "Germany — Unternehmensregister company search",
-    .name_ja = "ドイツ 企業登録簿", .category = "government",
-    .portal = "https://www.unternehmensregister.de", .record_type = "de-entity",
-    .tags = "\"de\",\"registry\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.unternehmensregister.de/ureg/search1.html?"
-      "submitaction=microsearch&research.name={q}",
-    .base = "https://www.unternehmensregister.de", .filter_query = 1,
-    .description = "The German company register portal — HRB number, register "
-      "court, legal form and the index of every document the company has "
-      "filed, including shareholder lists and articles of association" },
 
   { .id = "DE_BUNDESANZEIGER_FILINGS", .name = "Germany Bundesanzeiger — published accounts & notices",
     .name_ja = "ドイツ 連邦官報 決算公告", .category = "government",
@@ -47,18 +36,6 @@ static const hp_source HP2_EU_DACH[] = {
       "gets: where the register answers, the beneficial owner and the nature "
       "of control; where it demands a legitimate-interest login, nothing is "
       "invented — the lookup returns empty" },
-
-  { .id = "DE_BAFIN_COMPANY_DB", .name = "Germany BaFin — supervised institutions database",
-    .name_ja = "ドイツ BaFin 監督対象機関", .category = "government",
-    .portal = "https://portal.mvp.bafin.de", .record_type = "de-financial-institution",
-    .tags = "\"de\",\"financial\",\"licence\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://portal.mvp.bafin.de/database/InstInfo/suche.do?"
-      "locale=en_GB&meldung=Suche&searchString={q}",
-    .base = "https://portal.mvp.bafin.de", .filter_query = 1,
-    .description = "Institutions authorised by BaFin — banks, insurers, "
-      "payment and crypto-custody firms — with the BaFin identification "
-      "number, the licences held and the date each was granted or withdrawn" },
 
   { .id = "DE_BAFIN_WARNINGS", .name = "Germany BaFin — unauthorised business & investor warnings",
     .name_ja = "ドイツ BaFin 無登録業者警告", .category = "government",
@@ -107,18 +84,6 @@ static const hp_source HP2_EU_DACH[] = {
     .description = "German industrial property rights with the proprietor, "
       "representative, legal status and the register of transfers and licences "
       "— including the security interests that companies grant over IP" },
-
-  { .id = "DE_PRTR_EMISSIONS", .name = "Germany PRTR — facility emissions & operators",
-    .name_ja = "ドイツ 汚染物質排出移動登録", .category = "government",
-    .portal = "https://www.thru.de", .record_type = "de-facility",
-    .tags = "\"de\",\"environment\",\"infrastructure\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.thru.de/thrude/suche/?tx_solr%5Bq%5D={q}",
-    .base = "https://www.thru.de", .filter_query = 1,
-    .description = "German pollutant release and transfer register — the "
-      "facility, its operator, coordinates, industrial activity and reported "
-      "releases by substance and year. An operator-named map of German "
-      "industrial sites" },
 
   { .id = "DE_RECHTSPRECHUNG", .name = "Germany — federal case law database",
     .name_ja = "ドイツ 連邦判例データベース", .category = "government",
@@ -183,17 +148,6 @@ static const hp_source HP2_EU_DACH[] = {
       "decision date, norms applied and the document URLs. A real API, walked "
       "page by page rather than sampled" },
 
-  { .id = "AT_LOBBYREGISTER", .name = "Austria — lobbying & interest representation register",
-    .name_ja = "オーストリア ロビー登録", .category = "government",
-    .portal = "https://lobbyreg.justiz.gv.at", .record_type = "at-lobbyist",
-    .tags = "\"at\",\"lobbying\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://lobbyreg.justiz.gv.at/edikte/ir/iredi18.nsf/suchel?SearchView&query={q}",
-    .base = "https://lobbyreg.justiz.gv.at", .filter_query = 1,
-    .description = "Austrian lobbying register entries — lobbying firms, their "
-      "clients, in-house lobbyists and self-governing bodies, with the "
-      "declared turnover from lobbying activity" },
-
   { .id = "AT_DATA_GV_AT", .name = "Austria data.gv.at — open data catalogue",
     .name_ja = "オーストリア オープンデータ", .category = "government",
     .portal = "https://www.data.gv.at", .record_type = "at-dataset",
@@ -247,28 +201,6 @@ static const hp_source HP2_EU_DACH[] = {
       "records — the daily change stream behind Zefix, including the "
       "director changes and capital movements Zefix only shows as a snapshot" },
 
-  { .id = "CH_SIMAP_TENDERS", .name = "Switzerland simap — public procurement",
-    .name_ja = "スイス 公共調達", .category = "government",
-    .portal = "https://www.simap.ch", .record_type = "ch-tender",
-    .tags = "\"ch\",\"procurement\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.simap.ch/shabforms/COMMON/search/searchForm.jsf?q={q}",
-    .base = "https://www.simap.ch", .filter_query = 1,
-    .description = "Swiss federal, cantonal and municipal tender notices and "
-      "awards — contracting authority, procedure, the winning bidder and the "
-      "award value, including the direct awards that bypass competition" },
-
-  { .id = "LI_HANDELSREGISTER", .name = "Liechtenstein — commercial register",
-    .name_ja = "リヒテンシュタイン 商業登記", .category = "government",
-    .portal = "https://www.oera.li", .record_type = "li-entity",
-    .tags = "\"li\",\"registry\",\"ownership\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.oera.li/hrweb/ger/firmensuche_afj.htm?name={q}",
-    .base = "https://www.oera.li", .filter_query = 1,
-    .description = "Liechtenstein's commercial register — the Anstalt, "
-      "Stiftung and Treuunternehmen structures that hold assets for owners who "
-      "never appear elsewhere, with their registered representatives and the "
-      "trustee firms administering them" },
 };
 
 HP_REGISTER_TABLE(HP2_EU_DACH)
