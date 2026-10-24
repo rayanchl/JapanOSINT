@@ -128,26 +128,70 @@ else
   sed -n '1,5p' "$SCRATCH/ldr.err" >&2
 fi
 
+objs_for() {                            # the link line for a test's own object
+  local under="$1"
+  if [ -n "$COMMON" ]; then
+    printf '%s %s' "$COMMON" "$(grep -vxF "$OBJDIR/$under" "$SCRATCH/under.txt")"
+  else
+    grep -vxF "$OBJDIR/$under" "$live_objs"
+  fi
+}
+
+# ONE SEEDED DATABASE, COPIED, INSTEAD OF 88 DERIVED FROM SCRATCH.
+#
+# db_open() applies the schema, runs the boot migrations and seeds `sources`
+# from the registry — 58,055 sources x two prepared statement steps, every one
+# of which ThreadSanitizer instruments. Measured 2026-10-24: 0.75 s natively,
+# 30 s under TSan, paid once per test because each test gets its own database.
+# The TSan job's log is a column of those lines: test_alert_tenancy opens 39
+# databases and spent 21 of the job's 82.8 minutes doing it.
+#
+# So build that database ONCE here and copy the file per test. Each test then
+# sees exactly what its own first db_open() used to leave it — schema,
+# migrations, a seeded sources table and nothing else, because that is all
+# seed_template.c does — and its own db_open() matches the fingerprint
+# core/db.c now stamps into `_registry_seed` and skips the pass in 0.07 s.
+#
+# A failure here is NOT fatal: without a template each test creates its own
+# database exactly as before, which is slow and correct. That matters because
+# the alternative — a test silently running against a database somebody else
+# prepared — is the `ar` trap one section up, and the difference between the
+# two is that this one is a file copy of a database the suite's own code wrote.
+TEMPLATE=""
+echo "--- seed template (one db_open, copied per test) ---"
+# shellcheck disable=SC2046 disable=SC2086
+if $CC $CFLAGS tests/unit/seed_template.c $(objs_for "") \
+      -o "$SCRATCH/seed_template" $LDLIBS 2>"$SCRATCH/seed_template.cc" &&
+   JO_DB="$SCRATCH/template.db" $RUNNER "$SCRATCH/seed_template"; then
+  TEMPLATE="$SCRATCH/template.db"
+  rm -f "$SCRATCH/seed_template"
+else
+  echo "--- no seed template; every test will derive its own database ---" >&2
+  sed -n '1,10p' "$SCRATCH/seed_template.cc" >&2
+fi
+
 fail=0
 for src in tests/unit/test_*.c; do
   name=$(basename "$src" .c)
   # Which object does this test include? (duplicate symbols if also linked.)
   under=$(under_of "$src")
-  if [ -n "$COMMON" ]; then
-    objs="$COMMON $(grep -vxF "$OBJDIR/$under" "$SCRATCH/under.txt")"
-  else
-    objs=$(grep -vxF "$OBJDIR/$under" "$live_objs")
-  fi
+  objs=$(objs_for "$under")
 
   echo "--- $name ($OBJDIR, excludes ${under:-<none>}) ---"
   # shellcheck disable=SC2086
   if ! $CC $CFLAGS "$src" $objs -o "$SCRATCH/$name" $LDLIBS 2>"$SCRATCH/$name.cc"; then
     echo "BUILD FAILED"; sed -n '1,20p' "$SCRATCH/$name.cc"; fail=1; continue
   fi
+  # A copy of the seeded template, or nothing — in which case the test's own
+  # db_open() creates and seeds the file itself, as it always did. The -wal and
+  # -shm are NOT copied: the template was closed cleanly, so its WAL is already
+  # folded in, and copying a stale sidecar is how a copied SQLite database goes
+  # wrong.
+  [ -n "$TEMPLATE" ] && cp "$TEMPLATE" "$SCRATCH/$name.db"
   JO_DB="$SCRATCH/$name.db" $RUNNER "$SCRATCH/$name"
   rc=$?
   [ $rc -eq 0 ] || { echo "FAILED (exit $rc)"; fail=1; }
-  rm -f "$SCRATCH/$name" "$SCRATCH/$name.db"
+  rm -f "$SCRATCH/$name" "$SCRATCH/$name.db"*   # the -wal/-shm sidecars too
 done
 
 # tools/cleanup_stale_uids.py deletes rows from a live database. Its self-test

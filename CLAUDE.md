@@ -1436,6 +1436,76 @@ that redefines a symbol still fails the build, once instead of 84 times. And
 run.sh now removes each test binary after running it: at 128 MB a test, the old
 script left **~10 GB** in `$TMPDIR` until the suite ended.
 
+**AND LINKING WAS NOT THE WHOLE BILL: THE JOB CAME IN AT 82.8 MIN, NOT THE ~45
+THAT PREDICTED** (2026-10-24, CI run 554, all six jobs green). `ci.yml`'s own
+note had set the test — "if a run still comes in over ~70 min, the ceiling is
+the wrong lever a second time" — so the next thing was to find out where the
+time goes rather than to raise it again. **A GitHub job log timestamps every
+line, so `run.sh`'s own `--- test_x ---` markers ARE a profile**; nothing had to
+be instrumented. The gaps say:
+
+    compile 1,860 TSan objects + the one `ld -r`      3.1 min
+    88 test slots, marker to first output (the LINK)  2.7 min, median 1.6 s
+    test_alert_tenancy                               21.1 min
+    test_source_category                             14.8 min
+    test_service_vec                                  6.9 min
+    test_sourceindexapi                               3.5 min
+    the other 84 tests                               33.3 min, median 31.1 s
+
+So the partial link worked exactly as measured, under TSan too — 2.7 min of
+82.8, not worth another look. What remained was per-test EXECUTION, and inside
+it ONE line repeats: `[db] seeded sources from registry`. **A seed that inserts
+NOTHING costs 16 s under TSan** (30 s when it inserts all 58,055), because
+`db_seed_sources()` is two prepared-statement steps per source and the
+sanitiser instruments all 116,110 of them. test_alert_tenancy's 21 minutes is
+82 of those lines; the median test's 31 s is mostly one.
+
+Two changes, each measured:
+
+* **`core/db.c` stamps a fingerprint of what the seed WOULD write** — a FNV-1a
+  over the five values it writes (id, name, type, category, url) in registry
+  order — into `_registry_seed`, beside the row count the table had when the
+  last full pass finished, and skips the pass when both still match. A warm
+  `db_open` goes **0.63 s → 0.07 s** natively; a fresh one is unchanged. The
+  same shape as `_fts_meta`, which already keys the FTS rebuild on a
+  fingerprint of the index it would rebuild.
+
+  What it gives up is stated rather than hoped: a `name`/`type`/`category`/
+  `url` edited BY HAND outside that function is no longer reverted on the next
+  boot, and `JO_DB_RESEED=1` forces the full pass for exactly that. The row
+  count is the half that catches drift on the database's side — a row inserted
+  or deleted by anything else makes `count(*)` disagree and the next boot does
+  the full pass, prune included. The count is stamped AFTER the prune, so an
+  install holding a stale row for its history still reaches the fast path.
+* **`tests/unit/run.sh` seeds ONE template database and copies the file** per
+  test (`tests/unit/seed_template.c`, one `db_open` and nothing else), so no
+  test derives it from scratch and each one's own `db_open` then matches the
+  stamp. A failure to build the template is NOT fatal: every test creates its
+  own database exactly as before, which is slow and correct.
+
+Local suite **494 s → 455 s** (the saving is small here because a native seed
+is only 0.75 s; the point is the 20-30x sanitiser multiplier), 86 tests, all
+passing, with **129 of the 152 opens taking the fast path** and
+test_alert_tenancy taking it 82 times out of 82. The 23 that still do a full
+pass are tests that open a second database of their own.
+`tests/unit/test_db_seed.c` pins the fingerprint field by field, the three ways
+of not matching a stamp, the stale-row case and both readings of
+`JO_DB_RESEED`.
+
+**The next driver is already named, so nobody has to find it twice**:
+`test_source_category` spends 765 s on a 15-nearest vote over 42,255 declared
+sources and `test_service_vec` indexes all 58,055 source cards five times at
+~65 s each. Those are O(registry) BY DESIGN, so making them cheap is a question
+about what they should cover — not a build fix.
+
+One trap met on the way, and it is the one `prune_orphans` exists for: linking
+a single test by hand with `find obj -name '*.o'` picked up four stale
+`hp3b4*_arcgislayers.o` objects whose `.c` files no longer exist, and the
+binary **segfaulted in the registration constructors** after printing
+`[hp] NOT REGISTERED … '(no id)'` for rows that read as garbage. Nothing was
+wrong with the tree; the object list was. Build a one-off test binary through
+run.sh's own pruning, not through a bare `find`.
+
 **A macOS job the runner cancels at 15 minutes is the runner's, not the
 PR's** (seen 2026-10-21 on `main`'s own run for PR #57 and on two PRs the
 same day; the owner's rule of 2026-10-22): when the other five jobs are green,

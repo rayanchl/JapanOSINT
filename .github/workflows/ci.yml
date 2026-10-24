@@ -274,6 +274,44 @@ jobs:
   # test_alert_tenancy alone does **39 full db_opens** (the 2026-10-19 note
   # above clocked it at 17.5 min on its own, with the registry at 48k). That
   # is a product-sized cost inside one test, and it grows with every batch.
+  #
+  # IT CAME IN AT 82.8 MIN, so by the sentence above the prediction of ~45 was
+  # wrong and the second lever was due. The job's own log says exactly where
+  # the time went — every `--- test_x ---` line is timestamped, so the gaps
+  # are a profile (run 554, 2026-10-23, all six jobs green):
+  #
+  #     compile 1,860 TSan objects + the one `ld -r`      3.1 min
+  #     88 test slots, marker to first output (the LINK)  2.7 min total,
+  #                                                       median 1.6 s
+  #     test_alert_tenancy                               21.1 min
+  #     test_source_category                             14.8 min
+  #     test_service_vec                                  6.9 min
+  #     test_sourceindexapi                               3.5 min
+  #     the other 84 tests                               33.3 min,
+  #                                                       median 31.1 s
+  #
+  # So the partial link DID work, including under TSan — linking is 2.7 min of
+  # 82.8 and no longer worth looking at. What is left is per-test EXECUTION,
+  # and inside it one line repeats: `[db] seeded sources from registry`, 30 s
+  # when it inserts 58,055 rows and **16 s when it inserts nothing at all**,
+  # because the seed is two prepared-statement steps per source and TSan
+  # instruments all 116,110 of them. test_alert_tenancy's 21 min is 82 of
+  # those lines; the median test's 31 s is mostly one.
+  #
+  # Two changes address that, and both are measured rather than reasoned:
+  # core/db.c stamps a FINGERPRINT of what the seed writes into
+  # `_registry_seed` and skips the pass when it and the row count still match
+  # (a warm db_open goes 0.63 s -> 0.07 s natively), and tests/unit/run.sh
+  # seeds ONE template database and copies the file per test, so no test
+  # derives it from scratch. Local suite 494 s -> 455 s, 86 tests, all
+  # passing, with 129 of the 152 opens taking the fast path and
+  # test_alert_tenancy taking it 82 times out of 82.
+  #
+  # The next driver after this one is named for whoever reads the log next:
+  # test_source_category spends 765 s on a 15-nearest vote over 42,255
+  # declared sources, and test_service_vec indexes all 58,055 source cards
+  # five times at ~65 s each. Those are O(registry) by design, so making them
+  # cheap is a question about what they should cover, not a build fix.
   thread-sanitizer:
     runs-on: ubuntu-latest
     timeout-minutes: 90
