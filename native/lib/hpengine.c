@@ -5615,7 +5615,20 @@ date_step_back:
           "slice the QUERY instead (window_days, or a filter the upstream "
           "does honour, one request per slice) — see "
           "docs/SOURCE_EXHAUSTIVENESS.md"
-        : "raise max_items/page_max on this row (lib/hpengine.h) — see "
+        /* "Raise the ceiling" is advice, not a fact, and it is wrong wherever
+         * the UPSTREAM bounds its own window — which it can do while looking
+         * perfectly healthy. Japan Search's item API refuses
+         * `from + size > 2000` with HTTP 200, `hit: 0` and an empty list, so
+         * 130 rows in this tree sit at a ceiling that is the API's and not
+         * ours, and a reader told to raise page_max would walk pages that
+         * answer empty. The engine cannot tell the two apart — it stops before
+         * asking for the page that would have refused — so the remedy says how
+         * to find out in one request instead of asserting the knob works. */
+        : "raise max_items/page_max on this row (lib/hpengine.h) — but ask the "
+          "endpoint FIRST whether it serves past the current ceiling: request "
+          "one record just beyond it, and an empty success (zero records, a "
+          "zeroed total) means the bound is the upstream's own window and no "
+          "ceiling reaches it. Where it is, slice the QUERY instead — see "
           "docs/SOURCE_EXHAUSTIVENESS.md");
     char *pj = cJSON_PrintUnformatted(p);
     cJSON_Delete(p);

@@ -1334,6 +1334,14 @@ static long declared_total(cJSON *doc) {
      * not one row's quirk — the same reason `response.numFound` is here for
      * Solr. Measured 2026-10-23. */
     "result.totalResults",
+    /* Japan Search's `jps-cross` item API answers `hit: 5409` beside the 500
+     * records on a page, and 130 hp rows in this tree read that API — every one
+     * of them reading 2,000 of its collection (the API's own `from + size <=
+     * 2000` bound) and saying nothing, because no list here could reach the
+     * number. Singular `hit` is safe where bare `count` is not: "records in
+     * THIS page" is spelled `count`, `size` or `hits`, never `hit`. Added
+     * because a live family needed it, and measured on it. */
+    "hit",
     NULL };
   for (int i = 0; KEYS[i]; i++) {
     cJSON *v = dotted(doc, KEYS[i]);

@@ -1275,6 +1275,40 @@ Where the tree actually stands, as `make audit-sources` reports it:
     wrong for a row that declares a one-page ceiling ON PURPOSE. A
     `page_max_declared == 1` walk now says so and points at the row's comment.
 
+  **A CEILING CAN BE THE UPSTREAM'S, SERVED AS AN EMPTY SUCCESS — and then
+  "raise page_max" is the wrong advice for 130 rows** (2026-10-24, Japan
+  Search's `jps-cross` item API; the family note is in
+  `collectors/pivot/table/hp3b30_jplibrary.c`). The sweep read 39 of those rows
+  COLLISION, about a fifth of each row's 2,000 records, and neither half of the
+  cause is a property of any row:
+
+  * **`from + size <= 2000` is a hard bound.** `from=1999&size=1` answers
+    normally; `from=2000&size=1`, `from=1995&size=10` and `from=1900&size=200`
+    each answer HTTP **200 with `hit: 0` and an empty list**. So every row's
+    `page_max = 4` at `size = 500` is the API's ceiling and not ours, and the
+    engine CANNOT tell the difference — it stops before asking for the page
+    that would have refused. hpengine's remedy no longer asserts the knob
+    works: it says to request one record past the ceiling and read an empty
+    success as the upstream's own window, with slicing the QUERY as the route
+    to the rest.
+  * **The index reorders between requests and no sort pins it.** Two readings
+    of the same four pages disagreed — in one, `from=0` and `from=500` were
+    disjoint; in another they shared **266 of 500**. Six sort spellings
+    (`sort=id`, `-id`, `common.title`, `-common.lastUpdatedDate`, `sortBy=id`,
+    `order=id`) each returned exactly what the controls `sort=frobnicate` and
+    `frobnicate=7` returned. The 2,000 records hold 1,732 distinct ids and
+    **1,732 distinct whole records**, so the surplus is byte-identical and
+    nothing distinguishable is lost at the sink — but a record the shuffle kept
+    out of all four pages was never fetched.
+
+  So the rows are a 2,000-record sample of a larger collection, redrawn each
+  run, and **`hit` had to be added to the declared-total lists** before any of
+  them could say so: it is the whole match set in that API (5,409 beside a
+  500-record page), singular, so it does not share bare `count`'s ambiguity. A
+  row that read 2,000 of 5,409 in silence now files "2,000 of 5,409 — upstream
+  declared this total" every run. **Do not re-key these rows**: `id` is the
+  item id and is already right.
+
   **And DCAT titles are language maps, which `pick()` was built to skip.**
   `title: {"en": …, "fr": …}` is an object, so the title picker skipped it, and
   `description` is the same shape, so nothing further down the list resolved

@@ -164,6 +164,10 @@ static long pw_total_available(const cJSON *doc) {
      * is the CKAN/JSON:API house spelling. Bare `count` stays out, for the
      * reason above — these do not share its ambiguity. */
     "numberMatched", "totalElements", "recordsTotal", "total",
+    /* Japan Search's item API: `hit` is the whole match set (5,409 beside a
+     * 500-record page). Singular, so it does not share bare `count`'s
+     * ambiguity — a page size is spelled `count`, `size` or `hits`. */
+    "hit",
     NULL
   };
   for (int i = 0; keys[i]; i++) {
