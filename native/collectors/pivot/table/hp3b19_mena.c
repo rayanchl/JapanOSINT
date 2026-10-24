@@ -1452,11 +1452,29 @@ static const hp_source HP3B19_MENA[] = {
     .record_type = "dataset-record",
     .tags = "\"turkey\",\"izmir\",\"opendata\",\"bulk\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://acikveri.bizizmir.com/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    /* package_search?sort=id+asc, NOT current_package_list_with_resources:
+     * that action takes no sort parameter and orders by
+     * `metadata_modified desc`, so a dataset edited during the walk jumps
+     * to the head — one record served twice and another pushed past a page
+     * boundary and never read. Batch 34 measured that loss on this same
+     * action (3 of 2,000 on govdata, 16 of 942 on Zürich) and re-pointed
+     * its 81 rows; these four were the ones it did not reach, and the id
+     * sort is stable. package_search returns the resources inline too
+     * (checked on this host, 2026-10-24), so the row keeps its subject.
+     * 250 datasets declared by result.count the same day = 8 pages of
+     * 100 with headroom, so the walk ends on the upstream's short page.     *
+     * The two fields below move WITH the URL, which is the whole of the
+     * "a URL changed after validation is unvalidated" rule: the bulk
+     * action answers `result` as a bare array and pages on `offset`,
+     * package_search answers `result.results` and pages on `start`. Left
+     * as they were, the re-pointed row stored ONE record — measured, on
+     * all three rows, which is how this was caught. */
+    .url = "https://acikveri.bizizmir.com/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .id_keys = "name",
     .interval = 86400,
-    .page_param = "offset",
+    .page_max = 8,   /* 250 datasets / 100 a page, +headroom (2026-10-24) */
+    .page_param = "start",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_size = 100,
     .title_keys = "title",
@@ -1512,7 +1530,13 @@ static const hp_source HP3B19_MENA[] = {
     .record_type = "traffic-count",
     .tags = "\"turkey\",\"izmir\",\"traffic\",\"transport\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://acikveri.bizizmir.com/api/3/action/datastore_search?resource_id=25866cc4-298a-4ee7-bfd3-719ea7f530b2&limit=100",
+    /* `sort=_id asc` because this row CYCLES and datastore_search has no
+     * guaranteed order without it. `_id` is the datastore's own sequential row
+     * id, present in every resource, so it needs no per-dataset knowledge.
+     * Measured on data.zagreb.hr 2026-10-24: offset 0 answers _id 1,2,3 and
+     * offset 3 answers 4,5,6 — ordered, disjoint, and the envelope publishes
+     * `total` for the disclosure. */
+    .url = "https://acikveri.bizizmir.com/api/3/action/datastore_search?resource_id=25866cc4-298a-4ee7-bfd3-719ea7f530b2&limit=100&sort=_id%20asc",
     .array_path = "result.records",
     .id_keys = "_id",
     .interval = 21600,
@@ -1532,7 +1556,13 @@ static const hp_source HP3B19_MENA[] = {
     .record_type = "traffic-speed",
     .tags = "\"turkey\",\"izmir\",\"traffic\",\"speed\",\"transport\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://acikveri.bizizmir.com/api/3/action/datastore_search?resource_id=a3bd880f-dfc6-4f65-bbfd-5fcc998268c3&limit=100",
+    /* `sort=_id asc` because this row CYCLES and datastore_search has no
+     * guaranteed order without it. `_id` is the datastore's own sequential row
+     * id, present in every resource, so it needs no per-dataset knowledge.
+     * Measured on data.zagreb.hr 2026-10-24: offset 0 answers _id 1,2,3 and
+     * offset 3 answers 4,5,6 — ordered, disjoint, and the envelope publishes
+     * `total` for the disclosure. */
+    .url = "https://acikveri.bizizmir.com/api/3/action/datastore_search?resource_id=a3bd880f-dfc6-4f65-bbfd-5fcc998268c3&limit=100&sort=_id%20asc",
     .array_path = "result.records",
     .id_keys = "_id",
     .interval = 21600,
@@ -1568,7 +1598,13 @@ static const hp_source HP3B19_MENA[] = {
     .record_type = "road-count",
     .tags = "\"turkey\",\"izmir\",\"roads\",\"infrastructure\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://acikveri.bizizmir.com/api/3/action/datastore_search?resource_id=9bfbf3cd-ab9d-4fdc-8da8-3537467138ae&limit=100",
+    /* `sort=_id asc` because this row CYCLES and datastore_search has no
+     * guaranteed order without it. `_id` is the datastore's own sequential row
+     * id, present in every resource, so it needs no per-dataset knowledge.
+     * Measured on data.zagreb.hr 2026-10-24: offset 0 answers _id 1,2,3 and
+     * offset 3 answers 4,5,6 — ordered, disjoint, and the envelope publishes
+     * `total` for the disclosure. */
+    .url = "https://acikveri.bizizmir.com/api/3/action/datastore_search?resource_id=9bfbf3cd-ab9d-4fdc-8da8-3537467138ae&limit=100&sort=_id%20asc",
     .array_path = "result.records",
     .id_keys = "_id",
     .interval = 86400,
@@ -1588,7 +1624,13 @@ static const hp_source HP3B19_MENA[] = {
     .record_type = "building-count",
     .tags = "\"turkey\",\"izmir\",\"buildings\",\"infrastructure\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://acikveri.bizizmir.com/api/3/action/datastore_search?resource_id=54af6862-2d36-48d0-838f-a42133e8b943&limit=100",
+    /* `sort=_id asc` because this row CYCLES and datastore_search has no
+     * guaranteed order without it. `_id` is the datastore's own sequential row
+     * id, present in every resource, so it needs no per-dataset knowledge.
+     * Measured on data.zagreb.hr 2026-10-24: offset 0 answers _id 1,2,3 and
+     * offset 3 answers 4,5,6 — ordered, disjoint, and the envelope publishes
+     * `total` for the disclosure. */
+    .url = "https://acikveri.bizizmir.com/api/3/action/datastore_search?resource_id=54af6862-2d36-48d0-838f-a42133e8b943&limit=100&sort=_id%20asc",
     .array_path = "result.records",
     .id_keys = "_id",
     .interval = 86400,

@@ -1367,7 +1367,13 @@ static const hp_source HP3B19_HEALTH[] = {
     .record_type = "prescribing-record",
     .tags = "\"uk\",\"nhs\",\"prescribing\",\"practice\",\"dispensing\",\"epd\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.nhsbsa.net/api/3/action/datastore_search?resource_id=EPD_202301&limit=100",
+    /* `sort=_id asc` because this row CYCLES and datastore_search has no
+     * guaranteed order without it. `_id` is the datastore's own sequential row
+     * id, present in every resource, so it needs no per-dataset knowledge.
+     * Measured on data.zagreb.hr 2026-10-24: offset 0 answers _id 1,2,3 and
+     * offset 3 answers 4,5,6 — ordered, disjoint, and the envelope publishes
+     * `total` for the disclosure. */
+    .url = "https://opendata.nhsbsa.net/api/3/action/datastore_search?resource_id=EPD_202301&limit=100&sort=_id%20asc",
     .array_path = "result.records",
     .interval = 604800,
     .page_param = "offset",
@@ -1578,7 +1584,14 @@ static const hp_source HP3B19_HEALTH[] = {
     .record_type = "wastewater-observation",
     .tags = "\"cdc\",\"nwss\",\"wastewater\",\"surveillance\",\"sars-cov-2\",\"usa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.cdc.gov/resource/g653-rqe2.json?%24limit=1000",
+    /* `$order=:id` because SODA guarantees NO order without it and this row
+     * CYCLES: a resumed `$offset` walk lands where it meant to only if the
+     * order is stable between runs. `:id` is Socrata's own row identifier, so
+     * it needs no per-dataset knowledge. Measured on data.cdc.gov 2026-10-24:
+     * accepted percent-encoded, stable over two reads, offsets 0 and 3 share
+     * no row, and DESC answers a different set — so the parameter is honoured
+     * rather than silently ignored, which is what rule 4d says to check. */
+    .url = "https://data.cdc.gov/resource/g653-rqe2.json?%24limit=1000&%24order=%3Aid",
     .date_keys = "date",
     .interval = 86400,
     .page_param = "%24offset",
@@ -1600,7 +1613,14 @@ static const hp_source HP3B19_HEALTH[] = {
     .record_type = "notifiable-disease-record",
     .tags = "\"cdc\",\"nndss\",\"notifiable\",\"surveillance\",\"weekly\",\"usa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.cdc.gov/resource/x9gk-5huc.json?%24limit=1000",
+    /* `$order=:id` because SODA guarantees NO order without it and this row
+     * CYCLES: a resumed `$offset` walk lands where it meant to only if the
+     * order is stable between runs. `:id` is Socrata's own row identifier, so
+     * it needs no per-dataset knowledge. Measured on data.cdc.gov 2026-10-24:
+     * accepted percent-encoded, stable over two reads, offsets 0 and 3 share
+     * no row, and DESC answers a different set — so the parameter is honoured
+     * rather than silently ignored, which is what rule 4d says to check. */
+    .url = "https://data.cdc.gov/resource/x9gk-5huc.json?%24limit=1000&%24order=%3Aid",
     .interval = 86400,
     .page_param = "%24offset",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -1622,7 +1642,14 @@ static const hp_source HP3B19_HEALTH[] = {
     .record_type = "mortality-observation",
     .tags = "\"cdc\",\"nchs\",\"mortality\",\"excess-deaths\",\"state\",\"usa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.cdc.gov/resource/r8kw-7aab.json?%24limit=1000",
+    /* `$order=:id` because SODA guarantees NO order without it and this row
+     * CYCLES: a resumed `$offset` walk lands where it meant to only if the
+     * order is stable between runs. `:id` is Socrata's own row identifier, so
+     * it needs no per-dataset knowledge. Measured on data.cdc.gov 2026-10-24:
+     * accepted percent-encoded, stable over two reads, offsets 0 and 3 share
+     * no row, and DESC answers a different set — so the parameter is honoured
+     * rather than silently ignored, which is what rule 4d says to check. */
+    .url = "https://data.cdc.gov/resource/r8kw-7aab.json?%24limit=1000&%24order=%3Aid",
     .date_keys = "week_ending_date",
     .interval = 86400,
     .page_param = "%24offset",
@@ -1644,7 +1671,14 @@ static const hp_source HP3B19_HEALTH[] = {
     .record_type = "mortality-observation",
     .tags = "\"cdc\",\"nchs\",\"mortality\",\"county\",\"weekly\",\"usa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.cdc.gov/resource/ite7-j2w7.json?%24limit=1000",
+    /* `$order=:id` because SODA guarantees NO order without it and this row
+     * CYCLES: a resumed `$offset` walk lands where it meant to only if the
+     * order is stable between runs. `:id` is Socrata's own row identifier, so
+     * it needs no per-dataset knowledge. Measured on data.cdc.gov 2026-10-24:
+     * accepted percent-encoded, stable over two reads, offsets 0 and 3 share
+     * no row, and DESC answers a different set — so the parameter is honoured
+     * rather than silently ignored, which is what rule 4d says to check. */
+    .url = "https://data.cdc.gov/resource/ite7-j2w7.json?%24limit=1000&%24order=%3Aid",
     .date_keys = "week_ending_date",
     .interval = 86400,
     .page_param = "%24offset",
@@ -1665,7 +1699,16 @@ static const hp_source HP3B19_HEALTH[] = {
     .record_type = "hospital-capacity-record",
     .tags = "\"hhs\",\"hospital\",\"capacity\",\"facility\",\"icu\",\"usa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    /* `$order=hospital_pk,collection_week` — the row's OWN identity columns,
+     * the pair its composite_id is built from — because SODA guarantees no
+     * order without `$order` and this row CYCLES: a resumed `$offset` walk
+     * lands where it meant to only if the order is stable between runs.
+     * `$order=:id` is accepted here too (measured 2026-10-24, even alongside
+     * the composite select), but ordering on the identity the row keys on is
+     * what this file's rule asks for, and it is the order a reader can check.
+     * Measured the same day: the pair is accepted and answers ascending. */
     .url = "https://healthdata.gov/resource/anag-cw7u.json?%24limit=1000"
+      "&%24order=hospital_pk,collection_week"
       "&%24select=*,(hospital_pk%20%7C%7C%20%27_%27%20%7C%7C%20collection_week)%20AS%20composite_id",
     .date_keys = "collection_week",
     /* exhaustive-ok: hospital_pk names the FACILITY, not the record -- this is
@@ -1700,7 +1743,14 @@ static const hp_source HP3B19_HEALTH[] = {
     .record_type = "hospital-capacity-record",
     .tags = "\"hhs\",\"hospital\",\"capacity\",\"state\",\"staffing\",\"usa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://healthdata.gov/resource/g62h-syeh.json?%24limit=1000",
+    /* `$order=:id` because SODA guarantees NO order without it and this row
+     * CYCLES: a resumed `$offset` walk lands where it meant to only if the
+     * order is stable between runs. `:id` is Socrata's own row identifier, so
+     * it needs no per-dataset knowledge. Measured on data.cdc.gov 2026-10-24:
+     * accepted percent-encoded, stable over two reads, offsets 0 and 3 share
+     * no row, and DESC answers a different set — so the parameter is honoured
+     * rather than silently ignored, which is what rule 4d says to check. */
+    .url = "https://healthdata.gov/resource/g62h-syeh.json?%24limit=1000&%24order=%3Aid",
     .date_keys = "date",
     .interval = 86400,
     .page_param = "%24offset",

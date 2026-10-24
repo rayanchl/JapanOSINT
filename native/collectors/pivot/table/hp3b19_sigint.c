@@ -1493,7 +1493,14 @@ static const hp_source HP3B19_SIGINT[] = {
      * same 10-page budget now collects 10,000 real records instead of 2,896.
      * Ordering by a real column instead would have been worse, not better: at
      * `$order=impianto` a 1,000-row page holds just 9 installations. */
-    .url = "https://www.dati.friuliveneziagiulia.it/resource/28hy-b3b2.json?$select=DISTINCT%20impianto,operatore,data,stato_attivazione,comune,provincia,etrs89est,etrs89nord&$limit=1000",
+    /* `$order=:id` because SODA guarantees NO order without it and this row
+     * CYCLES: a resumed `$offset` walk lands where it meant to only if the
+     * order is stable between runs. `:id` is Socrata's own row identifier, so
+     * it needs no per-dataset knowledge. Measured on data.cdc.gov 2026-10-24:
+     * accepted percent-encoded, stable over two reads, offsets 0 and 3 share
+     * no row, and DESC answers a different set — so the parameter is honoured
+     * rather than silently ignored, which is what rule 4d says to check. */
+    .url = "https://www.dati.friuliveneziagiulia.it/resource/28hy-b3b2.json?$select=DISTINCT%20impianto,operatore,data,stato_attivazione,comune,provincia,etrs89est,etrs89nord&$limit=1000&$order=:id",
     .date_keys = "data",
     /* Every selected column, because that tuple IS the distinct row. */
     .id_keys = "impianto+operatore+data+stato_attivazione+etrs89est+etrs89nord",

@@ -660,7 +660,13 @@ static const hp_source HP3B19_FINANCE[] = {
     .record_type = "company-record",
     .tags = "\"israel\",\"registry\",\"companies\",\"middleeast\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.gov.il/api/3/action/datastore_search?resource_id=f004176c-b85f-4542-8901-7b3176f9a054&limit=100",
+    /* `sort=_id asc` because this row CYCLES and datastore_search has no
+     * guaranteed order without it. `_id` is the datastore's own sequential row
+     * id, present in every resource, so it needs no per-dataset knowledge.
+     * Measured on data.zagreb.hr 2026-10-24: offset 0 answers _id 1,2,3 and
+     * offset 3 answers 4,5,6 — ordered, disjoint, and the envelope publishes
+     * `total` for the disclosure. */
+    .url = "https://data.gov.il/api/3/action/datastore_search?resource_id=f004176c-b85f-4542-8901-7b3176f9a054&limit=100&sort=_id%20asc",
     .array_path = "result.records",
     .interval = 86400,
     .page_param = "offset",

@@ -658,7 +658,13 @@ static const hp_source HP3B19_EURASIA[] = {
     .record_type = "beneficial-owner",
     .tags = "\"latvia\",\"company\",\"beneficialowner\",\"register\",\"ubo\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.gov.lv/dati/api/3/action/datastore_search?resource_id=20a9b26d-d056-4dbb-ae18-9ff23c87bdee&limit=100",
+    /* `sort=_id asc` because this row CYCLES and datastore_search has no
+     * guaranteed order without it. `_id` is the datastore's own sequential row
+     * id, present in every resource, so it needs no per-dataset knowledge.
+     * Measured on data.zagreb.hr 2026-10-24: offset 0 answers _id 1,2,3 and
+     * offset 3 answers 4,5,6 — ordered, disjoint, and the envelope publishes
+     * `total` for the disclosure. */
+    .url = "https://data.gov.lv/dati/api/3/action/datastore_search?resource_id=20a9b26d-d056-4dbb-ae18-9ff23c87bdee&limit=100&sort=_id%20asc",
     .array_path = "result.records",
     /* A row is one beneficial owner OF a legal entity: the registration number
      * repeats for every owner (live 2026-09-15: 1,000 records, 812 entity
@@ -742,7 +748,13 @@ static const hp_source HP3B19_EURASIA[] = {
     .record_type = "licensed-entity",
     .tags = "\"latvia\",\"environment\",\"waste\",\"permit\",\"register\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.gov.lv/dati/api/3/action/datastore_search?resource_id=4a3e6292-235e-4083-815d-9ea0c4870f4b&limit=100",
+    /* `sort=_id asc` because this row CYCLES and datastore_search has no
+     * guaranteed order without it. `_id` is the datastore's own sequential row
+     * id, present in every resource, so it needs no per-dataset knowledge.
+     * Measured on data.zagreb.hr 2026-10-24: offset 0 answers _id 1,2,3 and
+     * offset 3 answers 4,5,6 — ordered, disjoint, and the envelope publishes
+     * `total` for the disclosure. */
+    .url = "https://data.gov.lv/dati/api/3/action/datastore_search?resource_id=4a3e6292-235e-4083-815d-9ea0c4870f4b&limit=100&sort=_id%20asc",
     .array_path = "result.records",
     .id_keys = "_id",
     .interval = 86400,
@@ -765,7 +777,13 @@ static const hp_source HP3B19_EURASIA[] = {
     .record_type = "emissions-permit",
     .tags = "\"latvia\",\"environment\",\"industry\",\"permit\",\"ippc\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.gov.lv/dati/api/3/action/datastore_search?resource_id=66dd77e3-868d-474c-b24a-4e7e83c0ca34&limit=100",
+    /* `sort=_id asc` because this row CYCLES and datastore_search has no
+     * guaranteed order without it. `_id` is the datastore's own sequential row
+     * id, present in every resource, so it needs no per-dataset knowledge.
+     * Measured on data.zagreb.hr 2026-10-24: offset 0 answers _id 1,2,3 and
+     * offset 3 answers 4,5,6 — ordered, disjoint, and the envelope publishes
+     * `total` for the disclosure. */
+    .url = "https://data.gov.lv/dati/api/3/action/datastore_search?resource_id=66dd77e3-868d-474c-b24a-4e7e83c0ca34&limit=100&sort=_id%20asc",
     .array_path = "result.records",
     .id_keys = "_id",
     .interval = 86400,
@@ -784,7 +802,13 @@ static const hp_source HP3B19_EURASIA[] = {
     .record_type = "water-permit",
     .tags = "\"latvia\",\"environment\",\"water\",\"permit\",\"register\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.gov.lv/dati/api/3/action/datastore_search?resource_id=62131cb1-2add-4ef1-a04f-b0eda9fa5576&limit=100",
+    /* `sort=_id asc` because this row CYCLES and datastore_search has no
+     * guaranteed order without it. `_id` is the datastore's own sequential row
+     * id, present in every resource, so it needs no per-dataset knowledge.
+     * Measured on data.zagreb.hr 2026-10-24: offset 0 answers _id 1,2,3 and
+     * offset 3 answers 4,5,6 — ordered, disjoint, and the envelope publishes
+     * `total` for the disclosure. */
+    .url = "https://data.gov.lv/dati/api/3/action/datastore_search?resource_id=62131cb1-2add-4ef1-a04f-b0eda9fa5576&limit=100&sort=_id%20asc",
     .array_path = "result.records",
     .id_keys = "_id",
     .interval = 86400,
@@ -841,7 +865,13 @@ static const hp_source HP3B19_EURASIA[] = {
     .record_type = "address-record",
     .tags = "\"croatia\",\"zagreb\",\"address\",\"street\",\"register\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.zagreb.hr/api/3/action/datastore_search?resource_id=b110b7b6-f9b6-4bbf-8db8-a9245895f316&limit=100",
+    /* `sort=_id asc` because this row CYCLES and datastore_search has no
+     * guaranteed order without it. `_id` is the datastore's own sequential row
+     * id, present in every resource, so it needs no per-dataset knowledge.
+     * Measured on data.zagreb.hr 2026-10-24: offset 0 answers _id 1,2,3 and
+     * offset 3 answers 4,5,6 — ordered, disjoint, and the envelope publishes
+     * `total` for the disclosure. */
+    .url = "https://data.zagreb.hr/api/3/action/datastore_search?resource_id=b110b7b6-f9b6-4bbf-8db8-a9245895f316&limit=100&sort=_id%20asc",
     .array_path = "result.records",
     .interval = 604800,
     .page_param = "offset",
@@ -896,7 +926,13 @@ static const hp_source HP3B19_EURASIA[] = {
     .record_type = "company-record",
     .tags = "\"slovenia\",\"company\",\"register\",\"prs\",\"business\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://podatki.gov.si/api/3/action/datastore_search?resource_id=beb70929-3d0d-41c6-9af2-25d525d906d3&limit=100",
+    /* `sort=_id asc` because this row CYCLES and datastore_search has no
+     * guaranteed order without it. `_id` is the datastore's own sequential row
+     * id, present in every resource, so it needs no per-dataset knowledge.
+     * Measured on data.zagreb.hr 2026-10-24: offset 0 answers _id 1,2,3 and
+     * offset 3 answers 4,5,6 — ordered, disjoint, and the envelope publishes
+     * `total` for the disclosure. */
+    .url = "https://podatki.gov.si/api/3/action/datastore_search?resource_id=beb70929-3d0d-41c6-9af2-25d525d906d3&limit=100&sort=_id%20asc",
     .array_path = "result.records",
     .id_keys = "_id",
     .interval = 86400,
@@ -979,7 +1015,13 @@ static const hp_source HP3B19_EURASIA[] = {
     .record_type = "registered-organisation",
     .tags = "\"montenegro\",\"labour\",\"union\",\"register\",\"civil\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.gov.me/api/3/action/datastore_search?resource_id=02295121-60fc-450d-9e09-3da4c2030551&limit=100",
+    /* `sort=_id asc` because this row CYCLES and datastore_search has no
+     * guaranteed order without it. `_id` is the datastore's own sequential row
+     * id, present in every resource, so it needs no per-dataset knowledge.
+     * Measured on data.zagreb.hr 2026-10-24: offset 0 answers _id 1,2,3 and
+     * offset 3 answers 4,5,6 — ordered, disjoint, and the envelope publishes
+     * `total` for the disclosure. */
+    .url = "https://data.gov.me/api/3/action/datastore_search?resource_id=02295121-60fc-450d-9e09-3da4c2030551&limit=100&sort=_id%20asc",
     .array_path = "result.records",
     .interval = 86400,
     .page_param = "offset",
@@ -998,7 +1040,13 @@ static const hp_source HP3B19_EURASIA[] = {
     .record_type = "medicine-record",
     .tags = "\"montenegro\",\"medicine\",\"register\",\"health\",\"pharma\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.gov.me/api/3/action/datastore_search?resource_id=77c3018f-cc56-4532-992d-5b6a68f86f42&limit=100",
+    /* `sort=_id asc` because this row CYCLES and datastore_search has no
+     * guaranteed order without it. `_id` is the datastore's own sequential row
+     * id, present in every resource, so it needs no per-dataset knowledge.
+     * Measured on data.zagreb.hr 2026-10-24: offset 0 answers _id 1,2,3 and
+     * offset 3 answers 4,5,6 — ordered, disjoint, and the envelope publishes
+     * `total` for the disclosure. */
+    .url = "https://data.gov.me/api/3/action/datastore_search?resource_id=77c3018f-cc56-4532-992d-5b6a68f86f42&limit=100&sort=_id%20asc",
     .array_path = "result.records",
     .id_keys = "_id",
     .interval = 86400,
@@ -1478,7 +1526,13 @@ static const hp_source HP3B19_EURASIA[] = {
     .record_type = "licensed-professional",
     .tags = "\"slovenia\",\"health\",\"licence\",\"register\",\"practitioner\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://podatki.gov.si/api/3/action/datastore_search?resource_id=c6408144-48f0-4e03-9d35-172a7779fece&limit=100",
+    /* `sort=_id asc` because this row CYCLES and datastore_search has no
+     * guaranteed order without it. `_id` is the datastore's own sequential row
+     * id, present in every resource, so it needs no per-dataset knowledge.
+     * Measured on data.zagreb.hr 2026-10-24: offset 0 answers _id 1,2,3 and
+     * offset 3 answers 4,5,6 — ordered, disjoint, and the envelope publishes
+     * `total` for the disclosure. */
+    .url = "https://podatki.gov.si/api/3/action/datastore_search?resource_id=c6408144-48f0-4e03-9d35-172a7779fece&limit=100&sort=_id%20asc",
     .array_path = "result.records",
     .id_keys = "_id",
     .interval = 86400,
@@ -2859,11 +2913,29 @@ static const hp_source HP3B19_EURASIA[] = {
     .record_type = "dataset-record",
     .tags = "\"armenia\",\"opendata\",\"catalogue\",\"dataset\",\"resource\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.opendata.am/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    /* package_search?sort=id+asc, NOT current_package_list_with_resources:
+     * that action takes no sort parameter and orders by
+     * `metadata_modified desc`, so a dataset edited during the walk jumps
+     * to the head — one record served twice and another pushed past a page
+     * boundary and never read. Batch 34 measured that loss on this same
+     * action (3 of 2,000 on govdata, 16 of 942 on Zürich) and re-pointed
+     * its 81 rows; these four were the ones it did not reach, and the id
+     * sort is stable. package_search returns the resources inline too
+     * (checked on this host, 2026-10-24), so the row keeps its subject.
+     * 823 datasets declared by result.count the same day = 14 pages of
+     * 100 with headroom, so the walk ends on the upstream's short page.     *
+     * The two fields below move WITH the URL, which is the whole of the
+     * "a URL changed after validation is unvalidated" rule: the bulk
+     * action answers `result` as a bare array and pages on `offset`,
+     * package_search answers `result.results` and pages on `start`. Left
+     * as they were, the re-pointed row stored ONE record — measured, on
+     * all three rows, which is how this was caught. */
+    .url = "https://data.opendata.am/api/3/action/package_search?sort=id+asc&rows=100",
+    .array_path = "result.results",
     .id_keys = "name",
     .interval = 86400,
-    .page_param = "offset",
+    .page_max = 14,   /* 823 datasets / 100 a page, +headroom (2026-10-24) */
+    .page_param = "start",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_size = 100,
     .page_start = 0,

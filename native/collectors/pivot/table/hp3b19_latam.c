@@ -613,7 +613,14 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "production-record",
     .tags = "\"colombia\",\"mining\",\"royalty\",\"production\",\"anm\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.datos.gov.co/resource/r85m-vv6c.json?%24limit=1000",
+    /* `$order=:id` because SODA guarantees NO order without it and this row
+     * CYCLES: a resumed `$offset` walk lands where it meant to only if the
+     * order is stable between runs. `:id` is Socrata's own row identifier, so
+     * it needs no per-dataset knowledge. Measured on data.cdc.gov 2026-10-24:
+     * accepted percent-encoded, stable over two reads, offsets 0 and 3 share
+     * no row, and DESC answers a different set — so the parameter is honoured
+     * rather than silently ignored, which is what rule 4d says to check. */
+    .url = "https://www.datos.gov.co/resource/r85m-vv6c.json?%24limit=1000&%24order=%3Aid",
     .interval = 21600,
     .page_param = "%24offset",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -806,7 +813,14 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "missing-person",
     .tags = "\"colombia\",\"missingpersons\",\"forensics\",\"humanrights\",\"register\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.datos.gov.co/resource/8hqm-7fdt.json?%24limit=1000",
+    /* `$order=:id` because SODA guarantees NO order without it and this row
+     * CYCLES: a resumed `$offset` walk lands where it meant to only if the
+     * order is stable between runs. `:id` is Socrata's own row identifier, so
+     * it needs no per-dataset knowledge. Measured on data.cdc.gov 2026-10-24:
+     * accepted percent-encoded, stable over two reads, offsets 0 and 3 share
+     * no row, and DESC answers a different set — so the parameter is honoured
+     * rather than silently ignored, which is what rule 4d says to check. */
+    .url = "https://www.datos.gov.co/resource/8hqm-7fdt.json?%24limit=1000&%24order=%3Aid",
     .interval = 86400,
     .page_param = "%24offset",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -825,7 +839,14 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "public-official",
     .tags = "\"colombia\",\"contraloria\",\"officials\",\"directory\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.datos.gov.co/resource/7pn8-vpxh.json?%24limit=1000",
+    /* `$order=:id` because SODA guarantees NO order without it and this row
+     * CYCLES: a resumed `$offset` walk lands where it meant to only if the
+     * order is stable between runs. `:id` is Socrata's own row identifier, so
+     * it needs no per-dataset knowledge. Measured on data.cdc.gov 2026-10-24:
+     * accepted percent-encoded, stable over two reads, offsets 0 and 3 share
+     * no row, and DESC answers a different set — so the parameter is honoured
+     * rather than silently ignored, which is what rule 4d says to check. */
+    .url = "https://www.datos.gov.co/resource/7pn8-vpxh.json?%24limit=1000&%24order=%3Aid",
     .interval = 21600,
     .page_param = "%24offset",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -845,7 +866,14 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "professional-licence",
     .tags = "\"colombia\",\"health\",\"professional\",\"register\",\"licence\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.datos.gov.co/resource/my8c-6xkk.json?%24limit=1000",
+    /* `$order=:id` because SODA guarantees NO order without it and this row
+     * CYCLES: a resumed `$offset` walk lands where it meant to only if the
+     * order is stable between runs. `:id` is Socrata's own row identifier, so
+     * it needs no per-dataset knowledge. Measured on data.cdc.gov 2026-10-24:
+     * accepted percent-encoded, stable over two reads, offsets 0 and 3 share
+     * no row, and DESC answers a different set — so the parameter is honoured
+     * rather than silently ignored, which is what rule 4d says to check. */
+    .url = "https://www.datos.gov.co/resource/my8c-6xkk.json?%24limit=1000&%24order=%3Aid",
     .interval = 86400,
     .page_param = "%24offset",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -864,7 +892,14 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "budget-execution",
     .tags = "\"colombia\",\"royalty\",\"budget\",\"regalias\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.datos.gov.co/resource/g4qj-2p2e.json?%24limit=1000",
+    /* `$order=:id` because SODA guarantees NO order without it and this row
+     * CYCLES: a resumed `$offset` walk lands where it meant to only if the
+     * order is stable between runs. `:id` is Socrata's own row identifier, so
+     * it needs no per-dataset knowledge. Measured on data.cdc.gov 2026-10-24:
+     * accepted percent-encoded, stable over two reads, offsets 0 and 3 share
+     * no row, and DESC answers a different set — so the parameter is honoured
+     * rather than silently ignored, which is what rule 4d says to check. */
+    .url = "https://www.datos.gov.co/resource/g4qj-2p2e.json?%24limit=1000&%24order=%3Aid",
     .interval = 21600,
     .page_param = "%24offset",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */

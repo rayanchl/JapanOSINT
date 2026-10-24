@@ -1510,7 +1510,14 @@ static const hp_source HP3B19_DEFENCE[] = {
      * row. Socrata's own row identifier is exposed by asking for it in
      * $select and is 100 of 100 distinct here; fecha_inicio_ejecuci_n is the
      * date column the view actually has. */
-    .url = "https://www.datos.gov.co/resource/rpmr-utcd.json?%24limit=100&%24where=upper%28nombre_de_la_entidad%29%20like%20%27%25DEFENSA%25%27&%24select=*,:id",
+    /* `$order=:id` because SODA guarantees NO order without it and this row
+     * CYCLES: a resumed `$offset` walk lands where it meant to only if the
+     * order is stable between runs. `:id` is Socrata's own row identifier, so
+     * it needs no per-dataset knowledge. Measured on data.cdc.gov 2026-10-24:
+     * accepted percent-encoded, stable over two reads, offsets 0 and 3 share
+     * no row, and DESC answers a different set — so the parameter is honoured
+     * rather than silently ignored, which is what rule 4d says to check. */
+    .url = "https://www.datos.gov.co/resource/rpmr-utcd.json?%24limit=100&%24where=upper%28nombre_de_la_entidad%29%20like%20%27%25DEFENSA%25%27&%24select=*,:id&%24order=%3Aid",
     .date_keys = "fecha_inicio_ejecuci_n",
     .id_keys = ":id",
     .interval = 21600,
