@@ -47,15 +47,25 @@ Two things the re-points taught, both caught only because the rows were run:
 | ArcGIS, unverified | 3 | CH_BAKOM ×2 answer no features at offset 1; CR_HEREDIA_PATENTES answers this container nothing |
 | CKAN bulk, unverified | 1 | `data.ibb.gov.tr` (Istanbul) does not answer at all today, so a re-point has nothing to verify against |
 
+## Four more families probed the same day — all four refuse a stable order
+
+| family | rows | reading |
+| --- | --- | --- |
+| `api.uktradeinfo.com` (OData v4) | 4 | **`$orderby` is refused with HTTP 403**: "use only the allowed operations as described in the API documentation". The plain row URL answers 200. So an OData service does not necessarily allow OData's own sort |
+| `repository.overheid.nl` (SRU 2.0) | 4 | **`sortKeys` is silently ignored.** `sortKeys=identifier,,1` and `,,0` (ascending and descending) answer the SAME two records, and a bogus sort key — `zzznotafield` — draws no SRU diagnostic at all. Rule 4d's shape, in a sort parameter |
+| `environment.data.gov.uk` flood-monitoring | 8 | **`_sort` is accepted and ignored**: `_sort=notation` and `_sort=-notation` answer the same records. The records stay whole (unlike Parliament's), so this is a dead parameter rather than a harmful one. The `asset-management` endpoint among these rows is the Parliament-style Linked Data API and has NOT been checked for the record-degradation hazard — do that before sorting it |
+| `www.thegazette.co.uk` | 5 | `sort=publication-date` is ignored — and `sort-by=id` **changed the result set**, from 9,321,677 notices to 4,882,776 with zero entries returned. An unrecognised parameter on this API filters rather than erroring |
+
+**That last one is the generalisable warning: an unrecognised parameter is not
+always ignored.** On most of the APIs here a bad sort key is dropped; on The
+Gazette it silently narrowed the corpus by 4.4 million notices. So when a sort
+is added to a row, compare the upstream's own total before and after — if the
+total moves, the parameter was not read as a sort.
+
 ## Still unexamined
 
-The remaining rows of the HIGH class are the long tail with no shared family —
-`environment.data.gov.uk` (8, a Linked Data API like Parliament's and so likely
-to carry the same record-degradation hazard: **check what it stores before
-sorting it**), `www.thegazette.co.uk` (5), `repository.overheid.nl` (4),
-`api.uktradeinfo.com` (4), and ~60 single-host rows. They are listed with their
-host and URL in `docs/measured-seam-risk-2026-10-22.tsv`; nothing about them is
-claimed here.
+~60 single-host rows, listed with their host and URL in
+`docs/measured-seam-risk-2026-10-22.tsv`. Nothing about them is claimed here.
 
 The 166 `OK_NODIR` rows — an order parameter with no direction — are a separate
 and smaller question: most APIs default such a sort to ascending, but "most"

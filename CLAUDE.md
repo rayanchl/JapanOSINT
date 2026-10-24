@@ -1992,8 +1992,21 @@ Engine subtleties worth knowing before writing a row:
   host stopped answering before HONOURED could be established — one undecided
   reading is not grounds to change seven rows. Hungary's INSPIRE WFS accepts
   `sortBy=name` and that name has TIES, so it is not a total order.
-  `environment.data.gov.uk` (8 rows) is the same Linked Data API as
-  Parliament's: **read what it stores before sorting it.**
+  `environment.data.gov.uk`'s flood-monitoring `_sort` is accepted and
+  IGNORED (`notation` and `-notation` answer the same records), and the
+  `asset-management` row among those 8 is the same Linked Data API as
+  Parliament's: **read what it stores before sorting it.** `api.uktradeinfo.com`
+  REFUSES OData's own `$orderby` with HTTP 403 ("use only the allowed
+  operations"), and `repository.overheid.nl`'s SRU ignores `sortKeys` in both
+  directions while drawing no diagnostic for a bogus key at all.
+
+  **And an unrecognised parameter is not always ignored — on some APIs it
+  FILTERS.** The Gazette dropped `sort=publication-date` silently, but
+  `sort-by=id` took its own declared total from **9,321,677 notices to
+  4,882,776** and returned nothing: the parameter was read as a search term,
+  not a sort. So when a sort goes onto a row, compare the upstream's own total
+  before and after — a total that moves means the parameter was not read as a
+  sort, and the row is now about a different collection.
 
   **And the 44 unresolved verdicts of the first sweep were re-run**
   (`docs/measured-cycle-retry-2026-10-22.tsv`), because "re-run each
