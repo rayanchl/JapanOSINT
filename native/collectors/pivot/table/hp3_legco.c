@@ -15,8 +15,12 @@
  *   - bills: 100 rows ~20 s a page ($top=1000 did not finish in 180 s), so
  *     offset pages of 100 in key order, the whole feed (69 pages) every day;
  *   - votes: keyset on `id` is flat (38 s and 47 s for consecutive pages of
- *     5,000), so `id gt cursor`, 40 pages a run, page_resume=1 keeps the
- *     cursor across runs: ~3 six-hourly runs a cycle;
+ *     5,000), so `id gt cursor` with page_resume=1 keeping the cursor across
+ *     runs. But the server's throughput swings: the same 7.5 MB 5,000-row page
+ *     took 27 s, 172 s and then stalled at 416 KB after 300 s within an hour,
+ *     and the engine's 180 s timeout failed it twice. So pages of 1,000
+ *     (1.5 MB, 18 s when measured), 60 a run, a 300 s timeout: ~9 six-hourly
+ *     runs a cycle;
  *   - speeches: a keyset filter is unusable (`RundownID gt …` took 1,818 s
  *     for ONE page), but offset paging in the server's natural order is
  *     stable (the same 100 rows in the same order on a repeat at $skip
@@ -59,7 +63,7 @@ static const hp_source HP3_LEGCO[] = {
     .id_keys = "RundownID",
     .title_keys = "SpeakerName+SectionName,SectionName",
     .date_keys = "MeetingDate",
-    .timeout_ms = 180000,
+    .timeout_ms = 300000,
     .interval = 21600,
     .description = "Speech-level Hansard of Hong Kong Legislative Council sittings "
       "(551,619 speeches): meeting date, Hansard language, section, "
@@ -72,20 +76,20 @@ static const hp_source HP3_LEGCO[] = {
     .record_type = "legislative-vote",
     .tags = "\"hkg\",\"legislature\",\"voting\",\"politics\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "http://app.legco.gov.hk/vrdb/odata/vVotingResult?$format=json&$orderby=id&$top=5000", /* exhaustive-ok: keyset-paged by next_path and resumed across runs (page_resume=1) */
+    .url = "http://app.legco.gov.hk/vrdb/odata/vVotingResult?$format=json&$orderby=id&$top=1000", /* exhaustive-ok: keyset-paged by next_path and resumed across runs (page_resume=1) */
     .array_path = "value",
     .next_path = "value.$last.id",
-    .next_tmpl = "http://app.legco.gov.hk/vrdb/odata/vVotingResult?$format=json&$orderby=id&$top=5000&$filter=id%20gt%20{v}",
-    .page_max = 40, .page_resume = 1,
+    .next_tmpl = "http://app.legco.gov.hk/vrdb/odata/vVotingResult?$format=json&$orderby=id&$top=1000&$filter=id%20gt%20{v}",
+    .page_max = 60, .page_resume = 1,
     .id_keys = "id",
     .title_keys = "motion_en,motion_ch",
     .date_keys = "vote_date",
-    .timeout_ms = 180000,
+    .timeout_ms = 300000,
     .interval = 21600,
     .description = "Every recorded division of the Hong Kong Legislative Council "
       "(542,997 member votes): committee or council, term, vote number, "
       "date and time, the motion in English and Chinese, mover, the "
       "separate-mechanism flag and the per-constituency and overall "
-      "counts and results. Read whole across runs, 200,000 votes a run." },
+      "counts and results. Read whole across runs, 60,000 votes a run." },
 };
 HP_REGISTER_TABLE(HP3_LEGCO)
