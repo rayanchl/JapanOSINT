@@ -9,11 +9,36 @@
 #include <math.h>
 #include <limits.h>
 
-/* collectorMirror.NATIVE_ID_KEYS, exact order. */
+/* collectorMirror.NATIVE_ID_KEYS, minus `stop_id`, which is now checked only
+ * AFTER the Feature's own `id` (NATIVE_ID_GROUP_KEYS below).
+ *
+ * A GTFS stop id is unique per AGENCY, not globally, so it identifies a GROUP
+ * and must not outrank the record identity -- which under RFC 7946 3.2 is the
+ * Feature's own `id`. The collision-guard comment further down already says
+ * this class of name "is routinely a DIMENSION rather than a record identity".
+ *
+ * Measured 2026-09-08 on nam-ags-california-transit-stops (88,247 features;
+ * the full reading is in that row's header in
+ * collectors/feed/generated/vsrc13_us_state_1.c): 10,000 features carried only
+ * 9,084 distinct stop_ids ("105" appeared 8 times) while the layer's own `id`
+ * -- ArcGIS OBJECTID under f=geojson -- was unique for all 10,000. 916
+ * collided, 111 were rescued by the in-page guard and 805 were LOST per pass,
+ * since colliding agencies land in different 500-feature pages and
+ * gj_collision_map() only ever sees one. That header prescribed this repair.
+ *
+ * Only stop_id moves. station_id, buoy_id and spring_id stay ahead of the
+ * feature id because collectors synthesize STABLE ids into them on purpose --
+ * k_net.c and national_parks.c both carry an AUDIT NOTE about replacing a
+ * positional id with an OSM id in exactly that field -- so demoting them would
+ * override a deliberate decision. They want measuring one source at a time. */
 static const char *NATIVE_ID_KEYS[] = {
   "camera_uid","station_uid","line_uid","cluster_uid","footprint_id",
   "post_uid","event_id","earthquake_id","buoy_id","station_id",
-  "spring_id","stop_id","uid","id","uuid", NULL };
+  "spring_id","uid","id","uuid", NULL };
+
+/* Unique only within an agency: checked after the Feature's own `id`. Our own
+ * five stop_id collectors set no top-level id, so for them nothing changes. */
+static const char *NATIVE_ID_GROUP_KEYS[] = { "stop_id", NULL };
 
 static const char *prop_str(cJSON *props, const char *k) {
   cJSON *v = cJSON_GetObjectItem(props, k);
@@ -58,7 +83,8 @@ static void sha1_hex16(const char *s, char *out17) {
   out17[16] = 0;
 }
 
-/* featureUid: NATIVE_ID_KEYS → feature.id → sourceId|h:sha1(JSON.stringify
+/* featureUid: NATIVE_ID_KEYS → feature.id → NATIVE_ID_GROUP_KEYS →
+ * sourceId|h:sha1(JSON.stringify
  * {g:geometry,p:props})[:16]. cJSON_PrintUnformatted preserves source key
  * order (like JS), so the fingerprint matches for the hash-fallback minority
  * (most features carry a natural id; per-source parity tests flag any drift).
@@ -83,22 +109,30 @@ static void sha1_hex16(const char *s, char *out17) {
  * below can ask "does this feature carry an id of its own?" without paying for
  * the content hash of every feature that does not. Returns 1 and fills `out`
  * with the bare id; 0 when the feature has none. */
-static int feature_native_id(cJSON *feat, char *out, size_t n) {
-  cJSON *props = cJSON_GetObjectItem(feat, "properties");
-  if (props) {
-    for (int i = 0; NATIVE_ID_KEYS[i]; i++) {
-      cJSON *v = cJSON_GetObjectItem(props, NATIVE_ID_KEYS[i]);
-      if (v && !cJSON_IsNull(v)) {
-        char idv[256]; id_to_str(v, idv, sizeof idv);
-        if (idv[0]) { snprintf(out, n, "%s", idv); return 1; }
-      }
+/* First non-null, non-empty value among `keys` in `props`. */
+static int props_pick_id(cJSON *props, const char *const *keys,
+                         char *out, size_t n) {
+  if (!props) return 0;
+  for (int i = 0; keys[i]; i++) {
+    cJSON *v = cJSON_GetObjectItem(props, keys[i]);
+    if (v && !cJSON_IsNull(v)) {
+      char idv[256]; id_to_str(v, idv, sizeof idv);
+      if (idv[0]) { snprintf(out, n, "%s", idv); return 1; }
     }
   }
+  return 0;
+}
+
+static int feature_native_id(cJSON *feat, char *out, size_t n) {
+  cJSON *props = cJSON_GetObjectItem(feat, "properties");
+  if (props_pick_id(props, NATIVE_ID_KEYS, out, n)) return 1;
   cJSON *fid = cJSON_GetObjectItem(feat, "id");
   if (fid && !cJSON_IsNull(fid)) {
     char idv[256]; id_to_str(fid, idv, sizeof idv);
     if (idv[0]) { snprintf(out, n, "%s", idv); return 1; }
   }
+  /* Group-unique names, only once the feature offered no id of its own. */
+  if (props_pick_id(props, NATIVE_ID_GROUP_KEYS, out, n)) return 1;
   return 0;
 }
 
