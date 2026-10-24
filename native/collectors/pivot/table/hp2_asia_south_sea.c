@@ -50,17 +50,6 @@ static const hp_source HP2_ASIA_SS[] = {
       "across Indian states — the litigation layer beneath the High Court "
       "judgments that Indian Kanoon indexes" },
 
-  { .id = "IN_SEBI_INTERMEDIARIES", .name = "India SEBI — registered intermediaries & orders",
-    .name_ja = "インド SEBI 登録業者/命令", .category = "economy",
-    .portal = "https://www.sebi.gov.in", .record_type = "in-sebi-record",
-    .tags = "\"in\",\"finance\",\"enforcement\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.sebi.gov.in/sebiweb/home/search.jsp?searchText={q}",
-    .base = "https://www.sebi.gov.in", .filter_query = 1,
-    .description = "SEBI registered intermediaries plus its enforcement orders, "
-      "debarments and settlement records — whether an Indian market participant "
-      "is licensed, and whether it has been barred" },
-
   { .id = "IN_IP_INDIA_PATENTS", .name = "India IP — patent & trademark applications",
     .name_ja = "インド 特許/商標出願", .category = "research",
     .portal = "https://ipindiaservices.gov.in", .record_type = "in-patent",
@@ -163,17 +152,6 @@ static const hp_source HP2_ASIA_SS[] = {
     .description = "Indonesian public procurement notices and winners across the "
       "LPSE network, plus LKPP's blacklist of barred providers — the sanction "
       "that matters most to an Indonesian contractor" },
-
-  { .id = "ID_OJK_LICENSEES", .name = "Indonesia OJK — licensed financial institutions",
-    .name_ja = "インドネシア OJK 免許金融機関", .category = "economy",
-    .portal = "https://www.ojk.go.id", .record_type = "id-licensee",
-    .tags = "\"id\",\"finance\",\"licences\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.ojk.go.id/id/Search.aspx?k={q}",
-    .base = "https://www.ojk.go.id", .filter_query = 1,
-    .description = "Indonesian financial-services authority registers and its "
-      "illegal-investment alert list — the difference between a licensed "
-      "multifinance company and a scheme operating without one" },
 
   { .id = "TH_SEC_LICENSEES", .name = "Thailand SEC — licensed intermediaries & enforcement",
     .name_ja = "タイ SEC 免許業者/処分", .category = "economy",

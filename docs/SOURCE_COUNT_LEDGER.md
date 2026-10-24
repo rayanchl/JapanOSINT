@@ -5,7 +5,17 @@ was seeded from, what it measured and what it taught. Moved out of `CLAUDE.md`
 on 2026-10-19 so that file keeps the rules and the current number; the lessons
 that a new batch must not relearn are summarised there. Newest first.
 
-**The registered count is 57,529** (2026-10-22, merged): main's 57,527 (its
+**The registered count is 57,399** (2026-10-25, branch `fix6/htmlsweep`): 57,529 less 130 HTML-mode rows measured DEAD by the reachability sweep of every
+HP_HTML row (`docs/html-reachability-2026-10.md`): two engine passes each, then
+DNS, TCP and the page's bare path checked by hand. 103 answered 404/410 with the
+bare path 404 and the root alive, 6 more did once an honest agent got past a
+403, 4 are 200 pages titled "404"/"not found", 14 hosts no longer resolve, 2
+redirect to a 404 page and 1 to a bare IP that refuses :443. 51 come from the
+unprobed `hp2_*` tables, 14 from `hp_*`, 64 from batch 31 (registered, not
+proven) and 1 from batch 28. Ledger: `docs/removed-sources-2026-10-25-html-dead.tsv`.
+Both floors re-recorded.
+
+**The count was 57,529** (2026-10-22, merged): main's 57,527 (its
 `&amp;` pass, below) plus this branch's +2 on the shared 57,536 base: +4
 tuberculosis windows, +1 Elia imbalance-price row, −3 ODS rows whose datasets
 no longer exist. No id is in both sides' changes; both floors re-recorded.

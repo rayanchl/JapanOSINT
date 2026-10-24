@@ -23,17 +23,6 @@ static const hp_source HP_MENA_AF_CIS[] = {
       "number, legal form and status for a business name. Dubai licences name the "
       "local partner/sponsor, which is the point of the lookup" },
 
-  { .id = "AE_ADGM_REGISTER", .name = "ADGM — Abu Dhabi Global Market register",
-    .name_ja = "アブダビ国際市場 登記", .category = "government",
-    .type = "scraped", .mode = HP_HTML,
-    .portal = "https://www.adgm.com", .record_type = "ae-company",
-    .tags = "\"ae\",\"free-zone\",\"registry\"", .free_tier = 1,
-    .url = "https://www.adgm.com/public-registers/registration-authority?search={q}",
-    .base = "https://www.adgm.com", .filter_query = 1,
-    .description = "ADGM public register hits — free-zone entities, their licence "
-      "categories and status. Gulf free zones are the standard vehicle for regional "
-      "holding structures, and their registers are the only public view of them" },
-
   { .id = "SA_MC_COMMERCIAL", .name = "Saudi Ministry of Commerce — CR lookup",
     .name_ja = "サウジ 商業登記照会", .category = "government",
     .type = "scraped", .mode = HP_HTML,
@@ -124,17 +113,6 @@ static const hp_source HP_MENA_AF_CIS[] = {
       "sector — company registers, procurement awards and licence lists published "
       "through the Africa Open Data CKAN network" },
 
-  { .id = "RW_DOMESTIC_REGISTRY", .name = "Rwanda RDB — business register",
-    .name_ja = "ルワンダ 企業登記(RDB)", .category = "government",
-    .type = "scraped", .mode = HP_HTML,
-    .portal = "https://org.rdb.rw", .record_type = "rw-company",
-    .tags = "\"rw\",\"registry\"", .free_tier = 1,
-    .url = "https://org.rdb.rw/busregonline/Home/SearchCompany?companyName={q}",
-    .base = "https://org.rdb.rw", .filter_query = 1,
-    .description = "Rwanda Development Board business register — one of the few "
-      "African registries that publishes company code, status, shareholders and "
-      "directors without payment" },
-
   { .id = "GH_RGD_SEARCH", .name = "Ghana Registrar-General — entity search",
     .name_ja = "ガーナ 企業登記", .category = "government",
     .type = "scraped", .mode = HP_HTML,
@@ -157,16 +135,6 @@ static const hp_source HP_MENA_AF_CIS[] = {
       "Armenia and others, entity by entity" },
 
   /* ── Russia / CIS ──────────────────────────────────────────────────────── */
-  { .id = "RU_RUSPROFILE_SEARCH", .name = "Rusprofile — Russian company mirror",
-    .name_ja = "ロシア 企業情報(Rusprofile)", .category = "government",
-    .type = "scraped", .mode = HP_HTML,
-    .portal = "https://www.rusprofile.ru", .record_type = "ru-company",
-    .tags = "\"ru\",\"registry\",\"ownership\"", .free_tier = 1,
-    .url = "https://www.rusprofile.ru/search?query={q}",
-    .href_must = "/id/", .base = "https://www.rusprofile.ru",
-    .description = "Russian legal entities and sole traders matching a name, INN or "
-      "OGRN on the EGRUL mirror — each hit leads to founders, director history, "
-      "capital, affiliations and arbitration cases" },
 
   { .id = "RU_LIST_ORG", .name = "List-Org — Russian entity directory",
     .name_ja = "ロシア 企業ディレクトリ(List-Org)", .category = "government",
@@ -200,17 +168,6 @@ static const hp_source HP_MENA_AF_CIS[] = {
     .description = "Ukrainian companies, beneficial owners, tenders and court cases "
       "linked in one graph — the analyst-facing mirror of EDR, Prozorro and the "
       "court registry" },
-
-  { .id = "KZ_ADATA_SEARCH", .name = "adata.kz — Kazakh company data",
-    .name_ja = "カザフスタン 企業情報", .category = "government",
-    .type = "scraped", .mode = HP_HTML,
-    .portal = "https://adata.kz", .record_type = "kz-company",
-    .tags = "\"kz\",\"registry\"", .free_tier = 1,
-    .url = "https://adata.kz/search?query={q}",
-    .base = "https://adata.kz", .filter_query = 1,
-    .description = "Kazakh legal entities by name or BIN — registration data, "
-      "director, activity, tax and state-procurement participation as republished "
-      "from official sources" },
 
   { .id = "GE_OPENDATA_COMPANY", .name = "Georgia — public registry data search",
     .name_ja = "ジョージア 企業登記データ", .category = "government",

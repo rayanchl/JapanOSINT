@@ -144,17 +144,6 @@ static const hp_source HP2_EU_CENTRAL[] = {
       "and the winning price. The concentration pattern in these awards is the "
       "documented basis of the EU's conditionality proceedings" },
 
-  { .id = "SI_AJPES_REGISTRY", .name = "Slovenia AJPES — business register",
-    .name_ja = "スロベニア 企業登録", .category = "government",
-    .portal = "https://www.ajpes.si", .record_type = "si-entity",
-    .tags = "\"si\",\"registry\",\"accounts\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.ajpes.si/prs/PrsSearch.aspx?q={q}",
-    .base = "https://www.ajpes.si", .filter_query = 1,
-    .description = "Slovenian business register — registration number, tax "
-      "number, founders and their holdings, representatives, and the annual "
-      "reports AJPES publishes for every registered entity" },
-
   { .id = "SI_ERAR_PAYMENTS", .name = "Slovenia Erar — public sector payments",
     .name_ja = "スロベニア 公的支出データベース", .category = "government",
     .portal = "https://erar.si", .record_type = "si-public-payment",
@@ -178,29 +167,6 @@ static const hp_source HP2_EU_CENTRAL[] = {
     .description = "Croatian tender notices and award decisions with the "
       "contracting authority, the bidders and the awarded value, plus the "
       "register of economic operators excluded from procurement" },
-
-  { .id = "RO_ONRC_RECOM", .name = "Romania ONRC — trade register",
-    .name_ja = "ルーマニア 商業登記", .category = "government",
-    .portal = "https://portal.onrc.ro", .record_type = "ro-entity",
-    .tags = "\"ro\",\"registry\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://portal.onrc.ro/ONRCPortalWeb/ONRCPortal.portal?q={q}",
-    .base = "https://portal.onrc.ro", .filter_query = 1,
-    .description = "Romanian trade register — CUI, registration number, seat, "
-      "administrators, associates and share capital, plus the insolvency and "
-      "dissolution flags recorded against the entity" },
-
-  { .id = "RO_ANAF_TAXPAYERS", .name = "Romania ANAF — taxpayer & VAT status",
-    .name_ja = "ルーマニア 納税者/VAT状況", .category = "government",
-    .portal = "https://mfinante.gov.ro", .record_type = "ro-tax-status",
-    .tags = "\"ro\",\"tax\",\"registry\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://mfinante.gov.ro/ro/web/site/info-contribuabili?cod={q}",
-    .base = "https://mfinante.gov.ro", .filter_query = 1,
-    .description = "Romanian taxpayer records — VAT registration and any "
-      "cancellation, inactive-taxpayer status, split-VAT enrolment and the "
-      "published balance-sheet indicators. Inactive status invalidates a "
-      "counterparty's invoices under Romanian law" },
 
   { .id = "RO_SICAP_TENDERS", .name = "Romania SEAP/SICAP — electronic procurement",
     .name_ja = "ルーマニア 電子調達", .category = "government",

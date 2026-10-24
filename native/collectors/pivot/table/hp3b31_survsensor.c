@@ -111,17 +111,6 @@ static const hp_source HP3B31_SURVSENSOR[] = {
       "Over a hundred million points, densest in Japan, and the only "
       "independent check on official dose-rate reporting" },
 
-  { .id = "JP_NRA_RADIATION_MONITORING", .name = "Japan NRA — environmental radiation monitoring",
-    .name_ja = "原子力規制委員会 放射線モニタリング", .category = "surveillance",
-    .portal = "https://radioactivity.nra.go.jp", .record_type = "radiation-station",
-    .tags = "\"jp\",\"radiation\",\"sensor\",\"nuclear\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://radioactivity.nra.go.jp/map/?q={q}",
-    .base = "https://radioactivity.nra.go.jp", .filter_query = 1,
-    .description = "Japan's Nuclear Regulation Authority monitoring post "
-      "network — every prefectural and site-boundary dose-rate post around the "
-      "nuclear plants, with location, operator and the published readings" },
-
   /* ── Seismic, volcanic and geophysical ────────────────────────────────── */
   { .id = "FDSN_STATION_INVENTORY", .name = "FDSN — global seismic station inventory",
     .name_ja = "世界地震観測局 一覧", .category = "surveillance",
@@ -207,18 +196,6 @@ static const hp_source HP3B31_SURVSENSOR[] = {
       "coordinates, brightness temperature, fire radiative power and "
       "confidence. Used far beyond wildfire: gas flaring, industrial thermal "
       "signatures and the destruction of structures all appear here" },
-
-  { .id = "COPERNICUS_EMS_ACTIVATIONS", .name = "Copernicus EMS — emergency mapping activations",
-    .name_ja = "コペルニクス 緊急マッピング", .category = "surveillance",
-    .portal = "https://emergency.copernicus.eu", .record_type = "ems-activation",
-    .tags = "\"eu\",\"satellite\",\"disaster\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://emergency.copernicus.eu/mapping/list-of-components/EMSR?q={q}",
-    .base = "https://emergency.copernicus.eu", .filter_query = 1,
-    .description = "Every activation of the EU's rapid satellite mapping "
-      "service — the requesting authority, the event, the area of interest and "
-      "the delivered damage-assessment and reference maps, released openly "
-      "including for conflict-related activations" },
 
   { .id = "GDACS_DISASTER_ALERTS", .name = "GDACS — global disaster alert & coordination",
     .name_ja = "GDACS 災害警報", .category = "surveillance",

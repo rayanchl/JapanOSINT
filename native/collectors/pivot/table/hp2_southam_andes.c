@@ -108,17 +108,6 @@ static const hp_source HP2_ANDES[] = {
       "disciplinary-sanction and fiscal-liability registers — the datasets that "
       "say whether a person may hold public contracts at all" },
 
-  { .id = "CO_PROCURADURIA_ANTECEDENTES", .name = "Colombia — disciplinary record certificate",
-    .name_ja = "コロンビア 懲戒記録証明", .category = "government",
-    .portal = "https://www.procuraduria.gov.co", .record_type = "co-disciplinary",
-    .tags = "\"co\",\"enforcement\",\"pep\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.procuraduria.gov.co/portal/index.jsp?buscar={q}",
-    .base = "https://www.procuraduria.gov.co", .filter_query = 1,
-    .description = "Colombian Procuraduría disciplinary antecedents — whether a "
-      "person is barred from public office or contracting. Required for public "
-      "employment, and therefore a hard, checkable status" },
-
   /* ── Peru ──────────────────────────────────────────────────────────────── */
   { .id = "PE_SUNAT_RUC", .name = "Peru SUNAT — RUC taxpayer record",
     .name_ja = "ペルー 納税者登録(RUC)", .category = "economy",
@@ -180,17 +169,6 @@ static const hp_source HP2_ANDES[] = {
       "class, activity start/cessation dates and current status, straight from "
       "the SRI service with no key" },
 
-  { .id = "EC_SUPERCIAS_COMPANY", .name = "Ecuador Supercias — company & shareholder data",
-    .name_ja = "エクアドル 会社監督庁", .category = "government",
-    .portal = "https://appscvsmovil.supercias.gob.ec", .record_type = "ec-company",
-    .tags = "\"ec\",\"registry\",\"ownership\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://appscvsmovil.supercias.gob.ec/portalInformacion/consulta_cia_menu.zul?nombre={q}",
-    .base = "https://appscvsmovil.supercias.gob.ec", .filter_query = 1,
-    .description = "Ecuador's companies supervisor — legal representatives, "
-      "shareholders and financial statements. Ecuador publishes shareholder "
-      "lists, which most of the region does not" },
-
   { .id = "BO_SICOES_TENDERS", .name = "Bolivia SICOES — public procurement",
     .name_ja = "ボリビア 公共調達(SICOES)", .category = "government",
     .portal = "https://www.sicoes.gob.bo", .record_type = "bo-tender",
@@ -234,17 +212,6 @@ static const hp_source HP2_ANDES[] = {
     .description = "Uruguayan state purchase calls and awards — the buying "
       "agency, the item, the award and the supplier RUT; Uruguay also publishes "
       "its supplier register through the same portal" },
-
-  { .id = "UY_DGI_RUT", .name = "Uruguay DGI — taxpayer (RUT) status",
-    .name_ja = "ウルグアイ 納税者登録(RUT)", .category = "economy",
-    .portal = "https://www.dgi.gub.uy", .record_type = "uy-taxpayer",
-    .tags = "\"uy\",\"tax\",\"identity\"", .want = HP_NUMERIC,
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://servicios.dgi.gub.uy/serviciosenlinea/dgi--servicios-en-linea--consulta-de-certificado-unico?rut={qd}",
-    .base = "https://servicios.dgi.gub.uy", .filter_query = 0,
-    .description = "Uruguayan taxpayer certificate status behind a RUT — whether "
-      "the entity holds a valid single certificate, which it needs to contract "
-      "with the state or import" },
 
   { .id = "VE_REGISTRY_SEARCH", .name = "Venezuela — RIF & mercantile register search",
     .name_ja = "ベネズエラ 納税者/商業登記", .category = "government",

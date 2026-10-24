@@ -100,17 +100,6 @@ static const hp_source HP_APAC[] = {
       "or sector — licence lists, contractor registers and enforcement datasets, "
       "with their resource URLs for direct download" },
 
-  { .id = "CN_MIIT_ICP", .name = "China ICP filing lookup (beian)",
-    .name_ja = "中国 ICP備案照会", .category = "cyber",
-    .type = "scraped", .mode = HP_HTML,
-    .portal = "https://beian.miit.gov.cn", .record_type = "cn-icp",
-    .tags = "\"cn\",\"domains\"", .want = HP_DOMAIN, .free_tier = 1,
-    .url = "https://www.beianx.cn/search/{qh}",
-    .base = "https://www.beianx.cn", .filter_query = 0,
-    .description = "Chinese ICP filing behind a domain — the licensed operator name, "
-      "filing number and approval date. An ICP record ties a Chinese-hosted site to "
-      "a registered legal entity, which WHOIS privacy usually hides" },
-
   /* ── Singapore / Malaysia / Indonesia / Thailand / Vietnam ─────────────── */
   { .id = "SG_DATA_REGISTRY", .name = "Singapore data.gov.sg — registry datasets",
     .name_ja = "シンガポール 政府データ 検索", .category = "government",
@@ -143,17 +132,6 @@ static const hp_source HP_APAC[] = {
     .description = "Indonesian Ministry of Law legal-entity search — PT/CV names, "
       "SK decree numbers and domicile as published on the AHU profile pages" },
 
-  { .id = "TH_DBD_SEARCH", .name = "Thailand DBD — business registration search",
-    .name_ja = "タイ 企業登記(DBD)", .category = "government",
-    .type = "scraped", .mode = HP_HTML,
-    .portal = "https://datawarehouse.dbd.go.th", .record_type = "th-company",
-    .tags = "\"th\",\"registry\"", .free_tier = 1,
-    .url = "https://datawarehouse.dbd.go.th/searchJuristicInfo?jpNameTh={q}",
-    .base = "https://datawarehouse.dbd.go.th", .filter_query = 1,
-    .description = "Thai Department of Business Development registration hits — "
-      "juristic person id, name, status and registered capital where the warehouse "
-      "serves them without a session" },
-
   { .id = "VN_BUSINESS_REGISTRY", .name = "Vietnam National Business Registration search",
     .name_ja = "ベトナム 企業登記", .category = "government",
     .type = "scraped", .mode = HP_HTML,
@@ -164,16 +142,6 @@ static const hp_source HP_APAC[] = {
     .description = "Vietnamese national business-registration portal hits — company "
       "name, tax code and registered office per match, from the public information "
       "service pages" },
-
-  { .id = "PH_SEC_ICOUNT", .name = "Philippines SEC — company name verification",
-    .name_ja = "フィリピン SEC 企業名照会", .category = "government",
-    .type = "scraped", .mode = HP_HTML,
-    .portal = "https://secexpress.ph", .record_type = "ph-company",
-    .tags = "\"ph\",\"registry\"", .free_tier = 1,
-    .url = "https://secexpress.ph/search?q={q}",
-    .base = "https://secexpress.ph", .filter_query = 1,
-    .description = "Philippine SEC company-name search results — registration "
-      "number and status per matching corporation or partnership" },
 
   /* ── India ─────────────────────────────────────────────────────────────── */
   { .id = "IN_DATA_RESOURCE", .name = "data.gov.in — registry & filing datasets",

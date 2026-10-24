@@ -93,17 +93,6 @@ static const hp_source HP3B31_MENACIS[] = {
       "reference, the scope, the bond required and the award, covering the "
       "infrastructure programme that dominates Qatari state spending" },
 
-  { .id = "KW_KUWAIT_TENDERS", .name = "Kuwait CAPT — central agency for public tenders",
-    .name_ja = "クウェート 中央入札庁", .category = "government",
-    .portal = "https://www.capt.gov.kw", .record_type = "kw-tender",
-    .tags = "\"kw\",\"procurement\",\"gulf\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.capt.gov.kw/search?q={q}",
-    .base = "https://www.capt.gov.kw", .filter_query = 1,
-    .description = "Kuwait's central tendering agency — tender announcements, "
-      "the classified-supplier register and the award decisions published in "
-      "the agency's bulletin" },
-
   { .id = "OM_ISTITHMAAR_TENDERS", .name = "Oman — tender board & government procurement",
     .name_ja = "オマーン 政府調達", .category = "government",
     .portal = "https://etendering.tenderboard.gov.om", .record_type = "om-tender",
@@ -222,17 +211,6 @@ static const hp_source HP3B31_MENACIS[] = {
       "code, address, director, founders and, since the transparency reforms, "
       "the ultimate beneficial owner declared for each entity" },
 
-  { .id = "UA_OPENDATABOT_ENTITY", .name = "Ukraine Opendatabot — registry & court monitoring",
-    .name_ja = "ウクライナ 登記/裁判モニタ", .category = "government",
-    .portal = "https://opendatabot.ua", .record_type = "ua-entity",
-    .tags = "\"ua\",\"registry\",\"courts\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://opendatabot.ua/search?query={q}",
-    .base = "https://opendatabot.ua", .filter_query = 1,
-    .description = "The consolidated Ukrainian view — registry changes, court "
-      "cases, tax debts, enforcement proceedings, licence grants and property "
-      "registrations against one entity or person" },
-
   { .id = "BY_BELARUS_TENDERS", .name = "Belarus — state procurement portal",
     .name_ja = "ベラルーシ 政府調達", .category = "government",
     .portal = "https://icetrade.by", .record_type = "by-procurement",
@@ -244,17 +222,6 @@ static const hp_source HP3B31_MENACIS[] = {
       "lot value and outcome. In a jurisdiction with heavy sanctions exposure, "
       "the state contract feed is often the only current evidence a company is "
       "still operating and who it trades with" },
-
-  { .id = "AM_ARLIS_LEGAL", .name = "Armenia ARLIS — legal information system",
-    .name_ja = "アルメニア 法令情報", .category = "legal",
-    .portal = "https://www.arlis.am", .record_type = "am-legislation",
-    .tags = "\"am\",\"law\",\"caucasus\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.arlis.am/DocumentView.aspx?search={q}",
-    .base = "https://www.arlis.am", .filter_query = 1,
-    .description = "Armenia's legal database — laws, government decisions, "
-      "licence grants and the individual administrative acts naming companies "
-      "that receive concessions or exemptions" },
 
   { .id = "GE_MATSNE_GAZETTE", .name = "Georgia Matsne — legislative herald",
     .name_ja = "ジョージア 官報", .category = "government",
