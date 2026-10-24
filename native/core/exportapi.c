@@ -223,8 +223,10 @@ static const char *fmt_ctype(efmt f) {
  *
  * `enterprise` used to be -1, i.e. unlimited, which is not a cap at all: one
  * request walked the entire database into a socket, and the mongoose write
- * path buffers the whole response in c->send (see the note on export_mg_write
- * in httpd.c), so "unlimited" was also an unbounded server-side allocation.
+ * path then buffered the whole response in c->send, so "unlimited" was also an
+ * unbounded server-side allocation. (Exports now stream from a worker with
+ * socket-paced backpressure, and the inline fallback that buffered is gone —
+ * httpd.c reply_export_unstartable — but the cap still bounds the walk.)
  * A ceiling that no legitimate export reaches is still a ceiling, and it is
  * the difference between a slow export and an OOM. JO_EXPORT_MAX_ROWS raises
  * it for a deployment that genuinely needs more. */
