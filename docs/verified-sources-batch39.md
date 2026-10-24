@@ -146,11 +146,14 @@ national unit-generation system).
   distinct, in 56 s, so there is no boundary left. Re-run: 23,475 stored.
 * **CZCE**: 4 of the 27 unlabelled subtotal lines are byte-identical
   zero-activity lines; 266 of 270 is correct dedupe.
-* **Palace Museum**: the firewall answered 403 after 31 unpaced pages. The
-  walk is disclosed as cut short, and the address was still blocked over an
-  hour later. The row now pauses 3 s between pages (`page_delay_ms`): a
-  monthly walk of about 8 h. The pace that clears the firewall is **not yet
-  measured**. Re-run this row when the block has lifted.
+* **Palace Museum**: the firewall answered 403 after 31 unpaced pages, and
+  then refused every request from this address, the home page included,
+  until 2026-10-13. The row is now a resumed walk (`page_resume=1`): 300
+  pages a day, 10 s apart (under a third of the refused pace), with the
+  position kept across runs, so all 9,301 pages are read once every 31 days
+  and a refused page is the next run's first page rather than a lost walk.
+  Measured 2026-10-13: 131 pages (26,200 objects) at this pace with no 403
+  before the test was stopped.
 * **Replaced**: the frozen VCSV `hk-companies-registry-new-nonhk-companies`
   (one week of 2025, since batch 17) is removed. `JO39_CN_HK_CR_NEW_NONHK_COMPANIES`
   reads the newest week.
@@ -196,8 +199,8 @@ cursors carried between responses (MEE's `tempReportKey`).
   (0.34%) repeated across page boundaries, so as many may be skipped in any
   one walk.
 * `JO39_CN_PALACE_MUSEUM_COLLECTION`: the museum still answered 403 on
-  2026-10-06 afternoon, about 3 h after the first burst. The 3 s pace remains
-  unmeasured.
+  2026-10-06 afternoon, about 3 h after the first burst; the block had lifted
+  by 2026-10-13 (see above for the resumed, paced walk).
 
 ## Registry
 
