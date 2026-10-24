@@ -93,3 +93,19 @@ Tree gates after both tables landed: build 0 warnings; `lint-sources` OK;
 `audit-sources` 0 findings across 331 strict-set files; `hptest`,
 `pagewalktest`, `htmlparsetest`, `authtest`, `unit`, `selftest` all pass;
 `source-floor` and `registry-floor` re-recorded at 47,115.
+
+## The split by region (2026-10-24)
+
+`hp3b48_news` was one collector of 3,992 outlets. Each row's name carries the
+publisher's country as the batch wrote it ("Giornale di Sicilia (IT) - …"), so
+every row now names a regional collector derived from that code
+(`tools/split_beats_by_body_type.py`, the same tool that split batch 47 by
+body type; the code → region table is in it): `news_europe_west` 1,251,
+`news_northam` 1,146 (US 1,096, CA 50), `news_asia_pacific` 555,
+`news_europe_east` 485 (Russia, Ukraine, the Caucasus and Central Asia
+included), `news_latam` 295, `news_mena` 153 (Turkey included),
+`news_africa` 107. Category and record type stay `news` / `news-article`; all
+seven sit under News & media. One row's name had been cut after the code
+("Church Herald (RU) -"), which the first pass could not read — the matcher
+accepts a code at the end of the name now, and the plan step refuses to run
+while any row has no code rather than leaving it in the old bucket.
