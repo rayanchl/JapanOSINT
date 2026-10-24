@@ -65,7 +65,16 @@ GROUPS = [
     ("grp_sanctions",    "Sanctions & compliance", "制裁・コンプライアンス",
      "Sanctions lists, designated persons, debarment and watchlists."),
     ("grp_culture",      "Culture, heritage, libraries & archives", "文化・遺産・図書館・アーカイブ",
-     "Libraries, archives, museums, heritage registers, tourism and education."),
+     "Libraries, archives, museums, heritage registers, tourism, sport."),
+    # 2026-10-24: schooling got its own heading. Italy's 2,725 state schools
+    # (itgov_scuole) had landed under Culture through the education category
+    # while batch 49's Japanese education associations sat under Science — the
+    # same kind of body in two groups. The line: EDUCATION is schools, adult
+    # education, school boards and education associations; universities,
+    # grandes écoles and research institutes stay under Science with the
+    # journals and repositories they publish into.
+    ("grp_education",    "Education & schools", "教育・学校",
+     "Primary, secondary and adult-education institutions, school boards, education ministries and associations."),
     ("grp_surveillance", "Cameras, sensors & exposure", "カメラ・センサー・露出",
      "Public webcams, telemetry, seismic and environmental sensor networks, internet-exposure scanners."),
     ("grp_osint",        "Investigation pivots & reference", "調査ピボット・参照",
@@ -94,7 +103,7 @@ OVERRIDES = {
     "hp3b49_jpwpmedical": "grp_health", "hp3b49_jpwpagri": "grp_health", "hp3b49_jpwpcci": "grp_corporate",
     "hp3b49_jpwpcommerce": "grp_corporate", "hp3b49_jpwpcoop": "grp_corporate", "hp3b49_jpwpjc": "grp_social",
     "hp3b49_jpwpprof": "grp_legal", "hp3b49_jpwpfire": "grp_safety", "hp3b49_jpwpwelfare": "grp_health",
-    "hp3b49_jpwpculture": "grp_culture", "hp3b49_jpwpedu": "grp_science",
+    "hp3b49_jpwpculture": "grp_culture", "hp3b49_jpwpedu": "grp_education",
     # 2026-10-24: the three giant beats split by BODY TYPE (hp3b47_frgov 9,619,
     # hp3b47_itgov 5,716 and hp3b48_news 3,992 rows, each one undifferentiated
     # collector). Every row of those tables names its collector explicitly;
@@ -106,7 +115,7 @@ OVERRIDES = {
     "frgov_etat": "grp_government", "frgov_securite": "grp_safety", "frgov_sante": "grp_health",
     "frgov_ordres": "grp_legal", "frgov_enseignement": "grp_science",
     "frgov_environnement": "grp_environment", "frgov_culture": "grp_culture",
-    "itgov_scuole": "grp_culture", "itgov_universita": "grp_science", "itgov_comuni": "grp_government",
+    "itgov_scuole": "grp_education", "itgov_universita": "grp_science", "itgov_comuni": "grp_government",
     "itgov_territoriali": "grp_government", "itgov_ordini": "grp_legal", "itgov_sanita": "grp_health",
     "itgov_camere": "grp_corporate", "itgov_servizi_pubblici": "grp_infrastructure",
     "itgov_ambiente": "grp_environment", "itgov_cultura": "grp_culture", "itgov_altri": "grp_government",
@@ -180,7 +189,7 @@ OVERRIDES = {
     "hp3b19_northam": "grp_government", "hp30tokyo_tokyo": "grp_government",
     "us_civilian": "grp_geo", "de_civilian": "grp_geo", "gb_civilian": "grp_geo", "fr_civilian": "grp_geo",
     "jp_civilian": "grp_geo",             # OSM/Nominatim and relationship graphs
-    "culture": "grp_culture", "tourism": "grp_culture", "fr_education": "grp_culture",
+    "culture": "grp_culture", "tourism": "grp_culture", "fr_education": "grp_education",
     "marketplace": "grp_social", "classifieds": "grp_social", "social": "grp_social", "commercial": "grp_corporate",
     "agriculture": "grp_health", "food": "grp_health",
     "disaster": "grp_environment", "jp_river": "grp_environment", "earthobs": "grp_environment",
@@ -207,7 +216,7 @@ KEYWORDS = [
     ("procurement", "grp_procurement"), ("payroll", "grp_procurement"), ("payments", "grp_procurement"),
     ("customs", "grp_procurement"), ("tax", "grp_procurement"), ("aid", "grp_procurement"),
     ("opendata", "grp_opendata"), ("statistics", "grp_opendata"), ("microdata", "grp_opendata"), ("demographics", "grp_opendata"),
-    ("research", "grp_science"), ("education", "grp_culture"),
+    ("research", "grp_science"), ("education", "grp_education"),
     ("health", "grp_health"),
     ("environment", "grp_environment"), ("hazard", "grp_environment"), ("disaster", "grp_environment"), ("hydrology", "grp_environment"),
     ("geodata", "grp_geo"), ("geography", "grp_geo"), ("geospatial", "grp_geo"),
@@ -238,7 +247,7 @@ CATEGORY_GROUP = {
     "company-registry": "grp_corporate", "commerce": "grp_corporate", "commercial": "grp_corporate", "industry": "grp_corporate",
     "disclosure": "grp_corporate", "markets": "grp_corporate", "trade": "grp_corporate", "registry": "grp_corporate",
     "opendata": "grp_opendata", "statistics": "grp_opendata", "microdata": "grp_opendata", "demographics": "grp_opendata",
-    "research": "grp_science", "literature": "grp_science", "genomics": "grp_science", "education": "grp_culture",
+    "research": "grp_science", "literature": "grp_science", "genomics": "grp_science", "education": "grp_education",
     "health": "grp_health", "clinical": "grp_health", "outbreak": "grp_health", "agriculture": "grp_health", "food": "grp_health",
     "environment": "grp_environment", "weather": "grp_environment", "wildfire": "grp_environment", "seismic": "grp_environment",
     "ocean": "grp_environment", "hazard": "grp_environment", "disaster": "grp_environment", "hydrology": "grp_environment",
