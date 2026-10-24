@@ -1167,6 +1167,13 @@ typedef struct {
    * emitted right now. NULL/0 everywhere else, which is the old behaviour. */
   const unsigned char *dup_map;
   int   rec_idx;
+  /* occurrence_rows=1 only: the record's 1-based occurrence number within its
+   * BYTE-IDENTICAL group, or 0 when nothing on this page shares its content.
+   * Built by the same pre-pass as dup_map, and read only to disambiguate rows
+   * an occurrence register publishes more than once — see
+   * hp_source.occurrence_rows. NULL for every other row, which is the old
+   * behaviour exactly. */
+  const int *dup_ord;
   /* The response was HTTP 200 but its BODY said the request failed — see
    * hp_json_error_doc(). Set by the mode driver, read by hp_run so the walk
    * stops and the run reports the same thing an HTTP failure reports.
@@ -1742,16 +1749,32 @@ static cJSON *hp_csv_flat(const hp_source *s, cJSON *row) {
   return flat;
 }
 
+/* Release the occurrence-number array and clear it, so a later emit cannot
+ * read a dangling pointer. Paired with every hp_collision_map() call. */
+static void hp_collision_ord_free(hp_run_state *st) {
+  free((void *)st->dup_ord);
+  st->dup_ord = NULL;
+}
+
 static unsigned char *hp_collision_map(hp_run_state *st, cJSON *arr, int n,
                                        hp_flat_fn flat_fn) {
   if (n < 2) return NULL;
   const hp_source *s = st->s;
   hp_keyed_row *k = malloc((size_t)n * sizeof *k);
   unsigned char *dup = calloc((size_t)n, 1);
+  /* occurrence_rows only: a second pass over the same flattened records,
+   * hashing their CONTENT, so a row that publishes the same event tuple many
+   * times can key each occurrence apart. Allocated only when the row asks for
+   * it — an extra print-and-hash per record is not a cost every row should
+   * pay. */
+  hp_keyed_row *ck = s->occurrence_rows ? malloc((size_t)n * sizeof *ck) : NULL;
+  int *ord = s->occurrence_rows ? calloc((size_t)n, sizeof *ord) : NULL;
+  int cm = 0;
   /* Out of memory must degrade to the old behaviour, not abort the run: a
    * colliding row is worse than no guard, but losing the SOURCE is worse than
    * both. */
-  if (!k || !dup) { free(k); free(dup); return NULL; }
+  if (!k || !dup) { free(k); free(dup); free(ck); free(ord); return NULL; }
+  if (s->occurrence_rows && (!ck || !ord)) { free(ck); free(ord); ck = NULL; ord = NULL; }
 
   int m = 0, i = 0;
   cJSON *rec;
@@ -1759,6 +1782,14 @@ static unsigned char *hp_collision_map(hp_run_state *st, cJSON *arr, int n,
     cJSON *flat = flat_fn ? flat_fn(s, rec) : rec;
     if (!flat) { i++; continue; }
     hp_stamp_date(s, st->vars, flat);
+    /* The content hash the emitter will compute, computed here so the
+     * occurrence numbers can be assigned in one pass over the page. Same
+     * input (the flattened record's JSON) and same function, for the reason
+     * the note below gives about deriving a key twice. */
+    if (ck) {
+      char *js = cJSON_PrintUnformatted(flat);
+      if (js) { hp_fnv_hex(js, ck[cm].key); ck[cm].idx = i; cm++; free(js); }
+    }
     /* Buffer sizes and pick modes IDENTICAL to hp_emit_record's, so the key
      * this guard derives is the key the emitter derives. */
     char sc_t[HP_PICK_TEXT_CAP], sc_r[64], lastbuf[64];
@@ -1799,7 +1830,37 @@ static unsigned char *hp_collision_map(hp_run_state *st, cJSON *arr, int n,
     a = b;
   }
   free(k);
-  if (!flagged) { free(dup); return NULL; }
+
+  /* Occurrence numbers, within each byte-identical group, in the order the
+   * upstream published them. The FIRST of a group gets 0 and so keeps the uid
+   * it already has — turning occurrence_rows on adds rows and re-keys none —
+   * and a record nothing else matches stays 0 too. qsort is not stable, so the
+   * group is ordered by the record's own index rather than by where the sort
+   * happened to put it: the 2nd row of the file is occurrence 2 on every run. */
+  if (ck && ord) {
+    qsort(ck, (size_t)cm, sizeof *ck, hp_keyed_cmp);
+    for (int a = 0; a < cm; ) {
+      int b = a + 1;
+      while (b < cm && !strcmp(ck[a].key, ck[b].key)) b++;
+      if (b - a > 1) {
+        /* Index order within the group. n is the page, so an insertion sort
+         * over a group of identical rows is bounded by the group's own size. */
+        for (int x = a + 1; x < b; x++) {
+          hp_keyed_row t = ck[x];
+          int y = x - 1;
+          while (y >= a && ck[y].idx > t.idx) { ck[y + 1] = ck[y]; y--; }
+          ck[y + 1] = t;
+        }
+        for (int j = a; j < b; j++) ord[ck[j].idx] = j - a + 1;
+        flagged++;   /* a byte-identical group is a reason to keep the map */
+      }
+      a = b;
+    }
+    st->dup_ord = ord;      /* owned by the caller's dupmap lifetime, below */
+  }
+  free(ck);
+
+  if (!flagged) { free(dup); free(ord); st->dup_ord = NULL; return NULL; }
   return dup;
 }
 
@@ -1922,7 +1983,16 @@ static void hp_emit_record(hp_run_state *st, cJSON *flat) {
     char chash[17];
     hp_fnv_hex(js ? js : title, chash);
     free(js);
-    snprintf(keybuf, sizeof keybuf, "%.180s|%.120s|%s", s->id, kpart, chash);
+    /* A content hash separates records that merely SHARE a key. It cannot
+     * separate records that share their content, and on an occurrence register
+     * those are different events — see hp_source.occurrence_rows. The
+     * occurrence number is appended only from the second one onward, so the
+     * first keeps the uid it already had. */
+    int occ = (s->occurrence_rows && st->dup_ord) ? st->dup_ord[st->rec_idx] : 0;
+    if (occ > 1)
+      snprintf(keybuf, sizeof keybuf, "%.180s|%.120s|%s|#%d", s->id, kpart, chash, occ);
+    else
+      snprintf(keybuf, sizeof keybuf, "%.180s|%.120s|%s", s->id, kpart, chash);
   } else {
     snprintf(keybuf, sizeof keybuf, "%.180s|%.120s", s->id, kpart);
   }
@@ -2362,6 +2432,10 @@ static int hp_run_json(hp_run_state *st, const char *body) {
   st->dup_map = NULL;
   st->rec_idx = 0;
   free(dupmap);
+  /* The occurrence numbers hp_collision_map may have allocated share the
+   * map's lifetime, and there are four of these sites — freeing in three
+   * of them is the shape this tree keeps finding, so it is one call. */
+  hp_collision_ord_free(st);
   /* The header described THIS page's `doc`, which is freed below. Clearing it
    * here is what keeps a detail hop, a later page or the next row from reading
    * a dangling pointer — the same reason dup_map is cleared one line up. */
@@ -2416,10 +2490,34 @@ static int hp_run_csv(hp_run_state *st, const char *body) {
     if      (!strcmp(s->csv_delim, "tab")  || !strcmp(s->csv_delim, "\\t")) snprintf(delim, sizeof delim, "\t");
     else if (!strcmp(s->csv_delim, "pipe")) snprintf(delim, sizeof delim, "|");
     else if (!strcmp(s->csv_delim, "semi")) snprintf(delim, sizeof delim, ";");
+    /* `comma` — the obvious spelling of the default, and 87 rows used it while
+     * nothing accepted it. The `else` below takes the FIRST CHARACTER of an
+     * unrecognised value, so those rows split their files on the letter **c**:
+     * Japanese crime and accident CSVs contain no ASCII c at all, so every line
+     * became ONE field whose NAME was the entire header line and whose value
+     * was the entire row. Exactly the FDSN pipe defect this engine already
+     * records — "the record COUNT was real, which is precisely why it read as
+     * healthy for weeks" — and it was healthy-looking for longer: the
+     * 2026-09-08 triage of the same rows reasoned about "two incidents that
+     * match on all thirteen columns" while the engine was reading one. */
+    else if (!strcmp(s->csv_delim, "comma") || !strcmp(s->csv_delim, ","))
+                                            snprintf(delim, sizeof delim, ",");
     else if (!strcmp(s->csv_delim, "ws"))   snprintf(delim, sizeof delim, "ws");
     else if (!strncmp(s->csv_delim, "lit:", 4) && s->csv_delim[4])
                                             snprintf(delim, sizeof delim, "%s", s->csv_delim + 4);
-    else                                    snprintf(delim, sizeof delim, "%c", s->csv_delim[0]);
+    else if (!s->csv_delim[1])              snprintf(delim, sizeof delim, "%c", s->csv_delim[0]);
+    /* A WORD that names nothing is a declaration error, and its first letter is
+     * never what the author meant. Degrade to the default rather than to that
+     * letter — a comma-separated file read with the right delimiter is the
+     * likeliest recovery — and say so, loudly enough to be found. `lit:` is
+     * how a multi-character delimiter is declared deliberately, and
+     * `make lint-sources` fails the build on this shape so it cannot ship
+     * again. */
+    else {
+      fprintf(stderr, "[hp] %s: csv_delim '%s' names nothing — reading as "
+                      "comma. Known: comma, tab, pipe, semi, ws, lit:<token>\n",
+              s->id, s->csv_delim);
+    }
   }
   /* A title line above the header is dropped BEFORE the comment strip and the
    * parse, as physical lines: the header that follows it is still read with
@@ -2510,6 +2608,10 @@ static int hp_emit_rows(hp_run_state *st, cJSON *rows) {
   st->dup_map = NULL;
   st->rec_idx = 0;
   free(dupmap);
+  /* The occurrence numbers hp_collision_map may have allocated share the
+   * map's lifetime, and there are four of these sites — freeing in three
+   * of them is the shape this tree keeps finding, so it is one call. */
+  hp_collision_ord_free(st);
   cJSON_Delete(rows);
   return st->emitted;
 }
@@ -3118,6 +3220,10 @@ static int hp_run_xml(hp_run_state *st, const char *body) {
   st->dup_map = NULL;
   st->rec_idx = 0;
   free(dupmap);
+  /* The occurrence numbers hp_collision_map may have allocated share the
+   * map's lifetime, and there are four of these sites — freeing in three
+   * of them is the shape this tree keeps finding, so it is one call. */
+  hp_collision_ord_free(st);
   cJSON_Delete(flats);
   /* Shape notice (a), XML form: the declared record element is nowhere in a
    * body that DOES repeat some other element. A body with no repeated element
@@ -3329,6 +3435,10 @@ static int hp_run_recjar(hp_run_state *st, const char *body) {
   st->dup_map = NULL;
   st->rec_idx = 0;
   free(dupmap);
+  /* The occurrence numbers hp_collision_map may have allocated share the
+   * map's lifetime, and there are four of these sites — freeing in three
+   * of them is the shape this tree keeps finding, so it is one call. */
+  hp_collision_ord_free(st);
   cJSON_Delete(flats);
   st->page_records = records;
   return st->emitted;

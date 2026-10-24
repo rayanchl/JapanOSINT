@@ -359,6 +359,35 @@ typedef struct hp_source {
    * of its TLD, so the row states it. */
   const char *charset;
   int filter_query;           /* 1 = keep only records mentioning the query */
+  /* occurrence_rows=1: THIS FILE IS A REGISTER OF EVENTS, so two byte-identical
+   * rows are two different events and must both be stored.
+   *
+   * The uid collision guard disambiguates records that share a key by hashing
+   * their CONTENT, which is exactly right for a catalogue — `sec-nga-tod`
+   * serves one product 14 times byte for byte, and storing it once is real
+   * dedupe. It is exactly wrong for an occurrence register whose columns are
+   * all categorical: Japan Coast Guard's vessel-accident file has 17 columns
+   * (year, month, vessel type, accident type, distance from shore, casualties,
+   * tonnage band, cause) and NO incident identifier, so 40 separate
+   * pleasure-boat drift incidents in September 2018 are one row repeated 40
+   * times, and 1,383 of its 19,370 incidents a run collapsed onto each other.
+   * The prefectural police crime-occurrence files are the same shape: a
+   * bicycle theft is (ward, method, time band, locked?), and two thefts in one
+   * ward on one method are two crimes.
+   *
+   * No record count can tell the two apart, and neither can the engine: it is
+   * a statement about what the FILE is, so it belongs to the row's author.
+   * Declaring it makes the guard append the record's occurrence number within
+   * its byte-identical group — the 2nd, 3rd, … 40th row with that content —
+   * and the FIRST keeps the uid it already has, so turning this on adds rows
+   * and never re-keys the ones a database already holds.
+   *
+   * The cost, stated because it is real: an occurrence number is positional
+   * within the group, so a publisher who re-sorts the file re-numbers the
+   * repeats and the next run stores them alongside the old ones. These files
+   * are append-only annual snapshots, which is why that is an acceptable
+   * trade here and not a general one. */
+  int occurrence_rows;
   /* Cap on emitted records. 0 (the default) means EVERY record the upstream
    * returned — the engine does not invent a limit the caller did not ask for.
    * A non-zero value is the row author's explicit choice and is reported in

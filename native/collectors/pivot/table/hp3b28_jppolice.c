@@ -18,6 +18,24 @@
  * reverts repairs, so the generator refuses without --force. See
  * CLAUDE.md, "Batch tooling".
  */
+/* ── these files are REGISTERS OF EVENTS (2026-10-24) ─────────────────────
+ *
+ * Each CSV row is one occurrence reduced to categorical columns with no
+ * incident identifier, so two byte-identical rows are two different events and
+ * the uid guard's content hash — right for a catalogue — collapsed them.
+ * Measured on the Japan Coast Guard vessel-accident file: 17 columns (year,
+ * month, vessel type, accident type, distance from shore, casualties, usage,
+ * tonnage band, cause), 19,370 incidents, 17,987 distinct, and ONE TUPLE
+ * APPEARS FORTY TIMES — forty pleasure-boat drift incidents in September 2018,
+ * in harbour, mooring failure, under typhoon conditions. Forty accidents, and
+ * the sink was storing one.
+ *
+ * `occurrence_rows = 1` (lib/hpengine.h) keeps them: the first of an identical
+ * group keeps the uid it already had and the rest extend it with their
+ * occurrence number, which is a fact about the published file rather than an
+ * invented identity. See the longer argument at the head of
+ * hp3b25_jppolice.c, where the same conclusion was reached and declined in
+ * September and is reversed with its own reasoning. */
 #include "lib/hpengine.h"
 
 static const hp_source HP3B28_JPPOLICE[] = {
@@ -260,6 +278,7 @@ static const hp_source HP3B28_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"fukushima\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.police.pref.fukushima.jp/seianki/homepage/top_page/fukushima_2024hittakuri.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -295,6 +314,7 @@ static const hp_source HP3B28_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"niigata\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.niigata.lg.jp/uploaded/attachment/455863.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -330,6 +350,7 @@ static const hp_source HP3B28_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"nagano\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.nagano.lg.jp/police/toukei/hanzai/documents/nagano_2024zidousyatou.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -671,6 +692,7 @@ static const hp_source HP3B28_JPPOLICE[] = {
     .record_type = "traffic-accident-record",
     .tags = "\"japan\",\"police\",\"npa\",\"traffic\",\"opendata\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.npa.go.jp/publications/statistics/koutsuu/opendata/2024/kosokuhyo_2024.csv",
     .charset = "sjis",
     .csv_delim = "comma",
@@ -691,6 +713,7 @@ static const hp_source HP3B28_JPPOLICE[] = {
     .record_type = "maritime-accident-record",
     .tags = "\"japan\",\"maritime-safety\",\"coastguard\",\"vessel-accident\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www6.kaiho.mlit.go.jp/info/keihatsu/senpakukainan_2025.csv",
     .charset = "sjis",
     .csv_delim = "comma",
@@ -713,6 +736,7 @@ static const hp_source HP3B28_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"aomori\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.police.pref.aomori.jp/seianbu/seian_kikaku/hanyoku/csv/2025/aomori_2025zitensyatou.csv",
     .charset = "sjis",
     .csv_delim = "comma",
@@ -734,6 +758,7 @@ static const hp_source HP3B28_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"miyagi\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.police.pref.miyagi.jp/seian/miyagi_2025hittakuri.csv",
     .charset = "sjis",
     .csv_delim = "comma",
@@ -755,6 +780,7 @@ static const hp_source HP3B28_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"chiba\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.police.pref.chiba.jp/content/common/000074739.csv",
     .charset = "sjis",
     .csv_delim = "comma",

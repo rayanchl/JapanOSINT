@@ -51,6 +51,30 @@
  * one, and the run line prints both -- which is exactly why rule 4b prints
  * them together. Anonymisation removed the distinguishing detail upstream; we
  * cannot manufacture it here without fabricating an identity. */
+/* ── 2026-10-24: THAT CONCLUSION IS REVERSED, and the note above says why ──
+ *
+ * The triage above is right about every fact and wrong about what to do, and
+ * its own last paragraph is the reason: "the incident count is therefore the
+ * EMITTED number, not the stored one, and the run line prints both". A run
+ * line is not what anyone queries. Rule 2 is explicit that what was left
+ * unused is reported AS DATA and not as a log line nobody reads, and here it
+ * was not even that: the database simply held fewer incidents than Japan's
+ * police published, with nothing in it saying so.
+ *
+ * The objection was that telling the rows apart would mean "fabricating an
+ * identity". It would, if the engine invented an incident number or a time.
+ * `occurrence_rows = 1` (lib/hpengine.h) does not: it keys a repeat on its
+ * OCCURRENCE NUMBER WITHIN THE FILE — this is the second row with this
+ * content, and the third — which is a fact about the published document and
+ * asserts nothing whatever about which bicycle was taken. What it preserves is
+ * the one thing anonymisation did not remove and the sink was discarding: how
+ * many incidents there were.
+ *
+ * Re-measured 2026-10-24 on the same Gifu file the note above measured: 1,630
+ * rows, 1,615 distinct, and the top repeat is three bicycles from one parking
+ * area in Ogaki on 2024-05-17 at 12:00, all unlocked, victims in their
+ * twenties. Three crimes, and the database now holds three. The first keeps
+ * the uid it already had, so no row already stored is re-keyed. */
 #include "lib/hpengine.h"
 
 static const hp_source HP3B25_JPPOLICE[] = {
@@ -61,6 +85,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"iwate\",\"buhinnerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.iwate.jp/kenkei/_res/projects/project_kenkei/_page_/003/000/711/s_opendata_2024/iwate_2024buhinnerai.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -82,6 +107,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"iwate\",\"ootobaitou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.iwate.jp/kenkei/_res/projects/project_kenkei/_page_/003/000/711/s_opendata_2024/iwate_2024ootobaitou.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -104,6 +130,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"iwate\",\"syazyounerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.iwate.jp/kenkei/_res/projects/project_kenkei/_page_/003/000/711/s_opendata_2024/iwate_2024syazyounerai.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -126,6 +153,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"iwate\",\"zidouhanbaikinerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.iwate.jp/kenkei/_res/projects/project_kenkei/_page_/003/000/711/s_opendata_2024/iwate_2024zidouhanbaikinerai.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -147,6 +175,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"iwate\",\"zidousyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.iwate.jp/kenkei/_res/projects/project_kenkei/_page_/003/000/711/s_opendata_2024/iwate_2024zidousyatou.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -168,6 +197,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"iwate\",\"zitensyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.iwate.jp/kenkei/_res/projects/project_kenkei/_page_/003/000/711/s_opendata_2024/iwate_2024zitensyatou.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -190,6 +220,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"yamagata\",\"buhinnerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.yamagata.jp/documents/1566/yamagata_2025buhinnerai.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -212,6 +243,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"yamagata\",\"ootobaitou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.yamagata.jp/documents/1566/yamagata_2025ootobaitou.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -234,6 +266,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"yamagata\",\"syazyounerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.yamagata.jp/documents/1566/yamagata_2025syazyounerai.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -255,6 +288,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"yamagata\",\"zidousyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.yamagata.jp/documents/1566/yamagata_2025zidousyatou.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -276,6 +310,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"yamagata\",\"zitensyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.yamagata.jp/documents/1566/yamagata_2025zitensyatou.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -298,6 +333,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"nagano\",\"buhinnerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.nagano.lg.jp/police/toukei/hanzai/documents/nagano_2025buhinnerai.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -319,6 +355,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"nagano\",\"hittakuri\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.nagano.lg.jp/police/toukei/hanzai/documents/nagano_2025hittakuri.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -341,6 +378,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"nagano\",\"ootobaitou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.nagano.lg.jp/police/toukei/hanzai/documents/nagano_2025ootobaitou.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -363,6 +401,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"nagano\",\"syazyounerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.nagano.lg.jp/police/toukei/hanzai/documents/nagano_2025syazyounerai.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -385,6 +424,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"nagano\",\"zidouhanbaikinerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.nagano.lg.jp/police/toukei/hanzai/documents/nagano_2025zidouhanbaikinerai.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -406,6 +446,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"nagano\",\"zidousyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.nagano.lg.jp/police/toukei/hanzai/documents/nagano_2025zidousyatou.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -427,6 +468,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"nagano\",\"zitensyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.nagano.lg.jp/police/toukei/hanzai/documents/nagano_2025zitensyatou.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -449,6 +491,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"shizuoka\",\"buhinnerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.shizuoka.jp/police/_res/projects/project_police/_page_/002/001/145/shizuoka_2025buhinnerai.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -470,6 +513,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"shizuoka\",\"hittakuri\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.shizuoka.jp/police/_res/projects/project_police/_page_/002/001/145/shizuoka_2025hittakuri.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -492,6 +536,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"shizuoka\",\"ootobaitou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.shizuoka.jp/police/_res/projects/project_police/_page_/002/001/145/shizuoka_2025ootobaitou.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -514,6 +559,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"shizuoka\",\"syazyounerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.shizuoka.jp/police/_res/projects/project_police/_page_/002/001/145/shizuoka_2025syazyounerai.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -536,6 +582,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"shizuoka\",\"zidouhanbaikinerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.shizuoka.jp/police/_res/projects/project_police/_page_/002/001/145/shizuoka_2025zidouhanbaikinerai.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -557,6 +604,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"shizuoka\",\"zidousyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.shizuoka.jp/police/_res/projects/project_police/_page_/002/001/145/shizuoka_2025zidousyatou.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -578,6 +626,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"shizuoka\",\"zitensyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.shizuoka.jp/police/_res/projects/project_police/_page_/002/001/145/shizuoka_2025zitensyatou.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -600,6 +649,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"tottori\",\"buhinnerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.tottori.lg.jp/secure/1180850/tottori_2025buhinnerai.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -622,6 +672,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"tottori\",\"ootobaitou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.tottori.lg.jp/secure/1180850/tottori_2025ootobaitou.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -644,6 +695,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"tottori\",\"syazyounerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.tottori.lg.jp/secure/1180850/tottori_2025syazyounerai.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -666,6 +718,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"tottori\",\"zidouhanbaikinerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.tottori.lg.jp/secure/1180850/tottori_2025zidouhanbaikinerai.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -687,6 +740,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"tottori\",\"zidousyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.tottori.lg.jp/secure/1180850/tottori_2025zidousyatou.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -708,6 +762,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"tottori\",\"zitensyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.tottori.lg.jp/secure/1180850/tottori_2025zitensyatou.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -730,6 +785,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"tokushima\",\"buhinnerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.police.pref.tokushima.jp/file/excel/28opendata/tokushima_2025buhinnerai.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -752,6 +808,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"tokushima\",\"ootobaitou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.police.pref.tokushima.jp/file/excel/28opendata/tokushima_2025ootobaitou.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -774,6 +831,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"tokushima\",\"syazyounerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.police.pref.tokushima.jp/file/excel/28opendata/tokushima_2025syazyounerai.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -796,6 +854,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"tokushima\",\"zidouhanbaikinerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.police.pref.tokushima.jp/file/excel/28opendata/tokushima_2025zidouhanbaikinerai.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -817,6 +876,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"tokushima\",\"zidousyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.police.pref.tokushima.jp/file/excel/28opendata/tokushima_2025zidousyatou.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -839,6 +899,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"tokushima\",\"zitensyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.police.pref.tokushima.jp/file/excel/28opendata/tokushima_2025zitensyatou.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -861,6 +922,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"fukui\",\"buhinnerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.fukui.lg.jp/kenkei/doc/kenkei/naka2-naka1600_d/fil/fukui_2025buhinnerai.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -882,6 +944,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"fukui\",\"ootobaitou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.fukui.lg.jp/kenkei/doc/kenkei/naka2-naka1600_d/fil/fukui_2025ootobaitou.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -904,6 +967,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"fukui\",\"syazyounerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.fukui.lg.jp/kenkei/doc/kenkei/naka2-naka1600_d/fil/fukui_2025syazyounerai.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -925,6 +989,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"fukui\",\"zidousyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.fukui.lg.jp/kenkei/doc/kenkei/naka2-naka1600_d/fil/fukui_2025zidousyatou.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -946,6 +1011,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"fukui\",\"zitensyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.fukui.lg.jp/kenkei/doc/kenkei/naka2-naka1600_d/fil/fukui_2025zitensyatou.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -968,6 +1034,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"niigata\",\"hittakuri\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.niigata.lg.jp/uploaded/attachment/508048.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -992,6 +1059,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"niigata\",\"syazyounerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.niigata.lg.jp/uploaded/attachment/507929.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -1016,6 +1084,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"niigata\",\"buhinnerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.niigata.lg.jp/uploaded/attachment/507932.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -1040,6 +1109,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"niigata\",\"zidouhanbaikinerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.niigata.lg.jp/uploaded/attachment/507934.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -1063,6 +1133,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"niigata\",\"zidousyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.niigata.lg.jp/uploaded/attachment/507935.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -1087,6 +1158,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"niigata\",\"ootobaitou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.niigata.lg.jp/uploaded/attachment/507936.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -1111,6 +1183,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"niigata\",\"zitensyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.niigata.lg.jp/uploaded/attachment/507937.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -1135,6 +1208,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"shiga\",\"buhinnerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.shiga.lg.jp/documents/15737/5626037.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -1159,6 +1233,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"shiga\",\"ootobaitou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.shiga.lg.jp/documents/15737/5626039.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -1182,6 +1257,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"shiga\",\"syazyounerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.shiga.lg.jp/documents/15737/5626040.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -1206,6 +1282,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"shiga\",\"zidouhanbaikinerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.shiga.lg.jp/documents/15737/5626041.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -1229,6 +1306,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"shiga\",\"zidousyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.shiga.lg.jp/documents/15737/5626042.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -1251,6 +1329,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"shiga\",\"zitensyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.pref.shiga.lg.jp/documents/15737/5626043.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -1273,6 +1352,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"gifu\",\"hittakuri\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://gifu-opendata.pref.gifu.lg.jp/dataset/35db33b9-7e77-499e-b90d-f302fafb7aaa/resource/0a6da554-8812-4da8-8fac-c95151ab741d/download/gifu_2024hittakuri.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -1295,6 +1375,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"gifu\",\"zidouhanbaikinerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://gifu-opendata.pref.gifu.lg.jp/dataset/35db33b9-7e77-499e-b90d-f302fafb7aaa/resource/10200b9e-e263-42c0-afd5-9b9b065ef411/download/gifu_2024zidouhanbaikinerai.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -1317,6 +1398,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"gifu\",\"ootobaitou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://gifu-opendata.pref.gifu.lg.jp/dataset/35db33b9-7e77-499e-b90d-f302fafb7aaa/resource/20068f2f-4c66-4c0c-9582-a8c56aaf3563/download/gifu_2024ootobaitou.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -1338,6 +1420,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"gifu\",\"zitensyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://gifu-opendata.pref.gifu.lg.jp/dataset/35db33b9-7e77-499e-b90d-f302fafb7aaa/resource/7c8c1e64-270b-4888-b474-083f442d596f/download/gifu_2024zidensyatou.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -1359,6 +1442,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"gifu\",\"zidousyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://gifu-opendata.pref.gifu.lg.jp/dataset/35db33b9-7e77-499e-b90d-f302fafb7aaa/resource/ad28ac6a-4c4b-45de-8e4b-18a82ef07ddb/download/gifu_2024zidousyatou.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -1381,6 +1465,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"gifu\",\"syazyounerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://gifu-opendata.pref.gifu.lg.jp/dataset/35db33b9-7e77-499e-b90d-f302fafb7aaa/resource/db3e7dae-1e20-462f-9a66-8b5992d1792b/download/gifu_2024syazyounerai.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -1403,6 +1488,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"gifu\",\"buhinnerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://gifu-opendata.pref.gifu.lg.jp/dataset/35db33b9-7e77-499e-b90d-f302fafb7aaa/resource/eaacc9c0-22eb-40c8-b778-3b173c401c15/download/gifu_2024buhinnerai.csv",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -1425,6 +1511,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"shimane\",\"zitensyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://shimane-opendata.jp/resource_download/74817",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -1449,6 +1536,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"shimane\",\"ootobaitou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://shimane-opendata.jp/resource_download/74818",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -1472,6 +1560,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"shimane\",\"zidousyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://shimane-opendata.jp/resource_download/74819",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -1496,6 +1585,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"shimane\",\"buhinnerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://shimane-opendata.jp/resource_download/74821",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -1520,6 +1610,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"shimane\",\"syazyounerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://shimane-opendata.jp/resource_download/74822",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -1544,6 +1635,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"hiroshima\",\"hittakuri\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://hiroshima-opendata.dataeye.jp/resource_download/11975",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -1568,6 +1660,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"hiroshima\",\"syazyounerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://hiroshima-opendata.dataeye.jp/resource_download/11979",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -1593,6 +1686,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"hiroshima\",\"buhinnerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://hiroshima-opendata.dataeye.jp/resource_download/11983",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -1618,6 +1712,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"hiroshima\",\"zidouhanbaikinerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://hiroshima-opendata.dataeye.jp/resource_download/11987",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -1642,6 +1737,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"hiroshima\",\"zidousyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://hiroshima-opendata.dataeye.jp/resource_download/11991",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -1666,6 +1762,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"hiroshima\",\"ootobaitou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://hiroshima-opendata.dataeye.jp/resource_download/11995",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -1691,6 +1788,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"hiroshima\",\"zitensyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://hiroshima-opendata.dataeye.jp/resource_download/11999",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -1715,6 +1813,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"okayama\",\"buhinnerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://okayama-pref.dataeye.jp/resource_download/10125",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -1737,6 +1836,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"okayama\",\"hittakuri\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://okayama-pref.dataeye.jp/resource_download/10126",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",
@@ -1759,6 +1859,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"okayama\",\"ootobaitou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://okayama-pref.dataeye.jp/resource_download/10127",
     .csv_delim = "comma",
     .date_keys = "発生年月日（始期）",

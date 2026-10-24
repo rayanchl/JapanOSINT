@@ -632,6 +632,30 @@ static const hp_source T[] = {
   /* .interval is not decoration: a static URL with no interval references no
    * entity token and is never scheduled, so hp_run returns 0 without fetching
    * (rule 3). A bulk file row must declare a cadence to exist at all. */
+  /* `comma` is the obvious spelling of the default and nothing accepted it:
+   * the engine took the first character of an unrecognised value, so 87 rows
+   * split their files on the letter **c**. Both fixture bodies below contain
+   * no ASCII c and no k, so either mistake leaves the whole line in one
+   * field — which is what makes these two tests able to see it. */
+  { .id = "T_DELIM_COMMA", .name = "csv_delim=comma", .url = "https://x.test/d.csv",
+    .mode = HP_CSV, .csv_delim = "comma", .interval = 3600,
+    .record_type = "t-delim", .free_tier = 1, .description = "d" },
+  { .id = "T_DELIM_BAD", .name = "csv_delim names nothing", .url = "https://x.test/d.csv",
+    .mode = HP_CSV, .csv_delim = "kamma", .interval = 3600,
+    .record_type = "t-delim", .free_tier = 1, .description = "d" },
+
+  /* An OCCURRENCE REGISTER: categorical columns, no incident identifier, so
+   * two byte-identical rows are two different events (hpengine.h
+   * occurrence_rows). The pair exists so the control is the same fixture with
+   * the flag off — the whole claim is that the flag, and nothing else, decides
+   * whether identical rows are kept. */
+  { .id = "T_OCCUR", .name = "occurrence register", .url = "https://x.test/occ.csv",
+    .mode = HP_CSV, .interval = 3600, .occurrence_rows = 1,
+    .record_type = "t-occ", .free_tier = 1, .description = "d" },
+  { .id = "T_OCCUR_OFF", .name = "same file, flag off", .url = "https://x.test/occ.csv",
+    .mode = HP_CSV, .interval = 3600,
+    .record_type = "t-occ", .free_tier = 1, .description = "d" },
+
   { .id = "T_CSV_BARE", .name = "headerless csv, no keys declared",
     .url = "https://x.test/bare.csv", .mode = HP_CSV, .csv_no_header = 1,
     .interval = 3600,
@@ -4574,6 +4598,144 @@ int main(void) {
        "53d: a run that got an HTTP status carries no TLS cause, however the "
        "thread-local was left");
     (void)rc; }
+
+
+  /* ── 54. an occurrence register's identical rows are distinct events ──
+   *
+   * The uid guard disambiguates records that SHARE A KEY by hashing their
+   * content, which is right for a catalogue (NGA's TOD file serves one product
+   * 14 times byte for byte and storing it once is real dedupe) and wrong for a
+   * register of events whose columns are all categorical. Japan Coast Guard's
+   * vessel-accident file has 17 such columns and no incident id, so 40
+   * separate September-2018 drift incidents are one row repeated 40 times:
+   * 1,383 of its 19,370 incidents a run collapsed onto each other. No count
+   * can tell the two apart, so the row's author declares which it is. */
+  fx_reset();
+  fx_add("/occ.csv", 200,
+         "ward,method,locked\n"
+         "Chuo,cut,no\n"
+         "Chuo,cut,no\n"
+         "Chuo,cut,no\n"
+         "Kita,pick,yes\n");
+  g_ncap = 0;
+  rc = run_source("T_OCCUR", NULL);
+  ok(rc == 0 && g_ncap == 4, "54: every row of an occurrence register is emitted");
+  { /* Four records, four uids: the three identical ones are occurrences 1..3
+     * and the fourth is alone. */
+    int distinct = 0;
+    for (int i = 0; i < g_ncap; i++) {
+      int seen = 0;
+      for (int j = 0; j < i; j++) if (!strcmp(g_cap[i].key, g_cap[j].key)) seen = 1;
+      if (!seen) distinct++;
+    }
+    ok(distinct == 4, "54b: four distinct remote_keys, so nothing collapses at the sink");
+  }
+
+  /* 54c. THE CONTROL, and the whole reason the pair exists: the same body with
+   *      the flag OFF must collapse the three, which is today's behaviour and
+   *      must stay the default. */
+  g_ncap = 0;
+  rc = run_source("T_OCCUR_OFF", NULL);
+  { int distinct = 0;
+    for (int i = 0; i < g_ncap; i++) {
+      int seen = 0;
+      for (int j = 0; j < i; j++) if (!strcmp(g_cap[i].key, g_cap[j].key)) seen = 1;
+      if (!seen) distinct++;
+    }
+    ok(rc == 0 && g_ncap == 4 && distinct == 2,
+       "54c: with the flag off the identical rows still collapse to one uid");
+  }
+
+  /* 54d. THE FIRST OCCURRENCE KEEPS ITS UID, so turning the flag on adds rows
+   *      to a database and re-keys none of the ones already in it. The two
+   *      fixture rows have different ids, and the uid begins with the id, so
+   *      the keys cannot be compared across them — what is asserted instead is
+   *      the SHAPE that carries the guarantee: the group yields some base key
+   *      X (exactly what the guard derives without this flag) plus X|#2 and
+   *      X|#3. */
+  fx_reset();
+  fx_add("/occ.csv", 200,
+         "ward,method,locked\n"
+         "Chuo,cut,no\n"
+         "Chuo,cut,no\n"
+         "Chuo,cut,no\n"
+         "Kita,pick,yes\n");
+  g_ncap = 0;
+  run_source("T_OCCUR", NULL);
+  { char base[256] = "";
+    int n_sfx = 0, n_base = 0;
+    for (int i = 0; i < g_ncap; i++) {
+      if (!strstr(g_cap[i].props, "Chuo")) continue;
+      if (strstr(g_cap[i].key, "|#")) n_sfx++;
+      else { n_base++; snprintf(base, sizeof base, "%s", g_cap[i].key); }
+    }
+    char want2[300], want3[300];
+    snprintf(want2, sizeof want2, "%s|#2", base);
+    snprintf(want3, sizeof want3, "%s|#3", base);
+    int f2 = 0, f3 = 0;
+    for (int i = 0; i < g_ncap; i++) {
+      if (!strcmp(g_cap[i].key, want2)) f2 = 1;
+      if (!strcmp(g_cap[i].key, want3)) f3 = 1;
+    }
+    ok(n_base == 1 && n_sfx == 2 && *base && f2 && f3,
+       "54d: one occurrence keeps the plain uid; the others extend it with |#2 and |#3");
+  }
+
+  /* 54e. A row where nothing repeats must key identically with the flag on or
+   *      off — the guarantee that makes this safe to put on 25 live rows. The
+   *      id prefix differs between the two fixtures, so the comparison is on
+   *      the part of the uid the guard derives. */
+  fx_reset();
+  fx_add("/occ.csv", 200,
+         "ward,method,locked\n"
+         "Chuo,cut,no\n"
+         "Kita,pick,yes\n");
+  g_ncap = 0;
+  run_source("T_OCCUR", NULL);
+  { char on0[256] = "", on1[256] = "";
+    int n_on = g_ncap;
+    const char *p0 = g_ncap > 0 ? strchr(g_cap[0].key, '|') : NULL;
+    const char *p1 = g_ncap > 1 ? strchr(g_cap[1].key, '|') : NULL;
+    snprintf(on0, sizeof on0, "%s", p0 ? p0 : "");
+    snprintf(on1, sizeof on1, "%s", p1 ? p1 : "");
+    g_ncap = 0;
+    run_source("T_OCCUR_OFF", NULL);
+    const char *q0 = g_ncap > 0 ? strchr(g_cap[0].key, '|') : NULL;
+    const char *q1 = g_ncap > 1 ? strchr(g_cap[1].key, '|') : NULL;
+    ok(n_on == 2 && g_ncap == 2 && q0 && q1 &&
+       !strcmp(on0, q0) && !strcmp(on1, q1) && !strstr(on0, "|#"),
+       "54e: with nothing repeated the flag changes no uid at all");
+  }
+
+
+  /* ── 55. a csv_delim that is a WORD ──────────────────────────────────────
+   *
+   * The engine resolved `tab`, `pipe`, `semi`, `ws` and `lit:` by name and
+   * took the FIRST CHARACTER of anything else. 87 rows said `comma`, so they
+   * split on `c` — and the Japanese crime and accident files they read contain
+   * no ASCII c at all, so every line became ONE field whose name was the whole
+   * header line. The record count stayed exactly right, which is why it
+   * survived a hand triage of the same rows that reasoned about "thirteen
+   * columns" while the engine was reading one. */
+  fx_reset();
+  fx_add("/d.csv", 200, "ward,method\nOgaki,bicycle\n");
+  g_ncap = 0;
+  rc = run_source("T_DELIM_COMMA", NULL);
+  ok(rc == 0 && g_ncap == 1 &&
+     strstr(g_cap[0].props, "\"ward\":\"Ogaki\"") != NULL &&
+     strstr(g_cap[0].props, "\"method\":\"bicycle\"") != NULL,
+     "55: csv_delim=comma splits on commas, into named fields");
+
+  /* 55b. A word that names nothing must NOT become its first letter. It reads
+   *      as the default comma — the likeliest recovery for a file somebody
+   *      called comma-separated — and `make lint-sources` fails the build on
+   *      the shape so it cannot ship twice. */
+  g_ncap = 0;
+  rc = run_source("T_DELIM_BAD", NULL);
+  ok(rc == 0 && g_ncap == 1 &&
+     strstr(g_cap[0].props, "\"ward\":\"Ogaki\"") != NULL &&
+     strstr(g_cap[0].props, "\"method\":\"bicycle\"") != NULL,
+     "55b: an unknown delimiter word reads as comma, never as its first letter");
 
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;

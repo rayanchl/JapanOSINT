@@ -865,6 +865,79 @@ which is precisely why it read as healthy for weeks. Fixed 2026-10-04 with
 **A row's record count says nothing about whether its FIELDS were parsed** —
 check one record's `properties` the first time a non-comma CSV row ships.
 
+**AND IT HAPPENED AGAIN TO 87 ROWS, THROUGH THE OPPOSITE MISTAKE: THEY SAID
+`csv_delim = "comma"`** (2026-10-24). The resolver named `tab`, `pipe`, `semi`,
+`ws` and `lit:<token>` and took the **first character** of anything else — so
+`comma` meant **`c`**. The Japanese crime and accident files these rows read
+contain no ASCII `c` at all, so every line became ONE FIELD whose NAME was the
+entire header line and whose value was the entire row: 20 columns of offence,
+method, police station, municipality, date, hour, place, victim age and lock
+status, in one unqueryable cell, with a correct record count on every run.
+77 rows in `hp3b25_jppolice.c`, 8 in `hp3b28_jppolice.c`, 2 in
+`hp3b25_jpinfra.c`.
+
+**What makes this worth a paragraph rather than a line is that a careful hand
+triage of those very rows walked straight past it.** The 2026-09-08 note at the
+head of `hp3b25_jppolice.c` works through the collision verdicts, fetches four
+of the files, matches the duplicate-line count to the loss exactly, and
+concludes "two incidents that match on all thirteen columns are, in the
+published file, the same thirteen bytes" — reasoning about thirteen columns
+while the engine was reading one. It reached a true conclusion about the FILE
+and never asked what the engine had made of it. The cheap check its own
+predecessor paragraph prescribes — read one record's `properties` — would have
+shown it in a second.
+
+So: **`comma` is accepted now**, a single character is still taken literally,
+`lit:` is still how a multi-character delimiter is declared, and a WORD that
+names nothing reads as the default comma with a line on stderr rather than as
+its first letter. `make lint-sources`' `csv-delim-name` fails the build on the
+shape (checked by introducing one: 0 findings clean, 1 and FAILED with
+`"kamma"`), and `hptest` 55 and 55b pin both halves on a body containing
+neither `c` nor `k`, so either mistake would leave the whole line in one field.
+
+Measured after, through the engine: `JO28_JCG_VESSEL_ACCIDENT_CSV` 19,370 of
+19,370 with **22 named fields** a record, the Gifu bicycle-theft file 1,630 of
+1,630 with **20**, and both JEPX power-market rows 9,984 and 9,953 complete
+with 24 and 14. Every shape notice those rows had been filing about unmatched
+title keys is gone, because the keys now match.
+
+**The two JEPX rows then showed the next layer**: with their fields finally
+readable, `id_keys = "受渡日"` is the DELIVERY DAY on a file of half-hour slots
+— a dimension, kept honest only by the content hash, which means an upstream
+price CORRECTION would have landed as a second row instead of updating the
+first. `受渡日+時刻コード` and `年月日+時刻コード` are 9,984 of 9,984 and 9,953
+of 9,953. A delimiter fix is not the end of a row's repair; it is the first
+time anyone can see the row.
+
+**AND THE SAME FILES NEEDED A SECOND, INDEPENDENT FIX: `occurrence_rows = 1`.**
+Once the columns were readable the collision came back smaller and real — 1,615
+of Gifu's 1,630 — because **a register of EVENTS whose columns are all
+categorical publishes two different events as the same bytes.** Three bicycles
+taken from one parking area in Ōgaki on 2024-05-17 at 12:00, all unlocked,
+victims in their twenties: three crimes, one row in the database. Japan Coast
+Guard's file has one tuple appearing **forty times** — forty pleasure-boat
+drift incidents in September 2018, in harbour, mooring failure, under typhoon
+conditions.
+
+The guard's content hash is exactly right for a CATALOGUE — `sec-nga-tod`
+serves one product 14 times byte for byte and storing it once is real dedupe —
+and exactly wrong here. **No record count can tell a catalogue from an
+occurrence register**, so the row's author declares which it is
+(`hp_source.occurrence_rows`, `hptest` 54–54e). The flag keys a repeat on its
+occurrence number WITHIN the file, which is a fact about the published document
+and not an invented identity; the first of a group keeps the uid it already
+had, so turning it on adds rows and re-keys none. 85 rows carry it — every
+HP_CSV row in those two files, because the flag states what the FILE is rather
+than what one sampled run showed.
+
+**That reverses the September decision, and the argument is in the file rather
+than silently applied.** Its objection was that distinguishing the rows would
+mean fabricating an identity; its own last paragraph is the answer — "the
+incident count is therefore the EMITTED number, not the stored one, and the run
+line prints both". A run line is not what anyone queries. Rule 2 says what was
+left unused is reported AS DATA, and here it was not even that: the database
+held fewer crimes than the police published, with nothing in it saying so.
+
 **Batch 31 has now had its `--check-filter` run (2026-10-06), and 65 rows
 failed it.** All 360 rows of `docs/candidate-sources-batch31.*.txt` were probed
 live; the full result is `docs/probe-sources-batch31.tsv`. 51 PASS. Sixty-five
@@ -1584,13 +1657,16 @@ pass are tests that open a second database of their own.
 of not matching a stamp, the stale-row case and both readings of
 `JO_DB_RESEED`.
 
-**CI then measured it: the TSan job is 36.0 min, from 82.8** (run 576,
-2026-10-24, all six jobs green), and the whole workflow got cheaper with it
-because `build-and-test` runs the same suite without the sanitiser:
-**34.7 min → 10.4 min**. 117 minutes of CI time a run, from two levers, both
-found by reading the job's own timestamps rather than by guessing — and the
-first of the two (the link) would have looked like the whole answer if the
-second had not been measured against it.
+**CI then measured it: the TSan job is ~40 min, from 82.8** — 36.0, 36.9 and
+45.4 over the next three green runs (2026-10-24), and three readings rather
+than one because this runner varies: `asan` on the same runs was 12.3, 10.2 and
+14.4 min on work that did not change. **A single CI duration is a draw from a
+distribution**, so quoting one is the same error as believing one probe. The
+whole workflow got cheaper with it, because `build-and-test` runs the same
+suite without the sanitiser: **34.7 min → ~10.5 min**. Both levers were found
+by reading the job's own timestamps rather than by guessing, and the first (the
+link) would have looked like the whole answer if the second had not been
+measured against it.
 
 **The next driver is already named, so nobody has to find it twice**:
 `test_source_category` spends 765 s on a 15-nearest vote over 42,255 declared
