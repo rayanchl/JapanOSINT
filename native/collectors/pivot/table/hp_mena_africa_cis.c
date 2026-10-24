@@ -57,28 +57,7 @@ static const hp_source HP_MENA_AF_CIS[] = {
       "Hebrew and English names, status, type, address and whether the company is a "
       "government or public company" },
 
-  { .id = "TR_MERSIS_GAZETTE", .name = "Turkey — trade registry gazette search",
-    .name_ja = "トルコ 商業登記官報", .category = "government",
-    .type = "scraped", .mode = HP_HTML,
-    .portal = "https://www.ticaretsicil.gov.tr", .record_type = "tr-gazette",
-    .tags = "\"tr\",\"gazette\",\"registry\"", .free_tier = 1,
-    .url = "https://www.ticaretsicil.gov.tr/view/hizmetlerimiz/ilanlar.php?ara={q}",
-    .base = "https://www.ticaretsicil.gov.tr", .filter_query = 1,
-    .description = "Turkish Trade Registry Gazette announcements naming an entity — "
-      "incorporations, capital increases, board changes and liquidations, which is "
-      "where Turkish corporate change is legally published" },
-
   /* ── Africa ────────────────────────────────────────────────────────────── */
-  { .id = "ZA_CIPC_DISCLOSURE", .name = "South Africa CIPC — enterprise enquiry",
-    .name_ja = "南アフリカ 企業登記(CIPC)", .category = "government",
-    .type = "scraped", .mode = HP_HTML,
-    .portal = "https://www.cipc.co.za", .record_type = "za-company",
-    .tags = "\"za\",\"registry\"", .free_tier = 1,
-    .url = "https://www.bizportal.gov.za/CompanySearch?q={q}",
-    .base = "https://www.bizportal.gov.za", .filter_query = 1,
-    .description = "South African company and close-corporation search via BizPortal "
-      "— registration number, status and type; CIPC's own API is credential-gated, "
-      "so this is the honest public surface" },
 
   { .id = "ZA_SAFLII_JUDGMENTS", .name = "SAFLII — Southern African judgments",
     .name_ja = "南部アフリカ 判例(SAFLII)", .category = "legal",

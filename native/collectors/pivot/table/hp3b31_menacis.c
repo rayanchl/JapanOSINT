@@ -82,17 +82,6 @@ static const hp_source HP3B31_MENACIS[] = {
       "legal form, licensed activities and the branch structure, in the Gulf's "
       "most openly searchable company register" },
 
-  { .id = "QA_MONAQASAT_TENDERS", .name = "Qatar — government tenders portal",
-    .name_ja = "カタール 政府調達", .category = "government",
-    .portal = "https://monaqasat.mof.gov.qa", .record_type = "qa-tender",
-    .tags = "\"qa\",\"procurement\",\"gulf\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://monaqasat.mof.gov.qa/Tenders?search={q}",
-    .base = "https://monaqasat.mof.gov.qa", .filter_query = 1,
-    .description = "Qatari ministry and public-entity tenders — the tender "
-      "reference, the scope, the bond required and the award, covering the "
-      "infrastructure programme that dominates Qatari state spending" },
-
   { .id = "OM_ISTITHMAAR_TENDERS", .name = "Oman — tender board & government procurement",
     .name_ja = "オマーン 政府調達", .category = "government",
     .portal = "https://etendering.tenderboard.gov.om", .record_type = "om-tender",
@@ -139,17 +128,6 @@ static const hp_source HP3B31_MENACIS[] = {
     .description = "Moroccan state and local authority tenders — the notice, "
       "the estimate, the bidders admitted and the award, plus the excluded "
       "contractors list maintained by the Treasury" },
-
-  { .id = "TN_OPEN_DATA_TENDERS", .name = "Tunisia — open data & public procurement",
-    .name_ja = "チュニジア オープンデータ/調達", .category = "government",
-    .portal = "http://www.data.gov.tn", .record_type = "tn-dataset",
-    .tags = "\"tn\",\"open-data\",\"procurement\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "http://www.data.gov.tn/fr/dataset?q={q}",
-    .base = "http://www.data.gov.tn", .filter_query = 1,
-    .description = "Tunisia's open data portal, which carries the TUNEPS "
-      "procurement extracts, the public enterprise list and the budget "
-      "execution data published after the transparency reforms" },
 
   { .id = "EG_EGYPT_GOV_SEARCH", .name = "Egypt — government services & gazette search",
     .name_ja = "エジプト 政府情報検索", .category = "government",
