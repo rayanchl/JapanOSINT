@@ -29,6 +29,17 @@ HOST_AGENT_KIND(HA_CONTACT,     "JapanOSINT/1.0 (contact via repo issues)")
 HOST_AGENT_KIND(HA_RCORP,       "RCorp-feeds/1.0 (+https://github.com/RCorp; feed collector; contact via repo issues)")
 HOST_AGENT_KIND(HA_COMPAT,      "Mozilla/5.0 (compatible; JapanOSINT/1.0; +https://github.com/rayanchl/JapanOSINT)")
 HOST_AGENT_KIND(HA_BROWSER,     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36")
+/* SEC asks every automated client to declare a contact it can reach, and
+ * refuses the repo URL and any github.com address. The repository owner's
+ * decision of 2026-10-24: SEC gets his address. Measured 2026-10-24 (data.sec.gov
+ * companyfacts / www.sec.gov Archives daily-index / efts.sec.gov search):
+ *     engine agent (repo URL)                       403 / 403 / 403
+ *     HA_CONTACT                                    200 / 403 / 200
+ *     "JapanOSINT/1.0 research (<owner address>)"   200 / 200 / 200
+ * Seven rows sent this address in their own headers; six others sent
+ * contact@japanosint.local or osint@example.org, which are not addresses
+ * anyone reads. One entry per host now makes every SEC request say the same. */
+HOST_AGENT_KIND(HA_SEC,         "JapanOSINT/1.0 research (rayanchouialkessal@gmail.com)")
 
 /* ── token and contact-URL blocks (was UA_OVERRIDE) ────────────────────── */
   HOST_AGENT("data.humdata.org", HA_RCORP)
@@ -584,3 +595,7 @@ HOST_AGENT_KIND(HA_BROWSER,     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537
 
   HOST_AGENT("www.hkd.meti.go.jp", HA_BROWSER)
   HOST_AGENT("www.bungeika.or.jp", HA_BROWSER)
+  /* SEC: see HA_SEC above. */
+  HOST_AGENT("www.sec.gov", HA_SEC)
+  HOST_AGENT("data.sec.gov", HA_SEC)
+  HOST_AGENT("efts.sec.gov", HA_SEC)
