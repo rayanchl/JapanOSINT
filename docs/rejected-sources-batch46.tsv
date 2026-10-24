@@ -1,0 +1,95 @@
+# Batch 46 rejects, kept as data rather than dropped (2026-10-19).
+# 899 candidate layers were discovered by asking 195 ArcGIS service roots for their own
+# directory; 819 answered /query with real records. These 80 did not, and each says why.
+#   NO_QUERY        the layer exists in the directory but its /query endpoint refuses
+#                   (no query capability, or a 200 carrying an error body)
+#   EMPTY_RESULTSET it answers and holds nothing — a source guaranteed to emit nothing
+#                   on every run, which is what CLAUDE.md calls the invisible nothing
+#   NO_ID_FIELD     no objectIdField and no OBJECTID/FID: every uid would be a content
+#                   hash, so a record that CHANGES becomes a new row instead of an update
+#   NET_ERR/HTTP_ERR one reading, not a property — these may be a bad afternoon
+#
+# A further 739 PASS layers were not selected: deduped (the same layer under the ArcGIS/arcgis
+# and MapServer/FeatureServer spellings), under the 50-record floor, cartography by name
+# (hillshade, contour, tile index), or beyond this batch's 2-per-root cap and 165 target.
+verdict	root	service	type	layer	layer_name	count	id_field	geom	note
+EMPTY_RESULTSET	https://services.arcgis.com/8lRhdTsQyJpO52F1/arcgis/rest/services	511_IA_Road_Conditions_Change_View	FeatureServer	0	Iowa DOT Winter Road Conditions	0		esriGeometryPolyline	
+EMPTY_RESULTSET	https://services.arcgis.com/Ej0PsM5Aw677QF1W/arcgis/rest/services	_Evacuation_Routes_view_6e0ca9e8f25344ffa4c4a11b305884c3	FeatureServer	0	Evacuation Routes	0		esriGeometryPolyline	
+EMPTY_RESULTSET	https://services.arcgis.com/aA3snZwJfFkVyDuP/arcgis/rest/services	_Evacuation_Routes_view_ab508cef4b51423aa6fde7edfa62743e	FeatureServer	0	Evacuation Routes	0		esriGeometryPolyline	
+EMPTY_RESULTSET	https://services.arcgis.com/r4A0V7UzH9fcLVvv/arcgis/rest/services	00297_FieldMaps	FeatureServer	0	00297_points	0		esriGeometryPoint	
+EMPTY_RESULTSET	https://services.arcgis.com/r4A0V7UzH9fcLVvv/arcgis/rest/services	00297_FieldMaps	FeatureServer	1	00297_lines	0		esriGeometryPolyline	
+EMPTY_RESULTSET	https://services1.arcgis.com/2iUE8l8JKrP2tygQ/arcgis/rest/services	2018_NWS_Storm_Based_Warnings	FeatureServer	0	NWS_Storm_Based_Warnings	0		esriGeometryPolygon	
+EMPTY_RESULTSET	https://services1.arcgis.com/9YyqaQtDdDR8tupG/arcgis/rest/services	3W_ASBUILT__RM210233_WFL1	FeatureServer	2	swManhole	0		esriGeometryPoint	
+EMPTY_RESULTSET	https://services1.arcgis.com/fXHQyq63u0UsTeSM/arcgis/rest/services	17_008_Tornado_Tracks	FeatureServer	0	Text	0		esriGeometryPoint	
+EMPTY_RESULTSET	https://services1.arcgis.com/fXHQyq63u0UsTeSM/arcgis/rest/services	17_008_Tornado_Tracks	FeatureServer	1	Points	0		esriGeometryPoint	
+EMPTY_RESULTSET	https://services2.arcgis.com/aIrBD8yn1TDTEXoz/arcgis/rest/services	AAH_Abandonment_Public	FeatureServer	0	AAH_Abandonment	0		esriGeometryPoint	
+EMPTY_RESULTSET	https://services2.arcgis.com/aIrBD8yn1TDTEXoz/arcgis/rest/services	AAH_CleanUp_Public	FeatureServer	0	AAH_CleanUp	0		esriGeometryPoint	
+EMPTY_RESULTSET	https://services2.arcgis.com/aIrBD8yn1TDTEXoz/arcgis/rest/services	AAH_Renewal_Public	FeatureServer	0	AAH_Renewal	0		esriGeometryPoint	
+EMPTY_RESULTSET	https://services2.arcgis.com/tgYSvsRXvVD2Ic84/arcgis/rest/services	201908cafe	FeatureServer	1	Review	0			
+EMPTY_RESULTSET	https://services3.arcgis.com/b9WvedVPoizGfvfD/arcgis/rest/services	ActiveTO_and_CurbTO_View	FeatureServer	0	ActiveTO and CurbTO	0		esriGeometryPolyline	
+EMPTY_RESULTSET	https://services6.arcgis.com/M9nrgnB1gu8YnLFM/arcgis/rest/services	survey123_bc62c9bb95c94cdb8b9bc966b604848d_fieldworker	FeatureServer	0	surveyPoint	0		esriGeometryPoint	
+EMPTY_RESULTSET	https://services6.arcgis.com/M9nrgnB1gu8YnLFM/arcgis/rest/services	survey123_bc62c9bb95c94cdb8b9bc966b604848d_fieldworker	FeatureServer	1	metadata	0			
+EMPTY_RESULTSET	https://services7.arcgis.com/aWegpbylh57tDDge/arcgis/rest/services	service_2862d2c3490440e7b28ba621586c83d7	FeatureServer	0	survey	0		esriGeometryPoint	
+EMPTY_RESULTSET	https://services7.arcgis.com/v8XBa2naYNQGOjlG/arcgis/rest/services	3faec6f9482d4031b4d9f8cd197e149d_public_view_1592361765364	FeatureServer	0	UrbanEvents	0		esriGeometryPolygon	
+EMPTY_RESULTSET	https://services7.arcgis.com/v8XBa2naYNQGOjlG/arcgis/rest/services	3faec6f9482d4031b4d9f8cd197e149d_public_view_1592361765364	FeatureServer	2	Overlays	0		esriGeometryPolygon	
+HTTP_ERR	https://gis.charttools.noaa.gov/arcgis/rest/services	encdirect/enc_coverage	MapServer	1	General.Coverage_area				{'code': 500, 'message': 'Error handling service request :Could not find service. Service 
+HTTP_ERR	https://gis.charttools.noaa.gov/arcgis/rest/services	encdirect/enc_coverage	MapServer	3	Approach.Coverage_area				{'code': 500, 'message': 'Error handling service request :Could not find service. Service 
+NET_ERR	https://caltrans-gis.dot.ca.gov/arcgis/rest/services	CaRS-Partnerships/California_Road_Sharing_Initiative_Partnerships	FeatureServer	0	CaRS Partnerships	58		esriGeometryPolygon	<urlopen error [Errno 104] Connection reset by peer>
+NET_ERR	https://enterprise.firstmap.delaware.gov/arcgis/rest/services	Basemaps/DE_Aerial_Basemap	MapServer	1	Major Routes				<urlopen error [Errno 104] Connection reset by peer>
+NET_ERR	https://gis.ekurhuleni.gov.za/arcgis/rest/services	CoE_2023_ProcapMap_MIL1	MapServer	4	Street Centrelines				<urlopen error [Errno 104] Connection reset by peer>
+NO_ID_FIELD	https://gis.massdot.state.ma.us/arcgis/rest/services	Massachusetts_Tercentenary_Markers	MapServer	1	Tercentenary_Marker__ATTACH	167			
+NO_ID_FIELD	https://portal.miningcadastre.go.ke/arcgis/rest/services	SSRSMaps_SOE	MapServer	0	Grid Conversion Buffer Zone	1522		esriGeometryPolygon	
+NO_QUERY	https://gis.charttools.noaa.gov/arcgis/rest/services	encdirect/enc_coverage	MapServer	4	Harbor.Coverage_area			esriGeometryPolygon	{'code': 500, 'message': 'Error handling service request :Could not find service. Service 
+NO_QUERY	https://gis.ngdc.noaa.gov/arcgis/rest/services	bathy_gap_analysis_machc	MapServer	0	3 or more soundings per ~100m cell				{'code': 400, 'message': 'Invalid or missing input parameters.', 'details': []}
+NO_QUERY	https://gis.ngdc.noaa.gov/arcgis/rest/services	bathy_gap_analysis_machc	MapServer	1	1-2 soundings per ~100m cell				{'code': 400, 'message': 'Invalid or missing input parameters.', 'details': []}
+NO_QUERY	https://gis.ngdc.noaa.gov/arcgis/rest/services	bathy_gap_analysis	MapServer	0	3 or more soundings per ~100m cell				{'code': 400, 'message': 'Invalid or missing input parameters.', 'details': []}
+NO_QUERY	https://gis.ngdc.noaa.gov/arcgis/rest/services	bathy_gap_analysis	MapServer	1	1-2 soundings per ~100m cell				{'code': 400, 'message': 'Invalid or missing input parameters.', 'details': []}
+NO_QUERY	https://gis.ngdc.noaa.gov/arcgis/rest/services	caribe_ews_energy_plots	MapServer	0	1882_max_height.tif				{'code': 400, 'message': 'Invalid or missing input parameters.', 'details': []}
+NO_QUERY	https://gisdata.in.gov/server/rest/services	Annual_Precipitation_2010	MapServer	0	Annual Precipitation 2010				{'code': 400, 'message': 'Invalid or missing input parameters.', 'details': []}
+NO_QUERY	https://gisdata.in.gov/server/rest/services	Annual_Precipitation_2011	MapServer	0	Annual Precipitation 2011				{'code': 400, 'message': 'Invalid or missing input parameters.', 'details': []}
+NO_QUERY	https://gisdata.in.gov/server/rest/services	Annual_Precipitation_2012	MapServer	0	Annual Precipitation 2012				{'code': 400, 'message': 'Invalid or missing input parameters.', 'details': []}
+NO_QUERY	https://gisdata.in.gov/server/rest/services	Annual_Precipitation_2013	MapServer	0	Annual Precipitation 2013				{'code': 400, 'message': 'Invalid or missing input parameters.', 'details': []}
+NO_QUERY	https://gisdata.in.gov/server/rest/services	Annual_Precipitation_2014	MapServer	0	Annual Precipitation 2014				{'code': 400, 'message': 'Invalid or missing input parameters.', 'details': []}
+NO_QUERY	https://gisservices.dec.ny.gov/arcgis/rest/services	dec_backcountry_features	MapServer	1	Beach			esriGeometryPoint	{'code': 400, 'message': 'Failed to execute query.', 'details': []}
+NO_QUERY	https://gtkdata.gtk.fi/arcgis/rest/services	1GE_bedrock_surface_B	MapServer	0	FI_1GE_Structure	587		esriGeometryPolyline	{'code': 400, 'message': 'Pagination is not supported.', 'details': []}
+NO_QUERY	https://gtkdata.gtk.fi/arcgis/rest/services	1GE_bedrock_surface_B	MapServer	1	FI_1GE_Bedrock_age	4651		esriGeometryPolygon	{'code': 400, 'message': 'Pagination is not supported.', 'details': []}
+NO_QUERY	https://gtkdata.gtk.fi/arcgis/rest/services	1GE_bedrock_surface_B	MapServer	2	FI_1GE_Surface_lithology	50763		esriGeometryPolygon	{'code': 400, 'message': 'Pagination is not supported.', 'details': []}
+NO_QUERY	https://gtkdata.gtk.fi/arcgis/rest/services	1GE_bedrock_surface_B	MapServer	3	FI_1GE_Bedrock	4651		esriGeometryPolygon	{'code': 400, 'message': 'Pagination is not supported.', 'details': []}
+NO_QUERY	https://gtkdata.gtk.fi/arcgis/rest/services	1GE_bedrock_surface_B	MapServer	4	FI_1GE_Surface	50763		esriGeometryPolygon	{'code': 400, 'message': 'Pagination is not supported.', 'details': []}
+NO_QUERY	https://map.bedford.gov.uk/arcgis/rest/services	Basemap/BBC_Default_Basemap	MapServer	16	Default				{'code': 400, 'message': 'Invalid or missing input parameters.', 'details': []}
+NO_QUERY	https://mapprod3.environment.nsw.gov.au/arcgis/rest/services	Basemap/DPEBasemap	MapServer	0	DPEBasemap	1		esriGeometryPolygon	{'code': 400, 'message': 'Pagination is not supported.', 'details': []}
+NO_QUERY	https://maps.austintexas.gov/arcgis/rest/services	AirportNoise/AirportNoiseMap	MapServer	0	Noise Contours			esriGeometryPolyline	{'code': 500, 'message': 'Error performing query operation', 'details': []}
+NO_QUERY	https://maps.austintexas.gov/arcgis/rest/services	AirportNoise/AirportNoiseMap	MapServer	1	Noise Buffer			esriGeometryPolyline	{'code': 500, 'message': 'Error performing query operation', 'details': []}
+NO_QUERY	https://maps.austintexas.gov/arcgis/rest/services	AirportNoise/AirportNoiseMap	MapServer	2	Airport Parcels			esriGeometryPolygon	{'code': 500, 'message': 'Error performing query operation', 'details': []}
+NO_QUERY	https://maps.austintexas.gov/arcgis/rest/services	AirportNoise/AirportNoiseMap	MapServer	3	ALP Acquisition Parcels			esriGeometryPolygon	{'code': 500, 'message': 'Error performing query operation', 'details': []}
+NO_QUERY	https://maps.austintexas.gov/arcgis/rest/services	AirportNoise/AirportNoiseMap	MapServer	4	BAFB Acquistion Parcels			esriGeometryPolygon	{'code': 500, 'message': 'Error performing query operation', 'details': []}
+NO_QUERY	https://portal.data.nsw.gov.au/arcgis/rest/services	ALS_Analysis_into_Forest_Change_Wauchope	MapServer	286	2023 Canopy Cover Model (%)				{'code': 400, 'message': 'Invalid or missing input parameters.', 'details': []}
+NO_QUERY	https://portal.data.nsw.gov.au/arcgis/rest/services	ALS_Analysis_into_Forest_Change_Wauchope	MapServer	266	2023 Canopy Height Model (m)				{'code': 400, 'message': 'Invalid or missing input parameters.', 'details': []}
+NO_QUERY	https://portal.data.nsw.gov.au/arcgis/rest/services	ALS_Analysis_into_Forest_Change_Wauchope	MapServer	123	2016 Canopy Cover Model (%)				{'code': 400, 'message': 'Invalid or missing input parameters.', 'details': []}
+NO_QUERY	https://portal.data.nsw.gov.au/arcgis/rest/services	ALS_Analysis_into_Forest_Change_Wauchope	MapServer	124	2016 Canopy Height Model (m)				{'code': 400, 'message': 'Invalid or missing input parameters.', 'details': []}
+NO_QUERY	https://portal.data.nsw.gov.au/arcgis/rest/services	ALS_Analysis_into_Forest_Change_Wauchope	MapServer	309	2012 Canopy Cover Model (%)				{'code': 400, 'message': 'Invalid or missing input parameters.', 'details': []}
+NO_QUERY	https://services1.arcgis.com/UzywP0SobSWMx2Pl/arcgis/rest/services	survey123_302b30c183384fb8a7cc5c05daa6e5fd_form	FeatureServer	0	survey			esriGeometryPoint	{'code': 400, 'message': '', 'details': ['This operation is not supported.']}
+NO_QUERY	https://services1.arcgis.com/XlTFoh9FvQbdpw6d/arcgis/rest/services	survey123_9d97e791135140f893021fe905b20668_form	FeatureServer	0	survey			esriGeometryPoint	{'code': 400, 'message': '', 'details': ['This operation is not supported.']}
+NO_QUERY	https://services1.arcgis.com/XlTFoh9FvQbdpw6d/arcgis/rest/services	survey123_cd7d5dca688e4467a88d251844770797_form	FeatureServer	0	survey			esriGeometryPoint	{'code': 400, 'message': '', 'details': ['This operation is not supported.']}
+NO_QUERY	https://services1.arcgis.com/cGRQILZoIvUkhwTf/arcgis/rest/services	survey123_55f603923b694b85a9b51b540ec9653d_form	FeatureServer	0	survey			esriGeometryPoint	{'code': 400, 'message': '', 'details': ['This operation is not supported.']}
+NO_QUERY	https://services1.arcgis.com/cGRQILZoIvUkhwTf/arcgis/rest/services	survey123_fb1182e786224344a86c1692776aa8c9_form	FeatureServer	0	survey			esriGeometryPoint	{'code': 400, 'message': '', 'details': ['This operation is not supported.']}
+NO_QUERY	https://services1.arcgis.com/fo4p3O1xXIiFqk9X/arcgis/rest/services	AccountRequests_submit_5a9484be9044466ea10fab594a38dd6c	FeatureServer	0	AccountRequests			esriGeometryPoint	{'code': 400, 'message': '', 'details': ['This operation is not supported.']}
+NO_QUERY	https://services2.arcgis.com/xtuWQvb2YQnp0z3F/arcgis/rest/services	AccountRequests_submit_2d87945a518e4619b48a070f891161fc	FeatureServer	0	AccountRequests			esriGeometryPoint	{'code': 400, 'message': '', 'details': ['This operation is not supported.']}
+NO_QUERY	https://services5.arcgis.com/PZeNMNQU2CU59YeG/arcgis/rest/services	fieldReport_ver_1_2	FeatureServer	0	fieldReport_ver.1.2			esriGeometryPoint	{'code': 400, 'message': '', 'details': ['This operation is not supported.']}
+NO_QUERY	https://services6.arcgis.com/M9nrgnB1gu8YnLFM/arcgis/rest/services	survey123_8210ccbb13574dee8a4a434cb5878d4a_form	FeatureServer	0	survey			esriGeometryPoint	{'code': 400, 'message': '', 'details': ['This operation is not supported.']}
+NO_QUERY	https://services6.arcgis.com/ruiLLQIvxE9JPmz1/arcgis/rest/services	survey123_a56c0832933647dd8432a17884a30178_form	FeatureServer	0	survey			esriGeometryPoint	{'code': 400, 'message': '', 'details': ['This operation is not supported.']}
+NO_QUERY	https://services6.arcgis.com/ruiLLQIvxE9JPmz1/arcgis/rest/services	survey123_3cabe837221744ecb8e7d86a78a991db_form	FeatureServer	0	survey			esriGeometryPoint	{'code': 400, 'message': '', 'details': ['This operation is not supported.']}
+NO_QUERY	https://services6.arcgis.com/vgk9QzEU5SI8I6pT/arcgis/rest/services	service_6f2ffb7a214b461b9d443f4af1258680	FeatureServer	0	survey			esriGeometryPoint	{'code': 400, 'message': '', 'details': ['This operation is not supported.']}
+NO_QUERY	https://services6.arcgis.com/vgk9QzEU5SI8I6pT/arcgis/rest/services	survey123_595bc258fa5f4370be574ade3477c1a6_form	FeatureServer	0	survey			esriGeometryPoint	{'code': 400, 'message': '', 'details': ['This operation is not supported.']}
+NO_QUERY	https://services7.arcgis.com/DkC6f6v0YUQX0rke/arcgis/rest/services	survey123_71918ac195f9462caa142453b8bff394_fieldworker	FeatureServer	0	survey			esriGeometryPoint	{'code': 400, 'message': '', 'details': ['This operation is not supported.']}
+NO_QUERY	https://services7.arcgis.com/DkC6f6v0YUQX0rke/arcgis/rest/services	survey123_a77f33a9b9f649cfada5c7983c67874b_form	FeatureServer	0	survey			esriGeometryPoint	{'code': 400, 'message': '', 'details': ['This operation is not supported.']}
+NO_QUERY	https://services7.arcgis.com/JPM37uGraOFrUEDo/arcgis/rest/services	survey123_b0a7fe8efe82476f848562fc2df6ce35_form	FeatureServer	0	survey			esriGeometryPoint	{'code': 400, 'message': '', 'details': ['This operation is not supported.']}
+NO_QUERY	https://services7.arcgis.com/aWegpbylh57tDDge/arcgis/rest/services	survey123_a602d133dbc24492bea57cf05742f0df_form	FeatureServer	0	survey			esriGeometryPoint	{'code': 400, 'message': '', 'details': ['This operation is not supported.']}
+NO_QUERY	https://services8.arcgis.com/54QMawiMC688GOIY/arcgis/rest/services	survey123_70a6e68720ac40349328ec363a1e2e26_form	FeatureServer	0	survey			esriGeometryPoint	{'code': 400, 'message': '', 'details': ['This operation is not supported.']}
+NO_QUERY	https://spatial.durham.gov.uk/arcgis/rest/services	External/Background_10k	MapServer	0	Watermark			esriGeometryPolygon	{'code': 400, 'extendedCode': -2147220222, 'message': 'Requested operation is not supporte
+NO_QUERY	https://spatial.durham.gov.uk/arcgis/rest/services	External/Background_10k	MapServer	1	1:10,000			esriGeometryPolygon	{'code': 400, 'extendedCode': -2147220222, 'message': 'Requested operation is not supporte
+NO_QUERY	https://spatial.durham.gov.uk/arcgis/rest/services	External/Background_InterMap	MapServer	1	Watermark			esriGeometryPolygon	{'code': 400, 'extendedCode': -2147220222, 'message': 'Requested operation is not supporte
+NO_QUERY	https://spatial.durham.gov.uk/arcgis/rest/services	External/Background_InterMap	MapServer	2	1:10,000				{'code': 400, 'extendedCode': -2147220222, 'message': 'Requested operation is not supporte
+NO_QUERY	https://spatial.durham.gov.uk/arcgis/rest/services	External/Background_InterMap	MapServer	3	1:25,000				{'code': 400, 'extendedCode': -2147220222, 'message': 'Requested operation is not supporte
+NO_QUERY	https://srvags.sgc.gov.co/arcgis/rest/services	Amenaza_Sismica/Amenaza_Sismica_Nacional	MapServer	0	Valor Amenaza	1122		esriGeometryPoint	{'code': 400, 'message': 'Pagination is not supported.', 'details': []}
+NO_QUERY	https://srvags.sgc.gov.co/arcgis/rest/services	Amenaza_Sismica/Amenaza_Sismica_Nacional	MapServer	1	Capitales principales	5		esriGeometryPolygon	{'code': 400, 'message': 'Pagination is not supported.', 'details': []}

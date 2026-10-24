@@ -6,6 +6,10 @@
  * since — this file, not the manifest, is the current copy. The
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
+/* VJSON_IDKEYS / VJSON_PREP: used from here down, so the include sits at the
+ * top. It used to sit beside the first row that needed it, 280 lines below the
+ * first row that needs it now. */
+#include "_vjson_idkeys.inc"
 
 VJSON(lat_co_covid, "lat-co-covid", "Datos Abiertos Colombia - COVID-19 confirmed cases", "コロンビア：保健 - Datos Abiertos Colombia - COVID-19 confirmed cases",
   "latam_data", "health",
@@ -93,12 +97,16 @@ VJSON_KEYED(lat_co_fic, "lat-co-fic", "Datos Abiertos Colombia - Collective inve
   "Reported returns for Colombian collective investment funds (FIC) by fund and period.",
   ":id");
 
-VJSON(lat_co_ideam_estaciones, "lat-co-ideam-estaciones", "Datos Abiertos Colombia - IDEAM national weather station catalogue", "コロンビア：環境 - Datos Abiertos Colombia - IDEAM national weather station catalogue",
+/* Registry sweep 2026-10-22: 10,000 / 9,917. VJSON's id precedence
+   list finds no field in this Socrata record, so it fell back and collapsed
+   the series. Measured over two pages before the key was touched: 1,000 of 1,000; the station register, one row per station code. */
+VJSON_IDKEYS(lat_co_ideam_estaciones, "lat-co-ideam-estaciones", "Datos Abiertos Colombia - IDEAM national weather station catalogue", "コロンビア：環境 - Datos Abiertos Colombia - IDEAM national weather station catalogue",
   "latam_data", "environment",
   "https://www.datos.gov.co/resource/hp9r-jxuu.json?$limit=500&$order=:id",
   "",
   "es", "[\"col\",\"environment\",\"data\"]", 86400,
-  "IDEAM's national hydro-meteorological station register with coordinates, altitude, status and operator.");
+  "IDEAM's national hydro-meteorological station register with coordinates, altitude, status and operator.",
+  "codigo");
 
 VJSON(lat_co_inspeccion_sanitaria, "lat-co-inspeccion-sanitaria", "Datos Abiertos Colombia - Sanitary inspection certificates", "コロンビア：保健 - Datos Abiertos Colombia - Sanitary inspection certificates",
   "latam_data", "health",
@@ -121,12 +129,16 @@ VJSON(lat_co_labs_ambientales, "lat-co-labs-ambientales", "Datos Abiertos Colomb
   "es", "[\"col\",\"environment\",\"data\"]", 86400,
   "IDEAM-accredited environmental testing laboratories with accreditation scope and validity.");
 
-VJSON(lat_co_medicamentos, "lat-co-medicamentos", "Datos Abiertos Colombia - Unique code of authorised medicines", "コロンビア：保健 - Datos Abiertos Colombia - Unique code of authorised medicines",
+/* Registry sweep 2026-10-22: 10,000 / 6,245. VJSON's id precedence
+   list finds no field in this Socrata record, so it fell back and collapsed
+   the series. Measured over two pages before the key was touched: 1,000 of 1,000. The natural three-part key reaches only 983: INVIMA repeats a CUM row per ACTIVE INGREDIENT and per role, which is what the 15 remaining groups differ on. */
+VJSON_IDKEYS(lat_co_medicamentos, "lat-co-medicamentos", "Datos Abiertos Colombia - Unique code of authorised medicines", "コロンビア：保健 - Datos Abiertos Colombia - Unique code of authorised medicines",
   "latam_data", "health",
   "https://www.datos.gov.co/resource/i7cb-raxc.json?$limit=500&$order=:id",
   "",
   "es", "[\"col\",\"health\",\"data\"]", 86400,
-  "INVIMA's register of medicines with a currently valid unique medicine code (CUM).");
+  "INVIMA's register of medicines with a currently valid unique medicine code (CUM).",
+  "expediente+expedientecum+consecutivocum+principioactivo+nombrerol");
 
 VJSON(lat_co_pdet, "lat-co-pdet", "Datos Abiertos Colombia - PDET priority municipalities", "コロンビア：データ - Datos Abiertos Colombia - PDET priority municipalities",
   "latam_data", "conflict",
@@ -156,12 +168,16 @@ VJSON(lat_co_precios_medic, "lat-co-precios-medic", "Datos Abiertos Colombia - C
   "es", "[\"col\",\"health\",\"data\"]", 86400,
   "Reported transaction prices for medicines across Colombian purchasers, used to spot price outliers.");
 
-VJSON(lat_co_procuraduria, "lat-co-procuraduria", "Datos Abiertos Colombia - Procuraduria General staff directory", "コロンビア：政府 - Datos Abiertos Colombia - Procuraduria General staff directory",
+/* Registry sweep 2026-10-22: 4,986 / 4,166. VJSON's id precedence
+   list finds no field in this Socrata record, so it fell back and collapsed
+   the series. Measured over two pages before the key was touched: 1,000 of 1,000, no part absent (the name composite reaches 1,000 too, but one row is missing a surname). */
+VJSON_IDKEYS(lat_co_procuraduria, "lat-co-procuraduria", "Datos Abiertos Colombia - Procuraduria General staff directory", "コロンビア：政府 - Datos Abiertos Colombia - Procuraduria General staff directory",
   "latam_data", "gov",
   "https://www.datos.gov.co/resource/actn-47cb.json?$limit=500&$order=:id",
   "",
   "es", "[\"col\",\"gov\",\"data\"]", 86400,
-  "Named officials of Colombia's Inspector General office with post and duty station.");
+  "Named officials of Colombia's Inspector General office with post and duty station.",
+  "correo_electronico+cargo");
 
 VJSON(lat_co_reps, "lat-co-reps", "Datos Abiertos Colombia - Special register of health providers and sites (REPS)", "コロンビア：保健 - Datos Abiertos Colombia - Special register of health providers and sites (REPS)",
   "latam_data", "health",
@@ -170,12 +186,16 @@ VJSON(lat_co_reps, "lat-co-reps", "Datos Abiertos Colombia - Special register of
   "es", "[\"col\",\"health\",\"data\"]", 86400,
   "Every registered Colombian health provider and service location with services enabled and status.");
 
-VJSON(lat_co_runt_actores, "lat-co-runt-actores", "Datos Abiertos Colombia - RUNT transport actors by municipality", "コロンビア：交通 - Datos Abiertos Colombia - RUNT transport actors by municipality",
+/* Registry sweep 2026-10-22: 10,000 emitted / 5,111 stored. VJSON's id precedence
+   list finds no field in this Socrata record, so it fell back and collapsed
+   the series. Measured over two pages before the key was touched: 1,000 of 1,000, no part ever absent; the record is a company PER MONTH PER ACTOR TYPE, and id_empresa alone is 984 of 1,000. */
+VJSON_IDKEYS(lat_co_runt_actores, "lat-co-runt-actores", "Datos Abiertos Colombia - RUNT transport actors by municipality", "コロンビア：交通 - Datos Abiertos Colombia - RUNT transport actors by municipality",
   "latam_data", "transport",
   "https://www.datos.gov.co/resource/epfm-5fhb.json?$limit=500&$order=:id",
   "",
   "es", "[\"col\",\"transport\",\"data\"]", 86400,
-  "Registered transport-system actors (drivers, operators, centres) per municipality and department.");
+  "Registered transport-system actors (drivers, operators, centres) per municipality and department.",
+  "id_empresa+a_o+mes_nombre+tipo_actor");
 
 VJSON(lat_co_rups, "lat-co-rups", "Datos Abiertos Colombia - Register of public-utility providers (RUPS)", "コロンビア：政府 - Datos Abiertos Colombia - Register of public-utility providers (RUPS)",
   "latam_data", "gov",
@@ -191,12 +211,16 @@ VJSON(lat_co_secop_integrado, "lat-co-secop-integrado", "Datos Abiertos Colombia
   "es", "[\"col\",\"economy\",\"data\"]", 86400,
   "Consolidated view across SECOP I, SECOP II and the Tienda Virtual, one row per procurement operation.");
 
-VJSON(lat_co_secop1_multas, "lat-co-secop1-multas", "Datos Abiertos Colombia - SECOP I fines and sanctions", "コロンビア：司法 - Datos Abiertos Colombia - SECOP I fines and sanctions",
+/* Registry sweep 2026-10-22: 1,716 / 1,619. VJSON's id precedence
+   list finds no field in this Socrata record, so it fell back and collapsed
+   the series. Measured over two pages before the key was touched: 1,000 of 1,000; the process URL is one per sanction. */
+VJSON_IDKEYS(lat_co_secop1_multas, "lat-co-secop1-multas", "Datos Abiertos Colombia - SECOP I fines and sanctions", "コロンビア：司法 - Datos Abiertos Colombia - SECOP I fines and sanctions",
   "latam_data", "legal",
   "https://www.datos.gov.co/resource/4n4q-k399.json?$limit=500&$order=:id",
   "",
   "es", "[\"col\",\"legal\",\"data\"]", 86400,
-  "Fines, penalties and sanctions imposed on contractors under SECOP I, with entity and cause.");
+  "Fines, penalties and sanctions imposed on contractors under SECOP I, with entity and cause.",
+  "ruta_de_proceso");
 
 /* Socrata row id, as on lat-co-extranjeros above: 500 of 500 distinct live. */
 VJSON_KEYED(lat_co_secop1_procesos, "lat-co-secop1-procesos", "Datos Abiertos Colombia - SECOP I procurement processes", "コロンビア：経済 - Datos Abiertos Colombia - SECOP I procurement processes",
@@ -207,12 +231,16 @@ VJSON_KEYED(lat_co_secop1_procesos, "lat-co-secop1-procesos", "Datos Abiertos Co
   "Legacy SECOP I tender records, still the only source for older Colombian contracting.",
   ":id");
 
-VJSON(lat_co_secop2_contratos, "lat-co-secop2-contratos", "Datos Abiertos Colombia - SECOP II electronic contracts", "コロンビア：経済 - Datos Abiertos Colombia - SECOP II electronic contracts",
+/* Registry sweep 2026-10-22: 10,000 / 6,789. VJSON's id precedence
+   list finds no field in this Socrata record, so it fell back and collapsed
+   the series. Measured over two pages before the key was touched: 1,000 of 1,000 distinct over two pages; the contract id, which is what the record is. */
+VJSON_IDKEYS(lat_co_secop2_contratos, "lat-co-secop2-contratos", "Datos Abiertos Colombia - SECOP II electronic contracts", "コロンビア：経済 - Datos Abiertos Colombia - SECOP II electronic contracts",
   "latam_data", "economy",
   "https://www.datos.gov.co/resource/jbjy-vk9h.json?$limit=500&$order=:id",
   "",
   "es", "[\"col\",\"economy\",\"data\"]", 86400,
-  "Every contract awarded through Colombia's SECOP II e-procurement platform: buying entity, supplier, value, dates and contract object.");
+  "Every contract awarded through Colombia's SECOP II e-procurement platform: buying entity, supplier, value, dates and contract object.",
+  "id_contrato");
 
 /* Socrata row id, as on lat-co-extranjeros above: 500 of 500 distinct live. */
 VJSON_KEYED(lat_co_secop2_procesos, "lat-co-secop2-procesos", "Datos Abiertos Colombia - SECOP II procurement processes", "コロンビア：経済 - Datos Abiertos Colombia - SECOP II procurement processes",
@@ -304,12 +332,16 @@ VJSON(lat_co_tratados, "lat-co-tratados", "Datos Abiertos Colombia - Internation
   "es", "[\"col\",\"gov\",\"data\"]", 86400,
   "Treaty register with counterpart, subject, signature and entry-into-force dates.");
 
-VJSON(lat_co_trm, "lat-co-trm", "Datos Abiertos Colombia - Representative market exchange rate (TRM)", "コロンビア：経済 - Datos Abiertos Colombia - Representative market exchange rate (TRM)",
+/* Registry sweep 2026-10-22: 8,372 / 8,288. VJSON's id precedence
+   list finds no field in this Socrata record, so it fell back and collapsed
+   the series. Measured over two pages before the key was touched: 1,000 of 1,000; a daily FX rate IS identified by the day it applies from. */
+VJSON_IDKEYS(lat_co_trm, "lat-co-trm", "Datos Abiertos Colombia - Representative market exchange rate (TRM)", "コロンビア：経済 - Datos Abiertos Colombia - Representative market exchange rate (TRM)",
   "latam_data", "economy",
   "https://www.datos.gov.co/resource/32sa-8pi3.json?$limit=500&$order=:id",
   "",
   "es", "[\"col\",\"economy\",\"data\"]", 86400,
-  "Daily COP/USD representative market rate as certified by the Superintendencia Financiera.");
+  "Daily COP/USD representative market rate as certified by the Superintendencia Financiera.",
+  "vigenciadesde");
 
 VJSON(lat_co_turismo_rnt, "lat-co-turismo-rnt", "Datos Abiertos Colombia - National tourism register (RNT)", "コロンビア：経済 - Datos Abiertos Colombia - National tourism register (RNT)",
   "latam_data", "economy",

@@ -27,16 +27,13 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"pivot\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?Query={q}&Count=100",
+    .url = "https://www.kkj.go.jp/api/?Query={q}&Count=1000",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
     .interval = 0,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
     .title_keys = "ProjectName",
     .description = "Full-text search over every tender and award notice that "
       "Japanese national ministries, prefectures and municipalities "
@@ -46,7 +43,23 @@ static const hp_source HP3B25_JPBIZREG[] = {
       "category, issue date, the URL of the original notice and the "
       "extracted text of it. For a company name it surfaces the calls "
       "that name the firm as an incumbent or an awardee; zzqxv9 "
-      "returned 0 hits, so the filter is real." },
+      "returned 0 hits, so the filter is real. The portal caps Count at "
+      "1,000 and honours no offset parameter of any name, so a busy "
+      "keyword is answered with the NEWEST 1,000 — 清掃 now reports 62,255 "
+      "hits — which is a window over the newest records rather than an "
+      "arbitrary slice (the default order is newest first, checked), and "
+      "the run states how many of how many it used. The prefecture rows "
+      "below read the same corpus exhaustively by date instead — 97.7% of "
+      "it, measured 2026-10-22: 清掃 answers 62,308 hits and the same query "
+      "summed over LG_Code 01..47 answers 60,902, so about one notice in "
+      "forty-four carries no prefecture code at all. Those are national "
+      "bodies (日本中央競馬会, 林野庁, the national research institutes, JST), and "
+      "no value of LG_Code selects them — 00, 0, 000000, 48 and 99 each "
+      "answer 0 hits. CFT_Issue_Date does compose with this pivot's own "
+      "Query (清掃 in 2026: 13,406 of the 62,308), so slicing an entity's "
+      "answer by date is possible; it is not done because a busy keyword "
+      "needs windows near a week to fit under the 1,000 cap, which is "
+      "several hundred requests for one question a person is waiting on." },
 
   { .id = "JP25_JPBIZ_KKJ_ORG", .name = "KKJ public procurement portal - by issuing organisation",
     .name_ja = "官公需情報ポータルサイト 発注機関名検索",
@@ -54,49 +67,112 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"organisation\",\"pivot\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?Organization_Name={q}&Count=100",
+    .url = "https://www.kkj.go.jp/api/?Organization_Name={q}&Count=1000",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
     .interval = 0,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
     .title_keys = "ProjectName",
     .description = "The same corpus addressed by the issuing organisation: 東京都 "
       "returned 3,170 notices, zzqxv9 returned 0. This is the pivot for "
       "a public body rather than a supplier - it lists everything that "
       "body has put out to tender, with category and date, which is the "
-      "primary record of what a ministry or a city is buying." },
+      "primary record of what a ministry or a city is buying. Bounded the "
+      "same way as the full-text pivot above: the newest 1,000 for the "
+      "body asked about, with the remainder disclosed." },
 
+  /* ── KKJ per prefecture: one date-window cycle each ─────────────────────
+   *
+   * All 47 prefectures, measured against www.kkj.go.jp on 2026-10-20. What the
+   * portal honours, and the reason these rows read a DATE SLICE rather than
+   * walking pages:
+   *
+   * * `LG_Code` is honoured, and really filters — 50,530 hits for 01, 93,053
+   *   for 13, 5,468 for 24, 0 for the impossible code 99, each answer carrying
+   *   prefecture-correct records. So this is not rule 4d's confident wrong
+   *   answer; the slice is real.
+   * * `Count` is honoured and capped HARD at 1,000: Count=2000, 5000 and
+   *   10000 each return exactly 1,000 records.
+   * * NO offset parameter is honoured under ANY name. Start, Offset, Skip,
+   *   From, Page, PageNo, Index, StartIndex, Start_Index, First, Begin and
+   *   Position were each sent with a real value and each returned ResultId
+   *   1..N unchanged. These rows used to declare `page_param = "Start"`, so
+   *   they walked 20 pages that re-emitted page 1 and stored 100 records.
+   * * `CityCode`, `PrefectureName`, `Keyword`, `Date`, `Period` and every
+   *   `*_From`/`*_To` spelling tried are ignored — the same hit count comes
+   *   back with and without them, which is the shape rule 4d calls fatal and
+   *   the reason they are not used here. `Query` and `Organization_Name` ARE
+   *   honoured (the two pivots above), but a keyword is not a partition.
+   * * `CFT_Issue_Date=<from>/<to>` IS honoured, and it partitions the
+   *   collection EXACTLY: for every one of the 47 codes, the hit count under
+   *   `CFT_Issue_Date=1900-01-01/2099-12-31` equals the unfiltered count, so
+   *   no record is undated and none is lost to the predicate — the question
+   *   CLAUDE.md says to ask before windowing a row. Per-year counts sum to the
+   *   total as well. Nothing is dated before 2021 or after today, so
+   *   `window_from = "2021-01-01"` is the real start of the corpus and the
+   *   forward walk's trailing window is the live feed.
+   *
+   * `window_days` is per prefecture, from that prefecture's own busiest year
+   * against a burstiness measured rather than assumed — and the measurement
+   * had to go to DAILY granularity, because weekly counts said the wrong
+   * thing twice over.
+   *
+   * Weekly counts across eight whole prefecture-years put the peak week at
+   * 2.48x to 4.24x the average week, which suggested sizing every row so a
+   * 4.3x week fits. Then the three worst weeks in the corpus were measured day
+   * by day:
+   *
+   * * Tokyo's peak is a SEASON, not a spike — the weeks of 2024-01-22, 01-29
+   *   and 02-05 held 978, 1,055 and 979, about 143 a weekday with nothing at
+   *   weekends. So its rolling maxima are max3d 643, max4d 806, max5d 1,055:
+   *   four days fit and five do not, and the weekly ratio had been
+   *   conservative by a third. The burst factor is calibrated on that one
+   *   measured number (806 / 4 days / 61.9 a day = 3.26) and every row is
+   *   sized to put a busy window near 850 of the 1,000 cap.
+   * * Toyama publishes in BULK: single days of 1,449 and 1,161 notices, which
+   *   is why its max3d and max7d are the same number. No window width can read
+   *   such a day whole — the 1,000 cap is per READ — so a narrow window there
+   *   would lose the same records at seven times the requests. Its row says
+   *   so, and the run states what it left.
+   *
+   * The 1,000 cap costs 686 records across those eight measured
+   * prefecture-years — 0.74% of 92,446, and all but 55 of it Toyama's dumps —
+   * evaluated at WEEKLY width, which is wider than any row here uses. And the
+   * sizing does not have to be perfect: a window whose own count exceeds one
+   * read DISCLOSES itself and names the width that would have fitted, so a
+   * miss is data rather than silence.
+   *
+   * The cadence is six hours, which costs less traffic than the daily sweep it
+   * replaces: a run used to pull 1,000 records (18.5 MB for 01), where a
+   * window holds a few hundred. 4,142 windows cover all 47 rows, so every one
+   * but Tokyo is through its backfill inside 120 days and the median inside
+   * 13. */
   { .id = "JP25_JPBIZ_KKJ_PREF_01_HOKKAIDO", .name = "KKJ public procurement notices - 北海道 (LG code 01)",
     .name_ja = "官公需情報ポータル 北海道 入札公告",
     .category = "government", .portal = "https://www.kkj.go.jp",
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"hokkaido\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=01&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=01&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 6, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 北海道 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 北海道 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 50,530 notices, 13,755 of them in its busiest year (2024), "
+      "and window_days=6 puts a busy window near 737 of the 1,000-record "
+      "cap; 353 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_02_AOMORI", .name = "KKJ public procurement notices - 青森県 (LG code 02)",
     .name_ja = "官公需情報ポータル 青森県 入札公告",
@@ -104,26 +180,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"aomori\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=02&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=02&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 45, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 青森県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 青森県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 9,419 notices, 2,102 of them in its busiest year (2026), "
+      "and window_days=45 puts a busy window near 844 of the 1,000-record "
+      "cap; 48 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_03_IWATE", .name = "KKJ public procurement notices - 岩手県 (LG code 03)",
     .name_ja = "官公需情報ポータル 岩手県 入札公告",
@@ -131,26 +205,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"iwate\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=03&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=03&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 44, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 岩手県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 岩手県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 10,145 notices, 2,143 of them in its busiest year (2026), "
+      "and window_days=44 puts a busy window near 842 of the 1,000-record "
+      "cap; 49 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_04_MIYAGI", .name = "KKJ public procurement notices - 宮城県 (LG code 04)",
     .name_ja = "官公需情報ポータル 宮城県 入札公告",
@@ -158,26 +230,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"miyagi\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=04&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=04&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 19, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 宮城県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 宮城県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 18,632 notices, 4,763 of them in its busiest year (2025), "
+      "and window_days=19 puts a busy window near 808 of the 1,000-record "
+      "cap; 112 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_05_AKITA", .name = "KKJ public procurement notices - 秋田県 (LG code 05)",
     .name_ja = "官公需情報ポータル 秋田県 入札公告",
@@ -185,26 +255,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"akita\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=05&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=05&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 43, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 秋田県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 秋田県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 8,824 notices, 2,197 of them in its busiest year (2026), "
+      "and window_days=43 puts a busy window near 843 of the 1,000-record "
+      "cap; 50 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_06_YAMAGATA", .name = "KKJ public procurement notices - 山形県 (LG code 06)",
     .name_ja = "官公需情報ポータル 山形県 入札公告",
@@ -212,26 +280,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"yamagata\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=06&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=06&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 47, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 山形県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 山形県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 7,988 notices, 1,991 of them in its busiest year (2026), "
+      "and window_days=47 puts a busy window near 835 of the 1,000-record "
+      "cap; 46 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_07_FUKUSHIMA", .name = "KKJ public procurement notices - 福島県 (LG code 07)",
     .name_ja = "官公需情報ポータル 福島県 入札公告",
@@ -239,26 +305,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"fukushima\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=07&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=07&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 24, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 福島県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 福島県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 18,101 notices, 3,858 of them in its busiest year (2026), "
+      "and window_days=24 puts a busy window near 826 of the 1,000-record "
+      "cap; 89 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_08_IBARAKI", .name = "KKJ public procurement notices - 茨城県 (LG code 08)",
     .name_ja = "官公需情報ポータル 茨城県 入札公告",
@@ -266,26 +330,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"ibaraki\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=08&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=08&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 13, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 茨城県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 茨城県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 23,664 notices, 6,978 of them in its busiest year (2025), "
+      "and window_days=13 puts a busy window near 810 of the 1,000-record "
+      "cap; 163 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_09_TOCHIGI", .name = "KKJ public procurement notices - 栃木県 (LG code 09)",
     .name_ja = "官公需情報ポータル 栃木県 入札公告",
@@ -293,26 +355,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"tochigi\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=09&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=09&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 84, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 栃木県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 栃木県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 4,232 notices, 1,122 of them in its busiest year (2026), "
+      "and window_days=84 puts a busy window near 841 of the 1,000-record "
+      "cap; 26 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_10_GUNMA", .name = "KKJ public procurement notices - 群馬県 (LG code 10)",
     .name_ja = "官公需情報ポータル 群馬県 入札公告",
@@ -320,26 +380,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"gunma\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=10&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=10&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 70, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 群馬県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 群馬県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 4,774 notices, 1,342 of them in its busiest year (2026), "
+      "and window_days=70 puts a busy window near 839 of the 1,000-record "
+      "cap; 31 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_11_SAITAMA", .name = "KKJ public procurement notices - 埼玉県 (LG code 11)",
     .name_ja = "官公需情報ポータル 埼玉県 入札公告",
@@ -347,26 +405,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"saitama\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=11&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=11&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 14, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 埼玉県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 埼玉県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 31,852 notices, 6,693 of them in its busiest year (2025), "
+      "and window_days=14 puts a busy window near 836 of the 1,000-record "
+      "cap; 152 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_12_CHIBA", .name = "KKJ public procurement notices - 千葉県 (LG code 12)",
     .name_ja = "官公需情報ポータル 千葉県 入札公告",
@@ -374,26 +430,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"chiba\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=12&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=12&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 15, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 千葉県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 千葉県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 24,353 notices, 6,271 of them in its busiest year (2022), "
+      "and window_days=15 puts a busy window near 840 of the 1,000-record "
+      "cap; 142 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_13_TOKYO", .name = "KKJ public procurement notices - 東京都 (LG code 13)",
     .name_ja = "官公需情報ポータル 東京都 入札公告",
@@ -401,26 +455,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"tokyo\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=13&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=13&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 4, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 東京都 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 東京都 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 93,053 notices, 22,577 of them in its busiest year (2024), "
+      "and window_days=4 puts a busy window near 806 of the 1,000-record "
+      "cap; 530 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_14_KANAGAWA", .name = "KKJ public procurement notices - 神奈川県 (LG code 14)",
     .name_ja = "官公需情報ポータル 神奈川県 入札公告",
@@ -428,26 +480,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"kanagawa\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=14&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=14&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 16, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 神奈川県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 神奈川県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 25,101 notices, 5,763 of them in its busiest year (2024), "
+      "and window_days=16 puts a busy window near 823 of the 1,000-record "
+      "cap; 133 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_15_NIIGATA", .name = "KKJ public procurement notices - 新潟県 (LG code 15)",
     .name_ja = "官公需情報ポータル 新潟県 入札公告",
@@ -455,26 +505,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"niigata\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=15&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=15&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 25, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 新潟県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 新潟県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 17,563 notices, 3,762 of them in its busiest year (2024), "
+      "and window_days=25 puts a busy window near 840 of the 1,000-record "
+      "cap; 85 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_16_TOYAMA", .name = "KKJ public procurement notices - 富山県 (LG code 16)",
     .name_ja = "官公需情報ポータル 富山県 入札公告",
@@ -482,26 +530,29 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"toyama\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=16&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=16&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 6, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 富山県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 富山県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 30,512 notices, 14,649 of them in its busiest year (2022), "
+      "and window_days=6 puts a busy window near 785 of the 1,000-record "
+      "cap; 353 windows cover 2021-01-01 to now. This prefecture publishes "
+      "in bulk: single days of 1,449 (2021-06-07) and 1,161 (2022-06-06) "
+      "notices, measured day by day. The portal caps one read at 1,000, so "
+      "those days cannot be read whole by any window width at all, and the "
+      "run states how many it left; a narrower window would lose the same "
+      "records at seven times the requests. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_17_ISHIKAWA", .name = "KKJ public procurement notices - 石川県 (LG code 17)",
     .name_ja = "官公需情報ポータル 石川県 入札公告",
@@ -509,26 +560,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"ishikawa\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=17&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=17&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 44, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 石川県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 石川県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 7,289 notices, 2,145 of them in its busiest year (2026), "
+      "and window_days=44 puts a busy window near 842 of the 1,000-record "
+      "cap; 49 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_18_FUKUI", .name = "KKJ public procurement notices - 福井県 (LG code 18)",
     .name_ja = "官公需情報ポータル 福井県 入札公告",
@@ -536,26 +585,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"fukui\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=18&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=18&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 90, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 福井県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 福井県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 4,042 notices, 848 of them in its busiest year (2026), "
+      "and window_days=90 puts a busy window near 681 of the 1,000-record "
+      "cap; 24 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_19_YAMANASHI", .name = "KKJ public procurement notices - 山梨県 (LG code 19)",
     .name_ja = "官公需情報ポータル 山梨県 入札公告",
@@ -563,26 +610,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"yamanashi\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=19&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=19&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 48, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 山梨県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 山梨県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 5,283 notices, 1,944 of them in its busiest year (2026), "
+      "and window_days=48 puts a busy window near 833 of the 1,000-record "
+      "cap; 45 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_20_NAGANO", .name = "KKJ public procurement notices - 長野県 (LG code 20)",
     .name_ja = "官公需情報ポータル 長野県 入札公告",
@@ -590,26 +635,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"nagano\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=20&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=20&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 22, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 長野県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 長野県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 16,020 notices, 4,254 of them in its busiest year (2024), "
+      "and window_days=22 puts a busy window near 835 of the 1,000-record "
+      "cap; 97 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_21_GIFU", .name = "KKJ public procurement notices - 岐阜県 (LG code 21)",
     .name_ja = "官公需情報ポータル 岐阜県 入札公告",
@@ -617,26 +660,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"gifu\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=21&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=21&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 24, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 岐阜県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 岐阜県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 16,398 notices, 3,823 of them in its busiest year (2026), "
+      "and window_days=24 puts a busy window near 819 of the 1,000-record "
+      "cap; 89 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_22_SHIZUOKA", .name = "KKJ public procurement notices - 静岡県 (LG code 22)",
     .name_ja = "官公需情報ポータル 静岡県 入札公告",
@@ -644,26 +685,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"shizuoka\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=22&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=22&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 40, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 静岡県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 静岡県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 11,104 notices, 2,326 of them in its busiest year (2023), "
+      "and window_days=40 puts a busy window near 830 of the 1,000-record "
+      "cap; 53 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_23_AICHI", .name = "KKJ public procurement notices - 愛知県 (LG code 23)",
     .name_ja = "官公需情報ポータル 愛知県 入札公告",
@@ -671,26 +710,51 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"aichi\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=23&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=23&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 33, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 愛知県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 愛知県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 10,652 notices, 2,847 of them in its busiest year (2026), "
+      "and window_days=33 puts a busy window near 839 of the 1,000-record "
+      "cap; 65 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
+
+  /* 三重県 was simply missing from this set — 46 of the 47 codes were
+   * registered. LG_Code=24 answers 5,468 notices, all of them dated. */
+  { .id = "JP25_JPBIZ_KKJ_PREF_24_MIE", .name = "KKJ public procurement notices - 三重県 (LG code 24)",
+    .name_ja = "官公需情報ポータル 三重県 入札公告",
+    .category = "government", .portal = "https://www.kkj.go.jp",
+    .record_type = "procurement-notice",
+    .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"mie\"",
+    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.kkj.go.jp/api/?LG_Code=24&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
+    .array_path = "SearchResult",
+    .body_keys = "ProjectDescription",
+    .date_keys = "CftIssueDate,Date",
+    .id_keys = "Key",
+    .interval = 21600,
+    .link_keys = "ExternalDocumentURI",
+    .window_days = 87, .window_from = "2021-01-01",
+    .title_keys = "ProjectName",
+    .description = "Every procurement notice filed by 三重県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 5,468 notices, 1,087 of them in its busiest year (2021), "
+      "and window_days=87 puts a busy window near 844 of the 1,000-record "
+      "cap; 25 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_25_SHIGA", .name = "KKJ public procurement notices - 滋賀県 (LG code 25)",
     .name_ja = "官公需情報ポータル 滋賀県 入札公告",
@@ -698,26 +762,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"shiga\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=25&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=25&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 90, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 滋賀県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 滋賀県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 2,691 notices, 793 of them in its busiest year (2026), "
+      "and window_days=90 puts a busy window near 637 of the 1,000-record "
+      "cap; 24 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_26_KYOTO", .name = "KKJ public procurement notices - 京都府 (LG code 26)",
     .name_ja = "官公需情報ポータル 京都府 入札公告",
@@ -725,26 +787,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"kyoto\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=26&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=26&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 30, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 京都府 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 京都府 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 9,391 notices, 3,124 of them in its busiest year (2026), "
+      "and window_days=30 puts a busy window near 837 of the 1,000-record "
+      "cap; 71 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_27_OSAKA", .name = "KKJ public procurement notices - 大阪府 (LG code 27)",
     .name_ja = "官公需情報ポータル 大阪府 入札公告",
@@ -752,26 +812,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"osaka\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=27&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=27&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 17, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 大阪府 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 大阪府 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 22,018 notices, 5,394 of them in its busiest year (2026), "
+      "and window_days=17 puts a busy window near 819 of the 1,000-record "
+      "cap; 125 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_28_HYOGO", .name = "KKJ public procurement notices - 兵庫県 (LG code 28)",
     .name_ja = "官公需情報ポータル 兵庫県 入札公告",
@@ -779,26 +837,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"hyogo\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=28&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=28&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 13, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 兵庫県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 兵庫県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 17,667 notices, 7,271 of them in its busiest year (2026), "
+      "and window_days=13 puts a busy window near 844 of the 1,000-record "
+      "cap; 163 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_29_NARA", .name = "KKJ public procurement notices - 奈良県 (LG code 29)",
     .name_ja = "官公需情報ポータル 奈良県 入札公告",
@@ -806,26 +862,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"nara\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=29&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=29&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 55, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 奈良県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 奈良県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 6,216 notices, 1,705 of them in its busiest year (2026), "
+      "and window_days=55 puts a busy window near 837 of the 1,000-record "
+      "cap; 39 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_30_WAKAYAMA", .name = "KKJ public procurement notices - 和歌山県 (LG code 30)",
     .name_ja = "官公需情報ポータル 和歌山県 入札公告",
@@ -833,26 +887,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"wakayama\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=30&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=30&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 40, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 和歌山県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 和歌山県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 8,529 notices, 2,372 of them in its busiest year (2022), "
+      "and window_days=40 puts a busy window near 847 of the 1,000-record "
+      "cap; 53 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_31_TOTTORI", .name = "KKJ public procurement notices - 鳥取県 (LG code 31)",
     .name_ja = "官公需情報ポータル 鳥取県 入札公告",
@@ -860,26 +912,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"tottori\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=31&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=31&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 90, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 鳥取県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 鳥取県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 1,789 notices, 657 of them in its busiest year (2026), "
+      "and window_days=90 puts a busy window near 528 of the 1,000-record "
+      "cap; 24 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_32_SHIMANE", .name = "KKJ public procurement notices - 島根県 (LG code 32)",
     .name_ja = "官公需情報ポータル 島根県 入札公告",
@@ -887,26 +937,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"shimane\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=32&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=32&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 90, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 島根県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 島根県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 1,441 notices, 495 of them in its busiest year (2026), "
+      "and window_days=90 puts a busy window near 397 of the 1,000-record "
+      "cap; 24 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_33_OKAYAMA", .name = "KKJ public procurement notices - 岡山県 (LG code 33)",
     .name_ja = "官公需情報ポータル 岡山県 入札公告",
@@ -914,26 +962,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"okayama\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=33&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=33&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 29, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 岡山県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 岡山県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 13,236 notices, 3,184 of them in its busiest year (2026), "
+      "and window_days=29 puts a busy window near 824 of the 1,000-record "
+      "cap; 74 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_34_HIROSHIMA", .name = "KKJ public procurement notices - 広島県 (LG code 34)",
     .name_ja = "官公需情報ポータル 広島県 入札公告",
@@ -941,26 +987,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"hiroshima\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=34&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=34&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 11, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 広島県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 広島県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 26,922 notices, 8,184 of them in its busiest year (2026), "
+      "and window_days=11 puts a busy window near 804 of the 1,000-record "
+      "cap; 193 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_35_YAMAGUCHI", .name = "KKJ public procurement notices - 山口県 (LG code 35)",
     .name_ja = "官公需情報ポータル 山口県 入札公告",
@@ -968,26 +1012,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"yamaguchi\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=35&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=35&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 64, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 山口県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 山口県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 5,683 notices, 1,480 of them in its busiest year (2025), "
+      "and window_days=64 puts a busy window near 845 of the 1,000-record "
+      "cap; 34 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_36_TOKUSHIMA", .name = "KKJ public procurement notices - 徳島県 (LG code 36)",
     .name_ja = "官公需情報ポータル 徳島県 入札公告",
@@ -995,26 +1037,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"tokushima\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=36&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=36&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 87, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 徳島県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 徳島県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 4,086 notices, 1,090 of them in its busiest year (2025), "
+      "and window_days=87 puts a busy window near 846 of the 1,000-record "
+      "cap; 25 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_37_KAGAWA", .name = "KKJ public procurement notices - 香川県 (LG code 37)",
     .name_ja = "官公需情報ポータル 香川県 入札公告",
@@ -1022,26 +1062,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"kagawa\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=37&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=37&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 42, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 香川県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 香川県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 5,517 notices, 2,238 of them in its busiest year (2026), "
+      "and window_days=42 puts a busy window near 839 of the 1,000-record "
+      "cap; 51 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_38_EHIME", .name = "KKJ public procurement notices - 愛媛県 (LG code 38)",
     .name_ja = "官公需情報ポータル 愛媛県 入札公告",
@@ -1049,26 +1087,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"ehime\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=38&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=38&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 63, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 愛媛県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 愛媛県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 4,152 notices, 1,506 of them in its busiest year (2026), "
+      "and window_days=63 puts a busy window near 847 of the 1,000-record "
+      "cap; 34 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_39_KOCHI", .name = "KKJ public procurement notices - 高知県 (LG code 39)",
     .name_ja = "官公需情報ポータル 高知県 入札公告",
@@ -1076,26 +1112,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"kochi\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=39&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=39&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 37, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 高知県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 高知県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 7,296 notices, 2,511 of them in its busiest year (2026), "
+      "and window_days=37 puts a busy window near 829 of the 1,000-record "
+      "cap; 58 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_40_FUKUOKA", .name = "KKJ public procurement notices - 福岡県 (LG code 40)",
     .name_ja = "官公需情報ポータル 福岡県 入札公告",
@@ -1103,26 +1137,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"fukuoka\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=40&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=40&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 23, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 福岡県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 福岡県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 19,469 notices, 4,082 of them in its busiest year (2024), "
+      "and window_days=23 puts a busy window near 838 of the 1,000-record "
+      "cap; 93 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_41_SAGA", .name = "KKJ public procurement notices - 佐賀県 (LG code 41)",
     .name_ja = "官公需情報ポータル 佐賀県 入札公告",
@@ -1130,26 +1162,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"saga\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=41&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=41&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 76, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 佐賀県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 佐賀県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 5,937 notices, 1,250 of them in its busiest year (2025), "
+      "and window_days=76 puts a busy window near 848 of the 1,000-record "
+      "cap; 28 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_42_NAGASAKI", .name = "KKJ public procurement notices - 長崎県 (LG code 42)",
     .name_ja = "官公需情報ポータル 長崎県 入札公告",
@@ -1157,26 +1187,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"nagasaki\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=42&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=42&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 77, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 長崎県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 長崎県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 4,213 notices, 1,224 of them in its busiest year (2025), "
+      "and window_days=77 puts a busy window near 841 of the 1,000-record "
+      "cap; 28 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_43_KUMAMOTO", .name = "KKJ public procurement notices - 熊本県 (LG code 43)",
     .name_ja = "官公需情報ポータル 熊本県 入札公告",
@@ -1184,26 +1212,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"kumamoto\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=43&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=43&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 53, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 熊本県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 熊本県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 5,484 notices, 1,780 of them in its busiest year (2026), "
+      "and window_days=53 puts a busy window near 842 of the 1,000-record "
+      "cap; 40 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_44_OITA", .name = "KKJ public procurement notices - 大分県 (LG code 44)",
     .name_ja = "官公需情報ポータル 大分県 入札公告",
@@ -1211,26 +1237,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"oita\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=44&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=44&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 90, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 大分県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 大分県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 3,947 notices, 919 of them in its busiest year (2024), "
+      "and window_days=90 puts a busy window near 738 of the 1,000-record "
+      "cap; 24 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_45_MIYAZAKI", .name = "KKJ public procurement notices - 宮崎県 (LG code 45)",
     .name_ja = "官公需情報ポータル 宮崎県 入札公告",
@@ -1238,26 +1262,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"miyazaki\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=45&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=45&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 76, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 宮崎県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 宮崎県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 5,598 notices, 1,246 of them in its busiest year (2026), "
+      "and window_days=76 puts a busy window near 845 of the 1,000-record "
+      "cap; 28 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_46_KAGOSHIMA", .name = "KKJ public procurement notices - 鹿児島県 (LG code 46)",
     .name_ja = "官公需情報ポータル 鹿児島県 入札公告",
@@ -1265,26 +1287,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"kagoshima\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=46&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=46&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 40, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 鹿児島県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 鹿児島県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 9,115 notices, 2,366 of them in its busiest year (2025), "
+      "and window_days=40 puts a busy window near 845 of the 1,000-record "
+      "cap; 53 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KKJ_PREF_47_OKINAWA", .name = "KKJ public procurement notices - 沖縄県 (LG code 47)",
     .name_ja = "官公需情報ポータル 沖縄県 入札公告",
@@ -1292,26 +1312,24 @@ static const hp_source HP3B25_JPBIZREG[] = {
     .record_type = "procurement-notice",
     .tags = "\"japan\",\"procurement\",\"tender\",\"kkj\",\"prefecture\",\"okinawa\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kkj.go.jp/api/?LG_Code=47&Count=100",
+    .url = "https://www.kkj.go.jp/api/?LG_Code=47&Count=1000"
+           "&CFT_Issue_Date={wstart}/{wend}",
     .array_path = "SearchResult",
     .body_keys = "ProjectDescription",
     .date_keys = "CftIssueDate,Date",
     .id_keys = "Key",
-    .interval = 86400,
+    .interval = 21600,
     .link_keys = "ExternalDocumentURI",
-    .page_param = "Start",
-    .page_size = 100,
-    .page_start = 1,
+    .window_days = 46, .window_from = "2021-01-01",
     .title_keys = "ProjectName",
-    .description = "Daily sweep of every procurement notice filed by 沖縄県 and the "
-      "municipalities inside it, via the portal's LG_Code filter "
-      "(LG_Code=13 returned 91,094 hits, LG_Code=01 49,639; the "
-      "impossible code 99 returned 0). Each record names the project, "
-      "the issuing body, the category, the issue date and the source "
-      "document, and the body text carries the tender conditions "
-      "including named incumbents and required licences. Registered per "
-      "prefecture because a single national sweep bounded by page_max "
-      "would never reach the smaller issuers." },
+    .description = "Every procurement notice filed by 沖縄県 and the municipalities "
+      "inside it, read over a date-window cycle. Measured 2026-10-20: this "
+      "prefecture holds 9,016 notices, 2,028 of them in its busiest year (2025), "
+      "and window_days=46 puts a busy window near 833 of the 1,000-record "
+      "cap; 47 windows cover 2021-01-01 to now. Each record names the "
+      "project, the issuing body, the category, the issue date and the "
+      "source document, and the body text carries the tender conditions "
+      "including named incumbents and required licences." },
 
   { .id = "JP25_JPBIZ_KANSAI_KAIGO", .name = "Union of Kansai Governments - care-service establishments (all "
       "member prefectures)",

@@ -18,10 +18,12 @@ static const hp_source T[] = {
     .collector = "us_corporate", .category = "corporate",
     .description = "Every network/facility/IX owning organisation: id, legal name, aka, website, social_media handles, street address + city/state/zip/country, lat/lon, created/updated timestamps. This is the root of the PeeringDB ownership tree.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "corporate-record", .tags = "\"us\",\"corporate\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://www.peeringdb.com/api/org?limit=3",
+    .url = "https://www.peeringdb.com/api/org?limit=100",
     .array_path = "data",
     .detail_url = "https://www.peeringdb.com/api/org/{v}?depth=2", .detail_key = "id",
-    .page_walk = 1,
+    .page_max = 2,   /* 2 x 100 records a run. This row has a detail hop, and the per-run hop budget is 1,000 OR 120 SECONDS — the CLOCK is what binds on a slow host, measured on api.safecast.org, which reached 116 hops of 1,000 before its 120s ran out (2026-10-20). So a run is sized to what can plausibly be deepened rather than to what the API will serve: records past the budget are stamped _detail_pending and, because the budget is spent in page order, never deepened on a later run either. The per-host hop rate is NOT measured for this row — 200 is the family default and the number to revisit if its detail-truncation notice shows pending records. See docs/probe-sized-pages-2026-10-20.md */
+    .page_param = "skip",
+    .page_size = 100,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "us-ca-dcc-cannabis-detail",

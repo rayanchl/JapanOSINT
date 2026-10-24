@@ -462,6 +462,23 @@ export default function SourceDetailPage() {
       </Section>
 
       <Section label="Status">
+        {/* WHY it is not working, and what to do — stated before the run
+            numbers rather than left in a notice's properties blob below. The
+            same object the Sources list shows, from the same builder, so the
+            reason a reader arrived with is the reason this page confirms. */}
+        {st.health && !st.health.working && (
+          <Card>
+            <KV pairs={[
+              ['not working', <Pill tone="danger">{st.health.state}</Pill>],
+              st.health.http_status && ['upstream answered', `HTTP ${st.health.http_status}${st.health.body_parsed === false ? ' · the body did not parse' : ''}`],
+              st.health.outcome && ['the engine read it as', st.health.outcome],
+              st.health.credentials_required?.length && ['needs a credential', st.health.credentials_required.join(', ')],
+              st.health.note && ['what happened', st.health.note],
+              st.health.remedy && ['remedy', st.health.remedy],
+              st.health.since && ['recorded', when(st.health.since)],
+            ].filter(Boolean)} />
+          </Card>
+        )}
         <Card>
           <KV pairs={[
             ['status', <Pill tone={statusTone(st.status)}>{st.status || 'pending — never run'}</Pill>],

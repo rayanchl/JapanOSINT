@@ -1169,26 +1169,42 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
       "specific codebook, script or table inside a deposit rather than "
       "the deposit as a whole." },
 
-  { .id = "DATAVERSE_HARVARD_DATAVERSES", .name = "Harvard Dataverse - newest sub-dataverses (collections)",
+  { .id = "DATAVERSE_HARVARD_DATAVERSES", .name = "Harvard Dataverse - every sub-dataverse (collections register)",
     .category = "investigation", .portal = "https://dataverse.harvard.edu",
     .record_type = "repository-collection",
     .tags = "\"dataverse\",\"harvard\",\"collection\",\"register\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://dataverse.harvard.edu/api/search?q=*&type=dataverse&per_page=100&sort=date&order=desc",
+    /* Was `order=desc`, reading the newest 2,000 of 9,750 for ever — so 7,750
+     * collections were unreachable while the row's own description called it
+     * "a register of who is publishing research data through Harvard". A
+     * register that can only see its newest fifth is not one, and the fix is
+     * the sort rather than a second row: 9,750 is small enough that a cycle
+     * covers it in five runs and then keeps up, because new collections land at
+     * the TAIL of an ascending sort where a forward walk has not been yet.
+     *
+     * Measured 2026-10-20: `order=asc` answers 200, `start=9000` answers 200
+     * with 100 items and `total_count` 9,750, so the deep end is reachable.
+     * The trade is stated rather than hidden — a brand-new collection can now
+     * take up to five days to appear, which for a register of organisations is
+     * worth the other 7,750. */
+    .url = "https://dataverse.harvard.edu/api/search?q=*&type=dataverse&per_page=100&sort=date&order=asc",
     .array_path = "data.items",
     .date_keys = "published_at",
     .id_keys = "identifier,url",
     .interval = 86400,
     .link_keys = "url",
     .page_param = "start",
+    .page_resume = 1,
     .page_size = 100,
     .page_zero_based = 1,
     .title_keys = "name",
-    .description = "The newest collections (sub-dataverses) created in the Harvard "
-      "Dataverse: identifier, name, description, affiliation and "
-      "publication date. Each collection is an organisation, lab or "
-      "project that has started depositing data, so the stream is a "
-      "register of who is publishing research data through Harvard." },
+    .description = "Every collection (sub-dataverse) in the Harvard Dataverse, read "
+      "over a cycle from the oldest forward: identifier, name, description, "
+      "affiliation and publication date. Each collection is an organisation, "
+      "lab or project that has started depositing data, so the set is a "
+      "register of who is publishing research data through Harvard — 9,750 of "
+      "them by the repository's own count, where this row used to see the "
+      "newest 2,000." },
 
   { .id = "DATAVERSE_HARVARD_LATEST_DATASETS", .name = "Harvard Dataverse - newest datasets",
     .category = "investigation", .portal = "https://dataverse.harvard.edu",
@@ -1651,12 +1667,38 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
       "Dataverse exist, and each hostname is a search API that answers "
       "the same query shape as the rows above." },
 
+  /* The eleven NADA catalogues below were authored with
+   * `sort_by=created&sort_order=desc`, which puts a newly published study at the
+   * HEAD of an offset walk — the drift CLAUDE.md names, since a study catalogued
+   * between page 3 and page 4 shifts every later page under the walk. Each host
+   * was asked the same question twice on 2026-10-22 (`sort_by=idno`, asc against
+   * desc) rather than fixed on reasoning:
+   *
+   *   HONOURS IT, now ascending by the row's own `idno`: UNHCR (1,108 studies),
+   *   FAO (1,783), Zambia (25), Cambodia (45), ERF MENA (211), Somalia (11).
+   *   NADA reads `idno` asc as nation ascending, year descending; that is a
+   *   deterministic key on a field we already key records by, so an insertion
+   *   lands beside its own country instead of at the head.
+   *
+   *   IGNORES IT — identical first rows for asc, for desc and for
+   *   `sort_by=created&sort_order=desc`: DataFirst South Africa (605) and
+   *   Armenia (26). The parameters are dropped rather than left declaring an
+   *   ordering the server does not give.
+   *
+   *   UNMEASURED FROM HERE, so left exactly as authored: Nepal, Palestine and
+   *   Costa Rica, each `rc=-1` with zero bytes through the engine's own client
+   *   the same day (Palestine serves a leaf without its intermediate). A row we
+   *   cannot reach is not a row we may re-point on inference.
+   *
+   * None of the eight reachable ones is truncated: the largest is 18 pages
+   * against the 20-page ceiling, so the ordering is about the seams within one
+   * run and not about a cycle. */
   { .id = "NADA_UNHCR_CATALOG", .name = "UNHCR Microdata Library - survey catalogue",
     .category = "government", .portal = "https://microdata.unhcr.org",
     .record_type = "microdata-survey",
     .tags = "\"nada\",\"microdata\",\"survey\",\"catalogue\",\"unhcr\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://microdata.unhcr.org/index.php/api/catalog/search?ps=100&sort_by=created&sort_order=desc",
+    .url = "https://microdata.unhcr.org/index.php/api/catalog/search?ps=100&sort_by=idno&sort_order=asc",
     .array_path = "result.rows",
     .date_keys = "created",
     .id_keys = "idno,id",
@@ -1677,7 +1719,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .record_type = "microdata-survey",
     .tags = "\"nada\",\"microdata\",\"survey\",\"catalogue\",\"fao\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://microdata.fao.org/index.php/api/catalog/search?ps=100&sort_by=created&sort_order=desc",
+    .url = "https://microdata.fao.org/index.php/api/catalog/search?ps=100&sort_by=idno&sort_order=asc",
     .array_path = "result.rows",
     .date_keys = "created",
     .id_keys = "idno,id",
@@ -1698,7 +1740,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .record_type = "microdata-survey",
     .tags = "\"nada\",\"microdata\",\"survey\",\"catalogue\",\"zambia\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://nada.zamstats.gov.zm/index.php/api/catalog/search?ps=100&sort_by=created&sort_order=desc",
+    .url = "https://nada.zamstats.gov.zm/index.php/api/catalog/search?ps=100&sort_by=idno&sort_order=asc",
     .array_path = "result.rows",
     .date_keys = "created",
     .id_keys = "idno,id",
@@ -1718,7 +1760,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .record_type = "microdata-survey",
     .tags = "\"nada\",\"microdata\",\"survey\",\"catalogue\",\"datafirst_sa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.datafirst.uct.ac.za/dataportal/index.php/api/catalog/search?ps=100&sort_by=created&sort_order=desc",
+    .url = "https://www.datafirst.uct.ac.za/dataportal/index.php/api/catalog/search?ps=100",
     .array_path = "result.rows",
     .date_keys = "created",
     .id_keys = "idno,id",
@@ -1740,7 +1782,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .record_type = "microdata-survey",
     .tags = "\"nada\",\"microdata\",\"survey\",\"catalogue\",\"cambodia\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://microdata.nis.gov.kh/index.php/api/catalog/search?ps=100&sort_by=created&sort_order=desc",
+    .url = "https://microdata.nis.gov.kh/index.php/api/catalog/search?ps=100&sort_by=idno&sort_order=asc",
     .array_path = "result.rows",
     .date_keys = "created",
     .id_keys = "idno,id",
@@ -1780,7 +1822,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .record_type = "microdata-survey",
     .tags = "\"nada\",\"microdata\",\"survey\",\"catalogue\",\"erf_mena\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://erfdataportal.com/index.php/api/catalog/search?ps=100&sort_by=created&sort_order=desc",
+    .url = "https://erfdataportal.com/index.php/api/catalog/search?ps=100&sort_by=idno&sort_order=asc",
     .array_path = "result.rows",
     .date_keys = "created",
     .id_keys = "idno,id",
@@ -1822,7 +1864,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .record_type = "microdata-survey",
     .tags = "\"nada\",\"microdata\",\"survey\",\"catalogue\",\"somalia\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://microdata.nbs.gov.so/index.php/api/catalog/search?ps=100&sort_by=created&sort_order=desc",
+    .url = "https://microdata.nbs.gov.so/index.php/api/catalog/search?ps=100&sort_by=idno&sort_order=asc",
     .array_path = "result.rows",
     .date_keys = "created",
     .id_keys = "idno,id",
@@ -1842,7 +1884,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .record_type = "microdata-survey",
     .tags = "\"nada\",\"microdata\",\"survey\",\"catalogue\",\"armenia\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://microdata.armstat.am/index.php/api/catalog/search?ps=100&sort_by=created&sort_order=desc",
+    .url = "https://microdata.armstat.am/index.php/api/catalog/search?ps=100",
     .array_path = "result.rows",
     .date_keys = "created",
     .id_keys = "idno,id",

@@ -1,4 +1,5 @@
 /* lib/zipread.c — see header. */
+#include <stdio.h>
 #include "zipread.h"
 #include <stdlib.h>
 #include <string.h>
@@ -100,10 +101,21 @@ int zip_entry_count(const char *buf, size_t len) {
   return (int)rd16((const unsigned char *)buf + eocd + 10);
 }
 
-char *zip_find_entry(const char *buf, size_t len, const char *name,
-                     size_t *out_len) {
+/* The central-directory walk both named and indexed lookups need. `name`
+ * non-NULL selects by path or basename; NULL selects the `index`-th entry in
+ * central-directory order. `name_out` (when given) receives the entry's own
+ * path, which is the only way an indexed caller learns what it just read.
+ *
+ * One copy on purpose: an indexed walk written beside the named one is two
+ * readings of the same bytes that drift apart, which is the mistake this tree
+ * has already paid for in its manifest parsers. */
+static char *zip_cd_entry(const char *buf, size_t len, const char *name,
+                          int index, char *name_out, size_t name_n,
+                          size_t *out_len) {
   if (out_len) *out_len = 0;
-  if (!buf || !name || len < 22) return NULL;
+  if (name_out && name_n) name_out[0] = 0;
+  if (!buf || len < 22) return NULL;
+  if (!name && index < 0) return NULL;
   const unsigned char *b = (const unsigned char *)buf;
 
   size_t eocd = 0;
@@ -130,7 +142,10 @@ char *zip_find_entry(const char *buf, size_t len, const char *name,
     memcpy(nbuf, b + p + 46, ncopy);
     nbuf[ncopy] = 0;
 
-    if (strcmp(nbuf, name) == 0 || strcmp(zbase(nbuf), name) == 0) {
+    int hit = name ? (strcmp(nbuf, name) == 0 || strcmp(zbase(nbuf), name) == 0)
+                   : (i == (unsigned)index);
+    if (hit) {
+      if (name_out && name_n) snprintf(name_out, name_n, "%s", nbuf);
       /* Re-read the local header purely for its name/extra lengths — those
        * are the only fields there we can trust (see header note). */
       if (lho + 30 > len || rd32(b + lho) != 0x04034b50UL) return NULL;
@@ -155,6 +170,17 @@ char *zip_find_entry(const char *buf, size_t len, const char *name,
     p += 46 + nlen + elen + clen;
   }
   return NULL;
+}
+
+char *zip_find_entry(const char *buf, size_t len, const char *name,
+                     size_t *out_len) {
+  if (!name) { if (out_len) *out_len = 0; return NULL; }
+  return zip_cd_entry(buf, len, name, -1, NULL, 0, out_len);
+}
+
+char *zip_entry_at(const char *buf, size_t len, int index,
+                   char *name_out, size_t name_n, size_t *out_len) {
+  return zip_cd_entry(buf, len, NULL, index, name_out, name_n, out_len);
 }
 
 char *zip_first_entry(const char *buf, size_t len, size_t *out_len) {

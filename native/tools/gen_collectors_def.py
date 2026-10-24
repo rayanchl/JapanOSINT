@@ -88,6 +88,13 @@ OVERRIDES = {
     "jp_webmedia": "grp_media",   # batches 43/44: 400 Japanese web-media/blog RSS feeds, authored under "social"
     # batch 45: WordPress collections of hosts the registry already held, split by host type
     "hp3b45_jpwpmedia": "grp_media", "hp3b45_jpwpcorp": "grp_corporate", "hp3b45_jpwporg": "grp_legal",
+    # Batch 54 — the content collections batch 49 left behind. `jpwporg` is
+    # the one that NEEDS an entry: its dominant category is `organization`,
+    # which no KEYWORD or CATEGORY_GROUP rule covers, so without this the
+    # check reports it UNASSIGNED. The other two are listed beside it so the
+    # grouping is stated rather than left to a substring match on the key.
+    "hp3b54_jpwporg": "grp_legal", "hp3b54_jpwpmedia": "grp_media",
+    "hp3b54_jpwpcorp": "grp_corporate",
     "hp3b45_jpwpculture": "grp_culture", "hp3b45_jpwpcyber": "grp_cyber", "hp3b45_jpwpscience": "grp_science",
     "hp3b45_jpwpenv": "grp_environment", "hp3b45_jpwpgov": "grp_government",
     # batch 49: federation-member sites (the staging set of batch 45), by federation
@@ -264,6 +271,9 @@ LABELS = {
     "osm": ("OpenStreetMap — taginfo & changesets", "OpenStreetMap タグ・変更セット", None),
     "reddit": ("Reddit regional & thematic multireddits", "Reddit 地域・テーマ別", "One feed per multireddit (reddit-group-*)."),
     "hp3b28_jpdb": ("Japan — CiNii Research (batch 28)", "日本 CiNii Research", None),
+    "hp3b55_atparl": ("Austria — Parliament materials (batch 55)", "オーストリア議会 資料",
+                      "The Austrian Parliament's whole materials index, read as seven "
+                      "complete legislative-period slices."),
     # hand-written family labels that had no human name
     "geopolitics": ("Geopolitics, defence & conflict", "地政学・防衛・紛争", None),
     "aviation": ("Aviation & airspace", "航空・空域", None),
@@ -354,6 +364,9 @@ LABELS = {
     "hp3b45_jpwpmedia": ("Japan — online media & magazines, WordPress collections (batch 45)", "日本 ウェブメディア WordPress", None),
     "hp3b45_jpwpcorp": ("Japan — company sites, WordPress collections (batch 45)", "日本 企業サイト WordPress（45）", None),
     "hp3b45_jpwporg": ("Japan — associations & professional bodies, WordPress collections (batch 45)", "日本 団体・士業 WordPress", None),
+    "hp3b54_jpwporg": ("Japan — associations & co-ops: the information and event collections batch 49 missed (batch 54)", "日本 団体 お知らせ・行事", None),
+    "hp3b54_jpwpmedia": ("Japan — public facilities & local bodies: information and event collections (batch 54)", "日本 公共施設 お知らせ・行事", None),
+    "hp3b54_jpwpcorp": ("Japan — corporate sites: information collections (batch 54)", "日本 企業サイト お知らせ", None),
     "hp3b45_jpwpculture": ("Japan — libraries & culture, WordPress collections (batch 45)", "日本 図書館・文化 WordPress", None),
     "hp3b45_jpwpcyber": ("Japan — security organisations, WordPress collections (batch 45)", "日本 セキュリティ団体 WordPress", None),
     "hp3b45_jpwpscience": ("Japan — research institutions, WordPress collections (batch 45)", "日本 研究機関 WordPress", None),

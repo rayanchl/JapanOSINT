@@ -4449,32 +4449,26 @@ static const hp_source HP3B41_JPCORPWP[] = {
       "is kept as the body, so this is the organisation's own notice "
       "text rather than a headline." },
 
-  { .id = "JO41_WP_CORP_5368", .name = "日本インシュレーション — notices (WordPress REST)",
-    .name_ja = "日本インシュレーション 新着情報（WordPress REST）",
-    .category = "corporate", .portal = "https://www.jic-bestork.co.jp/",
-    .record_type = "corporate-notice",
-    .tags = "\"japan\",\"company\",\"listed\",\"notice\",\"wordpress\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.jic-bestork.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
-    .array_path = ".",
-    .body_keys = "content.rendered",
-    .date_keys = "date",
-    .id_keys = "id",
-    .interval = 21600,
-    .link_keys = "link",
-    .page_max = 60,
-    .page_param = "page",
-    .page_start = 1,
-    .timeout_ms = 30000,
-    .title_keys = "title.rendered",
-    .description = "WordPress REST posts feed of 日本インシュレーション (www.jic-bestork.co.jp, "
-      "証券コード 5368). Fetched 2026-10-06: 1 posts on the first page, each "
-      "record carrying "
-      "acf,aioseo_notices,author,categories,class_list,comment_status,content,date,date_gmt,excerpt,featured_media,format. "
-      "First post: Hello world!. content.rendered is kept as the body, "
-      "so this is the organisation's own notice text rather than a "
-      "headline." },
-
+  /* jic-bestork.co.jp (日本インシュレーション) CLOSED ITS REST API, and the
+   * recovery route was checked before these rows were removed rather than
+   * after. Measured 2026-10-20: the site root answers 200, so the publisher is
+   * alive, and `/wp-json/` ITSELF answers
+   * `{"code":"rest_login_required","message":"REST API restricted to
+   * authenticated users."}` — a site-wide, deliberate setting, not one route
+   * and not a transient. The engine gets the same 401 and files a
+   * collector-fetch-failure naming it.
+   *
+   * The reason this is worth a comment is the part that did NOT work. The site
+   * still serves `/feed/` with HTTP 200, which is normally how a locked-down
+   * WordPress publisher is recovered — but that feed holds exactly ONE item,
+   * WordPress's default "Hello world!", and every per-post-type feed
+   * (`?post_type=news&feed=rss2` and the six others these rows covered) holds
+   * ZERO. So there is nothing behind the lock to re-point at, and the next
+   * person does not need to re-check it.
+   *
+   * Ten rows removed: JO41_WP_CORP_5368 and JO42_WP_CORP_5368_{NEWS, PAGES,
+   * USERS, COMPLETEDPROJE, CONSTPRODUCTS, DIGITALCATALOG, LOOSCBP,
+   * MULTIUSEPRODS, PLANTPRODS}. */
   { .id = "JO41_WP_CORP_5461", .name = "中部鋼鈑 — notices (WordPress REST)",
     .name_ja = "中部鋼鈑 新着情報（WordPress REST）",
     .category = "corporate", .portal = "https://www.chubukohan.co.jp/",
@@ -4916,6 +4910,32 @@ static const hp_source HP3B41_JPCORPWP[] = {
       "First post: 「せとうちジャーニーウォークin広島2026」に参加しました. content.rendered is "
       "kept as the body, so this is the organisation's own notice text "
       "rather than a headline." },
+
+  { .id = "JO41_WP_CORP_5983", .name = "イワブチ — notices (WordPress REST)",
+    .name_ja = "イワブチ 新着情報（WordPress REST）",
+    .category = "corporate", .portal = "https://www.iwabuchi.co.jp/",
+    .record_type = "corporate-notice",
+    .tags = "\"japan\",\"company\",\"listed\",\"notice\",\"wordpress\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.iwabuchi.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .array_path = ".",
+    .body_keys = "content.rendered",
+    .date_keys = "date",
+    .id_keys = "id",
+    .interval = 21600,
+    .link_keys = "link",
+    .page_max = 60,
+    .page_param = "page",
+    .page_start = 1,
+    .timeout_ms = 30000,
+    .title_keys = "title.rendered",
+    .description = "WordPress REST posts feed of イワブチ (www.iwabuchi.co.jp, 証券コード "
+      "5983). Fetched 2026-10-06: 100 posts on the first page, each "
+      "record carrying "
+      "author,categories,comment_status,content,date,date_gmt,excerpt,featured_media,format,guid,id,link. "
+      "First post: 令和８年熊本地震による被災者の方々に対する義援金を寄付いたしました. content.rendered "
+      "is kept as the body, so this is the organisation's own notice "
+      "text rather than a headline." },
 
   { .id = "JO41_WP_CORP_6022", .name = "赤阪鐵工所 — notices (WordPress REST)",
     .name_ja = "赤阪鐵工所 新着情報（WordPress REST）",
@@ -5618,6 +5638,32 @@ static const hp_source HP3B41_JPCORPWP[] = {
       "content.rendered is kept as the body, so this is the "
       "organisation's own notice text rather than a headline." },
 
+  { .id = "JO41_WP_CORP_6444", .name = "サンデン — notices (WordPress REST)",
+    .name_ja = "サンデン 新着情報（WordPress REST）",
+    .category = "corporate", .portal = "https://www.sanden.co.jp/",
+    .record_type = "corporate-notice",
+    .tags = "\"japan\",\"company\",\"listed\",\"notice\",\"wordpress\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.sanden.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .array_path = ".",
+    .body_keys = "content.rendered",
+    .date_keys = "date",
+    .id_keys = "id",
+    .interval = 21600,
+    .link_keys = "link",
+    .page_max = 60,
+    .page_param = "page",
+    .page_start = 1,
+    .timeout_ms = 30000,
+    .title_keys = "title.rendered",
+    .description = "WordPress REST posts feed of サンデン (www.sanden.co.jp, 証券コード "
+      "6444). Fetched 2026-10-06: 100 posts on the first page, each "
+      "record carrying "
+      "acf,aioseo_notices,author,categories,class_list,comment_status,content,date,date_gmt,excerpt,featured_media,format. "
+      "First post: サンデン、日産自動車より「BCP活動感謝状」を初受賞－安定供給を支える事業継続体制が評価－. "
+      "content.rendered is kept as the body, so this is the "
+      "organisation's own notice text rather than a headline." },
+
   { .id = "JO41_WP_CORP_6466", .name = "ＴＶＥ — notices (WordPress REST)",
     .name_ja = "ＴＶＥ 新着情報（WordPress REST）",
     .category = "corporate", .portal = "https://www.toavalve.co.jp/",
@@ -6063,6 +6109,32 @@ static const hp_source HP3B41_JPCORPWP[] = {
       "First post: 弊社社内行事による臨時休業のお知らせ. content.rendered is kept as the "
       "body, so this is the organisation's own notice text rather than "
       "a headline." },
+
+  { .id = "JO41_WP_CORP_6696", .name = "トラース・オン・プロダクト — notices (WordPress REST)",
+    .name_ja = "トラース・オン・プロダクト 新着情報（WordPress REST）",
+    .category = "corporate", .portal = "https://www.traas.co.jp/",
+    .record_type = "corporate-notice",
+    .tags = "\"japan\",\"company\",\"listed\",\"notice\",\"wordpress\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.traas.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .array_path = ".",
+    .body_keys = "content.rendered",
+    .date_keys = "date",
+    .id_keys = "id",
+    .interval = 21600,
+    .link_keys = "link",
+    .page_max = 60,
+    .page_param = "page",
+    .page_start = 1,
+    .timeout_ms = 30000,
+    .title_keys = "title.rendered",
+    .description = "WordPress REST posts feed of トラース・オン・プロダクト (www.traas.co.jp, "
+      "証券コード 6696). Fetched 2026-10-06: 76 posts on the first page, "
+      "each record carrying "
+      "author,categories,class_list,comment_status,content,date,date_gmt,excerpt,featured_media,format,guid,id. "
+      "First post: 電気代高騰にどう備える？2026年版・省エネ補助金の選び方. content.rendered is "
+      "kept as the body, so this is the organisation's own notice text "
+      "rather than a headline." },
 
   { .id = "JO41_WP_CORP_6699", .name = "ダイヤモンドエレクトリックホールディングス — notices (WordPress REST)",
     .name_ja = "ダイヤモンドエレクトリックホールディングス 新着情報（WordPress REST）",
@@ -7265,6 +7337,31 @@ static const hp_source HP3B41_JPCORPWP[] = {
       "First post: 投稿テスト. content.rendered is kept as the body, so this "
       "is the organisation's own notice text rather than a headline." },
 
+  { .id = "JO41_WP_CORP_7480", .name = "スズデン — notices (WordPress REST)",
+    .name_ja = "スズデン 新着情報（WordPress REST）",
+    .category = "corporate", .portal = "https://www.suzuden.co.jp/",
+    .record_type = "corporate-notice",
+    .tags = "\"japan\",\"company\",\"listed\",\"notice\",\"wordpress\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.suzuden.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
+    .array_path = ".",
+    .body_keys = "content.rendered",
+    .date_keys = "date",
+    .id_keys = "id",
+    .interval = 21600,
+    .link_keys = "link",
+    .page_max = 60,
+    .page_param = "page",
+    .page_start = 1,
+    .timeout_ms = 30000,
+    .title_keys = "title.rendered",
+    .description = "WordPress REST posts feed of スズデン (www.suzuden.co.jp, 証券コード "
+      "7480). Fetched 2026-10-06: 100 posts on the first page, each "
+      "record carrying "
+      "author,categories,comment_status,content,date,date_gmt,excerpt,featured_media,format,guid,id,link. "
+      "First post: 大和事業所 太陽光発電システム ドローン空撮映像を公開いたしました. content.rendered "
+      "is kept as the body, so this is the organisation's own notice "
+      "text rather than a headline." },
   { .id = "JO41_WP_CORP_7483", .name = "ドウシシャ — notices (WordPress REST)",
     .name_ja = "ドウシシャ 新着情報（WordPress REST）",
     .category = "corporate", .portal = "https://www.doshisha.co.jp/",

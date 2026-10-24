@@ -13043,184 +13043,26 @@ static const hp_source HP3B42_JPCPTCORP[] = {
       "host's own /wp-json route table, not guessed. Post-shaped: "
       "title.rendered, date, link and content.rendered are kept." },
 
-  { .id = "JO42_WP_CORP_5368_COMPLETEDPROJE", .name = "日本インシュレーション — custom post type `completed-projects` (WordPress "
-      "REST)",
-    .name_ja = "日本インシュレーション completed-projects（WordPress REST）",
-    .category = "corporate", .portal = "https://www.jic-bestork.co.jp/",
-    .record_type = "cpt-completed-projects",
-    .tags = "\"japan\",\"company\",\"listed\",\"wordpress\",\"cpt\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.jic-bestork.co.jp/wp-json/wp/v2/completed-projects?per_page=100&orderby=date&order=desc",
-    .array_path = ".",
-    .body_keys = "content.rendered",
-    .date_keys = "date",
-    .id_keys = "id",
-    .interval = 21600,
-    .link_keys = "link",
-    .page_max = 60,
-    .page_param = "page",
-    .page_start = 1,
-    .timeout_ms = 30000,
-    .title_keys = "title.rendered",
-    .description = "WordPress REST custom post type `completed-projects` of "
-      "日本インシュレーション (www.jic-bestork.co.jp). Fetched 2026-10-12: the "
-      "collection answered with records and declares 20 in X-WP-Total. "
-      "Discovered from this host's own /wp-json route table, not "
-      "guessed. Post-shaped: title.rendered, date, link and "
-      "content.rendered are kept." },
-
-  { .id = "JO42_WP_CORP_5368_CONSTPRODUCTS", .name = "日本インシュレーション — custom post type `const-products` (WordPress REST)",
-    .name_ja = "日本インシュレーション const-products（WordPress REST）",
-    .category = "corporate", .portal = "https://www.jic-bestork.co.jp/",
-    .record_type = "cpt-const-products",
-    .tags = "\"japan\",\"company\",\"listed\",\"wordpress\",\"cpt\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.jic-bestork.co.jp/wp-json/wp/v2/const-products?per_page=100&orderby=date&order=desc",
-    .array_path = ".",
-    .body_keys = "content.rendered",
-    .date_keys = "date",
-    .id_keys = "id",
-    .interval = 21600,
-    .link_keys = "link",
-    .page_max = 60,
-    .page_param = "page",
-    .page_start = 1,
-    .timeout_ms = 30000,
-    .title_keys = "title.rendered",
-    .description = "WordPress REST custom post type `const-products` of 日本インシュレーション "
-      "(www.jic-bestork.co.jp). Fetched 2026-10-12: the collection "
-      "answered with records and declares 18 in X-WP-Total. Discovered "
-      "from this host's own /wp-json route table, not guessed. "
-      "Post-shaped: title.rendered, date, link and content.rendered are "
-      "kept." },
-
-  { .id = "JO42_WP_CORP_5368_DIGITALCATALOG", .name = "日本インシュレーション — custom post type `digital-catalog` (WordPress "
-      "REST)",
-    .name_ja = "日本インシュレーション digital-catalog（WordPress REST）",
-    .category = "corporate", .portal = "https://www.jic-bestork.co.jp/",
-    .record_type = "cpt-digital-catalog",
-    .tags = "\"japan\",\"company\",\"listed\",\"wordpress\",\"cpt\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.jic-bestork.co.jp/wp-json/wp/v2/digital-catalog?per_page=100&orderby=date&order=desc",
-    .array_path = ".",
-    .body_keys = "content.rendered",
-    .date_keys = "date",
-    .id_keys = "id",
-    .interval = 21600,
-    .link_keys = "link",
-    .page_max = 60,
-    .page_param = "page",
-    .page_start = 1,
-    .timeout_ms = 30000,
-    .title_keys = "title.rendered",
-    .description = "WordPress REST custom post type `digital-catalog` of 日本インシュレーション "
-      "(www.jic-bestork.co.jp). Fetched 2026-10-12: the collection "
-      "answered with records and declares 14 in X-WP-Total. Discovered "
-      "from this host's own /wp-json route table, not guessed. "
-      "Post-shaped: title.rendered, date, link and content.rendered are "
-      "kept." },
-
-  { .id = "JO42_WP_CORP_5368_LOOSCBP", .name = "日本インシュレーション — custom post type `loos-cbp` (WordPress REST)",
-    .name_ja = "日本インシュレーション loos-cbp（WordPress REST）",
-    .category = "corporate", .portal = "https://www.jic-bestork.co.jp/",
-    .record_type = "cpt-loos-cbp",
-    .tags = "\"japan\",\"company\",\"listed\",\"wordpress\",\"cpt\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.jic-bestork.co.jp/wp-json/wp/v2/loos-cbp?per_page=100&orderby=date&order=desc",
-    .array_path = ".",
-    .body_keys = "content.rendered",
-    .date_keys = "date",
-    .id_keys = "id",
-    .interval = 21600,
-    .link_keys = "link",
-    .page_max = 60,
-    .page_param = "page",
-    .page_start = 1,
-    .timeout_ms = 30000,
-    .title_keys = "title.rendered",
-    .description = "WordPress REST custom post type `loos-cbp` of 日本インシュレーション "
-      "(www.jic-bestork.co.jp). Fetched 2026-10-12: the collection "
-      "answered with records and declares 14 in X-WP-Total. Discovered "
-      "from this host's own /wp-json route table, not guessed. "
-      "Post-shaped: title.rendered, date, link and content.rendered are "
-      "kept." },
-
-  { .id = "JO42_WP_CORP_5368_MULTIUSEPRODS", .name = "日本インシュレーション — custom post type `multi-use-prods` (WordPress "
-      "REST)",
-    .name_ja = "日本インシュレーション multi-use-prods（WordPress REST）",
-    .category = "corporate", .portal = "https://www.jic-bestork.co.jp/",
-    .record_type = "cpt-multi-use-prods",
-    .tags = "\"japan\",\"company\",\"listed\",\"wordpress\",\"cpt\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.jic-bestork.co.jp/wp-json/wp/v2/multi-use-prods?per_page=100&orderby=date&order=desc",
-    .array_path = ".",
-    .body_keys = "content.rendered",
-    .date_keys = "date",
-    .id_keys = "id",
-    .interval = 21600,
-    .link_keys = "link",
-    .page_max = 60,
-    .page_param = "page",
-    .page_start = 1,
-    .timeout_ms = 30000,
-    .title_keys = "title.rendered",
-    .description = "WordPress REST custom post type `multi-use-prods` of 日本インシュレーション "
-      "(www.jic-bestork.co.jp). Fetched 2026-10-12: the collection "
-      "answered with records and declares 6 in X-WP-Total. Discovered "
-      "from this host's own /wp-json route table, not guessed. "
-      "Post-shaped: title.rendered, date, link and content.rendered are "
-      "kept." },
-
-  { .id = "JO42_WP_CORP_5368_NEWS", .name = "日本インシュレーション — custom post type `news` (WordPress REST)",
-    .name_ja = "日本インシュレーション news（WordPress REST）",
-    .category = "corporate", .portal = "https://www.jic-bestork.co.jp/",
-    .record_type = "cpt-news",
-    .tags = "\"japan\",\"company\",\"listed\",\"wordpress\",\"cpt\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.jic-bestork.co.jp/wp-json/wp/v2/news?per_page=100&orderby=date&order=desc",
-    .array_path = ".",
-    .body_keys = "content.rendered",
-    .date_keys = "date",
-    .id_keys = "id",
-    .interval = 21600,
-    .link_keys = "link",
-    .page_max = 60,
-    .page_param = "page",
-    .page_start = 1,
-    .timeout_ms = 30000,
-    .title_keys = "title.rendered",
-    .description = "WordPress REST custom post type `news` of 日本インシュレーション "
-      "(www.jic-bestork.co.jp). Fetched 2026-10-12: the collection "
-      "answered with records and declares 163 in X-WP-Total. Discovered "
-      "from this host's own /wp-json route table, not guessed. "
-      "Post-shaped: title.rendered, date, link and content.rendered are "
-      "kept." },
-
-  { .id = "JO42_WP_CORP_5368_PLANTPRODS", .name = "日本インシュレーション — custom post type `plant-prods` (WordPress REST)",
-    .name_ja = "日本インシュレーション plant-prods（WordPress REST）",
-    .category = "corporate", .portal = "https://www.jic-bestork.co.jp/",
-    .record_type = "cpt-plant-prods",
-    .tags = "\"japan\",\"company\",\"listed\",\"wordpress\",\"cpt\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.jic-bestork.co.jp/wp-json/wp/v2/plant-prods?per_page=100&orderby=date&order=desc",
-    .array_path = ".",
-    .body_keys = "content.rendered",
-    .date_keys = "date",
-    .id_keys = "id",
-    .interval = 21600,
-    .link_keys = "link",
-    .page_max = 60,
-    .page_param = "page",
-    .page_start = 1,
-    .timeout_ms = 30000,
-    .title_keys = "title.rendered",
-    .description = "WordPress REST custom post type `plant-prods` of 日本インシュレーション "
-      "(www.jic-bestork.co.jp). Fetched 2026-10-12: the collection "
-      "answered with records and declares 13 in X-WP-Total. Discovered "
-      "from this host's own /wp-json route table, not guessed. "
-      "Post-shaped: title.rendered, date, link and content.rendered are "
-      "kept." },
-
+  /* jic-bestork.co.jp (日本インシュレーション) CLOSED ITS REST API, and the
+   * recovery route was checked before these rows were removed rather than
+   * after. Measured 2026-10-20: the site root answers 200, so the publisher is
+   * alive, and `/wp-json/` ITSELF answers
+   * `{"code":"rest_login_required","message":"REST API restricted to
+   * authenticated users."}` — a site-wide, deliberate setting, not one route
+   * and not a transient. The engine gets the same 401 and files a
+   * collector-fetch-failure naming it.
+   *
+   * The reason this is worth a comment is the part that did NOT work. The site
+   * still serves `/feed/` with HTTP 200, which is normally how a locked-down
+   * WordPress publisher is recovered — but that feed holds exactly ONE item,
+   * WordPress's default "Hello world!", and every per-post-type feed
+   * (`?post_type=news&feed=rss2` and the six others these rows covered) holds
+   * ZERO. So there is nothing behind the lock to re-point at, and the next
+   * person does not need to re-check it.
+   *
+   * Ten rows removed: JO41_WP_CORP_5368 and JO42_WP_CORP_5368_{NEWS, PAGES,
+   * USERS, COMPLETEDPROJE, CONSTPRODUCTS, DIGITALCATALOG, LOOSCBP,
+   * MULTIUSEPRODS, PLANTPRODS}. */
   { .id = "JO42_WP_CORP_5950_IR", .name = "日本パワーファスニング — custom post type `ir` (WordPress REST)",
     .name_ja = "日本パワーファスニング ir（WordPress REST）",
     .category = "corporate", .portal = "https://www.jpf-net.co.jp/",

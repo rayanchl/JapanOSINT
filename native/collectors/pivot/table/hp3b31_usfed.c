@@ -360,15 +360,45 @@ static const hp_source HP3B31_USFED[] = {
   { .id = "US_DATA_GOV_CKAN", .name = "Data.gov — federal dataset catalog",
     .name_ja = "米国データポータル 目録", .category = "government",
     .portal = "https://catalog.data.gov", .record_type = "us-dataset",
-    .tags = "\"us\",\"open-data\",\"catalog\"", .free_tier = 1,
-    .url = "https://catalog.data.gov/api/3/action/package_search?q={q}&rows=100",
-    .array_path = "result.results", .title_keys = "title,organization.title",
-    .id_keys = "id", .date_keys = "metadata_modified",
-    .page_param = "start", .page_size = 100, .page_start = 0, .page_max = 30,
+    .tags = "\"us\",\"open-data\",\"catalog\"", .mode = HP_HTML,
+    .free_tier = 1,
+    /* RE-POINTED 2026-10-21 (open item B2), and this one is a DOWNGRADE that
+     * is worth stating. catalog.data.gov's CKAN API is gone, not moved: 404 on
+     * /api/3/action/package_search, /api/action/package_search,
+     * /api/3/action/status_show and /api/3/action/package_list, measured that
+     * day (main's own batch-34 reading of catalog.data.gov 404 agrees). So the
+     * paged API this row used is replaced by the site's HTML search, which is
+     * a RANKED view of 8 results and not a complete read of the catalogue.
+     *
+     * NO PAGING IS DECLARED, DELIBERATELY. `?page=2` returns THE SAME eight
+     * datasets as page 1; the only difference is a `from_hint` parameter that
+     * base64-encodes the page number, so the bodies are NOT byte-identical and
+     * pagewalk's same-body guard would not stop the walk. A walk here would
+     * store page 1 under 20 different uids and report 160 records — fabricated
+     * volume, with every gate green. `?q=…&start=20` and `&offset=20` return
+     * nothing at all. Measured: 8 /dataset/ anchors for "Toyota", 0 for
+     * "zzqqxxjjwwvv7731", so the filter itself is honest; href_must is needed
+     * because the page's other anchors are chrome.
+     *
+     * It stores 8 records for 7 datasets, measured, and the surplus is the
+     * page's own shape rather than a key fault: data.gov links a dataset both
+     * with and without the `from_hint` parameter, so one dataset arrives under
+     * two hrefs and the second copy takes the format badge's label ("JSON").
+     * Nothing here can collapse them — an anchor row is keyed on the resolved
+     * URL and the engine has no query-normalising dedupe — so it is written
+     * down rather than papered over. */
+    .url = "https://catalog.data.gov/?q={q}",
+    .base = "https://catalog.data.gov", .href_must = "/dataset/",
+    /* NO filter_query. It was set here for one run and kept 1 record of the
+     * 5 datasets the page returned: filter_query keeps only records
+     * MENTIONING the entity, which is right for a bulk file filtered locally
+     * and wrong wherever the SERVER already filtered — it then discards the
+     * upstream's own matches whose link text does not happen to repeat the
+     * word. Measured: 5 datasets on the page, 1 emitted with the flag. */
     .description = "The federal open-data catalog — which agency publishes a "
-      "dataset touching a subject, the resource URLs behind it and the "
-      "publication and modification dates. A directory of where the raw "
-      "government record on a topic actually lives" },
+      "dataset touching a subject. A RANKED view: the search returns its top "
+      "matches, not every dataset that mentions the entity, because data.gov "
+      "retired the CKAN API this row used to page through" },
 };
 
 HP_REGISTER_TABLE(HP3B31_USFED)

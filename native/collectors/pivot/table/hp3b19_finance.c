@@ -1163,11 +1163,16 @@ static const hp_source HP3B19_FINANCE[] = {
     .record_type = "fiscal-statement",
     .tags = "\"us\",\"treasury\",\"fiscal\",\"budget\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/mts/mts_table_1?page[size]=100&sort=-record_date",
+    /* No cycle here, because the whole table fits in one run. Measured
+     * 2026-10-22: `meta.total-count` 3,145 — 32 pages of 100 — so `page_max`
+     * 40 reads the table COMPLETE every day, which is better than a cycle that
+     * would leave two thirds of it a day stale. Ascending for the same reason
+     * as the daily statement above: a new month lands at the tail. */
+    .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/mts/mts_table_1?page[size]=100&sort=record_date",
     .array_path = "data",
     .interval = 86400,
+    .page_max = 40,
     .page_param = "page[number]",
-    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_start = 1,
     .description = "Monthly federal receipts, outlays and the resulting deficit or "
       "surplus by classification line, with fiscal-year, quarter and "
@@ -1183,11 +1188,18 @@ static const hp_source HP3B19_FINANCE[] = {
     .record_type = "fiscal-statement",
     .tags = "\"us\",\"treasury\",\"cash\",\"liquidity\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/dts/operating_cash_balance?page[size]=100&sort=-record_date",
+    /* ASCENDING on purpose. This is a cycling row over an append-only daily
+     * series, and `sort=-record_date` put each new day at the HEAD, shifting
+     * every page under a walk resumed halfway down. Measured 2026-10-22:
+     * the API honours `sort=record_date` (first page 2005-10-03 against
+     * 2026-10-20 reversed) and declares `meta.total-count` 16,710 — 168 pages
+     * of 100, so a 20-page cycle on a six-hourly interval comes round in about
+     * two days, walking forward into the days it has not read. */
+    .url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/dts/operating_cash_balance?page[size]=100&sort=record_date",
     .array_path = "data",
     .interval = 21600,
     .page_param = "page[number]",
-    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
+    .page_resume = 1,   /* 16,710 records over 168 pages (measured 2026-10-22): read over a cycle */
     .page_start = 1,
     .description = "The daily opening and closing balance of the Treasury General "
       "Account at the Federal Reserve and of tax-and-loan accounts, "

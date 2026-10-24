@@ -14,6 +14,7 @@
 #include "../lib/hpengine.h"
 #include "../lib/jsonlist.h"
 #include "../lib/pagewalk.h"   /* jo_page_max — 18d derives the ceiling, not a literal */
+#include "../lib/datetok.h"    /* the window tests name their dates, not literals */
 #include "../lib/feedlib.h"
 #include "../lib/csv.h"
 #include "../core/httpclient.h"
@@ -88,12 +89,21 @@ static char g_call_hdrs[16][512];
  * cache on the path answering for a page it never fetched, and the one retry
  * that asks it to go back to the origin. */
 #define FX_304_UNLESS_NOCACHE 1304
+/* A fixture status that makes http_request RETURN NON-ZERO — a transport
+ * failure, where there is no HTTP status at all. The engine reads that as
+ * fst = -1, and it is the only way to reach the TLS branch of the
+ * fetch-failure record (test 53). */
+#define FX_TRANSPORT_FAIL     1999
+/* What http_last_tls_cause() reports. The real one is thread-local state in
+ * core/httpclient.c, which this harness does not link. */
+static int g_fx_tls = HTTP_TLS_NONE;
 /* Milliseconds every stub request takes — for the detail TIME budget, which
  * nothing else in this harness can exercise. 0 everywhere else. */
 static int  g_fx_delay_ms = 0;
 
 static void fx_reset(void) { g_nfx = 0; g_ncalls = 0; g_last_url[0] = 0;
                              g_last_body[0] = 0; g_last_hdrs[0] = 0;
+                             g_fx_tls = HTTP_TLS_NONE;
                              memset(g_call_hdrs, 0, sizeof g_call_hdrs); }
 static void fx_add(const char *match, long status, const char *body) {
   if (g_nfx < 16) g_fx[g_nfx++] = (fixture){ match, body, status, 0 };
@@ -128,6 +138,10 @@ int http_request(http_client *c, const char *method, const char *url,
               : strstr(url, g_fx[i].match) != NULL;
     if (hit) {
       out->status = g_fx[i].status;
+      /* No status, no body: the exchange never completed. */
+      if (out->status == FX_TRANSPORT_FAIL) {
+        out->status = 0; out->body = NULL; out->body_len = 0; return 1;
+      }
       if (out->status == FX_304_UNLESS_NOCACHE) {
         if (!strstr(g_last_hdrs, "Cache-Control: no-cache")) { out->status = 304; return 0; }
         out->status = 200;
@@ -149,6 +163,19 @@ int http_request(http_client *c, const char *method, const char *url,
   return 0;                     /* completed exchange, 404 */
 }
 void http_response_free(http_response *r) { if (r) { free(r->body); r->body = NULL; } }
+/* The TLS-cause accessors (open item D1-bis). core/httpclient.c is not linked
+ * here, so the cause is whatever a test set — and the LABEL and REMEDY are the
+ * real strings' SHAPE rather than their text, because what this harness can
+ * check is that the engine puts them in the record and keys them on the cause,
+ * not what a sentence in another file says. test_http_tls_cause.c owns the
+ * classifier and the wording. */
+int http_last_tls_cause(void) { return g_fx_tls; }
+const char *http_tls_cause_label(int cause) {
+  return cause == HTTP_TLS_NONE ? "" : "STUB-LABEL";
+}
+const char *http_tls_cause_remedy(int cause) {
+  return cause == HTTP_TLS_NONE ? "" : "STUB-REMEDY";
+}
 /* lib/jsonlist.c is linked for jsonlist_next_page(), the paging decision the
  * page_walk rows share with every VJSON collector (and lib/pagewalk.c because
  * jsonlist.c calls into it). The operator URL override and the feed key hash
@@ -334,6 +361,32 @@ static const hp_source T[] = {
     .page_param = "offset", .page_size = 2, .page_max = 2, .page_resume = 1,
     .interval = 3600,
     .record_type = "t-page", .free_tier = 1, .description = "d" },
+  /* A collection whose only slicing axis is a DATE: the upstream honours no
+   * offset at all, so the cycle walks date windows forward instead of pages
+   * (test 41). window_from is far enough back that the walk starts there and
+   * is nowhere near caught up, whatever day the suite runs on. */
+  { .id = "T_WINDOW", .name = "date-window cycle",
+    .url = "https://x.test/wz?from={wstart}&to={wend}",
+    .array_path = "items", .title_keys = "name", .id_keys = "id",
+    .interval = 86400, .window_days = 7, .window_from = "2020-01-01",
+    .record_type = "t-page", .free_tier = 1, .description = "d" },
+  /* A window row with a strftime format on the tokens, and no window_from, so
+   * it is a live tail with no backfill (tests 41c, 41d). */
+  { .id = "T_WINDOW_TAIL", .name = "date-window live tail",
+    .url = "https://x.test/wt?d={wstart:%Y%m%d}-{wend:%Y%m%d}",
+    .array_path = "items", .title_keys = "name", .id_keys = "id",
+    .interval = 86400, .window_days = 3,
+    .record_type = "t-page", .free_tier = 1, .description = "d" },
+  /* window_days with no {wstart}/{wend} token anywhere: nothing to slice, so
+   * the engine must refuse rather than read one window and look complete
+   * (test 41e). It declares page_resume too, which window_days would own if
+   * the window were active — here it must not be. */
+  { .id = "T_WINDOW_NOTOK", .name = "window_days with no window token",
+    .url = "https://x.test/rz?all=1",
+    .array_path = "items", .title_keys = "name", .id_keys = "id",
+    .page_param = "offset", .page_size = 2, .page_max = 2, .page_resume = 1,
+    .interval = 86400, .window_days = 7, .window_from = "2020-01-01",
+    .record_type = "t-page", .free_tier = 1, .description = "d" },
   /* The same walk with a row-declared conditional header: it belongs to the
    * first request only (test 9f-sexies). */
   { .id = "T_PAGE_COND", .name = "offset pagination, conditional first request",
@@ -460,6 +513,25 @@ static const hp_source T[] = {
     .title_keys = "name", .id_keys = "id", .interval = 3600,
     .page_walk = 1,
     .record_type = "t-total-page", .free_tier = 1, .description = "d" },
+
+  /* OData spells both envelope fields as ONE key containing a dot, so a
+   * dotted-path resolver that splits unconditionally could never find them —
+   * `@odata.nextLink` sat in jsonlist.c's next-link list, named in its comment
+   * as the OData spelling, matching nothing. Both resolvers now fall back to
+   * the literal key AFTER the split fails, so nothing that resolved before
+   * resolves differently. T_ODATA_DECL is the hp_path copy of the same fix:
+   * the row names the dotted key itself, in next_path. */
+  { .id = "T_ODATA", .name = "OData envelope: dotted KEYS, not dotted paths",
+    .url = "https://x.test/od?select=all", .array_path = "value",
+    .title_keys = "name", .id_keys = "id", .interval = 3600,
+    .page_walk = 1,
+    .record_type = "t-odata", .free_tier = 1, .description = "d" },
+
+  { .id = "T_ODATA_DECL", .name = "a row DECLARING a dotted key as next_path",
+    .url = "https://x.test/odd?select=all", .array_path = "value",
+    .title_keys = "name", .id_keys = "id", .interval = 3600,
+    .next_path = "@odata.nextLink",
+    .record_type = "t-odata-decl", .free_tier = 1, .description = "d" },
 
   { .id = "T_PAGE_SET", .name = "page_param replaces, never appends",
     .url = "https://x.test/pset?page=1&per=2", .array_path = "items",
@@ -767,6 +839,31 @@ static const hp_source T[] = {
   { .id = "T_XML_STR", .name = "xml text-only records", .url = "https://x.test/str.xml",
     .mode = HP_XML, .array_path = "string", .interval = 3600,
     .record_type = "t-xmlstr", .free_tier = 1, .description = "d" },
+  /* A page-NUMBER row whose page size lives in its URL, because `page_size`
+   * on a page number would make the parameter an offset (test 43). The engine
+   * could not see that size at all, so "was the previous page short?" was
+   * unanswerable on the second request — the one where it matters. */
+  { .id = "T_URLSIZE", .name = "page size declared in the URL",
+    .url = "https://x.test/us?per_page=100",
+    .array_path = "items", .title_keys = "name", .id_keys = "id",
+    .page_param = "page", .interval = 3600,
+    .record_type = "t-urlsize", .free_tier = 1, .description = "d" },
+  /* The same shape with a size page 1 FILLS, so a repeat really is an ignored
+   * parameter — the loud case the quiet one must not have cost (test 43c). */
+  { .id = "T_URLSIZE_FULL", .name = "page size in the URL, page 1 full",
+    .url = "https://x.test/uf?per_page=2",
+    .array_path = "items", .title_keys = "name", .id_keys = "id",
+    .page_param = "page", .interval = 3600,
+    .record_type = "t-urlsizef", .free_tier = 1, .description = "d" },
+  /* An XML row that declares NO paging, against an upstream that states its
+   * own total in the envelope wrapping the records (test 42). Japan's KKJ
+   * procurement API is the live case: `<SearchHits>50530</SearchHits>` beside
+   * 1,000 results, and no offset parameter of any name honoured. */
+  { .id = "T_XML_TOTAL", .name = "xml declared total, one request",
+    .url = "https://x.test/kkj?Count=2",
+    .mode = HP_XML, .array_path = "SearchResult", .interval = 86400,
+    .title_keys = "ProjectName", .id_keys = "Key",
+    .record_type = "t-xmltotal", .free_tier = 1, .description = "d" },
 
   /* ── engine fixes of 2026-10-02 (tests 27-33) ── */
   /* A page-numbered page_walk row whose URL states a page size and NO page.
@@ -847,6 +944,105 @@ static const hp_source T[] = {
 };
 HP_REGISTER_TABLE(T)
 
+/* A row with an id and NO `.url` cannot be fetched, so hp_register refuses it
+ * — and until 2026-10-21 it refused it in silence, which is how two rows of
+ * one batch shipped registering nothing at all. Pinned here from both sides:
+ * the url-less row must stay OUT (nothing should "fix" this by registering a
+ * row the engine cannot run), and the complete row BESIDE it must still come
+ * in, because one unusable row must not take its table down with it. The
+ * stderr line itself was confirmed by hand on a build with .url removed. */
+static const hp_source TNOURL[] = {
+  { .id = "T_NO_URL_AT_ALL", .name = "a row with no url", .url = NULL,
+    .array_path = "items", .title_keys = "name", .id_keys = "id",
+    .interval = 3600, .record_type = "t-nourl", .free_tier = 1, .description = "d" },
+  { .id = "T_URL_PRESENT", .name = "its complete neighbour",
+    .url = "https://x.test/present",
+    .array_path = "items", .title_keys = "name", .id_keys = "id",
+    .interval = 3600, .record_type = "t-nourl", .free_tier = 1, .description = "d" },
+};
+HP_REGISTER_TABLE(TNOURL)
+
+/* A JSON "table": records that are ARRAYS, with the column names in a sibling
+ * array. Two national parliaments publish exactly this (Finland's Eduskunta
+ * and the Austrian Parliament), and without row_header_path the engine names
+ * such a record's cells POSITIONALLY — so a row would key on positions whose
+ * meaning the upstream can change silently. */
+static const hp_source TTBL[] = {
+  { .id = "T_JTBL", .name = "json table with a header array",
+    .url = "https://x.test/tbl",
+    .array_path = "rowData", .row_header_path = "columnNames",
+    .title_keys = "lastname", .id_keys = "personId",
+    .interval = 3600, .record_type = "t-table", .free_tier = 1, .description = "d" },
+  /* The same response with NO header path declared: the control. */
+  { .id = "T_JTBL_NOHDR", .name = "json table without a declared header",
+    .url = "https://x.test/tbl",
+    .array_path = "rowData",
+    .interval = 3600, .record_type = "t-table", .free_tier = 1, .description = "d" },
+  /* Austria's shape: the header entries are OBJECTS naming the column. */
+  { .id = "T_JTBL_OBJHDR", .name = "json table whose header entries are objects",
+    .url = "https://x.test/tbl2",
+    .array_path = "rows", .row_header_path = "header",
+    .title_keys = "ITYP", .id_keys = "GP_CODE",
+    .interval = 3600, .record_type = "t-table", .free_tier = 1, .description = "d" },
+  /* A header that is not an array at all: the row must still emit, under
+   * positional names, rather than lose the page. */
+  { .id = "T_JTBL_BADHDR", .name = "json table whose header path is not an array",
+    .url = "https://x.test/tbl3",
+    .array_path = "rowData", .row_header_path = "columnNames",
+    .interval = 3600, .record_type = "t-table", .free_tier = 1, .description = "d" },
+};
+HP_REGISTER_TABLE(TTBL)
+
+/* ── a workbook whose sheets ARE the collection (fixtures 50–50e) ──────────
+ * PMDA publishes its annual drug approvals as one workbook with one sheet per
+ * month, and a new sheet appears every month. A row reading one sheet of it
+ * drops the rest at a seam, which is rule 2; a row pinned to a sheet NAME goes
+ * stale in weeks and a row pinned to index 0 reads the first month for ever. */
+static const hp_source TXLS[] = {
+  /* The default: one sheet, the way every xlsx row behaved before. */
+  { .id = "T_XLS_ONE", .name = "workbook, first sheet only",
+    .url = "https://x.test/wb.xlsx", .mode = HP_XLSX,
+    .title_keys = "name", .id_keys = "code",
+    .interval = 3600, .record_type = "t-xls", .free_tier = 1, .description = "d" },
+  /* Every sheet. */
+  { .id = "T_XLS_ALL", .name = "workbook, every sheet",
+    .url = "https://x.test/wb.xlsx", .mode = HP_XLSX, .xlsx_sheet_all = 1,
+    .title_keys = "name", .id_keys = "code",
+    .interval = 3600, .record_type = "t-xls", .free_tier = 1, .description = "d" },
+  /* xlsx_sheet_all OVERRIDES a declared sheet name rather than combining with
+   * it — including a name the workbook does not have, which the single-sheet
+   * path fails the whole run on. */
+  { .id = "T_XLS_ALL_NAMED", .name = "workbook, every sheet, name also declared",
+    .url = "https://x.test/wb.xlsx", .mode = HP_XLSX, .xlsx_sheet_all = 1,
+    .xlsx_sheet = "no-such-sheet",
+    .title_keys = "name", .id_keys = "code",
+    .interval = 3600, .record_type = "t-xls", .free_tier = 1, .description = "d" },
+};
+HP_REGISTER_TABLE(TXLS)
+
+/* ── an archive whose MEMBERS are the collection (fixtures 51–51c) ────────
+ * The Assemblée nationale publishes its 19,165 written questions as one JSON
+ * document each inside a single ZIP, so the first-entry read is 19,164 records
+ * dropped at a seam. */
+static const hp_source TZIPALL[] = {
+  /* The default: the first member only, with the extra-entries notice. */
+  { .id = "T_ZIPALL_ONE", .name = "zip of json records, first member only",
+    .url = "https://x.test/za.zip", .array_path = "rec",
+    .title_keys = "name", .id_keys = "id",
+    .interval = 3600, .record_type = "t-zipall", .free_tier = 1, .description = "d" },
+  /* zip_all_entries declared on a mode it does not serve. */
+  { .id = "T_ZIPALL_CSV", .name = "zip of json records, declared csv",
+    .url = "https://x.test/za.zip", .mode = HP_CSV, .zip_all_entries = 1,
+    .title_keys = "name", .id_keys = "id",
+    .interval = 3600, .record_type = "t-zipall", .free_tier = 1, .description = "d" },
+  /* Every member. */
+  { .id = "T_ZIPALL", .name = "zip of json records, every member",
+    .url = "https://x.test/za.zip", .zip_all_entries = 1, .array_path = "rec",
+    .title_keys = "name", .id_keys = "id",
+    .interval = 3600, .record_type = "t-zipall", .free_tier = 1, .description = "d" },
+};
+HP_REGISTER_TABLE(TZIPALL)
+
 /* A ZIP of `n` STORED entries (no compression, so the test needs no zlib and
  * the payload bytes appear in the archive verbatim), with a central directory
  * and end record. CRCs are 0: nothing in the engine checks them. Caller frees;
@@ -885,6 +1081,59 @@ static char *mk_zip(const char *const *names, const char *const *datas,
   w += 22;
   *len = (size_t)(w - z);
   return (char *)z;
+}
+
+/* A minimal .xlsx: `nsheets` worksheets named "m1".."mN", each holding a header
+ * row (name,code) and two data rows, built with mk_zip above so the test needs
+ * no fixture file and no Python. Cells are inline strings, so there is no
+ * sharedStrings member to keep in step.
+ *
+ * `drop` (1-based, 0 for none) declares a sheet in xl/workbook.xml and then
+ * does NOT write its zip member, which is a workbook that converts every sheet
+ * but one — the shape the disclosure exists for. Caller frees. */
+static char *mk_xlsx(int nsheets, int drop, size_t *len) {
+  static char wbx[1024], rels[1024], sh[8][512];
+  const char *names[8]; const char *datas[8]; size_t lens[8];
+  size_t w = 0;
+  w = (size_t)snprintf(wbx, sizeof wbx,
+      "<?xml version=\"1.0\"?><workbook xmlns=\"http://schemas.openxmlformats.org"
+      "/spreadsheetml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org"
+      "/officeDocument/2006/relationships\"><sheets>");
+  for (int i = 1; i <= nsheets; i++)
+    w += (size_t)snprintf(wbx + w, sizeof wbx - w,
+        "<sheet name=\"m%d\" sheetId=\"%d\" r:id=\"rId%d\"/>", i, i, i);
+  snprintf(wbx + w, sizeof wbx - w, "</sheets></workbook>");
+
+  w = (size_t)snprintf(rels, sizeof rels,
+      "<?xml version=\"1.0\"?><Relationships xmlns=\"http://schemas.openxmlformats"
+      ".org/package/2006/relationships\">");
+  for (int i = 1; i <= nsheets; i++)
+    w += (size_t)snprintf(rels + w, sizeof rels - w,
+        "<Relationship Id=\"rId%d\" Type=\"http://schemas.openxmlformats.org"
+        "/officeDocument/2006/relationships/worksheet\" "
+        "Target=\"worksheets/sheet%d.xml\"/>", i, i);
+  snprintf(rels + w, sizeof rels - w, "</Relationships>");
+
+  int n = 0;
+  names[n] = "xl/workbook.xml";            datas[n] = wbx;  lens[n] = strlen(wbx);  n++;
+  names[n] = "xl/_rels/workbook.xml.rels"; datas[n] = rels; lens[n] = strlen(rels); n++;
+  static char path[8][40];
+  for (int i = 1; i <= nsheets && n < 8; i++) {
+    if (i == drop) continue;
+    snprintf(sh[i - 1], sizeof sh[0],
+        "<?xml version=\"1.0\"?><worksheet xmlns=\"http://schemas.openxmlformats"
+        ".org/spreadsheetml/2006/main\"><sheetData>"
+        "<row r=\"1\"><c r=\"A1\" t=\"inlineStr\"><is><t>name</t></is></c>"
+                     "<c r=\"B1\" t=\"inlineStr\"><is><t>code</t></is></c></row>"
+        "<row r=\"2\"><c r=\"A2\" t=\"inlineStr\"><is><t>row %d-1</t></is></c>"
+                     "<c r=\"B2\" t=\"inlineStr\"><is><t>m%d-1</t></is></c></row>"
+        "<row r=\"3\"><c r=\"A3\" t=\"inlineStr\"><is><t>row %d-2</t></is></c>"
+                     "<c r=\"B3\" t=\"inlineStr\"><is><t>m%d-2</t></is></c></row>"
+        "</sheetData></worksheet>", i, i, i, i);
+    snprintf(path[i - 1], sizeof path[0], "xl/worksheets/sheet%d.xml", i);
+    names[n] = path[i - 1]; datas[n] = sh[i - 1]; lens[n] = strlen(sh[i - 1]); n++;
+  }
+  return mk_zip(names, datas, lens, n, len);
 }
 
 /* Number of captured rows of a given record_type, and the first of them. */
@@ -3510,6 +3759,694 @@ int main(void) {
   ok(rc == 0 && g_cap_ids_has("1") && !g_res_set,
      "40e: an entity run neither resumes nor stores a position");
 
+  /* ── 41. A COLLECTION SLICED BY DATE, not by pages (window_days).
+   *
+   * page_resume needs the upstream to page. EBI's ENA portal API does not: it
+   * answers {"message":"Unsupported param offset"} with HTTP 400 to any
+   * offset, so ENA_PATHOGEN_SARSCOV2_RUNS read 1,000 records of 7,556,500 and
+   * then — a failed page storing no position, correctly — read the same 1,000
+   * on every run for ever at rc=0. What that endpoint does honour is a date
+   * predicate, so the slice is a date window and the cycle walks it forward. */
+  fx_reset();
+  fx_add("/wz?from=", 200,
+         "{\"items\":[{\"name\":\"a\",\"id\":\"1\"},{\"name\":\"b\",\"id\":\"2\"}]}");
+  rc = run_source_resume("T_WINDOW", NULL, NULL);
+  ok(rc == 0 && strstr(g_last_url, "from=2020-01-01") != NULL &&
+     strstr(g_last_url, "to=2020-01-07") != NULL,
+     "41: a window row with no stored position starts at window_from, one "
+     "window_days wide");
+  ok(g_res_set && strcmp(g_res_out, "w=2020-01-08") == 0,
+     "41: and stores the NEXT window's start, not a URL");
+  /* The shortfall none of the six truncation triggers can see: the walk ended
+   * cleanly, every page was served, and what was not read is the rest of the
+   * collection OUTSIDE the window. Without this a row reading 0.08% of its
+   * upstream files nothing at all and looks finished. */
+  { const cap *nt = NULL;
+    ok(cap_count("collector-truncation-notice", &nt) == 1 && nt &&
+       strstr(nt->props, "\"cycle_axis\":\"date window\"") != NULL &&
+       strstr(nt->props, "\"window_start\":\"2020-01-01\"") != NULL &&
+       strstr(nt->props, "\"window_end\":\"2020-01-07\"") != NULL &&
+       strstr(nt->props, "\"next_run_window_start\":\"2020-01-08\"") != NULL &&
+       strstr(nt->props, "\"window_caught_up\":false") != NULL,
+       "41: and discloses the window it read and the one coming next"); }
+
+  /* 41b. The walk goes FORWARD. A backward walk from today would not see a
+   *      record published this morning until it had finished the history — a
+   *      year of daily runs for ENA — which is the same mistake as cycling a
+   *      newest-first collection. */
+  snprintf(saved, sizeof saved, "%s", g_res_out);
+  rc = run_source_resume("T_WINDOW", NULL, saved);
+  ok(rc == 0 && strstr(g_last_url, "from=2020-01-08") != NULL &&
+     strstr(g_last_url, "to=2020-01-14") != NULL &&
+     g_res_set && strcmp(g_res_out, "w=2020-01-15") == 0,
+     "41b: the next run reads the window AFTER the one stored, moving forward");
+
+  /* 41b-ii. An EMPTY window still advances. A window that holds no records is
+   *         a fact about those dates, not a failure, and re-reading it would
+   *         stall the cycle on the first quiet week of the history. */
+  fx_reset();
+  fx_add("/wz?from=", 200, "{\"items\":[]}");
+  rc = run_source_resume("T_WINDOW", NULL, "w=2020-02-05");
+  ok(rc == 0 && g_res_set && strcmp(g_res_out, "w=2020-02-12") == 0,
+     "41b-ii: an empty window advances the cycle rather than stalling it");
+
+  /* 41b-iv. A window that was NOT SERVED does not advance. Advancing past a
+   *          window we were refused would drop its records permanently —
+   *          nothing ever comes back for them — whereas re-reading a window we
+   *          already have is cheap and self-healing. This is the opposite
+   *          choice from a failed PAGE, which clears its position, and the
+   *          difference is that a page can be reached again from the start of
+   *          the same collection while a skipped window cannot. */
+  fx_reset();
+  fx_add("/wz?from=", 500, NULL);
+  rc = run_source_resume("T_WINDOW", NULL, "w=2020-03-04");
+  ok(g_res_set && strcmp(g_res_out, "w=2020-03-04") == 0,
+     "41b-iv: a window that was not served is re-read, not skipped");
+
+  /* 41c. The tokens render through strftime, so an upstream wanting 20200101
+   *      gets it; and with no window_from the row is a live tail that starts
+   *      at the trailing window. */
+  fx_reset();
+  fx_add("/wt?d=", 200,
+         "{\"items\":[{\"name\":\"a\",\"id\":\"1\"}]}");
+  rc = run_source_resume("T_WINDOW_TAIL", NULL, NULL);
+  {
+    char lo[16], hi[16], want[64];
+    long today = datetok_day_of(0, 0);
+    datetok_iso_from_day(today - 2, lo, sizeof lo);   /* window_days = 3 */
+    datetok_iso_from_day(today, hi, sizeof hi);
+    snprintf(want, sizeof want, "d=%.4s%.2s%.2s-%.4s%.2s%.2s",
+             lo, lo + 5, lo + 8, hi, hi + 5, hi + 8);
+    ok(rc == 0 && strstr(g_last_url, want) != NULL,
+       "41c: {wstart:%Y%m%d}/{wend:%Y%m%d} render through strftime, and a row "
+       "with no window_from starts at the trailing window");
+  }
+
+  /* 41d. A CAUGHT-UP row pins itself to the trailing window: the stored
+   *      position stops advancing and every later run reads the live tail.
+   *      That is what makes one row both the backfill and the live feed, and
+   *      it is why the walk goes forward. A stored position in the FUTURE is
+   *      clamped to the tail rather than followed. */
+  {
+    char tok[32], lo[16];
+    long today = datetok_day_of(0, 0);
+    datetok_iso_from_day(today + 400, lo, sizeof lo);
+    snprintf(tok, sizeof tok, "w=%s", lo);
+    fx_reset();
+    fx_add("/wt?d=", 200, "{\"items\":[{\"name\":\"a\",\"id\":\"1\"}]}");
+    rc = run_source_resume("T_WINDOW_TAIL", NULL, tok);
+    char tail[16], want[32];
+    datetok_iso_from_day(today - 2, tail, sizeof tail);
+    snprintf(want, sizeof want, "w=%s", tail);
+    ok(rc == 0 && g_res_set && strcmp(g_res_out, want) == 0,
+       "41d: a caught-up row pins to the trailing window and stays there");
+  }
+
+  /* 41d-ii. A token the engine does not recognise is treated as ABSENT — the
+   *         contract source.h documents — so a row moved from page_resume to
+   *         window_days reads its old stored URL as "no position" and starts
+   *         the window cycle at window_from rather than somewhere arbitrary. */
+  fx_reset();
+  fx_add("/wz?from=", 200,
+         "{\"items\":[{\"name\":\"a\",\"id\":\"1\"}]}");
+  rc = run_source_resume("T_WINDOW", NULL, "https://x.test/rz?all=1&offset=4");
+  ok(rc == 0 && strstr(g_last_url, "from=2020-01-01") != NULL,
+     "41d-ii: a page-resume URL left over on a window row is ignored, not "
+     "parsed as a date");
+
+  /* 41e. window_days with no {wstart}/{wend} token is REFUSED. Reading one
+   *      window of a collection and looking complete is the invisible nothing
+   *      this engine's disclosures exist to prevent — and the row must fall
+   *      back to the paging it declares, not to nothing. */
+  fx_reset();
+  fx_add("offset=2", 200,
+         "{\"items\":[{\"name\":\"c\",\"id\":\"3\"},{\"name\":\"d\",\"id\":\"4\"}]}");
+  fx_add("/rz?all=1", 200,
+         "{\"items\":[{\"name\":\"a\",\"id\":\"1\"},{\"name\":\"b\",\"id\":\"2\"}]}");
+  rc = run_source_resume("T_WINDOW_NOTOK", NULL, NULL);
+  ok(rc == 0 && g_cap_ids_has("1") && g_cap_ids_has("3") &&
+     g_res_set && strstr(g_res_out, "offset=4") != NULL,
+     "41e: window_days with no window token is ignored and page_resume still "
+     "owns the position");
+
+  /* 41f. An ENTITY run ignores the window, for the same reason it ignores a
+   *      page position: "what do we have on X" must answer from the start of
+   *      X's results. */
+  fx_reset();
+  fx_add("/wz?from=", 200, "{\"items\":[{\"name\":\"a\",\"id\":\"1\"}]}");
+  rc = run_source_resume("T_WINDOW", "somebody", "w=2020-05-06");
+  ok(rc == 0 && !g_res_set,
+     "41f: an entity run neither reads nor stores a window position");
+
+  /* 41g. The row DESCRIBES its window, so a source page does not report a
+   *      cycling row as having no cycle at all. */
+  {
+    char *dw = hp_describe_json("T_WINDOW");
+    ok(dw && strstr(dw, "\"window_days\":7") != NULL &&
+       strstr(dw, "\"window_from\":\"2020-01-01\"") != NULL &&
+       strstr(dw, "window_resume_note") != NULL,
+       "41g: hp_describe_json reports the window cycle");
+    free(dw);
+  }
+
+  /* 41h. A WINDOW THAT WAS TOO WIDE must not report itself as read in full.
+   *      The window notice's reason said "read its window in full" from one
+   *      condition only — that the row was behind — so an under-sized window
+   *      whose overflow the upstream counted would have been reported as a
+   *      tidy deferral. The difference matters because a DEFERRED record comes
+   *      back on a later run and an OVERFLOWED one never does, and this is
+   *      what lets a window size ship on a measured estimate: set too wide, it
+   *      says so in the data instead of losing records quietly. */
+  fx_reset();
+  fx_add("/wz?from=", 200,
+         "{\"total\":1200,\"items\":[{\"name\":\"a\",\"id\":\"1\"},"
+         "{\"name\":\"b\",\"id\":\"2\"}]}");
+  rc = run_source_resume("T_WINDOW", NULL, NULL);
+  { const cap *nt = NULL;
+    ok(rc == 0 && cap_count("collector-truncation-notice", &nt) == 1 && nt &&
+       strstr(nt->props, "\"records_available\":1200") != NULL &&
+       strstr(nt->props, "the window is too wide") != NULL &&
+       strstr(nt->props, "read its window in full") == NULL &&
+       strstr(nt->props, "narrow window_days") != NULL,
+       "41h: a window whose own count exceeds one read says it is too wide, "
+       "not that it completed");
+    /* Still a cycle: the next window is the one after this, because stalling
+     * on an over-wide window would lose the rest of the collection too. */
+    ok(g_res_set && strcmp(g_res_out, "w=2020-01-08") == 0,
+       "41h-ii: and the cycle still advances past it"); }
+
+  /* 42. AN XML ROW'S DECLARED TOTAL. hp_run_json has read one since the
+   *     truncation notice needed a remainder to state; the XML path never did,
+   *     so no XML row in the tree could disclose one. And the trigger itself
+   *     required page_walk, so a row making ONE request against an upstream
+   *     that says it holds 50x more filed nothing at all — the quiet half of
+   *     the KKJ defect, which would have survived removing its dead paging. */
+  fx_reset();
+  fx_add("/kkj?Count=2", 200,
+         "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n<Results>\n<Version>1.0</Version>\n"
+         "<SearchResults>\n<SearchHits>50530</SearchHits>\n"
+         "<SearchResult><ResultId>1</ResultId><Key>k1</Key>"
+         "<ProjectName>one</ProjectName></SearchResult>\n"
+         "<SearchResult><ResultId>2</ResultId><Key>k2</Key>"
+         "<ProjectName>two</ProjectName></SearchResult>\n"
+         "</SearchResults>\n</Results>\n");
+  rc = run_source("T_XML_TOTAL", NULL);
+  { const cap *nt = NULL;
+    /* 50530, not 2: the upstream's own count is the honest size of what was
+     * not used, and the records we counted are only a floor on it. */
+    ok(rc == 0 && cap_count("collector-truncation-notice", &nt) == 1 && nt &&
+       strstr(nt->props, "\"records_used\":2") != NULL &&
+       strstr(nt->props, "\"records_available\":50530") != NULL &&
+       strstr(nt->props, "\"records_available_basis\":\"upstream declared this "
+                         "total\"") != NULL,
+       "42: an XML envelope's own total is read, and a one-request row "
+       "discloses the remainder");
+    /* The remedy must not name a knob that cannot move. There is no ceiling to
+     * raise on a row that never walked, and KKJ is the proof that adding a
+     * page parameter is not automatically an option either. */
+    ok(nt && strstr(nt->props, "makes ONE request") != NULL &&
+       strstr(nt->props, "declares no paging") != NULL &&
+       strstr(nt->props, "page_max") == NULL,
+       "42b: and its remedy says to slice the query, not to raise a ceiling");
+  }
+
+  /* 42c. THE SAME NAME INSIDE A RECORD IS NOT THE COLLECTION'S SIZE. Only the
+   *      text before the first record is searched, and `<SearchResult` must not
+   *      match the `<SearchResults>` wrapper on the way — that prefix is how
+   *      the first attempt at this read nothing at all. Here the wrapper
+   *      carries no count and a record carries a `<TotalCount>`: reading it
+   *      would make the disclosure itself a fabrication. */
+  fx_reset();
+  fx_add("/kkj?Count=2", 200,
+         "<Results>\n<SearchResults>\n"
+         "<SearchResult><Key>k1</Key><ProjectName>one</ProjectName>"
+         "<TotalCount>99999</TotalCount></SearchResult>\n"
+         "<SearchResult><Key>k2</Key><ProjectName>two</ProjectName>"
+         "<TotalCount>99999</TotalCount></SearchResult>\n"
+         "</SearchResults>\n</Results>\n");
+  rc = run_source("T_XML_TOTAL", NULL);
+  ok(rc == 0 && cap_count("collector-truncation-notice", NULL) == 0 &&
+     g_cap_ids_has("k1") && g_cap_ids_has("k2"),
+     "42c: a count-shaped field inside a record is not read as the "
+     "collection's total");
+
+  /* 43. A REPEAT AFTER A SHORT PAGE IS NOT EVIDENCE OF AN IGNORED PARAMETER.
+   *     Two identical bodies fit two readings — the parameter was ignored, or
+   *     the collection ended where the short page said it did — and nothing in
+   *     the bodies tells them apart. The notice asserted the first and gave a
+   *     count of pages "skipped" that was only what the ceiling would have
+   *     allowed. Measured on corp.casy.co.jp: 30 pages against `per_page=100`,
+   *     the same 30 again for `page=2` instead of the 400 the WordPress REST
+   *     API normally gives, and the site's own `x-wp-totalpages` header says 1.
+   *
+   *     It could not be told apart before this because the page size was in
+   *     the URL, which the engine did not read, so `prev_short` was 0 on the
+   *     second request of every such row. */
+  fx_reset();
+  fx_add("/us?per_page=100", 200,
+         "{\"items\":[{\"name\":\"a\",\"id\":\"1\"},{\"name\":\"b\",\"id\":\"2\"}]}");
+  rc = run_source("T_URLSIZE", NULL);
+  { const cap *nt = NULL;
+    ok(rc == 0 && cap_count("collector-shape-notice", &nt) == 1 && nt &&
+       strstr(nt->props, "\"previous_page_was_short\":true") != NULL &&
+       strstr(nt->props, "probably nothing") != NULL,
+       "43: a byte-identical page after a SHORT page is reported as the end of "
+       "the feed, not as an ignored page parameter");
+    ok(nt && strstr(nt->props, "re-point page_param") == NULL,
+       "43b: and it does not tell anyone to re-point a working parameter"); }
+
+  /* 43c. A FULL page 1 that repeats is still the real finding — the fix must
+   *      not have bought the quiet case by losing the loud one. Two full pages
+   *      of genuinely different records cannot be byte-identical. */
+  fx_reset();
+  fx_add("/us?per_page=100", 200,
+         "{\"items\":[{\"name\":\"a\",\"id\":\"1\"},{\"name\":\"b\",\"id\":\"2\"}]}");
+  fx_reset();
+  fx_add("/uf?per_page=2", 200,
+         "{\"items\":[{\"name\":\"a\",\"id\":\"1\"},{\"name\":\"b\",\"id\":\"2\"}]}");
+  rc = run_source("T_URLSIZE_FULL", NULL);
+  { const cap *nt = NULL;
+    ok(rc == 0 && cap_count("collector-shape-notice", &nt) == 1 && nt &&
+       strstr(nt->props, "\"previous_page_was_short\":false") != NULL &&
+       strstr(nt->props, "re-point page_param") != NULL,
+       "43c: a full page that repeats is still reported as an ignored page "
+       "parameter"); }
+
+  /* 44. A RATE-LIMIT PAGE SERVED AS HTTP 200 is a refusal wearing a success
+   *     status, and no status check can see it. Archive-It does exactly that
+   *     — `<title>Rate limit reached</title>` with a 200 — so the
+   *     fetch-failure notice said "the endpoint may have moved" and sent the
+   *     reader looking for a move that never happened, when the remedy is a
+   *     per-host gap. Reproducible an hour apart, which is why it is named. */
+  fx_reset();
+  fx_add("/us?per_page=100", 200,
+         "<html><head><title>Rate limit reached</title></head><body>"
+         "You've reached the limit for the number of requests that can be "
+         "made in a short period of time.</body></html>");
+  rc = run_source("T_URLSIZE", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "RATE-LIMIT page instead of the data") != NULL &&
+       strstr(nt->props, "core/hostgate.c") != NULL &&
+       strstr(nt->props, "the endpoint may have moved") == NULL,
+       "44: a rate-limit page served as 200 is named as one, and the remedy "
+       "is pacing rather than a hunt for a moved endpoint");
+    (void)rc; }
+
+  /* 44b. And an ordinary unparseable 200 still reads as one — the detector
+   *      must not claim a rate limit for every HTML body. A page that merely
+   *      contains the word "limit" is not a rate-limit page. */
+  fx_reset();
+  fx_add("/us?per_page=100", 200,
+         "<html><body>Download limit: 50 rows per export.</body></html>");
+  rc = run_source("T_URLSIZE", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "RATE-LIMIT") == NULL &&
+       strstr(nt->props, "the endpoint may have moved") != NULL,
+       "44b: an unparseable 200 that is not a rate-limit page is not reported "
+       "as one");
+    (void)rc; }
+
+  /* 45. A BOT WALL SERVED AS HTTP 200 — the same shape as 44 and a DIFFERENT
+   *     remedy, which is the whole reason it is a separate flag.
+   *     catalogue.data.govt.nz answers its CKAN bulk endpoint with 200 and
+   *     Imperva's "Pardon Our Interruption" (measured 2026-10-20, 6,183
+   *     bytes), so the notice said "the endpoint may have moved" — the third
+   *     reader sent hunting a move that never happened. Pacing cannot reach a
+   *     wall that refuses an automated client at any rate, so the remedy must
+   *     NOT be a hostgate gap either. */
+  fx_reset();
+  fx_add("/us?per_page=100", 200,
+         "<!DOCTYPE html><html><head><noscript><title>Pardon Our Interruption"
+         "</title></noscript></head><body>As you were browsing something about "
+         "your browser made us think you were a bot.</body></html>");
+  rc = run_source("T_URLSIZE", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "BOT-WALL interstitial") != NULL &&
+       strstr(nt->props, "UA_OVERRIDE") != NULL &&
+       strstr(nt->props, "the endpoint may have moved") == NULL &&
+       strstr(nt->props, "RATE-LIMIT") == NULL,
+       "45: a bot wall served as 200 is named as one, and the remedy is the "
+       "User-Agent rather than pacing or a moved endpoint");
+    (void)rc; }
+
+  /* 45b. And the detector does not fire on a DATA body that happens to carry
+   *      refusal-shaped words. "access denied" is deliberately not in the word
+   *      list: permit decisions and FOI logs are full of it. */
+  fx_reset();
+  fx_add("/us?per_page=100", 200,
+         "<html><body>Request 2024-117: ACCESS DENIED in part; see schedule 2."
+         "</body></html>");
+  rc = run_source("T_URLSIZE", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "BOT-WALL") == NULL &&
+       strstr(nt->props, "the endpoint may have moved") != NULL,
+       "45b: an unparseable 200 whose text merely says 'access denied' is not "
+       "reported as a bot wall");
+    (void)rc; }
+
+  /* 46. THE UPSTREAM'S OWN NO-DATA ANSWER IS AN HONEST EMPTY, not a refusal.
+   *     FDSN's `nodata` parameter names the status a service must use for an
+   *     empty result and every FDSN row here passes `nodata=404`, so those rows
+   *     ASK to be told "nothing" with a 404 — and the fetch-failure notice then
+   *     read it back as "the upstream refused the request", remedy "the
+   *     endpoint has moved or retired". ws.icgc.cat is the measured case: its
+   *     event service answers `1.2.4` at /version, holds no events for any
+   *     window, and answers the identical query with HTTP 204 when `nodata` is
+   *     not forced. Filing that as a FAILURE is this notice making exactly the
+   *     confusion it exists to prevent. */
+  fx_reset();
+  fx_add("/us?per_page=100", 404,
+         "Error 404: Not Found\n\nno matching events found\n\nUsage details "
+         "are available from /fdsnws/event/1/\n");
+  rc = run_source("T_URLSIZE", NULL);
+  ok(rc == 0 && cap_count("collector-fetch-failure", NULL) == 0,
+     "46: a 404 carrying the upstream's own no-data wording files NO "
+     "fetch-failure record — it is the honest empty rule 1 asks for");
+
+  /* 46b. And the loud half, which matters more: a 404 that means the service
+   *      is NOT THERE must still be a failure. eida.koeri.boun.edu.tr answers
+   *      the same 404 to the same nodata=404 row with "The requested resource
+   *      does not exist on this server" — a node that does not run the event
+   *      service at all. Keying on the status, or on the row having asked for
+   *      nodata=404, would file that dead service as a healthy empty, which is
+   *      the dangerous direction. */
+  fx_reset();
+  fx_add("/us?per_page=100", 404,
+         "Error 404: Not Found\n\nThe requested resource does not exist on "
+         "this server.\n");
+  rc = run_source("T_URLSIZE", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "the upstream refused the request") != NULL,
+       "46b: a 404 that says the resource does not exist is still a refusal");
+    (void)rc; }
+
+  /* 46c. HTTP 204 needs no wording at all — no content is what it means. */
+  fx_reset();
+  fx_add("/us?per_page=100", 204, "");
+  rc = run_source("T_URLSIZE", NULL);
+  ok(rc == 0 && cap_count("collector-fetch-failure", NULL) == 0,
+     "46c: a 204 with no body is an honest empty, not a refused fetch");
+
+  /* 46d. A WINDOW ROW MUST ADVANCE over a declared empty. The window was read
+   *      and held nothing; not advancing would re-read that one empty window
+   *      for ever and never reach the records beyond it — the exact opposite of
+   *      the refusal case the no-advance rule exists for. */
+  fx_reset();
+  fx_add("/wz?from=", 404, "Error 404: Not Found\n\nno matching events found\n");
+  rc = run_source_resume("T_WINDOW", NULL, "w=2020-02-05");
+  ok(rc == 0 && g_res_set && strcmp(g_res_out, "w=2020-02-12") == 0,
+     "46d: a window whose upstream declares it EMPTY advances to the next "
+     "window rather than stalling on it");
+
+  /* 47. AN ODATA ENVELOPE'S KEYS CONTAIN A DOT, and dotted() used to split
+   *     every path unconditionally — so `@odata.nextLink` was looked up as
+   *     doc["@odata"]["nextLink"], which no OData server publishes. The key
+   *     had been in the next-link list, with the comment above it naming
+   *     OData as supported, since that list was written. */
+  fx_reset();
+  fx_add("/od2?page=2", 200,
+    "{\"odata.count\":3,\"value\":[{\"name\":\"o3\",\"id\":\"3\"}]}");
+  fx_add("/od?select=all", 200,
+    "{\"odata.count\":3,"
+    "\"@odata.nextLink\":\"https://x.test/od2?page=2\","
+    "\"value\":[{\"name\":\"o1\",\"id\":\"1\"},{\"name\":\"o2\",\"id\":\"2\"}]}");
+  rc = run_source("T_ODATA", NULL);
+  ok(rc == 0 && g_ncalls == 2 && g_ncap >= 3,
+     "47: the server's own @odata.nextLink is followed — a key whose NAME "
+     "contains a dot resolves after the dotted split fails");
+
+  /* 47b. and `odata.count` reaches the declared-total read, so a row that
+   *      stops short of what the upstream says it holds discloses the real
+   *      remainder instead of inferring one from the page it got. */
+  fx_reset();
+  fx_add("/od?select=all", 200,
+    "{\"odata.count\":551619,"
+    "\"value\":[{\"name\":\"p1\",\"id\":\"1\"},{\"name\":\"p2\",\"id\":\"2\"}]}");
+  rc = run_source("T_ODATA", NULL);
+  { const cap *nt = NULL;
+    ok(rc == 0 && cap_count("collector-truncation-notice", &nt) == 1 && nt &&
+       strstr(nt->props, "\"records_available\":551619") != NULL &&
+       strstr(nt->props, "\"records_available_basis\":\"upstream declared this "
+                         "total\"") != NULL,
+       "47b: odata.count is read as the upstream's declared total"); }
+
+  /* 47c. THE OTHER COPY: hp_path, which resolves a path the ROW declares. A
+   *      row whose upstream is OData names `@odata.nextLink` in next_path, and
+   *      splitting that is the identical defect one file over. Fixed in the
+   *      same change rather than left for a later session to find — CLAUDE.md
+   *      records the uid-collision guard existing in three record paths and
+   *      being repaired in one. */
+  fx_reset();
+  fx_add("/odd2?page=2", 200, "{\"value\":[{\"name\":\"q3\",\"id\":\"3\"}]}");
+  fx_add("/odd?select=all", 200,
+    "{\"@odata.nextLink\":\"https://x.test/odd2?page=2\","
+    "\"value\":[{\"name\":\"q1\",\"id\":\"1\"},{\"name\":\"q2\",\"id\":\"2\"}]}");
+  rc = run_source("T_ODATA_DECL", NULL);
+  ok(rc == 0 && g_ncalls == 2 && g_ncap >= 3,
+     "47c: a row that DECLARES a dotted key as next_path resolves it too");
+
+  /* 48. A row the engine cannot fetch is refused at REGISTRATION, and says so.
+   *     `hp_register()` skipped a row with no `.url` with a bare `continue`:
+   *     the row compiled, sat in its table, registered nothing and reported
+   *     nothing, and the only symptom was the registry floor counting one
+   *     fewer source than the day before. Two rows of open item B2's
+   *     re-pointing pass shipped exactly that way (an `index_url` row still
+   *     needs a `.url` — the engine replaces it per run). Both halves matter:
+   *     the unusable row stays out, and its complete neighbour still gets in. */
+  ok(find_def("T_NO_URL_AT_ALL") == NULL,
+     "48: a row with no url is NOT registered");
+  ok(find_def("T_URL_PRESENT") != NULL,
+     "48b: the complete row beside it still registers");
+
+  /* 49. A JSON TABLE — records that are arrays, with the column names in a
+   *     sibling array. Finland's Eduskunta and the Austrian Parliament both
+   *     publish this and nothing else in the engine could key it: without a
+   *     declared header the cells are named by POSITION, so a row's keys would
+   *     be positions whose meaning the upstream can change silently. */
+  fx_reset();
+  fx_add("/tbl", 200,
+    "{\"columnNames\":[\"personId\",\"lastname\",\"party\"],"
+    "\"rowData\":[[\"1\",\"Marin\",\"SDP\"],[\"2\",\"Orpo\",\"KOK\"]]}");
+  rc = run_source("T_JTBL", NULL);
+  ok(rc == 0 && g_ncap == 2 &&
+     strstr(g_cap[0].props, "\"lastname\":\"Marin\"") != NULL &&
+     strstr(g_cap[0].props, "\"party\":\"SDP\"") != NULL,
+     "49: an array record is named by the header the row points at");
+  ok(g_ncap == 2 && !strcmp(g_cap[0].title, "Marin"),
+     "49b: title_keys resolves against the header's names");
+  ok(g_ncap == 2 && strstr(g_cap[0].key, "|1") != NULL,
+     "49b-ii: id_keys too, so the uid is the upstream's own key");
+
+  /* 49c. The control: the SAME response with no header path declared keeps the
+   *      positional names, so this change is strictly additive. */
+  fx_reset();
+  fx_add("/tbl", 200,
+    "{\"columnNames\":[\"personId\",\"lastname\",\"party\"],"
+    "\"rowData\":[[\"1\",\"Marin\",\"SDP\"]]}");
+  rc = run_source("T_JTBL_NOHDR", NULL);
+  ok(rc == 0 && g_ncap == 1 &&
+     strstr(g_cap[0].props, "\"lastname\"") == NULL &&
+     strstr(g_cap[0].props, "\".1\":\"Marin\"") != NULL,
+     "49c: with no declared header the cells keep their positional names");
+
+  /* 49d. Austria names its columns as OBJECTS: {"label":...}. */
+  fx_reset();
+  fx_add("/tbl2", 200,
+    "{\"header\":[{\"label\":\"GP_CODE\",\"feld_name\":\"GP\"},"
+    "{\"label\":\"ITYP\",\"feld_name\":\"ITYP\"}],"
+    "\"rows\":[[\"XXII\",\"VER\"]]}");
+  rc = run_source("T_JTBL_OBJHDR", NULL);
+  ok(rc == 0 && g_ncap == 1 &&
+     strstr(g_cap[0].props, "\"GP_CODE\":\"XXII\"") != NULL &&
+     strstr(g_cap[0].props, "\"ITYP\":\"VER\"") != NULL,
+     "49d: a header entry that is an object is read by its label");
+
+  /* 49e. A row longer than its header keeps the surplus cell under its
+   *      positional name. Dropping it would be a discard (house rule 2). */
+  fx_reset();
+  fx_add("/tbl", 200,
+    "{\"columnNames\":[\"personId\"],"
+    "\"rowData\":[[\"1\",\"extra\"]]}");
+  rc = run_source("T_JTBL", NULL);
+  /* This fixture has no `lastname`, which the row declares as its title key,
+   * so the engine ALSO files a shape notice saying so — correct behaviour, and
+   * the reason this asserts on the record rather than on the capture count. */
+  { const cap *c = NULL;
+    ok(rc == 0 && cap_count("t-table", &c) == 1 && c &&
+       strstr(c->props, "\"personId\":\"1\"") != NULL &&
+       strstr(c->props, "\"col1\":\"extra\"") != NULL,
+       "49e: a cell past the header's end is kept, not dropped");
+    ok(cap_count("collector-shape-notice", NULL) == 1,
+       "49e-ii: and the missing declared title key is disclosed, not silent"); }
+
+  /* 49f. A header path that resolves to something that is not an array must
+   *      not lose the page: the records emit under positional names. */
+  fx_reset();
+  fx_add("/tbl3", 200, "{\"columnNames\":\"oops\",\"rowData\":[[\"1\",\"x\"]]}");
+  rc = run_source("T_JTBL_BADHDR", NULL);
+  ok(rc == 0 && g_ncap == 1,
+     "49f: a header path that is not an array still emits, positionally");
+
+  /* ── 50. A workbook's OTHER SHEETS are records too ───────────────────────
+   * One fetch buys the whole workbook, so reading one of its three sheets
+   * discards two at a seam. PMDA's annual approval workbook adds a sheet every
+   * month, which is why a name and an index are both wrong there. */
+  { size_t zl = 0;
+    char *wb = mk_xlsx(3, 0, &zl);
+
+    /* 50. The default is unchanged: the first sheet, two records. */
+    fx_reset();
+    fx_add_bin("/wb.xlsx", 200, wb, zl);
+    rc = run_source("T_XLS_ONE", "");
+    ok(rc == 0 && cap_count("t-xls", NULL) == 2 && cap_count(NOTICE, NULL) == 0,
+       "50: without xlsx_sheet_all a workbook still reads its first sheet only");
+
+    /* 50b. Every sheet, each with its own header: 3 x 2 records, no notice. */
+    fx_reset();
+    fx_add_bin("/wb.xlsx", 200, wb, zl);
+    rc = run_source("T_XLS_ALL", "");
+    ok(rc == 0 && cap_count("t-xls", NULL) == 6 && cap_count(NOTICE, NULL) == 0,
+       "50b: xlsx_sheet_all reads all three sheets (6 records, no header row among them)");
+
+    /* 50b-ii. The header of sheet 2 and 3 was consumed as a header, not stored
+     *         as a record — the ECB mistake in miniature. Every id is a real
+     *         code and none of them is the literal "code". */
+    { int hdr = 0;
+      for (int i = 0; i < g_ncap; i++)
+        if (strstr(g_cap[i].props, "\"code\":\"code\"")) hdr++;
+      ok(hdr == 0, "50b-ii: no sheet's header row was stored as a record"); }
+
+    /* 50c. xlsx_sheet_all overrides a declared sheet name. The same name on
+     *      the single-sheet path fails the whole run, so this pins that the
+     *      override is deliberate rather than an accident of ordering. */
+    fx_reset();
+    fx_add_bin("/wb.xlsx", 200, wb, zl);
+    rc = run_source("T_XLS_ALL_NAMED", "");
+    ok(rc == 0 && cap_count("t-xls", NULL) == 6,
+       "50c: xlsx_sheet_all overrides xlsx_sheet rather than combining with it");
+    free(wb);
+  }
+
+  /* 50d. A sheet the workbook declares and the zip does not carry: the other
+   *      sheets' records still emit AND the loss is disclosed by name. A month
+   *      of approvals missing must not be a silent four-of-six. */
+  { size_t zl = 0;
+    char *wb = mk_xlsx(3, 2, &zl);
+    fx_reset();
+    fx_add_bin("/wb.xlsx", 200, wb, zl);
+    rc = run_source("T_XLS_ALL", "");
+    const cap *n = NULL;
+    ok(rc == 0 && cap_count("t-xls", NULL) == 4 && cap_count(NOTICE, &n) == 1 && n &&
+       strstr(n->props, "\"sheets_declared\":3") != NULL &&
+       strstr(n->props, "\"sheets_failed\":1") != NULL &&
+       strstr(n->props, "#1") != NULL,
+       "50d: an unreadable sheet costs its records and is disclosed, naming it");
+    free(wb);
+  }
+
+  /* 50e. No sheet readable at all is the single-sheet path's honest failure,
+   *      not a successful run that happened to emit nothing (rule 1). */
+  { size_t zl = 0;
+    char *wb = mk_xlsx(1, 1, &zl);
+    fx_reset();
+    fx_add_bin("/wb.xlsx", 200, wb, zl);
+    rc = run_source("T_XLS_ALL", "");
+    ok(rc != 0 && cap_count("t-xls", NULL) == 0,
+       "50e: a workbook whose every sheet is unreadable fails, it does not succeed empty");
+    free(wb);
+  }
+
+  /* ── 51. A ZIP's OTHER MEMBERS are records too ───────────────────────────
+   * One archive, one JSON document per record — the Assemblée nationale's
+   * shape. Reading member 0 is every other record dropped at a seam, and the
+   * engine's own zip-extra notice had been saying so without a remedy that
+   * reaches 19,165 members. */
+  { const char *nm[3] = { "json/a.json", "json/b.json", "json/c.json" };
+    const char *dt[3] = { "{\"rec\":{\"id\":\"1\",\"name\":\"one\"}}",
+                          "{\"rec\":{\"id\":\"2\",\"name\":\"two\"}}",
+                          "{\"rec\":{\"id\":\"3\",\"name\":\"three\"}}" };
+    size_t ln[3] = { strlen(dt[0]), strlen(dt[1]), strlen(dt[2]) };
+    size_t zl = 0;
+    char *z = mk_zip(nm, dt, ln, 3, &zl);
+
+    /* 51. The default is unchanged: one record, and the loss is disclosed. */
+    fx_reset();
+    fx_add_bin("/za.zip", 200, z, zl);
+    rc = run_source("T_ZIPALL_ONE", "");
+    ok(rc == 0 && cap_count("t-zipall", NULL) == 1 && cap_count(NOTICE, NULL) == 1,
+       "51: without zip_all_entries a ZIP still reads its first member, and says so");
+
+    /* 51b. Every member, each parsed on its own: three records, no notice. */
+    fx_reset();
+    fx_add_bin("/za.zip", 200, z, zl);
+    rc = run_source("T_ZIPALL", "");
+    ok(rc == 0 && cap_count("t-zipall", NULL) == 3 && cap_count(NOTICE, NULL) == 0,
+       "51b: zip_all_entries reads all three members (3 records, no extra-entries notice)");
+
+    /* 51b-ii. Each member's own declared array_path resolved, so the records
+     *         carry their real keys rather than a positional guess. */
+    { int keyed = 0;
+      for (int i = 0; i < g_ncap; i++)
+        if (strstr(g_cap[i].props, "\"name\":\"one\"") ||
+            strstr(g_cap[i].props, "\"name\":\"two\"") ||
+            strstr(g_cap[i].props, "\"name\":\"three\"")) keyed++;
+      ok(keyed == 3, "51b-ii: every member's array_path resolved, not just the first's"); }
+    free(z);
+  }
+
+  /* 51c. A member the archive declares and cannot inflate: the others' records
+   *      still emit AND the loss is disclosed, naming the member. */
+  { const char *nm[2] = { "json/a.json", "json/bad.json" };
+    const char *dt[2] = { "{\"rec\":{\"id\":\"1\",\"name\":\"one\"}}", "x" };
+    size_t ln[2] = { strlen(dt[0]), 1 };
+    size_t zl = 0;
+    char *z = mk_zip(nm, dt, ln, 2, &zl);
+    /* Claim DEFLATE for the second member while its bytes are stored, so the
+     * inflate fails the way an unsupported method would. Its central-directory
+     * record is the one zip_entry_at reads. */
+    unsigned char *u = (unsigned char *)z;
+    int patched = 0;
+    for (size_t i = 0; i + 46 < zl; i++)
+      if (u[i] == 0x50 && u[i+1] == 0x4b && u[i+2] == 0x01 && u[i+3] == 0x02) {
+        if (patched++) { u[i + 10] = 8; u[i + 11] = 0; break; }
+      }
+    fx_reset();
+    fx_add_bin("/za.zip", 200, z, zl);
+    rc = run_source("T_ZIPALL", "");
+    const cap *n = NULL;
+    ok(rc == 0 && cap_count("t-zipall", NULL) == 1 && cap_count(NOTICE, &n) == 1 && n &&
+       strstr(n->props, "\"entries_declared\":2") != NULL &&
+       strstr(n->props, "\"entries_failed\":1") != NULL,
+       "51c: an unreadable member costs its records and is disclosed, naming it");
+    free(z);
+  }
+
+  /* 51d. zip_all_entries on a mode it does not serve is REFUSED, not read as
+   *      JSON anyway and not a quiet empty: concatenating CSV members would
+   *      read the second member's header as a record, and a row that declared
+   *      the flag on the wrong mode would otherwise emit nothing with rc=0. */
+  { const char *nm[2] = { "json/a.json", "json/b.json" };
+    const char *dt[2] = { "{\"rec\":{\"id\":\"1\",\"name\":\"one\"}}",
+                          "{\"rec\":{\"id\":\"2\",\"name\":\"two\"}}" };
+    size_t ln[2] = { strlen(dt[0]), strlen(dt[1]) };
+    size_t zl = 0;
+    char *z = mk_zip(nm, dt, ln, 2, &zl);
+    fx_reset();
+    fx_add_bin("/za.zip", 200, z, zl);
+    rc = run_source("T_ZIPALL_CSV", "");
+    /* rc=-1, no records, and ONE collector-fetch-failure: the refusal is
+     * disclosed as data rather than left on stderr (rule 1). */
+    ok(rc != 0 && cap_count("t-zipall", NULL) == 0 &&
+       cap_count("collector-fetch-failure", NULL) == 1,
+       "51d: zip_all_entries on a non-JSON mode is refused and disclosed, not a silent empty");
+    free(z);
+  }
+
   /* 40f. $JO_PAGE_MAX reaches a row that declares its own ceiling, DOWNWARDS.
    *      T_RESUME declares page_max = 2; under JO_PAGE_MAX=1 it must read one
    *      page, not two. The engine used to resolve this as
@@ -3538,7 +4475,7 @@ int main(void) {
   ok(rc == 0 && cap_count("t-page", NULL) == 4 && g_ncalls == 2,
      "40f: with the variable unset the row's declared 2 pages are read again");
 
-  /* 41. detail_html_kv: an HTML record page's label/value cells merge under
+  /* 52. detail_html_kv: an HTML record page's label/value cells merge under
    *     "detail." — data-label cells, a <th>/<td> pair, entities decoded, a
    *     repeated label indexed rather than overwritten, the empty-data-label
    *     label column skipped. A page with no such cells is an error on the
@@ -3565,10 +4502,78 @@ int main(void) {
        strstr(a->props, "\"detail.Expiration Date.1\":\"07/05/2019\"") &&
        strstr(a->props, "\"detail.Owner\":\"SMITH & SONS LLC\"") &&
        !strstr(a->props, "detail.Serial\"") && !strstr(a->props, "_detail_error"),
-       "41: detail_html_kv merges data-label cells and th/td pairs; a repeated label is indexed");
+       "52: detail_html_kv merges data-label cells and th/td pairs; a repeated label is indexed");
     ok(b && strstr(b->props, "no label/value cells"),
-       "41: an HTML detail page with no label/value cells is an error on the record");
+       "52: an HTML detail page with no label/value cells is an error on the record");
   }
+
+  /* 53. WHICH TLS FAILURE, in the fetch-failure record (open item D1-bis).
+   *     "The request failed at the transport level" is one sentence covering
+   *     four findings with four remedies — and docs/tls-intermediates-
+   *     2026-10-21.md measured what that cost: of 30 hosts written off as
+   *     "TLS refused", 24 were a MISSING INTERMEDIATE, which is ours to fix.
+   *     The record names the cause now. What this test owns is that the engine
+   *     attaches it, keys it on the cause, and attaches it ONLY to a transport
+   *     failure; tests/unit/test_http_tls_cause.c owns the classifier. */
+  fx_reset();
+  fx_add("/us?per_page=100", FX_TRANSPORT_FAIL, NULL);
+  rc = run_source("T_URLSIZE", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "failed at the transport level") != NULL &&
+       strstr(nt->props, "\"tls_cause\"") == NULL,
+       "53: a transport failure with no TLS verdict says so, and claims no "
+       "certificate finding it does not have");
+    (void)rc; }
+
+  /* 53b. The cause that matters most, because it is the fixable one. */
+  fx_reset();
+  fx_add("/us?per_page=100", FX_TRANSPORT_FAIL, NULL);
+  g_fx_tls = HTTP_TLS_NO_LOCAL_ISSUER;
+  rc = run_source("T_URLSIZE", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "\"tls_cause\":\"no_local_issuer\"") != NULL &&
+       strstr(nt->props, "\"tls_detail\":\"STUB-LABEL\"") != NULL &&
+       strstr(nt->props, "\"remedy\":\"STUB-REMEDY\"") != NULL &&
+       strstr(nt->props, "failed at the transport level") == NULL &&
+       strstr(nt->title, "TLS chain is incomplete") != NULL,
+       "53b: a missing intermediate is named in the cause, the detail, the "
+       "remedy AND the title — not filed as a generic transport failure");
+    (void)rc; }
+
+  /* 53c. Each cause gets its own title, because the title is what a human
+   *      scans; a reader who sees only "the TLS handshake was refused" is back
+   *      where D1-bis started. */
+  fx_reset();
+  fx_add("/us?per_page=100", FX_TRANSPORT_FAIL, NULL);
+  g_fx_tls = HTTP_TLS_HOSTNAME_MISMATCH;
+  rc = run_source("T_URLSIZE", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "\"tls_cause\":\"hostname_mismatch\"") != NULL &&
+       strstr(nt->title, "different hostname") != NULL,
+       "53c: a hostname mismatch is a different finding with a different title");
+    (void)rc; }
+
+  /* 53d. THE NEGATIVE THAT MATTERS. The cause is thread-local state about the
+   *      LAST attempt, so a row whose page 1 came back with an HTTP STATUS must
+   *      not pick up a certificate verdict left behind by something else — that
+   *      would be this record inventing the cause, which is the mistake it has
+   *      already made three times (Archive-It, the Imperva wall, FDSN's
+   *      nodata=404). */
+  fx_reset();
+  fx_add("/us?per_page=100", 503, "<html>upstream busy</html>");
+  g_fx_tls = HTTP_TLS_EXPIRED;          /* stale, from an unrelated fetch */
+  rc = run_source("T_URLSIZE", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "\"http_status\":503") != NULL &&
+       strstr(nt->props, "\"tls_cause\"") == NULL &&
+       strstr(nt->props, "STUB-REMEDY") == NULL,
+       "53d: a run that got an HTTP status carries no TLS cause, however the "
+       "thread-local was left");
+    (void)rc; }
 
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;

@@ -31,4 +31,26 @@ int datetok_present(const char *s);
  * holds none. A malformed token is left verbatim. */
 char *datetok_expand(const char *tmpl, time_t now_in, int tz_min,
                      int shift, char shift_unit);
+
+/* ── Whole-DAY arithmetic, for a caller that slices a collection by date
+ * rather than formatting one instant (hpengine.h's window_days).
+ *
+ * Exported from here rather than written again next door: this file already
+ * holds the civil-date arithmetic, and it holds it because neither timegm()
+ * nor strptime() is C99 — the same class of portability trap as the
+ * strcasestr/memmem one, where a function glibc hides behind _GNU_SOURCE was
+ * implicitly declared with a truncated return on Linux CI.
+ *
+ * A "day number" is days since 1970-01-01. */
+#define DATETOK_BAD_DAY (-2147483648L)
+/* "YYYY-MM-DD" (leading/trailing space tolerated) -> day number, or
+ * DATETOK_BAD_DAY when it does not parse. */
+long datetok_day_from_iso(const char *s);
+/* Day number -> "YYYY-MM-DD". `cap` must be at least 11. */
+void datetok_iso_from_day(long day, char *out, size_t cap);
+/* The day number `now_in` (0 = time(NULL)) falls on in UTC+tz_min. */
+long datetok_day_of(time_t now_in, int tz_min);
+/* The instant midnight of `day` begins at, in UTC+tz_min — the time_t a
+ * strftime-based renderer wants back. */
+time_t datetok_day_start(long day, int tz_min);
 #endif

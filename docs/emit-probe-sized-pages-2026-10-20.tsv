@@ -1,0 +1,71 @@
+# The 37 probe-sized hp16 rows, re-measured after the retune. 2026-10-20/21.
+# Serial (--jobs 1), so no verdict here is the sweep's own concurrency.
+#
+# 35 OK. Two notes, because a verdict is not a diagnosis:
+#
+#   pl-bzp-board-search  COLLISION 192/147 is STALE. The tool pins its binary
+#     at startup (which is why it is trustworthy), and this run began before
+#     that row got `id_keys = "noticeNumber,bzpNumber,moIdentifier"`. Measured
+#     after the fix, by a direct --run: 192 records, 195 stored (192 + 3
+#     notices), no collision.
+#
+#   jp-peeringdb-fac-country-depth1  FETCH_FAILED is the sweep's verdict and
+#     not the row's. Run ALONE it reports `emitted 113 of 113 available across
+#     2 page(s)` — its LIST read is complete, 113 being every JP facility
+#     peeringdb lists. What gets refused is the per-record DETAIL hop:
+#     `detail status=429 https://www.peeringdb.com/api/netfac?fac_id=...`.
+#
+#     The budget was then probed rather than guessed at, and bounded rather
+#     than found: 12 rapid requests all 200, then 60 rapid requests all 200 in
+#     10.1s (5.9/s), with no Retry-After or rate headers on anything. Yet 113
+#     hops inside one run DO get refused partway. So it is a bucket of between
+#     60 and 113 requests and its REFILL RATE is unmeasured — finding it means
+#     deliberately driving a volunteer-run community database to refusal, which
+#     is not worth the knowledge.
+#
+#     So no hostgate entry was added, on the Archive-It precedent in CLAUDE.md:
+#     a gap chosen without measuring the budget is a guess. The shortfall is
+#     already disclosed per run by the detail-truncation notice, which names the
+#     hops made, failed and pending. Written down as a bounded measurement.
+#
+# us-federalregister-by-docket stores 1 record because its docket (FAA-2022-0674)
+# holds one PRORULE — the row is a worked example of the docket filter, and 1 of
+# 1 is complete.
+id	verdict	shell_rc	sched_rc	emitted	stored	db_rows	available	secs	note
+esma-solr-upreg	OK	0	0	200	201	200	200	31.3	
+openaire-datasources-search	OK	0	0	14	14	14	14	6.0	
+openaire-organizations-search	OK	0	0	118	118	118	118	41.2	
+openaire-products-by-project	OK	0	0	25	25	25	25	6.0	
+global-osm-changesets-by-user	OK	0	0	100	100	100	100	33.9	
+jp-safecast-bgeigie-imports	OK	0	0	200	201	200	200	33.5	
+jp-safecast-measurements	OK	0	0	200	201	200	200	34.6	
+jp-peeringdb-fac-country-depth1	FETCH_FAILED	0	0	1	1	0	-1	0.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+pl-bzp-board-search	COLLISION	0	0	192	147	146	192	43.8	46 of 192 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+sk-rpo-search	OK	0	0	500	501	500	500	149.6	
+ua-prozorro-contracts	OK	0	0	200	201	200	200	43.2	
+ua-prozorro-tenders	OK	0	0	200	201	200	200	38.6	
+global-peeringdb-org-list	OK	0	0	200	202	200	200	122.1	
+us-usaspending-agency-federal-account	OK	0	0	157	158	157	157	28.8	
+us-usaspending-reporting-agencies-overview	OK	0	0	111	112	111	111	21.4	
+uk-govuk-search-drug-safety-update	OK	0	0	200	201	200	200	69.1	
+uk-govuk-search-medical-safety-alerts	OK	0	0	200	201	200	200	65.8	
+us-cms-provider-enrollment	OK	0	0	200	201	200	200	31.0	
+global-peeringdb-campus-list	OK	0	0	76	77	76	76	121.7	
+global-peeringdb-ixfac-by-ix	OK	0	0	15	15	15	15	3.6	
+global-peeringdb-netfac-by-fac	OK	0	0	200	202	200	200	122.0	
+global-peeringdb-netixlan-by-ix	OK	0	0	200	202	200	200	182.1	
+uk-govuk-search-cma-cases	OK	0	0	200	201	200	200	56.6	
+uk-govuk-search-employment-tribunal	OK	0	0	200	201	200	200	62.1	
+uk-govuk-search-tax-tribunal	OK	0	0	200	201	200	200	68.5	
+uk-govuk-search-utaac-decisions	OK	0	0	200	201	200	200	59.6	
+us-federalregister-by-cfr	OK	0	0	200	201	200	200	34.1	
+us-federalregister-by-docket	OK	0	0	1	1	1	1	0.8	
+us-legistar-seattle-events	OK	0	0	1000	1002	1000	1000	123.8	
+us-legistar-seattle-matters	OK	0	0	1000	1002	1000	1000	121.8	
+us-oyez-advocates	OK	0	0	200	201	200	200	31.3	
+us-oyez-cases-by-term	OK	0	0	62	62	62	62	10.4	
+uk-govuk-search-maib-reports	OK	0	0	200	201	200	200	45.3	
+uk-govuk-search-raib-reports	OK	0	0	200	201	200	200	49.4	
+us-fmcsa-carrier-census	OK	0	0	200	202	200	200	127.3	
+us-fmcsa-crash-file	OK	0	0	200	201	200	200	91.5	
+us-fmcsa-vehicle-inspection-file	OK	0	0	200	201	200	200	80.7	

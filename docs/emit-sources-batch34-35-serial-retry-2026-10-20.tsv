@@ -1,0 +1,24 @@
+id	verdict	shell_rc	sched_rc	emitted	stored	db_rows	available	secs	note
+JO34_CKANRES_ADMIN_OPENDATA_AZ	FETCH_FAILED	0	0	1	1	0	-1	2.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO34_CKANRES_CATALOG_DATA_GOV	FETCH_FAILED	0	0	1	1	0	-1	0.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO34_CKANRES_CATALOGUE_DATA_GOVT_NZ	FETCH_FAILED	0	0	1	1	0	-1	1.3	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO34_CKANRES_CKAN_PUBLISHING_SERVICE_GOV_UK	FETCH_FAILED	0	0	1	1	0	-1	1.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO34_CKANRES_DATA_CITY_TENDO_YAMAGATA_JP	FETCH_FAILED	1	-1	1	1	0	-1	2.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO34_CKANRES_DATA_GO_TH	FETCH_FAILED	0	0	1	1	0	-1	0.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO34_CKANRES_DATA_GOV_IL	FETCH_FAILED	0	0	1	1	0	-1	1.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO34_CKANRES_DATA_GOV_RO	FETCH_FAILED	1	-1	1	1	0	-1	20.6	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO34_CKANRES_DATA_GOV_UK	FETCH_FAILED	0	0	1	1	0	-1	3.4	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO34_CKANRES_DATA_HOUSTONTX_GOV	FETCH_FAILED	1	-1	1	1	0	-1	1.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO34_CKANRES_DATA_MILWAUKEE_GOV	FETCH_FAILED	1	-1	1	1	0	-1	1.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO34_CKANRES_DATA_OK_GOV	FETCH_FAILED	1	-1	1	1	0	-1	1.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO34_CKANRES_DATA_SANANTONIO_GOV	FETCH_FAILED	1	-1	1	1	0	-1	1.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO34_CKANRES_DATA_VIRGINIA_GOV	FETCH_FAILED	1	-1	1	1	0	-1	0.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO34_CKANRES_DATOSABIERTOS_MALAGA_EU	OK	0	0	1377	1377	1377	1377	7.7	
+JO34_CKANRES_OPENDATA_CITY_NIIGATA_LG_JP	FETCH_FAILED	1	-1	1	1	0	-1	1.0	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO34_CKANRES_OPENDATA_HAWAII_GOV	FETCH_FAILED	1	-1	1	1	0	-1	0.9	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO34_CKANRES_WWW_DATOSABIERTOS_GOB_PE	FETCH_FAILED	0	0	1	1	0	-1	1.7	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO34_FDSNEVT_EIDA_GEIN_NOA_GR	FETCH_FAILED	0	0	1	1	0	-1	1.2	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO34_FDSNEVT_EIDA_KOERI_BOUN_EDU_TR	FETCH_FAILED	0	0	1	1	0	-1	1.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO34_FDSNEVT_WS_ICGC_CAT	FETCH_FAILED	0	0	1	1	0	-1	0.8	the upstream refused the request or served a body that did not parse; the engine stored a collector-fetch-failure notice and no records (rule 1)
+JO34_FDSNSTA_SEISDATA_EPOS_FRANCE_FR	OK	0	0	6594	6594	6594	6594	4.4	
+JO34_FDSNSTA_SERVICE_SCEDC_CALTECH_EDU	OK	0	0	6897	6897	6897	6897	9.2	

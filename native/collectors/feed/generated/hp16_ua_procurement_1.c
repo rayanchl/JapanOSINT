@@ -18,10 +18,11 @@ static const hp_source T[] = {
     .collector = "ua_procurement", .category = "procurement",
     .description = "Feed of all Ukrainian public contracts by id + dateModified. Dereferencing an id returns a 24.7 KB record with awardID, tender_id (back-pointer to the originating tender), itemised scope, value, contract period, supplier identity and the signed documents.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "procurement-record", .tags = "\"ua\",\"procurement\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "uk",
-    .url = "https://public-api.prozorro.gov.ua/api/2.5/contracts?limit=5",
+    .url = "https://public-api.prozorro.gov.ua/api/2.5/contracts?limit=100",
     .array_path = "data",
     .detail_url = "https://public-api.prozorro.gov.ua/api/2.5/contracts/{v}", .detail_key = "id",
-    .page_walk = 1,
+    .page_max = 2,   /* 2 x 100 records a run. This row has a detail hop, and the per-run hop budget is 1,000 OR 120 SECONDS — the CLOCK is what binds on a slow host, measured on api.safecast.org, which reached 116 hops of 1,000 before its 120s ran out (2026-10-20). So a run is sized to what can plausibly be deepened rather than to what the API will serve: records past the budget are stamped _detail_pending and, because the budget is spent in page order, never deepened on a later run either. The per-host hop rate is NOT measured for this row — 200 is the family default and the number to revisit if its detail-truncation notice shows pending records. See docs/probe-sized-pages-2026-10-20.md */
+    .next_path = "next_page.uri",
     .interval = 21600, .free_tier = 1 },
 
   { .id = "ua-prozorro-tender-awards",
@@ -73,10 +74,11 @@ static const hp_source T[] = {
     .collector = "ua_procurement", .category = "procurement",
     .description = "Chronological change feed of every Ukrainian public tender (id + dateModified, cursor-paginated) on the production public API host — distinct from the public.api.openprocurement.org sandbox host already in the tree. Each id dereferences to the full OCDS-style tender: procurement method, tender period, description, items with DK021 classification, value, procuring entity with its EDRPOU code, and the full document set.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "procurement-record", .tags = "\"ua\",\"procurement\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "uk",
-    .url = "https://public-api.prozorro.gov.ua/api/2.5/tenders?limit=5",
+    .url = "https://public-api.prozorro.gov.ua/api/2.5/tenders?limit=100",
     .array_path = "data",
     .detail_url = "https://public-api.prozorro.gov.ua/api/2.5/tenders/{v}", .detail_key = "id",
-    .page_walk = 1,
+    .page_max = 2,   /* 2 x 100 records a run. This row has a detail hop, and the per-run hop budget is 1,000 OR 120 SECONDS — the CLOCK is what binds on a slow host, measured on api.safecast.org, which reached 116 hops of 1,000 before its 120s ran out (2026-10-20). So a run is sized to what can plausibly be deepened rather than to what the API will serve: records past the budget are stamped _detail_pending and, because the budget is spent in page order, never deepened on a later run either. The per-host hop rate is NOT measured for this row — 200 is the family default and the number to revisit if its detail-truncation notice shows pending records. See docs/probe-sized-pages-2026-10-20.md */
+    .next_path = "next_page.uri",
     .interval = 21600, .free_tier = 1 },
 
 };

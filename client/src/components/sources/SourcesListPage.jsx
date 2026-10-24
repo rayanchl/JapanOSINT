@@ -107,6 +107,9 @@ export default function SourcesListPage() {
         <FacetSelect label="all engines" value={filters.engine} onChange={(v) => set({ engine: v })} facet={facets?.engines} />
         <FacetSelect label="all kinds" value={filters.kind} onChange={(v) => set({ kind: v })} facet={facets?.kinds} />
         <FacetSelect label="all statuses" value={filters.status} onChange={(v) => set({ status: v })} facet={facets?.statuses} />
+        {/* "broken" is every state that is not ok — one query, so a state added
+            later cannot be missed by adding four counts together. */}
+        <FacetSelect label="all health" value={filters.health} onChange={(v) => set({ health: v })} facet={facets?.healths} />
         <Toggle on={Boolean(filters.has_items)} onChange={(v) => set({ has_items: v })} label="with items only" />
         <Segmented value={filters.sort || 'name'} onChange={(v) => set({ sort: v })} options={[{ value: 'name', label: 'name' }, { value: 'items', label: 'items' }, { value: 'fetched', label: 'fetched' }, { value: 'grade', label: 'grade' }, { value: 'collector', label: 'collector' }]} />
         <Toggle on={Boolean(filters.desc)} onChange={(v) => set({ desc: v })} label="desc" />
@@ -136,7 +139,26 @@ export default function SourcesListPage() {
             <tbody>
               {list.rows.map((s) => (
                 <tr key={s.id} className="border-b border-osint-border/40 hover:bg-white/5">
-                  <td className="px-3 py-2"><Pill tone={statusTone(s.status)}>{s.status || 'pending'}</Pill></td>
+                  <td className="px-3 py-2">
+                    <Pill tone={statusTone(s.status)}>{s.status || 'pending'}</Pill>
+                    {/* WHY it is not working, next to the fact that it is not.
+                        The engine records the reason and the remedy; before
+                        this they were two clicks away in a notice blob. */}
+                    {s.health && !s.health.working && (
+                      <div className="mt-1 text-[10px] leading-tight text-osint-muted max-w-[180px]">
+                        <span className="font-mono uppercase">{s.health.state}</span>
+                        {s.health.http_status ? <span className="font-mono"> · {s.health.http_status}</span> : null}
+                        {s.health.credentials_required?.length ? (
+                          <div className="font-mono truncate" title={s.health.credentials_required.join(', ')}>
+                            needs {s.health.credentials_required.join(', ')}
+                          </div>
+                        ) : null}
+                        {s.health.remedy && (
+                          <div className="truncate" title={s.health.remedy}>{s.health.remedy}</div>
+                        )}
+                      </div>
+                    )}
+                  </td>
                   <td className="px-3 py-2 min-w-[220px]">
                     <Link to={`/console/sources/${encodeURIComponent(s.id)}`} className="text-osint-text hover:text-accent">{s.name || s.id}</Link>
                     {s.name_ja && s.name_ja !== s.name && <span className="ml-2 text-osint-muted">{s.name_ja}</span>}

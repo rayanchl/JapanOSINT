@@ -108,6 +108,62 @@ HOST_AGENT_KIND(HA_BROWSER,     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537
   HOST_AGENT("www.telegram.hr", HA_NOCOLLECTOR)
   HOST_AGENT("www.jornalnoticias.co.mz", HA_NOCOLLECTOR)
 
+  /* SIX MORE, and the "collector" filter now looks like a FAMILY rather than a
+   * run of coincidences. Bisected 2026-10-20 against each host's own
+   * /api/3/action/package_search?rows=1:
+   *
+   *     host                   engine UA   without "collector"   bare
+   *     data.ok.gov              502            200               200
+   *     data.virginia.gov        502            200               200
+   *     opendata.hawaii.gov      502            200               200
+   *     data.houstontx.gov       502            200               200
+   *     data.milwaukee.gov       502            200               200
+   *     data.sanantonio.gov      502            200               200
+   *
+   * Six for six, the same status and the same single word as data.boston.gov
+   * and data.sanjoseca.gov above — two OpenGov-hosted CKAN portals, which these
+   * six also are. So a 502 from a US municipal CKAN is worth bisecting the
+   * agent on BEFORE it is read as a dead endpoint or as load.
+   *
+   * How they were found is the part worth keeping. The batch-34 emit audit
+   * reported all six FETCH_FAILED at three parallel jobs, and this tree's own
+   * rule ("a verdict that changes with --jobs is not a measurement") said to
+   * re-run them serially. They failed again, serially — which ruled concurrency
+   * OUT and left the client as the only difference, since the same URLs answer
+   * 200 in half a second to a hand request.
+   *
+   * AND THE TREE ALREADY KNEW, one row at a time. Each of these six hosts
+   * carries a second registered row from an earlier batch — five JO29A_FGT_*
+   * and SOCRATA_HAWAII — and every one of them carried a per-ROW
+   * `User-Agent: JapanOSINT/1.0` header, which is why those six store records
+   * today (data.ok.gov: 397, its whole package_search count; San Antonio 166,
+   * Milwaukee 186, Houston 96). So an earlier session met this same filter on
+   * these same hosts and solved it in the row rather than in a table, and
+   * batch 34 could not inherit what was written there. A host-level entry
+   * fixes every row on the host, including the next one somebody adds — which
+   * is this file's whole argument, reached independently. */
+  HOST_AGENT("data.ok.gov", HA_NOCOLLECTOR)
+  HOST_AGENT("data.virginia.gov", HA_NOCOLLECTOR)
+  HOST_AGENT("opendata.hawaii.gov", HA_NOCOLLECTOR)
+  HOST_AGENT("data.houstontx.gov", HA_NOCOLLECTOR)
+  HOST_AGENT("data.milwaukee.gov", HA_NOCOLLECTOR)
+  HOST_AGENT("data.sanantonio.gov", HA_NOCOLLECTOR)
+
+  /* planelogger.com, found by re-asking batch 31's twice-refused rows what they
+   * actually answer rather than removing them under "fails twice leaves".
+   * Measured 2026-10-20 on /Aircraft/Search?searchterm=Toyota, twice each:
+   *     engine UA        403, 403
+   *     HA_NOCOLLECTOR   200, 200  (19,742 bytes, the aircraft table)
+   *     "JapanOSINT/1.0" 200, 200
+   * so it is the word filter again, and OFFSHORE_AIRCRAFT_REGISTRIES was one
+   * table entry away from working rather than dead. Worth noting what the
+   * triage that found it ALSO found: of the other 89 rows, 36 answer 403 at the
+   * host ROOT as well as on the path, which no agent naming us clears — a
+   * wall, not a word filter. This entry is the one row where the bisection
+   * changed the answer, which is the measurement being worth making and not a
+   * reason to expect it often. */
+  HOST_AGENT("www.planelogger.com", HA_NOCOLLECTOR)
+
   /* OCHA Financial Tracking Service (api.hpc.tools) — the HDX "OSINT" token
    * block, same operator family. Measured 2026-09-14: engine agent 406, the
    * RCorp-feeds agent HDX already uses 200. Four ocha-fts-* rows. */

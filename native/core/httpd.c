@@ -248,7 +248,7 @@ typedef struct {
   sa_kind kind;
   char id[256];                       /* source id, or collector key          */
   char q[256], collector[128], group[64], category[64], engine[32], skind[32],
-       status[16], grade[8], sort[16];
+       status[16], health[16], grade[8], sort[16];
   int has_items, desc, limit, offset, refresh;
   char key[64];                       /* respcache key                        */
 } sa_arg;
@@ -267,6 +267,7 @@ static void sa_parse(struct mg_http_message *hm, sa_arg *a) {
   mg_http_get_var(&hm->query, "engine", a->engine, sizeof a->engine);
   mg_http_get_var(&hm->query, "kind", a->skind, sizeof a->skind);
   mg_http_get_var(&hm->query, "status", a->status, sizeof a->status);
+  mg_http_get_var(&hm->query, "health", a->health, sizeof a->health);
   mg_http_get_var(&hm->query, "grade", a->grade, sizeof a->grade);
   mg_http_get_var(&hm->query, "sort", a->sort, sizeof a->sort);
   if (mg_http_get_var(&hm->query, "has_items", v, sizeof v) > 0) a->has_items = v[0] == '1';
@@ -279,14 +280,15 @@ static void sa_parse(struct mg_http_message *hm, sa_arg *a) {
   unsigned long long h = 1469598103934665603ULL;
   h = sa_fnv(h, a->id); h = sa_fnv(h, a->q); h = sa_fnv(h, a->collector); h = sa_fnv(h, a->group);
   h = sa_fnv(h, a->category); h = sa_fnv(h, a->engine); h = sa_fnv(h, a->skind);
-  h = sa_fnv(h, a->status); h = sa_fnv(h, a->grade); h = sa_fnv(h, a->sort);
+  h = sa_fnv(h, a->status); h = sa_fnv(h, a->health); h = sa_fnv(h, a->grade); h = sa_fnv(h, a->sort);
   snprintf(a->key, sizeof a->key, "sa:%d:%016llx:%d%d:%d:%d", (int)a->kind, h,
            a->has_items, a->desc, a->limit, a->offset);
 }
 static char *sa_build(db_handle *db, const sa_arg *a, int *st) {
   sourceapi_query q = {
     .q = a->q, .collector = a->collector, .group = a->group, .category = a->category,
-    .engine = a->engine, .kind = a->skind, .status = a->status, .grade = a->grade,
+    .engine = a->engine, .kind = a->skind, .status = a->status, .health = a->health,
+    .grade = a->grade,
     .has_items = a->has_items, .sort = a->sort, .desc = a->desc,
     .limit = a->limit, .offset = a->offset };
   char *b = NULL;

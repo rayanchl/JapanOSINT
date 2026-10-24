@@ -180,13 +180,16 @@ static const hp_source HP3B19_AFRICA[] = {
     .record_type = "statistical-publication",
     .tags = "\"cabo verde\",\"statistics\",\"publication\",\"census\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://bdmi.ine.cv/site_deploy_api/api/Publication?pageSize=50",
+    /* Measured 2026-10-20: the envelope says `totalItems: 2425` and the API
+     * echoes `currentPage: 0` whatever you send it — 0, 1, 3 and 10 all return
+     * the same first two codigos — so the declared page parameter was dead and
+     * this row read 50 of 2,425. `pageSize` IS honoured, and pageSize=5000
+     * returns all 2,425 in one request. */
+    .url = "https://bdmi.ine.cv/site_deploy_api/api/Publication?pageSize=5000",
     .array_path = "items",
     .filter_query = 1,
     .id_keys = "codigo",
     .interval = 86400,
-    .page_param = "currentPage",
-    .page_start = 1,
     .title_keys = "titulo,nome",
     .description = "The 2,398 statistical publications of Cabo Verde's national "
       "statistics institute, served by the JSON backend behind its "
@@ -201,15 +204,14 @@ static const hp_source HP3B19_AFRICA[] = {
     .record_type = "tender-notice",
     .tags = "\"cabo verde\",\"procurement\",\"tender\",\"concurso\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://bdmi.ine.cv/site_deploy_api/api/Competitions?take=50",
+    /* Measured 2026-10-20: `take` is honoured and `skip`, `offset` and `page`
+     * are not (each returns the first records again), so take=1000 reads the
+     * whole register — 80 tenders, 80 distinct codigo. */
+    .url = "https://bdmi.ine.cv/site_deploy_api/api/Competitions?take=1000",
     .date_keys = "data_inicio",
     .filter_query = 1,
     .id_keys = "codigo",
     .interval = 21600,
-    .page_param = "skip",
-    .page_size = 50,
-    .page_start = 0,
-    .page_zero_based = 1,
     .title_keys = "nome",
     .description = "Public procurement competitions run by Cabo Verde's national "
       "statistics institute, with the notice title, category, full "

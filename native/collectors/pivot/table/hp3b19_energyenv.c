@@ -343,15 +343,68 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "generation-mix",
     .tags = "\"energy\",\"grid\",\"denmark\",\"settlement\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    /* A record here is one (hour, price area), and the row declared NO id_keys,
+     * so the engine keyed on the first scalar it found — `HourUTC`. DK1 and DK2
+     * for the same hour therefore collided, and only the in-page content-hash
+     * guard kept both: their uids became content hashes, so a settlement
+     * REVISION of an hour (this dataset is the audited series, which is exactly
+     * what gets revised) landed as a NEW row instead of updating the old one.
+     * That is batch 36's openFDA lesson — `stored` matched `emitted` the whole
+     * time and nothing looked wrong. Keyed on the tuple now. */
     .url = "https://api.energidataservice.dk/dataset/ProductionConsumptionSettlement?limit=50&sort=HourUTC%20desc",
     .array_path = "records",
+    .date_keys = "HourUTC",
+    .id_keys = "HourUTC+PriceArea",
     .interval = 21600,
     .page_param = "offset",
     .page_size = 50,
+    /* Deliberately NOT cycling, and deliberately still `desc`: this row is the
+     * live tail of an audited series that lags about ten days, and its 1,000
+     * newest records are two price areas x ~500 hours, so ~20 days of coverage
+     * every six hours. A cycle would trade that for the history, which the
+     * sibling below reads instead. Measured 2026-10-20: newest HourUTC
+     * 2026-10-10T23:00. */
     .description = "Settled hourly Danish generation by technology and consumption "
       "by category for each price area, including central power, local "
       "power, offshore and onshore wind and solar. The settled series "
       "is the audited version rather than the live estimate" },
+
+  /* The history the row above cannot reach, on the PLOS_CORPUS pattern: one
+   * collection, a live head sorted newest-first and a backfill sorted
+   * oldest-first that keeps its place. The series starts 2004-12-31T23:00 and
+   * the head only ever sees the last ~20 days of it.
+   *
+   * Measured against the API on 2026-10-20:
+   *     limit=1000&sort=HourUTC asc              1,000 records, 2004-12-31..2005-01-21T18
+   *     limit=5000&sort=HourUTC asc              5,000 records, ..2005-04-15
+   *     limit=1000&offset=1000&sort=HourUTC asc  1,000 records starting 2005-01-21T19
+   * so the ceiling is at least 5,000 a page and `offset` is a true record
+   * offset with no overlap at the seam. 5,000 x page_max 4 is 20,000 records a
+   * run against roughly 382,000 in the series (two price areas x ~21.8 years of
+   * hours), so the cycle completes in about three weeks and then idles on the
+   * tail, where the ascending sort puts each newly settled hour. */
+  { .id = "ENERGINET_PRODCONSUM_SETTLEMENT_HISTORY",
+    .name = "Energinet — settled production and consumption, the whole series",
+    .name_ja = "Energinet 確定生産消費データ（全期間）",
+    .category = "energy", .portal = "https://www.energidataservice.dk",
+    .record_type = "generation-mix",
+    .tags = "\"energy\",\"grid\",\"denmark\",\"settlement\",\"backfill\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://api.energidataservice.dk/dataset/ProductionConsumptionSettlement?limit=5000&sort=HourUTC%20asc",
+    .array_path = "records",
+    .date_keys = "HourUTC",
+    .id_keys = "HourUTC+PriceArea",
+    .interval = 86400,
+    .page_param = "offset",
+    .page_max = 4,
+    .page_resume = 1,
+    .page_size = 5000,
+    .description = "Every settled hour Energinet has published, from 2004-12-31 "
+      "forward, read over a cycle: Danish generation by technology and "
+      "consumption by category for each price area. Same records as the live "
+      "settlement row, which reads the newest ~20 days every six hours; this "
+      "one reaches the roughly 382,000 behind them, which no page ceiling over "
+      "a newest-first sort can" },
 
   { .id = "ENERGINET_CAPACITY_MUNICIPALITY", .name = "Energinet — installed capacity by municipality",
     .name_ja = "Energinet 自治体別設備容量",
@@ -974,16 +1027,42 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "air-quality-index",
     .tags = "\"air\",\"netherlands\",\"index\",\"station\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.luchtmeetnet.nl/open_api/lki",
+    /* THE BARE PATH 302s, AND THE REDIRECT DROPS THE PAGE PARAMETER. Measured
+     * 2026-10-20: `/open_api/lki` answers 302 to
+     * `?order_by=&station_number=&order_direction=&start=…&end=…` with a
+     * default 7-day window, so every page the engine asked for came back as
+     * page 1 — 100 records of the 17,100 that window holds, with the engine
+     * correctly reporting "the page parameter is being ignored". `start=`
+     * alone still redirects; the server wants the whole default parameter set
+     * before it will serve the URL as given.
+     *
+     * With the set present, paging works and the envelope says how far:
+     * `pagination.last_page` is 7 for a six-hour window, page 7 is short (4
+     * records) and page 8 is empty. Six hours is chosen against the HOURLY
+     * cadence — 604 records over 7 pages, inside the 20-page default ceiling,
+     * so this row cannot truncate, and a run missed for up to five hours is
+     * still covered. `end` must be a real instant: `end=2099-01-01` returns
+     * ZERO rather than everything. */
+    .url = "https://api.luchtmeetnet.nl/open_api/lki?order_by=&station_number="
+           "&order_direction=&start={ago:21600}&end={ago:0}",
     .array_path = "data",
+    .date_keys = "timestamp_measured",
+    /* 100 records across 17 distinct station_numbers on one page, measured —
+     * so the station is a DIMENSION and the identity is the pair. This defect
+     * was invisible while the row read one page: it could not collide with
+     * itself across pages it never fetched. */
+    .id_keys = "station_number+timestamp_measured",
     .interval = 3600,
     .page_param = "page",
     .page_start = 1,
+    .title_keys = "station_number",
     .description = "The Dutch composite air quality index value for each monitoring "
-      "station with the station number and the measurement timestamp, "
-      "paged across the whole network history. The index is what "
-      "triggers public advisories, so it is the number with regulatory "
-      "consequences" },
+      "station with the station number and the measurement timestamp. The "
+      "index is what triggers public advisories, so it is the number with "
+      "regulatory consequences. Read as a rolling six-hour window: 604 "
+      "records across 7 pages, measured 2026-10-20, where the row previously "
+      "stored 100 of a 7-day window's 17,100 because the endpoint's redirect "
+      "discarded the page parameter" },
 
   { .id = "NOAA_FOSS_LANDINGS", .name = "NOAA Fisheries — commercial landings by species and state",
     .name_ja = "NOAA 漁業水揚統計",
@@ -1063,7 +1142,14 @@ static const hp_source HP3B19_ENERGYENV[] = {
      * overlap and no gap), it is UNIQUE per feature (1,000 distinct in 1,000,
      * 10,000 in 10,000, so it is the record's identity and not a dimension),
      * `count=10000` is honoured at 15.2 MB and 1.8 s a page, and the layer's
-     * own numberMatched is 42,327. Five pages read the cadastre whole. */
+     * own numberMatched is 42,327. Five pages read the cadastre whole.
+     *
+     * NOT applied to the tree's other WFS `startIndex` rows, which is the half
+     * of this finding that generalises: 17 of them declare no `sortBy`, this is
+     * the only one refused, and 12 of the 13 reachable others serve page 2
+     * fine — GeoServer objects only where the feature type has no primary key.
+     * Both branches reached the sortBy independently; a blanket fix would have
+     * been a change made on reasoning. */
     .url = "https://openmaps.gov.bc.ca/geo/pub/WHSE_MINERAL_TENURE.MTA_ACQUIRED_TENURE_SVW/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=pub:WHSE_MINERAL_TENURE.MTA_ACQUIRED_TENURE_SVW&outputFormat=application/json&sortBy=TENURE_NUMBER_ID&count=10000",
     .array_path = "features",
     .id_keys = "properties.TENURE_NUMBER_ID",

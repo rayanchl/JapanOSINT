@@ -1,3 +1,27 @@
+# Batch 45 STAGING set — **REGISTERED. This file is a RECORD, not a to-do list.**
+#
+# CORRECTED 2026-10-22. Every line below used to be headed "NOT generated, NOT registered", and that
+# stopped being true the day main's batch 49 shipped: 5,392 of these 5,643 endpoints are registered in
+# the tree right now, which is batch 49's own row count. A session that believed the old header would
+# have re-registered 5,392 duplicate endpoints — the same trap CLAUDE.md records for batch 37, whose
+# header said "still unprobed" for a fortnight after it was probed. Measured by normalising both sides
+# (scheme and leading www. dropped) and comparing: 5,392 present, 251 absent.
+#
+# The 251 that are NOT registered were checked on 2026-10-22 and split in two:
+#   * ~225 are theme and plugin MACHINERY, which tools/wp_routes_sweep.py's own MACHINERY regex rejects
+#     by design — banner*, bnr*, slide*/slider*/carousel, *-parts, *_form*, lazyblocks, vk-block-patterns,
+#     kubio*, ghostkit_template, fl-builder-template, post_grid*, snow-monkey-forms, um_form, popupbanner.
+#     Carousel slides and form definitions are not a source.
+#   * the rest are real content collections the sweep found and batch 49 did not take: the *information*
+#     family (~30), xo_event (8), member-information 1,074 and members_information 426 (member-company
+#     registers), recommend 1,042, other 756, mailnews 280, search 191 (a clinic directory), links 62.
+#     Those are registered as their own beat; see the batch note for the measurement.
+#   * ONE is a domain takeover and must never be registered: www.miyawakacci.or.jp, whose posts
+#     collection samples as Polish casino spam. CLAUDE.md already records main removing that host from
+#     batch 49. A scan of all 253 leftover sample titles for gambling/pharma vocabulary and for an
+#     unexpected script found exactly that one.
+#
+# Original header, kept verbatim because it is the record of what was measured on 2026-10-19:
 # Batch 45 STAGING set — NOT generated, NOT registered. Measured 2026-10-19.
 # 5,123 member-organisation hosts harvested from nationwide federations' link pages (chambers of commerce,
 # JA, medical associations, fire chiefs, welfare councils, co-ops, professional bodies, culture, JC; see

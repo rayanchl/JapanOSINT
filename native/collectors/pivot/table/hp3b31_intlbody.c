@@ -114,7 +114,21 @@ static const hp_source HP3B31_INTLBODY[] = {
     .description = "The Bank's finances catalog, which carries the major "
       "contract award dataset — the supplier, its country, the borrower "
       "country, the procurement method and the contract amount for every award "
-      "above the disclosure threshold" },
+      "above the disclosure threshold. REGISTERED AND FAILING, and the reason "
+      "is now measured (2026-10-23) rather than guessed: the Socrata platform "
+      "is RETIRED — finances.worldbank.org 302s to financesone.worldbank.org "
+      "preserving the path, and that host answers HTTP 200 with its "
+      "single-page-app HTML for every path, /api/catalog/v1 and "
+      "/resource/<id>.json alike. So this row's fetch-failure note reads "
+      "\"a 200 that did not parse\", which is the Archive-It shape: the move "
+      "really happened. The successor is the Data Catalog API "
+      "(datacatalogapi.worldbank.org/ddhxext/), which is where the new site's "
+      "own dataset ids live (the awards page canonicalises to DS00047). It is "
+      "NOT re-pointed there because that host cannot be measured from this "
+      "container: four attempts across two sessions, one of them after 150 s "
+      "of complete idleness, all HTTP 429 from Cloudflare with a fresh "
+      "retry-after of ~45 s, so the quota is not ours to drain. A candidate "
+      "endpoint is not a fix" },
 
   { .id = "IFC_PROJECT_DISCLOSURES", .name = "IFC — private sector investment disclosures",
     .name_ja = "IFC 投融資案件開示", .category = "finance",

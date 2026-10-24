@@ -120,6 +120,15 @@ jobs:
         working-directory: native
         run: make htmlparsetest
 
+      # A feed URL that has stopped being a feed used to report rc=0 records=0 —
+      # indistinguishable from a newspaper that published nothing. Four national
+      # press feeds were serving their HTML homepage. rsstest pins that a 2xx
+      # body which is not a feed is a FAILED fetch, and — the half that keeps it
+      # safe — that a valid feed with no items is still an honest empty.
+      - name: RSS/Atom toolkit (a dead feed is not an empty feed)
+        working-directory: native
+        run: make rsstest
+
       - name: Lint collector sources
         working-directory: native
         run: make lint-sources
@@ -224,6 +233,85 @@ jobs:
   # seed the 48k-row registry), and test_service_vec reached at minute 42 —
   # then cancelled inside it with 14 tests queued, a timeout and never a
   # result. vecindex_items_state() halved that test; this is the headroom.
+  #
+  # 150, not 90 (2026-10-22): the suite is 84 tests and the 90 is spent. A
+  # TIMED-OUT JOB IS REPORTED `cancelled`, NOT `failure`, which is why this
+  # needed measuring rather than reading — the run that hit it looks on the
+  # PR exactly like a job somebody stopped. Four consecutive runs, oldest
+  # first:
+  #
+  #     7d13e707  success    50.8 min
+  #     d163738a  success    70.0 min
+  #     4306358d  success    85.4 min   <- 4.6 min of headroom, green by luck
+  #     8a91a064  cancelled  90.4 min   <- the wall, with the suite unfinished
+  #
+  # So this is not a flaky job and not the commit that hit it: the budget was
+  # exhausted and the last green was already inside the noise. That is this
+  # tree's own rule about a kill line — SLOW means unmeasured, not failed, and
+  # the limit is a property of the tool rather than of what it measures.
+  #
+  # The number is the symptom. The cost driver is tests/unit/run.sh linking
+  # EVERY object for each of the 84 tests, so the job grows with the product
+  # and not with what a change touches — a per-test link under TSan, 84 times.
+  # Fixing that is worth more than any ceiling, and this raise buys the room
+  # to do it rather than standing in for it.
+  #
+  # BACK TO 90 (2026-10-23), because that fix is in: tests/unit/run.sh now
+  # `ld -r`s the 1,807 objects no test excludes into one relocatable object
+  # ONCE and links each test against that plus the 53 objects some test does
+  # exclude. Measured on the plain build, same tree, same test: a full link is
+  # **35.688 s** and a partial-link link is **2.674 s**, so the suite's link
+  # budget goes from ~50 min to ~3.7 min, and the whole 84-test suite now runs
+  # end to end in **494 s**. Subtracting that from the 90.4 min above predicts
+  # a job around 45 min, which is where the 50.8-min run at the top of the
+  # series sat with ten fewer tests. So this ceiling has roughly 2x headroom
+  # again instead of 4.6 min, and it is a gate rather than a formality.
+  #
+  # If a run still comes in over ~70 min, the ceiling is the wrong lever a
+  # second time and the next cost driver is already identified: a single test
+  # can open the database dozens of times and every `db_open` seeds the whole
+  # registry, which is now 58,054 rows. Measured while timing this change:
+  # test_alert_tenancy alone does **39 full db_opens** (the 2026-10-19 note
+  # above clocked it at 17.5 min on its own, with the registry at 48k). That
+  # is a product-sized cost inside one test, and it grows with every batch.
+  #
+  # IT CAME IN AT 82.8 MIN, so by the sentence above the prediction of ~45 was
+  # wrong and the second lever was due. The job's own log says exactly where
+  # the time went — every `--- test_x ---` line is timestamped, so the gaps
+  # are a profile (run 554, 2026-10-23, all six jobs green):
+  #
+  #     compile 1,860 TSan objects + the one `ld -r`      3.1 min
+  #     88 test slots, marker to first output (the LINK)  2.7 min total,
+  #                                                       median 1.6 s
+  #     test_alert_tenancy                               21.1 min
+  #     test_source_category                             14.8 min
+  #     test_service_vec                                  6.9 min
+  #     test_sourceindexapi                               3.5 min
+  #     the other 84 tests                               33.3 min,
+  #                                                       median 31.1 s
+  #
+  # So the partial link DID work, including under TSan — linking is 2.7 min of
+  # 82.8 and no longer worth looking at. What is left is per-test EXECUTION,
+  # and inside it one line repeats: `[db] seeded sources from registry`, 30 s
+  # when it inserts 58,055 rows and **16 s when it inserts nothing at all**,
+  # because the seed is two prepared-statement steps per source and TSan
+  # instruments all 116,110 of them. test_alert_tenancy's 21 min is 82 of
+  # those lines; the median test's 31 s is mostly one.
+  #
+  # Two changes address that, and both are measured rather than reasoned:
+  # core/db.c stamps a FINGERPRINT of what the seed writes into
+  # `_registry_seed` and skips the pass when it and the row count still match
+  # (a warm db_open goes 0.63 s -> 0.07 s natively), and tests/unit/run.sh
+  # seeds ONE template database and copies the file per test, so no test
+  # derives it from scratch. Local suite 494 s -> 455 s, 86 tests, all
+  # passing, with 129 of the 152 opens taking the fast path and
+  # test_alert_tenancy taking it 82 times out of 82.
+  #
+  # The next driver after this one is named for whoever reads the log next:
+  # test_source_category spends 765 s on a 15-nearest vote over 42,255
+  # declared sources, and test_service_vec indexes all 58,055 source cards
+  # five times at ~65 s each. Those are O(registry) by design, so making them
+  # cheap is a question about what they should cover, not a build fix.
   thread-sanitizer:
     runs-on: ubuntu-latest
     timeout-minutes: 90
@@ -400,6 +488,15 @@ jobs:
       - name: HTML attribute scanner
         working-directory: native
         run: make htmlparsetest
+
+      # A feed URL that has stopped being a feed used to report rc=0 records=0 —
+      # indistinguishable from a newspaper that published nothing. Four national
+      # press feeds were serving their HTML homepage. rsstest pins that a 2xx
+      # body which is not a feed is a FAILED fetch, and — the half that keeps it
+      # safe — that a valid feed with no items is still an honest empty.
+      - name: RSS/Atom toolkit (a dead feed is not an empty feed)
+        working-directory: native
+        run: make rsstest
 
       # Deliberately NOT repeated here: lint-sources and audit-sources. Both
       # are pure python3 over the source text with no platform-dependent

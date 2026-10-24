@@ -90,7 +90,15 @@ static const hp_source HP3B34_FDSNEVENT[] = {
      * events (`noa2024aaaak|2024-01-01T00:00:28…`). So it needs a window, and
      * a rolling one rather than a frozen date — 30 days back, re-rendered
      * every run, with the records' own origin time as the date. Ascending for
-     * the same drift reason as the ETHZ row. */
+     * the same drift reason as the ETHZ row.
+     *
+     * Two branches re-added this row independently, with a two-day window and
+     * this thirty-day one, and the wider window is kept. The narrow one is
+     * SAFE — a quiet window answers 404 carrying FDSN's own "no matching
+     * events found", which hp_status_is_declared_empty reads as the honest
+     * empty it is rather than a refusal — but it is one day of slack against a
+     * daily interval, so a single missed run loses events permanently, where
+     * thirty days re-reads what we already hold at the cost of a few pages. */
     .url = "https://eida.gein.noa.gr/fdsnws/event/1/query?format=text&nodata=404&starttime={date:%Y-%m-%d:-30}&orderby=time-asc&limit=1000",
     .csv_comment = "#",
     .csv_delim = "pipe",

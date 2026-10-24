@@ -1,0 +1,29 @@
+#	batch 55 — atparl: the Austrian Parliament's materials index, read as seven complete slices.
+#	Measured 2026-10-23. Every row was read BOTH by hand against the endpoint (the probe
+#	column: the upstream's own `count`, `pages` and the distinct count of the record key)
+#	and through the engine (`./bin/japanosint --run <id>` against a scratch database).
+#	The probe sends GET and this endpoint ignores the query string entirely, so
+#	tools/probe_hp_batch.py cannot judge these rows — the by-hand readings are in
+#	docs/at-parlament-filter-api-2026-10-23.md and are reproduced here.
+#	There is no sort parameter on this endpoint and none is needed: `showAll=true` plus a
+#	GP filter is a complete, deterministic, single-page read.
+id	post_body (the filter)	upstream_count	upstream_pages	distinct_on_key	engine_emitted	engine_stored	engine_bytes	engine_requests	engine_rc	notices	verdict
+JO55_ATPARL_GP_V_XVI	{"GP":["V","VI","VII","VIII","IX","X","XI","XII","XIII","XIV","XV","XVI","KN","PN","BR"]}	50896	1	50896	50896	50896	22326720	1	0	0	OK
+JO55_ATPARL_GP_XVII_XXI	{"GP":["XVII","XVIII","XIX","XX","XXI"]}	77646	1	77646	77646	77646	39656232	1	0	0	OK
+JO55_ATPARL_GP_XXII_XXIII_XXVI	{"GP":["XXII","XXIII","XXVI"]}	55695	1	55695	55695	55695	34061075	1	0	0	OK
+JO55_ATPARL_GP_XXIV	{"GP":["XXIV"]}	51970	1	51970	51970	51970	31525138	1	0	0	OK
+JO55_ATPARL_GP_XXV	{"GP":["XXV"]}	51979	1	51979	51979	51979	30174679	1	0	0	OK
+JO55_ATPARL_GP_XXVII	{"GP":["XXVII"]}	76457	1	76457	76457	76457	47692962	1	0	0	OK
+JO55_ATPARL_GP_XXVIII_CURRENT	{"GP":["XXVIII"]}	26714	1	26714	26718	26718	17048837	1	0	0	OK
+#
+#	TOTALS: 391357 records emitted, 391357 stored, 7 requests, 222,485,643 bytes, zero notices.
+#	The database holds 391,361 rows for these seven ids — four more than the by-hand counts,
+#	because the open 28th period gained materials between the two readings (26,714 by hand,
+#	26,718 in the engine minutes later). That drift IS the open period, not a gap: the 27 GP
+#	codes' counts summed to 391,354 against an unfiltered 391,354 read in the same minute.
+#
+#	distinct_on_key is GP_CODE+ITYP+INR+NRBR. The obvious key is WRONG and all three obvious
+#	candidates agree on the wrong answer: WENTRY_ID (the site's own web-item id), HIS_URL and
+#	GP_CODE+ITYP+INR each give 75,485 of XXVII's 76,457. All 972 groups DIFFER, in exactly one
+#	column — NRBR — because a material that went through both chambers is served once per
+#	chamber under one web-item id.

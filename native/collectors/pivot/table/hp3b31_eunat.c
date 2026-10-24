@@ -131,7 +131,55 @@ static const hp_source HP3B31_EUNAT[] = {
     .base = "https://www.assemblee-nationale.fr", .filter_query = 1,
     .description = "Bills, amendments with their authors, written questions and "
       "ministerial answers, committee hearings and the audition of named "
-      "company executives — which is a public, on-record statement by them" },
+      "company executives — which is a public, on-record statement by them. "
+      "THIS PATH IS DEAD: measured 2026-10-22, /dyn/recherche answers 404 for "
+      "a real company name and for an impossible one alike, and the homepage "
+      "carries no search form at all (the site renders its search in the "
+      "browser). The row is kept and discloses its 404 once per run; "
+      "FR_AN_QUESTIONS_ECRITES below reads the part of this record the "
+      "Assemblée publishes as open data." },
+
+  /* What the Assemblée nationale does publish, asked of its own open-data site
+   * rather than guessed at (2026-10-22): every written question of the current
+   * legislature, as ONE ZIP holding 19,165 JSON documents — one question each.
+   *
+   * This is the row zip_all_entries exists for. The engine read the first
+   * member of a ZIP and disclosed the rest as lost, and its own remedy ("a
+   * named-entry read, or one row per member") does not reach 19,165 members.
+   * Each member is `{"question": {...}}`, so array_path resolves to one object
+   * and each member contributes exactly one record.
+   *
+   * The file is the whole legislature every time (50 MB compressed), so the
+   * cadence is weekly rather than daily: the Journal officiel publishes
+   * questions most weekdays, and a daily row would re-download 50 MB to find
+   * them. Every record upserts on its own `uid`, so a re-read costs nothing. */
+  { .id = "FR_AN_QUESTIONS_ECRITES",
+    .name = "France Assemblée nationale — written questions to ministers",
+    .name_ja = "フランス国民議会 書面質問",
+    .category = "government",
+    .portal = "https://data.assemblee-nationale.fr/questions/questions-ecrites",
+    .record_type = "fr-parliamentary-question",
+    .tags = "\"fr\",\"parliament\",\"question\",\"minister\",\"open-data\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://data.assemblee-nationale.fr/static/openData/repository/17/"
+           "questions/questions_ecrites/Questions_ecrites.json.zip",
+    .zip_all_entries = 1,
+    .array_path = "question",
+    .title_keys = "indexationAN.analyses.analyse,indexationAN.rubrique",
+    .id_keys = "uid",
+    .body_keys = "textesQuestion.texteQuestion.texte",
+    .date_keys = "textesQuestion.texteQuestion.infoJO.dateJO",
+    .interval = 604800,
+    .timeout_ms = 180000,
+    .description = "Every written question a French deputy has put to a "
+      "minister this legislature, with the minister's answer where one has "
+      "been given: the question's identifier and number, the subject heading "
+      "the Assemblée indexes it under, the deputy who asked it with their "
+      "parliamentary group, the ministry it was addressed to, the Journal "
+      "officiel issue and page it was published in, and the full text. A "
+      "written question is the cheapest way a deputy puts a company, a site "
+      "closure or a contract on the public record, so the text is a primary "
+      "source naming firms that no company register would." },
 
   { .id = "NL_DATA_OVERHEID_CKAN", .name = "Netherlands data.overheid.nl — dataset catalog",
     .name_ja = "オランダ オープンデータ目録", .category = "government",
@@ -173,13 +221,116 @@ static const hp_source HP3B31_EUNAT[] = {
   { .id = "NO_STORTINGET_DATA", .name = "Norway Storting — parliamentary data service",
     .name_ja = "ノルウェー議会 データサービス", .category = "government",
     .portal = "https://data.stortinget.no", .record_type = "no-parliamentary-record",
-    .tags = "\"no\",\"parliament\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.stortinget.no/no/Saker-og-publikasjoner/Sok/?stq={q}",
-    .base = "https://www.stortinget.no", .filter_query = 1,
-    .description = "Norwegian parliamentary cases, votes per representative, "
-      "committee hearings and the register of representatives' financial "
-      "interests including shareholdings and paid travel" },
+    .tags = "\"no\",\"parliament\"", .free_tier = 1,
+    /* RE-POINTED 2026-10-21 (open item B2), and a change of KIND as well as of
+     * path: interval 0 to daily. The scraped search path 404s, and the
+     * Storting publishes a documented JSON export instead — but that export
+     * takes a SESSION, not an entity (`?sakid=` alone answers HTTP 500), so it
+     * cannot answer "what do we have on X" and must not stay an interval-0
+     * pivot that nothing would ever run (house rule 3). The openFDA nine went
+     * the other way and CLAUDE.md records what that cost.
+     *
+     * AND THE OBVIOUS REPLACEMENT WAS ALREADY REGISTERED. The triage named
+     * /eksport/saker; `make lint-sources` answered dup-endpoint, because
+     * `eur-stortinget-saker` (collectors/feed/generated/vsrc13_europe_gov_2.c)
+     * has read exactly that URL every six hours all along — measured today,
+     * 197 records, rc=0. Registering it again would have been the data.gov.uk
+     * PROXY row over again: two rows, one upstream, no new data. **Run the
+     * dup-endpoint lint before believing a re-point is a new source.**
+     *
+     * So this row takes an export the tree does NOT read, and the one its own
+     * description already promised ("committee hearings"): /eksport/horinger,
+     * 76 hearings in 83 KB, measured 2026-10-21. Of the nine Stortinget
+     * exports registered in this tree, three live ones were missing —
+     * horinger, interpellasjoner and sporretimesporsmal — and the other two
+     * are the rows beneath this one.
+     *
+     * A hearing's subject lives one level down, in the case it is about, so
+     * the title is a dotted path through the flattened record. */
+    .url = "https://data.stortinget.no/eksport/horinger?format=json",
+    .interval = 86400,
+    .array_path = "horinger_liste",
+    .title_keys = "horing_sak_info_liste.0.sak_korttittel,komite.navn",
+    .id_keys = "id",
+    .description = "Every committee hearing of the Norwegian parliament — the "
+      "committee holding it, the case it concerns, the deadline for written "
+      "submissions and whether it is written-only. Who is invited to be heard "
+      "on a bill is the earliest public signal of who is lobbying it" },
+
+  /* The one file of France's parliamentary open data the engine can read
+   * today (open item B2, 2026-10-22). The row above this beat's FR pivot
+   * stays failing honestly: its register is the debates and amendments, which
+   * data.assemblee-nationale.fr publishes as CSV or JSON INSIDE A ZIP, and no
+   * engine mode reads that (lib/zipread.c exists but only HP_XLSX uses it).
+   *
+   * MEASURED 2026-10-22: HTTP 200, 109,317 bytes, text/csv, 2,077 data rows,
+   * SEMICOLON-delimited (5 fields on semicolons, 1 on commas) and NOT UTF-8 —
+   * windows-1252, which is why a UTF-8 reader sees "Identifiant du d?put?".
+   * One deputy holds many staff, so the identity is the (deputy, collaborator)
+   * tuple and not the deputy: keying on the deputy alone would collapse 2,077
+   * rows onto the ~577 who have staff.
+   *
+   * `index_url` is not optional here. The path carries `/17/` — the
+   * LEGISLATURE number — which is a value frozen into a URL exactly like a
+   * date, and it will 404 when the 18th begins. The portal's own
+   * deputies-in-office page links the current file, so the engine follows it
+   * every run; `.url` is the edition seen today, which the engine replaces. */
+  { .id = "FR_AN_DEPUTY_STAFF",
+    .name = "France Assemblée nationale — deputies' parliamentary staff",
+    .name_ja = "フランス国民議会 議員秘書", .category = "government",
+    .portal = "https://data.assemblee-nationale.fr",
+    .record_type = "fr-parliamentary-staff",
+    .tags = "\"fr\",\"parliament\",\"staff\"", .mode = HP_CSV, .free_tier = 1,
+    .url = "https://data.assemblee-nationale.fr/static/openData/repository/17/"
+      "amo/collaborateurs_csv_opendata/liste_collaborateurs_excel.csv",
+    .index_url = "https://data.assemblee-nationale.fr/acteurs/deputes-en-exercice",
+    .index_href_must = "liste_collaborateurs_excel.csv",
+    .csv_delim = "semi", .charset = "windows-1252",
+    .interval = 604800,
+    .title_keys = "Nom du collaborateur",
+    .id_keys = "Identifiant du député+Nom du collaborateur+Prénom du collaborateur",
+    .description = "Every parliamentary assistant employed by a sitting French "
+      "deputy, by name, with the deputy they work for and that deputy's own "
+      "identifier — from the Assemblée nationale's own open data. Who staffs a "
+      "legislator's office is a public fact that is rarely published anywhere "
+      "else" },
+
+  { .id = "NO_STORTINGET_INTERPELLATIONS",
+    .name = "Norway Storting — interpellations to ministers",
+    .name_ja = "ノルウェー議会 大臣への質問(緊急質問)", .category = "government",
+    .portal = "https://data.stortinget.no", .record_type = "no-parliamentary-record",
+    .tags = "\"no\",\"parliament\"", .free_tier = 1,
+    /* One of the three live exports the tree was missing (2026-10-21): 5
+     * interpellations, each naming the minister who answered and the minister
+     * it was put to — which are not always the same person, and the
+     * difference is the point. */
+    .url = "https://data.stortinget.no/eksport/interpellasjoner?format=json",
+    .interval = 86400,
+    .array_path = "sporsmal_liste",
+    /* `tittel` EXISTS on these records and is null on all five of them (the
+     * session's interpellations are still at status 1, not yet titled), so a
+     * row declaring it alone emitted a shape notice saying 0 of 5 records
+     * carried the declared title. The minister it was put to is always
+     * present, so it is the fallback — and `tittel` stays first for the
+     * records that will have one. */
+    .title_keys = "tittel,sporsmal_til_minister_tittel", .id_keys = "id",
+    .description = "Interpellations put to Norwegian ministers — the full "
+      "question text, who asked it, which minister answered and on whose "
+      "behalf, with the date answered" },
+
+  { .id = "NO_STORTINGET_QUESTION_TIME",
+    .name = "Norway Storting — question-time questions",
+    .name_ja = "ノルウェー議会 質問時間", .category = "government",
+    .portal = "https://data.stortinget.no", .record_type = "no-parliamentary-record",
+    .tags = "\"no\",\"parliament\"", .free_tier = 1,
+    /* The third missing export: 60 question-time questions, same shape as the
+     * interpellations above and the same reason for registering it. */
+    .url = "https://data.stortinget.no/eksport/sporretimesporsmal?format=json",
+    .interval = 86400,
+    .array_path = "sporsmal_liste", .title_keys = "tittel", .id_keys = "id",
+    .description = "Questions put to ministers in the Norwegian parliament's "
+      "question time — the question as asked, the member who asked it, the "
+      "minister it was addressed to and the one who answered" },
 
   { .id = "NO_DOFFIN_TENDERS", .name = "Norway Doffin — public procurement database",
     .name_ja = "ノルウェー 公共調達", .category = "government",
@@ -217,13 +368,37 @@ static const hp_source HP3B31_EUNAT[] = {
   { .id = "FI_EDUSKUNTA_RECORDS", .name = "Finland Eduskunta — parliamentary documents",
     .name_ja = "フィンランド議会 文書", .category = "government",
     .portal = "https://www.eduskunta.fi", .record_type = "fi-parliamentary-record",
-    .tags = "\"fi\",\"parliament\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.eduskunta.fi/FI/search/Sivut/results.aspx?k={q}",
-    .base = "https://www.eduskunta.fi", .filter_query = 1,
-    .description = "Finnish bills, written questions and committee statements, "
-      "plus the members' declarations of interests and the register of "
-      "election-campaign funding by donor" },
+    .tags = "\"fi\",\"parliament\"", .mode = HP_JSON, .free_tier = 1,
+    /* RE-POINTED 2026-10-22 (open item B2-bis). The scraped SharePoint search
+     * path is gone; Eduskunta publishes a documented open-data API instead,
+     * and the row stays an entity pivot because that API FILTERS — measured
+     * both ways, which is the only reading that settles it (rule 4d):
+     *     columnName=lastname&columnValue=Marin              1 row
+     *     columnName=lastname&columnValue=zzqqxxjjwwvv7731   0 rows
+     *     no filter at all                                 100 rows, hasMore
+     *
+     * It needed an ENGINE AFFORDANCE, not just a path. The API answers a JSON
+     * TABLE — `rowData` is an array of ARRAYS and the column names are in a
+     * sibling `columnNames` — so without `row_header_path` the engine would
+     * name the cells by POSITION and this row's keys would be positions whose
+     * meaning the API can change without anything here noticing. That is the
+     * same hazard the ECB workbook taught, where two sheets of one file have
+     * different geometry. `row_header_path` was added for this row and for the
+     * Austrian one below; hptest 49-49f pin it, including that a row
+     * declaring no header path still behaves exactly as before.
+     *
+     * MemberOfParliament is the table a name can be looked up in: 19 tables
+     * exist and the others key on ids and technical keys. `page` is a page
+     * NUMBER and 0-based, so page_zero_based is set and page_size is NOT (that
+     * would make it an offset — see lint-sources page-size-on-page-number). */
+    .url = "https://avoindata.eduskunta.fi/api/v1/tables/MemberOfParliament/"
+      "rows?perPage=100&page=0&columnName=lastname&columnValue={q}",
+    .array_path = "rowData", .row_header_path = "columnNames",
+    .title_keys = "lastname", .id_keys = "personId",
+    .page_param = "page", .page_zero_based = 1,
+    .description = "Every member of the Finnish parliament the surname matches "
+      "— the person id the rest of Eduskunta's open data keys on, their party, "
+      "and whether they hold a ministerial post. Ask it for a surname" },
 
   /* ── Iberia and Italy ─────────────────────────────────────────────────── */
   { .id = "ES_PORTAL_TRANSPARENCIA", .name = "Spain — transparency portal & subsidy database",

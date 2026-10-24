@@ -507,38 +507,65 @@ static const hp_source HP3B20_SCHOLARLY[] = {
       "feed over a fully open-access corpus, so every hit resolves to "
       "readable full text" },
 
-  /* The second row PLOS_RECENT's own note asks for: the WHOLE corpus, read
-   * over a cycle. Ascending publication date (oldest first, from PLoS
-   * Biology's 2003-08-18 launch issue) is the sort a cycle needs — new
-   * papers land at the TAIL, where a resumed walk has not been yet, so a run
-   * boundary never re-reads or skips a page (the 22 rows re-sorted on
-   * 2026-10-18). `id asc` second, because thousands of articles share one
-   * publication date. Measured 2026-10-20: numFound 418,125 at 100 a page =
-   * 4,182 pages; at 20 pages a daily run the cycle is ~209 days, and the
-   * notice says where it is. PLOS_RECENT keeps the newest; this row owns the
-   * back catalogue. */
-  { .id = "PLOS_CORPUS", .name = "PLOS - every article across all journals, read over a cycle",
-    .name_ja = "PLOS 全論文（巡回読み）",
+  /* The sibling the row above asks for, in its own words: "The whole PLOS
+   * corpus wants its own row with an ascending sort; recency wants this one."
+   * PLOS_RECENT reads the newest 2,000 of 418,142 every six hours and will
+   * never see the other 416,000; this row reads the collection from the
+   * beginning and keeps its place.
+   *
+   * Everything here is measured against api.plos.org on 2026-10-20 rather than
+   * copied from its sibling:
+   *
+   *   sort=publication_date asc,id asc    200, numFound 418,142
+   *   start=10000 / 50000 / 400000        200, 0.2-1.1 s, dates 2008 / 2012 /
+   *                                       2026 — so deep paging works to the
+   *                                       far end of the corpus, with no cap
+   *                                       and no slowdown
+   *   20 rapid pages of 100               20x 200 in 7.5 s, no rate-limit or
+   *                                       Retry-After headers at all
+   *   50 rapid pages of 100               50x 200 in 16.0 s
+   *
+   * So page_max is 50 because a 50-page burst was MEASURED on this host, not
+   * extrapolated from the 20 that the default allows, and no per-host gap was
+   * added to core/hostgate.c for exactly the reason CLAUDE.md gives: a gap set
+   * without a refusal to measure against is a guess. 5,000 records a run, four
+   * runs a day, so a full cycle is about 21 days and the notice says where it
+   * is.
+   *
+   * The ascending sort is the cycle's precondition, not a preference: new
+   * articles land at the TAIL of an ascending collection, where a forward walk
+   * has not been yet, so a resumed run asks for the pages it meant to. Its
+   * sibling keeps `desc` deliberately, which is why that one must not cycle.
+   * The secondary `id asc` is its sibling's measurement and applies here for
+   * the same reason: thousands of articles share one publication date, and an
+   * offset walk sorted on the date alone re-serves some and skips others. */
+  { .id = "PLOS_CORPUS", .name = "PLOS - the whole corpus, oldest first",
+    .name_ja = "PLOS 全論文（刊行順・古い順）",
     .category = "research", .portal = "https://plos.org",
     .record_type = "publication-record",
-    .tags = "\"research\",\"plos\",\"openaccess\",\"corpus\"",
+    .tags = "\"research\",\"plos\",\"openaccess\",\"corpus\",\"backfill\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.plos.org/search?q=doc_type%3Afull&rows=100&wt=json&sort=publication_date%20asc,id%20asc",
+    .url = "https://api.plos.org/search?q=doc_type%3Afull&rows=100&wt=json"
+           "&sort=publication_date%20asc,id%20asc&start=0",
     .array_path = "response.docs",
     .body_keys = "abstract",
     .date_keys = "publication_date",
     .id_keys = "id",
-    .interval = 86400,
+    .interval = 21600,
     .page_param = "start",
-    .page_resume = 1,   /* 418,125 records, measured 2026-10-20: read over a cycle, 20 pages a run */
+    .page_max = 50,
+    .page_resume = 1,
     .page_size = 100,
     .page_zero_based = 1,
     .title_keys = "title_display,title",
     .description = "Every full article PLOS has published across all eleven "
-      "journals, oldest first, with DOI, title, journal, article type, "
-      "author list, subject terms and abstract. Read over a cycle of daily "
-      "runs so the whole open-access corpus is stored, not only the newest "
-      "two thousand that PLOS_RECENT keeps current" },
+      "journals, read from the beginning of the corpus forward and resuming "
+      "where the last run stopped — DOI, title, journal, article type, author "
+      "list, subject terms and abstract, the same record PLOS_RECENT carries. "
+      "That row is the live head of the same collection and reads its newest "
+      "2,000 every six hours; this one reaches the 418,142 behind them, which "
+      "no page ceiling over a newest-first sort can. Fully open access, so "
+      "every hit resolves to readable full text" },
 
   { .id = "INSPIRE_SEMINARS", .name = "INSPIRE-HEP - seminars",
     .name_ja = "INSPIRE-HEP セミナー",

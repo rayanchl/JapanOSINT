@@ -190,14 +190,25 @@ PAGED_MACROS = ('VJSON', 'VJSONBIG', 'VGEO', 'VJSON_KEYED',
 # to one of these far below; the ±16-line window cannot see that, and the
 # `$offset=0` seed is exactly what pw_walk advances (lib/pagewalk.c only ever
 # advances a parameter the URL already carries). od_walk_rows is a thin
-# wrapper over pw_walk (collectors/sources/od_shared.inc). pw_walk_max and
-# od_walk_rows_max are the same walks with an explicit page ceiling, and
-# od_ckan_walk / od_ods_catalog_walk hand their URL to pw_walk_max / pw_walk
-# (od_shared.inc). The suffixes were missing until 2026-10-21, so every URL
-# handed to a ceilinged walk read as a single-page discard — 49 findings.
-_WALKER_CALL = re.compile(r'\b(?:pw_walk(?:_max)?|od_walk_rows(?:_max)?|'
-                          r'od_ckan_walk|od_ods_catalog_walk|'
-                          r'jsonlist_emit_paged\w*|'
+# wrapper over pw_walk (collectors/sources/od_shared.inc).
+# `pw_walk_max` / `od_walk_rows_max` are the explicit-page-ceiling variants
+# added 2026-10-12 beside pw_walk_max() in lib/pagewalk.h, and they never
+# reached this list — `\bpw_walk\s*\(` cannot match `pw_walk_max(`, so every
+# caller of them read as a single-page discard. That is the same shape
+# CLAUDE.md records for gen_hp_batch.py's opt table: a new piece reached the
+# engine and the collectors without reaching the tool that checks them. Hence
+# `\w*`, as the two emit_paged entries already use.
+#
+# od_ckan_walk and od_ods_catalog_walk are added after READING their bodies, as
+# the note above PAGED_MACROS demands (collectors/sources/od_shared.inc):
+#   od_ckan_walk()        -> pw_walk_max(ctx, sink, source_id, url, …)
+#   od_ods_catalog_walk() -> pw_walk(ctx, sink, source_id, url, …)
+# Both hand the caller's URL straight to the walker, so a page-1 URL passed to
+# either is walked. od_udata_collect() is deliberately NOT here: it pages with
+# a `while` loop of its own rather than handing the URL to pw_walk, and no
+# caller of it is flagged, so adding it would be an unverified name.
+_WALKER_CALL = re.compile(r'\b(?:pw_walk\w*|od_walk_rows\w*|od_ckan_walk\w*|'
+                          r'od_ods_catalog_walk\w*|jsonlist_emit_paged\w*|'
                           r'geojson_emit_paged\w*)\s*\(')
 
 
@@ -239,35 +250,25 @@ def _handed_to_walker(lines, n):
     name = _url_binding(lines, n)
     if not name:
         return False
-    if name == 'url' and _restates_walked_url(lines, n):
-        return True
     pat = re.compile(r'\b' + re.escape(name) + r'\b')
     return any(pat.search(a) for a in _walker_call_args(lines))
 
 
-_LITERAL = re.compile(r'"((?:[^"\\]|\\.)*)"')
-
-
-def _restates_walked_url(lines, n):
-    """A source_def's `.url = "…"` is the human-facing copy of the URL the
-    collector's run() walks. It is excused only when its text ENDS WITH the
-    literal of another line in the file whose URL is handed to a walker (the
-    walked URL may be split over adjacent literals, so the last fragment is
-    what both lines share)."""
-    m = _LITERAL.search(lines[n - 1])
-    if not m:
-        return False
-    restated = m.group(1)
-    for i, other in enumerate(lines, 1):
-        if i == n or SKIP_LINE.match(other):
-            continue
-        lm = _LITERAL.search(other)
-        if not lm or '.url' in other or len(lm.group(1)) < 12:
-            continue
-        if restated.endswith(lm.group(1)) and _url_binding(lines, i) != 'url' \
-                and _handed_to_walker(lines, i):
-            return True
-    return False
+# Two sessions fixed the source_def `.url` false positive on the same day and
+# disagreed about what the field IS, which decides the rule rather than the
+# other way round. The narrower reading excused a `.url` only when it restated,
+# character for character, a URL handed to a walker elsewhere in the file, and
+# kept the finding otherwise. That treats a `.url` nothing walks as a request —
+# and it is not one: `source.h` calls the field "canonical/base or internal://
+# sentinel", rule 3 of CLAUDE.md says nothing at that layer can even see an
+# entity token, and no code in this tree fetches it for records (the one reader,
+# core/pagination_probe.c, probes it for a page parameter). A bespoke collector
+# names its request in its own `#define` or `static const char *URL`, which
+# _handed_to_walker reads separately. So a def's `.url` is skipped outright
+# (_in_source_def), including where the collector pages in a `while` loop of its
+# own rather than through a named walker — the case the narrower rule would
+# still have flagged. An hp_source TABLE row keeps its finding: the engine
+# really does fetch its `.url`.
 MACRO_OPEN = re.compile(r'^\s*([A-Z][A-Z0-9_]*)\s*\(')
 
 
@@ -318,6 +319,34 @@ def _hp_row_block(lines, n):
             end = i - 1
             break
     return start, end
+
+
+_SOURCE_DEF = re.compile(r'\bconst\s+source_def\b')
+_BLOCK_END = re.compile(r'^\s*\}\s*;')
+
+
+def _in_source_def(lines, n):
+    """Is line `n` a field of a `source_def` initialiser?
+
+    `source_def.url` is DOCUMENTATION — source.h calls it the human-facing
+    portal and CLAUDE.md says so in as many words ("source_def.url is the
+    human-facing portal, not the URL template, so nothing at that layer can see
+    {q}"). The request a bespoke collector makes lives in its own `#define` or
+    `static const char *URL`, which this check reads separately.
+
+    So flagging a def's `.url` as a single-page read is a category error, and it
+    accounted for 20 of the 49 single-page findings outside the gated set —
+    including rows whose request line is handed to pw_walk twelve lines below.
+    An hp_source TABLE row is a different thing and keeps its finding: it is
+    `{ .id = …` and the engine really does fetch its `.url`, which is what
+    _hp_row_block / _hp_row_pages are for."""
+    for i in range(n, max(0, n - 40), -1):
+        line = lines[i - 1]
+        if _SOURCE_DEF.search(line):
+            return True
+        if i != n and _BLOCK_END.match(line):
+            return False
+    return False
 
 
 def _strip_comments(text):
@@ -393,6 +422,10 @@ def audit_lines(lines):
                 if GEOM_VAR.search(line) and GEOM_CTX.search(ctx2):
                     continue
             if cid == 'single-page':
+                # A source_def's `.url` is the human-facing portal, not the
+                # request — see _in_source_def.
+                if _in_source_def(lines, n):
+                    continue
                 # Inside an hp_source row, only that row's own declarations
                 # count — see _hp_row_block for what the neighbour excuse hid.
                 block = _hp_row_block(lines, n)
@@ -481,25 +514,40 @@ SELFTEST = [
      "       + one_fetch(c, s, FETCHED);\n"
      "}\n",
      {("single-page", 2)}, {("single-page", 1)}),
-    # single-page: pw_walk_max / od_ckan_walk walk too, and a source_def's
-    # `.url` restating a walked (split) URL is not a second read — but a
-    # `.url` restating a URL nothing walks still is.
-    ("static const char *URL =\n"
-     "  \"https://x.example/api/\"\n"
-     "  \"records?limit=100&offset=0&order_by=id\";\n"
-     "#define BARE \"https://x.example/other?limit=100&offset=0\"\n"
+    # The explicit-page-ceiling variants (pw_walk_max, od_walk_rows_max, added
+    # 2026-10-12) and the two shared portal walkers whose bodies hand the URL
+    # straight to pw_walk. Every one of these read as a single-page discard
+    # until 2026-10-20 — 26 files, 49 findings, all of them already paged.
+    # The plain fetch on the last line still must be reported.
+    ("#define A \"https://x.example/a.json?rows=200&start=0\"\n"
+     "#define B \"https://x.example/b.json?limit=100&offset=0\"\n"
+     "#define C \"https://x.example/c.json?rows=200&start=0\"\n"
+     "#define D \"https://x.example/d.json?limit=100&offset=0\"\n"
+     "#define E \"https://x.example/e.json?size=50&page=0\"\n"
      "static int run(const source_ctx *c, intel_sink *s) {\n"
-     "  return pw_walk_max(c, s, \"id\", URL, pw_fetch_json, pg, NULL, 9)\n"
-     "       + od_ckan_walk(c, s, \"id\", BARE2, \"b\", NULL, \"t\", 9);\n"
-     "}\n"
-     "static const source_def d = {\n"
-     "  .url = \"https://x.example/api/records?limit=100&offset=0&order_by=id\",\n"
+     "  return pw_walk_max(c, s, \"id\", A, pw_fetch_json, p, NULL, 20)\n"
+     "       + od_walk_rows_max(c, s, \"id\", B, \"d\", &sp, 40)\n"
+     "       + od_ckan_walk(c, s, \"id\", C, \"base\", EX, \"[]\", 20)\n"
+     "       + od_ods_catalog_walk(c, s, \"id\", D, \"base\", \"[]\")\n"
+     "       + one_fetch(c, s, E);\n"
+     "}\n",
+     {("single-page", 5)},
+     {("single-page", 1), ("single-page", 2), ("single-page", 3),
+      ("single-page", 4)}),
+    # A source_def's `.url` is the human-facing portal (source.h), not the
+    # request — 20 of those 49 findings were def fields, several of them in
+    # files whose request line is handed to a walker a dozen lines below. An
+    # hp_source TABLE row is a different thing and keeps its finding, because
+    # the engine really does fetch its `.url`.
+    ("static const source_def d = {\n"
+     "  .id = \"x\", .collector = \"y\",\n"
+     "  .url = \"https://x.example/p.json?rows=200&start=0\",\n"
      "};\n"
-     "static const source_def e = {\n"
-     "  .url = \"https://x.example/other?limit=100&offset=0\",\n"
+     "static const hp_source T[] = {\n"
+     "  { .id = \"R\", .url = \"https://x.example/q.json?limit=100&offset=0\",\n"
+     "    .interval = 3600 },\n"
      "};\n",
-     {("single-page", 4), ("single-page", 13)},
-     {("single-page", 3), ("single-page", 10)}),
+     {("single-page", 6)}, {("single-page", 3)}),
 ]
 
 
