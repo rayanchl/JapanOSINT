@@ -305,7 +305,14 @@ static const hp_source HP2_US_REG[] = {
    * API (/api/content.json?query=) return the identical result set for a real
    * term and an impossible one (25 and 225,206 rows), the content API honours
    * no bureau filter, and no enforcement feed is published. Evidence:
-   * docs/removed-sources-2026-10-25-html-dead.tsv. */
+   * docs/removed-sources-2026-10-25-html-dead.tsv.
+   *
+   * RETURNED 2026-10-25 as collectors/sources/fcc_enforcement.c, same id. The
+   * content API's `search_string` (not `query`) IS a server-side title filter
+   * — a prefix match: "Verizon" 401 documents, an impossible term none. It
+   * cannot be a row here: the API's first array element is a count envelope
+   * the engine would emit as a record, and fields=all splits each document's
+   * multi-valued fields into separate rows that must be merged per nid. */
 
   { .id = "US_GSA_EXCLUSIONS", .name = "SAM.gov — federal exclusions (debarment)",
     .name_ja = "米国 連邦調達除外リスト", .category = "government",
