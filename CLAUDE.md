@@ -204,7 +204,7 @@ manifests, TSVs, docs and collector keys — exactly as the batch-41 note below
 predicts. The count ledger — every
 batch from 37 to 48, main's 45 included, what seeded it, what it measured and what it taught — is
 `docs/SOURCE_COUNT_LEDGER.md`; this file keeps the rules and the current number.
-Both floors are re-recorded at 57,536 and `make source-count` agrees. The
+Both floors are re-recorded at 57,394 and `make source-count` agrees (2026-10-24, measured on the merge of origin's HTML sweep with the geojson `stop_id` fix, a clean snapshot build: registry 57,394, `make source-count` 57,394; the 57,536 this line used to state was two merges stale). The
 lessons from batches 43–48 that a new batch must not relearn:
 
 * **A registration count is not a website, and a build is not a registry.**
@@ -1034,10 +1034,15 @@ underneath them that older notes in this file predate:
   sources declare).
 * **Collectors are grouped** (2026-10-17): `core/collectors.def` is GENERATED
   by `tools/gen_collectors_def.py` from the collector census and gives every
-  collector key a `parent` among 22 `grp_*` groups (government, legal,
+  collector key a `parent` among 23 `grp_*` groups (government, legal,
   corporate, procurement, open data, science, health, environment, space,
   cyber, telecom, infrastructure, transport, media, social, geo, safety,
-  sanctions, culture, surveillance, OSINT pivots, internal). **A new beat
+  sanctions, culture, education, surveillance, OSINT pivots, internal).
+  Education is the 23rd (2026-10-24): the `education` category had filed
+  Italy's 2,725 state schools under Culture while batch 49's Japanese
+  education associations sat under Science, the same kind of body in two
+  groups. Schools, adult education and education associations are Education;
+  universities, grandes écoles and research institutes stay under Science. **A new beat
   needs a line there**: a collector the def does not list shows under
   `grp_unassigned` on every page and `test_sourceapi.c` fails. **`make
   collectors-def`** (2026-10-20) takes the census from the binary itself
