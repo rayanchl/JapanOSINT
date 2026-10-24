@@ -751,6 +751,11 @@ static const hp_source T[] = {
     .url = "https://x.test/efs/rows/{offset}:{offset_end}/JSON", .page_size = 2, .page_max = 6,
     .title_keys = "name", .id_keys = "id",
     .record_type = "t-offpath", .free_tier = 1, .description = "d" },
+  /* A keyset walk on a NUMERIC id (test 39). */
+  { .id = "T_NEXT_NUM", .name = "numeric keyset cursor", .url = "https://x.test/nn?o=id",
+    .array_path = "items", .title_keys = "name", .id_keys = "id", .interval = 3600,
+    .next_path = "items.$last.id", .next_tmpl = "https://x.test/nn?after={v}", .page_max = 5,
+    .record_type = "t-nextnum", .free_tier = 1, .description = "d" },
   /* An HTML listing that links each item from an icon AND a headline (test 37). */
   { .id = "T_HTML_GIFU", .name = "icon + headline anchors", .url = "https://x.test/gifu",
     .mode = HP_HTML, .href_must = "/articles/-/", .base = "https://x.test", .interval = 3600,
@@ -3585,6 +3590,16 @@ int main(void) {
     ok(b && strstr(b->props, "no label/value cells"),
        "41: an HTML detail page with no label/value cells is an error on the record");
   }
+
+  /* 39. A numeric cursor advances a next_tmpl walk; it used to stop the walk
+   * at page 1 in silence (LegCo votes, 2026-10-25). */
+  fx_reset();
+  fx_add("/nn?after=3", 200, "{\"items\":[]}");
+  fx_add("/nn?after=2", 200, "{\"items\":[{\"name\":\"c\",\"id\":3}]}");
+  fx_add("/nn?o=id", 200, "{\"items\":[{\"name\":\"a\",\"id\":1},{\"name\":\"b\",\"id\":2}]}");
+  rc = run_source("T_NEXT_NUM", "");
+  ok(rc == 0 && cap_count("t-nextnum", NULL) == 3 && g_ncalls == 3,
+     "39: a numeric next_path cursor walks on (after=2, after=3) instead of stopping at page 1");
 
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;

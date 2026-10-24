@@ -2157,6 +2157,19 @@ static int hp_run_json(hp_run_state *st, const char *body) {
     cJSON *nx = hp_path(doc, s->next_path);
     if (nx && cJSON_IsString(nx) && nx->valuestring[0])
       st->next_url = strdup(nx->valuestring);
+    /* A NUMERIC cursor is a cursor too — the id of the last record, for a row
+     * that builds the next page from next_tmpl (`$filter=id gt {v}`). Only a
+     * string used to count, so a keyset row on a numeric id read page 1 and
+     * stopped, reporting "emitted 1000 of 1000 available" with no notice:
+     * LegCo's 542,997 votes stored 1,000 (2026-10-25). Without next_tmpl the
+     * value is used as a URL, which a number is not, so it stays ignored. */
+    else if (nx && cJSON_IsNumber(nx) && s->next_tmpl && *s->next_tmpl) {
+      char nb[64];
+      double d = nx->valuedouble;
+      if (d == (double)(long long)d) snprintf(nb, sizeof nb, "%lld", (long long)d);
+      else                           snprintf(nb, sizeof nb, "%.17g", d);
+      st->next_url = strdup(nb);
+    }
   }
   st->page_records = arr ? cJSON_GetArraySize(arr) : 0;
   /* The only exit that can hold a hp_path_multi wrapper: `arr_owned` is set

@@ -39,9 +39,11 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 57,394** (2026-10-25): 57,395 less US_FCC_ENFORCEMENT,
-a search whose query never reached the server and that has nothing to re-point
-to (rule 4d, same evidence file). 57,395 was 57,529 less 134 dead HTML
+**The registered count is 57,393** (2026-10-25): 57,395 less two —
+US_FCC_ENFORCEMENT, a search whose query never reached the server and that has
+nothing to re-point to (rule 4d, `docs/removed-sources-2026-10-25-html-dead.tsv`),
+and `gov-hk-legco-bills`, a second reading of the LegCo bills feed
+(`docs/removed-sources-2026-10-25-legco.tsv`). 57,395 was 57,529 less 134 dead HTML
 rows found by the reachability sweep — the page and its bare path 404/410
 while the site answers, or the domain gone — each with its evidence in
 `docs/removed-sources-2026-10-25-html-dead.tsv` (the sweep itself:
@@ -204,7 +206,7 @@ manifests, TSVs, docs and collector keys — exactly as the batch-41 note below
 predicts. The count ledger — every
 batch from 37 to 48, main's 45 included, what seeded it, what it measured and what it taught — is
 `docs/SOURCE_COUNT_LEDGER.md`; this file keeps the rules and the current number.
-Both floors are re-recorded at 57,394 and `make source-count` agrees (2026-10-24, measured on the merge of origin's HTML sweep with the geojson `stop_id` fix, a clean snapshot build: registry 57,394, `make source-count` 57,394; the 57,536 this line used to state was two merges stale). The
+Both floors are re-recorded at 57,393 and `make source-count` agrees (2026-10-25, on the merge of origin's HTML sweep and geojson `stop_id` fix with the LegCo/SEC branch, which removes gov-hk-legco-bills: registry 57,393; it was 57,394 on 2026-10-24, and the 57,536 this line once stated was two merges stale). The
 lessons from batches 43–48 that a new batch must not relearn:
 
 * **A registration count is not a website, and a build is not a registry.**
