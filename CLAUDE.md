@@ -191,6 +191,61 @@ valid RSS with today's `lastBuildDate` and zero items** — a feed that is being
 built and is serving nothing. It stays silent, correctly: the body IS a feed,
 and the finding there is the upstream's.
 
+**AND THE DISCRIMINATOR FOR EVERY REMAINING SHAPE WAS ALREADY ON THE RUN LINE:
+THE BYTE COUNT** (2026-10-25). The complete registry sweep read 631 rows
+`EMITS_NOTHING`, all carrying one note — "no records reached intel_items" —
+which is identical for a feed that published nothing today and for a row that
+fetched 131,618 bytes of a maintenance page. `fetch_log.bytes_fetched` has been
+on the run line since 2026-10-12 and the gate was discarding it. With it, the
+467 rows that survived re-reading split **370 honest empties to 97 that
+transferred a real body and found no records in it** — and only 8 of those 97
+had disclosed anything. The 97 are a ranked list; the top of it was three
+distinct defects, each a shape this rule had not yet recorded:
+
+* **EVERY FIELD OF A RECORD CAN BE NESTED, and then a VJSON row stores
+  nothing.** Four rows read `laws.e-gov.go.jp/api/2/laws` and transferred 4.1,
+  4.4, 4.5 and 2.0 MB a run — **14.9 MB** — for `rc=0 records=0 stored=0`. An
+  e-Gov law record is `{law_info:{…}, revision_info:{…},
+  current_revision_info:{…}}` with not one top-level scalar, and VJSON's uid
+  and title precedence lists are single-level BY DESIGN: `pick()` looks up a
+  bare name and deliberately skips a nested value so a later key in the list
+  can still match. With every candidate nested there is nothing to key on and
+  nothing to title. **No VJSON row can read such an API whatever its keys
+  say**, so the fix is never per row: the four are replaced by one hpengine row
+  (`EGOV_LAW_LIST_ALL`), where `id_keys`/`title_keys` take dotted paths —
+  9,567 of 9,567, its own declared total exactly.
+* **"HONEST EMPTY, NEVER rc=-1" IS A CLAIM ABOUT THE UPSTREAM, AND IT CAN BE
+  FALSE.** `denki_yoho.h` returned 0 when it parsed no observation, under a
+  comment saying exactly that. There is no quiet hour for electricity demand:
+  the CSV always carries the current hour, the rows run every 300 s, and the
+  collector already retries yesterday. `kyushu-power` fetched 107,690 bytes of
+  an HTML landing page every run — its dated CSV now 302s to
+  `/td/power-usages01.html` after a site redesign — and said nothing. It
+  returns -1 now, so `sched_disclose_fetch_failure` names the hosts, bytes and
+  remedy. Two of the ten TSO rows were affected; the other eight are untouched.
+* **AN ANCHOR CALENDAR DEFEATS THE LABEL MINIMUM, and that was the fourth
+  record path without a disclosure.** The US NRC's event-notification year
+  pages carry 205 and 245 real `<a href>` anchors, every one matching the row's
+  `href_must` — and the listing is a calendar, so every visible label is the
+  day of the month: "23", "22", "1". hpengine rejects a label under three
+  characters, which must stay (it is what keeps pagination digits and "»" out
+  of every HTML row), so a page whose links are ALL labelled that way read as a
+  page with no records. The JSON path has had `label-keys-unmatched` for this
+  shape all along; the HTML path has `anchors-unlabelled` now, naming how many
+  anchors matched and telling the reader NOT to lower the minimum. `hptest`
+  57/57b, with 57c/57d as the controls — and the first version of 57 proved
+  nothing, because putting the anchors under an `<h3>October</h3>` let the
+  context fallback borrow that heading as a label: **a fixture that does not
+  reproduce the condition is not a test of it.**
+
+Two gate lessons from the same pass, both the shape of the `POD` and `GATED`
+corrections: a verdict must not put a source behaving correctly in a defect
+bucket. **A row that DISCLOSED is not a row that stayed silent** — 8 of those
+97 had filed a shape notice and the verdict read the same for both — and **a
+gate that gives every row a fresh database reads a date-window row's window 1
+of N**, which is how 47 healthy KKJ prefecture rows came back `EMITS_NOTHING`
+(`WINDOW_EMPTY`, above).
+
 Full audit of how each collector behaves today:
 `native/collectors/SOURCE_REALITY_REPORT.md`.
 
