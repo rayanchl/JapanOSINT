@@ -214,6 +214,27 @@ distinct defects, each a shape this rule had not yet recorded:
   say**, so the fix is never per row: the four are replaced by one hpengine row
   (`EGOV_LAW_LIST_ALL`), where `id_keys`/`title_keys` take dotted paths —
   9,567 of 9,567, its own declared total exactly.
+
+  **IT IS A FAMILY, AND THE SCAN FOR IT COST FIVE REQUESTS.** Two unrelated
+  APIs in one hour made it worth looking for the other copies rather than
+  waiting to meet them: of the 97 rows, five are VJSON rows with a literal
+  endpoint, and **four of those turned out to be this shape** — ECHR's HUDOC
+  (`{"columns": {…}}`, 232,481 documents), TDnet's mirror (`{"Tdnet": {…}}`),
+  and both InterPro rows (`{"metadata": {…}}`). Eight rows across five APIs in
+  one day. The CHECK is mechanical and worth running on any row that transfers
+  a real body and stores nothing: resolve the record array, and ask whether the
+  first record has a single top-level scalar. The two that were NOT this shape
+  matter as much — `sci-usgs-astro-pds` carries a top-level `id`, and
+  `geo-gfz-kp-nowcast` is parallel arrays and not records at all — because the
+  symptom is identical and the remedies are not.
+
+  **And one of them keys on BOTH shapes, because the shape depends on a
+  parameter's VALUE.** TDnet's mirror returns items wrapped in `Tdnet` for no
+  limit, `limit=3`, `300` and `500`, and **FLAT for `limit=100`** — same
+  endpoint, same minute, measured twice at each value and stable every time. A
+  row keyed on the wrapped path alone stores nothing the day somebody tunes the
+  limit to 100. `Tdnet.id,id` reads the wrapped path and falls back to the flat
+  one, which is what `,` CHOOSES is for.
 * **"HONEST EMPTY, NEVER rc=-1" IS A CLAIM ABOUT THE UPSTREAM, AND IT CAN BE
   FALSE.** `denki_yoho.h` returned 0 when it parsed no observation, under a
   comment saying exactly that. There is no quiet hour for electricity demand:
@@ -3565,6 +3586,25 @@ Engine subtleties worth knowing before writing a row:
   `failed_page_url`. Leaving `page_max` ABOVE the cap is deliberate there: the
   notice then names GLEIF's refusal rather than our own ceiling, for the price
   of one 400 a run.
+
+  **A THIRD SPELLING: HTTP 408, AND A 408 THAT RETURNS IN 0.4 s IS NOT A
+  TIMEOUT** (2026-10-25, `EBI_INTERPRO_PROTEINS_REVIEWED`). Walking
+  `www.ebi.ac.uk/interpro/api/protein/reviewed/` down the API's OWN published
+  `next` cursors: pages 1 to 10 each serve 500 rows in about 0.7 s, and page 11
+  answers **408 in 0.4 s** — repeatably, for that cursor and every later
+  attempt. So the cap is 5,000 records of the 573,015 it declares, wearing the
+  status of the one thing it is not; the three spellings now on record are
+  GLEIF's 400, the empty HTTP 200 of Japan Search and HUDOC, and this.
+
+  **And `page_resume` on a capped cursor is WORSE than no cycle at all**, which
+  is the half worth remembering. The engine correctly does not advance the
+  position when a page fails — so run 1 stored the REFUSED cursor as its
+  position, and run 2 resumed from it, read one record and cleared. The row
+  would have ground over the same 5,000 for ever, and the 292-second first run
+  was retries against the 408 rather than slow pages. Before giving a
+  cursor-paged row a cycle, walk the cursor by hand to the ceiling: if the
+  position it would store is refused, the row wants `page_max` plus the
+  disclosure, not `page_resume`.
 * **`page_size` on a bracketed page-number parameter hid from the lint that
   exists for it.** `_PAGENUM_NAME` in `tools/lint_sources.py` anchored the name
   list with `$`, so JSON:API's `page[number]` — written percent-encoded in a
