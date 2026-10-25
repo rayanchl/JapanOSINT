@@ -227,12 +227,13 @@ VJSON(gov_dk_ft_sag, "gov-dk-ft-sag", "Folketinget — Parliamentary Cases", "�
   "da", "[\"denmark\",\"parliament\",\"bills\"]", 3600,
   "Danish Folketing cases (bills, motions, inquiries) ordered by most recent update.");
 
-VJSON(gov_echr_hudoc, "gov-echr-hudoc", "ECHR HUDOC — Judgments and Decisions", "欧州人権裁判所 判例DB",
-  "legal", "courts",
-  "https://hudoc.echr.coe.int/app/query/results?query=contentsitename%3AECHR&select=itemid%2Cdocname%2Cappno&sort=&start=0&length=50",
-  "results",
-  "en", "[\"echr\",\"humanrights\",\"courts\",\"europe\"]", 21600,
-  "Judgments and decisions of the European Court of Human Rights from the HUDOC case-law database.");
+/* REMOVED 2026-10-25: gov-echr-hudoc read hudoc.echr.coe.int, whose every
+ * record field is nested under "columns", so VJSON had nothing to key or title
+ * and stored 0 records while transferring 222 KB over 20 requests a run.
+ * Replaced by ECHR_HUDOC_INDEX in collectors/pivot/table/hp_courts_legal.c,
+ * beside the entity pivot that has keyed on columns.itemid all along: the whole
+ * 232,481-document index read over a cycle in date order. The measurement, and
+ * the control that proves the sort is honoured, are in that row's comment. */
 
 VRSS(gov_edpb_news, "gov-edpb-news", "European Data Protection Board — News", "欧州データ保護会議 ニュース",
   "legal", "regulator",
