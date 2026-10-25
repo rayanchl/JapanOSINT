@@ -1702,6 +1702,88 @@ static const hp_source HP3B19_SCIENCE[] = {
       "thermosalinograph measurement while under way, so the register "
       "doubles as a list of research and merchant ships carrying "
       "instrumented seawater intakes" },
+
+  /* THE TWO INTERPRO ROWS ARE THE NESTED-RECORD DEFECT AGAIN — the fourth and
+   * fifth instances found on 2026-10-25, all from the byte count the registry
+   * sweep's EMITS_NOTHING verdict had been throwing away. An InterPro record is
+   * `{"metadata": {…}}` with no top-level scalar, so VJSON's single-level uid
+   * and title precedence lists dropped every one: 1,034,250 and 300,809 bytes
+   * transferred a run between them, nothing stored. hpengine takes the dotted
+   * path, which is the whole reason these are a move rather than an edit.
+   *
+   * Measured the same day: `page_size` is honoured to 500, the API publishes a
+   * `next` CURSOR (page 1 and page 2 are disjoint, 100 of 100 distinct
+   * accessions each), and `count` is in the engine's declared-total list
+   * already, so both rows state their remainder without a change.
+   *
+   * The two differ in exactly one decision, and it is the 200-page cost
+   * ceiling this file sets. Entries are **54,922** — 110 pages at 500, so the
+   * row completes in ONE run and gets `page_max = 130` for headroom, because a
+   * ceiling set to exactly the need manufactures a false truncation notice.
+   * Reviewed proteins are **573,015** — 1,147 pages, far over the ceiling — so
+   * that row reads its collection over a cycle at 100 pages a run, about a
+   * dozen runs to come round. A cursor walk is the right thing to resume: the
+   * stored position IS the server's own next link, and accession order does not
+   * drift under it the way a newest-first offset does. */
+  { .id = "EBI_INTERPRO_ENTRIES", .name = "InterPro — protein family and domain entries",
+    .name_ja = "InterPro タンパク質ファミリー・ドメイン",
+    .category = "science", .portal = "https://www.ebi.ac.uk/interpro",
+    .record_type = "protein-signature",
+    .tags = "\"interpro\",\"protein\",\"domains\",\"ebi\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.ebi.ac.uk/interpro/api/entry/InterPro/?page_size=500",
+    .array_path = "results",
+    .title_keys = "metadata.name,metadata.accession",
+    .id_keys = "metadata.accession",
+    .next_path = "next",
+    .interval = 86400,
+    .page_max = 130,   /* 54,922 entries = 110 pages at 500; headroom is deliberate */
+    .description = "Every entry in InterPro — the protein families, domains and "
+      "sites integrated from its member databases — with the IPR accession, "
+      "name, entry type and the member-database signatures and GO terms behind "
+      "it. 54,922 entries when measured on 2026-10-25" },
+
+  { .id = "EBI_INTERPRO_PROTEINS_REVIEWED", .name = "InterPro — reviewed (Swiss-Prot) proteins",
+    .name_ja = "InterPro 査読済みタンパク質",
+    .category = "science", .portal = "https://www.ebi.ac.uk/interpro",
+    .record_type = "protein-record",
+    .tags = "\"interpro\",\"protein\",\"uniprot\",\"ebi\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.ebi.ac.uk/interpro/api/protein/reviewed/?page_size=500",
+    .array_path = "results",
+    .title_keys = "metadata.name,metadata.accession",
+    .id_keys = "metadata.accession",
+    .next_path = "next",
+    .interval = 86400,
+    /* NO page_resume, AND NO CYCLE IS POSSIBLE: the cursor is CAPPED AT 5,000
+     * RECORDS, and it says so with a status that lies. Measured by hand
+     * 2026-10-25, walking the API's own published `next` links: pages 1 to 10
+     * each serve 500 rows in about 0.7 s, and **page 11 answers HTTP 408 in
+     * 0.4 s** — far too fast to be the "request timeout" that status names, and
+     * the same refusal comes back for that cursor on every later attempt. So
+     * it is a deep-paging cap, and this is a THIRD spelling of a family this
+     * file already records twice: GLEIF refuses page 51 with a 400, Japan
+     * Search and HUDOC answer past their ceiling with an empty HTTP 200, and
+     * here it is a 408. **A 408 that returns in 0.4 s is not a timeout.**
+     *
+     * page_resume made it worse rather than better, which is why it is named
+     * here instead of left out quietly: the engine correctly does not advance
+     * on a failed page, so run 1 stored the refused cursor as the position and
+     * run 2 resumed from it and read ONE record before clearing — the row
+     * would have ground over the same 5,000 for ever. (It also explains a
+     * 292-second first run: that was retries against the 408, not slow pages.)
+     *
+     * So the row reads the first 5,000 proteins in 10 requests and 5.7 s and
+     * DISCLOSES the 573,015 the upstream declares, which is the honest state
+     * rather than a silent one. Reaching the rest means slicing the QUERY —
+     * this API filters by organism and by entry — and that is a design question
+     * about which slices to register, not a paging fix. */
+    .page_max = 10,
+    .description = "Every reviewed (Swiss-Prot) protein InterPro holds, with its "
+      "UniProt accession, name, gene, length, source organism and whether "
+      "AlphaFold has a model for it. 573,015 proteins when measured on "
+      "2026-10-25, read over a cycle" },
+
 };
 
 HP_REGISTER_TABLE(HP3B19_SCIENCE)

@@ -1,0 +1,311 @@
+
+=== AFRICA_RESOURCE_PROJECTS  https://resourceprojects.org/
+    stale path: https://resourceprojects.org/search?q=energy
+    root: HTTP 200, 82031 bytes
+
+=== AM_ARLIS_LEGAL  https://www.arlis.am/
+    stale path: https://www.arlis.am/DocumentView.aspx?search=energy
+    root: HTTP 200, 596687 bytes -> https://www.arlis.am/hy/
+
+=== APG_FATF_STYLE_BODIES  https://www.apgml.org/
+    stale path: https://www.apgml.org/search/default.aspx?q=energy
+    root: HTTP 200, 56277 bytes
+    FORM GET  https://www.apgml.org/documents
+         fields: keys
+
+=== AT_PARLAMENT_RECORDS  https://www.parlament.gv.at/
+    stale path: https://www.parlament.gv.at/recherchieren/suche?searchTerm=energy
+    root: HTTP 200, 53378 bytes
+    SITEMAP https://www.parlament.gv.at/dokument/sitemap.xml
+
+=== BR_CGU_LENIENCY_AGREEMENTS  https://www.gov.br/
+    stale path: https://www.gov.br/cgu/pt-br/busca?SearchableText=energy
+    root: HTTP 200, 131952 bytes -> https://www.gov.br/pt-br
+    LINK http://agenciagov.ebc.com.br/noticias/202610/receita-federal-restituiu-80-dos-contribuintes-em-ate-um-mes-ate-o-fim-do-prazo-da-declaracao-do-irpf-2026   ()
+    SITEMAP https://www.gov.br/sitemap.xml.gz
+
+=== CH_OPENTRANSPORTDATA  https://opentransportdata.swiss/
+    stale path: https://opentransportdata.swiss/en/search/?q=energy
+    root: HTTP 200, 120209 bytes -> https://opentransportdata.swiss/de/
+    FORM GET  https://opentransportdata.swiss/de/
+         fields: s
+    LINK https://data.opentransportdata.swiss/dataset/   (Daten⭷)
+    LINK https://api-manager.opentransportdata.swiss/   (API-Manager⭷)
+    LINK https://data.opentransportdata.swiss/de/dataset/   (Zu den Daten⭷)
+
+=== CL_INFOPROBIDAD_DECLARATIONS  https://www.infoprobidad.cl/
+    stale path: https://www.infoprobidad.cl/Consultas/Declaraciones?nombre=energy
+    root: HTTP 200, 140122 bytes
+
+=== COPERNICUS_EMS_ACTIVATIONS  https://emergency.copernicus.eu/
+    stale path: https://emergency.copernicus.eu/mapping/list-of-components/EMSR?q=energy
+    root: HTTP 200, 20466 bytes
+    FORM GET  https://emergency.copernicus.eu/search
+         fields: q
+    LINK https://forest-fire.emergency.copernicus.eu   (Wildfires)
+    LINK https://rapidmapping.emergency.copernicus.eu/EMSR927/reporting   (Flood in Nepal)
+    LINK https://rapidmapping.emergency.copernicus.eu/EMSR935/reporting   (Flood in Alicante-Valencia Regions, Spain - Situational repo)
+    LINK https://rapidmapping.emergency.copernicus.eu/EMSR934/reporting   (Earthquake in Panama - Situational reporting)
+    LINK https://rapidmapping.emergency.copernicus.eu/EMSR933/reporting   (Flood in Crete, Greece - Situational reporting)
+
+=== CZ_CUZK_CADASTRE  https://nahlizenidokn.cuzk.cz/
+    stale path: https://nahlizenidokn.cuzk.cz/VyberBudovu.aspx?typ=Parcela&hledat=energy
+    root: HTTP 200, 16711 bytes -> https://nahlizenidokn.cuzk.gov.cz/
+    LINK https://api-kn.cuzk.gov.cz/   (https://api-kn.cuzk.gov.cz/)
+
+=== ES_CATASTRO_PARCELS  https://www1.sedecatastro.gob.es/
+    stale path: https://www1.sedecatastro.gob.es/Cartografia/BuscarParcela.aspx?busqueda=energy
+    root: HTTP 200, 70738 bytes
+    LINK https://www1.sedecatastro.gob.es/CYCBienInmueble/SECBusquedaPIC.aspx   ()
+
+=== ES_PORTAL_TRANSPARENCIA  https://transparencia.gob.es/
+    stale path: https://transparencia.gob.es/es_ES/buscar?texto=energy
+    root: HTTP 200, 382488 bytes
+    LINK https://transparencia.gob.es/bin/customLogout.json?path=/content/transparencia_home/es/inicio   (Cerrar sesión)
+    LINK https://transparencia.gob.es/masinformacion/integridad/siage/capitulos-siage   (Portada de Capítulos Sistema de Integridad de la Administrac)
+    LINK https://transparencia.gob.es/masinformacion/integridad/siage/capitulos-siage/cba   (Código Buena Administración)
+    LINK https://transparencia.gob.es/masinformacion/integridad/siage/capitulos-siage/cbg   (Código Buena Administración)
+    SITEMAP https://transparencia.gob.es/sitemap.xml
+    SITEMAP https://transparencia.gob.es/ca/sitemap.xml
+    SITEMAP https://transparencia.gob.es/eu/sitemap.xml
+
+=== EU_CHAFEA_HEALTH_PROGRAMME  https://hadea.ec.europa.eu/
+    stale path: https://hadea.ec.europa.eu/search_en?keys=energy
+    root: HTTP 200, 16867 bytes -> https://hadea.ec.europa.eu/select-language?destination=/node/1
+    SITEMAP https://hadea.ec.europa.eu/sitemap.xml
+
+=== EU_COMMISSION_MEETINGS  https://ec.europa.eu/
+    stale path: https://ec.europa.eu/transparencyinitiative/meetings/meeting.do?host=&d-6679426-p=1&searchString=Toyota
+    root: HTTP 200, 16791 bytes -> https://commission.europa.eu/select-language?destination=/node/1
+
+=== EU_ECB_SUPERVISED_ENTITIES  https://www.bankingsupervision.europa.eu/
+    stale path: https://www.bankingsupervision.europa.eu/search/html/index.en.html?searchTerm=energy
+    root: HTTP 200, 107680 bytes -> https://www.bankingsupervision.europa.eu/home/html/index.en.html
+    FORM GET  https://www.bankingsupervision.europa.eu/home/html/index.en.html
+         fields: search
+    SITEMAP https://www.bankingsupervision.europa.eu/sitemap.xml
+
+=== EU_EIOPA_PENSION_REGISTER  https://www.eiopa.europa.eu/
+    stale path: https://www.eiopa.europa.eu/search_en?keys=energy
+    root: HTTP 200, 16969 bytes -> https://www.eiopa.europa.eu/select-language?destination=/node/1
+    SITEMAP https://www.eiopa.europa.eu/sitemap.xml
+
+=== EU_INDUSTRIAL_EMISSIONS_PORTAL  https://industry.eea.europa.eu/
+    stale path: https://industry.eea.europa.eu/explore/explore-data-map/results?q=energy
+    root: HTTP 200, 418464 bytes
+    LINK https://forest.eea.europa.eu/   (FISE - Forest information system for Europe)
+    SITEMAP https://industry.eea.europa.eu/sitemap.xml.gz
+
+=== EU_INTEGRITY_WATCH  https://www.integritywatch.eu/
+    stale path: https://www.integritywatch.eu/mepsincomes?search=energy
+    root: HTTP 200, 6361 bytes
+
+=== EU_OLAF_INVESTIGATION_REPORTS  https://anti-fraud.ec.europa.eu/
+    stale path: https://anti-fraud.ec.europa.eu/search_en?keys=energy
+    root: HTTP 200, 17350 bytes -> https://anti-fraud.ec.europa.eu/select-language?destination=/node/1
+    SITEMAP https://anti-fraud.ec.europa.eu/sitemap.xml
+
+=== FI_EDUSKUNTA_RECORDS  https://www.eduskunta.fi/
+    stale path: https://www.eduskunta.fi/FI/search/Sivut/results.aspx?k=energy
+    root: HTTP 200, 203251 bytes
+    SITEMAP https://www.eduskunta.fi/sitemap.xml
+
+=== FR_ASSEMBLEE_NATIONALE  https://www.assemblee-nationale.fr/
+    stale path: https://www.assemblee-nationale.fr/dyn/recherche?texte=energy
+    root: HTTP 200, 117694 bytes
+
+=== HK_DATA_GOV_CATALOG  https://data.gov.hk/
+    stale path: https://data.gov.hk/en/search?q=energy
+    root: HTTP 200, 33357 bytes -> https://data.gov.hk/tc/
+    FORM GET  https://data.gov.hk/tc/
+    FORM GET  https://data.gov.hk/tc/
+         fields: home-search-input
+    LINK https://data.gov.hk/tc-datasets   (數據集)
+    LINK https://data.gov.hk/tc-datasets/category/city-management   (城市管理及公共設施)
+    LINK https://data.gov.hk/tc-datasets/category/climate-and-weather   (氣象)
+    LINK https://data.gov.hk/tc-datasets/category/commerce-and-industry   (工商業)
+    LINK https://data.gov.hk/tc-datasets/category/social-welfare   (社區及社會福利)
+    LINK https://data.gov.hk/tc-datasets/category/development   (發展、地理及土地資訊)
+    LINK https://data.gov.hk/tc-datasets/category/education   (教育)
+    LINK https://data.gov.hk/tc-datasets/category/legislature   (選舉及立法機關)
+    LINK https://data.gov.hk/tc-datasets/category/employment-and-labour   (就業及勞工)
+    LINK https://data.gov.hk/tc-datasets/category/environment   (環境)
+
+=== HK_GLD_TENDER_AWARDS  https://www.gld.gov.hk/
+    stale path: https://www.gld.gov.hk/eng/tenders_notices.htm?q=Toyota
+    root: HTTP 200, 356 bytes
+
+=== IE_LOBBYING_REGISTER  https://www.lobbying.ie/
+    stale path: https://www.lobbying.ie/app/search?query=Toyota
+    root: HTTP 200, 64543 bytes
+    FORM GET  https://www.lobbying.ie/search
+         fields: queryText
+    LINK https://www.lobbying.ie/help-resources/guidance-notes/top-ten-things-builders-and-developers-need-to-know-about-lobbying-on-zoning-and-development/   (Top ten things builders and developers need to know about lo)
+
+=== IFC_PROJECT_DISCLOSURES  https://disclosures.ifc.org/
+    stale path: https://disclosures.ifc.org/results?q=energy
+    root: HTTP 200, 76460 bytes
+    FORM POST https://disclosures.ifc.org/
+         fields: lang_exact, qterm
+    FORM GET  https://disclosures.ifc.org/
+         fields: q
+    FORM GET  https://disclosures.ifc.org/
+         fields: qterm_test
+    LINK https://www.ifc.org/en/what-we-do/sector-expertise/mobilizing-private-capital   (Mobilizing Private Capital)
+    LINK https://www.ifc.org/en/what-we-do/sector-expertise/agribusiness-forestry   (Agribusiness)
+    SITEMAP https://disclosures.ifc.org/sitemap.xml
+
+=== ITU_SPACE_NETWORKS  https://www.itu.int/
+    stale path: https://www.itu.int/net/search/index.aspx?cx=&q=energy
+    root: HTTP 200, 99539 bytes -> https://www.itu.int/en/Pages/default.aspx
+    FORM GET  https://www.itu.int/net/itu_search/index.aspx
+         fields: cof, cx, ie, q
+
+=== JP_KANPO_GAZETTE  https://search.npb.go.jp/
+    stale path: https://search.npb.go.jp/kanpou/search.html?q=%E7%92%B0%E5%A2%83
+    root: HTTP 200, 10761 bytes -> https://search.npb.go.jp/kanpou/auth/login/LoginStartUp.form
+
+=== JP_MHLW_LABOUR_VIOLATIONS  https://www.mhlw.go.jp/
+    stale path: https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/anzen/hourei/index.html?q=%E7%92%B0%E5%A2%83
+    root: HTTP 200, 74872 bytes -> https://www.mhlw.go.jp/index.html
+    FORM GET  https://www.mhlw.go.jp/search.html
+         fields: cof, cx, ie, q
+    FORM GET  https://www.mhlw.go.jp/search.html
+         fields: cof, cx, ie, q
+
+=== JP_MLIT_CONSTRUCTION_LICENCE  https://etsuran2.mlit.go.jp/
+    stale path: https://etsuran2.mlit.go.jp/TAKKEN/kensetsuKensaku.do?companyName=%E3%83%88%E3%83%A8%E3%82%BF
+    root: HTTP 200, 6890 bytes -> https://etsuran2.mlit.go.jp:443/TAKKEN/
+
+=== JP_NRA_RADIATION_MONITORING  https://radioactivity.nra.go.jp/
+    stale path: https://radioactivity.nra.go.jp/map/?q=%E7%92%B0%E5%A2%83
+    root: HTTP 200, 171710 bytes -> https://radioactivity.nra.go.jp/ja
+    SITEMAP https://radioactivity.nra.go.jp/sitemap.xml
+
+=== JP_PMDA_APPROVALS  https://www.pmda.go.jp/
+    stale path: https://www.pmda.go.jp/PmdaSearch/iyakuSearch/Result?keyword=%E7%92%B0%E5%A2%83
+    root: HTTP 200, 87831 bytes
+    FORM GET  https://ss.pmda.go.jp/ja_all/search.x
+         fields: ie, nccharset, page, q
+
+=== MX_DECLARANET_ASSETS  https://declaranet.gob.mx/
+    stale path: https://declaranet.gob.mx/consulta?nombre=energy
+    root: HTTP 200, 28424 bytes
+
+=== MX_INE_FISCALIZACION  https://www.ine.mx/
+    stale path: https://www.ine.mx/buscador/?q=Toyota
+    root: HTTP 200, 210376 bytes
+    FORM GET  https://www.ine.mx/
+         fields: s
+    FORM GET  https://www.ine.mx/
+         fields: s
+    SITEMAP https://www.ine.mx/sitemap_index.xml
+
+=== NL_TWEEDE_KAMER_OPENDATA  https://opendata.tweedekamer.nl/
+    stale path: https://opendata.tweedekamer.nl/zoeken?q=energy
+    root: HTTP -1, 52 bytes
+
+=== NO_STORTINGET_DATA  https://www.stortinget.no/
+    stale path: https://www.stortinget.no/no/Saker-og-publikasjoner/Sok/?stq=energy
+    root: HTTP 200, 96670 bytes
+    LINK https://www.stortinget.no/no/Hva-skjer-pa-Stortinget/Horing/horing/?h=10005964   (Statsbudsjettet 2027 (kapitler fordelt til kommunal- og forv)
+    LINK https://www.stortinget.no/no/Hva-skjer-pa-Stortinget/Horing/horing/?h=10005968   (Statsbudsjettet 2027 (kapitler fordelt til energi- og miljøk)
+    SITEMAP https://www.stortinget.no/sitemap.xml
+
+=== NZ_PARLIAMENT_PECUNIARY  https://www.parliament.nz/
+    stale path: https://www.parliament.nz/en/pb/sc/submissions-and-advice/search?Criteria.Keyword=energy
+    root: HTTP 200, 20203 bytes
+
+=== OPCW_DECLARATIONS  https://www.opcw.org/
+    stale path: https://www.opcw.org/search?search_api_fulltext=energy
+    root: HTTP 200, 86063 bytes
+
+=== RW_RDB_REGISTRY  https://org.rdb.rw/
+    stale path: https://org.rdb.rw/business/search?q=Toyota
+    root: HTTP 200, 74743 bytes
+    LINK https://org.rdb.rw/security-interests-in-movable-property/   (Security Interests in movable property)
+    LINK https://org.rdb.rw/security-interests-in-movable-property/fee-tariffs/   (Fee tarifs)
+    SITEMAP https://org.rdb.rw/wp-sitemap.xml
+
+=== TOKYO_MOU_INSPECTIONS  https://www.tokyo-mou.org/
+    stale path: https://www.tokyo-mou.org/inspections_detentions/psc_database.php?vessel=energy
+    root: HTTP 200, 201160 bytes
+    FORM GET  https://www.tokyo-mou.org/
+         fields: s
+    FORM GET  https://www.tokyo-mou.org/
+         fields: s
+    FORM GET  https://www.tokyo-mou.org/
+         fields: s
+    FORM GET  https://www.tokyo-mou.org/
+         fields: s
+    SITEMAP https://www.tokyo-mou.org/sitemap_index.xml
+
+=== TW_DATA_GOV_CATALOG  https://data.gov.tw/
+    stale path: https://data.gov.tw/api/front/dataset/search?qs=energy&size=100
+    root: HTTP 200, 592812 bytes
+    LINK https://twitter.com/intent/tweet?text=政府資料開放平臺 https://data.gov.tw/ 數位發展部 地址:100057 臺北市中正區延平南路143號 電話：02-2531-1998 或 0800-650-688 信箱：opendata@moda.gov.tw   (分享到 X (前 Twitter))
+    LINK https://data.gov.tw/high_value_datasets   (高應用價值主題專區)
+    LINK https://data.gov.tw/datasets/search?ct=291   (生育保健)
+    LINK https://data.gov.tw/datasets/search?ct=285   (出生及收養)
+    LINK https://data.gov.tw/datasets/search?ct=280   (求學及進修)
+    LINK https://data.gov.tw/datasets/search?ct=548   (服兵役)
+    LINK https://data.gov.tw/datasets/search?ct=261   (求職及就業)
+    LINK https://data.gov.tw/datasets/search?ct=258   (開創事業)
+    LINK https://data.gov.tw/datasets/search?ct=549   (婚姻)
+    LINK https://data.gov.tw/datasets/search?ct=254   (投資理財)
+
+=== US_DATA_GOV_CKAN  https://catalog.data.gov/
+    stale path: https://catalog.data.gov/api/3/action/package_search?q=energy&rows=100
+    root: HTTP 200, 215521 bytes
+    FORM GET  https://catalog.data.gov/
+         fields: q, sort
+    FORM GET  https://catalog.data.gov/
+         fields: has_download, org_type, q, spatial_filter
+    LINK https://catalog.data.gov/dataset/electric-vehicle-population-data   (Electric Vehicle Population Data)
+    LINK https://catalog.data.gov/dataset/supply-chain-greenhouse-gas-emission-factors-v1-3-by-naics-6   (Supply Chain Greenhouse Gas Emission Factors v1.3 by NAICS-6)
+    LINK https://catalog.data.gov/dataset/lottery-powerball-winning-numbers-beginning-2010   (Lottery Powerball Winning Numbers: Beginning 2010)
+    LINK https://catalog.data.gov/dataset/fy-2025-disability-compensation-recipients-by-county   (FY 2025 Disability Compensation Recipients by County)
+    LINK https://catalog.data.gov/dataset/jpl-small-body-database-browser   (JPL Small Body Database Browser)
+    LINK https://catalog.data.gov/dataset/2015-16-harassment-or-bullying-by-basis-category-civil-rights-data-collection   (2015-16 Harassment or Bullying by Basis Category Civil Right)
+    LINK https://catalog.data.gov/dataset/baby-names-from-social-security-card-applications-national-data   (Baby Names from Social Security Card Applications - National)
+    LINK https://catalog.data.gov/dataset/crime-data-from-2020-to-present   (Crime Data from 2020 to 2024)
+    LINK https://catalog.data.gov/dataset/warehouse-and-retail-sales   (Warehouse and Retail Sales)
+    LINK https://catalog.data.gov/dataset/inventory-of-owned-and-leased-properties-iolp   (Inventory of Owned and Leased Properties (IOLP))
+    SITEMAP https://catalog.data.gov/sitemap.xml
+
+=== WORLDBANK_CONTRACT_AWARDS  https://finances.worldbank.org/
+    stale path: https://finances.worldbank.org/api/catalog/v1?q=Toyota&domains=finances.worldbank.org&search_context=finances.worldbank.org&limit=100
+    root: HTTP 200, 156678 bytes -> https://financesone.worldbank.org/
+    LINK https://documents1.worldbank.org/curated/en/099041224122018248/pdf/BOSIB1f97f66160061aff5128284597b03e.pdf   (IBRD Callable Capital Report)
+    LINK https://financesoneint.worldbank.org/data?type=DATASET&tag=exposure   (Country Exposures)
+    LINK https://financesone.worldbank.org/data?type=DATASET&category=Trust%20Funds%20and%20FIFs   (Trust Funds & FIFs)
+    LINK https://financesone.worldbank.org/data?type=DATASET   (0)
+    LINK https://financesone.worldbank.org/data?type=DATASET&category=Loans and Credits   (Loans and Credits Key financial datasets of the Internationa)
+    LINK https://financesone.worldbank.org/data?type=DATASET&category=Financial Reporting   (Financial Reporting IBRD, IDA, IFC and MIGA datasets from th)
+    LINK https://financesone.worldbank.org/data?type=DATASET&category=Shareholder Equity   (Shareholder Equity Member countries are allocated votes at t)
+    LINK https://financesone.worldbank.org/data?type=DATASET&category=Other   (Other Datasets Datasets that do not belong to a specific cat)
+    LINK https://financesone.worldbank.org/data?type=DATASET&category=Procurement   (Procurement Datasets pertaining Project Procurement or Corpo)
+    LINK https://financesone.worldbank.org/data?type=DATASET&category=Projects   (Projects IFC Project data and MIGA Project data disclosed in)
+    SITEMAP https://financesone.worldbank.org/sitemap/sitemap-new.xml
+
+=== ZA_CIPC_ENTERPRISE  https://eservices.cipc.co.za/
+    stale path: https://eservices.cipc.co.za/EnterpriseSearch/Search?enterpriseName=Toyota
+    root: HTTP 200, 39657 bytes
+
+=== ZA_GOVERNMENT_GAZETTE  https://www.gov.za/
+    stale path: https://www.gov.za/documents/government-gazette?search=energy
+    root: HTTP 200, 53269 bytes
+    FORM GET  https://www.gov.za/search
+         fields: search_query
+
+=== ZA_MUNICIPAL_MONEY  https://municipalmoney.gov.za/
+    stale path: https://municipalmoney.gov.za/search?q=Toyota
+    root: HTTP 200, 60919 bytes
+    FORM GET  https://municipalmoney.gov.za/
+         fields: Municipality Search 2
+    FORM GET  https://municipalmoney.gov.za/
+         fields: Municipality Search
+    FORM GET  https://municipalmoney.gov.za/
+         fields: Municipality Search Hero
+    LINK https://municipaldata.treasury.gov.za/   (Municipal Money API)
+    SITEMAP https://municipalmoney.gov.za/sitemap.txt

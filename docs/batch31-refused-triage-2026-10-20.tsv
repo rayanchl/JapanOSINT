@@ -1,0 +1,126 @@
+# Batch 31's twice-refused rows, asked three questions instead of removed.
+# 2026-10-20.
+#
+# CLAUDE.md's rule is "re-run each FETCH_FAILED once; a row that fails twice
+# leaves". Both readings are now in — 2026-10-11 (48x404, 42x403) and
+# 2026-10-20 (46x404, 42x403, 2 transport) — so the condition is met for 88
+# rows, and acting on it alone would have been wrong 44 times.
+#
+# Each row was asked: its own probe URL with the ENGINE's User-Agent, the same
+# URL with the agent that clears the known word filter, and the HOST ROOT. The
+# root is what separates "the publisher is gone" from "our path is stale".
+#
+#   44  path 404, root 200     the host is alive and serving; OUR PATH is stale.
+#                              Recoverable, one re-point each. Removing these
+#                              would have discarded 44 live publishers over our
+#                              own URLs.
+#   36  path 403, root 403     the host refuses this client everywhere, and no
+#                              agent in UA_OVERRIDE changes it. A wall, not a
+#                              word filter and not a path problem.
+#    5  path 403, root 200     refused at the endpoint while the site serves —
+#                              a key, a session, or an endpoint-level wall.
+#    1  path 403, alt_ua 200   OFFSHORE_AIRCRAFT_REGISTRIES. The word filter
+#                              again; planelogger.com added to UA_OVERRIDE and
+#                              the row recovered. Verified twice each way.
+#    1  path 200               JP_EGOV_LAW_SEARCH answers 200 today for its own
+#                              probe entity, so its two 404s were about the
+#                              entity the audit asked with or the day it asked.
+#    1  path 404, root 404     KE_OPEN_DATA — the host itself is gone. The one
+#                              row the "fails twice" rule fits exactly.
+#    1  path 404, root 403     TZ_BRELA_ENTITY.
+#    1  timeout, root 200      CA_VESSEL_REGISTRY, unmeasured rather than dead.
+#
+# So the removal list is ONE row long, not 88. The 44 are a re-pointing job and
+# the 36 are the registry.faa.gov decision this tree has already taken once:
+# "the source stays honestly failing rather than quietly evading".
+id	prior	engine_ua	bytes	alt_ua	root	url
+AFRICA_OPEN_AFRICA_CKAN	HTTP_403	H403	0	H403	H403	https://open.africa/api/3/action/package_search?q=energy&rows=100
+AFRICA_RESOURCE_PROJECTS	HTTP_404	H404	0	H404	200	https://resourceprojects.org/search?q=energy
+AFRICA_SAFLII_JUDGMENTS	HTTP_403	H403	0	H403	H403	https://www.saflii.org/cgi-bin/sinosrch.cgi?query=energy&method=auto
+AIRPLANES_LIVE_CALLSIGN	HTTP_403	H403	0	H403	H403	https://api.airplanes.live/v2/callsign/JAL1
+AIRPLANES_LIVE_REGISTRATION	HTTP_403	H403	0	H403	H403	https://api.airplanes.live/v2/reg/JAL1
+AM_ARLIS_LEGAL	HTTP_404	H404	0	H404	200	https://www.arlis.am/DocumentView.aspx?search=energy
+APG_FATF_STYLE_BODIES	HTTP_404	H404	0	H404	200	https://www.apgml.org/search/default.aspx?q=energy
+AT_PARLAMENT_RECORDS	HTTP_404	H404	0	H404	200	https://www.parlament.gv.at/recherchieren/suche?searchTerm=energy
+AU_ASIC_BANNED_DISQUALIFIED	HTTP_403	H403	0	H403	H403	https://connectonline.asic.gov.au/RegistrySearch/faces/landing/bannedAndDisqualified.jspx?searchText=energy
+AU_AUSTENDER_CONTRACTS	HTTP_403	H403	0	H403	H403	https://www.tenders.gov.au/Search/CnSearch?keyword=Toyota
+AU_PARLINFO_HANSARD	HTTP_403	H403	0	H403	H403	https://parlinfo.aph.gov.au/parlInfo/search/summary/summary.w3p;query=energy
+BR_CGU_LENIENCY_AGREEMENTS	HTTP_404	H404	0	H404	200	https://www.gov.br/cgu/pt-br/busca?SearchableText=energy
+CA_VESSEL_REGISTRY	HTTP_404	TimeoutError	0	-	200	https://wwwapps.tc.gc.ca/Saf-Sec-Sur/4/vrqs-srib/eng/vessel-registrations/vessel-registration-results?name=Toyota
+CH_OPENTRANSPORTDATA	HTTP_404	H404	0	H404	200	https://opentransportdata.swiss/en/search/?q=energy
+CL_INFOPROBIDAD_DECLARATIONS	HTTP_404	H404	0	H404	200	https://www.infoprobidad.cl/Consultas/Declaraciones?nombre=energy
+CL_TRANSPARENCIA_ACTIVA	HTTP_403	H403	0	H403	H403	https://www.portaltransparencia.cl/PortalPdT/buscador?q=energy
+COE_GRECO_MONEYVAL	HTTP_403	H403	0	H403	H403	https://www.coe.int/en/web/portal/search?p_p_id=search&q=energy
+COPERNICUS_EMS_ACTIVATIONS	HTTP_404	H404	0	H404	200	https://emergency.copernicus.eu/mapping/list-of-components/EMSR?q=energy
+CZ_CUZK_CADASTRE	HTTP_404	H404	0	H404	200	https://nahlizenidokn.cuzk.cz/VyberBudovu.aspx?typ=Parcela&hledat=energy
+DE_BUNDESKARTELLAMT_DECISIONS	HTTP_403	H403	0	H403	H403	https://www.bundeskartellamt.de/SiteGlobals/Forms/Suche/Entscheidungssuche_Formular.html?input_=energy
+DK_FOLKETINGET_ODA	HTTP_403	H403	0	H403	H403	https://www.ft.dk/da/soegning?q=energy
+ES_CATASTRO_PARCELS	HTTP_404	H404	0	H404	200	https://www1.sedecatastro.gob.es/Cartografia/BuscarParcela.aspx?busqueda=energy
+ES_PORTAL_TRANSPARENCIA	HTTP_404	H404	0	H404	200	https://transparencia.gob.es/es_ES/buscar?texto=energy
+EU_ACER_ENERGY_REMIT	HTTP_403	H403	0	H403	200	https://www.acer.europa.eu/search?search_api_fulltext=energy
+EU_CHAFEA_HEALTH_PROGRAMME	HTTP_404	H404	0	H404	200	https://hadea.ec.europa.eu/search_en?keys=energy
+EU_COMMISSION_MEETINGS	HTTP_404	H404	0	H404	200	https://ec.europa.eu/transparencyinitiative/meetings/meeting.do?host=&d-6679426-p=1&searchString=Toyota
+EU_COUNCIL_PUBLIC_REGISTER	HTTP_403	H403	0	H403	H403	https://www.consilium.europa.eu/en/documents-publications/public-register/public-register-search/?SearchTerm=energy
+EU_ECB_SUPERVISED_ENTITIES	HTTP_404	H404	0	H404	200	https://www.bankingsupervision.europa.eu/search/html/index.en.html?searchTerm=energy
+EU_EIOPA_PENSION_REGISTER	HTTP_404	H404	0	H404	200	https://www.eiopa.europa.eu/search_en?keys=energy
+EU_INDUSTRIAL_EMISSIONS_PORTAL	HTTP_404	H404	0	H404	200	https://industry.eea.europa.eu/explore/explore-data-map/results?q=energy
+EU_INTEGRITY_WATCH	HTTP_404	H404	0	H404	200	https://www.integritywatch.eu/mepsincomes?search=energy
+EU_OLAF_INVESTIGATION_REPORTS	HTTP_404	H404	0	H404	200	https://anti-fraud.ec.europa.eu/search_en?keys=energy
+FI_EDUSKUNTA_RECORDS	HTTP_404	H404	0	H404	200	https://www.eduskunta.fi/FI/search/Sivut/results.aspx?k=energy
+FR_ASSEMBLEE_NATIONALE	HTTP_404	H404	0	H404	200	https://www.assemblee-nationale.fr/dyn/recherche?texte=energy
+GLOBAL_RESOURCE_CONTRACTS	HTTP_403	H403	0	H403	200	https://www.resourcecontracts.org/search?q=Toyota
+GT_GUATECOMPRAS	HTTP_403	H403	0	H403	H403	https://www.guatecompras.gt/concursos/consultaConcurso.aspx?busqueda=Toyota
+HK_DATA_GOV_CATALOG	HTTP_404	H404	0	H404	200	https://data.gov.hk/en/search?q=energy
+HK_GLD_TENDER_AWARDS	HTTP_404	H404	0	H404	200	https://www.gld.gov.hk/eng/tenders_notices.htm?q=Toyota
+IAEA_SAFEGUARDS_RECORD	HTTP_403	H403	0	H403	H403	https://www.iaea.org/search?search_api_fulltext=energy
+ICAO_SAFETY_AUDITS	HTTP_403	H403	0	H403	H403	https://www.icao.int/search/pages/results.aspx?k=energy
+ID_LKPP_BLACKLIST	HTTP_403	H403	0	H403	H403	https://inaproc.id/daftar-hitam?search=energy
+ID_SUPREME_COURT_JUDGMENTS	HTTP_403	H403	0	H403	H403	https://putusan3.mahkamahagung.go.id/search.html?q=energy
+IE_CHARITIES_REGULATOR	HTTP_403	H403	0	H403	H403	https://www.charitiesregulator.ie/en/information-for-the-public/search-the-register-of-charities?searchTerm=energy
+IE_LOBBYING_REGISTER	HTTP_404	H404	0	H404	200	https://www.lobbying.ie/app/search?query=Toyota
+IFC_PROJECT_DISCLOSURES	HTTP_404	H404	0	H404	200	https://disclosures.ifc.org/results?q=energy
+INDIAN_OCEAN_MOU_PSC	HTTP_403	H403	0	H403	H403	https://www.iomou.org/ipcqsearch.php?vessel=energy
+IN_CPGRAMS_ENFORCEMENT	HTTP_403	H403	0	H403	H403	https://www.mca.gov.in/content/mca/global/en/search.html?q=energy
+ISDB_PROJECT_DISCLOSURE	HTTP_403	H403	0	H403	200	https://www.isdb.org/projects?search=energy
+ITU_SPACE_NETWORKS	HTTP_404	H404	0	H404	200	https://www.itu.int/net/search/index.aspx?cx=&q=energy
+IT_OPENCOESIONE_PROJECTS	HTTP_403	H403	0	H403	H403	https://opencoesione.gov.it/it/ricerca/?q=energy
+JP_EGOV_LAW_SEARCH	HTTP_404	200	4096	-	200	https://laws.e-gov.go.jp/api/2/keyword?keyword=%E7%92%B0%E5%A2%83&limit=500
+JP_EGOV_PUBLIC_COMMENT	HTTP_403	H403	0	H403	H403	https://public-comment.e-gov.go.jp/pcm/search?searchWord=%E7%92%B0%E5%A2%83
+JP_JFTC_ENFORCEMENT	HTTP_403	H403	0	H403	H403	https://www.jftc.go.jp/cgi-bin/search.cgi?q=%E7%92%B0%E5%A2%83
+JP_KANPO_GAZETTE	HTTP_404	H404	0	H404	200	https://search.npb.go.jp/kanpou/search.html?q=%E7%92%B0%E5%A2%83
+JP_MHLW_LABOUR_VIOLATIONS	HTTP_404	H404	0	H404	200	https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/anzen/hourei/index.html?q=%E7%92%B0%E5%A2%83
+JP_MLIT_CONSTRUCTION_LICENCE	HTTP_404	H404	0	H404	200	https://etsuran2.mlit.go.jp/TAKKEN/kensetsuKensaku.do?companyName=%E3%83%88%E3%83%A8%E3%82%BF
+JP_NRA_RADIATION_MONITORING	HTTP_404	H404	0	H404	200	https://radioactivity.nra.go.jp/map/?q=%E7%92%B0%E5%A2%83
+JP_PMDA_APPROVALS	HTTP_404	H404	0	H404	200	https://www.pmda.go.jp/PmdaSearch/iyakuSearch/Result?keyword=%E7%92%B0%E5%A2%83
+KE_OPEN_DATA	HTTP_404	H404	0	H404	H404	https://www.opendata.go.ke/search?q=energy
+KW_KUWAIT_TENDERS	HTTP_403	H403	0	H403	H403	https://www.capt.gov.kw/search?q=Toyota
+MX_DECLARANET_ASSETS	HTTP_404	H404	0	H404	200	https://declaranet.gob.mx/consulta?nombre=energy
+MX_INE_FISCALIZACION	HTTP_404	H404	0	H404	200	https://www.ine.mx/buscador/?q=Toyota
+NG_CAC_COMPANY_SEARCH	HTTP_403	H403	0	H403	H403	https://search.cac.gov.ng/home?searchTerm=Toyota
+NL_TWEEDE_KAMER_OPENDATA	HTTP_404	H404	0	H404	200	https://opendata.tweedekamer.nl/zoeken?q=energy
+NO_STORTINGET_DATA	HTTP_404	H404	0	H404	200	https://www.stortinget.no/no/Saker-og-publikasjoner/Sok/?stq=energy
+NZ_PARLIAMENT_PECUNIARY	HTTP_404	H404	0	H404	200	https://www.parliament.nz/en/pb/sc/submissions-and-advice/search?Criteria.Keyword=energy
+OECD_ANTIBRIBERY_REPORTS	HTTP_403	H403	0	H403	H403	https://www.oecd.org/en/search.html?q=energy
+OFFSHORE_AIRCRAFT_REGISTRIES	HTTP_403	H403	0	200	H403	https://www.planelogger.com/Aircraft/Search?searchterm=Toyota
+OPCW_DECLARATIONS	HTTP_404	H404	0	H404	200	https://www.opcw.org/search?search_api_fulltext=energy
+PACIFIC_ISLAND_REGISTRIES	HTTP_403	H403	0	H403	H403	https://pacificdata.org/data/dataset?q=Toyota
+PCA_ARBITRATION_CASES	HTTP_403	H403	0	H403	H403	https://pca-cpa.org/en/cases/?s=energy
+RW_RDB_REGISTRY	HTTP_404	H404	0	H404	200	https://org.rdb.rw/business/search?q=Toyota
+SMITHSONIAN_VOLCANOES	HTTP_403	H403	0	H403	H403	https://volcano.si.edu/search_volcano_results.cfm?vname=energy
+TH_OPEN_DATA_CKAN	HTTP_403	H403	0	H403	H403	https://data.go.th/api/3/action/package_search?q=energy&rows=100
+TOKYO_MOU_INSPECTIONS	HTTP_404	H404	0	H404	200	https://www.tokyo-mou.org/inspections_detentions/psc_database.php?vessel=energy
+TW_DATA_GOV_CATALOG	HTTP_404	H404	0	H404	200	https://data.gov.tw/api/front/dataset/search?qs=energy&size=100
+TZ_BRELA_ENTITY	HTTP_404	H404	0	H404	H403	https://ors.brela.go.tz/orsAdmin/searchcompany?name=Toyota
+UA_OPENDATABOT_ENTITY	HTTP_403	H403	0	H403	H403	https://opendatabot.ua/search?query=Toyota
+UK_PARLIAMENT_WRITTEN_QUESTIONS	HTTP_403	H403	0	H403	H403	https://questions-statements.parliament.uk/api/writtenquestions/questions?searchTerm=energy&take=100&expandMember=true
+UK_WDTK_FOI_REQUESTS	HTTP_403	H403	0	H403	H403	https://www.whatdotheyknow.com/search/energy/requests
+US_AK_CORP_DATABASE	HTTP_403	H403	0	H403	H403	https://www.commerce.alaska.gov/cbp/main/search/entities?entityName=Toyota
+US_DATA_GOV_CKAN	HTTP_404	H404	0	H404	200	https://catalog.data.gov/api/3/action/package_search?q=energy&rows=100
+US_FAA_AIRCRAFT_REGISTRY	HTTP_403	H403	0	H403	H403	https://registry.faa.gov/aircraftinquiry/Search/NameResult?Nametxt=Toyota
+US_GA_SOS_BUSINESS	HTTP_403	H403	0	H403	H403	https://ecorp.sos.ga.gov/BusinessSearch/BusinessSearchResults?businessName=Toyota
+US_NC_SOS_BUSINESS	HTTP_403	H403	0	H403	200	https://www.sosnc.gov/online_services/search/by_title/_Business_Registration?searchStr=Toyota
+US_UT_BUSINESS_SEARCH	HTTP_403	H403	0	H403	200	https://secure.utah.gov/bes/action/details?entity=Toyota
+WORLDBANK_CONTRACT_AWARDS	HTTP_404	H404	0	H404	200	https://finances.worldbank.org/api/catalog/v1?q=Toyota&domains=finances.worldbank.org&search_context=finances.worldbank.org&limit=100
+ZA_CIPC_ENTERPRISE	HTTP_404	H404	0	H404	200	https://eservices.cipc.co.za/EnterpriseSearch/Search?enterpriseName=Toyota
+ZA_GOVERNMENT_GAZETTE	HTTP_404	H404	0	H404	200	https://www.gov.za/documents/government-gazette?search=energy
+ZA_MUNICIPAL_MONEY	HTTP_404	H404	0	H404	200	https://municipalmoney.gov.za/search?q=Toyota

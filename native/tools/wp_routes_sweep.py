@@ -35,10 +35,43 @@ SKIP_TYPES = {"attachment", "wp_block", "wp_template", "wp_template_part", "wp_n
               "acf-field-group", "acf-post-type", "acf-taxonomy", "acf-ui-options-page",
               "wpcf7_contact_form", "e-landing-page", "elementor_library", "elementor_font",
               "elementor_icons", "elementor_snippet"}
-MACHINERY = re.compile(r"(banner|bnr|slide|carousel|^mv$|^mvtop$|visual|form|snippet|lazyblock|^blocks?$"
+# Theme and plugin post types that are furniture rather than a record set: a
+# carousel's slides, a contact form's submissions, a block pattern.
+#
+# TWO ALTERNATIVES WERE OVER-BROAD, and both were found by measurement rather
+# than by reading (2026-10-22, re-examining batch 45's staging set):
+#
+#   * `form` was unanchored, so it matched in|form|ation — and silently rejected
+#     the whole `information` family, 30 collections of announcements including
+#     `member-information` (1,074 records, Fukuyama chamber of commerce's member
+#     companies) and `members_information` (426). This is exactly the substring
+#     trap CLAUDE.md already records for the takeover scan, where "cialis" is
+#     inside "Commercialisti" and "casino" inside "Liceo Pascasino". It is
+#     anchored on a separator or a string edge now, which still catches every
+#     form type in the pool (snow-monkey-forms, um_form, sureforms_form,
+#     post_forms, cities_form, form_manage, form_bouka) and admits
+#     `information`, `format` and `former`.
+#   * `^xo_` was written for the XO Liteslider plugin and also matched
+#     `xo_event`, the XO Event Calendar's post type — 8 collections of real
+#     events from medical associations and chambers of commerce, up to 573
+#     records. The slider is still caught; the calendar is not.
+#
+# Measured over the 253 collections batch 49 did not take: the two fixes admit
+# 39 on 37 hosts and let no form or slider type through.
+MACHINERY = re.compile(r"(banner|bnr|slide|carousel|^mv$|^mvtop$|visual|(?:^|[-_])forms?(?:[-_]|$)"
+                       r"|snippet|lazyblock|^blocks?$"
                        r"|parts|pattern|template|layout|grid|widget|pochipps|marquee|^lp$|^search$|^manage$"
                        r"|measurement|queue|mail|section|^link|^top[-_]|^pr$|smartnews|^yahoo$|robo_gallery"
-                       r"|^xo_|selecter|taxonomy-page|^other$|loos-cbp|tieup|tie-up|^sidebnr$|^recommend$"
+                       r"|^xo_(?!event)|selecter|taxonomy-page|^other$|loos-cbp|tieup|tie-up|^sidebnr$|^recommend$"
+                       # kubio is a page BUILDER: `kubio/preview-changeset` and
+                       # `kubio/global-data` are its editor state, and they
+                       # reached the probe only because a `/` in the rest_base
+                       # dodged every anchored alternative above. Measured
+                       # 2026-10-22: the changeset collection probes
+                       # EMPTY_RESULTSET, so it would never have shipped — but
+                       # it belongs in the rejected file by NAME, as machinery,
+                       # not in the probe's results as an empty source.
+                       r"|kubio|changeset"
                        r"|let_me_know)", re.I)
 POST_OPTS = ("array_path=.;interval=21600;title_keys=title.rendered;id_keys=id;date_keys=date;link_keys=link;"
              "body_keys=content.rendered;page_param=page;page_start=1;page_max=60;timeout_ms=30000;"

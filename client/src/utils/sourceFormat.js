@@ -109,7 +109,11 @@ export function splitTemplate(tmpl) {
 }
 
 /** The search page's state ↔ URL query, so a filtered list is a shareable link. */
-export const SEARCH_KEYS = ['q', 'group', 'collector', 'category', 'engine', 'kind', 'status', 'grade', 'has_items', 'sort', 'desc'];
+// `health` is the source's own answer to "does it work" (ok | failing |
+// gated | degraded | pending, plus `broken` for every state that is not
+// ok). It is a SEARCH_KEY so a filtered list stays shareable as a URL,
+// which is the whole reason these live here rather than in component state.
+export const SEARCH_KEYS = ['q', 'group', 'collector', 'category', 'engine', 'kind', 'status', 'health', 'grade', 'has_items', 'sort', 'desc'];
 export function searchPath(params, { limit } = {}) {
   const sp = new URLSearchParams();
   for (const k of SEARCH_KEYS) {

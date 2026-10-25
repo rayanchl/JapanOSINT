@@ -1264,9 +1264,51 @@ def check_page_size_on_page_number():
     return out
 
 
+
+def check_csv_delim_name():
+    """An hp row's `csv_delim` must NAME something the engine knows.
+
+    hp_run_csv resolves the named delimiters (comma, tab, pipe, semi, ws) and
+    `lit:<token>`, and a SINGLE character is taken literally. Anything else is
+    a word that names nothing, and the engine used to take its FIRST
+    CHARACTER: 87 rows declared `csv_delim = "comma"` and split their files on
+    the letter **c**. Japanese crime and accident CSVs contain no ASCII c, so
+    every line became one field whose NAME was the whole header line — 20
+    columns of offence, place, date and victim attributes collapsed into one
+    unqueryable cell, with a correct record count on every run and no gate able
+    to see it. The engine accepts `comma` now and reads an unknown word as the
+    default; this check is what stops the next one shipping."""
+    known = {"comma", ",", "tab", "\\t", "pipe", "semi", "ws"}
+    out = []
+    for path in source_files():
+        text = read(path)
+        if "hp_source" not in text:
+            continue
+        for m in _HP_TBL_RE.finditer(text):
+            block = _brace_block(text, m.end() - 1)
+            if not block:
+                continue
+            for row in _hp_rows(block):
+                dm = re.search(r"\.csv_delim\s*=", row)
+                if not dm:
+                    continue
+                val = _read_string_concat(row, dm.end())
+                if val is None or val in known or val.startswith("lit:") \
+                   or len(val) == 1:
+                    continue
+                idm = re.search(r"\.id\s*=", row)
+                sid = _read_string_concat(row, idm.end()) if idm else "?"
+                ln = text.count("\n", 0, text.find(row)) + 1
+                out.append("%s:%d: %s declares csv_delim `%s`, which names "
+                           "nothing -- known: comma, tab, pipe, semi, ws, "
+                           "lit:<token>, or one literal character"
+                           % (os.path.relpath(path, REPO), ln, sid, val))
+    return out
+
 CHECKS = [
     ("dup-id", check_dup_id),
     ("page-size-on-page-number", check_page_size_on_page_number),
+    ("csv-delim-name", check_csv_delim_name),
     ("dup-endpoint", check_dup_endpoint),
     ("unresolved-id", check_unresolved_id),
     ("registry-orphan", check_registry_orphan),

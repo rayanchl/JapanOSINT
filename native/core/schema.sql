@@ -1,3 +1,16 @@
+/* What db_seed_sources() last derived the `sources` table from: a hash of the
+ * five values it writes for every registered source, and the row count the
+ * table had when that pass finished. A boot whose registry hashes the same and
+ * whose table still holds that many rows skips the pass — 116,110 prepared
+ * statement steps at 58,055 sources, which is the dominant cost of every
+ * db_open. The same shape as _fts_meta below, for the same reason. */
+CREATE TABLE IF NOT EXISTS _registry_seed (
+    name         TEXT PRIMARY KEY,
+    fingerprint  TEXT NOT NULL,
+    rows         INTEGER NOT NULL,
+    sources      INTEGER NOT NULL,
+    seeded_at    TEXT NOT NULL
+  );
 CREATE TABLE IF NOT EXISTS _fts_meta (
     name         TEXT PRIMARY KEY,
     fingerprint  TEXT NOT NULL,

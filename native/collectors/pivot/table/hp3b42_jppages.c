@@ -5076,31 +5076,26 @@ static const hp_source HP3B42_JPPAGES[] = {
       "Post-shaped: title.rendered, date, link and content.rendered are "
       "kept." },
 
-  { .id = "JO42_WP_CORP_5368_PAGES", .name = "日本インシュレーション — static pages (WordPress REST)",
-    .name_ja = "日本インシュレーション 固定ページ（WordPress REST）",
-    .category = "corporate", .portal = "https://www.jic-bestork.co.jp/",
-    .record_type = "site-page",
-    .tags = "\"japan\",\"company\",\"listed\",\"wordpress\",\"pages\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.jic-bestork.co.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc",
-    .array_path = ".",
-    .body_keys = "content.rendered",
-    .date_keys = "date",
-    .id_keys = "id",
-    .interval = 21600,
-    .link_keys = "link",
-    .page_max = 60,
-    .page_param = "page",
-    .page_start = 1,
-    .timeout_ms = 30000,
-    .title_keys = "title.rendered",
-    .description = "WordPress REST static pages of 日本インシュレーション "
-      "(www.jic-bestork.co.jp). Fetched 2026-10-12: the collection "
-      "answered with records and declares 20 in X-WP-Total. Discovered "
-      "from this host's own /wp-json route table, not guessed. "
-      "Post-shaped: title.rendered, date, link and content.rendered are "
-      "kept." },
-
+  /* jic-bestork.co.jp (日本インシュレーション) CLOSED ITS REST API, and the
+   * recovery route was checked before these rows were removed rather than
+   * after. Measured 2026-10-20: the site root answers 200, so the publisher is
+   * alive, and `/wp-json/` ITSELF answers
+   * `{"code":"rest_login_required","message":"REST API restricted to
+   * authenticated users."}` — a site-wide, deliberate setting, not one route
+   * and not a transient. The engine gets the same 401 and files a
+   * collector-fetch-failure naming it.
+   *
+   * The reason this is worth a comment is the part that did NOT work. The site
+   * still serves `/feed/` with HTTP 200, which is normally how a locked-down
+   * WordPress publisher is recovered — but that feed holds exactly ONE item,
+   * WordPress's default "Hello world!", and every per-post-type feed
+   * (`?post_type=news&feed=rss2` and the six others these rows covered) holds
+   * ZERO. So there is nothing behind the lock to re-point at, and the next
+   * person does not need to re-check it.
+   *
+   * Ten rows removed: JO41_WP_CORP_5368 and JO42_WP_CORP_5368_{NEWS, PAGES,
+   * USERS, COMPLETEDPROJE, CONSTPRODUCTS, DIGITALCATALOG, LOOSCBP,
+   * MULTIUSEPRODS, PLANTPRODS}. */
   { .id = "JO42_WP_UNIV_JICHI_PAGES", .name = "Jichi Medical School — static pages (WordPress REST)",
     .name_ja = "Jichi Medical School 固定ページ（WordPress REST）",
     .category = "research", .portal = "https://www.jichi.ac.jp/",

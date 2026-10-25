@@ -1,0 +1,16 @@
+# measured 2026-10-23 against model models/multilingual-e5-large-q8_0.gguf
+# Nothing here is written back to any threshold. A key with no label
+# set reads UNLABELLED and carries a distribution only.
+key	metric	in_force	source	label_source	n_pos	n_neg	pos_deciles	neg_deciles	best_cutoff	best_prec	best_rec	best_f1	prec_at_in_force	rec_at_in_force	verdict
+entity_vec_cos_floor	cosine	0.8000	default (ENTITY_VEC_COS_FLOOR)	entities.norm_key + aliases	0	0								UNLABELLED
+story_tau	cosine	0.8500	default (STORY_TAU_DEFAULT)	intel_items.cluster_id (simhash)	200	200	0.9395,0.9837,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0	0.681,0.7161,0.7244,0.7329,0.7406,0.7471,0.7543,0.7659,0.7762,0.7934,0.8372	0.8372	1.0000	1.0000	1.0000	1.0000	1.0000	MEASURED
+alert_sem_threshold	cosine	0.8200	default (ALERT_SEM_THRESHOLD_DEFAULT)	NONE	0	0								UNLABELLED
+relevance_sim_min	cosine	0.4000	default (RELEV_SIM_MIN)	NONE	0	0								UNLABELLED
+suggest_min_cos	cosine	0.5000	default (SUGGEST_MIN_COS)	NONE	0	0								UNLABELLED
+resolve_emb_min_cos	cosine	0.6000	default (RESOLVE_EMB_MIN_COS_DEFAULT)	NONE	0	0								UNLABELLED
+resolve_emb_margin	cosine_margin	0.1000	default (RESOLVE_EMB_MARGIN_DEFAULT)	NONE (needs a triple, not a pair)	0	0								UNMEASURABLE FROM PAIRS
+camera_dup_cosine_min	cosine	0.9700	default (CAM_DUP_COSINE_MIN)	camera_stills.sha256	0	0								UNLABELLED
+repair_sem_cos_floor	cosine	0.7000	default (REPAIR_SEM_COS_FLOOR_DEFAULT)	NONE	0	0								UNLABELLED
+corpus_vec_max_distance	l2_distance	1.4142	default (CORPUS_VEC_MAX_DISTANCE_DEFAULT)	NONE	0	0								UNLABELLED
+route_min_cos	cosine	0.5500	default (ROUTE_MIN_COS_DEFAULT)	NONE	0	0								UNLABELLED
+# embedding requests: 20, dimension: 1024

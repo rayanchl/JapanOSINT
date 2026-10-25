@@ -146,10 +146,47 @@ typedef struct {
   long freshness;   /* the adaptive measurement (source_sched_state.freshness_interval), 0 = none */
 } sched_t;
 
+/* ── why a source is not working, in the row that says it is not ────────────
+ *
+ * `sources.status` says online / degraded / offline / pending, and a run's
+ * `error_message` says what the last run hit. Neither says WHY the upstream
+ * refused us or what to do about it — that lives in the engine's own
+ * disclosure records, and until now a reader had to open one source's detail
+ * page and read a notice's properties blob to find it. For a fleet of 58,000
+ * that is the same as not disclosing it.
+ *
+ * The engine already stores everything needed. `collector-fetch-failure`
+ * carries the http status, whether the body parsed, an outcome, a note and a
+ * REMEDY (a key_env, a per-host gap in core/hostgate.c, a UA_OVERRIDE entry,
+ * an endpoint that moved); `collector-status-notice` carries
+ * status=needs_credential and the env vars required. So this is a projection,
+ * not a new measurement: one row per source, from the newest record of each
+ * kind, carried on the search row AND the detail so a reader sees the reason
+ * next to the status rather than two clicks away.
+ *
+ * Kept deliberately small and fixed-size: the snapshot holds one of these per
+ * source and is rebuilt every 10 s, so a per-row malloc of a notice blob would
+ * be 58,000 allocations a tick. Long text is truncated, and the detail page
+ * still serves the notice VERBATIM beside this (notices_json), so nothing is
+ * lost — this is the summary, not the record. */
+typedef struct {
+  char id[256];
+  char kind[32];        /* the record_type this came from                   */
+  char state[16];       /* "failing" | "gated"                              */
+  char outcome[64];     /* the engine's own classification of the refusal   */
+  char note[300];
+  char remedy[300];
+  char env[160];        /* env vars a gated source needs, comma-separated   */
+  char since[32];       /* fetched_at of that newest record                 */
+  long http_status;     /* 0 when the record carries none                   */
+  int  body_parsed;     /* -1 unknown, 0 no, 1 yes                          */
+} health_t;
+
 typedef struct {
   agg_t *agg; int nagg;
   srow_t *srow; int nsrow;
   sched_t *sched; int nsched;
+  health_t *health; int nhealth;
   source_trust *trust; int ntrust;
   long long built_ms;
   char built_at[40];
@@ -165,14 +202,16 @@ static long long now_ms(void) {
 static int id_cmp_agg(const void *a, const void *b)   { return strcmp(((const agg_t *)a)->id, ((const agg_t *)b)->id); }
 static int id_cmp_srow(const void *a, const void *b)  { return strcmp(((const srow_t *)a)->id, ((const srow_t *)b)->id); }
 static int id_cmp_sched(const void *a, const void *b) { return strcmp(((const sched_t *)a)->id, ((const sched_t *)b)->id); }
+static int id_cmp_health(const void *a, const void *b) { return strcmp(((const health_t *)a)->id, ((const health_t *)b)->id); }
 static int id_cmp_trust(const void *a, const void *b) { return strcmp(((const source_trust *)a)->source_id, ((const source_trust *)b)->source_id); }
 static int key_agg(const void *k, const void *e)   { return strcmp((const char *)k, ((const agg_t *)e)->id); }
 static int key_srow(const void *k, const void *e)  { return strcmp((const char *)k, ((const srow_t *)e)->id); }
+static int key_health(const void *k, const void *e) { return strcmp((const char *)k, ((const health_t *)e)->id); }
 static int key_sched(const void *k, const void *e) { return strcmp((const char *)k, ((const sched_t *)e)->id); }
 static int key_trust(const void *k, const void *e) { return strcmp((const char *)k, ((const source_trust *)e)->source_id); }
 
 static void snap_free(snapshot *s) {
-  free(s->agg); free(s->srow); free(s->sched); free(s->trust);
+  free(s->agg); free(s->srow); free(s->sched); free(s->health); free(s->trust);
   memset(s, 0, sizeof *s);
 }
 
@@ -247,6 +286,82 @@ static void snap_load(db_handle *db, snapshot *s) {
     sqlite3_finalize(st);
     qsort(s->sched, (size_t)s->nsched, sizeof *s->sched, id_cmp_sched);
   }
+  /* The newest disclosure record of each failure kind, per source. A source
+   * with both a refusal and a credential notice keeps the one fetched later,
+   * because that is the state it is in now.
+   *
+   * ORDER BY source_id, fetched_at ASC: ordering by the id FIRST is what keeps
+   * this linear. Same-id rows are then adjacent, so "keep the newest" is just
+   * "overwrite the row if it is the one we appended last" — a scan of the
+   * whole array per row would be O(n^2), which at 58,000 sources is not a
+   * snapshot that rebuilds every ten seconds. (lib/seenset.c exists for the
+   * general case; adjacency makes it unnecessary here.)
+   *
+   * record_type is filtered to the two kinds that mean NOT WORKING — a
+   * truncation or shape notice is a working source telling us something, and
+   * folding those in here would report healthy rows as failing. */
+  if (sqlite3_prepare_v2(db->h,
+        "SELECT source_id,record_type,properties,fetched_at FROM intel_items "
+        "WHERE record_type IN ('collector-fetch-failure','collector-status-notice') "
+        "ORDER BY source_id ASC, fetched_at ASC", -1, &st, NULL) == SQLITE_OK) {
+    int cap = 0;
+    while (sqlite3_step(st) == SQLITE_ROW) {
+      const char *sid = (const char *)sqlite3_column_text(st, 0);
+      if (!sid || !*sid) continue;
+      health_t *r = NULL;
+      if (s->nhealth && !strcmp(s->health[s->nhealth - 1].id, sid))
+        r = &s->health[s->nhealth - 1];          /* a newer record, same id */
+      if (!r) {
+        GROW(s->health, s->nhealth, cap, health_t);
+        if (s->nhealth == cap) break;
+        r = &s->health[s->nhealth++];
+      }
+      memset(r, 0, sizeof *r);
+      snprintf(r->id, sizeof r->id, "%s", sid);
+      const char *rt = ctext(st, 1);
+      snprintf(r->kind, sizeof r->kind, "%s", rt ? rt : "");
+      const char *at = ctext(st, 3);
+      if (at) snprintf(r->since, sizeof r->since, "%s", at);
+      r->http_status = 0;
+      r->body_parsed = -1;
+      const char *pj = ctext(st, 2);
+      cJSON *p = pj ? cJSON_Parse(pj) : NULL;
+      if (p) {
+        cJSON *v;
+        if ((v = cJSON_GetObjectItem(p, "http_status") ) && cJSON_IsNumber(v))
+          r->http_status = (long)v->valuedouble;
+        if ((v = cJSON_GetObjectItem(p, "body_parsed")))
+          r->body_parsed = cJSON_IsTrue(v) ? 1 : (cJSON_IsFalse(v) ? 0 : -1);
+        if ((v = cJSON_GetObjectItem(p, "outcome")) && cJSON_IsString(v))
+          snprintf(r->outcome, sizeof r->outcome, "%s", v->valuestring);
+        if ((v = cJSON_GetObjectItem(p, "note")) && cJSON_IsString(v))
+          snprintf(r->note, sizeof r->note, "%s", v->valuestring);
+        if ((v = cJSON_GetObjectItem(p, "remedy")) && cJSON_IsString(v))
+          snprintf(r->remedy, sizeof r->remedy, "%s", v->valuestring);
+        /* a credential notice names its own state and the vars it wants */
+        cJSON *stx = cJSON_GetObjectItem(p, "status");
+        if (cJSON_IsString(stx) && !strcmp(stx->valuestring, "needs_credential")) {
+          snprintf(r->state, sizeof r->state, "gated");
+          cJSON *ev = cJSON_GetObjectItem(p, "env_vars_required");
+          if (cJSON_IsArray(ev)) {
+            size_t used = 0;
+            cJSON *e;
+            cJSON_ArrayForEach(e, ev) {
+              if (!cJSON_IsString(e)) continue;
+              int w = snprintf(r->env + used, sizeof r->env - used,
+                               used ? ",%s" : "%s", e->valuestring);
+              if (w <= 0 || (size_t)w >= sizeof r->env - used) break;
+              used += (size_t)w;
+            }
+          }
+        }
+        cJSON_Delete(p);
+      }
+      if (!r->state[0]) snprintf(r->state, sizeof r->state, "failing");
+    }
+    sqlite3_finalize(st);
+    qsort(s->health, (size_t)s->nhealth, sizeof *s->health, id_cmp_health);
+  }
   s->trust = source_trust_load(db, &s->ntrust);
   if (s->trust) qsort(s->trust, (size_t)s->ntrust, sizeof *s->trust, id_cmp_trust);
   s->built_ms = now_ms();
@@ -264,7 +379,16 @@ static int snap_ttl_ms(void) {
 }
 static snapshot *snap_lock(db_handle *db) {
   pthread_mutex_lock(&g_snap_mu);
-  if (!g_snap.built_ms || now_ms() - g_snap.built_ms > snap_ttl_ms()) {
+  /* `>=`, not `>`: a TTL of ZERO means "never serve a cached snapshot", and
+   * with `>` it meant "unless this call lands in the same MILLISECOND as the
+   * last one". That is not a theoretical difference — `test_sourceapi.c` sets
+   * the TTL to 0 precisely so a write it just made is visible to the next
+   * read, and on the macOS runner two consecutive sourceapi_detail() calls
+   * complete inside one millisecond, so the second one read the snapshot from
+   * before the write and the health assertion failed there while passing on
+   * Linux. An operator who disables the cache gets the same surprise, quietly.
+   * At the default 10 s the change is one millisecond of staleness. */
+  if (!g_snap.built_ms || now_ms() - g_snap.built_ms >= snap_ttl_ms()) {
     snapshot fresh;
     snap_load(db, &fresh);
     snap_free(&g_snap);
@@ -285,6 +409,58 @@ static const sched_t *snap_sched(const snapshot *s, const char *id) {
 }
 static const source_trust *snap_trust(const snapshot *s, const char *id) {
   return s->trust ? bsearch(id, s->trust, (size_t)s->ntrust, sizeof *s->trust, key_trust) : NULL;
+}
+static const health_t *snap_health(const snapshot *s, const char *id) {
+  return s->health ? bsearch(id, s->health, (size_t)s->nhealth, sizeof *s->health, key_health) : NULL;
+}
+
+/* The one builder of the `health` object, used by BOTH the search row and the
+ * source detail — two copies would drift, and the whole point is that the
+ * reason a reader sees in a list is the reason the detail page confirms.
+ *
+ * `state` is the answer to "does this source work": "gated" (it needs a
+ * credential and says which), "failing" (the upstream refused us and the
+ * engine recorded why), "degraded" (it ran and stored nothing), "pending"
+ * (never ran), "ok". The first two come from the engine's disclosure records;
+ * the rest from the run status, so a source with no notice still gets a state
+ * rather than a null. */
+static const char *health_state(const srow_t *r, const health_t *h) {
+  if (h && h->state[0])                   return h->state;
+  if (!r || !r->status[0])                return "pending";
+  if (!strcmp(r->status, "offline"))      return "failing";
+  if (!strcmp(r->status, "degraded"))     return "degraded";
+  if (!strcmp(r->status, "pending"))      return "pending";
+  if (!strcmp(r->status, "online"))       return "ok";
+  return "unknown";
+}
+
+static cJSON *health_json(const srow_t *r, const health_t *h) {
+  cJSON *o = cJSON_CreateObject();
+  const char *state = health_state(r, h);
+  cJSON_AddStringToObject(o, "state", state);
+  cJSON_AddBoolToObject(o, "working", !strcmp(state, "ok"));
+  add_str_or_null(o, "kind",    h && h->kind[0]    ? h->kind    : NULL);
+  add_str_or_null(o, "outcome", h && h->outcome[0] ? h->outcome : NULL);
+  add_str_or_null(o, "note",    h && h->note[0]    ? h->note    : NULL);
+  add_str_or_null(o, "remedy",  h && h->remedy[0]  ? h->remedy  : NULL);
+  add_str_or_null(o, "since",   h && h->since[0]   ? h->since   : NULL);
+  /* The env vars a gated source wants, as a list: a client should be able to
+   * name them without splitting a string. */
+  if (h && h->env[0]) {
+    cJSON *a = cJSON_CreateArray();
+    char buf[sizeof h->env];
+    snprintf(buf, sizeof buf, "%s", h->env);
+    for (char *t = strtok(buf, ","); t; t = strtok(NULL, ","))
+      cJSON_AddItemToArray(a, cJSON_CreateString(t));
+    cJSON_AddItemToObject(o, "credentials_required", a);
+  } else {
+    cJSON_AddNullToObject(o, "credentials_required");
+  }
+  if (h && h->http_status > 0) cJSON_AddNumberToObject(o, "http_status", (double)h->http_status);
+  else                         cJSON_AddNullToObject(o, "http_status");
+  if (h && h->body_parsed >= 0) cJSON_AddBoolToObject(o, "body_parsed", h->body_parsed == 1);
+  else                          cJSON_AddNullToObject(o, "body_parsed");
+  return o;
 }
 
 /* ── the compact row every list shares ──────────────────────────────────── */
@@ -361,6 +537,7 @@ static cJSON *row_json(const reg_ent *e, const snapshot *s, long long now) {
   cJSON_AddNumberToObject(o, "notices", a ? (double)a->notices : 0);
   add_str_or_null(o, "last_fetched", a ? a->last_fetched : NULL);
   add_str_or_null(o, "status", r && r->status[0] ? r->status : NULL);
+  cJSON_AddItemToObject(o, "health", health_json(r, snap_health(s, d->id)));
   add_str_or_null(o, "last_check", r ? r->last_check : NULL);
   add_str_or_null(o, "last_success", r ? r->last_success : NULL);
   if (r && r->has_records) cJSON_AddNumberToObject(o, "records_last_run", (double)r->records_count);
@@ -476,6 +653,15 @@ static int hit_matches(const reg_ent *e, const snapshot *s, const sourceapi_quer
     const char *st = (r && r->status[0]) ? r->status : "pending";
     if (strcmp(st, q->status)) return 0;
   }
+  if (nonempty(q->health)) {
+    const char *hs = health_state(r, snap_health(s, d->id));
+    /* "broken" is every state that is not ok. It exists because the question
+     * a reader actually asks is "what is NOT working", and asking that as
+     * four separate queries (failing, gated, degraded, pending) and adding up
+     * is how a reader misses a state somebody adds later. */
+    if (!strcmp(q->health, "broken")) { if (!strcmp(hs, "ok")) return 0; }
+    else if (strcmp(hs, q->health)) return 0;
+  }
   const source_trust *t = snap_trust(s, d->id);
   if (nonempty(q->grade)) {
     if (!strcmp(q->grade, "unrated")) { if (t && t->rated) return 0; }
@@ -509,6 +695,7 @@ static cJSON *search_obj(db_handle *db, const sourceapi_query *q, const char *fo
   hit_t *hits = malloc((size_t)(g_nreg > 0 ? g_nreg : 1) * sizeof *hits);
   int nh = 0;
   facets f_coll = {0}, f_cat = {0}, f_eng = {0}, f_kind = {0}, f_status = {0}, f_grp = {0};
+  facets f_health = {0};
   if (hits) {
     for (int i = 0; i < g_nreg; i++) {
       hit_t h;
@@ -520,6 +707,7 @@ static cJSON *search_obj(db_handle *db, const sourceapi_query *q, const char *fo
       facet_add(&f_cat, (m && m->category) ? m->category : (h.e->d->category ? h.e->d->category : "(none)"));
       facet_add(&f_eng, engine_of(h.e->d));
       facet_add(&f_kind, h.e->kind);
+      facet_add(&f_health, health_state(h.r, snap_health(s, h.e->d->id)));
       facet_add(&f_status, (h.r && h.r->status[0]) ? h.r->status : "pending");
     }
     g_sort = nonempty(qq.sort) ? qq.sort : "name"; g_desc = qq.desc;
@@ -545,6 +733,10 @@ static cJSON *search_obj(db_handle *db, const sourceapi_query *q, const char *fo
   cJSON_AddItemToObject(fa, "engines", facet_json(&f_eng, 16, 0));
   cJSON_AddItemToObject(fa, "kinds", facet_json(&f_kind, 8, 0));
   cJSON_AddItemToObject(fa, "statuses", facet_json(&f_status, 8, 0));
+  /* Every health state with its count: a client offering "what is not
+   * working" needs the states to come from the data rather than a list it
+   * keeps in sync by hand. */
+  cJSON_AddItemToObject(fa, "healths", facet_json(&f_health, 8, 0));
   cJSON *meta = cJSON_CreateObject();
   cJSON_AddItemToObject(meta, "facets", fa);   /* inside meta: the {data,page,meta} envelope every list shares */
   char ts[40]; iso_now(ts, sizeof ts);
@@ -559,6 +751,7 @@ static cJSON *search_obj(db_handle *db, const sourceapi_query *q, const char *fo
   add_str_or_null(fl, "engine", qq.engine);
   add_str_or_null(fl, "kind", qq.kind);
   add_str_or_null(fl, "status", qq.status);
+  add_str_or_null(fl, "health", qq.health);
   add_str_or_null(fl, "grade", qq.grade);
   cJSON_AddBoolToObject(fl, "has_items", qq.has_items);
   cJSON_AddStringToObject(fl, "sort", g_sort);
@@ -1265,6 +1458,10 @@ char *sourceapi_detail(db_handle *db, const char *id) {
 
   cJSON *status = cJSON_CreateObject();
   add_str_or_null(status, "status", r && r->status[0] ? r->status : NULL);
+  /* The same object the search row carries, from the same builder: the reason
+   * a reader saw in the list is the reason this page confirms. The verbatim
+   * notice is still below in `notices`; this is the summary of it. */
+  cJSON_AddItemToObject(status, "health", health_json(r, snap_health(s, id)));
   add_str_or_null(status, "last_check", r ? r->last_check : NULL);
   add_str_or_null(status, "last_success", r ? r->last_success : NULL);
   if (r && r->has_resp) cJSON_AddNumberToObject(status, "response_time_ms", (double)r->response_ms);

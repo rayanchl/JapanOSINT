@@ -1,0 +1,32 @@
+# Open item B2 — the re-pointed rows, measured through ./bin/japanosint --run
+# on 2026-10-21. Every row was also asked about an impossible entity where it
+# is a pivot (rule 4d); those readings are in docs/b2-path-stale-triage-2026-10-21.md.
+#
+# id	kind	rc	records	stored	requests	bytes	notices	reading
+ZA_MUNICIPAL_MONEY	pivot	0	39	39	1	7441	0	cut=demarcation.label:"Cape Town" — 39 of the API's own declared 39; impossible label 0 of 0
+ZA_GOVERNMENT_GAZETTE	pivot	-1	1	1	2	0	1	LOCAL_EGRESS: 3 consecutive engine runs rc=-1 bytes=0, and curl with the engine agent gets "Connection reset by peer" status 000 for the same URL that answered 200 / 46,284 bytes earlier the same day. UNMEASURED FROM HERE, not a verdict about the host; the filter reading (3 notice anchors real, 0 impossible) stands from the earlier reachable window
+US_DATA_GOV_CKAN	pivot	0	8	8	1	144110	0	8 records over 7 distinct datasets — one dataset is linked both with and without ?from_hint, so it stores twice, the second copy labelled "JSON". Upstream anchor shape, documented in the row
+NO_STORTINGET_DATA	scheduled 86400	0	76	76	1	83766	0	/eksport/horinger — 76 committee hearings, complete in one request
+NO_STORTINGET_INTERPELLATIONS	scheduled 86400	0	5	5	1	8557	0	after title_keys fell back to the minister: `tittel` exists and is null on all five
+NO_STORTINGET_QUESTION_TIME	scheduled 86400	0	60	60	1	132832	0	complete in one request
+EU_ECB_SUPERVISED_ENTITIES	scheduled 604800	0	831	830	2	390858	0	index followed to ssm.listofsupervisedentities202608.en.xlsx; 1 collision is ECB's OWN duplicate (LEI 9598006VA7CEUXXG2H60 at sheet rows 160 and 372, identical in every field). 28 of the 831 are country SECTION rows the sheet interleaves among the entities
+EU_ECB_SUPERVISED_ENTITIES_LSI	scheduled 604800	0	2166	2166	2	390858	0	the LSIs sheet of the same workbook; 41 of the 2,166 are country section rows
+
+# Getting those two rows to parse took four readings, and the lesson is the
+# tree's own: A RECORD COUNT SAYS NOTHING ABOUT WHETHER THE FIELDS PARSED.
+# The first run reported 835 records and rc=0 with every field named `col6` and
+# the workbook's TITLE BLOCK stored as supervised banks. Three things had to be
+# measured rather than reasoned about:
+#   * the header is not row 1 — sheet row 12 on SIs, row 8 on LSIs — and
+#     csv_skip_lines counts PHYSICAL lines, so the header's own quoted "\r\n"
+#     (the cell reads "LEI / MFI code for branches") makes it span two of them;
+#   * the two sheets of ONE workbook have DIFFERENT geometry: the LEI is col2
+#     and the name col11 on SIs, col1 and col9 on LSIs. Declaring the SIs
+#     positions on the LSIs sheet emitted 2,166 records titled by their LEI and
+#     two shape notices saying 0 of 2,166 carried the declared keys — the
+#     engine catching it, not me;
+#   * and the header must not be read as a header at all. Its names live in
+#     MERGED cells, so most are empty, and depending on which row the skip
+#     landed on the parser alternated between positional `colN` names and a
+#     field literally named "". `csv_no_header = 1` makes it deterministic,
+#     which is the correct declaration for a spreadsheet laid out for humans.

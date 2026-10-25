@@ -230,6 +230,90 @@ int main(void) {
   assert(sourceapi_summary(&db, "NO_SUCH_SOURCE_ID", 0) == NULL);
   printf("  summary degradation ok\n");
 
+  /* ── health: the reason a source is not working, in the row ────────────
+   *
+   * The engine already records WHY a fetch was refused and what the remedy is;
+   * before this, a reader had to open one source's detail page and read a
+   * notice's properties blob to find it, which for 58,000 sources is the same
+   * as not disclosing it. These assertions pin the projection, the precedence
+   * between the two record kinds, and the one filter a reader actually wants.
+   *
+   * Nothing here removes a source: a failing row keeps its place and gains a
+   * legible reason, which is the operator's decision this implements. */
+  {
+    const char *sid = d->id;
+    /* a refusal, then a credential notice fetched LATER: the newer one wins,
+     * because that is the state the source is in now */
+    insert_item(&db, sid, "hf1", "refused", "collector-fetch-failure",
+      "{\"http_status\":403,\"body_parsed\":false,\"outcome\":\"bot_wall\","
+      "\"note\":\"the host refused this client\","
+      "\"remedy\":\"bisect the agent, then core/httpclient.c UA_OVERRIDE\"}",
+      "2026-10-22T09:00:00Z");
+    char *j = sourceapi_detail(&db, sid);
+    cJSON *o = cJSON_Parse(j); free(j);
+    assert(get(o, "status.health") && "the detail carries health");
+    assert(!strcmp(str(o, "status.health.state"), "failing"));
+    assert(num(o, "status.health.http_status") == 403);
+    assert(str(o, "status.health.remedy") &&
+           strstr(str(o, "status.health.remedy"), "UA_OVERRIDE") &&
+           "the engine's own remedy reaches the reader");
+    assert(cJSON_IsFalse(get(o, "status.health.working")));
+    cJSON_Delete(o);
+
+    insert_item(&db, sid, "hf2", "gated", "collector-status-notice",
+      "{\"status\":\"needs_credential\",\"env_vars_required\":[\"JO_A_KEY\",\"JO_B_KEY\"]}",
+      "2026-10-22T10:00:00Z");
+    j = sourceapi_detail(&db, sid);
+    o = cJSON_Parse(j); free(j);
+    assert(!strcmp(str(o, "status.health.state"), "gated") &&
+           "the NEWER record decides the state");
+    assert(cJSON_GetArraySize(get(o, "status.health.credentials_required")) == 2 &&
+           "a gated source names the vars it needs, as a list");
+    cJSON_Delete(o);
+
+    /* the search row carries the SAME object, from the same builder */
+    sourceapi_query hq = { .q = sid, .limit = 5 };
+    j = sourceapi_search(&db, &hq);
+    o = cJSON_Parse(j); free(j);
+    const cJSON *row = cJSON_GetArrayItem(get(o, "data"), 0);
+    assert(row && !strcmp(cJSON_GetObjectItem(cJSON_GetObjectItem((cJSON *)row, "health"),
+                                              "state")->valuestring, "gated") &&
+           "the list shows the same reason the detail confirms");
+    assert(get(o, "meta.facets.healths") && "the states are a facet");
+    cJSON_Delete(o);
+
+    /* "broken" is every state that is not ok — asked as one query, so a state
+     * added later cannot be missed by a reader adding four counts up */
+    sourceapi_query bq = { .health = "broken", .limit = 500 };
+    j = sourceapi_search(&db, &bq);
+    o = cJSON_Parse(j); free(j);
+    int broken = (int)num(o, "page.total");
+    assert(broken >= 1 && "the gated source is in the broken set");
+    cJSON_Delete(o);
+
+    sourceapi_query okq = { .health = "ok", .limit = 500 };
+    j = sourceapi_search(&db, &okq);
+    o = cJSON_Parse(j); free(j);
+    const cJSON *okrows = get(o, "data");
+    for (int i = 0; i < cJSON_GetArraySize(okrows); i++) {
+      const cJSON *h = cJSON_GetObjectItem(cJSON_GetArrayItem((cJSON *)okrows, i), "health");
+      assert(h && !strcmp(cJSON_GetObjectItem((cJSON *)h, "state")->valuestring, "ok") &&
+             "health=ok returns only working sources");
+    }
+    cJSON_Delete(o);
+
+    /* a truncation notice is a WORKING source telling us something: folding it
+     * in here would report healthy rows as failing */
+    insert_item(&db, sid, "ht1", "truncated", "collector-truncation-notice",
+                "{\"records_available\":9000}", "2026-10-22T11:00:00Z");
+    j = sourceapi_detail(&db, sid);
+    o = cJSON_Parse(j); free(j);
+    assert(!strcmp(str(o, "status.health.state"), "gated") &&
+           "a truncation notice does not change the health state");
+    cJSON_Delete(o);
+    printf("  health projection ok\n");
+  }
+
   db_close(&db);
   printf("test_sourceapi: all passed\n");
   return 0;

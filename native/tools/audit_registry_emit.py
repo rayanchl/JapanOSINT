@@ -48,6 +48,12 @@ Usage:
   audit_registry_emit.py --bin ./bin/japanosint --match '^vsrc19' --jobs 8
   audit_registry_emit.py --bin ./bin/japanosint --ids-file ids.txt --resume
 
+A maintenance pod (collector name beginning with `_`, the convention source.h
+documents) is reported POD and NOT run: it writes its own tables and nothing to
+intel_items, so asking it whether it emits records is the confusion the
+EMITS_NOTHING verdict exists to expose. The first registry-wide sweep reported
+eight of them as dead sources.
+
 Exit status: 1 if any selected source came back EMITS_NOTHING, COLLISION,
 SINK_MISMATCH, NO_RUN_LINE, UNREADABLE_DB or UNREGISTERED, or if an --only id
 is not registered; else 0. SLOW does not fail the run on its own — it is
@@ -58,11 +64,13 @@ before its run returned, UNREADABLE_DB means the verdict rests on the process's
 own word, and an id the binary does not know was never run at all. A sweep made
 entirely of those used to exit 0.
 """
+import atexit
 import argparse
 import io
 import os
 import re
 import shutil
+import json
 import sqlite3
 import subprocess
 import sys
@@ -83,14 +91,35 @@ STORED = re.compile(r"\bstored=(\?|>=\d+|\d+)")
 # the two without subtracting is comparing different things, and it reported
 # SINK_MISMATCH for every healthy row that happened to file one notice.
 RUN_NOTICES = re.compile(r"\bnotices=(\d+)")
+# THE ONE FIELD THAT SEPARATES AN HONEST EMPTY FROM A SILENT FAILURE, and
+# this tool was throwing it away. An EMITS_NOTHING verdict on rc=0 reads the
+# same for a feed that published nothing today and for a row that fetched
+# 131,618 bytes of an OData maintenance page and found no records in it --
+# CLAUDE.md records exactly that row (`il-knesset-dates`), and the reason it
+# stayed invisible is that every host answered, so run_status() read "ok".
+# The byte count is already on the run line; printing it turns an opaque
+# class into a ranked list.
+RUN_BYTES = re.compile(r"\bbytes=(\d+) requests=(\d+)")
 LIST = re.compile(r"^(\S+)\s+collector=(\S+)\s+interval=(-?\d+)\s*$")
 # hpengine's own line, kept because it separates "the upstream had nothing"
 # from "we threw away what it gave us" — a distinction `records=0` cannot make.
 HP_EMIT = re.compile(r"\[hp:[^\]]+\] emitted (\d+) of (\d+) available")
 # The engine's own stderr when it was refused, so the FETCH_FAILED verdict is
 # corroborated by the run output and not inferred from a row count alone.
+#
+# The `[sched]` alternative is the SCHEDULER's own disclosure (2026-10-22), and
+# it exists because this pattern only ever matched hpengine. Until the scheduler
+# filed a fetch-failure for collectors that file none themselves, a refused
+# VJSON or bespoke row had no notice and no `[hp:…]` line, so it fell through to
+# `EMITS_NOTHING` — a verdict about a source that FETCHED and stored none, which
+# is a different defect wanting a different fix. Measured on this tool's own
+# first registry-wide run: 288 of 3,612 rows were that, 18 of 18 sampled being
+# vsrc rows, against 34 that disclosed and were all hp16_*. One more instance of
+# the rule this repo keeps relearning — when you fix something, look for the
+# other copies — and the tool was the third copy.
 FETCH_FAILURE = re.compile(r'\[hp:[^\]]+\]\s+(?:status=\d+|transport failure|'
-                           r'non-JSON body)')
+                           r'non-JSON body)'
+                           r'|\[sched\]\s+\S+\s+fetch-failure:')
 # The engine's three ways of saying "this row was never asked a question".
 # The third was added 2026-10-11 after the second-largest misreading in this
 # tool's history: an on-demand pivot with no entity returned silently, so 268
@@ -192,6 +221,31 @@ ENGINE_NOTICES = (
     "collector-shape-notice",
 )
 
+# ...AND THAT LIST WAS A COPY OF A RULE, so it fell behind the rule. The engine
+# decides what a notice is in ONE place, intel_item_is_notice() in core/intel.c:
+# a record_type that starts `collector-` and ends `-notice`. The run line's
+# `notices=` counter uses it, this tool's three-name tuple did not, and the two
+# disagreed about `collector-status-notice` — the "needs credential" note rule 1
+# prescribes for a gated source.
+#
+# The cost was a FALSE ACCUSATION, which is the worst thing a gate can produce.
+# A key-gated row stores exactly one status notice, so the run line reads
+# `records=0 stored=1 notices=1` while this tool counted that same row as one
+# RECORD, the two numbers disagreed, and the verdict was SINK_MISMATCH: "a
+# collector emitting under another id, or a bug". Measured 2026-10-23 on
+# OPENEI_UTILITY_RATES and worldbank-debarred-firms, both behaving exactly as
+# designed. They are the only two in 9,151 rows, which is precisely why nobody
+# would have questioned the verdict.
+#
+# So the SQL mirrors the engine's rule instead of naming kinds: any
+# `collector-%-notice`, plus collector-fetch-failure, which is deliberately NOT
+# a `-notice` (a dead source reports records=1 so the run line cannot hide it)
+# and still is not a record from the upstream. A notice kind added tomorrow is
+# covered without touching this file — the tuple above stays only because the
+# epilog and the POD note name those three by hand.
+_NOTICE_SQL = ("(record_type LIKE 'collector-%-notice' "
+               "OR record_type = 'collector-fetch-failure')")
+
 
 def db_rows_for(db, sid):
     """-> (real_rows, notice_rows) or (None, None) when the DB is unreadable.
@@ -199,15 +253,13 @@ def db_rows_for(db, sid):
     Unreadable is NOT zero -- see verdict_for()."""
     try:
         con = sqlite3.connect("file:%s?mode=ro" % db, uri=True)
-        qs = ",".join("?" * len(ENGINE_NOTICES))
         real = con.execute(
             "SELECT COUNT(*) FROM intel_items WHERE source_id=? "
-            "AND (record_type IS NULL OR record_type NOT IN (%s))" % qs,
-            (sid,) + ENGINE_NOTICES).fetchone()[0]
+            "AND (record_type IS NULL OR NOT %s)" % _NOTICE_SQL,
+            (sid,)).fetchone()[0]
         notices = con.execute(
             "SELECT COUNT(*) FROM intel_items WHERE source_id=? "
-            "AND record_type IN (%s)" % qs,
-            (sid,) + ENGINE_NOTICES).fetchone()[0]
+            "AND %s" % _NOTICE_SQL, (sid,)).fetchone()[0]
         con.close()
         return real, notices
     except Exception:
@@ -249,6 +301,13 @@ def run_one(a, tmpl, sid, slot):
     secs = round(time.time() - t0, 1)
 
     rows, notices = db_rows_for(db, sid)
+    # Read the gated reason HERE, while the scratch database still exists: the
+    # unlink below is three lines away, and passing the PATH into verdict_for
+    # meant opening a file that had already been deleted — which failed
+    # silently and left a gated source reading EMITS_NOTHING, the very verdict
+    # this is meant to separate it from.
+    gated = status_notice_reason(db, sid)
+    failcause = fetch_failure_reason(db, sid)
     for suf in ("", "-wal", "-shm"):
         try:
             os.unlink(db + suf)
@@ -259,13 +318,149 @@ def run_one(a, tmpl, sid, slot):
         io.open(os.path.join(a.keep_logs, sid + ".log"), "w",
                 encoding="utf-8", newline="\n").write(blob[-40000:])
 
-    res = verdict_for(sid, blob, rc, rows, secs, timed_out, notices)
+    res = verdict_for(sid, blob, rc, rows, secs, timed_out, notices, gated,
+                      failcause)
     with _lock:
         emit_row(a, res)
     return res
 
 
-def verdict_for(sid, blob, rc, rows, secs, timed_out, notices=0):
+def fetch_failure_reason(db, sid):
+    """-> a one-line CAUSE for a refused fetch, read off the engine's own
+    collector-fetch-failure record, else None.
+
+    This existed as a fixed sentence for 4,761 of the 55,834 rows the first
+    complete registry sweep measured (2026-10-25) -- the largest failure class
+    in the tree, and every row of it read "the upstream refused the request or
+    served a body that did not parse", which is the verdict restating itself.
+    The engine has written the cause as DATA since 2026-10-06 (lib/hpengine.c)
+    and 2026-10-22 (core/scheduler.c, every other collector), and since
+    2026-10-23 that includes the nine TLS causes named apart -- a missing
+    intermediate is fixable and an unrecognized_name is not. Not reading it was
+    this tool failing rule 4c against the engine beside it: the disclosure is a
+    row in the database, and the gate that reports on it was matching stderr.
+
+    The two writers carry different fields on purpose (the scheduler has no
+    http_status to report, because a bespoke collector never measured one), so
+    this reads whichever are present rather than assuming a shape."""
+    if not db:
+        return None
+    try:
+        con = sqlite3.connect("file:%s?mode=ro" % db, uri=True)
+        row = con.execute(
+            "SELECT properties FROM intel_items WHERE source_id=? "
+            "AND record_type='collector-fetch-failure' LIMIT 1", (sid,)).fetchone()
+        con.close()
+    except Exception:
+        return None
+    if not row or not row[0]:
+        return None
+    try:
+        p = json.loads(row[0])
+    except Exception:
+        return None
+    bits = []
+    # A status of -1 (or 0) is "nobody measured one", which is a real and
+    # deliberate state: core/scheduler.c files no http_status at all because a
+    # bespoke collector never reported one, and naming a status nobody measured
+    # would be this gate inventing the cause -- the mistake CLAUDE.md records
+    # three times over (Archive-It, the Imperva wall, FDSN's nodata=404).
+    st = p.get("http_status")
+    if isinstance(st, (int, float)) and st > 0:
+        bits.append("HTTP %d" % int(st))
+    else:
+        st = None
+    if p.get("body_parsed") is False and st:
+        bits.append("body did not parse")
+    # A HANDSHAKE REFUSED BEFORE ANY CERTIFICATE WAS JUDGED IS THE ONE CAUSE
+    # THIS CONTAINER ITSELF PRODUCES, so it must not read as the source's.
+    # CLAUDE.md records it twice: a peer reset here can be OUR egress
+    # (`ws_closed_mid_exchange` at $HTTPS_PROXY/__agentproxy/status), and
+    # tools/audit_page_two.py reports exactly this as LOCAL_EGRESS "worded so
+    # nobody can read one as a finding". Measured 2026-10-25: of the first 103
+    # re-classified failures, 51 were a bare handshake and the cluster is
+    # dominated by `eur-ods-*` rows, while a plain curl of an OpenDataSoft host
+    # from this container answers `Recv failure: Connection reset by peer` and
+    # HTTP 000. A named certificate cause (no_local_issuer, expired,
+    # hostname_mismatch, ...) is the SOURCE's and keeps its own wording -- the
+    # whole point of naming the nine causes apart.
+    cause = p.get("tls_cause")
+    te = p.get("transport_error")
+    bare = (cause in (None, "", "none", "handshake", "other")
+            and te in (None, "", "none", "ok", "other", "connect"))
+    if cause and cause != "none":
+        bits.append("TLS %s" % cause)
+        if p.get("tls_detail"):
+            bits.append(str(p["tls_detail"])[:60])
+    if te and te not in ("none", "ok"):
+        bits.append("transport %s" % te)
+    if bare and not st:
+        bits.append("NO CERTIFICATE WAS JUDGED and no status was measured, "
+                    "which is also what this container's own egress looks "
+                    "like — check $HTTPS_PROXY/__agentproxy/status and re-read "
+                    "from another network before treating this as the "
+                    "source's (CLAUDE.md: a peer reset here can be ours)")
+    hc, ha = p.get("hosts_contacted"), p.get("hosts_answered")
+    if isinstance(hc, (int, float)) and isinstance(ha, (int, float)):
+        bits.append("%d of %d hosts answered" % (int(ha), int(hc)))
+    nb = p.get("hosts_no_answer")
+    if nb:
+        bits.append("silent: %s" % str(nb)[:80])
+    by = p.get("bytes_fetched")
+    if isinstance(by, (int, float)):
+        bits.append("%d bytes" % int(by))
+    if not bits:
+        # No measured field to report, but the record still carries the
+        # engine's own sentence about what happened. Prefer it to this tool's
+        # generic one: it is the writer's account, and an hpengine row whose
+        # transport failed before any status existed has nothing else to give.
+        rsn = p.get("outcome") or p.get("reason")
+        if rsn:
+            bits.append("no status measured; engine: " + str(rsn)[:200])
+        else:
+            return None
+    rem = p.get("remedy") or p.get("tls_remedy")
+    out = "; ".join(bits)
+    if rem:
+        out += " | remedy: " + str(rem)[:200]
+    return out
+
+
+def status_notice_reason(db, sid):
+    """-> a one-line reason when this source stored a collector-status-notice
+    and nothing else, else None.
+
+    The notice is the engine's "I did not invent a record" record: for a gated
+    source it carries status=needs_credential and the env vars that would open
+    it, which is the remedy a reader needs. Read from the DATABASE rather than
+    matched on stderr, because a notice is data and the run line is not."""
+    if not db:
+        return None
+    try:
+        con = sqlite3.connect("file:%s?mode=ro" % db, uri=True)
+        row = con.execute(
+            "SELECT properties FROM intel_items WHERE source_id=? "
+            "AND record_type='collector-status-notice' LIMIT 1", (sid,)).fetchone()
+        con.close()
+    except Exception:
+        return None
+    if not row or not row[0]:
+        return None
+    try:
+        p = json.loads(row[0])
+    except Exception:
+        return "stored a collector-status-notice and no records"
+    st = p.get("status") or "status notice"
+    envs = p.get("env_vars_required") or []
+    if st == "needs_credential":
+        return ("waiting for a credential, and said so as data: needs %s "
+                "(rule 1's gated note, not a defect)"
+                % (", ".join(envs) if envs else "an unnamed credential"))
+    return ("stored a collector-status-notice saying %r and no records" % st)
+
+
+def verdict_for(sid, blob, rc, rows, secs, timed_out, notices=0, gated=None,
+                failcause=None):
     sched = None
     for m in SCHED.finditer(blob):
         if m.group(1) == sid:
@@ -349,9 +544,10 @@ def verdict_for(sid, blob, rc, rows, secs, timed_out, notices=0):
     if rows == 0 and notices > 0 and FETCH_FAILURE.search(blob):
         return (sid, "FETCH_FAILED", rc, sched_rc, emitted, stored, rows,
                 available, secs,
+                failcause or
                 "the upstream refused the request or served a body that did "
                 "not parse; the engine stored a collector-fetch-failure "
-                "notice and no records (rule 1)")
+                "notice that carried no cause fields (rule 1)")
 
     note = stored_note
     if stored_records >= 0 and rows != stored_records and not stored_note:
@@ -372,13 +568,72 @@ def verdict_for(sid, blob, rc, rows, secs, timed_out, notices=0):
             return (sid, "NEEDS_ENTITY", rc, sched_rc, emitted, stored, rows,
                     available, secs,
                     "on-demand pivot: reachable only with an entity (rule 3)")
+        # A row that is WAITING FOR A CREDENTIAL stored exactly what rule 1
+        # asks of it: a collector-status-notice naming the env vars it needs,
+        # and no invented records. Reporting that as EMITS_NOTHING puts a row
+        # doing the right thing in the same column as a row whose keys are
+        # wrong, and the remedy is not the same — one needs a key, the other
+        # needs title_keys/id_keys. Same reasoning as NEEDS_ENTITY above and
+        # POD below: a source behaving exactly as designed does not belong in
+        # a defect bucket. (Before this it read SINK_MISMATCH, for the
+        # notice-definition drift recorded at ENGINE_NOTICES.)
+        if gated:
+            return (sid, "GATED", rc, sched_rc, emitted, stored, rows,
+                    available, secs, gated)
+        # A DATE-WINDOW ROW READ AN HONESTLY EMPTY WINDOW AND ADVANCED, which
+        # is this tree's own rule 1 (an upstream's "nothing matched" is not a
+        # refusal) and not a defect. Reporting it EMITS_NOTHING is this tool
+        # making the confusion that verdict exists to expose, exactly as the
+        # POD and GATED corrections above were.
+        #
+        # It matters at scale because of HOW this gate runs: every source gets
+        # a FRESH scratch database, so a window row has no stored position and
+        # always reads window 1 of N, starting at its declared window_from.
+        # The verdict is therefore about the walk's STARTING POINT, never about
+        # the source. Measured 2026-10-25: all 47 KKJ prefecture rows read
+        # EMITS_NOTHING for exactly that reason — kkj.go.jp answers their first
+        # 45-day window with `<SearchHits>0</SearchHits>` in 144 bytes because
+        # Japan's procurement corpus begins at fiscal year 2021 (Aomori: 0 in
+        # each of 2021-01..03, then 108, 68, 117 from April), while a window
+        # near today holds 218 records and 2024 holds 282. Forty-seven healthy
+        # sources in a defect bucket, on the one reading a fresh database can
+        # take.
+        wm = re.search(r"\[hp:%s\] window (\S+)\.\.(\S+)" % re.escape(sid), blob)
+        adv = ("the next run reads the window beginning" in blob)
+        if wm and adv and rc == 0:
+            return (sid, "WINDOW_EMPTY", rc, sched_rc, emitted, stored, rows,
+                    available, secs,
+                    "date-window row: the window %s..%s is honestly empty and "
+                    "the walk advanced (rule 1). This gate gives every source "
+                    "a fresh database, so a window row reads window 1 of N "
+                    "from its declared window_from — this says where the walk "
+                    "STARTS, not whether the source works. Re-read it with a "
+                    "window near today before treating it as a finding"
+                    % (wm.group(1), wm.group(2)))
         if available > 0:
             return (sid, "EMITS_NOTHING", rc, sched_rc, emitted, stored, rows,
                     available, secs,
                     "fetched %d records and stored none — needs title_keys/"
                     "id_keys, or is not a record source" % available)
+        transfer = ""
+        if sched:
+            bm = RUN_BYTES.search(blob[sched.end():sched.end() + 240])
+            if bm:
+                nb, nr = int(bm.group(1)), int(bm.group(2))
+                if nb > 2048:
+                    transfer = (" — but it FETCHED %d bytes over %d request(s) "
+                                "and found no records in them, so this is a "
+                                "body that is not what the row expects (a "
+                                "maintenance or error page, a moved endpoint, "
+                                "a changed shape), not an empty upstream: read "
+                                "the body" % (nb, nr))
+                else:
+                    transfer = (" — it transferred %d bytes over %d request(s), "
+                                "so the upstream really did hand over nothing"
+                                % (nb, nr))
         return (sid, "EMITS_NOTHING", rc, sched_rc, emitted, stored, rows,
-                available, secs, note or "no records reached intel_items")
+                available, secs,
+                (note or "no records reached intel_items") + transfer)
     if emitted > 0 and rows < emitted:
         return (sid, "COLLISION", rc, sched_rc, emitted, stored, rows,
                 available, secs,
@@ -418,7 +673,7 @@ def main():
         description="Prove registered sources EMIT and STORE, not merely fetch.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="verdicts: OK | EMITS_NOTHING | COLLISION | FETCH_FAILED | "
-               "SLOW | NEEDS_ENTITY"
+               "SLOW | NEEDS_ENTITY | GATED | POD"
                " | SINK_MISMATCH | UNREADABLE_DB | NO_RUN_LINE | UNREGISTERED")
     ap.add_argument("--bin", required=True, help="path to the japanosint binary")
     sel = ap.add_argument_group("source selection (combined with AND)")
@@ -452,6 +707,9 @@ def main():
     ap.add_argument("--resume", action="store_true",
                     help="skip ids already present in --out")
     ap.add_argument("--quiet", action="store_true")
+    ap.add_argument("--no-pin", action="store_true",
+                    help="run the binary in place instead of a pinned copy "
+                         "(only to measure the binary as it changes)")
     a = ap.parse_args()
 
     a.bin = os.path.abspath(a.bin)
@@ -464,6 +722,27 @@ def main():
     a.entities = ents
     if not os.access(a.bin, os.X_OK):
         raise SystemExit("not executable: %s" % a.bin)
+    # PIN THE BINARY. CLAUDE.md says "never rebuild the binary while an audit
+    # runs", and that is a discipline nobody can hold for the two hours a 290-
+    # row sweep takes: a `make` in another shell replaces this file underneath
+    # the sweep and every remaining row comes back shell rc=126, which the
+    # tool reports as NO_RUN_LINE — "the process died before the run returned".
+    # Measured 2026-10-20: 229 of 290 batch-49 rows read that way, from a
+    # rebuild made in the middle for an unrelated row fix. Those verdicts look
+    # exactly like a batch of broken sources.
+    #
+    # So copy it once, run against the copy, and the footgun is gone rather
+    # than remembered.
+    if not a.no_pin:
+        _pin = os.path.join(tempfile.gettempdir(),
+                            "jo-audit-bin-%d" % os.getpid())
+        shutil.copy2(a.bin, _pin)
+        os.chmod(_pin, 0o755)
+        atexit.register(lambda: os.path.exists(_pin) and os.unlink(_pin))
+        if not a.quiet:
+            print("pinned binary: %s (a rebuild cannot disturb this run)"
+                  % _pin, flush=True)
+        a.bin = _pin
     a.file_limit_kb = a.file_limit * 1024      # `ulimit -f` counts 1K blocks
 
     own_tmp = None
@@ -514,6 +793,21 @@ def main():
             want = set(x.strip() for x in io.open(a.ids_file, encoding="utf-8")
                        if x.strip() and not x.startswith("#"))
             srcs = [s for s in srcs if s[0] in want]
+        # A MAINTENANCE POD IS NOT A RECORD SOURCE, and running one answers a
+        # question it was never asked. `source.h`'s convention is a collector
+        # name beginning with `_` (_maint, _enrich, _probe, _vec…), and the
+        # embedding backfill, the camera stills lane, the translator and the
+        # vector indexers all live there: they write their own tables and
+        # nothing to intel_items, by design. The first registry-wide sweep
+        # reported eight of them as EMITS_NOTHING, which is this tool making the
+        # confusion the EMITS_NOTHING verdict exists to expose. They are
+        # reported as POD and not run — listed, so nothing registered hides,
+        # and never counted as a finding.
+        pods = [s for s in srcs if s[1].startswith("_")]
+        srcs = [s for s in srcs if not s[1].startswith("_")]
+        if pods:
+            sys.stderr.write("pods: %d maintenance lane(s) reported POD, not "
+                             "run (collector name starts with '_')\n" % len(pods))
         ids = [s[0] for s in srcs]
         if a.resume and a.out:
             done = already_done(a.out)
@@ -539,6 +833,17 @@ def main():
         sys.stderr.write("running %d sources, jobs=%d timeout=%ds\n"
                          % (len(ids), a.jobs, a.timeout))
         res = []
+        done_ids = already_done(a.out) if (a.resume and a.out) else set()
+        for pid, pcoll, pival in pods:
+            if pid in done_ids:
+                continue
+            row = (pid, "POD", 0, 0, -1, -1, -1, -1, 0.0,
+                   "maintenance pod (collector %s): writes its own tables, not "
+                   "intel_items — not run" % pcoll)
+            res.append(row)
+            if a.out_fh:
+                a.out_fh.write("\t".join(str(x) for x in row) + "\n")
+                a.out_fh.flush()
         with ThreadPoolExecutor(max_workers=a.jobs) as ex:
             # The slot is the source's INDEX, not index % jobs: two tasks
             # sharing a slot can overlap (the pool does not hand work out in
@@ -563,7 +868,20 @@ def main():
     # difference the first time this ran: a SLOW row contributes 33,249 stored
     # rows and no emit count, which made the fleet look like it stored 25,582
     # records more than it emitted.
-    measured = [r for r in res if r[4] >= 0 and r[6] >= 0]
+    #
+    # A FETCH_FAILED row is excluded from the pair as well, and that is not
+    # tidiness: its `emitted` is 1 because the engine's own fetch-failure
+    # record goes through emit() and is NOT a `collector-*-notice`, while
+    # `db_rows_for` excludes that record_type from the row count by design. So
+    # the pair reads 1 emitted against 0 stored and the difference tallies as a
+    # record "lost to uid collision" — a disclosure counted as a discard. It
+    # was invisible while only hpengine disclosed (34 rows of the first 3,612);
+    # the scheduler-side disclosure of 2026-10-22 would have turned it into the
+    # headline number, since every refused row in the fleet now files one.
+    # Counted and named separately instead.
+    failed = [r for r in res if r[1] == "FETCH_FAILED"]
+    measured = [r for r in res
+                if r[4] >= 0 and r[6] >= 0 and r[1] != "FETCH_FAILED"]
     tot_e = sum(r[4] for r in measured)
     tot_s = sum(r[6] for r in measured)
     # Per-source, and floored at zero: a collector that makes its own sink can
@@ -573,10 +891,15 @@ def main():
     print("over the %d sources where both numbers are known — records emitted: "
           "%s, rows stored: %s, records lost to uid collision: %s"
           % (len(measured), f"{tot_e:,}", f"{tot_s:,}", f"{lost:,}"))
-    if len(measured) != len(res):
+    if failed:
+        print("(%d source(s) stored a fetch-failure disclosure and no records; "
+              "that row is a disclosure, not a discard, so they are not in "
+              "those totals)" % len(failed))
+    skipped = len(res) - len(measured) - len(failed)
+    if skipped > 0:
         print("(%d source(s) contributed no comparable pair — SLOW, "
               "NO_RUN_LINE or UNREADABLE_DB — and are excluded from those "
-              "totals rather than counted as zero)" % (len(res) - len(measured)))
+              "totals rather than counted as zero)" % skipped)
 
     coll = sorted([r for r in res if r[1] == "COLLISION"],
                   key=lambda r: r[6] - r[4])

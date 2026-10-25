@@ -1384,14 +1384,28 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "nuclear-event-report",
     .tags = "\"nuclear\",\"regulator\",\"incident\",\"usa\",\"nrc\",\"safety\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
-    /* MOVED (2026-10-25, docs/html-reachability-2026-10.md): the old
-     * reading-rm path 301s here and the day links are now
-     * /event-notification-reports/2026/2026MMDDen, so the old href_must
-     * matched none of the page's 229 anchors. STILL STORES NOTHING: the new
-     * page is a calendar whose day links are labelled "1".."31", and
-     * hp_run_html skips an anchor whose label is under 3 characters when
-     * nothing beside it names it either — an engine rule, not this row's.
-     * The URL and href_must are right for the day links. */
+    /* RE-POINTED 2026-10-25, and TWO SESSIONS FOUND THE MOVE INDEPENDENTLY
+     * THE SAME DAY — this one from the registry sweep's EMITS_NOTHING verdict
+     * once it was given the byte count already on the run line (130,950 bytes
+     * fetched, rc=0 records=0 stored=0, rule 1's invisible nothing), the other
+     * from the HP_HTML reachability sweep (docs/html-reachability-2026-10.md).
+     * Both re-pointed to this same URL and href_must: nrc.gov was
+     * restructured, the old /reading-rm/doc-collections/event-status/ tree
+     * 301s away, and the day links are now
+     * /event-notification-reports/2026/2026MMDDen. 205 day links read here,
+     * 229 anchors read there — different days, same page.
+     *
+     * IT STILL STORES NOTHING, AND NOW IT SAYS SO. The listing is a calendar,
+     * so every visible label is the day of the month ("23", "1"), and
+     * hp_run_html rejects a label under three characters when nothing beside
+     * it names the link either — an engine rule, not this row's, and one that
+     * STAYS: it is what keeps pagination digits and "»" out of every HTML
+     * row. What was missing was the disclosure, which the JSON path has had as
+     * `label-keys-unmatched` all along; the HTML path files
+     * `anchors-unlabelled` now (hptest 57/57b, controls 57c/57d), naming how
+     * many anchors matched and telling the reader NOT to lower the minimum.
+     * So the URL and href_must are right for the day links, and the row is
+     * disclosing rather than silent until the labels can be read. */
     .url = "https://www.nrc.gov/documents-reports/document-collections/"
       "events-reports-associated-with/event-notification-reports/2026",
     .base = "https://www.nrc.gov",
@@ -1415,9 +1429,10 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "nuclear-event-report",
     .tags = "\"nuclear\",\"regulator\",\"incident\",\"usa\",\"nrc\",\"safety\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
-    /* MOVED (2026-10-25): same move, and the same 2-character day labels,
-     * as the 2026 listing above — still stores nothing until the engine
-     * labels such links. */
+    /* RE-POINTED 2026-10-25: the same move and the same day-number labels as
+     * the 2026 listing above (136,942 bytes fetched for nothing; 245 day
+     * links read here). It discloses through `anchors-unlabelled` now rather
+     * than failing silently — see that row's note. */
     .url = "https://www.nrc.gov/documents-reports/document-collections/"
       "events-reports-associated-with/event-notification-reports/2025",
     .base = "https://www.nrc.gov",
@@ -1437,10 +1452,14 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "nuclear-defect-report",
     .tags = "\"nuclear\",\"regulator\",\"defect\",\"supplychain\",\"usa\",\"nrc\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
-    /* MOVED (2026-10-25): the old path 301s to the page below, which links
-     * each report straight to its ADAMS PDF (/docs/ML26xx/ML26…pdf, 41 on
-     * the page that day, every one a 2026 report); nothing else on the
-     * page links under /docs/ML. */
+    /* RE-POINTED 2026-10-25, and this one CHANGED SHAPE as well as path: the
+     * old /reading-rm/ tree 301s here (114,037 bytes fetched against an
+     * href_must naming the old path, for rc=0 records=0 stored=0), and the
+     * reports are no longer daily HTML pages but ADAMS PDFs linked straight
+     * from the listing as /docs/ML26xx/ML26….pdf — so that path is the
+     * href_must, and nothing else on the page links under /docs/ML. Unlike
+     * the two event rows above, this one STORES: 41 records, every one a 2026
+     * report, measured independently by both sessions that found the move. */
     .url = "https://www.nrc.gov/regulations-legislation/"
       "reports-associated-with-events/part-21-reports/2026",
     .base = "https://www.nrc.gov",

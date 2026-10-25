@@ -6,6 +6,7 @@
  * since — this file, not the manifest, is the current copy. The
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
+#include "_vjson_idkeys.inc"
 
 VGEO(nam_ags_metro_transportation_network_tnet_in_king_county_for, "nam-ags-metro-transportation-network-tnet-in-king-county-for", "Metro Transportation Network (TNET) in King County for Car Mode — CAR Mode from Transportation Network", "Metro Transportation Network (TNET) in King County for Car Mode — CAR Mode from Transportation Network",
   "us_local", "transport",
@@ -25,12 +26,17 @@ VGEO(nam_ags_road_centerlines_road_centerlines, "nam-ags-road-centerlines-road-c
   "en", "[\"usa\",\"transport\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer 'Road Centerlines' from the 'Road Centerlines' service, GeoJSON with per-feature geometry.");
 
-VJSON(nam_austin_311, "nam-austin-311", "City of Austin — 311 unified data", "City of Austin — 311 unified data",
+/* Registry sweep 2026-10-22: 2616 of 10000 records a run collapsed onto a uid
+   already written (26.2%). VJSON/VGEO's id precedence list finds no field in
+   this Socrata record, so it fell back and keyed on content. Measured over two
+   pages before the key was touched: 1,000 of 1,000 distinct — the service-request number. */
+VJSON_IDKEYS(nam_austin_311, "nam-austin-311", "City of Austin — 311 unified data", "City of Austin — 311 unified data",
   "us_local", "opendata",
   "https://data.austintexas.gov/resource/xwdj-i9he.json?$limit=500&$order=:id",
   "",
   "en", "[\"usa\",\"tx\",\"311\",\"opendata\"]", 3600,
-  "Austin 311 service requests with department, method received, status and location.");
+  "Austin 311 service requests with department, method received, status and location.",
+  "sr_number");
 
 VJSON(nam_austin_crime_reports, "nam-austin-crime-reports", "City of Austin — police crime reports", "City of Austin — police crime reports",
   "us_local", "crime",
@@ -81,12 +87,17 @@ VGEO(nam_cambridgema_sprinkler_and_standpipe_permits, "nam-cambridgema-sprinkler
   "en", "[\"usa\",\"ma\",\"economy\",\"opendata\"]", 21600,
   "Socrata open-data feed from City of Cambridge, Massachusetts: Sprinkler and Standpipe Permits, one JSON record per row.");
 
-VJSON(nam_chicago_311_requests, "nam-chicago-311-requests", "City of Chicago — 311 service requests (most recent)", "City of Chicago — 311 service requests (most recent)",
+/* Registry sweep 2026-10-22: 1489 of 10000 records a run collapsed onto a uid
+   already written (14.9%). VJSON/VGEO's id precedence list finds no field in
+   this Socrata record, so it fell back and keyed on content. Measured over two
+   pages before the key was touched: 1,000 of 1,000 distinct — the service-request number. */
+VJSON_IDKEYS(nam_chicago_311_requests, "nam-chicago-311-requests", "City of Chicago — 311 service requests (most recent)", "City of Chicago — 311 service requests (most recent)",
   "us_local", "opendata",
   "https://data.cityofchicago.org/resource/v6vf-nfxy.json?$limit=500&$order=created_date%20DESC",
   "",
   "en", "[\"usa\",\"il\",\"311\",\"opendata\"]", 1800,
-  "Newest Chicago 311 requests with type, status, ward and coordinates.");
+  "Newest Chicago 311 requests with type, status, ward and coordinates.",
+  "sr_number");
 
 VJSON(nam_chicago_building_permits, "nam-chicago-building-permits", "City of Chicago — building permits", "City of Chicago — building permits",
   "us_local", "economy",
@@ -102,12 +113,17 @@ VJSON(nam_chicago_crimes_recent, "nam-chicago-crimes-recent", "City of Chicago �
   "en", "[\"usa\",\"il\",\"crime\",\"police\"]", 3600,
   "Newest Chicago Police incident reports with primary type, arrest flag, beat and block-level location.");
 
-VJSON(nam_chicago_food_inspections, "nam-chicago-food-inspections", "City of Chicago — food establishment inspections", "City of Chicago — food establishment inspections",
+/* Registry sweep 2026-10-22: 2222 of 10000 records a run collapsed onto a uid
+   already written (22.2%). VJSON/VGEO's id precedence list finds no field in
+   this Socrata record, so it fell back and keyed on content. Measured over two
+   pages before the key was touched: 1,000 of 1,000 distinct — the inspection id; a restaurant is inspected many times. */
+VJSON_IDKEYS(nam_chicago_food_inspections, "nam-chicago-food-inspections", "City of Chicago — food establishment inspections", "City of Chicago — food establishment inspections",
   "us_local", "health",
   "https://data.cityofchicago.org/resource/4ijn-s7e5.json?$limit=500&$order=:id",
   "",
   "en", "[\"usa\",\"il\",\"health\",\"inspections\"]", 21600,
-  "Chicago food inspection outcomes with risk level, violations and facility location.");
+  "Chicago food inspection outcomes with risk level, violations and facility location.",
+  "inspection_id");
 
 VJSON(nam_chicago_towed_vehicles, "nam-chicago-towed-vehicles", "City of Chicago — towed vehicles", "City of Chicago — towed vehicles",
   "us_local", "transport",
@@ -116,12 +132,17 @@ VJSON(nam_chicago_towed_vehicles, "nam-chicago-towed-vehicles", "City of Chicago
   "en", "[\"usa\",\"il\",\"transport\",\"enforcement\"]", 21600,
   "Vehicles towed by the City of Chicago in the last 90 days with make, colour, plate state and pound.");
 
-VJSON(nam_chicago_traffic_crashes, "nam-chicago-traffic-crashes", "City of Chicago — traffic crashes (most recent)", "City of Chicago — traffic crashes (most recent)",
+/* Registry sweep 2026-10-22: 1894 of 10000 records a run collapsed onto a uid
+   already written (18.9%). VJSON/VGEO's id precedence list finds no field in
+   this Socrata record, so it fell back and keyed on content. Measured over two
+   pages before the key was touched: 1,000 of 1,000 distinct — the crash record id. */
+VJSON_IDKEYS(nam_chicago_traffic_crashes, "nam-chicago-traffic-crashes", "City of Chicago — traffic crashes (most recent)", "City of Chicago — traffic crashes (most recent)",
   "us_local", "transport",
   "https://data.cityofchicago.org/resource/85ca-t3if.json?$limit=500&$order=crash_date%20DESC",
   "",
   "en", "[\"usa\",\"il\",\"transport\",\"crashes\"]", 3600,
-  "Latest reported Chicago crashes with cause, injuries, lighting and weather conditions.");
+  "Latest reported Chicago crashes with cause, injuries, lighting and weather conditions.",
+  "crash_record_id");
 
 VGEO(nam_cityofchicago_beach_e_coli_predictions, "nam-cityofchicago-beach-e-coli-predictions", "City of Chicago — Beach E. coli Predictions", "City of Chicago — Beach E. coli Predictions",
   "us_local", "opendata",
@@ -141,11 +162,16 @@ VGEO(nam_cityofchicago_cdph_environmental_enforcement, "nam-cityofchicago-cdph-e
   "en", "[\"usa\",\"il\",\"environment\",\"opendata\"]", 21600,
   "Socrata open-data feed from City of Chicago: CDPH Environmental Enforcement, one JSON record per row.");
 
-VGEO(nam_cityofchicago_chicago_energy_benchmarking, "nam-cityofchicago-chicago-energy-benchmarking", "City of Chicago — Chicago Energy Benchmarking", "City of Chicago — Chicago Energy Benchmarking",
+/* Registry sweep 2026-10-22: 4085 of 8000 records a run collapsed onto a uid
+   already written (51.1%). VJSON/VGEO's id precedence list finds no field in
+   this Socrata record, so it fell back and keyed on content. Measured over two
+   pages before the key was touched: 800 of 800 distinct — Socrata's own row id. NOT `address`, which a minimal-key search finds unique in one sample and which is per BUILDING on a dataset that reports per YEAR. */
+VGEO_IDKEYS(nam_cityofchicago_chicago_energy_benchmarking, "nam-cityofchicago-chicago-energy-benchmarking", "City of Chicago — Chicago Energy Benchmarking", "City of Chicago — Chicago Energy Benchmarking",
   "us_local", "energy",
   "https://data.cityofchicago.org/resource/xq83-jr8c.geojson?$limit=400&$order=:id",
   "en", "[\"usa\",\"il\",\"energy\",\"opendata\"]", 21600,
-  "Socrata open-data feed from City of Chicago: Chicago Energy Benchmarking, one JSON record per row.");
+  "Socrata open-data feed from City of Chicago: Chicago Energy Benchmarking, one JSON record per row.",
+  "id+data_year");
 
 VGEO(nam_cityofgainesville_311_service_requests_mygnv, "nam-cityofgainesville-311-service-requests-mygnv", "City of Gainesville, Florida — 311 Service Requests (myGNV)", "City of Gainesville, Florida — 311 Service Requests (myGNV)",
   "us_local", "opendata",
@@ -189,11 +215,16 @@ VGEO(nam_cityofnewyork_parking_meters_locations_and_status, "nam-cityofnewyork-p
   "en", "[\"usa\",\"ny\",\"transport\",\"opendata\"]", 21600,
   "Socrata open-data feed from City of New York: Parking Meters Locations and Status, one JSON record per row.");
 
-VGEO(nam_cityofnewyork_street_closures_due_to_construction_acti, "nam-cityofnewyork-street-closures-due-to-construction-acti", "City of New York — Street Closures due to Construction Activities by Block", "City of New York — Street Closures due to Construction Activities by Block",
+/* Registry sweep 2026-10-22: 191 of 4343 records a run collapsed onto a uid
+   already written (4.4%). VJSON/VGEO's id precedence list finds no field in
+   this Socrata record, so it fell back and keyed on content. Measured over two
+   pages before the key was touched: 776 of 800 distinct — the closure's own id, and 776 is also the sample's WHOLE-record distinctness, so every remaining collapse is the upstream's own byte-identical duplicate. */
+VGEO_IDKEYS(nam_cityofnewyork_street_closures_due_to_construction_acti, "nam-cityofnewyork-street-closures-due-to-construction-acti", "City of New York — Street Closures due to Construction Activities by Block", "City of New York — Street Closures due to Construction Activities by Block",
   "us_local", "transport",
   "https://data.cityofnewyork.us/resource/i6b5-j7bu.geojson?$limit=400&$order=:id",
   "en", "[\"usa\",\"ny\",\"transport\",\"opendata\"]", 1800,
-  "Socrata open-data feed from City of New York: Street Closures due to Construction Activities by Block, one JSON record per row.");
+  "Socrata open-data feed from City of New York: Street Closures due to Construction Activities by Block, one JSON record per row.",
+  "uniqueid");
 
 VJSON(nam_ckan_wprdc_health, "nam-ckan-wprdc-health", "Western Pennsylvania Regional Data Center — open data catalogue (health datasets)", "Western Pennsylvania Regional Data Center — open data catalogue (health datasets)",
   "us_local", "health",
@@ -319,12 +350,17 @@ VJSON(nam_la_311_requests, "nam-la-311-requests", "City of Los Angeles — 311 s
   "en", "[\"usa\",\"ca\",\"311\",\"opendata\"]", 3600,
   "Los Angeles MyLA311 requests with type, council district, status and coordinates.");
 
-VJSON(nam_la_crime_recent, "nam-la-crime-recent", "City of Los Angeles — crime reports (2020 onward)", "City of Los Angeles — crime reports (2020 onward)",
+/* Registry sweep 2026-10-22: 2821 of 10000 records a run collapsed onto a uid
+   already written (28.2%). VJSON/VGEO's id precedence list finds no field in
+   this Socrata record, so it fell back and keyed on content. Measured over two
+   pages before the key was touched: 1,000 of 1,000 distinct — LAPD's division-of-records number, the dataset's documented row id. */
+VJSON_IDKEYS(nam_la_crime_recent, "nam-la-crime-recent", "City of Los Angeles — crime reports (2020 onward)", "City of Los Angeles — crime reports (2020 onward)",
   "us_local", "crime",
   "https://data.lacity.org/resource/2nrs-mtv8.json?$limit=500&$order=:id",
   "",
   "en", "[\"usa\",\"ca\",\"crime\",\"police\"]", 21600,
-  "LAPD crime reports with offence code, victim demographics, weapon and reporting district.");
+  "LAPD crime reports with offence code, victim demographics, weapon and reporting district.",
+  "dr_no");
 
 VGEO(nam_lacity_energy_and_water_use_municipal_buildings, "nam-lacity-energy-and-water-use-municipal-buildings", "City of Los Angeles — Energy and Water Use - Municipal Buildings", "City of Los Angeles — Energy and Water Use - Municipal Buildings",
   "us_local", "environment",

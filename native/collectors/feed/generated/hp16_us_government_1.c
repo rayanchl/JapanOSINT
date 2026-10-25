@@ -94,10 +94,12 @@ static const hp_source T[] = {
     .collector = "us_government", .category = "government",
     .description = "157 federal accounts for USDA FY2024, each with code, name, obligated_amount, gross_outlay_amount and children[] listing the treasury account symbols beneath it. The appropriations map of an agency.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "government-record", .tags = "\"us\",\"government\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://api.usaspending.gov/api/v2/agency/012/federal_account/?fiscal_year=2024&limit=3",
+    .url = "https://api.usaspending.gov/api/v2/agency/012/federal_account/?fiscal_year=2024&limit=100",
     .array_path = "results",
     .detail_url = "https://api.usaspending.gov/api/v2/federal_accounts/{v}/", .detail_key = "code",
-    .page_walk = 1,
+    .page_max = 2,   /* 2 x 100 records a run. This row has a detail hop, and the per-run hop budget is 1,000 OR 120 SECONDS — the CLOCK is what binds on a slow host, measured on api.safecast.org, which reached 116 hops of 1,000 before its 120s ran out (2026-10-20). So a run is sized to what can plausibly be deepened rather than to what the API will serve: records past the budget are stamped _detail_pending and, because the budget is spent in page order, never deepened on a later run either. The per-host hop rate is NOT measured for this row — 200 is the family default and the number to revisit if its detail-truncation notice shows pending records. See docs/probe-sized-pages-2026-10-20.md */
+    .page_param = "page",
+    .page_start = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "us-usaspending-agency-overview",
@@ -116,10 +118,12 @@ static const hp_source T[] = {
     .collector = "us_government", .category = "government",
     .description = "111 agencies with agency_name, abbreviation, toptier_code, agency_id, current_total_budget_authority_amount, recent_publication_date, discrepancy_count, obligation_difference, unlinked contract/assistance award counts and assurance statement URL. This is the metadata that tells you how trustworthy an agency's reported spending is.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "government-record", .tags = "\"us\",\"government\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://api.usaspending.gov/api/v2/reporting/agencies/overview/?fiscal_year=2024&fiscal_period=9&limit=3",
+    .url = "https://api.usaspending.gov/api/v2/reporting/agencies/overview/?fiscal_year=2024&fiscal_period=9&limit=100",
     .array_path = "results",
     .detail_url = "https://api.usaspending.gov/api/v2/reporting/agencies/{v}/differences/?fiscal_year=2024&fiscal_period=9", .detail_key = "toptier_code",
-    .page_walk = 1,
+    .page_max = 2,   /* 2 x 100 records a run. This row has a detail hop, and the per-run hop budget is 1,000 OR 120 SECONDS — the CLOCK is what binds on a slow host, measured on api.safecast.org, which reached 116 hops of 1,000 before its 120s ran out (2026-10-20). So a run is sized to what can plausibly be deepened rather than to what the API will serve: records past the budget are stamped _detail_pending and, because the budget is spent in page order, never deepened on a later run either. The per-host hop rate is NOT measured for this row — 200 is the family default and the number to revisit if its detail-truncation notice shows pending records. See docs/probe-sized-pages-2026-10-20.md */
+    .page_param = "page",
+    .page_start = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

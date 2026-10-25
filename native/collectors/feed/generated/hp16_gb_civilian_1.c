@@ -18,10 +18,11 @@ static const hp_source T[] = {
     .collector = "gb_civilian", .category = "civilian",
     .description = "An individual mapper's edit stream: changeset id, created_at/closed_at, counts, bbox (min/max lat/lon — i.e. where they were editing), and tags naming the editor software, host and imagery used. Tree had bbox and display_name queries but not the uid query.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "civilian-record", .tags = "\"gb\",\"civilian\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://api.openstreetmap.org/api/0.6/changesets.json?user=1&limit=5",
+    .url = "https://api.openstreetmap.org/api/0.6/changesets.json?user=1&limit=100",   /* exhaustive-ok: the OSM API caps limit at 100 (300 is HTTP 400) and honours no offset — &offset= returns byte-identical bytes (measured 2026-10-20); it slices by time/max_id instead, which this row does not */
     .array_path = "changesets",
     .detail_url = "https://api.openstreetmap.org/api/0.6/changeset/{v}.json?include_discussion=true", .detail_key = "id",
     .page_walk = 1,
+    .page_max = 2,   /* 2 x 100 records a run. This row has a detail hop, and the per-run hop budget is 1,000 OR 120 SECONDS — the CLOCK is what binds on a slow host, measured on api.safecast.org, which reached 116 hops of 1,000 before its 120s ran out (2026-10-20). So a run is sized to what can plausibly be deepened rather than to what the API will serve: records past the budget are stamped _detail_pending and, because the budget is spent in page order, never deepened on a later run either. The per-host hop rate is NOT measured for this row — 200 is the family default and the number to revisit if its detail-truncation notice shows pending records. See docs/probe-sized-pages-2026-10-20.md */
     .interval = 21600, .free_tier = 1 },
 
 };

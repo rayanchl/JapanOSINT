@@ -181,7 +181,33 @@ static const hp_source HP3B31_JPGOV[] = {
       "and ministerial ordinance in force, returning the law ID, the title and "
       "the amendment history — the operative text, not a commentary on it" },
 
-  /* ── Licensing and sectoral supervision ───────────────────────────────── */
+  { .id = "JP_KANPO_DAILY_CONTENTS",
+    .name = "Kanpō — official gazette, each day's table of contents",
+    .name_ja = "官報 日次目次（直近90日）", .category = "government",
+    .portal = "https://www.kanpo.go.jp/", .record_type = "jp-gazette-notice",
+    .tags = "\"jp\",\"gazette\",\"insolvency\",\"notice\",\"kanpo\"",
+    .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.kanpo.go.jp/{date:%Y%m%d}/{date:%Y%m%d}.fullcontents.html",
+    /* No `base`: the hrefs are relative to the DAY'S DIRECTORY, and with base
+     * unset the engine resolves them against the page it fetched, which is
+     * that directory. Declaring the host instead (the obvious thing, and the
+     * first thing tried) resolved every notice to
+     * /20261022h01813/… — a 404 for all 25 of them, with the record count and
+     * the run line perfectly healthy. */
+    .href_must = "f.html",
+    .date_back = 4, .date_step = "d",
+    .date_field = "kanpo_date",
+    .interval = 21600,
+    .description = "Every notice in the Japanese official gazette for one day, "
+      "as the gazette's own table of contents lists it: the notice's full "
+      "title, the ministry or agency that issued it and its notice number, and "
+      "the page of the issue it appears on. The main edition, the extra, the "
+      "government-procurement edition and any special extra are all listed "
+      "together. Ministerial ordinances, public-notice amendments, company "
+      "dissolutions, capital reductions, merger announcements and bankruptcy "
+      "commencements are all published here first." },
+
+    /* ── Licensing and sectoral supervision ───────────────────────────────── */
 
   { .id = "JP_MLIT_LAND_TRADE_PRICES", .name = "MLIT — actual land transaction prices",
     .name_ja = "国土交通省 不動産取引価格情報", .category = "government",
@@ -198,6 +224,35 @@ static const hp_source HP3B31_JPGOV[] = {
       "price, area, structure, building year, city planning zone and frontage "
       "road, by municipality and quarter. Requests the full history rather than "
       "a single quarter so a district's price series is complete" },
+
+  { .id = "JP_PMDA_NEW_DRUG_APPROVALS",
+    .name = "PMDA — new drug approvals, this fiscal year's monthly register",
+    .name_ja = "PMDA 新医薬品承認品目一覧（年度・月別）", .category = "health",
+    .portal = "https://www.pmda.go.jp/review-services/drug-reviews/"
+              "review-information/p-drugs/0010.html",
+    .record_type = "jp-medical-approval",
+    .tags = "\"jp\",\"health\",\"regulatory\",\"pmda\",\"drug-approval\"",
+    .mode = HP_XLSX, .want = HP_ANY, .free_tier = 1,
+    .url = "https://www.pmda.go.jp/files/000281578.xlsx",
+    .index_url = "https://www.pmda.go.jp/review-services/drug-reviews/"
+                 "review-information/p-drugs/0040.html",
+    .index_href_must = ".xlsx",
+    .xlsx_sheet_all = 1,
+    .csv_no_header = 1,
+    .csv_skip_lines = 5,
+    .interval = 604800,
+    .title_keys = "col3",
+    .id_keys = "col1+col2+col3",
+    .description = "Every new drug PMDA approved this Japanese fiscal year, as "
+      "the agency publishes it: the review division, the approval date, the "
+      "month's sequence number, the brand name with the marketing "
+      "authorisation holder and its corporate number, whether the entry is a "
+      "first approval (承認) or a partial change (一変), the active ingredient "
+      "with new active ingredients underlined, and the indication granted. One "
+      "worksheet per month, all of them read. The corporate number in the "
+      "brand-name cell is the join to every other Japanese company register in "
+      "this tree, which makes this the authorisation side of a pharmaceutical "
+      "company's record." },
 
   { .id = "JP_TDNET_TIMELY_DISCLOSURE", .name = "TDnet — Japanese listed company timely disclosure",
     .name_ja = "TDnet 適時開示情報", .category = "finance",

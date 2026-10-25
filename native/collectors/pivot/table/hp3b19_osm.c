@@ -397,7 +397,7 @@ static const hp_source HP3B19_OSM[] = {
     .record_type = "osm-tag",
     .tags = "\"osm\",\"taginfo\",\"reference\",\"schema\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://taginfo.openstreetmap.org/api/4/tags/popular?rp=100&sortname=count_all&sortorder=desc",
+    .url = "https://taginfo.openstreetmap.org/api/4/tags/popular?rp=100&sortname=count_all&sortorder=desc",   /* exhaustive-ok: unpaged on purpose — this endpoint returns all 14,546 tags in one response, measured 2026-10-20 (see the note below) */
     .headers = { "User-Agent: JapanOSINT-research/1.0 (+https://github.com/)" },
     .array_path = "data",
     /* A taginfo record is a KEY=VALUE pair, so the value alone is a dimension,
@@ -409,9 +409,28 @@ static const hp_source HP3B19_OSM[] = {
      * which are distinct keys and are kept). */
     .id_keys = "key+value",
     .interval = 86400,
-    .page_param = "page",
-    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
-    .page_start = 1,
+    /* ONE request, deliberately, measured both ways on 2026-10-20. taginfo
+     * honours `rp` only when a `page` parameter is present: asked WITHOUT one
+     * it returns the whole collection — 14,546 tags, its own `total` — in a
+     * single 4 MB response.
+     *
+     * So the paging declared here was worse than useless. Page 1 is the URL as
+     * written, which already held all 14,546; pages 2 to 20 then asked
+     * `rp=100&page=N` and re-served the first 1,900, which collapsed at the
+     * sink:
+     *     records=16446 stored=14547 requests=20
+     *     UID-COLLISION: 1900 of 16446 emitted records collapsed
+     * Nothing was ever LOST — the collection was complete from page 1 — but 19
+     * of 20 requests re-read it, and the run line carried a collision that was
+     * an artefact of our own paging and said nothing about the upstream. Both
+     * go away with the page parameter. (The note this replaces recorded that
+     * `page` is a page NUMBER and must not take a page_size, which was true and
+     * is now moot.)
+     *
+     * The single-page risk is real, which is why it is written down: if taginfo
+     * ever caps an unpaged response, one request would quietly return less and
+     * nothing would disclose it. 14,546 against its own declared `total` is the
+     * check to re-make if this row's count ever drops sharply. */
     .title_keys = "value",
     .description = "Key equals value pairs actually in use across the planet with "
       "per-element-type counts, the share of the map they represent and "

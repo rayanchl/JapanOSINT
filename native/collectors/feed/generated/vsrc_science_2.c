@@ -14,19 +14,15 @@ VJSON(geo_inat_birds, "geo-inat-birds", "iNaturalist — bird observations", "iN
   "en", "[\"inaturalist\",\"birds\",\"aves\"]", 10800,
   "Recent bird observations worldwide.");
 
-VJSON(geo_inat_observations_japan, "geo-inat-observations-japan", "iNaturalist — Japan observations", "iNaturalist — 日本の観測",
-  "science", "biodiversity",
-  "https://api.inaturalist.org/v1/observations?per_page=200&place_id=6737&geo=true&order_by=created_at",
-  "results",
-  "en", "[\"inaturalist\",\"japan\",\"observation\"]", 10800,
-  "Species observations recorded within Japan.");
+/* geo-inat-observations-japan: moved to collectors/pivot/table/hp3_inat.c (2026-10-24).
+   A descending order over a live head drifts under the walk — page 1
+   against page 2 overlapped by 10 of 200 — so it reads down the API's own
+   keyset cursor (id_below) instead. The measurement is in that file. */
 
-VJSON(geo_inat_research_small, "geo-inat-research-small", "iNaturalist — research-grade observations", "iNaturalist — リサーチグレード観測",
-  "science", "biodiversity",
-  "https://api.inaturalist.org/v1/observations?per_page=100&quality_grade=research&geo=true&order_by=created_at",
-  "results",
-  "en", "[\"inaturalist\",\"researchgrade\"]", 3600,
-  "Verified research-grade observations suitable for scientific use.");
+/* geo-inat-research-small: moved to collectors/pivot/table/hp3_inat.c (2026-10-24).
+   A descending order over a live head drifts under the walk — page 1
+   against page 2 overlapped by 10 of 200 — so it reads down the API's own
+   keyset cursor (id_below) instead. The measurement is in that file. */
 
 /* geo-inaturalist-obs (and the geo-inat-* rows above/below): the sweep's
  * emitted-vs-stored gap here is NOT a wrong id. Each record carries a unique
@@ -39,12 +35,10 @@ VJSON(geo_inat_research_small, "geo-inat-research-small", "iNaturalist — resea
  * page position, say) would fabricate rows. The upstream offers no stable
  * cursor this engine can drive, and the row re-runs hourly, so the shifted
  * window is re-covered on the next pass. Verified legitimate; do not "fix". */
-VJSON(geo_inaturalist_obs, "geo-inaturalist-obs", "iNaturalist — recent georeferenced observations", "iNaturalist — 位置情報付き最新観測",
-  "science", "biodiversity",
-  "https://api.inaturalist.org/v1/observations?per_page=200&order_by=created_at&geo=true",
-  "results",
-  "en", "[\"inaturalist\",\"citizen\",\"observation\"]", 3600,
-  "Live citizen-science species observations; each record carries a coordinate pair.");
+/* geo-inaturalist-obs: moved to collectors/pivot/table/hp3_inat.c (2026-10-24).
+   A descending order over a live head drifts under the walk — page 1
+   against page 2 overlapped by 10 of 200 — so it reads down the API's own
+   keyset cursor (id_below) instead. The measurement is in that file. */
 
 VJSON(geo_inaturalist_obs_threatened, "geo-inaturalist-obs-threatened", "iNaturalist — threatened species observations", "iNaturalist — 絶滅危惧種の観測",
   "science", "biodiversity",

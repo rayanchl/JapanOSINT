@@ -464,6 +464,32 @@ static const hp_source HP3B33_SUPPLYCHAIN[] = {
     .url = "https://pub.dev/api/packages",
     .array_path = "packages",
     .date_keys = "latest.published",
+    /* `name` IS RIGHT AND THE ~655 COLLISIONS A RUN ARE NOT ITS FAULT.
+     * Measured 2026-10-25: 93,353 emitted / 92,698 stored over 934 requests,
+     * and /api/package-names (gzip, below) declares exactly 93,353 — so the
+     * row reaches the whole namespace and a package name is unique, as a
+     * registry namespace must be.
+     *
+     * The cause is this file's newest-first-walk hazard: page 1 carries
+     * packages published today (2026-10-25) and page 900 carries 2019-01-18,
+     * so every package published during the ~4-minute walk is inserted at the
+     * HEAD and shifts one record across each page boundary still below it.
+     * Seven publications with ~93 boundaries left each is the 655.
+     *
+     * There is no sort to pin it, and that was established with controls
+     * rather than assumed: `sort=name`, `order=name`, `sort=created` and
+     * `sort=updated` each return a page byte-identical to the plain one — and
+     * so do `frobnicate=7` and `sort=notacolumn`, so this endpoint discards
+     * its query string entirely (CLAUDE.md, batch 55). No page-size parameter
+     * is honoured either, so the boundary count cannot be reduced.
+     *
+     * So the remedies this file names are all unavailable: ascending needs a
+     * sort, and a cycle composes with newest-first even worse than a single
+     * walk does. Do NOT re-key — a content hash would turn one package's two
+     * sightings into two packages, inventing a distinction the registry has
+     * not got. The missed set is a different 0.7% every run, so coverage fills
+     * in across runs; that is a property of the drift and not a design, and
+     * 655 a run is what it costs. */
     .id_keys = "name",
     .interval = 86400,
     .next_path = "next_url",

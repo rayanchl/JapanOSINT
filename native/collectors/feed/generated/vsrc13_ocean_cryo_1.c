@@ -161,7 +161,20 @@ VJSON(sci_ocean_coops_waterlevels, "sci-ocean-coops-waterlevels", "NOAA CO-OPS �
  * "Location", and live-verified 2026-09-07 the feed has 1,336 rows carrying
  * only 1,130 distinct Location values (Bay of Biscay ports, Pacific atolls and
  * a dozen "Marina" entries repeat), which is what collapsed the run to 1,341
- * stored. "sensorid" is the row's own key: 1,336 of 1,336 distinct, no nulls. */
+ * stored. "sensorid" is the row's own key: 1,336 of 1,336 distinct, no nulls.
+ *
+ * 2026-10-22: the registry sweep reports this row COLLISION, 1,921 emitted /
+ * 1,340 stored, and the key is still RIGHT — the feed grew and now repeats
+ * rows. Measured on the same body: 1,921 rows hold 1,635 distinct WHOLE
+ * records, so 286 are the upstream's own byte-identical duplicates (the sink's
+ * content hash collapses those correctly), and of the 259 sensorid groups with
+ * more than one row, 167 differ ONLY in observations / first / last /
+ * timestampdata / updatedata — running counters and timestamps, i.e. the same
+ * sensor reported twice in one response with different totals. Widening the key
+ * to sensorid+observations reaches 1,602 of 1,921 and would store one sensor
+ * several times, inflating a station INVENTORY: the longer key is the worse
+ * one, as the Colombia pass found on INVIMA's device register. Do not "fix"
+ * this verdict. */
 VJSON_KEYED(sci_ocean_ioc_sealevel_tab, "sci-ocean-ioc-sealevel-tab", "IOC Sea Level Monitoring — full station list", "IOC Sea Level Monitoring — full station list",
   "ocean_cryo", "environment",
   "https://www.ioc-sealevelmonitoring.org/service.php?query=stationlist&showall=a&format=json",

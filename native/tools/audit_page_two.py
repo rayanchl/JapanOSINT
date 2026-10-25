@@ -1,0 +1,619 @@
+#!/usr/bin/env python3
+"""Does the SECOND page actually work? Asked of every paged scheduled row.
+
+THE GAP THIS CLOSES. Two rows were found reading a fraction of their upstream
+for weeks, both by accident, and both for the same reason: the row declared
+paging the upstream does not accept.
+
+  ENA_PATHOGEN_SARSCOV2_RUNS  1,000 of 7,556,500 — ebi.ac.uk answers
+                              {"message":"Unsupported param offset"} to ANY
+                              offset. There is no second page to ask for.
+  BC_MINERAL_TENURE           50 of 42,234 — GeoServer answers "Cannot do
+                              natural order without a primary key, please add
+                              it or specify a manual sort over existing
+                              attributes" to `startIndex` without `sortBy`.
+
+Every existing gate passes both. The probe fetches page ONE. `audit_batch_emit`
+and `audit_registry_emit` run the row and read what it stored, and a row that
+stores its whole first page stores everything it emitted — `records == stored`,
+rc=0. `audit_page_ceiling` probes three pages but reads the ceiling arithmetic,
+and `audit_cycle_health` only covers rows that declare `page_resume`. The
+question none of them asks is the simplest one: **ask for page 2 and look at
+what comes back.**
+
+It is two requests a row, and the verdict that matters is `REFUSED` — a 4xx or
+an HTTP-200 error body, with the upstream's own message quoted, because that
+message is what says which remedy applies:
+
+  * a message naming the PARAMETER as unsupported  -> the collection has no
+    page 2 at all; it needs a different slicing axis (`window_days`, a filter)
+  * a message naming a missing SORT                -> add the sort (BC's case)
+  * a message naming a DEPTH cap                   -> narrow each request
+  * 429 / 403 / 5xx                                -> one reading, re-run
+
+`SAME_AS_PAGE1` is the other finding, and a quieter one: the server accepted
+the parameter, ignored it, and served the same records again. That is rule 4d
+applied to paging — a walk that emits N pages of one page's records, with the
+collision guard hiding it at the sink.
+
+Reads rows out of the C (the maintained copy), skips entity pivots (a pivot
+answers about an entity, and page 2 of no entity is meaningless), and
+serialises per HOST: this tool's own sibling manufactured 11 false findings by
+running 12 rows of the same upstreams at once.
+
+  python3 tools/audit_page_two.py --out page2.tsv --jobs 6
+"""
+import argparse
+import csv
+import json
+import os
+import re
+import ssl
+import sys
+import time
+import threading
+import urllib.error
+import urllib.request
+from concurrent.futures import ThreadPoolExecutor
+
+UA = ("Mozilla/5.0 (compatible; JapanOSINT/1.0; +https://github.com/rayanchl/"
+      "japanosint)")
+# Run under `python3 -I`, which strips this script's own directory from
+# sys.path, so a sibling module has to be found explicitly.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import jo_tls                                                     # noqa: E402
+
+_lock = threading.Lock()
+# tools/jo_tls.py, not a context of its own: Python's default refuses
+# handshakes the ENGINE completes, which made this sweep report 27 live rows as
+# dead. See that file for the measurement.
+_ctx = jo_tls.context()
+
+ROW = re.compile(r'\{\s*\.id\s*=\s*"([^"]+)"')
+# An entity token makes the row a pivot; page 2 of no entity means nothing.
+ENTITY = re.compile(r"\{q[a-z]*\}|\{cik|\{key\}")
+COLS = ["verdict", "id", "page_param", "page_size", "http1", "http2",
+        "recs1", "recs2", "host", "message", "url2"]
+
+# The upstream's own words, grouped by the remedy they imply. Matched against
+# the page-2 body so the verdict carries a remedy and not just a status.
+#; A page-2 failure that means "there is no page 2 because the collection
+# ended" — NOT a refusal to page. Matched on the error CODE first, because a
+# code is language-independent and the message is not: WordPress answers
+# `rest_post_invalid_page_number` with the text in the site's own language, and
+# the first run of this sweep reported 18 REFUSED of which 17 were Japanese
+# municipal sites saying "リクエストされたページ数は存在するページ数を上回って
+# います。" — "the requested page exceeds the number of existing pages". A gate
+# whose findings are mostly benign is a gate nobody reads.
+BENIGN_CODE = re.compile(
+    r"invalid_page_number|rest_post_invalid_page|page_out_of_range|"
+    r"invalid_offset|no_more_(results|pages)|out_of_bounds", re.I)
+BENIGN_MSG = re.compile(
+    r"exceeds the (number of )?(existing |available )?pages?|"
+    r"page number .* (exceeds|greater than|out of)|beyond the (last|end)|"
+    r"no (more|further) (results|records|pages)|"
+    r"存在するページ数を上回|ページが存在しません", re.I)
+
+REMEDY = [
+    ("no-such-parameter",
+     r"unsupported param|unknown param|invalid param|not a (valid |recognized )?"
+     r"param|unexpected param|param .* not support"),
+    ("needs-a-sort",
+     r"natural order|without a (primary key|sort)|must (be )?(specify|provide) "
+     r"a sort|sortby is required|order by"),
+    ("depth-cap",
+     r"too deep|max(imum)? (offset|result|window|from)|result window|"
+     r"deep pagination|exceeds? the (maximum|limit)|offset .* too large"),
+]
+
+
+def paged_rows(tree):
+    """(id, host, url, page_param, page_size, next_path) for scheduled rows
+    that declare offset/page-number paging."""
+    out = []
+    for dirpath, _d, files in os.walk(tree):
+        for fn in files:
+            if not fn.endswith(".c"):
+                continue
+            t = open(os.path.join(dirpath, fn), encoding="utf-8",
+                     errors="replace").read()
+            if "page_param" not in t:
+                continue
+            for m in ROW.finditer(t):
+                nxt = t.find("{ .id =", m.end())
+                body = t[m.start():nxt if nxt > 0 else len(t)]
+                pp = re.search(r'\.page_param\s*=\s*"([^"]+)"', body)
+                if not pp:
+                    continue
+                iv = re.search(r"\.interval\s*=\s*(\d+)", body)
+                if not iv or int(iv.group(1)) == 0:
+                    continue          # a pivot, not a scheduled walk
+                u = re.search(r'\.url\s*=\s*"((?:[^"\\]|\\.)*)"', body)
+                if not u:
+                    continue
+                url = u.group(1)
+                if ENTITY.search(url) or "{page" in url or "{offset" in url:
+                    continue          # pivot, or a token this tool cannot bind
+                if "{date" in url or "{ago" in url or "{wstart" in url:
+                    continue          # a dated window; its own rules apply
+                ps = re.search(r"\.page_size\s*=\s*(\d+)", body)
+                zb = re.search(r"\.page_zero_based\s*=\s*1", body)
+                st = re.search(r"\.page_start\s*=\s*(\d+)", body)
+                hm = re.search(r"https?://([A-Za-z0-9._-]+)", url)
+                out.append({
+                    "id": m.group(1), "url": url,
+                    "host": hm.group(1).lower() if hm else "",
+                    "page_param": pp.group(1),
+                    "page_size": int(ps.group(1)) if ps else 0,
+                    "zero_based": bool(zb),
+                    "page_start": int(st.group(1)) if st else 0,
+                })
+    return out
+
+
+def set_param(url, key, val):
+    """Replace the parameter if present, else append — the same contract as
+    hp_url_set_param, which exists because APPENDING made a server bind the
+    first occurrence and serve page 1 for the whole walk."""
+    enc = re.escape(key)
+    if re.search(r"[?&]%s=" % enc, url):
+        return re.sub(r"([?&]%s=)[^&]*" % enc, r"\g<1>%s" % val, url)
+    return url + ("&" if "?" in url else "?") + "%s=%s" % (key, val)
+
+
+# A transport failure that is OURS, not the upstream's — measured, in both of
+# the two shapes it takes here.
+#
+# "Connection refused" names a socket that was never opened, so it says
+# nothing about the server at the other end. The first full run of this sweep
+# recorded 569 of them as PAGE1_FAILED, all in its last 15% and spread across
+# wholly unrelated hosts (a Japanese university's WordPress, the EIB, NHTSA);
+# both of the two re-tested by hand answered 200 immediately afterwards.
+#
+# "Connection reset by peer" LOOKS like the upstream's own refusal, and the
+# first reading of it here was that a reset is the peer's action and so belongs
+# to the row. That was wrong in this environment, and worth the one command it
+# took to find out: curl against the same hosts reports HTTP 000, and the agent
+# proxy names the cause itself — ws_closed_mid_exchange, "the tunnel to the
+# egress proxy closed before the exchange completed". Confirm with
+#     curl -sS "$HTTPS_PROXY/__agentproxy/status"
+# The hosts are not denied by policy: each answers 200 on its own. It is the
+# tunnel's capacity under many concurrent connections.
+#
+# Both are the same shape as audit_cycle_health.py's load-made STUCK verdicts,
+# one layer up: a verdict that changes with the tool's own concurrency is not a
+# measurement. They are retried with a back-off, and if they persist they are
+# reported as LOCAL_EGRESS so that nobody can read one as a finding about a
+# source. A row that only ever comes back LOCAL_EGRESS is UNMEASURED from
+# here, which is a thing to write down rather than a verdict to act on.
+# How much of a body to read. It was 400 KB, which truncated an ArcGIS page of
+# 300 features and a CKAN page of 48 packages — and a truncated body cannot be
+# counted, so both became "records unknown" and neither the short-page rule nor
+# the empty-page test could run on them. 8 MB holds every page this sweep has
+# met; a body past it is genuinely too large to count and says so (-1) instead
+# of guessing, which is what the old `s.count("},")` fallback did.
+MAXREAD = 8 * 1024 * 1024
+
+_LOCAL_EGRESS = re.compile(
+    r"Connection refused|Connection reset by peer|Temporary failure in name "
+    r"resolution|Cannot assign requested address|Too many open files", re.I)
+
+
+def get(url, timeout=60, tries=3):
+    req = urllib.request.Request(url, headers={
+        "User-Agent": UA, "Accept": "application/json, text/csv, */*"})
+    last = b""
+    for attempt in range(tries):
+        try:
+            with urllib.request.urlopen(req, timeout=timeout, context=_ctx) as r:
+                return r.status, r.read()[:MAXREAD]
+        except urllib.error.HTTPError as e:
+            try:
+                return e.code, e.read()[:4000]
+            except Exception:
+                return e.code, b""
+        except Exception as e:
+            last = str(e)[:200].encode()
+            if not _LOCAL_EGRESS.search(str(e)):
+                return -1, last
+            # Back off: the point is to stop ASKING for a while, since the
+            # refusal is on this side of the wire.
+            if attempt + 1 < tries:
+                time.sleep(2.0 * (attempt + 1))
+    return -2, last
+
+
+# The envelope names a record set is published under, in the order the engine's
+# own array_path resolution would try them. Checked BEFORE any search, because
+# a search cannot be trusted — see count_records().
+_ENVELOPES = (
+    ("features",), ("results",), ("result", "results"), ("result",),
+    ("data",), ("items",), ("records",), ("value",), ("rows",),
+    ("response", "docs"), ("hits", "hits"), ("packages",),
+)
+
+
+def _at(d, path):
+    cur = d
+    for k in path:
+        if not isinstance(cur, dict) or k not in cur:
+            return None
+        cur = cur[k]
+    return cur if isinstance(cur, list) else None
+
+
+def count_records(blob):
+    """How many records a body holds.
+
+    This used to take the longest list ANYWHERE in the document, described as
+    "a floor, only ever compared with ITSELF". Both halves were wrong.
+
+    It is not only compared with itself: the short-page rule compares it with
+    the page SIZE the URL asked for, and that comparison is what separates a
+    benign PAGE1_IS_ALL from a REFUSED or a SAME_AS_PAGE1 finding. And the
+    longest list in an ArcGIS response is a polygon's coordinate RING, not its
+    records — `EAD_PROTECTED_AREAS` holds 21 features and was counted as 3,748,
+    `AR_DATOS_TRANSPORTE` holds 48 packages (its own `result.count` says so)
+    and was counted as 1,232. Over-counting makes a short page look full, so a
+    complete collection reads as a finding.
+
+    This is the same array hijack CLAUDE.md records for the ENGINE — "with no
+    array_path the engine picks the densest array of OBJECTS, which is not the
+    root as soon as a root record carries a longer nested array of its own" —
+    in a tool that never got the engine's fix. So: the declared envelope first,
+    then the longest array of OBJECTS (a ring is an array of arrays of
+    numbers), and never a bare list of scalars found by searching."""
+    s = blob.decode("utf-8", "replace").strip()
+    if not s:
+        return 0
+    if s[0] in "[{":
+        try:
+            d = json.loads(s)
+        except ValueError:
+            # A body this tool truncated at MAXREAD cannot be counted, and the
+            # old fallback — `s.count("},") + 1` — did not decline, it guessed:
+            # 1,232 for a CKAN page holding 48 packages, whose own
+            # `result.count` says 48. A fabricated count then feeds the
+            # short-page rule and turns a complete collection into a finding.
+            # -1 means UNKNOWN and every comparison below guards on it.
+            return -1
+        if isinstance(d, list):
+            return len(d)
+        for path in _ENVELOPES:
+            got = _at(d, path)
+            if got is not None:
+                return len(got)
+        # No envelope we know: the longest array whose elements are OBJECTS.
+        best, stack = 0, [d]
+        while stack:
+            cur = stack.pop()
+            if isinstance(cur, list):
+                if cur and all(isinstance(x, dict) for x in cur):
+                    best = max(best, len(cur))
+                stack.extend(x for x in cur if isinstance(x, (list, dict)))
+            elif isinstance(cur, dict):
+                stack.extend(cur.values())
+        return best
+    return max(0, s.count("\n"))
+
+
+def self_test():
+    """The counter's own fixtures, run before any sweep trusts it.
+
+    CLAUDE.md's reason, from the exhaustiveness scanner: a check whose own case
+    it has stopped seeing reports zero findings and reads like good news. Both
+    of this counter's defects — a polygon ring counted as records, and a
+    guessed count for a body that would not parse — produced numbers that
+    looked like measurements, so the fixtures pin the shapes rather than the
+    code."""
+    cases = [
+        ("bare root array", b'[{"a":1},{"a":2},{"a":3}]', 3),
+        ("CKAN result.results beats a search",
+         json.dumps({"result": {"count": 48,
+                                "results": [{"i": i} for i in range(48)]}}
+                    ).encode(), 48),
+        ("ArcGIS: 7 features, not a 900-point ring",
+         json.dumps({"features": [{"attributes": {"a": 1},
+                                   "geometry": {"rings": [[[0, 0]] * 900]}}
+                                  for _ in range(7)]}).encode(), 7),
+        ("no envelope: longest array of OBJECTS, not of numbers",
+         json.dumps({"weird": {"nums": list(range(5000)),
+                               "recs": [{"x": 1}, {"x": 2}]}}).encode(), 2),
+        ("a truncated body DECLINES rather than guessing",
+         b'{"result":{"results":[{"a":1},{"a":2},{"a":3}', -1),
+        ("empty body", b"", 0),
+        ("an empty result set is zero, not one", json.dumps({"results": []}).encode(), 0),
+        ("csv falls back to lines", b"a,b\n1,2\n3,4\n", 2),
+    ]
+    bad = 0
+    for label, blob, want in cases:
+        got = count_records(blob)
+        if got != want:
+            bad += 1
+            print("SELF-TEST FAIL  %-50s got=%s want=%s" % (label, got, want))
+    if bad:
+        print("\n%d counter fixture(s) failed — the sweep's verdicts would not "
+              "mean anything, so it is not run." % bad)
+        return False
+    return True
+
+
+def message_of(blob):
+    """The upstream's own explanation, if it gave one."""
+    s = blob.decode("utf-8", "replace")
+    try:
+        d = json.loads(s)
+        for k in ("message", "error", "detail", "error_description",
+                  "errorMessage", "Message"):
+            v = d.get(k) if isinstance(d, dict) else None
+            if isinstance(v, str) and v.strip():
+                return v.strip()[:220]
+            if isinstance(v, dict):
+                for kk in ("message", "details", "description"):
+                    vv = v.get(kk)
+                    if isinstance(vv, str) and vv.strip():
+                        return vv.strip()[:220]
+                    if isinstance(vv, list) and vv:
+                        return str(vv[0])[:220]
+    except ValueError:
+        pass
+    # XML/OGC service exceptions say it in an element.
+    for pat in (r"<(?:ows:)?ExceptionText>([^<]{3,300})",
+                r"<ServiceException[^>]*>([^<]{3,300})",
+                r"<(?:faultstring|message|Message)>([^<]{3,300})"):
+        mm = re.search(pat, s, re.I)
+        if mm:
+            return " ".join(mm.group(1).split())[:220]
+    s2 = " ".join(s.split())
+    return s2[:220] if len(s2) < 400 else ""
+
+
+def code_of(blob):
+    """The upstream's machine-readable error code, if it gave one."""
+    try:
+        d = json.loads(blob.decode("utf-8", "replace"))
+    except Exception:
+        return ""
+    if not isinstance(d, dict):
+        return ""
+    for k in ("code", "errorCode", "error_code"):
+        v = d.get(k)
+        if isinstance(v, str):
+            return v
+    e = d.get("error")
+    if isinstance(e, dict):
+        for k in ("code", "errorCode"):
+            v = e.get(k)
+            if isinstance(v, (str, int)):
+                return str(v)
+    return ""
+
+
+# How many records the URL ITSELF asked for. Needed because the engine's
+# short-page rule compares what came back with what was requested, and most of
+# these rows carry the size in the URL rather than in page_size (which is only
+# set for an OFFSET parameter).
+_SIZE_KEYS = ("per_page", "pageSize", "page_size", "resultRecordCount",
+              "limit", "count", "rows", "maxFeatures", "$top", "num",
+              "page%5Bsize%5D", "page[size]", "n")
+
+
+def declared_size(url):
+    for k in _SIZE_KEYS:
+        m = re.search(r"[?&]%s=(\d+)" % re.escape(k), url)
+        if m:
+            v = int(m.group(1))
+            if v > 0:
+                return v
+    return 0
+
+
+def remedy_of(msg):
+    for name, pat in REMEDY:
+        if re.search(pat, msg, re.I):
+            return name
+    return ""
+
+
+def probe(a, r):
+    host = r["host"] or r["id"]
+    lock = a.locks.setdefault(host, threading.Lock())
+    with lock:
+        return _probe(a, r)
+
+
+def _probe(a, r):
+    out = dict.fromkeys(COLS, "")
+    out.update({"id": r["id"], "page_param": r["page_param"],
+                "page_size": r["page_size"] or "", "host": r["host"]})
+    # PAGE 1 IS THE ROW'S URL AS WRITTEN. The engine does not bind the page
+    # parameter for the first request — it asks for the url and advances from
+    # there — so binding it here asks a question the collector never asks.
+    # That mattered: GeoServer refuses `startIndex` at ANY value without a
+    # sort, so adding `startIndex=1` to page 1 reported BC_MINERAL_TENURE as
+    # PAGE1_FAILED when its real page 1 is fine and only its PAGING is broken.
+    # The verdict would have pointed at the wrong half of the row.
+    if r["page_size"]:
+        second = r["page_start"] + r["page_size"]        # an OFFSET parameter
+    else:
+        first = r["page_start"] if r["zero_based"] else max(r["page_start"], 1)
+        second = first + 1                              # a page NUMBER
+    u1 = r["url"]
+    u2 = set_param(r["url"], r["page_param"], str(second))
+    out["url2"] = u2[:300]
+
+    s1, b1 = get(u1, a.timeout)
+    out["http1"] = s1
+    # -2 is OUR egress refusing, not the upstream (see get()). It is not a
+    # finding about this row and must never be counted as one.
+    if s1 == -2:
+        out["verdict"] = "LOCAL_EGRESS"
+        out["message"] = ("this environment's egress tunnel failed, retried "
+                          "with a back-off and failed again — NOT a reading "
+                          "about this source, which is UNMEASURED from here: "
+                          "%s" % message_of(b1))[:240]
+        return out
+    if s1 != 200:
+        out["verdict"] = "PAGE1_FAILED"
+        out["message"] = message_of(b1)[:200]
+        return out
+    n1 = count_records(b1)
+    out["recs1"] = n1
+    if n1 == 0:
+        out["verdict"] = "PAGE1_EMPTY"
+        return out
+    if n1 < 0:
+        # Page 1 arrived larger than this tool reads, so it cannot be counted
+        # and neither the short-page rule nor an empty-page test means
+        # anything. The byte comparison below still does, so say what is known.
+        out["verdict"] = ("SAME_AS_PAGE1" if get(u2, a.timeout)[1] == b1
+                          else "RECS_UNKNOWN")
+        out["message"] = ("page 1 is larger than this tool reads (%d bytes), "
+                          "so its records cannot be counted; only the "
+                          "byte-identity test applies" % len(b1))
+        return out
+
+    s2, b2 = get(u2, a.timeout)
+    out["http2"] = s2
+    n2 = count_records(b2)
+    out["recs2"] = n2
+    msg = message_of(b2)
+
+    if s2 == -2:
+        out["verdict"] = "LOCAL_EGRESS"
+        out["message"] = ("this environment's egress tunnel failed on page 2, "
+                          "retried with a back-off and failed again — NOT a "
+                          "reading about this source, which is UNMEASURED "
+                          "from here: %s" % msg)[:240]
+        return out
+    if s2 == -1:
+        out["verdict"] = "NET_ERR"
+        out["message"] = msg[:200]
+        return out
+    if s2 != 200:
+        # THE ENGINE'S OWN RULE FIRST, and it is the general one: "A failure on
+        # the page AFTER a short page (fewer than page_size records) is the
+        # upstream's end of data, not a truncation" (CLAUDE.md). A page 1 that
+        # came back short of what the URL asked for IS the whole collection, so
+        # whatever page 2 answers is not a finding. Measured: a Japanese
+        # municipal site returned 7 posts against `per_page=100` and then 400
+        # on page 2 — the collection is 7 records.
+        want = declared_size(r["url"]) or r["page_size"]
+        if want and n1 >= 0 and n1 < want:
+            out["verdict"] = "PAGE1_IS_ALL"
+            out["message"] = ("page 1 held %d of the %d it asked for, so the "
+                              "collection ends inside it" % (n1, want))
+            return out
+        if BENIGN_CODE.search(code_of(b2)) or BENIGN_MSG.search(msg):
+            out["verdict"] = "PAGE1_IS_ALL"
+            out["message"] = ("upstream says there is no page 2: %s"
+                              % msg)[:220]
+            return out
+        out["verdict"] = "REFUSED"
+        out["message"] = ("%s | %s" % (remedy_of(msg), msg)).strip(" |")[:220]
+        return out
+    want = declared_size(r["url"]) or r["page_size"]
+    if n2 < 0:
+        want = 0          # an uncountable page 2 cannot be judged by size
+    # An upstream that says in a 200 body that there is no further page.
+    if BENIGN_CODE.search(code_of(b2)) or BENIGN_MSG.search(msg):
+        out["verdict"] = "PAGE1_IS_ALL"
+        out["message"] = ("upstream says there is no page 2: %s" % msg)[:220]
+        return out
+    # An HTTP-200 refusal: the status says yes and the body says no. The same
+    # shape probe_hp_batch.py rejects, and the shape ArcGIS uses to say
+    # returnCentroid is polygon-only.
+    if n2 == 0 and msg and remedy_of(msg):
+        out["verdict"] = "REFUSED"
+        out["message"] = ("200-body | %s | %s"
+                          % (remedy_of(msg), msg))[:220]
+        return out
+    if b2 == b1:
+        # Byte-identical: the parameter was accepted and ignored. Two pages of
+        # genuinely different records cannot be byte-identical — so this is a
+        # real finding EVEN when page 1 was short, because a short page that
+        # repeats is still a walk that re-emits the same records.
+        out["verdict"] = "SAME_AS_PAGE1"
+        out["message"] = "page 2 is byte-identical to page 1"
+        return out
+    if n2 == 0:
+        # The engine's short-page rule again: an empty page 2 after a page 1
+        # that did not fill is the end of the collection, not a shortfall.
+        if want and n1 >= 0 and n1 < want:
+            out["verdict"] = "PAGE1_IS_ALL"
+            out["message"] = ("page 1 held %d of the %d it asked for and page "
+                              "2 is empty" % (n1, want))
+        else:
+            out["verdict"] = "PAGE2_EMPTY"
+            out["message"] = ("page 1 filled (%d) but page 2 is empty — worth "
+                              "one look" % n1)
+        return out
+    out["verdict"] = "OK"
+    return out
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--tree", default="collectors")
+    ap.add_argument("--jobs", type=int, default=6)
+    ap.add_argument("--timeout", type=int, default=60)
+    ap.add_argument("--out")
+    ap.add_argument("--limit", type=int, default=0)
+    ap.add_argument("--ids-file")
+    ap.add_argument("--self-test", action="store_true",
+                    help="run the record counter's fixtures and exit")
+    a = ap.parse_args()
+
+    # Fixtures FIRST, always — not only under the flag. A sweep whose counter
+    # has stopped seeing its own case produces verdicts that read like
+    # measurements, which is how both of this counter's defects survived.
+    if not self_test():
+        return 2
+    if a.self_test:
+        print("counter fixtures: all pass")
+        return 0
+
+    rows = paged_rows(a.tree)
+    if a.ids_file:
+        want = {x.strip() for x in open(a.ids_file) if x.strip()}
+        rows = [r for r in rows if r["id"] in want]
+    if a.limit:
+        rows = rows[:a.limit]
+    a.locks = {}
+    sys.stderr.write("asking page 2 of %d paged scheduled rows on %d hosts, "
+                     "%d jobs (one row at a time per host)\n"
+                     % (len(rows), len({r["host"] for r in rows}), a.jobs))
+    done = [0]
+
+    def one(r):
+        res = probe(a, r)
+        with _lock:
+            done[0] += 1
+            if res["verdict"] not in ("OK", "PAGE2_EMPTY"):
+                sys.stderr.write("%-14s %-40s %s\n" % (
+                    res["verdict"], res["id"], str(res["message"])[:80]))
+            if done[0] % 100 == 0:
+                sys.stderr.write("  ... %d/%d\n" % (done[0], len(rows)))
+            sys.stderr.flush()
+        return res
+
+    with ThreadPoolExecutor(max_workers=a.jobs) as ex:
+        res = list(ex.map(one, rows))
+
+    if a.out:
+        with open(a.out, "w") as f:
+            w = csv.DictWriter(f, COLS, delimiter="\t", extrasaction="ignore")
+            w.writeheader()
+            for r in sorted(res, key=lambda r: (r["verdict"], r["id"])):
+                w.writerow(r)
+    tally = {}
+    for r in res:
+        tally[r["verdict"]] = tally.get(r["verdict"], 0) + 1
+    sys.stderr.write("\n")
+    for k in sorted(tally, key=lambda k: -tally[k]):
+        sys.stderr.write("  %-14s %d\n" % (k, tally[k]))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

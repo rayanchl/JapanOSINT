@@ -101,6 +101,88 @@ static const hp_source HP_COURTS[] = {
       "entity or applicant — application number, respondent state, conclusion and "
       "judgment date" },
 
+  /* THE STANDING INDEX, as against the pivot above. `gov-echr-hudoc` read this
+   * same API on a 6-hour schedule and stored NOTHING while transferring 222 KB
+   * over 20 requests a run — the invisible nothing, found 2026-10-25 by giving
+   * the registry sweep's EMITS_NOTHING verdict the byte count that was already
+   * on the run line.
+   *
+   * The cause is the e-Gov law API's cause, a second instance on a different
+   * continent: **every field of a HUDOC record is nested.** A record is
+   * `{"columns": {"itemid": …, "docname": …, "appno": …}}` with no top-level
+   * scalar, and VJSON's uid and title precedence lists are single-level by
+   * design, so every record was dropped. The pivot above has keyed on
+   * `columns.itemid` since it was written; a VJSON row cannot say that, which
+   * is why the fix is a move rather than an edit. "Every field nested" is a
+   * FAMILY, not a quirk — look for it whenever a row transfers a real body and
+   * stores nothing.
+   *
+   * Measured 2026-10-25, one request each. `resultcount` is **232,481** —
+   * the whole ECHR case-law database — and the engine reads it without a
+   * change, because `declared_total()` lists `resultCount` and cJSON's
+   * `cJSON_GetObjectItem` is case-insensitive, so the row discloses its
+   * remainder on every run. `length` is honoured to 1,000; page 1 is
+   * byte-stable across two reads and disjoint from page 2.
+   *
+   * The sort is honoured, and the CONTROL is what says so in a shape worth
+   * knowing: `sort=frobnicate Ascending` returns an **empty result set** —
+   * this API validates the sort field and refuses an unknown one by answering
+   * nothing, where data.europa.eu's type-checks its key and discards the value
+   * (CLAUDE.md, "a parameter that validates is not a parameter that works").
+   * `kpdate Ascending` and `kpdate Descending` give different, plausible
+   * heads. Ascending is required by the cycle: new judgments land at the TAIL
+   * where a forward walk has not been yet.
+   *
+   * **AND A PAGE CYCLE CANNOT READ IT, because the offset has a hard cap that
+   * is served as an EMPTY SUCCESS.** The first attempt did exactly that:
+   * `page_param = "start"` with `page_max = 40` read 20 pages, 10,000 records,
+   * and filed "this run completed the cycle" — a tidy falsehood, because
+   * `start=9500&length=500` answers 500 rows while **`start=9900` answers 0
+   * rows AND `resultcount: 0`**. So `start + length <= 10000` is the API's own
+   * bound, the engine cannot tell it from the end of data, and the position
+   * would have cleared every run while the row re-read the same first 10,000
+   * for ever. That is the Japan Search ceiling and the ENA false-completion,
+   * both in one row, and this file's rule for it is the remedy: when no offset
+   * reaches the rest, slice the QUERY.
+   *
+   * `kpdate` is the axis, so this is a `window_days` row. Sizing it is a
+   * measurement and the obvious choice was wrong: a ONE-YEAR window peaks at
+   * **9,647 (2012)** against the 10,000 cap — 353 records of headroom, and an
+   * unsampled year could exceed it. An overflowed window is not a deferral
+   * here, because the cap means no later run can reach past 10,000 of that
+   * window either, so it is lost rather than late. Half-year windows peak near
+   * 5,000, which is half the cap: 136 windows from 1959, caught up in about a
+   * month at six-hourly, then pinned to the trailing window, which is what
+   * makes one row both the backfill and the live feed.
+   *
+   * **The known gap is 11 records and is stated rather than hidden**, because
+   * a date predicate is only exhaustive where every record is dated: the
+   * collection answers 232,481 with no predicate and **232,470** to
+   * `kpdate:[1900 TO 2040]`, so eleven documents carry no judgment date and no
+   * window will ever reach them. Measured, not assumed — that is the check
+   * this file asks for before windowing a row. */
+  { .id = "ECHR_HUDOC_INDEX", .name = "ECHR HUDOC — the whole case-law index",
+    .name_ja = "欧州人権裁判所 判例DB（全件）", .category = "legal",
+    .portal = "https://hudoc.echr.coe.int", .record_type = "echr-judgment",
+    .tags = "\"eu\",\"courts\",\"human-rights\",\"echr\"", .free_tier = 1,
+    .url = "https://hudoc.echr.coe.int/app/query/results?query=contentsitename%3AECHR"
+           "%20AND%20kpdate%3A%5B{wstart}T00%3A00%3A00Z%20TO%20{wend}T00%3A00%3A00Z%5D"
+           "&select=itemid,docname,appno,kpdate,doctype,originatingbody"
+           "&sort=kpdate%20Ascending&start=0&length=500",
+    .array_path = "results",
+    .title_keys = "columns.docname", .id_keys = "columns.itemid",
+    .date_keys = "columns.kpdate",
+    .interval = 21600,
+    .window_days = 182, .window_from = "1959-01-01",
+    .page_param = "start", .page_size = 500, .page_zero_based = 1,
+    .page_max = 20,   /* 10,000 a window against a ~5,000 peak half-year, and the API's own start+length<=10000 cap */
+    .description = "Every judgment and decision in the European Court of Human "
+      "Rights' HUDOC database — item id, case name, application number, "
+      "judgment date, document type and the originating body — read as "
+      "half-year slices of judgment date, walking forward from 1959 and then "
+      "pinning to the current window. 232,481 documents when measured on "
+      "2026-10-25, of which 11 carry no date and no window reaches" },
+
   { .id = "CANLII_SEARCH", .name = "CanLII — Canadian case law & legislation",
     .name_ja = "カナダ 判例(CanLII)", .category = "legal",
     .portal = "https://www.canlii.org", .record_type = "ca-judgment",

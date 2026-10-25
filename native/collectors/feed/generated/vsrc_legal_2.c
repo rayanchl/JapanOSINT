@@ -108,12 +108,13 @@ VRSS(gov_it_gazzetta_s1, "gov-it-gazzetta-s1", "Gazzetta Ufficiale — Constitut
   "it", "[\"italy\",\"gazette\",\"constitutionalcourt\"]", 86400,
   "Italian Official Gazette special series carrying Constitutional Court rulings and referrals.");
 
-VJSON(gov_jp_egov_laws, "gov-jp-egov-laws", "e-Gov — Japanese Statute Database", "e-Gov 法令データベース",
-  "legal", "parliament",
-  "https://laws.e-gov.go.jp/api/2/laws?limit=50",
-  "laws",
-  "ja", "[\"japan\",\"legislation\",\"statute\",\"egov\"]", 86400,
-  "Official Japanese e-Gov statute API listing laws with promulgation number and effective date.");
+/* REMOVED 2026-10-25: gov-jp-egov-laws read laws.e-gov.go.jp/api/2/laws, whose every
+ * field is NESTED, so VJSON had nothing to key or title and stored 0 records
+ * while fetching 2.0 MB a run. Replaced by EGOV_LAW_LIST_ALL in
+ * collectors/pivot/table/hp3b23_jpregistry.c, a complete read of all 9,567
+ * statutes on hpengine, where id_keys/title_keys take dotted paths. The
+ * measurement and why the read is complete rather than sliced by law_type are
+ * in that row's comment. */
 
 VJSON(gov_jp_kokkai_meetings, "gov-jp-kokkai-meetings", "National Diet — Meeting Records API", "国会会議録検索 会議一覧",
   "legal", "parliament",

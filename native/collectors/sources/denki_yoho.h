@@ -212,10 +212,40 @@ static int denki_run(const source_ctx *ctx, intel_sink *sink,
     free(csv);
   }
 
+  /* THERE IS NO QUIET HOUR FOR ELECTRICITY DEMAND, so parsing no observation
+   * is a FAILURE and not an empty. Until 2026-10-25 this line returned 0 under
+   * a comment calling it "honest empty, never rc=-1", and that premise was
+   * wrong in the way lib/rss_atom.c already argues for its own case: "no RSS or Atom
+   * document is zero bytes long, so this is an error". A denki-yoho CSV always
+   * carries the current hour's demand for its area; each of these rows runs
+   * every 300 s and the loop above has already tried today AND yesterday. If
+   * neither yielded a reading, the fetch or the shape failed.
+   *
+   * What it cost is measured. `kyushu-power` fetched 107,690 bytes over two
+   * requests and stored nothing, every run, reporting `rc=0 records=0
+   * stored=0` — byte for byte what a quiet source looks like. Its dated CSV
+   * now answers 302 to https://www.kyuden.co.jp/td/power-usages01.html, a
+   * 53,845-byte HTML landing page carrying no .csv link at all (the page's own
+   * scripts are under /library/td2026/, so the path moved in a site redesign),
+   * and the collector was following that redirect and parsing the homepage.
+   * `okinawa-power` answers 403 in 754 bytes to EVERY agent tried — the engine
+   * agent, a bare `JapanOSINT/1.0`, the compat prefix that recovered 491
+   * wall-blocked rows, `curl/8.5.0` and no User-Agent at all — so it is not an
+   * agent filter and gets no host_agents.def line. Found only because the
+   * registry sweep's EMITS_NOTHING verdict was given the byte count that was
+   * already on the run line.
+   *
+   * Returning -1 hands it to core/scheduler.c's sched_disclose_fetch_failure,
+   * which files one upsert-keyed record per (source, entity) naming the hosts
+   * contacted, the hosts that answered, the bytes, the request count and the
+   * remedy. That is the disclosure rule 1 asks for, and because the record is
+   * upsert-keyed a transient leaves ONE row that updates rather than noise.
+   * The eight healthy TSO rows are unaffected: they parse a reading and return
+   * from below. */
   if (!obs.ok) {
     fprintf(stderr, "[%s] %s_unavailable (%s)\n",
             cfg->source_id, cfg->meta_src, url);
-    return 0;                            /* honest empty, never rc=-1 */
+    return -1;
   }
 
   char iso[40]; dy_iso_jst(&obs, iso, sizeof iso);

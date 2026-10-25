@@ -190,6 +190,22 @@ hptest:
 	  third_party/cJSON.c $(ICONV_LIB) -lz
 	./bin/hpengine_test
 
+# Offline unit test for the RSS/Atom toolkit (lib/rss_atom.c), with its own
+# http_request stub. It is here rather than in tests/unit/ because
+# tests/unit/run.sh links every object, so a test there cannot replace
+# http_request without a duplicate symbol. What it pins: a 2xx body that is not
+# a feed at all is a FAILED FETCH, not an empty feed — four national press
+# feeds were serving their HTML homepage and reporting rc=0 records=0.
+.PHONY: rsstest
+rsstest:
+	@mkdir -p bin
+	$(CC) $(CFLAGS) -o bin/rss_atom_test tests/rss_atom_test.c lib/rss_atom.c \
+	  lib/feedlib.c lib/csv.c lib/hpengine.c lib/datetok.c lib/htmlparse.c \
+	  lib/seenset.c lib/xlsx.c lib/zipread.c lib/jsonlist.c lib/pagewalk.c \
+	  collectors/pivot/table/hp_uk_deep.c \
+	  third_party/cJSON.c $(LDLIBS) $(ICONV_LIB) -lz
+	./bin/rss_atom_test
+
 # Offline unit test for the HTML attribute scanner (lib/htmlparse.c). Pure
 # string work, no network: it pins the boundary rule that keeps `data-src=`
 # from answering a lookup for `src` — see tests/htmlparse_test.c.

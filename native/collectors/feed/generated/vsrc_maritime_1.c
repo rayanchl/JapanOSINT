@@ -187,6 +187,14 @@ VJSON(sec_nga_radionav_warn, "sec-nga-radionav-warn", "NGA Radio Navigational Wa
   "en", "[\"radio\",\"navwarn\",\"broadcast\",\"nga\"]", 604800,
   "Stations that broadcast radio navigational warnings, with frequencies, times and the sea areas they serve.");
 
+/* 117 emitted / 10 stored is CORRECT dedupe, and the 91% rate is what makes it
+ * worth writing down rather than leaving for the next sweep to re-open.
+ * Measured 2026-10-24: the endpoint returns 117 records carrying seven fields
+ * each and **10 distinct whole records** — one repeated 14 times, one 13, one
+ * 12, byte for byte — and the ten are also the ten distinct values of every
+ * candidate key (seriesAndNationalStockNumber, title) and of the full tuple.
+ * There is no field that could key the 107 apart because there is nothing
+ * different about them. Do not re-key this row. */
 VJSON(sec_nga_tod, "sec-nga-tod", "NGA Tactical Oceanographic Data Catalogue", "NGA 戦術海洋データカタログ",
   "maritime", "navwarning",
   "https://msi.nga.mil/api/publications/products/tod?output=json",
