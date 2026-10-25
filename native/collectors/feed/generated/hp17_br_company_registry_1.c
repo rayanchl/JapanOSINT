@@ -16,22 +16,58 @@ static const hp_source T[] = {
   { .id = "br-cnpja-open-office",
     .name = "CNPJa Open - office/company with members and roles",
     .collector = "br_company-registry", .category = "company-registry",
-    .description = "Third CNPJ source, English-keyed and the cleanest to parse: taxId, alias, founded date, head-office flag, status, and company.members[] each with person.id (a stable UUID), person.name, masked taxId, age band, country and role text - plus Simples/SIMEI opt-in history.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "company-registry-record", .tags = "\"br\",\"company-registry\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "pt",
+    .description = "Third CNPJ source, English-keyed and the cleanest to parse: taxId, alias, founded date, head-office flag, status, and company.members[] each with person.id (a stable UUID), person.name, masked taxId, age band, country and role text - plus Simples/SIMEI opt-in history.  NOT a second hop: its detail endpoint is this row's own url, so the hop re-fetched what it already had (removed 2026-10-25).",
+    .record_type = "company-registry-record", .tags = "\"br\",\"company-registry\",\"batch17\"", .lang = "pt",
     .url = "https://open.cnpja.com/office/19131243000197",
     .array_path = "sideactivities",
-    .detail_url = "https://open.cnpja.com/office/{v}", .detail_key = "taxId",
+    /* NO DETAIL HOP: its detail_url WAS this row's url. /office/{v}
+     * against /office/19131243000197 is one endpoint, so the "second hop"
+     * re-fetched the response already in hand and wrote every field a
+     * second time under detail.*. That needs no measurement to settle —
+     * one URL, one representation — and `make lint-sources` fails the
+     * shape now (`detail-self-hop`), which is how the five rows in this
+     * state were found at all: by asking the question of the whole tree
+     * after measuring it on one row (us-sf-311-open311-requests).
+     *
+     * STILL OPEN ON THIS ROW, and deliberately not guessed at: its url
+     * carries ONE entity frozen at authoring time (CNPJ 19131243000197)
+     * on a 24 h interval, and its array_path mines that one record's
+     * nested `sideactivities` array as the record set. So the row
+     * re-reads one subject for ever and emits its sub-array. That is
+     * the shape repaired for both Open311 single-case rows (`{q}` in
+     * the path plus interval 0) and it wants the same repair — but the
+     * entity shape gate, whether this path takes an entity at all, and
+     * what the record set should then be are three live readings of
+     * this host, not inferences from another one. */
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "br-cnpjws-publica",
     .name = "CNPJ.ws publica - empresa, socios e estabelecimentos",
     .collector = "br_company-registry", .category = "company-registry",
-    .description = "Second independent CNPJ source: razao_social, capital social, legal nature with code, responsible-party qualification, last-update timestamp, and socios[] with masked CPF/CNPJ, name, person type, entry date, age band, qualification object and country - plus the estabelecimento block (address, CNAE, status).  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "company-registry-record", .tags = "\"br\",\"company-registry\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "pt",
+    .description = "Second independent CNPJ source: razao_social, capital social, legal nature with code, responsible-party qualification, last-update timestamp, and socios[] with masked CPF/CNPJ, name, person type, entry date, age band, qualification object and country - plus the estabelecimento block (address, CNAE, status).  NOT a second hop: its detail endpoint is this row's own url, so the hop re-fetched what it already had (removed 2026-10-25).",
+    .record_type = "company-registry-record", .tags = "\"br\",\"company-registry\",\"batch17\"", .lang = "pt",
     .url = "https://publica.cnpj.ws/cnpj/19131243000197",
     .array_path = "estabelecimento.atividades_secundarias",
-    .detail_url = "https://publica.cnpj.ws/cnpj/{v}", .detail_key = "cnpj_raiz",
+    /* NO DETAIL HOP: its detail_url WAS this row's url. /cnpj/{v}
+     * against /cnpj/19131243000197 is one endpoint, so the "second hop"
+     * re-fetched the response already in hand and wrote every field a
+     * second time under detail.*. That needs no measurement to settle —
+     * one URL, one representation — and `make lint-sources` fails the
+     * shape now (`detail-self-hop`), which is how the five rows in this
+     * state were found at all: by asking the question of the whole tree
+     * after measuring it on one row (us-sf-311-open311-requests).
+     *
+     * STILL OPEN ON THIS ROW, and deliberately not guessed at: its url
+     * carries ONE entity frozen at authoring time (CNPJ 19131243000197)
+     * on a 24 h interval, and its array_path mines that one record's
+     * nested `estabelecimento.atividades_secundarias` array as the record set. So the row
+     * re-reads one subject for ever and emits its sub-array. That is
+     * the shape repaired for both Open311 single-case rows (`{q}` in
+     * the path plus interval 0) and it wants the same repair — but the
+     * entity shape gate, whether this path takes an entity at all, and
+     * what the record set should then be are three live readings of
+     * this host, not inferences from another one. */
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 

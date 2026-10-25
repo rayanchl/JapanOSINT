@@ -114,28 +114,83 @@ static const hp_source T[] = {
   { .id = "us-brookline-311-open311-request-detail",
     .name = "Brookline MA 311 - single service request",
     .collector = "us_civilian", .category = "civilian",
-    .description = "Single-case detail with full status_notes and geocoded address.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "civilian-record", .tags = "\"us\",\"civilian\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://spot.brooklinema.gov/open311/v2/requests/SR-138499.json",
-    .detail_url = "https://spot.brooklinema.gov/open311/v2/requests/{v}.json", .detail_key = "service_request_id",
-    .page_walk = 1,
-    .interval = 21600, .free_tier = 1 },
+    .description = "Single-case detail with full status_notes and geocoded address.  An entity pivot: hand it a case id (either spelling the server uses — SR-138499 or a bare number like 20, both measured live 2026-10-25).",
+    .record_type = "civilian-record", .tags = "\"us\",\"civilian\",\"batch16\",\"pivot\"", .lang = "en",
+    /* THE OTHER COPY OF THE SF SINGLE-CASE DEFECT, ten lines from the
+     * row that was repaired on 2026-10-25 and not repaired with it.
+     * It had ONE case id frozen into its URL — SR-138499, requested
+     * 2026-08-16 and `closed` since 2026-08-21 (measured today) — on a
+     * 6 h interval, so it re-read an immutable record four times a day
+     * and, because its detail_url was the SAME endpoint, did it TWICE
+     * per run. Its name has said "single service request" all along.
+     *
+     * The repair is `us-sf-311-open311-request-detail`'s, which is now
+     * proven: `{q}` in the path plus `interval = 0` makes it the lookup
+     * its name claims, with no collector relabel, because
+     * `registry_is_entity_pivot()` reads interval == 0, a collector
+     * that is non-empty and not `_`-prefixed, and a `{q`-token in the
+     * url. `make registry-floor` is what proves it reachable rather
+     * than orphaned.
+     *
+     * `.want` is HP_ANY and not HP_NUMERIC — the difference from the SF
+     * row, and it is a measurement: SPOT serves BOTH id spellings, the
+     * `SR-nnnnnn` form and a bare `20` (fetched today, 200 both ways),
+     * so no shape gate admits every real id and excludes a word. The
+     * cost is that a mistyped entity reaches the wire and 404s, which
+     * is what HP_ANY means everywhere.
+     *
+     * page_walk is dropped (one record has no pages, and the walk would
+     * probe page 2 of a one-record response) and so is the self-hop. */
+    .url = "https://spot.brooklinema.gov/open311/v2/requests/{q}.json",
+    /* `.` IS THE DOCUMENT ITSELF, declared rather than guessed. Open311
+     * serves its request collection as a ROOT ARRAY, and with no array_path
+     * the engine picks the densest array of objects — which on this server
+     * is `extended_attributes.photos`, not the request. Measured 2026-10-25
+     * on the single-case row: `--run … 20` emitted THREE records titled
+     * "Submitted" (the photo uploads) and filed the engine's own
+     * densest-array-fallback notice naming `[0].extended_attributes.photos`,
+     * size 3 against a runner-up of 1. A one-record response is where that
+     * guess is weakest, because any nested array beats a root array of one.
+     * Declared on all four Open311 rows, not just the row that failed —
+     * the list rows win on size today and win by NAME now. */
+    .array_path = ".",
+    .want = HP_ANY,
+    .interval = 0, .free_tier = 1 },
 
   { .id = "us-brookline-311-open311-requests",
     .name = "Brookline MA 311 (SPOT) - Open311 GeoReport v2 requests",
     .collector = "us_civilian", .category = "civilian",
-    .description = "service_request_id (SR-nnnnnn), status, status_notes, service_name, service_code, requested_datetime, updated_datetime, address, lat/long, token. Municipal complaint stream for a Boston-area town, keyless.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "civilian-record", .tags = "\"us\",\"civilian\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "service_request_id (SR-nnnnnn), status, status_notes, service_name, service_code, requested_datetime, updated_datetime, address, lat/long, token. Municipal complaint stream for a Boston-area town, keyless.  NO SECOND HOP: measured 2026-10-25, this server's /requests/<id>.json returns the same 12 fields with the same values as the record already in the list response, so the hop was a request per record for nothing.",
+    .record_type = "civilian-record", .tags = "\"us\",\"civilian\",\"batch16\"", .lang = "en",
     .url = "https://spot.brooklinema.gov/open311/v2/requests.json",
-    .detail_url = "https://spot.brooklinema.gov/open311/v2/requests/{v}.json", .detail_key = "service_request_id",
+    /* THE DETAIL HOP IS GONE BECAUSE IT FETCHED THE RECORD IT ALREADY
+     * HAD. Open311 GeoReport v2 serves one representation of a service
+     * request, and /requests/<id>.json is its single-resource form —
+     * not a deeper record. Measured on THIS host 2026-10-25 (the SF
+     * reading is about SF, so Brookline was asked separately): the
+     * bare list serves 50 records of 12 fields, and the detail fetch of
+     * the first of them returns the same 12 keys with identical values
+     * — detail_only=none, values_differ=none. So the hop spent one
+     * request per record to write every field a second time under
+     * detail.*, and stamped _detail_pending on every record past the
+     * budget: a disclosure that there was more behind the record, when
+     * there is not.
+     *
+     * It also removed the delay this file's page-probe fix is about.
+     * This row has page_walk with no page number bound in the URL and a
+     * FULL first page, which is two of the three conditions for the
+     * probe to read a reordered page 1 as new data; the third is a long
+     * gap between the probe's two requests, and the detail hops were
+     * it. Without them the two requests are consecutive. */
+    .array_path = ".",   /* the root array, by name rather than by size - see the single-case row above */
     .page_walk = 1,
     .interval = 21600, .free_tier = 1 },
 
   { .id = "us-sf-311-open311-request-detail",
     .name = "San Francisco 311 - single service request",
     .collector = "us_civilian", .category = "civilian",
-    .description = "Full record for one case id including the complete free-text description, resolution status_notes, media_url and coordinates.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "civilian-record", .tags = "\"us\",\"civilian\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "Full record for one case id including the complete free-text description, resolution status_notes, media_url and coordinates.  An entity pivot: hand it a numeric case id.",
+    .record_type = "civilian-record", .tags = "\"us\",\"civilian\",\"batch16\",\"pivot\"", .lang = "en",
     /* WAS A SCHEDULED ROW WITH ONE CASE ID FROZEN INTO ITS URL — case
      * 101004634285, filed 2026-08-16 and CLOSED — re-read every six hours,
      * four times a day, forever. An immutable record fetched on a cadence: the
@@ -161,18 +216,30 @@ static const hp_source T[] = {
      * handed to the dispatcher becomes a 404 fetch instead of a refusal.
      * `page_walk` is dropped — a single record has no pages, and leaving it
      * would have the walk probe a second page of a one-record response.
-     * The detail hop stays: it re-reads the same case under detail.* and is
-     * how the row returns the record rather than the summary. */
+     *
+     * THE DETAIL HOP IS GONE TOO, and the sentence that stood here said
+     * the opposite: "it re-reads the same case under detail.* and is how
+     * the row returns the record rather than the summary". Its own
+     * detail_url was this row's url — /requests/{v}.json against
+     * /requests/{q}.json, one endpoint — so the "second hop" re-fetched
+     * the record just fetched and wrote every field a second time under
+     * detail.*. The evidence was on the run line that commit quoted:
+     * `requests=2` for one record. Measured 2026-10-25 on four cases of
+     * differing shape (open/closed, with and without media_url, with and
+     * without status_notes): the list and detail representations are the
+     * same 13 keys with identical values every time. Open311 GeoReport v2
+     * has one representation of a request; the single-resource URL is not
+     * a deeper record. */
     .url = "https://mobile311.sfgov.org/open311/v2/requests/{q}.json",
-    .detail_url = "https://mobile311.sfgov.org/open311/v2/requests/{v}.json", .detail_key = "service_request_id",
+    .array_path = ".",   /* the root array, by name rather than by size - see the Brookline single-case row above */
     .want = HP_NUMERIC,
     .interval = 0, .free_tier = 1 },
 
   { .id = "us-sf-311-open311-requests",
     .name = "San Francisco 311 - Open311 GeoReport v2 requests",
     .collector = "us_civilian", .category = "civilian",
-    .description = "Live 311 case feed: service_request_id, status, status_notes, service_name, service_code, description (free text, frequently contains licence plates, vehicle descriptions and named complaints), requested_datetime, updated_datetime, address, lat/long, media_url. Supports &service_code=, &start_date=, &end_date=, &status= filters. One of the only surviving Open311 GeoReport servers in the US.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "civilian-record", .tags = "\"us\",\"civilian\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "Live 311 case feed: service_request_id, status, status_notes, service_name, service_code, description (free text, frequently contains licence plates, vehicle descriptions and named complaints), requested_datetime, updated_datetime, address, lat/long, media_url. Supports &service_code=, &start_date=, &end_date=, &status= filters. One of the only surviving Open311 GeoReport servers in the US.  NO SECOND HOP: measured 2026-10-25, /requests/<id>.json returns the same 13 fields with the same values as the record already in the list response, so the hop was a request per record for nothing.",
+    .record_type = "civilian-record", .tags = "\"us\",\"civilian\",\"batch16\"", .lang = "en",
     /* A 48-HOUR WINDOW, NOT A CYCLE, and the measurement that forced it
      * (2026-10-24; the 136-row collision re-sweep read 100 emitted / 66
      * stored here, 34% collapsed on an .id_keys that is unique by
@@ -221,8 +288,38 @@ static const hp_source T[] = {
      * no case can be filed after now, and both spellings of this parameter
      * were measured honoured as they are written here. */
     .url = "https://mobile311.sfgov.org/open311/v2/requests.json?start_date={ago:43200}&end_date={date+1d:%Y-%m-%dT00:00:00Z}&page_size=100&page=1",
+    .array_path = ".",   /* the root array, by name rather than by size - see the Brookline single-case row above */
     .id_keys = "service_request_id",
-    .detail_url = "https://mobile311.sfgov.org/open311/v2/requests/{v}.json", .detail_key = "service_request_id",
+    /* NO DETAIL HOP, AND THE MEASUREMENT THAT REMOVED IT (2026-10-25).
+     * The open question left here was a hostgate gap for the detail
+     * hops, which this row's own notice reported being refused. The
+     * prior question is what the hop brought back, and it is nothing:
+     * Open311 GeoReport v2 defines ONE representation of a service
+     * request, so /requests/<id>.json is its single-resource form, not
+     * a deeper record. Asked of four cases chosen to differ (open and
+     * closed, with and without media_url, with and without
+     * status_notes): same 13 keys, identical values, every time —
+     * detail_only=none, list_only=none, values_differ=none. Confirmed
+     * independently on the other Open311 server in the tree
+     * (spot.brooklinema.gov, 12 keys, same answer).
+     *
+     * What it cost: 48 of the 59 requests a run, and it could never
+     * have been more than a token share of the records. The detail
+     * budget is 1,000 hops OR 120 s (hpengine.h), and at this host's
+     * 1,200 ms gate 120 s buys about 48 hops — so 48 of 1,074 records
+     * were "deepened", always the first 48 in page order because
+     * hp_detail_admit() spends in that order, and the other 1,026
+     * carried `_detail_pending`: a disclosure saying there was more
+     * behind the record, when there was not. A gap would have been
+     * measured to pace a hop that had nothing to fetch.
+     *
+     * So this row is 11 requests a run instead of 59, the detail
+     * truncation notice is gone (it was reporting a shortfall that
+     * cannot exist), and the per-host 1,200 ms gap in core/hostgate.c
+     * stays as it is — it was measured for the page walk and the page
+     * walk still wants it. us-sf-311-open311-services keeps ITS hop:
+     * requests.json?service_code={v} is a different resource, the cases
+     * under a service code, and 8 codes make it 9 requests a run. */
     .page_walk = 1,
     .page_max = 40,   /* ~13 pages needed at 100 a page (measured); headroom above the need, never equal to it — a ceiling at the need manufactures a false truncation notice */
     .interval = 21600, .free_tier = 1 },

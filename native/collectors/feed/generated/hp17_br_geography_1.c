@@ -16,11 +16,30 @@ static const hp_source T[] = {
   { .id = "br-ibge-municipio-detalhe",
     .name = "IBGE Localidades - municipio por codigo",
     .collector = "br_geography", .category = "geography",
-    .description = "Per-municipality detail hop (the list endpoint is already in the tree): IBGE code and name plus the full nested hierarchy - microrregiao, mesorregiao, UF with sigla, macro-region, and the immediate/intermediate region codes. Resolves the codigoIbge carried on every PNCP tender.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "geography-record", .tags = "\"br\",\"geography\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "pt",
+    .description = "Per-municipality detail hop (the list endpoint is already in the tree): IBGE code and name plus the full nested hierarchy - microrregiao, mesorregiao, UF with sigla, macro-region, and the immediate/intermediate region codes. Resolves the codigoIbge carried on every PNCP tender.  NO SECOND HOP: its detail endpoint was this row's own url, with the record's id the one already in it (2026-10-25).",
+    .record_type = "geography-record", .tags = "\"br\",\"geography\",\"batch17\"", .lang = "pt",
     .url = "https://servicodados.ibge.gov.br/api/v1/localidades/municipios/3550308",
     .array_path = ".",
-    .detail_url = "https://servicodados.ibge.gov.br/api/v1/localidades/municipios/{v}", .detail_key = "id",
+    /* NO DETAIL HOP. `make lint-sources` (`detail-self-hop`) found this
+     * row's detail_url to BE its url, which is necessary for a worthless
+     * hop and not sufficient — a key naming a different id would reach a
+     * different document through the same endpoint. So each of the nine
+     * was asked, one request, 2026-10-25:
+     * SELF on the static argument, and UNMEASURED from here — IBGE
+     * timed out for this probe on 2026-10-25, and an unmeasured host
+     * is written down as such rather than filed as a reading. The
+     * argument needs no request: array_path is the document itself,
+     * so the single record IS the município this url names and its
+     * `id` field can only be 3550308. A hop onto the same id is the
+     * same document.
+     *
+     * Also still open and NOT guessed at here: this row's url carries ONE
+     * entity frozen at authoring time on a schedule, so it re-reads one
+     * subject for ever — the shape repaired for both Open311 single-case
+     * rows (`{q}` in the path plus interval 0). The path demonstrably takes
+     * an id, because the detail_url templated that exact position; what the
+     * record set should become once it is a pivot is a reading of this host
+     * and is listed in docs/detail-self-hops-2026-10-25.tsv. */
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 

@@ -314,11 +314,28 @@ static const hp_source T[] = {
   { .id = "us-scotus-docket-json",
     .name = "US Supreme Court — full docket record (JSON)",
     .collector = "us_legal", .category = "legal",
-    .description = "The complete SCOTUS docket for one case number, straight from supremecourt.gov and completely keyless. Contains CaseNumber, term, case type (Paid/IFP/Application), PetitionerTitle, RespondentTitle, DocketedDate, LowerCourt + lower-court docket numbers and decision date, RelatedCaseNumber[], Petitioner[] and Respondent[] arrays of counsel (name, firm, address, phone, party represented), Other[] (amici counsel), and ProceedingsandOrder[] — 53 dated docket entries here — each with Date, Text and a Links[] array of DocumentUrl PDFs on supremecourt.gov/DocketPDF/. Docket -> entries -> documents in a single hop. Works for merits dockets (24-1234) and applications (24A1012).  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "The complete SCOTUS docket for one case number, straight from supremecourt.gov and completely keyless. Contains CaseNumber, term, case type (Paid/IFP/Application), PetitionerTitle, RespondentTitle, DocketedDate, LowerCourt + lower-court docket numbers and decision date, RelatedCaseNumber[], Petitioner[] and Respondent[] arrays of counsel (name, firm, address, phone, party represented), Other[] (amici counsel), and ProceedingsandOrder[] — 53 dated docket entries here — each with Date, Text and a Links[] array of DocumentUrl PDFs on supremecourt.gov/DocketPDF/. Docket -> entries -> documents in a single hop. Works for merits dockets (24-1234) and applications (24A1012).  NO SECOND HOP: the declared detail_key (RelatedCaseNumber) resolves on none of this docket's entries, so it only ever stamped _detail_error (measured 2026-10-25).",
+    .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\"", .lang = "en",
     .url = "https://www.supremecourt.gov/rss/cases/JSON/24-1234.json",
     .array_path = "proceedingsandorder",
-    .detail_url = "https://www.supremecourt.gov/rss/cases/JSON/{v}.json", .detail_key = "RelatedCaseNumber",
+    /* NO DETAIL HOP. `make lint-sources` (`detail-self-hop`) found this
+     * row's detail_url to BE its url, which is necessary for a worthless
+     * hop and not sufficient — a key naming a different id would reach a
+     * different document through the same endpoint. So each of the nine
+     * was asked, one request, 2026-10-25:
+     * NO KEY, and this is the one that looked legitimate: keying on
+     * `RelatedCaseNumber` would be a related-case hop through the
+     * same endpoint, which is a real thing to want. Measured: the 53
+     * `proceedingsandorder` entries carry no such field, so it fetched
+     * nothing and stamped `_detail_error` 53 times a run.
+     *
+     * Also still open and NOT guessed at here: this row's url carries ONE
+     * entity frozen at authoring time on a schedule, so it re-reads one
+     * subject for ever — the shape repaired for both Open311 single-case
+     * rows (`{q}` in the path plus interval 0). The path demonstrably takes
+     * an id, because the detail_url templated that exact position; what the
+     * record set should become once it is a pivot is a reading of this host
+     * and is listed in docs/detail-self-hops-2026-10-25.tsv. */
     .page_walk = 1,
     .interval = 43200, .free_tier = 1 },
 

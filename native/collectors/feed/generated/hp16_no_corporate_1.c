@@ -16,11 +16,29 @@ static const hp_source T[] = {
   { .id = "no-brreg-underenhet-detail",
     .name = "Norway Brreg sub-unit (establishment) detail record",
     .collector = "no_corporate", .category = "corporate",
-    .description = "Full record for a single Norwegian establishment/branch (underenhet): name, complete historiskeNavn array with fraDato/tilDato, organisasjonsform, beliggenhetsadresse and postadresse, kommune, naeringskode, antallAnsatte, registration and deletion dates, and overordnetEnhet pointing back at the parent company. This is the detail hop behind /api/underenheter?overordnetEnhet=.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "corporate-record", .tags = "\"no\",\"corporate\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "no",
+    .description = "Full record for a single Norwegian establishment/branch (underenhet): name, complete historiskeNavn array with fraDato/tilDato, organisasjonsform, beliggenhetsadresse and postadresse, kommune, naeringskode, antallAnsatte, registration and deletion dates, and overordnetEnhet pointing back at the parent company. This is the detail hop behind /api/underenheter?overordnetEnhet=.  NOT a second hop: its detail endpoint is this row's own url, so the hop re-fetched what it already had (removed 2026-10-25).",
+    .record_type = "corporate-record", .tags = "\"no\",\"corporate\",\"batch16\"", .lang = "no",
     .url = "https://data.brreg.no/enhetsregisteret/api/underenheter/973861883",
     .array_path = "historiskenavn",
-    .detail_url = "https://data.brreg.no/enhetsregisteret/api/underenheter/{v}", .detail_key = "organisasjonsnummer",
+    /* NO DETAIL HOP: its detail_url WAS this row's url. /api/underenheter/{v}
+     * against /api/underenheter/973861883 is one endpoint, so the "second hop"
+     * re-fetched the response already in hand and wrote every field a
+     * second time under detail.*. That needs no measurement to settle —
+     * one URL, one representation — and `make lint-sources` fails the
+     * shape now (`detail-self-hop`), which is how the five rows in this
+     * state were found at all: by asking the question of the whole tree
+     * after measuring it on one row (us-sf-311-open311-requests).
+     *
+     * STILL OPEN ON THIS ROW, and deliberately not guessed at: its url
+     * carries ONE entity frozen at authoring time (establishment 973861883)
+     * on a 24 h interval, and its array_path mines that one record's
+     * nested `historiskenavn` array as the record set. So the row
+     * re-reads one subject for ever and emits its sub-array. That is
+     * the shape repaired for both Open311 single-case rows (`{q}` in
+     * the path plus interval 0) and it wants the same repair — but the
+     * entity shape gate, whether this path takes an entity at all, and
+     * what the record set should then be are three live readings of
+     * this host, not inferences from another one. */
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 

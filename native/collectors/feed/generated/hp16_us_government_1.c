@@ -16,11 +16,25 @@ static const hp_source T[] = {
   { .id = "us-ma-ocpf-filer",
     .name = "Massachusetts OCPF - filer (candidate/committee) profile",
     .collector = "us_government", .category = "government",
-    .description = "cpfId, candidate first/last name, committeeName, accountType (candidate/PAC/ballot-question/party flags), officeSought, district, treasurer, depository bank id and name, address, isActive/isClosed, treasurerTrainingCompletionDate. Entry point for a person -> committee -> reports -> donors chain.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "government-record", .tags = "\"us\",\"government\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "cpfId, candidate first/last name, committeeName, accountType (candidate/PAC/ballot-question/party flags), officeSought, district, treasurer, depository bank id and name, address, isActive/isClosed, treasurerTrainingCompletionDate. Entry point for a person -> committee -> reports -> donors chain.  NO SECOND HOP: its detail endpoint was this row's own url and every record's cpfId is the filer already in it (measured 2026-10-25).",
+    .record_type = "government-record", .tags = "\"us\",\"government\",\"batch16\"", .lang = "en",
     .url = "https://api.ocpf.us/filer/15021",
     .array_path = "tags",
-    .detail_url = "https://api.ocpf.us/filer/{v}", .detail_key = "cpfId",
+    /* NO DETAIL HOP. `make lint-sources` (`detail-self-hop`) found this
+     * row's detail_url to BE its url, which is necessary for a worthless
+     * hop and not sufficient — a key naming a different id would reach a
+     * different document through the same endpoint. So each of the nine
+     * was asked, one request, 2026-10-25:
+     * SELF: 17 records (the filer's `tags`), and `cpfId` is 15021 on
+     * every one — the url's own filer. 17 re-fetches of this response.
+     *
+     * Also still open and NOT guessed at here: this row's url carries ONE
+     * entity frozen at authoring time on a schedule, so it re-reads one
+     * subject for ever — the shape repaired for both Open311 single-case
+     * rows (`{q}` in the path plus interval 0). The path demonstrably takes
+     * an id, because the detail_url templated that exact position; what the
+     * record set should become once it is a pivot is a reading of this host
+     * and is listed in docs/detail-self-hops-2026-10-25.tsv. */
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
@@ -37,22 +51,52 @@ static const hp_source T[] = {
   { .id = "us-ma-ocpf-report-detail",
     .name = "Massachusetts OCPF - itemised report (donors and spending)",
     .collector = "us_government", .category = "government",
-    .description = "Full contents of one filing: receipts[] with each contributor's name, address, occupation, employer, principalOfficer, amount, date, tenderTypeDescription (Credit Card/Check), relatedCpfId; plus merchantProviderFees, refundedContributions, expenditures, bankName, officeDistrictSought and reporting totals. This is the deepest hop in MA campaign finance.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "government-record", .tags = "\"us\",\"government\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "Full contents of one filing: receipts[] with each contributor's name, address, occupation, employer, principalOfficer, amount, date, tenderTypeDescription (Credit Card/Check), relatedCpfId; plus merchantProviderFees, refundedContributions, expenditures, bankName, officeDistrictSought and reporting totals. This is the deepest hop in MA campaign finance.  NO SECOND HOP: its detail endpoint was this row's own url and every receipt's reportId is the report already in it (measured 2026-10-25).",
+    .record_type = "government-record", .tags = "\"us\",\"government\",\"batch16\"", .lang = "en",
     .url = "https://api.ocpf.us/report/1038377",
     .array_path = "receipts",
-    .detail_url = "https://api.ocpf.us/report/{v}", .detail_key = "reportId",
+    /* NO DETAIL HOP. `make lint-sources` (`detail-self-hop`) found this
+     * row's detail_url to BE its url, which is necessary for a worthless
+     * hop and not sufficient — a key naming a different id would reach a
+     * different document through the same endpoint. So each of the nine
+     * was asked, one request, 2026-10-25:
+     * SELF: 8 records (the report's `receipts`), and `reportId` is
+     * 1038377 on every one — this report. 8 re-fetches.
+     *
+     * Also still open and NOT guessed at here: this row's url carries ONE
+     * entity frozen at authoring time on a schedule, so it re-reads one
+     * subject for ever — the shape repaired for both Open311 single-case
+     * rows (`{q}` in the path plus interval 0). The path demonstrably takes
+     * an id, because the detail_url templated that exact position; what the
+     * record set should become once it is a pivot is a reading of this host
+     * and is listed in docs/detail-self-hops-2026-10-25.tsv. */
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "us-ma-ocpf-report-list",
     .name = "Massachusetts OCPF - all reports for one filer",
     .collector = "us_government", .category = "government",
-    .description = "Every report a committee has filed of a given base type, each already containing its receipts/expenditure arrays, bankName, reportingPeriod, depositSequence and totals. Combined with /reports/baseReportTypes/{cpfId} this enumerates a filer's complete filing history.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "government-record", .tags = "\"us\",\"government\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "Every report a committee has filed of a given base type, each already containing its receipts/expenditure arrays, bankName, reportingPeriod, depositSequence and totals. Combined with /reports/baseReportTypes/{cpfId} this enumerates a filer's complete filing history.  NO SECOND HOP: its detail endpoint was this row's own url and every item's cpfId is the filer already in it, so the hop re-asked for this same list once per item (measured 2026-10-25).",
+    .record_type = "government-record", .tags = "\"us\",\"government\",\"batch16\"", .lang = "en",
     .url = "https://api.ocpf.us/reports/reportList/15021?baseReportTypeId=2",
     .array_path = "items",
-    .detail_url = "https://api.ocpf.us/reports/reportList/{v}?baseReportTypeId=2", .detail_key = "cpfId",
+    /* NO DETAIL HOP. `make lint-sources` (`detail-self-hop`) found this
+     * row's detail_url to BE its url, which is necessary for a worthless
+     * hop and not sufficient — a key naming a different id would reach a
+     * different document through the same endpoint. So each of the nine
+     * was asked, one request, 2026-10-25:
+     * SELF, and the most expensive of the nine: 50 records (the
+     * filer's reports), `cpfId` 15021 on every one, so the hop asked
+     * for THIS LIST fifty times a run — bounded only by the detail
+     * budget, which it then spent on nothing.
+     *
+     * Also still open and NOT guessed at here: this row's url carries ONE
+     * entity frozen at authoring time on a schedule, so it re-reads one
+     * subject for ever — the shape repaired for both Open311 single-case
+     * rows (`{q}` in the path plus interval 0). The path demonstrably takes
+     * an id, because the detail_url templated that exact position; what the
+     * record set should become once it is a pivot is a reading of this host
+     * and is listed in docs/detail-self-hops-2026-10-25.tsv. */
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 

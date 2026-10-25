@@ -29,11 +29,26 @@ static const hp_source T[] = {
   { .id = "us-ca-dcc-cannabis-detail",
     .name = "California DCC - single cannabis licence record",
     .collector = "us_corporate", .category = "corporate",
-    .description = "Full licence record including businessOwnerName (named natural persons, e.g. 'Collin Hammans, JoAnn Hammans'), businessLegalName, businessDbaName, businessStructure, licensingAuthority, issue/expiration dates, premiseStreetAddress and status history fields.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "corporate-record", .tags = "\"us\",\"corporate\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "Full licence record including businessOwnerName (named natural persons, e.g. 'Collin Hammans, JoAnn Hammans'), businessLegalName, businessDbaName, businessStructure, licensingAuthority, issue/expiration dates, premiseStreetAddress and status history fields.  NO SECOND HOP: its detail endpoint was this row's own url and the record's id is the one already in it (measured 2026-10-25).",
+    .record_type = "corporate-record", .tags = "\"us\",\"corporate\",\"batch16\"", .lang = "en",
     .url = "https://as-dcc-pub-cann-w-p-002.azurewebsites.net/licenses/16186",
     .array_path = ".",
-    .detail_url = "https://as-dcc-pub-cann-w-p-002.azurewebsites.net/licenses/{v}", .detail_key = "id",
+    /* NO DETAIL HOP. `make lint-sources` (`detail-self-hop`) found this
+     * row's detail_url to BE its url, which is necessary for a worthless
+     * hop and not sufficient — a key naming a different id would reach a
+     * different document through the same endpoint. So each of the nine
+     * was asked, one request, 2026-10-25:
+     * SELF: array_path is the document itself, so the one record IS
+     * the licence this url names, and its `id` can only be 16186 —
+     * the hop re-fetched this very response.
+     *
+     * Also still open and NOT guessed at here: this row's url carries ONE
+     * entity frozen at authoring time on a schedule, so it re-reads one
+     * subject for ever — the shape repaired for both Open311 single-case
+     * rows (`{q}` in the path plus interval 0). The path demonstrably takes
+     * an id, because the detail_url templated that exact position; what the
+     * record set should become once it is a pivot is a reading of this host
+     * and is listed in docs/detail-self-hops-2026-10-25.tsv. */
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 

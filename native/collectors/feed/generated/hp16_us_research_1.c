@@ -49,11 +49,34 @@ static const hp_source T[] = {
   { .id = "openalex-institution-detail",
     .name = "OpenAlex institution record (detail)",
     .collector = "us_research", .category = "research",
-    .description = "One institution: ROR id, country, type, homepage, acronyms and alternative names, lineage (parent institutions), geo coordinates, works/cited-by counts, associated_institutions and repositories.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "research-record", .tags = "\"us\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    .description = "One institution: ROR id, country, type, homepage, acronyms and alternative names, lineage (parent institutions), geo coordinates, works/cited-by counts, associated_institutions and repositories.  NO SECOND HOP: the declared detail_key resolved to topic ids and the hop asked the institutions endpoint for them, 25 404s a run (measured 2026-10-25).",
+    .record_type = "research-record", .tags = "\"us\",\"research\",\"batch16\"", .lang = "en",
     .url = "https://api.openalex.org/institutions/I27837315",
     .array_path = "topics",
-    .detail_url = "https://api.openalex.org/institutions/{v}", .detail_key = "id",
+    /* NO DETAIL HOP. `make lint-sources` (`detail-self-hop`) found this
+     * row's detail_url to BE its url, which is necessary for a worthless
+     * hop and not sufficient — a key naming a different id would reach a
+     * different document through the same endpoint. So each of the nine
+     * was asked, one request, 2026-10-25:
+     * WRONG NAMESPACE, and the costliest in requests: the 25 records
+     * are the institution's `topics`, so `id` resolves to a TOPIC id
+     * (T10009, T10015 …) and the hop asked the INSTITUTIONS endpoint
+     * for it. `institutions/T10009` is HTTP 404 (measured). So 25
+     * requests a run, 25 404s, 25 `_detail_error` stamps. The
+     * measurement first read as REACHES — 25 distinct ids, none the
+     * url's own — which is why "it reaches another id" had to be
+     * checked against "that id belongs to this endpoint".
+     * The three sibling OpenAlex institution rows are NOT this shape
+     * (their url is a list and `id` is an institution id); the lint
+     * flags only this one, which is the check being narrow enough.
+     *
+     * Also still open and NOT guessed at here: this row's url carries ONE
+     * entity frozen at authoring time on a schedule, so it re-reads one
+     * subject for ever — the shape repaired for both Open311 single-case
+     * rows (`{q}` in the path plus interval 0). The path demonstrably takes
+     * an id, because the detail_url templated that exact position; what the
+     * record set should become once it is a pivot is a reading of this host
+     * and is listed in docs/detail-self-hops-2026-10-25.tsv. */
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 

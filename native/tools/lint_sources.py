@@ -1305,10 +1305,169 @@ def check_csv_delim_name():
                            % (os.path.relpath(path, REPO), ln, sid, val))
     return out
 
+_ETOK = re.compile(r"\{(?:q[a-zA-Z]?|Q|v|V)\}")
+
+
+def _detail_is_same_endpoint(url, detail):
+    """Is `detail` the same endpoint as `url`?
+
+    Two shapes, and both were found in the tree rather than imagined:
+
+      * token for token -- `/requests/{q}.json` against `/requests/{v}.json`
+        (us-sf-311-open311-request-detail). One endpoint under two spellings
+        of "the entity goes here";
+      * the row's url carries an id FROZEN at authoring time where the detail
+        url has its token -- `/office/19131243000197` against `/office/{v}`
+        (br-cnpja-open-office, br-cnpjws-publica, no-brreg-underenhet-detail,
+        us-brookline-311-open311-request-detail). The probe URL shipped as the
+        row.
+
+    The second shape has to be drawn narrowly, and the first attempt was not:
+    comparing the last "/"-separated segment of the whole URL reported 110
+    rows, and the first ones read were CKAN `package_search?rows=100` beside
+    `package_show?id={v}` -- a correct detail hop, in a defect bucket, which
+    is the one thing this repo's verdicts must not do. On a query URL the last
+    "/"-segment is `package_search?rows=100`, and its `100` passed a "contains
+    four digits" test for an identifier.
+
+    So: the QUERY STRINGS must be identical (a detail that adds a filter is a
+    different request, which is what CKAN, ANFR and every search-then-show
+    pair do), the difference must be in the last PATH segment, and the url's
+    own segment must be DIGIT-DENSE -- at least four digits and at least half
+    the characters -- rather than merely containing digits. `/api/items`
+    against `/api/{v}` stays unflagged; `24-1234.json`, `SR-138499.json`,
+    `973861883` and `19131243000197` are all caught."""
+    u, d = _ETOK.sub("{X}", url), _ETOK.sub("{X}", detail)
+    if u == d:
+        return True
+    upath, _, uq = u.partition("?")
+    dpath, _, dq = d.partition("?")
+    if uq != dq or "/" not in upath or "/" not in dpath:
+        return False
+    uhead, ulast = upath.rsplit("/", 1)
+    dhead, dlast = dpath.rsplit("/", 1)
+    if uhead != dhead or "{X}" not in dlast or "{X}" in ulast:
+        return False
+    stem = ulast.rsplit(".", 1)[0] if "." in ulast else ulast
+    digits = sum(c.isdigit() for c in stem)
+    return (digits >= 4 and digits * 2 >= len(stem)
+            and all(c.isalnum() or c in "-_" for c in stem))
+
+
+# Every pair that decided the predicate's shape, both directions, checked on
+# each run. The over-broad first version passed the four TRUE cases and also
+# claimed the four FALSE ones -- 110 findings, CKAN `package_search` beside
+# `package_show?id={v}` among them -- so a fixture set that only proves the
+# TRUE cases would have passed it too.
+_SELFHOP_FIXTURES = [
+    # (url, detail_url, is_the_same_endpoint)
+    # token for token: one endpoint, two spellings of "the entity goes here"
+    ("https://mobile311.sfgov.org/open311/v2/requests/{q}.json",
+     "https://mobile311.sfgov.org/open311/v2/requests/{v}.json", True),
+    # the probe URL shipped as the row: a frozen id where the token belongs
+    ("https://spot.brooklinema.gov/open311/v2/requests/SR-138499.json",
+     "https://spot.brooklinema.gov/open311/v2/requests/{v}.json", True),
+    ("https://api.ocpf.us/filer/15021", "https://api.ocpf.us/filer/{v}", True),
+    ("https://www.supremecourt.gov/rss/cases/JSON/24-1234.json",
+     "https://www.supremecourt.gov/rss/cases/JSON/{v}.json", True),
+    # a frozen id with a query, where the query is carried identically
+    ("https://api.ocpf.us/reports/reportList/15021?baseReportTypeId=2",
+     "https://api.ocpf.us/reports/reportList/{v}?baseReportTypeId=2", True),
+    # NOT the same endpoint: a search beside a show, which is what nearly every
+    # legitimate detail hop in this tree looks like. The query strings differ.
+    ("https://datos.magyp.gob.ar/api/3/action/package_search?rows=100&sort=id%20asc",
+     "https://datos.magyp.gob.ar/api/3/action/package_show?id={v}", False),
+    # NOT the same endpoint: same path, but the detail adds a filter
+    ("https://data.anfr.fr/d4c/api/records/1.0/search/?dataset=dd11&rows=1000",
+     "https://data.anfr.fr/d4c/api/records/1.0/search/?dataset=dd11&q=sup_id%3A{v}&rows=1000",
+     False),
+    # NOT the same endpoint: a real list path beside a real item path. This is
+    # the case the digit-density test exists for -- `items` is not an id.
+    ("https://example.test/api/items", "https://example.test/api/{v}", False),
+    # NOT the same endpoint: a word that merely contains four digits
+    ("https://example.test/api/report2024summary",
+     "https://example.test/api/{v}", False),
+    # NOT the same endpoint: the detail is one path level deeper
+    ("https://example.test/api/case/24-1234",
+     "https://example.test/api/case/{v}/docket", False),
+]
+
+
+def _selfhop_fixtures_ok():
+    bad = []
+    for url, detail, want in _SELFHOP_FIXTURES:
+        got = _detail_is_same_endpoint(url, detail)
+        if got != want:
+            bad.append("  %s vs %s -> %s, expected %s"
+                       % (url, detail, got, want))
+    if bad:
+        sys.stderr.write("detail-self-hop predicate no longer sees its own "
+                         "cases:\n" + "\n".join(bad) + "\n")
+        return False
+    return True
+
+
+def check_detail_self_hop():
+    """A row's `detail_url` must not be the row's own `url`.
+
+    hpengine's second hop exists to fetch the record behind a list hit. When
+    the two URLs are one endpoint it re-fetches the response already in hand
+    and writes every field a second time under `detail.*` -- a request per
+    record, and on a paged row a `_detail_pending` stamp on everything past
+    the budget, which says there is more behind the record when there is not.
+
+    Measured 2026-10-25 on the row that started it
+    (us-sf-311-open311-requests, whose hop is not a self-hop but was dead for
+    the neighbouring reason: Open311 serves ONE representation of a service
+    request, so /requests/<id>.json is its single-resource form). Asking the
+    same question of the whole tree statically -- no requests at all -- found
+    five rows whose detail_url IS their url. One of them, the SF single-case
+    pivot, had a comment asserting the opposite: "it re-reads the same case
+    under detail.* and is how the row returns the record rather than the
+    summary", with `requests=2` for one record on its own run line.
+
+    A row that really means it says so with a `detail-self-hop-ok: <reason>`
+    marker inside the row, as `page-offset-ok` does one check over."""
+    if not _selfhop_fixtures_ok():
+        sys.exit(2)
+    out = []
+    for path in source_files():
+        text = read(path)
+        if "hp_source" not in text:
+            continue
+        for m in _HP_TBL_RE.finditer(text):
+            block = _brace_block(text, m.end() - 1)
+            if not block:
+                continue
+            for row in _hp_rows(block):
+                dm = re.search(r"\.detail_url\s*=", row)
+                if not dm or "detail-self-hop-ok" in row:
+                    continue
+                um = re.search(r"(?<![\w.])\.url\s*=", row)
+                if not um:
+                    continue
+                url = _read_string_concat(row, um.end())
+                detail = _read_string_concat(row, dm.end())
+                if not url or not detail:
+                    continue
+                if not _detail_is_same_endpoint(url, detail):
+                    continue
+                idm = re.search(r"\.id\s*=", row)
+                sid = _read_string_concat(row, idm.end()) if idm else "?"
+                ln = text.count("\n", 0, text.find(row)) + 1
+                out.append("%s:%d: %s declares a detail_url that is its own "
+                           "url (%s vs %s) -- the second hop re-fetches the "
+                           "response already in hand"
+                           % (os.path.relpath(path, REPO), ln, sid,
+                              url, detail))
+    return out
+
+
 CHECKS = [
     ("dup-id", check_dup_id),
     ("page-size-on-page-number", check_page_size_on_page_number),
     ("csv-delim-name", check_csv_delim_name),
+    ("detail-self-hop", check_detail_self_hop),
     ("dup-endpoint", check_dup_endpoint),
     ("unresolved-id", check_unresolved_id),
     ("registry-orphan", check_registry_orphan),

@@ -27,22 +27,55 @@ static const hp_source T[] = {
   { .id = "jp-ndl-authority-person",
     .name = "Web NDL Authorities - person/corporate name authority record (JSON-LD)",
     .collector = "jp_research", .category = "research",
-    .description = "Authority record for a named person or organisation: uri, primaryTopic with foaf:Person/foaf:Organization type, prefLabel literalForm plus transcription (kana reading), altLabel variant names and pseudonyms, birth/death dates, related authorities (owl:sameAs to VIAF/LCNAME), source citations and created/modified timestamps. The entity-resolution layer for Japanese personal and corporate names in library data.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "research-record", .tags = "\"jp\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "ja",
+    .description = "Authority record for a named person or organisation: uri, primaryTopic with foaf:Person/foaf:Organization type, prefLabel literalForm plus transcription (kana reading), altLabel variant names and pseudonyms, birth/death dates, related authorities (owl:sameAs to VIAF/LCNAME), source citations and created/modified timestamps. The entity-resolution layer for Japanese personal and corporate names in library data.  NO SECOND HOP: the declared detail_key resolves on none of this row's records, so it only ever stamped _detail_error (measured 2026-10-25).",
+    .record_type = "research-record", .tags = "\"jp\",\"research\",\"batch16\"", .lang = "ja",
     .url = "https://id.ndl.go.jp/auth/ndlna/00270232.json",
     .array_path = "altlabel",
-    .detail_url = "https://id.ndl.go.jp/auth/ndlna/{v}.json", .detail_key = "ndlna_id",
+    /* NO DETAIL HOP. `make lint-sources` (`detail-self-hop`) found this
+     * row's detail_url to BE its url, which is necessary for a worthless
+     * hop and not sufficient — a key naming a different id would reach a
+     * different document through the same endpoint. So each of the nine
+     * was asked, one request, 2026-10-25:
+     * NO KEY: 7 records (the authority record's `altlabel` entries)
+     * and `ndlna_id` resolves on NONE of them. That is not a free
+     * no-op: hp_deepen() spends the budget first and then stamps
+     * `_detail_error: list record carries no detail key` on every
+     * record, so the row disclosed a failed detail fetch 7 times a
+     * run for a detail that does not exist.
+     *
+     * Also still open and NOT guessed at here: this row's url carries ONE
+     * entity frozen at authoring time on a schedule, so it re-reads one
+     * subject for ever — the shape repaired for both Open311 single-case
+     * rows (`{q}` in the path plus interval 0). The path demonstrably takes
+     * an id, because the detail_url templated that exact position; what the
+     * record set should become once it is a pivot is a reading of this host
+     * and is listed in docs/detail-self-hops-2026-10-25.tsv. */
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "jp-ndl-authority-subject",
     .name = "Web NDL Authorities - subject heading (NDLSH) record",
     .collector = "jp_research", .category = "research",
-    .description = "NDL subject heading as SKOS Concept: uri, prefLabel literalForm with kana transcription, altLabel synonyms, broader/narrower/related concept links, created (back to 1980) and modified dates. Lets you expand or normalise a topic before running an NDL Search query.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "research-record", .tags = "\"jp\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "ja",
+    .description = "NDL subject heading as SKOS Concept: uri, prefLabel literalForm with kana transcription, altLabel synonyms, broader/narrower/related concept links, created (back to 1980) and modified dates. Lets you expand or normalise a topic before running an NDL Search query.  NO SECOND HOP: the declared detail_key resolves on none of this row's records, so it only ever stamped _detail_error (measured 2026-10-25).",
+    .record_type = "research-record", .tags = "\"jp\",\"research\",\"batch16\"", .lang = "ja",
     .url = "https://id.ndl.go.jp/auth/ndlsh/00560222.json",
     .array_path = "narrower",
-    .detail_url = "https://id.ndl.go.jp/auth/ndlsh/{v}.json", .detail_key = "ndlsh_id",
+    /* NO DETAIL HOP. `make lint-sources` (`detail-self-hop`) found this
+     * row's detail_url to BE its url, which is necessary for a worthless
+     * hop and not sufficient — a key naming a different id would reach a
+     * different document through the same endpoint. So each of the nine
+     * was asked, one request, 2026-10-25:
+     * NO KEY: 9 records (`narrower`), `ndlsh_id` on none of them —
+     * so 9 `_detail_error` stamps a run and no fetch. Same shape as
+     * the person row above.
+     *
+     * Also still open and NOT guessed at here: this row's url carries ONE
+     * entity frozen at authoring time on a schedule, so it re-reads one
+     * subject for ever — the shape repaired for both Open311 single-case
+     * rows (`{q}` in the path plus interval 0). The path demonstrably takes
+     * an id, because the detail_url templated that exact position; what the
+     * record set should become once it is a pivot is a reading of this host
+     * and is listed in docs/detail-self-hops-2026-10-25.tsv. */
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 

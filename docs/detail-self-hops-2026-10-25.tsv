@@ -1,0 +1,52 @@
+#	A DETAIL HOP THAT RE-FETCHES ITS OWN URL. Found 2026-10-25 by asking the whole tree a question first measured on one row.
+#
+#	It started at us-sf-311-open311-requests, whose open item was "measure a hostgate gap for the detail hops" - the row's own
+#	notice reported them refused. The prior question is what the hop brought back. Open311 GeoReport v2 defines ONE representation
+#	of a service request, so /requests/<id>.json is its single-resource form and not a deeper record: measured against four SF
+#	cases chosen to differ (open/closed, with and without media_url, with and without status_notes) and against the other Open311
+#	server in the tree (spot.brooklinema.gov), the list and detail representations are the same keys with identical values every
+#	time. 48 of that row's 59 requests a run were buying nothing, and 1,026 of 1,074 records carried _detail_pending - a
+#	disclosure that there was more behind the record, when there was not.
+#
+#	Asking it statically of all 627 rows that declare a detail_url - no requests at all - found 16 whose detail_url IS their url.
+#	7 were removed with the Open311 work; the 9 below were each then MEASURED, one request, because "your detail_url is your own
+#	endpoint" is NECESSARY for a worthless hop and not SUFFICIENT: a key naming a different id reaches a different document
+#	through the same endpoint, which is a real thing to want.
+#
+#	make lint-sources fails the shape now (detail-self-hop). Its first predicate was OVER-BROAD and the tree said so at once -
+#	110 findings, the first ones read being CKAN package_search beside package_show?id={v}, a correct hop in a defect bucket. On a
+#	query URL the last "/"-segment is `package_search?rows=100` and its `100` passed a "looks like an id" test. Narrowed: the
+#	query strings must be identical, the difference must be in the last PATH segment, and the url's own segment must be
+#	digit-dense. A row that means it says so with a `detail-self-hop-ok: <reason>` marker, as page-offset-ok does.
+#
+#	verdict: SELF = every record's detail_key equals the id already in the url. NO-KEY = the key resolves on no record, so
+#	hp_deepen() spends the budget and stamps _detail_error on every record - a disclosed failure to fetch a detail that does not
+#	exist. WRONG-NS = the key resolves to an id from another namespace and the hop asks this endpoint for it (404s).
+#
+#	STILL OPEN, and deliberately not guessed at: all 9 ALSO carry one entity frozen into the url on a schedule, so each re-reads
+#	one subject for ever and emits that one record's nested array. That is the shape repaired for both Open311 single-case rows
+#	(`{q}` in the path plus interval 0, no collector relabel - registry_is_entity_pivot() reads interval 0, a non-`_` collector
+#	and a `{q`-token). The path demonstrably takes an id, because the detail_url templated that exact position. What is NOT
+#	settled per row is the entity shape gate (.want) and what the record set should be once the row is a pivot: array_path today
+#	names a nested array of the one probe record, which is the probe's assumption and not the row's purpose. One reading of each
+#	host, which is why it is listed rather than done.
+#
+id	file	verdict	records	detail_key	array_path	interval_sec	frozen_entity	url	detail_url	what_the_hop_cost_per_run	pivot_remedy_still_open
+us-ma-ocpf-report-list	native/collectors/feed/generated/hp16_us_government_1.c	SELF	50	cpfId	items	86400	filer 15021	https://api.ocpf.us/reports/reportList/15021?baseReportTypeId=2	https://api.ocpf.us/reports/reportList/{v}?baseReportTypeId=2	50 re-fetches of this same list, one per item, bounded only by the detail budget	{q} for the filer id; .want HP_NUMERIC (cpfId is numeric); array_path items is right for a filer's report list
+openalex-institution-detail	native/collectors/feed/generated/hp16_us_research_1.c	WRONG-NS	25	id	topics	86400	institution I27837315	https://api.openalex.org/institutions/I27837315	https://api.openalex.org/institutions/{v}	25 requests, 25 HTTP 404 (institutions/T10009 measured), 25 _detail_error stamps	{q} for the institution id; array_path should be the institution record, not its topics; the three sibling institution rows are NOT this shape
+us-scotus-docket-json	native/collectors/feed/generated/hp16_us_legal_1.c	NO-KEY	53	RelatedCaseNumber	proceedingsandorder	43200	docket 24-1234	https://www.supremecourt.gov/rss/cases/JSON/24-1234.json	https://www.supremecourt.gov/rss/cases/JSON/{v}.json	53 _detail_error stamps; no fetch. A related-case hop was plausible here, which is why it was measured	{q} for the docket number; .want is NOT numeric (24-1234); a real related-case hop needs a field that actually carries one
+us-ma-ocpf-filer	native/collectors/feed/generated/hp16_us_government_1.c	SELF	17	cpfId	tags	86400	filer 15021	https://api.ocpf.us/filer/15021	https://api.ocpf.us/filer/{v}	17 re-fetches of this response	{q} for the filer id; array_path tags emits the filer's tags, not the filer
+jp-ndl-authority-person	native/collectors/feed/generated/hp16_jp_research_1.c	NO-KEY	7	ndlna_id	altlabel	86400	authority 00270232	https://id.ndl.go.jp/auth/ndlna/00270232.json	https://id.ndl.go.jp/auth/ndlna/{v}.json	7 _detail_error stamps; no fetch	{q} for the ndlna id; array_path altlabel emits alternative labels, not the authority record
+jp-ndl-authority-subject	native/collectors/feed/generated/hp16_jp_research_1.c	NO-KEY	9	ndlsh_id	narrower	86400	subject 00560222	https://id.ndl.go.jp/auth/ndlsh/00560222.json	https://id.ndl.go.jp/auth/ndlsh/{v}.json	9 _detail_error stamps; no fetch	{q} for the ndlsh id; array_path narrower emits narrower terms, not the heading
+us-ma-ocpf-report-detail	native/collectors/feed/generated/hp16_us_government_1.c	SELF	8	reportId	receipts	86400	report 1038377	https://api.ocpf.us/report/1038377	https://api.ocpf.us/report/{v}	8 re-fetches of this response	{q} for the report id; array_path receipts is arguably right here - a report's receipts ARE its records
+us-ca-dcc-cannabis-detail	native/collectors/feed/generated/hp16_us_corporate_1.c	SELF	1	id	.	86400	licence 16186	https://as-dcc-pub-cann-w-p-002.azurewebsites.net/licenses/16186	https://as-dcc-pub-cann-w-p-002.azurewebsites.net/licenses/{v}	1 re-fetch of this response	{q} for the licence id; array_path . is right - the document is the record
+br-ibge-municipio-detalhe	native/collectors/feed/generated/hp17_br_geography_1.c	SELF (static; host UNMEASURED from here)	1	id	.	86400	municipio 3550308	https://servicodados.ibge.gov.br/api/v1/localidades/municipios/3550308	https://servicodados.ibge.gov.br/api/v1/localidades/municipios/{v}	1 re-fetch of this response	{q} for the IBGE municipio code; array_path . is right. IBGE timed out for this probe on 2026-10-25 - unmeasured from here, not diagnosed
+#
+#	The 7 removed with the Open311 work, for the record:
+#	us-sf-311-open311-request-detail	 self-hop, requests/{q}.json against requests/{v}.json, 2 requests for one record
+#	us-brookline-311-open311-request-detail	 self-hop AND one closed case (SR-138499, closed 2026-08-21) frozen on a 6 h interval - now a pivot
+#	us-sf-311-open311-requests	 not a self-hop: a dead hop, the single-resource form of the record it already had
+#	us-brookline-311-open311-requests	 the same dead hop, measured on that host separately
+#	no-brreg-underenhet-detail	 self-hop; establishment 973861883 still frozen on a 24 h interval
+#	br-cnpja-open-office	 self-hop; CNPJ 19131243000197 still frozen on a 24 h interval
+#	br-cnpjws-publica	 self-hop; CNPJ 19131243000197 still frozen on a 24 h interval
