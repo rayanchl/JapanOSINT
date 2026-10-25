@@ -185,9 +185,60 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "deforestation-alert",
     .tags = "\"brazil\",\"amazon\",\"deforestation\",\"inpe\",\"satellite\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://terrabrasilis.dpi.inpe.br/geoserver/deter-amz/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=deter-amz:deter_amz&maxFeatures=500&outputFormat=application%2Fjson",
+    /* Read 500 of 464,353 alerts, hourly, forever — the upstream's own
+     * `totalFeatures`, measured 2026-10-25. It declared no paging at all, so
+     * one request per run was all it ever made.
+     *
+     * `sortBy=view_date,gid` is not cosmetic and `sortBy=gid` does NOT work:
+     * asked with gid alone the service returned statistics IDENTICAL to no
+     * sort at all — 100 rows holding 53 distinct gids, 23 repeated feature
+     * ids WITHIN one page, and 1 feature shared across the page-1/page-2 seam
+     * — i.e. the sort was ignored and the walk was paging a union view with no
+     * effective ORDER BY. With `view_date,gid` the same windows come back
+     * clean: 1,000 rows, 1,000 distinct feature ids, 1,000 distinct gid,
+     * overlap 0 across the seam, and page 1 byte-repeatable. So the repeated
+     * rows were an artifact of unordered paging and NOT duplicate data —
+     * which is why `id_keys` is the feature's own id and nothing was widened
+     * to "fix" a collision that was a question (rule 4b).
+     *
+     * `timeout_ms = 120000` because the sorted query is genuinely slow and the
+     * engine's 20 s HP_HTTP_TIMEOUT was cutting it off mid-walk. Measured per
+     * page, 1,000 features: 13.6 s at startIndex=0, 20.0 s unsorted, 21.2 s at
+     * 500, and 33.7 s at startIndex=20000. The first fixed run showed exactly
+     * what that costs without the raise — "page 3 answered -1" after 10
+     * requests and 207 s, a working query reported as a transport failure,
+     * which is the ENA lesson in this file repeated on another host.
+     *
+     * NOTE WHAT THAT TIMING CURVE MEANS: an offset walk on an unindexed sort
+     * gets slower the deeper it goes, so the far end of a 465-page cycle will
+     * eventually exceed even 120 s. The real remedy is a KEYSET cursor —
+     * `CQL_FILTER=view_date>'<the last date read>'`, the shape ELIA's
+     * imbalance history and the Go module index use — which costs the server a
+     * range scan instead of a sort-and-skip. Not built here: it needs its own
+     * measurement per host, and this row is 20x better in the meantime.
+     *
+     * `page_max = 10` rather than the 465 pages the total needs. This row runs
+     * HOURLY because new alerts are the point, and at ~20 s a page even 50
+     * pages would have it fetching for 17 minutes of every hour against one
+     * agency's GeoServer. Ten pages is ~10,000 records and a few minutes a
+     * run, the cycle comes round in about two days, and `page_resume` keeps
+     * the position so each run reads a further slice rather than the same
+     * first one. The freshness half is still unsolved and the arithmetic says
+     * so: a cycling walk sits somewhere in the archive, so a brand-new alert
+     * waits for the cycle. The proper shape is the deliberate pair this file
+     * uses elsewhere (canada-hydrometric, the ELIA rows) — a short `view_date`
+     * window for the live tail beside this full-archive cycle — and that is a
+     * second row, not an edit to this one. */
+    .url = "https://terrabrasilis.dpi.inpe.br/geoserver/deter-amz/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=deter-amz:deter_amz&maxFeatures=1000&outputFormat=application%2Fjson&sortBy=view_date,gid",
     .array_path = "features",
+    .id_keys = "id",
     .interval = 3600,
+    .timeout_ms = 120000,
+    .page_param = "startIndex",
+    .page_size = 1000,
+    .page_start = 0,
+    .page_max = 10,
+    .page_resume = 1,
     .description = "INPE's near-real-time deforestation and forest-degradation "
       "alerts for the Brazilian Amazon, as polygons with the detection "
       "date, alert class, area in hectares, municipality, state, and "
@@ -202,9 +253,32 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "deforestation-polygon",
     .tags = "\"brazil\",\"amazon\",\"deforestation\",\"prodes\",\"inpe\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://terrabrasilis.dpi.inpe.br/geoserver/prodes-legal-amz/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=prodes-legal-amz:yearly_deforestation&maxFeatures=500&outputFormat=application%2Fjson",
+    /* Read 500 of 835,439 polygons, every six hours, forever — the upstream's
+     * own `totalFeatures`, measured 2026-10-25, and the largest single
+     * shortfall found in this pass. It declared no paging at all.
+     *
+     * `sortBy=fid` is honoured here and is enough on its own, unlike DETER
+     * above: startIndex 0 against 10 came back disjoint (overlap 0), page 1
+     * repeatable, and the feature ids are UUIDs rather than a serial, so the
+     * order is stable without a second key. Measured rather than assumed,
+     * because the sibling row on the same GeoServer silently ignored its sort.
+     *
+     * 836 pages of 1,000 is past the 200-page line this file draws, so it
+     * reads the archive over a CYCLE: 200 pages a run, the position stored,
+     * about four runs (roughly a day at this cadence) to come round. That is
+     * the right trade for PRODES specifically — it is the ANNUAL consolidated
+     * map, republished once a year, so nothing is lost by taking a day to read
+     * it, and a cycle on a yearly dataset is not a freshness compromise the
+     * way it is for DETER's hourly alerts. */
+    .url = "https://terrabrasilis.dpi.inpe.br/geoserver/prodes-legal-amz/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=prodes-legal-amz:yearly_deforestation&maxFeatures=1000&outputFormat=application%2Fjson&sortBy=fid",
     .array_path = "features",
+    .id_keys = "id",
     .interval = 21600,
+    .page_param = "startIndex",
+    .page_size = 1000,
+    .page_start = 0,
+    .page_max = 200,
+    .page_resume = 1,
     .description = "PRODES, the official annual clear-cut deforestation map of the "
       "Legal Amazon that Brazil's deforestation rate is calculated "
       "from, as individual polygons with the reference year, area, "
