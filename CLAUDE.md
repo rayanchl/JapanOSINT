@@ -2257,6 +2257,40 @@ findings that generalise are:
   `offense_date` (a timestamp) and `link` (a URL)** as unique keys on three of
   these datasets. Same rule as the IDEAM timestamps, three more times.
 
+**TWO SIBLING ROWS ON ONE PORTAL, ONE NEEDING A KEY AND ONE NEEDING TO KEEP
+THE FALLBACK** (2026-10-25, Colombia's SECOP I and II on `datos.gov.co`). Both
+read COLLISION, and the reading that decided each is the row's CURRENT loss
+rather than how good the candidate key looks:
+
+* **`gov-co-secop1` lost 294 of 1,000 a run.** No field on a SECOP record is in
+  VJSON's uid precedence list, so it fell back to hashing (title, link, date) —
+  and no TITLE key matches either, so the label is the record's FIRST SCALAR,
+  which is `entidad`: the contracting authority. Every procurement DANE
+  publishes shared one uid. Measured over twenty pages, 1,000 records: 979
+  distinct whole records and `id_del_proceso` is **979**, equal to it, so it is
+  the identity and the 21 repeats are the upstream's own bytes. Keyed:
+  **707 → 981 stored** (979 records plus two notices).
+* **`gov-co-secop2` lost 2 of 1,000 and KEEPS the fallback.** Same portal, same
+  shape, opposite answer: 1,000 records, 1,000 distinct whole, and the best
+  field key is `numero_del_contrato` at **943** —
+  `codigo_entidad_en_secop+numero_del_contrato` and
+  `numero_de_proceso+numero_del_contrato` are also 943. Declaring the "real" id
+  would lose 57 records a run where the content hash loses 2. **A contract
+  number is not unique in that register and the register publishes nothing that
+  is**, which is the result, and the row says so.
+
+Two process notes from doing it, both of which nearly cost a wrong change.
+`numero_del_contrato` is 250 of 250 over 250 records and 943 of 1,000 over a
+thousand — **"two pages can be too few" is not a special case, it is the normal
+case**. And the engine run that "proved" the first fix stored 705, two fewer
+than before: there was a COMPILE ERROR in the file, so the binary was the
+previous one. `VJSON_IDKEYS` lives in its own include
+(`collectors/sources/_vjson_idkeys.inc`), not in `_verified_macros.inc`, and a
+file using it has to pull it in — the error names a column in the macro's
+argument list, which reads like a bad argument count rather than a missing
+definition. **Check the build's own exit before believing a measurement taken
+after it.**
+
 **A FIELD CALLED "UNIQUE IDENTIFYING NUMBER" IS UNIQUE WITHIN A SESSION**
 (2026-10-24, `collectors/pivot/table/hp3b20_parliament.c`). UK Parliament's
 linked-data API gives every question a `uin`, which is what Hansard calls it

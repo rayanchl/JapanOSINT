@@ -7,6 +7,12 @@
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
 #include "lib/pagewalk.h"
+/* VJSON_IDKEYS: the shim sink that keys a row on a named field
+ * (gov-co-secop1 below — the uid precedence list finds nothing in a SECOP
+ * record and falls back to the first scalar, which is the contracting
+ * authority). The macro lives in its own include, not in
+ * _verified_macros.inc, so a file using it has to pull it in. */
+#include "_vjson_idkeys.inc"
 
 VRSS(gov_afdb_news, "gov-afdb-news", "African Development Bank — News", "アフリカ開発銀行 ニュース",
   "government", "transparency",
@@ -100,13 +106,31 @@ VJSON(gov_cl_datos_ckan, "gov-cl-datos-ckan", "datos.gob.cl — Chilean Open Dat
   "es", "[\"chile\",\"opendata\",\"catalogue\",\"latam\"]", 86400,
   "Newly published datasets on the Chilean national open data portal.");
 
-VJSON(gov_co_secop1, "gov-co-secop1", "SECOP I — Colombian Procurement", "SECOP I コロンビア調達",
+/* 294 of 1,000 records a run collapsed (registry sweep). The record carries no
+   field VJSON's uid precedence list knows, so it fell back to hashing (title,
+   link, date) — and no TITLE key matches either, so the label is the record's
+   FIRST SCALAR, which is `entidad`: the contracting authority. Every process
+   DANE publishes shared one uid. Measured 2026-10-25 over ten pages (the shape
+   the engine reads): 500 records, 485 distinct whole, and `id_del_proceso` is
+   485 — equal to the distinct-whole count, so it IS the identity and the 15
+   repeats are the upstream's own byte-identical duplicates. */
+VJSON_IDKEYS(gov_co_secop1, "gov-co-secop1", "SECOP I — Colombian Procurement", "SECOP I コロンビア調達",
   "government", "procurement",
   "https://www.datos.gov.co/resource/p6dx-8zbt.json?$limit=50&$order=:id",
   "",
   "es", "[\"colombia\",\"procurement\",\"contracts\",\"latam\"]", 3600,
-  "Colombian SECOP I public contracting records with entity, value and contractor.");
+  "Colombian SECOP I public contracting records with entity, value and contractor.",
+  "id_del_proceso");
 
+/* LEFT ON THE FALLBACK DELIBERATELY, measured 2026-10-25 — the sibling above
+   needed a key and this one does not, from the same starting symptom. Over
+   twenty pages: 1,000 records, 1,000 distinct whole, and the best field key is
+   `numero_del_contrato` at 943; `codigo_entidad_en_secop+numero_del_contrato`
+   and `numero_de_proceso+numero_del_contrato` are also 943. The engine's own
+   reading is 999 of 1,000 stored. So declaring the "real" id would LOSE 57
+   records a run where the content-hash fallback loses 2. Compare a proposed key
+   against the row's CURRENT loss before changing it; a contract number is not
+   unique in this register and the register does not publish anything that is. */
 VJSON(gov_co_secop2, "gov-co-secop2", "SECOP II — Colombian Procurement", "SECOP II コロンビア調達",
   "government", "procurement",
   "https://www.datos.gov.co/resource/rpmr-utcd.json?$limit=50&$order=:id",
