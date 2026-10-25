@@ -40,7 +40,26 @@
  * comparing it against the four-minute figure in the comment BELOW, which
  * describes the superseded whole-rebuild design over pivots only. 27.3 minutes
  * matches neither ~10 nor ~45; the measurement that settles it is whether the
- * NEXT tick is short, since an unchanged card is only a hash compare. */
+ * NEXT tick is short, since an unchanged card is only a hash compare.
+ *
+ * SETTLED 2026-10-25, same day: it is not re-embedding. `service_vec_meta`
+ * (read directly, not inferred from duration) is the honest instrument:
+ *   eligible_count=57921  embedded_count=27062  last_embedded=4096
+ * `last_embedded` lands exactly on the cap every tick and `embedded_count`
+ * climbs by exactly that each time — a pod re-embedding unchanged cards
+ * would show `embedded_count` flat while duration stayed long, not this.
+ * It is a cold build at the cap, ~14 ticks from `state` leaving `building`
+ * and `registry_sig` being written, after which ticks go back to cheap hash
+ * compares. A second tick ran at 20.4 minutes (down from 27.3) — still not
+ * ~10, and the missing variable was the MODEL: this comment's "~10 min" /
+ * "~45 min" were measured against multilingual-e5-large; the server runs
+ * `bge-m3-Q8_0.gguf`. 4,096 cards in ~20min is ~300ms/card for a 1024-dim
+ * Q8 model sharing :8082 with the intel backfill pod's own backlog — the
+ * backfill's concurrent load explains the 27.3-vs-20.4 spread, the model
+ * explains why neither is 10. **Check `select * from service_vec_meta`
+ * before reading a tick's wall-clock as a verdict on anything** — duration
+ * is confounded by whatever else is on :8082; `last_embedded` and
+ * `embedded_count` are not. */
 #define SVEC_MAX_PER_RUN_DEF 4096
 
 /* The index, as lib/vecindex sees it. It used to be rebuilt WHOLE (no
