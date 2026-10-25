@@ -656,13 +656,13 @@ HOST_AGENT_KIND(HA_SEC,         "JapanOSINT/1.0 research (rayanchouialkessal@gma
    * Re-measured here 2026-10-25 WITH the engine's Accept and Accept-Encoding
    * headers (without them all four answer 403 to every agent):
    *   kansai-airport  HA_CONTACT 200, 31 KB after its redirect to /flight/search
-   *   ceidg           HA_CONTACT 200, 12 KB
+   *   ceidg           HA_CONTACT 200, 12 KB (dropped 2026-10-25: its rows now
+   *                   use the CEIDG v3 API, and nothing fetches this host)
    *   fcc.gov         HA_CONTACT 200, 17 KB — and 200 on /api/content.json,
    *                   which the re-written FCC enforcement collector reads
    *                   (engine agent 403 there too, 2026-10-25)
    *   allabolag       HA_CONTACT 403; HA_COMPAT 200, 105 KB after its redirect */
   HOST_AGENT("www.kansai-airport.or.jp", HA_CONTACT)
-  HOST_AGENT("aplikacja.ceidg.gov.pl", HA_CONTACT)
   HOST_AGENT("www.fcc.gov", HA_CONTACT)
   HOST_AGENT("www.allabolag.se", HA_COMPAT)
   /* SEC: see HA_SEC above. */
