@@ -349,6 +349,8 @@ that replaced them survive, so no coverage is lost. **A sweep's verdict is
 about the URL it sent, not about the row's name** — re-read a removal against
 the row as it stands now.
 
+**Measured 2026-10-25 on the merged tree at 005e4ee8** (main's 57,923 plus the two IOC sea-level retirements rebased onto it, `sci-ocean-ioc-sealevel-tab` and `geo-ioc-sealevel-stations`): registry 57,921, `make source-count` 57,921, both floors re-recorded at 57,921 from that build, not by arithmetic.
+
 **Main's count was 57,394** (2026-10-25): 57,393 plus `US_FCC_ENFORCEMENT`
 back as a hand-written collector (`collectors/sources/fcc_enforcement.c`) on
 the FCC Content API's server-side title search (`search_string`, a PREFIX
