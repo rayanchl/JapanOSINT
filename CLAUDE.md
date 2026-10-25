@@ -1288,6 +1288,54 @@ Where the tree actually stands, as `make audit-sources` reports it:
   with a declared `sortBy` and no `startIndex=0` 1,774. **Bind the offset in
   the row's own URL and declare the sort.**
 
+  **AND WHERE THE UPSTREAM PUBLISHES A KEYSET CURSOR, THE ANSWER IS NOT A
+  SORT AT ALL** (2026-10-25, `collectors/pivot/table/hp3_inat.c`). The three
+  iNaturalist rows read COLLISION in the sweep — 375 of 4,000, 200 of 4,000,
+  116 of 2,000 — and the cause was the drift this file names: page 1 read twice
+  a second apart is byte-identical, and **page 1 against page 2 overlaps by 10
+  of 200**, because that API takes on the order of 4,000 observations an hour
+  and a descending order over a live head moves under the walk. No ordering
+  fixes that: ascending would read the 2008 observations for ever, and
+  descending is the point of the rows.
+
+  iNaturalist publishes `id_below` for exactly this, and it measures clean: 200
+  ids strictly descending, then `id_below` of that page's last id returning 200
+  more whose maximum is one below it, **overlap 0** — with the control
+  `frobnicate=7` returning the identical set, so the cursor is doing the work
+  rather than any added parameter moving the answer. The rows read down it now:
+  4,000 / 4,000, 4,000 / 4,000 and 2,000 / 2,000, with every record carrying
+  its coordinates (`latlon_key = "location"`, 4,000 of 4,000 with a latitude).
+
+  **`page_resume` is deliberately NOT used there**, and the reason generalises:
+  a resumed keyset would march backwards through 385,217,394 observations and
+  never return to the head, which is what the cycling rules already exclude for
+  a row whose purpose is recency. Each run starts at the head again and walks
+  twenty pages down from it. The remainder is disclosed from the envelope's own
+  `total_results`.
+
+  Three things it cost, each worth knowing:
+
+  * **`next_path` accepted a STRING only, so a numeric cursor was invisible** —
+    and an auto-increment row id is the commonest keyset cursor there is. The
+    row declared `next_path = "results.$last.id"` and made ONE request, storing
+    200 of a declared 385 million. This is the blindness `hptest`'s `T_NUM_ID`
+    already pins for identifier FIELDS ("cJSON_IsString alone was blind to
+    every one of them"), in the paging path, found the same way: by watching a
+    walk that should have paged make one request. A number is accepted now
+    **only with a `next_tmpl`**, because without one the value is used AS the
+    next URL and a bare number is not one; an integral value prints as an
+    integer, never `4.1e+08`. `hptest` 56–56d, including that control.
+  * **A `.url` built from a `#define` reads to `lint_sources.py` as the bare
+    host and path**, so three rows whose queries differ only by a filter looked
+    like one duplicate of a bespoke collector on the same endpoint
+    (`dup-endpoint`, 1 above baseline). Inlining the URLs fixed it. The lint is
+    right to normalise, and a row's endpoint is worth spelling out where a
+    human will read it anyway.
+  * **A move must not quietly change a row's cost.** Raising the research-grade
+    row to 200 a page doubled it to 205 MB and 143 s a run against an hourly
+    cadence; it keeps the 100 it had, measured at 101 MB. Fixing the drift was
+    the job, not re-sizing the row.
+
   **A sort parameter can be IGNORED, which is rule 4d wearing different
   clothes.** Two of the eleven NADA microdata catalogues — DataFirst South
   Africa and Armenia — return identical first rows for `sort_order=asc`, for

@@ -2459,6 +2459,29 @@ static int hp_run_json(hp_run_state *st, const char *body) {
     cJSON *nx = hp_path(doc, s->next_path);
     if (nx && cJSON_IsString(nx) && nx->valuestring[0])
       st->next_url = strdup(nx->valuestring);
+    /* A NUMERIC cursor. `cJSON_IsString` alone was blind to it, which is the
+     * same defect this engine already records for identifier fields ("SEC's
+     * cik, RIPEstat's number, BrandMeister's id ... cJSON_IsString alone was
+     * blind to every one of them", hptest T_NUM_ID) — and the commonest keyset
+     * cursor there is, is an auto-increment row id. iNaturalist pages 385
+     * million observations by `id_below=<the last id of the page>`; the row
+     * declared `next_path = "results.$last.id"` and got ONE request, because
+     * the id is a JSON number.
+     *
+     * Only with a `next_tmpl`, and that is not a nicety: without one the value
+     * is used AS the next URL, and a bare number is not a URL. So a row that
+     * states how to spend a cursor can use a numeric one, and a row that
+     * expects the upstream to hand back a link is unchanged. Integral values
+     * print as integers — "410612173", never "410612173.0" or "4.1e+08",
+     * either of which the upstream would reject or, worse, silently read as a
+     * different cursor. */
+    else if (nx && cJSON_IsNumber(nx) && s->next_tmpl && *s->next_tmpl) {
+      char nb[48];
+      double v = nx->valuedouble;
+      if (v == (double)(long long)v) snprintf(nb, sizeof nb, "%lld", (long long)v);
+      else                           snprintf(nb, sizeof nb, "%.17g", v);
+      st->next_url = strdup(nb);
+    }
   }
   st->page_records = arr ? cJSON_GetArraySize(arr) : 0;
   /* The only exit that can hold a hp_path_multi wrapper: `arr_owned` is set

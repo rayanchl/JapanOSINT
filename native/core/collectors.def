@@ -420,8 +420,8 @@ COLLECTOR("qa_statistics", "Qatar — statistics", NULL, NULL, "grp_opendata")  
 COLLECTOR("sl_statistics", "Sierra Leone — statistics", NULL, NULL, "grp_opendata")  /* 1 src; statistics 1 */
 COLLECTOR("tn_microdata", "Tunisia — microdata", NULL, NULL, "grp_opendata")  /* 1 src; microdata 1 */
 
-/* Science, research & academia: 23 collector(s), 2009 sources */
-COLLECTOR("science", "Science feeds", "科学フィード", NULL, "grp_science")  /* 401 src; science 61, earthobs 60, spaceweather 51 */
+/* Science, research & academia: 24 collector(s), 2009 sources */
+COLLECTOR("science", "Science feeds", "科学フィード", NULL, "grp_science")  /* 398 src; science 61, earthobs 60, spaceweather 51 */
 COLLECTOR("academic", "Academic and research feeds", "学術・研究フィード", NULL, "grp_science")  /* 371 src; literature 134, clinical 61, genomics 41 */
 COLLECTOR("us_research", "United States — research", NULL, NULL, "grp_science")  /* 241 src; science 228, research 13 */
 COLLECTOR("hp3b42_jpcptuni", "Japan — university sites, WordPress custom post types (batch 42)", "日本 大学サイト カスタム投稿", NULL, "grp_science")  /* 205 src; research 205 */
@@ -441,6 +441,7 @@ COLLECTOR("science_press", "Science & technology press", "科学・技術メデ�
 COLLECTOR("eu_research", "EU — research", NULL, NULL, "grp_science")  /* 13 src; research 13 */
 COLLECTOR("hp3b45_jpwpscience", "Japan — research institutions, WordPress collections (batch 45)", "日本 研究機関 WordPress", NULL, "grp_science")  /* 11 src; physics 11 */
 COLLECTOR("de_research", "Germany — research", NULL, NULL, "grp_science")  /* 9 src; research 9 */
+COLLECTOR("hp3_inat", "iNaturalist — species observations", "iNaturalist 生物観測", "Three recency feeds read down the API's own keyset cursor, so a live head does not drift under the walk.", "grp_science")  /* 3 src; biodiversity 3 */
 COLLECTOR("hp3b49_jpwpedu", "Japan — junior-college & private-university associations (batch 49)", "日本 短大協会・私大協", NULL, "grp_science")  /* 3 src; education 3 */
 COLLECTOR("it_research", "Italy — research", NULL, NULL, "grp_science")  /* 2 src; research 2 */
 COLLECTOR("hp3b28_jpdb", "Japan — CiNii Research (batch 28)", "日本 CiNii Research", NULL, "grp_science")  /* 1 src; reference 1 */
@@ -516,7 +517,7 @@ COLLECTOR("space_sci", "space sci", NULL, NULL, "grp_space")  /* 56 src; space 5
 COLLECTOR("satellite", "Satellites", "衛星", NULL, "grp_space")  /* 34 src; satellite 25,  9 */
 COLLECTOR("osint_satellite", "OSINT pivots — satellite", "OSINTピボット — satellite", "Hand-written entity pivots whose category is satellite (collectors/sources/, DEFR/DEF rows).", "grp_space")  /* 4 src; satellite 4 */
 
-/* Cyber threat intelligence & hacking: 21 collector(s), 1320 sources */
+/* Cyber threat intelligence & hacking: 21 collector(s), 1321 sources */
 COLLECTOR("cyber", "Cyber threat intelligence", "サイバー脅威情報", NULL, "grp_cyber")  /* 210 src; cyber 161,  48, infrastructure 1 */
 COLLECTOR("hp3b22_pastechat", "Paste sites and chat leaks (batch 22)", "ペーストサイト・チャット", NULL, "grp_cyber")  /* 148 src; social 148 */
 COLLECTOR("security", "Security advisories", "セキュリティ勧告", NULL, "grp_cyber")  /* 130 src; advisory 84, vulnerability 26, policy 13 */
@@ -525,7 +526,7 @@ COLLECTOR("osint_cyber", "OSINT pivots — cyber", "OSINTピボット — cyber"
 COLLECTOR("hp3b22_extortion", "Extortion and ransomware leak sites (batch 22)", "恐喝・ランサムウェア", NULL, "grp_cyber")  /* 100 src; threat 72, reference 28 */
 COLLECTOR("hp3b23_jpcyber", "jpcyber (batch 23)", NULL, NULL, "grp_cyber")  /* 100 src; threat 54, social 16, government 9 */
 COLLECTOR("hp3b22_breachcat", "breachcat (batch 22)", NULL, NULL, "grp_cyber")  /* 91 src; legal 90, cyber 1 */
-COLLECTOR("threat-intel", "threat intel", NULL, NULL, "grp_cyber")  /* 77 src; research 43, malware 14, ransomware 11 */
+COLLECTOR("threat-intel", "threat intel", NULL, NULL, "grp_cyber")  /* 78 src; research 44, malware 14, ransomware 11 */
 COLLECTOR("hp3b25_jpdeep", "jpdeep (batch 25)", NULL, NULL, "grp_cyber")  /* 59 src; security 43, internet 12, government 2 */
 COLLECTOR("hp3b33_supplychain", "Software supply chain and package registries (batch 33)", "ソフトウェア・サプライチェーン", NULL, "grp_cyber")  /* 43 src; cyber 43 */
 COLLECTOR("cyber_advisory", "cyber advisory", NULL, NULL, "grp_cyber")  /* 27 src; cyber 27 */

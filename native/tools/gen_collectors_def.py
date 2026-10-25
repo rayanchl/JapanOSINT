@@ -85,6 +85,7 @@ OVERRIDES = {
     "thinktanks": "grp_media", "trade_press": "grp_media", "ngo_rights": "grp_safety", "conflict_press": "grp_safety",
     "arxiv": "grp_science", "science_press": "grp_science", "finance_press": "grp_corporate",
     "osm": "grp_geo", "hp3b28_jpdb": "grp_science", "reddit": "grp_social",
+    "hp3_inat": "grp_science",   # iNaturalist observations, moved off VJSON for a keyset cursor
     "jp_webmedia": "grp_media",   # batches 43/44: 400 Japanese web-media/blog RSS feeds, authored under "social"
     # batch 45: WordPress collections of hosts the registry already held, split by host type
     "hp3b45_jpwpmedia": "grp_media", "hp3b45_jpwpcorp": "grp_corporate", "hp3b45_jpwporg": "grp_legal",
@@ -271,6 +272,9 @@ LABELS = {
     "osm": ("OpenStreetMap — taginfo & changesets", "OpenStreetMap タグ・変更セット", None),
     "reddit": ("Reddit regional & thematic multireddits", "Reddit 地域・テーマ別", "One feed per multireddit (reddit-group-*)."),
     "hp3b28_jpdb": ("Japan — CiNii Research (batch 28)", "日本 CiNii Research", None),
+    "hp3_inat": ("iNaturalist — species observations", "iNaturalist 生物観測",
+                 "Three recency feeds read down the API's own keyset cursor, so a "
+                 "live head does not drift under the walk."),
     "hp3b55_atparl": ("Austria — Parliament materials (batch 55)", "オーストリア議会 資料",
                       "The Austrian Parliament's whole materials index, read as seven "
                       "complete legislative-period slices."),

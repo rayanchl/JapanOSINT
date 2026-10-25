@@ -632,6 +632,21 @@ static const hp_source T[] = {
   /* .interval is not decoration: a static URL with no interval references no
    * entity token and is never scheduled, so hp_run returns 0 without fetching
    * (rule 3). A bulk file row must declare a cadence to exist at all. */
+  /* A NUMERIC keyset cursor: `next_path` resolves to a JSON number and the row
+   * states how to spend it. The pair is the point — the same row without a
+   * next_tmpl must NOT page, because a bare number is not a URL. */
+  { .id = "T_NUMCUR", .name = "numeric cursor with a template",
+    .url = "https://x.test/obs?per_page=2",
+    .array_path = "results", .next_path = "results.$last.id",
+    .next_tmpl = "https://x.test/obs?per_page=2&id_below={v}",
+    .id_keys = "id", .title_keys = "name", .interval = 3600, .page_max = 3,
+    .record_type = "t-numcur", .free_tier = 1, .description = "d" },
+  { .id = "T_NUMCUR_NOTMPL", .name = "numeric cursor, no template",
+    .url = "https://x.test/obs?per_page=2",
+    .array_path = "results", .next_path = "results.$last.id",
+    .id_keys = "id", .title_keys = "name", .interval = 3600, .page_max = 3,
+    .record_type = "t-numcur", .free_tier = 1, .description = "d" },
+
   /* `comma` is the obvious spelling of the default and nothing accepted it:
    * the engine took the first character of an unrecognised value, so 87 rows
    * split their files on the letter **c**. Both fixture bodies below contain
@@ -4736,6 +4751,51 @@ int main(void) {
      strstr(g_cap[0].props, "\"ward\":\"Ogaki\"") != NULL &&
      strstr(g_cap[0].props, "\"method\":\"bicycle\"") != NULL,
      "55b: an unknown delimiter word reads as comma, never as its first letter");
+
+
+  /* ── 56. a NUMERIC keyset cursor ─────────────────────────────────────────
+   *
+   * `next_path` accepted a STRING only, and the commonest keyset cursor there
+   * is, is an auto-increment row id. iNaturalist pages 385 million
+   * observations by `id_below=<the last id of the page>`; the row declared
+   * `next_path = "results.$last.id"` and made ONE request, storing 200 of a
+   * declared 385,217,394 — the same blindness this file already pins for
+   * identifier FIELDS in T_NUM_ID, in the paging path. */
+  fx_reset();
+  /* The fixture matcher is first-SUBSTRING-wins, so the cursor pages are
+   * registered before the base URL they contain. */
+  fx_add("id_below=899", 200,
+         "{\"results\":[{\"id\":898,\"name\":\"c\"},{\"id\":897,\"name\":\"d\"}]}");
+  fx_add("id_below=897", 200, "{\"results\":[]}");
+  fx_add("/obs?per_page=2", 200,
+         "{\"results\":[{\"id\":900,\"name\":\"a\"},{\"id\":899,\"name\":\"b\"}]}");
+  g_ncap = 0;
+  rc = run_source("T_NUMCUR", NULL);
+  ok(rc == 0 && g_ncap == 4, "56: a numeric cursor pages (4 records over 2 pages)");
+  { int a = 0, d = 0;
+    for (int i = 0; i < g_ncap; i++) {
+      if (strstr(g_cap[i].props, "\"name\":\"a\"")) a = 1;
+      if (strstr(g_cap[i].props, "\"name\":\"d\"")) d = 1;
+    }
+    ok(a && d, "56b: the first page's first record and the last page's last both arrive");
+  }
+
+  /* 56c. THE CONTROL. Without a next_tmpl the resolved value is used AS the
+   *      next URL, and a bare number is not one — so a numeric cursor must be
+   *      ignored there rather than turned into a request for "899". */
+  g_ncap = 0;
+  rc = run_source("T_NUMCUR_NOTMPL", NULL);
+  ok(rc == 0 && g_ncap == 2,
+     "56c: without a next_tmpl a numeric cursor does not page (a number is not a URL)");
+
+  /* 56d. A STRING cursor is unchanged: the additive guarantee. */
+  fx_reset();
+  fx_add("id_below=x899", 200, "{\"results\":[]}");
+  fx_add("/obs?per_page=2", 200,
+         "{\"results\":[{\"id\":\"x900\",\"name\":\"a\"},{\"id\":\"x899\",\"name\":\"b\"}]}");
+  g_ncap = 0;
+  rc = run_source("T_NUMCUR", NULL);
+  ok(rc == 0 && g_ncap == 2, "56d: a string cursor still spends through the template");
 
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;
