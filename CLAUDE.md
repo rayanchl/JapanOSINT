@@ -2622,6 +2622,32 @@ probe is the tool that decides whether a row ships:
   mismatch at `dataverse.openscholar.org` and `nesstar.statssa.gov.za`, which
   only not checking the hostname would reach.
 
+  **BUT CHECK WHOSE CERTIFICATE YOU ARE LOOKING AT FIRST, BECAUSE IN A PROXIED
+  CONTAINER IT IS NEVER THE UPSTREAM'S** (2026-10-25). The AIA method above —
+  read the leaf's `CA Issuers` extension, fetch the missing intermediate,
+  verify it against the system root store — assumes the leaf on the wire is the
+  publisher's. Here it is not. Measured with `openssl s_client` against six
+  hosts including three that work perfectly (`github.com`, `laws.e-gov.go.jp`,
+  `catalogue.dataspace.copernicus.eu`): **every one presents a certificate
+  issued by `O = Anthropic, CN = Egress Gateway SDS Issuing CA (production)`**,
+  and the proxy's CA is in the trust bundle (14 Anthropic entries of 148 in
+  `/root/.ccr/ca-bundle.crt`, which is also why its own status reports
+  `bundleCoversEveryHost: true`). TLS terminates at the egress gateway for
+  every host, so the upstream's real chain is not observable from this
+  container at all.
+  So a `no_local_issuer` reading taken HERE is about the chain the gateway
+  presented, never about the publisher's own, and following D1's remedy from
+  such a reading would add intermediates that have nothing to do with the
+  cause — a confident wrong fix, in the one area of this tree where a wrong
+  certificate is worst. It does not retract D1: those seven intermediates were
+  each verified against the system root store and took nine hosts from
+  `rc=1 status=0` to HTTP 200, which is a measurement. It bounds it. The seven
+  rows the complete sweep's re-read reported as `no_local_issuer` — five
+  `sci-gwosc-*` on one host, plus `apdrc.soest.hawaii.edu` and
+  `nhgeodata.unh.edu` — are therefore **unmeasured from here**, not diagnosed.
+  Before trusting any TLS cause, run one `openssl s_client` against a host you
+  know works and read the issuer.
+
   **THE ENGINE NOW TELLS THEM APART, which was open item D1-bis** (2026-10-23).
   The disclosure used to read "the request failed at the transport level",
   which is the paragraph above's own lesson un-learned at the one place a

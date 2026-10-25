@@ -594,6 +594,40 @@ the line after the extension header finds only the responder. Both IODA and
 UCLA first came back `NO_AIA` from exactly that, and so did
 `www.kanamic.net` among the nine. Read the whole block.
 
+### D6. Every TLS cause measured here is measured against the EGRESS GATEWAY's certificate
+
+Measured 2026-10-25 with `openssl s_client` against six hosts, three of which
+work perfectly (`github.com`, `laws.e-gov.go.jp`,
+`catalogue.dataspace.copernicus.eu`): **all six present a certificate issued by
+`O = Anthropic, CN = Egress Gateway SDS Issuing CA (production)`**, and that CA
+is in the trust bundle (14 Anthropic entries of 148 in
+`/root/.ccr/ca-bundle.crt`, which is why the proxy's own status reports
+`bundleCoversEveryHost: true`). TLS terminates at the gateway for every host,
+so the publisher's real chain is not observable from this container.
+
+Consequences, in order of how expensive getting them wrong would be:
+
+* **D1's AIA remedy cannot be derived from a reading taken here.** It reads the
+  leaf's `CA Issuers` extension to find the missing intermediate; the leaf here
+  is the gateway's. Following it would add intermediates unrelated to the
+  cause, which is a confident wrong fix in the one area of this tree where a
+  wrong certificate is worst. D1 is not retracted — its seven intermediates
+  were each verified against the system root store and took nine hosts from
+  `rc=1 status=0` to HTTP 200 — it is bounded to the environment it was
+  measured in.
+* **The seven `no_local_issuer` rows the sweep's re-read found are UNMEASURED
+  FROM HERE, not diagnosed**: `sci-gwosc-allevents`, `sci-gwosc-gwtc`,
+  `sci-gwosc-gwtc2-1-confident`, `sci-gwosc-gwtc3-confident`,
+  `sci-gwosc-o3-discovery` (five rows on one host), `sci-erddap-apdrc-grid` and
+  `nam-nh-geodata-services`. Re-read them from a network without the gateway
+  before touching a certificate.
+* **The nine named TLS causes are still right about what the CLIENT saw**, and
+  that is what the disclosure claims; what must not be inferred is that the
+  cause belongs to the publisher.
+
+Cheap check before trusting any TLS cause: one `openssl s_client` against a
+host you know works, and read the issuer.
+
 ### D2. A set of hosts answer HTTP 000 through this container's proxy
 
 Measured one at a time, with no concurrency: `odre.opendatasoft.com`,
