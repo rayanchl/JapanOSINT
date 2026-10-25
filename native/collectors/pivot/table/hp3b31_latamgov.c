@@ -107,41 +107,6 @@ static const hp_source HP3B31_LATAMGOV[] = {
       "surcharge orders against named officials and contractors, and the "
       "declarations of ineligibility that bar a firm from federal contracting" },
 
-  { .id = "BR_CGU_LENIENCY_AGREEMENTS", .name = "Brazil CGU — leniency agreements & accountability",
-    .name_ja = "ブラジル CGU 司法取引協定", .category = "government",
-    .portal = "https://www.gov.br", .record_type = "br-leniency-agreement",
-    .tags = "\"br\",\"corruption\",\"enforcement\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.gov.br/cgu/pt-br/busca?SearchableText={q}",
-    .base = "https://www.gov.br", .filter_query = 1,
-    .description = "Comptroller General leniency agreements under the Clean "
-      "Company Act — the company, the conduct admitted, the fine and the "
-      "compliance obligations imposed. The Brazilian corporate equivalent of a "
-      "deferred prosecution agreement" },
-
-  /* ── Chile: the lobbying act as an API ────────────────────────────────── */
-  { .id = "CL_INFOPROBIDAD_DECLARATIONS", .name = "Chile — public officials' interest declarations",
-    .name_ja = "チリ 公職者利益申告", .category = "government",
-    .portal = "https://www.infoprobidad.cl", .record_type = "cl-asset-declaration",
-    .tags = "\"cl\",\"conflict-of-interest\",\"assets\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.infoprobidad.cl/Consultas/Declaraciones?nombre={q}",
-    .base = "https://www.infoprobidad.cl", .filter_query = 1,
-    .description = "Declarations of interest and assets filed by Chilean public "
-      "officials — company shareholdings, directorships, real property and "
-      "the interests of a spouse, published in full rather than summarised" },
-
-  { .id = "CL_TRANSPARENCIA_ACTIVA", .name = "Chile — active transparency disclosures",
-    .name_ja = "チリ 能動的情報公開", .category = "government",
-    .portal = "https://www.portaltransparencia.cl", .record_type = "cl-transparency",
-    .tags = "\"cl\",\"transparency\",\"public-money\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.portaltransparencia.cl/PortalPdT/buscador?q={q}",
-    .base = "https://www.portaltransparencia.cl", .filter_query = 1,
-    .description = "Every Chilean public body must publish staff and their "
-      "salaries, contracts, transfers to third parties and consultancy "
-      "agreements on a fixed schedule. This is the search across all of them" },
-
   /* ── Colombia, Argentina, Peru ────────────────────────────────────────── */
   { .id = "CO_DATOS_ABIERTOS_CATALOG", .name = "Colombia datos.gov.co — open data catalog",
     .name_ja = "コロンビア オープンデータ目録", .category = "government",
@@ -202,28 +167,6 @@ static const hp_source HP3B31_LATAMGOV[] = {
     .description = "Every Mexican public body's mandatory disclosures in one "
       "search — payroll, contracts, concessions, permits, travel expenses and "
       "the answered access-to-information requests, federal and state" },
-
-  { .id = "MX_DECLARANET_ASSETS", .name = "Mexico DeclaraNet — officials' asset declarations",
-    .name_ja = "メキシコ 公職者資産申告", .category = "government",
-    .portal = "https://declaranet.gob.mx", .record_type = "mx-asset-declaration",
-    .tags = "\"mx\",\"conflict-of-interest\",\"assets\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://declaranet.gob.mx/consulta?nombre={q}",
-    .base = "https://declaranet.gob.mx", .filter_query = 1,
-    .description = "Asset, interest and tax declarations of Mexican federal "
-      "public servants — property, vehicles, investments, debts and the "
-      "positions held by family members in the private sector" },
-
-  { .id = "MX_INE_FISCALIZACION", .name = "Mexico INE — political party finance audits",
-    .name_ja = "メキシコ選管 政党会計監査", .category = "government",
-    .portal = "https://www.ine.mx", .record_type = "mx-political-finance",
-    .tags = "\"mx\",\"political-finance\",\"elections\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.ine.mx/buscador/?q={q}",
-    .base = "https://www.ine.mx", .filter_query = 1,
-    .description = "The National Electoral Institute's audits of party and "
-      "campaign finance — reported income and spending, the suppliers paid, "
-      "the sanctions imposed and the undeclared contributions found" },
 
   /* ── Central America, Panama and the Caribbean ────────────────────────── */
   { .id = "PA_PANAMACOMPRA", .name = "Panama — PanamaCompra procurement portal",

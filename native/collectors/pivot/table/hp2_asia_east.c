@@ -36,16 +36,6 @@ static const hp_source HP2_ASIA_EAST[] = {
       "agency, estimated price, notice and closing dates, and the notice number "
       "that keys the award record" },
 
-  { .id = "KR_KIPRIS_PATENTS", .name = "Korea KIPRIS — patent & trademark search",
-    .name_ja = "韓国 特許情報(KIPRIS)", .category = "research",
-    .portal = "https://www.kipris.or.kr", .record_type = "kr-patent",
-    .tags = "\"kr\",\"patents\"", .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://engdipl.kipris.or.kr/eng/search/total_search.do?searchWord={q}",
-    .base = "https://engdipl.kipris.or.kr", .filter_query = 1,
-    .description = "Korean patents, utility models, designs and trademarks by "
-      "applicant or keyword — the IP position of a Korean manufacturer, which "
-      "often names subsidiaries the corporate register does not" },
-
   { .id = "KR_DATA_GO_KR", .name = "Korea data.go.kr — dataset & register catalogue",
     .name_ja = "韓国 公共データ カタログ", .category = "government",
     .portal = "https://www.data.go.kr", .record_type = "kr-dataset",
@@ -90,17 +80,6 @@ static const hp_source HP2_ASIA_EAST[] = {
       "its own accounting number, address and responsible person; the operating "
       "footprint behind one headquarters registration" },
 
-  { .id = "TW_IMPORT_EXPORT", .name = "Taiwan — importer/exporter registration",
-    .name_ja = "台湾 輸出入業者登録", .category = "economy",
-    .portal = "https://fbfh.trade.gov.tw", .record_type = "tw-trader",
-    .tags = "\"tw\",\"trade\",\"customs\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://fbfh.trade.gov.tw/rich/text/indexfbOL.asp?keyword={q}",
-    .base = "https://fbfh.trade.gov.tw", .filter_query = 1,
-    .description = "Taiwan's register of licensed importers and exporters — "
-      "English trading name, registration status and approval date; the link "
-      "between a shipping document and a registered Taiwanese entity" },
-
   /* ── China ─────────────────────────────────────────────────────────────── */
   { .id = "CN_CREDIT_CHINA", .name = "Credit China — discredited entity lists",
     .name_ja = "信用中国 — 失信被執行者リスト", .category = "government",
@@ -133,16 +112,6 @@ static const hp_source HP2_ASIA_EAST[] = {
     .description = "Chinese-assignee patents seen from the US collection — CNIPA's "
       "own search is JS-only, but a Chinese company's US filings name the same "
       "assignee entity and are fully queryable" },
-
-  { .id = "CN_MOFCOM_SANCTIONS", .name = "China MOFCOM — unreliable entity & export lists",
-    .name_ja = "中国商務部 — 信頼できない企業リスト", .category = "government",
-    .portal = "https://www.mofcom.gov.cn", .record_type = "cn-countersanction",
-    .tags = "\"cn\",\"sanctions\"", .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.mofcom.gov.cn/was5/web/search?channelid=226248&searchword={q}",
-    .base = "https://www.mofcom.gov.cn", .filter_query = 1,
-    .description = "Chinese counter-sanctions surface: the unreliable-entity list, "
-      "export-control designations and anti-dumping determinations naming a firm "
-      "— the mirror image of OFAC exposure for companies trading both ways" },
 
   /* ── Hong Kong & Macau ─────────────────────────────────────────────────── */
   { .id = "HK_SFC_LICENSEES", .name = "Hong Kong SFC — licensed persons & firms",
@@ -187,17 +156,6 @@ static const hp_source HP2_ASIA_EAST[] = {
     .description = "Administrative dispositions against Japanese construction "
       "firms — business suspensions, licence revocations and the conduct behind "
       "them. Japan's public debarment surface for the construction sector" },
-
-  { .id = "JP_FSA_ACTIONS", .name = "Japan FSA — administrative actions",
-    .name_ja = "金融庁 — 行政処分", .category = "government",
-    .portal = "https://www.fsa.go.jp", .record_type = "jp-enforcement",
-    .tags = "\"jp\",\"finance\",\"enforcement\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.fsa.go.jp/cgi-bin/search.cgi?q={q}",
-    .base = "https://www.fsa.go.jp", .filter_query = 1,
-    .description = "Financial Services Agency administrative actions and warnings "
-      "— unregistered operators, business-improvement orders and suspensions "
-      "naming the firm and its officers" },
 
   { .id = "JP_JICA_CONTRACTS", .name = "Japan JICA — aid contracts & debarment",
     .name_ja = "JICA — 契約と資格停止", .category = "government",

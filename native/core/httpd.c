@@ -209,17 +209,21 @@ static void reply_json_err_id(struct mg_connection *c, int code,
   free(j);
 }
 
-/* export_write_fn over a mongoose connection, for the INLINE fallback only
- * (no worker thread could be started): one Transfer-Encoding chunk per batch,
- * non-zero once the peer is gone. mg_http_write_chunk() appends to c->send,
- * which only drains on the event loop, so this path buffers the whole
- * response. The normal path streams from a worker with socket-paced
- * backpressure — see "exports on a worker, streamed to the socket" below. */
-static int export_mg_write(void *ctx, const char *buf, size_t len) {
-  struct mg_connection *c = (struct mg_connection *) ctx;
-  if (c->is_closing || c->is_draining) return 1;
-  mg_http_write_chunk(c, buf, len);
-  return 0;
+/* No export worker could be started (thread or memory exhausted). This used
+ * to fall back to running the export INLINE: the walk held the event loop for
+ * its whole length — the server answered nothing else — and every chunk piled
+ * up in c->send, which only drains on that same loop, so the whole body sat in
+ * memory (up to the plan's row cap) before a byte left. A refusal the client
+ * can retry is the honest answer; the condition is transient by nature. */
+static void reply_export_unstartable(struct mg_connection *c, const char *what) {
+  char hb[CORS_HDR_MAX + 96];
+  snprintf(hb, sizeof hb,
+    "Content-Type: application/json\r\nRetry-After: 5\r\n%s", cors_h(c));
+  mg_http_reply(c, 503, hb,
+    "{\"error\":\"export_worker_unavailable\",\"detail\":\"the server could "
+    "not start a worker for this %s; it was refused rather than run on the "
+    "event loop, which would stall every other request and hold the whole "
+    "file in memory\",\"retry_after_sec\":5}\n", what);
 }
 
 /* String field of a cJSON object, or NULL. */
@@ -1031,6 +1035,11 @@ static void reply_busy(struct mg_connection *c) {
 #ifndef XS_PUMP_WINDOW
 #define XS_PUMP_WINDOW(x) ((void) 0)
 #endif
+/* How export_offload starts its worker; test_export_stream.c makes it fail to
+ * reach the "no worker" refusal without exhausting the machine's threads. */
+#ifndef XS_THREAD_CREATE
+#define XS_THREAD_CREATE(th, fn, arg) pthread_create((th), NULL, (fn), (arg))
+#endif
 #define XS_COMMIT_BYTES 65536u        /* one exportapi/reportapi batch (OB_CAP) */
 #define XS_STALL_SEC    120           /* no drain at all for this long: the peer is gone */
 
@@ -1333,10 +1342,10 @@ static void *export_thread(void *vp) {
 
 /* OWNERSHIP OF ea->body. Deferred (1): the worker owns it and frees it.
  * Refused busy (1): freed here, the request is answered. Thread could not be
- * started (0): NOT freed — the caller still owns it and serves inline with it.
- * This used to free it on that path too, and the report route then ran
- * report_run(..., NULL): the request's own body (the sections and options the
- * caller asked for) silently replaced by the defaults. */
+ * started (0): NOT freed — the caller still owns it, frees it, and answers
+ * 503 (reply_export_unstartable). It once ran the report inline with it, and
+ * before that this freed it too, so the inline report_run got NULL: the
+ * caller's own sections and options silently replaced by the defaults. */
 static int export_offload(struct mg_connection *c, exp_arg *ea) {
   if (!worker_admit()) { free(ea->body); free(ea); reply_busy(c); return 1; }
   xstream *x = calloc(1, sizeof *x);
@@ -1356,7 +1365,7 @@ static int export_offload(struct mg_connection *c, exp_arg *ea) {
   x->next_live = g_xs_live;
   g_xs_live = x;
   pthread_t th;
-  if (pthread_create(&th, NULL, export_thread, ea) == 0) {
+  if (XS_THREAD_CREATE(&th, export_thread, ea) == 0) {
     pthread_detach(th);
     return 1;                      /* streamed from MG_EV_WAKEUP / MG_EV_POLL */
   }
@@ -1365,7 +1374,7 @@ static int export_offload(struct mg_connection *c, exp_arg *ea) {
   xs_release(x);
   worker_release();
   free(ea);                        /* ea->body stays the caller's */
-  return 0;                        /* caller falls back to the inline path */
+  return 0;                        /* caller refuses: reply_export_unstartable */
 }
 
 /* ── handlers that call SOMEBODY ELSE, off the loop ────────────────────────
@@ -3926,20 +3935,8 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           if (export_offload(c, ea)) return;
         }
       }
-      /* Thread spawn failed: the old inline path, chunked as before. */
-      mg_printf(c,
-        "HTTP/1.1 200 OK\r\n"
-        "Content-Type: %s\r\n"
-        "Content-Disposition: attachment; filename=\"%s\"\r\n"
-        "Transfer-Encoding: chunked\r\n"
-        "Cache-Control: no-store\r\n"
-        "X-Accel-Buffering: no\r\n"
-        "%s\r\n",
-        plan.content_type, plan.filename, cors_h(c));
-      c->is_resp = 0;                 /* we own the framing (== the SSE path) */
-      long rows = 0;
-      export_run(g_db, &tc, kind, fmt, qs, export_mg_write, c, &rows, &status);
-      mg_http_write_chunk(c, "", 0);  /* terminating zero-length chunk */
+      /* No worker (export_offload freed `ea`, or calloc failed): refuse. */
+      reply_export_unstartable(c, "export");
       return;
     }
 
@@ -4020,25 +4017,11 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           snprintf(ea->ctype, sizeof ea->ctype, "%s", plan.content_type);
           snprintf(ea->fname, sizeof ea->fname, "%s", plan.filename);
           if (export_offload(c, ea)) return;
-          /* 0 = no thread: export_offload handed `bdy` back, and the inline
-           * report below must run with the body the caller sent. */
+          /* 0 = no thread: export_offload handed `bdy` back to us. */
         }
       }
-      mg_printf(c,
-        "HTTP/1.1 200 OK\r\n"
-        "Content-Type: %s\r\n"
-        "Content-Disposition: attachment; filename=\"%s\"\r\n"
-        "Transfer-Encoding: chunked\r\n"
-        "Cache-Control: no-store\r\n"
-        "X-Content-Type-Options: nosniff\r\n"
-        "X-Accel-Buffering: no\r\n"
-        "%s\r\n",
-        plan.content_type, plan.filename, cors_h(c));
-      c->is_resp = 0;
-      long rbytes = 0;
-      report_run(g_db, &tc, cid, bdy, export_mg_write, c, &rbytes, &status);
       free(bdy);
-      mg_http_write_chunk(c, "", 0);
+      reply_export_unstartable(c, "report");
       return;
     }
 

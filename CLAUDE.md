@@ -325,6 +325,42 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
+**The registered count is MEASURED ON THIS MERGE** (2026-10-25, the fifth merge
+of main into this branch): `make source-count` is the number, never the
+arithmetic, and the removals on both sides are why. This merge took main's
+2026-10-25 HTML reachability sweep, and resolving it per row is the lesson
+worth more than the count — **main's sweep measured ten of this branch's rows
+at a URL they no longer carry.** Of the 23 rows in conflict, 13 had been
+re-pointed here and measured on the new endpoint (the ZA gazette 3 anchors for
+a real entity and 0 for an impossible one, Municipal Money 39 facts of a
+declared 39, the ECB workbook, four Stortinget exports, Eduskunta's
+`avoindata` API, and the three bulk-file stand-ins), so main's 404 is a true
+reading of a dead path and a false one about the row that replaced it. The
+other 10 were byte-identical to what main measured dead in two passes with the
+page, the bare path AND the site root each checked, which is stronger than
+this file's own "one probe is one reading" — so those removals stand, four of
+them overturning a decision taken here to keep a dead pivot "disclosing".
+**Both sessions had measured the same fact** (this branch's own note says
+PMDA's search "answers the form page to every POST constructible here" and the
+Assemblée's "404s with no form"); they differed only on the policy, and the
+tree's own precedent settles it, from the FAA case: "Three sources removed
+rather than left registered and failing every run." The three stand-in rows
+that replaced them survive, so no coverage is lost. **A sweep's verdict is
+about the URL it sent, not about the row's name** — re-read a removal against
+the row as it stands now.
+
+**Main's count was 57,394** (2026-10-25): 57,393 plus `US_FCC_ENFORCEMENT`
+back as a hand-written collector (`collectors/sources/fcc_enforcement.c`) on
+the FCC Content API's server-side title search (`search_string`, a PREFIX
+match: "Verizon" 401 documents, an impossible term none). 57,393 was 57,395
+less two — `US_FCC_ENFORCEMENT` in its old form, a search whose query never
+reached the server (rule 4d), and `gov-hk-legco-bills`, a second reading of
+the LegCo bills feed (`docs/removed-sources-2026-10-25-legco.tsv`). 57,395 was
+57,529 less **134 dead HTML rows** found by its reachability sweep — the page
+and its bare path 404/410 while the site answers, or the domain gone — each
+with its evidence in `docs/removed-sources-2026-10-25-html-dead.tsv` (the
+sweep itself: `docs/html-reachability-2026-10.md`).
+
 **The registered count is 58,055** (2026-10-23): 58,054 plus `cyb-levelblue`,
 the successor of a press feed whose host now redirects to another company —
 see rule 1's note on a feed that has stopped being a feed.
@@ -662,7 +698,10 @@ manifests, TSVs, docs and collector keys — exactly as the batch-41 note below
 predicts. The count ledger — every
 batch from 37 to 48, main's 45 and batch 46 included, what seeded it, what it measured and what it taught — is
 `docs/SOURCE_COUNT_LEDGER.md`; this file keeps the rules and the current number.
-Both floors are re-recorded from `make source-count` after every merge.
+Both floors are re-recorded from `make source-count` after every merge, and
+the number above is that reading rather than an addition — main reached
+57,393/57,394 by its own removals on 2026-10-25 and the 57,536 this line once
+stated was two merges stale, which is exactly why it is measured each time.
 
 **And a THIRD branch hit the same renumbering, which is why batch 46 is the
 ArcGIS beat.** PR #51 generated it as batch 45 when 44 was the highest
@@ -1972,6 +2011,33 @@ underneath them that older notes in this file predate:
   pivots, and labels it "OSINT pivots — <cat>". Safe because the pivot rule
   below never read the label; a scheduled row's `collector` must name its
   beat, not a macro's default.
+* **The table name is the wrong collector for a REGISTER** (2026-10-24). Half
+  the registry read as Government because three tables were one collector
+  each: `hp3b47_frgov` 9,619 rows, `hp3b47_itgov` 5,716, `hp3b48_news` 3,992,
+  every row `category = "government"` / `record_type = "government-notice"`
+  (or `news`). The rows themselves said otherwise — 6,450 "Mairie - X", 1,163
+  CCAS and care services, 2,725 Italian state schools and 821 professional
+  orders filed as public administration, 1,096 US newspapers in one world
+  bucket. Every row of the three tables now names its collector explicitly
+  (`.collector`, the field the default fills) and the category of its body
+  type, derived from the body's NAME by ordered regex rules in
+  `tools/split_beats_by_body_type.py` (`plan` → `apply` → `manifest`): France
+  by the type prefix the service-public.fr directory writes first, Italy by the
+  name plus the IPA category in parentheses, the press by the `(CC)` country
+  code into seven regions. 29 collectors replace 3 — `frgov_mairies` 6,450,
+  `frgov_social` 1,163, `itgov_scuole` 2,725 (education, under Culture),
+  `itgov_ordini` 821 (Legal), `news_europe_west` 1,251, `news_northam` 1,146 …
+  — and a row no rule types goes to an honest residue (`itgov_altri`, 181),
+  never a guessed type. Measured over the census: Government 29,746 → 24,222
+  (51.7% → 42.1%), Culture 751 → 3,650, Legal 980 → 1,931, Health 2,542 →
+  2,987, Infrastructure 633 → 1,096; 621 collectors, 0 unassigned; the id set
+  is byte-identical to main's (57,529 both ways), no URL or key changed, so no
+  emit measurement is invalidated. Both batch notes carry the per-collector
+  table. **When a beat is a register of everything a country's public sector
+  publishes, the file name is not a collector — read the names before
+  shipping it as one.** The 118 singleton collectors are the hand-written
+  one-family beats and stay: a collector is the beat a source was authored and
+  probed in, and that provenance is what a singleton records.
 * **"Entity pivot" is `registry_is_entity_pivot()`** in `registry.c`, the one
   rule both the dispatcher and `service_vec` use: interval 0, not a `_` pod,
   and (hpengine) an entity token in the URL/body OR `filter_query=1` (a bulk
@@ -2001,10 +2067,15 @@ underneath them that older notes in this file predate:
 
 * **Collectors are grouped** (2026-10-17): `core/collectors.def` is GENERATED
   by `tools/gen_collectors_def.py` from the collector census and gives every
-  collector key a `parent` among 22 `grp_*` groups (government, legal,
+  collector key a `parent` among 23 `grp_*` groups (government, legal,
   corporate, procurement, open data, science, health, environment, space,
   cyber, telecom, infrastructure, transport, media, social, geo, safety,
-  sanctions, culture, surveillance, OSINT pivots, internal). **A new beat
+  sanctions, culture, education, surveillance, OSINT pivots, internal).
+  Education is the 23rd (2026-10-24): the `education` category had filed
+  Italy's 2,725 state schools under Culture while batch 49's Japanese
+  education associations sat under Science, the same kind of body in two
+  groups. Schools, adult education and education associations are Education;
+  universities, grandes écoles and research institutes stay under Science. **A new beat
   needs a line there**: a collector the def does not list shows under
   `grp_unassigned` on every page and `test_sourceapi.c` fails. **`make
   collectors-def`** (2026-10-20) takes the census from the binary itself

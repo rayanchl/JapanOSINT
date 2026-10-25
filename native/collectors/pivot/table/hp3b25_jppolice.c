@@ -2373,16 +2373,23 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .record_type = "police-notice",
     .tags = "\"japan\",\"police\",\"ibaraki\",\"notice\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.pref.ibaraki.jp/kenkei/a05_introduction/announce/oshirase.html",
-    .base = "https://www.pref.ibaraki.jp",
-    .href_must = "/kenkei/a05_introduction/announce/",
+    /* MOVED (2026-10-25, docs/html-reachability-2026-10.md): the force's
+     * site was rebuilt as a small static site; oshirase.html now redirects
+     * to /kenkei/, whose "各種情報 (警察音楽隊、お知らせ、事件情報)" page is
+     * the announcement list, linking each notice as a PDF under
+     * /kenkei/documents/ RELATIVELY (../documents/…), so the base is the
+     * page's own directory. */
+    .url = "https://www.pref.ibaraki.jp/kenkei/contents/information.html",
+    .base = "https://www.pref.ibaraki.jp/kenkei/contents/",
+    .href_must = "/kenkei/documents/",
     .id_keys = "href",
     .interval = 86400,
     .link_keys = "href",
     .title_keys = "text",
-    .description = "Ibaraki Prefectural Police announcement list (41 KB live): 10 "
-      "links to current notices under /announce/ plus archived alerts. "
-      "The force has no RSS." },
+    .description = "Ibaraki Prefectural Police announcement list — the "
+      "\"各種情報\" page of the force's rebuilt site: notices, reward-case "
+      "bulletins and monthly traffic-enforcement schedules, each a PDF under "
+      "/kenkei/documents/ (6 on 2026-10-25). The force has no RSS." },
 
   { .id = "JP25_JPPOLICE_M47_MAIL_HOKKAIDO", .name = "Anzen m47 — Hokkaido police/municipal crime-prevention mail "
       "archive",

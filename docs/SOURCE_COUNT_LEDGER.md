@@ -5,6 +5,56 @@ was seeded from, what it measured and what it taught. Moved out of `CLAUDE.md`
 on 2026-10-19 so that file keeps the rules and the current number; the lessons
 that a new batch must not relearn are summarised there. Newest first.
 
+**The count is MEASURED ON THE FIFTH MERGE OF MAIN** (2026-10-25, main at
+`bd8c9a4f`, 46 commits). 13 conflicts, and the one that mattered was a
+deletion: main's HTML reachability sweep removed 23 rows this branch's files
+still carried, and **ten of those readings were taken against a URL the row no
+longer has**, because the sweep ran in a tree without this branch's B2
+re-pointing pass. Resolved per row by comparing each row's registered URL with
+the URL main's own TSV records measuring:
+
+| | rows | resolution |
+| --- | --- | --- |
+| URL differs from what main measured | 13 | KEPT — re-pointed and measured here (ZA gazette, Municipal Money, ČÚZK's keyed API, 4 Stortinget exports, Eduskunta, 2 ECB sheets, 3 bulk-file stand-ins) |
+| URL byte-identical to main's reading | 10 | REMOVED — main measured them dead twice, page + bare path + root |
+
+Four of the ten reverse a decision taken on this branch to keep a dead pivot
+registered and "disclosing". Both sessions had measured the same FACT — this
+branch's own notes say PMDA's search "answers the form page to every POST
+constructible here" and the Assemblée's "404s with no form on the homepage" —
+so the disagreement was policy, not evidence, and the tree's own precedent
+decides it: *"Three sources removed rather than left registered and failing
+every run"* (the FAA case). The bulk-file rows that stand in for three of them
+survive, so the coverage does not.
+
+Two more conflicts were the same-defect-found-twice shape this ledger keeps
+recording. **Numeric keyset cursors**: both sessions fixed `next_path`'s
+blindness to a JSON number on the same day, from different APIs — iNaturalist
+storing 200 of 385,217,394 here, LegCo storing 1,000 of 542,997 there — with
+behaviourally identical code, so the merge keeps main's larger buffer and both
+measurements, because two unrelated APIs make it a family rather than a quirk.
+**The NRC restructure**: both re-pointed the same three rows to the same URLs
+and the same `href_must`, one from the EMITS_NOTHING sweep's byte count and one
+from the HTML sweep. Main's note that the two event rows "still store nothing"
+is right and now incomplete — this branch's `anchors-unlabelled` notice means
+they disclose it instead of failing silently.
+
+`core/collectors.def` conflicted in 23 places and was not hand-resolved: it is
+GENERATED, main had split the government collectors into new keys, so it was
+regenerated from the binary's own census (`make collectors-def`) — the rule
+this file already states, applied rather than re-learned.
+
+**The registered count is 57,395** (2026-10-25, branch `fix6/htmlsweep`): 57,529 less 134 HTML-mode rows measured DEAD by the reachability sweep of every
+HP_HTML row (`docs/html-reachability-2026-10.md`): two engine passes each, then
+DNS, TCP and the page's bare path checked by hand. 103 answered 404/410 with the
+bare path 404 and the root alive, 6 more did once an honest agent got past a
+403, 4 are 200 pages titled "404"/"not found", 14 hosts no longer resolve, 2
+redirect to a 404 page, 1 to a bare IP that refuses :443, and 4 are 404 past
+a certificate chain OpenSSL rejects. 51 come from the unprobed `hp2_*` tables,
+16 from `hp_*`, 66 from batch 31 (registered, not proven) and 1 from batch 28. Ledger: `docs/removed-sources-2026-10-25-html-dead.tsv`.
+Both floors re-recorded.
+
+
 **The count stays 58,055 across main's merge of 2026-10-24** (main at
 `2c846ac3`, seven commits), and the one conflict is worth recording because of
 how it resolved. Main MOVED three San Francisco Socrata rows —

@@ -42,18 +42,6 @@ static const hp_source HP2_NORTHAM_CA_MX[] = {
       "date of birth, the schedule and the country regulation that listed them. "
       "Canada lists names the EU and US do not, so this is not a duplicate" },
 
-  { .id = "CA_INELIGIBILITY_SUSPENSION", .name = "Canada PSPC — ineligibility & suspension list",
-    .name_ja = "カナダ 政府調達 不適格/停止", .category = "government",
-    .portal = "https://www.canada.ca", .record_type = "ca-debarment",
-    .tags = "\"ca\",\"debarment\",\"procurement\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.canada.ca/en/public-services-procurement/services/"
-      "acquisitions/ineligibility-suspension-policy.html?q={q}",
-    .base = "https://www.canada.ca", .filter_query = 1,
-    .description = "Suppliers barred or suspended from Canadian federal "
-      "contracts under the Ineligibility and Suspension Policy — the offence, "
-      "the affiliate scope and the period of ineligibility" },
-
   { .id = "CA_LOBBYING_REGISTRY", .name = "Canada — commissioner of lobbying registry",
     .name_ja = "カナダ ロビー活動登録", .category = "government",
     .portal = "https://lobbycanada.gc.ca", .record_type = "ca-lobbying",
@@ -99,20 +87,6 @@ static const hp_source HP2_NORTHAM_CA_MX[] = {
       "DIN, brand and generic name, class, schedule and marketing status. "
       "Structured records straight from Health Canada's own API" },
 
-  { .id = "CA_CIPO_TRADEMARKS", .name = "Canada CIPO — trademark database",
-    .name_ja = "カナダ 商標データベース", .category = "government",
-    .portal = "https://www.ic.gc.ca", .record_type = "ca-trademark",
-    .tags = "\"ca\",\"ip\",\"trademark\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.ic.gc.ca/app/opic-cipo/trdmrks/srch/resultList.html?"
-      "queryTerms={q}&start=1&num=50",
-    .base = "https://www.ic.gc.ca", .filter_query = 1,
-    .page_param = "start", .page_size = 50, .page_start = 1,
-    .description = "Canadian trademark applications and registrations — owner, "
-      "agent, Nice classes, status and the full prosecution history. Trademark "
-      "ownership survives corporate restructuring and often names the real "
-      "operating group behind a rebranded entity" },
-
   { .id = "CA_CONTRACT_DISCLOSURE", .name = "Canada — proactive contract disclosure search",
     .name_ja = "カナダ 政府契約 個別開示", .category = "government",
     .portal = "https://search.open.canada.ca", .record_type = "ca-contract",
@@ -150,17 +124,6 @@ static const hp_source HP2_NORTHAM_CA_MX[] = {
       "status, registered office and the officers on file. Ontario holds the "
       "largest share of Canadian corporate activity" },
 
-  { .id = "CA_AIRCRAFT_REGISTER", .name = "Transport Canada — civil aircraft register",
-    .name_ja = "カナダ 航空機登録", .category = "transport",
-    .portal = "https://wwwapps.tc.gc.ca", .record_type = "ca-aircraft",
-    .tags = "\"ca\",\"aviation\",\"registry\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://wwwapps.tc.gc.ca/saf-sec-sur/2/ccarcs-riacc/RchSimp.aspx?owner={q}",
-    .base = "https://wwwapps.tc.gc.ca", .filter_query = 1,
-    .description = "Canadian civil aircraft registrations by owner — mark, "
-      "make and model, serial number, owner and operator, plus the ownership "
-      "history and any registered lien on the airframe" },
-
   /* ── Mexico ────────────────────────────────────────────────────────────── */
   { .id = "MX_SAT_EFOS_69B", .name = "Mexico SAT — article 69-B simulated-operations list",
     .name_ja = "メキシコ SAT 69-B 架空取引リスト", .category = "government",
@@ -190,42 +153,6 @@ static const hp_source HP2_NORTHAM_CA_MX[] = {
       "companion list to 69-B and the one that shows whether a firm has simply "
       "vanished from its registered address" },
 
-  { .id = "MX_SFP_SANCIONADOS", .name = "Mexico — sanctioned suppliers & public servants",
-    .name_ja = "メキシコ 制裁業者/公務員登録", .category = "government",
-    .portal = "https://directoriosancionados.funcionpublica.gob.mx",
-    .record_type = "mx-debarment",
-    .tags = "\"mx\",\"debarment\",\"procurement\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://directoriosancionados.funcionpublica.gob.mx/SanFicTec/"
-      "jsp/Ficha_Tecnica/SancionadosN.htm?q={q}",
-    .base = "https://directoriosancionados.funcionpublica.gob.mx", .filter_query = 1,
-    .description = "Mexico's register of suppliers barred from federal "
-      "contracting and of public servants disqualified from office — the "
-      "sanction, its duration and the contracting authority that imposed it" },
-
-  { .id = "MX_COMPRANET_CONTRACTS", .name = "Mexico CompraNet — procurement contracts",
-    .name_ja = "メキシコ CompraNet 調達契約", .category = "government",
-    .portal = "https://compranetinfo.hacienda.gob.mx", .record_type = "mx-contract",
-    .tags = "\"mx\",\"procurement\",\"contracts\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://compranetinfo.hacienda.gob.mx/datosabiertos/index.html?q={q}",
-    .base = "https://compranetinfo.hacienda.gob.mx", .filter_query = 1,
-    .description = "Mexican federal procurement procedures and awarded "
-      "contracts — contracting unit, procedure type, supplier RFC, amount and "
-      "whether the award was competitive or a direct adjudication" },
-
-  { .id = "MX_RUG_LIENS", .name = "Mexico RUG — movable-property security register",
-    .name_ja = "メキシコ 動産担保登記", .category = "government",
-    .portal = "https://www.rug.gob.mx", .record_type = "mx-lien",
-    .tags = "\"mx\",\"lien\",\"finance\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.rug.gob.mx/Rug/home/consulta.jsf?q={q}",
-    .base = "https://www.rug.gob.mx", .filter_query = 1,
-    .description = "Security interests registered over Mexican movable "
-      "property — debtor, secured creditor, the collateral and the amount "
-      "secured. The clearest public read on who is financing a Mexican "
-      "operating company and against what assets" },
-
   { .id = "MX_SIGER_RPC", .name = "Mexico SIGER — public register of commerce",
     .name_ja = "メキシコ 商業登記", .category = "government",
     .portal = "https://rpc.economia.gob.mx", .record_type = "mx-entity",
@@ -248,19 +175,6 @@ static const hp_source HP2_NORTHAM_CA_MX[] = {
     .description = "Mexican trademark and patent filings — holder, agent, "
       "class, status and the assignment history that reveals corporate "
       "restructurings inside a Mexican group" },
-
-  { .id = "MX_CNBV_SUPERVISED", .name = "Mexico CNBV — supervised financial entities",
-    .name_ja = "メキシコ CNBV 監督対象金融機関", .category = "government",
-    .portal = "https://www.gob.mx", .record_type = "mx-financial-entity",
-    .tags = "\"mx\",\"financial\",\"licence\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.gob.mx/cnbv/busqueda?utf8=%E2%9C%93&q={q}",
-    .base = "https://www.gob.mx", .filter_query = 1,
-    .description = "Entities supervised by Mexico's banking and securities "
-      "commission — banks, sofomes, brokerages and fintechs — with their "
-      "authorisation status and the sanctions the CNBV has imposed. Mexican "
-      "sofomes are a recurring money-laundering typology, so licence status "
-      "here is a real risk signal" },
 
   { .id = "MX_DOF_GAZETTE", .name = "Mexico — Diario Oficial de la Federación",
     .name_ja = "メキシコ 官報", .category = "government",

@@ -52,17 +52,6 @@ static const hp_source HP2_BRAZIL[] = {
       "the agency, the legal ground and the publication date. The individual-level "
       "counterpart to the corporate debarment lists" },
 
-  { .id = "BR_SLAVE_LABOUR_LIST", .name = "Brazil — slave-labour employers list (lista suja)",
-    .name_ja = "ブラジル 強制労働企業リスト", .category = "government",
-    .portal = "https://www.gov.br/trabalho-e-emprego", .record_type = "br-labour-violation",
-    .tags = "\"br\",\"labour\",\"blacklist\",\"human-rights\"", .free_tier = 1,
-    .type = "scraped", .mode = HP_HTML,
-    .url = "https://www.gov.br/trabalho-e-emprego/pt-br/@@busca?SearchableText={q}",
-    .base = "https://www.gov.br", .filter_query = 1,
-    .description = "Brazil's register of employers caught using labour analogous "
-      "to slavery — the single most consequential supply-chain finding available "
-      "about a Brazilian producer, and grounds for exclusion by most buyers" },
-
   { .id = "BR_IBAMA_EMBARGOES", .name = "Brazil IBAMA — environmental embargoes",
     .name_ja = "ブラジル 環境違反差止(IBAMA)", .category = "government",
     .portal = "https://www.ibama.gov.br", .record_type = "br-environmental-sanction",
@@ -147,17 +136,6 @@ static const hp_source HP2_BRAZIL[] = {
     .description = "Brazilian trademark and patent filings by holder — brands a "
       "group owns under names that do not match its corporate registration" },
 
-  { .id = "BR_JUCESP_COMPANY", .name = "Brazil — state commercial registries (juntas)",
-    .name_ja = "ブラジル 州商業登記", .category = "government",
-    .portal = "https://www.gov.br/empresas-e-negocios", .record_type = "br-company",
-    .tags = "\"br\",\"registry\",\"officers\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.gov.br/empresas-e-negocios/pt-br/@@busca?SearchableText={q}",
-    .base = "https://www.gov.br", .filter_query = 1,
-    .description = "State-level commercial registry (junta comercial) surface — "
-      "the articles of association and amendments that name partners and capital "
-      "changes, which the federal CNPJ record summarises but does not evidence" },
-
   /* ── Politics, elections, justice ──────────────────────────────────────── */
   { .id = "BR_TSE_CANDIDATES", .name = "Brazil TSE — candidates & asset declarations",
     .name_ja = "ブラジル 選挙 候補者/資産申告", .category = "government",
@@ -225,17 +203,6 @@ static const hp_source HP2_BRAZIL[] = {
     .description = "Brazilian electricity regulator open data — generation plants "
       "with owner, capacity and coordinates, transmission concessions and "
       "distributor performance; the critical-infrastructure inventory" },
-
-  { .id = "BR_ANP_FUEL_LICENCES", .name = "Brazil ANP — oil, gas & fuel authorisations",
-    .name_ja = "ブラジル 石油・ガス認可(ANP)", .category = "industry",
-    .portal = "https://www.gov.br/anp", .record_type = "br-energy-licence",
-    .tags = "\"br\",\"energy\",\"licences\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.gov.br/anp/pt-br/@@busca?SearchableText={q}",
-    .base = "https://www.gov.br", .filter_query = 1,
-    .description = "Authorisations to produce, import, distribute or resell fuels "
-      "in Brazil, and ANP's penalties — the licence layer over a sector with "
-      "persistent fuel-fraud and money-laundering exposure" },
 
   { .id = "BR_MINING_CADASTRE", .name = "Brazil ANM — mining rights cadastre",
     .name_ja = "ブラジル 鉱業権登録(ANM)", .category = "industry",

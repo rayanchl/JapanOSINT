@@ -131,17 +131,6 @@ static const hp_source HP3B31_SURVTRANSPORT[] = {
       "is therefore also an operator register — the licensed name, the "
       "National Operator Code and the services run" },
 
-  { .id = "CH_OPENTRANSPORTDATA", .name = "Switzerland — open transport data platform",
-    .name_ja = "スイス 公共交通オープンデータ", .category = "transport",
-    .portal = "https://opentransportdata.swiss", .record_type = "ch-transit-feed",
-    .tags = "\"ch\",\"transit\",\"realtime\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://opentransportdata.swiss/en/search/?q={q}",
-    .base = "https://opentransportdata.swiss", .filter_query = 1,
-    .description = "Switzerland's national access point — the full timetable, "
-      "real-time delay feed, service facilities and the stop register that "
-      "assigns a unique identifier to every platform in the country" },
-
   /* ── Maritime telemetry ───────────────────────────────────────────────── */
   { .id = "DK_OPEN_AIS_ARCHIVE", .name = "Denmark — open AIS data archive",
     .name_ja = "デンマーク AISデータ公開", .category = "maritime",
@@ -241,17 +230,6 @@ static const hp_source HP3B31_SURVTRANSPORT[] = {
       "provider, the vehicle, the pad with coordinates, the mission and its "
       "orbit, and the payload customers where disclosed" },
 
-  { .id = "EU_RAIL_RINF_INFRASTRUCTURE", .name = "EU RINF — register of railway infrastructure",
-    .name_ja = "EU 鉄道インフラ登録", .category = "transport",
-    .portal = "https://rinf.era.europa.eu", .record_type = "eu-rail-infrastructure",
-    .tags = "\"eu\",\"rail\",\"infrastructure\",\"registry\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://rinf.era.europa.eu/API/Search?q={q}",
-    .base = "https://rinf.era.europa.eu", .filter_query = 1,
-    .description = "The EU register of railway infrastructure — every section "
-      "of line with its infrastructure manager, gauge, electrification, "
-      "signalling system, axle load and tunnel and platform parameters. The "
-      "physical rail network as a queryable dataset" },
 };
 
 HP_REGISTER_TABLE(HP3B31_SURVTRANSPORT)

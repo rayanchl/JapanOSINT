@@ -46,19 +46,6 @@
 
 static const hp_source HP3B31_ASSETREG[] = {
   /* ── Land and cadastre ────────────────────────────────────────────────── */
-  { .id = "ES_CATASTRO_PARCELS", .name = "Spain Catastro — cadastral parcel search",
-    .name_ja = "スペイン 地籍検索", .category = "government",
-    .portal = "https://ovc.catastro.meh.es", .record_type = "es-parcel",
-    .tags = "\"es\",\"cadastre\",\"property\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www1.sedecatastro.gob.es/Cartografia/BuscarParcela.aspx?"
-      "busqueda={q}",
-    .base = "https://www1.sedecatastro.gob.es", .filter_query = 1,
-    .description = "Spain's cadastre — the cadastral reference, surface area, "
-      "built area, construction year, use classification and cadastral value "
-      "for any parcel, plus the graphical boundary. Free and without "
-      "registration, which is rare for a European cadastre" },
-
   { .id = "CZ_CUZK_CADASTRE", .name = "Czech Republic ČÚZK — cadastre of real estate",
     .name_ja = "チェコ 不動産地籍", .category = "government",
     .portal = "https://nahlizenidokn.cuzk.cz", .record_type = "cz-parcel",
@@ -190,53 +177,7 @@ static const hp_source HP3B31_ASSETREG[] = {
       "engine power and the licence and entry-exit events. The register that "
       "makes IUU fishing attribution possible" },
 
-  { .id = "INDIAN_OCEAN_MOU_PSC", .name = "Indian Ocean MoU — port state control inspections",
-    .name_ja = "インド洋MOU 港湾国監督検査", .category = "maritime",
-    .portal = "https://www.iomou.org", .record_type = "psc-inspection",
-    .tags = "\"maritime\",\"inspection\",\"indian-ocean\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.iomou.org/ipcqsearch.php?vessel={q}",
-    .base = "https://www.iomou.org", .filter_query = 1,
-    .description = "Inspections in Indian Ocean ports — India, South Africa, "
-      "Iran, Kenya, Australia and the Gulf approaches — with the deficiencies, "
-      "detentions and the flag and class of the vessel. The regional regime "
-      "covering the routes the European and Asian MoUs do not" },
-
-  { .id = "CA_VESSEL_REGISTRY", .name = "Canada — vessel registration query system",
-    .name_ja = "カナダ 船舶登録", .category = "maritime",
-    .portal = "https://wwwapps.tc.gc.ca", .record_type = "ca-vessel",
-    .tags = "\"ca\",\"maritime\",\"vessel\",\"registry\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://wwwapps.tc.gc.ca/Saf-Sec-Sur/4/vrqs-srib/eng/"
-      "vessel-registrations/vessel-registration-results?name={q}",
-    .base = "https://wwwapps.tc.gc.ca", .filter_query = 1,
-    .description = "Transport Canada's vessel registry — official number, "
-      "hull identification, tonnage, the registered owner and mortgagee, and "
-      "the port of registry, covering commercial and pleasure craft alike" },
-
-  { .id = "TOKYO_MOU_INSPECTIONS", .name = "Tokyo MoU — Asia-Pacific port state control",
-    .name_ja = "東京MOU 港湾国監督検査", .category = "maritime",
-    .portal = "https://www.tokyo-mou.org", .record_type = "psc-inspection",
-    .tags = "\"maritime\",\"inspection\",\"asia-pacific\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.tokyo-mou.org/inspections_detentions/psc_database.php"
-      "?vessel={q}",
-    .base = "https://www.tokyo-mou.org", .filter_query = 1,
-    .description = "Port state control inspections across the Asia-Pacific "
-      "region including Japan, with the deficiency detail, detention record and "
-      "the flag and recognised organisation performance tables" },
-
   /* ── Aircraft ─────────────────────────────────────────────────────────── */
-  { .id = "UK_CAA_GINFO_REGISTER", .name = "UK CAA G-INFO — aircraft register",
-    .name_ja = "英国民間航空局 航空機登録", .category = "transport",
-    .portal = "https://siteapps.caa.co.uk", .record_type = "uk-aircraft",
-    .tags = "\"uk\",\"aviation\",\"registry\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://siteapps.caa.co.uk/g-info/?search={q}",
-    .base = "https://siteapps.caa.co.uk", .filter_query = 1,
-    .description = "The UK civil aircraft register — registration mark, type, "
-      "serial number, registered owner and its address, and the "
-      "certificate-of-airworthiness status" },
 
   { .id = "OFFSHORE_AIRCRAFT_REGISTRIES", .name = "Offshore aircraft registries — Aruba, Bermuda, Cayman, San Marino",
     .name_ja = "オフショア 航空機登録", .category = "transport",
@@ -251,17 +192,6 @@ static const hp_source HP3B31_ASSETREG[] = {
       "survives a re-registration" },
 
   /* ── Spectrum and transmission sites ──────────────────────────────────── */
-  { .id = "AU_ACMA_SPECTRUM_LICENCES", .name = "Australia ACMA — radiocommunications licence register",
-    .name_ja = "豪州ACMA 無線免許登録", .category = "infrastructure",
-    .portal = "https://web.acma.gov.au", .record_type = "au-spectrum-licence",
-    .tags = "\"au\",\"spectrum\",\"licence\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://web.acma.gov.au/rrl/register_search.main_page?search={q}",
-    .base = "https://web.acma.gov.au", .filter_query = 1,
-    .description = "Australia's register of radiocommunications licences — the "
-      "licensee, the frequency assignment, the transmitter site coordinates, "
-      "the antenna details and the emission designator. Site coordinates make "
-      "this a physical-infrastructure map as well as a licence list" },
 
   { .id = "CA_ISED_SPECTRUM_LICENCES", .name = "Canada ISED — spectrum licence & tower data",
     .name_ja = "カナダ 無線免許/鉄塔", .category = "infrastructure",
@@ -275,29 +205,7 @@ static const hp_source HP3B31_ASSETREG[] = {
       "the licensee, the service area, the frequency and the antenna structure "
       "locations registered with Innovation, Science and Economic Development" },
 
-  { .id = "ITU_SPACE_NETWORKS", .name = "ITU — satellite network filings & frequency assignments",
-    .name_ja = "ITU 衛星ネットワーク登録", .category = "infrastructure",
-    .portal = "https://www.itu.int", .record_type = "satellite-filing",
-    .tags = "\"space\",\"spectrum\",\"multilateral\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.itu.int/net/search/index.aspx?cx=&q={q}",
-    .base = "https://www.itu.int", .filter_query = 1,
-    .description = "Satellite network filings — the notifying administration, "
-      "the orbital position, the frequency bands and the bringing-into-use "
-      "date. Orbital slots are held by states on behalf of named operators, and "
-      "the filing is the only public record of that arrangement" },
-
   /* ── Extraction, energy and environmental permits ─────────────────────── */
-  { .id = "AU_MINING_TENEMENTS", .name = "Australia — state mining tenement registers",
-    .name_ja = "豪州 鉱区登録", .category = "energy",
-    .portal = "https://geoview.dmp.wa.gov.au", .record_type = "au-mining-tenement",
-    .tags = "\"au\",\"mining\",\"licence\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://minedexext.dmirs.wa.gov.au/web/guest/minedex-search?q={q}",
-    .base = "https://minedexext.dmirs.wa.gov.au", .filter_query = 1,
-    .description = "Western Australian mineral tenements and MINEDEX project "
-      "records — the tenement holder, the commodity, the status, the "
-      "expenditure commitment and the operating status of each deposit" },
 
   { .id = "CLIMATE_TRACE_ASSETS", .name = "Climate TRACE — asset-level emissions & ownership",
     .name_ja = "Climate TRACE 施設別排出/所有", .category = "environment",
@@ -328,17 +236,6 @@ static const hp_source HP3B31_ASSETREG[] = {
       "deforestation alerts inside those boundaries — a supply-chain claim "
       "checked against satellite fact" },
 
-  { .id = "EU_INDUSTRIAL_EMISSIONS_PORTAL", .name = "EU Industrial Emissions Portal — permitted installations",
-    .name_ja = "EU 産業排出施設登録", .category = "environment",
-    .portal = "https://industry.eea.europa.eu", .record_type = "eu-industrial-facility",
-    .tags = "\"eu\",\"environment\",\"industry\",\"permit\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://industry.eea.europa.eu/explore/explore-data-map/results?q={q}",
-    .base = "https://industry.eea.europa.eu", .filter_query = 1,
-    .description = "Every permitted industrial installation in the EEA — the "
-      "operator and parent company, the site coordinates, the activities "
-      "permitted, the pollutant releases and transfers, and the inspection and "
-      "non-compliance record held by the national regulator" },
 };
 
 HP_REGISTER_TABLE(HP3B31_ASSETREG)

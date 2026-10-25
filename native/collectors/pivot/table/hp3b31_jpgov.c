@@ -181,54 +181,6 @@ static const hp_source HP3B31_JPGOV[] = {
       "and ministerial ordinance in force, returning the law ID, the title and "
       "the amendment history — the operative text, not a commentary on it" },
 
-  { .id = "JP_EGOV_PUBLIC_COMMENT", .name = "e-Gov — public comment (パブリックコメント)",
-    .name_ja = "e-Gov パブリックコメント", .category = "government",
-    .portal = "https://public-comment.e-gov.go.jp", .record_type = "jp-consultation",
-    .tags = "\"jp\",\"regulation\",\"consultation\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://public-comment.e-gov.go.jp/pcm/search?searchWord={q}",
-    .base = "https://public-comment.e-gov.go.jp", .filter_query = 1,
-    .description = "Draft ministerial rules open for comment and the published "
-      "response summaries — the earliest public signal that a ministry intends "
-      "to change a licensing, safety or reporting requirement" },
-
-  { .id = "JP_KANPO_GAZETTE", .name = "Kanpō — Japanese official gazette search",
-    .name_ja = "官報検索", .category = "government",
-    .portal = "https://search.npb.go.jp", .record_type = "jp-gazette-notice",
-    .tags = "\"jp\",\"gazette\",\"insolvency\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://search.npb.go.jp/kanpou/search.html?q={q}",
-    .base = "https://search.npb.go.jp", .filter_query = 1,
-    .description = "The official gazette — bankruptcy and civil rehabilitation "
-      "commencement notices, company dissolutions, capital reductions, merger "
-      "announcements and settlement publications. Japanese corporate distress "
-      "appears here before it appears anywhere commercial. "
-      "THIS SEARCH IS NOW BEHIND A PAID MEMBER LOGIN: measured 2026-10-22, the "
-      "search path answers 404 and search.npb.go.jp/kanpou/ redirects to "
-      "/kanpou/auth/login/LoginStartUp.form. It is a member account, not an "
-      "API key, so there is no key_env that would open it. The row is kept and "
-      "discloses its 404 once per run; JP_KANPO_DAILY_CONTENTS below reads the "
-      "ninety days the gazette publishes free." },
-
-  /* The gazette is still free — the SEARCH is what went behind the paywall.
-   * www.kanpo.go.jp publishes the last ninety days (kanpou.npb.go.jp redirects
-   * there), and each day has a table of contents listing every notice with its
-   * full title, the issuing ministry and the notice number: 本紙 (the main
-   * edition), 号外 (the extra), 政府調達 (government procurement) and 特別号外.
-   * That is the register the dead pivot above was for, addressed by DATE
-   * instead of by entity.
-   *
-   * date_back is what makes a daily row work on a gazette: nothing is
-   * published at a weekend or on a public holiday, so a run on a Sunday walks
-   * back to Friday rather than reporting an empty day. Four steps covers a
-   * three-day weekend.
-   *
-   * Measured 2026-10-22: 25 of 25 stored in one request, and the day's 43
-   * anchors become 25 records because SEVERAL NOTICES SHARE ONE GAZETTE PAGE.
-   * That is the engine's anchor policy rather than a loss — each record keeps
-   * the strongest label as its title and the others as `other_labels.N`, and 9
-   * of the 25 carry one. A record count alone would read 43 -> 25 as a
-   * collision to fix; it is the gazette's own layout. */
   { .id = "JP_KANPO_DAILY_CONTENTS",
     .name = "Kanpō — official gazette, each day's table of contents",
     .name_ja = "官報 日次目次（直近90日）", .category = "government",
@@ -255,29 +207,7 @@ static const hp_source HP3B31_JPGOV[] = {
       "dissolutions, capital reductions, merger announcements and bankruptcy "
       "commencements are all published here first." },
 
-  { .id = "JP_JFTC_ENFORCEMENT", .name = "JFTC — antitrust cease-and-desist orders",
-    .name_ja = "公正取引委員会 排除措置命令", .category = "government",
-    .portal = "https://www.jftc.go.jp", .record_type = "jp-antitrust-action",
-    .tags = "\"jp\",\"antitrust\",\"enforcement\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.jftc.go.jp/cgi-bin/search.cgi?q={q}",
-    .base = "https://www.jftc.go.jp", .filter_query = 1,
-    .description = "Japan Fair Trade Commission cease-and-desist orders and "
-      "surcharge payment orders — the cartel or abuse found, the named "
-      "participants, the surcharge amount and the leniency applicants" },
-
-  /* ── Licensing and sectoral supervision ───────────────────────────────── */
-  { .id = "JP_MLIT_CONSTRUCTION_LICENCE", .name = "MLIT — construction business licence search",
-    .name_ja = "国土交通省 建設業者検索", .category = "government",
-    .portal = "https://etsuran2.mlit.go.jp", .record_type = "jp-licence",
-    .tags = "\"jp\",\"construction\",\"licence\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://etsuran2.mlit.go.jp/TAKKEN/kensetsuKensaku.do?companyName={q}",
-    .base = "https://etsuran2.mlit.go.jp", .filter_query = 1,
-    .description = "Licensed construction contractors — licence number and "
-      "issuing prefecture, the 29 work categories permitted, the technical "
-      "staff registered and any suspension. Construction licensing is where "
-      "Japanese contractor sanctions become visible" },
+    /* ── Licensing and sectoral supervision ───────────────────────────────── */
 
   { .id = "JP_MLIT_LAND_TRADE_PRICES", .name = "MLIT — actual land transaction prices",
     .name_ja = "国土交通省 不動産取引価格情報", .category = "government",
@@ -295,98 +225,6 @@ static const hp_source HP3B31_JPGOV[] = {
       "road, by municipality and quarter. Requests the full history rather than "
       "a single quarter so a district's price series is complete" },
 
-  { .id = "JP_MHLW_LABOUR_VIOLATIONS", .name = "MHLW — labour law violation disclosures",
-    .name_ja = "厚生労働省 労働基準関係法令違反公表", .category = "government",
-    .portal = "https://www.mhlw.go.jp", .record_type = "jp-labour-violation",
-    .tags = "\"jp\",\"labour\",\"enforcement\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/"
-      "roudoukijun/anzen/hourei/index.html?q={q}",
-    .base = "https://www.mhlw.go.jp", .filter_query = 1,
-    .description = "The list of employers publicly named for labour-standards "
-      "violations — the establishment, the provision breached, the facts and "
-      "the date of referral to prosecutors. Japan's closest analogue to a wage "
-      "and safety enforcement register. "
-      "THIS PATH IS DEAD and no replacement was found: measured 2026-10-22, "
-      "the authored index answers 404 (with the ministry's 49 KB custom 404 "
-      "page, so read the status and not the byte count), the ministry's own "
-      "site search is a Google Custom Search — Google's index of the ministry, "
-      "not the ministry's register, which is why it is not re-pointed there — "
-      "and the labour-standards section of the ministry's own sitemap lists no "
-      "public-disclosure page at all. The row is kept and discloses its 404 "
-      "once per run rather than being removed. "
-      "THE REGISTER WAS THEN FOUND (2026-10-23), and it is still not "
-      "shippable — which is a better reason than \"no replacement\". It is not "
-      "on www.mhlw.go.jp at all, which is why a search of the ministry's site "
-      "and sitemap could not see it: each PREFECTURAL LABOUR BUREAU publishes "
-      "its own, on jsite.mhlw.go.jp — Tokyo's 労働基準関係法令違反に係る公表事案 "
-      "is at /tokyo-roudoukyoku/jirei_toukei/souken_jirei.html. Two things "
-      "stop it. The page is a wrapper whose only content is a link to a PDF "
-      "re-published under a new numeric content id each edition "
-      "(002861040.pdf when this was read), and hpengine has no PDF mode — so "
-      "an HP_HTML row here would store the page's NAVIGATION as enforcement "
-      "cases, the confident wrong answer FAA_NNUMBER_REGISTRY was removed for. "
-      "And the path is Tokyo's own: osaka, aichi, fukuoka and kanagawa all "
-      "404 on the same path (hokkaido 404s too, with two stale PDFs on its "
-      "error page), so this is 47 differently-shaped bureau sites and a "
-      "discovery beat of its own, not a re-point. What would make it "
-      "shippable is a PDF text mode in the engine" },
-
-  { .id = "JP_PMDA_APPROVALS", .name = "PMDA — drug & device approval database",
-    .name_ja = "PMDA 医薬品医療機器情報", .category = "health",
-    .portal = "https://www.pmda.go.jp", .record_type = "jp-medical-approval",
-    .tags = "\"jp\",\"health\",\"regulatory\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.pmda.go.jp/PmdaSearch/iyakuSearch/Result?keyword={q}",
-    .base = "https://www.pmda.go.jp", .filter_query = 1,
-    .description = "Japanese approvals for pharmaceuticals and medical devices "
-      "— the marketing authorisation holder, approval number and date, the "
-      "package insert and the safety measures ordered after approval. "
-      "THIS PATH IS DEAD and the search behind it cannot be driven: measured "
-      "2026-10-22, the Result path answers 404 for a real drug name and for an "
-      "impossible one alike, and the live form at /PmdaSearch/iyakuSearch/ is "
-      "`POST /PmdaSearch/iyakuSearch` with nameWord plus two radios — which "
-      "answers the FORM PAGE AGAIN for every POST that can be constructed from "
-      "here (with a session cookie, with a referer, with the image button's "
-      "x/y coordinates, with the display-column checkboxes). The row is kept "
-      "and discloses its 404 once per run rather than being removed; "
-      "JP_PMDA_NEW_DRUG_APPROVALS below reads the register PMDA does publish "
-      "as a file." },
-
-  /* The register PMDA publishes as a FILE, which is what the dead pivot above
-   * could not reach. One workbook per fiscal year, one worksheet per month, and
-   * A NEW WORKSHEET APPEARS EVERY MONTH — so this is the row xlsx_sheet_all
-   * exists for: a name goes stale in weeks and index 0 reads May for ever.
-   *
-   * Measured 2026-10-22. The workbook's attachment id changes with every
-   * edition (today /files/000281578.xlsx, 32 KB), which is the
-   * index_url/index_href_must case. Its four sheets are 承認品目5月分, 6月分,
-   * 8月分 and 9月分 — July is simply absent, the publisher's own gap, not ours.
-   * All four have identical geometry: a title line, a blank line, then a header
-   * whose cells carry quoted CRLFs and so span THREE physical lines, so
-   * csv_skip_lines = 5 lands on the first data row of every sheet. The header
-   * is not read as a header (csv_no_header = 1) because its names live in
-   * merged multi-line cells — the ECB workbook's lesson, and the cost is a row
-   * pinned to column POSITIONS, which a re-laid-out workbook would change
-   * without changing the record count.
-   *
-   * The identity has to be unique across the WHOLE workbook, not within one
-   * sheet, because all four sheets land in one page: approval date + the
-   * month's sequence number + the product name. Note September writes its
-   * dates in the Reiwa era (R8.9.16) where the earlier sheets write 2026.9.16 —
-   * the same month in two notations, which is another reason not to key on the
-   * date alone.
-   *
-   * The fiscal-year page id is pinned (0040 = 2026年度) and will need bumping
-   * when 2027年度 appears, because the engine follows ONE index hop and the
-   * year index at p-drugs/0010.html is a hop above the page that carries the
-   * workbook. It discloses itself with a 404 when that happens.
-   *
-   * Measured: 95 of 95 stored in 2 requests (the index hop and the file), the
-   * sum of the four sheets' data rows (11 + 29 + 23 + 32) exactly, no header
-   * row among them and no shape notice. One of the 95 is a blank spacer row
-   * the publisher leaves inside a sheet; it keys on itself, so it is one
-   * record for ever rather than one a run. */
   { .id = "JP_PMDA_NEW_DRUG_APPROVALS",
     .name = "PMDA — new drug approvals, this fiscal year's monthly register",
     .name_ja = "PMDA 新医薬品承認品目一覧（年度・月別）", .category = "health",

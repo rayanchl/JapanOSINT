@@ -285,7 +285,62 @@ static void test_blank_before_quote_in_comma_mode(void) {
   cJSON_Delete(rows);
 }
 
+/* Split `t` with csv_record_end into slices of `per` records, parse each slice
+ * on its own, and compare every cell with the whole-text parse. */
+static void check_slices_match_whole(const char *t, int per, const char *what) {
+  cJSON *whole = csv_parse_wellformed(t, 0, NULL, 0, NULL);
+  size_t len = strlen(t), at = 0;
+  int r = 0, same = 1, slices = 0;
+  while (at < len) {
+    size_t end = at;
+    for (int k = 0; k < per && end < len; k++)
+      end = csv_record_end(t, len, end, ',');
+    char *slice = malloc(end - at + 1);
+    if (!slice) { same = 0; break; }
+    memcpy(slice, t + at, end - at);
+    slice[end - at] = 0;
+    cJSON *part = csv_parse_wellformed(slice, 0, NULL, 0, NULL);
+    slices++;
+    cJSON *row;
+    cJSON_ArrayForEach(row, part) {
+      cJSON *w = cJSON_GetArrayItem(whole, r++);
+      char *a = cJSON_PrintUnformatted(row), *b = w ? cJSON_PrintUnformatted(w) : NULL;
+      if (!b || strcmp(a, b)) same = 0;
+      free(a); free(b);
+    }
+    cJSON_Delete(part);
+    free(slice);
+    at = end;
+  }
+  char msg[200];
+  snprintf(msg, sizeof msg, "%s: %d slices of %d hold the whole parse", what,
+           slices, per);
+  ok(same && r == cJSON_GetArraySize(whole), msg);
+  cJSON_Delete(whole);
+}
+
+static void test_record_end_agrees_with_the_parser(void) {
+  printf("-- csv_record_end splits exactly where csv_rows ends a record\n");
+  const char *t = "a,b,c\n"
+                  "1,\"two\nlines\",x\n"          /* quoted newline: one record  */
+                  "2,b\"c,y\n"                    /* mid-field quote is content  */
+                  "3, \"padded, quote\",z\r\n"    /* blank-led quote opens; CRLF */
+                  "4,\"he said \"\"hi\"\"\n\",w\n" /* doubled quote, then newline */
+                  "\n"                            /* a blank line is a record too */
+                  "5,last,v";                     /* no trailing newline          */
+  size_t len = strlen(t), at = 0;
+  int n = 0;
+  while (at < len) { at = csv_record_end(t, len, at, ','); n++; }
+  cJSON *whole = csv_parse_wellformed(t, 0, NULL, 0, NULL);
+  eqi(n, cJSON_GetArraySize(whole), "as many records as the parser builds");
+  cJSON_Delete(whole);
+  eqi((int)csv_record_end(t, len, 0, ','), 6, "the header ends after its own newline");
+  eqi((int)csv_record_end(t, len, len, ','), (int)len, "from the end, the end");
+  for (int per = 1; per <= 4; per++) check_slices_match_whole(t, per, "mixed fixture");
+}
+
 int main(void) {
+  test_record_end_agrees_with_the_parser();
   test_bom_is_not_a_column_name();
   test_midfield_quote_is_literal();
   test_parity_does_not_cross_records();

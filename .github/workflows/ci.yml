@@ -23,7 +23,7 @@ name: ci
 
 on:
   push:
-    branches: ["**"]
+    branches: [main]
   pull_request:
   workflow_dispatch:
 
@@ -36,6 +36,13 @@ on:
 # (head_ref on pull_request, ref_name on push), so the pull_request run that
 # follows a push by a few seconds supersedes the push run of the same commit.
 # main is never cancelled: a run there is the record of what merged.
+#
+# And the push event fires for main only (2026-10-24). With `branches: ["**"]`
+# every push to a PR branch still STARTED a run that the pull_request run then
+# cancelled a minute later — six jobs scheduled, one minute of five free-plan
+# macOS runners spent, nothing measured (PR #71's push run 568, cancelled at
+# 15:50:59 by its PR run 569). A branch without a PR gets no run until one is
+# opened, which is what a PR is for; `workflow_dispatch` covers the rest.
 concurrency:
   group: ci-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}

@@ -44,16 +44,6 @@
 
 static const hp_source HP3B31_APACGOV[] = {
   /* ── Australia ────────────────────────────────────────────────────────── */
-  { .id = "AU_AUSTENDER_CONTRACTS", .name = "AusTender — Australian government contract notices",
-    .name_ja = "豪州 政府調達契約", .category = "government",
-    .portal = "https://www.tenders.gov.au", .record_type = "au-contract",
-    .tags = "\"au\",\"procurement\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.tenders.gov.au/Search/CnSearch?keyword={q}",
-    .base = "https://www.tenders.gov.au", .filter_query = 1,
-    .description = "Every Australian Commonwealth contract notice above the "
-      "reporting threshold — the agency, the supplier and its ABN, the value, "
-      "the procurement method and whether it was a limited tender" },
 
   { .id = "AU_LOBBYIST_REGISTER", .name = "Australia — federal register of lobbyists",
     .name_ja = "豪州 連邦ロビイスト登録", .category = "government",
@@ -137,17 +127,6 @@ static const hp_source HP3B31_APACGOV[] = {
       "consent registers, contaminated-site lists, fisheries and biosecurity "
       "data, and the public-sector spending extracts" },
 
-  { .id = "NZ_PARLIAMENT_PECUNIARY", .name = "New Zealand Parliament — pecuniary interests & papers",
-    .name_ja = "NZ議会 資産利益登録", .category = "government",
-    .portal = "https://www.parliament.nz", .record_type = "nz-member-interest",
-    .tags = "\"nz\",\"parliament\",\"conflict-of-interest\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.parliament.nz/en/pb/sc/submissions-and-advice/search?Criteria.Keyword={q}",
-    .base = "https://www.parliament.nz", .filter_query = 1,
-    .description = "Select committee submissions, advice and the register of "
-      "members' pecuniary interests — company directorships, shareholdings, "
-      "trusts, gifts and overseas travel paid for by third parties" },
-
   /* ── Korea, Taiwan, Hong Kong ─────────────────────────────────────────── */
   { .id = "KR_ALIO_PUBLIC_INSTITUTIONS", .name = "Korea ALIO — public institution disclosure",
     .name_ja = "韓国 公共機関経営情報公開", .category = "government",
@@ -183,28 +162,6 @@ static const hp_source HP3B31_APACGOV[] = {
     .description = "Taiwan's national open data platform — the food-safety "
       "inspection, company registration extract, air-quality and public-works "
       "datasets published by each ministry, with the API endpoint for each" },
-
-  { .id = "HK_DATA_GOV_CATALOG", .name = "Hong Kong DATA.GOV.HK — dataset catalog",
-    .name_ja = "香港 公共データ目録", .category = "government",
-    .portal = "https://data.gov.hk", .record_type = "hk-dataset",
-    .tags = "\"hk\",\"open-data\",\"catalog\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://data.gov.hk/en/search?q={q}",
-    .base = "https://data.gov.hk", .filter_query = 1,
-    .description = "Hong Kong's public data catalog — licensing registers, "
-      "building records, tender awards and transport datasets published by "
-      "each bureau and department" },
-
-  { .id = "HK_GLD_TENDER_AWARDS", .name = "Hong Kong — government tender notices & awards",
-    .name_ja = "香港 政府入札公告", .category = "government",
-    .portal = "https://www.gld.gov.hk", .record_type = "hk-tender",
-    .tags = "\"hk\",\"procurement\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.gld.gov.hk/eng/tenders_notices.htm?q={q}",
-    .base = "https://www.gld.gov.hk", .filter_query = 1,
-    .description = "Government Logistics Department tender notices and the "
-      "gazetted award results — the department, the contract, the successful "
-      "bidder and the contract sum" },
 
   /* ── Southeast and South Asia ─────────────────────────────────────────── */
   { .id = "ID_SUPREME_COURT_JUDGMENTS", .name = "Indonesia — Supreme Court judgment directory",

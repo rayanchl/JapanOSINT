@@ -50,17 +50,6 @@ static const hp_source HP2_WORLD_CRITICAL[] = {
       "bank's own list of debarred entities. AIIB lending sits behind a large "
       "share of new Asian energy and transport assets" },
 
-  { .id = "UN_VENDOR_INELIGIBILITY", .name = "United Nations — ineligible vendors",
-    .name_ja = "国連 取引不適格ベンダー", .category = "government",
-    .portal = "https://www.ungm.org", .record_type = "un-debarment",
-    .tags = "\"un\",\"debarment\",\"procurement\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.ungm.org/Public/UNGMVendorIneligibility?q={q}",
-    .base = "https://www.ungm.org", .filter_query = 1,
-    .description = "Vendors suspended or removed from UN procurement, with the "
-      "sanctioning UN entity, the basis and the duration. A vendor barred here "
-      "is barred across the whole UN system, which is a very large buyer" },
-
   /* ── AML, tax and financial-integrity regimes ──────────────────────────── */
   { .id = "FATF_MONITORED_JURISDICTIONS", .name = "FATF — high-risk & monitored jurisdictions",
     .name_ja = "FATF 高リスク/監視対象法域", .category = "government",
@@ -97,19 +86,6 @@ static const hp_source HP2_WORLD_CRITICAL[] = {
       "FATCA — the GIIN, the legal name, the country and the classification. "
       "A global directory of banks, funds and trust companies that includes "
       "entities in jurisdictions with no public financial register at all" },
-
-  { .id = "FINCEN_ENFORCEMENT", .name = "FinCEN — enforcement actions & advisories",
-    .name_ja = "FinCEN 執行措置/勧告", .category = "government",
-    .portal = "https://www.fincen.gov", .record_type = "us-aml-enforcement",
-    .tags = "\"us\",\"aml\",\"enforcement\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.fincen.gov/search?search={q}",
-    .base = "https://www.fincen.gov", .filter_query = 1,
-    .description = "FinCEN civil money penalties, consent orders, section 311 "
-      "and 9714 special measures and the advisories naming typologies and "
-      "institutions. Section 311 findings cut a named foreign bank out of the "
-      "US dollar system, which is the most severe non-sanctions measure there "
-      "is" },
 
   /* ── Export control ────────────────────────────────────────────────────── */
   { .id = "JP_METI_END_USER_LIST", .name = "Japan METI — foreign end user list",
@@ -162,18 +138,6 @@ static const hp_source HP2_WORLD_CRITICAL[] = {
       "the product, the stated manufacturer, the batch numbers and the "
       "countries where it was found. Names the manufacturers whose identity "
       "was used on falsified packaging, which no national regulator collates" },
-
-  { .id = "ICAO_SAFETY_AUDIT", .name = "ICAO — safety oversight audit results",
-    .name_ja = "ICAO 安全監査結果", .category = "safety",
-    .portal = "https://www.icao.int", .record_type = "icao-audit",
-    .tags = "\"icao\",\"aviation\",\"safety\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.icao.int/Pages/Search.aspx?k={q}",
-    .base = "https://www.icao.int", .filter_query = 1,
-    .description = "ICAO universal safety oversight audit findings by state — "
-      "effective implementation scores by area and any significant safety "
-      "concern raised. A state's audit score is the best available proxy for "
-      "whether its aircraft registry and operator certificates mean anything" },
 
   /* ── Energy, infrastructure and supply chains ──────────────────────────── */
   { .id = "GEM_ENERGY_TRACKERS", .name = "Global Energy Monitor — asset trackers",

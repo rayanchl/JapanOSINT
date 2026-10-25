@@ -75,17 +75,6 @@ static const hp_source HP3B31_INTLBODY[] = {
       "reports importing — are the standard method for locating "
       "trade-based value transfer and sanctions circumvention" },
 
-  { .id = "ICAO_SAFETY_AUDITS", .name = "ICAO — state safety audit & aviation registry data",
-    .name_ja = "ICAO 航空安全監査", .category = "transport",
-    .portal = "https://www.icao.int", .record_type = "icao-safety-record",
-    .tags = "\"un\",\"aviation\",\"safety\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.icao.int/search/pages/results.aspx?k={q}",
-    .base = "https://www.icao.int", .filter_query = 1,
-    .description = "ICAO's universal safety oversight audit results by state, "
-      "the significant safety concerns raised, aircraft registration prefixes "
-      "and the state letters that record regulatory failures" },
-
   /* ── Development banks: projects, contracts, debarment ────────────────── */
   { .id = "WORLDBANK_PROJECTS_API", .name = "World Bank — projects & operations API",
     .name_ja = "世界銀行 事業API", .category = "government",
@@ -130,18 +119,6 @@ static const hp_source HP3B31_INTLBODY[] = {
       "retry-after of ~45 s, so the quota is not ours to drain. A candidate "
       "endpoint is not a fix" },
 
-  { .id = "IFC_PROJECT_DISCLOSURES", .name = "IFC — private sector investment disclosures",
-    .name_ja = "IFC 投融資案件開示", .category = "finance",
-    .portal = "https://disclosures.ifc.org", .record_type = "mdb-investment",
-    .tags = "\"mdb\",\"investment\",\"private-sector\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://disclosures.ifc.org/results?q={q}",
-    .base = "https://disclosures.ifc.org", .filter_query = 1,
-    .description = "International Finance Corporation investments — the client "
-      "company by name, the sponsor, the investment amount, the environmental "
-      "and social category and the summary of investment information. A direct "
-      "link between a private company and development finance" },
-
   { .id = "ISDB_PROJECT_DISCLOSURE", .name = "Islamic Development Bank — projects & procurement",
     .name_ja = "イスラム開発銀行 事業/調達", .category = "government",
     .portal = "https://www.isdb.org", .record_type = "mdb-project",
@@ -166,42 +143,7 @@ static const hp_source HP3B31_INTLBODY[] = {
       "each disbursement. Following the implementing partner chain is how aid "
       "money is traced to a local contractor" },
 
-  /* ── Arbitration and international courts ─────────────────────────────── */
-  { .id = "PCA_ARBITRATION_CASES", .name = "Permanent Court of Arbitration — cases",
-    .name_ja = "常設仲裁裁判所 事件", .category = "legal",
-    .portal = "https://pca-cpa.org", .record_type = "arbitration-case",
-    .tags = "\"arbitration\",\"disputes\",\"treaty\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://pca-cpa.org/en/cases/?s={q}",
-    .base = "https://pca-cpa.org", .filter_query = 1,
-    .description = "PCA-administered inter-state, investor-state and "
-      "contract-based arbitrations — the parties, the applicable rules, the "
-      "tribunal and the procedural orders and awards released publicly" },
-
-  { .id = "WTO_DISPUTE_SETTLEMENT", .name = "WTO — dispute settlement & trade measures",
-    .name_ja = "WTO 紛争解決/貿易措置", .category = "government",
-    .portal = "https://www.wto.org", .record_type = "wto-dispute",
-    .tags = "\"trade\",\"disputes\",\"multilateral\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.wto.org/english/res_e/search_e.htm?q={q}",
-    .base = "https://www.wto.org", .filter_query = 1,
-    .description = "WTO disputes with the complainant, respondent, measure "
-      "challenged and panel findings, plus the notified anti-dumping, "
-      "countervailing and safeguard measures that name the exporters affected" },
-
   /* ── Standards, compliance and mutual evaluation ──────────────────────── */
-  { .id = "APG_FATF_STYLE_BODIES", .name = "FATF-style regional bodies — regional AML evaluations",
-    .name_ja = "FATF地域体 相互審査", .category = "government",
-    .portal = "https://www.apgml.org", .record_type = "aml-evaluation",
-    .tags = "\"aml\",\"compliance\",\"asia-pacific\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.apgml.org/search/default.aspx?q={q}",
-    .base = "https://www.apgml.org", .filter_query = 1,
-    .description = "The Asia/Pacific Group on Money Laundering and its sister "
-      "regional bodies assess the countries the FATF plenary never reaches "
-      "directly. Their mutual evaluation and follow-up reports carry the "
-      "jurisdiction-level detail — beneficial ownership access, supervision "
-      "coverage, prosecution counts — that the FATF summary omits" },
 
   { .id = "COE_GRECO_MONEYVAL", .name = "Council of Europe — GRECO & MONEYVAL evaluations",
     .name_ja = "欧州評議会 汚職/資金洗浄審査", .category = "government",
@@ -237,17 +179,6 @@ static const hp_source HP3B31_INTLBODY[] = {
       "incident and trafficking database summaries and the power reactor "
       "information system records for each named facility and operator" },
 
-  { .id = "OPCW_DECLARATIONS", .name = "OPCW — chemical weapons convention record",
-    .name_ja = "OPCW 化学兵器条約 記録", .category = "government",
-    .portal = "https://www.opcw.org", .record_type = "chemical-record",
-    .tags = "\"chemical\",\"nonproliferation\",\"multilateral\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.opcw.org/search?search_api_fulltext={q}",
-    .base = "https://www.opcw.org", .filter_query = 1,
-    .description = "Declared chemical industry facilities subject to "
-      "inspection, verification reports, investigation of alleged use reports "
-      "and the identification of attribution findings naming units and "
-      "entities" },
 };
 
 HP_REGISTER_TABLE(HP3B31_INTLBODY)

@@ -1288,11 +1288,11 @@ typedef struct {
   const char *prev_url;     /* the URL of the page read before this one      */
   int   pw_probe, pw_probed;
   /* What a detail hop is sent with: the row's own headers (token, UA, Accept,
-   * {key} expanded) minus conditional ones and minus ANY Content-Type — the
-   * hop is a bodiless GET, and a row's own Content-Type describes its POST —
-   * plus the JSON Accept default the hop's parser needs, also for a row whose
-   * list is XML/CSV/HTML. NULL-ended. (Fixed on two branches at once; both
-   * cases are in hptest: 2b, and the branch's UK_CQC-shaped case.) */
+   * Content-Type, {key} expanded) minus conditional ones and minus the
+   * content type the engine itself adds for a POST body — plus the JSON Accept
+   * default the hop's parser needs, also for a row whose list is
+   * XML/CSV/HTML. NULL-ended. hptest 2b (a POST row: no engine content type
+   * on the hop), 2c (a GET row that declares one: kept) and the UK_CQC case. */
   const char *const *detail_hdrs;
 } hp_run_state;
 
@@ -2461,23 +2461,31 @@ static int hp_run_json(hp_run_state *st, const char *body) {
     if (nx && cJSON_IsString(nx) && nx->valuestring[0])
       st->next_url = strdup(nx->valuestring);
     /* A NUMERIC cursor. `cJSON_IsString` alone was blind to it, which is the
-     * same defect this engine already records for identifier fields ("SEC's
+     * same defect this engine already records for identifier FIELDS ("SEC's
      * cik, RIPEstat's number, BrandMeister's id ... cJSON_IsString alone was
      * blind to every one of them", hptest T_NUM_ID) — and the commonest keyset
-     * cursor there is, is an auto-increment row id. iNaturalist pages 385
-     * million observations by `id_below=<the last id of the page>`; the row
-     * declared `next_path = "results.$last.id"` and got ONE request, because
-     * the id is a JSON number.
+     * cursor there is, is an auto-increment row id.
+     *
+     * TWO SESSIONS FOUND THIS INDEPENDENTLY ON 2026-10-25, on two unrelated
+     * APIs, which is what makes it a family rather than one upstream's quirk —
+     * and both found it the same way, by watching a walk that should have
+     * paged make ONE request:
+     *
+     *   - iNaturalist pages 385 million observations by `id_below=<the last id
+     *     of the page>`; the row declared `next_path = "results.$last.id"` and
+     *     got one request, storing 200 of a declared 385,217,394.
+     *   - LegCo's votes reported "emitted 1000 of 1000 available" with no
+     *     notice at all, having stored 1,000 of 542,997.
      *
      * Only with a `next_tmpl`, and that is not a nicety: without one the value
      * is used AS the next URL, and a bare number is not a URL. So a row that
-     * states how to spend a cursor can use a numeric one, and a row that
-     * expects the upstream to hand back a link is unchanged. Integral values
-     * print as integers — "410612173", never "410612173.0" or "4.1e+08",
-     * either of which the upstream would reject or, worse, silently read as a
-     * different cursor. */
+     * states how to spend a cursor (`$filter=id gt {v}`) can use a numeric
+     * one, and a row that expects the upstream to hand back a link is
+     * unchanged. Integral values print as integers — "410612173", never
+     * "410612173.0" or "4.1e+08", either of which the upstream would reject
+     * or, worse, silently read as a different cursor. */
     else if (nx && cJSON_IsNumber(nx) && s->next_tmpl && *s->next_tmpl) {
-      char nb[48];
+      char nb[64];
       double v = nx->valuedouble;
       if (v == (double)(long long)v) snprintf(nb, sizeof nb, "%lld", (long long)v);
       else                           snprintf(nb, sizeof nb, "%.17g", v);
@@ -4778,13 +4786,18 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
     }
     nocache_hdrs[nn] = NULL;
   }
-  /* Detail hops (see hp_run_state.detail_hdrs): later_hdrs without any
-   * Content-Type, plus the JSON Accept the hop's parser needs. */
+  /* Detail hops (see hp_run_state.detail_hdrs): later_hdrs without the
+   * content type the ENGINE added for a POST body, plus the JSON Accept the
+   * hop's parser needs. A Content-Type the ROW declares is kept: some servers
+   * demand it on a bodiless GET — PY_AIP's /detalle answers HTTP 500 without
+   * `Content-Type: application/json` — and the 2026-10-12 merge that dropped
+   * every Content-Type turned all of that row's hops into 500s. */
   const char *detail_hdrs[13];
   {
     int nd = 0;
     for (int i = 0; later_hdrs[i]; i++) {
-      if (!strncasecmp(later_hdrs[i], "Content-Type:", 13)) continue;
+      if (body && !has_ctype && !strncasecmp(later_hdrs[i], "Content-Type:", 13))
+        continue;
       detail_hdrs[nd++] = later_hdrs[i];
     }
     if (!has_accept && s->mode != HP_JSON) detail_hdrs[nd++] = "Accept: application/json";

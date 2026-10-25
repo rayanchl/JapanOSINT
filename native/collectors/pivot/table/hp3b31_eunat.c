@@ -60,41 +60,6 @@ static const hp_source HP3B31_EUNAT[] = {
       "the answers. German ministries disclose enforcement counts, contract "
       "detail and incident data almost exclusively through question answers" },
 
-  { .id = "DE_BUNDESKARTELLAMT_DECISIONS", .name = "Germany Bundeskartellamt — antitrust & merger decisions",
-    .name_ja = "ドイツ連邦カルテル庁 決定", .category = "government",
-    .portal = "https://www.bundeskartellamt.de", .record_type = "de-antitrust-decision",
-    .tags = "\"de\",\"antitrust\",\"enforcement\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.bundeskartellamt.de/SiteGlobals/Forms/Suche/"
-      "Entscheidungssuche_Formular.html?input_={q}",
-    .base = "https://www.bundeskartellamt.de", .filter_query = 1,
-    .description = "The Federal Cartel Office's decision database — merger "
-      "clearances and prohibitions naming both parties, cartel fines with the "
-      "amount per undertaking, abuse-of-dominance rulings and the sector "
-      "inquiries that map an entire market's ownership" },
-
-  { .id = "DE_PRTR_FACILITIES", .name = "Germany PRTR — industrial pollutant release register",
-    .name_ja = "ドイツ 汚染物質排出登録", .category = "environment",
-    .portal = "https://www.thru.de", .record_type = "de-industrial-facility",
-    .tags = "\"de\",\"environment\",\"industry\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.thru.de/thrude/suche/?tx_solr[q]={q}",
-    .base = "https://www.thru.de", .filter_query = 1,
-    .description = "Every German industrial installation above the reporting "
-      "threshold — the operator, the site coordinates, the activity class and "
-      "the annual quantity of each pollutant released to air, water and soil" },
-
-  { .id = "AT_PARLAMENT_RECORDS", .name = "Austria Parlament — parliamentary materials",
-    .name_ja = "オーストリア議会 資料検索", .category = "government",
-    .portal = "https://www.parlament.gv.at", .record_type = "at-parliamentary-record",
-    .tags = "\"at\",\"parliament\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.parlament.gv.at/recherchieren/suche?searchTerm={q}",
-    .base = "https://www.parlament.gv.at", .filter_query = 1,
-    .description = "Austrian bills, ministerial answers, committee reports and "
-      "the members' declarations of outside income and functions, which "
-      "Austria publishes at a finer grain than most of the EU" },
-
   { .id = "AT_LOBBYING_REGISTER", .name = "Austria — lobbying and interest representation register",
     .name_ja = "オーストリア ロビー登録簿", .category = "government",
     .portal = "https://www.lobbyreg.justiz.gv.at", .record_type = "at-lobbyist",
@@ -122,37 +87,6 @@ static const hp_source HP3B31_EUNAT[] = {
       "French tender notices and award results with the buyer, the object, the "
       "procedure, the estimated value and the successful supplier" },
 
-  { .id = "FR_ASSEMBLEE_NATIONALE", .name = "France Assemblée nationale — parliamentary record",
-    .name_ja = "フランス国民議会 議事録", .category = "government",
-    .portal = "https://www.assemblee-nationale.fr", .record_type = "fr-parliamentary-record",
-    .tags = "\"fr\",\"parliament\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.assemblee-nationale.fr/dyn/recherche?texte={q}",
-    .base = "https://www.assemblee-nationale.fr", .filter_query = 1,
-    .description = "Bills, amendments with their authors, written questions and "
-      "ministerial answers, committee hearings and the audition of named "
-      "company executives — which is a public, on-record statement by them. "
-      "THIS PATH IS DEAD: measured 2026-10-22, /dyn/recherche answers 404 for "
-      "a real company name and for an impossible one alike, and the homepage "
-      "carries no search form at all (the site renders its search in the "
-      "browser). The row is kept and discloses its 404 once per run; "
-      "FR_AN_QUESTIONS_ECRITES below reads the part of this record the "
-      "Assemblée publishes as open data." },
-
-  /* What the Assemblée nationale does publish, asked of its own open-data site
-   * rather than guessed at (2026-10-22): every written question of the current
-   * legislature, as ONE ZIP holding 19,165 JSON documents — one question each.
-   *
-   * This is the row zip_all_entries exists for. The engine read the first
-   * member of a ZIP and disclosed the rest as lost, and its own remedy ("a
-   * named-entry read, or one row per member") does not reach 19,165 members.
-   * Each member is `{"question": {...}}`, so array_path resolves to one object
-   * and each member contributes exactly one record.
-   *
-   * The file is the whole legislature every time (50 MB compressed), so the
-   * cadence is weekly rather than daily: the Journal officiel publishes
-   * questions most weekdays, and a daily row would re-download 50 MB to find
-   * them. Every record upserts on its own `uid`, so a re-read costs nothing. */
   { .id = "FR_AN_QUESTIONS_ECRITES",
     .name = "France Assemblée nationale — written questions to ministers",
     .name_ja = "フランス国民議会 書面質問",
@@ -193,17 +127,6 @@ static const hp_source HP3B31_EUNAT[] = {
       "subsidy registers, the WOO (freedom of information) publication "
       "platform exports, environmental monitoring and the base registries that "
       "underpin Dutch administration" },
-
-  { .id = "NL_TWEEDE_KAMER_OPENDATA", .name = "Netherlands Tweede Kamer — parliament open data",
-    .name_ja = "オランダ下院 オープンデータ", .category = "government",
-    .portal = "https://opendata.tweedekamer.nl", .record_type = "nl-parliamentary-record",
-    .tags = "\"nl\",\"parliament\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://opendata.tweedekamer.nl/zoeken?q={q}",
-    .base = "https://opendata.tweedekamer.nl", .filter_query = 1,
-    .description = "The Dutch lower house's open data service — documents, "
-      "motions, votes per member, agenda items and the lobbyist access passes "
-      "issued, all as structured records" },
 
   /* ── Nordics ──────────────────────────────────────────────────────────── */
   { .id = "SE_RIKSDAGEN_DOCUMENTS", .name = "Sweden Riksdag — document API",
@@ -401,17 +324,6 @@ static const hp_source HP3B31_EUNAT[] = {
       "and whether they hold a ministerial post. Ask it for a surname" },
 
   /* ── Iberia and Italy ─────────────────────────────────────────────────── */
-  { .id = "ES_PORTAL_TRANSPARENCIA", .name = "Spain — transparency portal & subsidy database",
-    .name_ja = "スペイン 透明性ポータル", .category = "government",
-    .portal = "https://transparencia.gob.es", .record_type = "es-transparency",
-    .tags = "\"es\",\"transparency\",\"subsidy\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://transparencia.gob.es/es_ES/buscar?texto={q}",
-    .base = "https://transparencia.gob.es", .filter_query = 1,
-    .description = "Spain's transparency portal — senior officials' agendas "
-      "and declared assets, the answered access-to-information requests, and "
-      "the route into the BDNS national subsidy database that names every "
-      "grant beneficiary with its NIF and the amount received" },
 
   { .id = "PT_DIARIO_REPUBLICA", .name = "Portugal — Diário da República",
     .name_ja = "ポルトガル 官報", .category = "government",
@@ -436,19 +348,6 @@ static const hp_source HP3B31_EUNAT[] = {
       "public contract with its CIG identifier, the awarding body, the "
       "participants, the winner and the amounts paid — plus the "
       "white-list and interdiction records for mafia infiltration" },
-
-  { .id = "IT_OPENCOESIONE_PROJECTS", .name = "Italy OpenCoesione — cohesion project spending",
-    .name_ja = "イタリア 結束基金事業", .category = "government",
-    .portal = "https://opencoesione.gov.it", .record_type = "it-funded-project",
-    .tags = "\"it\",\"funding\",\"beneficiary\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://opencoesione.gov.it/it/ricerca/?q={q}",
-    .base = "https://opencoesione.gov.it", .filter_query = 1,
-    .description = "Every EU cohesion-funded project in Italy at record level "
-      "— the beneficiary with its fiscal code, the implementing body, the "
-      "programme, the committed and actually paid amounts, the physical "
-      "progress and the municipality. Italy's most granular public-spending "
-      "dataset" },
 
   { .id = "PL_SEJM_API", .name = "Poland Sejm — parliamentary API",
     .name_ja = "ポーランド下院 API", .category = "government",

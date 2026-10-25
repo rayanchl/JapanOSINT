@@ -72,18 +72,6 @@ static const hp_source HP3B31_EUTRANS[] = {
       "minutes. Most of the EU's technical rulemaking happens here, out of "
       "sight of the Parliament" },
 
-  { .id = "EU_COMMISSION_MEETINGS", .name = "EU — Commission high-level lobby meetings",
-    .name_ja = "EU 委員会幹部面談記録", .category = "government",
-    .portal = "https://ec.europa.eu", .record_type = "eu-lobby-meeting",
-    .tags = "\"eu\",\"lobbying\",\"influence\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://ec.europa.eu/transparencyinitiative/meetings/meeting.do"
-      "?host=&d-6679426-p=1&searchString={q}",
-    .base = "https://ec.europa.eu", .filter_query = 1,
-    .description = "Meetings between Commissioners, their cabinets and "
-      "directors-general and registered interest representatives — date, "
-      "portfolio, the organisation met and the subject discussed" },
-
   { .id = "EU_HAVE_YOUR_SAY_FEEDBACK", .name = "EU — Have Your Say initiative feedback",
     .name_ja = "EU 政策意見募集", .category = "government",
     .portal = "https://ec.europa.eu", .record_type = "eu-consultation-feedback",
@@ -119,17 +107,6 @@ static const hp_source HP3B31_EUTRANS[] = {
     .description = "Council working-party documents, member state position "
       "papers and negotiating mandates — where national governments' actual "
       "positions on a file are recorded, as opposed to their public statements" },
-
-  { .id = "EU_INTEGRITY_WATCH", .name = "EU Integrity Watch — MEP side jobs & meetings",
-    .name_ja = "EU 議員兼職/面談監視", .category = "government",
-    .portal = "https://www.integritywatch.eu", .record_type = "eu-conflict-of-interest",
-    .tags = "\"eu\",\"conflict-of-interest\",\"lobbying\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.integritywatch.eu/mepsincomes?search={q}",
-    .base = "https://www.integritywatch.eu", .filter_query = 1,
-    .description = "MEPs' declared outside income and the lobby meetings held "
-      "by rapporteurs, assembled from the Parliament's own declarations. The "
-      "conflict-of-interest view the Parliament publishes only as scanned PDFs" },
 
   /* ── Parliament as data ───────────────────────────────────────────────── */
   { .id = "EU_EP_OPENDATA_DOCUMENTS", .name = "European Parliament — open data documents",
@@ -222,17 +199,6 @@ static const hp_source HP3B31_EUTRANS[] = {
       "identifiers, budgets and deadlines — and, for closed calls, the "
       "consortia selected" },
 
-  { .id = "EU_OLAF_INVESTIGATION_REPORTS", .name = "EU OLAF — anti-fraud investigation reporting",
-    .name_ja = "EU 不正対策局 調査報告", .category = "government",
-    .portal = "https://anti-fraud.ec.europa.eu", .record_type = "eu-fraud-case",
-    .tags = "\"eu\",\"fraud\",\"enforcement\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://anti-fraud.ec.europa.eu/search_en?keys={q}",
-    .base = "https://anti-fraud.ec.europa.eu", .filter_query = 1,
-    .description = "The European Anti-Fraud Office's published case reporting "
-      "and recommendations — customs fraud, misused structural funds and "
-      "staff-integrity cases, with the recovery amounts recommended" },
-
   /* ── Identity and compliance checks ───────────────────────────────────── */
   { .id = "EU_EUDAMED_DEVICES", .name = "EUDAMED — EU medical device database",
     .name_ja = "EU 医療機器データベース", .category = "health",
@@ -267,29 +233,6 @@ static const hp_source HP3B31_EUTRANS[] = {
     .description = "The EU energy regulator's market monitoring — REMIT "
       "registered market participants, market-abuse decisions taken by national "
       "regulators and the cross-border capacity allocation record" },
-
-  { .id = "EU_CHAFEA_HEALTH_PROGRAMME", .name = "EU HaDEA — health & digital programme beneficiaries",
-    .name_ja = "EU 保健デジタル事業受益者", .category = "government",
-    .portal = "https://hadea.ec.europa.eu", .record_type = "eu-funded-project",
-    .tags = "\"eu\",\"funding\",\"health\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://hadea.ec.europa.eu/search_en?keys={q}",
-    .base = "https://hadea.ec.europa.eu", .filter_query = 1,
-    .description = "The executive agency running EU4Health, Digital Europe and "
-      "part of Horizon — grant beneficiaries, consortium partners and the "
-      "procurement it runs on the Commission's behalf" },
-
-  { .id = "EU_EIOPA_PENSION_REGISTER", .name = "EIOPA — cross-border pension & insurance registers",
-    .name_ja = "EU 年金/保険登録簿", .category = "finance",
-    .portal = "https://www.eiopa.europa.eu", .record_type = "eu-pension-institution",
-    .tags = "\"eu\",\"pensions\",\"licence\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.eiopa.europa.eu/search_en?keys={q}",
-    .base = "https://www.eiopa.europa.eu", .filter_query = 1,
-    .description = "Institutions for occupational retirement provision "
-      "operating cross-border, the pan-European personal pension register and "
-      "the insurance undertakings list — pension money is a shareholder class "
-      "that rarely appears in a company's own filings" },
 
   { .id = "EU_ECB_SUPERVISED_ENTITIES", .name = "ECB Banking Supervision — supervised entities",
     .name_ja = "ECB 監督対象銀行", .category = "finance",

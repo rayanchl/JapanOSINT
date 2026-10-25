@@ -7,9 +7,9 @@
  *
  * For the given ctx->entity, run() actually FETCHES each registry's server-
  * rendered search page and emits ONE intel_item per real <a> hit extracted by
- * jo_emit_anchors (real anchor extraction — nothing synthesized). Total output
- * is capped at ~40 and each registry is capped at ~3 hits so a single query
- * can't fan out forever.
+ * jo_emit_anchors (real anchor extraction — nothing synthesized). No registry
+ * is capped (EU_PER_REG_CAP 0); the whole sweep stops at EU_TOTAL_CAP (500)
+ * emits, and a sweep cut short says so in jo_registry_sweep_notice().
  *
  * HONESTY: many of these registries are JS-only / anti-bot / behind a POST form
  * or a CAPTCHA. Those rows simply yield 0 (honest empty) — that is expected and
@@ -116,9 +116,11 @@ static const eu_reg REGS[] = {
   { "KRS eWyszukiwarka (PL)",
     "https://wyszukiwarka-krs.ms.gov.pl/podmiot/wyszukiwanie/KRS?nazwa=%s",
     NULL, "https://wyszukiwarka-krs.ms.gov.pl", "PL", "pl-company" },
-  { "CEIDG Business Register (PL)",
-    "https://aplikacja.ceidg.gov.pl/ceidg/ceidg.public.ui/Search.aspx?name=%s",
-    NULL, "https://aplikacja.ceidg.gov.pl", "PL", "pl-company" },
+  /* CEIDG removed 2026-10-25: Search.aspx is an ASP.NET form, so a GET with
+   * ?name= answers the empty search form and results need a viewstate POST —
+   * every query spent a request here and could only come back empty, while
+   * the table listed CEIDG as covered. CEIDG is queried properly by
+   * PL_CEIDG_SOLE_TRADERS (hp2_eu_central.c) through the official v3 API. */
 
   /* CZ — Czechia */
   { "Justice.cz Public Register (CZ)",
@@ -208,7 +210,7 @@ static const source_def europe_registry_def = {
   .update_interval_sec = 0, .run = run,
   .category = "government", .type = "scraped",
   .url = "internal://osint/world_reg_europe",
-  .description = "Entity pivot across ~26 real EU/European public company, court & tender registries (DE/IT/ES/NL/BE/CH/AT/IE/PT/PL/CZ/SE/FI/GR/RO/HU + BRIS/e-Justice/TED); anchor scrape, honest-empty on JS-only/anti-bot",
+  .description = "Entity pivot across ~25 real EU/European public company, court & tender registries (DE/IT/ES/NL/BE/CH/AT/IE/PT/PL/CZ/SE/FI/GR/RO/HU + BRIS/e-Justice/TED); anchor scrape, honest-empty on JS-only/anti-bot",
   .layer = NULL, .free_tier = 1,
 };
 REGISTER_SOURCE(europe_registry_def)

@@ -239,17 +239,6 @@ static const hp_source HP_COURTS[] = {
       "Congressional Record, CFR and public laws mentioning an entity — one index "
       "over the whole federal publication corpus" },
 
-  { .id = "WIPO_UDRP_DECISIONS", .name = "WIPO — UDRP domain dispute decisions",
-    .name_ja = "WIPO ドメイン紛争裁定", .category = "legal",
-    .portal = "https://www.wipo.int/amc/en/domains/", .record_type = "udrp-decision",
-    .tags = "\"domains\",\"disputes\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.wipo.int/amc/en/domains/search/legalindex-results.jsp?q={q}",
-    .base = "https://www.wipo.int", .filter_query = 1,
-    .description = "WIPO domain-name panel decisions involving an entity or domain — "
-      "complainant, respondent, the disputed domains and the outcome; a reliable way "
-      "to attribute cybersquatting portfolios to a person" },
-
   { .id = "US_PACER_RSS_COURTS", .name = "CourtListener — recent PACER activity feed",
     .name_ja = "米国連邦裁判所 最新提出", .category = "legal",
     .portal = "https://www.courtlistener.com", .record_type = "us-court-filing",
@@ -262,15 +251,6 @@ static const hp_source HP_COURTS[] = {
     .description = "Most recent docket activity mentioning an entity, newest first — "
       "the monitoring view: new complaints, new motions and new appearances as they "
       "enter RECAP" },
-
-  { .id = "IE_COURTS_SEARCH", .name = "Courts Service of Ireland — legal diary & judgments",
-    .name_ja = "アイルランド 裁判所検索", .category = "legal",
-    .portal = "https://www.courts.ie", .record_type = "ie-judgment",
-    .tags = "\"ie\",\"courts\"", .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.courts.ie/search/judgments/%22{q}%22",
-    .href_must = "/acc/", .base = "https://www.courts.ie",
-    .description = "Irish written judgments mentioning an entity — the counterpart to "
-      "CRO filings for Irish holding companies and their directors" },
 
   { .id = "NZ_LEGAL_SEARCH", .name = "NZLII — New Zealand case law",
     .name_ja = "ニュージーランド 判例(NZLII)", .category = "legal",

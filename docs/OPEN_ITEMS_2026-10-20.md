@@ -201,11 +201,28 @@ affordance twice over rather than a path:
 | `FI_EDUSKUNTA_RECORDS` | re-pointed | the `avoindata` API, on the new `row_header_path` — `Marin` 1 of 1, an impossible value 0 |
 | `AT_PARLAMENT_RECORDS` | SHIPPED 2026-10-23, as batch 55 | there is no sort parameter — and none was needed. See below |
 | `CZ_CUZK_CADASTRE` | re-pointed | `/api/v1/Parcely/Vyhledani`, `ApiKey` header, `JO_CUZK_API_KEY` — a credential disclosure until a key exists |
-| `FR_ASSEMBLEE_NATIONALE` | kept failing + NEW row | /dyn/recherche 404s for a real name and an impossible one alike, and the homepage has no search form. `FR_AN_QUESTIONS_ECRITES` reads the open data instead: **19,165 of 19,165 written questions stored** in one request, 50 MB, on the new `zip_all_entries` |
-| `JP_PMDA_APPROVALS` | kept failing + NEW row | the search is `POST /PmdaSearch/iyakuSearch` and answers the FORM PAGE for every POST constructible here (session cookie, referer, the image button's x/y, the column checkboxes). `JP_PMDA_NEW_DRUG_APPROVALS` reads the annual workbook: **95 of 95** across four monthly sheets, on the new `xlsx_sheet_all` |
-| `JP_KANPO_GAZETTE` | kept failing + NEW row | the search is behind a paid MEMBER LOGIN (`/kanpou/auth/login/LoginStartUp.form`), which no `key_env` opens. But the gazette itself is free: `JP_KANPO_DAILY_CONTENTS` reads each day's table of contents, **25 of 25** carrying 43 notice titles |
-| `JP_MHLW_LABOUR_VIOLATIONS` | kept failing; the register was FOUND and is still not shippable | see below |
+| `FR_ASSEMBLEE_NATIONALE` | **REMOVED 2026-10-25** (was: kept failing) + NEW row | /dyn/recherche 404s for a real name and an impossible one alike, and the homepage has no search form. `FR_AN_QUESTIONS_ECRITES` reads the open data instead: **19,165 of 19,165 written questions stored** in one request, 50 MB, on the new `zip_all_entries` |
+| `JP_PMDA_APPROVALS` | **REMOVED 2026-10-25** (was: kept failing) + NEW row | the search is `POST /PmdaSearch/iyakuSearch` and answers the FORM PAGE for every POST constructible here (session cookie, referer, the image button's x/y, the column checkboxes). `JP_PMDA_NEW_DRUG_APPROVALS` reads the annual workbook: **95 of 95** across four monthly sheets, on the new `xlsx_sheet_all` |
+| `JP_KANPO_GAZETTE` | **REMOVED 2026-10-25** (was: kept failing) + NEW row | the search is behind a paid MEMBER LOGIN (`/kanpou/auth/login/LoginStartUp.form`), which no `key_env` opens. But the gazette itself is free: `JP_KANPO_DAILY_CONTENTS` reads each day's table of contents, **25 of 25** carrying 43 notice titles |
+| `JP_MHLW_LABOUR_VIOLATIONS` | **REMOVED 2026-10-25**; the register was FOUND and is still not shippable | see below |
 | `WORLDBANK_CONTRACT_AWARDS` | kept failing; the move is now measured, the successor is not | see below |
+
+**FOUR OF THESE ROWS WERE REMOVED ON 2026-10-25, AND THE DECISION WAS NOT
+THIS SESSION'S ALONE.** The "kept failing, disclosing" verdict above was a
+deliberate choice: a dead pivot that files a fetch-failure record tells a
+reader the search is gone, where a vanished row says nothing. Main's HP_HTML
+reachability sweep reached the opposite conclusion on the same rows, having
+measured the same fact — two engine passes each, plus the page, the bare path
+and the site root — and the fifth merge of main took main's side, because the
+tree's own precedent is explicit from the FAA case: *"Three sources removed
+rather than left registered and failing every run."*
+
+What makes that safe rather than lossy is the NEW row beside each one: the
+PMDA workbook, the Kanpō daily contents and the Assemblée's ZIP all survive
+and all store. So the coverage the dead pivots were standing in for is in the
+tree; only the rows that could never answer are gone. `JP_MHLW_LABOUR_VIOLATIONS`
+is the one with no replacement, and its finding is preserved below rather than
+with the row.
 
 ### The three that were still open on 2026-10-22, settled 2026-10-23
 
@@ -262,6 +279,17 @@ store the page's NAVIGATION as enforcement cases, which is what
 aichi, fukuoka, kanagawa and hokkaido all 404 on it, so this is 47
 differently-shaped bureau sites and a discovery beat of its own. What would
 make it shippable is a PDF text mode in the engine.
+
+**CLOSED 2026-10-25 by main's HTML reachability sweep, which upgraded this from
+"unmeasured" to measured dead.** The row itself is now REMOVED: that sweep ran
+every HP_HTML row through the engine twice and checked the page, the bare path
+and the site root, and this row's registered URL answered 404 on both passes
+with its bare path 404 and the root alive. This file had recorded it as
+"recorded as unmeasured, not dead", which was the honest state then and is
+superseded now — two passes plus the bare-path and root checks is stronger
+than the one reading that entry rested on. The register described above is
+still real and still wants a PDF text mode, so the FINDING survives the row:
+whoever adds that mode should start from the 47 bureau sites, not from this id.
 
 **`WORLDBANK_CONTRACT_AWARDS` — the move is measured; the successor is not
 measurable from here.** `finances.worldbank.org` **302s to

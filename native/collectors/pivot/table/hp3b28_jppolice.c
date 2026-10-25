@@ -188,7 +188,11 @@ static const hp_source HP3B28_JPPOLICE[] = {
     .tags = "\"japan\",\"maritime-safety\",\"coastguard\",\"advisory\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.kaiho.mlit.go.jp/info/topics/",
-    .base = "https://www.kaiho.mlit.go.jp",
+    /* SHAPE (2026-10-25, docs/html-reachability-2026-10.md): the listing
+     * now links its posts RELATIVELY ("post-991.html"), and a base of the
+     * host root resolved them to /post-991.html, outside href_must — 256
+     * anchors, 0 stored. The base is the listing's own directory now. */
+    .base = "https://www.kaiho.mlit.go.jp/info/topics/",
     .href_must = "/info/topics/",
     .interval = 21600,
     .description = "JCG's rolling topics/advisories feed, distinct from the formal "

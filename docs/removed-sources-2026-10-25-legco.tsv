@@ -1,0 +1,4 @@
+# Removed 2026-10-25: a second reading of one LegCo feed.
+#
+# id	file	reason	evidence
+gov-hk-legco-bills	collectors/feed/generated/vsrc_legal_1.c	duplicate	Read http://app.legco.gov.hk/BillsDB/odata/Vbills, the feed eas-hk-legco-bills reads, at $top=25 instead of 100 — the same 6,884 bills (odata.count, 2026-10-24) stored a second time under a second source id; under the 20-page VJSON ceiling it stopped at 500. eas-hk-legco-bills (collectors/pivot/table/hp3_legco.c) now reads all of them.
