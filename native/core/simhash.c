@@ -19,6 +19,7 @@
  * upgrade failure into an ordinary wait. */
 #include "simhash.h"
 #include "fts.h"
+#include "fts_schema.h"   /* fts_segment_body */
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
 #include <pthread.h>
@@ -541,7 +542,7 @@ void simhash_on_item(db_handle *db, const char *tenant_id, const char *uid,
                      const char *title, const char *body) {
   if (!db || !db->h || !uid || !*uid) return;
   char *st = fts_segment(title ? title : "");
-  char *sb = fts_segment(body ? body : "");
+  char *sb = fts_segment_body(body);
   simhash_on_item_segmented(db, tenant_id, uid, st, sb);
   free(st);
   free(sb);
@@ -629,7 +630,7 @@ long simhash_backfill(db_handle *db, int limit, volatile int *cancel) {
         const char *ti = (const char *)sqlite3_column_text(tx, 0);
         const char *bo = (const char *)sqlite3_column_text(tx, 1);
         st = fts_segment(ti ? ti : "");
-        sb = fts_segment(bo ? bo : "");
+        sb = fts_segment_body(bo);
       }
       rows[i].fp = simhash_text(st, sb, &rows[i].ntok);
       free(st);

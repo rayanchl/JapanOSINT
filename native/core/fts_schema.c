@@ -70,6 +70,35 @@ char *fts_flatten_json(const char *json) {
   return b.p;
 }
 
+/* A record body as the index sees it. Hand-written collectors pass the
+ * record's own JSON as `body` (205 files did on 2026-10-25), and segmenting
+ * that verbatim indexes its KEYS: every record of a register then shares
+ * most of its tokens, so core/simhash.c fingerprints them all as
+ * near-duplicates of each other — one false cluster, and a band bucket each
+ * insert has to scan. San Francisco's business register crawled at 23
+ * records a second through that until its collector stopped passing JSON.
+ * A body that parses as a JSON object or array is indexed as its VALUES
+ * (flatten_val, exactly as properties are); any other body is segmented as
+ * it always was. The stored body is not touched. */
+char *fts_segment_body(const char *body) {
+  if (!body) return fts_segment("");
+  const char *p = body;
+  while (*p == ' ' || *p == '\t' || *p == '\n' || *p == '\r') p++;
+  if (*p == '{' || *p == '[') {
+    cJSON *j = cJSON_Parse(p);
+    if (j && (cJSON_IsObject(j) || cJSON_IsArray(j))) {
+      sbuf b = {NULL, 0, 0};
+      flatten_val(&b, j, 0);
+      cJSON_Delete(j);
+      char *seg = fts_segment(b.p ? b.p : "");
+      free(b.p);
+      return seg;
+    }
+    cJSON_Delete(j);
+  }
+  return fts_segment(body);
+}
+
 /* ── schema probes ───────────────────────────────────────────────────── */
 
 static int table_exists(sqlite3 *h, const char *name) {
@@ -368,7 +397,7 @@ void fts_schema_migrate(db_handle *db) {
        * path; Latin (URLs, ids, English) passes straight through, so this is
        * only a real cost on Japanese text. */
       char *v_title = fts_segment((const char *)sqlite3_column_text(sel, 1));
-      char *v_body  = fts_segment((const char *)sqlite3_column_text(sel, 2));
+      char *v_body  = fts_segment_body((const char *)sqlite3_column_text(sel, 2));
       char *v_summ  = fts_segment((const char *)sqlite3_column_text(sel, 3));
       char *v_link  = fts_segment((const char *)sqlite3_column_text(sel, 4));
       char *v_auth  = fts_segment((const char *)sqlite3_column_text(sel, 5));
