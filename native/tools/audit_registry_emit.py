@@ -91,6 +91,15 @@ STORED = re.compile(r"\bstored=(\?|>=\d+|\d+)")
 # the two without subtracting is comparing different things, and it reported
 # SINK_MISMATCH for every healthy row that happened to file one notice.
 RUN_NOTICES = re.compile(r"\bnotices=(\d+)")
+# THE ONE FIELD THAT SEPARATES AN HONEST EMPTY FROM A SILENT FAILURE, and
+# this tool was throwing it away. An EMITS_NOTHING verdict on rc=0 reads the
+# same for a feed that published nothing today and for a row that fetched
+# 131,618 bytes of an OData maintenance page and found no records in it --
+# CLAUDE.md records exactly that row (`il-knesset-dates`), and the reason it
+# stayed invisible is that every host answered, so run_status() read "ok".
+# The byte count is already on the run line; printing it turns an opaque
+# class into a ranked list.
+RUN_BYTES = re.compile(r"\bbytes=(\d+) requests=(\d+)")
 LIST = re.compile(r"^(\S+)\s+collector=(\S+)\s+interval=(-?\d+)\s*$")
 # hpengine's own line, kept because it separates "the upstream had nothing"
 # from "we threw away what it gave us" — a distinction `records=0` cannot make.
@@ -597,8 +606,25 @@ def verdict_for(sid, blob, rc, rows, secs, timed_out, notices=0, gated=None,
                     available, secs,
                     "fetched %d records and stored none — needs title_keys/"
                     "id_keys, or is not a record source" % available)
+        transfer = ""
+        if sched:
+            bm = RUN_BYTES.search(blob[sched.end():sched.end() + 240])
+            if bm:
+                nb, nr = int(bm.group(1)), int(bm.group(2))
+                if nb > 2048:
+                    transfer = (" — but it FETCHED %d bytes over %d request(s) "
+                                "and found no records in them, so this is a "
+                                "body that is not what the row expects (a "
+                                "maintenance or error page, a moved endpoint, "
+                                "a changed shape), not an empty upstream: read "
+                                "the body" % (nb, nr))
+                else:
+                    transfer = (" — it transferred %d bytes over %d request(s), "
+                                "so the upstream really did hand over nothing"
+                                % (nb, nr))
         return (sid, "EMITS_NOTHING", rc, sched_rc, emitted, stored, rows,
-                available, secs, note or "no records reached intel_items")
+                available, secs,
+                (note or "no records reached intel_items") + transfer)
     if emitted > 0 and rows < emitted:
         return (sid, "COLLISION", rc, sched_rc, emitted, stored, rows,
                 available, secs,
