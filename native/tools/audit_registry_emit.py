@@ -354,14 +354,34 @@ def fetch_failure_reason(db, sid):
         st = None
     if p.get("body_parsed") is False and st:
         bits.append("body did not parse")
+    # A HANDSHAKE REFUSED BEFORE ANY CERTIFICATE WAS JUDGED IS THE ONE CAUSE
+    # THIS CONTAINER ITSELF PRODUCES, so it must not read as the source's.
+    # CLAUDE.md records it twice: a peer reset here can be OUR egress
+    # (`ws_closed_mid_exchange` at $HTTPS_PROXY/__agentproxy/status), and
+    # tools/audit_page_two.py reports exactly this as LOCAL_EGRESS "worded so
+    # nobody can read one as a finding". Measured 2026-10-25: of the first 103
+    # re-classified failures, 51 were a bare handshake and the cluster is
+    # dominated by `eur-ods-*` rows, while a plain curl of an OpenDataSoft host
+    # from this container answers `Recv failure: Connection reset by peer` and
+    # HTTP 000. A named certificate cause (no_local_issuer, expired,
+    # hostname_mismatch, ...) is the SOURCE's and keeps its own wording -- the
+    # whole point of naming the nine causes apart.
     cause = p.get("tls_cause")
+    te = p.get("transport_error")
+    bare = (cause in (None, "", "none", "handshake", "other")
+            and te in (None, "", "none", "ok", "other", "connect"))
     if cause and cause != "none":
         bits.append("TLS %s" % cause)
         if p.get("tls_detail"):
             bits.append(str(p["tls_detail"])[:60])
-    te = p.get("transport_error")
     if te and te not in ("none", "ok"):
         bits.append("transport %s" % te)
+    if bare and not st:
+        bits.append("NO CERTIFICATE WAS JUDGED and no status was measured, "
+                    "which is also what this container's own egress looks "
+                    "like — check $HTTPS_PROXY/__agentproxy/status and re-read "
+                    "from another network before treating this as the "
+                    "source's (CLAUDE.md: a peer reset here can be ours)")
     hc, ha = p.get("hosts_contacted"), p.get("hosts_answered")
     if isinstance(hc, (int, float)) and isinstance(ha, (int, float)):
         bits.append("%d of %d hosts answered" % (int(ha), int(hc)))
