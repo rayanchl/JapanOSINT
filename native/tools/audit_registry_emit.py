@@ -542,6 +542,36 @@ def verdict_for(sid, blob, rc, rows, secs, timed_out, notices=0, gated=None,
         if gated:
             return (sid, "GATED", rc, sched_rc, emitted, stored, rows,
                     available, secs, gated)
+        # A DATE-WINDOW ROW READ AN HONESTLY EMPTY WINDOW AND ADVANCED, which
+        # is this tree's own rule 1 (an upstream's "nothing matched" is not a
+        # refusal) and not a defect. Reporting it EMITS_NOTHING is this tool
+        # making the confusion that verdict exists to expose, exactly as the
+        # POD and GATED corrections above were.
+        #
+        # It matters at scale because of HOW this gate runs: every source gets
+        # a FRESH scratch database, so a window row has no stored position and
+        # always reads window 1 of N, starting at its declared window_from.
+        # The verdict is therefore about the walk's STARTING POINT, never about
+        # the source. Measured 2026-10-25: all 47 KKJ prefecture rows read
+        # EMITS_NOTHING for exactly that reason — kkj.go.jp answers their first
+        # 45-day window with `<SearchHits>0</SearchHits>` in 144 bytes because
+        # Japan's procurement corpus begins at fiscal year 2021 (Aomori: 0 in
+        # each of 2021-01..03, then 108, 68, 117 from April), while a window
+        # near today holds 218 records and 2024 holds 282. Forty-seven healthy
+        # sources in a defect bucket, on the one reading a fresh database can
+        # take.
+        wm = re.search(r"\[hp:%s\] window (\S+)\.\.(\S+)" % re.escape(sid), blob)
+        adv = ("the next run reads the window beginning" in blob)
+        if wm and adv and rc == 0:
+            return (sid, "WINDOW_EMPTY", rc, sched_rc, emitted, stored, rows,
+                    available, secs,
+                    "date-window row: the window %s..%s is honestly empty and "
+                    "the walk advanced (rule 1). This gate gives every source "
+                    "a fresh database, so a window row reads window 1 of N "
+                    "from its declared window_from — this says where the walk "
+                    "STARTS, not whether the source works. Re-read it with a "
+                    "window near today before treating it as a finding"
+                    % (wm.group(1), wm.group(2)))
         if available > 0:
             return (sid, "EMITS_NOTHING", rc, sched_rc, emitted, stored, rows,
                     available, secs,

@@ -148,7 +148,28 @@ static const hp_source HP3B25_JPBIZREG[] = {
    * replaces: a run used to pull 1,000 records (18.5 MB for 01), where a
    * window holds a few hundred. 4,142 windows cover all 47 rows, so every one
    * but Tokyo is through its backfill inside 120 days and the median inside
-   * 13. */
+   * 13.
+   *
+   * ── window_from STAYS AT 2021-01-01, and that is a measurement ──────────
+   *
+   * All 47 rows read EMITS_NOTHING in the registry sweep of 2026-10-25, which
+   * looks like 47 dead sources and is none. The gate gives every source a
+   * FRESH database, so a window row has no stored position and reads window 1
+   * of N from window_from — and kkj.go.jp answers that first window with
+   * `<SearchHits>0</SearchHits>` in 144 bytes, an honest empty under rule 1.
+   * The same endpoint holds 218 records in a window near today and 282 in a
+   * 45-day window of 2024, so the verdict was about where the walk STARTS.
+   * audit_registry_emit.py says WINDOW_EMPTY now instead of putting healthy
+   * rows in a defect bucket.
+   *
+   * The obvious tidy-up — move window_from to the fiscal year the corpus
+   * begins in — was measured and REFUSED. Japan's FY2021 boundary does hold:
+   * Aomori is 0 in each of 2021-01, 02 and 03 and then 108, 68, 117 from
+   * April, and Jan-Mar 2021 is 0 for Hokkaido, Aichi, Osaka, Fukuoka and
+   * Okinawa too. But **Tokyo has 1 record in that quarter**, so starting at
+   * 2021-04-01 would discard it — one notice, which rule 2 does not trade for
+   * two saved runs on a fresh install. Six prefectures agreeing is not the
+   * seventh, and the cost of being wrong here is silent. */
   { .id = "JP25_JPBIZ_KKJ_PREF_01_HOKKAIDO", .name = "KKJ public procurement notices - 北海道 (LG code 01)",
     .name_ja = "官公需情報ポータル 北海道 入札公告",
     .category = "government", .portal = "https://www.kkj.go.jp",
