@@ -611,6 +611,22 @@ Re-take the reading from an environment with ordinary egress before changing
 them. `api.data.gov.hk` does answer over https from here, if those endpoints
 ever stop.
 
+**Control the TLS reading against a host you know works — and against the
+publisher's own chain** (2026-10-25, the correction the PR #51 session relayed,
+narrowed by running it). TLS in these containers terminates at the egress
+gateway, which presents its own `O = Anthropic` certificate, so a
+`no_local_issuer` seen in-container can be about the gateway rather than the
+publisher. But it is not about the gateway for EVERY host either: measured the
+same minute, `openssl s_client` (which does not use the proxy) verifies
+github.com, api.gleif.org AND app.legco.gov.hk — `CN = *.legco.gov.hk`,
+`Verify return code: 0 (ok)` — while `curl` through the proxy answers 200 for
+gleif, 400 for github's bare root and **000 for LegCo**. So the honest
+statement is the narrow one: this path mishandles THAT host, the publisher's
+chain is fine, and neither the gateway nor LegCo is at fault on its own. Open
+item D6 in `docs/OPEN_ITEMS_2026-10-20.md` bounds the 2026-10-21
+AIA/intermediates work the same way. **Two controls, not one: a host known to
+work through the proxy, and the publisher read directly.**
+
 **The registered count was 57,062** (2026-10-21): the 56,955 below, plus
 **batch 51's 136** Hong Kong and Macao government feeds and China News Service
 (`collectors/sources/cn_feeds_batch51.c`, read off the publishers' own RSS

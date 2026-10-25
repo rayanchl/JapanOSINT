@@ -250,6 +250,16 @@ same unreachable `https`. The agent proxy reports `bundleCoversEveryHost:
 true` and lists no relay failure for the host, so this is a reading of this
 path, not of the source.
 
+**Controlled the next day** (2026-10-25, prompted by the PR #51 session's
+note that TLS terminates at the egress gateway in these containers): `openssl
+s_client`, which does not use the proxy, verifies github.com, api.gleif.org AND
+app.legco.gov.hk — the last as `CN = *.legco.gov.hk`, `Verify return code: 0
+(ok)` — while `curl` through the proxy answers 200 for gleif, 400 for github's
+bare root and 000 for LegCo. So the publisher's chain is sound and the proxy is
+not broken in general: this path mishandles that one host. Two controls settle
+such a reading, never one — a host known to work through the proxy, and the
+publisher read directly.
+
 One useful corollary: `api.data.gov.hk` IS reachable over https from here (it
 answers `{"message":"REQUEST ERROR: start parameter missing"}` to a malformed
 historical-archive request), so Hong Kong's own portal is a path that exists if
