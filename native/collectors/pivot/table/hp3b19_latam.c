@@ -246,6 +246,104 @@ static const hp_source HP3B19_LATAM[] = {
       "indigenous land. This is the dataset that drives Brazilian "
       "enforcement operations and it is served straight from the "
       "agency's own GeoServer" },
+  /* THE LIVE TAIL OF THE ROW ABOVE, and the deliberate PAIR that row's own
+   * comment asked for: "a short `view_date` window for the live tail beside
+   * this full-archive cycle - and that is a second row, not an edit to this
+   * one." The cycling row reads 464,353 alerts over about two days, so a
+   * brand-new alert waits for the cycle to come round to it; this row reads the
+   * trailing window every run and never waits. Same pair shape as
+   * canada-hydrometric-realtime / gc-hydrometric and the two ELIA
+   * system-imbalance rows.
+   *
+   * DO NOT RETIRE EITHER HALF AS A DUPLICATE ENDPOINT. These two rows read one
+   * typeName and differ only in a CQL_FILTER, which is exactly what a
+   * host+path+query comparison or a limit-pair harvest reports as one source
+   * registered twice. They are the READ_BOTH case: neither row answers the
+   * other's question, and the overlap is bounded at the window's ~3,300
+   * records against the archive's 464,353.
+   *
+   * THE WINDOW IS SIZED ON THE MEASURED PUBLICATION LAG, NOT ON THE CADENCE,
+   * and the lag is the whole reason this is 30 days rather than 7. Measured
+   * 2026-10-25: the newest alert in the layer is dated 2026-10-16, NINE DAYS
+   * OLD, and `view_date > <today-7>` answers numberMatched="0". A seven-day
+   * window would be a row that reads nothing on every run and looks exactly
+   * like a dead source - the KKJ WINDOW_EMPTY shape, manufactured on purpose.
+   * The window counts, from the service's own resultType=hits: 7 days 0,
+   * 14 days 780, 21 days 2,321, 30 days 3,339, 45 days 5,833, 90 days 11,300.
+   *
+   * `page_max = 20` is sized on the WORST MONTH ON RECORD and not on today.
+   * Recent 30-day stretches run 1,394-4,551 (four pages), but August 2019 held
+   * 13,060 alerts and August 2020 10,845 - so a ceiling set from this year
+   * would silently truncate the window in a bad year, when the data matters
+   * most. Twenty pages is 20,000 records, above the worst reading with
+   * headroom, which is also what keeps a short last page from reading as our
+   * ceiling and filing a false truncation notice.
+   *
+   * `resultType=hits` HERE NEEDS WFS 2.0.0 and the row reads 1.0.0: asked of a
+   * version=1.0.0 service it answers numberOfFeatures="0", which is a number
+   * that looks like a total and is a refusal. Every count above was taken on
+   * the 2.0.0 endpoint for that reason. The row itself stays on 1.0.0 because
+   * that is the spelling whose paging is measured on this host.
+   *
+   * THE FILTER IS HONOURED AND THAT WAS CONTROLLED, not assumed from a 200:
+   * `CQL_FILTER=frobnicate>'2026-01-01'` answers a ServiceExceptionReport
+   * naming the column - "Illegal property name: frobnicate for feature type
+   * deter-amz:deter_amz" - so this service validates its filter and an accepted
+   * view_date predicate is being applied rather than discarded.
+   *
+   * Paging measured on the shipped URL, 2026-10-25: startIndex 0, 1000 and
+   * 2000 each returned 1,000 features with 1,000 distinct feature ids, overlap
+   * ZERO across both seams, view_date ascending (2026-09-26 -> 2026-10-04 ->
+   * 2026-10-11). And the filtered query is four to five times FASTER per page
+   * than the unfiltered one the archive row walks - 3 s, 4 s and 6 s against
+   * that row's measured 13.6 s to 33.7 s - because the predicate shrinks the
+   * set being sorted. `timeout_ms` is kept at the archive row's 120000 anyway:
+   * a bad year's window is five times today's.
+   *
+   * NO `page_resume`, deliberately, and the file's own rule says why: a row
+   * whose purpose is recency must not cycle, or it spends its runs somewhere in
+   * the middle of the window instead of at the head. Each run reads the whole
+   * trailing window from the start. The window completes inside the ceiling, so
+   * there is nothing to resume in any case.
+   *
+   * A CORRECTION TO THE ARCHIVE ROW'S OWN PROPOSED REMEDY, which this
+   * measurement is what makes checkable. That comment says "the real remedy is
+   * a KEYSET cursor - `CQL_FILTER=view_date>'<the last date read>'`". As
+   * written that would SKIP RECORDS: view_date is a DATE and it is nowhere near
+   * unique - the five newest alerts all read 2026-10-16, and 780 alerts share
+   * the last fourteen days - so a page ending part-way through a date followed
+   * by `view_date > <that date>` drops the rest of that day for ever, while
+   * `>=` never advances. A keyset needs a key that is unique or a tuple that
+   * is; the Go module index's Timestamp and ELIA's one-minute
+   * predictiontimeutc are both effectively unique per record and view_date is
+   * not. So the offset walk stays, and this row is what solves the freshness
+   * half. */
+  { .id = "BR_INPE_DETER_ALERTS_RECENT",
+    .name = "INPE TerraBrasilis - DETER deforestation alerts (trailing 30 days)",
+    .name_ja = "ブラジル国立宇宙研究所 DETER 森林減少警報（直近30日）",
+    .category = "environment", .portal = "http://terrabrasilis.dpi.inpe.br",
+    .record_type = "deforestation-alert",
+    .tags = "\"brazil\",\"amazon\",\"deforestation\",\"inpe\",\"satellite\",\"recent\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://terrabrasilis.dpi.inpe.br/geoserver/deter-amz/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=deter-amz:deter_amz&maxFeatures=1000&outputFormat=application%2Fjson&sortBy=view_date,gid&startIndex=0&CQL_FILTER=view_date%3E%27{date:%Y-%m-%d:-30}%27",
+    .array_path = "features",
+    .id_keys = "id",
+    .interval = 21600,
+    .timeout_ms = 120000,
+    .page_param = "startIndex",
+    .page_size = 1000,
+    .page_start = 0,
+    .page_max = 20,
+    .description = "INPE's DETER deforestation and forest-degradation alerts for "
+      "the Brazilian Amazon published in the last 30 days, as polygons with "
+      "the detection date, alert class, area in hectares, municipality, state "
+      "and whether the polygon falls inside a conservation unit or indigenous "
+      "land. The live-tail half of a deliberate pair: BR_INPE_DETER_ALERTS "
+      "reads the whole 464,353-alert archive over a cycle, this row reads the "
+      "trailing window every run so a new alert never waits for the cycle. "
+      "DETER publishes with a measured nine-day lag, which is why the window "
+      "is 30 days and not a week" },
+
 
   { .id = "BR_INPE_PRODES_YEARLY", .name = "INPE TerraBrasilis — PRODES annual clear-cut mapping",
     .name_ja = "ブラジル国立宇宙研究所 PRODES 年次森林減少",
