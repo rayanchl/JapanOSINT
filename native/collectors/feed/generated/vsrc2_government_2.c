@@ -189,26 +189,29 @@ VJSON(jpx_egov_keyword, "jpx-egov-keyword", "e-Gov law keyword search — disast
   "ja", "[\"japan\",\"law\",\"egov\",\"disaster\"]", 86400,
   "Full-text hits for disaster provisions across the statute book.");
 
-VJSON(jpx_egov_laws_cabinet, "jpx-egov-laws-cabinet", "e-Gov law index — cabinet orders", "e-Gov法令API 政令一覧",
-  "government", "ordinance",
-  "https://laws.e-gov.go.jp/api/2/laws?law_type=CabinetOrder&limit=100",
-  "laws",
-  "ja", "[\"japan\",\"law\",\"egov\",\"cabinet-order\"]", 86400,
-  "Index of cabinet orders, where most implementing detail of Japanese regulation lives.");
+/* REMOVED 2026-10-25: jpx-egov-laws-cabinet read laws.e-gov.go.jp/api/2/laws, whose every
+ * field is NESTED, so VJSON had nothing to key or title and stored 0 records
+ * while fetching 4.4 MB a run. Replaced by EGOV_LAW_LIST_ALL in
+ * collectors/pivot/table/hp3b23_jpregistry.c, a complete read of all 9,567
+ * statutes on hpengine, where id_keys/title_keys take dotted paths. The
+ * measurement and why the read is complete rather than sliced by law_type are
+ * in that row's comment. */
 
-VJSON(jpx_egov_laws_ministerial, "jpx-egov-laws-ministerial", "e-Gov law index — ministerial ordinances", "e-Gov法令API 府省令一覧",
-  "government", "ordinance",
-  "https://laws.e-gov.go.jp/api/2/laws?law_type=MinisterialOrdinance&limit=100",
-  "laws",
-  "ja", "[\"japan\",\"law\",\"egov\",\"ordinance\"]", 86400,
-  "Index of ministerial ordinances issued by each ministry.");
+/* REMOVED 2026-10-25: jpx-egov-laws-ministerial read laws.e-gov.go.jp/api/2/laws, whose every
+ * field is NESTED, so VJSON had nothing to key or title and stored 0 records
+ * while fetching 4.5 MB a run. Replaced by EGOV_LAW_LIST_ALL in
+ * collectors/pivot/table/hp3b23_jpregistry.c, a complete read of all 9,567
+ * statutes on hpengine, where id_keys/title_keys take dotted paths. The
+ * measurement and why the read is complete rather than sliced by law_type are
+ * in that row's comment. */
 
-VJSON(jpx_egov_laws_v2, "jpx-egov-laws-v2", "e-Gov law index — all statutes", "e-Gov法令API 法令一覧",
-  "government", "ordinance",
-  "https://laws.e-gov.go.jp/api/2/laws?limit=100",
-  "laws",
-  "ja", "[\"japan\",\"law\",\"egov\",\"statutes\"]", 86400,
-  "Authoritative index of Japanese statutes with promulgation and revision dates.");
+/* REMOVED 2026-10-25: jpx-egov-laws-v2 read laws.e-gov.go.jp/api/2/laws, whose every
+ * field is NESTED, so VJSON had nothing to key or title and stored 0 records
+ * while fetching 4.1 MB a run. Replaced by EGOV_LAW_LIST_ALL in
+ * collectors/pivot/table/hp3b23_jpregistry.c, a complete read of all 9,567
+ * statutes on hpengine, where id_keys/title_keys take dotted paths. The
+ * measurement and why the read is complete rather than sliced by law_type are
+ * in that row's comment. */
 
 VGEO(jpx_geo_t131032_hoikuenjson, "jpx-geo-t131032-hoikuenjson", "港区 — childcare facilities", "港区 子育て",
   "government", "local-gov",
