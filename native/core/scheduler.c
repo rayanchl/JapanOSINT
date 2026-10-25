@@ -1341,6 +1341,42 @@ static void watchdog_scan(void) {
   pthread_mutex_unlock(&g_q.mu);
 }
 
+/* A short, human-readable list of sources currently occupying a worker slot
+ * and how long each has held it — for a diagnostic message elsewhere, never
+ * for control flow. Added for the wal-checkpoint pod's "a reader is holding
+ * a snapshot open" line (collectors/pod/wal_checkpoint_pod.c): that pod only
+ * knows ITS OWN connection, so a BUSY/incomplete-PASSIVE result used to name
+ * no suspect at all. This reads the exact state watchdog_scan already
+ * tracks, so the two never disagree. Truncates silently at `cap`; always
+ * NUL-terminates.
+ *
+ * `exclude_id` (may be NULL) is skipped — `g_q.started[]` spans BOTH lanes
+ * (scheduler.c's own busy-count read does the same, unconditionally), so a
+ * maintenance pod calling this while it is itself the running() entry would
+ * otherwise name ITSELF, with the longest hold of anything in the list
+ * (every retry it has just spent counts against its own elapsed time). A
+ * caller passes its own ctx->source_id; every other maint-lane pod
+ * (embedding-backfill included) is a legitimate suspect and stays. */
+void scheduler_running_summary(char *buf, size_t cap, const char *exclude_id) {
+  if (!buf || cap == 0) return;
+  buf[0] = '\0';
+  if (!atomic_load(&g_ready)) return;
+  time_t now = time(NULL);
+  size_t used = 0;
+  pthread_mutex_lock(&g_q.mu);
+  for (int i = 0; i < g_n && used + 1 < cap; i++) {
+    if (!g_q.started[i]) continue;
+    if (exclude_id && strcmp(g_all[i]->id, exclude_id) == 0) continue;
+    long over = (long)(now - g_q.started[i]);
+    int n = snprintf(buf + used, cap - used, "%s%s(%lds)",
+                      used ? ", " : "", g_all[i]->id, over);
+    if (n < 0) break;
+    used += (size_t)n < cap - used ? (size_t)n : cap - used - 1;
+  }
+  pthread_mutex_unlock(&g_q.mu);
+  if (used == 0) snprintf(buf, cap, "(nothing currently running)");
+}
+
 /* ── boot ramp ────────────────────────────────────────────────────────────
  *
  * The first-run offset of the k-th of m sources in one lane. The old ramp was

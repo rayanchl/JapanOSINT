@@ -25,6 +25,14 @@ void scheduler_stop_background(int wait_ms);
 int  scheduler_claim(const char *id);
 void scheduler_release(const char *id);
 
+/* Writes a short list of "<id>(<seconds held>s), ..." for every source
+ * currently occupying a worker slot into `buf` (always NUL-terminated,
+ * truncated silently at `cap`; "(nothing currently running)" when none is).
+ * `exclude_id` (may be NULL) is left out — pass your own ctx->source_id so a
+ * pod calling this from inside its own run() does not name itself.
+ * Diagnostic only — see scheduler.c for why the wal-checkpoint pod needs it. */
+void scheduler_running_summary(char *buf, size_t cap, const char *exclude_id);
+
 /* First-run offset (seconds after boot) of the k-th of m scheduled sources in
  * one lane — see the boot ramp note in scheduler.c. Pure, for tests. */
 long sched_boot_offset(int k, int m, int workers, long stag, long ramp,

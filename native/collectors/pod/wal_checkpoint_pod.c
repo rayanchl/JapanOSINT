@@ -60,6 +60,7 @@
 #include <time.h>
 #include "source.h"
 #include "core/db.h"
+#include "core/scheduler.h"
 #include "third_party/sqlite3.h"
 
 /* Per-attempt ceiling on how long the TRUNCATE may hold the writer lock while
@@ -147,13 +148,25 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     /* The PASSIVE pass is what still protects the disk here: when it folded
      * every frame, the next writer restarts the log from the top. */
     int all_folded = (prc == SQLITE_OK && plog >= 0 && pckpt == plog);
+    /* "(leaked sqlite3_stmt?)" used to be a genuine guess: this pod only
+     * holds ITS OWN connection, so it could not name the reader it was
+     * waiting on. scheduler_running_summary() reads the same worker-slot
+     * state the "has held a worker slot" WARN lines already come from, so
+     * the next occurrence names a suspect instead of restating the
+     * question — see the 2026-10-22 incident this was added for, where the
+     * 100% failure rate here went un-diagnosed for ~5 hours while the WAL
+     * grew past 190 GB. */
+    char running[512];
+    scheduler_running_summary(running, sizeof running, ctx->source_id);
     fprintf(stderr, "[wal] TRUNCATE skipped after %d x %d ms: a reader is holding a "
-            "snapshot open (leaked sqlite3_stmt?). PASSIVE folded %d of %d frames%s; "
+            "snapshot open. PASSIVE folded %d of %d frames%s; "
             "-wal is %lld MB%s\n",
             tries, WAL_TRUNC_WAIT_MS, pckpt, plog,
             all_folded ? " (the log is reused once those readers move on)" : "",
             after >> 20,
             (after >> 20) > WAL_LOUD_MB ? " — this is how the disk filled on 2026-09-21" : "");
+    if (!all_folded)
+      fprintf(stderr, "[wal]   held open by: %s\n", running);
     return all_folded ? 0 : -1;
   }
   fprintf(stderr, "[wal] checkpoint failed rc=%d (%s), -wal %lld MB\n", rc, sqlite3_errstr(rc), before >> 20);
