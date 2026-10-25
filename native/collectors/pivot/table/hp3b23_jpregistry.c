@@ -243,6 +243,47 @@ static const hp_source HP3B23_JPREGISTRY[] = {
    * because it is a measured, shipped row and `law_type=Act` is a facet a
    * reader asks for by name; the cost is 2,165 duplicate upserts a day and the
    * numbers are here so that retiring it stays a one-line decision. */
+  /* TDnet, THE SAME NESTED-RECORD DEFECT AS THE e-GOV ROWS ABOVE, third
+   * instance of the day. `jpx-tdnet-recent` transferred 210 KB a run and
+   * stored nothing: a record on this mirror is `{"Tdnet": {…}}` with no
+   * top-level scalar, so VJSON's single-level uid and title lists dropped
+   * every one. Found 2026-10-25 from the byte count on the run line.
+   *
+   * **AND THE SHAPE DEPENDS ON THE `limit` VALUE**, which is why the keys name
+   * both. Measured twice at each value and stable every time: no limit, 3, 300
+   * and 500 return items WRAPPED in `Tdnet`, while **`limit=100` returns them
+   * FLAT** — same endpoint, same minute, two record shapes. So a row keyed on
+   * the wrapped path alone would store nothing the day somebody tuned the limit
+   * to 100, and a row keyed flat stores nothing today. `,` CHOOSES
+   * (CLAUDE.md rule 4b), so `Tdnet.id,id` reads the wrapped path and falls back
+   * to the flat one, and the row is immune to the flip.
+   *
+   * This is NOT a duplicate of `tdnet-disclosure`, which scrapes
+   * release.tdnet.info's own HTML index: the mirror serves structured JSON
+   * carrying the securities code and the XBRL link, which the HTML listing does
+   * not. `total_count` equals the rows returned at every limit, so it is this
+   * page's count and not the collection's — the endpoint is a rolling recent
+   * window, so the row makes one request and does not page. 500 of 500
+   * distinct ids measured. */
+  { .id = "JP_TDNET_RECENT", .name = "TDnet — timely disclosures, rolling feed",
+    .name_ja = "TDnet 適時開示情報 直近一覧",
+    .category = "finance", .portal = "https://www.release.tdnet.info",
+    .record_type = "disclosure",
+    .tags = "\"japan\",\"disclosure\",\"tdnet\",\"listed-companies\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://webapi.yanoshin.jp/webapi/tdnet/list/recent.json?limit=500",
+    .array_path = "items",
+    .title_keys = "Tdnet.title,title",
+    .id_keys = "Tdnet.id,id",
+    .date_keys = "Tdnet.pubdate,pubdate",
+    .link_keys = "Tdnet.document_url,document_url",
+    .interval = 1800,
+    .description = "Timely disclosures filed by Tokyo-listed companies as the "
+      "yanoshin mirror serves them: the disclosure id and publication time, the "
+      "securities code and company name, the document title and a link to the "
+      "filed PDF, plus the XBRL and financial-summary URLs where the filing has "
+      "them. A rolling window of the most recent 500" },
+
   { .id = "EGOV_LAW_LIST_ALL", .name = "e-Gov Law Search — every statute in force",
     .name_ja = "e-Gov法令検索 法令一覧（全法令種別）",
     .category = "legal", .portal = "https://laws.e-gov.go.jp",
