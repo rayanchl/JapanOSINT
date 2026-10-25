@@ -289,6 +289,7 @@ def run_one(a, tmpl, sid, slot):
     # silently and left a gated source reading EMITS_NOTHING, the very verdict
     # this is meant to separate it from.
     gated = status_notice_reason(db, sid)
+    failcause = fetch_failure_reason(db, sid)
     for suf in ("", "-wal", "-shm"):
         try:
             os.unlink(db + suf)
@@ -299,10 +300,92 @@ def run_one(a, tmpl, sid, slot):
         io.open(os.path.join(a.keep_logs, sid + ".log"), "w",
                 encoding="utf-8", newline="\n").write(blob[-40000:])
 
-    res = verdict_for(sid, blob, rc, rows, secs, timed_out, notices, gated)
+    res = verdict_for(sid, blob, rc, rows, secs, timed_out, notices, gated,
+                      failcause)
     with _lock:
         emit_row(a, res)
     return res
+
+
+def fetch_failure_reason(db, sid):
+    """-> a one-line CAUSE for a refused fetch, read off the engine's own
+    collector-fetch-failure record, else None.
+
+    This existed as a fixed sentence for 4,761 of the 55,834 rows the first
+    complete registry sweep measured (2026-10-25) -- the largest failure class
+    in the tree, and every row of it read "the upstream refused the request or
+    served a body that did not parse", which is the verdict restating itself.
+    The engine has written the cause as DATA since 2026-10-06 (lib/hpengine.c)
+    and 2026-10-22 (core/scheduler.c, every other collector), and since
+    2026-10-23 that includes the nine TLS causes named apart -- a missing
+    intermediate is fixable and an unrecognized_name is not. Not reading it was
+    this tool failing rule 4c against the engine beside it: the disclosure is a
+    row in the database, and the gate that reports on it was matching stderr.
+
+    The two writers carry different fields on purpose (the scheduler has no
+    http_status to report, because a bespoke collector never measured one), so
+    this reads whichever are present rather than assuming a shape."""
+    if not db:
+        return None
+    try:
+        con = sqlite3.connect("file:%s?mode=ro" % db, uri=True)
+        row = con.execute(
+            "SELECT properties FROM intel_items WHERE source_id=? "
+            "AND record_type='collector-fetch-failure' LIMIT 1", (sid,)).fetchone()
+        con.close()
+    except Exception:
+        return None
+    if not row or not row[0]:
+        return None
+    try:
+        p = json.loads(row[0])
+    except Exception:
+        return None
+    bits = []
+    # A status of -1 (or 0) is "nobody measured one", which is a real and
+    # deliberate state: core/scheduler.c files no http_status at all because a
+    # bespoke collector never reported one, and naming a status nobody measured
+    # would be this gate inventing the cause -- the mistake CLAUDE.md records
+    # three times over (Archive-It, the Imperva wall, FDSN's nodata=404).
+    st = p.get("http_status")
+    if isinstance(st, (int, float)) and st > 0:
+        bits.append("HTTP %d" % int(st))
+    else:
+        st = None
+    if p.get("body_parsed") is False and st:
+        bits.append("body did not parse")
+    cause = p.get("tls_cause")
+    if cause and cause != "none":
+        bits.append("TLS %s" % cause)
+        if p.get("tls_detail"):
+            bits.append(str(p["tls_detail"])[:60])
+    te = p.get("transport_error")
+    if te and te not in ("none", "ok"):
+        bits.append("transport %s" % te)
+    hc, ha = p.get("hosts_contacted"), p.get("hosts_answered")
+    if isinstance(hc, (int, float)) and isinstance(ha, (int, float)):
+        bits.append("%d of %d hosts answered" % (int(ha), int(hc)))
+    nb = p.get("hosts_no_answer")
+    if nb:
+        bits.append("silent: %s" % str(nb)[:80])
+    by = p.get("bytes_fetched")
+    if isinstance(by, (int, float)):
+        bits.append("%d bytes" % int(by))
+    if not bits:
+        # No measured field to report, but the record still carries the
+        # engine's own sentence about what happened. Prefer it to this tool's
+        # generic one: it is the writer's account, and an hpengine row whose
+        # transport failed before any status existed has nothing else to give.
+        rsn = p.get("outcome") or p.get("reason")
+        if rsn:
+            bits.append("no status measured; engine: " + str(rsn)[:200])
+        else:
+            return None
+    rem = p.get("remedy") or p.get("tls_remedy")
+    out = "; ".join(bits)
+    if rem:
+        out += " | remedy: " + str(rem)[:200]
+    return out
 
 
 def status_notice_reason(db, sid):
@@ -338,7 +421,8 @@ def status_notice_reason(db, sid):
     return ("stored a collector-status-notice saying %r and no records" % st)
 
 
-def verdict_for(sid, blob, rc, rows, secs, timed_out, notices=0, gated=None):
+def verdict_for(sid, blob, rc, rows, secs, timed_out, notices=0, gated=None,
+                failcause=None):
     sched = None
     for m in SCHED.finditer(blob):
         if m.group(1) == sid:
@@ -422,9 +506,10 @@ def verdict_for(sid, blob, rc, rows, secs, timed_out, notices=0, gated=None):
     if rows == 0 and notices > 0 and FETCH_FAILURE.search(blob):
         return (sid, "FETCH_FAILED", rc, sched_rc, emitted, stored, rows,
                 available, secs,
+                failcause or
                 "the upstream refused the request or served a body that did "
                 "not parse; the engine stored a collector-fetch-failure "
-                "notice and no records (rule 1)")
+                "notice that carried no cause fields (rule 1)")
 
     note = stored_note
     if stored_records >= 0 and rows != stored_records and not stored_note:
