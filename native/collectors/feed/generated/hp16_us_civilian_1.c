@@ -173,18 +173,31 @@ static const hp_source T[] = {
      * the same window read twice returns the identical set in the identical
      * order. So the window is the stable sort this server does not offer.
      *
-     * 48 hours (yesterday 00:00Z through tomorrow 00:00Z) because the window
-     * must be wider than the 6 h interval or cases filed after a day's last
-     * run would fall between two windows and never be read at all.
-     * page_size=100 is honoured (so is 200) — it was 5, which spent a page
-     * request on 5 records. page_resume is gone: a cycle over an unordered
-     * collection is the defect, and the engine refuses it for a {date…} row
-     * anyway, since a stored position would pin one day forever. */
-    .url = "https://mobile311.sfgov.org/open311/v2/requests.json?start_date={date-1d:%Y-%m-%dT00:00:00Z}&end_date={date+1d:%Y-%m-%dT00:00:00Z}&page_size=100&page=1",
+     * The window must be wider than the interval, or cases filed after one
+     * run would fall between two windows and never be read at all — but it
+     * was 48 HOURS against a 6 h cadence, which read every case about eight
+     * times and cost 39 pages a run. Re-measured 2026-10-25 and sized to the
+     * cadence instead: start_date is honoured at HOUR granularity (asked
+     * 00:25:01Z, oldest record served 00:53:08Z, nothing from before the
+     * instant), so {ago:43200} is a rolling TWELVE hours — two full runs of
+     * slack, so one missed run still loses nothing, where 8 h would leave
+     * only two. Cost measured on the live server: 8 h is 6 pages, 521 records,
+     * ZERO repeats, 21 s. Twelve hours at this collection's rate (2,429 in the
+     * finished day of 2026-10-20, ~101 an hour) is ~1,200 records, ~13 pages
+     * — against 39 before, and the host's 429 landed on page 17 of three
+     * such walks in one, so this walk no longer reaches the page that was
+     * being refused. page_size=100 is honoured (so is 200); it was 5, which
+     * spent a page request on 5 records. page_resume is gone: a cycle over an
+     * unordered collection is the defect, and the engine refuses it for a
+     * {date…}/{ago…} row anyway, since a stored position would pin one
+     * window forever. end_date stays a day in the FUTURE rather than "now":
+     * no case can be filed after now, and both spellings of this parameter
+     * were measured honoured as they are written here. */
+    .url = "https://mobile311.sfgov.org/open311/v2/requests.json?start_date={ago:43200}&end_date={date+1d:%Y-%m-%dT00:00:00Z}&page_size=100&page=1",
     .id_keys = "service_request_id",
     .detail_url = "https://mobile311.sfgov.org/open311/v2/requests/{v}.json", .detail_key = "service_request_id",
     .page_walk = 1,
-    .page_max = 80,   /* ~4,900 records a window at 100 a page = ~49 pages (2,429 for 2026-10-20, measured); headroom above the need, never equal to it */
+    .page_max = 40,   /* ~13 pages needed at 100 a page (measured); headroom above the need, never equal to it — a ceiling at the need manufactures a false truncation notice */
     .interval = 21600, .free_tier = 1 },
 
   { .id = "us-sf-311-open311-services",

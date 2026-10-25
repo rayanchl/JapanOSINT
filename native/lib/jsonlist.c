@@ -1068,15 +1068,20 @@ static int emit_wrapped_list(intel_sink *sink, const char *source_id,
                     depth + 1);
 }
 
-static int emit_array(intel_sink *sink, const char *source_id, cJSON *arr,
-                      const char *record_type, const char *lang,
-                      const char *tags_json, int depth) {
+/* `skip` is the page-1 probe's identity set (jsonlist_page_fps): a record the
+ * previous page already carried is not emitted a second time. NULL = emit
+ * everything, which is every caller but the probe. */
+static int emit_array_ex(intel_sink *sink, const char *source_id, cJSON *arr,
+                         const char *record_type, const char *lang,
+                         const char *tags_json, int depth,
+                         const unsigned long long *skip, int nskip) {
   int total = cJSON_GetArraySize(arr);
   unsigned char *dup = collision_map(arr, record_type, total);
 
   int n = 0, i = 0;
   cJSON *rec;
   cJSON_ArrayForEach(rec, arr) {
+    if (skip && jsonlist_fps_has(skip, nskip, rec)) { i++; continue; }
     int got = emit_record(sink, source_id, rec, record_type, lang, tags_json,
                           dup && dup[i]);
     if (!got)
@@ -1090,6 +1095,13 @@ static int emit_array(intel_sink *sink, const char *source_id, cJSON *arr,
   return n;
 }
 
+static int emit_array(intel_sink *sink, const char *source_id, cJSON *arr,
+                      const char *record_type, const char *lang,
+                      const char *tags_json, int depth) {
+  return emit_array_ex(sink, source_id, arr, record_type, lang, tags_json,
+                       depth, NULL, 0);
+}
+
 int jsonlist_emit(intel_sink *sink, const char *source_id, cJSON *doc,
                   const char *path, const char *record_type,
                   const char *lang, const char *tags_json) {
@@ -1100,9 +1112,10 @@ int jsonlist_emit(intel_sink *sink, const char *source_id, cJSON *doc,
 /* As jsonlist_emit, but reports how many records the document CONTAINED as
  * well as how many became rows — see jsonlist.h for why the difference is
  * load-bearing for any caller deciding "did this page come back full". */
-int jsonlist_emit_ex(intel_sink *sink, const char *source_id, cJSON *doc,
-                     const char *path, const char *record_type,
-                     const char *lang, const char *tags_json, int *seen) {
+static int jl_emit_doc(intel_sink *sink, const char *source_id, cJSON *doc,
+                       const char *path, const char *record_type,
+                       const char *lang, const char *tags_json, int *seen,
+                       const unsigned long long *skip, int nskip) {
   if (seen) *seen = 0;
   /* A single-object document is one record, not a degenerate list. Several
    * public APIs return exactly this — a status or summary document — and
@@ -1151,10 +1164,18 @@ int jsonlist_emit_ex(intel_sink *sink, const char *source_id, cJSON *doc,
   }
 
   if (seen) *seen = cJSON_GetArraySize(arr);
-  int n = emit_array(sink, source_id, arr, record_type, lang, tags_json, 0);
+  int n = emit_array_ex(sink, source_id, arr, record_type, lang, tags_json, 0,
+                        skip, nskip);
   cJSON_Delete(owned);
   if (!g_jl_shape.paged) jl_shape_flush(sink, source_id, path, n);
   return n;
+}
+
+int jsonlist_emit_ex(intel_sink *sink, const char *source_id, cJSON *doc,
+                     const char *path, const char *record_type,
+                     const char *lang, const char *tags_json, int *seen) {
+  return jl_emit_doc(sink, source_id, doc, path, record_type, lang, tags_json,
+                     seen, NULL, 0);
 }
 
 /* ── the page walk ────────────────────────────────────────────────────────
@@ -1298,6 +1319,85 @@ unsigned long long jsonlist_page_fp(cJSON *arr) {
     if (++i >= 8) break;   /* exhaustive-ok: identity probe, not a record read */
   }
   return h;
+}
+
+/* ── the page-1 probe's identity set ──────────────────────────────────────
+ * The probe asks ONE question: this response came back for `page=1` after a
+ * first request that named no page — is it the page we already have (a 1-based
+ * API) or the second page (a 0-based one)? It used to be answered by comparing
+ * jsonlist_page_fp() above, and that hash answers it only while the collection
+ * holds still between the two requests.
+ *
+ * In hpengine it does not have to. hp_emit_record spends the detail budget per
+ * record INSIDE the page loop, so a row with a detail_url puts every hop of
+ * page 1 between the two requests of the probe. Measured on
+ * us-sf-311-open311-requests (2026-10-24): ~70 s apart, 58 hops at that host's
+ * 1200 ms gap, against an Open311 collection with no ORDER BY that reorders on
+ * any write. The first eight records were no longer the first eight, the hash
+ * missed, the probe read as new data, and the WHOLE first page was emitted a
+ * second time — one page_size of collapse per run, every run, on the very
+ * metric this tree reads to find rule 4b loss. hptest 28c/28d and 31e are that
+ * server; they fail on the hash and pass on identity.
+ *
+ * So: each record's own content fingerprint, sorted, compared as a set. A
+ * reorder cannot move a set, and a record whose CONTENT changed between the
+ * two reads is correctly seen as new — re-emitting it updates its row, which
+ * is what an update is.
+ *
+ * And the page is not skipped wholesale. A record that ARRIVED between the two
+ * requests is on that response and on nothing we have read, so dropping the
+ * page would discard it (house rule 2). The callers emit what the previous
+ * page did not carry and skip what it did. Cost: one content hash per record
+ * of at most two pages a run — the page a probe may follow, and the probe. */
+static unsigned long long fnv_str(unsigned long long h, const char *s) {
+  for (const unsigned char *p = (const unsigned char *)s; *p; p++)
+    h = (h ^ *p) * 1099511628211ULL;
+  return h;
+}
+
+static unsigned long long rec_fp(cJSON *rec) {
+  unsigned long long h = 1469598103934665603ULL;   /* FNV-1a 64 */
+  char *s = cJSON_PrintUnformatted(rec);
+  if (!s) return h;
+  h = fnv_str(h, s);
+  free(s);
+  return h;
+}
+
+static int fp_cmp(const void *a, const void *b) {
+  unsigned long long x = *(const unsigned long long *)a;
+  unsigned long long y = *(const unsigned long long *)b;
+  return x < y ? -1 : x > y ? 1 : 0;
+}
+
+unsigned long long *jsonlist_page_fps(cJSON *arr, int *n_out) {
+  if (n_out) *n_out = 0;
+  int n = arr ? cJSON_GetArraySize(arr) : 0;
+  if (n <= 0) return NULL;
+  unsigned long long *fps = malloc((size_t)n * sizeof *fps);
+  if (!fps) return NULL;
+  int i = 0;
+  cJSON *rec;
+  cJSON_ArrayForEach(rec, arr) {
+    if (i >= n) break;
+    fps[i++] = rec_fp(rec);
+  }
+  qsort(fps, (size_t)i, sizeof *fps, fp_cmp);
+  if (n_out) *n_out = i;
+  return fps;
+}
+
+int jsonlist_fps_has(const unsigned long long *fps, int n, cJSON *rec) {
+  if (!fps || n <= 0 || !rec) return 0;
+  unsigned long long want = rec_fp(rec);
+  int lo = 0, hi = n - 1;
+  while (lo <= hi) {
+    int mid = lo + (hi - lo) / 2;
+    if (fps[mid] == want) return 1;
+    if (fps[mid] < want) lo = mid + 1;
+    else                 hi = mid - 1;
+  }
+  return 0;
 }
 
 /* The upstream's own count of what exists, for the in-band disclosure. -1 when
@@ -1656,6 +1756,9 @@ int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
   int repeated = 0;
   char *prev_url = NULL;      /* the page read before this one, for the probe */
   int probed = 0;             /* the page-1 probe is tried at most once        */
+  /* Page 1's record identities, for the probe's set test (jsonlist_page_fps). */
+  unsigned long long *probe_fps = NULL;
+  int probe_nfps = 0;
 
   /* A later page that failed: the walk only asks for one on the upstream's
    * evidence that more exists (jsonlist_next_page), so a failure there is a
@@ -1703,23 +1806,35 @@ int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
      * page the engine itself has decided is a re-serve is not a page of
      * records and is not counted as one. */
     unsigned long long fp = jsonlist_page_fp(arr);
-    if (pages > 0 && got > 0 && fp == prev_fp) {
-      /* The page-1 probe answered with the first page: a 1-based API, and
-       * page 1 is already in hand. Continue at page 2; the probe is not a
-       * page read, so it does not count toward the ceiling or `pages`. */
-      char *p2 = probed ? NULL : jsonlist_page_one_retry(prev_url, page_url);
-      if (p2) {
-        probed = 1;
-        cJSON_Delete(doc);
-        free(prev_url);
-        prev_url = page_url;
-        page_url = p2;
-        pages--;                             /* the loop's pages++ restores it */
-        continue;
-      }
-      repeated = 1;
+    /* Is THIS response the 0-vs-1-based probe? Asked of the URL PAIR, which a
+     * reorder cannot change, and not of the records — the hash below could not
+     * answer it over a collection that moves between the two requests
+     * (jsonlist_page_fps). On a 1-based API this response is page 1 again, so
+     * it is emitted MINUS what page 1 already carried: anything left arrived
+     * in between and is here and nowhere else. The probe is not a page read,
+     * so it does not count toward the ceiling or `pages`. */
+    char *p2 = (pages > 0 && got > 0 && !probed)
+                 ? jsonlist_page_one_retry(prev_url, page_url) : NULL;
+    if (p2) {
+      probed = 1;
+      int added = jl_emit_doc(sink, source_id, doc, path, record_type, lang,
+                              tags_json, NULL, probe_fps, probe_nfps);
+      total += added;
+      fetched += added;
+      cJSON_Delete(doc);
+      free(prev_url);
+      prev_url = page_url;
+      page_url = p2;
+      pages--;                               /* the loop's pages++ restores it */
+      continue;
     }
+    if (pages > 0 && got > 0 && fp == prev_fp) repeated = 1;
     prev_fp = fp;
+    /* A probe can only follow the first page; keep that page's identities. */
+    if (pages == 0 && got > 0) {
+      free(probe_fps);
+      probe_fps = jsonlist_page_fps(arr, &probe_nfps);
+    }
 
     int n = repeated ? 0
                      : jsonlist_emit(sink, source_id, doc, path, record_type,
@@ -1745,6 +1860,7 @@ int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
   }
   free(prev_url);
   free(page_url);
+  free(probe_fps);
 
   /* A THIRD trigger: the upstream's own total exceeds what this walk fetched,
    * and nothing above noticed.

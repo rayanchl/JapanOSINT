@@ -1287,6 +1287,12 @@ typedef struct {
    * the probe as a page. Once per run. */
   const char *prev_url;     /* the URL of the page read before this one      */
   int   pw_probe, pw_probed;
+  /* Page 1's record identities, so the probe's response can be emitted MINUS
+   * the records we already have. The ordered hash above cannot do it here: the
+   * detail hops of page 1 run between the probe's two requests, which is what
+   * jsonlist_page_fps()'s comment is about. */
+  unsigned long long *probe_fps;
+  int   probe_nfps;
   /* What a detail hop is sent with: the row's own headers (token, UA, Accept,
    * Content-Type, {key} expanded) minus conditional ones and minus the
    * content type the engine itself adds for a POST body — plus the JSON Accept
@@ -2374,32 +2380,61 @@ static int hp_run_json(hp_run_state *st, const char *body) {
    * to the page ceiling, and the ceiling then filed a truncation notice
    * claiming pages were pending. A repeat is the end of what this URL can
    * reach, not a page of records. */
+  /* On the page-1 probe's response: which of its records page 1 did NOT
+   * carry. NULL on every other page. */
+  unsigned char *probe_new = NULL;
+  int probe_new_n = 0;
   if (st->rec_guard && arr_n > 0) {
     unsigned long long fp = jsonlist_page_fp(arr);
-    if (st->page > 1 && st->rec_fp_set && fp == st->rec_fp) {
-      /* page_walk's page-1 probe: the first URL had no page number (or 0), so
-       * the walk asked for page 1 in case the API is 0-based. Getting the
-       * first page back means it is 1-based and page 1 was already read —
-       * continue at page 2. Anything else is a cursor being ignored. */
-      char *p2 = (st->pw && !st->pw_probed && st->prev_url)
-                   ? jsonlist_page_one_retry(st->prev_url, st->url) : NULL;
-      if (p2) {
-        free(st->pw_next);
-        st->pw_next = p2;
-        st->pw_probe = st->pw_probed = 1;
-        st->page_records = arr_n;            /* keep walking */
-      } else {
-        st->rec_repeat = 1;
-        st->page_records = 0;                /* stop: nothing new */
+    /* page_walk's page-1 probe: the first URL had no page number (or 0), so
+     * the walk asked for page 1 in case the API is 0-based. Whether this
+     * response IS that probe is a question about the URL PAIR, and it is asked
+     * that way — it used to be asked only when the ordered hash of the first
+     * eight records matched, which a collection that moves between the two
+     * requests defeats, and this engine's own detail hops put ~70 s between
+     * them (jsonlist_page_fps(), hptest 28c/28d). On a 1-based API the records
+     * are page 1's again, so the page is emitted MINUS the ones we hold:
+     * whatever is left ARRIVED in between and is on this response alone, and
+     * dropping the page would discard it. */
+    char *p2 = (st->pw && !st->pw_probed && st->prev_url && st->page > 1)
+                 ? jsonlist_page_one_retry(st->prev_url, st->url) : NULL;
+    if (p2) {
+      free(st->pw_next);
+      st->pw_next = p2;
+      st->pw_probe = st->pw_probed = 1;
+      st->page_records = arr_n;              /* keep walking */
+      probe_new = calloc((size_t)arr_n, 1);
+      if (probe_new) {
+        int pi = 0;
+        cJSON *pr;
+        cJSON_ArrayForEach(pr, arr) {
+          if (pi >= arr_n) break;
+          if (!jsonlist_fps_has(st->probe_fps, st->probe_nfps, pr)) {
+            probe_new[pi] = 1;
+            probe_new_n++;
+          }
+          pi++;
+        }
       }
+    } else if (st->page > 1 && st->rec_fp_set && fp == st->rec_fp) {
+      /* Not the probe, and the same records again: a cursor being ignored. */
+      st->rec_repeat = 1;
+      st->page_records = 0;                  /* stop: nothing new */
       cJSON_Delete(arr_owned);
       cJSON_Delete(doc);
       return st->emitted;
     }
     st->rec_fp = fp;
     st->rec_fp_set = 1;
+    /* A probe can only follow the first page; keep that page's identities. */
+    if (st->pw && !st->pw_probed && st->page == 1) {
+      free(st->probe_fps);
+      st->probe_fps = jsonlist_page_fps(arr, &st->probe_nfps);
+    }
   }
-  st->available += arr_n;
+  /* What the upstream HANDED OVER: a record the probe re-served is not a
+   * second record, exactly as the whole page was not counted before. */
+  st->available += probe_new ? probe_new_n : arr_n;
   /* The column names for this page, if the row declares where they are. Set
    * BEFORE hp_collision_map, because that function flattens every record to
    * compute its fallback key: a header visible to the emit loop but not to the
@@ -2421,6 +2456,7 @@ static int hp_run_json(hp_run_state *st, const char *body) {
   cJSON_ArrayForEach(rec, arr) {
     if (max && st->emitted >= max) { st->truncated = 1; break; }
     if (st->ctx->cancel && *st->ctx->cancel) { st->truncated = 1; break; }
+    if (probe_new && !probe_new[ri]) { ri++; continue; }   /* already held */
     cJSON *flat = hp_json_flat(s, rec);
     if (!flat) { ri++; continue; }
     st->rec_idx = ri;
@@ -2433,6 +2469,7 @@ static int hp_run_json(hp_run_state *st, const char *body) {
   st->dup_map = NULL;
   st->rec_idx = 0;
   free(dupmap);
+  free(probe_new);
   /* The occurrence numbers hp_collision_map may have allocated share the
    * map's lifetime, and there are four of these sites — freeing in three
    * of them is the shape this tree keeps finding, so it is one call. */
@@ -5523,6 +5560,7 @@ dated_restart:;
   free(page_body);
   free(st.next_url);
   free(st.pw_next);
+  free(st.probe_fps);
   html_seen_free(&st.hseen);
   if (0) {
 date_step_back:
@@ -5533,7 +5571,7 @@ date_step_back:
     vars.day_shift++;
     free(page_url); page_url = NULL;
     free(page_body); page_body = NULL;
-    free(st.next_url); free(st.pw_next);
+    free(st.next_url); free(st.pw_next); free(st.probe_fps);
     html_seen_free(&st.hseen);
     vars.pg_set = 0;
     free(url); free(body);

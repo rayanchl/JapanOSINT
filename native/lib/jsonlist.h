@@ -102,6 +102,16 @@ char *jsonlist_page_one_retry(const char *prev_url, const char *page_url);
  * walk's "did the upstream move?" test. Exported so hpengine's paged JSON rows
  * stop on the same evidence a VJSON walk stops on. */
 unsigned long long jsonlist_page_fp(cJSON *arr);
+
+/* The page-1 probe's identity set. jsonlist_page_fp() above is ORDER-SENSITIVE
+ * and reads only a page's first eight records, which is right for its own
+ * question (did the server re-serve the page we just read?) and wrong for the
+ * one the probe borrowed it for — see the comment on jsonlist_page_fps() in
+ * jsonlist.c. These give a page's records as a sorted set of content
+ * fingerprints, and ask whether one record is in it; a reorder moves neither.
+ * The array is malloc'd and the caller frees it. */
+unsigned long long *jsonlist_page_fps(cJSON *arr, int *n_out);
+int jsonlist_fps_has(const unsigned long long *fps, int n, cJSON *rec);
 /* The upstream's own count of the whole match set, as that walk reads it; -1
  * when it did not say. */
 long jsonlist_declared_total(cJSON *doc);

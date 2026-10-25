@@ -956,6 +956,13 @@ static const hp_source T[] = {
   { .id = "T_PW_ONE", .name = "page_walk, 1-based page numbers", .url = "https://x.test/wo?per_page=2",
     .array_path = "items", .title_keys = "name", .id_keys = "id", .interval = 3600,
     .page_walk = 1, .record_type = "t-pwo", .free_tier = 1, .description = "d" },
+  /* The same 1-based API, whose collection MOVES between the two requests of
+   * the page-1 probe — the shape a row with a detail hop always reads, since
+   * every hop of page 1 lands between them (tests 28c/28d). */
+  { .id = "T_PW_SHUFFLE", .name = "page_walk, 1-based, collection reorders under the probe",
+    .url = "https://x.test/wsh?per_page=2",
+    .array_path = "items", .title_keys = "name", .id_keys = "id", .interval = 3600,
+    .page_walk = 1, .record_type = "t-pwsh", .free_tier = 1, .description = "d" },
   /* An offset the server ignores, under an envelope that changes per request. */
   { .id = "T_PW_VOLATILE", .name = "page_walk, ignored cursor, volatile envelope",
     .url = "https://x.test/wv?limit=2", .array_path = "items",
@@ -3063,6 +3070,68 @@ int main(void) {
        "28: the probe is not counted as a page (page=2's records are page 2)");
   }
 
+  /* 28c. THE SAME 1-BASED WALK, WHOSE COLLECTION MOVED BETWEEN THE PROBE'S TWO
+   *      REQUESTS. The probe's verdict used to rest on jsonlist_page_fp(), an
+   *      ORDER-SENSITIVE hash of the first EIGHT records of a page, compared
+   *      with the page before. In this engine those two requests are not
+   *      adjacent: hp_emit_record spends the detail budget per record inside
+   *      the page loop, so a row with a detail_url puts every hop of page 1
+   *      between the bare request and the page=1 probe. Measured on
+   *      us-sf-311-open311-requests (2026-10-24): ~70 s apart, 58 hops at that
+   *      host's 1200 ms gap. A collection with no ORDER BY reorders in 70 s,
+   *      the hash misses, the probe is read as new data, and the whole of page
+   *      1 is emitted a SECOND time — exactly one page_size of collapse on a
+   *      39-page run and the same 100 on a run cut at page 16, a constant
+   *      independent of pages read. Nothing is lost (the duplicate collapses
+   *      onto its own uid) but it is indistinguishable, in a sweep, from the
+   *      rule 4b loss those numbers are read for.
+   *
+   *      The question does not need the hash: jsonlist_page_one_retry() already
+   *      answers "is this request the probe?" from the URL alone. Here the
+   *      server hands back page 1's two records in the opposite order. */
+  fx_reset();
+  fx_add("wsh?per_page=2&page=1", 200,
+    "{\"items\":[{\"name\":\"a2\",\"id\":\"2\"},{\"name\":\"a1\",\"id\":\"1\"}]}");
+  fx_add("wsh?per_page=2&page=2", 200,
+    "{\"items\":[{\"name\":\"a3\",\"id\":\"3\"},{\"name\":\"a4\",\"id\":\"4\"}]}");
+  fx_add("wsh?per_page=2&page=3", 200,
+    "{\"items\":[{\"name\":\"a5\",\"id\":\"5\"}]}");
+  fx_add("wsh?per_page=2", 200,
+    "{\"items\":[{\"name\":\"a1\",\"id\":\"1\"},{\"name\":\"a2\",\"id\":\"2\"}]}");
+  rc = run_source("T_PW_SHUFFLE", "");
+  ok(rc == 0 && cap_count("t-pwsh", NULL) == 5,
+     "28c: a REORDERED page-1 probe is still the probe — five records, none emitted twice");
+  ok(g_ncalls == 4 && strstr(g_last_url, "page=3") != NULL,
+     "28c: and the walk still continues at 2 and 3");
+
+  /* 28d. The other half, and the reason the fix is not "skip the probe's page":
+   *      a record that ARRIVED between the two requests is on the probe's
+   *      response and on nothing we have read. Dropping the page would discard
+   *      it — rule 2 — so the page is emitted MINUS the records the previous
+   *      page already carried. a9 arrives, a1 repeats, a2 is pushed onto page
+   *      2 by the arrival and is read there. */
+  fx_reset();
+  fx_add("wsh?per_page=2&page=1", 200,
+    "{\"items\":[{\"name\":\"a9\",\"id\":\"9\"},{\"name\":\"a1\",\"id\":\"1\"}]}");
+  fx_add("wsh?per_page=2&page=2", 200,
+    "{\"items\":[{\"name\":\"a3\",\"id\":\"3\"},{\"name\":\"a4\",\"id\":\"4\"}]}");
+  fx_add("wsh?per_page=2&page=3", 200,
+    "{\"items\":[{\"name\":\"a5\",\"id\":\"5\"}]}");
+  fx_add("wsh?per_page=2", 200,
+    "{\"items\":[{\"name\":\"a1\",\"id\":\"1\"},{\"name\":\"a2\",\"id\":\"2\"}]}");
+  rc = run_source("T_PW_SHUFFLE", "");
+  ok(rc == 0 && g_cap_ids_has("9"),
+     "28d: a record that arrived between the probe's two requests is NOT discarded");
+  {
+    int n1 = 0;
+    for (int i = 0; i < g_ncap; i++) {
+      const char *bar = strrchr(g_cap[i].key, '|');
+      if (bar && !strcmp(bar + 1, "1")) n1++;
+    }
+    ok(n1 == 1 && cap_count("t-pwsh", NULL) == 6,
+       "28d: and the record the probe repeated is emitted exactly once");
+  }
+
   /* 29. page_walk, the server ignores the cursor and stamps every response
    *     with a fresh `took`. The body hash never matched, so the same two
    *     records were re-emitted for 20 pages and a page-ceiling truncation
@@ -3172,6 +3241,22 @@ int main(void) {
                             "items", "t-vj", "en", "[]");
     ok(n == 3 && g_ncap == 3 && g_ncalls == 3,
        "31b: VJSON 1-based walk: the page-1 probe repeats page 1, nothing re-emitted, page 2 read");
+    /* 31e. The same walk, the same reshuffle as 28c. This path has no detail
+     *      hops to delay the probe, but a slow host does the same thing, and
+     *      it is the same decision in the same function — the defect was
+     *      found in hpengine and fixed in both, per this tree's rule about
+     *      looking for the other copies of a bug. */
+    fx_reset();
+    g_ncap = 0;
+    fx_add("vs?per_page=2&page=1", 200,
+      "{\"items\":[{\"name\":\"b2\",\"id\":\"2\"},{\"name\":\"b1\",\"id\":\"1\"}]}");
+    fx_add("vs?per_page=2&page=2", 200, "{\"items\":[{\"name\":\"b3\",\"id\":\"3\"}]}");
+    fx_add("vs?per_page=2", 200,
+      "{\"items\":[{\"name\":\"b1\",\"id\":\"1\"},{\"name\":\"b2\",\"id\":\"2\"}]}");
+    n = jsonlist_emit_paged(&vs, "VJ_SHUF", NULL, "https://x.test/vs?per_page=2", 1000,
+                            "items", "t-vj", "en", "[]");
+    ok(n == 3 && g_ncap == 3 && g_ncalls == 3,
+       "31e: the VJSON probe survives a reorder — b1/b2 emitted once each, b3 read");
     char *nx = jsonlist_page_one_retry("https://x.test/a?size=2&page=1",
                                        "https://x.test/a?size=2&page=2");
     ok(nx == NULL, "31c: a repeat that is not the page-1 probe is not retried");
