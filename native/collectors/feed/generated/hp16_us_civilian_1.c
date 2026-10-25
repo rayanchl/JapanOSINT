@@ -136,10 +136,37 @@ static const hp_source T[] = {
     .collector = "us_civilian", .category = "civilian",
     .description = "Full record for one case id including the complete free-text description, resolution status_notes, media_url and coordinates.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "civilian-record", .tags = "\"us\",\"civilian\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://mobile311.sfgov.org/open311/v2/requests/101004634285.json",
+    /* WAS A SCHEDULED ROW WITH ONE CASE ID FROZEN INTO ITS URL — case
+     * 101004634285, filed 2026-08-16 and CLOSED — re-read every six hours,
+     * four times a day, forever. An immutable record fetched on a cadence: the
+     * row stored nothing new after its first run and cost a request each time.
+     * This is the openFDA shape rule 3 describes ("scheduled feeds that
+     * re-fetched one 2009 device clearance twice a day"), and the remedy is
+     * the same: it becomes the lookup its own name already claims.
+     *
+     * `{q}` in the path plus `interval = 0` is the whole change, and NO
+     * collector relabel is needed — which is worth stating because rule 3's
+     * text still says the dispatcher asks `collector == "osint"`, and that is
+     * stale. Both predicates are now one rule: `is_entity_pivot()` in
+     * core/osint_dispatch.c delegates to `registry_is_entity_pivot()`, which
+     * reads interval == 0, a collector that is non-empty and does not start
+     * with `_`, and — for an hpengine row — `hp_source_uses_entity()`, i.e. a
+     * `{q`-prefixed token in the url or post body. `us_civilian` satisfies it.
+     * registry.c's own comment says so: "the collector NAME is no longer part
+     * of either rule … `collector != "osint"` would call 1,864 live pivots
+     * dead."
+     *
+     * `.want = HP_NUMERIC` because an Open311 case id is numeric and this path
+     * interpolates straight into the URL: without the shape gate, a word
+     * handed to the dispatcher becomes a 404 fetch instead of a refusal.
+     * `page_walk` is dropped — a single record has no pages, and leaving it
+     * would have the walk probe a second page of a one-record response.
+     * The detail hop stays: it re-reads the same case under detail.* and is
+     * how the row returns the record rather than the summary. */
+    .url = "https://mobile311.sfgov.org/open311/v2/requests/{q}.json",
     .detail_url = "https://mobile311.sfgov.org/open311/v2/requests/{v}.json", .detail_key = "service_request_id",
-    .page_walk = 1,
-    .interval = 21600, .free_tier = 1 },
+    .want = HP_NUMERIC,
+    .interval = 0, .free_tier = 1 },
 
   { .id = "us-sf-311-open311-requests",
     .name = "San Francisco 311 - Open311 GeoReport v2 requests",

@@ -2250,9 +2250,26 @@ checked for.
 python3 native/tools/audit_batch_reachable.py docs/candidate-sources-batch*.txt
 ```
 
-**The DISPATCHER does not test for an entity token, and a wrong `collector`
+**NO LONGER TRUE AS WRITTEN — read the next paragraph before acting on this
+one.** The dispatcher stopped asking about the collector label when the `osint`
+collector was removed (round 5, 2026-10-20): `is_entity_pivot()` in
+`core/osint_dispatch.c` is now a one-line delegation to
+`registry_is_entity_pivot()`, so there is ONE rule, it DOES test for an entity
+token, and the label plays no part beyond being non-empty and not starting with
+`_`. `registry.c` says why in its own comment — "the collector NAME is no
+longer part of either rule: hpengine rows take their table's name as collector
+(2026-10-12), so `collector != "osint"` would call 1,864 live pivots dead."
+**So converting a scheduled row into a pivot needs `interval = 0` and a `{q`
+token, and NOT a relabel.** This text cost a session a wrong plan on
+2026-10-25 (it budgeted a collector relabel for `us-sf-311-open311-request-detail`
+that the code does not require), which is the whole reason the history below is
+kept rather than deleted: the FAILURE it records is still real and still the
+best warning in this file about a repair that lands and does nothing. What has
+changed is only the mechanism.
+
+**The DISPATCHER did not test for an entity token, and a wrong `collector`
 label silently retired 16 live pivots.** `is_entity_pivot()`
-(`core/osint_dispatch.c`) asks `collector == "osint" && update_interval_sec == 0`
+(`core/osint_dispatch.c`) asked `collector == "osint" && update_interval_sec == 0`
 — a proxy for "takes an entity", and it cannot do better, because
 `source_def.url` is the human-facing portal, not the URL template, so nothing
 at that layer can see `{q}`. The proxy holds only because every hand-written
@@ -2651,6 +2668,33 @@ URL took it to 14. So subtract one page size before reading a collision on such
 a row, or bind the first page and remove the artifact — and do NOT widen
 `id_keys` to chase it, which is the same mistake the inclusive-cursor note
 makes one mechanism over.
+
+**That shape needs THREE conditions together, and the fix is in the probe, not
+in rows.** A full first page (a short page ends the walk, so no probe is ever
+issued — `us-austin-apd-crime-arcgis` reads 297 of a declared 1,000 and is
+therefore immune, which also means RAISING a page size below a collection's
+true size can turn a safe row into an exposed one); no page number bound in the
+URL; and a delay between the two requests long enough for the collection to
+move, which on an hpengine row means a detail hop, because `hp_emit_record`
+spends the detail budget per record INSIDE the page loop. Measured on the
+registry: of 351 hp rows declaring `resultRecordCount`/`maxFeatures` with a
+page cursor, only THREE also declare a `detail_url` — `CA_CALGEM_WELLS` and the
+two `IMF_PORTWATCH_*` rows, all at `page_size=1000`, so the false collapse
+would have been 1,000 records rather than 100. Their retained `fetch_log` shows
+it never fired: every recorded run has `stored` at or just above
+`records_fetched` (the surplus is notice uids). `log-retention` prunes that
+table, so absence there is not proof of never — but it is the only evidence
+available and it points one way.
+The remedy is `jsonlist_page_fps()`: the probe's verdict is settled by record
+IDENTITY — each record's own content hash, as a SET — because a reorder cannot
+move a set, while the ordered 8-record `jsonlist_page_fp()` keeps its original
+and correct job of asking "has the server re-served the page we just read".
+And the re-served page is NOT skipped wholesale: a record that arrived between
+the two requests is on that response and on nothing read so far, so dropping
+the page would discard it. The probe emits the complement. `hptest` 28c (pure
+reorder), 28d (a new record at the head of the re-served page) and 31e (the
+same in `jsonlist_emit_paged`, because a shared decision needs both copies
+fixed) pin all three halves.
 
 **What is left after that subtraction is told apart by the run's DURATION, not
 by the count.** The same row read 98 distinct of 100 in 26 s and 66 of 100 over
