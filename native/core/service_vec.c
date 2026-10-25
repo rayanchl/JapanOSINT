@@ -22,11 +22,25 @@
  * the whole point: the registry-order path had to drop them at this size. */
 #define SVEC_TOPK_DEF 60
 /* Cards EMBEDDED per build tick (unchanged cards cost a hash compare and are
- * not counted). The whole registry is ~18,900 cards and was measured at about
+ * not counted). The whole registry was ~18,900 cards and was measured at about
  * 45 minutes of CPU embedding against multilingual-e5-large; one tick holding
  * the _maint lane that long would starve the intel backfill pod that shares
  * it. 4,096 is ~10 minutes, and covers every pivot (embedded FIRST, see the
- * build) in the first tick. JO_SVEC_MAX_PER_RUN overrides; 0 = no cap. */
+ * build) in the first tick. JO_SVEC_MAX_PER_RUN overrides; 0 = no cap.
+ *
+ * THOSE TWO FIGURES ARE A DATED READING, not today's: the registry is 57,921
+ * as of 2026-10-25, about 3x the ~18,900 they were taken at, so a cold full
+ * index is nearer 135 minutes and the 4,096 cap is ~15 ticks from complete
+ * rather than 2. The derived claims still hold at the new scale — a tick is
+ * still ~10 minutes because the CAP, not the registry, sets it, and the
+ * ~1,864 entity pivots still fit inside one tick — which is why the numbers
+ * are marked rather than re-measured here. They cost a real misreading on
+ * 2026-10-25: a 27.3-minute `_svec_index` hold after the registry grew
+ * 57,527 -> 57,921 (a signature change forcing a rebuild) was judged benign by
+ * comparing it against the four-minute figure in the comment BELOW, which
+ * describes the superseded whole-rebuild design over pivots only. 27.3 minutes
+ * matches neither ~10 nor ~45; the measurement that settles it is whether the
+ * NEXT tick is short, since an unchanged card is only a hash compare. */
 #define SVEC_MAX_PER_RUN_DEF 4096
 
 /* The index, as lib/vecindex sees it. It used to be rebuilt WHOLE (no
