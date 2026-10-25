@@ -114,6 +114,11 @@
 #define FTS_FLATTEN_MAX_TOTAL 4096
 char *fts_flatten_json(const char *json);
 
+/* fts_segment() for a record BODY: a body that is a JSON object or array is
+ * segmented as its values (fts_flatten_json's walk), never its keys; any
+ * other body exactly as fts_segment() would. Returns malloc'd. */
+char *fts_segment_body(const char *body);
+
 /* Idempotent. No-op when intel_items_fts already carries FTS_SCHEMA_COLUMNS.
  * Otherwise rebuilds the index in one transaction (see the header comment) and
  * rewrites intel_items_fts_uid_map to match. Call from db_open()'s boot

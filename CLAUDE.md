@@ -4072,17 +4072,23 @@ Engine subtleties worth knowing before writing a row:
   (`csv_parse_wellformed()` skips the repair entirely, for xlsx-written text).
   Blanks before an opening quote are padding in every mode: abuse.ch writes
   `"a", "b"`, and comma mode used to keep the quotes and split tags on commas.
-* **A record's `body` is text, never its JSON.** `core/simhash.c`
-  fingerprints the body to cluster near-duplicate items, and a register's
-  records all share the same JSON keys — so a collector that passed
-  `it.body = <the record's JSON>` made every record a near-duplicate of every
-  other: one false cluster, and a band bucket each insert had to scan.
-  `socrata-sf-business-registrations` crawled at 23 records a second
-  (75,000 in 53 min) until its body became the business's name, owner,
-  address and industry; it then read all 368,735 in 28 min, in 26,883 real
-  clusters. The full record still belongs in `properties_json`. About 19
-  hand-written collectors still pass the JSON as body
-  (`grep -rn "\.body *= *pj" collectors`), unmeasured.
+* **A record's `body` is text, never its JSON** — and the sink no longer
+  trusts that it is. `socrata-sf-business-registrations` passed each
+  licence's JSON as `body` while stamping the same "DataSF open data" /
+  "San Francisco, CA" values on every record, and `core/simhash.c`
+  fingerprinted all 368,735 as near-duplicates: one false cluster, and a band
+  bucket each insert had to scan (23 records a second, until the body became
+  the business's name, owner, address and industry; then 28 min for all of
+  them, in 26,883 real clusters). 205 hand-written collectors pass the JSON
+  as `body` (309 sites, 2026-10-25), so the sink now indexes and fingerprints
+  a JSON body by its VALUES, the way it indexes `properties`
+  (`fts_segment_body()`, core/fts_schema.c, in all five places a body is
+  segmented); the stored body is unchanged. Measured on two of them, the
+  JSON body alone made no false cluster — IRS exempt orgs' largest cluster
+  is 267 chapters of "PTA NEW YORK CONGRESS" before and after, and New
+  Zealand charities is 100 records in 100 clusters — so what the change buys
+  is keys out of search and fingerprints; a collector that stamps constant
+  values on every record still needs a real text body of its own.
 * Use `jo_strcasestr`/`jo_memmem` (`lib/jocore.h`), never `strcasestr`/`memmem`:
   glibc declares them only under `_GNU_SOURCE`, which this tree never defines,
   so on Linux CI they were implicitly declared with a truncated return.
