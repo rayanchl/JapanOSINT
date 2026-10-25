@@ -33325,24 +33325,13 @@ static const hp_source HP3B48_NEWS[] = {
       "17:25:07 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country KG." },
 
-  { .id = "JO48_NEWS_Q104889693_2", .name = "Q104889693 (KG) - Сайт газеты Для Вас",
-    .name_ja = "Q104889693 (KG) - Сайт газеты Для Вас",
-    .category = "news", .collector = "news_europe_east", .portal = "https://dv.kg/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://dv.kg/?feed=rss2&",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 01 Oct 2026 "
-      "17:25:07 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country KG." },
+  /* JO48_NEWS_Q104889693_2: RETIRED 2026-10-25 - the generator emitted this source
+   * twice, the second copy carrying a trailing `&`. Measured 2026-10-25:
+   * the `&` spelling 301s to the canonical URL and returns the identical
+   * item set (10 items, same guid set), so this row cost one duplicate
+   * request AND one redirect hop per run while minting a second uid set
+   * for one read. Survivor: JO48_NEWS_Q104889693.
+   * docs/removed-sources-2026-10-25-twin-rows.tsv */
 
   { .id = "JO48_NEWS_Q4387375", .name = "Azattyk (KG) - Азаттык үналгысы",
     .name_ja = "Azattyk (KG) - Азаттык үналгысы",
@@ -49077,24 +49066,13 @@ static const hp_source HP3B48_NEWS[] = {
       "21:12:01 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country RU." },
 
-  { .id = "JO48_NEWS_Q2044030_2", .name = "Novy Vzglyad (RU) - Издательский Дом «Новый Взгляд»",
-    .name_ja = "Novy Vzglyad (RU) - Издательский Дом «Новый Взгляд»",
-    .category = "news", .collector = "news_europe_east", .portal = "https://www.newlookmedia.ru/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.newlookmedia.ru/?feed=rss2&",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 27 items, RSS2 feed, newest Fri, 02 Oct 2026 "
-      "21:12:01 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country RU." },
+  /* JO48_NEWS_Q2044030_2: RETIRED 2026-10-25 - the generator emitted this source
+   * twice, the second copy carrying a trailing `&`. Measured 2026-10-25:
+   * the `&` spelling 301s to the canonical URL and returns the identical
+   * item set (27 items, same guid set), so this row cost one duplicate
+   * request AND one redirect hop per run while minting a second uid set
+   * for one read. Survivor: JO48_NEWS_Q2044030.
+   * docs/removed-sources-2026-10-25-twin-rows.tsv */
 
   { .id = "JO48_NEWS_Q16271798", .name = "Northern truth (RU) - Газета \"Северная правда\"",
     .name_ja = "Northern truth (RU) - Газета \"Северная правда\"",
@@ -56164,25 +56142,13 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as news-agency, country "
       "UA." },
 
-  { .id = "JO48_NEWS_Q30957186_2", .name = "Center News (UA) - Centernews",
-    .name_ja = "Center News (UA) - Centernews",
-    .category = "news", .collector = "news_europe_east", .portal = "https://www.centernews.com.ua/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.centernews.com.ua/?feed=rss2&",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "17:00:51 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as news-agency, country "
-      "UA." },
+  /* JO48_NEWS_Q30957186_2: RETIRED 2026-10-25 - the generator emitted this source
+   * twice, the second copy carrying a trailing `&`. Measured 2026-10-25:
+   * the `&` spelling 301s to the canonical URL and returns the identical
+   * item set (10 items, same guid set), so this row cost one duplicate
+   * request AND one redirect hop per run while minting a second uid set
+   * for one read. Survivor: JO48_NEWS_Q30957186.
+   * docs/removed-sources-2026-10-25-twin-rows.tsv */
 
   { .id = "JO48_NEWS_Q133832175", .name = "Q133832175 (UA) - Главком",
     .name_ja = "Q133832175 (UA) - Главком",

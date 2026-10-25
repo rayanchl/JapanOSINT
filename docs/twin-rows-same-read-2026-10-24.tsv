@@ -1,3 +1,33 @@
+# RESOLVED 2026-10-25, and three of this file's own statements are corrected
+# by the measurement that resolved it. The 19 groups are real and all 19 are
+# now one row each; the removals, the survivor chosen for each and the live
+# reading behind each are docs/removed-sources-2026-10-25-twin-rows.tsv.
+# Read that file with this one.
+#
+#   * "whose trailing ampersand parses to nothing on the wire" - IT DOES NOT.
+#     On 16 of the 18 hosts the `&` spelling is an HTTP 301 to the canonical
+#     URL, so the duplicate row cost a REDIRECT HOP as well as a duplicate
+#     request. The server canonicalises the character; it does not ignore it.
+#   * "7 are harmless singles carrying the same generator artifact" - harmless
+#     is now measured rather than assumed (all 6 answer both spellings with the
+#     same status, byte count and record count), and there are SIX, not seven.
+#     "25 rows in the tree have a bare trailing `&`" is 24 across six files,
+#     not seven: hp2_eu_dach's `...Judikatur?Applikation=Justiz&` is the FIRST
+#     PART of a multi-part C string literal and does not end the URL at all. A
+#     grep for the bytes `&"` cannot see the concatenation, so it reports that
+#     part as a trailing ampersand - the same shape as this tree's other
+#     counting mistakes, where the tool could not see its real input.
+#   * and the assumption underneath the whole file - that a twin's two halves
+#     are the same read - is FALSE ON ONE HOST, which is why each pair was
+#     measured rather than the family argued. ordinefarmacistiviterbo.it serves
+#     the plain spelling 7 items and the `&` spelling HTTP 200 with a
+#     THREE-BYTE body (a UTF-8 BOM) and no redirect, so JO47_IT_ORFAP_VT_2 was
+#     not a duplicate at all: it fetched 3 bytes and stored nothing on every
+#     run since it shipped, invisible behind a sibling reading the same site
+#     correctly.
+#
+# Everything below is the 2026-10-24 text unchanged.
+#
 # Rows that are the SAME READ under two ids - 19 groups, 2026-10-24.
 #
 # Found while reading the limit-pairs row by row.

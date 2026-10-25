@@ -47126,25 +47126,13 @@ static const hp_source HP3B47_ITGOV[] = {
       "11:20:18 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_IIMVI_2", .name = "Ipab per I Minori di Vicenza (Pubbliche Amministrazioni, "
-      "Vicenza, VI) - IPAB per i Minori di Vicenza",
-    .name_ja = "Ipab per I Minori di Vicenza (Pubbliche Amministrazioni, Vicenza, VI) - IPAB per i Minori di Vicenza",
-    .category = "health", .collector = "itgov_sanita", .portal = "https://www.ipabperiminoridivicenza.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ipabperiminoridivicenza.it/?feed=rss2&",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 6 items, RSS2 feed, newest Thu, 20 Nov 2025 "
-      "11:20:18 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+  /* JO47_IT_IIMVI_2: RETIRED 2026-10-25 - the generator emitted this source
+   * twice, the second copy carrying a trailing `&`. Measured 2026-10-25:
+   * the `&` spelling 301s to the canonical URL and returns the identical
+   * item set (6 items, same guid set), so this row cost one duplicate
+   * request AND one redirect hop per run while minting a second uid set
+   * for one read. Survivor: JO47_IT_IIMVI.
+   * docs/removed-sources-2026-10-25-twin-rows.tsv */
 
   { .id = "JO47_IT_IIRBW_TN", .name = "Istituto di Istruzione La Rosa Bianca Weisse Rose di Cavalese "
       "(Pubbliche Amministrazioni, Cavalese, TN) - Istituto di "
@@ -93038,25 +93026,13 @@ static const hp_source HP3B47_ITGOV[] = {
       "11:40:13 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_JDFF4O40_2", .name = "Consorzio di bonifica Monte-Salorno (Stazioni Appaltanti, Egna, "
-      "BZ) - Bonifizierungskonsortium Gmund-Salurn",
-    .name_ja = "Consorzio di bonifica Monte-Salorno (Stazioni Appaltanti, Egna, BZ) - Bonifizierungskonsortium Gmund-Salurn",
-    .category = "environment", .collector = "itgov_ambiente", .portal = "https://bonif.org/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://bonif.org/?feed=rss2&",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 11 Aug 2026 "
-      "11:40:13 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+  /* JO47_IT_JDFF4O40_2: RETIRED 2026-10-25 - the generator emitted this source
+   * twice, the second copy carrying a trailing `&`. Measured 2026-10-25:
+   * the `&` spelling 301s to the canonical URL and returns the identical
+   * item set (10 items, same guid set), so this row cost one duplicate
+   * request AND one redirect hop per run while minting a second uid set
+   * for one read. Survivor: JO47_IT_JDFF4O40.
+   * docs/removed-sources-2026-10-25-twin-rows.tsv */
 
   { .id = "JO47_IT_JG30T2EL", .name = "Innovaquartu srl (Gestori di Pubblici Servizi, Quartu "
       "Sant'Elena, CA) - InnovaQuartu",
@@ -105747,25 +105723,15 @@ static const hp_source HP3B47_ITGOV[] = {
       "08:36:07 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ORFAP_VT_2", .name = "Ordine dei Farmacisti della Provincia di Viterbo (Pubbliche "
-      "Amministrazioni, Viterbo, VT) - Ordine dei Farmacisti",
-    .name_ja = "Ordine dei Farmacisti della Provincia di Viterbo (Pubbliche Amministrazioni, Viterbo, VT) - Ordine dei Farmacisti",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.ordinefarmacistiviterbo.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ordinefarmacistiviterbo.it/?feed=rss2&",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 7 items, RSS2 feed, newest Tue, 14 Apr 2026 "
-      "08:36:07 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+  /* JO47_IT_ORFAP_VT_2: RETIRED 2026-10-25, and it was never the duplicate it
+   * looked like. The generator emitted this source twice, the second copy
+   * carrying a trailing `&` on the URL. Measured 2026-10-25: the plain
+   * spelling answers 200 with 7 items; the `&` spelling answers 200 with a
+   * THREE-BYTE body (a UTF-8 BOM and nothing else) and no items at all, no
+   * redirect. So this row fetched 3 bytes and stored nothing on every run
+   * since it shipped - rule 1's invisible nothing, hidden behind a sibling
+   * that reads the same site correctly. Survivor: JO47_IT_ORFAP_VT.
+   * docs/removed-sources-2026-10-25-twin-rows.tsv */
 
   { .id = "JO47_IT_ORFAPREN", .name = "Ordine dei Farmacisti della Provincia di Enna (Pubbliche "
       "Amministrazioni, Enna, EN) - Ordine dei Farmacisti della "

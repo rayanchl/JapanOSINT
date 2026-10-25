@@ -8188,24 +8188,13 @@ static const hp_source HP3B44_UKGOV[] = {
       "09:55:36 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_OCLEPYCHARDGROUP_PC_GOV_UK_2", .name = "oclepychardgroup-pc.gov.uk - Ocle Pychard Group Parish Council",
-    .name_ja = "oclepychardgroup-pc.gov.uk - Ocle Pychard Group Parish Council",
-    .category = "government", .portal = "https://oclepychardgroup-pc-gov-uk.stackstaging.com/",
-    .record_type = "government-notice",
-    .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://oclepychardgroup-pc-gov-uk.stackstaging.com/?feed=rss2&",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 10 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "09:55:36 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+  /* JO44_UK_OCLEPYCHARDGROUP_PC_GOV_UK_2: RETIRED 2026-10-25 - the generator emitted this source
+   * twice, the second copy carrying a trailing `&`. Measured 2026-10-25:
+   * the `&` spelling 301s to the canonical URL and returns the identical
+   * item set (10 items, same guid set), so this row cost one duplicate
+   * request AND one redirect hop per run while minting a second uid set
+   * for one read. Survivor: JO44_UK_OCLEPYCHARDGROUP_PC_GOV_UK.
+   * docs/removed-sources-2026-10-25-twin-rows.tsv */
 
   { .id = "JO44_UK_BARTESTREEWITHLUGWARDINEGROUP_PC_GOV_UK", .name = "bartestreewithlugwardinegroup-pc.gov.uk - Bartestree with "
       "Lugwardine Parish Council",

@@ -1,3 +1,25 @@
+# AMENDED 2026-10-25: THREE OF THE 659 IDS NO LONGER EXIST, so the row count
+# is 656 live rows plus three that this inventory predates. Checked by
+# intersecting every id in this file against the collector tree: 655 of 659
+# resolve to a row whose current source still declares the size parameter named
+# here, and the three that resolve to nothing are
+# CR_SANCARLOS_LICORES, CR_SANCARLOS_PATENTES (both retired 2026-10-20, their
+# layers withdrawn from San Carlos's IDE - the evidence is in the group comment
+# at the head of their old position in hp3b19_latam.c) and
+# JO30_GOV_SETAGAYA_EXTINGUISHER (RENAMED, not removed: it is five district
+# rows, JO30_GOV_SETAGAYA_EXTINGUISHER_{SETAGAYA,KITAZAWA,...}).
+#
+# A fourth row's DATA is stale rather than its id: CR_SANCARLOS_PREDIOS is
+# listed here as `maxfeatures`, and that row was re-pointed to WFS 2.0.0 on
+# 2026-10-19 and carries `count`. It reads 20,000 a run over a cycle and is not
+# a non-advanceable row at all.
+#
+# Worth saying plainly because it cost something: two of those three phantom
+# ids were carried out of this file into a session summary as live work to do,
+# and the two rows had been retired with full evidence five days earlier. An
+# inventory is dated the moment it is written; re-resolve its ids against the
+# tree before treating any of them as a finding.
+#
 # CORRECTED 2026-10-25, BEFORE ANY FIX WAS BUILT ON IT. The header below is
 # kept verbatim because its per-row data is sound and its conclusion is not:
 # the 659 rows are real and almost all of them PAGE ALREADY. Read this block

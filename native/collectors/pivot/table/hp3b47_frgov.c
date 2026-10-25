@@ -2508,24 +2508,13 @@ static const hp_source HP3B47_FRGOV[] = {
       "15:16:41 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_55E63C96_F8A4_424C_A9FD_52DDF515B6EF_2", .name = "Mairie - Ableiges (SL, INSEE 95002) - Ableiges",
-    .name_ja = "Mairie - Ableiges (SL, INSEE 95002) - Ableiges",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://ableiges.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ableiges.fr/?feed=rss2&",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 50 items, RSS2 feed, newest Mon, 03 Aug 2026 "
-      "15:16:41 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+  /* JO47_FR_55E63C96_F8A4_424C_A9FD_52DDF515B6EF_2: RETIRED 2026-10-25 - the generator emitted this source
+   * twice, the second copy carrying a trailing `&`. Measured 2026-10-25:
+   * the `&` spelling 301s to the canonical URL and returns the identical
+   * item set (50 items, same guid set), so this row cost one duplicate
+   * request AND one redirect hop per run while minting a second uid set
+   * for one read. Survivor: JO47_FR_55E63C96_F8A4_424C_A9FD_52DDF515B6EF.
+   * docs/removed-sources-2026-10-25-twin-rows.tsv */
 
   { .id = "JO47_FR_560493E5_484F_4400_98A3_272B17F6BA0D", .name = "Mairie - Cambon-et-Salvergues (SL, INSEE 34046) - Cambon et "
       "Salvergues",
@@ -38751,25 +38740,13 @@ static const hp_source HP3B47_FRGOV[] = {
       "08:31:38 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_957C662B_DD64_47C8_9D96_55AC90EC4012_2", .name = "Mairie - Mauvezin-sur-Gupie (SL, INSEE 47163) - "
-      "Mauvezin-sur-Gupie",
-    .name_ja = "Mairie - Mauvezin-sur-Gupie (SL, INSEE 47163) - Mauvezin-sur-Gupie",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://mairie-mauvezinsurgupie.com/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mairie-mauvezinsurgupie.com/?feed=rss2&",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "08:31:38 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+  /* JO47_FR_957C662B_DD64_47C8_9D96_55AC90EC4012_2: RETIRED 2026-10-25 - the generator emitted this source
+   * twice, the second copy carrying a trailing `&`. Measured 2026-10-25:
+   * the `&` spelling 301s to the canonical URL and returns the identical
+   * item set (10 items, same guid set), so this row cost one duplicate
+   * request AND one redirect hop per run while minting a second uid set
+   * for one read. Survivor: JO47_FR_957C662B_DD64_47C8_9D96_55AC90EC4012.
+   * docs/removed-sources-2026-10-25-twin-rows.tsv */
 
   { .id = "JO47_FR_9592A028_216C_4834_8FC6_017654B4EABB", .name = "Mairie - Holnon (SL, INSEE 02382) - mairie-holnon.fr",
     .name_ja = "Mairie - Holnon (SL, INSEE 02382) - mairie-holnon.fr",
@@ -61781,25 +61758,13 @@ static const hp_source HP3B47_FRGOV[] = {
       "19:36:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_9F47A24C_7FA2_449E_9037_10D458C8F241_2", .name = "Mairie - Salles-de-Barbezieux (SL, INSEE 16360) - "
-      "sallesdebarbezieux",
-    .name_ja = "Mairie - Salles-de-Barbezieux (SL, INSEE 16360) - sallesdebarbezieux",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.sallesdebarbezieux.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.sallesdebarbezieux.fr/?feed=rss2&",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 06 Oct 2026 "
-      "19:36:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+  /* JO47_FR_9F47A24C_7FA2_449E_9037_10D458C8F241_2: RETIRED 2026-10-25 - the generator emitted this source
+   * twice, the second copy carrying a trailing `&`. Measured 2026-10-25:
+   * the `&` spelling 301s to the canonical URL and returns the identical
+   * item set (10 items, same guid set), so this row cost one duplicate
+   * request AND one redirect hop per run while minting a second uid set
+   * for one read. Survivor: JO47_FR_9F47A24C_7FA2_449E_9037_10D458C8F241.
+   * docs/removed-sources-2026-10-25-twin-rows.tsv */
 
   { .id = "JO47_FR_9F773CF2_BE12_4343_8383_E2DD275CBF49", .name = "Mairie - Andon (SL, INSEE 06003) - Fête des voisins à Canaux",
     .name_ja = "Mairie - Andon (SL, INSEE 06003) - Fête des voisins à Canaux",
@@ -80791,24 +80756,13 @@ static const hp_source HP3B47_FRGOV[] = {
       "09:03:21 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_02A98D03_72A8_415F_8F91_23E411822B6D_2", .name = "Mairie - Arc-et-Senans (SL, INSEE 25021) - Arc et Senans",
-    .name_ja = "Mairie - Arc-et-Senans (SL, INSEE 25021) - Arc et Senans",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.arc-et-senans.com/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.arc-et-senans.com/?feed=rss2&",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "09:03:21 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+  /* JO47_FR_02A98D03_72A8_415F_8F91_23E411822B6D_2: RETIRED 2026-10-25 - the generator emitted this source
+   * twice, the second copy carrying a trailing `&`. Measured 2026-10-25:
+   * the `&` spelling 301s to the canonical URL and returns the identical
+   * item set (10 items, same guid set), so this row cost one duplicate
+   * request AND one redirect hop per run while minting a second uid set
+   * for one read. Survivor: JO47_FR_02A98D03_72A8_415F_8F91_23E411822B6D.
+   * docs/removed-sources-2026-10-25-twin-rows.tsv */
 
   { .id = "JO47_FR_02DF8FFD_327D_4EF9_8E8F_207779AD5667", .name = "Association d'aide aux victimes et médiation pénale AVMP 32 (SL, "
       "INSEE 32013) - Aide aux Victimes et Mesures Pénales du Gers   "
@@ -109269,25 +109223,13 @@ static const hp_source HP3B47_FRGOV[] = {
       "18:36:32 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_4C91D7C6_8652_4E23_A0DE_42899A4B2950_2", .name = "Mairie - Flancourt-Crescy-en-Roumois (SL, INSEE 27085) - "
-      "Flancourt-Crescy en Roumois",
-    .name_ja = "Mairie - Flancourt-Crescy-en-Roumois (SL, INSEE 27085) - Flancourt-Crescy en Roumois",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "http://flancourt-crescy-en-roumois.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://flancourt-crescy-en-roumois.fr/?feed=rss2&",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 19 Aug 2026 "
-      "18:36:32 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+  /* JO47_FR_4C91D7C6_8652_4E23_A0DE_42899A4B2950_2: RETIRED 2026-10-25 - the generator emitted this source
+   * twice, the second copy carrying a trailing `&`. Measured 2026-10-25:
+   * the `&` spelling 301s to the canonical URL and returns the identical
+   * item set (10 items, same guid set), so this row cost one duplicate
+   * request AND one redirect hop per run while minting a second uid set
+   * for one read. Survivor: JO47_FR_4C91D7C6_8652_4E23_A0DE_42899A4B2950.
+   * docs/removed-sources-2026-10-25-twin-rows.tsv */
 
   { .id = "JO47_FR_4CCFCBF9_726B_48B6_93CF_680BD2CA3402", .name = "Mairie - Sargé-lès-le-Mans (SL, INSEE 72328) - Ville de "
       "Sargé-lès-Le Mans, Sarthe (72)",
@@ -127483,25 +127425,13 @@ static const hp_source HP3B47_FRGOV[] = {
       "10:21:25 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_5BBFC1FF_46F2_4886_A2B8_E42F69A807CF_2", .name = "Mairie - Saint-Riquier-ès-Plains (SL, INSEE 76646) - Mairie de "
-      "Saint Riquier Es Plains",
-    .name_ja = "Mairie - Saint-Riquier-ès-Plains (SL, INSEE 76646) - Mairie de Saint Riquier Es Plains",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "http://st-riquier-es-plains.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://st-riquier-es-plains.fr/?feed=rss2&",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "10:21:25 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+  /* JO47_FR_5BBFC1FF_46F2_4886_A2B8_E42F69A807CF_2: RETIRED 2026-10-25 - the generator emitted this source
+   * twice, the second copy carrying a trailing `&`. Measured 2026-10-25:
+   * the `&` spelling 301s to the canonical URL and returns the identical
+   * item set (10 items, same guid set), so this row cost one duplicate
+   * request AND one redirect hop per run while minting a second uid set
+   * for one read. Survivor: JO47_FR_5BBFC1FF_46F2_4886_A2B8_E42F69A807CF.
+   * docs/removed-sources-2026-10-25-twin-rows.tsv */
 
   { .id = "JO47_FR_5C36EC9C_855F_4884_9D7A_B2177F445CBF", .name = "Mairie - Le Mont-Saint-Adrien (SL, INSEE 60428) - Commune Le "
       "Mont Saint Adrien",
@@ -134628,25 +134558,13 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:13:54 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_A24CFC99_80ED_4B6C_B92F_8078F7B9AEF5_2", .name = "Mairie - Saint-Pierre-de-Curtille (SL, INSEE 73273) - "
-      "Saint-Pierre-de-Curtille",
-    .name_ja = "Mairie - Saint-Pierre-de-Curtille (SL, INSEE 73273) - Saint-Pierre-de-Curtille",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "http://www.saint-pierre-de-curtille.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.saint-pierre-de-curtille.fr/?feed=rss2&",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 03 Jul 2026 "
-      "14:13:54 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+  /* JO47_FR_A24CFC99_80ED_4B6C_B92F_8078F7B9AEF5_2: RETIRED 2026-10-25 - the generator emitted this source
+   * twice, the second copy carrying a trailing `&`. Measured 2026-10-25:
+   * the `&` spelling 301s to the canonical URL and returns the identical
+   * item set (10 items, same guid set), so this row cost one duplicate
+   * request AND one redirect hop per run while minting a second uid set
+   * for one read. Survivor: JO47_FR_A24CFC99_80ED_4B6C_B92F_8078F7B9AEF5.
+   * docs/removed-sources-2026-10-25-twin-rows.tsv */
 
   { .id = "JO47_FR_A29549A0_59B5_4291_B44D_522CC8BF854F", .name = "Mairie - Le Montellier (SL, INSEE 01260) - Mairie de <br>Le "
       "Montellier",
@@ -165018,25 +164936,13 @@ static const hp_source HP3B47_FRGOV[] = {
       "11:51:35 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_BA971EEF_5C84_4844_A634_996B936BEB25_2", .name = "Mairie - Saint-Christophe (SL, INSEE 23186) - Mairie de Saint "
-      "Christophe (23)",
-    .name_ja = "Mairie - Saint-Christophe (SL, INSEE 23186) - Mairie de Saint Christophe (23)",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "http://saintchristophe23.paysdegueret.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://saintchristophe23.paysdegueret.fr/?feed=rss2&",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "11:51:35 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+  /* JO47_FR_BA971EEF_5C84_4844_A634_996B936BEB25_2: RETIRED 2026-10-25 - the generator emitted this source
+   * twice, the second copy carrying a trailing `&`. Measured 2026-10-25:
+   * the `&` spelling 301s to the canonical URL and returns the identical
+   * item set (10 items, same guid set), so this row cost one duplicate
+   * request AND one redirect hop per run while minting a second uid set
+   * for one read. Survivor: JO47_FR_BA971EEF_5C84_4844_A634_996B936BEB25.
+   * docs/removed-sources-2026-10-25-twin-rows.tsv */
 
   { .id = "JO47_FR_BAFB65F6_CD4A_4BDF_8197_613880EB3310", .name = "Mairie - Gratens (SL, INSEE 31229) - Mairie de Gratens",
     .name_ja = "Mairie - Gratens (SL, INSEE 31229) - Mairie de Gratens",
@@ -170956,25 +170862,13 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:27:53 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_20CB2477_AD84_4F36_B602_CC0F8835F493_2", .name = "Centre communal d'action sociale (CCAS) - Poisvilliers (SL, "
-      "INSEE 28301) - Commune de Poisvilliers",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Poisvilliers (SL, INSEE 28301) - Commune de Poisvilliers",
-    .category = "local-gov", .collector = "frgov_social", .portal = "http://www.poisvilliers.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.poisvilliers.fr/?feed=rss2&",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Tue, 12 Nov 2024 "
-      "14:27:53 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+  /* JO47_FR_20CB2477_AD84_4F36_B602_CC0F8835F493_2: RETIRED 2026-10-25 - the generator emitted this source
+   * twice, the second copy carrying a trailing `&`. Measured 2026-10-25:
+   * the `&` spelling 301s to the canonical URL and returns the identical
+   * item set (10 items, same guid set), so this row cost one duplicate
+   * request AND one redirect hop per run while minting a second uid set
+   * for one read. Survivor: JO47_FR_20CB2477_AD84_4F36_B602_CC0F8835F493.
+   * docs/removed-sources-2026-10-25-twin-rows.tsv */
 
   { .id = "JO47_FR_20D12B4D_E8BE_4594_A004_B9FE3ABDF190", .name = "Mairie - Cosnac (SL, INSEE 19063) - Le site de la ville de "
       "Cosnac",

@@ -2883,24 +2883,15 @@ static const hp_source HP3B44_USGOV[] = {
       "00:51:35 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_CASTANEATOWNSHIPPA_GOV_2", .name = "Castanea Township (City, Lock Haven, PA) - Castanea Township",
-    .name_ja = "Castanea Township (City, Lock Haven, PA) - Castanea Township",
-    .category = "government", .portal = "https://www.castaneatownshippa.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.castaneatownshippa.gov/?feed=rss2&",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 1 items, RSS2 feed, newest Sun, 10 Sep 2023 "
-      "00:51:35 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+  /* JO44_US_CASTANEATOWNSHIPPA_GOV_2: RETIRED 2026-10-25 - the generator emitted this source
+   * twice, the second copy carrying a trailing `&`. Both spellings answered
+   * 200 with one item and the identical guid set when measured earlier that
+   * day; the re-read an hour later timed out on BOTH spellings, which is a
+   * reading of the path and not of the row. Kept as two readings rather
+   * than one: the removal rests on the earlier measurement plus the fact
+   * that every field deciding the read is identical to JO44_US_CASTANEATOWNSHIPPA_GOV,
+   * which survives.
+   * docs/removed-sources-2026-10-25-twin-rows.tsv */
 
   { .id = "JO44_US_CASTLEPINESCO_GOV", .name = "City Of Castle Pines (City, Castle Pines, CO) - City of Castle "
       "Pines",

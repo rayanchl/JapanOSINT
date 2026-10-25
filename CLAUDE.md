@@ -349,6 +349,13 @@ that replaced them survive, so no coverage is lost. **A sweep's verdict is
 about the URL it sent, not about the row's name** — re-read a removal against
 the row as it stands now.
 
+**The registered count is 57,901** (2026-10-25): 57,921 less the twenty rows
+of the nineteen twin groups below — one read registered twice, nineteen times
+over. MEASURED from that build: `make source-count` 57,901 and the binary's own
+`--list-sources` 57,901 with 0 duplicates, 0 dropped and 0 never-runs, both
+floors re-recorded at 57,901. The number was predicted by arithmetic and then
+read, which is the only order this file accepts.
+
 **Measured 2026-10-25 on the merged tree at 005e4ee8** (main's 57,923 plus the two IOC sea-level retirements rebased onto it, `sci-ocean-ioc-sealevel-tab` and `geo-ioc-sealevel-stations`): registry 57,921, `make source-count` 57,921, both floors re-recorded at 57,921 from that build, not by arithmetic.
 
 **Main's count was 57,394** (2026-10-25): 57,393 plus `US_FCC_ENFORCEMENT`
@@ -505,6 +512,63 @@ LESS — a newspaper search whose real filter finds nothing, a Joomla row then
 served the Atom it asked for against an RSS declaration, a CMS honouring a
 small `displayCount` — and keep the `&amp;` with a marker on the row. Measure
 both URLs before changing one. Ledger: `docs/SOURCE_COUNT_LEDGER.md`.
+
+**AND WHAT A DECODE LEAVES BEHIND IS A TWIN NO DUPLICATE CHECK CAN SEE**
+(2026-10-25, `docs/removed-sources-2026-10-25-twin-rows.tsv`). A
+`?feed=rss2&amp;` decodes to `?feed=rss2&`, whose trailing ampersand still
+distinguishes two rows to a STRING comparison — so `check_dup_endpoint`, which
+groups on host + path + query textually, could not group them, and neither
+could the limit-pair harvest, which requires every other parameter to match.
+**19 groups, 38 rows, 19 redundant registrations**, each group inside a single
+file: a generator emitting one source twice, which noticed the NAMES collided
+and appended `_2` to the second id rather than concluding it had one source.
+They were found by fingerprinting the READ rather than comparing names —
+normalised URL + array_path + id_keys + title_keys + record_type + detail_url +
+detail_key + mode + csv_delim + post_body + next_path — and 31 groups became 19
+once two over-broad normalisations were corrected, a `page` that is a CONTENT
+selector and a dropped fragment that is a SHEET selector. The corrections only
+ever shrink the claim.
+
+Three things the repair measured that the finding had assumed, and each one
+mattered:
+
+* **the ampersand does not "parse to nothing on the wire" — it is a 301** to
+  the canonical URL on 16 of the 18 hosts, so the duplicate row cost a redirect
+  hop as well as a duplicate request. The server canonicalises the character
+  rather than ignoring it.
+* **one pair was never the same read at all**, which is why each was measured
+  instead of the family argued. `ordinefarmacistiviterbo.it` answers the plain
+  spelling with 7 items and the `&` spelling with HTTP **200 and a THREE-BYTE
+  body** — a UTF-8 BOM, nothing else — with no redirect. So that row fetched 3
+  bytes and stored nothing on every run since it shipped: rule 1's invisible
+  nothing, hidden behind a sibling reading the same site correctly. A
+  per-family argument would have retired it for the wrong reason and written
+  down the wrong fact.
+* **and the population carrying the artifact was 24 rows across six files, not
+  25 across seven.** `hp2_eu_dach`'s
+  `data.bka.gv.at/.../Judikatur?Applikation=Justiz&` is the FIRST PART of a
+  multi-part C string literal and does not end that URL at all; a grep for the
+  bytes `&"` cannot see the concatenation and reports it as a trailing
+  ampersand. **Concatenate a multi-part literal before reading its last
+  character** — this is the same shape as every other miscount in this file,
+  where the tool could not see its real input.
+
+The six genuine singles keep theirs, and that is measured too: each answers
+both spellings with the same status, the same byte count and the same record
+count, so the artifact is harmless there as a reading rather than as the
+finding's assumption. Changing a live row's URL to save nothing is how a
+validated row becomes unvalidated.
+
+Which half survives is a per-row judgement and the removal file makes it: the
+suffixed `_2` id is the generator's second emission, so the base id is the one
+with stored history and other rows' references. For the one group that is not
+this artifact — three World Bank country rows, two generated and one curated —
+the curated row survives, and nothing is lost because
+`api.worldbank.org/v2/country` answers `{"pages":1,"total":296}` at that row's
+own `per_page=300`: one page is the whole collection, measured through the
+engine at 296 emitted / 296 stored. Rows a removal leaves behind in an OLD
+database are what `tools/cleanup_stale_uids.py` is for; it reports by default
+and deletes only rows whose replacement is proven to exist.
 
 **Main's count was 57,536** (2026-10-21): main's 57,415 (below) plus
 this branch's 121 on the same 56,955 base — batch 51's 136, less 29

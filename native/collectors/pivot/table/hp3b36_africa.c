@@ -1435,49 +1435,34 @@ static const hp_source HP3B36_AFRICA[] = {
       "— a series with nulls would collapse every one of them onto a "
       "single row." },
 
-  { .id = "AF_WORLDBANK_COUNTRY", .name = "World Bank reference — Worldbank Country",
-    .category = "economy", .portal = "https://data.worldbank.org",
-    .record_type = "worldbank-reference",
-    .tags = "\"worldbank\",\"reference\",\"economy\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.worldbank.org/v2/country?format=json&per_page=400",
-    .array_path = "1",
-    .id_keys = "id",
-    .interval = 86400,
-    .page_param = "page",
-    .title_keys = "name",
-    .description = "World Bank reference on api.worldbank.org. Fetched live "
-      "2026-10-05 under the engine's own User-Agent: 295 records in "
-      "113590 bytes. First record's fields: "
-      "id,iso2Code,name,region,adminregion,incomeLevel,lendingType,capitalCity,longitude,latitude. "
-      "The data array is the second ELEMENT of a positional root array "
-      "and has no key; array_path \"1\" names it by position, so the "
-      "page past the end, [meta, []], reads empty and ends the walk. "
-      "Discovery found the same array (66 "
-      "observations against a 1-object metadata head)." },
+  /* AF_WORLDBANK_COUNTRY and WORLD_WB_COUNTRY stood here and are RETIRED
+   * 2026-10-25. They sat 21 lines apart in this file and were one read registered
+   * twice: identical in every field that decides what is fetched and how it is
+   * keyed - category, portal, record_type, tags, mode, array_path, id_keys,
+   * interval, page_param, title_keys - with VERBATIM identical descriptions
+   * carrying the same measurement ("295 records in 113590 bytes"). They differed
+   * only in id, name and `per_page`, 400 against 500.
+   *
+   * The survivor is WORLDBANK_COUNTRY_REGISTER in hp3b19_intlorg.c, and it is the
+   * curated row rather than either generator output: it carries a name_ja, the
+   * record_type `country-reference`, and a description that says what the code list
+   * IS - "what makes those series joinable to anything else" - where these two
+   * restate their own probe.
+   *
+   * Nothing is lost by keeping one, and that was measured rather than assumed:
+   * api.worldbank.org/v2/country answers `{"page":1,"pages":1,"per_page":"300",
+   * "total":296}` at the survivor's own per_page of 300, so one page is the whole
+   * collection and no reading depends on the 400 or the 500. Its weekly cadence
+   * against these two dailies is the one real difference, and a code list of
+   * economies and regional aggregates is not a daily publication.
+   *
+   * The third row is what made this findable at all: three rows agreeing on one
+   * upstream read like corroboration, so the check that found them fingerprints the
+   * READ - normalised URL + array_path + id_keys + title_keys + record_type +
+   * detail_url + detail_key + mode + csv_delim + post_body + next_path - rather
+   * than comparing names. docs/removed-sources-2026-10-25-twin-rows.tsv */
 
-  { .id = "WORLD_WB_COUNTRY", .name = "World Bank reference — Wb Country",
-    .category = "economy", .portal = "https://data.worldbank.org",
-    .record_type = "worldbank-reference",
-    .tags = "\"worldbank\",\"reference\",\"economy\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.worldbank.org/v2/country?format=json&per_page=500",
-    .array_path = "1",
-    .id_keys = "id",
-    .interval = 86400,
-    .page_param = "page",
-    .title_keys = "name",
-    .description = "World Bank reference on api.worldbank.org. Fetched live "
-      "2026-10-05 under the engine's own User-Agent: 295 records in "
-      "113590 bytes. First record's fields: "
-      "id,iso2Code,name,region,adminregion,incomeLevel,lendingType,capitalCity,longitude,latitude. "
-      "The data array is the second ELEMENT of a positional root array "
-      "and has no key; array_path \"1\" names it by position, so the "
-      "page past the end, [meta, []], reads empty and ends the walk. "
-      "Discovery found the same array (66 "
-      "observations against a 1-object metadata head)." },
-
-  { .id = "WORLD_WB_INCOMELEVEL", .name = "World Bank reference — Wb Incomelevel",
+    { .id = "WORLD_WB_INCOMELEVEL", .name = "World Bank reference — Wb Incomelevel",
     .category = "economy", .portal = "https://data.worldbank.org",
     .record_type = "worldbank-reference",
     .tags = "\"worldbank\",\"reference\",\"economy\"",

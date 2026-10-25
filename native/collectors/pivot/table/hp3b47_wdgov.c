@@ -17149,25 +17149,13 @@ static const hp_source HP3B47_WDGOV[] = {
       "09:50:54 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q3407467_2", .name = "Ombudsman of the Philippines (government-agency, PH) - Office of "
-      "the Ombudsman",
-    .name_ja = "Ombudsman of the Philippines (government-agency, PH) - Office of the Ombudsman",
-    .category = "government", .portal = "https://www.ombudsman.gov.ph/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ombudsman.gov.ph/?feed=rss2&",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "09:50:54 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
+  /* JO47_WD_Q3407467_2: RETIRED 2026-10-25 - the generator emitted this source
+   * twice, the second copy carrying a trailing `&`. Measured 2026-10-25:
+   * the `&` spelling 301s to the canonical URL and returns the identical
+   * item set (10 items, same guid set), so this row cost one duplicate
+   * request AND one redirect hop per run while minting a second uid set
+   * for one read. Survivor: JO47_WD_Q3407467.
+   * docs/removed-sources-2026-10-25-twin-rows.tsv */
 
   { .id = "JO47_WD_Q31810190", .name = "Mactan Cebu International Airport Authority (government-agency, "
       "PH) - Mactan – Cebu International Airport Authority",

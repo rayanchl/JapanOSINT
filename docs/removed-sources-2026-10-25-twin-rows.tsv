@@ -1,0 +1,86 @@
+# Rows removed 2026-10-25: the duplicate half of 19 twin groups.
+#
+# Each group was ONE READ registered twice. The finding is
+# docs/twin-rows-same-read-2026-10-24.tsv, which fingerprinted the read itself
+# across all 44,112 declarative rows - normalised URL + array_path + id_keys +
+# title_keys + record_type + detail_url + detail_key + mode + csv_delim +
+# post_body + next_path - and reported 19 groups while saying in its own header
+# that it decided nothing, because which half survives is a per-row judgement.
+# This file makes that judgement, and it rests on two measurements taken before
+# anything was removed.
+#
+# ONE: the structural half. Each pair's two struct blocks were extracted from
+# the C and compared field by field. 18 of 19 are IDENTICAL in every field
+# except id, name, name_ja and the trailing `&` on the url. The 19th is the
+# World Bank pair, which differs additionally in `per_page` (400 against 500).
+#
+# TWO: the live half, 2026-10-25. Both spellings of every endpoint were fetched
+# and their item sets compared by guid.
+#
+# WHAT THAT MEASUREMENT CORRECTED IN THE FINDING. The 2026-10-24 file says the
+# trailing ampersand "parses to nothing on the wire". It does not: on 16 of the
+# 18 hosts the `&` spelling is a 301 REDIRECT to the canonical URL, so the
+# duplicate row cost a redirect hop on top of its duplicate request. The
+# mechanism is the server canonicalising the URL, not the server ignoring the
+# character - and on one host it is neither.
+#
+# AND THE ONE HOST WHERE THE TWO HALVES ARE NOT THE SAME READ AT ALL is the
+# reason this was worth measuring per row rather than per family.
+# ordinefarmacistiviterbo.it answers the plain spelling with 7 items and the `&`
+# spelling with HTTP 200 and a three-byte body - a UTF-8 BOM and nothing else -
+# with no redirect. So JO47_IT_ORFAP_VT_2 was not a duplicate; it was a row
+# fetching 3 bytes and storing nothing on every run, invisible behind a sibling
+# that reads the same site correctly. A per-family argument would have retired
+# it for the wrong reason and recorded the wrong fact.
+#
+# ONE GROUP IS UNMEASURED TODAY AND IS REMOVED ANYWAY, SAID PLAINLY.
+# castaneatownshippa.gov answered both spellings with 200, one item and the
+# identical guid set when first read; an hour later both spellings timed out.
+# The removal there rests on the earlier reading plus the structural identity,
+# not on the timeout, which is a reading of this container's egress path.
+#
+# NO COVERAGE IS LOST. Every removed row's endpoint is still read by the
+# surviving row named beside it, under the id that existing stored uids and any
+# other row already reference - the suffixed `_2` id is the generator's second
+# emission, so the base id is the one with history. Rows the removal leaves
+# behind in an OLD database are what tools/cleanup_stale_uids.py exists for; it
+# reports by default and deletes only rows whose replacement is proven to
+# exist. It has NOT been run.
+#
+# THE SEVEN - SIX - TRAILING-AMPERSAND SINGLES ARE NOT TOUCHED, AND THAT IS
+# ALSO MEASURED. The 2026-10-24 file counted 25 rows in the tree carrying a
+# bare trailing `&` across seven files. Re-counted with a parser that
+# CONCATENATES a multi-part C string literal before looking at its last
+# character, it is 24 across six: hp2_eu_dach's
+# `data.bka.gv.at/.../Judikatur?Applikation=Justiz&` is the FIRST part of a
+# multi-part literal and does not end the URL at all, which a grep for the
+# bytes `&"` reports as a trailing ampersand. 18 of the 24 are the halves
+# removed here. The remaining 6 were each fetched both ways on 2026-10-25 and
+# every one is SAME - same status, same byte count, same record count - so the
+# ampersand is harmless on those six as a measurement rather than as the
+# earlier file's assumption. They keep it: changing a live row's URL to save
+# nothing is how a validated row becomes unvalidated.
+#
+# group	removed_id	surviving_id	file	url	verdict	items_plain	items_amp	evidence
+
+group	removed_id	surviving_id	file	url	verdict	items_plain	items_amp	evidence
+1	AF_WORLDBANK_COUNTRY	WORLDBANK_COUNTRY_REGISTER	native/collectors/pivot/table/hp3b36_africa.c	https://api.worldbank.org/v2/country?format=json&per_page=400	SAME_COLLECTION_CURATED_ROW_KEPT	296	296	api.worldbank.org/v2/country answers {"page":1,"pages":1,"per_page":"300","total":296} at the survivor's own per_page, so one page is the whole collection and neither the 400 nor the 500 reaches anything the 300 does not; survivor is the curated row in hp3b19_intlorg.c, these two are generator output with verbatim-identical descriptions
+1	WORLD_WB_COUNTRY	WORLDBANK_COUNTRY_REGISTER	native/collectors/pivot/table/hp3b36_africa.c	https://api.worldbank.org/v2/country?format=json&per_page=500	SAME_COLLECTION_CURATED_ROW_KEPT	296	296	api.worldbank.org/v2/country answers {"page":1,"pages":1,"per_page":"300","total":296} at the survivor's own per_page, so one page is the whole collection and neither the 400 nor the 500 reaches anything the 300 does not; survivor is the curated row in hp3b19_intlorg.c, these two are generator output with verbatim-identical descriptions
+2	JO44_UK_OCLEPYCHARDGROUP_PC_GOV_UK_2	JO44_UK_OCLEPYCHARDGROUP_PC_GOV_UK	native/collectors/pivot/table/hp3b44_ukgov.c	https://oclepychardgroup-pc-gov-uk.stackstaging.com/?feed=rss2	SAME_ITEM_SET	10	10	both 200; identical guid set; the & spelling reached it through 1 redirect to the canonical URL
+3	JO44_US_CASTANEATOWNSHIPPA_GOV_2	JO44_US_CASTANEATOWNSHIPPA_GOV	native/collectors/pivot/table/hp3b44_usgov.c	https://www.castaneatownshippa.gov/?feed=rss2	SAME_ITEM_SET_EARLIER_READING	1	1	both 200 with 1 item and the identical guid set on the first read; a re-read an hour later timed out on BOTH spellings, which is a reading of the path and not of the row
+4	JO47_FR_55E63C96_F8A4_424C_A9FD_52DDF515B6EF_2	JO47_FR_55E63C96_F8A4_424C_A9FD_52DDF515B6EF	native/collectors/pivot/table/hp3b47_frgov.c	https://ableiges.fr/?feed=rss2	SAME_ITEM_SET	50	50	both 200; identical guid set; 1 redirect
+5	JO47_FR_957C662B_DD64_47C8_9D96_55AC90EC4012_2	JO47_FR_957C662B_DD64_47C8_9D96_55AC90EC4012	native/collectors/pivot/table/hp3b47_frgov.c	https://mairie-mauvezinsurgupie.com/?feed=rss2	SAME_ITEM_SET	10	10	both 200; identical guid set; 1 redirect
+6	JO47_FR_9F47A24C_7FA2_449E_9037_10D458C8F241_2	JO47_FR_9F47A24C_7FA2_449E_9037_10D458C8F241	native/collectors/pivot/table/hp3b47_frgov.c	https://www.sallesdebarbezieux.fr/?feed=rss2	SAME_ITEM_SET	10	10	both 200; identical guid set; 1 redirect
+7	JO47_FR_02A98D03_72A8_415F_8F91_23E411822B6D_2	JO47_FR_02A98D03_72A8_415F_8F91_23E411822B6D	native/collectors/pivot/table/hp3b47_frgov.c	https://www.arc-et-senans.com/?feed=rss2	SAME_ITEM_SET	10	10	both 200; identical guid set; 1 redirect
+8	JO47_FR_4C91D7C6_8652_4E23_A0DE_42899A4B2950_2	JO47_FR_4C91D7C6_8652_4E23_A0DE_42899A4B2950	native/collectors/pivot/table/hp3b47_frgov.c	http://flancourt-crescy-en-roumois.fr/?feed=rss2	SAME_ITEM_SET	10	10	both 200; identical guid set; 1 redirect
+9	JO47_FR_5BBFC1FF_46F2_4886_A2B8_E42F69A807CF_2	JO47_FR_5BBFC1FF_46F2_4886_A2B8_E42F69A807CF	native/collectors/pivot/table/hp3b47_frgov.c	http://st-riquier-es-plains.fr/?feed=rss2	SAME_ITEM_SET	10	10	both 200; identical guid set; 1 redirect
+10	JO47_FR_A24CFC99_80ED_4B6C_B92F_8078F7B9AEF5_2	JO47_FR_A24CFC99_80ED_4B6C_B92F_8078F7B9AEF5	native/collectors/pivot/table/hp3b47_frgov.c	http://www.saint-pierre-de-curtille.fr/?feed=rss2	SAME_ITEM_SET	10	10	both 200; identical guid set; 1 redirect
+11	JO47_FR_BA971EEF_5C84_4844_A634_996B936BEB25_2	JO47_FR_BA971EEF_5C84_4844_A634_996B936BEB25	native/collectors/pivot/table/hp3b47_frgov.c	http://saintchristophe23.paysdegueret.fr/?feed=rss2	SAME_ITEM_SET	10	10	both 200; identical guid set; 1 redirect
+12	JO47_FR_20CB2477_AD84_4F36_B602_CC0F8835F493_2	JO47_FR_20CB2477_AD84_4F36_B602_CC0F8835F493	native/collectors/pivot/table/hp3b47_frgov.c	http://www.poisvilliers.fr/?feed=rss2	SAME_ITEM_SET	10	10	both 200; identical guid set; 1 redirect
+13	JO47_IT_IIMVI_2	JO47_IT_IIMVI	native/collectors/pivot/table/hp3b47_itgov.c	https://www.ipabperiminoridivicenza.it/?feed=rss2	SAME_ITEM_SET	6	6	both 200; identical guid set; 1 redirect
+14	JO47_IT_JDFF4O40_2	JO47_IT_JDFF4O40	native/collectors/pivot/table/hp3b47_itgov.c	https://bonif.org/?feed=rss2	SAME_ITEM_SET	10	10	both 200; identical guid set; 1 redirect
+15	JO47_IT_ORFAP_VT_2	JO47_IT_ORFAP_VT	native/collectors/pivot/table/hp3b47_itgov.c	https://www.ordinefarmacistiviterbo.it/?feed=rss2	AMP_HALF_IS_DEAD	7	0	plain 200, 23687 bytes, 7 items; the & spelling 200 with a THREE-BYTE body (a UTF-8 BOM, nothing else), 0 items, NO redirect - this row fetched 3 bytes and stored nothing on every run since it shipped
+16	JO47_WD_Q3407467_2	JO47_WD_Q3407467	native/collectors/pivot/table/hp3b47_wdgov.c	https://www.ombudsman.gov.ph/?feed=rss2	SAME_ITEM_SET	10	10	both 200; identical guid set; 1 redirect
+17	JO48_NEWS_Q104889693_2	JO48_NEWS_Q104889693	native/collectors/pivot/table/hp3b48_news.c	https://dv.kg/?feed=rss2	SAME_ITEM_SET	10	10	both 200; identical guid set; 1 redirect
+18	JO48_NEWS_Q2044030_2	JO48_NEWS_Q2044030	native/collectors/pivot/table/hp3b48_news.c	https://www.newlookmedia.ru/?feed=rss2	SAME_ITEM_SET	27	27	both 200; identical guid set; 1 redirect
+19	JO48_NEWS_Q30957186_2	JO48_NEWS_Q30957186	native/collectors/pivot/table/hp3b48_news.c	https://www.centernews.com.ua/?feed=rss2	SAME_ITEM_SET	10	10	both 200; identical guid set; 1 redirect
