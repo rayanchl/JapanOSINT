@@ -1,3 +1,148 @@
+# CORRECTED 2026-10-25, BEFORE ANY FIX WAS BUILT ON IT. The header below is
+# kept verbatim because its per-row data is sound and its conclusion is not:
+# the 659 rows are real and almost all of them PAGE ALREADY. Read this block
+# first.
+#
+# What the original pass measured: that each of these rows declares a page size
+# whose spelling sits on jsonlist's EXTRA list rather than PAGERS. True.
+# What it then CONCLUDED: that each therefore makes one request per run, and
+# that two PAGERS entries would make all 659 walk. Both wrong, because the
+# conclusion assumed every row reaches jsonlist_next_page(), and it never
+# checked each row's own declared opts or its construct.
+#
+# Re-derived from the C, which is the maintained copy:
+#
+#   357  hpengine rows in collectors/pivot/table/
+#          352 of them DECLARE paging already -- 343 `page_param=resultOffset`,
+#          8 `startIndex`, 1 `page_walk=1` -- with a `page_size`, so they page
+#          through declared opts and a PAGERS entry was never relevant to them.
+#          5 declare nothing (named below).
+#   300  VGEO rows (299 VGEO + 1 VGEO_IDKEYS). VGEO does not go through
+#          jsonlist_emit_paged() AT ALL; `geojson_emit_paged()` in
+#          lib/geojson.c has its own four-mechanism pager, and mechanism 1 is
+#          precisely the ArcGIS case: on `exceededTransferLimit` it advances
+#          `resultOffset` by the declared `resultRecordCount`.
+#     2  VJSON rows -- the ONLY rows a PAGERS entry would have reached.
+#
+# So the proposed two-line engine change would have altered 2 rows, not 659.
+# The cross-check that the new classification is the right one: it counts
+# exactly 154 rows carrying `resultOffset`/`startIndex` in their own URL, the
+# same 154 the column below reports, and attributes all of them to the hp half.
+#
+# THE REMAINING DEFECT IS SMALLER AND DIFFERENT. Of the 357 hp rows, 209 page
+# with an order clause, 122 page by offset with NONE, 21 have no sortable field
+# that could be established, and 5 declare no paging at all
+# (BR_INPE_DETER_ALERTS, BR_INPE_PRODES_YEARLY, CR_SNIT_DISTRITOS,
+# IE_EPA_AIR_SITES, IE_EPA_BATHING_WATERS -- all WFS rows on `maxFeatures`).
+#
+# AND THE 122 WERE MEASURED RATHER THAN ASSUMED, which is the only reason this
+# file does not now recommend a 122-row edit as a recovery. One row per host,
+# four requests each -- offset 0 and offset 50, unsorted, then the same two
+# with `orderByFields=<the layer's own oid>` -- comparing OBJECT IDS, not
+# bodies:
+#
+#   ALREADY_STABLE  15 hosts / 109 rows   unsorted overlap 0 of 50 on EVERY
+#                                         host: they serve a stable order with
+#                                         no sort asked for
+#   SHORT            3 hosts /  13 rows   the layer holds less than one page,
+#                                         so there is no seam to lose
+#   SKIP_PROVEN      0
+#   SORT_REFUSED     0                    the clause is accepted everywhere
+#   SORT_IGNORED     0                    and honoured: sorted pages are
+#                                         disjoint and ascending across the
+#                                         seam on all 15
+#
+# So adding `orderByFields` to those 122 rows recovers NOTHING measurable
+# today. It remains what CLAUDE.md's rule asks for -- an offset walk should
+# name a stable sort -- and it is free, since every one of the 122 sits on a
+# layer declaring `supportsOrderBy: yes`. But it is prophylaxis against the
+# order changing, not a repair, and must not be reported as records recovered.
+#
+# ONE HONEST LIMIT ON THAT READING: those four requests completed in 10
+# seconds. The 2026-10-24 SF 311 measurement showed a collision growing with
+# walk DURATION (98 distinct of 100 in 26 s against 66 of 100 over 164 s),
+# because an unordered index reshuffles under a slower walk. A 10-second probe
+# is the fast case and cannot rule out loss on a walk that takes minutes.
+#
+# `orderByFields` CANNOT BE WRITTEN BLIND, which the layers themselves settled.
+# 639 distinct layers were asked for their own metadata: 497 publish
+# `objectIdField`, 109 more declare the id by TYPE (`esriFieldTypeOID`) while
+# publishing no such key, and 33 were unreachable from here. Across them the
+# id has TWELVE spellings -- OBJECTID 323, ObjectId 67, FID 49, objectid 35,
+# ESRI_OID 7, OID 6, OBJECTID_1 4, fid 2, OBJECTID_12_13, OBJECTID_12,
+# ObjectID, RowID. A batch writing `orderByFields=OBJECTID` would have been
+# wrong on 35% of them, and a wrong field name is an ArcGIS error: it turns a
+# row that reads one page into a row that reads nothing.
+#
+# THE TOOLING ATE THE DATA TWICE ON THE WAY TO THIS CORRECTION, and both are
+# worth more than the finding. (1) The re-classifier blanked comments with
+# `//[^\n]*`, which matched the `//` inside `https://` and blanked every URL in
+# every file; the probe built on it reported "hosts: 0", which is the only
+# reason it was caught. That is the FIFTH instance of that defect in this
+# repo's tooling -- the fourth deleted 106,239 URLs and reported "0 pairs" as a
+# RESULT -- and the resolver written the day before has the guarded
+# `(?<!:)//`, so this was a regression introduced by retyping a pattern that
+# already existed correctly. Its replacement is string-aware and asserts on
+# every call that the count of `http` inside string literals is unchanged,
+# refusing to return a tidy wrong answer. (2) The same script read each hp
+# row's URL as the first `http` string in the row, which is `.portal` -- the
+# human-facing site, not the request template -- so every hp row read as
+# carrying no order clause. Both defects produced CLEAN-LOOKING output.
+#
+# WHAT WAS FIXED ON THE STRENGTH OF THE RE-DERIVATION, 2026-10-25. Eleven rows,
+# 1,320,127 records that exist against 6,702 being read per run:
+#
+#   8 BfS WFS rows (vsrc_environment_1.c), 6,700 of 1,284,847. GeoServer
+#     publishes `totalFeatures` in the same body, and geojson_emit_paged()'s
+#     mechanism 3 advances a cursor when the total exceeds what was read AND
+#     the URL already names one -- so the missing half was the cursor, not the
+#     code. `&sortBy=id&startIndex=0`, verified per typeName first
+#     (startIndex 0 against 20, 20 + 20 features, overlap 0 on all eight).
+#     Two of them declared maxFeatures=2000 and were served 1000 -- the
+#     service's own cap, so every page came back short and a short page reads
+#     as the end of the data; they declare 1000 now. Three BfS rows on the same
+#     service are deliberately untouched because they are COMPLETE (8, 421 and
+#     1,673 features). NOT exhaustive yet, and the file says so with the
+#     arithmetic: the geojson ceiling is 20 pages, so a fixed row reads up to
+#     20,000 a run, which completes only eurdep_latestValue (17 pages) and
+#     discloses a shortfall up to 671 pages for gamma_aerosole. A VGEO row
+#     cannot declare page_max/page_resume; the cycle needs these eight moved to
+#     an hp table, where the ids and keys carry over unchanged.
+#
+#   2 VJSON rows, 1 record each of 6,072 and 29,208 -- and BOTH HAD A SECOND
+#     DEFECT THAT MADE THE FIRST INVISIBLE: `array_path` was "fields", which in
+#     an ArcGIS reply is the COLUMN DEFINITIONS, so each run emitted ~20 field
+#     descriptors titled and keyed as remediation sites and zoning districts.
+#     CLAUDE.md records that trap ("once counted a response's own 252-key
+#     schema block as records") and these two rows shipped with it. Raising the
+#     limit alone would have changed NOTHING while array_path named `fields`,
+#     which is why the record count looked plausible. Now "features", with
+#     `f=geojson` so each feature carries a top-level `id` for VJSON's key
+#     precedence (an `f=json` feature is {attributes, geometry} with no scalar
+#     at the top and would have keyed on a hash), `orderByFields` on the
+#     layer's own id spelling, and the size at the layer's declared
+#     maxRecordCount. Their stored uids are field names and are orphaned;
+#     cleanup_stale_uids.py is the tool and has NOT been run, the live database
+#     being mid-integrity-check.
+#
+#   1 hp row, us-austin-apd-crime-arcgis, `resultRecordCount=2` AND
+#     `array_path = "fields"` -- the same schema-as-records defect, in the only
+#     `page_walk=1` row of the 659. NOT fixed here: origin/main carries a
+#     different version of its file, so it waits for the rebase rather than
+#     being edited into a conflict.
+#
+# Engine: the two PAGERS entries went in, with the EXTRA list removed as dead,
+# and hpengine_test.c's 9i2 was REPOINTED rather than deleted -- it had used
+# `maxFeatures=2` as its example of a size with no movable cursor, a class this
+# change empties, so it now names an unrecognised spelling plus a declared
+# total (the surviving path to that disclosure) and two new cases pin the
+# ArcGIS and WFS families advancing. Gates after: build 0 warnings,
+# lint-sources / source-floor / registry-floor / audit-sources / pagewalktest /
+# hptest all rc=0, registry 57,527 unchanged with 0 never-runs.
+#
+# ---------------------------------------------------------------------------
+# ORIGINAL HEADER, 2026-10-24, kept as written:
+#
 # A page size the walk RECOGNISES and cannot ADVANCE - 659 rows, measured
 # 2026-10-24.
 #

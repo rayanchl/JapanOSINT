@@ -490,13 +490,43 @@ static const hp_source T[] = {
     .page_walk = 1,
     .record_type = "t-auto-short", .free_tier = 1, .description = "d" },
 
-  /* A full page, no next link, and a page size with no cursor sibling the
-   * walk knows (`maxFeatures`): the walk stops — and says so in-band, because
-   * a full page is evidence that more exists. */
+  /* A full page, no next link, and a page size the walk does not recognise at
+   * all (`pageLen`): the walk stops without guessing a cursor — and says so
+   * in-band, because the body ALSO declares a total bigger than what arrived,
+   * which is the upstream's own evidence that more exists.
+   *
+   * This used to be spelled `maxFeatures=2`, as an example of a size the walk
+   * recognises and cannot move. That class is empty since 2026-10-25:
+   * `maxFeatures`/`startIndex` and `resultRecordCount`/`resultOffset` are
+   * PAGERS families now, so every size jl_declared_size() recognises has a
+   * cursor the walk can advance (T_PAGE_ARCGIS below pins that). An
+   * unrecognised spelling is the remaining way to reach this path, which is
+   * why the fixture names one — and the declared total is what makes the
+   * disclosure fire, since a full page of an unknown size is not by itself
+   * evidence of anything. */
   { .id = "T_PAGE_STUCK", .name = "full page, nothing to advance",
-    .url = "https://x.test/pk?maxFeatures=2", .array_path = "items",
+    .url = "https://x.test/pk?pageLen=2", .array_path = "items",
     .title_keys = "name", .id_keys = "id", .interval = 3600, .page_walk = 1,
     .record_type = "t-auto-stuck", .free_tier = 1, .description = "d" },
+
+  /* ArcGIS REST: `resultRecordCount` is the page size and `resultOffset` the
+   * cursor that goes with it — a PAGERS family since 2026-10-25. Before that
+   * the pair sat on jl_declared_size()'s EXTRA list, so a row declaring one
+   * made a single request forever and disclosed the full page as truncation.
+   * The URL names no offset, so the walk writes the family's first one
+   * itself. */
+  { .id = "T_PAGE_ARCGIS", .name = "arcgis resultRecordCount/resultOffset",
+    .url = "https://x.test/pq?resultRecordCount=2", .array_path = "items",
+    .title_keys = "name", .id_keys = "id", .interval = 3600, .page_walk = 1,
+    .record_type = "t-auto-arcgis", .free_tier = 1, .description = "d" },
+
+  /* WFS 1.x: `maxFeatures` with `startIndex` (WFS 2.0's spelling for the same
+   * cursor), the other half of the same change. This row carries the cursor
+   * already, which is the shape the eight BfS radiation rows were given. */
+  { .id = "T_PAGE_WFS", .name = "wfs maxFeatures/startIndex",
+    .url = "https://x.test/pw?maxFeatures=2&startIndex=0", .array_path = "items",
+    .title_keys = "name", .id_keys = "id", .interval = 3600, .page_walk = 1,
+    .record_type = "t-auto-wfs", .free_tier = 1, .description = "d" },
 
   /* `rp` is flexigrid's page size (taginfo), paired with a `page` cursor. */
   { .id = "T_PAGE_PROVEN", .name = "page size proven by the response",
@@ -1824,14 +1854,44 @@ int main(void) {
   /* 9i2. a full page with nothing the walk can advance is not followed with a
    * guessed parameter; the shortfall is stated as a truncation-notice record. */
   fx_reset();
-  fx_add("/pk?maxFeatures=2", 200,
-    "{\"items\":[{\"name\":\"k1\",\"id\":\"1\"},{\"name\":\"k2\",\"id\":\"2\"}]}");
+  fx_add("/pk?pageLen=2", 200,
+    "{\"items\":[{\"name\":\"k1\",\"id\":\"1\"},{\"name\":\"k2\",\"id\":\"2\"}],"
+    "\"totalResultCount\":10}");
   rc = run_source("T_PAGE_STUCK", "");
   ok(rc == 0 && g_ncalls == 1 && g_ncap == 3,
-     "full page with no cursor sibling: one request, no guessed cursor");
+     "full page, size spelling unknown: one request, no guessed cursor");
   ok(g_ncap == 3 && strcmp(g_cap[2].rtype, "collector-truncation-notice") == 0 &&
      strstr(g_cap[2].props, "came back full") != NULL,
      "…and the full last page is disclosed in-band");
+
+  /* 9i3. resultRecordCount/resultOffset is a PAGERS family: the walk writes
+   * the offset the URL does not carry and advances it by the declared size,
+   * instead of reading page 1 forever. Measured on the two VJSON rows this
+   * reached — one asking for 1 record of 6,072 every three hours, the other 1
+   * of 29,208 a day. */
+  fx_reset();
+  fx_add("resultOffset=2", 200, "{\"items\":[{\"name\":\"q3\",\"id\":\"3\"}]}");
+  fx_add("/pq?resultRecordCount=2", 200,
+    "{\"items\":[{\"name\":\"q1\",\"id\":\"1\"},{\"name\":\"q2\",\"id\":\"2\"}]}");
+  rc = run_source("T_PAGE_ARCGIS", "");
+  ok(rc == 0 && g_ncalls == 2 && g_ncap == 3,
+     "resultRecordCount advances resultOffset instead of stopping at page 1");
+  ok(strstr(g_last_url, "resultOffset=2") != NULL &&
+     strstr(g_last_url, "resultRecordCount=2") != NULL,
+     "…by the declared page size, leaving the size alone");
+
+  /* 9i4. the WFS half, with the cursor already in the URL — the shape the BfS
+   * rows carry. `startIndex=0` must advance to 2, not be left at 0 and not be
+   * read as "a cursor is present so there is nothing to seed". */
+  fx_reset();
+  fx_add("startIndex=2", 200, "{\"items\":[{\"name\":\"w3\",\"id\":\"3\"}]}");
+  fx_add("/pw?maxFeatures=2&startIndex=0", 200,
+    "{\"items\":[{\"name\":\"w1\",\"id\":\"1\"},{\"name\":\"w2\",\"id\":\"2\"}]}");
+  rc = run_source("T_PAGE_WFS", "");
+  ok(rc == 0 && g_ncalls == 2 && g_ncap == 3,
+     "maxFeatures advances startIndex from the 0 the URL declares");
+  ok(strstr(g_last_url, "startIndex=2") != NULL,
+     "…to exactly one page on, not back to the start");
 
   /* 9j. a SHORT first page is the upstream saying it is finished. Following it
    * would be inventing a page that was never offered. */

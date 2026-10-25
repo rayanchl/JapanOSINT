@@ -1457,24 +1457,57 @@ static const struct pager PAGERS[] = {
   { "$limit",    "$offset", NULL,    0 },   /* Socrata SODA                    */
   { "$top",      "$skip",  NULL,     0 },   /* OData                           */
   { "maxRecords","offset", NULL,     0 },   /* Airtable-style                  */
+  /* ArcGIS REST and WFS 1.x. Both spellings lived on jl_declared_size()'s
+   * EXTRA list below — "a size we can disclose but cannot move" — until
+   * 2026-10-25, when the population behind them was counted and it turned out
+   * nearly all of it pages by another route: of 659 scheduled rows declaring
+   * one of these sizes, 351 are hpengine rows that declare
+   * `page_param=resultOffset` themselves, and 300 are VGEO rows walked by
+   * geojson_emit_paged(), whose mechanism 1 already advances `resultOffset`
+   * on ArcGIS's own `exceededTransferLimit`. Only THREE rows reach this
+   * table, and all three were reading a single page: two VJSON rows asking
+   * for `resultRecordCount=1` of 6,072 and of 29,208 records, and the one
+   * `page_walk=1` row, Austin's crime layer, asking for 2.
+   *
+   * Measured before adding, one URL per host, `resultOffset=0` against
+   * `resultOffset=2` with the bodies and then the feature ids compared:
+   * disjoint on 47 hosts, overlapping on 4, ignored on 4, refused on 5
+   * (docs/arcgis-resultoffset-probe-2026-10-24.tsv). The 4 that overlap
+   * advance the cursor and re-serve records, so an ordering clause belongs in
+   * the ROW's URL — `orderByFields` for ArcGIS, `sortBy` for WFS — and a row
+   * given one of these sizes without a sort is CLAUDE.md's "collision that is
+   * really a skip". `maxFeatures` reaches no row through this table today; it
+   * is here because the WFS rows that need paging are the ones that already
+   * declare `startIndex`, and the pair belongs with its family rather than in
+   * a second list that cannot move it. */
+  { "resultRecordCount", "resultOffset", NULL, 0 },  /* ArcGIS REST query     */
+  { "maxFeatures", "startIndex", NULL,   0 },   /* WFS 1.x; 2.0 spelling      */
   { NULL, NULL, NULL, 0 }
 };
 
-/* The page size this URL declares, or -1. The PAGERS families plus the size
- * spellings that have no cursor sibling this walk can move, because "the page
- * came back exactly full" is evidence of more data whether or not we know how
- * to ask for it. `$limit` used to head this list; it is a PAGERS family now
- * (see above), so it reaches this function through the loop below rather than
- * as a size we can only disclose. */
+/* The page size this URL declares, or -1 — the PAGERS families, and nothing
+ * else.
+ *
+ * It used to consult a second list as well, EXTRA, holding the size spellings
+ * "that have no cursor sibling this walk can move, because 'the page came back
+ * exactly full' is evidence of more data whether or not we know how to ask for
+ * it." That list held `$limit`, then `resultRecordCount` and `maxFeatures`,
+ * and each of the three graduated to PAGERS once its cursor was measured —
+ * `$limit`/`$offset` on 2026-09-15 and the other two on 2026-10-25 — so it is
+ * now empty and gone.
+ *
+ * Worth keeping the shape of the mistake it enabled, because it was a function
+ * of the SPLIT and not of either list: a size on EXTRA made a row disclose a
+ * full page as truncation forever while jsonlist_next_page(), which iterates
+ * PAGERS alone, had nothing to advance. The two lists read as one mechanism
+ * from the call site and were two. If a size spelling ever needs to be
+ * declarable-but-unmovable again, the way to do it is ONE table that says so:
+ * a pager entry with a NULL cursor_param, plus the skip for it in
+ * jsonlist_next_page(), which does not exist today and would dereference it —
+ * not a second list that only this function reads. */
 static long jl_declared_size(const char *url) {
-  static const char *const EXTRA[] = { "resultRecordCount",
-                                       "maxFeatures", NULL };
   for (int i = 0; PAGERS[i].size_param; i++) {
     long v = jsonlist_query_int(url, PAGERS[i].size_param);
-    if (v > 0) return v;
-  }
-  for (int i = 0; EXTRA[i]; i++) {
-    long v = jsonlist_query_int(url, EXTRA[i]);
     if (v > 0) return v;
   }
   return -1;

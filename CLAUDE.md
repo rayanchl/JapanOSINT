@@ -2636,6 +2636,32 @@ counts emits the sink refused (SQLITE_BUSY, a failed COMMIT): before it, a
 lock held by the WAL checkpoint pod lost records with nothing on the run line.
 `stored=` itself still equals the DB's distinct-uid count.
 
+**A UID-COLLISION of exactly one page size on a `page_walk` row is the walk
+colliding with itself, not a key defect.** A walk whose URL carries no page
+number fetches it bare and then asks for `page=1`, because which base the API
+uses is not knowable from the URL (the probe under `page_walk` above); a
+1-based server answers page 1 with the page already read, the repeat guard
+recognises it and the walk goes on — but BOTH pages were emitted, so one page
+size's worth of records collapse onto uids this run already wrote.
+`us-sf-311-open311-requests` reported 107 collapsed across 39 pages and
+**exactly 100 across 16** (measured 2026-10-24), and binding `&page=1` into the
+URL took it to 14. So subtract one page size before reading a collision on such
+a row, or bind the first page and remove the artifact — and do NOT widen
+`id_keys` to chase it, which is the same mistake the inclusive-cursor note
+makes one mechanism over.
+
+**What is left after that subtraction is told apart by the run's DURATION, not
+by the count.** The same row read 98 distinct of 100 in 26 s and 66 of 100 over
+164 s: an index with no stable order reshuffles under a slower walk, so a key
+defect gives the same number twice and a reshuffle does not. The `secs` column
+in `audit_registry_emit.py`'s output therefore separates "the upstream
+reordered under us" from "this row's identity is wrong" with no sort probe at
+all — and it is the reason a fast probe cannot certify a slow walk. When the
+answer is the reshuffle, check that a sort is actually available before
+declaring it fixed: **a 200 is not evidence a sort landed.**
+`mobile311.sfgov.org` accepts `sort`, `order` and `order_by`, answers 200 to
+each, and honours none.
+
 Sweep the whole registry for both failures, not just a batch:
 
 ```sh
@@ -3050,6 +3076,63 @@ Engine subtleties worth knowing before writing a row:
   `uk-govuk-search-cma-cases` resumes at `start=60`, then `start=120`; the
   six are at `count=100` with an ascending sort now. **A walk that reads
   exactly one page of a declared size deserves one look at that table.**
+* **And `jl_declared_size()` used to consult a SECOND list that
+  `jsonlist_next_page()` never walked — so "the engine knows this size" and
+  "the engine can move this size" were two different facts that read as one.**
+  `PAGERS[]` pairs a size spelling with a cursor and is the only list the walk
+  iterates; an `EXTRA[]` list held the spellings "that have no cursor sibling
+  this walk can move, because 'the page came back exactly full' is evidence of
+  more data whether or not we know how to ask for it". A row whose size sat
+  there made ONE request per run, forever, and disclosed the full page as
+  truncation — honest, and the data past page 1 never fetched.
+  `resultRecordCount`/`resultOffset` (ArcGIS REST) and
+  `maxFeatures`/`startIndex` (WFS 1.x) are PAGERS families as of 2026-10-25,
+  measured one URL per host first (`resultOffset=0` against `=2`, bodies then
+  feature ids: disjoint on 47 hosts, overlapping on 4, ignored on 4, refused on
+  5 — `docs/arcgis-resultoffset-probe-2026-10-24.tsv`), and EXTRA is empty and
+  gone. **The lesson is not the two entries, it is how badly the population was
+  mis-read before it was counted.** 659 scheduled rows declare one of those
+  sizes, and the first pass concluded all 659 therefore read one page. They do
+  not: 351 are hpengine rows that declare `page_param=resultOffset` themselves,
+  300 are VGEO rows walked by `geojson_emit_paged()` — which is not
+  `jsonlist_emit_paged()` and already advances `resultOffset` on ArcGIS's own
+  `exceededTransferLimit` — and **three** rows reached the table. Those three
+  were each reading a single page: two VJSON rows asking for
+  `resultRecordCount=1` of 6,072 and of 29,208 records, and the one
+  `page_walk=1` row asking for 2. So **read the row's own opts and its
+  CONSTRUCT before concluding anything from its URL**: a size parameter says
+  what the row asked the server for, never which engine will walk it.
+  `tools/audit_url_limits.py` tells its reader to discount `--generated`
+  because "the `vsrc*` fleet pages through `jsonlist_emit_paged()` at the macro
+  level"; that is true for a size in PAGERS, was false for one in EXTRA, and is
+  false for a VGEO row either way. **"The macro pages for it" is a claim about
+  the PARAMETER and the CONSTRUCT, not about the macro.**
+  Full re-derivation, both of its own defects included:
+  `docs/jsonlist-nonadvanceable-page-size-2026-10-24.tsv`.
+* **An offset walk needs a stable sort, and the sort field is the layer's to
+  declare — across 639 ArcGIS layers the object id has TWELVE spellings.**
+  `OBJECTID` 323, `ObjectId` 67, `FID` 49, `objectid` 35, `ESRI_OID` 7, `OID`
+  6, `OBJECTID_1` 4, `fid` 2, plus `OBJECTID_12_13`, `OBJECTID_12`, `ObjectID`
+  and `RowID`. A batch writing `orderByFields=OBJECTID` would have been wrong
+  on 35% of them, and a wrong field name is an ArcGIS ERROR — it turns a row
+  that reads one page into a row that reads nothing, which is worse than the
+  bug being fixed. The layer publishes the answer (`<layer>?f=json` →
+  `objectIdField`, `advancedQueryCapabilities.supportsPagination` /
+  `supportsOrderBy`, and `maxRecordCount`, above which ArcGIS clamps silently
+  so every page comes back short and a walk reads a short page as the end of
+  the data). 110 layers publish no `objectIdField` key at all and **all of them
+  declare one by TYPE** (a field whose `type` is `esriFieldTypeOID`), so the
+  count of unsortable layers is zero — asking the second question is the
+  difference between 110 "cannot be fixed" and 110 fixable.
+  **And prophylaxis is not a repair.** 122 rows page by offset with no order
+  clause; one row per host, four requests each, object ids compared, measured
+  **ALREADY_STABLE on all 15 hosts that have a seam** (unsorted overlap 0 of
+  50) with the sort accepted and honoured everywhere and **0 records
+  recovered**. Adding the clause is still what this file asks for and it is
+  free, but it must not be reported as data recovered. One honest limit on that
+  reading: those requests completed in 10 s, and a collision on an unordered
+  index grows with walk DURATION (below, rule 4b), so a fast probe is the fast
+  case and cannot clear a walk that takes minutes.
 * **The page ceiling is one number with one knob: `jo_page_max()`, 20, under
   `$JO_PAGE_MAX`** (`lib/pagewalk.c`). It was three, with two numbers and two
   knobs, one of which did not exist — `pagewalk.c` 20/`$JO_PAGE_MAX`,
