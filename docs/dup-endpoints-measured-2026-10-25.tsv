@@ -1,0 +1,198 @@
+# The 103 limit-pairs MEASURED THROUGH THE ENGINE - 2026-10-25.
+#
+# docs/dup-endpoints-behind-a-limit-2026-10-24.tsv ranked the pairs and decided
+# nothing. docs/dup-endpoints-resolved-to-rows-2026-10-24.tsv read the rows and
+# bucketed them, and closed by saying what was still missing: "Every removal
+# still wants what the IOC pair got: the endpoint measured, the candidate keys
+# counted against distinct whole records, and the evidence written down before
+# the row goes." This file is that measurement.
+#
+# EVERY SCHEDULED ROW ON BOTH SIDES OF ALL 103 PAIRS WAS RUN THROUGH THE REAL
+# BINARY: 163 rows, serialised one at a time, against one scratch database.
+# Serialised rather than parallel because core/hostgate.c paces requests inside
+# ONE process and cannot pace several that each think they are alone - ten of
+# these rows share api.fda.gov. Run against a PINNED COPY of the binary, which
+# earned itself twice over in the same hour: a concurrent session was linking
+# bin/japanosint, and an unpinned run exits 126 "Text file busy" and reads as a
+# source that returns nothing. 155 of 163 produced a run line.
+#
+# THE RULE IS ONE A NUMBER CAN SETTLE, and it refuses wherever the numbers do
+# not settle it:
+#
+#   * the KEEPER is the side that STORES MORE. A row that stores less than its
+#     sibling is not the keeper whatever its construct, which is the opposite
+#     of resolving this from the declaration - and the declaration was the only
+#     thing the earlier passes had.
+#   * on a tie the hpengine row keeps it, because it declares an identity where
+#     VJSON keys on a fixed precedence list - UNLESS it declares no id_keys, in
+#     which case retiring the generated row leaves one row with no declared
+#     identity, which is rule 4b exposure and not a repair (HOLD_NEEDS_KEY).
+#   * on a tie between two rows of the same construct, the fresher cadence
+#     keeps it; if the cadences are equal too it is HOLD_TIE, a judgement and
+#     not a number.
+#   * if either side did not run it is HOLD_UNMEASURED. A verdict read off a
+#     failed fetch is the mistake this tree keeps catching itself making.
+#
+#   RETIRE            67 pairs, of which 63 are actionable (naming 63
+#                        distinct rows); the other 4 are the two
+#                        three-row groups excluded below
+#   READ_BOTH         13   passed through untouched
+#   UNRESOLVED        10   a hand-written collector builds its URL in code
+#   HOLD_CYCLES        4   see the cycling-row correction below
+#   HOLD_UNMEASURED    5
+#   HOLD_TIE           3
+#   HOLD_NEEDS_KEY     1
+#
+# TWO ROWS ARE A KEEPER IN ONE PAIR AND A GONER IN ANOTHER, and that is the one
+# structural finding here: gov-pl-sejm-interpellations and nam-mbta-vehicles.
+# Both sit in a THREE-row group over one endpoint, where a row can lose to one
+# sibling and beat another, so no per-pair verdict can settle it - the group
+# needs one keeper chosen across all three. Those two rows and their pairs are
+# excluded from any removal built on this file. A pairwise comparison over a
+# group of three is not transitive, and reading it as though it were is how a
+# repair deletes the row it meant to keep.
+#
+# SIX IDS IN THE 2026-10-24 FILE DO NOT EXIST, and the engine said so by name
+# ("unknown source"): AF_WORLDBANK_COUNTRY and WORLD_WB_COUNTRY (retired
+# 2026-10-25 as the World Bank twin group), gov-hk-legco-bills (main removed it
+# 2026-10-25), and gov-jp-egov-laws, jpx-egov-laws-v2 and jpx-tdnet-recent -
+# three of the four e-Gov/TDnet VJSON rows replaced by EGOV_LAW_LIST_ALL when
+# the all-fields-nested finding landed. That is the second inventory this week
+# to carry ids that had already been retired with evidence; an inventory is
+# dated the moment it is written, so re-resolve its ids before treating any one
+# of them as a finding.
+#
+#
+# AND THE RULE IS WRONG FOR A CYCLING ROW, WHICH THE MEASUREMENT ITSELF
+# EXPOSED - read this before acting on any RETIRE line. "Stores more" is the
+# reach of ONE RUN, and a row carrying `page_resume` reads a FURTHER SLICE on
+# every run: its one-run total is a per-run figure, not what it reaches. The
+# whole BGS cluster is that shape and it is the caveat the 2026-10-24 file had
+# already named from the declarations - the generated row asks for more records
+# per request than the hp row does. Measured here: geo-bgs-aeromag stores 4,001
+# a run against BGS_AEROMAGNETIC_SURVEY's 2,001, so the numeric rule names the
+# hp row for retirement - and that hp row CYCLES, so over a cycle it reaches
+# the whole collection while the generated row re-reads its first 4,001 for
+# ever. Retiring it would be the newest-first-limit error in a new place: a
+# bigger per-run number standing in for a complete read.
+#
+# So the four BGS pairs are HOLD_CYCLES, not RETIRE. Four of the 69 rows named
+# for retirement declare page_resume and all four are those. The remaining 65
+# involve no cycling row on either side, so one run IS their reach and the
+# numeric rule holds for them.
+#
+# WHICH IS WHY NOTHING IS RETIRED ON THIS FILE EITHER. The rule needed patching
+# twice in the hour it took to apply it - once for the non-transitive
+# three-row groups, once for cycling rows - and a rule that has just been
+# wrong twice is not one to run across 65 live sources unreviewed. Everything a
+# removal needs is here: the keeper, both sides' measured reading, and the
+# exclusions by name.
+#
+# Columns: `was` is the 2026-10-24 bucket, `action` the measured verdict,
+# stored_a/stored_b what each side actually stored through the engine and
+# req_a/req_b how many requests each made (a keeper that pages shows it here).
+
+was	action	host	id_a	stored_a	req_a	id_b	stored_b	req_b	why	group_note
+RETIRE_GENERATED	HOLD_NEEDS_KEY	api.safecast.org/measurements.json	geo-safecast-measurements	25	1	safecast-radiation	25	1	tie at 25; the hp keeper safecast-radiation declares no id_keys	
+PICK_ONE	HOLD_TIE	catalog.data.metro.tokyo.lg.jp/api/3/action/organization_list	jp-ckan-tokyo-organization-list	25	1	jp-catalog-data-metro-tokyo-lg-jp-orgs	25	1	tie at 25, same construct, same cadence 86400 - a judgement, not a number	
+PICK_ONE	HOLD_TIE	dadosabertos.camara.leg.br/api/v2/eventos	lat-camara-eventos-json	13	1	gov-br-camara-eventos	13	1	tie at 13, same construct, same cadence 3600 - a judgement, not a number	
+PICK_ONE	HOLD_TIE	data.city.yokohama.lg.jp/api/3/action/organization_list	jp-ckan-yokohama-organization-list	25	1	jp-data-city-yokohama-lg-jp-orgs	25	1	tie at 25, same construct, same cadence 86400 - a judgement, not a number	
+PICK_ONE	HOLD_UNMEASURED	app.legco.gov.hk/BillsDB/odata/Vbills	eas-hk-legco-bills	6000	61	gov-hk-legco-bills	None	None	gov-hk-legco-bills: NO_RUN_LINE: pplied (193 objects) [cadence] policy from defa	
+PICK_ONE	HOLD_UNMEASURED	laws.e-gov.go.jp/api/2/laws	jpx-egov-laws-v2	None	None	gov-jp-egov-laws	None	None	jpx-egov-laws-v2: NO_RUN_LINE:  applied (193 objects) [cadence] policy from de	
+RETIRE_GENERATED	HOLD_UNMEASURED	openveda.cloud/api/stac/search	sci-stac-openveda-search	2001	20	OPENVEDA_STAC_SEARCH	None	None	OPENVEDA_STAC_SEARCH: SLOW_240s	
+RETIRE_GENERATED	HOLD_UNMEASURED	webapi.yanoshin.jp/webapi/tdnet/list/recent.json	jpx-tdnet-recent	None	None	YANOSHIN_TDNET_RECENT	302	1	jpx-tdnet-recent: NO_RUN_LINE:  applied (193 objects) [cadence] policy from de	
+RETIRE_GENERATED	HOLD_UNMEASURED	www.datos.gov.co/api/views.json	lat-socrata-co-views	100	2	ODS_COLOMBIA	None	None	ODS_COLOMBIA: SLOW_240s	
+READ_BOTH	READ_BOTH	api.bcra.gob.ar/estadisticas/v4.0/monetarias	BCRA_MONETARY_SERIES	1000	1	AR_BCRA_MONETARIAS	1611	358	passed through	
+READ_BOTH	READ_BOTH	api.crossref.org/funders	CROSSREF_FUNDERS	None	None	CROSSREF_FUNDER_GRAPH	None	None	passed through	
+READ_BOTH	READ_BOTH	api.gleif.org/api/v1/lei-records/{qU}/direct-children	GLEIF_LEI_CHILDREN	None	None	GLEIF_DIRECT_CHILDREN	None	None	passed through	
+READ_BOTH	READ_BOTH	api.pdok.nl/bzk/locatieserver/search/v3_1/free	NL_PDOK_LOCATIESERVER	None	None	NL_PDOK_LOCATIE	None	None	passed through	
+READ_BOTH	READ_BOTH	api.safecast.org/measurements.json	jp-safecast-measurements	201	208	safecast-radiation	25	1	passed through	
+READ_BOTH	READ_BOTH	api.safecast.org/measurements.json	SAFECAST_MEASUREMENTS	30002	30	safecast-radiation	25	1	passed through	
+READ_BOTH	READ_BOTH	api.worldbank.org/v2/country	WORLDBANK_COUNTRY_REGISTER	296	2	AF_WORLDBANK_COUNTRY	None	None	passed through	
+READ_BOTH	READ_BOTH	api.worldbank.org/v2/country	WORLDBANK_COUNTRY_REGISTER	296	2	WORLD_WB_COUNTRY	None	None	passed through	
+READ_BOTH	READ_BOTH	data.ny.gov/resource/n9v6-gdp6.json	US_NY_SOS_CORP	None	None	NY_ACTIVE_CORPS	None	None	passed through	
+READ_BOTH	READ_BOTH	directory.spineservices.nhs.uk/ORD/2-0-0/organisations	UK_NHS_ODS	None	None	UK_NHS_ODS_ORG	None	None	passed through	
+READ_BOTH	READ_BOTH	laws.e-gov.go.jp/api/2/keyword	EGOV_LAW_KEYWORD	None	None	JP_EGOV_LAW_SEARCH	None	None	passed through	
+READ_BOTH	READ_BOTH	onionoo.torproject.org/details	TOR_ONIONOO_DETAILS	None	None	TOR_ONIONOO_RELAYS	None	None	passed through	
+READ_BOTH	READ_BOTH	open.canada.ca/data/api/3/action/package_search	CANADA_OPENDATA_SEARCH	None	None	CANADA_OPEN_CONTRACTS	None	None	passed through	
+RETIRE_GENERATED	HOLD_CYCLES	ogcapi.bgs.ac.uk/collections/aeromag/items	geo-bgs-aeromag	4001	20	BGS_AEROMAGNETIC_SURVEY	2001	20	keeper geo-bgs-aeromag stores 4001 vs 2001	EXCLUDED_FROM_REMOVAL: the hp row cycles on page_resume, so its per-run stored count is not its reach
+RETIRE_GENERATED	HOLD_CYCLES	ogcapi.bgs.ac.uk/collections/mine_plans/items	geo-bgs-mine-plans	4001	20	BGS_MINE_PLANS	2001	22	keeper geo-bgs-mine-plans stores 4001 vs 2001	EXCLUDED_FROM_REMOVAL: the hp row cycles on page_resume, so its per-run stored count is not its reach
+RETIRE_GENERATED	HOLD_CYCLES	ogcapi.bgs.ac.uk/collections/onshoreboreholeindex/items	geo-bgs-borehole-index	6001	20	BGS_ONSHORE_BOREHOLE_INDEX	2001	20	keeper geo-bgs-borehole-index stores 6001 vs 2001	EXCLUDED_FROM_REMOVAL: the hp row cycles on page_resume, so its per-run stored count is not its reach
+RETIRE_GENERATED	HOLD_CYCLES	ogcapi.bgs.ac.uk/collections/world-mineral-statistics/items	geo-bgs-world-mineral-stats	4001	20	BGS_WORLD_MINERAL_STATISTICS	2001	20	keeper geo-bgs-world-mineral-stats stores 4001 vs 2001	EXCLUDED_FROM_REMOVAL: the hp row cycles on page_resume, so its per-run stored count is not its reach
+RETIRE_GENERATED	RETIRE:GRIP_BGP_HIJACKS	api.grip.inetintel.cc.gatech.edu/json/events	cyb-grip-events	1002	20	GRIP_BGP_HIJACKS	1001	1	keeper cyb-grip-events stores 1002 vs 1001	
+RETIRE_GENERATED	RETIRE:NOAA_STATIONS_OBSERVATIONS	api.weather.gov/stations	geo-nws-stations	501	1	NOAA_STATIONS_OBSERVATIONS	200	1	keeper geo-nws-stations stores 501 vs 200	
+RETIRE_GENERATED	RETIRE:US_NCEI_DATASETS	www.ncei.noaa.gov/access/services/search/v1/datasets	sci-clim-ncei-datasets	101	2	US_NCEI_DATASETS	11	1	keeper sci-clim-ncei-datasets stores 101 vs 11	
+PICK_ONE	RETIRE:cyb-camara-br-votacoes2	dadosabertos.camara.leg.br/api/v2/votacoes	cyb-camara-br-votacoes2	903	10	gov-br-camara-votacoes	903	19	tie at 903; keeping the fresher cadence 3600 over 21600	
+PICK_ONE	RETIRE:cyb-sejm-pl-interpellations	api.sejm.gov.pl/sejm/term10/interpellations	cyb-sejm-pl-interpellations	50	1	gov-pl-sejm-interpellations	1001	20	keeper gov-pl-sejm-interpellations stores 1001 vs 50	EXCLUDED_FROM_REMOVAL: three-row group, needs one keeper chosen across the group
+RETIRE_GENERATED	RETIRE:cyb-sejm-pl-interpellations	api.sejm.gov.pl/sejm/term10/interpellations	cyb-sejm-pl-interpellations	50	1	PL_SEJM_API	15001	33	keeper PL_SEJM_API stores 15001 vs 50	
+RETIRE_GENERATED	RETIRE:cyb-wa-breaches	data.wa.gov/resource/sb4j-ca4h.json	cyb-wa-breaches	1675	1	WA_DATA_BREACH_NOTIFICATIONS	1675	1	tie at 1675; hp row WA_DATA_BREACH_NOTIFICATIONS keys on id	
+RETIRE_GENERATED	RETIRE:eco-cdc-nndss-weekly	data.cdc.gov/resource/x9gk-5huc.json	eco-cdc-nndss-weekly	200	1	CDC_NNDSS_WEEKLY_TABLES	20001	20	keeper CDC_NNDSS_WEEKLY_TABLES stores 20001 vs 200	
+PICK_ONE	RETIRE:eco-fda-food-event	api.fda.gov/food/event.json	sci-openfda-food-event	102	2	eco-fda-food-event	52	2	keeper sci-openfda-food-event stores 102 vs 52	
+PICK_ONE	RETIRE:eco-fda-tobacco-problem	api.fda.gov/tobacco/problem.json	sci-openfda-tobacco-problem	102	2	eco-fda-tobacco-problem	52	2	keeper sci-openfda-tobacco-problem stores 102 vs 52	
+PICK_ONE	RETIRE:eco-fda-vet-event	api.fda.gov/animalandveterinary/event.json	sci-openfda-animalandveterinary-event	102	2	eco-fda-vet-event	52	2	keeper sci-openfda-animalandveterinary-event stores 102 vs 52	
+PICK_ONE	RETIRE:eco-mbta-alerts	api-v3.mbta.com/alerts	nam-mbta-alerts	133	2	eco-mbta-alerts	131	3	keeper nam-mbta-alerts stores 133 vs 131	
+PICK_ONE	RETIRE:eco-mbta-vehicles	api-v3.mbta.com/vehicles	nam-mbta-vehicles	383	4	eco-mbta-vehicles	380	8	keeper nam-mbta-vehicles stores 383 vs 380	EXCLUDED_FROM_REMOVAL: three-row group, needs one keeper chosen across the group
+RETIRE_GENERATED	RETIRE:eco-mbta-vehicles	api-v3.mbta.com/vehicles	eco-mbta-vehicles	380	8	mbta-vehicle-positions	384	1	keeper mbta-vehicle-positions stores 384 vs 380	
+RETIRE_GENERATED	RETIRE:eur-cbs-catalog2	opendata.cbs.nl/ODataCatalog/Tables	eur-cbs-catalog2	4001	20	CBS_NETHERLANDS_ODATA	5988	1	keeper CBS_NETHERLANDS_ODATA stores 5988 vs 4001	
+RETIRE_GENERATED	RETIRE:eur-ods-bretagne	data.bretagne.bzh/api/explore/v2.1/catalog/datasets	eur-ods-bretagne	189	2	FR_ODS_DATA_BRETAG	189	5	tie at 189; hp row FR_ODS_DATA_BRETAG keys on dataset_id	
+RETIRE_GENERATED	RETIRE:eur-ods-economie	data.economie.gouv.fr/api/explore/v2.1/catalog/datasets	eur-ods-economie	617	7	FR_SIRENE_ODS	617	14	tie at 617; hp row FR_SIRENE_ODS keys on dataset_id	
+RETIRE_GENERATED	RETIRE:eur-ods-issy	data.issy.com/api/explore/v2.1/catalog/datasets	eur-ods-issy	327	4	FR_ODS_ISSY	327	8	tie at 327; hp row FR_ODS_ISSY keys on dataset_id	
+RETIRE_GENERATED	RETIRE:eur-ods-laregion	data.laregion.fr/api/explore/v2.1/catalog/datasets	eur-ods-laregion	204	3	FR_ODS_OCCITANIE	204	6	tie at 204; hp row FR_ODS_OCCITANIE keys on dataset_id	
+RETIRE_GENERATED	RETIRE:eur-ods-paris	opendata.paris.fr/api/explore/v2.1/catalog/datasets	eur-ods-paris	489	5	FR_ODS_PARIS	489	11	tie at 489; hp row FR_ODS_PARIS keys on dataset_id	
+RETIRE_GENERATED	RETIRE:eur-ods-paysdelaloire	data.paysdelaloire.fr/api/explore/v2.1/catalog/datasets	eur-ods-paysdelaloire	215	3	FR_ODS_PAYSDELALOIRE	215	6	tie at 215; hp row FR_ODS_PAYSDELALOIRE keys on dataset_id	
+RETIRE_GENERATED	RETIRE:eur-ods-public	public.opendatasoft.com/api/explore/v2.1/catalog/datasets	eur-ods-public	420	5	FR_ODS_PUBLIC_OPENDA	420	10	tie at 420; hp row FR_ODS_PUBLIC_OPENDA keys on dataset_id	
+RETIRE_GENERATED	RETIRE:eur-ods-ratp	data.ratp.fr/api/explore/v2.1/catalog/datasets	eur-ods-ratp	16	1	FR_ODS_DATA_RATP	16	1	tie at 16; hp row FR_ODS_DATA_RATP keys on dataset_id	
+RETIRE_GENERATED	RETIRE:eur-ods-strasbourg	data.strasbourg.eu/api/explore/v2.1/catalog/datasets	eur-ods-strasbourg	400	5	FR_ODS_DATA_STRASB	400	9	tie at 400; hp row FR_ODS_DATA_STRASB keys on dataset_id	
+RETIRE_GENERATED	RETIRE:fr-ods-education-catalog	data.education.gouv.fr/api/explore/v2.1/catalog/datasets	fr-ods-education-catalog	313	4	FR_ODS2_DATA_EDUCA	313	8	tie at 313; hp row FR_ODS2_DATA_EDUCA keys on dataset_id	
+RETIRE_GENERATED	RETIRE:fr-ods-enseignementsup-catalog	data.enseignementsup-recherche.gouv.fr/api/explore/v2.1/catalog/datasets	fr-ods-enseignementsup-catalog	217	3	FR_ODS2_DATA_ENSEI	217	6	tie at 217; hp row FR_ODS2_DATA_ENSEI keys on dataset_id	
+RETIRE_GENERATED	RETIRE:fr-ods-sncf-catalog	ressources.data.sncf.com/api/explore/v2.1/catalog/datasets	fr-ods-sncf-catalog	163	2	FR_ODS_SNCF	163	5	tie at 163; hp row FR_ODS_SNCF keys on dataset_id	
+RETIRE_GENERATED	RETIRE:geo-bgs-earthquakes	ogcapi.bgs.ac.uk/collections/recentearthquakes/items	geo-bgs-earthquakes	4001	20	BGS_RECENT_EARTHQUAKES	7834	79	keeper BGS_RECENT_EARTHQUAKES stores 7834 vs 4001	
+RETIRE_GENERATED	RETIRE:geo-bgs-eruption-source	ogcapi.bgs.ac.uk/collections/eruption-source-parameter/items	geo-bgs-eruption-source	2672	9	BGS_ERUPTION_SOURCE_PARAMETER	2672	27	tie at 2672; hp row BGS_ERUPTION_SOURCE_PARAMETER keys on properties.volcano_id	
+RETIRE_GENERATED	RETIRE:geo-bgs-faults-625k	ogcapi.bgs.ac.uk/collections/bgsgeology625kfaults/items	geo-bgs-faults-625k	2741	14	BGS_GEOLOGY_625K_FAULTS	2741	28	tie at 2741; hp row BGS_GEOLOGY_625K_FAULTS keys on id	
+RETIRE_GENERATED	RETIRE:geo-bgs-historical-quakes	ogcapi.bgs.ac.uk/collections/historicalearthquakes/items	geo-bgs-historical-quakes	471	2	BGS_HISTORICAL_EARTHQUAKES	471	5	tie at 471; hp row BGS_HISTORICAL_EARTHQUAKES keys on id	
+RETIRE_GENERATED	RETIRE:geo-bgs-landslide-index	ogcapi.bgs.ac.uk/collections/landslideindex/items	geo-bgs-landslide-index	6001	20	BGS_LANDSLIDE_INDEX	18630	187	keeper BGS_LANDSLIDE_INDEX stores 18630 vs 6001	
+RETIRE_GENERATED	RETIRE:geo-bgs-offshore-core-samples	ogcapi.bgs.ac.uk/collections/offshore-core-sample-data/items	geo-bgs-offshore-core-samples	3663	13	BGS_OFFSHORE_CORE_SAMPLE_DATA	3663	37	tie at 3663; hp row BGS_OFFSHORE_CORE_SAMPLE_DATA keys on id	
+RETIRE_GENERATED	RETIRE:geo-bgs-offshore-wells	ogcapi.bgs.ac.uk/collections/offshore-hydrocarbon-wells/items	geo-bgs-offshore-wells	6001	20	BGS_OFFSHORE_HYDROCARBON_WELLS	13308	134	keeper BGS_OFFSHORE_HYDROCARBON_WELLS stores 13308 vs 6001	
+RETIRE_GENERATED	RETIRE:geo-nws-zones	api.weather.gov/zones	geo-nws-zones	501	1	US_WEATHER_ZONES	4779	1	keeper US_WEATHER_ZONES stores 4779 vs 501	
+RETIRE_GENERATED	RETIRE:geo-safecast-measurements	api.safecast.org/measurements.json	jp-safecast-measurements	201	208	geo-safecast-measurements	25	1	keeper jp-safecast-measurements stores 201 vs 25	
+PICK_ONE	RETIRE:gov-ar-diputados-ckan	datos.hcdn.gob.ar/api/3/action/package_search	lat-ckan-hcdn-ar	29	1	gov-ar-diputados-ckan	29	1	tie at 29; keeping the fresher cadence 43200 over 86400	
+PICK_ONE	RETIRE:gov-br-camara-frentes	dadosabertos.camara.leg.br/api/v2/frentes	lat-camara-frentes-json	1443	15	gov-br-camara-frentes	1001	20	keeper lat-camara-frentes-json stores 1443 vs 1001	
+PICK_ONE	RETIRE:gov-br-camara-orgaos	dadosabertos.camara.leg.br/api/v2/orgaos	lat-camara-orgaos-json	1659	17	gov-br-camara-orgaos	1001	20	keeper lat-camara-orgaos-json stores 1659 vs 1001	
+PICK_ONE	RETIRE:gov-br-camara-partidos	dadosabertos.camara.leg.br/api/v2/partidos	lat-camara-partidos-json	22	1	gov-br-camara-partidos	22	1	tie at 22; keeping the fresher cadence 86400 over 604800	
+PICK_ONE	RETIRE:gov-br-camara-proposicoes	dadosabertos.camara.leg.br/api/v2/proposicoes	lat-camara-props-json	2002	20	gov-br-camara-proposicoes	1002	20	keeper lat-camara-props-json stores 2002 vs 1002	
+PICK_ONE	RETIRE:gov-co-secop2	www.datos.gov.co/resource/rpmr-utcd.json	lat-co-secop-integrado	10001	20	gov-co-secop2	1000	20	keeper lat-co-secop-integrado stores 10001 vs 1000	
+PICK_ONE	RETIRE:gov-do-datos-ckan	datos.gob.do/api/3/action/package_search	lat-ckan-datos-do	1069	11	gov-do-datos-ckan	1001	20	keeper lat-ckan-datos-do stores 1069 vs 1001	
+RETIRE_GENERATED	RETIRE:gov-europarl-opendata-docs	data.europarl.europa.eu/api/v2/documents	gov-europarl-opendata-docs	1	3	EU_EP_OPENDATA_DOCUMENTS	1	2	tie at 1; hp row EU_EP_OPENDATA_DOCUMENTS keys on identifier	
+PICK_ONE	RETIRE:gov-oireachtas-divisions	api.oireachtas.ie/v1/divisions	cyb-oireachtas-divisions	51	2	gov-oireachtas-divisions	26	2	keeper cyb-oireachtas-divisions stores 51 vs 26	
+RETIRE_GENERATED	RETIRE:gov-oireachtas-members	api.oireachtas.ie/v1/members	gov-oireachtas-members	51	1	IE_OIREACHTAS_MEMBERS	1928	5	keeper IE_OIREACHTAS_MEMBERS stores 1928 vs 51	
+PICK_ONE	RETIRE:gov-oireachtas-questions	api.oireachtas.ie/v1/questions	cyb-oireachtas-questions	51	2	gov-oireachtas-questions	26	2	keeper cyb-oireachtas-questions stores 51 vs 26	
+RETIRE_GENERATED	RETIRE:gov-ons-datasets	api.beta.ons.gov.uk/v1/datasets	gov-ons-datasets	338	7	UK_ONS_DATASETS	338	5	tie at 338; hp row UK_ONS_DATASETS keys on id	
+PICK_ONE	RETIRE:gov-openfda-device-enforcement	api.fda.gov/device/enforcement.json	gov-openfda-device-enforcement	51	2	eco-fda-device-enforcement	101	2	keeper eco-fda-device-enforcement stores 101 vs 51	
+PICK_ONE	RETIRE:gov-openfda-device-event	api.fda.gov/device/event.json	sci-openfda-device-event	101	2	gov-openfda-device-event	51	2	keeper sci-openfda-device-event stores 101 vs 51	
+PICK_ONE	RETIRE:gov-openfda-device-recall	api.fda.gov/device/recall.json	gov-openfda-device-recall	51	2	eco-fda-device-recall	101	2	keeper eco-fda-device-recall stores 101 vs 51	
+PICK_ONE	RETIRE:gov-openfda-drug-label	api.fda.gov/drug/label.json	sci-openfda-drug-label	102	2	gov-openfda-drug-label	52	2	keeper sci-openfda-drug-label stores 102 vs 52	
+PICK_ONE	RETIRE:gov-openfda-food-enforcement	api.fda.gov/food/enforcement.json	gov-openfda-food-enforcement	51	2	eco-fda-food-enforcement	101	2	keeper eco-fda-food-enforcement stores 101 vs 51	
+PICK_ONE	RETIRE:gov-pa-datos-ckan	www.datosabiertos.gob.pa/api/3/action/package_search	lat-ckan-datos-pa	2001	20	gov-pa-datos-ckan	1001	20	keeper lat-ckan-datos-pa stores 2001 vs 1001	
+RETIRE_GENERATED	RETIRE:gov-pl-sejm-interpellations	api.sejm.gov.pl/sejm/term10/interpellations	gov-pl-sejm-interpellations	1001	20	PL_SEJM_API	15001	33	keeper PL_SEJM_API stores 15001 vs 1001	EXCLUDED_FROM_REMOVAL: three-row group, needs one keeper chosen across the group
+PICK_ONE	RETIRE:gov-tw-ly-bills	ly.govapi.tw/v2/bills	eas-ly-bills	102	2	gov-tw-ly-bills	52	2	keeper eas-ly-bills stores 102 vs 52	
+PICK_ONE	RETIRE:gov-tw-ly-legislators	ly.govapi.tw/v2/legislators	eas-ly-legislators	102	2	gov-tw-ly-legislators	52	2	keeper eas-ly-legislators stores 102 vs 52	
+RETIRE_GENERATED	RETIRE:gov-ua-prozorro	public.api.openprocurement.org/api/2.5/tenders	gov-ua-prozorro	101	1	UA_OPENPROCUREMENT_TENDERS	2002	764	keeper UA_OPENPROCUREMENT_TENDERS stores 2002 vs 101	
+RETIRE_GENERATED	RETIRE:gov-worldbank-indicators	api.worldbank.org/v2/indicator	gov-worldbank-indicators	2	1	WORLDBANK_INDICATOR_CATALOGUE	10001	20	keeper WORLDBANK_INDICATOR_CATALOGUE stores 10001 vs 2	
+RETIRE_GENERATED	RETIRE:gov-worldbank-sources	api.worldbank.org/v2/sources	gov-worldbank-sources	2	1	WORLDBANK_SOURCE_REGISTER	71	1	keeper WORLDBANK_SOURCE_REGISTER stores 71 vs 2	
+RETIRE_GENERATED	RETIRE:jpx-p2pquake-jma-quake	api.p2pquake.net/v2/jma/quake	jpx-p2pquake-jma-quake	1002	20	P2PQUAKE_JMA_QUAKE	2001	20	keeper P2PQUAKE_JMA_QUAKE stores 2001 vs 1002	
+RETIRE_GENERATED	RETIRE:nam-mbta-vehicles	api-v3.mbta.com/vehicles	nam-mbta-vehicles	383	4	mbta-vehicle-positions	384	1	keeper mbta-vehicle-positions stores 384 vs 383	EXCLUDED_FROM_REMOVAL: three-row group, needs one keeper chosen across the group
+PICK_ONE	RETIRE:sci-ogcf-usgswater-daily	api.waterdata.usgs.gov/ogcapi/v0/collections/daily/items	sci-ogcf-usgswater-daily	4001	20	geo-usgs-water-daily	6001	20	keeper geo-usgs-water-daily stores 6001 vs 4001	
+PICK_ONE	RETIRE:sci-ogcf-usgswater-latest-continuous	api.waterdata.usgs.gov/ogcapi/v0/collections/latest-continuous/items	sci-ogcf-usgswater-latest-continuous	4001	20	geo-usgs-water-latest-continuous	10001	20	keeper geo-usgs-water-latest-continuous stores 10001 vs 4001	
+PICK_ONE	RETIRE:sci-ogcf-usgswater-latest-daily	api.waterdata.usgs.gov/ogcapi/v0/collections/latest-daily/items	sci-ogcf-usgswater-latest-daily	4001	20	geo-usgs-water-latest-daily	10001	20	keeper geo-usgs-water-latest-daily stores 10001 vs 4001	
+PICK_ONE	RETIRE:sci-ogcf-usgswater-latest-field-measurements	api.waterdata.usgs.gov/ogcapi/v0/collections/latest-field-measurements/items	sci-ogcf-usgswater-latest-field-measurements	2001	11	geo-usgs-water-field-meas	6001	20	keeper geo-usgs-water-field-meas stores 6001 vs 2001	
+RETIRE_GENERATED	RETIRE:us-nycopendata-views-index	data.cityofnewyork.us/api/views.json	us-nycopendata-views-index	1	3	US_SOCRATA_CITYOFNEWYORK	3022	5	keeper US_SOCRATA_CITYOFNEWYORK stores 3022 vs 1	
+UNRESOLVED	UNRESOLVED	api.climatetrace.org/v6/assets	CLIMATE_TRACE_ASSETS	None	None	<unresolved>	None	None	passed through	
+UNRESOLVED	UNRESOLVED	api.energidataservice.dk/dataset/ElectricityProdex5MinRealtime	eco-dk-electricityprod	2002	26	<unresolved>	None	None	passed through	
+UNRESOLVED	UNRESOLVED	api.gios.gov.pl/pjp-api/v1/rest/station/findAll	geo-gios-v1-stations	288	2	<unresolved>	None	None	passed through	
+UNRESOLVED	UNRESOLVED	api.github.com/search/code	<unresolved>	None	None	<unresolved>	None	None	passed through	
+UNRESOLVED	UNRESOLVED	api.obis.org/v3/occurrence	geo-obis-occurrence	101	3	<unresolved>	None	None	passed through	
+UNRESOLVED	UNRESOLVED	api.opensanctions.org/search/default	<unresolved>	None	None	<unresolved>	None	None	passed through	
+UNRESOLVED	UNRESOLVED	api.opensanctions.org/search/default	<unresolved>	None	None	<unresolved>	None	None	passed through	
+UNRESOLVED	UNRESOLVED	api.opensanctions.org/search/default	<unresolved>	None	None	<unresolved>	None	None	passed through	
+UNRESOLVED	UNRESOLVED	blockchain.info/rawaddr/%s	<unresolved>	None	None	<unresolved>	None	None	passed through	
+UNRESOLVED	UNRESOLVED	caselaw.nationalarchives.gov.uk/atom.xml	uk-caselaw-atom	50	1	<unresolved>	None	None	passed through	
