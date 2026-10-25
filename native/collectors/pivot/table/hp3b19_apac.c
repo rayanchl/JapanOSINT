@@ -499,22 +499,37 @@ static const hp_source HP3B19_APAC[] = {
     .record_type = "weather-forecast",
     .tags = "\"malaysia\",\"weather\",\"met\",\"forecast\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.data.gov.my/weather/forecast?limit=100",
+    /* The trailing slash is the endpoint: without it the API answers 301 to
+     * the same path WITH one, which cost a redirect on every request and made
+     * the path read as dead to any tool that does not follow redirects. */
+    .url = "https://api.data.gov.my/weather/forecast/?limit=20000",
+    .date_keys = "date",
+    .id_keys = "location.location_id+date",
     .interval = 10800,
-    .page_param = "page",
     .title_keys = "location.location_name",
     .description = "District-level Malaysian weather forecasts from the Malaysian "
       "Meteorological Department with location code, district, state, "
-      "morning, afternoon, night and general forecast text per date" },
+      "morning, afternoon, night and general forecast text per date. "
+      "Measured 2026-10-20: the collection is 3,080 records — 440 "
+      "locations x 7 dates — and limit=20000 and limit=50000 both return "
+      "exactly that, so one request takes all of it. It used to ask for "
+      "limit=100 and declare page_param=\"page\", which this API ignores "
+      "along with offset and skip (all three return record 1 again), so "
+      "it stored the first 100 forever. The key is the TUPLE: 3,080 "
+      "distinct location_id+date against 440 distinct location_id, so "
+      "keying on the location alone would store one date in seven." },
 
   { .id = "AP19_MY_MET_WARNING", .name = "MET Malaysia warning API (data.gov.my)",
     .category = "disaster", .portal = "https://www.data.gov.my",
     .record_type = "weather-warning",
     .tags = "\"malaysia\",\"weather\",\"warning\",\"disaster\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.data.gov.my/weather/warning?limit=100",
+    .url = "https://api.data.gov.my/weather/warning/?limit=20000",
+    /* Two records can share an issuance AND a title and differ in their
+     * validity window — measured, not byte-identical — so the window is part
+     * of the identity rather than a field beside it. */
+    .id_keys = "warning_issue.issued+warning_issue.title_en+valid_from+valid_to",
     .interval = 900,
-    .page_param = "page",
     .title_keys = "warning_issue.title_en",
     .description = "Malaysian Meteorological Department severe weather warnings with "
       "issue and valid times, heading and full English and Malay "
@@ -525,14 +540,22 @@ static const hp_source HP3B19_APAC[] = {
     .record_type = "earthquake-event",
     .tags = "\"malaysia\",\"earthquake\",\"met\",\"disaster\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.data.gov.my/weather/warning/earthquake?limit=100",
+    .url = "https://api.data.gov.my/weather/warning/earthquake/?limit=20000",
+    .date_keys = "utcdatetime",
+    .id_keys = "utcdatetime",
     .interval = 900,
-    .page_param = "page",
-    .title_keys = "utcdatetime",
+    .lat_key = "lat",
+    .lon_key = "lon",
+    .title_keys = "location",
     .description = "Earthquake and tsunami bulletins issued by the Malaysian "
       "Meteorological Department with UTC and local origin time, "
       "magnitude, depth, epicentre coordinates, location description "
-      "and the status of any tsunami warning for Malaysian waters" },
+      "and the status of any tsunami warning for Malaysian waters. "
+      "Measured 2026-10-20: the catalogue is 902 events back to 2023, "
+      "and limit=1000, 20000 and 100000 all return exactly 902. It used "
+      "to ask for limit=100 behind a page_param this API ignores, so it "
+      "stored the newest 100 and nothing else. utcdatetime is unique "
+      "across all 902, checked, so it is the key." },
 
   { .id = "AP19_SG_ONEMAP_SEARCH", .name = "OneMap Singapore address search",
     .category = "reference", .portal = "https://www.onemap.gov.sg",
@@ -1216,10 +1239,24 @@ static const hp_source HP3B19_APAC[] = {
     /* &sort=code: unsorted, consecutive pages repeat and skip stocks (985 distinct in 1,000; 1,000 with the sort), 2026-10-05 */
     .headers = { "User-Agent: Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML like Gecko) Chrome/124.0 Safari/537.36" },
     .array_path = "data",
-    .id_keys = "code",
+    /* `code` ALONE LOSES A FIFTH OF THE TABLE, and not to repeated tickers:
+     * 2,737 of 14,100 collapsed (registry sweep, 2026-10-22) because **218 of
+     * every 3,000 rows carry no `code` field at all** — OTC instruments with
+     * no ticker, which sort together under `sort=code` and so cluster on the
+     * later pages. Measured 2026-10-23 over 61 pages / 6,100 rows: `code`
+     * alone is 2,783 distinct, `companyId` alone 5,920, and `code` else
+     * `companyId` is **5,922 — exactly the number of distinct whole records**,
+     * so this is the best key the table admits. `,` CHOOSES (CLAUDE.md rule
+     * 4b): code when present, companyId when not. The two value spaces cannot
+     * collide — a code is a 3-letter ticker, a companyId a decimal string. */
+    .id_keys = "code,companyId",
     .interval = 86400,
     .page_param = "page",
-    .page_max = 141,   /* 14,061 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
+    /* 160, not 141: the endpoint's own totalElements was 14,061 on 2026-10-12
+     * and 14,433 on 2026-10-23, so 141 pages had become a ceiling that cuts.
+     * Headroom is deliberate — a page_max set to exactly the pages needed
+     * files a truncation notice when nothing was lost (CLAUDE.md). */
+    .page_max = 160,
     /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
     .title_keys = "companyName",
     .description = "Every equity listed on the Ho Chi Minh, Hanoi and UPCoM "

@@ -164,6 +164,10 @@ static long pw_total_available(const cJSON *doc) {
      * is the CKAN/JSON:API house spelling. Bare `count` stays out, for the
      * reason above — these do not share its ambiguity. */
     "numberMatched", "totalElements", "recordsTotal", "total",
+    /* Japan Search's item API: `hit` is the whole match set (5,409 beside a
+     * 500-record page). Singular, so it does not share bare `count`'s
+     * ambiguity — a page size is spelled `count`, `size` or `hits`. */
+    "hit",
     NULL
   };
   for (int i = 0; keys[i]; i++) {
@@ -174,6 +178,27 @@ static long pw_total_available(const cJSON *doc) {
   if (cJSON_IsObject(meta)) {
     const cJSON *v = cJSON_GetObjectItemCaseSensitive(meta, "total");
     if (cJSON_IsNumber(v) && v->valuedouble >= 0) return (long)v->valuedouble;
+  }
+  /* One level down under `result`, which is where two API families put it and
+   * where neither of the root lists above can reach: `result.count` is CKAN's
+   * and data.europa.eu's search envelope, `result.totalResults` the Linked
+   * Data API's. Bare root `count` stays out for the reason given above — it is
+   * "records in THIS page" as often as not — but `result.count` is not
+   * ambiguous: the whole match set is the only thing it names in either
+   * family. This list is the THIRD copy of the declared-total idea in the tree
+   * (lib/jsonlist.c's `declared_total`, hpengine's XML reader, and here), so
+   * both spellings were added to jsonlist's list in the same change.
+   *
+   * Measured 2026-10-24: data.europa.eu answers `result.count: 9079` beside
+   * the 100 records it hands over, and pagewalk's notice reported
+   * `records_available: null` while the number sat in the body. */
+  const cJSON *res = cJSON_GetObjectItemCaseSensitive(doc, "result");
+  if (cJSON_IsObject(res)) {
+    static const char *const rkeys[] = { "count", "totalResults", NULL };
+    for (int i = 0; rkeys[i]; i++) {
+      const cJSON *v = cJSON_GetObjectItemCaseSensitive(res, rkeys[i]);
+      if (cJSON_IsNumber(v) && v->valuedouble >= 0) return (long)v->valuedouble;
+    }
   }
   return -1;
 }
@@ -593,6 +618,15 @@ int pw_walk_max(const source_ctx *c, intel_sink *s, const char *id,
       : stopped_on_repeat  ? "the upstream's pagination is not advancing — check whether "
                            "this endpoint needs a cursor parameter we are not sending"
       : stopped_at_ceiling ? "raise JO_PAGE_MAX, or re-run — the walk resumes from the same URL"
+      /* A row that DECLARED a one-page ceiling bounded itself on purpose, so
+       * "give it a page parameter" names the one knob that must not move —
+       * this file's own rule that a remedy pointing at an immovable knob is
+       * worse than none. The case it exists for is an index with no honoured
+       * ordering (gov-dataeuropa-search), where paging re-reads and skips. */
+      : page_max_declared == 1 && (more_known || full_last)
+                         ? "none, unless the upstream gains a stable ordering: this row "
+                           "declares a one-page ceiling on purpose and its own comment "
+                           "says what was measured — see docs/SOURCE_EXHAUSTIVENESS.md"
       : (more_known || full_last)
                          ? "give this source an offset/page parameter in its URL so "
                            "lib/pagewalk.c can continue it — see docs/SOURCE_EXHAUSTIVENESS.md"

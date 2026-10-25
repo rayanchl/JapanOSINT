@@ -18,10 +18,12 @@ static const hp_source T[] = {
     .collector = "us_infrastructure", .category = "infrastructure",
     .description = "Multi-building datacentre campuses: id, org_id, org_name, name, aka, website, social_media, country/city/state/zipcode.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "infrastructure-record", .tags = "\"us\",\"infrastructure\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://www.peeringdb.com/api/campus?limit=3",
+    .url = "https://www.peeringdb.com/api/campus?limit=100",
     .array_path = "data",
     .detail_url = "https://www.peeringdb.com/api/campus/{v}?depth=2", .detail_key = "id",
-    .page_walk = 1,
+    .page_max = 2,   /* 2 x 100 records a run. This row has a detail hop, and the per-run hop budget is 1,000 OR 120 SECONDS — the CLOCK is what binds on a slow host, measured on api.safecast.org, which reached 116 hops of 1,000 before its 120s ran out (2026-10-20). So a run is sized to what can plausibly be deepened rather than to what the API will serve: records past the budget are stamped _detail_pending and, because the budget is spent in page order, never deepened on a later run either. The per-host hop rate is NOT measured for this row — 200 is the family default and the number to revisit if its detail-truncation notice shows pending records. See docs/probe-sized-pages-2026-10-20.md */
+    .page_param = "skip",
+    .page_size = 100,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "global-peeringdb-carrierfac",
@@ -40,10 +42,12 @@ static const hp_source T[] = {
     .collector = "us_infrastructure", .category = "infrastructure",
     .description = "Which datacentres an exchange has switches in: ix_id, fac_id, facility name, city, country. IX -> physical building hop.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "infrastructure-record", .tags = "\"us\",\"infrastructure\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://www.peeringdb.com/api/ixfac?ix_id=26&limit=5",
+    .url = "https://www.peeringdb.com/api/ixfac?ix_id=26&limit=100",
     .array_path = "data",
     .detail_url = "https://www.peeringdb.com/api/fac/{v}?depth=2", .detail_key = "fac_id",
-    .page_walk = 1,
+    .page_max = 2,   /* 2 x 100 records a run. This row has a detail hop, and the per-run hop budget is 1,000 OR 120 SECONDS — the CLOCK is what binds on a slow host, measured on api.safecast.org, which reached 116 hops of 1,000 before its 120s ran out (2026-10-20). So a run is sized to what can plausibly be deepened rather than to what the API will serve: records past the budget are stamped _detail_pending and, because the budget is spent in page order, never deepened on a later run either. The per-host hop rate is NOT measured for this row — 200 is the family default and the number to revisit if its detail-truncation notice shows pending records. See docs/probe-sized-pages-2026-10-20.md */
+    .page_param = "skip",
+    .page_size = 100,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "global-peeringdb-ixlan-by-ix",
@@ -62,10 +66,12 @@ static const hp_source T[] = {
     .collector = "us_infrastructure", .category = "infrastructure",
     .description = "Which ASNs are physically present in a given datacentre: net_id, fac_id, local_asn, facility name/city/country. Facility -> tenant network hop.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "infrastructure-record", .tags = "\"us\",\"infrastructure\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://www.peeringdb.com/api/netfac?fac_id=1&limit=5",
+    .url = "https://www.peeringdb.com/api/netfac?fac_id=1&limit=100",
     .array_path = "data",
     .detail_url = "https://www.peeringdb.com/api/net/{v}?depth=2", .detail_key = "net_id",
-    .page_walk = 1,
+    .page_max = 2,   /* 2 x 100 records a run. This row has a detail hop, and the per-run hop budget is 1,000 OR 120 SECONDS — the CLOCK is what binds on a slow host, measured on api.safecast.org, which reached 116 hops of 1,000 before its 120s ran out (2026-10-20). So a run is sized to what can plausibly be deepened rather than to what the API will serve: records past the budget are stamped _detail_pending and, because the budget is spent in page order, never deepened on a later run either. The per-host hop rate is NOT measured for this row — 200 is the family default and the number to revisit if its detail-truncation notice shows pending records. See docs/probe-sized-pages-2026-10-20.md */
+    .page_param = "skip",
+    .page_size = 100,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "global-peeringdb-netixlan-by-ix",
@@ -73,10 +79,12 @@ static const hp_source T[] = {
     .collector = "us_infrastructure", .category = "infrastructure",
     .description = "Per-port membership rows joining a network to an exchange LAN: net_id, ix_id, ixlan_id, asn, ipaddr4, ipaddr6, port speed (Mbit), is_rs_peer, bfd_support, operational flag. The IX -> member-ASN -> peering IP hop.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "infrastructure-record", .tags = "\"us\",\"infrastructure\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://www.peeringdb.com/api/netixlan?ix_id=26&limit=5",
+    .url = "https://www.peeringdb.com/api/netixlan?ix_id=26&limit=100",
     .array_path = "data",
     .detail_url = "https://www.peeringdb.com/api/net/{v}?depth=2", .detail_key = "net_id",
-    .page_walk = 1,
+    .page_max = 2,   /* 2 x 100 records a run. This row has a detail hop, and the per-run hop budget is 1,000 OR 120 SECONDS — the CLOCK is what binds on a slow host, measured on api.safecast.org, which reached 116 hops of 1,000 before its 120s ran out (2026-10-20). So a run is sized to what can plausibly be deepened rather than to what the API will serve: records past the budget are stamped _detail_pending and, because the budget is spent in page order, never deepened on a later run either. The per-host hop rate is NOT measured for this row — 200 is the family default and the number to revisit if its detail-truncation notice shows pending records. See docs/probe-sized-pages-2026-10-20.md */
+    .page_param = "skip",
+    .page_size = 100,
     .interval = 86400, .free_tier = 1 },
 
   { .id = "us-arin-rdap-autnum",

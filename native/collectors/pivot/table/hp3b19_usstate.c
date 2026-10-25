@@ -1547,9 +1547,26 @@ static const hp_source HP3B19_USSTATE[] = {
     .record_type = "enforcement-notice",
     .tags = "\"us\",\"texas\",\"environment\",\"enforcement\",\"tceq\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.texas.gov/resource/rua3-iswk.json?$limit=1000&$order=:id",
+    .url = "https://data.texas.gov/resource/rua3-iswk.json?$limit=1000&$select=*,:id&$order=:id",
     .date_keys = "noe_dt",
-    .id_keys = "noe_id",
+    /* `noe_id` IS A NOTICE ID, AND A NOTICE COVERS SEVERAL INVESTIGATIONS, so
+     * it identifies a notice and not a record: 370 of 20,000 collapsed on it
+     * (registry sweep, re-measured 2026-10-25). The upstream says so in one
+     * request — noe_id 459,430,322,011,133.00 carries two rows differing in
+     * `invstn_no` (920618 against 1120136) and in the docket's own date suffix
+     * (2011-1298-PST-E; 2013-SEP-12 against ...2013-JUN-03): two real
+     * investigations under one notice, not a repeat. Over the engine's whole
+     * 20,000-row read: 20,000 distinct WHOLE records, 19,595 distinct noe_id,
+     * 19,997 for noe_id+invstn_no — so even the best composite the columns
+     * admit is three short.
+     *
+     * `:id` is Socrata's own row identifier, 20,000 of 20,000 distinct on the
+     * same walk, and it is what the sibling TX_TCEQ_VIOLATION_CITATIONS below
+     * has keyed on all along — the answer was ten lines away, which is this
+     * tree's "look for the other copies" lesson at its smallest scale (the UK
+     * Parliament `_about` case was the same shape). It needs `$select=*,:id`:
+     * Socrata does not serve `:id` unless it is asked for. */
+    .id_keys = ":id",
     .interval = 86400,
     .lat_key = "lat_dec_coord_num",
     .lon_key = "long_dec_coord_num",

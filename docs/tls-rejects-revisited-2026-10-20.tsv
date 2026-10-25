@@ -1,0 +1,91 @@
+# What the probe's TLS strictness actually cost the registry — measured, 2026-10-20.
+#
+# tools/jo_tls.py was added because ssl.create_default_context() refuses
+# handshakes the ENGINE completes: yamaguchi-opendata.jp answers
+# TLSV1_ALERT_INSUFFICIENT_SECURITY to Python's default and HTTP 200 at
+# DEFAULT@SECLEVEL=1 with verification still on, while the engine stores 102
+# records from it across 3 requests. That recovered 20 of the 27 rows the
+# page-2 sweep had written down as dead endpoints.
+#
+# The obvious next question is how many CANDIDATES the same strictness had
+# refused over the tree's history — a probe that rejects a live source is the
+# failure direction that costs sources permanently, because a rejected row
+# never ships. Eight batch-reject files name a TLS refusal, 51 distinct
+# candidates between them. Every one was re-asked with the new context:
+#
+#   ALIVE      21   ALIVE_NONJSON 20, ALIVE_JSON 1
+#   STILL_FAILS 30  CERTIFICATE_VERIFY_FAILED (an untrusted chain, which a
+#                   cipher security level does not address and which must not
+#                   be bypassed) or TLSV1_UNRECOGNIZED_NAME (an SNI mismatch)
+#
+# AND THE COST WAS ZERO, which is only sayable because it was measured rather
+# than assumed in either direction:
+#
+# * 20 of the 21 alive are `jp-kkj-*` — the SAME kkj.go.jp procurement corpus
+#   this session rebuilt as 47 prefecture rows reading it exhaustively over a
+#   date-window cycle, plus two entity pivots. They were rejected once for a
+#   TLS artefact, re-registered by hand later, and are now read in full. Adding
+#   them would be 20 duplicate endpoints.
+# * the 1 remaining, JO41_WP_CORP_7991 (www.mamiya-op.co.jp), serves five posts
+#   titled "Sample post5" dated 2022-07-12 — a demo WordPress install's default
+#   content, not corporate notices. It stays out, and that is a judgement about
+#   the CONTENT rather than about the transport.
+# * the 30 that still fail, fail for the engine too. Measured on four of them:
+#   IODA (x3), Dataverse UCLA, NADA Nepal and NI MARENA all answer `rc=-1` and
+#   file a collector-fetch-failure record naming it.
+#
+# So the tool defect was real and worth fixing — it was actively mislabelling
+# 20 live registered rows as dead — and it had cost the registry nothing.
+#
+verdict	id	records	note	url
+ALIVE_JSON	JO41_WP_CORP_7991	5	HTTP 200, 11096 bytes	https://www.mamiya-op.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc
+ALIVE_NONJSON	jp-kkj-award-results-tokyo	0	HTTP 200, 215824 bytes	https://kkj.go.jp/api/?Query=%E8%90%BD%E6%9C%AD%E7%B5%90%E6%9E%9C&LG_Code=13
+ALIVE_NONJSON	jp-kkj-procurement-api	0	HTTP 200, 256435 bytes	https://www.kkj.go.jp/api/?Query=%E5%B7%A5%E4%BA%8B
+ALIVE_NONJSON	jp-kkj-procurement-api-paged	0	HTTP 200, 270203 bytes	https://www.kkj.go.jp/api/?Query=%E3%83%88%E3%83%A8%E3%82%BF&Count=5
+ALIVE_NONJSON	jp-kkj-tender-aichi	0	HTTP 200, 78851 bytes	https://kkj.go.jp/api/?Query=%E5%B7%A5%E4%BA%8B&LG_Code=23
+ALIVE_NONJSON	jp-kkj-tender-by-date	0	HTTP 200, 9004 bytes	https://kkj.go.jp/api/?CFT_Issue_Date=2026-08-01/2026-08-16&Query=%E9%81%93%E8%B7%AF
+ALIVE_NONJSON	jp-kkj-tender-chiba	0	HTTP 200, 248835 bytes	https://kkj.go.jp/api/?Query=%E5%B7%A5%E4%BA%8B&LG_Code=12
+ALIVE_NONJSON	jp-kkj-tender-fukuoka	0	HTTP 200, 142827 bytes	https://kkj.go.jp/api/?Query=%E5%B7%A5%E4%BA%8B&LG_Code=40
+ALIVE_NONJSON	jp-kkj-tender-hiroshima	0	HTTP 200, 400000 bytes	https://kkj.go.jp/api/?Query=%E5%B7%A5%E4%BA%8B&LG_Code=34
+ALIVE_NONJSON	jp-kkj-tender-hokkaido	0	HTTP 200, 163722 bytes	https://kkj.go.jp/api/?Query=%E5%B7%A5%E4%BA%8B&LG_Code=01
+ALIVE_NONJSON	jp-kkj-tender-hyogo	0	HTTP 200, 400000 bytes	https://kkj.go.jp/api/?Query=%E5%B7%A5%E4%BA%8B&LG_Code=28
+ALIVE_NONJSON	jp-kkj-tender-ibaraki	0	HTTP 200, 400000 bytes	https://kkj.go.jp/api/?Query=%E5%B7%A5%E4%BA%8B&LG_Code=08
+ALIVE_NONJSON	jp-kkj-tender-kanagawa	0	HTTP 200, 223141 bytes	https://kkj.go.jp/api/?Query=%E5%B7%A5%E4%BA%8B&LG_Code=14
+ALIVE_NONJSON	jp-kkj-tender-kyoto	0	HTTP 200, 351134 bytes	https://kkj.go.jp/api/?Query=%E5%B7%A5%E4%BA%8B&LG_Code=26
+ALIVE_NONJSON	jp-kkj-tender-miyagi	0	HTTP 200, 400000 bytes	https://kkj.go.jp/api/?Query=%E5%B7%A5%E4%BA%8B&LG_Code=04
+ALIVE_NONJSON	jp-kkj-tender-niigata	0	HTTP 200, 34584 bytes	https://kkj.go.jp/api/?Query=%E5%B7%A5%E4%BA%8B&LG_Code=15
+ALIVE_NONJSON	jp-kkj-tender-osaka	0	HTTP 200, 144581 bytes	https://kkj.go.jp/api/?Query=%E5%B7%A5%E4%BA%8B&LG_Code=27
+ALIVE_NONJSON	jp-kkj-tender-saitama	0	HTTP 200, 400000 bytes	https://kkj.go.jp/api/?Query=%E5%B7%A5%E4%BA%8B&LG_Code=11
+ALIVE_NONJSON	jp-kkj-tender-search	0	HTTP 200, 256435 bytes	https://kkj.go.jp/api/?Query=%E5%B7%A5%E4%BA%8B
+ALIVE_NONJSON	jp-kkj-tender-shizuoka	0	HTTP 200, 108608 bytes	https://kkj.go.jp/api/?Query=%E5%B7%A5%E4%BA%8B&LG_Code=22
+ALIVE_NONJSON	jp-kkj-tender-tokyo	0	HTTP 200, 197483 bytes	https://kkj.go.jp/api/?Query=%E5%B7%A5%E4%BA%8B&LG_Code=13
+STILL_FAILS	DV_ISRAEL_ISDC	0	<urlopen error [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:1016)>	https://dataverse.openscholar.org/api/search
+STILL_FAILS	JO32_MUNI_YAMAGUCHI_CKAN	0	HTTP Error 409: CONFLICT	https://yamaguchi-opendata.jp/ckan/api/3/action/datastore_search
+STILL_FAILS	JO41_WP_CORP_3939	0	<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>	https://www.kanamic.net/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc
+STILL_FAILS	JO41_WP_CORP_5983	0	<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>	https://www.iwabuchi.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc
+STILL_FAILS	JO41_WP_CORP_6444	0	<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>	https://www.sanden.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc
+STILL_FAILS	JO41_WP_CORP_6696	0	<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>	https://www.traas.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc
+STILL_FAILS	JO41_WP_CORP_7480	0	<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>	https://www.suzuden.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc
+STILL_FAILS	JO41_WP_UNIV_IP	0	<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'www.ip.kyusan-u.	https://www.ip.kyusan-u.ac.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc
+STILL_FAILS	MATRIX_PUBLICROOMS_MATRIX_KDE_ORG	0	<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'matrix.kde.org'.	https://matrix.kde.org/_matrix/client/v3/publicRooms?limit=100
+STILL_FAILS	NADA_SOUTH_AFRICA_STATSSA	0	<urlopen error [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:1016)>	https://nesstar.statssa.gov.za/api/catalog/search
+STILL_FAILS	NOSTR_RELAY_RELAY_NOSTRICH_DE	0	<urlopen error [Errno 104] Connection reset by peer>	https://relay.nostrich.de/
+STILL_FAILS	ansd-actualite	0	<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>	https://www.ansd.sn/jsonapi/node/actualite
+STILL_FAILS	ansd-appel-offre	0	<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>	https://www.ansd.sn/jsonapi/node/appel_d_offre
+STILL_FAILS	ansd-concours-formations	0	<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>	https://www.ansd.sn/jsonapi/node/concours_et_formations
+STILL_FAILS	ansd-enquete-etude	0	<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>	https://www.ansd.sn/jsonapi/node/enquete_et_etude
+STILL_FAILS	ansd-evenements	0	<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>	https://www.ansd.sn/jsonapi/node/evenements
+STILL_FAILS	ansd-flash-stat	0	<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>	https://www.ansd.sn/jsonapi/node/flash_stat
+STILL_FAILS	ansd-indicateur-economique	0	<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>	https://www.ansd.sn/jsonapi/node/indicateur_economique
+STILL_FAILS	ansd-lois-rapport-activite	0	<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>	https://www.ansd.sn/jsonapi/node/rapport_d_activite_ansd
+STILL_FAILS	ansd-lois-reglements	0	<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>	https://www.ansd.sn/jsonapi/node/lois_et_reglements
+STILL_FAILS	ansd-procedures	0	<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>	https://www.ansd.sn/jsonapi/node/procedures
+STILL_FAILS	ansd-rapport-recensement	0	<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>	https://www.ansd.sn/jsonapi/node/rapport_recensement
+STILL_FAILS	ansd-ressource	0	<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>	https://www.ansd.sn/jsonapi/node/ressource
+STILL_FAILS	ansd-situation-eco-sociale	0	<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>	https://www.ansd.sn/jsonapi/node/situation_economique_et_social
+STILL_FAILS	ansd-statistique-theme	0	<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>	https://www.ansd.sn/jsonapi/node/statistique_theme
+STILL_FAILS	hk-legco-bills	0	<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>	https://app.legco.gov.hk/BillsDB/odata/Vbills?$format=json&$top=200
+STILL_FAILS	hk-legco-hansard-speeches	0	<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>	https://app.legco.gov.hk/OpenData/HansardDB/Speeches?$format=json&$top=200
+STILL_FAILS	hk-legco-voting-results	0	<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>	https://app.legco.gov.hk/vrdb/odata/vVotingResult?$format=json&$top=200
+STILL_FAILS	ons-algerie-rss	0	<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>	https://www.ons.dz/spip.php?page=backend
+STILL_FAILS	pk-pcrwr-search	0	<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)>	https://www.pcrwr.gov.pk/wp-json/wp/v2/search?search=water&per_page=50

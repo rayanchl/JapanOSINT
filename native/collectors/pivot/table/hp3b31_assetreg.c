@@ -46,6 +46,47 @@
 
 static const hp_source HP3B31_ASSETREG[] = {
   /* ── Land and cadastre ────────────────────────────────────────────────── */
+  { .id = "CZ_CUZK_CADASTRE", .name = "Czech Republic ČÚZK — cadastre of real estate",
+    .name_ja = "チェコ 不動産地籍", .category = "government",
+    .portal = "https://nahlizenidokn.cuzk.cz", .record_type = "cz-parcel",
+    .tags = "\"cz\",\"cadastre\",\"property\",\"ownership\"",
+    .mode = HP_JSON,
+    /* RE-POINTED 2026-10-22 (open item B2). The scraped ASPX path is gone, and
+     * the cadastre now publishes a documented REST API — found by asking the
+     * host what it serves rather than guessing a path: its Swagger UI names
+     * its own spec at /swagger/v1.0/swagger.json, which gives the base
+     * (/api/v1), 41 paths, and the authentication scheme.
+     *
+     * IT IS A CREDENTIAL GATE, measured rather than assumed. One request each
+     * on 2026-10-22, both of them refused identically:
+     *     no ApiKey header at all   401, an RFC 7235 problem+json body
+     *     ApiKey: <a bogus value>   401, the same body
+     * while /api/v1/AplikacniSluzby/Health answers 200 without a key, so the
+     * service is up and it is the DATA that is gated. So this row carries
+     * key_env and stores a "needs credential" notice naming exactly what is
+     * missing until a key exists — rule 1's honest degradation — instead of a
+     * 404 that reads like a dead publisher.
+     *
+     * Its search endpoints take CODES, not free text (KodKatastralnihoUzemi is
+     * a cadastral-area code, KmenoveCisloParcely a parcel number), so this is
+     * an identifier pivot like the openFDA nine, not a name search. The entity
+     * is the cadastral-area code.
+     *
+     * The API also documents the distinction rule 1 cares about, and it is
+     * worth honouring when the key arrives: a MISSING object is 404, while a
+     * search matching nothing is 200 with an empty data list and an
+     * informational message. */
+    .free_tier = 0, .key_env = "JO_CUZK_API_KEY",
+    .url = "https://api-kn.cuzk.gov.cz/api/v1/Parcely/Vyhledani"
+      "?KodKatastralnihoUzemi={qd}",
+    .headers = { "ApiKey: {key}" },
+    .array_path = "data",
+    .description = "The Czech cadastre publishes the owner of each parcel and "
+      "building by name, together with the title deed, encumbrances, easements "
+      "and pending proceedings. One of the few European property registers "
+      "where ownership is openly readable — through an API that needs a key "
+      "registered at registrace.cuzk.gov.cz, which this row says in a notice "
+      "until one is set in JO_CUZK_API_KEY" },
 
   { .id = "EE_LAND_BOARD_CADASTRE", .name = "Estonia Land Board — cadastre & address service",
     .name_ja = "エストニア 土地台帳", .category = "government",

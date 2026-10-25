@@ -7,39 +7,92 @@
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
 
+/* THE ELEVEN BfS ROWS: eight were reading one page of a million records.
+ *
+ * Measured 2026-10-25 against www.imis.bfs.de, which publishes the total in
+ * the same body it serves the page from, so each shortfall below is the
+ * service's own arithmetic and not an estimate:
+ *
+ *     typeName                       read    of         interval
+ *     new_gamma_aerosole_24h         1000    670,928    21600
+ *     odlinfo_timeseries_odl_1h       500    260,742     3600
+ *     new_dwd_iod_24h                1000     97,760    21600
+ *     nuklide_boden                   200     95,055    86400
+ *     bfg_gesamt_gamma               1000     88,371     3600
+ *     eurdep_maxValue                1000*    29,968     3600
+ *     bsh_gesamt_gamma_kuenstlich    1000     24,157     3600
+ *     eurdep_latestValue             1000*    16,856     3600
+ *                                   -----  ---------
+ *                                    6700  1,284,847
+ *
+ * (* those two DECLARED 2000 and were served 1000: the service applies its own
+ * cap, so the declared size was above what it will return and every page came
+ * back short — and a walk reads a short page as the upstream's end of data.
+ * They declare 1000 now, which is what the server gives.)
+ *
+ * The missing half was only the cursor. geojson_emit_paged()'s mechanism 3
+ * advances a cursor when the upstream's own total exceeds what has been read
+ * AND THE URL ALREADY NAMES ONE — "the remainder is the server's arithmetic,
+ * not ours" — and GeoServer publishes `totalFeatures` in every body. So
+ * `startIndex=0` is what these rows lacked, not a code change.
+ *
+ * `sortBy=id` is a prerequisite, not decoration: GeoServer refuses
+ * `startIndex` without a sort on some deployments ("Cannot do natural order
+ * without a primary key", recorded in CLAUDE.md from BC's service), and an
+ * offset walk with no stable sort skips records on the rest. Verified per
+ * typeName before it was written: `startIndex=0` against `startIndex=20` with
+ * `sortBy=id` returns 20 + 20 features with overlap 0 on all eight.
+ *
+ * THREE ROWS ON THE SAME SERVICE ARE DELIBERATELY UNTOUCHED because they are
+ * complete: bfs_locations holds 8 features, new_dwd_niederschlag_24h 421 and
+ * odlinfo_odl_1h_latest 1,673, each below its declared size. A cursor would
+ * buy them nothing and would cost one extra request per run.
+ *
+ * WHAT IS STILL MISSING, with its arithmetic, because a fix that recovers
+ * 20,000 of 670,928 must not be filed as done: the geojson ceiling is 20 pages
+ * ($JO_GEOJSON_PAGE_MAX), so a fixed row now reads up to 20,000 a run against
+ * 1,000 before. That COMPLETES eurdep_latestValue (17 pages) and discloses a
+ * shortfall for the other seven, up to 671 pages for gamma_aerosole. A VGEO
+ * row cannot declare `page_max` or `page_resume` — those are hpengine opts —
+ * so reading these exhaustively means moving the eight rows into an hp table
+ * with `page_param=startIndex`, `page_size=1000`, `page_max=200` and
+ * `page_resume=1`, the cycle CLAUDE.md prescribes above 200 pages. The ids and
+ * the keys carry over unchanged, because geojson keys a Feature on its own
+ * `id` and an hp row with `id_keys="id"` keys on the same field, so no uid
+ * moves and nothing needs cleanup_stale_uids.py. That is the next step. */
 VGEO(geo_bfs_bfg_gamma, "geo-bfs-bfg-gamma", "BfS Germany — waterway gamma monitoring", "ドイツBfS — 水路ガンマ監視",
   "environment", "radiation",
-  "https://www.imis.bfs.de/ogc/opendata/ows?service=WFS&version=1.1.0&request=GetFeature&typeName=opendata:bfg_gesamt_gamma&outputFormat=application/json&maxFeatures=1000",
+  "https://www.imis.bfs.de/ogc/opendata/ows?service=WFS&version=1.1.0&request=GetFeature&typeName=opendata:bfg_gesamt_gamma&outputFormat=application/json&maxFeatures=1000&sortBy=id&startIndex=0",
   "en", "[\"germany\",\"radiation\",\"water\"]", 21600,
   "German federal waterway gamma monitoring stations.");
 
 VGEO(geo_bfs_bsh_gamma, "geo-bfs-bsh-gamma", "BfS Germany — marine artificial gamma", "ドイツBfS — 海域人工ガンマ核種",
   "environment", "radiation",
-  "https://www.imis.bfs.de/ogc/opendata/ows?service=WFS&version=1.1.0&request=GetFeature&typeName=opendata:bsh_gesamt_gamma_kuenstlich&outputFormat=application/json&maxFeatures=1000",
+  "https://www.imis.bfs.de/ogc/opendata/ows?service=WFS&version=1.1.0&request=GetFeature&typeName=opendata:bsh_gesamt_gamma_kuenstlich&outputFormat=application/json&maxFeatures=1000&sortBy=id&startIndex=0",
   "en", "[\"germany\",\"radiation\",\"marine\"]", 21600,
   "North Sea and Baltic artificial gamma monitoring by BSH.");
 
 VGEO(geo_bfs_eurdep_latest, "geo-bfs-eurdep-latest", "BfS/EURDEP — European gamma dose rate, latest", "BfS/EURDEP — 欧州空間線量率 最新",
   "environment", "radiation",
-  "https://www.imis.bfs.de/ogc/opendata/ows?service=WFS&version=1.1.0&request=GetFeature&typeName=opendata:eurdep_latestValue&outputFormat=application/json&maxFeatures=2000",
+  "https://www.imis.bfs.de/ogc/opendata/ows?service=WFS&version=1.1.0&request=GetFeature&typeName=opendata:eurdep_latestValue&outputFormat=application/json&maxFeatures=1000&sortBy=id&startIndex=0",
   "en", "[\"europe\",\"radiation\",\"eurdep\"]", 3600,
   "Latest EURDEP gamma dose rate values across European monitoring networks, with station coordinates.");
 
 VGEO(geo_bfs_eurdep_max, "geo-bfs-eurdep-max", "BfS/EURDEP — European gamma dose rate, maxima", "BfS/EURDEP — 欧州空間線量率 最大値",
   "environment", "radiation",
-  "https://www.imis.bfs.de/ogc/opendata/ows?service=WFS&version=1.1.0&request=GetFeature&typeName=opendata:eurdep_maxValue&outputFormat=application/json&maxFeatures=2000",
+  "https://www.imis.bfs.de/ogc/opendata/ows?service=WFS&version=1.1.0&request=GetFeature&typeName=opendata:eurdep_maxValue&outputFormat=application/json&maxFeatures=1000&sortBy=id&startIndex=0",
   "en", "[\"europe\",\"radiation\",\"eurdep\"]", 3600,
   "Maximum recent EURDEP dose rate per European station; anomaly screening layer.");
 
 VGEO(geo_bfs_gamma_aerosole, "geo-bfs-gamma-aerosole", "BfS Germany — aerosol gamma nuclides", "ドイツBfS — エアロゾル中ガンマ核種",
   "environment", "radiation",
-  "https://www.imis.bfs.de/ogc/opendata/ows?service=WFS&version=1.1.0&request=GetFeature&typeName=opendata:new_gamma_aerosole_24h&outputFormat=application/json&maxFeatures=1000",
+  "https://www.imis.bfs.de/ogc/opendata/ows?service=WFS&version=1.1.0&request=GetFeature&typeName=opendata:new_gamma_aerosole_24h&outputFormat=application/json&maxFeatures=1000&sortBy=id&startIndex=0",
   "en", "[\"germany\",\"radiation\",\"aerosol\"]", 21600,
   "Airborne particulate gamma nuclide measurements by site.");
 
 VGEO(geo_bfs_iod_24h, "geo-bfs-iod-24h", "BfS Germany — airborne iodine-131", "ドイツBfS — 大気中ヨウ素131",
   "environment", "radiation",
-  "https://www.imis.bfs.de/ogc/opendata/ows?service=WFS&version=1.1.0&request=GetFeature&typeName=opendata:new_dwd_iod_24h&outputFormat=application/json&maxFeatures=1000",
+  "https://www.imis.bfs.de/ogc/opendata/ows?service=WFS&version=1.1.0&request=GetFeature&typeName=opendata:new_dwd_iod_24h&outputFormat=application/json&maxFeatures=1000&sortBy=id&startIndex=0",
   "en", "[\"germany\",\"radiation\",\"iodine\"]", 21600,
   "Airborne I-131 measurements, the classic reactor-release indicator.");
 
@@ -57,7 +110,7 @@ VGEO(geo_bfs_niederschlag, "geo-bfs-niederschlag", "BfS Germany — precipitatio
 
 VGEO(geo_bfs_nuklide_boden_small, "geo-bfs-nuklide-boden-small", "BfS Germany — soil nuclide measurements", "ドイツBfS — 土壌核種測定",
   "environment", "radiation",
-  "https://www.imis.bfs.de/ogc/opendata/ows?service=WFS&version=1.1.0&request=GetFeature&typeName=opendata:nuklide_boden&outputFormat=application/json&maxFeatures=200",
+  "https://www.imis.bfs.de/ogc/opendata/ows?service=WFS&version=1.1.0&request=GetFeature&typeName=opendata:nuklide_boden&outputFormat=application/json&maxFeatures=200&sortBy=id&startIndex=0",
   "en", "[\"germany\",\"radiation\",\"soil\"]", 86400,
   "Soil radionuclide sampling results with site coordinates.");
 
@@ -69,7 +122,7 @@ VGEO(geo_bfs_odl_1h, "geo-bfs-odl-1h", "BfS Germany — gamma dose rate, hourly"
 
 VGEO(geo_bfs_odl_timeseries, "geo-bfs-odl-timeseries", "BfS Germany — gamma dose rate time series", "ドイツBfS — 空間線量率 時系列",
   "environment", "radiation",
-  "https://www.imis.bfs.de/ogc/opendata/ows?service=WFS&version=1.1.0&request=GetFeature&typeName=opendata:odlinfo_timeseries_odl_1h&outputFormat=application/json&maxFeatures=500",
+  "https://www.imis.bfs.de/ogc/opendata/ows?service=WFS&version=1.1.0&request=GetFeature&typeName=opendata:odlinfo_timeseries_odl_1h&outputFormat=application/json&maxFeatures=500&sortBy=id&startIndex=0",
   "en", "[\"germany\",\"radiation\",\"timeseries\"]", 3600,
   "Recent hourly dose-rate history per German probe.");
 

@@ -53,6 +53,7 @@ NATIVE = os.path.dirname(HERE)
 sys.path.insert(0, os.path.join(NATIVE, "collectors"))
 sys.path.insert(0, HERE)
 
+import jo_tls                     # noqa: E402  (THE TLS context)
 import verify_feeds as VF          # noqa: E402  (verdict logic, reused verbatim)
 from gen_hp_batch import load               # noqa: E402  (adds the mode/want check)
 from manifest import parse_opts, opt        # noqa: E402  (THE opts parser)
@@ -432,8 +433,12 @@ def fetch(url, extra, timeout=None, body=None):
     data = body.encode("utf-8") if body is not None else None
     req = urllib.request.Request(VF.encode_url(url), headers=headers, data=data,
                                  method="POST" if data is not None else "GET")
+    # Main's 429/Retry-After handling and this branch's shared TLS context are
+    # both needed here: the default context refuses handshakes the engine
+    # completes, and THIS is the gate that decides whether a row ships.
     try:
-        resp_cm = urllib.request.urlopen(req, timeout=timeout or VF.TIMEOUT)
+        resp_cm = urllib.request.urlopen(req, timeout=timeout or VF.TIMEOUT,
+                                         context=jo_tls.context())
     except urllib.error.HTTPError as e:
         if e.code == 429 or e.headers.get("Retry-After"):
             _throttled(host, e.code, e.headers.get("Retry-After"))

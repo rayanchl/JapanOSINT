@@ -204,6 +204,109 @@ static const hp_source HP3B23_JPREGISTRY[] = {
       "revision identifier, which is what distinguishes the version in "
       "force on a given date from the one merely passed." },
 
+  /* FOUR VJSON ROWS READ THIS SAME API, FETCHED 14.9 MB A RUN BETWEEN THEM AND
+   * STORED NOTHING — for four days at least, and nothing said so. Found
+   * 2026-10-25 by giving the registry sweep's EMITS_NOTHING verdict the byte
+   * count that was already on the run line: `jpx-egov-laws-v2`,
+   * `jpx-egov-laws-cabinet`, `jpx-egov-laws-ministerial` (4.1, 4.4 and 4.5 MB
+   * over 20 requests each) and `gov-jp-egov-laws` (2.0 MB), all `rc=0
+   * records=0 stored=0`, the invisible nothing rule 1 is about.
+   *
+   * The cause is structural rather than per row: EVERY FIELD OF AN e-Gov LAW
+   * RECORD IS NESTED. A record is `{law_info:{...}, revision_info:{...},
+   * current_revision_info:{...}}` with not one top-level scalar, and VJSON's
+   * uid and title precedence lists are single-level by design — `pick()` in
+   * lib/jsonlist.c looks up a bare name and deliberately SKIPS a nested value
+   * so a later key in the list can still match. With every candidate nested
+   * there is nothing to key on and nothing to title, so each record was
+   * dropped. No VJSON row can read this API, whatever its keys say.
+   *
+   * hpengine can, because `id_keys`/`title_keys`/`date_keys` take dotted
+   * paths, and the row next door has been proving it since 2026-10-12. So the
+   * four are removed and this ONE row replaces them: a complete read of the
+   * whole statute database rather than a slice.
+   *
+   * Complete rather than sliced on purpose. `law_type` looked like the natural
+   * partition, and enumerating it gives Constitution 1, Act 2,165,
+   * CabinetOrder 2,445, ImperialOrder 74, MinisterialOrdinance 4,449, Rule 454
+   * — **9,588 against a total of 9,567**, so the slices OVER-sum and a law can
+   * answer to two of them. Over-coverage is not proof of coverage (CLAUDE.md,
+   * batch 55: enumerate the dimension, then check the slices sum to the
+   * whole), and an unfiltered read needs no such argument. Measured: 9,567
+   * total, 96 pages at limit=100, page 1 byte-stable across two reads, page 1
+   * and page 2 disjoint, `law_info.law_id` 200 of 200 distinct over two pages.
+   * `page_max` is 110 and not 96, because a ceiling set to exactly the pages
+   * needed manufactures a false truncation notice.
+   *
+   * EGOV_LAW_LIST_ACT above is now a strict SUBSET of this row — same endpoint,
+   * same keys, 2,165 of these 9,567, upserting onto the same uids. It is kept
+   * because it is a measured, shipped row and `law_type=Act` is a facet a
+   * reader asks for by name; the cost is 2,165 duplicate upserts a day and the
+   * numbers are here so that retiring it stays a one-line decision. */
+  /* TDnet, THE SAME NESTED-RECORD DEFECT AS THE e-GOV ROWS ABOVE, third
+   * instance of the day. `jpx-tdnet-recent` transferred 210 KB a run and
+   * stored nothing: a record on this mirror is `{"Tdnet": {…}}` with no
+   * top-level scalar, so VJSON's single-level uid and title lists dropped
+   * every one. Found 2026-10-25 from the byte count on the run line.
+   *
+   * **AND THE SHAPE DEPENDS ON THE `limit` VALUE**, which is why the keys name
+   * both. Measured twice at each value and stable every time: no limit, 3, 300
+   * and 500 return items WRAPPED in `Tdnet`, while **`limit=100` returns them
+   * FLAT** — same endpoint, same minute, two record shapes. So a row keyed on
+   * the wrapped path alone would store nothing the day somebody tuned the limit
+   * to 100, and a row keyed flat stores nothing today. `,` CHOOSES
+   * (CLAUDE.md rule 4b), so `Tdnet.id,id` reads the wrapped path and falls back
+   * to the flat one, and the row is immune to the flip.
+   *
+   * This is NOT a duplicate of `tdnet-disclosure`, which scrapes
+   * release.tdnet.info's own HTML index: the mirror serves structured JSON
+   * carrying the securities code and the XBRL link, which the HTML listing does
+   * not. `total_count` equals the rows returned at every limit, so it is this
+   * page's count and not the collection's — the endpoint is a rolling recent
+   * window, so the row makes one request and does not page. 500 of 500
+   * distinct ids measured. */
+  { .id = "JP_TDNET_RECENT", .name = "TDnet — timely disclosures, rolling feed",
+    .name_ja = "TDnet 適時開示情報 直近一覧",
+    .category = "finance", .portal = "https://www.release.tdnet.info",
+    .record_type = "disclosure",
+    .tags = "\"japan\",\"disclosure\",\"tdnet\",\"listed-companies\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://webapi.yanoshin.jp/webapi/tdnet/list/recent.json?limit=500",
+    .array_path = "items",
+    .title_keys = "Tdnet.title,title",
+    .id_keys = "Tdnet.id,id",
+    .date_keys = "Tdnet.pubdate,pubdate",
+    .link_keys = "Tdnet.document_url,document_url",
+    .interval = 1800,
+    .description = "Timely disclosures filed by Tokyo-listed companies as the "
+      "yanoshin mirror serves them: the disclosure id and publication time, the "
+      "securities code and company name, the document title and a link to the "
+      "filed PDF, plus the XBRL and financial-summary URLs where the filing has "
+      "them. A rolling window of the most recent 500" },
+
+  { .id = "EGOV_LAW_LIST_ALL", .name = "e-Gov Law Search — every statute in force",
+    .name_ja = "e-Gov法令検索 法令一覧（全法令種別）",
+    .category = "legal", .portal = "https://laws.e-gov.go.jp",
+    .record_type = "statute",
+    .tags = "\"japan\",\"law\",\"legislation\",\"egov\",\"statute\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://laws.e-gov.go.jp/api/2/laws?limit=100",
+    .array_path = "laws",
+    .date_keys = "law_info.promulgation_date",
+    .id_keys = "law_info.law_id,revision_info.law_revision_id",
+    .interval = 86400,
+    .page_param = "offset",
+    .page_size = 100,
+    .page_zero_based = 1,
+    .page_max = 110,   /* 9,567 records = 96 pages, measured 2026-10-25; headroom is deliberate */
+    .title_keys = "law_info.law_title,revision_info.law_title",
+    .description = "Every statute in Japan's official e-Gov law database, across all "
+      "law types — the Constitution, Acts, Cabinet Orders, Imperial "
+      "Orders, Ministerial Ordinances and Rules — each with its law "
+      "number, promulgation and enforcement dates and the revision "
+      "identifier that distinguishes the version in force from the one "
+      "merely passed. 9,567 statutes when measured on 2026-10-25" },
+
   { .id = "EGOV_LAW_KEYWORD", .name = "e-Gov Law Search — keyword search",
     .name_ja = "e-Gov法令検索 キーワード検索",
     .category = "legal", .portal = "https://laws.e-gov.go.jp",

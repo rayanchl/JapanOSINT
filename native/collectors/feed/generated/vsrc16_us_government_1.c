@@ -169,8 +169,22 @@ VJSON(us_nycopendata_views_index, "us-nycopendata-views-index", "NYC Open Data -
 
 VJSON(us_phl_arcgis_zoning_basedistricts, "us-phl-arcgis-zoning-basedistricts", "Philadelphia zoning base districts (city ArcGIS org)", "Philadelphia zoning base districts (city ArcGIS org)",
   "us_government", "government",
-  "https://services.arcgis.com/fLeGjb7u4uXqeF9q/ArcGIS/rest/services/Zoning_BaseDistricts/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1&f=json",
-  "fields",
+  /* Same pair of defects as us-ny-dec-remediation-spills, same batch, found
+   * the same way (measured 2026-10-25): `array_path` was "fields", the ArcGIS
+   * reply's COLUMN DEFINITIONS, so this row emitted the layer's schema as
+   * zoning districts; and `resultRecordCount=1` asked for one polygon a day of
+   * 29,208 the layer holds (its own returnCountOnly). Fixing the limit without
+   * the path would have changed nothing.
+   *
+   * `f=geojson` gives each feature a top-level `id` for VJSON's key
+   * precedence — an `f=json` feature is {attributes, geometry} and would have
+   * keyed on a hash. 2000 is the layer's declared maxRecordCount; above it
+   * ArcGIS clamps silently and the short page reads as the end of the data.
+   * `orderByFields=objectid` is this layer's own objectIdField spelling — of
+   * 639 layers measured there are twelve spellings, and a wrong one is an
+   * error, not a fallback. 29,208 records is 15 pages, inside the ceiling. */
+  "https://services.arcgis.com/fLeGjb7u4uXqeF9q/ArcGIS/rest/services/Zoning_BaseDistricts/FeatureServer/0/query?where=1%3D1&outFields=*&orderByFields=objectid&resultRecordCount=2000&f=geojson",
+  "features",
   "en", "[\"us\",\"government\",\"batch16\",\"high-penetrancy\"]", 86400,
   "Zoning district polygons with code/long_code attributes. The org id fLeGjb7u4uXqeF9q hosts the rest of Philadelphia's authoritative feature services (the service directory at /arcgis/rest/services?f=json enumerates them) and complements the Carto tables with the spatial layer.");
 

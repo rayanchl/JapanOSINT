@@ -174,12 +174,50 @@ VJSON(geo_cmr_stac_root, "geo-cmr-stac-root", "NASA CMR STAC — provider catalo
   "en", "[\"nasa\",\"stac\",\"catalog\"]", 86400,
   "List of NASA DAAC STAC endpoints.");
 
-VJSON(geo_copernicus_odata_s2, "geo-copernicus-odata-s2", "Copernicus Data Space — Sentinel-2 OData", "Copernicus — Sentinel-2 OData",
+/* This row read the OLDEST end of a 40-million-product archive, every hour,
+ * for as long as it existed — the dea-stac case, found 2026-10-25 from its
+ * collision count (2,000 emitted / 1,703 stored). Its URL declared no
+ * `$orderby`, and the unordered default is near-insertion order: page 1 led
+ * with `S2A_MSIL2A_20150903T112116` and page 2 with a July 2015 product, so
+ * the twenty pages were an arbitrary slice of 2015 re-stored every run while
+ * the live archive grew behind them. The 297 collisions were the only symptom,
+ * and they are the harmless half — an unordered walk that serves one record
+ * twice skips another, and the skip leaves no trace.
+ *
+ * Measured the same day, one request each. The endpoint VALIDATES its query
+ * string — `frobnicate=7` is HTTP 400 — so an accepted parameter is being
+ * honoured rather than ignored, which is the control this tree learned to send
+ * after batch 55 (26 sort spellings that all "worked" against an endpoint that
+ * read none of them). `$orderby=PublicationDate asc|desc` and `$orderby=Id`
+ * each give a different head; `$top` is honoured to 1,000 and 422s at 2,000;
+ * `@odata.nextLink` is published on every page, which is what has been paging
+ * this row all along.
+ *
+ * So the fix is the ordering and a window, not the paging. ASCENDING is the
+ * half that matters: Sentinel-2 publishes 1,915 products an hour (28,158 a
+ * day), and new products land at the TAIL of an ascending walk, where the walk
+ * has not been yet — a three-page read of a two-hour window came back 2,737
+ * distinct of 2,737, no overlap and no skip, against the 297 it was losing.
+ * Descending would have kept the drift at the head and the 20-page ceiling
+ * would still have bounded it to the newest 2,000.
+ *
+ * The window is SEVEN hours (8,512 products measured, 9 pages of 1,000 inside
+ * the default 20-page ceiling) rather than one, because the row's declared
+ * hourly interval is not the cadence that runs: the operator's system-wide
+ * policy sits above it and its compiled default is six hours, so a window
+ * sized on 3600 would drop five hours of publications on an unmodified
+ * install. Seven hours covers that with ~2.3x headroom for a reprocessing
+ * burst, and `$count=true` makes the window state its own total, so an
+ * overflow discloses itself with the real number instead of looking like a
+ * quiet hour. `Id` is the product UUID and keys the row (200 of 200 distinct
+ * when measured), so a product whose metadata is revised updates its row
+ * rather than arriving as a second one. */
+VJSON_KEYED(geo_copernicus_odata_s2, "geo-copernicus-odata-s2", "Copernicus Data Space — Sentinel-2 OData", "Copernicus — Sentinel-2 OData",
   "science", "earthobs",
-  "https://catalogue.dataspace.copernicus.eu/odata/v1/Products?$filter=Collection/Name%20eq%20%27SENTINEL-2%27&$top=100",
+  "https://catalogue.dataspace.copernicus.eu/odata/v1/Products?$filter=Collection/Name%20eq%20%27SENTINEL-2%27%20and%20PublicationDate%20gt%20{ago:25200}&$orderby=PublicationDate%20asc&$top=1000&$count=true",
   "value",
   "en", "[\"sentinel2\",\"odata\",\"copernicus\"]", 3600,
-  "OData product query over the Sentinel-2 archive.");
+  "Sentinel-2 products published in the last seven hours, oldest first.", "Id");
 
 VGEO(geo_cwfis_nfdb_points, "geo-cwfis-nfdb-points", "CWFIS Canada — national fire database points", "カナダCWFIS — 全国火災データベース",
   "science", "wildfire",

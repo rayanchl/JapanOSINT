@@ -1,10 +1,17 @@
 #include "httpclient.h"
+#include "catrust.h"
 #include "url_override.h"
 #include "evidence.h"
 #include "content_change.h"
 #include "hostgate.h"
+#include "../lib/jocore.h"   /* jo_strcasestr: strcasestr needs _GNU_SOURCE */
 #include <stdio.h>
 #include <curl/curl.h>
+/* For the X509_V_ERR_* codes only — the verify result is how a TLS failure is
+ * told apart from the three others it is routinely confused with (see
+ * http_last_tls_cause in httpclient.h). OpenSSL's headers are always present
+ * here; core/catrust.c says why. */
+#include <openssl/x509.h>
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
@@ -48,6 +55,10 @@ static void log_host(http_client *c, const char *url, long status, int hard) {
   c->hosts[c->n_hosts].requests = 1;
   c->hosts[c->n_hosts].ok = ok;
   c->n_hosts++;
+}
+
+void http_client_test_log_host(http_client *c, const char *url, long status) {
+  log_host(c, url, status, 0);
 }
 
 int http_client_host_count(http_client *c) { return c ? c->n_hosts : 0; }
@@ -197,6 +208,10 @@ void http_easy_harden(void *curl_easy) {
   curl_easy_setopt(e, CURLOPT_PREREQFUNCTION, on_prereq);
   curl_easy_setopt(e, CURLOPT_PREREQDATA, (void *)0);
 #endif
+  /* Supply the intermediates nine upstreams omit from their own handshake.
+   * This ADDS links to the verification store; it cannot add a trust anchor
+   * and does not touch VERIFYPEER or VERIFYHOST. See core/catrust.h. */
+  catrust_install(e);
 }
 
 /* usleep() takes a 32-bit useconds_t and POSIX allows EINVAL past one second;
@@ -476,12 +491,160 @@ static __thread int g_last_te = HTTP_TE_NONE;
 
 int http_last_transport_error(void) { return g_last_te; }
 
+/* Which TLS failure, if the last attempt was one — see httpclient.h. Same
+ * thread-local reasoning as g_last_te. */
+static __thread int g_last_tls = HTTP_TLS_NONE;
+
+int http_last_tls_cause(void) { return g_last_tls; }
+
+const char *http_tls_cause_label(int cause) {
+  switch (cause) {
+    case HTTP_TLS_NO_LOCAL_ISSUER:
+      return "the certificate chain could not be completed — no client here "
+             "could find the certificate that SIGNED this one, which usually "
+             "means the server sent its leaf without the intermediate";
+    case HTTP_TLS_EXPIRED:
+      return "the server's certificate has expired";
+    case HTTP_TLS_NOT_YET_VALID:
+      return "the server's certificate is not valid yet, so either it was "
+             "issued for a later date or this machine's clock is wrong";
+    case HTTP_TLS_HOSTNAME_MISMATCH:
+      return "the certificate is valid but is for a different hostname, so "
+             "this row is asking the wrong name";
+    case HTTP_TLS_SELF_SIGNED:
+      return "the certificate is self-signed, so no public CA vouches for it";
+    case HTTP_TLS_REVOKED:
+      return "the issuing CA has revoked the certificate";
+    case HTTP_TLS_UNRECOGNIZED_NAME:
+      return "the server answered the TLS handshake with \"unrecognized "
+             "name\": it does not serve this hostname at all, so no "
+             "certificate was ever offered";
+    case HTTP_TLS_HANDSHAKE:
+      return "the TLS handshake was refused before any certificate was "
+             "judged — a protocol version, cipher or security-level mismatch";
+    case HTTP_TLS_OTHER:
+      return "the certificate failed verification for a reason this build "
+             "does not name separately";
+    default:
+      return "";
+  }
+}
+
+const char *http_tls_cause_remedy(int cause) {
+  switch (cause) {
+    case HTTP_TLS_NO_LOCAL_ISSUER:
+      /* The one cause that is usually OURS to fix, and the one that was
+       * mislabelling 24 live hosts as untrustworthy until 2026-10-21. */
+      return "this is the fixable one and it is not a trust problem: read the "
+             "leaf's AIA CA-Issuers extension, fetch that intermediate, verify "
+             "it against the SYSTEM root store, and add it to "
+             "native/data/tls/extra-intermediates.pem with its provenance "
+             "(core/catrust.c loads it for the engine and tools/jo_tls.py for "
+             "the tools). An entry there can COMPLETE a chain and never ANCHOR "
+             "one, which tests/unit/test_catrust.c enforces";
+    case HTTP_TLS_EXPIRED:
+    case HTTP_TLS_NOT_YET_VALID:
+      return "nothing here can fix this: it is the upstream's certificate, or "
+             "this machine's clock. Check the clock first, then re-run — an "
+             "expiry is often fixed within hours";
+    case HTTP_TLS_HOSTNAME_MISMATCH:
+      return "re-point the row at the name the certificate carries; this is "
+             "how www.ip.kyusan-u.ac.jp resolved to www.kyusan-u.ac.jp and "
+             "matrix.kde.org to kde.modular.im. Do NOT stop checking the "
+             "hostname — that is the one route to this host nobody should take";
+    case HTTP_TLS_SELF_SIGNED:
+      return "a self-signed certificate cannot be completed by an "
+             "intermediate, so extra-intermediates.pem is the wrong lever: "
+             "record the row as unreachable rather than widening trust";
+    case HTTP_TLS_REVOKED:
+      return "a revoked certificate is a decision by the CA; record the row as "
+             "unreachable and do not work around it";
+    case HTTP_TLS_UNRECOGNIZED_NAME:
+      /* Named apart from HTTP_TLS_HANDSHAKE because that remedy points at a
+       * cipher security level, and a knob that cannot move is worse than no
+       * remedy at all. Measured 2026-10-23: dataverse.openscholar.org and
+       * nesstar.statssa.gov.za — the two hosts docs/tls-intermediates-
+       * 2026-10-21.md records as "genuinely unreachable, an SNI mismatch" —
+       * both answer CURLE 35 `tlsv1 unrecognized name`, and no cipher or
+       * trust change reaches that. */
+      return "the host is not serving this name: find the name it does serve "
+             "and re-point the row, or record it as unreachable. Neither a "
+             "cipher level nor a trust change reaches this — there is no "
+             "certificate in the exchange to fix";
+    case HTTP_TLS_HANDSHAKE:
+      return "no certificate was judged, so this is not about trust: compare "
+             "against tools/jo_tls.py, which lowers OpenSSL's CIPHER SECURITY "
+             "LEVEL (verification and hostname checking stay on) and reaches "
+             "hosts the default context refuses — yamaguchi-opendata.jp is the "
+             "measured case";
+    case HTTP_TLS_OTHER:
+      return "read the libcurl message on the [http] line above: \"no local "
+             "issuer\", \"expired\", \"hostname mismatch\" and \"self-signed\" "
+             "are four findings with four remedies";
+    default:
+      return "";
+  }
+}
+
+/* The verify result is the discriminator; the message text is the fallback for
+ * the cases it cannot express (see httpclient.h). `msg` may be empty. */
+static int tls_cause_of(CURLcode rc, long verify, const char *msg) {
+  switch (verify) {
+    case X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT_LOCALLY:
+    case X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT:
+    case X509_V_ERR_UNABLE_TO_VERIFY_LEAF_SIGNATURE:
+      return HTTP_TLS_NO_LOCAL_ISSUER;
+    case X509_V_ERR_CERT_HAS_EXPIRED:
+    case X509_V_ERR_CRL_HAS_EXPIRED:
+      return HTTP_TLS_EXPIRED;
+    case X509_V_ERR_CERT_NOT_YET_VALID:
+    case X509_V_ERR_CRL_NOT_YET_VALID:
+      return HTTP_TLS_NOT_YET_VALID;
+    case X509_V_ERR_HOSTNAME_MISMATCH:
+      return HTTP_TLS_HOSTNAME_MISMATCH;
+    case X509_V_ERR_DEPTH_ZERO_SELF_SIGNED_CERT:
+    case X509_V_ERR_SELF_SIGNED_CERT_IN_CHAIN:
+      return HTTP_TLS_SELF_SIGNED;
+    case X509_V_ERR_CERT_REVOKED:
+      return HTTP_TLS_REVOKED;
+    default: break;
+  }
+  /* No verify result to read. A hostname mismatch arrives this way on some
+   * backends, and `strcasestr` is jo_strcasestr in this tree for the reason
+   * CLAUDE.md gives (glibc declares strcasestr only under _GNU_SOURCE). */
+  if (msg && msg[0]) {
+    /* The two spellings libcurl actually uses: "no alternative certificate
+     * subject name matches target host name 'x'" and "certificate subject name
+     * 'x' does not match target host name 'y'". A bare "hostname" is NOT in
+     * this list on purpose — it appears in resolver and proxy messages that
+     * have nothing to do with a certificate, and an over-broad alternative in
+     * a classifier is how this tree has twice filed one finding as another. */
+    if (jo_strcasestr(msg, "subject name") || jo_strcasestr(msg, "subjectAltName")
+        || jo_strcasestr(msg, "host name"))
+      return HTTP_TLS_HOSTNAME_MISMATCH;
+    if (jo_strcasestr(msg, "local issuer")) return HTTP_TLS_NO_LOCAL_ISSUER;
+    if (jo_strcasestr(msg, "expired"))      return HTTP_TLS_EXPIRED;
+    if (jo_strcasestr(msg, "self signed") || jo_strcasestr(msg, "self-signed"))
+      return HTTP_TLS_SELF_SIGNED;
+    /* OpenSSL alert 112, which libcurl reports as "tlsv1 unrecognized name"
+     * inside CURLE 35. It is not a certificate verdict and wants the opposite
+     * remedy from a cipher mismatch — see http_tls_cause_remedy. */
+    if (jo_strcasestr(msg, "unrecognized name")) return HTTP_TLS_UNRECOGNIZED_NAME;
+  }
+  /* A refusal before verification has no certificate verdict at all, so it is
+   * not a trust finding and must not be reported as one. */
+  if (rc == CURLE_SSL_CONNECT_ERROR || rc == CURLE_SSL_CIPHER)
+    return HTTP_TLS_HANDSHAKE;
+  return HTTP_TLS_OTHER;
+}
+
 static int do_once(http_client *c, const char *method, const char *url,
                    const char *const *headers, const char *body,
                    size_t body_len, int timeout_ms, http_response *out,
                    long *retry_after_ms) {
   *retry_after_ms = -1;
   g_last_te = HTTP_TE_OTHER;            /* every early refusal below is "other" */
+  g_last_tls = HTTP_TLS_NONE;           /* nothing below this is a TLS verdict */
   /* Defensive: a NULL client/method/url must never segfault the process.
    * On-demand runs (e.g. dataapi_layer) may invoke an HTTP-backed collector
    * without a client wired up; treat that as a hard failure (rc=1 → caller
@@ -518,6 +681,13 @@ static int do_once(http_client *c, const char *method, const char *url,
   hdr_state hs = { -1 };
   curl_easy_setopt(e, CURLOPT_HEADERFUNCTION, on_header);
   curl_easy_setopt(e, CURLOPT_HEADERDATA, &hs);
+  /* curl_easy_strerror() gives the CLASS ("SSL peer certificate or SSH remote
+   * key was not OK"); the error buffer gives the sentence that names which
+   * ("unable to get local issuer certificate"). Both are logged, because the
+   * first is stable and the second is what tells four TLS findings apart. */
+  char ebuf[CURL_ERROR_SIZE];
+  ebuf[0] = 0;
+  curl_easy_setopt(e, CURLOPT_ERRORBUFFER, ebuf);
   http_easy_harden(e);
   /* Belt to the write-callback's braces: when the server DOES advertise a
    * length, refuse before a single byte is transferred. */
@@ -575,6 +745,18 @@ static int do_once(http_client *c, const char *method, const char *url,
               : (rc == CURLE_COULDNT_CONNECT || rc == CURLE_COULDNT_RESOLVE_HOST ||
                  rc == CURLE_COULDNT_RESOLVE_PROXY) ? HTTP_TE_CONNECT
               : HTTP_TE_OTHER;
+    /* Which TLS failure (open item D1-bis). Read from the handle BEFORE
+     * cleanup, and only for the CURLcodes that mean the TLS layer refused —
+     * CURLINFO_SSL_VERIFYRESULT is 0 on a plain HTTP error too, and 0 is also
+     * X509_V_OK, so asking unconditionally would read every connect refusal as
+     * a certificate verdict. */
+    if (rc == CURLE_PEER_FAILED_VERIFICATION || rc == CURLE_SSL_CONNECT_ERROR ||
+        rc == CURLE_SSL_CERTPROBLEM || rc == CURLE_SSL_CIPHER ||
+        rc == CURLE_SSL_ISSUER_ERROR || rc == CURLE_SSL_INVALIDCERTSTATUS) {
+      long verify = 0;
+      curl_easy_getinfo(e, CURLINFO_SSL_VERIFYRESULT, &verify);
+      g_last_tls = tls_cause_of(rc, verify, ebuf);
+    }
   }
   if (hl) curl_slist_free_all(hl);
   curl_easy_cleanup(e);
@@ -584,6 +766,8 @@ static int do_once(http_client *c, const char *method, const char *url,
     if (b.over || rc == CURLE_FILESIZE_EXCEEDED)
       fprintf(stderr, "[http] %s: response exceeded %zu byte ceiling\n",
               url, b.cap);
+    else if (ebuf[0])  /* the sentence that names WHICH failure, not the class */
+      fprintf(stderr, "[http] %s: %s (%s)\n", url, ebuf, curl_easy_strerror(rc));
     else  /* callers log only "transport failure"; say which one */
       fprintf(stderr, "[http] %s: %s\n", url, curl_easy_strerror(rc));
     free(b.buf); out->status = 0; out->body = NULL; out->body_len = 0; return 1;

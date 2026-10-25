@@ -115,9 +115,133 @@ void ensure_column(db_handle *db, const char *table, const char *col,
  * re-pointed onto their real ids. Those four columns have exactly one author —
  * this function — so refreshing them can't clobber user state. `url` is
  * COALESCEd so a metadata row without a url never blanks a seeded one. */
+/* A FINGERPRINT OF WHAT THE SEED WOULD WRITE, so a seed that would change
+ * nothing costs one query instead of 116,110.
+ *
+ * The loop below is two prepared-statement steps per registered source, and at
+ * 58,055 sources that is the dominant cost of EVERY db_open — measured
+ * 2026-10-24 at 0.5 s natively and, because ThreadSanitizer instruments every
+ * one of those steps, at **16 s under TSan even when it inserts nothing** ("0
+ * new, 0 metadata-refreshed"). The unit suite opens a database at least once
+ * per test and `test_alert_tenancy` opens 39, so the TSan job spent about 45 of
+ * its 82.8 minutes re-deriving a table it had already derived: the four slowest
+ * tests' logs are a column of identical no-op seed lines.
+ *
+ * So hash exactly the five values the seed writes — id, name, type, category,
+ * url, in registry order — store that beside the row count the table had when
+ * the full pass finished, and skip the pass when both still match. FNV-1a over
+ * the same bytes the statement would have bound, so a changed name, a new
+ * source, a removed one or a reordered registry all change it.
+ *
+ * What it assumes, stated rather than hoped: those four columns have exactly
+ * one author, which is the invariant the comment above already relies on to
+ * refresh them unconditionally. What it gives up: a database whose name/type/
+ * category/url were edited BY HAND outside this function keeps the edit until
+ * the registry or the row count changes, where before the next boot reverted
+ * it. `JO_DB_RESEED=1` forces the full pass for exactly that case.
+ *
+ * The row count is the half that catches drift on the database's side: a row
+ * inserted or deleted by anything else makes count(*) disagree and the next
+ * boot does the full pass (including the prune). A stale row KEPT for its
+ * history is counted the same way, by storing the count observed after the
+ * pass rather than the registry's size. */
+static unsigned long long db_seed_fingerprint(const source_def **a, int n) {
+  unsigned long long h = 1469598103934665603ULL;   /* FNV-1a 64 */
+#define FP_STR(s) do {                                                  \
+    for (const unsigned char *q = (const unsigned char *)(s); q && *q; q++) \
+      h = (h ^ *q) * 1099511628211ULL;                                  \
+    h = (h ^ 0x1fU) * 1099511628211ULL;   /* field separator */          \
+  } while (0)
+  for (int i = 0; i < n; i++) {
+    const source_def *d = a[i];
+    const src_meta *m = src_meta_get(d->id);
+    FP_STR(d->id);
+    FP_STR((m && m->name) ? m->name : (d->name ? d->name : d->id));
+    FP_STR((m && m->type) ? m->type : "api");
+    FP_STR((m && m->category) ? m->category : "investigation");
+    FP_STR((m && m->url) ? m->url : "");
+  }
+#undef FP_STR
+  return h;
+}
+
+/* The stamp, in `_registry_seed` (core/schema.sql, beside _fts_meta, which
+ * keys the same kind of skip on the same kind of hash). Absent, unparseable or
+ * from a database too old to have the table all read as "no stamp", which is
+ * the safe direction: the full pass runs. */
+static int db_seed_stamp_read(db_handle *db, unsigned long long *fp, long *rows) {
+  sqlite3_stmt *s = NULL;
+  int ok = 0;
+  if (sqlite3_prepare_v2(db->h,
+        "SELECT fingerprint, rows FROM _registry_seed WHERE name='sources'",
+        -1, &s, NULL) == SQLITE_OK && sqlite3_step(s) == SQLITE_ROW) {
+    const unsigned char *a = sqlite3_column_text(s, 0);
+    if (a) {
+      char *ea = NULL;
+      unsigned long long v = strtoull((const char *)a, &ea, 10);
+      if (ea && !*ea) {
+        *fp = v;
+        *rows = (long)sqlite3_column_int64(s, 1);
+        ok = 1;
+      }
+    }
+  }
+  if (s) sqlite3_finalize(s);
+  return ok;
+}
+
+static void db_seed_stamp_write(db_handle *db, unsigned long long fp,
+                                long rows, int sources) {
+  sqlite3_stmt *s = NULL;
+  if (sqlite3_prepare_v2(db->h,
+        "INSERT INTO _registry_seed (name,fingerprint,rows,sources,seeded_at) "
+        "VALUES ('sources',?1,?2,?3,strftime('%Y-%m-%dT%H:%M:%SZ','now')) "
+        "ON CONFLICT(name) DO UPDATE SET fingerprint=excluded.fingerprint, "
+        "  rows=excluded.rows, sources=excluded.sources, "
+        "  seeded_at=excluded.seeded_at",
+        -1, &s, NULL) != SQLITE_OK) return;
+  char buf[32];
+  snprintf(buf, sizeof buf, "%llu", fp);
+  sqlite3_bind_text(s, 1, buf, -1, SQLITE_TRANSIENT);
+  sqlite3_bind_int64(s, 2, rows);
+  sqlite3_bind_int(s, 3, sources);
+  sqlite3_step(s);
+  sqlite3_finalize(s);
+}
+
+static long db_sources_rows(db_handle *db) {
+  sqlite3_stmt *s = NULL;
+  long r = -1;
+  if (sqlite3_prepare_v2(db->h, "SELECT COUNT(*) FROM sources", -1, &s, NULL)
+      == SQLITE_OK && sqlite3_step(s) == SQLITE_ROW)
+    r = (long)sqlite3_column_int64(s, 0);
+  if (s) sqlite3_finalize(s);
+  return r;
+}
+
 static void db_seed_sources(db_handle *db) {
   const source_def **a = registry_all();
   int n = registry_count();
+
+  /* The fast path. Deliberately BEFORE the `n <= 0` reasoning below: an empty
+   * registry has an empty fingerprint, which cannot match a stamp written by a
+   * binary that had sources, so a sanitiser or unit-test build still takes the
+   * full pass and still declines to prune. */
+  unsigned long long fp = db_seed_fingerprint(a, n);
+  const char *force = getenv("JO_DB_RESEED");
+  if (n > 0 && !(force && *force && strcmp(force, "0") != 0)) {
+    unsigned long long had_fp = 0;
+    long had_rows = -1;
+    if (db_seed_stamp_read(db, &had_fp, &had_rows) && had_fp == fp) {
+      long now = db_sources_rows(db);
+      if (now == had_rows) {
+        fprintf(stderr, "[db] sources already seeded from registry "
+                        "(%d sources, %ld rows, fingerprint unchanged)\n", n, now);
+        return;
+      }
+    }
+  }
+
   static const char *SQL =
     "INSERT INTO sources (id,name,type,category,url,status) "
     "VALUES (?1,?2,?3,?4,?5,'pending') "
@@ -219,6 +343,12 @@ static void db_seed_sources(db_handle *db) {
     sqlite3_finalize(p);
   }
   free(ids_json);
+
+  /* Stamp what this pass settled on, AFTER the prune, so the row count
+   * includes any stale row kept for its history. A stamp written before the
+   * prune would disagree with the table on the very next boot and the fast
+   * path would never fire on an install that has retired a source. */
+  db_seed_stamp_write(db, fp, db_sources_rows(db), n);
 
   fprintf(stderr,
           "[db] seeded sources from registry (%d new, %d metadata-refreshed",

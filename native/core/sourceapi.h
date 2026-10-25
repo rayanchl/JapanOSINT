@@ -34,6 +34,13 @@ typedef struct {
   const char *kind;       /* pivot | scheduled | scheduled-pivot |
                            * unreachable | internal                          */
   const char *status;     /* online | degraded | offline | pending           */
+  const char *health;     /* the SOURCE'S OWN answer to "does it work", from
+                           * the engine's disclosure records rather than from
+                           * the run status alone: ok | failing | gated |
+                           * degraded | pending, plus the synthetic value
+                           * "broken", which matches every state that is not
+                           * ok — the one filter a reader wants when the
+                           * question is "what is not working".              */
   const char *grade;      /* A..F, or "unrated"                              */
   int         has_items;  /* 1 = only sources with stored items; 0 = all     */
   const char *sort;       /* name (default) | id | items | fetched | grade |

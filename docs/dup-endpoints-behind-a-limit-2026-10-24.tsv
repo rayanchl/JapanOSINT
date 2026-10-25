@@ -1,0 +1,200 @@
+﻿# Duplicate endpoint pairs hidden behind a record-limit parameter - measured 2026-10-23
+#
+# lint_sources.check_dup_endpoint groups on host+path+QUERY, textually. A pair of
+# rows that read ONE collection and differ only in how many records they ask for
+# therefore never groups, so none of these is in lint_baseline.json. By that
+# check's own reasoning they are real: uid = source_id|remote_key, so two sources
+# on one endpoint store every record twice, in intel_items and in the FTS mirror,
+# and spend two requests per cycle to do it.
+#
+# A record limit cannot select a different dataset, which is what makes this
+# subclass decidable WITHOUT a live read - unlike the scope parameter that hid the
+# IOC sea-level trio (showall=all / showall=a / absent), where only a fetch showed
+# the server discards an unrecognised value and serves the default list.
+#
+# VERIFIED 2026-10-24 against the two false-positive mechanisms this list was
+# published with a warning about. Re-harvested with C comments and .detail_url
+# assignments stripped (a commented URL is documentation and is never fetched; a
+# .detail_url is a per-record route, the {v} exclusion the lint already makes):
+#
+#   as harvested, the way lint_sources harvests   106 pairs
+#   with comments and .detail_url stripped        103 pairs
+#   comment-only false positives                    3
+#
+# The three that were documentation, not requests:
+#   data.cityofchicago.org/resource/r5kz-chrr.json          $limit
+#   data.sf.gov/resource/g8m3-pdis.json                     $limit
+#   ezamowienia.gov.pl/mo-board/api/v1/Board/Search         pagesize
+#
+# The first attempt at this verification reported 0 surviving pairs, i.e. that
+# every one was an artifact. That was wrong and the retraction would have been
+# worse than the original claim: the line-comment regex `//[^\n]*` matches the
+# `//` inside `https://`, so stripping deleted every URL in the tree -- 106,239
+# of them -- and the check reported its own blindness as a clean result. Use
+# `(?<!:)//[^\n]*`, and the script now refuses to print a number at all if
+# stripping loses more than half the host+path groups. CLAUDE.md's rule earned
+# again: zero findings from a new check deserves one suspicious look.
+#
+# STILL per-pair judgement before anything is retired. One distinction this
+# list does NOT draw: a pair of two SCHEDULED rows duplicates a request on
+# every cycle, whereas a pivot (entity token elsewhere in the URL) paired with
+# a scheduled feed only double-STORES, since a pivot runs on demand. Both are
+# rule-4b costs but they are not the same cost.
+# `api.gleif.org/api/v1/lei-records/{qU}/direct-children` is visibly the second
+# kind. The repair is per-pair, as the 423 already in the baseline are.
+#
+# AND A LIMIT PAIR CAN BE DELIBERATE (osintsaas-43, 2026-10-24). Identical
+# query strings do not mean identical purpose: two rows reading one collection
+# at different limits may be an intentional pair, the way
+# `canada-hydrometric-realtime` and `gc-hydrometric` are -- newest-per-station
+# for the map, every observation for the series -- where the difference lives
+# in the row's INTERVAL, record_type and page_resume, none of which appear in
+# the URL this list groups on. Retiring either of those would be a real loss.
+# This grouping requires every other query parameter to match, so a differing
+# sort or filter already excludes a pair; what it cannot see is a difference
+# declared in opts rather than in the query. Read the row, not just the URL.
+#
+# CLASSIFIED BY COST (2026-10-24), which is 43's distinction made countable:
+#
+#   BOTH_SCHEDULED   90   neither URL carries an entity token, so both rows run
+#                         on a cadence -> a duplicated REQUEST every cycle on
+#                         top of duplicated storage. Read these first.
+#   BOTH_PIVOTS      13   both carry a token (e.g. gleif .../{qU}/...), so both
+#                         run on demand -> duplicated storage, no duplicated
+#                         scheduled traffic.
+#   PIVOT_AND_FEED    0   see below -- this zero is an ARTIFACT, not a finding.
+#
+# The PIVOT_AND_FEED bucket cannot be populated by this method and its being
+# empty says nothing about the tree. A token in the QUERY makes the two query
+# strings differ by more than the limit, so the pair is excluded before it is
+# classified; a token in the PATH is part of the host+path key, so both sides
+# carry it and the pair lands in BOTH_PIVOTS. A pivot paired with a scheduled
+# feed over one collection is therefore invisible HERE and still worth looking
+# for by another route.
+#
+# The token test is itself only a proxy -- the same proxy
+# registry_is_entity_pivot() leans on. The authoritative test is interval == 0,
+# which lives in the row's own declaration and not in its URL. So this ranks
+# the list for reading; it decides nothing.
+#
+# RESOLVED TO ROWS, same day: docs/dup-endpoints-resolved-to-rows-2026-10-24.tsv
+# replaces the token proxy above with each row's own `interval` and reads the
+# fields the URL could not show. The counts move a long way once the rows are
+# read instead of their URLs: 47 pairs are a generated feed row shadowing an
+# hpengine row (the IOC shape), 33 are two generated rows over one endpoint,
+# and only 13 are two hpengine rows - which is the one bucket where a
+# deliberate pair can live. PIVOT_AND_FEED is 0 on the authoritative test too,
+# though the grouping artifact described above still applies to it. Read that
+# file before retiring anything; it also names the 8 pairs whose SURVIVING row
+# has no id_keys, where retiring the generated side would leave rule 4b
+# exposure rather than a repair.
+#
+# pairs: 103 verified of 106 harvested (90 both-scheduled, 13 both-pivots)
+hostpath	param	diff	file_a	file_b
+api.bcra.gob.ar/estadisticas/v4.0/monetarias	limit	present(1000) vs absent	native/collectors/pivot/table/hp3b19_latam.c	native/collectors/pivot/table/hp3b19_finance.c
+api.beta.ons.gov.uk/v1/datasets	limit	value 50 vs 100	native/collectors/feed/generated/vsrc_government_2.c	native/collectors/pivot/table/hp3b36_uk.c
+api.climatetrace.org/v6/assets	limit	present(1000) vs absent	native/collectors/pivot/table/hp3b31_assetreg.c	native/collectors/sources/eni_climatetrace_assets.c
+api.crossref.org/funders	rows	value 100 vs 25	native/collectors/pivot/table/hp3_gov.c	native/collectors/pivot/table/hp_research_ip.c
+api.energidataservice.dk/dataset/ElectricityProdex5MinRealtime	limit	present(100) vs absent	native/collectors/sources/eni_energinet_prodex.c	native/collectors/feed/generated/vsrc_energy_1.c
+api.fda.gov/animalandveterinary/event.json	limit	value 50 vs 100	native/collectors/feed/generated/vsrc_health_1.c	native/collectors/feed/generated/vsrc2_health_2.c
+api.fda.gov/device/enforcement.json	limit	value 50 vs 100	native/collectors/feed/generated/vsrc_government_2.c	native/collectors/feed/generated/vsrc_health_1.c
+api.fda.gov/device/event.json	limit	value 50 vs 100	native/collectors/feed/generated/vsrc_government_2.c	native/collectors/feed/generated/vsrc2_health_2.c
+api.fda.gov/device/recall.json	limit	value 50 vs 100	native/collectors/feed/generated/vsrc_government_2.c	native/collectors/feed/generated/vsrc_health_1.c
+api.fda.gov/drug/label.json	limit	value 50 vs 100	native/collectors/feed/generated/vsrc_government_2.c	native/collectors/feed/generated/vsrc2_health_2.c
+api.fda.gov/food/enforcement.json	limit	value 50 vs 100	native/collectors/feed/generated/vsrc_government_2.c	native/collectors/feed/generated/vsrc_health_1.c
+api.fda.gov/food/event.json	limit	value 50 vs 100	native/collectors/feed/generated/vsrc_health_1.c	native/collectors/feed/generated/vsrc2_health_2.c
+api.fda.gov/tobacco/problem.json	limit	value 50 vs 100	native/collectors/feed/generated/vsrc_health_1.c	native/collectors/feed/generated/vsrc2_health_2.c
+api.gios.gov.pl/pjp-api/v1/rest/station/findAll	size	present(500) vs absent	native/collectors/feed/generated/vsrc_environment_1.c	native/collectors/sources/eni_gios_poland_air.c
+api.github.com/search/code	per_page	present(30) vs absent	native/collectors/sources/theharvester.c	native/collectors/sources/code_search.c,native/collectors/sources/credential_leak.c
+api.gleif.org/api/v1/lei-records/%7BqU%7D/direct-children	page[size]	value 50 vs 100	native/collectors/pivot/table/hp_chain_finance.c	native/collectors/pivot/table/hp3_corp.c
+api.grip.inetintel.cc.gatech.edu/json/events	length	value 1000 vs 50	native/collectors/pivot/table/hp3b31_survnet.c	native/collectors/feed/generated/vsrc_infrastructure_1.c
+api.obis.org/v3/occurrence	size	present(100) vs absent	native/collectors/feed/generated/vsrc_science_2.c	native/collectors/sources/biodiversity_world.c
+api.oireachtas.ie/v1/divisions	limit	value 50 vs 25	native/collectors/feed/generated/vsrc13_transparency_1.c	native/collectors/feed/generated/vsrc_legal_2.c
+api.oireachtas.ie/v1/members	limit	value 50 vs 500	native/collectors/feed/generated/vsrc_legal_2.c	native/collectors/pivot/table/hp3b31_ukie.c
+api.oireachtas.ie/v1/questions	limit	value 50 vs 25	native/collectors/feed/generated/vsrc13_transparency_1.c	native/collectors/feed/generated/vsrc_legal_2.c
+api.opensanctions.org/search/default	limit	value 50 vs 15	native/collectors/sources/sanctions_check.c	native/collectors/sources/pep_watchlist.c
+api.opensanctions.org/search/default	limit	value 15 vs 20	native/collectors/sources/pep_watchlist.c	native/collectors/sources/sanctions_world2.c
+api.opensanctions.org/search/default	limit	value 50 vs 20	native/collectors/sources/sanctions_check.c	native/collectors/sources/sanctions_world2.c
+api.osf.io/v2/providers/preprints/eartharxiv/preprints	page[size]	value 50 vs 100	native/collectors/feed/generated/vsrc2_academic_5.c	native/collectors/feed/generated/vsrc13_earthobs_2.c
+api.p2pquake.net/v2/jma/quake	limit	value 50 vs 100	native/collectors/feed/generated/vsrc2_disaster_1.c	native/collectors/pivot/table/hp3b23_jpregistry.c
+api.pdok.nl/bzk/locatieserver/search/v3_1/free	rows	value 100 vs 25	native/collectors/pivot/table/hp3b19_landreg.c	native/collectors/pivot/table/hp_eu_deep.c
+api.safecast.org/measurements.json	limit	present(200) vs absent	native/collectors/feed/generated/vsrc_environment_2.c	native/collectors/sources/geoeo_safecast.c
+api.safecast.org/measurements.json	limit	value 3 vs 200	native/collectors/feed/generated/hp16_jp_environment_1.c	native/collectors/feed/generated/vsrc_environment_2.c
+api.safecast.org/measurements.json	limit	present(3) vs absent	native/collectors/feed/generated/hp16_jp_environment_1.c	native/collectors/sources/geoeo_safecast.c
+api.safecast.org/measurements.json	per_page	present(1000) vs absent	native/collectors/pivot/table/hp3b31_survsensor.c	native/collectors/sources/geoeo_safecast.c
+api.sejm.gov.pl/sejm/term10/interpellations	limit	present(500) vs absent	native/collectors/pivot/table/hp3b31_eunat.c	native/collectors/feed/generated/vsrc13_transparency_1.c
+api.sejm.gov.pl/sejm/term10/interpellations	limit	present(50) vs absent	native/collectors/feed/generated/vsrc_legal_3.c	native/collectors/feed/generated/vsrc13_transparency_1.c
+api.sejm.gov.pl/sejm/term10/interpellations	limit	value 50 vs 500	native/collectors/feed/generated/vsrc_legal_3.c	native/collectors/pivot/table/hp3b31_eunat.c
+api.waterdata.usgs.gov/ogcapi/v0/collections/daily/items	limit	value 200 vs 300	native/collectors/feed/generated/vsrc13_ocean_cryo_1.c	native/collectors/feed/generated/vsrc_environment_3.c
+api.waterdata.usgs.gov/ogcapi/v0/collections/latest-continuous/items	limit	value 500 vs 200	native/collectors/feed/generated/vsrc_environment_3.c	native/collectors/feed/generated/vsrc13_ocean_cryo_1.c
+api.waterdata.usgs.gov/ogcapi/v0/collections/latest-daily/items	limit	value 500 vs 200	native/collectors/feed/generated/vsrc_environment_3.c	native/collectors/feed/generated/vsrc13_ocean_cryo_1.c
+api.waterdata.usgs.gov/ogcapi/v0/collections/latest-field-measurements/items	limit	value 200 vs 300	native/collectors/feed/generated/vsrc13_ocean_cryo_1.c	native/collectors/feed/generated/vsrc_environment_3.c
+api.weather.gov/stations	limit	value 200 vs 500	native/collectors/pivot/table/hp3_geo.c	native/collectors/feed/generated/vsrc_environment_2.c
+api.weather.gov/zones	limit	present(500) vs absent	native/collectors/feed/generated/vsrc_environment_2.c	native/collectors/pivot/table/hp3b36_usa.c
+api.worldbank.org/v2/country	per_page	value 300 vs 500	native/collectors/pivot/table/hp3b19_intlorg.c	native/collectors/pivot/table/hp3b36_africa.c
+api.worldbank.org/v2/country	per_page	value 300 vs 400	native/collectors/pivot/table/hp3b19_intlorg.c	native/collectors/pivot/table/hp3b36_africa.c
+api.worldbank.org/v2/indicator	per_page	value 500 vs 100	native/collectors/pivot/table/hp3b19_intlorg.c	native/collectors/feed/generated/vsrc_government_3.c
+api.worldbank.org/v2/sources	per_page	value 100 vs 200	native/collectors/feed/generated/vsrc_government_3.c	native/collectors/pivot/table/hp3b19_intlorg.c
+api-v3.mbta.com/alerts	page[limit]	value 100 vs 50	native/collectors/feed/generated/vsrc13_us_local_1.c	native/collectors/feed/generated/vsrc_transport_1.c
+api-v3.mbta.com/vehicles	page[limit]	present(100) vs absent	native/collectors/feed/generated/vsrc13_us_local_1.c	native/collectors/sources/trn_mbta_vehicle_positions.c
+api-v3.mbta.com/vehicles	page[limit]	present(50) vs absent	native/collectors/feed/generated/vsrc_transport_1.c	native/collectors/sources/trn_mbta_vehicle_positions.c
+api-v3.mbta.com/vehicles	page[limit]	value 100 vs 50	native/collectors/feed/generated/vsrc13_us_local_1.c	native/collectors/feed/generated/vsrc_transport_1.c
+app.legco.gov.hk/BillsDB/odata/Vbills	$top	value 100 vs 25	native/collectors/feed/generated/vsrc13_eastasia_data_2.c	native/collectors/feed/generated/vsrc_legal_1.c
+blockchain.info/rawaddr/%25s	limit	value 0 vs 10	native/collectors/sources/crypto_world2.c	native/collectors/sources/crypto_tracker.c
+caselaw.nationalarchives.gov.uk/atom.xml	per_page	present(50) vs absent	native/collectors/sources/uk_feeds_batch50.c	native/collectors/sources/sanc_uk_caselaw.c
+catalog.data.metro.tokyo.lg.jp/api/3/action/organization_list	limit	present(1000) vs absent	native/collectors/feed/generated/vsrc14_jp_prefectural_1.c	native/collectors/feed/generated/vsrc15_jp_opendata_1.c
+dadosabertos.camara.leg.br/api/v2/eventos	itens	value 100 vs 50	native/collectors/feed/generated/vsrc13_latam_gov_1.c	native/collectors/feed/generated/vsrc_legal_1.c
+dadosabertos.camara.leg.br/api/v2/frentes	itens	value 100 vs 50	native/collectors/feed/generated/vsrc13_latam_gov_1.c	native/collectors/feed/generated/vsrc_legal_1.c
+dadosabertos.camara.leg.br/api/v2/orgaos	itens	value 100 vs 50	native/collectors/feed/generated/vsrc13_latam_gov_1.c	native/collectors/feed/generated/vsrc_legal_1.c
+dadosabertos.camara.leg.br/api/v2/partidos	itens	value 100 vs 50	native/collectors/feed/generated/vsrc13_latam_gov_1.c	native/collectors/feed/generated/vsrc_legal_1.c
+dadosabertos.camara.leg.br/api/v2/proposicoes	itens	value 100 vs 50	native/collectors/feed/generated/vsrc13_latam_gov_1.c	native/collectors/feed/generated/vsrc_legal_1.c
+dadosabertos.camara.leg.br/api/v2/votacoes	itens	value 50 vs 100	native/collectors/feed/generated/vsrc_legal_1.c	native/collectors/feed/generated/vsrc13_transparency_1.c
+data.bretagne.bzh/api/explore/v2.1/catalog/datasets	limit	value 50 vs 100	native/collectors/pivot/table/hp3b36_france.c	native/collectors/feed/generated/vsrc13_europe_data_2.c
+data.cdc.gov/resource/x9gk-5huc.json	$limit	value 200 vs 1000	native/collectors/feed/generated/vsrc_health_1.c	native/collectors/pivot/table/hp3b19_health.c
+data.city.yokohama.lg.jp/api/3/action/organization_list	limit	present(1000) vs absent	native/collectors/feed/generated/vsrc14_jp_prefectural_2.c	native/collectors/feed/generated/vsrc15_jp_opendata_1.c
+data.cityofchicago.org/resource/r5kz-chrr.json	$limit	present(200) vs absent	native/collectors/sources/reg2_socrata_registries.c	native/collectors/sources/biz_licence_churn.c
+data.cityofnewyork.us/api/views.json	limit	value 1000 vs 10000	native/collectors/pivot/table/hp3b36_usa.c	native/collectors/feed/generated/vsrc16_us_government_1.c
+data.economie.gouv.fr/api/explore/v2.1/catalog/datasets	limit	value 50 vs 100	native/collectors/pivot/table/hp3b36_france.c	native/collectors/feed/generated/vsrc13_europe_data_3.c
+data.education.gouv.fr/api/explore/v2.1/catalog/datasets	limit	value 50 vs 100	native/collectors/pivot/table/hp3b36_france.c	native/collectors/feed/generated/vsrc14_fr_opendata_1.c
+data.enseignementsup-recherche.gouv.fr/api/explore/v2.1/catalog/datasets	limit	value 50 vs 100	native/collectors/pivot/table/hp3b36_france.c	native/collectors/feed/generated/vsrc14_fr_opendata_1.c
+data.europarl.europa.eu/api/v2/documents	limit	present(50) vs absent	native/collectors/pivot/table/hp3b31_eutrans.c	native/collectors/feed/generated/vsrc_government_1.c
+data.issy.com/api/explore/v2.1/catalog/datasets	limit	value 50 vs 100	native/collectors/pivot/table/hp3b36_france.c	native/collectors/feed/generated/vsrc13_europe_data_3.c
+data.laregion.fr/api/explore/v2.1/catalog/datasets	limit	value 100 vs 50	native/collectors/feed/generated/vsrc13_europe_data_3.c	native/collectors/pivot/table/hp3b36_france.c
+data.ny.gov/resource/n9v6-gdp6.json	$limit	value 40 vs 1000	native/collectors/pivot/table/hp_americas_deep.c	native/collectors/pivot/table/hp2_northam_states.c
+data.paysdelaloire.fr/api/explore/v2.1/catalog/datasets	limit	value 50 vs 100	native/collectors/pivot/table/hp3b36_france.c	native/collectors/feed/generated/vsrc13_europe_data_4.c
+data.ratp.fr/api/explore/v2.1/catalog/datasets	limit	value 50 vs 100	native/collectors/pivot/table/hp3b36_france.c	native/collectors/feed/generated/vsrc13_europe_data_4.c
+data.sf.gov/resource/g8m3-pdis.json	$limit	present(200) vs absent	native/collectors/sources/reg2_socrata_registries.c	native/collectors/sources/biz_licence_churn.c
+data.strasbourg.eu/api/explore/v2.1/catalog/datasets	limit	value 50 vs 100	native/collectors/pivot/table/hp3b36_france.c	native/collectors/feed/generated/vsrc13_europe_data_5.c
+data.wa.gov/resource/sb4j-ca4h.json	$limit	value 2000 vs 50000	native/collectors/feed/generated/vsrc_threat_intel_2.c	native/collectors/pivot/table/hp3b22_breachcat.c
+datos.gob.do/api/3/action/package_search	rows	value 50 vs 100	native/collectors/feed/generated/vsrc_government_1.c	native/collectors/feed/generated/vsrc13_latam_data_1.c
+datos.hcdn.gob.ar/api/3/action/package_search	rows	value 100 vs 50	native/collectors/feed/generated/vsrc13_latam_data_1.c	native/collectors/feed/generated/vsrc_legal_1.c
+directory.spineservices.nhs.uk/ORD/2-0-0/organisations	limit	value 100 vs 40	native/collectors/pivot/table/hp3b36_uk.c	native/collectors/pivot/table/hp_uk_deep.c
+ezamowienia.gov.pl/mo-board/api/v1/Board/Search	pagesize	present(5) vs absent	native/collectors/sources/reg2_eu_procurement.c	native/collectors/feed/generated/hp16_pl_procurement_1.c
+laws.e-gov.go.jp/api/2/keyword	limit	value 500 vs 100	native/collectors/pivot/table/hp3b31_jpgov.c	native/collectors/pivot/table/hp3b23_jpregistry.c
+laws.e-gov.go.jp/api/2/laws	limit	value 50 vs 100	native/collectors/feed/generated/vsrc_legal_2.c	native/collectors/feed/generated/vsrc2_government_2.c
+ly.govapi.tw/v2/bills	limit	value 50 vs 100	native/collectors/feed/generated/vsrc_legal_3.c	native/collectors/feed/generated/vsrc13_taiwan_gov_1.c
+ly.govapi.tw/v2/legislators	limit	value 50 vs 100	native/collectors/feed/generated/vsrc_legal_3.c	native/collectors/feed/generated/vsrc13_taiwan_gov_1.c
+ogcapi.bgs.ac.uk/collections/aeromag/items	limit	value 100 vs 200	native/collectors/pivot/table/hp3b19_science.c	native/collectors/feed/generated/vsrc_science_1.c
+ogcapi.bgs.ac.uk/collections/bgsgeology625kfaults/items	limit	value 100 vs 200	native/collectors/pivot/table/hp3b19_science.c	native/collectors/feed/generated/vsrc_science_1.c
+ogcapi.bgs.ac.uk/collections/eruption-source-parameter/items	limit	value 100 vs 300	native/collectors/pivot/table/hp3b19_science.c	native/collectors/feed/generated/vsrc_science_1.c
+ogcapi.bgs.ac.uk/collections/historicalearthquakes/items	limit	value 100 vs 300	native/collectors/pivot/table/hp3b19_science.c	native/collectors/feed/generated/vsrc_science_1.c
+ogcapi.bgs.ac.uk/collections/landslideindex/items	limit	value 100 vs 300	native/collectors/pivot/table/hp3b19_science.c	native/collectors/feed/generated/vsrc_disaster_1.c
+ogcapi.bgs.ac.uk/collections/mine_plans/items	limit	value 100 vs 200	native/collectors/pivot/table/hp3b19_science.c	native/collectors/feed/generated/vsrc_science_1.c
+ogcapi.bgs.ac.uk/collections/offshore-core-sample-data/items	limit	value 100 vs 300	native/collectors/pivot/table/hp3b19_science.c	native/collectors/feed/generated/vsrc_science_1.c
+ogcapi.bgs.ac.uk/collections/offshore-hydrocarbon-wells/items	limit	value 100 vs 300	native/collectors/pivot/table/hp3b19_science.c	native/collectors/feed/generated/vsrc_science_1.c
+ogcapi.bgs.ac.uk/collections/onshoreboreholeindex/items	limit	value 100 vs 300	native/collectors/pivot/table/hp3b19_science.c	native/collectors/feed/generated/vsrc_science_1.c
+ogcapi.bgs.ac.uk/collections/recentearthquakes/items	limit	value 100 vs 200	native/collectors/pivot/table/hp3b19_science.c	native/collectors/feed/generated/vsrc_disaster_1.c
+ogcapi.bgs.ac.uk/collections/world-mineral-statistics/items	limit	value 100 vs 200	native/collectors/pivot/table/hp3b19_science.c	native/collectors/feed/generated/vsrc_science_1.c
+onionoo.torproject.org/details	limit	value 200 vs 1000	native/collectors/pivot/table/hp3_netintel.c	native/collectors/pivot/table/hp3b31_survnet.c
+open.canada.ca/data/api/3/action/package_search	rows	value 100 vs 25	native/collectors/pivot/table/hp3b19_northam.c	native/collectors/pivot/table/hp_procurement_aid.c
+opendata.cbs.nl/ODataCatalog/Tables	$top	present(200) vs absent	native/collectors/feed/generated/vsrc13_europe_gov_1.c	native/collectors/pivot/table/hp3_infra.c
+opendata.paris.fr/api/explore/v2.1/catalog/datasets	limit	value 50 vs 100	native/collectors/pivot/table/hp3b36_france.c	native/collectors/feed/generated/vsrc13_europe_data_4.c
+openveda.cloud/api/stac/search	limit	value 500 vs 100	native/collectors/pivot/table/hp3b19_energyenv.c	native/collectors/feed/generated/vsrc13_earthobs_3.c
+public.api.openprocurement.org/api/2.5/tenders	limit	present(100) vs absent	native/collectors/pivot/table/hp3b19_eurasia.c	native/collectors/feed/generated/vsrc_government_3.c
+public.opendatasoft.com/api/explore/v2.1/catalog/datasets	limit	value 50 vs 100	native/collectors/pivot/table/hp3b36_france.c	native/collectors/feed/generated/vsrc13_europe_data_4.c
+ressources.data.sncf.com/api/explore/v2.1/catalog/datasets	limit	value 50 vs 100	native/collectors/pivot/table/hp3b36_france.c	native/collectors/feed/generated/vsrc14_fr_opendata_1.c
+webapi.yanoshin.jp/webapi/tdnet/list/recent.json	limit	present(300) vs absent	native/collectors/pivot/table/hp3b23_jpregistry.c	native/collectors/feed/generated/vsrc2_economy_1.c
+www.datos.gov.co/api/views.json	limit	value 100 vs 1000	native/collectors/feed/generated/vsrc13_latam_data_3.c	native/collectors/pivot/table/hp3_portals.c
+www.datos.gov.co/resource/rpmr-utcd.json	$limit	value 50 vs 500	native/collectors/feed/generated/vsrc_government_1.c	native/collectors/feed/generated/vsrc13_latam_data_2.c
+www.datosabiertos.gob.pa/api/3/action/package_search	rows	value 50 vs 100	native/collectors/feed/generated/vsrc_government_3.c	native/collectors/feed/generated/vsrc13_latam_data_1.c
+www.ncei.noaa.gov/access/services/search/v1/datasets	limit	present(100) vs absent	native/collectors/pivot/table/hp3b36_usa.c	native/collectors/feed/generated/vsrc13_climate_air_1.c

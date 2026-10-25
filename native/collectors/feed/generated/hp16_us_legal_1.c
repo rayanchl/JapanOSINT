@@ -21,8 +21,10 @@ static const hp_source T[] = {
     .url = "https://www.gov.uk/api/search.json?filter_format=cma_case&count=100&order=public_timestamp&fields=title,link,description,case_type,case_state,opened_date,closed_date,market_sector",
     .array_path = "results",
     .detail_url = "https://www.gov.uk/api/content{v}", .detail_key = "link",
-    .page_walk = 1,
-    .page_resume = 1,   /* 2,588 records (2026-10-12): read over a cycle, 20 pages of 100 a run. count=100 and an ascending public_timestamp since 2026-10-20 — until lib/jsonlist.c knew the count/start pair this walk read ONE page of 3 a run and cycled nothing */
+    .page_param = "start",
+    .page_size = 100,
+    .page_max = 3,   /* 3 x 100 records a run, every one deepened. MEASURED 2026-10-21: www.gov.uk serves 30 api/content detail hops in 9.7 s (3.1/s), so hp_detail_admit()'s 120 SECOND half of the budget reaches ~370 hops on this host -- the 1,000-hop count never binds here, and the rate is per host (api.safecast.org reached 116). The default 20 pages would store 2,000 and stamp ~1,630 _detail_pending that no later run deepens, the budget being spent in page order. See docs/probe-sized-pages-2026-10-20.md */
+    .page_resume = 1,   /* 2,588 records (2026-10-12): read over a cycle; the pages-a-run figure is the page_max above, sized to this host's measured detail-hop rate. count=100 and an ascending public_timestamp since 2026-10-20 — until lib/jsonlist.c knew the count/start pair this walk read ONE page of 3 a run and cycled nothing */
     .interval = 43200, .free_tier = 1 },
 
   { .id = "uk-govuk-search-employment-tribunal",
@@ -33,8 +35,10 @@ static const hp_source T[] = {
     .url = "https://www.gov.uk/api/search.json?filter_format=employment_tribunal_decision&count=100&order=public_timestamp&fields=title,link,description,tribunal_decision_categories,tribunal_decision_decision_date",
     .array_path = "results",
     .detail_url = "https://www.gov.uk/api/content{v}", .detail_key = "link",
-    .page_walk = 1,
-    .page_resume = 1,   /* 134,654 records (2026-10-12): read over a cycle, 20 pages of 100 a run. count=100 and an ascending public_timestamp since 2026-10-20 — until lib/jsonlist.c knew the count/start pair this walk read ONE page of 3 a run and cycled nothing */
+    .page_param = "start",
+    .page_size = 100,
+    .page_max = 3,   /* 3 x 100 records a run, every one deepened. MEASURED 2026-10-21: www.gov.uk serves 30 api/content detail hops in 9.7 s (3.1/s), so hp_detail_admit()'s 120 SECOND half of the budget reaches ~370 hops on this host -- the 1,000-hop count never binds here, and the rate is per host (api.safecast.org reached 116). The default 20 pages would store 2,000 and stamp ~1,630 _detail_pending that no later run deepens, the budget being spent in page order. See docs/probe-sized-pages-2026-10-20.md */
+    .page_resume = 1,   /* 134,654 records (2026-10-12): read over a cycle; the pages-a-run figure is the page_max above, sized to this host's measured detail-hop rate. count=100 and an ascending public_timestamp since 2026-10-20 — until lib/jsonlist.c knew the count/start pair this walk read ONE page of 3 a run and cycled nothing */
     .interval = 43200, .free_tier = 1 },
 
   { .id = "uk-govuk-search-tax-tribunal",
@@ -45,8 +49,10 @@ static const hp_source T[] = {
     .url = "https://www.gov.uk/api/search.json?filter_format=tax_tribunal_decision&count=100&order=public_timestamp&fields=title,link,description,tribunal_decision_category,tribunal_decision_decision_date",
     .array_path = "results",
     .detail_url = "https://www.gov.uk/api/content{v}", .detail_key = "link",
-    .page_walk = 1,
-    .page_resume = 1,   /* 1,447 records (2026-10-12): read over a cycle, 20 pages of 100 a run. count=100 and an ascending public_timestamp since 2026-10-20 — until lib/jsonlist.c knew the count/start pair this walk read ONE page of 3 a run and cycled nothing */
+    .page_param = "start",
+    .page_size = 100,
+    .page_max = 3,   /* 3 x 100 records a run, every one deepened. MEASURED 2026-10-21: www.gov.uk serves 30 api/content detail hops in 9.7 s (3.1/s), so hp_detail_admit()'s 120 SECOND half of the budget reaches ~370 hops on this host -- the 1,000-hop count never binds here, and the rate is per host (api.safecast.org reached 116). The default 20 pages would store 2,000 and stamp ~1,630 _detail_pending that no later run deepens, the budget being spent in page order. See docs/probe-sized-pages-2026-10-20.md */
+    .page_resume = 1,   /* 1,447 records (2026-10-12): read over a cycle; the pages-a-run figure is the page_max above, sized to this host's measured detail-hop rate. count=100 and an ascending public_timestamp since 2026-10-20 — until lib/jsonlist.c knew the count/start pair this walk read ONE page of 3 a run and cycled nothing */
     .interval = 43200, .free_tier = 1 },
 
   { .id = "uk-govuk-search-utaac-decisions",
@@ -57,8 +63,10 @@ static const hp_source T[] = {
     .url = "https://www.gov.uk/api/search.json?filter_format=utaac_decision&count=100&order=public_timestamp&fields=title,link,description,tribunal_decision_categories,tribunal_decision_decision_date,tribunal_decision_judges",
     .array_path = "results",
     .detail_url = "https://www.gov.uk/api/content{v}", .detail_key = "link",
-    .page_walk = 1,
-    .page_resume = 1,   /* 2,084 records (2026-10-12): read over a cycle, 20 pages of 100 a run. count=100 and an ascending public_timestamp since 2026-10-20 — until lib/jsonlist.c knew the count/start pair this walk read ONE page of 3 a run and cycled nothing */
+    .page_param = "start",
+    .page_size = 100,
+    .page_max = 3,   /* 3 x 100 records a run, every one deepened. MEASURED 2026-10-21: www.gov.uk serves 30 api/content detail hops in 9.7 s (3.1/s), so hp_detail_admit()'s 120 SECOND half of the budget reaches ~370 hops on this host -- the 1,000-hop count never binds here, and the rate is per host (api.safecast.org reached 116). The default 20 pages would store 2,000 and stamp ~1,630 _detail_pending that no later run deepens, the budget being spent in page order. See docs/probe-sized-pages-2026-10-20.md */
+    .page_resume = 1,   /* 2,084 records (2026-10-12): read over a cycle; the pages-a-run figure is the page_max above, sized to this host's measured detail-hop rate. count=100 and an ascending public_timestamp since 2026-10-20 — until lib/jsonlist.c knew the count/start pair this walk read ONE page of 3 a run and cycled nothing */
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-cap-reporter-volumes",
@@ -132,12 +140,13 @@ static const hp_source T[] = {
     .collector = "us_legal", .category = "legal",
     .description = "Every FR document that amends a given CFR title/part (count 1,532 for 40 CFR 63). Gives the rulemaking history of a specific regulation, with next_page_url cursor. Joins directly to the eCFR endpoints above.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://www.federalregister.gov/api/v1/documents.json?conditions%5Bcfr%5D%5Btitle%5D=40&conditions%5Bcfr%5D%5Bpart%5D=63&per_page=5",
+    .url = "https://www.federalregister.gov/api/v1/documents.json?conditions%5Bcfr%5D%5Btitle%5D=40&conditions%5Bcfr%5D%5Bpart%5D=63&per_page=100",
     .array_path = "results",
     .id_keys = "document_number",
     .detail_url = "https://www.federalregister.gov/api/v1/documents/{v}.json", .detail_key = "document_number",
     .page_walk = 1,
-    .page_resume = 1,   /* 1,533 records, measured 2026-10-12: read over a cycle, 5~ pages a run */
+    .page_resume = 1,   /* 1,533 records, measured 2026-10-12: read over a cycle (its pages-a-run figure is superseded: the page SIZE changed on 2026-10-20, see the page_max note) */
+    .page_max = 2,   /* 2 x 100 records a run. This row has a detail hop, and the per-run hop budget is 1,000 OR 120 SECONDS — the CLOCK is what binds on a slow host, measured on api.safecast.org, which reached 116 hops of 1,000 before its 120s ran out (2026-10-20). So a run is sized to what can plausibly be deepened rather than to what the API will serve: records past the budget are stamped _detail_pending and, because the budget is spent in page order, never deepened on a later run either. The per-host hop rate is NOT measured for this row — 200 is the family default and the number to revisit if its detail-truncation notice shows pending records. See docs/probe-sized-pages-2026-10-20.md */
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-federalregister-by-docket",
@@ -145,10 +154,11 @@ static const hp_source T[] = {
     .collector = "us_legal", .category = "legal",
     .description = "Pulls every FR notice/rule filed under a specific agency docket number, optionally narrowed by document type. Returns title, type, publication_date, document_number, html_url, abstract. The bridge between a Regulations.gov docket and its Federal Register publications.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://www.federalregister.gov/api/v1/documents.json?conditions%5Btype%5D%5B%5D=PRORULE&conditions%5Bdocket_id%5D=FAA-2022-0674&per_page=5",
+    .url = "https://www.federalregister.gov/api/v1/documents.json?conditions%5Btype%5D%5B%5D=PRORULE&conditions%5Bdocket_id%5D=FAA-2022-0674&per_page=100",
     .array_path = "results",
     .detail_url = "https://www.federalregister.gov/api/v1/documents/{v}.json", .detail_key = "document_number",
     .page_walk = 1,
+    .page_max = 2,   /* 2 x 100 records a run. This row has a detail hop, and the per-run hop budget is 1,000 OR 120 SECONDS — the CLOCK is what binds on a slow host, measured on api.safecast.org, which reached 116 hops of 1,000 before its 120s ran out (2026-10-20). So a run is sized to what can plausibly be deepened rather than to what the API will serve: records past the budget are stamped _detail_pending and, because the budget is spent in page order, never deepened on a later run either. The per-host hop rate is NOT measured for this row — 200 is the family default and the number to revisit if its detail-truncation notice shows pending records. See docs/probe-sized-pages-2026-10-20.md */
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-federalregister-executive-orders",
@@ -191,10 +201,18 @@ static const hp_source T[] = {
     .collector = "us_legal", .category = "legal",
     .description = "Meetings: EventId, EventGuid, EventBodyId, EventBodyName (e.g. 'Parks, Seattle Center, Libraries, and Gender Pay Equity Committee'), EventDate, EventTime, EventLocation, EventAgendaFile, EventMinutesFile, EventVideoPath, EventInSiteURL, EventLastModifiedUtc. EventId opens the agenda-item hop.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://webapi.legistar.com/v1/seattle/events?$top=1",
+    /* `$top=1` read ONE record a page, so a cycling walk advanced twenty
+     * meetings a run. Same endpoint family as the matters row below: $top=1000
+     * is the ceiling and $skip a true offset, and `EventId asc` is the stable
+     * ascending key a cycle needs. 100 a page x page_max 10 keeps a run inside
+     * the detail-hop budget, which matters more here than anywhere — each
+     * event's detail hop fetches its whole agenda. */
+    .url = "https://webapi.legistar.com/v1/seattle/events?$top=100&$orderby=EventId%20asc",
     .id_keys = "EventId",
     .detail_url = "https://webapi.legistar.com/v1/seattle/events/{v}/eventitems", .detail_key = "EventId",
-    .page_walk = 1,
+    .page_param = "$skip",
+    .page_size = 100,
+    .page_max = 10,
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .interval = 43200, .free_tier = 1 },
 
@@ -203,10 +221,28 @@ static const hp_source T[] = {
     .collector = "us_legal", .category = "legal",
     .description = "Granicus Legistar municipal-legislature API, keyless, OData-queryable ($top/$skip/$filter/$orderby). Each matter: MatterId, MatterGuid, MatterFile (e.g. 'CB 121253'), MatterName, MatterTitle (the full ordinance text summary), MatterTypeName, MatterStatusName, MatterBodyId/Name, MatterIntroDate, MatterAgendaDate, MatterPassedDate, MatterEnactmentDate, MatterEnactmentNumber, MatterRequester, MatterNotes, MatterVersion, MatterLastModifiedUtc. MatterId opens four verified sub-resources (sponsors, histories, attachments, versions).  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://webapi.legistar.com/v1/seattle/matters?$top=2&$orderby=MatterLastModifiedUtc%20desc",
+    /* `$top=2` read TWO records a page: measured as it stood, records=40 over
+     * requests=60. Legistar's own ceiling and offset, measured 2026-10-20:
+     *     $top=1000              200, 1,000 records (MatterId 1785..3156)
+     *     $top=1000&$skip=1000   200, 1,000 records (MatterId 3157..4303)
+     *     $top=5000              HTTP 400
+     * so 1,000 is the page and $skip is a true record offset with no overlap.
+     * 100 a page x page_max 10 keeps a run inside the detail-hop budget, so
+     * every record stored is deepened rather than stamped _detail_pending.
+     *
+     * `$orderby=MatterId asc` replaces `MatterLastModifiedUtc desc` because a
+     * cycle and a descending sort do not compose — and that sort was worse than
+     * most: LastModified MOVES, so a record edited mid-walk jumps to the head
+     * and shifts every page boundary behind it. MatterId is immutable and
+     * ascending, so new matters land at the tail, where a forward walk has not
+     * been yet. */
+    .url = "https://webapi.legistar.com/v1/seattle/matters?$top=100&$orderby=MatterId%20asc",
     .id_keys = "MatterId",
     .detail_url = "https://webapi.legistar.com/v1/seattle/matters/{v}", .detail_key = "MatterId",
-    .page_walk = 1,
+    .page_param = "$skip",
+    .page_size = 100,
+    .page_max = 10,
+    .page_resume = 1,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-ma-ocpf-barred-filers",
@@ -234,10 +270,11 @@ static const hp_source T[] = {
     .collector = "us_legal", .category = "legal",
     .description = "Every lawyer who has argued before the Supreme Court in Oyez's coverage: ID, name, href to /people/{identifier}, last_name, length_of_service, identifier. Paginated list; the entry point for 'which cases did this lawyer argue'.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://api.oyez.org/advocates?per_page=3",
+    .url = "https://api.oyez.org/advocates?per_page=100",
     .detail_url = "https://api.oyez.org/people/{v}", .detail_key = "identifier",
     .page_walk = 1,
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
+    .page_max = 2,   /* 2 x 100 records a run. This row has a detail hop, and the per-run hop budget is 1,000 OR 120 SECONDS — the CLOCK is what binds on a slow host, measured on api.safecast.org, which reached 116 hops of 1,000 before its 120s ran out (2026-10-20). So a run is sized to what can plausibly be deepened rather than to what the API will serve: records past the budget are stamped _detail_pending and, because the budget is spent in page order, never deepened on a later run either. The per-host hop rate is NOT measured for this row — 200 is the family default and the number to revisit if its detail-truncation notice shows pending records. See docs/probe-sized-pages-2026-10-20.md */
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-oyez-case-detail",
@@ -256,10 +293,11 @@ static const hp_source T[] = {
     .collector = "us_legal", .category = "legal",
     .description = "Keyless SCOTUS case index. Each case: ID, name, href (api.oyez.org/cases/{term}/{docket}), docket_number, additional_docket_numbers, timeline[] of events (Granted/Argued/Decided with unix dates), lower_court, facts_of_the_case, question, conclusion, term, and labelled issue areas.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://api.oyez.org/cases?filter=term:2022&labels=true&per_page=3",
+    .url = "https://api.oyez.org/cases?filter=term:2022&labels=true&per_page=100",
     .detail_url = "https://api.oyez.org/cases/2022/{v}", .detail_key = "docket_number",
     .page_walk = 1,
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
+    .page_max = 2,   /* 2 x 100 records a run. This row has a detail hop, and the per-run hop budget is 1,000 OR 120 SECONDS — the CLOCK is what binds on a slow host, measured on api.safecast.org, which reached 116 hops of 1,000 before its 120s ran out (2026-10-20). So a run is sized to what can plausibly be deepened rather than to what the API will serve: records past the budget are stamped _detail_pending and, because the budget is spent in page order, never deepened on a later run either. The per-host hop rate is NOT measured for this row — 200 is the family default and the number to revisit if its detail-truncation notice shows pending records. See docs/probe-sized-pages-2026-10-20.md */
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-oyez-natural-court",

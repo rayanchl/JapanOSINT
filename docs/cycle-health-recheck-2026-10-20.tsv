@@ -1,0 +1,91 @@
+# The cycle sweep's findings, RE-MEASURED with one row at a time per host (2026-10-20).
+# tools/audit_cycle_health.py --ids-file <the 22 non-healthy verdicts + the 35 rows added since> --jobs 6
+#
+# WHY. The first full sweep (2026-10-19, 530 rows, 12 jobs — docs/cycle-health-2026-10-19.tsv) reported 12
+# STUCK, 6 FETCH_FAILED and 4 SLOW, and the write-up hedged: "several are load this sweep created". A hedge is
+# not a measurement. core/hostgate.c paces requests inside ONE process and cannot pace twelve that each think
+# they are alone, and a cycling row makes ~20 requests to one host, so two rows of the same host overlap for
+# their whole run. audit_cycle_health.py now serialises per host; this is the same rows asked again.
+#
+# SCOPE, and why it is not all 565: load makes a page FAIL, so it can only manufacture a false STUCK or
+# FETCH_FAILED. It cannot manufacture a false CYCLING or COMPLETE, because those mean a position was or was not
+# stored after a walk that WAS served. So the first sweep's 508 healthy verdicts stand, and only its 22
+# findings needed re-reading — plus the 35 rows main added after that sweep ran (530 -> 565).
+#
+# RESULT: 43 CYCLING, 7 STUCK, 4 FETCH_FAILED, 2 COMPLETE, 1 SLOW. SEVENTEEN of the 22 verdicts CHANGED.
+#
+# Six of the twelve STUCK rows were the sweep's own load, now reading CYCLING:
+#   FAA_ARCGIS_OBSTACLES         p20/429 -> CYCLING      FAA_ARCGIS_US_AIRPORTS   p18/429 -> CYCLING
+#   us-sf-311-open311-requests   p20/429 -> CYCLING      au-asic-afs-licensees     p3/403 -> CYCLING
+#   au-asic-credit-licensees      p4/403 -> CYCLING      (and UKPARL/GBIF rows from SLOW/FETCH_FAILED)
+# One was real and is FIXED: BC_MINERAL_TENURE p2/400 -> CYCLING, after sortBy=TENURE_NUMBER_ID.
+#
+# THE au-asic FAMILY IS NOT FULLY EXPLAINED, and this is the honest remainder. Five rows share data.gov.au.
+# Host-paced, two now cycle, two read FETCH_FAILED (403 on page 1) and one is still STUCK (403 on page 2). So
+# the 403s are NOT purely this sweep's concurrency — which is what the earlier by-hand test suggested when
+# data.gov.au served 8 rapid serial and then 12 concurrent requests, all 200, from urllib. The difference
+# between that test and these runs is the CLIENT: the engine sends its own headers. That is the next thing to
+# measure on this host, and it is recorded here rather than guessed at with a hostgate entry.
+#
+# The other four STUCK are 429 (ENERGINET, TRONSCAN, us-courtlistener), 500 (TZ_PPRA) and two transport
+# failures (-1: CR_HEREDIA_PATENTES, WHO_XMART_FLUNET_SENTINEL, both previously SLOW and so unmeasured).
+# Each still discloses its own failing page, status and URL on every run, so re-running this is how a
+# transient stays distinguishable from a property.
+id	verdict	records	pages_read	resume_stored	failed_page	failed_page_status	secs	failed_page_url	note
+CERT_KH_WP_POSTS	COMPLETE	907		no			135.5		walk ended on its own and cleared the position
+JP25_JPMUNI2_BODIK_ODCS_NEWS	COMPLETE	280		no			6.2		walk ended on its own and cleared the position
+BC_MINERAL_TENURE	CYCLING	1000	20	yes			9.3		stored a position; next run reads the next slice
+CR_SANCARLOS_PREDIOS	CYCLING	20000	20	yes			60.3		stored a position; next run reads the next slice
+FAA_ARCGIS_OBSTACLES	CYCLING	10000	20	yes			21.9		stored a position; next run reads the next slice
+FAA_ARCGIS_US_AIRPORTS	CYCLING	10000	20	yes			19.2		stored a position; next run reads the next slice
+GBIF_OCC_KE	CYCLING	6000	20	yes			38.1		stored a position; next run reads the next slice
+JO46_AGS_ARCGISSERVER_MAD_ADDRESS_PTS	CYCLING	40000	20	yes			109.9		stored a position; next run reads the next slice
+JO46_AGS_GISP_MILE_POST_SIGN_ONE_TENT	CYCLING	40000	20	yes			123.3		stored a position; next run reads the next slice
+JO46_AGS_GISSERVICES_BACK_COUNTRY_FEA	CYCLING	20000	20	yes			26.0		stored a position; next run reads the next slice
+JO46_AGS_GISWEB_ADDRESS	CYCLING	20000	20	yes			27.4		stored a position; next run reads the next slice
+JO46_AGS_GISWEB_LOCALBUSINESSTAX	CYCLING	20000	20	yes			49.5		stored a position; next run reads the next slice
+JO46_AGS_GIS_WELL_LOCATIONS	CYCLING	20000	20	yes			32.6		stored a position; next run reads the next slice
+JO46_AGS_GIS_WELL_NUMBER	CYCLING	20000	20	yes			34.7		stored a position; next run reads the next slice
+JO46_AGS_PORTAL_ROAD	CYCLING	40000	20	yes			90.7		stored a position; next run reads the next slice
+JO46_AGS_PORTAL_UNIDENTIFIED	CYCLING	40000	20	yes			99.5		stored a position; next run reads the next slice
+JO46_AGS_SERVICES1_2013TO2017CRASH_AB	CYCLING	40000	20	yes			64.4		stored a position; next run reads the next slice
+JO46_AGS_SERVICES1_2D	CYCLING	40000	20	yes			89.9		stored a position; next run reads the next slice
+JO46_AGS_SERVICES1_HOKAKU_EXCEL_POINT	CYCLING	40000	20	yes			90.7		stored a position; next run reads the next slice
+JO46_AGS_SERVICES2_COG_ADDRESS_POINT	CYCLING	40000	20	yes			82.5		stored a position; next run reads the next slice
+JO46_AGS_SERVICES2_POLE04202023	CYCLING	20000	20	yes			41.7		stored a position; next run reads the next slice
+JO46_AGS_SERVICES2_RP_ADDRESSPT	CYCLING	40000	20	yes			88.3		stored a position; next run reads the next slice
+JO46_AGS_SERVICES3_120WATER_INVENTORY	CYCLING	20000	20	yes			48.7		stored a position; next run reads the next slice
+JO46_AGS_SERVICES3_ADDRESS_PARCEL_COM	CYCLING	40000	20	yes			102.9		stored a position; next run reads the next slice
+JO46_AGS_SERVICES3_ADDRESS_POINTS	CYCLING	40000	20	yes			92.8		stored a position; next run reads the next slice
+JO46_AGS_SERVICES3_EVENTLINE2019	CYCLING	40000	20	yes			176.6		stored a position; next run reads the next slice
+JO46_AGS_SERVICES5_CHIBANZU	CYCLING	40000	20	yes			86.4		stored a position; next run reads the next slice
+JO46_AGS_SERVICES6_ADDRESS_SCORES_ECO	CYCLING	40000	20	yes			77.6		stored a position; next run reads the next slice
+JO46_AGS_SERVICES6_ADDRESS_SCORES_TRA	CYCLING	40000	20	yes			76.5		stored a position; next run reads the next slice
+JO46_AGS_SERVICES6_ATSROUTE	CYCLING	40000	20	yes			104.5		stored a position; next run reads the next slice
+JO46_AGS_SERVICES8_CALS_CONSTRUCTION	CYCLING	40000	20	yes			106.8		stored a position; next run reads the next slice
+JO46_AGS_SERVICES8_PHOTOCENTERS	CYCLING	40000	20	yes			61.3		stored a position; next run reads the next slice
+JO46_AGS_SERVICES_100_YEAR_FLOOD_ZONE	CYCLING	40000	20	yes			158.4		stored a position; next run reads the next slice
+JO46_AGS_SERVICES_2017_TO_2021_TEEN_C	CYCLING	40000	20	yes			67.3		stored a position; next run reads the next slice
+JO46_AGS_SERVICES_AP1_GCP_MMS1	CYCLING	40000	20	yes			75.4		stored a position; next run reads the next slice
+JO46_AGS_SERVICES_NATA19AC_CRP_CRSG	CYCLING	40000	20	yes			160.6		stored a position; next run reads the next slice
+JO46_AGS_SERVICES_ODOT_CRASHES_2022_C	CYCLING	40000	20	yes			82.9		stored a position; next run reads the next slice
+JO46_AGS_SERVICES_PHOTO_CENTRES	CYCLING	40000	20	yes			76.2		stored a position; next run reads the next slice
+JO46_AGS_SERVICES_PHOTO_COVERAGE	CYCLING	40000	20	yes			90.0		stored a position; next run reads the next slice
+JO46_AGS_SERVICES_V_SDEOFTSEG_PERMITS	CYCLING	40000	20	yes			63.2		stored a position; next run reads the next slice
+UKPARL_LDA_COMMONS_ANSWERS	CYCLING	10000	20	yes			109.2		stored a position; next run reads the next slice
+UKPARL_LDA_COMMONS_WRITTEN_Q	CYCLING	10000	20	yes			267.5		stored a position; next run reads the next slice
+au-asic-afs-licensees	CYCLING	2000	20	yes			135.9		stored a position; next run reads the next slice
+au-asic-credit-licensees	CYCLING	2000	20	yes			134.6		stored a position; next run reads the next slice
+us-sf-311-open311-requests	CYCLING	61	20	yes			161.0		stored a position; next run reads the next slice
+SV_COMPRASAL_ADJUDICACIONES	FETCH_FAILED	0		no			40.8		SV_COMPRASAL_ADJUDICACIONES stored nothing: the request failed at the transport level
+au-asic-financial-advisers	FETCH_FAILED	0		no			0.9		au-asic-financial-advisers stored nothing: upstream answered 403
+au-asic-smsf-auditors	FETCH_FAILED	0		no			0.8		au-asic-smsf-auditors stored nothing: upstream answered 403
+au-government-organisations-register	FETCH_FAILED	0		no			0.9		au-government-organisations-register stored nothing: upstream answered 403
+JO46_AGS_SERVICES_2010_CENSUS_TRACTS	SLOW	38000		no			400.0		hit --timeout at 400.0s; unmeasured, not failed
+CR_HEREDIA_PATENTES	STUCK	5000	5	no	6	-1	206.8	https://sig.heredia.go.cr/server/rest/services/Patentes/PatentesVista/MapServer/0/query?where=1%3D1&outFields=*&f=json&returnGeometry=false&resultRecordCount=1000&resultOffset=5000	page 6 answered -1; no position stored, so the next run re-reads this slice
+ENERGINET_CAPACITY_MUNICIPALITY	STUCK	50	1	no	2	429	3.0	https://api.energidataservice.dk/dataset/CapacityPerMunicipality?limit=50&offset=50	page 2 answered 429; no position stored, so the next run re-reads this slice
+TRONSCAN_TOP_ACCOUNTS	STUCK	50	2	no	3	429	25.1	https://apilist.tronscanapi.com/api/account/list?limit=25&start=50	page 3 answered 429; no position stored, so the next run re-reads this slice
+TZ_PPRA_NEST_OCDS_RELEASES	STUCK	148	3	no	4	500	22.4	https://nest.go.tz/gateway/nest-data-portal-api/api/releases?since=2023-06-15T00:00:00.000&cursor=3867192	page 4 answered 500; no position stored, so the next run re-reads this slice
+WHO_XMART_FLUNET_SENTINEL	STUCK	13000	13	no	14	-1	293.9	https://xmart-api-public.who.int/FLUMART/VIW_FNT?%24format=json&%24top=1000&%24skip=13000	page 14 answered -1; no position stored, so the next run re-reads this slice
+au-asic-credit-representatives	STUCK	100	1	no	2	403	17.8	https://data.gov.au/data/api/3/action/datastore_search?resource_id=999d9e92-df2c-4d6d-b580-321dcd205292&limit=100&offset=100	page 2 answered 403; no position stored, so the next run re-reads this slice
+us-courtlistener-search-recap-dockets	STUCK	209	11	no	12	429	287.8	https://www.courtlistener.com/api/rest/v4/search/?cursor=cz0xNDMuNTg0NjMmcz00NDEwNjcyJnQ9ciZkPTIwMjYtMTAtMjAmcD0xMg%3D%3D&q=Google&type=r	page 12 answered 429; no position stored, so the next run re-reads this slice

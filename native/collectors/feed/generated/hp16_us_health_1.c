@@ -21,8 +21,10 @@ static const hp_source T[] = {
     .url = "https://www.gov.uk/api/search.json?filter_format=drug_safety_update&count=100&order=public_timestamp&fields=title,link,description,first_published_at",
     .array_path = "results",
     .detail_url = "https://www.gov.uk/api/content{v}", .detail_key = "link",
-    .page_walk = 1,
-    .page_resume = 1,   /* 867 records (2026-10-12): read over a cycle, 20 pages of 100 a run. count=100 and an ascending public_timestamp since 2026-10-20 — until lib/jsonlist.c knew the count/start pair this walk read ONE page of 3 a run and cycled nothing */
+    .page_param = "start",
+    .page_size = 100,
+    .page_max = 3,   /* 3 x 100 records a run, every one deepened. MEASURED 2026-10-21: www.gov.uk serves 30 api/content detail hops in 9.7 s (3.1/s), so hp_detail_admit()'s 120 SECOND half of the budget reaches ~370 hops on this host -- the 1,000-hop count never binds here, and the rate is per host (api.safecast.org reached 116). The default 20 pages would store 2,000 and stamp ~1,630 _detail_pending that no later run deepens, the budget being spent in page order. See docs/probe-sized-pages-2026-10-20.md */
+    .page_resume = 1,   /* 867 records (2026-10-12): read over a cycle; the pages-a-run figure is the page_max above, sized to this host's measured detail-hop rate. count=100 and an ascending public_timestamp since 2026-10-20 — until lib/jsonlist.c knew the count/start pair this walk read ONE page of 3 a run and cycled nothing */
     .interval = 43200, .free_tier = 1 },
 
   { .id = "uk-govuk-search-medical-safety-alerts",
@@ -33,8 +35,10 @@ static const hp_source T[] = {
     .url = "https://www.gov.uk/api/search.json?filter_format=medical_safety_alert&count=100&order=public_timestamp&fields=title,link,description,alert_type,issued_date,medical_specialism",
     .array_path = "results",
     .detail_url = "https://www.gov.uk/api/content{v}", .detail_key = "link",
-    .page_walk = 1,
-    .page_resume = 1,   /* 1,453 records (2026-10-12): read over a cycle, 20 pages of 100 a run. count=100 and an ascending public_timestamp since 2026-10-20 — until lib/jsonlist.c knew the count/start pair this walk read ONE page of 3 a run and cycled nothing */
+    .page_param = "start",
+    .page_size = 100,
+    .page_max = 3,   /* 3 x 100 records a run, every one deepened. MEASURED 2026-10-21: www.gov.uk serves 30 api/content detail hops in 9.7 s (3.1/s), so hp_detail_admit()'s 120 SECOND half of the budget reaches ~370 hops on this host -- the 1,000-hop count never binds here, and the rate is per host (api.safecast.org reached 116). The default 20 pages would store 2,000 and stamp ~1,630 _detail_pending that no later run deepens, the budget being spent in page order. See docs/probe-sized-pages-2026-10-20.md */
+    .page_resume = 1,   /* 1,453 records (2026-10-12): read over a cycle; the pages-a-run figure is the page_max above, sized to this host's measured detail-hop rate. count=100 and an ascending public_timestamp since 2026-10-20 — until lib/jsonlist.c knew the count/start pair this walk read ONE page of 3 a run and cycled nothing */
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-cms-data-catalog",
@@ -73,9 +77,11 @@ static const hp_source T[] = {
     .collector = "us_health", .category = "health",
     .description = "2,978,925 rows (confirmed via the /data/stats endpoint). Per provider: NPI, MULTIPLE_NPI_FLAG, PECOS_ASCT_CNTL_ID (the PECOS associate id that links individuals to organisations), ENRLMT_ID, PROVIDER_TYPE_CD and PROVIDER_TYPE_DESC, STATE_CD, FIRST_NAME/MDL_NAME/LAST_NAME, ORG_NAME. Server-side filtering works: ?filter[NPI]=... returns the single record.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "health-record", .tags = "\"us\",\"health\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://data.cms.gov/data-api/v1/dataset/2457ea29-fc82-48b0-86ec-3b0755de7515/data?size=2",
+    .url = "https://data.cms.gov/data-api/v1/dataset/2457ea29-fc82-48b0-86ec-3b0755de7515/data?size=100",
     .detail_url = "https://data.cms.gov/data-api/v1/dataset/2457ea29-fc82-48b0-86ec-3b0755de7515/data?size=100&filter[NPI]={v}", .detail_key = "NPI",
-    .page_walk = 1,
+    .page_max = 2,   /* 2 x 100 records a run. This row has a detail hop, and the per-run hop budget is 1,000 OR 120 SECONDS — the CLOCK is what binds on a slow host, measured on api.safecast.org, which reached 116 hops of 1,000 before its 120s ran out (2026-10-20). So a run is sized to what can plausibly be deepened rather than to what the API will serve: records past the budget are stamped _detail_pending and, because the budget is spent in page order, never deepened on a later run either. The per-host hop rate is NOT measured for this row — 200 is the family default and the number to revisit if its detail-truncation notice shows pending records. See docs/probe-sized-pages-2026-10-20.md */
+    .page_param = "offset",
+    .page_size = 100,
     .interval = 43200, .free_tier = 1 },
 
   { .id = "us-cpsc-recall-by-date-range",

@@ -1,0 +1,51 @@
+# Two IOC sea-level rows retired 2026-10-24 as duplicates of one endpoint.
+#
+# www.ioc-sealevelmonitoring.org/service.php?query=stationlist was registered
+# FOUR times. Measured live 2026-10-23 with the engine's own agent:
+#
+#   showall=all   HTTP 200  2,389,277 B  2,349 rows  2,039 byte-distinct
+#   showall=a     HTTP 200  1,966,120 B  1,924 rows
+#   (no showall)  HTTP 200  1,966,121 B  1,924 rows
+#
+# showall=a and no-showall are the same response, so the service IGNORES an
+# unrecognised value and serves the default list. That is why lint-sources and
+# the 531-pair dup baseline never grouped these: check_dup_endpoint keys on
+# host+path+QUERY textually, and a parameter the SERVER discards still
+# distinguishes two rows to a string comparison.
+#
+# Candidate keys against distinct whole records, showall=all (2,039):
+#   Code                                    1,766
+#   sensorid                                1,648   (119 NULL)
+#   Code+sensor+sensorid                     1,766
+#   Code+sensor+sensorid+updatedata          1,867   <- the surviving row's key
+#
+# The 2,349 -> 1,867 gap is CORRECT dedupe, not loss: the 115 colliding groups
+# differ only in observations/first/last, counters that advance every minute.
+# Widening the key would mint a fresh uid every run and grow the table without
+# bound. Measured before repairing, per rule 4b.
+#
+# KEPT: ioc-sea-level-stations (sources/mar_ioc_sea_level_stations.c) - the
+#   sensor-level read, keyed code|sensor|sensorid|updatedata, carries the gauge
+#   position and lasttime as published_at.
+# KEPT: ioc-sealevel-stations (sources/geoeo_ioc_sealevel.c) - a different
+#   RECORD GRANULARITY (one row per station, sensors folded into sensor_count)
+#   on the default list, keyed on Code. Not a duplicate of the above.
+#
+# CAUTION on the per-pass numbers in the evidence column (added 2026-10-24).
+# "stored 1,763 of 2,385" and "stored 1,341 of 1,960" are readings from the
+# 2026-08-24 source-health and 2026-09-04 collision sweeps, and both PREDATE
+# the in-page collision guard that content-hashes records colliding inside one
+# page. These two rows are SINGLE-PAGE reads -- service.php returns the whole
+# list in one response, no cursor, no next link -- so under the guard a
+# surviving collapse on them would prove the records were byte-identical, i.e.
+# correct dedupe, not loss. Nobody re-measured them after the guard landed.
+# So: do NOT read this removal as recovering ~1,238 records/pass. It removes a
+# duplicated REQUEST and duplicated STORAGE, which is certain, and it removes a
+# row whose name misdescribed its endpoint. Whether either row was still
+# losing records was unmeasured, and the honest answer is that it probably was
+# not. The grounds for retiring them do not depend on it.
+#
+# Registry count 57,529 -> 57,527; both floors re-recorded.
+id	file	url	reason	evidence
+geo-ioc-sealevel-stations	feed/generated/vsrc_environment_2.c	https://www.ioc-sealevelmonitoring.org/service.php?query=stationlist&showall=all&format=json	DUP_ENDPOINT	byte-identical URL to ioc-sea-level-stations, so every record was stored twice under two source ids and two requests spent per cycle; had no id_keys and stored 1,763 of 2,385 emitted (source-health 2026-08-24); unrepairable in place because VJSON_KEYED takes ONE field and this upstream's identity is four
+sci-ocean-ioc-sealevel-tab	feed/generated/vsrc13_ocean_cryo_1.c	https://www.ioc-sealevelmonitoring.org/service.php?query=stationlist&showall=a&format=json	DUP_ENDPOINT + NAME_NOT_SUPPORTED_BY_ENDPOINT	showall=a is ignored by the service, so the row called itself the "full station list" while reading the default 1,924-row list (425 rows short of showall=all); its comment's key claim "sensorid 1,336 of 1,336 distinct, no nulls" was a 2026-09-07 reading that no longer holds - 1,341 distinct of 1,924 on 2026-10-23, and 119 NULL sensorid on showall=all, which VJSON_KEYED cannot key; stored 1,341 of 1,960 emitted (collision audit 2026-09-04)

@@ -6,6 +6,7 @@
  * since — this file, not the manifest, is the current copy. The
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
+#include "_vjson_idkeys.inc"
 
 VRSS(lat_cemaden_rss, "lat-cemaden-rss", "CEMADEN - natural disaster monitoring bulletin", "ブラジル：防災 - CEMADEN - natural disaster monitoring bulletin",
   "latam_hazard", "hazard",
@@ -27,26 +28,38 @@ VJSON(lat_cl_xor_sismo, "lat-cl-xor-sismo", "Chile - recent earthquakes (sismolo
   "es", "[\"chl\",\"hazard\",\"hazard\"]", 900,
   "Recent Chilean earthquakes with origin time, magnitude, depth and epicentre coordinates.");
 
-VJSON(lat_co_ideam_precip, "lat-co-ideam-precip", "Datos Abiertos Colombia - IDEAM precipitation observations", "コロンビア：防災 - Datos Abiertos Colombia - IDEAM precipitation observations",
+/* Registry sweep 2026-10-22: 10,000 / 7,591. VJSON's id precedence
+   list finds no field in this Socrata record, so it fell back and collapsed
+   the series. Measured over two pages before the key was touched: 1,000 of 1,000. Note fechaobservacion ALONE is also 1,000 of 1,000 in this sample and is the WRONG key: a station network records many stations at one instant, and the sample only looks unique because it is ordered by :id. */
+VJSON_IDKEYS(lat_co_ideam_precip, "lat-co-ideam-precip", "Datos Abiertos Colombia - IDEAM precipitation observations", "コロンビア：防災 - Datos Abiertos Colombia - IDEAM precipitation observations",
   "latam_hazard", "hazard",
   "https://www.datos.gov.co/resource/s54a-sgyg.json?$limit=500&$order=:id",
   "",
   "es", "[\"col\",\"hazard\",\"hazard\"]", 86400,
-  "Station-level rainfall observations from the IDEAM network, with station id, date and measured value.");
+  "Station-level rainfall observations from the IDEAM network, with station id, date and measured value.",
+  "codigoestacion+codigosensor+fechaobservacion");
 
-VJSON(lat_co_ideam_presion, "lat-co-ideam-presion", "Datos Abiertos Colombia - IDEAM atmospheric pressure observations", "コロンビア：防災 - Datos Abiertos Colombia - IDEAM atmospheric pressure observations",
+/* Registry sweep 2026-10-22: 10,000 / 9,075. VJSON's id precedence
+   list finds no field in this Socrata record, so it fell back and collapsed
+   the series. Measured over two pages before the key was touched: 1,000 of 1,000, same shape as the precipitation row. */
+VJSON_IDKEYS(lat_co_ideam_presion, "lat-co-ideam-presion", "Datos Abiertos Colombia - IDEAM atmospheric pressure observations", "コロンビア：防災 - Datos Abiertos Colombia - IDEAM atmospheric pressure observations",
   "latam_hazard", "hazard",
   "https://www.datos.gov.co/resource/62tk-nxj5.json?$limit=500&$order=:id",
   "",
   "es", "[\"col\",\"hazard\",\"hazard\"]", 86400,
-  "Station-level barometric pressure readings from the IDEAM network.");
+  "Station-level barometric pressure readings from the IDEAM network.",
+  "codigoestacion+codigosensor+fechaobservacion");
 
-VJSON(lat_co_ideam_temp, "lat-co-ideam-temp", "Datos Abiertos Colombia - IDEAM air temperature observations", "コロンビア：防災 - Datos Abiertos Colombia - IDEAM air temperature observations",
+/* Registry sweep 2026-10-22: 10,000 / 9,653. VJSON's id precedence
+   list finds no field in this Socrata record, so it fell back and collapsed
+   the series. Measured over two pages before the key was touched: 1,000 of 1,000, same shape as the precipitation row. */
+VJSON_IDKEYS(lat_co_ideam_temp, "lat-co-ideam-temp", "Datos Abiertos Colombia - IDEAM air temperature observations", "コロンビア：防災 - Datos Abiertos Colombia - IDEAM air temperature observations",
   "latam_hazard", "hazard",
   "https://www.datos.gov.co/resource/sbwg-7ju4.json?$limit=500&$order=:id",
   "",
   "es", "[\"col\",\"hazard\",\"hazard\"]", 86400,
-  "Station-level ambient air temperature readings from the IDEAM network.");
+  "Station-level ambient air temperature readings from the IDEAM network.",
+  "codigoestacion+codigosensor+fechaobservacion");
 
 #include "lib/arcgis_dir.h"
 

@@ -176,3 +176,52 @@ char *datetok_expand(const char *tmpl, time_t now_in, int tz_min,
   out[len] = 0;
   return out;
 }
+
+/* ── whole-DAY arithmetic (datetok.h): the same civil-date helpers above,
+ * exported, so a caller slicing a collection by date does not grow a second
+ * copy of them. */
+long datetok_day_from_iso(const char *s) {
+  if (!s) return DATETOK_BAD_DAY;
+  while (*s == ' ' || *s == '\t') s++;
+  long y = 0; int m = 0, d = 0, n = 0;
+  /* Hand-parsed rather than sscanf("%ld-%d-%d"): that accepts "2020-1-1" and
+   * "2020-01-01junk" alike, and a window floor silently read as a different
+   * day is exactly the kind of quiet wrongness this file exists to avoid. */
+  for (n = 0; n < 4; n++) {
+    if (s[n] < '0' || s[n] > '9') return DATETOK_BAD_DAY;
+    y = y * 10 + (s[n] - '0');
+  }
+  if (s[4] != '-' || s[5] < '0' || s[5] > '9' || s[6] < '0' || s[6] > '9')
+    return DATETOK_BAD_DAY;
+  m = (s[5] - '0') * 10 + (s[6] - '0');
+  if (s[7] != '-' || s[8] < '0' || s[8] > '9' || s[9] < '0' || s[9] > '9')
+    return DATETOK_BAD_DAY;
+  d = (s[8] - '0') * 10 + (s[9] - '0');
+  const char *tail = s + 10;
+  while (*tail == ' ' || *tail == '\t' || *tail == '\n' || *tail == '\r') tail++;
+  if (*tail) return DATETOK_BAD_DAY;
+  if (m < 1 || m > 12 || d < 1 || d > dt_month_days(y, m))
+    return DATETOK_BAD_DAY;
+  return dt_days_from_civil(y, m, d);
+}
+
+void datetok_iso_from_day(long day, char *out, size_t cap) {
+  if (!out || cap < 11) { if (out && cap) out[0] = 0; return; }
+  long y; int m, d;
+  dt_civil_from_days(day, &y, &m, &d);
+  snprintf(out, cap, "%04ld-%02d-%02d", y, m, d);
+}
+
+long datetok_day_of(time_t now_in, int tz_min) {
+  time_t t = now_in ? now_in : time(NULL);
+  /* Floor division, not truncation: C integer division rounds toward zero, so
+   * an instant before 1970 would land on the day after the one it is in. */
+  long long secs = (long long)t + (long long)tz_min * 60;
+  long long day = secs / 86400;
+  if (secs < 0 && secs % 86400) day--;
+  return (long)day;
+}
+
+time_t datetok_day_start(long day, int tz_min) {
+  return (time_t)((long long)day * 86400 - (long long)tz_min * 60);
+}

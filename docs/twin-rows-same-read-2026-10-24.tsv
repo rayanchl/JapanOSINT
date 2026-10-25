@@ -1,0 +1,120 @@
+# Rows that are the SAME READ under two ids - 19 groups, 2026-10-24.
+#
+# Found while reading the limit-pairs row by row.
+# AF_WORLDBANK_COUNTRY and WORLD_WB_COUNTRY sit 21 lines apart in
+# hp3b36_africa.c and are identical in every field that decides what is
+# fetched and how it is keyed - category, portal, record_type, tags, mode,
+# array_path, id_keys, interval, page_param, title_keys - with VERBATIM
+# identical descriptions carrying the same measurement ("295 records in 113590
+# bytes"). They differ in id, name and `per_page` (400 against 500). A third
+# row, WORLDBANK_COUNTRY_REGISTER, reads the same ~295 countries weekly with
+# the same `id_keys = "id"`.
+#
+# So the read itself was fingerprinted across all 44,112 declarative rows:
+# normalised URL + array_path + id_keys + title_keys + record_type + detail_url
+# + detail_key + mode + csv_delim + post_body + next_path. Two rows sharing all
+# of that fetch one collection and mint ONE set of remote_keys, so the uid
+# differs only by source_id - rule 4b's double storage in its most literal
+# form, plus a duplicated request every cycle.
+#
+#   19 groups, 38 rows, 19 redundant registrations. All 19 groups are inside a
+#   SINGLE FILE: this is a generator emitting one source twice, not two
+#   sessions colliding.
+#
+# EIGHTEEN OF THE NINETEEN DIFFER BY ONE CHARACTER: a trailing `&`.
+#   https://www.castaneatownshippa.gov/?feed=rss2
+#   https://www.castaneatownshippa.gov/?feed=rss2&
+# Every other field matches, name and name_ja included, and the generator's own
+# collision handling appended `_2` to the second id - so it noticed the NAMES
+# collided and concluded it had two sources rather than one source twice.
+#
+# check_dup_endpoint cannot group them: it compares host+path+QUERY TEXTUALLY,
+# and `feed=rss2` is not the string `feed=rss2&`. Neither could the limit-pair
+# harvest, which requires every other query parameter to match and reads a
+# record-limit difference only.
+#
+# This is the `&amp;` family again, from a new side. The 2026-10-22 decode pass
+# found 1,076 rows carrying a literal `&amp;` and removed the nine that became
+# exact duplicates once decoded. These 18 are what a decode leaves BEHIND: a
+# `?feed=rss2&amp;` becomes `?feed=rss2&`, whose trailing ampersand parses to
+# nothing on the wire while still distinguishing two rows to a string
+# comparison. 25 rows in the tree have a bare trailing `&` in their url, across
+# seven files (hp2_eu_dach, hp3b44_{uk,us}gov, hp3b47_{fr,it,wd}gov,
+# hp3b48_news); 18 of them are half of a twin pair and 7 are harmless singles
+# carrying the same generator artifact.
+#
+# THE ONE GROUP THAT IS NOT A TRAILING AMPERSAND is the World Bank pair above.
+#
+# REPORTED, NOT REPAIRED. Which row of a twin group survives is a per-row
+# decision and this file does not make it: the surviving id is the one other
+# rows and stored uids may already reference, and `tools/cleanup_stale_uids.py`
+# exists because identity changes leave rows behind in an old database. For the
+# World Bank trio the cadences differ (604800 against 86400 twice) and the
+# declared per_page differs (300/400/500) over a collection of ~295 records
+# that fits in one page of any of them, so no reading is lost by keeping any
+# one of them - but that is a judgement about three rows, and the other 18 want
+# the same one made explicitly.
+#
+# TWO FALSE POSITIVES THIS CHECK PRODUCED FIRST, both from a filter that
+# matched too much - the mirror of the failure in
+# docs/dup-endpoints-behind-a-limit-2026-10-24.tsv, where one matched too
+# little:
+#
+#   * blanking the value of every paging-ish parameter merged three different
+#     SPIP feeds on lanouaille.fr (`spip.php?page=backend`,
+#     `?page=backendagenda`, `?page=piclens.rss`) into one group, because
+#     `page` there is a CONTENT selector. A cursor is only a cursor when the
+#     row declares it, so the normaliser now blanks a cursor named by the row's
+#     own `page_param` and a short list of names that can mean nothing but
+#     "how many" - never `page`, `p`, `start`, `offset` or `startIndex` on name
+#     alone.
+#   * `urlsplit` drops the fragment silently, which reported four reads of one
+#     FSA workbook (`ginkou.xlsx`, `#foreign`, `#regional`, `#regional2` -
+#     sheet selectors) as one source registered four times. The fragment is
+#     part of the read and is in the fingerprint now.
+#   * hand-written collectors are excluded entirely: a `source_def.url` there
+#     is the human-facing PORTAL and not the request template, which is why
+#     four autobahn.de rows all declare `verkehr.autobahn.de/o/autobahn/` while
+#     each builds a different endpoint in code.
+#
+#   31 groups before those three corrections, 19 after. The corrections only
+#   ever shrink the claim.
+group	id	interval	file	url
+1	AF_WORLDBANK_COUNTRY	86400	native/collectors/pivot/table/hp3b36_africa.c	https://api.worldbank.org/v2/country?format=json&per_page=400
+1	WORLD_WB_COUNTRY	86400	native/collectors/pivot/table/hp3b36_africa.c	https://api.worldbank.org/v2/country?format=json&per_page=500
+2	JO44_UK_OCLEPYCHARDGROUP_PC_GOV_UK	3600	native/collectors/pivot/table/hp3b44_ukgov.c	https://oclepychardgroup-pc-gov-uk.stackstaging.com/?feed=rss2
+2	JO44_UK_OCLEPYCHARDGROUP_PC_GOV_UK_2	3600	native/collectors/pivot/table/hp3b44_ukgov.c	https://oclepychardgroup-pc-gov-uk.stackstaging.com/?feed=rss2&
+3	JO44_US_CASTANEATOWNSHIPPA_GOV	604800	native/collectors/pivot/table/hp3b44_usgov.c	https://www.castaneatownshippa.gov/?feed=rss2
+3	JO44_US_CASTANEATOWNSHIPPA_GOV_2	604800	native/collectors/pivot/table/hp3b44_usgov.c	https://www.castaneatownshippa.gov/?feed=rss2&
+4	JO47_FR_55E63C96_F8A4_424C_A9FD_52DDF515B6EF	86400	native/collectors/pivot/table/hp3b47_frgov.c	https://ableiges.fr/?feed=rss2
+4	JO47_FR_55E63C96_F8A4_424C_A9FD_52DDF515B6EF_2	86400	native/collectors/pivot/table/hp3b47_frgov.c	https://ableiges.fr/?feed=rss2&
+5	JO47_FR_957C662B_DD64_47C8_9D96_55AC90EC4012	21600	native/collectors/pivot/table/hp3b47_frgov.c	https://mairie-mauvezinsurgupie.com/?feed=rss2
+5	JO47_FR_957C662B_DD64_47C8_9D96_55AC90EC4012_2	21600	native/collectors/pivot/table/hp3b47_frgov.c	https://mairie-mauvezinsurgupie.com/?feed=rss2&
+6	JO47_FR_9F47A24C_7FA2_449E_9037_10D458C8F241	21600	native/collectors/pivot/table/hp3b47_frgov.c	https://www.sallesdebarbezieux.fr/?feed=rss2
+6	JO47_FR_9F47A24C_7FA2_449E_9037_10D458C8F241_2	21600	native/collectors/pivot/table/hp3b47_frgov.c	https://www.sallesdebarbezieux.fr/?feed=rss2&
+7	JO47_FR_02A98D03_72A8_415F_8F91_23E411822B6D	3600	native/collectors/pivot/table/hp3b47_frgov.c	https://www.arc-et-senans.com/?feed=rss2
+7	JO47_FR_02A98D03_72A8_415F_8F91_23E411822B6D_2	3600	native/collectors/pivot/table/hp3b47_frgov.c	https://www.arc-et-senans.com/?feed=rss2&
+8	JO47_FR_4C91D7C6_8652_4E23_A0DE_42899A4B2950	86400	native/collectors/pivot/table/hp3b47_frgov.c	http://flancourt-crescy-en-roumois.fr/?feed=rss2
+8	JO47_FR_4C91D7C6_8652_4E23_A0DE_42899A4B2950_2	86400	native/collectors/pivot/table/hp3b47_frgov.c	http://flancourt-crescy-en-roumois.fr/?feed=rss2&
+9	JO47_FR_5BBFC1FF_46F2_4886_A2B8_E42F69A807CF	21600	native/collectors/pivot/table/hp3b47_frgov.c	http://st-riquier-es-plains.fr/?feed=rss2
+9	JO47_FR_5BBFC1FF_46F2_4886_A2B8_E42F69A807CF_2	21600	native/collectors/pivot/table/hp3b47_frgov.c	http://st-riquier-es-plains.fr/?feed=rss2&
+10	JO47_FR_A24CFC99_80ED_4B6C_B92F_8078F7B9AEF5	86400	native/collectors/pivot/table/hp3b47_frgov.c	http://www.saint-pierre-de-curtille.fr/?feed=rss2
+10	JO47_FR_A24CFC99_80ED_4B6C_B92F_8078F7B9AEF5_2	86400	native/collectors/pivot/table/hp3b47_frgov.c	http://www.saint-pierre-de-curtille.fr/?feed=rss2&
+11	JO47_FR_BA971EEF_5C84_4844_A634_996B936BEB25	3600	native/collectors/pivot/table/hp3b47_frgov.c	http://saintchristophe23.paysdegueret.fr/?feed=rss2
+11	JO47_FR_BA971EEF_5C84_4844_A634_996B936BEB25_2	3600	native/collectors/pivot/table/hp3b47_frgov.c	http://saintchristophe23.paysdegueret.fr/?feed=rss2&
+12	JO47_FR_20CB2477_AD84_4F36_B602_CC0F8835F493	604800	native/collectors/pivot/table/hp3b47_frgov.c	http://www.poisvilliers.fr/?feed=rss2
+12	JO47_FR_20CB2477_AD84_4F36_B602_CC0F8835F493_2	604800	native/collectors/pivot/table/hp3b47_frgov.c	http://www.poisvilliers.fr/?feed=rss2&
+13	JO47_IT_IIMVI	86400	native/collectors/pivot/table/hp3b47_itgov.c	https://www.ipabperiminoridivicenza.it/?feed=rss2
+13	JO47_IT_IIMVI_2	86400	native/collectors/pivot/table/hp3b47_itgov.c	https://www.ipabperiminoridivicenza.it/?feed=rss2&
+14	JO47_IT_JDFF4O40	86400	native/collectors/pivot/table/hp3b47_itgov.c	https://bonif.org/?feed=rss2
+14	JO47_IT_JDFF4O40_2	86400	native/collectors/pivot/table/hp3b47_itgov.c	https://bonif.org/?feed=rss2&
+15	JO47_IT_ORFAP_VT	86400	native/collectors/pivot/table/hp3b47_itgov.c	https://www.ordinefarmacistiviterbo.it/?feed=rss2
+15	JO47_IT_ORFAP_VT_2	86400	native/collectors/pivot/table/hp3b47_itgov.c	https://www.ordinefarmacistiviterbo.it/?feed=rss2&
+16	JO47_WD_Q3407467	3600	native/collectors/pivot/table/hp3b47_wdgov.c	https://www.ombudsman.gov.ph/?feed=rss2
+16	JO47_WD_Q3407467_2	3600	native/collectors/pivot/table/hp3b47_wdgov.c	https://www.ombudsman.gov.ph/?feed=rss2&
+17	JO48_NEWS_Q104889693	3600	native/collectors/pivot/table/hp3b48_news.c	https://dv.kg/?feed=rss2
+17	JO48_NEWS_Q104889693_2	3600	native/collectors/pivot/table/hp3b48_news.c	https://dv.kg/?feed=rss2&
+18	JO48_NEWS_Q2044030	3600	native/collectors/pivot/table/hp3b48_news.c	https://www.newlookmedia.ru/?feed=rss2
+18	JO48_NEWS_Q2044030_2	3600	native/collectors/pivot/table/hp3b48_news.c	https://www.newlookmedia.ru/?feed=rss2&
+19	JO48_NEWS_Q30957186	3600	native/collectors/pivot/table/hp3b48_news.c	https://www.centernews.com.ua/?feed=rss2
+19	JO48_NEWS_Q30957186_2	3600	native/collectors/pivot/table/hp3b48_news.c	https://www.centernews.com.ua/?feed=rss2&

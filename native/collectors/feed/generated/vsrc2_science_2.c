@@ -141,19 +141,19 @@ VJSON_KEYED(sci_ebi_biostudies_bioimages, "sci-ebi-biostudies-bioimages", "BioIm
   "en", "[\"bioimaging\",\"ebi\",\"dataset\"]", 86400,
   "Biological imaging datasets deposited at EMBL-EBI.", "accession");
 
-VJSON(sci_ebi_interpro_entries, "sci-ebi-interpro-entries", "InterPro protein family entries", "InterPro タンパク質ファミリー",
-  "science", "genomics",
-  "https://www.ebi.ac.uk/interpro/api/entry/InterPro/?page_size=100",
-  "results",
-  "en", "[\"interpro\",\"protein\",\"domains\"]", 86400,
-  "Protein family, domain and site signatures integrated in InterPro.");
+/* REMOVED 2026-10-25: sci-ebi-interpro-entries stored 0 records while transferring 1.0 MB a
+ * run, because every field of a record on that API is NESTED and VJSON's uid
+ * and title precedence lists are single-level by design. Replaced by
+ * EBI_INTERPRO_ENTRIES in collectors/pivot/table/hp3b19_science.c,
+ * where id_keys/title_keys take dotted paths; the measurement is in that
+ * row's comment. */
 
-VJSON(sci_ebi_interpro_proteins, "sci-ebi-interpro-proteins", "InterPro reviewed proteins", "InterPro 査読済みタンパク質",
-  "science", "genomics",
-  "https://www.ebi.ac.uk/interpro/api/protein/reviewed/?page_size=50",
-  "results",
-  "en", "[\"interpro\",\"protein\",\"uniprot\"]", 86400,
-  "Reviewed UniProt proteins with their InterPro domain assignments.");
+/* REMOVED 2026-10-25: sci-ebi-interpro-proteins stored 0 records while transferring 301 KB a
+ * run, because every field of a record on that API is NESTED and VJSON's uid
+ * and title precedence lists are single-level by design. Replaced by
+ * EBI_INTERPRO_PROTEINS_REVIEWED in collectors/pivot/table/hp3b19_science.c,
+ * where id_keys/title_keys take dotted paths; the measurement is in that
+ * row's comment. */
 
 VJSON(sci_ebi_ols_ontologies, "sci-ebi-ols-ontologies", "EBI Ontology Lookup Service", "EBI オントロジー検索サービス",
   "science", "genomics",

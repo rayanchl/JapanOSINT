@@ -155,20 +155,32 @@ VJSON(sci_ocean_coops_waterlevels, "sci-ocean-coops-waterlevels", "NOAA CO-OPS �
   "en", "[\"usa\",\"tide\",\"sealevel\",\"station\"]", 86400,
   "Every NOAA tide-gauge water-level station with coordinates, datum and operating status.");
 
-/* sci-ocean-ioc-sealevel-tab: the records carry no field jsonlist's id
- * precedence recognises — the only lowercase "code" on each row is null — so
- * every row fell back to a hash of (title, link, date). The title comes from
- * "Location", and live-verified 2026-09-07 the feed has 1,336 rows carrying
- * only 1,130 distinct Location values (Bay of Biscay ports, Pacific atolls and
- * a dozen "Marina" entries repeat), which is what collapsed the run to 1,341
- * stored. "sensorid" is the row's own key: 1,336 of 1,336 distinct, no nulls. */
-VJSON_KEYED(sci_ocean_ioc_sealevel_tab, "sci-ocean-ioc-sealevel-tab", "IOC Sea Level Monitoring — full station list", "IOC Sea Level Monitoring — full station list",
-  "ocean_cryo", "environment",
-  "https://www.ioc-sealevelmonitoring.org/service.php?query=stationlist&showall=a&format=json",
-  "",
-  "en", "[\"int\",\"tide\",\"sealevel\",\"station\",\"tsunami\"]", 21600,
-  "Global IOC/GLOSS sea-level station inventory with coordinates, operator and last-report time — the tsunami-relevant gauge network.",
-  "sensorid");
+/* sci-ocean-ioc-sealevel-tab was RETIRED 2026-10-24. Its name was a claim its
+ * endpoint did not support, and its key no longer held.
+ *
+ * It read `service.php?query=stationlist&showall=a` and called itself the
+ * "full station list". Measured live 2026-10-23: the service IGNORES an
+ * unrecognised `showall` value and serves the DEFAULT list — `showall=a`
+ * returned 1,966,120 bytes and 1,924 rows, byte-identical to passing no
+ * parameter at all, against 2,349 rows for the real `showall=all`. So this row
+ * never read the full list, and it duplicated what
+ * `ioc-sea-level-stations` (collectors/sources/mar_ioc_sea_level_stations.c)
+ * already fetches, which keys on `code|sensor|sensorid|updatedata` and stores
+ * the position and `lasttime`.
+ *
+ * The key claim above is also a DATED measurement, not a current fact: the
+ * comment said "sensorid: 1,336 of 1,336 distinct, no nulls" from 2026-09-07,
+ * and on 2026-10-23 the same endpoint served 1,924 rows with only 1,341
+ * distinct `sensorid` — and on `showall=all`, 119 rows where `sensorid` is
+ * NULL, which VJSON_KEYED cannot key at all. Repair in place was impossible:
+ * the upstream's identity is four fields and VJSON_KEYED takes one.
+ *
+ * What the collision was NOT: the 2,349-emitted / 1,867-stored gap on the
+ * surviving row is CORRECT dedupe. 115 colliding groups differ only in
+ * `observations`, `first` and `last` — counters that advance every minute — so
+ * widening the key would mint a fresh uid on every run and grow the table
+ * without bound, which is a worse failure than the collision. Measured before
+ * touching anything, per rule 4b's "a collision is a question". */
 
 VGEO(sci_ogcf_usgswater_channel_measurements, "sci-ogcf-usgswater-channel-measurements", "USGS Water Data OGC API — channel-measurements", "USGS Water Data OGC API — channel-measurements",
   "ocean_cryo", "hydrology",

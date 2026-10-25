@@ -2279,28 +2279,181 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
       "with the host site in safield003, address in safield004 and a "
       "WGS84 point." },
 
-  { .id = "JO30_GOV_SETAGAYA_EXTINGUISHER", .name = "Setagaya Ward - street fire extinguishers (Setagaya district)",
+  /* THE LAYER WAS NOT WITHDRAWN, IT WAS RENAMED — and the one row that used to
+   * stand here looked for the name we expected (`47_fireExtinguisher_Setagaya`)
+   * and found nothing. Asking the root what it SERVES, the way batch 46 was
+   * built and the way CR_SANCARLOS_PREDIOS was recovered, finds the register
+   * under its Japanese name and split into the ward files the old row's own
+   * description said existed: 街路消火器（世田谷/北沢/烏山/玉川/砧）. Counted
+   * 2026-10-20 — 1,342 + 1,274 + 523 + 1,090 + 722 = 4,951 extinguishers where
+   * the dead row stored none.
+   *
+   * The publisher stamps the EDITION into the service name (`202609`), and the
+   * previous edition is gone from the directory, so these paths will 404 when
+   * the next one lands. hpengine's `index_url`/`index_href_must` cannot follow
+   * that — it reads an HTML landing page, not an ArcGIS directory — so the row
+   * will file a collector-fetch-failure naming the 404 instead, and the remedy
+   * is to re-read the root listing above. Fields are the publisher's own: `F_`
+   * is the local number ("No."), 住所 the address, FID the object id (not
+   * OBJECTID, which the old row keyed on). */
+  { .id = "JO30_GOV_SETAGAYA_EXTINGUISHER_SETAGAYA", .name = "Setagaya Ward - street fire extinguishers (Setagaya district)",
     .name_ja = "世田谷区 街路消火器（世田谷地域）",
-    .category = "emergency", .portal = "https://data-setagaya.opendata.arcgis.com",
+    .category = "safety", .portal = "https://data-setagaya.opendata.arcgis.com",
     .record_type = "street-fire-extinguisher",
     .tags = "\"japan\",\"setagaya\",\"tokyo\",\"ward\",\"fire\",\"extinguisher\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://services7.arcgis.com/HEXYbKoojU2pCBN0/arcgis/rest/services/47_fireExtinguisher_Setagaya/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0",
+    .url = "https://services7.arcgis.com/HEXYbKoojU2pCBN0/arcgis/rest/services/"
+           "%E8%A1%97%E8%B7%AF%E6%B6%88%E7%81%AB%E5%99%A8%EF%BC%88%E4%B8%96%E7%94%B0%E8%B0%B7%EF%BC%89202609/FeatureServer/0/query"
+           "?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=FID+ASC"
+           "&resultRecordCount=2000&resultOffset=0",
     .array_path = "features",
-    .id_keys = "attributes.OBJECTID",
+    .id_keys = "attributes.FID",
     .interval = 604800,
     .lat_key = "geometry.y",
     .lon_key = "geometry.x",
-    .page_max = 3,
     .page_param = "resultOffset",
-    .page_size = 1000,
+    .page_size = 2000,
     .page_zero_based = 1,
     .timeout_ms = 60000,
-    .title_keys = "attributes.safield003",
-    .description = "1,346 street fire extinguishers in the Setagaya district (layer "
-      "modified 2026-02-04), each keyed by its address in safield003 "
-      "with a WGS84 point; page 2 returned the remaining 346. Four "
-      "sibling layers cover the other districts." },
+    .title_keys = "attributes.住所,attributes.F_",
+    .description = "1,342 street fire extinguishers in the Setagaya district of Setagaya, "
+      "counted 2026-10-20 via the layer's own returnCountOnly. Each record "
+      "carries the address (住所), the ward's local number (F_) and a WGS84 "
+      "point. The published page size is 2,000, which is the publisher's own "
+      "maxRecordCount, so the district fits in one request." },
+
+  { .id = "JO30_GOV_SETAGAYA_EXTINGUISHER_KITAZAWA", .name = "Setagaya Ward - street fire extinguishers (Kitazawa district)",
+    .name_ja = "世田谷区 街路消火器（北沢地域）",
+    .category = "safety", .portal = "https://data-setagaya.opendata.arcgis.com",
+    .record_type = "street-fire-extinguisher",
+    .tags = "\"japan\",\"setagaya\",\"tokyo\",\"ward\",\"fire\",\"extinguisher\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://services7.arcgis.com/HEXYbKoojU2pCBN0/arcgis/rest/services/"
+           "%E8%A1%97%E8%B7%AF%E6%B6%88%E7%81%AB%E5%99%A8%EF%BC%88%E5%8C%97%E6%B2%A2%EF%BC%89202609/FeatureServer/0/query"
+           "?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=FID+ASC"
+           "&resultRecordCount=2000&resultOffset=0",
+    .array_path = "features",
+    .id_keys = "attributes.FID",
+    .interval = 604800,
+    .lat_key = "geometry.y",
+    .lon_key = "geometry.x",
+    .page_param = "resultOffset",
+    .page_size = 2000,
+    .page_zero_based = 1,
+    .timeout_ms = 60000,
+    .title_keys = "attributes.住所,attributes.F_",
+    .description = "1,274 street fire extinguishers in the Kitazawa district of Setagaya, "
+      "counted 2026-10-20 via the layer's own returnCountOnly. Each record "
+      "carries the address (住所), the ward's local number (F_) and a WGS84 "
+      "point. The published page size is 2,000, which is the publisher's own "
+      "maxRecordCount, so the district fits in one request." },
+
+  { .id = "JO30_GOV_SETAGAYA_EXTINGUISHER_KARASUYAMA", .name = "Setagaya Ward - street fire extinguishers (Karasuyama district)",
+    .name_ja = "世田谷区 街路消火器（烏山地域）",
+    .category = "safety", .portal = "https://data-setagaya.opendata.arcgis.com",
+    .record_type = "street-fire-extinguisher",
+    .tags = "\"japan\",\"setagaya\",\"tokyo\",\"ward\",\"fire\",\"extinguisher\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://services7.arcgis.com/HEXYbKoojU2pCBN0/arcgis/rest/services/"
+           "%E8%A1%97%E8%B7%AF%E6%B6%88%E7%81%AB%E5%99%A8%EF%BC%88%E7%83%8F%E5%B1%B1%EF%BC%89202609/FeatureServer/0/query"
+           "?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=FID+ASC"
+           "&resultRecordCount=2000&resultOffset=0",
+    .array_path = "features",
+    .id_keys = "attributes.FID",
+    .interval = 604800,
+    .lat_key = "geometry.y",
+    .lon_key = "geometry.x",
+    .page_param = "resultOffset",
+    .page_size = 2000,
+    .page_zero_based = 1,
+    .timeout_ms = 60000,
+    .title_keys = "attributes.住所,attributes.F_",
+    .description = "523 street fire extinguishers in the Karasuyama district of Setagaya, "
+      "counted 2026-10-20 via the layer's own returnCountOnly. Each record "
+      "carries the address (住所), the ward's local number (F_) and a WGS84 "
+      "point. The published page size is 2,000, which is the publisher's own "
+      "maxRecordCount, so the district fits in one request." },
+
+  { .id = "JO30_GOV_SETAGAYA_EXTINGUISHER_TAMAGAWA", .name = "Setagaya Ward - street fire extinguishers (Tamagawa district)",
+    .name_ja = "世田谷区 街路消火器（玉川地域）",
+    .category = "safety", .portal = "https://data-setagaya.opendata.arcgis.com",
+    .record_type = "street-fire-extinguisher",
+    .tags = "\"japan\",\"setagaya\",\"tokyo\",\"ward\",\"fire\",\"extinguisher\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://services7.arcgis.com/HEXYbKoojU2pCBN0/arcgis/rest/services/"
+           "%E8%A1%97%E8%B7%AF%E6%B6%88%E7%81%AB%E5%99%A8%EF%BC%88%E7%8E%89%E5%B7%9D%EF%BC%89202609/FeatureServer/0/query"
+           "?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=FID+ASC"
+           "&resultRecordCount=2000&resultOffset=0",
+    .array_path = "features",
+    .id_keys = "attributes.FID",
+    .interval = 604800,
+    .lat_key = "geometry.y",
+    .lon_key = "geometry.x",
+    .page_param = "resultOffset",
+    .page_size = 2000,
+    .page_zero_based = 1,
+    .timeout_ms = 60000,
+    .title_keys = "attributes.住所,attributes.F_",
+    .description = "1,090 street fire extinguishers in the Tamagawa district of Setagaya, "
+      "counted 2026-10-20 via the layer's own returnCountOnly. Each record "
+      "carries the address (住所), the ward's local number (F_) and a WGS84 "
+      "point. The published page size is 2,000, which is the publisher's own "
+      "maxRecordCount, so the district fits in one request." },
+
+  { .id = "JO30_GOV_SETAGAYA_EXTINGUISHER_KINUTA", .name = "Setagaya Ward - street fire extinguishers (Kinuta district)",
+    .name_ja = "世田谷区 街路消火器（砧地域）",
+    .category = "safety", .portal = "https://data-setagaya.opendata.arcgis.com",
+    .record_type = "street-fire-extinguisher",
+    .tags = "\"japan\",\"setagaya\",\"tokyo\",\"ward\",\"fire\",\"extinguisher\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://services7.arcgis.com/HEXYbKoojU2pCBN0/arcgis/rest/services/"
+           "%E8%A1%97%E8%B7%AF%E6%B6%88%E7%81%AB%E5%99%A8%EF%BC%88%E7%A0%A7%EF%BC%89202609/FeatureServer/0/query"
+           "?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=FID+ASC"
+           "&resultRecordCount=2000&resultOffset=0",
+    .array_path = "features",
+    .id_keys = "attributes.FID",
+    .interval = 604800,
+    .lat_key = "geometry.y",
+    .lon_key = "geometry.x",
+    .page_param = "resultOffset",
+    .page_size = 2000,
+    .page_zero_based = 1,
+    .timeout_ms = 60000,
+    .title_keys = "attributes.住所,attributes.F_",
+    .description = "722 street fire extinguishers in the Kinuta district of Setagaya, "
+      "counted 2026-10-20 via the layer's own returnCountOnly. Each record "
+      "carries the address (住所), the ward's local number (F_) and a WGS84 "
+      "point. The published page size is 2,000, which is the publisher's own "
+      "maxRecordCount, so the district fits in one request." },
+
+  /* Found in the same directory listing and not previously registered: the
+   * ward's register of wells kept usable after an earthquake, which is a
+   * water-supply layer for exactly the scenario the shelters above are for. */
+  { .id = "JO30_GOV_SETAGAYA_QUAKE_WELLS", .name = "Setagaya Ward - earthquake-preparedness wells",
+    .name_ja = "世田谷区 震災対策用井戸リスト",
+    .category = "safety", .portal = "https://data-setagaya.opendata.arcgis.com",
+    .record_type = "emergency-well",
+    .tags = "\"japan\",\"setagaya\",\"tokyo\",\"ward\",\"water\",\"earthquake\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://services7.arcgis.com/HEXYbKoojU2pCBN0/arcgis/rest/services/"
+           "%E9%9C%87%E7%81%BD%E5%AF%BE%E7%AD%96%E7%94%A8%E4%BA%95%E6%88%B8%E3%83%AA%E3%82%B9%E3%83%88202609"
+           "/FeatureServer/0/query"
+           "?where=1%3D1&outFields=*&outSR=4326&f=json&orderByFields=FID+ASC"
+           "&resultRecordCount=2000&resultOffset=0",
+    .array_path = "features",
+    .id_keys = "attributes.FID",
+    .interval = 604800,
+    .lat_key = "geometry.y",
+    .lon_key = "geometry.x",
+    .page_param = "resultOffset",
+    .page_size = 2000,
+    .page_zero_based = 1,
+    .timeout_ms = 60000,
+    .title_keys = "attributes.住所,attributes.F_",
+    .description = "1,148 wells in Setagaya Ward designated as usable water sources "
+      "after an earthquake, counted 2026-10-20. Each record carries the "
+      "address (住所), the ward's local number (F_) and a WGS84 point." },
+
 
   { .id = "JO30_GOV_SETAGAYA_NURSERY", .name = "Setagaya Ward - nurseries",
     .name_ja = "世田谷区 保育所",

@@ -83,12 +83,12 @@ VRSS(jpx_keidanren_shinchaku_rdf, "jpx-keidanren-shinchaku-rdf", "Keidanren — 
   "ja", "[\"japan\",\"economy\",\"disclosure\"]", 3600,
   "Everything newly published on the official site — Keidanren.");
 
-VJSON(jpx_tdnet_recent, "jpx-tdnet-recent", "TDnet timely disclosure feed", "TDnet 適時開示情報 直近一覧",
-  "economy", "disclosure",
-  "https://webapi.yanoshin.jp/webapi/tdnet/list/recent.json",
-  "items",
-  "ja", "[\"japan\",\"disclosure\",\"tdnet\",\"listed-companies\"]", 1800,
-  "Rolling feed of timely disclosures filed by Tokyo-listed companies, with securities codes and PDF links.");
+/* REMOVED 2026-10-25: jpx-tdnet-recent stored 0 records while transferring 210 KB a
+ * run, because every field of a record on that API is NESTED and VJSON's uid
+ * and title precedence lists are single-level by design. Replaced by
+ * JP_TDNET_RECENT in collectors/pivot/table/hp3b23_jpregistry.c,
+ * where id_keys/title_keys take dotted paths; the measurement is in that
+ * row's comment. */
 
 VRSS(jpx_zenginkyo_news_rss, "jpx-zenginkyo-news-rss", "Japanese Bankers Association — Notices", "RSS＜ニュース＆トピックス＞ : 一般社団法人 全国銀行協会",
   "economy", "disclosure",

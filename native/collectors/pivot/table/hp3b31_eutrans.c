@@ -132,11 +132,19 @@ static const hp_source HP3B31_EUTRANS[] = {
       "?format=application%2Fld%2Bjson&limit=200",
     .array_path = "data", .filter_query = 1,
     .title_keys = "label,classification", .id_keys = "identifier",
-    .page_param = "offset", .page_size = 200, .page_start = 0, .page_max = 20,
+    /* Walked to the end 2026-10-20: the collection is 3,972 records and the
+       20-page default stopped at 3,717. Note this API's `limit` is a CEILING
+       and not a promise — eleven pages mid-collection came back short (184,
+       193, 150, 189, 161, 170, 175, 192, 157, 146) with full pages after them
+       — so a walk that treated the first short page as the end would have
+       stored 1,384. 30 pages leaves room to grow and the walk stops at the
+       real end. The 2 colliding identifiers are the upstream's own: 3,972
+       records carry 3,970 distinct identifiers, counted. */
+    .page_param = "offset", .page_size = 200, .page_start = 0, .page_max = 30,
     .interval = 21600,
     .description = "Every Parliament committee, subcommittee, political group "
       "and interparliamentary delegation, with the identifiers that join a body "
-      "to its members and its documents" },
+      "to its members and its documents. 3,972 bodies, measured 2026-10-20" },
 
   { .id = "EU_EP_MEETINGS", .name = "European Parliament — meetings & agendas",
     .name_ja = "欧州議会 会議日程", .category = "government",
@@ -225,6 +233,115 @@ static const hp_source HP3B31_EUTRANS[] = {
     .description = "The EU energy regulator's market monitoring — REMIT "
       "registered market participants, market-abuse decisions taken by national "
       "regulators and the cross-border capacity allocation record" },
+
+  { .id = "EU_ECB_SUPERVISED_ENTITIES", .name = "ECB Banking Supervision — supervised entities",
+    .name_ja = "ECB 監督対象銀行", .category = "finance",
+    .portal = "https://www.bankingsupervision.europa.eu",
+    .record_type = "eu-supervised-bank",
+    .tags = "\"eu\",\"banking\",\"supervision\"", .mode = HP_XLSX,
+    .free_tier = 1,
+    /* RE-POINTED 2026-10-21 (open item B2), and TWICE: the candidate recorded
+     * in docs/b2-path-stale-triage-2026-10-21.md was itself already stale —
+     * /banking/list/who/html/index.en.html 301s to the path below.
+     *
+     * THE TRIAGE'S OWN READING OF THIS ROW WAS WRONG and the correction is the
+     * lesson. It counted 288 anchors on that page and took them for the list
+     * of supervised entities; they are site navigation (/about/..., /press/...,
+     * /activities/...). An anchor COUNT says nothing about what the anchors
+     * ARE, which is the same mistake as a record count that cannot see what
+     * was parsed.
+     * The list itself is published as a workbook re-named every month
+     * (ssm.listofsupervisedentities202608.en.xlsx), so this is the
+     * index_url/index_href_must case: the engine re-reads the landing page
+     * every run and follows the current link, instead of pinning an edition
+     * that 404s next month. index_href_must takes the FIRST matching anchor
+     * and the main list is listed before its _annex_changes sibling; if ECB
+     * ever reversed that order the row would read the 11-row annex instead of
+     * 844 rows, which is visible in the record count rather than silent.
+     *
+     * Also a change of KIND: interval 0 to weekly. A workbook is not an entity
+     * pivot, and an interval-0 row with no {q} never runs at all (rule 3).
+     * The workbook has FOUR sheets — SIs 844 rows, LSIs 2,175, Appendix 39,
+     * Changes 11 — and HP_XLSX reads one, so the less significant institutions
+     * are the deliberate sibling row below rather than 2,175 records dropped
+     * at the seam. */
+    /* The last edition seen, as the convention is (JO32_REG_NIIGATA_*): the
+     * engine REPLACES it every run with the link index_href_must finds, and a
+     * row carrying no `.url` at all is dropped by hp_register() — which is how
+     * both of these rows first shipped registering nothing. */
+    .url = "https://www.bankingsupervision.europa.eu/ecb/pub/pdf/"
+      "ssm.listofsupervisedentities202608.en.xlsx",
+    .index_url = "https://www.bankingsupervision.europa.eu/framework/"
+      "supervised-banks/html/index.en.html",
+    .index_href_must = ".en.xlsx",
+    .xlsx_sheet = "SIs", .csv_no_header = 1, .csv_skip_lines = 13,
+    .interval = 604800,
+    /* Positional keys, because this workbook has no header the CSV path can
+     * use: the names sit in MERGED cells, so most of the header row's columns
+     * are empty and the parser reads the file headerless (colN), exactly as
+     * `csv_no_header` does. At csv_skip_lines=11 the header row itself came
+     * through AS A RECORD, named col2/col7/col8/col11/col17/col19 — which is
+     * what identified the columns, and 12 drops it. MEASURED 2026-10-21 from
+     * that record: col2 = "LEI / MFI code for branches", col7 = Type,
+     * col8 = "(M)FH status", col11 = Name, col17 = country of establishment,
+     * col19 = ground for significance.
+     * The dependency this buys is real and worth stating: the row is pinned to
+     * ECB's column POSITIONS, so a re-laid-out workbook would mis-name fields
+     * without changing the record count. A branch carries an MFI code rather
+     * than an LEI, so identity falls back to the name. */
+    .title_keys = "col11", .id_keys = "col2,col11",
+    /* MEASURED 2026-10-21 through the binary: 831 emitted, 830 stored, and the
+     * one collision is ECB'S OWN DUPLICATE — LEI 9598006VA7CEUXXG2H60
+     * ("Santander CACEIS Latam Holding 1") appears at sheet rows 160 AND 372,
+     * identical in LEI, type, name and country, because the workbook lists it
+     * under two supervised groups. The key is right; a collision is a
+     * question, and this one was asked of the file.
+     * 28 of the 831 records carry no LEI: the sheet interleaves COUNTRY
+     * SECTION rows ("Belgium") among the entities, and nothing declarative can
+     * drop a row for lacking a field, so they arrive as records titled with a
+     * country name. Written down rather than hidden. */
+    .description = "Every bank the ECB supervises DIRECTLY — the significant "
+      "institutions, with the significance criterion applied to each and the "
+      "group it sits in — from the ECB's own monthly workbook" },
+
+  { .id = "EU_ECB_SUPERVISED_ENTITIES_LSI",
+    .name = "ECB Banking Supervision — less significant institutions",
+    .name_ja = "ECB 監督対象銀行(重要性の低い銀行)", .category = "finance",
+    .portal = "https://www.bankingsupervision.europa.eu",
+    .record_type = "eu-supervised-bank",
+    .tags = "\"eu\",\"banking\",\"supervision\"", .mode = HP_XLSX,
+    .free_tier = 1,
+    /* The LSIs sheet of the same workbook, read as its own row because
+     * HP_XLSX takes one worksheet and 2,175 banks are not an acceptable thing
+     * to lose at a seam (house rule 2). A deliberate pair, like the ELIA
+     * rows: same fetch shape, different sheet. Measured 2026-10-21 from the
+     * same file the row above follows. */
+    /* The last edition seen, as the convention is (JO32_REG_NIIGATA_*): the
+     * engine REPLACES it every run with the link index_href_must finds, and a
+     * row carrying no `.url` at all is dropped by hp_register() — which is how
+     * both of these rows first shipped registering nothing. */
+    .url = "https://www.bankingsupervision.europa.eu/ecb/pub/pdf/"
+      "ssm.listofsupervisedentities202608.en.xlsx",
+    .index_url = "https://www.bankingsupervision.europa.eu/framework/"
+      "supervised-banks/html/index.en.html",
+    .index_href_must = ".en.xlsx",
+    .xlsx_sheet = "LSIs", .csv_no_header = 1, .csv_skip_lines = 9,
+    .interval = 604800,
+    /* Same workbook, same headerless shape, DIFFERENT geometry: its header is
+     * at sheet row 8 and its columns sit elsewhere — col1 is the LEI and col9
+     * the name, against col2 and col11 on the SIs sheet. Declaring the SIs
+     * positions here emitted 2,166 records titled by their LEI and two shape
+     * notices saying 0 of 2,166 carried the declared keys, which is the engine
+     * catching it rather than me. Two sheets of one workbook are two
+     * geometries. */
+    .title_keys = "col9", .id_keys = "col1,col9",
+    /* MEASURED 2026-10-21: 2,166 emitted, 2,166 stored, no collision — and 41
+     * of them are this sheet's country section rows, same characteristic as
+     * the SIs row above. */
+    .description = "The euro-area banks supervised by their NATIONAL "
+      "authority under ECB oversight rather than by the ECB directly — the "
+      "long tail of the same monthly workbook, about three times as many "
+      "institutions as the directly supervised list" },
 
   { .id = "EU_EFTA_SURVEILLANCE_CASES", .name = "EFTA Surveillance Authority — cases & decisions",
     .name_ja = "EFTA監視機構 事件/決定", .category = "government",

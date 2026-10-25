@@ -6,6 +6,13 @@
  * since — this file, not the manifest, is the current copy. The
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
+#include "lib/pagewalk.h"
+/* VJSON_IDKEYS: the shim sink that keys a row on a named field
+ * (gov-co-secop1 below — the uid precedence list finds nothing in a SECOP
+ * record and falls back to the first scalar, which is the contracting
+ * authority). The macro lives in its own include, not in
+ * _verified_macros.inc, so a file using it has to pull it in. */
+#include "_vjson_idkeys.inc"
 
 VRSS(gov_afdb_news, "gov-afdb-news", "African Development Bank — News", "アフリカ開発銀行 ニュース",
   "government", "transparency",
@@ -99,13 +106,31 @@ VJSON(gov_cl_datos_ckan, "gov-cl-datos-ckan", "datos.gob.cl — Chilean Open Dat
   "es", "[\"chile\",\"opendata\",\"catalogue\",\"latam\"]", 86400,
   "Newly published datasets on the Chilean national open data portal.");
 
-VJSON(gov_co_secop1, "gov-co-secop1", "SECOP I — Colombian Procurement", "SECOP I コロンビア調達",
+/* 294 of 1,000 records a run collapsed (registry sweep). The record carries no
+   field VJSON's uid precedence list knows, so it fell back to hashing (title,
+   link, date) — and no TITLE key matches either, so the label is the record's
+   FIRST SCALAR, which is `entidad`: the contracting authority. Every process
+   DANE publishes shared one uid. Measured 2026-10-25 over ten pages (the shape
+   the engine reads): 500 records, 485 distinct whole, and `id_del_proceso` is
+   485 — equal to the distinct-whole count, so it IS the identity and the 15
+   repeats are the upstream's own byte-identical duplicates. */
+VJSON_IDKEYS(gov_co_secop1, "gov-co-secop1", "SECOP I — Colombian Procurement", "SECOP I コロンビア調達",
   "government", "procurement",
   "https://www.datos.gov.co/resource/p6dx-8zbt.json?$limit=50&$order=:id",
   "",
   "es", "[\"colombia\",\"procurement\",\"contracts\",\"latam\"]", 3600,
-  "Colombian SECOP I public contracting records with entity, value and contractor.");
+  "Colombian SECOP I public contracting records with entity, value and contractor.",
+  "id_del_proceso");
 
+/* LEFT ON THE FALLBACK DELIBERATELY, measured 2026-10-25 — the sibling above
+   needed a key and this one does not, from the same starting symptom. Over
+   twenty pages: 1,000 records, 1,000 distinct whole, and the best field key is
+   `numero_del_contrato` at 943; `codigo_entidad_en_secop+numero_del_contrato`
+   and `numero_de_proceso+numero_del_contrato` are also 943. The engine's own
+   reading is 999 of 1,000 stored. So declaring the "real" id would LOSE 57
+   records a run where the content-hash fallback loses 2. Compare a proposed key
+   against the row's CURRENT loss before changing it; a contract number is not
+   unique in this register and the register does not publish anything that is. */
 VJSON(gov_co_secop2, "gov-co-secop2", "SECOP II — Colombian Procurement", "SECOP II コロンビア調達",
   "government", "procurement",
   "https://www.datos.gov.co/resource/rpmr-utcd.json?$limit=50&$order=:id",
@@ -134,18 +159,80 @@ VJSON(gov_cpsc_recalls, "gov-cpsc-recalls", "CPSC — Consumer Product Recalls",
   "en", "[\"usa\",\"cpsc\",\"recalls\",\"consumer\"]", 21600,
   "US Consumer Product Safety Commission recall records with hazard, remedy, importer and units.");
 
-/* The URL declared a page SIZE and no cursor of any kind, so the page walk had
- * nothing it was allowed to advance and re-fetched page 1 on every pass: 150
- * emitted, 51 stored, the same 50 datasets three times. The records themselves
- * are fine — "id" is present and 50 of 50 distinct. Adding the portal's own
- * 0-based `page` parameter gives the walk something real to step. Verified live
- * 2026-09-07: page=0 and page=1 are 100 distinct ids. */
-VJSON(gov_dataeuropa_search, "gov-dataeuropa-search", "data.europa.eu — Dataset Search", "欧州オープンデータポータル 検索",
-  "government", "procurement",
-  "https://data.europa.eu/api/hub/search/search?q=procurement&limit=50&page=0",
-  "result.results",
-  "en", "[\"eu\",\"opendata\",\"procurement\",\"catalogue\"]", 86400,
-  "Search across the official EU open data portal, here scoped to public procurement datasets.");
+/* gov-dataeuropa-search is ONE REQUEST, deliberately, and the measurement that
+ * forced it is the strongest reading in this file.
+ *
+ * The row used to carry `limit=50&page=0` under a 2026-09-07 note saying the
+ * portal's own 0-based `page` gave the walk "something real to step", verified
+ * that day as "page=0 and page=1 are 100 distinct ids". The registry sweep then
+ * read it 100 emitted / 52 stored, and three CONSECUTIVE RUNS of the unchanged
+ * row through the engine emitted 500, 200 and 100 records, storing 103, 102 and
+ * 101. Nothing about the row or the binary changed between them.
+ *
+ * The cause is that this index has no stable ordering, and that was measured
+ * from both ends (2026-10-24):
+ *   - page=0 read twice is byte-identical, and page=1 read twice is NOT;
+ *   - `sort` is ignored on the GET: `sort=id+asc`, `relevance+desc` and
+ *     `title+asc` all return the identical first three records, and so does the
+ *     control `frobnicate=7`;
+ *   - the POST form of the same endpoint VALIDATES the key and still ignores
+ *     the value, which is the sharper trap: `{"sort":"id"}` is a 400 naming the
+ *     schema ("input don't match type ARRAY"), so a 400 on a bad spelling looks
+ *     like proof the parameter is real — and `{"sort":["id+asc"]}`,
+ *     `["id+desc"]` and the control `["frobnicate+asc"]` then all return the
+ *     same first three records. A PARAMETER THAT VALIDATES IS NOT A PARAMETER
+ *     THAT WORKS; only an unknown field inside a well-typed value separates
+ *     them.
+ * So the walk's own length was decided by whether a drifting index happened to
+ * re-serve a page the repeat guard recognised. Its record count measured the
+ * drift, not the portal.
+ *
+ * `pw_walk_max(..., 1)` reads the one page that IS stable and files the shared
+ * disclosure naming the upstream's own `result.count` — 9,079 procurement
+ * datasets against the 100 read. That is the honest shape for a
+ * relevance-ranked search whose deeper pages cannot be walked without
+ * re-reading and skipping, and it is the row's own name: a search, not a
+ * register. `limit=100` is one request of 4.4 MB (the API caps `limit` at
+ * somewhere between 1,000 and 2,000; 1,000 records is 58 MB, against the 64 MB
+ * body ceiling, so the size is a cost choice and not a limit of the endpoint).
+ *
+ * Titles come out of DCAT language maps (`title: {"en": …, "fr": …}`), which
+ * `pick()` in lib/jsonlist.c now reads — before that every record here was
+ * stored as "procurement <slug>" and the engine's own shape notice said so. */
+/* The plain emit, through the walker so the disclosure is pagewalk's and not a
+ * second copy of it (rule 4c). `seen` non-NULL says the caller discloses. */
+typedef struct { const char *path, *record_type, *lang, *tags_json; } eudp_opts;
+
+static int eudp_emit_page(const source_ctx *c, intel_sink *s, const char *id,
+                          cJSON *doc, void *ud, int *seen) {
+  (void)c;
+  eudp_opts *o = (eudp_opts *)ud;
+  return jsonlist_emit_ex(s, id, doc, o->path, o->record_type, o->lang,
+                          o->tags_json, seen);
+}
+
+static int run_gov_dataeuropa_search(const source_ctx *c, intel_sink *s) {
+  eudp_opts o = { "result.results", "procurement", "en",
+                  "[\"eu\",\"opendata\",\"procurement\",\"catalogue\"]" };
+  int n = pw_walk_max(c, s, "gov-dataeuropa-search",
+                      "https://data.europa.eu/api/hub/search/search?q=procurement&limit=100",
+                      pw_fetch_json, eudp_emit_page, &o,
+                      1);   /* exhaustive-ok: the one page this index serves stably; the remainder is disclosed from result.count (measured 2026-10-24) */
+  if (n < 0) { fprintf(stderr, "[gov-dataeuropa-search] fetch failed\n"); return -1; }
+  return 0;
+}
+static const source_def gov_dataeuropa_search = {
+  .id = "gov-dataeuropa-search", .collector = "government", .engine = "vjson",
+  .name = "data.europa.eu — Dataset Search",
+  .name_ja = "欧州オープンデータポータル 検索",
+  .update_interval_sec = 86400, .run = run_gov_dataeuropa_search,
+  .category = "procurement", .type = "api",
+  .url = "https://data.europa.eu/api/hub/search/search?q=procurement&limit=100",
+  .description = "Search across the official EU open data portal, here scoped "
+    "to public procurement datasets. One stable page of the ranked result set; "
+    "the portal's own count of matches is disclosed per run.",
+  .layer = NULL, .free_tier = 1 };
+REGISTER_SOURCE(gov_dataeuropa_search)
 
 VJSON(gov_do_datos_ckan, "gov-do-datos-ckan", "Datos Abiertos República Dominicana", "ドミニカ共和国公開データ",
   "government", "transparency",

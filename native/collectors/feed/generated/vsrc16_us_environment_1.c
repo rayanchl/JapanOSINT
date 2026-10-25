@@ -64,8 +64,37 @@ VJSON(us_epa_envirofacts_tri_reporting_form, "us-epa-envirofacts-tri-reporting-f
 
 VJSON(us_ny_dec_remediation_spills, "us-ny-dec-remediation-spills", "New York State DEC - remediation sites and spills", "New York State DEC - remediation sites and spills",
   "us_environment", "environment",
-  "https://gisservices.dec.ny.gov/arcgis/rest/services/der/RemediationSpills/MapServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1&f=json",
-  "fields",
+  /* THIS ROW WAS STORING THE LAYER'S SCHEMA AS SPILL RECORDS. Two defects,
+   * measured 2026-10-25, and the second one made the first invisible:
+   *
+   *   `array_path` was "fields" — the `fields` array of an ArcGIS query reply
+   *   is its COLUMN DEFINITIONS, so every run emitted ~20 field descriptors
+   *   titled and keyed as remediation sites. That is the "once counted a
+   *   response's own schema block as records" trap in CLAUDE.md, in a row that
+   *   shipped. It is "features" now.
+   *
+   *   `resultRecordCount=1` — one record every three hours, of 6,072 the layer
+   *   holds (its own returnCountOnly). Raising that alone would have changed
+   *   NOTHING while array_path still named `fields`, which is why the record
+   *   count looked plausible for as long as it did.
+   *
+   * `f=geojson` rather than `f=json` so each feature carries a top-level `id`
+   * (the OID): VJSON keys on a fixed top-level precedence list, and an
+   * `f=json` feature is {attributes, geometry} with no scalar at the top, so
+   * every record would have fallen back to a hash of title/link/date. The
+   * size is the layer's own declared maxRecordCount — above it ArcGIS clamps
+   * silently, so pages would come back short and a walk reads a short page as
+   * the end of the data. `orderByFields=OBJECTID` because the walk advances
+   * `resultOffset` and an offset walk with no stable sort skips records; this
+   * layer publishes no `objectIdField` key at all, so OBJECTID is the field it
+   * declares with type esriFieldTypeOID — read, not guessed. 6,072 records is
+   * 4 pages, well inside the 20-page ceiling.
+   *
+   * The uids this row has written are field names and are now orphaned;
+   * tools/cleanup_stale_uids.py is the tool for that, and it has NOT been run
+   * here because the live database is mid-integrity-check. */
+  "https://gisservices.dec.ny.gov/arcgis/rest/services/der/RemediationSpills/MapServer/0/query?where=1%3D1&outFields=*&orderByFields=OBJECTID&resultRecordCount=2000&f=geojson",
+  "features",
   "en", "[\"us\",\"environment\",\"batch16\",\"high-penetrancy\"]", 10800,
   "NY Division of Environmental Remediation site register: SITECODE, SITENAME, PROGRAM, SITECLASS, ADDRESS1/2, LOCALITY, ZIPCODE, COUNTY, TOWN, REGION, UTMX/UTMY, METHOD, and per-record DETAIL_URL, DOC_URL, BROWN_URL, CLASS_URL fields that link straight to the DEC case file and documents. Rate-sensitive: it reset the connection on repeated rapid hits.");
 

@@ -171,6 +171,48 @@ describe('SourceDetailPage', () => {
     render(<MemoryRouter initialEntries={['/console/sources/NOPE']}><Routes><Route path="/console/sources/:id" element={<SourceDetailPage />} /></Routes></MemoryRouter>);
     await waitFor(() => expect(screen.getByText(/No registered source has this id/)).toBeTruthy());
   });
+  it('states WHY a source is not working, and the remedy, before the run numbers', async () => {
+    // The operator's decision is to keep every non-working source and disclose
+    // it. A reader must not have to open a notice's properties blob to learn
+    // that a 403 is a bot wall and what to do about it.
+    const gated = { ...DETAIL, status: { ...DETAIL.status, status: 'offline',
+      health: { state: 'failing', working: false, kind: 'collector-fetch-failure',
+        http_status: 403, body_parsed: false, outcome: 'bot_wall',
+        note: 'the host refused this client',
+        remedy: 'bisect the agent, then core/httpclient.c UA_OVERRIDE',
+        credentials_required: null, since: '2026-10-22T09:00:00Z' } } };
+    mockFetch((url) => {
+      if (/\/detail$/.test(path(url))) return gated;
+      if (/\/summary$/.test(path(url))) return { __status: 503, error: 'llm_unreachable', facts: {} };
+      return { data: [], meta: {} };
+    });
+    render(<MemoryRouter initialEntries={['/console/sources/T_JSON']}>
+      <Routes><Route path="/console/sources/:id" element={<SourceDetailPage />} /></Routes>
+    </MemoryRouter>);
+    await waitFor(() => expect(screen.getByText('not working')).toBeTruthy());
+    expect(screen.getByText(/HTTP 403/)).toBeTruthy();
+    expect(screen.getByText(/the body did not parse/)).toBeTruthy();
+    expect(screen.getByText(/UA_OVERRIDE/)).toBeTruthy();
+    expect(screen.getByText('bot_wall')).toBeTruthy();
+  });
+  it('says nothing about health when the source works', async () => {
+    const ok = { ...DETAIL, status: { ...DETAIL.status, status: 'online',
+      health: { state: 'ok', working: true, kind: null, http_status: null,
+        body_parsed: null, outcome: null, note: null, remedy: null,
+        credentials_required: null, since: null } } };
+    mockFetch((url) => {
+      if (/\/detail$/.test(path(url))) return ok;
+      if (/\/summary$/.test(path(url))) return { __status: 503, error: 'llm_unreachable', facts: {} };
+      return { data: [], meta: {} };
+    });
+    render(<MemoryRouter initialEntries={['/console/sources/T_JSON']}>
+      <Routes><Route path="/console/sources/:id" element={<SourceDetailPage />} /></Routes>
+    </MemoryRouter>);
+    // 'online' appears in more than one place on this page, so the
+    // assertion is about the health CARD's own label, which is unique.
+    await waitFor(() => expect(screen.getAllByText('online').length).toBeGreaterThan(0));
+    expect(screen.queryByText('not working')).toBeNull();
+  });
 });
 
 describe('SummaryCard', () => {

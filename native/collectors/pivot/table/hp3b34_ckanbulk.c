@@ -160,7 +160,7 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_CATALOG_DATA_CITY_KANAZAWA_ISHIKAWA_JP", .name = "catalog-data.city.kanazawa.ishikawa.jp — every dataset with its "
-      "resource files (CKAN current_package_list_with_resources)",
+      "resource files (CKAN package_search, id-sorted)",
     .name_ja = "catalog-data.city.kanazawa.ishikawa.jp データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://catalog-data.city.kanazawa.ishikawa.jp",
     .record_type = "dataset-inventory",
@@ -199,7 +199,7 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_CATALOG_CITY_KOBE_LG_JP", .name = "catalog.city.kobe.lg.jp — every dataset with its resource files "
-      "(CKAN current_package_list_with_resources)",
+      "(CKAN package_search, id-sorted)",
     .name_ja = "catalog.city.kobe.lg.jp データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://catalog.city.kobe.lg.jp",
     .record_type = "dataset-inventory",
@@ -238,7 +238,7 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_CATALOG_CITY_UTSUNOMIYA_TOCHIGI_JP", .name = "catalog.city.utsunomiya.tochigi.jp — every dataset with its "
-      "resource files (CKAN current_package_list_with_resources)",
+      "resource files (CKAN package_search, id-sorted)",
     .name_ja = "catalog.city.utsunomiya.tochigi.jp データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://catalog.city.utsunomiya.tochigi.jp",
     .record_type = "dataset-inventory",
@@ -278,7 +278,7 @@ static const hp_source HP3B34_CKANBULK[] = {
 
 
   { .id = "JO34_CKANRES_CATALOG_DATA_METRO_TOKYO_LG_JP", .name = "catalog.data.metro.tokyo.lg.jp — every dataset with its resource "
-      "files (CKAN current_package_list_with_resources)",
+      "files (CKAN package_search, id-sorted)",
     .name_ja = "catalog.data.metro.tokyo.lg.jp データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://catalog.data.metro.tokyo.lg.jp",
     .record_type = "dataset-inventory",
@@ -317,7 +317,7 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_CATALOG_OPENDATA_PREF_KANAGAWA_JP", .name = "catalog.opendata.pref.kanagawa.jp — every dataset with its "
-      "resource files (CKAN current_package_list_with_resources)",
+      "resource files (CKAN package_search, id-sorted)",
     .name_ja = "catalog.opendata.pref.kanagawa.jp データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://catalog.opendata.pref.kanagawa.jp",
     .record_type = "dataset-inventory",
@@ -435,7 +435,7 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_CKAN_MONTEVIDEO_GUB_UY", .name = "ckan.montevideo.gub.uy — every dataset with its resource files "
-      "(CKAN current_package_list_with_resources)",
+      "(CKAN package_search, id-sorted)",
     .name_ja = "ckan.montevideo.gub.uy データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://ckan.montevideo.gub.uy",
     .record_type = "dataset-inventory",
@@ -474,7 +474,7 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_CKAN_OPENDATA_SWISS", .name = "ckan.opendata.swiss — every dataset with its resource files "
-      "(CKAN current_package_list_with_resources)",
+      "(CKAN package_search, id-sorted)",
     .name_ja = "ckan.opendata.swiss データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://ckan.opendata.swiss",
     .record_type = "dataset-inventory",
@@ -552,7 +552,7 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_CKAN_PREF_AKITA_LG_JP", .name = "ckan.pref.akita.lg.jp — every dataset with its resource files "
-      "(CKAN current_package_list_with_resources)",
+      "(CKAN package_search, id-sorted)",
     .name_ja = "ckan.pref.akita.lg.jp データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://ckan.pref.akita.lg.jp",
     .record_type = "dataset-inventory",
@@ -591,7 +591,7 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_CKAN_PREF_MIYAZAKI_LG_JP", .name = "ckan.pref.miyazaki.lg.jp — every dataset with its resource files "
-      "(CKAN current_package_list_with_resources)",
+      "(CKAN package_search, id-sorted)",
     .name_ja = "ckan.pref.miyazaki.lg.jp データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://ckan.pref.miyazaki.lg.jp",
     .record_type = "dataset-inventory",
@@ -630,7 +630,7 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DADESOBERTES_GVA_ES", .name = "dadesobertes.gva.es — every dataset with its resource files "
-      "(CKAN current_package_list_with_resources)",
+      "(CKAN package_search, id-sorted)",
     .name_ja = "dadesobertes.gva.es データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://dadesobertes.gva.es",
     .record_type = "dataset-inventory",
@@ -747,7 +747,7 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DADOSABERTOS_BNDES_GOV_BR", .name = "dadosabertos.bndes.gov.br — every dataset with its resource "
-      "files (CKAN current_package_list_with_resources)",
+      "files (CKAN package_search, id-sorted)",
     .name_ja = "dadosabertos.bndes.gov.br データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://dadosabertos.bndes.gov.br",
     .record_type = "dataset-inventory",
@@ -786,7 +786,7 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DADOSABERTOS_POA_BR", .name = "dadosabertos.poa.br — every dataset with its resource files "
-      "(CKAN current_package_list_with_resources)",
+      "(CKAN package_search, id-sorted)",
     .name_ja = "dadosabertos.poa.br データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://dadosabertos.poa.br",
     .record_type = "dataset-inventory",
@@ -956,7 +956,7 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATA_CITY_FUKUYAMA_HIROSHIMA_JP", .name = "data.city.fukuyama.hiroshima.jp — every dataset with its "
-      "resource files (CKAN current_package_list_with_resources)",
+      "resource files (CKAN package_search, id-sorted)",
     .name_ja = "data.city.fukuyama.hiroshima.jp データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://data.city.fukuyama.hiroshima.jp",
     .record_type = "dataset-inventory",
@@ -995,7 +995,7 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATA_CITY_SENDAI_JP", .name = "data.city.sendai.jp — every dataset with its resource files "
-      "(CKAN current_package_list_with_resources)",
+      "(CKAN package_search, id-sorted)",
     .name_ja = "data.city.sendai.jp データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://data.city.sendai.jp",
     .record_type = "dataset-inventory",
@@ -1035,7 +1035,7 @@ static const hp_source HP3B34_CKANBULK[] = {
 
 
   { .id = "JO34_CKANRES_DATA_CITY_YOKOHAMA_LG_JP", .name = "data.city.yokohama.lg.jp — every dataset with its resource files "
-      "(CKAN current_package_list_with_resources)",
+      "(CKAN package_search, id-sorted)",
     .name_ja = "data.city.yokohama.lg.jp データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://data.city.yokohama.lg.jp",
     .record_type = "dataset-inventory",
@@ -1113,7 +1113,7 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATA_DATA4CITIZEN_JP", .name = "data.data4citizen.jp — every dataset with its resource files "
-      "(CKAN current_package_list_with_resources)",
+      "(CKAN package_search, id-sorted)",
     .name_ja = "data.data4citizen.jp データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://data.data4citizen.jp",
     .record_type = "dataset-inventory",
@@ -1414,21 +1414,48 @@ static const hp_source HP3B34_CKANBULK[] = {
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
-    .description = "UNPROBED. The CKAN Action API endpoint that returns whole "
-      "package dicts WITH their resources inline, so each record "
-      "carries the dataset plus the URL, format and size of every "
-      "downloadable file under it. package_search (already wired for "
-      "this host) answers a query with dataset summaries; this answers "
-      "\"what does this body publish, and where are the actual files\". "
-      "Host and CKAN base path are proven live by the existing "
-      "package_search row; the action path is fixed by the CKAN Action "
-      "API. Response is {success, result:[...]}; some CKAN builds "
-      "disable or deprecate this action, in which case the row is an "
-      "honest empty." },
+    .description = "UNPROBED. Re-pointed onto package_search with a stable id "
+      "sort, the way every kept row in this beat was: "
+      "current_package_list_with_resources has no sort parameter and orders "
+      "by metadata_modified desc, so a dataset edited during the walk shifts "
+      "every later page. package_search returns whole package dicts carrying "
+      "`resources`, so each record is still the dataset plus the URL, format "
+      "and size of every downloadable file under it, and page_resume reads a "
+      "catalogue larger than one ceiling over a cycle." },
 
+
+ { .id = "JO34_CKANRES_DATA_HOUSTONTX_GOV", .name = "data.houstontx.gov — every dataset with its resource files (CKAN "
+      "package_search, id-sorted)",
+    .name_ja = "data.houstontx.gov データセット・リソース全件（CKAN）",
+    .category = "government", .portal = "https://data.houstontx.gov",
+    .record_type = "dataset-inventory",
+    .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"usa\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://data.houstontx.gov/api/3/action/package_search"
+           "?rows=100&start=0&sort=id%20asc",
+    .array_path = "result.results",
+    .body_keys = "notes",
+    .date_keys = "metadata_modified",
+    .id_keys = "id",
+    .interval = 86400,
+    .link_keys = "url",
+    .page_max = 20,
+    .page_param = "start",
+    .page_resume = 1,
+    .page_size = 100,
+    .timeout_ms = 90000,
+    .title_keys = "title,name",
+    .description = "RESTORED 2026-10-21. This row was removed on a reading taken before core/httpclient.c's UA_OVERRIDE carried this host: it answers HTTP 502 to the engine's own User-Agent and HTTP 200 to the agent with the filtered word removed, with result.count 96 on package_search. One of the six US municipal CKAN portals this branch bisected for that filter, so the fix and the row ship together. Re-pointed onto package_search with a stable id "
+      "sort, the way every kept row in this beat was: "
+      "current_package_list_with_resources has no sort parameter and orders "
+      "by metadata_modified desc, so a dataset edited during the walk shifts "
+      "every later page. package_search returns whole package dicts carrying "
+      "`resources`, so each record is still the dataset plus the URL, format "
+      "and size of every downloadable file under it, and page_resume reads a "
+      "catalogue larger than one ceiling over a cycle." },
 
   { .id = "JO34_CKANRES_DATA_KYIVCITY_GOV_UA", .name = "data.kyivcity.gov.ua — every dataset with its resource files "
-      "(CKAN current_package_list_with_resources)",
+      "(CKAN package_search, id-sorted)",
     .name_ja = "data.kyivcity.gov.ua データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://data.kyivcity.gov.ua",
     .record_type = "dataset-inventory",
@@ -1454,18 +1481,45 @@ static const hp_source HP3B34_CKANBULK[] = {
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
-    .description = "UNPROBED. The CKAN Action API endpoint that returns whole "
-      "package dicts WITH their resources inline, so each record "
-      "carries the dataset plus the URL, format and size of every "
-      "downloadable file under it. package_search (already wired for "
-      "this host) answers a query with dataset summaries; this answers "
-      "\"what does this body publish, and where are the actual files\". "
-      "Host and CKAN base path are proven live by the existing "
-      "package_search row; the action path is fixed by the CKAN Action "
-      "API. Response is {success, result:[...]}; some CKAN builds "
-      "disable or deprecate this action, in which case the row is an "
-      "honest empty." },
+    .description = "UNPROBED. Re-pointed onto package_search with a stable id "
+      "sort, the way every kept row in this beat was: "
+      "current_package_list_with_resources has no sort parameter and orders "
+      "by metadata_modified desc, so a dataset edited during the walk shifts "
+      "every later page. package_search returns whole package dicts carrying "
+      "`resources`, so each record is still the dataset plus the URL, format "
+      "and size of every downloadable file under it, and page_resume reads a "
+      "catalogue larger than one ceiling over a cycle." },
 
+
+ { .id = "JO34_CKANRES_DATA_MILWAUKEE_GOV", .name = "data.milwaukee.gov — every dataset with its resource files (CKAN "
+      "package_search, id-sorted)",
+    .name_ja = "data.milwaukee.gov データセット・リソース全件（CKAN）",
+    .category = "government", .portal = "https://data.milwaukee.gov",
+    .record_type = "dataset-inventory",
+    .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"usa\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://data.milwaukee.gov/api/3/action/package_search"
+           "?rows=100&start=0&sort=id%20asc",
+    .array_path = "result.results",
+    .body_keys = "notes",
+    .date_keys = "metadata_modified",
+    .id_keys = "id",
+    .interval = 86400,
+    .link_keys = "url",
+    .page_max = 20,
+    .page_param = "start",
+    .page_resume = 1,
+    .page_size = 100,
+    .timeout_ms = 90000,
+    .title_keys = "title,name",
+    .description = "RESTORED 2026-10-21. This row was removed on a reading taken before core/httpclient.c's UA_OVERRIDE carried this host: it answers HTTP 502 to the engine's own User-Agent and HTTP 200 to the agent with the filtered word removed, with result.count 186 on package_search. One of the six US municipal CKAN portals this branch bisected for that filter, so the fix and the row ship together. Re-pointed onto package_search with a stable id "
+      "sort, the way every kept row in this beat was: "
+      "current_package_list_with_resources has no sort parameter and orders "
+      "by metadata_modified desc, so a dataset edited during the walk shifts "
+      "every later page. package_search returns whole package dicts carrying "
+      "`resources`, so each record is still the dataset plus the URL, format "
+      "and size of every downloadable file under it, and page_resume reads a "
+      "catalogue larger than one ceiling over a cycle." },
 
   { .id = "JO34_CKANRES_DATA_NT_GOV_AU", .name = "data.nt.gov.au — every dataset with its resource files (CKAN "
       "package_search, id-sorted)",
@@ -1494,21 +1548,48 @@ static const hp_source HP3B34_CKANBULK[] = {
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
-    .description = "UNPROBED. The CKAN Action API endpoint that returns whole "
-      "package dicts WITH their resources inline, so each record "
-      "carries the dataset plus the URL, format and size of every "
-      "downloadable file under it. package_search (already wired for "
-      "this host) answers a query with dataset summaries; this answers "
-      "\"what does this body publish, and where are the actual files\". "
-      "Host and CKAN base path are proven live by the existing "
-      "package_search row; the action path is fixed by the CKAN Action "
-      "API. Response is {success, result:[...]}; some CKAN builds "
-      "disable or deprecate this action, in which case the row is an "
-      "honest empty." },
+    .description = "UNPROBED. Re-pointed onto package_search with a stable id "
+      "sort, the way every kept row in this beat was: "
+      "current_package_list_with_resources has no sort parameter and orders "
+      "by metadata_modified desc, so a dataset edited during the walk shifts "
+      "every later page. package_search returns whole package dicts carrying "
+      "`resources`, so each record is still the dataset plus the URL, format "
+      "and size of every downloadable file under it, and page_resume reads a "
+      "catalogue larger than one ceiling over a cycle." },
 
+
+ { .id = "JO34_CKANRES_DATA_OK_GOV", .name = "data.ok.gov — every dataset with its resource files (CKAN "
+      "package_search, id-sorted)",
+    .name_ja = "data.ok.gov データセット・リソース全件（CKAN）",
+    .category = "government", .portal = "https://data.ok.gov",
+    .record_type = "dataset-inventory",
+    .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"usa\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://data.ok.gov/api/3/action/package_search"
+           "?rows=100&start=0&sort=id%20asc",
+    .array_path = "result.results",
+    .body_keys = "notes",
+    .date_keys = "metadata_modified",
+    .id_keys = "id",
+    .interval = 86400,
+    .link_keys = "url",
+    .page_max = 20,
+    .page_param = "start",
+    .page_resume = 1,
+    .page_size = 100,
+    .timeout_ms = 90000,
+    .title_keys = "title,name",
+    .description = "RESTORED 2026-10-21. This row was removed on a reading taken before core/httpclient.c's UA_OVERRIDE carried this host: it answers HTTP 502 to the engine's own User-Agent and HTTP 200 to the agent with the filtered word removed, with result.count 397 on package_search. One of the six US municipal CKAN portals this branch bisected for that filter, so the fix and the row ship together. Re-pointed onto package_search with a stable id "
+      "sort, the way every kept row in this beat was: "
+      "current_package_list_with_resources has no sort parameter and orders "
+      "by metadata_modified desc, so a dataset edited during the walk shifts "
+      "every later page. package_search returns whole package dicts carrying "
+      "`resources`, so each record is still the dataset plus the URL, format "
+      "and size of every downloadable file under it, and page_resume reads a "
+      "catalogue larger than one ceiling over a cycle." },
 
   { .id = "JO34_CKANRES_DATA_OPENDEVELOPMENTCAMBODIA_NET", .name = "data.opendevelopmentcambodia.net — every dataset with its "
-      "resource files (CKAN current_package_list_with_resources)",
+      "resource files (CKAN package_search, id-sorted)",
     .name_ja = "data.opendevelopmentcambodia.net データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://data.opendevelopmentcambodia.net",
     .record_type = "dataset-inventory",
@@ -1547,7 +1628,7 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATA_OPENDEVELOPMENTMEKONG_NET", .name = "data.opendevelopmentmekong.net — every dataset with its resource "
-      "files (CKAN current_package_list_with_resources)",
+      "files (CKAN package_search, id-sorted)",
     .name_ja = "data.opendevelopmentmekong.net データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://data.opendevelopmentmekong.net",
     .record_type = "dataset-inventory",
@@ -1586,7 +1667,7 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATA_OPENDEVELOPMENTMYANMAR_NET", .name = "data.opendevelopmentmyanmar.net — every dataset with its "
-      "resource files (CKAN current_package_list_with_resources)",
+      "resource files (CKAN package_search, id-sorted)",
     .name_ja = "data.opendevelopmentmyanmar.net データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://data.opendevelopmentmyanmar.net",
     .record_type = "dataset-inventory",
@@ -1651,18 +1732,45 @@ static const hp_source HP3B34_CKANBULK[] = {
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
-    .description = "UNPROBED. The CKAN Action API endpoint that returns whole "
-      "package dicts WITH their resources inline, so each record "
-      "carries the dataset plus the URL, format and size of every "
-      "downloadable file under it. package_search (already wired for "
-      "this host) answers a query with dataset summaries; this answers "
-      "\"what does this body publish, and where are the actual files\". "
-      "Host and CKAN base path are proven live by the existing "
-      "package_search row; the action path is fixed by the CKAN Action "
-      "API. Response is {success, result:[...]}; some CKAN builds "
-      "disable or deprecate this action, in which case the row is an "
-      "honest empty." },
+    .description = "UNPROBED. Re-pointed onto package_search with a stable id "
+      "sort, the way every kept row in this beat was: "
+      "current_package_list_with_resources has no sort parameter and orders "
+      "by metadata_modified desc, so a dataset edited during the walk shifts "
+      "every later page. package_search returns whole package dicts carrying "
+      "`resources`, so each record is still the dataset plus the URL, format "
+      "and size of every downloadable file under it, and page_resume reads a "
+      "catalogue larger than one ceiling over a cycle." },
 
+
+ { .id = "JO34_CKANRES_DATA_SANANTONIO_GOV", .name = "data.sanantonio.gov — every dataset with its resource files "
+      "(CKAN package_search, id-sorted)",
+    .name_ja = "data.sanantonio.gov データセット・リソース全件（CKAN）",
+    .category = "government", .portal = "https://data.sanantonio.gov",
+    .record_type = "dataset-inventory",
+    .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"usa\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://data.sanantonio.gov/api/3/action/package_search"
+           "?rows=100&start=0&sort=id%20asc",
+    .array_path = "result.results",
+    .body_keys = "notes",
+    .date_keys = "metadata_modified",
+    .id_keys = "id",
+    .interval = 86400,
+    .link_keys = "url",
+    .page_max = 20,
+    .page_param = "start",
+    .page_resume = 1,
+    .page_size = 100,
+    .timeout_ms = 90000,
+    .title_keys = "title,name",
+    .description = "RESTORED 2026-10-21. This row was removed on a reading taken before core/httpclient.c's UA_OVERRIDE carried this host: it answers HTTP 502 to the engine's own User-Agent and HTTP 200 to the agent with the filtered word removed, with result.count 166 on package_search. One of the six US municipal CKAN portals this branch bisected for that filter, so the fix and the row ship together. Re-pointed onto package_search with a stable id "
+      "sort, the way every kept row in this beat was: "
+      "current_package_list_with_resources has no sort parameter and orders "
+      "by metadata_modified desc, so a dataset edited during the walk shifts "
+      "every later page. package_search returns whole package dicts carrying "
+      "`resources`, so each record is still the dataset plus the URL, format "
+      "and size of every downloadable file under it, and page_resume reads a "
+      "catalogue larger than one ceiling over a cycle." },
 
   { .id = "JO34_CKANRES_DATA_SANJOSECA_GOV", .name = "data.sanjoseca.gov — every dataset with its resource files (CKAN "
       "package_search, id-sorted)",
@@ -1704,7 +1812,7 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATA_SMARTDUBLIN_IE", .name = "data.smartdublin.ie — every dataset with its resource files "
-      "(CKAN current_package_list_with_resources)",
+      "(CKAN package_search, id-sorted)",
     .name_ja = "data.smartdublin.ie データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://data.smartdublin.ie",
     .record_type = "dataset-inventory",
@@ -1743,7 +1851,7 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATA_STADT_ZUERICH_CH", .name = "data.stadt-zuerich.ch — every dataset with its resource files "
-      "(CKAN current_package_list_with_resources)",
+      "(CKAN package_search, id-sorted)",
     .name_ja = "data.stadt-zuerich.ch データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://data.stadt-zuerich.ch",
     .record_type = "dataset-inventory",
@@ -1769,7 +1877,51 @@ static const hp_source HP3B34_CKANBULK[] = {
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
-    .description = "UNPROBED. The CKAN Action API endpoint that returns whole "
+    .description = "UNPROBED. Re-pointed onto package_search with a stable id "
+      "sort, the way every kept row in this beat was: "
+      "current_package_list_with_resources has no sort parameter and orders "
+      "by metadata_modified desc, so a dataset edited during the walk shifts "
+      "every later page. package_search returns whole package dicts carrying "
+      "`resources`, so each record is still the dataset plus the URL, format "
+      "and size of every downloadable file under it, and page_resume reads a "
+      "catalogue larger than one ceiling over a cycle." },
+
+
+ { .id = "JO34_CKANRES_DATA_VIRGINIA_GOV", .name = "data.virginia.gov — every dataset with its resource files (CKAN "
+      "package_search, id-sorted)",
+    .name_ja = "data.virginia.gov データセット・リソース全件（CKAN）",
+    .category = "government", .portal = "https://data.virginia.gov",
+    .record_type = "dataset-inventory",
+    .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"usa\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://data.virginia.gov/api/3/action/package_search"
+           "?rows=100&start=0&sort=id%20asc",
+    .array_path = "result.results",
+    .body_keys = "notes",
+    .date_keys = "metadata_modified",
+    .id_keys = "id",
+    .interval = 86400,
+    .link_keys = "url",
+    .page_max = 20,
+    .page_param = "start",
+    .page_resume = 1,
+    .page_size = 100,
+    .timeout_ms = 90000,
+    .title_keys = "title,name",
+    .description = "RESTORED 2026-10-21. This row was removed on a reading taken before core/httpclient.c's UA_OVERRIDE carried this host: it answers HTTP 502 to the engine's own User-Agent and HTTP 200 to the agent with the filtered word removed, with result.count 32090 on package_search. One of the six US municipal CKAN portals this branch bisected for that filter, so the fix and the row ship together. MEASURED 2026-10-20, and THE reason this beat's offset walk "
+      "is not safe to trust on an unsorted collection. The bulk action answers "
+      "here, and its offset walk is UNSTABLE: 20 pages of 100 returned 2,000 "
+      "records holding 1,800 distinct ids — 200 duplicates, which the sink "
+      "collapsed, reported as a COLLISION. The duplicates are the visible half. "
+      "The same 20 pages of package_search sorted on `id asc` returned 2,000 "
+      "records with 0 duplicates, and 1,884 of those ids NEVER APPEARED in the "
+      "bulk walk: the invisible half is records skipped, permanently, with no "
+      "symptom but the collision. (CLAUDE.md: 'a collision that is really a "
+      "skip is the worst shape in this file'.) So this row is sorted and keyed "
+      "the same way, and it CYCLES — its own count is 32,089 datasets, which no "
+      "20-page ceiling reaches, and an ascending sort is the precondition a "
+      "cycle needs. Original note: The CKAN Action API endpoint that returns "
+      "whole "
       "package dicts WITH their resources inline, so each record "
       "carries the dataset plus the URL, format and size of every "
       "downloadable file under it. package_search (already wired for "
@@ -1780,7 +1932,6 @@ static const hp_source HP3B34_CKANBULK[] = {
       "API. Response is {success, result:[...]}; some CKAN builds "
       "disable or deprecate this action, in which case the row is an "
       "honest empty." },
-
 
   { .id = "JO34_CKANRES_DATA_ZAGREB_HR", .name = "data.zagreb.hr — every dataset with its resource files (CKAN "
       "package_search, id-sorted)",
@@ -1861,7 +2012,7 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATENREGISTER_BERLIN_DE", .name = "datenregister.berlin.de — every dataset with its resource files "
-      "(CKAN current_package_list_with_resources)",
+      "(CKAN package_search, id-sorted)",
     .name_ja = "datenregister.berlin.de データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://datenregister.berlin.de",
     .record_type = "dataset-inventory",
@@ -1887,21 +2038,48 @@ static const hp_source HP3B34_CKANBULK[] = {
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
-    .description = "UNPROBED. The CKAN Action API endpoint that returns whole "
-      "package dicts WITH their resources inline, so each record "
-      "carries the dataset plus the URL, format and size of every "
-      "downloadable file under it. package_search (already wired for "
-      "this host) answers a query with dataset summaries; this answers "
-      "\"what does this body publish, and where are the actual files\". "
-      "Host and CKAN base path are proven live by the existing "
-      "package_search row; the action path is fixed by the CKAN Action "
-      "API. Response is {success, result:[...]}; some CKAN builds "
-      "disable or deprecate this action, in which case the row is an "
-      "honest empty." },
+    .description = "UNPROBED. Re-pointed onto package_search with a stable id "
+      "sort, the way every kept row in this beat was: "
+      "current_package_list_with_resources has no sort parameter and orders "
+      "by metadata_modified desc, so a dataset edited during the walk shifts "
+      "every later page. package_search returns whole package dicts carrying "
+      "`resources`, so each record is still the dataset plus the URL, format "
+      "and size of every downloadable file under it, and page_resume reads a "
+      "catalogue larger than one ceiling over a cycle." },
 
+
+ { .id = "JO34_CKANRES_DATI_COMUNE_MATERA_IT", .name = "dati.comune.matera.it — every dataset with its resource files "
+      "(CKAN package_search, id-sorted)",
+    .name_ja = "dati.comune.matera.it データセット・リソース全件（CKAN）",
+    .category = "government", .portal = "https://dati.comune.matera.it",
+    .record_type = "dataset-inventory",
+    .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"italy\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://dati.comune.matera.it/api/3/action/package_search"
+           "?rows=100&start=0&sort=id%20asc",
+    .array_path = "result.results",
+    .body_keys = "notes",
+    .date_keys = "metadata_modified",
+    .id_keys = "id",
+    .interval = 86400,
+    .link_keys = "url",
+    .page_max = 20,
+    .page_param = "start",
+    .page_resume = 1,
+    .page_size = 100,
+    .timeout_ms = 90000,
+    .title_keys = "title,name",
+    .description = "RESTORED 2026-10-21. Removed with the six User-Agent rows, but this host is not one of them: it answers HTTP 200 to BOTH agents with real CKAN JSON — success true, result.count 249, so the removal was superseded for a different reason and was checked separately. Re-pointed onto package_search with a stable id "
+      "sort, the way every kept row in this beat was: "
+      "current_package_list_with_resources has no sort parameter and orders "
+      "by metadata_modified desc, so a dataset edited during the walk shifts "
+      "every later page. package_search returns whole package dicts carrying "
+      "`resources`, so each record is still the dataset plus the URL, format "
+      "and size of every downloadable file under it, and page_resume reads a "
+      "catalogue larger than one ceiling over a cycle." },
 
   { .id = "JO34_CKANRES_DATI_COMUNE_MILANO_IT", .name = "dati.comune.milano.it — every dataset with its resource files "
-      "(CKAN current_package_list_with_resources)",
+      "(CKAN package_search, id-sorted)",
     .name_ja = "dati.comune.milano.it データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://dati.comune.milano.it",
     .record_type = "dataset-inventory",
@@ -2174,7 +2352,7 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATOS_MININTERIOR_GOB_AR", .name = "datos.mininterior.gob.ar — every dataset with its resource files "
-      "(CKAN current_package_list_with_resources)",
+      "(CKAN package_search, id-sorted)",
     .name_ja = "datos.mininterior.gob.ar データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://datos.mininterior.gob.ar",
     .record_type = "dataset-inventory",
@@ -2252,7 +2430,7 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATOS_TRANSPORTE_GOB_AR", .name = "datos.transporte.gob.ar — every dataset with its resource files "
-      "(CKAN current_package_list_with_resources)",
+      "(CKAN package_search, id-sorted)",
     .name_ja = "datos.transporte.gob.ar データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://datos.transporte.gob.ar",
     .record_type = "dataset-inventory",
@@ -2291,7 +2469,7 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATOSABIERTOS_MALAGA_EU", .name = "datosabiertos.malaga.eu — every dataset with its resource files "
-      "(CKAN current_package_list_with_resources)",
+      "(CKAN package_search, id-sorted)",
     .name_ja = "datosabiertos.malaga.eu データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://datosabiertos.malaga.eu",
     .record_type = "dataset-inventory",
@@ -2330,7 +2508,7 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_DATOSABIERTOS_MENDOZA_GOV_AR", .name = "datosabiertos.mendoza.gov.ar — every dataset with its resource "
-      "files (CKAN current_package_list_with_resources)",
+      "files (CKAN package_search, id-sorted)",
     .name_ja = "datosabiertos.mendoza.gov.ar データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://datosabiertos.mendoza.gov.ar",
     .record_type = "dataset-inventory",
@@ -2369,7 +2547,7 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_GEOSCIENCE_DATA_QLD_GOV_AU", .name = "geoscience.data.qld.gov.au — every dataset with its resource "
-      "files (CKAN current_package_list_with_resources)",
+      "files (CKAN package_search, id-sorted)",
     .name_ja = "geoscience.data.qld.gov.au データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://geoscience.data.qld.gov.au",
     .record_type = "dataset-inventory",
@@ -2408,7 +2586,7 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_GIFU_OPENDATA_PREF_GIFU_LG_JP", .name = "gifu-opendata.pref.gifu.lg.jp — every dataset with its resource "
-      "files (CKAN current_package_list_with_resources)",
+      "files (CKAN package_search, id-sorted)",
     .name_ja = "gifu-opendata.pref.gifu.lg.jp データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://gifu-opendata.pref.gifu.lg.jp",
     .record_type = "dataset-inventory",
@@ -2447,7 +2625,7 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_OPDT_CITY_TOYAMA_LG_JP", .name = "opdt.city.toyama.lg.jp — every dataset with its resource files "
-      "(CKAN current_package_list_with_resources)",
+      "(CKAN package_search, id-sorted)",
     .name_ja = "opdt.city.toyama.lg.jp データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://opdt.city.toyama.lg.jp",
     .record_type = "dataset-inventory",
@@ -2525,7 +2703,7 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_OPENDATA_CITY_IMIZU_TOYAMA_JP", .name = "opendata.city.imizu.toyama.jp — every dataset with its resource "
-      "files (CKAN current_package_list_with_resources)",
+      "files (CKAN package_search, id-sorted)",
     .name_ja = "opendata.city.imizu.toyama.jp データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://opendata.city.imizu.toyama.jp",
     .record_type = "dataset-inventory",
@@ -2564,7 +2742,7 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_OPENDATA_CITY_MACHIDA_TOKYO_JP", .name = "opendata.city.machida.tokyo.jp — every dataset with its resource "
-      "files (CKAN current_package_list_with_resources)",
+      "files (CKAN package_search, id-sorted)",
     .name_ja = "opendata.city.machida.tokyo.jp データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://opendata.city.machida.tokyo.jp",
     .record_type = "dataset-inventory",
@@ -2603,7 +2781,7 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_OPENDATA_CITY_MINATO_TOKYO_JP", .name = "opendata.city.minato.tokyo.jp — every dataset with its resource "
-      "files (CKAN current_package_list_with_resources)",
+      "files (CKAN package_search, id-sorted)",
     .name_ja = "opendata.city.minato.tokyo.jp データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://opendata.city.minato.tokyo.jp",
     .record_type = "dataset-inventory",
@@ -2643,7 +2821,7 @@ static const hp_source HP3B34_CKANBULK[] = {
 
 
   { .id = "JO34_CKANRES_OPENDATA_CITY_SAGAMIHARA_KANAGAWA_JP", .name = "opendata.city.sagamihara.kanagawa.jp — every dataset with its "
-      "resource files (CKAN current_package_list_with_resources)",
+      "resource files (CKAN package_search, id-sorted)",
     .name_ja = "opendata.city.sagamihara.kanagawa.jp データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://opendata.city.sagamihara.kanagawa.jp",
     .record_type = "dataset-inventory",
@@ -2682,7 +2860,7 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_OPENDATA_COMUNE_BARI_IT", .name = "opendata.comune.bari.it — every dataset with its resource files "
-      "(CKAN current_package_list_with_resources)",
+      "(CKAN package_search, id-sorted)",
     .name_ja = "opendata.comune.bari.it データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://opendata.comune.bari.it",
     .record_type = "dataset-inventory",
@@ -2708,21 +2886,48 @@ static const hp_source HP3B34_CKANBULK[] = {
     .page_size = 100,
     .timeout_ms = 90000,
     .title_keys = "title,name",
-    .description = "UNPROBED. The CKAN Action API endpoint that returns whole "
-      "package dicts WITH their resources inline, so each record "
-      "carries the dataset plus the URL, format and size of every "
-      "downloadable file under it. package_search (already wired for "
-      "this host) answers a query with dataset summaries; this answers "
-      "\"what does this body publish, and where are the actual files\". "
-      "Host and CKAN base path are proven live by the existing "
-      "package_search row; the action path is fixed by the CKAN Action "
-      "API. Response is {success, result:[...]}; some CKAN builds "
-      "disable or deprecate this action, in which case the row is an "
-      "honest empty." },
+    .description = "UNPROBED. Re-pointed onto package_search with a stable id "
+      "sort, the way every kept row in this beat was: "
+      "current_package_list_with_resources has no sort parameter and orders "
+      "by metadata_modified desc, so a dataset edited during the walk shifts "
+      "every later page. package_search returns whole package dicts carrying "
+      "`resources`, so each record is still the dataset plus the URL, format "
+      "and size of every downloadable file under it, and page_resume reads a "
+      "catalogue larger than one ceiling over a cycle." },
 
+
+ { .id = "JO34_CKANRES_OPENDATA_HAWAII_GOV", .name = "opendata.hawaii.gov — every dataset with its resource files "
+      "(CKAN package_search, id-sorted)",
+    .name_ja = "opendata.hawaii.gov データセット・リソース全件（CKAN）",
+    .category = "government", .portal = "https://opendata.hawaii.gov",
+    .record_type = "dataset-inventory",
+    .tags = "\"ckan\",\"open-data\",\"dataset-inventory\",\"resources\",\"usa\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://opendata.hawaii.gov/api/3/action/package_search"
+           "?rows=100&start=0&sort=id%20asc",
+    .array_path = "result.results",
+    .body_keys = "notes",
+    .date_keys = "metadata_modified",
+    .id_keys = "id",
+    .interval = 86400,
+    .link_keys = "url",
+    .page_max = 20,
+    .page_param = "start",
+    .page_resume = 1,
+    .page_size = 100,
+    .timeout_ms = 90000,
+    .title_keys = "title,name",
+    .description = "RESTORED 2026-10-21. This row was removed on a reading taken before core/httpclient.c's UA_OVERRIDE carried this host: it answers HTTP 502 to the engine's own User-Agent and HTTP 200 to the agent with the filtered word removed, with result.count 963 on package_search. One of the six US municipal CKAN portals this branch bisected for that filter, so the fix and the row ship together. Re-pointed onto package_search with a stable id "
+      "sort, the way every kept row in this beat was: "
+      "current_package_list_with_resources has no sort parameter and orders "
+      "by metadata_modified desc, so a dataset edited during the walk shifts "
+      "every later page. package_search returns whole package dicts carrying "
+      "`resources`, so each record is still the dataset plus the URL, format "
+      "and size of every downloadable file under it, and page_resume reads a "
+      "catalogue larger than one ceiling over a cycle." },
 
   { .id = "JO34_CKANRES_OPENDATA_MUENCHEN_DE", .name = "opendata.muenchen.de — every dataset with its resource files "
-      "(CKAN current_package_list_with_resources)",
+      "(CKAN package_search, id-sorted)",
     .name_ja = "opendata.muenchen.de データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://opendata.muenchen.de",
     .record_type = "dataset-inventory",
@@ -2761,7 +2966,7 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_OPENDATA_NHSBSA_NET", .name = "opendata.nhsbsa.net — every dataset with its resource files "
-      "(CKAN current_package_list_with_resources)",
+      "(CKAN package_search, id-sorted)",
     .name_ja = "opendata.nhsbsa.net データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://opendata.nhsbsa.net",
     .record_type = "dataset-inventory",
@@ -2800,7 +3005,7 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_OPENDATA_SCHLESWIG_HOLSTEIN_DE", .name = "opendata.schleswig-holstein.de — every dataset with its resource "
-      "files (CKAN current_package_list_with_resources)",
+      "files (CKAN package_search, id-sorted)",
     .name_ja = "opendata.schleswig-holstein.de データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://opendata.schleswig-holstein.de",
     .record_type = "dataset-inventory",
@@ -2956,7 +3161,7 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_SUCHE_TRANSPARENZ_HAMBURG_DE", .name = "suche.transparenz.hamburg.de — every dataset with its resource "
-      "files (CKAN current_package_list_with_resources)",
+      "files (CKAN package_search, id-sorted)",
     .name_ja = "suche.transparenz.hamburg.de データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://suche.transparenz.hamburg.de",
     .record_type = "dataset-inventory",
@@ -2995,7 +3200,7 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_TRANSPARENZ_KARLSRUHE_DE", .name = "transparenz.karlsruhe.de — every dataset with its resource files "
-      "(CKAN current_package_list_with_resources)",
+      "(CKAN package_search, id-sorted)",
     .name_ja = "transparenz.karlsruhe.de データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://transparenz.karlsruhe.de",
     .record_type = "dataset-inventory",
@@ -3035,7 +3240,7 @@ static const hp_source HP3B34_CKANBULK[] = {
 
 
   { .id = "JO34_CKANRES_WWW_OFFENESDATENPORTAL_DE", .name = "www.offenesdatenportal.de — every dataset with its resource "
-      "files (CKAN current_package_list_with_resources)",
+      "files (CKAN package_search, id-sorted)",
     .name_ja = "www.offenesdatenportal.de データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://www.offenesdatenportal.de",
     .record_type = "dataset-inventory",
@@ -3074,7 +3279,7 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_WWW_OPENDATA_HRO_DE", .name = "www.opendata-hro.de — every dataset with its resource files "
-      "(CKAN current_package_list_with_resources)",
+      "(CKAN package_search, id-sorted)",
     .name_ja = "www.opendata-hro.de データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://www.opendata-hro.de",
     .record_type = "dataset-inventory",
@@ -3152,7 +3357,7 @@ static const hp_source HP3B34_CKANBULK[] = {
       "honest empty." },
 
   { .id = "JO34_CKANRES_WWW_OPENDATA_NHS_SCOT", .name = "www.opendata.nhs.scot — every dataset with its resource files "
-      "(CKAN current_package_list_with_resources)",
+      "(CKAN package_search, id-sorted)",
     .name_ja = "www.opendata.nhs.scot データセット・リソース全件（CKAN）",
     .category = "government", .portal = "https://www.opendata.nhs.scot",
     .record_type = "dataset-inventory",

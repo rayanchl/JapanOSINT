@@ -188,9 +188,60 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "deforestation-alert",
     .tags = "\"brazil\",\"amazon\",\"deforestation\",\"inpe\",\"satellite\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://terrabrasilis.dpi.inpe.br/geoserver/deter-amz/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=deter-amz:deter_amz&maxFeatures=500&outputFormat=application%2Fjson",
+    /* Read 500 of 464,353 alerts, hourly, forever — the upstream's own
+     * `totalFeatures`, measured 2026-10-25. It declared no paging at all, so
+     * one request per run was all it ever made.
+     *
+     * `sortBy=view_date,gid` is not cosmetic and `sortBy=gid` does NOT work:
+     * asked with gid alone the service returned statistics IDENTICAL to no
+     * sort at all — 100 rows holding 53 distinct gids, 23 repeated feature
+     * ids WITHIN one page, and 1 feature shared across the page-1/page-2 seam
+     * — i.e. the sort was ignored and the walk was paging a union view with no
+     * effective ORDER BY. With `view_date,gid` the same windows come back
+     * clean: 1,000 rows, 1,000 distinct feature ids, 1,000 distinct gid,
+     * overlap 0 across the seam, and page 1 byte-repeatable. So the repeated
+     * rows were an artifact of unordered paging and NOT duplicate data —
+     * which is why `id_keys` is the feature's own id and nothing was widened
+     * to "fix" a collision that was a question (rule 4b).
+     *
+     * `timeout_ms = 120000` because the sorted query is genuinely slow and the
+     * engine's 20 s HP_HTTP_TIMEOUT was cutting it off mid-walk. Measured per
+     * page, 1,000 features: 13.6 s at startIndex=0, 20.0 s unsorted, 21.2 s at
+     * 500, and 33.7 s at startIndex=20000. The first fixed run showed exactly
+     * what that costs without the raise — "page 3 answered -1" after 10
+     * requests and 207 s, a working query reported as a transport failure,
+     * which is the ENA lesson in this file repeated on another host.
+     *
+     * NOTE WHAT THAT TIMING CURVE MEANS: an offset walk on an unindexed sort
+     * gets slower the deeper it goes, so the far end of a 465-page cycle will
+     * eventually exceed even 120 s. The real remedy is a KEYSET cursor —
+     * `CQL_FILTER=view_date>'<the last date read>'`, the shape ELIA's
+     * imbalance history and the Go module index use — which costs the server a
+     * range scan instead of a sort-and-skip. Not built here: it needs its own
+     * measurement per host, and this row is 20x better in the meantime.
+     *
+     * `page_max = 10` rather than the 465 pages the total needs. This row runs
+     * HOURLY because new alerts are the point, and at ~20 s a page even 50
+     * pages would have it fetching for 17 minutes of every hour against one
+     * agency's GeoServer. Ten pages is ~10,000 records and a few minutes a
+     * run, the cycle comes round in about two days, and `page_resume` keeps
+     * the position so each run reads a further slice rather than the same
+     * first one. The freshness half is still unsolved and the arithmetic says
+     * so: a cycling walk sits somewhere in the archive, so a brand-new alert
+     * waits for the cycle. The proper shape is the deliberate pair this file
+     * uses elsewhere (canada-hydrometric, the ELIA rows) — a short `view_date`
+     * window for the live tail beside this full-archive cycle — and that is a
+     * second row, not an edit to this one. */
+    .url = "https://terrabrasilis.dpi.inpe.br/geoserver/deter-amz/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=deter-amz:deter_amz&maxFeatures=1000&outputFormat=application%2Fjson&sortBy=view_date,gid",
     .array_path = "features",
+    .id_keys = "id",
     .interval = 3600,
+    .timeout_ms = 120000,
+    .page_param = "startIndex",
+    .page_size = 1000,
+    .page_start = 0,
+    .page_max = 10,
+    .page_resume = 1,
     .description = "INPE's near-real-time deforestation and forest-degradation "
       "alerts for the Brazilian Amazon, as polygons with the detection "
       "date, alert class, area in hectares, municipality, state, and "
@@ -205,9 +256,32 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "deforestation-polygon",
     .tags = "\"brazil\",\"amazon\",\"deforestation\",\"prodes\",\"inpe\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://terrabrasilis.dpi.inpe.br/geoserver/prodes-legal-amz/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=prodes-legal-amz:yearly_deforestation&maxFeatures=500&outputFormat=application%2Fjson",
+    /* Read 500 of 835,439 polygons, every six hours, forever — the upstream's
+     * own `totalFeatures`, measured 2026-10-25, and the largest single
+     * shortfall found in this pass. It declared no paging at all.
+     *
+     * `sortBy=fid` is honoured here and is enough on its own, unlike DETER
+     * above: startIndex 0 against 10 came back disjoint (overlap 0), page 1
+     * repeatable, and the feature ids are UUIDs rather than a serial, so the
+     * order is stable without a second key. Measured rather than assumed,
+     * because the sibling row on the same GeoServer silently ignored its sort.
+     *
+     * 836 pages of 1,000 is past the 200-page line this file draws, so it
+     * reads the archive over a CYCLE: 200 pages a run, the position stored,
+     * about four runs (roughly a day at this cadence) to come round. That is
+     * the right trade for PRODES specifically — it is the ANNUAL consolidated
+     * map, republished once a year, so nothing is lost by taking a day to read
+     * it, and a cycle on a yearly dataset is not a freshness compromise the
+     * way it is for DETER's hourly alerts. */
+    .url = "https://terrabrasilis.dpi.inpe.br/geoserver/prodes-legal-amz/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=prodes-legal-amz:yearly_deforestation&maxFeatures=1000&outputFormat=application%2Fjson&sortBy=fid",
     .array_path = "features",
+    .id_keys = "id",
     .interval = 21600,
+    .page_param = "startIndex",
+    .page_size = 1000,
+    .page_start = 0,
+    .page_max = 200,
+    .page_resume = 1,
     .description = "PRODES, the official annual clear-cut deforestation map of the "
       "Legal Amazon that Brazil's deforestation rate is calculated "
       "from, as individual polygons with the reference year, area, "
@@ -1352,67 +1426,65 @@ static const hp_source HP3B19_LATAM[] = {
       "supplies much of Costa Rica's central valley, and this names who "
       "is drawing from it" },
 
-  { .id = "CR_SANCARLOS_PATENTES", .name = "IDESCA San Carlos — commercial licences",
-    .name_ja = "コスタリカ サンカルロス市 営業許可",
-    .category = "corporate", .portal = "https://www.munisc.go.cr",
-    .record_type = "business-licence",
-    .tags = "\"costarica\",\"sancarlos\",\"licence\",\"business\",\"municipal\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://idesca.munisc.go.cr/geoserver/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=geonode:patente_comercial_sc&maxFeatures=1000&outputFormat=application%2Fjson",
-    .array_path = "features",
-    .interval = 86400,
-    .page_param = "startIndex",
-    .page_size = 1000,
-    .page_start = 0,
-    .description = "Commercial licences in San Carlos, the largest canton of Costa "
-      "Rica's northern zone, with the land-registry finca number, the "
-      "licence numbers, the licence category, the district, the "
-      "business name, the tax regime it operates under and the address, "
-      "each geolocated. Four thousand named businesses tied to the "
-      "parcel they occupy" },
-
-  { .id = "CR_SANCARLOS_LICORES", .name = "IDESCA San Carlos — liquor licences",
-    .name_ja = "コスタリカ サンカルロス市 酒類販売許可",
-    .category = "corporate", .portal = "https://www.munisc.go.cr",
-    .record_type = "liquor-licence",
-    .tags = "\"costarica\",\"sancarlos\",\"liquor\",\"licence\",\"municipal\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://idesca.munisc.go.cr/geoserver/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=geonode:patentes_licores_sc&maxFeatures=1000&outputFormat=application%2Fjson",
-    .array_path = "features",
-    .interval = 86400,
-    .page_param = "startIndex",
-    .page_size = 1000,
-    .page_start = 0,
-    .description = "Liquor licences in the canton of San Carlos with the parcel "
-      "number, the licence class and sub-classification, the "
-      "application and licence numbers, the district, the address and "
-      "the business name, geolocated. Liquor licensing is one of the "
-      "few Costa Rican municipal registers naming the business at the "
-      "parcel it trades from" },
-
+  /* CR_SANCARLOS_PATENTES and CR_SANCARLOS_LICORES stood here and are GONE —
+   * the commercial-licence and liquor-licence registers were withdrawn from
+   * San Carlos's IDE. Measured 2026-10-20, and measured the way the PREDIOS
+   * recovery says to: not by trusting the name we expected, but by asking the
+   * server what it serves. GetCapabilities lists 38 feature types and none is
+   * a patente or licores layer, and the GeoNode catalogue behind it answers 0
+   * hits for `patente`, `licores` AND `comercial` by title and abstract — so
+   * the concept is absent, not renamed. Both rows failed page 1 with
+   * `ServiceException code="InvalidParameterValue" locator="typeName"`, which
+   * is GeoServer saying the type does not exist; found by the page-2 gate,
+   * which reported them SAME_AS_PAGE1 because both pages were the same
+   * exception document.
+   *
+   * The sibling that WAS renamed is the lesson's other half: PREDIOS reads
+   * `geonode:Catastro_sc` below. */
   { .id = "CR_SANCARLOS_PREDIOS", .name = "IDESCA San Carlos — cadastral parcels",
     .name_ja = "コスタリカ サンカルロス市 地籍区画",
     .category = "reference", .portal = "https://www.munisc.go.cr",
     .record_type = "cadastral-parcel",
     .tags = "\"costarica\",\"sancarlos\",\"cadastre\",\"parcel\",\"municipal\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    /* DEAD LAYER, round 8 (2026-09-21): the GeoServer answers 200 with a WFS
+    /* RECOVERED 2026-10-19, and the reason it read as dead is worth keeping.
+     * Round 8 (2026-09-21) found `geonode:predios_sc` answering 200 with a WFS
      * ServiceExceptionReport — `InvalidParameterValue locator="typeName":
-     * Feature type geonode:predios_sc unknown`. GetCapabilities (47 KB,
-     * aerodromos_sc, albergues_sc, bomberos_sc, …) lists no predio* layer at
-     * all, so the parcels were withdrawn, not renamed. Left failing honestly
-     * (rc=-1, EMITS_NOTHING); the URL stays so the next probe re-tests the
-     * same thing. Evidence in docs/source-repair-round8-A.tsv. */
-    .url = "https://idesca.munisc.go.cr/geoserver/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=geonode:predios_sc&maxFeatures=1000&outputFormat=application%2Fjson",
+     * Feature type geonode:predios_sc unknown` — searched GetCapabilities for
+     * a `predio*` layer, found none, and concluded the parcels had been
+     * withdrawn rather than renamed. That conclusion followed from searching
+     * for THE NAME WE EXPECTED. The server's 40 feature types include
+     * `geonode:Catastro_sc`, which no `predio*` search can match and which is
+     * this same cadastre under its other Spanish name: 99,222 features
+     * carrying `id`, `Distrito`, `Finca`, `Plano` and `Propietario` — the
+     * owner name, which is the field this row exists for.
+     *
+     * Two further changes the measurement forced. WFS 2.0.0, because `count`
+     * and `startIndex` are 2.0.0 paging and 1.0.0's `maxFeatures` is not; and
+     * `sortBy=id`, because GeoServer refuses `startIndex` on a type with no
+     * primary key ("Cannot do natural order without a primary key"), which is
+     * the same 400 BC_MINERAL_TENURE was stuck on. Measured startIndex
+     * 0/1000/2000 → 1,000 features each, first id 0 / 1291 / 2591, ascending
+     * and non-overlapping, against a declared total of 99,222.
+     *
+     * 99,222 records at 1,000 a page is 100 pages, past the 20-page ceiling,
+     * so it reads over a cycle. */
+    .url = "https://idesca.munisc.go.cr/geoserver/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=geonode:Catastro_sc&count=1000&outputFormat=application%2Fjson&sortBy=id",
     .array_path = "features",
+    .id_keys = "properties.id",
+    .title_keys = "properties.Finca,properties.Propietario,properties.id",
     .interval = 86400,
     .page_param = "startIndex",
+    .page_resume = 1,
     .page_size = 1000,
     .page_start = 0,
-    .description = "Ninety-eight thousand cadastral parcels of the canton of San "
-      "Carlos as polygons with their finca and parcel attributes. A "
-      "municipal cadastre served openly as GeoJSON is the join between "
-      "the licence registers on the same server and the land itself" },
+    .description = "Ninety-nine thousand cadastral parcels of the canton of San "
+      "Carlos, Costa Rica, each carrying its district, finca (title) "
+      "number, survey plan number and the name of the registered "
+      "PROPRIETOR. A municipal cadastre served openly is the join "
+      "between the licence registers on the same server and the land "
+      "itself, and the owner name is what makes that join an answer "
+      "about a person or a company rather than about a polygon" },
 
   { .id = "PA_PANAMACOMPRA_RUBROS", .name = "PanamaCompra — procurement classification segments",
     .name_ja = "パナマ公共調達 品目分類",
@@ -2627,79 +2699,56 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "foi-request",
     .tags = "\"paraguay\",\"transparency\",\"foi\",\"accesstoinformation\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://informacionpublica.paraguay.gov.py/api/dashboard/buscar?keyword={q}&pageSize=5000",
-    /* The server answers HTTP 500 "Content type '' not supported" without a
-     * JSON Content-Type, on the list AND on /detalle. The manifest wrote it
-     * `application/json\;charset=utf-8`, which gen_hp_batch rejects as a
-     * swallowed `charset` opt; plain `application/json` is served the same
-     * (200, 100 records, totalRecords 57,748 for "salud", 2026-10-06), so
-     * both copies now say that and nothing is ambiguous.
+    /* ONE RECORD PER REQUEST, THE WHOLE MATCH SET (2026-10-25). This row used
+     * to read /api/dashboard/buscar, which returns one row per (request,
+     * reply) and shuffles its WHOLE match set on every request, honouring no
+     * sort and no partitioning filter (dates, estado, idInstitucion,
+     * institucion, tema, sortField/sortAsc, sort=id,asc — all ignored, "agua"
+     * stayed 27,778). Any search past one 5,000-row page was therefore a
+     * random sample: "agua" walked in 7 pages stored 18,803 rows over 15,407
+     * of its ~21,800 requests.
      *
-     * `page` is a page NUMBER: pageSize=100&page=577 is the last 48 of 57,748
-     * and page=578 is empty. The row also declared page_size=100, which makes
-     * the engine treat page_param as an OFFSET — it asked for pages 0, 100,
-     * 200 … 600, read 7 of 578 pages, and stored 571 of 57,748 (records=600,
-     * UID-COLLISION 29). page_size is gone; pageSize stays in the URL.
+     * The same backend's request LIST, /api/solicitud/, is complete and
+     * ordered: it honours `keyword`, sorts by ascending id (pages strictly
+     * ascending, non-overlapping), pages with `page` (0-based) and
+     * `pageSize`, and its id set equals the search endpoint's ("puente" 290
+     * = 290; every id on a 5,000-row "agua" search page is in it). "agua"
+     * reads completely in 5 pages of 5,000: 21,917 requests, ~62 s. An
+     * impossible keyword answers totalRecords 0.
      *
-     * Two upstream properties to know before trusting a count from this row:
-     * the order of a result set is NOT stable between identical requests (the
-     * same page=0 came back with different first ids three times running), and
-     * one request id can appear several times on a page (66093 x3). A walk can
-     * therefore repeat some requests and miss others: two identical walks of
-     * "puente" (totalRecords 415, five pages) returned 415 rows each, holding
-     * 200 and 215 distinct ids. The front end sends no sort parameter either,
-     * so there is none to pin. The sink keeps one row per distinct
-     * id+content.
+     * What the list lacks is the reply text, so the record is the REQUEST
+     * (keyed on its own `id`) and its replies come from the detail hop:
+     * /api/solicitud/{id}/detalle carries the whole case file, replies in
+     * `flujosSolicitud[].comentario` (10 of 10 matched the search rows they
+     * used to come from). The hop runs within the engine's per-run detail
+     * budget (hp_detail_admit: a count and a clock); a record it does not
+     * reach carries `_detail_pending` and the run files a detail-truncation
+     * notice with the counts, so a large search is complete in its requests
+     * and says exactly how many of their case files it fetched.
      *
-     * NO SORT IS HONOURED; A LARGE PAGE IS (2026-10-07). The same backend's
-     * /api/solicitud/ list takes sortField + sortAsc (main-es2015 bundle), so
-     * those were tried here, with sort=id,asc, orderBy, order, sortOrder and
-     * ordenar: page=0 of "puente" came back in a different order on every
-     * request with each of them. The walk cannot be made stable, but it can
-     * be made to have no boundaries: pageSize is honoured far above 100 —
-     * 5,000 and 20,000 rows answered in full ("salud", 57,765 matches: 24 s
-     * and 69 s) — and a result set that fits in ONE page is the complete set
-     * whatever order it comes in. "puente" (415) at pageSize=500 returned 415
-     * rows holding 287 distinct ids and 385 distinct rows, identical on two
-     * requests, where the 100-row walk stored 293 rows over 212 ids. 5,000 is
-     * the page: every pivot up to 5,000 matches is one request with no
-     * boundary to repeat or skip across. What still collides inside one page
-     * is the upstream repeating a byte-identical row (puente 30, contrato
-     * 109) — real duplicates, which the sink collapses. timeout_ms covers the
-     * 24 s a full 5,000-row page takes.
-     *
-     * Above 5,000 the walk is still incomplete, and not only at the
-     * boundaries: the server shuffles the WHOLE match set per request, so
-     * each page is in effect a random 5,000 of it. "agua" (27,598 rows;
-     * 26,548 distinct, 21,769 ids in one 30,000-row response, 142 s, 37 MB)
-     * walked in 7 pages stored 18,803 rows over 15,407 ids — the ~70% that
-     * six random draws cover. No row can fix that: a single page as large as
-     * the match set is the only complete read, and "a" matches 172,247. */
+     * Both endpoints answer HTTP 500 without a JSON Content-Type, the list
+     * and /detalle alike, so the header goes on both (detail hops carry the
+     * row's headers). timeout_ms covers a full 5,000-row page. */
+    .url = "https://informacionpublica.paraguay.gov.py/api/solicitud/?keyword={q}&pageSize=5000",
     .headers = { "Content-Type: application/json" },
     .timeout_ms = 120000,
     .array_path = "data.lista",
-    .detail_key = "id",
-    .detail_url = "https://informacionpublica.paraguay.gov.py/api/solicitud/{v}/detalle",
-    /* One row per (request, reply), not per request: a request answered
-     * twice comes back as two rows sharing `id` and differing only in
-     * `comentario`. "puente": 415 rows, 214 ids, 283 distinct rows, and
-     * id+comentario is 283 too. Keyed on `id` alone, a second reply on a
-     * later page collapsed onto the first. */
-    .id_keys = "id+comentario",
+    .id_keys = "id",
+    .title_keys = "titulo",
     .page_param = "page",
     .page_start = 0,
     .page_zero_based = 1,
     .page_max = 1000,
-    .title_keys = "titulo",
+    .detail_key = "id",
+    .detail_url = "https://informacionpublica.paraguay.gov.py/api/solicitud/{v}/detalle",
+    .detail_path = "data",
     .description = "Every freedom-of-information request made under Paraguay's Law "
-      "5282, searchable by keyword: the request id, the date filed, the "
-      "public body it was addressed to, the current state, the "
-      "statutory deadline, the title of what was asked for and the full "
-      "text of the agency's reply. Fifty-six thousand matches on a "
-      "single common keyword. What citizens have already extracted from "
-      "Paraguayan agencies, with the answers attached, and each id "
-      "resolves to the full case file. Requires a JSON Content-Type "
-      "header on GET" },
+      "5282 that matches a keyword, complete: the request id, the date filed, "
+      "the public body it was addressed to, its state and statutory "
+      "deadline and the title of what was asked for, with the case file — "
+      "the full request and every reply the agency gave — fetched per "
+      "request within the run's detail budget (a request it did not reach "
+      "is marked pending). Requires a JSON Content-Type header" },
 
   { .id = "PY_AIP_INSTITUCIONES", .name = "Portal Unificado de Acceso a la Información Pública — public "
       "bodies",

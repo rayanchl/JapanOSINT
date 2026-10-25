@@ -46,6 +46,72 @@
 
 static const hp_source HP3B31_AFRGOV[] = {
   /* ── South Africa ─────────────────────────────────────────────────────── */
+  { .id = "ZA_GOVERNMENT_GAZETTE", .name = "South Africa — government gazette notices",
+    .name_ja = "南アフリカ 官報", .category = "government",
+    .portal = "https://www.gov.za", .record_type = "za-gazette-notice",
+    .tags = "\"za\",\"gazette\",\"legal\"", .type = "scraped", .mode = HP_HTML,
+    .free_tier = 1,
+    /* RE-POINTED 2026-10-21 (open item B2). The old path 404s; gov.za's own
+     * search form declares GET /search?search_query=. Measured both ways, and
+     * the href_must is the whole point: with no filter the impossible entity
+     * still returns 3 /documents/ anchors (/documents/acts, /documents/latest,
+     * /documents/constitution/...), which would be emitted as gazette notices
+     * for EVERY entity. Narrowed to the notices path:
+     *   search_query=Toyota             3 /documents/notices/ anchors
+     *   search_query=zzqqxxjjwwvv7731   0
+     * A filter that works and chrome that does not are two different
+     * problems, and only the second is fixed by href_must. */
+    .url = "https://www.gov.za/search?search_query={q}",
+    .base = "https://www.gov.za", .href_must = "/documents/notices/",
+    /* filter_query is DROPPED here too, and this row had carried it since it
+     * was written. gov.za filters server-side (measured above), so the local
+     * pass only ever removed the upstream's own hits: a gazette notice is
+     * titled for the INSTRUMENT, not the company — "Competition Act:
+     * approved merger — Barloworld SA (Pty) Ltd and Leatoy (Pty) Ltd" is a
+     * real match for an entity its slug never names. */
+    .description = "National and provincial gazettes — liquidations, estate "
+      "notices, licence grants, expropriations and the regulatory "
+      "determinations that only ever appear in gazette form" },
+
+  { .id = "ZA_MUNICIPAL_MONEY", .name = "South Africa Municipal Money — municipal finances",
+    .name_ja = "南アフリカ 自治体財政", .category = "government",
+    .portal = "https://municipalmoney.gov.za", .record_type = "za-municipal-finance",
+    .tags = "\"za\",\"public-finance\",\"local-government\"", .free_tier = 1,
+    /* RE-POINTED 2026-10-21 (open item B2). municipalmoney.gov.za/search 404s
+     * on three readings nine days apart, but the National Treasury publishes
+     * the data through a cubes API the site itself calls "Municipal Money
+     * API". Measured that day, the filter asked BOTH ways (rule 4d):
+     *   cut=demarcation.label:"Cape Town"           39 facts, total 39
+     *   cut=demarcation.label:"Zzqqxxjjwwvv7731"     0 facts, total 0
+     *   no cut at all                           10,000 of a declared 10,314
+     * so the cut is honoured and this stays an entity pivot. The entity must
+     * be the demarcation LABEL exactly as the API spells it — "Cape Town",
+     * not "City of Cape Town", which returns 0 — which is why the name says
+     * so. `page` is a page NUMBER, so page_size is deliberately NOT declared
+     * (lint-sources: page-size-on-page-number).
+     * This reads ONE of the 21 cubes the API publishes; audit outcomes, cash
+     * coverage and creditor days are siblings nobody has registered yet, so
+     * the description no longer claims them. */
+    .url = "https://municipaldata.treasury.gov.za/api/cubes/uifwexp/facts"
+      "?cut=demarcation.label:%22{q}%22&page=0",   /* exhaustive-ok: one page IS the whole answer for a cut — 39 of a declared 39 for Cape Town, and the entire uncut cube is 10,314 facts; declaring page_param made the engine re-read page 0 and file a repeated-page notice every run */
+    .array_path = "data", .title_keys = "item.label",
+    /* Each of these field names CONTAINS A DOT and is a literal key, not a
+     * path — the shape hp_path's literal-key fallback exists for. One fact is
+     * (municipality, item, year), so the identity is all three: keying on the
+     * demarcation alone would collapse 39 facts onto one. */
+    .id_keys = "demarcation.code+item.code+financial_year_end.year",
+    /* NO paging, measured rather than assumed. With page_param declared the
+     * engine asked page 1, got page 0's bytes back, and filed a shape notice
+     * naming a repeated page on EVERY run — a healthy row crying wolf, which
+     * is how people learn to ignore notices. One page is complete here: a cut
+     * answers 39 of its own declared 39 for Cape Town, and the whole uncut
+     * cube is 10,314 facts, so no single municipality's (item x year) history
+     * comes near a page. */
+    .description = "Unauthorised, irregular, fruitless and wasteful "
+      "expenditure as audited, per municipality per financial year, from "
+      "National Treasury's own figures. Ask it for the municipality's name as "
+      "the Treasury spells it (\"Cape Town\"). Municipal financial distress is "
+      "the leading indicator for service-delivery contracts" },
 
   { .id = "ZA_PMG_PARLIAMENT", .name = "South Africa PMG — parliamentary committee record",
     .name_ja = "南アフリカ議会 委員会記録", .category = "government",

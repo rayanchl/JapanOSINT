@@ -114,11 +114,45 @@ static const hp_source T[] = {
     .collector = "us_civilian", .category = "civilian",
     .description = "Live 311 case feed: service_request_id, status, status_notes, service_name, service_code, description (free text, frequently contains licence plates, vehicle descriptions and named complaints), requested_datetime, updated_datetime, address, lat/long, media_url. Supports &service_code=, &start_date=, &end_date=, &status= filters. One of the only surviving Open311 GeoReport servers in the US.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "civilian-record", .tags = "\"us\",\"civilian\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://mobile311.sfgov.org/open311/v2/requests.json?page_size=5",
+    /* A 48-HOUR WINDOW, NOT A CYCLE, and the measurement that forced it
+     * (2026-10-24; the 136-row collision re-sweep read 100 emitted / 66
+     * stored here, 34% collapsed on an .id_keys that is unique by
+     * definition — rule 4b's worst shape, "a collision that is really a
+     * skip").
+     *
+     * The diagnosis in this file's own rules was that the fix is whichever
+     * sort parameter the upstream honours. It honours NONE. Measured against
+     * the live server: `sort`, `order` and `order_by` are all accepted with
+     * HTTP 200 and IGNORED (same result set as no parameter at all — rule
+     * 4d's shape), and the default order is not monotonic in
+     * requested_datetime in either direction. So the collection this row
+     * pages through has no stable order, while SF files a case about every
+     * 30 s and updates far more; the sweep's run took 164 s, and over that
+     * long the unordered result set reshuffles under the walk. Read fast the
+     * same 20 pages of 5 give 98 distinct ids of 100 (measured), which is why
+     * a short `--run` could never see this: the loss is a function of how
+     * long the walk takes.
+     *
+     * A window over a past instant cannot reshuffle — no case can acquire a
+     * requested_datetime that has already gone by. Measured on one finished
+     * day (2026-10-20, start_date/end_date honoured exactly, 100/100 records
+     * in-window): 25 pages, 2,429 emitted, 2,429 DISTINCT, zero repeats,
+     * every page disjoint, ending on the upstream's own short page of 29; and
+     * the same window read twice returns the identical set in the identical
+     * order. So the window is the stable sort this server does not offer.
+     *
+     * 48 hours (yesterday 00:00Z through tomorrow 00:00Z) because the window
+     * must be wider than the 6 h interval or cases filed after a day's last
+     * run would fall between two windows and never be read at all.
+     * page_size=100 is honoured (so is 200) — it was 5, which spent a page
+     * request on 5 records. page_resume is gone: a cycle over an unordered
+     * collection is the defect, and the engine refuses it for a {date…} row
+     * anyway, since a stored position would pin one day forever. */
+    .url = "https://mobile311.sfgov.org/open311/v2/requests.json?start_date={date-1d:%Y-%m-%dT00:00:00Z}&end_date={date+1d:%Y-%m-%dT00:00:00Z}&page_size=100&page=1",
     .id_keys = "service_request_id",
     .detail_url = "https://mobile311.sfgov.org/open311/v2/requests/{v}.json", .detail_key = "service_request_id",
     .page_walk = 1,
-    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
+    .page_max = 80,   /* ~4,900 records a window at 100 a page = ~49 pages (2,429 for 2026-10-20, measured); headroom above the need, never equal to it */
     .interval = 21600, .free_tier = 1 },
 
   { .id = "us-sf-311-open311-services",

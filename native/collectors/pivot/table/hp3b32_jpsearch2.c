@@ -18,6 +18,43 @@
  * that justify them, which the manifest has nowhere to put. Regenerating over
  * it reverts them, so the generator refuses to without --force. See CLAUDE.md,
  * "Batch tooling".
+ *
+ * ── jpsearch.go.jp/api/item/search/jps-cross, measured 2026-10-24 ─────────
+ *
+ * 130 rows in this tree read that API (63 here, 66 in hp3b32_jpsearch2.c, one
+ * in hp3b22_deeparchive.c), and the registry health sweep read 39 of them
+ * COLLISION — about a fifth of each row's 2,000 records collapsing. Measured on
+ * `sapporo` (hit 5,409), and both halves are properties of the API rather than
+ * of any row:
+ *
+ * 1. **`from + size <= 2000` is a hard bound, and it is served as an EMPTY
+ *    SUCCESS.** `from=1999&size=1` answers normally; `from=2000&size=1`,
+ *    `from=1995&size=10` and `from=1900&size=200` each answer HTTP 200 with
+ *    `hit: 0` and an empty list. So no paging change can reach past the first
+ *    2,000 records of a query, every row's `page_max = 4` at `size = 500` is
+ *    the upstream's ceiling rather than ours, and a reader must not be told to
+ *    raise it. Slicing the QUERY (a narrower `f-db`, or another facet) is the
+ *    only route to the rest.
+ *
+ * 2. **The index reorders between requests, and there is no sort to pin it.**
+ *    Two readings of the same four pages disagreed: in one, `from=0` and
+ *    `from=500` were disjoint; in another they shared 266 of 500, with 66 and
+ *    110 across the next two boundaries. Over the four pages that is 2,000
+ *    records carrying 1,732 distinct ids and **1,732 distinct whole records** —
+ *    the surplus is byte-identical, so nothing distinguishable is lost at the
+ *    sink, but a record that the shuffle kept out of all four pages was never
+ *    fetched at all. `sort=id`, `sort=-id`, `sort=common.title`,
+ *    `sort=-common.lastUpdatedDate`, `sortBy=id` and `order=id` were each sent
+ *    with the controls `sort=frobnicate` and `frobnicate=7`, and every one of
+ *    the six "sorted" answers is identical to the two control answers: the
+ *    parameter is not honoured, the answer merely moves (CLAUDE.md, batch 55).
+ *
+ * So these rows are a 2,000-record sample of a larger collection, redrawn each
+ * run, and that is now DISCLOSED rather than implied: `hit` was added to the
+ * declared-total lists in lib/jsonlist.c and lib/pagewalk.c, so each run files
+ * a truncation notice naming what the upstream says it holds against what the
+ * row read. Do not "fix" the collision by re-keying: `id` is the item id and is
+ * already correct, and the repeats are the upstream's own bytes.
  */
 #include "lib/hpengine.h"
 

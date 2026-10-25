@@ -29,10 +29,11 @@ static const hp_source T[] = {
     .collector = "sk_corporate", .category = "corporate",
     .description = "Keyless JSON search over the Slovak Register právnických osôb. Every hit is already a rich record: internal id, identifiers (ICO with validFrom), full name history with validFrom/validTo, address history, legalForms, establishment/termination dates, sourceRegister (Obchodný register / Živnostenský register), legalStatuses (e.g. 'Zaniknutá spoločnosť'), and empty-or-populated statutoryBodies and stakeholders arrays. The `id` is the key to the entity detail hop.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "corporate-record", .tags = "\"sk\",\"corporate\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "sk",
-    .url = "https://api.statistics.sk/rpo/v1/search?fullName=Slovensk&limit=5",
+    .url = "https://api.statistics.sk/rpo/v1/search?fullName=Slovensk&limit=100",   /* exhaustive-ok: this endpoint has NO offset — limit=5&offset=5 returns byte-identical bytes to limit=5 (measured 2026-10-20), so one request of 100 is all it can be asked for; limit=1000 times out */
     .array_path = "results",
     .detail_url = "https://api.statistics.sk/rpo/v1/entity/{v}", .detail_key = "id",
     .page_walk = 1,
+    .page_max = 2,   /* 2 x 100 records a run. This row has a detail hop, and the per-run hop budget is 1,000 OR 120 SECONDS — the CLOCK is what binds on a slow host, measured on api.safecast.org, which reached 116 hops of 1,000 before its 120s ran out (2026-10-20). So a run is sized to what can plausibly be deepened rather than to what the API will serve: records past the budget are stamped _detail_pending and, because the budget is spent in page order, never deepened on a later run either. The per-host hop rate is NOT measured for this row — 200 is the family default and the number to revisit if its detail-truncation notice shows pending records. See docs/probe-sized-pages-2026-10-20.md */
     .interval = 86400, .free_tier = 1 },
 
   { .id = "sk-rpvs-pvs-expand-partner",

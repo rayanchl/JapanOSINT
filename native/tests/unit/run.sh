@@ -77,23 +77,121 @@ prune_orphans() {                       # stdin: object paths, stdout: the live 
   done
 }
 
+under_of() {                            # a test's #included .c, as an object path
+  grep -oE '#include "\.\./\.\./[a-z_/]+\.c"' "$1" |
+    head -1 | sed 's|#include "../../||; s|"$||; s|\.c$|.o|'
+}
+
+# ONE PARTIAL LINK INSTEAD OF 84 FULL ONES.
+#
+# Every test links the whole tree, so the link line used to be ~1,860 objects
+# and the suite spent its time in ld rather than in the tests: measured
+# 2026-10-23 on this tree, 35.7 s per test — about fifty minutes of pure
+# linking, which is what made the TSan job hit its 90-minute ceiling.
+#
+# `ld -r` merges the objects NO test excludes into one relocatable object once
+# (1.2 s), and each test then links that plus the 53 objects some test does
+# exclude: 2.7 s, a 13x saving, for a binary 4 KB different from the old one.
+#
+# It is a PARTIAL link, not an archive, and that distinction is the whole
+# reason this is safe. An `ar` archive measured 0.27 s and produced a binary
+# 10.5 MB against 128.3 MB: archive members are pulled only to satisfy an
+# undefined symbol, and this tree's collectors self-register from constructors
+# that nothing references, so the test ran against an EMPTY registry (`[db]
+# seeded sources from registry (0 new … 58047 stale pruned)`) and still printed
+# "all passed", because the one it was checked with needs only *some* scheduled
+# row. A partial link keeps every section and every .init_array entry, so the
+# registry seeds the same 58,047 rows it does without this.
+#
+# It also keeps the duplicate-symbol check the prune_orphans note above exists
+# for — verified rather than assumed: `ld -r` over two objects defining one
+# function reports "multiple definition" and exits 1, exactly as the final link
+# does. So a stale object that redefines a symbol still fails the build, once
+# here instead of 84 times. A duplicate REGISTRATION (same id, different
+# symbol) is not a link error either way and is still caught by prune_orphans.
+live_objs="$SCRATCH/live.txt"
+find "$OBJDIR" -name '*.o' ! -name 'main.o' | prune_orphans | sort -u > "$live_objs"
+for src in tests/unit/test_*.c; do under_of "$src"; done |
+  sed '/^$/d' | sort -u | sed "s|^|$OBJDIR/|" > "$SCRATCH/under.txt"
+grep -vxFf "$SCRATCH/under.txt" "$live_objs" > "$SCRATCH/common.txt"
+
+COMMON=""
+# shellcheck disable=SC2046
+if ld -r -o "$SCRATCH/common.o" $(cat "$SCRATCH/common.txt") 2>"$SCRATCH/ldr.err"; then
+  COMMON="$SCRATCH/common.o"
+  echo "--- partial link: $(wc -l < "$SCRATCH/common.txt") objects -> common.o," \
+       "$(wc -l < "$SCRATCH/under.txt") kept separate ---"
+else
+  # Not fatal: fall back to the old full object list. A real duplicate symbol
+  # then fails every test's own link instead, so nothing is hidden by this.
+  echo "--- partial link unavailable, linking every object per test ---" >&2
+  sed -n '1,5p' "$SCRATCH/ldr.err" >&2
+fi
+
+objs_for() {                            # the link line for a test's own object
+  local under="$1"
+  if [ -n "$COMMON" ]; then
+    printf '%s %s' "$COMMON" "$(grep -vxF "$OBJDIR/$under" "$SCRATCH/under.txt")"
+  else
+    grep -vxF "$OBJDIR/$under" "$live_objs"
+  fi
+}
+
+# ONE SEEDED DATABASE, COPIED, INSTEAD OF 88 DERIVED FROM SCRATCH.
+#
+# db_open() applies the schema, runs the boot migrations and seeds `sources`
+# from the registry — 58,055 sources x two prepared statement steps, every one
+# of which ThreadSanitizer instruments. Measured 2026-10-24: 0.75 s natively,
+# 30 s under TSan, paid once per test because each test gets its own database.
+# The TSan job's log is a column of those lines: test_alert_tenancy opens 39
+# databases and spent 21 of the job's 82.8 minutes doing it.
+#
+# So build that database ONCE here and copy the file per test. Each test then
+# sees exactly what its own first db_open() used to leave it — schema,
+# migrations, a seeded sources table and nothing else, because that is all
+# seed_template.c does — and its own db_open() matches the fingerprint
+# core/db.c now stamps into `_registry_seed` and skips the pass in 0.07 s.
+#
+# A failure here is NOT fatal: without a template each test creates its own
+# database exactly as before, which is slow and correct. That matters because
+# the alternative — a test silently running against a database somebody else
+# prepared — is the `ar` trap one section up, and the difference between the
+# two is that this one is a file copy of a database the suite's own code wrote.
+TEMPLATE=""
+echo "--- seed template (one db_open, copied per test) ---"
+# shellcheck disable=SC2046 disable=SC2086
+if $CC $CFLAGS tests/unit/seed_template.c $(objs_for "") \
+      -o "$SCRATCH/seed_template" $LDLIBS 2>"$SCRATCH/seed_template.cc" &&
+   JO_DB="$SCRATCH/template.db" $RUNNER "$SCRATCH/seed_template"; then
+  TEMPLATE="$SCRATCH/template.db"
+  rm -f "$SCRATCH/seed_template"
+else
+  echo "--- no seed template; every test will derive its own database ---" >&2
+  sed -n '1,10p' "$SCRATCH/seed_template.cc" >&2
+fi
+
 fail=0
 for src in tests/unit/test_*.c; do
   name=$(basename "$src" .c)
   # Which object does this test include? (duplicate symbols if also linked.)
-  under=$(grep -oE '#include "\.\./\.\./[a-z_/]+\.c"' "$src" |
-          head -1 | sed 's|#include "../../||; s|"$||; s|\.c$|.o|')
-  objs=$(find "$OBJDIR" -name '*.o' ! -name 'main.o' \
-         ${under:+! -path "$OBJDIR/$under"} | prune_orphans | sort -u)
+  under=$(under_of "$src")
+  objs=$(objs_for "$under")
 
   echo "--- $name ($OBJDIR, excludes ${under:-<none>}) ---"
   # shellcheck disable=SC2086
   if ! $CC $CFLAGS "$src" $objs -o "$SCRATCH/$name" $LDLIBS 2>"$SCRATCH/$name.cc"; then
     echo "BUILD FAILED"; sed -n '1,20p' "$SCRATCH/$name.cc"; fail=1; continue
   fi
+  # A copy of the seeded template, or nothing — in which case the test's own
+  # db_open() creates and seeds the file itself, as it always did. The -wal and
+  # -shm are NOT copied: the template was closed cleanly, so its WAL is already
+  # folded in, and copying a stale sidecar is how a copied SQLite database goes
+  # wrong.
+  [ -n "$TEMPLATE" ] && cp "$TEMPLATE" "$SCRATCH/$name.db"
   JO_DB="$SCRATCH/$name.db" $RUNNER "$SCRATCH/$name"
   rc=$?
   [ $rc -eq 0 ] || { echo "FAILED (exit $rc)"; fail=1; }
+  rm -f "$SCRATCH/$name" "$SCRATCH/$name.db"*   # the -wal/-shm sidecars too
 done
 
 # tools/cleanup_stale_uids.py deletes rows from a live database. Its self-test
@@ -101,5 +199,15 @@ done
 # replacement is proven go, and nothing else does.
 echo "--- cleanup_stale_uids self-test ---"
 python3 tools/cleanup_stale_uids.py --self-test || { echo "FAILED"; fail=1; }
+
+# tools/measure_thresholds.py is the harness for open item E1 — the eleven
+# embedding thresholds that have never been measured on the production model.
+# It needs a real embedding server to measure anything and refuses a stub for
+# that, so what runs here is its own self-test: a stub server in-process, which
+# tests THE TOOL. It pins the one thing that would silently invert a reading —
+# that an L2 distance is swept the other way round from a cosine — and that it
+# reads all eleven keys out of core/thresholds.c rather than keeping a copy.
+echo "--- measure_thresholds self-test ---"
+python3 tools/measure_thresholds.py --self-test || { echo "FAILED"; fail=1; }
 
 exit $fail

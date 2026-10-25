@@ -221,12 +221,31 @@ VJSON(geo_imgw_synop, "geo-imgw-synop", "IMGW Poland — synoptic observations",
   "en", "[\"poland\",\"imgw\",\"observations\"]", 3600,
   "Polish synoptic station observations; station names, no coordinates in payload.");
 
-VJSON(geo_ioc_sealevel_stations, "geo-ioc-sealevel-stations", "IOC Sea Level Monitoring — global station list", "IOC 潮位監視 — 世界観測所一覧",
-  "environment", "ocean",
-  "https://www.ioc-sealevelmonitoring.org/service.php?query=stationlist&showall=all&format=json",
-  "",
-  "en", "[\"sealevel\",\"tidegauge\",\"ioc\",\"global\",\"tsunami\"]", 21600,
-  "Global GLOSS/IOC tide gauge registry with coordinates and operational status; the backbone of tsunami sea-level verification.");
+/* geo-ioc-sealevel-stations was RETIRED 2026-10-24 as a duplicate endpoint.
+ * It read `service.php?query=stationlist&showall=all` — byte for byte the URL
+ * `ioc-sea-level-stations` (collectors/sources/mar_ioc_sea_level_stations.c)
+ * already reads — so the pair stored every record twice, once under each
+ * source id (uid = source_id|remote_key), and spent two requests per cycle
+ * doing it. The hand-written row is the one to keep: it keys on
+ * `code|sensor|sensorid|updatedata`, which is the upstream's own identity, and
+ * it carries the gauge position and `lasttime` as published_at. This row had
+ * no `id_keys` at all and stored 1,763 of 2,385 emitted (measured
+ * 2026-08-24), and it COULD NOT be repaired in place: VJSON_KEYED takes one
+ * field and this upstream needs four.
+ *
+ * Why neither `make lint-sources` nor the 531-pair baseline ever saw it: the
+ * dup-endpoint check groups on host+path+QUERY, textually, and the three
+ * registrations of this one collection differed by a query parameter —
+ * `showall=all`, `showall=a`, and absent. Measured live 2026-10-23: the
+ * service IGNORES an unrecognised value, so `showall=a` returns byte-identical
+ * bytes to no parameter at all (1,924 rows), while `showall=all` returns
+ * 2,349. A parameter the server discards hides a duplicate from a textual
+ * comparison. The 107 pairs that differ only in a record-LIMIT parameter are
+ * the decidable half of the same blind spot — a limit cannot select a
+ * different dataset — and are listed, unverified, in
+ * docs/dup-endpoints-behind-a-limit-2026-10-24.tsv.
+ * This removal is recorded in
+ * docs/removed-sources-2026-10-24-ioc-dup-endpoint.tsv. */
 
 VJSON(geo_ipma_forecast_cities, "geo-ipma-forecast-cities", "IPMA Portugal — districts and islands", "ポルトガルIPMA — 県・諸島一覧",
   "environment", "weather",

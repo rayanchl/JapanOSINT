@@ -1311,6 +1311,12 @@ static const hp_source HP3B19_HEALTH[] = {
     .record_type = "food-alert-notice",
     .tags = "\"uk\",\"fsa\",\"food-safety\",\"allergen\",\"recall\",\"alert\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    /* `-created` stays. The register is COMPLETE inside the 20-page ceiling, so
+     * newest-first costs nothing: the FSA publishes no total, so its size was
+     * measured by bisecting `_offset` on 2026-10-22 — 1,370 alerts, 14 pages of
+     * 100, the oldest 2018-01-09. (`_sort=created` is honoured, and would be the
+     * fix if the register ever outgrew the ceiling.) An hourly row over a
+     * register that fits in one run has no cycle to compose with. */
     .url = "https://data.food.gov.uk/food-alerts/id?_limit=100&_sort=-created",
     .array_path = "items",
     .date_keys = "created",
@@ -1997,25 +2003,38 @@ static const hp_source HP3B19_HEALTH[] = {
     .record_type = "sequence-metadata-record",
     .tags = "\"ena\",\"ebi\",\"genomics\",\"sars-cov-2\",\"sequencing\",\"provenance\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ebi.ac.uk/ena/portal/api/search?result=read_run&query=tax_tree(2697049)%20AND%20first_public%3E%3D{date-30d}&fields=run_accession,sample_accession,study_accession,country,location,collection_date,center_name,instrument_platform,library_strategy,first_public&format=json&limit=0",
-    /* A 30-day WINDOW, complete inside it. The ENA Portal API answers `offset`
-     * with HTTP 400 "Unsupported param offset" (2026-10-22), so the offset
-     * cycle read the first 1,000 of 7,556,500 runs every day (the count
-     * endpoint's total). `limit=0` is the API's complete read, but 7.5
-     * million runs is ~2 GB a request and no cadence wants that; the counts
-     * say what a window holds — 0 runs made public in the last 7 days, 6,362
-     * in 30, 47,270 in a year — so the row reads everything made public in
-     * the last 30 days (`first_public>={date-30d}`, ~2 MB) at limit=0, daily:
-     * every new run is read, and a run that becomes public late is still
-     * inside the window on the next day. The 7.5 million already-public runs
-     * are NOT re-read by this row — that is the trade, stated here. */
+    /* NO PAGING, BY THE UPSTREAM'S CHOICE: ebi.ac.uk answers
+     * {"message":"Unsupported param offset"} with HTTP 400 to any offset, so
+     * the `page_param = "offset"` this row carried never worked. It read 1,000
+     * of 7,556,500 records (the endpoint's own /count, 2026-10-19), page 2 was
+     * refused, and because a failed page deliberately stores no resume
+     * position the same 1,000 came back on every run for ever at rc=0.
+     *
+     * What the endpoint does honour is a date predicate plus `limit=0`, which
+     * returns the whole matching set: measured 5,910 records for
+     * first_public 2026-10-01..07, exactly equal to /count for the same query.
+     * So the slice is a week of publication dates and window_days reads one
+     * per run, forward from the start of the pandemic deposits and then
+     * staying on the trailing week. ~350 daily runs to walk the history, which
+     * is the same shape as wayback_jp's 2,064-page index over ~207 runs. */
+    .url = "https://www.ebi.ac.uk/ena/portal/api/search?result=read_run&query=tax_tree(2697049)%20AND%20first_public%3E%3D{wstart}%20AND%20first_public%3C%3D{wend}&fields=run_accession,sample_accession,study_accession,country,location,collection_date,center_name,instrument_platform,library_strategy,first_public&format=json&limit=0",
+    /* The ENA Portal API answers a BARE ROOT ARRAY, and a bare root array
+     * must be declared (CLAUDE.md): with no array_path the engine mines the
+     * densest array of OBJECTS, which is the root only while the records stay
+     * flat. These are flat today — which is why the row measured correctly
+     * without it — so this is a latent hazard closed, not a bug fixed. Found
+     * by another session that rewrote these same rows and declared it. */
     .array_path = ".",
     .date_keys = "first_public",
     .id_keys = "run_accession",
     .interval = 86400,
-    /* 120 s, not the engine's 20 s default: the other session that fixed this
-     * row the same day measured the COLD query at 38.6 s (3.8 s warm) and saw
-     * the first fixed run time out at bytes=0 under the default. */
+    .window_days = 7,
+    .window_from = "2020-01-01",
+    /* 120 s, not the engine's 20 s default. Main measured this query COLD at
+     * 38.6 s (3.8 s warm) — it is computed over a 7.5-million-run tax tree —
+     * and at the default the row timed out with bytes=0 and filed a
+     * fetch-failure for a query that works. A row whose remedy is "wait" must
+     * not disclose itself as broken. */
     .timeout_ms = 120000,
     .title_keys = "run_accession",
     .description = "Every SARS-CoV-2 sequencing run deposited in the European "
@@ -2031,19 +2050,38 @@ static const hp_source HP3B19_HEALTH[] = {
     .record_type = "sequence-metadata-record",
     .tags = "\"ena\",\"ebi\",\"genomics\",\"influenza\",\"sample\",\"provenance\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    /* The ENA Portal API answers `offset` with HTTP 400 "Unsupported param
-     * offset" (2026-10-22), so the offset cycle this row carried read its
-     * first 1,000 samples every day and never advanced — the very row that
-     * taught the engine to say so (hptest 40b-iii), found again by
-     * tools/audit_cycle_advance.py. The API's own complete read is
-     * `limit=0`: ONE request answers the whole result set — 61,625 samples,
-     * 61,625 distinct accessions, 18.9 MB in 12 s, equal to the count
-     * endpoint's 61,625 (measured the same day). No paging, no cycle. */
-    .url = "https://www.ebi.ac.uk/ena/portal/api/search?result=sample&query=tax_tree(11320)&fields=sample_accession,description,country,location,collection_date,center_name,host,isolate,strain,serotype&format=json&limit=0",
+    /* NEITHER paged NOR windowed, and the second half of that is the measured
+     * part. ENA honours no offset (see the SARS-CoV-2 row above), and the
+     * obvious repair — the same first_public window — would silently DROP
+     * records here: this collection holds 61,537 samples and only 60,213 of
+     * them answer `first_public>=1990-01-01`, with 0 answering
+     * `first_public<1990-01-01`, so 1,324 samples carry no publication date at
+     * all and no date window could ever reach them (measured 2026-10-19).
+     * A date predicate is only exhaustive where every record is dated.
+     *
+     * It does not need one: at `limit=0` the whole collection comes back in
+     * one request — 61,537 records, 2.3 MB, 4.9 s, equal to the endpoint's own
+     * /count. One request a day, complete, nothing to resume. */
+    .url = "https://www.ebi.ac.uk/ena/portal/api/search?result=sample&query=tax_tree(11320)&fields=sample_accession,description,country,location,collection_date,center_name,host,isolate,strain,serotype,first_public&format=json&limit=0",
+    /* The ENA Portal API answers a BARE ROOT ARRAY, and a bare root array
+     * must be declared (CLAUDE.md): with no array_path the engine mines the
+     * densest array of OBJECTS, which is the root only while the records stay
+     * flat. These are flat today — which is why the row measured correctly
+     * without it — so this is a latent hazard closed, not a bug fixed. Found
+     * by another session that rewrote these same rows and declared it. */
     .array_path = ".",
+    /* `first_public` is in the FIELD list although nothing filters on it here,
+     * which is main's finding on its own version of this row: a record stamped
+     * with the date it became public is what lets `date_keys` order the feed at
+     * all, and a field absent from the list is absent from the stored record.
+     * The 1,324 samples that carry no first_public simply have no date, which
+     * is the honest answer and the very reason this row is not windowed. */
+    .date_keys = "first_public",
     .id_keys = "sample_accession",
     .interval = 86400,
-    .timeout_ms = 300000,   /* 18.9 MB in 82 s through the engine; the 20 s default is not for a whole-collection read */
+    /* Same archive and the same cold-query cost as its two read_run siblings
+     * (4.9 s warm here, 2026-10-19). */
+    .timeout_ms = 120000,
     .title_keys = "sample_accession",
     .description = "Influenza A virus samples registered in the European Nucleotide "
       "Archive with host species, isolate and strain names, serotype, "
@@ -2052,6 +2090,28 @@ static const hp_source HP3B19_HEALTH[] = {
       "shape that avian influenza spillover analysis actually needs, "
       "and it is public with no account" },
 
+  /* MAIN'S FIVE-ROW SET IS TAKEN HERE, and the deciding reason is a
+   * measurement this branch did not have. Main read all 360,690 MTB runs in
+   * one `limit=0` request and got **HTTP 200 with 331,580 rows — 8% short, in
+   * every date half**: a silent cut of an accession-ordered stream, not a
+   * truncated tail, and nothing in the response says so. Split on
+   * `first_public` the same day, every block answers exactly its own count
+   * (76,189 / 95,032 / 85,283 / 57,476 / 46,710 = 360,690). So the four static
+   * era rows are not tidiness, they are what makes the read COMPLETE, and a
+   * 200 carrying fewer rows than the count endpoint is a cut to measure for.
+   *
+   * It also settles an overlap this merge would otherwise have shipped. This
+   * branch read MTB with window_days = 90 walking forward from 2010, which
+   * covers exactly the span the four era rows cover; keeping both would have
+   * stored every MTB run TWICE under two source ids, and no record count
+   * would have shown that as wrong — a second copy looks just like a second
+   * source. Main's set also completes on day one where the cycle needs ~65
+   * daily runs to catch up.
+   *
+   * The window stays on SARS-CoV-2, which has no era rows and whose 7.5
+   * million runs a 30-day tail never reaches; its slices are ~15k records,
+   * far under the size where that cut appears, and each measured equal to the
+   * endpoint's own /count. */
   { .id = "ENA_PATHOGEN_MTB_RUNS", .name = "ENA — Mycobacterium tuberculosis sequencing run metadata (last 90 days)",
     .name_ja = "欧州ヌクレオチドアーカイブ 結核菌 シーケンスラン メタデータ（直近90日）",
     .category = "health", .portal = "https://www.ebi.ac.uk/ena",

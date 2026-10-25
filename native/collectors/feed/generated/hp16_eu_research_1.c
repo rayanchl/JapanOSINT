@@ -53,10 +53,11 @@ static const hp_source T[] = {
     .collector = "eu_research", .category = "research",
     .description = "Repositories and aggregators OpenAIRE harvests: official/English name, type scheme, OpenAIRE compatibility level, website, logo, original ids. Provenance registry - tells you which repository a record actually came from.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "research-record", .tags = "\"eu\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://api.openaire.eu/graph/v1/dataSources?search=Zenodo&pageSize=5",
+    .url = "https://api.openaire.eu/graph/v1/dataSources?search=Zenodo&pageSize=100",
     .array_path = "results",
     .detail_url = "https://api.openaire.eu/graph/v1/dataSources?search={v}&pageSize=50", .detail_key = "officialName",
     .page_walk = 1,
+    .page_max = 2,   /* 2 x 100 records a run. This row has a detail hop, and the per-run hop budget is 1,000 OR 120 SECONDS — the CLOCK is what binds on a slow host, measured on api.safecast.org, which reached 116 hops of 1,000 before its 120s ran out (2026-10-20). So a run is sized to what can plausibly be deepened rather than to what the API will serve: records past the budget are stamped _detail_pending and, because the budget is spent in page order, never deepened on a later run either. The per-host hop rate is NOT measured for this row — 200 is the family default and the number to revisit if its detail-truncation notice shows pending records. See docs/probe-sized-pages-2026-10-20.md */
     .interval = 86400, .free_tier = 1 },
 
   { .id = "openaire-organizations-search",
@@ -64,11 +65,12 @@ static const hp_source T[] = {
     .collector = "eu_research", .category = "research",
     .description = "118 org records for a name query: legal name, legal short name, website, country, OpenAIRE org id, pids and originalIds. The id used to attribute research products and projects to an institution.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "research-record", .tags = "\"eu\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://api.openaire.eu/graph/v1/organizations?search=Kyoto&pageSize=5",
+    .url = "https://api.openaire.eu/graph/v1/organizations?search=Kyoto&pageSize=100",
     .array_path = "results",
     .detail_url = "https://api.openaire.eu/graph/v1/organizations?search={v}&pageSize=50", .detail_key = "legalName",
     .page_walk = 1,
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
+    .page_max = 2,   /* 2 x 100 records a run. This row has a detail hop, and the per-run hop budget is 1,000 OR 120 SECONDS — the CLOCK is what binds on a slow host, measured on api.safecast.org, which reached 116 hops of 1,000 before its 120s ran out (2026-10-20). So a run is sized to what can plausibly be deepened rather than to what the API will serve: records past the budget are stamped _detail_pending and, because the budget is spent in page order, never deepened on a later run either. The per-host hop rate is NOT measured for this row — 200 is the family default and the number to revisit if its detail-truncation notice shows pending records. See docs/probe-sized-pages-2026-10-20.md */
     .interval = 86400, .free_tier = 1 },
 
   { .id = "openaire-products-by-project",
@@ -76,11 +78,12 @@ static const hp_source T[] = {
     .collector = "eu_research", .category = "research",
     .description = "25 outputs produced under one funded project, full product records with authors and ORCIDs. The grant->deliverables hop, and the reason the project id above matters. Verified with a real project id pulled from the projects search.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "research-record", .tags = "\"eu\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://api.openaire.eu/graph/v1/researchProducts?relProjectId=corda__h2020::6c228bea4ee8a4ef22cd1d4fa079b63a&pageSize=5",
+    .url = "https://api.openaire.eu/graph/v1/researchProducts?relProjectId=corda__h2020::6c228bea4ee8a4ef22cd1d4fa079b63a&pageSize=100",
     .array_path = "results",
     .detail_url = "https://api.openaire.eu/graph/v1/researchProducts?relProjectId={v}&pageSize=100", .detail_key = "id",
     .page_walk = 1,
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
+    .page_max = 2,   /* 2 x 100 records a run. This row has a detail hop, and the per-run hop budget is 1,000 OR 120 SECONDS — the CLOCK is what binds on a slow host, measured on api.safecast.org, which reached 116 hops of 1,000 before its 120s ran out (2026-10-20). So a run is sized to what can plausibly be deepened rather than to what the API will serve: records past the budget are stamped _detail_pending and, because the budget is spent in page order, never deepened on a later run either. The per-host hop rate is NOT measured for this row — 200 is the family default and the number to revisit if its detail-truncation notice shows pending records. See docs/probe-sized-pages-2026-10-20.md */
     .interval = 86400, .free_tier = 1 },
 
   { .id = "openaire-project-by-id",

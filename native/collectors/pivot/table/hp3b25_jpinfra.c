@@ -31,7 +31,14 @@ static const hp_source HP3B25_JPINFRA[] = {
     .headers = { "Referer: https://www.jepx.jp/" },
     .csv_delim = "comma",
     .date_keys = "受渡日",
-    .id_keys = "受渡日",
+    /* 受渡日 / 年月日 alone is the DELIVERY DAY, and this file is one row per
+     * half-hour slot, so the day is a dimension and the slot code completes
+     * the identity. It read as healthy because the content hash separated
+     * rows the key merged — which also means an upstream price CORRECTION
+     * would have landed as a second row instead of updating the first.
+     * Measured 2026-10-24, once the csv_delim fix made the fields readable
+     * at all: 9,984 of 9,984 and 9,953 of 9,953 distinct on the pair. */
+    .id_keys = "受渡日+時刻コード",
     .interval = 21600,
     .title_keys = "受渡日",
     .description = "The Japan Electric Power Exchange day-ahead result file for the "
@@ -54,7 +61,14 @@ static const hp_source HP3B25_JPINFRA[] = {
     .headers = { "Referer: https://www.jepx.jp/" },
     .csv_delim = "comma",
     .date_keys = "年月日",
-    .id_keys = "年月日",
+    /* 受渡日 / 年月日 alone is the DELIVERY DAY, and this file is one row per
+     * half-hour slot, so the day is a dimension and the slot code completes
+     * the identity. It read as healthy because the content hash separated
+     * rows the key merged — which also means an upstream price CORRECTION
+     * would have landed as a second row instead of updating the first.
+     * Measured 2026-10-24, once the csv_delim fix made the fields readable
+     * at all: 9,984 of 9,984 and 9,953 of 9,953 distinct on the pair. */
+    .id_keys = "年月日+時刻コード",
     .interval = 21600,
     .title_keys = "年月日",
     .description = "JEPX one-hour-ahead (intraday) market results: per date and "
