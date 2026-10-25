@@ -194,6 +194,55 @@ and the finding there is the upstream's.
 Full audit of how each collector behaves today:
 `native/collectors/SOURCE_REALITY_REPORT.md`.
 
+**THE REGISTRY HAS NOW BEEN READ END TO END, AND THE READING IS THE POINT**
+(2026-10-25, `docs/registry-health-sweep-2026-10-25.tsv`). Every scheduled row
+run through the real binary against a fresh copy of a warm template database:
+**55,834 rows — 49,375 OK, 4,761 FETCH_FAILED, 631 EMITS_NOTHING, 472 SLOW
+(unmeasured, not failed), 461 COLLISION, 114 GATED, 19 POD, 1 SINK_MISMATCH.**
+Four lessons from working it, each costing more than the number it corrected:
+
+* **A GATE THAT RUNS EVERY ROW IN A FRESH DATABASE CANNOT SEE A CYCLE'S
+  POSITION, so it reads window 1 of N and calls it dead.** All 47 KKJ
+  prefecture rows came back `EMITS_NOTHING` — forty-seven healthy sources in a
+  defect bucket — because a `window_days` row with no stored position starts at
+  its declared `window_from`, and kkj.go.jp answers that first window with
+  `<SearchHits>0</SearchHits>` in 144 bytes while holding 218 records in a
+  window near today. `WINDOW_EMPTY` joins `POD` and `GATED` as the third
+  correction of the same shape: a source behaving exactly as designed does not
+  belong in a defect bucket, and the note says to re-read with a window near
+  today before treating it as a finding. **The tidy-up that followed was
+  measured and REFUSED**: Japan's FY2021 boundary really does hold (Aomori 0 in
+  each of 2021-01..03, then 108, 68, 117 from April; the quarter empty for
+  Hokkaido, Aichi, Osaka, Fukuoka and Okinawa), but **Tokyo has 1 record in
+  it**, so moving `window_from` would discard a notice to save two runs on a
+  fresh install. Six prefectures agreeing is not the seventh.
+* **THE LARGEST FAILURE CLASS SAID NOTHING, BECAUSE THE GATE WAS MATCHING
+  STDERR WHILE THE ANSWER SAT IN A ROW BESIDE IT.** All 4,761 FETCH_FAILED rows
+  carried one fixed sentence — "the upstream refused the request or served a
+  body that did not parse" — which is the verdict restating itself. The engine
+  has written the cause as DATA since 2026-10-06 and, for every other
+  collector, since 2026-10-22, the nine TLS causes among it. That is rule 4c
+  against the engine the tool reports on. `fetch_failure_reason()` reads
+  whichever fields are present rather than assuming a shape, because the two
+  writers differ on purpose; a status of -1 is "nobody measured one" and is NOT
+  printed as a status, for the reason this file records three times over.
+* **MOST OF A COLLISION LIST IS STALE OR ALREADY ANSWERED, so re-measure
+  before reading.** Of the 30 rows losing ≥250 records a run, 8 were fixed
+  earlier the same week and the sweep simply predated the fix (UK Parliament
+  10,000/10,001, JCG 19,370/19,370, VNDirect, SECOP, dataeuropa), and 12 more
+  carried their own arithmetic in a comment saying "do not re-key this row".
+  The single biggest number in the whole sweep, `gr-diavgeia-positions` at
+  25,287 emitted / 233 stored, is a 1.6 MB file in which the upstream repeats
+  233 position titles 25,188 times byte for byte. **A collision count ranks
+  rows to look at; it is never a budget of what they cost.**
+* **AND THE GUARD GIVES A FREE DISCRIMINATOR NOBODY WAS USING.** The in-page
+  content-hash guard covers one page or array, so **a SINGLE-REQUEST row's
+  surviving collisions are byte-identical by construction** and need no
+  investigation at all. Validated rather than assumed: `geo-jrc-inform-scores`
+  serves 46,461 rows carrying exactly **46,079 distinct whole records**, which
+  is precisely what the engine stored. That took the list worth reading from
+  419 rows to the handful that make more than one request.
+
 **Every registered source is now proof-of-life verified.** Batch 14's 1,001
 unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `vsrc14_*`); batch 15 added 1,029 more (`vsrc15_*`, see
@@ -1190,6 +1239,33 @@ Where the tree actually stands, as `make audit-sources` reports it:
   the remedy in its own body: skip exists only on **`/ODataFeed/`**, which
   additionally needs `$format=json` or the 200 is Atom XML. Every CBS row that
   needs to page needs that path.
+
+  **AND THE SAME SHAPE WAS STILL IN THE TREE FIVE MONTHS LATER, FOUND FROM A
+  COLLISION COUNT** (2026-10-25). `geo-copernicus-odata-s2` declared no
+  `$orderby`, and an OData archive's unordered default is near INSERTION order
+  — so its twenty pages were an arbitrary slice of 2015 products, re-stored
+  every hour while 40 million accumulated behind them. The only symptom was
+  2,000 emitted / 1,703 stored, and that is the harmless half: an unordered
+  walk that serves one record twice skips another, and **the skip leaves no
+  trace**. So a collision count is worth reading as a question about ORDER, not
+  only about identity.
+  Three things the fix measured, one request each. The endpoint VALIDATES its
+  query string (`frobnicate=7` is HTTP 400), which is what makes an accepted
+  `$orderby` evidence rather than a guess — batch 55's control, in the
+  direction that licenses trusting a parameter. `$top` is honoured to 1,000 and
+  422s at 2,000, and `@odata.nextLink` had been paging the row all along, so
+  the defect was never the paging. And ASCENDING is the half that matters:
+  Sentinel-2 publishes 1,915 products an hour, new products land at the TAIL of
+  an ascending walk where the walk has not been yet, and a three-page read of a
+  two-hour window came back **2,737 distinct of 2,737**. Descending would have
+  kept the drift. The window is `{ago:25200}` — seven hours, not the row's
+  declared one — because **a row's declared interval is not the cadence that
+  runs**: the system-wide policy above it defaults to six, so a window sized on
+  3600 drops five hours of publications on an unmodified install. With
+  `$count=true` the window states its own total, so an overflow discloses
+  itself instead of looking like a quiet hour. Measured: 8,620 emitted, 8,620
+  stored, 9 requests, no notices, records dated yesterday and today instead of
+  2015.
 
   Two more generalisable findings from the pass:
 
@@ -2327,6 +2403,37 @@ Three things about it generalise past Westminster:
 Measured after: 10,000 of 10,000 on all four, and 20,000 distinct over two
 consecutive runs of the oral-questions row against one database with the
 position advancing `_page=20` → `_page=40`.
+
+**AND THE SAME LESSON AGAIN A DAY LATER, WITH ITS ANSWER TEN LINES AWAY**
+(2026-10-25). `TX_TCEQ_NOTICES_OF_ENFORCEMENT` keyed on `noe_id`, and a NOTICE
+of enforcement covers several investigations — so it identifies a notice and
+not a record, exactly as a `uin` identifies a question within a session. The
+upstream proves it in one request: noe_id 459,430,322,011,133.00 carries two
+rows differing in `invstn_no` (920618 against 1120136) and in the docket's own
+date suffix — two real investigations under one notice, not a repeat. Over the
+whole 20,000-row read: 20,000 distinct WHOLE records against 19,595 distinct
+noe_id, and the best composite the columns admit (`noe_id+invstn_no`) is still
+three short. The fix is `:id`, Socrata's own row identifier, 20,000 of 20,000
+distinct — **which the sibling `TX_TCEQ_VIOLATION_CITATIONS` ten lines below in
+the same file had keyed on all along**, the `_about` case repeating at the same
+tiny scale. It needs `$select=*,:id`: Socrata does not serve `:id` unless it is
+asked for. Measured after: 20,000 emitted, 20,001 stored, the +1 being the
+notice that discloses the 9,092 the cycle still owes.
+
+**The opposite verdict on the same symptom, measured the same hour.**
+`PUBDEV_ALL_PACKAGES` loses ~655 of 93,353 a run and its key is RIGHT:
+`/api/package-names` declares exactly the 93,353 the row emits, and a registry
+namespace cannot repeat a name. The cause is this file's newest-first hazard —
+page 1 carries packages published today and page 900 carries 2019 — so each
+package published during the four-minute walk is inserted at the HEAD and
+shifts one record across every page boundary still below it; seven
+publications with ~93 boundaries left each is the 655. No sort exists to pin
+it, established with controls: four sort spellings AND `frobnicate=7` AND
+`sort=notacolumn` each return a page byte-identical to the plain one, so the
+endpoint discards its query string entirely. Re-keying would turn one
+package's two sightings into two packages. **So a collision rate says nothing
+about which of the two findings you have** — one key was a dimension and one
+was correct, and only the upstream's own count told them apart.
 
 **AND THE DECLARED TOTAL WAS ONE LEVEL DOWN IN THE ENVELOPE.** All seven rows
 said "the upstream declares no total", which was true of what the ENGINE could
