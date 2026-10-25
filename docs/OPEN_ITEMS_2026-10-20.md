@@ -543,7 +543,14 @@ IODA ×3, Dataverse UCLA, NADA Nepal, NI MARENA — are registered rows on hosts
 whose chains are a DIFFERENT fault and were not re-measured here; they are
 D1-ter below.
 
-### D1-bis. The engine cannot tell four TLS faults apart
+### D1-bis. ~~The engine cannot tell four TLS faults apart~~ — SHIPPED, and it is NINE causes
+
+Closed 2026-10-23. `http_last_tls_cause()` (`core/httpclient.{c,h}`) names nine — `no_local_issuer`, `expired`, `not_yet_valid`, `hostname_mismatch`, `self_signed`, `revoked`, `unrecognized_name`, `handshake`, `other` — and BOTH fetch-failure writers (hpengine's and `core/scheduler.c`'s, because "look for the other copies" applies here too) carry `tls_cause`, `tls_detail` and a cause-specific `remedy`. The discriminator is OpenSSL's own verify result rather than the message text, a handshake refused before any certificate was judged is NOT reported as a trust finding, and `unrecognized_name` is named apart from `handshake` although libcurl reports both as CURLE 35, because no cipher or trust change reaches a server saying it does not serve that hostname. `tests/unit/test_http_tls_cause.c` pins that the verify result wins when the two disagree.
+
+**And on 2026-10-25 the gate that reports those records started reading them** (`fetch_failure_reason()` in `audit_registry_emit.py`): all 4,761 FETCH_FAILED rows of the complete sweep had carried one fixed sentence while the cause sat in a row of the database beside it.
+
+The original entry, for the record:
+
 
 A chain fault arrives as `rc=-1` and one `collector-fetch-failure` naming a
 transport error. "No local issuer", "expired", "hostname mismatch" and
@@ -788,7 +795,60 @@ directory, and probing for the name we expected (`wfs-si-gurs-kat`, `-ku`,
 Both rows are KEPT and disclose themselves through the health projection; see
 E6.
 
-### E7. The registry-wide health sweep is running, and its first 2,400 rows already found 14,060 records a run
+### E7. ~~The registry-wide health sweep is running~~ — COMPLETE, 55,834 rows
+
+Closed 2026-10-25: `docs/registry-health-sweep-2026-10-25.tsv`. Every scheduled
+row run through the real binary against a fresh copy of a warm template
+database. **49,375 OK, 4,761 FETCH_FAILED, 631 EMITS_NOTHING, 472 SLOW
+(unmeasured, not failed), 461 COLLISION, 114 GATED, 19 POD, 1 SINK_MISMATCH.**
+
+Four things the pass taught, each worth more than the number it corrected, and
+all four written into CLAUDE.md:
+
+* **A gate that runs every row in a fresh database cannot see a cycle's
+  position**, so it reads window 1 of N and calls it dead. All 47 KKJ
+  prefecture rows read EMITS_NOTHING for exactly that reason. `WINDOW_EMPTY`
+  joins `POD` and `GATED`. The tidy-up that followed — move `window_from` to
+  the fiscal year the corpus begins in — was measured and REFUSED, because
+  Tokyo has 1 record in a quarter that is empty for six other prefectures.
+* **The largest failure class said nothing.** All 4,761 FETCH_FAILED rows
+  carried one fixed sentence while the engine's own disclosure record held the
+  cause. `fetch_failure_reason()` reads it now; see D1-bis.
+* **Most of a collision list is stale or already answered.** Of the 30 rows
+  losing >=250 records a run, 8 were fixed earlier the same week and the sweep
+  predated the fix, and 12 carried their own arithmetic saying "do not re-key
+  this row". The biggest single number in the sweep,
+  `gr-diavgeia-positions` at 25,287 emitted / 233 stored, is a 1.6 MB file in
+  which the upstream repeats 233 position titles 25,188 times byte for byte.
+* **The in-page guard gives a free discriminator**: a SINGLE-REQUEST row's
+  surviving collisions are byte-identical by construction. Validated on
+  `geo-jrc-inform-scores` — 46,461 rows served, 46,079 distinct whole records,
+  exactly what the engine stored.
+
+Fixed out of the collision tail: `TX_TCEQ_NOTICES_OF_ENFORCEMENT` (noe_id is a
+notice id, `:id` is the record: 19,631 -> 20,001) and
+`geo-copernicus-odata-s2` (no `$orderby`, so twenty pages of 2015 products
+re-stored hourly: 1,703 -> 8,620). Left alone with their arithmetic:
+`PUBDEV_ALL_PACKAGES` (head-insertion drift, no sort exists, controls sent),
+`nam-providenceri-providence-tree-inventory`, `eur-soc-cat-b5rw-yz3c`,
+`gr-diavgeia-positions`, the three `awc-*` bbox rows and the Japan Search
+family.
+
+**Two classes are being re-read with causes** (in flight at the time of
+writing): the 4,761 FETCH_FAILED and the 631 EMITS_NOTHING. The early returns
+already say two things. **About a third of FETCH_FAILED is transient** — 55 of
+the first 158 re-read OK, which is "one probe is one reading" at scale, so the
+real failing count is well below 4,761. And **a bare TLS handshake refusal is
+the shape this container's own egress produces**: 51 of the first 103 failures
+were one, the cluster is dominated by `eur-ods-*` rows, and a plain curl of an
+OpenDataSoft host from here answers `Recv failure: Connection reset by peer`
+and HTTP 000. The gate says so in the record now rather than publishing 51
+environment artifacts as findings — the third time a sweep in this tree would
+have manufactured its own.
+
+The original entry, for the record:
+
+### E7 (as written). The registry-wide health sweep is running, and its first 2,400 rows already found 14,060 records a run
 
 `docs/registry-health-sweep-2026-10-22.tsv`, `audit_registry_emit.py
 --scheduled --jobs 6 --timeout 90 --resume`. **It covers a fraction of the
