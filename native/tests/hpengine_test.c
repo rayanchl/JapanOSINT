@@ -303,6 +303,13 @@ static const hp_source T[] = {
     .mode = HP_HTML, .href_must = "/rec/", .base = "https://x.test",
     .record_type = "t-html", .free_tier = 1, .description = "d" },
 
+  /* An anchor CALENDAR: every link matches href_must and every label is a day
+   * number, which the 3-character minimum rejects. Test 57. */
+  { .id = "T_HTML_CAL", .name = "html day-number calendar",
+    .url = "https://x.test/cal.html", .interval = 3600,
+    .mode = HP_HTML, .href_must = "/day/", .base = "https://x.test",
+    .record_type = "t-cal", .free_tier = 1, .description = "d" },
+
   /* The data URL is PUBLISHED on an index page, not fixed (hpengine.h
    * index_url). Kawasaki city stamps its licence CSVs with the month and
    * offers no stable path, so a baked-in URL works until the next refresh and
@@ -4070,6 +4077,61 @@ int main(void) {
        strstr(nt->props, "re-point page_param") != NULL,
        "43c: a full page that repeats is still reported as an ignored page "
        "parameter"); }
+
+  /* 57. ANCHORS MATCHED href_must AND EVERY LABEL WAS TOO SHORT TO TITLE A
+   *      RECORD. The 3-character minimum is deliberate — it keeps pagination
+   *      digits and "»" out of every HTML row — but a page whose links are ALL
+   *      labelled that way was read as a page with no records and said
+   *      nothing: `rc=0 records=0 stored=0`, the invisible nothing. Measured
+   *      on the US NRC's event-notification year pages, which are a calendar
+   *      of day numbers: 205 real anchors, every one matching the row's
+   *      href_must, every label one or two characters, 130,950 bytes fetched
+   *      and nothing stored or disclosed. The JSON path has had
+   *      `label-keys-unmatched` for this shape all along. */
+  fx_reset();
+  /* No borrowable text anywhere: the context fallback must fail too, or the
+   * anchors are rescued and there is nothing to disclose. That is what 57c
+   * and 57d exist to show from the other side. */
+  fx_add("/cal.html", 200,
+         "<ul><li><a href=\"/day/20261023en\">23</a></li>"
+         "<li><a href=\"/day/20261022en\">22</a></li>"
+         "<li><a href=\"/day/20261021en\">1</a></li></ul>");
+  rc = run_source("T_HTML_CAL", NULL);
+  { const cap *nt = NULL;
+    ok(rc == 0 && cap_count("collector-shape-notice", &nt) == 1 && nt &&
+       strstr(nt->props, "\"anchors_matched_href_must\":3") != NULL &&
+       strstr(nt->props, "\"anchors_with_a_usable_label\":0") != NULL,
+       "57: anchors that matched href_must and carried no usable label are "
+       "disclosed, naming how many");
+    ok(nt && strstr(nt->props, "Do NOT lower the 3-character minimum") != NULL,
+       "57b: and the remedy says not to lower the minimum that keeps "
+       "pagination digits out of every other HTML row"); }
+
+  /* 57c. THE CONTROL: the same page with real labels emits records and files
+   *      NOTHING. A notice that fires when records were stored would teach a
+   *      reader to ignore notices, which is the one thing these disclosures
+   *      cannot afford. */
+  fx_reset();
+  fx_add("/cal.html", 200,
+         "<h3>October</h3><p>"
+         "<a href=\"/day/20261023en\">23 October 2026</a> | "
+         "<a href=\"/day/20261022en\">22 October 2026</a></p>");
+  rc = run_source("T_HTML_CAL", NULL);
+  ok(rc == 0 && cap_count("t-cal", NULL) == 2 &&
+     cap_count("collector-shape-notice", NULL) == 0,
+     "57c: labelled anchors on the same page emit records and file no notice");
+
+  /* 57d. And a page where SOME anchors are short stays silent, because the row
+   *      did emit: an icon beside a headline is the ordinary case, not a
+   *      finding. */
+  fx_reset();
+  fx_add("/cal.html", 200,
+         "<h3>October</h3><p>"
+         "<a href=\"/day/20261023en\">23</a> "
+         "<a href=\"/day/20261022en\">22 October 2026</a></p>");
+  rc = run_source("T_HTML_CAL", NULL);
+  ok(rc == 0 && cap_count("collector-shape-notice", NULL) == 0,
+     "57d: a page that emitted anything files no unlabelled-anchor notice");
 
   /* 44. A RATE-LIMIT PAGE SERVED AS HTTP 200 is a refusal wearing a success
    *     status, and no status check can see it. Archive-It does exactly that

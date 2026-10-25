@@ -1384,9 +1384,16 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "nuclear-event-report",
     .tags = "\"nuclear\",\"regulator\",\"incident\",\"usa\",\"nrc\",\"safety\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.nrc.gov/reading-rm/doc-collections/event-status/event/2026/",
+    /* RE-POINTED 2026-10-25: nrc.gov was restructured and the old
+     * /reading-rm/doc-collections/event-status/ tree 301s away, so this row
+     * fetched 130,950 bytes of the NEW landing page and matched nothing against an
+     * href_must naming the OLD path — rc=0 records=0 stored=0, the invisible
+     * nothing, found by giving the registry sweep's EMITS_NOTHING verdict the
+     * byte count that was already on the run line. Measured on the new page:
+     * 205 daily report links. */
+    .url = "https://www.nrc.gov/documents-reports/document-collections/events-reports-associated-with/event-notification-reports/2026",
     .base = "https://www.nrc.gov",
-    .href_must = "/event-status/event/2026/",
+    .href_must = "/event-notification-reports/2026/",
     .interval = 3600,
     .description = "The Nuclear Regulatory Commission daily event notification "
       "listing for the year, one entry per operational day. Each linked "
@@ -1406,9 +1413,16 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "nuclear-event-report",
     .tags = "\"nuclear\",\"regulator\",\"incident\",\"usa\",\"nrc\",\"safety\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.nrc.gov/reading-rm/doc-collections/event-status/event/2025/",
+    /* RE-POINTED 2026-10-25: nrc.gov was restructured and the old
+     * /reading-rm/doc-collections/event-status/ tree 301s away, so this row
+     * fetched 136,942 bytes of the NEW landing page and matched nothing against an
+     * href_must naming the OLD path — rc=0 records=0 stored=0, the invisible
+     * nothing, found by giving the registry sweep's EMITS_NOTHING verdict the
+     * byte count that was already on the run line. Measured on the new page:
+     * 245 daily report links. */
+    .url = "https://www.nrc.gov/documents-reports/document-collections/events-reports-associated-with/event-notification-reports/2025",
     .base = "https://www.nrc.gov",
-    .href_must = "/event-status/event/2025/",
+    .href_must = "/event-notification-reports/2025/",
     .interval = 86400,
     .description = "The Nuclear Regulatory Commission daily event notification "
       "listing for 2025, one entry per operational day, each resolving "
@@ -1424,9 +1438,16 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "nuclear-defect-report",
     .tags = "\"nuclear\",\"regulator\",\"defect\",\"supplychain\",\"usa\",\"nrc\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.nrc.gov/reading-rm/doc-collections/event-status/part21/2026/",
+    /* RE-POINTED 2026-10-25: nrc.gov was restructured and the old
+     * /reading-rm/doc-collections/event-status/ tree 301s away, so this row
+     * fetched 114,037 bytes of the NEW landing page and matched nothing against an
+     * href_must naming the OLD path — rc=0 records=0 stored=0, the invisible
+     * nothing, found by giving the registry sweep's EMITS_NOTHING verdict the
+     * byte count that was already on the run line. Measured on the new page:
+     * the reports are no longer daily HTML pages but 82 ADAMS PDFs under /docs/ML<accession>, and that path is the href_must. */
+    .url = "https://www.nrc.gov/regulations-legislation/reports-associated-with-events/part-21-reports/2026",
     .base = "https://www.nrc.gov",
-    .href_must = "/event-status/part21/2026/",
+    .href_must = "/docs/ML",
     .interval = 21600,
     .description = "The Nuclear Regulatory Commission listing of reports filed under "
       "10 CFR Part 21, the rule requiring suppliers and licensees to "

@@ -1205,6 +1205,7 @@ typedef struct {
    * rule 2 says a shortfall is data, not a log line — and never when the
    * condition did not occur. */
   int   sh_path_missing;    /* pages where the declared array_path resolved to nothing */
+  int   sh_unlabelled;      /* anchors that matched href_must and had no label >=3 ch */
   char  sh_path_kind[96];   /* what it resolved to instead ("absent", "string", …) */
   int   sh_fb_pages;        /* pages where the densest-array guess had ≥2 candidates */
   hp_arrfind sh_fb;         /* the last such guess, for the notice's numbers    */
@@ -3953,7 +3954,7 @@ static int hp_run_html(hp_run_state *st, const char *html) {
        * first one after the href value (the parser located `</a>` the same
        * way). See hp_anchor_label(). */
       const char *inner = strchr(a.href + a.href_len, '>');
-      if (!inner || inner >= p - 4) continue;
+      if (!inner || inner >= p - 4) { st->sh_unlabelled++; continue; }
       a.text_len = hp_anchor_label(inner + 1, p - 4, a.text, sizeof a.text, &strength);
       if (a.text_len < 3) {
         /* Nothing inside the anchor names it. Its own attributes, then the
@@ -3965,7 +3966,7 @@ static int hp_run_html(hp_run_state *st, const char *html) {
                                              html, a.text, sizeof a.text);
         strength = HTML_LABEL_CONTEXT;
       }
-      if (a.text_len < 3) continue;
+      if (a.text_len < 3) { st->sh_unlabelled++; continue; }
     }
     if (s->filter_query && st->vars->raw &&
         !hp_icontains(a.text, st->vars->raw) && !hp_icontains(href, st->vars->raw))
@@ -4116,6 +4117,44 @@ static void hp_shape_notices(hp_run_state *st, intel_sink *sink,
              s->id, s->array_path ? s->array_path : "", st->sh_path_kind,
              st->sh_path_missing, st->page, emitted);
     jo_shape_notice(sink, s->id, "array-path-missing", title, p, TAGS);
+  }
+
+  /* (a-bis) ANCHORS MATCHED THE ROW'S href_must AND EVERY ONE WAS DROPPED
+   * FOR WANT OF A LABEL. The three-character minimum above is deliberate and
+   * must stay: it is what keeps pagination digits and "»" out of the records
+   * of every HTML row in the tree. But a page whose links are ALL labelled
+   * that way is then read as a page with no records at all, and said nothing
+   * — `rc=0 records=0 stored=0`, the invisible nothing rule 1 is about.
+   *
+   * Measured 2026-10-25 on the US NRC's event-notification year pages
+   * (NRC_EVENT_REPORTS_2025/2026): the listing is a CALENDAR, 205 and 245 real
+   * <a href> anchors whose visible text is the day of the month — "23", "22",
+   * "1" — so every anchor matched href_must and every one was one or two
+   * characters. 130,950 and 136,942 bytes fetched, nothing stored, nothing
+   * disclosed. The JSON path has had `label-keys-unmatched` for exactly this
+   * shape; the HTML path never got it, which is this file's own "look for the
+   * other copies" lesson in the fourth record path. */
+  if (st->sh_unlabelled && !emitted) {
+    p = cJSON_CreateObject();
+    cJSON_AddStringToObject(p, "query", q);
+    cJSON_AddStringToObject(p, "href_must", s->href_must ? s->href_must : "");
+    cJSON_AddNumberToObject(p, "anchors_matched_href_must", st->sh_unlabelled);
+    cJSON_AddNumberToObject(p, "anchors_with_a_usable_label", 0);
+    cJSON_AddNumberToObject(p, "pages_read", st->page);
+    cJSON_AddStringToObject(p, "remedy",
+      "the links are there and the row's href_must matches them, but none "
+      "carries a label of 3+ characters (a calendar of day numbers does "
+      "this), so the engine has nothing to title a record with. Either the "
+      "page's own listing is not the record source — read the linked pages "
+      "instead — or the row wants a shape that titles a record from its URL. "
+      "Do NOT lower the 3-character minimum: it is what keeps pagination "
+      "digits out of every other HTML row");
+    snprintf(title, sizeof title,
+             "%s: %d anchor(s) matched href_must \"%s\" on %d page(s) and none "
+             "carried a label of 3+ characters, so nothing was emitted",
+             s->id, st->sh_unlabelled, s->href_must ? s->href_must : "",
+             st->page);
+    jo_shape_notice(sink, s->id, "anchors-unlabelled", title, p, TAGS);
   }
 
   if (st->sh_fb_pages) {                                       /* (b) */
