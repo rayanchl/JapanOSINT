@@ -1438,7 +1438,9 @@ static const struct pager PAGERS[] = {
    * nothing because a one-page walk "completes". */
   { "count",     "start",  "startIndex", 0 },
   { "limit",     "offset", "skip",   0 },   /* Socrata, ODS, most REST; openFDA*/
-  /* Socrata SODA's OWN spelling. `$limit` sat in the EXTRA list below for
+  /* Socrata SODA's OWN spelling. `$limit` sat in jl_declared_size()'s EXTRA
+   * list — removed 2026-10-25 once its last two members became families here,
+   * so there is no longer a list "below" to point at — for
    * "recognise a full page, but we cannot ask for the next one", and that cost
    * the whole fleet every page after the first: measured 2026-09-19, 571
    * distinct `$limit=` URLs in this tree, 277 of them on this path (the other
@@ -1458,7 +1460,8 @@ static const struct pager PAGERS[] = {
   { "$top",      "$skip",  NULL,     0 },   /* OData                           */
   { "maxRecords","offset", NULL,     0 },   /* Airtable-style                  */
   /* ArcGIS REST and WFS 1.x. Both spellings lived on jl_declared_size()'s
-   * EXTRA list below — "a size we can disclose but cannot move" — until
+   * EXTRA list — "a size we can disclose but cannot move", and the reason
+   * that list is gone, since these were its last two members — until
    * 2026-10-25, when the population behind them was counted and it turned out
    * nearly all of it pages by another route: of 659 scheduled rows declaring
    * one of these sizes, 351 are hpengine rows that declare

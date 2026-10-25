@@ -113,6 +113,31 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
      * counters. The channel code is the last upstream field that separates
      * them, so it joins the key; rows identical in every field are the
      * upstream's own repetition and are meant to collapse. */
+    /* DO NOT "FIX" THIS ROW'S COLLISION VERDICT — measured twice, by two
+     * sessions, on two different reads of this same endpoint. This note is
+     * carried here on 2026-10-25 from the two generated rows that used to read
+     * the same service and were retired as duplicate endpoints
+     * (geo-ioc-sealevel-stations, sci-ocean-ioc-sealevel-tab); the evidence
+     * outlives the rows, and it now belongs to the only row still reading the
+     * service.
+     *
+     * 2026-10-22, on one body of 1,921 rows: 1,635 are distinct WHOLE records,
+     * so 286 are the upstream's own byte-identical duplicates and the sink's
+     * content hash collapses those correctly. Of the 259 `sensorid` groups
+     * holding more than one row, 167 differ ONLY in observations / first /
+     * last / timestampdata / updatedata — running counters and timestamps,
+     * i.e. the same sensor reported twice in one response with different
+     * totals. Widening the key to sensorid+observations reaches 1,602 of 1,921
+     * and would store one sensor several times, inflating a station INVENTORY:
+     * the longer key is the WORSE one, as the Colombia pass found on INVIMA's
+     * device register.
+     * 2026-10-24, independently, on a 2,349-row read: 115 colliding groups
+     * differ only in observations/first/last. Same conclusion by a different
+     * count — and the reason it must not be "repaired" is sharper than
+     * inventory inflation alone: those counters advance every minute, so a key
+     * that includes them mints a fresh uid on EVERY run and grows the table
+     * without bound. A collision is a question (rule 4b); this one has been
+     * answered twice and the answer is "nothing to fix". */
     char key[144];
     const cJSON *sidj = cJSON_GetObjectItem(s, "sensorid");
     const cJSON *updj = cJSON_GetObjectItem(s, "updatedata");

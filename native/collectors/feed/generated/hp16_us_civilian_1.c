@@ -72,11 +72,43 @@ static const hp_source T[] = {
     .collector = "us_civilian", .category = "civilian",
     .description = "CRIME_INCIDENT_POINTS_ID, RIN (report incident number), OCCURRENCE_DATE, OCCURRENCE_TIME, OCCURRENCE_WEEK_DAY, ADDRESS_BLOCK, offence fields and point geometry. Full ArcGIS query grammar (where=, time filters, geometry envelope, returnIdsOnly, orderByFields) so it can be paged exhaustively. Detail hop verified with objectIds=4388.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "civilian-record", .tags = "\"us\",\"civilian\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://maps.austintexas.gov/arcgis/rest/services/CrimeViewer_new/APD_Reported_Crimes_new/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=2&f=json",
-    .array_path = "fields",
-    .detail_url = "https://maps.austintexas.gov/arcgis/rest/services/CrimeViewer_new/APD_Reported_Crimes_new/FeatureServer/0/query?objectIds={v}&outFields=*&f=json", .detail_key = "OBJECTID",
+    /* THIS ROW WAS STORING THE LAYER'S SCHEMA AS CRIME RECORDS, and the second
+     * defect hid the first. Measured 2026-10-25.
+     *
+     * `array_path` was "fields" — the `fields` array of an ArcGIS query reply
+     * is its COLUMN DEFINITIONS — so every run emitted the layer's ~30 field
+     * descriptors as `civilian-record`s. That is CLAUDE.md's own trap ("once
+     * counted a response's own 252-key schema block as records") and it shipped
+     * here, in a row whose description advertises "Full ArcGIS query grammar
+     * (where=, time filters, geometry envelope, returnIdsOnly, orderByFields)
+     * so it can be paged exhaustively" — a capability a comment claimed and
+     * nothing used.
+     *
+     * `resultRecordCount=2` was the other half: two features a page. Raising it
+     * alone would have changed nothing while array_path still named `fields`,
+     * which is why the row's record count looked unremarkable.
+     *
+     * `.id_keys`/`.detail_key` are `attributes.OBJECTID`, the dotted form an
+     * f=json feature needs ({attributes, geometry} with no scalar at the top);
+     * the sibling ArcGIS rows in this tree use exactly that, and
+     * `attributes.API` proves the detail hop resolves a dotted key.
+     * `orderByFields=OBJECTID` because the walk now advances `resultOffset`
+     * (resultRecordCount/resultOffset became a PAGERS family on 2026-10-25) and
+     * an offset walk with no stable sort skips records; OBJECTID is this
+     * layer's declared objectIdField, read from its metadata. The size is 1000
+     * against a declared maxRecordCount of 2000 — comfortably one page, since
+     * the layer's own returnCountOnly answers 297. */
+    .url = "https://maps.austintexas.gov/arcgis/rest/services/CrimeViewer_new/APD_Reported_Crimes_new/FeatureServer/0/query?where=1%3D1&outFields=*&orderByFields=OBJECTID&resultRecordCount=1000&f=json",
+    .array_path = "features",
+    .id_keys = "attributes.OBJECTID",
+    .detail_url = "https://maps.austintexas.gov/arcgis/rest/services/CrimeViewer_new/APD_Reported_Crimes_new/FeatureServer/0/query?objectIds={v}&outFields=*&f=json", .detail_key = "attributes.OBJECTID",
     .page_walk = 1,
-    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
+    /* page_resume stays, and is now a genuine no-op rather than a cycle: the
+     * layer holds 297 records and one page takes all of them, so the walk
+     * completes and stores no position (hptest 40b-ii pins that shape). The
+     * 2026-10-12 note this replaces said it "pages past its ceiling" — true
+     * when a page was 2 records, meaningless now. */
+    .page_resume = 1,
     .interval = 21600, .free_tier = 1 },
 
   { .id = "us-brookline-311-open311-request-detail",
