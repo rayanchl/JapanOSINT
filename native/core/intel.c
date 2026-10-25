@@ -367,7 +367,7 @@ int intel_fts_remirror(db_handle *db, const char *uid) {
     }
     sqlite3_finalize(s);
     char *seg_t = fts_segment(v[0] ? v[0] : "");
-    char *seg_b = fts_segment(v[1] ? v[1] : "");
+    char *seg_b = fts_segment_body(v[1]);
     fts_stmts fs = {0};
     fts_write(db->h, &fs, uid, seg_t, seg_b, v[2], v[3], v[4],
               v[5] ? v[5] : "[]", v[6] ? v[6] : "{}");
@@ -599,7 +599,7 @@ static int emit(struct intel_sink *self, const intel_item *it) {
   /* Segmented once, used twice: the FTS mirror inside the transaction and the
    * simhash fingerprint after it. */
   char *seg_title = fts_segment(it->title ? it->title : "");
-  char *seg_body  = fts_segment(it->body ? it->body : "");
+  char *seg_body  = fts_segment_body(it->body);
 
   sqlite3_exec(h, "BEGIN", NULL, NULL, NULL);
   sqlite3_stmt *s = stmt_get(h, &st->q_upsert, SQL_UPSERT);
