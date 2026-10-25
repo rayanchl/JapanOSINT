@@ -381,36 +381,11 @@ VJSON(eas_hk_kmb_stops, "eas-hk-kmb-stops", "Hong Kong Transport — KMB and Lon
   "en", "[\"hkg\",\"transport\",\"bus\",\"rail\"]", 86400,
   "All 6,700+ KMB/LWB bus stops with WGS-84 coordinates and trilingual names.");
 
-/* The three LegCo rows below are on plain `http` DELIBERATELY — do not
- * "upgrade" the scheme. Measured 2026-10-24: `http://app.legco.gov.hk` answers
- * 200 and the rows store (bills 2,000 records, votes 2,000), while
- * `https://app.legco.gov.hk` and `https://www.legco.gov.hk` both end in a TLS
- * `unknown CA` alert under the session CA bundle AND the system bundle, and
- * `http://www.legco.gov.hk/` 307s to that same unreachable https. The agent
- * proxy reports no relay failure for the host, so that may be a property of
- * this environment rather than of LegCo — which is the reason to re-measure
- * before changing it, not a reason to change it now. Switching to https on
- * inference would take all three rows dark. */
-VJSON(eas_hk_legco_bills, "eas-hk-legco-bills", "Legislative Council of Hong Kong — bills database", "香港立法会 — 法案データベース",
-  "eastasia_data", "gazette",
-  "http://app.legco.gov.hk/BillsDB/odata/Vbills?$top=100&$format=json",
-  "value",
-  "en", "[\"hkg\",\"legislature\",\"gazette\",\"politics\"]", 43200,
-  "OData feed of bills introduced in the Hong Kong Legislative Council with reading dates and gazettal.");
+/* eas-hk-legco-bills: moved to collectors/pivot/table/hp3_legco.c (2026-10-25), read whole. */
 
-VJSON(eas_hk_legco_speeches, "eas-hk-legco-speeches", "Legislative Council of Hong Kong — Hansard speeches", "香港立法会 — 議事録発言記録",
-  "eastasia_data", "gazette",
-  "http://app.legco.gov.hk/OpenData/HansardDB/Speeches?$top=100&$format=json",
-  "value",
-  "en", "[\"hkg\",\"legislature\",\"hansard\",\"politics\"]", 43200,
-  "Speech-level Hansard records from Hong Kong Legislative Council sittings, attributable to individual members.");
+/* eas-hk-legco-speeches: moved to collectors/pivot/table/hp3_legco.c (2026-10-25), read whole. */
 
-VJSON(eas_hk_legco_votes, "eas-hk-legco-votes", "Legislative Council of Hong Kong — voting results", "香港立法会 — 投票結果",
-  "eastasia_data", "gazette",
-  "http://app.legco.gov.hk/vrdb/odata/vVotingResult?$top=100&$format=json",
-  "value",
-  "en", "[\"hkg\",\"legislature\",\"voting\",\"politics\"]", 43200,
-  "Recorded division results in the Hong Kong Legislative Council, per member and motion.");
+/* eas-hk-legco-votes: moved to collectors/pivot/table/hp3_legco.c (2026-10-25), read whole. */
 
 VJSON(eas_hk_mtr_eta_ael, "eas-hk-mtr-eta-ael", "Hong Kong Transport — MTR Airport Express — next train times at Hong Kong Station", "香港交通 — 港鉄 機場快線 — 香港駅の次列車",
   "eastasia_data", "transport",

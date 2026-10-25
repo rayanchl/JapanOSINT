@@ -472,23 +472,6 @@ static const hp_source HP3B28_JPFORGOTTEN[] = {
       "(?p=2) establishes the pagination scheme across the roughly 39 "
       "pages the total implies." },
 
-  { .id = "JO28_KOKUGAKUIN_DMUSEUM_INDEX", .name = "Kokugakuin University Digital Museum",
-    .name_ja = "國學院大學デジタル・ミュージアム",
-    .category = "archive", .portal = "https://d-museum.kokugakuin.ac.jp",
-    .record_type = "database-index",
-    .tags = "\"japan\",\"shinto\",\"archive\",\"kokugakuin\",\"directory\"",
-    .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://d-museum.kokugakuin.ac.jp/database/",
-    .base = "https://d-museum.kokugakuin.ac.jp",
-    .href_must = "/search_by_word/id=",
-    .interval = 2592000,
-    .description = "Kokugakuin University's digital museum landing page links 23 "
-      "confirmed sub-database entries (search_by_word/id=NNNNN), each a "
-      "distinct linked database (e.g. Shinto clergy and "
-      "shrine-hierarchy records) rather than an individual artifact "
-      "record. This row captures the directory-of-databases layer the "
-      "museum's 27+ linked databases fan out from." },
-
   { .id = "JO28_YOKOHAMA_ARCHIVE_YCMH", .name = "Yokohama History Museum Digital Archive",
     .name_ja = "横浜市歴史博物館デジタルアーカイブ",
     .category = "local-history", .portal = "https://archive.ycmh.jp",

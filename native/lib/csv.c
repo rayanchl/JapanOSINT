@@ -283,6 +283,33 @@ cJSON *csv_parse_d(const char *text, int headers, char delim) {
   return headers ? csv_name_rows(rows) : rows;
 }
 
+/* csv_rows' record boundary, without building the record. The quote rule is
+ * csv_rows' own, line for line, because a caller that splits a file here and
+ * parses each slice with csv_parse_* must split exactly where the parser would
+ * have ended the record: a quote opens a field only at the field's start
+ * (blanks before it are padding), `""` inside a quoted field is a literal
+ * quote, a CR is ignored, and a newline ends the record only outside quotes.
+ * A split that disagreed with the parser would cut one record in two and glue
+ * the halves onto its neighbours, with every count still adding up. */
+size_t csv_record_end(const char *text, size_t len, size_t from, char delim) {
+  int in_q = 0, fresh = 1;
+  for (size_t i = from; i < len; i++) {
+    char ch = text[i];
+    if (in_q) {
+      if (ch == '"') {
+        if (i + 1 < len && text[i + 1] == '"') i++;
+        else in_q = 0;
+      }
+      continue;
+    }
+    if (ch == '"' && fresh) { in_q = 1; fresh = 0; }
+    else if (ch == delim) fresh = 1;
+    else if (ch == '\n') return i + 1;
+    else if (ch != '\r' && ch != ' ' && ch != '\t') fresh = 0;
+  }
+  return len;
+}
+
 /* ── unterminated-quote recovery ──────────────────────────────────────────
  *
  * RFC 4180 says a quoted field ends at its closing quote, so a line that opens

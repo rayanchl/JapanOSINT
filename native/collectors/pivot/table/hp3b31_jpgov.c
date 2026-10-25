@@ -181,52 +181,7 @@ static const hp_source HP3B31_JPGOV[] = {
       "and ministerial ordinance in force, returning the law ID, the title and "
       "the amendment history — the operative text, not a commentary on it" },
 
-  { .id = "JP_EGOV_PUBLIC_COMMENT", .name = "e-Gov — public comment (パブリックコメント)",
-    .name_ja = "e-Gov パブリックコメント", .category = "government",
-    .portal = "https://public-comment.e-gov.go.jp", .record_type = "jp-consultation",
-    .tags = "\"jp\",\"regulation\",\"consultation\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://public-comment.e-gov.go.jp/pcm/search?searchWord={q}",
-    .base = "https://public-comment.e-gov.go.jp", .filter_query = 1,
-    .description = "Draft ministerial rules open for comment and the published "
-      "response summaries — the earliest public signal that a ministry intends "
-      "to change a licensing, safety or reporting requirement" },
-
-  { .id = "JP_KANPO_GAZETTE", .name = "Kanpō — Japanese official gazette search",
-    .name_ja = "官報検索", .category = "government",
-    .portal = "https://search.npb.go.jp", .record_type = "jp-gazette-notice",
-    .tags = "\"jp\",\"gazette\",\"insolvency\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://search.npb.go.jp/kanpou/search.html?q={q}",
-    .base = "https://search.npb.go.jp", .filter_query = 1,
-    .description = "The official gazette — bankruptcy and civil rehabilitation "
-      "commencement notices, company dissolutions, capital reductions, merger "
-      "announcements and settlement publications. Japanese corporate distress "
-      "appears here before it appears anywhere commercial" },
-
-  { .id = "JP_JFTC_ENFORCEMENT", .name = "JFTC — antitrust cease-and-desist orders",
-    .name_ja = "公正取引委員会 排除措置命令", .category = "government",
-    .portal = "https://www.jftc.go.jp", .record_type = "jp-antitrust-action",
-    .tags = "\"jp\",\"antitrust\",\"enforcement\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.jftc.go.jp/cgi-bin/search.cgi?q={q}",
-    .base = "https://www.jftc.go.jp", .filter_query = 1,
-    .description = "Japan Fair Trade Commission cease-and-desist orders and "
-      "surcharge payment orders — the cartel or abuse found, the named "
-      "participants, the surcharge amount and the leniency applicants" },
-
   /* ── Licensing and sectoral supervision ───────────────────────────────── */
-  { .id = "JP_MLIT_CONSTRUCTION_LICENCE", .name = "MLIT — construction business licence search",
-    .name_ja = "国土交通省 建設業者検索", .category = "government",
-    .portal = "https://etsuran2.mlit.go.jp", .record_type = "jp-licence",
-    .tags = "\"jp\",\"construction\",\"licence\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://etsuran2.mlit.go.jp/TAKKEN/kensetsuKensaku.do?companyName={q}",
-    .base = "https://etsuran2.mlit.go.jp", .filter_query = 1,
-    .description = "Licensed construction contractors — licence number and "
-      "issuing prefecture, the 29 work categories permitted, the technical "
-      "staff registered and any suspension. Construction licensing is where "
-      "Japanese contractor sanctions become visible" },
 
   { .id = "JP_MLIT_LAND_TRADE_PRICES", .name = "MLIT — actual land transaction prices",
     .name_ja = "国土交通省 不動産取引価格情報", .category = "government",
@@ -243,30 +198,6 @@ static const hp_source HP3B31_JPGOV[] = {
       "price, area, structure, building year, city planning zone and frontage "
       "road, by municipality and quarter. Requests the full history rather than "
       "a single quarter so a district's price series is complete" },
-
-  { .id = "JP_MHLW_LABOUR_VIOLATIONS", .name = "MHLW — labour law violation disclosures",
-    .name_ja = "厚生労働省 労働基準関係法令違反公表", .category = "government",
-    .portal = "https://www.mhlw.go.jp", .record_type = "jp-labour-violation",
-    .tags = "\"jp\",\"labour\",\"enforcement\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/"
-      "roudoukijun/anzen/hourei/index.html?q={q}",
-    .base = "https://www.mhlw.go.jp", .filter_query = 1,
-    .description = "The list of employers publicly named for labour-standards "
-      "violations — the establishment, the provision breached, the facts and "
-      "the date of referral to prosecutors. Japan's closest analogue to a wage "
-      "and safety enforcement register" },
-
-  { .id = "JP_PMDA_APPROVALS", .name = "PMDA — drug & device approval database",
-    .name_ja = "PMDA 医薬品医療機器情報", .category = "health",
-    .portal = "https://www.pmda.go.jp", .record_type = "jp-medical-approval",
-    .tags = "\"jp\",\"health\",\"regulatory\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.pmda.go.jp/PmdaSearch/iyakuSearch/Result?keyword={q}",
-    .base = "https://www.pmda.go.jp", .filter_query = 1,
-    .description = "Japanese approvals for pharmaceuticals and medical devices "
-      "— the marketing authorisation holder, approval number and date, the "
-      "package insert and the safety measures ordered after approval" },
 
   { .id = "JP_TDNET_TIMELY_DISCLOSURE", .name = "TDnet — Japanese listed company timely disclosure",
     .name_ja = "TDnet 適時開示情報", .category = "finance",

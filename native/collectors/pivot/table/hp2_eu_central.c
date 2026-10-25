@@ -16,9 +16,21 @@ static const hp_source HP2_EU_CENTRAL[] = {
     .name_ja = "ポーランド 個人事業者登録", .category = "government",
     .portal = "https://aplikacja.ceidg.gov.pl", .record_type = "pl-sole-trader",
     .tags = "\"pl\",\"registry\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://aplikacja.ceidg.gov.pl/ceidg/ceidg.public.ui/Search.aspx?q={q}",
-    .base = "https://aplikacja.ceidg.gov.pl", .filter_query = 1,
+    /* Re-pointed 2026-10-25 from the public Search.aspx page. That page is an
+     * ASP.NET form: a GET with ?q= answers the empty search form (200, 50 KB)
+     * and results need a viewstate POST the engine does not make, so the row
+     * fetched and stored nothing for every query (and filter_query matched
+     * the form's own echo of the term). The register's real query surface is
+     * the official CEIDG API, which needs a free token from the CEIDG account
+     * (dane.biznes.gov.pl): unauthenticated v3 answers 401, so until
+     * CEIDG_API_TOKEN is set this row files a needs-credential note, never
+     * an empty success. The response keys below follow the published v3
+     * schema and are unmeasured until a token exists — the engine's shape
+     * notices say so if they differ. */
+    .type = "api", .mode = HP_JSON, .free_tier = 0,
+    .key_env = "CEIDG_API_TOKEN", .headers = { "Authorization: Bearer {key}", NULL },
+    .url = "https://dane.biznes.gov.pl/api/ceidg/v3/firmy?nazwa={q}",
+    .array_path = "firmy", .title_keys = "nazwa", .id_keys = "id", .page_walk = 1,
     .description = "Polish sole traders and their businesses — NIP, REGON, "
       "business address, PKD activity codes, start and suspension dates and "
       "the licences held. KRS covers companies; this covers the far larger "
@@ -144,17 +156,6 @@ static const hp_source HP2_EU_CENTRAL[] = {
       "and the winning price. The concentration pattern in these awards is the "
       "documented basis of the EU's conditionality proceedings" },
 
-  { .id = "SI_AJPES_REGISTRY", .name = "Slovenia AJPES — business register",
-    .name_ja = "スロベニア 企業登録", .category = "government",
-    .portal = "https://www.ajpes.si", .record_type = "si-entity",
-    .tags = "\"si\",\"registry\",\"accounts\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.ajpes.si/prs/PrsSearch.aspx?q={q}",
-    .base = "https://www.ajpes.si", .filter_query = 1,
-    .description = "Slovenian business register — registration number, tax "
-      "number, founders and their holdings, representatives, and the annual "
-      "reports AJPES publishes for every registered entity" },
-
   { .id = "SI_ERAR_PAYMENTS", .name = "Slovenia Erar — public sector payments",
     .name_ja = "スロベニア 公的支出データベース", .category = "government",
     .portal = "https://erar.si", .record_type = "si-public-payment",
@@ -178,29 +179,6 @@ static const hp_source HP2_EU_CENTRAL[] = {
     .description = "Croatian tender notices and award decisions with the "
       "contracting authority, the bidders and the awarded value, plus the "
       "register of economic operators excluded from procurement" },
-
-  { .id = "RO_ONRC_RECOM", .name = "Romania ONRC — trade register",
-    .name_ja = "ルーマニア 商業登記", .category = "government",
-    .portal = "https://portal.onrc.ro", .record_type = "ro-entity",
-    .tags = "\"ro\",\"registry\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://portal.onrc.ro/ONRCPortalWeb/ONRCPortal.portal?q={q}",
-    .base = "https://portal.onrc.ro", .filter_query = 1,
-    .description = "Romanian trade register — CUI, registration number, seat, "
-      "administrators, associates and share capital, plus the insolvency and "
-      "dissolution flags recorded against the entity" },
-
-  { .id = "RO_ANAF_TAXPAYERS", .name = "Romania ANAF — taxpayer & VAT status",
-    .name_ja = "ルーマニア 納税者/VAT状況", .category = "government",
-    .portal = "https://mfinante.gov.ro", .record_type = "ro-tax-status",
-    .tags = "\"ro\",\"tax\",\"registry\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://mfinante.gov.ro/ro/web/site/info-contribuabili?cod={q}",
-    .base = "https://mfinante.gov.ro", .filter_query = 1,
-    .description = "Romanian taxpayer records — VAT registration and any "
-      "cancellation, inactive-taxpayer status, split-VAT enrolment and the "
-      "published balance-sheet indicators. Inactive status invalidates a "
-      "counterparty's invoices under Romanian law" },
 
   { .id = "RO_SICAP_TENDERS", .name = "Romania SEAP/SICAP — electronic procurement",
     .name_ja = "ルーマニア 電子調達", .category = "government",

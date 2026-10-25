@@ -88,6 +88,15 @@ cJSON *csv_parse_wellformed(const char *text, int headers, const char *delim,
  * upstream served. */
 int csv_quote_repairs(void);
 
+/* Offset just past the record that starts at `from` in text[0..len) — past its
+ * terminating newline, or `len` when the record runs to the end. The quote rule
+ * is csv_rows' (single-character `delim`, not the "ws" mode), so a file too big
+ * to parse whole can be cut into slices of whole records and each slice handed
+ * to csv_parse_wellformed(): the slices parse to exactly the records the whole
+ * text would have. For bulk files — the 100 MB IRVE consolidation, where a
+ * whole-file parse would build one cJSON node per cell, ~7.5 million. */
+size_t csv_record_end(const char *text, size_t len, size_t from, char delim);
+
 /* Shift_JIS → UTF-8, malloc'd NUL-terminated (caller frees). On iconv error
  * returns a plain UTF-8 copy of the input (mirrors JS catch → utf8). */
 char *csv_decode_sjis(const char *buf, size_t len);

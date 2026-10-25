@@ -39,7 +39,15 @@ unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `docs/verified-sources-batch15.md`). Rejects are kept as data in
 `docs/rejected-sources-batch{14,15}.tsv`. No `csrc14_*` file remains.
 
-**The registered count is 57,529** (2026-10-22, merged): main's 57,527 (below)
+**The registered count is 57,393** (2026-10-25): 57,395 less two —
+US_FCC_ENFORCEMENT, a search whose query never reached the server and that has
+nothing to re-point to (rule 4d, `docs/removed-sources-2026-10-25-html-dead.tsv`),
+and `gov-hk-legco-bills`, a second reading of the LegCo bills feed
+(`docs/removed-sources-2026-10-25-legco.tsv`). 57,395 was 57,529 less 134 dead HTML
+rows found by the reachability sweep — the page and its bare path 404/410
+while the site answers, or the domain gone — each with its evidence in
+`docs/removed-sources-2026-10-25-html-dead.tsv` (the sweep itself:
+`docs/html-reachability-2026-10.md`). 57,529 (2026-10-22, merged) was main's 57,527 (below)
 plus this branch's two on the same 57,536 base — the four tuberculosis
 windows and the Elia imbalance-price row, less the three OpenDataSoft rows
 whose datasets no longer exist (the cycle-advance sweep and the ODS title
@@ -134,17 +142,33 @@ and `probe_hp_batch.py` all read. Measured after, all nine SEC sources store:
 set. **A 403 that every honest agent draws is not always a token: ask whether
 the host wants a contact address.**
 
-**And LegCo is not unreachable — its HTTPS is, from this container.** All four
-Hong Kong Legislative Council rows read `http://app.legco.gov.hk` OData and
-they answer (bills 500 and 2,000 records, votes 2,000, measured 2026-10-24
-through the engine). `https://app.legco.gov.hk` and `https://www.legco.gov.hk`
-both end in a TLS `unknown CA` alert under the session CA bundle AND the system
-bundle, and `http://www.legco.gov.hk/` 307s to that same unreachable https;
-the agent proxy reports `bundleCoversEveryHost: true` and no relay failure for
-the host, so that is a reading of this path. **Those four URLs are on plain
-`http` deliberately: "upgrading" the scheme on inference takes all four rows
-dark.** The rows carry the measurement, and it should be re-taken from an
-environment with ordinary egress before anyone changes them.
+**Two sessions measured SEC on the same day and agree**, which is worth more
+than either reading alone. The agent kept is the one that passed all THREE
+hosts (`"JapanOSINT/1.0 research (<the owner's address>)"`, main's); the second
+reading adds that `OSINTsaas/1.0 (contact@example.com)` and a bare `JapanOSINT
+<address>` also pass, so what the filter wants is an `@` address — and main's
+`HA_CONTACT` row (200 / 403 / 200 across companyfacts, the Archives
+daily-index and the efts search) shows it is enforced per PATH, not per host.
+Main's pass also found six more rows announcing `contact@japanosint.local` or
+`osint@example.org`, addresses nobody reads, beside the seven that carried the
+real one. One entry per host covers all of them.
+
+**And LegCo is not unreachable — its HTTPS is, from this container.** Its three
+OData feeds are now `collectors/pivot/table/hp3_legco.c`, read whole with
+per-feed page sizes and timeouts measured against a slow server (bills 6,884 in
+69 pages a day; votes 542,997 on an `id gt` keyset at 1,000 a page; speeches
+551,619 by `$skip` 500 at a time over a ~9-day cycle), and the fourth row — a
+second reading of the bills feed at 25 a page — is gone. What this branch
+measured is the SCHEME: `https://app.legco.gov.hk` and
+`https://www.legco.gov.hk` both end in a TLS `unknown CA` alert under the
+session CA bundle AND the system bundle, while `http://www.legco.gov.hk/` 307s
+to that same unreachable https; the agent proxy reports
+`bundleCoversEveryHost: true` and no relay failure for the host, so that is a
+reading of this path rather than of LegCo. **Those URLs are on plain `http`
+deliberately: "upgrading" the scheme on inference takes every LegCo row dark.**
+Re-take the reading from an environment with ordinary egress before changing
+them. `api.data.gov.hk` does answer over https from here, if those endpoints
+ever stop.
 
 **The registered count was 57,062** (2026-10-21): the 56,955 below, plus
 **batch 51's 136** Hong Kong and Macao government feeds and China News Service
@@ -235,7 +259,7 @@ manifests, TSVs, docs and collector keys — exactly as the batch-41 note below
 predicts. The count ledger — every
 batch from 37 to 48, main's 45 included, what seeded it, what it measured and what it taught — is
 `docs/SOURCE_COUNT_LEDGER.md`; this file keeps the rules and the current number.
-Both floors are re-recorded at 57,536 and `make source-count` agrees. The
+Both floors are re-recorded at 57,393 and `make source-count` agrees (2026-10-25, on the merge of origin's HTML sweep and geojson `stop_id` fix with the LegCo/SEC branch, which removes gov-hk-legco-bills: registry 57,393; it was 57,394 on 2026-10-24, and the 57,536 this line once stated was two merges stale). The
 lessons from batches 43–48 that a new batch must not relearn:
 
 * **A registration count is not a website, and a build is not a registry.**
@@ -1021,6 +1045,33 @@ underneath them that older notes in this file predate:
   pivots, and labels it "OSINT pivots — <cat>". Safe because the pivot rule
   below never read the label; a scheduled row's `collector` must name its
   beat, not a macro's default.
+* **The table name is the wrong collector for a REGISTER** (2026-10-24). Half
+  the registry read as Government because three tables were one collector
+  each: `hp3b47_frgov` 9,619 rows, `hp3b47_itgov` 5,716, `hp3b48_news` 3,992,
+  every row `category = "government"` / `record_type = "government-notice"`
+  (or `news`). The rows themselves said otherwise — 6,450 "Mairie - X", 1,163
+  CCAS and care services, 2,725 Italian state schools and 821 professional
+  orders filed as public administration, 1,096 US newspapers in one world
+  bucket. Every row of the three tables now names its collector explicitly
+  (`.collector`, the field the default fills) and the category of its body
+  type, derived from the body's NAME by ordered regex rules in
+  `tools/split_beats_by_body_type.py` (`plan` → `apply` → `manifest`): France
+  by the type prefix the service-public.fr directory writes first, Italy by the
+  name plus the IPA category in parentheses, the press by the `(CC)` country
+  code into seven regions. 29 collectors replace 3 — `frgov_mairies` 6,450,
+  `frgov_social` 1,163, `itgov_scuole` 2,725 (education, under Culture),
+  `itgov_ordini` 821 (Legal), `news_europe_west` 1,251, `news_northam` 1,146 …
+  — and a row no rule types goes to an honest residue (`itgov_altri`, 181),
+  never a guessed type. Measured over the census: Government 29,746 → 24,222
+  (51.7% → 42.1%), Culture 751 → 3,650, Legal 980 → 1,931, Health 2,542 →
+  2,987, Infrastructure 633 → 1,096; 621 collectors, 0 unassigned; the id set
+  is byte-identical to main's (57,529 both ways), no URL or key changed, so no
+  emit measurement is invalidated. Both batch notes carry the per-collector
+  table. **When a beat is a register of everything a country's public sector
+  publishes, the file name is not a collector — read the names before
+  shipping it as one.** The 118 singleton collectors are the hand-written
+  one-family beats and stay: a collector is the beat a source was authored and
+  probed in, and that provenance is what a singleton records.
 * **"Entity pivot" is `registry_is_entity_pivot()`** in `registry.c`, the one
   rule both the dispatcher and `service_vec` use: interval 0, not a `_` pod,
   and (hpengine) an entity token in the URL/body OR `filter_query=1` (a bulk
@@ -1038,10 +1089,15 @@ underneath them that older notes in this file predate:
   sources declare).
 * **Collectors are grouped** (2026-10-17): `core/collectors.def` is GENERATED
   by `tools/gen_collectors_def.py` from the collector census and gives every
-  collector key a `parent` among 22 `grp_*` groups (government, legal,
+  collector key a `parent` among 23 `grp_*` groups (government, legal,
   corporate, procurement, open data, science, health, environment, space,
   cyber, telecom, infrastructure, transport, media, social, geo, safety,
-  sanctions, culture, surveillance, OSINT pivots, internal). **A new beat
+  sanctions, culture, education, surveillance, OSINT pivots, internal).
+  Education is the 23rd (2026-10-24): the `education` category had filed
+  Italy's 2,725 state schools under Culture while batch 49's Japanese
+  education associations sat under Science, the same kind of body in two
+  groups. Schools, adult education and education associations are Education;
+  universities, grandes écoles and research institutes stay under Science. **A new beat
   needs a line there**: a collector the def does not list shows under
   `grp_unassigned` on every page and `test_sourceapi.c` fails. **`make
   collectors-def`** (2026-10-20) takes the census from the binary itself
@@ -2239,6 +2295,17 @@ Engine subtleties worth knowing before writing a row:
   (`csv_parse_wellformed()` skips the repair entirely, for xlsx-written text).
   Blanks before an opening quote are padding in every mode: abuse.ch writes
   `"a", "b"`, and comma mode used to keep the quotes and split tags on commas.
+* **A record's `body` is text, never its JSON.** `core/simhash.c`
+  fingerprints the body to cluster near-duplicate items, and a register's
+  records all share the same JSON keys — so a collector that passed
+  `it.body = <the record's JSON>` made every record a near-duplicate of every
+  other: one false cluster, and a band bucket each insert had to scan.
+  `socrata-sf-business-registrations` crawled at 23 records a second
+  (75,000 in 53 min) until its body became the business's name, owner,
+  address and industry; it then read all 368,735 in 28 min, in 26,883 real
+  clusters. The full record still belongs in `properties_json`. About 19
+  hand-written collectors still pass the JSON as body
+  (`grep -rn "\.body *= *pj" collectors`), unmeasured.
 * Use `jo_strcasestr`/`jo_memmem` (`lib/jocore.h`), never `strcasestr`/`memmem`:
   glibc declares them only under `_GNU_SOURCE`, which this tree never defines,
   so on Linux CI they were implicitly declared with a truncated return.

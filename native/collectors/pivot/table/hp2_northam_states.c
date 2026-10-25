@@ -185,17 +185,6 @@ static const hp_source HP2_NORTHAM_STATES[] = {
       "discipline history behind each licensee" },
 
   /* ── State regulators & enforcement ────────────────────────────────────── */
-  { .id = "US_NY_DFS_ENFORCEMENT", .name = "New York DFS — enforcement actions",
-    .name_ja = "ニューヨーク州金融サービス局 処分", .category = "government",
-    .portal = "https://www.dfs.ny.gov", .record_type = "us-ny-enforcement",
-    .tags = "\"us\",\"newyork\",\"enforcement\",\"financial\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.dfs.ny.gov/search?search_api_fulltext={q}",
-    .base = "https://www.dfs.ny.gov", .filter_query = 1,
-    .description = "New York Department of Financial Services consent orders "
-      "and penalties. DFS is the regulator that fines global banks over "
-      "sanctions and AML failures, so its orders name the correspondent "
-      "relationships nobody else publishes" },
 
   { .id = "US_CA_DFPI_ACTIONS", .name = "California DFPI — enforcement & licence actions",
     .name_ja = "カリフォルニア州金融保護局 処分", .category = "government",
@@ -219,17 +208,6 @@ static const hp_source HP2_NORTHAM_STATES[] = {
       "against permitted facilities — the state layer under EPA ECHO, and "
       "usually the one that names the operating subsidiary rather than the "
       "corporate parent" },
-
-  { .id = "US_CA_DIR_JUDGMENTS", .name = "California DIR — wage judgments & debarment",
-    .name_ja = "カリフォルニア州労働局 判決/指名停止", .category = "government",
-    .portal = "https://www.dir.ca.gov", .record_type = "us-ca-labour-judgment",
-    .tags = "\"us\",\"california\",\"labour\",\"debarment\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.dir.ca.gov/dlse/Judgment-Search.html?q={q}",
-    .base = "https://www.dir.ca.gov", .filter_query = 1,
-    .description = "Unsatisfied wage judgments and public-works debarments "
-      "issued by California's labour commissioner — a direct read on whether a "
-      "contractor is barred from state work and whether it pays its workers" },
 
   { .id = "US_NY_UNIFIED_COURTS", .name = "New York — unified court system case search",
     .name_ja = "ニューヨーク州 裁判所 事件検索", .category = "government",
@@ -264,17 +242,6 @@ static const hp_source HP2_NORTHAM_STATES[] = {
     .description = "New York lobbying registrations and bi-monthly reports — "
       "client, lobbyist, compensation and the subjects lobbied, plus the "
       "financial-disclosure statements filed by state officials" },
-
-  { .id = "US_TX_ETHICS_FILINGS", .name = "Texas Ethics Commission — filings search",
-    .name_ja = "テキサス州倫理委員会 届出", .category = "government",
-    .portal = "https://www.ethics.state.tx.us", .record_type = "us-tx-political-filing",
-    .tags = "\"us\",\"texas\",\"lobbying\",\"campaign-finance\"",
-    .type = "scraped", .mode = HP_HTML, .free_tier = 1,
-    .url = "https://www.ethics.state.tx.us/search/cf/SearchByName.php?name={q}",
-    .base = "https://www.ethics.state.tx.us", .filter_query = 1,
-    .description = "Texas campaign-finance and lobbyist registrations with "
-      "itemised contributions and expenditures — who paid whom, at what point "
-      "in which legislative session" },
 
   { .id = "US_STATE_UCC_LIENS", .name = "US states — UCC secured-transaction liens",
     .name_ja = "米国州 UCC 担保権登記", .category = "government",

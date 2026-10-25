@@ -277,16 +277,6 @@ static const hp_source HP_EU[] = {
       "so a supplier's state business is fully traceable" },
 
   /* ── Iberia / Adriatic ─────────────────────────────────────────────────── */
-  { .id = "PT_RCBE_LOOKUP", .name = "Portugal RCBE — beneficial ownership check",
-    .name_ja = "ポルトガル 実質的支配者登記(RCBE)", .category = "government",
-    .type = "scraped", .mode = HP_HTML,
-    .portal = "https://rcbe.justica.gov.pt", .record_type = "pt-bo",
-    .tags = "\"pt\",\"beneficial-ownership\"", .free_tier = 1,
-    .url = "https://rcbe.justica.gov.pt/Home/Pesquisar?termo={q}",
-    .base = "https://rcbe.justica.gov.pt", .filter_query = 1,
-    .description = "Portuguese central register of beneficial owners — server-"
-      "rendered hits for an entity name or NIPC. Anti-bot or JS-only responses "
-      "yield nothing rather than an invented ownership claim" },
 
   { .id = "HR_SUDREG_SUBJECT", .name = "Croatia Sudski registar — company record",
     .name_ja = "クロアチア 商業登記", .category = "government",

@@ -168,17 +168,6 @@ static const hp_source HP_NORDIC[] = {
       "registration number. The portal is largely client-rendered, so this row is "
       "expected to be thin — it never invents a record to compensate" },
 
-  { .id = "LT_REKVIZITAI_SEARCH", .name = "Lithuania rekvizitai — company directory",
-    .name_ja = "リトアニア 企業ディレクトリ", .category = "government",
-    .type = "scraped", .mode = HP_HTML,
-    .portal = "https://rekvizitai.vz.lt", .record_type = "lt-company",
-    .tags = "\"lt\",\"registry\"", .free_tier = 1,
-    .url = "https://rekvizitai.vz.lt/en/search/?q={q}",
-    .href_must = "/en/company/", .base = "https://rekvizitai.vz.lt",
-    .description = "Lithuanian companies by name — the public directory that mirrors "
-      "Registrų centras data (code, VAT number, address, manager) with per-company "
-      "pages behind each hit" },
-
   /* ── Cross-Nordic financial / sanction-adjacent ────────────────────────── */
   { .id = "NO_KONKURS_REGISTER", .name = "Brønnøysund — Norwegian bankruptcy flags",
     .name_ja = "ノルウェー 破産情報", .category = "economy",

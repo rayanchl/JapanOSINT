@@ -46,39 +46,6 @@
 
 static const hp_source HP3B31_AFRGOV[] = {
   /* ── South Africa ─────────────────────────────────────────────────────── */
-  { .id = "ZA_CIPC_ENTERPRISE", .name = "South Africa CIPC — company & close corporation search",
-    .name_ja = "南アフリカ 企業登記", .category = "government",
-    .portal = "https://eservices.cipc.co.za", .record_type = "za-entity",
-    .tags = "\"za\",\"registry\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://eservices.cipc.co.za/EnterpriseSearch/Search?enterpriseName={q}",
-    .base = "https://eservices.cipc.co.za", .filter_query = 1,
-    .description = "The Companies and Intellectual Property Commission's "
-      "enterprise search — registration number, entity type, status, and the "
-      "directors and members recorded against a South African company" },
-
-  { .id = "ZA_GOVERNMENT_GAZETTE", .name = "South Africa — government gazette notices",
-    .name_ja = "南アフリカ 官報", .category = "government",
-    .portal = "https://www.gov.za", .record_type = "za-gazette-notice",
-    .tags = "\"za\",\"gazette\",\"legal\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.gov.za/documents/government-gazette?search={q}",
-    .base = "https://www.gov.za", .filter_query = 1,
-    .description = "National and provincial gazettes — liquidations, estate "
-      "notices, licence grants, expropriations and the regulatory "
-      "determinations that only ever appear in gazette form" },
-
-  { .id = "ZA_MUNICIPAL_MONEY", .name = "South Africa Municipal Money — municipal finances",
-    .name_ja = "南アフリカ 自治体財政", .category = "government",
-    .portal = "https://municipalmoney.gov.za", .record_type = "za-municipal-finance",
-    .tags = "\"za\",\"public-finance\",\"local-government\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://municipalmoney.gov.za/search?q={q}",
-    .base = "https://municipalmoney.gov.za", .filter_query = 1,
-    .description = "National Treasury's municipal financial data — audit "
-      "outcomes, irregular and unauthorised expenditure, cash coverage and "
-      "creditor days for every South African municipality. Municipal financial "
-      "distress is the leading indicator for service-delivery contracts" },
 
   { .id = "ZA_PMG_PARLIAMENT", .name = "South Africa PMG — parliamentary committee record",
     .name_ja = "南アフリカ議会 委員会記録", .category = "government",
@@ -174,39 +141,6 @@ static const hp_source HP3B31_AFRGOV[] = {
       "debarment register naming suppliers barred from public contracts, the "
       "Review Board decisions and the tender portal notices" },
 
-  { .id = "KE_OPEN_DATA", .name = "Kenya Open Data — national dataset portal",
-    .name_ja = "ケニア オープンデータ", .category = "government",
-    .portal = "https://www.opendata.go.ke", .record_type = "ke-dataset",
-    .tags = "\"ke\",\"open-data\",\"catalog\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://www.opendata.go.ke/search?q={q}",
-    .base = "https://www.opendata.go.ke", .filter_query = 1,
-    .description = "Kenyan county and national datasets — budget allocations, "
-      "health facility registers, school lists and the census tables used to "
-      "verify claimed project locations" },
-
-  { .id = "TZ_BRELA_ENTITY", .name = "Tanzania BRELA — business registration",
-    .name_ja = "タンザニア 企業登記", .category = "government",
-    .portal = "https://ors.brela.go.tz", .record_type = "tz-entity",
-    .tags = "\"tz\",\"registry\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://ors.brela.go.tz/orsAdmin/searchcompany?name={q}",
-    .base = "https://ors.brela.go.tz", .filter_query = 1,
-    .description = "Tanzania's Business Registrations and Licensing Agency — "
-      "company registration number, status, directors and the industrial "
-      "licence attached to a manufacturing entity" },
-
-  { .id = "RW_RDB_REGISTRY", .name = "Rwanda RDB — company registration",
-    .name_ja = "ルワンダ 企業登記", .category = "government",
-    .portal = "https://org.rdb.rw", .record_type = "rw-entity",
-    .tags = "\"rw\",\"registry\"", .type = "scraped", .mode = HP_HTML,
-    .free_tier = 1,
-    .url = "https://org.rdb.rw/business/search?q={q}",
-    .base = "https://org.rdb.rw", .filter_query = 1,
-    .description = "Rwanda Development Board's company register — TIN, "
-      "registration date, shareholders and directors. Rwanda is one of the few "
-      "African registries that publishes shareholding percentages openly" },
-
   { .id = "ET_ETHIOPIA_TRADE_REGISTRY", .name = "Ethiopia — trade registration & licensing",
     .name_ja = "エチオピア 商業登記", .category = "government",
     .portal = "https://etrade.gov.et", .record_type = "et-entity",
@@ -230,17 +164,6 @@ static const hp_source HP3B31_AFRGOV[] = {
       "registration status, directors and the annual return record, in a "
       "jurisdiction used as a regional holding domicile" },
 
-  { .id = "AFRICA_RESOURCE_PROJECTS", .name = "Resource Projects — extractive payments by project",
-    .name_ja = "資源事業 支払開示", .category = "government",
-    .portal = "https://resourceprojects.org", .record_type = "extractive-payment",
-    .tags = "\"africa\",\"extractives\",\"transparency\"", .type = "scraped",
-    .mode = HP_HTML, .free_tier = 1,
-    .url = "https://resourceprojects.org/search?q={q}",
-    .base = "https://resourceprojects.org", .filter_query = 1,
-    .description = "Payments to governments disclosed under the EU Accounting "
-      "Directive, UK, Canadian and Norwegian rules, broken down by project and "
-      "payment type — taxes, royalties, bonuses and infrastructure "
-      "improvements. Company-to-state money at asset level" },
 };
 
 HP_REGISTER_TABLE(HP3B31_AFRGOV)

@@ -230,8 +230,13 @@ CIK 320193), `SEC_EDGAR_SEARCH` 1,260, `SEC_EDGAR_FULL_INDEX_LISTING` 53,
 record), and `SEC_EDGAR_FRAMES` again with `$SEC_CONTACT_UA` set, unchanged at
 2,679.
 
-**LegCo is not unreachable — its HTTPS is, from this container.** All four
-Hong Kong Legislative Council rows are `http://app.legco.gov.hk` OData, and
+**LegCo is not unreachable — its HTTPS is, from this container.** (Written
+before the merge of 2026-10-25, which moved these three feeds into
+`collectors/pivot/table/hp3_legco.c` and reads them WHOLE — bills 6,884 in 69
+pages a day, votes 542,997 on an `id gt` keyset, speeches 551,619 by `$skip` —
+and dropped `gov-hk-legco-bills`, which read the bills feed a second time at 25
+a page. The scheme reading below stands, and is why those URLs stay on plain
+`http`.) All four rows as they then were are `http://app.legco.gov.hk` OData, and
 they answer: `gov-hk-legco-bills` 500 records, `eas-hk-legco-bills` 2,000,
 `eas-hk-legco-votes` 2,000, `eas-hk-legco-speeches` 100 of one page in 13.3 s
 (each measured 2026-10-24 through the engine). The speeches row is simply
