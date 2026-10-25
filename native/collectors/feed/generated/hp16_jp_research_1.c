@@ -27,10 +27,33 @@ static const hp_source T[] = {
   { .id = "jp-ndl-authority-person",
     .name = "Web NDL Authorities - person/corporate name authority record (JSON-LD)",
     .collector = "jp_research", .category = "research",
-    .description = "Authority record for a named person or organisation: uri, primaryTopic with foaf:Person/foaf:Organization type, prefLabel literalForm plus transcription (kana reading), altLabel variant names and pseudonyms, birth/death dates, related authorities (owl:sameAs to VIAF/LCNAME), source citations and created/modified timestamps. The entity-resolution layer for Japanese personal and corporate names in library data.  NO SECOND HOP: the declared detail_key resolves on none of this row's records, so it only ever stamped _detail_error (measured 2026-10-25).",
-    .record_type = "research-record", .tags = "\"jp\",\"research\",\"batch16\"", .lang = "ja",
-    .url = "https://id.ndl.go.jp/auth/ndlna/00270232.json",
-    .array_path = "altlabel",
+    .description = "Authority record for a named person or organisation: uri, primaryTopic with foaf:Person/foaf:Organization type, prefLabel literalForm plus transcription (kana reading), altLabel variant names and pseudonyms, birth/death dates, related authorities (owl:sameAs to VIAF/LCNAME), source citations and created/modified timestamps. The entity-resolution layer for Japanese personal and corporate names in library data.  NO SECOND HOP: the declared detail_key resolves on none of this row's records, so it only ever stamped _detail_error (measured 2026-10-25).  AN ENTITY PIVOT since 2026-10-25: hand it an NDLNA authority id (eight digits, zero-padded). It was a scheduled row with one of those frozen into its url, so it re-read a single subject for ever.",
+    .record_type = "research-record", .tags = "\"jp\",\"research\",\"batch16\",\"pivot\"", .lang = "ja",
+    .url = "https://id.ndl.go.jp/auth/ndlna/{q}.json",
+    /* NOW AN ENTITY PIVOT, AND THE READING BEHIND EACH PART OF IT.
+     * MEASURED 2026-10-25. A SECOND id proves the path is a lookup and
+     * not just this row's probe: /auth/ndlna/00270233.json answers 200 with
+     * a different authority (uri .../00270233, label "菅, 清璣"). The frozen
+     * 00270232 names no other ndlna id inside itself, so the second id was
+     * taken adjacent rather than harvested.
+     *
+     * array_path moves off `altlabel` because the row is "authority record
+     * for a named person or organisation" and an altLabel is one variant
+     * name, not the record. `.` is the document, which hpengine emits as a
+     * single record (lib/hpengine.c resolves a declared array_path that
+     * lands on an OBJECT as one record and counts it).
+     *
+     * id_keys/title_keys had to be DECLARED, and this is the half that would
+     * have bitten: the document's top-level scalars are @context, created,
+     * label, modified, uri — JSON-LD keeps everything else nested — so with
+     * no id_keys the fallback ends at the record's first scalar, which is
+     * `@context`, IDENTICAL on every authority record in the API. Every
+     * person this pivot was asked about would have collapsed onto one uid
+     * (rule 4b, silently). `uri` is the authority's own URI and `label` its
+     * display form; both measured present on all three records read. */
+    .array_path = ".",
+    .id_keys = "uri",
+    .title_keys = "label",
     /* NO DETAIL HOP. `make lint-sources` (`detail-self-hop`) found this
      * row's detail_url to BE its url, which is necessary for a worthless
      * hop and not sufficient — a key naming a different id would reach a
@@ -43,23 +66,29 @@ static const hp_source T[] = {
      * record, so the row disclosed a failed detail fetch 7 times a
      * run for a detail that does not exist.
      *
-     * Also still open and NOT guessed at here: this row's url carries ONE
-     * entity frozen at authoring time on a schedule, so it re-reads one
-     * subject for ever — the shape repaired for both Open311 single-case
-     * rows (`{q}` in the path plus interval 0). The path demonstrably takes
-     * an id, because the detail_url templated that exact position; what the
-     * record set should become once it is a pivot is a reading of this host
-     * and is listed in docs/detail-self-hops-2026-10-25.tsv. */
-    .page_walk = 1,
-    .interval = 86400, .free_tier = 1 },
+     * Its frozen-entity half was repaired the same day, in the commit after
+     * this one — the pivot note on this row says what each part of that was
+     * measured against. */
+    .want = HP_NUMERIC,
+    .interval = 0, .free_tier = 1 },
 
   { .id = "jp-ndl-authority-subject",
     .name = "Web NDL Authorities - subject heading (NDLSH) record",
     .collector = "jp_research", .category = "research",
-    .description = "NDL subject heading as SKOS Concept: uri, prefLabel literalForm with kana transcription, altLabel synonyms, broader/narrower/related concept links, created (back to 1980) and modified dates. Lets you expand or normalise a topic before running an NDL Search query.  NO SECOND HOP: the declared detail_key resolves on none of this row's records, so it only ever stamped _detail_error (measured 2026-10-25).",
-    .record_type = "research-record", .tags = "\"jp\",\"research\",\"batch16\"", .lang = "ja",
-    .url = "https://id.ndl.go.jp/auth/ndlsh/00560222.json",
-    .array_path = "narrower",
+    .description = "NDL subject heading as SKOS Concept: uri, prefLabel literalForm with kana transcription, altLabel synonyms, broader/narrower/related concept links, created (back to 1980) and modified dates. Lets you expand or normalise a topic before running an NDL Search query.  NO SECOND HOP: the declared detail_key resolves on none of this row's records, so it only ever stamped _detail_error (measured 2026-10-25).  AN ENTITY PIVOT since 2026-10-25: hand it an NDLSH subject-heading id (eight digits, zero-padded). It was a scheduled row with one of those frozen into its url, so it re-read a single subject for ever.",
+    .record_type = "research-record", .tags = "\"jp\",\"research\",\"batch16\",\"pivot\"", .lang = "ja",
+    .url = "https://id.ndl.go.jp/auth/ndlsh/{q}.json",
+    /* NOW AN ENTITY PIVOT, AND THE READING BEHIND EACH PART OF IT.
+     * MEASURED 2026-10-25, and the second id came out of the array this
+     * row used to emit: 00560222's `narrower` names 00560217 and four more,
+     * and /auth/ndlsh/00560217.json answers 200 with that heading's own uri
+     * and label. array_path moves off `narrower` for the reason the row's
+     * description gives — it IS "NDL subject heading as SKOS Concept", and a
+     * narrower term is a link, not the heading. Same @context trap as the
+     * person row above: id_keys and title_keys are declared, not inferred. */
+    .array_path = ".",
+    .id_keys = "uri",
+    .title_keys = "label",
     /* NO DETAIL HOP. `make lint-sources` (`detail-self-hop`) found this
      * row's detail_url to BE its url, which is necessary for a worthless
      * hop and not sufficient — a key naming a different id would reach a
@@ -69,15 +98,11 @@ static const hp_source T[] = {
      * so 9 `_detail_error` stamps a run and no fetch. Same shape as
      * the person row above.
      *
-     * Also still open and NOT guessed at here: this row's url carries ONE
-     * entity frozen at authoring time on a schedule, so it re-reads one
-     * subject for ever — the shape repaired for both Open311 single-case
-     * rows (`{q}` in the path plus interval 0). The path demonstrably takes
-     * an id, because the detail_url templated that exact position; what the
-     * record set should become once it is a pivot is a reading of this host
-     * and is listed in docs/detail-self-hops-2026-10-25.tsv. */
-    .page_walk = 1,
-    .interval = 86400, .free_tier = 1 },
+     * Its frozen-entity half was repaired the same day, in the commit after
+     * this one — the pivot note on this row says what each part of that was
+     * measured against. */
+    .want = HP_NUMERIC,
+    .interval = 0, .free_tier = 1 },
 
   { .id = "jp-ndl-dl-iiif-manifest",
     .name = "NDL Digital Collections - IIIF Presentation manifest",

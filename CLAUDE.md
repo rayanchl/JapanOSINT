@@ -1851,6 +1851,86 @@ rate-limited both the page walk and the per-record detail hop; pacing
 across 5 pages to 90 across 19. **A collision verdict is a question, not a
 diagnosis** — measure the upstream before touching a key.
 
+**A SECOND HOP IS A CLAIM, AND SIXTEEN OF THEM WERE FALSE** (2026-10-25,
+`docs/detail-self-hops-2026-10-25.tsv`). The open item on
+`us-sf-311-open311-requests` was "measure a hostgate gap for the detail hops",
+because the row's own notice reported them refused — and the prior question is
+what the hop BRINGS BACK. Open311 GeoReport v2 defines ONE representation of a
+service request, so `/requests/<id>.json` is its single-resource form and not a
+deeper record: asked of four SF cases chosen to differ (open and closed, with
+and without `media_url`, with and without `status_notes`), the list and detail
+representations are the same 13 keys with identical values every time, and the
+other Open311 server in the tree answers the same way on 12 keys. **A gap was
+about to be measured to pace a hop that had nothing to fetch.**
+
+**The cost is set by the per-host GAP, because the budget is TIME.**
+`hp_detail_admit()` spends 1,000 hops OR 120 s, so at this host's 1,200 ms gate
+120 s buys about 48 hops: 48 of 1,074 records were deepened, always the first 48
+in page order because the budget is spent in that order, and the other 1,026
+carried `_detail_pending` — a disclosure that there was more behind the record
+when there was not. 48 of the run's 59 requests. The row is 4 requests now, and
+the 1,200 ms gap STAYS because it was measured for the page walk.
+
+**Then the other copies, and the scan cost nothing.** A hop that re-reads its
+own url is visible without asking any server, so the question went to all 627
+rows declaring a `detail_url`: **16 have a detail_url that IS their url.**
+`make lint-sources` fails the shape now (`detail-self-hop`, with a
+`detail-self-hop-ok: <reason>` marker for a row that means it, as
+`page-offset-ok` has). Four things about it generalise:
+
+* **"Your detail_url is your own endpoint" is NECESSARY for a worthless hop
+  and not SUFFICIENT**, so each of the nine outside the Open311 family was
+  measured, one request. Three verdicts: **SELF** (every record's
+  `detail_key` equals the id already in the url — `us-ma-ocpf-report-list`
+  asked for THIS LIST fifty times a run), **NO-KEY** (the key resolves on no
+  record, which is not a free no-op: `hp_deepen()` spends the budget first and
+  then stamps `_detail_error: list record carries no detail key`, so three
+  rows disclosed a failed detail fetch 7, 9 and 53 times a run for a detail
+  that does not exist), and **WRONG NAMESPACE**.
+* **"It reaches another id" is not "it reaches another record."**
+  `openalex-institution-detail` first measured as REACHES — 25 distinct key
+  values, none the url's own — which reads like a legitimate hop. The 25
+  records are the institution's `topics`, so `id` is a TOPIC id and the hop
+  asked the INSTITUTIONS endpoint for it: `institutions/T10009` is HTTP 404.
+  25 requests, 25 404s, 25 `_detail_error` stamps a run. The id has to belong
+  to the endpoint's namespace, and only a request says whether it does.
+* **The check's first predicate was OVER-BROAD and the tree said so at once:
+  110 findings**, the first ones read being CKAN `package_search` beside
+  `package_show?id={v}` — a correct hop in a defect bucket, which is the one
+  thing this file's verdicts must not do (`POD`, `GATED`, `WINDOW_EMPTY`
+  again). On a query URL the last `/`-segment is `package_search?rows=100`,
+  whose `100` passed a "contains four digits" test for an identifier.
+  Narrowed to identical query strings, the difference in the last PATH
+  segment, and that segment digit-DENSE. Ten fixtures run before the check on
+  every lint run, and **the over-broad version was re-applied to them: it gets
+  3 of the 10 wrong**, so the set discriminates rather than merely passing.
+* **FOURTEEN OF THE SIXTEEN ALSO CARRIED ONE ENTITY FROZEN INTO THE URL on a
+  schedule** (the two exceptions are the SF and Brookline list rows), which is
+  the openFDA shape this file records under rule 3, found by the same scan: the
+  authoring probe's URL shipped as the row, re-reading one subject for ever and
+  emitting that record's nested array (`historiskenavn`, `sideactivities`,
+  `altlabel`, `topics`, `proceedingsandorder`). Eleven are pivots now —
+  `{q}` in the path plus `interval = 0`, no collector relabel — and
+  **declaring `id_keys` was the fix rather than polish**: none of them had one,
+  and Web NDL Authorities is JSON-LD whose only top-level scalars are
+  `@context`, `created`, `label`, `modified` and `uri`, so the no-`id_keys`
+  fallback ends at the record's FIRST SCALAR — `@context`, identical on every
+  record in the API. Every person that pivot was ever asked about would have
+  collapsed onto one uid, silently. **A scheduled row reading ONE entity can
+  never show that; a pivot shows it on the second question.** One of them paid
+  rule 4d back for free: `reportList/16928` answers an EMPTY items array where
+  a server ignoring its path parameter would have returned filer 15021's fifty
+  reports.
+
+Three not converted, and the reason is a decision rather than a measurement:
+`no-brreg-underenhet-detail`, `br-cnpja-open-office` and `br-cnpjws-publica`
+mine a nested array of their one frozen record, so a conversion has to settle
+what the record should be AND whether a company register that answers for any
+CNPJ belongs on a 24 h schedule at all. One of the nine,
+`br-ibge-municipio-detalhe`, is converted on the row's own authoring evidence
+and **not on a reading** — its host timed out twice from the measuring
+container, which is written down rather than filed as a verdict.
+
 `VJSON_PREP` is deliberately NOT converted: its extra argument is a C function
 that reshapes each page before emit, and a declarative row cannot hold code.
 VRSS and VGEO stay out too — hpengine has no RSS or FeatureCollection mode.

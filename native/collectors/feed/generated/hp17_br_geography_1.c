@@ -16,10 +16,31 @@ static const hp_source T[] = {
   { .id = "br-ibge-municipio-detalhe",
     .name = "IBGE Localidades - municipio por codigo",
     .collector = "br_geography", .category = "geography",
-    .description = "Per-municipality detail hop (the list endpoint is already in the tree): IBGE code and name plus the full nested hierarchy - microrregiao, mesorregiao, UF with sigla, macro-region, and the immediate/intermediate region codes. Resolves the codigoIbge carried on every PNCP tender.  NO SECOND HOP: its detail endpoint was this row's own url, with the record's id the one already in it (2026-10-25).",
-    .record_type = "geography-record", .tags = "\"br\",\"geography\",\"batch17\"", .lang = "pt",
-    .url = "https://servicodados.ibge.gov.br/api/v1/localidades/municipios/3550308",
+    .description = "Per-municipality detail hop (the list endpoint is already in the tree): IBGE code and name plus the full nested hierarchy - microrregiao, mesorregiao, UF with sigla, macro-region, and the immediate/intermediate region codes. Resolves the codigoIbge carried on every PNCP tender.  NO SECOND HOP: its detail endpoint was this row's own url, with the record's id the one already in it (2026-10-25).  AN ENTITY PIVOT since 2026-10-25: hand it an IBGE municipio code (seven digits). It was a scheduled row with one of those frozen into its url, so it re-read a single subject for ever.",
+    .record_type = "geography-record", .tags = "\"br\",\"geography\",\"batch17\",\"pivot\"", .lang = "pt",
+    .url = "https://servicodados.ibge.gov.br/api/v1/localidades/municipios/{q}",
+    /* NOW AN ENTITY PIVOT, AND THE READING BEHIND EACH PART OF IT.
+     * THE ONE OF THE NINE THAT IS UNMEASURED FROM HERE, and it is written
+     * down as such rather than filed as a reading. servicodados.ibge.gov.br
+     * timed out on both attempts on 2026-10-25 (the frozen code, then
+     * 3304557), so no second-entity reading exists from this container.
+     *
+     * The conversion is made anyway, and on evidence rather than hope: this
+     * row's OWN removed detail_url was `/municipios/{v}` keyed on `id`,
+     * authored from a live probe, so the path taking a code is attested by
+     * the row's authoring; its description says "the list endpoint is already
+     * in the tree"; and array_path `.` was already right. The alternative is
+     * leaving a row that re-reads Sao Paulo four times a week for ever. If
+     * the path turns out not to take a code, the pivot answers an honest
+     * empty or a disclosed fetch failure for every entity, which is visible,
+     * where today's behaviour is a stale record that looks healthy.
+     *
+     * id_keys/title_keys are the Localidades API's documented top-level
+     * fields and are NOT measured here either. Re-read this row against the
+     * host from somewhere with egress to it. */
     .array_path = ".",
+    .id_keys = "id",
+    .title_keys = "nome",
     /* NO DETAIL HOP. `make lint-sources` (`detail-self-hop`) found this
      * row's detail_url to BE its url, which is necessary for a worthless
      * hop and not sufficient — a key naming a different id would reach a
@@ -33,15 +54,11 @@ static const hp_source T[] = {
      * `id` field can only be 3550308. A hop onto the same id is the
      * same document.
      *
-     * Also still open and NOT guessed at here: this row's url carries ONE
-     * entity frozen at authoring time on a schedule, so it re-reads one
-     * subject for ever — the shape repaired for both Open311 single-case
-     * rows (`{q}` in the path plus interval 0). The path demonstrably takes
-     * an id, because the detail_url templated that exact position; what the
-     * record set should become once it is a pivot is a reading of this host
-     * and is listed in docs/detail-self-hops-2026-10-25.tsv. */
-    .page_walk = 1,
-    .interval = 86400, .free_tier = 1 },
+     * Its frozen-entity half was repaired the same day, in the commit after
+     * this one — the pivot note on this row says what each part of that was
+     * measured against. */
+    .want = HP_NUMERIC,
+    .interval = 0, .free_tier = 1 },
 
 };
 HP_REGISTER_TABLE(T)

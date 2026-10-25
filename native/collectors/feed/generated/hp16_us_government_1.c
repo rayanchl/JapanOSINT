@@ -16,10 +16,18 @@ static const hp_source T[] = {
   { .id = "us-ma-ocpf-filer",
     .name = "Massachusetts OCPF - filer (candidate/committee) profile",
     .collector = "us_government", .category = "government",
-    .description = "cpfId, candidate first/last name, committeeName, accountType (candidate/PAC/ballot-question/party flags), officeSought, district, treasurer, depository bank id and name, address, isActive/isClosed, treasurerTrainingCompletionDate. Entry point for a person -> committee -> reports -> donors chain.  NO SECOND HOP: its detail endpoint was this row's own url and every record's cpfId is the filer already in it (measured 2026-10-25).",
-    .record_type = "government-record", .tags = "\"us\",\"government\",\"batch16\"", .lang = "en",
-    .url = "https://api.ocpf.us/filer/15021",
-    .array_path = "tags",
+    .description = "cpfId, candidate first/last name, committeeName, accountType (candidate/PAC/ballot-question/party flags), officeSought, district, treasurer, depository bank id and name, address, isActive/isClosed, treasurerTrainingCompletionDate. Entry point for a person -> committee -> reports -> donors chain.  NO SECOND HOP: its detail endpoint was this row's own url and every record's cpfId is the filer already in it (measured 2026-10-25).  AN ENTITY PIVOT since 2026-10-25: hand it an OCPF filer id (cpfId). It was a scheduled row with one of those frozen into its url, so it re-read a single subject for ever.",
+    .record_type = "government-record", .tags = "\"us\",\"government\",\"batch16\",\"pivot\"", .lang = "en",
+    .url = "https://api.ocpf.us/filer/{q}",
+    /* NOW AN ENTITY PIVOT, AND THE READING BEHIND EACH PART OF IT.
+     * MEASURED 2026-10-25 with a second filer taken from the sibling
+     * `us-ma-ocpf-barred-filers` row: /filer/16928 answers 200 with 18
+     * top-level scalars including cpfId, fullName and committeeName.
+     * array_path moves off `tags` — the row is a "filer (candidate/committee)
+     * profile" and `tags` is a 17-element list beside it, not the profile. */
+    .array_path = ".",
+    .id_keys = "cpfId",
+    .title_keys = "fullName,committeeName",
     /* NO DETAIL HOP. `make lint-sources` (`detail-self-hop`) found this
      * row's detail_url to BE its url, which is necessary for a worthless
      * hop and not sufficient — a key naming a different id would reach a
@@ -28,15 +36,11 @@ static const hp_source T[] = {
      * SELF: 17 records (the filer's `tags`), and `cpfId` is 15021 on
      * every one — the url's own filer. 17 re-fetches of this response.
      *
-     * Also still open and NOT guessed at here: this row's url carries ONE
-     * entity frozen at authoring time on a schedule, so it re-reads one
-     * subject for ever — the shape repaired for both Open311 single-case
-     * rows (`{q}` in the path plus interval 0). The path demonstrably takes
-     * an id, because the detail_url templated that exact position; what the
-     * record set should become once it is a pivot is a reading of this host
-     * and is listed in docs/detail-self-hops-2026-10-25.tsv. */
-    .page_walk = 1,
-    .interval = 86400, .free_tier = 1 },
+     * Its frozen-entity half was repaired the same day, in the commit after
+     * this one — the pivot note on this row says what each part of that was
+     * measured against. */
+    .want = HP_NUMERIC,
+    .interval = 0, .free_tier = 1 },
 
   { .id = "us-ma-ocpf-iepacs",
     .name = "Massachusetts OCPF - independent-expenditure PAC reports",
@@ -51,10 +55,24 @@ static const hp_source T[] = {
   { .id = "us-ma-ocpf-report-detail",
     .name = "Massachusetts OCPF - itemised report (donors and spending)",
     .collector = "us_government", .category = "government",
-    .description = "Full contents of one filing: receipts[] with each contributor's name, address, occupation, employer, principalOfficer, amount, date, tenderTypeDescription (Credit Card/Check), relatedCpfId; plus merchantProviderFees, refundedContributions, expenditures, bankName, officeDistrictSought and reporting totals. This is the deepest hop in MA campaign finance.  NO SECOND HOP: its detail endpoint was this row's own url and every receipt's reportId is the report already in it (measured 2026-10-25).",
-    .record_type = "government-record", .tags = "\"us\",\"government\",\"batch16\"", .lang = "en",
-    .url = "https://api.ocpf.us/report/1038377",
+    .description = "Full contents of one filing: receipts[] with each contributor's name, address, occupation, employer, principalOfficer, amount, date, tenderTypeDescription (Credit Card/Check), relatedCpfId; plus merchantProviderFees, refundedContributions, expenditures, bankName, officeDistrictSought and reporting totals. This is the deepest hop in MA campaign finance.  NO SECOND HOP: its detail endpoint was this row's own url and every receipt's reportId is the report already in it (measured 2026-10-25).  AN ENTITY PIVOT since 2026-10-25: hand it an OCPF report id. It was a scheduled row with one of those frozen into its url, so it re-read a single subject for ever.",
+    .record_type = "government-record", .tags = "\"us\",\"government\",\"batch16\",\"pivot\"", .lang = "en",
+    .url = "https://api.ocpf.us/report/{q}",
+    /* NOW AN ENTITY PIVOT, AND THE READING BEHIND EACH PART OF IT.
+     * MEASURED 2026-10-25 with a second report taken from filer 15021's
+     * own report list: /report/1047869 answers 200 and its `receipts` hold
+     * two records, each carrying its own `id` (18595716), `reportId`, name,
+     * address, employer and amount.
+     *
+     * array_path STAYS `receipts`, against the pattern of the other eight,
+     * and the row's own description is why: "Full contents of one filing:
+     * receipts[] with each contributor's name, address, occupation,
+     * employer ... amount, date". The record here is the contributor, and
+     * that is the data worth having. `id` is the receipt's own identifier, so
+     * two contributions no longer key onto the report. */
     .array_path = "receipts",
+    .id_keys = "id",
+    .title_keys = "fullNameReverse,name",
     /* NO DETAIL HOP. `make lint-sources` (`detail-self-hop`) found this
      * row's detail_url to BE its url, which is necessary for a worthless
      * hop and not sufficient — a key naming a different id would reach a
@@ -63,23 +81,31 @@ static const hp_source T[] = {
      * SELF: 8 records (the report's `receipts`), and `reportId` is
      * 1038377 on every one — this report. 8 re-fetches.
      *
-     * Also still open and NOT guessed at here: this row's url carries ONE
-     * entity frozen at authoring time on a schedule, so it re-reads one
-     * subject for ever — the shape repaired for both Open311 single-case
-     * rows (`{q}` in the path plus interval 0). The path demonstrably takes
-     * an id, because the detail_url templated that exact position; what the
-     * record set should become once it is a pivot is a reading of this host
-     * and is listed in docs/detail-self-hops-2026-10-25.tsv. */
-    .page_walk = 1,
-    .interval = 86400, .free_tier = 1 },
+     * Its frozen-entity half was repaired the same day, in the commit after
+     * this one — the pivot note on this row says what each part of that was
+     * measured against. */
+    .want = HP_NUMERIC,
+    .interval = 0, .free_tier = 1 },
 
   { .id = "us-ma-ocpf-report-list",
     .name = "Massachusetts OCPF - all reports for one filer",
     .collector = "us_government", .category = "government",
-    .description = "Every report a committee has filed of a given base type, each already containing its receipts/expenditure arrays, bankName, reportingPeriod, depositSequence and totals. Combined with /reports/baseReportTypes/{cpfId} this enumerates a filer's complete filing history.  NO SECOND HOP: its detail endpoint was this row's own url and every item's cpfId is the filer already in it, so the hop re-asked for this same list once per item (measured 2026-10-25).",
-    .record_type = "government-record", .tags = "\"us\",\"government\",\"batch16\"", .lang = "en",
-    .url = "https://api.ocpf.us/reports/reportList/15021?baseReportTypeId=2",
+    .description = "Every report a committee has filed of a given base type, each already containing its receipts/expenditure arrays, bankName, reportingPeriod, depositSequence and totals. Combined with /reports/baseReportTypes/{cpfId} this enumerates a filer's complete filing history.  NO SECOND HOP: its detail endpoint was this row's own url and every item's cpfId is the filer already in it, so the hop re-asked for this same list once per item (measured 2026-10-25).  AN ENTITY PIVOT since 2026-10-25: hand it an OCPF filer id (cpfId); it answers that filer's whole filing history. It was a scheduled row with one of those frozen into its url, so it re-read a single subject for ever.",
+    .record_type = "government-record", .tags = "\"us\",\"government\",\"batch16\",\"pivot\"", .lang = "en",
+    .url = "https://api.ocpf.us/reports/reportList/{q}?baseReportTypeId=2",
+    /* NOW AN ENTITY PIVOT, AND THE READING BEHIND EACH PART OF IT.
+     * MEASURED 2026-10-25, and this one also settles rule 4d for the
+     * family: /reports/reportList/16928?baseReportTypeId=2 answers 200 with
+     * an EMPTY items array, where a server ignoring its path parameter would
+     * have handed back filer 15021's fifty reports. An honest empty for an
+     * entity with no reports of that type is exactly what a pivot should do.
+     *
+     * array_path stays `items` — the row is "all reports for one filer" — and
+     * `reportId` is measured unique across all 50 of filer 15021's items,
+     * which matters because every item also carries the same cpfId. */
     .array_path = "items",
+    .id_keys = "reportId",
+    .title_keys = "formTitle,reportTypeDescription",
     /* NO DETAIL HOP. `make lint-sources` (`detail-self-hop`) found this
      * row's detail_url to BE its url, which is necessary for a worthless
      * hop and not sufficient — a key naming a different id would reach a
@@ -90,15 +116,11 @@ static const hp_source T[] = {
      * for THIS LIST fifty times a run — bounded only by the detail
      * budget, which it then spent on nothing.
      *
-     * Also still open and NOT guessed at here: this row's url carries ONE
-     * entity frozen at authoring time on a schedule, so it re-reads one
-     * subject for ever — the shape repaired for both Open311 single-case
-     * rows (`{q}` in the path plus interval 0). The path demonstrably takes
-     * an id, because the detail_url templated that exact position; what the
-     * record set should become once it is a pivot is a reading of this host
-     * and is listed in docs/detail-self-hops-2026-10-25.tsv. */
-    .page_walk = 1,
-    .interval = 86400, .free_tier = 1 },
+     * Its frozen-entity half was repaired the same day, in the commit after
+     * this one — the pivot note on this row says what each part of that was
+     * measured against. */
+    .want = HP_NUMERIC,
+    .interval = 0, .free_tier = 1 },
 
   { .id = "us-phl-carto-311",
     .name = "Philadelphia 311 service requests",

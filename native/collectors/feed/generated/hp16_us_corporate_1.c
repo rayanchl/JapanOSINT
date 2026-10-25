@@ -29,10 +29,23 @@ static const hp_source T[] = {
   { .id = "us-ca-dcc-cannabis-detail",
     .name = "California DCC - single cannabis licence record",
     .collector = "us_corporate", .category = "corporate",
-    .description = "Full licence record including businessOwnerName (named natural persons, e.g. 'Collin Hammans, JoAnn Hammans'), businessLegalName, businessDbaName, businessStructure, licensingAuthority, issue/expiration dates, premiseStreetAddress and status history fields.  NO SECOND HOP: its detail endpoint was this row's own url and the record's id is the one already in it (measured 2026-10-25).",
-    .record_type = "corporate-record", .tags = "\"us\",\"corporate\",\"batch16\"", .lang = "en",
-    .url = "https://as-dcc-pub-cann-w-p-002.azurewebsites.net/licenses/16186",
+    .description = "Full licence record including businessOwnerName (named natural persons, e.g. 'Collin Hammans, JoAnn Hammans'), businessLegalName, businessDbaName, businessStructure, licensingAuthority, issue/expiration dates, premiseStreetAddress and status history fields.  NO SECOND HOP: its detail endpoint was this row's own url and the record's id is the one already in it (measured 2026-10-25).  AN ENTITY PIVOT since 2026-10-25: hand it a DCC licence id. It was a scheduled row with one of those frozen into its url, so it re-read a single subject for ever.",
+    .record_type = "corporate-record", .tags = "\"us\",\"corporate\",\"batch16\",\"pivot\"", .lang = "en",
+    .url = "https://as-dcc-pub-cann-w-p-002.azurewebsites.net/licenses/{q}",
+    /* NOW AN ENTITY PIVOT, AND THE READING BEHIND EACH PART OF IT.
+     * MEASURED 2026-10-25 with an id harvested from the sibling row that
+     * already works (`us-ca-dcc-cannabis-search`, whose own detail hop reads
+     * this very path): /licenses/5062 answers 200 with 28 top-level scalars
+     * including id, licenseNumber, businessLegalName and businessOwnerName.
+     * array_path `.` was already right — the document is the licence.
+     *
+     * HP_NUMERIC's bound is worth stating: every licence id seen here is
+     * four or five digits, so they pass, but a three-digit id would be
+     * refused before the wire. That is the trade this gate makes, and it is
+     * preferred to HP_ANY because the row's entity is a number. */
     .array_path = ".",
+    .id_keys = "id",
+    .title_keys = "businessLegalName,businessDbaName,licenseNumber",
     /* NO DETAIL HOP. `make lint-sources` (`detail-self-hop`) found this
      * row's detail_url to BE its url, which is necessary for a worthless
      * hop and not sufficient — a key naming a different id would reach a
@@ -42,15 +55,11 @@ static const hp_source T[] = {
      * the licence this url names, and its `id` can only be 16186 —
      * the hop re-fetched this very response.
      *
-     * Also still open and NOT guessed at here: this row's url carries ONE
-     * entity frozen at authoring time on a schedule, so it re-reads one
-     * subject for ever — the shape repaired for both Open311 single-case
-     * rows (`{q}` in the path plus interval 0). The path demonstrably takes
-     * an id, because the detail_url templated that exact position; what the
-     * record set should become once it is a pivot is a reading of this host
-     * and is listed in docs/detail-self-hops-2026-10-25.tsv. */
-    .page_walk = 1,
-    .interval = 86400, .free_tier = 1 },
+     * Its frozen-entity half was repaired the same day, in the commit after
+     * this one — the pivot note on this row says what each part of that was
+     * measured against. */
+    .want = HP_NUMERIC,
+    .interval = 0, .free_tier = 1 },
 
   { .id = "us-ca-dcc-cannabis-search",
     .name = "California Dept of Cannabis Control - licence search API",

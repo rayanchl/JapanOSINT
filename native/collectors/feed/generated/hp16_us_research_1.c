@@ -49,10 +49,22 @@ static const hp_source T[] = {
   { .id = "openalex-institution-detail",
     .name = "OpenAlex institution record (detail)",
     .collector = "us_research", .category = "research",
-    .description = "One institution: ROR id, country, type, homepage, acronyms and alternative names, lineage (parent institutions), geo coordinates, works/cited-by counts, associated_institutions and repositories.  NO SECOND HOP: the declared detail_key resolved to topic ids and the hop asked the institutions endpoint for them, 25 404s a run (measured 2026-10-25).",
-    .record_type = "research-record", .tags = "\"us\",\"research\",\"batch16\"", .lang = "en",
-    .url = "https://api.openalex.org/institutions/I27837315",
-    .array_path = "topics",
+    .description = "One institution: ROR id, country, type, homepage, acronyms and alternative names, lineage (parent institutions), geo coordinates, works/cited-by counts, associated_institutions and repositories.  NO SECOND HOP: the declared detail_key resolved to topic ids and the hop asked the institutions endpoint for them, 25 404s a run (measured 2026-10-25).  AN ENTITY PIVOT since 2026-10-25: hand it an OpenAlex institution id (I + digits) or any id OpenAlex resolves on that path. It was a scheduled row with one of those frozen into its url, so it re-read a single subject for ever.",
+    .record_type = "research-record", .tags = "\"us\",\"research\",\"batch16\",\"pivot\"", .lang = "en",
+    .url = "https://api.openalex.org/institutions/{q}",
+    /* NOW AN ENTITY PIVOT, AND THE READING BEHIND EACH PART OF IT.
+     * MEASURED 2026-10-25 with a second id taken from the frozen
+     * record's own lineage: /institutions/I2801799315 answers 200 with 16
+     * top-level scalars and display_name "Hurley Medical Center". array_path
+     * moves off `topics` because the row is "One institution" — and because
+     * `topics` is what made its removed detail hop ask the INSTITUTIONS
+     * endpoint for a TOPIC id (25 x HTTP 404 a run).
+     *
+     * HP_NUMERIC accepts `I27837315`: the gate counts digits anywhere and
+     * wants four, so an OpenAlex id passes and a person's name does not. */
+    .array_path = ".",
+    .id_keys = "id",
+    .title_keys = "display_name",
     /* NO DETAIL HOP. `make lint-sources` (`detail-self-hop`) found this
      * row's detail_url to BE its url, which is necessary for a worthless
      * hop and not sufficient — a key naming a different id would reach a
@@ -70,15 +82,11 @@ static const hp_source T[] = {
      * (their url is a list and `id` is an institution id); the lint
      * flags only this one, which is the check being narrow enough.
      *
-     * Also still open and NOT guessed at here: this row's url carries ONE
-     * entity frozen at authoring time on a schedule, so it re-reads one
-     * subject for ever — the shape repaired for both Open311 single-case
-     * rows (`{q}` in the path plus interval 0). The path demonstrably takes
-     * an id, because the detail_url templated that exact position; what the
-     * record set should become once it is a pivot is a reading of this host
-     * and is listed in docs/detail-self-hops-2026-10-25.tsv. */
-    .page_walk = 1,
-    .interval = 86400, .free_tier = 1 },
+     * Its frozen-entity half was repaired the same day, in the commit after
+     * this one — the pivot note on this row says what each part of that was
+     * measured against. */
+    .want = HP_NUMERIC,
+    .interval = 0, .free_tier = 1 },
 
   { .id = "openalex-work-by-doi",
     .name = "OpenAlex work by DOI (id pivot)",
