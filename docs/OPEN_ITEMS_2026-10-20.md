@@ -868,9 +868,37 @@ re-stored hourly: 1,703 -> 8,620). Left alone with their arithmetic:
 `gr-diavgeia-positions`, the three `awc-*` bbox rows and the Japan Search
 family.
 
-**Two classes are being re-read with causes** (in flight at the time of
-writing): the 4,761 FETCH_FAILED and the 631 EMITS_NOTHING. The early returns
-already say two things. **About a third of FETCH_FAILED is transient** — 55 of
+**Both classes have now been re-read with causes.**
+`docs/fetch-failed-reread-2026-10-25.tsv` (4,737 of the 4,761 re-run; the other
+24 are rows this session removed or replaced) and
+`docs/emits-nothing-reread-2026-10-25.tsv`.
+
+**FETCH_FAILED, 4,761 -> 3,549, because 1,139 (23.9%) read OK on a second
+attempt.** "One probe is one reading" at scale: a quarter of the largest
+failure class in the tree was transient. The rest now carry a cause instead of
+one fixed sentence:
+
+| rows | cause | what it wants |
+| --- | --- | --- |
+| 1,262 | bare handshake / unclassified transport | **this container's own egress** — unmeasured from here, not a finding |
+| 738 | HTTP 403 | the compat User-Agent, which recovered 491 rows on 2026-10-20 — the highest-value actionable group |
+| 564 | HTTP 5xx (503 389, 500 91, 502 74, 504 10) | a host that was down or shedding; re-read before judging |
+| 360 | a bespoke collector returned non-zero with every host answering | read the BODY, not the status |
+| 232 | HTTP 404 | the endpoint moved or retired; per row |
+| 115 | HTTP 200 whose body did not parse | the "stopped being a feed" family |
+| 84 | HTTP 429 | a per-host gap in `core/hostgate.c`, measured first |
+| 64 | a named TLS cause (32 no_local_issuer, 14 self_signed, 11 expired, 7 hostname_mismatch) | see **D6**: every leaf here is the gateway's, so these are not the publishers' chains |
+| 62 | transport timeout | a row's own `timeout_ms`, per the ENA precedent |
+| 21 | HTTP 408 | and one of those was a deep-paging cap in disguise (InterPro) |
+| 28 + 20 | HTTP 401, and 410/406/5xx-CDN oddments | a credential, or a retirement |
+
+**EMITS_NOTHING, 631 -> 467**, of which the byte count splits 370 honest
+empties from **97 that transferred a real body and found no records in it** —
+and only 8 of those 97 had disclosed anything. Five of the 97 are fixed (the
+e-Gov four, HUDOC, TDnet, both InterPro rows, the three NRC rows, two TSO
+rows); the rest are a ranked list with their byte counts.
+
+The early returns also said two things that stand: **About a third of FETCH_FAILED is transient** — 55 of
 the first 158 re-read OK, which is "one probe is one reading" at scale, so the
 real failing count is well below 4,761. And **a bare TLS handshake refusal is
 the shape this container's own egress produces**: 51 of the first 103 failures
