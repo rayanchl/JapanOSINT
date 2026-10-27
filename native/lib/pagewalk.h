@@ -86,6 +86,15 @@ int jo_page_max(const char *legacy_env);
  * declare a ceiling of their own. */
 int jo_page_max_for(int declared);
 
+/* OData v2 "verbose" JSON states its total as `d.__count`, and as a STRING:
+ * `{"d":{"results":[…],"__count":"46144"}}` when the request carries
+ * `$inlinecount=allpages`. Returns that number, or -1 — for an absent key, an
+ * empty string, or any string that is not entirely digits. One reader, called
+ * by both declared-total lists (pagewalk's and lib/jsonlist.c's), because a
+ * total read one way in one engine and not at all in the other is the shape
+ * this tree has had to repair three times. */
+long pw_odata_v2_count(const cJSON *doc);
+
 int pw_walk(const source_ctx *c, intel_sink *s, const char *id,
             const char *url, pw_fetch_fn fetch, pw_emit_fn emit_page, void *ud);
 
