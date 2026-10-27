@@ -570,6 +570,14 @@ static const hp_source T[] = {
     .next_path = "@odata.nextLink",
     .record_type = "t-odata-decl", .free_tier = 1, .description = "d" },
 
+  /* 58. OData v2 VERBOSE JSON: `{"d":{"results":[…],"__count":"46144"}}`.
+   * The total is a STRING, so no declared-total key could match it. */
+  { .id = "T_ODATA2", .name = "OData v2 verbose: d.__count is a string",
+    .url = "https://x.test/od2?$inlinecount=allpages", .array_path = "d.results",
+    .title_keys = "name", .id_keys = "id", .interval = 3600,
+    .page_walk = 1,
+    .record_type = "t-odata2", .free_tier = 1, .description = "d" },
+
   { .id = "T_PAGE_SET", .name = "page_param replaces, never appends",
     .url = "https://x.test/pset?page=1&per=2", .array_path = "items",
     .title_keys = "name", .id_keys = "id", .page_param = "page", .interval = 3600,
@@ -4476,6 +4484,50 @@ int main(void) {
   rc = run_source("T_ODATA_DECL", NULL);
   ok(rc == 0 && g_ncalls == 2 && g_ncap >= 3,
      "47c: a row that DECLARES a dotted key as next_path resolves it too");
+
+  /* 58. OData v2 "verbose" JSON states its total as `d.__count` and as a
+   *     STRING. The declared-total lists accepted numbers only, so a row on
+   *     the NZ Charities Register (46,144 organisations, 589,390 officers,
+   *     430,815 annual returns) could never say how much it was holding back
+   *     — "the upstream declares no total" with the number in the envelope. */
+  fx_reset();
+  fx_add("/od2?$inlinecount=allpages", 200,
+    "{\"d\":{\"results\":[{\"name\":\"c1\",\"id\":\"1\"},"
+    "{\"name\":\"c2\",\"id\":\"2\"}],\"__count\":\"46144\"}}");
+  rc = run_source("T_ODATA2", NULL);
+  { const cap *nt = NULL;
+    ok(rc == 0 && cap_count("collector-truncation-notice", &nt) == 1 && nt &&
+       strstr(nt->props, "\"records_available\":46144") != NULL &&
+       strstr(nt->props, "\"records_available_basis\":\"upstream declared this "
+                         "total\"") != NULL,
+       "58: OData v2's string d.__count is read as the upstream's declared total"); }
+
+  /* 58b. THE CONTROL: a count that is not entirely digits is not a total. The
+   *      same two records, a short page, and nothing else to go on — so the
+   *      walk ends quietly instead of reporting a number nobody published. */
+  fx_reset();
+  fx_add("/od2?$inlinecount=allpages", 200,
+    "{\"d\":{\"results\":[{\"name\":\"c1\",\"id\":\"1\"},"
+    "{\"name\":\"c2\",\"id\":\"2\"}],\"__count\":\"46k\"}}");
+  rc = run_source("T_ODATA2", NULL);
+  ok(rc == 0 && cap_count("collector-truncation-notice", NULL) == 0 &&
+     cap_count("t-odata2", NULL) == 2,
+     "58b: a d.__count that is not all digits is ignored, not half-read");
+
+  /* 58c. The one reader both lists call (lib/pagewalk.c), case by case. */
+  { cJSON *a = cJSON_Parse("{\"d\":{\"__count\":\"46144\"}}");
+    cJSON *b = cJSON_Parse("{\"d\":{\"__count\":\"12a\"}}");
+    cJSON *c = cJSON_Parse("{\"d\":{\"__count\":\"\"}}");
+    cJSON *d = cJSON_Parse("{\"d\":{\"__count\":7}}");
+    cJSON *e = cJSON_Parse("{\"d\":[{\"id\":1}]}");
+    cJSON *f = cJSON_Parse("{\"d\":{\"__count\":\"-5\"}}");
+    ok(pw_odata_v2_count(a) == 46144 && pw_odata_v2_count(b) == -1 &&
+       pw_odata_v2_count(c) == -1 && pw_odata_v2_count(d) == 7 &&
+       pw_odata_v2_count(e) == -1 && pw_odata_v2_count(f) == -1 &&
+       jsonlist_declared_total(a) == 46144 && jsonlist_declared_total(b) == -1,
+       "58c: digits only; a number is kept, a sign, a letter or an empty string is not");
+    cJSON_Delete(a); cJSON_Delete(b); cJSON_Delete(c);
+    cJSON_Delete(d); cJSON_Delete(e); cJSON_Delete(f); }
 
   /* 48. A row the engine cannot fetch is refused at REGISTRATION, and says so.
    *     `hp_register()` skipped a row with no `.url` with a bare `continue`:

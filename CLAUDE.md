@@ -349,6 +349,20 @@ that replaced them survive, so no coverage is lost. **A sweep's verdict is
 about the URL it sent, not about the row's name** — re-read a removal against
 the row as it stands now.
 
+**The registered count is 57,924** (2026-10-27, `make source-count`, both
+floors re-recorded from that build): 57,921 plus **batch 56's three rows**,
+the rest of the New Zealand Charities Register beside its organisations —
+every officer (589,506), every annual return (430,937) and the charity groups
+(357), `collectors/pivot/table/hp3b56_nzcharities.c`. The organisations row
+itself had read the same first 100 of 46,144 charities every run, its links
+had all redirected to the search page, and the register's other 22 OData sets
+were unread. **A DECLARED TOTAL CAN BE A STRING**: OData v2's verbose JSON
+writes `d.__count: "46144"`, and both declared-total lists accepted numbers
+only, so every row on such a service read "the upstream declares no total"
+with the number in its envelope. `pw_odata_v2_count()` (lib/pagewalk.c) reads
+it, digits only, for both lists; `hptest` 58–58c, 58 and 58c checked to fail
+without it.
+
 **Measured 2026-10-25 on the merged tree at 005e4ee8** (main's 57,923 plus the two IOC sea-level retirements rebased onto it, `sci-ocean-ioc-sealevel-tab` and `geo-ioc-sealevel-stations`): registry 57,921, `make source-count` 57,921, both floors re-recorded at 57,921 from that build, not by arithmetic.
 
 **Main's count was 57,394** (2026-10-25): 57,393 plus `US_FCC_ENFORCEMENT`

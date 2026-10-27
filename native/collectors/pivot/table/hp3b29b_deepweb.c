@@ -856,8 +856,13 @@ static const hp_source HP3B29B_DEEPWEB[] = {
     .record_type = "charity-officer",
     .tags = "\"newzealand\",\"charities\",\"officers\",\"directors\",\"banned\",\"odata\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.odata.charities.govt.nz/Officers?$filter=substringof('{q}',FullName)&$top=100&$format=json",
-    .array_path = "d",
+    /* Ordered on OfficerId with the first offset bound in the URL: an offset
+     * walk with no sort can serve one officer twice and skip another, and a
+     * collision is the only trace that leaves. $inlinecount states the match
+     * count, so a walk stopped short says how many it did not reach — which
+     * moves the records to d.results (2026-10-25). */
+    .url = "https://www.odata.charities.govt.nz/Officers?$filter=substringof('{q}',FullName)&$orderby=OfficerId&$top=100&$skip=0&$inlinecount=allpages&$format=json",
+    .array_path = "d.results",
     .date_keys = "PositionAppointmentDate",
     .id_keys = "OfficerId",
     .page_param = "$skip",
