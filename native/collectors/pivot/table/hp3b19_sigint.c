@@ -27,7 +27,10 @@ static const hp_source HP3B19_SIGINT[] = {
     .record_type = "broadcast-transmitter",
     .tags = "\"sigint\",\"spectrum\",\"broadcast\",\"finland\",\"register\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.traficom.fi/api/v1/Radioasematiedot?$top=1000",
+    /* `$orderby=ID` — the entity's own sequential id; this row cycles.
+     * Measured 2026-10-24: $skip=0 answers ID 1067, $skip=1 answers 1068,
+     * `ID desc` answers 3430. */
+    .url = "https://opendata.traficom.fi/api/v1/Radioasematiedot?$top=1000&$orderby=ID",
     .array_path = "value",
     .date_keys = "EndingDate",
     /* exhaustive-ok: LicenseNumber is the broadcaster's umbrella licence, not
@@ -78,7 +81,10 @@ static const hp_source HP3B19_SIGINT[] = {
     .record_type = "frequency-allocation",
     .tags = "\"sigint\",\"spectrum\",\"allocation\",\"finland\",\"reference\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.traficom.fi/api/v1/Taajuusjakotaulukko?$top=1000",
+    /* `$orderby=ID` — the entity's own sequential id; this row cycles.
+     * Measured 2026-10-24: $skip=0 answers ID 1, $skip=1 answers ID 2,
+     * and `ID desc` answers 5917, so the sort is honoured. */
+    .url = "https://opendata.traficom.fi/api/v1/Taajuusjakotaulukko?$top=1000&$orderby=ID",
     .array_path = "value",
     .interval = 86400,
     .page_param = "$skip",
@@ -123,7 +129,12 @@ static const hp_source HP3B19_SIGINT[] = {
     .record_type = "radio-licence",
     .tags = "\"sigint\",\"amateur\",\"callsign\",\"finland\",\"register\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.traficom.fi/api/v1/RadioamatoorienKutsumerkit?$top=1000",
+    /* `$orderby=ID` because this row cycles and OData guarantees no order
+     * without it. `ID` is the entity's own sequential id (the callsign is
+     * not: it is the row's identity but not monotone, so a new licence
+     * would land mid-collection). Measured 2026-10-24: accepted, honoured,
+     * $skip 0/1 answer consecutive ids. */
+    .url = "https://opendata.traficom.fi/api/v1/RadioamatoorienKutsumerkit?$top=1000&$orderby=ID",
     .array_path = "value",
     .id_keys = "CallSign",
     .interval = 86400,
@@ -1313,7 +1324,17 @@ static const hp_source HP3B19_SIGINT[] = {
     .record_type = "radio-licence",
     .tags = "\"sigint\",\"spectrum\",\"licence\",\"australia\",\"register\",\"geo\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://portal.data.nsw.gov.au/arcgis/rest/services/Hosted/Australian_Communication_and_Media_Authority_Data/FeatureServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=2000",
+    /* `orderByFields=objectid ASC` because this row CYCLES and an ArcGIS
+     * `query` with `resultOffset` has no guaranteed order without it — a
+     * resumed walk lands where it meant to only if the order is stable
+     * between runs. The field is NOT assumed: this layer's own metadata
+     * names `objectid` as its objectIdField (read 2026-10-24; across the 50
+     * ArcGIS rows the name is OBJECTID 40 times but also ObjectId,
+     * objectid, FID and oid_permit, so assuming one would have broken
+     * eight rows). Verified the same day: offsets 0,1 -> [1, 2] — two single-record
+     * pages at offsets 0 and 1 answer different records, so the sort is
+     * honoured and the pages are disjoint. */
+    .url = "https://portal.data.nsw.gov.au/arcgis/rest/services/Hosted/Australian_Communication_and_Media_Authority_Data/FeatureServer/0/query?where=1%3D1&outFields=*&f=json&resultRecordCount=2000&orderByFields=objectid%20ASC",
     .array_path = "features",
     .date_keys = "attributes.authorisation_date",
     .id_keys = "attributes.licence_no",
@@ -1493,7 +1514,14 @@ static const hp_source HP3B19_SIGINT[] = {
      * same 10-page budget now collects 10,000 real records instead of 2,896.
      * Ordering by a real column instead would have been worse, not better: at
      * `$order=impianto` a 1,000-row page holds just 9 installations. */
-    .url = "https://www.dati.friuliveneziagiulia.it/resource/28hy-b3b2.json?$select=DISTINCT%20impianto,operatore,data,stato_attivazione,comune,provincia,etrs89est,etrs89nord&$limit=1000",
+    /* `$order=:id` because SODA guarantees NO order without it and this row
+     * CYCLES: a resumed `$offset` walk lands where it meant to only if the
+     * order is stable between runs. `:id` is Socrata's own row identifier, so
+     * it needs no per-dataset knowledge. Measured on data.cdc.gov 2026-10-24:
+     * accepted percent-encoded, stable over two reads, offsets 0 and 3 share
+     * no row, and DESC answers a different set — so the parameter is honoured
+     * rather than silently ignored, which is what rule 4d says to check. */
+    .url = "https://www.dati.friuliveneziagiulia.it/resource/28hy-b3b2.json?$select=DISTINCT%20impianto,operatore,data,stato_attivazione,comune,provincia,etrs89est,etrs89nord&$limit=1000&$order=:id",
     .date_keys = "data",
     /* Every selected column, because that tuple IS the distinct row. */
     .id_keys = "impianto+operatore+data+stato_attivazione+etrs89est+etrs89nord",

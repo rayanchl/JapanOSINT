@@ -1079,7 +1079,18 @@ static const hp_source HP3B19_APAC[] = {
     .record_type = "dataset-record",
     .tags = "\"australia\",\"canberra\",\"opendata\",\"socrata\",\"city\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.act.gov.au/api/catalog/v1?limit=100",
+    /* `domains=`/`search_context=` because a Socrata domain's own
+     * /api/catalog/v1 is NOT scoped to that domain — the batch-34 finding, in
+     * a row that predates it. Measured 2026-10-24: unscoped this URL answers
+     * resultSetSize 10000 and its first record is a Dallas dataset; scoped it
+     * answers 784, all ACT's. Every record this row stored was labelled ACT's
+     * whoever owned it. `order=createdAt` for the cycle: accepted, honoured,
+     * and the scoped count unchanged — created-ascending puts a new dataset at
+     * the tail, where a resumed walk has not been (the same order, and the
+     * same reason, as the cross-portal rows in vsrc14_us_state_3.c). */
+    .url = "https://www.data.act.gov.au/api/catalog/v1?limit=100"
+      "&domains=www.data.act.gov.au&search_context=www.data.act.gov.au"
+      "&order=createdAt",
     .array_path = "results",
     .interval = 86400,
     .page_param = "offset",
@@ -1094,7 +1105,11 @@ static const hp_source HP3B19_APAC[] = {
     .record_type = "dataset-record",
     .tags = "\"australia\",\"marine\",\"aodn\",\"imos\",\"oceanography\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://catalogue-imos.aodn.org.au/geonetwork/srv/eng/q?_content_type=json&fast=index",
+    /* `sortBy=_id` because this row cycles and GeoNetwork's default is
+     * relevance, which no offset walk can rely on. Measured 2026-10-24:
+     * accepted, honoured (`sortOrder=reverse` answers different records)
+     * and the catalogue's own count is unchanged at 1,841. */
+    .url = "https://catalogue-imos.aodn.org.au/geonetwork/srv/eng/q?_content_type=json&fast=index&sortBy=_id",
     .array_path = "metadata",
     .id_keys = "link.0",
     .interval = 86400,

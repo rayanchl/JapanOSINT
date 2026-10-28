@@ -572,6 +572,75 @@ on a city's lapsed domain, whose row had already been removed as a takeover,
 was still in `UA_OVERRIDE`. `tests/unit/test_host_agents.c` pins the
 resolution.
 
+**SEC is the one host family that refuses us for having NO contact mailbox**
+(2026-10-24, `HA_SEC` in that table). Bisected against
+`www.sec.gov/files/company_tickers.json` and `data.sec.gov/api/xbrl/frames/…`:
+the engine's own agent — product, version, repository URL — is **403 on both**
+("undeclared automated tool"), and every agent carrying an `@` address answers
+200. So it is not a token the filter dislikes (INE's "collector", HDX's
+"OSINT") but the absence of an address someone answers, which SEC's
+automated-access policy asks every client to declare. That agent had been in
+NINE places — a `#define` in `collectors/sources/sec_edgar.c`, another in
+`sec_filing_diff.c`, and a `.headers` User-Agent on each of seven rows — and
+the two collectors announced **`contact@example.com`**, which passes the filter
+and is not a contact route. One line per host now (the repository owner's
+address, their decision of 2026-10-24), and **`$SEC_CONTACT_UA` replaces it**
+for a deployment that is not this one. That variable used to be read inside
+`sec_filing_diff.c`, where the per-host table would then have overruled it —
+an operator knob a later change silently defeated, exactly the shape
+`$JO_PAGE_MAX` was in until 2026-10-22 — so it resolves in ONE function,
+`host_agent_ua()`, which the dump, the override accessor, the request builder
+and `probe_hp_batch.py` all read. Measured after, all nine SEC sources store:
+`SEC_EDGAR_FRAMES` 2,679, `SEC_EDGAR_CIK_DIRECTORY_PIVOT` 2,270,
+`SEC_EDGAR_SEARCH` 1,260, `SEC_COMPANY_FACTS` 338, the four EDGAR listings
+320/53/37/32/31, `SEC_RISK_FACTOR_DIFF` 1 — and unchanged with the variable
+set. **A 403 that every honest agent draws is not always a token: ask whether
+the host wants a contact address.**
+
+**Two sessions measured SEC on the same day and agree**, which is worth more
+than either reading alone. The agent kept is the one that passed all THREE
+hosts (`"JapanOSINT/1.0 research (<the owner's address>)"`, main's); the second
+reading adds that `OSINTsaas/1.0 (contact@example.com)` and a bare `JapanOSINT
+<address>` also pass, so what the filter wants is an `@` address — and main's
+`HA_CONTACT` row (200 / 403 / 200 across companyfacts, the Archives
+daily-index and the efts search) shows it is enforced per PATH, not per host.
+Main's pass also found six more rows announcing `contact@japanosint.local` or
+`osint@example.org`, addresses nobody reads, beside the seven that carried the
+real one. One entry per host covers all of them.
+
+**And LegCo is not unreachable — its HTTPS is, from this container.** Its three
+OData feeds are now `collectors/pivot/table/hp3_legco.c`, read whole with
+per-feed page sizes and timeouts measured against a slow server (bills 6,884 in
+69 pages a day; votes 542,997 on an `id gt` keyset at 1,000 a page; speeches
+551,619 by `$skip` 500 at a time over a ~9-day cycle), and the fourth row — a
+second reading of the bills feed at 25 a page — is gone. What this branch
+measured is the SCHEME: `https://app.legco.gov.hk` and
+`https://www.legco.gov.hk` both end in a TLS `unknown CA` alert under the
+session CA bundle AND the system bundle, while `http://www.legco.gov.hk/` 307s
+to that same unreachable https; the agent proxy reports
+`bundleCoversEveryHost: true` and no relay failure for the host, so that is a
+reading of this path rather than of LegCo. **Those URLs are on plain `http`
+deliberately: "upgrading" the scheme on inference takes every LegCo row dark.**
+Re-take the reading from an environment with ordinary egress before changing
+them. `api.data.gov.hk` does answer over https from here, if those endpoints
+ever stop.
+
+**Control the TLS reading against a host you know works — and against the
+publisher's own chain** (2026-10-25, the correction the PR #51 session relayed,
+narrowed by running it). TLS in these containers terminates at the egress
+gateway, which presents its own `O = Anthropic` certificate, so a
+`no_local_issuer` seen in-container can be about the gateway rather than the
+publisher. But it is not about the gateway for EVERY host either: measured the
+same minute, `openssl s_client` (which does not use the proxy) verifies
+github.com, api.gleif.org AND app.legco.gov.hk — `CN = *.legco.gov.hk`,
+`Verify return code: 0 (ok)` — while `curl` through the proxy answers 200 for
+gleif, 400 for github's bare root and **000 for LegCo**. So the honest
+statement is the narrow one: this path mishandles THAT host, the publisher's
+chain is fine, and neither the gateway nor LegCo is at fault on its own. Open
+item D6 in `docs/OPEN_ITEMS_2026-10-20.md` bounds the 2026-10-21
+AIA/intermediates work the same way. **Two controls, not one: a host known to
+work through the proxy, and the publisher read directly.**
+
 **The registered count was 57,062** (2026-10-21): the 56,955 below, plus
 **batch 51's 136** Hong Kong and Macao government feeds and China News Service
 (`collectors/sources/cn_feeds_batch51.c`, read off the publishers' own RSS
@@ -2359,6 +2428,7 @@ says why.
 | `tools/audit_batch_reachable.py` | rule 3 above. A row whose opts are ambiguous is reported UNVERIFIABLE, never "never runs" |
 | `tools/audit_url_limits.py` | the seventh discard shape — a record limit asked of the UPSTREAM in a URL, with no paging to follow it. Read, not gated: 70 narrow candidates as of 2026-10-20 (103 when written, 89 after the 2026-10-11 pass), and a limit on a ranked pivot is legitimate |
 | `tools/audit_cycle_health.py` | whether a `page_resume` row can actually ADVANCE its cycle. Three outcomes, one healthy: `CYCLING` (a position was stored), `COMPLETE` (the walk ended and cleared it — the measured no-op that makes page_resume safe to apply broadly), `STUCK` (a page failed, so no position was stored and the next run re-reads the same slice; the collection past that point is unreachable). Found as the generalisation of the ENA shape. It reports the failing page's STATUS and URL rather than a bare verdict, because a 400 naming a parameter is a property of the endpoint while a 429 is one reading. Walks to the real ceiling rather than probing shallow — the failure can be at any page — so it costs ~20 requests a row. Reads the `page_resume` rows out of the C, which is the maintained copy |
+| `tools/audit_idkeys.py` | rule 4b's quietest shape: an `id_keys` naming a field the upstream does not send, which the engine answers by content-hashing every uid — so the row stores its records and a REVISED record lands as a new row instead of an update. One request per row, no database: one page, the first record flattened as `hp_json_flat` flattens it, each token resolved as **`hp_flat_get`** resolves it — exact flat key, else any key whose LAST dotted segment matches case-insensitively. Mirroring that fallback is the whole job: without it the check indicts most of the ArcGIS and GeoJSON fleet (its first version reported 35 rows and 30 were its own fault). It does NOT answer whether the key is UNIQUE — a key that exists and is a dimension loses records just as silently, and that is the registry sweep's COLLISION verdict. Rows come from the C, HP_JSON only, entity/date-token URLs skipped; `--all` drops the `page_resume` restriction |
 | `tools/audit_page_ceiling.py` | which scheduled rows stop at the PAGE CEILING, and how many pages their own upstream says they need. Probes SHALLOW (`--probe-pages`, default 3) and then does arithmetic, because the engine's truncation notice already carries the only number that settles it: a `records_available` whose basis is "upstream declared this total". `CEILING_DECLARED` is measured (pages_needed = total / page_size, the page size derived from the probe when the row declares none); `CEILING_UNKNOWN` means the upstream publishes no total and only a full walk can size it, which is a decision to take deliberately, not a finding. Reads `collector-fetch-failure` too, so a 429 is `FETCH_FAILED` and not "this source returns nothing" |
 | `tools/audit_cycle_advance.py` | which `page_resume` rows can never advance. Runs every cycling row through the real binary under **`JO_PAGE_MAX=2`** (which brakes a declared `page_max` too since 2026-10-22: `jo_page_max_for`, hptest 40f) and reads the truncation notice back: `STUCK` (page 2 refused with a 4xx that is the endpoint's — re-point the paging), `CUT` (transport/5xx/429/wall — re-run, then a hostgate gap), `ADVANCES`, `COMPLETES`, `FETCH_FAILED`, `NEEDS_ENTITY`, `SLOW`. The engine has disclosed the stuck shape per run since 2026-10-18; this is the first thing that READS the disclosures across the registry. `--from-tables collectors` takes the ids from the C, `--ids-file` for a re-run |
 | `tools/audit_page_param.py` | rows whose URL already binds their own `page_param`. The engine used to APPEND (`…&pagina=1&pagina=2`) and a server binding the first occurrence then served page 1 for the whole walk — N pages emitted, one stored, `rc=0`. Fixed in `hp_url_set_param` and pinned by `hptest` "9f-bis"; the lint stays because 103 of 1,431 paged rows are that shape and their paging depends on the replacement being right |
@@ -3788,6 +3858,222 @@ Engine subtleties worth knowing before writing a row:
   `jo_page_max_for`, hptest 40f), which is what this branch's
   `JO_PAGE_MAX_CAP` existed for — so that knob is gone and
   `audit_cycle_advance.py` sets `JO_PAGE_MAX=2`.
+
+  **ADVANCING IS NOT ADVANCING CORRECTLY, and 273 cycling rows cannot say
+  which they do** (2026-10-22, `docs/measured-seam-risk-2026-10-22.tsv`). Both
+  sweeps above ask whether page 2 can be fetched. Neither asks the other half:
+  a resumed walk only lands where it meant to if the collection's ORDER is
+  stable between runs. If the upstream reorders, a record moves out of the
+  slice the next run will read into the slice the last run already read, and it
+  is never stored — the skip this file calls its worst shape, whose visible
+  half is a small collision and whose invisible half is the loss. That is a
+  property of the row's URL, so it is readable without a request: of the 665
+  rows that cycle, **273 page by offset or page number with NO order parameter
+  at all** (ArcGIS 50, WordPress REST 28, CKAN 25, Socrata 13, ODS 9, WFS 3,
+  145 other), 166 name an order with no direction, 52 are keyset cursors (safe
+  by construction) and 173 sort ascending already.
+
+  **The first version of that count said 388, and 115 of them were false.**
+  The pattern matched `order`/`sort` after `?` or `&` and so could not see
+  Socrata's `&$order=`, OData's `&%24orderby=` or ArcGIS's `&orderByFields=` —
+  a third of the finding was rows that already sort. A new check's big number
+  deserves the same suspicious look this file gives a new check's zero.
+
+  **WordPress REST is the family measured end to end** (28 of those 273,
+  `docs/measured-wordpress-cycle-totals-2026-10-22.tsv`). Its default order is
+  `orderby=date&order=desc` — verified live, newest first — so every new post
+  pushes the whole collection down one place under a cycling walk. But a risk
+  ranking does not say which rows HAVE a seam, and `X-WP-Total` does: **8 of
+  the 28 hold more than one run reads** (kyoiku-press 77,291 posts, lnews
+  71,028, yakuji 58,422, japanmetal 57,496, ANCOM 5,705, ANM 3,831, AEK 3,138,
+  sorabatake 2,521) and 15 complete inside one run, where the cycle is a
+  genuine no-op and the descending order costs nothing. The 8 carry
+  `orderby=id&order=asc` now (accepted on every host, measured, ids ascending
+  — and note the dates are NOT monotonic with id, which is its own reason to
+  key the order on the id). Two runs against one database on sorabatake:
+  1,000 then 1,000, **2,000 distinct rows, zero overlap at the seam**. Four
+  rows answer no `X-WP-Total` at all and are recorded as unmeasured.
+  Recency is the trade: three of the 8 hosts have a registered RSS row that
+  covers it, so reading their archive forward is exactly the row's job; for the
+  other five the pair this wants (the `PLOS_RECENT`/`PLOS_CORPUS` shape) is
+  named in the row as a follow-up rather than implied. The other six families
+  are ranked and NOT fixed — ArcGIS needs each layer's own `objectIdField`,
+  which is one metadata read per row.
+
+  **The families behind those 273 are now measured one by one, and 99 rows
+  carry a stable sort** (2026-10-24,
+  `docs/measured-seam-families-2026-10-24.md`, per-layer readings in
+  `docs/measured-arcgis-oid-2026-10-24.tsv`). One verdict per API family, each
+  from a live probe, because a family's answer covers dozens of rows where a
+  per-row guess covers none:
+  * **ArcGIS, 47 of 50** — `orderByFields=<the layer's own objectIdField> ASC`.
+    The field is NOT assumable: across the 50 it is `OBJECTID` forty times but
+    also `ObjectId`, `objectid`, `FID` and `oid_permit`, so the probe reads
+    each layer's metadata first and then checks that offsets 0 and 1 answer
+    different records. `IMF_PORTWATCH_AIRPORTS`, two runs: 4,000 distinct.
+  * **CKAN `datastore_search`, 21** — `sort=_id asc`, the datastore's own
+    sequential row id. **Socrata, 13** — `$order=:id`, and DESC answering a
+    different set is what proves the parameter is honoured rather than
+    ignored. **IETF datatracker, 14** — `order_by=id`, the Django primary key.
+    **CKAN bulk list, 3** — re-pointed to `package_search?sort=id+asc`, each
+    now storing its portal's declared count exactly (823, 797, 250).
+    **One WFS**, Slovenia's 580,322 house numbers, on its own EID.
+  * **Three things the re-points taught.** A URL changed after validation is
+    unvalidated AND ITS SIBLINGS MOVE WITH IT: the CKAN re-point stored ONE
+    record on all three rows until `array_path` went `result` →
+    `result.results` and `page_param` `offset` → `start`. A notice nobody
+    reads is still true: the Hong Kong row's `title_keys = "author"` matched
+    nothing — present on every package, null on every one — so every dataset
+    was titled from the fallback list while the shape notice asked for this
+    exact repair. And the applier reads each URL out of the C, because the
+    risk TSV truncates its url column and the match failed on the one row
+    longer than 200 characters.
+
+  **54 rows were measured and deliberately NOT changed**, which is the part of
+  this pass worth keeping. **UK Parliament's Linked Data API degrades the
+  RECORD when sorted**: `bills.json?_sort=identifier` answers page 0 as bare
+  URI strings where the unsorted page answers full bill objects — a sort there
+  would have turned 14 rows' records into hyperlinks. GBIF exposes no sort at
+  all; FPDS's ATOM feed has none either, so stability there means deciding
+  whether the row is a recency feed, not adding a parameter. OpenDataSoft's 9
+  are 7-of-9 unreachable from this environment and need a per-dataset field.
+  SA Treasury's `order=` is parsed (a malformed spec returns zero rows) but the
+  host stopped answering before HONOURED could be established — one undecided
+  reading is not grounds to change seven rows. Hungary's INSPIRE WFS accepts
+  `sortBy=name` and that name has TIES, so it is not a total order.
+  `environment.data.gov.uk`'s flood-monitoring `_sort` is accepted and
+  IGNORED (`notation` and `-notation` answer the same records), and the
+  `asset-management` row among those 8 is the same Linked Data API as
+  Parliament's: **read what it stores before sorting it.** `api.uktradeinfo.com`
+  REFUSES OData's own `$orderby` with HTTP 403 ("use only the allowed
+  operations"), and `repository.overheid.nl`'s SRU ignores `sortKeys` in both
+  directions while drawing no diagnostic for a bogus key at all.
+
+  **And an unrecognised parameter is not always ignored — on some APIs it
+  FILTERS.** The Gazette dropped `sort=publication-date` silently, but
+  `sort-by=id` took its own declared total from **9,321,677 notices to
+  4,882,776** and returned nothing: the parameter was read as a search term,
+  not a sort. So when a sort goes onto a row, compare the upstream's own total
+  before and after — a total that moves means the parameter was not read as a
+  sort, and the row is now about a different collection.
+
+  **The long tail is measured too, and 19 more rows carry a sort** (2026-10-24,
+  `docs/measured-seam-tail-2026-10-24.tsv`). The 62 single-host rows no family
+  covers were each sent their own URL with a BOGUS sort value under nine
+  candidate parameter names: 29 parse such a parameter, 28 answer the baseline
+  byte for byte, 5 were unreachable. **The error body is the part worth
+  reading** — DERIB, USAspending and Misskey each hand over their whole allowed
+  set in it, and the OData services answer "could not find a property named …
+  on type …", which doubles as a schema check. Applied, each verified accepted,
+  honoured, total-preserving and disjoint over two runs against one database:
+  twelve OData rows on `$orderby=<the entity's own key>`, GOV.UK Search on
+  `order=public_timestamp` (the same ascending order the six rows in
+  `hp16_us_legal_1.c` carry), AODN on `sortBy=_id`, Miyazaki's CKAN group page
+  on `sort=metadata_created asc`, ACT's Socrata catalogue on `order=createdAt`,
+  Misskey on `sort=+firstRetrievedAt` (its enum's only append-at-tail order; a
+  page is its own 30), DERIB on `sort=legislationIdentifier` and USAspending on
+  `sort=name&order=asc` (209 of 209, its declared total). Twelve are measured
+  and NOT changed: GLEIF ×3 (`page[number]=51` is refused, so they are bounded
+  at 10,000 whatever the order — France declares 193,375 — and a stable sort
+  would only freeze which 10,000; the fix is a narrower filter per request), UK
+  Land Registry's PPI (`_sort` answers nothing in 35 s and an internal-error
+  page at 95 s, against a sub-second unsorted page), TronScan (only the
+  volatile `balance` is accepted, and that ranking is the row's subject), the
+  two Mastodon directories (`order` is `active|new`), ENTSOG (parsed, not
+  honoured), the two PNCP rows, and the two WordPress.org registries, whose
+  `request[browse]` offers rankings and a descending recency and no ascending
+  key. Three lessons:
+
+  * **Ask for the row's own `id_keys` and you check the row as well as the
+    order.** `$orderby=_RecordID` on WHO's FluNet answered "Could not find a
+    property named '_RecordID' on type 'FLUMART.VIW_FNT'" — the field that row
+    had keyed every record on since it shipped. The engine was already saying
+    so: the run files a `shape:id-keys-unmatched` notice and content-hashes
+    each uid, so a week WHO later revises is stored as a NEW row instead of
+    updating the one it corrects. Identity measured on 1,000 mid-collection
+    records: `ISO2+ISOYW` is 795 distinct of 1,000, `ISO2+ISOYW+ORIGIN_SOURCE`
+    is 1,000, and the row carries that now (2,000 + 2,000 = 4,000 distinct over
+    two runs). **That sweep is now done: 538 rows, 5 real hits**
+    (`docs/measured-idkeys-2026-10-24.tsv`) — every cycling JSON row that
+    declares an `id_keys`, one page each, the first record flattened as
+    `hp_json_flat` flattens it and each key token looked up as `hp_flat_get`
+    looks it up. 494 OK, 21 unmeasured (hosts that reset this path), 15
+    unparsed (POST-only rows a GET probe cannot ask), 3 with no record array.
+    The five: four Municipal Money v2 cubes keyed on
+    `municipality.demarcation_code`, which no cube publishes (the engine had
+    been saying `matched 0 of 100 record(s)` on every run), now on each cube's
+    own dimension tuple, measured 1,000 distinct of 1,000 facts; and
+    `SI_GURS_HOUSE_NUMBERS` on `properties.HS_MID`, which that layer does not
+    publish, now on `properties.EID_HISNA_STEVILKA` — the EID the feature's
+    own `id` is built from and the field the row already sorts on.
+    **And the first run of that sweep said 35, of which 30 were the checker's
+    fault**: `hp_flat_get()` falls back from an exact flat-key miss to any key
+    whose LAST dotted segment matches (case-insensitively, skipping a leading
+    `@`), so `iata_code` resolves against an ArcGIS record's
+    `attributes.iata_code` — `IMF_PORTWATCH_AIRPORTS` stores uids `RFN`,
+    `YOA`, `MVA` and files no notice. A checker that does not mirror that rule
+    indicts most of the ArcGIS and GeoJSON fleet. What the fallback cannot
+    save is a key token that itself contains a dot: it compares the whole
+    token against one segment, which is why the Municipal Money rows were real.
+    **The sweep asks whether a field EXISTS, not whether it is unique**, and
+    two rows it passed were wrong the other way: `ZA_MUNIMONEY_AUDIT_OPINIONS`
+    keyed on `demarcation.code` (one row per municipality per YEAR) and
+    `ZA_MUNIMONEY_OFFICIALS` on the municipality (one official per ROLE), both
+    measured composites now. A minimal-distinct-key search over one page would
+    have dropped `demarcation.code` entirely, because a Municipal Money page
+    covers one municipality — **the key is the cube's dimensions, not the
+    smallest tuple that separates one page**.
+  * **Prefer a key whose ties are impossible over one whose ties reshuffle.**
+    MSRC takes `releaseDate` or `id`, not both (the composite is refused).
+    Hundreds of advisories share a release date and the order inside a tie is
+    undefined, so a tie block can reorder under a resumed walk and lose a
+    record for good; a guid order is total, and an advisory inserted
+    mid-collection is simply read next cycle.
+  * **A measurement is not a code change.** The applier appended `&sort=…` to
+    the one row whose URL had no query string, so Misskey asked for
+    `/instances&sort=…`: one record, 135 bytes, `rc=0`, and only the two-run
+    engine reading caught it. A sweep of every URL literal for a `&` before any
+    `?` found nine more, all correct — five JMA `#fragment` portal links, an
+    open-meteo docs link, and two N2YO calls whose API really does document
+    `&apiKey=` appended to the path.
+
+  **And it found a rule-4d defect in 40 rows: a Socrata domain's own
+  `/api/catalog/v1` is not scoped to that domain** (2026-10-24,
+  `docs/measured-socrata-scope-2026-10-24.tsv`). This is the batch-34 finding
+  in 39 rows that shipped after it plus one that predates it, and the ACT row's
+  probe gave it away by answering in Spanish. Measured both ways on all 40:
+  unscoped each answers `resultSetSize` 10000 and 39 of 40 answer another
+  portal's dataset FIRST (Dallas, for 38); scoped each answers its own
+  catalogue — Honolulu 453, ACT 784, NYC 3,022, Maryland 3,606. Every record
+  they stored was attributed to the domain in the row's name whoever owned it,
+  with every gate green. All 40 carry `domains=`, `search_context=` and
+  `order=createdAt` now (the order, and the reason, that the cross-portal rows
+  in `vsrc14_us_state_3.c` already carry); the cross-portal rows on
+  `api.us.socrata.com` are deliberately unscoped and were left alone, because
+  they claim no domain. Two things to know about that set: **eight of the 40
+  hold more datasets than one run reads** and, being VJSON rows, they cannot
+  declare `page_resume` — they read the oldest-created 2,000 and file a
+  truncation notice, and moving them onto hpengine for a cycle is the named
+  follow-up; and **`chronicdata.cdc.gov` is now an alias of `data.cdc.gov`**
+  (same 1,478 ids at offset 0 and 1000, identical `/api/views/metadata/v1`), so
+  the five chronicdata rows collect what the data.cdc.gov rows collect. They
+  are recorded rather than removed: identical data, duplicate requests, and the
+  removal is a registry-count decision for the repository owner.
+
+  **And the 44 unresolved verdicts of the first sweep were re-run**
+  (`docs/measured-cycle-retry-2026-10-22.tsv`), because "re-run each
+  FETCH_FAILED once" is this file's own rule and inferring 44 rows from five
+  proxy log lines is not a measurement. 12 recovered on the second reading (one
+  of them, `ELIA_GENERATION_BY_FUEL_HIST`, only when run ALONE — its failure
+  was the sweep's own concurrency), 7 are the upstream speaking (4 × 503, a
+  429, a 403 and a 401 that wants a credential), and **22 fail for plain `curl`
+  from this container exactly as they fail for the engine** — connection reset,
+  empty reply, an untrusted certificate — so they are a reading of this path,
+  not of the rows, and nothing is retired on them. Three flap: they answered
+  `curl` 200 once and 000 minutes later, which is why the first reading's
+  "answered curl but failed in the engine" theory was dropped rather than
+  built on. **A second probe of a host that just answered is the cheapest way
+  to find out whether you measured the host or the moment.**
 
   533 rows cycled when this was written; 669 do on 2026-10-22, and the sweep
   above is how to know they still can. One shape to keep in mind: `interval = 2592000` is

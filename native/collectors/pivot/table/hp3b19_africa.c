@@ -313,7 +313,11 @@ static const hp_source HP3B19_AFRICA[] = {
     .body_keys = "opinion.label",
     .date_keys = "financial_year_end.year",
     .filter_query = 1,
-    .id_keys = "demarcation.code",
+    /* A cube fact is a DIMENSION TUPLE, and `demarcation.code` alone is one
+     * dimension: measured 2026-10-24 over 1,000 facts, the pair below is
+     * distinct where the municipality alone collapses every year it has an
+     * opinion for onto one row. */
+    .id_keys = "demarcation.code+financial_year_end.year",
     .interval = 21600,
     .page_param = "page",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -337,7 +341,11 @@ static const hp_source HP3B19_AFRICA[] = {
     .array_path = "data",
     .body_keys = "role.role",
     .filter_query = 1,
-    .id_keys = "municipality.demarcation_code",
+    /* `municipality.demarcation_code` IS a field of this cube (unlike the
+     * v2 cubes below) but it is not an identity: a municipality has one
+     * official per role. Measured 2026-10-24 over 1,000 facts: the pair is
+     * distinct, the code alone keeps one official per municipality. */
+    .id_keys = "municipality.demarcation_code+role.role",
     .interval = 21600,
     .page_param = "page",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -362,7 +370,15 @@ static const hp_source HP3B19_AFRICA[] = {
     .array_path = "data",
     .date_keys = "financial_year_end.year",
     .filter_query = 1,
-    .id_keys = "municipality.demarcation_code",
+    /* `municipality.demarcation_code` is not a field of any v2 cube — the
+     * engine filed `id_keys ... matched 0 of 100 record(s)` on every run and
+     * content-hashed each uid, so a figure National Treasury restates landed
+     * as a NEW row instead of updating the one it corrects. The dimensions
+     * are read from the cube itself (2026-10-24): the full tuple below is
+     * 1,000 distinct of 1,000 facts. Note a page covers ONE municipality, so
+     * a minimal-key search over one page drops `demarcation.code` — the
+     * dimension that matters most across the cube. */
+    .id_keys = "demarcation.code+function.code+item.code+financial_year_end.year+period_length.length+financial_period.period+amount_type.code",
     .interval = 21600,
     .page_param = "page",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -386,7 +402,10 @@ static const hp_source HP3B19_AFRICA[] = {
     .array_path = "data",
     .date_keys = "financial_year_end.year",
     .filter_query = 1,
-    .id_keys = "municipality.demarcation_code",
+    /* The cube's own dimensions, measured 2026-10-24 (1,000 distinct of
+     * 1,000 facts); `municipality.demarcation_code` is not one of them. See
+     * the income-and-expenditure row above for what the old key cost. */
+    .id_keys = "demarcation.code+function.code+item.code+capital_type.code+financial_year_end.year+period_length.length+financial_period.period+amount_type.code",
     .interval = 86400,
     .page_param = "page",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -409,7 +428,10 @@ static const hp_source HP3B19_AFRICA[] = {
     .array_path = "data",
     .date_keys = "financial_year_end.year",
     .filter_query = 1,
-    .id_keys = "municipality.demarcation_code",
+    /* The cube's own dimensions, measured 2026-10-24 (1,000 distinct of
+     * 1,000 facts). The engine had been reporting `id_keys
+     * "municipality.demarcation_code" matched 0 of 100 record(s)` per run. */
+    .id_keys = "demarcation.code+item.code+financial_year_end.year+period_length.length+financial_period.period+amount_type.code",
     .interval = 21600,
     .page_param = "page",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -1145,7 +1167,9 @@ static const hp_source HP3B19_AFRICA[] = {
     .array_path = "data",
     .date_keys = "financial_year_end.year",
     .filter_query = 1,
-    .id_keys = "municipality.demarcation_code",
+    /* The cube's own dimensions, measured 2026-10-24; the customer group is
+     * part of the identity here and of no other cube. */
+    .id_keys = "demarcation.code+customer_group.code+item.code+financial_year_end.year+period_length.length+financial_period.period+amount_type.code",
     .interval = 21600,
     .page_param = "page",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */

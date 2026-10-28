@@ -295,7 +295,16 @@ static const hp_source HP3B19_CYBER[] = {
     .record_type = "vulnerability-record",
     .tags = "\"vulnerability\",\"microsoft\",\"msrc\",\"advisory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.msrc.microsoft.com/sug/v2.0/en-US/vulnerability?$top=100",
+    /* `$orderby=id` because this row cycles over 31,340 advisories and
+     * OData promises no order without it. Measured 2026-10-24: honoured
+     * (asc and desc answer different records, $skip=1 a third). `id` and
+     * not `releaseDate`: hundreds of advisories share a release date and
+     * the order inside a tie is undefined, so a tie block can reshuffle
+     * under a resumed walk and lose a record for good, where a guid order
+     * is total — a newly inserted advisory is simply read next cycle.
+     * The composite `releaseDate,id` is refused ("An exception was
+     * thrown"), so one field is all this service offers. */
+    .url = "https://api.msrc.microsoft.com/sug/v2.0/en-US/vulnerability?$top=100&$orderby=id",
     .array_path = "value",
     .detail_key = "cveNumber",
     .detail_url = "https://api.msrc.microsoft.com/sug/v2.0/en-US/vulnerability/{v}",

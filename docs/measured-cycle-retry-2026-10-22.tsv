@@ -1,0 +1,45 @@
+outcome	id	retry_verdict	records	host	evidence
+RECOVERED	AP19_AU_MELB_CAFES	CEILING_DECLARED	200		second reading succeeded: CEILING_DECLARED, 200 records
+RECOVERED	BR_BCB_IFDATA_CADASTRO	CEILING_UNKNOWN	200		second reading succeeded: CEILING_UNKNOWN, 200 records
+RECOVERED	ELIA_GENERATION_BY_FUEL_HIST	FETCH_FAILED	0	opendata.elia.be	RECOVERED SOLO: 100 records in 2.1 s — its sweep failure was the sweep's own concurrency, not the row | transport failure; direct probe: 200
+RECOVERED	ELIA_SI_FORECAST_NEXT_QH_HISTORY	CEILING_DECLARED	200		second reading succeeded: CEILING_DECLARED, 200 records
+RECOVERED	FR_BODACC_COLLECTIVE	CEILING_DECLARED	200		second reading succeeded: CEILING_DECLARED, 200 records
+RECOVERED	JO29A_FGT_HAUTS_DE_SEINE_ODS	CEILING_DECLARED	200		second reading succeeded: CEILING_DECLARED, 200 records
+RECOVERED	JO34_CKANRES_DADOS_PE_GOV_BR	COMPLETE	47		second reading succeeded: COMPLETE, 47 records
+RECOVERED	JP25_JPMUNI2_HIROSHIMA_DATAEYE	CEILING_UNKNOWN	40		second reading succeeded: CEILING_UNKNOWN, 40 records
+RECOVERED	JP25_JPMUNI2_TSUYAMA_DATAEYE	CEILING_UNKNOWN	40		second reading succeeded: CEILING_UNKNOWN, 40 records
+RECOVERED	KAPSARC_JODI_CHINA_OIL	CEILING_DECLARED	200		second reading succeeded: CEILING_DECLARED, 200 records
+RECOVERED	NI_TELCOR_PUBLICACIONES	CEILING_UNKNOWN	153		second reading succeeded: CEILING_UNKNOWN, 153 records
+RECOVERED	OPENAERIALMAP_IMAGERY	CEILING_UNKNOWN	200		second reading succeeded: CEILING_UNKNOWN, 200 records
+UPSTREAM	ANFR_EMF_PROBE_MEASUREMENTS	FETCH_FAILED	0		ANFR_EMF_PROBE_MEASUREMENTS stored nothing: upstream answered 503
+UPSTREAM	ANFR_MARITIME_STATIONS	FETCH_FAILED	0		ANFR_MARITIME_STATIONS stored nothing: upstream answered 503
+UPSTREAM	CERT_PH_WP_POSTS	FETCH_FAILED	0		CERT_PH_WP_POSTS stored nothing: upstream answered 401
+UPSTREAM	JO45_WP_NEWECONOMY_POSTS	FETCH_FAILED	0		JO45_WP_NEWECONOMY_POSTS stored nothing: upstream answered 403
+UPSTREAM	JP25_JPMEDIA_DEMPA_WP	FETCH_FAILED	0		JP25_JPMEDIA_DEMPA_WP stored nothing: upstream answered 503
+UPSTREAM	JP25_JPMEDIA_KENSETSUNEWS_WP	FETCH_FAILED	0		JP25_JPMEDIA_KENSETSUNEWS_WP stored nothing: upstream answered 503
+UPSTREAM	us-courtlistener-search-recap-dockets	FETCH_FAILED	0		urtlistener-search-recap-dockets stored nothing: upstream answered 429
+PATH?	JO29A_FGT_ORLEANS_METROPOLE_ODS	FETCH_FAILED	0	data.orleans-metropole.fr	FLAPPING: curl 200 once, then curl 000 at 7.6 s minutes later; engine timed out at 20 s both times | transport failure; direct probe: 200
+PATH?	KAPSARC_SAUDI_LABOUR_ADMIN	FETCH_FAILED	0	datasource.kapsarc.org	FLAPPING: curl 200 once, then curl 000 at 7.4 s minutes later | transport failure; direct probe: 200
+PATH?	QATAR_DISTRICT_COOLING	FETCH_FAILED	0	www.data.gov.qa	FLAPPING: curl 200 once, then curl 000 at 8.0 s minutes later | transport failure; direct probe: 200
+PATH	AP19_AU_MELB_ODS_CAT	FETCH_FAILED	0	data.melbourne.vic.gov.au	curl from this container fails too (curl: (35) Recv failure: Connection reset by peer) — unreachable from here, not a verdict on the row
+PATH	BR_CNES_ESTABELECIMENTOS	FETCH_FAILED	0	apidadosabertos.saude.gov.br	curl from this container fails too (curl: (52) Empty reply from server) — unreachable from here, not a verdict on the row
+PATH	FR_BODACC_CREATION	FETCH_FAILED	0	bodacc-datadila.opendatasoft.com	curl from this container fails too (curl: (35) Recv failure: Connection reset by peer) — unreachable from here, not a verdict on the row
+PATH	FR_BODACC_RADIATION	FETCH_FAILED	0	bodacc-datadila.opendatasoft.com	curl from this container fails too (curl: (35) Recv failure: Connection reset by peer) — unreachable from here, not a verdict on the row
+PATH	FR_BODACC_VENTE	FETCH_FAILED	0	bodacc-datadila.opendatasoft.com	curl from this container fails too (curl: (35) Recv failure: Connection reset by peer) — unreachable from here, not a verdict on the row
+PATH	FR_ODS2_OPENDATA_CLERM	FETCH_FAILED	0	opendata.clermontmetropole.eu	curl from this container fails too (curl: (35) Recv failure: Connection reset by peer) — unreachable from here, not a verdict on the row
+PATH	FR_ODS_ROUEN	FETCH_FAILED	0	data.metropole-rouen-normandie.fr	curl from this container fails too (curl: (35) Recv failure: Connection reset by peer) — unreachable from here, not a verdict on the row
+PATH	IODA_ENTITIES_ASN	FETCH_FAILED	0	api.ioda.inetintel.cc.gatech.edu	curl from this container fails too (curl: (60) SSL certificate problem: unable to get local issu) — unreachable from here, not a verdict on the row
+PATH	ISTANBUL_OPENDATA_BULK	FETCH_FAILED	0	data.ibb.gov.tr	curl from this container fails too (curl: (35) Recv failure: Connection reset by peer) — unreachable from here, not a verdict on the row
+PATH	JO29A_FGT_BRUXELLES_VILLE_ODS	FETCH_FAILED	0	opendata.bruxelles.be	curl from this container fails too (curl: (35) Recv failure: Connection reset by peer) — unreachable from here, not a verdict on the row
+PATH	JO34_CKANRES_ADMIN_OPENDATA_AZ	FETCH_FAILED	0	admin.opendata.az	curl from this container fails too (curl: (35) Recv failure: Connection reset by peer) — unreachable from here, not a verdict on the row
+PATH	JO34_CKANRES_DATA_DATA4CITIZEN_JP	FETCH_FAILED	0	data.data4citizen.jp	curl from this container fails too (curl: (35) Recv failure: Connection reset by peer) — unreachable from here, not a verdict on the row
+PATH	JO34_CKANRES_DATA_GOV_LV	FETCH_FAILED	0	data.gov.lv	curl from this container fails too (curl: (35) Recv failure: Connection reset by peer) — unreachable from here, not a verdict on the row
+PATH	KAPSARC_SAUDI_IO_TABLE	FETCH_FAILED	0	datasource.kapsarc.org	curl from this container fails too (curl: (35) Recv failure: Connection reset by peer) — unreachable from here, not a verdict on the row
+PATH	LV_BENEFICIAL_OWNERS	FETCH_FAILED	0	data.gov.lv	curl from this container fails too (curl: (35) Recv failure: Connection reset by peer) — unreachable from here, not a verdict on the row
+PATH	LV_IPPC_PERMITS	FETCH_FAILED	0	data.gov.lv	curl from this container fails too (curl: (35) Recv failure: Connection reset by peer) — unreachable from here, not a verdict on the row
+PATH	LV_WASTE_OPERATORS	FETCH_FAILED	0	data.gov.lv	curl from this container fails too (curl: (35) Recv failure: Connection reset by peer) — unreachable from here, not a verdict on the row
+PATH	LV_WATER_PERMITS	FETCH_FAILED	0	data.gov.lv	curl from this container fails too (curl: (35) Recv failure: Connection reset by peer) — unreachable from here, not a verdict on the row
+PATH	np-bipad-earthquake	FETCH_FAILED	0	bipadportal.gov.np	curl from this container fails too (curl: (35) Recv failure: Connection reset by peer) — unreachable from here, not a verdict on the row
+PATH	np-bipad-municipality	FETCH_FAILED	0	bipadportal.gov.np	curl from this container fails too (curl: (35) Recv failure: Connection reset by peer) — unreachable from here, not a verdict on the row
+PATH	np-bipad-organization	FETCH_FAILED	0	bipadportal.gov.np	curl from this container fails too (curl: (35) Recv failure: Connection reset by peer) — unreachable from here, not a verdict on the row
+PATH	np-bipad-resource	FETCH_FAILED	0	bipadportal.gov.np	curl from this container fails too (curl: (35) Recv failure: Connection reset by peer) — unreachable from here, not a verdict on the row
