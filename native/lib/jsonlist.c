@@ -1448,7 +1448,11 @@ static long declared_total(cJSON *doc) {
     if (v && cJSON_IsNumber(v) && v->valuedouble >= 0)
       return (long)v->valuedouble;
   }
-  return -1;
+  /* OData v2 verbose writes its total as a STRING, `d.__count: "46144"`, so no
+   * entry above can match it: every OData v2 row read "the upstream declares
+   * no total" while the number sat in the envelope. pagewalk.c's reader, so
+   * the two lists cannot disagree about it. */
+  return pw_odata_v2_count(doc);
 }
 
 /* Read `name=<int>` out of a query string. Returns -1 if absent/unparseable. */

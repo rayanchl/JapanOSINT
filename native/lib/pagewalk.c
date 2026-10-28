@@ -8,6 +8,7 @@
 #include <string.h>
 #include <strings.h>
 #include <ctype.h>
+#include <limits.h>   /* LONG_MAX: pw_odata_v2_count() */
 
 /* The ONLY cap in this file that stops a walk. Every stop it causes emits a
  * collector-truncation-notice naming JO_PAGE_MAX as the remedy, so the bound is
@@ -147,6 +148,21 @@ static char *pw_next_link(const cJSON *doc) {
 /* How many records the upstream says exist in total, or -1 when it did not
  * say. Only unambiguous, well-known field names — `count` is deliberately
  * absent because half the APIs here use it for "records in THIS page". */
+long pw_odata_v2_count(const cJSON *doc) {
+  if (!cJSON_IsObject(doc)) return -1;
+  const cJSON *d = cJSON_GetObjectItemCaseSensitive(doc, "d");
+  const cJSON *c = cJSON_IsObject(d) ? cJSON_GetObjectItemCaseSensitive(d, "__count") : NULL;
+  if (cJSON_IsNumber(c)) return c->valuedouble >= 0 ? (long)c->valuedouble : -1;
+  if (!cJSON_IsString(c) || !c->valuestring || !c->valuestring[0]) return -1;
+  long v = 0;
+  for (const char *p = c->valuestring; *p; p++) {
+    if (*p < '0' || *p > '9') return -1;   /* the whole string, or nothing */
+    if (v > (LONG_MAX - 9) / 10) return -1;
+    v = v * 10 + (*p - '0');
+  }
+  return v;
+}
+
 static long pw_total_available(const cJSON *doc) {
   if (!cJSON_IsObject(doc)) return -1;
   static const char *const keys[] = {
@@ -200,7 +216,9 @@ static long pw_total_available(const cJSON *doc) {
       if (cJSON_IsNumber(v) && v->valuedouble >= 0) return (long)v->valuedouble;
     }
   }
-  return -1;
+  /* OData v2 verbose: `d.__count`, a string (measured 2026-10-25 on the NZ
+   * Charities Register: "46144" beside 5,000 rows). */
+  return pw_odata_v2_count(doc);
 }
 
 /* ── URL parameter surgery ────────────────────────────────────────────────
