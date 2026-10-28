@@ -349,6 +349,15 @@ that replaced them survive, so no coverage is lost. **A sweep's verdict is
 about the URL it sent, not about the row's name** — re-read a removal against
 the row as it stands now.
 
+**The registered count is 57,905** (2026-10-28, the merge of the two
+readings below). MEASURED on the merged tree with `make source-count`, and
+only then cross-checked, which is the order this file accepts: 57,921 less
+the twenty twin-group rows, plus one, plus batch 56's three = 57,905, and the
+binary's own registry agrees at 57,905 with 0 duplicates, 0 dropped and 0
+never-runs. Both floors re-recorded from that build. Neither side's number was
+wrong and neither was the merge's: a count is a reading of one tree, so two
+branches that each measured correctly still cannot be added together.
+
 **The registered count is 57,924** (2026-10-27, `make source-count`, both
 floors re-recorded from that build): 57,921 plus **batch 56's three rows**,
 the rest of the New Zealand Charities Register beside its organisations —
