@@ -660,7 +660,13 @@ static const hp_source HP3B19_FINANCE[] = {
     .record_type = "company-record",
     .tags = "\"israel\",\"registry\",\"companies\",\"middleeast\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.gov.il/api/3/action/datastore_search?resource_id=f004176c-b85f-4542-8901-7b3176f9a054&limit=100",
+    /* `sort=_id asc` because this row CYCLES and datastore_search has no
+     * guaranteed order without it. `_id` is the datastore's own sequential row
+     * id, present in every resource, so it needs no per-dataset knowledge.
+     * Measured on data.zagreb.hr 2026-10-24: offset 0 answers _id 1,2,3 and
+     * offset 3 answers 4,5,6 — ordered, disjoint, and the envelope publishes
+     * `total` for the disclosure. */
+    .url = "https://data.gov.il/api/3/action/datastore_search?resource_id=f004176c-b85f-4542-8901-7b3176f9a054&limit=100&sort=_id%20asc",
     .array_path = "result.records",
     .interval = 86400,
     .page_param = "offset",
@@ -780,7 +786,10 @@ static const hp_source HP3B19_FINANCE[] = {
     .record_type = "politically-exposed",
     .tags = "\"slovakia\",\"beneficial-ownership\",\"pep\",\"registry\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://rpvs.gov.sk/opendatav2/VerejniFunkcionari",
+    /* `$orderby=Id` — the entity's own key; see the authorised-persons row
+     * above for the measurement and for the $skiptoken cursor this service
+     * publishes and the engine cannot yet follow. */
+    .url = "https://rpvs.gov.sk/opendatav2/VerejniFunkcionari?$orderby=Id",
     .array_path = "value",
     .interval = 86400,
     .page_param = "$skip",
@@ -798,7 +807,15 @@ static const hp_source HP3B19_FINANCE[] = {
     .record_type = "verification-record",
     .tags = "\"slovakia\",\"beneficial-ownership\",\"verification\",\"registry\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://rpvs.gov.sk/opendatav2/OpravneneOsoby",
+    /* `$orderby=Id` — the entity's own key (the service's $metadata names
+     * it), because this row cycles. Measured 2026-10-24: honoured (`Id
+     * desc` answers 299363 where ascending answers 29948) and $skip is
+     * honoured with it. $top is refused outright ("the limit of '0' for
+     * Top query has been exceeded"), so the page size is the service's own
+     * 20. It also publishes an `@odata.nextLink` $skiptoken cursor, which
+     * would need no sort at all — hp_path cannot address a key containing
+     * a dot, so that is a better paging this engine cannot express yet. */
+    .url = "https://rpvs.gov.sk/opendatav2/OpravneneOsoby?$orderby=Id",
     .array_path = "value",
     .detail_key = "Id",
     .detail_url = "https://rpvs.gov.sk/opendatav2/OpravneneOsoby({v})?$expand=Partner,Adresa",

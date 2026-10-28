@@ -63,17 +63,15 @@
  * data.sec.gov. Operators SHOULD set SEC_CONTACT_UA to a real contact address:
  * SEC's automated-access policy asks for one, and the default is a placeholder
  * inherited for compatibility, not a real mailbox. */
-#define SEC_DEFAULT_UA "OSINTsaas/1.0 (contact@example.com)"
-
-/* Build the SEC request headers into caller-owned storage. `ua` must be at
- * least 256 bytes; `out` is a 3-slot array left NULL-terminated. */
-static void sec_headers(char *ua, size_t uacap, const char *out[3]) {
-  const char *env = jo_env("SEC_CONTACT_UA");
-  snprintf(ua, uacap, "User-Agent: %s", env ? env : SEC_DEFAULT_UA);
-  out[0] = ua;
-  out[1] = "Accept: application/json";
-  out[2] = NULL;
-}
+/* The agent is no longer built here: core/host_agents.def lists the SEC hosts
+ * as HA_SEC and http_request() puts that agent on the wire for them whatever a
+ * caller sets, so a User-Agent assembled in this file would have been dropped.
+ * $SEC_CONTACT_UA still replaces it, resolved in one place
+ * (host_agent_ua()), which is what keeps that knob real. */
+static const char *const SEC_HEADERS[] = {
+  "Accept: application/json",
+  NULL
+};
 
 /* Pad a CIK to the 10 digits data.sec.gov's submissions path requires.
  * Written with memset/memcpy rather than snprintf("%0*d%s") because the
@@ -241,9 +239,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (!ctx->entity || !*ctx->entity) return -1;
   if (!jo_looks_like_keyword(ctx->entity)) return 0;
 
-  char ua[256];
-  const char *hdrs[3];
-  sec_headers(ua, sizeof ua, hdrs);
+  const char *const *hdrs = SEC_HEADERS;
 
   /* Resolve the entity to a CIK. A bare number is already one. */
   char cik[32] = {0}, name[256] = {0};

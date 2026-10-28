@@ -27,7 +27,17 @@ static const hp_source HP3B20_AIRSPACE[] = {
     .record_type = "waypoint-record",
     .tags = "\"aviation\",\"faa\",\"nasr\",\"fix\",\"waypoint\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/DesignatedPoints/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json",
+    /* `orderByFields=OBJECTID ASC` because this row CYCLES and an ArcGIS
+     * `query` with `resultOffset` has no guaranteed order without it — a
+     * resumed walk lands where it meant to only if the order is stable
+     * between runs. The field is NOT assumed: this layer's own metadata
+     * names `OBJECTID` as its objectIdField (read 2026-10-24; across the 50
+     * ArcGIS rows the name is OBJECTID 40 times but also ObjectId,
+     * objectid, FID and oid_permit, so assuming one would have broken
+     * eight rows). Verified the same day: offsets 0,1 -> [1, 2] — two single-record
+     * pages at offsets 0 and 1 answer different records, so the sort is
+     * honoured and the pages are disjoint. */
+    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/DesignatedPoints/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&orderByFields=OBJECTID%20ASC",
     .array_path = "features",
     .id_keys = "GLOBAL_ID",
     .interval = 604800,
@@ -50,7 +60,17 @@ static const hp_source HP3B20_AIRSPACE[] = {
     .record_type = "airway-record",
     .tags = "\"aviation\",\"faa\",\"nasr\",\"airway\",\"aixm\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/ATSRoute/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json",
+    /* `orderByFields=OBJECTID ASC` because this row CYCLES and an ArcGIS
+     * `query` with `resultOffset` has no guaranteed order without it — a
+     * resumed walk lands where it meant to only if the order is stable
+     * between runs. The field is NOT assumed: this layer's own metadata
+     * names `OBJECTID` as its objectIdField (read 2026-10-24; across the 50
+     * ArcGIS rows the name is OBJECTID 40 times but also ObjectId,
+     * objectid, FID and oid_permit, so assuming one would have broken
+     * eight rows). Verified the same day: offsets 0,1 -> [1, 2] — two single-record
+     * pages at offsets 0 and 1 answer different records, so the sort is
+     * honoured and the pages are disjoint. */
+    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/ATSRoute/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&orderByFields=OBJECTID%20ASC",
     .array_path = "features",
     .id_keys = "GFID",
     .interval = 604800,
@@ -72,7 +92,17 @@ static const hp_source HP3B20_AIRSPACE[] = {
     .record_type = "clearance-record",
     .tags = "\"aviation\",\"faa\",\"nasr\",\"terrain\",\"oroca\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Clearance/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json",
+    /* `orderByFields=OBJECTID ASC` because this row CYCLES and an ArcGIS
+     * `query` with `resultOffset` has no guaranteed order without it — a
+     * resumed walk lands where it meant to only if the order is stable
+     * between runs. The field is NOT assumed: this layer's own metadata
+     * names `OBJECTID` as its objectIdField (read 2026-10-24; across the 50
+     * ArcGIS rows the name is OBJECTID 40 times but also ObjectId,
+     * objectid, FID and oid_permit, so assuming one would have broken
+     * eight rows). Verified the same day: offsets 0,1 -> [1, 2] — two single-record
+     * pages at offsets 0 and 1 answer different records, so the sort is
+     * honoured and the pages are disjoint. */
+    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Clearance/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&orderByFields=OBJECTID%20ASC",
     .array_path = "features",
     .id_keys = "GFID",
     .interval = 604800,
@@ -113,7 +143,17 @@ static const hp_source HP3B20_AIRSPACE[] = {
     .record_type = "airport-mapping-record",
     .tags = "\"aviation\",\"faa\",\"airport-mapping\",\"building\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/AM_Building/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json",
+    /* `orderByFields=OBJECTID ASC` because this row CYCLES and an ArcGIS
+     * `query` with `resultOffset` has no guaranteed order without it — a
+     * resumed walk lands where it meant to only if the order is stable
+     * between runs. The field is NOT assumed: this layer's own metadata
+     * names `OBJECTID` as its objectIdField (read 2026-10-24; across the 50
+     * ArcGIS rows the name is OBJECTID 40 times but also ObjectId,
+     * objectid, FID and oid_permit, so assuming one would have broken
+     * eight rows). Verified the same day: offsets 0,1 -> [1, 2] — two single-record
+     * pages at offsets 0 and 1 answer different records, so the sort is
+     * honoured and the pages are disjoint. */
+    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/AM_Building/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&orderByFields=OBJECTID%20ASC",
     .array_path = "features",
     .id_keys = "OBJECTID",
     .interval = 604800,
@@ -133,7 +173,17 @@ static const hp_source HP3B20_AIRSPACE[] = {
     .record_type = "uas-record",
     .tags = "\"aviation\",\"navcanada\",\"uas\",\"drone\",\"canada\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Nav_Canada_UASFM_Publication/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json",
+    /* `orderByFields=OBJECTID ASC` because this row CYCLES and an ArcGIS
+     * `query` with `resultOffset` has no guaranteed order without it — a
+     * resumed walk lands where it meant to only if the order is stable
+     * between runs. The field is NOT assumed: this layer's own metadata
+     * names `OBJECTID` as its objectIdField (read 2026-10-24; across the 50
+     * ArcGIS rows the name is OBJECTID 40 times but also ObjectId,
+     * objectid, FID and oid_permit, so assuming one would have broken
+     * eight rows). Verified the same day: offsets 0,1 -> [1, 2] — two single-record
+     * pages at offsets 0 and 1 answer different records, so the sort is
+     * honoured and the pages are disjoint. */
+    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Nav_Canada_UASFM_Publication/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&orderByFields=OBJECTID%20ASC",
     .array_path = "features",
     .id_keys = "GLOBALID",
     .interval = 604800,
@@ -155,7 +205,17 @@ static const hp_source HP3B20_AIRSPACE[] = {
     .record_type = "airport-record",
     .tags = "\"aviation\",\"faa\",\"nasr\",\"pending\",\"airport\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_Airports/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json",
+    /* `orderByFields=OBJECTID ASC` because this row CYCLES and an ArcGIS
+     * `query` with `resultOffset` has no guaranteed order without it — a
+     * resumed walk lands where it meant to only if the order is stable
+     * between runs. The field is NOT assumed: this layer's own metadata
+     * names `OBJECTID` as its objectIdField (read 2026-10-24; across the 50
+     * ArcGIS rows the name is OBJECTID 40 times but also ObjectId,
+     * objectid, FID and oid_permit, so assuming one would have broken
+     * eight rows). Verified the same day: offsets 0,1 -> [1, 2] — two single-record
+     * pages at offsets 0 and 1 answer different records, so the sort is
+     * honoured and the pages are disjoint. */
+    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_Airports/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&orderByFields=OBJECTID%20ASC",
     .array_path = "features",
     .id_keys = "GLOBAL_ID",
     .interval = 86400,
@@ -177,7 +237,17 @@ static const hp_source HP3B20_AIRSPACE[] = {
     .record_type = "runway-record",
     .tags = "\"aviation\",\"faa\",\"nasr\",\"pending\",\"runway\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_Runway/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json",
+    /* `orderByFields=OBJECTID ASC` because this row CYCLES and an ArcGIS
+     * `query` with `resultOffset` has no guaranteed order without it — a
+     * resumed walk lands where it meant to only if the order is stable
+     * between runs. The field is NOT assumed: this layer's own metadata
+     * names `OBJECTID` as its objectIdField (read 2026-10-24; across the 50
+     * ArcGIS rows the name is OBJECTID 40 times but also ObjectId,
+     * objectid, FID and oid_permit, so assuming one would have broken
+     * eight rows). Verified the same day: offsets 0,1 -> [1, 2] — two single-record
+     * pages at offsets 0 and 1 answer different records, so the sort is
+     * honoured and the pages are disjoint. */
+    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_Runway/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&orderByFields=OBJECTID%20ASC",
     .array_path = "features",
     .id_keys = "GLOBAL_ID",
     .interval = 86400,
@@ -218,7 +288,17 @@ static const hp_source HP3B20_AIRSPACE[] = {
     .record_type = "navaid-record",
     .tags = "\"aviation\",\"faa\",\"nasr\",\"pending\",\"navaid\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_Navaid_Component/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json",
+    /* `orderByFields=OBJECTID ASC` because this row CYCLES and an ArcGIS
+     * `query` with `resultOffset` has no guaranteed order without it — a
+     * resumed walk lands where it meant to only if the order is stable
+     * between runs. The field is NOT assumed: this layer's own metadata
+     * names `OBJECTID` as its objectIdField (read 2026-10-24; across the 50
+     * ArcGIS rows the name is OBJECTID 40 times but also ObjectId,
+     * objectid, FID and oid_permit, so assuming one would have broken
+     * eight rows). Verified the same day: offsets 0,1 -> [1, 2] — two single-record
+     * pages at offsets 0 and 1 answer different records, so the sort is
+     * honoured and the pages are disjoint. */
+    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_Navaid_Component/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&orderByFields=OBJECTID%20ASC",
     .array_path = "features",
     .id_keys = "GLOBAL_ID",
     .interval = 86400,
@@ -239,7 +319,17 @@ static const hp_source HP3B20_AIRSPACE[] = {
     .record_type = "waypoint-record",
     .tags = "\"aviation\",\"faa\",\"nasr\",\"pending\",\"fix\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_Designated_Point/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json",
+    /* `orderByFields=OBJECTID ASC` because this row CYCLES and an ArcGIS
+     * `query` with `resultOffset` has no guaranteed order without it — a
+     * resumed walk lands where it meant to only if the order is stable
+     * between runs. The field is NOT assumed: this layer's own metadata
+     * names `OBJECTID` as its objectIdField (read 2026-10-24; across the 50
+     * ArcGIS rows the name is OBJECTID 40 times but also ObjectId,
+     * objectid, FID and oid_permit, so assuming one would have broken
+     * eight rows). Verified the same day: offsets 0,1 -> [1, 2] — two single-record
+     * pages at offsets 0 and 1 answer different records, so the sort is
+     * honoured and the pages are disjoint. */
+    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_Designated_Point/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&orderByFields=OBJECTID%20ASC",
     .array_path = "features",
     .id_keys = "GLOBAL_ID",
     .interval = 86400,
@@ -259,7 +349,17 @@ static const hp_source HP3B20_AIRSPACE[] = {
     .record_type = "airway-record",
     .tags = "\"aviation\",\"faa\",\"nasr\",\"pending\",\"airway\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_ATS_Route/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json",
+    /* `orderByFields=OBJECTID ASC` because this row CYCLES and an ArcGIS
+     * `query` with `resultOffset` has no guaranteed order without it — a
+     * resumed walk lands where it meant to only if the order is stable
+     * between runs. The field is NOT assumed: this layer's own metadata
+     * names `OBJECTID` as its objectIdField (read 2026-10-24; across the 50
+     * ArcGIS rows the name is OBJECTID 40 times but also ObjectId,
+     * objectid, FID and oid_permit, so assuming one would have broken
+     * eight rows). Verified the same day: offsets 0,1 -> [1, 2] — two single-record
+     * pages at offsets 0 and 1 answer different records, so the sort is
+     * honoured and the pages are disjoint. */
+    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_ATS_Route/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&orderByFields=OBJECTID%20ASC",
     .array_path = "features",
     .id_keys = "GLOBAL_ID",
     .interval = 86400,
@@ -280,7 +380,17 @@ static const hp_source HP3B20_AIRSPACE[] = {
     .record_type = "airspace-record",
     .tags = "\"aviation\",\"faa\",\"nasr\",\"pending\",\"airspace\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_Route_Airspace/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json",
+    /* `orderByFields=OBJECTID ASC` because this row CYCLES and an ArcGIS
+     * `query` with `resultOffset` has no guaranteed order without it — a
+     * resumed walk lands where it meant to only if the order is stable
+     * between runs. The field is NOT assumed: this layer's own metadata
+     * names `OBJECTID` as its objectIdField (read 2026-10-24; across the 50
+     * ArcGIS rows the name is OBJECTID 40 times but also ObjectId,
+     * objectid, FID and oid_permit, so assuming one would have broken
+     * eight rows). Verified the same day: offsets 0,1 -> [1, 2] — two single-record
+     * pages at offsets 0 and 1 answer different records, so the sort is
+     * honoured and the pages are disjoint. */
+    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_Route_Airspace/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&orderByFields=OBJECTID%20ASC",
     .array_path = "features",
     .id_keys = "GLOBAL_ID",
     .interval = 86400,
@@ -299,7 +409,17 @@ static const hp_source HP3B20_AIRSPACE[] = {
     .record_type = "airspace-record",
     .tags = "\"aviation\",\"faa\",\"nasr\",\"pending\",\"airspace\",\"classb\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_Class_Airspace/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json",
+    /* `orderByFields=OBJECTID ASC` because this row CYCLES and an ArcGIS
+     * `query` with `resultOffset` has no guaranteed order without it — a
+     * resumed walk lands where it meant to only if the order is stable
+     * between runs. The field is NOT assumed: this layer's own metadata
+     * names `OBJECTID` as its objectIdField (read 2026-10-24; across the 50
+     * ArcGIS rows the name is OBJECTID 40 times but also ObjectId,
+     * objectid, FID and oid_permit, so assuming one would have broken
+     * eight rows). Verified the same day: offsets 0,1 -> [1, 2] — two single-record
+     * pages at offsets 0 and 1 answer different records, so the sort is
+     * honoured and the pages are disjoint. */
+    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_Class_Airspace/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&orderByFields=OBJECTID%20ASC",
     .array_path = "features",
     .id_keys = "GLOBAL_ID",
     .interval = 86400,
@@ -359,7 +479,17 @@ static const hp_source HP3B20_AIRSPACE[] = {
     .record_type = "airspace-record",
     .tags = "\"aviation\",\"faa\",\"nasr\",\"pending\",\"military\",\"training-route\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_MTR_Segment/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json",
+    /* `orderByFields=OBJECTID ASC` because this row CYCLES and an ArcGIS
+     * `query` with `resultOffset` has no guaranteed order without it — a
+     * resumed walk lands where it meant to only if the order is stable
+     * between runs. The field is NOT assumed: this layer's own metadata
+     * names `OBJECTID` as its objectIdField (read 2026-10-24; across the 50
+     * ArcGIS rows the name is OBJECTID 40 times but also ObjectId,
+     * objectid, FID and oid_permit, so assuming one would have broken
+     * eight rows). Verified the same day: offsets 0,1 -> [1, 2] — two single-record
+     * pages at offsets 0 and 1 answer different records, so the sort is
+     * honoured and the pages are disjoint. */
+    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_MTR_Segment/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&orderByFields=OBJECTID%20ASC",
     .array_path = "features",
     .id_keys = "GLOBAL_ID",
     .interval = 86400,
@@ -438,7 +568,17 @@ static const hp_source HP3B20_AIRSPACE[] = {
     .record_type = "navaid-record",
     .tags = "\"aviation\",\"faa\",\"nasr\",\"pending\",\"radial\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_Radials_Bearing/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json",
+    /* `orderByFields=OBJECTID ASC` because this row CYCLES and an ArcGIS
+     * `query` with `resultOffset` has no guaranteed order without it — a
+     * resumed walk lands where it meant to only if the order is stable
+     * between runs. The field is NOT assumed: this layer's own metadata
+     * names `OBJECTID` as its objectIdField (read 2026-10-24; across the 50
+     * ArcGIS rows the name is OBJECTID 40 times but also ObjectId,
+     * objectid, FID and oid_permit, so assuming one would have broken
+     * eight rows). Verified the same day: offsets 0,1 -> [1, 2] — two single-record
+     * pages at offsets 0 and 1 answer different records, so the sort is
+     * honoured and the pages are disjoint. */
+    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_Radials_Bearing/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&orderByFields=OBJECTID%20ASC",
     .array_path = "features",
     .id_keys = "GLOBAL_ID",
     .interval = 86400,
@@ -537,7 +677,17 @@ static const hp_source HP3B20_AIRSPACE[] = {
     .record_type = "airway-record",
     .tags = "\"aviation\",\"faa\",\"nasr\",\"pending\",\"enroute\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/EnrouteInformationPending/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json",
+    /* `orderByFields=OBJECTID ASC` because this row CYCLES and an ArcGIS
+     * `query` with `resultOffset` has no guaranteed order without it — a
+     * resumed walk lands where it meant to only if the order is stable
+     * between runs. The field is NOT assumed: this layer's own metadata
+     * names `OBJECTID` as its objectIdField (read 2026-10-24; across the 50
+     * ArcGIS rows the name is OBJECTID 40 times but also ObjectId,
+     * objectid, FID and oid_permit, so assuming one would have broken
+     * eight rows). Verified the same day: offsets 0,1 -> [1, 2] — two single-record
+     * pages at offsets 0 and 1 answer different records, so the sort is
+     * honoured and the pages are disjoint. */
+    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/EnrouteInformationPending/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&orderByFields=OBJECTID%20ASC",
     .array_path = "features",
     .id_keys = "GLOBAL_ID",
     .interval = 86400,
@@ -557,7 +707,17 @@ static const hp_source HP3B20_AIRSPACE[] = {
     .record_type = "frequency-record",
     .tags = "\"aviation\",\"faa\",\"nasr\",\"pending\",\"frequency\",\"radio\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/FrequencyPending/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json",
+    /* `orderByFields=OBJECTID ASC` because this row CYCLES and an ArcGIS
+     * `query` with `resultOffset` has no guaranteed order without it — a
+     * resumed walk lands where it meant to only if the order is stable
+     * between runs. The field is NOT assumed: this layer's own metadata
+     * names `OBJECTID` as its objectIdField (read 2026-10-24; across the 50
+     * ArcGIS rows the name is OBJECTID 40 times but also ObjectId,
+     * objectid, FID and oid_permit, so assuming one would have broken
+     * eight rows). Verified the same day: offsets 0,1 -> [1, 2] — two single-record
+     * pages at offsets 0 and 1 answer different records, so the sort is
+     * honoured and the pages are disjoint. */
+    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/FrequencyPending/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&orderByFields=OBJECTID%20ASC",
     .array_path = "features",
     .id_keys = "GLOBAL_ID",
     .interval = 86400,
@@ -578,7 +738,17 @@ static const hp_source HP3B20_AIRSPACE[] = {
     .record_type = "airway-record",
     .tags = "\"aviation\",\"faa\",\"nasr\",\"pending\",\"airway\",\"segment\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/RoutePortionPending/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json",
+    /* `orderByFields=OBJECTID ASC` because this row CYCLES and an ArcGIS
+     * `query` with `resultOffset` has no guaranteed order without it — a
+     * resumed walk lands where it meant to only if the order is stable
+     * between runs. The field is NOT assumed: this layer's own metadata
+     * names `OBJECTID` as its objectIdField (read 2026-10-24; across the 50
+     * ArcGIS rows the name is OBJECTID 40 times but also ObjectId,
+     * objectid, FID and oid_permit, so assuming one would have broken
+     * eight rows). Verified the same day: offsets 0,1 -> [1, 2] — two single-record
+     * pages at offsets 0 and 1 answer different records, so the sort is
+     * honoured and the pages are disjoint. */
+    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/RoutePortionPending/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&orderByFields=OBJECTID%20ASC",
     .array_path = "features",
     .id_keys = "GLOBAL_ID",
     .interval = 86400,
@@ -598,7 +768,17 @@ static const hp_source HP3B20_AIRSPACE[] = {
     .record_type = "airport-mapping-record",
     .tags = "\"aviation\",\"faa\",\"airport-mapping\",\"pending\",\"apron\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_AM_Apron/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json",
+    /* `orderByFields=OBJECTID ASC` because this row CYCLES and an ArcGIS
+     * `query` with `resultOffset` has no guaranteed order without it — a
+     * resumed walk lands where it meant to only if the order is stable
+     * between runs. The field is NOT assumed: this layer's own metadata
+     * names `OBJECTID` as its objectIdField (read 2026-10-24; across the 50
+     * ArcGIS rows the name is OBJECTID 40 times but also ObjectId,
+     * objectid, FID and oid_permit, so assuming one would have broken
+     * eight rows). Verified the same day: offsets 0,1 -> [1, 2] — two single-record
+     * pages at offsets 0 and 1 answer different records, so the sort is
+     * honoured and the pages are disjoint. */
+    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_AM_Apron/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&orderByFields=OBJECTID%20ASC",
     .array_path = "features",
     .id_keys = "FAA_ID",
     .interval = 86400,
@@ -618,7 +798,17 @@ static const hp_source HP3B20_AIRSPACE[] = {
     .record_type = "airport-mapping-record",
     .tags = "\"aviation\",\"faa\",\"airport-mapping\",\"pending\",\"taxiway\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_AM_Taxiway/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json",
+    /* `orderByFields=OBJECTID ASC` because this row CYCLES and an ArcGIS
+     * `query` with `resultOffset` has no guaranteed order without it — a
+     * resumed walk lands where it meant to only if the order is stable
+     * between runs. The field is NOT assumed: this layer's own metadata
+     * names `OBJECTID` as its objectIdField (read 2026-10-24; across the 50
+     * ArcGIS rows the name is OBJECTID 40 times but also ObjectId,
+     * objectid, FID and oid_permit, so assuming one would have broken
+     * eight rows). Verified the same day: offsets 0,1 -> [1, 2] — two single-record
+     * pages at offsets 0 and 1 answer different records, so the sort is
+     * honoured and the pages are disjoint. */
+    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_AM_Taxiway/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&orderByFields=OBJECTID%20ASC",
     .array_path = "features",
     .id_keys = "FAA_ID",
     .interval = 86400,
@@ -674,7 +864,17 @@ static const hp_source HP3B20_AIRSPACE[] = {
     .record_type = "airport-mapping-record",
     .tags = "\"aviation\",\"faa\",\"airport-mapping\",\"pending\",\"building\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_AM_Building/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json",
+    /* `orderByFields=OBJECTID ASC` because this row CYCLES and an ArcGIS
+     * `query` with `resultOffset` has no guaranteed order without it — a
+     * resumed walk lands where it meant to only if the order is stable
+     * between runs. The field is NOT assumed: this layer's own metadata
+     * names `OBJECTID` as its objectIdField (read 2026-10-24; across the 50
+     * ArcGIS rows the name is OBJECTID 40 times but also ObjectId,
+     * objectid, FID and oid_permit, so assuming one would have broken
+     * eight rows). Verified the same day: offsets 0,1 -> [1, 2] — two single-record
+     * pages at offsets 0 and 1 answer different records, so the sort is
+     * honoured and the pages are disjoint. */
+    .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_AM_Building/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&orderByFields=OBJECTID%20ASC",
     .array_path = "features",
     .id_keys = "OBJECTID",
     .interval = 86400,

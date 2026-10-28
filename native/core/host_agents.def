@@ -38,7 +38,20 @@ HOST_AGENT_KIND(HA_BROWSER,     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537
  *     "JapanOSINT/1.0 research (<owner address>)"   200 / 200 / 200
  * Seven rows sent this address in their own headers; six others sent
  * contact@japanosint.local or osint@example.org, which are not addresses
- * anyone reads. One entry per host now makes every SEC request say the same. */
+ * anyone reads. One entry per host now makes every SEC request say the same.
+ *
+ * Two sessions measured this host family on the same day and agree on the
+ * remedy. The second reading, against company_tickers.json and the xbrl
+ * frames endpoint: the engine agent 403 on both, and `OSINTsaas/1.0
+ * (contact@example.com)`, `JapanOSINT/1.0 (<owner address>)` and a bare
+ * `JapanOSINT <owner address>` all 200 — so what the filter wants is an `@`
+ * address, and the HA_CONTACT line above shows it is enforced per path, not
+ * per host. The agent kept is this one, which passed all three hosts.
+ * `contact@example.com` is what sec_edgar.c and sec_filing_diff.c had carried
+ * since they were written: it passes the filter and is not a contact route,
+ * which is the one thing SEC's policy actually asks for. $SEC_CONTACT_UA
+ * replaces this string for the SEC hosts (host_agent_ua() in httpclient.c), so
+ * another deployment announces its own address instead of this one. */
 HOST_AGENT_KIND(HA_SEC,         "JapanOSINT/1.0 research (rayanchouialkessal@gmail.com)")
 
 /* ── token and contact-URL blocks (was UA_OVERRIDE) ────────────────────── */
@@ -50,6 +63,11 @@ HOST_AGENT_KIND(HA_SEC,         "JapanOSINT/1.0 research (rayanchouialkessal@gma
    * We still identify ourselves and still offer a contact route, so this is
    * the documented remedy rather than an evasion. */
   HOST_AGENT("www.oasis-open.org", HA_CONTACT)
+
+  /* SEC: the bisect and the reason are on HA_SEC above. */
+  HOST_AGENT("www.sec.gov", HA_SEC)
+  HOST_AGENT("data.sec.gov", HA_SEC)
+  HOST_AGENT("efts.sec.gov", HA_SEC)
   /* Spain's INE web service (servicios.ine.es/wstempus). Measured 2026-09-07
    * against /wstempus/js/ES/CLASIFICACIONES:
    *     engine UA                                                403
@@ -665,7 +683,3 @@ HOST_AGENT_KIND(HA_SEC,         "JapanOSINT/1.0 research (rayanchouialkessal@gma
   HOST_AGENT("www.kansai-airport.or.jp", HA_CONTACT)
   HOST_AGENT("www.fcc.gov", HA_CONTACT)
   HOST_AGENT("www.allabolag.se", HA_COMPAT)
-  /* SEC: see HA_SEC above. */
-  HOST_AGENT("www.sec.gov", HA_SEC)
-  HOST_AGENT("data.sec.gov", HA_SEC)
-  HOST_AGENT("efts.sec.gov", HA_SEC)

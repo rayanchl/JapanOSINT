@@ -9,7 +9,7 @@
 
 VJSON(us_health_data_ny_gov_catalog, "us-health-data-ny-gov-catalog", "health.data.ny.gov — catalog (United States)", "health.data.ny.gov — catalog (United States)",
   "us_opendata", "opendata",
-  "https://health.data.ny.gov/api/catalog/v1?limit=100",
+  "https://health.data.ny.gov/api/catalog/v1?limit=100&domains=health.data.ny.gov&search_context=health.data.ny.gov&order=createdAt",
   "results",
   "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at health.data.ny.gov.");
@@ -23,7 +23,7 @@ VJSON(us_health_data_ny_gov_views, "us-health-data-ny-gov-views", "health.data.n
 
 VJSON(us_healthdata_gov_catalog, "us-healthdata-gov-catalog", "healthdata.gov — catalog (United States)", "healthdata.gov — catalog (United States)",
   "us_opendata", "opendata",
-  "https://healthdata.gov/api/catalog/v1?limit=100",
+  "https://healthdata.gov/api/catalog/v1?limit=100&domains=healthdata.gov&search_context=healthdata.gov&order=createdAt",
   "results",
   "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at healthdata.gov.");
@@ -42,7 +42,7 @@ VGEO(us_maps_nevcounty_opendata_arcgis_com_datasets, "us-maps-nevcounty-opendata
 
 VJSON(us_opendata_fcc_gov_catalog, "us-opendata-fcc-gov-catalog", "opendata.fcc.gov — catalog (United States)", "opendata.fcc.gov — catalog (United States)",
   "us_opendata", "opendata",
-  "https://opendata.fcc.gov/api/catalog/v1?limit=100",
+  "https://opendata.fcc.gov/api/catalog/v1?limit=100&domains=opendata.fcc.gov&search_context=opendata.fcc.gov&order=createdAt",
   "results",
   "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at opendata.fcc.gov.");
@@ -56,7 +56,7 @@ VJSON(us_opendata_fcc_gov_views, "us-opendata-fcc-gov-views", "opendata.fcc.gov 
 
 VJSON(us_opendata_maryland_gov_catalog, "us-opendata-maryland-gov-catalog", "opendata.maryland.gov — catalog (United States)", "opendata.maryland.gov — catalog (United States)",
   "us_opendata", "opendata",
-  "https://opendata.maryland.gov/api/catalog/v1?limit=100",
+  "https://opendata.maryland.gov/api/catalog/v1?limit=100&domains=opendata.maryland.gov&search_context=opendata.maryland.gov&order=createdAt",
   "results",
   "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at opendata.maryland.gov.");
@@ -75,7 +75,7 @@ VGEO(us_opendataportal_lasvegas_opendata_arcgis_datasets, "us-opendataportal-las
 
 VJSON(us_www_dallasopendata_com_catalog, "us-www-dallasopendata-com-catalog", "Dallas Open Data — catalog (United States)", "Dallas Open Data — catalog (United States)",
   "us_opendata", "opendata",
-  "https://www.dallasopendata.com/api/catalog/v1?limit=100",
+  "https://www.dallasopendata.com/api/catalog/v1?limit=100&domains=www.dallasopendata.com&search_context=www.dallasopendata.com&order=createdAt",
   "results",
   "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at www.dallasopendata.com.");

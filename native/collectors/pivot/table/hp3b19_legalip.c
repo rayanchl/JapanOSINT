@@ -152,7 +152,15 @@ static const hp_source HP3B19_LEGALIP[] = {
     .record_type = "sep-declaration-record",
     .tags = "\"standards\",\"ietf\",\"ipr\",\"patent\",\"sep\",\"declaration\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://datatracker.ietf.org/api/v1/ipr/holderiprdisclosure/?format=json&limit=100",
+    /* `order_by=id` because this row CYCLES and the datatracker's Tastypie
+     * API has no guaranteed order without it: a resumed `offset` walk lands
+     * where it meant to only if the order is stable between runs, and `id`
+     * is the Django primary key every one of these collections carries.
+     * Measured 2026-10-24 on five of the endpoints (relateddocument,
+     * person, reviewrequest, iprevent, session): offsets 0 and 2 answer ids
+     * 1,2 then 3,4 — ordered and disjoint — and `meta.total_count` is
+     * published, which is what the truncation notice reads. */
+    .url = "https://datatracker.ietf.org/api/v1/ipr/holderiprdisclosure/?format=json&limit=100&order_by=id",
     .array_path = "objects",
     .date_keys = "time",
     .detail_key = "id",
@@ -176,7 +184,15 @@ static const hp_source HP3B19_LEGALIP[] = {
     .record_type = "sep-declaration-record",
     .tags = "\"standards\",\"ietf\",\"ipr\",\"patent\",\"sep\",\"declaration\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://datatracker.ietf.org/api/v1/ipr/genericiprdisclosure/?format=json&limit=100",
+    /* `order_by=id` because this row CYCLES and the datatracker's Tastypie
+     * API has no guaranteed order without it: a resumed `offset` walk lands
+     * where it meant to only if the order is stable between runs, and `id`
+     * is the Django primary key every one of these collections carries.
+     * Measured 2026-10-24 on five of the endpoints (relateddocument,
+     * person, reviewrequest, iprevent, session): offsets 0 and 2 answer ids
+     * 1,2 then 3,4 — ordered and disjoint — and `meta.total_count` is
+     * published, which is what the truncation notice reads. */
+    .url = "https://datatracker.ietf.org/api/v1/ipr/genericiprdisclosure/?format=json&limit=100&order_by=id",
     .array_path = "objects",
     .date_keys = "time",
     .detail_key = "id",
@@ -197,7 +213,15 @@ static const hp_source HP3B19_LEGALIP[] = {
     .record_type = "sep-declaration-record",
     .tags = "\"standards\",\"ietf\",\"ipr\",\"patent\",\"sep\",\"declaration\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://datatracker.ietf.org/api/v1/ipr/thirdpartyiprdisclosure/?format=json&limit=100",
+    /* `order_by=id` because this row CYCLES and the datatracker's Tastypie
+     * API has no guaranteed order without it: a resumed `offset` walk lands
+     * where it meant to only if the order is stable between runs, and `id`
+     * is the Django primary key every one of these collections carries.
+     * Measured 2026-10-24 on five of the endpoints (relateddocument,
+     * person, reviewrequest, iprevent, session): offsets 0 and 2 answer ids
+     * 1,2 then 3,4 — ordered and disjoint — and `meta.total_count` is
+     * published, which is what the truncation notice reads. */
+    .url = "https://datatracker.ietf.org/api/v1/ipr/thirdpartyiprdisclosure/?format=json&limit=100&order_by=id",
     .array_path = "objects",
     .date_keys = "time",
     .detail_key = "id",
@@ -219,7 +243,15 @@ static const hp_source HP3B19_LEGALIP[] = {
     .record_type = "sep-declaration-link-record",
     .tags = "\"standards\",\"ietf\",\"ipr\",\"patent\",\"sep\",\"declaration\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://datatracker.ietf.org/api/v1/ipr/iprdocrel/?format=json&limit=100",
+    /* `order_by=id` because this row CYCLES and the datatracker's Tastypie
+     * API has no guaranteed order without it: a resumed `offset` walk lands
+     * where it meant to only if the order is stable between runs, and `id`
+     * is the Django primary key every one of these collections carries.
+     * Measured 2026-10-24 on five of the endpoints (relateddocument,
+     * person, reviewrequest, iprevent, session): offsets 0 and 2 answer ids
+     * 1,2 then 3,4 — ordered and disjoint — and `meta.total_count` is
+     * published, which is what the truncation notice reads. */
+    .url = "https://datatracker.ietf.org/api/v1/ipr/iprdocrel/?format=json&limit=100&order_by=id",
     .array_path = "objects",
     .id_keys = "id",
     .interval = 86400,
@@ -238,7 +270,15 @@ static const hp_source HP3B19_LEGALIP[] = {
     .record_type = "sep-declaration-event-record",
     .tags = "\"standards\",\"ietf\",\"ipr\",\"patent\",\"sep\",\"workflow\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://datatracker.ietf.org/api/v1/ipr/iprevent/?format=json&limit=100",
+    /* `order_by=id` because this row CYCLES and the datatracker's Tastypie
+     * API has no guaranteed order without it: a resumed `offset` walk lands
+     * where it meant to only if the order is stable between runs, and `id`
+     * is the Django primary key every one of these collections carries.
+     * Measured 2026-10-24 on five of the endpoints (relateddocument,
+     * person, reviewrequest, iprevent, session): offsets 0 and 2 answer ids
+     * 1,2 then 3,4 — ordered and disjoint — and `meta.total_count` is
+     * published, which is what the truncation notice reads. */
+    .url = "https://datatracker.ietf.org/api/v1/ipr/iprevent/?format=json&limit=100&order_by=id",
     .array_path = "objects",
     .date_keys = "time",
     .id_keys = "id",
@@ -257,7 +297,15 @@ static const hp_source HP3B19_LEGALIP[] = {
     .record_type = "liaison-statement-record",
     .tags = "\"standards\",\"ietf\",\"liaison\",\"itu\",\"3gpp\",\"ieee\",\"sdo\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://datatracker.ietf.org/api/v1/liaisons/liaisonstatement/?format=json&limit=100",
+    /* `order_by=id` because this row CYCLES and the datatracker's Tastypie
+     * API has no guaranteed order without it: a resumed `offset` walk lands
+     * where it meant to only if the order is stable between runs, and `id`
+     * is the Django primary key every one of these collections carries.
+     * Measured 2026-10-24 on five of the endpoints (relateddocument,
+     * person, reviewrequest, iprevent, session): offsets 0 and 2 answer ids
+     * 1,2 then 3,4 — ordered and disjoint — and `meta.total_count` is
+     * published, which is what the truncation notice reads. */
+    .url = "https://datatracker.ietf.org/api/v1/liaisons/liaisonstatement/?format=json&limit=100&order_by=id",
     .array_path = "objects",
     .date_keys = "submitted",
     .id_keys = "id",
@@ -278,7 +326,15 @@ static const hp_source HP3B19_LEGALIP[] = {
     .record_type = "draft-submission-record",
     .tags = "\"standards\",\"ietf\",\"draft\",\"submission\",\"sdo\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://datatracker.ietf.org/api/v1/submit/submission/?format=json&limit=100",
+    /* `order_by=id` because this row CYCLES and the datatracker's Tastypie
+     * API has no guaranteed order without it: a resumed `offset` walk lands
+     * where it meant to only if the order is stable between runs, and `id`
+     * is the Django primary key every one of these collections carries.
+     * Measured 2026-10-24 on five of the endpoints (relateddocument,
+     * person, reviewrequest, iprevent, session): offsets 0 and 2 answer ids
+     * 1,2 then 3,4 — ordered and disjoint — and `meta.total_count` is
+     * published, which is what the truncation notice reads. */
+    .url = "https://datatracker.ietf.org/api/v1/submit/submission/?format=json&limit=100&order_by=id",
     .array_path = "objects",
     .date_keys = "submission_date",
     .id_keys = "id",
@@ -298,7 +354,15 @@ static const hp_source HP3B19_LEGALIP[] = {
     .record_type = "document-relation-record",
     .tags = "\"standards\",\"ietf\",\"rfc\",\"citation\",\"sdo\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://datatracker.ietf.org/api/v1/doc/relateddocument/?format=json&limit=100",
+    /* `order_by=id` because this row CYCLES and the datatracker's Tastypie
+     * API has no guaranteed order without it: a resumed `offset` walk lands
+     * where it meant to only if the order is stable between runs, and `id`
+     * is the Django primary key every one of these collections carries.
+     * Measured 2026-10-24 on five of the endpoints (relateddocument,
+     * person, reviewrequest, iprevent, session): offsets 0 and 2 answer ids
+     * 1,2 then 3,4 — ordered and disjoint — and `meta.total_count` is
+     * published, which is what the truncation notice reads. */
+    .url = "https://datatracker.ietf.org/api/v1/doc/relateddocument/?format=json&limit=100&order_by=id",
     .array_path = "objects",
     .id_keys = "id",
     .interval = 86400,
@@ -983,7 +1047,15 @@ static const hp_source HP3B19_LEGALIP[] = {
     .record_type = "standards-role-record",
     .tags = "\"standards\",\"ietf\",\"working-group\",\"chair\",\"leadership\",\"sdo\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://datatracker.ietf.org/api/v1/group/role/?format=json&limit=100",
+    /* `order_by=id` because this row CYCLES and the datatracker's Tastypie
+     * API has no guaranteed order without it: a resumed `offset` walk lands
+     * where it meant to only if the order is stable between runs, and `id`
+     * is the Django primary key every one of these collections carries.
+     * Measured 2026-10-24 on five of the endpoints (relateddocument,
+     * person, reviewrequest, iprevent, session): offsets 0 and 2 answer ids
+     * 1,2 then 3,4 — ordered and disjoint — and `meta.total_count` is
+     * published, which is what the truncation notice reads. */
+    .url = "https://datatracker.ietf.org/api/v1/group/role/?format=json&limit=100&order_by=id",
     .array_path = "objects",
     .id_keys = "id",
     .interval = 86400,
@@ -1002,7 +1074,15 @@ static const hp_source HP3B19_LEGALIP[] = {
     .record_type = "standards-ballot-record",
     .tags = "\"standards\",\"ietf\",\"iesg\",\"ballot\",\"voting\",\"sdo\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://datatracker.ietf.org/api/v1/doc/ballotpositiondocevent/?format=json&limit=100",
+    /* `order_by=id` because this row CYCLES and the datatracker's Tastypie
+     * API has no guaranteed order without it: a resumed `offset` walk lands
+     * where it meant to only if the order is stable between runs, and `id`
+     * is the Django primary key every one of these collections carries.
+     * Measured 2026-10-24 on five of the endpoints (relateddocument,
+     * person, reviewrequest, iprevent, session): offsets 0 and 2 answer ids
+     * 1,2 then 3,4 — ordered and disjoint — and `meta.total_count` is
+     * published, which is what the truncation notice reads. */
+    .url = "https://datatracker.ietf.org/api/v1/doc/ballotpositiondocevent/?format=json&limit=100&order_by=id",
     .array_path = "objects",
     .date_keys = "time",
     .id_keys = "id",
@@ -1022,7 +1102,15 @@ static const hp_source HP3B19_LEGALIP[] = {
     .record_type = "standards-session-record",
     .tags = "\"standards\",\"ietf\",\"meeting\",\"session\",\"sdo\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://datatracker.ietf.org/api/v1/meeting/session/?format=json&limit=100",
+    /* `order_by=id` because this row CYCLES and the datatracker's Tastypie
+     * API has no guaranteed order without it: a resumed `offset` walk lands
+     * where it meant to only if the order is stable between runs, and `id`
+     * is the Django primary key every one of these collections carries.
+     * Measured 2026-10-24 on five of the endpoints (relateddocument,
+     * person, reviewrequest, iprevent, session): offsets 0 and 2 answer ids
+     * 1,2 then 3,4 — ordered and disjoint — and `meta.total_count` is
+     * published, which is what the truncation notice reads. */
+    .url = "https://datatracker.ietf.org/api/v1/meeting/session/?format=json&limit=100&order_by=id",
     .array_path = "objects",
     .date_keys = "modified",
     .id_keys = "id",

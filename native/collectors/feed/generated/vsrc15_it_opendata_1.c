@@ -156,7 +156,7 @@ VJSON(it_opendata_comune_bari_it_tags, "it-opendata-comune-bari-it-tags", "Bari 
 
 VJSON(it_www_dati_lombardia_it_catalog, "it-www-dati-lombardia-it-catalog", "Data Regione Lombardia — catalog (Italy)", "Data Regione Lombardia — catalog (Italy)",
   "it_opendata", "opendata",
-  "https://www.dati.lombardia.it/api/catalog/v1?limit=100",
+  "https://www.dati.lombardia.it/api/catalog/v1?limit=100&domains=www.dati.lombardia.it&search_context=www.dati.lombardia.it&order=createdAt",
   "results",
   "it", "[\"it\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
   "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at www.dati.lombardia.it.");

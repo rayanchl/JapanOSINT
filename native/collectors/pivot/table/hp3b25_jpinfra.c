@@ -962,7 +962,23 @@ static const hp_source HP3B25_JPINFRA[] = {
     .record_type = "satellite-news",
     .tags = "\"japan\",\"sorabatake\",\"satellite\",\"space\",\"earth-observation\",\"tellus\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://sorabatake.jp/wp-json/wp/v2/posts?per_page=50&page=1",
+    /* ASCENDING BY ID, because this row CYCLES and the collection is
+     * bigger than one run reads. WordPress's default order is
+     * `orderby=date&order=desc` (verified live 2026-10-22), so every new
+     * post pushes the whole collection down one place: a walk that
+     * resumes at page 14 tomorrow re-reads records it already had AND
+     * skips the ones that crossed the boundary, which is the shape
+     * CLAUDE.md calls the worst in the file — the overlap is visible as
+     * a small collision and the skip leaves no trace at all.
+     * X-WP-Total says 2,521 items here (3 runs of 1,000 to a cycle), and
+     * `orderby=id&order=asc` is accepted by this host (measured, ids
+     * ascending). Ascending puts new posts at the TAIL, where a forward
+     * walk has not been yet.
+     *
+     * Recency is NOT covered for this host by another row: the pair this
+     * wants (a desc, non-cycling recency row beside this archive one, the
+     * PLOS_RECENT/PLOS_CORPUS shape) is a follow-up, not done here. */
+    .url = "https://sorabatake.jp/wp-json/wp/v2/posts?per_page=50&page=1&orderby=id&order=asc",
     .array_path = "",
     .date_keys = "date",
     .id_keys = "id",

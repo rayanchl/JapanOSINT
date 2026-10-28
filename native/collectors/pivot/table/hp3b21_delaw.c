@@ -73,7 +73,12 @@ static const hp_source HP3B21_DELAW[] = {
     .record_type = "legislation-record",
     .tags = "\"germany\",\"legislation\",\"eli\",\"bmj\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://testphase.rechtsinformationen.bund.de/v1/legislation?size=100",
+    /* `sort=legislationIdentifier` — this row's own `id_keys`, and the API
+     * names its allowed set in its own error: a bogus value answers
+     * `must match "^-?(|default|date|temporalCoverageFrom|
+     * legislationIdentifier|DATUM)$"`. Measured 2026-10-24: accepted,
+     * honoured, totalItems unchanged at 5,534. */
+    .url = "https://testphase.rechtsinformationen.bund.de/v1/legislation?size=100&sort=legislationIdentifier",
     .array_path = "member",
     .date_keys = "item.exampleOfWork.datePublished",
     .id_keys = "item.legislationIdentifier",

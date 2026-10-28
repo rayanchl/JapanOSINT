@@ -441,7 +441,13 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "defence-budget-line",
     .tags = "\"defence\",\"budget\",\"program\",\"usa\",\"dod\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.usaspending.gov/api/v2/agency/097/program_activity/?fiscal_year=2025&limit=100",
+    /* `sort=name&order=asc` because this row cycles. The API names its
+     * allowed set in its own error: `Field 'sort' is outside valid values
+     * ['name', 'obligated_amount', 'gross_outlay_amount']` — the money
+     * columns move between runs, the name does not. Measured 2026-10-24:
+     * accepted, honoured, total unchanged at 209 (three pages, so the
+     * cycle is a no-op and the sort is what makes it repeatable). */
+    .url = "https://api.usaspending.gov/api/v2/agency/097/program_activity/?fiscal_year=2025&limit=100&sort=name&order=asc",
     .array_path = "results",
     .interval = 21600,
     .page_param = "page",
@@ -537,7 +543,13 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "government-publication",
     .tags = "\"defence\",\"uk\",\"mod\",\"publication\",\"policy\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gov.uk/api/search.json?filter_organisations=ministry-of-defence&count=50",
+    /* `order=public_timestamp` because this row cycles — the same
+     * ascending order the six GOV.UK Search rows in hp16_us_legal_1.c
+     * carry. Measured 2026-10-24: accepted, honoured, and the search's own
+     * total unchanged at 14,465. (The sorted page's first record carries
+     * an extra optional `display_type` field; the record is otherwise the
+     * same shape — this is not UK Parliament's degradation.) */
+    .url = "https://www.gov.uk/api/search.json?filter_organisations=ministry-of-defence&count=50&order=public_timestamp",
     .array_path = "results",
     .body_keys = "description",
     .date_keys = "public_timestamp",
@@ -1547,7 +1559,14 @@ static const hp_source HP3B19_DEFENCE[] = {
      * row. Socrata's own row identifier is exposed by asking for it in
      * $select and is 100 of 100 distinct here; fecha_inicio_ejecuci_n is the
      * date column the view actually has. */
-    .url = "https://www.datos.gov.co/resource/rpmr-utcd.json?%24limit=100&%24where=upper%28nombre_de_la_entidad%29%20like%20%27%25DEFENSA%25%27&%24select=*,:id",
+    /* `$order=:id` because SODA guarantees NO order without it and this row
+     * CYCLES: a resumed `$offset` walk lands where it meant to only if the
+     * order is stable between runs. `:id` is Socrata's own row identifier, so
+     * it needs no per-dataset knowledge. Measured on data.cdc.gov 2026-10-24:
+     * accepted percent-encoded, stable over two reads, offsets 0 and 3 share
+     * no row, and DESC answers a different set — so the parameter is honoured
+     * rather than silently ignored, which is what rule 4d says to check. */
+    .url = "https://www.datos.gov.co/resource/rpmr-utcd.json?%24limit=100&%24where=upper%28nombre_de_la_entidad%29%20like%20%27%25DEFENSA%25%27&%24select=*,:id&%24order=%3Aid",
     .date_keys = "fecha_inicio_ejecuci_n",
     .id_keys = ":id",
     .interval = 21600,

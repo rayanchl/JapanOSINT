@@ -107,7 +107,10 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "financial-institution",
     .tags = "\"brazil\",\"centralbank\",\"bank\",\"register\",\"finance\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://olinda.bcb.gov.br/olinda/servico/IFDATA/versao/v1/odata/IfDataCadastro(AnoMes=@AnoMes)?@AnoMes=202403&%24top=100&%24format=json",
+    /* `$orderby=CodInst` — the institution code, one row per institution
+     * in this month's snapshot; this row cycles. Measured 2026-10-24:
+     * accepted, honoured, $skip pages disjoint. */
+    .url = "https://olinda.bcb.gov.br/olinda/servico/IFDATA/versao/v1/odata/IfDataCadastro(AnoMes=@AnoMes)?@AnoMes=202403&%24top=100&%24format=json&%24orderby=CodInst",
     .array_path = "value",
     .interval = 86400,
     .page_param = "%24skip",
@@ -785,7 +788,14 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "production-record",
     .tags = "\"colombia\",\"mining\",\"royalty\",\"production\",\"anm\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.datos.gov.co/resource/r85m-vv6c.json?%24limit=1000",
+    /* `$order=:id` because SODA guarantees NO order without it and this row
+     * CYCLES: a resumed `$offset` walk lands where it meant to only if the
+     * order is stable between runs. `:id` is Socrata's own row identifier, so
+     * it needs no per-dataset knowledge. Measured on data.cdc.gov 2026-10-24:
+     * accepted percent-encoded, stable over two reads, offsets 0 and 3 share
+     * no row, and DESC answers a different set — so the parameter is honoured
+     * rather than silently ignored, which is what rule 4d says to check. */
+    .url = "https://www.datos.gov.co/resource/r85m-vv6c.json?%24limit=1000&%24order=%3Aid",
     .interval = 21600,
     .page_param = "%24offset",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -978,7 +988,14 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "missing-person",
     .tags = "\"colombia\",\"missingpersons\",\"forensics\",\"humanrights\",\"register\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.datos.gov.co/resource/8hqm-7fdt.json?%24limit=1000",
+    /* `$order=:id` because SODA guarantees NO order without it and this row
+     * CYCLES: a resumed `$offset` walk lands where it meant to only if the
+     * order is stable between runs. `:id` is Socrata's own row identifier, so
+     * it needs no per-dataset knowledge. Measured on data.cdc.gov 2026-10-24:
+     * accepted percent-encoded, stable over two reads, offsets 0 and 3 share
+     * no row, and DESC answers a different set — so the parameter is honoured
+     * rather than silently ignored, which is what rule 4d says to check. */
+    .url = "https://www.datos.gov.co/resource/8hqm-7fdt.json?%24limit=1000&%24order=%3Aid",
     .interval = 86400,
     .page_param = "%24offset",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -997,7 +1014,14 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "public-official",
     .tags = "\"colombia\",\"contraloria\",\"officials\",\"directory\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.datos.gov.co/resource/7pn8-vpxh.json?%24limit=1000",
+    /* `$order=:id` because SODA guarantees NO order without it and this row
+     * CYCLES: a resumed `$offset` walk lands where it meant to only if the
+     * order is stable between runs. `:id` is Socrata's own row identifier, so
+     * it needs no per-dataset knowledge. Measured on data.cdc.gov 2026-10-24:
+     * accepted percent-encoded, stable over two reads, offsets 0 and 3 share
+     * no row, and DESC answers a different set — so the parameter is honoured
+     * rather than silently ignored, which is what rule 4d says to check. */
+    .url = "https://www.datos.gov.co/resource/7pn8-vpxh.json?%24limit=1000&%24order=%3Aid",
     .interval = 21600,
     .page_param = "%24offset",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -1017,7 +1041,14 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "professional-licence",
     .tags = "\"colombia\",\"health\",\"professional\",\"register\",\"licence\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.datos.gov.co/resource/my8c-6xkk.json?%24limit=1000",
+    /* `$order=:id` because SODA guarantees NO order without it and this row
+     * CYCLES: a resumed `$offset` walk lands where it meant to only if the
+     * order is stable between runs. `:id` is Socrata's own row identifier, so
+     * it needs no per-dataset knowledge. Measured on data.cdc.gov 2026-10-24:
+     * accepted percent-encoded, stable over two reads, offsets 0 and 3 share
+     * no row, and DESC answers a different set — so the parameter is honoured
+     * rather than silently ignored, which is what rule 4d says to check. */
+    .url = "https://www.datos.gov.co/resource/my8c-6xkk.json?%24limit=1000&%24order=%3Aid",
     .interval = 86400,
     .page_param = "%24offset",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -1036,7 +1067,14 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "budget-execution",
     .tags = "\"colombia\",\"royalty\",\"budget\",\"regalias\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.datos.gov.co/resource/g4qj-2p2e.json?%24limit=1000",
+    /* `$order=:id` because SODA guarantees NO order without it and this row
+     * CYCLES: a resumed `$offset` walk lands where it meant to only if the
+     * order is stable between runs. `:id` is Socrata's own row identifier, so
+     * it needs no per-dataset knowledge. Measured on data.cdc.gov 2026-10-24:
+     * accepted percent-encoded, stable over two reads, offsets 0 and 3 share
+     * no row, and DESC answers a different set — so the parameter is honoured
+     * rather than silently ignored, which is what rule 4d says to check. */
+    .url = "https://www.datos.gov.co/resource/g4qj-2p2e.json?%24limit=1000&%24order=%3Aid",
     .interval = 21600,
     .page_param = "%24offset",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -1127,7 +1165,10 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "interest-rate",
     .tags = "\"brazil\",\"centralbank\",\"bank\",\"interestrate\",\"finance\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://olinda.bcb.gov.br/olinda/servico/taxaJuros/versao/v2/odata/TaxasJurosMensalPorMes?%24top=1000&%24format=json",
+    /* `$orderby` on exactly this row's own `id_keys`, because it cycles.
+     * Measured 2026-10-24: Olinda accepts the three-field form (MSRC's
+     * OData does not), honours it, and the pages are disjoint. */
+    .url = "https://olinda.bcb.gov.br/olinda/servico/taxaJuros/versao/v2/odata/TaxasJurosMensalPorMes?%24top=1000&%24format=json&%24orderby=anoMes,Modalidade,cnpj8",
     .array_path = "value",
     .interval = 21600,
     .page_param = "%24skip",
@@ -2260,7 +2301,17 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "zoning-record",
     .tags = "\"peru\",\"protected\",\"sernanp\",\"zoning\",\"environment\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://geoservicios.sernanp.gob.pe/arcgis/rest/services/servicios_ogc/peru_sernanp_0213/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&resultRecordCount=1000&f=json",
+    /* `orderByFields=objectid ASC` because this row CYCLES and an ArcGIS
+     * `query` with `resultOffset` has no guaranteed order without it — a
+     * resumed walk lands where it meant to only if the order is stable
+     * between runs. The field is NOT assumed: this layer's own metadata
+     * names `objectid` as its objectIdField (read 2026-10-24; across the 50
+     * ArcGIS rows the name is OBJECTID 40 times but also ObjectId,
+     * objectid, FID and oid_permit, so assuming one would have broken
+     * eight rows). Verified the same day: objectIdField absent; took the esriFieldTypeOID field — two single-record
+     * pages at offsets 0 and 1 answer different records, so the sort is
+     * honoured and the pages are disjoint. */
+    .url = "https://geoservicios.sernanp.gob.pe/arcgis/rest/services/servicios_ogc/peru_sernanp_0213/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&resultRecordCount=1000&f=json&orderByFields=objectid%20ASC",
     .array_path = "features",
     .interval = 21600,
     .page_param = "resultOffset",

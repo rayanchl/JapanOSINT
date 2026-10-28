@@ -37,6 +37,28 @@ int main(void) {
   assert(http_ua_override("https://midjourneyvideo.net/feed/") == NULL);
   printf("  the squatted midjourneyvideo.net stays out of the table: ok\n");
 
+  /* SEC refuses a client that declares no contact mailbox, so its agent is the
+   * one in this table that must carry an address — and an operator running
+   * their own deployment must be able to announce theirs. Both halves are
+   * asserted because the variable used to be read inside a collector that the
+   * table then overruled, which is a knob that silently stopped working. */
+  unsetenv("SEC_CONTACT_UA");
+  ua = http_ua_override("https://data.sec.gov/api/xbrl/frames/us-gaap/Assets/USD/CY2024Q1I.json");
+  assert(ua && strchr(ua, '@') && strstr(ua, "JapanOSINT/1.0"));
+  assert(!strstr(ua, "example.com"));
+  assert(http_ua_override("https://www.sec.gov/files/company_tickers.json") != NULL);
+  assert(http_ua_override("https://efts.sec.gov/LATEST/search-index?q=x") != NULL);
+  assert(!http_browser_host("https://www.sec.gov/files/company_tickers.json"));
+  setenv("SEC_CONTACT_UA", "AcmeResearch/2.0 (ops@acme.example)", 1);
+  ua = http_ua_override("https://www.sec.gov/files/company_tickers.json");
+  assert(ua && !strcmp(ua, "AcmeResearch/2.0 (ops@acme.example)"));
+  /* and only the SEC hosts: one operator's SEC contact is not every host's
+   * agent. */
+  ua = http_ua_override("https://pib.gov.in/RssMain.aspx?ModId=6");
+  assert(ua && !strcmp(ua, "JapanOSINT/1.0 (contact via repo issues)"));
+  unsetenv("SEC_CONTACT_UA");
+  printf("  the SEC hosts carry a contact mailbox, replaceable by $SEC_CONTACT_UA: ok\n");
+
   char *buf = NULL; size_t len = 0;
   FILE *f = open_memstream(&buf, &len);
   http_host_agents_dump(f);

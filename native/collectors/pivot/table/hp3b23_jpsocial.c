@@ -250,7 +250,15 @@ static const hp_source HP3B23_JPSOCIAL[] = {
     .record_type = "fediverse-instance",
     .tags = "\"japan\",\"fediverse\",\"misskey\",\"federation\",\"infrastructure\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://misskey.io/api/federation/instances",
+    /* `sort=+firstRetrievedAt` because this row cycles. Misskey validates
+     * this parameter against an enum (`+id` is refused), and of what it
+     * does allow this is the only append-at-tail order: a newly discovered
+     * instance is retrieved later, so it lands past a resumed walk's
+     * position instead of shifting it. Measured 2026-10-24: accepted,
+     * honoured, offset pages disjoint. The page size is Misskey's own 30:
+     * `limit=100` is refused (`#/properties/limit/maximum`, "must be <= 30").
+     */
+    .url = "https://misskey.io/api/federation/instances?sort=%2BfirstRetrievedAt",
     .date_keys = "firstRetrievedAt",
     .id_keys = "id,host",
     .interval = 86400,

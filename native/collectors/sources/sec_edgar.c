@@ -33,10 +33,14 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define SEC_USER_AGENT "OSINTsaas/1.0 (contact@example.com)"
-
+/* No User-Agent here. SEC refuses a client that declares no contact mailbox
+ * (measured 2026-10-24: the engine agent is 403 on www.sec.gov and
+ * data.sec.gov), and the agent for those hosts is one line in
+ * core/host_agents.def — HA_SEC, replaceable per deployment through
+ * $SEC_CONTACT_UA. This file used to carry "OSINTsaas/1.0
+ * (contact@example.com)", which passes the filter and is not a contact route:
+ * SEC's automated-access policy asks for an address someone answers. */
 static const char *const SEC_HEADERS[] = {
-  "User-Agent: " SEC_USER_AGENT,
   "Accept: application/json",
   NULL
 };

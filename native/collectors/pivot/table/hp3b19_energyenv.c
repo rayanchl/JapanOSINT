@@ -27,7 +27,13 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "grid-connection",
     .tags = "\"energy\",\"grid\",\"uk\",\"register\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.neso.energy/api/3/action/datastore_search?resource_id=17becbab-e3e8-473f-b303-3806f43a6a10&limit=50",
+    /* `sort=_id asc` because this row CYCLES and datastore_search has no
+     * guaranteed order without it. `_id` is the datastore's own sequential row
+     * id, present in every resource, so it needs no per-dataset knowledge.
+     * Measured on data.zagreb.hr 2026-10-24: offset 0 answers _id 1,2,3 and
+     * offset 3 answers 4,5,6 — ordered, disjoint, and the envelope publishes
+     * `total` for the disclosure. */
+    .url = "https://api.neso.energy/api/3/action/datastore_search?resource_id=17becbab-e3e8-473f-b303-3806f43a6a10&limit=50&sort=_id%20asc",
     .array_path = "result.records",
     .id_keys = "_id",
     .interval = 86400,
@@ -46,7 +52,13 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "capacity-market-unit",
     .tags = "\"energy\",\"grid\",\"uk\",\"auction\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.neso.energy/api/3/action/datastore_search?resource_id=25a5fa2e-873d-41c5-8aaf-fbc2b06d79e6&limit=50",
+    /* `sort=_id asc` because this row CYCLES and datastore_search has no
+     * guaranteed order without it. `_id` is the datastore's own sequential row
+     * id, present in every resource, so it needs no per-dataset knowledge.
+     * Measured on data.zagreb.hr 2026-10-24: offset 0 answers _id 1,2,3 and
+     * offset 3 answers 4,5,6 — ordered, disjoint, and the envelope publishes
+     * `total` for the disclosure. */
+    .url = "https://api.neso.energy/api/3/action/datastore_search?resource_id=25a5fa2e-873d-41c5-8aaf-fbc2b06d79e6&limit=50&sort=_id%20asc",
     .array_path = "result.records",
     .id_keys = "_id",
     .interval = 86400,
@@ -64,7 +76,13 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "capacity-market-component",
     .tags = "\"energy\",\"grid\",\"uk\",\"plant\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.neso.energy/api/3/action/datastore_search?resource_id=790f5fa0-f8eb-4d82-b98d-0d34d3e404e8&limit=50",
+    /* `sort=_id asc` because this row CYCLES and datastore_search has no
+     * guaranteed order without it. `_id` is the datastore's own sequential row
+     * id, present in every resource, so it needs no per-dataset knowledge.
+     * Measured on data.zagreb.hr 2026-10-24: offset 0 answers _id 1,2,3 and
+     * offset 3 answers 4,5,6 — ordered, disjoint, and the envelope publishes
+     * `total` for the disclosure. */
+    .url = "https://api.neso.energy/api/3/action/datastore_search?resource_id=790f5fa0-f8eb-4d82-b98d-0d34d3e404e8&limit=50&sort=_id%20asc",
     .array_path = "result.records",
     .id_keys = "_id",
     .interval = 86400,
@@ -82,7 +100,13 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "embedded-generator",
     .tags = "\"energy\",\"grid\",\"uk\",\"distributed\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.neso.energy/api/3/action/datastore_search?resource_id=68b6f3a1-e1bf-403b-9062-0269fc758d77&limit=50",
+    /* `sort=_id asc` because this row CYCLES and datastore_search has no
+     * guaranteed order without it. `_id` is the datastore's own sequential row
+     * id, present in every resource, so it needs no per-dataset knowledge.
+     * Measured on data.zagreb.hr 2026-10-24: offset 0 answers _id 1,2,3 and
+     * offset 3 answers 4,5,6 — ordered, disjoint, and the envelope publishes
+     * `total` for the disclosure. */
+    .url = "https://api.neso.energy/api/3/action/datastore_search?resource_id=68b6f3a1-e1bf-403b-9062-0269fc758d77&limit=50&sort=_id%20asc",
     .array_path = "result.records",
     .id_keys = "_id",
     .interval = 86400,
@@ -136,7 +160,13 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "network-constraint",
     .tags = "\"energy\",\"grid\",\"uk\",\"constraint\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.neso.energy/api/3/action/datastore_search?resource_id=38a18ec1-9e40-465d-93fb-301e80fd1352&limit=50",
+    /* `sort=_id asc` because this row CYCLES and datastore_search has no
+     * guaranteed order without it. `_id` is the datastore's own sequential row
+     * id, present in every resource, so it needs no per-dataset knowledge.
+     * Measured on data.zagreb.hr 2026-10-24: offset 0 answers _id 1,2,3 and
+     * offset 3 answers 4,5,6 — ordered, disjoint, and the envelope publishes
+     * `total` for the disclosure. */
+    .url = "https://api.neso.energy/api/3/action/datastore_search?resource_id=38a18ec1-9e40-465d-93fb-301e80fd1352&limit=50&sort=_id%20asc",
     .array_path = "result.records",
     .id_keys = "_id",
     .interval = 21600,
@@ -977,7 +1007,10 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "river-gauge",
     .tags = "\"water\",\"finland\",\"hydrology\",\"station\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://rajapinnat.ymparisto.fi/api/Hydrologiarajapinta/1.1/odata/Paikka?$top=50",
+    /* `$orderby=Paikka_Id` — the entity's own key; this row cycles and
+     * OData promises no order without it. Measured 2026-10-24: accepted,
+     * honoured, $skip pages disjoint. */
+    .url = "https://rajapinnat.ymparisto.fi/api/Hydrologiarajapinta/1.1/odata/Paikka?$top=50&$orderby=Paikka_Id",
     .array_path = "value",
     .detail_key = "Paikka_Id",
     .detail_url = "https://rajapinnat.ymparisto.fi/api/Hydrologiarajapinta/1.1/odata/Vedenkorkeus?$filter=Paikka_Id%20eq%20{v}&$top=500",
@@ -1593,7 +1626,13 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "interconnector-auction",
     .tags = "\"energy\",\"grid\",\"uk\",\"auction\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.neso.energy/api/3/action/datastore_search?resource_id=6a928369-bed3-445f-af8a-69cdb2cc5089&limit=50",
+    /* `sort=_id asc` because this row CYCLES and datastore_search has no
+     * guaranteed order without it. `_id` is the datastore's own sequential row
+     * id, present in every resource, so it needs no per-dataset knowledge.
+     * Measured on data.zagreb.hr 2026-10-24: offset 0 answers _id 1,2,3 and
+     * offset 3 answers 4,5,6 — ordered, disjoint, and the envelope publishes
+     * `total` for the disclosure. */
+    .url = "https://api.neso.energy/api/3/action/datastore_search?resource_id=6a928369-bed3-445f-af8a-69cdb2cc5089&limit=50&sort=_id%20asc",
     .array_path = "result.records",
     .id_keys = "_id",
     .interval = 21600,
