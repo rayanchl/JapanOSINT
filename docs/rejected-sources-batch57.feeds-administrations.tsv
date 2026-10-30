@@ -1,0 +1,539 @@
+key	name	url	verdict	kind	items
+Q273880	Beppu (city of Japan (shi))	https://twitter.com/BeppuCity_RSS	NOT_FEED		0
+Q86536	Komae (city of Japan (shi))	https://www.city.komae.tokyo.jp/index.cfm/4,13323,10,html	NOT_FEED		0
+Q281817	Inabe (city of Japan (shi))	https://www.city.inabe.mie.jp/about/rss.html	NOT_FEED		0
+Q432055	Hamada (city of Japan (shi))	https://www.city.hamada.shimane.jp/www/rss/kinkyu.rdf	OK	rss1	0
+Q725311	Ashibetsu (city of Japan (shi))	https://www.city.ashibetsu.hokkaido.jp/use/	NOT_FEED		0
+Q637868	Asahi (city of Japan (shi))	https://www.city.asahi.lg.jp/rss/10/list6.xml	OK	rss1	0
+Q725514	Ashiya (city of Japan (shi))	https://www.city.ashiya.lg.jp/kinkyu/kinkyu.xml	OK	rss1	0
+Q453502	Amami (city of Japan (shi))	https://www.city.amami.lg.jp/bosai/kinkyu/kinkyu.xml	OK	rss1	0
+Q726565	Kikugawa (city of Japan (shi))	https://www.city.kikugawa.shizuoka.jp/sousou.xml	HTTP_404		0
+Q127026	Sakurai (city of Japan (shi))	https://www.city.sakurai.lg.jp/cgi-bin/feed.php?categoryNo=14&amp;displayCount=15&amp;displayRange=90	HTTP_502		0
+Q127026	Sakurai (city of Japan (shi))	https://www.city.sakurai.lg.jp/cgi-bin/feed.php?siteNew=1&amp;displayCount=15&amp;displayRange=90	HTTP_502		0
+Q127026	Sakurai (city of Japan (shi))	https://www.city.sakurai.lg.jp/cgi-bin/feed.php?categoryNo=16&amp;displayCount=15&amp;displayRange=90	HTTP_502		0
+Q460812	Naruto (city of Japan (shi))	https://www.city.naruto.lg.jp/rss.html	NOT_FEED		0
+Q128849	Nagano (city of Japan (shi))	https://www.city.nagano.nagano.jp/kinkyu/suido.xml	OK	rss1	0
+Q317813	Fussa (city of Japan (shi))	https://www.city.fussa.tokyo.jp/about/1004552.html	NOT_FEED		0
+Q460820	Iga (city of Japan (shi))	https://www.city.iga.lg.jp/site_policy/0000000003.html	NOT_FEED		0
+Q734366	Oyabe (city of Japan (shi))	https://www.city.oyabe.toyama.jp/about/site/rss.html	NOT_FEED		0
+Q317830	Higashikurume (city of Japan (shi))	https://www.city.higashikurume.lg.jp/about/1003510.html	NOT_FEED		0
+Q460835	Marugame (city of Japan (shi))	https://www.city.marugame.lg.jp/site/furusatomarugame/	NOT_FEED		0
+Q638312	Toride (city of Japan (shi))	https://www.city.toride.ibaraki.jp/kinkyu/kinkyu.xml	OK	rss1	0
+Q317834	Kokubunji (city of Japan (shi))	https://www.city.kokubunji.tokyo.jp/about/1005069.html	NOT_FEED		0
+Q734390	Ebina (city of Japan (shi))	https://www.city.ebina.kanagawa.jp/about/rss.html	NOT_FEED		0
+Q317847	Inagi (city of Japan (shi))	https://www.city.inagi.tokyo.jp/this_hp/site/1010131.html	NOT_FEED		0
+Q463171	Handa (city of Japan (shi))	https://www.city.handa.lg.jp/about/site/1004054.html	NOT_FEED		0
+Q642018	Natori (city of Japan (shi))	https://www.city.natori.miyagi.jp/site/userguide/2710.html	NOT_FEED		0
+Q468765	Ube (city of Japan (shi))	https://www.city.ube.yamaguchi.jp/webguide/rss.html	NOT_FEED		0
+Q163888	Ageo (city of Japan (shi))	https://www.city.ageo.lg.jp/site/userguide/rss.html	NOT_FEED		0
+Q469189	Kurihara (city of Japan (shi))	https://www.kuriharacity.jp/li/010/news.rss	OK	rss2	0
+Q469189	Kurihara (city of Japan (shi))	https://www.kuriharacity.jp/li/030/news.rss	OK	rss2	0
+Q326956	Uji (city of Japan (shi))	https://www.city.uji.kyoto.jp/site/userguide/17907.html	NOT_FEED		0
+Q328067	Ise (city of Japan (shi))	https://www.city.ise.mie.jp/about/rss.html	NOT_FEED		0
+Q738275	Karatsu (city of Japan (shi))	https://www.city.karatsu.lg.jp/site/userguide/21333.html	NOT_FEED		0
+Q646834	Asaka (city of Japan (shi))	https://www.city.asaka.lg.jp/site/userguide/rss.html	NOT_FEED		0
+Q170616	Chiba (city of Japan (shi))	https://www.city.chiba.jp/kinkyu.xml	OK	rss1	0
+Q742160	Shijōnawate-shi (city of Japan (shi))	https://www.city.shijonawate.lg.jp/site/userguide/7025.html	NOT_FEED		0
+Q174691	Shizuoka (city of Japan (shi))	https://www.city.shizuoka.lg.jp/kinkyu/kinkyu.xml	OK	rss1	0
+Q749885	Mine (city of Japan (shi))	https://www2.city.mine.lg.jp/cgi-bin/feed.php?type=rss_2.0&siteNew=1	HTTP_502		0
+Q328625	Nagareyama (city of Japan (shi))	https://www.city.nagareyama.chiba.jp/site/rss.html	NOT_FEED		0
+Q329754	Kiyose (city of Japan (shi))	https://www.city.kiyose.lg.jp/about/rss.html	NOT_FEED		0
+Q329790	Kamaishi (city of Japan (shi))	https://www.city.kamaishi.iwate.jp/docs/2008121800033/	NOT_FEED		0
+Q179757	Chikuma (city of Japan (shi))	https://chikuma-kanko.com/feed/	HTTP_503		0
+Q651742	Minamiashigara (city of Japan (shi))	https://www.city.minamiashigara.kanagawa.jp/rss.php?&amp;d=&amp;s=1123&amp;o=4	OK	rss2	0
+Q651742	Minamiashigara (city of Japan (shi))	https://www.city.minamiashigara.kanagawa.jp/rss.php?&amp;d=&amp;s=1001&amp;o=2	OK	rss2	0
+Q753731	Masuda (city of Japan (shi))	https://www.city.masuda.lg.jp/shiseijoho/koho_kocho/homepage/rss.html	NOT_FEED		0
+Q765884	Hachimantai (city of Japan (shi))	https://www.city.hachimantai.lg.jp/soshiki/kizai/6169.html	NOT_FEED		0
+Q181966	Naha (city of Japan (shi))	https://www.city.naha.okinawa.jp/about/rss.html	NOT_FEED		0
+Q653355	Tagajō (city of Japan (shi))	https://www.city.tagajo.miyagi.jp/kinkyu/kinkyu/kinkyu.xml	HTTP_404		0
+Q188806	Kitakyūshū (city of Japan (shi))	https://www.city.kitakyushu.lg.jp/category/file_0005.html	NOT_FEED		0
+Q330007	Kunitachi (city of Japan (shi))	https://www.city.kunitachi.tokyo.jp/machi/sakura_toboku_matome/index.html	NOT_FEED		0
+Q653446	Tsuchiura (city of Japan (shi))	https://www.city.tsuchiura.lg.jp/rss.php?mode=news&amp;type=5	OK	rss2	0
+Q653446	Tsuchiura (city of Japan (shi))	https://www.city.tsuchiura.lg.jp/rss.php?mode=news&amp;type=6	OK	rss2	0
+Q496479	Yokote (city of Japan (shi))	https://www.city.yokote.lg.jp/shisei/1001181/1010072.html	NOT_FEED		0
+Q332825	Yatomi (city of Japan (shi))	https://www.city.yatomi.lg.jp/	NOT_FEED		0
+Q332825	Yatomi (city of Japan (shi))	https://www.city.yatomi.lg.jp/event_info/1001259/1005653.html	NOT_FEED		0
+Q332825	Yatomi (city of Japan (shi))	https://www.city.yatomi.lg.jp/about/1001146.html	NOT_FEED		0
+Q332825	Yatomi (city of Japan (shi))	https://www.city.yatomi.lg.jp/kosodate/index.html	NOT_FEED		0
+Q653510	Suita (city of Japan (shi))	https://www.city.suita.osaka.jp/about/rss.html	NOT_FEED		0
+Q335423	Takatsuki (city of Japan (shi))	https://www.city.takatsuki.osaka.jp/soshiki/6/47465.html	NOT_FEED		0
+Q782103	Mizuho (city of Japan (shi))	https://www.city.mizuho.lg.jp/services/rdf/rss10/1057.xml	OK	rss1	0
+Q199609	Ōita-shi (city of Japan (shi))	https://www.city.oita.oita.jp/kinkyuji/emergency_s.xml	OK	rss1	0
+Q199609	Ōita-shi (city of Japan (shi))	https://www.city.oita.oita.jp/o064/furusato/r08furusatomaturi.html	NOT_FEED		0
+Q199609	Ōita-shi (city of Japan (shi))	https://www.city.oita.oita.jp/1000000010006/1000000010006.html	NOT_FEED		0
+Q791587	Awa (city of Japan (shi))	https://www.city.awa.lg.jp/rss.html	NOT_FEED		0
+Q200077	Morioka (city of Japan (shi))	https://www.city.morioka.iwate.jp/site/1000040.html	NOT_FEED		0
+Q373107	Awaji (city of Japan (shi))	https://www.city.awaji.lg.jp/site/userguide/rss.html	NOT_FEED		0
+Q374477	Ashikaga (city of Japan (shi))	https://www.city.ashikaga.tochigi.jp/goverment/000083/000890/p000228.html	NOT_FEED		0
+Q817271	Bibai (city of Japan (shi))	https://www.city.bibai.hokkaido.jp/soshiki/2/rss.html	NOT_FEED		0
+Q374511	Oyama (city of Japan (shi))	https://www.city.oyama.tochigi.jp/rss.php?mode=news&amp;type=0	OK	rss2	0
+Q374511	Oyama (city of Japan (shi))	https://www.city.oyama.tochigi.jp/rss.php?mode=news&amp;type=1	OK	rss2	0
+Q374511	Oyama (city of Japan (shi))	https://www.city.oyama.tochigi.jp/rss.php?mode=news&amp;type=2	OK	rss2	0
+Q200251	Kōchi-shi (city of Japan (shi))	https://www.city.kochi.kochi.jp/soshiki/80/rss.html	NOT_FEED		0
+Q665097	Minoh (city of Japan (shi))	https://www.city.minoh.lg.jp/rss.html	NOT_FEED		0
+Q200267	Kamakura (city of Japan (shi))	https://www.city.kamakura.kanagawa.jp/kinkyu.xml	OK	rss1	0
+Q501891	Tahara (city of Japan (shi))	https://www.city.tahara.aichi.jp/site/1002356.html	NOT_FEED		0
+Q673010	Warabi (city of Japan (shi))	https://www.city.warabi.saitama.jp/about/rss.html	NOT_FEED		0
+Q384809	Ōbu-shi (city of Japan (shi))	https://www.city.obu.aichi.jp/about/rss.html	NOT_FEED		0
+Q200578	Yokosuka (city of Japan (shi))	https://www.city.yokosuka.kanagawa.jp/shisei/koho/goiken/feedback.html	NOT_FEED		0
+Q685491	Nihonmatsu (city of Japan (shi))	https://www.city.nihonmatsu.lg.jp/rss.php?mode=news&amp;type=0	OK	rss2	0
+Q685491	Nihonmatsu (city of Japan (shi))	https://www.city.nihonmatsu.lg.jp/rss.php?mode=news&amp;type=1	OK	rss2	0
+Q685491	Nihonmatsu (city of Japan (shi))	https://www.city.nihonmatsu.lg.jp/rss.php?mode=news&amp;type=2	OK	rss2	0
+Q819572	Kawachinagano (city of Japan (shi))	https://www.city.kawachinagano.lg.jp/site/userguide/5031.html	NOT_FEED		0
+Q819578	Kanoya (city of Japan (shi))	https://www.city.kanoya.lg.jp/kinkyu.xml	OK	rss1	0
+Q201117	Toyota (city of Japan (shi))	https://www.city.toyota.aichi.jp/about/rss.html	NOT_FEED		0
+Q385375	Ōmachi-shi (city of Japan (shi))	https://www.city.omachi.nagano.jp/emergency/rss	NOT_FEED		0
+Q201932	Kofu (city of Japan (shi))	https://www.city.kofu.lg.jp/bosai/kinkyu.xml	OK	rss1	0
+Q385591	Ōmura-shi (city of Japan (shi))	https://www.city.omura.nagasaki.jp/bousai/kurashi/anzen/kinkyu.xml	OK	rss1	0
+Q693264	Iwamizawa (city of Japan (shi))	https://www.city.iwamizawa.hokkaido.jp/cgi-bin/feed.php?displayCount=10&amp;displayRange=90	HTTP_502		0
+Q385864	Osakasayama (city of Japan (shi))	https://www.city.osakasayama.osaka.jp/OsakasayamaCityRSS.html	NOT_FEED		0
+Q386322	Ōtawara-shi (city of Japan (shi))	https://www.city.ohtawara.tochigi.jp/rss.html	NOT_FEED		0
+Q695895	Urasoe (city of Japan (shi))	https://www.city.urasoe.lg.jp/category/bbs/index.rss	HTTP_404		0
+Q695895	Urasoe (city of Japan (shi))	https://www.city.urasoe.lg.jp/category/bbs/index.atom	HTTP_404		0
+Q695895	Urasoe (city of Japan (shi))	https://www.city.urasoe.lg.jp/rss.html	NOT_FEED		0
+Q207876	Yamaguchi (city of Japan (shi))	https://www.city.yamaguchi.lg.jp/site/userguide/11137.html	NOT_FEED		0
+Q695892	Nanao (city of Japan (shi))	https://www.city.nanao.lg.jp/bosai/kurashi/bosai/kinkyu/emergency.xml	OK	rss1	0
+Q207311	Suzuka (city of Japan (shi))	https://www.city.suzuka.lg.jp/about/site/rss.html	NOT_FEED		0
+Q696394	Sakura (city of Japan (shi))	https://www.city.tochigi-sakura.lg.jp/rss/rss10-n10.xml	OK	rss1	0
+Q548493	Makurazaki (city of Japan (shi))	https://www.city.makurazaki.lg.jp/site/userguide/5078.html	NOT_FEED		0
+Q819658	Ishioka (city of Japan (shi))	https://www.city.ishioka.lg.jp/rss.php?mode=news&amp;type=0	OK	rss2	0
+Q819658	Ishioka (city of Japan (shi))	https://www.city.ishioka.lg.jp/rss.php?mode=news&amp;type=1&amp;nd=4	OK	rss2	0
+Q819658	Ishioka (city of Japan (shi))	https://www.city.ishioka.lg.jp/rss.php?mode=news&amp;type=1&amp;nd=5	OK	rss2	0
+Q819658	Ishioka (city of Japan (shi))	https://www.city.ishioka.lg.jp/rss.php?mode=news&amp;type=1&amp;nd=6	OK	rss2	0
+Q819658	Ishioka (city of Japan (shi))	https://www.city.ishioka.lg.jp/rss.php?mode=news&amp;type=1&amp;nd=7	OK	rss2	0
+Q819658	Ishioka (city of Japan (shi))	https://www.city.ishioka.lg.jp/rss.php?mode=news&amp;type=1&amp;nd=9	OK	rss2	0
+Q819658	Ishioka (city of Japan (shi))	https://www.city.ishioka.lg.jp/rss.php?mode=news&amp;type=1&amp;nd=10760	OK	rss2	0
+Q386052	Oshu (city of Japan (shi))	https://www.city.oshu.iwate.jp/gyosei/koho_kocho/1/8874.html	NOT_FEED		0
+Q576556	Midori (city of Japan (shi))	https://www.city.midori.gunma.jp/shisei/1001664/1001886/1000117/rss.html	NOT_FEED		0
+Q592065	Ginowan (city of Japan (shi))	https://www.city.ginowan.lg.jp/cgi-bin/feed.php?categoryNo=5170	OK	rss1	0
+Q592065	Ginowan (city of Japan (shi))	https://www.city.ginowan.lg.jp/cgi-bin/feed.php?categoryNo=5176	OK	rss1	0
+Q386661	Fujisawa (city of Japan (shi))	https://www.city.fujisawa.kanagawa.jp/kinkyu/kinkyu.xml	OK	rss1	0
+Q696401	Tome (city of Japan (shi))	https://www.city.tome.miyagi.jp/kinkyu/hazard.xml	OK	rss1	0
+Q696407	Hakusan (city of Japan (shi))	https://www.city.hakusan.lg.jp/about/site/rss.html	NOT_FEED		0
+Q210661	Musashino (city of Japan (shi))	https://www.city.musashino.lg.jp/about/1000040.html	NOT_FEED		0
+Q210667	Chōfu (city of Japan (shi))	https://www.city.chofu.lg.jp/kinkyu/kinkyu.xml	OK	rss1	0
+Q823493	Komatsushima (city of Japan (shi))	https://www.city.komatsushima.lg.jp/sangyo/nyusatsu/rss.xml	HTTP_404		0
+Q823493	Komatsushima (city of Japan (shi))	https://www.city.komatsushima.lg.jp/use/	NOT_FEED		0
+Q602903	Yurihonjo (city of Japan (shi))	https://www.city.yurihonjo.lg.jp/about/rss.html	NOT_FEED		0
+Q605256	Shimada (city of Japan (shi))	https://www.city.shimada.shizuoka.jp/kurashi-docs/soudanmatome.html	NOT_FEED		0
+Q696418	Katsuura (city of Japan (shi))	https://www.city.katsuura.lg.jp/site/userguide/4196.html	NOT_FEED		0
+Q696772	Hitachinaka (city of Japan (shi))	https://www.city.hitachinaka.lg.jp/about/rss.html	NOT_FEED		0
+Q389515	Kariya (city of Japan (shi))	https://www.city.kariya.lg.jp/about/rss.html	NOT_FEED		0
+Q819689	Tajimi (city of Japan (shi))	https://www.city.tajimi.lg.jp/about/site/rss.html	NOT_FEED		0
+Q208863	Hachiōji-shi (city of Japan (shi))	https://www.city.hachioji.tokyo.jp/987/p021090.html	NOT_FEED		0
+Q209683	Tokoname (city of Japan (shi))	https://www.city.tokoname.aichi.jp/site/about/rss.html	NOT_FEED		0
+Q823526	Shingu (city of Japan (shi))	https://www.city.shingu.lg.jp/RSSFeed/menu/0	HTTP_500		0
+Q213318	Amagasaki (city of Japan (shi))	https://www.city.amagasaki.hyogo.jp/siteinfo/site/rss.html	NOT_FEED		0
+Q583931	Bando (city of Japan (shi))	https://www.city.bando.lg.jp/rss.php?mode=news&amp;type=0	OK	rss2	0
+Q583931	Bando (city of Japan (shi))	https://www.city.bando.lg.jp/rss.php?mode=news&amp;type=1	OK	rss2	0
+Q583931	Bando (city of Japan (shi))	https://www.city.bando.lg.jp/rss.php?mode=news&amp;type=2	OK	rss2	0
+Q583931	Bando (city of Japan (shi))	https://www.city.bando.lg.jp/rss.php?mode=news&amp;type=3	OK	rss2	0
+Q695926	Yaita (city of Japan (shi))	https://www.city.yaita.tochigi.jp/site/userguide/rss.html	NOT_FEED		0
+Q209779	Sagamihara (city of Japan (shi))	https://www.city.sagamihara.kanagawa.jp/about/rss.html	NOT_FEED		0
+Q609350	Kawanishi (city of Japan (shi))	https://www.city.kawanishi.hyogo.jp/policy/rss.html	NOT_FEED		0
+Q223496	Chiryū-shi (city of Japan (shi))	https://www.city.chiryu.aichi.jp/1453784986928.html	NOT_FEED		0
+Q696777	Nisshin (city of Japan (shi))	https://www.city.nisshin.lg.jp/gaiyo/rss.html	NOT_FEED		0
+Q622594	Takayama (city of Japan (shi))	https://www.city.takayama.lg.jp/site/1005124.html	NOT_FEED		0
+Q236197	Hino (city of Japan (shi))	https://www.city.hino.lg.jp/about/rss.html	NOT_FEED		0
+Q823988	Kakegawa (city of Japan (shi))	https://www.city.kakegawa.shizuoka.jp/rss-urgency/urgency.part.json	NOT_FEED		0
+Q823988	Kakegawa (city of Japan (shi))	https://www.city.kakegawa.shizuoka.jp/rss-list/	NOT_FEED		0
+Q823988	Kakegawa (city of Japan (shi))	https://www.city.kakegawa.shizuoka.jp/rss-gyosei/	NOT_FEED		0
+Q823988	Kakegawa (city of Japan (shi))	https://www.city.kakegawa.shizuoka.jp/rss-kanko/	NOT_FEED		0
+Q823988	Kakegawa (city of Japan (shi))	https://www.city.kakegawa.shizuoka.jp/rss-kosodate/	NOT_FEED		0
+Q823988	Kakegawa (city of Japan (shi))	https://www.city.kakegawa.shizuoka.jp/rss-iju/	NOT_FEED		0
+Q823988	Kakegawa (city of Japan (shi))	https://www.city.kakegawa.shizuoka.jp/gyosei/docs/7008.html	NOT_FEED		0
+Q237683	Ōme (city of Japan (shi))	https://www.city.ome.tokyo.jp/site/userguide/14944.html	NOT_FEED		0
+Q633911	Chigasaki (city of Japan (shi))	https://www.city.chigasaki.kanagawa.jp/about/1001983.html	NOT_FEED		0
+Q824009	Sayama (city of Japan (shi))	https://www.city.sayama.saitama.jp/about/rss.html	NOT_FEED		0
+Q714636	Miyakojima (city of Japan (shi))	https://www.city.miyakojima.lg.jp/rss/../soshiki/kyouiku/syougaigakusyu/hakubutsukan/oshirase/2026-1029-1351-198.html	NOT_FEED		0
+Q714636	Miyakojima (city of Japan (shi))	https://www.city.miyakojima.lg.jp/rss/../soshiki/shityo/sangyoushikou/sangyoushinko/oshirase/2026-1014-1552-336.html	NOT_FEED		0
+Q714636	Miyakojima (city of Japan (shi))	https://www.city.miyakojima.lg.jp/rss/../jigyousya/kaigo/2026-1020-1748-72.html	NOT_FEED		0
+Q714636	Miyakojima (city of Japan (shi))	https://www.city.miyakojima.lg.jp/rss/../kurashi/kenkou/kaigo/index.html	NOT_FEED		0
+Q714636	Miyakojima (city of Japan (shi))	https://www.city.miyakojima.lg.jp/rss/../soshiki/shityo/seikatukankyou/shiminseikatu/oshirase/2026-1007-1145-54.html	NOT_FEED		0
+Q622620	Tōkai-shi (city of Japan (shi))	https://www.city.tokai.aichi.jp/about/rss.html	NOT_FEED		0
+Q634022	Kiryū (city of Japan (shi))	https://www.city.kiryu.lg.jp/site/rss.html	NOT_FEED		0
+Q241037	Numazu (city of Japan (shi))	https://www.city.numazu.shizuoka.jp/kurashi/topics/2026/minatomachizukuri/index.htm	NOT_FEED		0
+Q241037	Numazu (city of Japan (shi))	https://www.city.numazu.shizuoka.jp/rss/index.htm	NOT_FEED		0
+Q242108	Otaru (city of Japan (shi))	https://www.city.otaru.lg.jp/event_list/index.rss	HTTP_406		0
+Q242108	Otaru (city of Japan (shi))	https://www.city.otaru.lg.jp/event_list/index.atom	HTTP_406		0
+Q242108	Otaru (city of Japan (shi))	https://www.city.otaru.lg.jp/docs/2021022600106/	NOT_FEED		0
+Q390806	Musashimurayama (city of Japan (shi))	https://www.city.musashimurayama.lg.jp/about/1003891.html	NOT_FEED		0
+Q240489	Higashimurayama (city of Japan (shi))	https://www.city.higashimurayama.tokyo.jp/rss_news.xml	HTTP_403		0
+Q242783	Okazaki (city of Japan (shi))	https://www.city.okazaki.lg.jp/about/rss.html	NOT_FEED		0
+Q838678	Iyo (city of Japan (shi))	https://www.city.iyo.lg.jp/rss/index.html	NOT_FEED		0
+Q633983	Kashiwazaki (city of Japan (shi))	https://www.city.kashiwazaki.lg.jp/soshikiichiran/sogokikakubu/genkihasshinka/1/4/3535.html	NOT_FEED		0
+Q417825	Aki (city of Japan (shi))	https://www.city.aki.kochi.jp/life/dtl.php?hdnKey=5	NOT_FEED		0
+Q840595	Kamisu (city of Japan (shi))	https://www.city.kamisu.ibaraki.jp/shisei/koho/1003041/1003042/rss.html	NOT_FEED		0
+Q407947	Aira (city of Japan (shi))	https://www.city.aira.lg.jp/kinkyu/kinkyu.xml	HTTP_404		0
+Q840598	Itako (city of Japan (shi))	https://www.city.itako.lg.jp/rss.php?mode=news&amp;type=0	OK	rss2	0
+Q840598	Itako (city of Japan (shi))	https://www.city.itako.lg.jp/rss.php?mode=news&amp;type=1	OK	rss2	0
+Q840598	Itako (city of Japan (shi))	https://www.city.itako.lg.jp/rss.php?mode=news&amp;type=2	OK	rss2	0
+Q415372	Akaiwa (city of Japan (shi))	https://www.city.akaiwa.lg.jp/cgi-bin/feed.php?categoryNo=869	OK	rss1	0
+Q838663	Hitachiōta-shi (city of Japan (shi))	https://www.city.hitachiota.ibaraki.jp/rss.php?mode=news&amp;type=0	OK	rss2	0
+Q838663	Hitachiōta-shi (city of Japan (shi))	https://www.city.hitachiota.ibaraki.jp/rss.php?mode=news&amp;type=2	OK	rss2	0
+Q838663	Hitachiōta-shi (city of Japan (shi))	https://www.city.hitachiota.ibaraki.jp/rss.php?mode=news&amp;type=3	OK	rss2	0
+Q838660	Chino (city of Japan (shi))	https://www.city.chino.lg.jp/site/userguide/rss.html	NOT_FEED		0
+Q842098	Hashimoto (city of Japan (shi))	https://www.city.hashimoto.lg.jp/cgi-bin/feed.php?categoryNo=9&amp;includeShortcut=1	OK	rss1	0
+Q842098	Hashimoto (city of Japan (shi))	https://www.city.hashimoto.lg.jp/cgi-bin/feed.php?categoryNo=12&amp;includeShortcut=1	OK	rss1	0
+Q424813	Akō-shi (city of Japan (shi))	https://www.city.ako.lg.jp/kinkyu/kinkyu.xml	OK	rss1	0
+Q424813	Akō-shi (city of Japan (shi))	https://www.city.ako.lg.jp/rss/index.html	NOT_FEED		0
+Q260923	Yawata (city of Japan (shi))	https://www.city.yawata.kyoto.jp/rss/rss_topics.xml	OK	rss2	0
+Q260923	Yawata (city of Japan (shi))	https://www.city.yawata.kyoto.jp/site_policy/0000000042.html	NOT_FEED		0
+Q841129	Iida (city of Japan (shi))	https://www.city.iida.lg.jp/soshiki/1/syokuinbosyuzyouhoumatomesiritubyouin.html	NOT_FEED		0
+Q428989	Noboribetsu (city of Japan (shi))	https://www.city.noboribetsu.lg.jp/docs/2019013000028/	NOT_FEED		0
+Q269634	Tachikawa (city of Japan (shi))	https://www.city.tachikawa.lg.jp/shisei/koho/1005487/rss.html	NOT_FEED		0
+Q844133	Ushiku (city of Japan (shi))	https://www.city.ushiku.lg.jp/rss.php?mode=news&amp;type=0	OK	rss2	0
+Q844133	Ushiku (city of Japan (shi))	https://www.city.ushiku.lg.jp/rss.php?mode=news&amp;type=1	OK	rss2	0
+Q844133	Ushiku (city of Japan (shi))	https://www.city.ushiku.lg.jp/rss.php?mode=news&amp;type=2	OK	rss2	0
+Q844133	Ushiku (city of Japan (shi))	https://www.city.ushiku.lg.jp/rss.php?mode=news&amp;type=3	OK	rss2	0
+Q271917	Kushiro (city of Japan (shi))	https://www.city.kushiro.lg.jp/about/rss.html	NOT_FEED		0
+Q847562	Nasukarasuyama (city of Japan (shi))	https://www.city.nasukarasuyama.lg.jp/rss.php?mode=news&amp;type=0	OK	rss2	0
+Q847562	Nasukarasuyama (city of Japan (shi))	https://www.city.nasukarasuyama.lg.jp/rss.php?mode=news&amp;type=1	OK	rss2	0
+Q847562	Nasukarasuyama (city of Japan (shi))	https://www.city.nasukarasuyama.lg.jp/rss.php?mode=news&amp;type=2	OK	rss2	0
+Q847591	Tarumizu (city of Japan (shi))	https://www.city.tarumizu.lg.jp/kinkyu/kinkyu.xml	OK	rss1	0
+Q847601	Nakama (city of Japan (shi))	https://www.city.nakama.lg.jp/site/userguide/3351.html	NOT_FEED		0
+Q850335	Tamano (city of Japan (shi))	https://www.city.tamano.lg.jp/site/guide/5408.html	NOT_FEED		0
+Q850344	Sakado (city of Japan (shi))	https://www.city.sakado.lg.jp/soshiki/6/17537.html	NOT_FEED		0
+Q850344	Sakado (city of Japan (shi))	https://www.city.sakado.lg.jp/site/userguide/4794.html	NOT_FEED		0
+Q850359	Kitsuki (city of Japan (shi))	https://www.city.kitsuki.lg.jp/cgi-bin/feed.php?categoryNo=924	OK	rss1	0
+Q850359	Kitsuki (city of Japan (shi))	https://www.city.kitsuki.lg.jp/cgi-bin/feed.php?categoryNo=925	OK	rss1	0
+Q850527	Makinohara (city of Japan (shi))	https://www.city.makinohara.shizuoka.jp/soshiki/7/31235.html	NOT_FEED		0
+Q850640	Mukō-shi (city of Japan (shi))	https://www.city.muko.kyoto.jp/soshiki/1/1323.html	NOT_FEED		0
+Q851804	Shimotsuke (city of Japan (shi))	https://www.city.shimotsuke.lg.jp/rss/rss10.xml	OK	rss1	0
+Q853805	Kani (city of Japan (shi))	https://www.city.kani.lg.jp/services/rdf/rss10/31008.xml	OK	rss1	0
+Q853821	Mizunami (city of Japan (shi))	https://www.city.mizunami.lg.jp/about/rss.html	NOT_FEED		0
+Q855059	Sakaide (city of Japan (shi))	https://www.city.sakaide.lg.jp/site/userguide/rss.html	NOT_FEED		0
+Q857234	Shōbara-shi (city of Japan (shi))	https://www.city.shobara.hiroshima.jp/rss/	NOT_FEED		0
+Q857234	Shōbara-shi (city of Japan (shi))	https://satomachiplus.pref.hiroshima.lg.jp/	NOT_FEED		0
+Q857256	Hasuda (city of Japan (shi))	https://www.city.hasuda.saitama.jp/kinkyu/kinkyu.xml	OK	rss1	0
+Q857256	Hasuda (city of Japan (shi))	https://www.city.hasuda.saitama.jp/rss/index.html	NOT_FEED		0
+Q857266	Imari (city of Japan (shi))	https://www.city.imari.lg.jp/services/rdf/rss10/1021.xml	OK	rss1	0
+Q857828	Mima (city of Japan (shi))	https://www.city.mima.lg.jp/rss-list/	NOT_FEED		0
+Q857828	Mima (city of Japan (shi))	https://www.city.mima.lg.jp/rss-announce/	NOT_FEED		0
+Q857828	Mima (city of Japan (shi))	https://www.city.mima.lg.jp/rss-announce/rss.xml	OK	rss2	0
+Q857828	Mima (city of Japan (shi))	https://www.city.mima.lg.jp/rss-gyosei/	NOT_FEED		0
+Q857828	Mima (city of Japan (shi))	https://www.city.mima.lg.jp/rss-kanko/	NOT_FEED		0
+Q857828	Mima (city of Japan (shi))	https://www.city.mima.lg.jp/rss-kosodate/	NOT_FEED		0
+Q857828	Mima (city of Japan (shi))	https://www.city.mima.lg.jp/rss-iju/	NOT_FEED		0
+Q857828	Mima (city of Japan (shi))	https://www.city.mima.lg.jp/rss-kigyou/	NOT_FEED		0
+Q857828	Mima (city of Japan (shi))	https://www.city.mima.lg.jp/about/about-rss.html	NOT_FEED		0
+Q858352	Kirishima (city of Japan (shi))	https://www.city-kirishima.jp/kinkyuu.xml	OK	rss1	0
+Q858423	Date (city of Japan (shi))	https://www.city.fukushima-date.lg.jp/site/hajimete/rss.html	NOT_FEED		0
+Q860659	Gyōda-shi (city of Japan (shi))	https://www.city.gyoda.lg.jp/cgi-bin/feed.php?type=rss_2.0	HTTP_502		0
+Q861230	Maniwa (city of Japan (shi))	https://www.city.maniwa.lg.jp/site/guide/24588.html	NOT_FEED		0
+Q861283	Kobayashi (city of Japan (shi))	https://www.city.kobayashi.lg.jp/cgi-bin/feed.php?displayCount=10&amp;displayRange=90	HTTP_502		0
+Q861610	Tamana (city of Japan (shi))	https://www.city.tamana.lg.jp/sc/rss.html	NOT_FEED		0
+Q863739	Kasaoka (city of Japan (shi))	https://www.city.kasaoka.okayama.jp/site/userguide/rss.html	NOT_FEED		0
+Q863741	Bizen (city of Japan (shi))	https://www.city.bizen.okayama.jp/site/userguide/4121.html	NOT_FEED		0
+Q863758	Izunokuni (city of Japan (shi))	https://www.city.izunokuni.shizuoka.jp/kinkyu/kinkyu.xml	OK	rss1	0
+Q863758	Izunokuni (city of Japan (shi))	https://www.city.izunokuni.shizuoka.jp/rsshaishin/index.html	NOT_FEED		0
+Q873528	Sanmu (city of Japan (shi))	https://www.city.sammu.lg.jp/rss.php?mode=news&amp;type=0	OK	rss2	0
+Q873528	Sanmu (city of Japan (shi))	https://www.city.sammu.lg.jp/rss.php?mode=news&amp;type=1	OK	rss2	0
+Q873572	Kunisaki (city of Japan (shi))	https://www.city.kunisaki.oita.jp/rss/10/list7.xml	OK	rss1	0
+Q873572	Kunisaki (city of Japan (shi))	https://www.city.kunisaki.oita.jp/site/kanko/akifurusatomaturi2026.html	NOT_FEED		0
+Q873583	Kashiwara (city of Japan (shi))	https://www.city.kashiwara.lg.jp/rss.html	NOT_FEED		0
+Q873590	Fujimino (city of Japan (shi))	https://www.city.fujimino.saitama.jp/cgi-bin/feed.php?siteNew=1	HTTP_502		0
+Q873596	Niimi (city of Japan (shi))	https://www.city.niimi.okayama.jp/rss/rss_search	HTTP_404		0
+Q873596	Niimi (city of Japan (shi))	https://www.city.niimi.okayama.jp/pages/rss	NOT_FEED		0
+Q877164	Katō-shi (city of Japan (shi))	https://www.city.kato.lg.jp/kakukanogoannai/sangyoushinkoubu/noseika/tokusanbutsushinko/hanatomidori/18027.html	NOT_FEED		0
+Q877184	Namegata (city of Japan (shi))	https://www.city.namegata.ibaraki.jp/rss.php?mode=news&amp;type=0	NOT_FEED		0
+Q877184	Namegata (city of Japan (shi))	https://www.city.namegata.ibaraki.jp/rss.php?mode=news&amp;type=3	NOT_FEED		0
+Q877254	Tsukubamirai (city of Japan (shi))	https://www.city.tsukubamirai.lg.jp/rss.php?mode=news&amp;type=0	OK	rss2	0
+Q877254	Tsukubamirai (city of Japan (shi))	https://www.city.tsukubamirai.lg.jp/rss.php?mode=news&amp;type=1	OK	rss2	0
+Q877254	Tsukubamirai (city of Japan (shi))	https://www.city.tsukubamirai.lg.jp/rss.php?mode=news&amp;type=2	OK	rss2	0
+Q877266	Tainai (city of Japan (shi))	https://www.city.tainai.niigata.jp/kinkyu/kinkyu.xml	OK	rss1	0
+Q877266	Tainai (city of Japan (shi))	https://www.city.tainai.niigata.jp/topics/topics.xml	OK	rss1	0
+Q877266	Tainai (city of Japan (shi))	https://www.city.tainai.niigata.jp/event/event.xml	HTTP_404		0
+Q877941	Echizen (city of Japan (shi))	http://speechpanel.readspeaker.com/cgi-bin/rssp?customerid=8647&lang=jp&url=http%3A%2F%2Fwww.city.echizen.lg.jp%2findex.html	NOT_FEED		0
+Q911717	Ono (city of Japan (shi))	https://www.city.ono.hyogo.jp/cgi-bin/feed.php?categoryNo=18&amp;includeShortcut=1	OK	rss1	0
+Q11751	Nagoya (city of Japan (shi))	https://www.city.nagoya.jp/about/1017972.html	NOT_FEED		0
+Q15674	Kagoshima (city of Japan (shi))	https://www.city.kagoshima.lg.jp/jigyo/jigyo_chumoku.xml	HTTP_404		0
+Q15674	Kagoshima (city of Japan (shi))	https://www.city.kagoshima.lg.jp/kinkyu/kinkyu_saigai.xml	OK	rss1	0
+Q15674	Kagoshima (city of Japan (shi))	https://www.city.kagoshima.lg.jp/kumamotojishin/r8matome.html	NOT_FEED		0
+Q15716	Hioki (city of Japan (shi))	https://www.city.hioki.kagoshima.jp/kouho/home/kinkyu.xml	OK	rss1	0
+Q15716	Hioki (city of Japan (shi))	https://www.city.hioki.kagoshima.jp/kouho/home/nyusatsu.xml	HTTP_404		0
+Q15725	Ichikikushikino (city of Japan (shi))	https://www.city.ichikikushikino.lg.jp/kinkyu.xml	OK	rss1	0
+Q15732	Akune (city of Japan (shi))	https://www.city.akune.lg.jp/cgi-bin/feed.php?siteNew=1	HTTP_502		0
+Q15754	Minamisatsuma (city of Japan (shi))	https://www.city.minamisatsuma.lg.jp/atom.xml	OK	atom	0
+Q31238	Miki (city of Japan (shi))	https://www.city.miki.lg.jp/site/userguide/8515.html 	HTTP_000		0
+Q34664	Hiroshima (city of Japan (shi))	https://www.city.hiroshima.lg.jp/atomicbomb-peace/index.html	NOT_FEED		0
+Q34664	Hiroshima (city of Japan (shi))	https://www.city.hiroshima.lg.jp/atomicbomb-peace/1036662/index.html	NOT_FEED		0
+Q34664	Hiroshima (city of Japan (shi))	https://www.city.hiroshima.lg.jp/atomicbomb-peace/1036664/index.html	NOT_FEED		0
+Q34664	Hiroshima (city of Japan (shi))	https://www.city.hiroshima.lg.jp/atomicbomb-peace/fukko/index.html	NOT_FEED		0
+Q34664	Hiroshima (city of Japan (shi))	https://www.city.hiroshima.lg.jp/atomicbomb-peace/peace-ceremony/index.html	NOT_FEED		0
+Q34664	Hiroshima (city of Japan (shi))	https://www.city.hiroshima.lg.jp/atomicbomb-peace/1037854/index.html	NOT_FEED		0
+Q34664	Hiroshima (city of Japan (shi))	https://www.city.hiroshima.lg.jp/atomicbomb-peace/1036658/index.html	NOT_FEED		0
+Q34664	Hiroshima (city of Japan (shi))	https://www.city.hiroshima.lg.jp/atomicbomb-peace/peace-efforts/index.html	NOT_FEED		0
+Q34664	Hiroshima (city of Japan (shi))	https://www.city.hiroshima.lg.jp/about/rss.html	NOT_FEED		0
+Q35765	Osaka (city of Japan (shi))	https://www.city.osaka.lg.jp/main/site_policy/0000000148.html	NOT_FEED		0
+Q37951	Sapporo (city of Japan (shi))	https://www.city.sapporo.jp/koho/hp/rss/index.html	NOT_FEED		0
+Q44830	Tochigi (city of Japan (shi))	https://www.city.tochigi.lg.jp/site/userguide/12525.html	NOT_FEED		0
+Q45798	Gifu (city of Japan (shi))	https://www.city.gifu.lg.jp/info/kouhou/1008373/site/1008378.html	NOT_FEED		0
+Q990342	Sakai (city of Japan (shi))	https://www.city.fukui-sakai.lg.jp/kinkyu/kinkyu.xml	OK	rss1	0
+Q990371	Miyoshi (city of Japan (shi))	https://www.miyoshi.i-tokushima.jp/use/	NOT_FEED		0
+Q1203251	Oamishirasato (city of Japan (shi))	https://www.city.oamishirasato.lg.jp/rss/rss_emergency.xml	OK	rss2	0
+Q1206001	Nakagawa (city of Japan (shi))	https://www.city.nakagawa.lg.jp/site/userguide/rss.html	NOT_FEED		0
+Q153814	Yōrō-chō (town of Japan (machi/cho))	https://www.town.yoro.gifu.jp/about/rss.html	NOT_FEED		0
+Q1205986	Isen (town of Japan (machi/cho))	https://www.town.isen.kagoshima.jp/kinkyu.xml	HTTP_404		0
+Q1204086	Tōin-chō (town of Japan (machi/cho))	https://www.town.toin.lg.jp/cgi-bin/feed.php?siteNew=1&amp;displayRange=90	OK	rss1	0
+Q1202613	Kaisei (town of Japan (machi/cho))	https://www.town.kaisei.kanagawa.jp/RSSFeed/menu/0	HTTP_500		0
+Q1204145	Fujimi (town of Japan (machi/cho))	https://www.town.fujimi.lg.jp/page/rss.html	NOT_FEED		0
+Q1202754	Sakae (town of Japan (machi/cho))	https://www.town.sakae.chiba.jp/rss.php?mode=news&amp;type=0	OK	rss2	0
+Q1202754	Sakae (town of Japan (machi/cho))	https://www.town.sakae.chiba.jp/rss.php?mode=news&amp;type=1	OK	rss2	0
+Q1202754	Sakae (town of Japan (machi/cho))	https://www.town.sakae.chiba.jp/rss.php?mode=news&amp;type=2	OK	rss2	0
+Q265050	Tōgō-chō (town of Japan (machi/cho))	https://www.town.aichi-togo.lg.jp/cgi-bin/feed.php?categoryNo=1655&displayCount=15	OK	rss1	0
+Q265050	Tōgō-chō (town of Japan (machi/cho))	https://www.town.aichi-togo.lg.jp/cgi-bin/feed.php?categoryNo=1656&displayCount=15	OK	rss1	0
+Q1206005	Tsurugi (town of Japan (machi/cho))	https://www.town.tokushima-tsurugi.lg.jp/use/	NOT_FEED		0
+Q1018717	Uchiko-chō (town of Japan (machi/cho))	https://www.town.uchiko.ehime.jp/soshiki/1/rss.html	NOT_FEED		0
+Q1204276	Shōwa-chō (town of Japan (machi/cho))	https://www.town.showa.yamanashi.jp/site/userguide/4287.html	NOT_FEED		0
+Q1206025	Omachi (town of Japan (machi/cho))	https://www.town.omachi.lg.jp/dynamic/rss10forevent.ashx	OK	rss1	0
+Q1206076	Mashiki (town of Japan (machi/cho))	https://www.town.mashiki.lg.jp/dynamic/rss10forevent.ashx	OK	rss1	0
+Q1204453	Ichikawamisato (town of Japan (machi/cho))	https://ichikawamisatomap-ichikawamisato.hub.arcgis.com/	NOT_FEED		0
+Q1204459	Nagaizumi (town of Japan (machi/cho))	https://www.youtube.com/channel/UCcgBqSZdt8m4dtT8arUbICg/feed	NOT_FEED		0
+Q386472	Ōtō-machi (town of Japan (machi/cho))	https://www.town.oto.fukuoka.jp/dynamic/rss10forevent.ashx	OK	rss1	0
+Q1203107	Fusō-chō (town of Japan (machi/cho))	https://www.town.fuso.lg.jp/about/1002845/rss.html	NOT_FEED		0
+Q1206156	Kinko (town of Japan (machi/cho))	https://www.town.kinko.lg.jp/kinkyu.xml	OK	rss1	0
+Q1072651	Chikujō-machi (town of Japan (machi/cho))	https://www.town.chikujo.fukuoka.jp/news.rss	OK	rss2	0
+Q1072651	Chikujō-machi (town of Japan (machi/cho))	https://www.town.chikujo.fukuoka.jp/event.rss	OK	rss2	0
+Q1072651	Chikujō-machi (town of Japan (machi/cho))	https://www.town.chikujo.fukuoka.jp/boshu.rss	OK	rss2	0
+Q427600	Sekigahara (town of Japan (machi/cho))	https://www.town.sekigahara.gifu.jp/services/rdf/rss10/1021.xml	OK	rss1	0
+Q1203139	Sangō (town of Japan (machi/cho))	https://www.town.sango.nara.jp/site/userguide/4011.html	NOT_FEED		0
+Q1206365	Aizumi (town of Japan (machi/cho))	https://www.town.aizumi.lg.jp/rss.html	NOT_FEED		0
+Q1206371	Niyodogawa (town of Japan (machi/cho))	https://www.town.niyodogawa.lg.jp/rss/	NOT_FEED		0
+Q1203180	Nogi (town of Japan (machi/cho))	https://www.town.nogi.lg.jp/rss.php?mode=news&amp;type=0	NOT_FEED		0
+Q1203180	Nogi (town of Japan (machi/cho))	https://www.town.nogi.lg.jp/rss.php?mode=news&amp;type=1	NOT_FEED		0
+Q1203180	Nogi (town of Japan (machi/cho))	https://www.town.nogi.lg.jp/rss.php?mode=news&amp;type=2	NOT_FEED		0
+Q522462	Iijima (town of Japan (machi/cho))	https://www.town.iijima.lg.jp/content/?content=827	NOT_FEED		0
+Q1204853	Kotoura (town of Japan (machi/cho))	https://www.town.kotoura.tottori.jp/docs/2013010600090/	HTTP_404		0
+Q1155186	Taishi (town of Japan (machi/cho))	https://www.town.hyogo-taishi.lg.jp/cgi-bin/feed.php?categoryNo=6&includeIndex=1	OK	rss1	0
+Q1155186	Taishi (town of Japan (machi/cho))	https://www.town.hyogo-taishi.lg.jp/cgi-bin/feed.php?categoryNo=10&includeIndex=1	OK	rss1	0
+Q1155194	Inami (town of Japan (machi/cho))	https://www.town.hyogo-inami.lg.jp/rss_list.html	NOT_FEED		0
+Q1206617	Takaharu (town of Japan (machi/cho))	https://www.town.takaharu.lg.jp/site/userguide/2282.html	NOT_FEED		0
+Q1203226	Ōharu-chō (town of Japan (machi/cho))	https://www.town.oharu.aichi.jp/services/rdf/rss10/1039.xml	OK	rss1	0
+Q1206619	Higashikushira (town of Japan (machi/cho))	https://www.higashikushira.com/event_list/index.rss	HTTP_404		0
+Q1206619	Higashikushira (town of Japan (machi/cho))	https://www.higashikushira.com/event_list/index.atom	HTTP_404		0
+Q1206630	Rokunohe (town of Japan (machi/cho))	https://www.town.rokunohe.aomori.jp/category/bunya/chousei/saiyou/index.rss	OK	rss2	0
+Q1206630	Rokunohe (town of Japan (machi/cho))	https://www.town.rokunohe.aomori.jp/category/bunya/chousei/saiyou/index.atom	OK	atom	0
+Q1204988	Aizubange (town of Japan (machi/cho))	https://www.town.aizubange.fukushima.jp/site/hajimete/rss-haishin.html	NOT_FEED		0
+Q1205004	Mishima (town of Japan (machi/cho))	https://www.town.mishima.fukushima.jp/site/hajimete/rss.html	NOT_FEED		0
+Q1206640	Kikai (town of Japan (machi/cho))	https://www.town.kikai.lg.jp/kinkyu.xml	OK	rss1	0
+Q1155297	Harima (town of Japan (machi/cho))	https://www.town.harima.lg.jp/kinkyu/kinkyu.xml	OK	rss1	0
+Q1205014	Tabuse (town of Japan (machi/cho))	https://www.town.tabuse.lg.jp/site/userguide/6.html	NOT_FEED		0
+Q1203304	Kawachi (town of Japan (machi/cho))	https://www.town.ibaraki-kawachi.lg.jp/rss.php?mode=news&amp;type=0	HTTP_202		0
+Q1203304	Kawachi (town of Japan (machi/cho))	https://www.town.ibaraki-kawachi.lg.jp/rss.php?mode=news&amp;type=1	HTTP_202		0
+Q1203304	Kawachi (town of Japan (machi/cho))	https://www.town.ibaraki-kawachi.lg.jp/rss.php?mode=news&amp;type=2	HTTP_202		0
+Q1155858	Tanagura (town of Japan (machi/cho))	https://www.town.tanagura.fukushima.jp/rss.php?mode=news&amp;type=0	OK	rss2	0
+Q1155858	Tanagura (town of Japan (machi/cho))	https://www.town.tanagura.fukushima.jp/rss.php?mode=news&amp;type=1	OK	rss2	0
+Q1155858	Tanagura (town of Japan (machi/cho))	https://www.town.tanagura.fukushima.jp/rss.php?mode=news&amp;type=2	OK	rss2	0
+Q1155346	Kagamino (town of Japan (machi/cho))	https://www.town.kagamino.lg.jp/rss/10/list5.xml	OK	rss1	0
+Q1155682	Ogawara (town of Japan (machi/cho))	https://www.town.ogawara.miyagi.jp/services/rdf/rss10/1039.xml	OK	rss1	0
+Q636416	Nasu (town of Japan (machi/cho))	https://www.town.nasu.lg.jp/rss/rss10-1204020.xml	OK	rss1	0
+Q644327	Motegi (town of Japan (machi/cho))	https://www.town.motegi.tochigi.jp/motegi/nextpage.php?cd=7342&amp;syurui=2	NOT_FEED		0
+Q1206876	Kanda (town of Japan (machi/cho))	https://www.town.kanda.lg.jp/site/userguide/2293.html	NOT_FEED		0
+Q1206887	Shime (town of Japan (machi/cho))	https://www.town.shime.lg.jp/site/userguide/rss.html	NOT_FEED		0
+Q1205184	Koori (town of Japan (machi/cho))	https://www.town.koori.fukushima.jp/site/hajimete/1175.html	NOT_FEED		0
+Q1203324	Tone (town of Japan (machi/cho))	https://www.town.tone.ibaraki.jp/rss.php?mode=news&amp;type=0	OK	rss2	0
+Q1203324	Tone (town of Japan (machi/cho))	https://www.town.tone.ibaraki.jp/rss.php?mode=news&amp;type=1	OK	rss2	0
+Q1203324	Tone (town of Japan (machi/cho))	https://www.town.tone.ibaraki.jp/rss.php?mode=news&amp;type=2	OK	rss2	0
+Q1203350	Shirakawa (town of Japan (machi/cho))	https://www.town.shirakawa.lg.jp/about/rss.html	NOT_FEED		0
+Q1203366	Naganohara (town of Japan (machi/cho))	https://www.town.naganohara.gunma.jp/content/?content=415	NOT_FEED		0
+Q1203390	Ibaraki (town of Japan (machi/cho))	https://www.town.ibaraki.lg.jp/rss/rss10-n3-1.xml	OK	rss1	0
+Q1156127	Hino (town of Japan (machi/cho))	https://www.town.hino.tottori.jp/services/rdf/rss10/1750.xml	OK	rss1	0
+Q1206926	Genkai (town of Japan (machi/cho))	https://www.town.genkai.lg.jp/site/userguide/2953.html	NOT_FEED		0
+Q1203439	Shioya (town of Japan (machi/cho))	https://www.town.shioya.tochigi.jp/RSSFeed/menu/0	HTTP_500		0
+Q1205337	Kawasaki (town of Japan (machi/cho))	https://www.town.kawasaki.miyagi.jp/site/hajimete/rss.html	NOT_FEED		0
+Q1205369	Ikawa (town of Japan (machi/cho))	https://www.town.ikawa.akita.jp/site/userguide/2913.html	NOT_FEED		0
+Q671040	Hakone (town of Japan (machi/cho))	https://www.town.hakone.kanagawa.jp/rss.xml	HTTP_404		0
+Q1205416	Shinchi (town of Japan (machi/cho))	https://www.shinchi-town.jp/site/hajimete/about-rss.html	NOT_FEED		0
+Q1208553	Tatsugō-chō (town of Japan (machi/cho))	https://www.town.tatsugo.lg.jp/kinkyu.xml	OK	rss1	0
+Q1208563	Minamiōsumi-chō (town of Japan (machi/cho))	https://www.town.minamiosumi.lg.jp/kinkyu.xml	OK	rss1	0
+Q1205432	Gojōme-machi (town of Japan (machi/cho))	https://www.town.gojome.akita.jp/rss	HTTP_404		0
+Q699764	Taketomi (town of Japan (machi/cho))	https://www.town.taketomi.lg.jp/about/hatoma/	NOT_FEED		0
+Q702623	Yonaguni (town of Japan (machi/cho))	https://www.town.yonaguni.okinawa.jp/category/kubun/index.rss	HTTP_404		0
+Q702623	Yonaguni (town of Japan (machi/cho))	https://www.town.yonaguni.okinawa.jp/category/kubun/index.atom	HTTP_404		0
+Q725518	Ashiya (town of Japan (machi/cho))	https://www.town.ashiya.lg.jp/site/userguide/8711.html	NOT_FEED		0
+Q1203580	Kyonan (town of Japan (machi/cho))	https://www.town.kyonan.chiba.jp/site/guide/rss.html	NOT_FEED		0
+Q1205588	Sue (town of Japan (machi/cho))	https://www.town.sue.fukuoka.jp/hajimete/rss.html	NOT_FEED		0
+Q1203589	Minamichita (town of Japan (machi/cho))	https://www.town.minamichita.lg.jp/about/rss.html	NOT_FEED		0
+Q735494	Motoyama (town of Japan (machi/cho))	https://www.town.motoyama.kochi.jp/rsshaishin.html	NOT_FEED		0
+Q1203688	Ichikawa (town of Japan (machi/cho))	https://www.town.ichikawa.lg.jp/rsslist	NOT_FEED		0
+Q1156423	Kikuyō-machi (town of Japan (machi/cho))	https://www.town.kikuyo.lg.jp/kiji0031659/index.html	NOT_FEED		0
+Q1156548	Setouchi (town of Japan (machi/cho))	https://www.town.setouchi.lg.jp/kinkyu/kinkyu.xml	OK	rss1	0
+Q1205663	Ōsakikamijima (town of Japan (machi/cho))	https://www.town.osakikamijima.hiroshima.jp/3164.html	NOT_FEED		0
+Q772034	Iizuna (town of Japan (machi/cho))	https://www.town.iizuna.nagano.jp/use/	HTTP_404		0
+Q1205709	Yahaba (town of Japan (machi/cho))	https://www.town.yahaba.iwate.jp/use/use/use/rss	NOT_FEED		0
+Q775888	Minamisanriku (town of Japan (machi/cho))	https://www.town.minamisanriku.miyagi.jp/cgi-bin/feed.php?siteNew=1&amp;displayCount=15&amp;displayRange=90	OK	rss1	0
+Q1203731	Yoshino (town of Japan (machi/cho))	https://www.town.yoshino.nara.jp/cgi-bin/feed.php?categoryNo=12&displayCount=10&includeShortcut=1	OK	rss1	0
+Q1203741	Minamiizu (town of Japan (machi/cho))	https://www.town.minamiizu.shizuoka.jp/rss/	NOT_FEED		0
+Q1205751	Sakawa (town of Japan (machi/cho))	https://www.town.sakawa.lg.jp/rss/	NOT_FEED		0
+Q925875	Hatoyama (town of Japan (machi/cho))	https://www.town.hatoyama.saitama.jp/rss.php?mode=news&amp;type=0	OK	rss2	0
+Q925875	Hatoyama (town of Japan (machi/cho))	https://www.town.hatoyama.saitama.jp/rss.php?mode=news&amp;type=1	OK	rss2	0
+Q925875	Hatoyama (town of Japan (machi/cho))	https://www.town.hatoyama.saitama.jp/rss.php?mode=news&amp;type=2	OK	rss2	0
+Q925875	Hatoyama (town of Japan (machi/cho))	https://www.town.hatoyama.saitama.jp/kurashi/kenkou_fukushi_kaigo/senior_citizen/hatomaru_map.html	NOT_FEED		0
+Q931439	Ōsaki-chō (town of Japan (machi/cho))	https://www.town.kagoshima-osaki.lg.jp/kinkyu.xml	OK	rss1	0
+Q1211211	Nakatonbetsu (town of Japan (machi/cho))	https://www.town.nakatombetsu.hokkaido.jp/contact	NOT_FEED		0
+Q1211211	Nakatonbetsu (town of Japan (machi/cho))	https://www.town.nakatombetsu.hokkaido.jp/bunya/11081/	NOT_FEED		0
+Q1211211	Nakatonbetsu (town of Japan (machi/cho))	https://www.town.nakatombetsu.hokkaido.jp/bunya/7706/	NOT_FEED		0
+Q1211211	Nakatonbetsu (town of Japan (machi/cho))	https://www.town.nakatombetsu.hokkaido.jp/bunya/7710/	NOT_FEED		0
+Q1211211	Nakatonbetsu (town of Japan (machi/cho))	https://www.town.nakatombetsu.hokkaido.jp/bunya/7713/	NOT_FEED		0
+Q1211211	Nakatonbetsu (town of Japan (machi/cho))	https://www.town.nakatombetsu.hokkaido.jp/bunya/7884/	NOT_FEED		0
+Q1211211	Nakatonbetsu (town of Japan (machi/cho))	https://www.town.nakatombetsu.hokkaido.jp/bunya/5274/	NOT_FEED		0
+Q1211211	Nakatonbetsu (town of Japan (machi/cho))	https://www.town.nakatombetsu.hokkaido.jp/bunya/50874/	NOT_FEED		0
+Q1211211	Nakatonbetsu (town of Japan (machi/cho))	https://www.town.nakatombetsu.hokkaido.jp/bunya/64954/	NOT_FEED		0
+Q1211211	Nakatonbetsu (town of Japan (machi/cho))	https://www.facebook.com/nakatombetsu/	NOT_FEED		0
+Q1211211	Nakatonbetsu (town of Japan (machi/cho))	https://www.town.nakatombetsu.hokkaido.jp/bunya/5838/	NOT_FEED		0
+Q1211211	Nakatonbetsu (town of Japan (machi/cho))	https://www.town.nakatombetsu.hokkaido.jp/bunya/5837/	NOT_FEED		0
+Q1211211	Nakatonbetsu (town of Japan (machi/cho))	https://www.town.nakatombetsu.hokkaido.jp/bunya/5819/	NOT_FEED		0
+Q1211211	Nakatonbetsu (town of Japan (machi/cho))	https://www.town.nakatombetsu.hokkaido.jp/bunya/7621	NOT_FEED		0
+Q1211211	Nakatonbetsu (town of Japan (machi/cho))	https://www.town.nakatombetsu.hokkaido.jp/bunya/5819	NOT_FEED		0
+Q1211211	Nakatonbetsu (town of Japan (machi/cho))	https://www.town.nakatombetsu.hokkaido.jp/sitemap	NOT_FEED		0
+Q1205805	Soeda (town of Japan (machi/cho))	https://www.town.soeda.fukuoka.jp/site/userguide/4337.html	NOT_FEED		0
+Q1203799	Mihama (town of Japan (machi/cho))	https://tiktocoins.info/sitemap_index.xml	NOT_FEED		0
+Q1203828	Mihama (town of Japan (machi/cho))	https://www.town.aichi-mihama.lg.jp/cgi-bin/feed.php?siteNew=1&displayRange=90	OK	rss1	0
+Q1205885	Nakatane (town of Japan (machi/cho))	https://town.nakatane.kagoshima.jp/kinkyu.xml	OK	rss1	0
+Q1205885	Nakatane (town of Japan (machi/cho))	https://town.nakatane.kagoshima.jp/kouhou/home/news.xml	HTTP_404		0
+Q1205885	Nakatane (town of Japan (machi/cho))	https://town.nakatane.kagoshima.jp/kouhou/home/chumoku.xml	HTTP_404		0
+Q1205885	Nakatane (town of Japan (machi/cho))	https://town.nakatane.kagoshima.jp/kouhou/home/boshu.xml	HTTP_404		0
+Q1184801	Kashima (town of Japan (machi/cho))	https://www.town.kumamoto-kashima.lg.jp/sc/rss.html	NOT_FEED		0
+Q1335041	Embetsu (town of Japan (machi/cho))	https://www.town.embetsu.hokkaido.jp/c90/c9090/rss.xml	OK	rss2	0
+Q1203881	Nishikatsura (town of Japan (machi/cho))	https://www.town.nishikatsura.yamanashi.jp/RSSFeed/menu/0	HTTP_500		0
+Q1203943	Kisosaki (town of Japan (machi/cho))	https://www.town.kisosaki.lg.jp/rss/rss_emergency.xml	OK	rss2	0
+Q1184795	Hiji (town of Japan (machi/cho))	https://www.town.hiji.lg.jp/cgi-bin/feed.php?siteNew=1&amp;displayRange=90	HTTP_502		0
+Q1186204	Shibetsu (town of Japan (machi/cho))	https://www.shibetsutown.jp/content/?content=763	NOT_FEED		0
+Q1203960	Oguchi (town of Japan (machi/cho))	https://www.town.oguchi.lg.jp/services/rdf/rss10/1021.xml	OK	rss1	0
+Q1203960	Oguchi (town of Japan (machi/cho))	https://www.town.oguchi.lg.jp/services/rdf/rss10/6943.xml	OK	rss1	0
+Q1203960	Oguchi (town of Japan (machi/cho))	https://www.town.oguchi.lg.jp/1249.htm	NOT_FEED		0
+Q1203992	Kanie (town of Japan (machi/cho))	https://www.town.kanie.aichi.jp/site/userguide/rss.html	NOT_FEED		0
+Q1205954	Kaiyō-chō (town of Japan (machi/cho))	https://www.town.kaiyo.lg.jp/zokusei/event/index.rss	HTTP_404		0
+Q1205954	Kaiyō-chō (town of Japan (machi/cho))	https://www.town.kaiyo.lg.jp/zokusei/event/index.atom	HTTP_404		0
+Q1205954	Kaiyō-chō (town of Japan (machi/cho))	https://www.town.kaiyo.lg.jp/zokusei/saiyo/index.rss	HTTP_404		0
+Q1205954	Kaiyō-chō (town of Japan (machi/cho))	https://www.town.kaiyo.lg.jp/zokusei/saiyo/index.atom	HTTP_404		0
+Q1205954	Kaiyō-chō (town of Japan (machi/cho))	https://www.town.kaiyo.lg.jp/zokusei/nyusatsu/index.rss	HTTP_404		0
+Q1205954	Kaiyō-chō (town of Japan (machi/cho))	https://www.town.kaiyo.lg.jp/zokusei/nyusatsu/index.atom	HTTP_404		0
+Q1205954	Kaiyō-chō (town of Japan (machi/cho))	https://www.town.kaiyo.lg.jp/bunya/bosai/index.rss	HTTP_404		0
+Q1205954	Kaiyō-chō (town of Japan (machi/cho))	https://www.town.kaiyo.lg.jp/bunya/bosai/index.atom	HTTP_404		0
+Q1205954	Kaiyō-chō (town of Japan (machi/cho))	https://www.town.kaiyo.lg.jp/docs/2011020700090/	NOT_FEED		0
+Q1205957	Kamikatsu (town of Japan (machi/cho))	https://www.kamikatsu.jp/docs/2011020100104/	NOT_FEED		0
+Q1345551	Kawagoe (town of Japan (machi/cho))	https://www.town.kawagoe.mie.jp/about/rss.html	NOT_FEED		0
+Q1345562	Toyoyama (town of Japan (machi/cho))	https://www.town.toyoyama.lg.jp/about/rss.html	NOT_FEED		0
+Q1345954	Kota (town of Japan (machi/cho))	https://www.town.kota.lg.jp/soshiki/2/3.html	NOT_FEED		0
+Q1346747	Taga (town of Japan (machi/cho))	https://www.town.taga.lg.jp/cgi-bin/feed.php?siteNew=1&amp;displayCount=10&amp;displayRange=90	OK	rss1	0
+Q1346777	Shitara (town of Japan (machi/cho))	https://www.town.shitara.lg.jp/soshiki/5/2925.html	NOT_FEED		0
+Q1346895	Tateshina (town of Japan (machi/cho))	https://www.town.tateshina.nagano.jp/cgi-bin/feed.php?displayCount=0&amp;displayRange=90&amp;siteNew=1	OK	rss1	0
+Q1346952	Yaotsu (town of Japan (machi/cho))	https://www.town.yaotsu.lg.jp/services/rdf/rss10/1039.xml	OK	rss1	0
+Q1347231	Kawakita (town of Japan (machi/cho))	http://www.town.kawakita.ishikawa.jp/rss2.xml	HTTP_404		0
+Q1347411	Oguni (town of Japan (machi/cho))	https://www.town.oguni.yamagata.jp/rss/10/list3.xml	HTTP_503		0
+Q1347411	Oguni (town of Japan (machi/cho))	https://www.town.oguni.yamagata.jp/rss/10/list1.xml	HTTP_503		0
+Q1347411	Oguni (town of Japan (machi/cho))	https://www.town.oguni.yamagata.jp/rss/10/list6.xml	HTTP_503		0
+Q1347411	Oguni (town of Japan (machi/cho))	https://www.town.oguni.yamagata.jp/rss/10/list5.xml	HTTP_503		0
+Q1347411	Oguni (town of Japan (machi/cho))	https://www.town.oguni.yamagata.jp/site/hajimete/rss.html	NOT_FEED		0
+Q1347481	Yuza (town of Japan (machi/cho))	https://www.town.yuza.yamagata.jp/feed/emergency.xml	OK	rss2	0
+Q1347526	Minami-Echizen (town of Japan (machi/cho))	https://www.town.minamiechizen.lg.jp/toplink/901/news.xml	OK	rss2	0
+Q1347526	Minami-Echizen (town of Japan (machi/cho))	https://www.town.minamiechizen.lg.jp/event/news.xml	HTTP_404		0
+Q1347548	Ikeda (town of Japan (machi/cho))	https://www.town.ikeda.fukui.jp/topics.xml	HTTP_404		0
+Q1347574	Itayanagi (town of Japan (machi/cho))	https://www.town.tsuruta.lg.jp/atom.xml	OK	atom	0
+Q1348478	Shizukuishi (town of Japan (machi/cho))	https://www.town.shizukuishi.iwate.jp/category/bunya/emergency/index.rss	OK	rss2	0
+Q1348478	Shizukuishi (town of Japan (machi/cho))	https://www.town.shizukuishi.iwate.jp/category/bunya/emergency/index.atom	OK	atom	0
+Q1348478	Shizukuishi (town of Japan (machi/cho))	https://www.town.shizukuishi.iwate.jp/rss.html	NOT_FEED		0
+Q1348988	Nishikawa (town of Japan (machi/cho))	https://www.town.nishikawa.yamagata.jp/site/hajimete/rss.html	NOT_FEED		0
+Q1350193	Nakatosa (town of Japan (machi/cho))	https://www.town.nakatosa.lg.jp/life/detail.php?hdnKey=5&routekbn=A	NOT_FEED		0
+Q1350953	Masaki (town of Japan (machi/cho))	https://www.town.masaki.ehime.jp/soshiki/3/rss.html	NOT_FEED		0
+Q1350985	Tokunoshima (town of Japan (machi/cho))	https://www.tokunoshima-town.org/kinkyu/kinkyu.xml	OK	rss1	0
+Q1350985	Tokunoshima (town of Japan (machi/cho))	https://www.tokunoshima-town.org/rss/index.html	NOT_FEED		0
+Q1351723	Fujikawa (town of Japan (machi/cho))	https://www.town.fujikawa.yamanashi.jp/category/cat_emergency/cat_emergency/index.rss	OK	rss2	0
+Q1352182	Misato (town of Japan (machi/cho))	https://www.town.miyazaki-misato.lg.jp/dynamic/rss10forevent.ashx	OK	rss1	0
+Q1354284	Toyoura (town of Japan (machi/cho))	https://www.town.toyoura.hokkaido.jp/banner2cnt.php?url=https%3A%2F%2Ftoyoura-rss.amebaownd.com%2F&id=27	HTTP_503		0
+Q1354380	Hidaka (town of Japan (machi/cho))	https://www.town.hidaka.hokkaido.jp/content/?content=1446	NOT_FEED		0
+Q1354747	Kōra-chō (town of Japan (machi/cho))	https://www.kouratown.jp/cgi-bin/feed.php?displayCount=15&displayRange=90	HTTP_502		0
+Q1354853	Ninomiya (town of Japan (machi/cho))	https://www.town.ninomiya.kanagawa.jp/rss/rss_emergency.xml	OK	rss2	0
+Q1354853	Ninomiya (town of Japan (machi/cho))	https://www.town.ninomiya.kanagawa.jp/site_policy/0000000007.html	NOT_FEED		0
+Q1354919	Waki (town of Japan (machi/cho))	https://www.town.waki.lg.jp/site/userguide/1803.html	NOT_FEED		0
+Q1355074	Bihoro (town of Japan (machi/cho))	https://www.town.bihoro.hokkaido.jp/site/userguide/1371.html	NOT_FEED		0
+Q1355434	Aibetsu (town of Japan (machi/cho))	https://www.town.aibetsu.hokkaido.jp/rss.xml	OK	rss2	0
+Q1358642	Ranzan (town of Japan (machi/cho))	https://www.town.ranzan.saitama.jp/rss/rss_emergency.xml	OK	rss2	0
+Q1365478	Shari (town of Japan (machi/cho))	https://www.town.shari.hokkaido.jp/homepage/rss.html	NOT_FEED		0
+Q1367170	Kamimine (town of Japan (machi/cho))	https://www.town.kamimine.lg.jp/dynamic/rss10forevent.ashx	OK	rss1	0
+Q370487	Nakajima (village of Japan (mura/son))	https://www.vill-nakajima.jp/rss.php?mode=news&amp;type=0	OK	rss2	0
+Q374984	Nanmoku (village of Japan (mura/son))	https://nanmoku.ne.jp/sample-page/feed/	OK	rss2	0
+Q1204524	Matsukawa (village of Japan (mura/son))	https://www.vill.matsukawa.nagano.jp/content/?content=363	NOT_FEED		0
+Q29463	Kosuge (village of Japan (mura/son))	http://www.vill.kosuge.yamanashi.jp/etc/rss.html	NOT_FEED		0
+Q1204968	Chibu (village of Japan (mura/son))	http://www.vill.chibu.lg.jp/feed.xml	HTTP_404		0
+Q766027	Nishigō-mura (village of Japan (mura/son))	https://www.vill.nishigo.fukushima.jp/cgi-bin/feed.php?siteNew=1	HTTP_000		0
+Q268750	Tomari (village of Japan (mura/son))	https://www.vill.tomari.hokkaido.jp/new_info/kanko//rss.xml	NOT_FEED		0
+Q368508	Yamato (village of Japan (mura/son))	https://www.vill.yamato.lg.jp/	NOT_FEED		0
+Q763885	Minamiaiki (village of Japan (mura/son))	https://scontent-itm1-1.cdninstagram.com/v/t51.82787-15/863442398_18125314420910124_7853753327627135308_n.heic?stp=dst-jpg_e35_tt6&	HTTP_403		0
+Q1205964	Shiiba (village of Japan (mura/son))	https://www.vill.shiiba.miyazaki.jp/emergency/rss.xml	OK	atom	0
+Q1205992	Uken (village of Japan (mura/son))	https://www.uken.net/kouhoutoukei/kinkyu.xml	OK	rss1	0
+Q1205734	Kunohe (village of Japan (mura/son))	https://www.vill.kunohe.iwate.jp/oshirase/event/rss.xml	OK	rss2	0
+Q1205567	Ten-ei (village of Japan (mura/son))	https://www.vill.tenei.fukushima.jp/site/hajimete/rss.html	NOT_FEED		0
+Q1206551	Ōkawa-mura (village of Japan (mura/son))	https://www.vill.okawa.kochi.jp/life/dtl.php?hdnKey=1278&hdnSKBN=A	NOT_FEED		0
+Q1143112	Toshima (village of Japan (mura/son))	http://www.toshimamura.org/feed	HTTP_404		0
+Q1206355	Sanagōchi-son (village of Japan (mura/son))	https://www.vill.sanagochi.lg.jp/rss.html	NOT_FEED		0
+Q1206355	Sanagōchi-son (village of Japan (mura/son))	https://www.vill.sanagochi.lg.jp/category/shiru/index.rss	HTTP_404		0
+Q1206355	Sanagōchi-son (village of Japan (mura/son))	https://www.vill.sanagochi.lg.jp/category/shiru/index.atom	HTTP_404		0
+Q1206355	Sanagōchi-son (village of Japan (mura/son))	https://www.vill.sanagochi.lg.jp/category/kurashi/index.rss	HTTP_404		0
+Q1206355	Sanagōchi-son (village of Japan (mura/son))	https://www.vill.sanagochi.lg.jp/category/kurashi/index.atom	HTTP_404		0
+Q1206355	Sanagōchi-son (village of Japan (mura/son))	https://www.vill.sanagochi.lg.jp/category/gyosei/index.rss	HTTP_404		0
+Q1206355	Sanagōchi-son (village of Japan (mura/son))	https://www.vill.sanagochi.lg.jp/category/gyosei/index.atom	HTTP_404		0
+Q1204394	Yamanakako (village of Japan (mura/son))	https://www.vill.yamanakako.lg.jp/RSSFeed/menu/0	HTTP_500		0
+Q1354949	Kawauchi (village of Japan (mura/son))	https://www.kawauchimura.jp/rss.php?mode=news&amp;type=0	OK	rss2	0
+Q1155676	Izumizaki (village of Japan (mura/son))	https://www.vill.izumizaki.fukushima.jp/rss.php?mode=news&amp;type=0	OK	rss2	0
+Q1155676	Izumizaki (village of Japan (mura/son))	https://www.vill.izumizaki.fukushima.jp/rss.php?mode=news	OK	rss2	0
+Q1155676	Izumizaki (village of Japan (mura/son))	https://www.vill.izumizaki.fukushima.jp/rss.php?mode=news&amp;type=1	OK	rss2	0
+Q1155676	Izumizaki (village of Japan (mura/son))	https://www.vill.izumizaki.fukushima.jp/rss.php?mode=news&amp;type=2	OK	rss2	0
+Q1155676	Izumizaki (village of Japan (mura/son))	https://www.vill.izumizaki.fukushima.jp/rss.php?mode=news&amp;type=3	OK	rss2	0
+Q1155676	Izumizaki (village of Japan (mura/son))	https://www.vill.izumizaki.fukushima.jp/rss.php?mode=news&amp;type=4	OK	rss2	0
+Q1203952	Tobishima (village of Japan (mura/son))	https://www.vill.tobishima.aichi.jp/about/rss.html	NOT_FEED		0
+Q1203698	Shintō-mura (village of Japan (mura/son))	https://www.vill.shinto.gunma.jp/administration/100051/p000877.html	NOT_FEED		0
+Q1202620	Kitaaiki (village of Japan (mura/son))	http://www.vill.kitaaiki.nagano.jp/urgency/rss.xml	OK	rss2	0
+Q1203148	Higashiyoshino (village of Japan (mura/son))	https://vill.higashiyoshino.nara.jp/feed/	OK	rss2	0
+Q1349156	Higashidori (village of Japan (mura/son))	http://www.vill.higashidoori.lg.jp/news.rdf	NOT_FEED		0
+Q1349156	Higashidori (village of Japan (mura/son))	http://www.atom-higashidoori.jp/	NOT_FEED		0
+Q1349667	Yahiko (village of Japan (mura/son))	https://www.vill.yahiko.niigata.jp/content/?content=585	NOT_FEED		0
+Q1350839	Kunigami (village of Japan (mura/son))	https://www.vill.kunigami.okinawa.jp/rss_link/	NOT_FEED		0
+Q1347517	Ikusaka (village of Japan (mura/son))	http://www.village.ikusaka.nagano.jp/rss/rss.xml&quot;	HTTP_404		0
+Q1347517	Ikusaka (village of Japan (mura/son))	https://www.village.ikusaka.nagano.jp/katomasaharu/index.html	NOT_FEED		0
+Q1347692	Yomogita (village of Japan (mura/son))	https://www.vill.yomogita.lg.jp/sonsei/keikaku/public_comment_matome.html	NOT_FEED		0
+Q1362354	Inakadate (village of Japan (mura/son))	http://www.vill.inakadate.lg.jp/docs/2012022700101/	NOT_FEED		0
+Q1352137	Katsurao (village of Japan (mura/son))	https://www.katsurao.org/site/hajimete/rss.html	NOT_FEED		0
+Q1352167	Morotsuka (village of Japan (mura/son))	https://www.vill.morotsuka.miyazaki.jp/cgi-bin/feed.php?siteNew=1&displayRange=90	OK	rss1	0
+Q1490	Tokyo (prefecture of Japan)	https://review.metro.tokyo.lg.jp/review/?id=a0hTK00000HCZpq&amp;ServiceName=	NOT_FEED		0
+Q15701	Kagoshima Prefecture (prefecture of Japan)	https://www.pref.kagoshima.jp/infra/energy/atomic/index.html	NOT_FEED		0
+Q15701	Kagoshima Prefecture (prefecture of Japan)	https://www.pref.kagoshima.jp/rss.html	NOT_FEED		0
+Q48326	Iwate Prefecture (prefecture of Japan)	https://www.pref.iwate.jp/about/rss.html	NOT_FEED		0
+Q71699	Aomori Prefecture (prefecture of Japan)	https://www.pref.aomori.lg.jp/rss/	NOT_FEED		0
+Q80011	Chiba Prefecture (prefecture of Japan)	https://www.pref.chiba.lg.jp/homepage/kinkyu/kinkyu.xml	HTTP_404		0
+Q71707	Fukushima Prefecture (prefecture of Japan)	http://www.pref.fukushima.lg.jp/site/userguide/rss.html	NOT_FEED		0
+Q81863	Akita Prefecture (prefecture of Japan)	https://www.pref.akita.lg.jp/pages/archive/1417	NOT_FEED		0
+Q80434	Aichi Prefecture (prefecture of Japan)	http://www.pref.aichi.jp/site/userguide/rss.html	NOT_FEED		0
+Q83273	Ibaraki Prefecture (prefecture of Japan)	https://www.pref.ibaraki.jp/important_rss.xml	OK	rss1	0
+Q122723	Osaka Prefecture (prefecture of Japan)	https://www.pref.osaka.lg.jp/kinkyu/kinkyu.xml	OK	rss1	0
+Q125863	Yamagata Prefecture (prefecture of Japan)	https://www.pref.yamagata.jp/kensei/shoukai/aboutthissite/rss.html	NOT_FEED		0
+Q127264	Yamaguchi Prefecture (prefecture of Japan)	https://www.pref.yamaguchi.lg.jp/soshiki/21/92882.html	NOT_FEED		0
+Q127513	Kanagawa Prefecture (prefecture of Japan)	https://www.pref.kanagawa.jp/emergency/emergency.xml	OK	rss1	0
+Q127877	Nagano Prefecture (prefecture of Japan)	https://www.pref.nagano.lg.jp/kinkyu/kinkyu.xml	OK	rss1	0
+Q128186	Saitama Prefecture (prefecture of Japan)	https://www.pref.saitama.lg.jp/shinchaku/shinchaku.xml	HTTP_404		0
+Q128186	Saitama Prefecture (prefecture of Japan)	https://www.pref.saitama.lg.jp/kense/koho/homepage/rss.html	NOT_FEED		0
+Q128196	Mie Prefecture (prefecture of Japan)	https://www.pref.mie.lg.jp/info/rss.htm	NOT_FEED		0
+Q130290	Hyōgo Prefecture (prefecture of Japan)	https://web.pref.hyogo.lg.jp/about_rss.html	NOT_FEED		0
+Q132705	Niigata Prefecture (prefecture of Japan)	https://www.pref.niigata.lg.jp/site/kyotsu/rss.html	NOT_FEED		0
+Q132720	Yamanashi Prefecture (prefecture of Japan)	https://www.pref.yamanashi.jp/kinkyu.xml	OK	rss1	0
+Q132929	Toyama Prefecture (prefecture of Japan)	https://www.pref.toyama.jp/emergency.xml	OK	rss1	0
+Q132936	Okayama Prefecture (prefecture of Japan)	https://www.pref.okayama.jp/page/detail-19575.html	NOT_FEED		0
+Q133924	Ōita Prefecture (prefecture of Japan)	https://www.pref.oita.jp/soshiki/10400/rss.html	NOT_FEED		0
+Q160734	Tokushima Prefecture (prefecture of Japan)	https://www.pref.tokushima.lg.jp/rss/	NOT_FEED		0
+Q160734	Tokushima Prefecture (prefecture of Japan)	https://www.pref.tokushima.lg.jp/rss	NOT_FEED		0
+Q617375	Hiroshima Prefecture (prefecture of Japan)	https://www.pref.hiroshima.lg.jp/soshiki/19/1173052170405.html	NOT_FEED		0
+Q766445	Okinawa Prefecture (prefecture of Japan)	https://www.pref.okinawa.lg.jp/about/rss.html	NOT_FEED		0
+Q26406	Akashi (core city of Japan)	https://www.city.akashi.lg.jp/emergency/kinkyu.xml	OK	rss1	0
+Q200747	Wakayama (core city of Japan)	https://www.city.wakayama.wakayama.jp/site/rss.html	NOT_FEED		0
+Q202907	Otsu (core city of Japan)	https://www.city.otsu.lg.jp/cgi-bin/feed.php?categoryNo=19&amp;includeShortcut=1	OK	rss1	0
+Q203308	Shimonoseki (core city of Japan)	https://www.city.shimonoseki.lg.jp/site/userguide/51556.html	NOT_FEED		0
+Q204266	Toyama (core city of Japan)	https://www.city.toyama.lg.jp/about/rss.html	NOT_FEED		0
+Q270810	Ichinomiya (core city of Japan)	https://www.city.ichinomiya.aichi.jp/about/rss.html	NOT_FEED		0
+Q320934	Kurume (core city of Japan)	https://www.city.kurume.fukuoka.jp/1030website/2080rss/	NOT_FEED		0
+Q336431	Toyohashi (core city of Japan)	https://www.city.toyohashi.lg.jp/services/rdf/rss10/1021.xml	OK	rss1	0
+Q467487	Kurashiki (core city of Japan)	https://www.city.kurashiki.okayama.jp/about/rss.html	NOT_FEED		0
+Q46747	Sendai (city designated by government ordinance)	https://www.city.sendai.jp/kisho.xml	OK	rss1	0
+Q46747	Sendai (city designated by government ordinance)	https://www.city.sendai.jp/hinan.xml	OK	rss1	0
+Q11445244	Nara Prefectural Police (prefectural police department)	https://www.police.pref.nara.jp/rss_list.html	NOT_FEED		0

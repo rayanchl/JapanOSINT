@@ -349,6 +349,54 @@ that replaced them survive, so no coverage is lost. **A sweep's verdict is
 about the URL it sent, not about the row's name** — re-read a removal against
 the row as it stands now.
 
+**The registered count is 61,527** (2026-10-30, `make source-count`, both
+floors re-recorded from that build): 57,905 plus **batch 57's 3,622 Japanese
+rows** — eight beats in `collectors/pivot/table/hp3b57_*.c`, every one measured
+through the engine (3,580 OK, 346,732 records emitted in one pass, and NOT ONE
+`DROPS_EVERYTHING`). Full note: `native/collectors/OSINT_SOURCES_BATCH_57_JAPAN.md`.
+
+The method is batch 42's and 46's at national scale — **ask the publisher's own
+homepage what it declares** — seeded from Wikidata's P856 for 1,797
+administrations and 5,186 institutions, with every class id resolved through
+Wikidata's own search API rather than recalled, because a wrong QID returns an
+empty result set that reads exactly like a class with no members. Four things
+it cost, each a mistake this file already names, caught before it shipped:
+
+* **An exclusion list built by regex missed 1,499 duplicates.** A scan of the
+  tree's C found 89,119 URL literals and looked thorough;
+  `batch_exclusions.py --bin` then reported 1,499 municipal rows already held
+  by batch 50 and the `vsrc` government feeds, and printed why — *"id set:
+  57905 from the binary's registry (regex scan of the tree finds 46142)"*. That
+  beat went 2,069 → 570. **Pass `--bin`: an approximation of the registry is
+  not the registry.**
+* **The first cut repeated the batch-47 mistake with the answer already in
+  hand.** The feed pass had put museums, hospitals, libraries and universities
+  in ONE beat labelled `science`, and the WordPress sweep grouped by host
+  suffix, so copying batch 45/54's `jpwporg → grp_legal` would have filed 697
+  hospitals and museums under Legal. Every row was re-beated by the class the
+  HARVEST measured for its host — and, where an institution's feed lives on
+  blogspot or tumblr, by the Wikidata QID in the row's own id. 0 left
+  unclassified. **A beat named after the tool that found it is not a
+  classification.**
+* **`science` and `organization` are not categories this tree resolves**, which
+  is what `collectors-def-check` was reporting as `UNASSIGNED`. No `OVERRIDES`
+  entry was needed in the end: once each beat carried the category it really is
+  (`research`, `education`, `health`, `culture`, `infrastructure`, `police`),
+  all eight keys were grouped automatically — 640 collectors, 0 unassigned.
+* **A sweep's cost must be MEASURED, not extrapolated from one run.** The emit
+  sweep was abandoned at 8 jobs after three runs took 35-66 s each and
+  projected to five hours. A 341-row stratified sample then measured the real
+  throughput, and the full 3,622 ran in **20 minutes at 20 jobs**: these rows
+  are network-bound across ~2,500 distinct hosts, so concurrency buys almost
+  linearly and a single run's duration predicts nothing. Same error family as
+  reading a file's size as progress.
+
+Two beats are MEASURED BUT NOT REGISTERED, in
+`docs/staging-sources-batch57.jpwp{media,corp}.txt` (2,094 rows), held back for
+one reason: they are the beats still grouped by host suffix rather than by a
+measured publisher class, so registering them would re-introduce the second
+correction above. They are a record, not a to-do list.
+
 **The registered count is 57,905** (2026-10-28, the merge of the two
 readings below). MEASURED on the merged tree with `make source-count`, and
 only then cross-checked, which is the order this file accepts: 57,921 less

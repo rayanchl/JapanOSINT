@@ -1,0 +1,1261 @@
+host	rest_root	rest_base	type_name	status	count	x_wp_total	shape
+aiseikai-cl.com	https://aiseikai-cl.com/wp-json	posts	post	200	0	0	empty
+aih-net.com	https://aih-net.com/wp-json	pages	page	200	0	0	empty
+aih-net.com	https://aih-net.com/wp-json	users	user	403	0		
+aishinmemorial-hp.or.jp	https://aishinmemorial-hp.or.jp/wp-json	posts	post	200	0	0	empty
+aiplaza-toyohashi.jp	https://www.aiplaza-toyohashi.jp/wp-json	workflows	ppfuture_workflow	200	0	0	empty
+aiyoukai-mikawahp.com	https://www.aiyoukai-mikawahp.com/wp-json	posts	post	200	0	0	empty
+2480.jp	https://www.2480.jp/wp-json	feedback	feedback	401	0		
+767i.com	https://767i.com/wp-json	users	user	401	0		
+2480.jp	https://www.2480.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+2480.jp	https://www.2480.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+aisei-byouin.or.jp	https://aisei-byouin.or.jp/wp-json	users	user	403	0		
+akibi.ac.jp	https://www.akibi.ac.jp/wp-json	posts	post	200	0	0	empty
+aichi-toho.ac.jp	https://www.aichi-toho.ac.jp/wp-json	important_bnr	important_bnr	200	1	1	machinery
+aichi-toho.ac.jp	https://www.aichi-toho.ac.jp/wp-json	emergency	emergency	200	0	0	empty
+akita-noken.jp	https://www.akita-noken.jp/wp-json	users	user	403	0		
+aishinmemorial-hp.or.jp	https://aishinmemorial-hp.or.jp/wp-json	users	user	404	0		
+akita-rehacen.jp	https://www.akita-rehacen.jp/wp-json	users	user	500	0		
+aiseikai-hp.or.jp	https://aiseikai-hp.or.jp/wp-json	pages	page	200	0		not-a-list
+akaigawa.com	https://www.akaigawa.com/wp-json	important_info	important_info	200	0	0	empty
+aichi-toho.ac.jp	https://www.aichi-toho.ac.jp/wp-json	users	user	403	0		
+aoyama.ac.jp	https://www.aoyama.ac.jp/wp-json	posts	post	200	0	0	empty
+amakusa.jcho.go.jp	https://amakusa.jcho.go.jp/wp-json	topics	topics	200	0	0	empty
+aizawahospital.jp	https://aizawahospital.jp/wp-json	pages	page	200	0	231	not-a-list
+aoyama.ac.jp	https://www.aoyama.ac.jp/wp-json	center107	center107	200	0	0	empty
+aizawahospital.jp	https://aizawahospital.jp/wp-json	sp_post_carousel	sp_post_carousel	200	1	1	machinery
+aoyama.ac.jp	https://www.aoyama.ac.jp/wp-json	users	user	404	0		
+aizawahospital.jp	https://aizawahospital.jp/wp-json	sp_post_template	sp_post_template	200	0	0	empty
+aizawahospital.jp	https://aizawahospital.jp/wp-json	avada_faq	avada_faq	200	0	0	empty
+aizawahospital.jp	https://aizawahospital.jp/wp-json	users	user	401	0		
+akaigawa.com	https://www.akaigawa.com/wp-json	users	user	403	0		
+amakusa.jcho.go.jp	https://amakusa.jcho.go.jp/wp-json	users	user	404	0		
+aomori-kenbyo.jp	https://aomori-kenbyo.jp/wp-json	users	user	404	0		
+art-plaza.jp	https://www.art-plaza.jp/wp-json	users	user	401	0		
+akaganemuseum.jp	https://akaganemuseum.jp/wp-json	users	user	403	0		
+aomori-u.ac.jp	https://www.aomori-u.ac.jp/wp-json	pages	page	200	0	244	not-a-list
+aomori-u.ac.jp	https://www.aomori-u.ac.jp/wp-json	e-floating-buttons	e-floating-buttons	200	0	0	empty
+asahi-u.ac.jp	https://www.asahi-u.ac.jp/wp-json	feedback	feedback	401	0		
+asahi-u.ac.jp	https://www.asahi-u.ac.jp/wp-json	jetpack-forms	jetpack_form	401	0		
+beachland.jp	https://beachland.jp/wp-json	posts	post	200	0	0	empty
+art.city.wajima.ishikawa.jp	https://www.art.city.wajima.ishikawa.jp/wp-json	snow-monkey-forms	snow-monkey-forms	200	1	1	machinery
+asutamuland.jp	https://asutamuland.jp/wp-json	fanclub_info	fanclub_info	200	0	0	empty
+banbi.pref.niigata.lg.jp	https://banbi.pref.niigata.lg.jp/wp-json	posts	post	500	0		
+bgtym.org	https://www.bgtym.org/wp-json	posts	post	200	0	0	empty
+astem.or.jp	https://www.astem.or.jp/wp-json	um_form	um_form	200	3	3	machinery
+banbi.pref.niigata.lg.jp	https://banbi.pref.niigata.lg.jp/wp-json	pages	page	500	0		
+banbi.pref.niigata.lg.jp	https://banbi.pref.niigata.lg.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+bio.nagoya-u.ac.jp	https://www.bio.nagoya-u.ac.jp/wp-json	posts	post	404	0		
+amami-airport.co.jp	https://amami-airport.co.jp/wp-json	pages	page	-1	0		
+banbi.pref.niigata.lg.jp	https://banbi.pref.niigata.lg.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+bio.nagoya-u.ac.jp	https://www.bio.nagoya-u.ac.jp/wp-json	pages	page	404	0		
+bizen-moa.jp	https://bizen-moa.jp/wp-json	users	user	401	0		
+asahikawa.jrc.or.jp	http://asahikawa.jrc.or.jp/wp-json	pages	page	200	0	191	not-a-list
+beachland.jp	https://beachland.jp/wp-json	description	description	200	0	0	empty
+bgu.ac.jp	https://bgu.ac.jp/wp-json	posts	post	200	0	0	empty
+bgtym.org	https://www.bgtym.org/wp-json	users	user	403	0		
+ceglos.u-shizuoka-ken.ac.jp	https://ceglos.u-shizuoka-ken.ac.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+ccma-net.jp	https://www.ccma-net.jp/wp-json	users	user	404	0		
+cems.riken.jp	https://cems.riken.jp/wp-json	researcher	researcher	200	100	878	other
+bio.nagoya-u.ac.jp	https://www.bio.nagoya-u.ac.jp/wp-json	users	user	404	0		
+buffet-museum.jp	https://www.buffet-museum.jp/wp-json	lp	lp	200	0	0	empty
+buffet-museum.jp	https://www.buffet-museum.jp/wp-json	blog_parts	blog_parts	200	4	4	machinery
+cems.riken.jp	https://cems.riken.jp/wp-json	department	department	200	4	4	other
+chiba-kc.ac.jp	https://www.chiba-kc.ac.jp/wp-json	users	user	401	0		
+chiso.co.jp	https://chiso.co.jp/wp-json	posts	post	200	0	0	empty
+chuwa-hp.jp	https://chuwa-hp.jp/wp-json	posts	post	200	0	0	empty
+asahi-u.ac.jp	https://www.asahi-u.ac.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+asahi-u.ac.jp	https://www.asahi-u.ac.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+bfgu-bunka.ac.jp	https://bfgu-bunka.ac.jp/wp-json	gspbstylebook	gspbstylebook	200	1	1	other
+chido.jp	https://www.chido.jp/wp-json	users	user	403	0		
+bfgu-bunka.ac.jp	https://bfgu-bunka.ac.jp/wp-json	gscodesnippet	gscodesnippet	200	0	0	empty
+chiso.co.jp	https://chiso.co.jp/wp-json	main_visual	main_visual	200	7	7	machinery
+chukyo.jcho.go.jp	https://chukyo.jcho.go.jp/wp-json	topics	topics	200	0	0	empty
+bfgu-bunka.ac.jp	https://bfgu-bunka.ac.jp/wp-json	users	user	401	0		
+amahosp.jp	https://www.amahosp.jp/wp-json	manual	manual	200	0	0	empty
+chuwa-hp.jp	https://chuwa-hp.jp/wp-json	users	user	403	0		
+amahosp.jp	https://www.amahosp.jp/wp-json	users	user	404	0		
+asahikawa.jrc.or.jp	http://asahikawa.jrc.or.jp/wp-json	users	user	401	0		
+chibanishi-hp.or.jp	https://chibanishi-hp.or.jp/wp-json	users	user	404	0		
+chiso.co.jp	https://chiso.co.jp/wp-json	info_corp	info_corp	-1	0		
+bgu.ac.jp	https://bgu.ac.jp/wp-json	movie	movie	-1	0		
+azumino.jrc.or.jp	https://www.azumino.jrc.or.jp/wp-json	e-floating-buttons	e-floating-buttons	200	0	0	empty
+bgu.ac.jp	https://bgu.ac.jp/wp-json	workflows	ppfuture_workflow	200	0	0	empty
+cems.riken.jp	https://cems.riken.jp/wp-json	laboratory	laboratory	200	42	42	other
+azumino.jrc.or.jp	https://www.azumino.jrc.or.jp/wp-json	users	user	404	0		
+cku.ac.jp	https://www.cku.ac.jp/wp-json	xo_event	xo_event	200	0	0	empty
+chukyo.jcho.go.jp	https://chukyo.jcho.go.jp/wp-json	users	user	404	0		
+bgu.ac.jp	https://bgu.ac.jp/wp-json	users	user	404	0		
+cku.ac.jp	https://www.cku.ac.jp/wp-json	users	user	401	0		
+dhw.ac.jp	https://www.dhw.ac.jp/wp-json	posts	post	200	0	0	empty
+dpri.kyoto-u.ac.jp	https://www.dpri.kyoto-u.ac.jp/wp-json	posts	post	200	0	0	empty
+dcsweb.jp	https://www.dcsweb.jp/wp-json	users	user	403	0		
+dpri.kyoto-u.ac.jp	https://www.dpri.kyoto-u.ac.jp/wp-json	home_banner	home_banner	200	5	5	machinery
+cvc.pref.gunma.jp	https://www.cvc.pref.gunma.jp/wp-json	news	news	200	0	0	empty
+dpri.kyoto-u.ac.jp	https://www.dpri.kyoto-u.ac.jp/wp-json	home_banner_en	home_banner_en	200	5	5	machinery
+coopreha.jp	https://coopreha.jp/wp-json	users	user	403	0		
+dpri.kyoto-u.ac.jp	https://www.dpri.kyoto-u.ac.jp/wp-json	users	user	403	0		
+design.kyushu-u.ac.jp	https://www.design.kyushu-u.ac.jp/wp-json	banner	banner	200	8	8	machinery
+dhw.ac.jp	https://www.dhw.ac.jp/wp-json	vk-block-patterns	vk-block-patterns	200	39	39	machinery
+ekinan-lib.jp	https://ekinan-lib.jp/wp-json	posts	post	200	0	0	empty
+cvc.pref.gunma.jp	https://www.cvc.pref.gunma.jp/wp-json	section_information	section_information	200	30	30	machinery
+eiga.ac.jp	https://www.eiga.ac.jp/wp-json	posts	post	200	0	0	empty
+eikei.ac.jp	https://eikei.ac.jp/wp-json	notice	notice	200	0	0	empty
+en.vill.ogasawara.tokyo.jp	https://en.vill.ogasawara.tokyo.jp/wp-json	posts	post	200	0	0	empty
+daiichi-cps.ac.jp	https://www.daiichi-cps.ac.jp/wp-json	top_topics	top_topics	200	3	3	machinery
+dri.ne.jp	https://www.dri.ne.jp/wp-json	banner	banner	200	8	8	machinery
+daiichi-cps.ac.jp	https://www.daiichi-cps.ac.jp/wp-json	top_banner	top_banner	200	2	2	machinery
+en.vill.ogasawara.tokyo.jp	https://en.vill.ogasawara.tokyo.jp/wp-json	workflows	ppfuture_workflow	200	0	0	empty
+en.vill.ogasawara.tokyo.jp	https://en.vill.ogasawara.tokyo.jp/wp-json	users	user	403	0		
+ehime-u.ac.jp	https://www.ehime-u.ac.jp/wp-json	lazyblocks	lazyblocks	200	12	12	machinery
+ehime-u.ac.jp	https://www.ehime-u.ac.jp/wp-json	lazyblocks_templates	lazyblocks_templates	200	0	0	empty
+dri.ne.jp	https://www.dri.ne.jp/wp-json	xo_event	xo_event	200	0	0	empty
+ehime-u.ac.jp	https://www.ehime-u.ac.jp/wp-json	workflows	ppfuture_workflow	200	0	0	empty
+date-museum.jp	https://date-museum.jp/wp-json	users	user	401	0		
+cis.ac.jp	https://www.cis.ac.jp/wp-json	topics-bnr	topics-bnr	200	8	8	machinery
+ebikani-aquarium.com	https://ebikani-aquarium.com/wp-json	cta	cta	200	0	0	empty
+eikei.ac.jp	https://eikei.ac.jp/wp-json	workflows	ppfuture_workflow	200	0	0	empty
+daiichi-cps.ac.jp	https://www.daiichi-cps.ac.jp/wp-json	sensyotour	sensyotour	200	0	0	empty
+eiga.ac.jp	https://www.eiga.ac.jp/wp-json	lazyblocks	lazyblocks	200	52	52	machinery
+eiga.ac.jp	https://www.eiga.ac.jp/wp-json	lazyblocks_templates	lazyblocks_templates	200	1	1	machinery
+daiichi-cps.ac.jp	https://www.daiichi-cps.ac.jp/wp-json	main_slider	main_slider	200	1	1	machinery
+eri.u-tokyo.ac.jp	https://www.eri.u-tokyo.ac.jp/wp-json	visiting-researcher	visiting-researcher	200	0	0	empty
+daiichi-cps.ac.jp	https://www.daiichi-cps.ac.jp/wp-json	juken_slider	juken_slider	200	1	1	machinery
+cis.ac.jp	https://www.cis.ac.jp/wp-json	widgetopts_snippet	widgetopts_snippet	200	2	2	machinery
+daiichi-cps.ac.jp	https://www.daiichi-cps.ac.jp/wp-json	juken_topic_banner	juken_topic_banner	200	7	7	machinery
+daiichi-cps.ac.jp	https://www.daiichi-cps.ac.jp/wp-json	top_main_bnr	top_main_bnr	200	6	6	machinery
+es.hokudai.ac.jp	https://www.es.hokudai.ac.jp/wp-json	top_slider	top_slider	200	12	12	machinery
+fmyanbaru.co.jp	https://fmyanbaru.co.jp/wp-json	jb_store_css	jb_store_css	200	0	0	empty
+f-daiichihosp.jp	https://f-daiichihosp.jp/wp-json	banner	banner	200	1	1	machinery
+fks-ab.co.jp	https://fks-ab.co.jp/wp-json	fcrm-dummy	fcrm-dummy	200	0	0	empty
+fmyanbaru.co.jp	https://fmyanbaru.co.jp/wp-json	feedback	feedback	401	0		
+fmyanbaru.co.jp	https://fmyanbaru.co.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+fks-ab.co.jp	https://fks-ab.co.jp/wp-json	oceanwp_library	oceanwp_library	200	0	0	empty
+fengming.jp	https://fengming.jp/wp-json	pages	page	200	0	83	not-a-list
+fmyanbaru.co.jp	https://fmyanbaru.co.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+fengming.jp	https://fengming.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+flowercenter.jp	https://flowercenter.jp/wp-json	pages	page	-1	0		
+flowercenter.jp	https://flowercenter.jp/wp-json	cta	cta	200	0	0	empty
+fengming.jp	https://fengming.jp/wp-json	foogallery-album	foogallery-album	200	0	0	empty
+fmginowan.com	https://fmginowan.com/wp-json	easy-google-fonts	tt_font_control	200	0	0	empty
+eiga.ac.jp	https://www.eiga.ac.jp/wp-json	users	user	403	0		
+flower-park.jp	https://www.flower-park.jp/wp-json	hol-event	hol-event	-1	0		
+fukujuji.org	https://www.fukujuji.org/wp-json	posts	post	200	0	0	empty
+england-hill.com	https://england-hill.com/wp-json	attention	attention	200	0	0	empty
+fukurai.net	https://fukurai.net/wp-json	posts	post	200	0	0	empty
+f85.jp	https://www.f85.jp/wp-json	users	user	401	0		
+fujisawashuku-kouryukan.com	https://fujisawashuku-kouryukan.com/wp-json	blog	blog	200	0	0	empty
+frontier-u.jp	http://frontier-u.jp/wp-json	guest-author	guest-author	200	0	0	empty
+england-hill.com	https://england-hill.com/wp-json	slider_handmade	slider_handmade	200	1	1	machinery
+fsc.hokudai.ac.jp	https://www.fsc.hokudai.ac.jp/wp-json	activity-log-events	jp_act_log_event	401	0		
+flower-park.jp	https://www.flower-park.jp/wp-json	users	user	401	0		
+fsc.hokudai.ac.jp	https://www.fsc.hokudai.ac.jp/wp-json	jp_pay_order	jp_pay_order	401	0		
+fsc.hokudai.ac.jp	https://www.fsc.hokudai.ac.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+fsc.hokudai.ac.jp	https://www.fsc.hokudai.ac.jp/wp-json	users	user	404	0		
+fuji.ac.jp	https://www.fuji.ac.jp/wp-json	pages	page	-1	0		
+england-hill.com	https://england-hill.com/wp-json	tribe_venue	tribe_venue	200	0	0	empty
+fukuigokoku.jp	https://www.fukuigokoku.jp/wp-json	workflows	ppfuture_workflow	200	0	0	empty
+england-hill.com	https://england-hill.com/wp-json	tribe_organizer	tribe_organizer	200	0	0	empty
+fukui.jcho.go.jp	https://fukui.jcho.go.jp/wp-json	users	user	404	0		
+fuji.ac.jp	https://www.fuji.ac.jp/wp-json	lazyblocks	lazyblocks	200	100	247	machinery
+furusatokikaku.com	https://furusatokikaku.com/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+fuzoku-hosp.tokai.ac.jp	https://www.fuzoku-hosp.tokai.ac.jp/wp-json	page	page	200	0	187	not-a-list
+fuji.ac.jp	https://www.fuji.ac.jp/wp-json	lazyblocks_templates	lazyblocks_templates	200	0	0	empty
+gekkou.or.jp	https://gekkou.or.jp/wp-json	posts	post	-1	0		
+fuzoku-hosp.tokai.ac.jp	https://www.fuzoku-hosp.tokai.ac.jp/wp-json	emergency	emergency	200	0	0	empty
+gao-aqua.jp	https://www.gao-aqua.jp/wp-json	posts	post	200	0	0	empty
+fukuoka-mirai.jp	https://www.fukuoka-mirai.jp/wp-json	users	user	401	0		
+fuji.ac.jp	https://www.fuji.ac.jp/wp-json	users	user	401	0		
+england-hill.com	https://england-hill.com/wp-json	xo_event	xo_event	200	0	0	empty
+genkikaiyokohama.jp	http://genkikaiyokohama.jp/wp-json	posts	post	200	0	0	empty
+genkikaiyokohama.jp	http://genkikaiyokohama.jp/wp-json	pages	page	200	0	0	empty
+england-hill.com	https://england-hill.com/wp-json	tec_calendar_embed	tec_calendar_embed	200	0	0	empty
+furusatokikaku.com	https://furusatokikaku.com/wp-json	cta	cta	200	0	0	empty
+gh.opho.jp	https://www.gh.opho.jp/wp-json	posts	post	200	0	0	empty
+england-hill.com	https://england-hill.com/wp-json	users	user	401	0		
+fuzoku-hosp.tokai.ac.jp	https://www.fuzoku-hosp.tokai.ac.jp/wp-json	users	user	401	0		
+globis.ac.jp	https://www.globis.ac.jp/wp-json	posts	post	200	0	0	empty
+fukui-med.jrc.or.jp	https://www.fukui-med.jrc.or.jp/wp-json	guest-author	guest-author	200	0	0	empty
+funabashi.jcho.go.jp	https://funabashi.jcho.go.jp/wp-json	users	user	404	0		
+fukuoka-art-museum.jp	https://www.fukuoka-art-museum.jp/wp-json	posts	post	200	0	0	empty
+gh.opho.jp	https://www.gh.opho.jp/wp-json	users	user	403	0		
+furukawa-museum.or.jp	https://www.furukawa-museum.or.jp/wp-json	sp_eap_template	sp_eap_template	200	0	0	empty
+fujibi.or.jp	https://fujibi.or.jp/wp-json	pages	page	-1	0		
+fukuoka-art-museum.jp	https://www.fukuoka-art-museum.jp/wp-json	inquiry	inquiry	200	0	0	empty
+fukuoka-art-museum.jp	https://www.fukuoka-art-museum.jp/wp-json	collection	collection	200	0	0	empty
+hachinohe-u.ac.jp	https://www.hachinohe-u.ac.jp/wp-json	users	user	403	0		
+furukawa-museum.or.jp	https://www.furukawa-museum.or.jp/wp-json	sp_accordion_faqs	sp_accordion_faqs	200	0	0	empty
+hachijoapo.net	https://hachijoapo.net/wp-json	feedback	feedback	401	0		
+fukuoka-art-museum.jp	https://www.fukuoka-art-museum.jp/wp-json	users	user	404	0		
+hachijoapo.net	https://hachijoapo.net/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+hachijoapo.net	https://hachijoapo.net/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+gotoh-museum.or.jp	https://www.gotoh-museum.or.jp/wp-json	xo_event	xo_event	200	0	0	empty
+globis.ac.jp	https://www.globis.ac.jp/wp-json	users	user	200	0		not-a-list
+giza-ryuhyo.com	https://giza-ryuhyo.com/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+hagoromo.ac.jp	https://www.hagoromo.ac.jp/wp-json	pre_news	pre_news	200	0	0	empty
+ehime-u.ac.jp	https://www.ehime-u.ac.jp/wp-json	rm_content_editor	rm_content_editor	200	0	0	empty
+giza-ryuhyo.com	https://giza-ryuhyo.com/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+gmu.ac.jp	https://www.gmu.ac.jp/wp-json	top-slider	top-slider	200	2	2	machinery
+ehime-u.ac.jp	https://www.ehime-u.ac.jp/wp-json	users	user	401	0		
+hanabun-osaka.witc-pm.jp	https://hanabun-osaka.witc-pm.jp/wp-json	posts	post	200	0	0	empty
+gunma.jcho.go.jp	https://gunma.jcho.go.jp/wp-json	users	user	404	0		
+hakone-garasunomori.jp	https://www.hakone-garasunomori.jp/wp-json	recommend	recommend	200	1	1	machinery
+gmu.ac.jp	https://www.gmu.ac.jp/wp-json	users	user	403	0		
+hakone-garasunomori.jp	https://www.hakone-garasunomori.jp/wp-json	xo_liteslider	xo_liteslider	200	2	2	machinery
+heisei-music.ac.jp	https://www.heisei-music.ac.jp/wp-json	posts	post	200	0	0	empty
+hanazono.ac.jp	https://www.hanazono.ac.jp/wp-json	pages	page	200	0		not-a-list
+hidamari.hayashi-dorin.or.jp	https://hidamari.hayashi-dorin.or.jp/wp-json	posts	post	200	0	0	empty
+heisei-u.ac.jp	https://www.heisei-u.ac.jp/wp-json	posts	post	200	0	0	empty
+heiseihp.com	https://heiseihp.com/wp-json	users	user	403	0		
+hashima-rekimin.jp	https://hashima-rekimin.jp/wp-json	users	user	403	0		
+hi-tech.ac.jp	https://www.hi-tech.ac.jp/wp-json	tribe_venue	tribe_venue	200	0	0	empty
+hi-tech.ac.jp	https://www.hi-tech.ac.jp/wp-json	tribe_organizer	tribe_organizer	200	0	0	empty
+heisei-music.ac.jp	https://www.heisei-music.ac.jp/wp-json	loos-cbp	loos-cbp	200	5	5	machinery
+hi-tech.ac.jp	https://www.hi-tech.ac.jp/wp-json	tribe_events	tribe_events	200	0	0	empty
+hakuho-kakogawa.jp	https://hakuho-kakogawa.jp/wp-json	slider	slider	200	3	3	machinery
+heisei-iryou.ac.jp	https://www.heisei-iryou.ac.jp/wp-json	users	user	404	0		
+hi-tech.ac.jp	https://www.hi-tech.ac.jp/wp-json	tec_calendar_embed	tec_calendar_embed	200	0	0	empty
+hanabun-osaka.witc-pm.jp	https://hanabun-osaka.witc-pm.jp/wp-json	banner	banner	200	1	1	machinery
+higashisaga-hosp.jp	https://www.higashisaga-hosp.jp/wp-json	lp	lp	200	0	0	empty
+higashisaga-hosp.jp	https://www.higashisaga-hosp.jp/wp-json	blog_parts	blog_parts	200	0	0	empty
+himeshima.jp	https://www.himeshima.jp/wp-json	slider	slider	200	27	27	machinery
+hirosakiuhw.jp	https://www.hirosakiuhw.jp/wp-json	posts	post	200	0	0	empty
+hcu.ac.jp	https://hcu.ac.jp/wp-json	ys-parts	ys-parts	200	2	2	machinery
+hishioarts.com	https://hishioarts.com/wp-json	posts	post	200	0	0	empty
+hcu.ac.jp	https://hcu.ac.jp/wp-json	ystdtb-patterns	ystdtb-patterns	200	11	11	machinery
+himeji-du.ac.jp	https://www.himeji-du.ac.jp/wp-json	users	user	401	0		
+hiezu.jp	https://www.hiezu.jp/wp-json	users	user	200	0		not-a-list
+hoku-iryo-u.ac.jp	https://www.hoku-iryo-u.ac.jp/wp-json	posts	post	200	0	0	empty
+hmu.ac.jp	https://www.hmu.ac.jp/wp-json	posts	post	200	0	0	empty
+hokuto-kai.com	http://www.hokuto-kai.com/wp-json	posts	post	200	0	0	empty
+hikone.or.jp	https://www.hikone.or.jp/wp-json	users	user	404	0		
+hokuto-kai.com	http://www.hokuto-kai.com/wp-json	pages	page	200	0	44	not-a-list
+hokkai.ac.jp	https://www.hokkai.ac.jp/wp-json	banner_post	banner_post	200	5	5	machinery
+hirakawazoo.jp	https://hirakawazoo.jp/wp-json	users	user	401	0		
+hokumouken.com	https://hokumouken.com/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+hokumouken.com	https://hokumouken.com/wp-json	activity-log-events	jp_act_log_event	401	0		
+fujibi.or.jp	https://fujibi.or.jp/wp-json	collection-history	collection-history	200	0	0	empty
+heartlife.or.jp	https://www.heartlife.or.jp/wp-json	topics	topics	200	0	0	empty
+hokumouken.com	https://hokumouken.com/wp-json	jp_pay_order	jp_pay_order	401	0		
+hoku-iryo-u.ac.jp	https://www.hoku-iryo-u.ac.jp/wp-json	dent_post	dent_post	200	0	0	empty
+hokumouken.com	https://hokumouken.com/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+heartlife.or.jp	https://www.heartlife.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	1	1	machinery
+hirayama-museum.or.jp	https://hirayama-museum.or.jp/wp-json	wpb_gutenberg_param	wpb_gutenberg_param	200	0	0	empty
+hiroshima-med.jrc.or.jp	https://www.hiroshima-med.jrc.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	1	1	machinery
+hokkaido.jcho.go.jp	https://hokkaido.jcho.go.jp/wp-json	posts	post	-1	0		
+heartlife.or.jp	https://www.heartlife.or.jp/wp-json	feedzy_imports	feedzy_imports	200	0	0	empty
+hoku-iryo-u.ac.jp	https://www.hoku-iryo-u.ac.jp/wp-json	gen_post	gen_post	200	0	0	empty
+hoku-iryo-u.ac.jp	https://www.hoku-iryo-u.ac.jp/wp-json	medtech_post	medtech_post	200	0	0	empty
+hirayama-museum.or.jp	https://hirayama-museum.or.jp/wp-json	wpex_templates	wpex_templates	200	2	2	machinery
+hokusei.ac.jp	https://www.hokusei.ac.jp/wp-json	users	user	404	0		
+hoku-iryo-u.ac.jp	https://www.hoku-iryo-u.ac.jp/wp-json	rigaku_post	rigaku_post	200	0	0	empty
+hosp.keio.ac.jp	https://www.hosp.keio.ac.jp/wp-json	posts	post	200	0	0	empty
+hoku-iryo-u.ac.jp	https://www.hoku-iryo-u.ac.jp/wp-json	sagyo_post	sagyo_post	200	0	0	empty
+hoku-iryo-u.ac.jp	https://www.hoku-iryo-u.ac.jp/wp-json	shinri_post	shinri_post	200	0	0	empty
+himeji-hc.ac.jp	https://himeji-hc.ac.jp/wp-json	e-floating-buttons	e-floating-buttons	200	0	0	empty
+hosp.iwate-med.ac.jp	https://www.hosp.iwate-med.ac.jp/wp-json	posts	post	200	0	0	empty
+heartlife.or.jp	https://www.heartlife.or.jp/wp-json	ctas	pum_cta	404	0		
+hokushin.jcho.go.jp	https://hokushin.jcho.go.jp/wp-json	topics	topics	200	0	0	empty
+hoku-iryo-u.ac.jp	https://www.hoku-iryo-u.ac.jp/wp-json	nss_post	nss_post	200	0	0	empty
+hitoyoshi.jcho.go.jp	https://hitoyoshi.jcho.go.jp/wp-json	users	user	404	0		
+heartlife.or.jp	https://www.heartlife.or.jp/wp-json	users	user	404	0		
+hmu.ac.jp	https://www.hmu.ac.jp/wp-json	feedzy_imports	feedzy_imports	200	0	0	empty
+hodogaya.jcho.go.jp	https://hodogaya.jcho.go.jp/wp-json	users	user	404	0		
+hmu.ac.jp	https://www.hmu.ac.jp/wp-json	styleguide	styleguide	200	0	0	empty
+hoku-iryo-u.ac.jp	https://www.hoku-iryo-u.ac.jp/wp-json	in_medtech_post	in_medtech_post	200	0	0	empty
+hokkaido.jcho.go.jp	https://hokkaido.jcho.go.jp/wp-json	users	user	404	0		
+hospital.city.sendai.jp	https://hospital.city.sendai.jp/wp-json	posts	post	200	0	0	empty
+hospital.hayashi-dorin.or.jp	https://hospital.hayashi-dorin.or.jp/wp-json	posts	post	200	0	0	empty
+hokushin.jcho.go.jp	https://hokushin.jcho.go.jp/wp-json	users	user	404	0		
+huhp.hokudai.ac.jp	https://www.huhp.hokudai.ac.jp/wp-json	posts	post	200	0	0	empty
+hospital.pref.ibaraki.jp	https://www.hospital.pref.ibaraki.jp/chuo/wp-json	pages	page	-1	0		
+hosp.keio.ac.jp	https://www.hosp.keio.ac.jp/wp-json	presentation	presentation	200	0	0	empty
+hospital.pref.ibaraki.jp	https://www.hospital.pref.ibaraki.jp/chuo/wp-json	m-chart	m-chart	200	0		not-a-list
+i-u.ac.jp	https://www.i-u.ac.jp/wp-json	posts	post	200	0	0	empty
+himeji-hc.ac.jp	https://himeji-hc.ac.jp/wp-json	workflows	ppfuture_workflow	200	0	0	empty
+huhp.hokudai.ac.jp	https://www.huhp.hokudai.ac.jp/wp-json	center_section	center_section	200	78	78	machinery
+hirosakiuhw.jp	https://www.hirosakiuhw.jp/wp-json	english_info	english_info	200	0	0	empty
+hirosakiuhw.jp	https://www.hirosakiuhw.jp/wp-json	users	user	401	0		
+hosp.pref.okinawa.jp	http://www.hosp.pref.okinawa.jp/wp-json	users	user	403	0		
+iamas.ac.jp	https://www.iamas.ac.jp/wp-json	posts	post	200	0	0	empty
+huhp.hokudai.ac.jp	https://www.huhp.hokudai.ac.jp/wp-json	tokutei	tokutei	200	0	0	empty
+hoshigaoka.jcho.go.jp	https://hoshigaoka.jcho.go.jp/wp-json	users	user	404	0		
+hospital.city.sendai.jp	https://hospital.city.sendai.jp/wp-json	users	user	404	0		
+ibaraki.saiseikai.or.jp	https://www.ibaraki.saiseikai.or.jp/wp-json	posts	post	404	0		
+hsp.ehime-u.ac.jp	https://www.hsp.ehime-u.ac.jp/wp-json	users	user	403	0		
+hwc.or.jp	https://www.hwc.or.jp/wp-json	awaji	awaji	200	0	0	empty
+iamas.ac.jp	https://www.iamas.ac.jp/wp-json	doctoral_projects	doctoral_projects	200	0	0	empty
+fujibi.or.jp	https://fujibi.or.jp/wp-json	lazyblocks	lazyblocks	200	66	66	machinery
+hwc.or.jp	https://www.hwc.or.jp/wp-json	tanju	tanju	200	0	0	empty
+hosp.tohoku.ac.jp	https://www.hosp.tohoku.ac.jp/wp-json	parts	parts	200	2	2	machinery
+ichinobo.com	https://ichinobo.com/wp-json	posts	post	200	0	0	empty
+fujibi.or.jp	https://fujibi.or.jp/wp-json	lazyblocks_templates	lazyblocks_templates	200	0	0	empty
+i-minken.jp	https://i-minken.jp/wp-json	spectra-popup	spectra-popup	401	0		
+hwc.or.jp	https://www.hwc.or.jp/wp-json	asahigaoka	asahigaoka	200	0	0	empty
+hwc.or.jp	https://www.hwc.or.jp/wp-json	kuniumi	kuniumi	200	0	0	empty
+ichinobo.com	https://ichinobo.com/wp-json	xo_event	xo_event	200	0	0	empty
+ibaraki.saiseikai.or.jp	https://www.ibaraki.saiseikai.or.jp/wp-json	users	user	403	0		
+fujibi.or.jp	https://fujibi.or.jp/wp-json	tribe_rsvp_tickets	tribe_rsvp_tickets	200	0	0	empty
+icrr.u-tokyo.ac.jp	https://www.icrr.u-tokyo.ac.jp/wp-json	posts	post	200	0	0	empty
+i-minken.jp	https://i-minken.jp/wp-json	sureforms_form	sureforms_form	200	0	0	empty
+iae.kyoto-u.ac.jp	https://www.iae.kyoto-u.ac.jp/wp-json	banner	banner	200	11	11	machinery
+hosp.tohoku.ac.jp	https://www.hosp.tohoku.ac.jp/wp-json	pages	pages	200	100	434	duplicate-endpoint
+iias.or.jp	https://www.iias.or.jp/wp-json	posts	post	200	0	0	empty
+ibaraido.co.jp	https://www.ibaraido.co.jp/wp/wp-json	anniv	anniv	200	0	0	empty
+fujibi.or.jp	https://fujibi.or.jp/wp-json	tribe_organizer	tribe_organizer	200	0	0	empty
+iae.kyoto-u.ac.jp	https://www.iae.kyoto-u.ac.jp/wp-json	banner-en	banner-en	200	10	10	machinery
+ikeda-dreamwork.com	https://www.ikeda-dreamwork.com/wp-json	posts	post	200	0	0	empty
+hwc.or.jp	https://www.hwc.or.jp/wp-json	koujyo	koujyo	200	0	0	empty
+hoku-iryo-u.ac.jp	https://www.hoku-iryo-u.ac.jp/wp-json	nss_topics	nss_topics	200	0	0	empty
+hoku-iryo-u.ac.jp	https://www.hoku-iryo-u.ac.jp/wp-json	in_medtech_topics	in_medtech_topics	200	0	0	empty
+ifi.u-tokyo.ac.jp	https://ifi.u-tokyo.ac.jp/wp-json	users	user	401	0		
+ikenobo.jp	https://www.ikenobo.jp/wp-json	posts	post	-1	0		
+fujibi.or.jp	https://fujibi.or.jp/wp-json	tec_calendar_embed	tec_calendar_embed	200	0	0	empty
+hoku-iryo-u.ac.jp	https://www.hoku-iryo-u.ac.jp/wp-json	in_pharm_topics	in_pharm_topics	200	0	0	empty
+iida-museum.org	https://www.iida-museum.org/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+iida-museum.org	https://www.iida-museum.org/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+internet.ac.jp	https://www.internet.ac.jp/wp-json	posts	post	200	0	0	empty
+ioworld.jp	https://ioworld.jp/wp-json	users	user	401	0		
+ikeda20.or.jp	https://ikeda20.or.jp/wp-json	posts	post	-1	0		
+ichinobo.com	https://ichinobo.com/wp-json	sakunami_news	sakunami_news	200	0	78	not-a-list
+ichinohe-lib.sakura.ne.jp	https://ichinohe-lib.sakura.ne.jp/wp-json	wpuf_subscription	wpuf_subscription	200	0	0	empty
+icr.co.jp	https://www.icr.co.jp/wp-json	top-main-visual	top-main-visual	200	9	9	machinery
+icr.co.jp	https://www.icr.co.jp/wp-json	top-banner	top-banner	200	2	2	machinery
+infront.kyoto-u.ac.jp	https://www.infront.kyoto-u.ac.jp/wp-json	users	user	403	0		
+ipu-japan.ac.jp	https://ipu-japan.ac.jp/wp-json	pages	page	200	0	192	not-a-list
+ipu-japan.ac.jp	https://ipu-japan.ac.jp/wp-json	lp	lp	200	2	2	machinery
+ishibi.pref.ishikawa.jp	https://www.ishibi.pref.ishikawa.jp/wp-json	posts	post	200	0	0	empty
+ishikawa-pu.ac.jp	https://www.ishikawa-pu.ac.jp/wp-json	posts	post	200	0	0	empty
+ipu-japan.ac.jp	https://ipu-japan.ac.jp/wp-json	blog_parts	blog_parts	200	27	27	machinery
+ipu-japan.ac.jp	https://ipu-japan.ac.jp/wp-json	rm_content_editor	rm_content_editor	200	0	0	empty
+isee.nagoya-u.ac.jp	https://www.isee.nagoya-u.ac.jp/wp-json	users	user	401	0		
+internet.ac.jp	https://www.internet.ac.jp/wp-json	workflows	ppfuture_workflow	200	0	0	empty
+ishibi.pref.ishikawa.jp	https://www.ishibi.pref.ishikawa.jp/wp-json	vk-block-patterns	vk-block-patterns	200	7	7	machinery
+itami-kousei.jp	https://itami-kousei.jp/wp-json	posts	post	200	0	0	empty
+ishikawa-pu.ac.jp	https://www.ishikawa-pu.ac.jp/wp-json	top_slide	top_slide	200	7	7	machinery
+ishikiriseiki.or.jp	https://www.ishikiriseiki.or.jp/wp-json	feedback	feedback	401	0		
+ishikawa-nu.ac.jp	https://www.ishikawa-nu.ac.jp/wp-json	project	project	200	0	0	empty
+ishikiriseiki.or.jp	https://www.ishikiriseiki.or.jp/wp-json	jetpack-forms	jetpack_form	401	0		
+ishikiriseiki.or.jp	https://www.ishikiriseiki.or.jp/wp-json	activity-log-events	jp_act_log_event	401	0		
+ikeda20.or.jp	https://ikeda20.or.jp/wp-json	link	link	200	3	3	machinery
+itami-kousei.jp	https://itami-kousei.jp/wp-json	snow-monkey-forms	snow-monkey-forms	200	1	1	machinery
+ishikiriseiki.or.jp	https://www.ishikiriseiki.or.jp/wp-json	jp_pay_order	jp_pay_order	401	0		
+ikeda20.or.jp	https://ikeda20.or.jp/wp-json	xo_event	xo_event	200	0	0	empty
+icrr.u-tokyo.ac.jp	https://www.icrr.u-tokyo.ac.jp/wp-json	news_en	news_en	200	0	0	empty
+isit.or.jp	https://www.isit.or.jp/wp-json	posts	post	-1	0		
+ishikiriseiki.or.jp	https://www.ishikiriseiki.or.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+ikeda20.or.jp	https://ikeda20.or.jp/wp-json	infos	info	200	0	0	empty
+icrr.u-tokyo.ac.jp	https://www.icrr.u-tokyo.ac.jp/wp-json	event_researcher_en	event_researcher_en	200	0	0	empty
+iput.ac.jp	https://www.iput.ac.jp/wp-json	newsgroup	newsgroup	200	0	0	empty
+iput.ac.jp	https://www.iput.ac.jp/wp-json	eventgroup	eventgroup	200	0	0	empty
+iput.ac.jp	https://www.iput.ac.jp/wp-json	eyesgroup	eyesgroup	200	0	0	empty
+iput.ac.jp	https://www.iput.ac.jp/wp-json	faqgroup	faqgroup	200	0	0	empty
+iput.ac.jp	https://www.iput.ac.jp/wp-json	membergroup	membergroup	200	0	0	empty
+izumolib.icv.ne.jp	https://izumolib.icv.ne.jp/wp-json	posts	post	200	0	0	empty
+iuk.ac.jp	https://www.iuk.ac.jp/wp-json	top_fv_bnr	top_fv_bnr	200	3	3	machinery
+iuk.ac.jp	https://www.iuk.ac.jp/wp-json	top_slide_bnr	top_slide_bnr	200	11	11	machinery
+iput.ac.jp	https://www.iput.ac.jp/wp-json	mail-template	mail-template	200	4	4	machinery
+iput.ac.jp	https://www.iput.ac.jp/wp-json	toppickupgroup	toppickupgroup	200	0	0	empty
+isit.or.jp	https://www.isit.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	1	1	machinery
+iuk.ac.jp	https://www.iuk.ac.jp/wp-json	top_faculty_img	top_faculty_img	200	1	1	machinery
+isit.or.jp	https://www.isit.or.jp/wp-json	ltg-template-parts	ltg-template-parts	200	0	0	empty
+iwate-ryusendo.jp	https://www.iwate-ryusendo.jp/wp-json	peripheral	peripheral	200	0	0	empty
+isit.or.jp	https://www.isit.or.jp/wp-json	users	user	403	0		
+iwate-med.ac.jp	https://www.iwate-med.ac.jp/wp-json	visibility_preset	visibility_preset	200	0	0	empty
+iput.ac.jp	https://www.iput.ac.jp/wp-json	keygroup	keygroup	200	0	0	empty
+iput.ac.jp	https://www.iput.ac.jp/wp-json	topkeyvisual-tokyo	topkeyvisual-tokyo	200	3	3	machinery
+iput.ac.jp	https://www.iput.ac.jp/wp-json	topkeyvisual-osaka	topkeyvisual-osaka	200	3	3	machinery
+iwate-med.ac.jp	https://www.iwate-med.ac.jp/wp-json	users	user	403	0		
+iput.ac.jp	https://www.iput.ac.jp/wp-json	topkeyvisual-nagoya	topkeyvisual-nagoya	200	3	3	machinery
+iput.ac.jp	https://www.iput.ac.jp/wp-json	topgroup	topgroup	200	0	0	empty
+jc.hachinohe-u.ac.jp	https://jc.hachinohe-u.ac.jp/wp-json	users	user	403	0		
+ishibi.pref.ishikawa.jp	https://www.ishibi.pref.ishikawa.jp/wp-json	users	user	404	0		
+iqb.u-tokyo.ac.jp	https://www.iqb.u-tokyo.ac.jp/wp-json	gsm_styles	gsm_styles	200	0	0	empty
+imakiire.jp	https://imakiire.jp/wp-json	perinatal_care	perinatal_care	200	0	0	empty
+johas.go.jp	https://www.johas.go.jp/wp-json	posts	post	200	0	0	empty
+iqb.u-tokyo.ac.jp	https://www.iqb.u-tokyo.ac.jp/wp-json	users	user	401	0		
+jigokudani-yaenkoen.co.jp	https://jigokudani-yaenkoen.co.jp/wp-json	posts	post	200	0	0	empty
+jcmu.net	https://www.jcmu.net/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+iput.ac.jp	https://www.iput.ac.jp/wp-json	users	user	404	0		
+jinkeikai.com	https://www.jinkeikai.com/wp-json	users	user	401	0		
+jichi.ac.jp	https://www.jichi.ac.jp/wp-json	users	user	401	0		
+jcmu.net	https://www.jcmu.net/wp-json	ltg-template-parts	ltg-template-parts	200	0	0	empty
+jigokudani-yaenkoen.co.jp	https://jigokudani-yaenkoen.co.jp/wp-json	snow-monkey-forms	snow-monkey-forms	200	1	1	machinery
+jcmu.net	https://www.jcmu.net/wp-json	post_type_404	post_type_404	200	0	0	empty
+jcer.or.jp	https://www.jcer.or.jp/wp-json	users	user	404	0		
+jun.otsuma.ac.jp	https://www.jun.otsuma.ac.jp/wp-json	posts	post	200	0	0	empty
+itakon.com	https://itakon.com/wp-json	itakon_collection	itakon_collection	200	0	0	empty
+johyama.com	https://johyama.com/wp-json	feedback	feedback	401	0		
+jikei.ac.jp	https://www.jikei.ac.jp/wp-json	lazyblocks	lazyblocks	200	79	79	machinery
+iwcc.jp	https://iwcc.jp/wp-json	xo_event	xo_event	200	0	0	empty
+johyama.com	https://johyama.com/wp-json	jetpack-forms	jetpack_form	401	0		
+jikei.ac.jp	https://www.jikei.ac.jp/wp-json	lazyblocks_templates	lazyblocks_templates	200	0	0	empty
+ikuei.ac.jp	https://www.ikuei.ac.jp/wp-json	forms	forms	200	2	2	machinery
+kagawah.johas.go.jp	https://www.kagawah.johas.go.jp/wp-json	posts	post	200	0	0	empty
+kaishi-pu.ac.jp	https://kaishi-pu.ac.jp/wp-json	posts	post	200	0	0	empty
+kadogawa-lib.jp	http://www.kadogawa-lib.jp/wp-json	slideimage	slideimage	200	7	7	machinery
+k-junshin.ac.jp	https://www.k-junshin.ac.jp/gakuen/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+jun.otsuma.ac.jp	https://www.jun.otsuma.ac.jp/wp-json	users	user	401	0		
+jue.ac.jp	https://jue.ac.jp/wp-json	experience	experience	200	0	0	empty
+jyuzen.jp	https://jyuzen.jp/wp-json	rm_content_editor	rm_content_editor	200	0	0	empty
+izushaboten.com	https://izushaboten.com/wp-json	users	user	403	0		
+ikuei.ac.jp	https://www.ikuei.ac.jp/wp-json	workflows	ppfuture_workflow	200	0	0	empty
+kan-etsu-hp.ne.jp	https://www.kan-etsu-hp.ne.jp/wp-json	posts	post	200	0	0	empty
+kanagawa.saiseikai.or.jp	https://kanagawa.saiseikai.or.jp/wp-json	posts	post	200	0	0	empty
+jue.ac.jp	https://jue.ac.jp/wp-json	passing_experience	passing_experience	200	0	0	empty
+hmu.ac.jp	https://www.hmu.ac.jp/wp-json	users	user	404	0		
+kamogawa-seaworld.jp	https://kamogawa-seaworld.jp/wp-json	posts	post	200	0	0	empty
+kanazawa-bidai.ac.jp	https://www.kanazawa-bidai.ac.jp/wp-json	snow-monkey-forms	snow-monkey-forms	200	2	2	machinery
+kamogawa-seaworld.jp	https://kamogawa-seaworld.jp/wp-json	pages	page	500	0		
+jue.ac.jp	https://jue.ac.jp/wp-json	parents_meeting	parents_meeting	200	0	0	empty
+kanikko.jp	https://kanikko.jp/wp-json	posts	post	200	0	0	empty
+kansaih.johas.go.jp	https://www.kansaih.johas.go.jp/wp-json	posts	post	200	0	0	empty
+kan-etsu-hp.ne.jp	https://www.kan-etsu-hp.ne.jp/wp-json	pages	page	200	0		not-a-list
+k-bijutsukan.net	https://k-bijutsukan.net/wp-json	ys-parts	ys-parts	200	13	13	machinery
+kanto-gakuin.ac.jp	https://www.kanto-gakuin.ac.jp/wp-json	posts	post	200	0	0	empty
+kanikko.jp	https://kanikko.jp/wp-json	feedback	feedback	401	0		
+kamoltd.co.jp	https://kamoltd.co.jp/wp-json	e-floating-buttons	e-floating-buttons	200	0	0	empty
+kanto-ctr-hsp.com	https://www.kanto-ctr-hsp.com/wp-json	posts	post	200	0	0	empty
+kanikko.jp	https://kanikko.jp/wp-json	jetpack-forms	jetpack_form	401	0		
+kanikko.jp	https://kanikko.jp/wp-json	activity-log-events	jp_act_log_event	401	0		
+kansaih.johas.go.jp	https://www.kansaih.johas.go.jp/wp-json	nurse_blog	nurse_blog	200	0	0	empty
+jue.ac.jp	https://jue.ac.jp/wp-json	professor_kobe	professor_kobe	200	0	0	empty
+kanikko.jp	https://kanikko.jp/wp-json	jp_pay_order	jp_pay_order	401	0		
+kanikko.jp	https://kanikko.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+kaichi.ac.jp	https://kaichi.ac.jp/wp-json	pages	page	200	0	300	not-a-list
+jue.ac.jp	https://jue.ac.jp/wp-json	ghostkit_template	ghostkit_template	200	0	0	empty
+kaichi.ac.jp	https://kaichi.ac.jp/wp-json	feedback	feedback	401	0		
+kaichi.ac.jp	https://kaichi.ac.jp/wp-json	jetpack-forms	jetpack_form	401	0		
+kanbenosato.com	https://kanbenosato.com/wp-json	feedback	feedback	401	0		
+k-bijutsukan.net	https://k-bijutsukan.net/wp-json	ystdtb-patterns	ystdtb-patterns	200	0	0	empty
+kaichi.ac.jp	https://kaichi.ac.jp/wp-json	activity-log-events	jp_act_log_event	401	0		
+kaichi.ac.jp	https://kaichi.ac.jp/wp-json	cfkef-entries	cfkef-entries	200	0	0	empty
+kanazawa.jcho.go.jp	https://kanazawa.jcho.go.jp/wp-json	topics	topics	200	0	0	empty
+kaichi.ac.jp	https://kaichi.ac.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+kaichi.ac.jp	https://kaichi.ac.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+kanagawa.saiseikai.or.jp	https://kanagawa.saiseikai.or.jp/wp-json	snow-monkey-forms	snow-monkey-forms	200	1	1	machinery
+kamogawa-seaworld.jp	https://kamogawa-seaworld.jp/wp-json	notice	notice	200	0	0	empty
+kanazawa.jcho.go.jp	https://kanazawa.jcho.go.jp/wp-json	users	user	404	0		
+kazusa.or.jp	https://www.kazusa.or.jp/wp-json	posts	post	200	0	0	empty
+kani.jcho.go.jp	https://kani.jcho.go.jp/wp-json	topics	topics	200	0	0	empty
+kanbenosato.com	https://kanbenosato.com/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+kawaguchi-moa.jp	https://kawaguchi-moa.jp/wp-json	users	user	403	0		
+kanbenosato.com	https://kanbenosato.com/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+kaisei.ac.jp	https://www.kaisei.ac.jp/wp-json	widgetopts_snippet	widgetopts_snippet	200	0	0	empty
+kaisei.ac.jp	https://www.kaisei.ac.jp/wp-json	users	user	403	0		
+keijinkai.com	https://www.keijinkai.com/wp-json	users	user	404	0		
+kch-org.jp	https://www.kch-org.jp/wp-json	users	user	404	0		
+keiiku.gr.jp	https://keiiku.gr.jp/wp-json	outcome	outcome	200	86	86	other
+kani.jcho.go.jp	https://kani.jcho.go.jp/wp-json	users	user	404	0		
+keisatsubyoin.or.jp	https://www.keisatsubyoin.or.jp/wp-json	users	user	401	0		
+kcua.ac.jp	https://www.kcua.ac.jp/wp-json	vis_video	vis_video	200	0	0	empty
+keiiku.gr.jp	https://keiiku.gr.jp/wp-json	recovery	recovery	200	77	77	other
+kashiwazaki-ghmc.jp	https://kashiwazaki-ghmc.jp/wp-json	pages	page	200	0	142	not-a-list
+keiiku.gr.jp	https://keiiku.gr.jp/wp-json	study	study	200	0	0	empty
+kasei-gakuin.ac.jp	https://www.kasei-gakuin.ac.jp/wp-json	posts	post	200	0	0	empty
+keiiku.gr.jp	https://keiiku.gr.jp/wp-json	users	user	403	0		
+kinen.jp	https://kinen.jp/wp-json	lp	lp	200	0	0	empty
+kinen.jp	https://kinen.jp/wp-json	blog_parts	blog_parts	200	0	0	empty
+keiwa-c.ac.jp	https://keiwa-c.ac.jp/wp-json	keiwavolunteer	keiwavolunteer	200	0	0	empty
+johyama.com	https://johyama.com/wp-json	banner	banner	200	5	5	machinery
+kgwu.ac.jp	https://www.kgwu.ac.jp/wp-json	top_bnr	top_bnr	200	1	1	machinery
+kitami.hospital.pref.hokkaido.lg.jp	https://kitami.hospital.pref.hokkaido.lg.jp/wp-json	posts	post	200	0	0	empty
+johyama.com	https://johyama.com/wp-json	activity-log-events	jp_act_log_event	401	0		
+keiyukaisapporo.or.jp	https://keiyukaisapporo.or.jp/wp-json	snow-monkey-forms	snow-monkey-forms	200	3	3	machinery
+kawaguchikomusicforest.jp	https://kawaguchikomusicforest.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+johyama.com	https://johyama.com/wp-json	jp_pay_order	jp_pay_order	401	0		
+keiyukaisapporo.or.jp	https://keiyukaisapporo.or.jp/wp-json	users	user	403	0		
+kawaguchikomusicforest.jp	https://kawaguchikomusicforest.jp/wp-json	cta	cta	200	0	0	empty
+johyama.com	https://johyama.com/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+kazamaura.jp	https://www.kazamaura.jp/wp-json	feedback	feedback	401	0		
+kitano-hp.or.jp	https://www.kitano-hp.or.jp/wp-json	posts	post	200	0	0	empty
+keiyukai2.jp	https://keiyukai2.jp/wp-json	snow-monkey-forms	snow-monkey-forms	200	2	2	machinery
+kgwu.ac.jp	https://www.kgwu.ac.jp/wp-json	top_btn	top_btn	200	0	0	empty
+kazamaura.jp	https://www.kazamaura.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+keiyukai2.jp	https://keiyukai2.jp/wp-json	users	user	403	0		
+kazamaura.jp	https://www.kazamaura.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+kitashimin.fuchuhp.jp	https://kitashimin.fuchuhp.jp/wp-json	users	user	401	0		
+kenritsu-miyazakibyouin.jp	https://kenritsu-miyazakibyouin.jp/wp-json	lazyblocks	lazyblocks	200	1	1	machinery
+kiyoshikojin.or.jp	https://www.kiyoshikojin.or.jp/wp-json	users	user	401	0		
+kenritsu-miyazakibyouin.jp	https://kenritsu-miyazakibyouin.jp/wp-json	lazyblocks_templates	lazyblocks_templates	200	0	0	empty
+kenritsu-miyazakibyouin.jp	https://kenritsu-miyazakibyouin.jp/wp-json	users	user	404	0		
+kobatake.or.jp	https://kobatake.or.jp/wp-json	job-posts	job-posts	200	0	0	empty
+kobesuma-seaworld.jp	https://www.kobesuma-seaworld.jp/wp-json	posts	post	200	0	0	empty
+kobesuma-seaworld.jp	https://www.kobesuma-seaworld.jp/wp-json	pages	page	500	0		
+kobeherb.com	https://www.kobeherb.com/wp-json	posts	post	200	0	1060	not-a-list
+kobesuma-seaworld.jp	https://www.kobesuma-seaworld.jp/wp-json	notice_en	notice_en	200	0	0	empty
+kochi-hco-op.or.jp	https://www.kochi-hco-op.or.jp/wp-json	posts	post	200	0	0	empty
+kenkoudai.ac.jp	https://www.kenkoudai.ac.jp/wp-json	links	links	200	31	31	machinery
+kenkoudai.ac.jp	https://www.kenkoudai.ac.jp/wp-json	extension_courses	extension_courses	200	0	0	empty
+kenyukai-sakata.jp	https://www.kenyukai-sakata.jp/wp-json	kadence_form	kadence_form	500	0		
+kobesuma-seaworld.jp	https://www.kobesuma-seaworld.jp/wp-json	specialnews_en	specialnews_en	200	0	0	empty
+kochi-u.ac.jp	https://www.kochi-u.ac.jp/wp-json	posts	post	200	0	0	empty
+kenyukai-sakata.jp	https://www.kenyukai-sakata.jp/wp-json	kadence_navigation	kadence_navigation	500	0		
+kenkoudai.ac.jp	https://www.kenkoudai.ac.jp/wp-json	banner	banner	200	5	5	machinery
+kenyukai-sakata.jp	https://www.kenyukai-sakata.jp/wp-json	kadence_header	kadence_header	500	0		
+kobe-du.ac.jp	https://www.kobe-du.ac.jp/wp-json	pages	page	200	0	143	not-a-list
+kenyukai-sakata.jp	https://www.kenyukai-sakata.jp/wp-json	kadence_custom_svg	kadence_custom_svg	200	0	0	empty
+kmi.nagoya-u.ac.jp	https://www.kmi.nagoya-u.ac.jp/wp-json	users	user	401	0		
+kenyukai-sakata.jp	https://www.kenyukai-sakata.jp/wp-json	kadence_query	kadence_query	200	0	0	empty
+kobe-ccn.ac.jp	https://www.kobe-ccn.ac.jp/wp-json	pages	page	200	0	226	not-a-list
+kenyukai-sakata.jp	https://www.kenyukai-sakata.jp/wp-json	kadence_query_card	kadence_query_card	200	0	0	empty
+kochi-gu.ac.jp	https://kochi-gu.ac.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+kobe-ccn.ac.jp	https://www.kobe-ccn.ac.jp/wp-json	users	user	403	0		
+ko-ken-k3.ac.jp	https://ko-ken-k3.ac.jp/wp-json	feedback	feedback	401	0		
+kobe.jcho.go.jp	https://kobe.jcho.go.jp/wp-json	users	user	404	0		
+kenyukai-sakata.jp	https://www.kenyukai-sakata.jp/wp-json	kadence_lottie	kadence_lottie	200	0	0	empty
+ko-ken-k3.ac.jp	https://ko-ken-k3.ac.jp/wp-json	jetpack-forms	jetpack_form	401	0		
+kenyukai-sakata.jp	https://www.kenyukai-sakata.jp/wp-json	kadence_vector	kadence_vector	200	0	0	empty
+koka.ac.jp	https://www.koka.ac.jp/wp-json	tribe_organizer	tribe_organizer	200	0	0	empty
+kodomokagakukan.com	https://kodomokagakukan.com/wp-json	slide	slide	200	3	3	machinery
+kenyukai-sakata.jp	https://www.kenyukai-sakata.jp/wp-json	kb_icon	kb_icon	200	0	0	empty
+koka.ac.jp	https://www.koka.ac.jp/wp-json	tec_calendar_embed	tec_calendar_embed	200	0	0	empty
+kokugakuin.ac.jp	https://www.kokugakuin.ac.jp/wp-json	pages	page	500	0		
+komagino.jp	https://www.komagino.jp/wp-json	posts	post	200	0	0	empty
+kochi-gu.ac.jp	https://kochi-gu.ac.jp/wp-json	ctas	pum_cta	404	0		
+kochi-kinen.jp	https://kochi-kinen.jp/wp-json	vk-block-patterns	vk-block-patterns	200	3	3	machinery
+kochi-gu.ac.jp	https://kochi-gu.ac.jp/wp-json	rm_content_editor	rm_content_editor	200	0	0	empty
+kobesuma-seaworld.jp	https://www.kobesuma-seaworld.jp/wp-json	protection	protection	200	0	0	empty
+kenyukai-sakata.jp	https://www.kenyukai-sakata.jp/wp-json	ctas	pum_cta	404	0		
+kobe-du.ac.jp	https://www.kobe-du.ac.jp/wp-json	ghostkit_template	ghostkit_template	200	0	0	empty
+kitano-hp.or.jp	https://www.kitano-hp.or.jp/wp-json	lazyblocks	lazyblocks	200	9	9	machinery
+kinshukai.or.jp	https://kinshukai.or.jp/wp-json	users	user	401	0		
+kitano-hp.or.jp	https://www.kitano-hp.or.jp/wp-json	lazyblocks_templates	lazyblocks_templates	200	0	0	empty
+koukikai-group.or.jp	https://koukikai-group.or.jp/wp-json	posts	post	200	0	0	empty
+kitano-hp.or.jp	https://www.kitano-hp.or.jp/wp-json	users	user	403	0		
+komakihp.gr.jp	https://www.komakihp.gr.jp/wp-json	posts	post	200	0	0	empty
+komagino.jp	https://www.komagino.jp/wp-json	emergency	emergency	200	0	0	empty
+koumi-museum.com	https://www.koumi-museum.com/wp-json	posts	post	200	0	0	empty
+kobesuma-seaworld.jp	https://www.kobesuma-seaworld.jp/wp-json	hotel_notice_en	hotel_notice_en	200	0	0	empty
+kotohira.kaiyohakubutukan.or.jp	https://kotohira.kaiyohakubutukan.or.jp/wp-json	link	link	200	14	14	machinery
+koujin-hospital.jp	https://koujin-hospital.jp/wp-json	kamifusen_news	kamifusen_news	200	0	0	empty
+kobe-kiu.ac.jp	https://www.kobe-kiu.ac.jp/wp-json	users	user	401	0		
+koujunkai.jp	https://www.koujunkai.jp/wp-json	visualizer	visualizer	200	2	2	other
+kitami.jrc.or.jp	https://www.kitami.jrc.or.jp/wp-json	pages	page	200	0	114	not-a-list
+kotohira.kaiyohakubutukan.or.jp	https://kotohira.kaiyohakubutukan.or.jp/wp-json	top_visual_ctm	top_visual_ctm	-1	0		
+komagino.jp	https://www.komagino.jp/wp-json	workflows	ppfuture_workflow	200	0	0	empty
+koukikai-group.or.jp	https://koukikai-group.or.jp/wp-json	snow-monkey-forms	snow-monkey-forms	200	1	1	machinery
+kitami.jrc.or.jp	https://www.kitami.jrc.or.jp/wp-json	e-floating-buttons	e-floating-buttons	200	0	0	empty
+kotsu-city-kagoshima.jp	https://www.kotsu-city-kagoshima.jp/wp-json	users	user	404	0		
+kitami.jrc.or.jp	https://www.kitami.jrc.or.jp/wp-json	snow-monkey-forms	snow-monkey-forms	200	3	3	machinery
+krmc.city.kumamoto.med.or.jp	https://krmc.city.kumamoto.med.or.jp/wp-json	posts	post	200	0	0	empty
+ko-ken-k3.ac.jp	https://ko-ken-k3.ac.jp/wp-json	activity-log-events	jp_act_log_event	401	0		
+ko-ken-k3.ac.jp	https://ko-ken-k3.ac.jp/wp-json	jp_pay_order	jp_pay_order	401	0		
+kuromatsunai.com	http://www.kuromatsunai.com/wp-json	posts	post	200	0	0	empty
+kuias.kyoto-u.ac.jp	https://kuias.kyoto-u.ac.jp/e/wp-json	fl-builder-template	fl-builder-template	200	0	0	empty
+ko-ken-k3.ac.jp	https://ko-ken-k3.ac.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+kurokabe.co.jp	https://www.kurokabe.co.jp/wp-json	posts	post	200	0	0	empty
+kumamoto-hsu.ac.jp	https://www.kumamoto-hsu.ac.jp/wp-json	top_news	top_news	200	100	294	machinery
+kurobe-city-art-museum.jp	https://kurobe-city-art-museum.jp/wp-json	xo_liteslider	xo_liteslider	200	2	2	machinery
+kurobe-city-art-museum.jp	https://kurobe-city-art-museum.jp/wp-json	lp	lp	200	1	1	machinery
+kurokabe.co.jp	https://www.kurokabe.co.jp/wp-json	ec_slider	ec_slider	200	6	6	machinery
+kurobe-city-art-museum.jp	https://kurobe-city-art-museum.jp/wp-json	blog_parts	blog_parts	200	0	0	empty
+kobesuma-seaworld.jp	https://www.kobesuma-seaworld.jp/wp-json	users	user	404	0		
+kumamoto-med.jrc.or.jp	https://www.kumamoto-med.jrc.or.jp/wp-json	boshu_old	boshu_old	200	0	0	empty
+kurokabe.co.jp	https://www.kurokabe.co.jp/wp-json	top_fixed_panel	top_fixed_panel	200	11	11	machinery
+kyoai.ac.jp	https://kyoai.ac.jp/wp-json	posts	post	200	0	0	empty
+kurume-shinai.ac.jp	https://www.kurume-shinai.ac.jp/wp-json	users	user	401	0		
+kyoei.ac.jp	https://www.kyoei.ac.jp/wp-json	posts	post	200	0	0	empty
+kumamoto-med.jrc.or.jp	https://www.kumamoto-med.jrc.or.jp/wp-json	users	user	401	0		
+kunitachi-sakura.com	https://kunitachi-sakura.com/wp-json	test	test	200	0	0	empty
+kuragaikepark.com	https://kuragaikepark.com/wp-json	sunset	sunset	200	0	0	empty
+kyoai.ac.jp	https://kyoai.ac.jp/wp-json	users	user	401	0		
+kunitachi-sakura.com	https://kunitachi-sakura.com/wp-json	lazyblocks	lazyblocks	200	1	1	machinery
+kyoto-econ.ac.jp	https://www.kyoto-econ.ac.jp/wp-json	posts	post	200	0	0	empty
+kunitachi-sakura.com	https://kunitachi-sakura.com/wp-json	lazyblocks_templates	lazyblocks_templates	200	0	0	empty
+kuragaikepark.com	https://kuragaikepark.com/wp-json	lp	lp	200	0	0	empty
+kumamoto-hsu.ac.jp	https://www.kumamoto-hsu.ac.jp/wp-json	career_news	career_news	200	0	0	empty
+kuragaikepark.com	https://kuragaikepark.com/wp-json	blog_parts	blog_parts	200	0	0	empty
+kumamoto-hsu.ac.jp	https://www.kumamoto-hsu.ac.jp/wp-json	top_bnr_list	top_bnr_list	200	7	7	machinery
+kumamoto-hsu.ac.jp	https://www.kumamoto-hsu.ac.jp/wp-json	top_pickup_list	top_pickup_list	200	3	3	machinery
+kumamoto-hsu.ac.jp	https://www.kumamoto-hsu.ac.jp/wp-json	top_slick_list	top_slick_list	200	5	5	machinery
+lalique-museum.com	https://www.lalique-museum.com/wp-json	posts	post	200	0	0	empty
+kumamoto-hsu.ac.jp	https://www.kumamoto-hsu.ac.jp/wp-json	contents_bnr_list	contents_bnr_list	200	7	7	machinery
+kyoei.ac.jp	https://www.kyoei.ac.jp/wp-json	users	user	404	0		
+kumamoto-hsu.ac.jp	https://www.kumamoto-hsu.ac.jp/wp-json	xo_event	xo_event	200	0	0	empty
+kyotokacho-u.ac.jp	https://www.kyotokacho-u.ac.jp/wp-json	users	user	403	0		
+kyotobousai-c.com	https://kyotobousai-c.com/w/wp-json	faq	faq	200	0	0	empty
+lampwork-museum.com	https://www.lampwork-museum.com/wp/wp-json	new_parts	new_parts	200	1	1	machinery
+kyumed.jp	https://www.kyumed.jp/wp-json	pages	page	200	0	0	empty
+lalique-museum.com	https://www.lalique-museum.com/wp-json	workflows	ppfuture_workflow	200	0	0	empty
+kyoto2.jrc.or.jp	https://www.kyoto2.jrc.or.jp/wp-json	guest-author	guest-author	200	0	0	empty
+kyotokango.ac.jp	https://www.kyotokango.ac.jp/wp-json	users	user	403	0		
+lib.city-hokuto.ed.jp	https://www.lib.city-hokuto.ed.jp/wp-json	posts	post	200	0	0	empty
+kurakagaku.jp	https://kurakagaku.jp/wp-json	pages	page	200	0	71	not-a-list
+lampwork-museum.com	https://www.lampwork-museum.com/wp/wp-json	top_exhibition	top_exhibition	200	1	1	machinery
+lavender-park.jp	https://www.lavender-park.jp/wp-json	link	link	200	8	8	machinery
+lalique-museum.com	https://www.lalique-museum.com/wp-json	recruit	recruit	200	0	0	empty
+kurakagaku.jp	https://kurakagaku.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+lib.city-hokuto.ed.jp	https://www.lib.city-hokuto.ed.jp/wp-json	workflows	ppfuture_workflow	200	0	0	empty
+kurakagaku.jp	https://kurakagaku.jp/wp-json	ltg-template-parts	ltg-template-parts	200	1	1	machinery
+kurakagaku.jp	https://kurakagaku.jp/wp-json	cta	cta	200	0	0	empty
+lib.showacho.ed.jp	https://www.lib.showacho.ed.jp/wp-json	posts	post	200	0	0	empty
+kurashiki-cu.ac.jp	https://www.kurashiki-cu.ac.jp/kcc/index.php/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+kyusyu.jcho.go.jp	https://kyusyu.jcho.go.jp/wp-json	users	user	404	0		
+lib.showacho.ed.jp	https://www.lib.showacho.ed.jp/wp-json	workflows	ppfuture_workflow	200	0	0	empty
+kurashiki-cu.ac.jp	https://www.kurashiki-cu.ac.jp/kcc/index.php/wp-json	ltg-template-parts	ltg-template-parts	200	0	0	empty
+kuas.ac.jp	https://kuas.ac.jp/wp-json	kuasuni_academics	kuasuni_academics	200	0	123	not-a-list
+kurashiki-cu.ac.jp	https://www.kurashiki-cu.ac.jp/kcc/index.php/wp-json	cta	cta	200	0	0	empty
+library.city.aizuwakamatsu.fukushima.jp	https://library.city.aizuwakamatsu.fukushima.jp/wp-json	posts	post	200	0	0	empty
+kurashiki-cu.ac.jp	https://www.kurashiki-cu.ac.jp/kcc/index.php/wp-json	post_type_404	post_type_404	200	0	0	empty
+levent.or.jp	https://levent.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+lib.town.taketoyo.lg.jp	https://www.lib.town.taketoyo.lg.jp/contents/wp-json	ltg-template-parts	ltg-template-parts	200	0	0	empty
+library.city.nagakute.lg.jp	https://library.city.nagakute.lg.jp/contents/wp-json	posts	post	200	0	0	empty
+lib.city.chita.aichi.jp	https://www.lib.city.chita.aichi.jp/wp-json	vk-block-patterns	vk-block-patterns	200	1	1	machinery
+library.etajima.hiroshima.jp	https://library.etajima.hiroshima.jp/wp-json	posts	post	200	0	0	empty
+library.city.aizuwakamatsu.fukushima.jp	https://library.city.aizuwakamatsu.fukushima.jp/wp-json	users	user	404	0		
+lib.town.taketoyo.lg.jp	https://www.lib.town.taketoyo.lg.jp/contents/wp-json	post_type_404	post_type_404	200	0	0	empty
+library.city.chiryu.aichi.jp	https://library.city.chiryu.aichi.jp/wp-json	ltg-template-parts	ltg-template-parts	200	0	0	empty
+lib.city.maniwa.lg.jp	https://lib.city.maniwa.lg.jp/wp-json	mainvisual	mainvisual	200	1	1	machinery
+library.etajima.hiroshima.jp	https://library.etajima.hiroshima.jp/wp-json	workflows	ppfuture_workflow	200	0	0	empty
+library.city.chiryu.aichi.jp	https://library.city.chiryu.aichi.jp/wp-json	cta	cta	200	0	0	empty
+m-kissa.com	https://m-kissa.com/wp-json	posts	post	200	0	0	empty
+library.komaki.aichi.jp	https://www.library.komaki.aichi.jp/wp-json	cta	cta	200	0	0	empty
+library.yonezawa.yamagata.jp	https://www.library.yonezawa.yamagata.jp/wordp/wp-json	users	user	401	0		
+library.otsu.shiga.jp	https://www.library.otsu.shiga.jp/wp-json	posts	post	200	0	0	empty
+library.city.chiryu.aichi.jp	https://library.city.chiryu.aichi.jp/wp-json	post_type_404	post_type_404	200	0	0	empty
+manekineko-m.jp	http://manekineko-m.jp/wp-json	xo_event	xo_event	200	0	0	empty
+lib.city.chita.aichi.jp	https://www.lib.city.chita.aichi.jp/wp-json	cta	cta	200	0	0	empty
+kyoto2.jrc.or.jp	https://www.kyoto2.jrc.or.jp/wp-json	workflows	ppfuture_workflow	200	0	0	empty
+kuas.ac.jp	https://kuas.ac.jp/wp-json	kuasuni_announcement	kuasuni_announcement	200	0	0	empty
+m-kissa.com	https://m-kissa.com/wp-json	snow-monkey-forms	snow-monkey-forms	200	2	2	machinery
+kyoto2.jrc.or.jp	https://www.kyoto2.jrc.or.jp/wp-json	snow-monkey-forms	snow-monkey-forms	200	3	3	machinery
+matsu-reki.jp	https://matsu-reki.jp/wp-json	posts	post	200	0	0	empty
+matsuyama-u.ac.jp:443	https://www.matsuyama-u.ac.jp/wp-json	posts	post	200	0	0	empty
+matsu-reki.jp	https://matsu-reki.jp/wp-json	xo_event	xo_event	200	0	0	empty
+matsuyama-u.ac.jp:443	https://www.matsuyama-u.ac.jp/wp-json	pages	page	200	0	0	empty
+matsu-reki.jp	https://matsu-reki.jp/wp-json	users	user	403	0		
+library.toyama.toyama.jp	https://www.library.toyama.toyama.jp/wp-json	users	user	404	0		
+mannari.or.jp	https://mannari.or.jp/wp-json	cta	cta	200	0	0	empty
+marunuma-artpark.co.jp	https://www.marunuma-artpark.co.jp/wp-json	lp	lp	200	0	0	empty
+meijibashi.or.jp	https://www.meijibashi.or.jp/wp-json	pages	page	200	0	0	empty
+marunuma-artpark.co.jp	https://www.marunuma-artpark.co.jp/wp-json	blog_parts	blog_parts	200	2	2	machinery
+m-kissa.com	https://m-kissa.com/wp-json	users	user	401	0		
+meion.ac.jp	https://www.meion.ac.jp/wp-json	posts	post	200	0	0	empty
+masuda-med.or.jp	https://www.masuda-med.or.jp/wp-json	snow-monkey-forms	snow-monkey-forms	200	1	1	machinery
+mimt.jp	https://mimt.jp/wp-json	users	user	403	0		
+manga-museum.com	https://manga-museum.com/wp-json	tribe_organizer	tribe_organizer	200	0	0	empty
+manga-museum.com	https://manga-museum.com/wp-json	tribe_events	tribe_events	200	0	0	empty
+manga-museum.com	https://manga-museum.com/wp-json	tec_calendar_embed	tec_calendar_embed	200	0	0	empty
+meion.ac.jp	https://www.meion.ac.jp/wp-json	emergency_info	emergency_info	200	0	0	empty
+misawa-airport.co.jp	https://misawa-airport.co.jp/wp-json	users	user	404	0		
+matsudo-kankou.jp	https://www.matsudo-kankou.jp/wp-json	posts	post	-1	0		
+mimoca.jp	https://www.mimoca.jp/wp-json	users	user	404	0		
+mitokyodo-hp.jp	https://www.mitokyodo-hp.jp/wp-json	pages	page	200	0	254	not-a-list
+marukigallery.jp	https://marukigallery.jp/wp-json	posts	post	200	0	113	not-a-list
+miyazaki-city-zoo.jp	https://www.miyazaki-city-zoo.jp/wp-json	posts	post	200	0	0	empty
+matsudo-kankou.jp	https://www.matsudo-kankou.jp/wp-json	elementskit-content	elementskit_content	200	0	0	empty
+maspro.co.jp	https://www.maspro.co.jp/wp-json	posts	post	200	0	0	empty
+miyake-art.com	https://www.miyake-art.com/wp-json	feedback	feedback	401	0		
+matsuyama.jrc.or.jp	https://www.matsuyama.jrc.or.jp/wp-json	ys-parts	ys-parts	200	0	0	empty
+matsudo-kankou.jp	https://www.matsudo-kankou.jp/wp-json	elementskit-template	elementskit_template	200	0	0	empty
+miyake-art.com	https://www.miyake-art.com/wp-json	jetpack-forms	jetpack_form	401	0		
+matsudo-kankou.jp	https://www.matsudo-kankou.jp/wp-json	event	event	200	0	0	empty
+miyake-art.com	https://www.miyake-art.com/wp-json	activity-log-events	jp_act_log_event	401	0		
+miyazaki-airport.co.jp	https://www.miyazaki-airport.co.jp/wp-json	users	user	404	0		
+miyake-art.com	https://www.miyake-art.com/wp-json	jp_pay_order	jp_pay_order	401	0		
+miyake-art.com	https://www.miyake-art.com/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+miyazaki-ac.com	https://miyazaki-ac.com/wp-json	visualizer	visualizer	200	1	1	other
+medias.co.jp	https://www.medias.co.jp/wp-json	posts	post	200	0	0	empty
+mollusco-mugi.jp	https://www.mollusco-mugi.jp/wp-json	widgetopts_snippet	widgetopts_snippet	200	0	0	empty
+matsudo-kankou.jp	https://www.matsudo-kankou.jp/wp-json	sightseeing	sightseeing	200	0	257	not-a-list
+miyazaki-ac.com	https://miyazaki-ac.com/wp-json	ctas	pum_cta	404	0		
+mollusco-mugi.jp	https://www.mollusco-mugi.jp/wp-json	users	user	401	0		
+money-cash-navi.jp	https://money-cash-navi.jp/wp-json	lp	lp	200	0	0	empty
+momaw.jp	https://www.momaw.jp/wp-json	pages	page	200	0		not-a-list
+money-cash-navi.jp	https://money-cash-navi.jp/wp-json	blog_parts	blog_parts	200	0	0	empty
+momaw.jp	https://www.momaw.jp/wp-json	information	information	-1	0		
+medias.co.jp	https://www.medias.co.jp/wp-json	form	form	200	100	241	machinery
+matsudo-kankou.jp	https://www.matsudo-kankou.jp/wp-json	recommendation	recommendation	200	0	41	not-a-list
+montakanawa.jp:443	https://montakanawa.jp:443/wp-json	posts	post	200	0	0	empty
+maspro.co.jp	https://www.maspro.co.jp/wp-json	users	user	404	0		
+matsudo-kankou.jp	https://www.matsudo-kankou.jp/wp-json	pear_orchards	pear_orchards	200	0	0	empty
+momaw.jp	https://www.momaw.jp/wp-json	bid	bid	200	0	0	empty
+medias.co.jp	https://www.medias.co.jp/wp-json	manage_contest	manage_contest	200	0	0	empty
+matsudo-kankou.jp	https://www.matsudo-kankou.jp/wp-json	leaflet-page	leaflet-page	200	10	10	other
+morikazu-museum-tsukechi.jp	https://morikazu-museum-tsukechi.jp/wp-json	service	service	200	0	0	empty
+medias.co.jp	https://www.medias.co.jp/wp-json	protected_areas	protected_areas	200	0	0	empty
+morikazu-museum-tsukechi.jp	https://morikazu-museum-tsukechi.jp/wp-json	users	user	403	0		
+momak.go.jp	https://www.momak.go.jp/Japanese/wp-json	users	user	403	0		
+momaw.jp	https://www.momaw.jp/wp-json	parts	parts	200	5	5	machinery
+mpd.ac.jp	https://www.mpd.ac.jp/wp-json	posts	post	200	0	0	empty
+momaw.jp	https://www.momaw.jp/wp-json	toppage_parts	toppage_parts	200	6	6	machinery
+mu88pg.com	https://mu88pg.com/wp-json	easy-google-fonts	tt_font_control	200	0	0	empty
+mu88pg.com	https://mu88pg.com/wp-json	users	user	403	0		
+matsuyama-u.ac.jp:443	https://www.matsuyama-u.ac.jp/wp-json	other	other	200	29	29	machinery
+matsudo-kankou.jp	https://www.matsudo-kankou.jp/wp-json	commentary	commentary	200	0	37	not-a-list
+municipal-hospital.toyohashi.aichi.jp	https://www.municipal-hospital.toyohashi.aichi.jp/wp-json	posts	post	200	0	0	empty
+matsuyama.jrc.or.jp	https://www.matsuyama.jrc.or.jp/wp-json	aboutus	aboutus	200	0	302	not-a-list
+montakanawa.jp:443	https://montakanawa.jp:443/wp-json	users	user	404	0		
+municipal-hospital.toyohashi.aichi.jp	https://www.municipal-hospital.toyohashi.aichi.jp/wp-json	users	user	404	0		
+munakatashiko-museum.jp	https://munakatashiko-museum.jp/wp-json	lp	lp	200	0	0	empty
+kuas.ac.jp	https://kuas.ac.jp/wp-json	lazyblocks	lazyblocks	200	12	12	machinery
+munakatashiko-museum.jp	https://munakatashiko-museum.jp/wp-json	blog_parts	blog_parts	200	0	0	empty
+muroran-it.ac.jp	https://muroran-it.ac.jp/wp-json	lazyblocks	lazyblocks	200	0	0	empty
+kuas.ac.jp	https://kuas.ac.jp/wp-json	lazyblocks_templates	lazyblocks_templates	200	0	0	empty
+museum.toyota.aichi.jp	https://www.museum.toyota.aichi.jp/wp-json	posts	post	200	0	0	empty
+muroran-it.ac.jp	https://muroran-it.ac.jp/wp-json	lazyblocks_templates	lazyblocks_templates	200	0	0	empty
+matsudo-kankou.jp	https://www.matsudo-kankou.jp/wp-json	mtd_content	mtd_content	200	0	0	empty
+muroran-it.ac.jp	https://muroran-it.ac.jp/wp-json	users	user	404	0		
+matsudo-kankou.jp	https://www.matsudo-kankou.jp/wp-json	users	user	401	0		
+mpu.ac.jp	https://www.mpu.ac.jp/wp-json	inmedia	inmedia	200	0	0	empty
+kuas.ac.jp	https://kuas.ac.jp/wp-json	visibility_preset	visibility_preset	200	0	0	empty
+mpat.go.jp	https://www.mpat.go.jp/wp-json	snow-monkey-forms	snow-monkey-forms	200	1	1	machinery
+museum.chatan.jp	https://museum.chatan.jp/wp-json	users	user	404	0		
+kuas.ac.jp	https://kuas.ac.jp/wp-json	users	user	200	0	0	empty
+museum.toyota.aichi.jp	https://www.museum.toyota.aichi.jp/wp-json	press	press	200	0	0	empty
+n-watanabe-hosp.jp	https://n-watanabe-hosp.jp/wp-json	posts	post	200	0	0	empty
+mpu.ac.jp	https://www.mpu.ac.jp/wp-json	users	user	404	0		
+morimuramuseum.com	https://morimuramuseum.com/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+morimuramuseum.com	https://morimuramuseum.com/wp-json	activity-log-events	jp_act_log_event	401	0		
+morimuramuseum.com	https://morimuramuseum.com/wp-json	cta	cta	200	0	0	empty
+nagasakidejima.jp	https://nagasakidejima.jp/wp-json	users	user	403	0		
+mgu.ac.jp	https://www.mgu.ac.jp/wp-json	posts	post	200	0	0	empty
+nagoyaaqua.jp	https://nagoyaaqua.jp/wp-json	posts	post	200	0	0	empty
+musashino-music.ac.jp	https://www.musashino-music.ac.jp/wp-json	visibility_preset	visibility_preset	200	0	0	empty
+nagoya-1st.jrc.or.jp	https://nagoya-1st.jrc.or.jp/wp-json	posts	post	200	0	0	empty
+nagachu.jp	https://www.nagachu.jp/wp-json	xo_event	xo_event	200	0	0	empty
+nagasaki-museum.jp	https://nagasaki-museum.jp/wp-json	posts	post	200	0	0	empty
+n-watanabe-hosp.jp	https://n-watanabe-hosp.jp/wp-json	top_mv_slider	top_mv_slider	200	4	4	machinery
+nagahp.jp	https://www.nagahp.jp/wp-json	users	user	403	0		
+nanmoku.ne.jp	https://nanmoku.ne.jp/wp-json	posts	post	200	0	0	empty
+nagano-med.jrc.or.jp	https://www.nagano-med.jrc.or.jp/wp-json	pages	page	200	0	143	not-a-list
+nanao-af.jp	https://nanao-af.jp/glass/wp-json	posts	post	200	0	0	empty
+nagoya-ekisaikaihosp.jp	https://www.nagoya-ekisaikaihosp.jp/wp-json	users	user	404	0		
+nanmoku.ne.jp	https://nanmoku.ne.jp/wp-json	users	user	401	0		
+nagaoka.jrc.or.jp	https://www.nagaoka.jrc.or.jp/wp-json	users	user	401	0		
+nakamura-u.ac.jp	https://www.nakamura-u.ac.jp/wp-json	midcareer_info	midcareer_info	200	0	0	empty
+ncam.jp	https://www.ncam.jp/wp-json	posts	post	200	0	0	empty
+nanpuh.or.jp	https://www.nanpuh.or.jp/wp-json	snow-monkey-forms	snow-monkey-forms	200	4	4	machinery
+narasaho-c.ac.jp	https://www.narasaho-c.ac.jp/wp-json	workflows	ppfuture_workflow	200	0	0	empty
+nakagawamuseum.jp	https://nakagawamuseum.jp/wp-json	feedback	feedback	401	0		
+netsukekan.jp	https://www.netsukekan.jp/wp-json	posts	post	200	0	0	empty
+nd-park.jp	https://nd-park.jp/wp-json	users	user	403	0		
+nakagawamuseum.jp	https://nakagawamuseum.jp/wp-json	jetpack-forms	jetpack_form	401	0		
+ndgh.jp	https://www.ndgh.jp/wp-json	pages	page	200	0	101	not-a-list
+nakagawamuseum.jp	https://nakagawamuseum.jp/wp-json	activity-log-events	jp_act_log_event	401	0		
+nakagawamuseum.jp	https://nakagawamuseum.jp/wp-json	jp_pay_order	jp_pay_order	401	0		
+nasushiobara-library.jp	https://www.nasushiobara-library.jp/wp-json	xo_event	xo_event	200	0	0	empty
+nakagawamuseum.jp	https://nakagawamuseum.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+netsukekan.jp	https://www.netsukekan.jp/wp-json	users	user	403	0		
+ninjal.ac.jp	https://www.ninjal.ac.jp/wp-json	posts	post	200	0	0	empty
+nagano-med.jrc.or.jp	https://www.nagano-med.jrc.or.jp/wp-json	snow-monkey-forms	snow-monkey-forms	200	9	9	machinery
+nagoya-bunri.ac.jp	https://www.nagoya-bunri.ac.jp/wp-json	blog-health	blog-health	200	0	0	empty
+nanao-art-museum.jp	https://nanao-art-museum.jp/wp-json	xo_liteslider	xo_liteslider	200	33	33	machinery
+nagoya-bunri.ac.jp	https://www.nagoya-bunri.ac.jp/wp-json	blog-food	blog-food	200	0	0	empty
+nishi-ganka.or.jp	https://www.nishi-ganka.or.jp/wp-json	posts	post	200	0	0	empty
+nagoya-bunri.ac.jp	https://www.nagoya-bunri.ac.jp/wp-json	blog-media	blog-media	200	0	0	empty
+nih.or.jp	https://nih.or.jp/wp-json	users	user	404	0		
+nifs-k.ac.jp	https://www.nifs-k.ac.jp/wp-json	users	user	404	0		
+nirasakiomura-artmuseum.com	http://nirasakiomura-artmuseum.com/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+nirasakiomura-artmuseum.com	http://nirasakiomura-artmuseum.com/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+nakamura-u.ac.jp	https://www.nakamura-u.ac.jp/wp-json	top_bnr	top_bnr	200	6	6	machinery
+nakamura-u.ac.jp	https://www.nakamura-u.ac.jp/wp-json	attention	attention	200	0	0	empty
+nmh.or.jp	https://nmh.or.jp/wp-json	posts	post	200	0	0	empty
+noto-museum.jp	https://noto-museum.jp/wp-json	posts	post	200	0	0	empty
+nise.go.jp	https://www.nise.go.jp/wp-json	users	user	404	0		
+matsuyama.jrc.or.jp	https://www.matsuyama.jrc.or.jp/wp-json	careers	careers	200	0	111	not-a-list
+nmhc.jp	https://nmhc.jp/wp-json	posts	post	200	0	0	empty
+matsuyama.jrc.or.jp	https://www.matsuyama.jrc.or.jp/wp-json	widgetopts_snippet	widgetopts_snippet	200	0	0	empty
+nonhoi.jp	https://www.nonhoi.jp/wp-json	pages	page	200	0	0	empty
+matsuyama.jrc.or.jp	https://www.matsuyama.jrc.or.jp/wp-json	users	user	403	0		
+notredame.ac.jp	https://www.notredame.ac.jp/wp-json	posts	post	200	0	0	empty
+nagasaki-museum.jp	https://nagasaki-museum.jp/wp-json	news_english	news_english	200	0	0	empty
+nrs.aichi-pu.ac.jp	https://www.nrs.aichi-pu.ac.jp/wp-json	contribution	contribution	200	0	0	empty
+noboribetsu.jcho.go.jp	https://noboribetsu.jcho.go.jp/wp-json	users	user	404	0		
+noto-hospital.nanao.ishikawa.jp	https://www.noto-hospital.nanao.ishikawa.jp/wp-json	workflows	ppfuture_workflow	200	0	0	empty
+nobeoka-kenbyo.jp	https://www.nobeoka-kenbyo.jp/wp-json	chiiki	chiiki	200	0	0	empty
+noto-hospital.nanao.ishikawa.jp	https://www.noto-hospital.nanao.ishikawa.jp/wp-json	users	user	401	0		
+nrs.aichi-pu.ac.jp	https://www.nrs.aichi-pu.ac.jp/wp-json	users	user	401	0		
+niigata-u.ac.jp	https://www.niigata-u.ac.jp/wp-json	posts	post	200	0	0	empty
+niigataum.ac.jp	https://www.niigataum.ac.jp/wp-json	slidebanner	slidebanner	200	8	8	machinery
+nistep.go.jp	https://www.nistep.go.jp/wp-json	users	user	401	0		
+nobeoka-kenbyo.jp	https://www.nobeoka-kenbyo.jp/wp-json	lazyblocks	lazyblocks	200	4	4	machinery
+nuhw.ac.jp	https://www.nuhw.ac.jp/wp-json	top_slider_bnr	top_slider_bnr	200	4	4	machinery
+nagasaki-museum.jp	https://nagasaki-museum.jp/wp-json	mus-news	mus-news	200	0	0	empty
+nobeoka-kenbyo.jp	https://www.nobeoka-kenbyo.jp/wp-json	lazyblocks_templates	lazyblocks_templates	200	0	0	empty
+niigataum.ac.jp	https://www.niigataum.ac.jp/wp-json	linkbanner	linkbanner	200	9	9	machinery
+nuhw.ac.jp	https://www.nuhw.ac.jp/wp-json	top_pickup_bnr	top_pickup_bnr	200	9	9	machinery
+nagoya-1st.jrc.or.jp	https://nagoya-1st.jrc.or.jp/wp-json	slideshow	slideshow	200	5	5	machinery
+nobeoka-kenbyo.jp	https://www.nobeoka-kenbyo.jp/wp-json	users	user	404	0		
+nshp-muroran.or.jp	https://www.nshp-muroran.or.jp/wp-json	pages	page	200	0	0	empty
+nagasaki-museum.jp	https://nagasaki-museum.jp/wp-json	ea_report	ea_report	200	0	0	empty
+nmh.or.jp	https://nmh.or.jp/wp-json	users	user	404	0		
+odate-hp.odate.akita.jp	https://www.odate-hp.odate.akita.jp/wp-json	posts	post	200	0	0	empty
+nvlu.ac.jp	https://www.nvlu.ac.jp/wp-json	posts	post	200	0	0	empty
+nro.nao.ac.jp	https://www.nro.nao.ac.jp/wp-json	users	user	403	0		
+nagoya-1st.jrc.or.jp	https://nagoya-1st.jrc.or.jp/wp-json	users	user	404	0		
+ohsu.ac.jp	https://ohsu.ac.jp/wp-json	posts	post	200	0	0	empty
+ohara.or.jp	https://www.ohara.or.jp/wp-json	users	user	401	0		
+niigataum.ac.jp	https://www.niigataum.ac.jp/wp-json	vision	vision	200	0	0	empty
+notredame.ac.jp	https://www.notredame.ac.jp/wp-json	emergency	emergency	200	0	0	empty
+ofunachuohp.net	https://www.ofunachuohp.net/wp-json	posts	post	200	0	0	empty
+nagasaki-museum.jp	https://nagasaki-museum.jp/wp-json	masterpiece_en	masterpiece_en	200	0	0	empty
+ogunibyoin.jp	https://www.ogunibyoin.jp/wp-json	posts	post	200	0	0	empty
+nippon-maru.or.jp	https://www.nippon-maru.or.jp/wp-json	users	user	404	0		
+odate-hp.odate.akita.jp	https://www.odate-hp.odate.akita.jp/wp-json	banner	banner	200	14	14	machinery
+oici.jp	https://oici.jp/wp-json	posts	post	200	0	0	empty
+ogunibyoin.jp	https://www.ogunibyoin.jp/wp-json	pages	page	200	0	111	not-a-list
+nuhw.ac.jp	https://www.nuhw.ac.jp/wp-json	ad_pickup_bnr	ad_pickup_bnr	200	9	9	machinery
+oici.jp	https://oici.jp/wp-json	users	user	200	0	0	empty
+odate-hp.odate.akita.jp	https://www.odate-hp.odate.akita.jp/wp-json	users	user	404	0		
+notredame.ac.jp	https://www.notredame.ac.jp/wp-json	ghostkit_template	ghostkit_template	200	0	0	empty
+obihiro-kyokai-hsp.jp	https://www.obihiro-kyokai-hsp.jp/wp-json	kyushin	kyushin	200	0	0	empty
+nuhw.ac.jp	https://www.nuhw.ac.jp/wp-json	ad_pickup2_bnr	ad_pickup2_bnr	200	2	2	machinery
+okaya-museum.jp	https://okaya-museum.jp/wp-json	users	user	401	0		
+ohta-hp.or.jp	https://www.ohta-hp.or.jp/wp-json	users	user	404	0		
+nuhw.ac.jp	https://www.nuhw.ac.jp/wp-json	top_events_bnr	top_events_bnr	200	0	0	empty
+nakamura-u.ac.jp	https://www.nakamura-u.ac.jp/wp-json	ic_topics	ic_topics	200	0	0	empty
+okigei.ac.jp	https://www.okigei.ac.jp/wp-json	ppwp-section	ppwp-section	200	0	0	empty
+nuhw.ac.jp	https://www.nuhw.ac.jp/wp-json	users	user	403	0		
+onkogakkai.com	http://onkogakkai.com/wp-json	cta	cta	200	0	0	empty
+okishikyo.jp	https://okishikyo.jp/wp-json	users	user	404	0		
+nmhc.jp	https://nmhc.jp/wp-json	top_banner	top_banner	200	12	12	machinery
+osaka-iryou.ac.jp	https://www.osaka-iryou.ac.jp/wp-json	posts	post	200	0	0	empty
+onchikai.jp	https://www.onchikai.jp/wp-json	lp	lp	200	4	4	machinery
+nshp-muroran.or.jp	https://www.nshp-muroran.or.jp/wp-json	mailform	mailform	200	4	4	machinery
+open-air-museum.org	https://open-air-museum.org/wp-json	activity-log-events	jp_act_log_event	401	0		
+onchikai.jp	https://www.onchikai.jp/wp-json	blog_parts	blog_parts	200	4	4	machinery
+onchikai.jp	https://www.onchikai.jp/wp-json	users	user	401	0		
+omutacityzoo.org	https://omutacityzoo.org/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+omutacityzoo.org	https://omutacityzoo.org/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+oim.or.jp	https://oim.or.jp/wp-json	workflows	ppfuture_workflow	200	0	0	empty
+oim.or.jp	https://oim.or.jp/wp-json	spectra-popup	spectra-popup	200	0	0	empty
+otemae.ac.jp	https://www.otemae.ac.jp/wp-json	posts	post	200	0	0	empty
+otaru-kihinkan.jp	http://www.otaru-kihinkan.jp/wp-json	posts	post	200	0	0	empty
+otsuma.ac.jp	https://www.otsuma.ac.jp/wp-json	posts	post	200	0	0	empty
+otsu.jrc.or.jp	https://www.otsu.jrc.or.jp/wp-json	posts	post	200	0	0	empty
+otemae.ac.jp	https://www.otemae.ac.jp/wp-json	employ	employ	200	0	0	empty
+portal.chubu.ac.jp	https://portal.chubu.ac.jp/wp-json	emergency	emergency	200	0	0	empty
+protein.osaka-u.ac.jp	https://www.protein.osaka-u.ac.jp/wp-json	posts	post	200	0	0	empty
+otsu.jrc.or.jp	https://www.otsu.jrc.or.jp/wp-json	users	user	404	0		
+protein.osaka-u.ac.jp	https://www.protein.osaka-u.ac.jp/wp-json	pages	page	500	0		
+portal.chubu.ac.jp	https://portal.chubu.ac.jp/wp-json	users	user	404	0		
+phoenix.ac.jp	https://www.phoenix.ac.jp/wp-json	section	section	200	29	29	machinery
+parksgreenery.city.osaka.lg.jp	https://parksgreenery.city.osaka.lg.jp/wp-json	users	user	500	0		
+poole.ed.jp	https://poole.ed.jp/wp-json	posts	post	200	0	0	empty
+osaka.jcho.go.jp	https://osaka.jcho.go.jp/wp-json	pages	page	-1	0		
+osu.ac.jp	https://www.osu.ac.jp/wp-json	users	user	403	0		
+piif.ac.jp	https://www.piif.ac.jp/wp-json	newsgroup	newsgroup	200	0	0	empty
+piif.ac.jp	https://www.piif.ac.jp/wp-json	eventgroup	eventgroup	200	0	0	empty
+piif.ac.jp	https://www.piif.ac.jp/wp-json	eyesgroup	eyesgroup	200	0	0	empty
+piif.ac.jp	https://www.piif.ac.jp/wp-json	faqgroup	faqgroup	200	0	0	empty
+piif.ac.jp	https://www.piif.ac.jp/wp-json	membergroup	membergroup	200	0	0	empty
+pu-toyama.ac.jp	https://www.pu-toyama.ac.jp/wp-json	index_mainvisual	index_mainvisual	200	4	4	machinery
+piif.ac.jp	https://www.piif.ac.jp/wp-json	emergency	emergency	200	0	0	empty
+pu-toyama.ac.jp	https://www.pu-toyama.ac.jp/wp-json	index_banner	index_banner	200	11	11	machinery
+piif.ac.jp	https://www.piif.ac.jp/wp-json	mail-template	mail-template	200	4	4	machinery
+piif.ac.jp	https://www.piif.ac.jp/wp-json	toppickupgroup	toppickupgroup	200	0	0	empty
+osaka-sandai.ac.jp	https://www.osaka-sandai.ac.jp/wp-json	posts	post	200	0	0	empty
+phoenix.ac.jp	https://www.phoenix.ac.jp/wp-json	top_main_slide	top_main_slide	200	9	9	machinery
+piif.ac.jp	https://www.piif.ac.jp/wp-json	topkeyvisual	topkeyvisual	200	3	3	machinery
+osaka-sandai.ac.jp	https://www.osaka-sandai.ac.jp/wp-json	top_banner	top_banner	200	12	12	machinery
+piif.ac.jp	https://www.piif.ac.jp/wp-json	users	user	404	0		
+osaka-sandai.ac.jp	https://www.osaka-sandai.ac.jp/wp-json	admission_banner	admission_banner	200	1	1	machinery
+osaka-sandai.ac.jp	https://www.osaka-sandai.ac.jp/wp-json	top_banner_pickup	top_banner_pickup	200	6	6	machinery
+rctoyota.ac.jp	https://www.rctoyota.ac.jp/wp-json	top_bnr	top_bnr	200	1	1	machinery
+rokkosan.center	https://rokkosan.center/wp-json	users	user	404	0		
+poole.ed.jp	https://poole.ed.jp/wp-json	users	user	200	0		not-a-list
+niigataum.ac.jp	https://www.niigataum.ac.jp/wp-json	ccp	ccp	200	0	0	empty
+rokkasho-tosho.jp	https://www.rokkasho-tosho.jp/wp-json	slide	slide	200	2	2	machinery
+otsuma.ac.jp	https://www.otsuma.ac.jp/wp-json	slider	slider	200	1	1	machinery
+sadoukan.jp	https://sadoukan.jp/wp-json	posts	post	200	0	0	empty
+sadamisakihanto-museum.jp	https://sadamisakihanto-museum.jp/wp-json	users	user	404	0		
+saga-ab.jp	https://saga-ab.jp/wp-json	emergency	emergency	200	0	0	empty
+rokkosan.com	https://www.rokkosan.com/top/wp-json	main_bnr	main_bnr	200	1	1	machinery
+rokkasho-tosho.jp	https://www.rokkasho-tosho.jp/wp-json	tribe_venue	tribe_venue	200	0	0	empty
+sadoukan.jp	https://sadoukan.jp/wp-json	ltg-template-parts	ltg-template-parts	200	0	0	empty
+rokkasho-tosho.jp	https://www.rokkasho-tosho.jp/wp-json	tribe_organizer	tribe_organizer	200	0	0	empty
+rokkosan.com	https://www.rokkosan.com/top/wp-json	middle_bnr	middle_bnr	200	1	1	machinery
+saga-ab.jp	https://saga-ab.jp/wp-json	chotatsu	chotatsu	200	0	0	empty
+rokkosan.com	https://www.rokkosan.com/top/wp-json	small_bnr	small_bnr	200	1	1	machinery
+rekihaku.gifu.gifu.jp	https://www.rekihaku.gifu.gifu.jp/wp-json	users	user	404	0		
+saiseikai-karatsu.com	https://saiseikai-karatsu.com/wp-json	posts	post	200	0	0	empty
+rokkasho-tosho.jp	https://www.rokkasho-tosho.jp/wp-json	visibility_preset	visibility_preset	200	0	0	empty
+rokkasho-tosho.jp	https://www.rokkasho-tosho.jp/wp-json	tec_calendar_embed	tec_calendar_embed	200	0	0	empty
+parthenon.or.jp	https://www.parthenon.or.jp/wp-json	snow-monkey-forms	snow-monkey-forms	200	1	1	machinery
+saga-ab.jp	https://saga-ab.jp/wp-json	banner_post	banner_post	200	9	9	machinery
+niigataum.ac.jp	https://www.niigataum.ac.jp/wp-json	users	user	403	0		
+sapporo-park.or.jp	https://www.sapporo-park.or.jp/wp-json	users	user	404	0		
+saitama.jcho.go.jp	https://saitama.jcho.go.jp/wp-json	topics	topics	200	0	0	empty
+satohp.koutoku.or.jp	https://satohp.koutoku.or.jp/wp-json	users	user	403	0		
+sci-museum.jp	https://www.sci-museum.jp/wp-json	posts	post	200	0	0	empty
+scchr.jp	https://www.scchr.jp/wp-json	posts	post	200	0	0	empty
+seichiryo.com	https://seichiryo.com/wp-json	pages	page	200	0	34	not-a-list
+sannoukurabu.info	https://sannoukurabu.info/wp-json	users	user	401	0		
+sagamigawa-fureai.com	https://sagamigawa-fureai.com/wp-json	xo_event	xo_event	200	0	0	empty
+rokkosan.com	https://www.rokkosan.com/top/wp-json	shop_bnr	shop_bnr	200	1	1	machinery
+sam.or.jp	https://sam.or.jp/wp-json	users	user	404	0		
+sci-museum.jp	https://www.sci-museum.jp/wp-json	parts	parts	200	12	12	machinery
+rokkosan.com	https://www.rokkosan.com/top/wp-json	users	user	404	0		
+saitama.jcho.go.jp	https://saitama.jcho.go.jp/wp-json	users	user	404	0		
+sekisho-art-museum.jp	https://www.sekisho-art-museum.jp/wp-json	posts	post	200	0	0	empty
+sg-u.ac.jp	https://www.sg-u.ac.jp/wp-json	posts	post	200	0	0	empty
+pref-nagano-hosp.jp	https://www.pref-nagano-hosp.jp/honbu/wp-json	users	user	401	0		
+sawada-hp.or.jp	https://www.sawada-hp.or.jp/wp-json	users	user	401	0		
+shikokumura.or.jp	https://www.shikokumura.or.jp/wp-json	posts	post	200	0	0	empty
+science.pref.fukuoka.jp	https://science.pref.fukuoka.jp/wp-json	emergency_notice	emergency_notice	200	0	0	empty
+sg-u.ac.jp	https://www.sg-u.ac.jp/wp-json	users	user	403	0		
+nakamura-u.ac.jp	https://www.nakamura-u.ac.jp/wp-json	top_slider_bnr	top_slider_bnr	200	6	6	machinery
+shikokumura.or.jp	https://www.shikokumura.or.jp/wp-json	collections	collections	200	0	0	empty
+nakamura-u.ac.jp	https://www.nakamura-u.ac.jp/wp-json	food_tech_topics	food_tech_topics	200	0	0	empty
+sendai.jcho.go.jp	https://sendai.jcho.go.jp/wp-json	posts	post	-1	0		
+sendai-kousei-hospital.jp	https://sendai-kousei-hospital.jp/wp-json	pages	page	500	0		
+shimin.fuchuhp.jp	https://shimin.fuchuhp.jp/wp-json	users	user	401	0		
+nakamura-u.ac.jp	https://www.nakamura-u.ac.jp/wp-json	social_topics	social_topics	200	0	0	empty
+seto.kyoto-u.ac.jp	https://www.seto.kyoto-u.ac.jp/smbl/wp-json	lp	lp	200	0	0	empty
+sendai-kousei-hospital.jp	https://sendai-kousei-hospital.jp/wp-json	users	user	401	0		
+seto.kyoto-u.ac.jp	https://www.seto.kyoto-u.ac.jp/smbl/wp-json	blog_parts	blog_parts	200	1	1	machinery
+sendai.jcho.go.jp	https://sendai.jcho.go.jp/wp-json	topics	topics	200	0	0	empty
+seto.kyoto-u.ac.jp	https://www.seto.kyoto-u.ac.jp/smbl/wp-json	users	user	401	0		
+shimabi.com	https://shimabi.com/wp-json	snow-monkey-forms	snow-monkey-forms	200	1	1	machinery
+sevo.kyushu-u.ac.jp	https://sevo.kyushu-u.ac.jp/wp/wp-json	posts	post	-1	0		
+shikokumura.or.jp	https://www.shikokumura.or.jp/wp-json	users	user	404	0		
+shimojishima.jp	https://shimojishima.jp/wp-json	users	user	404	0		
+shinminato-museum.jp	https://shinminato-museum.jp/wp-json	users	user	403	0		
+rakuno.ac.jp	https://www.rakuno.ac.jp/wp-json	optout_research	optout_research	200	0	0	empty
+shiga.jcho.go.jp	https://shiga.jcho.go.jp/wp-json	topics	topics	200	0	0	empty
+sevo.kyushu-u.ac.jp	https://sevo.kyushu-u.ac.jp/wp/wp-json	ys-parts	ys-parts	200	0	0	empty
+nakamura-u.ac.jp	https://www.nakamura-u.ac.jp/wp-json	xo_event	xo_event	200	0	0	empty
+sendai.jcho.go.jp	https://sendai.jcho.go.jp/wp-json	users	user	404	0		
+shirakawa-kosei.jp	https://shirakawa-kosei.jp/wp-json	posts	post	200	0	0	empty
+senri.saiseikai.or.jp	https://www.senri.saiseikai.or.jp/wp-json	pages	page	200	0	116	not-a-list
+shimabi.com	https://shimabi.com/wp-json	users	user	403	0		
+shinonoi-ghp.jp	https://shinonoi-ghp.jp/wp-json	users	user	401	0		
+shiga.jcho.go.jp	https://shiga.jcho.go.jp/wp-json	users	user	404	0		
+sguc.ac.jp	https://sguc.ac.jp/wp-json	users	user	401	0		
+shizuoka-eiwa.ac.jp	https://www.shizuoka-eiwa.ac.jp/wp-json	attention	attention	200	0	0	empty
+shironishi.or.jp	https://www.shironishi.or.jp/wp-json	feedback	feedback	401	0		
+saigaku.ac.jp	https://www.saigaku.ac.jp/wp-json	pages	page	200	0	212	not-a-list
+shozokan.nich.go.jp	https://shozokan.nich.go.jp/wp-json	posts	post	200	0	0	empty
+shironishi.or.jp	https://www.shironishi.or.jp/wp-json	jetpack-forms	jetpack_form	401	0		
+saigaku.ac.jp	https://www.saigaku.ac.jp/wp-json	users	user	403	0		
+shironishi.or.jp	https://www.shironishi.or.jp/wp-json	activity-log-events	jp_act_log_event	401	0		
+shin-tokyohospital.or.jp	https://shin-tokyohospital.or.jp/wp-json	users	user	404	0		
+shodai.ac.jp	https://www.shodai.ac.jp/wp-json	users	user	403	0		
+shoyo-plaza.jp	https://shoyo-plaza.jp/wp-json	posts	post	200	0	0	empty
+showanokurashi.com	https://www.showanokurashi.com/wp-json	wpb_gutenberg_param	wpb_gutenberg_param	200	0	0	empty
+shokeikan.go.jp	https://www.shokeikan.go.jp/wp-json	users	user	404	0		
+showanokurashi.com	https://www.showanokurashi.com/wp-json	wpex_templates	wpex_templates	200	1	1	machinery
+shiretoko-museum.jpn.org	https://shiretoko-museum.jpn.org/wp-json	vk-block-patterns	vk-block-patterns	200	1	1	machinery
+showanokurashi.com	https://www.showanokurashi.com/wp-json	wpex_card	wpex_card	200	0	0	empty
+shironishi.or.jp	https://www.shironishi.or.jp/wp-json	jp_pay_order	jp_pay_order	401	0		
+shiretoko-museum.jpn.org	https://shiretoko-museum.jpn.org/wp-json	cta	cta	200	0	0	empty
+shizuoka-eiwa.ac.jp	https://www.shizuoka-eiwa.ac.jp/wp-json	top_mainvisual	top_mainvisual	200	3	3	machinery
+shironishi.or.jp	https://www.shironishi.or.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+rakuno.ac.jp	https://www.rakuno.ac.jp/wp-json	wp_registered_template	wp_registered_template	401	0		
+silkfact.jp	https://silkfact.jp/wp-json	users	user	403	0		
+shironishi.or.jp	https://www.shironishi.or.jp/wp-json	users	user	404	0		
+rakuno.ac.jp	https://www.rakuno.ac.jp/wp-json	users	user	404	0		
+shunan-u.ac.jp	https://www.shunan-u.ac.jp/wp-json	top_banner	top_banner	200	6	6	machinery
+shokei-gakuen.ac.jp	https://www.shokei-gakuen.ac.jp/wp-json	users	user	401	0		
+skyterrace.toseki.com	https://skyterrace.toseki.com/wp-json	posts	post	200	0	0	empty
+shozokan.nich.go.jp	https://shozokan.nich.go.jp/wp-json	users	user	403	0		
+someseiryu.net	https://someseiryu.net/wp-json	posts	post	200	0	0	empty
+sku.ac.jp	https://www.sku.ac.jp/wp-json	posts	post	200	0	0	empty
+shunan-u.ac.jp	https://www.shunan-u.ac.jp/wp-json	voice	voice	200	0	0	empty
+sku.ac.jp	https://www.sku.ac.jp/wp-json	pages	page	500	0		
+smma.or.jp	https://smma.or.jp/wp-json	rental	rental	200	0	0	empty
+st-mary.ac.jp	https://www.st-mary.ac.jp/wp-json	posts	post	200	0	0	empty
+sky-handa.com	https://sky-handa.com/wp-json	feedback	feedback	401	0		
+sky-handa.com	https://sky-handa.com/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+sky-handa.com	https://sky-handa.com/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+t-csm.jp	https://t-csm.jp/wp-json	posts	post	200	0	0	empty
+soocity-library.jp	http://soocity-library.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+st-mary.ac.jp	https://www.st-mary.ac.jp/wp-json	snow-monkey-forms	snow-monkey-forms	200	1	1	machinery
+soseikai.or.jp	https://www.soseikai.or.jp/wp-json	my_block_patterns	my_block_patterns	200	35	35	machinery
+tad-toyama.jp	https://tad-toyama.jp/wp-json	posts	post	200	0	0	empty
+syowa.wakabakai-hp.com	https://syowa.wakabakai-hp.com/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+skgh.jp	https://www.skgh.jp/wp-json	users	user	404	0		
+syowa.wakabakai-hp.com	https://syowa.wakabakai-hp.com/wp-json	ltg-template-parts	ltg-template-parts	200	0	0	empty
+tagawa-art.jp	https://tagawa-art.jp/wp-json	posts	post	200	0	0	empty
+syowa.wakabakai-hp.com	https://syowa.wakabakai-hp.com/wp-json	post_type_404	post_type_404	200	0	0	empty
+shunan-u.ac.jp	https://www.shunan-u.ac.jp/wp-json	restrictions	cc_restriction	404	0		
+tachineputa.jp	https://tachineputa.jp/wp-json	recommend	recommend	200	29	29	machinery
+sku.ac.jp	https://www.sku.ac.jp/wp-json	xo_event	xo_event	200	0	0	empty
+syowa.wakabakai-hp.com	https://syowa.wakabakai-hp.com/wp-json	users	user	401	0		
+takahama-kawara-museum.com	https://www.takahama-kawara-museum.com/wp-json	posts	post	200	0	0	empty
+takaishi-lib.jp	https://takaishi-lib.jp/wp-json	posts	post	200	0	0	empty
+tagawa-art.jp	https://tagawa-art.jp/wp-json	users	user	401	0		
+takahama-kawara-museum.com	https://www.takahama-kawara-museum.com/wp-json	users	user	404	0		
+tajimi-hospital.jp	https://www.tajimi-hospital.jp/wp-json	urgent	urgent	200	0	0	empty
+takaishi-lib.jp	https://takaishi-lib.jp/wp-json	lp	lp	200	0	0	empty
+takahama-lib.jp	https://www.takahama-lib.jp/wp-json	posts	post	200	0	0	empty
+takaishi-lib.jp	https://takaishi-lib.jp/wp-json	blog_parts	blog_parts	200	0	0	empty
+tais.ac.jp	https://tais.ac.jp/wp-json	pages	page	500	0		
+tais.ac.jp	https://tais.ac.jp/wp-json	workflows	ppfuture_workflow	200	0	0	empty
+tais.ac.jp	https://tais.ac.jp/wp-json	users	user	404	0		
+shizubi.jp	https://shizubi.jp/wp-json	users	user	401	0		
+shumei-u.ac.jp	https://www.shumei-u.ac.jp/wp-json	pages	page	200	0	193	not-a-list
+sus.ac.jp	https://www.sus.ac.jp/wp-json	feedback	feedback	401	0		
+takedahp.or.jp	https://www.takedahp.or.jp/wp-json	users	user	404	0		
+takahama-lib.jp	https://www.takahama-lib.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+takamatsu-municipal-hospital.jp	https://www.takamatsu-municipal-hospital.jp/wp-json	users	user	403	0		
+tamakyuryo.or.jp	https://www.tamakyuryo.or.jp/hospital/wp-json	posts	post	200	0	0	empty
+takahama-lib.jp	https://www.takahama-lib.jp/wp-json	ltg-template-parts	ltg-template-parts	200	0	0	empty
+taromuseum.jp	https://www.taromuseum.jp/wp-json	linkcollection	bms_link	200	11	11	machinery
+tau.ac.jp	https://www.tau.ac.jp/wp-json	posts	post	200	0	0	empty
+takatsuki.jrc.or.jp	https://www.takatsuki.jrc.or.jp/wp-json	hospital_information	hospital_information	200	0	0	empty
+takatsuki.jrc.or.jp	https://www.takatsuki.jrc.or.jp/wp-json	important	important	200	0	0	empty
+tau.ac.jp	https://www.tau.ac.jp/wp-json	users	user	404	0		
+sus.ac.jp	https://www.sus.ac.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+sus.ac.jp	https://www.sus.ac.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+takahama-lib.jp	https://www.takahama-lib.jp/wp-json	cta	cta	200	0	0	empty
+taikan.tokyo	https://taikan.tokyo/wp-json	users	user	403	0		
+suzuka-u.ac.jp	https://www.suzuka-u.ac.jp/wp-json	foogallery	foogallery	200	0	0	empty
+suzuka-u.ac.jp	https://www.suzuka-u.ac.jp/wp-json	users	user	401	0		
+takahama-lib.jp	https://www.takahama-lib.jp/wp-json	post_type_404	post_type_404	200	0	0	empty
+tenri-u.ac.jp	https://www.tenri-u.ac.jp/wp-json	posts	post	200	0	0	empty
+tcu.ac.jp	https://www.tcu.ac.jp/wp-json	page	page	200	0	673	not-a-list
+tamakyuryo.or.jp	https://www.tamakyuryo.or.jp/hospital/wp-json	examination-dock	examination-dock	200	0	0	empty
+takayamamuseum.jp	https://www.takayamamuseum.jp/wp-json	current_exhibition	current_exhibition	200	0	0	empty
+takayamamuseum.jp	https://www.takayamamuseum.jp/wp-json	next_exhibition	next_exhibition	200	0	0	empty
+takatsuki.jrc.or.jp	https://www.takatsuki.jrc.or.jp/wp-json	my_block_patterns	my_block_patterns	200	33	33	machinery
+tcu.ac.jp	https://www.tcu.ac.jp/wp-json	topics_program	topics_program	200	0	0	empty
+tobu.saiseikai.or.jp	https://www.tobu.saiseikai.or.jp/wp-json	posts	post	200	0	0	empty
+tiktocoins.info	https://tiktocoins.info/wp-json	rm_content_editor	rm_content_editor	200	0	0	empty
+tiktocoins.info	https://tiktocoins.info/wp-json	rank_math_schema	rank_math_schema	200	0	0	empty
+tbgu.ac.jp	https://www.tbgu.ac.jp/wp-json	hcc-news	hcc-news	200	0	0	empty
+tohto.ac.jp	https://www.tohto.ac.jp/wp-json	posts	post	200	0	0	empty
+tcu.ac.jp	https://www.tcu.ac.jp/wp-json	topics_research	topics_research	200	0	0	empty
+tobu.saiseikai.or.jp	https://www.tobu.saiseikai.or.jp/wp-json	pages	page	200	0	143	not-a-list
+tateyama-hp.com	https://tateyama-hp.com/wp-json	newsrecruit	newsrecruit	200	0	0	empty
+tokoname-tounomori.jp	https://www.tokoname-tounomori.jp/wp-json	posts	post	200	0	0	empty
+tateyama-hp.com	https://tateyama-hp.com/wp-json	users	user	401	0		
+tohto.ac.jp	https://www.tohto.ac.jp/wp-json	e-floating-buttons	e-floating-buttons	200	0	0	empty
+tokoname-tounomori.jp	https://www.tokoname-tounomori.jp/wp-json	feedback	feedback	401	0		
+tokiwakai-chp.com	https://www.tokiwakai-chp.com/wp-json	posts	post	200	0	0	empty
+tokoname-tounomori.jp	https://www.tokoname-tounomori.jp/wp-json	jetpack-forms	jetpack_form	401	0		
+tokyo-ondai.ac.jp	https://www.tokyo-ondai.ac.jp/wp-json	posts	post	200	0	0	empty
+tokoname-tounomori.jp	https://www.tokoname-tounomori.jp/wp-json	activity-log-events	jp_act_log_event	401	0		
+takoman.co.jp	https://www.takoman.co.jp/wp-json	spectra-popup	spectra-popup	401	0		
+tokoname-tounomori.jp	https://www.tokoname-tounomori.jp/wp-json	jp_pay_order	jp_pay_order	401	0		
+takasaki-u.ac.jp	https://www.takasaki-u.ac.jp/wp-json	top_topics	top_topics	200	3	3	machinery
+tokoname-tounomori.jp	https://www.tokoname-tounomori.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+tokaigakuin-u.ac.jp	https://tokaigakuin-u.ac.jp/wp-json	pages	page	200	0	220	not-a-list
+takasaki-u.ac.jp	https://www.takasaki-u.ac.jp/wp-json	top_pickup	top_pickup	200	6	6	machinery
+tokyo-hikifune-hp.jp	https://tokyo-hikifune-hp.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+tbgu.ac.jp	https://www.tbgu.ac.jp/wp-json	clinical-news-sw	clinical-news-sw	200	0	0	empty
+tokara.jp	https://www.tokara.jp/wp-json	users	user	401	0		
+tokoname-tounomori.jp	https://www.tokoname-tounomori.jp/wp-json	users	user	401	0		
+takasaki-u.ac.jp	https://www.takasaki-u.ac.jp/wp-json	top_movie	top_movie	200	2	2	machinery
+tbgu.ac.jp	https://www.tbgu.ac.jp/wp-json	clinical-news-ce	clinical-news-ce	200	0	0	empty
+tokyo-hikifune-hp.jp	https://tokyo-hikifune-hp.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+topmuseum.jp	https://topmuseum.jp/wp-json	posts	post	200	0	0	empty
+tominaga.or.jp	https://www.tominaga.or.jp/wp-json	posts	post	200	0	0	empty
+tosyo.betsukai.jp	https://tosyo.betsukai.jp/wp-json	posts	post	200	0	0	empty
+tokiwakai-chp.com	https://www.tokiwakai-chp.com/wp-json	activity-log-events	jp_act_log_event	401	0		
+tomakomai-lib.jp	https://www.tomakomai-lib.jp/wp-json	posts	post	200	0	0	empty
+tokiwakai-chp.com	https://www.tokiwakai-chp.com/wp-json	jp_pay_order	jp_pay_order	401	0		
+tokiwakai-chp.com	https://www.tokiwakai-chp.com/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+tokyo-ondai.ac.jp	https://www.tokyo-ondai.ac.jp/wp-json	school_subject	school_subject	200	0	0	empty
+tosyo.betsukai.jp	https://tosyo.betsukai.jp/wp-json	link	link	200	2	2	machinery
+toua-u.ac.jp	https://www.toua-u.ac.jp/wp-json	posts	post	200	0	0	empty
+tominaga.or.jp	https://www.tominaga.or.jp/wp-json	symptom	symptom	200	0	0	empty
+tominaga.or.jp	https://www.tominaga.or.jp/wp-json	auto_link	auto_link	200	0	0	empty
+town.hachijo.tokyo.jp	https://www.town.hachijo.tokyo.jp/wp-json	posts	post	200	0	0	empty
+tokyo-ondai.ac.jp	https://www.tokyo-ondai.ac.jp/wp-json	pr_press	pr_press	200	0	0	empty
+tomakomai-lib.jp	https://www.tomakomai-lib.jp/wp-json	xo_event	xo_event	200	0	0	empty
+towatown.jp	https://www.towatown.jp/wp-json	pages	page	200	0	0	empty
+town.iwate.iwate.jp	https://town.iwate.iwate.jp/wp-json	posts	post	200	0	0	empty
+town.chonan.chiba.jp	https://www.town.chonan.chiba.jp/wp-json	users	user	403	0		
+town.iwate.iwate.jp	https://town.iwate.iwate.jp/wp-json	pages	page	200	0	0	empty
+tokyo-ondai.ac.jp	https://www.tokyo-ondai.ac.jp/wp-json	top_banner	top_banner	200	5	5	machinery
+tenri-u.ac.jp	https://www.tenri-u.ac.jp/wp-json	recruit	recruit	200	0	0	empty
+town.iwate.iwate.jp	https://town.iwate.iwate.jp/wp-json	users	user	200	0	0	empty
+tottori-moa.jp	https://tottori-moa.jp/wp-json	pages	page	500	0		
+tenri-u.ac.jp	https://www.tenri-u.ac.jp/wp-json	users	user	401	0		
+town.kaminoseki.lg.jp	https://www.town.kaminoseki.lg.jp/wp-json	questions	question	200	0	0	empty
+tominaga.or.jp	https://www.tominaga.or.jp/wp-json	recruit	recruit	200	0	0	empty
+tottori-moa.jp	https://tottori-moa.jp/wp-json	lazyblocks	lazyblocks	200	9	9	machinery
+town.hiraizumi.iwate.jp	https://www.town.hiraizumi.iwate.jp/wp-json	workflows	ppfuture_workflow	200	0	0	empty
+tottori-moa.jp	https://tottori-moa.jp/wp-json	lazyblocks_templates	lazyblocks_templates	200	0	0	empty
+town.nagashima.lg.jp	https://www.town.nagashima.lg.jp/wp-json	posts	post	200	0	0	empty
+tokaigakuen-u.ac.jp	https://www.tokaigakuen-u.ac.jp/wp-json	snow-monkey-forms	snow-monkey-forms	200	2	2	machinery
+town.hiraizumi.iwate.jp	https://www.town.hiraizumi.iwate.jp/wp-json	tribe_organizer	tribe_organizer	200	0	0	empty
+town.anan.nagano.jp	http://town.anan.nagano.jp/wp-json	loos-cbp	loos-cbp	200	4	4	machinery
+town.mutsuzawa.chiba.jp	https://www.town.mutsuzawa.chiba.jp/wp-json	posts	post	-1	0		
+town.horokanai.hokkaido.jp	https://www.town.horokanai.hokkaido.jp/wp-json	users	user	404	0		
+town.hiraizumi.iwate.jp	https://www.town.hiraizumi.iwate.jp/wp-json	tribe_events	tribe_events	200	0	0	empty
+shumei-u.ac.jp	https://www.shumei-u.ac.jp/wp-json	users	user	401	0		
+town.minamifurano.hokkaido.jp	https://www.town.minamifurano.hokkaido.jp/wp-json	e-floating-buttons	e-floating-buttons	200	0	0	empty
+town.nagashima.lg.jp	https://www.town.nagashima.lg.jp/wp-json	event_shinryou	event_shinryou	200	0	0	empty
+town.yuni.lg.jp	https://www.town.yuni.lg.jp/wp-json	posts	post	200	0	0	empty
+town.nagashima.lg.jp	https://www.town.nagashima.lg.jp/wp-json	info_shinryou	info_shinryou	200	0	0	empty
+town.kawazu.shizuoka.jp	https://www.town.kawazu.shizuoka.jp/wp-json	important	important	200	0	0	empty
+town.nanporo.hokkaido.jp	https://www.town.nanporo.hokkaido.jp/wp-json	pages	page	200	0	196	not-a-list
+toyama-glass-art-museum.jp	https://toyama-glass-art-museum.jp/wp-json	posts	post	200	0	0	empty
+town.nagashima.lg.jp	https://www.town.nagashima.lg.jp/wp-json	event_choseien	event_choseien	200	0	0	empty
+town.nagashima.lg.jp	https://www.town.nagashima.lg.jp/wp-json	topinfo_kaikei	topinfo_kaikei	200	0	0	empty
+town.nagashima.lg.jp	https://www.town.nagashima.lg.jp/wp-json	event_kaikei	event_kaikei	200	0	0	empty
+town.mitake.lg.jp	https://www.town.mitake.lg.jp/wp-json	banner	banner	200	5	5	machinery
+town.nanporo.hokkaido.jp	https://www.town.nanporo.hokkaido.jp/wp-json	banner	banner	200	5	5	machinery
+toyookahp-kumiai.or.jp	https://www.toyookahp-kumiai.or.jp/wp-json	posts	post	200	0	0	empty
+town.nanporo.hokkaido.jp	https://www.town.nanporo.hokkaido.jp/wp-json	getwid_template_part	getwid_template_part	200	0	0	empty
+tokaigakuen-u.ac.jp	https://www.tokaigakuen-u.ac.jp/wp-json	slide_banner	slide_banner	200	5	5	machinery
+toyamah.johas.go.jp	https://www.toyamah.johas.go.jp/wp-json	pages	page	500	0		
+town.hachijo.tokyo.jp	https://www.town.hachijo.tokyo.jp/wp-json	users	user	401	0		
+townohi-lib.jp	https://townohi-lib.jp/wp-json	pages	page	500	0		
+toyamah.johas.go.jp	https://www.toyamah.johas.go.jp/wp-json	cta	cta	200	0	0	empty
+toyookahp-kumiai.or.jp	https://www.toyookahp-kumiai.or.jp/wp-json	ad_banner	ad_banner	200	4	4	machinery
+tokaigakuen-u.ac.jp	https://www.tokaigakuen-u.ac.jp/wp-json	users	user	404	0		
+town.wanouchi.gifu.jp	https://town.wanouchi.gifu.jp/wp-json	banner	banner	200	3	3	machinery
+toyamah.johas.go.jp	https://www.toyamah.johas.go.jp/wp-json	ghostkit_template	ghostkit_template	200	0	0	empty
+town.yuni.lg.jp	https://www.town.yuni.lg.jp/wp-json	ijyu_teijyu	ijyu_teijyu	200	0	0	empty
+town.wanouchi.gifu.jp	https://town.wanouchi.gifu.jp/wp-json	monologue	monologue	200	0	0	empty
+toyama-familypark.jp	https://www.toyama-familypark.jp/wp-json	users	user	404	0		
+tsc.ac.jp	https://www.tsc.ac.jp/wp-json	pages	page	200	0	0	empty
+town.mie-kihoku.lg.jp	https://www.town.mie-kihoku.lg.jp/wp-json	visibility_preset	visibility_preset	200	0	0	empty
+trickart-pia.com	https://trickart-pia.com/wp-json	activity-log-events	jp_act_log_event	401	0		
+town.mie-kihoku.lg.jp	https://www.town.mie-kihoku.lg.jp/wp-json	users	user	404	0		
+tsrh.jp	https://www.tsrh.jp/wp-json	posts	post	200	0	0	empty
+tsc-05.ac.jp	https://www.tsc-05.ac.jp/wp-json	ctas	pum_cta	404	0		
+trickart-pia.com	https://trickart-pia.com/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+tsc-05.ac.jp	https://www.tsc-05.ac.jp/wp-json	users	user	401	0		
+tuts.ac.jp	https://www.tuts.ac.jp/wp-json	posts	post	200	0	0	empty
+trickart-pia.com	https://trickart-pia.com/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+tsc.ac.jp	https://www.tsc.ac.jp/wp-json	users	user	403	0		
+trickart-pia.com	https://trickart-pia.com/wp-json	cta	cta	200	0	0	empty
+tsrh.jp	https://www.tsrh.jp/wp-json	lp	lp	200	0	0	empty
+trickart-pia.com	https://trickart-pia.com/wp-json	users	user	404	0		
+tsrh.jp	https://www.tsrh.jp/wp-json	blog_parts	blog_parts	200	0	0	empty
+town.yokoze.saitama.jp	https://www.town.yokoze.saitama.jp/wp-json	people	people	200	0	0	empty
+town.minano.saitama.jp	https://www.town.minano.saitama.jp/wp-json	users	user	401	0		
+town.yokoze.saitama.jp	https://www.town.yokoze.saitama.jp/wp-json	users	user	404	0		
+uji-hp.or.jp	https://uji-hp.or.jp/wp-json	users	user	403	0		
+uplaza-utazu.jp	https://uplaza-utazu.jp/wp-json	posts	post	200	0	0	empty
+umitamago.jp	https://www.umitamago.jp/wp-json	slide	slide	200	5	5	machinery
+ujitoku.or.jp	https://www.ujitoku.or.jp/wp-json	users	user	404	0		
+tuat-museum.org	https://www.tuat-museum.org/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+umitamago.jp	https://www.umitamago.jp/wp-json	important_notice	important_notice	200	0	0	empty
+umitamago.jp	https://www.umitamago.jp/wp-json	users	user	401	0		
+tuat-museum.org	https://www.tuat-museum.org/wp-json	templately_library	templately_library	200	0	0	empty
+tuat-museum.org	https://www.tuat-museum.org/wp-json	sp_wpcp_template	sp_wpcp_template	200	0	0	empty
+univ.shibata.ac.jp	https://univ.shibata.ac.jp/wp-json	visual	visual	200	9	9	machinery
+umds.ac.jp	https://www.umds.ac.jp/wp-json	posts	post	200	0	1242	not-a-list
+tsukuba-kinen.or.jp	https://tsukuba-kinen.or.jp/wp-json	pediatric_log	pediatric_log	200	0	0	empty
+univ.shibata.ac.jp	https://univ.shibata.ac.jp/wp-json	banner	banner	200	9	9	machinery
+vill.higashiyoshino.nara.jp	https://vill.higashiyoshino.nara.jp/wp-json	posts	post	200	0	0	empty
+vill-tenryu.jp	https://www.vill-tenryu.jp/wp-json	emergency	emergency	200	0	0	empty
+vill-tenryu.jp	https://www.vill-tenryu.jp/wp-json	users	user	404	0		
+venezia-museum.or.jp	https://venezia-museum.or.jp/wp-json	cta	cta	200	0	0	empty
+vill.higashinaruse.lg.jp	https://vill.higashinaruse.lg.jp/wp-json	chiefs	chiefs	200	0	0	empty
+utsunomiya.jcho.go.jp	https://utsunomiya.jcho.go.jp/wp-json	topics	topics	200	0	0	empty
+uzunomichi.jp	https://www.uzunomichi.jp/wp-json	users	user	403	0		
+vill.higashiyoshino.nara.jp	https://vill.higashiyoshino.nara.jp/wp-json	users	user	403	0		
+u-tokai.ac.jp	https://www.u-tokai.ac.jp/wp-json	workflows	hm_workflow	404	0		
+urawa.ac.jp	https://www.urawa.ac.jp/wp-json	protected_areas	protected_areas	200	0	0	empty
+vill.tenkawa.nara.jp	https://www.vill.tenkawa.nara.jp/wp-json	posts	post	200	0	0	empty
+u-tokai.ac.jp	https://www.u-tokai.ac.jp/wp-json	visibility_preset	visibility_preset	200	0	0	empty
+vill.kurotaki.nara.jp	https://www.vill.kurotaki.nara.jp/wp-json	bannerad	bannerad	200	2	2	machinery
+urugi.jp	https://urugi.jp/wp-json	users	user	403	0		
+vill.kouzushima.tokyo.jp	https://www.vill.kouzushima.tokyo.jp/wp-json	news	news	200	0	0	empty
+via.co.jp	https://via.co.jp/wp-json	fl-builder-template	fl-builder-template	200	96	96	machinery
+utsunomiya.jcho.go.jp	https://utsunomiya.jcho.go.jp/wp-json	users	user	404	0		
+watanabetei.com	https://www.watanabetei.com/wp-json	posts	post	200	0	0	empty
+umds.ac.jp	https://www.umds.ac.jp/wp-json	seminar2	seminar2	200	0	0	empty
+vill.kouzushima.tokyo.jp	https://www.vill.kouzushima.tokyo.jp/wp-json	users	user	404	0		
+vill.ogasawara.tokyo.jp	https://www.vill.ogasawara.tokyo.jp/wp-json	workflows	ppfuture_workflow	200	0	0	empty
+umds.ac.jp	https://www.umds.ac.jp/wp-json	users	user	403	0		
+tuins.ac.jp	https://www.tuins.ac.jp/wp-json	pages	page	200	0		not-a-list
+vill.ogasawara.tokyo.jp	https://www.vill.ogasawara.tokyo.jp/wp-json	users	user	403	0		
+well.ac.jp	https://www.well.ac.jp/wp-json	posts	post	200	0	0	empty
+wahha-kamigata.jp	https://wahha-kamigata.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+wsu.ac.jp	https://www.wsu.ac.jp/wp-json	posts	post	200	0	0	empty
+uonuma-kikan-hospital.jp	https://www.uonuma-kikan-hospital.jp/wp-json	feedback	feedback	401	0		
+wahha-kamigata.jp	https://wahha-kamigata.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+uonuma-kikan-hospital.jp	https://www.uonuma-kikan-hospital.jp/wp-json	jetpack-forms	jetpack_form	401	0		
+uonuma-kikan-hospital.jp	https://www.uonuma-kikan-hospital.jp/wp-json	activity-log-events	jp_act_log_event	401	0		
+www-sk.icrr.u-tokyo.ac.jp	https://www-sk.icrr.u-tokyo.ac.jp/wp-json	posts	post	200	0	0	empty
+yamada-kujirakan.jp	https://yamada-kujirakan.jp/wp-json	posts	post	200	0	0	empty
+uyo.ac.jp	https://www.uyo.ac.jp/wp-json	workflows	ppfuture_workflow	200	0	0	empty
+wilmina.ac.jp	https://www.wilmina.ac.jp/wp-json	top_slider	top_slider	200	10	10	machinery
+web.aiu.ac.jp	https://web.aiu.ac.jp/wp-json	research	research	200	56	56	other
+woodmuseum.jp	https://www.woodmuseum.jp/wp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+www-sk.icrr.u-tokyo.ac.jp	https://www-sk.icrr.u-tokyo.ac.jp/wp-json	pages	page	500	0		
+web.aiu.ac.jp	https://web.aiu.ac.jp/wp-json	users	user	401	0		
+woodmuseum.jp	https://www.woodmuseum.jp/wp/wp-json	cta	cta	200	0	0	empty
+www-sk.icrr.u-tokyo.ac.jp	https://www-sk.icrr.u-tokyo.ac.jp/wp-json	users	user	403	0		
+vill.kurotaki.nara.jp	https://www.vill.kurotaki.nara.jp/wp-json	kinkyu	kinkyu	200	0	0	empty
+yamada-kujirakan.jp	https://yamada-kujirakan.jp/wp-json	activity-log-events	jp_act_log_event	401	0		
+wsu.ac.jp	https://www.wsu.ac.jp/wp-json	pages	page	200	0		not-a-list
+yamada-kujirakan.jp	https://yamada-kujirakan.jp/wp-json	jp_pay_order	jp_pay_order	401	0		
+wsu.ac.jp	https://www.wsu.ac.jp/wp-json	parts	parts	200	8	8	machinery
+yamada-kujirakan.jp	https://yamada-kujirakan.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+uyo.ac.jp	https://www.uyo.ac.jp/wp-json	ctas	pum_cta	404	0		
+yanagida-flower.jp	https://yanagida-flower.jp/wp-json	posts	post	200	0	0	empty
+yamanashi-eiwa.ac.jp	https://www.yamanashi-eiwa.ac.jp/wp-json	users	user	404	0		
+vill.sai.lg.jp	https://www.vill.sai.lg.jp/wp-json	slide	slide	200	3	3	machinery
+y-mcoop.com	https://y-mcoop.com/wp-json	feedback	feedback	401	0		
+yamauchi-lib.jp	https://yamauchi-lib.jp/wp-json	xo_event	xo_event	200	0	0	empty
+y-mcoop.com	https://y-mcoop.com/wp-json	jetpack-forms	jetpack_form	401	0		
+wilmina.ac.jp	https://www.wilmina.ac.jp/wp-json	we_school_news	we_school_news	200	0	0	empty
+yamanashi.jcho.go.jp	https://yamanashi.jcho.go.jp/wp-json	users	user	404	0		
+y-mcoop.com	https://y-mcoop.com/wp-json	activity-log-events	jp_act_log_event	401	0		
+y-mcoop.com	https://y-mcoop.com/wp-json	jp_pay_order	jp_pay_order	401	0		
+wsu.ac.jp	https://www.wsu.ac.jp/wp-json	member_board	member_board	200	0	0	empty
+y-mcoop.com	https://y-mcoop.com/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+wilmina.ac.jp	https://www.wilmina.ac.jp/wp-json	top_banner	top_banner	200	7	7	machinery
+yokohama.art.museum	https://yokohama.art.museum/wp-json	posts	post	200	0	0	empty
+ymc.yuuai.or.jp	https://ymc.yuuai.or.jp/wp-json	posts	post	200	0	0	empty
+vill.sai.lg.jp	https://www.vill.sai.lg.jp/wp-json	insitebanner	insitebanner	200	2	2	machinery
+uonuma-kikan-hospital.jp	https://www.uonuma-kikan-hospital.jp/wp-json	post_recruit	post_recruit	200	0	0	empty
+yokohama.art.museum	https://yokohama.art.museum/wp-json	sp_accordion_faqs	sp_accordion_faqs	200	0	0	empty
+yonemorihp.jp	https://www.yonemorihp.jp/wp-json	posts	post	200	0	0	empty
+u-ryukyu.ac.jp	https://www.u-ryukyu.ac.jp/wp-json	posts	post	200	0	0	empty
+u-ryukyu.ac.jp	https://www.u-ryukyu.ac.jp/wp-json	feedback	feedback	401	0		
+ymc.yuuai.or.jp	https://ymc.yuuai.or.jp/wp-json	pages	page	200	0	186	not-a-list
+ytmoca.jp	https://ytmoca.jp/wp-json	posts	post	200	0	0	empty
+u-ryukyu.ac.jp	https://www.u-ryukyu.ac.jp/wp-json	spectra-popup	spectra-popup	401	0		
+yonemorihp.jp	https://www.yonemorihp.jp/wp-json	um_form	um_form	200	1	1	machinery
+ych.or.jp	https://www.ych.or.jp/wp-json	my_block_patterns	my_block_patterns	200	41	41	machinery
+yamate.jcho.go.jp	https://yamate.jcho.go.jp/wp-json	users	user	404	0		
+u-ryukyu.ac.jp	https://www.u-ryukyu.ac.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+u-ryukyu.ac.jp	https://www.u-ryukyu.ac.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+u-ryukyu.ac.jp	https://www.u-ryukyu.ac.jp/wp-json	users	user	401	0		
+tagen.tohoku.ac.jp	https://www2.tagen.tohoku.ac.jp/wp-json	magazine	magazine	200	0	248	not-a-list
+yokohama.jrc.or.jp	https://www.yokohama.jrc.or.jp/wp-json	lazyblocks	lazyblocks	200	14	14	machinery
+yukioka-u.ac.jp	https://www.yukioka-u.ac.jp/wp-json	posts	post	200	0	0	empty
+yokohama.jrc.or.jp	https://www.yokohama.jrc.or.jp/wp-json	lazyblocks_templates	lazyblocks_templates	200	0	0	empty
+yokkaichi.jcho.go.jp	https://yokkaichi.jcho.go.jp/wp-json	users	user	404	0		
+y-nm.ac.jp	https://www.y-nm.ac.jp/wp-json	users	user	403	0		
+vill.sai.lg.jp	https://www.vill.sai.lg.jp/wp-json	tec_calendar_embed	tec_calendar_embed	200	0	0	empty
+yashima-hp.com	https://www.yashima-hp.com/wp-json	lazyblocks	lazyblocks	200	1	1	machinery
+yashima-hp.com	https://www.yashima-hp.com/wp-json	lazyblocks_templates	lazyblocks_templates	200	0	0	empty
+yubujima.com	https://yubujima.com/wp-json	widgetopts_snippet	widgetopts_snippet	200	0	0	empty
+yashima-hp.com	https://www.yashima-hp.com/wp-json	snow-monkey-forms	snow-monkey-forms	200	1	1	machinery
+zenjinkai-group.jp	https://www.zenjinkai-group.jp/wp-json	posts	post	200	0	0	empty
+yokohama.jcho.go.jp	https://yokohama.jcho.go.jp/wp-json	users	user	404	0		
+zeshinkai.or.jp	https://www.zeshinkai.or.jp/wp-json	users	user	403	0		
+zoomo.co.jp	https://zoomo.co.jp/wp-json	banner	banner	200	5	5	machinery
+yokogurayama-museum.jp	https://www.yokogurayama-museum.jp/wp-json	widgetopts_snippet	widgetopts_snippet	200	0	0	empty
+yokogurayama-museum.jp	https://www.yokogurayama-museum.jp/wp-json	news	news	200	0	0	empty
+zoomo.co.jp	https://zoomo.co.jp/wp-json	top-movie	top-movie	200	13	13	machinery
+zoomo.co.jp	https://zoomo.co.jp/wp-json	lazyblocks	lazyblocks	200	0	0	empty
+zoomo.co.jp	https://zoomo.co.jp/wp-json	lazyblocks_templates	lazyblocks_templates	200	1	1	machinery
+yokohama.jrc.or.jp	https://www.yokohama.jrc.or.jp/wp-json	med	med	200	0	60	not-a-list
+zhi.or.jp	https://www.zhi.or.jp/wp-json	news	news	200	0	0	empty
+ymc.yuuai.or.jp	https://ymc.yuuai.or.jp/wp-json	snow-monkey-forms	snow-monkey-forms	200	1	1	machinery
+yukawa.kyoto-u.ac.jp	https://www.yukawa.kyoto-u.ac.jp/wp-json	posts	post	200	0	0	empty
+zhi.or.jp	https://www.zhi.or.jp/wp-json	eiyoublog	eiyoublog	200	0	0	empty
+ymc.yuuai.or.jp	https://ymc.yuuai.or.jp/wp-json	spectra-popup	spectra-popup	401	0		
+zhi.or.jp	https://www.zhi.or.jp/wp-json	hoiku_blog	hoiku_blog	200	0	0	empty
+ymc.yuuai.or.jp	https://ymc.yuuai.or.jp/wp-json	users	user	401	0		
+yukawa.kyoto-u.ac.jp	https://www.yukawa.kyoto-u.ac.jp/wp-json	/research	research	404	0		
+zhi.or.jp	https://www.zhi.or.jp/wp-json	vk-block-patterns	vk-block-patterns	200	0	0	empty
+yukawa.kyoto-u.ac.jp	https://www.yukawa.kyoto-u.ac.jp/wp-json	/people	people	404	0		
+zhi.or.jp	https://www.zhi.or.jp/wp-json	ltg-template-parts	ltg-template-parts	200	0	0	empty
+u-tokai.ac.jp	https://www.u-tokai.ac.jp/wp-json	section_news	section_news	200	100	1828	machinery
+zhi.or.jp	https://www.zhi.or.jp/wp-json	snow-monkey-forms	snow-monkey-forms	200	3	3	machinery
+yukawa.kyoto-u.ac.jp	https://www.yukawa.kyoto-u.ac.jp/wp-json	users	user	404	0		
+zhi.or.jp	https://www.zhi.or.jp/wp-json	post_type_404	post_type_404	200	0	0	empty
+zhi.or.jp	https://www.zhi.or.jp/wp-json	users	user	403	0		
+uonuma-kikan-hospital.jp	https://www.uonuma-kikan-hospital.jp/wp-json	kiko_news	kiko_news	200	0	0	empty
+uonuma-kikan-hospital.jp	https://www.uonuma-kikan-hospital.jp/wp-json	jp_pay_order	jp_pay_order	200	0	0	empty
+uonuma-kikan-hospital.jp	https://www.uonuma-kikan-hospital.jp/wp-json	jp_pay_product	jp_pay_product	200	0	0	empty
+uonuma-kikan-hospital.jp	https://www.uonuma-kikan-hospital.jp/wp-json	users	user	403	0		
+yokohama-art.ac.jp	https://www.yokohama-art.ac.jp/wp-json	home_keyvisual	home_keyvisual	200	7	7	machinery
+u-tokai.ac.jp	https://www.u-tokai.ac.jp/wp-json	users	user	200	0	0	empty
+yokohama-art.ac.jp	https://www.yokohama-art.ac.jp/wp-json	lazyblocks	lazyblocks	200	16	16	machinery
+yokohama-art.ac.jp	https://www.yokohama-art.ac.jp/wp-json	lazyblocks_templates	lazyblocks_templates	200	0	0	empty
+yokohama-art.ac.jp	https://www.yokohama-art.ac.jp/wp-json	users	user	404	0		

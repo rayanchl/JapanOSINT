@@ -1,0 +1,53 @@
+# The rows that did NOT pass proof-of-life and were therefore never generated
+# into C. They are KEPT here rather than deleted: one probe is one reading, and
+# an HTTP or transport verdict can be a user-agent or a bad afternoon - a
+# next-day retry pass has recovered 63 of 2,724 before. The engine audit reports
+# every one of them UNREGISTERED, which is it correctly saying the binary does
+# not hold the row.
+#
+id	beat	probe_verdict	probe_http	probe_note	url
+JO57IQ11199361	jpinfra	NET_ERR	0	[Errno 111] Connection refused	https://happyfm873.com/feed/
+JO57IQ123521212	jpcult	ERR	0	RemoteDisconnected: Remote end closed connection without res	https://kotohiranomiya.tumblr.com/rss
+JO57IQ30227146	jpcult	TIMEOUT	0	timeout	https://www.nitorihd.co.jp/news/atom.xml
+JO57_Q1203868_2	jpmuni	HTTP_ERR	403	Forbidden	https://www.town.agui.lg.jp/rss/rss_new.xml
+JO57_Q265050	jpmuni	HTTP_ERR	403	Forbidden	https://www.town.aichi-togo.lg.jp/cgi-bin/feed.php?siteNew=1&displayCount=15&displayRange=90
+JO57_Q389495	jpmuni	HTTP_ERR	403	Forbidden	https://www.city.toyokawa.lg.jp/cgi-bin/feed.php?siteNew=1&amp;displayRange=90
+JO57_Q648275_2	jpmuni	HTTP_ERR	403	Forbidden	https://www.city.iwakura.aichi.jp/rss/rss_topics.xml
+JO57_Q648275_3	jpmuni	HTTP_ERR	302	The HTTP server returned a redirect error that would lead to	https://www.city.iwakura.aichi.jp/rss/rss_new.xml
+JO57_Q694930	jpmuni	HTTP_ERR	403	Forbidden	https://www.city.gamagori.lg.jp/rss/10/list3.xml
+JO57_Q694930_3	jpmuni	HTTP_ERR	302	The HTTP server returned a redirect error that would lead to	https://www.city.gamagori.lg.jp/rss/10/list6.xml
+JO57_Q816734_3	jpmuni	HTTP_ERR	403	Forbidden	https://www.city.takahama.lg.jp/rss/10/list6.xml
+JO57_WP_BIKAKEN_COMPOUNDS	jpsci	NET_ERR	0	[Errno 111] Connection refused	https://www.bikaken.or.jp/wp-json/wp/v2/compounds?per_page=100&orderby=date&order=desc
+JO57_WP_BIKAKEN_HISTORIES	jpsci	NET_ERR	0	[Errno 111] Connection refused	https://www.bikaken.or.jp/wp-json/wp/v2/histories?per_page=100&orderby=date&order=desc
+JO57_WP_BIKAKEN_LABORATORIES	jpsci	NET_ERR	0	[Errno 111] Connection refused	https://www.bikaken.or.jp/wp-json/wp/v2/laboratories?per_page=100&orderby=date&order=desc
+JO57_WP_BIKAKEN_LITERATURES	jpsci	NET_ERR	0	[Errno 111] Connection refused	https://www.bikaken.or.jp/wp-json/wp/v2/literatures?per_page=100&orderby=date&order=desc
+JO57_WP_BIKAKEN_MEMBERS	jpsci	NET_ERR	0	[Errno 111] Connection refused	https://www.bikaken.or.jp/wp-json/wp/v2/members?per_page=100&orderby=date&order=desc
+JO57_WP_BIKAKEN_NEWS	jpsci	NET_ERR	0	[Errno 111] Connection refused	https://www.bikaken.or.jp/wp-json/wp/v2/news?per_page=100&orderby=date&order=desc
+JO57_WP_BIKAKEN_PAGES	jpsci	NET_ERR	0	[Errno 111] Connection refused	https://www.bikaken.or.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc
+JO57_WP_BIKAKEN_POSTS	jpsci	NET_ERR	0	[Errno 111] Connection refused	https://www.bikaken.or.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc
+JO57_WP_BIKAKEN_PRESSRELEASES	jpsci	NET_ERR	0	[Errno 111] Connection refused	https://www.bikaken.or.jp/wp-json/wp/v2/pressreleases?per_page=100&orderby=date&order=desc
+JO57_WP_BIKAKEN_USERS	jpsci	NET_ERR	0	[Errno 111] Connection refused	https://www.bikaken.or.jp/wp-json/wp/v2/users?per_page=100
+JO57_WP_KANSAIGAIDAI_EXAM	jpedu	HTTP_ERR	403	Forbidden	https://www.kansaigaidai.ac.jp/wp-json/wp/v2/exam?per_page=100&orderby=date&order=desc
+JO57_WP_KANSAIGAIDAI_HEADLINE	jpedu	HTTP_ERR	403	Forbidden	https://www.kansaigaidai.ac.jp/wp-json/wp/v2/headline?per_page=100&orderby=date&order=desc
+JO57_WP_KANSAIGAIDAI_PAGES	jpedu	HTTP_ERR	403	Forbidden	https://www.kansaigaidai.ac.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc
+JO57_WP_KANSAIGAIDAI_POSTS	jpedu	HTTP_ERR	403	Forbidden	https://www.kansaigaidai.ac.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc
+JO57_WP_KANSAIGAIDAI_USERS	jpedu	HTTP_ERR	403	Forbidden	https://www.kansaigaidai.ac.jp/wp-json/wp/v2/users?per_page=100
+JO57_WP_KATSUMATAHOSPITAL_PAGES	jpheal	UNPARSEABLE	200	declared array_path but body is not JSON	https://katsumata-hospital.or.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc
+JO57_WP_KYOTOECON_PAGES	jpedu	NET_ERR	0	[Errno 111] Connection refused	https://www.kyoto-econ.ac.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc
+JO57_WP_KYOTOECON_USERS	jpedu	NET_ERR	0	[Errno 111] Connection refused	https://www.kyoto-econ.ac.jp/wp-json/wp/v2/users?per_page=100
+JO57_WP_NISHIGANKA_PAGES	jpheal	NET_ERR	0	[Errno 111] Connection refused	https://www.nishi-ganka.or.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc
+JO57_WP_NISHIGANKA_USERS	jpheal	NET_ERR	0	[Errno 111] Connection refused	https://www.nishi-ganka.or.jp/wp-json/wp/v2/users?per_page=100
+JO57_WP_TCU_IMPORTANT	jpedu	HTTP_ERR	403	Forbidden	https://www.tcu.ac.jp/wp-json/wp/v2/important?per_page=100&orderby=date&order=desc
+JO57_WP_TCU_NEWS	jpedu	HTTP_ERR	403	Forbidden	https://www.tcu.ac.jp/wp-json/wp/v2/news?per_page=100&orderby=date&order=desc
+JO57_WP_TCU_POSTS	jpedu	HTTP_ERR	403	Forbidden	https://www.tcu.ac.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc
+JO57_WP_TCU_TOPICS100TH	jpedu	HTTP_ERR	403	Forbidden	https://www.tcu.ac.jp/wp-json/wp/v2/topics_100th?per_page=100&orderby=date&order=desc
+JO57_WP_TCU_TOPICSEFFORTS	jpedu	HTTP_ERR	403	Forbidden	https://www.tcu.ac.jp/wp-json/wp/v2/topics_efforts?per_page=100&orderby=date&order=desc
+JO57_WP_TCU_TOPICSENTERPRISE	jpedu	HTTP_ERR	403	Forbidden	https://www.tcu.ac.jp/wp-json/wp/v2/topics_enterprise?per_page=100&orderby=date&order=desc
+JO57_WP_TCU_TOPICSENTRANCE	jpedu	HTTP_ERR	403	Forbidden	https://www.tcu.ac.jp/wp-json/wp/v2/topics_entrance?per_page=100&orderby=date&order=desc
+JO57_WP_TCU_TOPICSEXAMINEE	jpedu	HTTP_ERR	403	Forbidden	https://www.tcu.ac.jp/wp-json/wp/v2/topics_examinee?per_page=100&orderby=date&order=desc
+JO57_WP_TCU_TOPICSGRADUATE	jpedu	HTTP_ERR	403	Forbidden	https://www.tcu.ac.jp/wp-json/wp/v2/topics_graduate?per_page=100&orderby=date&order=desc
+JO57_WP_TCU_TOPICSLECTURE	jpedu	HTTP_ERR	403	Forbidden	https://www.tcu.ac.jp/wp-json/wp/v2/topics_lecture?per_page=100&orderby=date&order=desc
+JO57_WP_TCU_TOPICSPARENT	jpedu	HTTP_ERR	403	Forbidden	https://www.tcu.ac.jp/wp-json/wp/v2/topics_parent?per_page=100&orderby=date&order=desc
+JO57_WP_TCU_USERS	jpedu	HTTP_ERR	403	Forbidden	https://www.tcu.ac.jp/wp-json/wp/v2/users?per_page=100
+JO57_WP_UTOKAI_CAMPUSNEWS	jpedu	TIMEOUT	0	timeout	https://www.u-tokai.ac.jp/wp-json/wp/v2/campus_news?per_page=100&orderby=date&order=desc
+JO57_WP_UTOKAI_CHALLENGENEWS	jpedu	TIMEOUT	0	timeout	https://www.u-tokai.ac.jp/wp-json/wp/v2/challenge_news?per_page=100&orderby=date&order=desc

@@ -1,0 +1,397 @@
+key	name	url	verdict	kind	items
+Q28031133	Humanitec Junior College (junior college in Japan)	https://www.best-shingaku.net/s-matome/schoolcontents/c002011.php?log=matome-oshiete	HTTP_403		0
+Q4696565	Aichi Bunkyo Women's College (junior college in Japan)	https://ai-bunkyo.ac.jp/home/feed/	OK	rss2	0
+Q4997799	Bunkyo Gakuin College (junior college in Japan)	https://www.bgu.ac.jp/feed/	OK	rss2	0
+Q5507640	Fukui College of Health Sciences (junior college in Japan)	https://www.f-gh.jp/feed/	OK	rss2	0
+Q5770737	Hirosaki University of Health and Welfare Junior College (junior college in Japan)	https://www.hirosakiuhw.jp/feed/	OK	rss2	0
+Q7813769	Tokushima College of Technology (junior college in Japan)	https://www.tokuco.ac.jp/sitemap_index.xml	HTTP_404		0
+Q7849881	Tsu City College (junior college in Japan)	https://www.tsu-cc.ac.jp/sitemap.xml	HTTP_404		0
+Q9006136	Shujitsu Junior College (junior college in Japan)	https://www.shujitsu.ac.jp/general/	NOT_FEED		0
+Q10883248	Kyoto Junior College of Foreign Languages (junior college in Japan)	https://www.kufs.ac.jp/feed/?id=1	HTTP_403		0
+Q11393662	Hyogo Agricultural College (junior college in Japan)	https://www.kobe-u.ac.jp/en/site/feeds/	NOT_FEED		0
+Q11401881	Hokusei Gakuen University Junior College (junior college in Japan)	https://www.hokusei.ac.jp/top/feed/	OK	rss2	0
+Q7109084	Otsuma Women's University Junior College Division (junior college in Japan)	https://www.jun.otsuma.ac.jp/feed/	OK	rss2	0
+Q178017	Gunma University (university)	https://www.gunma-u.ac.jp/g4/feed	OK	rss2	0
+Q195546	University of Kitakyushu (university)	https://www.youtube.com/channel/UCOD0Za6bVSWS3qVSw_Or6yw/feed	NOT_FEED		0
+Q1150245	Kyushu Institute of Technology (university)	http://www.kyutech.ac.jp/rss2.xml	HTTP_404		0
+Q4802088	Gunma Prefectural College of Health Sciences (university)	https://www.gchs.ac.jp/feed/index.xml	HTTP_404		0
+Q6130118	Nagasaki University of Foreign Studies (university)	https://www.nagasaki-gaigo.ac.jp/other-information/rss-2/	NOT_FEED		0
+Q6156549	Japan Center for Michigan Universities (university)	https://www.jcmu.net/home-3/feed/	OK	rss2	0
+Q405304	Nayoro City University (university)	http://www.nayoro.ac.jp/website/rss.html	NOT_FEED		0
+Q6958958	Nagoya College of Music (university)	https://www.meion.ac.jp/feed/	OK	rss2	0
+Q6958958	Nagoya College of Music (university)	https://www.meion.ac.jp/sample-page.html/feed/	OK	rss2	0
+Q6365534	Kanto Gakuin University (university)	https://www.kanto-gakuin.ac.jp/feed/	OK	rss2	0
+Q509250	Kogakuin University (university)	https://www.kogakuin.ac.jp/student/matome.html	NOT_FEED		0
+Q4845532	Ishikawa Prefectural University (university)	https://www.ishikawa-pu.ac.jp/feed/	OK	rss2	0
+Q6424315	Kobe Kaisei College (university)	https://www.kaisei.ac.jp/feed	HTTP_500		0
+Q5288571	Doho University (university)	https://www.doho.ac.jp/	NOT_FEED		0
+Q835744	Aomori Public University (university)	https://www.nebuta.ac.jp/feed	HTTP_500		0
+Q835972	Asahikawa Medical University (university)	https://www.asahikawa-med.ac.jp/department/medical/basic/functional_anatomy/	NOT_FEED		0
+Q835972	Asahikawa Medical University (university)	https://www.asahikawa-med.ac.jp/department/medical/basic/microscopic_anatomy/	NOT_FEED		0
+Q3180921	Tokyo Medical and Dental University (university)	https://www.tmd.ac.jp/site-information/rss/	NOT_FEED		0
+Q5507658	Fukui University of Technology (university)	http://www.fukui-ut.ac.jp/subject/atomic/	NOT_FEED		0
+Q5507658	Fukui University of Technology (university)	https://www.fukui-ut.ac.jp/subject/atomic/	NOT_FEED		0
+Q7676991	Takachiho University (university)	https://www.takachiho.jp/feed/	OK	rss2	0
+Q935246	Kōchi University (university)	https://www.kochi-u.ac.jp/feed/	OK	rss2	0
+Q940234	Prefectural University of Hiroshima (university)	https://www.pu-hiroshima.ac.jp/soshiki/47/rss.html	NOT_FEED		0
+Q7813855	Tokyo City University (university)	https://www.tcu.ac.jp/news/information/feed/	HTTP_403		0
+Q3551540	Atomi University (university)	https://www.atomi.ac.jp/progress/atomikakei/	NOT_FEED		0
+Q3551540	Atomi University (university)	http://atdailib2.atomi.ac.jp/repo/repository/hyakunin/	NOT_FEED		0
+Q3551540	Atomi University (university)	https://www.atomi.ac.jp/gakuen/news/detail/640/	NOT_FEED		0
+Q3551540	Atomi University (university)	https://www.atomi.ac.jp/gakuen/news/detail/620/	NOT_FEED		0
+Q3551540	Atomi University (university)	https://www.atomi.ac.jp/gakuen/news/detail/596/	NOT_FEED		0
+Q3551540	Atomi University (university)	https://www.atomi.ac.jp/gakuen/news/detail/591/	NOT_FEED		0
+Q3551540	Atomi University (university)	https://www.atomi.ac.jp/gakuen/news/detail/587/	NOT_FEED		0
+Q3551540	Atomi University (university)	https://www.atomi.ac.jp/gakuen/news/detail/581/	NOT_FEED		0
+Q3551540	Atomi University (university)	https://www.atomi.ac.jp/gakuen/news/detail/578/	NOT_FEED		0
+Q3551540	Atomi University (university)	https://www.atomi.ac.jp/gakuen/news/detail/576/	NOT_FEED		0
+Q3551540	Atomi University (university)	https://www.atomi.ac.jp/gakuen/news/detail/574/	NOT_FEED		0
+Q3551540	Atomi University (university)	https://www.atomi.ac.jp/gakuen/news/detail/570/	NOT_FEED		0
+Q7813915	Tokyo Kasei-Gakuin University (university)	https://www.kasei-gakuin.ac.jp/feed/	OK	rss2	0
+Q3551841	Okayama Prefectural University (university)	https://www.oka-pu.ac.jp/page-1994/	NOT_FEED		0
+Q1067916	Okayama University (university)	https://www.okayama-u.ac.jp/xml/banner_ctg_2_ja.rss	OK	rss1	0
+Q1067916	Okayama University (university)	https://www.okayama-u.ac.jp/xml/banner_ja.rss	OK	rss1	0
+Q1067916	Okayama University (university)	https://www.okayama-u.ac.jp/xml/okadai_ad_banner_ja.rss	OK	rss1	0
+Q1067916	Okayama University (university)	https://www.okayama-u.ac.jp/xml/okadai_banner_2_ja.rss	OK	rss1	0
+Q1067916	Okayama University (university)	https://www.okayama-u.ac.jp/xml/okadai_banner_ja_ja.rss	OK	rss1	0
+Q1067916	Okayama University (university)	https://www.okayama-u.ac.jp/xml/okadai_research_highlights_ja.rss	OK	rss1	0
+Q1067916	Okayama University (university)	https://www.okayama-u.ac.jp/xml/okadai_slider_ja.rss	OK	rss1	0
+Q1067916	Okayama University (university)	https://www.okayama-u.ac.jp/xml/okadai_youtube_ja.rss	OK	rss1	0
+Q1067916	Okayama University (university)	https://www.okayama-u.ac.jp/xml/seed_admcms1ccokayamauacjpokayamau_user_ja.rss	OK	rss1	0
+Q1069400	Kagawa University (university)	http://www.kagawa-u.ac.jp/index.php/tools/news_rss/	HTTP_403		0
+Q3551851	Ehime Prefectural University of Health Science (university)	https://www.epu.ac.jp/rss.html	NOT_FEED		0
+Q1074112	Ehime University (university)	https://www.ehime-u.ac.jp/home/feed/	OK	rss2	0
+Q86743748	Professional University of Information and Management for Innovation (university)	https://www.i-u.ac.jp/feed/	OK	rss2	0
+Q1149393	Kansai University (private university)	https://www.kansai-u.ac.jp/ja/new.xml	HTTP_404		0
+Q1149393	Kansai University (private university)	https://www.kansai-u.ac.jp/ja/important.xml	HTTP_404		0
+Q1149393	Kansai University (private university)	https://www.kansai-u.ac.jp/ja/topics.xml	HTTP_404		0
+Q2160579	Okinawa International University (private university)	https://www.okiu.ac.jp/rss.xml?id=51503	OK	rss2	0
+Q4387971	Tenri University (private university)	https://www.tenri-u.ac.jp/feed/	OK	rss2	0
+Q4389652	Kitasato University (private university)	https://www.kitasato-u.ac.jp/jp/academics/research_support/software/tfs.html	NOT_FEED		0
+Q11300904	Graduate School of Management, Globis University (private university)	https://www.globis.ac.jp/feed/	OK	rss2	0
+Q97163260	Kochi Gakuen University (private university)	https://kochi-gu.ac.jp/sample-page/feed	OK	rss2	0
+Q125255403	University of Kochi Health Sciences (private university)	https://ko-ken-k3.ac.jp/sample-page/feed/	OK	rss2	0
+Q11421280	National Institute of Special Education (research institute)	https://www.nise.go.jp/feed/	HTTP_500		0
+Q11440159	The Institute of Scientific and Industrial Research，Osaka University (research institute)	https://www.sanken.osaka-u.ac.jp/index.xml	HTTP_404		0
+Q11440162	Institute for Protein Research, Osaka University (research institute)	https://www.protein.osaka-u.ac.jp/frontpage/feed/	OK	rss2	0
+Q4346622	National Institute of Informatics (research institute)	https://group-mmm.org/eratommsd/ja/	NOT_FEED		0
+Q28687458	Institute of Advanced Energy,  Kyoto University (research institute)	https://www.iae.kyoto-u.ac.jp/researcher/organization/generation/atomic/	NOT_FEED		0
+Q30265999	Research Institute of Environment, Agriculture and Fisheries, Osaka Prefecture (research institute)	https://www.knsk-osaka.jp/portal_info/media/index.rss	HTTP_404		0
+Q30265999	Research Institute of Environment, Agriculture and Fisheries, Osaka Prefecture (research institute)	https://www.knsk-osaka.jp/aboutfeed.html	HTTP_404		0
+Q30267662	RIKEN Center for Emergent Matter Science (research institute)	https://cems.riken.jp/home/feed	OK	rss2	0
+Q30267664	RIKEN Center for Developmental Biology (research institute)	http://www.cdb.riken.jp/news/?feed=rss2	NOT_FEED		0
+Q30274470	Okinawa Prefectural Agricultural Research Center (research institute)	https://www.pref.okinawa.jp/about/rss.html	NOT_FEED		0
+Q30274470	Okinawa Prefectural Agricultural Research Center (research institute)	https://www.pref.okinawa.lg.jp/about/rss.html	NOT_FEED		0
+Q30296470	Japan Food Research Laboratories (research institute)	https://www.jfrl.or.jp/service/feed	NOT_FEED		0
+Q30296470	Japan Food Research Laboratories (research institute)	https://www.jfrl.or.jp/service/feed-safety	NOT_FEED		0
+Q55262667	Research Institute for Interdisciplinary Science (research institute)	https://www.riis.okayama-u.ac.jp/sample-page-2-2/feed/	OK	rss2	0
+Q55262667	Research Institute for Interdisciplinary Science (research institute)	https://www.riis.okayama-u.ac.jp/info/?feed=rss2	OK	rss2	0
+Q7280334	Radiation Effects Research Foundation (research institute)	https://www.rerf.or.jp/rss_info/	NOT_FEED		0
+Q6040218	Institute of Developing Economies (research institute)	https://www.ide.go.jp/rss/japanese_event.xml	HTTP_403		0
+Q6040218	Institute of Developing Economies (research institute)	https://www.ide.go.jp/rss/japanese_download.xml	HTTP_403		0
+Q6040218	Institute of Developing Economies (research institute)	https://www.ide.go.jp/rss/japanese.xml	HTTP_403		0
+Q119423371	金沢大学がん進展制御研究所 (research institute)	https://ganken.cri.kanazawa-u.ac.jp/20240919_prof-oshima_the_yoshidatomizou_award/	NOT_FEED		0
+Q123039470	Center for Open Data in the Humanities (research institute)	https://codh.rois.ac.jp/feedback/	NOT_FEED		0
+Q133798634	National Institute of Global Health and Medicine (research institute)	https://www.nature.com/articles/s41467-019-08591-6	NOT_FEED		0
+Q140358145	Hydrolox Research Institute (research institute)	https://www.f85.jp/matome	NOT_FEED		0
+Q4853066	The Institute of Statistical Mathematics (research institute)	https://www.ism.ac.jp/news/2015/announce_rss.html	NOT_FEED		0
+Q11374919	Hida Observatory (astronomical observatory)	https://www.youtube.com/channel/UCjrssqGmuQRqpao-ohakpsA	NOT_FEED		0
+Q11622289	Sendai Space Museum (astronomical observatory)	https://sendaiuchukan.jp/index.html%3e%3cLINK%20rel=	HTTP_404		0
+Q1063071	Yamato Museum (science museum)	https://www.youtube.com/@yamatomuseum2005	NOT_FEED		0
+Q1063071	Yamato Museum (science museum)	https://yamatomuseum.securesite.jp/et/	HTTP_000		0
+Q1063071	Yamato Museum (science museum)	https://yamatomuseum.securesite.jp/annex/	HTTP_000		0
+Q65264568	Yamagata Museum of Science and Industry (science museum)	https://www.y-sunka.org/blog/feed2js/feed2js.php?src=http%3A%2F%2Fwww.y-sunka.org%2Fblog%2F%3Ffeed%3Drss2&num=3&utf=y&html=y	NOT_FEED		0
+Q65264568	Yamagata Museum of Science and Industry (science museum)	http://feed2js.org//feed2js.php?src=http%3A%2F%2Fwww.y-sunka.org%2Fblog%2F%3Ffeed%3Drss2&num=3&tz=+9&targ=popup&utf=y&css=feed&html=y	NOT_FEED		0
+Q139898652	Tōkai Terra Park (science museum)	https://www.japc.co.jp/atom/index.html	NOT_FEED		0
+Q11582155	Sagamigawa Fureai Science Museum (science museum)	https://sagamigawa-fureai.com/toppage/feed/	OK	rss2	0
+Q11582155	Sagamigawa Fureai Science Museum (science museum)	https://sagamigawa-fureai.com/feeding/	NOT_FEED		0
+Q11662211	Misawa Aviation & Science Museum (science museum)	https://kokukagaku.jp/%e3%83%88%e3%83%83%e3%83%97%e3%83%9a%e3%83%bc%e3%82%b8/feed/	OK	rss2	0
+Q16872707	Meteorological Science Museum (science museum)	https://www.jma.go.jp/jma/menu/rss_info.html	HTTP_404		0
+Q17226278	Nakaya Ukichiro Museum of Snow and Ice (science museum)	https://yukinokagakukan.kagashi-ss.com/feed/	OK	rss2	0
+Q11485839	Shobara Redcross Hospital (hospital)	https://www.shobara.jrc.or.jp/homepage/feed/	OK	rss2	0
+Q11400429	Katsutadai Hospital (hospital)	https://tums-katsutadai.jp/home/feed/	OK	rss2	0
+Q11609550	Gunma University Hospital (hospital)	https://hospital.med.gunma-u.ac.jp/?feed=rss2&	NOT_FEED		0
+Q11610897	Yokohama City Seibu Hospital (hospital)	https://marianna-yokohama.jp/feed/	OK	rss2	0
+Q11279101	Midori Hospital (hospital)	https://midori-gr.jp/feed/	OK	rss2	0
+Q11279327	Miyoshi Municipal Hospital (hospital)	https://hospital-miyoshi.jp/feed/	OK	rss2	0
+Q11369243	Kuki General Hospital (hospital)	https://shinkuki-hp.jp/home/feed/	OK	rss2	0
+Q11375099	Kyoto City Hospital (hospital)	http://www.kch-org.jp/feedback	NOT_FEED		0
+Q11375274	Kyoto Prefectural Maizuru Rehabilitation Center for Children (hospital)	https://maizuru-ryouiku.kkr.or.jp/atom.xml	OK	atom	0
+Q11375657	Japanese Red Cross Society Kyoto Daini Hospital (hospital)	https://www.kyoto2.jrc.or.jp/category/news_feedback/	NOT_FEED		0
+Q4520992	Okinawa Airakuen (hospital)	https://www.mhlw.go.jp/rss/	NOT_FEED		0
+Q4520992	Okinawa Airakuen (hospital)	https://www.mhlw.go.jp/rss/index.html	NOT_FEED		0
+Q6435130	Koyama Fukusei Hospital (hospital)	https://www.fukusei.jp/feed/	OK	rss2	0
+Q6435130	Koyama Fukusei Hospital (hospital)	https://www.fukusei.jp/home/feed/	OK	rss2	0
+Q11377959	Sendai City Hospital (hospital)	https://hospital.city.sendai.jp//feed	OK	rss2	0
+Q11440681	Osaka City General Hospital (hospital)	https://www.osakacity-hp.or.jp/byouin/feed/	HTTP_404		0
+Q11543514	Yokosuka Kyosai Hospital (hospital)	https://ykh.kkr.or.jp/home/feed/index.html	HTTP_404		0
+Q50036935	SOUSEIKAI Global Clinical Research Center (hospital)	https://www.fukuoka-mirai.jp/top/feed/	OK	rss2	0
+Q65255124	NHO Miyazaki National Hospital (hospital)	https://44karssmid.localinfo.jp/	HTTP_503		0
+Q11662212	Aomori Prefectural Central Hospital (hospital)	https://aomori-kenbyo.jp/contact/form-feedback/	NOT_FEED		0
+Q11667281	Kagawa University Hospital (hospital)	https://www.med.kagawa-u.ac.jp/xml/filename.xml	HTTP_404		0
+Q11492336	Keiyukai Sapporo Hospital (hospital)	https://keiyukaisapporo.or.jp/category/staff-column/	NOT_FEED		0
+Q11494194	Aichi Psychiatric Medical Center (hospital)	https://apmc.pref.aichi.jp/feed/	NOT_FEED		0
+Q11502862	Uonuma Kikan Hospital (hospital)	https://www.uonuma-kikan-hospital.jp/home/feed	OK	rss2	0
+Q11571629	National Hospital Organization East Nagano Hospital (hospital)	https://enagano-hosp.jp/feed/	HTTP_404		0
+Q131875376	Tsudanuma Central General Hospital (hospital)	https://tcgh.jp/feedback/	NOT_FEED		0
+Q11572587	Nissan Tamagawa Hospital (hospital)	https://www.tamagawa-hosp.jp/support/feeding/563/	NOT_FEED		0
+Q11561499	Saiseikai Chuwa Hospital (hospital)	https://chuwa-hp.jp/feed/	OK	rss2	0
+Q11561499	Saiseikai Chuwa Hospital (hospital)	https://chuwa-hp.jp/feed/atom/	OK	atom	0
+Q11561516	Saiseikai Yokohama Eastern Hospital (hospital)	https://www.tobu.saiseikai.or.jp/feed/?rss2&amp;post_type=news	OK	rss2	0
+Q11468414	Yamagata City Hospital Saiseikan (hospital)	https://www.saiseikan.jp/feed/	OK	rss2	0
+Q11468503	Yamagata Prefectural Central Hospital (hospital)	http://www.ypch.gr.jp/rss2.xml	HTTP_404		0
+Q97182598	Kofu-Kyoritsu Hospital (hospital)	https://kofukyouritsu.com/sample-page/feed/	OK	rss2	0
+Q97199619	日新会病院 (hospital)	https://nisshinkai.jp/sitemap.xml	NOT_FEED		0
+Q97273764	Isawa-Kyoritsu hospital (hospital)	https://isawakyouritsu.com/sample-page/feed/	OK	rss2	0
+Q97278126	健生会ふれあい相互病院 (hospital)	https://www.t-kenseikai.jp/honbu/tamatomonokai/	NOT_FEED		0
+Q97310439	Takamatsu Kyodo Hospital (hospital)	https://t-kyodo.com/page-2/feed/	OK	rss2	0
+Q131877350	Soseikai General Hospital (hospital)	https://www.soseikai.or.jp/introduction/team-medical/feeding-swallowing/	NOT_FEED		0
+Q27157870	Akita Prefectural Center for Rehabilitation and Psychiatric Medicine (hospital)	https://www.akita-rehacen.jp/sub-site-news/hbd/	NOT_FEED		0
+Q27157870	Akita Prefectural Center for Rehabilitation and Psychiatric Medicine (hospital)	https://www.akita-rehacen.jp/sub-site-news/mcd/	NOT_FEED		0
+Q27157870	Akita Prefectural Center for Rehabilitation and Psychiatric Medicine (hospital)	https://www.akita-rehacen.jp//sub-site-news/yod/	NOT_FEED		0
+Q30261330	Nishikawa Hospital (hospital)	https://money-cash-navi.jp/au-genkinka/feed/	OK	rss2	0
+Q17216778	Gunma Children's Medical Center (hospital)	https://cmc.pref.gunma.jp/clinic/service/breastfeeding/	NOT_FEED		0
+Q11656269	Kansai Rosai Hospital (hospital)	https://www.kansaih.johas.go.jp/feed	OK	rss2	0
+Q133810728	Hanawa Kousei Hospital (hospital)	https://www.hanawa-fkousei.jp/top/feed/	OK	rss2	0
+Q135847887	公立七日市病院 (hospital)	https://nano-hosp.jp/sample-page/feed	OK	rss2	0
+Q97311021	Takamatsu Heiwa Hospital (hospital)	https://t-heiwa.com/page-2/feed/	OK	rss2	0
+Q107518954	Gifu Heart Center (hospital)	https://gifu-heart-center.jp/sample-page/feed/	OK	rss2	0
+Q109362983	Chiba Tokushukai Hospital (hospital)	https://www.naritatomisato.jp/	NOT_FEED		0
+Q109362983	Chiba Tokushukai Hospital (hospital)	https://www.ne.jp/asahi/funabashi/rehatomo/	NOT_FEED		0
+Q115617414	Ukai Rehabilitation Hospital (hospital)	https://ukaireha.kzan.jp/feed/	OK	rss2	0
+Q30281248	Tsubame Rosai Hospital (hospital)	https://www.tsrh.jp/feed/	OK	rss2	0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/brain/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/brain-school/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/med_outpatient/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/hosp_formalities/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/hos_index/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/hos_message/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/hos_philo/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/hos_point/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/hos_standard/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/hos_intro/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/hos_emergency/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/hos_image_diagnosis/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/nurse_index/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/de_index/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/hos_nasva/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/hos_access/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/sunterrace_nagatomi/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/qa/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/center_about/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/gf_about/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/eye/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/rehabilitation/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/hos_welf/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/nurse_philo/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/nurse_care/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/nurse_edu/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/nurse_intro/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/nurse_assistant/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/de_message/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/de_radio/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/hos_clilabo/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/hos_medicine/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/de_food/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/de_ma/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/de_manage/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/de_infection/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/de_me/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/nurse_committee/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/rec-index/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/brainch/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/covid/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/topics/%e4%bb%8a%e6%b3%89%e3%80%80%e5%88%a9%e5%b4%87%e3%80%80%e5%85%88%e7%94%9f%e7%9d%80%e4%bb%bb%e3%81%ab%e3%81%a4%e3%81%84%e3%81%a6	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/topics/%e8%84%b3%e5%8d%92%e4%b8%ad%e5%b8%82%e6%b0%91%e5%85%ac%e9%96%8b%e8%ac%9b%e5%ba%a7%e3%81%ab%e3%81%a4%e3%81%84%e3%81%a6-2	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/topics/%e3%81%8a%e7%9b%86%e3%81%ae%e4%bc%91%e8%a8%ba%e3%81%ae%e3%81%8a%e7%9f%a5%e3%82%89%e3%81%9b-3	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/topics/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/press/%e3%80%8c%e4%b8%96%e7%95%8c%e8%84%b3%e5%8d%92%e4%b8%ad%e3%83%87%e3%83%bc%e3%80%8d%e3%83%a9%e3%82%a4%e3%83%88%e3%82%a2%e3%83%83%e3%83%97%e4%bc%81%e7%94%bb%e3%81%ab%e3%81%a4%e3%81%84%e3%81%a6	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/press/%e5%a4%a7%e5%88%86%e5%90%88%e5%90%8c%e6%96%b0%e8%81%9e%e3%80%802026%e5%b9%b4%e6%96%b0%e6%98%a5%e5%8c%bb%e7%99%82%e6%a9%9f%e9%96%a2%e3%82%a4%e3%83%b3%e3%82%bf%e3%83%93%e3%83%a5%e3%83%bc%e3%81%ab	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/topics/%e3%80%8c%e4%b8%96%e7%95%8c%e8%84%b3%e5%8d%92%e4%b8%ad%e3%83%87%e3%83%bc%e3%80%8d%e3%83%a9%e3%82%a4%e3%83%88%e3%82%a2%e3%83%83%e3%83%97%e4%bc%81%e7%94%bb	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/press/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/rec-rn/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/rec-sn/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/rec-w/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.com/rec-na/	NOT_FEED		0
+Q30280854	Nagatomi Neurosurgical Hospital (hospital)	https://nagatomi-hp.co	HTTP_000		0
+Q30281047	Takano Hospital (hospital)	https://www.youtube.com/user/takanohp/feed	NOT_FEED		0
+Q126935785	Tokiwadaira Central Hospital (hospital)	https://www.tokiwakai-chp.com/feed/	OK	rss2	0
+Q30267477	Ichikawa City Rehabilitation Hospital (hospital)	https://tums-ichikawahp.jp/feed	OK	rss2	0
+Q30267694	Hokkaido Orthopedic Surgery Memorial Hospital (hospital)	https://www.hokkaido-seikei-kinen.jp/feed	HTTP_500		0
+Q30269822	Fukuoka Kinen Hospital (hospital)	https://kinen.jp/index/feed/	OK	rss2	0
+Q30280094	Imakiire General Hospital (hospital)	https://imakiire.jp/sample-page/feed/	OK	rss2	0
+Q28684274	最上町立最上病院 (hospital)	https://mu88pg.com/sample-page/feed/	OK	rss2	0
+Q28684777	Aira Hospital (hospital)	https://hospital.pref.kagoshima.jp/satsunan/feed.html	NOT_FEED		0
+Q28684777	Aira Hospital (hospital)	https://hospital.pref.kagoshima.jp/kanoya/feed.html	NOT_FEED		0
+Q28684777	Aira Hospital (hospital)	https://hospital.pref.kagoshima.jp/hokusatsu/feed.html	NOT_FEED		0
+Q28684777	Aira Hospital (hospital)	https://hospital.pref.kagoshima.jp/aira/feed.html	NOT_FEED		0
+Q28685379	Koma-Kyoritsu hospital (hospital)	https://komakyouritsu.com/sample-page/feed/	OK	rss2	0
+Q716411	Former Kaichi School (museum)	https://matsu-haku.com/sample-page/feed	OK	rss2	0
+Q104236175	Motojinya, Mashike Museum and Library (museum)	http://motojinya.blogspot.com/feeds/comments/default	HTTP_403		0
+Q30925818	Shogawa Memorial Museum of Sotojiro Matsumura (museum)	https://1073shoso.jp/www/common/rss.jsp	NOT_FEED		0
+Q38255004	Okazaki Shinkin Bank Museum (museum)	https://www.okashin.co.jp/bd/matomete/index.html	NOT_FEED		0
+Q48748602	Meihou Rekishiminzokushiryoukan (museum)	https://furusato.meiho.info/?feed=rss2	OK	rss2	0
+Q48748602	Meihou Rekishiminzokushiryoukan (museum)	https://furusato.meiho.info/?feed=rss2&	OK	rss2	0
+Q55541826	Akkeshi Town Ōta Tonden Kaitaku Memorial Museum (museum)	http://edu.town.akkeshi.hokkaido.jp/sitemaps/sitemap.xml	HTTP_404		0
+Q55541826	Akkeshi Town Ōta Tonden Kaitaku Memorial Museum (museum)	http://edu.town.akkeshi.hokkaido.jp/sitemaps/sitemap.xml.gz	HTTP_404		0
+Q59610850	Hishio (museum)	https://hishioarts.com/about-hishio/feed/	OK	rss2	0
+Q21654086	Brief Messages from the Heart Museum (museum)	http://www.tegami-museum.jp/home/feed	OK	rss2	0
+Q21654084	Nifrel (museum)	https://www.nifrel.jp/detail/matome/	NOT_FEED		0
+Q11277755	Hotaruika Museum (museum)	https://hotaruikamuseum.com/home/feed	OK	rss2	0
+Q11495238	Parliamentary Museum (museum)	https://speechpanel.readspeaker.com/cgi-bin/rssp?customerid=7272&lang=ja_jp&url=	NOT_FEED		0
+Q11509583	Hibiya Library & Museum (museum)	https://www.library.chiyoda.tokyo.jp/information/20260905-15nen_matome/?utm_medium=banner	NOT_FEED		0
+Q11282592	Auschwitz Peace Museum Japan (museum)	http://am-j.or.jp/sample-page/feed/	OK	rss2	0
+Q11376381	Nima Sand Museum (museum)	https://www.sandmuseum.jp/feed.xml	HTTP_404		0
+Q60986412	Iriomote Wildlife Conservation Center (museum)	https://iwcc.jp/home/feed/	OK	rss2	0
+Q64143415	Kumamoto Prefectural Museum Network Center (museum)	https://kumamoto-museum.net/home/feed	OK	rss2	0
+Q65292338	YukinoSato Information Center (museum)	http://yukinosato.jp/feed/?post_type=info	HTTP_404		0
+Q104709460	Fuji Museum (museum)	https://feedly.com/index.html	NOT_FEED		0
+Q110199716	Former Retreat of Tomomi Iwakura (museum)	https://www.facebook.com/iwakuratomomiueya/	NOT_FEED		0
+Q11401205	Kita City Asukayama Museum (museum)	https://www.city.kita.lg.jp/city-information/feedback/index.html	NOT_FEED		0
+Q11401205	Kita City Asukayama Museum (museum)	https://www.city.kita.lg.jp/city-information/feedback/1014173.html	NOT_FEED		0
+Q104698242	Fussa Museum of Local History (museum)	https://www.museum.fussa.tokyo.jp/home/feed	OK	rss2	0
+Q104708815	National Important Cultural Properties Watanabe-tei (museum)	https://www.watanabetei.com/feed/	OK	rss2	0
+Q136486637	Iroha Sōan (museum)	https://iroha.kagashi-ss.com/feed/	OK	rss2	0
+Q138316977	Fukae Heritage Museum (museum)	https://fukae-heritage-museum.or.jp/feed/	OK	rss2	0
+Q139784060	Noto Satoyama Satoumi Museum (museum)	https://noto-museum.jp/feed/	OK	rss2	0
+Q117220457	Tokoname Tunomori Ceramics Lab (museum)	https://www.tokoname-tounomori.jp/feed/	OK	rss2	0
+Q119488018	Analog Game Museum (museum)	https://feedly.com/i/discover/sources/search/feed/https%3A%2F%2Fanaloggamemuseum.org	NOT_FEED		0
+Q123472588	Kabeya Shūseikan (museum)	http://kabeya-syuseikan.com/top/feed/	OK	rss2	0
+Q131911113	福来記念・山本資料館 (museum)	https://fukurai.net/feed/	OK	rss2	0
+Q132398704	Izumo Cultural Heritage Museum (museum)	https://www.izumo-zaidan.jp/feed.xml	HTTP_404		0
+Q132480639	Santōka Furusato Museum (museum)	https://www.facebook.com/santokafurusatomuseum	NOT_FEED		0
+Q133796743	Kanazawa Museum of Wooden Japanese Sweet Molds (museum)	https://www.morihachi.co.jp/%e3%83%88%e3%83%83%e3%83%97%e3%83%9a%e3%83%bc%e3%82%b8/feed	OK	rss2	0
+Q126452126	Kimotsuki-cho History and Folklore Museum (museum)	https://kimotsuki-town.jp/cgi-bin/feed.php?categoryNo=755	OK	rss1	0
+Q126452126	Kimotsuki-cho History and Folklore Museum (museum)	https://kimotsuki-town.jp/cgi-bin/feed.php?categoryNo=756	OK	rss1	0
+Q140262473	ストーンミュージアムひるかわ (museum)	https://hirukawa-ishi.com/feed/	OK	rss2	0
+Q140469508	GLION MUSEUM (museum)	https://glion-museum.jp/sample-page/feed/	OK	rss2	0
+Q11417787	Kubosō Memorial Museum of Arts (art museum)	https://satomachi-izumi.com/	NOT_FEED		0
+Q11668358	Jūkichi Komagata Memorial Art Museum (art museum)	https://komagata-museum.com/feed/	OK	rss2	0
+Q17191286	Hoshino Tomihiro Museum of Art・Ashikita (art museum)	http://hoshino-museum.com/%e3%83%88%e3%83%83%e3%83%97%e3%83%9a%e3%83%bc%e3%82%b8/feed/	OK	rss2	0
+Q17209461	Teruko Yokoi Hinageshi Art Museum (art museum)	https://www.enakawakamiya.co.jp/enatomo_salon	NOT_FEED		0
+Q17211689	Shikoku Mura Gallery (art museum)	https://www.shikokumura.or.jp/feed/	OK	rss2	0
+Q11586039	Notojima Glass Art Museum (art museum)	https://nanao-af.jp/glass/feed/	OK	rss2	0
+Q11587726	Rokuzan Art Museum (art museum)	https://rokuzan.jp/feed/	OK	rss2	0
+Q11603353	Lalique Museum, Hakone (art museum)	https://www.lalique-museum.com/feed/	OK	rss2	0
+Q28669360	Kimura Tea Ceremony Museum (art museum)	https://sadoukan.jp/feed/	OK	rss2	0
+Q28687423	Kurobe City Art Museum (art museum)	http://kurobe-city-art-museum.jp/sample-page/feed/	OK	rss2	0
+Q11190936	BB Plaza Museum of Art (art museum)	https://bbpmuseum.jp/%e3%83%88%e3%83%83%e3%83%97%e3%83%9a%e3%83%bc%e3%82%b8/feed	OK	rss2	0
+Q843638	MOA Museum of Art (art museum)	https://www.moaart.or.jp/feed/	NOT_FEED		0
+Q132396991	Sekishō Art Museum (art museum)	https://www.sekisho-art-museum.jp/feed	OK	rss2	0
+Q124099900	Yoh Shomei Art Museum (art museum)	https://www.yohshomei.com/top-2.html/feed	OK	rss2	0
+Q127568860	Imura Art Museum (art museum)	https://kyotobisho.com/feed/	OK	rss2	0
+Q11617518	Museum of Modern Art, Ibaraki (art museum)	https://www.modernart.museum.ibk.ed.jp/rss/rss10.xml	OK	rss1	0
+Q11617518	Museum of Modern Art, Ibaraki (art museum)	https://www.modernart.museum.ibk.ed.jp/rss/rss10-n1.xml	OK	rss1	0
+Q11617518	Museum of Modern Art, Ibaraki (art museum)	https://www.modernart.museum.ibk.ed.jp/rss/rss10-n2.xml	OK	rss1	0
+Q11617518	Museum of Modern Art, Ibaraki (art museum)	https://www.modernart.museum.ibk.ed.jp/rss/rss10-n4.xml	OK	rss1	0
+Q11617518	Museum of Modern Art, Ibaraki (art museum)	https://www.modernart.museum.ibk.ed.jp/rss/rss10-n5.xml	OK	rss1	0
+Q11617518	Museum of Modern Art, Ibaraki (art museum)	https://www.modernart.museum.ibk.ed.jp/rss/rss10-n8.xml	OK	rss1	0
+Q11617518	Museum of Modern Art, Ibaraki (art museum)	https://www.modernart.museum.ibk.ed.jp/rss/rss10-n6.xml	OK	rss1	0
+Q11617518	Museum of Modern Art, Ibaraki (art museum)	https://www.modernart.museum.ibk.ed.jp/rss/rss10-n7.xml	OK	rss1	0
+Q11617518	Museum of Modern Art, Ibaraki (art museum)	https://www.modernart.museum.ibk.ed.jp/rss/rss10-n3.xml	OK	rss1	0
+Q11532663	Itabashi Art Museum (art museum)	https://www.city.itabashi.tokyo.jp/rss/index.html	NOT_FEED		0
+Q11539040	Munakata Shikō Memorial Museum of Art (art museum)	https://munakatashiko-museum.jp/shiko/feed/	OK	rss2	0
+Q11542374	Yokoi Teruko Fuji Museum of Art (art museum)	https://yokoi-fujimuseum.co.jp/sample-page-2/feed/	OK	rss2	0
+Q11542451	Yokoo Tadanori Museum of Contemporary Art (art museum)	https://ytmoca.jp/feed/	OK	rss2	0
+Q28692054	Nisipirica Museum (art museum)	https://m-kissa.com/feed/	OK	rss2	0
+Q38266963	Yokote Masuda Manga Museum (art museum)	https://akitafurusatomura.co.jp/	NOT_FEED		0
+Q42704985	Nakagawa-machi Batō Hiroshige Museum of Art (art museum)	http://www.hiroshige.bato.tochigi.jp/home/feed	OK	rss2	0
+Q48750098	FAN Museum (art museum)	https://fanmuseum.jp/fanmuseum/feed/	NOT_FEED		0
+Q51371009	National Film Archive of Japan (art museum)	https://www.nfaj.go.jp/feed/	HTTP_404		0
+Q11576742	Tagawa City Museum of Art (art museum)	https://tagawa-art.jp/feed/	OK	rss2	0
+Q11356786	Sankō Museum (art museum)	https://www.sanko-museum.or.jp/feed/	OK	rss2	0
+Q17230481	Amuse Museum (art museum)	https://feedly.com/i/discover/sources/search/feed/https%3A%2F%2Fwww.amusemuseum.com	NOT_FEED		0
+Q21653817	Toyama Glass Art Museum (art museum)	https://toyama-glass-art-museum.jp/page-5/feed/	OK	rss2	0
+Q11384365	Sato Museum of Art (art museum)	https://www.facebook.com/satomuseum	NOT_FEED		0
+Q11384365	Sato Museum of Art (art museum)	https://www.instagram.com/satomuseum	NOT_FEED		0
+Q3788646	Hasegawa Machiko Art Museum (art museum)	https://www.hasegawamachiko.jp/feed/	HTTP_403		0
+Q5359197	The Museum of Fine Arts, Gifu (art museum)	https://kenbi.pref.gifu.lg.jp/sample-page/feed/	OK	rss2	0
+Q7700648	Tenshin Memorial Museum of Art (art museum)	https://www.tenshin.museum.ibk.ed.jp/viewer/info.html?id=877	NOT_FEED		0
+Q4461630	Toyota Municipal Museum of Art (art museum)	https://www.museum.toyota.aichi.jp/feed/	OK	rss2	0
+Q65941212	Yayoi Kusama Museum (art museum)	https://yayoikusamamuseum.jp/sample-page/feed/	OK	rss2	0
+Q11260159	Iwakishiritsuiwakisogo Library (public library)	https://library.city.iwaki.fukushima.jp/rss/rss10-n6.xml	OK	rss1	0
+Q11260159	Iwakishiritsuiwakisogo Library (public library)	https://library.city.iwaki.fukushima.jp/rss/rss10-n3.xml	OK	rss1	0
+Q11647499	Kanazawa Umimirai Library (public library)	https://www.facebook.com/hashtag/%E9%87%91%E6%B2%A2%E5%B8%82%E5%9B%B3%E6%9B%B8%E9%A4%A8%E3%81%8B%E3%82%89%E3%81%AE%E3%81%8A%E7%9F%A5%E3%82%89%E3%81%9B?source=feed_text	NOT_FEED		0
+Q61886031	Ikedachoritsu Library (public library)	https://www.ikeda-dreamwork.com/feed/	OK	rss2	0
+Q61886041	Bekkaicho Library (public library)	https://tosyo.betsukai.jp/feed/	OK	rss2	0
+Q61886041	Bekkaicho Library (public library)	https://tosyo.betsukai.jp/feed/atom/	OK	atom	0
+Q61886041	Bekkaicho Library (public library)	https://tosyo.betsukai.jp/sitemaps/sitemap.xml	HTTP_404		0
+Q61886041	Bekkaicho Library (public library)	https://tosyo.betsukai.jp/sitemaps/sitemap.xml.gz	HTTP_404		0
+Q30925888	Suwashi Library (public library)	https://www.libnet-suwa.gr.jp/feed/	OK	rss2	0
+Q30925888	Suwashi Library (public library)	https://www.libnet-suwa.gr.jp/feed/atom/	OK	atom	0
+Q35443228	Hozuka Library (public library)	https://www.city.adachi.tokyo.jp/rss/index.html	NOT_FEED		0
+Q41767686	Takahama City Library (public library)	https://www.takahama-lib.jp/feed/	OK	rss2	0
+Q41768084	Nagakute Central Library (public library)	https://library.city.nagakute.lg.jp/contents/feed	OK	rss2	0
+Q48747764	Yuki Library (public library)	https://lib-yuki.city.yuki.lg.jp/rss/rss10.xml	OK	rss1	0
+Q48747764	Yuki Library (public library)	https://lib-yuki.city.yuki.lg.jp/rss/rss10-n4.xml	OK	rss1	0
+Q48747764	Yuki Library (public library)	https://lib-yuki.city.yuki.lg.jp/rss/rss10-n1.xml	OK	rss1	0
+Q48747764	Yuki Library (public library)	https://lib-yuki.city.yuki.lg.jp/rss/rss10-n2.xml	OK	rss1	0
+Q48747764	Yuki Library (public library)	https://lib-yuki.city.yuki.lg.jp/rss/rss10-n3.xml	OK	rss1	0
+Q61886347	Itako Public Library (public library)	https://lib.itako.ed.jp/rss/rss10-n1.xml	OK	rss1	0
+Q61886347	Itako Public Library (public library)	https://lib.itako.ed.jp/rss/rss10-n4.xml	OK	rss1	0
+Q61886358	Kamisushiritsuchuo Library (public library)	https://www.kamisu-tosho.jp/rss/rss10-n3.xml	OK	rss1	0
+Q61886358	Kamisushiritsuchuo Library (public library)	https://www.kamisu-tosho.jp/rss/rss10-n2.xml	OK	rss1	0
+Q61886361	Hokota Public Library (public library)	https://www.lib-hokota.jp/rss/rss10-n1.xml	OK	rss1	0
+Q61886364	Omitamashiogawa Library (public library)	https://lib.city.omitama.lg.jp/rss/rss10-n8-9.xml	OK	rss1	0
+Q61886364	Omitamashiogawa Library (public library)	https://lib.city.omitama.lg.jp/rss/rss10-n10-9.xml	OK	rss1	0
+Q61886395	Oyamashiritsuchuo Library Oyamabunkan (public library)	https://library.city.oyama.tochigi.jp/rss/rss10-n3.xml	OK	rss1	0
+Q61886395	Oyamashiritsuchuo Library Oyamabunkan (public library)	https://library.city.oyama.tochigi.jp/rss/rss10-n4.xml	OK	rss1	0
+Q61886439	Takasakishiritsumisato Library (public library)	https://lib.city.takasaki.gunma.jp/rss/rss10-n3.xml	OK	rss1	0
+Q61887722	Hokutoshiakeno Library (public library)	https://www.lib.city-hokuto.ed.jp/feed/	OK	rss2	0
+Q61887722	Hokutoshiakeno Library (public library)	https://www.lib.city-hokuto.ed.jp/feed/atom/	OK	atom	0
+Q61887722	Hokutoshiakeno Library (public library)	https://www.lib.city-hokuto.ed.jp/sitemap.xml	NOT_FEED		0
+Q61887722	Hokutoshiakeno Library (public library)	https://www.lib.city-hokuto.ed.jp/sitemap.xml.gz	NOT_FEED		0
+Q61887743	Uenoharashiritsu Library (public library)	https://www.library.city.uenohara.yamanashi.jp/sitemaps/sitemap.xml	HTTP_404		0
+Q61887743	Uenoharashiritsu Library (public library)	https://www.library.city.uenohara.yamanashi.jp/sitemaps/sitemap.xml.gz	HTTP_404		0
+Q61887621	Ippanzaidanhojimbijobunko (public library)	https://www.lib.pref.toyama.jp/kankobutsu/kankobutsu.html	NOT_FEED		0
+Q61887750	Chuoshiritsutamahoshogaigakushukan (public library)	https://www.lib.city-chuo.ed.jp/sitemaps/sitemap.xml	HTTP_404		0
+Q61887750	Chuoshiritsutamahoshogaigakushukan (public library)	https://www.lib.city-chuo.ed.jp/sitemaps/sitemap.xml.gz	HTTP_404		0
+Q61887750	Chuoshiritsutamahoshogaigakushukan (public library)	https://www.lib.city-chuo.ed.jp/tatomi/	NOT_FEED		0
+Q61887750	Chuoshiritsutamahoshogaigakushukan (public library)	https://www.lib.city-chuo.ed.jp/tatomi/event/530/	NOT_FEED		0
+Q61887750	Chuoshiritsutamahoshogaigakushukan (public library)	https://www.lib.city-chuo.ed.jp/tatomi/event/832/	NOT_FEED		0
+Q61887750	Chuoshiritsutamahoshogaigakushukan (public library)	https://www.lib.city-chuo.ed.jp/tatomi/event/829/	NOT_FEED		0
+Q61887750	Chuoshiritsutamahoshogaigakushukan (public library)	https://www.lib.city-chuo.ed.jp/tatomi/event/828/	NOT_FEED		0
+Q61887750	Chuoshiritsutamahoshogaigakushukan (public library)	https://www.lib.city-chuo.ed.jp/tatomi/event/830/	NOT_FEED		0
+Q61887759	Showa Public Library (public library)	https://www.lib.showacho.ed.jp/feed/	OK	rss2	0
+Q61887759	Showa Public Library (public library)	https://www.lib.showacho.ed.jp/feed/atom/	OK	atom	0
+Q61898055	Muratamachirekishimiraikantoshoshitsu (public library)	https://muratamachi.info/index.html/feed	OK	rss2	0
+Q61888618	Izumoshiritsumibenotaki Library (public library)	https://izumolib.icv.ne.jp/feed/	OK	rss2	0
+Q61898144	Koganeishinishinodaikaikantoshoshitsu (public library)	https://www.library.koganei.tokyo.jp/viewer/info.html?id=877	NOT_FEED		0
+Q61898160	Arakawakuritsushioiritoshosabisusuteshon (public library)	https://www.city.arakawa.tokyo.jp/kinkyuji/emergency.xml	OK	rss1	0
+Q61898160	Arakawakuritsushioiritoshosabisusuteshon (public library)	https://www.city.arakawa.tokyo.jp/kinkyuji/emergency_s.xml	OK	rss1	0
+Q61886638	Ichikawashiichikawaekiminamiguchi Library (public library)	https://www.ekinan-lib.jp/feed/	OK	rss2	0
+Q61886670	Nodashiritsukofu Library (public library)	http://www.library-noda.jp/homepage/info/usrss/index.html	NOT_FEED		0
+Q61888811	Shimonosekishiritsuhikoshima Library (public library)	https://www.library.shimonoseki.yamaguchi.jp/viewer/info.html?id=877	NOT_FEED		0
+Q61886747	Urayasu Public Library (public library)	https://page2rss.com/rss/51ff7167173d061b8e07e2c592a0f22b	NOT_FEED		0
+Q61888159	Otsushikita Library (public library)	http://www.library.otsu.shiga.jp/feed	OK	rss2	0
+Q61898404	Kitaaikimuratoshoshitsu (public library)	http://www.vill.kitaaiki.nagano.jp/urgency/rss.xml	OK	rss2	0
+Q61888925	Raiburariutazu (public library)	https://uplaza-utazu.jp/feed/	OK	rss2	0
+Q61900613	Iseshishogaigakushusentaisetopiajidoshokona (public library)	https://www.isetopia.jp/sitemap.xml	NOT_FEED		0
+Q61897658	Kobayashi City Library (public library)	https://www.city.kobayashi.lg.jp/cgi-bin/feed.php?displayCount=10&amp;displayRange=90	HTTP_502		0
+Q61897710	Soshiritsu Library Osumibunkan (public library)	https://soocity-library.jp/feed/	HTTP_000		0
+Q61888403	Takaishishiritsu Library (public library)	https://takaishi-lib.jp/feed/	OK	rss2	0
+Q61900927	Misatomachichubunkakoryusentatoshoshitsu (public library)	https://misatomachi-hibiki.jimdofree.com/j/privacy	NOT_FEED		0
+Q61900927	Misatomachichubunkakoryusentatoshoshitsu (public library)	https://jp.jimdo.com/?utm_source=cre-misatomachi-hibiki&amp;utm_medium=footer%20ad&amp;utm_campaign=ownads%20webview	NOT_FEED		0
+Q61900975	Hitashionokominkanchikushibunko (public library)	http://www.hita-k.org/home/feed	OK	rss2	0
+Q61897722	Shibushi City Library (public library)	http://www.shibushicity-lib.jp/sample-page/feed	OK	rss2	0
+Q11612037	Yanagida Botanical Park (botanical garden)	https://yanagida-flower.jp/feed/	OK	rss2	0
+Q6788091	Matsue Vogel Park (botanical garden)	https://www.ichibata.co.jp/rssfeed/	NOT_FEED		0
+Q11380529	Izu Animal Kingdom (botanical garden)	https://www.izu-kamori.jp/sitemap_index.xml	NOT_FEED		0
+Q11324991	NEW REOMA WORLD (zoo)	https://www.newreomaworld.com/feed/	OK	rss2	0
+Q11400772	Kitakitsune Farm (zoo)	https://kitakitsune-farm.com/feed/	OK	rss2	0
+Q11400772	Kitakitsune Farm (zoo)	https://kitakitsune-farm.com/sample-page/feed/	OK	rss2	0
+Q11454261	Miyazaki City Phoenix Zoo (zoo)	https://www.miyazaki-city-zoo.jp/feed/	OK	rss2	0
+Q17218329	ワールド牧場 (zoo)	https://www.worldranch.co.jp/contents/ecofeed.html	HTTP_404		0
+Q1191885	Osaka Aquarium Kaiyukan (public aquarium)	https://www.kaiyukan.com/program/feedingtime/	NOT_FEED		0
+Q4782699	Aquamarine Fukushima (public aquarium)	https://www.aquamarine.or.jp/programs-category/feeding-time/	NOT_FEED		0
+Q11595485	Oga Aquarium Gao (public aquarium)	https://www.gao-aqua.jp	NOT_FEED		0
+Q11595485	Oga Aquarium Gao (public aquarium)	http://www.akitafurusatomura.co.jp/	NOT_FEED		0
+Q11636428	Echizen Matsushima Aquarium (public aquarium)	https://www.echizen-aquarium.com/touch/feed_animal.html	NOT_FEED		0
+Q56347666	DMM Kariyushi Aquarium (public aquarium)	https://kariyushi-aquarium.com/feeding/	NOT_FEED		0
+Q22811103	South Hokkaido Railway Company (railway company)	https://www.shr-isaribi.jp/toppage/feed/	OK	rss2	0
+Q970339	Chōfu Airport (airport)	https://www.kouwan.metro.tokyo.lg.jp/yakuwari/minatomaru	NOT_FEED		0
+Q1931194	Tajima Airport (airport)	https://www.tajima-airport.jp/home/feed/	OK	rss2	0
+Q38266925	ラヂオ気仙沼 (broadcaster)	https://kfm775.co.jp/event/atom.xml	OK	atom	0
+Q11199426	FM小田原 (broadcaster)	https://fm-odawara.com/feed/?post_type=post	HTTP_404		0
+Q11290605	エフエムベイエリア (broadcaster)	https://www.bay-wave.co.jp/sitemap.xml	NOT_FEED		0
+Q11290605	エフエムベイエリア (broadcaster)	http://feed.mikle.com/	NOT_FEED		0
