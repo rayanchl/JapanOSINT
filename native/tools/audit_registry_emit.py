@@ -117,8 +117,16 @@ HP_EMIT = re.compile(r"\[hp:[^\]]+\] emitted (\d+) of (\d+) available")
 # vsrc rows, against 34 that disclosed and were all hp16_*. One more instance of
 # the rule this repo keeps relearning — when you fix something, look for the
 # other copies — and the tool was the third copy.
+#
+# `unreadable body:` is the FOURTH copy of the same lesson, found the same way
+# — by running this tool against an engine change (2026-11-03). hpengine's
+# "a 200 whose body is a refusal" test used to live in hp_run_json alone; once
+# the XML, CSV, NDJSON and HTML drivers disclosed it too, 25 of 89 rows in that
+# run came back SINK_MISMATCH ("a collector emitting under another id, or a
+# bug") because their disclosure's stderr matched nothing here. One phrase
+# covers all five drivers deliberately, so a sixth cannot reintroduce this.
 FETCH_FAILURE = re.compile(r'\[hp:[^\]]+\]\s+(?:status=\d+|transport failure|'
-                           r'non-JSON body)'
+                           r'non-JSON body|unreadable body:)'
                            r'|\[sched\]\s+\S+\s+fetch-failure:')
 # The engine's three ways of saying "this row was never asked a question".
 # The third was added 2026-10-11 after the second-largest misreading in this

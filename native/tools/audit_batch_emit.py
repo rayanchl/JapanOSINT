@@ -96,7 +96,14 @@ REASONS = [
     (re.compile(r"\[hp:[^\]]+\] status=(\d+)"),                 "HTTP_%s"),
     (re.compile(r"\[hp:[^\]]+\] transport failure"),            "TRANSPORT_FAIL"),
     (re.compile(r"\[hp:[^\]]+\] non-JSON body"),                "UNPARSEABLE"),
+    # `non-XML body` matches a line the engine has never printed — kept because
+    # removing a pattern is not free and it costs nothing, but it is worth
+    # knowing it has never fired. The line the XML, CSV, NDJSON and HTML
+    # drivers DO print, since 2026-11-03, is the one below: ONE phrase for all
+    # five, so a sixth driver cannot arrive undisclosed here (the same mistake
+    # this very pattern represents, from the gate's side).
     (re.compile(r"\[hp:[^\]]+\] non-XML body"),                 "UNPARSEABLE"),
+    (re.compile(r"\[hp:[^\]]+\] unreadable body:"),             "UNPARSEABLE"),
     (re.compile(r"\[hp:[^\]]+\] entity shape mismatch"),        "ENTITY_SHAPE"),
     (re.compile(r"\[hp:[^\]]+\] scheduled run but the row needs an entity"),
                                                                 "NEEDS_ENTITY"),

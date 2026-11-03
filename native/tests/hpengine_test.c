@@ -4360,7 +4360,11 @@ int main(void) {
   { const cap *nt = NULL;
     ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
        strstr(nt->props, "BOT-WALL interstitial") != NULL &&
-       strstr(nt->props, "UA_OVERRIDE") != NULL &&
+       /* The table moved to core/host_agents.def on 2026-10-21 and this remedy
+        * still named core/httpclient.c's UA_OVERRIDE — a remedy pointing at a
+        * knob that is not there any more, which this file calls worse than
+        * none. The assertion is on the name that exists. */
+       strstr(nt->props, "core/host_agents.def") != NULL &&
        strstr(nt->props, "the endpoint may have moved") == NULL &&
        strstr(nt->props, "RATE-LIMIT") == NULL,
        "45: a bot wall served as 200 is named as one, and the remedy is the "
@@ -5086,6 +5090,127 @@ int main(void) {
   rc = run_source("T_NEXT_NUM", "");
   ok(rc == 0 && cap_count("t-nextnum", NULL) == 3 && g_ncalls == 3,
      "39: a numeric next_path cursor walks on (after=2, after=3) instead of stopping at page 1");
+
+  /* ── 58. A REFUSAL SERVED AS 200 REACHES EVERY MODE DRIVER, not just JSON ──
+   *
+   * Tests 44 and 45 pin the rate-limit page and the bot wall — both through
+   * T_URLSIZE, an HP_JSON row, because the discriminators lived inside
+   * hp_run_json and nowhere else. So the fixes this file records as done on
+   * 2026-10-06 and 2026-10-20 each went into ONE of five mode drivers, and an
+   * HP_XML row handed a challenge page found no records, filed at most an
+   * `array-path-missing` notice whose remedy says RE-POINT THE PATH, and
+   * returned 0: the third reader sent hunting a move that never happened.
+   *
+   * Measured 2026-11-03 on the largest remaining family of the 2026-10-25
+   * sweep — 15 UK parish-council `/feed` rows, every one HP_XML with
+   * `array_path = "channel.item"`, whose bodies were byte-identical at 33,245
+   * bytes across 15 unrelated domains. Probed: Cloudflare's
+   * `<title>Just a moment...</title>`, which is also why that phrase is in the
+   * word list now — the two spellings the list already carried are its older
+   * interstitial, so even a JSON row behind current Cloudflare got the wrong
+   * remedy. T_XML_DOTTED is deliberately the same shape as those rows. */
+  fx_reset();
+  fx_add("/rss.xml", 200,
+         "<!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment..."
+         "</title></head><body><div id=\"cf-wrapper\"><div>Enable JavaScript "
+         "and cookies to continue</div></div></body></html>");
+  rc = run_source("T_XML_DOTTED", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "BOT-WALL interstitial") != NULL &&
+       strstr(nt->props, "core/host_agents.def") != NULL &&
+       strstr(nt->props, "the endpoint may have moved") == NULL,
+       "58: an XML row served a bot wall as 200 discloses the wall, with the "
+       "User-Agent as the remedy rather than a re-point");
+    ok(cap_count("collector-shape-notice", NULL) == 0,
+       "58b: and it does NOT file array-path-missing — there is no path to "
+       "re-point when the endpoint stopped serving XML");
+    (void)rc; }
+
+  /* 58c. THE CONTROL that keeps it narrow. A real feed holding zero items is
+   *      an honest empty and must stay silent: the finding there is the
+   *      upstream's, which is the same line lib/rss_atom.c draws for
+   *      news24-za (424 bytes of valid RSS, today's lastBuildDate, no items). */
+  fx_reset();
+  fx_add("/rss.xml", 200,
+         "<?xml version=\"1.0\"?><rss version=\"2.0\"><channel>"
+         "<title>Parish notices</title><lastBuildDate>Mon, 03 Nov 2026 09:00:00 "
+         "GMT</lastBuildDate></channel></rss>");
+  rc = run_source("T_XML_DOTTED", NULL);
+  ok(rc == 0 && cap_count("collector-fetch-failure", NULL) == 0 &&
+     g_ncap == 0,
+     "58c: a well-formed feed with zero items is an honest empty — no records "
+     "and no disclosure");
+
+  /* 58d. And the XML path's OWN schema-drift notice is unchanged: a body that
+   *      really is XML and really repeats some other element is drift, and
+   *      array-path-missing is the right answer there. The additive
+   *      guarantee — this is the case 58b must not have swallowed. */
+  fx_reset();
+  fx_add("/rss.xml", 200,
+         "<?xml version=\"1.0\"?><feed><notice><t>a</t></notice>"
+         "<notice><t>b</t></notice></feed>");
+  rc = run_source("T_XML_DOTTED", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-shape-notice", &nt) == 1 && nt &&
+       strstr(nt->props, "notice") != NULL &&
+       cap_count("collector-fetch-failure", NULL) == 0,
+       "58d: a declared element absent from a body that IS XML is still "
+       "reported as drift, not as a refusal");
+    (void)rc; }
+
+  /* 58e. CSV, where the stakes are highest: an HTML page PARSES as CSV — every
+   *      line becomes one unqueryable cell — so the parse cannot refuse it and
+   *      the row reports records it does not have. That is the `csv_delim`
+   *      lesson (one field per line, a correct record count on every run) with
+   *      a web page in place of a wrong delimiter. */
+  fx_reset();
+  fx_add("/d.csv", 200,
+         "<!DOCTYPE html><html><head><title>Just a moment...</title></head>"
+         "<body>Checking your browser before you continue.</body></html>");
+  g_ncap = 0;
+  rc = run_source("T_DELIM_COMMA", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "BOT-WALL interstitial") != NULL,
+       "58e: a CSV row served an HTML page discloses it instead of storing "
+       "the page's lines as records");
+    /* The disclosure is the only record: the page's lines are NOT stored. */
+    ok(g_ncap == 1, "58e-bis: and nothing but the disclosure reaches the sink");
+    (void)rc; }
+
+  /* 58f. The CSV control: a real CSV whose CELLS carry markup is not an HTML
+   *      document, and the test must not read one as the other — which is why
+   *      hp_body_is_html wants a doctype or an <html> root and reads only the
+   *      leading bytes. A register of web pages is an ordinary thing to
+   *      publish. */
+  fx_reset();
+  fx_add("/d.csv", 200,
+         "ward,method\nOgaki,\"<html>bicycle</html>\"\n");
+  g_ncap = 0;
+  rc = run_source("T_DELIM_COMMA", NULL);
+  ok(rc == 0 && cap_count("collector-fetch-failure", NULL) == 0 &&
+     g_ncap == 1 && strstr(g_cap[0].props, "\"ward\":\"Ogaki\"") != NULL,
+     "58f: a CSV whose cells contain markup still stores its records");
+
+  /* 58g. HTML mode, where hp_body_is_html cannot discriminate because the data
+   *      IS a page — so only the refusal's own WORDS can, and `unreadable` is
+   *      set only when one of them fires. A listing that simply matched no
+   *      anchor stays an honest empty (the T_HTML_CAL calendar of test 57 is
+   *      the row, and 57's own fixture is the control for that half). */
+  fx_reset();
+  fx_add("/cal.html", 200,
+         "<!DOCTYPE html><html><head><title>Just a moment...</title></head>"
+         "<body>Enable JavaScript and cookies to continue</body></html>");
+  g_ncap = 0;
+  rc = run_source("T_HTML_CAL", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "BOT-WALL interstitial") != NULL &&
+       strstr(nt->props, "core/host_agents.def") != NULL,
+       "58g: an HTML row whose page is a wall discloses the wall rather than "
+       "reading it as a listing with nothing on it");
+    (void)rc; }
 
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;
