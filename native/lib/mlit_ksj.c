@@ -243,7 +243,38 @@ int mlit_ksj_collect(const source_ctx *ctx, intel_sink *sink,
   for (int m = 0; !features && m < n_mirrors; m++)
     features = try_url(ctx->http, mirrors[m], cfg, abolished_only);
 
-  if (!features) features = cJSON_CreateArray();   /* live=false → 0 rows */
+  /* NO MIRROR ANSWERED is a FAILED FETCH, not an empty dataset — and this file
+   * said the opposite in its own header ("0 rows when no mirror responds is
+   * success (return 0)"). That is a claim about the UPSTREAM and it is false
+   * here: C02 is Japan's port register, N02 its stations, N05 its rail
+   * history, N07 its bus routes, P02 its airports, P11 its bus stops. None of
+   * them has a quiet day, so zero features can only mean nobody served us the
+   * file. The identical claim was in denki_yoho.h, under the identical
+   * comment, and cost `kyushu-power` an HTML landing page every run for as
+   * long as nobody looked (rule 1).
+   *
+   * Measured 2026-11-03: every one of the eleven GeoJSON URLs this tree holds
+   * under `/ksj/gml/data/` answers HTTP 404 with the same 20,594-byte error
+   * page, so each of these collectors transferred 41,188 bytes (its two
+   * mirrors) and reported `rc=0 records=0 stored=0` — byte for byte what a
+   * register that published nothing would look like. The directory above them
+   * answers 403 rather than 404, so the paths are withdrawn rather than the
+   * host being gone; where the files went is NOT discoverable from this
+   * container, because the datalist page's download links are form-driven and
+   * `/ksj/api/1.0b/...getKSJURL.php` is itself 404 now. So this returns -1 and
+   * lets core/scheduler.c's sched_disclose_fetch_failure name the hosts, the
+   * bytes and the remedy, which is what a reader needs in order to re-point
+   * these rows from an environment that can see the new route.
+   *
+   * An EMPTY array that a mirror really served is a different thing and still
+   * returns 0: `features` is non-NULL then (try_url returns NULL only when
+   * nothing parsed), so the honest empty rule 1 asks for is preserved. */
+  if (!features) {
+    fprintf(stderr, "[%s] no mirror served a parseable %s GeoJSON — reporting "
+                    "a failed fetch, not an empty register\n",
+            ctx->source_id, code);
+    return -1;
+  }
   int n = geojson_emit_features(sink, ctx->source_id, features);
   cJSON_Delete(features);
   fprintf(stderr, "[%s] emitted %d\n", ctx->source_id, n);
