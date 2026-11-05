@@ -44,10 +44,44 @@ bulk endpoint with HTTP **200** and Imperva's `<title>Pardon Our
 Interruption</title>`, so the note again said "the endpoint may have moved" —
 the third reader sent hunting a move that never happened. Pacing cannot reach a
 wall that refuses an automated client at any rate, so the remedy must not be a
-hostgate gap either: it points at `core/httpclient.c`'s UA_OVERRIDE table, where
-one WORD in the agent is the measured cause on every host so far. `hptest` 45,
-and 45b pins that a body merely saying "access denied" is not reported as a wall
-— permit decisions and FOI logs are full of the phrase.
+hostgate gap either: it points at the per-host agent table, where one WORD in
+the agent is the measured cause on every host so far. `hptest` 45, and 45b pins
+that a body merely saying "access denied" is not reported as a wall — permit
+decisions and FOI logs are full of the phrase.
+
+**That remedy named `core/httpclient.c`'s UA_OVERRIDE until 2026-11-05**, a
+table that moved to `core/host_agents.def` on 2026-10-21 — so for a fortnight
+it pointed a reader at a knob that is not there, which this file calls worse
+than none. `hptest` 45 asserts the name that exists now.
+
+**AND BOTH TESTS ABOVE WERE IN `hp_run_json` AND NOWHERE ELSE** (2026-11-05),
+so the fixes this rule records as done on 2026-10-06 and 2026-10-20 reached one
+of five mode drivers. An `HP_XML` row handed a challenge page found no records,
+filed at most an `array-path-missing` notice whose remedy says RE-POINT THE
+PATH, and returned 0 — the third reader sent hunting a move that never
+happened, three paragraphs after this rule names that mistake twice.
+`hp_body_refusal()` is the one word test now, called by JSON, XML, CSV, NDJSON
+and HTML alike, and `hp_body_is_html()` carries `lib/rss_atom.c`'s "a 2xx body
+that is not a feed AT ALL is not an empty feed either" into the three modes
+whose data is not a page (HTML mode gets the words test only, since its data
+IS one; NDJSON needs its own site because a web page reaches `hp_run_json` as
+`[]`, which parses). **`Just a moment` is in the word list now** because that
+is what Cloudflare serves today — measured on two parish-council hosts — while
+the two spellings the list already carried are its older interstitial, so even
+a JSON row behind current Cloudflare was getting the wrong remedy. A wall's
+wording is a dated reading like everything else here. `hptest` 58–58g: five
+assertions confirmed to fail against the old code, three controls, and one of
+the controls earned its place — 58f caught the first `hp_body_is_html()`
+reading a CSV cell containing `<html>` as a page, so the test now requires
+markup at the START of the body.
+
+**And the GATES were the fourth copy**, found by running one against the
+change: 25 of 89 correctly-disclosing rows came back `SINK_MISMATCH` ("a
+collector emitting under another id, or a bug") because their stderr matched no
+pattern in `audit_registry_emit.py`. One phrase for all five drivers
+(`unreadable body:`), one pattern in each tool, so a sixth driver cannot
+reintroduce it. `audit_batch_emit.py`'s `non-XML body` turns out to match a
+line the engine has never printed.
 
 **And the inverse mistake: AN UPSTREAM'S OWN "NOTHING MATCHED" IS NOT A
 REFUSAL.** FDSN's `nodata` parameter names the status a service must use for an
@@ -73,6 +107,26 @@ that does not run the service at all. Keying on the status, or on the row having
 asked for `nodata=404`, would have filed that dead service as a healthy empty —
 the dangerous direction. `hptest` 46–46d, each checked against the old
 behaviour.
+
+**AND IT WENT THAT DANGEROUS WAY ANYWAY, because the phrase was looked for in
+a WEB PAGE** (2026-11-05). `JO47_IT_AUSL_MO` reads an Italian health
+authority's `/feed/`, which answers HTTP **404 with 604,031 bytes of a React
+404 page** — and that bundle carries the WordPress block editor's translation
+table, in which sits the string `"No matching blocks"`. So
+`jo_strcasestr(body, "no matching")` matched an i18n KEY inside half a megabyte
+of markup, and a dead feed was filed as a healthy empty: rc=0, no records, no
+notice, with `bytes=604031` on the run line the whole time. The paragraph above
+had named this exact failure as the one to avoid and then committed it four
+lines later.
+So the body must not be an HTML DOCUMENT: a service's declared-empty reply is
+its own short message — FDSN's is about sixty bytes, koeri's one sentence — and
+no FDSN, OGC or OData service answers "nothing matched" with a page. That is
+the narrowest rule covering the measured cause, and it reuses `hp_body_is_html`
+rather than guessing a size ceiling nobody has measured across services.
+`hptest` 46e, confirmed to fail without it, and **46f is the control**: a
+plain-text 404 saying "no data available" still reads as an honest empty, which
+is the only thing that makes narrowing 46 safe. **A phrase test is a test of
+the body's OWN words, so it needs to know what kind of body it is reading.**
 
 It changes two things that read the run line. A dead source now reports
 `records=1 stored=1`, so `audit_registry_emit.py` counts engine notices
@@ -202,6 +256,28 @@ transferred a real body and found no records in it** — and only 8 of those 97
 had disclosed anything. The 97 are a ranked list; the top of it was three
 distinct defects, each a shape this rule had not yet recorded:
 
+**THE TAIL OF THAT LIST HAS NOW BEEN WORKED, AND A THIRD OF IT WAS SIMPLY
+HEALTHY** (2026-11-05, `docs/emits-nothing-tail-2026-11-05.tsv`). The 91 rows
+left after the first eight fixes, re-read through the real binary: **31 OK, 32
+FETCH_FAILED (all disclosing), 28 that fetched a body and stored nothing.** So
+the eight-day-old sweep had measured the MOMENT for a third of them, which is
+this file's "one probe is one reading" at the scale of a whole verdict column —
+and the cheapest way to avoid acting on it is to re-read before changing a row,
+not to re-reason about the note.
+
+The largest apparent family in that tail dissolved the same way, and it is the
+better lesson of the two. **15 UK parish-council `/feed/` rows whose bodies
+were byte-identical at 33,245 bytes across 15 unrelated domains** read exactly
+like one dead platform; three probed by hand gave two Cloudflare 403s and
+`maltbytowncouncil.gov.uk` serving **24,793 bytes of real RSS**, and through
+the engine **11 of the 15 store records today**. So NO agent-table entry was
+added: a wall that lets eleven of fifteen through in the same minute is not
+something an agent change reaches, and a gap or agent set on an unreproducible
+reading is guessing. **An identical byte count across unrelated hosts groups
+candidates; it does not make them a family** — the same correction the
+`JO28_ADR_FINMAC` / `JP25_JPFIN_FINMAC_NEWS` pair forced in the same pass,
+where a shared 7,249 bytes turned out to be two genuinely different paths.
+
 * **EVERY FIELD OF A RECORD CAN BE NESTED, and then a VJSON row stores
   nothing.** Four rows read `laws.e-gov.go.jp/api/2/laws` and transferred 4.1,
   4.4, 4.5 and 2.0 MB a run — **14.9 MB** — for `rc=0 records=0 stored=0`. An
@@ -244,6 +320,66 @@ distinct defects, each a shape this rule had not yet recorded:
   `/td/power-usages01.html` after a site redesign — and said nothing. It
   returns -1 now, so `sched_disclose_fetch_failure` names the hosts, bytes and
   remedy. Two of the ten TSO rows were affected; the other eight are untouched.
+
+  **`kyushu-power` ITSELF IS WORKING, and that sentence was the stale thing**
+  (re-measured 2026-11-05): its dated CSV answers HTTP 200 with 8,522 bytes of
+  real `text/csv`, and the engine stores 8,640 MW at 19:40 JST as a
+  `power-demand` record. The redirect was a reading of one day. The `-1`
+  change above was right and stays; what is corrected is the claim about the
+  row's state today. **Re-read a row before acting on a note about it** —
+  this file's own "one probe is one reading", turned on this file.
+
+  **AND THE CLAIM WAS IN A SHARED HELPER, TWICE OVER.** `lib/mlit_ksj.h` said
+  in as many words "0 rows when no mirror responds is success (return 0)", and
+  the .c implemented it, so SIX national registers — C02 ports, N02 stations,
+  N05 rail history, N07 bus routes, P02 airports, P11 bus stops — each fetched
+  two 404 pages and reported `rc=0 records=0`. All eleven GeoJSON URLs this
+  tree holds under `/ksj/gml/data/` answer 404 with the same 20,594-byte page,
+  so each row transferred 41,188 bytes a run; that identical byte count is
+  what grouped them out of the 2026-10-25 sweep's unexplained rows. Measured
+  after, all six: `rc=-1 records=1 stored=1 bytes=41188`. The directory above
+  them answers 403 rather than 404, so the paths are withdrawn rather than the
+  host gone — but the datalist page's download links are form-driven and
+  `/ksj/api/1.0b/...getKSJURL.php` is itself 404, so the successor route is
+  **unmeasured from this container** rather than re-pointed on a guess.
+* **AND SEVEN MORE COLLECTORS HAD MADE THE SAME CALL CORRECTLY, AND THEN THE
+  MACHINERY ARRIVED** (2026-11-05, `docs/emits-nothing-tail-2026-11-05.tsv`).
+  Working the sweep's tail, seven bespoke rows turned out to carry a REASONED
+  comment choosing an honest empty — written when a log line was the only place
+  to put it, because `sched_disclose_fetch_failure` did not exist until
+  2026-10-22. `flightradar-jp`'s 2026-07-31 note diagnoses the Cloudflare 302
+  exactly and ends "the block is now visible in the log"; `cam-webcamtaxi` says
+  "faithful => 0 cameras"; `nicter-stats` calls an empty "the correct result"
+  two lines after naming where the figures moved to; and `wanted-persons` says
+  an operator "could not tell an unreachable NPA index from no wanted persons
+  published" — and then returns 0 anyway. Each returns -1 now, and every
+  diagnosis in those notes re-measured as still true, so what changed is only
+  where it is written down. **A correct decision can go stale when the thing it
+  worked around gets built**, so a comment explaining why a shortfall is a log
+  line is worth re-reading after any disclosure lands.
+
+  Three of the seven are worth their own line. `reddit-jp-subs` carried
+  `return n >= 0 ? 0 : -1`, which can never be -1, so five of Japan's busiest
+  subreddits "all published nothing" every 30 minutes while reddit answered
+  **403 with 189,908 bytes of its block page** to each — and the fix keys on
+  the PARSE, not the record count, because a quiet sub still serves a listing
+  with an empty `children`. That tautology is in **254 sites** across the tree
+  (`return n >= 0 ? 0 : -1` 223, `rc` 23, others 8); it is only a defect where
+  the counter cannot go negative AND zero records cannot be honest, and that
+  second half is the author's measurement rather than something a scan can
+  decide — so the population is written down here rather than swept.
+  And `jma-ocean-temp` and `jartic-traffic` **cannot emit a record at all**:
+  both fetch, discard the response, and emit `[]` by construction under a
+  comment reading "live always []", with JARTIC doing it every 300 s — 288
+  requests a day — against a 404. They are left disclosing rather than removed,
+  because `core/layers.def`, `core/statusapi.c` and `unified_highway.c` name
+  those ids, so a removal is a count decision with references.
+
+  **`bird-flu-outbreaks` is the control, and it is NOT changed.** It reached
+  the 令和8年 season page and found no cases, which in early November is simply
+  true — Japan's HPAI season holds zero outbreaks for months — and that
+  collector already returns -1 for an unreachable index or season page. A pass
+  like this needs one row it leaves alone, or the rule it applies is untested.
 * **AN ANCHOR CALENDAR DEFEATS THE LABEL MINIMUM, and that was the fourth
   record path without a disclosure.** The US NRC's event-notification year
   pages carry 205 and 245 real `<a href>` anchors, every one matching the row's
@@ -349,7 +485,53 @@ that replaced them survive, so no coverage is lost. **A sweep's verdict is
 about the URL it sent, not about the row's name** — re-read a removal against
 the row as it stands now.
 
-**The registered count is 61,527** (2026-10-30, `make source-count`, both
+**The registered count is 60,829** (2026-11-05, `make source-count`, both
+floors re-recorded from that build, and the binary's own registry agrees at
+60,829 with 0 duplicates, 0 dropped and 0 never-runs): 61,527 less **698 rows
+that read ONE FEED under a second format spelling**.
+
+Joomla serves one feed as `?format=feed&type=rss` and `&type=atom`; WordPress
+serves one as `/feed/`, `/feed/atom/` and `/feed/rss2/`. `core/intel.c` keys
+every row as `uid = "<source_id>|<remote_key>"`, so two rows on one feed do not
+dedupe — every item is stored once per row and the request is spent twice. The
+generator emitted both, noticed the ids collided, appended `_2`, and did not
+conclude it had one source: main's own `2c14ad9 retire 19 twin groups` at
+thirty-five times the scale. **693 groups, 1,391 rows**, every one run through
+the real binary (1,319 OK, 65 FETCH_FAILED, 7 EMITS_NOTHING) — and in **689 of
+the 693 every member stored the identical record count**. Twelve groups read
+into one database held **228 rows for 107 distinct titles**, several from
+byte-identical responses, with the same post's uid differing only by its
+source_id prefix. Per row:
+`docs/removed-sources-2026-11-05-feed-format-twins.tsv`.
+
+Three things from it generalise:
+
+* **The four groups whose members DIFFERED were each re-read, and three were
+  transient.** The fourth is why this is decided per row and not per family: on
+  `mairie-saint-christophe-des-bardes.com` the `type=rss` spelling answers **0
+  bytes, twice**, while `type=atom` stores 20 — so the ATOM row is the keeper
+  there, against the rule that keeps the base id everywhere else (658 groups
+  keep the base, 34 store nothing today and keep one row disclosing).
+  The `ordinefarmacistiviterbo.it` lesson, one family over.
+* **`dup-endpoint` could not see any of this, for two independent reasons**,
+  either alone sufficient: it groups host+path+QUERY textually, so `type=rss`
+  and `type=atom` are two endpoints to it, and it only reports an endpoint
+  shared by 2+ FILES while all 693 groups sit inside ONE file. Its count did
+  not move by one when 698 rows left. `make lint-sources` has
+  **`feed-format-twin`** now, unbaselined because the population is zero — and
+  its zero was CHECKED rather than trusted: against the pre-retirement tree it
+  reports 10 groups in `hp3b44_ukgov.c` alone, and the first version reported 8
+  there because skipping a row that asked for no format dropped the `/feed/` +
+  `/feed/atom/` shape. A row that really serves different content under two
+  spellings says so with a `feed-format-twin-ok:` marker.
+* **The by-catch repaid the 2026-10-22 decision to KEEP the `&amp;`.**
+  `JO47_IT_CPIPI_MS_2` was the one row in the tree genuinely receiving Atom
+  against `array_path = channel.item`, storing nothing. 71 rows look like that
+  shape and **70 are correct by accident**: their `&amp;` sends
+  `amp;type=atom`, which the server ignores, so they really receive RSS.
+  Retiring the twin fixes the one real case.
+
+**The registered count was 61,527** (2026-10-30, `make source-count`, both
 floors re-recorded from that build): 57,905 plus **batch 57's 3,622 Japanese
 rows** — eight beats in `collectors/pivot/table/hp3b57_*.c`, every one measured
 through the engine (3,580 OK, 346,732 records emitted in one pass, and NOT ONE
@@ -2629,6 +2811,7 @@ says why.
 | `tools/audit_batch_reachable.py` | rule 3 above. A row whose opts are ambiguous is reported UNVERIFIABLE, never "never runs" |
 | `tools/audit_url_limits.py` | the seventh discard shape — a record limit asked of the UPSTREAM in a URL, with no paging to follow it. Read, not gated: 70 narrow candidates as of 2026-10-20 (103 when written, 89 after the 2026-10-11 pass), and a limit on a ranked pivot is legitimate |
 | `tools/audit_cycle_health.py` | whether a `page_resume` row can actually ADVANCE its cycle. Three outcomes, one healthy: `CYCLING` (a position was stored), `COMPLETE` (the walk ended and cleared it — the measured no-op that makes page_resume safe to apply broadly), `STUCK` (a page failed, so no position was stored and the next run re-reads the same slice; the collection past that point is unreachable). Found as the generalisation of the ENA shape. It reports the failing page's STATUS and URL rather than a bare verdict, because a 400 naming a parameter is a property of the endpoint while a 429 is one reading. Walks to the real ceiling rather than probing shallow — the failure can be at any page — so it costs ~20 requests a row. Reads the `page_resume` rows out of the C, which is the maintained copy |
+| `make lint-sources` / `feed-format-twin` | two rows reading ONE feed under two format spellings (`?type=rss` beside `&type=atom`, `/feed/` beside `/feed/atom/`). 693 groups / 1,391 rows when it was written, retired to zero, so it is UNBASELINED and any new one fails. It exists apart from `dup-endpoint` because that check could not see this for two independent reasons: it groups host+path+QUERY textually, and it only reports an endpoint shared by 2+ FILES while every group sat inside one file. A publisher that really serves different content under two spellings says so with a `feed-format-twin-ok:` marker |
 | `tools/audit_idkeys.py` | rule 4b's quietest shape: an `id_keys` naming a field the upstream does not send, which the engine answers by content-hashing every uid — so the row stores its records and a REVISED record lands as a new row instead of an update. One request per row, no database: one page, the first record flattened as `hp_json_flat` flattens it, each token resolved as **`hp_flat_get`** resolves it — exact flat key, else any key whose LAST dotted segment matches case-insensitively. Mirroring that fallback is the whole job: without it the check indicts most of the ArcGIS and GeoJSON fleet (its first version reported 35 rows and 30 were its own fault). It does NOT answer whether the key is UNIQUE — a key that exists and is a dimension loses records just as silently, and that is the registry sweep's COLLISION verdict. Rows come from the C, HP_JSON only, entity/date-token URLs skipped; `--all` drops the `page_resume` restriction |
 | `tools/audit_page_ceiling.py` | which scheduled rows stop at the PAGE CEILING, and how many pages their own upstream says they need. Probes SHALLOW (`--probe-pages`, default 3) and then does arithmetic, because the engine's truncation notice already carries the only number that settles it: a `records_available` whose basis is "upstream declared this total". `CEILING_DECLARED` is measured (pages_needed = total / page_size, the page size derived from the probe when the row declares none); `CEILING_UNKNOWN` means the upstream publishes no total and only a full walk can size it, which is a decision to take deliberately, not a finding. Reads `collector-fetch-failure` too, so a 429 is `FETCH_FAILED` and not "this source returns nothing" |
 | `tools/audit_cycle_advance.py` | which `page_resume` rows can never advance. Runs every cycling row through the real binary under **`JO_PAGE_MAX=2`** (which brakes a declared `page_max` too since 2026-10-22: `jo_page_max_for`, hptest 40f) and reads the truncation notice back: `STUCK` (page 2 refused with a 4xx that is the endpoint's — re-point the paging), `CUT` (transport/5xx/429/wall — re-run, then a hostgate gap), `ADVANCES`, `COMPLETES`, `FETCH_FAILED`, `NEEDS_ENTITY`, `SLOW`. The engine has disclosed the stuck shape per run since 2026-10-18; this is the first thing that READS the disclosures across the registry. `--from-tables collectors` takes the ids from the C, `--ids-file` for a re-run |
