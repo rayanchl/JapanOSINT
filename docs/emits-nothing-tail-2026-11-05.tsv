@@ -1,0 +1,30 @@
+id	bytes	requests	measured_2026_11_05	outcome	note
+reddit-jp-subs	949540	5	HTTP 403 + 189,908 B of reddit's block page per sub	FIXED_DISCLOSES	return n>=0?0:-1 could never be -1; five of Japan's busiest subreddits do not all go quiet. Discriminator is the PARSE, not the record count. reddit's .json listings now want OAuth, a credential this row lacks.
+JO47_IT_AUSL_MO	604031	1	HTTP 404 + 604,031 B React 404 page	FIXED_ENGINE	its bundle carries the WordPress editor's i18n string "No matching blocks", which hp_status_is_declared_empty matched, filing a dead feed as a healthy empty. The no-data test now refuses an HTML document. hptest 46e/46f.
+sci-usgs-astro-pds	395932	2	stored=2 notices=2	ALREADY_DISCLOSES	the row files two shape notices per run. CLAUDE.md already records it as NOT the nested-record shape (it carries a top-level id), so the data question is its own and is open.
+phone-scam-hotspots	225906	13	rc=0 records=0, 13 requests	OPEN	unexamined; 13 requests a run for no records. Next in the queue.
+real-estate	161694	13	rc=0 records=0, 13 requests	OPEN	unexamined (suumo.c).
+NRC_EVENT_REPORTS_2025	138146	1	anchors-unlabelled notice	ALREADY_DISCLOSES	the anchor-calendar shape CLAUDE.md records; the notice tells the reader not to lower the label minimum.
+NRC_EVENT_REPORTS_2026	133143	1	anchors-unlabelled notice	ALREADY_DISCLOSES	same.
+bird-flu-outbreaks	97687	2	reached the 令和8年 season page, no cases	HONEST_EMPTY	Japan's HPAI season begins in late autumn and genuinely holds zero outbreaks for months. The collector already returns -1 for an unreachable index and an unreachable season page. NOT changed — this is the control for the whole pass.
+JO47_IT_CPIPI_MS_2	68985	1	HTTP 200, 69,005 B of real Atom	RETIRED	the one row in the tree genuinely served Atom against array_path=channel.item. Its twin reads the same feed as RSS and stores 10, so the twin retirement fixes it. 70 other rows look like this shape and are correct by accident: their &amp; sends amp;type=atom, which the server ignores.
+unified-airports	41188	6	rc=0 records=0	DOWNSTREAM	fuses three upstreams including mlit-p02-airports; its upstreams disclose individually now, so the database can tell what happened.
+mlit-c02-ports	41188	2	HTTP 404 + 20,594 B error page x2 mirrors	FIXED_DISCLOSES	lib/mlit_ksj.c: "0 rows when no mirror responds is success" was false for six national registers.
+mlit-n02-stations	41188	2	same	FIXED_DISCLOSES	same helper.
+mlit-n05-rail-history	41188	2	same	FIXED_DISCLOSES	same helper.
+mlit-p02-airports	41188	2	same	FIXED_DISCLOSES	same helper.
+mlit-p11-bus-stops	41188	2	same	FIXED_DISCLOSES	same helper.
+mlit-n07-bus-routes	20594	1	same, one mirror	FIXED_DISCLOSES	same helper. All eleven /ksj/gml/data/ GeoJSON URLs 404; the successor route is unmeasured from this container (the datalist page's links are form-driven and the old API endpoint is 404 too).
+nicter-stats	12066	1	HTTP 200, no counter in the page	FIXED_DISCLOSES	the comment called an empty "the correct result" while naming where the figures moved to (/top10). NICTER holds plenty; this PAGE stopped carrying it.
+wifi-hotspots-jcfw	11830	1	/jcfw/area.html 301s to /jw-auto/ja/	FIXED_DISCLOSES	fetched the new landing page and parsed no <tr>. A national public Wi-Fi directory does not empty out.
+homes-co	8271	47	rc=0 records=0, 47 requests	OPEN	unexamined; 47 requests a run is the highest request count in the tail.
+JP25_JPFIN_FINMAC_NEWS	7249	1	rc=0 records=0	OPEN	grouped with JO28_ADR_FINMAC only by a shared byte count; the two read genuinely DIFFERENT paths (/news/ and /tokei-siryo/index_03/). A shared byte count groups candidates, it never proves a twin.
+JO28_ADR_FINMAC	7249	1	rc=0 records=0	OPEN	see above.
+flightradar-jp	5683	1	zone feed 302s to /static/legacy/feed.json, which is 403	FIXED_DISCLOSES	its own 2026-07-31 note had diagnosed this exactly and concluded "the block is now visible in the log" — correct when written, because sched_disclose_fetch_failure did not exist until 2026-10-22.
+cam-webcamtaxi	5664	1	HTTP 403, 5,664 B	FIXED_DISCLOSES	"faithful => 0 cameras" was the same stale decision; the WAF reading still holds.
+wanted-persons	3351	1	NPA index HTTP 404, 3,351 B	FIXED_DISCLOSES	its own comment said an operator "could not tell an unreachable NPA index from no wanted persons published" and then returned 0 anyway. npa.go.jp/sousa/ declares no shimeitehai link, so the successor is unmeasured from here.
+wikipedia-ja-recent	3443	1	HTTP 429 "You are making too many requests"	OPEN	rate limited. The budget cannot be measured from behind the limit (the Archive-It rule), so no hostgate gap is guessed at; the UA is also `japanosint-collector`, which Wikimedia's policy asks to carry contact details.
+geo-gfz-kp-nowcast	2310	1	stored=1 notices=1	ALREADY_DISCLOSES	CLAUDE.md records it as parallel arrays rather than records.
+sslbl-jp	2308	2	rc=0 records=0 over two upstreams	OPEN	goes through threatintel_collect; zero JP IPs on an SSL blacklist can be an honest day, so the discriminator must be "neither upstream parsed", not "no records".
+jma-ocean-temp	2203	1	all /kaikyo/daily/ paths 404	FIXED_DISCLOSES	and it CANNOT emit: it discards the response and emits [] by construction. Not removed — core/layers.def and core/statusapi.c name the id, so that is a count decision with references.
+jartic-traffic	146	1	HTTP 404	FIXED_DISCLOSES	the second and more expensive copy of the same no-op: interval 300 s, so 288 requests a day. Not removed — unified_highway.c fuses it as its congestion upstream.

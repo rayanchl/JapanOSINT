@@ -263,19 +263,28 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   char *idx_html = feed_get_text(ctx->http, NPA_WANTED_HTML, 8000);
   if (!idx_html) {
     /* both of these bailed silently, so an operator could not tell an
-     * unreachable NPA index from "no wanted persons published" */
-    fprintf(stderr, "[wanted-persons] NPA index unreachable (%s)\n",
-            NPA_WANTED_HTML);
-    return 0;
+     * unreachable NPA index from "no wanted persons published" — and then they
+     * returned 0, so an operator still could not. The log line was the only
+     * place to put it when this was written; sched_disclose_fetch_failure
+     * (2026-10-22) is the right place, and rule 1 says a shortfall is data. */
+    fprintf(stderr, "[wanted-persons] NPA index unreachable (%s) — reporting "
+                    "a failed fetch\n", NPA_WANTED_HTML);
+    return -1;
   }
   int ok = strstr(idx_html, "shimeitehai") != NULL ||
            strstr(idx_html,
              "\xe6\x8c\x87\xe5\x90\x8d\xe6\x89\x8b\xe9\x85\x8d") != NULL;
   free(idx_html);
   if (!ok) {
+    /* Measured 2026-11-05: this index answers **HTTP 404 with 3,351 bytes**,
+     * and npa.go.jp/sousa/ declares no link carrying `shimeitehai` or `tehai`
+     * in its HTML, so the successor path is unmeasured from here rather than
+     * diagnosed. Japan's national most-wanted list is not a thing that goes
+     * quietly empty, so a changed layout is a finding and not a result. */
     fprintf(stderr, "[wanted-persons] NPA index fetched but carries no "
-                    "shimeitehai marker — page layout changed\n");
-    return 0;
+                    "shimeitehai marker — the page moved or changed layout; "
+                    "reporting a failed fetch, not an empty wanted list\n");
+    return -1;
   }
 
   cJSON *features = cJSON_CreateArray();

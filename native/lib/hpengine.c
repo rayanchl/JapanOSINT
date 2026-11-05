@@ -4622,10 +4622,28 @@ static int hp_header_is_conditional(const char *h) {
  * resource does not exist on this server" — a node that does not run the event
  * service at all (CLAUDE.md's own lesson). Keying on the status, or on the row
  * having asked for `nodata=404`, would file that dead service as a healthy
- * empty, which is the dangerous direction. */
+ * empty, which is the dangerous direction.
+ *
+ * AND IT WENT THAT DANGEROUS WAY ANYWAY, because the phrase was looked for in
+ * a WEB PAGE (2026-11-05). `JO47_IT_AUSL_MO` reads an Italian health
+ * authority's `/feed/`, which now answers **HTTP 404 with 604,031 bytes of a
+ * React 404 page** — and that bundle carries the WordPress block editor's
+ * translation table, in which sits the string `"No matching blocks"`. So
+ * `jo_strcasestr(body, "no matching")` matched an i18n key inside a
+ * half-megabyte document, and a dead feed was filed as a healthy empty: rc=0,
+ * no records, no notice, exactly what this function exists to prevent for
+ * koeri. The run line said `bytes=604031` the whole time.
+ *
+ * So the body must not be an HTML DOCUMENT. A service's declared-empty reply
+ * is its own short message — FDSN's is about sixty bytes of text, koeri's is
+ * one sentence — and no FDSN, OGC or OData service answers "nothing matched"
+ * with a web page. That is the narrowest discriminator that covers the
+ * measured cause, and it reuses hp_body_is_html rather than guessing a size
+ * ceiling nobody has measured across services. */
 static int hp_status_is_declared_empty(long status, const char *body) {
   if (status == 204) return 1;                  /* no content, by definition */
   if (status != 404 || !body) return 0;
+  if (hp_body_is_html(body)) return 0;          /* a page is not a no-data reply */
   return jo_strcasestr(body, "no matching") != NULL ||
          jo_strcasestr(body, "no data available") != NULL;
 }

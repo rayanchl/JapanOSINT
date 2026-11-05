@@ -60,9 +60,26 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
    * today: the zone feed answers 302 (Cloudflare) to every request, with the
    * collector's UA and with a browser UA alike, i.e. FR24 has closed the
    * key-free endpoint. Left as an honest empty (rc=0, no fabricated
-   * aircraft); the block is now visible in the log. */
-  if (!data)
-    fprintf(stderr, "[flightradar-jp] feed fetch failed/blocked: %s\n", FEED_URL);
+   * aircraft); the block is now visible in the log.
+   *
+   * THAT LAST SENTENCE IS THE PART THAT WAS WRONG, and it was wrong the way a
+   * correct decision goes stale rather than the way a mistake is wrong. Rule 1
+   * says a shortfall is reported AS DATA, "not as a log line nobody reads" —
+   * and in July there was nowhere else to put it, because
+   * sched_disclose_fetch_failure did not exist until 2026-10-22. It does now,
+   * so a refused fetch here becomes a record naming the host, the bytes and
+   * the remedy. Re-measured 2026-11-05 and the diagnosis above still holds
+   * exactly: the zone feed 302s to `/static/legacy/feed.json`, which answers
+   * **403**, so the key-free endpoint is still closed. What changes is only
+   * that the database can now say so.
+   *
+   * An honest empty is still preserved: a parsed body holding no aircraft over
+   * Japan returns 0 as it always did. Only a body that did not parse is -1. */
+  if (!data) {
+    fprintf(stderr, "[flightradar-jp] feed fetch failed/blocked: %s — "
+                    "reporting a failed fetch, not an empty sky\n", FEED_URL);
+    return -1;                      /* nothing is allocated yet at this point */
+  }
 
   cJSON *features = cJSON_CreateArray();
   if (data && cJSON_IsObject(data)) {

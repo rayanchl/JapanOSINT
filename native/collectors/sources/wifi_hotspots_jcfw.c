@@ -88,7 +88,25 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
   free(html);
   fprintf(stderr, "[wifi-hotspots-jcfw] emitted %d\n", n);
-  return n >= 0 ? 0 : -1;
+  /* `n >= 0 ? 0 : -1` could never be -1 — n starts at 0 and only ever
+   * increments — so a 200 carrying no <tr> at all read as a directory with no
+   * hotspots in it. Measured 2026-11-05: `/jcfw/area.html` **301s to
+   * `/jw-auto/ja/`**, the service's new landing page, and the row fetched
+   * 11,830 bytes of that instead of the area table. A national public Wi-Fi
+   * directory does not empty out, so no rows parsed from a page that answered
+   * is the page having moved. The successor list is not discoverable from the
+   * landing page's HTML, so it is unmeasured from here rather than re-pointed.
+   *
+   * The honest empty is preserved by construction: the `!html` path above
+   * already returns -1, and a page that really did carry an empty table would
+   * still have <tr> blocks to parse. */
+  if (n == 0) {
+    fprintf(stderr, "[wifi-hotspots-jcfw] no table rows in the page that "
+                    "answered — reporting a failed fetch, not an empty "
+                    "directory\n");
+    return -1;
+  }
+  return n;
 }
 
 static const source_def wifi_hotspots_jcfw_def = {

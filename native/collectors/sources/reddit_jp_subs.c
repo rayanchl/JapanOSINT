@@ -19,6 +19,7 @@ static const char *SUBS[] = { "japan", "japanlife", "Tokyo",
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *hdrs[] = { "User-Agent: JapanOSINT/1.0 (research)", NULL };
   int n = 0;
+  int listings = 0;              /* subs that served a PARSEABLE listing */
   for (int s = 0; s < NSUB; s++) {
     char url[160];
     snprintf(url, sizeof url,
@@ -27,6 +28,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON *data = r ? cJSON_GetObjectItem(r, "data") : NULL;
     cJSON *children = data ? cJSON_GetObjectItem(data, "children") : NULL;
     if (cJSON_IsArray(children)) {
+      listings++;
       cJSON *c;
       cJSON_ArrayForEach(c, children) {
         cJSON *p = cJSON_GetObjectItem(c, "data");
@@ -123,8 +125,33 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     }
     if (r) cJSON_Delete(r);
   }
-  fprintf(stderr, "[reddit-jp-subs] emitted %d\n", n);
-  return n >= 0 ? 0 : -1;
+  /* NOT ONE SUB SERVED A LISTING is a refusal, not five quiet subreddits.
+   * `n >= 0 ? 0 : -1` could never be -1, so this row reported
+   * `rc=0 records=0 stored=0` while reddit.com answered **HTTP 403 with
+   * 189,908 bytes of its block page** to each of the five — about 950 KB a
+   * run, every 30 minutes, indistinguishable in the database from r/japan,
+   * r/japanlife, r/Tokyo, r/newsokur and r/JapanFinance all publishing
+   * nothing. Measured 2026-11-05; it is one of the 2026-10-25 sweep's rows
+   * that "fetched a real body and found no records in it".
+   *
+   * The discriminator is the PARSE, not the record count, which is what keeps
+   * rule 1's honest empty: a sub with no new posts still serves a listing
+   * whose `children` is an empty array, so it counts here. Only a body that
+   * is not a listing at all leaves `listings` at zero, and then
+   * sched_disclose_fetch_failure names the host, the bytes and the remedy.
+   * Same shape, same fix as lib/mlit_ksj.c's "no mirror answered".
+   *
+   * The remedy is not a User-Agent: reddit's `.json` listing endpoints now
+   * want OAuth, which is a credential this row does not have, so the
+   * disclosure is the honest outcome until one is configured. */
+  fprintf(stderr, "[reddit-jp-subs] emitted %d from %d of %d listing(s)\n",
+          n, listings, NSUB);
+  if (listings == 0) {
+    fprintf(stderr, "[reddit-jp-subs] no sub served a parseable listing — "
+                    "reporting a failed fetch, not five quiet subreddits\n");
+    return -1;
+  }
+  return n;
 }
 
 static const source_def reddit_jp_subs_def = {

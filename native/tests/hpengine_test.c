@@ -4431,6 +4431,37 @@ int main(void) {
   ok(rc == 0 && cap_count("collector-fetch-failure", NULL) == 0,
      "46c: a 204 with no body is an honest empty, not a refused fetch");
 
+  /* 46e. AND THE PHRASE MUST BE THE BODY'S OWN MESSAGE, NOT A STRING BURIED IN
+   *      A WEB PAGE — 46b's dangerous direction, reached anyway (2026-11-05).
+   *      `JO47_IT_AUSL_MO` reads an Italian health authority's `/feed/`, which
+   *      answers HTTP 404 with 604,031 bytes of a React 404 page whose bundle
+   *      carries the WordPress block editor's translation table — and in it the
+   *      string "No matching blocks". So a dead feed was filed as a healthy
+   *      empty: rc=0, no records, no notice, with `bytes=604031` on the run
+   *      line the whole time. A service's declared-empty reply is its own short
+   *      message; none answers with a page. */
+  fx_reset();
+  fx_add("/us?per_page=100", 404,
+         "<!DOCTYPE html><html lang=\"it\"><head><title>Pagina non trovata"
+         "</title><script>var t={\"No matching blocks\":\"Nessun blocco "
+         "corrispondente\"};</script></head><body>404</body></html>");
+  rc = run_source("T_URLSIZE", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "the upstream refused the request") != NULL,
+       "46e: a 404 HTML page that merely contains 'no matching' is a refusal, "
+       "not the upstream's own no-data answer");
+    (void)rc; }
+
+  /* 46f. THE CONTROL for 46e: the real FDSN wording is plain text and must
+   *      still read as an honest empty. Narrowing 46e by excluding HTML is only
+   *      safe if it leaves this case exactly as 46 found it. */
+  fx_reset();
+  fx_add("/us?per_page=100", 404, "Error 404: Not Found\n\nno data available\n");
+  rc = run_source("T_URLSIZE", NULL);
+  ok(rc == 0 && cap_count("collector-fetch-failure", NULL) == 0,
+     "46f: a plain-text 404 saying 'no data available' is still an honest empty");
+
   /* 46d. A WINDOW ROW MUST ADVANCE over a declared empty. The window was read
    *      and held nothing; not advancing would re-read that one empty window
    *      for ever and never reach the records beyond it — the exact opposite of
