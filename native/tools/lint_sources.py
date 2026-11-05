@@ -1075,6 +1075,95 @@ def check_geo_precision():
     return out
 
 
+def _feed_format_key(url):
+    """A feed URL with the FORMAT it asks for normalised away.
+
+    Joomla serves one feed as `?format=feed&type=rss` and `&type=atom`;
+    WordPress serves one as `/feed/`, `/feed/atom/`, `/feed/rss2/` and `/rss1`.
+    Those are serialisations of the same items, not two collections."""
+    u = re.sub(r'[?&]type=(?:rss|rss2|atom)\b', '', url)
+    u = re.sub(r'[?&]format=feed\b', '', u)
+    u = re.sub(r'/feed/(?:atom|rss2?)/?$', '/feed/', u)
+    u = re.sub(r'/rss1$', '/feed/', u)
+    # a query left starting with `&`, or left empty, after the strip
+    u = re.sub(r'\?&', '?', u)
+    return u.rstrip('?&')
+
+
+def check_feed_format_twin():
+    """Two rows reading ONE feed under two format spellings.
+
+    core/intel.c keys every row as uid = "<source_id>|<remote_key>", so two
+    rows on one feed do not dedupe: every item is stored once per row and the
+    request is spent twice. Measured 2026-11-05 across the whole tree: **693
+    groups, 1,391 rows**, and in 689 of the 693 every member stored the
+    identical record count. Twelve groups read through the engine held **228
+    database rows for 107 distinct titles**, several of them from
+    byte-identical responses (`?type=rss` and `?type=atom` answering the same
+    25,914 bytes). 698 rows were retired; the evidence is per row in
+    docs/removed-sources-2026-11-05-feed-format-twins.tsv.
+
+    THIS IS A CHECK OF ITS OWN BECAUSE dup-endpoint COULD NOT SEE IT, for two
+    independent reasons, either of which alone would have been enough: that
+    check groups host+path+QUERY textually, so `type=rss` and `type=atom` are
+    two endpoints to it; and it only reports an endpoint shared by 2+ FILES,
+    while every one of the 693 groups sits inside a single file. It is the same
+    blind spot the 2026-10-25 `&amp;` twin note records — "check_dup_endpoint,
+    which groups on host + path + query textually, could not group them" — in
+    the shape that survived that pass.
+
+    Reported per group rather than per row, and NOT baselined: the population
+    is zero now, so any new one is a regression. A publisher that really does
+    serve different CONTENT under two spellings says so with a
+    `feed-format-twin-ok: <reason>` marker in the row, as `page-offset-ok` and
+    `detail-self-hop-ok` do. One group needed that judgement in the retirement
+    pass and it was decided by measurement, not by the rule: on
+    mairie-saint-christophe-des-bardes.com the `type=rss` spelling answers 0
+    bytes twice while `type=atom` stores 20, so the ATOM row is the one that
+    survives there."""
+    groups = {}
+    for path in source_files():
+        text = read(path)
+        if "hp_source" not in text:
+            continue
+        for m in _HP_TBL_RE.finditer(text):
+            block = _brace_block(text, m.end() - 1)
+            if not block:
+                continue
+            for row in _hp_rows(block):
+                if "feed-format-twin-ok" in row:
+                    continue
+                um = re.search(r"(?<![\w.])\.url\s*=", row)
+                idm = re.search(r"\.id\s*=", row)
+                if not um or not idm:
+                    continue
+                url = _read_string_concat(row, um.end())
+                sid = _read_string_concat(row, idm.end())
+                if not url or not sid:
+                    continue
+                k = _feed_format_key(url)
+                # A row that asked for no format at all still belongs in the
+                # group when its path IS a feed: WordPress's commonest pair is
+                # `/feed/` beside `/feed/atom/`, and skipping the plain member
+                # left one url in the group and reported nothing. Checked
+                # against the pre-retirement tree, which is the only way to see
+                # it: hp3b44_ukgov.c read 8 groups with the skip and 10 without
+                # — the two missing ones were exactly that shape.
+                if k == url and not re.search(r"/(?:feed|rss)/?$", url):
+                    continue
+                groups.setdefault((os.path.relpath(path, REPO), k), {})[url] = sid
+    out = []
+    for (rel, k), byurl in sorted(groups.items()):
+        if len(byurl) < 2:
+            continue
+        out.append("%s: %s is read under %d format spellings (%s) -- one feed, "
+                   "one row; the others store every item a second time"
+                   % (rel, k, len(byurl),
+                      ", ".join("%s=%s" % (s, u.rsplit("?", 1)[-1][:28])
+                                for u, s in sorted(byurl.items()))))
+    return out
+
+
 def check_dup_endpoint():
     """The same upstream endpoint fetched by more than one collector file.
 
@@ -1468,6 +1557,7 @@ CHECKS = [
     ("page-size-on-page-number", check_page_size_on_page_number),
     ("csv-delim-name", check_csv_delim_name),
     ("detail-self-hop", check_detail_self_hop),
+    ("feed-format-twin", check_feed_format_twin),
     ("dup-endpoint", check_dup_endpoint),
     ("unresolved-id", check_unresolved_id),
     ("registry-orphan", check_registry_orphan),

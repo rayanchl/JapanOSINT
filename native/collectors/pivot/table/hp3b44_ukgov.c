@@ -596,24 +596,6 @@ static const hp_source HP3B44_UKGOV[] = {
       "09:08:05 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_BUCKFASTLEIGH_GOV_UK_2", .name = "buckfastleigh.gov.uk - Buckfastleigh Town Council",
-    .name_ja = "buckfastleigh.gov.uk - Buckfastleigh Town Council",
-    .category = "government", .portal = "https://buckfastleigh.gov.uk/",
-    .record_type = "government-notice",
-    .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://buckfastleigh.gov.uk/feed/rss/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 10 items, RSS2 feed, newest Wed, 30 Sep 2026 "
-      "09:08:05 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO44_UK_WATFORD_GOV_UK", .name = "watford.gov.uk - www.watford.gov.uk",
     .name_ja = "watford.gov.uk - www.watford.gov.uk",
@@ -3252,24 +3234,6 @@ static const hp_source HP3B44_UKGOV[] = {
       "11:43:26 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_MOUNTEDGCUMBE_GOV_UK_2", .name = "mountedgcumbe.gov.uk - Mount Edgcumbe",
-    .name_ja = "mountedgcumbe.gov.uk - Mount Edgcumbe",
-    .category = "government", .portal = "https://www.mountedgcumbe.gov.uk/",
-    .record_type = "government-notice",
-    .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mountedgcumbe.gov.uk/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 2 items, ATOM feed, newest "
-      "2026-09-26T07:58:09Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO44_UK_BRAYPARISHCOUNCIL_GOV_UK", .name = "brayparishcouncil.gov.uk - Bray Parish Council",
     .name_ja = "brayparishcouncil.gov.uk - Bray Parish Council",
@@ -6768,24 +6732,6 @@ static const hp_source HP3B44_UKGOV[] = {
       "2026 09:36:59 GMT. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO44_UK_PONTYPRIDDTOWNCOUNCIL_GOV_UK_2", .name = "pontypriddtowncouncil.gov.uk - pontytowncouncil",
-    .name_ja = "pontypriddtowncouncil.gov.uk - pontytowncouncil",
-    .category = "government", .portal = "https://www.pontypriddtowncouncil.gov.uk/",
-    .record_type = "government-notice",
-    .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.pontypriddtowncouncil.gov.uk/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 128 items, ATOM feed, newest "
-      "2026-10-05T09:36:59Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO44_UK_MARKYATEPARISHCOUNCIL_GOV_UK", .name = "markyateparishcouncil.gov.uk - Markyate Parish Council",
     .name_ja = "markyateparishcouncil.gov.uk - Markyate Parish Council",
@@ -8448,24 +8394,6 @@ static const hp_source HP3B44_UKGOV[] = {
       "09:32:19 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_ULEYPARISHCOUNCIL_GOV_UK_2", .name = "uleyparishcouncil.gov.uk - 94adaf68",
-    .name_ja = "uleyparishcouncil.gov.uk - 94adaf68",
-    .category = "government", .portal = "https://www.uleyparishcouncil.gov.uk/",
-    .record_type = "government-notice",
-    .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.uleyparishcouncil.gov.uk/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 2 items, ATOM feed, newest "
-      "2019-03-18T09:32:19Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO44_UK_KINGSWOODPARISHCOUNCIL_GOV_UK", .name = "kingswoodparishcouncil.gov.uk - Kingswood Parish Council",
     .name_ja = "kingswoodparishcouncil.gov.uk - Kingswood Parish Council",
@@ -13910,24 +13838,6 @@ static const hp_source HP3B44_UKGOV[] = {
       "20:56:57 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_WARTON_PC_GOV_UK_2", .name = "warton-pc.gov.uk - Home",
-    .name_ja = "warton-pc.gov.uk - Home",
-    .category = "government", .portal = "https://warton-pc.gov.uk/",
-    .record_type = "government-notice",
-    .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://warton-pc.gov.uk/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 1 items, ATOM feed, newest "
-      "2026-10-17T19:22:35+01:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO44_UK_SHEFFORDTOWNCOUNCIL_GOV_UK", .name = "sheffordtowncouncil.gov.uk - Shefford Town Council",
     .name_ja = "sheffordtowncouncil.gov.uk - Shefford Town Council",
@@ -15580,25 +15490,6 @@ static const hp_source HP3B44_UKGOV[] = {
       "11:11:31 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_ROMALDKIRKPARISHCOUNCIL_GOV_UK_2", .name = "romaldkirkparishcouncil.gov.uk - "
-      "6ebddd4c92494dcfa4c604b30d42eb62",
-    .name_ja = "romaldkirkparishcouncil.gov.uk - 6ebddd4c92494dcfa4c604b30d42eb62",
-    .category = "government", .portal = "https://www.romaldkirkparishcouncil.gov.uk/",
-    .record_type = "government-notice",
-    .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.romaldkirkparishcouncil.gov.uk/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 2 items, ATOM feed, newest "
-      "2017-02-10T11:11:31Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO44_UK_FLAMSTEADPARISHCOUNCIL_GOV_UK", .name = "flamsteadparishcouncil.gov.uk - Flamstead Parish Council",
     .name_ja = "flamsteadparishcouncil.gov.uk - Flamstead Parish Council",
@@ -16219,25 +16110,6 @@ static const hp_source HP3B44_UKGOV[] = {
       "11:11:31 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_STARTFORTHPARISHCOUNCIL_GOV_UK_2", .name = "startforthparishcouncil.gov.uk - "
-      "6965e3a9ddd24a6eb86d9a08dc2b8118",
-    .name_ja = "startforthparishcouncil.gov.uk - 6965e3a9ddd24a6eb86d9a08dc2b8118",
-    .category = "government", .portal = "https://www.startforthparishcouncil.gov.uk/",
-    .record_type = "government-notice",
-    .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.startforthparishcouncil.gov.uk/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 2 items, ATOM feed, newest "
-      "2017-02-10T11:11:31Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO44_UK_NORTHKELSEYPARISHCOUNCIL_GOV_UK", .name = "northkelseyparishcouncil.gov.uk - Wordpress",
     .name_ja = "northkelseyparishcouncil.gov.uk - Wordpress",
@@ -26218,24 +26090,6 @@ static const hp_source HP3B44_UKGOV[] = {
       "11:27:48 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_HATHERTONPARISH_GOV_UK_2", .name = "hathertonparish.gov.uk - All the latest news",
-    .name_ja = "hathertonparish.gov.uk - All the latest news",
-    .category = "government", .portal = "https://www.hathertonparish.gov.uk/",
-    .record_type = "government-notice",
-    .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.hathertonparish.gov.uk/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 1 items, ATOM feed, newest "
-      "2025-02-25T11:27:48Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO44_UK_DUNSTONWITHCOPPENHALL_PC_GOV_UK", .name = "dunstonwithcoppenhall-pc.gov.uk - Dunston And Coppenhall Parish "
       "Council",
@@ -27349,24 +27203,6 @@ static const hp_source HP3B44_UKGOV[] = {
       "12:57:57 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_BERROWPARISH_GOV_UK_2", .name = "berrowparish.gov.uk - berrowpc",
-    .name_ja = "berrowparish.gov.uk - berrowpc",
-    .category = "government", .portal = "https://www.berrowparish.gov.uk/",
-    .record_type = "government-notice",
-    .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.berrowparish.gov.uk/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 3 items, ATOM feed, newest "
-      "2020-08-25T12:57:57Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO44_UK_FORDHAMPARISH_GOV_UK", .name = "fordhamparish.gov.uk - Fordham Parish Council",
     .name_ja = "fordhamparish.gov.uk - Fordham Parish Council",
@@ -31456,23 +31292,6 @@ static const hp_source HP3B44_UKGOV[] = {
       "21:05:32 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_UK_ALLCANNINGS_PC_GOV_UK_2", .name = "allcannings-pc.gov.uk - All Cannings Parish Council - Home",
-    .name_ja = "allcannings-pc.gov.uk - All Cannings Parish Council - Home",
-    .category = "government", .portal = "https://allcannings-pc.gov.uk/",
-    .record_type = "government-notice",
-    .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://allcannings-pc.gov.uk/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 3 items, ATOM feed, newest "
-      "2026-10-17T18:26:15+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO44_UK_ATWORTHPARISHCOUNCIL_GOV_UK", .name = "atworthparishcouncil.gov.uk - Atworth Parish Council",
     .name_ja = "atworthparishcouncil.gov.uk - Atworth Parish Council",

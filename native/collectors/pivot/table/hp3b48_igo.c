@@ -324,25 +324,6 @@ static const hp_source HP3B48_IGO[] = {
       "on its site root. Wikidata classes it as "
       "international-organization." },
 
-  { .id = "JO48_IGO_Q707083_2", .name = "Young Christian Workers - JOCI-IYCW - Accueil",
-    .name_ja = "Young Christian Workers - JOCI-IYCW - Accueil",
-    .category = "international", .portal = "https://joci.org/",
-    .record_type = "organisation-notice",
-    .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://joci.org/fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, ATOM feed, newest "
-      "2026-10-18T17:58:24+02:00. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "international-organization." },
 
   { .id = "JO48_IGO_Q707083_3", .name = "Young Christian Workers - CIJOC ICYCW",
     .name_ja = "Young Christian Workers - CIJOC ICYCW",
@@ -1365,25 +1346,6 @@ static const hp_source HP3B48_IGO[] = {
       "on its site root. Wikidata classes it as "
       "international-organization." },
 
-  { .id = "JO48_IGO_Q9256216_2", .name = "Eurofish - Eurofish",
-    .name_ja = "Eurofish - Eurofish",
-    .category = "international", .portal = "https://eurofish.dk/",
-    .record_type = "organisation-notice",
-    .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://eurofish.dk/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-09T08:54:30Z. A feed the organisation itself declares or "
-      "links on its site root. Wikidata classes it as "
-      "international-organization." },
 
   { .id = "JO48_IGO_Q133207", .name = "Muslim Brotherhood - إخوان أونلاين",
     .name_ja = "Muslim Brotherhood - إخوان أونلاين",
@@ -1505,25 +1467,6 @@ static const hp_source HP3B48_IGO[] = {
       "on its site root. Wikidata classes it as "
       "international-organization." },
 
-  { .id = "JO48_IGO_Q6053396_2", .name = "International Society for Philosophy of Music Education - ISPME",
-    .name_ja = "International Society for Philosophy of Music Education - ISPME",
-    .category = "international", .portal = "https://ispme.net/",
-    .record_type = "organisation-notice",
-    .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ispme.net/index.php/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2017-11-08T15:29:34Z. A feed the organisation itself declares or "
-      "links on its site root. Wikidata classes it as "
-      "international-organization." },
 
   { .id = "JO48_IGO_Q6053438", .name = "International Society for the History of Philosophy of Science - "
       "HOPOS – The International Society for History of Philosophy of "
@@ -3379,26 +3322,6 @@ static const hp_source HP3B48_IGO[] = {
       "on its site root. Wikidata classes it as "
       "international-organization." },
 
-  { .id = "JO48_IGO_Q54556161_2", .name = "United Nations Latin American Institute for the Prevention of "
-      "Crime and the Treatment of Offenders - ILANUD",
-    .name_ja = "United Nations Latin American Institute for the Prevention of Crime and the Treatment of Offenders - ILANUD",
-    .category = "international", .portal = "https://www.ilanud.org/",
-    .record_type = "organisation-notice",
-    .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ilanud.org/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-16T14:51:13Z. A feed the organisation itself declares or "
-      "links on its site root. Wikidata classes it as "
-      "international-organization." },
 
   { .id = "JO48_IGO_Q55075164", .name = "European Personnel Recovery Centre - EPRC",
     .name_ja = "European Personnel Recovery Centre - EPRC",
@@ -4094,26 +4017,6 @@ static const hp_source HP3B48_IGO[] = {
       "on its site root. Wikidata classes it as "
       "international-organization." },
 
-  { .id = "JO48_IGO_Q29577703_2", .name = "European Health Telematics Association - Home - European eHealth "
-      "Multidisciplinary Stakeholder Platform",
-    .name_ja = "European Health Telematics Association - Home - European eHealth Multidisciplinary Stakeholder Platform",
-    .category = "international", .portal = "https://www.ehtel.eu/",
-    .record_type = "organisation-notice",
-    .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ehtel.eu/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T17:58:39+02:00. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "international-organization." },
 
   { .id = "JO48_IGO_Q30255602", .name = "European Centre for Executive Development - CEDEP",
     .name_ja = "European Centre for Executive Development - CEDEP",
@@ -5215,25 +5118,6 @@ static const hp_source HP3B48_IGO[] = {
       "on its site root. Wikidata classes it as "
       "international-organization." },
 
-  { .id = "JO48_IGO_Q141453400_2", .name = "Q141453400 - Shield",
-    .name_ja = "Q141453400 - Shield",
-    .category = "international", .portal = "https://www.congress-shield.org/",
-    .record_type = "organisation-notice",
-    .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.congress-shield.org/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-18T07:35:03Z. A feed the organisation itself declares or "
-      "links on its site root. Wikidata classes it as "
-      "international-organization." },
 
   { .id = "JO48_IGO_Q141453400_3", .name = "Q141453400 - منظمة الدرع الدولية",
     .name_ja = "Q141453400 - منظمة الدرع الدولية",
@@ -5538,25 +5422,6 @@ static const hp_source HP3B48_IGO[] = {
       "on its site root. Wikidata classes it as "
       "intergovernmental-organization." },
 
-  { .id = "JO48_IGO_Q2826699_2", .name = "ASECNA - ASECNA Online - Accueil",
-    .name_ja = "ASECNA - ASECNA Online - Accueil",
-    .category = "international", .portal = "https://www.asecna.aero/",
-    .record_type = "organisation-notice",
-    .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.asecna.aero/index.php/fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T15:58:44+00:00. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "intergovernmental-organization." },
 
   { .id = "JO48_IGO_Q3046245", .name = "EUMETNET - Eumetnet",
     .name_ja = "EUMETNET - Eumetnet",
@@ -5802,26 +5667,6 @@ static const hp_source HP3B48_IGO[] = {
       "on its site root. Wikidata classes it as "
       "intergovernmental-organization." },
 
-  { .id = "JO48_IGO_Q109312829_2", .name = "Permanent Commission for the South Pacific - CPPS - Comisión "
-      "Permanente del Pacífico Sur",
-    .name_ja = "Permanent Commission for the South Pacific - CPPS - Comisión Permanente del Pacífico Sur",
-    .category = "international", .portal = "https://www.cpps-int.org/",
-    .record_type = "organisation-notice",
-    .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cpps-int.org/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T10:58:45-05:00. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "intergovernmental-organization." },
 
   { .id = "JO48_IGO_Q127981543", .name = "Non-Aligned Movement Centre for South-South Technical "
       "Cooperation - NAM CSSTC",
@@ -6027,26 +5872,6 @@ static const hp_source HP3B48_IGO[] = {
       "on its site root. Wikidata classes it as "
       "intergovernmental-organization." },
 
-  { .id = "JO48_IGO_Q605177_2", .name = "International Cospas-Sarsat Programme - International "
-      "Cospas-Sarsat Programme - International COSPAS-SARSAT",
-    .name_ja = "International Cospas-Sarsat Programme - International Cospas-Sarsat Programme - International COSPAS-SARSAT",
-    .category = "international", .portal = "http://www.cospas-sarsat.int/",
-    .record_type = "organisation-notice",
-    .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.cospas-sarsat.int/en/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T15:58:46+00:00. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "intergovernmental-organization." },
 
   { .id = "JO48_IGO_Q605177_3", .name = "International Cospas-Sarsat Programme - International "
       "Cospas-Sarsat Programme - International COSPAS-SARSAT",
@@ -6693,24 +6518,6 @@ static const hp_source HP3B48_IGO[] = {
       "21:15:54 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO48_IGO_Q54121489_2", .name = "Chubby Pixel - Chubby Pixel",
-    .name_ja = "Chubby Pixel - Chubby Pixel",
-    .category = "international", .portal = "https://chubbypixel.com/",
-    .record_type = "organisation-notice",
-    .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://chubbypixel.com/feed/rss/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 12 items, RSS2 feed, newest Sun, 23 Aug 2026 "
-      "21:15:54 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as think-tank." },
 
   { .id = "JO48_IGO_Q2549114", .name = "CI Games S.A. - CI Games",
     .name_ja = "CI Games S.A. - CI Games",
@@ -7264,24 +7071,6 @@ static const hp_source HP3B48_IGO[] = {
       "17:18:55 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO48_IGO_Q33252900_3", .name = "Ludeon Studios - Ludeon Studios",
-    .name_ja = "Ludeon Studios - Ludeon Studios",
-    .category = "international", .portal = "https://ludeon.com/",
-    .record_type = "organisation-notice",
-    .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ludeon.com/blog/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-14T18:09:18Z. A feed the organisation itself declares or "
-      "links on its site root. Wikidata classes it as think-tank." },
 
   { .id = "JO48_IGO_Q33465537", .name = "Young Horses - Young Horses Games",
     .name_ja = "Young Horses - Young Horses Games",

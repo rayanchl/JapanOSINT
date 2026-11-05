@@ -42,25 +42,6 @@ static const hp_source HP3B43_JPRSS[] = {
       "feed (new notices), found via <link rel=alternate> on its root "
       "page." },
 
-  { .id = "JO43_BODIK_FEED_ATOM", .name = "BODIK ODCS - platform-wide dataset feed (Atom)",
-    .name_ja = "BODIK オープンデータ 新着フィード",
-    .category = "government", .portal = "https://odcs.bodik.jp/",
-    .record_type = "municipal-notice",
-    .tags = "\"japan\",\"municipal\",\"notice\",\"rss\",\"41\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://odcs.bodik.jp/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 10 items, ATOM feed, newest "
-      "2026-10-13T00:00:43Z. The shared BODIK platform feed that 281 "
-      "member municipalities declare as their open-data site; ONE row, "
-      "not one per member." },
 
   { .id = "JO43_BODIK_FEED", .name = "BODIK ODCS - platform-wide dataset feed",
     .name_ja = "BODIK オープンデータ 新着フィード",

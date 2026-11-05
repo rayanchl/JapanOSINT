@@ -316,23 +316,6 @@ static const hp_source HP3B57_JPHEAL[] = {
       "07:52:57 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO57IQ7700606_2", .name = "Tenri Hospital (hospital) - 奈良県天理市｜公益財団法人・天理よろづ相談所病院「憩",
-    .name_ja = "Tenri Hospital (hospital) - 奈良県天理市｜公益財団法人・天理よろづ相談所病院「憩",
-    .category = "health", .portal = "https://www.tenriyorozu.jp/",
-    .record_type = "health-notice",
-    .tags = "\"jpheal\",\"japan\",\"hospital\",\"notice\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.tenriyorozu.jp/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-30: 10 items, ATOM feed, newest "
-      "2026-10-29T07:52:59Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO57IQ10903296", .name = "Saiseikai Otaru Hospital (hospital) - 済生会小樽病院／最新情報",
     .name_ja = "Saiseikai Otaru Hospital (hospital) - 済生会小樽病院／最新情報",
@@ -1382,23 +1365,6 @@ static const hp_source HP3B57_JPHEAL[] = {
       "2026-10-28T03:28:19Z. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO57IQ11495009_2", .name = "Jikei Hospital (hospital) - 慈恵病院   無痛分娩や子宮脱などお気軽にご相談ください",
-    .name_ja = "Jikei Hospital (hospital) - 慈恵病院   無痛分娩や子宮脱などお気軽にご相談ください",
-    .category = "health", .portal = "http://jikei-hp.or.jp/",
-    .record_type = "health-notice",
-    .tags = "\"jpheal\",\"japan\",\"hospital\",\"notice\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://jikei-hp.or.jp/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-30: 10 items, RSS2 feed, newest Wed, 28 Oct 2026 "
-      "03:28:19 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO57IQ11498189", .name = "Japan Seamen's Relief Association Moji Hospital (hospital) - "
       "公益社団法人日本海員掖済会 門司掖済会病院",
@@ -2146,23 +2112,6 @@ static const hp_source HP3B57_JPHEAL[] = {
       "2026-10-08T08:01:27Z. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO57IQ131877189_2", .name = "Kameda Daiichi Hospital (hospital) - 亀田第一病院   新潟市江南区",
-    .name_ja = "Kameda Daiichi Hospital (hospital) - 亀田第一病院   新潟市江南区",
-    .category = "health", .portal = "https://www.ijn.or.jp/",
-    .record_type = "health-notice",
-    .tags = "\"jpheal\",\"japan\",\"hospital\",\"notice\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ijn.or.jp/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-30: 10 items, RSS2 feed, newest Thu, 08 Oct 2026 "
-      "08:01:27 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO57IQ131877305", .name = "Kumamoto Kinoh Hospital (hospital) - 新着情報・お知らせ",
     .name_ja = "Kumamoto Kinoh Hospital (hospital) - 新着情報・お知らせ",

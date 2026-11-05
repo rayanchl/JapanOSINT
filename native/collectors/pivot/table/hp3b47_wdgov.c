@@ -177,25 +177,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "2026 17:21:26 +0300. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO47_WD_Q97041548_2", .name = "World Health Organization - Afghanistan (government-agency, AF) "
-      "- WHO EMRO - Home",
-    .name_ja = "World Health Organization - Afghanistan (government-agency, AF) - WHO EMRO - Home",
-    .category = "government", .portal = "https://www.emro.who.int/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.emro.who.int/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1247 items, ATOM feed, newest "
-      "2026-10-18T14:21:11+03:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_WD_Q5358329", .name = "Autoriteti i Komunikimeve Elektronike dhe Postare "
       "(government-agency, AL) - AKEP",
@@ -393,24 +374,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "05:39:04 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q109535905_2", .name = "Armenian Automobile Federation (regulatory-agency, AM) - FAA",
-    .name_ja = "Armenian Automobile Federation (regulatory-agency, AM) - FAA",
-    .category = "government", .portal = "https://faa.am/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://faa.am/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2025-08-25T05:39:04Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_WD_Q135095163", .name = "Laboratorio de Investigaciones del Territorio y el Ambiente "
       "(government-agency, AR) - II Festival en Defensa de la Ciencia "
@@ -1127,25 +1090,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "13:25:16 -0300. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q130285595_2", .name = "Q130285595 (legislature, AR) - Concejo Municipal de San Carlos "
-      "de Bariloche - Sitio Oficial.",
-    .name_ja = "Q130285595 (legislature, AR) - Concejo Municipal de San Carlos de Bariloche - Sitio Oficial.",
-    .category = "government", .portal = "https://concejobariloche.gov.ar/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://concejobariloche.gov.ar/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 12 items, ATOM feed, newest "
-      "2026-10-18T08:21:16-03:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_WD_Q130285630", .name = "Q130285630 (legislature, AR) - RESOLUCIONES CDT 2021",
     .name_ja = "Q130285630 (legislature, AR) - RESOLUCIONES CDT 2021",
@@ -2120,25 +2064,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "08:46:14 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q5974475_2", .name = "ISPR Bangladesh (government-agency, BD) - গণপ্রজাতন্ত্রী "
-      "বাংলাদেশ সরকা",
-    .name_ja = "ISPR Bangladesh (government-agency, BD) - গণপ্রজাতন্ত্রী বাংলাদেশ সরকা",
-    .category = "government", .portal = "https://ispr.gov.bd/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ispr.gov.bd/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-18T08:46:15Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_WD_Q2927108", .name = "Bruxelles Formation (government-agency, BE) - Bruxelles "
       "Formation",
@@ -3222,25 +3147,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "13:32:25 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q116796982_2", .name = "Civil Defense of the State of Rio de Janeiro (government-agency, "
-      "BR) - Defesa Civil RJ",
-    .name_ja = "Civil Defense of the State of Rio de Janeiro (government-agency, BR) - Defesa Civil RJ",
-    .category = "government", .portal = "https://www.defesacivil.rj.gov.br/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.defesacivil.rj.gov.br/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 6 items, ATOM feed, newest "
-      "2026-10-18T11:21:38+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_WD_Q116796991", .name = "Civil Defense of the State of Goiás (government-agency, BR) - "
       "Corpo de Bombeiros Militar do Estado de Goiás",
@@ -3342,25 +3248,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "18:30:24 -0300. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q125200007_2", .name = "Fundação Catarinense de Educação Especial (government-agency, "
-      "BR) - FCEE - Início",
-    .name_ja = "Fundação Catarinense de Educação Especial (government-agency, BR) - FCEE - Início",
-    .category = "government", .portal = "https://www.fcee.sc.gov.br/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.fcee.sc.gov.br/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T08:21:38-03:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_WD_Q125416877", .name = "CORECON/SE   REGIONAL OF ECONOMICS COUNCIL OF THE 16TH "
       "REGION-SERGIPE (government-agency, BR) - Conselho Regional de "
@@ -4110,24 +3997,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "18:56:24 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q5354576_2", .name = "Elections BC (government-agency, CA) - Elections BC",
-    .name_ja = "Elections BC (government-agency, CA) - Elections BC",
-    .category = "government", .portal = "https://elections.bc.ca/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://elections.bc.ca/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-16T22:53:27Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_WD_Q6517362", .name = "Legal Aid Ontario (government-agency, CA) - Legal Aid Ontario",
     .name_ja = "Legal Aid Ontario (government-agency, CA) - Legal Aid Ontario",
@@ -4247,25 +4116,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "06:04:31 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q36874937_2", .name = "Nunavut Wildlife Management Board (government-agency, CA) - NWMB "
-      "- NWMB",
-    .name_ja = "Nunavut Wildlife Management Board (government-agency, CA) - NWMB - NWMB",
-    .category = "government", .portal = "https://www.nwmb.com/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.nwmb.com/en/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T11:21:44+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_WD_Q48754899", .name = "Fonds de recherche du Québec (government-agency, CA) - Appel "
       "Archives - Fonds de recherche du Québec",
@@ -4546,24 +4396,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "12:38:59 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q140045477_2", .name = "Conseil Scientifique National (government-agency, CD) - CSN",
-    .name_ja = "Conseil Scientifique National (government-agency, CD) - CSN",
-    .category = "government", .portal = "https://csnrdc.net/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://csnrdc.net/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-09T12:40:06Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_WD_Q124030417", .name = "Ministry of Telecommunications and New Information and "
       "Communication Technologies (DRC (ministry, CD) - Secrétariat "
@@ -5375,25 +5207,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "00:00:00 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q16928139_2", .name = "Státní pozemkový úřad (government-agency, CZ) - Státní pozemkový "
-      "úřad České republiky",
-    .name_ja = "Státní pozemkový úřad (government-agency, CZ) - Státní pozemkový úřad České republiky",
-    .category = "government", .portal = "https://spu.gov.cz/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spu.gov.cz/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-16T00:00:00+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_WD_Q41567483", .name = "Městské lesy Doksy (government-agency, CZ) - Městské lesy Doksy, "
       "s. r. o.",
@@ -5473,25 +5286,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "10:45:14 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q12055720_2", .name = "Q12055720 (government-agency, CZ) - Digitální a informační "
-      "agentura - Úvodní strana",
-    .name_ja = "Q12055720 (government-agency, CZ) - Digitální a informační agentura - Úvodní strana",
-    .category = "government", .portal = "https://www.szrcr.cz/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.szrcr.cz/cs/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T13:22:15+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_WD_Q24639794", .name = "Q24639794 (government-agency, CZ) - NAÚ",
     .name_ja = "Q24639794 (government-agency, CZ) - NAÚ",
@@ -5512,24 +5306,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "07:56:26 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q24639794_2", .name = "Q24639794 (government-agency, CZ) - NAÚ",
-    .name_ja = "Q24639794 (government-agency, CZ) - NAÚ",
-    .category = "government", .portal = "https://nauvs.cz/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://nauvs.cz/index.php/cs/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:22:16+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_WD_Q45898143", .name = "Q45898143 (government-agency, CZ) - Ministerstvo zdravotnictví",
     .name_ja = "Q45898143 (government-agency, CZ) - Ministerstvo zdravotnictví",
@@ -5908,24 +5684,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "10:55:13 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q50038478_2", .name = "Feuerwehr Brühl (government-agency, DE) - Startseite",
-    .name_ja = "Feuerwehr Brühl (government-agency, DE) - Startseite",
-    .category = "government", .portal = "https://feuerwehr-bruehl.de/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://feuerwehr-bruehl.de/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T13:22:19+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_WD_Q136663821", .name = "Kompetenzzentrum Wasser Hessen (government-agency, DE) - "
       "Kompetenzzentrum Wasser Hessen",
@@ -5967,25 +5725,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "10:31:34 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q15794007_2", .name = "Chemical and veterinary research office "
-      "Münsterland-Emscher-Lippe (government-agency, DE) - Startseite",
-    .name_ja = "Chemical and veterinary research office Münsterland-Emscher-Lippe (government-agency, DE) - Startseite",
-    .category = "government", .portal = "https://www.cvua-mel.de/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cvua-mel.de/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, ATOM feed, newest "
-      "2026-10-18T13:22:19+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_WD_Q15809603", .name = "Firefighting in Kiel (government-agency, DE) - "
       "Stadtfeuerwehrverband Kiel",
@@ -6407,25 +6146,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "2014 07:05:13 +0000. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO47_WD_Q191207_2", .name = "Q191207 (government-agency, DE) - BayZiel - Aktuelles Programm - "
-      "BayZiel",
-    .name_ja = "Q191207 (government-agency, DE) - BayZiel - Aktuelles Programm - BayZiel",
-    .category = "government", .portal = "https://fortbildung.bayziel.de/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://fortbildung.bayziel.de/simplelist?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 107 items, ATOM feed, newest "
-      "2026-10-18T11:22:21+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_WD_Q27967430", .name = "Q27967430 (government-agency, DE) - Stadt Gräfenberg",
     .name_ja = "Q27967430 (government-agency, DE) - Stadt Gräfenberg",
@@ -6504,24 +6224,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "13:35:39 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q130245325_2", .name = "Q130245325 (government-agency, DE) - Startseite",
-    .name_ja = "Q130245325 (government-agency, DE) - Startseite",
-    .category = "government", .portal = "https://laendernotarkasse.de/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://laendernotarkasse.de/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T13:22:25+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_WD_Q131195546", .name = "Q131195546 (government-agency, DE) - Aktuelle Themen des "
       "Deutschen Bundestages",
@@ -9010,26 +8712,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "14:55:10 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q30297190_2", .name = "NIHR Nottingham Digestive Diseases Biomedical Research Unit "
-      "(government-agency, GB) - Gastrointestinal & Liver - Nottingham "
-      "Biomedical Research Centre",
-    .name_ja = "NIHR Nottingham Digestive Diseases Biomedical Research Unit (government-agency, GB) - Gastrointestinal & Liver - Nottingham Biomedical Research Centre",
-    .category = "government", .portal = "https://nottinghambrc.nihr.ac.uk/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://nottinghambrc.nihr.ac.uk/research/gastrointestinal-liver?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:22:40+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_WD_Q30297191", .name = "NIHR Oxford Musculoskeletal Biomedical Research Unit "
       "(government-agency, GB) - NIHR Biomedical Research Centre: "
@@ -9991,26 +9673,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "10:06:43 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q113486777_2", .name = "Athens Municipality Agency for Culture, Athletics and Youth "
-      "(government-agency, GR) - ΟΠΑΝΔΑ - ΟΡΓΑΝΙΣΜΟΣ ΠΟΛΙΤΙΣΜΟΥ "
-      "ΑΘΛΗΤΙΣΜΟΥ Κ",
-    .name_ja = "Athens Municipality Agency for Culture, Athletics and Youth (government-agency, GR) - ΟΠΑΝΔΑ - ΟΡΓΑΝΙΣΜΟΣ ΠΟΛΙΤΙΣΜΟΥ ΑΘΛΗΤΙΣΜΟΥ Κ",
-    .category = "government", .portal = "https://www.opanda.gr/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.opanda.gr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, ATOM feed, newest "
-      "2026-10-18T11:22:48+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_WD_Q141553165", .name = "National Exams Organization (government-agency, GR) - Αρχική",
     .name_ja = "National Exams Organization (government-agency, GR) - Αρχική",
@@ -10031,24 +9693,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "16:03:37 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q141553165_2", .name = "National Exams Organization (government-agency, GR) - Αρχική",
-    .name_ja = "National Exams Organization (government-agency, GR) - Αρχική",
-    .category = "government", .portal = "https://eoe.minedu.gov.gr/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://eoe.minedu.gov.gr/el/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T11:22:49+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_WD_Q1546397", .name = "Greek National Council for Radio and Television "
       "(government-agency, GR) - Εθνικό Συμβούλιο Ραδιοτηλεόρασης",
@@ -10568,25 +10212,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "14:32:44 +0700. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q140907511_2", .name = "Badan Perencanaan Pembangunan, Riset, dan Inovasi Daerah Kota "
-      "Magelang (government-agency, ID) - Bapperida Kota Magelang",
-    .name_ja = "Badan Perencanaan Pembangunan, Riset, dan Inovasi Daerah Kota Magelang (government-agency, ID) - Bapperida Kota Magelang",
-    .category = "government", .portal = "https://bappeda.magelangkota.go.id/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://bappeda.magelangkota.go.id/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 8 items, ATOM feed, newest "
-      "2026-10-18T18:22:51+07:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_WD_Q140907986", .name = "Badan Riset dan Inovasi Daerah Provinsi Sulawesi Tengah "
       "(government-agency, ID) - ASN Brida Sulteng Ikuti Sosialisasi "
@@ -13561,24 +13186,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "08:00:00 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q78188560_2", .name = "Q78188560 (government-agency, LU) - Accueil",
-    .name_ja = "Q78188560 (government-agency, LU) - Accueil",
-    .category = "government", .portal = "https://geologie.lu/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://geologie.lu/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 7 items, ATOM feed, newest "
-      "2026-10-18T13:23:17+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_WD_Q136341210", .name = "Q136341210 (government-organization, LU) - CDM Luxembourg – "
       "Centre pour le développement moteur",
@@ -14703,25 +14310,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "18:46:53 -0600. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q901361_2", .name = "Instituto Nacional de Antropología e Historia "
-      "(government-agency, MX) - Bienvenidos al INAH",
-    .name_ja = "Instituto Nacional de Antropología e Historia (government-agency, MX) - Bienvenidos al INAH",
-    .category = "government", .portal = "https://www.inah.gob.mx/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.inah.gob.mx/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T05:23:27-06:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_WD_Q5779292", .name = "Comisión de Derechos Humanos de la Ciudad de México "
       "(government-agency, MX) - Comisión de Derechos Humanos de la "
@@ -15204,26 +14792,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "15:44:27 +0800. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q141195227_2", .name = "Institut Penyelidikan Pembangunan Belia Malaysia "
-      "(government-agency, MY) - Institut Penyelidikan Pembangunan "
-      "Belia Malaysia - Institut Penyelidikan Pembang",
-    .name_ja = "Institut Penyelidikan Pembangunan Belia Malaysia (government-agency, MY) - Institut Penyelidikan Pembangunan Belia Malaysia - Institut Penyelidikan Pembang",
-    .category = "government", .portal = "https://www.iyres.gov.my/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iyres.gov.my/bm/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T19:23:30+08:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_WD_Q63923285", .name = "Malaysia Department of Insolvency (government-agency, MY) - "
       "Portal Rasmi Jabatan Insolvensi Malaysia",
@@ -16393,25 +15961,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "10:37:59 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q120204663_2", .name = "High Court of the Federal Capital Territory (court, NG) - FCT "
-      "High Court",
-    .name_ja = "High Court of the Federal Capital Territory (court, NG) - FCT High Court",
-    .category = "government", .portal = "https://www.fcthighcourt.gov.ng/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.fcthighcourt.gov.ng/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 18 items, ATOM feed, newest "
-      "2026-09-28T10:38:00Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_WD_Q25044025", .name = "Pharmacy Council of Nigeria (regulatory-agency, NG) - Pharmacy "
       "Council of Nigeria",
@@ -17459,25 +17008,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "01:04:50 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q7185199_2", .name = "Philippine Rice Research Institute (government-agency, PH) - "
-      "DA-PhilRice",
-    .name_ja = "Philippine Rice Research Institute (government-agency, PH) - DA-PhilRice",
-    .category = "government", .portal = "https://www.philrice.gov.ph/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.philrice.gov.ph/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-16T01:56:52Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_WD_Q13565023", .name = "Civil Service Commission (government-agency, PH) - Civil Service "
       "Commission - The Official Website of the Philippines Civil "
@@ -17500,26 +17030,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "17:00:52 +0800. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q13565023_2", .name = "Civil Service Commission (government-agency, PH) - Civil Service "
-      "Commission - The Official Website of the Philippines Civil "
-      "Service",
-    .name_ja = "Civil Service Commission (government-agency, PH) - Civil Service Commission - The Official Website of the Philippines Civil Service",
-    .category = "government", .portal = "https://www.csc.gov.ph/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.csc.gov.ph/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, ATOM feed, newest "
-      "2026-10-18T19:23:33+08:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_WD_Q17081517", .name = "National Council on Disability Affairs (government-agency, PH) - "
       "National Council on Disability Affairs",
@@ -17601,25 +17111,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "00:03:06 +0800. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q31810157_2", .name = "Food and Nutrition Research Institute (government-agency, PH) - "
-      "News and Announcement",
-    .name_ja = "Food and Nutrition Research Institute (government-agency, PH) - News and Announcement",
-    .category = "government", .portal = "https://fnri.dost.gov.ph/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://fnri.dost.gov.ph/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T19:24:09+08:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_WD_Q31810163", .name = "Agricultural Credit Policy Council (government-agency, PH) - "
       "ACPC",
@@ -18466,25 +17957,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "12:24:47 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q113654054_2", .name = "Q113654054 (government-agency, PL) - Strona Główna - Zakład "
-      "Zieleni Miejskiej - Katowice",
-    .name_ja = "Q113654054 (government-agency, PL) - Strona Główna - Zakład Zieleni Miejskiej - Katowice",
-    .category = "government", .portal = "https://www.zzm.katowice.pl/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.zzm.katowice.pl/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T13:24:02+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_WD_Q7986274", .name = "West Pomeranian Regional Assembly (legislature, PL) - Strona "
       "główna",
@@ -18506,25 +17978,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "08:22:47 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q7986274_2", .name = "West Pomeranian Regional Assembly (legislature, PL) - Strona "
-      "główna",
-    .name_ja = "West Pomeranian Regional Assembly (legislature, PL) - Strona główna",
-    .category = "government", .portal = "https://sejmik.wzp.pl/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://sejmik.wzp.pl/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T11:24:02+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_WD_Q11835771", .name = "Opole Regional Assembly (legislature, PL) - Samorząd Województwa "
       "Opolskiego",
@@ -19643,24 +19096,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "10:57:41 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q12738900_2", .name = "RADEF (government-agency, RO) - Romania Film",
-    .name_ja = "RADEF (government-agency, RO) - Romania Film",
-    .category = "government", .portal = "https://www.romaniafilm.ro/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.romaniafilm.ro/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2025-06-13T11:25:16Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_WD_Q30291124", .name = "Institutul Naţional de Cercetare-Dezvoltare in Construcţii "
       "Urbanism şi Dezvoltare Teritorială Durabilă (government-agency, "
@@ -19724,26 +19159,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "11:00:14 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q61085113_2", .name = "National Agency of Equal Opportunities for Women and Men "
-      "(government-agency, RO) - Agenția Națională pentru Egalitatea de "
-      "Șanse Între Femei și Bărbați",
-    .name_ja = "National Agency of Equal Opportunities for Women and Men (government-agency, RO) - Agenția Națională pentru Egalitatea de Șanse Între Femei și Bărbați",
-    .category = "government", .portal = "https://anes.gov.ro/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://anes.gov.ro/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-16T11:09:18Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_WD_Q124526172", .name = "Institutul Naţional de Cercetare-Dezvoltare pentru Securitate "
       "Minieră şi Protecţie Antiexplozivă - INSEMEX (government-agency, "
@@ -21701,25 +21116,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "19:51:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q18534597_2", .name = "Q18534597 (regulatory-agency, SK) - Úrad pre dohľad nad "
-      "zdravotnou starostlivosťou",
-    .name_ja = "Q18534597 (regulatory-agency, SK) - Úrad pre dohľad nad zdravotnou starostlivosťou",
-    .category = "government", .portal = "https://www.udzs-sk.sk/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.udzs-sk.sk/feed/rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 7 items, RSS2 feed, newest Sat, 10 Oct 2026 "
-      "19:51:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO47_WD_Q30285491", .name = "Ministry of Health of Senegal (government-agency, SN) - "
       "MINISTÈRE DE LA SANTÉ ET DE L'ACTION SOCIALE",
@@ -21782,26 +21178,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "21:15:17 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q107621852_2", .name = "Agence sénégalaise de la reforestation et de la Grande muraille "
-      "verte (government-agency, SN) - Agence Panafricaine de la Grande "
-      "Muraille Verte",
-    .name_ja = "Agence sénégalaise de la reforestation et de la Grande muraille verte (government-agency, SN) - Agence Panafricaine de la Grande Muraille Verte",
-    .category = "government", .portal = "https://www.grandemurailleverte.org/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.grandemurailleverte.org/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T11:24:24+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_WD_Q140843647", .name = "Ministry of Family, Social Action and Solidarity (ministry, SN) "
       "- MIFASS – Sénégal",
@@ -22661,25 +22037,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "16:52:24 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q137103754_2", .name = "Q137103754 (government-agency, TJ) - Агентии назорат дар соҳаи "
-      "маориф ва илми на",
-    .name_ja = "Q137103754 (government-agency, TJ) - Агентии назорат дар соҳаи маориф ва илми на",
-    .category = "government", .portal = "https://ansmi.tj/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ansmi.tj/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T11:24:33+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_WD_Q4314981", .name = "National Bank of Tajikistan (central-bank, TJ) - Қурби асъор",
     .name_ja = "National Bank of Tajikistan (central-bank, TJ) - Қурби асъор",
@@ -22878,25 +22235,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "07:59:16 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q29514145_2", .name = "National Handicrafts Office (government-organization, TN) - "
-      "الديوان الوطني للصناعات التقليدية",
-    .name_ja = "National Handicrafts Office (government-organization, TN) - الديوان الوطني للصناعات التقليدية",
-    .category = "government", .portal = "https://www.artisanat.nat.tn/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.artisanat.nat.tn/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T11:24:35+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_WD_Q374071", .name = "Turkish Historical Society (government-agency, TR) - Türk Tarih "
       "Kurumu",
@@ -24350,26 +23688,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "13:14:22 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q12081137_2", .name = "Basin Agency of Water Resources of Southern Buh River "
-      "(government-organization, UA) - Офіційний сайт Басейнового "
-      "управління водн",
-    .name_ja = "Basin Agency of Water Resources of Southern Buh River (government-organization, UA) - Офіційний сайт Басейнового управління водн",
-    .category = "government", .portal = "https://www.buvrpb.davr.gov.ua/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.buvrpb.davr.gov.ua/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 15 items, ATOM feed, newest "
-      "2026-10-18T11:24:50+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_WD_Q12100330", .name = "State Migration Service of Ukraine (government-organization, UA) "
       "- Новини ДМС України (RSS-feed)",
@@ -24430,25 +23748,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "13:55:37 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q4413761_2", .name = "Selydove City Council (legislature, UA) - Селидівська міська "
-      "рада",
-    .name_ja = "Selydove City Council (legislature, UA) - Селидівська міська рада",
-    .category = "government", .portal = "https://selidovo-rada.gov.ua/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://selidovo-rada.gov.ua/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 14 items, ATOM feed, newest "
-      "2026-10-18T11:24:52+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_WD_Q12123294", .name = "Mykolayivska Miskya rrada (legislature, UA) - Миколаївська "
       "міська радa",
@@ -25290,25 +24589,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "15:14:00 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q6462132_2", .name = "South Jersey Transportation Authority (government-agency, US) - "
-      "sjtabeta",
-    .name_ja = "South Jersey Transportation Authority (government-agency, US) - sjtabeta",
-    .category = "government", .portal = "https://www.sjta.com/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.sjta.com/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-07-09T15:14:00Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_WD_Q6682074", .name = "Los Angeles County Department of Medical Examiner "
       "(government-agency, US) - County of Los Angeles Medical Examiner",
@@ -25932,24 +25212,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "22:51:36 -0500. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q140351166_2", .name = "Mobile Housing Board (government-agency, US) - Home",
-    .name_ja = "Mobile Housing Board (government-agency, US) - Home",
-    .category = "government", .portal = "https://mobilehousing.org/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mobilehousing.org/?author=1&format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 7 items, ATOM feed, newest "
-      "2026-10-18T06:25:00-05:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_WD_Q140351944", .name = "Defense and Veterans Brain Injury Center (government-agency, US) "
       "- Health.mil Articles RSS Feed",
@@ -28097,26 +27359,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "18:20:48 -0400. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q140876031_2", .name = "Egyptian Cultural and Educational Bureau (government-agency, US) "
-      "- Egyptian Cultural and Educational Bureau - Washington DC - "
-      "Egyptian Cultural and",
-    .name_ja = "Egyptian Cultural and Educational Bureau (government-agency, US) - Egyptian Cultural and Educational Bureau - Washington DC - Egyptian Cultural and",
-    .category = "government", .portal = "https://www.eecous.org/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.eecous.org/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, ATOM feed, newest "
-      "2026-10-18T07:25:11-04:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_WD_Q140876139", .name = "Oregon Potato Commission (government-agency, US) - Oregon Potato "
       "Commission v1",
@@ -29376,25 +28618,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "10:49:43 -0400. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q105267358_2", .name = "National Emergency Management Organisation of St. Vincent and "
-      "the Grenadines (government-agency, VC) - Home",
-    .name_ja = "National Emergency Management Organisation of St. Vincent and the Grenadines (government-agency, VC) - Home",
-    .category = "government", .portal = "https://nemo.gov.vc/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://nemo.gov.vc/nemo/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T07:25:18-04:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_WD_Q120983426", .name = "Saint Vincent and the Grenadines Bureau of Standards "
       "(government-agency, VC) - Bureau of Standards",
@@ -29416,25 +28639,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "18:11:24 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q120983426_2", .name = "Saint Vincent and the Grenadines Bureau of Standards "
-      "(government-agency, VC) - Bureau of Standards",
-    .name_ja = "Saint Vincent and the Grenadines Bureau of Standards (government-agency, VC) - Bureau of Standards",
-    .category = "government", .portal = "https://bos.gov.vc/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://bos.gov.vc/bos/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T11:25:18+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_WD_Q940077", .name = "National Commission of Telecommunications (government-agency, "
       "VE) - CONATEL",

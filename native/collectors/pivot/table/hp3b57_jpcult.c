@@ -113,23 +113,6 @@ static const hp_source HP3B57_JPCULT[] = {
       "08:54:23 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO57IQ104239175_2", .name = "Historical Museum of Urahoro (museum) - 浦幌町立博物館",
-    .name_ja = "Historical Museum of Urahoro (museum) - 浦幌町立博物館",
-    .category = "culture", .portal = "https://museum-urahoro.jp/",
-    .record_type = "culture-notice",
-    .tags = "\"jpcult\",\"japan\",\"museum\",\"library\",\"notice\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://museum-urahoro.jp/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-30: 10 items, ATOM feed, newest "
-      "2026-10-28T09:44:05Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO57IQ104696502", .name = "鶴岡市いでは文化記念館 (museum) - 羽黒町観光協会",
     .name_ja = "鶴岡市いでは文化記念館 (museum) - 羽黒町観光協会",
@@ -583,24 +566,6 @@ static const hp_source HP3B57_JPCULT[] = {
       "2026-10-29T05:54:29Z. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO57IQ101244809_2", .name = "Kyoto City Disaster Prevention Center (museum) - "
-      "京都市市民防災センター｜一般財団法人京都市防災協会",
-    .name_ja = "Kyoto City Disaster Prevention Center (museum) - 京都市市民防災センター｜一般財団法人京都市防災協会",
-    .category = "culture", .portal = "https://kyotobousai-c.com/",
-    .record_type = "culture-notice",
-    .tags = "\"jpcult\",\"japan\",\"museum\",\"library\",\"notice\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://kyotobousai-c.com/w/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-30: 9 items, RSS2 feed, newest Thu, 29 Oct 2026 "
-      "05:52:07 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO57IQ11278126", .name = "Maizuru Chiegura (museum) - 舞鶴赤れんがパーク",
     .name_ja = "Maizuru Chiegura (museum) - 舞鶴赤れんがパーク",
@@ -765,23 +730,6 @@ static const hp_source HP3B57_JPCULT[] = {
       "08:15:54 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO57IQ11613201_2", .name = "Chidō Museum (museum) - 致道博物館 Official site.",
-    .name_ja = "Chidō Museum (museum) - 致道博物館 Official site.",
-    .category = "culture", .portal = "https://www.chido.jp/",
-    .record_type = "culture-notice",
-    .tags = "\"jpcult\",\"japan\",\"museum\",\"library\",\"notice\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.chido.jp/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-30: 10 items, ATOM feed, newest "
-      "2026-10-28T04:30:00Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO57IQ61732106", .name = "Sino-Japanese Peace Treaty Memorial Hall (museum) - SHIMOHAKU "
       "Web Site（ブログ）",
@@ -949,23 +897,6 @@ static const hp_source HP3B57_JPCULT[] = {
       "07:07:42 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO57IQ104709460_2", .name = "Fuji Museum (museum) - 河口湖.net",
-    .name_ja = "Fuji Museum (museum) - 河口湖.net",
-    .category = "culture", .portal = "https://kawaguchiko.net/",
-    .record_type = "culture-notice",
-    .tags = "\"jpcult\",\"japan\",\"museum\",\"library\",\"notice\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://kawaguchiko.net/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-30: 10 items, ATOM feed, newest "
-      "2026-07-26T06:03:44Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO57IQ104709461", .name = "Tsugane Gakkou (museum) - 津金学校",
     .name_ja = "Tsugane Gakkou (museum) - 津金学校",
@@ -1789,24 +1720,6 @@ static const hp_source HP3B57_JPCULT[] = {
       "2026-09-21T05:07:42Z. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO57IQ17191286_2", .name = "Hoshino Tomihiro Museum of Art・Ashikita (art museum) - "
-      "星野富弘美術館-芦北町",
-    .name_ja = "Hoshino Tomihiro Museum of Art・Ashikita (art museum) - 星野富弘美術館-芦北町",
-    .category = "culture", .portal = "http://hoshino-museum.com/",
-    .record_type = "culture-notice",
-    .tags = "\"jpcult\",\"japan\",\"museum\",\"library\",\"notice\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://hoshino-museum.com/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-30: 6 items, RSS2 feed, newest Mon, 21 Sep 2026 "
-      "05:04:44 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO57IQ17193123", .name = "Contemporary Art Museum Ise (art museum) - 伊勢現代美術館 / Online Shop",
     .name_ja = "Contemporary Art Museum Ise (art museum) - 伊勢現代美術館 / Online Shop",
@@ -3993,23 +3906,6 @@ static const hp_source HP3B57_JPCULT[] = {
       "06:31:13 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO57IQ61886035_2", .name = "Akkeshi Information Library (public library) - 本の森 厚岸情報館",
-    .name_ja = "Akkeshi Information Library (public library) - 本の森 厚岸情報館",
-    .category = "culture", .portal = "https://lib.town.akkeshi.hokkaido.jp/",
-    .record_type = "culture-notice",
-    .tags = "\"jpcult\",\"japan\",\"museum\",\"library\",\"notice\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://lib.town.akkeshi.hokkaido.jp/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-30: 5 items, ATOM feed, newest "
-      "2023-12-20T06:40:00Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO57IQ61886052", .name = "Civic Library Of Towada (public library) - これ怪しい？",
     .name_ja = "Civic Library Of Towada (public library) - これ怪しい？",
@@ -4337,23 +4233,6 @@ static const hp_source HP3B57_JPCULT[] = {
       "2026-10-27T07:39:07Z. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO57IQ61886264_3", .name = "Fukushima City West Exit Library (public library) - コラッセふくしま",
-    .name_ja = "Fukushima City West Exit Library (public library) - コラッセふくしま",
-    .category = "culture", .portal = "https://www.corasse.com/",
-    .record_type = "culture-notice",
-    .tags = "\"jpcult\",\"japan\",\"museum\",\"library\",\"notice\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.corasse.com/feed/rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-30: 10 items, RSS2 feed, newest (no date field). "
-      "A feed the organisation itself declares or links on its site "
-      "root." },
 
   { .id = "JO57IQ48756117", .name = "Chiryu City Library (public library) - 知立市図書館",
     .name_ja = "Chiryu City Library (public library) - 知立市図書館",
@@ -4903,23 +4782,6 @@ static const hp_source HP3B57_JPCULT[] = {
       "06:25:25 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO57IQ61887743_2", .name = "Uenoharashiritsu Library (public library) - 上野原市立図書館",
-    .name_ja = "Uenoharashiritsu Library (public library) - 上野原市立図書館",
-    .category = "culture", .portal = "https://www.library.city.uenohara.yamanashi.jp/",
-    .record_type = "culture-notice",
-    .tags = "\"jpcult\",\"japan\",\"museum\",\"library\",\"notice\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.library.city.uenohara.yamanashi.jp/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-30: 4 items, ATOM feed, newest "
-      "2026-08-31T06:25:52Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO57IQ61887750", .name = "Chuoshiritsutamahoshogaigakushukan (public library) - 中央市立図書館",
     .name_ja = "Chuoshiritsutamahoshogaigakushukan (public library) - 中央市立図書館",
@@ -4939,23 +4801,6 @@ static const hp_source HP3B57_JPCULT[] = {
       "01:00:31 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO57IQ61887750_2", .name = "Chuoshiritsutamahoshogaigakushukan (public library) - 中央市立図書館",
-    .name_ja = "Chuoshiritsutamahoshogaigakushukan (public library) - 中央市立図書館",
-    .category = "culture", .portal = "https://www.lib.city-chuo.ed.jp/",
-    .record_type = "culture-notice",
-    .tags = "\"jpcult\",\"japan\",\"museum\",\"library\",\"notice\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.lib.city-chuo.ed.jp/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-30: 2 items, ATOM feed, newest "
-      "2026-10-23T01:12:40Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO57IQ61887766", .name = "Naganoshiritsunagano Library (public library) - 長野市立図書館",
     .name_ja = "Naganoshiritsunagano Library (public library) - 長野市立図書館",

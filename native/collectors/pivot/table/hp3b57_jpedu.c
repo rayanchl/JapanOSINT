@@ -1883,23 +1883,6 @@ static const hp_source HP3B57_JPEDU[] = {
       "07:39:50 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO57IQ7876458_2", .name = "Ube Frontier University (university) - 宇部フロンティア大学",
-    .name_ja = "Ube Frontier University (university) - 宇部フロンティア大学",
-    .category = "education", .portal = "https://www.frontier-u.jp/",
-    .record_type = "education-notice",
-    .tags = "\"jpedu\",\"japan\",\"university\",\"college\",\"notice\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.frontier-u.jp/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-30: 10 items, ATOM feed, newest "
-      "2026-10-27T07:51:32Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO57IQ8192319", .name = "Hiroshima Shudo University (university) - 広島修道大学公式ニュース",
     .name_ja = "Hiroshima Shudo University (university) - 広島修道大学公式ニュース",

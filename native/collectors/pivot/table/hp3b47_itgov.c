@@ -1214,25 +1214,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "11:35:30 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_3JPPAJDM_2", .name = "GRUPPO DI AZIONE LOCALE ISC MADONIE (Gestori di Pubblici "
-      "Servizi, Castellana Sicula, PA) - Home",
-    .name_ja = "GRUPPO DI AZIONE LOCALE ISC MADONIE (Gestori di Pubblici Servizi, Castellana Sicula, PA) - Home",
-    .category = "local-gov", .collector = "itgov_territoriali", .portal = "https://www.madoniegal.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.madoniegal.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, ATOM feed, newest "
-      "2026-10-18T11:29:12+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_3KCOWSBJ", .name = "RETI S.R.L. (Stazioni Appaltanti, Novi Ligure, AL) - Reti srl",
     .name_ja = "RETI S.R.L. (Stazioni Appaltanti, Novi Ligure, AL) - Reti srl",
@@ -1497,26 +1478,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "12:54:43 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_48LQPAQ6_2", .name = "ORDINE DEI BIOLOGI DEL PIEMONTE, DELLA LIGURIA E DELLA VALLE "
-      "D'AOSTA (Pubbliche Amministrazioni, Torino, TO) - Ordine dei "
-      "Biologi del Piemonte, della Liguria e della Valle d'Aosta",
-    .name_ja = "ORDINE DEI BIOLOGI DEL PIEMONTE, DELLA LIGURIA E DELLA VALLE D'AOSTA (Pubbliche Amministrazioni, Torino, TO) - Ordine dei Biologi del Piemonte, della Liguria e della Valle d'Aosta",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.ordinebiologiplv.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ordinebiologiplv.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T09:29:15+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_48MUH68H", .name = "Istituto di Istruzione superiore \"Beccari Steiner\" (Pubbliche "
       "Amministrazioni, Torino, TO) - IIS Beccari Steiner",
@@ -2290,26 +2251,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "14:43:21 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_6TAN6PRP_2", .name = "AZIENDA SERVIZI ECOLOGICI (Gestori di Pubblici Servizi, "
-      "Manfredonia, FG) - A.S.E. Manfredonia   Azienda Servizi "
-      "Ecologici SpA",
-    .name_ja = "AZIENDA SERVIZI ECOLOGICI (Gestori di Pubblici Servizi, Manfredonia, FG) - A.S.E. Manfredonia   Azienda Servizi Ecologici SpA",
-    .category = "utility", .collector = "itgov_servizi_pubblici", .portal = "https://www.asemanfredonia.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.asemanfredonia.it/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-09-15T14:48:27Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_IT_6U598X6H", .name = "CENTRO NAZIONALE DI RICERCA PER LE TECNOLOGIE DELL'AGRICOLTURA - "
       "AGRITECH (Pubbliche Amministrazioni, Napoli, NA) - Agritech "
@@ -3674,25 +3615,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "20:31:03 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_AACSL1_2", .name = "Ato Ambiente Cl1 Spa in Liquidazione (Pubbliche Amministrazioni, "
-      "Caltanissetta, CL) - Ato.CL1 Ambiente",
-    .name_ja = "Ato Ambiente Cl1 Spa in Liquidazione (Pubbliche Amministrazioni, Caltanissetta, CL) - Ato.CL1 Ambiente",
-    .category = "environment", .collector = "itgov_ambiente", .portal = "https://www.atoambientecl1.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.atoambientecl1.it/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, ATOM feed, newest "
-      "2019-11-12T15:23:25Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_IT_AALSS", .name = "Ales Arte Lavoro e Servizi Spa (Societa' in Conto Economico "
       "Consolidato, Roma, RM) - Ales Arte Lavoro e Servizi S.p.A.",
@@ -3734,25 +3656,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "15:42:44 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_AAMSC_2", .name = "Casa di Riposo Sgobba (Pubbliche Amministrazioni, Noci, BA) - "
-      "ASP A.M. Sgobba",
-    .name_ja = "Casa di Riposo Sgobba (Pubbliche Amministrazioni, Noci, BA) - ASP A.M. Sgobba",
-    .category = "health", .collector = "itgov_sanita", .portal = "https://www.operapiasgobbanoci.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.operapiasgobbanoci.it/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-09-30T15:42:44Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_IT_AARIC", .name = "Agenzia regionale dell'Abruzzo per la Committenza (Pubbliche "
       "Amministrazioni, L'Aquila, AQ) - AreaCom - Agenzia regionale "
@@ -4140,25 +4043,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "17:45:39 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ACMDC_2", .name = "Asp Collegio Morigi - De Cesaris (Pubbliche Amministrazioni, "
-      "Piacenza, PC) - ASP Collegio Morigi – De Cesaris",
-    .name_ja = "Asp Collegio Morigi - De Cesaris (Pubbliche Amministrazioni, Piacenza, PC) - ASP Collegio Morigi – De Cesaris",
-    .category = "health", .collector = "itgov_sanita", .portal = "https://www.collegiomorigi.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.collegiomorigi.it/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2024-10-11T07:45:20Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_IT_ACMJAMZO", .name = "Azienda Territoriale per l'Edilizia Residenziale della provincia "
       "di Belluno (Gestori di Pubblici Servizi, Belluno, BL) - Azienda "
@@ -4650,26 +4534,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "12:51:26 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_AGENAS_2", .name = "Agenzia Nazionale per i Servizi Sanitari Regionali - AGENAS "
-      "(Pubbliche Amministrazioni, Roma, RM) - Agenas - Agenzia "
-      "Nazionale per i servizi sanitari Regionali - AGENAS",
-    .name_ja = "Agenzia Nazionale per i Servizi Sanitari Regionali - AGENAS (Pubbliche Amministrazioni, Roma, RM) - Agenas - Agenzia Nazionale per i servizi sanitari Regionali - AGENAS",
-    .category = "health", .collector = "itgov_sanita", .portal = "https://www.agenas.gov.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.agenas.gov.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-18T11:29:38+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_AGETPL", .name = "Agenzia del Trasporto Pubblico Locale del Bacino della Citta' "
       "Metropolitana di Milano Monza e Brianza Lodi e Pavia (Pubbliche "
@@ -4692,26 +4556,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "11:28:10 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_AGETPL_2", .name = "Agenzia del Trasporto Pubblico Locale del Bacino della Citta' "
-      "Metropolitana di Milano Monza e Brianza Lodi e Pavia (Pubbliche "
-      "Amministrazioni, Milano, MI) - Home - Agenzia TPL",
-    .name_ja = "Agenzia del Trasporto Pubblico Locale del Bacino della Citta' Metropolitana di Milano Monza e Brianza Lodi e Pavia (Pubbliche Amministrazioni, Milano, MI) - Home - Agenzia TPL",
-    .category = "local-gov", .collector = "itgov_territoriali", .portal = "https://www.agenziatpl.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.agenziatpl.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 8 items, ATOM feed, newest "
-      "2026-10-18T09:29:38+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_AGGI", .name = "Scuola Media Antonio Gramsci-Giuseppe Impastato di Giugliano "
       "(Pubbliche Amministrazioni, Giugliano in Campania, NA) - Scuola "
@@ -4895,26 +4739,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "10:15:34 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_AICV_2", .name = "Asilo Infantile Clementi di Velo (Pubbliche Amministrazioni, "
-      "Torri di Quartesolo, VI) - Pagina iniziale - Asilo Clementi di "
-      "Velo",
-    .name_ja = "Asilo Infantile Clementi di Velo (Pubbliche Amministrazioni, Torri di Quartesolo, VI) - Pagina iniziale - Asilo Clementi di Velo",
-    .category = "education", .collector = "itgov_scuole", .portal = "https://www.asiloclementivelo.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.asiloclementivelo.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T11:29:39+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_AIHJB1KH", .name = "ISTITUTO DI ISTRUZIONE SUPERIORE BIANCHINI FILOSI (Pubbliche "
       "Amministrazioni, Terracina, LT) - I.I.S Bianchini Filosi",
@@ -5345,26 +5169,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "18:38:39 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_AMCO_BG_2", .name = "Ordine dei Medici Chirurghi e degli Odontoiatri della Provincia "
-      "di Bergamo (Pubbliche Amministrazioni, Bergamo, BG) - Ordine dei "
-      "Medici Chirurghi e degli Odontoiatri di Bergamo",
-    .name_ja = "Ordine dei Medici Chirurghi e degli Odontoiatri della Provincia di Bergamo (Pubbliche Amministrazioni, Bergamo, BG) - Ordine dei Medici Chirurghi e degli Odontoiatri di Bergamo",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.omceo.bg.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.omceo.bg.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T11:29:42+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_AMCO_MA", .name = "Ordine dei Medici Chirurghi e degli Odontoiatri della Provincia "
       "di Macerata (Pubbliche Amministrazioni, Macerata, MC) - Ordine "
@@ -5489,25 +5293,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "19:30:32 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_AMTBS_2", .name = "Azienda Mobilita' e Trasporti Bari Spa (Gestori di Pubblici "
-      "Servizi, Bari, BA) - Amtab - Home",
-    .name_ja = "Azienda Mobilita' e Trasporti Bari Spa (Gestori di Pubblici Servizi, Bari, BA) - Amtab - Home",
-    .category = "utility", .collector = "itgov_servizi_pubblici", .portal = "https://www.amtab.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.amtab.it/it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, ATOM feed, newest "
-      "2026-10-18T11:29:43+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_AMTS_023", .name = "Azienda Mobilita' e Trasporti Spa (Gestori di Pubblici Servizi, "
       "Verona, VR) - AMT3",
@@ -6470,26 +6255,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "10:04:10 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ARCEA_CZ_2", .name = "Agenzia della Regione Calabria per le Erogazioni in Agricoltura "
-      "(Pubbliche Amministrazioni, Catanzaro, CZ) - ARCEA - Agenzia "
-      "della Regione Calabria per le Erogazioni in Agricoltura",
-    .name_ja = "Agenzia della Regione Calabria per le Erogazioni in Agricoltura (Pubbliche Amministrazioni, Catanzaro, CZ) - ARCEA - Agenzia della Regione Calabria per le Erogazioni in Agricoltura",
-    .category = "government", .collector = "itgov_altri", .portal = "https://www.arcea.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.arcea.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, ATOM feed, newest "
-      "2026-10-18T09:29:51+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ARDOE1QF", .name = "I.I.S. E.MORSELLI - L.STURZO (Pubbliche Amministrazioni, Gela, "
       "CL) - IIS E. MORSELLI – LUIGI STURZO – GELA",
@@ -7324,26 +7089,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "15:05:03 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ASCRL_3_2", .name = "Agrorinasce S.C.R.L. - Agenzia per L'Innovazione, Lo Sviluppo e "
-      "La Sicurezza del Territorio (Pubbliche Amministrazioni, San "
-      "Cipriano d'Aversa, CE) - Agrorinasce",
-    .name_ja = "Agrorinasce S.C.R.L. - Agenzia per L'Innovazione, Lo Sviluppo e La Sicurezza del Territorio (Pubbliche Amministrazioni, San Cipriano d'Aversa, CE) - Agrorinasce",
-    .category = "utility", .collector = "itgov_servizi_pubblici", .portal = "https://www.agrorinasce.org/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.agrorinasce.org/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, ATOM feed, newest "
-      "2026-10-18T11:29:56+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ASCSO", .name = "Ascanio Sobrero (Pubbliche Amministrazioni, Casale Monferrato, "
       "AL) - IS Ascanio Sobrero – Casale Monferrato",
@@ -7839,25 +7584,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "09:45:07 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ASPAD_2", .name = "Azienda Pubblica di Servizi alla Persona Ardito Desio (Pubbliche "
-      "Amministrazioni, Palmanova, UD) - asparditodesio",
-    .name_ja = "Azienda Pubblica di Servizi alla Persona Ardito Desio (Pubbliche Amministrazioni, Palmanova, UD) - asparditodesio",
-    .category = "health", .collector = "itgov_sanita", .portal = "https://www.asparditodesio.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.asparditodesio.it/sito3/index.php?option=com_content&view=featured&Itemid=170&format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:29:59+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ASPBL", .name = "Asp Basso Lodigiano (Pubbliche Amministrazioni, Codogno, LO) - "
       "Asp Basso Lodigiano",
@@ -8183,26 +7909,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "16:35:11 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ASPV_2", .name = "Azienda di Servizi alla Persona Valsasino (Pubbliche "
-      "Amministrazioni, San Colombano al Lambro, MI) - Pagina iniziale "
-      "- Azienda Servizi alla Persona Valsasino",
-    .name_ja = "Azienda di Servizi alla Persona Valsasino (Pubbliche Amministrazioni, San Colombano al Lambro, MI) - Pagina iniziale - Azienda Servizi alla Persona Valsasino",
-    .category = "health", .collector = "itgov_sanita", .portal = "https://www.aspvalsasino.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.aspvalsasino.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T11:30:01+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ASPVE", .name = "Azienda Servizi alla Persona Vittorio Emanuele II (Pubbliche "
       "Amministrazioni, Fabriano, AN) - ASP FABRIANO",
@@ -9824,25 +9530,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "13:00:23 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_C_A098_2", .name = "Comune di Aidone (Pubbliche Amministrazioni, Aidone, EN) - "
-      "Comune di Aidone - HOME PAGE",
-    .name_ja = "Comune di Aidone (Pubbliche Amministrazioni, Aidone, EN) - Comune di Aidone - HOME PAGE",
-    .category = "local-gov", .collector = "itgov_comuni", .portal = "https://www.comune.aidone.en.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comune.aidone.en.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, ATOM feed, newest "
-      "2026-10-18T09:30:26+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_C_A100", .name = "Comune di Aielli (Pubbliche Amministrazioni, Aielli, AQ) - "
       "Comune di Aielli",
@@ -10024,25 +9711,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "11:05:39 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_C_A208_2", .name = "Comune di Alliste (Pubbliche Amministrazioni, Alliste, LE) - "
-      "Comune di Alliste - Portale istituzionale",
-    .name_ja = "Comune di Alliste (Pubbliche Amministrazioni, Alliste, LE) - Comune di Alliste - Portale istituzionale",
-    .category = "local-gov", .collector = "itgov_comuni", .portal = "https://www.comunedialliste.le.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comunedialliste.le.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T09:30:30+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_C_A218", .name = "Comune di Almese (Pubbliche Amministrazioni, Almese, TO) - "
       "Comune di Almese",
@@ -10144,25 +9812,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "09:33:30 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_C_A272_2", .name = "Comune di Andali (Pubbliche Amministrazioni, Andali, CZ) - "
-      "Comune di Andali - In Evidenza",
-    .name_ja = "Comune di Andali (Pubbliche Amministrazioni, Andali, CZ) - Comune di Andali - In Evidenza",
-    .category = "local-gov", .collector = "itgov_comuni", .portal = "https://www.comunediandali.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comunediandali.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T09:30:33+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_C_A286", .name = "Comune di Andriano (Pubbliche Amministrazioni, Andriano, BZ) - "
       "Andrian News",
@@ -10645,25 +10294,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "07:10:26 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_C_A65_2", .name = "Consorzio Due Giare (Pubbliche Amministrazioni, Baressa, OR) - "
-      "Home",
-    .name_ja = "Consorzio Due Giare (Pubbliche Amministrazioni, Baressa, OR) - Home",
-    .category = "government", .collector = "itgov_altri", .portal = "https://www.consorzioduegiare.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.consorzioduegiare.it/index.php/ita/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 6 items, ATOM feed, newest "
-      "2026-10-18T09:30:53+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_C_A651", .name = "Comune di Bardonecchia (Pubbliche Amministrazioni, Bardonecchia, "
       "TO) - Comune di Bardonecchia",
@@ -13813,25 +13443,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "15:50:08 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_C_D237_2", .name = "Comune di Cutrofiano (Pubbliche Amministrazioni, Cutrofiano, LE) "
-      "- Comune di Cutrofiano - Portale istituzionale",
-    .name_ja = "Comune di Cutrofiano (Pubbliche Amministrazioni, Cutrofiano, LE) - Comune di Cutrofiano - Portale istituzionale",
-    .category = "local-gov", .collector = "itgov_comuni", .portal = "https://www.comune.cutrofiano.le.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comune.cutrofiano.le.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T09:32:54+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_C_D237_3", .name = "Comune di Cutrofiano (Pubbliche Amministrazioni, Cutrofiano, LE) "
       "- Rischio Meteo-Idro Archivi - InfoALERT 365 CUTROFIANO",
@@ -14952,25 +14563,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "15:12:48 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_C_D892_2", .name = "Comune di Gambarana (Pubbliche Amministrazioni, Gambarana, PV) - "
-      "Comune di Gambarana - Home",
-    .name_ja = "Comune di Gambarana (Pubbliche Amministrazioni, Gambarana, PV) - Comune di Gambarana - Home",
-    .category = "local-gov", .collector = "itgov_comuni", .portal = "https://www.comune.gambarana.pv.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comune.gambarana.pv.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 6 items, ATOM feed, newest "
-      "2026-10-18T11:33:28+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_C_D923", .name = "Comune di Gargazzone - Gemeinde Gargazon (Pubbliche "
       "Amministrazioni, Gargazzone, BZ) - Gargazon News",
@@ -15531,25 +15123,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "07:27:52 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_C_E563_2", .name = "Comune di Leverano (Pubbliche Amministrazioni, Leverano, LE) - "
-      "Comune di Leverano - Home",
-    .name_ja = "Comune di Leverano (Pubbliche Amministrazioni, Leverano, LE) - Comune di Leverano - Home",
-    .category = "local-gov", .collector = "itgov_comuni", .portal = "https://www.comune.leverano.le.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comune.leverano.le.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 61 items, ATOM feed, newest "
-      "2026-10-18T11:34:07+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_C_E578", .name = "Comune di Licodia Eubea (Pubbliche Amministrazioni, Licodia "
       "Eubea, CT) - Comune di Licodia Eubea",
@@ -15911,25 +15484,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "23:31:30 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_C_E816_2", .name = "Comune di Magliolo (Pubbliche Amministrazioni, Magliolo, SV) - "
-      "Home",
-    .name_ja = "Comune di Magliolo (Pubbliche Amministrazioni, Magliolo, SV) - Home",
-    .category = "local-gov", .collector = "itgov_comuni", .portal = "https://www.comune.magliolo.sv.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comune.magliolo.sv.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 6 items, ATOM feed, newest "
-      "2026-10-18T09:34:18+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_C_E819", .name = "Comune di Magnago (Pubbliche Amministrazioni, Magnago, MI) - "
       "Comune di Magnago",
@@ -16874,26 +16428,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "09:13:21 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_C_F553_2", .name = "Comune di Montemaggiore Belsito (Pubbliche Amministrazioni, "
-      "Montemaggiore Belsito, PA) - Home - Comune di Montemaggiore "
-      "Belsito",
-    .name_ja = "Comune di Montemaggiore Belsito (Pubbliche Amministrazioni, Montemaggiore Belsito, PA) - Home - Comune di Montemaggiore Belsito",
-    .category = "local-gov", .collector = "itgov_comuni", .portal = "https://www.comune.montemaggiorebelsito.pa.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comune.montemaggiorebelsito.pa.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:34:47+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_C_F580", .name = "Comune di Montenero Val Cocchiara (Pubbliche Amministrazioni, "
       "Montenero Val Cocchiara, IS) - Comune di Montenero Val Cocchiara",
@@ -18654,25 +18188,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "09:24:05 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_C_H129_2", .name = "Comune di Quingentole (Pubbliche Amministrazioni, Quingentole, "
-      "MN) - Home",
-    .name_ja = "Comune di Quingentole (Pubbliche Amministrazioni, Quingentole, MN) - Home",
-    .category = "local-gov", .collector = "itgov_comuni", .portal = "https://www.comune.quingentole.mn.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comune.quingentole.mn.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:35:48+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_C_H152", .name = "Comune di Racines (Pubbliche Amministrazioni, Racines, BZ) - "
       "Ratschings News",
@@ -20668,25 +20183,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "08:33:47 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_C_I529_2", .name = "Comune di Schignano (Pubbliche Amministrazioni, Schignano, CO) - "
-      "Home",
-    .name_ja = "Comune di Schignano (Pubbliche Amministrazioni, Schignano, CO) - Home",
-    .category = "local-gov", .collector = "itgov_comuni", .portal = "https://www.comune.schignano.co.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comune.schignano.co.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 7 items, ATOM feed, newest "
-      "2026-10-18T09:36:49+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_C_I533", .name = "Comune di Sciacca (Pubbliche Amministrazioni, Sciacca, AG) - "
       "Comune di Sciacca",
@@ -21274,25 +20770,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "18:41:01 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_C_I780_2", .name = "Comune di Sogliano Cavour (Pubbliche Amministrazioni, Sogliano "
-      "Cavour, LE) - Comune di Sogliano Cavour - Portale istituzionale",
-    .name_ja = "Comune di Sogliano Cavour (Pubbliche Amministrazioni, Sogliano Cavour, LE) - Comune di Sogliano Cavour - Portale istituzionale",
-    .category = "local-gov", .collector = "itgov_comuni", .portal = "https://www.comunedisoglianocavour.le.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comunedisoglianocavour.le.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T09:37:14+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_C_I790", .name = "Comune di Solarolo Rainerio (Pubbliche Amministrazioni, Solarolo "
       "Rainerio, CR) - Comune di Solarolo Rainerio",
@@ -21334,25 +20811,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "07:24:05 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_C_I793_2", .name = "Comune di Solbiate Arno (Pubbliche Amministrazioni, Solbiate "
-      "Arno, VA) - Comune di Solbiate Arno",
-    .name_ja = "Comune di Solbiate Arno (Pubbliche Amministrazioni, Solbiate Arno, VA) - Comune di Solbiate Arno",
-    .category = "local-gov", .collector = "itgov_comuni", .portal = "https://www.comune.solbiate-arno.va.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comune.solbiate-arno.va.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 7 items, ATOM feed, newest "
-      "2026-10-18T09:37:06+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_C_I802", .name = "Comune di Soliera (Pubbliche Amministrazioni, Soliera, MO) - "
       "Comune di Soliera",
@@ -21454,25 +20912,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "11:43:19 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_C_I852_2", .name = "Comune di Sori (Pubbliche Amministrazioni, Sori, GE) - Comune di "
-      "Sori - Home",
-    .name_ja = "Comune di Sori (Pubbliche Amministrazioni, Sori, GE) - Comune di Sori - Home",
-    .category = "local-gov", .collector = "itgov_comuni", .portal = "https://www.comune.sori.ge.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comune.sori.ge.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 8 items, ATOM feed, newest "
-      "2026-10-18T11:37:16+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_C_I865", .name = "Comune di Sospiro (Pubbliche Amministrazioni, Sospiro, CR) - "
       "Comune di Sospiro",
@@ -22195,24 +21634,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "10:32:54 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_C_L460_2", .name = "Comune di Tufino (Pubbliche Amministrazioni, Tufino, NA) - Home",
-    .name_ja = "Comune di Tufino (Pubbliche Amministrazioni, Tufino, NA) - Home",
-    .category = "local-gov", .collector = "itgov_comuni", .portal = "https://www.comune.tufino.na.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comune.tufino.na.it/joomla30/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T09:37:41+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_C_L464", .name = "Comune di Tula (Pubbliche Amministrazioni, Tula, SS) - Comune di "
       "Tula",
@@ -23154,25 +22575,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "07:24:05 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_C_M404_2", .name = "Comune di Valle Cannobina (Pubbliche Amministrazioni, Valle "
-      "Cannobina, VB) - Home",
-    .name_ja = "Comune di Valle Cannobina (Pubbliche Amministrazioni, Valle Cannobina, VB) - Home",
-    .category = "local-gov", .collector = "itgov_comuni", .portal = "https://www.comune.vallecannobina.vb.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comune.vallecannobina.vb.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 6 items, ATOM feed, newest "
-      "2026-10-18T09:38:13+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_C_TDBLC", .name = "Comune di Torre De' Busi (Pubbliche Amministrazioni, Torre de' "
       "Busi, BG) - Comune di Torre de' Busi - Provincia di Bergamo",
@@ -23555,26 +22957,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "11:25:48 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CARIGUMA_2", .name = "Casa di Riposo Guizzo Marseille I.P.A.B (Pubbliche "
-      "Amministrazioni, Volpago del Montello, TV) - GUIZZO MARSEILLE "
-      "I.P.A.B.  - Home",
-    .name_ja = "Casa di Riposo Guizzo Marseille I.P.A.B (Pubbliche Amministrazioni, Volpago del Montello, TV) - GUIZZO MARSEILLE I.P.A.B.  - Home",
-    .category = "health", .collector = "itgov_sanita", .portal = "https://www.guizzo-marseille.org/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.guizzo-marseille.org/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:38:28+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CARIPBP", .name = "Casa del Sorriso di Badia Polesine (Pubbliche Amministrazioni, "
       "Badia Polesine, RO) - CASA DEL SORRISO BADIA POLESINE",
@@ -23616,25 +22998,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "14:00:09 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CASAD_0_2", .name = "Charitas Asp - Servizi Assistenziali per Disabili (Pubbliche "
-      "Amministrazioni, Modena, MO) - Charitasasp",
-    .name_ja = "Charitas Asp - Servizi Assistenziali per Disabili (Pubbliche Amministrazioni, Modena, MO) - Charitasasp",
-    .category = "health", .collector = "itgov_sanita", .portal = "https://charitasasp.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://charitasasp.it/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2025-06-26T14:00:09Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_IT_CASAM", .name = "Casoria Ambiente Spa (Gestori di Pubblici Servizi, Casoria, NA) "
       "- Casoria Ambiente",
@@ -23656,25 +23019,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "2026-08-05T08:34:56Z. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO47_IT_CASAM_2", .name = "Casoria Ambiente Spa (Gestori di Pubblici Servizi, Casoria, NA) "
-      "- Casoria Ambiente",
-    .name_ja = "Casoria Ambiente Spa (Gestori di Pubblici Servizi, Casoria, NA) - Casoria Ambiente",
-    .category = "environment", .collector = "itgov_ambiente", .portal = "https://www.casoriambiente.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.casoriambiente.it/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 05 Aug 2026 "
-      "08:34:56 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO47_IT_CASIL", .name = "Consorzio per L'Area di Sviluppo Industriale di Lecce (Pubbliche "
       "Amministrazioni, Lecce, LE) - Consorzio per l'Area per lo "
@@ -23697,26 +23041,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "15:52:25 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CASIL_2", .name = "Consorzio per L'Area di Sviluppo Industriale di Lecce (Pubbliche "
-      "Amministrazioni, Lecce, LE) - Consorzio per l'Area per lo "
-      "Sviluppo Industriale - Consorzio per l'Area di Svilu",
-    .name_ja = "Consorzio per L'Area di Sviluppo Industriale di Lecce (Pubbliche Amministrazioni, Lecce, LE) - Consorzio per l'Area per lo Sviluppo Industriale - Consorzio per l'Area di Svilu",
-    .category = "utility", .collector = "itgov_servizi_pubblici", .portal = "https://www.asi-lecce.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.asi-lecce.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T09:38:29+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CATABR1", .name = "Consorzio Ambito Terriroriale 3 Ausl Br1 (Pubbliche "
       "Amministrazioni, Francavilla Fontana, BR) - Ambito Territoriale "
@@ -23739,26 +23063,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "20:58:37 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CATABR1_2", .name = "Consorzio Ambito Terriroriale 3 Ausl Br1 (Pubbliche "
-      "Amministrazioni, Francavilla Fontana, BR) - Ambito Territoriale "
-      "Sociale BR3",
-    .name_ja = "Consorzio Ambito Terriroriale 3 Ausl Br1 (Pubbliche Amministrazioni, Francavilla Fontana, BR) - Ambito Territoriale Sociale BR3",
-    .category = "health", .collector = "itgov_sanita", .portal = "https://www.ambitofrancavillafontana.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ambitofrancavillafontana.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 6 items, ATOM feed, newest "
-      "2026-10-18T11:38:29+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CAV9SBL2", .name = "AREA IMPIANTI SPA (Stazioni Appaltanti, Copparo, FE) - Area "
       "Impianti SpA",
@@ -24087,25 +23391,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "09:19:09 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CBNS_SS_2", .name = "Consorzio di Bonifica della Nurra - Sassari (Gestori di Pubblici "
-      "Servizi, Sassari, SS) - Home",
-    .name_ja = "Consorzio di Bonifica della Nurra - Sassari (Gestori di Pubblici Servizi, Sassari, SS) - Home",
-    .category = "environment", .collector = "itgov_ambiente", .portal = "https://www.bonificanurra.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.bonificanurra.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, ATOM feed, newest "
-      "2026-10-18T09:37:58+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CBP", .name = "Consorzio di Bonifica Parmense (Gestori di Pubblici Servizi, "
       "Parma, PR) - Consorzio della Bonifica Parmense",
@@ -24167,25 +23452,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "08:35:26 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CBP_094_2", .name = "Consorzio di Bonifica della Piana di Venafro (Gestori di "
-      "Pubblici Servizi, Venafro, IS) - Home",
-    .name_ja = "Consorzio di Bonifica della Piana di Venafro (Gestori di Pubblici Servizi, Venafro, IS) - Home",
-    .category = "environment", .collector = "itgov_ambiente", .portal = "https://www.bonificavenafro.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.bonificavenafro.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T09:38:33+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CBRO_039", .name = "Consorzio di Bonifica della Romagna Occidentale (Gestori di "
       "Pubblici Servizi, Lugo, RA) - Consorzio di Bonifica della "
@@ -24250,26 +23516,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "2026 12:13:00 +0200. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO47_IT_CBSM_2", .name = "Consorzio di Bonifica della Sardegna Meridionale (Gestori di "
-      "Pubblici Servizi, Cagliari, CA) - Home - Consorzio di Bonifica "
-      "della Sardegna Meridionale",
-    .name_ja = "Consorzio di Bonifica della Sardegna Meridionale (Gestori di Pubblici Servizi, Cagliari, CA) - Home - Consorzio di Bonifica della Sardegna Meridionale",
-    .category = "environment", .collector = "itgov_ambiente", .portal = "https://www.cbsm.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cbsm.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 957 items, ATOM feed, newest "
-      "2026-10-18T11:38:33+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CBSUD", .name = "Consorzio di Bonifica Sud (Gestori di Pubblici Servizi, Vasto, "
       "CH) - Consorzio Bonifica Sud Vasto",
@@ -24331,25 +23577,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "20:36:39 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CBV_0_2", .name = "Consiglio di Bacino Veronese (Pubbliche Amministrazioni, Verona, "
-      "VR) - Benvenuto in Joomla",
-    .name_ja = "Consiglio di Bacino Veronese (Pubbliche Amministrazioni, Verona, VR) - Benvenuto in Joomla",
-    .category = "local-gov", .collector = "itgov_territoriali", .portal = "https://www.atoveronese.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.atoveronese.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T09:38:35+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CBVCRP", .name = "Consorzio Bonifica Val di Chiana Romana e Val di Paglia (Gestori "
       "di Pubblici Servizi, Chiusi, SI) - Consorzio di Bonifica",
@@ -25000,26 +24227,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "20:15:24 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CCSRSSUU_2", .name = "Consorzio Comprensoriale per Lo Smaltimento Rr.Ss.Uu. Area "
-      "Piomba-fino (Pubbliche Amministrazioni, Atri, TE) - Consorzio "
-      "Piomba Fino",
-    .name_ja = "Consorzio Comprensoriale per Lo Smaltimento Rr.Ss.Uu. Area Piomba-fino (Pubbliche Amministrazioni, Atri, TE) - Consorzio Piomba Fino",
-    .category = "utility", .collector = "itgov_servizi_pubblici", .portal = "https://www.consorziopiombafino.com/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.consorziopiombafino.com/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T09:38:39+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CCSS", .name = "Consorzio Casalasco Servizi Sociali (Pubbliche Amministrazioni, "
       "Casalmaggiore, CR) - Concass",
@@ -25122,26 +24329,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "11:08:05 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CD7JL7B8_2", .name = "Conferenza dei Rettori delle Università Italiane (Stazioni "
-      "Appaltanti, Roma, RM) - Consolidating Higher Education "
-      "Experience of Reform: norms, networks and good pr",
-    .name_ja = "Conferenza dei Rettori delle Università Italiane (Stazioni Appaltanti, Roma, RM) - Consolidating Higher Education Experience of Reform: norms, networks and good pr",
-    .category = "research", .collector = "itgov_universita", .portal = "https://www.crui.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.crui.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, ATOM feed, newest "
-      "2026-10-18T11:38:39+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CDAD_059", .name = "Collegio degli Agrotecnici e degli Agrotecnici Laureati della "
       "provicnia di Latina (Pubbliche Amministrazioni, Latina, LT) - "
@@ -25164,26 +24351,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "23:17:49 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CDAD_059_2", .name = "Collegio degli Agrotecnici e degli Agrotecnici Laureati della "
-      "provicnia di Latina (Pubbliche Amministrazioni, Latina, LT) - "
-      "Agrotecnici Latina - Home",
-    .name_ja = "Collegio degli Agrotecnici e degli Agrotecnici Laureati della provicnia di Latina (Pubbliche Amministrazioni, Latina, LT) - Agrotecnici Latina - Home",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.agrotecnicilatina.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.agrotecnicilatina.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T11:38:39+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CDBV", .name = "Consorzio di Bonifica Velia (Gestori di Pubblici Servizi, "
       "Prignano Cilento, SA) - Consorzio Di Bonifica Velia",
@@ -25307,47 +24474,7 @@ static const hp_source HP3B47_ITGOV[] = {
       "14:56:05 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CDGDGI_2", .name = "Collegio Dei Geometri e Dei Geometri Laureati della Provincia di "
-      "Isernia (Pubbliche Amministrazioni, Isernia, IS) - Collegio dei "
-      "Geometri di Isernia",
-    .name_ja = "Collegio Dei Geometri e Dei Geometri Laureati della Provincia di Isernia (Pubbliche Amministrazioni, Isernia, IS) - Collegio dei Geometri di Isernia",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.collegio-geometri-is.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.collegio-geometri-is.it/portale/index.php?option=com_k2&view=itemlist&task=category&id=31:news&Itemid=101&format=feed&type=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "14:56:05 +0200. A feed the organisation itself declares or links "
-      "on its site root." },
 
-  { .id = "JO47_IT_CDGDGI_3", .name = "Collegio Dei Geometri e Dei Geometri Laureati della Provincia di "
-      "Isernia (Pubbliche Amministrazioni, Isernia, IS) - Collegio dei "
-      "Geometri di Isernia",
-    .name_ja = "Collegio Dei Geometri e Dei Geometri Laureati della Provincia di Isernia (Pubbliche Amministrazioni, Isernia, IS) - Collegio dei Geometri di Isernia",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.collegio-geometri-is.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.collegio-geometri-is.it/portale/index.php?option=com_k2&view=itemlist&task=category&id=31:news&Itemid=101&format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-18T11:38:40+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CDGDGLM", .name = "Collegio Dei Geometri e Dei Geometri Laureati di Mondovi "
       "(Pubbliche Amministrazioni, Mondovì, CN) - Collegio dei Geometri "
@@ -25599,26 +24726,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "18:23:41 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CDOPB_BS_2", .name = "ORDINE INTERPROVINCIALE DELLA PROFESSIONE OSTETRICA DI BRESCIA E "
-      "MANTOVA (Pubbliche Amministrazioni, Brescia, BS) - Ordine della "
-      "Professione di Ostetrica della Provincia di Brescia - Home",
-    .name_ja = "ORDINE INTERPROVINCIALE DELLA PROFESSIONE OSTETRICA DI BRESCIA E MANTOVA (Pubbliche Amministrazioni, Brescia, BS) - Ordine della Professione di Ostetrica della Provincia di Brescia - Home",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.ostetrichebresciamantova.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ostetrichebresciamantova.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-18T11:38:42+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CDOPFG", .name = "Collegio Delle Ostetriche della Provincia di Foggia (Pubbliche "
       "Amministrazioni, Foggia, FG) - Ordine ostetriche Foggia",
@@ -25748,27 +24855,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "08:46:53 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CDPFG_2", .name = "Collegio Dei Periti Industriali e Dei Periti Industriali "
-      "Laureati della Provincia di Foggia (Pubbliche Amministrazioni, "
-      "Foggia, FG) - Ordine dei Periti Industriali e Periti Industriali "
-      "Laureati della Prov Foggia -",
-    .name_ja = "Collegio Dei Periti Industriali e Dei Periti Industriali Laureati della Provincia di Foggia (Pubbliche Amministrazioni, Foggia, FG) - Ordine dei Periti Industriali e Periti Industriali Laureati della Prov Foggia -",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.peritindustriali-foggia.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.peritindustriali-foggia.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T09:38:43+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CDPI_013", .name = "Ordine dei Periti Industriali e Periti Industriali Laureati "
       "della Provincia di Como (Pubbliche Amministrazioni, Como, CO) - "
@@ -26202,26 +25288,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "15:05:36 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CDR_ARA_2", .name = "Casa di Riposo A. Rossi di Arsiero (Pubbliche Amministrazioni, "
-      "Arsiero, VI) - Centro servizi alla persona - Casa di Riposo A. "
-      "Rossi - Arsiero - VI",
-    .name_ja = "Casa di Riposo A. Rossi di Arsiero (Pubbliche Amministrazioni, Arsiero, VI) - Centro servizi alla persona - Casa di Riposo A. Rossi - Arsiero - VI",
-    .category = "health", .collector = "itgov_sanita", .portal = "https://www.csprossi.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.csprossi.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 16 items, ATOM feed, newest "
-      "2026-10-18T09:38:45+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CDR1EZVN", .name = "ECHO SISTEMI SRL (Gestori di Pubblici Servizi, Siracusa, SR) - "
       "Echo Sistemi",
@@ -26450,27 +25516,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "12:39:50 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CDTSRM_2", .name = "Ordine dei tecnici sanitari di radiologia medica, delle "
-      "professioni sanitarie tecniche, della riabilitazione e della "
-      "prevenzione della Provincia di Siracusa (Pubbliche "
-      "Amministrazioni, Siracusa, SR) - Home",
-    .name_ja = "Ordine dei tecnici sanitari di radiologia medica, delle professioni sanitarie tecniche, della riabilitazione e della prevenzione della Provincia di Siracusa (Pubbliche Amministrazioni, Siracusa, SR) - Home",
-    .category = "health", .collector = "itgov_sanita", .portal = "https://www.tsrmsiracusa.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.tsrmsiracusa.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T09:38:47+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CFASD", .name = "Comune Funes Amministrazione Separata Dei Beni di Uso Civico - "
       "Frazione Tiso (Pubbliche Amministrazioni, Funes, BZ) - Villnöß "
@@ -27141,26 +26186,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "09:37:42 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CGLPA_2", .name = "Collegio Geometri e Geometri Laureati della Provincia di Palermo "
-      "(Pubbliche Amministrazioni, Palermo, PA) - Home - Collegio dei "
-      "Geometri e Geometri laureati della provincia di Palermo..",
-    .name_ja = "Collegio Geometri e Geometri Laureati della Provincia di Palermo (Pubbliche Amministrazioni, Palermo, PA) - Home - Collegio dei Geometri e Geometri laureati della provincia di Palermo..",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.geometri.pa.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.geometri.pa.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T11:38:52+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CGLPTR", .name = "Collegio Geometri e Geometri Laureati della Provincia di Trento "
       "(Pubbliche Amministrazioni, Trento, TN) - Collegio Geometri e "
@@ -27723,27 +26748,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "13:37:50 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CIDOT_1_2", .name = "Ordine della Professione di Ostetrica interprovinciale di "
-      "Torino, Asti, Cuneo, Alessandria e Aosta (Pubbliche "
-      "Amministrazioni, Torino, TO) - Ordine Ostetriche "
-      "interprovinciale di Torino Asti Cuneo Alessandria e Aosta",
-    .name_ja = "Ordine della Professione di Ostetrica interprovinciale di Torino, Asti, Cuneo, Alessandria e Aosta (Pubbliche Amministrazioni, Torino, TO) - Ordine Ostetriche interprovinciale di Torino Asti Cuneo Alessandria e Aosta",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://ostetrichetorinoasticuneoalessandriaaosta.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ostetrichetorinoasticuneoalessandriaaosta.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T09:38:55+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CIDPARP", .name = "Collegio Interprovinciale Dei Periti Agrari e Periti Agrari "
       "Laureati di Re e Pr (Pubbliche Amministrazioni, Reggio "
@@ -27787,25 +26791,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "16:33:32 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CIDSP_2", .name = "Consorzio Ovest Solidale (Pubbliche Amministrazioni, Rivoli, TO) "
-      "- Consorzio Ovest Solidale - Home",
-    .name_ja = "Consorzio Ovest Solidale (Pubbliche Amministrazioni, Rivoli, TO) - Consorzio Ovest Solidale - Home",
-    .category = "health", .collector = "itgov_sanita", .portal = "https://www.consorzioovestsolidale.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.consorzioovestsolidale.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:38:56+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CIDSVT", .name = "Consorzio Intercomunale Dei Servizi Ed Interventi Sociali Valle "
       "del Tevere (Pubbliche Amministrazioni, Formello, RM) - Valle del "
@@ -28263,26 +27248,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "08:42:30 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CIPAS_FB_2", .name = "Ordine delle Professioni Infermieristiche della Provincia di "
-      "Udine (Pubbliche Amministrazioni, Udine, UD) - Ordine delle "
-      "professioni infermieristiche di Udine",
-    .name_ja = "Ordine delle Professioni Infermieristiche della Provincia di Udine (Pubbliche Amministrazioni, Udine, UD) - Ordine delle professioni infermieristiche di Udine",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.opiudine.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.opiudine.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T11:39:00+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CIPAS_PV", .name = "ORDINE DELLE PROFESSIONI INFERMIERISTICHE DI PAVIA (Pubbliche "
       "Amministrazioni, Pavia, PV) - Opi Pavia",
@@ -28388,26 +27353,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "12:14:00 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CIPS_3", .name = "Ordine Delle Professioni Infermieristiche Della Provincia Di "
-      "Siena (Pubbliche Amministrazioni, Siena, SI) - OPI di Siena - "
-      "Home",
-    .name_ja = "Ordine Delle Professioni Infermieristiche Della Provincia Di Siena (Pubbliche Amministrazioni, Siena, SI) - OPI di Siena - Home",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.opisiena.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.opisiena.it/si/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, ATOM feed, newest "
-      "2026-10-18T11:39:00+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CIRA", .name = "C.I.R.A. SRL (Gestori di Pubblici Servizi, Dego, SV) - Cira "
       "Servizio Idrico",
@@ -28736,24 +27681,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "10:35:39 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CKXT3LV4_2", .name = "Oasi srl (Stazioni Appaltanti, Napoli, NA) - Home",
-    .name_ja = "Oasi srl (Stazioni Appaltanti, Napoli, NA) - Home",
-    .category = "utility", .collector = "itgov_servizi_pubblici", .portal = "https://www.istitutosangiorgio.com/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutosangiorgio.com/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T11:39:02+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CLCC_063", .name = "Casoria 1 Ludovico da Casoria Centrale (Pubbliche "
       "Amministrazioni, Casoria, NA) - Istituto Comprensivo Ludovico Da "
@@ -29593,25 +28520,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "07:24:05 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CMTZ_2", .name = "Comunita' Montana del Turano 8 zona (Pubbliche Amministrazioni, "
-      "Rocca Sinibalda, RI) - Home",
-    .name_ja = "Comunita' Montana del Turano 8 zona (Pubbliche Amministrazioni, Rocca Sinibalda, RI) - Home",
-    .category = "local-gov", .collector = "itgov_territoriali", .portal = "https://www.comunitamontanaturano.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comunitamontanaturano.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T09:39:01+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CMUG_FG", .name = "Conservatorio di Musica U. Giordano (Pubbliche Amministrazioni, "
       "Foggia, FG) - Christian Saggese",
@@ -29960,25 +28868,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "07:19:08 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CNDDRCLV_2", .name = "Consiglio Notarile Dei Distretti Riuniti di Chieti Lanciano e "
-      "Vasto (Pubbliche Amministrazioni, Ortona, CH) - 09ce6fd4",
-    .name_ja = "Consiglio Notarile Dei Distretti Riuniti di Chieti Lanciano e Vasto (Pubbliche Amministrazioni, Ortona, CH) - 09ce6fd4",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.cndchieti.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cndchieti.it/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2021-04-01T07:19:08Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_IT_CNDDRIM", .name = "Consiglio Notarile Dei Distretti Riuniti di Imperia e Sanremo "
       "(Pubbliche Amministrazioni, Sanremo, IM) - Home",
@@ -30000,25 +28889,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "08:40:12 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CNDDRIM_2", .name = "Consiglio Notarile Dei Distretti Riuniti di Imperia e Sanremo "
-      "(Pubbliche Amministrazioni, Sanremo, IM) - Home",
-    .name_ja = "Consiglio Notarile Dei Distretti Riuniti di Imperia e Sanremo (Pubbliche Amministrazioni, Sanremo, IM) - Home",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.distrettonotarileimperiasanremo.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.distrettonotarileimperiasanremo.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T09:39:10+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CNDDRNA", .name = "Consiglio Notarile Dei Distretti Riuniti di Napoli, Torre "
       "Annunziata e Nola (Pubbliche Amministrazioni, Napoli, NA) - "
@@ -30290,26 +29160,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "18:51:13 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CNOCL_RM_2", .name = "Consiglio Nazionale dell'Ordine dei Consulenti del Lavoro "
-      "(Pubbliche Amministrazioni, Roma, RM) - Consiglio Nazionale "
-      "dell'Ordine dei Consulenti del Lavoro",
-    .name_ja = "Consiglio Nazionale dell'Ordine dei Consulenti del Lavoro (Pubbliche Amministrazioni, Roma, RM) - Consiglio Nazionale dell'Ordine dei Consulenti del Lavoro",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.cnoconsulentidellavoro.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cnoconsulentidellavoro.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T11:37:12+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CNODAS", .name = "Consiglio Nazionale dell'Ordine Degli Assistenti Sociali "
       "(Pubbliche Amministrazioni, Roma, RM) - CNOAS",
@@ -31111,25 +29961,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "15:24:32 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CODAR_2", .name = "Consiglio dell'Ordine Degli Avvocati di Rimini (Pubbliche "
-      "Amministrazioni, Rimini, RN) - Ordine avvocati di Rimini",
-    .name_ja = "Consiglio dell'Ordine Degli Avvocati di Rimini (Pubbliche Amministrazioni, Rimini, RN) - Ordine avvocati di Rimini",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.avvocati.rimini.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.avvocati.rimini.it/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2017-03-07T15:24:32Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_IT_CODAU", .name = "Ordine degli Avvocati di Udine (Pubbliche Amministrazioni, "
       "Udine, UD) - Ordine Avvocati Udine",
@@ -31519,25 +30350,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "00:00:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_COPS_2", .name = "Ordine della Professione di Ostetrica della Provincia di Salerno "
-      "(Pubbliche Amministrazioni, Salerno, SA) - Home",
-    .name_ja = "Ordine della Professione di Ostetrica della Provincia di Salerno (Pubbliche Amministrazioni, Salerno, SA) - Home",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.ordineostetrichesalerno.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ordineostetrichesalerno.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 6 items, ATOM feed, newest "
-      "2026-10-18T09:39:22+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_COTN", .name = "Consorzio 1 Toscana Nord (Gestori di Pubblici Servizi, "
       "Viareggio, LU) - Consorzio 1 Toscana Nord",
@@ -31643,26 +30455,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "09:17:40 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CPADP_CA_2", .name = "Collegio Periti Agrari e dei Periti Agrari Laureati di Catania e "
-      "Siracusa (Pubbliche Amministrazioni, Catania, CT) - Collegio "
-      "Periti Agrari Catania e Siracusa - In Evidenza",
-    .name_ja = "Collegio Periti Agrari e dei Periti Agrari Laureati di Catania e Siracusa (Pubbliche Amministrazioni, Catania, CT) - Collegio Periti Agrari Catania e Siracusa - In Evidenza",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.collegioperitiagraricataniasiracusa.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.collegioperitiagraricataniasiracusa.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, ATOM feed, newest "
-      "2026-10-18T09:39:22+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CPALV_VR", .name = "Collegio dei Periti Agrari e dei Periti Agrari Laureati della "
       "Provincia di Verona (Pubbliche Amministrazioni, Verona, VR) - "
@@ -32923,25 +31715,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "14:03:36 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CPIAV_1_2", .name = "ORDINE DELLE PROFESSIONI INFERMIERISTICHE PALERMO (Pubbliche "
-      "Amministrazioni, Palermo, PA) - OPI Palermo",
-    .name_ja = "ORDINE DELLE PROFESSIONI INFERMIERISTICHE PALERMO (Pubbliche Amministrazioni, Palermo, PA) - OPI Palermo",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.opipalermo.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.opipalermo.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 11 items, ATOM feed, newest "
-      "2026-10-18T11:39:30+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CPIAVA", .name = "Centro Provinciale Istruzione Adulti 2 Varese (Pubbliche "
       "Amministrazioni, Varese, VA) - CPIA 2 Varese",
@@ -33191,25 +31964,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "08:55:37 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CPIN_2", .name = "Ordine delle Professioni Infermieristiche di Napoli. OPI NAPOLI "
-      "(Pubbliche Amministrazioni, Napoli, NA) - Home",
-    .name_ja = "Ordine delle Professioni Infermieristiche di Napoli. OPI NAPOLI (Pubbliche Amministrazioni, Napoli, NA) - Home",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.opinapoli.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.opinapoli.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:39:32+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CPIP_072", .name = "ORDINE DEI PERITI INDUSTRIALI E PERITI INDUSTRIALI LAUREATI "
       "DELLE PROVINCE DI BARI E BARLETTA-ANDRIA-TRANI (Pubbliche "
@@ -33357,27 +32111,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "06:02:21 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CPIPI_MS_2", .name = "Collegio dei Periti Industriali e dei Periti Industriali "
-      "Laureati della Provincia di Massa e Carrara (Pubbliche "
-      "Amministrazioni, Massa, MS) - Benvenuti nel sito dei Periti "
-      "Industriali e dei Periti Industriali Laureati di M",
-    .name_ja = "Collegio dei Periti Industriali e dei Periti Industriali Laureati della Provincia di Massa e Carrara (Pubbliche Amministrazioni, Massa, MS) - Benvenuti nel sito dei Periti Industriali e dei Periti Industriali Laureati di M",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.periti-ms.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.periti-ms.it/index.php?format=feed&type=atom",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 06 May 2026 "
-      "06:02:21 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO47_IT_CPIPI_PN", .name = "Ordine Periti Industriali della Provincia di Pordenone "
       "(Pubbliche Amministrazioni, Pordenone, PN) - Ordine Periti "
@@ -33421,26 +32154,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "09:14:29 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CPIPI_RE_2", .name = "Ordine dei Periti Industriali della Provincia di Ravenna "
-      "(Pubbliche Amministrazioni, Ravenna, RA) - Home - Ordine dei "
-      "Periti Industriali della Provincia di Ravenna",
-    .name_ja = "Ordine dei Periti Industriali della Provincia di Ravenna (Pubbliche Amministrazioni, Ravenna, RA) - Home - Ordine dei Periti Industriali della Provincia di Ravenna",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.peritiindustriali.ra.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.peritiindustriali.ra.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 8 items, ATOM feed, newest "
-      "2026-10-18T09:39:34+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CPIPI_TV", .name = "Ordine dei Periti Industriali e dei Periti Industriali Laureati "
       "della Provincia di Treviso (Pubbliche Amministrazioni, Treviso, "
@@ -33527,26 +32240,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "12:34:52 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CPIPILCR_2", .name = "Ordine dei periti industriali e dei periti industriali laureati "
-      "della provincia di Cremona (Pubbliche Amministrazioni, Cremona, "
-      "CR) - Home",
-    .name_ja = "Ordine dei periti industriali e dei periti industriali laureati della provincia di Cremona (Pubbliche Amministrazioni, Cremona, CR) - Home",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.peritindustrialicremona.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.peritindustrialicremona.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:39:34+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CPIPR_BG", .name = "Ordine dei Periti Industriali e Periti Industriali Laureati "
       "della Provincia di Bergamo (Pubbliche Amministrazioni, Bergamo, "
@@ -33885,26 +32578,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "13:40:10 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CPIRC_2", .name = "Ordine delle Professioni Infermieristiche di Reggio Calabria "
-      "(Pubbliche Amministrazioni, Reggio di Calabria, RC) - OPI REGGIO "
-      "CALABRIA",
-    .name_ja = "Ordine delle Professioni Infermieristiche di Reggio Calabria (Pubbliche Amministrazioni, Reggio di Calabria, RC) - OPI REGGIO CALABRIA",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.opireggiocalabria.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.opireggiocalabria.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 8 items, ATOM feed, newest "
-      "2026-10-18T09:39:38+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CPISA", .name = "Ordine delle Professioni Infermieristiche di Salerno (O.P.I.) "
       "(Pubbliche Amministrazioni, Salerno, SA) - OPI Salerno",
@@ -34157,25 +32830,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "00:00:49 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CPOCL_2", .name = "Consiglio Provinciale Ordine Consulenti del Lavoro di Macerata "
-      "(Pubbliche Amministrazioni, Macerata, MC) - Home",
-    .name_ja = "Consiglio Provinciale Ordine Consulenti del Lavoro di Macerata (Pubbliche Amministrazioni, Macerata, MC) - Home",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.consulentidellavoromacerata.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.consulentidellavoromacerata.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T09:39:40+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CPOCLAP", .name = "Consiglio Provinciale Ordine Consulenti del Lavoro di Ascoli "
       "Piceno (Pubbliche Amministrazioni, Ascoli Piceno, AP) - Ordine "
@@ -34366,25 +33020,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "16:20:17 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CPQUQ1BH_2", .name = "IIS V. GIUSTINIANI BASSANO ROMANO (Pubbliche Amministrazioni, "
-      "Bassano Romano, VT) - IIS Vincenzo Giustiniani - Bassano Romano",
-    .name_ja = "IIS V. GIUSTINIANI BASSANO ROMANO (Pubbliche Amministrazioni, Bassano Romano, VT) - IIS Vincenzo Giustiniani - Bassano Romano",
-    .category = "education", .collector = "itgov_scuole", .portal = "https://www.iisgiustiniani.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iisgiustiniani.edu.it/sito/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T11:39:41+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CPSO", .name = "Consorzio Progetto Solidarieta' (Pubbliche Amministrazioni, "
       "Porto Mantovano, MN) - Consorzio Progetto Solidarietà",
@@ -34466,25 +33101,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "13:29:36 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CPTC_2", .name = "Ordine TSRM e PSTRP di Catania (Pubbliche Amministrazioni, Aci "
-      "Castello, CT) - ORDINE TSRM E PSTRP DI CATANIA - Home",
-    .name_ja = "Ordine TSRM e PSTRP di Catania (Pubbliche Amministrazioni, Aci Castello, CT) - ORDINE TSRM E PSTRP DI CATANIA - Home",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.tsrmct.org/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.tsrmct.org/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T09:39:41+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CPTM", .name = "Ordine dei Tecnici Sanitari di Radiologia Medica e delle "
       "Professioni Sanitarie Tecniche della Riabilitazione e della "
@@ -34813,25 +33429,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "05:40:03 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CQ57X31P_2", .name = "UNIONE DI COMUNI \"TIFERNUM\" (Pubbliche Amministrazioni, "
-      "Castellino del Biferno, CB) - Home",
-    .name_ja = "UNIONE DI COMUNI \"TIFERNUM\" (Pubbliche Amministrazioni, Castellino del Biferno, CB) - Home",
-    .category = "local-gov", .collector = "itgov_territoriali", .portal = "https://www.unionecomunitifernum.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.unionecomunitifernum.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T09:39:43+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CR_CAMPA", .name = "Consiglio Regionale della Campania (Pubbliche Amministrazioni, "
       "Napoli, NA) - Consiglio regionale della Campania",
@@ -35199,25 +33796,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "15:20:30 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CRM_TV_2", .name = "Casa Gino e Pierina Marani (Pubbliche Amministrazioni, Villorba, "
-      "TV) - Pagina iniziale - Casa Gino e Pierina Marani",
-    .name_ja = "Casa Gino e Pierina Marani (Pubbliche Amministrazioni, Villorba, TV) - Pagina iniziale - Casa Gino e Pierina Marani",
-    .category = "health", .collector = "itgov_sanita", .portal = "https://www.casamarani.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.casamarani.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T11:39:45+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CRMB_VR", .name = "Centro servizi alla Persona CR Morelli Bugna (Pubbliche "
       "Amministrazioni, Villafranca di Verona, VR) - Centro Servizi "
@@ -35546,26 +34124,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "16:42:13 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CRU_TV_2", .name = "Casa di Riposo Umberto I di Montebelluna (Pubbliche "
-      "Amministrazioni, Montebelluna, TV) - Pagina iniziale - Casa di "
-      "riposo Umberto I",
-    .name_ja = "Casa di Riposo Umberto I di Montebelluna (Pubbliche Amministrazioni, Montebelluna, TV) - Pagina iniziale - Casa di riposo Umberto I",
-    .category = "health", .collector = "itgov_sanita", .portal = "https://www.umbertoprimo.com/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.umbertoprimo.com/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, ATOM feed, newest "
-      "2026-10-18T11:39:48+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CRVFA", .name = "Casa di Riposo Vittorio Fossombroni (Gestori di Pubblici "
       "Servizi, Arezzo, AR) - Casa di Riposo ASP Fossombroni",
@@ -35772,26 +34330,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "2025-11-27T12:25:23Z. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO47_IT_CSDMI_2", .name = "Consiglio Territoriale Degli Spedizionieri Doganali di Milano "
-      "(Pubbliche Amministrazioni, Milano, MI) - Ordine Doganalisti "
-      "Lombardia",
-    .name_ja = "Consiglio Territoriale Degli Spedizionieri Doganali di Milano (Pubbliche Amministrazioni, Milano, MI) - Ordine Doganalisti Lombardia",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.albodoganalistimilano.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.albodoganalistimilano.it/feed/rss/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 27 Nov 2025 "
-      "12:19:58 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO47_IT_CSFEP_TV", .name = "CASA ELISEO E PIETRO MOZZETTI (Pubbliche Amministrazioni, "
       "Vazzola, TV) - Casa Eliseo e Pietro Mozzetti",
@@ -35916,26 +34454,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "10:27:57 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CSMJT_UD_2", .name = "Conservatorio Statale di Musica Jacopo Tomadini (Pubbliche "
-      "Amministrazioni, Udine, UD) - Conservatorio statale di Musica "
-      "Jacopo Tomadini - Udine",
-    .name_ja = "Conservatorio Statale di Musica Jacopo Tomadini (Pubbliche Amministrazioni, Udine, UD) - Conservatorio statale di Musica Jacopo Tomadini - Udine",
-    .category = "research", .collector = "itgov_universita", .portal = "https://www.conservatorio.udine.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.conservatorio.udine.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-18T11:39:50+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CSMNS_BN", .name = "Conservatorio Statale di Musica Nicola Sala (Pubbliche "
       "Amministrazioni, Benevento, BN) - Conservatorio Statale di "
@@ -36182,25 +34700,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "13:54:21 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CTRLE_2", .name = "Consorzio Trapanese Legalita (Pubbliche Amministrazioni, "
-      "Castelvetrano, TP) - Home",
-    .name_ja = "Consorzio Trapanese Legalita (Pubbliche Amministrazioni, Castelvetrano, TP) - Home",
-    .category = "government", .collector = "itgov_altri", .portal = "https://www.consorziotrapaneselegalitasviluppo.com/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.consorziotrapaneselegalitasviluppo.com/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T09:39:52+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CTSDN", .name = "Consiglio Territoriale Spedizionieri Doganali di Napoli "
       "(Pubbliche Amministrazioni, Napoli, NA) - Consiglio Territoriale "
@@ -36223,47 +34722,7 @@ static const hp_source HP3B47_ITGOV[] = {
       "07:17:17 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CTSDN_2", .name = "Consiglio Territoriale Spedizionieri Doganali di Napoli "
-      "(Pubbliche Amministrazioni, Napoli, NA) - Consiglio Territoriale "
-      "Spedizionieri Doganali Napoli",
-    .name_ja = "Consiglio Territoriale Spedizionieri Doganali di Napoli (Pubbliche Amministrazioni, Napoli, NA) - Consiglio Territoriale Spedizionieri Doganali Napoli",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.albodoganalistinapoli.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.albodoganalistinapoli.it/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-06-17T07:18:18Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
-  { .id = "JO47_IT_CTSDN_3", .name = "Consiglio Territoriale Spedizionieri Doganali di Napoli "
-      "(Pubbliche Amministrazioni, Napoli, NA) - Consiglio Territoriale "
-      "Spedizionieri Doganali Napoli",
-    .name_ja = "Consiglio Territoriale Spedizionieri Doganali di Napoli (Pubbliche Amministrazioni, Napoli, NA) - Consiglio Territoriale Spedizionieri Doganali Napoli",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.albodoganalistinapoli.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.albodoganalistinapoli.it/feed/rss/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 07 Jun 2026 "
-      "07:17:17 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO47_IT_CTSPE", .name = "Consorzio Turistico Sa Perda 'E Iddocca (Pubbliche "
       "Amministrazioni, Laconi, OR) - Consorzio Turistico Sa Perda 'e "
@@ -36308,27 +34767,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "08:27:31 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CTSRM_2", .name = "Ordine Provinciale di Ferrara dei Tecnici Sanitari di Radiologia "
-      "Medica e delle Professioni Sanitarie Tecniche, della "
-      "Riabilitazione e Prevenzione (Pubbliche Amministrazioni, "
-      "Ferrara, FE) - Home",
-    .name_ja = "Ordine Provinciale di Ferrara dei Tecnici Sanitari di Radiologia Medica e delle Professioni Sanitarie Tecniche, della Riabilitazione e Prevenzione (Pubbliche Amministrazioni, Ferrara, FE) - Home",
-    .category = "health", .collector = "itgov_sanita", .portal = "https://www.ferraratsrm.org/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ferraratsrm.org/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 15 items, ATOM feed, newest "
-      "2026-10-18T09:39:53+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CTSRM_E1", .name = "Ordine dei Tecnici Sanitari di Radiologia Medica e delle "
       "Professioni Sanitarie Tecniche, della Riabilitazione e della "
@@ -36644,26 +35082,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "18:26:52 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_D1VWHYA4_2", .name = "Federazione Italiana Canoa Kayak (Stazioni Appaltanti, Roma, RM) "
-      "- Federazione Italiana Canoa e Kayak - Federazione Italiana "
-      "Canoa",
-    .name_ja = "Federazione Italiana Canoa Kayak (Stazioni Appaltanti, Roma, RM) - Federazione Italiana Canoa e Kayak - Federazione Italiana Canoa",
-    .category = "culture", .collector = "itgov_cultura", .portal = "https://www.federcanoa.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.federcanoa.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T11:39:55+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_D2K0HFUC", .name = "ITS NUOVE TECNOLOGIE PER IL MADE IN ITALY SISTEMA AGROALIMENTARE "
       "(Gestori di Pubblici Servizi, Teramo, TE) - ITS Academy "
@@ -37171,25 +35589,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "15:31:50 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_E346ZFUT_2", .name = "SPPL CARMINIO SRL (Stazioni Appaltanti, Carmiano, LE) - Carminio "
-      "srl - sito ufficiale - Carminio srl",
-    .name_ja = "SPPL CARMINIO SRL (Stazioni Appaltanti, Carmiano, LE) - Carminio srl - sito ufficiale - Carminio srl",
-    .category = "utility", .collector = "itgov_servizi_pubblici", .portal = "https://www.carminio.le.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.carminio.le.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T09:39:58+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_E6XFNI5F", .name = "POLO TECNOLOGICO \"DONEGANI CILIBERTO\" (Pubbliche "
       "Amministrazioni, Crotone, KR) - Donegani-Ciliberto",
@@ -38190,26 +36589,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "11:34:19 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ERRCC9BD_2", .name = "I.M.M. SRL ISTITUTO MARIA MONTESSORI IMPRESA SOCIALE (Stazioni "
-      "Appaltanti, Somma Vesuviana, NA) - ISTITUTO MONTESSORI – Scuola "
-      "Paritaria a Somma Vesuviana (Napoli)",
-    .name_ja = "I.M.M. SRL ISTITUTO MARIA MONTESSORI IMPRESA SOCIALE (Stazioni Appaltanti, Somma Vesuviana, NA) - ISTITUTO MONTESSORI – Scuola Paritaria a Somma Vesuviana (Napoli)",
-    .category = "utility", .collector = "itgov_servizi_pubblici", .portal = "https://www.istruzionemontessori.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istruzionemontessori.it/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, ATOM feed, newest "
-      "2026-10-14T11:34:30Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_IT_ERSAF", .name = "ERSAF - Ente Regionale per I Servizi all'Agricoltura e alle "
       "Foreste (Pubbliche Amministrazioni, Milano, MI) - Ersaf",
@@ -38352,25 +36731,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "11:11:31 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ESCPT_2", .name = "E.S.Co. Provinciale Tuscia Spa (Gestori di Pubblici Servizi, "
-      "Viterbo, VT) - 08429ceff8b04789b17ff06d7553c956",
-    .name_ja = "E.S.Co. Provinciale Tuscia Spa (Gestori di Pubblici Servizi, Viterbo, VT) - 08429ceff8b04789b17ff06d7553c956",
-    .category = "utility", .collector = "itgov_servizi_pubblici", .portal = "https://www.escotuscia.com/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.escotuscia.com/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2017-02-10T11:11:31Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_IT_ESU_PD", .name = "Esu  di Padova (Pubbliche Amministrazioni, Padova, PD) - ESU "
       "Padova IT",
@@ -38677,25 +37037,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "12:00:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_FBK_2", .name = "Fondazione Bruno Kessler (Pubbliche Amministrazioni, Trento, TN) "
-      "- FBK",
-    .name_ja = "Fondazione Bruno Kessler (Pubbliche Amministrazioni, Trento, TN) - FBK",
-    .category = "culture", .collector = "itgov_cultura", .portal = "https://www.fbk.eu/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.fbk.eu/en/feed/rss/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 15 items, RSS2 feed, newest Tue, 13 Oct 2026 "
-      "12:00:00 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO47_IT_FC_087", .name = "Ferrovia Circumetnea (Pubbliche Amministrazioni, Catania, CT) - "
       "Ferrovia Circumetnea",
@@ -38818,25 +37159,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "16:37:06 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_FCNDI_2", .name = "Fondazione Consiglio Nazionale Degli Ingegneri (Gestori di "
-      "Pubblici Servizi, Roma, RM) - Home",
-    .name_ja = "Fondazione Consiglio Nazionale Degli Ingegneri (Gestori di Pubblici Servizi, Roma, RM) - Home",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.fondazionecni.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.fondazionecni.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T11:40:09+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_FCPSSSU", .name = "SERVIZI IN COMUNE S.p.A. (Gestori di Pubblici Servizi, Pomezia, "
       "RM) - SERVIZI IN COMUNE S.p.A.",
@@ -38939,25 +37261,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "07:51:03 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_FCSR_2", .name = "Fondazione Conservatori e Scandurra Riuniti (Pubbliche "
-      "Amministrazioni, Messina, ME) - Home",
-    .name_ja = "Fondazione Conservatori e Scandurra Riuniti (Pubbliche Amministrazioni, Messina, ME) - Home",
-    .category = "government", .collector = "itgov_altri", .portal = "https://www.ipabscandurra.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ipabscandurra.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T10:40:09+01:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_FD312VE9", .name = "SOCIETA' ABRUZZESE GESTIONE AEROPORTO  (Stazioni Appaltanti, "
       "Pescara, PE) - Abruzzo Airport",
@@ -39063,27 +37366,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "09:15:28 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_FEDAF_2", .name = "Federazione Regionale Degli Ordini Dei Dottori Agronomi e Dei "
-      "Dottori Forestali dell'Emilia-romagna (Pubbliche "
-      "Amministrazioni, Bologna, BO) - Federazione Regionale dei "
-      "Dottori Agronomi e dei Dottori Forestali dell'Emi",
-    .name_ja = "Federazione Regionale Degli Ordini Dei Dottori Agronomi e Dei Dottori Forestali dell'Emilia-romagna (Pubbliche Amministrazioni, Bologna, BO) - Federazione Regionale dei Dottori Agronomi e dei Dottori Forestali dell'Emi",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.agronomiforestali-rer.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.agronomiforestali-rer.it/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-09-28T09:15:28Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_IT_FEDAF_3", .name = "Federazione Regionale Degli Ordini Dei Dottori Agronomi e Dei "
       "Dottori Forestali dell'Emilia-romagna (Pubbliche "
@@ -39369,25 +37651,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "07:30:18 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_FITA_2", .name = "Fita Federazione Italiana Taekwondo (Stazioni Appaltanti, Roma, "
-      "RM) - Federazione Italiana Taekwondo - Home",
-    .name_ja = "Fita Federazione Italiana Taekwondo (Stazioni Appaltanti, Roma, RM) - Federazione Italiana Taekwondo - Home",
-    .category = "culture", .collector = "itgov_cultura", .portal = "https://www.taekwondoitalia.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.taekwondoitalia.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T11:40:11+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_FITA_3", .name = "Fita Federazione Italiana Taekwondo (Stazioni Appaltanti, Roma, "
       "RM) - Federazione Italiana Taekwondo - News",
@@ -39592,27 +37855,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "12:57:30 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_FNPLSAM_2", .name = "Fondo Nazionale di Previdenza per I Lavoratori di Spedizione "
-      "Corrieri e Delle Agenzie Marittime Racc. e Mediatori Maritt. "
-      "(Enti Nazionali di Previdenza ed Assistenza Sociale in Conto "
-      "Economico Consolidato, Milano, MI) - Home",
-    .name_ja = "Fondo Nazionale di Previdenza per I Lavoratori di Spedizione Corrieri e Delle Agenzie Marittime Racc. e Mediatori Maritt. (Enti Nazionali di Previdenza ed Assistenza Sociale in Conto Economico Consolidato, Milano, MI) - Home",
-    .category = "health", .collector = "itgov_sanita", .portal = "https://www.fasc.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.fasc.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 8 items, ATOM feed, newest "
-      "2026-10-18T09:40:12+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_FODAF", .name = "Federazione Interregionale Degli Ordini Dei Dottori Agronomi e "
       "Dottori Forestali del Piemonte e della Valle D'Aosta (Pubbliche "
@@ -40368,25 +38610,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "14:59:30 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_GALSTS_2", .name = "Gruppo di Azione Locale S.T.S. (Gestori di Pubblici Servizi, "
-      "Rogliano, CS) - SERVIZIO CIVILE",
-    .name_ja = "Gruppo di Azione Locale S.T.S. (Gestori di Pubblici Servizi, Rogliano, CS) - SERVIZIO CIVILE",
-    .category = "local-gov", .collector = "itgov_territoriali", .portal = "https://www.galsts.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.galsts.it/newj/index.php/it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T09:40:19+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_GALTA", .name = "Gruppo di Azione Locale Terre di Aci Societa' Consortile a "
       "Responsabilita' Limitata (Gestori di Pubblici Servizi, Acireale, "
@@ -41117,24 +39340,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "06:55:54 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_HRDAQNXW_2", .name = "SANTA TERESA SPA (Stazioni Appaltanti, Brindisi, BR) - Home",
-    .name_ja = "SANTA TERESA SPA (Stazioni Appaltanti, Brindisi, BR) - Home",
-    .category = "utility", .collector = "itgov_servizi_pubblici", .portal = "https://www.santateresaspa.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.santateresaspa.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T09:40:22+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_HS1HMYZI", .name = "CENTRO PADANE ENGINEERING S.R.L. (Stazioni Appaltanti, Cremona, "
       "CR) - Centropadane srl",
@@ -41383,25 +39588,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "11:05:05 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_IACPT_07_2", .name = "Agenzia Regionale per la Casa e L'Abitare per la provincia di "
-      "Taranto (Pubbliche Amministrazioni, Taranto, TA) - NEWS/AVVISI",
-    .name_ja = "Agenzia Regionale per la Casa e L'Abitare per la provincia di Taranto (Pubbliche Amministrazioni, Taranto, TA) - NEWS/AVVISI",
-    .category = "government", .collector = "itgov_altri", .portal = "https://www.arcajonica.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.arcajonica.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 7 items, ATOM feed, newest "
-      "2026-10-18T09:40:24+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_IAFAM_CT", .name = "Conservatorio Statale di Musica V. Bellini di Catania (Pubbliche "
       "Amministrazioni, Catania, CT) - Conservatorio Bellini Catania",
@@ -45408,26 +43594,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "15:00:11 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ICSSE_2", .name = "Istituto Comprensivo Statale Selargius1 (Pubbliche "
-      "Amministrazioni, Selargius, CA) - Home - Istituto Comprensivo "
-      "Statale 1 Selargius",
-    .name_ja = "Istituto Comprensivo Statale Selargius1 (Pubbliche Amministrazioni, Selargius, CA) - Home - Istituto Comprensivo Statale 1 Selargius",
-    .category = "education", .collector = "itgov_scuole", .portal = "https://www.comprensivoselargius1.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comprensivoselargius1.edu.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 14 items, ATOM feed, newest "
-      "2026-10-18T09:40:50+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ICSSLN", .name = "Istituto Comprensivo Statale San Leone IX (Pubbliche "
       "Amministrazioni, Sessa Aurunca, CE) - Istituto Comprensivo San "
@@ -45860,25 +44026,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "12:46:24 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ICUC_2", .name = "Istituto Comprensivo 1 Capoluogo (Pubbliche Amministrazioni, "
-      "Poggiomarino, NA) - Home",
-    .name_ja = "Istituto Comprensivo 1 Capoluogo (Pubbliche Amministrazioni, Poggiomarino, NA) - Home",
-    .category = "education", .collector = "itgov_scuole", .portal = "https://www.ic1capoluogopoggiomarino.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ic1capoluogopoggiomarino.edu.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 16 items, ATOM feed, newest "
-      "2026-10-18T11:40:52+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ICUFTO", .name = "I.C. Ugo Foscolo (Pubbliche Amministrazioni, Torino, TO) - "
       "Istituto Comprensivo \"Ugo Foscolo\" – Torino",
@@ -45960,25 +44107,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "14:36:57 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ICV1_2", .name = "Istituto Comprensivo Venaria 1 (Pubbliche Amministrazioni, "
-      "Venaria Reale, TO) - Home",
-    .name_ja = "Istituto Comprensivo Venaria 1 (Pubbliche Amministrazioni, Venaria Reale, TO) - Home",
-    .category = "education", .collector = "itgov_scuole", .portal = "https://www.icvenaria1.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icvenaria1.edu.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 7 items, ATOM feed, newest "
-      "2026-10-18T09:40:52+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ICVAP", .name = "Istituto Comprensivo di Via Angelini (Pubbliche Amministrazioni, "
       "Pavia, PV) - Istituto Comprensivo Statale di via ANGELINI",
@@ -46960,27 +45088,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "10:16:01 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_IIAPS_2", .name = "Istituto Immacolata Azienda Pubblica di Servizi alla Persona "
-      "(Pubbliche Amministrazioni, Galatina, LE) - Il sito "
-      "istituzionale dell'Istituto Immacolata - Istituto Immacolata "
-      "a.s.p.",
-    .name_ja = "Istituto Immacolata Azienda Pubblica di Servizi alla Persona (Pubbliche Amministrazioni, Galatina, LE) - Il sito istituzionale dell'Istituto Immacolata - Istituto Immacolata a.s.p.",
-    .category = "health", .collector = "itgov_sanita", .portal = "https://www.istitutoimmacolata.org/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutoimmacolata.org/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T09:41:03+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_IIBPG", .name = "Ipab Istituto Boccone del Povero Gurrera Moncada Calafato "
       "(Pubbliche Amministrazioni, Caltanissetta, CL) - IPAB "
@@ -47024,26 +45131,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "10:35:32 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_IIBSS_2", .name = "Ipab Istituto di Beneficenza e Scolastico Sac. M. Scriffignano "
-      "Siscaro (Pubbliche Amministrazioni, Agira, EN) - Istituto "
-      "Scriffignano",
-    .name_ja = "Ipab Istituto di Beneficenza e Scolastico Sac. M. Scriffignano Siscaro (Pubbliche Amministrazioni, Agira, EN) - Istituto Scriffignano",
-    .category = "health", .collector = "itgov_sanita", .portal = "https://www.istitutoscriffignano.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutoscriffignano.it/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-07T08:03:08Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_IT_IIEDN", .name = "Iis Enrico De Nicola (Pubbliche Amministrazioni, San Giovanni la "
       "Punta, CT) - I.T.E.T. \"E. DE NICOLA\" - Home",
@@ -47065,25 +45152,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "11:34:47 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_IIEDN_2", .name = "Iis Enrico De Nicola (Pubbliche Amministrazioni, San Giovanni la "
-      "Punta, CT) - I.T.E.T. \"E. DE NICOLA\" - Home",
-    .name_ja = "Iis Enrico De Nicola (Pubbliche Amministrazioni, San Giovanni la Punta, CT) - I.T.E.T. \"E. DE NICOLA\" - Home",
-    .category = "education", .collector = "itgov_scuole", .portal = "https://www.denicola.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.denicola.edu.it/new/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:41:05+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_IILG", .name = "Istituto di istruzione Lorenzo Guetti (Pubbliche "
       "Amministrazioni, Tione di Trento, TN) - Istituto d'Istruzione "
@@ -48625,25 +46693,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "11:44:15 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_IPABC_0_2", .name = "IPAB Villa Fiorita (Pubbliche Amministrazioni, Cornuda, TV) - "
-      "Pagina iniziale - IPAB Villa Fiorita di Cornuda",
-    .name_ja = "IPAB Villa Fiorita (Pubbliche Amministrazioni, Cornuda, TV) - Pagina iniziale - IPAB Villa Fiorita di Cornuda",
-    .category = "health", .collector = "itgov_sanita", .portal = "https://www.ipabvillafiorita.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ipabvillafiorita.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:41:15+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_IPABCA", .name = "I.P.A.B. Centro Anziani (Pubbliche Amministrazioni, Bussolengo, "
       "VR) - IPAB Centro Anziani Bussolengo",
@@ -49110,26 +47159,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "16:10:20 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_IPTIE_2", .name = "P.T.P. \"Rambaldi DE- Fazio\" (Pubbliche Amministrazioni, "
-      "Lamezia Terme, CZ) - Polo Tecnologico Ind. ed Artig. Avanz. - "
-      "Lamezia Terme   Sito web ufficiale",
-    .name_ja = "P.T.P. \"Rambaldi DE- Fazio\" (Pubbliche Amministrazioni, Lamezia Terme, CZ) - Polo Tecnologico Ind. ed Artig. Avanz. - Lamezia Terme   Sito web ufficiale",
-    .category = "education", .collector = "itgov_scuole", .portal = "https://www.polotecnologico.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.polotecnologico.edu.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 6 items, ATOM feed, newest "
-      "2026-10-18T11:41:17+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_IQA17IRK", .name = "Unione della Rocca e dei Vivai (Pubbliche Amministrazioni, "
       "Novara di Sicilia, ME) - Unione della rocca e dei vivai",
@@ -50770,25 +48799,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "17:30:50 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ISTSC_AGIS01600N_2", .name = "ISTRUZIONE SECONDARIA SUPERIORE - I.I.S. 'DON MICHELE ARENA' "
-      "(Pubbliche Amministrazioni, Sciacca, AG) - iissarena - Home",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - I.I.S. 'DON MICHELE ARENA' (Pubbliche Amministrazioni, Sciacca, AG) - iissarena - Home",
-    .category = "education", .collector = "itgov_scuole", .portal = "https://www.iissarena.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iissarena.edu.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, ATOM feed, newest "
-      "2026-10-18T11:41:28+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ISTSC_AGIS018009", .name = "ISTITUTO SUPERIORE - I.I.S. GIUDICI SAETTA E LIVATINO (Pubbliche "
       "Amministrazioni, Ravanusa, AG) - Istituto d'Istruzione Superiore "
@@ -55965,26 +53975,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "08:44:03 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ISTSC_BSIS01300G_2", .name = "ISTRUZIONE SECONDARIA SUPERIORE - 'COSSALI' - ORZINUOVI "
-      "(Pubbliche Amministrazioni, Orzinuovi, BS) - I.I.S. \"G. "
-      "Cossali\" - Home",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - 'COSSALI' - ORZINUOVI (Pubbliche Amministrazioni, Orzinuovi, BS) - I.I.S. \"G. Cossali\" - Home",
-    .category = "education", .collector = "itgov_scuole", .portal = "https://www.cossali.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cossali.edu.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:41:56+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ISTSC_BSIS016003", .name = "ISTRUZIONE SECONDARIA SUPERIORE - PRIMO LEVI (Pubbliche "
       "Amministrazioni, Sarezzo, BS) - ISTITUTO DI ISTRUZIONE "
@@ -56877,26 +54867,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "15:06:12 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ISTSC_CAVC010001_2", .name = "CONVITTO NAZIONALE - CONV.NAZIONALE 'VITTORIO EMANUE (Pubbliche "
-      "Amministrazioni, Cagliari, CA) - Convitto Nazionale \"Vittorio "
-      "Emanuele II\" Cagliari",
-    .name_ja = "CONVITTO NAZIONALE - CONV.NAZIONALE 'VITTORIO EMANUE (Pubbliche Amministrazioni, Cagliari, CA) - Convitto Nazionale \"Vittorio Emanuele II\" Cagliari",
-    .category = "education", .collector = "itgov_scuole", .portal = "https://www.convittocagliari.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.convittocagliari.edu.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 6 items, ATOM feed, newest "
-      "2026-10-18T09:42:01+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ISTSC_CBIC81800C", .name = "ISTITUTO COMPRENSIVO - I.C. CAMPOMARINO (Pubbliche "
       "Amministrazioni, Campomarino, CB) - Sito Istituzionale "
@@ -59405,25 +57375,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "00:00:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ISTSC_COPS030001_2", .name = "LICEO SCIENTIFICO - PAOLO GIOVIO (Pubbliche Amministrazioni, "
-      "Como, CO) - Liceo Giovio",
-    .name_ja = "LICEO SCIENTIFICO - PAOLO GIOVIO (Pubbliche Amministrazioni, Como, CO) - Liceo Giovio",
-    .category = "education", .collector = "itgov_scuole", .portal = "https://web.liceogiovio.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://web.liceogiovio.edu.it/_sito2020/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T09:42:14+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ISTSC_CORC010008", .name = "ISTITUTO PROFESSIONALE PER I SERVIZI COMMERCIALI E TURISTICI - "
       "G.PESSINA (Pubbliche Amministrazioni, Como, CO) - IPSSCTS "
@@ -60313,26 +58264,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "08:55:37 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ISTSC_CSIC8A000R_2", .name = "ISTITUTO COMPRENSIVO - IC ' C. ALVARO' TREBISACCE (Pubbliche "
-      "Amministrazioni, Trebisacce, CS) - Istituto Comprensivo "
-      "\"C.Alvaro\" Trebisacce",
-    .name_ja = "ISTITUTO COMPRENSIVO - IC ' C. ALVARO' TREBISACCE (Pubbliche Amministrazioni, Trebisacce, CS) - Istituto Comprensivo \"C.Alvaro\" Trebisacce",
-    .category = "education", .collector = "itgov_scuole", .portal = "https://www.istitutocomprensivotrebisacce.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutocomprensivotrebisacce.edu.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 8 items, ATOM feed, newest "
-      "2026-10-18T11:42:17+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ISTSC_CSIC8AE00X", .name = "ISTITUTO COMPRENSIVO - IC SAN MARCO ARGENTANO (Pubbliche "
       "Amministrazioni, San Marco Argentano, CS) - Istituto Comprensivo "
@@ -61908,26 +59839,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "16:08:58 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ISTSC_CTRH010007_2", .name = "ISTITUTO PROFESSIONALE PER I SERVIZI ALBERGHIERI E RISTORAZIONE "
-      "- IPSSA GIOVANNI FALCONE (Pubbliche Amministrazioni, Giarre, CT) "
-      "- Home Page Istituto",
-    .name_ja = "ISTITUTO PROFESSIONALE PER I SERVIZI ALBERGHIERI E RISTORAZIONE - IPSSA GIOVANNI FALCONE (Pubbliche Amministrazioni, Giarre, CT) - Home Page Istituto",
-    .category = "education", .collector = "itgov_scuole", .portal = "https://www.alberghierogiarre.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.alberghierogiarre.edu.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T11:42:25+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ISTSC_CTRH05000N", .name = "ISTITUTO PROFESSIONALE PER I SERVIZI ALBERGHIERI E RISTORAZIONE "
       "- IPSSAR DI NICOLOSI (Pubbliche Amministrazioni, Nicolosi, CT) - "
@@ -62549,25 +60460,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "16:15:30 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ISTSC_CZPS03000B_2", .name = "LICEO SCIENTIFICO - LS 'L. SICILIANI' CATANZARO (Pubbliche "
-      "Amministrazioni, Catanzaro, CZ) - Liceo Siciliani   Home",
-    .name_ja = "LICEO SCIENTIFICO - LS 'L. SICILIANI' CATANZARO (Pubbliche Amministrazioni, Catanzaro, CZ) - Liceo Siciliani   Home",
-    .category = "education", .collector = "itgov_scuole", .portal = "https://www.liceosiciliani.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceosiciliani.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:42:28+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ISTSC_CZRH04000Q", .name = "ISTITUTO PROFESSIONALE PER I SERVIZI ALBERGHIERI E RISTORAZIONE "
       "- IPSSAR SOVERATO (Pubbliche Amministrazioni, Soverato, CZ) - "
@@ -64946,25 +62838,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "22:43:53 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ISTSC_GETH020002_2", .name = "ISTITUTO TECNICO NAUTICO - ITN SAN GIORGIO (Pubbliche "
-      "Amministrazioni, Genova, GE) - Istituto Nautico   Homepage",
-    .name_ja = "ISTITUTO TECNICO NAUTICO - ITN SAN GIORGIO (Pubbliche Amministrazioni, Genova, GE) - Istituto Nautico   Homepage",
-    .category = "education", .collector = "itgov_scuole", .portal = "https://www.itnautico.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.itnautico.edu.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-18T09:42:41+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ISTSC_GOIC81200C", .name = "ISTITUTO COMPRENSIVO - I.C. DI LINGUA SLOVENA -GORIZIA "
       "(Pubbliche Amministrazioni, Gorizia, GO) - Istituto Comprensivo "
@@ -65314,25 +63187,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "20:11:52 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ISTSC_KRIC80300C_2", .name = "ISTITUTO COMPRENSIVO - ISTITUTO COMPRENSIVO PAPANICE (Pubbliche "
-      "Amministrazioni, Crotone, KR) - Home - I.C. Papanice-Alfieri",
-    .name_ja = "ISTITUTO COMPRENSIVO - ISTITUTO COMPRENSIVO PAPANICE (Pubbliche Amministrazioni, Crotone, KR) - Home - I.C. Papanice-Alfieri",
-    .category = "education", .collector = "itgov_scuole", .portal = "https://www.icpapanice.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icpapanice.edu.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T09:42:43+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ISTSC_KRIC825009", .name = "ISTITUTO COMPRENSIVO - I.O.' D.BORRELLI ' S. SEVERINA (Pubbliche "
       "Amministrazioni, Santa Severina, KR) - ioBorrelli",
@@ -66210,26 +64064,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "11:42:43 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ISTSC_LEIC8AD00C_2", .name = "ISTITUTO COMPRENSIVO - CAMPI SALENTINA (Pubbliche "
-      "Amministrazioni, Campi Salentina, LE) - Home - Istituto "
-      "Comprensivo \"Teresa Sarti\" Campi Salentina",
-    .name_ja = "ISTITUTO COMPRENSIVO - CAMPI SALENTINA (Pubbliche Amministrazioni, Campi Salentina, LE) - Home - Istituto Comprensivo \"Teresa Sarti\" Campi Salentina",
-    .category = "education", .collector = "itgov_scuole", .portal = "https://www.comprensivocampisalentina.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comprensivocampisalentina.edu.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:42:47+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ISTSC_LEIC8AK00R", .name = "ISTITUTO COMPRENSIVO - TRICASE 'G.PASCOLI' (Pubbliche "
       "Amministrazioni, Tricase, LE) - ISTITUTO COMPRENSIVO STATALE “G. "
@@ -66785,25 +64619,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "11:59:35 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ISTSC_LOIC80200P_2", .name = "ISTITUTO COMPRENSIVO - A.GRAMSCI MULAZZANO (Pubbliche "
-      "Amministrazioni, Mulazzano, LO) - Home",
-    .name_ja = "ISTITUTO COMPRENSIVO - A.GRAMSCI MULAZZANO (Pubbliche Amministrazioni, Mulazzano, LO) - Home",
-    .category = "education", .collector = "itgov_scuole", .portal = "http://icmulazzano.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://icmulazzano.edu.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T09:42:51+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ISTSC_LOIC805006", .name = "ISTITUTO COMPRENSIVO DI ZELO BUON PERSICO (Pubbliche "
       "Amministrazioni, Zelo Buon Persico, LO) - IC ZeloBp",
@@ -67070,25 +64885,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "19:41:09 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ISTSC_LTIC82100T_2", .name = "ISTITUTO COMPRENSIVO - A.GRAMSCI (Pubbliche Amministrazioni, "
-      "Aprilia, LT) - Home",
-    .name_ja = "ISTITUTO COMPRENSIVO - A.GRAMSCI (Pubbliche Amministrazioni, Aprilia, LT) - Home",
-    .category = "education", .collector = "itgov_scuole", .portal = "https://icgramsciaprilia.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://icgramsciaprilia.edu.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 8 items, ATOM feed, newest "
-      "2026-10-18T11:42:51+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ISTSC_LTIC825005", .name = "ISTITUTO OMNICOMPRENSIVO-LICEO SCIENTIFICO (Pubbliche "
       "Amministrazioni, Castelforte, LT) - Omnicomprensivo Castelforte "
@@ -67294,25 +65090,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "13:54:41 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ISTSC_LTIC855001_2", .name = "ISTITUTO COMPRENSIVO - I.C. SCAURI (Pubbliche Amministrazioni, "
-      "Minturno, LT) - Home",
-    .name_ja = "ISTITUTO COMPRENSIVO - I.C. SCAURI (Pubbliche Amministrazioni, Minturno, LT) - Home",
-    .category = "education", .collector = "itgov_scuole", .portal = "https://www.istitutocomprensivomarcoemilioscauro.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.istitutocomprensivomarcoemilioscauro.edu.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 13 items, ATOM feed, newest "
-      "2026-10-18T11:42:52+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ISTSC_LTIS00100R", .name = "Campus dei Licei Massimiliano Ramadu' (Pubbliche "
       "Amministrazioni, Cisterna di Latina, LT) - Campus dei Licei – "
@@ -72105,26 +69882,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "09:10:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ISTSC_MITN03000E_2", .name = "Istituto Tecnico Statale per il Turismo A. Gentileschi "
-      "(Pubbliche Amministrazioni, Milano, MI) - ITT Artemisia "
-      "Gentileschi - Istituto Gentileschi",
-    .name_ja = "Istituto Tecnico Statale per il Turismo A. Gentileschi (Pubbliche Amministrazioni, Milano, MI) - ITT Artemisia Gentileschi - Istituto Gentileschi",
-    .category = "education", .collector = "itgov_scuole", .portal = "https://www.gentileschi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gentileschi.edu.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 8 items, ATOM feed, newest "
-      "2026-10-18T09:43:16+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ISTSC_MIVE01000P", .name = "Educandato E. Setti Carraro Dalla Chiesa - Milano (Pubbliche "
       "Amministrazioni, Milano, MI) - Educandato Setti Carraro",
@@ -75915,26 +73672,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "14:09:33 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ISTSC_PDIS018003_2", .name = "ISTRUZIONE SECONDARIA SUPERIORE - IIS MEUCCI-CITTADELLA "
-      "(Pubbliche Amministrazioni, Cittadella, PD) - "
-      "www.meuccifanoli.edu.it",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - IIS MEUCCI-CITTADELLA (Pubbliche Amministrazioni, Cittadella, PD) - www.meuccifanoli.edu.it",
-    .category = "education", .collector = "itgov_scuole", .portal = "https://www.meuccifanoli.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.meuccifanoli.edu.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-18T09:43:44+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ISTSC_PDIS026002", .name = "ISTITUTO SUPERIORE -  I.I.S. EUGANEO - ESTE (Pubbliche "
       "Amministrazioni, Este, PD) - Istituto di Istruzione Superiore "
@@ -78328,25 +76065,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "12:24:27 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ISTSC_PZIC86200E_2", .name = "ISTITUTO COMPRENSIVO - PICERNO (Pubbliche Amministrazioni, "
-      "Picerno, PZ) - Istituto Comprensivo Statale di Picerno  - Home",
-    .name_ja = "ISTITUTO COMPRENSIVO - PICERNO (Pubbliche Amministrazioni, Picerno, PZ) - Istituto Comprensivo Statale di Picerno  - Home",
-    .category = "education", .collector = "itgov_scuole", .portal = "https://www.icpicerno.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icpicerno.edu.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T11:43:59+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ISTSC_PZIC864006", .name = "ISTITUTO COMPRENSIVO - 'J. STELLA' MURO LUCANO (Pubbliche "
       "Amministrazioni, Muro Lucano, PZ) - IC \"J. Stella\" Muro Lucano",
@@ -79403,26 +77121,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "08:03:22 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ISTSC_REIS00900L_2", .name = "ISTRUZIONE SECONDARIA SUPERIORE - 'A. ZANELLI' (Pubbliche "
-      "Amministrazioni, Reggio nell'Emilia, RE) - IIS ZANELLI REGGIO "
-      "EMILIA",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - 'A. ZANELLI' (Pubbliche Amministrazioni, Reggio nell'Emilia, RE) - IIS ZANELLI REGGIO EMILIA",
-    .category = "education", .collector = "itgov_scuole", .portal = "https://www.zanelli.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.zanelli.edu.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T11:44:06+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ISTSC_REIS01100L", .name = "ISTITUTO SUPERIORE -  I.S. NOBILI/LOMBARDINI (Pubbliche "
       "Amministrazioni, Reggio nell'Emilia, RE) - Home",
@@ -79444,25 +77142,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "10:52:30 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ISTSC_REIS01100L_2", .name = "ISTITUTO SUPERIORE -  I.S. NOBILI/LOMBARDINI (Pubbliche "
-      "Amministrazioni, Reggio nell'Emilia, RE) - Home",
-    .name_ja = "ISTITUTO SUPERIORE -  I.S. NOBILI/LOMBARDINI (Pubbliche Amministrazioni, Reggio nell'Emilia, RE) - Home",
-    .category = "education", .collector = "itgov_scuole", .portal = "https://www.iisnobili.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iisnobili.edu.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 8 items, ATOM feed, newest "
-      "2026-10-18T11:44:06+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ISTSC_REPC02000N", .name = "LICEO CLASSICO - 'RINALDO CORSO' SEZZ. CL. E SC. (Pubbliche "
       "Amministrazioni, Correggio, RE) - Liceo Statale Rinaldo Corso "
@@ -79505,25 +77184,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "05:07:52 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ISTSC_REPC030008_2", .name = "LICEO CLASSICO - ARIOSTO SPALLANZANI SEZZ.CL.E SC. (Pubbliche "
-      "Amministrazioni, Reggio nell'Emilia, RE) - Home",
-    .name_ja = "LICEO CLASSICO - ARIOSTO SPALLANZANI SEZZ.CL.E SC. (Pubbliche Amministrazioni, Reggio nell'Emilia, RE) - Home",
-    .category = "education", .collector = "itgov_scuole", .portal = "https://www.liceoariostospallanzani-re.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.liceoariostospallanzani-re.edu.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 13 items, ATOM feed, newest "
-      "2026-10-18T09:44:06+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ISTSC_REPS03000B", .name = "LICEO SCIENTIFICO - ALDO MORO (Pubbliche Amministrazioni, Reggio "
       "nell'Emilia, RE) - Liceo Aldo Moro",
@@ -81381,25 +79041,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "13:41:09 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ISTSC_RMIC8C3007_2", .name = "Istituto Comprensivo di Frascati (Pubbliche Amministrazioni, "
-      "Frascati, RM) - Home",
-    .name_ja = "Istituto Comprensivo di Frascati (Pubbliche Amministrazioni, Frascati, RM) - Home",
-    .category = "education", .collector = "itgov_scuole", .portal = "https://www.icdifrascati.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icdifrascati.edu.it/it-IT/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-18T11:44:17+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ISTSC_RMIC8C4003", .name = "ISTITUTO COMPRENSIVO - I.C. ANZIO IV (Pubbliche Amministrazioni, "
       "Anzio, RM) - Anzio IV",
@@ -88799,26 +86440,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "11:25:01 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ISTSC_TPIC83300L_2", .name = "ISTITUTO COMPRENSIVO - IC 'G. XXIII' PACECO (Pubbliche "
-      "Amministrazioni, Paceco, TP) - Istituto Comprensivo Giovanni "
-      "XXIII - Paceco (TP)",
-    .name_ja = "ISTITUTO COMPRENSIVO - IC 'G. XXIII' PACECO (Pubbliche Amministrazioni, Paceco, TP) - Istituto Comprensivo Giovanni XXIII - Paceco (TP)",
-    .category = "education", .collector = "itgov_scuole", .portal = "https://www.icpaceco.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.icpaceco.edu.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, ATOM feed, newest "
-      "2026-10-18T11:44:56+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ISTSC_TPIC83400C", .name = "ISTITUTO COMPRENSIVO - 'BAGOLINO' ALCAMO (Pubbliche "
       "Amministrazioni, Alcamo, TP) - I.C. S. Bagolino",
@@ -91223,25 +88844,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "05:52:12 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ISTSC_VEIS004007_2", .name = "ISTRUZIONE SECONDARIA SUPERIORE - LUIGI LUZZATTI (Pubbliche "
-      "Amministrazioni, Venezia, VE) - Home",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - LUIGI LUZZATTI (Pubbliche Amministrazioni, Venezia, VE) - Home",
-    .category = "education", .collector = "itgov_scuole", .portal = "https://www.iisluzzatti.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iisluzzatti.edu.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 6 items, ATOM feed, newest "
-      "2026-10-18T09:45:07+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ISTSC_VERH020008", .name = "ISTITUTO PROFESSIONALE PER I SERVIZI ALBERGHIERI E RISTORAZIONE "
       "- ELENA CORNARO (Pubbliche Amministrazioni, Jesolo, VE) - IPSEOA "
@@ -92042,26 +89644,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "17:54:48 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ISTSC_VTIS007001_2", .name = "ISTRUZIONE SECONDARIA SUPERIORE - U. MIDOSSI CON S.M.S. ANNESSA "
-      "(Pubbliche Amministrazioni, Civita Castellana, VT) - Midossi - "
-      "IIS U.Midossi di Civita Castellana",
-    .name_ja = "ISTRUZIONE SECONDARIA SUPERIORE - U. MIDOSSI CON S.M.S. ANNESSA (Pubbliche Amministrazioni, Civita Castellana, VT) - Midossi - IIS U.Midossi di Civita Castellana",
-    .category = "education", .collector = "itgov_scuole", .portal = "https://www.midossi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.midossi.edu.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:45:13+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ISTSC_VTIS00800R", .name = "ISTRUZIONE SECONDARIA SUPERIORE - I.P.S.S.C.T. E GRAFICA PUBBL. "
       "'F.ORIOLI' (Pubbliche Amministrazioni, Viterbo, VT) - Istituto "
@@ -93442,27 +91024,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "12:35:51 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_KUE9J1VN_2", .name = "COLLEGIO INTERPROVINCIALE DEI PERITI AGRARI E DEI PERITI AGRARI "
-      "LAUREATI DI BRESCIA CREMONA MANTOVA SONDRIO (Pubbliche "
-      "Amministrazioni, Cremona, CR) - home page  Collegio "
-      "Interprovinciale dei Periti Agrari e Periti Agrari laureati",
-    .name_ja = "COLLEGIO INTERPROVINCIALE DEI PERITI AGRARI E DEI PERITI AGRARI LAUREATI DI BRESCIA CREMONA MANTOVA SONDRIO (Pubbliche Amministrazioni, Cremona, CR) - home page  Collegio Interprovinciale dei Periti Agrari e Periti Agrari laureati",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://interprov.peragr.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://interprov.peragr.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 7 items, ATOM feed, newest "
-      "2026-10-18T11:45:20+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_KWGN5WZY", .name = "I.C.-S.S. VESUVIO-SALVEMINI (Pubbliche Amministrazioni, San "
       "Sebastiano al Vesuvio, NA) - Scuola Media \"G. Salvemini\"",
@@ -93607,26 +91168,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "08:38:07 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_LACASA_2", .name = "La C.A.S.A. Centro Assistenza Servizi per Anziani (Pubbliche "
-      "Amministrazioni, Schio, VI) - La C.A.S.A. - Centro Assistenza "
-      "Servizi per Anziani - Home",
-    .name_ja = "La C.A.S.A. Centro Assistenza Servizi per Anziani (Pubbliche Amministrazioni, Schio, VI) - La C.A.S.A. - Centro Assistenza Servizi per Anziani - Home",
-    .category = "health", .collector = "itgov_sanita", .portal = "https://www.lacasaschio.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.lacasaschio.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:45:21+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_LACIARPE", .name = "Liceo Artistico Ciardo-pellegrino (Pubbliche Amministrazioni, "
       "Lecce, LE) - Liceo Artistico e Coreutico Ciardo Pellegrino Lecce",
@@ -94717,25 +92258,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "10:10:58 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_MC_2", .name = "Unione Dei Comuni Monte Contessa (Pubbliche Amministrazioni, "
-      "Curinga, CZ) - Unione Comuni Monte Contessa - Home",
-    .name_ja = "Unione Dei Comuni Monte Contessa (Pubbliche Amministrazioni, Curinga, CZ) - Unione Comuni Monte Contessa - Home",
-    .category = "local-gov", .collector = "itgov_territoriali", .portal = "https://www.unionemontecontessa.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.unionemontecontessa.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 6 items, ATOM feed, newest "
-      "2026-10-18T11:45:28+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_MCBMC", .name = "Museo Castello del Buonconsiglio Monumenti e Collezioni "
       "Provinciali (Pubbliche Amministrazioni, Trento, TN) - Castello "
@@ -95060,25 +92582,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "18:36:47 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_MS_042_2", .name = "Viva Servizi Spa (Gestori di Pubblici Servizi, Ancona, AN) - "
-      "Home - Viva Servizi Ancona",
-    .name_ja = "Viva Servizi Spa (Gestori di Pubblici Servizi, Ancona, AN) - Home - Viva Servizi Ancona",
-    .category = "utility", .collector = "itgov_servizi_pubblici", .portal = "https://www.vivaservizi.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.vivaservizi.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T11:45:31+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_MSBCS", .name = "Messina Servizi Bene Comune Spa (Gestori di Pubblici Servizi, "
       "Messina, ME) - Messinaservizi Bene Comune",
@@ -95462,25 +92965,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "10:26:52 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_N5DN4JUC_2", .name = "Federazione Italiana Sport Rotellistici (Stazioni Appaltanti, "
-      "Roma, RM) - Home - Federazione Italiana Sport Rotellistici",
-    .name_ja = "Federazione Italiana Sport Rotellistici (Stazioni Appaltanti, Roma, RM) - Home - Federazione Italiana Sport Rotellistici",
-    .category = "culture", .collector = "itgov_cultura", .portal = "https://www.fisr.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.fisr.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-18T11:45:32+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_N5DN4JUC_3", .name = "Federazione Italiana Sport Rotellistici (Stazioni Appaltanti, "
       "Roma, RM) - News - Federazione Italiana Sport Rotellistici",
@@ -95522,25 +93006,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "14:30:25 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_N8UGGL4N_2", .name = "Fondazione Its Academy Sistema Moda (Gestori di Pubblici "
-      "Servizi, Roma, RM) - ITS Academy Sistema Moda",
-    .name_ja = "Fondazione Its Academy Sistema Moda (Gestori di Pubblici Servizi, Roma, RM) - ITS Academy Sistema Moda",
-    .category = "education", .collector = "itgov_scuole", .portal = "https://www.itsacademymoda.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.itsacademymoda.it/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-09-09T14:49:36Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_IT_NAIC8GV0", .name = "Istituto Comprensivo Colombo di Frattaminore (Pubbliche "
       "Amministrazioni, Frattaminore, NA) - Istituto Comprensivo "
@@ -95764,25 +93229,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "16:34:35 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_NJOKHNKZ_2", .name = "FEDERAZIONE ITALIANA BADMINTON (Stazioni Appaltanti, Roma, RM) - "
-      "FIBa - Federazione Italiana Badminton - Home",
-    .name_ja = "FEDERAZIONE ITALIANA BADMINTON (Stazioni Appaltanti, Roma, RM) - FIBa - Federazione Italiana Badminton - Home",
-    .category = "culture", .collector = "itgov_cultura", .portal = "https://www.badmintonitalia.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.badmintonitalia.it/it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T11:45:33+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_NN1ZB3X7", .name = "Yes I Code (Gestori di Pubblici Servizi, Roma, RM) - Yes I Code",
     .name_ja = "Yes I Code (Gestori di Pubblici Servizi, Roma, RM) - Yes I Code",
@@ -96473,26 +93919,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "10:30:41 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_OAPC_TA_2", .name = "Ordine degli Architetti Pianificatori Paesaggisti e Conservatori "
-      "della Provincia di Taranto (Pubbliche Amministrazioni, Taranto, "
-      "TA) - Frontpage Slideshow",
-    .name_ja = "Ordine degli Architetti Pianificatori Paesaggisti e Conservatori della Provincia di Taranto (Pubbliche Amministrazioni, Taranto, TA) - Frontpage Slideshow",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.architettitaranto.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.architettitaranto.it/index.php/component/fpss/module/119?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T09:45:38+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_OAPP_039", .name = "Ordine Architetti Pianificatori Paesaggisti Conservatori di "
       "Ravenna (Pubbliche Amministrazioni, Ravenna, RA) - Ordine "
@@ -96642,26 +94068,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "09:00:43 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_OAPPC_SO_2", .name = "Ordine degli Architetti Pianificatori Paesaggisti e Conservatori "
-      "della Provincia di Sondrio (Pubbliche Amministrazioni, Sondrio, "
-      "SO) - Home - Ordine Architetti Sondrio",
-    .name_ja = "Ordine degli Architetti Pianificatori Paesaggisti e Conservatori della Provincia di Sondrio (Pubbliche Amministrazioni, Sondrio, SO) - Home - Ordine Architetti Sondrio",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.ordinearchitettisondrio.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ordinearchitettisondrio.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 8 items, ATOM feed, newest "
-      "2026-10-18T11:45:39+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_OAPPC_TS", .name = "Ordine degli Architetti Pianificatori Paesaggisti e Conservatori "
       "della Provincia di Trieste (Pubbliche Amministrazioni, Trieste, "
@@ -98589,26 +95995,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "07:24:29 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ODASM_2", .name = "Ordine Degli Avvocati di Santa Maria Capua Vetere (Pubbliche "
-      "Amministrazioni, Santa Maria Capua Vetere, CE) - Ordine Avvocati "
-      "S.M.C.V.",
-    .name_ja = "Ordine Degli Avvocati di Santa Maria Capua Vetere (Pubbliche Amministrazioni, Santa Maria Capua Vetere, CE) - Ordine Avvocati S.M.C.V.",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.ordineavvocatismcv.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ordineavvocatismcv.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, ATOM feed, newest "
-      "2026-10-18T11:45:49+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ODASMO", .name = "Ordine Degli Assistenti Sociali Molise (Pubbliche "
       "Amministrazioni, Campobasso, CB) - Ordine Assistenti Sociali "
@@ -98875,26 +96261,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "10:42:26 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ODC_PCR_2", .name = "Ordine Provinciale dei Chimici e dei Fisici di Cremona "
-      "(Pubbliche Amministrazioni, Cremona, CR) - Ordine dei Chimici e "
-      "dei Fisici di Cremona",
-    .name_ja = "Ordine Provinciale dei Chimici e dei Fisici di Cremona (Pubbliche Amministrazioni, Cremona, CR) - Ordine dei Chimici e dei Fisici di Cremona",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.chimicicremona.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.chimicicremona.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 6 items, ATOM feed, newest "
-      "2026-10-18T09:45:50+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ODCC", .name = "Ordine Dei Chimici della Campania (Pubbliche Amministrazioni, "
       "Napoli, NA) - Ordine Regionale dei Chimici e dei Fisici della "
@@ -100441,26 +97807,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "09:55:37 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ODDCD_8_2", .name = "Ordine Dei Dottori Commercialisti e Degli Esperti Contabili di "
-      "Tivoli (Pubbliche Amministrazioni, Tivoli, RM) - ODCEC Tivoli - "
-      "Home",
-    .name_ja = "Ordine Dei Dottori Commercialisti e Degli Esperti Contabili di Tivoli (Pubbliche Amministrazioni, Tivoli, RM) - ODCEC Tivoli - Home",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.odcectivoli.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.odcectivoli.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 7 items, ATOM feed, newest "
-      "2026-10-18T11:45:59+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ODDCD_VB", .name = "Ordine dei Dottori Commercialisti e degli Esperti Contabili di "
       "Verbania (Pubbliche Amministrazioni, Verbania, VB) - Ordine "
@@ -101667,27 +99013,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "17:32:06 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ODMC_045_2", .name = "Ordine dei Medici Chirurghi e degli Odontoiatri della Provincia "
-      "di Massa Carrara (Pubbliche Amministrazioni, Carrara, MS) - "
-      "Ordine Provinciale dei Medici Chirurghi e degli Odontoiatri di "
-      "Massa Carrara",
-    .name_ja = "Ordine dei Medici Chirurghi e degli Odontoiatri della Provincia di Massa Carrara (Pubbliche Amministrazioni, Carrara, MS) - Ordine Provinciale dei Medici Chirurghi e degli Odontoiatri di Massa Carrara",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.ordinedeimedicims.org/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ordinedeimedicims.org/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:46:04+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ODMC_050", .name = "Ordine Dei Medici Chirurghi e Degli Odontoiatri della Provincia "
       "di Pisa (Pubbliche Amministrazioni, Pisa, PI) - Ordine dei "
@@ -101711,27 +99036,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "08:28:52 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ODMC_050_2", .name = "Ordine Dei Medici Chirurghi e Degli Odontoiatri della Provincia "
-      "di Pisa (Pubbliche Amministrazioni, Pisa, PI) - Ordine dei "
-      "Medici Chirurghi e Odontoiatri di Pisa - Ordine dei Medici "
-      "Chirurghi",
-    .name_ja = "Ordine Dei Medici Chirurghi e Degli Odontoiatri della Provincia di Pisa (Pubbliche Amministrazioni, Pisa, PI) - Ordine dei Medici Chirurghi e Odontoiatri di Pisa - Ordine dei Medici Chirurghi",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://omceopi.org/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://omceopi.org/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T11:46:04+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ODMC_052", .name = "Ordine Dei Medici Chirurghi e Odontoiatri di Siena (Pubbliche "
       "Amministrazioni, Siena, SI) - Ordine de Medici Chirurghi e "
@@ -101754,26 +99058,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "14:24:36 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ODMC_052_2", .name = "Ordine Dei Medici Chirurghi e Odontoiatri di Siena (Pubbliche "
-      "Amministrazioni, Siena, SI) - Ordine de Medici Chirurghi e "
-      "Odontoiatri di Siena",
-    .name_ja = "Ordine Dei Medici Chirurghi e Odontoiatri di Siena (Pubbliche Amministrazioni, Siena, SI) - Ordine de Medici Chirurghi e Odontoiatri di Siena",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.omceosiena.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.omceosiena.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T09:46:06+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ODMC_053", .name = "Ordine Dei Medici Chirurghi e Degli Odontoiatri della Provincia "
       "di Grosseto (Pubbliche Amministrazioni, Grosseto, GR) - Ordine "
@@ -101797,27 +99081,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "11:41:17 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ODMC_053_2", .name = "Ordine Dei Medici Chirurghi e Degli Odontoiatri della Provincia "
-      "di Grosseto (Pubbliche Amministrazioni, Grosseto, GR) - Ordine "
-      "dei Medici Chirurghi e degli Odontoiatri di Grosseto Ordine "
-      "Provinciale d",
-    .name_ja = "Ordine Dei Medici Chirurghi e Degli Odontoiatri della Provincia di Grosseto (Pubbliche Amministrazioni, Grosseto, GR) - Ordine dei Medici Chirurghi e degli Odontoiatri di Grosseto Ordine Provinciale d",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.omceogrosseto.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.omceogrosseto.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:46:05+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ODMC_062", .name = "Ordine Dei Medici Chirurghi e Degli Odontoiatri di Benevento "
       "(Pubbliche Amministrazioni, Benevento, BN) - Home",
@@ -101839,25 +99102,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "15:58:11 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ODMC_062_2", .name = "Ordine Dei Medici Chirurghi e Degli Odontoiatri di Benevento "
-      "(Pubbliche Amministrazioni, Benevento, BN) - Home",
-    .name_ja = "Ordine Dei Medici Chirurghi e Degli Odontoiatri di Benevento (Pubbliche Amministrazioni, Benevento, BN) - Home",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.ordinemedicibenevento.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ordinemedicibenevento.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:46:05+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ODMC_063", .name = "Ordine Dei Medici Chirurghi e Degli Odontoiatri della Provincia "
       "di Napoli (Pubbliche Amministrazioni, Napoli, NA) - OMCeO Napoli",
@@ -101921,26 +99165,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "11:49:49 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ODMC_068_2", .name = "Ordine Dei Medici Chirurghi e Degli Odontoiatri della Provincia "
-      "di Pescara (Pubbliche Amministrazioni, Pescara, PE) - Ordine Dei "
-      "Medici Chirurghi e Degli Odontoiatri della Provincia di Pescara",
-    .name_ja = "Ordine Dei Medici Chirurghi e Degli Odontoiatri della Provincia di Pescara (Pubbliche Amministrazioni, Pescara, PE) - Ordine Dei Medici Chirurghi e Degli Odontoiatri della Provincia di Pescara",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.omceopescara.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.omceopescara.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, ATOM feed, newest "
-      "2026-10-18T11:46:06+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ODMC_069", .name = "Ordine Dei Medici Chirurghi e Degli Odontoiatri della Provincia "
       "di Chieti (Pubbliche Amministrazioni, Chieti, CH) - Ordine Dei "
@@ -101963,26 +99187,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "16:32:36 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ODMC_069_2", .name = "Ordine Dei Medici Chirurghi e Degli Odontoiatri della Provincia "
-      "di Chieti (Pubbliche Amministrazioni, Chieti, CH) - Ordine Dei "
-      "Medici Chirurghi e Degli Odontoiatri della Provincia di Chieti",
-    .name_ja = "Ordine Dei Medici Chirurghi e Degli Odontoiatri della Provincia di Chieti (Pubbliche Amministrazioni, Chieti, CH) - Ordine Dei Medici Chirurghi e Degli Odontoiatri della Provincia di Chieti",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.omceoch.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.omceoch.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 7 items, ATOM feed, newest "
-      "2026-10-18T11:46:06+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ODMC_071", .name = "ORDINE MEDICI CHIRURGHI ED ODONTOIATRI PROVINCIA DI FOGGIA "
       "(Pubbliche Amministrazioni, Foggia, FG) - OMCeO Foggia",
@@ -102045,26 +99249,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "09:00:00 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ODMC_073_2", .name = "Ordine Dei Medici Chirurghi e Degli Odontoiatri della Provincia "
-      "di Taranto (Pubbliche Amministrazioni, Taranto, TA) - Ordine dei "
-      "Medici Chirurghi e degli Odontoiatri della Provincia di Taranto",
-    .name_ja = "Ordine Dei Medici Chirurghi e Degli Odontoiatri della Provincia di Taranto (Pubbliche Amministrazioni, Taranto, TA) - Ordine dei Medici Chirurghi e degli Odontoiatri della Provincia di Taranto",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.omceota.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.omceota.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T11:46:07+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ODMC_074", .name = "Ordine Dei Medici Chirurghi e Degli Odontoatri della Provincia "
       "di Brindisi (Pubbliche Amministrazioni, Brindisi, BR) - OMCeO "
@@ -102216,26 +99400,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "17:45:53 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ODMCD_3", .name = "Ordine dei Medici Chirurghi e degli Odontoiatri della Provincia "
-      "di Arezzo (Pubbliche Amministrazioni, Arezzo, AR) - Ordine "
-      "Medici e Odontoiatri di Arezzo",
-    .name_ja = "Ordine dei Medici Chirurghi e degli Odontoiatri della Provincia di Arezzo (Pubbliche Amministrazioni, Arezzo, AR) - Ordine Medici e Odontoiatri di Arezzo",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.omceoar.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.omceoar.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:46:09+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ODMCD_CB", .name = "Ordine dei Medici Chirurghi e degli Odontoiatri della Provincia "
       "di Campobasso (Pubbliche Amministrazioni, Campobasso, CB) - "
@@ -102320,25 +99484,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "09:30:02 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ODMCD_TP_2", .name = "Ordine Dei Medici Chirurghi e Degli Odontoiatri della Provincia "
-      "di Trapani (Pubbliche Amministrazioni, Trapani, TP) - Home",
-    .name_ja = "Ordine Dei Medici Chirurghi e Degli Odontoiatri della Provincia di Trapani (Pubbliche Amministrazioni, Trapani, TP) - Home",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.omceotrapani.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.omceotrapani.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, ATOM feed, newest "
-      "2026-10-18T11:46:09+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ODMCDA", .name = "Ordine Dei Medici Chirurghi e Degli Odontoiatri della Provincia "
       "di Avellino (Pubbliche Amministrazioni, Avellino, AV) - OMCeO "
@@ -102463,26 +99608,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "09:29:31 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ODMCOI_2", .name = "Ordine Dei Medici Chirurghi e Odontoiatri di Imperia (Pubbliche "
-      "Amministrazioni, Imperia, IM) - Ordine Provinciale dei Medici "
-      "Chirurghi e degli Odontoiatri di Imperia",
-    .name_ja = "Ordine Dei Medici Chirurghi e Odontoiatri di Imperia (Pubbliche Amministrazioni, Imperia, IM) - Ordine Provinciale dei Medici Chirurghi e degli Odontoiatri di Imperia",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.omceoim.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.omceoim.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:46:10+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ODMCOL", .name = "Ordine Dei Medici Chirurghi e Degli Odontoiatri della Provincia "
       "di Lucca (Pubbliche Amministrazioni, Lucca, LU) - Ordine dei "
@@ -102506,27 +99631,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "11:33:37 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ODMCOL_2", .name = "Ordine Dei Medici Chirurghi e Degli Odontoiatri della Provincia "
-      "di Lucca (Pubbliche Amministrazioni, Lucca, LU) - Ordine dei "
-      "Medici Chirurghi e degli Odontoiatri della Provincia di Lucca "
-      "Ordine",
-    .name_ja = "Ordine Dei Medici Chirurghi e Degli Odontoiatri della Provincia di Lucca (Pubbliche Amministrazioni, Lucca, LU) - Ordine dei Medici Chirurghi e degli Odontoiatri della Provincia di Lucca Ordine",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.ordmedlu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ordmedlu.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:46:10+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ODMCOV", .name = "Ordine Dei Medici Chirurghi e Odontoiatri della Provincia di "
       "Verona (Pubbliche Amministrazioni, Verona, VR) - Ordine Dei "
@@ -102549,26 +99653,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "12:32:46 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ODMCOV_2", .name = "Ordine Dei Medici Chirurghi e Odontoiatri della Provincia di "
-      "Verona (Pubbliche Amministrazioni, Verona, VR) - Ordine Dei "
-      "Medici Chirurghi e Odontoiatri della Provincia di Verona",
-    .name_ja = "Ordine Dei Medici Chirurghi e Odontoiatri della Provincia di Verona (Pubbliche Amministrazioni, Verona, VR) - Ordine Dei Medici Chirurghi e Odontoiatri della Provincia di Verona",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.omceovr.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.omceovr.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:46:11+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ODMV_054", .name = "Ordine dei Medici Veterinari della Provincia di Perugia "
       "(Pubbliche Amministrazioni, Perugia, PG) - Ordine dei Medici "
@@ -102759,26 +99843,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "15:51:28 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ODMVP_F_2", .name = "Ordine Dei Medici Veterinari della Provincia di Frosinone "
-      "(Pubbliche Amministrazioni, Frosinone, FR) - Home - Ordine dei "
-      "Medici Veterinari della provincia di Frosinone",
-    .name_ja = "Ordine Dei Medici Veterinari della Provincia di Frosinone (Pubbliche Amministrazioni, Frosinone, FR) - Home - Ordine dei Medici Veterinari della provincia di Frosinone",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.ordineveterinarifrosinone.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ordineveterinarifrosinone.it/fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, ATOM feed, newest "
-      "2026-10-18T11:46:11+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ODMVPA", .name = "Ordine Dei Medici Veterinari della Provincia di Avellino "
       "(Pubbliche Amministrazioni, Avellino, AV) - Ordine Medici "
@@ -103150,25 +100214,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "14:08:22 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_OFARMCR_2", .name = "Ordine dei Farmacisti della Provincia di Cremona (Pubbliche "
-      "Amministrazioni, Cremona, CR) - Home",
-    .name_ja = "Ordine dei Farmacisti della Provincia di Cremona (Pubbliche Amministrazioni, Cremona, CR) - Home",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.ordfarma-cremona.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ordfarma-cremona.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 6 items, ATOM feed, newest "
-      "2026-10-18T11:46:15+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_OGER", .name = "Ordine Geologi Emilia Romagna (Pubbliche Amministrazioni, "
       "Bologna, BO) - Ordine dei Geologi Regione Emilia-Romagna",
@@ -103272,25 +100317,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "15:38:21 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_OIISS_2", .name = "ISTITUTO SUPERIORE ORVIETO I.I.S. SCIENTIFICO E TECNICO "
-      "(Pubbliche Amministrazioni, Orvieto, TR) - Home*",
-    .name_ja = "ISTITUTO SUPERIORE ORVIETO I.I.S. SCIENTIFICO E TECNICO (Pubbliche Amministrazioni, Orvieto, TR) - Home*",
-    .category = "education", .collector = "itgov_scuole", .portal = "https://www.majoranamaitani.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.majoranamaitani.edu.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, ATOM feed, newest "
-      "2026-10-18T09:46:17+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_OIP_SS", .name = "Ordine degli Ingegneri della Provincia di Sassari (Pubbliche "
       "Amministrazioni, Sassari, SS) - ORDINE DEGLI INGEGNERI DELLA "
@@ -103459,26 +100485,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "12:37:41 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_OMCD_033_2", .name = "Ordine dei Medici Chirurghi e degli Odontoiatri di Piacenza "
-      "(Pubbliche Amministrazioni, Piacenza, PC) - Ordine dei Medici "
-      "Chirurghi e degli Odontoiatri di Piacenza",
-    .name_ja = "Ordine dei Medici Chirurghi e degli Odontoiatri di Piacenza (Pubbliche Amministrazioni, Piacenza, PC) - Ordine dei Medici Chirurghi e degli Odontoiatri di Piacenza",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.ordinemedici.piacenza.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ordinemedici.piacenza.it/?eventDate=2022-10-07&eventDisplay=day&paged=6&post_type=tribe_events&format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, ATOM feed, newest "
-      "2026-10-18T11:46:18+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_OMCEO_0", .name = "Ordine Medici Chirurghi Ed Odontoiatri Mantova (Pubbliche "
       "Amministrazioni, Mantova, MN) - Omceo Mantova",
@@ -103521,26 +100527,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "12:04:38 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_OMCEO_SO_2", .name = "Ordine dei Medici Chirurghi e degli Odontoiatri della Provincia "
-      "di Sondrio (Pubbliche Amministrazioni, Sondrio, SO) - Ordine dei "
-      "Medici Chirurghi e degli Odontoiatri di Sondrio",
-    .name_ja = "Ordine dei Medici Chirurghi e degli Odontoiatri della Provincia di Sondrio (Pubbliche Amministrazioni, Sondrio, SO) - Ordine dei Medici Chirurghi e degli Odontoiatri di Sondrio",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.ordinemedicisondrio.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ordinemedicisondrio.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:46:18+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_OMCO_028", .name = "Ordine Dei Medici Chirurghi e Odontoiatri di Padova (Pubbliche "
       "Amministrazioni, Padova, PD) - Ordine dei Medici Chirurghi e "
@@ -103563,26 +100549,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "10:30:36 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_OMCO_028_2", .name = "Ordine Dei Medici Chirurghi e Odontoiatri di Padova (Pubbliche "
-      "Amministrazioni, Padova, PD) - Ordine dei Medici Chirurghi e "
-      "degli Odontoiatri della Provincia di Padova",
-    .name_ja = "Ordine Dei Medici Chirurghi e Odontoiatri di Padova (Pubbliche Amministrazioni, Padova, PD) - Ordine dei Medici Chirurghi e degli Odontoiatri della Provincia di Padova",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.omco.pd.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.omco.pd.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 6 items, ATOM feed, newest "
-      "2026-10-18T11:46:19+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_OMCO_AL", .name = "Ordine dei Medici Chirurghi e degli Odontoiatri della Provincia "
       "di Alessandria (Pubbliche Amministrazioni, Alessandria, AL) - "
@@ -103606,27 +100572,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "09:12:28 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_OMCO_AL_2", .name = "Ordine dei Medici Chirurghi e degli Odontoiatri della Provincia "
-      "di Alessandria (Pubbliche Amministrazioni, Alessandria, AL) - "
-      "Ordine Provinciale dei Medici Chirurghi e degli Odontoiatri di "
-      "Alessandria",
-    .name_ja = "Ordine dei Medici Chirurghi e degli Odontoiatri della Provincia di Alessandria (Pubbliche Amministrazioni, Alessandria, AL) - Ordine Provinciale dei Medici Chirurghi e degli Odontoiatri di Alessandria",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.ordinemedici.al.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ordinemedici.al.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T11:46:19+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_OMCO_CS", .name = "Ordine dei Medici Chirurghi e degli Odontoiatri della provincia "
       "di Cosenza (Pubbliche Amministrazioni, Cosenza, CS) - Ordine dei "
@@ -103691,26 +100636,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "12:24:08 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_OMCO_FI_2", .name = "Ordine dei Medici Chirurghi e degli Odontoiatri della Provincia "
-      "di Firenze (Pubbliche Amministrazioni, Firenze, FI) - Ordine dei "
-      "Medici Chirurghi e Odontoiatri di Firenze",
-    .name_ja = "Ordine dei Medici Chirurghi e degli Odontoiatri della Provincia di Firenze (Pubbliche Amministrazioni, Firenze, FI) - Ordine dei Medici Chirurghi e Odontoiatri di Firenze",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.ordine-medici-firenze.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ordine-medici-firenze.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:46:19+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_OMCO_LT", .name = "Ordine dei Medici Chirurghi e degli Odontoiatri della Provincia "
       "di Latina (Pubbliche Amministrazioni, Latina, LT) - OMCeO Latina",
@@ -103773,26 +100698,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "08:30:17 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_OMCO_MO_2", .name = "Ordine dei Medici Chirurghi e degli Odontoiatri della Provincia "
-      "di Novara (Pubbliche Amministrazioni, Novara, NO) - Ordine Dei "
-      "Medici Chirurghi e Degli Odontoiatri della Provincia di Novara",
-    .name_ja = "Ordine dei Medici Chirurghi e degli Odontoiatri della Provincia di Novara (Pubbliche Amministrazioni, Novara, NO) - Ordine Dei Medici Chirurghi e Degli Odontoiatri della Provincia di Novara",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.ordinemedicinovara.com/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ordinemedicinovara.com/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T09:46:20+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_OMCO_PR", .name = "Ordine dei Medici Chirurghi e degli Odontoiatri della Provincia "
       "di Parma (Pubbliche Amministrazioni, Parma, PR) - Ordine dei "
@@ -103877,25 +100782,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "12:45:52 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_OMCO_RI_2", .name = "Ordine dei Medici Chirurghi e degli Odontoiatri della Provincia "
-      "di Rieti (Pubbliche Amministrazioni, Rieti, RI) - Omceo Rieti",
-    .name_ja = "Ordine dei Medici Chirurghi e degli Odontoiatri della Provincia di Rieti (Pubbliche Amministrazioni, Rieti, RI) - Omceo Rieti",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.omceorieti.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.omceorieti.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T09:46:20+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_OMCO_TS", .name = "Ordine dei Medici Chirurghi e degli Odontoiatri della Provincia "
       "di Trieste (Pubbliche Amministrazioni, Trieste, TS) - OMCeO "
@@ -103938,25 +100824,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "09:34:36 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_OMCO_UD_2", .name = "Ordine dei Medici Chirurghi e degli Odontoiatri della Provincia "
-      "di Udine (Pubbliche Amministrazioni, Udine, UD) - Home",
-    .name_ja = "Ordine dei Medici Chirurghi e degli Odontoiatri della Provincia di Udine (Pubbliche Amministrazioni, Udine, UD) - Home",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.omceoudine.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.omceoudine.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:46:21+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_OMCOO_SS", .name = "Ordine dei Medici Chirurghi e degli Odontoiatri della provincia "
       "di Sassari (Pubbliche Amministrazioni, Sassari, SS) - OMCeO "
@@ -104000,26 +100867,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "12:48:47 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_OMCOP_0_2", .name = "ORDINE DEI MEDICI E DEGLI ODONTOIATRI DELLA PROVINCIA DI VITERBO "
-      "(Pubbliche Amministrazioni, Viterbo, VT) - Ordine dei Medici "
-      "Chirurghi e degli Odontoiatri della provincia di Viterbo",
-    .name_ja = "ORDINE DEI MEDICI E DEGLI ODONTOIATRI DELLA PROVINCIA DI VITERBO (Pubbliche Amministrazioni, Viterbo, VT) - Ordine dei Medici Chirurghi e degli Odontoiatri della provincia di Viterbo",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.ordinemediciviterbo.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ordinemediciviterbo.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:46:22+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_OMCOPVTN", .name = "Ordine dei Medici Chirurghi e degli Odontoiatri della Provincia "
       "di Trento (Pubbliche Amministrazioni, Trento, TN) - Home",
@@ -104041,25 +100888,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "17:04:24 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_OMCOPVTN_2", .name = "Ordine dei Medici Chirurghi e degli Odontoiatri della Provincia "
-      "di Trento (Pubbliche Amministrazioni, Trento, TN) - Home",
-    .name_ja = "Ordine dei Medici Chirurghi e degli Odontoiatri della Provincia di Trento (Pubbliche Amministrazioni, Trento, TN) - Home",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.ordinemedicitn.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ordinemedicitn.it/?eventDate=2017-11-18&eventDisplay=day&paged=6&post_type=tribe_events&tribe_events_cat=patrocini&format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T11:46:22+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_OMOP_042", .name = "Ordine Medici Chirurghi Odontoiatri della Provincia di Ancona "
       "(Pubbliche Amministrazioni, Ancona, AN) - Ordine dei Medici e "
@@ -104082,26 +100910,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "16:36:59 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_OMOP_042_2", .name = "Ordine Medici Chirurghi Odontoiatri della Provincia di Ancona "
-      "(Pubbliche Amministrazioni, Ancona, AN) - Ordine dei Medici e "
-      "degli Odontoiatri di Ancona",
-    .name_ja = "Ordine Medici Chirurghi Odontoiatri della Provincia di Ancona (Pubbliche Amministrazioni, Ancona, AN) - Ordine dei Medici e degli Odontoiatri di Ancona",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.ordinemedici.ancona.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ordinemedici.ancona.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:46:22+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_OMV_BG", .name = "Ordine dei Medici Veterinari della Provincia di Bergamo "
       "(Pubbliche Amministrazioni, Bergamo, BG) - Ordine veterinari "
@@ -104207,25 +101015,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "13:11:08 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_OMV_PD_2", .name = "Ordine dei Medici Veterinari della Provincia di Padova "
-      "(Pubbliche Amministrazioni, Padova, PD) - Home",
-    .name_ja = "Ordine dei Medici Veterinari della Provincia di Padova (Pubbliche Amministrazioni, Padova, PD) - Home",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.ordinevetpd.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ordinevetpd.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 8 items, ATOM feed, newest "
-      "2026-10-18T09:46:22+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_OMV_PR", .name = "Ordine dei Medici Veterinari della Provincia di Parma (Pubbliche "
       "Amministrazioni, Parma, PR) - Ordine dei Medici Veterinari di "
@@ -104269,26 +101058,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "08:57:52 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_OMV_PV_2", .name = "Ordine dei Medici Veterinari della Provincia di Pavia (Pubbliche "
-      "Amministrazioni, Pavia, PV) - Ordine medici veterinari della "
-      "provincia di Pavia",
-    .name_ja = "Ordine dei Medici Veterinari della Provincia di Pavia (Pubbliche Amministrazioni, Pavia, PV) - Ordine medici veterinari della provincia di Pavia",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://veterinari.pv.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://veterinari.pv.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T09:46:23+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_OMV_RG", .name = "Ordine dei Medici Veterinari della Provincia di Ragusa "
       "(Pubbliche Amministrazioni, Ragusa, RG) - Ordine dei Medici "
@@ -104666,26 +101435,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "15:20:25 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_OPDMC_0_2", .name = "Ordine Provinciale Dei Medici Chirurghi e Degli Odontoiatri di "
-      "Ravenna (Pubbliche Amministrazioni, Ravenna, RA) - Ordine dei "
-      "Medici Chirurghi e degli Odontoiatri di Ravenna",
-    .name_ja = "Ordine Provinciale Dei Medici Chirurghi e Degli Odontoiatri di Ravenna (Pubbliche Amministrazioni, Ravenna, RA) - Ordine dei Medici Chirurghi e degli Odontoiatri di Ravenna",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.omceo-ra.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.omceo-ra.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T11:46:25+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_OPDMC_1", .name = "Ordine Provinciale Dei Medici Chirurghi e Degli Odontoiatri di "
       "Rovigo (Pubbliche Amministrazioni, Rovigo, RO) - Ordine dei "
@@ -104730,27 +101479,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "09:41:15 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_OPDMC_FR_2", .name = "Ordine dei Medici Chirurghi e degli Odontoiatri della Provincia "
-      "di Frosinone (Pubbliche Amministrazioni, Frosinone, FR) - Home - "
-      "Ordine Provinciale dei Medici Chirurghi e degli Odontoiatri di "
-      "Frosinone",
-    .name_ja = "Ordine dei Medici Chirurghi e degli Odontoiatri della Provincia di Frosinone (Pubbliche Amministrazioni, Frosinone, FR) - Home - Ordine Provinciale dei Medici Chirurghi e degli Odontoiatri di Frosinone",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.ordinemedicifrosinone.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ordinemedicifrosinone.it/fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, ATOM feed, newest "
-      "2026-10-18T11:46:25+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_OPDMC_UD", .name = "Ordine dei Medici Chirurghi e degli Odontoiatri della Provincia "
       "di Pavia (Pubbliche Amministrazioni, Pavia, PV) - OMCEO Pavia",
@@ -104793,26 +101521,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "11:14:21 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_OPDMCT_2", .name = "Ordine Provinciale Dei Medici Chirurghi e Degli Odontoiatri di "
-      "Treviso (Pubbliche Amministrazioni, Treviso, TV) - Ordine "
-      "Provinciale Dei Medici Chirurghi e Degli Odontoiatri di Treviso",
-    .name_ja = "Ordine Provinciale Dei Medici Chirurghi e Degli Odontoiatri di Treviso (Pubbliche Amministrazioni, Treviso, TV) - Ordine Provinciale Dei Medici Chirurghi e Degli Odontoiatri di Treviso",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.ordinemedicitv.org/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ordinemedicitv.org/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, ATOM feed, newest "
-      "2026-10-18T11:46:27+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_OPFB", .name = "Opera Pia Francesco Bottoni (Pubbliche Amministrazioni, Papozze, "
       "RO) - Istituto Opera Pia – Centro Servizi per Anziani",
@@ -104935,25 +101643,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "09:57:24 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_OPMCO_VC_2", .name = "Ordine dei Medici Chirurghi e degli Odontoiatri della Provincia "
-      "di Vercelli (Pubbliche Amministrazioni, Vercelli, VC) - Home",
-    .name_ja = "Ordine dei Medici Chirurghi e degli Odontoiatri della Provincia di Vercelli (Pubbliche Amministrazioni, Vercelli, VC) - Home",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.ordinemedicivercelli.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ordinemedicivercelli.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T11:46:28+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_OPMCOC", .name = "Ordine Provinciale Dei Medici Chirurghi e Degli Odontoiatri di "
       "Cremona (Pubbliche Amministrazioni, Cremona, CR) - OMCeO Cremona",
@@ -105835,25 +102524,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "13:08:16 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ORGIBASI_2", .name = "Ordine dei Giornalisti della Regione Basilicata (Pubbliche "
-      "Amministrazioni, Potenza, PZ) - Home",
-    .name_ja = "Ordine dei Giornalisti della Regione Basilicata (Pubbliche Amministrazioni, Potenza, PZ) - Home",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://odg.basilicata.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://odg.basilicata.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 7 items, ATOM feed, newest "
-      "2026-10-18T09:46:32+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ORING_AG", .name = "Ordine degli Ingegneri della Provincia di Agrigento (Pubbliche "
       "Amministrazioni, Agrigento, AG) - Ordine Ingegneri Agrigento",
@@ -105937,26 +102607,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "13:42:13 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ORING_AT_2", .name = "Ordine degli Ingegneri della Provincia di Asti (Pubbliche "
-      "Amministrazioni, Asti, AT) - ORDINE degli INGEGNERI della "
-      "Provincia di Asti - Frontpage Slideshow (by JoomlaW",
-    .name_ja = "Ordine degli Ingegneri della Provincia di Asti (Pubbliche Amministrazioni, Asti, AT) - ORDINE degli INGEGNERI della Provincia di Asti - Frontpage Slideshow (by JoomlaW",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.ordineingegneri.asti.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ordineingegneri.asti.it/index.php/component/fpss/module/109?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 6 items, ATOM feed, newest "
-      "2026-10-18T11:46:32+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ORING_BA", .name = "Ordine degli Ingegneri della Provincia di Bari (Pubbliche "
       "Amministrazioni, Bari, BA) - ORDINE DEGLI INGEGNERI DELLA "
@@ -106645,26 +103295,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "12:41:05 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ORPV_RC_2", .name = "Ordine dei Medici Veterinari della Provincia di Reggio Calabria "
-      "(Pubbliche Amministrazioni, Reggio di Calabria, RC) - Home   "
-      "Ordine dei Medici Veterinari della Provincia di Reggio Calabria",
-    .name_ja = "Ordine dei Medici Veterinari della Provincia di Reggio Calabria (Pubbliche Amministrazioni, Reggio di Calabria, RC) - Home   Ordine dei Medici Veterinari della Provincia di Reggio Calabria",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.ordineveterinarirc.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ordineveterinarirc.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 16 items, ATOM feed, newest "
-      "2026-10-18T11:46:35+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_ORREGEPI", .name = "Ordine dei Geologi del Piemonte (Pubbliche Amministrazioni, "
       "Torino, TO) - Notizie",
@@ -106832,26 +103462,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "14:17:21 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_OVP_CR_2", .name = "Ordine dei Medici Veterinari della Provincia di Cremona "
-      "(Pubbliche Amministrazioni, Cremona, CR) - Home - Ordine dei "
-      "Veterinari della Provincia di Cremona",
-    .name_ja = "Ordine dei Medici Veterinari della Provincia di Cremona (Pubbliche Amministrazioni, Cremona, CR) - Home - Ordine dei Veterinari della Provincia di Cremona",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.ordinevetcremona.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ordinevetcremona.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, ATOM feed, newest "
-      "2026-10-18T09:46:36+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_OVPT", .name = "Ordine Veterinari Provincia di Terni (Pubbliche Amministrazioni, "
       "Terni, TR) - Ordine Veterinari Terni",
@@ -106974,25 +103584,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "10:15:15 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_P_BR_2", .name = "Provincia di Brindisi (Pubbliche Amministrazioni, Brindisi, BR) "
-      "- Provincia di Brindisi",
-    .name_ja = "Provincia di Brindisi (Pubbliche Amministrazioni, Brindisi, BR) - Provincia di Brindisi",
-    .category = "local-gov", .collector = "itgov_territoriali", .portal = "https://www.provincia.brindisi.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.provincia.brindisi.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 18 items, ATOM feed, newest "
-      "2026-10-18T11:46:37+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_P_PA", .name = "Citta' Metropolitana di Palermo (Pubbliche Amministrazioni, "
       "Palermo, PA) - Città metropolitana",
@@ -107459,26 +104050,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "12:15:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_PCSF_2", .name = "Piccola Casa della Sacra Famiglia (Gestori di Pubblici Servizi, "
-      "Gassino Torinese, TO) - Fondazione Piccola Casa Sacra Famiglia "
-      "teol. Don Mignola",
-    .name_ja = "Piccola Casa della Sacra Famiglia (Gestori di Pubblici Servizi, Gassino Torinese, TO) - Fondazione Piccola Casa Sacra Famiglia teol. Don Mignola",
-    .category = "utility", .collector = "itgov_servizi_pubblici", .portal = "https://www.pcsf.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.pcsf.it/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 6 items, ATOM feed, newest "
-      "2014-08-22T12:15:00Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_IT_PDGS", .name = "Parco Delle Groane (Pubbliche Amministrazioni, Solaro, MI) - "
       "Parco delle Groane",
@@ -108753,25 +105324,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "14:04:00 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_R_CRLI_2", .name = "Consiglio Regionale della Liguria (Pubbliche Amministrazioni, "
-      "Genova, GE) - consiglio - Regione Liguria",
-    .name_ja = "Consiglio Regionale della Liguria (Pubbliche Amministrazioni, Genova, GE) - consiglio - Regione Liguria",
-    .category = "local-gov", .collector = "itgov_territoriali", .portal = "https://www.regione.liguria.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.regione.liguria.it/homepage-consiglio.feed?type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T11:46:51+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_R2C20VBG", .name = "Consorzio 2 Alto Valdarno (Gestori di Pubblici Servizi, Arezzo, "
       "AR) - Consorzio di Bonifica 2",
@@ -110655,25 +107207,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "09:45:16 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_TN1NQL32_2", .name = "CONSORZIO DI BONIFICA DEL SANNIO ALIFANO (Gestori di Pubblici "
-      "Servizi, Piedimonte Matese, CE) - Home",
-    .name_ja = "CONSORZIO DI BONIFICA DEL SANNIO ALIFANO (Gestori di Pubblici Servizi, Piedimonte Matese, CE) - Home",
-    .category = "environment", .collector = "itgov_ambiente", .portal = "https://www.sannioalifano.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.sannioalifano.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 29 items, ATOM feed, newest "
-      "2026-10-18T11:47:06+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_TPLSRL", .name = "Tpl Linea Srl (Gestori di Pubblici Servizi, Savona, SV) - TPL "
       "Linea",
@@ -110898,25 +107431,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "09:08:53 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_UACT_2", .name = "Universita' Agraria di Colle di Tora (Pubbliche Amministrazioni, "
-      "Colle di Tora, RI) - Home",
-    .name_ja = "Universita' Agraria di Colle di Tora (Pubbliche Amministrazioni, Colle di Tora, RI) - Home",
-    .category = "research", .collector = "itgov_universita", .portal = "https://www.uniagrariacolleditora.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.uniagrariacolleditora.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T09:47:07+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_UASP", .name = "Universita Agraria di Sipicciano (Pubbliche Amministrazioni, "
       "Graffignano, VT) - Università  Agraria di Sipicciano",
@@ -111180,25 +107694,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "10:32:57 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_UCIB_2", .name = "Unione di Comuni Isola Bergamasca (Pubbliche Amministrazioni, "
-      "Madone, BG) - Home",
-    .name_ja = "Unione di Comuni Isola Bergamasca (Pubbliche Amministrazioni, Madone, BG) - Home",
-    .category = "local-gov", .collector = "itgov_territoriali", .portal = "https://www.unione.isola.bg.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.unione.isola.bg.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T09:47:10+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_UCLAM", .name = "Unione di Comuni Lombarda Adda Martesana (Pubbliche "
       "Amministrazioni, Pozzuolo Martesana, MI) - Unione di Comuni "
@@ -111242,26 +107737,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "08:15:53 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_UCLPC_PV_2", .name = "Unione di Comuni Lombarda Prima Collina (Pubbliche "
-      "Amministrazioni, Canneto Pavese, PV) - Unione di Comuni Lombarda "
-      "Prima Collina - Home",
-    .name_ja = "Unione di Comuni Lombarda Prima Collina (Pubbliche Amministrazioni, Canneto Pavese, PV) - Unione di Comuni Lombarda Prima Collina - Home",
-    .category = "local-gov", .collector = "itgov_territoriali", .portal = "https://www.primacollina.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.primacollina.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 6 items, ATOM feed, newest "
-      "2026-10-18T11:47:10+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_UCMP_050", .name = "Unione Colli Marittimi Pisani (Pubbliche Amministrazioni, "
       "Montescudaio, PI) - Unione dei Comuni COLLI MARITTIMI PISANI",
@@ -111471,26 +107946,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "17:04:13 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_UCVU_2", .name = "Unione Comuni Valle Ustica (Pubbliche Amministrazioni, Vicovaro, "
-      "RM) - Unione dei Comuni della Valle Ustica - Città Metropolitana "
-      "di Roma",
-    .name_ja = "Unione Comuni Valle Ustica (Pubbliche Amministrazioni, Vicovaro, RM) - Unione dei Comuni della Valle Ustica - Città Metropolitana di Roma",
-    .category = "local-gov", .collector = "itgov_territoriali", .portal = "https://www.unionecomunivalleustica.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.unionecomunivalleustica.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 8 items, ATOM feed, newest "
-      "2026-10-18T11:47:14+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_UDAB", .name = "Ufficio D'Ambito di Brescia (Pubbliche Amministrazioni, Brescia, "
       "BS) - Aato – Ufficio d'Ambito di Brescia",
@@ -111655,26 +108110,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "14:05:24 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_UDCDS_2", .name = "Unione Dei Comuni Delle Serre Salentine (Pubbliche "
-      "Amministrazioni, Aradeo, LE) - Il sito ufficiale dell'Unione dei "
-      "Comuni Serre Salentine - Unione dei Comuni del",
-    .name_ja = "Unione Dei Comuni Delle Serre Salentine (Pubbliche Amministrazioni, Aradeo, LE) - Il sito ufficiale dell'Unione dei Comuni Serre Salentine - Unione dei Comuni del",
-    .category = "local-gov", .collector = "itgov_territoriali", .portal = "https://www.unioneserresalentine.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.unioneserresalentine.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T09:47:17+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_UDCDSB", .name = "Unione Dei Comuni Delle Sorgenti del Biferno (Pubbliche "
       "Amministrazioni, Bojano, CB) - Sorgenti del Biferno",
@@ -111841,25 +108276,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "11:29:45 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_UDCRG_2", .name = "Unione Dei Comuni Riviera di Gallura (Pubbliche Amministrazioni, "
-      "San Teodoro, OT) - Home",
-    .name_ja = "Unione Dei Comuni Riviera di Gallura (Pubbliche Amministrazioni, San Teodoro, OT) - Home",
-    .category = "local-gov", .collector = "itgov_territoriali", .portal = "https://unionerivieradigallura.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://unionerivieradigallura.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-18T09:47:20+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_UDCS", .name = "Unione Dei Comuni del Sinello (Pubbliche Amministrazioni, "
       "Guilmi, CH) - Home",
@@ -111881,25 +108297,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "07:24:05 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_UDCS_2", .name = "Unione Dei Comuni del Sinello (Pubbliche Amministrazioni, "
-      "Guilmi, CH) - Home",
-    .name_ja = "Unione Dei Comuni del Sinello (Pubbliche Amministrazioni, Guilmi, CH) - Home",
-    .category = "local-gov", .collector = "itgov_territoriali", .portal = "https://www.unionesinello.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.unionesinello.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T09:47:10+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_UDCTA", .name = "Unione Dei Comuni Terre di Acaya e di Roca (Pubbliche "
       "Amministrazioni, Melendugno, LE) - Unione dei Comuni Terra di "
@@ -111922,26 +108319,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "17:36:26 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_UDCTA_2", .name = "Unione Dei Comuni Terre di Acaya e di Roca (Pubbliche "
-      "Amministrazioni, Melendugno, LE) - Unione dei Comuni Terra di "
-      "Acaya e Roca - Portale Ufficiale",
-    .name_ja = "Unione Dei Comuni Terre di Acaya e di Roca (Pubbliche Amministrazioni, Melendugno, LE) - Unione dei Comuni Terra di Acaya e Roca - Portale Ufficiale",
-    .category = "local-gov", .collector = "itgov_territoriali", .portal = "https://www.terrediacayaeroca.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.terrediacayaeroca.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, ATOM feed, newest "
-      "2026-10-18T09:47:24+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_UDCV_046", .name = "Unione Dei Comuni della Versilia (Pubbliche Amministrazioni, "
       "Seravezza, LU) - Unione dei Comuni della Versilia",
@@ -112063,25 +108440,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "20:37:45 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_UITS_58_2", .name = "Unione Italiana Tiro a Segno (Pubbliche Amministrazioni, Roma, "
-      "RM) - Unione Italiana Tiro a Segno - Home",
-    .name_ja = "Unione Italiana Tiro a Segno (Pubbliche Amministrazioni, Roma, RM) - Unione Italiana Tiro a Segno - Home",
-    .category = "local-gov", .collector = "itgov_territoriali", .portal = "https://www.uits.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.uits.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 16 items, ATOM feed, newest "
-      "2026-10-18T11:47:21+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_UITS_58_3", .name = "Unione Italiana Tiro a Segno (Pubbliche Amministrazioni, Roma, "
       "RM) - Unione Italiana Tiro a Segno - News",
@@ -112145,26 +108503,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "09:04:11 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ULDCO_2", .name = "Unione Lombarda Dei Comuni Oltrepadani (Pubbliche "
-      "Amministrazioni, Silvano Pietra, PV) - Unione dei Comuni "
-      "Oltrepadani - Home",
-    .name_ja = "Unione Lombarda Dei Comuni Oltrepadani (Pubbliche Amministrazioni, Silvano Pietra, PV) - Unione dei Comuni Oltrepadani - Home",
-    .category = "local-gov", .collector = "itgov_territoriali", .portal = "https://www.unionecomunioltrepadani.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.unionecomunioltrepadani.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 6 items, ATOM feed, newest "
-      "2026-10-18T11:47:22+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_UM_CR", .name = "Unione Municipia (Pubbliche Amministrazioni, Motta Baluffi, CR) "
       "- Unione Municipia",
@@ -113752,26 +110090,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "00:00:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_WBKO7L8T_2", .name = "Azienda Speciale Tignale Servizi Manlio Bonincontri (Gestori di "
-      "Pubblici Servizi, Tignale, BS) - Casa di Riposo di Tignale "
-      "\"Manlio Bonincontri\"  - Casa di Riposo di Ti",
-    .name_ja = "Azienda Speciale Tignale Servizi Manlio Bonincontri (Gestori di Pubblici Servizi, Tignale, BS) - Casa di Riposo di Tignale \"Manlio Bonincontri\"  - Casa di Riposo di Ti",
-    .category = "utility", .collector = "itgov_servizi_pubblici", .portal = "https://www.casadiriposotignale.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.casadiriposotignale.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T09:47:38+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_WBOK9VCY", .name = "I.C. \"S.GIOVANNI BOSCO - BATTISTI - FERRARIS\" (Pubbliche "
       "Amministrazioni, Bisceglie, BT) - Istituto Comprensivo "
@@ -113993,25 +110311,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "07:00:00 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_WUS4QGRD_2", .name = "Risorse per Roma SpA (Stazioni Appaltanti, Roma, RM) - Risorse "
-      "per Roma SpA - Home",
-    .name_ja = "Risorse per Roma SpA (Stazioni Appaltanti, Roma, RM) - Risorse per Roma SpA - Home",
-    .category = "utility", .collector = "itgov_servizi_pubblici", .portal = "https://www.risorseperroma.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.risorseperroma.it/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T11:47:39+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_WUWWNN98", .name = "AZIENDA SPECIALE SELE INCLUSIONE - AZIENDA TERRITORIALE PER I "
       "SERVIZI ALLA PERSONA (Pubbliche Amministrazioni, Eboli, SA) - "
@@ -114604,47 +110903,7 @@ static const hp_source HP3B47_ITGOV[] = {
       "00:00:00 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_YI4Z4OFH_2", .name = "AZIENDA TERRITORIALE PER L'EDILIZIA RESIDENZIALE DELLA PROVINCIA "
-      "DI VERONA (Gestori di Pubblici Servizi, Verona, VR) - Home Page "
-      "- ATER Verona",
-    .name_ja = "AZIENDA TERRITORIALE PER L'EDILIZIA RESIDENZIALE DELLA PROVINCIA DI VERONA (Gestori di Pubblici Servizi, Verona, VR) - Home Page - ATER Verona",
-    .category = "health", .collector = "itgov_sanita", .portal = "https://www.ater.vr.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ater.vr.it/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-18T11:47:43+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
-  { .id = "JO47_IT_YI4Z4OFH_3", .name = "AZIENDA TERRITORIALE PER L'EDILIZIA RESIDENZIALE DELLA PROVINCIA "
-      "DI VERONA (Gestori di Pubblici Servizi, Verona, VR) - Home Page "
-      "- ATER Verona",
-    .name_ja = "AZIENDA TERRITORIALE PER L'EDILIZIA RESIDENZIALE DELLA PROVINCIA DI VERONA (Gestori di Pubblici Servizi, Verona, VR) - Home Page - ATER Verona",
-    .category = "health", .collector = "itgov_sanita", .portal = "https://www.ater.vr.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ater.vr.it/index.php?format=feed",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 29 Jun 2026 "
-      "00:00:00 +0200. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO47_IT_YLYCZ638", .name = "Ente di gestione Ambito Territoriale Ottimale (Pubbliche "
       "Amministrazioni, Rieti, RI) - Ato 3 Rieti",

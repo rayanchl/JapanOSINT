@@ -334,25 +334,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "2026-10-08T07:10:37Z. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO47_FR_42DD624F_28F6_4412_B76F_160EA8EB3111_2", .name = "Fédération départementale des chasseurs - Haute-Marne (SL, INSEE "
-      "52121) - Fédération Départementale des Chasseurs",
-    .name_ja = "Fédération départementale des chasseurs - Haute-Marne (SL, INSEE 52121) - Fédération Départementale des Chasseurs",
-    .category = "environment", .collector = "frgov_environnement", .portal = "https://www.fdc52.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.fdc52.fr/index.php/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 05 Oct 2026 "
-      "10:35:33 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO47_FR_4336D344_E271_4183_BE9D_31F1573A2DCA", .name = "Mairie - Bray-Dunes (SL, INSEE 59107) - Ville de Bray-Dunes",
     .name_ja = "Mairie - Bray-Dunes (SL, INSEE 59107) - Ville de Bray-Dunes",
@@ -1146,25 +1127,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "16:21:41 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_49689749_5E15_455D_A8AB_CA5068974A79_2", .name = "Point-justice en France services Saint-Aulaye (SL, INSEE 24376) "
-      "- Conseil Départemental d'Accès au Droit en Dordogne",
-    .name_ja = "Point-justice en France services Saint-Aulaye (SL, INSEE 24376) - Conseil Départemental d'Accès au Droit en Dordogne",
-    .category = "public-safety", .collector = "frgov_securite", .portal = "https://cdad-dordogne.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cdad-dordogne.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T13:17:12+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_497BCACE_072B_402D_84AF_F6E0905400E3", .name = "Centre communal d'action sociale (CCAS) - Clères (SL, INSEE "
       "76179) - Mairie de Clères",
@@ -1998,25 +1960,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:21:40 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_51BD69A9_FF15_4593_AA0A_C14579A88D8B_2", .name = "Communauté d'agglomération - Châlons-en-Champagne (SL, INSEE "
-      "51108) - Actualités",
-    .name_ja = "Communauté d'agglomération - Châlons-en-Champagne (SL, INSEE 51108) - Actualités",
-    .category = "local-gov", .collector = "frgov_intercommunal", .portal = "https://www.chalons-agglo.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.chalons-agglo.fr/cac/actualites?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T13:17:12+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_51E9E6E3_323C_44F4_9D14_C26DB490E974", .name = "Mairie - Cluny (SL, INSEE 71137) - Ville de Cluny",
     .name_ja = "Mairie - Cluny (SL, INSEE 71137) - Ville de Cluny",
@@ -2152,24 +2095,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "21:30:29 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_52E9B9C0_AEE0_481E_8F0B_B76E847DBEDB_2", .name = "Mairie - Falaise (SL, INSEE 14258) - Mairie de Falaise",
-    .name_ja = "Mairie - Falaise (SL, INSEE 14258) - Mairie de Falaise",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.falaise.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.falaise.fr/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-15T07:37:10Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_531F1A40_87AD_4058_841D_ABFFB0014EF1", .name = "Mairie - Belleville-en-Beaujolais (SL, INSEE 69019) - Mairie de "
       "Belleville-en-Beaujolais",
@@ -2390,25 +2315,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "17:55:57 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_54206F7F_8B49_439A_BA8A_9EDD72F3FAC5_2", .name = "Centre communal d'action sociale (CCAS) - Foisches (SL, INSEE "
-      "08175) - Mairie de Foisches - Site officiel",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Foisches (SL, INSEE 08175) - Mairie de Foisches - Site officiel",
-    .category = "local-gov", .collector = "frgov_social", .portal = "https://foisches.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://foisches.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T13:17:11+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_54859430_FF98_4F11_8460_6F325FAE64E0", .name = "Point-justice du Tribunal Proximité de Péronne (SL, INSEE 80620) "
       "- CDAD de la Somme – point justice",
@@ -3183,24 +3089,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "09:32:24 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_5D8F8CE0_19AD_422F_A1A9_CB1D7B813A58_2", .name = "Mairie - Anneyron (SL, INSEE 26010) - Accueil",
-    .name_ja = "Mairie - Anneyron (SL, INSEE 26010) - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.anneyron.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.anneyron.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 16 items, ATOM feed, newest "
-      "2026-10-18T13:17:12+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_5DAB61FE_3CE7_4313_9825_0B731DAC28A3", .name = "Centre communal d'action sociale (CCAS) - Cournon-d'Auvergne "
       "(SL, INSEE 63124) - Ville de Cournon-d'Auvergne – site officiel",
@@ -4193,25 +4081,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:03:48 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_67B9F5E3_25D5_486A_AFBD_A68AD56E499C_2", .name = "Centre communal d'action sociale (CCAS) - Le Drennec (SL, INSEE "
-      "29047) - Commune du Drennec, site officiel",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Le Drennec (SL, INSEE 29047) - Commune du Drennec, site officiel",
-    .category = "local-gov", .collector = "frgov_social", .portal = "https://le-drennec.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://le-drennec.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T13:17:13+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_67C2063C_095F_4F95_AF95_BFFCE23C8B4C", .name = "Mission locale pour l'insertion professionnelle et sociale des "
       "jeunes (16-25 ans) - Saint-Étienne-de-Saint-Geoirs (SL, INSEE "
@@ -4370,25 +4239,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "20:11:35 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_68DB398E_C07F_4EC0_BDDB_32B621DA721A_2", .name = "Mairie déléguée - Laduz (SL, INSEE 89213) - L'agenda et les "
-      "informations de Valravillon",
-    .name_ja = "Mairie déléguée - Laduz (SL, INSEE 89213) - L'agenda et les informations de Valravillon",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.valravillon.com/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.valravillon.com/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 23 items, ATOM feed, newest "
-      "2026-10-13T20:11:35Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_69100A51_7055_4657_87FC_1F5EBFF0FF31", .name = "Centre communal d'action sociale (CCAS) - Brax (SL, INSEE 31088) "
       "- Événements",
@@ -4767,26 +4617,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "08:05:02 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_6C3130EB_7A35_487B_874C_96145F504C15_2", .name = "Bureau d'information et d'orientation (BIO) - Université Limoges "
-      "- Campus des Jacobins (SL, INSEE 87085) - Direction Orientation, "
-      "Réussite et Insertion",
-    .name_ja = "Bureau d'information et d'orientation (BIO) - Université Limoges - Campus des Jacobins (SL, INSEE 87085) - Direction Orientation, Réussite et Insertion",
-    .category = "government", .collector = "frgov_services_citoyens", .portal = "https://www.unilim.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.unilim.fr/dori/feed/rss/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 8 items, RSS2 feed, newest Tue, 07 Jul 2026 "
-      "08:05:02 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO47_FR_6C9D7E22_F9E3_48AB_9192_FE53E5F4CC64", .name = "Point-justice Maison de justice et du droit d'Aulnoye-Aymeries "
       "(SL, INSEE 59033) - C.D.A.D Du Nord",
@@ -4928,25 +4758,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "16:03:19 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_6D37DEBF_8008_4CB4_99A6_8A6EA15949F6_2", .name = "Mairie - Saint-Martin-la-Garenne (SL, INSEE 78567) - "
-      "saint-martin-la-garenne.fr - Accueil",
-    .name_ja = "Mairie - Saint-Martin-la-Garenne (SL, INSEE 78567) - saint-martin-la-garenne.fr - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.saint-martin-la-garenne.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.saint-martin-la-garenne.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T13:17:12+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_6DA4CB8E_C5D8_409E_9A84_88D3FC73E45C", .name = "Point information jeunesse - Saint-Omer (SL, INSEE 62765) - "
       "CAPSO",
@@ -5266,25 +5077,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "15:11:26 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_71CBB17C_9999_4D23_A7C9_E27F37A6B3A6_2", .name = "Mairie - Puycasquier (SL, INSEE 32335) - "
-      "fb59f164d1924e52af2d2cf738379415",
-    .name_ja = "Mairie - Puycasquier (SL, INSEE 32335) - fb59f164d1924e52af2d2cf738379415",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.puycasquier.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.puycasquier.fr/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2020-08-27T15:11:26Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_71D03F79_B437_4249_AC14_6CF03C81BD84", .name = "Mairie - Montbouton (SL, INSEE 90070) - Montbouton",
     .name_ja = "Mairie - Montbouton (SL, INSEE 90070) - Montbouton",
@@ -5364,25 +5156,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "00:00:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_720A443B_9395_4FC5_862B_F3AC6798D2F7_2", .name = "Centre communal d'action sociale (CCAS) - Braud-et-Saint-Louis "
-      "(SL, INSEE 33073) - Accueil",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Braud-et-Saint-Louis (SL, INSEE 33073) - Accueil",
-    .category = "local-gov", .collector = "frgov_social", .portal = "https://www.mairie-braud.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mairie-braud.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 6 items, ATOM feed, newest "
-      "2026-10-18T11:17:13+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_720A443B_9395_4FC5_862B_F3AC6798D2F7_3", .name = "Centre communal d'action sociale (CCAS) - Braud-et-Saint-Louis "
       "(SL, INSEE 33073) - Site officiel de la commune de Braud et "
@@ -6000,25 +5773,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:47:03 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_77FAC7FD_EDE0_421A_AB7F_86A5E496FE3E_2", .name = "Mairie - Germond-Rouvre (SL, INSEE 79133) - Germond-Rouvre, "
-      "Viva'cité de l'esprit village !",
-    .name_ja = "Mairie - Germond-Rouvre (SL, INSEE 79133) - Germond-Rouvre, Viva'cité de l'esprit village !",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "http://www.germond-rouvre.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.germond-rouvre.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T13:17:13+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_7834843B_6D75_478E_9264_DA035E6A593F", .name = "Mairie - Luché-Pringé (SL, INSEE 72175) - Luché-Pringé",
     .name_ja = "Mairie - Luché-Pringé (SL, INSEE 72175) - Luché-Pringé",
@@ -6121,25 +5875,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "08:06:18 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_78C7DD9E_BC59_4D8B_B6DB_53BCF74D6AF4_2", .name = "Centre communal d'action sociale (CCAS) - Casteljaloux (SL, "
-      "INSEE 47052) - Mairie Casteljaloux - Actualités",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Casteljaloux (SL, INSEE 47052) - Mairie Casteljaloux - Actualités",
-    .category = "local-gov", .collector = "frgov_social", .portal = "https://www.mairie-casteljaloux.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mairie-casteljaloux.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T11:17:14+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_792C23C5_B822_4683_85A9_81F5991DBD5D", .name = "Mairie déléguée - Mourjou (SL, INSEE 15136) - Site officiel de "
       "la commune de  Puycapel dans le Cantal",
@@ -6279,25 +6014,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:44:48 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_7A15D608_0808_43C9_929D_2C579A68AA06_2", .name = "Mairie - Challes (SL, INSEE 72053) - Bienvenue sur le site "
-      "officiel de la commune de Challes",
-    .name_ja = "Mairie - Challes (SL, INSEE 72053) - Bienvenue sur le site officiel de la commune de Challes",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.challes72.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.challes72.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T13:17:13+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_7A1CE044_6782_4FB4_AA72_DD9DB709BA8A", .name = "Police municipale - Champagnole (SL, INSEE 39097) - Mairie de "
       "Champagnole",
@@ -6494,24 +6210,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "06:36:57 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_7BBD64C0_B059_4186_A4F4_74A6CC39D475_2", .name = "Mairie - Branne (SL, INSEE 33071) - Mairie de Branne",
-    .name_ja = "Mairie - Branne (SL, INSEE 33071) - Mairie de Branne",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.mairie-branne.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mairie-branne.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T11:17:14+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_7BCE7B74_2A2A_4198_B326_F5F4AABFE9FE", .name = "Mairie - Villers-Saint-Frambourg-Ognon (SL, INSEE 60682) - "
       "Villers-Saint-Frambourg-Ognon",
@@ -6571,24 +6269,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:29:24 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_7C704AC2_68FE_4975_B2B2_7EBC4030F006_2", .name = "Mairie - Ercé-près-Liffré (SL, INSEE 35107) - Accueil",
-    .name_ja = "Mairie - Ercé-près-Liffré (SL, INSEE 35107) - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.ercepresliffre.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ercepresliffre.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T11:17:14+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_7CBB8EAF_5084_44A5_9604_BA0D0EDACAC6", .name = "Espace conseil France Rénov' - Toulouse (SL, INSEE 31555) - "
       "Toulouse Renov'",
@@ -6886,25 +6566,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:02:42 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_25C87111_8EB0_44BF_8A8D_F99D4B27F1EE_2", .name = "Mairie - Le Gué-de-Longroi (SL, INSEE 28188) - Commune du Gué de "
-      "Longroi - Accueil",
-    .name_ja = "Mairie - Le Gué-de-Longroi (SL, INSEE 28188) - Commune du Gué de Longroi - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "http://guedelongroi.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://guedelongroi.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T11:17:14+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_2604672B_BCA0_422E_BCC3_930B13EFDD9F", .name = "Mairie - Moulon (SL, INSEE 33298) - Mairie de Moulon",
     .name_ja = "Mairie - Moulon (SL, INSEE 33298) - Mairie de Moulon",
@@ -7557,25 +7218,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "19:27:08 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_2C115A2F_A794_4025_B52C_96940B40CBCC_2", .name = "Mairie - Saint-Cyr-de-Valorges (SL, INSEE 42213) - Commune de "
-      "Saint-Cyr-De-Valorges",
-    .name_ja = "Mairie - Saint-Cyr-de-Valorges (SL, INSEE 42213) - Commune de Saint-Cyr-De-Valorges",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.saint-cyr-de-valorges.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.saint-cyr-de-valorges.fr/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 8 items, ATOM feed, newest "
-      "2026-10-18T11:29:48+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_2CAD4F0F_2C4B_41FF_BB3A_2B4E79C407D1", .name = "Service départemental d'incendie et de secours (SDIS) - "
       "Haute-Savoie (SIL, INSEE 74010) - Agenda SDIS 74",
@@ -7857,26 +7499,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "15:21:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_2DE0D025_3DB4_4E7B_84FE_7E8CE2E3C0E0_2", .name = "Centre communal d'action sociale (CCAS) - Lestelle-Bétharram "
-      "(SL, INSEE 64339) - Lestelle Bétharram, La Bastide entre Gave et "
-      "Montagne",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Lestelle-Bétharram (SL, INSEE 64339) - Lestelle Bétharram, La Bastide entre Gave et Montagne",
-    .category = "local-gov", .collector = "frgov_social", .portal = "https://www.lestelle-betharram.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.lestelle-betharram.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-18T11:17:14+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_2DFF25A3_CF6E_459C_B028_F5359243EAF4", .name = "Mairie - Argent-sur-Sauldre (SL, INSEE 18011) - Mairie d'Argent "
       "sur Sauldre",
@@ -8364,24 +7986,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "06:00:40 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_32427216_A0E6_4C57_AEAA_5130962716EE_2", .name = "Mairie - Habsheim (SL, INSEE 68118) - Mairie Habsheim",
-    .name_ja = "Mairie - Habsheim (SL, INSEE 68118) - Mairie Habsheim",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.mairie-habsheim.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mairie-habsheim.fr/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-15T15:42:06Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_32C14617_3C52_4320_8046_41E39EF9F2A4", .name = "Centre communal d'action sociale (CCAS) - Schœnenbourg (SL, "
       "INSEE 67455) - Commune de Schoenenbourg",
@@ -8484,25 +8088,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "11:31:04 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_32FC49B4_C94B_49CE_BBAF_5AFACB6612EA_2", .name = "Point info famille - Montpellier - Paillade (SL, INSEE 34172) - "
-      "UDAF",
-    .name_ja = "Point info famille - Montpellier - Paillade (SL, INSEE 34172) - UDAF",
-    .category = "local-gov", .collector = "frgov_social", .portal = "https://www.udaf34.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.udaf34.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 8 items, ATOM feed, newest "
-      "2026-10-18T13:17:14+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_333B2917_9222_4F80_859A_FA040FB93D49", .name = "Mairie - Nonant (SL, INSEE 14465) - Site d'information de la "
       "commune de Nonant",
@@ -8602,25 +8187,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "07:28:45 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_342F4950_AE08_4A31_BB68_9C5E7F72AB36_2", .name = "Centre communal d'action sociale (CCAS) - Aure sur Mer (SL, "
-      "INSEE 14591) - Aure sur Mer",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Aure sur Mer (SL, INSEE 14591) - Aure sur Mer",
-    .category = "local-gov", .collector = "frgov_social", .portal = "https://www.auresurmer.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.auresurmer.fr/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 11 items, ATOM feed, newest "
-      "2026-10-11T07:28:45Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_3469EDB8_5DB8_4F9E_9A83_3FCDD710C1B4", .name = "Mairie - Demigny (SL, INSEE 71170) - Commune de Demigny",
     .name_ja = "Mairie - Demigny (SL, INSEE 71170) - Commune de Demigny",
@@ -9607,25 +9173,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:57:12 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_3D22665F_7143_4F2E_8BC4_7E13064EFC13_2", .name = "Communauté de communes - Grand Châteaudun (SL, INSEE 28088) - "
-      "cc044843a33c4795990205e3dabe3f48",
-    .name_ja = "Communauté de communes - Grand Châteaudun (SL, INSEE 28088) - cc044843a33c4795990205e3dabe3f48",
-    .category = "culture", .collector = "frgov_culture", .portal = "https://www.grandchateaudun.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.grandchateaudun.fr/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2020-11-18T14:57:12Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_3D88C5A1_D57F_4A3A_ACD2_3F689477CA2B", .name = "Info Jeunes - Montpellier - I.PEICC (SL, INSEE 34172) - Accueil",
     .name_ja = "Info Jeunes - Montpellier - I.PEICC (SL, INSEE 34172) - Accueil",
@@ -10015,24 +9562,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "09:42:42 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_41763578_2B45_4E83_81F6_F7F9EF44452D_2", .name = "Mairie - Villethierry (SL, INSEE 89467) - A la une !",
-    .name_ja = "Mairie - Villethierry (SL, INSEE 89467) - A la une !",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.villethierry.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.villethierry.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, ATOM feed, newest "
-      "2026-10-18T13:17:09+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_417D0BC2_A123_4DE6_9021_DA5B7EC5AAB2", .name = "Communauté de communes - Sundgau (SL, INSEE 68004) - Site "
       "internet de la Communauté de Communes Sundgau",
@@ -10601,26 +10130,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "09:04:21 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_0AE13BED_85EC_4307_8D1D_52792996F6A7_2", .name = "Mairie - Saint-Baudel (SL, INSEE 18199) - Commune de "
-      "Saint-Baudel - Site officiel de la commune de Saint Baudel "
-      "(18160)",
-    .name_ja = "Mairie - Saint-Baudel (SL, INSEE 18199) - Commune de Saint-Baudel - Site officiel de la commune de Saint Baudel (18160)",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.saintbaudel.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.saintbaudel.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:17:16+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_0AE99E0E_77CF_44BA_8141_4F9FF84B2B3E", .name = "Mairie - Les Ressuintes (SL, INSEE 28314) - COMMUNE LES "
       "RESSUINTES",
@@ -11032,25 +10541,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "06:47:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_0F381BF8_8197_4B3D_8C57_D9F2864A49BA_2", .name = "Mairie - Mornas (SL, INSEE 84083) - Mornas - Site officiel de la "
-      "ville de Mornas en Vaucluse",
-    .name_ja = "Mairie - Mornas (SL, INSEE 84083) - Mornas - Site officiel de la ville de Mornas en Vaucluse",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.mornas.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mornas.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, ATOM feed, newest "
-      "2026-10-18T11:17:15+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_0F428A56_22F1_41C8_8AD7_1BF0BF6A83BB", .name = "Mairie - Tantonville (SL, INSEE 54513) - RSS",
     .name_ja = "Mairie - Tantonville (SL, INSEE 54513) - RSS",
@@ -11289,24 +10779,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "13:10:39 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_114A1668_D6D8_4809_B8F6_2F5E29ACFCAB_2", .name = "Mairie - Val-d'Oust (SL, INSEE 56197) - Mairie de Val d'Oust",
-    .name_ja = "Mairie - Val-d'Oust (SL, INSEE 56197) - Mairie de Val d'Oust",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.mairie-valdoust.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mairie-valdoust.fr/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 43 items, ATOM feed, newest "
-      "2025-08-06T13:10:39Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_114DCEC7_1213_4D65_90C2_1A9301EC6DC7", .name = "Centre communal d'action sociale (CCAS) - Chaniers (SL, INSEE "
       "17086) - Chaniers, au bord du fleuve en Charente-Maritime (17)",
@@ -11804,24 +11276,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "07:22:46 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_184B0D11_D221_4FF3_BDE7_DB1BEA496E3F_2", .name = "Mairie - Bartenheim (SL, INSEE 68021) - Mairie de Bartenheim",
-    .name_ja = "Mairie - Bartenheim (SL, INSEE 68021) - Mairie de Bartenheim",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.bartenheim.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.bartenheim.fr/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-06T07:22:47Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_18C08D8D_9F8D_4C5E_AFE9_D1B23310C21C", .name = "Police municipale - Rezé (SL, INSEE 44143) - Ville de Rezé",
     .name_ja = "Police municipale - Rezé (SL, INSEE 44143) - Ville de Rezé",
@@ -11941,25 +11395,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "16:46:20 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_19CEFE40_3EB3_4D9F_B014_260254E928F4_2", .name = "Centre communal d'action sociale (CCAS) - Désertines Mayenne "
-      "(SL, INSEE 53091) - mairie - Commune de Désertines (53)",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Désertines Mayenne (SL, INSEE 53091) - mairie - Commune de Désertines (53)",
-    .category = "local-gov", .collector = "frgov_social", .portal = "https://desertines53.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://desertines53.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-18T13:17:15+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_1A25644A_8A92_404D_AFC5_6D25E90BCE5A", .name = "Point-justice du Palais de justice de Laval (SL, INSEE 53130) - "
       "Conseil départemental de l'accès au droit de la Mayenne",
@@ -12392,26 +11827,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "08:53:23 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_1E93EB86_0BE3_4C60_9850_181AF2FAA6DD_2", .name = "Conseil d'architecture, d'urbanisme et de l'environnement (CAUE) "
-      "- Pas-de-Calais (SIL, INSEE 62041) - CAUE Pas-de-Calais - "
-      "ACCUEIL",
-    .name_ja = "Conseil d'architecture, d'urbanisme et de l'environnement (CAUE) - Pas-de-Calais (SIL, INSEE 62041) - CAUE Pas-de-Calais - ACCUEIL",
-    .category = "environment", .collector = "frgov_environnement", .portal = "https://www.caue62.org/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.caue62.org/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T11:17:16+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_1EA975AB_91EC_46A3_B4A2_C831366110DE", .name = "Mairie - Remollon (SL, INSEE 05115) - Mairie de Remollon",
     .name_ja = "Mairie - Remollon (SL, INSEE 05115) - Mairie de Remollon",
@@ -12651,24 +12066,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "15:57:22 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_21825B6C_ACCF_4321_A5FD_61157BCD95E8_2", .name = "Mairie - Haute-Épine (SL, INSEE 60304) - Page d'accueil",
-    .name_ja = "Mairie - Haute-Épine (SL, INSEE 60304) - Page d'accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.haute-epine.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.haute-epine.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, ATOM feed, newest "
-      "2026-10-18T13:17:16+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_21A5F749_F4AA_4EF9_A751_AF695E70F17B", .name = "Mairie - Rémelfing (SL, INSEE 57568) - Rémelfing - Borne Infos",
     .name_ja = "Mairie - Rémelfing (SL, INSEE 57568) - Rémelfing - Borne Infos",
@@ -13571,25 +12968,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "09:15:02 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_8416A80A_F627_4202_A524_923D382FF4ED_2", .name = "Mairie - Neuilly-Plaisance (SL, INSEE 93049) - Focus à "
-      "Neuilly-Plaisance",
-    .name_ja = "Mairie - Neuilly-Plaisance (SL, INSEE 93049) - Focus à Neuilly-Plaisance",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.mairie-neuillyplaisance.com/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mairie-neuillyplaisance.com/index.php?option=com_flexicontent&Itemid=101&cid=21&format=feed&lang=fr&type=atom&view=category",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 8 items, ATOM feed, newest "
-      "2026-10-18T13:17:17+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_84276807_ADA3_42F9_A738_40757E1BA9B1", .name = "Mairie - Péaule (SL, INSEE 56153) - Mairie de Péaule",
     .name_ja = "Mairie - Péaule (SL, INSEE 56153) - Mairie de Péaule",
@@ -13887,25 +13265,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "09:45:28 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_863D33C5_0A7A_4C9F_95AF_A2909192C419_2", .name = "Mairie - Siros (SL, INSEE 64525) - Actualité de la commune de  "
-      "Siros - Siros, commune du Béarn, 64, Aquitaine",
-    .name_ja = "Mairie - Siros (SL, INSEE 64525) - Actualité de la commune de  Siros - Siros, commune du Béarn, 64, Aquitaine",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.siros.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.siros.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, ATOM feed, newest "
-      "2026-10-18T11:17:16+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_865D034F_089B_4F4A_9370_55AB3FB6AA69", .name = "Mission locale pour l'insertion professionnelle et sociale des "
       "jeunes (16-25 ans) - Beauvais (SL, INSEE 60057) - Cité des "
@@ -14737,25 +14096,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:32:37 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_8D24E694_3E60_46A4_9B70_A8F673990BB5_2", .name = "Communauté de communes - Savoir Faire (SL, INSEE 52197) - "
-      "Actualités de la Communauté de Communes des Savoir-Faire",
-    .name_ja = "Communauté de communes - Savoir Faire (SL, INSEE 52197) - Actualités de la Communauté de Communes des Savoir-Faire",
-    .category = "local-gov", .collector = "frgov_intercommunal", .portal = "https://www.ccdessavoirfaire.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ccdessavoirfaire.fr/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 13 items, ATOM feed, newest "
-      "2026-10-01T14:32:37Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_8D2C2BE8_9193_462D_92A3_49DC3934A17A", .name = "Mairie - Sougé (SL, INSEE 41250) - Mairie de Sougé 41800",
     .name_ja = "Mairie - Sougé (SL, INSEE 41250) - Mairie de Sougé 41800",
@@ -17616,25 +16956,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:10:00 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_9FFAFF92_3EFE_4C19_92FC_734F6A19389E_2", .name = "Mairie - Sabran (SL, INSEE 30225) - Accueil -  Le site officiel "
-      "de la commune de Sabran dans le Gard",
-    .name_ja = "Mairie - Sabran (SL, INSEE 30225) - Accueil -  Le site officiel de la commune de Sabran dans le Gard",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.sabran.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.sabran.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T13:17:16+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_A0114814_1168_4A03_B15B_9A63256EAF42", .name = "Mairie - L'Herbergement (SL, INSEE 85108) - L'Herbergement",
     .name_ja = "Mairie - L'Herbergement (SL, INSEE 85108) - L'Herbergement",
@@ -19013,25 +18334,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "15:27:16 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_B38C7BC5_4485_4F69_B81E_DF668CDC93F9_2", .name = "Mairie - Ploudiry (SL, INSEE 29180) - Commune de Ploudiry, site "
-      "officiel",
-    .name_ja = "Mairie - Ploudiry (SL, INSEE 29180) - Commune de Ploudiry, site officiel",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://mairie-ploudiry.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mairie-ploudiry.fr/fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T13:17:17+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_B3B8CA7E_CEA0_4B08_93BE_76F6E3F397F5", .name = "Centre Local d’Information et de Coordination (CLIC) des 4 "
       "Rivières / Antenne MDPH (SL, INSEE 35126) - Accueil – Clic des 4 "
@@ -19092,24 +18394,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "18:00:27 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_B3FB1044_5A30_4015_A0F3_11E146863AEC_2", .name = "Mairie - Monestier-de-Clermont (SL, INSEE 38242) - Accueil",
-    .name_ja = "Mairie - Monestier-de-Clermont (SL, INSEE 38242) - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.monestierdeclermont.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.monestierdeclermont.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T13:17:18+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_B43FAA5F_8311_4D8C_B95D_EEE275711565", .name = "Mairie - Champ-Laurent (SL, INSEE 73072) - CHAMP LAURENT",
     .name_ja = "Mairie - Champ-Laurent (SL, INSEE 73072) - CHAMP LAURENT",
@@ -21602,25 +20886,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "07:35:59 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_CD46F7A1_4AF3_466D_B0FB_7407FF53E198_2", .name = "Mairie - Bricqueville-sur-Mer (SL, INSEE 50085) - Briqueville "
-      "sur mer  - Accueil",
-    .name_ja = "Mairie - Bricqueville-sur-Mer (SL, INSEE 50085) - Briqueville sur mer  - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.bricqueville-sur-mer.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.bricqueville-sur-mer.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-18T11:17:18+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_CE3EC8DE_31CD_4A63_A2A4_A1D8DFB8F795", .name = "Centre communal d'action sociale (CCAS) - Le Pouget (SL, INSEE "
       "34210) - Mairie Le POUGET",
@@ -23233,24 +22498,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "21:01:22 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_DCE93534_D3B4_4AE2_ACFD_3FA70BFB6802_2", .name = "Mairie - Belvès (SL, INSEE 24035) - Accueil",
-    .name_ja = "Mairie - Belvès (SL, INSEE 24035) - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.belves-en-perigord.com/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.belves-en-perigord.com/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, ATOM feed, newest "
-      "2026-10-18T11:17:18+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_DCEC9AD9_4A10_4D41_9DEF_EB846A7EBE0D", .name = "Mairie - Antugnac (SL, INSEE 11010) - COMMUNE D’ANTUGNAC",
     .name_ja = "Mairie - Antugnac (SL, INSEE 11010) - COMMUNE D’ANTUGNAC",
@@ -26780,25 +26027,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "12:59:28 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_0ADBDA77_8242_476C_84C1_0CAE92D06E39_2", .name = "Mairie - Pardies (SL, INSEE 64443) - pardies.fr - Pardies - site "
-      "officiel de la commune - Mairie - Béarn 64",
-    .name_ja = "Mairie - Pardies (SL, INSEE 64443) - pardies.fr - Pardies - site officiel de la commune - Mairie - Béarn 64",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.pardies.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.pardies.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 7 items, ATOM feed, newest "
-      "2026-10-18T13:17:18+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_0BCDA2B1_65EB_43CD_B30E_48A8DBF782E3", .name = "Centre communal d'action sociale (CCAS) - Jouarre (SL, INSEE "
       "77238) - Jouarre",
@@ -28060,24 +27288,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:42:24 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_175FDA30_AA12_4213_80F4_AB5F725D2834_2", .name = "Mairie - Raedersdorf (SL, INSEE 68259) - mairie-de-raedersdorf",
-    .name_ja = "Mairie - Raedersdorf (SL, INSEE 68259) - mairie-de-raedersdorf",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.raedersdorf.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.raedersdorf.fr/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2025-12-04T14:42:24Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_1771208D_F0CB_42FE_8411_42753137A51C", .name = "Mairie - Auzeville-Tolosane (SL, INSEE 31035) - "
       "Auzeville-Tolosane",
@@ -29019,24 +28229,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:00:00 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_21087458_7962_40C1_AC2A_3D51B75C380F_2", .name = "Mairie - Meurchin (SL, INSEE 62573) - Commune de Meurchin",
-    .name_ja = "Mairie - Meurchin (SL, INSEE 62573) - Commune de Meurchin",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.meurchin.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.meurchin.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T13:17:18+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_21104209_666A_4231_AACC_9BC4E9DA6FF4", .name = "Mairie - Lezay (SL, INSEE 79148) - Mairie de Lezay",
     .name_ja = "Mairie - Lezay (SL, INSEE 79148) - Mairie de Lezay",
@@ -32709,25 +31901,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "16:32:40 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_4D5D5218_BBD7_477E_B985_28D0CECDA475_2", .name = "Centre de gestion de la fonction publique territoriale - "
-      "Côte-d'Or (SL, INSEE 21231) - Actualités",
-    .name_ja = "Centre de gestion de la fonction publique territoriale - Côte-d'Or (SL, INSEE 21231) - Actualités",
-    .category = "government", .collector = "frgov_etat", .portal = "https://www.cdg21.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cdg21.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 12 items, ATOM feed, newest "
-      "2026-10-18T13:17:19+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_4D918B34_6D1E_42A1_B13E_FF8DC4FC8C80", .name = "Mairie - Mainvilliers (SL, INSEE 28229) - Site de la mairie",
     .name_ja = "Mairie - Mainvilliers (SL, INSEE 28229) - Site de la mairie",
@@ -33198,25 +32371,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "05:47:16 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_52D44261_D7CF_4860_8D94_E5E5CFE0F67D_2", .name = "Mairie - Boulzicourt (SL, INSEE 08076) - Site Internet officiel "
-      "de la commune de Boulzicourt - Accueil",
-    .name_ja = "Mairie - Boulzicourt (SL, INSEE 08076) - Site Internet officiel de la commune de Boulzicourt - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.boulzicourt.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.boulzicourt.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-18T11:17:20+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_52FE412C_33B3_4927_8FF2_4737186047F9", .name = "Mairie - Marenla (SL, INSEE 62551) - COMMUNE DE MARENLA",
     .name_ja = "Mairie - Marenla (SL, INSEE 62551) - COMMUNE DE MARENLA",
@@ -33456,24 +32610,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "18:06:57 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_5547DB49_997A_43FF_8952_83AFD9F8A326_2", .name = "Mairie - Cernex (SL, INSEE 74052) - L'accueil",
-    .name_ja = "Mairie - Cernex (SL, INSEE 74052) - L'accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.cernex.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cernex.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T11:17:20+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_5607DD41_B1C4_4717_9DDC_23C8B345591A", .name = "Mairie - Bully (SL, INSEE 42027) - Bienvenue à Bully",
     .name_ja = "Mairie - Bully (SL, INSEE 42027) - Bienvenue à Bully",
@@ -34815,24 +33951,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "15:46:06 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_6669DC1E_18BA_4EFD_9F74_025347099616_2", .name = "Mairie - Sainte-Agnès (SL, INSEE 38350) - Accueil Sainte-Agnès",
-    .name_ja = "Mairie - Sainte-Agnès (SL, INSEE 38350) - Accueil Sainte-Agnès",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.sainte-agnes.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.sainte-agnes.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T11:17:19+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_673D10DA_9068_4AC8_A5EC_7264228D9C65", .name = "Mairie - Montolieu (SL, INSEE 11253) - Site Officiel de la "
       "Mairie de Montolieu",
@@ -34994,25 +34112,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "16:02:32 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_697AFF7E_A4D2_498A_A371_8D0F962F7A40_2", .name = "Mairie - Plounévez-Lochrist (SL, INSEE 29206) - Mairie de "
-      "Plounevez-Lochrist, site officiel",
-    .name_ja = "Mairie - Plounévez-Lochrist (SL, INSEE 29206) - Mairie de Plounevez-Lochrist, site officiel",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://plounevez-lochrist.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://plounevez-lochrist.fr/fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, ATOM feed, newest "
-      "2026-10-18T13:17:19+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_69DB0FB2_9F53_4BA2_9FD3_9E8B1ADDE338", .name = "Direction régionale de l'environnement, de l'aménagement et du "
       "logement (Dréal) Grand Est - Unité départementale Ardennes (SIL, "
@@ -35352,24 +34451,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:33:35 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_6CE4171F_205B_45F2_BFC7_45049668105A_2", .name = "Mairie - Sallenôves (SL, INSEE 74257) - La mairie   Accueil",
-    .name_ja = "Mairie - Sallenôves (SL, INSEE 74257) - La mairie   Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.sallenoves.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.sallenoves.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:17:20Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_6D0EAAB5_40EA_4D9B_8592_663C99133408", .name = "Mairie - La Chapelle-Anthenaise (SL, INSEE 53056) - La "
       "Chapelle-Anthenaise",
@@ -35846,24 +34927,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "15:07:27 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_736C3CE2_6EF6_46B6_BEE0_6349E387472F_2", .name = "Mairie - Générac (SL, INSEE 33184) - Accueil",
-    .name_ja = "Mairie - Générac (SL, INSEE 33184) - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "http://www.generac33.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.generac33.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 39 items, ATOM feed, newest "
-      "2026-10-18T11:17:20+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_73743338_5C7B_4E51_8670_31C5CDF8677E", .name = "Centre communal d'action sociale (CCAS) - Viriat (SL, INSEE "
       "01451) - Accueil",
@@ -35885,25 +34948,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "16:52:49 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_73743338_5C7B_4E51_8670_31C5CDF8677E_2", .name = "Centre communal d'action sociale (CCAS) - Viriat (SL, INSEE "
-      "01451) - Accueil",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Viriat (SL, INSEE 01451) - Accueil",
-    .category = "local-gov", .collector = "frgov_social", .portal = "https://viriat.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://viriat.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T13:17:21+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_7375C101_B928_41B4_A076_6D981534AEAE", .name = "Centre communal d'action sociale (CCAS) - Asson (SL, INSEE "
       "64068) - Asson, village du Béarn, Piémont des Pyrénées "
@@ -35926,26 +34970,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "07:02:21 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_7375C101_B928_41B4_A076_6D981534AEAE_2", .name = "Centre communal d'action sociale (CCAS) - Asson (SL, INSEE "
-      "64068) - Asson, village du Béarn, Piémont des Pyrénées "
-      "Atlantiques",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Asson (SL, INSEE 64068) - Asson, village du Béarn, Piémont des Pyrénées Atlantiques",
-    .category = "local-gov", .collector = "frgov_social", .portal = "https://www.asson.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.asson.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 17 items, ATOM feed, newest "
-      "2026-10-18T11:17:20+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_738BF0FC_A3A8_4CCA_B27E_3449A9A262A9", .name = "Mairie - Apatou (SL, INSEE 97360) - APATOU",
     .name_ja = "Mairie - Apatou (SL, INSEE 97360) - APATOU",
@@ -35987,26 +35011,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "15:00:00 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_739D42AF_DF85_43D5_B11C_63652BDCA94E_2", .name = "Centre communal d'action sociale (CCAS) - "
-      "Saint-Maurice-de-Beynost (SL, INSEE 01376) - Accueil du site de "
-      "Saint-Maurice-de-Beynost",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Saint-Maurice-de-Beynost (SL, INSEE 01376) - Accueil du site de Saint-Maurice-de-Beynost",
-    .category = "local-gov", .collector = "frgov_social", .portal = "https://www.saint-maurice-de-beynost.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.saint-maurice-de-beynost.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 8 items, ATOM feed, newest "
-      "2026-10-18T13:17:20+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_73B268F6_0F98_459C_AFE8_F80A6B4D8928", .name = "Mairie - Ornaisons (SL, INSEE 11267) - Commune d'Ornaisons",
     .name_ja = "Mairie - Ornaisons (SL, INSEE 11267) - Commune d'Ornaisons",
@@ -36462,25 +35466,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "12:49:16 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_7B241D09_D6D9_4E32_8470_FE8DF309E444_2", .name = "Mairie - Henriville (SL, INSEE 57316) - "
-      "5f4065512f91489f9ebd7177b8e87445",
-    .name_ja = "Mairie - Henriville (SL, INSEE 57316) - 5f4065512f91489f9ebd7177b8e87445",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.henriville.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.henriville.fr/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2019-07-17T12:49:16Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_7B6C911B_FF72_4A15_BCFE_1F5AF8C06ED8", .name = "Mairie - Garnay (SL, INSEE 28171) - le site de la commune de "
       "Garnay",
@@ -37705,26 +36690,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "00:00:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_889C4DB0_A1E3_4041_A3FD_7F1983DE44A8_2", .name = "Mairie déléguée - La Boissière-d'Ans (SL, INSEE 24047) - Cubjac "
-      "en Périgord Un ilot de verdure caractère bien trempé Aquitaine "
-      "Dordogn",
-    .name_ja = "Mairie déléguée - La Boissière-d'Ans (SL, INSEE 24047) - Cubjac en Périgord Un ilot de verdure caractère bien trempé Aquitaine Dordogn",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://cubjac.com/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cubjac.com/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:17:20+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_88B5203E_915C_4B50_9080_BB793DFC2316", .name = "Info Jeunes - Eaubonne (SL, INSEE 95203) - Ville d’Eaubonne",
     .name_ja = "Info Jeunes - Eaubonne (SL, INSEE 95203) - Ville d’Eaubonne",
@@ -39122,24 +38087,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "12:30:12 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_A49E5B76_238E_4445_A5B7_9C50BAB9C867_2", .name = "Université de Limoges (SI, INSEE ) - Université de Limoges",
-    .name_ja = "Université de Limoges (SI, INSEE ) - Université de Limoges",
-    .category = "research", .collector = "frgov_enseignement", .portal = "https://www.unilim.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.unilim.fr/feed/rss/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "12:30:12 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO47_FR_CB47A769_8574_403D_9130_0AD9C83C7E22", .name = "France Travail (SI, INSEE ) - peorgfluxrss",
     .name_ja = "France Travail (SI, INSEE ) - peorgfluxrss",
@@ -40792,25 +39739,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "07:46:19 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_A3EAC3B4_AFBA_4C9D_B8B5_A8266DF627FF_2", .name = "Centre communal d'action sociale (CCAS) - Tavel (SL, INSEE "
-      "30326) - Site Officiel de la mairie de Tavel",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Tavel (SL, INSEE 30326) - Site Officiel de la mairie de Tavel",
-    .category = "local-gov", .collector = "frgov_social", .portal = "https://www.mairiedetavel.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mairiedetavel.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 8 items, ATOM feed, newest "
-      "2026-10-18T13:17:20+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_A480C8D8_682D_42AB_8A54_84E83E6591CC", .name = "Mairie - Saint-Pierre-Bois (SL, INSEE 67430) - Commune de "
       "Saint-Pierre-Bois/Hohwarth",
@@ -40891,24 +39819,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:18:49 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_A5BC7372_FEF9_48E5_A182_6024A765024E_2", .name = "Mairie - Cize (SL, INSEE 01106) - Accueil",
-    .name_ja = "Mairie - Cize (SL, INSEE 01106) - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.cize.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cize.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T13:17:21+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_A5BF9F84_010D_43AA_A141_77C52F290A0D", .name = "Communauté d'agglomération - Mauges Communauté (SL, INSEE 49023) "
       "- Mauges Communauté",
@@ -41262,25 +40172,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:40:29 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_AD32857F_5AB2_47D2_9F1F_79A0A5F23F88_2", .name = "Centre communal d'action sociale (CCAS) - Chalon (SL, INSEE "
-      "38066) - Actualité",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Chalon (SL, INSEE 38066) - Actualité",
-    .category = "local-gov", .collector = "frgov_social", .portal = "http://mairie.chalon.free.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://mairie.chalon.free.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-18T11:17:21Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_AE046EDD_1A58_4575_8BF0_5B1FF4849416", .name = "Espace conseil France Rénov' - Blois (SL, INSEE 41018) - "
       "Agglopolys, Communauté d'Agglomération de Blois",
@@ -41362,25 +40253,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:21:01 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_AF886D10_C909_4D1E_8B2A_B67C3C10FD56_2", .name = "Mairie - Prêcheur (SL, INSEE 97219) - "
-      "d97fe61339af41ebbe5c557415133b31",
-    .name_ja = "Mairie - Prêcheur (SL, INSEE 97219) - d97fe61339af41ebbe5c557415133b31",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.mairie-precheur.com/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mairie-precheur.com/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 15 items, ATOM feed, newest "
-      "2026-04-13T14:21:01Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_B049C877_008C_4960_8B88_DCBD1523E0A4", .name = "Mairie - Warneton (SL, INSEE 59643) - Warneton",
     .name_ja = "Mairie - Warneton (SL, INSEE 59643) - Warneton",
@@ -41889,24 +40761,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "13:08:48 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_B713EF0A_0627_4F78_B3B6_66F85EFA6C64_2", .name = "Espace conseil France Rénov' - Arras (SL, INSEE 62041) - Accueil",
-    .name_ja = "Espace conseil France Rénov' - Arras (SL, INSEE 62041) - Accueil",
-    .category = "government", .collector = "frgov_services_citoyens", .portal = "https://www.cieu.org/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cieu.org/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 14 items, ATOM feed, newest "
-      "2026-10-18T11:17:21+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_B8AD37B9_A402_402D_AC70_B94564AB6471", .name = "Mairie - Trévoux (SL, INSEE 01427) - Ville de Trévoux",
     .name_ja = "Mairie - Trévoux (SL, INSEE 01427) - Ville de Trévoux",
@@ -42454,25 +41308,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "11:17:36 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_BF7358A5_A9FC_4E8F_A6D8_7AA6BC55A199_2", .name = "Mairie - Garons (SL, INSEE 30125) - Site officiel de la mairie "
-      "de Garons dans le Gard",
-    .name_ja = "Mairie - Garons (SL, INSEE 30125) - Site officiel de la mairie de Garons dans le Gard",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "http://www.garons.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.garons.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, ATOM feed, newest "
-      "2026-10-18T13:17:20+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_BF89C8A6_CC14_4927_81D0_FD79255A5F60", .name = "Mairie - Saint-Vivien-de-Monségur (SL, INSEE 33491) - Saint "
       "Vivien de Monségur village labellisé 2 fleurs",
@@ -43002,25 +41837,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "15:16:27 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_C85EFF38_607E_4B42_B37B_03CB6B4FE901_2", .name = "Espace conseil France Rénov' - Excideuil (SL, INSEE 24164) - "
-      "Accueil",
-    .name_ja = "Espace conseil France Rénov' - Excideuil (SL, INSEE 24164) - Accueil",
-    .category = "government", .collector = "frgov_services_citoyens", .portal = "https://www.ccilap.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ccilap.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T11:17:22+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_C8D5A9AF_6E61_445D_97FE_D3D23ECD6A82", .name = "Conseil départemental de l'ordre des médecins - Ille-et-Vilaine "
       "(SIL, INSEE 35238) - Dernières actualités",
@@ -43529,25 +42345,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "13:49:52 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_CE477EC7_A4D0_4D77_B693_29EA1CA3436E_2", .name = "Mairie - Larmor-Baden (SL, INSEE 56106) - Larmor-Baden - Site "
-      "officiel de la commune - Mairie de Larmor-Baden",
-    .name_ja = "Mairie - Larmor-Baden (SL, INSEE 56106) - Larmor-Baden - Site officiel de la commune - Mairie de Larmor-Baden",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.larmorbaden.com/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.larmorbaden.com/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 7 items, ATOM feed, newest "
-      "2026-10-18T11:17:23+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_CE6346B3_E657_47BC_AE2A_95E884B55106", .name = "Mairie - Châtel-de-Neuvre (SL, INSEE 03065) - Chatel de Neuvre",
     .name_ja = "Mairie - Châtel-de-Neuvre (SL, INSEE 03065) - Chatel de Neuvre",
@@ -44295,24 +43092,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "11:39:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_D7C12502_243D_467D_84CF_59235300FE50_2", .name = "Mairie - Francières (SL, INSEE 60254) - Accueil",
-    .name_ja = "Mairie - Francières (SL, INSEE 60254) - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.mairie-francieres.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mairie-francieres.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T11:17:23+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_D94F8FFD_0076_4483_AD1C_8CB4D631621D", .name = "Mairie - Oysonville (SL, INSEE 28294) - OYSONVILLE",
     .name_ja = "Mairie - Oysonville (SL, INSEE 28294) - OYSONVILLE",
@@ -44782,26 +43561,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "10:23:24 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_DF300C30_7B29_444D_A637_392CDC54F733_2", .name = "Communauté de communes - Aure Louron (SL, INSEE 65031) - "
-      "Communauté de Communes Aure Louron - Hautes-Pyrénées 65 - Page "
-      "d'accueil",
-    .name_ja = "Communauté de communes - Aure Louron (SL, INSEE 65031) - Communauté de Communes Aure Louron - Hautes-Pyrénées 65 - Page d'accueil",
-    .category = "local-gov", .collector = "frgov_intercommunal", .portal = "https://www.aure-louron.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.aure-louron.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T13:17:23+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_DF30D536_DA15_425A_9D1A_1A4DB9F1EB39", .name = "Mairie - Touvérac (SL, INSEE 16384) - Commune de Touverac",
     .name_ja = "Mairie - Touvérac (SL, INSEE 16384) - Commune de Touverac",
@@ -45161,25 +43920,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "15:38:03 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_E3257315_EF8A_4E8C_9E98_03080237FFDD_2", .name = "Mairie - Seclin (SL, INSEE 59560) - Site officiel de la ville de "
-      "Seclin",
-    .name_ja = "Mairie - Seclin (SL, INSEE 59560) - Site officiel de la ville de Seclin",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.ville-seclin.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ville-seclin.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T13:16:22+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_E337CB74_F15A_421D_A5A9_3D50CA6FACE9", .name = "Mairie - Cucq (SL, INSEE 62261) - CUCQ TREPIED STELLA",
     .name_ja = "Mairie - Cucq (SL, INSEE 62261) - CUCQ TREPIED STELLA",
@@ -45990,24 +44730,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "08:59:09 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_EF186DA3_D437_46CF_AA81_EAB8372858BE_2", .name = "Mairie - Dornes (SL, INSEE 58104) - Mairie",
-    .name_ja = "Mairie - Dornes (SL, INSEE 58104) - Mairie",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "http://www.dornes.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.dornes.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, ATOM feed, newest "
-      "2026-10-18T11:17:23+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_EF414A05_6095_42D8_A871_4B229DF2146D", .name = "Centre communal d'action sociale (CCAS) - Arpajon (SL, INSEE "
       "91021) - Ville de Ville d'Arpajon : Flux RSS des actualités",
@@ -46110,25 +44832,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "13:03:34 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_F01DCC70_1CC3_4D30_88E5_69C70C23AD61_2", .name = "Mairie - Villeneuve-Saint-Georges (SL, INSEE 94078) - Mairie de "
-      "Villeneuve-Saint-Georges site officiel - L'actu à Villeneuve",
-    .name_ja = "Mairie - Villeneuve-Saint-Georges (SL, INSEE 94078) - Mairie de Villeneuve-Saint-Georges site officiel - L'actu à Villeneuve",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.villeneuve-saint-georges.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.villeneuve-saint-georges.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 6 items, ATOM feed, newest "
-      "2026-10-18T11:17:05+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_F042F497_2380_4A69_B83C_E3051EFFA3B4", .name = "Mairie - Lodève (SL, INSEE 34142) - Lodève",
     .name_ja = "Mairie - Lodève (SL, INSEE 34142) - Lodève",
@@ -46639,25 +45342,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:59:40 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_F4E16CD7_1D04_4C25_B1EC_113B1B259F1F_2", .name = "Mairie - Les Essarts-lès-Sézanne (SL, INSEE 51235) - Bienvenue "
-      "sur le site communal",
-    .name_ja = "Mairie - Les Essarts-lès-Sézanne (SL, INSEE 51235) - Bienvenue sur le site communal",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://les-essarts-les-sezanne.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://les-essarts-les-sezanne.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T13:17:24+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_F4E4CB3E_EA43_47A9_AEDB_5DDCFCC6830D", .name = "Espace conseil France Rénov' - Colombier-Saugnieu (SL, INSEE "
       "69299) - CCEL",
@@ -47109,26 +45793,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "07:29:34 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_FAC42D25_E113_4E73_91EF_2A4F984214B9_2", .name = "Mission locale pour l'insertion professionnelle et sociale des "
-      "jeunes (16-25 ans) - Colmar - la Fecht (SL, INSEE 68066) - "
-      "Mission Locale Colmar",
-    .name_ja = "Mission locale pour l'insertion professionnelle et sociale des jeunes (16-25 ans) - Colmar - la Fecht (SL, INSEE 68066) - Mission Locale Colmar",
-    .category = "government", .collector = "frgov_services_citoyens", .portal = "https://missionlocalecolmar.com/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://missionlocalecolmar.com/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, ATOM feed, newest "
-      "2018-10-19T08:02:59Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_FB5E9799_A2E2_46B0_8C33_F59F65FDC623", .name = "Association interprofessionnelle des centres médicaux et sociaux "
       "de santé au travail - La Plaine-Saint-Denis (SIL, INSEE 93066) - "
@@ -47348,25 +46012,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "09:52:27 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_FF2E3845_CEE4_4857_BD62_A4BAD9D7B115_2", .name = "Ordre des avocats - Barreau de Saintes (SL, INSEE 17415) - "
-      "Accueil - Ordre des avocats au barreau de SAINTES",
-    .name_ja = "Ordre des avocats - Barreau de Saintes (SL, INSEE 17415) - Accueil - Ordre des avocats au barreau de SAINTES",
-    .category = "legal", .collector = "frgov_ordres", .portal = "https://www.avocats-saintes.com/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.avocats-saintes.com/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T13:17:24+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_FF741951_542A_4702_85C7_6F3D8645D5B0", .name = "Mairie - Bram (SL, INSEE 11049) - Bram, la ville à vivre !",
     .name_ja = "Mairie - Bram (SL, INSEE 11049) - Bram, la ville à vivre !",
@@ -47541,24 +46186,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "09:24:33 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_61F268AF_C94B_4C06_8CF5_464044014AFC_2", .name = "Mairie - Joze (SL, INSEE 63180) - Joze - Accueil",
-    .name_ja = "Mairie - Joze (SL, INSEE 63180) - Joze - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.joze.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.joze.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T11:17:23+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_624A3813_1A40_4661_8142_45ECC359AD18", .name = "Mairie - Épinay-sur-Orge (SL, INSEE 91216) - Ville Épinay sur "
       "Orge",
@@ -48347,25 +46974,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "12:46:15 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_6A0B9FAD_34F0_4528_A352_ED14AF3815BF_2", .name = "Centre communal d'action sociale (CCAS) - Sibiril (SL, INSEE "
-      "29276) - Commune de Sibiril",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Sibiril (SL, INSEE 29276) - Commune de Sibiril",
-    .category = "local-gov", .collector = "frgov_social", .portal = "https://sibiril.com/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://sibiril.com/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T13:17:23+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_6A2F4EB6_C8F2_400B_A6B9_DB7123D48A35", .name = "Mairie - Échallat (SL, INSEE 16123) - Échallat",
     .name_ja = "Mairie - Échallat (SL, INSEE 16123) - Échallat",
@@ -48917,25 +47525,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "17:55:16 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_702DA343_5E58_4FC7_9A25_D6573A77FFFC_2", .name = "Espace conseil France Rénov' - Carrières-sous-Poissy (SL, INSEE "
-      "78123) - Energies Solidaires",
-    .name_ja = "Espace conseil France Rénov' - Carrières-sous-Poissy (SL, INSEE 78123) - Energies Solidaires",
-    .category = "government", .collector = "frgov_services_citoyens", .portal = "https://energies-solidaires.org/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://energies-solidaires.org/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-02T17:15:34Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_702F230D_75C8_4A57_B143_CF3F2D78BC94", .name = "Communauté de communes - Hautes Terres de l'Aubrac (SL, INSEE "
       "48009) - Hautes Terres de l'Aubrac",
@@ -49058,25 +47647,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:11:01 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_7090CE2C_0C3E_44FD_9C16_CDFE63B77E1B_2", .name = "Mairie - Connangles (SL, INSEE 43076) - "
-      "9050c6883d8c4960bf3838dce7551383",
-    .name_ja = "Mairie - Connangles (SL, INSEE 43076) - 9050c6883d8c4960bf3838dce7551383",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.connangles.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.connangles.fr/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2020-05-19T14:11:01Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_70B4B3C0_9EC1_45FA_81F7_BA5C98209472", .name = "Mairie - Selens (SL, INSEE 02704) - Commune de Selens",
     .name_ja = "Mairie - Selens (SL, INSEE 02704) - Commune de Selens",
@@ -51006,25 +49576,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "12:23:22 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_4EF5A4BA_98E5_4FA4_AB34_3621F02F1749_2", .name = "Fédération départementale pour la pêche et la protection du "
-      "milieu aquatique - Corrèze (SL, INSEE 19272) - Peche 19",
-    .name_ja = "Fédération départementale pour la pêche et la protection du milieu aquatique - Corrèze (SL, INSEE 19272) - Peche 19",
-    .category = "environment", .collector = "frgov_environnement", .portal = "https://www.peche19.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.peche19.fr/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2025-11-12T11:23:24Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_4F7C687E_A76D_44F5_9543_5EE33F5852C5", .name = "Mairie - Saxel (SL, INSEE 74261) - Accueil",
     .name_ja = "Mairie - Saxel (SL, INSEE 74261) - Accueil",
@@ -51045,24 +49596,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "17:19:24 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_4F7C687E_A76D_44F5_9543_5EE33F5852C5_2", .name = "Mairie - Saxel (SL, INSEE 74261) - Accueil",
-    .name_ja = "Mairie - Saxel (SL, INSEE 74261) - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.mairie-saxel.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mairie-saxel.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:17:24+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_50638156_B76A_4D4F_A754_B843204AA2FA", .name = "Centre communal d'action sociale (CCAS) - Mont-Saxonnex (SL, "
       "INSEE 74189) - Mairie Mont-Saxonnex",
@@ -51123,25 +49656,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "12:24:18 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_50E80107_760C_4B80_A1E7_6522E8E9E23B_2", .name = "Mairie - Fontaines-d'Ozillac (SL, INSEE 17163) - Accueil - "
-      "Commune de Fontaines d'Ozillac",
-    .name_ja = "Mairie - Fontaines-d'Ozillac (SL, INSEE 17163) - Accueil - Commune de Fontaines d'Ozillac",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://fontainesdozillac.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://fontainesdozillac.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T13:17:25+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_5112066F_6489_4345_BAA3_789EA12CEFC3", .name = "Centre communal d'action sociale (CCAS) - Soultz-sous-Forêts "
       "(SL, INSEE 67474) - Actualités",
@@ -51202,24 +49716,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "12:33:37 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_51398BB3_BC43_4479_92C1_2BDCB518DCD8_2", .name = "Mairie - Juvelize (SL, INSEE 57353) - Juvelize",
-    .name_ja = "Mairie - Juvelize (SL, INSEE 57353) - Juvelize",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "http://www.saulnois.juvelize.com/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.saulnois.juvelize.com/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T13:17:23+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_513FFE74_AE67_47CC_922C_89794D29A602", .name = "Centre communal d'action sociale (CCAS) - "
       "Prats-de-Mollo-la-Preste (SL, INSEE 66150) - Immersions "
@@ -52231,25 +50727,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "17:24:02 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_5D84E93A_2402_4673_82D7_D7AC7A8DD436_2", .name = "Mairie - Cevins (SL, INSEE 73063) - Affichage - La commune de "
-      "Cevins",
-    .name_ja = "Mairie - Cevins (SL, INSEE 73063) - Affichage - La commune de Cevins",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.cevins.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cevins.fr/index.php?option=com_content&view=featured&lang=fr&Itemid=101&format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:17:25+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_5D90A83B_60C2_4F67_B04C_654776503FF9", .name = "Centre communal d'action sociale (CCAS) - Valentigney (SL, INSEE "
       "25580) - Ville de Valentigney",
@@ -52506,25 +50983,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "11:11:31 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_258915C8_13D3_4B36_85AB_0C97D4180A8A_2", .name = "Mairie - Abondant (SL, INSEE 28001) - "
-      "c9cd4cb721af42b9af5744d4d70cacd5",
-    .name_ja = "Mairie - Abondant (SL, INSEE 28001) - c9cd4cb721af42b9af5744d4d70cacd5",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.abondant-village.com/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.abondant-village.com/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2017-02-10T11:11:31Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_2592AAED_46CE_4200_9AD6_F4665E93A4B4", .name = "Espace conseil France Rénov' - Paris 12ème (SL, INSEE 75056) - "
       "Agence Parisienne du Climat",
@@ -52784,25 +51242,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "16:54:14 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_28FECE95_6D6B_4ED8_B6A0_4767CFC6E11D_2", .name = "Mairie - Salaunes (SL, INSEE 33494) - Accueil -  Mairie de "
-      "Salaunes",
-    .name_ja = "Mairie - Salaunes (SL, INSEE 33494) - Accueil -  Mairie de Salaunes",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "http://www.mairie-salaunes.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.mairie-salaunes.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T13:17:26+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_29493E50_870F_460C_A915_9AE5EB347437", .name = "Mairie - La Forest-Landerneau (SL, INSEE 29056) - La "
       "Forest-Landerneau",
@@ -53317,25 +51756,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "12:55:39 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_2E6311AE_2A0F_4102_A218_1970E2690C12_2", .name = "Centre communal d'action sociale (CCAS) - Tramoyes (SL, INSEE "
-      "01424) - Accueil",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Tramoyes (SL, INSEE 01424) - Accueil",
-    .category = "local-gov", .collector = "frgov_social", .portal = "https://www.tramoyes.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.tramoyes.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 6 items, ATOM feed, newest "
-      "2026-10-18T13:17:26+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_2ECEA7B9_8A46_4A2B_A129_8233A1C56B36", .name = "Mairie - Breuil-le-Sec (SL, INSEE 60106) - breuillesec",
     .name_ja = "Mairie - Breuil-le-Sec (SL, INSEE 60106) - breuillesec",
@@ -53674,26 +52094,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "01:00:01 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_31D2C4D6_3617_4568_817C_1CE06924A8DF_2", .name = "Service interentreprises de santé au travail du BTP 61 - Alençon "
-      "(SIL, INSEE 61001) - Services Interentreprises de Santé au "
-      "Travail du BTP - Réseau des SIST BTP",
-    .name_ja = "Service interentreprises de santé au travail du BTP 61 - Alençon (SIL, INSEE 61001) - Services Interentreprises de Santé au Travail du BTP - Réseau des SIST BTP",
-    .category = "health", .collector = "frgov_sante", .portal = "https://www.sist-btp.com/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.sist-btp.com/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T13:17:25+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_31D2C4D6_3617_4568_817C_1CE06924A8DF_3", .name = "Service interentreprises de santé au travail du BTP 61 - Alençon "
       "(SIL, INSEE 61001) - sistbtp.com : Rôle et missions des SIST",
@@ -53773,25 +52173,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "10:33:06 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_32BBBF08_DB79_4495_96C9_4561849575D1_2", .name = "Mairie - Colombières-sur-Orb (SL, INSEE 34080) - "
-      "036169b097024642bb3821f978dace8a",
-    .name_ja = "Mairie - Colombières-sur-Orb (SL, INSEE 34080) - 036169b097024642bb3821f978dace8a",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.colombieres-sur-orb.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.colombieres-sur-orb.fr/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2020-09-23T10:33:06Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_331715EB_F9B0_46BA_93F6_25D4D5E44140", .name = "Mairie - Vaudreching (SL, INSEE 57700) - Commune de Vaudreching",
     .name_ja = "Mairie - Vaudreching (SL, INSEE 57700) - Commune de Vaudreching",
@@ -56439,25 +54820,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "11:46:57 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_11D678F7_953A_4FA9_B55D_F71EC04A6BC9_2", .name = "Mairie - Donneville (SL, INSEE 31162) - Donneville, commune de "
-      "Haute-Garonne",
-    .name_ja = "Mairie - Donneville (SL, INSEE 31162) - Donneville, commune de Haute-Garonne",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.mairie-donneville.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mairie-donneville.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T13:17:26+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_12629203_4253_4522_B87A_709DF434B7D7", .name = "Mairie - Braches (SL, INSEE 80132) - Mairie de Braches",
     .name_ja = "Mairie - Braches (SL, INSEE 80132) - Mairie de Braches",
@@ -56536,25 +54898,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "16:43:23 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_13C7D7B2_9C2C_42E2_B3F6_05A5468DF7A9_2", .name = "Mairie - Merléac (SL, INSEE 22149) - Mairie de Merléac, site "
-      "officiel",
-    .name_ja = "Mairie - Merléac (SL, INSEE 22149) - Mairie de Merléac, site officiel",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://merleac.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://merleac.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T13:17:25+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_1420434A_E8E7_4296_93DB_D9F3970AAFD6", .name = "Centre communal d'action sociale (CCAS) - Arès (SL, INSEE 33011) "
       "- Arès",
@@ -56731,25 +55074,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "08:48:18 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_15CE96AD_BC51_4984_99FB_A1150DC0AAD3_2", .name = "Communauté de Communes des Hautes Vosges (SL, INSEE 88116) - "
-      "Site officiel de la Communauté de Communes des Hautes Vosges",
-    .name_ja = "Communauté de Communes des Hautes Vosges (SL, INSEE 88116) - Site officiel de la Communauté de Communes des Hautes Vosges",
-    .category = "local-gov", .collector = "frgov_intercommunal", .portal = "https://www.cchautesvosges.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cchautesvosges.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T13:17:26+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_15DA8875_3361_48DD_9014_ED10E1F16E88", .name = "Mairie - Mirabeau (SL, INSEE 84076) - Mirabeau En Luberon",
     .name_ja = "Mairie - Mirabeau (SL, INSEE 84076) - Mirabeau En Luberon",
@@ -56850,24 +55174,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "21:20:51 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_1767DC03_014A_4EF3_B0B4_E7D64F9BCE3D_2", .name = "Mairie - Laragne-Montéglin (SL, INSEE 05070) - Actualité",
-    .name_ja = "Mairie - Laragne-Montéglin (SL, INSEE 05070) - Actualité",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "http://www.laragne.net/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.laragne.net/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:17:26Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_17695DAC_38CE_4E3A_9538_6BDDD03B8D2B", .name = "Mairie - Esquay-sur-Seulles (SL, INSEE 14250) - Commune "
       "d'Esquay-sur-Seulles",
@@ -57658,24 +55964,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "17:12:23 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_21B002B1_89B8_425D_AF69_7DEF83107AA4_2", .name = "Mairie - Saint-Marc-la-Lande (SL, INSEE 79271) - Accueil",
-    .name_ja = "Mairie - Saint-Marc-la-Lande (SL, INSEE 79271) - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.saint-marc-la-lande.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.saint-marc-la-lande.fr/stmarc/index.php?option=com_content&view=featured&Itemid=21&format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 7 items, ATOM feed, newest "
-      "2026-10-18T13:17:27+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_220755F5_ABD6_4724_AAF2_397908BDE7EF", .name = "Mairie - Saint-Alban-de-Montbel (SL, INSEE 73219) - Mairie de "
       "Saint-Alban de Montbel – Savoie (73)",
@@ -58167,25 +56455,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "15:33:48 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_80C94BBC_2A57_4021_9CAB_BDABFD8F82CE_2", .name = "Mairie - Wavrans-sur-l'Aa (SL, INSEE 62882) - Commune de "
-      "Wavrans-sur-l'Aa",
-    .name_ja = "Mairie - Wavrans-sur-l'Aa (SL, INSEE 62882) - Commune de Wavrans-sur-l'Aa",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://wavranssurlaa.com/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://wavranssurlaa.com/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 11 items, ATOM feed, newest "
-      "2026-10-18T13:17:27+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_813E2C11_5CEA_451A_B9D1_B34A25A809D8", .name = "Mairie - Champagne (SL, INSEE 17083) - Le mag de Champagne",
     .name_ja = "Mairie - Champagne (SL, INSEE 17083) - Le mag de Champagne",
@@ -58956,25 +57225,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "05:00:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_8C0736ED_3E26_4EDD_AE30_F573B1CDA9DA_2", .name = "Mairie - Montpon-Ménestérol (SL, INSEE 24294) - Ville de "
-      "Montpon-Ménestérol en Dordogne et en Périgord",
-    .name_ja = "Mairie - Montpon-Ménestérol (SL, INSEE 24294) - Ville de Montpon-Ménestérol en Dordogne et en Périgord",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.montpon-menesterol.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.montpon-menesterol.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, ATOM feed, newest "
-      "2026-10-18T11:17:26+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_8C363668_475B_4BE1_A74D_7DB8BF422221", .name = "Mairie - Puy-Saint-Vincent (SL, INSEE 05110) - Flux des "
       "actualités du site",
@@ -59115,24 +57365,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:59:54 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_8D6EA009_67A3_414F_B973_FA72D77D1870_2", .name = "Mairie - Opio (SL, INSEE 06089) - Mairie d'Opio",
-    .name_ja = "Mairie - Opio (SL, INSEE 06089) - Mairie d'Opio",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://mairie-opio.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mairie-opio.fr/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-08T14:59:55Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_8D6F14C4_D073_48FE_915A_A201F33450E2", .name = "Direction de l'économie, de l'emploi, du travail et des "
       "solidarités (DEETS) - La Réunion (SIL, INSEE 97411) - Direction "
@@ -59392,25 +57624,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "16:20:14 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_912489F7_6E63_45C3_B3CD_5928B7FC424F_2", .name = "Mairie - Mauzac (SL, INSEE 31334) - Site officiel de la Mairie "
-      "de Mauzac - Mairie de Mauzac",
-    .name_ja = "Mairie - Mauzac (SL, INSEE 31334) - Site officiel de la Mairie de Mauzac - Mairie de Mauzac",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.mairie-mauzac.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mairie-mauzac.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T13:17:26+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_9149DE47_FFEA_4674_B6A0_B2769110AA2F", .name = "Mairie - Boissy-le-Cutté (SL, INSEE 91080) - Accueil",
     .name_ja = "Mairie - Boissy-le-Cutté (SL, INSEE 91080) - Accueil",
@@ -59431,24 +57644,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "17:21:18 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_9149DE47_FFEA_4674_B6A0_B2769110AA2F_2", .name = "Mairie - Boissy-le-Cutté (SL, INSEE 91080) - Accueil",
-    .name_ja = "Mairie - Boissy-le-Cutté (SL, INSEE 91080) - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.boissy-le-cutte.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.boissy-le-cutte.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 8 items, ATOM feed, newest "
-      "2026-10-18T11:17:27+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_917E43AB_664A_4C5F_952A_D3C6745D5F6E", .name = "Centre communal d'action sociale (CCAS) - Chasselay (SL, INSEE "
       "69049) - Ville de Chasselay",
@@ -60985,25 +59180,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "17:43:10 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_9910533F_CC69_41C9_9B10_ADC497D7A249_2", .name = "Mairie - La Chapelle-Craonnaise (SL, INSEE 53058) - La "
-      "Chapelle-Craonnaise - Accueil",
-    .name_ja = "Mairie - La Chapelle-Craonnaise (SL, INSEE 53058) - La Chapelle-Craonnaise - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "http://www.chapelle-craonnaise.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.chapelle-craonnaise.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:17:27+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_9925FC30_8A1A_4715_96F4_E1C8824A1771", .name = "Mairie - Gâcogne (SL, INSEE 58120) - "
       "gacogne-en-morvan.jimdofree.com Blog Feed",
@@ -61319,25 +59495,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "09:23:45 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_9B2A5B05_6922_413D_A8AA_FEF7AA45CA0A_2", .name = "Mairie - Sainte-Colombe-en-Bruilhois (SL, INSEE 47238) - Mairie "
-      "de Sainte Colombe en Bruilhois",
-    .name_ja = "Mairie - Sainte-Colombe-en-Bruilhois (SL, INSEE 47238) - Mairie de Sainte Colombe en Bruilhois",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://ville-saintecolombeenbruilhois.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ville-saintecolombeenbruilhois.fr/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-09T09:23:45Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_9B437527_1C2A_44D3_882C_C4A139DBA193", .name = "Mairie - Bénouville (SL, INSEE 14060) - Mairie de Bénouville",
     .name_ja = "Mairie - Bénouville (SL, INSEE 14060) - Mairie de Bénouville",
@@ -61498,25 +59655,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "16:21:25 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_9CF82AAC_588F_4EEB_97BE_5454E2133C02_2", .name = "Mairie - Méailles (SL, INSEE 04115) - Méailles, Alpes de "
-      "Haute-Provence, site officiel",
-    .name_ja = "Mairie - Méailles (SL, INSEE 04115) - Méailles, Alpes de Haute-Provence, site officiel",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.meailles.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.meailles.fr/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T09:35:33+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_9D4F6AFD_4AB5_4EC9_8A8F_08EB7AACA2B0", .name = "Direction interdépartementale des routes (DIR) - Sud-Ouest (SIL, "
       "INSEE 31555) - DIR Sud-Ouest",
@@ -61618,25 +59756,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "20:55:09 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_9E028887_5917_46F9_A1D8_F1A7C07B0323_2", .name = "Centre communal d'action sociale (CCAS) - Beaumetz-lès-Loges "
-      "(SL, INSEE 62097) - Accueil",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Beaumetz-lès-Loges (SL, INSEE 62097) - Accueil",
-    .category = "local-gov", .collector = "frgov_social", .portal = "https://www.beaumetzlesloges.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.beaumetzlesloges.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:17:28+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_9F04903A_2432_4507_9EC5_155FB5094B11", .name = "Centre communal d'action sociale (CCAS) - Gourdon (SL, INSEE "
       "46127) - Mairie de Gourdon",
@@ -61698,25 +59817,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "22:00:00 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_9F22344B_1E0A_4028_88DB_AA51C0803C67_2", .name = "Mairie - Silly-sur-Nied (SL, INSEE 57654) - Bienvenue sur le "
-      "site officiel de Silly-sur-Nied Landremont",
-    .name_ja = "Mairie - Silly-sur-Nied (SL, INSEE 57654) - Bienvenue sur le site officiel de Silly-sur-Nied Landremont",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.silly-sur-nied.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.silly-sur-nied.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T13:17:28+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_9F25579F_79ED_4930_AA0B_9179FD9EF3EA", .name = "Mairie - Cuise-la-Motte (SL, INSEE 60188) - Mairie de "
       "Cuise-la-Motte",
@@ -62218,25 +60318,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "01:00:01 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_A5701093_7482_43F1_8621_19825C557C54_2", .name = "Mairie - Modène (SL, INSEE 84077) - Mairie de Modène en Vaucluse "
-      "- Site officiel",
-    .name_ja = "Mairie - Modène (SL, INSEE 84077) - Mairie de Modène en Vaucluse - Site officiel",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.mairiedemodene.com/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mairiedemodene.com/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T13:17:29+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_A586643B_727A_40D7_B0A0_7DDCD043D8E0", .name = "Mairie - Cérans-Foulletourte (SL, INSEE 72051) - Ville de "
       "Cérans-Foulletourte",
@@ -62903,25 +60984,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "11:15:03 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_ADD99E18_F74F_473A_8ED9_4ED481803BBD_2", .name = "Mairie - La Rochette (SL, INSEE 77389) - Ville La Rochette - "
-      "Mairie de La Rochette (77) - Ville de Seine-et-Marne",
-    .name_ja = "Mairie - La Rochette (SL, INSEE 77389) - Ville La Rochette - Mairie de La Rochette (77) - Ville de Seine-et-Marne",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.ville-la-rochette.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ville-la-rochette.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T13:17:29+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_AE0FE16B_6F00_46A2_AABA_F143704873E6", .name = "Mairie - Champtercier (SL, INSEE 04047) - Mairie de Champtercier",
     .name_ja = "Mairie - Champtercier (SL, INSEE 04047) - Mairie de Champtercier",
@@ -63855,25 +61917,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "19:25:42 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_B7435FCB_ADA1_4A42_AEB0_8A436D30FBAC_2", .name = "Centre communal d'action sociale (CCAS) - Plougonvelin (SL, "
-      "INSEE 29190) - Commune de Plougonvelin",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Plougonvelin (SL, INSEE 29190) - Commune de Plougonvelin",
-    .category = "local-gov", .collector = "frgov_social", .portal = "https://plougonvelin.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://plougonvelin.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T13:17:28+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_B76B0FF4_BE4D_40A9_8E20_425198D7141B", .name = "Mairie - Peumerit (SL, INSEE 29159) - Commune de Peumerit",
     .name_ja = "Mairie - Peumerit (SL, INSEE 29159) - Commune de Peumerit",
@@ -64519,24 +62562,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "2026 12:00:28 GMT. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO47_FR_BEBA7736_7007_4C07_8D46_8233CE29774D_2", .name = "Mairie - Aiffres (SL, INSEE 79003) - ACTUALITES",
-    .name_ja = "Mairie - Aiffres (SL, INSEE 79003) - ACTUALITES",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.ville-aiffres.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ville-aiffres.fr/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 102 items, ATOM feed, newest "
-      "2026-10-09T12:00:28Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_BEC69F2A_A6B7_40F1_96B0_20C5F90124F9", .name = "Conseil départemental de l'ordre des médecins - Landes (SIL, "
       "INSEE 40192) - Dernières actualités",
@@ -65287,25 +63312,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "16:30:04 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_C6A43B30_BB64_447C_AC54_94BE9A5394A2_2", .name = "Mairie - Saint-Germain-sur-Morin (SL, INSEE 77413) - Ville de "
-      "Saint-Germain-sur-Morin - ACCUEIL",
-    .name_ja = "Mairie - Saint-Germain-sur-Morin (SL, INSEE 77413) - Ville de Saint-Germain-sur-Morin - ACCUEIL",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.saint-germain-sur-morin.org/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.saint-germain-sur-morin.org/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 8 items, ATOM feed, newest "
-      "2026-10-18T11:17:29+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_C6DC0BA3_51AF_443B_884C_17534A321F10", .name = "Centre de ressources et d'information des bénévoles (CRIB) - "
       "Centre de services aux associations du Val-d'Oise (SL, INSEE "
@@ -66190,25 +64196,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "09:32:17 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_D17E05ED_16A4_463D_821E_41269B780A58_2", .name = "Mairie - Élincourt-Sainte-Marguerite (SL, INSEE 60206) - "
-      "9b56e850d1894f63852459d883759c28",
-    .name_ja = "Mairie - Élincourt-Sainte-Marguerite (SL, INSEE 60206) - 9b56e850d1894f63852459d883759c28",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.elincourtsaintemarguerite.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.elincourtsaintemarguerite.fr/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 27 items, ATOM feed, newest "
-      "2023-12-04T09:32:17Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_D19ABEA3_459E_407B_A1A2_85CD05382B03", .name = "Relais Autonomie - Centre Local d'Information et de Coordination "
       "(CLIC) - Caëstre (SL, INSEE 59120) - Association Flandre et Lys "
@@ -67094,25 +65081,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "10:00:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_DE7CF06E_DF62_4237_9072_DEEE4101569B_2", .name = "Mairie - Altillac (SL, INSEE 19007) - Bienvenue à Altillac... "
-      "Site officiel de la Mairie d'Altillac",
-    .name_ja = "Mairie - Altillac (SL, INSEE 19007) - Bienvenue à Altillac... Site officiel de la Mairie d'Altillac",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.altillac.com/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.altillac.com/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:17:29Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_DEB4643C_EDE2_43EA_B5AD_4621EE759AC9", .name = "Mairie - Sains-en-Gohelle (SL, INSEE 62737) - Mairie de "
       "Sains-En-Gohelle",
@@ -68364,24 +66332,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "07:18:18 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_F489F741_4326_46A3_8B46_FCEC6D19B6E0_2", .name = "Mairie - Civray-de-Touraine (SL, INSEE 37079) - Accueil",
-    .name_ja = "Mairie - Civray-de-Touraine (SL, INSEE 37079) - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.civraydetouraine.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.civraydetouraine.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:17:30+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_F4B69005_27F1_4145_A9D6_9078AE8F8475", .name = "Mairie - Billy-Montigny (SL, INSEE 62133) - Billy-Montigny",
     .name_ja = "Mairie - Billy-Montigny (SL, INSEE 62133) - Billy-Montigny",
@@ -68518,24 +66468,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "15:50:12 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_F6942798_EFC8_4F9E_B5E9_679F9D2F9ED3_2", .name = "Mairie - Zuydcoote (SL, INSEE 59668) - Zuydcoote",
-    .name_ja = "Mairie - Zuydcoote (SL, INSEE 59668) - Zuydcoote",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.zuydcoote.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.zuydcoote.fr/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-07T07:01:08Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_F697E7C8_AC28_4ABD_B807_1B7588962EB6", .name = "Mairie - Corseul (SL, INSEE 22048) - Commune de Corseul",
     .name_ja = "Mairie - Corseul (SL, INSEE 22048) - Commune de Corseul",
@@ -69881,26 +67813,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "18:10:45 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_69DCA1EE_7BCA_4C4B_80B8_41BE260D4A92_2", .name = "Communauté de communes - Alpes Provence Verdon Sources de "
-      "Lumière (SL, INSEE 04173) - Accueil - CCAPV - Communauté de "
-      "Communes Alpes-Provence-Verdon, Sources de Lumi",
-    .name_ja = "Communauté de communes - Alpes Provence Verdon Sources de Lumière (SL, INSEE 04173) - Accueil - CCAPV - Communauté de Communes Alpes-Provence-Verdon, Sources de Lumi",
-    .category = "local-gov", .collector = "frgov_intercommunal", .portal = "https://ccapv.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ccapv.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, ATOM feed, newest "
-      "2026-10-18T13:17:30+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_69EFFD92_791E_4BBA_9BB8_9694F624EBA5", .name = "Mairie - Boucheporn (SL, INSEE 57095) - Boucheporn",
     .name_ja = "Mairie - Boucheporn (SL, INSEE 57095) - Boucheporn",
@@ -70233,25 +68145,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "13:55:16 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_6D48F434_0D80_46F6_AA9E_F35A24290999_2", .name = "Point info famille - Saint-Saulge (SL, INSEE 58267) - "
-      "9d352dd9a88b40f9b158b4506a036459",
-    .name_ja = "Point info famille - Saint-Saulge (SL, INSEE 58267) - 9d352dd9a88b40f9b158b4506a036459",
-    .category = "local-gov", .collector = "frgov_social", .portal = "https://www.escn58.info/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.escn58.info/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2020-04-08T13:55:16Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_6DAF92E7_E50F_4EA5_9A80_C2D330141D2D", .name = "Mairie - Claveisolles (SL, INSEE 69060) - CLAVEISOLLES",
     .name_ja = "Mairie - Claveisolles (SL, INSEE 69060) - CLAVEISOLLES",
@@ -70350,25 +68243,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "11:11:31 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_6E98301F_47DA_4F7A_A4E3_4D59F07D04A8_2", .name = "Mairie - Congis-sur-Thérouanne (SL, INSEE 77126) - "
-      "558cefb24f1046299e1ad2d90734c701",
-    .name_ja = "Mairie - Congis-sur-Thérouanne (SL, INSEE 77126) - 558cefb24f1046299e1ad2d90734c701",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.congis-sur-therouanne.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.congis-sur-therouanne.fr/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2017-02-10T11:11:31Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_6EC05DA8_B22D_44BF_859A_CA2FFB53DAE6", .name = "Mairie - Laroque-des-Albères (SL, INSEE 66093) - Accueil",
     .name_ja = "Mairie - Laroque-des-Albères (SL, INSEE 66093) - Accueil",
@@ -70549,25 +68423,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "12:04:58 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_6FF78640_9864_4E30_B0ED_86D302FF9C08_2", .name = "Centre Local d’Information et de Coordination (CLIC) Eclair'Âge "
-      "(SL, INSEE 44069) - Accueil",
-    .name_ja = "Centre Local d’Information et de Coordination (CLIC) Eclair'Âge (SL, INSEE 44069) - Accueil",
-    .category = "local-gov", .collector = "frgov_social", .portal = "https://www.cliceclairage.com/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cliceclairage.com/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:17:30+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_70243F54_9FD4_4162_81D1_5A20FD33C329", .name = "Centre communal d'action sociale (CCAS) - Genay (SL, INSEE "
       "69278) - Genay “De peur je n’ay”",
@@ -70916,24 +68771,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "09:34:29 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_7545F544_17E5_4912_9614_D29D054746F2_2", .name = "Mairie - Pfulgriesheim (SL, INSEE 67375) - Accueil",
-    .name_ja = "Mairie - Pfulgriesheim (SL, INSEE 67375) - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "http://www.pfulgriesheim.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.pfulgriesheim.fr/index.php?option=com_content&view=featured&Itemid=101&format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T13:17:30+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_7562730A_B4B1_466B_A68C_AC949AE32822", .name = "Communauté de communes - Senlis Sud Oise (SL, INSEE 60612) - "
       "CCSSO",
@@ -71191,25 +69028,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "08:21:11 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_7A300DF4_C15C_451D_A50C_1A03D8203CBE_2", .name = "Police municipale - Saint-Chéron (SL, INSEE 91540) - "
-      "Saint-Chéron",
-    .name_ja = "Police municipale - Saint-Chéron (SL, INSEE 91540) - Saint-Chéron",
-    .category = "public-safety", .collector = "frgov_securite", .portal = "https://saint-cheron.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://saint-cheron.fr/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-16T08:24:40Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_7A85CCDD_1508_4D40_8628_D7E9BBA74086", .name = "Conseil départemental de l'ordre des médecins - Seine-et-Marne "
       "(SIL, INSEE 77389) - Dernières actualités",
@@ -71368,24 +69186,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "08:53:40 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_7C75C6B1_9A53_4223_98C4_AC0AF1EBC431_2", .name = "Mairie - Cayeux-sur-Mer (SL, INSEE 80182) - Cayeux-sur-Mer",
-    .name_ja = "Mairie - Cayeux-sur-Mer (SL, INSEE 80182) - Cayeux-sur-Mer",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.cayeux-sur-mer.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cayeux-sur-mer.fr/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-16T08:53:40Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_7CA8F877_A278_43B5_80DD_16605BC07A2D", .name = "Mairie - Cardesse (SL, INSEE 64165) - Mairie de Cardesse",
     .name_ja = "Mairie - Cardesse (SL, INSEE 64165) - Mairie de Cardesse",
@@ -72347,24 +70147,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "10:08:28 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_12EECB1D_5D91_4A10_BC74_6BA7CC5471FA_2", .name = "Mairie - Kruth (SL, INSEE 68171) - Accueil - kruth.fr",
-    .name_ja = "Mairie - Kruth (SL, INSEE 68171) - Accueil - kruth.fr",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "http://www.kruth.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.kruth.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-18T13:17:30+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_13121C71_35C8_4560_9F94_EFFE5D484197", .name = "Centre communal d'action sociale (CCAS) - Pégomas (SL, INSEE "
       "06090) - Villedepegomas",
@@ -72935,24 +70717,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "07:30:53 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_1B636971_A247_4B3F_83BD_260906045E0E_2", .name = "Mairie - Le Grand-Village-Plage (SL, INSEE 17485) - Accueil",
-    .name_ja = "Mairie - Le Grand-Village-Plage (SL, INSEE 17485) - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://legrandvillageplage.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://legrandvillageplage.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T13:17:31+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_1C2EF89D_B0C8_46D0_9F8B_7157086C6635", .name = "Mairie - La Hauteville (SL, INSEE 78302) - La Hauteville",
     .name_ja = "Mairie - La Hauteville (SL, INSEE 78302) - La Hauteville",
@@ -73484,25 +71248,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "08:54:02 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_22AD506C_CE54_44C2_95AA_4DDB6984FAF3_2", .name = "Mairie - Bosdarros (SL, INSEE 64139) - Toute l'actualité de "
-      "Bosdarros",
-    .name_ja = "Mairie - Bosdarros (SL, INSEE 64139) - Toute l'actualité de Bosdarros",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "http://www.mairie-bosdarros.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.mairie-bosdarros.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-18T11:17:29+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_22C1A254_E25B_4437_88BD_375B82D4A798", .name = "Mairie - ting (SL, INSEE 57521) - Bienvenue à Oeting",
     .name_ja = "Mairie - ting (SL, INSEE 57521) - Bienvenue à Oeting",
@@ -74430,25 +72175,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "19:34:02 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_2B28B668_296A_4C1E_817C_5DF0895413A8_2", .name = "Mairie - Santa-Maria-Siché (SL, INSEE 2A312) - Mairie de Santa "
-      "Maria Sichè",
-    .name_ja = "Mairie - Santa-Maria-Siché (SL, INSEE 2A312) - Mairie de Santa Maria Sichè",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.santamariasiche.corsica/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.santamariasiche.corsica/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T13:17:31+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_2B64AF25_7867_492F_AB8B_31E3BE51B583", .name = "Mairie - Mazille (SL, INSEE 71290) - Commune de Mazille71",
     .name_ja = "Mairie - Mazille (SL, INSEE 71290) - Commune de Mazille71",
@@ -75355,24 +73081,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "09:48:08 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_3418C381_109D_48EF_ACDC_1A998EC4C3E6_2", .name = "Mairie - Bouloc (SL, INSEE 31079) - Bouloc - Accueil",
-    .name_ja = "Mairie - Bouloc (SL, INSEE 31079) - Bouloc - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "http://www.mairie-bouloc.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.mairie-bouloc.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T11:17:31+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_34599F33_1417_4548_B7CD_0C8993850465", .name = "Mairie - Malleret-Boussac (SL, INSEE 23120) - Malleret-Boussac",
     .name_ja = "Mairie - Malleret-Boussac (SL, INSEE 23120) - Malleret-Boussac",
@@ -75800,24 +73508,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "12:14:57 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_3AD7D71B_A6C3_4B27_89BD_088B60747A66_2", .name = "Mairie - Druye (SL, INSEE 37099) - Accueil",
-    .name_ja = "Mairie - Druye (SL, INSEE 37099) - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.druye.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.druye.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T11:17:31+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_3AEFFF70_7E86_4123_A5C0_743FAB5390E4", .name = "Mairie - Albon-d'Ardèche (SL, INSEE 07006) - Albon d'Ardèche",
     .name_ja = "Mairie - Albon-d'Ardèche (SL, INSEE 07006) - Albon d'Ardèche",
@@ -75937,26 +73627,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "06:00:15 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_3BE71EE1_D77F_47CC_B697_7C66801F707A_2", .name = "Centre communal d'action sociale (CCAS) - Munster (SL, INSEE "
-      "68226) - Ville de Munster (Alsace)   Située au cœur de l’Alsace "
-      "et de l’une des plu",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Munster (SL, INSEE 68226) - Ville de Munster (Alsace)   Située au cœur de l’Alsace et de l’une des plu",
-    .category = "local-gov", .collector = "frgov_social", .portal = "https://www.munster.alsace/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.munster.alsace/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-14T17:24:17Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_3C8049ED_4C39_4349_9AB4_08EB1908C351", .name = "Mairie - Steinbourg (SL, INSEE 67478) - commune de steinbourg",
     .name_ja = "Mairie - Steinbourg (SL, INSEE 67478) - commune de steinbourg",
@@ -76170,25 +73840,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "07:33:30 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_3F0D1DE0_BFC8_4E2E_AC62_01AADE6ED649_2", .name = "Mairie - Montrem (SL, INSEE 24295) - Mairie de Montrem - Site "
-      "officiel de la commune (24110)",
-    .name_ja = "Mairie - Montrem (SL, INSEE 24295) - Mairie de Montrem - Site officiel de la commune (24110)",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.mairiedemontrem.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mairiedemontrem.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T11:17:31+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_3F5DAB3F_D3D1_4B38_BD0A_0B363A6DB7AB", .name = "Mairie - Marquefave (SL, INSEE 31320) - Événements",
     .name_ja = "Mairie - Marquefave (SL, INSEE 31320) - Événements",
@@ -76639,26 +74290,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "02:40:00 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_434929C1_61A7_4BD8_9F32_C61543EC10E3_2", .name = "Centre communal d'action sociale (CCAS) - "
-      "Saint-Denis-de-Gastines (SL, INSEE 53211) - Mairie - Commune "
-      "Saint Denis de Gastines",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Saint-Denis-de-Gastines (SL, INSEE 53211) - Mairie - Commune Saint Denis de Gastines",
-    .category = "local-gov", .collector = "frgov_social", .portal = "https://www.st-denis-de-gastines.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.st-denis-de-gastines.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 8 items, ATOM feed, newest "
-      "2026-10-18T13:17:31+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_43576EDA_B638_4DC1_90AD_1F029E1645EE", .name = "Communauté d'agglomération - La Riviera Française (SL, INSEE "
       "06083) - Communauté de la Riviera Française",
@@ -77014,25 +74645,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "19:54:53 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_47A4BFAC_6D17_4100_B612_2DA446BF97AC_2", .name = "Mairie - Fillé-sur-Sarthe (SL, INSEE 72133) - "
-      "d0d2c48d831f41eab4bc87ebe5416c00",
-    .name_ja = "Mairie - Fillé-sur-Sarthe (SL, INSEE 72133) - d0d2c48d831f41eab4bc87ebe5416c00",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.mairie-fille.org/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mairie-fille.org/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2021-08-23T19:54:53Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_47E6200E_C5AE_48FB_8F8C_026E25A27BDE", .name = "Mairie - Scientrier (SL, INSEE 74262) - Mairie de Scientrier",
     .name_ja = "Mairie - Scientrier (SL, INSEE 74262) - Mairie de Scientrier",
@@ -77405,26 +75017,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "16:17:26 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_4E3E2428_830F_4269_8653_E50B86213E56_2", .name = "Communauté de communes - Mellois en Poitou (SL, INSEE 79174) - "
-      "Communauté de communes Mellois en Poitou - Communauté de "
-      "communes Mellois en P",
-    .name_ja = "Communauté de communes - Mellois en Poitou (SL, INSEE 79174) - Communauté de communes Mellois en Poitou - Communauté de communes Mellois en P",
-    .category = "local-gov", .collector = "frgov_intercommunal", .portal = "https://www.melloisenpoitou.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.melloisenpoitou.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T13:17:31+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_4E3E2428_830F_4269_8653_E50B86213E56_3", .name = "Communauté de communes - Mellois en Poitou (SL, INSEE 79174) - "
       "Agenda",
@@ -78562,24 +76154,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "08:23:41 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_5D934C85_2467_43E1_BEA1_F9798A974B28_2", .name = "Mairie - Pédernec (SL, INSEE 22164) - Commune de Pédernec",
-    .name_ja = "Mairie - Pédernec (SL, INSEE 22164) - Commune de Pédernec",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.pedernec.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.pedernec.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 11 items, ATOM feed, newest "
-      "2026-10-18T11:17:32+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_5D994F41_9C1D_45B5_9513_0A936C105B12", .name = "Mairie - Ordizan (SL, INSEE 65335) - Commune d’Ordizan",
     .name_ja = "Mairie - Ordizan (SL, INSEE 65335) - Commune d’Ordizan",
@@ -78992,26 +76566,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "06:00:12 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_8125B5BD_1821_437A_8F61_6EE149A8AAD1_2", .name = "Centre de ressources et d'information des bénévoles (CRIB) - "
-      "Maison des associations de Strasbourg (SL, INSEE 67482) - Maison "
-      "des associations de Strasbourg",
-    .name_ja = "Centre de ressources et d'information des bénévoles (CRIB) - Maison des associations de Strasbourg (SL, INSEE 67482) - Maison des associations de Strasbourg",
-    .category = "government", .collector = "frgov_services_citoyens", .portal = "https://www.mdas.org/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mdas.org/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-09-16T09:44:46Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_8159EF9D_FF6E_429D_846B_05C3028FE82F", .name = "Mairie - Alsting (SL, INSEE 57013) - Site officiel de la commune "
       "d'ALSTING",
@@ -80401,25 +77955,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:24:34 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_9D7AE206_E231_4823_99B3_F79627E8F615_2", .name = "École nationale supérieure de formation de l'enseignement "
-      "agricole (SI, INSEE ) - ENSFEA",
-    .name_ja = "École nationale supérieure de formation de l'enseignement agricole (SI, INSEE ) - ENSFEA",
-    .category = "research", .collector = "frgov_enseignement", .portal = "https://www.ensfea.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ensfea.fr/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-07T14:32:20Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_A22E547D_3D94_4923_B55C_82EBAC6C5758", .name = "Centre des monuments nationaux (SI, INSEE ) - Actualités du CMN",
     .name_ja = "Centre des monuments nationaux (SI, INSEE ) - Actualités du CMN",
@@ -81020,24 +78555,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "10:29:39 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_060472AD_7539_4D2F_A6DE_EBFED4C10A1A_2", .name = "Mairie - La Martyre (SL, INSEE 29144) - Mairie de La Martyre",
-    .name_ja = "Mairie - La Martyre (SL, INSEE 29144) - Mairie de La Martyre",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://lamartyre.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://lamartyre.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T13:17:31+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_0622FE0B_DA37_4A18_B99C_A61D1A496694", .name = "Mairie - Saint-Coutant-le-Grand (SL, INSEE 17320) - St Coutant "
       "Le Grand",
@@ -81922,24 +79439,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "15:39:34 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_A1EC2CC1_BB1D_40F4_A6B7_3EBBDAE98B68_2", .name = "Mairie - Sarran (SL, INSEE 19251) - Accueil - Village de Sarran",
-    .name_ja = "Mairie - Sarran (SL, INSEE 19251) - Accueil - Village de Sarran",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.villagedesarran.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.villagedesarran.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T13:17:37+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_A1EC2CC1_BB1D_40F4_A6B7_3EBBDAE98B68_3", .name = "Mairie - Sarran (SL, INSEE 19251) - Actualités - Village de "
       "Sarran",
@@ -82818,25 +80317,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "09:13:13 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_AEFCEA03_498A_41AE_9720_2DC4ECD40862_2", .name = "Mairie - Champagny-en-Vanoise (SL, INSEE 73071) - Mairie de "
-      "Champagny - Accueil",
-    .name_ja = "Mairie - Champagny-en-Vanoise (SL, INSEE 73071) - Mairie de Champagny - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.mairie-champagny.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mairie-champagny.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:17:33+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_AF0F4E4F_82C7_4F37_8882_3BC3EBB34F88", .name = "Point info famille - Belvès (SL, INSEE 24035) - Vallée Dordogne "
       "Forêt Bessède",
@@ -83037,25 +80517,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "17:40:03 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_B1AAAAE8_EA98_4F22_8F0B_D528775AB0F0_2", .name = "Mairie - Notre-Dame-de-Commiers (SL, INSEE 38277) - Notre Dame "
-      "de Commiers - Notre Dame de Commiers",
-    .name_ja = "Mairie - Notre-Dame-de-Commiers (SL, INSEE 38277) - Notre Dame de Commiers - Notre Dame de Commiers",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://notredamedecommiers.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://notredamedecommiers.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T13:17:31+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_B1D0155B_EF23_4681_801F_B05F8C241E48", .name = "Mairie - Pompignan (SL, INSEE 30200) - RSS",
     .name_ja = "Mairie - Pompignan (SL, INSEE 30200) - RSS",
@@ -83528,25 +80989,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "09:30:07 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_BB7502E9_0339_4223_87D3_3F7B8B33D7DA_2", .name = "Mairie - Saclas (SL, INSEE 91533) - Bienvenue sur le Site "
-      "Internet de la Mairie de Saclas",
-    .name_ja = "Mairie - Saclas (SL, INSEE 91533) - Bienvenue sur le Site Internet de la Mairie de Saclas",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.mairie-saclas.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mairie-saclas.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T11:17:33Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_BC236CE4_2D96_4ADD_B270_E4EDE5642963", .name = "Mairie - Sainte-Marie (SL, INSEE 25523) - RSS",
     .name_ja = "Mairie - Sainte-Marie (SL, INSEE 25523) - RSS",
@@ -83703,24 +81145,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "17:54:40 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_BD50F072_3945_45BB_8610_3372BDD4FB07_2", .name = "Mairie - Tassé (SL, INSEE 72347) - mairie72.fr",
-    .name_ja = "Mairie - Tassé (SL, INSEE 72347) - mairie72.fr",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://mairie72.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mairie72.fr/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-17T17:55:47Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_BE4CCAF3_FDD0_4428_B426_74BC77354B3A", .name = "Mairie - Béthisy-Saint-Pierre (SL, INSEE 60068) - Site officiel "
       "de Béthisy-Saint-Pierre",
@@ -84055,25 +81479,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "16:00:38 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_C4EFAA48_98B7_49F3_BD3F_911D7649B39B_2", .name = "Centre communal d'action sociale (CCAS) - Broyes (SL, INSEE "
-      "51092) - Bienvenue sur le site de BROYES 51120 dans la Marne",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Broyes (SL, INSEE 51092) - Bienvenue sur le site de BROYES 51120 dans la Marne",
-    .category = "local-gov", .collector = "frgov_social", .portal = "https://broyes.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://broyes.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T13:17:34+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_C4F0BBD7_0CBC_4A13_BB63_37E57C1B7671", .name = "Mairie - Lempdes (SL, INSEE 63193) - Mairie de Lempdes",
     .name_ja = "Mairie - Lempdes (SL, INSEE 63193) - Mairie de Lempdes",
@@ -84292,26 +81697,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "13:25:18 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_C8B73A6D_4148_4664_9970_CFF1FF2CE7F7_2", .name = "Conseil d'architecture, d'urbanisme et de l'environnement (CAUE) "
-      "- Alsace - Site de Colmar (SIL, INSEE 68066) - CAUE Alsace   "
-      "Conseil d'architecture, d'urbanisme et de l'environ",
-    .name_ja = "Conseil d'architecture, d'urbanisme et de l'environnement (CAUE) - Alsace - Site de Colmar (SIL, INSEE 68066) - CAUE Alsace   Conseil d'architecture, d'urbanisme et de l'environ",
-    .category = "environment", .collector = "frgov_environnement", .portal = "https://www.caue-alsace.com/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.caue-alsace.com/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-13T13:49:40Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_C8F07472_A0E7_4298_9BE7_EF40EE374DFD", .name = "Mairie - Reffannes (SL, INSEE 79225) - Mairie de REFFANNES",
     .name_ja = "Mairie - Reffannes (SL, INSEE 79225) - Mairie de REFFANNES",
@@ -84451,25 +81836,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:44:32 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_CA17DCD5_9EBA_48DF_89BB_368DF45BAD1D_2", .name = "Centre communal d'action sociale (CCAS) - Chiry-Ourscamp (SL, "
-      "INSEE 60150) - Accueil",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Chiry-Ourscamp (SL, INSEE 60150) - Accueil",
-    .category = "local-gov", .collector = "frgov_social", .portal = "https://www.chiry-ourscamp.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.chiry-ourscamp.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T11:17:54+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_CB14ED9C_BF70_426C_A8C5_CE1ACA0FF837", .name = "Mairie - Fursac (SL, INSEE 23192) - Site officiel de la commune "
       "de Fursac en Creuse",
@@ -84550,24 +81916,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "12:22:06 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_CC3DF238_1890_462F_8A9D_6AD4788531E8_2", .name = "Mairie - Les Hermaux (SL, INSEE 48073) - Les Hermaux",
-    .name_ja = "Mairie - Les Hermaux (SL, INSEE 48073) - Les Hermaux",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.les-hermaux.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.les-hermaux.fr/feed/rss/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Thu, 01 Oct 2026 "
-      "12:22:06 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO47_FR_CC53D21F_2C7D_4966_8B1D_7C4CA58D3444", .name = "Info Jeunes - Montigny-le-Bretonneux (SL, INSEE 78423) - "
       "Yvelines Info Jeunes",
@@ -85455,24 +82803,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "17:16:47 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_D9C123D0_166C_4C8E_8A3F_C29F392C4A5F_2", .name = "Mairie - Les Salelles (SL, INSEE 48185) - Les Salelles – Lozère",
-    .name_ja = "Mairie - Les Salelles (SL, INSEE 48185) - Les Salelles – Lozère",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.les-salelles-lozere.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.les-salelles-lozere.fr/feed/rss/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, RSS2 feed, newest Fri, 19 Dec 2025 "
-      "17:16:47 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO47_FR_DA109C19_8BD8_4A35_A5C9_869A8A1A099D", .name = "Mairie - Châlette-sur-Loing (SL, INSEE 45068) - Mairie de la "
       "Chalette-sur-Loing",
@@ -85871,25 +83201,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "08:30:41 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_DDC44D70_CA4C_4F33_A562_7D13211EAD4E_2", .name = "Mairie - Cerizay (SL, INSEE 79062) - Ville de CERIZAY - "
-      "Actualités",
-    .name_ja = "Mairie - Cerizay (SL, INSEE 79062) - Ville de CERIZAY - Actualités",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.cerizay.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cerizay.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T11:17:33+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_DDE9C34B_6A8E_4336_90A8_87126A8CF9B0", .name = "Info Jeunes - Contrexéville (SL, INSEE 88114) - Centre Social La "
       "Toupie Contrexéville",
@@ -86756,25 +84067,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "10:52:29 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_E633318A_DE10_45ED_8401_3D3F7C0AAB66_2", .name = "Centre communal d'action sociale (CCAS) - Mairieux (SL, INSEE "
-      "59370) - Accueil",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Mairieux (SL, INSEE 59370) - Accueil",
-    .category = "local-gov", .collector = "frgov_social", .portal = "https://www.mairieux.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mairieux.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-18T11:17:34+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_E6717826_A8A2_4BEC_A421_6A298FF421F5", .name = "Mairie - Chavannaz (SL, INSEE 74066) - Mairie de Chavannaz",
     .name_ja = "Mairie - Chavannaz (SL, INSEE 74066) - Mairie de Chavannaz",
@@ -87051,25 +84343,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "12:53:29 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_E9F8005D_349D_4B19_941A_3A40E4E5FB77_2", .name = "Police municipale - Sainte-Eulalie (SL, INSEE 33397) - Mairie St "
-      "Eulalie - Site officiel de la ville de Sainte-Eulalie - Gironde",
-    .name_ja = "Police municipale - Sainte-Eulalie (SL, INSEE 33397) - Mairie St Eulalie - Site officiel de la ville de Sainte-Eulalie - Gironde",
-    .category = "public-safety", .collector = "frgov_securite", .portal = "https://www.mairie-ste-eulalie.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mairie-ste-eulalie.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 6 items, ATOM feed, newest "
-      "2026-10-18T11:17:34+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_EA1146E8_4464_4C46_B511_377729E20AEB", .name = "Mairie - Baby (SL, INSEE 77015) - Village de Baby",
     .name_ja = "Mairie - Baby (SL, INSEE 77015) - Village de Baby",
@@ -87406,25 +84679,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "07:43:23 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_EEE62544_D240_4383_8BBF_314CDB85CCFF_2", .name = "Mairie - Baye (SL, INSEE 29005) - Site officiel de la commune de "
-      "Baye",
-    .name_ja = "Mairie - Baye (SL, INSEE 29005) - Site officiel de la commune de Baye",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://baye.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://baye.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T13:17:33+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_EEEF49F8_39DF_4291_8842_8CDCE5F17908", .name = "Mairie - Oberbronn (SL, INSEE 67340) - Commune d'Oberbronn",
     .name_ja = "Mairie - Oberbronn (SL, INSEE 67340) - Commune d'Oberbronn",
@@ -88270,26 +85524,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "17:38:45 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_FEED2471_DD68_4D16_9C29_A90E09990A64_2", .name = "Communauté de communes - Haut Val de Sèvre (SL, INSEE 79270) - "
-      "Actualités de la Communauté de communes Haut Val de Sèvre - "
-      "Communauté de Co",
-    .name_ja = "Communauté de communes - Haut Val de Sèvre (SL, INSEE 79270) - Actualités de la Communauté de communes Haut Val de Sèvre - Communauté de Co",
-    .category = "local-gov", .collector = "frgov_intercommunal", .portal = "https://cc-hautvaldesevre.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cc-hautvaldesevre.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T13:17:34+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_FF04F81D_5D8E_4FAA_A56C_2FF2F6F1FAE9", .name = "Mairie - Montjean (SL, INSEE 53158) - "
       "fa4ad0b4e38c4c11815a03b7ed37460f",
@@ -88311,25 +85545,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "11:11:31 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_FF04F81D_5D8E_4FAA_A56C_2FF2F6F1FAE9_2", .name = "Mairie - Montjean (SL, INSEE 53158) - "
-      "fa4ad0b4e38c4c11815a03b7ed37460f",
-    .name_ja = "Mairie - Montjean (SL, INSEE 53158) - fa4ad0b4e38c4c11815a03b7ed37460f",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.mairie-montjean53.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mairie-montjean53.fr/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2017-02-10T11:11:31Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_FFA2369B_14DF_4388_80EE_AB338608EEAD", .name = "Mairie - Woustviller (SL, INSEE 57752) - Woustviller",
     .name_ja = "Mairie - Woustviller (SL, INSEE 57752) - Woustviller",
@@ -89218,25 +86433,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "16:48:36 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_4AD56835_7C7C_4BE4_9D0F_06CF12A9C36E_2", .name = "Mairie - Lovagny (SL, INSEE 74152) - Site officiel de la mairie "
-      "de Lovagny",
-    .name_ja = "Mairie - Lovagny (SL, INSEE 74152) - Site officiel de la mairie de Lovagny",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.lovagny.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.lovagny.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:17:35+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_4BC054C8_34B4_4192_B022_34E4520AA25C", .name = "Mairie - Saint-Léonard-de-Noblat (SL, INSEE 87161) - Ville de "
       "Saint-Léonard-de-Noblat",
@@ -89317,25 +86513,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "10:16:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_4CB3EA88_E2BD_41D9_B6B0_8B78960CD009_2", .name = "Mairie - Saint-Sauveur (SL, INSEE 33471) - Bienvenue à la mairie "
-      "de Saint-Sauveur en médoc,  Site officiel de la Mairie",
-    .name_ja = "Mairie - Saint-Sauveur (SL, INSEE 33471) - Bienvenue à la mairie  de Saint-Sauveur en médoc,  Site officiel de la Mairie",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.saint-sauveur-medoc.com/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.saint-sauveur-medoc.com/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T11:17:36+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_4CCE6DCB_DC4E_4CE9_81F9_F1E567CF97C7", .name = "Centre communal d'action sociale (CCAS) - Fleurey-sur-Ouche (SL, "
       "INSEE 21273) - Fleurey-sur-Ouche",
@@ -89474,24 +86651,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "18:15:29 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_4DFE12A8_5ED5_4789_B6E1_3A293AE729C0_2", .name = "Mairie - Bonrepos-Riquet (SL, INSEE 31074) - Mairie de Bonrepos",
-    .name_ja = "Mairie - Bonrepos-Riquet (SL, INSEE 31074) - Mairie de Bonrepos",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.bonrepos-riquet.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.bonrepos-riquet.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T11:17:36+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_4E1B5D93_A8D0_4CE3_AF71_ACC1385A06C3", .name = "Mairie - Sainte-Thorette (SL, INSEE 18237) - Sainte Thorette",
     .name_ja = "Mairie - Sainte-Thorette (SL, INSEE 18237) - Sainte Thorette",
@@ -89784,24 +86943,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "10:48:36 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_51C93CB0_F1DB_4F73_B3A2_8F781A9BF48C_2", .name = "Mairie - Saint-Loup-d'Ordon (SL, INSEE 89350) - Actuellement",
-    .name_ja = "Mairie - Saint-Loup-d'Ordon (SL, INSEE 89350) - Actuellement",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://saintloupdordon.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://saintloupdordon.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T13:17:35+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_51FBDE99_FD6E_4975_9AE6_F83E3012EFE0", .name = "Mairie - Bouzigues (SL, INSEE 34039) - Bouzigues",
     .name_ja = "Mairie - Bouzigues (SL, INSEE 34039) - Bouzigues",
@@ -89939,25 +87080,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "08:00:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_545449F8_CA44_4465_8B99_D21F4925939F_2", .name = "Mairie - Villars-le-Sec (SL, INSEE 90105) - - Site officiel de "
-      "la commune de Villars le Sec",
-    .name_ja = "Mairie - Villars-le-Sec (SL, INSEE 90105) - - Site officiel de la commune de Villars le Sec",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.villars-le-sec.com/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.villars-le-sec.com/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 7 items, ATOM feed, newest "
-      "2026-10-18T11:17:35+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_5477D5D5_6818_4673_8DD3_7C125082A56A", .name = "Mairie - Ambres (SL, INSEE 81011) - Mairie d'Ambres",
     .name_ja = "Mairie - Ambres (SL, INSEE 81011) - Mairie d'Ambres",
@@ -92072,25 +89194,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "09:42:07 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_19201023_AA19_403D_83C6_3EAF01FAEC6C_2", .name = "Police municipale - Biesheim (SL, INSEE 68036) - Ville de "
-      "Biesheim",
-    .name_ja = "Police municipale - Biesheim (SL, INSEE 68036) - Ville de Biesheim",
-    .category = "public-safety", .collector = "frgov_securite", .portal = "https://www.biesheim.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.biesheim.fr/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 63 items, ATOM feed, newest "
-      "2026-10-16T09:43:50Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_19AFEA50_60E3_432E_BEE4_E68A16469956", .name = "Mairie - Loisieux (SL, INSEE 73147) - Commune de Loisieux",
     .name_ja = "Mairie - Loisieux (SL, INSEE 73147) - Commune de Loisieux",
@@ -92171,26 +89274,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "09:10:21 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_1AFB6E2C_D039_49CB_BA78_A9C1C0EBBEAA_2", .name = "Maison de l'emploi (MDE) - Villeneuve d'Ascq - Mons-en-Baroeul "
-      "(SL, INSEE 59009) - ADéLIE Villeneuve d'Ascq - Mons en Baroeul "
-      "et communes partenaires - Accueil",
-    .name_ja = "Maison de l'emploi (MDE) - Villeneuve d'Ascq - Mons-en-Baroeul (SL, INSEE 59009) - ADéLIE Villeneuve d'Ascq - Mons en Baroeul et communes partenaires - Accueil",
-    .category = "government", .collector = "frgov_services_citoyens", .portal = "https://www.adelie-vamb.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.adelie-vamb.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, ATOM feed, newest "
-      "2026-10-18T13:17:37+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_1B3E74F6_9049_453B_A554_95672075446A", .name = "Centre communal d'action sociale (CCAS) - Menetou-Salon (SL, "
       "INSEE 18145) - Informations",
@@ -92212,25 +89295,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "09:55:13 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_1B3E74F6_9049_453B_A554_95672075446A_2", .name = "Centre communal d'action sociale (CCAS) - Menetou-Salon (SL, "
-      "INSEE 18145) - Informations",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Menetou-Salon (SL, INSEE 18145) - Informations",
-    .category = "local-gov", .collector = "frgov_social", .portal = "https://www.menetou-salon.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.menetou-salon.fr/index.php/fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 7 items, ATOM feed, newest "
-      "2026-10-18T13:17:39+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_1BD21547_AA7A_4564_A308_BB884E46B879", .name = "Point information jeunesse - Cuers (SL, INSEE 83049) - Ville de "
       "Cuers",
@@ -92937,24 +90001,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "00:00:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_2698B32D_4837_414C_AF2F_BEEED8770408_2", .name = "Mairie - Montenay (SL, INSEE 53155) - accueil",
-    .name_ja = "Mairie - Montenay (SL, INSEE 53155) - accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.montenay.net/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.montenay.net/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 7 items, ATOM feed, newest "
-      "2026-10-18T11:17:35+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_26B69AEE_DFCB_4FEA_84C8_562FE531317F", .name = "Mairie - Saint-Élix-le-Château (SL, INSEE 31476) - Les articles "
       "de mon site",
@@ -93796,25 +90842,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "09:02:45 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_32B69157_C4BC_4F65_AABB_26CE02EBEE5E_2", .name = "Mairie - Paradou (SL, INSEE 13068) - Mairie du Paradou 13520. "
-      "Site officiel",
-    .name_ja = "Mairie - Paradou (SL, INSEE 13068) - Mairie du Paradou 13520. Site officiel",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.mairie-du-paradou.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mairie-du-paradou.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, ATOM feed, newest "
-      "2026-10-18T13:17:36+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_32C18409_C830_4BA1_988F_53798FD4B9A2", .name = "Communauté de communes - Dombes Saône Vallée (SL, INSEE 01427) - "
       "Communauté de communes Dombes Saône Vallée",
@@ -94243,24 +91270,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "17:12:28 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_38472657_FEB3_4115_A70D_A880BB80FAAC_2", .name = "Mairie - Molles (SL, INSEE 03174) - Accueil",
-    .name_ja = "Mairie - Molles (SL, INSEE 03174) - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.molles.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.molles.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T11:17:35Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_386FD6BA_3AA1_4479_8766_33F94EE63271", .name = "Caisse générale de sécurité sociale (CGSS) - Martinique (SL, "
       "INSEE 97213) - CGSS Martinique",
@@ -94909,26 +91918,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "15:03:06 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_62FD54BB_527B_470E_8C96_7817BF7FFBCE_2", .name = "Service départemental d'incendie et de secours (SDIS) - "
-      "Finistère (SIL, INSEE 29232) - SDIS 29 - Service Départemental "
-      "d’Incendie et de Secours du Finistère",
-    .name_ja = "Service départemental d'incendie et de secours (SDIS) - Finistère (SIL, INSEE 29232) - SDIS 29 - Service Départemental d’Incendie et de Secours du Finistère",
-    .category = "public-safety", .collector = "frgov_securite", .portal = "http://www.sdis29.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.sdis29.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T13:17:37+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_62FD54BB_527B_470E_8C96_7817BF7FFBCE_3", .name = "Service départemental d'incendie et de secours (SDIS) - "
       "Finistère (SIL, INSEE 29232) - A la Une",
@@ -94970,25 +91959,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "07:51:39 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_63106D94_F6C5_4D95_BE7D_1782BE39D009_2", .name = "Mairie - Saint-Plantaire (SL, INSEE 36207) - mairie de saint "
-      "plantaire - Accueil",
-    .name_ja = "Mairie - Saint-Plantaire (SL, INSEE 36207) - mairie de saint plantaire - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.saint-plantaire.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.saint-plantaire.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, ATOM feed, newest "
-      "2026-10-18T11:17:35+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_63273537_8B37_4C6B_949F_8C865F2F4B3E", .name = "Mairie - Plomelin (SL, INSEE 29170) - Plomelin",
     .name_ja = "Mairie - Plomelin (SL, INSEE 29170) - Plomelin",
@@ -97566,25 +94536,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "09:48:54 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_878757AE_F1C2_4BF2_8DD9_2A35FE5FF1A0_2", .name = "Mairie - Soumoulou (SL, INSEE 64526) - Mairie de Soumoulou - "
-      "Site officiel",
-    .name_ja = "Mairie - Soumoulou (SL, INSEE 64526) - Mairie de Soumoulou - Site officiel",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.soumoulou.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.soumoulou.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-18T13:17:37+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_88016219_CDC2_4DE8_8D15_301E4D576C59", .name = "Centre communal d'action sociale (CCAS) - Golancourt (SL, INSEE "
       "60278) - Commune de Golancourt",
@@ -97702,24 +94653,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "08:40:02 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_897E0DAA_DC17_45FD_A374_C5B8C011FB71_2", .name = "Mairie - Avesnes-les-Aubert (SL, INSEE 59037) - Accueil",
-    .name_ja = "Mairie - Avesnes-les-Aubert (SL, INSEE 59037) - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.avesnes-les-aubert.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.avesnes-les-aubert.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 11 items, ATOM feed, newest "
-      "2026-10-18T11:17:37+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_89DB51DD_25EA_4B36_B7AE_8D38F8640104", .name = "Mairie - Arvillers (SL, INSEE 80031) - Commune de Arvillers",
     .name_ja = "Mairie - Arvillers (SL, INSEE 80031) - Commune de Arvillers",
@@ -98054,25 +94987,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "17:56:24 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_8F61F73E_AE1D_4027_9DB7_D09D725C65B2_2", .name = "Mairie - Parigny (SL, INSEE 42166) - Mairie de Parigny - Loire "
-      "42120",
-    .name_ja = "Mairie - Parigny (SL, INSEE 42166) - Mairie de Parigny - Loire 42120",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.parigny.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.parigny.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T13:17:37+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_8FC658D8_2276_4209_8A89_60361D6E0333", .name = "Mairie - Kersaint-Plabennec (SL, INSEE 29095) - Commune de "
       "Kersaint-Plabennec",
@@ -98270,24 +95184,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "13:37:12 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_91B95DE6_4BB2_411B_84A1_5864D55B49A0_2", .name = "Mairie - Chuzelles (SL, INSEE 38110) - Chuzelles - La mairie",
-    .name_ja = "Mairie - Chuzelles (SL, INSEE 38110) - Chuzelles - La mairie",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://chuzelles.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://chuzelles.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T13:17:38+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_91CD4A59_CF3C_40CF_B3A4_911A6AE1296E", .name = "Mairie - Beautiran (SL, INSEE 33037) - Mairie de Beautiran",
     .name_ja = "Mairie - Beautiran (SL, INSEE 33037) - Mairie de Beautiran",
@@ -99075,25 +95971,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "15:50:55 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_004EF847_BE01_4ABD_A765_3A0D58666E84_2", .name = "Fédération départementale pour la pêche et la protection du "
-      "milieu aquatique - Charente-Maritime (SL, INSEE 17415) - Accueil",
-    .name_ja = "Fédération départementale pour la pêche et la protection du milieu aquatique - Charente-Maritime (SL, INSEE 17415) - Accueil",
-    .category = "environment", .collector = "frgov_environnement", .portal = "https://www.peche17.org/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.peche17.org/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T09:39:10+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_005487FA_0A79_4D61_9BF3_AB63BDBD302B", .name = "Mairie - Pons (SL, INSEE 17283) - Ville de Pons",
     .name_ja = "Mairie - Pons (SL, INSEE 17283) - Ville de Pons",
@@ -100343,26 +97220,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "11:11:31 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_9E7BC76F_1B9F_43A0_8D76_354CC4FBF724_2", .name = "Point conseil budget - Foyer international d'accueil et de "
-      "culture (FIAC 62) - Berck (SL, INSEE 62108) - "
-      "bff35e65c32b4d4dad8bf026ce5a1dc4",
-    .name_ja = "Point conseil budget - Foyer international d'accueil et de culture (FIAC 62) - Berck (SL, INSEE 62108) - bff35e65c32b4d4dad8bf026ce5a1dc4",
-    .category = "local-gov", .collector = "frgov_social", .portal = "https://www.fiac-berck.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.fiac-berck.fr/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2017-02-10T11:11:31Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_9E825CB6_2874_4B22_98BE_A0F7D17C4C54", .name = "Mairie - Le Touquet (SL, INSEE 62826) - Ville du "
       "Touquet-Paris-Plage – Site officiel",
@@ -101642,25 +98499,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "11:54:52 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_B13845A2_830E_4420_918A_89F44AD79C44_2", .name = "Centre communal d'action sociale (CCAS) - Merry-sur-Yonne (SL, "
-      "INSEE 89253) - Site officiel de la Mairie de Merry-sur-Yonne",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Merry-sur-Yonne (SL, INSEE 89253) - Site officiel de la Mairie de Merry-sur-Yonne",
-    .category = "local-gov", .collector = "frgov_social", .portal = "https://merrysuryonne.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://merrysuryonne.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T13:17:38+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_B1486764_D8DB_45B9_A3C7_B69A6AF9E0E4", .name = "Mairie - Auribeau-sur-Siagne (SL, INSEE 06007) - "
       "Auribeau-sur-Siagne – Site officiel",
@@ -102436,24 +99274,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "18:18:35 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_B8465952_0856_4B58_860B_D2488942FF76_2", .name = "Mairie - Coudres (SL, INSEE 27177) - Accueil",
-    .name_ja = "Mairie - Coudres (SL, INSEE 27177) - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.coudres.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.coudres.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, ATOM feed, newest "
-      "2026-10-18T11:17:38+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_B851A029_9EED_4281_91AA_3568078C8328", .name = "Mairie - Larodde (SL, INSEE 63190) - RETOUR SUR LES JOURNÉES DU "
       "PATRIMOINE  (19 et 20/09 à Larodde)   Larodde",
@@ -102632,26 +99452,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "13:38:32 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_BC133A53_459C_4FF9_80CC_79A4555FC656_2", .name = "Mairie - Balaruc-le-Vieux (SL, INSEE 34024) - Mairie de "
-      "Balaruc-le-Vieux - Bienvenue sur le site de la mairie de "
-      "Balaruc-le-Vi",
-    .name_ja = "Mairie - Balaruc-le-Vieux (SL, INSEE 34024) - Mairie de Balaruc-le-Vieux - Bienvenue sur le site de la mairie de Balaruc-le-Vi",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.ville-balaruclevieux.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ville-balaruclevieux.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 15 items, ATOM feed, newest "
-      "2026-10-18T13:17:39+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_BC1986D3_FA48_45C3_A56B_F4E8DB8E29B3", .name = "Mission locale pour l'insertion professionnelle et sociale des "
       "jeunes (16-25 ans) - Guérande (SL, INSEE 44069) - Mission Locale "
@@ -104619,25 +101419,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "08:39:00 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_DBE47E0A_B325_413C_A71D_57BE8AB5359C_2", .name = "Mairie - Saint-Coulitz (SL, INSEE 29243) - Commune de "
-      "Saint-Coulitz - Commune du parc naturel régional d'Armorique",
-    .name_ja = "Mairie - Saint-Coulitz (SL, INSEE 29243) - Commune de Saint-Coulitz - Commune du parc naturel régional d'Armorique",
-    .category = "environment", .collector = "frgov_environnement", .portal = "https://www.saint-coulitz.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.saint-coulitz.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, ATOM feed, newest "
-      "2026-10-18T13:17:38+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_DC0A915F_247B_45A1_AFA4_F9C302286231", .name = "Centre communal d'action sociale (CCAS) - Gouesnach (SL, INSEE "
       "29060) - GOUESNAC'H",
@@ -106212,25 +102993,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "13:34:00 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_F6504CCA_705B_4139_A416_8D77A9B6610B_2", .name = "Mairie - Sainte-Agathe-en-Donzy (SL, INSEE 42196) - Commune de "
-      "Sainte-Agathe-En-Donzy",
-    .name_ja = "Mairie - Sainte-Agathe-en-Donzy (SL, INSEE 42196) - Commune de Sainte-Agathe-En-Donzy",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "http://www.sainte-agathe-en-donzy.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.sainte-agathe-en-donzy.fr/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:39:50+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_F6533802_B5FB_40E0_B914_8B2B9FF90D44", .name = "Point d'information local dédié aux personnes âgées - Morlaix "
       "(SL, INSEE 29151) - Actualités",
@@ -107033,24 +103795,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "22:56:28 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_089D7155_F3ED_4F73_B6A4_4FA11EA4BBF5_2", .name = "Mairie - Démuin (SL, INSEE 80237) - Accueil",
-    .name_ja = "Mairie - Démuin (SL, INSEE 80237) - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.demuin.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.demuin.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T13:17:40+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_08C1E797_57A1_4B83_A41F_3A9DF6CA53E3", .name = "Mission locale pour l'insertion professionnelle et sociale des "
       "jeunes (16-25 ans) - Toulouse - Garipuy (SL, INSEE 31555) - "
@@ -107462,24 +104206,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "08:38:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_0EDDFC46_D8EF_4337_A82F_B43F484D628D_2", .name = "Mairie - Dieulefit (SL, INSEE 26114) - Mairie de Dieulefit",
-    .name_ja = "Mairie - Dieulefit (SL, INSEE 26114) - Mairie de Dieulefit",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://mairie-dieulefit.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mairie-dieulefit.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T11:17:36+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_0F5F2BC6_C9B1_4A03_84B1_FB86C2AA20C0", .name = "Mairie - Monoblet (SL, INSEE 30172) - Monoblet",
     .name_ja = "Mairie - Monoblet (SL, INSEE 30172) - Monoblet",
@@ -108009,24 +104735,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "17:57:25 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_16A69FA6_E69F_41B4_A927_92B317A46020_2", .name = "Mairie - Essises (SL, INSEE 02289) - Actus Essises 02570",
-    .name_ja = "Mairie - Essises (SL, INSEE 02289) - Actus Essises 02570",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.essises.info/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.essises.info/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-07-31T17:57:25Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_176CABEB_85A0_4AB7_980C_D8A23347E4DA", .name = "Mairie - Saint-Selve (SL, INSEE 33474) - Mairie de Saint-Selve - "
       "Accueil",
@@ -108048,25 +104756,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "07:25:00 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_176CABEB_85A0_4AB7_980C_D8A23347E4DA_2", .name = "Mairie - Saint-Selve (SL, INSEE 33474) - Mairie de Saint-Selve - "
-      "Accueil",
-    .name_ja = "Mairie - Saint-Selve (SL, INSEE 33474) - Mairie de Saint-Selve - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.saintselve.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.saintselve.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T13:17:39+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_176EA559_DE16_41D4_94E0_AD9E87EC20E4", .name = "Mairie - Lods (SL, INSEE 25339) - Site officiel du village de "
       "Lods",
@@ -108809,25 +105498,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "12:14:32 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_43E1CF05_116E_42FD_87EA_18431D1BA597_2", .name = "Centre communal d'action sociale (CCAS) - Montenois (SL, INSEE "
-      "25394) - Commune de Montenois (25) - Accueil",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Montenois (SL, INSEE 25394) - Commune de Montenois (25) - Accueil",
-    .category = "local-gov", .collector = "frgov_social", .portal = "https://www.montenois.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.montenois.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 12 items, ATOM feed, newest "
-      "2026-10-18T13:17:40+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_44D8E96D_3A26_4031_A3CB_75732A7B2A2A", .name = "Mairie - Rougemont-le-Château (SL, INSEE 90089) - Site de la "
       "commune de Rougemont-le-Chï¿½teau",
@@ -110254,25 +106924,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "17:36:23 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_59B2A3FC_062A_4429_9B6A_7CA90479AB11_2", .name = "Mairie - Corbeilles (SL, INSEE 45103) - Corbeilles en Gâtinais - "
-      "Accueil",
-    .name_ja = "Mairie - Corbeilles (SL, INSEE 45103) - Corbeilles en Gâtinais - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "http://www.corbeillesengatinais.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.corbeillesengatinais.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T13:17:39+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_5A27DF8E_11FA_4E09_9D9F_1984C2CC44E5", .name = "Mairie - Andilly (SL, INSEE 74009) - Commune d'Andilly",
     .name_ja = "Mairie - Andilly (SL, INSEE 74009) - Commune d'Andilly",
@@ -110941,25 +107592,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:18:52 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_62673909_F8EF_4F2E_8562_07341ABE4033_2", .name = "Centre communal d'action sociale (CCAS) - Saint-Jean-Soleymieux "
-      "(SL, INSEE 42240) - NOUVEAU SITE !!!!",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Saint-Jean-Soleymieux (SL, INSEE 42240) - NOUVEAU SITE !!!!",
-    .category = "local-gov", .collector = "frgov_social", .portal = "https://saint-jean-soleymieux.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://saint-jean-soleymieux.fr/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-06-08T14:26:53Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_626EB0A9_A749_4989_B0B8_C5A5F2399F57", .name = "Mairie - Montonvillers (SL, INSEE 80565) - Mairie de "
       "Montonvillers",
@@ -111687,24 +108319,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "08:42:39 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_71DEB87A_F48B_482B_8E9D_FB045DF71D6F_2", .name = "Mairie - Tressin (SL, INSEE 59602) - TRESSIN   Site officiel",
-    .name_ja = "Mairie - Tressin (SL, INSEE 59602) - TRESSIN   Site officiel",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.mairie-tressin.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mairie-tressin.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T11:17:40+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_7216C936_3BC1_4DF8_A4E6_3BF1AF2549FD", .name = "Ordre des avocats - Barreau de Bobigny (SL, INSEE 93008) - "
       "Barreau de Seine-Saint-Denis",
@@ -114200,25 +110814,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "11:25:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_417E5D19_B0DF_4977_B885_F2CA48BA3BF6_2", .name = "Mairie - Plivot (SL, INSEE 51434) - Site officiel de la Mairie "
-      "de Plivot",
-    .name_ja = "Mairie - Plivot (SL, INSEE 51434) - Site officiel de la Mairie de Plivot",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://plivot.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://plivot.fr/fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T11:17:40+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_7DF7DD80_4F49_429D_9FB0_F108C623659E", .name = "Point information jeunesse - Nontron (SL, INSEE 24311) - Mission "
       "Locale du Haut Périgord",
@@ -114320,25 +110915,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "10:52:12 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_7EBE7448_F78A_4346_8C6F_28B0B3D95705_2", .name = "Mairie - Milly-sur-Thérain (SL, INSEE 60403) - Milly sur Therain "
-      "- Home",
-    .name_ja = "Mairie - Milly-sur-Thérain (SL, INSEE 60403) - Milly sur Therain - Home",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.milly-sur-therain.eu/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.milly-sur-therain.eu/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T13:17:41+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_7ED38734_A8AD_4004_B9E9_8BEF6745D700", .name = "Mairie - Athis (SL, INSEE 51018) - Mairie d'Athis",
     .name_ja = "Mairie - Athis (SL, INSEE 51018) - Mairie d'Athis",
@@ -115943,24 +112519,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:54:51 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_943CC46E_D5FD_46F8_8C14_769951189168_2", .name = "Mairie - Moosch (SL, INSEE 68217) - Moosch",
-    .name_ja = "Mairie - Moosch (SL, INSEE 68217) - Moosch",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://moosch.net/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://moosch.net/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2024-04-03T14:54:51Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_94A3223B_C4F5_4A40_A884_AE89522E542A", .name = "Mairie - Les Moitiers-d'Allonne (SL, INSEE 50332) - "
       "www.lesmoitiersdallonne.com Blog Feed",
@@ -116062,25 +112620,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "10:37:42 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_95CD53FF_DE28_46BB_8EEC_023AF20D0893_2", .name = "Mairie - Trégrom (SL, INSEE 22359) - Mairie de Trégrom -Site "
-      "officiel",
-    .name_ja = "Mairie - Trégrom (SL, INSEE 22359) - Mairie de Trégrom -Site officiel",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://tregrom.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://tregrom.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T13:17:40+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_962977E0_D967_4205_AF4C_06F868DE5FB4", .name = "Mairie - Heudicourt (SL, INSEE 80438) - Heudicourt, Somme",
     .name_ja = "Mairie - Heudicourt (SL, INSEE 80438) - Heudicourt, Somme",
@@ -116635,24 +113174,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "12:04:45 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_0209334F_00D6_4584_91CC_AA75B9DD5C91_2", .name = "Mairie - Lissac (SL, INSEE 09170) - lissac09 - Accueil",
-    .name_ja = "Mairie - Lissac (SL, INSEE 09170) - lissac09 - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.lissac09.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.lissac09.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 8 items, ATOM feed, newest "
-      "2026-10-18T11:17:41+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_021D36E5_FFB1_4C4C_B20C_B6E98824B436", .name = "Mairie - Saint-Jean-Saint-Germain (SL, INSEE 37222) - Mairie de "
       "Saint-Jean Saint-Germain",
@@ -116831,25 +113352,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "11:26:45 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_056083A7_555F_481B_B107_2F76A8E203D1_2", .name = "Mairie - Orly-sur-Morin (SL, INSEE 77345) - Site officiel de la "
-      "commune d'Orly sur Moirn - Actualités",
-    .name_ja = "Mairie - Orly-sur-Morin (SL, INSEE 77345) - Site officiel de la commune d'Orly sur Moirn - Actualités",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.orly-sur-morin.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.orly-sur-morin.fr/site/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 6 items, ATOM feed, newest "
-      "2026-10-18T11:14:48+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_061C6743_BF69_429C_B37B_D3E953DCB220", .name = "Centre communal d'action sociale (CCAS) - Marolles-sur-Seine "
       "(SL, INSEE 77279) - Marolles-sur-seine",
@@ -117353,24 +113855,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:52:39 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_9F860EF9_C342_4E87_8F07_6CDFAD90798B_2", .name = "Mairie - Reignac (SL, INSEE 33351) - Accueil",
-    .name_ja = "Mairie - Reignac (SL, INSEE 33351) - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "http://www.reignac33.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.reignac33.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:17:41+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_A000A7C5_4CDD_4E94_AF31_074BE5E4A995", .name = "Centre communal d'action sociale (CCAS) - Allennes-les-Marais "
       "(SL, INSEE 59005) - Allennes les Marais",
@@ -118628,25 +115112,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "17:22:42 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_B8AA3512_7D9F_4A59_AFAD_F624F9923DBA_2", .name = "Mairie - Val-de-Meuse (SL, INSEE 52332) - titleMairie de Val de "
-      "Meuse 52140",
-    .name_ja = "Mairie - Val-de-Meuse (SL, INSEE 52332) - titleMairie de Val de Meuse 52140",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.mairie-val-de-meuse.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mairie-val-de-meuse.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T13:17:42+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_B9633A6C_B70A_4047_ABA0_1FECD27695B1", .name = "Mairie - Peillon (SL, INSEE 06092) - Commune de Peillon",
     .name_ja = "Mairie - Peillon (SL, INSEE 06092) - Commune de Peillon",
@@ -118999,25 +115464,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "11:11:31 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_BE3173C7_1150_4EB8_9627_3ED57F70FD1E_2", .name = "Mairie - Rouvillers (SL, INSEE 60553) - "
-      "c393f42b7a6b41f4a0356ad8f77e8902",
-    .name_ja = "Mairie - Rouvillers (SL, INSEE 60553) - c393f42b7a6b41f4a0356ad8f77e8902",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.rouvillers.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.rouvillers.fr/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2017-02-10T11:11:31Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_BEC43A45_D866_4A28_907B_B9CE57F1DCCC", .name = "Mairie - Bias (SL, INSEE 47027) - Mairie de bias",
     .name_ja = "Mairie - Bias (SL, INSEE 47027) - Mairie de bias",
@@ -119547,24 +115993,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "06:30:35 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_C4294E5F_890F_4CBC_8C42_24CEC3D31950_2", .name = "Mairie - Saint-Maximin (SL, INSEE 38426) - Accueil",
-    .name_ja = "Mairie - Saint-Maximin (SL, INSEE 38426) - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "http://www.stmaximin38.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.stmaximin38.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, ATOM feed, newest "
-      "2026-10-18T11:17:42+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_C42AB950_17E5_41F8_89D9_4909C5AA02E3", .name = "Mairie - Fontanes (SL, INSEE 46109) - MAIRIE de FONTANES",
     .name_ja = "Mairie - Fontanes (SL, INSEE 46109) - MAIRIE de FONTANES",
@@ -119900,26 +116328,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "15:52:53 +0400. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_C964EEFC_ACE8_4798_8CC7_816D069E5E32_2", .name = "Maison départementale des personnes handicapées (MDPH) - "
-      "Martinique (SL, INSEE 97209) - Maison Martiniquaise des "
-      "Personnes en situation de Handicap   MMPH 972   www.mmp",
-    .name_ja = "Maison départementale des personnes handicapées (MDPH) - Martinique (SL, INSEE 97209) - Maison Martiniquaise des Personnes en situation de Handicap   MMPH 972   www.mmp",
-    .category = "local-gov", .collector = "frgov_social", .portal = "https://www.mmph.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mmph.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T15:17:42+04:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_C9D4173B_6B50_4D6F_8D5F_A9A6627C4EA3", .name = "Mairie - Curis-au-Mont-d'Or (SL, INSEE 69071) - Mairie de Curis "
       "au Mont d'Or",
@@ -120258,25 +116666,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:20:18 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_CDE129E5_7668_4BAC_A7AA_F8ABFE4CA05A_2", .name = "Centre de ressources et d'information des bénévoles (CRIB) - "
-      "Progesport de Limoges (SL, INSEE 87085) - CDES",
-    .name_ja = "Centre de ressources et d'information des bénévoles (CRIB) - Progesport de Limoges (SL, INSEE 87085) - CDES",
-    .category = "government", .collector = "frgov_services_citoyens", .portal = "https://cdes.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cdes.fr/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-13T19:17:21Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_CE038F77_945B_40A7_8841_E1DD737B3ABD", .name = "Mairie - Réville (SL, INSEE 50433) - Site officiel de la commune "
       "de Réville",
@@ -121753,24 +118142,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "13:14:06 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_E456EA5C_30F9_423A_AF0E_F52A09D30768_2", .name = "Mairie - Châlons-en-Champagne (SL, INSEE 51108) - Actualités",
-    .name_ja = "Mairie - Châlons-en-Champagne (SL, INSEE 51108) - Actualités",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.chalonsenchampagne.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.chalonsenchampagne.fr/ville/actualites?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T13:17:43+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_E48073C3_CB60_40F8_A385_D5A73F380686", .name = "Centre régional de pharmacovigilance - Clermont-Ferrand (SIL, "
       "INSEE 63113) - Pharmaco",
@@ -122375,25 +118746,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "19:18:38 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_EDA5570A_8855_48B0_83A4_D9E3D1654318_2", .name = "Mairie - Le Tréhou (SL, INSEE 29294) - Mairie de Le Tréhou - "
-      "Site officiel",
-    .name_ja = "Mairie - Le Tréhou (SL, INSEE 29294) - Mairie de Le Tréhou - Site officiel",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://letrehou.bzh/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://letrehou.bzh/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T11:41:22+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_EE2255EA_DF43_42C4_8FD0_A9F0ABDDFA5F", .name = "Mairie - Signy-l'Abbaye (SL, INSEE 08419) - Signy l'abbaye",
     .name_ja = "Mairie - Signy-l'Abbaye (SL, INSEE 08419) - Signy l'abbaye",
@@ -122803,25 +119155,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "15:12:56 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_F2EB093F_4327_465B_86A4_C728EF9D4471_2", .name = "Mairie - Péronne-en-Mélantois (SL, INSEE 59458) - Peronne en "
-      "Mélantois",
-    .name_ja = "Mairie - Péronne-en-Mélantois (SL, INSEE 59458) - Peronne en Mélantois",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.peronne-melantois.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.peronne-melantois.fr/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-07-21T15:12:57Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_F565E8D3_6C04_48D0_8FF7_C009D94DCE36", .name = "Point d'information local dédié aux personnes âgées - Ay (SL, "
       "INSEE 51030) - Entourage – Bien vieillir",
@@ -124033,24 +120366,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "09:04:28 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_2E2DE91B_1F62_4AB7_91D2_0479A75020D4_2", .name = "Mairie - Verton (SL, INSEE 62849) - Accueil",
-    .name_ja = "Mairie - Verton (SL, INSEE 62849) - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "http://www.verton.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.verton.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 13 items, ATOM feed, newest "
-      "2026-10-18T11:17:43+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_2EB637D5_F874_46B8_95FF_6943821F23C7", .name = "Mairie - Le Cailar (SL, INSEE 30059) - Commune de Le Cailar",
     .name_ja = "Mairie - Le Cailar (SL, INSEE 30059) - Commune de Le Cailar",
@@ -124348,26 +120663,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "15:18:10 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_31E82773_AFE1_4C0C_A2C3_1FEAA5E56D94_2", .name = "Mairie - Saint-Christophe-sur-Roc (SL, INSEE 79241) - Site "
-      "officiel de la Mairie de Saint Christophe sur roc - Mairie de "
-      "Saint christo",
-    .name_ja = "Mairie - Saint-Christophe-sur-Roc (SL, INSEE 79241) - Site officiel de la Mairie de Saint Christophe sur roc - Mairie de Saint christo",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.stchristophesurroc.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.stchristophesurroc.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T11:17:42+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_32301C90_937D_4653_A3AC_11C487ED0D42", .name = "Mairie - Sottevast (SL, INSEE 50579) - Ville de Sottevast",
     .name_ja = "Mairie - Sottevast (SL, INSEE 50579) - Ville de Sottevast",
@@ -124695,24 +120990,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "16:21:10 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_3503E1F5_BC4E_4FB6_9ECB_AE676F184E47_2", .name = "Mairie - Valle-di-Rostino (SL, INSEE 2B337) - Valle di Rostino",
-    .name_ja = "Mairie - Valle-di-Rostino (SL, INSEE 2B337) - Valle di Rostino",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "http://valledirostino.com/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://valledirostino.com/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-09-19T16:41:33Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_350B43FC_C54B_4FAE_9DBD_EBF560A148D4", .name = "Mairie - Chalampé (SL, INSEE 68064) - Mairie de Chalampé   C'est "
       "une chance !",
@@ -124734,25 +121011,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "15:28:39 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_350B43FC_C54B_4FAE_9DBD_EBF560A148D4_2", .name = "Mairie - Chalampé (SL, INSEE 68064) - Mairie de Chalampé   C'est "
-      "une chance !",
-    .name_ja = "Mairie - Chalampé (SL, INSEE 68064) - Mairie de Chalampé   C'est une chance !",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.chalampe.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.chalampe.fr/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-03-02T15:28:40Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_35DE7A5D_E69A_4FB0_BE88_1CE74866627C", .name = "Mairie - Athée (SL, INSEE 53012) - Mairie de Athée",
     .name_ja = "Mairie - Athée (SL, INSEE 53012) - Mairie de Athée",
@@ -124832,24 +121090,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "19:00:23 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_3673452B_AB28_435B_B4B7_8A9888A61B62_2", .name = "Mairie - Montesquieu-Lauragais (SL, INSEE 31374) - Accueil",
-    .name_ja = "Mairie - Montesquieu-Lauragais (SL, INSEE 31374) - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://mairie-montesquieu-lauragais.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mairie-montesquieu-lauragais.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T13:17:44+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_3680BC67_8998_412A_9A31_69BF652BB396", .name = "Mairie - Novillard (SL, INSEE 90074) - Novillard",
     .name_ja = "Mairie - Novillard (SL, INSEE 90074) - Novillard",
@@ -125536,25 +121776,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:43:02 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_4183333B_FA9D_4580_99D5_D17BDD030DBC_2", .name = "Mairie - Cressin-Rochefort (SL, INSEE 01133) - Commune de "
-      "Cressin-Rochefort",
-    .name_ja = "Mairie - Cressin-Rochefort (SL, INSEE 01133) - Commune de Cressin-Rochefort",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.cressin-rochefort.com/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cressin-rochefort.com/feed/rss/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 6 items, RSS2 feed, newest Tue, 19 Aug 2025 "
-      "14:43:02 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO47_FR_41D1C092_78F0_44B4_8353_CBBD044C23BA", .name = "Mairie - Don (SL, INSEE 59670) - Mairie de Don",
     .name_ja = "Mairie - Don (SL, INSEE 59670) - Mairie de Don",
@@ -125654,25 +121875,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "11:31:55 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_42DE70E7_33D6_4F8A_AFB7_29AA208480E3_2", .name = "Mairie - Avapessa (SL, INSEE 2B025) - Avapessa - Site officiel "
-      "de la Commune",
-    .name_ja = "Mairie - Avapessa (SL, INSEE 2B025) - Avapessa - Site officiel de la Commune",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.avapessa.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.avapessa.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T13:17:44+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_4372DBBF_1F75_40EC_BC99_12F76045E9CF", .name = "Communauté d'Agglomération - Lunel Agglomération (SL, INSEE "
       "34145) - Lunel Agglo",
@@ -125872,25 +122074,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "16:08:16 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_47FC620B_CFDC_4300_965A_E9D3DB914988_2", .name = "Mairie - Morigny-Champigny (SL, INSEE 91433) - Morigny-Champigny "
-      "– Site officiel de la commune",
-    .name_ja = "Mairie - Morigny-Champigny (SL, INSEE 91433) - Morigny-Champigny – Site officiel de la commune",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.morignychampigny.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.morignychampigny.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, ATOM feed, newest "
-      "2026-10-18T13:17:43+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_47FCAC5D_5895_4FBF_B5E0_F3B258405544", .name = "Mairie - Tremblay-en-France (SL, INSEE 93073) - Ville de Ville "
       "de Tremblay-en-France : Flux RSS de l'agenda",
@@ -126072,25 +122255,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "08:57:04 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_48383872_8DB5_40B3_8207_ED05C3870563_2", .name = "Info Jeunes - Yssingeaux (SL, INSEE 43268) - "
-      "2b855fffebd54251bfdd2da9ed866438",
-    .name_ja = "Info Jeunes - Yssingeaux (SL, INSEE 43268) - 2b855fffebd54251bfdd2da9ed866438",
-    .category = "government", .collector = "frgov_services_citoyens", .portal = "https://www.pij-des-sucs.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.pij-des-sucs.fr/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 65 items, ATOM feed, newest "
-      "2026-06-04T08:57:04Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_4842A688_E52C_4422_828E_9B1A3B4BE192", .name = "Centre communal d'action sociale (CCAS) - Plouvien (SL, INSEE "
       "29209) - Plouvien",
@@ -126620,25 +122784,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "13:15:29 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_506B3C48_5475_49E5_A2E8_9CCAD0A9B2BE_2", .name = "Mairie - Les Salelles (SL, INSEE 07305) - "
-      "40b1ecb0db394ecabbe8e6bccc625953",
-    .name_ja = "Mairie - Les Salelles (SL, INSEE 07305) - 40b1ecb0db394ecabbe8e6bccc625953",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.les-salelles-ardeche.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.les-salelles-ardeche.fr/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2021-12-08T13:15:29Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_50A8E4CA_399E_4F60_A034_DC3EEAA82916", .name = "Mairie - Perreux (SL, INSEE 42170) - Ateliers créatifs de Noël",
     .name_ja = "Mairie - Perreux (SL, INSEE 42170) - Ateliers créatifs de Noël",
@@ -126817,25 +122962,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "11:11:31 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_534F6F24_A78D_4394_AE2C_DECC3AD00927_2", .name = "Mairie - Saint-Victor-en-Marche (SL, INSEE 23248) - "
-      "efeb16b4e3534d6696a246eefcb57f45",
-    .name_ja = "Mairie - Saint-Victor-en-Marche (SL, INSEE 23248) - efeb16b4e3534d6696a246eefcb57f45",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.saintvictorenmarche.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.saintvictorenmarche.fr/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2017-02-10T11:11:31Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_540437F4_BBE5_410A_8E0A_E4D7D9826B23", .name = "Mairie - Le Plessis-Feu-Aussoux (SL, INSEE 77365) - RSS",
     .name_ja = "Mairie - Le Plessis-Feu-Aussoux (SL, INSEE 77365) - RSS",
@@ -126934,25 +123060,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "23:04:39 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_550C16CA_9544_445B_9772_51892EA162C4_2", .name = "Mairie - Berneuil-sur-Aisne (SL, INSEE 60064) - Berneuil sur "
-      "Aisne",
-    .name_ja = "Mairie - Berneuil-sur-Aisne (SL, INSEE 60064) - Berneuil sur Aisne",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://berneuil-sur-aisne.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://berneuil-sur-aisne.fr/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 40 items, ATOM feed, newest "
-      "2026-07-28T14:03:48Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_561E608A_62BF_4230_A378_8EB6986A81BD", .name = "Centre communal d'action sociale (CCAS) - Clermont-en-Argonne "
       "(SL, INSEE 55117) - Commune de Clermont en Argonne",
@@ -127713,26 +123820,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "00:00:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_615E55D4_7FD7_4AF1_AB21_994273E58DC4_2", .name = "Mairie - Cubjac-Auvézère-Val-d Ans (SL, INSEE 24147) - Cubjac en "
-      "Périgord Un ilot de verdure caractère bien trempé Aquitaine "
-      "Dordogn",
-    .name_ja = "Mairie - Cubjac-Auvézère-Val-d Ans (SL, INSEE 24147) - Cubjac en Périgord Un ilot de verdure caractère bien trempé Aquitaine Dordogn",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.cubjac.com/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cubjac.com/index.php?ID=7531.html&format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:17:44+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_618463AD_E62A_40A3_95F9_95E5601D0575", .name = "Mairie - Champnétery (SL, INSEE 87035) - COMMUNE DE CHAMPNÉTERY",
     .name_ja = "Mairie - Champnétery (SL, INSEE 87035) - COMMUNE DE CHAMPNÉTERY",
@@ -127853,24 +123940,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "06:59:08 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_64130E4B_1D1D_4F4C_887A_FE55BB17BC18_2", .name = "Mairie - Altviller (SL, INSEE 57015) - Accueil",
-    .name_ja = "Mairie - Altviller (SL, INSEE 57015) - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.mairie-altviller.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mairie-altviller.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T11:17:44+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_6497E341_814C_4DB7_A980_A3D19F30FD6A", .name = "Police municipale - Punaauia (SL, INSEE 98738) - Site officiel "
       "de la Ville de Punaauia",
@@ -128010,25 +124079,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "05:30:02 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_669FC1D1_0A57_4E04_BABE_9CFF92340B5D_2", .name = "Mairie - Brainans (SL, INSEE 39073) - Accueil - Le village de "
-      "Brainans",
-    .name_ja = "Mairie - Brainans (SL, INSEE 39073) - Accueil - Le village de Brainans",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.brainans.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.brainans.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, ATOM feed, newest "
-      "2026-10-18T13:17:45+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_66AAFAED_10D8_4B05_BBD8_E45EE27B7CA1", .name = "Mairie - Hettange-Grande (SL, INSEE 57323) - Ville Hettange "
       "Grande",
@@ -128107,24 +124157,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:41:05 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_66BD5846_0FB5_4661_AF84_62BDC48E3C75_2", .name = "Mairie - Maisons (SL, INSEE 14391) - accueil",
-    .name_ja = "Mairie - Maisons (SL, INSEE 14391) - accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.maisons14.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.maisons14.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T11:17:46+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_673ECF42_0476_4C44_97EB_C92C2BE4A402", .name = "Mairie - Storckensohn (SL, INSEE 68328) - Storckensohn",
     .name_ja = "Mairie - Storckensohn (SL, INSEE 68328) - Storckensohn",
@@ -128894,24 +124926,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "16:33:43 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_7350F769_420C_4CD7_A05A_B8AEAAB64B14_2", .name = "Mairie - Saint-Jodard (SL, INSEE 42241) - Commune de St Jodard",
-    .name_ja = "Mairie - Saint-Jodard (SL, INSEE 42241) - Commune de St Jodard",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.saint-jodard.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.saint-jodard.fr/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:41:56+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_74395E7C_8723_4C1E_BFA0_B29CE5704CD1", .name = "Mairie - Saint-Julien-de-Vouvantes (SL, INSEE 44170) - ST JULIEN "
       "DE VOUVANTES",
@@ -129052,25 +125066,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "16:47:36 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_750EC0F3_8232_4FF8_BCE6_96412C5BEBB2_2", .name = "Mairie - Aillon-le-Vieux (SL, INSEE 73005) - Commune d'Aillon le "
-      "Vieux - Massif des Bauges",
-    .name_ja = "Mairie - Aillon-le-Vieux (SL, INSEE 73005) - Commune d'Aillon le Vieux - Massif des Bauges",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.aillonlevieux.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.aillonlevieux.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T13:17:44+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_757BD407_C4D3_4A1E_AAAD_66F40B1C418D", .name = "Centre communal d'action sociale (CCAS) - Sainte-Marie "
       "Martinique (SL, INSEE 97228) - Carnet d'Escales",
@@ -129835,25 +125830,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:18:28 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_0B3BF489_1481_4402_9EC6_D16B49AB27D8_2", .name = "Mairie - Landeronde (SL, INSEE 85118) - Bienvenue sur le portail "
-      "de Landeronde",
-    .name_ja = "Mairie - Landeronde (SL, INSEE 85118) - Bienvenue sur le portail de Landeronde",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://landeronde.com/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://landeronde.com/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-18T11:17:45+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_0C02A1FA_9F97_4721_98C6_0DCF6DA6BE06", .name = "Mairie - Saint-Fortunat-sur-Eyrieux (SL, INSEE 07237) - Mairie "
       "de Saint-Fortunat",
@@ -130439,25 +126415,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "06:17:50 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_15189B6E_74B0_4F8D_98A4_9910306E1AC4_2", .name = "Mairie - Araules (SL, INSEE 43007) - "
-      "bf4480d12d514287854ce25475274e33",
-    .name_ja = "Mairie - Araules (SL, INSEE 43007) - bf4480d12d514287854ce25475274e33",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.mairie-araules.com/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mairie-araules.com/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 54 items, ATOM feed, newest "
-      "2026-09-02T06:17:50Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_15D0853D_03DC_4D62_8A33_258124163B1C", .name = "Centre communal d'action sociale (CCAS) - La Tour-en-Jarez (SL, "
       "INSEE 42311) - LA TOUR-EN-JAREZ",
@@ -130676,25 +126633,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "08:00:13 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_18AA708E_A9E1_4E36_BDE3_37416DEC65B3_2", .name = "Espace conseil France Rénov' - Evry-Courcouronnes (SL, INSEE "
-      "91228) - ALEC Sud Parisienne",
-    .name_ja = "Espace conseil France Rénov' - Evry-Courcouronnes (SL, INSEE 91228) - ALEC Sud Parisienne",
-    .category = "government", .collector = "frgov_services_citoyens", .portal = "https://alec-sudparisienne.org/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://alec-sudparisienne.org/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-09T08:07:40Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_18E0C2DE_8C6E_40F9_9594_72F0D858C9C9", .name = "Mairie - Gausson (SL, INSEE 22060) - Mairie de Gausson – 22150",
     .name_ja = "Mairie - Gausson (SL, INSEE 22060) - Mairie de Gausson – 22150",
@@ -131102,24 +127040,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "08:18:40 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_216C9C7D_B6DC_4C55_9064_E01B99C185B1_2", .name = "Mairie - Séron (SL, INSEE 65422) - Accueil",
-    .name_ja = "Mairie - Séron (SL, INSEE 65422) - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.commune-seron.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.commune-seron.fr/index.php/fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:17:45+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_217C5D7D_E2FF_4DC3_80D0_7588A2F9D8F5", .name = "Mairie - Angé (SL, INSEE 41002) - www.mairie-ange.com Blog Feed",
     .name_ja = "Mairie - Angé (SL, INSEE 41002) - www.mairie-ange.com Blog Feed",
@@ -132233,26 +128153,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "01:00:01 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_8955517C_7983_48DB_845E_0575B1710FDA_2", .name = "Association de santé au travail du BTP de l'Ain - "
-      "Bourg-en-Bresse (SIL, INSEE 01053) - AST BTP AIN - Présentation "
-      "du service",
-    .name_ja = "Association de santé au travail du BTP de l'Ain - Bourg-en-Bresse (SIL, INSEE 01053) - AST BTP AIN - Présentation du service",
-    .category = "health", .collector = "frgov_sante", .portal = "https://www.ast-btp-ain.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ast-btp-ain.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T13:17:46+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_8A1AC2B9_E80D_416F_9B53_D77473CC0D39", .name = "Mairie - Meroux-Moval (SL, INSEE 90068) - La commune de "
       "Meroux-Moval",
@@ -133051,25 +128951,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "09:39:24 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_1AD40156_4D99_4048_8115_9CDE69163784_2", .name = "Institut français de LITUANIE - Vilnius (SI, INSEE ) - IF "
-      "Lituanie",
-    .name_ja = "Institut français de LITUANIE - Vilnius (SI, INSEE ) - IF Lituanie",
-    .category = "culture", .collector = "frgov_culture", .portal = "https://www.institutfrancais-lituanie.com/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.institutfrancais-lituanie.com/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-13T09:39:24Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_1E10F16F_2D71_4008_B07D_38A2A98935AB", .name = "Institut des Hautes études par les sciences et la technologie "
       "(SI, INSEE ) - IHEST – Institut des Hautes Etudes pour la "
@@ -133814,24 +129695,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:09:35 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_98857895_0DEC_4608_A3A1_CC5CBBBAC604_2", .name = "Mairie - Corbeny (SL, INSEE 02215) - Bienvenue sur Corbeny.fr",
-    .name_ja = "Mairie - Corbeny (SL, INSEE 02215) - Bienvenue sur Corbeny.fr",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://corbeny.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://corbeny.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 7 items, ATOM feed, newest "
-      "2026-10-18T13:17:48+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_98874F88_24FC_4818_B3EE_715553ED0B7E", .name = "Mairie - Bosroumois (SL, INSEE 27090) - Mairie de Bosroumois",
     .name_ja = "Mairie - Bosroumois (SL, INSEE 27090) - Mairie de Bosroumois",
@@ -134304,24 +130167,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "15:39:40 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_9F12CCB6_980A_45B0_B69C_8A4F0D09E7CF_2", .name = "Mairie - Mesnières-en-Bray (SL, INSEE 76427) - Mesnières en Bray",
-    .name_ja = "Mairie - Mesnières-en-Bray (SL, INSEE 76427) - Mesnières en Bray",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.mesnieres-en-bray.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mesnieres-en-bray.fr/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-05T08:07:47Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_A005AE93_86F4_45BC_9826_DCA1955516D2", .name = "Mairie - Gabrias (SL, INSEE 48068) - Accueil",
     .name_ja = "Mairie - Gabrias (SL, INSEE 48068) - Accueil",
@@ -134342,24 +130187,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "06:53:28 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_A005AE93_86F4_45BC_9826_DCA1955516D2_2", .name = "Mairie - Gabrias (SL, INSEE 48068) - Accueil",
-    .name_ja = "Mairie - Gabrias (SL, INSEE 48068) - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.gabrias.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gabrias.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T11:17:47+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_A022E701_54FD_433A_82E3_75D1AFAAC950", .name = "Mairie - Roquefort-des-Corbières (SL, INSEE 11322) - Roquefort "
       "des Corbières",
@@ -134760,24 +130587,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "12:32:21 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_A729ED3C_C0F4_45EB_95F7_9DBBF5D2AEE1_2", .name = "Mairie - Laplume (SL, INSEE 47137) - Mairie de Laplume",
-    .name_ja = "Mairie - Laplume (SL, INSEE 47137) - Mairie de Laplume",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.laplume.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.laplume.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 6 items, ATOM feed, newest "
-      "2026-10-18T11:17:46+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_A93230BA_6E87_4A87_9786_788B61BCE0E5", .name = "Fédération départementale des chasseurs - Sarthe (SL, INSEE "
       "72181) - Fédération Départementale des Chasseurs de la Sarthe",
@@ -135133,26 +130942,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "08:11:49 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_AFC0ADBF_171D_40F4_B571_DD21BDC49032_2", .name = "Communauté de communes - Trois Rivières (SL, INSEE 02134) - "
-      "Communaute de Communes des Trois Rivières-Aisne - CC3R  - "
-      "Accueil",
-    .name_ja = "Communauté de communes - Trois Rivières (SL, INSEE 02134) - Communaute de Communes des Trois Rivières-Aisne - CC3R  - Accueil",
-    .category = "local-gov", .collector = "frgov_intercommunal", .portal = "https://cc3r.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cc3r.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:17:45+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_B00CDC66_D36D_4D69_824D_F75D78B4AC71", .name = "Mairie - Cazères-sur-l'Adour (SL, INSEE 40080) - Cazères sur l' "
       "Adour",
@@ -135213,24 +131002,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "08:40:00 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_B0442843_E758_433A_ACD5_1B3AA76D7662_2", .name = "Mairie - Simacourbe (SL, INSEE 64524) - Actualités de la commune",
-    .name_ja = "Mairie - Simacourbe (SL, INSEE 64524) - Actualités de la commune",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.simacourbe.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.simacourbe.fr/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 84 items, ATOM feed, newest "
-      "2025-11-02T08:40:00Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_B0696DC9_9D67_44A2_AAF6_54AC300B9694", .name = "Communauté de communes - Sézanne Sud Ouest Marnais (SL, INSEE "
       "51009) - Communauté de communes de Sézanne Sud Ouest Marnais",
@@ -138084,24 +133855,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "16:14:40 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_EB2DB152_B54D_46EF_8D28_52CE177DE7C2_2", .name = "Mairie - Fay-sur-Lignon (SL, INSEE 43092) - Accueil",
-    .name_ja = "Mairie - Fay-sur-Lignon (SL, INSEE 43092) - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.faysurlignon.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.faysurlignon.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 11 items, ATOM feed, newest "
-      "2026-10-18T11:17:47+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_EB8FD322_A426_43E9_8B4B_AD7EC85A1057", .name = "Mairie - Guitté (SL, INSEE 22071) - Commune de Guitté",
     .name_ja = "Mairie - Guitté (SL, INSEE 22071) - Commune de Guitté",
@@ -141122,25 +136875,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "09:47:37 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_270446C0_FDCF_441D_A154_BBBB17D23D7A_2", .name = "Mairie - Civaux (SL, INSEE 86077) - Bienvenue sur le site de la "
-      "mairie de Civaux (86) - Mairie de Civaux (86)",
-    .name_ja = "Mairie - Civaux (SL, INSEE 86077) - Bienvenue sur le site de la mairie de Civaux (86) - Mairie de Civaux (86)",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.ville-civaux.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ville-civaux.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T11:17:46+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_270F1D59_59E2_48C2_9825_061BBE11376D", .name = "Ordre des avocats - Barreau de Lyon (SL, INSEE 69383) - Barreau "
       "de lyon",
@@ -141611,25 +137345,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "01:00:00 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_323825F4_F3A8_41FF_BD34_ABC12312816D_2", .name = "Mairie - Lanhouarneau (SL, INSEE 29111) - Mairie de Lanhouarneau "
-      "- Site officiel",
-    .name_ja = "Mairie - Lanhouarneau (SL, INSEE 29111) - Mairie de Lanhouarneau - Site officiel",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://lanhouarneau.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://lanhouarneau.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T13:17:46+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_325DDF07_1EFC_4949_92D3_9174D0F361D8", .name = "Mairie - Fégréac (SL, INSEE 44057) - Fégréac",
     .name_ja = "Mairie - Fégréac (SL, INSEE 44057) - Fégréac",
@@ -143038,24 +138753,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "13:56:30 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_650D46A7_196D_41E3_88AA_80BC53E09044_2", .name = "Mairie - Saint-Martin-de-la-Cluze (SL, INSEE 38115) - Actualités",
-    .name_ja = "Mairie - Saint-Martin-de-la-Cluze (SL, INSEE 38115) - Actualités",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.saintmartindelacluze.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.saintmartindelacluze.fr/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 17 items, ATOM feed, newest "
-      "2026-09-24T13:56:30Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_65121965_455F_48E0_85F7_C8A4BB9485EC", .name = "Mairie - Bricqueville-la-Blouette (SL, INSEE 50084) - "
       "Bricqueville la Blouette",
@@ -143216,25 +138913,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "00:00:00 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_6783B7EB_4147_4C71_873F_CF22AB1C3241_2", .name = "Mairie - Saint-Germain-la-Montagne (SL, INSEE 42229) - Accueil - "
-      "Saint Germain la Montagne",
-    .name_ja = "Mairie - Saint-Germain-la-Montagne (SL, INSEE 42229) - Accueil - Saint Germain la Montagne",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://mairiesaintgermainlamontagne.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mairiesaintgermainlamontagne.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T13:17:48+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_67A013BE_CA21_4F3D_AF4F_17F55D787B1A", .name = "Mairie - Beaurecueil (SL, INSEE 13012) - Beaurecueil",
     .name_ja = "Mairie - Beaurecueil (SL, INSEE 13012) - Beaurecueil",
@@ -143544,25 +139222,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "16:42:45 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_6D21FFC8_9304_48A8_A7C4_00F6C131FCC8_2", .name = "Ordre des avocats - Barreau de Bayonne (SL, INSEE 64102) - "
-      "Accueil - Ordre des avocats de Bayonne",
-    .name_ja = "Ordre des avocats - Barreau de Bayonne (SL, INSEE 64102) - Accueil - Ordre des avocats de Bayonne",
-    .category = "legal", .collector = "frgov_ordres", .portal = "https://www.avocats-bayonne.org/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.avocats-bayonne.org/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T13:17:48+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_6D5C01C0_4A6F_4B79_96BC_CF8D16871B54", .name = "Mairie - Cabanac-et-Villagrains (SL, INSEE 33077) - Cabanac et "
       "Villagrains",
@@ -143663,24 +139322,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:25:34 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_6E610E4D_91FA_4A8F_807D_56CF6665A03B_2", .name = "Mairie - Essegney (SL, INSEE 88163) - ACCUEIL",
-    .name_ja = "Mairie - Essegney (SL, INSEE 88163) - ACCUEIL",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.essegney.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.essegney.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:17:48+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_6E8BA09E_3675_494B_8659_150B106174E3", .name = "Mairie - Mouzon (SL, INSEE 08311) - Ville de Mouzon",
     .name_ja = "Mairie - Mouzon (SL, INSEE 08311) - Ville de Mouzon",
@@ -144072,25 +139713,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "15:08:17 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_783BA18E_8173_4175_91AE_579FAC391368_2", .name = "Mairie - Port-de-Lanne (SL, INSEE 40231) - Port de Lanne - "
-      "Accueil",
-    .name_ja = "Mairie - Port-de-Lanne (SL, INSEE 40231) - Port de Lanne - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.port-de-lanne.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.port-de-lanne.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T11:17:48+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_7861813E_F431_4647_8CF5_F3433AAB43FF", .name = "Mairie - Cherisy (SL, INSEE 28098) - Chérisy, un cadre de vie – "
       "Eure et Loir (28)",
@@ -144289,25 +139911,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "00:00:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_41E84688_B1E8_4615_B4C8_A693B8E34C58_2", .name = "Mairie - Laneuveville-devant-Nancy (SL, INSEE 54300) - Accueil - "
-      "Laneuveville-devant-Nancy",
-    .name_ja = "Mairie - Laneuveville-devant-Nancy (SL, INSEE 54300) - Accueil - Laneuveville-devant-Nancy",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.ville-laneuveville-devant-nancy.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ville-laneuveville-devant-nancy.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T11:17:48+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_429E91A1_9595_4493_B2B1_2703191D3E5C", .name = "Communauté de communes - Marche et Combrailles en Aquitaine (SL, "
       "INSEE 23013) - Communauté de Communes Marche et Combraille en "
@@ -144620,24 +140223,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "09:45:21 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_49D5894F_A9F7_49C1_BC27_D94D0F69778B_2", .name = "Mairie - Bèze (SL, INSEE 21071) - Commune de Bèze - Accueil",
-    .name_ja = "Mairie - Bèze (SL, INSEE 21071) - Commune de Bèze - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.beze.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.beze.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T13:17:48+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_4B82B263_0CD2_4731_9A77_2178AE11DFD7", .name = "Mairie - Genneville (SL, INSEE 14299) - Mairie de Genneville",
     .name_ja = "Mairie - Genneville (SL, INSEE 14299) - Mairie de Genneville",
@@ -145268,25 +140853,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "07:45:37 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_582A2FEB_8757_4A65_B4FD_AAAF23CF327A_2", .name = "Mairie - Roderen (SL, INSEE 68279) - Roderen, village d'Alsace, "
-      "Site officiel de la commune - Bienvenue à Roderen",
-    .name_ja = "Mairie - Roderen (SL, INSEE 68279) - Roderen, village d'Alsace, Site officiel de la commune - Bienvenue à Roderen",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.roderen.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.roderen.fr/index.php?option=com_content&view=category&layout=blog&id=8&Itemid=251&format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 15 items, ATOM feed, newest "
-      "2026-10-18T13:17:49+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_589B888E_7C59_4E3B_8E29_44093AC10824", .name = "Mairie - Rivery (SL, INSEE 80674) - Ville de Rivery",
     .name_ja = "Mairie - Rivery (SL, INSEE 80674) - Ville de Rivery",
@@ -145364,24 +140930,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "08:08:14 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_5A02ABC9_6D8D_423A_B1D0_D25A042DF73C_2", .name = "Mairie - Pinay (SL, INSEE 42171) - Commune de Pinay",
-    .name_ja = "Mairie - Pinay (SL, INSEE 42171) - Commune de Pinay",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.pinay.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.pinay.fr/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T09:43:29+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_5A629BBD_29B5_4840_9183_E8FA7CBD3BC6", .name = "Espace conseil France Rénov' - Foix (SL, INSEE 09122) - ALEDA",
     .name_ja = "Espace conseil France Rénov' - Foix (SL, INSEE 09122) - ALEDA",
@@ -145853,25 +141401,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "10:23:06 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_8150172C_CCA9_4489_83F7_CF9560D372CE_2", .name = "Mairie - Gagnac-sur-Garonne (SL, INSEE 31205) - Gagnac sur "
-      "Garonne",
-    .name_ja = "Mairie - Gagnac-sur-Garonne (SL, INSEE 31205) - Gagnac sur Garonne",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.gagnac-sur-garonne.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gagnac-sur-garonne.fr/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 8 items, ATOM feed, newest "
-      "2026-10-01T10:23:06Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_819C8C5D_A924_4683_A4BE_35CE046A8DC0", .name = "Mairie - Jumigny (SL, INSEE 02396) - Jumigny",
     .name_ja = "Mairie - Jumigny (SL, INSEE 02396) - Jumigny",
@@ -146186,24 +141715,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "10:07:29 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_85F5A511_C0E6_483D_ABCE_A46CB9E163BE_2", .name = "Mairie - Nervieux (SL, INSEE 42155) - Accueil",
-    .name_ja = "Mairie - Nervieux (SL, INSEE 42155) - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.nervieux.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.nervieux.fr/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-18T11:43:36+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_86399DE6_2317_47E7_80FC_DC72D64A8F7C", .name = "Communauté de communes - La Sologne des Rivières (SL, INSEE "
       "41232) - CCSR – Communauté de Communes de la Sologne des "
@@ -146774,25 +142285,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "17:55:57 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_905D5A58_F098_4A56_A912_725F98CD2642_2", .name = "Mairie - Tréflaouénan (SL, INSEE 29285) - Commune de "
-      "Tréflaouenan - Mairie de Tréflaouenan - Site officiel",
-    .name_ja = "Mairie - Tréflaouénan (SL, INSEE 29285) - Commune de Tréflaouenan - Mairie de Tréflaouenan - Site officiel",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://treflaouenan.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://treflaouenan.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T13:03:15+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_90863C0E_4B7C_4606_A717_F9101AD2F4B6", .name = "Mairie - Ville-sur-Yron (SL, INSEE 54581) - Ville-sur-Yron",
     .name_ja = "Mairie - Ville-sur-Yron (SL, INSEE 54581) - Ville-sur-Yron",
@@ -147760,25 +143252,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:52:15 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_03DC5CFF_AB93_4C76_930D_8779737D1325_2", .name = "Centre de gestion de la fonction publique territoriale - "
-      "Ardennes (SL, INSEE 08105) - Accueil",
-    .name_ja = "Centre de gestion de la fonction publique territoriale - Ardennes (SL, INSEE 08105) - Accueil",
-    .category = "government", .collector = "frgov_etat", .portal = "https://cdg08.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cdg08.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 14 items, ATOM feed, newest "
-      "2026-10-18T13:17:49+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_042F6293_1E03_40D0_99B0_23C54C364E5C", .name = "Service interentreprises de médecine et santé au travail - "
       "Biarritz (SIL, INSEE 64122) - Simetra",
@@ -150605,25 +146078,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "16:24:22 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_C8FDC588_FA83_4A31_84A9_020A33290C0E_2", .name = "Communauté de communes - Isle Vern Salembre en Périgord (SL, "
-      "INSEE 24372) - Accueil - CCIVS",
-    .name_ja = "Communauté de communes - Isle Vern Salembre en Périgord (SL, INSEE 24372) - Accueil - CCIVS",
-    .category = "local-gov", .collector = "frgov_intercommunal", .portal = "https://www.ccivs.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ccivs.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, ATOM feed, newest "
-      "2026-10-18T13:17:48+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_C94A6A21_3860_44EB_93A1_3D44230FD49B", .name = "Mairie - Saint-Pierre-d'Entremont (SL, INSEE 38446) - Commune de "
       "Saint Pierre d'Entremont Isère",
@@ -150726,26 +146180,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "11:11:31 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_CA843D30_F12C_4DD5_B479_1E6322CDB61D_2", .name = "Mission locale pour l'insertion professionnelle et sociale des "
-      "jeunes (16-25 ans) - Menton (SL, INSEE 06083) - "
-      "cd0a1dc03a3e4924be8dd71fea94172d",
-    .name_ja = "Mission locale pour l'insertion professionnelle et sociale des jeunes (16-25 ans) - Menton (SL, INSEE 06083) - cd0a1dc03a3e4924be8dd71fea94172d",
-    .category = "government", .collector = "frgov_services_citoyens", .portal = "https://www.mission-locale-est-06.org/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mission-locale-est-06.org/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2017-02-10T11:11:31Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_CAE1F083_432B_4136_BB9B_DFACD462ACE2", .name = "Mairie - Firminy (SL, INSEE 42095) - Ville de Firminy – Site "
       "officiel",
@@ -151590,25 +147024,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "17:42:04 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_DBCA068E_04FD_4A61_AE5E_FB5509D42E76_2", .name = "Mairie - Saint-Cernin-de-l Herm (SL, INSEE 24386) - Mairie de "
-      "Saint Cernin de l'Herm",
-    .name_ja = "Mairie - Saint-Cernin-de-l Herm (SL, INSEE 24386) - Mairie de Saint Cernin de l'Herm",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.saint-cernin-de-lherm-24.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.saint-cernin-de-lherm-24.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T13:17:49+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_DD568CC0_808D_40F2_8D16_F219765A01D7", .name = "Mairie - Léguevin (SL, INSEE 31291) - Mairie de Léguevin",
     .name_ja = "Mairie - Léguevin (SL, INSEE 31291) - Mairie de Léguevin",
@@ -152200,25 +147615,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:39:36 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_E5EEDCE6_B8CD_4D67_8E33_E6CCEAA96FAA_2", .name = "Mairie - Parcé-sur-Sarthe (SL, INSEE 72228) - Parcé sur Sarthe - "
-      "Bienvenue sur le site officiel de la commune de Parcé sur S",
-    .name_ja = "Mairie - Parcé-sur-Sarthe (SL, INSEE 72228) - Parcé sur Sarthe - Bienvenue sur le site officiel de la commune de Parcé sur S",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.parce-sur-sarthe.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.parce-sur-sarthe.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 16 items, ATOM feed, newest "
-      "2026-10-18T13:17:49+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_E61522F9_72DC_437B_9AC7_ECE36F7C879F", .name = "Parc naturel régional - Monts d'Ardèche (SIL, INSEE 07107) - Les "
       "pieds dans le Parc",
@@ -152536,25 +147932,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "06:50:50 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_EAFF10DF_FBFC_4F3D_9268_5722EAA1C8AE_2", .name = "Mairie - Rety (SL, INSEE 62705) - Accueil - Mairie-rety.fr - "
-      "Site officiel de la Mairie de Rety",
-    .name_ja = "Mairie - Rety (SL, INSEE 62705) - Accueil - Mairie-rety.fr - Site officiel de la Mairie de Rety",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://mairie-rety.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://mairie-rety.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, ATOM feed, newest "
-      "2026-10-18T11:17:50+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_EBBA7DF2_6FEC_417A_8CA6_3DA1ADAF58C7", .name = "Bureau d'aide aux victimes du tribunal judiciaire de Tulle (SL, "
       "INSEE 19272) - Aravic France-victime 19",
@@ -152791,25 +148168,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "08:18:48 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_EFB3071A_52D5_4546_8647_CC148F2C57C9_2", .name = "Mairie - Larnage (SL, INSEE 26156) - Mairie de Larnage  - 26600 "
-      "- Commune de la Drôme.",
-    .name_ja = "Mairie - Larnage (SL, INSEE 26156) - Mairie de Larnage  - 26600 - Commune de la Drôme.",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.larnage.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.larnage.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T11:17:49+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_EFF0B57B_0685_47C5_B7C3_B64D3453849A", .name = "Mairie - Saint-Venant (SL, INSEE 62770) - Saint-Venant",
     .name_ja = "Mairie - Saint-Venant (SL, INSEE 62770) - Saint-Venant",
@@ -154203,25 +149561,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "15:52:57 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_664F831B_F621_45F6_84D1_144648F1D127_2", .name = "Mairie - Frontenay-Rohan-Rohan (SL, INSEE 79130) - La mairie à "
-      "votre service",
-    .name_ja = "Mairie - Frontenay-Rohan-Rohan (SL, INSEE 79130) - La mairie à votre service",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.frontenay-rohan-rohan.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.frontenay-rohan-rohan.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T13:17:50+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_66C5D853_1111_4373_BC9E_229E401FCB44", .name = "Mairie - Tende (SL, INSEE 06163) - Ville de Tende",
     .name_ja = "Mairie - Tende (SL, INSEE 06163) - Ville de Tende",
@@ -154340,24 +149679,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "16:52:49 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_69590620_3370_4D9C_BC34_3D9D5588030E_2", .name = "Mairie - Viriat (SL, INSEE 01451) - Accueil",
-    .name_ja = "Mairie - Viriat (SL, INSEE 01451) - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.viriat.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.viriat.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T13:17:51+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_69BB4FA9_FBF2_4BEA_A6C3_891F9A67A327", .name = "Mairie - Saint-Julien-l Ars (SL, INSEE 86226) - "
       "Saint-Julien-l'Ars",
@@ -156892,25 +152213,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "08:01:36 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_58416538_CF73_4D71_A258_4017F2D6DAB0_2", .name = "Mairie - Offranville (SL, INSEE 76482) - Mairie d'Offranville - "
-      "Accueil",
-    .name_ja = "Mairie - Offranville (SL, INSEE 76482) - Mairie d'Offranville - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.offranville.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.offranville.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T11:17:49+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_585A1E49_014A_4308_A46E_8B77F912D8A7", .name = "Mairie - Mendionde (SL, INSEE 64377) - Mairie de Mendionde",
     .name_ja = "Mairie - Mendionde (SL, INSEE 64377) - Mairie de Mendionde",
@@ -158033,25 +153335,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "15:14:39 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_2FEEFB43_2830_46D2_B4AE_ABBD6CC35C32_2", .name = "Mairie - François (SL, INSEE 79128) - Site de la Mairie de "
-      "François dans les Deux-Sèvres - Mairie de François (Deux",
-    .name_ja = "Mairie - François (SL, INSEE 79128) - Site de la Mairie de François dans les Deux-Sèvres - Mairie de François (Deux",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.mairie-francois.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mairie-francois.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T11:17:50+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_30982F3C_E8D1_4A7D_8816_2FB6E0DF4DFC", .name = "Centre communal d'action sociale (CCAS) - Cendras (SL, INSEE "
       "30077) - www.cendras.fr Blog Feed",
@@ -158423,24 +153706,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "11:20:09 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_37505358_3F4B_4FDF_9F5A_E28777B06E3C_2", .name = "Mairie - Louignac (SL, INSEE 19120) - Accueil",
-    .name_ja = "Mairie - Louignac (SL, INSEE 19120) - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.louignac.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.louignac.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:17:51+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_3763BE06_D217_4C94_9071_74D098233B39", .name = "Mairie - Pencran (SL, INSEE 29156) - Pencran.bzh",
     .name_ja = "Mairie - Pencran (SL, INSEE 29156) - Pencran.bzh",
@@ -158679,25 +153944,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "13:40:34 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_3C58359A_4232_4F56_898E_D98C4C3581C4_2", .name = "Communauté d'agglomération - Centre de la Martinique (SL, INSEE "
-      "97209) - CACE Maison",
-    .name_ja = "Communauté d'agglomération - Centre de la Martinique (SL, INSEE 97209) - CACE Maison",
-    .category = "local-gov", .collector = "frgov_intercommunal", .portal = "https://www.cacem.org/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cacem.org/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-17T13:41:30Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_3DA01B4C_E663_45C3_8CAD_2EC9E5B9E526", .name = "Mairie - La Rouquette (SL, INSEE 12205) - Mairie de La Rouquette",
     .name_ja = "Mairie - La Rouquette (SL, INSEE 12205) - Mairie de La Rouquette",
@@ -158955,25 +154201,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "19:08:45 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_405A3ABA_19F6_449C_B109_63D68BF9115A_2", .name = "Mairie - Poilly-sur-Tholon (SL, INSEE 89304) - Les informations "
-      "de Poilly sur Tholon",
-    .name_ja = "Mairie - Poilly-sur-Tholon (SL, INSEE 89304) - Les informations de Poilly sur Tholon",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.mairiepoillysurtholon.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mairiepoillysurtholon.fr/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2021-07-07T19:08:45Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_406BE0FF_61C6_47F4_9347_53D0F4DE4E1F", .name = "Mairie - Tivernon (SL, INSEE 45325) - Commune de Tivernon",
     .name_ja = "Mairie - Tivernon (SL, INSEE 45325) - Commune de Tivernon",
@@ -159151,24 +154378,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "13:30:47 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_084E8410_4738_444C_A309_74E674A5EF7E_2", .name = "Mairie - Vieux-Condé (SL, INSEE 59616) - Accueil",
-    .name_ja = "Mairie - Vieux-Condé (SL, INSEE 59616) - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.ville-vieux-conde.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ville-vieux-conde.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T09:44:47+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_08946FC5_0F2C_4DB4_998B_53F95E522EF0", .name = "Mairie - Saint-Paul-sur-Yenne (SL, INSEE 73269) - Saint Paul sur "
       "Yenne",
@@ -160303,25 +155512,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "13:14:05 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_1FB06C55_D445_4493_97DF_658C3B25585D_2", .name = "Mairie - Carantilly (SL, INSEE 50098) - Mairie de Carantilly - "
-      "commune du centre Manche en Normandie",
-    .name_ja = "Mairie - Carantilly (SL, INSEE 50098) - Mairie de Carantilly - commune du centre Manche en Normandie",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.mairie-de-carantilly.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mairie-de-carantilly.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 7 items, ATOM feed, newest "
-      "2026-10-18T11:17:52+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_1FF8A9A1_4F60_4CFA_BD96_F86CD6B11B23", .name = "Mairie - Saulchery (SL, INSEE 02701) - Commune de Saulchery - "
       "Accueil",
@@ -160343,25 +155533,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "12:38:58 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_1FF8A9A1_4F60_4CFA_BD96_F86CD6B11B23_2", .name = "Mairie - Saulchery (SL, INSEE 02701) - Commune de Saulchery - "
-      "Accueil",
-    .name_ja = "Mairie - Saulchery (SL, INSEE 02701) - Commune de Saulchery - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.saulchery.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.saulchery.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 12 items, ATOM feed, newest "
-      "2026-10-18T11:17:52+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_208FA09E_2745_4D85_9C4A_92D799F0982F", .name = "Communauté de communes - Pays des Abers (SL, INSEE 29160) - CC "
       "Pays des Abers",
@@ -160441,24 +155612,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "11:01:22 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_231008B4_818D_4700_B3AD_8F71DB007B68_2", .name = "Mairie - Gervans (SL, INSEE 26380) - titleMairie de Gervans",
-    .name_ja = "Mairie - Gervans (SL, INSEE 26380) - titleMairie de Gervans",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "http://www.mairie-gervans.com/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.mairie-gervans.com/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:17:51+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_237DBC92_E853_4006_8E7E_15D528FCD7BB", .name = "Communauté de communes - Vimeu (SL, INSEE 80368) - Communautés "
       "de Communes du Vimeu",
@@ -160736,26 +155889,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "17:00:10 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_80A6D207_D65A_4630_B721_0619A59E1209_2", .name = "Centre communal d'action sociale (CCAS) - Plouguin (SL, INSEE "
-      "29196) - Commune de Plouguin - site officiel - Commune de "
-      "Plouguin - Site officiel",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Plouguin (SL, INSEE 29196) - Commune de Plouguin - site officiel - Commune de Plouguin - Site officiel",
-    .category = "local-gov", .collector = "frgov_social", .portal = "https://plouguin.bzh/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://plouguin.bzh/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, ATOM feed, newest "
-      "2026-10-18T13:17:52+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_80C53265_C6FB_4D93_A327_E7DD259D19C0", .name = "Info Jeunes - Villard-de-Lans (SL, INSEE 38548) - Agopop",
     .name_ja = "Info Jeunes - Villard-de-Lans (SL, INSEE 38548) - Agopop",
@@ -161561,24 +156694,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "A feed the organisation itself declares or links on its site "
       "root." },
 
-  { .id = "JO47_FR_8CF44C36_C747_4D05_AE32_72CB635BE649_2", .name = "Mairie - Gorron (SL, INSEE 53107) - ACTUALITÉ",
-    .name_ja = "Mairie - Gorron (SL, INSEE 53107) - ACTUALITÉ",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.gorron.org/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gorron.org/index.php/fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 16 items, ATOM feed, newest "
-      "2026-10-18T11:17:52+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_8D461777_66BF_432F_9CE3_2FC8D9009F9B", .name = "Mission locale pour l'insertion professionnelle et sociale des "
       "jeunes (16-25 ans) - Fontaine (SL, INSEE 38169) - Mission Locale "
@@ -162782,26 +157897,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "09:01:24 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_02681293_38E8_4CE4_BAA0_0EA006F7BEC5_2", .name = "Fédération départementale pour la pêche et la protection du "
-      "milieu aquatique - Cher (SL, INSEE 18033) - Fédération pour la "
-      "Pêche et la Protection du Milieu Aquatique du Cher",
-    .name_ja = "Fédération départementale pour la pêche et la protection du milieu aquatique - Cher (SL, INSEE 18033) - Fédération pour la Pêche et la Protection du Milieu Aquatique du Cher",
-    .category = "environment", .collector = "frgov_environnement", .portal = "https://federationpeche18.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://federationpeche18.fr/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-09-04T09:06:02Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_0298FA63_B3FD_4B6B_9AEF_C8D429A2A2EB", .name = "Mairie - Goersdorf (SL, INSEE 67160) - Site de Gœrsdorf "
       "Mitschdorf",
@@ -164276,25 +159371,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "11:11:31 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_AA9F741E_BECC_4FFB_82DA_01ADF4402D4E_2", .name = "Mairie - Saint-Paul-Mont-Penit (SL, INSEE 85260) - "
-      "b2bed74e85214020a0864f8837f7c3f2",
-    .name_ja = "Mairie - Saint-Paul-Mont-Penit (SL, INSEE 85260) - b2bed74e85214020a0864f8837f7c3f2",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.saintpaulmontpenit.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.saintpaulmontpenit.fr/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2017-02-10T11:11:31Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_AB5F5D61_62C3_4CC4_BCA1_28C3936675B4", .name = "Mairie déléguée - Nonant-le-Pin (SL, INSEE 61310) - Mairie de "
       "NONANT-LE-PIN",
@@ -166058,25 +161134,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "00:03:57 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_D25583EE_0999_4274_9AAD_1C389E56D201_2", .name = "Mairie - Brecé (SL, INSEE 53042) - Accueil - Commune de Brecé "
-      "(53)",
-    .name_ja = "Mairie - Brecé (SL, INSEE 53042) - Accueil - Commune de Brecé (53)",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.brece.com/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.brece.com/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-18T11:17:53+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_D29BF394_63DF_48F6_BA0E_AB716FA9BE71", .name = "Communauté de communes - Arc Mosellan (SL, INSEE 57117) - Arc "
       "Mosellan",
@@ -166234,24 +161291,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "08:53:48 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_D3E4B9D3_19CF_4BD3_A62C_E172DB030D61_2", .name = "Mairie - Labatut-Rivière (SL, INSEE 65240) - Acceuil",
-    .name_ja = "Mairie - Labatut-Rivière (SL, INSEE 65240) - Acceuil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "http://www.labatut-riviere.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.labatut-riviere.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:14:39Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_D3ECD202_74FC_4AE9_BCC7_9A875C5AE7E0", .name = "Centre communal d'action sociale (CCAS) - Onnaing (SL, INSEE "
       "59447) - Ville d'Onnaing",
@@ -166823,24 +161862,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "13:36:47 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_DEC5449A_DA0B_4CBE_AC74_804934C9DB4C_2", .name = "Mairie - Kiffis (SL, INSEE 68165) - mairie-de-kiffis",
-    .name_ja = "Mairie - Kiffis (SL, INSEE 68165) - mairie-de-kiffis",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.kiffis.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kiffis.fr/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-07-13T13:36:47Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_DECE7647_2F04_49FE_BC34_C10B868C3FD1", .name = "Mairie - Mauguio (SL, INSEE 34154) - Mairie de Mauguio Carnon",
     .name_ja = "Mairie - Mauguio (SL, INSEE 34154) - Mairie de Mauguio Carnon",
@@ -167095,25 +162116,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "08:22:03 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_E4490002_D506_4F3F_8ADE_FDB1335CF5E5_2", .name = "Mairie - Junas (SL, INSEE 30136) - Ville de Junas - La mairie à "
-      "votre service",
-    .name_ja = "Mairie - Junas (SL, INSEE 30136) - Ville de Junas - La mairie à votre service",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.junas.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.junas.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T11:17:53+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_E449DFC1_C7C2_43B5_9977_A8B6B0070137", .name = "Espace conseil France Rénov' - Obernai (SL, INSEE 67348) - "
       "Actualité",
@@ -167252,24 +162254,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "13:31:39 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_E6F8F33C_9CE8_4F3C_9918_CA90629B6C50_2", .name = "Mairie - Gauriac (SL, INSEE 33182) - Gauriac",
-    .name_ja = "Mairie - Gauriac (SL, INSEE 33182) - Gauriac",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.gauriac.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gauriac.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-18T13:17:54+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_E744CCD3_C94E_4690_9A40_CB566F59B9DE", .name = "Mairie - Boesenbiesen (SL, INSEE 67053) - Boesenbiesen",
     .name_ja = "Mairie - Boesenbiesen (SL, INSEE 67053) - Boesenbiesen",
@@ -167723,25 +162707,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "12:06:32 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_EDB3B4D0_8B3E_4F4D_8C65_0731ED5EE2E2_2", .name = "Mairie - Allerey-sur-Saône (SL, INSEE 71003) - "
-      "6b18b68948894b9b87059f74b0c76e8d",
-    .name_ja = "Mairie - Allerey-sur-Saône (SL, INSEE 71003) - 6b18b68948894b9b87059f74b0c76e8d",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.mairieallereysursaone.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mairieallereysursaone.fr/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2023-05-09T12:06:32Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_EDE32EAB_8D65_46CB_8B53_B20DFA852D5A", .name = "Mairie - Brégnier-Cordon (SL, INSEE 01058) - Commune de Bregnier "
       "Cordon",
@@ -168116,26 +163081,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "19:46:09 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_F57C7815_470F_4DCD_AD42_5350FA61A19C_2", .name = "Mairie - Arros-de-Nay (SL, INSEE 64054) - Village "
-      "d'Arros-de-Nay, informations municipales d'Arros 64 Béarn "
-      "Pyrénées At",
-    .name_ja = "Mairie - Arros-de-Nay (SL, INSEE 64054) - Village d'Arros-de-Nay, informations municipales d'Arros 64 Béarn Pyrénées At",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "http://www.arrosdenay.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.arrosdenay.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 11 items, ATOM feed, newest "
-      "2026-10-18T11:17:53+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_F588CC68_431B_4941_9B6C_260B0F4410AA", .name = "Mairie - Les Voivres (SL, INSEE 88520) - LES VOIVRES 88240",
     .name_ja = "Mairie - Les Voivres (SL, INSEE 88520) - LES VOIVRES 88240",
@@ -169315,25 +164260,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:05:17 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_038523B1_2101_4685_802E_CCE32D32EC81_2", .name = "Mairie - La Devise (SL, INSEE 17457) - Bienvenue sur le site "
-      "officiel de La Devise",
-    .name_ja = "Mairie - La Devise (SL, INSEE 17457) - Bienvenue sur le site officiel de La Devise",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.la-devise.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.la-devise.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T13:17:55+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_03FEFB68_F7AF_4081_8A05_4EBA832E3AC6", .name = "Info Jeunes - Le Mans-Le Flore Habitat Jeunes (SL, INSEE 72181) "
       "- Le Flore – Hébergement / Logement Jeunes – Le Mans",
@@ -169646,24 +164572,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "12:55:53 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_0AF86A09_FB2D_4B01_9C05_AAC624E0D34B_2", .name = "Mairie - Le Malzieu-Forain (SL, INSEE 48089) - Le Malzieu-Forain",
-    .name_ja = "Mairie - Le Malzieu-Forain (SL, INSEE 48089) - Le Malzieu-Forain",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.lemalzieuforain.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.lemalzieuforain.fr/feed/rss/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Mon, 12 Oct 2026 "
-      "12:55:53 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO47_FR_0B00D718_DE66_4609_A5BF_51F7368BAA4E", .name = "Mission locale pour l'insertion professionnelle et sociale des "
       "jeunes (16-25 ans) - Mont-de-Marsan (SL, INSEE 40192) - Milo40",
@@ -169863,25 +164771,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "11:19:07 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_0D83BC99_1953_4BBB_9AFC_E4B4864864A9_2", .name = "Mairie - Saint-Sylvestre (SL, INSEE 87183) - Accueil - Commune "
-      "de Saint-Sylvestre dans les Monts d’Ambazac, Limousin",
-    .name_ja = "Mairie - Saint-Sylvestre (SL, INSEE 87183) - Accueil - Commune de Saint-Sylvestre dans les Monts d’Ambazac, Limousin",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.saint-sylvestre-limousin.com/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.saint-sylvestre-limousin.com/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T13:17:58+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_0DF272C6_FA15_49B5_B5D3_79ABBCECD2D2", .name = "Mairie - Plumaudan (SL, INSEE 22239) - Commune de Plumaudan",
     .name_ja = "Mairie - Plumaudan (SL, INSEE 22239) - Commune de Plumaudan",
@@ -170990,25 +165879,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "16:13:36 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_21DDE7E7_4B4D_491E_92FD_44F8B50BDF8A_2", .name = "Centre communal d'action sociale (CCAS) - Cérences (SL, INSEE "
-      "50109) - Accueil - ville de Cérences",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Cérences (SL, INSEE 50109) - Accueil - ville de Cérences",
-    .category = "local-gov", .collector = "frgov_social", .portal = "https://www.cerences.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cerences.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T13:17:55+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_22FEA403_388B_4373_9066_6576AEF07CFD", .name = "Mairie - Saint-Cassien (SL, INSEE 38373) - Commune de Saint "
       "Cassien",
@@ -171679,25 +166549,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "12:09:06 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_680246AE_BBB2_4EE9_97B0_B35C20A2AD7C_2", .name = "Mairie - Champgenéteux (SL, INSEE 53053) - "
-      "8c0159afdec5457bbd419cea469bb3ba",
-    .name_ja = "Mairie - Champgenéteux (SL, INSEE 53053) - 8c0159afdec5457bbd419cea469bb3ba",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.mairiechampgeneteux.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mairiechampgeneteux.fr/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-06-08T12:09:06Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_680B9E28_B7A3_4D91_A6D3_C9D126043E20", .name = "Mairie - Le Cabanial (SL, INSEE 31097) - Les articles de mon "
       "site",
@@ -171873,24 +166724,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "00:00:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_6C5E9907_DBB8_4D3B_AE74_95A9B0504304_2", .name = "Mairie - Chénelette (SL, INSEE 69054) - Chenelette - Accueil",
-    .name_ja = "Mairie - Chénelette (SL, INSEE 69054) - Chenelette - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "http://www.chenelette.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.chenelette.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T11:17:55Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_6C6E1A42_73F6_4173_A82B_517BC7C4254E", .name = "Mairie - Authezat (SL, INSEE 63021) - Commune d'AUTHEZAT, "
       "bienvenue sur le site officiel",
@@ -172362,24 +167195,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "10:46:10 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_70E253F0_FFEA_498F_A9BC_CD7753AA3E13_2", .name = "Mairie - Marquise (SL, INSEE 62560) - ville-marquise",
-    .name_ja = "Mairie - Marquise (SL, INSEE 62560) - ville-marquise",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.ville-marquise.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ville-marquise.fr/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 12 items, ATOM feed, newest "
-      "2026-10-15T10:46:10Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_7140CB63_CD2F_4DF5_9DEB_D78F3327B619", .name = "Mairie - Saint-Aubin-du-Plain (SL, INSEE 79238) - Saint Aubin du "
       "Plain",
@@ -172538,25 +167353,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "11:20:55 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_734C80DA_EC37_43C9_99E4_661A914558CE_2", .name = "Mairie - Trégarantec (SL, INSEE 29288) - Mairie de Trégarantec - "
-      "Site officiel",
-    .name_ja = "Mairie - Trégarantec (SL, INSEE 29288) - Mairie de Trégarantec - Site officiel",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://tregarantec.bzh/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://tregarantec.bzh/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T11:11:46+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_73C14674_6315_4221_B10C_50E620D57EBB", .name = "Mairie - L'Étoile (SL, INSEE 80296) - Bienvenue à  l'Etoile",
     .name_ja = "Mairie - L'Étoile (SL, INSEE 80296) - Bienvenue à  l'Etoile",
@@ -172616,25 +167412,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "06:49:01 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_74398AE0_95DA_428F_87E6_87065A8F4CFB_2", .name = "Mairie - Ploumilliau (SL, INSEE 22226) - Ploumilliau – Plouilio "
-      "– Commune de Bretagne Côtes-d'Armor",
-    .name_ja = "Mairie - Ploumilliau (SL, INSEE 22226) - Ploumilliau – Plouilio – Commune de Bretagne Côtes-d'Armor",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://ploumilliau.bzh/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ploumilliau.bzh/mairie/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-16T06:57:39Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_7466C9FB_5B81_4F85_BF18_AFA4605F257F", .name = "Mairie - Saint-Pompon (SL, INSEE 24488) - Site officiel de la "
       "mairie de Saint-Pompon",
@@ -174718,25 +169495,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "16:37:38 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_41175609_4F7B_4EC4_807A_DA977D45FFC0_2", .name = "Mairie - Saint-Honoré (SL, INSEE 38396) - Site officiel de la "
-      "Mairie de Saint-Honoré en Isère (38). Retrouvez toutes les",
-    .name_ja = "Mairie - Saint-Honoré (SL, INSEE 38396) - Site officiel de la Mairie de Saint-Honoré en Isère (38). Retrouvez toutes les",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.saint-honore-mairie.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.saint-honore-mairie.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T13:17:55+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_416A7832_A3FB_4B39_BAE1_7341C81EEB2A", .name = "Point d'information local dédié aux personnes âgées - "
       "Clermont-Ferrand (SL, INSEE 63113) - Clic Clic Clermont",
@@ -174994,25 +169752,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:24:50 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_46B55782_631C_47DD_B4ED_E1E45EDD132E_2", .name = "Mairie - Vion (SL, INSEE 72378) - Mairie de Vion (72) - Mairie "
-      "de Vion ( 72 - Sarthe )",
-    .name_ja = "Mairie - Vion (SL, INSEE 72378) - Mairie de Vion (72) - Mairie de Vion ( 72 - Sarthe )",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.vion72.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.vion72.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 13 items, ATOM feed, newest "
-      "2026-10-18T13:17:55+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_46EACE04_0FF0_4FA3_8806_B2EB1B7794AE", .name = "Communauté de communes - Berry Grand Sud (SL, INSEE 18057) - "
       "Communauté de Communes Berry Grand Sud",
@@ -175053,24 +169792,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "08:12:04 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_477AB4A5_55AD_4365_99B9_377ACF7A945C_2", .name = "Mairie - Manot (SL, INSEE 16205) - Accueil",
-    .name_ja = "Mairie - Manot (SL, INSEE 16205) - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.manot.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.manot.fr/index.php?option=com_content&view=featured&Itemid=101&format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-18T11:17:55+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_47D0081E_CD9F_4661_8265_5EE5E642E6F1", .name = "Mairie - Le Poët-Laval (SL, INSEE 26243) - Le Poët-Laval",
     .name_ja = "Mairie - Le Poët-Laval (SL, INSEE 26243) - Le Poët-Laval",
@@ -175716,25 +170437,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "18:58:29 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_52C18003_B8AD_444E_B9A1_1E74C45D815C_2", .name = "Mairie - Saint-Derrien (SL, INSEE 29244) - Mairie de "
-      "Saint-Derrien, site officiel",
-    .name_ja = "Mairie - Saint-Derrien (SL, INSEE 29244) - Mairie de Saint-Derrien, site officiel",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://saint-derrien.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://saint-derrien.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T13:17:55+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_52C973F2_63E1_4C40_9E4E_214754FDA131", .name = "Mairie - Baneins (SL, INSEE 01028) - Mairie de Baneins",
     .name_ja = "Mairie - Baneins (SL, INSEE 01028) - Mairie de Baneins",
@@ -176993,24 +171695,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "16:17:24 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_8A9C5336_DC2D_463D_86C7_63367D71619B_2", .name = "Mairie - Zinswiller (SL, INSEE 67558) - Zinswiller - Accueil",
-    .name_ja = "Mairie - Zinswiller (SL, INSEE 67558) - Zinswiller - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.zinswiller.com/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.zinswiller.com/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 6 items, ATOM feed, newest "
-      "2026-10-18T13:17:57+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_8AA68133_A3C5_4970_A96D_C46685C973E9", .name = "Mairie - Mont-Cauvaire (SL, INSEE 76443) - Mairie",
     .name_ja = "Mairie - Mont-Cauvaire (SL, INSEE 76443) - Mairie",
@@ -178047,24 +172731,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "10:54:16 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_A20FA989_1CB9_4944_841B_207667CD0FE0_2", .name = "Mairie - Saint-Aubin-Routot (SL, INSEE 76563) - Accueil",
-    .name_ja = "Mairie - Saint-Aubin-Routot (SL, INSEE 76563) - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.saint-aubin-routot.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.saint-aubin-routot.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 6 items, ATOM feed, newest "
-      "2026-10-18T11:17:56+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_A235555B_17F3_4DE5_811B_344DBC127401", .name = "Communauté d'agglomération - Gard Rhodanien (SL, INSEE 30028) - "
       "Le site officiel de l'Agglomération du Gard rhodanien",
@@ -178360,25 +173026,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:34:07 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_A7E6C430_CBC9_4607_8CC6_398F9C6EA3CE_2", .name = "Mairie - Cherrueix (SL, INSEE 35078) - Mairie de Cherrueix, site "
-      "officiel",
-    .name_ja = "Mairie - Cherrueix (SL, INSEE 35078) - Mairie de Cherrueix, site officiel",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://cherrueix.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cherrueix.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T13:17:56+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_A84546AB_D92D_4525_BEF5_C2BDCA67935E", .name = "Mairie - Lanrelas (SL, INSEE 22114) - LANRELAS",
     .name_ja = "Mairie - Lanrelas (SL, INSEE 22114) - LANRELAS",
@@ -179216,25 +173863,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "09:11:28 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_BADDCA09_5597_4112_B9AD_49FC7E6EA623", .name = "Mairie - Saint-Christophe-des-Bardes (SL, INSEE 33384) - "
-      "Actualités",
-    .name_ja = "Mairie - Saint-Christophe-des-Bardes (SL, INSEE 33384) - Actualités",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.mairie-saint-christophe-des-bardes.com/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mairie-saint-christophe-des-bardes.com/?format=feed&type=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Tue, 06 Oct 2026 "
-      "17:02:54 +0200. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO47_FR_BADDCA09_5597_4112_B9AD_49FC7E6EA623_2", .name = "Mairie - Saint-Christophe-des-Bardes (SL, INSEE 33384) - "
       "Actualités",
@@ -180297,25 +174925,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "A feed the organisation itself declares or links on its site "
       "root." },
 
-  { .id = "JO47_FR_D0756FD9_75B6_411F_87FB_1CEF6785889E_2", .name = "Centre communal d'action sociale (CCAS) - Gorron (SL, INSEE "
-      "53107) - ACTUALITÉ",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Gorron (SL, INSEE 53107) - ACTUALITÉ",
-    .category = "local-gov", .collector = "frgov_social", .portal = "https://gorron.org/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://gorron.org/index.php/fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 16 items, ATOM feed, newest "
-      "2026-10-18T11:17:57+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_D1363692_D1EE_4372_9239_E54B1E923219", .name = "Point info famille - Marseille - 4e arrondissement (SL, INSEE "
       "13204) - Maison des Familles",
@@ -181567,24 +176176,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "00:00:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_E5BD2DAB_18A5_4597_B42B_986EA9372A87_2", .name = "Mairie - Thervay (SL, INSEE 39528) - Accueil",
-    .name_ja = "Mairie - Thervay (SL, INSEE 39528) - Accueil",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.thervay.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.thervay.fr/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:17:57+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_E6061EAA_2606_4B82_B121_9210938F3649", .name = "Mairie - Saint-Jean-d'Avelanne (SL, INSEE 38398) - Mairie de "
       "Saint Jean d'Avelanne",
@@ -182032,24 +176623,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "09:53:04 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_F37FC5CA_CC9B_4D62_827C_F0DC1175798D_2", .name = "Mairie - Sainte-Gemme (SL, INSEE 36193) - Sainte-Gemme",
-    .name_ja = "Mairie - Sainte-Gemme (SL, INSEE 36193) - Sainte-Gemme",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.sainte-gemme-indre.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.sainte-gemme-indre.fr/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2025-06-18T09:53:04Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_FR_F3A14B3D_1BBD_421F_9FC0_7838DD65C9DB", .name = "Mairie - Gauré (SL, INSEE 31215) - Mairie de Gauré",
     .name_ja = "Mairie - Gauré (SL, INSEE 31215) - Mairie de Gauré",
@@ -182423,25 +176996,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "16:12:23 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_FA91426A_5205_4932_B435_48E9184DB1D9_2", .name = "Mairie - Cleurie (SL, INSEE 88109) - Cleurie - Cleurie - village "
-      "des Vosges",
-    .name_ja = "Mairie - Cleurie (SL, INSEE 88109) - Cleurie - Cleurie - village des Vosges",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://cleurie.com/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cleurie.com/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:18:05+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_FB2DD40D_2235_4D2B_863A_94C7756625AC", .name = "Fédération départementale des chasseurs - Haute-Saône (SL, INSEE "
       "70388) - Chasse70",
@@ -182482,24 +177036,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "16:46:40 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_FC00B04E_25C9_4503_A842_59D25B10035B_2", .name = "Mairie - Aureville (SL, INSEE 31025) - Aureville mairie",
-    .name_ja = "Mairie - Aureville (SL, INSEE 31025) - Aureville mairie",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.aureville.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.aureville.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 8 items, ATOM feed, newest "
-      "2026-10-18T13:17:58+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_FC8B921F_B071_4A79_A5C4_CD85B98C1058", .name = "Mairie - Wasquehal (SL, INSEE 59646) - Ville de Wasquehal",
     .name_ja = "Mairie - Wasquehal (SL, INSEE 59646) - Ville de Wasquehal",
@@ -183207,24 +177743,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "16:51:52 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_153B37D1_C06C_48C7_853C_61FC1894F5FD_2", .name = "Mairie - Bolsenheim (SL, INSEE 67054) - Site officiel de la "
-      "ville de Bolsenheim",
-    .name_ja = "Mairie - Bolsenheim (SL, INSEE 67054) - Site officiel de la ville de Bolsenheim",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.bolsenheim.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.bolsenheim.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T11:44:51+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_15DF4DB2_2080_4827_92AE_D9056823FA7A", .name = "Mairie - Vaucresson (SL, INSEE 92076) - Ville de Vaucresson",
     .name_ja = "Mairie - Vaucresson (SL, INSEE 92076) - Ville de Vaucresson",
@@ -183371,24 +177889,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "10:13:49 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_17117B5E_0EBD_4B43_B9EA_D66F898AC555_2", .name = "France services - Saint-James (SL, INSEE 50487) - Communauté "
-      "d'agglomération Mont Saint Michel Normandie",
-    .name_ja = "France services - Saint-James (SL, INSEE 50487) - Communauté d'agglomération Mont Saint Michel Normandie",
-    .category = "government", .collector = "frgov_services_citoyens", .portal = "https://www.msm-normandie.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.msm-normandie.fr/fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T09:45:45+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_176B11D2_68FD_45E3_8755_13101A1D89EB", .name = "Centre communal d'action sociale (CCAS) - Linselles (SL, INSEE "
       "59352) - Linselles (59)",
@@ -183580,24 +178080,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "00:00:04 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_19DA9641_68D9_4625_826C_06F452198721_2", .name = "Centre communal d'action sociale (CCAS) - Chevreuse (SL, INSEE "
-      "78160) - Site officiel de la ville de Chevreuse",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Chevreuse (SL, INSEE 78160) - Site officiel de la ville de Chevreuse",
-    .category = "local-gov", .collector = "frgov_social", .portal = "https://www.chevreuse.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.chevreuse.fr/fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T09:30:12+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_1BFDBABC_87B5_4F38_95B1_4A6A99B448FF", .name = "Mairie - Elven (SL, INSEE 56053) - Elven (56)",
     .name_ja = "Mairie - Elven (SL, INSEE 56053) - Elven (56)",
@@ -184180,24 +178662,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "06:55:42 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_349D2E83_B6B0_4B1F_B93C_C49201F8362D_2", .name = "Mairie - Louhans-Châteaurenaud (SL, INSEE 71263) - Site officiel "
-      "de Louhans-Châteaurenaud",
-    .name_ja = "Mairie - Louhans-Châteaurenaud (SL, INSEE 71263) - Site officiel de Louhans-Châteaurenaud",
-    .category = "culture", .collector = "frgov_culture", .portal = "https://www.louhans-chateaurenaud.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.louhans-chateaurenaud.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T09:40:29+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_35CA4923_63D3_4DBC_A943_B60509B92612", .name = "Mairie - Corenc (SL, INSEE 38126) - Corenc (38)",
     .name_ja = "Mairie - Corenc (SL, INSEE 38126) - Corenc (38)",
@@ -185006,24 +179470,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "15:10:21 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_58528D96_8BCC_445F_8D8F_E141989E7486_2", .name = "Centre communal d'action sociale (CCAS) - La Ville-du-Bois (SL, "
-      "INSEE 91665) - La ville du Bois",
-    .name_ja = "Centre communal d'action sociale (CCAS) - La Ville-du-Bois (SL, INSEE 91665) - La ville du Bois",
-    .category = "local-gov", .collector = "frgov_social", .portal = "https://www.lavilledubois.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.lavilledubois.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T09:43:29+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_5CEE124F_C49B_4869_A3C2_39BC630C8246", .name = "Police municipale - La Clusaz (SL, INSEE 74080) - Mairie de La "
       "Clusaz (74)",
@@ -185302,24 +179748,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "09:30:02 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_6637CB28_5D7C_4476_91AF_25F7BD0A018A_2", .name = "Centre communal d'action sociale (CCAS) - Osthouse (SL, INSEE "
-      "67364) - Site officiel de la ville d'Osthouse",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Osthouse (SL, INSEE 67364) - Site officiel de la ville d'Osthouse",
-    .category = "local-gov", .collector = "frgov_social", .portal = "https://www.osthouse.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.osthouse.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T11:40:16+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_6C8DD6B2_42E7_4B57_A7BA_77857CFDFFBD", .name = "Mairie - Le Cloître-Saint-Thégonnec (SL, INSEE 29034) - Le "
       "Cloître Saint Thégonnec (29) - site officiel de la mairie",
@@ -185360,25 +179788,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "04:15:57 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_6E374CCF_863B_478D_B0DA_1DC567B4A34F_2", .name = "Centre de gestion de la fonction publique territoriale - Réunion "
-      "(SL, INSEE 97416) - Centre de Gestion de la Fonction Publique "
-      "Territoriale de la Réunion",
-    .name_ja = "Centre de gestion de la fonction publique territoriale - Réunion (SL, INSEE 97416) - Centre de Gestion de la Fonction Publique Territoriale de la Réunion",
-    .category = "government", .collector = "frgov_etat", .portal = "https://www.cdgreunion.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cdgreunion.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T09:43:20+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_6F1E9EE6_0204_4242_B22F_8310EE61A9B7", .name = "Mairie - Cuzieu (SL, INSEE 42081) - Cuzieu",
     .name_ja = "Mairie - Cuzieu (SL, INSEE 42081) - Cuzieu",
@@ -185546,24 +179955,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "09:07:16 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_7783F629_5C98_4309_84C7_01390EFD1735_2", .name = "Mairie - Villemoisson-sur-Orge (SL, INSEE 91667) - Site officiel "
-      "de la mairie de VILLEMOISSON-sur-ORGE",
-    .name_ja = "Mairie - Villemoisson-sur-Orge (SL, INSEE 91667) - Site officiel de la mairie de VILLEMOISSON-sur-ORGE",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.villemoisson.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.villemoisson.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T09:34:01+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_793C4F83_9F50_463D_B8E1_4692759D32AE", .name = "Mairie - Villegouge (SL, INSEE 33548) - Site Officiel de "
       "Villegouge",
@@ -185714,24 +180105,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "09:28:54 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_7C59D06B_24EE_47FC_8224_F4A30EF6C537_2", .name = "Mairie - Bourg-Achard (SL, INSEE 27103) - Site officiel de la "
-      "ville de Bourg Achard",
-    .name_ja = "Mairie - Bourg-Achard (SL, INSEE 27103) - Site officiel de la ville de Bourg Achard",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.bourgachard.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.bourgachard.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T09:46:00+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_7CC2A93E_E9E1_4900_AB8C_AD55EED890FA", .name = "Communauté de communes - Pays de la Châtaigneraie (SL, INSEE "
       "85289) - Pays de La Châtaigneraie (85)",
@@ -185847,24 +180220,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "09:51:50 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_841ACD94_3C15_46B3_8E29_87A9F874E6A9_2", .name = "Mairie - Pfaffenheim (SL, INSEE 68255) - Site officiel de la "
-      "ville de Pfaffenheim",
-    .name_ja = "Mairie - Pfaffenheim (SL, INSEE 68255) - Site officiel de la ville de Pfaffenheim",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.pfaffenheim.alsace/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.pfaffenheim.alsace/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 3 items, ATOM feed, newest "
-      "2026-10-18T09:30:20+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_84B935A5_4C0F_45D0_B811_D69C5671F317", .name = "Mairie - Hattstatt (SL, INSEE 68123) - Hattstatt un vlllage où "
       "il fait bon vivre",
@@ -185885,24 +180240,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "10:24:53 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_84B935A5_4C0F_45D0_B811_D69C5671F317_2", .name = "Mairie - Hattstatt (SL, INSEE 68123) - Hattstatt un vlllage où "
-      "il fait bon vivre",
-    .name_ja = "Mairie - Hattstatt (SL, INSEE 68123) - Hattstatt un vlllage où il fait bon vivre",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.hattstatt.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.hattstatt.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T09:30:21+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_85D64EA4_9595_4F82_87C7_365285222EA8", .name = "Communauté d'agglomération - Grand Sud Caraïbe (SL, INSEE 97105) "
       "- Communauté d&#039;Agglomération GRAND SUD CARAÏBE",
@@ -186112,24 +180449,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "11:06:30 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_8DD94F32_51F0_4CA0_8D51_B7E792903EDA_2", .name = "Communauté de communes - Nord Est Béarn (SL, INSEE 64405) - "
-      "Communauté de Communes du Nord Est Béarn - CCNEB",
-    .name_ja = "Communauté de communes - Nord Est Béarn (SL, INSEE 64405) - Communauté de Communes du Nord Est Béarn - CCNEB",
-    .category = "local-gov", .collector = "frgov_intercommunal", .portal = "https://www.cc-nordestbearn.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cc-nordestbearn.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T11:30:27+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_8EEE3CE7_220F_4D56_83ED_909158F9C220", .name = "Mairie - Zehnacker (SL, INSEE 67555) - Zehnacker",
     .name_ja = "Mairie - Zehnacker (SL, INSEE 67555) - Zehnacker",
@@ -186761,24 +181080,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:28:59 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_AA295C23_E88D_4B4B_85B8_23297C3B74B6_2", .name = "Centre communal d'action sociale (CCAS) - Limersheim (SL, INSEE "
-      "67266) - Site officiel de la ville de Limersheim",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Limersheim (SL, INSEE 67266) - Site officiel de la ville de Limersheim",
-    .category = "local-gov", .collector = "frgov_social", .portal = "https://www.limersheim.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.limersheim.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T11:39:21+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_AF118FA5_25BD_4A71_9924_98624E18FC33", .name = "Mairie - Saint-Mars-la-Réorthe (SL, INSEE 85242) - Saint-Mars la "
       "Réorthe (85)",
@@ -187173,25 +181474,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "16:15:28 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_B86879A2_252C_4810_88B3_B95922755984_2", .name = "Communauté de communes - Pays des Écrins (SL, INSEE 05006) - "
-      "Bienvenue sur le site de la Communauté de Communes du Pays des "
-      "Ecrins",
-    .name_ja = "Communauté de communes - Pays des Écrins (SL, INSEE 05006) - Bienvenue sur le site de la Communauté de Communes du Pays des Ecrins",
-    .category = "local-gov", .collector = "frgov_intercommunal", .portal = "https://www.cc-paysdesecrins.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cc-paysdesecrins.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T11:35:45+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_BB1171F3_C161_40CC_85C8_A3C928D94732", .name = "Centre communal d'action sociale (CCAS) - Vieux-Vy-sur-Couesnon "
       "(SL, INSEE 35355) - Mairie de Vieux-Vy-sur-Couesnon en Ille et "
@@ -187359,24 +181641,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "16:09:41 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_C119919A_73FE_45BE_8F04_2B78CB6D20F7_2", .name = "Communauté de communes - Plateau Picard (SL, INSEE 60498) - "
-      "Accueil - Communauté de Communes du Plateau Picard",
-    .name_ja = "Communauté de communes - Plateau Picard (SL, INSEE 60498) - Accueil - Communauté de Communes du Plateau Picard",
-    .category = "local-gov", .collector = "frgov_intercommunal", .portal = "https://www.plateaupicard.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.plateaupicard.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T11:41:04+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_C1353D43_7AA7_4864_9501_C47DBF1FBF4E", .name = "Mairie - Monnaie (SL, INSEE 37153) - Monnaie (37)",
     .name_ja = "Mairie - Monnaie (SL, INSEE 37153) - Monnaie (37)",
@@ -187451,24 +181715,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "10:01:45 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_C34AC2AA_F0DE_42C4_820C_23496AE95C87_2", .name = "Centre communal d'action sociale (CCAS) - Graveson (SL, INSEE "
-      "13045) - Site officiel",
-    .name_ja = "Centre communal d'action sociale (CCAS) - Graveson (SL, INSEE 13045) - Site officiel",
-    .category = "local-gov", .collector = "frgov_social", .portal = "https://www.graveson-provence.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.graveson-provence.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T11:46:37+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_CA203352_FB00_4EDE_9E8D_79DF07996C07", .name = "Mairie - Ottmarsheim (SL, INSEE 68253) - Site officiel de la "
       "ville d' Ottmarsheim",
@@ -187489,24 +181735,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "08:23:49 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_CA203352_FB00_4EDE_9E8D_79DF07996C07_2", .name = "Mairie - Ottmarsheim (SL, INSEE 68253) - Site officiel de la "
-      "ville d' Ottmarsheim",
-    .name_ja = "Mairie - Ottmarsheim (SL, INSEE 68253) - Site officiel de la ville d' Ottmarsheim",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.ottmarsheim.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ottmarsheim.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T09:35:55+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_CC7F0D32_2AF7_44FF_9482_6A824BD3A849", .name = "Centre communal d'action sociale (CCAS) - Chasseneuil-du-Poitou "
       "(SL, INSEE 86062) - Chasseneuil du Poitou (86)",
@@ -187773,24 +182001,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "08:04:35 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_D88B9E1A_B59A_4484_8938_B98678AECCCD_2", .name = "Mairie - Westhalten (SL, INSEE 68364) - Site officiel de la "
-      "ville de Wethalten",
-    .name_ja = "Mairie - Westhalten (SL, INSEE 68364) - Site officiel de la ville de Wethalten",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.westhalten.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.westhalten.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, ATOM feed, newest "
-      "2026-10-18T09:41:13+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_DDCA1EAC_AD09_43DD_8FB4_52124AFF5792", .name = "Mairie - Marlenheim (SL, INSEE 67282) - Marlenheim",
     .name_ja = "Mairie - Marlenheim (SL, INSEE 67282) - Marlenheim",
@@ -188003,24 +182213,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "14:11:12 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_E7053C77_268E_4BB6_864F_059C9E5E0DF7_2", .name = "Mairie - Gundolsheim (SL, INSEE 68116) - Site officiel de la "
-      "commune de Gundolsheim",
-    .name_ja = "Mairie - Gundolsheim (SL, INSEE 68116) - Site officiel de la commune de Gundolsheim",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.gundolsheim.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gundolsheim.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 4 items, ATOM feed, newest "
-      "2026-10-18T09:33:37+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_E77F05D6_2985_44E4_A31E_E93334A864D8", .name = "Mairie - Les Epesses (SL, INSEE 85082) - Les Epesses (85)",
     .name_ja = "Mairie - Les Epesses (SL, INSEE 85082) - Les Epesses (85)",
@@ -188351,24 +182543,6 @@ static const hp_source HP3B47_FRGOV[] = {
       "03:12:47 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_FR_F1CC48A1_0B95_40C1_9712_8267BC8872AE_2", .name = "Mairie - Tonnay-Charente (SL, INSEE 17449) - Tonnay-Charente - "
-      "Site officiel de la commune",
-    .name_ja = "Mairie - Tonnay-Charente (SL, INSEE 17449) - Tonnay-Charente - Site officiel de la commune",
-    .category = "local-gov", .collector = "frgov_mairies", .portal = "https://www.tonnay-charente.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.tonnay-charente.fr/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 1 items, ATOM feed, newest "
-      "2026-10-18T09:36:14+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_FR_F1E79023_D829_4CFA_8D25_D3AA13CFB4F9", .name = "Centre communal d'action sociale (CCAS) - Plouhinec (SL, INSEE "
       "29197) - Plouhinec (29)",

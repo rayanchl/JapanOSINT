@@ -1558,25 +1558,6 @@ static const hp_source HP3B44_USGOV[] = {
       "17:06:41 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_BETHELPARKPA_GOV_2", .name = "Municipality of Bethel Park (City, Bethel Park, PA) - "
-      "bethel-park",
-    .name_ja = "Municipality of Bethel Park (City, Bethel Park, PA) - bethel-park",
-    .category = "government", .portal = "https://www.bethelparkpa.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.bethelparkpa.gov/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 23 items, ATOM feed, newest "
-      "2026-10-14T17:06:41Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO44_US_BETHELTWPLEBANON_GOV", .name = "Bethel Township (City, Fredericksburg, PA) - Bethel Township",
     .name_ja = "Bethel Township (City, Fredericksburg, PA) - Bethel Township",
@@ -2086,24 +2067,6 @@ static const hp_source HP3B44_USGOV[] = {
       "16:45:55 -0400. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_BREWSTERVILLAGE_NY_GOV_2", .name = "Brewster of Village (City, Brewster, NY) - Village of Brewster",
-    .name_ja = "Brewster of Village (City, Brewster, NY) - Village of Brewster",
-    .category = "government", .portal = "https://brewstervillage-ny.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://brewstervillage-ny.gov/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 31 items, ATOM feed, newest "
-      "2026-10-17T14:15:33-04:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO44_US_BRIDGEVIEW_IL_GOV", .name = "Village of Bridgeview (City, Bridgeview, IL) - Village of "
       "Bridgeview Illinois",
@@ -2593,24 +2556,6 @@ static const hp_source HP3B44_USGOV[] = {
       "14:37:24 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_CAMDENAIRPORTAR_GOV_2", .name = "Camden Municipal Airport (City, Camden, AR) - camden-airport",
-    .name_ja = "Camden Municipal Airport (City, Camden, AR) - camden-airport",
-    .category = "government", .portal = "https://www.camdenairportar.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.camdenairportar.gov/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 2 items, ATOM feed, newest "
-      "2026-04-06T14:37:24Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO44_US_CAMDENNJ_GOV", .name = "City of Camden (City, Camden, NJ) - The City of Camden",
     .name_ja = "City of Camden (City, Camden, NJ) - The City of Camden",
@@ -3364,25 +3309,6 @@ static const hp_source HP3B44_USGOV[] = {
       "18:51:11 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_CITYOFBULLSHOALS_GOV_2", .name = "City of Bull Shoals (City, Bull Shoals, AR) - CITY OF BULL "
-      "SHOALS NEWS & UPDATES",
-    .name_ja = "City of Bull Shoals (City, Bull Shoals, AR) - CITY OF BULL SHOALS NEWS & UPDATES",
-    .category = "government", .portal = "https://www.cityofbullshoals.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cityofbullshoals.gov/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 18 items, ATOM feed, newest "
-      "2026-09-22T18:51:11Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO44_US_CITYOFCASA_GOV", .name = "City of Casa (City, Casa, AR) - City of Casa",
     .name_ja = "City of Casa (City, Casa, AR) - City of Casa",
@@ -3480,24 +3406,6 @@ static const hp_source HP3B44_USGOV[] = {
       "15:03:26 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_CITYOFCONCORDGA_GOV_2", .name = "City of Concord (City, Concord, GA) - city-of-concord",
-    .name_ja = "City of Concord (City, Concord, GA) - city-of-concord",
-    .category = "government", .portal = "https://www.cityofconcordga.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cityofconcordga.gov/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 2 items, ATOM feed, newest "
-      "2026-08-17T15:03:26Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
 
 
@@ -3579,25 +3487,6 @@ static const hp_source HP3B44_USGOV[] = {
       "2026 13:57:42 GMT. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO44_US_CITYOFEUCLID_GOV_2", .name = "City Of Euclid (City, Euclid, OH) - City of Euclid News and "
-      "Events",
-    .name_ja = "City Of Euclid (City, Euclid, OH) - City of Euclid News and Events",
-    .category = "government", .portal = "https://www.cityofeuclid.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cityofeuclid.gov/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 403 items, ATOM feed, newest "
-      "2026-10-09T13:57:42Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO44_US_CITYOFFARGO_ND_GOV", .name = "City of Fargo (City, Fargo, ND) - City News Room",
     .name_ja = "City of Fargo (City, Fargo, ND) - City News Room",
@@ -3676,24 +3565,6 @@ static const hp_source HP3B44_USGOV[] = {
       "12:28:59 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_CITYOFFORISTELLMO_GOV_2", .name = "City of Foristell (City, Foristell, MO) - city-of-foristell",
-    .name_ja = "City of Foristell (City, Foristell, MO) - city-of-foristell",
-    .category = "government", .portal = "https://www.cityofforistell.org/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cityofforistell.org/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 3 items, ATOM feed, newest "
-      "2026-09-30T12:28:59Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO44_US_CITYOFFULTONNY_GOV", .name = "City of Fulton (City, Fulton, NY) - The City of Fulton",
     .name_ja = "City of Fulton (City, Fulton, NY) - The City of Fulton",
@@ -3886,24 +3757,6 @@ static const hp_source HP3B44_USGOV[] = {
       "15:16:35 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_CITYOFHORNELL_GOV_2", .name = "The City of Hornell (City, Hornell, NY) - tch-2023",
-    .name_ja = "The City of Hornell (City, Hornell, NY) - tch-2023",
-    .category = "government", .portal = "https://www.cityofhornell.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cityofhornell.gov/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 4 items, ATOM feed, newest "
-      "2024-06-05T15:16:35Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO44_US_CITYOFHORSESHOEBENDAR_GOV", .name = "City of Horseshoe Bend (City, Horseshoe Bend, AR) - City of "
       "Horseshoe Bend Arkansas",
@@ -5419,24 +5272,6 @@ static const hp_source HP3B44_USGOV[] = {
       "19:56:09 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_DELAWARETOWNSHIPPA_GOV_2", .name = "Delaware Township (City, Dingmans Ferry, PA) - Home",
-    .name_ja = "Delaware Township (City, Dingmans Ferry, PA) - Home",
-    .category = "government", .portal = "https://delawaretownshippa.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://delawaretownshippa.gov/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 2 items, ATOM feed, newest "
-      "2026-10-17T18:15:48+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO44_US_DELAWARETOWNSHIPPA_GOV_3", .name = "Delaware Township (City, Dingmans Ferry, PA) - Rss (2)",
     .name_ja = "Delaware Township (City, Dingmans Ferry, PA) - Rss (2)",
@@ -5652,25 +5487,6 @@ static const hp_source HP3B44_USGOV[] = {
       "20:50:58 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_DIGGINSMO_GOV_2", .name = "Village of Diggins (City, Diggins, MO) - Message from the "
-      "Chairman",
-    .name_ja = "Village of Diggins (City, Diggins, MO) - Message from the Chairman",
-    .category = "government", .portal = "https://www.digginsmo.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.digginsmo.gov/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 3 items, ATOM feed, newest "
-      "2025-07-30T20:50:58Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO44_US_DIVERNONIL_GOV", .name = "Village of Divernon (City, Divernon, IL) - Divernon, Illinois",
     .name_ja = "Village of Divernon (City, Divernon, IL) - Divernon, Illinois",
@@ -6504,25 +6320,6 @@ static const hp_source HP3B44_USGOV[] = {
       "19:56:45 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_FARMINGTON_MO_GOV_2", .name = "City of Farmington (City, Farmington, MO) - "
-      "farmington-dupe-for-fix8-b77ln03mo-v1",
-    .name_ja = "City of Farmington (City, Farmington, MO) - farmington-dupe-for-fix8-b77ln03mo-v1",
-    .category = "government", .portal = "https://www.farmington-mo.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.farmington-mo.gov/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 35 items, ATOM feed, newest "
-      "2026-09-25T19:56:45Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO44_US_FILERTWPMI_GOV", .name = "Filer Township (City, Manistee, MI) - Filer Township",
     .name_ja = "Filer Township (City, Manistee, MI) - Filer Township",
@@ -6662,25 +6459,6 @@ static const hp_source HP3B44_USGOV[] = {
       "13:17:18 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_FORTRECOVERYOHIO_GOV_2", .name = "Village of Fort Recovery (City, Fort Recovery, OH) - "
-      "fort-recovery",
-    .name_ja = "Village of Fort Recovery (City, Fort Recovery, OH) - fort-recovery",
-    .category = "government", .portal = "https://www.fortrecoveryohio.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.fortrecoveryohio.gov/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 9 items, ATOM feed, newest "
-      "2023-06-29T13:17:18Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO44_US_FORTWRIGHTKY_GOV", .name = "City of Fort Wright (City, Fort Wright, KY) - City of Fort "
       "Wright, KY",
@@ -8703,25 +8481,6 @@ static const hp_source HP3B44_USGOV[] = {
       "09:40:37 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_HILLSBOROVA_GOV_2", .name = "Town of Hillsboro (City, Hillsboro, VA) - News from Hillsboro, "
-      "Virginia",
-    .name_ja = "Town of Hillsboro (City, Hillsboro, VA) - News from Hillsboro, Virginia",
-    .category = "government", .portal = "https://www.hillsborova.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.hillsborova.gov/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 12 items, ATOM feed, newest "
-      "2024-03-28T09:40:37Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO44_US_HINTONTOWNSHIP_GOV", .name = "Hinton Township (City, Lakeview, MI) - Hinton, Township "
       "(Mecosta, MI)",
@@ -10219,24 +9978,6 @@ static const hp_source HP3B44_USGOV[] = {
       "07:19:32 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_LAGRANGEKY_GOV_2", .name = "City of La Grange Kentucky (City, La Grange, KY) - lacity",
-    .name_ja = "City of La Grange Kentucky (City, La Grange, KY) - lacity",
-    .category = "government", .portal = "https://www.lagrangeky.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.lagrangeky.gov/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 4 items, ATOM feed, newest "
-      "2019-04-22T07:19:32Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO44_US_LAGRANGENY_GOV", .name = "Town of LaGrange (City, Lagrangeville, NY) - Town of LaGrange",
     .name_ja = "Town of LaGrange (City, Lagrangeville, NY) - Town of LaGrange",
@@ -10802,24 +10543,6 @@ static const hp_source HP3B44_USGOV[] = {
       "19:35:17 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_LINCOLNIL_GOV_2", .name = "City of Lincoln (City, Lincoln, IL) - blank-site69a1fcec",
-    .name_ja = "City of Lincoln (City, Lincoln, IL) - blank-site69a1fcec",
-    .category = "government", .portal = "https://www.lincolnil.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.lincolnil.gov/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 6 items, ATOM feed, newest "
-      "2024-11-20T19:35:17Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO44_US_LINDEN_NJ_GOV", .name = "TeliApp Corporation (City, Linden, NJ) - City of Linden",
     .name_ja = "TeliApp Corporation (City, Linden, NJ) - City of Linden",
@@ -11131,24 +10854,6 @@ static const hp_source HP3B44_USGOV[] = {
       "15:02:07 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_LOUISVILLENY_GOV_2", .name = "Town of Louisville (City, MASSENA, NY) - town-of-louisville",
-    .name_ja = "Town of Louisville (City, MASSENA, NY) - town-of-louisville",
-    .category = "government", .portal = "https://www.louisvilleny.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.louisvilleny.gov/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 4 items, ATOM feed, newest "
-      "2019-09-16T15:02:07Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO44_US_LOVINGNM_GOV", .name = "The Village of Loving (City, Loving, NM) - Village of Loving",
     .name_ja = "The Village of Loving (City, Loving, NM) - Village of Loving",
@@ -13922,24 +13627,6 @@ static const hp_source HP3B44_USGOV[] = {
       "07:19:32 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_PALMYRAMO_GOV_2", .name = "City of Palmyra (City, Palmyra, MO) - palmyra-city",
-    .name_ja = "City of Palmyra (City, Palmyra, MO) - palmyra-city",
-    .category = "government", .portal = "https://www.palmyramo.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.palmyramo.gov/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 4 items, ATOM feed, newest "
-      "2019-04-22T07:19:32Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO44_US_PALOUSEWA_GOV", .name = "City of Palouse (City, Palouse, WA) - City of Palouse",
     .name_ja = "City of Palouse (City, Palouse, WA) - City of Palouse",
@@ -14464,25 +14151,6 @@ static const hp_source HP3B44_USGOV[] = {
       "19:40:28 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_PINELEVELAL_GOV_2", .name = "Town of Pine Level, Alabama (City, Prattville, AL) - Town of "
-      "Pine Level News",
-    .name_ja = "Town of Pine Level, Alabama (City, Prattville, AL) - Town of Pine Level News",
-    .category = "government", .portal = "https://www.pinelevelal.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.pinelevelal.gov/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 38 items, ATOM feed, newest "
-      "2026-07-06T19:40:28Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO44_US_PINEPLAINS_NY_GOV", .name = "Town of Pine Plains (City, Pine Plains, NY) - Town of Pine "
       "Plains",
@@ -14777,24 +14445,6 @@ static const hp_source HP3B44_USGOV[] = {
       "16:32:02 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_POCONOPA_GOV_2", .name = "Pocono Township (City, Tannersville, PA) - Pocono Township",
-    .name_ja = "Pocono Township (City, Tannersville, PA) - Pocono Township",
-    .category = "government", .portal = "https://www.poconopa.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.poconopa.gov/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 10 items, ATOM feed, newest "
-      "2026-10-08T16:32:02Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO44_US_POKAGONTOWNSHIPMI_GOV", .name = "Pokagon Township (City, Dowagiac, MI) - Pokagon Township",
     .name_ja = "Pokagon Township (City, Dowagiac, MI) - Pokagon Township",
@@ -15013,25 +14663,6 @@ static const hp_source HP3B44_USGOV[] = {
       "17:31:47 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_POTSDAMMUSEUMNY_GOV_2", .name = "Potsdam Public Museum (City, Potsdam, NY) - Potsdam Public "
-      "Museum",
-    .name_ja = "Potsdam Public Museum (City, Potsdam, NY) - Potsdam Public Museum",
-    .category = "government", .portal = "https://www.potsdammuseumny.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.potsdammuseumny.gov/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 22 items, ATOM feed, newest "
-      "2022-12-29T17:31:47Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO44_US_POULSBO_GOV", .name = "City of Poulsbo (City, Poulsbo, WA) - City of Poulsbo",
     .name_ja = "City of Poulsbo (City, Poulsbo, WA) - City of Poulsbo",
@@ -15129,24 +14760,6 @@ static const hp_source HP3B44_USGOV[] = {
       "14:53:24 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_PROVISOTOWNSHIP_GOV_2", .name = "Proviso Township (City, Hillside, IL) - provisotownship",
-    .name_ja = "Proviso Township (City, Hillside, IL) - provisotownship",
-    .category = "government", .portal = "https://www.provisotownship.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.provisotownship.gov/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 2 items, ATOM feed, newest "
-      "2019-03-12T14:53:24Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO44_US_PURVIS_MS_GOV", .name = "City of Purvis (City, Purvis, MS) - City of Purvis, Mississippi",
     .name_ja = "City of Purvis (City, Purvis, MS) - City of Purvis, Mississippi",
@@ -15750,24 +15363,6 @@ static const hp_source HP3B44_USGOV[] = {
       "16:17:20 -0500. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_RUSSELLVILLEKY_GOV_2", .name = "City of Russellville, Kentucky (City, Russellville, KY) - Home",
-    .name_ja = "City of Russellville, Kentucky (City, Russellville, KY) - Home",
-    .category = "government", .portal = "https://russellvilleky.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://russellvilleky.gov/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 6 items, ATOM feed, newest "
-      "2026-10-17T13:16:36-05:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO44_US_SALEMTOWNSHIPACMI_GOV", .name = "Salem Township in Allegan County (City, Burnips, MI) - Salem "
       "Township (Allegan, MI)",
@@ -17367,25 +16962,6 @@ static const hp_source HP3B44_USGOV[] = {
       "14:06:25 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_SUGARGROVEIL_GOV_2", .name = "Village of Sugar Grove (City, Sugar Grove, IL) - "
-      "sugar-grove-active",
-    .name_ja = "Village of Sugar Grove (City, Sugar Grove, IL) - sugar-grove-active",
-    .category = "government", .portal = "https://www.sugargroveil.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.sugargroveil.gov/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 45 items, ATOM feed, newest "
-      "2026-10-13T14:06:25Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO44_US_SUMMERFIELDTWPCLAREMI_GOV", .name = "Summerfield Township (City, Harrison, MI) - Summerfield, "
       "Township (Clare, MI)",
@@ -17858,24 +17434,6 @@ static const hp_source HP3B44_USGOV[] = {
       "2022-02-23T20:08:05Z. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO44_US_TIOGATX_GOV_2", .name = "City of Tioga (City, Tioga, TX) - City of Tioga",
-    .name_ja = "City of Tioga (City, Tioga, TX) - City of Tioga",
-    .category = "government", .portal = "https://www.tiogatx.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.tiogatx.gov/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 2 items, RSS2 feed, newest Wed, 23 Feb 2022 "
-      "20:08:05 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO44_US_TOBYHANNATOWNSHIPPA_GOV", .name = "Tobyhanna Township (City, Pocono Pines, PA) - Tobyhanna Township",
     .name_ja = "Tobyhanna Township (City, Pocono Pines, PA) - Tobyhanna Township",
@@ -18129,25 +17687,6 @@ static const hp_source HP3B44_USGOV[] = {
       "10:44:12 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_TOWNOFATHENSNY_GOV_2", .name = "Town of Athens New York (City, Athens, NY) - Town of Athens, NY "
-      "- Official Municipal Website",
-    .name_ja = "Town of Athens New York (City, Athens, NY) - Town of Athens, NY - Official Municipal Website",
-    .category = "government", .portal = "https://townofathensny.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://townofathensny.gov/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 5 items, ATOM feed, newest "
-      "2026-10-17T18:16:48+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO44_US_TOWNOFBAILEYTONAL_GOV", .name = "Town of Baileyton (City, Baileyton, AL) - Town of Baileyton",
     .name_ja = "Town of Baileyton (City, Baileyton, AL) - Town of Baileyton",
@@ -18321,24 +17860,6 @@ static const hp_source HP3B44_USGOV[] = {
       "07:19:32 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_TOWNOFBURKEVILLE_GOV_2", .name = "Burkeville (City, Burkeville, VA) - town-of-burkeville",
-    .name_ja = "Burkeville (City, Burkeville, VA) - town-of-burkeville",
-    .category = "government", .portal = "https://www.townofburkeville.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.townofburkeville.gov/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 4 items, ATOM feed, newest "
-      "2019-04-22T07:19:32Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO44_US_TOWNOFBURNSNY_GOV", .name = "Town of Burns (City, Canaseraga, NY) - Town of Burns",
     .name_ja = "Town of Burns (City, Canaseraga, NY) - Town of Burns",
@@ -19748,24 +19269,6 @@ static const hp_source HP3B44_USGOV[] = {
       "02:51:34 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_TOWNOFRICHLANDNY_GOV_2", .name = "TOWN OF RICHLAND (City, PULASKI, NY) - Home",
-    .name_ja = "TOWN OF RICHLAND (City, PULASKI, NY) - Home",
-    .category = "government", .portal = "https://townofrichlandny.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://townofrichlandny.gov/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 2 items, ATOM feed, newest "
-      "2026-10-17T18:16:55+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO44_US_TOWNOFRICHMOND_WALWORTHWI_GOV", .name = "Town of Richmond (City, Whitewater, WI) - Town of Richmond",
     .name_ja = "Town of Richmond (City, Whitewater, WI) - Town of Richmond",
@@ -20388,24 +19891,6 @@ static const hp_source HP3B44_USGOV[] = {
       "16:47:34 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_TRINIDADTEXAS_GOV_2", .name = "City of Trinidad (City, Trinidad, TX) - trinidad",
-    .name_ja = "City of Trinidad (City, Trinidad, TX) - trinidad",
-    .category = "government", .portal = "https://www.trinidadtexas.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.trinidadtexas.gov/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 1 items, ATOM feed, newest "
-      "2025-11-25T16:47:34Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO44_US_TROYAL_GOV", .name = "City of Troy (City, Troy, AL) - Home Page News",
     .name_ja = "City of Troy (City, Troy, AL) - Home Page News",
@@ -21404,25 +20889,6 @@ static const hp_source HP3B44_USGOV[] = {
       "07:58:06 -0700. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_VILLAGEOFMONTGOMERYNY_GOV_2", .name = "Village of Montgomery (City, Montgomery, NY) - Village of "
-      "Montgomery",
-    .name_ja = "Village of Montgomery (City, Montgomery, NY) - Village of Montgomery",
-    .category = "government", .portal = "https://villageofmontgomeryny.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://villageofmontgomeryny.gov/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 9 items, ATOM feed, newest "
-      "2026-10-17T11:17:02-07:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO44_US_VILLAGEOFMONTICELLONY_GOV", .name = "Village of Monticello (City, Monticello, NY) - Village of "
       "Monticello, NY",
@@ -23557,25 +23023,6 @@ static const hp_source HP3B44_USGOV[] = {
       "16:51:37 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_COTTERAR_GOV_2", .name = "City of Cotter (City - Election, COTTER, AR) - Mayor's News – "
-      "The City of Cotter",
-    .name_ja = "City of Cotter (City - Election, COTTER, AR) - Mayor's News – The City of Cotter",
-    .category = "government", .portal = "https://www.cotterar.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.cotterar.gov/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 77 items, ATOM feed, newest "
-      "2026-10-12T16:51:37Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO44_US_CROSWELLMI_GOV", .name = "City of Croswell (City - Election, Croswell, MI) - Croswell, "
       "City (Sanilac, MI)",
@@ -24727,24 +24174,6 @@ static const hp_source HP3B44_USGOV[] = {
       "14:22:45 -0600. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_ADAMSCOUNTYNE_GOV_2", .name = "Adams County Nebraska (County, Hastings, NE) - Home",
-    .name_ja = "Adams County Nebraska (County, Hastings, NE) - Home",
-    .category = "government", .portal = "https://adamscountyne.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://adamscountyne.gov/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 1 items, ATOM feed, newest "
-      "2026-10-17T13:17:21-05:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO44_US_ADAMSCOUNTYOH_GOV", .name = "Adams County Commissioners (County, West Union, OH) - Adams "
       "County Government",
@@ -25020,24 +24449,6 @@ static const hp_source HP3B44_USGOV[] = {
       "20:50:31 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_BCILTRANSIT_GOV_2", .name = "County of Boone (County, Belvidere, IL) - Rider Alerts",
-    .name_ja = "County of Boone (County, Belvidere, IL) - Rider Alerts",
-    .category = "government", .portal = "https://www.bciltransit.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.bciltransit.gov/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 1 items, ATOM feed, newest "
-      "2019-04-02T20:50:31Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO44_US_BEAVERHEADCOUNTYMT_GOV", .name = "Beaverhead County (County, Dillon, MT) - Beaverhead County",
     .name_ja = "Beaverhead County (County, Dillon, MT) - Beaverhead County",
@@ -25583,25 +24994,6 @@ static const hp_source HP3B44_USGOV[] = {
       "21:57:39 -0500. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_CEDARCOUNTYMO_GOV_2", .name = "Cedar County, Missouri (County, Stockton, MO) - Home - Cedar "
-      "County Missouri",
-    .name_ja = "Cedar County, Missouri (County, Stockton, MO) - Home - Cedar County Missouri",
-    .category = "government", .portal = "https://cedarcountymo.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cedarcountymo.gov/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 2 items, ATOM feed, newest "
-      "2026-10-17T13:17:25-05:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO44_US_CEDARCOUNTYNE_GOV", .name = "Cedar County (County, Hartington, NE) - Cedar County",
     .name_ja = "Cedar County (County, Hartington, NE) - Cedar County",
@@ -25642,25 +25034,6 @@ static const hp_source HP3B44_USGOV[] = {
       "08:00:00 -0500. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_CHEROKEECOUNTYKS_GOV_2", .name = "Cherokee County (County, Columbus, KS) - Cherokee County, Kansas "
-      "- Home",
-    .name_ja = "Cherokee County (County, Columbus, KS) - Cherokee County, Kansas - Home",
-    .category = "government", .portal = "https://cherokeecountyks.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cherokeecountyks.gov/main/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 1 items, ATOM feed, newest "
-      "2026-10-17T13:17:25-05:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO44_US_CHERRYCOUNTYNE_GOV", .name = "Cherry County (County, Valentine, NE) - Cherry County",
     .name_ja = "Cherry County (County, Valentine, NE) - Cherry County",
@@ -26231,25 +25604,6 @@ static const hp_source HP3B44_USGOV[] = {
       "15:50:12 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_DCSOKY_GOV_2", .name = "Daviess County Sheriffs Office (County, Owensboro, KY) - "
-      "daviess-county-sheriffs-office",
-    .name_ja = "Daviess County Sheriffs Office (County, Owensboro, KY) - daviess-county-sheriffs-office",
-    .category = "government", .portal = "https://www.dcsoky.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.dcsoky.gov/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 6 items, ATOM feed, newest "
-      "2023-08-21T15:50:12Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO44_US_DECATURCOUNTYGA_GOV", .name = "Decatur County Board of Commissioners (County, Bainbridge, GA) - "
       "Decatur County GA",
@@ -27095,25 +26449,6 @@ static const hp_source HP3B44_USGOV[] = {
       "14:00:07 -0500. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_HILLSDALECOUNTY_GOV_2", .name = "Hillsdale County (County, Hillsdale, MI) - Welcome to Hillsdale "
-      "County, Michigan",
-    .name_ja = "Hillsdale County (County, Hillsdale, MI) - Welcome to Hillsdale County, Michigan",
-    .category = "government", .portal = "https://hillsdalecounty.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://hillsdalecounty.gov/index.php?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 1 items, ATOM feed, newest "
-      "2026-10-17T14:17:32-04:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO44_US_HILLSTAXFL_GOV", .name = "Hillsborough County Tax Collector (County, Tampa, FL) - "
       "Hillsborough County Tax Collector",
@@ -27470,24 +26805,6 @@ static const hp_source HP3B44_USGOV[] = {
       "11:38:31 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_KIMBALLCOUNTYNE_GOV_2", .name = "Kimball County (County, Kimball, NE) - kimball_1",
-    .name_ja = "Kimball County (County, Kimball, NE) - kimball_1",
-    .category = "government", .portal = "https://www.kimballcountyne.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kimballcountyne.gov/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 4 items, ATOM feed, newest "
-      "2019-07-01T11:38:31Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO44_US_KNOXCOUNTYNE_GOV", .name = "Knox County (County, Center, NE) - Knox County",
     .name_ja = "Knox County (County, Center, NE) - Knox County",
@@ -28437,25 +27754,6 @@ static const hp_source HP3B44_USGOV[] = {
       "14:01:37 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_OLDHAMCOUNTYKY_GOV_2", .name = "Oldham County Fiscal Court (County, La Grange, KY) - Oldham "
-      "County News",
-    .name_ja = "Oldham County Fiscal Court (County, La Grange, KY) - Oldham County News",
-    .category = "government", .portal = "https://www.oldhamcountyky.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.oldhamcountyky.gov/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 7 items, ATOM feed, newest "
-      "2026-10-08T14:01:37Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO44_US_OPCDLA_GOV", .name = "Orleans Parish Communication District (County, New Orleans, LA) "
       "- Orleans Parish Communication District",
@@ -31082,25 +30380,6 @@ static const hp_source HP3B44_USGOV[] = {
       "17:57:32 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_VOTENASSAUFL_GOV_2", .name = "Nassau County Supervisor of Elections (County - Election, Yulee, "
-      "FL) - vote-nassau",
-    .name_ja = "Nassau County Supervisor of Elections (County - Election, Yulee, FL) - vote-nassau",
-    .category = "government", .portal = "https://www.votenassaufl.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.votenassaufl.gov/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 1 items, ATOM feed, newest "
-      "2026-10-15T17:57:32Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO44_US_ARC_GOV", .name = "Appalachian Regional Commission (Federal - Executive, "
       "Washington, DC) - Appalachian Regional Commission",
@@ -35391,25 +34670,6 @@ static const hp_source HP3B44_USGOV[] = {
       "18:35:29 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_HCESD13TX_GOV_2", .name = "Harris County Emergency Services District #13 (Special district, "
-      "Cypress, TX) - Harris County ESD 13",
-    .name_ja = "Harris County Emergency Services District #13 (Special district, Cypress, TX) - Harris County ESD 13",
-    .category = "government", .portal = "http://www.cypresscreekfire.com/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.cypresscreekfire.com/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 8 items, ATOM feed, newest "
-      "2023-10-09T18:35:29Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO44_US_HESPERIAPARKS_GOV", .name = "Hesperia Recreation & Parks District (Special district, "
       "Hesperia, CA) - Hesperia Parks & Recreation",
@@ -35752,25 +35012,6 @@ static const hp_source HP3B44_USGOV[] = {
       "21:02:25 GMT. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_LLANOCOESD5TX_GOV_2", .name = "Llano County Emergency Services District #5 (Special district, "
-      "Sunrise Beach Village, TX) - Llano County ESD 5",
-    .name_ja = "Llano County Emergency Services District #5 (Special district, Sunrise Beach Village, TX) - Llano County ESD 5",
-    .category = "government", .portal = "https://www.llanocoesd5tx.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.llanocoesd5tx.gov/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 52 items, ATOM feed, newest "
-      "2026-08-19T21:02:25Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO44_US_LONEPEAKFIRE_GOV", .name = "Lone Peak Fire District (Special district, Highland, UT) - Lone "
       "Peak Fire District",
@@ -39793,25 +39034,6 @@ static const hp_source HP3B44_USGOV[] = {
       "10:25:18 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_COLUSA_NSN_GOV_2", .name = "Colusa Indian Community Council (Tribal, Colusa, CA) - Colusa "
-      "Indian Community Council",
-    .name_ja = "Colusa Indian Community Council (Tribal, Colusa, CA) - Colusa Indian Community Council",
-    .category = "government", .portal = "https://www.colusa-nsn.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.colusa-nsn.gov/feed/atom/",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 1 items, ATOM feed, newest "
-      "2013-05-24T10:25:18Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO44_US_CSKT_GOV", .name = "Confederated Salish and Kootenai Tribes (Tribal, Pablo, MT) - "
       "Confederated Salish & Kootenai Tribes",
@@ -40290,25 +39512,6 @@ static const hp_source HP3B44_USGOV[] = {
       "08:12:53 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_PECHANGA_NSN_GOV_2", .name = "Pechanga Tribal Government (Tribal, Temecula, CA) - Pechanga "
-      "Tribal Government",
-    .name_ja = "Pechanga Tribal Government (Tribal, Temecula, CA) - Pechanga Tribal Government",
-    .category = "government", .portal = "https://pechanga-nsn.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://pechanga-nsn.gov/?format=feed&type=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 4 items, ATOM feed, newest "
-      "2026-10-17T18:18:31+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO44_US_PINOLEVILLE_NSN_GOV", .name = "Pinoleville Pomo Nation (Tribal, Ukiah, CA) - Pinoleville Pomo "
       "Nation",
