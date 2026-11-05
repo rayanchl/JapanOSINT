@@ -60,24 +60,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "2026 08:43:56 +0200. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO47_WD_Q11926724_3", .name = "Andorran Financial Authority (central-bank, AD) - AFA",
-    .name_ja = "Andorran Financial Authority (central-bank, AD) - AFA",
-    .category = "government", .portal = "https://www.afa.ad/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.afa.ad/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 500 items, ATOM feed, newest "
-      "2020-08-17T14:08:43+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_WD_Q11926724_4", .name = "Andorran Financial Authority (central-bank, AD) - Advertències",
     .name_ja = "Andorran Financial Authority (central-bank, AD) - Advertències",
@@ -1546,25 +1528,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "03:07:27 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q4650880_2", .name = "ACT Fire and Rescue (government-agency, AU) - ACT Emergency "
-      "Services Agency - Working together to care and protect",
-    .name_ja = "ACT Fire and Rescue (government-agency, AU) - ACT Emergency Services Agency - Working together to care and protect",
-    .category = "government", .portal = "http://esa.act.gov.au/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://esa.act.gov.au/feed",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "03:07:27 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO47_WD_Q4698993", .name = "Airservices Australia (government-agency, AU) - Airservices",
     .name_ja = "Airservices Australia (government-agency, AU) - Airservices",
@@ -2262,25 +2225,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "13:46:00 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q2103415_3", .name = "Flemish advisory council for environment and nature "
-      "(government-organization, BE) - Minaraad",
-    .name_ja = "Flemish advisory council for environment and nature (government-organization, BE) - Minaraad",
-    .category = "government", .portal = "https://www.minaraad.be/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.minaraad.be/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 15 items, ATOM feed, newest "
-      "2026-07-02T10:01:21+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_WD_Q2582528", .name = "Assembly of the Flemish Community Commission (legislature, BE) - "
       "raadvgc.be",
@@ -2946,26 +2890,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "19:16:20 -0300. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q30264215_2", .name = "Fundação de Apoio à Pesquisa do Estado da Paraíba "
-      "(government-agency, BR) - FAPESQ - Fundação de Apoio à Pesquisa "
-      "do Estado da Paraíba",
-    .name_ja = "Fundação de Apoio à Pesquisa do Estado da Paraíba (government-agency, BR) - FAPESQ - Fundação de Apoio à Pesquisa do Estado da Paraíba",
-    .category = "government", .portal = "https://fapesq.rpp.br/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://fapesq.rpp.br/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 15 items, ATOM feed, newest "
-      "2022-03-31T12:06:05-03:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_WD_Q30299123", .name = "Secretaria de Desenvolvimento Econômico e Turístico "
       "(government-agency, BR) - Prefeitura de Lorena",
@@ -11246,25 +11170,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "16:43:00 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q43895470_3", .name = "Agenzia Sanitaria e Sociale Regionale (government-agency, IT) - "
-      "Assr",
-    .name_ja = "Agenzia Sanitaria e Sociale Regionale (government-agency, IT) - Assr",
-    .category = "government", .portal = "https://assr.regione.emilia-romagna.it/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://assr.regione.emilia-romagna.it/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 15 items, ATOM feed, newest "
-      "2026-10-13T13:09:46+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_WD_Q108436146", .name = "archaeological park of Colosseum (government-agency, IT) - Parco "
       "archeologico del Colosseo",
@@ -11344,24 +11249,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "08:40:00 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q3958117_3", .name = "Emilia-Romagna Health Service (government-agency, IT) - Salute",
-    .name_ja = "Emilia-Romagna Health Service (government-agency, IT) - Salute",
-    .category = "government", .portal = "https://salute.regione.emilia-romagna.it/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://salute.regione.emilia-romagna.it/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 15 items, ATOM feed, newest "
-      "2026-10-16T10:46:28+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_WD_Q18751939", .name = "Civic Museums of Brescia (government-agency, IT) - Fondazione "
       "Brescia Musei",
@@ -12125,25 +12012,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "2025-09-01T01:00:32Z. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO47_WD_Q137943560_2", .name = "Fuchu City Hospital Organization (government-agency, JP) - "
-      "地方独立行政法人 府中市病院機構",
-    .name_ja = "Fuchu City Hospital Organization (government-agency, JP) - 地方独立行政法人 府中市病院機構",
-    .category = "government", .portal = "https://fuchuhp.jp/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://fuchuhp.jp/feed",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 5 items, RSS2 feed, newest Mon, 01 Sep 2025 "
-      "01:00:32 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO47_WD_Q11507232", .name = "Japan Sport Association (government-agency, JP) - 日本スポーツ協会",
     .name_ja = "Japan Sport Association (government-agency, JP) - 日本スポーツ協会",
@@ -18658,24 +18526,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "10:42:36 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q86360599_2", .name = "DGERT (government-agency, PT) - DGERT",
-    .name_ja = "DGERT (government-agency, PT) - DGERT",
-    .category = "government", .portal = "http://www.dgert.gov.pt/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.dgert.gov.pt/feed/rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Wed, 14 Oct 2026 "
-      "10:42:36 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO47_WD_Q9630323", .name = "Arquivo Distrital de Aveiro (government-organization, PT) - "
       "Arquivo Distrital de Aveiro",
@@ -18858,25 +18708,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "A feed the organisation itself declares or links on its site "
       "root." },
 
-  { .id = "JO47_WD_Q18537588_2", .name = "Romanian Financial Supervisory Authority (government-agency, RO) "
-      "- Autoritatea de Supraveghere Financiară",
-    .name_ja = "Romanian Financial Supervisory Authority (government-agency, RO) - Autoritatea de Supraveghere Financiară",
-    .category = "government", .portal = "https://asfromania.ro/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://asfromania.ro/ro/rss/rss.xml",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 16 items, RSS2 feed, newest (no date field). "
-      "A feed the organisation itself declares or links on its site "
-      "root." },
 
   { .id = "JO47_WD_Q18537592", .name = "National Authority for Regulating Community Services Public "
       "Utilities (government-agency, RO) - A.N.R.S.C",
@@ -21277,25 +21108,6 @@ static const hp_source HP3B47_WDGOV[] = {
       "15:42:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_WD_Q139497581", .name = "Ministry of Armed Forces of Senegal (ministry, SN) - Ministère "
-      "des forces armées",
-    .name_ja = "Ministry of Armed Forces of Senegal (ministry, SN) - Ministère des forces armées",
-    .category = "government", .portal = "https://www.forcesarmees.gouv.sn/",
-    .record_type = "government-notice",
-    .tags = "\"wdgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.forcesarmees.gouv.sn/rss.xml",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 2 items, RSS2 feed, newest Tue, 07 Apr 2020 "
-      "05:21:26 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO47_WD_Q140067386", .name = "Ministry of Water and Sanitation of Senegal (ministry, SN) - "
       "Ministère de l'Hydraulique et de l'Assainissement du Sénégal",

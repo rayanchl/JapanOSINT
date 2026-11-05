@@ -461,24 +461,6 @@ static const hp_source HP3B44_UKGOV[] = {
       "2026 13:34:59 GMT. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO44_UK_KETTERING_GOV_UK_2", .name = "kettering.gov.uk - North Northamptonshire Council news",
-    .name_ja = "kettering.gov.uk - North Northamptonshire Council news",
-    .category = "government", .portal = "https://www.northnorthants.gov.uk/",
-    .record_type = "government-notice",
-    .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.northnorthants.gov.uk/rss/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 606 items, ATOM feed, newest "
-      "2026-10-16T15:02:38.352Z. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO44_UK_SWINDON_GOV_UK", .name = "swindon.gov.uk - www.swindon.gov.uk Latest News",
     .name_ja = "swindon.gov.uk - www.swindon.gov.uk Latest News",
@@ -1248,24 +1230,6 @@ static const hp_source HP3B44_UKGOV[] = {
       "2026 09:00:51 GMT. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO44_UK_SOUTHNORTHANTS_GOV_UK_2", .name = "southnorthants.gov.uk - West Northamptonshire Council news",
-    .name_ja = "southnorthants.gov.uk - West Northamptonshire Council news",
-    .category = "government", .portal = "https://www.westnorthants.gov.uk/",
-    .record_type = "government-notice",
-    .tags = "\"ukgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.westnorthants.gov.uk/rss/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 843 items, ATOM feed, newest "
-      "2026-10-16T14:38:07.489Z. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO44_UK_NIDIRECT_GOV_UK", .name = "nidirect.gov.uk - NIDirect Newsroom",
     .name_ja = "nidirect.gov.uk - NIDirect Newsroom",

@@ -870,23 +870,6 @@ static const hp_source HP3B57_JPEDU[] = {
       "2026-10-29T07:33:04Z. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO57IQ6884458_3", .name = "Miyazaki Sangyo-keiei University (university) - 宮崎産業経営大学",
-    .name_ja = "Miyazaki Sangyo-keiei University (university) - 宮崎産業経営大学",
-    .category = "education", .portal = "http://www.miyasankei-u.ac.jp/",
-    .record_type = "education-notice",
-    .tags = "\"jpedu\",\"japan\",\"university\",\"college\",\"notice\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.miyasankei-u.ac.jp/feed/rss/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-30: 50 items, RSS2 feed, newest Thu, 29 Oct 2026 "
-      "07:33:04 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO57IQ1201044", .name = "Oita University (university) - 最新情報｜大分大学",
     .name_ja = "Oita University (university) - 最新情報｜大分大学",
@@ -12129,30 +12112,6 @@ static const hp_source HP3B57_JPEDU[] = {
       "root (/wp/v2/types), not guessed. Keyed on the user id with name "
       "as the title: a user record carries no date field." },
 
-  { .id = "JO57_WP_KEIWAC_POSTS", .name = "敬和学園大学 新潟県新発田市にあるリベラルアーツ大学 — posts (WordPress REST)",
-    .name_ja = "敬和学園大学 新潟県新発田市にあるリベラルアーツ大学 投稿（WordPress REST）",
-    .category = "education", .portal = "https://keiwa-c.ac.jp/",
-    .record_type = "education-notice",
-    .tags = "\"jpedu\",\"japan\",\"university\",\"college\",\"notice\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://keiwa-c.ac.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
-    .array_path = ".",
-    .body_keys = "content.rendered",
-    .date_keys = "date",
-    .id_keys = "id",
-    .interval = 21600,
-    .link_keys = "link",
-    .page_max = 60,
-    .page_param = "page",
-    .page_start = 1,
-    .timeout_ms = 30000,
-    .title_keys = "title.rendered",
-    .description = "WordPress REST posts of 敬和学園大学 新潟県新発田市にあるリベラルアーツ大学 "
-      "(keiwa-c.ac.jp). Fetched 2026-10-30: the collection answered "
-      "with 3 record(s) and declares 3 in X-WP-Total. Discovered from "
-      "this host's own REST root (/wp/v2/types), not guessed. "
-      "Post-shaped: title.rendered, date, link and content.rendered are "
-      "kept." },
 
   { .id = "JO57_WP_KENKOUDAI_INFORMATION", .name = "健康科学大学 — custom post type `information` (新着情報) (WordPress REST)",
     .name_ja = "健康科学大学 新着情報（WordPress REST）",
@@ -12253,30 +12212,6 @@ static const hp_source HP3B57_JPEDU[] = {
       "root (/wp/v2/types), not guessed. Post-shaped: title.rendered, "
       "date, link and content.rendered are kept." },
 
-  { .id = "JO57_WP_KEIWAC_PAGES", .name = "敬和学園大学 新潟県新発田市にあるリベラルアーツ大学 — pages (WordPress REST)",
-    .name_ja = "敬和学園大学 新潟県新発田市にあるリベラルアーツ大学 固定ページ（WordPress REST）",
-    .category = "education", .portal = "https://keiwa-c.ac.jp/",
-    .record_type = "education-notice",
-    .tags = "\"jpedu\",\"japan\",\"university\",\"college\",\"notice\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://keiwa-c.ac.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc",
-    .array_path = ".",
-    .body_keys = "content.rendered",
-    .date_keys = "date",
-    .id_keys = "id",
-    .interval = 21600,
-    .link_keys = "link",
-    .page_max = 60,
-    .page_param = "page",
-    .page_start = 1,
-    .timeout_ms = 30000,
-    .title_keys = "title.rendered",
-    .description = "WordPress REST pages of 敬和学園大学 新潟県新発田市にあるリベラルアーツ大学 "
-      "(keiwa-c.ac.jp). Fetched 2026-10-30: the collection answered "
-      "with 100 record(s) and declares 259 in X-WP-Total. Discovered "
-      "from this host's own REST root (/wp/v2/types), not guessed. "
-      "Post-shaped: title.rendered, date, link and content.rendered are "
-      "kept." },
 
   { .id = "JO57_WP_KIIS_POSTS", .name = "九州情報大学 — posts (WordPress REST)",
     .name_ja = "九州情報大学 投稿（WordPress REST）",
@@ -12376,31 +12311,6 @@ static const hp_source HP3B57_JPEDU[] = {
       "Post-shaped: title.rendered, date, link and content.rendered are "
       "kept." },
 
-  { .id = "JO57_WP_KEIWAC_LIBRARYNEWS", .name = "敬和学園大学 新潟県新発田市にあるリベラルアーツ大学 — custom post type `librarynews` "
-      "(図書館だより) (WordPress REST)",
-    .name_ja = "敬和学園大学 新潟県新発田市にあるリベラルアーツ大学 図書館だより（WordPress REST）",
-    .category = "education", .portal = "https://keiwa-c.ac.jp/",
-    .record_type = "education-notice",
-    .tags = "\"jpedu\",\"japan\",\"university\",\"college\",\"notice\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://keiwa-c.ac.jp/wp-json/wp/v2/librarynews?per_page=100&orderby=date&order=desc",
-    .array_path = ".",
-    .body_keys = "content.rendered",
-    .date_keys = "date",
-    .id_keys = "id",
-    .interval = 21600,
-    .link_keys = "link",
-    .page_max = 60,
-    .page_param = "page",
-    .page_start = 1,
-    .timeout_ms = 30000,
-    .title_keys = "title.rendered",
-    .description = "WordPress REST custom post type `librarynews` (図書館だより) of 敬和学園大学 "
-      "新潟県新発田市にあるリベラルアーツ大学 (keiwa-c.ac.jp). Fetched 2026-10-30: the "
-      "collection answered with 36 record(s) and declares 36 in "
-      "X-WP-Total. Discovered from this host's own REST root "
-      "(/wp/v2/types), not guessed. Post-shaped: title.rendered, date, "
-      "link and content.rendered are kept." },
 
   { .id = "JO57_WP_KASEIGAKUIN_INTERVIEW", .name = "東京家政学院大学 — custom post type `interview` (インタビュー) (WordPress "
       "REST)",
@@ -12674,31 +12584,6 @@ static const hp_source HP3B57_JPEDU[] = {
       "Post-shaped: title.rendered, date, link and content.rendered are "
       "kept." },
 
-  { .id = "JO57_WP_KEIWAC_KEIWABADMINTON", .name = "敬和学園大学 新潟県新発田市にあるリベラルアーツ大学 — custom post type `keiwabadminton` "
-      "(バドミントン部ブログ) (WordPress REST)",
-    .name_ja = "敬和学園大学 新潟県新発田市にあるリベラルアーツ大学 バドミントン部ブログ（WordPress REST）",
-    .category = "education", .portal = "https://keiwa-c.ac.jp/",
-    .record_type = "education-notice",
-    .tags = "\"jpedu\",\"japan\",\"university\",\"college\",\"notice\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://keiwa-c.ac.jp/wp-json/wp/v2/keiwabadminton?per_page=100&orderby=date&order=desc",
-    .array_path = ".",
-    .body_keys = "content.rendered",
-    .date_keys = "date",
-    .id_keys = "id",
-    .interval = 21600,
-    .link_keys = "link",
-    .page_max = 60,
-    .page_param = "page",
-    .page_start = 1,
-    .timeout_ms = 30000,
-    .title_keys = "title.rendered",
-    .description = "WordPress REST custom post type `keiwabadminton` (バドミントン部ブログ) of "
-      "敬和学園大学 新潟県新発田市にあるリベラルアーツ大学 (keiwa-c.ac.jp). Fetched 2026-10-30: "
-      "the collection answered with 100 record(s) and declares 550 in "
-      "X-WP-Total. Discovered from this host's own REST root "
-      "(/wp/v2/types), not guessed. Post-shaped: title.rendered, date, "
-      "link and content.rendered are kept." },
 
   { .id = "JO57_WP_KGWU_OPENCAMPUS", .name = "川村学園女子大学 — custom post type `opencampus` (オープンキャンパス) (WordPress "
       "REST)",
@@ -12752,30 +12637,6 @@ static const hp_source HP3B57_JPEDU[] = {
       "guessed. Post-shaped: title.rendered, date, link and "
       "content.rendered are kept." },
 
-  { .id = "JO57_WP_KEIWAC_USERS", .name = "敬和学園大学 新潟県新発田市にあるリベラルアーツ大学 — author/staff register (WordPress "
-      "REST)",
-    .name_ja = "敬和学園大学 新潟県新発田市にあるリベラルアーツ大学 利用者一覧（WordPress REST）",
-    .category = "education", .portal = "https://keiwa-c.ac.jp/",
-    .record_type = "education-notice",
-    .tags = "\"jpedu\",\"japan\",\"university\",\"college\",\"notice\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://keiwa-c.ac.jp/wp-json/wp/v2/users?per_page=100",
-    .array_path = ".",
-    .body_keys = "description",
-    .id_keys = "id",
-    .interval = 86400,
-    .link_keys = "link",
-    .page_max = 60,
-    .page_param = "page",
-    .page_start = 1,
-    .timeout_ms = 30000,
-    .title_keys = "name",
-    .description = "WordPress REST author/staff register of 敬和学園大学 "
-      "新潟県新発田市にあるリベラルアーツ大学 (keiwa-c.ac.jp). Fetched 2026-10-30: the "
-      "collection answered with 6 record(s) and declares 6 in "
-      "X-WP-Total. Discovered from this host's own REST root "
-      "(/wp/v2/types), not guessed. Keyed on the user id with name as "
-      "the title: a user record carries no date field." },
 
   { .id = "JO57_WP_KGWU_USERS", .name = "川村学園女子大学 — author/staff register (WordPress REST)",
     .name_ja = "川村学園女子大学 利用者一覧（WordPress REST）",
@@ -22110,29 +21971,6 @@ static const hp_source HP3B57_JPEDU[] = {
       "(/wp/v2/types), not guessed. Post-shaped: title.rendered, date, "
       "link and content.rendered are kept." },
 
-  { .id = "JO57_WP_SGUC_POSTS", .name = "山陽学園大学・山陽学園短期大学  /  Student First — posts (WordPress REST)",
-    .name_ja = "山陽学園大学・山陽学園短期大学  /  Student First 投稿（WordPress REST）",
-    .category = "education", .portal = "https://sguc.ac.jp/",
-    .record_type = "education-notice",
-    .tags = "\"jpedu\",\"japan\",\"university\",\"college\",\"notice\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://sguc.ac.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
-    .array_path = ".",
-    .body_keys = "content.rendered",
-    .date_keys = "date",
-    .id_keys = "id",
-    .interval = 21600,
-    .link_keys = "link",
-    .page_max = 60,
-    .page_param = "page",
-    .page_start = 1,
-    .timeout_ms = 30000,
-    .title_keys = "title.rendered",
-    .description = "WordPress REST posts of 山陽学園大学・山陽学園短期大学  /  Student First "
-      "(sguc.ac.jp). Fetched 2026-10-30: the collection answered with 1 "
-      "record(s) and declares 1 in X-WP-Total. Discovered from this "
-      "host's own REST root (/wp/v2/types), not guessed. Post-shaped: "
-      "title.rendered, date, link and content.rendered are kept." },
 
   { .id = "JO57_WP_SFSOSAKAU_EMPLOYMENT", .name = "大阪大学 外国語学部 — custom post type `employment` (採用情報) (WordPress "
       "REST)",
@@ -22185,29 +22023,6 @@ static const hp_source HP3B57_JPEDU[] = {
       "Post-shaped: title.rendered, date, link and content.rendered are "
       "kept." },
 
-  { .id = "JO57_WP_SGUC_PAGES", .name = "山陽学園大学・山陽学園短期大学  /  Student First — pages (WordPress REST)",
-    .name_ja = "山陽学園大学・山陽学園短期大学  /  Student First 固定ページ（WordPress REST）",
-    .category = "education", .portal = "https://sguc.ac.jp/",
-    .record_type = "education-notice",
-    .tags = "\"jpedu\",\"japan\",\"university\",\"college\",\"notice\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://sguc.ac.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc",
-    .array_path = ".",
-    .body_keys = "content.rendered",
-    .date_keys = "date",
-    .id_keys = "id",
-    .interval = 21600,
-    .link_keys = "link",
-    .page_max = 60,
-    .page_param = "page",
-    .page_start = 1,
-    .timeout_ms = 30000,
-    .title_keys = "title.rendered",
-    .description = "WordPress REST pages of 山陽学園大学・山陽学園短期大学  /  Student First "
-      "(sguc.ac.jp). Fetched 2026-10-30: the collection answered with "
-      "63 record(s) and declares 63 in X-WP-Total. Discovered from this "
-      "host's own REST root (/wp/v2/types), not guessed. Post-shaped: "
-      "title.rendered, date, link and content.rendered are kept." },
 
   { .id = "JO57_WP_SFSOSAKAU_OPENCAMPUS", .name = "大阪大学 外国語学部 — custom post type `opencampus` (オープンキャンパス) "
       "(WordPress REST)",
@@ -23815,29 +23630,6 @@ static const hp_source HP3B57_JPEDU[] = {
       "root (/wp/v2/types), not guessed. Post-shaped: title.rendered, "
       "date, link and content.rendered are kept." },
 
-  { .id = "JO57_WP_TAIS_POSTS", .name = "大正大学 — posts (WordPress REST)",
-    .name_ja = "大正大学 投稿（WordPress REST）",
-    .category = "education", .portal = "https://tais.ac.jp/",
-    .record_type = "education-notice",
-    .tags = "\"jpedu\",\"japan\",\"university\",\"college\",\"notice\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://tais.ac.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
-    .array_path = ".",
-    .body_keys = "content.rendered",
-    .date_keys = "date",
-    .id_keys = "id",
-    .interval = 21600,
-    .link_keys = "link",
-    .page_max = 60,
-    .page_param = "page",
-    .page_start = 1,
-    .timeout_ms = 30000,
-    .title_keys = "title.rendered",
-    .description = "WordPress REST posts of 大正大学 (tais.ac.jp). Fetched 2026-10-30: "
-      "the collection answered with 11 record(s) and declares 11 in "
-      "X-WP-Total. Discovered from this host's own REST root "
-      "(/wp/v2/types), not guessed. Post-shaped: title.rendered, date, "
-      "link and content.rendered are kept." },
 
   { .id = "JO57_WP_SUS_PAGES", .name = "公立諏訪東京理科大学 — pages (WordPress REST)",
     .name_ja = "公立諏訪東京理科大学 固定ページ（WordPress REST）",

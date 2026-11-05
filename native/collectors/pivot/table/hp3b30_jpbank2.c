@@ -1659,20 +1659,6 @@ static const hp_source HP3B30_JPBANK2[] = {
       "【お知らせ】2026年09月10日 …) and link only; many items share one link, "
       "so identity is the title." },
 
-  { .id = "JO30_BANK_KABUCOM_RSS", .name = "au Kabucom Securities press release RSS",
-    .name_ja = "auカブコム証券 プレスリリース RSS",
-    .category = "finance", .portal = "https://www.kabu.com/",
-    .record_type = "press-release",
-    .tags = "\"japan\",\"finance\",\"securities\",\"au-kabucom\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kabu.com/rss.xml",
-    .array_path = "item",
-    .date_keys = "pubDate",
-    .id_keys = "guid,link",
-    .interval = 86400,
-    .title_keys = "title",
-    .description = "RSS 2.0, 50 items with guid, link, title, pubDate; newest "
-      "2026-09-16 NISA口座の開設・管理に関する約款規定類の改定のお知らせ." },
 
   { .id = "JO30_BANK_IWAICOSMO_RSS", .name = "Iwai Cosmo Securities news release RSS",
     .name_ja = "岩井コスモ証券 ニュースリリース RSS",

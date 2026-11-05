@@ -8560,24 +8560,6 @@ static const hp_source HP3B44_USGOV[] = {
       "00:00:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_HOLLANDVT_GOV_2", .name = "Town of Holland (City, Holland, VT) - Holland, VT",
-    .name_ja = "Town of Holland (City, Holland, VT) - Holland, VT",
-    .category = "government", .portal = "https://hollandvt.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://hollandvt.gov/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 2 items, ATOM feed, newest "
-      "2026-10-16T17:14:18+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO44_US_HOLLYSPRINGSMS_GOV", .name = "City Of Holly Springs  (City, Holly Springs, MS) - City of Holly "
       "Springs",
@@ -32024,26 +32006,6 @@ static const hp_source HP3B44_USGOV[] = {
       "12:54:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_DSAC_GOV_3", .name = "Department of Justice / U.S. Department of Justice, BI, Domestic "
-      "Security Alliance Council (DSAC) (Federal - Executive, Potomac, "
-      "MD) - DSAC",
-    .name_ja = "Department of Justice / U.S. Department of Justice, BI, Domestic Security Alliance Council (DSAC) (Federal - Executive, Potomac, MD) - DSAC",
-    .category = "government", .portal = "https://www.dsac.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.dsac.gov/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 12 items, ATOM feed, newest "
-      "2023-08-01T16:44:33+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO44_US_IPRCENTER_GOV", .name = "Department of Justice / U.S Immigration and Customs Enforcement "
       "(Federal - Executive, Washington, DC) - IPRCenter",
@@ -32085,25 +32047,6 @@ static const hp_source HP3B44_USGOV[] = {
       "12:52:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_IPRCENTER_GOV_3", .name = "Department of Justice / U.S Immigration and Customs Enforcement "
-      "(Federal - Executive, Washington, DC) - IPRCenter",
-    .name_ja = "Department of Justice / U.S Immigration and Customs Enforcement (Federal - Executive, Washington, DC) - IPRCenter",
-    .category = "government", .portal = "https://www.iprcenter.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.iprcenter.gov/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 15 items, ATOM feed, newest "
-      "2025-10-07T15:31:08+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO44_US_RCFL_GOV", .name = "Department of Justice / RCFL (Federal - Executive, McLean, VA) - "
       "RCFL",
@@ -32145,25 +32088,6 @@ static const hp_source HP3B44_USGOV[] = {
       "11:57:00 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_RCFL_GOV_3", .name = "Department of Justice / RCFL (Federal - Executive, McLean, VA) - "
-      "RCFL",
-    .name_ja = "Department of Justice / RCFL (Federal - Executive, McLean, VA) - RCFL",
-    .category = "government", .portal = "https://www.rcfl.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.rcfl.gov/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 15 items, ATOM feed, newest "
-      "2018-05-16T13:13:26+00:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO44_US_BOEM_GOV", .name = "Department of the Interior / Minerals Management Service "
       "(Federal - Executive, Herndon, VA) - Bureau of Ocean Energy "
@@ -35596,25 +35520,6 @@ static const hp_source HP3B44_USGOV[] = {
       "16:24:58 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO44_US_PORTOFEDMONDS_GOV_2", .name = "Port of Edmonds (Special district, Edmonds, WA) - Port Of "
-      "Edmonds",
-    .name_ja = "Port of Edmonds (Special district, Edmonds, WA) - Port Of Edmonds",
-    .category = "government", .portal = "https://www.portofedmonds.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.portofedmonds.gov/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 10 items, RSS2 feed, newest Fri, 24 Apr 2026 "
-      "16:24:58 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO44_US_REAGANMTD_GOV", .name = "Reagan Mass Transit District (Special district, Dixon, IL) - "
       "Reagan Mass Transit District",
@@ -36918,25 +36823,6 @@ static const hp_source HP3B44_USGOV[] = {
       "2026 17:20:00 -0600. A feed the organisation itself declares or "
       "links on its site root." },
 
-  { .id = "JO44_US_CODOT_GOV_3", .name = "Colorado Department of Transportation (State or territory, "
-      "Denver, CO) - Site",
-    .name_ja = "Colorado Department of Transportation (State or territory, Denver, CO) - Site",
-    .category = "government", .portal = "https://www.codot.gov/",
-    .record_type = "government-notice",
-    .tags = "\"usgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.codot.gov/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-17: 500 items, ATOM feed, newest "
-      "2019-12-20T17:38:50-06:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO44_US_COEMERGENCY_GOV", .name = "State of Colorado OIT (State or territory, Denver, CO) - "
       "Colorado Emergency Management",

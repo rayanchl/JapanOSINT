@@ -8124,29 +8124,6 @@ static const hp_source HP3B49_JPWPAGRI[] = {
       "guessed. Post-shaped: title.rendered, date, link and "
       "content.rendered are kept." },
 
-  { .id = "JO49_WP_JAKYOTO_POSTS2", .name = "【公式】JAグループ京都 — posts (WordPress REST)",
-    .name_ja = "【公式】JAグループ京都 投稿（WordPress REST）",
-    .category = "agriculture", .portal = "https://www.ja-kyoto.jp/",
-    .record_type = "site-post",
-    .tags = "\"japan\",\"wordpress\",\"posts\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ja-kyoto.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
-    .array_path = ".",
-    .body_keys = "content.rendered",
-    .date_keys = "date",
-    .id_keys = "id",
-    .interval = 21600,
-    .link_keys = "link",
-    .page_max = 60,
-    .page_param = "page",
-    .page_start = 1,
-    .timeout_ms = 30000,
-    .title_keys = "title.rendered",
-    .description = "WordPress REST posts of 【公式】JAグループ京都 (www.ja-kyoto.jp). Fetched "
-      "2026-10-20: the collection answered with 4 record(s) and "
-      "declares 4 in X-WP-Total. Discovered from this host's own REST "
-      "root (/wp/v2/types), not guessed. Post-shaped: title.rendered, "
-      "date, link and content.rendered are kept." },
 
   { .id = "JO49_WP_JAKUROBE_POSTS", .name = "JAくろべ — posts (WordPress REST)",
     .name_ja = "JAくろべ 投稿（WordPress REST）",
@@ -8442,29 +8419,6 @@ static const hp_source HP3B49_JPWPAGRI[] = {
       "root (/wp/v2/types), not guessed. Post-shaped: title.rendered, "
       "date, link and content.rendered are kept." },
 
-  { .id = "JO49_WP_JAKYOTO_PAGES2", .name = "【公式】JAグループ京都 — pages (WordPress REST)",
-    .name_ja = "【公式】JAグループ京都 固定ページ（WordPress REST）",
-    .category = "agriculture", .portal = "https://www.ja-kyoto.jp/",
-    .record_type = "site-page",
-    .tags = "\"japan\",\"wordpress\",\"pages\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ja-kyoto.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc",
-    .array_path = ".",
-    .body_keys = "content.rendered",
-    .date_keys = "date",
-    .id_keys = "id",
-    .interval = 21600,
-    .link_keys = "link",
-    .page_max = 60,
-    .page_param = "page",
-    .page_start = 1,
-    .timeout_ms = 30000,
-    .title_keys = "title.rendered",
-    .description = "WordPress REST pages of 【公式】JAグループ京都 (www.ja-kyoto.jp). Fetched "
-      "2026-10-20: the collection answered with 7 record(s) and "
-      "declares 7 in X-WP-Total. Discovered from this host's own REST "
-      "root (/wp/v2/types), not guessed. Post-shaped: title.rendered, "
-      "date, link and content.rendered are kept." },
 
   { .id = "JO49_WP_JAKYOTONINOKUNI_PAGES", .name = "JA京都にのくに — pages (WordPress REST)",
     .name_ja = "JA京都にのくに 固定ページ（WordPress REST）",
@@ -8663,29 +8617,6 @@ static const hp_source HP3B49_JPWPAGRI[] = {
       "root (/wp/v2/types), not guessed. Post-shaped: title.rendered, "
       "date, link and content.rendered are kept." },
 
-  { .id = "JO49_WP_JAKYOTO_USERS2", .name = "【公式】JAグループ京都 — author/staff register (WordPress REST)",
-    .name_ja = "【公式】JAグループ京都 利用者一覧（WordPress REST）",
-    .category = "agriculture", .portal = "https://www.ja-kyoto.jp/",
-    .record_type = "site-user",
-    .tags = "\"japan\",\"wordpress\",\"users\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ja-kyoto.jp/wp-json/wp/v2/users?per_page=100",
-    .array_path = ".",
-    .body_keys = "description",
-    .id_keys = "id",
-    .interval = 86400,
-    .link_keys = "link",
-    .page_max = 60,
-    .page_param = "page",
-    .page_start = 1,
-    .timeout_ms = 30000,
-    .title_keys = "name",
-    .description = "WordPress REST author/staff register of 【公式】JAグループ京都 "
-      "(www.ja-kyoto.jp). Fetched 2026-10-20: the collection answered "
-      "with 2 record(s) and declares 2 in X-WP-Total. Discovered from "
-      "this host's own REST root (/wp/v2/types), not guessed. Keyed on "
-      "the user id with name as the title: a user record carries no "
-      "date field." },
 
   { .id = "JO49_WP_JAIRUMANO_JOBTYPE", .name = "JAいるま野2026 — custom post type `jobtype` (求人募集) (WordPress REST)",
     .name_ja = "JAいるま野2026 求人募集（WordPress REST）",

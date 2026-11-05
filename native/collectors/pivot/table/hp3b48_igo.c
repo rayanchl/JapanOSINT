@@ -2589,46 +2589,7 @@ static const hp_source HP3B48_IGO[] = {
       "on its site root. Wikidata classes it as "
       "international-organization." },
 
-  { .id = "JO48_IGO_Q18553830_3", .name = "European Council of Skeptical Organisations - News Archive - "
-      "European Skeptics",
-    .name_ja = "European Council of Skeptical Organisations - News Archive - European Skeptics",
-    .category = "international", .portal = "https://www.ecso.org/",
-    .record_type = "organisation-notice",
-    .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ecso.org/news/rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Wed, 03 Jun 2026 "
-      "18:16:22 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as "
-      "international-organization." },
 
-  { .id = "JO48_IGO_Q18553830_4", .name = "European Council of Skeptical Organisations - European Skeptics",
-    .name_ja = "European Council of Skeptical Organisations - European Skeptics",
-    .category = "international", .portal = "https://www.ecso.org/",
-    .record_type = "organisation-notice",
-    .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ecso.org/rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 9 items, RSS2 feed, newest Wed, 11 Mar 2020 "
-      "20:21:09 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as "
-      "international-organization." },
 
   { .id = "JO48_IGO_Q18553830_5", .name = "European Council of Skeptical Organisations - Organizations "
       "Archive - European Skeptics",
@@ -3752,7 +3713,9 @@ static const hp_source HP3B48_IGO[] = {
       "on its site root. Wikidata classes it as "
       "international-organization." },
 
-  { .id = "JO48_IGO_Q333727_2", .name = "International Seabed Authority - International Seabed Authority",
+  { .id = "JO48_IGO_Q333727_2",
+    /* feed-format-twin-ok: measured 2026-11-05: 50 records against the sibling's 9, so the two spellings are not one feed */
+    .name = "International Seabed Authority - International Seabed Authority",
     .name_ja = "International Seabed Authority - International Seabed Authority",
     .category = "international", .portal = "https://isa.org.jm/",
     .record_type = "organisation-notice",
@@ -3852,25 +3815,6 @@ static const hp_source HP3B48_IGO[] = {
       "on its site root. Wikidata classes it as "
       "international-organization." },
 
-  { .id = "JO48_IGO_Q352378_2", .name = "Adaptation Fund - Adaptation Fund",
-    .name_ja = "Adaptation Fund - Adaptation Fund",
-    .category = "international", .portal = "http://www.adaptation-fund.org/",
-    .record_type = "organisation-notice",
-    .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.adaptation-fund.org/rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 18 Sep 2026 "
-      "14:53:59 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as "
-      "international-organization." },
 
   { .id = "JO48_IGO_Q369760", .name = "Nuclear Energy Agency - OECD Nuclear Energy Agency Archive Feed",
     .name_ja = "Nuclear Energy Agency - OECD Nuclear Energy Agency Archive Feed",
@@ -8157,24 +8101,6 @@ static const hp_source HP3B48_IGO[] = {
       "19:24:38 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as think-tank." },
 
-  { .id = "JO48_IGO_Q108304729_2", .name = "Onion Games - Onion Games",
-    .name_ja = "Onion Games - Onion Games",
-    .category = "international", .portal = "https://oniongames.jp/",
-    .record_type = "organisation-notice",
-    .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://oniongames.jp/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-09-08T19:29:51Z. A feed the organisation itself declares or "
-      "links on its site root. Wikidata classes it as think-tank." },
 
   { .id = "JO48_IGO_Q108325233", .name = "Blayze Games - BlayzeGames",
     .name_ja = "Blayze Games - BlayzeGames",

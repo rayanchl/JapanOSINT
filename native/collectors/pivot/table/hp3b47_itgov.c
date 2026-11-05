@@ -10876,25 +10876,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "09:16:03 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_C_B120_3", .name = "Comune di Brandico (Pubbliche Amministrazioni, Brandico, BS) - "
-      "Comune di Brandico",
-    .name_ja = "Comune di Brandico (Pubbliche Amministrazioni, Brandico, BS) - Comune di Brandico",
-    .category = "local-gov", .collector = "itgov_comuni", .portal = "https://www.comune.brandico.bs.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comune.brandico.bs.it/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 15 items, ATOM feed, newest "
-      "2026-10-17T09:16:03+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_C_B145", .name = "Comune di Brennero (Pubbliche Amministrazioni, Brennero, BZ) - "
       "Brenner News",
@@ -18108,25 +18089,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "18:08:01 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_C_H091_3", .name = "Comune di Pumenengo (Pubbliche Amministrazioni, Pumenengo, BG) - "
-      "Comune di Pumenengo (BG)",
-    .name_ja = "Comune di Pumenengo (Pubbliche Amministrazioni, Pumenengo, BG) - Comune di Pumenengo (BG)",
-    .category = "local-gov", .collector = "itgov_comuni", .portal = "https://www.comune.pumenengo.bg.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.comune.pumenengo.bg.it/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 15 items, ATOM feed, newest "
-      "2026-10-08T18:08:01+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_C_H109", .name = "Comune di Quarrata (Pubbliche Amministrazioni, Quarrata, PT) - "
       "Comune di Quarrata",
@@ -23884,26 +23846,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "15:50:00 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CCIAA_MO_3", .name = "Camera di Commercio, Industria, Artigianato e Agricoltura di "
-      "Modena (Pubbliche Amministrazioni, Modena, MO) - Archivio "
-      "Notizie",
-    .name_ja = "Camera di Commercio, Industria, Artigianato e Agricoltura di Modena (Pubbliche Amministrazioni, Modena, MO) - Archivio Notizie",
-    .category = "commerce", .collector = "itgov_camere", .portal = "https://www.mo.camcom.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mo.camcom.it/collezione-news-di-tutto-il-sito/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 15 items, ATOM feed, newest "
-      "2019-11-27T13:54:53+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CCIAA_MO_4", .name = "Camera di Commercio, Industria, Artigianato e Agricoltura di "
       "Modena (Pubbliche Amministrazioni, Modena, MO) - News",
@@ -23945,25 +23887,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "13:11:00 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CCIAA_MO_6", .name = "Camera di Commercio, Industria, Artigianato e Agricoltura di "
-      "Modena (Pubbliche Amministrazioni, Modena, MO) - News",
-    .name_ja = "Camera di Commercio, Industria, Artigianato e Agricoltura di Modena (Pubbliche Amministrazioni, Modena, MO) - News",
-    .category = "commerce", .collector = "itgov_camere", .portal = "https://www.mo.camcom.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mo.camcom.it/modena-economica/news/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 15 items, ATOM feed, newest "
-      "2025-02-17T15:45:31+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CCIAA_MO_7", .name = "Camera di Commercio, Industria, Artigianato e Agricoltura di "
       "Modena (Pubbliche Amministrazioni, Modena, MO) - Portale",
@@ -24005,25 +23928,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "15:50:00 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CCIAA_MO_9", .name = "Camera di Commercio, Industria, Artigianato e Agricoltura di "
-      "Modena (Pubbliche Amministrazioni, Modena, MO) - Portale",
-    .name_ja = "Camera di Commercio, Industria, Artigianato e Agricoltura di Modena (Pubbliche Amministrazioni, Modena, MO) - Portale",
-    .category = "commerce", .collector = "itgov_camere", .portal = "https://www.mo.camcom.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mo.camcom.it/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 15 items, ATOM feed, newest "
-      "2019-07-23T09:55:38+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CCIAACCV", .name = "Camera di Commercio Industria Artigianato e Agricoltura di "
       "Catanzaro Crotone e Vibo Valentia (Pubbliche Amministrazioni, "
@@ -24087,25 +23991,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "13:13:27 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CCIAAN_3", .name = "Camera di Commercio Industria Artigianato e Agricoltura Delle "
-      "Marche (Pubbliche Amministrazioni, Ancona, AN) - Sito",
-    .name_ja = "Camera di Commercio Industria Artigianato e Agricoltura Delle Marche (Pubbliche Amministrazioni, Ancona, AN) - Sito",
-    .category = "commerce", .collector = "itgov_camere", .portal = "https://www.marche.camcom.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.marche.camcom.it/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 15 items, ATOM feed, newest "
-      "2019-09-30T14:58:08+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CCOBA", .name = "Comunita' Comprensoriale Oltradige - Bassa Atesina (Pubbliche "
       "Amministrazioni, Egna, BZ) - BZG Überetsch - Unterland News",
@@ -25683,26 +25568,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "15:50:58 +0100. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_CGAMPO_3", .name = "Consorzio di Gestione dell'Area Marina Protetta del Promontorio "
-      "di Portofino (Pubbliche Amministrazioni, Portofino, GE) - "
-      "Portale AMP Portofino",
-    .name_ja = "Consorzio di Gestione dell'Area Marina Protetta del Promontorio di Portofino (Pubbliche Amministrazioni, Portofino, GE) - Portale AMP Portofino",
-    .category = "environment", .collector = "itgov_ambiente", .portal = "https://www.portofinoamp.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.portofinoamp.it/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 604800,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 15 items, ATOM feed, newest "
-      "2018-07-18T17:08:08+01:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_CGCCG", .name = "Co.Ge.Ca Consorzio Gestione Canile (Pubbliche Amministrazioni, "
       "Nizza Monferrato, AT) - www.canilecogeca.it",
@@ -35427,25 +35292,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "09:04:05 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_DTROM_3", .name = "Destinazione Turistica Romagna (Pubbliche Amministrazioni, "
-      "Rimini, RN) - Destinazione Romagna",
-    .name_ja = "Destinazione Turistica Romagna (Pubbliche Amministrazioni, Rimini, RN) - Destinazione Romagna",
-    .category = "culture", .collector = "itgov_cultura", .portal = "https://destinazioneromagna.emr.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://destinazioneromagna.emr.it/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 15 items, ATOM feed, newest "
-      "2026-10-05T09:04:05+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_DU78VNV1", .name = "LARIO RETI HOLDING SPA (Gestori di Pubblici Servizi, Lecco, LC) "
       "- Lario Reti Holding",
@@ -48327,26 +48173,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "2026-10-18T11:41:25+02:00. A feed the organisation itself "
       "declares or links on its site root." },
 
-  { .id = "JO47_IT_ISTB_2", .name = "Istituto Tecnico Economico Bolzano in Lingua Tedesca (Pubbliche "
-      "Amministrazioni, Bolzano, BZ) - wfo.bz.it - "
-      "Wirtschaftsfachoberschule H. Kunter - Bozen - Home",
-    .name_ja = "Istituto Tecnico Economico Bolzano in Lingua Tedesca (Pubbliche Amministrazioni, Bolzano, BZ) - wfo.bz.it - Wirtschaftsfachoberschule H. Kunter - Bozen - Home",
-    .category = "education", .collector = "itgov_scuole", .portal = "http://wfo.bz.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://wfo.bz.it/?format=feed&type=rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 14 items, RSS2 feed, newest Thu, 15 Oct 2026 "
-      "07:30:26 +0200. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO47_IT_ISTCOC", .name = "Istituto Comprensivo Colozza (Pubbliche Amministrazioni, "
       "Campobasso, CB) - Istituto comprensivo Colozza",
@@ -55036,26 +54862,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "12:02:18 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_ISTSC_CBPM01000C_2", .name = "ISTITUTO MAGISTRALE - ISTITUTO OMNICOMPRENSIVO (Pubbliche "
-      "Amministrazioni, Guglionesi, CB) - Istituto Omnicomprensivo "
-      "Guglionesi",
-    .name_ja = "ISTITUTO MAGISTRALE - ISTITUTO OMNICOMPRENSIVO (Pubbliche Amministrazioni, Guglionesi, CB) - Istituto Omnicomprensivo Guglionesi",
-    .category = "education", .collector = "itgov_scuole", .portal = "https://www.omnicomprensivoguglionesi.edu.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.omnicomprensivoguglionesi.edu.it/rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "12:02:18 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO47_IT_ISTSC_CBPM040008", .name = "ISTITUTO MAGISTRALE - LICEO STATALE 'GIUSEPPE MARIA GALANTI' "
       "(Pubbliche Amministrazioni, Campobasso, CB) - Liceo Statale "
@@ -94580,26 +94386,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "04:47:41 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_OCLPAL_2", .name = "Ordine Consulenti del Lavoro Palermo (Pubbliche Amministrazioni, "
-      "Palermo, PA) - Ordine dei Consulenti del Lavoro Consiglio "
-      "Provinciale di Palermo",
-    .name_ja = "Ordine Consulenti del Lavoro Palermo (Pubbliche Amministrazioni, Palermo, PA) - Ordine dei Consulenti del Lavoro Consiglio Provinciale di Palermo",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://consulentidellavoro.pa.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://consulentidellavoro.pa.it/rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Sun, 13 Sep 2026 "
-      "04:47:41 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO47_IT_OCLPB", .name = "Ordine Consulenti del Lavoro della Provincia di Belluno "
       "(Pubbliche Amministrazioni, Belluno, BL) - Ordine dei consulenti "
@@ -101185,26 +100971,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "05:00:33 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_OMVP_057_2", .name = "Ordine dei Medici Veterinari della Provincia di Rieti (Pubbliche "
-      "Amministrazioni, Rieti, RI) - Ordine dei Medici Veterinari della "
-      "Provincia di Rieti",
-    .name_ja = "Ordine dei Medici Veterinari della Provincia di Rieti (Pubbliche Amministrazioni, Rieti, RI) - Ordine dei Medici Veterinari della Provincia di Rieti",
-    .category = "legal", .collector = "itgov_ordini", .portal = "https://www.ordineveterinaririeti.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.ordineveterinaririeti.it/?feed=atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 86400,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-08-08T06:30:32Z. A feed the organisation itself declares or "
-      "links on its site root." },
 
   { .id = "JO47_IT_OMVPR", .name = "Ordine dei Medici Veterinari della Provincia di Rimini "
       "(Pubbliche Amministrazioni, Rimini, RN) - Ordine Veterinari "
@@ -106785,25 +106551,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "10:42:09 +0000. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_SVTRL_2", .name = "Societa Vicentina Trasporti a Responsabilita Limitata (Gestori "
-      "di Pubblici Servizi, Vicenza, VI) - News",
-    .name_ja = "Societa Vicentina Trasporti a Responsabilita Limitata (Gestori di Pubblici Servizi, Vicenza, VI) - News",
-    .category = "utility", .collector = "itgov_servizi_pubblici", .portal = "https://svt.vi.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://svt.vi.it/it/rss.xml",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 16 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "10:42:09 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO47_IT_SVTRL_3", .name = "Societa Vicentina Trasporti a Responsabilita Limitata (Gestori "
       "di Pubblici Servizi, Vicenza, VI) - News",
@@ -107554,25 +107301,6 @@ static const hp_source HP3B47_ITGOV[] = {
       "10:10:00 +0200. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO47_IT_UC_VALMA_3", .name = "Unione di Comuni Valmarecchia (Pubbliche Amministrazioni, "
-      "Novafeltria, RN) - Unione di Comuni Valmarecchia",
-    .name_ja = "Unione di Comuni Valmarecchia (Pubbliche Amministrazioni, Novafeltria, RN) - Unione di Comuni Valmarecchia",
-    .category = "local-gov", .collector = "itgov_territoriali", .portal = "https://www.vallemarecchia.it/",
-    .record_type = "government-notice",
-    .tags = "\"itgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.vallemarecchia.it/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 21600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 15 items, ATOM feed, newest "
-      "2026-10-13T11:48:29+02:00. A feed the organisation itself "
-      "declares or links on its site root." },
 
   { .id = "JO47_IT_UC_VSEN", .name = "Unione Comuni Valdichiana Senese (Pubbliche Amministrazioni, "
       "Sarteano, SI) - Unione dei Comuni Valdichiana Senese",

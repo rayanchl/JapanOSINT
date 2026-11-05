@@ -485,7 +485,61 @@ that replaced them survive, so no coverage is lost. **A sweep's verdict is
 about the URL it sent, not about the row's name** — re-read a removal against
 the row as it stands now.
 
-**The registered count is 60,829** (2026-11-05, `make source-count`, both
+**The registered count is 60,620** (2026-11-05, `make source-count`; the
+binary's registry agrees at 60,620 with 0 duplicates, 0 dropped and 0
+never-runs, both floors re-recorded from that build): 60,829 less **209 more
+rows that read a feed the tree already read**, found by asking the SAME
+question with the format normalisation widened. Evidence per row:
+`docs/removed-sources-2026-11-05-double-feeds.tsv`. Four shapes:
+
+* **145 feed-path variants** — `rss.xml` beside `atom.xml`, `/feed/` beside
+  `/rss`, `index.rss`;
+* **50 `www`** — `keiwa-c.ac.jp/wp-json/...` beside
+  `www.keiwa-c.ac.jp/wp-json/...`, the `funq.jp` case the WordPress sweep's
+  note already records;
+* **8 WordPress `?feed=rss2`**;
+* **6 BYTE-IDENTICAL URLs.** Four are CKAN pairs (`JO29A_FGT_*_CKAN` beside
+  `JO34_CKANRES_*`) sharing url, `array_path` AND `id_keys`, differing only in
+  `record_type` — measured on Houston, **both store 100 records from 803,495
+  bytes over 2 requests**; the JO34 rows carry `page_resume`, `timeout_ms` and
+  `title_keys`, so they are the keepers and the batch number decided nothing.
+  `JO28_IT_SHIEN_GRANTDECISION` reads its sibling's page with NO `id_keys`, so
+  every uid was a content hash. `CA_MRAS_SEARCH` duplicates
+  `CA_BUSINESS_REGISTRIES`.
+
+**AND THE EXACT-URL SCAN'S OTHER FIVE GROUPS ARE DELIBERATE, which is why the
+whole read is fingerprinted rather than the URL.** Batch 55's seven Austrian
+Parliament GP slices, gBizINFO's six sections of one company record,
+USAspending's awards against subawards, the three cvrapi.dk readings and the
+ECB workbook's SIs/LSIs sheets all share a URL and differ in the POST body,
+the sheet or the record type. Eleven groups share a URL; six are duplicates.
+
+**WHAT THE MEASUREMENT CHANGED, and the reason to take it rather than trust the
+normaliser:** of 208 candidate groups, 195 agreed on a non-zero stored count,
+7 stored zero both ways, and **6 did not agree and are NOT retired** — the
+normaliser had collapsed `/rss.xml` onto `/feed/` for rows whose own names say
+"site page index (sitemap RSS)". `jvcea.or.jp`, `kabu.com` and `sse.or.jp`
+each read a SITEMAP RSS (50 records) beside a news feed (10); `isa.org.jm` is
+9 against 50 and `ithome.com.tw` 10 against 30. Each carries a
+`feed-format-twin-ok:` marker with its reading. **A normalisation is a
+hypothesis about two URLs; only the records settle it.**
+
+BYTES was tried as the discriminator and is the WRONG one here: RSS and Atom
+serialise the same items at different sizes (157,209 against 153,170 for the
+same 20 records), so it rejected 144 of 208 genuine pairs. Stored count plus a
+sampled title comparison is what settles it — nine groups across all four
+shapes read into one database gave **204 rows for 100 distinct titles**.
+
+And one row was deliberately left wrong, because it could not be measured:
+`CA_BUSINESS_REGISTRIES` keys on `Juri_ID,Company_Number`, and a jurisdiction
+id with a COMMA (which CHOOSES) would collapse every company a query returns
+in one jurisdiction. `searchapi.mrasservice.ca` answers a transport failure
+with 0 bytes from this container, twice, so whether `Juri_ID` repeats across
+one answer is **unmeasured from here** and the key is untouched with the
+suspicion written into the row. A collision is a question to measure, not a key
+to rewrite on inference.
+
+**The registered count was 60,829** (2026-11-05, `make source-count`, both
 floors re-recorded from that build, and the binary's own registry agrees at
 60,829 with 0 duplicates, 0 dropped and 0 never-runs): 61,527 less **698 rows
 that read ONE FEED under a second format spelling**.

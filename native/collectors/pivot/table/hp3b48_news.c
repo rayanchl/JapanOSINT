@@ -4637,25 +4637,6 @@ static const hp_source HP3B48_NEWS[] = {
       "10:00:00 -0300. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country BR." },
 
-  { .id = "JO48_NEWS_Q9559228_3", .name = "A União (BR) - A União - Jornal, Editora e Gráfica",
-    .name_ja = "A União (BR) - A União - Jornal, Editora e Gráfica",
-    .category = "news", .collector = "news_latam", .portal = "https://auniao.pb.gov.br/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://auniao.pb.gov.br/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 15 items, ATOM feed, newest "
-      "2022-07-12T14:52:38-03:00. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "newspaper, country BR." },
 
   { .id = "JO48_NEWS_Q10267618", .name = "Diario de S. Paulo (BR) - ▷ Diário SP",
     .name_ja = "Diario de S. Paulo (BR) - ▷ Diário SP",
@@ -4714,25 +4695,6 @@ static const hp_source HP3B48_NEWS[] = {
       "07:31:06 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country BR." },
 
-  { .id = "JO48_NEWS_Q10288561_2", .name = "Gazeta Mercantil (BR) - GAZETA MERCANTIL",
-    .name_ja = "Gazeta Mercantil (BR) - GAZETA MERCANTIL",
-    .category = "news", .collector = "news_latam", .portal = "https://gazetamercantil.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://gazetamercantil.com/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 50 items, ATOM feed, newest "
-      "2026-10-17T19:36:53Z. A feed the organisation itself declares or "
-      "links on its site root. Wikidata classes it as newspaper, "
-      "country BR." },
 
   { .id = "JO48_NEWS_Q10339108", .name = "O Estado do Maranhão (BR) - Imirante.com",
     .name_ja = "O Estado do Maranhão (BR) - Imirante.com",
@@ -5440,24 +5402,6 @@ static const hp_source HP3B48_NEWS[] = {
       "12:44:06 GMT. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country BR." },
 
-  { .id = "JO48_NEWS_Q18285222_2", .name = "Q18285222 (BR) - Jornal da Paraíba",
-    .name_ja = "Q18285222 (BR) - Jornal da Paraíba",
-    .category = "news", .collector = "news_latam", .portal = "https://jornaldaparaiba.com.br/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://jornaldaparaiba.com.br/feed",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 50 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "12:44:06 GMT. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country BR." },
 
   { .id = "JO48_NEWS_Q20050055", .name = "Q20050055 (BR) - Jornal Semanário",
     .name_ja = "Q20050055 (BR) - Jornal Semanário",
@@ -5857,25 +5801,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country BR." },
 
-  { .id = "JO48_NEWS_Q139377657_2", .name = "Q139377657 (BR) - Beira do Campo — Notícias de Futebol",
-    .name_ja = "Q139377657 (BR) - Beira do Campo — Notícias de Futebol",
-    .category = "news", .collector = "news_latam", .portal = "https://beiradocampo.com.br/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://beiradocampo.com.br/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 30 items, ATOM feed, newest "
-      "2026-10-18T13:07:29.000Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country BR." },
 
   { .id = "JO48_NEWS_Q139619399", .name = "Q139619399 (BR) - Misterios do Mundo",
     .name_ja = "Q139619399 (BR) - Misterios do Mundo",
@@ -7277,25 +7202,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country CA." },
 
-  { .id = "JO48_NEWS_Q28233111_2", .name = "Halifax Examiner (CA) - Halifax Examiner",
-    .name_ja = "Halifax Examiner (CA) - Halifax Examiner",
-    .category = "news", .collector = "news_northam", .portal = "https://halifaxexaminer.ca/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://halifaxexaminer.ca/feed/",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "20:19:57 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as online-newspaper, "
-      "country CA." },
 
   { .id = "JO48_NEWS_Q62713193", .name = "LifeSiteNews (CA) - LifeSite",
     .name_ja = "LifeSiteNews (CA) - LifeSite",
@@ -7520,25 +7426,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as news-website, country "
       "CA." },
 
-  { .id = "JO48_NEWS_Q7894217_2", .name = "Universe Today (CA) - Universe Today",
-    .name_ja = "Universe Today (CA) - Universe Today",
-    .category = "news", .collector = "news_northam", .portal = "https://www.universetoday.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.universetoday.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-18T16:47:01Z. A feed the organisation itself declares or "
-      "links on its site root. Wikidata classes it as news-website, "
-      "country CA." },
 
   { .id = "JO48_NEWS_Q7894217_3", .name = "Universe Today (CA) - Universe Today Podcast",
     .name_ja = "Universe Today (CA) - Universe Today Podcast",
@@ -11902,25 +11789,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as news-website, country "
       "DE." },
 
-  { .id = "JO48_NEWS_Q114398988_2", .name = "Echo (DE) - ЭХО - Главное",
-    .name_ja = "Echo (DE) - ЭХО - Главное",
-    .category = "news", .collector = "news_europe_west", .portal = "https://echofm.online/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://echofm.online/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 50 items, ATOM feed, newest "
-      "2026-10-18T17:19:04.702Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "news-website, country DE." },
 
   { .id = "JO48_NEWS_Q137441601", .name = "The Decoder (DE) - The Decoder",
     .name_ja = "The Decoder (DE) - The Decoder",
@@ -14332,24 +14200,6 @@ static const hp_source HP3B48_NEWS[] = {
       "08:52:39 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country ES." },
 
-  { .id = "JO48_NEWS_Q10337927_2", .name = "Novas da Galiza (ES) - Novas da Galiza",
-    .name_ja = "Novas da Galiza (ES) - Novas da Galiza",
-    .category = "news", .collector = "news_europe_west", .portal = "http://www.novas.gal/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.novas.gal/feed",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "08:52:39 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country ES." },
 
   { .id = "JO48_NEWS_Q12255560", .name = "Busturialdeko Hitza (ES) - Busturialdeko Hitza",
     .name_ja = "Busturialdeko Hitza (ES) - Busturialdeko Hitza",
@@ -16902,25 +16752,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country ES." },
 
-  { .id = "JO48_NEWS_Q9093581_2", .name = "Q9093581 (ES) - Vieiros: Galiza Hoxe",
-    .name_ja = "Q9093581 (ES) - Vieiros: Galiza Hoxe",
-    .category = "news", .collector = "news_europe_west", .portal = "https://vieiros.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://vieiros.com/rss/ultimas",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "19:03:12 +0200. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as online-newspaper, "
-      "country ES." },
 
   { .id = "JO48_NEWS_Q10267573", .name = "Q10267573 (ES) - Início - Diário Liberdade",
     .name_ja = "Q10267573 (ES) - Início - Diário Liberdade",
@@ -17145,26 +16976,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as news-website, country "
       "ES." },
 
-  { .id = "JO48_NEWS_Q141580434_2", .name = "Q141580434 (ES) - Animux · Noticias de anime, cine y series y "
-      "videojuegos",
-    .name_ja = "Q141580434 (ES) - Animux · Noticias de anime, cine y series y videojuegos",
-    .category = "news", .collector = "news_europe_west", .portal = "https://animux.es/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://animux.es/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 30 items, ATOM feed, newest "
-      "2026-10-18T16:24:00Z. A feed the organisation itself declares or "
-      "links on its site root. Wikidata classes it as news-website, "
-      "country ES." },
 
   { .id = "JO48_NEWS_Q141596102", .name = "Q141596102 (ES) - Actualidad CEU",
     .name_ja = "Q141596102 (ES) - Actualidad CEU",
@@ -20096,25 +19907,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as news-website, country "
       "FR." },
 
-  { .id = "JO48_NEWS_Q138678830_2", .name = "info.fr (FR) - INFO.FR",
-    .name_ja = "info.fr (FR) - INFO.FR",
-    .category = "news", .collector = "news_europe_west", .portal = "https://info.fr/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://info.fr/rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 50 items, RSS2 feed, newest Wed, 07 Oct 2026 "
-      "09:17:20 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as news-website, country "
-      "FR." },
 
   { .id = "JO48_NEWS_Q140163054", .name = "IsraNews (FR) - IsraNews",
     .name_ja = "IsraNews (FR) - IsraNews",
@@ -21166,25 +20958,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as news-website, country "
       "GB." },
 
-  { .id = "JO48_NEWS_Q122624545_2", .name = "Brighton and Hove News (GB) - Brighton and Hove News",
-    .name_ja = "Brighton and Hove News (GB) - Brighton and Hove News",
-    .category = "news", .collector = "news_europe_west", .portal = "https://brightonandhovenews.org/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://brightonandhovenews.org/feed",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "15:22:04 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as news-website, country "
-      "GB." },
 
   { .id = "JO48_NEWS_Q123511655", .name = "Lincolnshire Live (GB) - LincolnshireLive - frontpage",
     .name_ja = "Lincolnshire Live (GB) - LincolnshireLive - frontpage",
@@ -22192,25 +21965,6 @@ static const hp_source HP3B48_NEWS[] = {
       "20:09:00 +0300. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country GR." },
 
-  { .id = "JO48_NEWS_Q139901419_2", .name = "ToManifesto.gr (GR) - tomanifesto.gr",
-    .name_ja = "ToManifesto.gr (GR) - tomanifesto.gr",
-    .category = "news", .collector = "news_europe_west", .portal = "https://tomanifesto.gr/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://tomanifesto.gr/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 50 items, ATOM feed, newest "
-      "2026-10-18T20:09:00+03:00. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "newspaper, country GR." },
 
   { .id = "JO48_NEWS_Q139901419_3", .name = "ToManifesto.gr (GR) - tomanifesto.gr - Απόψεις",
     .name_ja = "ToManifesto.gr (GR) - tomanifesto.gr - Απόψεις",
@@ -23898,25 +23652,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country HU." },
 
-  { .id = "JO48_NEWS_Q97192831_2", .name = "Q97192831 (HU) - Alfahir.hu",
-    .name_ja = "Q97192831 (HU) - Alfahir.hu",
-    .category = "news", .collector = "news_europe_east", .portal = "https://alfahir.hu/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://alfahir.hu/syndication/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-14T17:23:39.3800534Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country HU." },
 
   { .id = "JO48_NEWS_Q139591501", .name = "Q139591501 (HU) - WakeUp Magazin",
     .name_ja = "Q139591501 (HU) - WakeUp Magazin",
@@ -30905,25 +30640,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as news-agency, country "
       "IT." },
 
-  { .id = "JO48_NEWS_Q3606450_3", .name = "Agenzia Giornalistica Italia (IT) - Agi",
-    .name_ja = "Agenzia Giornalistica Italia (IT) - Agi",
-    .category = "news", .collector = "news_europe_west", .portal = "https://www.agi.it/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.agi.it/economia/rss.xml",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, RSS2 feed, newest Sat, 17 Oct 2026 "
-      "21:29:21 GMT. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as news-agency, country "
-      "IT." },
 
   { .id = "JO48_NEWS_Q3606450_4", .name = "Agenzia Giornalistica Italia (IT) - Agi",
     .name_ja = "Agenzia Giornalistica Italia (IT) - Agi",
@@ -32604,25 +32320,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as news-website, country "
       "JP." },
 
-  { .id = "JO48_NEWS_Q86741222_2", .name = "Q86741222 (JP) - アクセスジャーナル",
-    .name_ja = "Q86741222 (JP) - アクセスジャーナル",
-    .category = "news", .collector = "news_asia_pacific", .portal = "https://access-journal.jp/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://access-journal.jp/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-18T14:37:25Z. A feed the organisation itself declares or "
-      "links on its site root. Wikidata classes it as news-website, "
-      "country JP." },
 
   { .id = "JO48_NEWS_Q11324223", .name = "Niconico News (JP) - ニコニコニュース オリジナル",
     .name_ja = "Niconico News (JP) - ニコニコニュース オリジナル",
@@ -39850,25 +39547,6 @@ static const hp_source HP3B48_NEWS[] = {
       "declares or links on its site root. Wikidata classes it as "
       "newspaper, country NO." },
 
-  { .id = "JO48_NEWS_Q12011080_2", .name = "Ytringen (NO) - Ytringen",
-    .name_ja = "Ytringen (NO) - Ytringen",
-    .category = "news", .collector = "news_europe_west", .portal = "https://ytringen.no/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ytringen.no/rss.xml",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 100 items, RSS2 feed, newest Sun, 18 Oct "
-      "2026 16:00:00 +0200. A feed the organisation itself declares or "
-      "links on its site root. Wikidata classes it as newspaper, "
-      "country NO." },
 
   { .id = "JO48_NEWS_Q12011080_3", .name = "Ytringen (NO) - Ytringen",
     .name_ja = "Ytringen (NO) - Ytringen",
@@ -40308,25 +39986,6 @@ static const hp_source HP3B48_NEWS[] = {
       "declares or links on its site root. Wikidata classes it as "
       "newspaper, country NO." },
 
-  { .id = "JO48_NEWS_Q12718759_2", .name = "Sulaposten (NO) - Sulaposten",
-    .name_ja = "Sulaposten (NO) - Sulaposten",
-    .category = "news", .collector = "news_europe_west", .portal = "https://sulaposten.no/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://sulaposten.no/rss.xml",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 100 items, RSS2 feed, newest Sat, 17 Oct "
-      "2026 01:00:00 +0200. A feed the organisation itself declares or "
-      "links on its site root. Wikidata classes it as newspaper, "
-      "country NO." },
 
   { .id = "JO48_NEWS_Q12718759_3", .name = "Sulaposten (NO) - Sulaposten",
     .name_ja = "Sulaposten (NO) - Sulaposten",
@@ -40755,25 +40414,6 @@ static const hp_source HP3B48_NEWS[] = {
       "declares or links on its site root. Wikidata classes it as "
       "newspaper, country NO." },
 
-  { .id = "JO48_NEWS_Q1049200_2", .name = "Ságat (NO) - Ságat",
-    .name_ja = "Ságat (NO) - Ságat",
-    .category = "news", .collector = "news_europe_west", .portal = "https://www.sagat.no/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.sagat.no/rss.xml",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 100 items, RSS2 feed, newest Sun, 18 Oct "
-      "2026 18:22:49 +0200. A feed the organisation itself declares or "
-      "links on its site root. Wikidata classes it as newspaper, "
-      "country NO." },
 
   { .id = "JO48_NEWS_Q1049200_3", .name = "Ságat (NO) - Ságat",
     .name_ja = "Ságat (NO) - Ságat",
@@ -41246,25 +40886,6 @@ static const hp_source HP3B48_NEWS[] = {
       "declares or links on its site root. Wikidata classes it as "
       "newspaper, country NO." },
 
-  { .id = "JO48_NEWS_Q1759310_2", .name = "Norge IDAG (NO) - Norge IDAG",
-    .name_ja = "Norge IDAG (NO) - Norge IDAG",
-    .category = "news", .collector = "news_europe_west", .portal = "https://idag.no/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://idag.no/rss.xml",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 100 items, RSS2 feed, newest Sun, 18 Oct "
-      "2026 15:29:34 +0200. A feed the organisation itself declares or "
-      "links on its site root. Wikidata classes it as newspaper, "
-      "country NO." },
 
   { .id = "JO48_NEWS_Q1759310_3", .name = "Norge IDAG (NO) - Norge IDAG",
     .name_ja = "Norge IDAG (NO) - Norge IDAG",
@@ -41665,25 +41286,6 @@ static const hp_source HP3B48_NEWS[] = {
       "declares or links on its site root. Wikidata classes it as "
       "newspaper, country NO." },
 
-  { .id = "JO48_NEWS_Q3420557_2", .name = "Haramsnytt (NO) - Haramsnytt",
-    .name_ja = "Haramsnytt (NO) - Haramsnytt",
-    .category = "news", .collector = "news_europe_west", .portal = "https://haramsnytt.no/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://haramsnytt.no/rss.xml",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 100 items, RSS2 feed, newest Sun, 18 Oct "
-      "2026 10:16:12 +0200. A feed the organisation itself declares or "
-      "links on its site root. Wikidata classes it as newspaper, "
-      "country NO." },
 
   { .id = "JO48_NEWS_Q3420557_3", .name = "Haramsnytt (NO) - Haramsnytt",
     .name_ja = "Haramsnytt (NO) - Haramsnytt",
@@ -42257,25 +41859,6 @@ static const hp_source HP3B48_NEWS[] = {
       "declares or links on its site root. Wikidata classes it as "
       "newspaper, country NO." },
 
-  { .id = "JO48_NEWS_Q10971581_2", .name = "Bygdebladet (NO) - Bygdebladet",
-    .name_ja = "Bygdebladet (NO) - Bygdebladet",
-    .category = "news", .collector = "news_europe_west", .portal = "https://bygdebladet.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://bygdebladet.com/rss.xml",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 100 items, RSS2 feed, newest Sun, 18 Oct "
-      "2026 10:27:59 +0200. A feed the organisation itself declares or "
-      "links on its site root. Wikidata classes it as newspaper, "
-      "country NO." },
 
   { .id = "JO48_NEWS_Q10971581_3", .name = "Bygdebladet (NO) - Bygdebladet",
     .name_ja = "Bygdebladet (NO) - Bygdebladet",
@@ -43210,25 +42793,6 @@ static const hp_source HP3B48_NEWS[] = {
       "declares or links on its site root. Wikidata classes it as "
       "newspaper, country NO." },
 
-  { .id = "JO48_NEWS_Q11970386_2", .name = "Frolendingen (NO) - Frolendingen",
-    .name_ja = "Frolendingen (NO) - Frolendingen",
-    .category = "news", .collector = "news_europe_west", .portal = "https://frolendingen.no/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://frolendingen.no/rss.xml",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 100 items, RSS2 feed, newest Sun, 18 Oct "
-      "2026 12:00:00 +0200. A feed the organisation itself declares or "
-      "links on its site root. Wikidata classes it as newspaper, "
-      "country NO." },
 
   { .id = "JO48_NEWS_Q11970386_3", .name = "Frolendingen (NO) - Frolendingen",
     .name_ja = "Frolendingen (NO) - Frolendingen",
@@ -43665,25 +43229,6 @@ static const hp_source HP3B48_NEWS[] = {
       "declares or links on its site root. Wikidata classes it as "
       "newspaper, country NO." },
 
-  { .id = "JO48_NEWS_Q12007336_2", .name = "Trav- og Galopp-Nytt (NO) - Trav og Galopp-Nytt",
-    .name_ja = "Trav- og Galopp-Nytt (NO) - Trav og Galopp-Nytt",
-    .category = "news", .collector = "news_europe_west", .portal = "https://tgn.no/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://tgn.no/rss.xml",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 100 items, RSS2 feed, newest Sun, 18 Oct "
-      "2026 19:00:00 +0200. A feed the organisation itself declares or "
-      "links on its site root. Wikidata classes it as newspaper, "
-      "country NO." },
 
   { .id = "JO48_NEWS_Q12007336_3", .name = "Trav- og Galopp-Nytt (NO) - Trav og Galopp-Nytt",
     .name_ja = "Trav- og Galopp-Nytt (NO) - Trav og Galopp-Nytt",
@@ -44223,25 +43768,6 @@ static const hp_source HP3B48_NEWS[] = {
       "declares or links on its site root. Wikidata classes it as "
       "online-newspaper, country NO." },
 
-  { .id = "JO48_NEWS_Q131842882_2", .name = "Verdinytt (NO) - Verdinytt",
-    .name_ja = "Verdinytt (NO) - Verdinytt",
-    .category = "news", .collector = "news_europe_west", .portal = "https://verdinytt.no/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://verdinytt.no/rss.xml",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 100 items, RSS2 feed, newest Sun, 18 Oct "
-      "2026 08:26:26 +0200. A feed the organisation itself declares or "
-      "links on its site root. Wikidata classes it as online-newspaper, "
-      "country NO." },
 
   { .id = "JO48_NEWS_Q131842882_3", .name = "Verdinytt (NO) - Verdinytt",
     .name_ja = "Verdinytt (NO) - Verdinytt",
@@ -46799,25 +46325,6 @@ static const hp_source HP3B48_NEWS[] = {
       "17:13:00 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country PT." },
 
-  { .id = "JO48_NEWS_Q4350216_2", .name = "Açoriano Oriental (PT) - Açoriano Oriental - Últimas Notícias",
-    .name_ja = "Açoriano Oriental (PT) - Açoriano Oriental - Últimas Notícias",
-    .category = "news", .collector = "news_europe_west", .portal = "https://www.acorianooriental.pt/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.acorianooriental.pt/feed/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 25 items, ATOM feed, newest "
-      "2026-10-18T17:13:00+00:00. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "newspaper, country PT." },
 
   { .id = "JO48_NEWS_Q4819631", .name = "Diário dos Açores (PT) - Diário dos Açores",
     .name_ja = "Diário dos Açores (PT) - Diário dos Açores",
@@ -50893,25 +50400,6 @@ static const hp_source HP3B48_NEWS[] = {
       "declares or links on its site root. Wikidata classes it as "
       "news-website, country RU." },
 
-  { .id = "JO48_NEWS_Q138975315_2", .name = "Tourprom (RU) - Все новости туризма и мира   ТУРПРОМ",
-    .name_ja = "Tourprom (RU) - Все новости туризма и мира   ТУРПРОМ",
-    .category = "news", .collector = "news_europe_east", .portal = "https://www.tourprom.ru/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.tourprom.ru/feed/rss.xml",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 30 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "17:21:18 +0300. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as news-website, country "
-      "RU." },
 
   { .id = "JO48_NEWS_Q140739609", .name = "Astra (RU) - Astra Press",
     .name_ja = "Astra (RU) - Astra Press",
@@ -50953,25 +50441,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as news-agency, country "
       "RU." },
 
-  { .id = "JO48_NEWS_Q4376116_2", .name = "pravoslavie.ru (RU) - Православие.ru",
-    .name_ja = "pravoslavie.ru (RU) - Православие.ru",
-    .category = "news", .collector = "news_europe_east", .portal = "https://pravoslavie.ru/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://pravoslavie.ru/xml/full.xml",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 50 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "11:07:07 +0300. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as news-agency, country "
-      "RU." },
 
   { .id = "JO48_NEWS_Q4376388", .name = "Prime (RU) - ПРАЙМ",
     .name_ja = "Prime (RU) - ПРАЙМ",
@@ -54591,25 +54060,6 @@ static const hp_source HP3B48_NEWS[] = {
       "08:44:26 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country TW." },
 
-  { .id = "JO48_NEWS_Q20688689_2", .name = "Taiwan People News (TW) - 民報",
-    .name_ja = "Taiwan People News (TW) - 民報",
-    .category = "news", .collector = "news_asia_pacific", .portal = "https://www.peoplenews.tw/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.peoplenews.tw/feed/atom",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, ATOM feed, newest "
-      "2026-10-18T08:46:25Z. A feed the organisation itself declares or "
-      "links on its site root. Wikidata classes it as newspaper, "
-      "country TW." },
 
   { .id = "JO48_NEWS_Q697153", .name = "United Daily News (TW) - 聯合新聞網：觸動未來 新識力",
     .name_ja = "United Daily News (TW) - 聯合新聞網：觸動未來 新識力",
@@ -54938,7 +54388,9 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as news-website, country "
       "TW." },
 
-  { .id = "JO48_NEWS_Q123398745_2", .name = "iThome (TW) - iThome 新聞",
+  { .id = "JO48_NEWS_Q123398745_2",
+    /* feed-format-twin-ok: measured 2026-11-05: 30 records against the sibling's 10, so the two spellings are not one feed */
+    .name = "iThome (TW) - iThome 新聞",
     .name_ja = "iThome (TW) - iThome 新聞",
     .category = "news", .collector = "news_asia_pacific", .portal = "https://www.ithome.com.tw/",
     .record_type = "news-article",
@@ -62310,24 +61762,6 @@ static const hp_source HP3B48_NEWS[] = {
       "12:05:10 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO48_NEWS_Q55668233_2", .name = "Pahrump Valley Times (US) - Pahrump Valley Times",
-    .name_ja = "Pahrump Valley Times (US) - Pahrump Valley Times",
-    .category = "news", .collector = "news_northam", .portal = "https://pvtimes.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://pvtimes.com/rss",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 30 items, RSS2 feed, newest Fri, 16 Oct 2026 "
-      "12:05:10 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO48_NEWS_Q55668241_2", .name = "Amherst Bee (US) - www.beenews.com - RSS Results",
     .name_ja = "Amherst Bee (US) - www.beenews.com - RSS Results",
@@ -63060,26 +62494,6 @@ static const hp_source HP3B48_NEWS[] = {
       "13:00:00 GMT. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO48_NEWS_Q7728732_2", .name = "The Daily Triplicate (US) - Del Norte Triplicate — Latest "
-      "stories",
-    .name_ja = "The Daily Triplicate (US) - Del Norte Triplicate — Latest stories",
-    .category = "news", .collector = "news_northam", .portal = "https://triplicate.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://triplicate.com/feeds/all/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 30 items, ATOM feed, newest "
-      "2026-10-18T13:00:00.547Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "newspaper, country US." },
 
   { .id = "JO48_NEWS_Q7729492", .name = "Decatur Daily (US) - www.decaturdaily.com - RSS Results",
     .name_ja = "Decatur Daily (US) - www.decaturdaily.com - RSS Results",
@@ -66437,24 +65851,6 @@ static const hp_source HP3B48_NEWS[] = {
       "13:24:00 +0000. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO48_NEWS_Q7769401_2", .name = "Times Leader (US) - Times Leader",
-    .name_ja = "Times Leader (US) - Times Leader",
-    .category = "news", .collector = "news_northam", .portal = "https://timesleader.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://timesleader.com/feed",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "13:24:00 +0000. A feed the organisation itself declares or links "
-      "on its site root. Wikidata classes it as newspaper, country US." },
 
   { .id = "JO48_NEWS_Q7749664", .name = "The Maine Campus (US) - The Maine Campus",
     .name_ja = "The Maine Campus (US) - The Maine Campus",
@@ -67245,25 +66641,6 @@ static const hp_source HP3B48_NEWS[] = {
       "08:00:00 GMT. A feed the organisation itself declares or links "
       "on its site root. Wikidata classes it as newspaper, country US." },
 
-  { .id = "JO48_NEWS_Q140402486_2", .name = "Pulse Chronicles (US) - Pulse Chronicles",
-    .name_ja = "Pulse Chronicles (US) - Pulse Chronicles",
-    .category = "news", .collector = "news_northam", .portal = "https://pulsechronicles.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://pulsechronicles.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 50 items, ATOM feed, newest "
-      "2026-09-16T08:00:00.000Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "newspaper, country US." },
 
   { .id = "JO48_NEWS_Q140402486_3", .name = "Pulse Chronicles (US) - Pulse Chronicles — The Pulse",
     .name_ja = "Pulse Chronicles (US) - Pulse Chronicles — The Pulse",
@@ -70008,25 +69385,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216750_2", .name = "UZU News (US) - UZU News",
-    .name_ja = "UZU News (US) - UZU News",
-    .category = "news", .collector = "news_northam", .portal = "https://uzunews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://uzunews.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-16T21:30:14.457Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216748", .name = "USA Post 21 (US) - USA Post 21",
     .name_ja = "USA Post 21 (US) - USA Post 21",
@@ -70048,25 +69406,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216748_2", .name = "USA Post 21 (US) - USA Post 21",
-    .name_ja = "USA Post 21 (US) - USA Post 21",
-    .category = "news", .collector = "news_northam", .portal = "https://usapost2021.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://usapost2021.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-16T20:34:59.332Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141250170", .name = "California Culture Chronicle (US) - California Culture Chronicle",
     .name_ja = "California Culture Chronicle (US) - California Culture Chronicle",
@@ -70088,25 +69427,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141250170_2", .name = "California Culture Chronicle (US) - California Culture Chronicle",
-    .name_ja = "California Culture Chronicle (US) - California Culture Chronicle",
-    .category = "news", .collector = "news_northam", .portal = "https://ccctimes.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ccctimes.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-16T21:47:49.781Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141250174", .name = "The Tulsa Times (US) - The Tulsa Times",
     .name_ja = "The Tulsa Times (US) - The Tulsa Times",
@@ -70128,25 +69448,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141250174_2", .name = "The Tulsa Times (US) - The Tulsa Times",
-    .name_ja = "The Tulsa Times (US) - The Tulsa Times",
-    .category = "news", .collector = "news_northam", .portal = "https://tustimes.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://tustimes.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-16T21:50:05.455Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141250172", .name = "Multi Academic Journal (US) - Multi Academic Journal",
     .name_ja = "Multi Academic Journal (US) - Multi Academic Journal",
@@ -70168,25 +69469,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141250172_2", .name = "Multi Academic Journal (US) - Multi Academic Journal",
-    .name_ja = "Multi Academic Journal (US) - Multi Academic Journal",
-    .category = "news", .collector = "news_northam", .portal = "https://multiacademicjournal.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://multiacademicjournal.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-16T21:48:40.560Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141347002", .name = "Money & World (US) - Money & World",
     .name_ja = "Money & World (US) - Money & World",
@@ -70830,25 +70112,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216614_2", .name = "24 News Click (US) - 24 News Click",
-    .name_ja = "24 News Click (US) - 24 News Click",
-    .category = "news", .collector = "news_northam", .portal = "https://24newsclick.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://24newsclick.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-16T21:13:27.364Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216615", .name = "3G Times (US) - 3G Times",
     .name_ja = "3G Times (US) - 3G Times",
@@ -70870,25 +70133,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216615_2", .name = "3G Times (US) - 3G Times",
-    .name_ja = "3G Times (US) - 3G Times",
-    .category = "news", .collector = "news_northam", .portal = "https://3gtimes.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://3gtimes.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-16T21:07:13.129Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216623", .name = "Agla News (US) - Agla News",
     .name_ja = "Agla News (US) - Agla News",
@@ -70910,25 +70154,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216623_2", .name = "Agla News (US) - Agla News",
-    .name_ja = "Agla News (US) - Agla News",
-    .category = "news", .collector = "news_northam", .portal = "https://aglanews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://aglanews.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-16T20:48:19.029Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216621", .name = "Agile News (US) - Agile News",
     .name_ja = "Agile News (US) - Agile News",
@@ -70950,25 +70175,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216621_2", .name = "Agile News (US) - Agile News",
-    .name_ja = "Agile News (US) - Agile News",
-    .category = "news", .collector = "news_northam", .portal = "https://agile-news.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://agile-news.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-16T20:23:41.313Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216626", .name = "Amjilt News (US) - Amjilt News",
     .name_ja = "Amjilt News (US) - Amjilt News",
@@ -70990,25 +70196,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216626_2", .name = "Amjilt News (US) - Amjilt News",
-    .name_ja = "Amjilt News (US) - Amjilt News",
-    .category = "news", .collector = "news_northam", .portal = "https://amjilt.news/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://amjilt.news/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-16T20:40:10.550Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216654", .name = "Business News 7 (US) - Business News 7",
     .name_ja = "Business News 7 (US) - Business News 7",
@@ -71030,25 +70217,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216654_2", .name = "Business News 7 (US) - Business News 7",
-    .name_ja = "Business News 7 (US) - Business News 7",
-    .category = "news", .collector = "news_northam", .portal = "https://businessnews7.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://businessnews7.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-18T15:48:44.745Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216655", .name = "Buzz News 10 (US) - Buzz News 10",
     .name_ja = "Buzz News 10 (US) - Buzz News 10",
@@ -71070,25 +70238,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216655_2", .name = "Buzz News 10 (US) - Buzz News 10",
-    .name_ja = "Buzz News 10 (US) - Buzz News 10",
-    .category = "news", .collector = "news_northam", .portal = "https://buzznews10.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://buzznews10.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-18T15:40:05.483Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216652", .name = "Blog Daily (US) - Blog Daily",
     .name_ja = "Blog Daily (US) - Blog Daily",
@@ -71110,25 +70259,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216652_2", .name = "Blog Daily (US) - Blog Daily",
-    .name_ja = "Blog Daily (US) - Blog Daily",
-    .category = "news", .collector = "news_northam", .portal = "https://blogdaily.us/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://blogdaily.us/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-16T21:14:04.598Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216658", .name = "Daily Detective News (US) - Daily Detective News",
     .name_ja = "Daily Detective News (US) - Daily Detective News",
@@ -71150,25 +70280,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216658_2", .name = "Daily Detective News (US) - Daily Detective News",
-    .name_ja = "Daily Detective News (US) - Daily Detective News",
-    .category = "news", .collector = "news_northam", .portal = "https://dailydetectivenews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://dailydetectivenews.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-16T21:44:25.910Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216659", .name = "Daily News Voyage (US) - Daily News Voyage",
     .name_ja = "Daily News Voyage (US) - Daily News Voyage",
@@ -71190,25 +70301,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216659_2", .name = "Daily News Voyage (US) - Daily News Voyage",
-    .name_ja = "Daily News Voyage (US) - Daily News Voyage",
-    .category = "news", .collector = "news_northam", .portal = "https://dailynewsvoyage.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://dailynewsvoyage.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-17T21:30:46.395Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216662", .name = "Dayue News (US) - Dayue News",
     .name_ja = "Dayue News (US) - Dayue News",
@@ -71230,25 +70322,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216662_2", .name = "Dayue News (US) - Dayue News",
-    .name_ja = "Dayue News (US) - Dayue News",
-    .category = "news", .collector = "news_northam", .portal = "https://dayuenews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://dayuenews.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-16T20:53:03.487Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216660", .name = "Daily Pencil (US) - Daily Pencil",
     .name_ja = "Daily Pencil (US) - Daily Pencil",
@@ -71270,25 +70343,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216660_2", .name = "Daily Pencil (US) - Daily Pencil",
-    .name_ja = "Daily Pencil (US) - Daily Pencil",
-    .category = "news", .collector = "news_northam", .portal = "https://dailypencil.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://dailypencil.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-18T08:57:57.724Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216666", .name = "EDN News 12 (US) - EDN News 12",
     .name_ja = "EDN News 12 (US) - EDN News 12",
@@ -71310,25 +70364,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216666_2", .name = "EDN News 12 (US) - EDN News 12",
-    .name_ja = "EDN News 12 (US) - EDN News 12",
-    .category = "news", .collector = "news_northam", .portal = "https://ednnews-12.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ednnews-12.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-16T22:11:24.113Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216668", .name = "Engevity News (US) - Engevity News",
     .name_ja = "Engevity News (US) - Engevity News",
@@ -71350,25 +70385,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216668_2", .name = "Engevity News (US) - Engevity News",
-    .name_ja = "Engevity News (US) - Engevity News",
-    .category = "news", .collector = "news_northam", .portal = "https://engevitynews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://engevitynews.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-16T20:40:45.622Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216672", .name = "Farm Press Theme (US) - Farm Press Theme",
     .name_ja = "Farm Press Theme (US) - Farm Press Theme",
@@ -71390,25 +70406,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216672_2", .name = "Farm Press Theme (US) - Farm Press Theme",
-    .name_ja = "Farm Press Theme (US) - Farm Press Theme",
-    .category = "news", .collector = "news_northam", .portal = "https://farmpresstheme.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://farmpresstheme.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-16T20:16:57.471Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216673", .name = "Fun News Daily (US) - Fun News Daily",
     .name_ja = "Fun News Daily (US) - Fun News Daily",
@@ -71430,25 +70427,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216673_2", .name = "Fun News Daily (US) - Fun News Daily",
-    .name_ja = "Fun News Daily (US) - Fun News Daily",
-    .category = "news", .collector = "news_northam", .portal = "https://funnewsdaily.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://funnewsdaily.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-16T20:17:30.216Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216683", .name = "Juvenile Pre & Post (US) - Juvenile Pre & Post",
     .name_ja = "Juvenile Pre & Post (US) - Juvenile Pre & Post",
@@ -71470,25 +70448,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216683_2", .name = "Juvenile Pre & Post (US) - Juvenile Pre & Post",
-    .name_ja = "Juvenile Pre & Post (US) - Juvenile Pre & Post",
-    .category = "news", .collector = "news_northam", .portal = "https://juvenile-pre-post.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://juvenile-pre-post.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-16T20:54:43.768Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216686", .name = "Legacy Village News (US) - Legacy Village News",
     .name_ja = "Legacy Village News (US) - Legacy Village News",
@@ -71510,25 +70469,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216686_2", .name = "Legacy Village News (US) - Legacy Village News",
-    .name_ja = "Legacy Village News (US) - Legacy Village News",
-    .category = "news", .collector = "news_northam", .portal = "https://legacyvillagenews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://legacyvillagenews.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-16T21:31:24.621Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216687", .name = "Licht Journal (US) - Licht Journal",
     .name_ja = "Licht Journal (US) - Licht Journal",
@@ -71550,25 +70490,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216687_2", .name = "Licht Journal (US) - Licht Journal",
-    .name_ja = "Licht Journal (US) - Licht Journal",
-    .category = "news", .collector = "news_northam", .portal = "https://licht-journal.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://licht-journal.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-18T11:24:26.304Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216684", .name = "KAJ News (US) - KAJ News",
     .name_ja = "KAJ News (US) - KAJ News",
@@ -71590,25 +70511,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216684_2", .name = "KAJ News (US) - KAJ News",
-    .name_ja = "KAJ News (US) - KAJ News",
-    .category = "news", .collector = "news_northam", .portal = "https://kajnews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://kajnews.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-16T20:49:10.811Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216685", .name = "L4 News (US) - L4 News",
     .name_ja = "L4 News (US) - L4 News",
@@ -71630,25 +70532,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216685_2", .name = "L4 News (US) - L4 News",
-    .name_ja = "L4 News (US) - L4 News",
-    .category = "news", .collector = "news_northam", .portal = "https://l4news.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://l4news.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-16T21:23:41.812Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216690", .name = "LMH News (US) - LMH News",
     .name_ja = "LMH News (US) - LMH News",
@@ -71670,25 +70553,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216690_2", .name = "LMH News (US) - LMH News",
-    .name_ja = "LMH News (US) - LMH News",
-    .category = "news", .collector = "news_northam", .portal = "https://lmhnews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://lmhnews.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-16T20:56:21.286Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216695", .name = "Media News Watch (US) - Media News Watch",
     .name_ja = "Media News Watch (US) - Media News Watch",
@@ -71710,25 +70574,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216695_2", .name = "Media News Watch (US) - Media News Watch",
-    .name_ja = "Media News Watch (US) - Media News Watch",
-    .category = "news", .collector = "news_northam", .portal = "https://medianewswatch.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://medianewswatch.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-16T20:58:36.933Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216693", .name = "Market Post Center (US) - Market Post Center",
     .name_ja = "Market Post Center (US) - Market Post Center",
@@ -71750,25 +70595,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216693_2", .name = "Market Post Center (US) - Market Post Center",
-    .name_ja = "Market Post Center (US) - Market Post Center",
-    .category = "news", .collector = "news_northam", .portal = "https://marketpostcenter.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://marketpostcenter.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-16T21:03:13.598Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216697", .name = "Miami in News (US) - Miami in News",
     .name_ja = "Miami in News (US) - Miami in News",
@@ -71790,25 +70616,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216697_2", .name = "Miami in News (US) - Miami in News",
-    .name_ja = "Miami in News (US) - Miami in News",
-    .category = "news", .collector = "news_northam", .portal = "https://miamiinnews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://miamiinnews.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-18T12:20:05.760Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216702", .name = "Naval Pages (US) - Naval Pages",
     .name_ja = "Naval Pages (US) - Naval Pages",
@@ -71830,25 +70637,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216702_2", .name = "Naval Pages (US) - Naval Pages",
-    .name_ja = "Naval Pages (US) - Naval Pages",
-    .category = "news", .collector = "news_northam", .portal = "https://naval-pages.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://naval-pages.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-18T01:26:25.530Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216703", .name = "News ABC (US) - News ABC",
     .name_ja = "News ABC (US) - News ABC",
@@ -71870,25 +70658,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216703_2", .name = "News ABC (US) - News ABC",
-    .name_ja = "News ABC (US) - News ABC",
-    .category = "news", .collector = "news_northam", .portal = "https://news-abc.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://news-abc.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-18T08:56:18.751Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216706", .name = "News Bay 71 (US) - News Bay 71",
     .name_ja = "News Bay 71 (US) - News Bay 71",
@@ -71910,25 +70679,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216706_2", .name = "News Bay 71 (US) - News Bay 71",
-    .name_ja = "News Bay 71 (US) - News Bay 71",
-    .category = "news", .collector = "news_northam", .portal = "https://newsbay71.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://newsbay71.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-18T13:06:33.743Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216704", .name = "News Choice (US) - News Choice",
     .name_ja = "News Choice (US) - News Choice",
@@ -71950,25 +70700,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216704_2", .name = "News Choice (US) - News Choice",
-    .name_ja = "News Choice (US) - News Choice",
-    .category = "news", .collector = "news_northam", .portal = "https://news-choice.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://news-choice.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-17T20:54:44.300Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216705", .name = "News 7 Channel (US) - News 7 Channel",
     .name_ja = "News 7 Channel (US) - News 7 Channel",
@@ -71990,25 +70721,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216705_2", .name = "News 7 Channel (US) - News 7 Channel",
-    .name_ja = "News 7 Channel (US) - News 7 Channel",
-    .category = "news", .collector = "news_northam", .portal = "https://news7channel.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://news7channel.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-18T02:03:20.262Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216708", .name = "Newspaper Daily (US) - Newspaper Daily",
     .name_ja = "Newspaper Daily (US) - Newspaper Daily",
@@ -72030,25 +70742,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216708_2", .name = "Newspaper Daily (US) - Newspaper Daily",
-    .name_ja = "Newspaper Daily (US) - Newspaper Daily",
-    .category = "news", .collector = "news_northam", .portal = "https://newspaper-daily.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://newspaper-daily.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-18T10:33:35.100Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216713", .name = "Norly News (US) - Norly News",
     .name_ja = "Norly News (US) - Norly News",
@@ -72070,25 +70763,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216713_2", .name = "Norly News (US) - Norly News",
-    .name_ja = "Norly News (US) - Norly News",
-    .category = "news", .collector = "news_northam", .portal = "https://norlynews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://norlynews.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-16T21:04:52.663Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216718", .name = "Pacific Press New York (US) - Pacific Press New York",
     .name_ja = "Pacific Press New York (US) - Pacific Press New York",
@@ -72110,25 +70784,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216718_2", .name = "Pacific Press New York (US) - Pacific Press New York",
-    .name_ja = "Pacific Press New York (US) - Pacific Press New York",
-    .category = "news", .collector = "news_northam", .portal = "https://pacificpressnewyork.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://pacificpressnewyork.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-16T21:09:50.604Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216716", .name = "Old Post Books (US) - Old Post Books",
     .name_ja = "Old Post Books (US) - Old Post Books",
@@ -72150,25 +70805,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216716_2", .name = "Old Post Books (US) - Old Post Books",
-    .name_ja = "Old Post Books (US) - Old Post Books",
-    .category = "news", .collector = "news_northam", .portal = "https://oldpostbooks.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://oldpostbooks.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-16T20:27:04.028Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216717", .name = "Orer News (US) - Orer News",
     .name_ja = "Orer News (US) - Orer News",
@@ -72190,25 +70826,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216717_2", .name = "Orer News (US) - Orer News",
-    .name_ja = "Orer News (US) - Orer News",
-    .category = "news", .collector = "news_northam", .portal = "https://orer.news/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://orer.news/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-16T20:25:30.582Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216723", .name = "Red Orb News (US) - Red Orb News",
     .name_ja = "Red Orb News (US) - Red Orb News",
@@ -72230,25 +70847,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216723_2", .name = "Red Orb News (US) - Red Orb News",
-    .name_ja = "Red Orb News (US) - Red Orb News",
-    .category = "news", .collector = "news_northam", .portal = "https://redorbnews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://redorbnews.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-16T21:12:50.130Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216727", .name = "Reliable News (US) - Reliable News",
     .name_ja = "Reliable News (US) - Reliable News",
@@ -72270,25 +70868,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216727_2", .name = "Reliable News (US) - Reliable News",
-    .name_ja = "Reliable News (US) - Reliable News",
-    .category = "news", .collector = "news_northam", .portal = "https://reliable-news.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://reliable-news.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-18T09:19:10.331Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216724", .name = "Regd News (US) - Regd News",
     .name_ja = "Regd News (US) - Regd News",
@@ -72310,25 +70889,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216724_2", .name = "Regd News (US) - Regd News",
-    .name_ja = "Regd News (US) - Regd News",
-    .category = "news", .collector = "news_northam", .portal = "https://regdnews.tv/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://regdnews.tv/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-18T12:36:26.840Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216731", .name = "Santa Post (US) - Santa Post",
     .name_ja = "Santa Post (US) - Santa Post",
@@ -72350,25 +70910,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216731_2", .name = "Santa Post (US) - Santa Post",
-    .name_ja = "Santa Post (US) - Santa Post",
-    .category = "news", .collector = "news_northam", .portal = "https://santapost.org/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://santapost.org/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-16T21:11:34.675Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216728", .name = "Rockland Review News (US) - Rockland Review News",
     .name_ja = "Rockland Review News (US) - Rockland Review News",
@@ -72390,25 +70931,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216728_2", .name = "Rockland Review News (US) - Rockland Review News",
-    .name_ja = "Rockland Review News (US) - Rockland Review News",
-    .category = "news", .collector = "news_northam", .portal = "https://rocklandreviewnews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://rocklandreviewnews.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-16T20:32:19.016Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216735", .name = "Spedtacular Daily Living (US) - Spedtacular Daily Living",
     .name_ja = "Spedtacular Daily Living (US) - Spedtacular Daily Living",
@@ -72430,25 +70952,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216735_2", .name = "Spedtacular Daily Living (US) - Spedtacular Daily Living",
-    .name_ja = "Spedtacular Daily Living (US) - Spedtacular Daily Living",
-    .category = "news", .collector = "news_northam", .portal = "https://spedtaculardailyliving.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://spedtaculardailyliving.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-17T18:50:48.270Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216732", .name = "Shore News Now (US) - Shore News Now",
     .name_ja = "Shore News Now (US) - Shore News Now",
@@ -72470,25 +70973,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216732_2", .name = "Shore News Now (US) - Shore News Now",
-    .name_ja = "Shore News Now (US) - Shore News Now",
-    .category = "news", .collector = "news_northam", .portal = "https://shorenewsnow.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://shorenewsnow.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-16T21:05:38.407Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216739", .name = "The Daily Deal Queen (US) - The Daily Deal Queen",
     .name_ja = "The Daily Deal Queen (US) - The Daily Deal Queen",
@@ -72510,25 +70994,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216739_2", .name = "The Daily Deal Queen (US) - The Daily Deal Queen",
-    .name_ja = "The Daily Deal Queen (US) - The Daily Deal Queen",
-    .category = "news", .collector = "news_northam", .portal = "https://thedailydealqueen.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://thedailydealqueen.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-16T20:08:47.420Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216742", .name = "The Press Times (US) - The Press Times",
     .name_ja = "The Press Times (US) - The Press Times",
@@ -72550,25 +71015,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216742_2", .name = "The Press Times (US) - The Press Times",
-    .name_ja = "The Press Times (US) - The Press Times",
-    .category = "news", .collector = "news_northam", .portal = "https://thepresstimes.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://thepresstimes.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-18T12:34:08.358Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216740", .name = "The Daily News 24 (US) - The Daily News 24",
     .name_ja = "The Daily News 24 (US) - The Daily News 24",
@@ -72590,25 +71036,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216740_2", .name = "The Daily News 24 (US) - The Daily News 24",
-    .name_ja = "The Daily News 24 (US) - The Daily News 24",
-    .category = "news", .collector = "news_northam", .portal = "https://thedailynews24hr.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://thedailynews24hr.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-16T21:16:21.991Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216746", .name = "Union Times Today (US) - Union Times Today",
     .name_ja = "Union Times Today (US) - Union Times Today",
@@ -72630,25 +71057,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216746_2", .name = "Union Times Today (US) - Union Times Today",
-    .name_ja = "Union Times Today (US) - Union Times Today",
-    .category = "news", .collector = "news_northam", .portal = "https://uniontimestoday.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://uniontimestoday.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-16T20:36:28.679Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216747", .name = "USA Daily News 24 (US) - USA Daily News 24",
     .name_ja = "USA Daily News 24 (US) - USA Daily News 24",
@@ -72670,25 +71078,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216747_2", .name = "USA Daily News 24 (US) - USA Daily News 24",
-    .name_ja = "USA Daily News 24 (US) - USA Daily News 24",
-    .category = "news", .collector = "news_northam", .portal = "https://usadailynews24.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://usadailynews24.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-16T21:00:59.623Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q141216744", .name = "Toor News (US) - Toor News",
     .name_ja = "Toor News (US) - Toor News",
@@ -72710,25 +71099,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as online-newspaper, "
       "country US." },
 
-  { .id = "JO48_NEWS_Q141216744_2", .name = "Toor News (US) - Toor News",
-    .name_ja = "Toor News (US) - Toor News",
-    .category = "news", .collector = "news_northam", .portal = "https://toornews.com/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://toornews.com/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 20 items, ATOM feed, newest "
-      "2026-10-16T21:27:09.283Z. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "online-newspaper, country US." },
 
   { .id = "JO48_NEWS_Q5188530", .name = "Crosscut (US) - Cascade PBS",
     .name_ja = "Crosscut (US) - Cascade PBS",
@@ -76113,25 +74483,6 @@ static const hp_source HP3B48_NEWS[] = {
       "on its site root. Wikidata classes it as news-agency, country "
       "YE." },
 
-  { .id = "JO48_NEWS_Q12251185_2", .name = "Khabar Agency (YE) - وكالة خبر للأنباء",
-    .name_ja = "Khabar Agency (YE) - وكالة خبر للأنباء",
-    .category = "news", .collector = "news_mena", .portal = "https://www.khbr.me/",
-    .record_type = "news-article",
-    .tags = "\"news\",\"press\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.khbr.me/atom.xml",
-    .array_path = "entry",
-    .date_keys = "updated,published",
-    .id_keys = "id,link.@href",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link.@href",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 50 items, ATOM feed, newest "
-      "2026-10-18T19:40:30+03:00. A feed the organisation itself "
-      "declares or links on its site root. Wikidata classes it as "
-      "news-agency, country YE." },
 
   { .id = "JO48_NEWS_Q2937243", .name = "Cape Argus (ZA) - Cape Argus",
     .name_ja = "Cape Argus (ZA) - Cape Argus",

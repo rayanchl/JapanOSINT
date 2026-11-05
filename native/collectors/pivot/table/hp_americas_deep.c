@@ -189,16 +189,6 @@ static const hp_source HP_AMERICAS[] = {
       "of US corporate shells, so its register is a routine pivot" },
 
   /* ── Canada ────────────────────────────────────────────────────────────── */
-  { .id = "CA_MRAS_SEARCH", .name = "Canada Business Registries — federated search",
-    .name_ja = "カナダ 企業登記 横断検索", .category = "government",
-    .portal = "https://beta.canadasbusinessregistries.ca", .record_type = "ca-company",
-    .tags = "\"ca\",\"registry\"", .free_tier = 1,
-    .url = "https://searchapi.mrasservice.ca/Search/api/v1/search?fq=keyword:%7B{q}%7D"
-           "&lang=en&queryaction=fieldquery&sortfield=score&sortorder=desc",
-    .array_path = "docs", .title_keys = "Company_Name", .id_keys = "Juri_ID",
-    .description = "Federated search across Canadian federal and provincial "
-      "corporate registries — company name, jurisdiction, registry id and status "
-      "in one query instead of thirteen separate portals" },
 
   /* ── Brazil ────────────────────────────────────────────────────────────── */
   { .id = "BR_MINHARECEITA_CNPJ", .name = "Minha Receita — full CNPJ record",

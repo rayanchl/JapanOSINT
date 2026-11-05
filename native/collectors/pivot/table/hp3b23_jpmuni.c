@@ -4369,30 +4369,6 @@ static const hp_source HP3B23_JPMUNI[] = {
       "committee — and almost none of it is reprinted anywhere a "
       "national search will reach." },
 
-  { .id = "JPMUNI_NOSHIRO_UPDATE", .name = "Noshiro — municipal update feed",
-    .name_ja = "能代市 能代市",
-    .category = "government", .portal = "https://www.city.noshiro.lg.jp/",
-    .record_type = "municipal-notice",
-    .tags = "\"japan\",\"municipal\",\"localgov\",\"rss\",\"update\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.city.noshiro.lg.jp/rss.xml",
-    .array_path = "item",
-    .date_keys = "pubDate",
-    .id_keys = "link",
-    .interval = 21600,
-    .link_keys = "link",
-    .title_keys = "title",
-    .description = "The Noshiro municipal office's own update feed, read straight "
-      "off the town hall CMS rather than through an aggregator. It "
-      "carries every page the office adds or revises, which in a "
-      "Japanese municipal CMS is the single stream that carries "
-      "ordinances, council minutes, budget documents, permit registers, "
-      "tender results and personnel notices alike. Japanese municipal "
-      "sites are the primary record for a person or a business at the "
-      "level where things are actually decided — a planning permission, "
-      "a subsidy award, a licence suspension, an appointment to a local "
-      "committee — and almost none of it is reprinted anywhere a "
-      "national search will reach." },
 
   { .id = "JPMUNI_KOMAE_UPDATE", .name = "Komae — municipal update feed",
     .name_ja = "狛江市 狛江市役所",

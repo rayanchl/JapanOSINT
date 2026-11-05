@@ -13,6 +13,8 @@
     "Checks sitting at 0 stay scalar; there is nothing to mask."
   ],
   "checks": {
+    "csv-delim-name": 0,
+    "detail-self-hop": 0,
     "dup-endpoint": {
       "%.*s.wikipedia.org/wiki": 1,
       "%s": 1,
@@ -133,7 +135,6 @@
       "internetdb.shodan.io/%s": 1,
       "internetdb.shodan.io/<ip>": 1,
       "ipqualityscore.com/api/json/ip/%s/%s": 1,
-      "it-shien.smrj.go.jp/download/grantdecision_list": 1,
       "kbopub.economie.fgov.be": 1,
       "kenyalaw.org": 1,
       "kenyalaw.org/caselaw/cases/advanced_search?q=%s": 1,
@@ -405,6 +406,7 @@
       "{}.tumblr.com": 1
     },
     "dup-id": 0,
+    "feed-format-twin": 0,
     "geo-precision": {
       "native/collectors/pod/geojson_file.c": 1,
       "native/collectors/sources/5g_coverage.c": 1,
@@ -749,9 +751,9 @@
     "unresolved-id": 0
   },
   "registered_sources": {
-    "direct": 1178,
-    "macro_expanded": 56230,
-    "total": 57408,
+    "direct": 1180,
+    "macro_expanded": 59440,
+    "total": 60620,
     "unresolved": 0
   }
 }

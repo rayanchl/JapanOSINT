@@ -2262,26 +2262,6 @@ static const hp_source HP3B25_JPBIZREG[] = {
       "name, status, address, phone, designation flags and operating "
       "body." },
 
-  { .id = "JP25_JPBIZ_JCNET_RSS", .name = "JC-NET bankruptcy and corporate news (RSS)",
-    .name_ja = "JC-NET 倒産・企業情報 RSS",
-    .category = "business", .portal = "https://n-seikei.jp",
-    .record_type = "bankruptcy-notice",
-    .tags = "\"japan\",\"bankruptcy\",\"tousan\",\"jcnet\",\"feed\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://n-seikei.jp/rss.xml",
-    .array_path = "item",
-    .body_keys = "description",
-    .date_keys = "pubDate",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .title_keys = "title",
-    .description = "JC-NET's daily feed of Japanese corporate bankruptcies and "
-      "business news: 15 items per pull, each a dated article such as "
-      "the daily 破産・小口倒産一覧 (30 bankruptcies on 2026-08-28) naming the "
-      "companies, their prefecture, industry and the court action. One "
-      "of the few free running records of small-company failures since "
-      "the Kanpo made bankruptcy notices unsearchable." },
 
   { .id = "JP25_JPBIZ_JCNET_ATOM", .name = "JC-NET bankruptcy and corporate news (Atom, full text)",
     .name_ja = "JC-NET 倒産・企業情報 Atom",

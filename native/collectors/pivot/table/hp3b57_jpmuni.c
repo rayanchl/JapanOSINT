@@ -77,23 +77,6 @@ static const hp_source HP3B57_JPMUNI[] = {
       "00:00:00+09:00. A feed the organisation itself declares or links "
       "on its site root." },
 
-  { .id = "JO57IQ61885977", .name = "Bieicho Library (public library) - 美瑛町｜最新情報",
-    .name_ja = "Bieicho Library (public library) - 美瑛町｜最新情報",
-    .category = "government", .portal = "https://www.town.biei.hokkaido.jp/",
-    .record_type = "government-notice",
-    .tags = "\"jpmuni\",\"japan\",\"municipal\",\"notice\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.town.biei.hokkaido.jp/rss/whatsnew.rdf",
-    .array_path = "item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-30: 50 items, RSS1 feed, newest "
-      "2026-10-31T04:44:05JST. A feed the organisation itself declares "
-      "or links on its site root." },
 
   { .id = "JO57_Q290326", .name = "Nirasaki (city of Japan (shi)) - 韮崎市",
     .name_ja = "Nirasaki (city of Japan (shi)) - 韮崎市",

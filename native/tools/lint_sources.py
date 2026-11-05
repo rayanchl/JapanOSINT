@@ -1081,13 +1081,18 @@ def _feed_format_key(url):
     Joomla serves one feed as `?format=feed&type=rss` and `&type=atom`;
     WordPress serves one as `/feed/`, `/feed/atom/`, `/feed/rss2/` and `/rss1`.
     Those are serialisations of the same items, not two collections."""
-    u = re.sub(r'[?&]type=(?:rss|rss2|atom)\b', '', url)
+    u = re.sub(r'^http://', 'https://', url)
+    u = re.sub(r'://www\.', '://', u)
+    u = re.sub(r'[?&]type=(?:rss|rss2|atom)\b', '', u)
+    u = re.sub(r'[?&]feed=(?:rss|rss2|atom|rdf)\b', '', u)
     u = re.sub(r'[?&]format=feed\b', '', u)
     u = re.sub(r'/feed/(?:atom|rss2?)/?$', '/feed/', u)
+    u = re.sub(r'/(?:feed|rss|rss2|rss\.xml|rss2\.xml|atom\.xml|feed\.xml|'
+               r'index\.rss)/?$', '/feed/', u)
     u = re.sub(r'/rss1$', '/feed/', u)
     # a query left starting with `&`, or left empty, after the strip
     u = re.sub(r'\?&', '?', u)
-    return u.rstrip('?&')
+    return u.rstrip('?&/')
 
 
 def check_feed_format_twin():
