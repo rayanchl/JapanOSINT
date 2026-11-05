@@ -1009,6 +1009,50 @@ The lessons from batches 43–48 that a new batch must not relearn:
   first as a header on each row, since 2026-10-21 as an `HA_COMPAT` line in
   `core/host_agents.def`; the four that refused twice stay out. Try that
   agent before calling a 403 dead.
+
+  **AND THE SAME LEVER, ON THE SAME-LOOKING CLASS SIXTEEN DAYS LATER,
+  RECOVERED FOUR ROWS OF 738** (2026-11-05,
+  `docs/http403-agent-sweep-2026-11-05.{md,tsv}`). The complete registry
+  sweep left 738 rows measured at HTTP 403 and the paragraph above named the
+  remedy, so all 555 hosts behind them were walked through the whole ladder.
+  **304 hosts (404 rows) refused ALL FIVE agents**, the browser profile
+  included; **214 (295 rows) answer the ENGINE agent again** — the 403 was
+  nine days stale, and a sample of 20 run through the engine stores records on
+  17, so ~250 rows were recovered by elapsed time and nothing else; 20 only
+  ever answered with an egress-shaped failure and are unmeasured from here;
+  and 17 "recovered" on one reading. **Re-measuring those 17 twice each left
+  6, and the ENGINE then left 4.** Three lessons, each of which cost a wrong
+  change that was nearly made:
+
+  * **Re-ask with the ENGINE agent before writing any entry.** 8 of the 17
+    were the host FLAPPING, not the agent working. Going straight to
+    `HA_COMPAT` would have "recovered" 214 hosts and written 214 permanent
+    table lines that do nothing.
+  * **The probe and the engine disagree, and the engine wins** — this file's
+    own rule, met head-on. `www.rakuten-bank.co.jp` answers 200 to
+    `HA_CONTACT` twice through the sweep's client and **403 to all four agents
+    through `--run`**, because the hosts in that block judge the engine's
+    `Accept`/`Accept-Encoding` headers and not the agent alone. Measure a
+    candidate through `--run` before writing it down.
+  * **A 403 class is not one thing.** 54 of 60 refusing hosts sampled are
+    Cloudflare and 52 serve a JAVASCRIPT CHALLENGE, which no agent and no
+    pacing reaches — so the engine's standing 403 remedy ("a credential or a
+    User-Agent it is not sending") was aiming 404 rows at a knob that cannot
+    move. `lib/hpengine.c` names that shape now, and the marker had to be
+    MEASURED rather than guessed: `cf_chl_opt` is in 45 of 50 walls and 0 of
+    the 6 confirmed agent recoveries, while the obvious
+    `cdn-cgi/challenge-platform` is in 46 of 50 **and 1 of the 6** — Cloudflare
+    injects that script into ordinary error pages, and `www.salemcountynj.gov`
+    serves a plain 1,901-byte 403 carrying it whose feed the agent minus
+    "collector" fetches 200. Keying on it would have told the reader not to try
+    the one thing that works. The engine's OWN existing markers measured **0 of
+    50**, so the wall went unnamed even on the 200 path the detector covered —
+    a second, independent defect. `hptest` 59–59d, 59c being that false
+    positive pinned as a control.
+
+  So: **a remedy that worked on one cohort is a hypothesis about the next
+  one.** Both paragraphs are kept, each with its date and its numbers, because
+  the first is not wrong — it is a measurement of a different population.
 * **A URL changed after validation is unvalidated** (an unescaped `&amp;`
   made Joomla serve Atom where rows declared RSS), **a well-formed feed with
   zero items is `EMPTY_RESULTSET`**, **a substring count of `<item` counts the

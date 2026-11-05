@@ -4307,6 +4307,95 @@ int main(void) {
   ok(rc == 0 && cap_count("collector-shape-notice", NULL) == 0,
      "57d: a page that emitted anything files no unlabelled-anchor notice");
 
+  /* ── 59. A BOT WALL SERVED AS HTTP 403 ──────────────────────────────────
+   *
+   * The wall vocabulary ran only where a 200 failed to parse, so a 403 whose
+   * body is a JS challenge was reported as "the upstream refused this client"
+   * with the remedy "check whether the row needs a credential (key_env) or a
+   * User-Agent it is not sending". Measured 2026-11-05 across the 738 rows the
+   * complete registry sweep read as HTTP 403: of their 555 hosts, the agent
+   * ladder recovered almost none, and 54 of 60 refusing hosts sampled were
+   * Cloudflare, 52 of them this challenge. So the old remedy named a knob that
+   * cannot move — the mistake this engine has now made four times (Archive-It,
+   * the Imperva wall, FDSN's nodata=404, and here).
+   *
+   * The fixture body is the real one's distinguishing content: the challenge
+   * script path and its options variable. */
+  fx_reset();
+  fx_add("/us?per_page=100", 403,
+         "<!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment..."
+         "</title></head><body><div id=\"challenge-error-title\"></div>"
+         "<script src=\"/cdn-cgi/challenge-platform/h/g/orchestrate/chl_page/v1\">"
+         "</script><script>window._cf_chl_opt={cvId:\"3\"};</script>"
+         "</body></html>");
+  rc = run_source("T_URLSIZE", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "BOT-WALL interstitial") != NULL &&
+       strstr(nt->props, "CHALLENGE wall") != NULL &&
+       strstr(nt->props, "do NOT bisect the User-Agent") != NULL &&
+       strstr(nt->props, "a User-Agent it is not sending") == NULL &&
+       strstr(nt->props, "\"http_status\":403") != NULL,
+       "59: a bot wall served as 403 is named as one, and the remedy no longer "
+       "sends the reader to bisect an agent that cannot work");
+    (void)rc; }
+
+  /* 59b. THE CONTROL, and the one that keeps the old behaviour honest: an
+   *      ordinary 403 with nothing wall-shaped in it must STILL get the
+   *      credential/agent remedy, because for those hosts it is the right one
+   *      — 491 rows were recovered that way on 2026-10-20. */
+  fx_reset();
+  fx_add("/us?per_page=100", 403, "{\"error\":\"forbidden: api key required\"}");
+  rc = run_source("T_URLSIZE", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "a User-Agent it is not sending") != NULL &&
+       strstr(nt->props, "CHALLENGE wall") == NULL &&
+       strstr(nt->props, "BOT-WALL") == NULL,
+       "59b: a plain 403 keeps the credential/agent remedy — the wall test must "
+       "not swallow the case the agent ladder really fixes");
+    (void)rc; }
+
+  /* 59c. THE FALSE POSITIVE THAT NARROWED THE DETECTOR, and the control that
+   *      matters most here. Cloudflare injects its challenge SCRIPT into
+   *      ordinary error pages as well, so `cdn-cgi/challenge-platform` is not
+   *      a challenge marker: measured 2026-11-05 it is in 46 of 50 hosts that
+   *      refused every agent AND in 1 of the 6 an agent recovered.
+   *      www.salemcountynj.gov is that one — a plain 1,901-byte "403
+   *      Forbidden" carrying the tag, whose feed the agent minus the word
+   *      "collector" fetches 200 twice over. Keying on it would have told the
+   *      reader not to try the one thing that works, so this body must keep
+   *      the credential/agent remedy. */
+  fx_reset();
+  fx_add("/us?per_page=100", 403,
+         "<!DOCTYPE html><html style=\"height:100%\"><head><title> 403 Forbidden"
+         "</title></head><body><script src=\"/cdn-cgi/challenge-platform/h/b/"
+         "scripts/jsd/main.js\"></script></body></html>");
+  rc = run_source("T_URLSIZE", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "CHALLENGE wall") == NULL &&
+       strstr(nt->props, "a User-Agent it is not sending") != NULL,
+       "59c: an ordinary Cloudflare 403 that merely carries the injected "
+       "challenge script is NOT called a challenge — the agent ladder fixes it");
+    (void)rc; }
+
+  /* 59d. The STALE-VOCABULARY half, a second defect in its own right: the
+   *      markers this engine already carried measured 0 of 50 on those hosts,
+   *      so the wall went unnamed even on the 200 path it did cover. */
+  fx_reset();
+  fx_add("/us?per_page=100", 200,
+         "<!DOCTYPE html><html><head><title>Just a moment...</title></head>"
+         "<body><script>window._cf_chl_opt={cvId:\"3\"};</script></body></html>");
+  rc = run_source("T_URLSIZE", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "BOT-WALL interstitial") != NULL &&
+       strstr(nt->props, "the endpoint may have moved") == NULL,
+       "59d: the current-generation challenge marker is detected on a "
+       "non-parsing 200 too, not just the previous generation's");
+    (void)rc; }
+
   /* 44. A RATE-LIMIT PAGE SERVED AS HTTP 200 is a refusal wearing a success
    *     status, and no status check can see it. Archive-It does exactly that
    *     — `<title>Rate limit reached</title>` with a 200 — so the

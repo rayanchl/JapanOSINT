@@ -683,3 +683,48 @@ HOST_AGENT_KIND(HA_SEC,         "JapanOSINT/1.0 research (rayanchouialkessal@gma
   HOST_AGENT("www.kansai-airport.or.jp", HA_CONTACT)
   HOST_AGENT("www.fcc.gov", HA_CONTACT)
   HOST_AGENT("www.allabolag.se", HA_COMPAT)
+
+  /* FOUR HOSTS OUT OF 555, AND THE NUMBER IS THE FINDING (2026-11-05,
+   * docs/http403-agent-sweep-2026-11-05.{md,tsv}). The complete registry sweep
+   * left 738 rows reading HTTP 403, and this file's own history said what to
+   * do: on 2026-10-20 the browser-compatible prefix recovered 491 of 523 such
+   * rows, so the agent ladder was the obvious lever. It is not, for this
+   * cohort. Every one of the 555 hosts behind those 738 rows was bisected
+   * through the whole ladder — engine, HA_NOCOLLECTOR, HA_CONTACT, HA_COMPAT,
+   * HA_BROWSER:
+   *
+   *     304 hosts (404 rows)  refused ALL FIVE, the browser profile included
+   *     214 hosts (295 rows)  answer the ENGINE agent now — the 403 was stale
+   *      20 hosts ( 21 rows)  this container's own egress; unmeasured from here
+   *      17 hosts ( 18 rows)  an agent recovered... on one reading
+   *
+   * and re-measuring those 17 twice each is what left five, and the engine then cut it to four: 8 were the
+   * HOST flapping (the engine agent answers 200 on a second reading, so an
+   * entry here would be a line kept for ever for nothing) and 3 no longer
+   * recover under any agent. An entry set on one reading is a guess, which is
+   * what this table already says about a hostgate gap.
+   *
+   * The 304 are a CHALLENGE wall, not an agent problem: 54 of 60 sampled are
+   * Cloudflare and 52 of those serve a JavaScript interstitial. lib/hpengine.c
+   * names that shape now instead of advising an agent bisection that cannot
+   * work — see hp_body_is_challenge() for the marker that discriminates it
+   * from an ordinary Cloudflare 403, which this very set made necessary.
+   *
+   * AND THEN FOUR, BECAUSE THE PROBE AND THE ENGINE DISAGREED ABOUT THE
+   * FIFTH. `www.rakuten-bank.co.jp` answered 200 to HA_CONTACT twice through
+   * the sweep's own HTTP client and answers **403 to all four agents through
+   * the ENGINE**, browser profile included — the note above this block already
+   * records why (these hosts judge the engine's `Accept`/`Accept-Encoding`
+   * headers, not the agent alone), and CLAUDE.md's rule is that the engine's
+   * measurement outranks the probe in both directions. So that host is a
+   * refuses-all, its row keeps disclosing, and no line here claims otherwise.
+   * Measure a candidate through `--run` before writing it down.
+   *
+   * Each line below is engine-measured: the row stores real records with the
+   * named agent where it stored only its own fetch-failure disclosure before
+   * (10, 1, 2 and 10 records respectively). Neither needed more than the two
+   * cheapest changes in the ladder. */
+  HOST_AGENT("web.reunionprospectivecompetences.org", HA_NOCOLLECTOR)
+  HOST_AGENT("www.limousis.fr", HA_NOCOLLECTOR)
+  HOST_AGENT("www.mairie-esperce.fr", HA_NOCOLLECTOR)
+  HOST_AGENT("www.salemcountynj.gov", HA_NOCOLLECTOR)

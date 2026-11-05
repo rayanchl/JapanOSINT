@@ -2190,29 +2190,65 @@ static char *hp_jsonp_inner(const char *body) {
   return out;
 }
 
+/* THE wall vocabulary, in one place. It was inline in hp_run_json below and so
+ * could only ever judge a non-parsing 200; a wall served as 403 never reached
+ * it. Two readers now, and rule 4c's reason for that: two copies of this list
+ * would drift, and the drift is invisible — a marker missing from one copy
+ * reads as "no wall", which is the remedy pointing the wrong way.
+ *
+ * Only words a vendor puts in the page it serves INSTEAD of the data. Not
+ * "limit" (a legitimate parameter name, in half the URLs in this tree) and not
+ * "access denied" (a phrase permit decisions and FOI logs really carry). */
+static int hp_body_is_ratelimit(const char *body) {
+  return body && (jo_strcasestr(body, "rate limit") ||
+                  jo_strcasestr(body, "rate-limit") ||
+                  jo_strcasestr(body, "too many requests"));
+}
+
+static int hp_body_is_botwall(const char *body) {
+  return body && (jo_strcasestr(body, "cf_chl_opt") ||
+                  jo_strcasestr(body, "Pardon Our Interruption") ||
+                  jo_strcasestr(body, "Checking your browser") ||
+                  jo_strcasestr(body, "Attention Required") ||
+                  jo_strcasestr(body, "cf-browser-verification") ||
+                  jo_strcasestr(body, "captcha"));
+}
+
+/* A CHALLENGE specifically: the vendor wants JavaScript EXECUTED, so no agent
+ * reaches it and the agent ladder is the wrong advice. That is a narrower
+ * claim than "a wall", and it had to be, because the obvious marker is a FALSE
+ * POSITIVE on exactly the hosts the ladder does fix.
+ *
+ * Measured 2026-11-05, two groups: 50 hosts that refused all five agents in
+ * the ladder, against the 6 an agent recovered over two readings each.
+ *
+ *     marker                        refused-all   agent-fixable
+ *     cf_chl_opt                       45/50          0/6     <- discriminates
+ *     cdn-cgi/challenge-platform       46/50          1/6     <- does NOT
+ *     cf-browser-verification           0/50          0/6
+ *
+ * Cloudflare injects the `challenge-platform` script into ORDINARY error
+ * pages too: www.salemcountynj.gov serves a plain 1,901-byte "403 Forbidden"
+ * carrying that tag, and the agent minus the word "collector" fetches its feed
+ * 200 twice over. Keying on it would have told the reader not to try the one
+ * thing that works. `cf_chl_opt` is the challenge's own options variable and
+ * appeared in none of the six. The old `cf-browser-verification` is kept for
+ * Cloudflare's previous generation, measured at 0/50 today. */
+static int hp_body_is_challenge(const char *body) {
+  return body && (jo_strcasestr(body, "cf_chl_opt") ||
+                  jo_strcasestr(body, "cf-browser-verification"));
+}
+
 static int hp_run_json(hp_run_state *st, const char *body) {
   const hp_source *s = st->s;
   char *jsonp = hp_jsonp_inner(body);                  /* see hp_jsonp_inner */
   cJSON *doc = cJSON_Parse(jsonp ? jsonp : body);
   free(jsonp);
   if (!doc) {
-    /* A 200 that is really a refusal. Only the words a rate limiter puts in a
-     * page it serves INSTEAD of the data — not "limit", which is a legitimate
-     * parameter name and appears in half the URLs in this tree. */
-    if (jo_strcasestr(body, "rate limit") || jo_strcasestr(body, "rate-limit") ||
-        jo_strcasestr(body, "too many requests"))
-      st->unreadable_ratelimit = 1;
-    /* And a 200 that is really a BOT WALL. Same rule as above: only the words
-     * the wall puts in the page it serves INSTEAD of the data, and each of
-     * these is a vendor's own interstitial title rather than anything a data
-     * body would carry. Not "access denied", which is a phrase real records
-     * (permit decisions, FOI logs) do carry. */
-    else if (jo_strcasestr(body, "Pardon Our Interruption") ||
-             jo_strcasestr(body, "Checking your browser") ||
-             jo_strcasestr(body, "Attention Required") ||
-             jo_strcasestr(body, "cf-browser-verification") ||
-             jo_strcasestr(body, "captcha"))
-      st->unreadable_botwall = 1;
+    /* A 200 that is really a refusal — the vocabulary is hp_body_is_*() above,
+     * shared with the 4xx path so a wall is named whatever status it wears. */
+    if (hp_body_is_ratelimit(body))     st->unreadable_ratelimit = 1;
+    else if (hp_body_is_botwall(body))  st->unreadable_botwall = 1;
     fprintf(stderr, "[hp:%s] non-JSON body%s\n", s->id,
             st->unreadable_ratelimit ? " — it is a RATE-LIMIT page served as 200"
           : st->unreadable_botwall   ? " — it is a BOT-WALL page served as 200"
@@ -5099,6 +5135,26 @@ dated_restart:;
         if (first_nodata)
           fprintf(stderr, "[hp:%s] the upstream answered HTTP %ld with its own "
                   "no-data wording: an EMPTY result, not a refusal\n", s->id, fst);
+        /* A WALL SERVED AS 401/403, which this engine could not see: the wall
+         * vocabulary ran only where a 200 failed to parse, so a refusal whose
+         * body says "execute this JavaScript" was reported as "the upstream
+         * refused this client" with the remedy "check whether the row needs a
+         * credential or a User-Agent it is not sending". Measured 2026-11-05
+         * across the 738 rows the complete sweep read as HTTP 403: of 555
+         * hosts, the agent ladder core/host_agents.def prescribes recovered
+         * almost none, and 54 of 60 refusing hosts sampled were Cloudflare —
+         * 52 of them a JS challenge that no User-Agent reaches. So the old
+         * remedy named a knob that cannot move, which this file calls worse
+         * than none. The body was in scope here all along; only nothing read
+         * it. */
+        if ((fst == 401 || fst == 403) && !first_nodata && hr.body) {
+          if (hp_body_is_challenge(hr.body))       st.unreadable_botwall = 1;
+          else if (hp_body_is_ratelimit(hr.body))  st.unreadable_ratelimit = 1;
+          if (st.unreadable_botwall)
+            fprintf(stderr, "[hp:%s] HTTP %ld carrying a CHALLENGE interstitial: "
+                    "JavaScript is wanted, so this is not a credential or an "
+                    "agent problem\n", s->id, fst);
+        }
       }
       if (page == 0 && (fst < 0 || fst >= 500 || (fst == 304 && !first_conditional)))
         hard_error = 1;
@@ -5955,6 +6011,10 @@ date_step_back:
         ? "the upstream answered 200 with a BOT-WALL interstitial instead of "
           "the data — a refusal wearing a success status, and one that pacing "
           "does not reach"
+      : st.unreadable_botwall
+        ? "the upstream served a BOT-WALL interstitial, not the data: a "
+          "challenge page asking for JavaScript, which no User-Agent and no "
+          "pacing reaches"
       : first_status == 200
         ? "the upstream answered 200 and the body did not parse in this row's "
           "declared mode — a redirect to an HTML notice does this"
@@ -5969,6 +6029,18 @@ date_step_back:
       : first_status == 429
         ? "rate limited: give the host a per-host minimum gap in "
           "core/hostgate.c, as crates.io has"
+      /* The wall is tested BEFORE the plain 401/403, or a challenge page keeps
+       * the old "send a different User-Agent" advice that measurably fails —
+       * and `first_status != 200` keeps it OUT of the 200 case below, which
+       * has its own remedy naming the agent table. Without that guard this
+       * branch swallowed it, and hptest 45 is what said so. */
+      : st.unreadable_botwall && first_status != 200
+        ? "a CHALLENGE wall, so do NOT bisect the User-Agent and do NOT add a "
+          "hostgate gap: it wants JavaScript executed, and 2026-11-05's sweep "
+          "of 555 such hosts recovered almost none by any agent, the browser "
+          "profile included. Look for a route the publisher offers instead (a "
+          "documented API, a bulk file, a mirror); if there is none, record "
+          "the row as unmeasurable from here rather than guessing at an agent"
       : first_status == 401 || first_status == 403
         ? "the upstream refused this client: check whether the row needs a "
           "credential (key_env) or a User-Agent it is not sending"
@@ -5996,6 +6068,10 @@ date_step_back:
       snprintf(title, sizeof title,
                "%s stored nothing: a bot wall answered 200 instead of the data",
                s->id);
+    else if (st.unreadable_botwall)
+      snprintf(title, sizeof title,
+               "%s stored nothing: a bot wall answered HTTP %ld — a challenge, "
+               "not a credential", s->id, first_status);
     else if (first_status == 200)
       snprintf(title, sizeof title,
                "%s stored nothing: the body did not parse in its declared mode",
