@@ -298,27 +298,37 @@ VRSS(geo_korea_kma_rss, "geo-korea-kma-rss", "KMA Korea — short-range forecast
   "en", "[\"korea\",\"kma\",\"forecast\"]", 3600,
   "Korean Meteorological Administration forecast RSS for a zone.");
 
+/* ArcGIS rows in this file: `orderByFields=<the layer's own objectIdField>
+ * ASC` (2026-11-07). These walk on `resultOffset` (geojson_emit_paged's
+ * mechanism 1, on the server's own exceededTransferLimit) with no order
+ * clause, and ArcGIS promises no stable order without one. The field was READ
+ * per layer from `<layer>?f=json` (objectIdField, else the esriFieldTypeOID
+ * field — spellings here include OBJECTID, objectid, FID, OBJECTID_1, ObjectId,
+ * oid, RowID), every layer declares supportsOrderBy, and the sorted query was
+ * asked once (resultRecordCount=3 at offsets 0 and 3): HTTP 200, no error
+ * body, pages disjoint. This is STABILISING, not a recovery — no record was
+ * measured lost without it. */
 VGEO(geo_la_air_quality_pm25, "geo-la-air-quality-pm25", "Global PM2.5 latest results (Esri Living Atlas)", "世界PM2.5 最新値",
   "environment", "airquality",
-  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/Air_Quality_PM25_Latest_Results/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=1000",
+  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/Air_Quality_PM25_Latest_Results/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=1000&orderByFields=OBJECTID%20ASC",
   "en", "[\"pm25\",\"global\",\"airquality\"]", 3600,
   "Latest PM2.5 measurements from a global station aggregation.");
 
 VGEO(geo_la_coral_reef_stations, "geo-la-coral-reef-stations", "Coral reef monitoring stations (Esri)", "サンゴ礁監視地点",
   "environment", "ocean",
-  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/Coral_Reef_Stations/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500",
+  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/Coral_Reef_Stations/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&orderByFields=ObjectId%20ASC",
   "en", "[\"coral\",\"reef\",\"monitoring\"]", 86400,
   "Coral reef watch virtual station locations for bleaching alerts.");
 
 VGEO(geo_la_drought_spi, "geo-la-drought-spi", "Standardized Precipitation Index, recent", "標準化降水指数(直近)",
   "environment", "weather",
-  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/SPI_recent/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&geometryPrecision=3",
+  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/SPI_recent/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&geometryPrecision=3&orderByFields=OBJECTID%20ASC",
   "en", "[\"drought\",\"spi\",\"global\"]", 86400,
   "Recent SPI drought index polygons; area-based, not point observations.");
 
 VGEO(geo_la_metar_wind, "geo-la-metar-wind", "METAR current wind observations (global)", "METAR 現在風観測(全球)",
   "environment", "weather",
-  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/NOAA_METAR_current_wind_speed_direction_v1/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=1000",
+  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/NOAA_METAR_current_wind_speed_direction_v1/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=1000&orderByFields=OBJECTID%20ASC",
   "en", "[\"metar\",\"wind\",\"global\"]", 1800,
   "Current wind speed and direction at global METAR stations.");
 

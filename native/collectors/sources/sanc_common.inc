@@ -32,10 +32,6 @@
 
 #include "_jp_osint.inc"   /* jo_sv / jo_env / jo_urlencode / jo_is_utf8 */
 
-/* A descriptive UA with a contact route: several of these publishers (GOV.UK
- * Search, PACER, HUDOC) block bare/absent user agents outright. */
-#define SANC_UA "User-Agent: JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; " \
-                "sanctions/legal collector; contact via repo issues)"
 
 /* The attribution string the OpenSanctions bulk exports REQUIRE. See the long
  * warning on sanc_opensanctions_run() below — CC-BY-NC means NON-COMMERCIAL. */
@@ -68,7 +64,9 @@ static inline char *sanc_http_get(const source_ctx *ctx, const char *url,
                                   long *out_status) {
   const char *hdrs[6];
   int h = 0;
-  hdrs[h++] = SANC_UA;
+  /* No caller User-Agent (2026-11-07): the engine's own agent and
+   * core/host_agents.def apply. The old SANC_UA carried the word "collector",
+   * a measured bot-wall trigger, and named an unrelated repository. */
   if (accept) hdrs[h++] = accept;
   if (range) {
     /* A byte range over a gzip stream is a range over the COMPRESSED bytes and

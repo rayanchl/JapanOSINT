@@ -17,7 +17,7 @@ static const char *SUBS[] = { "japan", "japanlife", "Tokyo",
 #define NSUB ((int)(sizeof(SUBS) / sizeof(SUBS[0])))
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *hdrs[] = { "User-Agent: JapanOSINT/1.0 (research)", NULL };
+  const char *hdrs[] = { NULL };
   int n = 0;
   for (int s = 0; s < NSUB; s++) {
     char url[160];

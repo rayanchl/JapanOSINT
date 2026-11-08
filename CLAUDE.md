@@ -681,7 +681,7 @@ three mechanisms with three precedences — `UA_OVERRIDE` and `BROWSER_HOSTS` in
 beat both. Now one line per host names one agent kind (`HA_NOCOLLECTOR`,
 `HA_CONTACT`, `HA_RCORP`, `HA_COMPAT`, `HA_BROWSER`), and for a listed host the
 table's agent goes on the wire whatever a row set; an unlisted host keeps a
-row's own header, else `JO_USER_AGENT`. 403 hosts. `./bin/japanosint
+row's own header, else `JO_USER_AGENT`. 403 hosts when it was built (420 on 2026-11-07 — read the file, not this number). `./bin/japanosint
 --host-agents` prints it (host, kind, agent, extra headers), and
 `tools/probe_hp_batch.py` reads the same file, so the probe sends what the
 engine sends. Measured before the move: no other source fetches from the 320
@@ -2618,8 +2618,9 @@ label removed them from the only path left that could run them.
 Two things now hold it:
 
 * `registry.c` prints `[registry] NEVER-RUNS id '…'` for any source with
-  interval 0 under a collector that is neither `"osint"` nor an internal `_`
-  lane, beside the DUPLICATE and OVERFLOW reports it already makes for the same
+  interval 0 that `registry_is_entity_pivot()` does not accept — the rule
+  is `source_never_runs()` now, not the collector label this bullet first
+  described (the `osint` label was removed in round 5) — beside the DUPLICATE and OVERFLOW reports it already makes for the same
   reason, and **`make registry-floor` fails on a non-zero count**. The `_`
   exemption is the convention `source.h` documents; `PORT_SCANNER` is
   deliberately `_probe` because it opens raw sockets, and keeping it out of the
@@ -3233,7 +3234,7 @@ probe is the tool that decides whether a row ships:
   against the real messages on the wire the same day (badssl.com's expired,
   wrong-host, self-signed and untrusted-root hosts, plus the two SNI hosts).
 
-* **`registry.faa.gov` is gone, and the measurement is why.** Three rows read
+* **OVERTURNED — kept as the record of a removal that did not stand** (see the browser-profile paragraph under rule 1: `FAA_REGISTRY` and `US_FAA_AIRCRAFT_REGISTRY` are registered again, on an `HA_BROWSER` line). **`registry.faa.gov` is gone, and the measurement is why.** Three rows read
   it — `US_FAA_AIRCRAFT_REGISTRY`, `FAA_NNUMBER_REGISTRY` and `FAA_REGISTRY`
   (a bespoke collector in `collectors/sources/vehicles_world.c`) — and all
   three are removed as of 2026-10-21. One request per agent that day: the

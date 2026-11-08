@@ -7,15 +7,25 @@
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
 
+/* ArcGIS rows in this file: `orderByFields=<the layer's own objectIdField>
+ * ASC` (2026-11-07). These walk on `resultOffset` (geojson_emit_paged's
+ * mechanism 1, on the server's own exceededTransferLimit) with no order
+ * clause, and ArcGIS promises no stable order without one. The field was READ
+ * per layer from `<layer>?f=json` (objectIdField, else the esriFieldTypeOID
+ * field — spellings here include OBJECTID, objectid, FID, OBJECTID_1, ObjectId,
+ * oid, RowID), every layer declares supportsOrderBy, and the sorted query was
+ * asked once (resultRecordCount=3 at offsets 0 and 3): HTTP 200, no error
+ * body, pages disjoint. This is STABILISING, not a recovery — no record was
+ * measured lost without it. */
 VGEO(id_jakarta_billboard_permits, "id-jakarta-billboard-permits", "Jakarta Billboard (Reklame) Permit Register - PTSP", "Jakarta Billboard (Reklame) Permit Register - PTSP",
   "id_permits", "permits",
-  "https://jakartasatu.jakarta.go.id/server/rest/services/Data_Reklame/data_reklame_ptsp/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&resultRecordCount=1000&f=geojson",
+  "https://jakartasatu.jakarta.go.id/server/rest/services/Data_Reklame/data_reklame_ptsp/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&resultRecordCount=1000&f=geojson&orderByFields=OBJECTID%20ASC",
   "id", "[\"id\",\"permits\",\"batch17\",\"high-penetrancy\"]", 86400,
   "Billboard/advertising structure register. properties: ID_REKLAME, LOKASI_REKLAME, KEL/KEC/WIL plus codes, JNS_REKLAME, POSISI_REKLAME, KONTENT_REKLAME, STATUS, NAMA_PERUSAHAAN (permit holder), STATUS_STRUKTUR_REK, VERIFIKASI_REK, PETUGAS (inspecting officer), CREATED_USER/DATE. Advertiser-to-structure-to-inspector pivot.");
 
 VGEO(id_jakarta_concrete_batching_plants, "id-jakarta-concrete-batching-plants", "Jakarta Concrete Batching Plants (with NPWP tax number and permit chain)", "Jakarta Concrete Batching Plants (with NPWP tax number and permit chain)",
   "id_permits", "permits",
-  "https://jakartasatu.jakarta.go.id/server/rest/services/Concrete_Batching_Plant_View/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&resultRecordCount=1000&f=geojson",
+  "https://jakartasatu.jakarta.go.id/server/rest/services/Concrete_Batching_Plant_View/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&resultRecordCount=1000&f=geojson&orderByFields=OBJECTID%20ASC",
   "id", "[\"id\",\"permits\",\"batch17\",\"high-penetrancy\"]", 86400,
   "41 batching plants, 54 attributes each: NAMA (operator, e.g. 'Saeti Concretindo Wahana'), NPWP (tax ID '01.373.121.1-073.000'), TDP, AKTA_PT (deed), LOKASI_CBP, KESESUAIAN (zoning compliance), JENIS_CBP, IZIN/AMDAL/IMB/AMDAL_UPL environmental-permit numbers, NO_IZIN, TGL_IZIN, MASA_BER, SP1 warning dates. Company-to-tax-ID-to-permit chain.");
 
@@ -29,24 +39,24 @@ VGEO(id_jakarta_concrete_batching_plants, "id-jakarta-concrete-batching-plants",
  * the first at [106.87145, -6.29844]. */
 VGEO(id_jakarta_emission_test_firms, "id-jakarta-emission-test-firms", "Jakarta DPMPTSP - Licensed Vehicle Emission Testing Businesses", "Jakarta DPMPTSP - Licensed Vehicle Emission Testing Businesses",
   "id_permits", "permits",
-  "https://jakartasatu.jakarta.go.id/server/rest/services/DPMPTSP/PTPS_UJI_EMISI/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&resultRecordCount=1000&f=geojson",
+  "https://jakartasatu.jakarta.go.id/server/rest/services/DPMPTSP/PTPS_UJI_EMISI/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&resultRecordCount=1000&f=geojson&orderByFields=OBJECTID%20ASC",
   "id", "[\"id\",\"permits\",\"batch17\",\"high-penetrancy\"]", 86400,
   "269 licensed emission-test operators. properties: NO, NAMA_PERUSAHAAN (company), ALAMAT_PERUSAHAAN, LAT/LONG_, SARANA_USAHA and licence columns. Named company plus premises.");
 
 VGEO(id_jakarta_imb_building_permits, "id-jakarta-imb-building-permits", "Jakarta DPMPTSP - IMB Building Permits", "Jakarta DPMPTSP - IMB Building Permits",
   "id_permits", "permits",
-  "https://jakartasatu.jakarta.go.id/server/rest/services/DPMPTSP/IMB_PTSP/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&resultRecordCount=1000&f=geojson",
+  "https://jakartasatu.jakarta.go.id/server/rest/services/DPMPTSP/IMB_PTSP/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&resultRecordCount=1000&f=geojson&orderByFields=OBJECTID%20ASC",
   "id", "[\"id\",\"permits\",\"batch17\",\"high-penetrancy\"]", 86400,
   "Building permits issued by Jakarta's one-stop service. properties: NAMA_IZIN (permit type), NOMOR_IZIN (full permit number), ALAMAT, WADMKD/WADMKC/WADMKK (village/district/city), X/Y. Permit-number to address pivot.");
 
 VGEO(id_jakarta_sippt_land_obligations, "id-jakarta-sippt-land-obligations", "Jakarta SIPPT - Land Allocation Permits and Developer Obligations", "Jakarta SIPPT - Land Allocation Permits and Developer Obligations",
   "id_permits", "permits",
-  "https://jakartasatu.jakarta.go.id/server/rest/services/SIPPT/SIPPT_VIEW/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&resultRecordCount=1000&f=geojson",
+  "https://jakartasatu.jakarta.go.id/server/rest/services/SIPPT/SIPPT_VIEW/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&resultRecordCount=1000&f=geojson&orderByFields=OBJECTID%20ASC",
   "id", "[\"id\",\"permits\",\"batch17\",\"high-penetrancy\"]", 86400,
   "SIPPT land-designation permits used to track developer obligations to the city. properties: ID_SIPPT (e.g. '541-2007'), S_ZONA, KWJB/KET (obligation flag), KELURAHAN/KECAMATAN/WILAYAH_LOKASI, Shape__Area, edit audit trail.");
 
 VGEO(id_jakarta_slf_buildings, "id-jakarta-slf-buildings", "Jakarta DPMPTSP - Building Worthiness Certificates (SLF) with owner and director identifiers", "Jakarta DPMPTSP - Building Worthiness Certificates (SLF) with owner and director identifiers",
   "id_permits", "permits",
-  "https://jakartasatu.jakarta.go.id/server/rest/services/DPMPTSP/Peta_SLF_DPMPTSP/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&resultRecordCount=1000&f=geojson",
+  "https://jakartasatu.jakarta.go.id/server/rest/services/DPMPTSP/Peta_SLF_DPMPTSP/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&resultRecordCount=1000&f=geojson&orderByFields=OBJECTID%20ASC",
   "id", "[\"id\",\"permits\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 86400,
   "901 certified buildings from Jakarta's one-stop licensing agency. properties carry BANGUNAN_NAMA (building), BANGUNAN_LOKASI/KEL/KEC/WIL, PEMILIK_NAMA (owning company, e.g. 'PT. Mulia Naga Lestari'), PEMILIK_ALAMAT/TLP/EMAIL, DIRUT_NAMA (managing director), DIRUT_NIK (national ID) and DIRUT_NPWP (tax ID), plus REK_NO/REK_TANGGAL/REK_STATUS. Highest-penetrancy Indonesian row found: building to company to named director to NIK/NPWP.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");

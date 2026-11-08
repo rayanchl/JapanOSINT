@@ -7,6 +7,7 @@
 #include "hpengine.h"
 #include "jsonlist.h"      /* jsonlist_next_page: page_walk rows page as VJSON did */
 #include "pagewalk.h"      /* jo_page_max: the tree's one page ceiling */
+#include "feedlib.h"       /* feed_status_body_is_declared_empty, FEED_ST_* — shared with the walkers */
 #include "../core/url_override.h"
 #include "csv.h"
 #include "xlsx.h"
@@ -1269,6 +1270,20 @@ typedef struct {
    * rate. Naming it keeps a reader from spending the afternoon on the wrong
    * two remedies. */
   int   unreadable_botwall;
+  /* The wall is specifically a JavaScript CHALLENGE (hp_body_is_challenge):
+   * no User-Agent reaches it, so its remedy is the opposite of an Imperva-style
+   * agent wall's. It used to depend on the STATUS which remedy a challenge got
+   * — at 403 "do NOT bisect the agent", at 200 "bisect the agent" — for the
+   * same Cloudflare body (audit 2026-11-07). Now it depends on the body. */
+  int   unreadable_challenge;
+  /* Page 1 was a 200 whose body reads as a wall, in ANY mode. The vocabulary
+   * used to run only inside hp_run_json, so an XML, CSV, HTML or NDJSON row
+   * served a 200 rate-limit page or bot wall emitted nothing, set no flag,
+   * filed no fetch-failure, returned rc=0 — rule 1's invisible nothing. These
+   * are promoted to the unreadable_* flags only if the run emitted nothing. */
+  int   p1_ratelimit, p1_botwall, p1_challenge, p1_maint;
+  int   unreadable_maint;     /* hp_body_is_maintenance, any status          */
+  int   refusal_wants_key;    /* a 401/403/429 body that names a credential  */
 
   /* Repeat guard on the RECORDS of a paged JSON walk (see hp_run_json).
    * Hashing the whole body could not see an ignored cursor when the envelope
@@ -2211,7 +2226,34 @@ static int hp_body_is_botwall(const char *body) {
                   jo_strcasestr(body, "Checking your browser") ||
                   jo_strcasestr(body, "Attention Required") ||
                   jo_strcasestr(body, "cf-browser-verification") ||
+                  /* Imperva's block page, measured 2026-11-07 on
+                   * wl-api.mf.gov.pl. Keyed on the incident TEXT, not on the
+                   * `_Incapsula_Resource` script, which harp.lg.jp also
+                   * serves on an ordinary 404 page. */
+                  jo_strcasestr(body, "Incapsula incident ID") ||
                   jo_strcasestr(body, "captcha"));
+}
+
+/* A page saying the SITE is down for maintenance or suspended. Measured
+ * 2026-11-07 on six Japanese WordPress hosts (Izumo's states it was taken down
+ * as a precaution after a PHP security advisory): the notice said "the
+ * endpoint may have moved", and the right advice is the opposite — nothing
+ * moved; re-read later before deciding anything. Only consulted where nothing
+ * parsed or nothing was emitted, so a post that mentions maintenance is a post. */
+static int hp_body_is_maintenance(const char *body) {
+  return body && (strstr(body, "メンテナンス中") || strstr(body, "一時停止") ||
+                  strstr(body, "公開を停止") ||
+                  jo_strcasestr(body, "under maintenance") ||
+                  jo_strcasestr(body, "down for maintenance") ||
+                  jo_strcasestr(body, "maintenance mode"));
+}
+
+/* A refusal whose body says a CREDENTIAL lifts it. OpenAlex answers 429 with
+ * "no API key … free daily budget shared by everyone on your network's IP":
+ * a hostgate gap cannot help a budget measured in a day, a key does. */
+static int hp_body_wants_key(const char *body) {
+  return body && (jo_strcasestr(body, "api key") || jo_strcasestr(body, "api_key") ||
+                  jo_strcasestr(body, "apikey") || jo_strcasestr(body, "access token"));
 }
 
 /* A CHALLENGE specifically: the vendor wants JavaScript EXECUTED, so no agent
@@ -2247,8 +2289,12 @@ static int hp_run_json(hp_run_state *st, const char *body) {
   if (!doc) {
     /* A 200 that is really a refusal — the vocabulary is hp_body_is_*() above,
      * shared with the 4xx path so a wall is named whatever status it wears. */
-    if (hp_body_is_ratelimit(body))     st->unreadable_ratelimit = 1;
-    else if (hp_body_is_botwall(body))  st->unreadable_botwall = 1;
+    if (hp_body_is_challenge(body)) {
+      st->unreadable_botwall = 1; st->unreadable_challenge = 1;
+    }
+    else if (hp_body_is_ratelimit(body))  st->unreadable_ratelimit = 1;
+    else if (hp_body_is_botwall(body))    st->unreadable_botwall = 1;
+    else if (hp_body_is_maintenance(body)) st->unreadable_maint = 1;
     fprintf(stderr, "[hp:%s] non-JSON body%s\n", s->id,
             st->unreadable_ratelimit ? " — it is a RATE-LIMIT page served as 200"
           : st->unreadable_botwall   ? " — it is a BOT-WALL page served as 200"
@@ -2517,7 +2563,12 @@ static int hp_run_json(hp_run_state *st, const char *body) {
   /* The upstream's own count of what exists, read the way jsonlist reads it
    * (first page), so a truncation notice can report the real remainder and a
    * page_walk row stops exactly where its VJSON form stopped. */
-  if (st->declared_total < 0) st->declared_total = jsonlist_declared_total(doc);
+  /* The one declared-total reader (lib/pagewalk.c). Bare root `count` is a
+   * total only when it exceeds this page's records — a page-size `count` read
+   * as the total makes a cut-short walk look complete (audit 2026-11-07). */
+  if (st->declared_total < 0)
+    st->declared_total = jo_declared_total(doc, arr ? (long)arr_n : -1,
+                                           NULL, 0);
   /* `total` is what the walk has FETCHED, not what it emitted: the decision
    * compares it with the upstream's declared total, and a row whose
    * filter_query drops records (or whose sink refuses one) emits fewer than
@@ -3167,7 +3218,7 @@ static long hp_xml_declared_total(const char *body, const char *rec_open) {
   static const char *EL[] = {
     "SearchHits", "TotalCount", "TotalResults", "TotalHits", "SearchCount",
     "RecordCount", "ResultCount", "numberMatched", "totalResults",
-    "totalCount", "numFound", NULL };
+    "totalCount", "numFound", "numberOfRecords", NULL };
   /* The first RECORD element, found the way the record loop below finds it: a
    * tag name is only that name when the next character ends it. KKJ wraps its
    * <SearchResult> records in a <SearchResults> envelope and puts the count
@@ -3183,17 +3234,49 @@ static long hp_xml_declared_total(const char *body, const char *rec_open) {
   }
   size_t limit = first ? (size_t)(first - body) : strlen(body);
   for (int i = 0; EL[i]; i++) {
-    char open[64];
-    int n = snprintf(open, sizeof open, "<%s>", EL[i]);
-    if (n <= 0 || (size_t)n >= sizeof open) continue;
-    const char *p = jo_memmem(body, limit, open, (size_t)n);
+    /* `<name>`, or `<prefix:name>` — SRU writes `<srw:numberOfRecords>` and
+     * `<zs:numberOfRecords>`, and a bare-name search could not reach a
+     * prefixed element at all (audit 2026-11-07). The name must be preceded
+     * by `<` or by `prefix:` after a `<`, and end at `>`. */
+    size_t nl = strlen(EL[i]);
+    for (const char *p = jo_memmem(body, limit, EL[i], nl); p;
+         p = jo_memmem(p + nl, limit - (size_t)(p + nl - body), EL[i], nl)) {
+      if (p == body || (size_t)(p - body) + nl >= limit || p[nl] != '>') continue;
+      const char *q = p - 1;
+      if (*q == ':') {
+        while (q > body && (isalnum((unsigned char)q[-1]) || q[-1] == '_' || q[-1] == '-')) q--;
+        if (q == p - 1 || q == body) continue;
+        q--;
+      }
+      if (*q != '<') continue;
+      char *end = NULL;
+      long v = strtol(p + nl + 1, &end, 10);
+      /* The value must be the WHOLE element text: `<TotalCount>12 of 40<` is
+       * not a count, and neither is an empty element. */
+      if (end && end != p + nl + 1 && *end == '<' && v >= 0) return v;
+    }
+  }
+  /* A total carried as an ATTRIBUTE, which no element search sees:
+   *   - WFS 2.0 `numberMatched="N"` on the FeatureCollection root (before the
+   *     first member, so inside `limit`; "unknown" is not a number and is
+   *     skipped). NOT `numberOfFeatures`: in WFS 1.1 that is the count in THIS
+   *     response, a page size — reading it as the total would make a cut-short
+   *     walk look complete.
+   *   - OAI-PMH `<resumptionToken completeListSize="N">`, which the protocol
+   *     puts AFTER the records, so it is searched in the whole body; the
+   *     attribute name is the protocol's own and occurs nowhere else.
+   * 415 hp rows are ListRecords/searchRetrieve requests and every one read
+   * "the upstream declares no total" with the number in the envelope. */
+  static const struct { const char *attr; int whole; } AT[] = {
+    { "numberMatched=\"", 0 }, { "completeListSize=\"", 1 }, { NULL, 0 } };
+  for (int i = 0; AT[i].attr; i++) {
+    size_t al = strlen(AT[i].attr);
+    size_t span = AT[i].whole ? strlen(body) : limit;
+    const char *p = jo_memmem(body, span, AT[i].attr, al);
     if (!p) continue;
-    p += n;
     char *end = NULL;
-    long v = strtol(p, &end, 10);
-    /* The value must be the WHOLE element text: `<TotalCount>12 of 40<` is not
-     * a count, and neither is an empty element. */
-    if (end && end != p && *end == '<' && v >= 0) return v;
+    long v = strtol(p + al, &end, 10);
+    if (end && end != p + al && *end == '"' && v >= 0) return v;
   }
   return -1;
 }
@@ -4509,11 +4592,11 @@ static int hp_header_is_conditional(const char *h) {
  * service at all (CLAUDE.md's own lesson). Keying on the status, or on the row
  * having asked for `nodata=404`, would file that dead service as a healthy
  * empty, which is the dangerous direction. */
+/* One rule for every walker now (lib/feedlib.h): VJSON, VGEO and pw_walk
+ * rows filed a quiet FDSN window as a fetch failure because only this engine
+ * knew it (audit 2026-11-07). */
 static int hp_status_is_declared_empty(long status, const char *body) {
-  if (status == 204) return 1;                  /* no content, by definition */
-  if (status != 404 || !body) return 0;
-  return jo_strcasestr(body, "no matching") != NULL ||
-         jo_strcasestr(body, "no data available") != NULL;
+  return feed_status_body_is_declared_empty(status, body);
 }
 
 /* A page AFTER the first did not deliver records: it answered a status other
@@ -5147,8 +5230,14 @@ dated_restart:;
          * remedy named a knob that cannot move, which this file calls worse
          * than none. The body was in scope here all along; only nothing read
          * it. */
+        if ((fst == 401 || fst == 403 || fst == 429) && !first_nodata && hr.body)
+          st.refusal_wants_key = hp_body_wants_key(hr.body);
+        if (fst >= 500 && hr.body && hp_body_is_maintenance(hr.body))
+          st.unreadable_maint = 1;
         if ((fst == 401 || fst == 403) && !first_nodata && hr.body) {
-          if (hp_body_is_challenge(hr.body))       st.unreadable_botwall = 1;
+          if (hp_body_is_challenge(hr.body)) {
+            st.unreadable_botwall = 1; st.unreadable_challenge = 1;
+          }
           else if (hp_body_is_ratelimit(hr.body))  st.unreadable_ratelimit = 1;
           if (st.unreadable_botwall)
             fprintf(stderr, "[hp:%s] HTTP %ld carrying a CHALLENGE interstitial: "
@@ -5177,6 +5266,14 @@ dated_restart:;
       }
       http_response_free(&hr);
       break;
+    }
+    if (page == 0) {
+      st.p1_challenge = hp_body_is_challenge(hr.body);
+      st.p1_ratelimit = !st.p1_challenge && hp_body_is_ratelimit(hr.body);
+      st.p1_botwall   = st.p1_challenge ||
+                        (!st.p1_ratelimit && hp_body_is_botwall(hr.body));
+      st.p1_maint     = !st.p1_botwall && !st.p1_ratelimit &&
+                        hp_body_is_maintenance(hr.body);
     }
     /* Shape notice (d): the same bytes as the previous page. A server that
      * ignores the page parameter re-serves page 1 with HTTP 200, and the walk
@@ -5808,7 +5905,16 @@ date_step_back:
         cJSON_AddStringToObject(p, "next_run_resumes_at",
                                 "the start — this run completed the cycle");
     }
-    char cutwhy[400] = "";
+    char cutwhy[400] = "", cutfix[600] = "";
+    if (failed_midwalk) {
+      /* The shared describer's remedy for the generic case: hpengine said "a
+       * rate-limited host needs a per-host gap" for a 403, a 5xx and a
+       * transport failure alike, which names the wrong knob for all three.
+       * Its status vocabulary is feedlib's: -1 here is FEED_ST_TRANSPORT. */
+      long fs = failed_unreadable ? FEED_ST_UNPARSED
+              : failed_status < 0 ? FEED_ST_TRANSPORT : failed_status;
+      pw_cut_describe(failed_page, fs, NULL, 0, cutfix, sizeof cutfix);
+    }
     if (failed_midwalk) {
       cJSON_AddNumberToObject(p, "failed_page", failed_page);
       cJSON_AddNumberToObject(p, "failed_page_status", (double)failed_status);
@@ -5869,8 +5975,9 @@ date_step_back:
           "narrow each request (a date window or a filter) so every slice fits "
           "under the cap — see docs/SOURCE_EXHAUSTIVENESS.md"
       : failed_midwalk
-        ? "re-run; a rate-limited host needs a per-host minimum gap "
-          "(core/hostgate.c) — see docs/SOURCE_EXHAUSTIVENESS.md"
+        ? (cutfix[0] ? cutfix
+           : "re-run; a rate-limited host needs a per-host minimum gap "
+             "(core/hostgate.c) — see docs/SOURCE_EXHAUSTIVENESS.md")
       : window_on && pw_more
         ? "narrow window_days on this row: the upstream counted more inside "
           "this one window than a single read could take, and those records "
@@ -5903,6 +6010,13 @@ date_step_back:
          * answer empty. The engine cannot tell the two apart — it stops before
          * asking for the page that would have refused — so the remedy says how
          * to find out in one request instead of asserting the knob works. */
+        /* $JO_PAGE_MAX is the operator's brake and OUTRANKS a row's own
+         * page_max (jo_page_max_for). With it set, "raise page_max" named a
+         * knob that would change nothing (audit 2026-11-07). */
+        : (getenv("JO_PAGE_MAX") && atoi(getenv("JO_PAGE_MAX")) > 0)
+        ? "the ceiling that stopped this walk is $JO_PAGE_MAX, the operator's "
+          "brake, which outranks this row's own page_max: raise or unset it "
+          "first. Only then is the row's page_max the binding ceiling"
         : "raise max_items/page_max on this row (lib/hpengine.h) — but ask the "
           "endpoint FIRST whether it serves past the current ceiling: request "
           "one record just beyond it, and an empty success (zero records, a "
@@ -5972,6 +6086,23 @@ date_step_back:
    * notice making exactly the confusion it exists to prevent. Such a run is
    * the honest empty rule 1 asks for — rc=0, no records, and the bytes and
    * request count on the run line showing it went and looked. */
+  /* See p1_*: a 200 wall in a mode that never consults the vocabulary. Only a
+   * run that emitted NOTHING is promoted — a page that mentions "captcha" and
+   * still yielded records is a page, not a wall — and never in HP_JSON, whose
+   * driver already judged the body: a body that PARSED as JSON is an error
+   * document (hp_json_error_doc), not an interstitial, and `{"error":"rate
+   * limited"}` keeps the errored-run verdict hptest pins. */
+  if (out == 0 && first_status == 200 && !st.unreadable && s->mode != HP_JSON &&
+      (st.p1_ratelimit || st.p1_botwall || st.p1_maint)) {
+    st.unreadable = 1;
+    st.unreadable_ratelimit = st.p1_ratelimit;
+    st.unreadable_botwall   = st.p1_botwall;
+    st.unreadable_challenge = st.p1_challenge;
+    st.unreadable_maint     = st.p1_maint;
+    fprintf(stderr, "[hp:%s] page 1 was a 200 %s page and nothing was "
+            "emitted\n", s->id, st.p1_ratelimit ? "RATE-LIMIT"
+                             : st.p1_maint ? "MAINTENANCE" : "BOT-WALL");
+  }
   if (out == 0 && (first_status != 200 || st.unreadable) && !first_nodata) {
     cJSON *p = cJSON_CreateObject();
     cJSON_AddStringToObject(p, "source_id", s->id);
@@ -5984,17 +6115,10 @@ date_step_back:
      * Named only when there IS a TLS verdict, so a connect refusal or a
      * timeout does not acquire a certificate finding it never had. */
     if (first_tls != HTTP_TLS_NONE) {
-      cJSON_AddStringToObject(p, "tls_cause",
-        first_tls == HTTP_TLS_NO_LOCAL_ISSUER   ? "no_local_issuer"
-      : first_tls == HTTP_TLS_EXPIRED           ? "expired"
-      : first_tls == HTTP_TLS_NOT_YET_VALID     ? "not_yet_valid"
-      : first_tls == HTTP_TLS_HOSTNAME_MISMATCH ? "hostname_mismatch"
-      : first_tls == HTTP_TLS_SELF_SIGNED       ? "self_signed"
-      : first_tls == HTTP_TLS_REVOKED           ? "revoked"
-      : first_tls == HTTP_TLS_UNRECOGNIZED_NAME ? "unrecognized_name"
-      : first_tls == HTTP_TLS_HANDSHAKE         ? "handshake"
-                                                : "other");
+      cJSON_AddStringToObject(p, "tls_cause", http_tls_cause_name(first_tls));
       cJSON_AddStringToObject(p, "tls_detail", http_tls_cause_label(first_tls));
+      /* the scheduler's record carried this and hp's did not */
+      cJSON_AddStringToObject(p, "tls_remedy", http_tls_cause_remedy(first_tls));
     }
     cJSON_AddStringToObject(p, "outcome",
       first_status == 0
@@ -6003,18 +6127,27 @@ date_step_back:
         ? http_tls_cause_label(first_tls)
       : first_status == -1
         ? "the request failed at the transport level"
+      : st.unreadable_challenge
+        ? "the upstream served a BOT-WALL interstitial that is a JavaScript "
+          "CHALLENGE, not the data — which no User-Agent and no pacing "
+          "reaches, whatever status it wears"
       : first_status == 200 && st.unreadable_ratelimit
         ? "the upstream answered 200 with a RATE-LIMIT page instead of the "
           "data — a refusal wearing a success status, which no status check "
           "can see"
+      : st.unreadable_ratelimit
+        ? "the upstream answered with a RATE-LIMIT page: the request was "
+          "refused for its rate, not for who sent it"
       : first_status == 200 && st.unreadable_botwall
         ? "the upstream answered 200 with a BOT-WALL interstitial instead of "
           "the data — a refusal wearing a success status, and one that pacing "
           "does not reach"
       : st.unreadable_botwall
-        ? "the upstream served a BOT-WALL interstitial, not the data: a "
-          "challenge page asking for JavaScript, which no User-Agent and no "
-          "pacing reaches"
+        ? "the upstream served a BOT-WALL interstitial, not the data, and one "
+          "that pacing does not reach"
+      : st.unreadable_maint
+        ? "the site says it is down for MAINTENANCE or suspended — nothing has "
+          "moved"
       : first_status == 200
         ? "the upstream answered 200 and the body did not parse in this row's "
           "declared mode — a redirect to an HTML notice does this"
@@ -6026,6 +6159,11 @@ date_step_back:
     cJSON_AddStringToObject(p, "remedy",
       first_tls != HTTP_TLS_NONE
         ? http_tls_cause_remedy(first_tls)
+      /* 429 only: a 401/403 already gets "check the credential (key_env)". */
+      : st.refusal_wants_key && first_status == 429
+        ? "the refusal names a CREDENTIAL: a key lifts this limit and a "
+          "hostgate gap cannot (a shared daily budget is not a per-second "
+          "rate) — declare key_env on the row and set the variable"
       : first_status == 429
         ? "rate limited: give the host a per-host minimum gap in "
           "core/hostgate.c, as crates.io has"
@@ -6034,27 +6172,35 @@ date_step_back:
        * and `first_status != 200` keeps it OUT of the 200 case below, which
        * has its own remedy naming the agent table. Without that guard this
        * branch swallowed it, and hptest 45 is what said so. */
-      : st.unreadable_botwall && first_status != 200
+      : st.unreadable_challenge
         ? "a CHALLENGE wall, so do NOT bisect the User-Agent and do NOT add a "
           "hostgate gap: it wants JavaScript executed, and 2026-11-05's sweep "
           "of 555 such hosts recovered almost none by any agent, the browser "
           "profile included. Look for a route the publisher offers instead (a "
           "documented API, a bulk file, a mirror); if there is none, record "
           "the row as unmeasurable from here rather than guessing at an agent"
+      /* A rate-limit body on a 401/403 was detected and then thrown away: the
+       * only readers were gated on a 200, so "API rate limit exceeded" served
+       * as 403 got the credential/agent advice (audit 2026-11-07). */
+      : st.unreadable_ratelimit
+        ? "rate limited (the body says so, whatever the status): give the host "
+          "a per-host minimum gap in core/hostgate.c. Measure the budget before "
+          "choosing one — a gap set on one reading is a guess"
+      : st.unreadable_botwall
+        ? "a bot wall, so do NOT reach for a hostgate gap or a moved endpoint: "
+          "the wall refuses an automated client at any rate. Bisect the "
+          "User-Agent through core/host_agents.def's ladder (engine agent "
+          "first, then HA_NOCOLLECTOR, HA_CONTACT, HA_COMPAT) and measure the "
+          "winner through --run — a word in the agent is the measured cause on "
+          "every host listed so far — and if no agent clears it, record the "
+          "row as unmeasurable from here rather than guessing at a gap"
       : first_status == 401 || first_status == 403
         ? "the upstream refused this client: check whether the row needs a "
           "credential (key_env) or a User-Agent it is not sending"
-      : first_status == 200 && st.unreadable_ratelimit
-        ? "rate limited behind a 200: give the host a per-host minimum gap in "
-          "core/hostgate.c. Measure the budget before choosing one — a gap "
-          "set on one reading is a guess"
-      : first_status == 200 && st.unreadable_botwall
-        ? "a bot wall, so do NOT reach for a hostgate gap or a moved endpoint: "
-          "the wall refuses an automated client at any rate. Bisect the "
-          "User-Agent as core/httpclient.c's UA_OVERRIDE table does — a word "
-          "in the agent is the measured cause on every host in it so far — and "
-          "if no agent clears it, record the row as unmeasurable from here "
-          "rather than guessing at a gap"
+      : st.unreadable_maint
+        ? "re-read in a week before treating the row as moved or dead: the "
+          "site itself announces maintenance or a suspension, and a removal "
+          "made on that reading would retire a live source"
       : first_status == 200
         ? "re-read the body by hand: the endpoint may have moved, started "
           "redirecting to an HTML page, or changed shape"
@@ -6064,7 +6210,14 @@ date_step_back:
     char key[320], title[256];
     snprintf(key, sizeof key, "%.150s|fetch-failure:%.120s", s->id,
              vars.raw ? vars.raw : "");
-    if (first_status == 200 && st.unreadable_botwall)
+    if (st.unreadable_challenge)
+      snprintf(title, sizeof title,
+               "%s stored nothing: a JavaScript challenge answered HTTP %ld — "
+               "not a credential and not an agent", s->id, first_status);
+    else if (st.unreadable_ratelimit && first_status != 200)
+      snprintf(title, sizeof title,
+               "%s stored nothing: rate limited (HTTP %ld)", s->id, first_status);
+    else if (first_status == 200 && st.unreadable_botwall)
       snprintf(title, sizeof title,
                "%s stored nothing: a bot wall answered 200 instead of the data",
                s->id);
@@ -6439,10 +6592,36 @@ char *hp_describe_json(const char *id) {
    * row as reading 20 pages, full stop, which is the misreading the truncation
    * notice's own title had to be rewritten to avoid. */
   hp_desc_int(pg, "page_resume", s->page_resume);
-  if (s->page_resume)
-    cJSON_AddStringToObject(pg, "page_resume_note",
-      "reads the collection over a cycle: one ceiling's worth per run, "
-      "resuming where the previous run stopped");
+  /* The engine refuses page_resume on four static shapes (hp_run's resume_on
+   * block), and this description used to promise a cycle for every row that
+   * merely DECLARED it — PNCP_BR_ARMY_CONTRACTS and BR_PNCP_CONTRATACOES carry
+   * a {date…} token and JO39_CN_PALACE_MUSEUM_COLLECTION a {page} token, so
+   * the source page said "reads the collection over a cycle" about rows that
+   * re-read the same slice every run (audit 2026-11-07). Same tests, same
+   * order, so the two cannot disagree again without one of them changing. */
+  if (s->page_resume) {
+    const char *why_not =
+        s->window_days > 0
+          ? "window_days owns this row's reading position"
+      : (hp_has_date_token(s->url) || hp_has_date_token(s->post_body))
+          ? "a {date…}/{ago…} token: a stored URL would pin one day forever"
+      : (hp_has_page_token(s->url) || hp_has_page_token(s->post_body))
+          ? "a {page}/{offset} token: the position is not readable from the URL"
+      : (!s->page_param && !s->next_path && !s->page_walk)
+          ? "the row declares no paging"
+          : NULL;
+    cJSON_AddBoolToObject(pg, "page_resume_effective", why_not == NULL);
+    if (why_not) {
+      char note[256];
+      snprintf(note, sizeof note, "declares page_resume but does NOT cycle: %s, "
+               "so each run re-reads the same slice", why_not);
+      cJSON_AddStringToObject(pg, "page_resume_note", note);
+    } else {
+      cJSON_AddStringToObject(pg, "page_resume_note",
+        "reads the collection over a cycle: one ceiling's worth per run, "
+        "resuming where the previous run stopped");
+    }
+  }
   /* The OTHER cycle axis. A source page that showed only page_resume would
    * describe a window row as having no cycle at all, which is the opposite of
    * the truth, and the two are mutually exclusive on one row by design. */

@@ -11,7 +11,6 @@
 #include <string.h>
 #include "_jp_osint.inc"
 
-static const char *JP_UA = "User-Agent: JapanOSINT/1.0 (osint@example.org)";
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *q = ctx->entity;
@@ -24,11 +23,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (zi != 7) { fprintf(stderr, "[JP_POSTAL] entity must be a 7-digit postal code\n"); return 0; }
   char url[256];
   snprintf(url, sizeof url, "https://zipcloud.ibsnet.co.jp/api/search?zipcode=%s", zip);
-  const char *hdrs[] = { "Accept: application/json", JP_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "JP_POSTAL");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *results = cJSON_GetObjectItem(root, "results");
   int n = 0;
   if (cJSON_IsArray(results)) {
@@ -52,17 +51,18 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       cJSON *p = cJSON_CreateObject();
       cJSON_AddStringToObject(p, "service", "JP_POSTAL"); cJSON_AddStringToObject(p, "zipcode", zip);
       cJSON_AddBoolToObject(p, "success", 1);
-      char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
-      intel_item it = {0};
-      it.remote_key = zip; it.title = full; it.summary = a1; it.body = bj; it.lang = "ja";
+      jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
+      it.remote_key = zip; it.title = full; it.summary = a1; it.body = bt ? bt : bj; it.lang = "ja";
       it.record_type = "jp-postal-address"; it.properties_json = pj; it.tags_json = "[\"osint-search\",\"JP_POSTAL\"]";
       if (sink->emit(sink, &it) >= 0) n++;
-      free(bj); free(pj);
+      free(bj); free(bt); free(pj);
     }
   }
   cJSON_Delete(root);
   fprintf(stderr, "[JP_POSTAL] emitted %d\n", n);
-  return 0;
+  return n < 0 ? -1 : 0;
 }
 
 static const source_def jp_postal_def = {

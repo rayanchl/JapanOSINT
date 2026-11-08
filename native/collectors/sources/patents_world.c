@@ -23,6 +23,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 /* ---- PatentsView (keyless, LIVE) --------------------------------------- */
 
@@ -51,13 +52,14 @@ static int pv_emit(intel_sink *sink, const cJSON *p) {
   cJSON_AddStringToObject(props, "source", "PatentsView");
   if (id) cJSON_AddStringToObject(props, "patent_id", id);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = id ? id : title;
   it.title           = title ? title : id;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "en";
   it.published_at    = date;
   it.link            = id ? link : NULL;
@@ -65,7 +67,7 @@ static int pv_emit(intel_sink *sink, const cJSON *p) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"PATENTSVIEW\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -102,12 +104,12 @@ static int run_patentsview(const source_ctx *ctx, intel_sink *sink) {
   free(qenc); free(fenc);
 
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "patentsview");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   cJSON *arr = cJSON_GetObjectItem(root, "patents");
   int emitted = 0;
@@ -127,7 +129,7 @@ static int run_epo_ops(const source_ctx *ctx, intel_sink *sink) {
   const char *key = jo_env("EPO_OPS_KEY");
   if (!key) {
     fprintf(stderr, "[epo_ops] gated (no EPO_OPS_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "epo_ops", "epo_ops", (const char *const[]){"EPO_OPS_KEY", NULL}, NULL, NULL);
   }
   /* OPS uses OAuth2 client-credentials then CQL search. Without a live token we
    * honest-empty rather than invent records. The published/register endpoint is
@@ -142,7 +144,7 @@ static int run_epo_ops(const source_ctx *ctx, intel_sink *sink) {
   snprintf(auth, sizeof auth, "Authorization: Bearer %s", key);
   const char *hdrs[] = { auth, "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "epo_ops");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   /* OPS returns EPO-namespaced XML/JSON; only emit on a parseable JSON body. */
   cJSON *root = cJSON_Parse(body);
   free(body);
@@ -182,13 +184,14 @@ static int lens_emit(intel_sink *sink, const cJSON *p) {
   cJSON_AddStringToObject(props, "source", "Lens.org");
   if (lens_id) cJSON_AddStringToObject(props, "lens_id", lens_id);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = lens_id ? lens_id : title;
   it.title           = title ? title : lens_id;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "en";
   it.published_at    = date;
   it.link            = lens_id ? link : NULL;
@@ -196,7 +199,7 @@ static int lens_emit(intel_sink *sink, const cJSON *p) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"LENS_PATENTS\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -206,7 +209,7 @@ static int run_lens(const source_ctx *ctx, intel_sink *sink) {
   const char *token = jo_env("LENS_TOKEN");
   if (!token) {
     fprintf(stderr, "[lens_patents] gated (no LENS_TOKEN)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "lens_patents", "lens_patents", (const char *const[]){"LENS_TOKEN", NULL}, NULL, NULL);
   }
   /* Lens patent search: POST a JSON query to /patent/search.
    *

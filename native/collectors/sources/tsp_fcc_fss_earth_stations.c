@@ -33,7 +33,7 @@
 
 #define FSS_BASE "https://opendata.fcc.gov/resource/acbv-jbb4.json"
 #define PAGE_SIZE 5000
-#define PAGES 4
+#define PAGES 4   /* 2026-11-07: $select=count(*) 469 → 1 page */
 
 /* Socrata numbers arrive as strings, sometimes with thousands separators and
  * unit suffixes. Strip ',' then strtod. Returns 1 on success. */
@@ -130,17 +130,18 @@ static int emit_page(cJSON *arr, intel_sink *sink, int *junk) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  int total = 0, pages = 0, junk = 0;
+  int total = 0, pages = 0, cut = 0, last_full = 0, junk = 0;
   for (int i = 0; i < PAGES; i++) {
     char url[256];
     snprintf(url, sizeof url, "%s?$limit=%d&$offset=%d&$order=number",
              FSS_BASE, PAGE_SIZE, i * PAGE_SIZE);
     cJSON *doc = feed_get_json(ctx->http, url, 60000);
-    if (!doc) break;
-    if (!cJSON_IsArray(doc)) { cJSON_Delete(doc); break; }
+    if (!doc) { cut = pages > 0; break; }   /* a refused LATER page is disclosed below */
+    if (!cJSON_IsArray(doc)) { cJSON_Delete(doc); cut = pages > 0; break; }
     pages++;
     int got = cJSON_GetArraySize(doc);
     total += emit_page(doc, sink, &junk);
+    last_full = (got >= PAGE_SIZE);
     cJSON_Delete(doc);
     if (got < PAGE_SIZE) break;             /* last page */
   }
@@ -148,6 +149,18 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     fprintf(stderr, "[fcc-fss-earth-stations] fetch failed\n");
     return -1;
   }
+  /* Every stop is disclosed (2026-11-07): a later page that failed used to
+   * `break` as if it were the end of the data, and a walk that used up its
+   * page budget on full pages said nothing. */
+  if (cut)
+    jo_trunc_notice_scoped(sink, "fcc-fss-earth-stations", "walk-cut", FSS_BASE, total, -1,
+                           "a later page failed (transport, refusal or an "
+                           "unreadable body) and the walk stopped there",
+                           "re-run; one failed page is one reading");
+  else if (pages >= PAGES && last_full)
+    jo_trunc_notice_scoped(sink, "fcc-fss-earth-stations", "page-ceiling", FSS_BASE, total, -1,
+                           "the PAGES ceiling stopped the walk on a full page",
+                           "raise PAGES in tsp_fcc_fss_earth_stations.c");
   fprintf(stderr, "[fcc-fss-earth-stations] emitted %d over %d page(s) "
                   "(%d rows dropped: null-island/pole coordinates)\n",
           total, pages, junk);

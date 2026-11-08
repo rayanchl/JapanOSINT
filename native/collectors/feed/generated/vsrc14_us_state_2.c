@@ -8,37 +8,46 @@
 #include "_verified_macros.inc"
 #include "_vjson_idkeys.inc"
 
+/* Scoped Socrata catalogue rows below carry `order=createdAt` (2026-11-07),
+ * as their scoped siblings already do. Without it the catalogue answers in
+ * relevance order, which promises nothing stable across an offset walk.
+ * Measured on api.us.socrata.com: `order=createdAt` is NEWEST FIRST (NYC,
+ * 3,032 datasets, first 2026-09-29; `createdAt ASC` answers 2011), the total
+ * does not move, offset=3 continues the same order, and `order=frobnicate` is
+ * HTTP 400 "not a supported sort". Newest-first means a dataset created during
+ * the walk can repeat one record at a page seam, never skip one; the
+ * 20-page ceiling is then the newest 2,000 (limit=100) or 1,000 (limit=50). */
 VJSON(us_socrata_discovery_pennsylvania, "us-socrata-discovery-pennsylvania", "Commonwealth of Pennsylvania Open Data — Asset Discovery", "ペンシルベニア州 データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.pa.gov",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.pa.gov&order=createdAt",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"pennsylvania\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on data.pa.gov, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
 
 VJSON(us_socrata_discovery_seattle, "us-socrata-discovery-seattle", "City of Seattle Open Data — Asset Discovery", "シアトル市 データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.seattle.gov&search_context=data.seattle.gov",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.seattle.gov&search_context=data.seattle.gov&order=createdAt",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"seattle\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on data.seattle.gov, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
 
 VJSON(us_socrata_discovery_sfgov, "us-socrata-discovery-sfgov", "City of San Francisco Open Data — Asset Discovery", "サンフランシスコ市 データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.sf.gov",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.sf.gov&order=createdAt",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"sfgov\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on data.sf.gov, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
 
 VJSON(us_socrata_discovery_texas, "us-socrata-discovery-texas", "State of Texas Open Data — Asset Discovery", "テキサス州 データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.texas.gov",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.texas.gov&order=createdAt",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"texas\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on data.texas.gov, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
 
 VJSON(us_socrata_discovery_washington, "us-socrata-discovery-washington", "Washington State Open Data — Asset Discovery", "ワシントン州 データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.wa.gov",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.wa.gov&order=createdAt",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"washington\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on data.wa.gov, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");

@@ -164,6 +164,7 @@ static const hp_source HP3B19_SIGINT[] = {
      * collapse is real dedupe of upstream repeats, not lost antennas. */
     .date_keys = "idriftsaettelsesdato",
     .interval = 86400,
+    .timeout_ms = 90000,   /* 2026-11-07: the 35,678,971-byte body (71,865 antennas) took 23.2 s and 24.7 s, past the engine's 20 s default, so every run timed out */
     .lat_key = "wgs84koordinat.bredde",
     .lon_key = "wgs84koordinat.laengde",
     .title_keys = "vejnavn.navn",
@@ -1168,15 +1169,29 @@ static const hp_source HP3B19_SIGINT[] = {
     .record_type = "radio-licence",
     .tags = "\"sigint\",\"spectrum\",\"mobile\",\"france\",\"register\",\"cartoradio\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.anfr.fr/d4c/api/records/1.0/search/?dataset=dd11fac6-4531-4a27-9c8c-a3a9e4ec2107&rows=1000",
+    /* `sort=id&start=0` + page_resume + `id_keys = "fields.id"` (2026-11-07).
+     * The row keyed on fields.sta_nm_anfr, the STATION number — and a station
+     * carries several emitters: 160 distinct of 1,000 on one page, so across
+     * pages every emitter of a station collapsed onto one row. `id` (the
+     * emitter row id) is 1,000 of 1,000. 821,309 emitters against a 20-page
+     * x 1,000 ceiling, so it now reads over a cycle (~41 daily runs) instead
+     * of the same unordered 20,000 every run.
+     * Measured 2026-11-07 on this host (transmitters, ship stations, EMF
+     * probes, observatory, SAR): `sort=<key>` answers 1,2,3…, `sort=-<key>`
+     * N,N-1…, the nhits total is unchanged, start=0 / start=1000 are
+     * disjoint, and an unknown sort field answers nhits 0 — so a sort is
+     * read, never silently dropped. Unsorted, a page began at an arbitrary
+     * id (490,623 here), i.e. the default order is not a stable walk. */
+    .url = "https://data.anfr.fr/d4c/api/records/1.0/search/?dataset=dd11fac6-4531-4a27-9c8c-a3a9e4ec2107&rows=1000&start=0&sort=id",
     .array_path = "records",
     .date_keys = "fields.emr_dt",
     .detail_key = "fields.sup_id",
     .detail_path = "records",
     .detail_url = "https://data.anfr.fr/d4c/api/records/1.0/search/?dataset=dd11fac6-4531-4a27-9c8c-a3a9e4ec2107&q=sup_id%3A{v}&rows=1000",
-    .id_keys = "fields.sta_nm_anfr",
+    .id_keys = "fields.id",
     .interval = 86400,
     .page_param = "start",
+    .page_resume = 1,
     .page_size = 1000,
     .page_start = 0,
     .title_keys = "fields.adm_lb_nom",
@@ -1197,7 +1212,15 @@ static const hp_source HP3B19_SIGINT[] = {
     .record_type = "ship-station-licence",
     .tags = "\"sigint\",\"maritime\",\"mmsi\",\"callsign\",\"france\",\"register\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.anfr.fr/d4c/api/records/1.0/search/?dataset=17323bc6-7f78-4683-9d52-35789a0f053f&rows=1000",
+    /* `sort=id&start=0` (2026-11-07): this row CYCLES, and a cycle needs a
+     * stable ascending order — unsorted, page 1 began at id 60,843.
+     * Measured 2026-11-07 on this host (transmitters, ship stations, EMF
+     * probes, observatory, SAR): `sort=<key>` answers 1,2,3…, `sort=-<key>`
+     * N,N-1…, the nhits total is unchanged, start=0 / start=1000 are
+     * disjoint, and an unknown sort field answers nhits 0 — so a sort is
+     * read, never silently dropped. Unsorted, a page began at an arbitrary
+     * id (490,623 here), i.e. the default order is not a stable walk. */
+    .url = "https://data.anfr.fr/d4c/api/records/1.0/search/?dataset=17323bc6-7f78-4683-9d52-35789a0f053f&rows=1000&start=0&sort=id",
     .array_path = "records",
     .date_keys = "fields.date_ouverture",
     .id_keys = "fields.mmsi",
@@ -1224,8 +1247,17 @@ static const hp_source HP3B19_SIGINT[] = {
     .record_type = "field-measurement",
     .tags = "\"sigint\",\"spectrum\",\"emf\",\"measurement\",\"france\",\"geo\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.anfr.fr/d4c/api/records/1.0/search/?dataset=28d187a3-1e67-4aa6-970e-e787db97aa99&rows=1000",
+    /* `sort=id&start=0` + `id_keys = "fields.id"` (2026-11-07): this row CYCLES
+     * unsorted (page 1 began at id 502,358) and declared no id_keys.
+     * Measured 2026-11-07 on this host (transmitters, ship stations, EMF
+     * probes, observatory, SAR): `sort=<key>` answers 1,2,3…, `sort=-<key>`
+     * N,N-1…, the nhits total is unchanged, start=0 / start=1000 are
+     * disjoint, and an unknown sort field answers nhits 0 — so a sort is
+     * read, never silently dropped. Unsorted, a page began at an arbitrary
+     * id (490,623 here), i.e. the default order is not a stable walk. */
+    .url = "https://data.anfr.fr/d4c/api/records/1.0/search/?dataset=28d187a3-1e67-4aa6-970e-e787db97aa99&rows=1000&start=0&sort=id",
     .array_path = "records",
+    .id_keys = "fields.id",
     .date_keys = "fields.date",
     .interval = 86400,
     .lat_key = "fields.latitude",
@@ -1250,14 +1282,24 @@ static const hp_source HP3B19_SIGINT[] = {
     .record_type = "deployment-statistic",
     .tags = "\"sigint\",\"spectrum\",\"mobile\",\"france\",\"observatory\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.anfr.fr/d4c/api/records/1.0/search/?dataset=a513a5d7-0071-4349-9419-a530dad9ba50&rows=1000",
+    /* `sort=_id&start=0` + `id_keys = "fields._id"` (2026-11-07). This dataset
+     * has no `id` field (sort=id answers nhits 0); `_id` is its row key, 1,000
+     * of 1,000 distinct, ascending 1.. and descending 58,558...
+     * Measured 2026-11-07 on this host (transmitters, ship stations, EMF
+     * probes, observatory, SAR): `sort=<key>` answers 1,2,3…, `sort=-<key>`
+     * N,N-1…, the nhits total is unchanged, start=0 / start=1000 are
+     * disjoint, and an unknown sort field answers nhits 0 — so a sort is
+     * read, never silently dropped. Unsorted, a page began at an arbitrary
+     * id (490,623 here), i.e. the default order is not a stable walk. */
+    .url = "https://data.anfr.fr/d4c/api/records/1.0/search/?dataset=a513a5d7-0071-4349-9419-a530dad9ba50&rows=1000&start=0&sort=_id",
     .array_path = "records",
+    .id_keys = "fields._id",
     .date_keys = "fields.date_generation",
     .interval = 86400,
     .page_param = "start",
     .page_size = 1000,
     .page_start = 0,
-    .page_max = 58,   /* 57,822 records at 1000 a page, measured 2026-10-12; the 20-page default reached 20,000 */
+    .page_max = 65,   /* 57,822 records at 1000 a page on 2026-10-12, 58,558 on 2026-11-07 — 58 pages had stopped dropping 558 */
     .title_keys = "fields.adm_lb_nom",
     .description = "The monthly deployment observatory: for each operator, "
       "generation and frequency band, the number of sites authorised, "
@@ -1273,7 +1315,15 @@ static const hp_source HP3B19_SIGINT[] = {
     .record_type = "equipment-measurement",
     .tags = "\"sigint\",\"spectrum\",\"handset\",\"sar\",\"france\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.anfr.fr/d4c/api/records/1.0/search/?dataset=ad8014ec-f631-450e-a259-799188714ef9&rows=1000",
+    /* `sort=_id&start=0` (2026-11-07): two pages (1,234 records), no sort; no
+     * `id` field here, `_id` asc 1.. / desc 1,234.., page 2 answers 1001..1234.
+     * Measured 2026-11-07 on this host (transmitters, ship stations, EMF
+     * probes, observatory, SAR): `sort=<key>` answers 1,2,3…, `sort=-<key>`
+     * N,N-1…, the nhits total is unchanged, start=0 / start=1000 are
+     * disjoint, and an unknown sort field answers nhits 0 — so a sort is
+     * read, never silently dropped. Unsorted, a page began at an arbitrary
+     * id (490,623 here), i.e. the default order is not a stable walk. */
+    .url = "https://data.anfr.fr/d4c/api/records/1.0/search/?dataset=ad8014ec-f631-450e-a259-799188714ef9&rows=1000&start=0&sort=_id",
     .array_path = "records",
     .date_keys = "fields.date_prelevement",
     /* ref_dossier is the ANFR case file, not the measurement: one dossier

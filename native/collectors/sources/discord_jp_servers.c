@@ -10,18 +10,16 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "lib/seenset.h"   /* growable hashed dedupe (2026-11-07) */
 
 static const char *LIST_URLS[] = {
   "https://disboard.org/ja/servers/tag/japanese",
   "https://disboard.org/ja/servers/tag/\xE6\x97\xA5\xE6\x9C\xAC", /* 日本 */
 };
 
-#define MAX_SEEN 8192
-
-static int seen_has(char **seen, int ns, const char *id) {
-  for (int i = 0; i < ns; i++) if (!strcmp(seen[i], id)) return 1;
-  return 0;
-}
+/* Dedupe is lib/seenset.c (2026-11-07): the hand-rolled fixed array this
+ * replaces stopped RECORDING ids once full and then let every later repeat
+ * through (and scanned linearly); a seen_set grows and is hashed. */
 
 /* decodeEntities + strip tags + collapse ws + trim → out (caller buf). */
 static void clean_text(const char *raw, size_t rawlen, char *out, size_t on) {
@@ -97,8 +95,8 @@ static void clean_text(const char *raw, size_t rawlen, char *out, size_t on) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  char *seen[MAX_SEEN];
-  int ns = 0, n = 0, gotAny = 0;
+  seen_set seen = {0};
+  int n = 0, gotAny = 0;
 
   for (size_t ui = 0; ui < sizeof(LIST_URLS) / sizeof(LIST_URLS[0]); ui++) {
     char *html = feed_get_text(ctx->http, LIST_URLS[ui], 15000);
@@ -131,8 +129,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       const char *end = strstr(r, "</a>");
       if (!end) { p = q; continue; }
 
-      if (!seen_has(seen, ns, id)) {
-        if (ns < MAX_SEEN) seen[ns++] = strdup(id);
+      if (seen_add(&seen, id)) {
         char name[1024];
         clean_text(r, (size_t)(end - r), name, sizeof name);
         char namebuf[1100];
@@ -171,7 +168,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     }
     free(html);
   }
-  for (int i = 0; i < ns; i++) free(seen[i]);
+  seen_free(&seen);
 
   if (!gotAny) {
     fprintf(stderr, "[discord-jp-servers] unavailable\n");

@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 /* one company → one intel_item. Returns 1 if emitted. */
 static int emit_company(intel_sink *sink, const cJSON *c) {
@@ -52,14 +53,15 @@ static int emit_company(intel_sink *sink, const cJSON *c) {
   if (cn)  cJSON_AddStringToObject(props, "corporate_number", cn);
   if (loc) cJSON_AddStringToObject(props, "location", loc);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = cn ? cn : name;
   it.title           = name ? name : cn;
   it.summary         = loc;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "ja";
   it.published_at    = est ? est : upd;
   it.link            = url;
@@ -67,7 +69,7 @@ static int emit_company(intel_sink *sink, const cJSON *c) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"GBIZINFO\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -77,7 +79,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *token = getenv("GBIZINFO_TOKEN");
   if (!token || !*token) {
     fprintf(stderr, "[gbizinfo] gated (no GBIZINFO_TOKEN)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "gbizinfo", "gbizinfo", (const char *const[]){"GBIZINFO_TOKEN", NULL}, NULL, NULL);
   }
 
   /* 13-digit corporate number → detail endpoint; else name search. */

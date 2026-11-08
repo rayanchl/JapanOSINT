@@ -1463,14 +1463,21 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "business-licence",
     .tags = "\"costarica\",\"heredia\",\"licence\",\"business\",\"municipal\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://sig.heredia.go.cr/server/rest/services/Patentes/PatentesVista/MapServer/0/query?where=1%3D1&outFields=*&f=json&returnGeometry=false&resultRecordCount=1000",
+    /* A KEYSET on OBJECTID, 2026-11-07. The resultOffset walk slows with depth on
+     * this server — resultOffset=6000 took 27.4 s — so runs were killed at
+     * ~6,000 of 10,089 (returnCountOnly) and the cycle never reached the
+     * rest. `where=OBJECTID>{v}` with `orderByFields=OBJECTID ASC` answers the
+     * same depth in 4.7 s (OBJECTID>5000: 1,000 features, 5001..19521 — the
+     * ids have gaps, which a keyset does not care about). OBJECTID is the
+     * layer's esriFieldTypeOID field; maxRecordCount is 1,000. */
+    .url = "https://sig.heredia.go.cr/server/rest/services/Patentes/PatentesVista/MapServer/0/query?where=1%3D1&outFields=*&f=json&returnGeometry=false&resultRecordCount=1000&orderByFields=OBJECTID%20ASC",
     .array_path = "features",
     .interval = 86400,
-    .page_param = "resultOffset",
-    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
+    .next_path = "features.$last.attributes.OBJECTID",
+    .next_tmpl = "https://sig.heredia.go.cr/server/rest/services/Patentes/PatentesVista/MapServer/0/query?where=OBJECTID%3E{v}&outFields=*&f=json&returnGeometry=false&resultRecordCount=1000&orderByFields=OBJECTID%20ASC",
+    .page_resume = 1,
     .page_size = 1000,
-    .page_start = 0,
-    .page_zero_based = 1,
+    .timeout_ms = 45000,
     .id_keys = "attributes.OBJECTID",
     .title_keys = "attributes.NOMBRE_COMERCIAL",
     .description = "Ten thousand municipal business licences in Heredia, Costa Rica, "
@@ -2243,7 +2250,12 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "dataset-record",
     .tags = "\"martinique\",\"opendata\",\"catalogue\",\"france\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.gouv.fr/api/1/datasets/?q=Martinique&page_size=100",
+    /* `sort=created` (ascending), 2026-11-07: the relevance-default order is not
+     * stable across pages — the unsorted two-page walk returned 110 records,
+     * 109 distinct, i.e. one dataset served twice and another not at all.
+     * Sorted ascending and descending each give 110 of 110 (total 110 both
+     * ways, first ids differ); `sort=frobnicate` is refused (no `data`). */
+    .url = "https://www.data.gouv.fr/api/1/datasets/?q=Martinique&page_size=100&sort=created",
     .array_path = "data",
     .id_keys = "id",
     .interval = 86400,

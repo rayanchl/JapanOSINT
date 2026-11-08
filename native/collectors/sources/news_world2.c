@@ -13,8 +13,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
-static const char *NW_UA = "User-Agent: JapanOSINT/1.0 (osint@example.org)";
 
 static int nw_emit_article(intel_sink *sink, const char *service, const char *title,
                            const char *url, const char *desc, const char *pub,
@@ -31,29 +31,30 @@ static int nw_emit_article(intel_sink *sink, const char *service, const char *ti
   cJSON_AddStringToObject(p, "service", service);
   if (src) cJSON_AddStringToObject(p, "outlet", src);
   cJSON_AddBoolToObject(p, "success", 1);
-  char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+  jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
   char tags[96]; snprintf(tags, sizeof tags, "[\"osint-search\",\"%s\"]", service);
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key = url ? url : title; it.title = title ? title : url;
-  it.summary = src; it.body = bj; it.author = author;
+  it.summary = src; it.body = bt ? bt : bj; it.author = author;
   it.link = url; it.lang = "en"; it.published_at = pub;
   it.record_type = "news-article"; it.properties_json = pj; it.tags_json = tags;
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
 static int run_newsapi(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   const char *k = jo_env("NEWSAPI_KEY");
-  if (!k) { fprintf(stderr, "[NEWSAPI_SEARCH] no NEWSAPI_KEY\n"); return 0; }
+  if (!k) return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "NEWSAPI_SEARCH", "NEWSAPI_SEARCH", (const char *const[]){"NEWSAPI_KEY", NULL}, NULL, NULL);
   char url[640];
   snprintf(url, sizeof url,
     "https://newsapi.org/v2/everything?q=%s&pageSize=20&sortBy=publishedAt&language=en&apiKey=%s", enc, k);
-  const char *hdrs[] = { "Accept: application/json", NW_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "NEWSAPI_SEARCH");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *arts = cJSON_GetObjectItem(root, "articles");
   int n = 0;
   if (cJSON_IsArray(arts)) {
@@ -71,14 +72,14 @@ static int run_newsapi(const source_ctx *ctx, intel_sink *sink, const char *enc)
 
 static int run_gnews(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   const char *k = jo_env("GNEWS_API_KEY");
-  if (!k) { fprintf(stderr, "[GNEWS_SEARCH] no GNEWS_API_KEY\n"); return 0; }
+  if (!k) return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "GNEWS_SEARCH", "GNEWS_SEARCH", (const char *const[]){"GNEWS_API_KEY", NULL}, NULL, NULL);
   char url[640];
   snprintf(url, sizeof url, "https://gnews.io/api/v4/search?q=%s&max=20&lang=en&token=%s", enc, k);
-  const char *hdrs[] = { "Accept: application/json", NW_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "GNEWS_SEARCH");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *arts = cJSON_GetObjectItem(root, "articles");
   int n = 0;
   if (cJSON_IsArray(arts)) {
@@ -96,15 +97,15 @@ static int run_gnews(const source_ctx *ctx, intel_sink *sink, const char *enc) {
 
 static int run_mediastack(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   const char *k = jo_env("MEDIASTACK_KEY");
-  if (!k) { fprintf(stderr, "[MEDIASTACK_SEARCH] no MEDIASTACK_KEY\n"); return 0; }
+  if (!k) return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "MEDIASTACK_SEARCH", "MEDIASTACK_SEARCH", (const char *const[]){"MEDIASTACK_KEY", NULL}, NULL, NULL);
   char url[640];
   snprintf(url, sizeof url,
     "http://api.mediastack.com/v1/news?access_key=%s&keywords=%s&limit=20&languages=en", k, enc);
-  const char *hdrs[] = { "Accept: application/json", NW_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "MEDIASTACK_SEARCH");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *data = cJSON_GetObjectItem(root, "data");
   int n = 0;
   if (cJSON_IsArray(data)) {
@@ -131,7 +132,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   else if (!strcmp(sid, "MEDIASTACK_SEARCH")) n = run_mediastack(ctx, sink, enc);
   free(enc);
   fprintf(stderr, "[%s] emitted %d\n", sid, n);
-  return 0;
+  return n < 0 ? -1 : 0;
 }
 
 #define NW_DEF(sym, ID, NM, DESC) \

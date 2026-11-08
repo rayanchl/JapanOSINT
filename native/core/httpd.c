@@ -253,7 +253,7 @@ typedef struct {
   char id[256];                       /* source id, or collector key          */
   char q[256], collector[128], group[64], category[64], engine[32], skind[32],
        status[16], health[16], grade[8], sort[16];
-  int has_items, desc, limit, offset, refresh;
+  int has_items, desc, limit, offset, refresh, fresh;
   char key[64];                       /* respcache key                        */
 } sa_arg;
 
@@ -262,6 +262,7 @@ static unsigned long long sa_fnv(unsigned long long h, const char *s) {
     h = (h ^ *p) * 1099511628211ULL;
   return (h ^ 0x1f) * 1099511628211ULL;
 }
+static void sa_make_key(sa_arg *a);
 static void sa_parse(struct mg_http_message *hm, sa_arg *a) {
   char v[16];
   mg_http_get_var(&hm->query, "q", a->q, sizeof a->q);
@@ -279,8 +280,16 @@ static void sa_parse(struct mg_http_message *hm, sa_arg *a) {
   if (mg_http_get_var(&hm->query, "limit", v, sizeof v) > 0) a->limit = atoi(v);
   if (mg_http_get_var(&hm->query, "offset", v, sizeof v) > 0) a->offset = atoi(v);
   if (mg_http_get_var(&hm->query, "refresh", v, sizeof v) > 0) a->refresh = v[0] == '1';
+  /* `fresh=1`: the client just changed something (Run now, a settings save)
+   * and must not be handed the cached page from before it — the detail page
+   * read its old run total and old interval for up to 10 s after a write
+   * (audit 2026-11-07). The fresh build still refreshes the cache. */
+  if (mg_http_get_var(&hm->query, "fresh", v, sizeof v) > 0) a->fresh = v[0] == '1';
   if (a->limit < 0) a->limit = 0;
   if (a->offset < 0) a->offset = 0;
+  sa_make_key(a);
+}
+static void sa_make_key(sa_arg *a) {
   unsigned long long h = 1469598103934665603ULL;
   h = sa_fnv(h, a->id); h = sa_fnv(h, a->q); h = sa_fnv(h, a->collector); h = sa_fnv(h, a->group);
   h = sa_fnv(h, a->category); h = sa_fnv(h, a->engine); h = sa_fnv(h, a->skind);
@@ -330,7 +339,7 @@ static void sa_serve(struct mg_connection *c, struct mg_http_message *hm, sa_kin
   a->mgr = c->mgr; a->cid = c->id; a->kind = kind;
   if (id) snprintf(a->id, sizeof a->id, "%s", id);
   sa_parse(hm, a);
-  if (sa_cacheable(a)) {
+  if (sa_cacheable(a) && !a->fresh) {
     long age = 0;
     char *hit = respcache_get(a->key, fleet_ttl(), &age);
     if (hit) { fleet_reply_cached(c, hit, age); free(hit); free(a); return; }
@@ -345,6 +354,17 @@ static void sa_serve(struct mg_connection *c, struct mg_http_message *hm, sa_kin
   free(a);
   reply_json(c, st, body ? body : "{\"error\":\"out_of_memory\"}");
   free(body);
+}
+
+/* Drop the cached detail page of one source after a write that changes it
+ * (settings, interval, schedule, a manual run), so the NEXT reader — not only
+ * the writer, who can pass fresh=1 — sees the change. */
+static void sa_drop_detail(const char *id) {
+  sa_arg a; memset(&a, 0, sizeof a);
+  a.kind = SA_DETAIL;
+  snprintf(a.id, sizeof a.id, "%s", id ? id : "");
+  sa_make_key(&a);
+  respcache_drop(a.key);
 }
 
 /* GET /api/sources/stats — aggregate counts from the sources table. */
@@ -2450,9 +2470,29 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           char eb[256]; snprintf(eb, sizeof eb, "{\"error\":\"%s\"}", err ? err : "invalid policy");
           reply_json(c, 400, eb); return;
         }
+        /* A fleet-wide cadence change was the one operator write here that
+         * left no row in the audit chain (audit 2026-11-07). Old and new. */
+        { char payload[256];
+          snprintf(payload, sizeof payload,
+                   "{\"old\":{\"global\":%ld,\"min\":%ld,\"max\":%ld},"
+                   "\"new\":{\"global\":%ld,\"min\":%ld,\"max\":%ld}}",
+                   (long)cur.global_sec, (long)cur.min_sec, (long)cur.max_sec,
+                   (long)np.global_sec, (long)np.min_sec, (long)np.max_sec);
+          audit_write(g_db, "platform", usr.id, "sched.cadence.put", "cadence", payload); }
       }
       char *body = cadence_json(g_db);
-      reply_json(c, 200, body); free(body); return;
+      /* `can_write` from the gate that enforces it, as /settings does: the web
+       * page guessed from a client-side flag that does not exist
+       * (`isPlatformOperator`) and offered nearly everyone a form this route
+       * refuses (audit 2026-11-07). */
+      { cJSON *cj = body ? cJSON_Parse(body) : NULL;
+        if (cj) {
+          cJSON_AddBoolToObject(cj, "can_write", opgate_check(&usr) == 0);
+          char *nb = cJSON_PrintUnformatted(cj);
+          cJSON_Delete(cj);
+          if (nb) { free(body); body = nb; }
+        } }
+      reply_json(c, 200, body ? body : "{\"error\":\"server_error\"}"); free(body); return;
     }
     if (eq(u, "/api/sources/stats")) { route_sources_stats(c); return; }
     /* GET /api/sources/semantic?q=&kind=&k= — the registry by MEANING
@@ -2547,6 +2587,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
              * deployment decision, not a tenant's data. */
             audit_write(g_db, "platform", usr.id,
                         "source.setting.put", sid, payload); }
+          sa_drop_detail(sid);
           char *body = source_settings_json(g_db, sid, 1);  /* just passed the gate */
           reply_json(c, body ? 200 : 500,
                      body ? body : "{\"error\":\"server_error\"}");
@@ -2824,6 +2865,22 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           char eb[320]; snprintf(eb, sizeof eb, "{\"error\":\"%s\"}", err ? err : "invalid interval");
           reply_json(c, registry_get(p) ? 400 : 404, eb); return;
         }
+        /* The same change through /settings was audited and through this
+         * route was not; one convention now (audit 2026-11-07). */
+        { char payload[160];
+          long nv = 0;
+          if (!is_del) {
+            cJSON *j = hm->body.len < 512
+                       ? cJSON_ParseWithLength(hm->body.buf, hm->body.len) : NULL;
+            cJSON *iv = j ? cJSON_GetObjectItemCaseSensitive(j, "interval_sec") : NULL;
+            if (iv && cJSON_IsNumber(iv)) nv = (long)iv->valuedouble;
+            cJSON_Delete(j);
+          }
+          snprintf(payload, sizeof payload, "{\"interval_sec\":%ld}", nv);
+          audit_write(g_db, "platform", usr.id,
+                      is_del || nv == 0 ? "source.interval.clear" : "source.interval.put",
+                      p, payload); }
+        sa_drop_detail(p);
       }
       char *body = source_interval_json(g_db, p, oc == 0);
       if (!body) { reply_json(c, 404, "{\"error\":\"Source not found\"}"); return; }
@@ -2848,6 +2905,8 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         reply_json(c, 400, "{\"error\":\"mode must be map_cron or search_only\"}"); return; }
       if (!strcmp(body, "\1err")) { free(body);
         reply_json(c, 500, "{\"error\":\"schedule_update_failed\"}"); return; }
+      audit_write(g_db, "platform", usr.id, "source.schedule.put", p, b);
+      sa_drop_detail(p);
       reply_json(c, 200, body); free(body); return;
     }
 
@@ -4713,6 +4772,17 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
       if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
 
+      /* The audit log names members, the actions they took and on what. It
+       * was readable by ANY member of the workspace — a viewer included —
+       * while every write it records is owner/admin- or operator-gated
+       * (flagged 2026-11-07). Owner/admin of the workspace, or the platform
+       * operator; /api/me stays open to every member. */
+      if (!eq(u, "/api/me") && opgate_check(&usr) != 0 &&
+          strcmp(tc.role, "owner") != 0 && strcmp(tc.role, "admin") != 0) {
+        reply_json(c, 403, "{\"error\":\"forbidden\",\"detail\":\"the audit "
+                   "log requires workspace owner/admin or platform operator\"}");
+        return;
+      }
       /* The chain walk is the whole log, streamed: off the event loop. */
       if (eq(u, "/api/audit/verify")) {
         sem_spawn(c, hm, audit_verify_route, tc.tenant_id, "", 0);
@@ -5134,9 +5204,25 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       if (qs_copy_or_414(c, hm, tq, sizeof tq)) return;
       char *body = transitapi(g_db, tp, tq);
       if (body) {
-        /* Unported transit routes (hydrate, station-boundaries) return a
-         * {"error":"not_implemented",...} body → send it as HTTP 501. */
-        int code = strstr(body, "\"error\":\"not_implemented\"") ? 501 : 200;
+        /* transitapi() reports every failure as a body, never a status:
+         * {"error":"station not found"}, "trip not found", "bad tripId …",
+         * "internal". Sent as HTTP 200 those read as SUCCESS, and the web
+         * client's station and vehicle popups dereferenced `data.station` on
+         * them and took the whole app down (audit 2026-11-07). A body that is
+         * an error object and nothing else gets the status it describes;
+         * unported routes keep their 501. */
+        int code = 200;
+        cJSON *ej = cJSON_Parse(body);
+        const cJSON *ev = ej ? cJSON_GetObjectItem(ej, "error") : NULL;
+        if (cJSON_IsString(ev) && ev->valuestring) {
+          const char *m = ev->valuestring;
+          size_t ml = strlen(m);
+          code = !strcmp(m, "not_implemented") ? 501
+               : !strcmp(m, "internal")         ? 500
+               : (ml >= 9 && !strcmp(m + ml - 9, "not found")) ? 404
+               : (cJSON_GetArraySize(ej) == 1)  ? 400 : 200;
+        }
+        cJSON_Delete(ej);
         reply_json(c, code, body); free(body); return;
       }
     }

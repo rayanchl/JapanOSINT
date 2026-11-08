@@ -27,8 +27,12 @@ X-WP-Total cannot be trusted).
 import sys, os, re, json, csv, time, ssl, threading, queue, argparse, unicodedata
 import urllib.request, urllib.error
 
-UA = "Mozilla/5.0 (compatible; JapanOSINT/1.0; +https://github.com/rayanchl/JapanOSINT)"
-CTX = ssl.create_default_context()
+# THE TLS context for this directory (CLAUDE.md rule 4c): the default context
+# refused Yamaguchi's SECLEVEL hosts and the leaf-only hosts the engine reaches,
+# and this is the tool that wrote batch 45/49's reject TSVs.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import jo_tls
+CTX = jo_tls.context()
 SKIP_TYPES = {"attachment", "wp_block", "wp_template", "wp_template_part", "wp_navigation",
               "wp_font_family", "wp_font_face", "wp_global_styles", "nav_menu_item", "revision",
               "customize_changeset", "oembed_cache", "user_request", "custom_css", "acf-field",
@@ -83,12 +87,17 @@ USER_OPTS = ("array_path=.;interval=86400;title_keys=name;id_keys=id;link_keys=l
 
 
 def get(url, timeout=20, want_json=True):
-    req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "application/json, */*"})
+    """The request is the ENGINE's (tools/jo_http.py): JO_USER_AGENT or the
+    host's core/host_agents.def agent, and `Accept: application/json` as a
+    JSON row sends it. This used to send its own compat agent, one of eight
+    spellings in this directory (2026-11-07), and this tool wrote batch 45/49's
+    reject TSVs — a host walled against one agent read differently here than
+    in the engine. Unpaced (the sweep's own worker queue serialises hosts)."""
+    import jo_http
     try:
-        with urllib.request.urlopen(req, timeout=timeout, context=CTX) as r:
-            body = r.read(4_000_000)
-            hdrs = {k.lower(): v for k, v in r.getheaders()}
-            st = r.status
+        st, _ct, body, rh = jo_http.request(url, None, timeout, None, 4_000_000,
+                                            pacer=None, mode="json")
+        hdrs = {k.lower(): v for k, v in rh.items()}
     except urllib.error.HTTPError as e:
         return e.code, {}, None
     except Exception as e:

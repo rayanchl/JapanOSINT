@@ -152,10 +152,10 @@ static int l2_cl_res_json(const source_ctx *ctx, intel_sink *sink,
                           const char *url, const char *base, int cap) {
   const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "latam2:CL RES");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) { fprintf(stderr, "[latam2:CL RES] parse fail\n"); return 0; }
+  if (!root) { fprintf(stderr, "[latam2:CL RES] parse fail\n"); return -1; }
 
   cJSON *arr = NULL;
   if (cJSON_IsArray(root)) arr = root;

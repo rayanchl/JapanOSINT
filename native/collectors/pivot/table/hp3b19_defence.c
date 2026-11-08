@@ -571,13 +571,28 @@ static const hp_source HP3B19_DEFENCE[] = {
       "appear here as addressable records rather than as a browsable "
       "page" },
 
+  /* The twelve GOV.UK Search organisation rows below walk `start` in steps of
+   * 50 and used to declare no `order`, so their pages were Elasticsearch's
+   * relevance-default order over a live index — a walk with no stable sort,
+   * which skips a record for every one it repeats. They carry the ascending
+   * `order=public_timestamp` UK_GOVUK_MOD_PUBS above already carries, the
+   * offset bound in the URL (`start=0`), and `page_resume = 1` so that a
+   * collection which outgrows its ceiling is read over a cycle instead of an
+   * ascending walk dropping its NEWEST records. Measured 2026-11-07 (DES and
+   * the RPT format): `order=frobnicate` is HTTP 422, so the parameter is
+   * validated; `order=public_timestamp` and `-public_timestamp` answer
+   * different first pages; the search's own total is unchanged by the sort
+   * (594 / 594, 18,867 / 18,867); start=0 and start=50 are disjoint; and a
+   * deep page (start=5000) read twice is identical. Every org's total read the
+   * same day is under its ceiling, so each walk completes and the cycle is a
+   * no-op until it is not. */
   { .id = "UK_GOVUK_DES_PUBS", .name = "GOV.UK Search — Defence Equipment and Support publications",
     .name_ja = "GOV.UK 英国防装備支援庁刊行物",
     .category = "government", .portal = "https://www.gov.uk",
     .record_type = "government-publication",
     .tags = "\"defence\",\"uk\",\"procurement\",\"des\",\"publication\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gov.uk/api/search.json?filter_organisations=defence-equipment-and-support&count=50",
+    .url = "https://www.gov.uk/api/search.json?filter_organisations=defence-equipment-and-support&count=50&order=public_timestamp&start=0",
     .array_path = "results",
     .body_keys = "description",
     .date_keys = "public_timestamp",
@@ -585,6 +600,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_param = "start",
+    .page_resume = 1,   /* ascending: cycle rather than drop the newest if it outgrows the ceiling (note above UK_GOVUK_DES_PUBS) */
     .page_size = 50,
     .page_zero_based = 1,
     .title_keys = "title",
@@ -604,7 +620,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "government-publication",
     .tags = "\"defence\",\"uk\",\"research\",\"dstl\",\"science\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gov.uk/api/search.json?filter_organisations=defence-science-and-technology-laboratory&count=50",
+    .url = "https://www.gov.uk/api/search.json?filter_organisations=defence-science-and-technology-laboratory&count=50&order=public_timestamp&start=0",
     .array_path = "results",
     .body_keys = "description",
     .date_keys = "public_timestamp",
@@ -612,9 +628,10 @@ static const hp_source HP3B19_DEFENCE[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_param = "start",
+    .page_resume = 1,   /* ascending: cycle rather than drop the newest if it outgrows the ceiling (note above UK_GOVUK_DES_PUBS) */
     .page_size = 50,
     .page_zero_based = 1,
-    .page_max = 23,   /* 1,137 records at 50 a page, measured 2026-10-12; the 20-page default reached 1,000 */
+    .page_max = 30,   /* 1,137 records at 50 a page, measured 2026-10-12; 1,140 on 2026-11-07 — 23 pages (1,150) left 10 of headroom, and an ascending walk cut short drops the NEWEST */
     .title_keys = "title",
     .description = "Documents published by Dstl, the MOD research agency, as "
       "structured records with title, path, format, organisation and "
@@ -630,7 +647,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "government-publication",
     .tags = "\"defence\",\"uk\",\"submarine\",\"nuclear\",\"sda\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gov.uk/api/search.json?filter_organisations=submarine-delivery-agency&count=50",
+    .url = "https://www.gov.uk/api/search.json?filter_organisations=submarine-delivery-agency&count=50&order=public_timestamp&start=0",
     .array_path = "results",
     .body_keys = "description",
     .date_keys = "public_timestamp",
@@ -638,6 +655,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_param = "start",
+    .page_resume = 1,   /* ascending: cycle rather than drop the newest if it outgrows the ceiling (note above UK_GOVUK_DES_PUBS) */
     .page_size = 50,
     .page_zero_based = 1,
     .title_keys = "title",
@@ -656,7 +674,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "government-publication",
     .tags = "\"defence\",\"uk\",\"estate\",\"infrastructure\",\"dio\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gov.uk/api/search.json?filter_organisations=defence-infrastructure-organisation&count=50",
+    .url = "https://www.gov.uk/api/search.json?filter_organisations=defence-infrastructure-organisation&count=50&order=public_timestamp&start=0",
     .array_path = "results",
     .body_keys = "description",
     .date_keys = "public_timestamp",
@@ -664,6 +682,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_param = "start",
+    .page_resume = 1,   /* ascending: cycle rather than drop the newest if it outgrows the ceiling (note above UK_GOVUK_DES_PUBS) */
     .page_size = 50,
     .page_zero_based = 1,
     .title_keys = "title",
@@ -681,7 +700,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "government-publication",
     .tags = "\"defence\",\"uk\",\"procurement\",\"pricing\",\"ssro\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gov.uk/api/search.json?filter_organisations=single-source-regulations-office&count=50",
+    .url = "https://www.gov.uk/api/search.json?filter_organisations=single-source-regulations-office&count=50&order=public_timestamp&start=0",
     .array_path = "results",
     .body_keys = "description",
     .date_keys = "public_timestamp",
@@ -689,6 +708,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_param = "start",
+    .page_resume = 1,   /* ascending: cycle rather than drop the newest if it outgrows the ceiling (note above UK_GOVUK_DES_PUBS) */
     .page_size = 50,
     .page_zero_based = 1,
     .title_keys = "title",
@@ -707,7 +727,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "government-publication",
     .tags = "\"defence\",\"uk\",\"nuclear\",\"warhead\",\"awe\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gov.uk/api/search.json?filter_organisations=atomic-weapons-establishment&count=50",
+    .url = "https://www.gov.uk/api/search.json?filter_organisations=atomic-weapons-establishment&count=50&order=public_timestamp&start=0",
     .array_path = "results",
     .body_keys = "description",
     .date_keys = "public_timestamp",
@@ -715,6 +735,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_param = "start",
+    .page_resume = 1,   /* ascending: cycle rather than drop the newest if it outgrows the ceiling (note above UK_GOVUK_DES_PUBS) */
     .page_size = 50,
     .page_zero_based = 1,
     .title_keys = "title",
@@ -732,7 +753,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "government-publication",
     .tags = "\"defence\",\"uk\",\"nuclear\",\"deterrent\",\"dno\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gov.uk/api/search.json?filter_organisations=defence-nuclear-organisation&count=50",
+    .url = "https://www.gov.uk/api/search.json?filter_organisations=defence-nuclear-organisation&count=50&order=public_timestamp&start=0",
     .array_path = "results",
     .body_keys = "description",
     .date_keys = "public_timestamp",
@@ -740,6 +761,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_param = "start",
+    .page_resume = 1,   /* ascending: cycle rather than drop the newest if it outgrows the ceiling (note above UK_GOVUK_DES_PUBS) */
     .page_size = 50,
     .page_zero_based = 1,
     .title_keys = "title",
@@ -756,7 +778,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "government-publication",
     .tags = "\"defence\",\"uk\",\"innovation\",\"dasa\",\"funding\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gov.uk/api/search.json?filter_organisations=defence-and-security-accelerator&count=50",
+    .url = "https://www.gov.uk/api/search.json?filter_organisations=defence-and-security-accelerator&count=50&order=public_timestamp&start=0",
     .array_path = "results",
     .body_keys = "description",
     .date_keys = "public_timestamp",
@@ -764,6 +786,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_param = "start",
+    .page_resume = 1,   /* ascending: cycle rather than drop the newest if it outgrows the ceiling (note above UK_GOVUK_DES_PUBS) */
     .page_size = 50,
     .page_zero_based = 1,
     .title_keys = "title",
@@ -781,7 +804,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "export-control-document",
     .tags = "\"exportcontrol\",\"uk\",\"licensing\",\"dualuse\",\"ecju\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gov.uk/api/search.json?filter_organisations=export-control-joint-unit&count=50",
+    .url = "https://www.gov.uk/api/search.json?filter_organisations=export-control-joint-unit&count=50&order=public_timestamp&start=0",
     .array_path = "results",
     .body_keys = "description",
     .date_keys = "public_timestamp",
@@ -789,6 +812,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_param = "start",
+    .page_resume = 1,   /* ascending: cycle rather than drop the newest if it outgrows the ceiling (note above UK_GOVUK_DES_PUBS) */
     .page_size = 50,
     .page_zero_based = 1,
     .title_keys = "title",
@@ -808,7 +832,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "nuclear-regulatory-document",
     .tags = "\"nuclear\",\"uk\",\"regulator\",\"safeguards\",\"onr\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gov.uk/api/search.json?filter_organisations=office-for-nuclear-regulation&count=50",
+    .url = "https://www.gov.uk/api/search.json?filter_organisations=office-for-nuclear-regulation&count=50&order=public_timestamp&start=0",
     .array_path = "results",
     .body_keys = "description",
     .date_keys = "public_timestamp",
@@ -816,6 +840,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_param = "start",
+    .page_resume = 1,   /* ascending: cycle rather than drop the newest if it outgrows the ceiling (note above UK_GOVUK_DES_PUBS) */
     .page_size = 50,
     .page_zero_based = 1,
     .title_keys = "title",
@@ -833,7 +858,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "government-publication",
     .tags = "\"defence\",\"uk\",\"hydrography\",\"maritime\",\"ukho\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gov.uk/api/search.json?filter_organisations=uk-hydrographic-office&count=50",
+    .url = "https://www.gov.uk/api/search.json?filter_organisations=uk-hydrographic-office&count=50&order=public_timestamp&start=0",
     .array_path = "results",
     .body_keys = "description",
     .date_keys = "public_timestamp",
@@ -841,6 +866,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_param = "start",
+    .page_resume = 1,   /* ascending: cycle rather than drop the newest if it outgrows the ceiling (note above UK_GOVUK_DES_PUBS) */
     .page_size = 50,
     .page_zero_based = 1,
     .title_keys = "title",
@@ -858,7 +884,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "government-publication",
     .tags = "\"defence\",\"uk\",\"safety\",\"inquiry\",\"dsa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gov.uk/api/search.json?filter_organisations=defence-safety-authority&count=50",
+    .url = "https://www.gov.uk/api/search.json?filter_organisations=defence-safety-authority&count=50&order=public_timestamp&start=0",
     .array_path = "results",
     .body_keys = "description",
     .date_keys = "public_timestamp",
@@ -866,6 +892,7 @@ static const hp_source HP3B19_DEFENCE[] = {
     .interval = 21600,
     .link_keys = "link",
     .page_param = "start",
+    .page_resume = 1,   /* ascending: cycle rather than drop the newest if it outgrows the ceiling (note above UK_GOVUK_DES_PUBS) */
     .page_size = 50,
     .page_zero_based = 1,
     .title_keys = "title",

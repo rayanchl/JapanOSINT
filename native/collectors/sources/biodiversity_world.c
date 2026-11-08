@@ -56,14 +56,15 @@ static int bio_emit(intel_sink *sink, const char *service, const char *rectype,
   if (have_geo) { cJSON_AddNumberToObject(props, "lat", lat);
                   cJSON_AddNumberToObject(props, "lon", lon); }
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = key ? key : title;
   it.title           = title;
   it.summary         = locality ? locality : sci;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "en";
   it.published_at    = observed;
   it.link            = link;
@@ -74,7 +75,7 @@ static int bio_emit(intel_sink *sink, const char *service, const char *rectype,
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"biodiversity\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -89,12 +90,12 @@ static int bio_gbif(const source_ctx *ctx, intel_sink *sink, const char *enc,
     "https://api.gbif.org/v1/occurrence/search"
     "?q=%s&has_coordinate=true&limit=%d", enc, max);
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0 (biodiversity)", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "GBIF_OCCURRENCE");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   cJSON *results = cJSON_GetObjectItem(root, "results");
   int emitted = 0;
   if (cJSON_IsArray(results)) {
@@ -143,12 +144,12 @@ static int bio_inat(const source_ctx *ctx, intel_sink *sink, const char *enc,
     "https://api.inaturalist.org/v1/observations"
     "?q=%s&per_page=%d&order_by=observed_on", enc, max);
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0 (biodiversity)", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "INATURALIST");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   cJSON *results = cJSON_GetObjectItem(root, "results");
   int emitted = 0;
   if (cJSON_IsArray(results)) {
@@ -197,12 +198,12 @@ static int bio_obis(const source_ctx *ctx, intel_sink *sink, const char *enc,
   snprintf(url, sizeof url,
     "https://api.obis.org/v3/occurrence?scientificname=%s&size=%d", enc, max);
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0 (biodiversity)", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "OBIS_MARINE");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   cJSON *results = cJSON_GetObjectItem(root, "results");
   int emitted = 0;
   if (cJSON_IsArray(results)) {

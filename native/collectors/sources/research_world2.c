@@ -15,8 +15,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
-static const char *RW_UA = "User-Agent: JapanOSINT/1.0 (osint@example.org)";
 
 /* strip HTML tags in-place (Wikipedia snippet has <span> highlights). */
 static void rw_striptags(char *s) {
@@ -35,11 +35,11 @@ static int run_wikipedia(const source_ctx *ctx, intel_sink *sink, const char *en
   snprintf(url, sizeof url,
     "https://en.wikipedia.org/w/api.php?action=query&list=search&format=json"
     "&srlimit=20&srsearch=%s", enc);
-  const char *hdrs[] = { "Accept: application/json", RW_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "WIKIPEDIA_SEARCH");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *query = cJSON_GetObjectItem(root, "query");
   const cJSON *search = query ? cJSON_GetObjectItem(query, "search") : NULL;
   int emitted = 0;
@@ -61,16 +61,17 @@ static int run_wikipedia(const source_ctx *ctx, intel_sink *sink, const char *en
       cJSON *p = cJSON_CreateObject();
       cJSON_AddStringToObject(p, "service", "WIKIPEDIA_SEARCH");
       cJSON_AddBoolToObject(p, "success", 1);
-      char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+      jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
       char link[512]; { char *e = jo_urlencode(title);
         snprintf(link, sizeof link, "https://en.wikipedia.org/wiki/%s", e ? e : ""); free(e); }
-      intel_item it = {0};
+      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
       it.remote_key = title; it.title = title; it.summary = snippet;
-      it.body = bj; it.link = link; it.lang = "en";
+      it.body = bt ? bt : bj; it.link = link; it.lang = "en";
       it.record_type = "wikipedia-article";
       it.properties_json = pj; it.tags_json = "[\"osint-search\",\"WIKIPEDIA_SEARCH\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(pj); free(snippet);
+      free(bj); free(bt); free(pj); free(snippet);
     }
   }
   cJSON_Delete(root);
@@ -80,11 +81,11 @@ static int run_wikipedia(const source_ctx *ctx, intel_sink *sink, const char *en
 static int run_hackernews(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   char url[512];
   snprintf(url, sizeof url, "https://hn.algolia.com/api/v1/search?query=%s&hitsPerPage=20", enc);
-  const char *hdrs[] = { "Accept: application/json", RW_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "HACKERNEWS_SEARCH");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *hits = cJSON_GetObjectItem(root, "hits");
   int emitted = 0;
   if (cJSON_IsArray(hits)) {
@@ -110,18 +111,19 @@ static int run_hackernews(const source_ctx *ctx, intel_sink *sink, const char *e
       cJSON_AddStringToObject(p, "service", "HACKERNEWS_SEARCH");
       if (oid) cJSON_AddStringToObject(p, "object_id", oid);
       cJSON_AddBoolToObject(p, "success", 1);
-      char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+      jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
       char link[256];
       if (oid) snprintf(link, sizeof link, "https://news.ycombinator.com/item?id=%s", oid);
       else snprintf(link, sizeof link, "%s", urlf ? urlf : "");
-      intel_item it = {0};
+      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
       it.remote_key = oid ? oid : ttl; it.title = ttl ? ttl : oid;
-      it.summary = author; it.body = bj; it.author = author;
+      it.summary = author; it.body = bt ? bt : bj; it.author = author;
       it.link = link[0] ? link : NULL; it.lang = "en"; it.published_at = created;
       it.record_type = "hackernews-item";
       it.properties_json = pj; it.tags_json = "[\"osint-search\",\"HACKERNEWS_SEARCH\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(pj);
+      free(bj); free(bt); free(pj);
     }
   }
   cJSON_Delete(root);
@@ -132,11 +134,11 @@ static int run_pullpush(const source_ctx *ctx, intel_sink *sink, const char *enc
   char url[512];
   snprintf(url, sizeof url,
     "https://api.pullpush.io/reddit/search/submission/?q=%s&size=20&sort=desc", enc);
-  const char *hdrs[] = { "Accept: application/json", RW_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "REDDIT_PULLPUSH");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *data = cJSON_GetObjectItem(root, "data");
   int emitted = 0;
   if (cJSON_IsArray(data)) {
@@ -161,20 +163,21 @@ static int run_pullpush(const source_ctx *ctx, intel_sink *sink, const char *enc
       cJSON_AddStringToObject(p, "service", "REDDIT_PULLPUSH");
       if (sub) cJSON_AddStringToObject(p, "subreddit", sub);
       cJSON_AddBoolToObject(p, "success", 1);
-      char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+      jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
       char link[512];
       if (full) snprintf(link, sizeof link, "%s", full);
       else if (perm) snprintf(link, sizeof link, "https://www.reddit.com%s", perm);
       else link[0] = 0;
       char summ[128]; snprintf(summ, sizeof summ, "r/%s · u/%s", sub ? sub : "?", author ? author : "?");
-      intel_item it = {0};
+      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
       it.remote_key = id ? id : title; it.title = title ? title : id;
-      it.summary = summ; it.body = bj; it.author = author;
+      it.summary = summ; it.body = bt ? bt : bj; it.author = author;
       it.link = link[0] ? link : NULL; it.lang = "en";
       it.record_type = "reddit-submission";
       it.properties_json = pj; it.tags_json = "[\"osint-search\",\"REDDIT_PULLPUSH\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(pj);
+      free(bj); free(bt); free(pj);
     }
   }
   cJSON_Delete(root);
@@ -184,15 +187,15 @@ static int run_pullpush(const source_ctx *ctx, intel_sink *sink, const char *enc
 /* CORE (open-access research aggregator) — key-gated: honest-empty w/o CORE_API_KEY. */
 static int run_core(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   const char *key = jo_env("CORE_API_KEY");
-  if (!key) { fprintf(stderr, "[CORE_SEARCH] no CORE_API_KEY\n"); return 0; }
+  if (!key) return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "CORE_SEARCH", "CORE_SEARCH", (const char *const[]){"CORE_API_KEY", NULL}, NULL, NULL);
   char url[512];
   snprintf(url, sizeof url, "https://api.core.ac.uk/v3/search/works?q=%s&limit=20", enc);
   char auth[160]; snprintf(auth, sizeof auth, "Authorization: Bearer %s", key);
-  const char *hdrs[] = { "Accept: application/json", RW_UA, auth, NULL };
+  const char *hdrs[] = { "Accept: application/json", auth, NULL };
   char *body = jo_get(ctx, url, hdrs, "CORE_SEARCH");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *results = cJSON_GetObjectItem(root, "results");
   int emitted = 0;
   if (cJSON_IsArray(results)) {
@@ -210,13 +213,14 @@ static int run_core(const source_ctx *ctx, intel_sink *sink, const char *enc) {
       cJSON *p = cJSON_CreateObject();
       cJSON_AddStringToObject(p, "service", "CORE_SEARCH");
       cJSON_AddBoolToObject(p, "success", 1);
-      char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
-      intel_item it = {0};
-      it.remote_key = doi ? doi : title; it.title = title; it.body = bj;
+      jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
+      it.remote_key = doi ? doi : title; it.title = title; it.body = bt ? bt : bj;
       it.link = dl; it.lang = "en"; it.record_type = "core-work";
       it.properties_json = pj; it.tags_json = "[\"osint-search\",\"CORE_SEARCH\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(pj);
+      free(bj); free(bt); free(pj);
     }
   }
   cJSON_Delete(root);
@@ -236,7 +240,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   else if (!strcmp(sid, "CORE_SEARCH"))       n = run_core(ctx, sink, enc);
   free(enc);
   fprintf(stderr, "[%s] emitted %d\n", sid, n);
-  return 0;
+  return n < 0 ? -1 : 0;
 }
 
 #define RW_DEF(sym, ID, NM, FREE, DESC) \

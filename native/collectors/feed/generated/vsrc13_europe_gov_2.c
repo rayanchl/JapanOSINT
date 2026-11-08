@@ -637,16 +637,29 @@ VJSON(eur_stortinget_saker, "eur-stortinget-saker", "Stortinget Norway — parli
   "no", "[\"nor\",\"politics\"]", 21600,
   "Cases before the Norwegian parliament with status and committee.");
 
+/* Tweede Kamer / Folketing OData rows: `$orderby=<modified> desc,<key>`
+ * (2026-11-07), copied from the sorted siblings (GewijzigdOp desc on TK
+ * Besluit, opdateringsdato desc on ft.dk Sag/Sagstrin/Dokument) and made a
+ * TOTAL order with the entity key, because many records share one timestamp
+ * (TK Stemming/Document, ft.dk Stemme: identical GewijzigdOp/opdateringsdato
+ * on consecutive rows). Without an order these $top/$skip walks read an
+ * arbitrary slice — TK's default first rows are dated 2008, 2019, 2024 mixed —
+ * of collections up to 1,035,132 (TK Stemming) and 1,840,932 (ft.dk Stemme);
+ * neither server publishes a nextLink for these requests. With it, the
+ * 20-page ceiling is the most recently modified $top x 20, a window. Both
+ * servers read the clause: a bogus $orderby is HTTP 400 ("Could not find a
+ * property named 'Frobnicate'" on TK). Small entity sets (TK Zaal 64,
+ * Fractie 160, Commissie 234; ft.dk Aktørtype 13 …) read whole either way. */
 VJSON(eur_tk_activiteit, "eur-tk-activiteit", "Tweede Kamer Netherlands — activities", "Tweede Kamer Netherlands — activities",
   "europe_gov", "politics",
-  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Activiteit?$top=50&$format=json",
+  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Activiteit?$top=50&$format=json&$orderby=GewijzigdOp%20desc,Id",
   "value",
   "nl", "[\"nld\",\"politics\"]", 21600,
   "Scheduled and completed activities of the Dutch House of Representatives.");
 
 VJSON(eur_tk_agendapunt, "eur-tk-agendapunt", "Tweede Kamer Netherlands — agenda items", "Tweede Kamer Netherlands — agenda items",
   "europe_gov", "politics",
-  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Agendapunt?$top=50&$format=json",
+  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Agendapunt?$top=50&$format=json&$orderby=GewijzigdOp%20desc,Id",
   "value",
   "nl", "[\"nld\",\"politics\"]", 21600,
   "Agenda items attached to Dutch parliamentary activities.");
@@ -660,35 +673,35 @@ VJSON(eur_tk_besluit, "eur-tk-besluit", "Tweede Kamer Netherlands — decisions"
 
 VJSON(eur_tk_commissie, "eur-tk-commissie", "Tweede Kamer Netherlands — committees", "Tweede Kamer Netherlands — committees",
   "europe_gov", "politics",
-  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Commissie?$top=100&$format=json",
+  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Commissie?$top=100&$format=json&$orderby=GewijzigdOp%20desc,Id",
   "value",
   "nl", "[\"nld\",\"politics\"]", 86400,
   "Committees of the Dutch House of Representatives.");
 
 VJSON(eur_tk_fractie, "eur-tk-fractie", "Tweede Kamer Netherlands — parliamentary groups", "Tweede Kamer Netherlands — parliamentary groups",
   "europe_gov", "politics",
-  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Fractie?$top=100&$format=json",
+  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Fractie?$top=100&$format=json&$orderby=GewijzigdOp%20desc,Id",
   "value",
   "nl", "[\"nld\",\"politics\"]", 86400,
   "Parliamentary groups in the Dutch House with seat counts.");
 
 VJSON(eur_tk_vergadering, "eur-tk-vergadering", "Tweede Kamer Netherlands — plenary meetings", "Tweede Kamer Netherlands — plenary meetings",
   "europe_gov", "politics",
-  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Vergadering?$top=50&$format=json",
+  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Vergadering?$top=50&$format=json&$orderby=GewijzigdOp%20desc,Id",
   "value",
   "nl", "[\"nld\",\"politics\"]", 21600,
   "Plenary meetings of the Dutch House of Representatives.");
 
 VJSON(eur_tk_verslag, "eur-tk-verslag", "Tweede Kamer Netherlands — room reservations", "Tweede Kamer Netherlands — room reservations",
   "europe_gov", "politics",
-  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Reservering?$top=50&$format=json",
+  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Reservering?$top=50&$format=json&$orderby=GewijzigdOp%20desc,Id",
   "value",
   "nl", "[\"nld\",\"politics\"]", 21600,
   "Room reservations linking Dutch parliamentary activities to times and places.");
 
 VJSON(eur_tk_zaal, "eur-tk-zaal", "Tweede Kamer Netherlands — meeting rooms", "Tweede Kamer Netherlands — meeting rooms",
   "europe_gov", "politics",
-  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Zaal?$top=100&$format=json",
+  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Zaal?$top=100&$format=json&$orderby=GewijzigdOp%20desc,Id",
   "value",
   "nl", "[\"nld\",\"politics\"]", 86400,
   "Rooms used for Dutch parliamentary meetings, needed to resolve activity locations.");

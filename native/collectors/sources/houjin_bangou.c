@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 /* a || b (string-truthy). */
 static const char *sor(const cJSON *o, const char *a, const char *b) {
@@ -50,7 +51,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *key = getenv("HOUJIN_BANGOU_KEY");
   if (!key || !*key) {
     fprintf(stderr, "[houjin-bangou] gated (no HOUJIN_BANGOU_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "houjin-bangou", "houjin-bangou", (const char *const[]){"HOUJIN_BANGOU_KEY", NULL}, NULL, NULL);
   }
 
   /* to = now; from = now - 7d; ymd = toISOString().slice(0,10) (UTC). */

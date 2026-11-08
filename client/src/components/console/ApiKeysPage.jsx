@@ -1,7 +1,9 @@
 import React, { useMemo, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { LuKey, LuKeyRound, LuLock, LuRefreshCw } from 'react-icons/lu';
-import { api, ApiError, isForbidden } from '../../api/client.js';
+import { api, ApiError, isForbidden, errorMessage } from '../../api/client.js';
+import { probeSource, setProbeConsent, mergeStatusRow, probeSummary } from '../../api/probe.js';
+import { useKeyedSources } from '../../hooks/useKeyedSources.js';
 import { useApi } from '../../hooks/useApi.js';
 import { useAuth } from '../../auth/AuthContext.jsx';
 import {
@@ -20,7 +22,9 @@ import {
  *              GET/PUT /api/tenant-keys/policy {policy,memberId,members[]}
  *   platform   GET /api/keys                   [{name,role,set,hasOverlay}]   (platform operator + admin role)
  *              GET/PUT /api/keys/:name
- * "Used by" comes from GET /api/status → apis[].envVars[{name,role}].
+ * "Used by" comes from GET /api/status → apis[].envVars[{name,role}], loaded
+ * only when asked for (useKeyedSources): no smaller route says which source
+ * reads which env var.
  */
 
 const ROLE_TONE = { required: 'accent', anyOf: 'warning', optional: 'neutral' };
@@ -45,7 +49,7 @@ export default function ApiKeysPage() {
 
   const listPath = scope === 'platform' ? '/api/keys' : '/api/tenant-keys';
   const { data, error, loading, reload, setData } = useApi(listPath, { deps: [scope] });
-  const status = useApi('/api/status');
+  const status = useKeyedSources();
 
   const [q, setQ] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -60,7 +64,7 @@ export default function ApiKeysPage() {
   }, [data, scope]);
   const canManage = scope === 'platform' ? true : (data?.canManage ?? true);
   const policy = scope === 'platform' ? null : data?.policy;
-  const statusRows = status.data?.apis || [];
+  const statusRows = status.all;
 
   const roles = useMemo(() => [...new Set(rows.map((r) => r.role))].sort((a, b) => (ROLE_RANK[a] ?? 9) - (ROLE_RANK[b] ?? 9)), [rows]);
   const filtered = useMemo(() => {
@@ -94,14 +98,19 @@ export default function ApiKeysPage() {
     <Page
       title={scope === 'platform' ? 'Platform keys' : 'API keys'}
       subtitle={scope === 'platform'
-        ? 'Server-wide default credentials every workspace falls back to. Platform operators only.'
-        : 'Bring your own keys. Each value is encrypted per workspace and injected into collectors at run time.'}
+        /* Stated as it is (2026-11-07): core/keysapi.c stores workspace keys in
+         * tenant_secrets and NOTHING outside keysapi.c reads them — collectors
+         * read the process environment, i.e. the platform keys. The page used
+         * to say a workspace key was "injected into collectors at run time",
+         * which told people a key was in use when it was not. */
+        ? 'The credentials collectors actually use (the server process environment, plus any overlay set here). Platform operators only.'
+        : 'Workspace keys are stored encrypted for this workspace, but collectors do NOT use them yet: every collector run uses the platform keys (Platform keys / PUT /api/keys).'}
       actions={(
         <>
           {auth.isPlatformAdmin && (
             <Segmented value={scope} onChange={setScope} options={[{ value: 'workspace', label: 'Workspace' }, { value: 'platform', label: 'Platform' }]} />
           )}
-          <Button size="sm" onClick={() => { reload(); status.reload(); }} title="Reload"><LuRefreshCw size={13} /></Button>
+          <Button size="sm" onClick={() => { reload(); if (status.wanted) status.load(); }} title="Reload"><LuRefreshCw size={13} /></Button>
         </>
       )}
       wide
@@ -142,7 +151,14 @@ export default function ApiKeysPage() {
           {isForbidden(error) && scope === 'platform' && 'Platform keys need the platform-operator allowlist AND an owner/admin role in the active workspace.'}
         </ErrorNotice>
       )}
-      {status.error && <ErrorNotice error={status.error} title="Source status unavailable (the “used by” lists will be empty)" onRetry={status.reload} />}
+      {status.error && <ErrorNotice error={status.error} title="Source status unavailable (the “used by” lists will be empty)" onRetry={status.load} />}
+      {!status.wanted && (
+        <Card className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-osint-muted">
+          <span>Which sources use each key is not loaded. The server has no small route for it yet, so this downloads the full source-status catalogue (every registered source).</span>
+          <Button size="sm" onClick={status.load}>Show source usage</Button>
+        </Card>
+      )}
+      {status.loading && <LoadingState label="Loading source status…" />}
 
       {!loading && !error && (
         filtered.length === 0 ? (
@@ -182,6 +198,8 @@ export default function ApiKeysPage() {
         scope={scope}
         canManage={canManage}
         statusRows={statusRows}
+        statusLoaded={status.loaded}
+        onLoadStatus={status.load}
         onStatusUpdate={(updated) => status.setData((d) => (d ? { ...d, apis: mergeStatusRow(d.apis, updated) } : d))}
         onClose={() => setSelected(null)}
         onUpdated={onUpdated}
@@ -193,7 +211,8 @@ export default function ApiKeysPage() {
 
 /* ------------------------------------------------------------------------ */
 
-function KeyDetailSheet({ row, scope, canManage, statusRows, onStatusUpdate, onClose, onUpdated }) {
+function KeyDetailSheet({ row, scope, canManage, statusRows, statusLoaded, onLoadStatus, onStatusUpdate, onClose, onUpdated }) {
+  const auth = useAuth();
   const navigate = useNavigate();
   const [working, setWorking] = useState(row);
   const [revealed, setRevealed] = useState(null);
@@ -207,6 +226,7 @@ function KeyDetailSheet({ row, scope, canManage, statusRows, onStatusUpdate, onC
   React.useEffect(() => { setWorking(row); setRevealed(null); setNewValue(''); setError(null); setSaved(false); }, [rowName, row]);
 
   if (!row || !working) return null;
+  const canReveal = auth?.isPlatformAdmin === true && (scope === 'platform' || Boolean(auth?.canManageWorkspace));
   const base = scope === 'platform' ? '/api/keys' : '/api/tenant-keys';
   const usedBy = statusRows.filter((s) => (s.envVars || []).some((v) => v.name === row.name));
   const roleFor = (s) => (s.envVars || []).find((v) => v.name === row.name)?.role;
@@ -252,15 +272,26 @@ function KeyDetailSheet({ row, scope, canManage, statusRows, onStatusUpdate, onC
           <Row label="Role">{working.role}</Row>
           <Row label="Status"><span className={working.set ? 'text-neon-green' : 'text-accent'}>{working.set ? 'Set' : 'Unset'}</span></Row>
           <Row label="Source"><span className={working.byok ? 'text-accent' : ''}>{sourceLabel}</span></Row>
-          {scope === 'workspace' && <div className="text-[11px] text-osint-muted pt-2">Your key is encrypted per workspace. When unset, collectors fall back to the platform default automatically.</div>}
+          {scope === 'workspace' && <div className="text-[11px] text-osint-muted pt-2">Your key is stored encrypted for this workspace. It is NOT used by any collector yet — collectors read the platform keys only, whether or not a workspace key is set.</div>}
         </Section>
 
         <Section label="Current value">
           {revealed === null ? (
             <div className="space-y-1.5">
-              <Button variant="primary" busy={busy} onClick={reveal}>Reveal value</Button>
+              {/* GET /api/tenant-keys/:name returns the decrypted key and the
+                * server requires a PLATFORM OPERATOR for it (httpd.c, the
+                * tenant-keys block) on top of keysapi.c's owner/admin check.
+                * The button was offered to everyone with "Owner or admin role
+                * required", so a workspace owner clicked it and got 403
+                * (2026-11-07). /api/keys (platform scope) is operator-only
+                * already. */}
+              {canReveal
+                ? <Button variant="primary" busy={busy} onClick={reveal}>Reveal value</Button>
+                : <div className="text-xs text-osint-muted italic">Hidden.</div>}
               <div className="text-[11px] text-osint-muted">
-                {scope === 'workspace' ? "Reveals your workspace's own key only (never the platform key). Owner or admin role required." : 'Reveals the overlay value; the .env-baked value is never returned.'}
+                {scope === 'workspace'
+                  ? "Reveals this workspace's own stored key only (never the platform key). Requires a platform operator who is also an owner or admin of this workspace; every reveal is audited."
+                  : 'Reveals the overlay value; the .env-baked value is never returned. Platform operators only.'}
               </div>
             </div>
           ) : revealed === '' ? (
@@ -293,9 +324,11 @@ function KeyDetailSheet({ row, scope, canManage, statusRows, onStatusUpdate, onC
         {error && <ErrorNotice error={error} title={error instanceof ApiError && error.status === 403 ? 'The server refused this account' : 'Request failed'} />}
         {saved && !error && <div className="text-xs text-neon-green">Saved.</div>}
 
-        <Section label={`Used by · ${usedBy.length}`}>
+        <Section label={statusLoaded ? `Used by · ${usedBy.length}` : 'Used by'}>
           {usedBy.length === 0 ? (
-            <div className="text-xs text-osint-muted">No sources reference this key in the current registry{statusRows.length === 0 ? ' (source status did not load)' : ''}.</div>
+            statusLoaded
+              ? <div className="text-xs text-osint-muted">No sources reference this key in the current registry.</div>
+              : <div className="text-xs text-osint-muted flex items-center gap-2">Source usage is not loaded (it downloads the full source-status catalogue). <Button size="sm" onClick={onLoadStatus}>Load</Button></div>
           ) : (
             <ul className="divide-y divide-osint-border -my-1">
               {usedBy.map((s) => (
@@ -322,36 +355,17 @@ function KeyDetailSheet({ row, scope, canManage, statusRows, onStatusUpdate, onC
         onConfirm={() => { setConfirmClear(false); write(''); }}
         title="Clear this key?"
         confirmLabel="Clear"
-        message={scope === 'workspace' ? "Removes your workspace's key. Collectors fall back to the platform default if one exists." : 'Removes the overlay value. The server falls back to the .env-baked value if any.'}
+        message={scope === 'workspace' ? "Removes your workspace's stored key. Collectors are unaffected: they use the platform keys, not workspace keys." : 'Removes the overlay value. The server falls back to the .env-baked value if any.'}
       />
     </Sheet>
   );
 }
 
 /** Probe / consent controls for a keyed source (iOS `ProbeActionsView`).
- *  POST /api/status/:id/probe · POST /api/status/:id/consent {consent} — both operator-gated. */
-/**
- * Fold a probe / consent response into the /api/status row it belongs to.
- * Those responses are PARTIAL (probe: probe* fields + reachable/error;
- * consent: {ok,id,probeConsent}); replacing the row with one dropped
- * requiresKey/envVars/name, and the keyed-source lists — which filter on
- * requiresKey — then lost the row entirely.
- */
-export function mergeStatusRow(rows, updated) {
-  if (!Array.isArray(rows) || !updated?.id) return rows;
-  const { ok: _ok, ...patch } = updated;
-  return rows.map((s) => (s.id === updated.id ? { ...s, ...patch } : s));
-}
-
-/** Toast text for a probe response: the server sends `reachable` + `error`
- *  and an HTTP status, never a `status` field. */
-export function probeSummary(r) {
-  if (!r || typeof r !== 'object') return 'Probe: no response body';
-  const code = r.probeResponseStatus != null ? `HTTP ${r.probeResponseStatus}` : null;
-  if (r.reachable === true) return `Probe: reachable${code ? ` (${code})` : ''}`;
-  if (r.reachable === false) return `Probe: unreachable — ${r.error || code || 'no response'}`;
-  return `Probe finished${code ? ` (${code})` : ''}`;
-}
+ *  POST /api/status/:id/probe · POST /api/status/:id/consent {consent} — both
+ *  operator-gated. The calls and the row merge live in api/probe.js, the one
+ *  copy SourcesPanel uses too; re-exported here for existing importers. */
+export { mergeStatusRow, probeSummary };
 
 export function ProbeActions({ row, onUpdate }) {
   const [busy, setBusy] = useState(null);
@@ -359,9 +373,7 @@ export function ProbeActions({ row, onUpdate }) {
   const run = async (kind) => {
     setBusy(kind); setError(null);
     try {
-      const r = kind === 'probe'
-        ? await api.post(`/api/status/${encodeURIComponent(row.id)}/probe`)
-        : await api.post(`/api/status/${encodeURIComponent(row.id)}/consent`, { consent: !row.probeConsent });
+      const r = kind === 'probe' ? await probeSource(row.id) : await setProbeConsent(row.id, !row.probeConsent);
       if (r && r.id) onUpdate?.(r);
       if (kind === 'probe') toast(probeSummary(r), { tone: r?.reachable === false ? 'danger' : 'accent', ttl: 5000 });
       else toast(r?.probeConsent ? 'Auto-probe allowed' : 'Auto-probe disabled');
@@ -373,7 +385,7 @@ export function ProbeActions({ row, onUpdate }) {
       <Button size="sm" busy={busy === 'probe'} onClick={() => run('probe')}>Probe now</Button>
       <Button size="sm" busy={busy === 'consent'} onClick={() => run('consent')}>{row.probeConsent ? 'Disallow auto-probe' : 'Allow auto-probe'}</Button>
       {row.missingVars?.length > 0 && <span className="text-[10px] text-accent font-mono">missing: {row.missingVars.join(', ')}</span>}
-      {error && <span className="text-[10px] text-neon-red font-mono">{error.message}</span>}
+      {error && <span className="text-[10px] text-neon-red font-mono">{errorMessage(error)}</span>}
     </div>
   );
 }

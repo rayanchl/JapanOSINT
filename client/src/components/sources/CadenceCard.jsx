@@ -30,6 +30,11 @@ export default function CadenceCard({ canEdit = false }) {
   }, [data]);
   if (error) return <ErrorNotice error={error} title="Could not load the cadence policy" onRetry={reload} />;
   if (loading && !data) return null;
+  /* The route that enforces the gate is the one that reports it: when the
+   * server sends `can_write` it decides, and the caller's `canEdit` (derived
+   * from the account's platform-operator flag) is only the fallback for a
+   * server that does not send it yet. */
+  const writable = typeof data?.can_write === 'boolean' ? data.can_write : canEdit;
   const p = data?.policy; const est = data?.estimate;
   const save = async (e) => {
     e.preventDefault();
@@ -51,9 +56,9 @@ export default function CadenceCard({ canEdit = false }) {
             {' · '}source: {data?.source}{data?.updated_at ? `, set ${data.updated_at}${data.updated_by ? ` by ${data.updated_by}` : ''}` : ''}
           </div>
         </div>
-        {canEdit && !edit && <Button size="sm" onClick={() => setEdit(true)}>Change</Button>}
+        {writable && !edit && <Button size="sm" onClick={() => setEdit(true)}>Change</Button>}
       </div>
-      {edit && (
+      {edit && writable && (
         <form onSubmit={save} className="mt-3 grid grid-cols-1 md:grid-cols-4 gap-2 items-end">
           <label className="text-[11px] text-osint-muted">global interval (s)<Input value={form.global_interval_sec} onChange={(e) => setForm({ ...form, global_interval_sec: e.target.value })} placeholder="0 = off" /></label>
           <label className="text-[11px] text-osint-muted">floor (s)<Input value={form.min_interval_sec} onChange={(e) => setForm({ ...form, min_interval_sec: e.target.value })} placeholder="0 = off" /></label>

@@ -48,7 +48,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON_Delete(req);
 
   const char *hdrs[] = { "Content-Type: application/json",
-                         "User-Agent: JapanOSINT/1.0", NULL };
+                         NULL };
   cJSON *notes = feed_post_json(ctx->http, API_URL, body, hdrs, TIMEOUT_MS);
   free(body);
   if (!notes || !cJSON_IsArray(notes)) {

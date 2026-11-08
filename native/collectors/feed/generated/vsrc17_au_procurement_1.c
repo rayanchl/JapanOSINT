@@ -22,21 +22,29 @@ VJSON(au_austender_ocds_contracts_published, "au-austender-ocds-contracts-publis
   "Full Open Contracting releases for Commonwealth contracts published in a date window. Each release carries a parties[] array naming the supplier with its AU-ABN additionalIdentifier and address, plus the buyer, tender, award and contract blocks. Keyless, and the date range is the pagination handle.");
 
 
+/* datastore_search rows below carry `sort=_id asc` (2026-11-07). An offset
+ * walk with no declared order relies on the backend's default; CKAN's
+ * datastore `_id` is its own sequential row id. Measured one or two rows per
+ * host (izmir, data.gov.il, data.gov.au, QLD, VIC, Mauritius, Panama,
+ * data.gov.sg): `_id desc` answers the opposite end, a bogus sort is refused
+ * (409, or a 404 page on data.gov.il), and the total does not move. The
+ * unsorted first page was already _id 1,2,3 on every one, so this is
+ * STABILISING, not a recovery: 0 records were measured lost without it. */
 VJSON(au_gov_contracts_historical, "au-gov-contracts-historical", "Australian Government historical contract notices", "Australian Government historical contract notices",
   "au_procurement", "procurement",
-  "https://data.gov.au/data/api/3/action/datastore_search?resource_id=06439664-bbcf-4118-a604-164006bffcaa&limit=100",
+  "https://data.gov.au/data/api/3/action/datastore_search?resource_id=06439664-bbcf-4118-a604-164006bffcaa&limit=100&sort=_id%20asc",
   "result.records",
   "en", "[\"au\",\"procurement\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 21600,
   "Commonwealth contract notices with Agency Name, Parent Contract ID, Contract ID (CN number), Publish/Start/End dates, Value, amendment date and amendment value, Description, Agency Ref ID and UNSPSC code — the award trail behind a federal supplier.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");
 VJSON(au_qld_contracts_awarded, "au-qld-contracts-awarded", "Queensland Government contracts directory — awarded contracts", "Queensland Government contracts directory — awarded contracts",
   "au_procurement", "procurement",
-  "https://www.data.qld.gov.au/api/3/action/datastore_search?resource_id=9a72dd9f-2e07-4ac6-bc45-a2d2ec76522a&limit=100",
+  "https://www.data.qld.gov.au/api/3/action/datastore_search?resource_id=9a72dd9f-2e07-4ac6-bc45-a2d2ec76522a&limit=100&sort=_id%20asc",
   "result.records",
   "en", "[\"au\",\"procurement\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 21600,
   "Awarded Queensland state contracts: Agency Name and Agency Address, contract Description, Date, Value, Supplier Name and Supplier Address. Supplier addresses at street level make this unusually good for entity resolution.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");
 VJSON(au_qld_supplier_arrangements, "au-qld-supplier-arrangements", "Queensland — supplier procurement arrangements directory", "Queensland — supplier procurement arrangements directory",
   "au_procurement", "procurement",
-  "https://www.data.qld.gov.au/api/3/action/datastore_search?resource_id=f64bdb14-0af1-43bb-9aaa-99c19cb66097&limit=100",
+  "https://www.data.qld.gov.au/api/3/action/datastore_search?resource_id=f64bdb14-0af1-43bb-9aaa-99c19cb66097&limit=100&sort=_id%20asc",
   "result.records",
   "en", "[\"au\",\"procurement\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 21600,
   "Standing offer arrangements: ID ref, Arrangement Number, Arrangement Name, State (Published), Categories / Subcategories / Product and Service Groups, Start and Expiry dates, Status and access permission. The panel structure suppliers sit inside.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");

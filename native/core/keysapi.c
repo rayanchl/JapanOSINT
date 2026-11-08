@@ -1,5 +1,7 @@
 #include "keysapi.h"
 #include "credtab.h"
+#include "../source.h"          /* registry_all — the rows' own key_env names */
+#include "../lib/hpengine.h"   /* hp_source_get */
 #include "audit.h"
 #include "auth.h"
 #include "../third_party/cJSON.h"
@@ -37,13 +39,47 @@ static char *jstr(cJSON *o, int *st, int code) {
  * that still does not fit is an error (cred_known_vars returns -1, loudly),
  * never a shorter list. */
 typedef struct { const char **N, **R; int n; } known_list;
+
+/* The `key_env` names the REGISTERED hpengine rows declare, beyond the
+ * hand-maintained credential table. Measured 2026-11-07: 74 distinct key_env
+ * names on 167 rows, of which 60 (on 149 rows — CQC_API_KEY, FEC_API_KEY,
+ * CONGRESS_GOV_API_KEY …) were not in core/credtab.c, so PUT /api/keys
+ * answered "Unknown key" for the very variable the engine's own gated notice
+ * told the operator to set. Built once from the registry: the names are
+ * string literals in the tables and live for the process. */
+static const char **g_row_keys;
+static int g_row_nkeys;
+static pthread_once_t g_row_keys_once = PTHREAD_ONCE_INIT;
+static void row_keys_build(void) {
+  int n = registry_count();
+  const source_def **all = registry_all();
+  if (n <= 0 || !all) return;
+  g_row_keys = calloc((size_t)n, sizeof *g_row_keys);
+  if (!g_row_keys) return;
+  for (int i = 0; i < n; i++) {
+    const hp_source *h = all[i] ? hp_source_get(all[i]->id) : NULL;
+    const char *k = h ? h->key_env : NULL;
+    if (!k || !*k) continue;
+    int dup = 0;
+    for (int j = 0; j < g_row_nkeys && !dup; j++) dup = !strcmp(g_row_keys[j], k);
+    if (!dup) g_row_keys[g_row_nkeys++] = k;
+  }
+}
+
 static int known_load(known_list *k) {
-  int cap = cred_known_capacity();
+  pthread_once(&g_row_keys_once, row_keys_build);
+  int cap = cred_known_capacity() + g_row_nkeys;
   if (cap < 1) cap = 1;
   k->N = calloc((size_t) cap, sizeof *k->N);
   k->R = calloc((size_t) cap, sizeof *k->R);
   k->n = (k->N && k->R) ? cred_known_vars(k->N, k->R, cap) : -1;
   if (k->n < 0) { free(k->N); free(k->R); k->N = k->R = NULL; return -1; }
+  /* append the rows' names the table does not already carry */
+  for (int i = 0; i < g_row_nkeys && k->n < cap; i++) {
+    int dup = 0;
+    for (int j = 0; j < k->n && !dup; j++) dup = !strcmp(k->N[j], g_row_keys[i]);
+    if (!dup) { k->N[k->n] = g_row_keys[i]; k->R[k->n] = "required"; k->n++; }
+  }
   return 0;
 }
 static void known_free(known_list *k) { free(k->N); free(k->R); k->N = k->R = NULL; }

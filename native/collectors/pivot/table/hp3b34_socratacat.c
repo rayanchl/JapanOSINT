@@ -49,7 +49,15 @@ static const hp_source HP3B34_SOCRATACAT[] = {
     .record_type = "dataset",
     .tags = "\"socrata\",\"open-data\",\"catalog\",\"dataset\",\"catalonia\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://analisi.transparenciacatalunya.cat/api/catalog/v1?q={q}&domains=analisi.transparenciacatalunya.cat&search_context=analisi.transparenciacatalunya.cat&limit=100",
+    /* `order=createdAt ASC` (2026-11-07): a catalog walk with no order. NB the
+     * bare `order=createdAt` is DESCENDING (newest first) on this API, which
+     * puts a dataset created mid-walk at the head and shifts every boundary;
+     * ASC puts it at the tail. Measured on data.sf.gov, www.datos.gov.co and
+     * opendata.rdw.nl: order=frobnicate is HTTP 400 ("not a supported
+     * sort"), ASC and DESC answer different pages (datos: 2016-07-14 first
+     * against 2026-10-30), resultSetSize unchanged (148 / 1,489 / 14), and
+     * offsets 0 and 100 are disjoint. */
+    .url = "https://analisi.transparenciacatalunya.cat/api/catalog/v1?q={q}&domains=analisi.transparenciacatalunya.cat&search_context=analisi.transparenciacatalunya.cat&limit=100&order=createdAt%20ASC",
     .array_path = "results",
     .body_keys = "resource.description",
     .date_keys = "resource.updatedAt",
@@ -77,7 +85,15 @@ static const hp_source HP3B34_SOCRATACAT[] = {
     .record_type = "dataset",
     .tags = "\"socrata\",\"open-data\",\"catalog\",\"dataset\",\"usa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cos-data.seattle.gov/api/catalog/v1?q={q}&domains=cos-data.seattle.gov&search_context=cos-data.seattle.gov&limit=100",
+    /* `order=createdAt ASC` (2026-11-07): a catalog walk with no order. NB the
+     * bare `order=createdAt` is DESCENDING (newest first) on this API, which
+     * puts a dataset created mid-walk at the head and shifts every boundary;
+     * ASC puts it at the tail. Measured on data.sf.gov, www.datos.gov.co and
+     * opendata.rdw.nl: order=frobnicate is HTTP 400 ("not a supported
+     * sort"), ASC and DESC answer different pages (datos: 2016-07-14 first
+     * against 2026-10-30), resultSetSize unchanged (148 / 1,489 / 14), and
+     * offsets 0 and 100 are disjoint. */
+    .url = "https://cos-data.seattle.gov/api/catalog/v1?q={q}&domains=cos-data.seattle.gov&search_context=cos-data.seattle.gov&limit=100&order=createdAt%20ASC",
     .array_path = "results",
     .body_keys = "resource.description",
     .date_keys = "resource.updatedAt",
@@ -104,7 +120,15 @@ static const hp_source HP3B34_SOCRATACAT[] = {
     .record_type = "dataset",
     .tags = "\"socrata\",\"open-data\",\"catalog\",\"dataset\",\"usa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.brla.gov/api/catalog/v1?q={q}&domains=data.brla.gov&search_context=data.brla.gov&limit=100",
+    /* `order=createdAt ASC` (2026-11-07): a catalog walk with no order. NB the
+     * bare `order=createdAt` is DESCENDING (newest first) on this API, which
+     * puts a dataset created mid-walk at the head and shifts every boundary;
+     * ASC puts it at the tail. Measured on data.sf.gov, www.datos.gov.co and
+     * opendata.rdw.nl: order=frobnicate is HTTP 400 ("not a supported
+     * sort"), ASC and DESC answer different pages (datos: 2016-07-14 first
+     * against 2026-10-30), resultSetSize unchanged (148 / 1,489 / 14), and
+     * offsets 0 and 100 are disjoint. */
+    .url = "https://data.brla.gov/api/catalog/v1?q={q}&domains=data.brla.gov&search_context=data.brla.gov&limit=100&order=createdAt%20ASC",
     .array_path = "results",
     .body_keys = "resource.description",
     .date_keys = "resource.updatedAt",
@@ -131,7 +155,15 @@ static const hp_source HP3B34_SOCRATACAT[] = {
     .record_type = "dataset",
     .tags = "\"socrata\",\"open-data\",\"catalog\",\"dataset\",\"canada\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.calgary.ca/api/catalog/v1?q={q}&domains=data.calgary.ca&search_context=data.calgary.ca&limit=100",
+    /* `order=createdAt ASC` (2026-11-07): a catalog walk with no order. NB the
+     * bare `order=createdAt` is DESCENDING (newest first) on this API, which
+     * puts a dataset created mid-walk at the head and shifts every boundary;
+     * ASC puts it at the tail. Measured on data.sf.gov, www.datos.gov.co and
+     * opendata.rdw.nl: order=frobnicate is HTTP 400 ("not a supported
+     * sort"), ASC and DESC answer different pages (datos: 2016-07-14 first
+     * against 2026-10-30), resultSetSize unchanged (148 / 1,489 / 14), and
+     * offsets 0 and 100 are disjoint. */
+    .url = "https://data.calgary.ca/api/catalog/v1?q={q}&domains=data.calgary.ca&search_context=data.calgary.ca&limit=100&order=createdAt%20ASC",
     .array_path = "results",
     .body_keys = "resource.description",
     .date_keys = "resource.updatedAt",
@@ -159,7 +191,15 @@ static const hp_source HP3B34_SOCRATACAT[] = {
     .record_type = "dataset",
     .tags = "\"socrata\",\"open-data\",\"catalog\",\"dataset\",\"ngo\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.cityofgainesville.org/api/catalog/v1?q={q}&domains=data.cityofgainesville.org&search_context=data.cityofgainesville.org&limit=100",
+    /* `order=createdAt ASC` (2026-11-07): a catalog walk with no order. NB the
+     * bare `order=createdAt` is DESCENDING (newest first) on this API, which
+     * puts a dataset created mid-walk at the head and shifts every boundary;
+     * ASC puts it at the tail. Measured on data.sf.gov, www.datos.gov.co and
+     * opendata.rdw.nl: order=frobnicate is HTTP 400 ("not a supported
+     * sort"), ASC and DESC answer different pages (datos: 2016-07-14 first
+     * against 2026-10-30), resultSetSize unchanged (148 / 1,489 / 14), and
+     * offsets 0 and 100 are disjoint. */
+    .url = "https://data.cityofgainesville.org/api/catalog/v1?q={q}&domains=data.cityofgainesville.org&search_context=data.cityofgainesville.org&limit=100&order=createdAt%20ASC",
     .array_path = "results",
     .body_keys = "resource.description",
     .date_keys = "resource.updatedAt",
@@ -186,7 +226,15 @@ static const hp_source HP3B34_SOCRATACAT[] = {
     .record_type = "dataset",
     .tags = "\"socrata\",\"open-data\",\"catalog\",\"dataset\",\"canada\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.edmonton.ca/api/catalog/v1?q={q}&domains=data.edmonton.ca&search_context=data.edmonton.ca&limit=100",
+    /* `order=createdAt ASC` (2026-11-07): a catalog walk with no order. NB the
+     * bare `order=createdAt` is DESCENDING (newest first) on this API, which
+     * puts a dataset created mid-walk at the head and shifts every boundary;
+     * ASC puts it at the tail. Measured on data.sf.gov, www.datos.gov.co and
+     * opendata.rdw.nl: order=frobnicate is HTTP 400 ("not a supported
+     * sort"), ASC and DESC answer different pages (datos: 2016-07-14 first
+     * against 2026-10-30), resultSetSize unchanged (148 / 1,489 / 14), and
+     * offsets 0 and 100 are disjoint. */
+    .url = "https://data.edmonton.ca/api/catalog/v1?q={q}&domains=data.edmonton.ca&search_context=data.edmonton.ca&limit=100&order=createdAt%20ASC",
     .array_path = "results",
     .body_keys = "resource.description",
     .date_keys = "resource.updatedAt",
@@ -213,7 +261,15 @@ static const hp_source HP3B34_SOCRATACAT[] = {
     .record_type = "dataset",
     .tags = "\"socrata\",\"open-data\",\"catalog\",\"dataset\",\"usa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.mesaaz.gov/api/catalog/v1?q={q}&domains=data.mesaaz.gov&search_context=data.mesaaz.gov&limit=100",
+    /* `order=createdAt ASC` (2026-11-07): a catalog walk with no order. NB the
+     * bare `order=createdAt` is DESCENDING (newest first) on this API, which
+     * puts a dataset created mid-walk at the head and shifts every boundary;
+     * ASC puts it at the tail. Measured on data.sf.gov, www.datos.gov.co and
+     * opendata.rdw.nl: order=frobnicate is HTTP 400 ("not a supported
+     * sort"), ASC and DESC answer different pages (datos: 2016-07-14 first
+     * against 2026-10-30), resultSetSize unchanged (148 / 1,489 / 14), and
+     * offsets 0 and 100 are disjoint. */
+    .url = "https://data.mesaaz.gov/api/catalog/v1?q={q}&domains=data.mesaaz.gov&search_context=data.mesaaz.gov&limit=100&order=createdAt%20ASC",
     .array_path = "results",
     .body_keys = "resource.description",
     .date_keys = "resource.updatedAt",
@@ -240,7 +296,15 @@ static const hp_source HP3B34_SOCRATACAT[] = {
     .record_type = "dataset",
     .tags = "\"socrata\",\"open-data\",\"catalog\",\"dataset\",\"usa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.norfolk.gov/api/catalog/v1?q={q}&domains=data.norfolk.gov&search_context=data.norfolk.gov&limit=100",
+    /* `order=createdAt ASC` (2026-11-07): a catalog walk with no order. NB the
+     * bare `order=createdAt` is DESCENDING (newest first) on this API, which
+     * puts a dataset created mid-walk at the head and shifts every boundary;
+     * ASC puts it at the tail. Measured on data.sf.gov, www.datos.gov.co and
+     * opendata.rdw.nl: order=frobnicate is HTTP 400 ("not a supported
+     * sort"), ASC and DESC answer different pages (datos: 2016-07-14 first
+     * against 2026-10-30), resultSetSize unchanged (148 / 1,489 / 14), and
+     * offsets 0 and 100 are disjoint. */
+    .url = "https://data.norfolk.gov/api/catalog/v1?q={q}&domains=data.norfolk.gov&search_context=data.norfolk.gov&limit=100&order=createdAt%20ASC",
     .array_path = "results",
     .body_keys = "resource.description",
     .date_keys = "resource.updatedAt",
@@ -268,7 +332,15 @@ static const hp_source HP3B34_SOCRATACAT[] = {
     .record_type = "dataset",
     .tags = "\"socrata\",\"open-data\",\"catalog\",\"dataset\",\"canada\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.novascotia.ca/api/catalog/v1?q={q}&domains=data.novascotia.ca&search_context=data.novascotia.ca&limit=100",
+    /* `order=createdAt ASC` (2026-11-07): a catalog walk with no order. NB the
+     * bare `order=createdAt` is DESCENDING (newest first) on this API, which
+     * puts a dataset created mid-walk at the head and shifts every boundary;
+     * ASC puts it at the tail. Measured on data.sf.gov, www.datos.gov.co and
+     * opendata.rdw.nl: order=frobnicate is HTTP 400 ("not a supported
+     * sort"), ASC and DESC answer different pages (datos: 2016-07-14 first
+     * against 2026-10-30), resultSetSize unchanged (148 / 1,489 / 14), and
+     * offsets 0 and 100 are disjoint. */
+    .url = "https://data.novascotia.ca/api/catalog/v1?q={q}&domains=data.novascotia.ca&search_context=data.novascotia.ca&limit=100&order=createdAt%20ASC",
     .array_path = "results",
     .body_keys = "resource.description",
     .date_keys = "resource.updatedAt",
@@ -296,7 +368,15 @@ static const hp_source HP3B34_SOCRATACAT[] = {
     .record_type = "dataset",
     .tags = "\"socrata\",\"open-data\",\"catalog\",\"dataset\",\"usa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.princegeorgescountymd.gov/api/catalog/v1?q={q}&domains=data.princegeorgescountymd.gov&search_context=data.princegeorgescountymd.gov&limit=100",
+    /* `order=createdAt ASC` (2026-11-07): a catalog walk with no order. NB the
+     * bare `order=createdAt` is DESCENDING (newest first) on this API, which
+     * puts a dataset created mid-walk at the head and shifts every boundary;
+     * ASC puts it at the tail. Measured on data.sf.gov, www.datos.gov.co and
+     * opendata.rdw.nl: order=frobnicate is HTTP 400 ("not a supported
+     * sort"), ASC and DESC answer different pages (datos: 2016-07-14 first
+     * against 2026-10-30), resultSetSize unchanged (148 / 1,489 / 14), and
+     * offsets 0 and 100 are disjoint. */
+    .url = "https://data.princegeorgescountymd.gov/api/catalog/v1?q={q}&domains=data.princegeorgescountymd.gov&search_context=data.princegeorgescountymd.gov&limit=100&order=createdAt%20ASC",
     .array_path = "results",
     .body_keys = "resource.description",
     .date_keys = "resource.updatedAt",
@@ -324,7 +404,15 @@ static const hp_source HP3B34_SOCRATACAT[] = {
     .record_type = "dataset",
     .tags = "\"socrata\",\"open-data\",\"catalog\",\"dataset\",\"usa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.sandiegocounty.gov/api/catalog/v1?q={q}&domains=data.sandiegocounty.gov&search_context=data.sandiegocounty.gov&limit=100",
+    /* `order=createdAt ASC` (2026-11-07): a catalog walk with no order. NB the
+     * bare `order=createdAt` is DESCENDING (newest first) on this API, which
+     * puts a dataset created mid-walk at the head and shifts every boundary;
+     * ASC puts it at the tail. Measured on data.sf.gov, www.datos.gov.co and
+     * opendata.rdw.nl: order=frobnicate is HTTP 400 ("not a supported
+     * sort"), ASC and DESC answer different pages (datos: 2016-07-14 first
+     * against 2026-10-30), resultSetSize unchanged (148 / 1,489 / 14), and
+     * offsets 0 and 100 are disjoint. */
+    .url = "https://data.sandiegocounty.gov/api/catalog/v1?q={q}&domains=data.sandiegocounty.gov&search_context=data.sandiegocounty.gov&limit=100&order=createdAt%20ASC",
     .array_path = "results",
     .body_keys = "resource.description",
     .date_keys = "resource.updatedAt",
@@ -351,7 +439,15 @@ static const hp_source HP3B34_SOCRATACAT[] = {
     .record_type = "dataset",
     .tags = "\"socrata\",\"open-data\",\"catalog\",\"dataset\",\"ngo\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.sccgov.org/api/catalog/v1?q={q}&domains=data.sccgov.org&search_context=data.sccgov.org&limit=100",
+    /* `order=createdAt ASC` (2026-11-07): a catalog walk with no order. NB the
+     * bare `order=createdAt` is DESCENDING (newest first) on this API, which
+     * puts a dataset created mid-walk at the head and shifts every boundary;
+     * ASC puts it at the tail. Measured on data.sf.gov, www.datos.gov.co and
+     * opendata.rdw.nl: order=frobnicate is HTTP 400 ("not a supported
+     * sort"), ASC and DESC answer different pages (datos: 2016-07-14 first
+     * against 2026-10-30), resultSetSize unchanged (148 / 1,489 / 14), and
+     * offsets 0 and 100 are disjoint. */
+    .url = "https://data.sccgov.org/api/catalog/v1?q={q}&domains=data.sccgov.org&search_context=data.sccgov.org&limit=100&order=createdAt%20ASC",
     .array_path = "results",
     .body_keys = "resource.description",
     .date_keys = "resource.updatedAt",
@@ -378,7 +474,15 @@ static const hp_source HP3B34_SOCRATACAT[] = {
     .record_type = "dataset",
     .tags = "\"socrata\",\"open-data\",\"catalog\",\"dataset\",\"ngo\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.sf.gov/api/catalog/v1?q={q}&domains=data.sf.gov&search_context=data.sf.gov&limit=100",
+    /* `order=createdAt ASC` (2026-11-07): a catalog walk with no order. NB the
+     * bare `order=createdAt` is DESCENDING (newest first) on this API, which
+     * puts a dataset created mid-walk at the head and shifts every boundary;
+     * ASC puts it at the tail. Measured on data.sf.gov, www.datos.gov.co and
+     * opendata.rdw.nl: order=frobnicate is HTTP 400 ("not a supported
+     * sort"), ASC and DESC answer different pages (datos: 2016-07-14 first
+     * against 2026-10-30), resultSetSize unchanged (148 / 1,489 / 14), and
+     * offsets 0 and 100 are disjoint. */
+    .url = "https://data.sf.gov/api/catalog/v1?q={q}&domains=data.sf.gov&search_context=data.sf.gov&limit=100&order=createdAt%20ASC",
     .array_path = "results",
     .body_keys = "resource.description",
     .date_keys = "resource.updatedAt",
@@ -405,7 +509,15 @@ static const hp_source HP3B34_SOCRATACAT[] = {
     .record_type = "dataset",
     .tags = "\"socrata\",\"open-data\",\"catalog\",\"dataset\",\"usa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.usaid.gov/api/catalog/v1?q={q}&domains=data.usaid.gov&search_context=data.usaid.gov&limit=100",
+    /* `order=createdAt ASC` (2026-11-07): a catalog walk with no order. NB the
+     * bare `order=createdAt` is DESCENDING (newest first) on this API, which
+     * puts a dataset created mid-walk at the head and shifts every boundary;
+     * ASC puts it at the tail. Measured on data.sf.gov, www.datos.gov.co and
+     * opendata.rdw.nl: order=frobnicate is HTTP 400 ("not a supported
+     * sort"), ASC and DESC answer different pages (datos: 2016-07-14 first
+     * against 2026-10-30), resultSetSize unchanged (148 / 1,489 / 14), and
+     * offsets 0 and 100 are disjoint. */
+    .url = "https://data.usaid.gov/api/catalog/v1?q={q}&domains=data.usaid.gov&search_context=data.usaid.gov&limit=100&order=createdAt%20ASC",
     .array_path = "results",
     .body_keys = "resource.description",
     .date_keys = "resource.updatedAt",
@@ -432,7 +544,15 @@ static const hp_source HP3B34_SOCRATACAT[] = {
     .record_type = "dataset",
     .tags = "\"socrata\",\"open-data\",\"catalog\",\"dataset\",\"usa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.vermont.gov/api/catalog/v1?q={q}&domains=data.vermont.gov&search_context=data.vermont.gov&limit=100",
+    /* `order=createdAt ASC` (2026-11-07): a catalog walk with no order. NB the
+     * bare `order=createdAt` is DESCENDING (newest first) on this API, which
+     * puts a dataset created mid-walk at the head and shifts every boundary;
+     * ASC puts it at the tail. Measured on data.sf.gov, www.datos.gov.co and
+     * opendata.rdw.nl: order=frobnicate is HTTP 400 ("not a supported
+     * sort"), ASC and DESC answer different pages (datos: 2016-07-14 first
+     * against 2026-10-30), resultSetSize unchanged (148 / 1,489 / 14), and
+     * offsets 0 and 100 are disjoint. */
+    .url = "https://data.vermont.gov/api/catalog/v1?q={q}&domains=data.vermont.gov&search_context=data.vermont.gov&limit=100&order=createdAt%20ASC",
     .array_path = "results",
     .body_keys = "resource.description",
     .date_keys = "resource.updatedAt",
@@ -459,7 +579,15 @@ static const hp_source HP3B34_SOCRATACAT[] = {
     .record_type = "dataset",
     .tags = "\"socrata\",\"open-data\",\"catalog\",\"dataset\",\"canada\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.winnipeg.ca/api/catalog/v1?q={q}&domains=data.winnipeg.ca&search_context=data.winnipeg.ca&limit=100",
+    /* `order=createdAt ASC` (2026-11-07): a catalog walk with no order. NB the
+     * bare `order=createdAt` is DESCENDING (newest first) on this API, which
+     * puts a dataset created mid-walk at the head and shifts every boundary;
+     * ASC puts it at the tail. Measured on data.sf.gov, www.datos.gov.co and
+     * opendata.rdw.nl: order=frobnicate is HTTP 400 ("not a supported
+     * sort"), ASC and DESC answer different pages (datos: 2016-07-14 first
+     * against 2026-10-30), resultSetSize unchanged (148 / 1,489 / 14), and
+     * offsets 0 and 100 are disjoint. */
+    .url = "https://data.winnipeg.ca/api/catalog/v1?q={q}&domains=data.winnipeg.ca&search_context=data.winnipeg.ca&limit=100&order=createdAt%20ASC",
     .array_path = "results",
     .body_keys = "resource.description",
     .date_keys = "resource.updatedAt",
@@ -487,7 +615,15 @@ static const hp_source HP3B34_SOCRATACAT[] = {
     .record_type = "dataset",
     .tags = "\"socrata\",\"open-data\",\"catalog\",\"dataset\",\"usa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://datahub.austintexas.gov/api/catalog/v1?q={q}&domains=datahub.austintexas.gov&search_context=datahub.austintexas.gov&limit=100",
+    /* `order=createdAt ASC` (2026-11-07): a catalog walk with no order. NB the
+     * bare `order=createdAt` is DESCENDING (newest first) on this API, which
+     * puts a dataset created mid-walk at the head and shifts every boundary;
+     * ASC puts it at the tail. Measured on data.sf.gov, www.datos.gov.co and
+     * opendata.rdw.nl: order=frobnicate is HTTP 400 ("not a supported
+     * sort"), ASC and DESC answer different pages (datos: 2016-07-14 first
+     * against 2026-10-30), resultSetSize unchanged (148 / 1,489 / 14), and
+     * offsets 0 and 100 are disjoint. */
+    .url = "https://datahub.austintexas.gov/api/catalog/v1?q={q}&domains=datahub.austintexas.gov&search_context=datahub.austintexas.gov&limit=100&order=createdAt%20ASC",
     .array_path = "results",
     .body_keys = "resource.description",
     .date_keys = "resource.updatedAt",
@@ -515,7 +651,15 @@ static const hp_source HP3B34_SOCRATACAT[] = {
     .record_type = "dataset",
     .tags = "\"socrata\",\"open-data\",\"catalog\",\"dataset\",\"usa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://datahub.transportation.gov/api/catalog/v1?q={q}&domains=datahub.transportation.gov&search_context=datahub.transportation.gov&limit=100",
+    /* `order=createdAt ASC` (2026-11-07): a catalog walk with no order. NB the
+     * bare `order=createdAt` is DESCENDING (newest first) on this API, which
+     * puts a dataset created mid-walk at the head and shifts every boundary;
+     * ASC puts it at the tail. Measured on data.sf.gov, www.datos.gov.co and
+     * opendata.rdw.nl: order=frobnicate is HTTP 400 ("not a supported
+     * sort"), ASC and DESC answer different pages (datos: 2016-07-14 first
+     * against 2026-10-30), resultSetSize unchanged (148 / 1,489 / 14), and
+     * offsets 0 and 100 are disjoint. */
+    .url = "https://datahub.transportation.gov/api/catalog/v1?q={q}&domains=datahub.transportation.gov&search_context=datahub.transportation.gov&limit=100&order=createdAt%20ASC",
     .array_path = "results",
     .body_keys = "resource.description",
     .date_keys = "resource.updatedAt",
@@ -543,7 +687,15 @@ static const hp_source HP3B34_SOCRATACAT[] = {
     .record_type = "dataset",
     .tags = "\"socrata\",\"open-data\",\"catalog\",\"dataset\",\"usa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://hicscdata.hawaii.gov/api/catalog/v1?q={q}&domains=hicscdata.hawaii.gov&search_context=hicscdata.hawaii.gov&limit=100",
+    /* `order=createdAt ASC` (2026-11-07): a catalog walk with no order. NB the
+     * bare `order=createdAt` is DESCENDING (newest first) on this API, which
+     * puts a dataset created mid-walk at the head and shifts every boundary;
+     * ASC puts it at the tail. Measured on data.sf.gov, www.datos.gov.co and
+     * opendata.rdw.nl: order=frobnicate is HTTP 400 ("not a supported
+     * sort"), ASC and DESC answer different pages (datos: 2016-07-14 first
+     * against 2026-10-30), resultSetSize unchanged (148 / 1,489 / 14), and
+     * offsets 0 and 100 are disjoint. */
+    .url = "https://hicscdata.hawaii.gov/api/catalog/v1?q={q}&domains=hicscdata.hawaii.gov&search_context=hicscdata.hawaii.gov&limit=100&order=createdAt%20ASC",
     .array_path = "results",
     .body_keys = "resource.description",
     .date_keys = "resource.updatedAt",
@@ -571,7 +723,15 @@ static const hp_source HP3B34_SOCRATACAT[] = {
     .record_type = "dataset",
     .tags = "\"socrata\",\"open-data\",\"catalog\",\"dataset\",\"com\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://illinois-edp.data.socrata.com/api/catalog/v1?q={q}&domains=illinois-edp.data.socrata.com&search_context=illinois-edp.data.socrata.com&limit=100",
+    /* `order=createdAt ASC` (2026-11-07): a catalog walk with no order. NB the
+     * bare `order=createdAt` is DESCENDING (newest first) on this API, which
+     * puts a dataset created mid-walk at the head and shifts every boundary;
+     * ASC puts it at the tail. Measured on data.sf.gov, www.datos.gov.co and
+     * opendata.rdw.nl: order=frobnicate is HTTP 400 ("not a supported
+     * sort"), ASC and DESC answer different pages (datos: 2016-07-14 first
+     * against 2026-10-30), resultSetSize unchanged (148 / 1,489 / 14), and
+     * offsets 0 and 100 are disjoint. */
+    .url = "https://illinois-edp.data.socrata.com/api/catalog/v1?q={q}&domains=illinois-edp.data.socrata.com&search_context=illinois-edp.data.socrata.com&limit=100&order=createdAt%20ASC",
     .array_path = "results",
     .body_keys = "resource.description",
     .date_keys = "resource.updatedAt",
@@ -598,7 +758,15 @@ static const hp_source HP3B34_SOCRATACAT[] = {
     .record_type = "dataset",
     .tags = "\"socrata\",\"open-data\",\"catalog\",\"dataset\",\"netherlands\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.rdw.nl/api/catalog/v1?q={q}&domains=opendata.rdw.nl&search_context=opendata.rdw.nl&limit=100",
+    /* `order=createdAt ASC` (2026-11-07): a catalog walk with no order. NB the
+     * bare `order=createdAt` is DESCENDING (newest first) on this API, which
+     * puts a dataset created mid-walk at the head and shifts every boundary;
+     * ASC puts it at the tail. Measured on data.sf.gov, www.datos.gov.co and
+     * opendata.rdw.nl: order=frobnicate is HTTP 400 ("not a supported
+     * sort"), ASC and DESC answer different pages (datos: 2016-07-14 first
+     * against 2026-10-30), resultSetSize unchanged (148 / 1,489 / 14), and
+     * offsets 0 and 100 are disjoint. */
+    .url = "https://opendata.rdw.nl/api/catalog/v1?q={q}&domains=opendata.rdw.nl&search_context=opendata.rdw.nl&limit=100&order=createdAt%20ASC",
     .array_path = "results",
     .body_keys = "resource.description",
     .date_keys = "resource.updatedAt",
@@ -626,7 +794,15 @@ static const hp_source HP3B34_SOCRATACAT[] = {
     .record_type = "dataset",
     .tags = "\"socrata\",\"open-data\",\"catalog\",\"dataset\",\"usa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://publicreporting.cftc.gov/api/catalog/v1?q={q}&domains=publicreporting.cftc.gov&search_context=publicreporting.cftc.gov&limit=100",
+    /* `order=createdAt ASC` (2026-11-07): a catalog walk with no order. NB the
+     * bare `order=createdAt` is DESCENDING (newest first) on this API, which
+     * puts a dataset created mid-walk at the head and shifts every boundary;
+     * ASC puts it at the tail. Measured on data.sf.gov, www.datos.gov.co and
+     * opendata.rdw.nl: order=frobnicate is HTTP 400 ("not a supported
+     * sort"), ASC and DESC answer different pages (datos: 2016-07-14 first
+     * against 2026-10-30), resultSetSize unchanged (148 / 1,489 / 14), and
+     * offsets 0 and 100 are disjoint. */
+    .url = "https://publicreporting.cftc.gov/api/catalog/v1?q={q}&domains=publicreporting.cftc.gov&search_context=publicreporting.cftc.gov&limit=100&order=createdAt%20ASC",
     .array_path = "results",
     .body_keys = "resource.description",
     .date_keys = "resource.updatedAt",
@@ -654,7 +830,15 @@ static const hp_source HP3B34_SOCRATACAT[] = {
     .record_type = "dataset",
     .tags = "\"socrata\",\"open-data\",\"catalog\",\"dataset\",\"usa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://sharefulton.fultoncountyga.gov/api/catalog/v1?q={q}&domains=sharefulton.fultoncountyga.gov&search_context=sharefulton.fultoncountyga.gov&limit=100",
+    /* `order=createdAt ASC` (2026-11-07): a catalog walk with no order. NB the
+     * bare `order=createdAt` is DESCENDING (newest first) on this API, which
+     * puts a dataset created mid-walk at the head and shifts every boundary;
+     * ASC puts it at the tail. Measured on data.sf.gov, www.datos.gov.co and
+     * opendata.rdw.nl: order=frobnicate is HTTP 400 ("not a supported
+     * sort"), ASC and DESC answer different pages (datos: 2016-07-14 first
+     * against 2026-10-30), resultSetSize unchanged (148 / 1,489 / 14), and
+     * offsets 0 and 100 are disjoint. */
+    .url = "https://sharefulton.fultoncountyga.gov/api/catalog/v1?q={q}&domains=sharefulton.fultoncountyga.gov&search_context=sharefulton.fultoncountyga.gov&limit=100&order=createdAt%20ASC",
     .array_path = "results",
     .body_keys = "resource.description",
     .date_keys = "resource.updatedAt",
@@ -682,7 +866,15 @@ static const hp_source HP3B34_SOCRATACAT[] = {
     .record_type = "dataset",
     .tags = "\"socrata\",\"open-data\",\"catalog\",\"dataset\",\"italy\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.dati.friuliveneziagiulia.it/api/catalog/v1?q={q}&domains=www.dati.friuliveneziagiulia.it&search_context=www.dati.friuliveneziagiulia.it&limit=100",
+    /* `order=createdAt ASC` (2026-11-07): a catalog walk with no order. NB the
+     * bare `order=createdAt` is DESCENDING (newest first) on this API, which
+     * puts a dataset created mid-walk at the head and shifts every boundary;
+     * ASC puts it at the tail. Measured on data.sf.gov, www.datos.gov.co and
+     * opendata.rdw.nl: order=frobnicate is HTTP 400 ("not a supported
+     * sort"), ASC and DESC answer different pages (datos: 2016-07-14 first
+     * against 2026-10-30), resultSetSize unchanged (148 / 1,489 / 14), and
+     * offsets 0 and 100 are disjoint. */
+    .url = "https://www.dati.friuliveneziagiulia.it/api/catalog/v1?q={q}&domains=www.dati.friuliveneziagiulia.it&search_context=www.dati.friuliveneziagiulia.it&limit=100&order=createdAt%20ASC",
     .array_path = "results",
     .body_keys = "resource.description",
     .date_keys = "resource.updatedAt",

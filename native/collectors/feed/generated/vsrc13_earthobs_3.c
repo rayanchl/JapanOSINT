@@ -58,8 +58,21 @@ VJSON(sci_volcano_eonet_sources, "sci-volcano-eonet-sources", "NASA EONET — ev
   "en", "[\"int\",\"hazard\",\"registry\"]", 88200,
   "The agencies EONET ingests from, with their identifiers and links — needed to attribute any EONET event.");
 
+/* WFS rows in this file: `startIndex=0` (2026-11-07). geojson_emit_paged()
+ * advances a WFS cursor only when the URL already names one AND the body's own
+ * numberMatched/totalFeatures exceeds what was read (mechanism 3), so a row
+ * without `startIndex` read ONE page of a declared total and stopped. Measured
+ * per row (count=5 at startIndex 0 and 5): where the server accepted paging
+ * without a sort — GeoServer does that only when it can order by the
+ * feature type's primary key — the two pages were disjoint and the row gets
+ * `startIndex=0` alone. Where it refused ("Cannot do natural order without a
+ * primary key"), the row also gets `sortBy=<a property distinct on the
+ * row's first 200 features>`, checked the same way (pages disjoint, total
+ * unchanged; a bogus sortBy is HTTP 400 "Illegal property name", so the
+ * server reads it). Probe-sized pages (count 2/3/20/50) are 1000 now. The
+ * 20-page geojson ceiling still bounds a run; the remainder is disclosed. */
 VGEO(sci_volcano_gvp_e3_eruptions, "sci-volcano-gvp-e3-eruptions", "Smithsonian GVP — eruptions since 1960 (WFS GeoJSON)", "Smithsonian GVP — eruptions since 1960 (WFS GeoJSON)",
   "earthobs", "hazard",
-  "https://webservices.volcano.si.edu/geoserver/GVP-VOTW/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=GVP-VOTW:E3WebApp_Eruptions1960&outputFormat=application/json&count=1000",
+  "https://webservices.volcano.si.edu/geoserver/GVP-VOTW/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=GVP-VOTW:E3WebApp_Eruptions1960&outputFormat=application/json&count=1000&sortBy=Activity_ID&startIndex=0",
   "en", "[\"int\",\"volcano\",\"eruption\",\"geojson\"]", 86400,
   "Every volcanic eruption recorded since 1960 as point features with VEI, start/stop dates and volcano number.");

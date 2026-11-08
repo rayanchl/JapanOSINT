@@ -4,6 +4,7 @@ import { LuX } from 'react-icons/lu';
 import MapView from './MapView';
 import LayerPanel from './LayerPanel';
 import MapPopup from './MapPopup';
+import ErrorBoundary from '../ui/ErrorBoundary.jsx';
 import MapTopBar from './overlays/MapTopBar.jsx';
 import AOIDrawOverlay, { AoiLayer } from './overlays/AOIDrawOverlay.jsx';
 import IsochroneOverlay from './overlays/IsochroneOverlay.jsx';
@@ -336,14 +337,36 @@ export default function MapPage() {
       )}
 
       {/* Feature popup */}
+      {/* The boundary is the backstop for a popup that throws while
+        * rendering: before it, one click on an unknown station blanked the
+        * whole app (2026-11-07). The fallback keeps a close button. */}
       {popup && popupPosition && !aoiDrawing && (
-        <MapPopup
-          feature={popup.feature}
-          layerType={popup.layerType}
-          layerDef={catalog[popup.layerType]}
-          position={popupPosition}
-          onClose={handleClosePopup}
-        />
+        <ErrorBoundary
+          label="Map popup"
+          resetKey={popup.feature}
+          fallback={(err) => (
+            <div
+              className="absolute z-40 glass-panel p-3 max-w-[340px] text-xs text-neon-red"
+              style={{ left: popupPosition.x ?? 0, top: popupPosition.y ?? 0, transform: 'translate(-50%, -110%)' }}
+              role="alert"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <span>This popup failed to render: <span className="font-mono">{err?.message || String(err)}</span></span>
+                <button type="button" onClick={handleClosePopup} aria-label="Close popup" className="text-gray-400 hover:text-gray-200">
+                  <LuX size={14} aria-hidden="true" />
+                </button>
+              </div>
+            </div>
+          )}
+        >
+          <MapPopup
+            feature={popup.feature}
+            layerType={popup.layerType}
+            layerDef={catalog[popup.layerType]}
+            position={popupPosition}
+            onClose={handleClosePopup}
+          />
+        </ErrorBoundary>
       )}
 
       {/* Bottom info bar */}

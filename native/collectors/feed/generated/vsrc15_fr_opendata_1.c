@@ -28,9 +28,17 @@ VJSON(fr_data_ampmetropole_fr_publisher_adil13, "fr-data-ampmetropole-fr-publish
   "fr", "[\"fr\",\"ods\",\"opendata\",\"publisher-adil13\"]", 86400,
   "Every dataset on this portal whose publisher is ADIL13 — the publisher's full stream, with field schema and record counts. Served by the ODS platform at data.ampmetropole.fr.");
 
+/* A publisher-filtered row answers an honest 0 when the portal RENAMES the
+ * publisher, which reads exactly like a publisher that stopped publishing.
+ * Measured 2026-11-07 against each portal's own publisher facet: the rows
+ * below whose filter now names the portal's current spelling were 0 under
+ * the old one (see each id's changes.tsv line: "Administration du Premier
+ * ministre" -> "Direction de l'information légale et administrative (Premier
+ * ministre)", 0 -> 1; "Meteo France" -> "Météo-France", 0 -> 1). The ids keep
+ * the old slug so no uid moves. */
 VJSON(fr_data_ampmetropole_fr_publisher_administration_du_premier_ministre, "fr-data-ampmetropole-fr-publisher-administration-du-premier-ministre", "data.ampmetropole.fr — publisher-administration-du-premier-ministre (France)", "data.ampmetropole.fr — publisher-administration-du-premier-ministre (France)",
   "fr_opendata", "opendata",
-  "https://data.ampmetropole.fr/api/explore/v2.1/catalog/datasets?where=publisher%3D%22Administration%20du%20Premier%20ministre%22&limit=100&order_by=dataset_id",
+  "https://data.ampmetropole.fr/api/explore/v2.1/catalog/datasets?where=publisher%3D%22Direction%20de%20l%27information%20l%C3%A9gale%20et%20administrative%20%28Premier%20ministre%29%22&limit=100&order_by=dataset_id",
   "results",
   "fr", "[\"fr\",\"ods\",\"opendata\",\"publisher-administration-du-premier-ministre\"]", 86400,
   "Every dataset on this portal whose publisher is Administration du Premier ministre — the publisher's full stream, with field schema and record counts. Served by the ODS platform at data.ampmetropole.fr.");

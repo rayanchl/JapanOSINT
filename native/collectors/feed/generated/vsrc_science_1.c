@@ -219,9 +219,22 @@ VJSON_KEYED(geo_copernicus_odata_s2, "geo-copernicus-odata-s2", "Copernicus Data
   "en", "[\"sentinel2\",\"odata\",\"copernicus\"]", 3600,
   "Sentinel-2 products published in the last seven hours, oldest first.", "Id");
 
+/* WFS rows in this file: `startIndex=0` (2026-11-07). geojson_emit_paged()
+ * advances a WFS cursor only when the URL already names one AND the body's own
+ * numberMatched/totalFeatures exceeds what was read (mechanism 3), so a row
+ * without `startIndex` read ONE page of a declared total and stopped. Measured
+ * per row (count=5 at startIndex 0 and 5): where the server accepted paging
+ * without a sort — GeoServer does that only when it can order by the
+ * feature type's primary key — the two pages were disjoint and the row gets
+ * `startIndex=0` alone. Where it refused ("Cannot do natural order without a
+ * primary key"), the row also gets `sortBy=<a property distinct on the
+ * row's first 200 features>`, checked the same way (pages disjoint, total
+ * unchanged; a bogus sortBy is HTTP 400 "Illegal property name", so the
+ * server reads it). Probe-sized pages (count 2/3/20/50) are 1000 now. The
+ * 20-page geojson ceiling still bounds a run; the remainder is disclosed. */
 VGEO(geo_cwfis_nfdb_points, "geo-cwfis-nfdb-points", "CWFIS Canada — national fire database points", "カナダCWFIS — 全国火災データベース",
   "science", "wildfire",
-  "https://cwfis.cfs.nrcan.gc.ca/geoserver/public/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=public:NFDB_point&outputFormat=application/json&srsName=EPSG:4326&count=500",
+  "https://cwfis.cfs.nrcan.gc.ca/geoserver/public/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=public:NFDB_point&outputFormat=application/json&srsName=EPSG:4326&count=500&startIndex=0",
   "en", "[\"canada\",\"wildfire\",\"historical\"]", 86400,
   "Historical Canadian fire ignition points for baseline statistics.");
 
@@ -295,7 +308,7 @@ VRSS(geo_egypt_nriag, "geo-egypt-nriag", "NRIAG Egypt — geoscience bulletin", 
 
 VGEO(geo_emodnet_bathymetry_wfs, "geo-emodnet-bathymetry-wfs", "EMODnet Bathymetry — depth contours", "EMODnet 海底地形 — 等深線",
   "science", "ocean",
-  "https://ows.emodnet-bathymetry.eu/wfs?service=WFS&version=2.0.0&request=GetFeature&typeName=emodnet:contours&outputFormat=application/json&count=200",
+  "https://ows.emodnet-bathymetry.eu/wfs?service=WFS&version=2.0.0&request=GetFeature&typeName=emodnet:contours&outputFormat=application/json&count=200&startIndex=0",
   "en", "[\"bathymetry\",\"emodnet\",\"europe\"]", 86400,
   "European seabed depth contour geometry.");
 
@@ -426,12 +439,12 @@ VJSON(geo_gfz_kp_nowcast, "geo-gfz-kp-nowcast", "GFZ Potsdam — Kp index nowcas
 
 VGEO(geo_gvp_eruptions, "geo-gvp-eruptions", "Smithsonian GVP — Holocene eruptions", "スミソニアン GVP — 完新世噴火",
   "science", "volcano",
-  "https://webservices.volcano.si.edu/geoserver/GVP-VOTW/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=GVP-VOTW:Smithsonian_VOTW_Holocene_Eruptions&outputFormat=application/json&count=1000",
+  "https://webservices.volcano.si.edu/geoserver/GVP-VOTW/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=GVP-VOTW:Smithsonian_VOTW_Holocene_Eruptions&outputFormat=application/json&count=1000&sortBy=Eruption_Number&startIndex=0",
   "en", "[\"volcano\",\"gvp\",\"eruption\"]", 86400,
   "Eruption records linked to volcano coordinates; the global eruption history layer.");
 
 VGEO(geo_gvp_pleistocene, "geo-gvp-pleistocene", "Smithsonian GVP — Pleistocene volcanoes", "スミソニアン GVP — 更新世火山",
   "science", "volcano",
-  "https://webservices.volcano.si.edu/geoserver/GVP-VOTW/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=GVP-VOTW:Smithsonian_VOTW_Pleistocene_Volcanoes&outputFormat=application/json&count=1000",
+  "https://webservices.volcano.si.edu/geoserver/GVP-VOTW/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=GVP-VOTW:Smithsonian_VOTW_Pleistocene_Volcanoes&outputFormat=application/json&count=1000&sortBy=Volcano_Number&startIndex=0",
   "en", "[\"volcano\",\"gvp\"]", 86400,
   "Pleistocene volcanic centres, useful for regional hazard context.");

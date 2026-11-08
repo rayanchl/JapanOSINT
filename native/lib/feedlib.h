@@ -24,11 +24,68 @@ cJSON *feed_get_json_h(http_client *http, const char *url,
 #define FEED_ST_UNKNOWN   (-1L)
 #define FEED_ST_TRANSPORT   0L
 #define FEED_ST_UNPARSED  (-2L)
+/* The upstream answered HTTP 404 with its OWN "nothing matched" wording — an
+ * honest empty, not a refusal (see feed_status_body_is_declared_empty below).
+ * A 204 is NOT folded into this code: it is unambiguous by itself, and an
+ * existing caller (collectors/sources/geohazard_extra.c) already keys on the
+ * raw 204, so it is still reported as 204. Ask feed_status_declared_empty()
+ * rather than comparing against either value. Added 2026-11-07. */
+#define FEED_ST_DECLARED_EMPTY (-3L)
 long feed_last_json_status(void);
 void feed_last_json_status_reset(void);
 /* "HTTP 304", "a transport failure", "an HTTP 200 whose body was not JSON",
  * "an unrecorded failure" — the words a truncation notice uses for `st`. */
 void feed_status_describe(long st, char *out, size_t cap);
+
+/* THE UPSTREAM'S OWN "NOTHING MATCHED", as one rule for every engine.
+ *
+ * FDSN's `nodata` parameter names the status a service must use for an empty
+ * result, and every FDSN row in this tree passes `nodata=404`: those rows ASK
+ * to be told "nothing" with a 404. lib/hpengine.c has read that as an honest
+ * empty since 2026-10-20 (hp_status_is_declared_empty, hptest 46-46d), but
+ * feed_get_json_h() returned NULL for it, so jsonlist_emit_paged(),
+ * geojson_emit_paged() and pw_walk() returned -1 and a quiet FDSN window on a
+ * VJSON/VGEO row filed a fetch-failure — the very confusion that notice exists
+ * to prevent, in the engines that never got the fix. Found 2026-11-07 by an
+ * audit that read every copy of the decision.
+ *
+ * The rule is hpengine's, byte for byte, and so are its controls: a 204 is
+ * empty by definition; a 404 is empty ONLY when its BODY carries the
+ * service's no-data wording ("no matching", "no data available",
+ * case-insensitive). `ws.icgc.cat` answers its empty event query that way and
+ * answers the identical query with 204 when `nodata` is not forced.
+ * `eida.koeri.boun.edu.tr` answers the SAME 404 to the same row with "The
+ * requested resource does not exist on this server" — a node that does not run
+ * the service — and that must stay a failure, which is why the status alone
+ * and the row's URL are never the discriminator.
+ *
+ * static inline, in the header, so lib/hpengine.c can share it without a link
+ * dependency on this file (hptest links hpengine.c without feedlib.c). */
+static inline int feed_ci_contains(const char *hay, const char *needle) {
+  if (!hay || !needle || !*needle) return 0;
+  for (; *hay; hay++) {
+    const char *h = hay, *n = needle;
+    while (*h && *n) {
+      char a = *h, b = *n;
+      if (a >= 'A' && a <= 'Z') a = (char)(a - 'A' + 'a');
+      if (b >= 'A' && b <= 'Z') b = (char)(b - 'A' + 'a');
+      if (a != b) break;
+      h++; n++;
+    }
+    if (!*n) return 1;
+  }
+  return 0;
+}
+static inline int feed_status_body_is_declared_empty(long status, const char *body) {
+  if (status == 204) return 1;                  /* no content, by definition */
+  if (status != 404 || !body) return 0;
+  return feed_ci_contains(body, "no matching") ||
+         feed_ci_contains(body, "no data available");
+}
+/* Is a status recorded by feed_last_json_status() an honest empty? */
+static inline int feed_status_declared_empty(long st) {
+  return st == 204 || st == FEED_ST_DECLARED_EMPTY;
+}
 
 /* GET url, return raw body (malloc'd, caller frees) or NULL. */
 char *feed_get_text(http_client *http, const char *url, int timeout_ms);

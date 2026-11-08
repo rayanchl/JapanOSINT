@@ -62,20 +62,21 @@ static int emit_record(intel_sink *sink, const cJSON *r) {
   if (uen)  cJSON_AddStringToObject(props, "uen", uen);
   if (stat) cJSON_AddStringToObject(props, "status", stat);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = uen ? uen : name;
   it.title           = name ? name : uen;
   it.summary         = stat;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "en";
   it.record_type     = "acra-entity";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"SG_ACRA\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -97,12 +98,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   free(enc);
 
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "sg_acra");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   int emitted = 0;
   const cJSON *result = cJSON_GetObjectItem(root, "result");

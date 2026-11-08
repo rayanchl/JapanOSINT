@@ -75,7 +75,7 @@ static int dw_emit_answer(intel_sink *sink, const char *domain,
   cJSON_AddStringToObject(props, "value", rdata);
   if (ttl >= 0) cJSON_AddNumberToObject(props, "ttl", ttl);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char title[512];
@@ -83,17 +83,18 @@ static int dw_emit_answer(intel_sink *sink, const char *domain,
   char key[600];
   snprintf(key, sizeof key, "%s|%s|%d|%.400s", domain, rtype, idx, rdata);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = key;
   it.title           = title;
   it.summary         = rdata;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "en";
   it.record_type     = "dns-record";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"dns\",\"doh\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -108,13 +109,12 @@ static int dw_doh_query(const source_ctx *ctx, intel_sink *sink,
   /* application/dns-json is the DoH JSON content type (dns.google & cloudflare). */
   const char *hdrs[] = {
     "Accept: application/dns-json",
-    "User-Agent: JapanOSINT/1.0 (dns-resolve)",
     NULL };
   char *body = jo_get(ctx, url, hdrs, "DOH_RESOLVE");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   int emitted = 0, idx = 0;
   cJSON *answ = cJSON_GetObjectItem(root, "Answer");
   if (cJSON_IsArray(answ)) {
@@ -216,13 +216,12 @@ static int dw_run_rdap(const source_ctx *ctx, intel_sink *sink) {
 
   const char *hdrs[] = {
     "Accept: application/rdap+json, application/json",
-    "User-Agent: JapanOSINT/1.0 (rdap-ip)",
     NULL };
   char *body = jo_get(ctx, url, hdrs, "RDAP_IP");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) { fprintf(stderr, "[RDAP_IP] parse fail\n"); return 0; }
+  if (!root) { fprintf(stderr, "[RDAP_IP] parse fail\n"); return -1; }
 
   const char *handle    = jo_sv(root, "handle");
   const char *name      = jo_sv(root, "name");
@@ -278,7 +277,7 @@ static int dw_run_rdap(const source_ctx *ctx, intel_sink *sink) {
   if (org)      cJSON_AddStringToObject(props, "org", org);
   if (country)  cJSON_AddStringToObject(props, "country", country);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char title[512];
@@ -287,17 +286,18 @@ static int dw_run_rdap(const source_ctx *ctx, intel_sink *sink) {
   char key[256];
   snprintf(key, sizeof key, "RDAP_IP|%s", handle ? handle : ip);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = key;
   it.title           = title;
   it.summary         = org ? org : name;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "en";
   it.record_type     = "ip-whois";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"rdap\",\"whois\"]";
   sink->emit(sink, &it);
-  free(bj); free(pj); free(org);
+  free(bj); free(bt); free(pj); free(org);
   cJSON_Delete(root);
   fprintf(stderr, "[RDAP_IP] emitted 1\n");
   return 0;

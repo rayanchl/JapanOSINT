@@ -514,12 +514,57 @@ static inline int jo_is_utf8(const char *s, size_t n) {
  * clean screen. A sanctions source that reports CLEAR because the download did
  * not finish is worse than one that fails loudly, so a caller fetching a whole
  * register asks for the time it needs. */
+/* The HTTP status of the last jo_get / jo_get_t / jo_get_st on this thread
+ * (2026-11-07). jo_get() returns NULL for EVERY non-200 and used to keep no
+ * status, so a collector could not tell "the upstream said no such record"
+ * (404 / 204) from "the upstream refused or broke" (429, 5xx, a transport
+ * error) — and 169 comments in collectors/sources call the NULL an "honest
+ * empty" whatever caused it, which is rule 1's invisible nothing: a refused
+ * fetch reading exactly like a source that ran and found nothing.
+ *
+ * 0 means no response at all (a transport failure: DNS, TLS, reset, timeout).
+ * The slot is per thread (collectors run on worker threads) and, because this
+ * header is static inline, per translation unit — which is all a caller
+ * needs, since it reads the status of a fetch it made itself a line earlier. */
+static inline long *jo__last_status_slot(void) {
+  static __thread long st;
+  return &st;
+}
+static inline long jo_last_status(void) { return *jo__last_status_slot(); }
+
+/* The return code a collector should give for a NULL jo_get body, from the
+ * status that produced it: 0 (an honest empty) ONLY for 204, or for 404 when
+ * the caller says this API uses 404 to mean "no such entity" — an entity in
+ * the URL PATH (`/package/<name>`, `/rdap/domain/<d>`). Everything else —
+ * 429, 5xx, 401/403, a 404 on a QUERY endpoint (which means the endpoint
+ * moved), or no response at all — is -1, so the scheduler and the dispatcher
+ * record a failure and file the fetch-failure disclosure instead of "no_data".
+ * A remedy must not name a knob that cannot move: this deliberately does not
+ * guess at 400/422, which some APIs use for "bad query" and others for
+ * "nothing found"; those stay failures until an API is measured. */
+static inline int jo_fail_rc(long status, int not_found_is_empty) {
+  if (status == 204) return 0;
+  if (status == 404 && not_found_is_empty) return 0;
+  return -1;
+}
+
+/* Fold one helper's return into a run total: a count adds, a -1 is COUNTED as
+ * a failure rather than subtracted (a helper that now returns -1 on a refused
+ * fetch must not make `n += helper()` under-report the records the others
+ * emitted). A run ends `return (failed && n == 0) ? -1 : 0;` — failed only
+ * when something failed AND nothing was emitted. */
+static inline void jo_acc(int r, int *n, int *failed) {
+  if (r > 0) *n += r;
+  else if (r < 0) (*failed)++;
+}
+
 static inline char *jo_get_t(const source_ctx *ctx, const char *url,
                              const char *const *headers, const char *tag,
                              int timeout_ms) {
   http_response hr = {0};
   int rc = http_request(ctx->http, "GET", url, headers, NULL, 0,
                         timeout_ms > 0 ? timeout_ms : 20000, 1, &hr);
+  *jo__last_status_slot() = (rc != 0) ? 0 : hr.status;
   if (rc != 0 || hr.status != 200 || !hr.body) {
     fprintf(stderr, "[%s] http status=%ld\n", tag, hr.status);
     http_response_free(&hr);
@@ -541,6 +586,67 @@ static inline char *jo_get(const source_ctx *ctx, const char *url,
   return jo_get_t(ctx, url, headers, tag, 20000);
 }
 
+/* jo_get with the status handed back explicitly (0 = no response). Same body
+ * contract as jo_get; jo_get's own signature is unchanged on purpose — 130
+ * callers. */
+static inline char *jo_get_st(const source_ctx *ctx, const char *url,
+                              const char *const *headers, const char *tag,
+                              long *status) {
+  char *b = jo_get_t(ctx, url, headers, tag, 20000);
+  if (status) *status = jo_last_status();
+  return b;
+}
+
+
+/* ------------------------------------------------ record-shape helpers ---- */
+
+/* Copy every top-level member of the JSON object `json` into `p` where `p`
+ * does not already carry that key (2026-11-07). Many hand-written pivots built
+ * the record's fields into a JSON BODY and left `properties` as
+ * {"service":…,"success":true}, so nothing that reads properties — filters,
+ * the map, the analysis prompt — could see a single field. Additive: an
+ * existing property is never overwritten. */
+static inline void jo_props_absorb(cJSON *p, const char *json) {
+  if (!p || !json) return;
+  cJSON *d = cJSON_Parse(json);
+  if (!cJSON_IsObject(d)) { cJSON_Delete(d); return; }
+  for (cJSON *c = d->child; c; c = c->next)
+    if (c->string && !cJSON_GetObjectItem(p, c->string))
+      cJSON_AddItemToObject(p, c->string, cJSON_Duplicate(c, 1));
+  cJSON_Delete(d);
+}
+
+/* A TEXT body from a JSON object's values: "key: value · key: value", nested
+ * values printed compactly. A record's body is text, never its JSON (see
+ * CLAUDE.md rule 4's note on the sink). malloc'd; NULL when `json` is not an
+ * object or empty. */
+static inline char *jo_values_text(const char *json) {
+  cJSON *d = json ? cJSON_Parse(json) : NULL;
+  if (!cJSON_IsObject(d)) { cJSON_Delete(d); return NULL; }
+  size_t cap = 256, len = 0;
+  char *out = malloc(cap);
+  if (!out) { cJSON_Delete(d); return NULL; }
+  out[0] = 0;
+  for (cJSON *c = d->child; c; c = c->next) {
+    if (!c->string || cJSON_IsNull(c)) continue;
+    char *v = cJSON_IsString(c) ? NULL : cJSON_PrintUnformatted(c);
+    const char *vs = cJSON_IsString(c) ? c->valuestring : v;
+    if (!vs || !*vs) { free(v); continue; }
+    size_t need = len + strlen(c->string) + strlen(vs) + 8;
+    if (need > cap) {
+      while (cap < need) cap *= 2;
+      char *no = realloc(out, cap);
+      if (!no) { free(v); break; }
+      out = no;
+    }
+    len += (size_t)snprintf(out + len, cap - len, "%s%s: %s",
+                            len ? " · " : "", c->string, vs);
+    free(v);
+  }
+  cJSON_Delete(d);
+  if (!len) { free(out); return NULL; }
+  return out;
+}
 
 /* ------------------------------------------- exhaustive-use disclosure (R7) */
 

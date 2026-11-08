@@ -480,34 +480,10 @@ enum CaseActivityKind {
 
 // MARK: - Timestamps
 
-/// Tolerant parser for the Cases subtree.
-///
-/// The shared `relativeTime(_:)` helper only accepts ISO-8601, but `cases`,
-/// `case_items`, `case_activity` and `annotations` all default their timestamp
-/// columns to SQLite's `datetime('now')`, which emits `YYYY-MM-DD HH:MM:SS`
-/// (UTC, no `T`, no zone). Feeding that to ISO8601DateFormatter yields nil and
-/// every row on the screen would read "—". Snapshot `captured_at` IS real
-/// ISO-8601, so both shapes have to work.
-func caseDate(_ raw: String?) -> Date? {
-    guard let raw, !raw.isEmpty else { return nil }
-
-    let isoFractional = ISO8601DateFormatter()
-    isoFractional.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-    if let d = isoFractional.date(from: raw) { return d }
-
-    let iso = ISO8601DateFormatter()
-    iso.formatOptions = [.withInternetDateTime]
-    if let d = iso.date(from: raw) { return d }
-
-    let sqlite = DateFormatter()
-    sqlite.locale = Locale(identifier: "en_US_POSIX")
-    sqlite.timeZone = TimeZone(identifier: "UTC")
-    sqlite.dateFormat = "yyyy-MM-dd HH:mm:ss"
-    if let d = sqlite.date(from: raw) { return d }
-
-    sqlite.dateFormat = "yyyy-MM-dd"
-    return sqlite.date(from: raw)
-}
+/// The Cases subtree's parser. It used to be its own tolerant copy because the
+/// shared `isoToDate` rejected SQLite's `datetime('now')` shape; that parser
+/// accepts it now, so this only delegates.
+func caseDate(_ raw: String?) -> Date? { isoToDate(raw) }
 
 func caseRelativeTime(_ raw: String?) -> String {
     guard let d = caseDate(raw) else { return "—" }

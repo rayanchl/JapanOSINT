@@ -175,9 +175,38 @@ VJSON(us_federalregister_suggested_searches, "us-federalregister-suggested-searc
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
   "FR's own editor-curated topic searches per section (environment, money, world, science-and-technology, business-and-industry, health-and-public-welfare): slug, title, description and the exact search conditions to replay. Ready-made high-signal queries.");
 
+/* THE LEGISTAR MATTER ROWS, RE-SIZED AND RE-ORDERED (2026-11-07).
+ *
+ * Each read `$top=2&$orderby=MatterLastModifiedUtc desc` — the authoring
+ * probe's page size, shipped: 2 x the 20-page ceiling = 40 matters a run, and
+ * ordered on a field an EDIT moves, so a matter amended mid-walk shifts every
+ * later page. Nashville's row below already carried the measured fix
+ * ($top=1000&$orderby=MatterId, 8,439 of 8,439 in 9 pages). Applied per
+ * client from each client's own size, measured the same day by bisecting
+ * `$skip` on `$orderby=MatterId` (one-row requests): Legistar caps `$top` at
+ * 1000 (2000 is HTTP 400 naming the limit), `$orderby=Frobnicate` is HTTP 400
+ * naming the property (so the server reads the sort), and MatterId asc/desc
+ * answer opposite ends (1,2,3 / 10730,10729,10727 on Baltimore).
+ *
+ *   ≤ 20 pages of 1000 — read COMPLETE, ascending: sacramento 8,809,
+ *     baltimore 9,591, miamidade 107.
+ *   > 20,000 — MatterId DESCENDING: the newest 20,000 matters by id, a
+ *     window rather than a frozen oldest slice, and a new matter landing at
+ *     the head can only REPEAT one record across a page boundary, never skip
+ *     one (an insert shifts records down, onto the page about to be read).
+ *     austintexas 21,043, kingcounty 23,456, pittsburgh 31,969, oakland
+ *     33,112, sfgov 33,880, boston 37,954, stpaul 40,863, denver 51,428,
+ *     milwaukee 62,843, columbus 115,652. The remainder is disclosed by the
+ *     walk's full-last-page notice; VJSON cannot declare page_resume, so a
+ *     complete read of these needs an hp row with a cycle.
+ *
+ * us-legistar-sfgov-matters also moves from VJSON to VJSON_KEYED on MatterId,
+ * as its siblings carry: 1,000 MatterIds distinct of 1,000 and MatterTitle
+ * only 992, so the title-hash fallback would fold distinct matters. Its uids
+ * change with the key (old rows: tools/cleanup_stale_uids.py territory). */
 VJSON_KEYED(us_legistar_austin_matters, "us-legistar-austin-matters", "Legistar — Austin, TX City Council legislation", "Legistar — Austin, TX City Council legislation",
   "us_legal", "legal",
-  "https://webapi.legistar.com/v1/austintexas/matters?$top=2&$orderby=MatterLastModifiedUtc%20desc",
+  "https://webapi.legistar.com/v1/austintexas/matters?$top=1000&$orderby=MatterId%20desc",
   "",
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
   "Austin City Council items (MatterFile '26-2183' style) with full Legistar matter fields and the sponsors/histories/attachments/versions sub-resources off MatterId.",
@@ -185,7 +214,7 @@ VJSON_KEYED(us_legistar_austin_matters, "us-legistar-austin-matters", "Legistar 
 
 VJSON_KEYED(us_legistar_baltimore_matters, "us-legistar-baltimore-matters", "Legistar — Baltimore City Council legislation", "Legistar — Baltimore City Council legislation",
   "us_legal", "legal",
-  "https://webapi.legistar.com/v1/baltimore/matters?$top=2&$orderby=MatterLastModifiedUtc%20desc",
+  "https://webapi.legistar.com/v1/baltimore/matters?$top=1000&$orderby=MatterId",
   "",
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
   "Baltimore City Council legislation (MatterFile '25-0093') with full Legistar matter metadata and the four MatterId sub-resource hops.",
@@ -193,7 +222,7 @@ VJSON_KEYED(us_legistar_baltimore_matters, "us-legistar-baltimore-matters", "Leg
 
 VJSON_KEYED(us_legistar_boston_matters, "us-legistar-boston-matters", "Legistar — Boston City Council legislation", "Legistar — Boston City Council legislation",
   "us_legal", "legal",
-  "https://webapi.legistar.com/v1/boston/matters?$top=2&$orderby=MatterLastModifiedUtc%20desc",
+  "https://webapi.legistar.com/v1/boston/matters?$top=1000&$orderby=MatterId%20desc",
   "",
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
   "Boston City Council dockets in the Legistar schema: MatterId, MatterFile (e.g. '2026-0932'), MatterName, MatterTitle, MatterTypeName, MatterStatusName, sponsoring body and lifecycle dates. Same four detail hops off MatterId.",
@@ -201,7 +230,7 @@ VJSON_KEYED(us_legistar_boston_matters, "us-legistar-boston-matters", "Legistar 
 
 VJSON_KEYED(us_legistar_columbus_matters, "us-legistar-columbus-matters", "Legistar — Columbus, OH City Council legislation", "Legistar — Columbus, OH City Council legislation",
   "us_legal", "legal",
-  "https://webapi.legistar.com/v1/columbus/matters?$top=2&$orderby=MatterLastModifiedUtc%20desc",
+  "https://webapi.legistar.com/v1/columbus/matters?$top=1000&$orderby=MatterId%20desc",
   "",
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
   "Columbus City Council ordinances (MatterFile '1023-2026') in the Legistar schema with the four MatterId detail sub-resources.",
@@ -209,7 +238,7 @@ VJSON_KEYED(us_legistar_columbus_matters, "us-legistar-columbus-matters", "Legis
 
 VJSON_KEYED(us_legistar_denver_matters, "us-legistar-denver-matters", "Legistar — Denver City Council legislation", "Legistar — Denver City Council legislation",
   "us_legal", "legal",
-  "https://webapi.legistar.com/v1/denver/matters?$top=2&$orderby=MatterLastModifiedUtc%20desc",
+  "https://webapi.legistar.com/v1/denver/matters?$top=1000&$orderby=MatterId%20desc",
   "",
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
   "Denver City Council bills and resolutions in the Legistar schema (MatterFile '26-1168'), with the standard MatterId detail hops to sponsors, action histories with votes, attachments and versions.",
@@ -217,7 +246,7 @@ VJSON_KEYED(us_legistar_denver_matters, "us-legistar-denver-matters", "Legistar 
 
 VJSON_KEYED(us_legistar_kingcounty_matters, "us-legistar-kingcounty-matters", "Legistar — King County, WA Council legislation", "Legistar — King County, WA Council legislation",
   "us_legal", "legal",
-  "https://webapi.legistar.com/v1/kingcounty/matters?$top=2&$orderby=MatterLastModifiedUtc%20desc",
+  "https://webapi.legistar.com/v1/kingcounty/matters?$top=1000&$orderby=MatterId%20desc",
   "",
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
   "King County Council ordinances and motions (MatterFile '2026-0223') in the Legistar schema, with sponsors/histories/attachments/versions available off MatterId.",
@@ -225,7 +254,7 @@ VJSON_KEYED(us_legistar_kingcounty_matters, "us-legistar-kingcounty-matters", "L
 
 VJSON_KEYED(us_legistar_miamidade_matters, "us-legistar-miamidade-matters", "Legistar — Miami-Dade County Commission legislation", "Legistar — Miami-Dade County Commission legislation",
   "us_legal", "legal",
-  "https://webapi.legistar.com/v1/miamidade/matters?$top=2&$orderby=MatterLastModifiedUtc%20desc",
+  "https://webapi.legistar.com/v1/miamidade/matters?$top=1000&$orderby=MatterId",
   "",
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
   "Miami-Dade County Commission items (MatterFile '161058') with full Legistar matter fields and the MatterId detail hops.",
@@ -233,7 +262,7 @@ VJSON_KEYED(us_legistar_miamidade_matters, "us-legistar-miamidade-matters", "Leg
 
 VJSON_KEYED(us_legistar_milwaukee_matters, "us-legistar-milwaukee-matters", "Legistar — Milwaukee Common Council legislation", "Legistar — Milwaukee Common Council legislation",
   "us_legal", "legal",
-  "https://webapi.legistar.com/v1/milwaukee/matters?$top=2&$orderby=MatterLastModifiedUtc%20desc",
+  "https://webapi.legistar.com/v1/milwaukee/matters?$top=1000&$orderby=MatterId%20desc",
   "",
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
   "Milwaukee Common Council files (MatterFile '26085') with full Legistar matter metadata and the sponsors/histories/attachments/versions hops off MatterId.",
@@ -255,7 +284,7 @@ VJSON_IDKEYS(us_legistar_nashville_matters, "us-legistar-nashville-matters", "Le
 
 VJSON_KEYED(us_legistar_oakland_matters, "us-legistar-oakland-matters", "Legistar — Oakland City Council legislation", "Legistar — Oakland City Council legislation",
   "us_legal", "legal",
-  "https://webapi.legistar.com/v1/oakland/matters?$top=2&$orderby=MatterLastModifiedUtc%20desc",
+  "https://webapi.legistar.com/v1/oakland/matters?$top=1000&$orderby=MatterId%20desc",
   "",
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
   "Oakland City Council items (MatterFile 'AR2026-001') in the Legistar schema with the four MatterId sub-resources for sponsors, action history, attachments and versions.",
@@ -263,7 +292,7 @@ VJSON_KEYED(us_legistar_oakland_matters, "us-legistar-oakland-matters", "Legista
 
 VJSON_KEYED(us_legistar_pittsburgh_matters, "us-legistar-pittsburgh-matters", "Legistar — Pittsburgh City Council legislation", "Legistar — Pittsburgh City Council legislation",
   "us_legal", "legal",
-  "https://webapi.legistar.com/v1/pittsburgh/matters?$top=2&$orderby=MatterLastModifiedUtc%20desc",
+  "https://webapi.legistar.com/v1/pittsburgh/matters?$top=1000&$orderby=MatterId%20desc",
   "",
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
   "Pittsburgh City Council files (MatterFile '2026-0606') in the Legistar schema with the standard MatterId sub-resource hops.",
@@ -271,15 +300,17 @@ VJSON_KEYED(us_legistar_pittsburgh_matters, "us-legistar-pittsburgh-matters", "L
 
 VJSON_KEYED(us_legistar_sacramento_matters, "us-legistar-sacramento-matters", "Legistar — Sacramento City Council legislation", "Legistar — Sacramento City Council legislation",
   "us_legal", "legal",
-  "https://webapi.legistar.com/v1/sacramento/matters?$top=2&$orderby=MatterLastModifiedUtc%20desc",
+  "https://webapi.legistar.com/v1/sacramento/matters?$top=1000&$orderby=MatterId",
   "",
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
   "Sacramento City Council items (MatterFile '2026-01427') with full Legistar matter fields and MatterId detail hops to sponsors, histories, attachments and versions.",
   "MatterId");
 
+/* $top=2 was the authoring probe's size (40 a run over 20 pages). Measured
+ * 2026-11-07: 83 bodies, 83 distinct BodyId in one $top=1000 page (was 2 x 20 pages = 40); the sort makes the one page deterministic. */
 VJSON(us_legistar_seattle_bodies, "us-legistar-seattle-bodies", "Legistar — legislative bodies and committees", "Legistar — legislative bodies and committees",
   "us_legal", "legal",
-  "https://webapi.legistar.com/v1/seattle/bodies?$top=2",
+  "https://webapi.legistar.com/v1/seattle/bodies?$top=1000&$orderby=BodyId",
   "",
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
   "Council, committees, boards and commissions: BodyId, BodyGuid, BodyName, BodyTypeId/Name, BodyMeetFlag, BodyActiveFlag, BodyDescription, BodyContactNameId, BodyLastModifiedUtc. The org chart above matters and events.");
@@ -312,24 +343,27 @@ VJSON(us_legistar_seattle_matter_versions, "us-legistar-seattle-matter-versions"
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
   "Key/Value pairs mapping each internal text id to its version number ([{\"Key\":\"18624\",\"Value\":\"1\"},...]), letting you retrieve every successive draft of an ordinance and diff what changed between readings.");
 
+/* $top=2 was the authoring probe's size (40 a run over 20 pages). Measured
+ * 2026-11-07: 630 persons, 630 distinct PersonId in one $top=1000 page (was 40); the sort makes the one page deterministic. */
 VJSON_KEYED(us_legistar_seattle_persons, "us-legistar-seattle-persons", "Legistar — council members and filers", "Legistar — council members and filers",
   "us_legal", "legal",
-  "https://webapi.legistar.com/v1/seattle/persons?$top=2",
+  "https://webapi.legistar.com/v1/seattle/persons?$top=1000&$orderby=PersonId",
   "",
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
   "Person registry for the jurisdiction: PersonId, PersonGuid, PersonFirstName/LastName/FullName, PersonActiveFlag, PersonCanViewFlag, PersonEmail, PersonWWW, PersonPhone, PersonAddress1/City1/State1/Zip1, PersonLastModifiedUtc. PersonId joins to MatterSponsorNameId and to vote records.",
   "PersonId");
 
-VJSON(us_legistar_sfgov_matters, "us-legistar-sfgov-matters", "Legistar — San Francisco Board of Supervisors legislation", "Legistar — San Francisco Board of Supervisors legislation",
+VJSON_KEYED(us_legistar_sfgov_matters, "us-legistar-sfgov-matters", "Legistar — San Francisco Board of Supervisors legislation", "Legistar — San Francisco Board of Supervisors legislation",
   "us_legal", "legal",
-  "https://webapi.legistar.com/v1/sfgov/matters?$top=2&$orderby=MatterLastModifiedUtc%20desc",
+  "https://webapi.legistar.com/v1/sfgov/matters?$top=1000&$orderby=MatterId%20desc",
   "",
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
-  "Same Legistar schema as Seattle for the San Francisco Board of Supervisors: MatterId, MatterFile, MatterName, MatterTitle, type, status, body, intro/agenda/passed/enactment dates. Supports the identical /matters/{MatterId}/sponsors|histories|attachments|versions detail hops.");
+  "Same Legistar schema as Seattle for the San Francisco Board of Supervisors: MatterId, MatterFile, MatterName, MatterTitle, type, status, body, intro/agenda/passed/enactment dates. Supports the identical /matters/{MatterId}/sponsors|histories|attachments|versions detail hops.",
+  "MatterId");
 
 VJSON_KEYED(us_legistar_stpaul_matters, "us-legistar-stpaul-matters", "Legistar — Saint Paul, MN City Council legislation", "Legistar — Saint Paul, MN City Council legislation",
   "us_legal", "legal",
-  "https://webapi.legistar.com/v1/stpaul/matters?$top=2&$orderby=MatterLastModifiedUtc%20desc",
+  "https://webapi.legistar.com/v1/stpaul/matters?$top=1000&$orderby=MatterId%20desc",
   "",
   "en", "[\"us\",\"legal\",\"batch16\",\"high-penetrancy\"]", 43200,
   "Saint Paul City Council ordinances and resolutions (MatterFile 'Ord 26-35') with full Legistar matter metadata and the MatterId detail hops.",

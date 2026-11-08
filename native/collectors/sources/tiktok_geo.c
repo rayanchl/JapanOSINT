@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 /* p?.cardItem?.geo?.lon != null (string or number). */
 static int num_of(const cJSON *v, double *out) {
@@ -24,7 +25,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *tok = getenv("TIKTOK_MS_TOKEN");
   if (!tok || !*tok) {
     fprintf(stderr, "[tiktok-geo] gated (no TIKTOK_MS_TOKEN)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "tiktok-geo", "tiktok-geo", (const char *const[]){"TIKTOK_MS_TOKEN", NULL}, NULL, NULL);
   }
   char url[512];
   snprintf(url, sizeof url,

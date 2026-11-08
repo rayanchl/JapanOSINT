@@ -22,6 +22,8 @@
  *   lib/pagewalk.c   20   $JO_PAGE_MAX            the generated V* fleet
  *   lib/jsonlist.c   20   $JO_JSONLIST_PAGE_MAX   hpengine rows with page_walk=1
  *   lib/hpengine.c   10   (no knob at all)        rows declaring their own paging
+ *   lib/geojson.c    20   $JO_GEOJSON_PAGE_MAX    the VGEO fleet — missed by the
+ *                                                 unification, found 2026-11-07
  *
  * So `JO_PAGE_MAX=50` raised one population, silently did nothing for the
  * second, and could not reach the third at any value — and the third is the
@@ -85,69 +87,135 @@ cJSON *pw_fetch_json(const source_ctx *c, const char *url, void *ud) {
  * guess. A wrong `total` would turn a disclosure into a false claim, which is
  * worse than saying nothing. */
 
-/* A next-page URL the SERVER supplied. Only absolute http(s) is accepted: a
- * relative or templated value would have to be resolved against assumptions
- * about the API, which is exactly what this module refuses to do. */
-static char *pw_next_link(const cJSON *doc) {
-  if (!cJSON_IsObject(doc)) return NULL;
-  static const char *const direct[] = {
-    "next", "@odata.nextLink", "nextLink", "next_page_url", "nextPageUrl",
-    /* `next_url` and `next_page` are the DRF/CKAN-adjacent spellings; they
-     * came from the jsonlist page walk this module absorbed, where they were
-     * measured against the live fleet. Same contract as the rest of the list:
-     * an absolute http(s) URL the SERVER handed us, or nothing. */
-    "next_url", "next_page", "nextRecordsUrl", NULL
-  };
-  static const char *const nested[] = { "links", "paging", "meta", "pagination", NULL };
+/* Dotted lookup that tolerates a missing level, with the literal-key fallback
+ * for a key that itself contains a dot (`@odata.nextLink`, `odata.count`):
+ * tried only AFTER the split fails, so a path that resolves by splitting
+ * resolves to the same node. lib/jsonlist.c's dotted() is the original; this
+ * is the copy the shared readers below use, CASE-INSENSITIVE as that one is
+ * (cJSON_GetObjectItem), because the VJSON fleet — the larger population —
+ * has always been read that way. */
+static const cJSON *pw_dotted(const cJSON *doc, const char *path) {
+  if (!doc || !path || !*path) return NULL;
+  char buf[128];
+  snprintf(buf, sizeof buf, "%s", path);
+  const cJSON *cur = doc;
+  char *save = NULL;
+  for (char *tok = strtok_r(buf, ".", &save); tok && cur;
+       tok = strtok_r(NULL, ".", &save))
+    cur = cJSON_GetObjectItem(cur, tok);
+  if (!cur && strchr(path, '.')) cur = cJSON_GetObjectItem(doc, path);
+  return cur;
+}
 
-  const cJSON *cand = NULL;
-  for (int i = 0; direct[i] && !cand; i++) {
-    const cJSON *v = cJSON_GetObjectItemCaseSensitive(doc, direct[i]);
-    if (cJSON_IsString(v)) cand = v;
+/* See pagewalk.h. Moved here from lib/jsonlist.c's resolve_link (2026-11-07)
+ * so the three walkers resolve a link the same way. */
+char *jo_resolve_link(const char *base, const char *href) {
+  if (!href || !href[0]) return NULL;
+  size_t hl = strlen(href);
+  if (hl > 4000) return NULL;            /* not a URL anyone meant */
+  if (!strncasecmp(href, "http://", 7) || !strncasecmp(href, "https://", 8))
+    return strdup(href);
+  if (!base || (strncasecmp(base, "http://", 7) && strncasecmp(base, "https://", 8)))
+    return NULL;
+  size_t cap = strlen(base) + hl + 2;
+  char *out = malloc(cap);
+  if (!out) return NULL;
+  if (href[0] == '?') {                       /* same path, new query */
+    const char *q = strchr(base, '?');
+    const char *f = strchr(base, '#');
+    if (!q || (f && f < q)) q = f;
+    size_t head = q ? (size_t)(q - base) : strlen(base);
+    memcpy(out, base, head);
+    snprintf(out + head, cap - head, "%s", href);
+    return out;
   }
-  for (int i = 0; nested[i] && !cand; i++) {
-    const cJSON *o = cJSON_GetObjectItemCaseSensitive(doc, nested[i]);
-    if (!cJSON_IsObject(o)) continue;
-    const cJSON *v = cJSON_GetObjectItemCaseSensitive(o, "next");
-    if (cJSON_IsObject(v)) v = cJSON_GetObjectItemCaseSensitive(v, "href");
-    /* `meta.nextLink` — OCHA FTS (api.hpc.tools); the top-level spelling is
-     * already in `direct` above, the nested one was not. */
-    if (!cJSON_IsString(v)) v = cJSON_GetObjectItemCaseSensitive(o, "nextLink");
-    if (cJSON_IsString(v)) cand = v;
+  if (href[0] == '/' && href[1] != '/') {     /* same origin, new path */
+    const char *p = strstr(base, "://");
+    const char *e = p ? p + 3 : base;
+    while (*e && *e != '/' && *e != '?' && *e != '#') e++;
+    size_t head = (size_t)(e - base);
+    memcpy(out, base, head);
+    snprintf(out + head, cap - head, "%s", href);
+    return out;
   }
-  /* The ARRAY form: {"links":[{"rel":"self",…},{"rel":"next","href":…}]}, which
-   * Oracle ORDS, HAL and OGC API servers publish. The object form above cannot
-   * see it, so br-tcu-inabilitados (ORDS) stopped at its first 25 records of
-   * 766 (measured 2026-09-14). Selected by rel, never by position: a server is
-   * free to put "self" first. */
-  if (!cand) {
-    const cJSON *arr = cJSON_GetObjectItemCaseSensitive(doc, "links");
-    const cJSON *l;
-    if (cJSON_IsArray(arr)) {
-      cJSON_ArrayForEach(l, arr) {
-        const cJSON *rel  = cJSON_GetObjectItemCaseSensitive(l, "rel");
-        const cJSON *href = cJSON_GetObjectItemCaseSensitive(l, "href");
-        if (cJSON_IsString(rel) && rel->valuestring &&
-            strcasecmp(rel->valuestring, "next") == 0 && cJSON_IsString(href)) {
-          cand = href;
-          break;
-        }
+  free(out);
+  return NULL;
+}
+
+/* THE ONE NEXT-LINK READER (2026-11-07). There were three, and an audit that
+ * read every copy found each blind where another could see:
+ *
+ *   lib/pagewalk.c   pw_next_link   absolute links only — so `nextRecordsUrl`
+ *                                   (Salesforce, ALWAYS a path: "/services/…")
+ *                                   sat in its list matching nothing, and a
+ *                                   relative `next` stopped the walk; lacked
+ *                                   `links.next_url`, `nextUrl`,
+ *                                   `pagination.next_page` and friends
+ *   lib/jsonlist.c   next_link      lacked `nextLink`, `next_page_url`,
+ *                                   `nextRecordsUrl`, `{links,paging,
+ *                                   pagination}.nextLink`
+ *   lib/geojson.c    gj_next_link   only `links[rel=next]`, and handed a
+ *                                   relative href to the fetch UNRESOLVED
+ *
+ * So the union, resolved one way. Relative resolution is limited to the two
+ * spellings RFC 3986 makes unambiguous and that actually occur — "?query"
+ * (bio.tools answers `"next": "?page=2&format=json"`) and "/absolute-path" —
+ * which take nothing from the API but the origin and path we already asked.
+ * Anything else (a bare cursor token, another scheme, "//host") is not a URL
+ * and is refused rather than glued onto the base and hoped for. A link that is
+ * present but null/false/empty means "last page" in every dialect here.
+ * Ordered most- to least-specific; the ARRAY form is selected by rel, never by
+ * position, because a server is free to put "self" first. */
+char *jo_next_link(const cJSON *doc, const char *base) {
+  if (!cJSON_IsObject(doc)) return NULL;
+  static const char *const KEYS[] = {
+    "links.next", "next", "next_url", "nextUrl", "nextPageUrl",
+    "meta.next", "paging.next", "@odata.nextLink", "next_page",
+    "meta.pagination.next", "pagination.next", "pagination.next_page",
+    "meta.pagination.next_page", "links.next_url",
+    /* OCHA FTS (api.hpc.tools) puts it at meta.nextLink: ocha-fts-flow-2026
+     * stopped after its first 200 of 20,161 flows (measured 2026-09-15). */
+    "meta.nextLink",
+    /* pagewalk's spellings jsonlist lacked. */
+    "nextLink", "next_page_url", "nextRecordsUrl",
+    "links.nextLink", "paging.nextLink", "pagination.nextLink", NULL };
+  for (int i = 0; KEYS[i]; i++) {
+    const cJSON *v = pw_dotted(doc, KEYS[i]);
+    if (cJSON_IsString(v) && v->valuestring && v->valuestring[0]) {
+      char *u = jo_resolve_link(base, v->valuestring);
+      if (u) return u;
+    }
+    /* CKAN and some JSON:API servers nest it as {next: {href: "..."}}. */
+    if (cJSON_IsObject(v)) {
+      const cJSON *h = cJSON_GetObjectItem(v, "href");
+      if (cJSON_IsString(h) && h->valuestring) {
+        char *u = jo_resolve_link(base, h->valuestring);
+        if (u) return u;
       }
     }
   }
-  if (!cand || !cand->valuestring) return NULL;
-  const char *u = cand->valuestring;
-  if (strncasecmp(u, "http://", 7) && strncasecmp(u, "https://", 8)) return NULL;
-  size_t n = strlen(u);
-  if (n < 8 || n > 4000) return NULL;
-  char *out = malloc(n + 1);
-  if (out) memcpy(out, u, n + 1);
-  return out;
+  /* The ARRAY form: {"links":[{"rel":"self",…},{"rel":"next","href":…}]}, which
+   * Oracle ORDS, HAL and OGC API servers publish. br-tcu-inabilitados (ORDS)
+   * stopped at its first 25 records of 766 without it (measured 2026-09-14). */
+  const cJSON *arr = cJSON_GetObjectItem(doc, "links");
+  if (cJSON_IsArray(arr)) {
+    const cJSON *l;
+    cJSON_ArrayForEach(l, arr) {
+      const cJSON *rel  = cJSON_GetObjectItem(l, "rel");
+      const cJSON *href = cJSON_GetObjectItem(l, "href");
+      if (cJSON_IsString(rel) && rel->valuestring &&
+          strcasecmp(rel->valuestring, "next") == 0 &&
+          cJSON_IsString(href) && href->valuestring) {
+        char *u = jo_resolve_link(base, href->valuestring);
+        if (u) return u;
+      }
+    }
+  }
+  return NULL;
 }
 
-/* How many records the upstream says exist in total, or -1 when it did not
- * say. Only unambiguous, well-known field names — `count` is deliberately
- * absent because half the APIs here use it for "records in THIS page". */
+/* OData v2's `d.__count` (see pagewalk.h). The rest of the declared-total
+ * rule is jo_declared_total() below. */
 long pw_odata_v2_count(const cJSON *doc) {
   if (!cJSON_IsObject(doc)) return -1;
   const cJSON *d = cJSON_GetObjectItemCaseSensitive(doc, "d");
@@ -163,62 +231,108 @@ long pw_odata_v2_count(const cJSON *doc) {
   return v;
 }
 
-static long pw_total_available(const cJSON *doc) {
+/* A number that can be a record count: a non-negative INTEGER. A fractional
+ * value under a key spelled `total` is a sum of money or a measurement, never
+ * how many records exist, so it is not read as one (strictly narrower than
+ * what any of the three old lists accepted). */
+static int pw_is_count(const cJSON *v) {
+  return cJSON_IsNumber(v) && v->valuedouble >= 0 &&
+         v->valuedouble < 9.0e15 && v->valuedouble == (double)(long long)v->valuedouble;
+}
+
+/* THE ONE DECLARED-TOTAL READER (2026-11-07). See pagewalk.h for the contract.
+ *
+ * There were three lists — lib/jsonlist.c `declared_total`, this file's
+ * `pw_total_available` and lib/geojson.c `gj_declared_total` — and an audit
+ * that read all three found them disagreeing in both directions: this file
+ * lacked `odata.count`, `totalItems`, `nhits`, `response.numFound`,
+ * `totalHits`, `payload.totalHits`, `hits.total`, `meta.pagination.total`,
+ * `pagination.total`, `total_results`, `totalResultCount` and `meta.count`;
+ * jsonlist lacked `totalRecords`, `total_rows` and `totalFeatures`; geojson
+ * knew four spellings. A row's notice could therefore say "the upstream
+ * declares no total" in one engine about a body another engine read the
+ * number out of — the shape this tree has repaired three times already.
+ *
+ * MATCHING IS CASE-INSENSITIVE, as jsonlist's and geojson's always were
+ * (cJSON_GetObjectItem); this file used to match case-sensitively, so for the
+ * pw_walk population the change is strictly additive (`resultcount` and
+ * `resultCount`, both of which this tree has met, are now one entry).
+ *
+ * BARE ROOT `count` IS THE ONE DELIBERATE DECISION. It is the commonest
+ * spelling of "records in THIS page" as well as of "the whole match set", and
+ * the lists disagreed: this file excluded it, jsonlist read it fourth, geojson
+ * read it last. Reading a page-size `count` as the total is the DANGEROUS
+ * direction — a cut-short walk then looks complete, and jsonlist's last-resort
+ * continuation (`available > total`) never fires. Reading a real total as
+ * "unknown" only loses a number from a notice. The tree's own evidence that
+ * `count` is sometimes the total: Django REST Framework's envelope
+ * (Spaceflight News `count` 36,457 beside 100, IFRC GO, InterPro — the
+ * comments in collectors/sources/soc_news_media.c and geoeo_ifrc_go.c claim
+ * lib/pagewalk.c "discloses against count", which was FALSE until today,
+ * because this file never read it) and the Austrian Parliament's filter API
+ * (hp3b55_atparl.c). So the rule is the one that separates the two meanings
+ * without guessing: a bare `count` is a total only when it EXCEEDS the records
+ * this page holds — a count of the page's own records can never be larger
+ * than the page. Equal is ambiguous and reads as unknown, which changes no
+ * walk: every trigger that reads the total compares `available > fetched`, and
+ * an equal total cannot satisfy it. It is checked LAST, after every
+ * unambiguous spelling. `result.count` and `meta.count` are nested, name the
+ * whole set in every family that publishes them, and are unaffected. */
+long jo_declared_total(const cJSON *doc, long page_records,
+                       char *basis, size_t cap) {
+  if (basis && cap) basis[0] = 0;
   if (!cJSON_IsObject(doc)) return -1;
-  static const char *const keys[] = {
-    "number_of_results", "totalResults", "total_count", "totalCount",
-    "totalRecords", "numFound", "total_rows", "@odata.count", "totalFeatures",
-    /* `resultcount` is unambiguous in a way bare `count` is not: both APIs in
-     * this tree that publish it (HUDOC, AUR) mean the size of the whole match
-     * set, not the size of this page. Checked before adding — that is the only
-     * reason `count` above is deliberately absent from this list. */
-    "resultcount",
-    /* Absorbed from the jsonlist page walk when the two engines were unified.
-     * Each names the size of the whole match set in the API family that
-     * publishes it: `numberMatched` is OGC API — Features, `totalElements` is
-     * Spring Data's Page envelope, `recordsTotal` is DataTables, and `total`
-     * is the CKAN/JSON:API house spelling. Bare `count` stays out, for the
-     * reason above — these do not share its ambiguity. */
-    "numberMatched", "totalElements", "recordsTotal", "total",
-    /* Japan Search's item API: `hit` is the whole match set (5,409 beside a
-     * 500-record page). Singular, so it does not share bare `count`'s
-     * ambiguity — a page size is spelled `count`, `size` or `hits`. */
+  static const char *const KEYS[] = {
+    /* jsonlist's order first: the VJSON fleet is the largest population, and
+     * a body carrying two of these with different values keeps its winner. */
+    "total_count", "totalCount", "total", "meta.count",
+    "numberMatched", "totalResults", "result.count", "meta.total",
+    "totalElements", "recordsTotal",
+    /* ROR `number_of_results`, Solr `numFound`/`response.numFound`, ODS
+     * `nhits`, CORDIS `payload.totalHits`. */
+    "number_of_results", "numFound", "response.numFound", "nhits",
+    "totalHits", "payload.totalHits", "totalResultCount", "total_results",
+    "resultCount", "hits.total", "meta.pagination.total", "pagination.total",
+    /* Cabo Verde's statistics office: `totalItems: 2425` beside 50 items. */
+    "totalItems",
+    /* OData v4/v3: single keys containing a dot (pw_dotted's fallback).
+     * LegCo Hong Kong answers `odata.count: 551619` beside 200 rows. */
+    "@odata.count", "odata.count",
+    /* The Linked Data API's envelope (lda.data.parliament.uk), 2026-10-23. */
+    "result.totalResults",
+    /* Japan Search `jps-cross`: `hit: 5409` beside a 500-record page.
+     * Singular, so it does not share bare `count`'s ambiguity. */
     "hit",
-    NULL
-  };
-  for (int i = 0; keys[i]; i++) {
-    const cJSON *v = cJSON_GetObjectItemCaseSensitive(doc, keys[i]);
-    if (cJSON_IsNumber(v) && v->valuedouble >= 0) return (long)v->valuedouble;
-  }
-  const cJSON *meta = cJSON_GetObjectItemCaseSensitive(doc, "meta");
-  if (cJSON_IsObject(meta)) {
-    const cJSON *v = cJSON_GetObjectItemCaseSensitive(meta, "total");
-    if (cJSON_IsNumber(v) && v->valuedouble >= 0) return (long)v->valuedouble;
-  }
-  /* One level down under `result`, which is where two API families put it and
-   * where neither of the root lists above can reach: `result.count` is CKAN's
-   * and data.europa.eu's search envelope, `result.totalResults` the Linked
-   * Data API's. Bare root `count` stays out for the reason given above — it is
-   * "records in THIS page" as often as not — but `result.count` is not
-   * ambiguous: the whole match set is the only thing it names in either
-   * family. This list is the THIRD copy of the declared-total idea in the tree
-   * (lib/jsonlist.c's `declared_total`, hpengine's XML reader, and here), so
-   * both spellings were added to jsonlist's list in the same change.
-   *
-   * Measured 2026-10-24: data.europa.eu answers `result.count: 9079` beside
-   * the 100 records it hands over, and pagewalk's notice reported
-   * `records_available: null` while the number sat in the body. */
-  const cJSON *res = cJSON_GetObjectItemCaseSensitive(doc, "result");
-  if (cJSON_IsObject(res)) {
-    static const char *const rkeys[] = { "count", "totalResults", NULL };
-    for (int i = 0; rkeys[i]; i++) {
-      const cJSON *v = cJSON_GetObjectItemCaseSensitive(res, rkeys[i]);
-      if (cJSON_IsNumber(v) && v->valuedouble >= 0) return (long)v->valuedouble;
+    /* This file's spellings jsonlist lacked: `totalRecords`, `total_rows`
+     * (CouchDB), `totalFeatures` (GeoServer GeoJSON). */
+    "totalRecords", "total_rows", "totalFeatures",
+    /* geojson's: `matchedCount`. */
+    "matchedCount",
+    NULL };
+  for (int i = 0; KEYS[i]; i++) {
+    const cJSON *v = pw_dotted(doc, KEYS[i]);
+    if (pw_is_count(v)) {
+      if (basis && cap) snprintf(basis, cap, "%s", KEYS[i]);
+      return (long)v->valuedouble;
     }
   }
   /* OData v2 verbose: `d.__count`, a string (measured 2026-10-25 on the NZ
    * Charities Register: "46144" beside 5,000 rows). */
-  return pw_odata_v2_count(doc);
+  long od = pw_odata_v2_count(doc);
+  if (od >= 0) {
+    if (basis && cap) snprintf(basis, cap, "d.__count");
+    return od;
+  }
+  const cJSON *c = cJSON_GetObjectItem(doc, "count");
+  if (pw_is_count(c)) {
+    long v = (long)c->valuedouble;
+    if (page_records == JO_TOTAL_TRUST_BARE_COUNT ||
+        (page_records >= 0 && v > page_records)) {
+      if (basis && cap) snprintf(basis, cap, "count");
+      return v;
+    }
+  }
+  return -1;
 }
 
 /* ── URL parameter surgery ────────────────────────────────────────────────
@@ -229,7 +343,10 @@ static int pw_find_num_param(const char *url, const char *name,
   size_t nl = strlen(name);
   const char *q = strchr(url, '?');
   if (!q) return 0;
-  for (const char *p = q; *p; p++) {
+  /* A `#fragment` ends the query (RFC 3986): nothing after it is a
+   * parameter, and a value it follows ends there. Fixed 2026-11-07 with the
+   * same defect in lib/jsonlist.c's jsonlist_query_int/_set. */
+  for (const char *p = q; *p && *p != '#'; p++) {
     if (*p != '?' && *p != '&') continue;
     const char *k = p + 1;
     if (strncasecmp(k, name, nl) != 0) continue;
@@ -246,7 +363,7 @@ static int pw_find_num_param(const char *url, const char *name,
      * source and counted into records_used. Requiring the value to end at the
      * parameter boundary rejects every date, timestamp and composite value
      * while accepting every genuine `offset=120` / `limit=20`. */
-    if (*e != '&' && *e != 0) continue;
+    if (*e != '&' && *e != '#' && *e != 0) continue;
     *val = strtol(d, NULL, 10);
     *dstart = (size_t)(d - url);
     *dend = (size_t)(e - url);
@@ -380,6 +497,142 @@ static char *pw_advance_url(const char *url, long page_size, int pages_done) {
   return NULL;
 }
 
+/* ── what a stop means, in words a reader can act on ───────────────────────
+ * Both describers are exported (pagewalk.h) because the same sentence used to
+ * be written three times — here, in lib/jsonlist.c and in lib/geojson.c — and
+ * every copy said "a host that refuses or rate-limits later pages needs a
+ * per-host minimum gap (core/hostgate.c)" WHATEVER the failing page answered.
+ * lib/hpengine.c had already learned (hp_cut_reason and its remedy chain)
+ * that a 400 after a full page is the signature of a deep-paging cap — GLEIF
+ * refuses `page[number]=51` with HTTP 400, 50 pages x 200 = 10,000 records —
+ * whose remedy is to NARROW each request, and that a gap cannot move it. A
+ * remedy that names a knob which cannot move is worse than none (CLAUDE.md),
+ * so the three walkers now take the status-specific sentence from here. Found
+ * 2026-11-07 by an audit that read every copy. */
+void pw_cut_describe(int failed_page, long status, char *reason, size_t rcap,
+                     char *remedy, size_t mcap) {
+  char pg[32], fdesc[96];
+  if (failed_page > 0) snprintf(pg, sizeof pg, "page %d", failed_page);
+  else                 snprintf(pg, sizeof pg, "a later page");
+  feed_status_describe(status, fdesc, sizeof fdesc);
+  const char *why = "", *fix = "";
+  int deep = 0;
+  if (status == FEED_ST_TRANSPORT) {
+    why = "— the exchange never completed — so the walk stopped before the "
+          "upstream ran out";
+    fix = "re-run: one transport failure is one reading, and in a proxied "
+          "container a reset or an empty reply can be this side's own egress. "
+          "A host that fails the same page on every run needs a per-host "
+          "minimum gap (core/hostgate.c), measured before it is set";
+  } else if (status == FEED_ST_UNPARSED) {
+    why = ", so its records were never delivered — a 2xx that does not parse is "
+          "usually an error, rate-limit or challenge page served as a success";
+    fix = "read that page's BODY, not its status: a rate-limit page wants a "
+          "per-host gap (core/hostgate.c) set on a measured budget, a bot wall "
+          "wants core/host_agents.def, and a moved endpoint wants re-pointing";
+  } else if (status == 204 || status == FEED_ST_DECLARED_EMPTY) {
+    why = "— the upstream's own \"nothing matched\" — after a page that gave "
+          "evidence of more, so the collection most likely ends exactly on a "
+          "page boundary";
+    fix = "none needed if records_used equals the upstream's own total; "
+          "otherwise check whether it caps how deep it pages";
+  } else if (status == 304) {
+    why = "Not Modified to a request that carried no conditional header (a "
+          "cache or proxy answering for a page it never fetched); a 304 has no "
+          "body, so the walk stopped before the upstream ran out";
+    fix = "re-run; no conditional header is sent on a later page, so a 304 "
+          "that persists is a cache or proxy in front of the upstream "
+          "answering for it";
+  } else if (status >= 300 && status < 400) {
+    why = "— a redirect that could not be followed (a loop, or no Location) — "
+          "so the walk stopped before the upstream ran out";
+    fix = "fetch that page's URL by hand and re-point the row at where the "
+          "redirect really goes";
+  } else if (status == 429) {
+    why = "(rate limited), so the walk stopped before the upstream ran out";
+    fix = "a per-host minimum gap in core/hostgate.c — measure the host's "
+          "budget first (how many requests a burst gets, and whether a pause "
+          "clears it), because a gap set on one reading is a guess";
+  } else if (status == 401 || status == 403 || status == 407) {
+    why = "— a refusal — so the walk stopped before the upstream ran out";
+    fix = "re-run once: a refusal that appears only deep in a walk can be a "
+          "rate limit. If it persists, check whether the row needs a "
+          "credential (key_env) or the host refuses this client's agent "
+          "(core/host_agents.def)";
+  } else if (status == 408 || status >= 500) {
+    why = "— a server error — so the walk stopped before the upstream ran out";
+    fix = "re-run; a server error on one page is one reading. If the same page "
+          "fails on every run the upstream cannot serve it; if it follows a "
+          "burst, a per-host minimum gap (core/hostgate.c) may clear it";
+  } else if (status >= 400) {
+    deep = 1;
+    fix = "check whether the upstream caps how deep it pages (GLEIF refuses "
+          "page[number]=51 with HTTP 400 — 10,000 records); if it does, "
+          "narrow each request (a date window or a filter) so every slice "
+          "fits under the cap — no gap or ceiling reaches the rest. See "
+          "docs/SOURCE_EXHAUSTIVENESS.md";
+  } else {
+    why = ", so the walk stopped before the upstream ran out";
+    fix = "re-run — the fetch recorded no status, so nothing more specific "
+          "can be said about this stop";
+  }
+  if (reason && rcap) {
+    if (deep)
+      snprintf(reason, rcap, "%s answered %s although the upstream had given "
+               "evidence of more (a full previous page, its own total, or a "
+               "next link): either a deep-paging limit refused the rest, or "
+               "the collection ends exactly on a page boundary", pg, fdesc);
+    else
+      snprintf(reason, rcap, "%s answered %s%s%s", pg, fdesc,
+               why[0] == ',' ? "" : " ", why);
+  }
+  if (remedy && mcap) snprintf(remedy, mcap, "%s", fix);
+}
+
+/* Is $JO_PAGE_MAX set to a value jo_page_max() honours? (0 and garbage are
+ * ignored there, so naming the variable for them would send the reader to a
+ * knob that did nothing.) */
+static int pw_env_ceiling_set(const char *name) {
+  const char *e = name ? getenv(name) : NULL;
+  return e && *e && atoi(e) > 0;
+}
+
+/* Which ceiling stopped a walk, named — see pagewalk.h. */
+void jo_page_ceiling_describe(int page_max, int declared, const char *legacy_env,
+                              char *reason, size_t rcap,
+                              char *remedy, size_t mcap) {
+  const int op = pw_env_ceiling_set("JO_PAGE_MAX");
+  const int legacy = !op && declared <= 0 && pw_env_ceiling_set(legacy_env);
+  const char *who = op       ? "JO_PAGE_MAX"
+                  : declared > 0 ? "this source's own measured ceiling"
+                  : legacy   ? legacy_env
+                             : "the tree's default";
+  if (reason && rcap)
+    snprintf(reason, rcap, "the page ceiling (%d page%s, %s) stopped the walk "
+             "while the upstream still had pages", page_max,
+             page_max == 1 ? "" : "s", who);
+  if (!remedy || !mcap) return;
+  if (op)
+    snprintf(remedy, mcap, "raise $JO_PAGE_MAX: an operator set it, and it "
+             "overrides every other ceiling in the tree (jo_page_max_for, "
+             "lib/pagewalk.c) — see docs/SOURCE_EXHAUSTIVENESS.md");
+  else if (declared > 0)
+    snprintf(remedy, mcap, "re-measure the upstream's total and raise the "
+             "ceiling this source declares (pw_walk_max / page_max), leaving "
+             "headroom; over ~200 pages read the collection over a cycle "
+             "instead. $JO_PAGE_MAX overrides it either way — see "
+             "docs/SOURCE_EXHAUSTIVENESS.md");
+  else if (legacy)
+    snprintf(remedy, mcap, "raise $JO_PAGE_MAX (the older $%s set this one, "
+             "and $JO_PAGE_MAX wins when both are set), or give this source a "
+             "measured ceiling of its own — see docs/SOURCE_EXHAUSTIVENESS.md",
+             legacy_env);
+  else
+    snprintf(remedy, mcap, "raise $JO_PAGE_MAX (default %d pages), or give "
+             "this source a measured ceiling of its own — see "
+             "docs/SOURCE_EXHAUSTIVENESS.md", JO_PAGE_MAX_DEFAULT);
+}
+
 /* ── the disclosure ─────────────────────────────────────────────────────────
  * The record itself is built by jo_truncation_notice_ex() (lib/jocore.h), which
  * is the single builder for `collector-truncation-notice` across the tree — one
@@ -394,7 +647,8 @@ static char *pw_advance_url(const char *url, long page_size, int pages_done) {
 static void pw_notice(intel_sink *s, const char *id, const char *url,
                       long used, long available, int pages, long dropped,
                       const char *reason, const char *remedy,
-                      int failed_page, long failed_status, const char *failed_url) {
+                      int failed_page, long failed_status, const char *failed_url,
+                      const char *resume_at) {
   cJSON *extra = cJSON_CreateObject();
   if (extra) {
     cJSON_AddStringToObject(extra, "url", url ? url : "");
@@ -409,6 +663,10 @@ static void pw_notice(intel_sink *s, const char *id, const char *url,
       cJSON_AddNumberToObject(extra, "failed_page_status", (double)failed_status);
       cJSON_AddStringToObject(extra, "failed_page_url", failed_url ? failed_url : "");
     }
+    /* A cycling walk (pw_walk_max_resume) says where the next run continues,
+     * as hpengine's page_resume notice does. */
+    if (resume_at)
+      cJSON_AddStringToObject(extra, "next_run_resumes_at", resume_at);
   }
   jo_truncation_notice_ex(s, id, NULL, used, available, reason, remedy, extra);
 }
@@ -418,9 +676,59 @@ int pw_walk(const source_ctx *c, intel_sink *s, const char *id,
   return pw_walk_max(c, s, id, url, fetch, emit_page, ud, 0);
 }
 
+/* The host of a URL, lower-cased, without userinfo or port, into `out`.
+ * Returns 0 when there is none. For pw_walk_max_resume's rule that a stored
+ * position may move a walk THROUGH a collection and never to another server
+ * (hpengine's hp_host_of is the same rule). */
+static int pw_host(const char *u, char *out, size_t cap) {
+  if (!u || !cap) return 0;
+  const char *p = strstr(u, "://");
+  p = p ? p + 3 : u;
+  const char *e = p;
+  while (*e && *e != '/' && *e != '?' && *e != '#') e++;
+  for (const char *a = p; a < e; a++) if (*a == '@') p = a + 1;
+  size_t n = 0;
+  while (p + n < e && p[n] != ':' && n + 1 < cap) {
+    out[n] = (char)tolower((unsigned char)p[n]);
+    n++;
+  }
+  out[n] = 0;
+  return n > 0;
+}
+
+static int pw_walk_impl(const source_ctx *c, intel_sink *s, const char *id,
+                        const char *url, pw_fetch_fn fetch, pw_emit_fn emit_page,
+                        void *ud, int page_max_declared, int resume_on,
+                        const char *resume_in, char *resume_out,
+                        size_t resume_cap);
+
 int pw_walk_max(const source_ctx *c, intel_sink *s, const char *id,
                 const char *url, pw_fetch_fn fetch, pw_emit_fn emit_page,
                 void *ud, int page_max_declared) {
+  return pw_walk_impl(c, s, id, url, fetch, emit_page, ud, page_max_declared,
+                      0, NULL, NULL, 0);
+}
+
+/* See pagewalk.h. Added 2026-11-07: pw_walk_max had no way to read a
+ * collection over a cycle, so a pw_walk source over its ceiling re-read its
+ * first pages for ever — the shape hpengine's page_resume fixed for 669 rows,
+ * left unreachable for every bespoke collector that walks through here. */
+int pw_walk_max_resume(const source_ctx *c, intel_sink *s, const char *id,
+                       const char *url, pw_fetch_fn fetch, pw_emit_fn emit_page,
+                       void *ud, int page_max_declared,
+                       const char *resume_in, char *resume_out, size_t cap) {
+  return pw_walk_impl(c, s, id, url, fetch, emit_page, ud, page_max_declared,
+                      1, resume_in, resume_out, cap);
+}
+
+static int pw_walk_impl(const source_ctx *c, intel_sink *s, const char *id,
+                        const char *url, pw_fetch_fn fetch, pw_emit_fn emit_page,
+                        void *ud, int page_max_declared, int resume_on,
+                        const char *resume_in, char *resume_out,
+                        size_t resume_cap) {
+  /* Clear first, so every early return leaves "start over" rather than a
+   * stale position: a run that fetched nothing has nowhere better to say. */
+  if (resume_out && resume_cap) resume_out[0] = 0;
   if (!c || !s || !url || !fetch || !emit_page) return -1;
 
   /* Plan against the URL that will ACTUALLY be fetched. http_request applies
@@ -472,8 +780,29 @@ int pw_walk_max(const source_ctx *c, intel_sink *s, const char *id,
   const int page_max = pw_page_max(page_max_declared);
   const int may_walk = pw_walk_enabled();
 
-  char *cur = strdup(url);
+  /* Start where the previous run stopped, when this is a cycling walk and the
+   * stored position is on the row's own host. The position is the URL the
+   * walk would have requested next, so pw_advance_url() continues from the
+   * numbers IN it — there is no page_start to read back, unlike hpengine,
+   * because this walk computes every next page from the page just fetched. */
+  int resumed = 0;
+  char *cur = NULL;
+  if (resume_on && resume_in && resume_in[0]) {
+    char hw[256], hg[256];
+    if (pw_host(url, hw, sizeof hw) && pw_host(resume_in, hg, sizeof hg) &&
+        strcmp(hw, hg) == 0) {
+      cur = strdup(resume_in);
+      resumed = 1;
+      fprintf(stderr, "[%s] resuming the walk at %s\n", id, resume_in);
+    } else {
+      fprintf(stderr, "[%s] stored resume position is on another host than "
+                      "the row's own URL — dropped; this run starts from the "
+                      "row's URL\n", id);
+    }
+  }
+  if (!cur) cur = strdup(url);
   if (!cur) return -1;
+  char *resume_tok = NULL;   /* the next URL a ceiling stop leaves behind */
 
   long total = 0, available = -1, dropped = 0;
   int  pages = 0, last_seen = 0;
@@ -495,6 +824,19 @@ int pw_walk_max(const source_ctx *c, intel_sink *s, const char *id,
     feed_last_json_status_reset();
     cJSON *doc = fetch(c, cur, ud);
     if (!doc) {
+      /* Page 1 answered the upstream's own "nothing matched" — a 204, or a
+       * 404 whose body says so (feed_status_body_is_declared_empty). That is
+       * rule 1's honest empty: rc 0, no records, no notice. It used to be -1,
+       * so a quiet FDSN window on a VJSON/VGEO row filed a fetch-failure
+       * (2026-11-07). Only page 1: a later page's empty is pw_cut_describe's
+       * to name, as hpengine does. A resumed walk whose position answers
+       * empty has reached the end of the collection, so the cycle restarts. */
+      if (pages == 0 && feed_status_declared_empty(feed_last_json_status())) {
+        fprintf(stderr, "[%s] the upstream answered with its own no-data "
+                        "status: an EMPTY result, not a refusal\n", id);
+        free(cur);
+        return 0;
+      }
       if (pages == 0) { free(cur); return -1; }   /* dead endpoint = error */
       /* A later page failing is not an error: keep what we have and say so. */
       failed_page = pages + 1;
@@ -543,10 +885,10 @@ int pw_walk_max(const source_ctx *c, intel_sink *s, const char *id,
     total   += emitted;
     dropped += last_seen - emitted;
 
-    long t = pw_total_available(doc);
+    long t = jo_declared_total(doc, last_seen, NULL, 0);
     if (t >= 0) available = t;
 
-    next = pw_next_link(doc);
+    next = jo_next_link(doc, cur);
     cJSON_Delete(doc);
 
     /* A server that hands back a link to the page we just fetched is a real
@@ -577,7 +919,14 @@ int pw_walk_max(const source_ctx *c, intel_sink *s, const char *id,
       if (full_last) next = pw_advance_url(cur, page_size, pages);
     }
     if (!next) break;
-    if (!may_walk || pages >= page_max) { stopped_at_ceiling = 1; break; }
+    if (!may_walk || pages >= page_max) {
+      stopped_at_ceiling = 1;
+      /* A cycling walk keeps the page it would have read next, exactly as
+       * hpengine keeps `page_url` when `st.truncated`. Not when continuation
+       * is switched off: JO_PAGE_WALK=0 asks for one page, not a cycle. */
+      if (resume_on && may_walk) { resume_tok = next; next = NULL; }
+      break;
+    }
 
     free(cur);
     cur = next; next = NULL;
@@ -590,23 +939,17 @@ int pw_walk_max(const source_ctx *c, intel_sink *s, const char *id,
    *   - or the last page came back exactly full and nothing in the response or
    *     the URL let us ask for the rest, which is the 2,592-source case. */
   int more_known    = (available >= 0 && available > total);
-  char failwhy[320] = "";
-  /* Name the ceiling that actually bit. It used to read "JO_PAGE_MAX" always,
-   * which is wrong for a source carrying its own measured ceiling: the reader
-   * would go looking for an environment variable nobody set. */
-  char ceilwhy[200];
-  snprintf(ceilwhy, sizeof ceilwhy,
-           "the page ceiling (%d page%s, %s) stopped the walk", page_max,
-           page_max == 1 ? "" : "s",
-           getenv("JO_PAGE_MAX")   ? "JO_PAGE_MAX"
-           : page_max_declared > 0 ? "this source's own measured ceiling"
-                                   : "the pagewalk default");
-  if (failed_page > 0) {
-    char fdesc[64];
-    feed_status_describe(failed_status, fdesc, sizeof fdesc);
-    snprintf(failwhy, sizeof failwhy, "page %d answered %s, so the walk stopped "
-             "before the upstream ran out", failed_page, fdesc);
-  }
+  /* Name the ceiling that actually bit, and the failing page's status-specific
+   * reason and remedy (jo_page_ceiling_describe, pw_cut_describe). The
+   * ceiling used to read "JO_PAGE_MAX" always, which is wrong for a source
+   * carrying its own measured ceiling, and every failed page got the same
+   * hostgate remedy whatever it answered. */
+  char ceilwhy[200], ceilfix[400], failwhy[400] = "", failfix[400] = "";
+  jo_page_ceiling_describe(page_max, page_max_declared, NULL,
+                           ceilwhy, sizeof ceilwhy, ceilfix, sizeof ceilfix);
+  if (failed_page > 0)
+    pw_cut_describe(failed_page, failed_status, failwhy, sizeof failwhy,
+                    failfix, sizeof failfix);
   if (failed_page > 0 || stopped_at_ceiling || stopped_on_repeat ||
       stopped_on_same_body || more_known || full_last || dropped > 0) {
     const char *reason =
@@ -627,15 +970,17 @@ int pw_walk_max(const source_ctx *c, intel_sink *s, const char *id,
                            "collector could use as a title, so they were not "
                            "emitted as rows";
     const char *remedy =
-      failed_page > 0      ? "re-run — the walk starts again from the same URL; a host "
-                           "that refuses or rate-limits later pages needs a per-host "
-                           "minimum gap (core/hostgate.c)"
+      failed_page > 0      ? failfix
       : stopped_on_same_body ? "this endpoint does not page the way its URL implies — "
                            "check whether it needs a different parameter, or drop "
                            "the one it ignores so the bound is stated honestly"
       : stopped_on_repeat  ? "the upstream's pagination is not advancing — check whether "
                            "this endpoint needs a cursor parameter we are not sending"
-      : stopped_at_ceiling ? "raise JO_PAGE_MAX, or re-run — the walk resumes from the same URL"
+      : stopped_at_ceiling && resume_tok
+                         ? "none needed: this source reads its collection over a "
+                           "cycle, and next_run_resumes_at says where the next "
+                           "run continues"
+      : stopped_at_ceiling ? ceilfix
       /* A row that DECLARED a one-page ceiling bounded itself on purpose, so
        * "give it a page parameter" names the one knob that must not move —
        * this file's own rule that a remedy pointing at an immovable knob is
@@ -653,13 +998,38 @@ int pw_walk_max(const source_ctx *c, intel_sink *s, const char *id,
     /* records_used is what was EMITTED; records_seen is what the pages held.
      * When those differ the gap is the discard, and it is stated as data. */
     pw_notice(s, id, url, total, available, pages, dropped, reason, remedy,
-              failed_page, failed_status, failed_url);
+              failed_page, failed_status, failed_url,
+              resume_on ? (resume_tok ? resume_tok
+                           : failed_page > 0 ? "the start — the position was NOT "
+                             "advanced because a page failed, so this source "
+                             "re-reads the same slice until its paging is fixed"
+                           : "the start — the walk ended here (the reason "
+                             "above says how), so the next run starts over")
+                        : NULL);
     fprintf(stderr, "[%s] emitted %ld across %d page(s) — TRUNCATED (%s)\n",
             id, total, pages, reason);
   } else {
     fprintf(stderr, "[%s] emitted %ld across %d page(s)\n", id, total, pages);
   }
 
+  /* Where the next run starts: the page a ceiling stop left unread, else
+   * nothing (cleared at the top) — the end of the collection, a failed page
+   * (bookmarking a refused page would retry that one page for ever; the
+   * notice says the position was not advanced), or a stop that is not a
+   * position at all. hpengine's page_resume rule, line for line. */
+  if (resume_on && resume_tok) {
+    if (resume_out && resume_cap && strlen(resume_tok) < resume_cap) {
+      snprintf(resume_out, resume_cap, "%s", resume_tok);
+      fprintf(stderr, "[%s] the next run resumes at %s\n", id, resume_tok);
+    } else {
+      fprintf(stderr, "[%s] the next position does not fit the caller's buffer "
+                      "(%zu bytes) — the next run starts over\n", id, resume_cap);
+    }
+  } else if (resume_on && resumed) {
+    fprintf(stderr, "[%s] the cycle %s; the next run starts over\n", id,
+            failed_page > 0 ? "was cut by a failed page" : "completed");
+  }
+  free(resume_tok);
   free(failed_url);
   free(cur);
   return (int)total;

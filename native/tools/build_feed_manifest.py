@@ -7,6 +7,14 @@ written only when it holds >= 1 record. Everything else goes to the rejects
 TSV with its reading."""
 import sys, re, time, subprocess, datetime, collections, html, concurrent.futures as cf
 from urllib.parse import urlparse
+
+# Shelling out to curl still goes through THE trust set (jo_tls, rule 4c):
+# system roots + session CA + the intermediates the engine loads.
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+import jo_tls as _jo_tls
+JO_CURL_TLS = _jo_tls.curl_args()
+
 disc, registered, out, prefix, beat = sys.argv[1:6]
 batch = re.sub(r'\D', '', prefix.split('_')[0]) or '?'
 jobs = int(sys.argv[6]) if len(sys.argv) > 6 else 8
@@ -34,9 +42,14 @@ for line in open(disc, encoding='utf-8').read().splitlines()[1:]:
         if u.lower() in seen: continue
         seen.add(u.lower()); cands.append((key, name, u))
 print('candidate feed urls', len(cands), file=sys.stderr)
-UA = 'Mozilla/5.0 (compatible; JapanOSINT)'
+# The request is the ENGINE's (tools/jo_http.py): JO_USER_AGENT, or the
+# core/host_agents.def agent for a listed host, and the engine's Accept.
+# This tool used to send an agent of its own (one of eight spellings in
+# this directory, 2026-11-07), so a host walled against one agent read
+# differently here than in the engine.
+import jo_http as _jo_http
 def get(url):
-    r = subprocess.run(['curl', '-sS', '-L', '--compressed', '--max-time', '25', '-A', UA,
+    r = subprocess.run(['curl', *JO_CURL_TLS, '-sS', '-L', '--compressed', '--max-time', '25', *_jo_http.curl_header_args(url),
                         '-o', '-', '-w', '\n%{http_code}', url], capture_output=True)
     b = r.stdout; i = b.rfind(b'\n'); return b[i + 1:].decode(errors='ignore'), b[:i]
 def classify(body):

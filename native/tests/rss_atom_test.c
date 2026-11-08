@@ -23,6 +23,7 @@
  * test there cannot stub http_request without a duplicate symbol.
  */
 #include "../lib/rss_atom.h"
+#include "../lib/feedlib.h"
 #include "../core/httpclient.h"
 
 #include <assert.h>
@@ -57,6 +58,9 @@ int http_last_transport_error(void) { return HTTP_TE_NONE; }
 int http_last_tls_cause(void) { return HTTP_TLS_NONE; }
 const char *http_tls_cause_label(int cause) { (void)cause; return ""; }
 const char *http_tls_cause_remedy(int cause) { (void)cause; return ""; }
+/* lib/hpengine.c's fetch-failure record names the TLS cause by its short name
+ * too (core/httpclient.h); not exercised here, stubbed like the two above. */
+const char *http_tls_cause_name(int cause) { (void)cause; return ""; }
 /* lib/feedlib.c and lib/hpengine.c are on the link line (rss_atom.c calls
  * feed_url_host_is_jp and hp_xml_decode), and they reach the rest of the HTTP
  * client and the registry. None of that is exercised here — every fetch in this
@@ -160,6 +164,43 @@ int main(void) {
   ok(rc == -1, "5: a 2xx with a zero-byte body is a failed fetch (europarl's WAF)");
   rc = run(RSS_TWO, 404);
   ok(rc == -1, "5: a non-2xx is a failed fetch");
+
+  /* 6. lib/feedlib.c, which this test links for real: THE UPSTREAM'S OWN
+   *    "NOTHING MATCHED" is recorded as such (2026-11-07), so jsonlist's,
+   *    geojson's and pagewalk's walks can return the honest empty hpengine
+   *    already returns. Both halves are FDSN's, measured 2026-10-20: ICGC's
+   *    empty event query with `nodata=404`, and KOERI's 404 for a service it
+   *    does not run — which must stay a failure. tests/pagewalk_test.c pins
+   *    what the three walkers then do with the status. */
+  {
+    g_body = "Error 404: No data available for request.\n"; g_status = 404;
+    cJSON *j = feed_get_json(NULL, "https://ws.example/fdsnws/event/1/query?nodata=404", 1000);
+    ok(j == NULL && feed_last_json_status() == FEED_ST_DECLARED_EMPTY,
+       "6: a 404 carrying the service's no-data wording is recorded as an empty");
+    g_body = "The requested resource does not exist on this server"; g_status = 404;
+    j = feed_get_json(NULL, "https://eida.example/fdsnws/event/1/query?nodata=404", 1000);
+    ok(j == NULL && feed_last_json_status() == 404,
+       "6: KOERI's 404 (no such service) is still a 404 — a failure");
+    g_body = NULL; g_status = 204;
+    j = feed_get_json(NULL, "https://ws.example/fdsnws/event/1/query", 1000);
+    ok(j == NULL && feed_last_json_status() == 204 &&
+       feed_status_declared_empty(feed_last_json_status()),
+       "6: a 204 keeps its own number (geohazard_extra.c keys on it) and reads empty");
+  }
+
+  /* 7. csv_decode_sjis reads CP932, through the feedlib path that reaches it
+   *    (2026-11-07). glibc's strict SHIFT_JIS rejects 0x87 0x40 (①), and the
+   *    decode fails closed, so the whole body came back as mojibake — the
+   *    machi.to case hpengine had already fixed in its own copy. It also read
+   *    0x5C as ¥ and 0x7E as ‾, turning JSON escapes and URL tildes into
+   *    symbols. Measured with iconv(1) the same day. */
+  {
+    g_body = "\x87\x40\x93\xfa\x96\x7b a~b\\c"; g_status = 200;
+    char *t = feed_get_text(NULL, "https://www.example.go.jp/list.csv", 1000);
+    ok(t && !strcmp(t, "\xe2\x91\xa0\xe6\x97\xa5\xe6\x9c\xac a~b\\c"),
+       "7: a .jp body with a NEC-extension ① decodes, and keeps ~ and \\ ASCII");
+    free(t);
+  }
 
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;

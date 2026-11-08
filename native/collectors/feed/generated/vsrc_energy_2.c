@@ -67,13 +67,23 @@ VJSON(eco_odre_prod_region, "eco-odre-prod-region", "France annual regional gene
  * technology codes, installed capacity, connection and commissioning dates —
  * which is unique on all 2,000 and leaves out the rolling annual-energy
  * columns that change between runs. `+` composes. */
+/* Re-measured 2026-11-07 (20 pages of 100, total_count 141,589 both ways):
+ * the seven-field key above is distinct on 1,994 of 2,000 in the default
+ * order and 1,999 of 2,000 ordered by EIC, so it still folds installations;
+ * with the EIC code (codeeicresourceobject) FIRST it is 2,000 of 2,000 —
+ * the EIC is non-null on every one of those 2,000 now, contrary to the
+ * older reading above, and where it is null (the aggregated "<36 kW" rows)
+ * the rest of the composite still applies. `order_by=codeeicresourceobject`
+ * gives the offset walk a stable order; the server reads it (a bogus
+ * order_by is HTTP 400 "Unknown field") and the total does not move. The
+ * uid changes with the key (old rows: tools/cleanup_stale_uids.py). */
 VJSON_IDKEYS(eco_odre_registre_prod, "eco-odre-registre-prod", "France generation and storage registry", "フランス発電・蓄電設備登録簿",
   "energy", "energy-grid",
-  "https://odre.opendatasoft.com/api/explore/v2.1/catalog/datasets/registre-national-installation-production-stockage-electricite-agrege/records?limit=100",
+  "https://odre.opendatasoft.com/api/explore/v2.1/catalog/datasets/registre-national-installation-production-stockage-electricite-agrege/records?limit=100&order_by=codeeicresourceobject",
   "results",
   "fr", "[\"france\",\"registry\",\"capacity\",\"storage\"]", 86400,
   "Aggregated national registry of French electricity generation and storage installations.",
-  "nominstallation+codeinseecommune+codefiliere+codetechnologie+puismaxinstallee+dateraccordement+datemiseenservice");
+  "codeeicresourceobject+nominstallation+codeinseecommune+codefiliere+codetechnologie+puismaxinstallee+dateraccordement+datemiseenservice");
 
 VRSS(eco_oilprice, "eco-oilprice", "OilPrice.com", "オイルプライス・ドットコム",
   "energy", "commodities",

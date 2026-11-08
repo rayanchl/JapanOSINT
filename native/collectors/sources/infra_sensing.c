@@ -16,12 +16,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 /* ---- ZoomEye host search (NEEDS_KEY) ------------------------------------- */
 static int run_zoomeye(const source_ctx *ctx, intel_sink *sink) {
   if (!ctx->entity || !*ctx->entity) return -1;
   const char *key = jo_env("ZOOMEYE_API_KEY");
-  if (!key) { fprintf(stderr, "[zoomeye] gated (no ZOOMEYE_API_KEY)\n"); return 0; }
+  if (!key) return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "zoomeye", "zoomeye", (const char *const[]){"ZOOMEYE_API_KEY", NULL}, NULL, NULL);
   char *q = jo_urlencode(ctx->entity); if (!q) return 0;
   char url[640];
   snprintf(url, sizeof url, "https://api.zoomeye.org/host/search?query=%s+country:JP", q);
@@ -29,9 +30,9 @@ static int run_zoomeye(const source_ctx *ctx, intel_sink *sink) {
   char hdr[160]; snprintf(hdr, sizeof hdr, "API-KEY: %s", key);
   const char *hdrs[] = { hdr, "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "zoomeye");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   int emitted = 0;
   cJSON *matches = cJSON_GetObjectItem(root, "matches");
   cJSON *m = NULL;
@@ -57,16 +58,16 @@ static int run_zoomeye(const source_ctx *ctx, intel_sink *sink) {
 static int run_hunter(const source_ctx *ctx, intel_sink *sink) {
   if (!ctx->entity || !*ctx->entity) return -1;
   const char *key = jo_env("HUNTER_API_KEY");
-  if (!key) { fprintf(stderr, "[hunter] gated (no HUNTER_API_KEY)\n"); return 0; }
+  if (!key) return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "hunter", "hunter", (const char *const[]){"HUNTER_API_KEY", NULL}, NULL, NULL);
   char *q = jo_urlencode(ctx->entity); if (!q) return 0;
   char url[640];
   snprintf(url, sizeof url, "https://api.hunter.io/v2/domain-search?domain=%s&api_key=%s", q, key);
   free(q);
   const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "hunter");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   int emitted = 0;
   cJSON *data = cJSON_GetObjectItem(root, "data");
   cJSON *emails = cJSON_GetObjectItem(data, "emails");

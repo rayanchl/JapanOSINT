@@ -2,6 +2,7 @@
 #include "../core/url_override.h"
 #include "jsonlist.h"
 #include "feedlib.h"
+#include "pagewalk.h"     /* jo_page_max, jo_next_link, jo_declared_total, the describers */
 #include <openssl/sha.h>
 #include <stdio.h>
 #include <string.h>
@@ -459,30 +460,14 @@ static int gj_exceeded(cJSON *doc) {
   return 0;
 }
 
-/* An OGC API Features / WFS3 `links` entry with rel="next". Returned malloc'd. */
-static char *gj_next_link(cJSON *doc) {
-  cJSON *links = cJSON_GetObjectItem(doc, "links");
-  if (!cJSON_IsArray(links)) return NULL;
-  cJSON *l;
-  cJSON_ArrayForEach(l, links) {
-    cJSON *rel = cJSON_GetObjectItem(l, "rel");
-    if (!cJSON_IsString(rel) || strcasecmp(rel->valuestring, "next")) continue;
-    cJSON *href = cJSON_GetObjectItem(l, "href");
-    if (cJSON_IsString(href) && href->valuestring[0]) return strdup(href->valuestring);
-  }
-  return NULL;
-}
-
-/* What the server says the full set holds, across the spellings in use. */
-static long gj_declared_total(cJSON *doc) {
-  static const char *const K[] = { "numberMatched", "totalFeatures",
-                                   "matchedCount", "count", NULL };
-  for (int i = 0; K[i]; i++) {
-    cJSON *v = cJSON_GetObjectItem(doc, K[i]);
-    if (cJSON_IsNumber(v) && v->valuedouble > 0) return (long)v->valuedouble;
-  }
-  return -1;
-}
+/* The server's next link and its declared total: lib/pagewalk.c's
+ * jo_next_link() and jo_declared_total(), shared with the other two walkers
+ * since 2026-11-07. This file's own copies were the narrowest of the three:
+ * gj_next_link read only `links[rel=next]` and handed a RELATIVE href to the
+ * fetch unresolved, and gj_declared_total knew four spellings
+ * (numberMatched, totalFeatures, matchedCount, count) — the last read
+ * unconditionally, so a `count` that was only this page's size passed for
+ * the upstream's total. Found by an audit that read every copy. */
 
 /* Cheap fingerprint of a page, to notice a cursor the server ignored. */
 static unsigned long long gj_page_fp(cJSON *features) {
@@ -515,9 +500,13 @@ static long gj_declared_size(const char *url) {
 
 int geojson_emit_paged(intel_sink *sink, const char *source_id,
                        http_client *http, const char *url, int timeout_ms) {
-  int page_max = 20;   /* exhaustive-ok: page-walk ceiling; an early stop is disclosed as a collector-truncation-notice and $JO_GEOJSON_PAGE_MAX raises it */
-  const char *env = getenv("JO_GEOJSON_PAGE_MAX");
-  if (env && *env) { int v = atoi(env); if (v > 0) page_max = v; }
+  /* The tree's ONE ceiling (jo_page_max, lib/pagewalk.c). This walk was the
+   * last one off it: a private 20 under $JO_GEOJSON_PAGE_MAX alone, so an
+   * operator's $JO_PAGE_MAX — the brake that bounds every other walk, in both
+   * directions — did not reach the ~300 VGEO rows (2026-11-07 audit). The old
+   * name is honoured as a legacy spelling, the way $JO_JSONLIST_PAGE_MAX is,
+   * and $JO_PAGE_MAX wins when both are set. */
+  int page_max = jo_page_max("JO_GEOJSON_PAGE_MAX");   /* exhaustive-ok: page-walk ceiling; an early stop is disclosed as a collector-truncation-notice */
 
   /* Plan against the URL that will ACTUALLY be fetched — see the same note in
    * jsonlist_emit_paged(). An operator-approved offset parameter lives only in
@@ -527,6 +516,7 @@ int geojson_emit_paged(intel_sink *sink, const char *source_id,
   if (!page_url) return -1;
 
   int total = 0, pages = 0, truncated = 0;
+  long fetched = 0;   /* features handed over on pages that were not repeats */
   int full_unadvanced = 0;   /* last page full, and nothing lets us ask for more */
   long available = -1;
   unsigned long long prev_fp = 0;
@@ -543,6 +533,15 @@ int geojson_emit_paged(intel_sink *sink, const char *source_id,
     feed_last_json_status_reset();
     cJSON *doc = feed_get_json(http, page_url, timeout_ms);
     if (!doc) {
+      /* Page 1 answered the upstream's own "nothing matched" (a 204, or a 404
+       * whose body says so — FDSN's `nodata`): rule 1's honest empty, rc 0,
+       * no notice (feed_status_body_is_declared_empty, 2026-11-07). */
+      if (pages == 0 && feed_status_declared_empty(feed_last_json_status())) {
+        fprintf(stderr, "[%s] the upstream answered with its own no-data "
+                        "status: an EMPTY result, not a refusal\n", source_id);
+        free(page_url);
+        return 0;
+      }
       /* A failed FIRST fetch is a dead endpoint and is the caller's to report.
        * A failure mid-walk means we already hold real features: keep them, stop,
        * and disclose the shortfall. */
@@ -554,16 +553,24 @@ int geojson_emit_paged(intel_sink *sink, const char *source_id,
       failed_url = strdup(page_url);
       break;
     }
-    if (available < 0) available = gj_declared_total(doc);
-
     cJSON *features = cJSON_IsArray(doc) ? doc : cJSON_GetObjectItem(doc, "features");
     int got = cJSON_IsArray(features) ? cJSON_GetArraySize(features) : 0;
+    if (available < 0) available = jo_declared_total(doc, got, NULL, 0);
 
     unsigned long long fp = gj_page_fp(features);
     if (pages > 0 && got > 0 && fp == prev_fp) repeated = 1;
     prev_fp = fp;
 
-    total += geojson_emit_doc(sink, source_id, doc);
+    /* A page the walk has recognised as a re-serve is not emitted — the same
+     * rule jsonlist_emit_paged() adopted on 2026-09-05, when 129 flagged
+     * sources sat at an exact 1/2, 1/3 or 2/3 stored/emitted ratio because
+     * the repeat was emitted first and recognised after. This walk kept the
+     * old order, so a re-served page was re-emitted onto uids written one
+     * page earlier and counted into records_used (2026-11-07 audit). */
+    if (!repeated) {
+      total += geojson_emit_doc(sink, source_id, doc);
+      fetched += got;
+    }
 
     char *next = NULL;
     if (!repeated && got > 0) {
@@ -574,8 +581,8 @@ int geojson_emit_paged(intel_sink *sink, const char *source_id,
         long cur = jsonlist_query_int(page_url, "resultOffset");
         next = jsonlist_query_set(page_url, "resultOffset", (cur >= 0 ? cur : 0) + size);
       }
-      /* 2. a next link, followed verbatim */
-      if (!next) next = gj_next_link(doc);
+      /* 2. a next link, resolved against this page (jo_next_link) */
+      if (!next) next = jo_next_link(doc, page_url);
       /* 3. the upstream's own total exceeds what we hold, and the URL already
        *    names a cursor. No page size is required here: the remainder is the
        *    server's arithmetic, not ours. */
@@ -631,36 +638,73 @@ int geojson_emit_paged(intel_sink *sink, const char *source_id,
   }
   free(page_url);
 
-  if (truncated || full_unadvanced) {
+  /* THE DECLARED-SHORT TRIGGER, which jsonlist_emit_paged() gained on
+   * 2026-10-24 and this walk did not: the upstream's own total exceeds what
+   * the walk fetched, and nothing above noticed — because the walk ended on
+   * the repeat guard or an EMPTY page, both of which `break` before
+   * `truncated` or `full_unadvanced` can be set. A FeatureCollection that says
+   * `numberMatched: 9079` and re-serves its first page to every offset read
+   * one page and filed nothing. It cannot cry wolf: a walk that read
+   * everything has available <= total. (2026-11-07 audit, "look for the
+   * other copies".) */
+  /* Compared on what was FETCHED, as jsonlist does: a feature the emitter
+   * skipped (not an object) was still handed over, and `total` also counts a
+   * repeated page's re-emit, which is not progress. */
+  int declared_short = !failed && !truncated && !full_unadvanced &&
+                       available >= 0 && available > fetched;
+
+  if (truncated || full_unadvanced || declared_short) {
     cJSON *p = cJSON_CreateObject();
     cJSON_AddStringToObject(p, "source_id", source_id);
     cJSON_AddStringToObject(p, "endpoint", url);
     cJSON_AddNumberToObject(p, "records_used", total);
-    if (available >= 0) cJSON_AddNumberToObject(p, "records_available", available);
+    if (available >= 0) {
+      cJSON_AddNumberToObject(p, "records_available", available);
+      cJSON_AddStringToObject(p, "records_available_basis",
+                              "upstream declared this total");
+    }
     else cJSON_AddStringToObject(p, "records_available",
                                  "unknown — upstream declared no total");
     cJSON_AddNumberToObject(p, "pages_read", pages);
     cJSON_AddNumberToObject(p, "page_ceiling", page_max);
-    cJSON_AddBoolToObject(p, "more_pages_pending", 1);
-    char fdesc[64] = "", freason[256] = "";
+    /* FALSE on the declared-short path: the walk held no next page when it
+     * stopped, so the authoritative signal is records_available against
+     * records_used — jsonlist's rule. */
+    cJSON_AddBoolToObject(p, "more_pages_pending", declared_short ? 0 : 1);
+    /* The failing page and the ceiling, in lib/pagewalk.c's words (shared
+     * with pw_walk and jsonlist_emit_paged since 2026-11-07): a failed page
+     * used to read "needs a per-host minimum gap" whatever it answered, and a
+     * ceiling stop "raise $JO_GEOJSON_PAGE_MAX" although $JO_PAGE_MAX wins. */
+    char fdesc[96] = "", freason[400] = "", ffix[400] = "";
+    char cwhy[200] = "", cfix[400] = "";
+    jo_page_ceiling_describe(page_max, 0, "JO_GEOJSON_PAGE_MAX",
+                             cwhy, sizeof cwhy, cfix, sizeof cfix);
     if (failed) {
       feed_status_describe(failed_status, fdesc, sizeof fdesc);
       cJSON_AddNumberToObject(p, "failed_page", failed_page);
       cJSON_AddNumberToObject(p, "failed_page_status", (double)failed_status);
       cJSON_AddStringToObject(p, "failed_page_url", failed_url ? failed_url : "");
-      snprintf(freason, sizeof freason, "page %d answered %s, so the walk stopped "
-               "before the upstream ran out", failed_page, fdesc);
+      pw_cut_describe(failed_page, failed_status, freason, sizeof freason,
+                      ffix, sizeof ffix);
     }
     cJSON_AddStringToObject(p, "reason", failed ? freason : truncated
-      ? "the page ceiling stopped the walk while the upstream still had features"
+      ? cwhy
+      : declared_short
+      ? "the walk ended without reaching the upstream's own declared total — "
+        "either it re-served a page it had already given (the repeat guard) or "
+        "it answered an empty page, so the remainder was never requested"
       : "the last page came back full (or the upstream declared more than was "
         "read) and neither the response nor this URL offers a way to ask for "
         "the next page, so features may remain unread");
     cJSON_AddStringToObject(p, "remedy", failed
-      ? "re-run; a host that refuses or rate-limits later pages needs a "
-        "per-host minimum gap (core/hostgate.c) — see docs/SOURCE_EXHAUSTIVENESS.md"
+      ? ffix
       : truncated
-      ? "raise $JO_GEOJSON_PAGE_MAX — see docs/SOURCE_EXHAUSTIVENESS.md"
+      ? cfix
+      : declared_short
+      ? "check whether the cursor this URL carries is honoured (send it twice "
+        "with different values and compare feature ids) and whether the layer "
+        "needs a stable order (orderByFields / sortBy on its own id) — see "
+        "docs/SOURCE_EXHAUSTIVENESS.md"
       : "give this source a cursor the walk can advance (for Socrata: $offset "
         "with a stable $order=:id) — see docs/SOURCE_EXHAUSTIVENESS.md");
     char *pj = cJSON_PrintUnformatted(p);
@@ -692,12 +736,13 @@ int geojson_emit_paged(intel_sink *sink, const char *source_id,
     free(pj);
   }
 
-  if (pages > 1 || truncated || full_unadvanced)
+  if (pages > 1 || truncated || full_unadvanced || declared_short)
     fprintf(stderr, "[%s] emitted %d across %d page(s)%s\n",
             source_id, total, pages,
             failed ? " (TRUNCATED: a later page failed)"
             : truncated ? " (TRUNCATED)"
-                      : full_unadvanced ? " (TRUNCATED: full last page, no cursor)" : "");
+            : full_unadvanced ? " (TRUNCATED: full last page, no cursor)"
+            : declared_short ? " (SHORT of the upstream's declared total)" : "");
   free(failed_url);
   return total;
 }

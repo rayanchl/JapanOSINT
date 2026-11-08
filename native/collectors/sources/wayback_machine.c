@@ -64,7 +64,7 @@ static int emit_snapshot(intel_sink *sink, const cJSON *row) {
   cJSON_AddStringToObject(props, "timestamp", ts->valuestring);
   if (mt && mt->valuestring) cJSON_AddStringToObject(props, "mimetype", mt->valuestring);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char rk[2300];
@@ -73,10 +73,11 @@ static int emit_snapshot(intel_sink *sink, const cJSON *row) {
   snprintf(title, sizeof title, "%s — %s", date[0] ? date : ts->valuestring,
            orig->valuestring);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.summary         = orig->valuestring;
   it.link            = playback;
   it.published_at    = date[0] ? date : NULL;
@@ -85,7 +86,7 @@ static int emit_snapshot(intel_sink *sink, const cJSON *row) {
   it.tags_json       = "[\"osint-search\",\"WAYBACK_MACHINE\"]";
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -96,11 +97,18 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   char enc[1024], url[1200];
   jo_uri_encode_buf(entity, enc, sizeof enc);
+  /* limit=-50, not limit=50 (2026-11-07). CDX answers in capture order,
+   * OLDEST first, so `limit=50` is the first fifty captures of a URL ever
+   * made — for any long-lived site, years-old snapshots and never the recent
+   * ones. The CDX server's documented negative limit returns the LAST N.
+   * UNMEASURED from this container: web.archive.org's tunnel closed on every
+   * request (agent-proxy ws_closed_mid_exchange, three tries that day), so this
+   * follows the documented contract and wants one live reading. */
   snprintf(url, sizeof url,
-           "https://web.archive.org/cdx/search/cdx?url=%s&output=json&limit=50",
+           "https://web.archive.org/cdx/search/cdx?url=%s&output=json&limit=-50",
            enc);
   cJSON *json = get_json(ctx->http, url);
-  if (!json) return 0;
+  if (!json) return -1;   /* a failed/unparsable CDX answer is not "no captures" */
 
   int emitted = 0;
   if (cJSON_IsArray(json)) {

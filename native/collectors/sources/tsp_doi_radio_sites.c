@@ -125,7 +125,7 @@ static int emit_features(cJSON *feats, intel_sink *sink) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  int total = 0, pages = 0;
+  int total = 0, pages = 0, cut = 0, last_full = 0;
   for (int i = 0; i < PAGES; i++) {
     char url[512];
     snprintf(url, sizeof url,
@@ -133,12 +133,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
              "&resultRecordCount=%d&resultOffset=%d&f=json",
              DOI_BASE, PAGE_SIZE, i * PAGE_SIZE);
     cJSON *doc = feed_get_json(ctx->http, url, 60000);
-    if (!doc) break;
+    if (!doc) { cut = pages > 0; break; }   /* a refused LATER page is disclosed below */
     cJSON *feats = cJSON_GetObjectItem(doc, "features");
-    if (!cJSON_IsArray(feats)) { cJSON_Delete(doc); break; }
+    if (!cJSON_IsArray(feats)) { cJSON_Delete(doc); cut = pages > 0; break; }
     pages++;
     int got = cJSON_GetArraySize(feats);
     total += emit_features(feats, sink);
+    last_full = (got > 0);
     cJSON_Delete(doc);
     if (got == 0) break;
   }
@@ -146,6 +147,18 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     fprintf(stderr, "[doi-radio-sites] fetch failed\n");
     return -1;
   }
+  /* Every stop is disclosed (2026-11-07): a later page that failed used to
+   * `break` as if it were the end of the data, and a walk that used up its
+   * page budget on full pages said nothing. */
+  if (cut)
+    jo_trunc_notice_scoped(sink, "doi-radio-sites", "walk-cut", DOI_BASE, total, -1,
+                           "a later page failed (transport, refusal or an "
+                           "unreadable body) and the walk stopped there",
+                           "re-run; one failed page is one reading");
+  else if (pages >= PAGES && last_full)
+    jo_trunc_notice_scoped(sink, "doi-radio-sites", "page-ceiling", DOI_BASE, total, -1,
+                           "the PAGES ceiling stopped the walk on a full page",
+                           "raise PAGES in tsp_doi_radio_sites.c");
   fprintf(stderr, "[doi-radio-sites] emitted %d over %d page(s)\n", total, pages);
   return 0;
 }

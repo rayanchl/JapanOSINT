@@ -4,8 +4,11 @@
  *
  * Endpoint: https://ows.emodnet-humanactivities.eu/wfs?service=WFS
  *   &version=2.0.0&request=GetFeature&outputFormat=application/json
- *   &typeName=emodnet:portvessels&count=5000
- *   (the layer has >1.7M rows; &count= pages it — see parse_notes)
+ *   &typeName=emodnet:portvessels&count=5000&startIndex=0
+ *   (the layer has 1,702,622 rows, measured 2026-11-07. Until then ONE
+ *    5,000-row page was read per run with no notice; it is now read over a
+ *    page_resume-style CYCLE — 40 pages a weekly run, ~9 runs a cycle — by
+ *    _emodnet_wfs.inc's emw_walk_cycle, every stop disclosed.)
  * Emits (all fetched): port, port_id, portcode, country, year, vesseltype,
  *   tonnage band + tonnagesize, nofvessels, gross_tonnage__gt_thousand, and
  *   the PORT point the statistic describes.
@@ -34,19 +37,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_emodnet_wfs.inc"
 
-#define WFS_URL "https://ows.emodnet-humanactivities.eu/wfs?service=WFS" \
-                "&version=2.0.0&request=GetFeature" \
-                "&outputFormat=application/json&typeName=emodnet:portvessels" \
-                "&count=5000"
-
-static int run(const source_ctx *ctx, intel_sink *sink) {
-  cJSON *doc = feed_get_json(ctx->http, WFS_URL, 90000);
-  if (!doc) {
-    fprintf(stderr, "[emodnet-port-vessel-traffic] fetch/parse failed\n");
-    return -1;
-  }
-  cJSON *feats = cJSON_GetObjectItem(doc, "features");
+/* numberMatched 1,702,622 (2026-11-07) against the old single count=5000 page; 341 pages, read as a CYCLE of 40 pages (200,000 rows) a run. Paged through _emodnet_wfs.inc (startIndex, natural key order). */
+#define WFS_URL "https://ows.emodnet-humanactivities.eu/wfs?service=WFS&version=2.0.0&request=GetFeature&outputFormat=application/json&typeName=emodnet:portvessels&count=5000&startIndex=0"
+static int emw_feats(const source_ctx *ctx, intel_sink *sink, cJSON *feats, void *ud) {
+  (void)ctx; (void)ud;
   int n = 0;
   cJSON *f;
   cJSON_ArrayForEach(f, feats) {
@@ -124,9 +120,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (sink->emit(sink, &it) >= 0) n++;
     free(pj);
   }
-  cJSON_Delete(doc);
+  return n;
+}
+
+static int run(const source_ctx *ctx, intel_sink *sink) {
+  int n = emw_walk_cycle(ctx, sink, ctx->source_id ? ctx->source_id : "emodnet-port-vessel-traffic", WFS_URL, 40, emw_feats, NULL);
   fprintf(stderr, "[emodnet-port-vessel-traffic] emitted %d\n", n);
-  return 0;
+  return n < 0 ? -1 : 0;   /* -1 only when the first page failed */
 }
 
 static const source_def mar_emodnet_port_vessel_traffic_def = {

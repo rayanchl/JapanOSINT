@@ -27,6 +27,7 @@ entirely (docs/b2-path-stale-triage-2026-10-21.md). Every candidate has to go
 through probe_hp_batch.py --check-filter before it goes anywhere near a row.
 """
 import html
+import os
 import re
 import sys
 import time
@@ -34,11 +35,12 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-sys.path.insert(0, '/home/user/JapanOSINT/native/tools')
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import jo_tls                                                    # noqa: E402
-
-UA = ("JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; "
-      "feed collector; contact via repo issues)")
+# The ENGINE's request conditions (JO_USER_AGENT, or the host's
+# core/host_agents.def agent) rather than a private copy of the agent that
+# skipped the per-host table (2026-11-07).
+import jo_http                                                   # noqa: E402
 CTX = jo_tls.context()
 LOCAL = ("connection reset by peer", "ws_closed_mid_exchange",
          "connection refused", "unexpected eof while reading")
@@ -51,7 +53,8 @@ def get(url, tries=3):
     for a in range(tries):
         try:
             r = urllib.request.urlopen(
-                urllib.request.Request(url, headers={"User-Agent": UA}),
+                urllib.request.Request(url, headers={k: v for k, v in jo_http.engine_headers(url).items()
+                                                if k != "Accept-Encoding"}),
                 timeout=45, context=CTX)
             return r.status, r.read(600000).decode("utf-8", "replace"), r.geturl()
         except urllib.error.HTTPError as e:

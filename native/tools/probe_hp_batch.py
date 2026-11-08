@@ -60,74 +60,18 @@ from manifest import parse_opts, opt        # noqa: E402  (THE opts parser)
 
 # verify_feeds' UA ends in a literal "Python-urllib" token, and several hosts
 # block on that token alone: opendata.gov.jo answered HTTP 451 and boi.org.il
-# served an SPA shell to it, while the identical request without it returned
-# JSON. Five rows in this batch were false rejections for that reason before it
-# was found. This still says exactly what we are and gives a contact — it drops
-# only the library name, which is not information the operator needs and is the
-# one part they are filtering on.
-def _engine_user_agent():
-    """The User-Agent the ENGINE will send, read from core/httpclient.h.
+# served an SPA shell to it. The probe sends what the ENGINE sends instead —
+# JO_USER_AGENT from core/httpclient.h (1,623 of batch 19's 1,810 rows were
+# once proven against a string they never send; IXF_TORIX answers 200 to one
+# and 403 to the other), and core/host_agents.def's agent for a listed host.
+# That resolution now lives in tools/jo_http.py, ONE copy for every fetching
+# tool here (2026-11-07: ten fetchers sent eight different agents and only
+# this one read the per-host table). The names stay importable from here.
+import jo_http                     # noqa: E402  (THE request conditions)
+DEFAULT_UA = jo_http.DEFAULT_UA
+HOST_AGENTS = jo_http.HOST_AGENTS
+import hpjson                      # noqa: E402  (THE engine JSON path model)
 
-    This prober's whole promise is that a row is never verified under different
-    request conditions than the ones its collector will actually use — and it
-    was breaking that promise on the single most consequential header. It sent
-    `Mozilla/5.0 (compatible; JapanOSINT-research/1.0; …)` while every hp row at
-    runtime sends JO_USER_AGENT, so 1,623 of batch 19's 1,810 rows (the ones not
-    declaring a header of their own) were proven against a string they will
-    never send. Measured, the difference decides the response rarely — 13 of 14
-    HTTP-error rows answered identically to both — but "rarely" is not "never",
-    and IXF_TORIX answers 200 to one and 403 to the other.
-
-    Parsed from the header rather than copied, so the two cannot drift apart
-    again. A row that genuinely needs a different UA declares header1, which the
-    engine then honours — that is the supported way to ask for one.
-    """
-    path = os.path.join(NATIVE, "core", "httpclient.h")
-    try:
-        src = open(path, encoding="utf-8").read()
-    except OSError:
-        return None
-    m = re.search(r"#define\s+JO_USER_AGENT\s*((?:\\\s*\n|.)*)", src)
-    if not m:
-        return None
-    parts = re.findall(r'"([^"]*)"', m.group(1))
-    return "".join(parts) or None
-
-
-DEFAULT_UA = _engine_user_agent() or \
-    "JapanOSINT/1.0 (+https://github.com/RCorp/OSINTsaas; feed collector; contact via repo issues)"
-
-
-def _host_agents():
-    """core/host_agents.def — the engine's per-host User-Agent table — as
-    {host: (agent, extra_headers)}, parsed from the same file the C includes so
-    the probe sends what the engine sends. A listed host's agent replaces any
-    User-Agent the row declares, exactly as http_request() does."""
-    try:
-        src = open(os.path.join(NATIVE, "core", "host_agents.def"), encoding="utf-8").read()
-        cli = open(os.path.join(NATIVE, "core", "httpclient.c"), encoding="utf-8").read()
-    except OSError:
-        return {}
-    src = re.sub(r"/\*.*?\*/", "", src, flags=re.S)
-    kinds = dict(re.findall(r'HOST_AGENT_KIND\(\s*(\w+)\s*,\s*"([^"]*)"\s*\)', src))
-    m = re.search(r"BROWSER_EXTRA_HEADERS\[\]\s*=\s*\{(.*?)NULL", cli, re.S)
-    extra = {}
-    for h in re.findall(r'"([^"]+)"', m.group(1) if m else ""):
-        k, _, v = h.partition(":")
-        extra[k.strip()] = v.strip()
-    # HA_SEC's agent carries a contact mailbox and an operator may replace it
-    # with their own; host_agent_ua() in httpclient.c reads the same variable,
-    # so the probe keeps sending what the engine sends.
-    sec_env = os.environ.get("SEC_CONTACT_UA")
-    if sec_env and "HA_SEC" in kinds:
-        kinds["HA_SEC"] = sec_env
-    out = {}
-    for host, kind in re.findall(r'HOST_AGENT\(\s*"([^"]+)"\s*,\s*(\w+)\s*\)', src):
-        out[host.lower()] = (kinds[kind], extra if kind == "HA_BROWSER" else {})
-    return out
-
-
-HOST_AGENTS = _host_agents()
 
 # verify_feeds caps a body at 8 MB on the reasoning that "a feed that big is not
 # a feed". That was true of the RSS-shaped sources it was written for, but this
@@ -250,72 +194,34 @@ def expand_runtime(s, r, shift=0):
     return s
 
 
-def _path_step(node, seg, out):
-    """hp_seg_step: key=value selector, positional index, map across."""
-    if isinstance(node, list):
-        if "=" in seg:
-            k, v = seg.split("=", 1)
-            for it in node:
-                if isinstance(it, dict) and it.get(k) == v:
-                    out.append(it)
-                    break
-        elif seg.isdigit():
-            i = int(seg)
-            if i < len(node):
-                out.append(node[i])
-        else:
-            for it in node:
-                _path_step(it, seg, out)
-    elif isinstance(node, dict):
-        # cJSON_GetObjectItem, which hp_path walks with, matches keys
-        # case-INsensitively; judging more strictly than the engine reads
-        # fails rows the engine serves.
-        if seg not in node:
-            seg = next((k for k in node if isinstance(k, str)
-                        and k.lower() == seg.lower()), seg)
-        if node.get(seg) is not None:
-            out.append(node[seg])         # a JSON null at the path is no node
-
-
 def resolve_array_path(doc, path):
     """Resolve a declared `array_path` the way lib/hpengine.c hp_run_json
-    does: hp_path first (keys, a numeric index into a list, `key=value`), then
-    hp_path_multi (map across every list on the way, flattened one level) when
-    that fails. Returns the node, or None when the path genuinely is not there
-    -- which stays a PATH_UNRESOLVED, because guessing some other array is how
-    a row whose shape changed gets a false pass.
+    does: hp_path first (keys, a numeric index into a list, `key=value`,
+    `$last`, and the whole path as ONE key when the split walk fails — OData's
+    `@odata.nextLink`), then hp_path_multi (map across every list on the way,
+    flattened one level) when that found nothing. Returns the node, or None
+    when the path genuinely is not there — which stays a PATH_UNRESOLVED,
+    because guessing some other array is how a row whose shape changed gets a
+    false pass.
 
-    The probe used to walk dict keys only and disagreed with the engine in
-    ways that all read as "this source is dead" (rule 4c):
+    The model is tools/hpjson.py, shared with audit_idkeys and
+    diagnose_emit_keys. The probe used to walk dict keys only and disagreed
+    with the engine in ways that all read as "this source is dead" (rule 4c):
       * `"."`, or any path whose segments are all empty, is THE ROOT -- hp_path
         skips empty segments. The hex.pm rows in batch 32 are that shape.
       * A path may CROSS AN ARRAY: NuGet's registration index is `items[]` of
         catalog pages, each with its own `items[]`; `items.items` is 86
         version records through the engine.
-      * `0.content` under a `null([...])` JSONP body (batch 39)."""
-    node = doc
-    for seg in [s for s in path.split(".") if s]:
-        crosses = isinstance(node, list) and not seg.isdigit() and "=" not in seg
-        nxt = []
-        if not crosses:                       # hp_path cannot map across a list
-            _path_step(node, seg, nxt)
-        if not nxt:
-            node = None
-            break
-        node = nxt[0]
-    if node is not None:
-        return node
-    cur = [doc]
-    for seg in [s for s in path.split(".") if s]:
-        nxt = []
-        for n in cur:
-            _path_step(n, seg, nxt)
-        cur = nxt
-    flat = []
-    for it in cur:
-        flat.extend(it) if isinstance(it, list) else flat.append(it)
-    flat = [x for x in flat if x is not None]
-    return flat or None
+      * `0.content` under a `null([...])` JSONP body (batch 39).
+      * `$last` and the literal-dot key were added to hp_path after this
+        resolver was written and never reached it (2026-11-07).
+    A JSON null AT the path is a node to hp_path (so hp_path_multi is not
+    tried) and holds no records: None here, as before."""
+    n = hpjson.hp_path(doc, path)
+    if n is hpjson.MISSING:
+        flat = [x for x in hpjson.hp_path_multi(doc, path) if x is not None]
+        return flat or None
+    return n
 
 
 def jsonp_inner(text):
@@ -366,92 +272,30 @@ def row_body(r, entity=None, shift=0):
 
 # ── per-host pacing ───────────────────────────────────────────────────────
 # The probe used to send its --jobs threads at whatever hosts the rows named,
-# with no notion of a host: a beat whose rows share one server (a national
-# portal's 500 datasets, a WordPress host serving 60 parish councils) got
-# every worker at once, and the probe then reported 429s and 502s that were a
-# reading of ITS OWN burst, not of the row. CLAUDE.md records the symptom:
-# "shared hosting that answers 502/403 to twelve concurrent probes stores its
-# feed at six". core/hostgate.c paces the engine per host; this is the same
-# idea for the probe — one request per host per HOST_GAP_MS, enforced across
-# threads, with a Retry-After or a 429 widening that host's gap for the rest
-# of the run. Hosts the rows do not share pay nothing.
+# with no notion of a host, and then reported 429s and 502s that were a
+# reading of ITS OWN burst (CLAUDE.md: "shared hosting that answers 502/403 to
+# twelve concurrent probes stores its feed at six"). One request per host per
+# HOST_GAP_MS across threads, a 429 or Retry-After widening that host's gap —
+# jo_http.Pacer, the same pacing every tool here now shares.
 HOST_GAP_MS = 1000
-_host_lock = __import__("threading").Lock()
-_host_next = {}          # host -> earliest monotonic time the next request may start
-_host_gap = {}           # host -> gap in seconds (grows on 429 / Retry-After)
 
 
-def _pace(url):
-    host = urllib.parse.urlsplit(url).netloc.lower()
-    if not host or HOST_GAP_MS <= 0:
-        return host
-    import time
-    while True:
-        with _host_lock:
-            now = time.monotonic()
-            due = _host_next.get(host, 0.0)
-            if now >= due:
-                _host_next[host] = now + _host_gap.get(host, HOST_GAP_MS / 1000.0)
-                return host
-            wait = due - now
-        time.sleep(min(wait, 5.0))
+def fetch(url, extra, timeout=None, body=None, mode=None):
+    """This row's request as the ENGINE makes it (jo_http.engine_headers):
+    the row's declared headers, the engine's default Accept for the row's
+    MODE — `application/json` for json only, libcurl's `*/*` otherwise; this
+    used to send `*/*` to every row — the Accept-Encoding libcurl offers (to
+    what Python can decode; it used to offer gzip alone), the per-host agent
+    table, and the row's timeout and POST body. Paced per host. Raises
+    urllib.error.HTTPError on >= 400 like urlopen.
 
-
-def _throttled(host, status, retry_after):
-    """A 429 (or any Retry-After) is the host saying the gap is too small."""
-    if not host:
-        return
-    try:
-        ra = float(retry_after) if retry_after else 0.0
-    except ValueError:
-        ra = 0.0
-    with _host_lock:
-        g = _host_gap.get(host, HOST_GAP_MS / 1000.0)
-        g = max(g * 2, ra, 1.0)
-        _host_gap[host] = min(g, 60.0)
-        import time
-        _host_next[host] = time.monotonic() + _host_gap[host]
-    sys.stderr.write("  [pace] %s answered %s; gap now %.1fs\n" % (host, status, _host_gap[host]))
-
-
-def fetch(url, extra, timeout=None, body=None):
-    """Same shape as verify_feeds.fetch, plus this row's declared headers and
-    timeout, and its POST body when it declares one. Paced per host."""
-    host = _pace(url)
-    headers = {
-        "User-Agent": DEFAULT_UA,
-        "Accept": "*/*",
-        "Accept-Encoding": "gzip",
-    }
-    headers.update(extra)
-    ha = HOST_AGENTS.get((urllib.parse.urlsplit(url).hostname or "").lower())
-    if ha:
-        for k in [k for k in headers if k.lower() == "user-agent"]:
-            del headers[k]
-        headers["User-Agent"] = ha[0]
-        headers.update(ha[1])
-    data = body.encode("utf-8") if body is not None else None
-    req = urllib.request.Request(VF.encode_url(url), headers=headers, data=data,
-                                 method="POST" if data is not None else "GET")
-    # Main's 429/Retry-After handling and this branch's shared TLS context are
-    # both needed here: the default context refuses handshakes the engine
-    # completes, and THIS is the gate that decides whether a row ships.
-    try:
-        resp_cm = urllib.request.urlopen(req, timeout=timeout or VF.TIMEOUT,
-                                         context=jo_tls.context())
-    except urllib.error.HTTPError as e:
-        if e.code == 429 or e.headers.get("Retry-After"):
-            _throttled(host, e.code, e.headers.get("Retry-After"))
-        raise
-    with resp_cm as resp:
-        raw = resp.read(MAXBYTES + 1)
-        if resp.headers.get("Content-Encoding") == "gzip":
-            import gzip
-            try:
-                raw = gzip.decompress(raw)
-            except Exception:
-                pass
-        return resp.status, resp.headers.get("Content-Type", ""), raw
+    Main's 429/Retry-After handling and the shared TLS context are both
+    needed: the default context refuses handshakes the engine completes, and
+    THIS is the gate that decides whether a row ships."""
+    jo_http.PACER.gap_ms = HOST_GAP_MS
+    st, ct, raw, _h = jo_http.request(url, extra, timeout or VF.TIMEOUT, body,
+                                      MAXBYTES, mode=mode)
+    return st, ct, raw
 
 
 def count_xml(text):
@@ -1058,6 +902,15 @@ def verify_html_table(r, sid, url, text, status, nbytes):
             "header=" + "|".join(names[:8])[:100])
 
 
+def _wall_note(kind):
+    """The remedy lib/hpengine.c's fetch-failure note gives for each wall."""
+    return {
+        "CHALLENGE": "JS challenge (cf_chl_opt): no agent or pacing reaches it",
+        "BOT_WALL": "bot wall: bisect the agent (core/host_agents.def)",
+        "RATE_LIMITED": "rate-limit page: measure the budget, then core/hostgate.c",
+    }.get(kind, "")
+
+
 def verify(r):
     """Verdict for one manifest row. Mirrors verify_feeds.verify exactly, and
     steps a dated row's date back the way hp_run's date_back does: a 4xx, or a
@@ -1104,7 +957,8 @@ def _judge(r, url, shift=0, entity=None):
         # the engine will actually read, and a pattern that matches nothing
         # fails here the way it fails there.
         try:
-            _st, _ct, page = fetch(o["index_url"], row_headers(r), row_timeout(r))
+            _st, _ct, page = fetch(o["index_url"], row_headers(r), row_timeout(r),
+                                   mode=r["mode"])
         except Exception as e:
             return (sid, o["index_url"], "INDEX_ERR", "", 0, 0, 0, ("%s: %s" % (type(e).__name__, e))[:60])
         hrefs = re.findall(r"""<a\b[^>]*?\bhref\s*=\s*["']([^"']+)["']""",
@@ -1119,8 +973,19 @@ def _judge(r, url, shift=0, entity=None):
     for k, v in bh.items():
         hdrs.setdefault(k, v)            # a declared header wins, as in hp_run
     try:
-        status, ctype, raw = fetch(url, hdrs, row_timeout(r), body)
+        status, ctype, raw = fetch(url, hdrs, row_timeout(r), body, mode=r["mode"])
     except urllib.error.HTTPError as e:
+        # A 401/403 whose body is a JS CHALLENGE (or a rate-limit page) is
+        # named as one, as lib/hpengine.c names it: the remedy is not a
+        # credential or an agent, and HTTP_ERR said nothing of the kind.
+        try:
+            eb = jo_http.decode_content(e.read(256 * 1024),
+                                        e.headers.get("Content-Encoding") if e.headers else "")
+        except Exception:
+            eb = b""
+        wk = jo_http.wall_kind(eb.decode("utf-8", "replace"), e.code)
+        if wk:
+            return (sid, url, wk, "", 0, e.code, len(eb), _wall_note(wk))
         return (sid, url, "HTTP_ERR", "", 0, e.code, 0, str(e.reason)[:60])
     except urllib.error.URLError as e:
         return (sid, url, "NET_ERR", "", 0, 0, 0, str(e.reason)[:60])
@@ -1268,8 +1133,9 @@ def _judge(r, url, shift=0, entity=None):
         # would have shipped "verified" against it. A CSV or blocklist is never
         # served as text/html, so the content-type alone settles it.
         if "html" in ctype.lower() or _looks_like_html(text):
-            return (sid, url, "HTML_CHALLENGE", "", 0, status, nbytes,
-                    text[:80].replace("\n", " "))
+            wk = jo_http.wall_kind(text, status)
+            return (sid, url, wk or "HTML_CHALLENGE", "", 0, status, nbytes,
+                    _wall_note(wk) if wk else text[:80].replace("\n", " "))
         lines = [x for x in text.splitlines() if x.strip() and not x.startswith("#")]
         if len(lines) > 1:
             kind, items = "text-lines", len(lines)
@@ -1317,14 +1183,107 @@ def _judge(r, url, shift=0, entity=None):
     if kind == "__empty__":
         return (sid, url, "EMPTY_RESULTSET", "", 0, status, nbytes, text[:80].replace("\n", " "))
     if not kind:
+        # A 200 that is a wall is a refusal with a remedy, not a shape change:
+        # named with the ENGINE's vocabulary (jo_http.wall_kind reads it out of
+        # lib/hpengine.c), so a JSON row served Imperva's "Pardon Our
+        # Interruption" or a Cloudflare `cf_chl_opt` page reads BOT_WALL /
+        # CHALLENGE here exactly as the engine's fetch-failure note names it.
+        # It used to read UNPARSEABLE, which sends the reader hunting a moved
+        # endpoint (CLAUDE.md rule 1, catalogue.data.govt.nz).
+        wk = jo_http.wall_kind(text, status)
+        if wk:
+            return (sid, url, wk, "", 0, status, nbytes, _wall_note(wk))
         return (sid, url, "UNPARSEABLE", "", 0, status, nbytes, text[:80].replace("\n", " "))
     if items < 1:
         return (sid, url, "EMPTY", kind, 0, status, nbytes, "parsed but zero items")
     return (sid, url, "PASS", kind, items, status, nbytes, "")
 
 
+def self_test():
+    """Fixtures for the request conditions and the verdicts this probe shares
+    with the engine. Each case fails under the probe as it was before
+    2026-11-07: it sent `Accept: */*` and `Accept-Encoding: gzip` to every row,
+    scored a 200 bot wall on a JSON row UNPARSEABLE and a 403 JS challenge
+    HTTP_ERR, and its array_path resolver had no `$last` and no literal-dot
+    key."""
+    import http.server
+    import threading
+    bad = []
+
+    def check(label, got, want):
+        if got != want:
+            bad.append("%-54s got=%r want=%r" % (label, got, want))
+
+    seen = {}
+    bodies = {
+        "/json": (200, "application/json", b'{"results":[{"id":1}]}'),
+        "/wall": (200, "text/html", b"<html><title>Pardon Our Interruption</title></html>"),
+        "/chl": (403, "text/html", b"<script>window._cf_chl_opt={cvId:'3'}</script>"),
+        "/cf403": (403, "text/html",
+                   b'<html>403 Forbidden<script src="/cdn-cgi/challenge-platform/h/b/s.js"></script>'),
+        "/gz": (200, "application/json", __import__("gzip").compress(b'[{"id":1},{"id":2}]')),
+    }
+
+    class H(http.server.BaseHTTPRequestHandler):
+        def do_GET(self):
+            seen[self.path] = dict(self.headers.items())
+            st, ct, b = bodies.get(self.path, (404, "text/plain", b"no"))
+            self.send_response(st)
+            self.send_header("Content-Type", ct)
+            if self.path == "/gz":
+                self.send_header("Content-Encoding", "gzip")
+            self.send_header("Content-Length", str(len(b)))
+            self.end_headers()
+            self.wfile.write(b)
+
+        def log_message(self, *a):
+            pass
+
+    os.environ["no_proxy"] = os.environ["NO_PROXY"] = "127.0.0.1,localhost"
+    srv = http.server.ThreadingHTTPServer(("127.0.0.1", 0), H)
+    threading.Thread(target=srv.serve_forever, daemon=True).start()
+    base = "http://127.0.0.1:%d" % srv.server_address[1]
+    global HOST_GAP_MS
+    gap, HOST_GAP_MS = HOST_GAP_MS, 0
+    try:
+        def row(path, mode="json", opts=""):
+            return {"id": "T_" + path.strip("/"), "url": base + path, "probe": base + path,
+                    "mode": mode, "opts": opts}
+        check("json row PASS", verify(row("/json"))[2], "PASS")
+        h = {k.lower(): v for k, v in seen.get("/json", {}).items()}
+        check("json row sends the engine's Accept", h.get("accept"), "application/json")
+        check("Accept-Encoding offers what libcurl offers (decodable subset)",
+              h.get("accept-encoding"), jo_http.ACCEPT_ENCODING)
+        check("engine User-Agent", h.get("user-agent"), DEFAULT_UA)
+        verify(row("/json", "csv"))
+        h = {k.lower(): v for k, v in seen.get("/json", {}).items()}
+        check("csv row sends libcurl's */*", h.get("accept"), "*/*")
+        verify(row("/json", "json", "header1=Accept: text/csv"))
+        h = {k.lower(): v for k, v in seen.get("/json", {}).items()}
+        check("a row's own Accept is not doubled or overridden", h.get("accept"), "text/csv")
+        check("a 200 bot wall on a JSON row is BOT_WALL", verify(row("/wall"))[2], "BOT_WALL")
+        check("a 403 JS challenge is CHALLENGE", verify(row("/chl"))[2], "CHALLENGE")
+        check("an ordinary CF 403 (challenge-platform script) stays HTTP_ERR",
+              verify(row("/cf403"))[2], "HTTP_ERR")
+        check("a gzip body is decoded", verify(row("/gz"))[4], 2)
+    finally:
+        HOST_GAP_MS = gap
+        srv.shutdown()
+    check("array_path $last", resolve_array_path({"p": [{"r": [1]}, {"r": [2, 3]}]}, "p.$last.r"), [2, 3])
+    check("array_path literal-dot key", resolve_array_path({"a.b": [{"x": 1}]}, "a.b"), [{"x": 1}])
+    check("array_path crossing a list", resolve_array_path({"i": [{"i": [1]}, {"i": [2]}]}, "i.i"), [1, 2])
+    check("array_path missing", resolve_array_path({"x": 1}, "results"), None)
+    for b in bad:
+        print("probe SELF-TEST FAIL  " + b)
+    return not bad
+
+
 def main():
     global CHECK_FILTER, HOST_GAP_MS
+    if "--self-test" in sys.argv[1:]:
+        ok = self_test()
+        print("probe fixtures: %s" % ("all pass" if ok else "FAILED"))
+        return 0 if ok else 2
     ap = argparse.ArgumentParser()
     ap.add_argument("manifests", nargs="+")
     ap.add_argument("--out")

@@ -149,7 +149,27 @@ static void test_default_is_none(void) {
   assert(http_last_tls_cause() == HTTP_TLS_NONE);
 }
 
+/* 7. The slug is what the fetch-failure records are QUERIED on, and it used to
+ *    be a ternary chain copied into hpengine.c and scheduler.c. One function
+ *    now: every named cause has its own slug, and the slugs are distinct. */
+static void test_cause_names(void) {
+  static const int named[] = {
+    HTTP_TLS_NO_LOCAL_ISSUER, HTTP_TLS_EXPIRED, HTTP_TLS_NOT_YET_VALID,
+    HTTP_TLS_HOSTNAME_MISMATCH, HTTP_TLS_SELF_SIGNED, HTTP_TLS_REVOKED,
+    HTTP_TLS_UNRECOGNIZED_NAME, HTTP_TLS_HANDSHAKE };
+  int n = (int)(sizeof named / sizeof named[0]);
+  for (int i = 0; i < n; i++) {
+    const char *a = http_tls_cause_name(named[i]);
+    assert(a && a[0] && strcmp(a, "other") && strcmp(a, "none"));
+    for (int j = i + 1; j < n; j++) assert(strcmp(a, http_tls_cause_name(named[j])));
+  }
+  assert(!strcmp(http_tls_cause_name(HTTP_TLS_NO_LOCAL_ISSUER), "no_local_issuer"));
+  assert(!strcmp(http_tls_cause_name(HTTP_TLS_NONE), "none"));
+  assert(!strcmp(http_tls_cause_name(9999), "other"));
+}
+
 int main(void) {
+  test_cause_names();
   test_default_is_none();
   test_verify_result_decides();
   test_verify_outranks_text();

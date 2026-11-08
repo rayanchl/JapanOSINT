@@ -11,7 +11,6 @@
 #include <string.h>
 #include "_jp_osint.inc"
 
-static const char *CW3_UA = "User-Agent: JapanOSINT/1.0 (osint@example.org)";
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *q = ctx->entity;
@@ -23,9 +22,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   snprintf(url, sizeof url,
     "https://api.dataforsyningen.dk/adresser?q=%s&per_side=10&struktur=mini&srid=4326", enc);
   free(enc);
-  const char *hdrs[] = { "Accept: application/json", CW3_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "DK_ADDRESS");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
   if (!cJSON_IsArray(root)) { if (root) cJSON_Delete(root); return 0; }
   int n = 0;
@@ -47,17 +46,18 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     char *bj = cJSON_PrintUnformatted(d); cJSON_Delete(d);
     cJSON *p = cJSON_CreateObject();
     cJSON_AddStringToObject(p, "service", "DK_ADDRESS"); cJSON_AddBoolToObject(p, "success", 1);
-    char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
-    intel_item it = {0};
-    it.remote_key = id ? id : bet; it.title = bet; it.summary = postnrnavn; it.body = bj; it.lang = "da";
+    jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+    char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
+    it.remote_key = id ? id : bet; it.title = bet; it.summary = postnrnavn; it.body = bt ? bt : bj; it.lang = "da";
     it.has_geo = hg; it.lat = hg ? y->valuedouble : 0; it.lon = hg ? x->valuedouble : 0;
     it.record_type = "dk-address"; it.properties_json = pj; it.tags_json = "[\"osint-search\",\"DK_ADDRESS\"]";
     if (sink->emit(sink, &it) >= 0) n++;
-    free(bj); free(pj);
+    free(bj); free(bt); free(pj);
   }
   cJSON_Delete(root);
   fprintf(stderr, "[DK_ADDRESS] emitted %d\n", n);
-  return 0;
+  return n < 0 ? -1 : 0;
 }
 
 static const source_def dk_address_def = {

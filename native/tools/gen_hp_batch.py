@@ -96,8 +96,13 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from manifest import (COLS, split_opts, parse_opts,          # noqa: E402
                       load as _manifest_load)
 
+# Every hp_mode in lib/hpengine.h. HP_RECJAR (IANA's `Key: Value` / `%%`
+# record-jar) was missing, so a record-jar row could only be written in a
+# manifest by lying about its shape — the exact IANA_LANGUAGE_SUBTAGS mistake
+# (declared csv, 49,312 "records" that were lines) that mode exists to end.
+# self_test() checks this table against the enum.
 MODE = {"json": "HP_JSON", "csv": "HP_CSV", "html": "HP_HTML", "xml": "HP_XML",
-        "xlsx": "HP_XLSX", "ndjson": "HP_NDJSON"}
+        "xlsx": "HP_XLSX", "ndjson": "HP_NDJSON", "recjar": "HP_RECJAR"}
 WANT = {"any": "HP_ANY", "domain": "HP_DOMAIN", "ip": "HP_IP",
         "email": "HP_EMAIL", "numeric": "HP_NUMERIC", "hash": "HP_HASH",
         "icao24": "HP_ICAO24", "eth": "HP_ETH", "btc": "HP_BTC",
@@ -131,7 +136,12 @@ STR_OPTS = {"array_path", "title_keys", "id_keys", "link_keys", "link_tmpl",
             "table_must",
             # the earliest date a window_days cycle asks for; unset makes the
             # row a live tail with no backfill
-            "window_from"}
+            "window_from",
+            # hp_source.lang (the language the records are written in) and
+            # .layer (the map layer the records feed): both are fields of the
+            # struct, both were rejected here as unknown opts (2026-11-07), and
+            # self_test() now fails on the next field that misses this table.
+            "lang", "layer"}
 # page_walk (an INT opt below): CLAUDE.md tells authors to use it ("page_walk=1
 # (HP_JSON only) walks it the way a VJSON collector is walked"), and this set
 # used to reject it as an unknown opt, so the documented way to page a row could
@@ -405,7 +415,78 @@ static const hp_source %(tbl)s[] = {
 '''
 
 
+# hp_source fields a manifest sets through a COLUMN (manifest.COLS) or a
+# dedicated opt rather than the generic STR_OPTS/INT_OPTS path, so the
+# struct-coverage check below does not expect them in those tables.
+#   headers      header1..header3 (HDR_OPTS), emitted as an initialiser list
+#   free_tier    an INT opt, but emitted beside mode/want, not in the loop
+#   mode, want   columns, mapped through MODE / WANT
+COLUMN_FIELDS = {"id", "name", "name_ja", "category", "record_type", "tags",
+                 "portal", "url", "description", "mode", "want", "headers"}
+
+
+def struct_fields(header=None):
+    """Field names of `struct hp_source` in lib/hpengine.h (comments
+    stripped; `const char *a, *b;` gives both; `headers[5]` gives headers)."""
+    header = header or os.path.join(os.path.dirname(os.path.dirname(
+        os.path.abspath(__file__))), "lib", "hpengine.h")
+    src = open(header, encoding="utf-8").read()
+    m = re.search(r"typedef struct[^{]*\{(.*?)\}\s*hp_source\s*;", src, re.S)
+    if not m:
+        return set()
+    body = re.sub(r"/\*.*?\*/|//[^\n]*", " ", m.group(1), flags=re.S)
+    out = set()
+    for decl in body.split(";"):
+        decl = " ".join(decl.split())
+        if not decl or "(" in decl:
+            continue
+        for part in decl.split(","):
+            nm = re.search(r"([A-Za-z_]\w*)\s*(?:\[[^\]]*\])?\s*$", part)
+            if nm:
+                out.add(nm.group(1))
+    return out
+
+
+def enum_modes(header=None):
+    header = header or os.path.join(os.path.dirname(os.path.dirname(
+        os.path.abspath(__file__))), "lib", "hpengine.h")
+    src = re.sub(r"/\*.*?\*/", " ", open(header, encoding="utf-8").read(), flags=re.S)
+    m = re.search(r"typedef enum\s*\{([^}]*HP_JSON[^}]*)\}\s*hp_mode\s*;", src, re.S)
+    return set(re.findall(r"\b(HP_[A-Z]+)\s*=", m.group(1))) if m else set()
+
+
+def self_test():
+    """Every hp_source field reachable from a manifest, every hp_mode
+    nameable. page_resume, page_walk and lang/layer each reached the engine
+    without reaching this generator, and the first batch to need one had
+    every such row rejected as an unknown opt."""
+    fields = struct_fields()
+    bad = []
+    if len(fields) < 40:
+        bad.append("parsed only %d hp_source fields from lib/hpengine.h" % len(fields))
+    missing = sorted(fields - STR_OPTS - INT_OPTS - COLUMN_FIELDS - {"free_tier"})
+    if missing:
+        bad.append("hp_source fields no manifest can set: %s (add them to "
+                   "STR_OPTS/INT_OPTS, or to COLUMN_FIELDS with a reason)" % ", ".join(missing))
+    stale = sorted((STR_OPTS | INT_OPTS) - fields)
+    if stale:
+        bad.append("opts that name no hp_source field: %s" % ", ".join(stale))
+    modes = enum_modes()
+    if not modes:
+        bad.append("parsed no hp_mode values from lib/hpengine.h")
+    unmapped = sorted(modes - set(MODE.values()))
+    if unmapped:
+        bad.append("hp_mode values no manifest mode maps to: %s" % ", ".join(unmapped))
+    for b in bad:
+        print("gen_hp_batch SELF-TEST FAIL  " + b)
+    return not bad
+
+
 def main():
+    if "--self-test" in sys.argv[1:]:
+        ok = self_test()
+        print("gen_hp_batch fixtures: %s" % ("all pass" if ok else "FAILED"))
+        return 0 if ok else 2
     ap = argparse.ArgumentParser()
     ap.add_argument("manifests", nargs="+")
     ap.add_argument("--probe-out",
@@ -514,4 +595,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

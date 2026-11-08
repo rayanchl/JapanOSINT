@@ -53,17 +53,18 @@ static int aid_emit(intel_sink *sink, const char *service, const char *rectype,
   if (query) cJSON_AddStringToObject(props, "query", query);
   if (link)  cJSON_AddStringToObject(props, "href", link);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char rk[512];
   snprintf(rk, sizeof rk, "%s|%.400s", service, key ? key : title);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
   it.summary         = summary;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = lang ? lang : "en";
   it.published_at    = date;
   it.link            = link;
@@ -71,7 +72,7 @@ static int aid_emit(intel_sink *sink, const char *service, const char *rectype,
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"aid\",\"humanitarian\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -104,12 +105,12 @@ static int aid_reliefweb(const source_ctx *ctx, intel_sink *sink, const char *q)
    * browser-shaped UA returns the 403. Send one so the failure is honest and
    * so a registered RELIEFWEB_APPNAME actually works when supplied. */
   const char *hdrs[] = { "Accept: application/json",
-    "User-Agent: Mozilla/5.0 (compatible; ReliefIntel/1.0)", NULL };
+    NULL };
   char *body = jo_get(ctx, url, hdrs, "RELIEFWEB");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   cJSON *arr = cJSON_GetObjectItem(root, "data");
   int emitted = 0;
   if (cJSON_IsArray(arr)) {
@@ -168,10 +169,10 @@ static int aid_iati(const source_ctx *ctx, intel_sink *sink, const char *q) {
   free(enc);
   const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "IATI_REGISTRY");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   cJSON *res = cJSON_GetObjectItem(root, "result");
   cJSON *arr = res ? cJSON_GetObjectItem(res, "results") : NULL;
   int emitted = 0;
@@ -225,12 +226,12 @@ static int aid_fts(const source_ctx *ctx, intel_sink *sink, const char *q) {
    * HTTP 406 {"error":"Blocked due to bot activity."} — verified: identical
    * request minus that UA returns 200. Send a plain browser-shaped UA. */
   const char *hdrs[] = { "Accept: application/json",
-    "User-Agent: Mozilla/5.0 (compatible; ReliefIntel/1.0)", NULL };
+    NULL };
   char *body = jo_get(ctx, url, hdrs, "OCHA_FTS");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   cJSON *arr = cJSON_GetObjectItem(root, "data");
   if (!cJSON_IsArray(arr) && cJSON_IsArray(root)) arr = root;
   int emitted = 0;
@@ -293,10 +294,10 @@ static int aid_worldbank(const source_ctx *ctx, intel_sink *sink, const char *q)
   free(enc);
   const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "WORLDBANK_PROJECTS");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   cJSON *projs = cJSON_GetObjectItem(root, "projects");
   int emitted = 0;
   if (cJSON_IsObject(projs)) {
@@ -327,16 +328,17 @@ static int aid_worldbank(const source_ctx *ctx, intel_sink *sink, const char *q)
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
+  int rc = 0;   /* a helper's -1 = refused/unparsable fetch (2026-11-07) */
   const char *q = (ctx->entity && *ctx->entity) ? ctx->entity : NULL;
   if (!q) return -1;
   if (strlen(q) < 2) { fprintf(stderr, "[aid] entity too short\n"); return 0; }
 
-  if      (strcmp(ctx->source_id, "RELIEFWEB") == 0)          aid_reliefweb(ctx, sink, q);
-  else if (strcmp(ctx->source_id, "IATI_REGISTRY") == 0)      aid_iati(ctx, sink, q);
-  else if (strcmp(ctx->source_id, "OCHA_FTS") == 0)           aid_fts(ctx, sink, q);
-  else if (strcmp(ctx->source_id, "WORLDBANK_PROJECTS") == 0) aid_worldbank(ctx, sink, q);
+  if      (strcmp(ctx->source_id, "RELIEFWEB") == 0)          rc = aid_reliefweb(ctx, sink, q);
+  else if (strcmp(ctx->source_id, "IATI_REGISTRY") == 0)      rc = aid_iati(ctx, sink, q);
+  else if (strcmp(ctx->source_id, "OCHA_FTS") == 0)           rc = aid_fts(ctx, sink, q);
+  else if (strcmp(ctx->source_id, "WORLDBANK_PROJECTS") == 0) rc = aid_worldbank(ctx, sink, q);
   else return -1;
-  return 0;   /* honest empty is not an error */
+  return rc < 0 ? -1 : 0;   /* honest empty 0, refused fetch -1 */
 }
 
 #define AID_DEF(SYM, ID, NAME, NAMEJA, URL, DESC) \

@@ -92,7 +92,7 @@ export default function ThresholdsTab() {
     <div className="space-y-4">
       <Section label={`Similarity thresholds · ${rows.length}`} right={<Button size="sm" variant="ghost" onClick={() => reload()}><LuRefreshCw size={12} /></Button>} padded={false}>
         <div className="px-3 pt-2 text-[11px] text-osint-muted">
-          Every embedding cut-off the server judges a vector comparison against. Resolution is {data?.meta?.order || 'db > env > default'}; a saved value applies on the next comparison, with no restart, and is recorded in the audit log. None has been measured on the production model — move them while watching the result.
+          Every embedding cut-off the server judges a vector comparison against. Resolution is {data?.meta?.order || 'db > env > default'}; a saved value applies on the next comparison, with no restart, and is recorded in the audit log. Measured on the production embedding model on 2026-10-23 (docs/measured-thresholds-2026-10-23.md): unrelated query↔record pairs score 0.6874–0.8448 cosine, so a cut-off must be above about 0.85 before it rejects anything, and six of the eleven (relevance, suggest, route, resolve, repair floor, and the corpus L2 ceiling) admit essentially every unrelated pair at their current values. story_tau 0.85 separated known-same from unrelated pairs completely. Choosing the other values needs human-labelled positive pairs, which do not exist yet — nothing was changed on that reading.
         </div>
         {loading && !data && <LoadingState />}
         {error && <div className="p-2"><ErrorNotice error={error} title={error instanceof ApiError && error.status === 403 ? 'The server refused this account (platform-operator allowlist)' : 'Could not load thresholds'} onRetry={reload} /></div>}

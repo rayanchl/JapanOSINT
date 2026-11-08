@@ -3,7 +3,9 @@ import { Link, useParams } from 'react-router-dom';
 import { LuPlay, LuRefreshCw, LuExternalLink } from 'react-icons/lu';
 import { api, errorMessage } from '../../api/client.js';
 import { useApi } from '../../hooks/useApi.js';
-import { Page, Card, Section, Pill, Button, KV, ErrorNotice, EmptyState, LoadingState, BoundNote, Mono, Toggle, Input, Field, cx, toast } from '../ui/kit.jsx';
+import { usePagedList } from '../../hooks/usePagedList.js';
+import { useAuthOptional } from '../../auth/AuthContext.jsx';
+import { Page, Card, Section, Pill, Button, KV, ErrorNotice, EmptyState, LoadingState, BoundNote, PagedFooter, Mono, Toggle, Input, Field, cx, toast } from '../ui/kit.jsx';
 import { isSafeUrl } from '../../utils/safeUrl.js';
 import { relativeTime, fmtAbs } from '../../utils/time.js';
 import {
@@ -42,7 +44,7 @@ export function fmtSetting(unit, v) {
   return String(v);
 }
 
-export function SettingsSection({ sourceId }) {
+export function SettingsSection({ sourceId, onSaved }) {
   const { data, error, loading, reload } = useApi(`/api/sources/${encodeURIComponent(sourceId)}/settings`);
   const [draft, setDraft] = useState({});      /* key -> {value, enabled} */
   const [busy, setBusy] = useState(null);
@@ -64,6 +66,11 @@ export function SettingsSection({ sourceId }) {
                     { key: s.key, value: Number(d.value), enabled: !!d.enabled });
       setDraft((p) => { const n = { ...p }; delete n[s.key]; return n; });
       await reload();
+      /* interval_sec moves the Frequency card's effective interval, which
+       * comes from /detail, not /settings — so the page re-reads that too
+       * (2026-11-07: it used to reload /settings only, and the card kept
+       * showing the old interval until a manual refresh). */
+      if (onSaved) onSaved(s);
       toast(`${s.label} saved`, { tone: 'ok' });
     } catch (e) {
       /* The server's own refusal, verbatim — value_out_of_range and
@@ -216,6 +223,76 @@ function Hist({ values, keyName, shown, total, noun }) {
   );
 }
 
+/**
+ * What the Frequency card says about the effective interval.
+ *
+ * It printed "as declared" whenever `effectiveInterval` was null — which it is
+ * for every row the scheduler has not stored a state for — even under the
+ * default global 6 h policy, i.e. it asserted the opposite of what runs
+ * (2026-11-07). The server sends the basis it decided on (`cadenceBasis`:
+ * override | policy | measured | declared | on demand) and the inputs, so
+ * this states that rather than inferring one. When the stored effective
+ * interval is absent the value is the one the basis names, and it says the
+ * scheduler has not yet recorded one.
+ */
+export function describeEffective(sch) {
+  if (!sch) return NOT_MEASURED;
+  const basis = sch.cadenceBasis || null;
+  if (sch.effectiveInterval != null) return `${fmtInterval(sch.effectiveInterval)}${basis ? ` (${basis})` : ''}`;
+  if (basis === 'on demand' || (sch.declaredInterval != null && sch.declaredInterval <= 0)) return 'on demand (entity pivot — never scheduled)';
+  const v = basis === 'override' ? sch.overrideInterval
+    : basis === 'declared' ? sch.declaredInterval
+    : basis === 'measured' ? (sch.policyInterval ?? sch.measuredInterval)
+    : basis === 'policy' ? sch.policyInterval
+    : (sch.overrideInterval ?? sch.policyInterval);
+  if (v == null) return basis ? `${basis} — interval not reported` : 'not reported';
+  return `${fmtInterval(v)}${basis ? ` (${basis})` : ''} — the scheduler has not recorded a state for this source yet`;
+}
+
+/** Paging described as the engine declares it, cycles included. */
+export function describePaging(pg) {
+  if (!pg) return NOT_MEASURED;
+  if (pg.strategy === 'single_request' && !(pg.window_days > 0)) return 'single request';
+  let out = pg.strategy === 'single_request' ? 'single request per window' : `${pg.strategy}${pg.next_path ? ` ${pg.next_path}` : ''}${pg.page_param ? ` ${pg.page_param}` : ''}${pg.page_size ? `, ${pg.page_size}/page` : ''}${pg.page_zero_based ? ', 0-based' : ''}`;
+  /* A cycling row's page_max is ONE SLICE, not the size of what it reads
+   * (hp_describe_json says so in its own comment): "up to 50 pages" alone
+   * described a row that reads its whole collection over a cycle as one that
+   * stops at page 50. */
+  if (pg.page_max) out += pg.page_resume ? `, ${pg.page_max} pages per run` : `, up to ${pg.page_max} pages`;
+  return out;
+}
+
+/** GET /api/sources/:id/logs, paged in the page — the link it replaces
+ * carried no bearer token (a plain navigation), so it was a 401 for every
+ * reader, and on a VITE_API_HOST deployment it pointed at the wrong origin. */
+export function RunsLog({ sourceId }) {
+  const runs = usePagedList(`/api/sources/${encodeURIComponent(sourceId)}/logs`, { pageSize: 50 });
+  if (runs.loading && runs.rows.length === 0) return <LoadingState label="Loading runs…" />;
+  if (runs.error) return <ErrorNotice error={runs.error} title="Could not load the run log" onRetry={runs.reload} />;
+  if (runs.rows.length === 0) return <span className="text-xs text-osint-muted">no runs recorded</span>;
+  return (
+    <div>
+      <table className="w-full text-[11px]">
+        <thead><tr className="text-osint-muted text-left"><th className="py-1 pr-2">when</th><th className="pr-2">status</th><th className="pr-2 text-right">fetched</th><th className="pr-2 text-right">stored</th><th className="pr-2 text-right">ms</th><th className="pr-2 text-right">bytes</th><th>error</th></tr></thead>
+        <tbody>
+          {runs.rows.map((r) => (
+            <tr key={r.id} className="border-t border-osint-border/40">
+              <td className="py-1 pr-2 font-mono whitespace-nowrap" title={r.timestamp}>{fmtAbs(r.timestamp)}</td>
+              <td className="pr-2"><Pill tone={r.status === 'ok' ? 'success' : 'danger'}>{r.status}</Pill></td>
+              <td className="pr-2 text-right font-mono">{r.records_fetched == null ? NOT_MEASURED : fmtCount(r.records_fetched)}</td>
+              <td className="pr-2 text-right font-mono">{r.stored == null ? NOT_MEASURED : fmtCount(r.stored)}</td>
+              <td className="pr-2 text-right font-mono">{r.duration_ms == null ? '—' : r.duration_ms}</td>
+              <td className="pr-2 text-right font-mono">{r.bytes_fetched == null ? NOT_MEASURED : fmtBytes(r.bytes_fetched)}</td>
+              <td className="text-osint-muted break-all">{r.error || ''}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <PagedFooter shown={runs.rows.length} total={runs.total} hasMore={runs.hasMore} busy={runs.loadingMore} onMore={runs.loadMore} error={runs.moreError} noun="runs" className="mt-1" />
+    </div>
+  );
+}
+
 export default function SourceDetailPage() {
   const { id } = useParams();
   const detail = useApi(`/api/sources/${encodeURIComponent(id)}/detail`);
@@ -223,6 +300,16 @@ export default function SourceDetailPage() {
   const samples = useApi(`/api/intel/items?source=${encodeURIComponent(id)}&limit=3`);
   const [running, setRunning] = useState(false);
   const [regen, setRegen] = useState(false);
+  const [showAllRuns, setShowAllRuns] = useState(false);
+  const auth = useAuthOptional();
+  /* POST /api/intel/sources/:id/run is allowed to a platform operator or the
+   * active workspace's owner/admin (httpd.c, the /run route); everyone else
+   * gets 403. The button was shown to every reader (2026-11-07). */
+  const canRun = auth?.isPlatformAdmin === true || Boolean(auth?.canManageWorkspace);
+  /* After a write, re-read the detail past the server's 10 s snapshot cache:
+   * `fresh=1` asks it to skip the cache, and a server that does not know the
+   * parameter ignores it. */
+  const reloadDetailFresh = () => detail.reload({ silent: true, query: { fresh: 1 } });
   const d = detail.data;
 
   const run = async () => {
@@ -230,7 +317,7 @@ export default function SourceDetailPage() {
     try {
       const r = await api.post(`/api/intel/sources/${encodeURIComponent(id)}/run`);
       toast(`ran: ${r?.ingested ?? '?'} new rows in ${r?.duration_ms ?? '?'} ms`, { tone: 'accent', ttl: 5000 });
-      detail.reload({ silent: true }); samples.reload({ silent: true });
+      reloadDetailFresh(); samples.reload({ silent: true });
     } catch (e) { toast(e?.status === 409 ? 'a run is already in flight' : errorMessage(e), { tone: 'danger', ttl: 5000 }); }
     finally { setRunning(false); }
   };
@@ -272,7 +359,7 @@ export default function SourceDetailPage() {
       actions={<div className="flex gap-2">
         {reg.url && isSafeUrl(reg.url) && <a href={reg.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs text-accent hover:underline"><LuExternalLink size={12} /> upstream</a>}
         <Link to={`/intel/sources/${encodeURIComponent(reg.id)}`} className="inline-flex items-center text-xs text-osint-muted hover:text-accent">stored items →</Link>
-        {reg.kind !== 'internal' && <Button variant="primary" busy={running} onClick={run}><LuPlay size={13} /> Run now</Button>}
+        {reg.kind !== 'internal' && canRun && <Button variant="primary" busy={running} onClick={run}><LuPlay size={13} /> Run now</Button>}
       </div>}
     >
       {reg.description && <p className="text-xs text-osint-muted -mt-2">{reg.description}</p>}
@@ -331,8 +418,10 @@ export default function SourceDetailPage() {
               ['language stamped', eng.parsing?.lang || 'en (default)'],
               eng.parsing?.max_items && ['max items', eng.parsing.max_items],
               ['detail hop', eng.detail_hop?.declared ? <span><Template value={eng.detail_hop.detail_url} /> <span className="text-osint-muted">via {eng.detail_hop.detail_key}{eng.detail_hop.detail_path ? ` → ${eng.detail_hop.detail_path}` : ''}{eng.detail_hop.detail_max ? `, at most ${eng.detail_hop.detail_max}` : ', every record (bounded by JO_HP_DETAIL_MAX)'}</span></span> : 'none'],
-              ['paging', eng.paging?.strategy === 'single_request' ? 'single request' : `${eng.paging.strategy}${eng.paging.next_path ? ` ${eng.paging.next_path}` : ''}${eng.paging.page_param ? ` ${eng.paging.page_param}` : ''}${eng.paging.page_size ? `, ${eng.paging.page_size}/page` : ''}${eng.paging.page_zero_based ? ', 0-based' : ''}${eng.paging.page_max ? `, up to ${eng.paging.page_max} pages` : ''}`],
+              ['paging', describePaging(eng.paging)],
               eng.paging?.next_tmpl && ['next page template', <Template value={eng.paging.next_tmpl} />],
+              eng.paging?.page_resume ? ['cycle', eng.paging.page_resume_note || 'reads the collection over a cycle, resuming where the previous run stopped'] : null,
+              eng.paging?.window_days > 0 ? ['date window', `${eng.paging.window_days} day${eng.paging.window_days === 1 ? '' : 's'} per run${eng.paging.window_from ? `, from ${eng.paging.window_from}` : ''}${eng.paging.window_resume_note ? ` — ${eng.paging.window_resume_note}` : ''}`] : null,
             ].filter(Boolean)} />
           </Card>
         </Section>
@@ -345,14 +434,17 @@ export default function SourceDetailPage() {
             ['measured interval', sch.adaptive ? (sch.measuredInterval != null ? `${fmtInterval(sch.measuredInterval)} (from the newest stored item)` : 'adaptive — no dated item yet') : 'not adaptive'],
             ['policy interval', sch.policyInterval != null ? `${fmtInterval(sch.policyInterval)} (${sch.policy || 'declared'})` : 'not reported'],
             ['set for this source', sch.overrideInterval != null ? `${fmtInterval(sch.overrideInterval)} (outranks the policy)` : 'no'],
-            ['effective interval', sch.effectiveInterval != null ? `${fmtInterval(sch.effectiveInterval)}${sch.cadenceBasis ? ` (${sch.cadenceBasis})` : ''}` : 'as declared'],
+            ['effective interval', describeEffective(sch)],
             ['next due', sch.next_due ? `${when(sch.next_due)}${sch.overdue ? ' — overdue' : ''}` : (sch.declaredInterval > 0 ? 'not yet run' : 'on demand')],
             ['schedule mode', sch.schedule_mode || 'default'],
             ['backed off', sch.backedOff ? `until ${when(sch.backoffUntil)}` : 'no'],
             ['quarantined (health)', sch.quarantined ? 'yes' : 'no'],
             ['consecutive failures / empties', `${sch.consecutiveFailures} / ${sch.consecutiveEmpties}`],
             ['runs in 30 days', sch.stats_30d ? `${fmtCount(sch.stats_30d.runs_30d)} (${fmtPct(sch.stats_30d.success_rate_30d)} ok)` : NOT_MEASURED],
-            ['average duration (30 d)', sch.stats_30d?.avg_duration_ms != null ? `${Math.round(sch.stats_30d.avg_duration_ms)} ms` : NOT_MEASURED],
+            /* The server writes avg_duration_ms_30d (sourceapi.c); this read
+             * avg_duration_ms and printed "not measured" for a measured
+             * value. The old spelling is still accepted. */
+            ['average duration (30 d)', (() => { const v = sch.stats_30d?.avg_duration_ms_30d ?? sch.stats_30d?.avg_duration_ms; return v != null ? `${Math.round(v)} ms` : NOT_MEASURED; })()],
             ['last run', when(sch.stats_30d?.last_run_at)],
           ]} />
         </Card>
@@ -409,7 +501,7 @@ export default function SourceDetailPage() {
         </div>
       </Section>
 
-      <Section label="Testing" right={<Link to={`/api/sources/${encodeURIComponent(reg.id)}/logs`} className="text-[10px] text-osint-muted hover:text-accent" target="_blank" rel="noreferrer">all runs (JSON) →</Link>}>
+      <Section label="Testing" right={<button type="button" className="text-[10px] text-osint-muted hover:text-accent" onClick={() => setShowAllRuns((v) => !v)}>{showAllRuns ? 'hide the full run log' : 'all runs →'}</button>}>
         <Card>
           <div className="text-[10px] uppercase tracking-wider text-osint-muted mb-1">recent runs</div>
           {(d.runs?.recent || []).length === 0 ? <span className="text-xs text-osint-muted">this source has never run</span> : (
@@ -432,6 +524,12 @@ export default function SourceDetailPage() {
           )}
           <BoundNote shown={d.runs?.shown ?? 0} total={d.runs?.total} noun="runs" className="mt-1" />
         </Card>
+        {showAllRuns && (
+          <Card className="mt-3">
+            <div className="text-[10px] uppercase tracking-wider text-osint-muted mb-1">full run log</div>
+            <RunsLog sourceId={reg.id} />
+          </Card>
+        )}
         <Card className="mt-3">
           <div className="text-[10px] uppercase tracking-wider text-osint-muted mb-1">engine notices (latest of each kind)</div>
           {(d.notices?.latest || []).length === 0 ? <span className="text-xs text-osint-muted">no notices stored — no fetch failure, shape surprise or truncation has been recorded for this source</span> : (
@@ -504,7 +602,7 @@ export default function SourceDetailPage() {
           ]} />
         </Card>
       </Section>
-      <SettingsSection sourceId={id} />
+      <SettingsSection sourceId={id} onSaved={reloadDetailFresh} />
 
       <div className="text-[10px] font-mono text-osint-muted">detail fetched {relativeTime(d.meta?.fetched_at)}</div>
     </Page>

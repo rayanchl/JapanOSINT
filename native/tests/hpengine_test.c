@@ -176,6 +176,22 @@ const char *http_tls_cause_label(int cause) {
 const char *http_tls_cause_remedy(int cause) {
   return cause == HTTP_TLS_NONE ? "" : "STUB-REMEDY";
 }
+/* The slug is a fixed vocabulary the records are queried on, so the stub keeps
+ * the real one's values (test_http_tls_cause.c pins the real function). */
+const char *http_tls_cause_name(int cause) {
+  switch (cause) {
+    case HTTP_TLS_NO_LOCAL_ISSUER:   return "no_local_issuer";
+    case HTTP_TLS_EXPIRED:           return "expired";
+    case HTTP_TLS_NOT_YET_VALID:     return "not_yet_valid";
+    case HTTP_TLS_HOSTNAME_MISMATCH: return "hostname_mismatch";
+    case HTTP_TLS_SELF_SIGNED:       return "self_signed";
+    case HTTP_TLS_REVOKED:           return "revoked";
+    case HTTP_TLS_UNRECOGNIZED_NAME: return "unrecognized_name";
+    case HTTP_TLS_HANDSHAKE:         return "handshake";
+    case HTTP_TLS_NONE:              return "none";
+    default:                         return "other";
+  }
+}
 /* lib/jsonlist.c is linked for jsonlist_next_page(), the paging decision the
  * page_walk rows share with every VJSON collector (and lib/pagewalk.c because
  * jsonlist.c calls into it). The operator URL override and the feed key hash
@@ -4210,6 +4226,57 @@ int main(void) {
      "42c: a count-shaped field inside a record is not read as the "
      "collection's total");
 
+  /* 42d-42g. THE TOTALS AN ELEMENT SEARCH FOR `<name>` COULD NOT REACH
+   *      (audit 2026-11-07): a namespace-prefixed element (SRU's
+   *      `<srw:numberOfRecords>`), an attribute after the records (OAI-PMH's
+   *      `completeListSize`), and an attribute on the root (WFS 2.0's
+   *      `numberMatched`) — plus the WFS 1.1 attribute that must NOT be read,
+   *      because `numberOfFeatures` is the size of THIS response. */
+  fx_reset();
+  fx_add("/kkj?Count=2", 200,
+         "<srw:searchRetrieveResponse xmlns:srw=\"s\"><srw:numberOfRecords>812"
+         "</srw:numberOfRecords><srw:records>"
+         "<SearchResult><Key>k1</Key><ProjectName>one</ProjectName></SearchResult>"
+         "<SearchResult><Key>k2</Key><ProjectName>two</ProjectName></SearchResult>"
+         "</srw:records></srw:searchRetrieveResponse>");
+  rc = run_source("T_XML_TOTAL", NULL);
+  { const cap *nt = NULL;
+    ok(rc == 0 && cap_count("collector-truncation-notice", &nt) == 1 && nt &&
+       strstr(nt->props, "\"records_available\":812") != NULL,
+       "42d: a namespace-prefixed SRU total is read"); }
+  fx_reset();
+  fx_add("/kkj?Count=2", 200,
+         "<OAI-PMH><ListRecords>"
+         "<SearchResult><Key>k1</Key><ProjectName>one</ProjectName></SearchResult>"
+         "<SearchResult><Key>k2</Key><ProjectName>two</ProjectName></SearchResult>"
+         "<resumptionToken completeListSize=\"62484\" cursor=\"0\">t</resumptionToken>"
+         "</ListRecords></OAI-PMH>");
+  rc = run_source("T_XML_TOTAL", NULL);
+  { const cap *nt = NULL;
+    ok(rc == 0 && cap_count("collector-truncation-notice", &nt) == 1 && nt &&
+       strstr(nt->props, "\"records_available\":62484") != NULL,
+       "42e: OAI-PMH's completeListSize, after the records, is read"); }
+  fx_reset();
+  fx_add("/kkj?Count=2", 200,
+         "<wfs:FeatureCollection numberMatched=\"5000\" numberReturned=\"2\">"
+         "<SearchResult><Key>k1</Key><ProjectName>one</ProjectName></SearchResult>"
+         "<SearchResult><Key>k2</Key><ProjectName>two</ProjectName></SearchResult>"
+         "</wfs:FeatureCollection>");
+  rc = run_source("T_XML_TOTAL", NULL);
+  { const cap *nt = NULL;
+    ok(rc == 0 && cap_count("collector-truncation-notice", &nt) == 1 && nt &&
+       strstr(nt->props, "\"records_available\":5000") != NULL,
+       "42f: a WFS 2.0 numberMatched attribute is read"); }
+  fx_reset();
+  fx_add("/kkj?Count=2", 200,
+         "<wfs:FeatureCollection numberOfFeatures=\"9999\">"
+         "<SearchResult><Key>k1</Key><ProjectName>one</ProjectName></SearchResult>"
+         "<SearchResult><Key>k2</Key><ProjectName>two</ProjectName></SearchResult>"
+         "</wfs:FeatureCollection>");
+  rc = run_source("T_XML_TOTAL", NULL);
+  ok(rc == 0 && cap_count("collector-truncation-notice", NULL) == 0,
+     "42g: WFS 1.1's numberOfFeatures (this response's size) is NOT a total");
+
   /* 43. A REPEAT AFTER A SHORT PAGE IS NOT EVIDENCE OF AN IGNORED PARAMETER.
    *     Two identical bodies fit two readings — the parameter was ignored, or
    *     the collection ended where the short page said it did — and nothing in
@@ -4396,6 +4463,59 @@ int main(void) {
        "non-parsing 200 too, not just the previous generation's");
     (void)rc; }
 
+  /* 59e. THE SAME CHALLENGE AT 200 GETS THE SAME REMEDY AS AT 403. The
+   *      remedy used to depend on the STATUS: at 403 "do NOT bisect the
+   *      User-Agent", at 200 "bisect the User-Agent" — for one Cloudflare
+   *      body, which no agent reaches either way (audit 2026-11-07). */
+  fx_reset();
+  fx_add("/us?per_page=100", 200,
+         "<!DOCTYPE html><html><head><title>Just a moment...</title></head>"
+         "<body><script>window._cf_chl_opt={cvId:\"3\"};</script></body></html>");
+  rc = run_source("T_URLSIZE", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "do NOT bisect the User-Agent") != NULL &&
+       strstr(nt->props, "Bisect the User-Agent") == NULL,
+       "59e: a challenge served as 200 gets the no-agent remedy, as at 403");
+    (void)rc; }
+
+  /* 59f. A RATE-LIMIT BODY ON A 403 was detected and then thrown away: both
+   *      readers of the flag were gated on a 200, so "API rate limit exceeded"
+   *      got "check the credential or the User-Agent". */
+  fx_reset();
+  fx_add("/us?per_page=100", 403, "{\"message\":\"API rate limit exceeded\"}");
+  rc = run_source("T_URLSIZE", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "rate limited") != NULL &&
+       strstr(nt->props, "a User-Agent it is not sending") == NULL,
+       "59f: a 403 whose body says rate limit is named as a rate limit");
+    (void)rc; }
+
+  /* 59g. A WALL IN A MODE THAT NEVER CONSULTED THE VOCABULARY. Only the JSON
+   *      driver asked whether a 200 body was a wall, so an XML row served a
+   *      bot wall emitted nothing, filed nothing and returned rc=0 — the
+   *      invisible nothing rule 1 is about. */
+  fx_reset();
+  fx_add("/x?q=", 200,
+         "<!DOCTYPE html><html><head><noscript><title>Pardon Our Interruption"
+         "</title></noscript></head><body>bot</body></html>");
+  rc = run_source("T_XML", "x");
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "BOT-WALL interstitial") != NULL,
+       "59g: an XML row served a 200 bot wall files a fetch-failure naming it");
+    (void)rc; }
+
+  /* 59h. ITS CONTROL: an XML row whose 200 body is an honest empty document
+   *      still files nothing. */
+  fx_reset();
+  fx_add("/x?q=", 200, "<?xml version=\"1.0\"?><list></list>");
+  rc = run_source("T_XML", "x");
+  ok(cap_count("collector-fetch-failure", NULL) == 0,
+     "59h: an empty XML document is not promoted to a wall");
+  (void)rc;
+
   /* 44. A RATE-LIMIT PAGE SERVED AS HTTP 200 is a refusal wearing a success
    *     status, and no status check can see it. Archive-It does exactly that
    *     — `<title>Rate limit reached</title>` with a 200 — so the
@@ -4449,7 +4569,8 @@ int main(void) {
   { const cap *nt = NULL;
     ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
        strstr(nt->props, "BOT-WALL interstitial") != NULL &&
-       strstr(nt->props, "UA_OVERRIDE") != NULL &&
+       strstr(nt->props, "core/host_agents.def") != NULL &&
+       strstr(nt->props, "UA_OVERRIDE") == NULL &&   /* the table moved 2026-10-21 */
        strstr(nt->props, "the endpoint may have moved") == NULL &&
        strstr(nt->props, "RATE-LIMIT") == NULL,
        "45: a bot wall served as 200 is named as one, and the remedy is the "

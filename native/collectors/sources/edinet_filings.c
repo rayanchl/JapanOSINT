@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 /* JS truthy string. */
 static const char *sv(const cJSON *o, const char *k) {
@@ -24,7 +25,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *key = getenv("EDINET_API_KEY");
   if (!key || !*key) {
     fprintf(stderr, "[edinet-filings] gated (no EDINET_API_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "edinet-filings", "edinet-filings", (const char *const[]){"EDINET_API_KEY", NULL}, NULL, NULL);
   }
 
   /* today() = new Date().toISOString().slice(0,10) (UTC date).

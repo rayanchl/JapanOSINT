@@ -8,81 +8,91 @@
 #include "_verified_macros.inc"
 #include "_vjson_idkeys.inc"
 
+/* ArcGIS rows in this file: `orderByFields=<the layer's own objectIdField>
+ * ASC` (2026-11-07). These walk on `resultOffset` (geojson_emit_paged's
+ * mechanism 1, on the server's own exceededTransferLimit) with no order
+ * clause, and ArcGIS promises no stable order without one. The field was READ
+ * per layer from `<layer>?f=json` (objectIdField, else the esriFieldTypeOID
+ * field — spellings here include OBJECTID, objectid, FID, OBJECTID_1, ObjectId,
+ * oid, RowID), every layer declares supportsOrderBy, and the sorted query was
+ * asked once (resultRecordCount=3 at offsets 0 and 3): HTTP 200, no error
+ * body, pages disjoint. This is STABILISING, not a recovery — no record was
+ * measured lost without it. */
 VGEO(nam_ags_climate_vulnerability_and_risk_assessment_wildfire_r, "nam-ags-climate-vulnerability-and-risk-assessment-wildfire-r", "Climate Vulnerability and Risk Assessment Wildfire Risk — CCVRA Wildfire Risk", "Climate Vulnerability and Risk Assessment Wildfire Risk — CCVRA Wildfire Risk",
   "namerica_hazard", "hazard",
-  "https://caltrans-gis.dot.ca.gov/arcgis/rest/services/CCVRA/CCVRA_Wildfire_Risk/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500",
+  "https://caltrans-gis.dot.ca.gov/arcgis/rest/services/CCVRA/CCVRA_Wildfire_Risk/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"hazard\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer 'CCVRA Wildfire Risk' from the 'Climate Vulnerability and Risk Assessment Wildfire Risk' service, GeoJSON with per-feature geometry.");
 
 VGEO(nam_ags_dams_nys_dec_dams, "nam-ags-dams-nys-dec-dams", "Dams — NYS DEC Dams", "Dams — NYS DEC Dams",
   "namerica_hazard", "hazard",
-  "https://services6.arcgis.com/DZHaqZm9cxOD4CWM/arcgis/rest/services/Dams/FeatureServer/29/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500",
+  "https://services6.arcgis.com/DZHaqZm9cxOD4CWM/arcgis/rest/services/Dams/FeatureServer/29/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"hazard\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer 'NYS DEC Dams' from the 'Dams' service, GeoJSON with per-feature geometry.");
 
 VGEO(nam_ags_evacuation_zones_public_em_evacuationzones, "nam-ags-evacuation-zones-public-em-evacuationzones", "Evacuation Zones public — EM EvacuationZones", "Evacuation Zones public — EM EvacuationZones",
   "namerica_hazard", "hazard",
-  "https://services3.arcgis.com/PBz5hDp35DPCX9Xs/arcgis/rest/services/Evacuation_Zones_public/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500",
+  "https://services3.arcgis.com/PBz5hDp35DPCX9Xs/arcgis/rest/services/Evacuation_Zones_public/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"hazard\",\"gis\",\"arcgis\"]", 86400,
   "ArcGIS FeatureServer layer 'EM EvacuationZones' from the 'Evacuation Zones public' service, GeoJSON with per-feature geometry.");
 
 VGEO(nam_ags_firm_flood_zones_firm, "nam-ags-firm-flood-zones-firm", "FIRM Flood Zones — FIRM", "FIRM Flood Zones — FIRM",
   "namerica_hazard", "hazard",
-  "https://services2.arcgis.com/LvWGAAhHwbCJ2GMP/arcgis/rest/services/FIRM/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500",
+  "https://services2.arcgis.com/LvWGAAhHwbCJ2GMP/arcgis/rest/services/FIRM/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"hazard\",\"gis\",\"arcgis\"]", 86400,
   "ArcGIS FeatureServer layer 'FIRM' from the 'FIRM Flood Zones' service, GeoJSON with per-feature geometry.");
 
 VGEO(nam_ags_landslide_susceptibility_landslide_susceptibility, "nam-ags-landslide-susceptibility-landslide-susceptibility", "Landslide Susceptibility — Landslide Susceptibility", "Landslide Susceptibility — Landslide Susceptibility",
   "namerica_hazard", "hazard",
-  "https://services.arcgis.com/9tC74aDHuml0x5Yz/arcgis/rest/services/Landslide_Susceptibility/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500",
+  "https://services.arcgis.com/9tC74aDHuml0x5Yz/arcgis/rest/services/Landslide_Susceptibility/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500&orderByFields=FID%20ASC",
   "en", "[\"usa\",\"hazard\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer 'Landslide Susceptibility' from the 'Landslide Susceptibility' service, GeoJSON with per-feature geometry.");
 
 VGEO(nam_ags_maine_stream_habitat_viewer_dams, "nam-ags-maine-stream-habitat-viewer-dams", "Maine Stream Habitat Viewer — Dams", "Maine Stream Habitat Viewer — Dams",
   "namerica_hazard", "hazard",
-  "https://services1.arcgis.com/RbMX0mRVOFNTdLzd/arcgis/rest/services/Maine_Stream_Habitat_Viewer/FeatureServer/1/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500",
+  "https://services1.arcgis.com/RbMX0mRVOFNTdLzd/arcgis/rest/services/Maine_Stream_Habitat_Viewer/FeatureServer/1/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"hazard\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer 'Dams' from the 'Maine Stream Habitat Viewer' service, GeoJSON with per-feature geometry.");
 
 VGEO(nam_ags_road_closure_active_roadclosuresnapshot, "nam-ags-road-closure-active-roadclosuresnapshot", "Road Closure (Active) — RoadClosureSnapshot", "Road Closure (Active) — RoadClosureSnapshot",
   "namerica_hazard", "hazard",
-  "https://services.arcgis.com/ZOyb2t4B0UYuYNYH/arcgis/rest/services/Road_Closure_(Active)/FeatureServer/2/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500",
+  "https://services.arcgis.com/ZOyb2t4B0UYuYNYH/arcgis/rest/services/Road_Closure_(Active)/FeatureServer/2/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"hazard\",\"gis\",\"arcgis\"]", 1800,
   "ArcGIS FeatureServer layer 'RoadClosureSnapshot' from the 'Road Closure (Active)' service, GeoJSON with per-feature geometry.");
 
 VGEO(nam_ags_sra_for_fhsz_in_lra_sra_for_fhsz_in_lra, "nam-ags-sra-for-fhsz-in-lra-sra-for-fhsz-in-lra", "SRA for FHSZ in LRA — SRA for FHSZ in LRA", "SRA for FHSZ in LRA — SRA for FHSZ in LRA",
   "namerica_hazard", "hazard",
-  "https://services1.arcgis.com/jUJYIo9tSA7EHvfZ/arcgis/rest/services/SRA_for_FHSZ_in_LRA/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500",
+  "https://services1.arcgis.com/jUJYIo9tSA7EHvfZ/arcgis/rest/services/SRA_for_FHSZ_in_LRA/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"hazard\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer 'SRA for FHSZ in LRA' from the 'SRA for FHSZ in LRA' service, GeoJSON with per-feature geometry.");
 
 VGEO(nam_ags_state_hazard_mitigation_plan_building_footprints_cen, "nam-ags-state-hazard-mitigation-plan-building-footprints-cen", "State Hazard Mitigation Plan — Building footprints centerpoints", "State Hazard Mitigation Plan — Building footprints centerpoints",
   "namerica_hazard", "hazard",
-  "https://services2.arcgis.com/FPJlJZYRsD8OhCWA/arcgis/rest/services/State_Hazard_Mitigation_Plan/FeatureServer/1/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500",
+  "https://services2.arcgis.com/FPJlJZYRsD8OhCWA/arcgis/rest/services/State_Hazard_Mitigation_Plan/FeatureServer/1/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500&orderByFields=OBJECTID_12%20ASC",
   "en", "[\"usa\",\"hazard\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer 'Building footprints centerpoints' from the 'State Hazard Mitigation Plan' service, GeoJSON with per-feature geometry.");
 
 VGEO(nam_ags_tens_predefined_areas_public_tens_predefined_areas, "nam-ags-tens-predefined-areas-public-tens-predefined-areas", "TENS Predefined Areas (Public) — TENS PREDEFINED AREAS", "TENS Predefined Areas (Public) — TENS PREDEFINED AREAS",
   "namerica_hazard", "hazard",
-  "https://services.arcgis.com/aA3snZwJfFkVyDuP/arcgis/rest/services/TENS_PREDEFINED_AREAS_view/FeatureServer/3/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500",
+  "https://services.arcgis.com/aA3snZwJfFkVyDuP/arcgis/rest/services/TENS_PREDEFINED_AREAS_view/FeatureServer/3/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"hazard\",\"gis\",\"arcgis\"]", 1800,
   "ArcGIS FeatureServer layer 'TENS PREDEFINED AREAS' from the 'TENS Predefined Areas (Public)' service, GeoJSON with per-feature geometry.");
 
 VGEO(nam_ags_usa_current_wildfires_california_current_incidents, "nam-ags-usa-current-wildfires-california-current-incidents", "USA Current Wildfires - California — Current Incidents", "USA Current Wildfires - California — Current Incidents",
   "namerica_hazard", "hazard",
-  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/USA_Wildfires_v1/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500",
+  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/USA_Wildfires_v1/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"hazard\",\"gis\",\"arcgis\"]", 1800,
   "ArcGIS FeatureServer layer 'Current Incidents' from the 'USA Current Wildfires - California' service, GeoJSON with per-feature geometry.");
 
 VGEO(nam_ags_wildfire_1000m_hazard_extent_dcrra_hazard_wildfire_d, "nam-ags-wildfire-1000m-hazard-extent-dcrra-hazard-wildfire-d", "Wildfire (1000m) - Hazard Extent - DCRRA — hazard wildfire Dissolve s 1000m", "Wildfire (1000m) - Hazard Extent - DCRRA — hazard wildfire Dissolve s 1000m",
   "namerica_hazard", "hazard",
-  "https://services1.arcgis.com/xeMpV7tU1t4KD3Ei/arcgis/rest/services/hazard_wildfire_Dissolve_s_1000m/FeatureServer/110/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500",
+  "https://services1.arcgis.com/xeMpV7tU1t4KD3Ei/arcgis/rest/services/hazard_wildfire_Dissolve_s_1000m/FeatureServer/110/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"hazard\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer 'hazard wildfire Dissolve s 1000m' from the 'Wildfire (1000m) - Hazard Extent - DCRRA' service, GeoJSON with per-feature geometry.");
 
 VGEO(nam_ags_wildfire_hazard_extent_dcrra_hazard_wildfire_dissolv, "nam-ags-wildfire-hazard-extent-dcrra-hazard-wildfire-dissolv", "Wildfire - Hazard Extent - DCRRA — hazard wildfire Dissolve s", "Wildfire - Hazard Extent - DCRRA — hazard wildfire Dissolve s",
   "namerica_hazard", "hazard",
-  "https://services1.arcgis.com/xeMpV7tU1t4KD3Ei/arcgis/rest/services/hazard_wildfire_Dissolve_s/FeatureServer/106/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500",
+  "https://services1.arcgis.com/xeMpV7tU1t4KD3Ei/arcgis/rest/services/hazard_wildfire_Dissolve_s/FeatureServer/106/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"hazard\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer 'hazard wildfire Dissolve s' from the 'Wildfire - Hazard Extent - DCRRA' service, GeoJSON with per-feature geometry.");
 
@@ -99,15 +109,28 @@ VGEO(nam_bc_fire_danger_wfs, "nam-bc-fire-danger-wfs", "BC Wildfire Service — 
   "en", "[\"can\",\"bc\",\"wildfire\",\"hazard\",\"geo\"]", 21600,
   "Province-wide fire danger class polygons used to anticipate where new starts are likely.");
 
+/* WFS rows in this file: `startIndex=0` (2026-11-07). geojson_emit_paged()
+ * advances a WFS cursor only when the URL already names one AND the body's own
+ * numberMatched/totalFeatures exceeds what was read (mechanism 3), so a row
+ * without `startIndex` read ONE page of a declared total and stopped. Measured
+ * per row (count=5 at startIndex 0 and 5): where the server accepted paging
+ * without a sort — GeoServer does that only when it can order by the
+ * feature type's primary key — the two pages were disjoint and the row gets
+ * `startIndex=0` alone. Where it refused ("Cannot do natural order without a
+ * primary key"), the row also gets `sortBy=<a property distinct on the
+ * row's first 200 features>`, checked the same way (pages disjoint, total
+ * unchanged; a bogus sortBy is HTTP 400 "Illegal property name", so the
+ * server reads it). Probe-sized pages (count 2/3/20/50) are 1000 now. The
+ * 20-page geojson ceiling still bounds a run; the remainder is disclosed. */
 VGEO(nam_bcwildfire_active_points_wfs, "nam-bcwildfire-active-points-wfs", "BC Wildfire Service — current fire points (WFS)", "BC Wildfire Service — current fire points (WFS)",
   "namerica_hazard", "hazard",
-  "https://openmaps.gov.bc.ca/geo/pub/WHSE_LAND_AND_NATURAL_RESOURCE.PROT_CURRENT_FIRE_PNTS_SP/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=pub:WHSE_LAND_AND_NATURAL_RESOURCE.PROT_CURRENT_FIRE_PNTS_SP&outputFormat=application/json&count=500&srsName=EPSG:4326",
+  "https://openmaps.gov.bc.ca/geo/pub/WHSE_LAND_AND_NATURAL_RESOURCE.PROT_CURRENT_FIRE_PNTS_SP/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=pub:WHSE_LAND_AND_NATURAL_RESOURCE.PROT_CURRENT_FIRE_PNTS_SP&outputFormat=application/json&count=500&srsName=EPSG:4326&startIndex=0",
   "en", "[\"can\",\"bc\",\"wildfire\",\"hazard\",\"geo\"]", 1800,
   "Point geometry for every fire currently tracked by the BC Wildfire Service, with size, status and cause.");
 
 VGEO(nam_bcwildfire_active_polys_wfs, "nam-bcwildfire-active-polys-wfs", "BC Wildfire Service — current fire perimeters (WFS)", "BC Wildfire Service — current fire perimeters (WFS)",
   "namerica_hazard", "hazard",
-  "https://openmaps.gov.bc.ca/geo/pub/WHSE_LAND_AND_NATURAL_RESOURCE.PROT_CURRENT_FIRE_POLYS_SP/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=pub:WHSE_LAND_AND_NATURAL_RESOURCE.PROT_CURRENT_FIRE_POLYS_SP&outputFormat=application/json&count=500&srsName=EPSG:4326",
+  "https://openmaps.gov.bc.ca/geo/pub/WHSE_LAND_AND_NATURAL_RESOURCE.PROT_CURRENT_FIRE_POLYS_SP/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=pub:WHSE_LAND_AND_NATURAL_RESOURCE.PROT_CURRENT_FIRE_POLYS_SP&outputFormat=application/json&count=500&srsName=EPSG:4326&startIndex=0",
   "en", "[\"can\",\"bc\",\"wildfire\",\"hazard\",\"geo\"]", 1800,
   "Mapped perimeters of currently burning British Columbia wildfires as polygons.");
 
@@ -132,31 +155,31 @@ VGEO(nam_calfire_incidents_geojson, "nam-calfire-incidents-geojson", "CAL FIRE �
 
 VGEO(nam_caltrans_ccvra_coastal_flood_risk_ccvr_coastal_flood_risk, "nam-caltrans-ccvra-coastal-flood-risk-ccvr-coastal-flood-risk", "Caltrans — CCVR Coastal Flood Risk (CCVRA Coastal Flood Risk)", "Caltrans — CCVR Coastal Flood Risk (CCVRA Coastal Flood Risk)",
   "namerica_hazard", "hazard",
-  "https://caltrans-gis.dot.ca.gov/arcgis/rest/services/CCVRA/CCVRA_Coastal_Flood_Risk/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://caltrans-gis.dot.ca.gov/arcgis/rest/services/CCVRA/CCVRA_Coastal_Flood_Risk/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"ca\",\"hazard\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer from Caltrans: CCVR Coastal Flood Risk, returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_caltrans_ccvra_landslide_risk_ccvra_landslide_risk, "nam-caltrans-ccvra-landslide-risk-ccvra-landslide-risk", "Caltrans — CCVRA Landslide Risk (CCVRA Landslide Risk)", "Caltrans — CCVRA Landslide Risk (CCVRA Landslide Risk)",
   "namerica_hazard", "hazard",
-  "https://caltrans-gis.dot.ca.gov/arcgis/rest/services/CCVRA/CCVRA_Landslide_Risk/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://caltrans-gis.dot.ca.gov/arcgis/rest/services/CCVRA/CCVRA_Landslide_Risk/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"ca\",\"hazard\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer from Caltrans: CCVRA Landslide Risk, returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_caltrans_ccvra_riverine_flood_risk_ccvra_riverine_flood_ris, "nam-caltrans-ccvra-riverine-flood-risk-ccvra-riverine-flood-ris", "Caltrans — CCVRA Riverine Flood Risk (CCVRA Riverine Flood Risk)", "Caltrans — CCVRA Riverine Flood Risk (CCVRA Riverine Flood Risk)",
   "namerica_hazard", "hazard",
-  "https://caltrans-gis.dot.ca.gov/arcgis/rest/services/CCVRA/CCVRA_Riverine_Flood_Risk/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://caltrans-gis.dot.ca.gov/arcgis/rest/services/CCVRA/CCVRA_Riverine_Flood_Risk/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"ca\",\"hazard\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer from Caltrans: CCVRA Riverine Flood Risk, returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_caltrans_ccvra_wildfire_risk_ccvra_wildfire_risk, "nam-caltrans-ccvra-wildfire-risk-ccvra-wildfire-risk", "Caltrans — CCVRA Wildfire Risk (CCVRA Wildfire Risk)", "Caltrans — CCVRA Wildfire Risk (CCVRA Wildfire Risk)",
   "namerica_hazard", "hazard",
-  "https://caltrans-gis.dot.ca.gov/arcgis/rest/services/CCVRA/CCVRA_Wildfire_Risk/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://caltrans-gis.dot.ca.gov/arcgis/rest/services/CCVRA/CCVRA_Wildfire_Risk/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"ca\",\"hazard\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer from Caltrans: CCVRA Wildfire Risk, returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_dc_ddoe_watershed_municipal_separate_storm_sewer_syst, "nam-dc-ddoe-watershed-municipal-separate-storm-sewer-syst", "District of Columbia (DC GIS) — Municipal Separate Storm Sewer Systems (MS4) - Sewer Shed (DDOE Watershed)", "District of Columbia (DC GIS) — Municipal Separate Storm Sewer Systems (MS4) - Sewer Shed (DDOE Watershed)",
   "namerica_hazard", "hazard",
-  "https://maps2.dcgis.dc.gov/dcgis/rest/services/DCGIS_APPS/DDOE_Watershed/MapServer/1/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://maps2.dcgis.dc.gov/dcgis/rest/services/DCGIS_APPS/DDOE_Watershed/MapServer/1/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"dc\",\"hazard\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer from District of Columbia (DC GIS): Municipal Separate Storm Sewer Systems (MS4) - Sewer Shed, returned as GeoJSON with per-feature geometry.");
 
@@ -168,19 +191,19 @@ VGEO(nam_dc_environment_flood_webmercator_community_rating_sys, "nam-dc-environm
 
 VGEO(nam_dc_environment_flood_webmercator_floodplains, "nam-dc-environment-flood-webmercator-floodplains", "District of Columbia (DC GIS) — Floodplains (Environment Flood WebMercator)", "District of Columbia (DC GIS) — Floodplains (Environment Flood WebMercator)",
   "namerica_hazard", "hazard",
-  "https://maps2.dcgis.dc.gov/dcgis/rest/services/DCGIS_DATA/Environment_Flood_WebMercator/MapServer/9/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://maps2.dcgis.dc.gov/dcgis/rest/services/DCGIS_DATA/Environment_Flood_WebMercator/MapServer/9/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"dc\",\"hazard\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer from District of Columbia (DC GIS): Floodplains, returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_dc_evacuation_route_map_evacuation_route_block_group, "nam-dc-evacuation-route-map-evacuation-route-block-group", "District of Columbia (DC GIS) — Evacuation Route Block Group (Evacuation Route Map)", "District of Columbia (DC GIS) — Evacuation Route Block Group (Evacuation Route Map)",
   "namerica_hazard", "hazard",
-  "https://maps2.dcgis.dc.gov/dcgis/rest/services/DCGIS_APPS/Evacuation_Route_Map/MapServer/2/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://maps2.dcgis.dc.gov/dcgis/rest/services/DCGIS_APPS/Evacuation_Route_Map/MapServer/2/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"dc\",\"hazard\",\"gis\",\"arcgis\"]", 86400,
   "ArcGIS FeatureServer layer from District of Columbia (DC GIS): Evacuation Route Block Group, returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_dc_evacuation_route_map_evacuation_route_points, "nam-dc-evacuation-route-map-evacuation-route-points", "District of Columbia (DC GIS) — Evacuation Route Points (Evacuation Route Map)", "District of Columbia (DC GIS) — Evacuation Route Points (Evacuation Route Map)",
   "namerica_hazard", "hazard",
-  "https://maps2.dcgis.dc.gov/dcgis/rest/services/DCGIS_APPS/Evacuation_Route_Map/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://maps2.dcgis.dc.gov/dcgis/rest/services/DCGIS_APPS/Evacuation_Route_Map/MapServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"dc\",\"hazard\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer from District of Columbia (DC GIS): Evacuation Route Points, returned as GeoJSON with per-feature geometry.");
 
@@ -204,13 +227,13 @@ VJSON(nam_drivebc_events, "nam-drivebc-events", "DriveBC — active road events 
 
 VGEO(nam_md_md_coastalresiliencyassessment_hazard_reduction_by, "nam-md-md-coastalresiliencyassessment-hazard-reduction-by", "Maryland iMAP — Hazard Reduction by Habitats (MD CoastalResiliencyAssessment)", "Maryland iMAP — Hazard Reduction by Habitats (MD CoastalResiliencyAssessment)",
   "namerica_hazard", "hazard",
-  "https://mdgeodata.md.gov/imap/rest/services/Environment/MD_CoastalResiliencyAssessment/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://mdgeodata.md.gov/imap/rest/services/Environment/MD_CoastalResiliencyAssessment/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"md\",\"hazard\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer from Maryland iMAP: Hazard Reduction by Habitats, returned as GeoJSON with per-feature geometry.");
 
 VGEO(nam_md_md_coastalresiliencyassessment_shoreline_hazard_in, "nam-md-md-coastalresiliencyassessment-shoreline-hazard-in", "Maryland iMAP — Shoreline Hazard Index (MD CoastalResiliencyAssessment)", "Maryland iMAP — Shoreline Hazard Index (MD CoastalResiliencyAssessment)",
   "namerica_hazard", "hazard",
-  "https://mdgeodata.md.gov/imap/rest/services/Environment/MD_CoastalResiliencyAssessment/FeatureServer/1/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200",
+  "https://mdgeodata.md.gov/imap/rest/services/Environment/MD_CoastalResiliencyAssessment/FeatureServer/1/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"usa\",\"md\",\"hazard\",\"gis\",\"arcgis\"]", 21600,
   "ArcGIS FeatureServer layer from Maryland iMAP: Shoreline Hazard Index, returned as GeoJSON with per-feature geometry.");
 

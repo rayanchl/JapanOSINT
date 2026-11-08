@@ -113,7 +113,7 @@ static int emit_state(const source_ctx *ctx, intel_sink *sink,
                       const char *state, int *nodms) {
   char url[512];
   snprintf(url, sizeof url, FMQ_URL_FMT, state);
-  const char *hdrs[] = { "User-Agent: JapanOSINT/1.0 (fcc-fm-query)", NULL };
+  const char *hdrs[] = { NULL };
   http_response hr = {0};
   int rc = http_request(ctx->http, "GET", url, hdrs, NULL, 0, 45000, 1, &hr);
   if (rc != 0 || hr.status != 200 || !hr.body) {

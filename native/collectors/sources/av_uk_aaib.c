@@ -38,7 +38,7 @@
   "public_timestamp,description"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *hdrs[] = { "Accept: application/json", AV_UA_HDR, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, AAIB_URL, hdrs, "uk-aaib-reports");
   if (!body) { fprintf(stderr, "[uk-aaib-reports] fetch failed\n"); return -1; }
   cJSON *doc = cJSON_Parse(body);

@@ -61,7 +61,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   char url[192];
   snprintf(url, sizeof url, "https://api-db2.sota.org.uk/api/summits/%s", ref);
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0 (sota-summit)", NULL };
+                         NULL };
   http_response hr = {0};
   int rc = http_request(ctx->http, "GET", url, hdrs, NULL, 0, 20000, 1, &hr);
   if (rc != 0) {                               /* transport failure (R3) */

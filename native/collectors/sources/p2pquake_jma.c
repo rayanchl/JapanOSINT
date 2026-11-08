@@ -24,7 +24,7 @@ static void coalesce2(cJSON *p, const char *k, cJSON *a, cJSON *b) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *hdrs[] = { "User-Agent: JapanOSINT", NULL };
+  const char *hdrs[] = { NULL };
   cJSON *data = feed_get_json_h(ctx->http, API_URL, hdrs, TIMEOUT_MS);
 
   cJSON *features = cJSON_CreateArray();

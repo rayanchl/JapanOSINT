@@ -12,20 +12,20 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
-static const char *GP_UA = "User-Agent: JapanOSINT/1.0 (osint@example.org)";
 
 static int run_w3w(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   const char *k = jo_env("W3W_API_KEY");
-  if (!k) { fprintf(stderr, "[WHAT3WORDS_CONVERT] no W3W_API_KEY\n"); return 0; }
+  if (!k) return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "WHAT3WORDS_CONVERT", "WHAT3WORDS_CONVERT", (const char *const[]){"W3W_API_KEY", NULL}, NULL, NULL);
   char url[512];
   snprintf(url, sizeof url,
     "https://api.what3words.com/v3/convert-to-coordinates?words=%s&key=%s", enc, k);
-  const char *hdrs[] = { "Accept: application/json", GP_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "WHAT3WORDS_CONVERT");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *coords = cJSON_GetObjectItem(root, "coordinates");
   const cJSON *lat = coords ? cJSON_GetObjectItem(coords, "lat") : NULL;
   const cJSON *lng = coords ? cJSON_GetObjectItem(coords, "lng") : NULL;
@@ -44,29 +44,30 @@ static int run_w3w(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   cJSON *p = cJSON_CreateObject();
   cJSON_AddStringToObject(p, "service", "WHAT3WORDS_CONVERT");
   cJSON_AddBoolToObject(p, "success", 1);
-  char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+  jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
   char title[200];
   snprintf(title, sizeof title, "///%s → %.5f,%.5f", words ? words : ctx->entity, lat->valuedouble, lng->valuedouble);
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key = words ? words : ctx->entity; it.title = title; it.summary = nearest;
-  it.body = bj; it.lang = "en"; it.has_geo = 1; it.lat = lat->valuedouble; it.lon = lng->valuedouble;
+  it.body = bt ? bt : bj; it.lang = "en"; it.has_geo = 1; it.lat = lat->valuedouble; it.lon = lng->valuedouble;
   it.record_type = "what3words";
   it.properties_json = pj; it.tags_json = "[\"osint-search\",\"WHAT3WORDS_CONVERT\"]";
-  int rc = sink->emit(sink, &it); free(bj); free(pj); cJSON_Delete(root);
+  int rc = sink->emit(sink, &it); free(bj); free(bt); free(pj); cJSON_Delete(root);
   return rc >= 0 ? 1 : 0;
 }
 
 static int run_opencage(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   const char *k = jo_env("OPENCAGE_KEY");
-  if (!k) { fprintf(stderr, "[OPENCAGE_GEOCODE] no OPENCAGE_KEY\n"); return 0; }
+  if (!k) return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "OPENCAGE_GEOCODE", "OPENCAGE_GEOCODE", (const char *const[]){"OPENCAGE_KEY", NULL}, NULL, NULL);
   char url[512];
   snprintf(url, sizeof url,
     "https://api.opencagedata.com/geocode/v1/json?q=%s&key=%s&limit=10&no_annotations=1", enc, k);
-  const char *hdrs[] = { "Accept: application/json", GP_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "OPENCAGE_GEOCODE");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *results = cJSON_GetObjectItem(root, "results");
   int emitted = 0;
   if (cJSON_IsArray(results)) {
@@ -86,14 +87,15 @@ static int run_opencage(const source_ctx *ctx, intel_sink *sink, const char *enc
       cJSON *p = cJSON_CreateObject();
       cJSON_AddStringToObject(p, "service", "OPENCAGE_GEOCODE");
       cJSON_AddBoolToObject(p, "success", 1);
-      char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
-      intel_item it = {0};
-      it.remote_key = formatted; it.title = formatted; it.body = bj; it.lang = "en";
+      jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
+      it.remote_key = formatted; it.title = formatted; it.body = bt ? bt : bj; it.lang = "en";
       it.has_geo = 1; it.lat = lat->valuedouble; it.lon = lng->valuedouble;
       it.record_type = "geocode-result";
       it.properties_json = pj; it.tags_json = "[\"osint-search\",\"OPENCAGE_GEOCODE\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(pj);
+      free(bj); free(bt); free(pj);
     }
   }
   cJSON_Delete(root);
@@ -111,7 +113,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   else if (!strcmp(sid, "OPENCAGE_GEOCODE"))   n = run_opencage(ctx, sink, enc);
   free(enc);
   fprintf(stderr, "[%s] emitted %d\n", sid, n);
-  return 0;
+  return n < 0 ? -1 : 0;
 }
 
 #define GP_DEF(sym, ID, NM, DESC) \

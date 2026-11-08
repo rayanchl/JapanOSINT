@@ -48,28 +48,23 @@ import csv
 import json
 import os
 import re
-import ssl
 import sys
 import time
 import threading
-import urllib.error
-import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 
-UA = ("Mozilla/5.0 (compatible; JapanOSINT/1.0; +https://github.com/rayanchl/"
-      "japanosint)")
 # Run under `python3 -I`, which strips this script's own directory from
 # sys.path, so a sibling module has to be found explicitly.
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import jo_tls                                                     # noqa: E402
+import jo_http                                                    # noqa: E402  (THE request conditions)
+import ctable                                                     # noqa: E402  (THE C row reader)
+import hpjson                                                     # noqa: E402  (THE engine JSON model)
 
 _lock = threading.Lock()
-# tools/jo_tls.py, not a context of its own: Python's default refuses
-# handshakes the ENGINE completes, which made this sweep report 27 live rows as
-# dead. See that file for the measurement.
-_ctx = jo_tls.context()
+# TLS is tools/jo_tls.py, through jo_http: Python's default refuses handshakes
+# the ENGINE completes, which made this sweep report 27 live rows as dead.
 
-ROW = re.compile(r'\{\s*\.id\s*=\s*"([^"]+)"')
 # An entity token makes the row a pivot; page 2 of no entity means nothing.
 ENTITY = re.compile(r"\{q[a-z]*\}|\{cik|\{key\}")
 COLS = ["verdict", "id", "page_param", "page_size", "http1", "http2",
@@ -108,57 +103,105 @@ REMEDY = [
 
 
 def paged_rows(tree):
-    """(id, host, url, page_param, page_size, next_path) for scheduled rows
-    that declare offset/page-number paging."""
+    """(id, host, url, page_param, page_size, …) for scheduled rows that
+    declare offset/page-number paging, read with tools/ctable.py — so a .url
+    split over adjacent literals or spelled through a string macro is ONE
+    string (this used to regex the first literal and probed 26 rows at a
+    fragment), and a row's span is its own braces rather than "up to the next
+    `{ .id =`". The row's own .headers, mode and array_path come with it: the
+    request is the engine's (jo_http) and page 1's records are counted where
+    the engine reads them."""
     out = []
-    for dirpath, _d, files in os.walk(tree):
-        for fn in files:
-            if not fn.endswith(".c"):
-                continue
-            t = open(os.path.join(dirpath, fn), encoding="utf-8",
-                     errors="replace").read()
-            if "page_param" not in t:
-                continue
-            for m in ROW.finditer(t):
-                nxt = t.find("{ .id =", m.end())
-                body = t[m.start():nxt if nxt > 0 else len(t)]
-                pp = re.search(r'\.page_param\s*=\s*"([^"]+)"', body)
-                if not pp:
-                    continue
-                iv = re.search(r"\.interval\s*=\s*(\d+)", body)
-                if not iv or int(iv.group(1)) == 0:
-                    continue          # a pivot, not a scheduled walk
-                u = re.search(r'\.url\s*=\s*"((?:[^"\\]|\\.)*)"', body)
-                if not u:
-                    continue
-                url = u.group(1)
-                if ENTITY.search(url) or "{page" in url or "{offset" in url:
-                    continue          # pivot, or a token this tool cannot bind
-                if "{date" in url or "{ago" in url or "{wstart" in url:
-                    continue          # a dated window; its own rules apply
-                ps = re.search(r"\.page_size\s*=\s*(\d+)", body)
-                zb = re.search(r"\.page_zero_based\s*=\s*1", body)
-                st = re.search(r"\.page_start\s*=\s*(\d+)", body)
-                hm = re.search(r"https?://([A-Za-z0-9._-]+)", url)
-                out.append({
-                    "id": m.group(1), "url": url,
-                    "host": hm.group(1).lower() if hm else "",
-                    "page_param": pp.group(1),
-                    "page_size": int(ps.group(1)) if ps else 0,
-                    "zero_based": bool(zb),
-                    "page_start": int(st.group(1)) if st else 0,
-                })
+    for r in ctable.iter_rows(tree, need="page_param"):
+        pp = r.s("page_param")
+        if not pp:
+            continue
+        if r.i("interval") <= 0:
+            continue          # a pivot, not a scheduled walk
+        url = r.s("url")
+        if not url:
+            continue
+        if ENTITY.search(url) or "{page" in url or "{offset" in url:
+            continue          # pivot, or a token this tool cannot bind
+        if "{date" in url or "{ago" in url or "{wstart" in url:
+            continue          # a dated window; its own rules apply
+        hdrs = r.get("headers") if isinstance(r.get("headers"), list) else []
+        out.append({
+            "id": r.s("id"), "url": url,
+            "host": ctable.host_of(url),
+            "page_param": pp,
+            "page_size": r.i("page_size"),
+            "zero_based": r.i("page_zero_based") == 1,
+            "page_start": r.i("page_start"),
+            "headers": hdrs,
+            "mode": (r.s("mode") or "HP_JSON").replace("HP_", "").lower(),
+            "array_path": r.s("array_path"),
+        })
     return out
 
 
 def set_param(url, key, val):
-    """Replace the parameter if present, else append — the same contract as
-    hp_url_set_param, which exists because APPENDING made a server bind the
-    first occurrence and serve page 1 for the whole walk."""
-    enc = re.escape(key)
-    if re.search(r"[?&]%s=" % enc, url):
-        return re.sub(r"([?&]%s=)[^&]*" % enc, r"\g<1>%s" % val, url)
-    return url + ("&" if "?" in url else "?") + "%s=%s" % (key, val)
+    """hp_url_set_param exactly: replace the FIRST `?key=` / `&key=` (its
+    value ends at `&` or `#`), else append. It used to replace EVERY
+    occurrence, so a URL binding the key twice was asked a question the
+    engine never asks (the engine binds the first and leaves the rest)."""
+    q = url.find("?")
+    p = q
+    while p >= 0:
+        cand = p + 1
+        if url.startswith(key + "=", cand):
+            end = cand + len(key) + 1
+            while end < len(url) and url[end] not in "&#":
+                end += 1
+            return url[:cand] + "%s=%s" % (key, val) + url[end:]
+        p = url.find("&", p + 1)
+    return url + ("&" if q >= 0 else "?") + "%s=%s" % (key, val)
+
+
+def url_num_param(url, key):
+    """hp_url_num_param: the integer the URL binds to `key` (first
+    occurrence, the WHOLE value digits), else None."""
+    p = url.find("?")
+    while p >= 0:
+        cand = p + 1
+        if url.startswith(key + "=", cand):
+            m = re.match(r"(\d+)(?=$|[&#])", url[cand + len(key) + 1:])
+            return int(m.group(1)) if m else None
+        p = url.find("&", p + 1)
+    return None
+
+
+def offset_named(param):
+    """hpengine.c's offset test: the name contains offset/start/skip,
+    case-insensitively (resultOffset, Start, $skip, startIndex)."""
+    pl = (param or "").lower()
+    return "offset" in pl or "start" in pl or "skip" in pl
+
+
+def page_two_value(r, page1_records):
+    """The value hp_run puts in page_param for the SECOND request.
+
+      page_start: unset (0) and not page_zero_based -> an OFFSET-named param
+                  starts at the value the URL binds (or 0); any other param
+                  is coerced to 1
+      step:       page_size, else the number of records page 1 returned
+      offset style (page_size set, or the name is offset-shaped):
+                  page_start + step;  page-number style: page_start + 1
+    It used to treat an offset-named param with no page_size as a page
+    NUMBER (`start=1`), so a `start`/`$skip` row's page 2 was record 1 —
+    an overlap with page 1 the engine never asks for."""
+    ps = r["page_start"]
+    named = offset_named(r["page_param"])
+    if not ps and not r["zero_based"] and named:
+        v0 = url_num_param(r["url"], r["page_param"])
+        if v0 and 0 < v0 < 100000000:
+            ps = v0
+    elif not ps and not r["zero_based"]:
+        ps = 1
+    step = r["page_size"] if r["page_size"] > 0 else page1_records
+    if r["page_size"] > 0 or named:
+        return ps + step
+    return ps + 1
 
 
 # A transport failure that is OURS, not the upstream's — measured, in both of
@@ -199,27 +242,25 @@ _LOCAL_EGRESS = re.compile(
     r"resolution|Cannot assign requested address|Too many open files", re.I)
 
 
-def get(url, timeout=60, tries=3):
-    req = urllib.request.Request(url, headers={
-        "User-Agent": UA, "Accept": "application/json, text/csv, */*"})
+def get(url, timeout=60, tries=3, headers=None, mode="json"):
+    """(status, body) for one request with the ENGINE's request conditions
+    (jo_http: the row's .headers, the per-host agent table, the engine's
+    Accept for the row's mode). This used to send its own agent and Accept
+    to every row and ignored .headers, so a header-authenticated or
+    agent-walled row was asked under conditions its collector never uses."""
     last = b""
     for attempt in range(tries):
-        try:
-            with urllib.request.urlopen(req, timeout=timeout, context=_ctx) as r:
-                return r.status, r.read()[:MAXREAD]
-        except urllib.error.HTTPError as e:
-            try:
-                return e.code, e.read()[:4000]
-            except Exception:
-                return e.code, b""
-        except Exception as e:
-            last = str(e)[:200].encode()
-            if not _LOCAL_EGRESS.search(str(e)):
-                return -1, last
-            # Back off: the point is to stop ASKING for a while, since the
-            # refusal is on this side of the wire.
-            if attempt + 1 < tries:
-                time.sleep(2.0 * (attempt + 1))
+        st, _ct, raw, err = jo_http.fetch_any(url, headers, timeout, None, MAXREAD,
+                                              pacer=None, mode=mode)
+        if st >= 0:
+            return st, raw[:MAXREAD] if st == 200 else raw[:4000]
+        last = err[:200].encode()
+        if not _LOCAL_EGRESS.search(err):
+            return -1, last
+        # Back off: the point is to stop ASKING for a while, since the
+        # refusal is on this side of the wire.
+        if attempt + 1 < tries:
+            time.sleep(2.0 * (attempt + 1))
     return -2, last
 
 
@@ -242,8 +283,13 @@ def _at(d, path):
     return cur if isinstance(cur, list) else None
 
 
-def count_records(blob):
+def count_records(blob, array_path=None):
     """How many records a body holds.
+
+    A row that DECLARES an array_path is counted where the engine reads it
+    (tools/hpjson.py select_records): a path that does not resolve is 0 —
+    the engine emits nothing — never "the longest list elsewhere". The row's
+    declared path used to be ignored entirely.
 
     This used to take the longest list ANYWHERE in the document, described as
     "a floor, only ever compared with ITSELF". Both halves were wrong.
@@ -263,9 +309,35 @@ def count_records(blob):
     in a tool that never got the engine's fix. So: the declared envelope first,
     then the longest array of OBJECTS (a ring is an array of arrays of
     numbers), and never a bare list of scalars found by searching."""
-    s = blob.decode("utf-8", "replace").strip()
+    # str.strip() does not remove a UTF-8 BOM, and a BOM-prefixed JSON body then
+    # fell through to the newline count below and read as 0 records.
+    s = blob.decode("utf-8", "replace").lstrip("\ufeff").strip()
     if not s:
         return 0
+    if s[0] == "<":
+        # XML (WFS GML, OAI-PMH, SRU, Atom): records are one element repeated
+        # under a common parent — the probe's count_xml rule. Counting NEWLINES
+        # read a one-line GeoServer FeatureCollection as 0 records, so a live
+        # row came back PAGE1_EMPTY.
+        import collections
+        import xml.etree.ElementTree as ET
+        try:
+            root = ET.fromstring(s)
+        except ET.ParseError:
+            return -1                 # truncated or not XML: UNKNOWN, not 0
+        best = 0
+        for parent in root.iter():
+            tally = collections.Counter(c.tag.rsplit("}", 1)[-1] for c in list(parent))
+            if tally:
+                best = max(best, tally.most_common(1)[0][1])
+        return best
+    if s[0] in "[{" and array_path:
+        try:
+            d = json.loads(s)
+        except ValueError:
+            return -1
+        recs, _how = hpjson.select_records(d, array_path)
+        return len(recs)
     if s[0] in "[{":
         try:
             d = json.loads(s)
@@ -324,13 +396,64 @@ def self_test():
         ("empty body", b"", 0),
         ("an empty result set is zero, not one", json.dumps({"results": []}).encode(), 0),
         ("csv falls back to lines", b"a,b\n1,2\n3,4\n", 2),
+        ("one-line WFS GML: 2 members, not 0 newlines",
+         b'<wfs:FeatureCollection xmlns:wfs="w"><wfs:member><a/></wfs:member>'
+         b'<wfs:member><a/></wfs:member></wfs:FeatureCollection>', 2),
+        ("a BOM before JSON is not a text body",
+         b'\xef\xbb\xbf[{"a":1},{"a":2}]', 2),
+        ("truncated XML DECLINES", b'<root><r/><r/', -1),
+    ]
+    # The row's DECLARED array_path is where the engine counts (2026-11-07).
+    cases += [
+        ("declared array_path: the declared array, not a longer one",
+         (json.dumps({"data": {"rows": [{"a": 1}]}, "results": [{"x": 1}] * 5}).encode(),
+          "data.rows"), 1),
+        ("declared array_path that does not resolve: the engine emits 0",
+         (json.dumps({"results": [{"x": 1}] * 5}).encode(), "items"), 0),
     ]
     bad = 0
     for label, blob, want in cases:
+        if isinstance(blob, tuple):
+            got = count_records(*blob)
+            if got != want:
+                bad += 1
+                print("SELF-TEST FAIL  %-50s got=%s want=%s" % (label, got, want))
+            continue
         got = count_records(blob)
         if got != want:
             bad += 1
             print("SELF-TEST FAIL  %-50s got=%s want=%s" % (label, got, want))
+    # The request this tool builds is the ENGINE's (hp_url_set_param,
+    # hp_url_declared_size and hp_run's page-2 arithmetic).
+    row = {"url": "https://e.x/q?start=0&k=1&start=9", "page_param": "start",
+           "page_size": 0, "page_start": 0, "zero_based": False}
+    for label, got, want in (
+        ("set_param replaces the FIRST occurrence only",
+         set_param("https://e.x/q?p=1&a=2&p=3", "p", "7"), "https://e.x/q?p=7&a=2&p=3"),
+        ("set_param appends when absent", set_param("https://e.x/q", "p", "2"), "https://e.x/q?p=2"),
+        ("set_param does not match a longer key", set_param("https://e.x/q?pp=1", "p", "2"),
+         "https://e.x/q?pp=1&p=2"),
+        ("declared_size reads the engine's list (perPage)", declared_size("https://e.x/?perPage=50"), 50),
+        ("declared_size reads `size`", declared_size("https://e.x/?size=25"), 25),
+        ("declared_size: not a list the engine lacks (maxFeatures)",
+         declared_size("https://e.x/?maxFeatures=40"), 0),
+        ("declared_size: a non-integer value is not a size", declared_size("https://e.x/?limit=10a"), 0),
+        ("offset-named param without page_size steps by page 1's count",
+         page_two_value(row, 100), 100),
+        ("page-number param steps by one", page_two_value(dict(row, page_param="page", url="https://e.x/"), 100), 2),
+        ("page_size makes it an offset from 1 (engine coerces page_start)",
+         page_two_value(dict(row, page_param="page", page_size=50, url="https://e.x/"), 7), 51),
+        ("an offset the URL binds is the start",
+         page_two_value(dict(row, url="https://e.x/?$skip=200", page_param="$skip"), 50), 250),
+        ("zero-based page number", page_two_value(dict(row, page_param="page", zero_based=True,
+                                                       url="https://e.x/"), 9), 1),
+    ):
+        if got != want:
+            bad += 1
+            print("SELF-TEST FAIL  %-50s got=%r want=%r" % (label, got, want))
+    if not _SIZE_KEYS:
+        bad += 1
+        print("SELF-TEST FAIL  hp_url_declared_size's list not parsed from lib/hpengine.c")
     if bad:
         print("\n%d counter fixture(s) failed — the sweep's verdicts would not "
               "mean anything, so it is not run." % bad)
@@ -389,22 +512,31 @@ def code_of(blob):
     return ""
 
 
-# How many records the URL ITSELF asked for. Needed because the engine's
-# short-page rule compares what came back with what was requested, and most of
-# these rows carry the size in the URL rather than in page_size (which is only
-# set for an OFFSET parameter).
-_SIZE_KEYS = ("per_page", "pageSize", "page_size", "resultRecordCount",
-              "limit", "count", "rows", "maxFeatures", "$top", "num",
-              "page%5Bsize%5D", "page[size]", "n")
+# How many records the URL ITSELF asked for — hp_url_declared_size's list,
+# READ OUT OF lib/hpengine.c so there is one list (this tool kept its own:
+# `maxFeatures`, `page[size]`, `n` that the engine never reads, and no `size`,
+# `pagesize`, `perPage`, `take` or `Count`, which 36 rows use and only the
+# engine saw). Same semantics: first occurrence, whole value an integer,
+# 0 < v < 1,000,000, case-sensitive name.
+def _c_size_keys():
+    try:
+        src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                                "lib", "hpengine.c"), encoding="utf-8").read()
+    except OSError:
+        return ()
+    m = re.search(r"hp_url_declared_size\(const char \*url\)\s*\{\s*static const char \*SZ\[\]\s*=\s*\{(.*?)\};",
+                  src, re.S)
+    return tuple(re.findall(r'"([^"]+)"', m.group(1))) if m else ()
+
+
+_SIZE_KEYS = _c_size_keys()
 
 
 def declared_size(url):
     for k in _SIZE_KEYS:
-        m = re.search(r"[?&]%s=(\d+)" % re.escape(k), url)
-        if m:
-            v = int(m.group(1))
-            if v > 0:
-                return v
+        v = url_num_param(url, k)
+        if v is not None and 0 < v < 1000000:
+            return v
     return 0
 
 
@@ -433,16 +565,10 @@ def _probe(a, r):
     # sort, so adding `startIndex=1` to page 1 reported BC_MINERAL_TENURE as
     # PAGE1_FAILED when its real page 1 is fine and only its PAGING is broken.
     # The verdict would have pointed at the wrong half of the row.
-    if r["page_size"]:
-        second = r["page_start"] + r["page_size"]        # an OFFSET parameter
-    else:
-        first = r["page_start"] if r["zero_based"] else max(r["page_start"], 1)
-        second = first + 1                              # a page NUMBER
     u1 = r["url"]
-    u2 = set_param(r["url"], r["page_param"], str(second))
-    out["url2"] = u2[:300]
+    hdrs, mode, ap = r.get("headers"), r.get("mode", "json"), r.get("array_path") or None
 
-    s1, b1 = get(u1, a.timeout)
+    s1, b1 = get(u1, a.timeout, headers=hdrs, mode=mode)
     out["http1"] = s1
     # -2 is OUR egress refusing, not the upstream (see get()). It is not a
     # finding about this row and must never be counted as one.
@@ -457,8 +583,12 @@ def _probe(a, r):
         out["verdict"] = "PAGE1_FAILED"
         out["message"] = message_of(b1)[:200]
         return out
-    n1 = count_records(b1)
+    n1 = count_records(b1, ap)
     out["recs1"] = n1
+    # page 2 as hp_run computes it — which needs page 1's record count when
+    # the row declares no page_size (see page_two_value)
+    u2 = set_param(r["url"], r["page_param"], str(page_two_value(r, max(n1, 0))))
+    out["url2"] = u2[:300]
     if n1 == 0:
         out["verdict"] = "PAGE1_EMPTY"
         return out
@@ -466,16 +596,16 @@ def _probe(a, r):
         # Page 1 arrived larger than this tool reads, so it cannot be counted
         # and neither the short-page rule nor an empty-page test means
         # anything. The byte comparison below still does, so say what is known.
-        out["verdict"] = ("SAME_AS_PAGE1" if get(u2, a.timeout)[1] == b1
+        out["verdict"] = ("SAME_AS_PAGE1" if get(u2, a.timeout, headers=hdrs, mode=mode)[1] == b1
                           else "RECS_UNKNOWN")
         out["message"] = ("page 1 is larger than this tool reads (%d bytes), "
                           "so its records cannot be counted; only the "
                           "byte-identity test applies" % len(b1))
         return out
 
-    s2, b2 = get(u2, a.timeout)
+    s2, b2 = get(u2, a.timeout, headers=hdrs, mode=mode)
     out["http2"] = s2
-    n2 = count_records(b2)
+    n2 = count_records(b2, ap)
     out["recs2"] = n2
     msg = message_of(b2)
 

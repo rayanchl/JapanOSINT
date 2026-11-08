@@ -17,6 +17,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 #define CENSYS_BASE "https://search.censys.io/api/v2"
 
@@ -74,12 +75,13 @@ static int emit_item(intel_sink *sink, const char *rk, const char *title,
   cJSON_AddStringToObject(props, "service", "CENSYS_SEARCH");
   cJSON_AddStringToObject(props, "kind", kind);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.summary         = summary;
   it.has_geo         = has_geo;
   it.lat             = lat;
@@ -88,7 +90,7 @@ static int emit_item(intel_sink *sink, const char *rk, const char *title,
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"CENSYS_SEARCH\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   cJSON_Delete(props);
   return rc >= 0 ? 1 : 0;
 }
@@ -342,7 +344,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *secret = getenv("CENSYS_API_SECRET");
   if (!(id && secret && *id && *secret)) {
     fprintf(stderr, "[CENSYS_SEARCH] gated (no CENSYS_API_ID/SECRET)\n");
-    return 0;                              /* key-gated: emit nothing */
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "CENSYS_SEARCH", "CENSYS_SEARCH", (const char *const[]){"CENSYS_API_ID", "CENSYS_API_SECRET", NULL}, NULL, NULL);                              /* key-gated: emit nothing */
   }
 
   char raw[512];

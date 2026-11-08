@@ -36,9 +36,10 @@
  *
  * ENV
  *   JO_PAGE_MAX   pages per run, default 20, for EVERY walk in the tree — this
- *                 module, lib/jsonlist.c and lib/hpengine.c alike. It used to
- *                 reach only this one; see jo_page_max() in pagewalk.c for what
- *                 the other two did instead. 1 restores the old single-fetch
+ *                 module, lib/jsonlist.c, lib/hpengine.c and (since 2026-11-07,
+ *                 when it was found reading only $JO_GEOJSON_PAGE_MAX)
+ *                 lib/geojson.c alike. It used to reach only this one; see
+ *                 jo_page_max() in pagewalk.c for what the others did instead. 1 restores the old single-fetch
  *                 behaviour while KEEPING the disclosure.
  *   JO_PAGE_WALK  0 disables continuation entirely (disclosure still emitted).
  */
@@ -71,7 +72,9 @@ typedef int (*pw_emit_fn)(const source_ctx *c, intel_sink *s, const char *id,
  * `emit_page`, and disclose anything left behind as a truncation-notice record.
  *
  * Returns the number of records emitted (the notice is not counted), or -1 if
- * the FIRST fetch failed — a dead endpoint is an error, an empty one is not. */
+ * the FIRST fetch failed — a dead endpoint is an error, an empty one is not.
+ * A first page answered with the upstream's own "nothing matched" (a 204, or
+ * a 404 whose body says so — feed_status_declared_empty) is that empty: 0. */
 /* The page ceiling every walk in the tree uses: $JO_PAGE_MAX when set, else
  * `legacy_env` when that name is set (NULL for none), else 20. One function
  * because there were three bounds with two numbers and two knobs, and one of
@@ -95,6 +98,59 @@ int jo_page_max_for(int declared);
  * this tree has had to repair three times. */
 long pw_odata_v2_count(const cJSON *doc);
 
+/* THE UPSTREAM'S DECLARED TOTAL — the one reader for every walk in the tree
+ * (lib/pagewalk.c, lib/jsonlist.c, lib/geojson.c; lib/hpengine.c should call
+ * it too). Returns the size of the whole match set the body states, or -1
+ * when it states none. `basis` (may be NULL) receives the key that carried
+ * it ("total", "result.count", "d.__count", "count", …), "" when -1.
+ *
+ * `page_records` is how many records THIS page holds, and decides only one
+ * thing: whether a bare root `count` is a total. It is, only when it EXCEEDS
+ * page_records (a count of the page's own records cannot be larger than the
+ * page). Pass -1 when the page size is unknown, and bare `count` is not read.
+ * JO_TOTAL_TRUST_BARE_COUNT reads it unconditionally — the old jsonlist rule,
+ * kept ONLY for jsonlist_declared_total()'s existing callers until they pass a
+ * page count. Matching is case-insensitive; a value must be a non-negative
+ * integer. Why each of those is so: the comment on the definition. */
+#define JO_TOTAL_TRUST_BARE_COUNT (-2L)
+long jo_declared_total(const cJSON *doc, long page_records,
+                       char *basis, size_t cap);
+
+/* THE NEXT-PAGE LINK the server published, resolved against `base` (the URL
+ * the page was read from; may be NULL, and then only an absolute link is
+ * returned). Every key spelling any of the three walkers knew, plus the
+ * `links[rel=next]` array form. A relative link is resolved only in its two
+ * unambiguous spellings, "?query" and "/path"; anything else is refused.
+ * Returns a malloc'd absolute URL, or NULL. */
+char *jo_next_link(const cJSON *doc, const char *base);
+/* The resolution step alone: `href` against `base`, as jo_next_link does it.
+ * malloc'd, or NULL when href is not a URL this rule accepts. */
+char *jo_resolve_link(const char *base, const char *href);
+
+/* WHY A LATER PAGE STOPPED A WALK, and what moves it — the one describer.
+ * `status` is in feedlib's vocabulary (feed_last_json_status): an HTTP status,
+ * FEED_ST_TRANSPORT (0) for an exchange that never completed,
+ * FEED_ST_UNPARSED (-2) for a 2xx body that could not be read,
+ * FEED_ST_DECLARED_EMPTY / 204 for the upstream's own "nothing matched",
+ * FEED_ST_UNKNOWN (-1) for unrecorded. A caller with another vocabulary maps
+ * into it (hpengine: its -1 transport is FEED_ST_TRANSPORT, its `unreadable`
+ * flag is FEED_ST_UNPARSED). `failed_page` > 0 is named in the reason ("page
+ * 3 answered HTTP 400 …"), else "a later page". Either buffer may be NULL.
+ * The remedy distinguishes a deep-paging cap (a 4xx after evidence of more:
+ * narrow each request — no gap reaches it) from a rate limit (429: a measured
+ * per-host gap), a refusal, a server error, a transport failure (one reading;
+ * can be our own egress) and an unreadable 2xx (read the body). */
+void pw_cut_describe(int failed_page, long status, char *reason, size_t rcap,
+                     char *remedy, size_t mcap);
+
+/* WHICH CEILING STOPPED A WALK, named, with the remedy that moves it:
+ * $JO_PAGE_MAX when an operator set it (it wins over everything), else the
+ * source's own declared ceiling (`declared` > 0), else `legacy_env` when that
+ * older variable is what set it (may be NULL), else the tree's default. */
+void jo_page_ceiling_describe(int page_max, int declared, const char *legacy_env,
+                              char *reason, size_t rcap,
+                              char *remedy, size_t mcap);
+
 int pw_walk(const source_ctx *c, intel_sink *s, const char *id,
             const char *url, pw_fetch_fn fetch, pw_emit_fn emit_page, void *ud);
 
@@ -115,6 +171,30 @@ int pw_walk(const source_ctx *c, intel_sink *s, const char *id,
 int pw_walk_max(const source_ctx *c, intel_sink *s, const char *id,
                 const char *url, pw_fetch_fn fetch, pw_emit_fn emit_page,
                 void *ud, int page_max_declared);
+
+/* As pw_walk_max, reading the collection over a CYCLE: hpengine's page_resume,
+ * for a collector that walks through this module.
+ *
+ *   resume_in   the position this source stored on its previous run (the
+ *               scheduler hands it over as source_ctx.resume_in), or NULL
+ *   resume_out  receives the position to store for the next run: the URL the
+ *               walk would have requested next when the page ceiling stopped
+ *               it, or "" — the cycle completed, the first page answered an
+ *               honest empty, or a page FAILED (a refused page is not
+ *               bookmarked; it would be retried for ever) — which the caller
+ *               stores as a cleared position (source_ctx.resume_out(ctx, NULL))
+ *   cap         resume_out's size; a position that does not fit is not stored
+ *
+ * The walk starts at resume_in only when its HOST is the row's own: a reading
+ * position may move a walk through a collection, never to another server.
+ * Every stop is still disclosed, and the notice carries next_run_resumes_at.
+ * As with hpengine, do not use this on an entity pivot (the scheduler passes
+ * no position there) or on a recency feed whose order is newest-first: new
+ * records land at the head and a resumed walk re-reads and skips at the seam. */
+int pw_walk_max_resume(const source_ctx *c, intel_sink *s, const char *id,
+                       const char *url, pw_fetch_fn fetch, pw_emit_fn emit_page,
+                       void *ud, int page_max_declared,
+                       const char *resume_in, char *resume_out, size_t cap);
 
 /* The default fetcher: feed_get_json with the 25 s timeout the macros used. */
 cJSON *pw_fetch_json(const source_ctx *c, const char *url, void *ud);

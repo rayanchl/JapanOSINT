@@ -407,10 +407,9 @@ struct GraphMeta: Codable, Hashable {
     let rel_types: String?
 }
 
-/// NOTE the name: `EntityGraph` is already taken by `Search/SearchModels.swift`
-/// (a different, poorer shape built on `EntityNode` and carrying no `meta`).
-/// Two same-named types in one module is a hard compile error, so the richer
-/// roadmap-19 payload — the one `GraphCanvasView` renders — is `EntityEgoGraph`.
+/// The entity ego-graph payload — the one `GraphCanvasView` renders. (A
+/// poorer `EntityGraph` with no `meta` used to sit in Search/SearchModels.swift
+/// for a client nothing called; both were removed 2026-11-07.)
 struct EntityEgoGraph: Decodable {
     let nodes: [GraphNode]
     let edges: [GraphEdge]

@@ -31,6 +31,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 /* ---- generic single-record emit for the JSON registries ---------------- */
 static int em_emit(intel_sink *sink, const char *service, const char *country,
@@ -56,21 +57,22 @@ static int em_emit(intel_sink *sink, const char *service, const char *country,
   if (reg_no) cJSON_AddStringToObject(props, "registration_number", reg_no);
   if (status) cJSON_AddStringToObject(props, "status", status);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = reg_no ? reg_no : name;
   it.title           = name ? name : reg_no;
   it.summary         = addr ? addr : status;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = lang;
   it.link            = link;
   it.record_type     = rectype;
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -79,7 +81,7 @@ static int em_emit(intel_sink *sink, const char *service, const char *country,
  * apikey: <key>. Response: { resultaten: [ { kvkNummer, naam, adres:{...} } ] } */
 static int nl_kvk(const source_ctx *ctx, intel_sink *sink, const char *q) {
   const char *key = jo_env("KVK_API_KEY");
-  if (!key) { fprintf(stderr, "[NL_KVK] gated (no KVK_API_KEY)\n"); return 0; }
+  if (!key) return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "NL_KVK", "NL_KVK", (const char *const[]){"KVK_API_KEY", NULL}, NULL, NULL);
 
   int alldig = 1, len = 0;
   for (const char *p = q; *p; p++, len++) if (!isdigit((unsigned char)*p)) alldig = 0;
@@ -99,10 +101,10 @@ static int nl_kvk(const source_ctx *ctx, intel_sink *sink, const char *q) {
   snprintf(hdr, sizeof hdr, "apikey: %s", key);
   const char *hdrs[] = { hdr, "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "NL_KVK");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   int emitted = 0;
   cJSON *arr = cJSON_GetObjectItem(root, "resultaten");
@@ -182,12 +184,12 @@ static int hr_sudreg(const source_ctx *ctx, intel_sink *sink, const char *q) {
     snprintf(url, sizeof url,
       "https://sudreg-data.gov.hr/api/javni/subjekt?tvrtka_naziv=%s", enc);
   free(enc);
-  const char *hdrs[] = { "Accept: application/json", "User-Agent: JapanOSINT/1.0", NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "HR_SUDREG");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   int emitted = 0;
   if (cJSON_IsArray(root)) emitted += hr_walk(sink, root, q);
   else if (cJSON_IsObject(root)) {
@@ -231,39 +233,34 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (strlen(q) < 2) { fprintf(stderr, "[reg_eu_more] entity too short\n"); return 0; }
   const char *id = ctx->source_id;
 
-  if (strcmp(id, "NL_KVK") == 0)       { nl_kvk(ctx, sink, q); return 0; }
-  if (strcmp(id, "HR_SUDREG") == 0)    { hr_sudreg(ctx, sink, q); return 0; }
+  if (strcmp(id, "NL_KVK") == 0)       { return nl_kvk(ctx, sink, q) < 0 ? -1 : 0; }
+  if (strcmp(id, "HR_SUDREG") == 0)    { return hr_sudreg(ctx, sink, q) < 0 ? -1 : 0; }
 
   if (strcmp(id, "PT_RCBE") == 0) {
-    scrape_reg(ctx, sink, q, "PT_RCBE", "PT_RCBE", "rcbe-entity",
+    return scrape_reg(ctx, sink, q, "PT_RCBE", "PT_RCBE", "rcbe-entity",
       "https://rcbe.justica.gov.pt",
-      "https://rcbe.justica.gov.pt/Home/Pesquisar?termo=%s", NULL);
-    return 0;
+      "https://rcbe.justica.gov.pt/Home/Pesquisar?termo=%s", NULL) < 0 ? -1 : 0;
   }
   if (strcmp(id, "HU_COMPANIES") == 0) {
-    scrape_reg(ctx, sink, q, "HU_COMPANIES", "HU_COMPANIES", "hu-company",
+    return scrape_reg(ctx, sink, q, "HU_COMPANIES", "HU_COMPANIES", "hu-company",
       "https://www.e-cegjegyzek.hu",
-      "https://www.e-cegjegyzek.hu/?cegnev=%s", NULL);
-    return 0;
+      "https://www.e-cegjegyzek.hu/?cegnev=%s", NULL) < 0 ? -1 : 0;
   }
   if (strcmp(id, "RS_APR") == 0) {
-    scrape_reg(ctx, sink, q, "RS_APR", "RS_APR", "apr-entity",
+    return scrape_reg(ctx, sink, q, "RS_APR", "RS_APR", "apr-entity",
       "https://pretraga2.apr.gov.rs",
-      "https://pretraga2.apr.gov.rs/unifiedentitysearch?searchTerm=%s", NULL);
-    return 0;
+      "https://pretraga2.apr.gov.rs/unifiedentitysearch?searchTerm=%s", NULL) < 0 ? -1 : 0;
   }
   if (strcmp(id, "LT_REGISTRAI") == 0) {
-    scrape_reg(ctx, sink, q, "LT_REGISTRAI", "LT_REGISTRAI", "lt-company",
+    return scrape_reg(ctx, sink, q, "LT_REGISTRAI", "LT_REGISTRAI", "lt-company",
       "https://rekvizitai.vz.lt",
-      "https://rekvizitai.vz.lt/en/search/?q=%s", NULL);
-    return 0;
+      "https://rekvizitai.vz.lt/en/search/?q=%s", NULL) < 0 ? -1 : 0;
   }
   if (strcmp(id, "LU_LBR") == 0) {
-    scrape_reg(ctx, sink, q, "LU_LBR", "LU_LBR", "lbr-entity",
+    return scrape_reg(ctx, sink, q, "LU_LBR", "LU_LBR", "lbr-entity",
       "https://www.lbr.lu",
       "https://www.lbr.lu/mjrcs/jsp/DisplayConsultDocumentsActionNotSecured.action?fileNumber=&companyName=%s",
-      NULL);
-    return 0;
+      NULL) < 0 ? -1 : 0;
   }
   return -1;
 }

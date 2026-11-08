@@ -56,7 +56,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
            "https://meri.digitraffic.fi/api/ais/v1/vessels/%s", mmsi);
 
   char *body = jo_get(ctx, url, NULL, "DIGITRAFFIC_AIS_VESSEL");
-  if (!body) return 0;              /* 404 = MMSI never heard: honest empty */
+  if (!body) return jo_fail_rc(jo_last_status(), 1);              /* 404 = MMSI never heard: honest empty; other refusals -1 */
   cJSON *v = cJSON_Parse(body);
   free(body);
   if (!v || !cJSON_IsObject(v)) { cJSON_Delete(v); return 0; }

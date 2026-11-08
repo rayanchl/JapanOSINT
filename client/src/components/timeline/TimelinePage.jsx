@@ -3,7 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { LuRefreshCw, LuMapPin, LuFileText, LuAtSign, LuBell, LuX } from 'react-icons/lu';
 import { api } from '../../api/client.js';
-import { useApi } from '../../hooks/useApi.js';
+import SourcePicker from '../sources/SourcePicker.jsx';
 import { Page, Card, Button, Input, Field, Segmented, ErrorNotice, EmptyState, LoadingState, CopyButton, cx } from '../ui/kit.jsx';
 import { fmtAbs } from '../../utils/time.js';
 
@@ -57,6 +57,10 @@ export default function TimelinePage() {
   const [customUntil, setCustomUntil] = useState(() => toLocalInput(Date.now()));
   const [bucket, setBucket] = useState('day');
   const [source, setSource] = useState('');
+  // ?q= on /api/timeline: a SEMANTIC timeline — the events of the k nearest
+  // intel items to q (timelineapi.c). The route existed with no UI.
+  const [semDraft, setSemDraft] = useState('');
+  const [semQ, setSemQ] = useState('');
   const [focused, setFocused] = useState(null); // { t } — a histogram bucket
 
   // Resolved request window.
@@ -89,9 +93,10 @@ export default function TimelinePage() {
     } else { q.since = win.since; q.until = win.until; }
     if (source) q.source = source;
     if (caseId) q.case_id = caseId;
+    if (semQ) q.q = semQ;
     if (cur) q.cursor = cur;
     return q;
-  }, [bucket, focused, win, source, caseId]);
+  }, [bucket, focused, win, source, caseId, semQ]);
 
   const load = useCallback(async () => {
     if (!win || tooWide) return;
@@ -132,16 +137,6 @@ export default function TimelinePage() {
     finally { setLoadingMore(false); }
   };
 
-  // Source catalogue for the filter; falls back to sources seen in events.
-  const srcCat = useApi('/api/intel/sources');
-  const sourceOptions = useMemo(() => {
-    const list = Array.isArray(srcCat.data?.data) ? srcCat.data.data : [];
-    if (list.length) return list.map((s) => ({ id: s.id, name: s.name || s.id }));
-    const seen = new Map();
-    for (const e of events) if (e.source_id && !seen.has(e.source_id)) seen.set(e.source_id, e.source_id);
-    return [...seen.entries()].map(([id, name]) => ({ id, name }));
-  }, [srcCat.data, events]);
-
   const totals = meta?.totals || buckets.reduce((a, b) => ({ intel: a.intel + (b.intel || 0), mentions: a.mentions + (b.mentions || 0), alerts: a.alerts + (b.alerts || 0) }), { intel: 0, mentions: 0, alerts: 0 });
   const notes = [...(meta?.notes || []), ...(meta?.listNotes || [])].filter((v, i, a) => a.indexOf(v) === i);
   const caseFilterDropped = caseId && notes.some((n) => n === 'case_items_table_missing' || n === 'cases_table_missing');
@@ -163,10 +158,16 @@ export default function TimelinePage() {
           <Field label="Window"><Segmented value={windowSel} onChange={(v) => { setWindowSel(v); setFocused(null); }} options={WINDOWS} /></Field>
           <Field label="Histogram"><Segmented value={bucket} onChange={(v) => { setBucket(v); setFocused(null); }} options={[{ value: 'hour', label: 'Hourly' }, { value: 'day', label: 'Daily' }]} /></Field>
           <Field label="Source">
-            <select value={source} onChange={(e) => setSource(e.target.value)} className="px-2 py-1 rounded-md bg-osint-bg border border-osint-border text-xs text-osint-text max-w-[240px]">
-              <option value="">All sources</option>
-              {sourceOptions.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
-            </select>
+            {/* Server-searched (SourcePicker); this used to download the whole
+              * /api/intel/sources catalogue to fill a <select>. Empty = all. */}
+            <SourcePicker value={source} onChange={setSource} placeholder="all sources — type to search" className="inline-block max-w-[240px]" />
+          </Field>
+          <Field label="By meaning (semantic)">
+            <form className="inline-flex gap-1" onSubmit={(e) => { e.preventDefault(); setSemQ(semDraft.trim()); setFocused(null); }}>
+              <Input className="w-[220px]" placeholder="optional: describe a topic…" value={semDraft} onChange={(e) => setSemDraft(e.target.value)} />
+              <Button type="submit" size="sm">Apply</Button>
+              {semQ && <Button size="sm" variant="ghost" onClick={() => { setSemDraft(''); setSemQ(''); }}>clear</Button>}
+            </form>
           </Field>
           {caseId && (
             <Field label="Case scope">
@@ -185,7 +186,11 @@ export default function TimelinePage() {
             {!win && <span className="text-xs text-neon-red pb-2">Since must be before until.</span>}
           </div>
         )}
-        {srcCat.error && <div className="text-[11px] text-osint-muted">Source catalogue unavailable ({srcCat.error.message}); the filter lists only sources seen in loaded events.</div>}
+        {semQ && meta?.semantic && (
+          <div className="text-[11px] text-accent">
+            Semantic scope: the {Number(meta.semantic.vector_hits ?? 0).toLocaleString()} nearest of k={meta.semantic.k} intel items to “{meta.semantic.q}”{meta.semantic.coverage?.embedded_count != null && meta.semantic.coverage?.eligible_count ? ` (index holds ${Number(meta.semantic.coverage.embedded_count).toLocaleString()} of ${Number(meta.semantic.coverage.eligible_count).toLocaleString()} eligible items)` : ''}. {meta.semantic.note}
+          </div>
+        )}
         {win && (
           <div className="text-[11px] text-osint-muted font-mono">
             {fmtAbs(win.since)} → {fmtAbs(win.until)} JST

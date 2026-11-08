@@ -491,8 +491,23 @@ static cJSON *sched_json(const sched_t *r, const char *id, long declared, int ad
   cJSON_AddStringToObject(o, "cadenceBasis", declared <= 0 ? "on demand" : ov > 0 ? "override"
                           : strcmp(cadence_mode_for(base), "declared") ? "policy"
                           : (adaptive && r && r->freshness > 0) ? "measured" : "declared");
-  if (r && r->effective > 0) cJSON_AddNumberToObject(o, "effectiveInterval", (double)r->effective);
+  /* The interval that runs NOW — the scheduler's own composition
+   * (sched_row_interval: an enabled override, else the policy over the
+   * measured-or-declared figure) — and only a health backoff stretching it
+   * keeps the value stored after the last run. It used to be that stored value
+   * alone, so a just-set override read "override 3600" beside "effective
+   * 21600, next due in 6 h" while the scheduler had already re-planned to one
+   * hour, and a never-run row printed "as declared" under the 6 h global
+   * default (audit 2026-11-07). */
+  long live = declared <= 0 ? 0 : ov > 0 ? ov : cadence_apply(base);
+  long eff  = live;
+  if (r && r->effective > live && r->failures > 0) eff = r->effective;
+  if (eff > 0) cJSON_AddNumberToObject(o, "effectiveInterval", (double)eff);
   else cJSON_AddNullToObject(o, "effectiveInterval");
+  cJSON_AddStringToObject(o, "effectiveBasis",
+                          eff <= 0 ? "on demand"
+                        : eff != live ? "health backoff"
+                        : ov > 0 ? "override" : "cadence");
   cJSON_AddNumberToObject(o, "consecutiveFailures", r ? r->failures : 0);
   cJSON_AddNumberToObject(o, "consecutiveEmpties", r ? r->empties : 0);
   int backed = r && r->backoff_until > now;
@@ -1548,7 +1563,10 @@ char *sourceapi_detail(db_handle *db, const char *id) {
      * never-run rows say null rather than a guess. */
     const cJSON *lr = stats ? cJSON_GetObjectItem(stats, "last_run_at") : NULL;
     long long last = (lr && cJSON_IsString(lr)) ? parse_ts(lr->valuestring) : 0;
-    long iv = (sc && sc->effective > 0) ? sc->effective : d->update_interval_sec;
+    /* The same live figure sched_json just published, not the stored one. */
+    const cJSON *ej = cJSON_GetObjectItem(sch, "effectiveInterval");
+    long iv = cJSON_IsNumber(ej) ? (long)ej->valuedouble
+            : (sc && sc->effective > 0) ? sc->effective : d->update_interval_sec;
     if (last > 0 && iv > 0) {
       char ts[32]; iso_epoch(last + iv, ts, sizeof ts);
       cJSON_AddStringToObject(sch, "next_due", ts);

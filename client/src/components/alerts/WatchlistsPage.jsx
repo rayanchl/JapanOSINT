@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { LuRefreshCw, LuEye, LuTrash2, LuPencil, LuX } from 'react-icons/lu';
+import { usePaged } from '../../hooks/useCases.js';
 import { api, errorMessage } from '../../api/client.js';
 import { useEntitySearch } from '../../hooks/useSearch.js';
 import { entityVisual } from '../../utils/entityVisuals.js';
@@ -33,25 +34,16 @@ export default function WatchlistsPage() {
   const myId = auth.me?.user?.id;
   const canWrite = canWriteWorkspace(auth.role);
   const roNote = readOnlyNote(auth.role, 'watchlist');
-  const [rows, setRows] = useState([]);
-  const [page, setPage] = useState(null);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  // The one keyset hook (usePaged, 2026-11-07). The hand-rolled loader it
+  // replaces had no request-sequence guard, so a slow first page could land
+  // after a reload and overwrite it, and a failed "load more" replaced the
+  // list's own error.
+  const list = usePaged('/api/watchlists', { limit: 100 });
+  const { rows, setRows, error, moreError, loading, loadingMore, hasMore, total, reload, loadMore } = list;
   const [editing, setEditing] = useState(null);   // 'new' | row
   const [confirmDel, setConfirmDel] = useState(null);
   const [busy, setBusy] = useState(null);
 
-  const load = async (cursor) => {
-    setLoading(true); setError(null);
-    try {
-      const j = await api.get('/api/watchlists', { query: { limit: 100, cursor } });
-      const d = Array.isArray(j?.data) ? j.data : [];
-      setRows((xs) => (cursor ? [...xs, ...d] : d));
-      setPage(j?.page || null);
-    } catch (e) { setError(e); }
-    finally { setLoading(false); }
-  };
-  useEffect(() => { load(); }, []);
 
   const toggle = async (w) => {
     setBusy(w.id);
@@ -79,13 +71,13 @@ export default function WatchlistsPage() {
       subtitle="Entities this workspace is following — every member sees every watchlist. Any new item that mentions one of them fires the watchlist's alert rule."
       actions={(
         <>
-          <Button onClick={() => load()} title="Refresh watchlists"><LuRefreshCw size={13} /></Button>
+          <Button onClick={() => reload()} title="Refresh watchlists"><LuRefreshCw size={13} /></Button>
           {canWrite && <Button variant="primary" onClick={() => setEditing('new')}><LuEye size={13} /> New watchlist</Button>}
         </>
       )}
     >
       {roNote && <div className="text-[11px] text-osint-muted">{roNote}</div>}
-      {error && <ErrorNotice error={error} title="Could not load watchlists" onRetry={() => load()} />}
+      {error && <ErrorNotice error={error} title="Could not load watchlists" onRetry={() => reload()} />}
       {loading && rows.length === 0 && !error && <LoadingState label="Loading watchlists…" />}
       {!loading && !error && rows.length === 0 && (
         <EmptyState title="No watchlists" action={canWrite ? <Button variant="primary" onClick={() => setEditing('new')}>Create a watchlist</Button> : null}>
@@ -128,8 +120,9 @@ export default function WatchlistsPage() {
             );
           })}
           <div className="flex items-center justify-between">
-            <BoundNote shown={rows.length} total={page?.next_cursor ? null : rows.length} more={Boolean(page?.next_cursor)} noun="watchlists" />
-            {page?.next_cursor && <Button size="sm" busy={loading} onClick={() => load(page.next_cursor)}>Load more</Button>}
+            <BoundNote shown={rows.length} total={total ?? (hasMore ? null : rows.length)} more={hasMore} noun="watchlists" />
+            {hasMore && <Button size="sm" busy={loadingMore} onClick={loadMore}>Load more</Button>}
+            {moreError && <span className="text-[11px] text-neon-red font-mono">next page failed — {errorMessage(moreError)}</span>}
           </div>
         </div>
       )}

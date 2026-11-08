@@ -18,6 +18,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 #define SOURCE_ID "psn-xbox-jp"
 
@@ -41,7 +42,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   if ((!npsso || !*npsso) && (!xblKey || !*xblKey)) {
     fprintf(stderr, "[psn-xbox-jp] gated (no PSN_NPSSO / XBOX_API_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "psn-xbox-jp", "psn-xbox-jp", (const char *const[]){"PSN_NPSSO", "XBOX_API_KEY", NULL}, NULL, NULL);
   }
 
   /* parseWatchlist: split on ',', trim, prefix psn:/xbl: */

@@ -1,8 +1,9 @@
 /* collectors/cyber/sources/poc_in_github.c
  * Port of server/src/collectors/pocInGithub.js.
  * GitHub contents API listing for current UTC year (fallback prev year),
- * filter CVE-YYYY-N.json files, sort by name desc, slice 60, fetch each raw
- * JSON (array of repos), take first 5 repos per CVE → one feature each.
+ * filter CVE-YYYY-N.json files, sort newest CVE first (numerically), take 60
+ * and disclose the rest, fetch each raw JSON (array of repos), every repo →
+ * one feature.
  * _meta dropped; SAMPLE_LIMIT env override not ported.
  * NOTE: the JS original pinned every row at Tokyo station. A GitHub repo is
  * not a place; those coordinates were invented and put 94 fake pins on the
@@ -36,10 +37,23 @@ static int is_cve_json(const char *s) {
   return strcmp(p, ".json") == 0;
 }
 
-/* a.name; for qsort descending localeCompare-ish (byte compare, JS uses
- * localeCompare but CVE ids are ASCII so byte order matches well enough). */
+/* Newest CVE first, NUMERICALLY: year, then sequence number (2026-11-07).
+ * The byte compare this replaces put "CVE-2026-9999" above "CVE-2026-10000"
+ * (and every 4-digit id above every 5-digit one), so the "newest 60" were the
+ * newest four-digit ids, not the newest CVEs. Names reaching here have passed
+ * is_cve_json(), so both numbers parse. */
+static void cve_nums(const char *s, long *y, long *n) {
+  *y = strtol(s + 4, NULL, 10);
+  const char *d = strchr(s + 4, '-');
+  *n = d ? strtol(d + 1, NULL, 10) : 0;
+}
 static int cmp_desc(const void *a, const void *b) {
-  return strcmp(*(const char *const *)b, *(const char *const *)a);
+  long ya, na, yb, nb;
+  cve_nums(*(const char *const *)a, &ya, &na);
+  cve_nums(*(const char *const *)b, &yb, &nb);
+  if (ya != yb) return ya < yb ? 1 : -1;
+  if (na != nb) return na < nb ? 1 : -1;
+  return 0;
 }
 
 /* repo.X ?? null  numeric */
@@ -118,6 +132,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON_Delete(listing);
 
   qsort(names, nn, sizeof *names, cmp_desc);
+  int listed = nn;
   if (nn > SAMPLE_LIMIT) {
     for (int k = SAMPLE_LIMIT; k < nn; k++) free(names[k]);
     nn = SAMPLE_LIMIT;
@@ -146,15 +161,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     snprintf(cveId, sizeof cveId, "%.*s",
              (int)(strlen(name) - 5), name);   /* drop ".json" (5 chars) */
 
-    int ri = 0;
+    /* EVERY repo of the CVE's file (2026-11-07): the JS port's slice(0,5)
+     * dropped the rest of a file already fetched, and its 400-byte
+     * description slice cut the field (rule 2). */
     cJSON *repo;
     cJSON_ArrayForEach(repo, arr) {
-      if (ri++ >= 5) break;                    /* slice(0,5) */
-      /* description: (repo.description||'').slice(0,400) — always string */
       const char *desc = jo_sv(repo, "description");
-      char dbuf[420];
-      if (desc) snprintf(dbuf, sizeof dbuf, "%.400s", desc);
-      else dbuf[0] = 0;
+      const char *dbuf = desc ? desc : "";
 
       cJSON *f = cJSON_CreateObject();
       cJSON_AddStringToObject(f, "type", "Feature");
@@ -203,6 +216,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   int n = geojson_emit_features(sink, ctx->source_id, features);
   cJSON_Delete(features);
+  /* The newest SAMPLE_LIMIT CVE files are read per run (one raw fetch each);
+   * the rest of the year's listing is disclosed rather than dropped silently. */
+  if (listed > SAMPLE_LIMIT)
+    jo_trunc_notice_scoped(sink, "poc-in-github", "cve-files", REPO_API,
+                           SAMPLE_LIMIT, listed,
+                           "only the newest SAMPLE_LIMIT CVE files of the year's "
+                           "listing were fetched this run (records count CVE FILES)",
+                           "raise SAMPLE_LIMIT in poc_in_github.c");
   fprintf(stderr, "[poc-in-github] emitted %d\n", n);
   return n >= 0 ? 0 : -1;
 }

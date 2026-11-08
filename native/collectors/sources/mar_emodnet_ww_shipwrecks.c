@@ -4,9 +4,10 @@
  *
  * Endpoint: https://ows.emodnet-humanactivities.eu/wfs?service=WFS
  *   &version=2.0.0&request=GetFeature&outputFormat=application/json
- *   &typeName=emodnet:wwshipwrecks&count=5000
+ *   &typeName=emodnet:wwshipwrecks&count=5000&startIndex=0
  *   (parse_notes: "Large layer: always page with &count= and &startIndex=" —
- *    one 5,000-feature page is taken per run.)
+ *    until 2026-11-07 ONE 5,000-feature page was taken per run, of 67,391;
+ *    it is walked to its end now, see _emodnet_wfs.inc.)
  * Emits (all fetched): wreck_id, name, type, flag, wreck_cate (hazard
  *   category), depth / water_dept, length, width, tonnage, cargo, date_sunk,
  *   original_d / last_detec and the charted position from
@@ -30,12 +31,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_emodnet_wfs.inc"
+#include "lib/seenset.h"
 
-#define WFS_URL "https://ows.emodnet-humanactivities.eu/wfs?service=WFS" \
-                "&version=2.0.0&request=GetFeature" \
-                "&outputFormat=application/json&typeName=emodnet:wwshipwrecks" \
-                "&count=5000"
-
+/* numberMatched 67,391 (2026-11-07) against the old single count=5000 page; 14 pages, ceiling 20 for headroom. Paged through _emodnet_wfs.inc (startIndex, natural key order). */
+#define WFS_URL "https://ows.emodnet-humanactivities.eu/wfs?service=WFS&version=2.0.0&request=GetFeature&outputFormat=application/json&typeName=emodnet:wwshipwrecks&count=5000&startIndex=0"
 /* string field, with the literal "n/a" treated as missing */
 static const char *wsv(const cJSON *o, const char *k) {
   const char *s = jo_sv(o, k);
@@ -48,13 +48,9 @@ static inline void add_w(cJSON *dst, const cJSON *src, const char *k) {
   if (s) cJSON_AddStringToObject(dst, k, s);
 }
 
-static int run(const source_ctx *ctx, intel_sink *sink) {
-  cJSON *doc = feed_get_json(ctx->http, WFS_URL, 120000);
-  if (!doc) {
-    fprintf(stderr, "[emodnet-ww-shipwrecks] fetch/parse failed\n");
-    return -1;
-  }
-  cJSON *feats = cJSON_GetObjectItem(doc, "features");
+static int emw_feats(const source_ctx *ctx, intel_sink *sink, cJSON *feats, void *ud) {
+  (void)ctx;
+  seen_set *ids = (seen_set *)ud;
   int n = 0;
   cJSON *f;
   cJSON_ArrayForEach(f, feats) {
@@ -114,8 +110,17 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
              type ? " · " : "", type ? type : "",
              depth ? " · least depth " : "", depth ? depth : "");
 
+    /* wreck_id is NOT unique: 67,387 distinct over 67,391 features (measured
+     * 2026-11-07), so four wrecks collapsed onto another's uid. The first
+     * holder keeps its uid; a repeat is keyed on its WFS feature id too, which
+     * is the upstream's own identifier for that row. */
+    char rk[200];
+    const char *fid = jo_sv(f, "id");
+    if (!seen_add(ids, wid) && fid) snprintf(rk, sizeof rk, "%s#%s", wid, fid);
+    else snprintf(rk, sizeof rk, "%s", wid);
+
     intel_item it = {0};
-    it.remote_key      = wid;
+    it.remote_key      = rk;
     it.title           = title;
     it.summary         = summary;
     it.link            = "https://emodnet.ec.europa.eu/en/human-activities";
@@ -128,9 +133,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (sink->emit(sink, &it) >= 0) n++;
     free(pj);
   }
-  cJSON_Delete(doc);
+  return n;
+}
+
+static int run(const source_ctx *ctx, intel_sink *sink) {
+  seen_set ids = {0};
+  int n = emw_walk(ctx, sink, ctx->source_id ? ctx->source_id : "emodnet-ww-shipwrecks", WFS_URL, 20, emw_feats, &ids);
+  seen_free(&ids);
   fprintf(stderr, "[emodnet-ww-shipwrecks] emitted %d\n", n);
-  return 0;
+  return n < 0 ? -1 : 0;   /* -1 only when the first page failed */
 }
 
 static const source_def mar_emodnet_ww_shipwrecks_def = {

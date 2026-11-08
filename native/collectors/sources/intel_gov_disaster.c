@@ -340,8 +340,7 @@ RSS_I(gd_volcano, "gvp-volcano-activity", "Smithsonian Weekly Volcanic Activity"
 #define NWS_URL "https://api.weather.gov/alerts/active"
 
 static int nws_run(const source_ctx *ctx, intel_sink *sink) {
-  const char *hdrs[] = { "User-Agent: japanosint-collector (osint feed reader)",
-                         "Accept: application/geo+json", NULL };
+  const char *hdrs[] = { "Accept: application/geo+json", NULL };
   cJSON *doc = feed_get_json_h(ctx->http, NWS_URL, hdrs, 30000);
   if (!doc) { fprintf(stderr, "[nws-alerts-us] fetch failed\n"); return -1; }
   cJSON *feats = cJSON_GetObjectItem(doc, "features");

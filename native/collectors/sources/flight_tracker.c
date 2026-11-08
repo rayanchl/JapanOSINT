@@ -137,7 +137,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON_AddStringToObject(props, "entity", q);
   cJSON_AddBoolToObject(props, "success", 1);   /* a live state vector was returned */
   cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   /* remote_key = flight:<icao24>. */
@@ -149,10 +149,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   else
     snprintf(title, sizeof title, "Aircraft %s", q);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key = rk;
   it.title = title;
-  it.body = bj;
+  it.body = bt ? bt : bj;
   it.summary = "live aircraft state";
   it.has_geo = has_geo;
   it.lat = lat;
@@ -162,7 +163,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   it.tags_json = "[\"osint-search\",\"FLIGHT_TRACKER\"]";
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   cJSON_Delete(env);
   cJSON_Delete(fi);
   return rc >= 0 ? 0 : -1;

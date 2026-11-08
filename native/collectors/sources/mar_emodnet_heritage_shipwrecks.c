@@ -5,7 +5,7 @@
  *
  * Endpoint: https://ows.emodnet-humanactivities.eu/wfs?service=WFS
  *   &version=2.0.0&request=GetFeature&outputFormat=application/json
- *   &typeName=emodnet:heritageshipwrecks&count=2000
+ *   &typeName=emodnet:heritageshipwrecks&count=5000&startIndex=0
  * Emits (all fetched): source_id, name, country, obj_type, sink_yr, dating,
  *   period, statutory protection status, depth_info, site_area, sink_context,
  *   obj_desc, source_inf, yr_updated, point_info and the recorded wreck site
@@ -27,11 +27,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_emodnet_wfs.inc"
 
-#define WFS_URL "https://ows.emodnet-humanactivities.eu/wfs?service=WFS" \
-                "&version=2.0.0&request=GetFeature&outputFormat=application/json" \
-                "&typeName=emodnet:heritageshipwrecks&count=2000"
-
+/* numberMatched 7,073 (2026-11-07) against the old count=2000: it stored 2,000; now 2 pages. Paged through _emodnet_wfs.inc (startIndex, natural key order). */
+#define WFS_URL "https://ows.emodnet-humanactivities.eu/wfs?service=WFS&version=2.0.0&request=GetFeature&outputFormat=application/json&typeName=emodnet:heritageshipwrecks&count=5000&startIndex=0"
 static const char *hsv(const cJSON *o, const char *k) {
   const char *s = jo_sv(o, k);
   if (!s) return NULL;
@@ -49,13 +48,8 @@ static inline void add_measure(cJSON *dst, const cJSON *src, const char *k) {
     cJSON_AddNumberToObject(dst, k, v->valuedouble);
 }
 
-static int run(const source_ctx *ctx, intel_sink *sink) {
-  cJSON *doc = feed_get_json(ctx->http, WFS_URL, 90000);
-  if (!doc) {
-    fprintf(stderr, "[emodnet-heritage-shipwrecks] fetch/parse failed\n");
-    return -1;
-  }
-  cJSON *feats = cJSON_GetObjectItem(doc, "features");
+static int emw_feats(const source_ctx *ctx, intel_sink *sink, cJSON *feats, void *ud) {
+  (void)ctx; (void)ud;
   int n = 0;
   cJSON *f;
   cJSON_ArrayForEach(f, feats) {
@@ -130,9 +124,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (sink->emit(sink, &it) >= 0) n++;
     free(pj);
   }
-  cJSON_Delete(doc);
+  return n;
+}
+
+static int run(const source_ctx *ctx, intel_sink *sink) {
+  int n = emw_walk(ctx, sink, ctx->source_id ? ctx->source_id : "emodnet-heritage-shipwrecks", WFS_URL, 0, emw_feats, NULL);
   fprintf(stderr, "[emodnet-heritage-shipwrecks] emitted %d\n", n);
-  return 0;
+  return n < 0 ? -1 : 0;   /* -1 only when the first page failed */
 }
 
 static const source_def mar_emodnet_heritage_shipwrecks_def = {

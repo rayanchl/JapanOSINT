@@ -125,7 +125,11 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "interconnector",
     .tags = "\"energy\",\"grid\",\"uk\",\"interconnector\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.neso.energy/api/3/action/datastore_search?resource_id=64f7908f-f787-4977-93e1-5342a5f1357f&limit=50",
+    /* `sort=_id asc` (2026-11-07): datastore_search promises no order without
+     * it. Measured on this host: sort=frobnicate is HTTP 409, _id asc and desc
+     * answer different pages, the total (35 here) is unchanged by the sort,
+     * and offset pages are disjoint. The resource fits the default ceiling. */
+    .url = "https://api.neso.energy/api/3/action/datastore_search?resource_id=64f7908f-f787-4977-93e1-5342a5f1357f&limit=50&offset=0&sort=_id%20asc",
     .array_path = "result.records",
     .id_keys = "_id",
     .interval = 86400,
@@ -143,7 +147,15 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "generation-mix",
     .tags = "\"energy\",\"grid\",\"uk\",\"timeseries\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.neso.energy/api/3/action/datastore_search?resource_id=f93d1835-75bc-43e5-84ad-12472b180a98&limit=50",
+    /* `sort=DATETIME desc` (2026-11-07). Unsorted, this hourly row read an
+     * arbitrary 1,000 of 312,816 half-hours (the first page measured was
+     * 2026-05-23, then 2026-05-24 — no order at all). Newest-first makes the
+     * run a stated window, the newest ~20 days, with the remainder disclosed
+     * from the envelope `total`; it does not cycle, so desc is the question
+     * being asked, not a drift hazard. Measured: DATETIME desc answers
+     * 2026-11-04T23:30 first, asc 2009-01-01; total unchanged; 1,000 newest
+     * rows carry 1,000 distinct DATETIMEs (no ties); offset pages disjoint. */
+    .url = "https://api.neso.energy/api/3/action/datastore_search?resource_id=f93d1835-75bc-43e5-84ad-12472b180a98&limit=50&offset=0&sort=DATETIME%20desc",
     .array_path = "result.records",
     .id_keys = "_id",
     .interval = 3600,
@@ -184,7 +196,11 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "demand-flexibility-event",
     .tags = "\"energy\",\"grid\",\"uk\",\"flexibility\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.neso.energy/api/3/action/datastore_search?resource_id=663f3f82-fec8-4c9a-a837-df5db8690a6f&limit=50",
+    /* `sort=_id asc` (2026-11-07): datastore_search promises no order without
+     * it. Measured on this host: sort=frobnicate is HTTP 409, _id asc and desc
+     * answer different pages, the total (5 here) is unchanged by the sort,
+     * and offset pages are disjoint. The resource fits the default ceiling. */
+    .url = "https://api.neso.energy/api/3/action/datastore_search?resource_id=663f3f82-fec8-4c9a-a837-df5db8690a6f&limit=50&offset=0&sort=_id%20asc",
     .array_path = "result.records",
     .id_keys = "_id",
     .interval = 900,
@@ -201,12 +217,22 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "carbon-intensity",
     .tags = "\"energy\",\"carbon\",\"uk\",\"forecast\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.neso.energy/api/3/action/datastore_search?resource_id=0e5fde43-2de7-4fb4-833d-c7bca3b658b0&limit=50",
+    /* `sort=datetime desc`, 1,000 a page, four pages (2026-11-07). Unsorted, this
+     * hourly row read an arbitrary 1,000 of 156,603 half-hours (the first
+     * page measured ran 2018-01-07, 2018-01-02, 2018-01-01). The newest
+     * rows are FORECAST slots a month ahead with null values (head
+     * 2026-12-07T13:00), so a 1,000-row newest window would hold no outturn
+     * at all: 4,000 newest (~83 days) reaches ~7 weeks of forecast-vs-actual.
+     * Measured: datetime desc / asc differ, total unchanged, 1,000 newest
+     * carry 1,000 distinct datetimes, offset pages disjoint. Not a cycle,
+     * so desc is deliberate; the envelope total discloses the rest. */
+    .url = "https://api.neso.energy/api/3/action/datastore_search?resource_id=0e5fde43-2de7-4fb4-833d-c7bca3b658b0&limit=1000&offset=0&sort=datetime%20desc",
     .array_path = "result.records",
     .id_keys = "_id",
     .interval = 3600,
     .page_param = "offset",
-    .page_size = 50,
+    .page_size = 1000,
+    .page_max = 4,
     .description = "Half-hourly forecast and outturn carbon intensity of British "
       "electricity in grams of CO2 per kWh. The forecast against "
       "outturn gap measures how well the operator predicted its own "
@@ -218,12 +244,17 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "wind-availability",
     .tags = "\"energy\",\"wind\",\"uk\",\"timeseries\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.neso.energy/api/3/action/datastore_search?resource_id=7aa508eb-36f5-4298-820f-2fa6745ae2e7&limit=50",
+    /* `sort=_id asc`, 1,000 a page (2026-11-07). At 50 a page under the
+     * 20-page default this row read the first 1,000 of 3,653 records
+     * every run in _id order. Measured: sort=frobnicate is 409, _id
+     * asc and desc differ, the total is unchanged by the sort, limit=1000
+     * is honoured and offset 0 / 1000 are disjoint. */
+    .url = "https://api.neso.energy/api/3/action/datastore_search?resource_id=7aa508eb-36f5-4298-820f-2fa6745ae2e7&limit=1000&offset=0&sort=_id%20asc",
     .array_path = "result.records",
     .id_keys = "_id",
     .interval = 21600,
     .page_param = "offset",
-    .page_size = 50,
+    .page_size = 1000,
     .description = "Daily declared availability of transmission-connected wind "
       "against installed capacity. The gap between installed and "
       "available capacity separates a weather event from an outage or a "
@@ -235,7 +266,11 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "renewable-forecast",
     .tags = "\"energy\",\"solar\",\"wind\",\"uk\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.neso.energy/api/3/action/datastore_search?resource_id=db6c038f-98af-4570-ab60-24d71ebd0ae5&limit=50",
+    /* `sort=_id asc` (2026-11-07): datastore_search promises no order without
+     * it. Measured on this host: sort=frobnicate is HTTP 409, _id asc and desc
+     * answer different pages, the total (598 here) is unchanged by the sort,
+     * and offset pages are disjoint. The resource fits the default ceiling. */
+    .url = "https://api.neso.energy/api/3/action/datastore_search?resource_id=db6c038f-98af-4570-ab60-24d71ebd0ae5&limit=50&offset=0&sort=_id%20asc",
     .array_path = "result.records",
     .id_keys = "_id",
     .interval = 3600,
@@ -252,12 +287,17 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "grid-load",
     .tags = "\"energy\",\"grid\",\"uk\",\"demand\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.neso.energy/api/3/action/datastore_search?resource_id=177f6fa4-ae49-4182-81ea-0c6b35f26ca6&limit=50",
+    /* `sort=_id asc`, 1,000 a page (2026-11-07). At 50 a page under the
+     * 20-page default this row read the first 1,000 of 2,114 records
+     * every run in _id order. Measured: sort=frobnicate is 409, _id
+     * asc and desc differ, the total is unchanged by the sort, limit=1000
+     * is honoured and offset 0 / 1000 are disjoint. */
+    .url = "https://api.neso.energy/api/3/action/datastore_search?resource_id=177f6fa4-ae49-4182-81ea-0c6b35f26ca6&limit=1000&offset=0&sort=_id%20asc",
     .array_path = "result.records",
     .id_keys = "_id",
     .interval = 3600,
     .page_param = "offset",
-    .page_size = 50,
+    .page_size = 1000,
     .description = "Half-hourly national demand, transmission system demand, "
       "embedded solar and wind, pumped storage and interconnector flows "
       "for Great Britain updated daily. The single most operationally "
@@ -556,12 +596,26 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "generation-mix",
     .tags = "\"energy\",\"grid\",\"belgium\",\"fuel\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.elia.be/api/explore/v2.1/catalog/datasets/ods033/records?limit=50",
+    /* A KEYSET CURSOR, re-measured 2026-11-07 — the ELIA_SI_FORECAST_NEXT_QH_HISTORY
+     * shape. Two defects: no id_keys, so the uid fell on the first scalar
+     * `generatedpower` (653 distinct of 1,000 records); and ODS refuses
+     * offset+limit > 10,000 with HTTP 400, so an offset cycle stalls for good
+     * at record 10,000 of 1,564,388. A quarter-hour holds 7 fuel codes
+     * (measured: 14 timestamps x 7 on the first page), so `datetime+fuelcode`
+     * is the identity, and the cursor is INCLUSIVE (`>=`) so the codes of a
+     * timestamp the page boundary split are re-read, never lost: four keyset
+     * pages answered 400 records, 394 distinct, 98 new a page, each 2018-01-01
+     * in order. order_by=frobnicate is HTTP 400 (ODSQL validates the clause). */
+    .url = "https://opendata.elia.be/api/explore/v2.1/catalog/datasets/ods033/records?limit=100&order_by=datetime%20asc%2Cfuelcode%20asc",
     .array_path = "results",
+    .id_keys = "datetime+fuelcode",
+    .date_keys = "datetime",
     .interval = 21600,
-    .page_param = "offset",
-    .page_resume = 1,   /* 1,564,388 records, measured 2026-10-12: read over a cycle, 50 pages a run */
-    .page_size = 50,
+    .next_path = "results.$last.datetime",
+    .next_tmpl = "https://opendata.elia.be/api/explore/v2.1/catalog/datasets/ods033/records?limit=100&order_by=datetime%20asc%2Cfuelcode%20asc&where=datetime%3E%3Ddate%27{v}%27",
+    .page_size = 100,
+    .page_max = 100,
+    .page_resume = 1,   /* 1,564,388 records: ~10,000 a run, a cycle of ~39 days against ~670 new a day */
     .title_keys = "generatedpower",
     .description = "Quarter-hourly Belgian generation by fuel code with the total, "
       "over a multi-year history. Belgium's nuclear share makes each "
@@ -1429,8 +1483,15 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "grid-load",
     .tags = "\"energy\",\"grid\",\"belgium\",\"demand\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.elia.be/api/explore/v2.1/catalog/datasets/ods002/records?limit=50",
+    /* `order_by=datetime` ascending + `offset=0` (2026-11-07): an offset walk with
+     * no sort over an ODS index that promises no order. The key is the
+     * dataset's own identity: datetime distinct over all 480 records read through
+     * /exports/json. Checked on this dataset: order_by=frobnicate is HTTP 400 (ODSQL
+     * validates it), asc and desc answer different pages, total_count is
+     * unchanged by the sort, offsets 0 and 100 are disjoint. */
+    .url = "https://opendata.elia.be/api/explore/v2.1/catalog/datasets/ods002/records?limit=50&offset=0&order_by=datetime%20asc",
     .array_path = "results",
+    .id_keys = "datetime",   /* none declared; 480 of 480 distinct (2026-11-07) */
     .interval = 3600,
     .page_param = "offset",
     .page_size = 50,
@@ -1609,12 +1670,18 @@ static const hp_source HP3B19_ENERGYENV[] = {
     .record_type = "operating-margin",
     .tags = "\"energy\",\"grid\",\"uk\",\"margin\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.neso.energy/api/3/action/datastore_search?resource_id=0eede912-8820-4c66-a58a-f7436d36b95f&limit=50",
+    /* `sort=_id asc`, 1,000 a page (2026-11-07). At 50 a page under the
+     * 20-page default this row read the first 1,000 of 27,232 records
+     * every run in _id order — the OLDEST, since _id follows the file. Measured: sort=frobnicate is 409, _id
+     * asc and desc differ, the total is unchanged by the sort, limit=1000
+     * is honoured and offset 0 / 1000 are disjoint. */
+    .url = "https://api.neso.energy/api/3/action/datastore_search?resource_id=0eede912-8820-4c66-a58a-f7436d36b95f&limit=1000&offset=0&sort=_id%20asc",
     .array_path = "result.records",
     .id_keys = "_id",
     .interval = 21600,
     .page_param = "offset",
-    .page_size = 50,
+    .page_size = 1000,
+    .page_max = 40,   /* 27,232 records at 1,000 a page, measured 2026-11-07, with headroom */
     .description = "The margin the British system operator requires itself to hold "
       "for each day, with the surplus or deficit against it. A negative "
       "operating margin published in advance is the formal precursor to "

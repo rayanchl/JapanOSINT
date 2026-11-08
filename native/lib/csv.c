@@ -578,7 +578,17 @@ int csv_is_utf8(const char *s, size_t n) {
  * so the source encoding is a parameter. */
 char *csv_decode_charset(const char *buf, size_t len, const char *from) {
   if (!buf) return NULL;
-  iconv_t cd = iconv_open("UTF-8", (from && from[0]) ? from : "SHIFT_JIS");
+  /* No encoding named means the Shift_JIS family, read as CP932 — the same
+   * answer csv_decode_sjis() gives, so the two entry points cannot disagree.
+   * An iconv that does not know the name CP932 (glibc and GNU libiconv both
+   * do) falls back to the strict SHIFT_JIS this file always used, rather than
+   * failing closed on every Japanese body. No cached probe: a static flag
+   * written from 8 scheduler workers is a data race TSan would rightly flag,
+   * and iconv_open is already paid per call. */
+  const char *enc = (from && from[0]) ? from : "CP932";
+  iconv_t cd = iconv_open("UTF-8", enc);
+  if (cd == (iconv_t)-1 && !strcmp(enc, "CP932"))
+    cd = iconv_open("UTF-8", "SHIFT_JIS");
   if (cd == (iconv_t)-1) {
     char *c = malloc(len + 1);
     if (!c) return NULL;
@@ -614,6 +624,33 @@ char *csv_decode_charset(const char *buf, size_t len, const char *from) {
   return out;
 }
 
+/* CP932, not strict SHIFT_JIS (fixed 2026-11-07). glibc's "SHIFT_JIS" is JIS
+ * X 0208 only and REJECTS the NEC/IBM extension rows Japanese web content uses
+ * — ① ② … (0x8740..), the NEC-selected IBM kanji, the IBM extensions — and
+ * csv_decode_charset() fails closed, so ONE such pair anywhere made the whole
+ * body come back verbatim and be stored as mojibake. lib/hpengine.c learned
+ * this on the Machi BBS boards (machi.to transcoded to mojibake where open2ch
+ * did not, from the same code path) and switched to CP932 — but this function
+ * is the OTHER copy of the same decision: feedlib's feed_get_text /
+ * feed_get_text_max / feed_get_json_h / feed_post_json, lib/rss_atom.c and
+ * jocore.h's jo_get() all reach it, and it kept the strict name. Found by an
+ * audit that read every Shift_JIS decode in the tree; measured with iconv(1)
+ * on 2026-11-07: `printf '\x87\x40' | iconv -f SHIFT_JIS` fails ("illegal
+ * input sequence at position 0") where `-f CP932` answers ①. CP932 is a
+ * superset of Shift_JIS in what it ACCEPTS, so this can only turn a
+ * fail-closed copy into a decode; the fallback behaviour (verbatim copy on an
+ * undecodable body, and strict SHIFT_JIS where an iconv has no CP932) is
+ * unchanged.
+ *
+ * It is NOT byte-identical in what it PRODUCES for a few code points, and that
+ * difference is a second fix rather than a cost — measured the same day with
+ * iconv(1): strict SHIFT_JIS reads 0x5C as U+00A5 (¥) and 0x7E as U+203E (‾),
+ * so a decoded JSON body had every backslash escape turned into "¥" and every
+ * "~" in a URL into an overline; CP932 keeps both ASCII. Four JIS symbols also
+ * map to their fullwidth CP932 forms (0x8160 〜→～, 0x817C −→－, 0x8191 ¢→￠,
+ * 0x8192 £→￡), which is what Windows-authored Japanese text means by them and
+ * what hpengine's rows already store. A record whose uid is a content hash and
+ * whose text carries one of those four will re-key once. */
 char *csv_decode_sjis(const char *buf, size_t len) {
-  return csv_decode_charset(buf, len, "SHIFT_JIS");
+  return csv_decode_charset(buf, len, "CP932");
 }

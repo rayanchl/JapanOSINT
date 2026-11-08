@@ -57,7 +57,7 @@ static void add_num(cJSON *o, const char *key, const char *raw) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *hdrs[] = { "User-Agent: JapanOSINT/1.0 (eop)", NULL };
+  const char *hdrs[] = { NULL };
   http_response hr = {0};
   int rc = http_request(ctx->http, "GET", EOP_URL, hdrs, NULL, 0, 45000, 1, &hr);
   if (rc != 0 || hr.status != 200 || !hr.body) {

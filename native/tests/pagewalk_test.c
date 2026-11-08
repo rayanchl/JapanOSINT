@@ -8,16 +8,51 @@
  * from here — so the fetch is scripted and every decision is asserted.
  *
  *   cc -Ithird_party tests/pagewalk_test.c lib/pagewalk.c third_party/cJSON.c
+ *
+ * Since 2026-11-07 it also compiles lib/jsonlist.c and lib/geojson.c IN (they
+ * are #included below, the way tests/unit/ includes the .c it tests), because
+ * the three walkers now share one declared-total reader, one next-link reader
+ * and one stop describer from lib/pagewalk.c, and the defects those replaced
+ * lived in the OTHER two copies. Their fetch, feed_get_json, is the scripted
+ * stub below, so the Makefile's link line is unchanged.
+ *
+ * -DPW_TEST_OLD_API compiles only the cases that use APIs which existed before
+ * 2026-11-07, so the same file can be run against the previous sources to
+ * show each new regression case FAILING there (how it was checked).
  */
 #include "../lib/pagewalk.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-/* ── stubs for the two symbols pagewalk.c pulls in from feedlib ───────────── */
+/* ── stubs for the symbols pagewalk.c, jsonlist.c and geojson.c pull in ──── */
 #include "../lib/feedlib.h"
+#ifndef FEED_ST_DECLARED_EMPTY
+#define FEED_ST_DECLARED_EMPTY (-3L)   /* PW_TEST_OLD_API: absent before 2026-11-07 */
+#endif
+/* jsonlist_emit_paged and geojson_emit_paged fetch through feed_get_json, so
+ * it reads the same script the pw_walk cases hand pw_walk directly. */
+struct script_s;
+static struct script_s *g_feed_sc;
+static cJSON *script_fetch(const source_ctx *c, const char *url, void *ud);
 cJSON *feed_get_json(http_client *h, const char *url, int t) {
-  (void)h; (void)url; (void)t; return NULL;    /* never reached: fetch is scripted */
+  (void)h; (void)t;
+  return g_feed_sc ? script_fetch(NULL, url, g_feed_sc) : NULL;
+}
+/* jsonlist.c's uid hash and geojson.c's SHA-1: the uids are not under test
+ * here, and the Makefile rule links no libcrypto. Deterministic, never empty. */
+void feed_hash_key(char *out21, const char *const *parts, int n) {
+  unsigned long h = 5381;
+  for (int i = 0; i < n; i++)
+    for (const char *p = parts[i] ? parts[i] : ""; *p; p++) h = h * 33 + (unsigned char)*p;
+  snprintf(out21, 21, "%020lu", h);
+}
+unsigned char *SHA1(const unsigned char *d, size_t n, unsigned char *md) {
+  static unsigned char buf[20];
+  unsigned char *o = md ? md : buf;
+  memset(o, 0, 20);
+  for (size_t i = 0; i < n; i++) o[i % 20] = (unsigned char)(o[i % 20] * 31 + d[i]);
+  return o;
 }
 char *feed_get_text(http_client *h, const char *url, int t) {
   (void)h; (void)url; (void)t; return NULL;
@@ -26,6 +61,8 @@ char *feed_get_text(http_client *h, const char *url, int t) {
  * way feed_get_json does in production, so the notice's failed-page status is
  * checkable. feed_status_describe() mirrors lib/feedlib.c's wording. */
 static long g_fake_status = FEED_ST_UNKNOWN;
+#ifndef PW_TEST_OLD_API
+#endif
 long feed_last_json_status(void) { return g_fake_status; }
 void feed_last_json_status_reset(void) { g_fake_status = FEED_ST_UNKNOWN; }
 void feed_status_describe(long st, char *out, size_t cap) {
@@ -46,6 +83,14 @@ const char *url_override_apply(const char *url) {
   return url;
 }
 
+/* The other two walkers, compiled in (see the header comment). */
+#ifndef PW_JSONLIST_C
+#define PW_JSONLIST_C "../lib/jsonlist.c"
+#define PW_GEOJSON_C  "../lib/geojson.c"
+#endif
+#include PW_JSONLIST_C
+#include PW_GEOJSON_C
+
 static int failures = 0;
 static void ok(int cond, const char *what) {
   printf("  %-5s %s\n", cond ? "ok" : "FAIL", what);
@@ -56,7 +101,8 @@ static void ok(int cond, const char *what) {
 typedef struct {
   int records;                 /* ordinary rows */
   int notices;                 /* collector-truncation-notice rows */
-  char last_notice_props[2048];
+  int other_notices;           /* any other collector-*-notice (jsonlist's shape notices) */
+  char last_notice_props[4096];
 } cap_t;
 
 static int cap_emit(struct intel_sink *s, const intel_item *it) {
@@ -65,6 +111,8 @@ static int cap_emit(struct intel_sink *s, const intel_item *it) {
     c->notices++;
     snprintf(c->last_notice_props, sizeof c->last_notice_props, "%s",
              it->properties_json ? it->properties_json : "");
+  } else if (it->record_type && !strncmp(it->record_type, "collector-", 10)) {
+    c->other_notices++;
   } else {
     c->records++;
   }
@@ -72,7 +120,7 @@ static int cap_emit(struct intel_sink *s, const intel_item *it) {
 }
 
 /* ── a scripted upstream ─────────────────────────────────────────────────── */
-typedef struct {
+typedef struct script_s {
   const char *body[8];         /* JSON per call, NULL entry = fetch failure */
   long status[8];              /* what a failing call answered (0 = not set) */
   int  n_body;
@@ -170,6 +218,37 @@ static int prop_str_eq(const char *props, const char *key, const char *want) {
   return r;
 }
 
+/* The VJSON and VGEO walks, which fetch through the scripted feed_get_json. */
+static int run_jl(const char *url, script_t *sc, cap_t *cap) {
+  intel_sink sink = { cap, cap_emit };
+  memset(cap, 0, sizeof *cap);
+  sc->calls = 0;
+  g_feed_sc = sc;
+  int n = jsonlist_emit_paged(&sink, "TEST", NULL, url, 1000, "items", NULL, NULL, NULL);
+  g_feed_sc = NULL;
+  return n;
+}
+static int run_gj(const char *url, script_t *sc, cap_t *cap) {
+  intel_sink sink = { cap, cap_emit };
+  memset(cap, 0, sizeof *cap);
+  sc->calls = 0;
+  g_feed_sc = sc;
+  int n = geojson_emit_paged(&sink, "TEST", NULL, url, 1000);
+  g_feed_sc = NULL;
+  return n;
+}
+#ifndef PW_TEST_OLD_API
+static int run_resume(const char *url, const char *rin, char *rout, size_t rcap,
+                      script_t *sc, cap_t *cap) {
+  source_ctx ctx = {0};
+  intel_sink sink = { cap, cap_emit };
+  memset(cap, 0, sizeof *cap);
+  sc->calls = 0;
+  return pw_walk_max_resume(&ctx, &sink, "TEST", url, script_fetch, script_emit,
+                            sc, 0, rin, rout, rcap);
+}
+#endif
+
 int main(void) {
   setenv("JO_PAGE_MAX", "5", 1);
   setenv("JO_PAGE_WALK", "1", 1);
@@ -226,12 +305,33 @@ int main(void) {
     ok(cap.notices == 0, "reached the end, nothing disclosed");
   }
 
-  printf("a relative or non-http next link is REFUSED, not guessed at\n");
+  printf("a relative next link is resolved in its two unambiguous spellings only\n");
   {
-    script_t sc = { .body = { "{\"items\":[{},{}],\"next\":\"/api?page=2\"}" },
-                    .n_body = 1 };
+    /* This used to assert that "/api?page=2" was REFUSED. That refusal was
+     * the opposite of jsonlist's rule (bio.tools' `"next": "?page=2&format=json"`
+     * was the whole reason 30,000 rows stopped at page 1 there), and it made
+     * `nextRecordsUrl` in this file's own key list dead — Salesforce always
+     * publishes it as a path. Since 2026-11-07 the three walkers share
+     * jo_next_link(): "?query" and "/path" resolve against the page's own
+     * URL, which takes nothing from the API but the origin we already asked;
+     * a bare token, another scheme or "//host" is still refused. */
+    script_t sc = { .body = { "{\"items\":[{},{}],\"next\":\"/api?page=2\"}", P2_of3 },
+                    .n_body = 2 };
     cap_t cap; run("https://x/api", &sc, &cap);
-    ok(sc.calls == 1, "a relative next link is not resolved against assumptions");
+    ok(sc.calls == 2 && strcmp(sc.seen[1], "https://x/api?page=2") == 0,
+       "a \"/path\" next link is resolved against the page's origin");
+  }
+  {
+    script_t sc = { .body = { "{\"items\":[{},{}],\"next\":\"abc123\"}", P2_of3 },
+                    .n_body = 2 };
+    cap_t cap; run("https://x/api", &sc, &cap);
+    ok(sc.calls == 1, "a bare cursor token is not a URL and is not glued on");
+  }
+  {
+    script_t sc = { .body = { "{\"items\":[{},{}],\"next\":\"//evil.example/x\"}", P2_of3 },
+                    .n_body = 2 };
+    cap_t cap; run("https://x/api", &sc, &cap);
+    ok(sc.calls == 1, "a network-path reference (another host) is refused");
   }
 
   printf("the page ceiling stops the walk and says so\n");
@@ -565,6 +665,299 @@ int main(void) {
     setenv("JO_PAGE_MAX", "5", 1);          /* as the walks above expect */
     unsetenv("JO_JSONLIST_PAGE_MAX");
   }
+
+  /* ── 2026-11-07: one reader, one describer, three walkers ─────────────────
+   * Each case below was run against the sources as they stood before that
+   * day (-DPW_TEST_OLD_API, see the header) and FAILED there, except the ones
+   * marked "control", which pin the half that must not move. */
+  static const char *J3a = "{\"items\":[{\"title\":\"a1\"},{\"title\":\"a2\"},{\"title\":\"a3\"}]}";
+  static const char *J3b = "{\"items\":[{\"title\":\"b1\"},{\"title\":\"b2\"},{\"title\":\"b3\"}]}";
+  static const char *J3c = "{\"items\":[{\"title\":\"c1\"},{\"title\":\"c2\"},{\"title\":\"c3\"}]}";
+#define GF(n) "{\"type\":\"Feature\",\"geometry\":null,\"properties\":{\"name\":\"" n "\"}}"
+  static const char *G3x = "{\"type\":\"FeatureCollection\",\"exceededTransferLimit\":true,"
+                           "\"features\":[" GF("x1") "," GF("x2") "," GF("x3") "]}";
+  static const char *G3y = "{\"type\":\"FeatureCollection\",\"exceededTransferLimit\":true,"
+                           "\"features\":[" GF("y1") "," GF("y2") "," GF("y3") "]}";
+  static const char *G3z = "{\"type\":\"FeatureCollection\",\"exceededTransferLimit\":true,"
+                           "\"features\":[" GF("z1") "," GF("z2") "," GF("z3") "]}";
+
+  printf("[4] one declared-total reader: a bare `count` above the page is a total\n");
+  {
+    /* Django REST Framework's envelope (Spaceflight News: count 36,457 beside
+     * 100). pw_walk excluded bare `count` outright, so two collectors whose
+     * comments say they "disclose against count" disclosed nothing. */
+    script_t sc = { .body = { "{\"count\":110000,\"items\":[{},{},{}]}" }, .n_body = 1 };
+    cap_t cap; run("https://x/api?limit=3", &sc, &cap);
+    ok(cap.notices == 1 && prop_num(cap.last_notice_props, "records_available") == 110000,
+       "pw_walk reads a DRF `count` larger than the page as the upstream's total");
+  }
+  {
+    script_t sc = { .body = { "{\"odata.count\":500,\"items\":[{},{},{}]}" }, .n_body = 1 };
+    cap_t cap; run("https://x/api?rows=3", &sc, &cap);
+    ok(prop_num(cap.last_notice_props, "records_available") == 500,
+       "pw_walk reads OData's `odata.count` (jsonlist's spelling it lacked)");
+  }
+  {
+    script_t sc = { .body = { "{\"count\":3,\"items\":[{},{},{}]}" }, .n_body = 1 };
+    cap_t cap; run("https://x/api?limit=3", &sc, &cap);
+    ok(cap.notices == 1 && prop_num(cap.last_notice_props, "records_available") == -12345,
+       "control: a `count` equal to the page is NOT claimed as the total");
+  }
+#ifndef PW_TEST_OLD_API
+  {
+    char basis[48];
+    cJSON *a = cJSON_Parse("{\"count\":20,\"items\":[]}");
+    cJSON *b = cJSON_Parse("{\"total\":12.5}");
+    cJSON *c = cJSON_Parse("{\"Total\":40}");
+    cJSON *d = cJSON_Parse("{\"d\":{\"__count\":\"46144\"}}");
+    cJSON *e = cJSON_Parse("{\"total\":7,\"count\":99}");
+    ok(jo_declared_total(a, 20, basis, sizeof basis) == -1 &&
+       jo_declared_total(a, 25, basis, sizeof basis) == -1,
+       "a bare `count` at or below the page's own size is not a total (the dangerous direction)");
+    ok(jo_declared_total(a, 3, basis, sizeof basis) == 20 && !strcmp(basis, "count"),
+       "a bare `count` above the page is, and the basis names the key");
+    ok(jo_declared_total(a, -1, NULL, 0) == -1,
+       "an unknown page size never reads a bare `count`");
+    ok(jo_declared_total(a, JO_TOTAL_TRUST_BARE_COUNT, NULL, 0) == 20 &&
+       jsonlist_declared_total(a) == 20,
+       "the legacy rule hpengine's page_walk rows were measured under is kept");
+    ok(jo_declared_total(b, 3, NULL, 0) == -1, "a fractional `total` is not a record count");
+    ok(jo_declared_total(c, 3, NULL, 0) == 40, "matching is case-insensitive, as jsonlist's was");
+    ok(jo_declared_total(d, 3, basis, sizeof basis) == 46144 && !strcmp(basis, "d.__count"),
+       "OData v2's string `d.__count`");
+    ok(jo_declared_total(e, 3, basis, sizeof basis) == 7 && !strcmp(basis, "total"),
+       "an unambiguous spelling wins over a bare `count`");
+    cJSON_Delete(a); cJSON_Delete(b); cJSON_Delete(c); cJSON_Delete(d); cJSON_Delete(e);
+  }
+#endif
+
+  printf("[5] geojson discloses a walk that ended short of the declared total\n");
+  {
+    /* numberMatched 9, startIndex advanced (mechanism 3), and the server
+     * re-serves page 1: the repeat guard ends the walk before `truncated` or
+     * `full_unadvanced` can be set, so it used to file NOTHING. */
+    static const char *G9 = "{\"type\":\"FeatureCollection\",\"numberMatched\":9,"
+                            "\"features\":[" GF("m1") "," GF("m2") "," GF("m3") "]}";
+    script_t sc = { .body = { G9, G9, G9 }, .n_body = 3, .repeat_body = 1 };
+    cap_t cap; int n = run_gj("https://x/wfs?startIndex=0", &sc, &cap);
+    ok(sc.calls == 2, "the re-served page 2 ended the walk");
+    ok(cap.notices == 1 && prop_num(cap.last_notice_props, "records_available") == 9,
+       "and the 6 the upstream says it holds beyond them are disclosed");
+    ok(n == 3 && prop_num(cap.last_notice_props, "records_used") == 3,
+       "the re-served page is not re-emitted or counted (jsonlist's 2026-09-05 rule)");
+  }
+  {
+    static const char *G3n = "{\"type\":\"FeatureCollection\",\"numberMatched\":3,"
+                             "\"features\":[" GF("k1") "," GF("k2") "," GF("k3") "]}";
+    script_t sc = { .body = { G3n }, .n_body = 1 };
+    cap_t cap; run_gj("https://x/wfs?startIndex=0", &sc, &cap);
+    ok(cap.notices == 0, "control: a walk that read the whole declared total files nothing");
+  }
+
+  printf("[6] the upstream's own \"nothing matched\" on page 1 is an honest empty\n");
+  {
+    script_t sc = { .body = { NULL }, .status = { 204 }, .n_body = 1 };
+    cap_t cap; int n = run("https://x/fdsnws/event/1/query?limit=3", &sc, &cap);
+    ok(n == 0 && cap.notices == 0 && cap.records == 0, "pw_walk: a 204 is rc 0, no notice");
+  }
+  {
+    script_t sc = { .body = { NULL }, .status = { FEED_ST_DECLARED_EMPTY }, .n_body = 1 };
+    cap_t cap; int n = run("https://x/fdsnws/event/1/query?limit=3", &sc, &cap);
+    ok(n == 0 && cap.notices == 0, "pw_walk: a 404 carrying the no-data wording is rc 0");
+  }
+  {
+    script_t sc = { .body = { NULL }, .status = { 404 }, .n_body = 1 };
+    cap_t cap; int n = run("https://x/fdsnws/event/1/query?limit=3", &sc, &cap);
+    ok(n == -1, "control: a plain 404 (KOERI: no such service) is still a failure");
+  }
+  {
+    script_t sc = { .body = { NULL }, .status = { 204 }, .n_body = 1 };
+    cap_t cap; int n = run_jl("https://x/q?limit=3&offset=0", &sc, &cap);
+    ok(n == 0 && cap.notices == 0, "jsonlist_emit_paged: a 204 is rc 0");
+    script_t s2 = { .body = { NULL }, .status = { 404 }, .n_body = 1 };
+    ok(run_jl("https://x/q?limit=3&offset=0", &s2, &cap) == -1,
+       "control: jsonlist_emit_paged still fails a plain 404");
+  }
+  {
+    script_t sc = { .body = { NULL }, .status = { FEED_ST_DECLARED_EMPTY }, .n_body = 1 };
+    cap_t cap; int n = run_gj("https://x/fdsnws/event/1/query?format=geojson", &sc, &cap);
+    ok(n == 0 && cap.notices == 0, "geojson_emit_paged: the no-data 404 is rc 0");
+    script_t s2 = { .body = { NULL }, .status = { 404 }, .n_body = 1 };
+    ok(run_gj("https://x/fdsnws/event/1/query?format=geojson", &s2, &cap) == -1,
+       "control: geojson_emit_paged still fails a plain 404");
+  }
+#ifndef PW_TEST_OLD_API
+  ok(feed_status_body_is_declared_empty(404, "Error 404: No data available for request.") &&
+     feed_status_body_is_declared_empty(404, "No Matching events found") &&
+     feed_status_body_is_declared_empty(204, NULL),
+     "the predicate: 204, or a 404 with the service's own no-data words");
+  ok(!feed_status_body_is_declared_empty(404,
+       "The requested resource does not exist on this server") &&
+     !feed_status_body_is_declared_empty(404, NULL) &&
+     !feed_status_body_is_declared_empty(200, "no data available") &&
+     !feed_status_body_is_declared_empty(500, "no matching"),
+     "control: KOERI's wording, a bodiless 404 and other statuses are not empty");
+  ok(feed_status_declared_empty(204) && feed_status_declared_empty(FEED_ST_DECLARED_EMPTY) &&
+     !feed_status_declared_empty(404) && !feed_status_declared_empty(FEED_ST_UNKNOWN),
+     "the status test the walkers read");
+#endif
+
+  printf("[7] a later page's remedy follows what it answered\n");
+  {
+    /* GLEIF refuses page[number]=51 with HTTP 400: a deep-paging cap, which
+     * no per-host gap moves. All three walkers used to say "needs a per-host
+     * minimum gap" for every status. */
+    script_t sc = { .body = { P3_of3, NULL }, .status = { 0, 400 }, .n_body = 2 };
+    cap_t cap; run("https://x/api?limit=3&offset=0", &sc, &cap);
+    ok(prop_str_eq(cap.last_notice_props, "remedy", "narrow each request") &&
+       !prop_str_eq(cap.last_notice_props, "remedy", "hostgate"),
+       "pw_walk: a 400 after a full page names a deep-paging cap, not a gap");
+    ok(prop_str_eq(cap.last_notice_props, "reason", "page 2 answered HTTP 400"),
+       "and the reason still names the page and its status");
+  }
+  {
+    script_t sc = { .body = { P3_of3, NULL }, .status = { 0, 429 }, .n_body = 2 };
+    cap_t cap; run("https://x/api?limit=3&offset=0", &sc, &cap);
+    ok(prop_str_eq(cap.last_notice_props, "remedy", "core/hostgate.c") &&
+       prop_str_eq(cap.last_notice_props, "remedy", "measure") &&
+       !prop_str_eq(cap.last_notice_props, "remedy", "narrow"),
+       "pw_walk: a 429 names a MEASURED per-host gap (control for the 400 case)");
+  }
+  {
+    script_t sc = { .body = { J3a, NULL }, .status = { 0, 400 }, .n_body = 2 };
+    cap_t cap; run_jl("https://x/q?limit=3&offset=0", &sc, &cap);
+    ok(cap.notices == 1 && prop_str_eq(cap.last_notice_props, "remedy", "narrow each request"),
+       "jsonlist_emit_paged: the same 400 gets the same remedy");
+  }
+  {
+    script_t sc = { .body = { G3x, NULL }, .status = { 0, 400 }, .n_body = 2 };
+    cap_t cap; run_gj("https://x/arcgis/query?resultRecordCount=3&resultOffset=0", &sc, &cap);
+    ok(cap.notices == 1 && prop_str_eq(cap.last_notice_props, "remedy", "narrow each request"),
+       "geojson_emit_paged: and so does the GeoJSON walk");
+  }
+
+  printf("[2/3] the ceiling that bit is named, and $JO_PAGE_MAX reaches every walk\n");
+  {
+    setenv("JO_PAGE_MAX", "2", 1);
+    script_t sc = { .body = { G3x, G3y, G3z, G3x }, .n_body = 4 };
+    cap_t cap; run_gj("https://x/arcgis/query?resultRecordCount=3&resultOffset=0", &sc, &cap);
+    ok(sc.calls == 2, "geojson_emit_paged stops at $JO_PAGE_MAX (it read only its own knob)");
+    ok(prop_str_eq(cap.last_notice_props, "remedy", "$JO_PAGE_MAX") &&
+       !prop_str_eq(cap.last_notice_props, "remedy", "JO_GEOJSON_PAGE_MAX"),
+       "and its remedy names the knob that bit");
+    script_t s2 = { .body = { J3a, J3b, J3c }, .n_body = 3 };
+    run_jl("https://x/q?limit=3&offset=0", &s2, &cap);
+    ok(s2.calls == 2 && prop_str_eq(cap.last_notice_props, "remedy", "$JO_PAGE_MAX: an operator set it") &&
+       !prop_str_eq(cap.last_notice_props, "remedy", "raise $JO_JSONLIST_PAGE_MAX"),
+       "jsonlist_emit_paged's ceiling remedy names $JO_PAGE_MAX, which wins");
+    unsetenv("JO_PAGE_MAX");
+    setenv("JO_GEOJSON_PAGE_MAX", "3", 1);
+    script_t s3 = { .body = { G3x, G3y, G3z, G3x }, .n_body = 4 };
+    run_gj("https://x/arcgis/query?resultRecordCount=3&resultOffset=0", &s3, &cap);
+    ok(s3.calls == 3 && prop_str_eq(cap.last_notice_props, "remedy", "older $JO_GEOJSON_PAGE_MAX"),
+       "the legacy $JO_GEOJSON_PAGE_MAX is still honoured, and named as what bit");
+    unsetenv("JO_GEOJSON_PAGE_MAX");
+    script_t s4 = { .body = { P3_of3, P3_of3, P3_of3 }, .n_body = 3 };
+    source_ctx ctx = {0}; intel_sink sink = { &cap, cap_emit };
+    memset(&cap, 0, sizeof cap);
+    pw_walk_max(&ctx, &sink, "TEST", "https://x/api?limit=3&offset=0",
+                script_fetch, script_emit, &s4, 2);
+    ok(prop_str_eq(cap.last_notice_props, "reason", "own measured ceiling") &&
+       prop_str_eq(cap.last_notice_props, "remedy", "re-measure"),
+       "pw_walk_max: a source's own ceiling is named with its own remedy");
+    setenv("JO_PAGE_MAX", "5", 1);
+  }
+
+  printf("[8] the GeoJSON walk resolves a relative next link\n");
+  {
+    script_t sc = { .body = {
+      "{\"type\":\"FeatureCollection\",\"features\":[" GF("r1") "],"
+      "\"links\":[{\"rel\":\"self\",\"href\":\"?startIndex=0\"},"
+      "{\"rel\":\"next\",\"href\":\"?startIndex=1\"}]}",
+      "{\"type\":\"FeatureCollection\",\"features\":[]}" }, .n_body = 2 };
+    cap_t cap; run_gj("https://x/ogc/collections/c/items?limit=1", &sc, &cap);
+    ok(sc.calls == 2 && !strcmp(sc.seen[1], "https://x/ogc/collections/c/items?startIndex=1"),
+       "a \"?query\" href is resolved against the page, not fetched as written");
+  }
+
+  printf("[9] a #fragment ends the query\n");
+  {
+    char *a = jsonlist_query_set("https://x/a?limit=10&offset=0#sheet=2", "offset", 10);
+    ok(a && !strcmp(a, "https://x/a?limit=10&offset=10#sheet=2"),
+       "jsonlist_query_set keeps the fragment after the LAST parameter");
+    free(a);
+    a = jsonlist_query_set("https://x/a#f", "offset", 3);
+    ok(a && !strcmp(a, "https://x/a?offset=3#f"),
+       "and appends to the query, before the fragment");
+    free(a);
+    a = jsonlist_query_set("https://x/a?offset=0&limit=5", "offset", 5);
+    ok(a && !strcmp(a, "https://x/a?offset=5&limit=5"), "control: a middle parameter");
+    free(a);
+    ok(jsonlist_query_int("https://x/a?offset=5#x", "offset") == 5,
+       "jsonlist_query_int reads a value the fragment ends");
+    ok(jsonlist_query_int("https://x/a#?offset=5", "offset") == -1,
+       "and never reads a parameter inside the fragment");
+    script_t sc = { .body = { P3_of3, P3_of3, P2_of3 }, .n_body = 3 };
+    cap_t cap; run("https://x/api?limit=3&offset=0#frag", &sc, &cap);
+    ok(sc.calls == 3 && strstr(sc.seen[1], "offset=3#frag") != NULL,
+       "pw_walk advances an offset that a fragment follows");
+  }
+
+  printf("[10] a record path that IS one dotted key resolves\n");
+  {
+    cJSON *a = cJSON_Parse("{\"odata.value\":[{\"k\":1}]}");
+    cJSON *b = cJSON_Parse("{\"odata\":{\"value\":[{\"k\":1},{\"k\":2}]}}");
+    cJSON *ra = jsonlist_find_array(a, "odata.value");
+    cJSON *rb = jsonlist_find_array(b, "odata.value");
+    ok(ra && cJSON_GetArraySize(ra) == 1, "jsonlist_find_array tries the literal key");
+    ok(rb && cJSON_GetArraySize(rb) == 2, "control: the split path still wins where it resolves");
+    cJSON_Delete(a); cJSON_Delete(b);
+  }
+
+#ifndef PW_TEST_OLD_API
+  printf("[11] pw_walk_max_resume reads a collection over a cycle\n");
+  {
+    char pos[512] = "x";
+    script_t sc = { .body = { P3_of3, P3_of3, P3_of3, P3_of3, P3_of3, P3_of3 }, .n_body = 6 };
+    cap_t cap; run_resume("https://x/api?limit=3&offset=0", NULL, pos, sizeof pos, &sc, &cap);
+    ok(sc.calls == 5 && !strcmp(pos, "https://x/api?limit=3&offset=15"),
+       "a ceiling stop stores the page it would have read next");
+    ok(prop_str_eq(cap.last_notice_props, "next_run_resumes_at", "offset=15") &&
+       prop_str_eq(cap.last_notice_props, "remedy", "over a cycle"),
+       "and the notice says where the next run continues");
+    char pos2[512] = "x";
+    script_t s2 = { .body = { P3_of3, P2_of3 }, .n_body = 2 };
+    run_resume("https://x/api?limit=3&offset=0", pos, pos2, sizeof pos2, &s2, &cap);
+    ok(!strcmp(s2.seen[0], "https://x/api?limit=3&offset=15") &&
+       strstr(s2.seen[1], "offset=18") != NULL,
+       "the next run starts there and advances from it");
+    ok(pos2[0] == 0, "reaching the end clears the position");
+    char pos3[512] = "x";
+    script_t s3 = { .body = { P2_of3 }, .n_body = 1 };
+    run_resume("https://x/api?limit=3&offset=0", "https://evil.example/api?limit=3&offset=15",
+               pos3, sizeof pos3, &s3, &cap);
+    ok(!strcmp(s3.seen[0], "https://x/api?limit=3&offset=0"),
+       "a stored position on another host is dropped");
+    script_t s4 = { .body = { P2_of3 }, .n_body = 1 };
+    run_resume("https://x/api?limit=3&offset=0", "https://X/api?limit=3&offset=3",
+               pos3, sizeof pos3, &s4, &cap);
+    ok(!strcmp(s4.seen[0], "https://X/api?limit=3&offset=3"),
+       "control: host comparison is case-insensitive");
+    char pos5[512] = "x";
+    script_t s5 = { .body = { P3_of3, NULL }, .status = { 0, 500 }, .n_body = 2 };
+    run_resume("https://x/api?limit=3&offset=0", NULL, pos5, sizeof pos5, &s5, &cap);
+    ok(pos5[0] == 0 && prop_str_eq(cap.last_notice_props, "next_run_resumes_at", "NOT advanced"),
+       "a failed page is not bookmarked, and the notice says so");
+    char pos6[512] = "x";
+    script_t s6 = { .body = { NULL }, .status = { 204 }, .n_body = 1 };
+    ok(run_resume("https://x/api?limit=3&offset=0", NULL, pos6, sizeof pos6, &s6, &cap) == 0 &&
+       pos6[0] == 0, "an honest empty first page clears it too");
+    char tiny[8] = "x";
+    script_t s7 = { .body = { P3_of3, P3_of3, P3_of3, P3_of3, P3_of3, P3_of3 }, .n_body = 6 };
+    run_resume("https://x/api?limit=3&offset=0", NULL, tiny, sizeof tiny, &s7, &cap);
+    ok(tiny[0] == 0, "a position that does not fit is not stored truncated");
+  }
+#endif
 
   printf(failures ? "\n%d FAILED\n" : "\nall passed\n", failures);
   return failures ? 1 : 0;

@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 /* Emit one intel row for a single satellite. Returns 1 if emitted. */
 static int emit_satellite(intel_sink *sink, cJSON *s,
@@ -52,17 +53,18 @@ static int emit_satellite(intel_sink *sink, cJSON *s,
    * satellite's position below is N2YO's own propagation output; we have no
    * independent measure of its accuracy and do not claim one. */
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
 
   char rk[64], title[320];
   snprintf(rk, sizeof rk, "sat:%d", norad);
   snprintf(title, sizeof title, "%s (NORAD %d)",
            (nm && nm->valuestring) ? nm->valuestring : "satellite", norad);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.summary         = (nm && nm->valuestring) ? nm->valuestring : "satellite overhead";
   it.has_geo         = has_geo;
   it.lat             = lat;
@@ -72,7 +74,7 @@ static int emit_satellite(intel_sink *sink, cJSON *s,
   it.tags_json       = "[\"osint-search\",\"SATELLITE_TRACKER\"]";
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   cJSON_Delete(body); cJSON_Delete(props);
   return rc >= 0 ? 1 : 0;
 }
@@ -81,7 +83,7 @@ static int run_satellite(const source_ctx *ctx, intel_sink *sink) {
   const char *key = getenv("N2YO_API_KEY");
   if (!key || !*key) {
     fprintf(stderr, "[SATELLITE_TRACKER] gated (no N2YO_API_KEY)\n");
-    return 0;                              /* key-gated: emit nothing */
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "SATELLITE_TRACKER", "SATELLITE_TRACKER", (const char *const[]){"N2YO_API_KEY", NULL}, NULL, NULL);                              /* key-gated: emit nothing */
   }
 
   /* The observer used to be hardcoded to 40.7128,-74.0060 (New York) while

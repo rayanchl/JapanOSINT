@@ -668,6 +668,7 @@ static const hp_source HP3B19_FINANCE[] = {
      * `total` for the disclosure. */
     .url = "https://data.gov.il/api/3/action/datastore_search?resource_id=f004176c-b85f-4542-8901-7b3176f9a054&limit=100&sort=_id%20asc",
     .array_path = "result.records",
+    .id_keys = "מספר חברה,_id",   /* 2026-11-07: none was declared, so records keyed on their title (company NAME) and collapsed across pages; the company number is distinct on 5,000 of 5,000 sampled at offset 300,000 of 733,283 */
     .interval = 86400,
     .page_param = "offset",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */

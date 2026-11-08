@@ -53,7 +53,7 @@ static int emit_company(intel_sink *sink, const cJSON *c) {
   cJSON_AddStringToObject(props, "source", "OpenCorporates");
   if (st && cJSON_IsString(st)) cJSON_AddStringToObject(props, "status", st->valuestring);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   /* Stable per-company key = jurisdiction:company_number. */
@@ -61,10 +61,11 @@ static int emit_company(intel_sink *sink, const cJSON *c) {
   snprintf(rk, sizeof rk, "company:%s:%s",
            jur ? jur : "?", num ? num : (name ? name : "?"));
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = name ? name : "company";
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.summary         = name ? name : "company";
   it.link            = (url && cJSON_IsString(url)) ? url->valuestring : NULL;
   it.record_type     = "osint_service_result";
@@ -72,7 +73,7 @@ static int emit_company(intel_sink *sink, const cJSON *c) {
   it.tags_json       = "[\"osint-search\",\"COMPANY_LOOKUP\"]";
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 

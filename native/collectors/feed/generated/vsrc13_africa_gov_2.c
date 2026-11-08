@@ -7,141 +7,151 @@
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
 
+/* ArcGIS rows in this file: `orderByFields=<the layer's own objectIdField>
+ * ASC` (2026-11-07). These walk on `resultOffset` (geojson_emit_paged's
+ * mechanism 1, on the server's own exceededTransferLimit) with no order
+ * clause, and ArcGIS promises no stable order without one. The field was READ
+ * per layer from `<layer>?f=json` (objectIdField, else the esriFieldTypeOID
+ * field — spellings here include OBJECTID, objectid, FID, OBJECTID_1, ObjectId,
+ * oid, RowID), every layer declares supportsOrderBy, and the sorted query was
+ * asked once (resultRecordCount=3 at offsets 0 and 3): HTTP 200, no error
+ * body, pages disjoint. This is STABILISING, not a recovery — no record was
+ * measured lost without it. */
 VGEO(afr_grid3_grid3_gha_settlement_extents_v3_0_grid3_gha_0, "afr-grid3-grid3-gha-settlement-extents-v3-0-grid3-gha--0", "GRID3 — Ghana settlement extents", "GRID3 — Ghana settlement extents",
   "africa_gov", "opendata",
-  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_GHA_Settlement_Extents_v3_0/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson",
+  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_GHA_Settlement_Extents_v3_0/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson&orderByFields=OBJECTID%20ASC",
   "en", "[\"gha\",\"settlements\",\"geospatial\",\"grid3\"]", 86400,
   "Polygon settlement extents for Ghana (built-up areas classified as urban, small settlement or hamlet) with real geometry for map layers.");
 
 VGEO(afr_grid3_grid3_gin_settlement_extents_v3_0_grid3_gin_0, "afr-grid3-grid3-gin-settlement-extents-v3-0-grid3-gin--0", "GRID3 — Guinea settlement extents", "GRID3 — Guinea settlement extents",
   "africa_gov", "opendata",
-  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_GIN_Settlement_Extents_v3_0/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson",
+  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_GIN_Settlement_Extents_v3_0/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson&orderByFields=OBJECTID%20ASC",
   "en", "[\"gin\",\"settlements\",\"geospatial\",\"grid3\"]", 64800,
   "Polygon settlement extents for Guinea (built-up areas classified as urban, small settlement or hamlet) with real geometry for map layers.");
 
 VGEO(afr_grid3_grid3_gmb_settlement_extents_v3_0_grid3_gmb_0, "afr-grid3-grid3-gmb-settlement-extents-v3-0-grid3-gmb--0", "GRID3 — Gambia settlement extents", "GRID3 — Gambia settlement extents",
   "africa_gov", "opendata",
-  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_GMB_Settlement_Extents_v3_0/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson",
+  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_GMB_Settlement_Extents_v3_0/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson&orderByFields=OBJECTID%20ASC",
   "en", "[\"gmb\",\"settlements\",\"geospatial\",\"grid3\"]", 86400,
   "Polygon settlement extents for Gambia (built-up areas classified as urban, small settlement or hamlet) with real geometry for map layers.");
 
 VGEO(afr_grid3_grid3_gnb_settlement_extents_v3_0_grid3_gnb_0, "afr-grid3-grid3-gnb-settlement-extents-v3-0-grid3-gnb--0", "GRID3 — Guinea-Bissau settlement extents", "GRID3 — Guinea-Bissau settlement extents",
   "africa_gov", "opendata",
-  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_GNB_Settlement_Extents_v3_0/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson",
+  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_GNB_Settlement_Extents_v3_0/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson&orderByFields=OBJECTID%20ASC",
   "en", "[\"gnb\",\"settlements\",\"geospatial\",\"grid3\"]", 64800,
   "Polygon settlement extents for Guinea-Bissau (built-up areas classified as urban, small settlement or hamlet) with real geometry for map layers.");
 
 VGEO(afr_grid3_grid3_gnq_settlement_extents_v3_0_grid3_gnq_0, "afr-grid3-grid3-gnq-settlement-extents-v3-0-grid3-gnq--0", "GRID3 — Equatorial Guinea settlement extents", "GRID3 — Equatorial Guinea settlement extents",
   "africa_gov", "opendata",
-  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_GNQ_Settlement_Extents_v3_0/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson",
+  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_GNQ_Settlement_Extents_v3_0/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson&orderByFields=OBJECTID%20ASC",
   "en", "[\"gnq\",\"settlements\",\"geospatial\",\"grid3\"]", 86400,
   "Polygon settlement extents for Equatorial Guinea (built-up areas classified as urban, small settlement or hamlet) with real geometry for map layers.");
 
 VGEO(afr_grid3_grid3_ken_settlement_extents_v3_0_grid3_ken_0, "afr-grid3-grid3-ken-settlement-extents-v3-0-grid3-ken--0", "GRID3 — Kenya settlement extents", "GRID3 — Kenya settlement extents",
   "africa_gov", "opendata",
-  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_KEN_Settlement_Extents_v3_0/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson",
+  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_KEN_Settlement_Extents_v3_0/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson&orderByFields=OBJECTID%20ASC",
   "en", "[\"ken\",\"settlements\",\"geospatial\",\"grid3\"]", 64800,
   "Polygon settlement extents for Kenya (built-up areas classified as urban, small settlement or hamlet) with real geometry for map layers.");
 
 VGEO(afr_grid3_grid3_lbr_settlement_extents_v3_0_grid3_lbr_0, "afr-grid3-grid3-lbr-settlement-extents-v3-0-grid3-lbr--0", "GRID3 — Liberia settlement extents", "GRID3 — Liberia settlement extents",
   "africa_gov", "opendata",
-  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_LBR_Settlement_Extents_v3_0/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson",
+  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_LBR_Settlement_Extents_v3_0/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson&orderByFields=OBJECTID%20ASC",
   "en", "[\"lbr\",\"settlements\",\"geospatial\",\"grid3\"]", 86400,
   "Polygon settlement extents for Liberia (built-up areas classified as urban, small settlement or hamlet) with real geometry for map layers.");
 
 VGEO(afr_grid3_grid3_lso_settlement_extents_v3_0_grid3_lso_0, "afr-grid3-grid3-lso-settlement-extents-v3-0-grid3-lso--0", "GRID3 — Lesotho settlement extents", "GRID3 — Lesotho settlement extents",
   "africa_gov", "opendata",
-  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_LSO_Settlement_Extents_v3_0/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson",
+  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_LSO_Settlement_Extents_v3_0/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson&orderByFields=OBJECTID%20ASC",
   "en", "[\"lso\",\"settlements\",\"geospatial\",\"grid3\"]", 64800,
   "Polygon settlement extents for Lesotho (built-up areas classified as urban, small settlement or hamlet) with real geometry for map layers.");
 
 VGEO(afr_grid3_grid3_mdg_settlement_extents_v3_0_grid3_mdg_0, "afr-grid3-grid3-mdg-settlement-extents-v3-0-grid3-mdg--0", "GRID3 — Madagascar settlement extents", "GRID3 — Madagascar settlement extents",
   "africa_gov", "opendata",
-  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_MDG_Settlement_Extents_v3_0/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson",
+  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_MDG_Settlement_Extents_v3_0/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson&orderByFields=OBJECTID%20ASC",
   "en", "[\"mdg\",\"settlements\",\"geospatial\",\"grid3\"]", 86400,
   "Polygon settlement extents for Madagascar (built-up areas classified as urban, small settlement or hamlet) with real geometry for map layers.");
 
 VGEO(afr_grid3_grid3_mli_settlement_extents_v3_0_grid3_mli_0, "afr-grid3-grid3-mli-settlement-extents-v3-0-grid3-mli--0", "GRID3 — Mali settlement extents", "GRID3 — Mali settlement extents",
   "africa_gov", "opendata",
-  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_MLI_Settlement_Extents_v3_0/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson",
+  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_MLI_Settlement_Extents_v3_0/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson&orderByFields=OBJECTID%20ASC",
   "en", "[\"mli\",\"settlements\",\"geospatial\",\"grid3\"]", 64800,
   "Polygon settlement extents for Mali (built-up areas classified as urban, small settlement or hamlet) with real geometry for map layers.");
 
 VGEO(afr_grid3_grid3_moz_settlement_extents_v3_0_grid3_moz_0, "afr-grid3-grid3-moz-settlement-extents-v3-0-grid3-moz--0", "GRID3 — Mozambique settlement extents", "GRID3 — Mozambique settlement extents",
   "africa_gov", "opendata",
-  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_MOZ_Settlement_Extents_v3_0/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson",
+  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_MOZ_Settlement_Extents_v3_0/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson&orderByFields=OBJECTID%20ASC",
   "en", "[\"moz\",\"settlements\",\"geospatial\",\"grid3\"]", 86400,
   "Polygon settlement extents for Mozambique (built-up areas classified as urban, small settlement or hamlet) with real geometry for map layers.");
 
 VGEO(afr_grid3_grid3_mrt_settlement_extents_v3_0_grid3_mrt_0, "afr-grid3-grid3-mrt-settlement-extents-v3-0-grid3-mrt--0", "GRID3 — Mauritania settlement extents", "GRID3 — Mauritania settlement extents",
   "africa_gov", "opendata",
-  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_MRT_Settlement_Extents_v3_0/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson",
+  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_MRT_Settlement_Extents_v3_0/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson&orderByFields=OBJECTID%20ASC",
   "en", "[\"mrt\",\"settlements\",\"geospatial\",\"grid3\"]", 64800,
   "Polygon settlement extents for Mauritania (built-up areas classified as urban, small settlement or hamlet) with real geometry for map layers.");
 
 VGEO(afr_grid3_grid3_mus_settlement_extents_v3_0_grid3_mus_0, "afr-grid3-grid3-mus-settlement-extents-v3-0-grid3-mus--0", "GRID3 — Mauritius settlement extents", "GRID3 — Mauritius settlement extents",
   "africa_gov", "opendata",
-  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_MUS_Settlement_Extents_v3_0/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson",
+  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_MUS_Settlement_Extents_v3_0/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson&orderByFields=OBJECTID%20ASC",
   "en", "[\"mus\",\"settlements\",\"geospatial\",\"grid3\"]", 86400,
   "Polygon settlement extents for Mauritius (built-up areas classified as urban, small settlement or hamlet) with real geometry for map layers.");
 
 VGEO(afr_grid3_grid3_mwi_settlement_extents_v3_0_grid3_mwi_0, "afr-grid3-grid3-mwi-settlement-extents-v3-0-grid3-mwi--0", "GRID3 — Malawi settlement extents", "GRID3 — Malawi settlement extents",
   "africa_gov", "opendata",
-  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_MWI_Settlement_Extents_v3_0/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson",
+  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_MWI_Settlement_Extents_v3_0/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson&orderByFields=OBJECTID%20ASC",
   "en", "[\"mwi\",\"settlements\",\"geospatial\",\"grid3\"]", 64800,
   "Polygon settlement extents for Malawi (built-up areas classified as urban, small settlement or hamlet) with real geometry for map layers.");
 
 VGEO(afr_grid3_grid3_nam_settlement_extents_v3_0_grid3_nam_0, "afr-grid3-grid3-nam-settlement-extents-v3-0-grid3-nam--0", "GRID3 — Namibia settlement extents", "GRID3 — Namibia settlement extents",
   "africa_gov", "opendata",
-  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_NAM_Settlement_Extents_v3_0/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson",
+  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_NAM_Settlement_Extents_v3_0/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson&orderByFields=OBJECTID%20ASC",
   "en", "[\"nam\",\"settlements\",\"geospatial\",\"grid3\"]", 86400,
   "Polygon settlement extents for Namibia (built-up areas classified as urban, small settlement or hamlet) with real geometry for map layers.");
 
 VGEO(afr_grid3_grid3_ner_settlement_extents_v3_0_grid3_ner_0, "afr-grid3-grid3-ner-settlement-extents-v3-0-grid3-ner--0", "GRID3 — Niger settlement extents", "GRID3 — Niger settlement extents",
   "africa_gov", "opendata",
-  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_NER_Settlement_Extents_v3_0/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson",
+  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_NER_Settlement_Extents_v3_0/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson&orderByFields=OBJECTID%20ASC",
   "en", "[\"ner\",\"settlements\",\"geospatial\",\"grid3\"]", 64800,
   "Polygon settlement extents for Niger (built-up areas classified as urban, small settlement or hamlet) with real geometry for map layers.");
 
 VGEO(afr_grid3_grid3_nga_ambulances_ambulances_70, "afr-grid3-grid3-nga-ambulances-ambulances-70", "GRID3 — Nigeria ambulance points", "GRID3 — Nigeria ambulance points",
   "africa_gov", "health",
-  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_NGA_Ambulances/FeatureServer/70/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson",
+  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_NGA_Ambulances/FeatureServer/70/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson&orderByFields=FID%20ASC",
   "en", "[\"nga\",\"cod\",\"geospatial\",\"grid3\"]", 43200,
   "Ambulance station locations recorded in the GRID3 Nigeria points-of-interest database.");
 
 VGEO(afr_grid3_grid3_nga_government_buildings_grid3_nga_poi_0, "afr-grid3-grid3-nga-government-buildings-grid3-nga-poi-0", "GRID3 — Nigeria government buildings", "GRID3 — Nigeria government buildings",
   "africa_gov", "gov",
-  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_NGA_Government_Buildings/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson",
+  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_NGA_Government_Buildings/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson&orderByFields=FID%20ASC",
   "en", "[\"nga\",\"cod\",\"geospatial\",\"grid3\"]", 43200,
   "Geolocated Nigerian government buildings and administrative offices.");
 
 VGEO(afr_grid3_grid3_nga_health_facilities_v2_0_grid3_nga_h_0, "afr-grid3-grid3-nga-health-facilities-v2-0-grid3-nga-h-0", "GRID3 — Nigeria health facilities", "GRID3 — Nigeria health facilities",
   "africa_gov", "health",
-  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_NGA_health_facilities_v2_0/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson",
+  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_NGA_health_facilities_v2_0/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson&orderByFields=OBJECTID%20ASC",
   "en", "[\"nga\",\"cod\",\"geospatial\",\"grid3\"]", 86400,
   "Geolocated Nigerian health facilities with name, ownership, level of care and LGA.");
 
 VGEO(afr_grid3_grid3_nga_hiv_statistics_by_state_hiv_statis_0, "afr-grid3-grid3-nga-hiv-statistics-by-state-hiv-statis-0", "GRID3 — Nigeria HIV statistics by state", "GRID3 — Nigeria HIV statistics by state",
   "africa_gov", "health",
-  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_NGA_HIV_Statistics_by_State/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson",
+  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_NGA_HIV_Statistics_by_State/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson&orderByFields=FID%20ASC",
   "en", "[\"nga\",\"cod\",\"geospatial\",\"grid3\"]", 43200,
   "State-level HIV prevalence and programme statistics joined to Nigerian state boundaries.");
 
 VGEO(afr_grid3_grid3_nga_police_stations_grid3_nga_poi_poli_0, "afr-grid3-grid3-nga-police-stations-grid3-nga-poi-poli-0", "GRID3 — Nigeria police stations", "GRID3 — Nigeria police stations",
   "africa_gov", "security",
-  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_NGA_Police_Stations/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson",
+  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_NGA_Police_Stations/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson&orderByFields=FID%20ASC",
   "en", "[\"nga\",\"cod\",\"geospatial\",\"grid3\"]", 86400,
   "Geolocated Nigerian police stations with name and administrative unit.");
 
 VGEO(afr_grid3_grid3_nga_post_offices_grid3_nga_poi_post_of_0, "afr-grid3-grid3-nga-post-offices-grid3-nga-poi-post-of-0", "GRID3 — Nigeria post offices", "GRID3 — Nigeria post offices",
   "africa_gov", "gov",
-  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_NGA_Post_Offices/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson",
+  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_NGA_Post_Offices/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson&orderByFields=FID%20ASC",
   "en", "[\"nga\",\"cod\",\"geospatial\",\"grid3\"]", 43200,
   "Geolocated Nigerian post offices from the GRID3 points-of-interest layer.");
 
 VGEO(afr_grid3_grid3_nga_prisons_grid3_nga_poi_prison_0, "afr-grid3-grid3-nga-prisons-grid3-nga-poi-prison-0", "GRID3 — Nigeria correctional facilities", "GRID3 — Nigeria correctional facilities",
   "africa_gov", "security",
-  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_NGA_Prisons/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson",
+  "https://services3.arcgis.com/BU6Aadhn6tbBEdyk/arcgis/rest/services/GRID3_NGA_Prisons/FeatureServer/0/query?where=1%3D1&outFields=*&outSR=4326&resultRecordCount=500&f=geojson&orderByFields=FID%20ASC",
   "en", "[\"nga\",\"cod\",\"geospatial\",\"grid3\"]", 86400,
   "Locations of Nigerian prisons and correctional facilities.");
 

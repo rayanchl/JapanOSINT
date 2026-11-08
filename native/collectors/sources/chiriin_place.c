@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lib/seenset.h"   /* growable hashed dedupe (2026-11-07) */
 
 #define BASE "https://msearch.gsi.go.jp/address-search/AddressSearch?q="
 
@@ -24,17 +25,13 @@ static const char *QUERIES[] = {
 #define NQ ((int)(sizeof QUERIES / sizeof QUERIES[0]))
 
 /* dedupe key store: "title|lon5|lat5" */
-#define MAX_SEEN 8192
-static int seen_has_add(char keys[][96], int *cnt, const char *k) {
-  for (int i = 0; i < *cnt; i++) if (strcmp(keys[i], k) == 0) return 1;
-  if (*cnt < MAX_SEEN) { snprintf(keys[*cnt], 96, "%s", k); (*cnt)++; }
-  return 0;
-}
+/* Dedupe is lib/seenset.c (2026-11-07): the hand-rolled fixed array this
+ * replaces stopped RECORDING ids once full and then let every later repeat
+ * through (and scanned linearly); a seen_set grows and is hashed. */
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *features = cJSON_CreateArray();
-  static char seen[MAX_SEEN][96];
-  int seen_cnt = 0;
+  seen_set seen = {0};   /* was a `static` array: shared between runs and threads */
   int any_fetched = 0;
 
   for (int qi = 0; qi < NQ; qi++) {
@@ -63,7 +60,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       char key[96];
       snprintf(key, sizeof key, "%s|%.5f|%.5f",
                title ? title : "null", lon, lat);
-      if (seen_has_add(seen, &seen_cnt, key)) continue;
+      if (!seen_add(&seen, key)) continue;
 
       cJSON *f = gj_point_feature(lon, lat);
 
@@ -79,6 +76,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_Delete(data);
   }
 
+  seen_free(&seen);
   if (!any_fetched) { cJSON_Delete(features); return -1; }
 
   int n = geojson_emit_features(sink, ctx->source_id, features);

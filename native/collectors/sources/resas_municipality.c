@@ -11,12 +11,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 #define BASE "https://opendata.resas-portal.go.jp/api/v1"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *key = getenv("RESAS_API_KEY");
-  if (!key || !*key) { fprintf(stderr, "[resas-municipality] gated (RESAS_API_KEY)\n"); return 0; }
+  if (!key || !*key) return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "resas-municipality", "resas-municipality", (const char *const[]){"RESAS_API_KEY", NULL}, NULL, NULL);
 
   char authhdr[256];
   snprintf(authhdr, sizeof authhdr, "X-API-KEY: %s", key);

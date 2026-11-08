@@ -42,7 +42,6 @@
 
 /* Wikimedia's UA policy asks for a descriptive agent identifying the client. */
 static const char *const WM_UA[] = {
-  "User-Agent: JapanOSINT-native/1.0 (OSINT research collector; +https://github.com/)",
   "Accept: application/json", NULL
 };
 

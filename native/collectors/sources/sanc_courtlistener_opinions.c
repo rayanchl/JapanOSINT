@@ -106,14 +106,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (cJSON_IsNumber(count))
       cJSON_AddNumberToObject(props, "total_matches", count->valuedouble);
     cJSON_AddBoolToObject(props, "success", 1);
-    char *pj = cJSON_PrintUnformatted(props);
+    jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
     cJSON_Delete(props);
 
-    intel_item it = {0};
+    char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
     it.remote_key = link[0] ? link : cname;
     it.title = cname;
     it.summary = summary;
-    it.body = bj;
+    it.body = bt ? bt : bj;
     it.link = link[0] ? link : NULL;
     it.lang = "en";
     it.published_at = filed;
@@ -121,7 +122,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     it.properties_json = pj ? pj : "{}";
     it.tags_json = "[\"osint-search\",\"court\",\"opinion\",\"us\"]";
     if (sink->emit(sink, &it) >= 0) n++;
-    free(bj);
+    free(bj); free(bt);
     free(pj);
   }
   cJSON_Delete(doc);

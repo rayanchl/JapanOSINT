@@ -582,12 +582,20 @@ static const hp_source HP3B19_LEGALIP[] = {
     .record_type = "tribunal-decision-record",
     .tags = "\"uk\",\"tribunal\",\"asylum\",\"decision\",\"hmcts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gov.uk/api/search.json?filter_format=asylum_support_decision&count=100",
+    /* `order=public_timestamp` + `start=0` + page_resume (2026-11-07): the walk had
+     * no stable sort over a live index. Measured on this format and on the
+     * RPT one: order=frobnicate is HTTP 422 (validated), asc and -desc answer
+     * different first pages, the total is unchanged by the sort, start 0/50
+     * are disjoint, and a deep page read twice is identical. Ascending puts
+     * new decisions at the TAIL, so the cycle covers growth past the ceiling. */
+    .url = "https://www.gov.uk/api/search.json?filter_format=asylum_support_decision&count=100&order=public_timestamp&start=0",
     .array_path = "results",
     .date_keys = "public_timestamp",
     .id_keys = "link",
     .interval = 21600,
     .page_param = "start",
+    .page_resume = 1,
+    .page_zero_based = 1,
     .page_size = 100,
     .title_keys = "title",
     .description = "Decisions of the First-tier Tribunal (Asylum Support), each "
@@ -601,14 +609,22 @@ static const hp_source HP3B19_LEGALIP[] = {
     .record_type = "tribunal-decision-record",
     .tags = "\"uk\",\"tribunal\",\"property\",\"leasehold\",\"decision\",\"hmcts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gov.uk/api/search.json?filter_format=residential_property_tribunal_decision&count=100",
+    /* `order=public_timestamp` + `start=0` + page_resume (2026-11-07): the walk had
+     * no stable sort over a live index. Measured on this format and on the
+     * RPT one: order=frobnicate is HTTP 422 (validated), asc and -desc answer
+     * different first pages, the total is unchanged by the sort, start 0/50
+     * are disjoint, and a deep page read twice is identical. Ascending puts
+     * new decisions at the TAIL, so the cycle covers growth past the ceiling. */
+    .url = "https://www.gov.uk/api/search.json?filter_format=residential_property_tribunal_decision&count=100&order=public_timestamp&start=0",
     .array_path = "results",
     .date_keys = "public_timestamp",
     .id_keys = "link",
     .interval = 21600,
     .page_param = "start",
+    .page_resume = 1,
+    .page_zero_based = 1,
     .page_size = 100,
-    .page_max = 183,   /* 18,291 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
+    .page_max = 200,   /* 18,291 records at 100 a page on 2026-10-12, 18,867 on 2026-11-07 (183 pages would have read 18,300 and, ascending, dropped the newest 567); 200 is the cost ceiling, page_resume reads the rest */
     .title_keys = "title",
     .description = "Decisions of the First-tier Tribunal (Property Chamber) on "
       "service charges, leasehold enfranchisement, rent determinations "
@@ -621,14 +637,22 @@ static const hp_source HP3B19_LEGALIP[] = {
     .record_type = "tribunal-decision-record",
     .tags = "\"uk\",\"tribunal\",\"employment\",\"appeal\",\"decision\",\"hmcts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gov.uk/api/search.json?filter_format=employment_appeal_tribunal_decision&count=100",
+    /* `order=public_timestamp` + `start=0` + page_resume (2026-11-07): the walk had
+     * no stable sort over a live index. Measured on this format and on the
+     * RPT one: order=frobnicate is HTTP 422 (validated), asc and -desc answer
+     * different first pages, the total is unchanged by the sort, start 0/50
+     * are disjoint, and a deep page read twice is identical. Ascending puts
+     * new decisions at the TAIL, so the cycle covers growth past the ceiling. */
+    .url = "https://www.gov.uk/api/search.json?filter_format=employment_appeal_tribunal_decision&count=100&order=public_timestamp&start=0",
     .array_path = "results",
     .date_keys = "public_timestamp",
     .id_keys = "link",
     .interval = 21600,
     .page_param = "start",
+    .page_resume = 1,
+    .page_zero_based = 1,
     .page_size = 100,
-    .page_max = 27,   /* 2,631 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
+    .page_max = 35,   /* 2,631 records at 100 a page on 2026-10-12, 2,641 on 2026-11-07: 27 pages left 59 of headroom; leave room above the measured need */
     .title_keys = "title",
     .description = "Judgments of the Employment Appeal Tribunal with the neutral "
       "citation, the parties, the presiding judge and the decision "
@@ -1183,12 +1207,20 @@ static const hp_source HP3B19_LEGALIP[] = {
     .record_type = "treaty-record",
     .tags = "\"uk\",\"treaty\",\"international-law\",\"fcdo\",\"diplomacy\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gov.uk/api/search.json?filter_content_store_document_type=international_treaty&count=100",
+    /* `order=public_timestamp` + `start=0` + page_resume (2026-11-07): the walk had
+     * no stable sort over a live index. Measured on this format and on the
+     * RPT one: order=frobnicate is HTTP 422 (validated), asc and -desc answer
+     * different first pages, the total is unchanged by the sort, start 0/50
+     * are disjoint, and a deep page read twice is identical. Ascending puts
+     * new decisions at the TAIL, so the cycle covers growth past the ceiling. */
+    .url = "https://www.gov.uk/api/search.json?filter_content_store_document_type=international_treaty&count=100&order=public_timestamp&start=0",
     .array_path = "results",
     .date_keys = "public_timestamp",
     .id_keys = "link",
     .interval = 21600,
     .page_param = "start",
+    .page_resume = 1,
+    .page_zero_based = 1,
     .page_size = 100,
     .title_keys = "title",
     .description = "United Kingdom treaty publications: bilateral tax and investment "

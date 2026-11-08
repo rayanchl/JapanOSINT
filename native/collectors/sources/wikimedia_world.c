@@ -25,8 +25,6 @@
 #include <string.h>
 #include "_jp_osint.inc"
 
-static const char *WM_UA =
-  "User-Agent: JapanOSINT/1.0 (https://example.org; osint@example.org)";
 
 /* ------------------------------------------------------------------ *
  *  WIKIDATA_SPARQL
@@ -44,7 +42,7 @@ static char *wd_resolve_qid(const source_ctx *ctx, const char *entity) {
      * that follows; those results are emitted in full. */
     "&search=%s&language=en&format=json&limit=1", enc);  /* exhaustive-ok: name->QID resolution step */
   free(enc);
-  const char *hdrs[] = { "Accept: application/json", WM_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "wikidata_sparql");
   if (!body) return NULL;
   cJSON *root = cJSON_Parse(body);
@@ -87,25 +85,26 @@ static int wd_emit_binding(intel_sink *sink, const cJSON *b, const char *qid) {
   cJSON_AddStringToObject(props, "subject_qid", qid);
   if (plab) cJSON_AddStringToObject(props, "property", plab);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char title[512];
   snprintf(title, sizeof title, "%s: %s",
            plab ? plab : "related", vlab ? vlab : (vuri ? vuri : "?"));
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = vuri ? vuri : title;
   it.title           = title;
   it.summary         = plab;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "en";
   it.link            = vuri;
   it.record_type     = "wikidata-relationship";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"WIKIDATA_SPARQL\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -129,12 +128,12 @@ static int run_wikidata_sparql(const source_ctx *ctx, intel_sink *sink,
     "https://query.wikidata.org/sparql?query=%s&format=json", enc);
   free(enc);
 
-  const char *hdrs[] = { "Accept: application/sparql-results+json", WM_UA, NULL };
+  const char *hdrs[] = { "Accept: application/sparql-results+json", NULL };
   char *body = jo_get(ctx, url, hdrs, "wikidata_sparql");
-  if (!body) { free(qid); return 0; }
+  if (!body) { free(qid); return jo_fail_rc(jo_last_status(), 0); }
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) { free(qid); return 0; }
+  if (!root) { free(qid); return -1; }
 
   int emitted = 0;
   const cJSON *results = cJSON_GetObjectItem(root, "results");
@@ -206,21 +205,22 @@ static int dbp_emit_doc(intel_sink *sink, const cJSON *doc) {
   if (uri)  cJSON_AddStringToObject(props, "resource", uri);
   if (type) cJSON_AddStringToObject(props, "type", type);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = uri ? uri : lab;
   it.title           = lab[0] ? lab : uri;
   it.summary         = dsc[0] ? dsc : NULL;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "en";
   it.link            = uri;
   it.record_type     = "dbpedia-resource";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"DBPEDIA\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -233,12 +233,12 @@ static int run_dbpedia(const source_ctx *ctx, intel_sink *sink,
     "https://lookup.dbpedia.org/api/search?query=%s&maxResults=15&format=json",
     enc);
   free(enc);
-  const char *hdrs[] = { "Accept: application/json", WM_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "dbpedia");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   int emitted = 0;
   const cJSON *docs = cJSON_GetObjectItem(root, "docs");
@@ -300,13 +300,14 @@ static int wc_emit_page(intel_sink *sink, const cJSON *pg, int has_geo,
   cJSON_AddStringToObject(props, "service", "WIKIMEDIA_COMMONS");
   cJSON_AddStringToObject(props, "href", link);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = link;
   it.title           = title;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "en";
   it.link            = link;
   it.has_geo         = has_geo;
@@ -316,7 +317,7 @@ static int wc_emit_page(intel_sink *sink, const cJSON *pg, int has_geo,
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"WIKIMEDIA_COMMONS\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -344,7 +345,7 @@ static int wc_emit_list(intel_sink *sink, const cJSON *root, const char *listkey
 
 static int run_commons(const source_ctx *ctx, intel_sink *sink,
                        const char *entity) {
-  const char *hdrs[] = { "Accept: application/json", WM_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char url[1024];
   double lat, lon;
 
@@ -355,10 +356,10 @@ static int run_commons(const source_ctx *ctx, intel_sink *sink,
       "&gscoord=%.6f%%7C%.6f&gsradius=10000&gslimit=30&gsnamespace=6&format=json",
       lat, lon);
     char *body = jo_get(ctx, url, hdrs, "wikimedia_commons");
-    if (!body) return 0;
+    if (!body) return jo_fail_rc(jo_last_status(), 0);
     cJSON *root = cJSON_Parse(body);
     free(body);
-    if (!root) return 0;
+    if (!root) return -1;
     int emitted = wc_emit_list(sink, root, "geosearch", 1);
     cJSON_Delete(root);
     fprintf(stderr, "[wikimedia_commons] emitted %d\n", emitted);
@@ -373,10 +374,10 @@ static int run_commons(const source_ctx *ctx, intel_sink *sink,
     "&srsearch=%s&srnamespace=6&srlimit=25&format=json", enc);
   free(enc);
   char *body = jo_get(ctx, url, hdrs, "wikimedia_commons");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   int emitted = wc_emit_list(sink, root, "search", 0);
   cJSON_Delete(root);
   fprintf(stderr, "[wikimedia_commons] emitted %d\n", emitted);

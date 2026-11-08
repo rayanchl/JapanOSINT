@@ -7,30 +7,38 @@
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
 
+/* datastore_search rows below carry `sort=_id asc` (2026-11-07). An offset
+ * walk with no declared order relies on the backend's default; CKAN's
+ * datastore `_id` is its own sequential row id. Measured one or two rows per
+ * host (izmir, data.gov.il, data.gov.au, QLD, VIC, Mauritius, Panama,
+ * data.gov.sg): `_id desc` answers the opposite end, a bogus sort is refused
+ * (409, or a 404 page on data.gov.il), and the total does not move. The
+ * unsorted first page was already _id 1,2,3 on every one, so this is
+ * STABILISING, not a recovery: 0 records were measured lost without it. */
 VJSON(sg_acra_corp_a, "sg-acra-corp-a", "ACRA Information on Corporate Entities ('A')", "ACRA Information on Corporate Entities ('A')",
   "sg_company-registry", "company-registry",
-  "https://data.gov.sg/api/action/datastore_search?resource_id=d_8575e84912df3c28995b8e6e0e05205a&limit=1000",
+  "https://data.gov.sg/api/action/datastore_search?resource_id=d_8575e84912df3c28995b8e6e0e05205a&limit=1000&sort=_id%20asc",
   "result.records",
   "en", "[\"sg\",\"company-registry\",\"batch17\",\"high-penetrancy\"]", 86400,
   "174,385 Singapore entities starting with A. 54 fields per record: uen, entity_name, entity_status_description, registration_incorporation_date, full registered address, primary/secondary SSIC code + description, no_of_officers, former_entity_name1..15, and uen_of_audit_firm1..5 / name_of_audit_firm1..5 (company-to-auditor pivot).");
 
 VJSON(sg_acra_corp_b, "sg-acra-corp-b", "ACRA Information on Corporate Entities ('B')", "ACRA Information on Corporate Entities ('B')",
   "sg_company-registry", "company-registry",
-  "https://data.gov.sg/api/action/datastore_search?resource_id=d_3a3807c023c61ddfba947dc069eb53f2&limit=1000",
+  "https://data.gov.sg/api/action/datastore_search?resource_id=d_3a3807c023c61ddfba947dc069eb53f2&limit=1000&sort=_id%20asc",
   "result.records",
   "en", "[\"sg\",\"company-registry\",\"batch17\",\"high-penetrancy\"]", 86400,
   "94,517 Singapore entities starting with B, same 54-field ACRA schema (status, incorporation date, address, SSIC activity, officer count, 15 former names, 5 audit-firm UEN/name pairs).");
 
 VJSON(sg_acra_corp_c, "sg-acra-corp-c", "ACRA Information on Corporate Entities ('C')", "ACRA Information on Corporate Entities ('C')",
   "sg_company-registry", "company-registry",
-  "https://data.gov.sg/api/action/datastore_search?resource_id=d_c0650f23e94c42e7a20921f4c5b75c24&limit=1000",
+  "https://data.gov.sg/api/action/datastore_search?resource_id=d_c0650f23e94c42e7a20921f4c5b75c24&limit=1000&sort=_id%20asc",
   "result.records",
   "en", "[\"sg\",\"company-registry\",\"batch17\",\"high-penetrancy\"]", 86400,
   "140,200 Singapore entities starting with C, full 54-field ACRA schema including officer count, former names and audit-firm links.");
 
 VJSON(sg_acra_entities_master, "sg-acra-entities-master", "ACRA - Entities Registered with ACRA (master UEN roll)", "ACRA - Entities Registered with ACRA (master UEN roll)",
   "sg_company-registry", "company-registry",
-  "https://data.gov.sg/api/action/datastore_search?resource_id=d_3f960c10fed6145404ca7b821f263b87&limit=1000",
+  "https://data.gov.sg/api/action/datastore_search?resource_id=d_3f960c10fed6145404ca7b821f263b87&limit=1000&sort=_id%20asc",
   "result.records",
   "en", "[\"sg\",\"company-registry\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 86400,
   "Master Singapore UEN roll, 2,112,559 records. Each record: uen, entity_name, entity_type_desc, uen_status_desc (Registered/Deregistered/Terminated), uen_issue_date, reg_street_name, reg_postal_code, issuance_agency_desc. Every record also carries _id as an id-ish fallback. Appending &q= turns it into a name/UEN search pivot.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");

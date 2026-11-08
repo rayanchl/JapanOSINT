@@ -54,9 +54,21 @@ VJSON_KEYED(us_legistar_austintexas_matters, "us-legistar-austintexas-matters", 
   "Austin council items including zoning cases and contract awards, with sponsors and full action history per matter.",
   "MatterId");
 
+/* $top=50 unordered was 1,000 matters a run (20 pages) in the server's
+ * default order. Re-sized and ordered per client as the matter rows in
+ * vsrc16_us_legal_1.c (2026-11-07, the same measurement: $top capped at 1000,
+ * a bogus $orderby is HTTP 400, sizes from bisecting $skip): complete and
+ * ascending where a client holds ≤ 20,000 matters — detroit 8,031,
+ * fortworthgov 11,736, hillsboroughcounty 2,989, sanjose 13,636 — and the
+ * newest 20,000 by MatterId descending where it holds more — phoenix 26,502,
+ * sanantonio 33,482, louisville 44,204, longbeach 59,799 (remainder disclosed
+ * by the full-last-page notice). us-legistar-austintexas-matters is LEFT as
+ * it was: us-legistar-austin-matters (vsrc16_us_legal_1.c) reads the same
+ * client and now carries the fix; giving this row the same URL would register
+ * one read twice, and which survives is the owner's call. */
 VJSON_KEYED(us_legistar_detroit_matters, "us-legistar-detroit-matters", "Detroit MI City Council legislation (Legistar API)", "Detroit MI City Council legislation (Legistar API)",
   "us_government", "government",
-  "https://webapi.legistar.com/v1/detroit/matters?$top=50",
+  "https://webapi.legistar.com/v1/detroit/matters?$top=1000&$orderby=MatterId",
   "",
   "en", "[\"us\",\"government\",\"batch16\",\"high-penetrancy\"]", 86400,
   "Detroit council legislation, contracts and land transfers with sponsors and action history.",
@@ -64,7 +76,7 @@ VJSON_KEYED(us_legistar_detroit_matters, "us-legistar-detroit-matters", "Detroit
 
 VJSON_KEYED(us_legistar_fortworth_matters, "us-legistar-fortworth-matters", "Fort Worth TX City Council legislation (Legistar API)", "Fort Worth TX City Council legislation (Legistar API)",
   "us_government", "government",
-  "https://webapi.legistar.com/v1/fortworthgov/matters?$top=50",
+  "https://webapi.legistar.com/v1/fortworthgov/matters?$top=1000&$orderby=MatterId",
   "",
   "en", "[\"us\",\"government\",\"batch16\",\"high-penetrancy\"]", 86400,
   "Fort Worth municipal legislation and contract items with the standard Legistar detail hops.",
@@ -72,7 +84,7 @@ VJSON_KEYED(us_legistar_fortworth_matters, "us-legistar-fortworth-matters", "For
 
 VJSON_KEYED(us_legistar_hillsborough_matters, "us-legistar-hillsborough-matters", "Hillsborough County FL (Tampa) legislation (Legistar API)", "Hillsborough County FL (Tampa) legislation (Legistar API)",
   "us_government", "government",
-  "https://webapi.legistar.com/v1/hillsboroughcounty/matters?$top=50",
+  "https://webapi.legistar.com/v1/hillsboroughcounty/matters?$top=1000&$orderby=MatterId",
   "",
   "en", "[\"us\",\"government\",\"batch16\",\"high-penetrancy\"]", 86400,
   "BOCC agenda matters for the Tampa metro county with the full Legistar matter/sponsor/history graph.",
@@ -80,7 +92,7 @@ VJSON_KEYED(us_legistar_hillsborough_matters, "us-legistar-hillsborough-matters"
 
 VJSON_KEYED(us_legistar_longbeach_matters, "us-legistar-longbeach-matters", "Long Beach CA City Council legislation (Legistar API)", "Long Beach CA City Council legislation (Legistar API)",
   "us_government", "government",
-  "https://webapi.legistar.com/v1/longbeach/matters?$top=50",
+  "https://webapi.legistar.com/v1/longbeach/matters?$top=1000&$orderby=MatterId%20desc",
   "",
   "en", "[\"us\",\"government\",\"batch16\",\"high-penetrancy\"]", 86400,
   "Long Beach municipal legislation with the full Legistar matter/sponsor/history graph.",
@@ -88,7 +100,7 @@ VJSON_KEYED(us_legistar_longbeach_matters, "us-legistar-longbeach-matters", "Lon
 
 VJSON_KEYED(us_legistar_louisville_matters, "us-legistar-louisville-matters", "Louisville/Jefferson County KY Metro Council legislation (Legistar API)", "Louisville/Jefferson County KY Metro Council legislation (Legistar API)",
   "us_government", "government",
-  "https://webapi.legistar.com/v1/louisville/matters?$top=50",
+  "https://webapi.legistar.com/v1/louisville/matters?$top=1000&$orderby=MatterId%20desc",
   "",
   "en", "[\"us\",\"government\",\"batch16\",\"high-penetrancy\"]", 86400,
   "Louisville Metro Council legislation with sponsors, histories and meetings.",
@@ -96,7 +108,7 @@ VJSON_KEYED(us_legistar_louisville_matters, "us-legistar-louisville-matters", "L
 
 VJSON_KEYED(us_legistar_phoenix_matters, "us-legistar-phoenix-matters", "Phoenix AZ City Council legislation (Legistar API)", "Phoenix AZ City Council legislation (Legistar API)",
   "us_government", "government",
-  "https://webapi.legistar.com/v1/phoenix/matters?$top=50",
+  "https://webapi.legistar.com/v1/phoenix/matters?$top=1000&$orderby=MatterId%20desc",
   "",
   "en", "[\"us\",\"government\",\"batch16\",\"high-penetrancy\"]", 86400,
   "Phoenix council agenda matters with the full Legistar matter/sponsor/history graph.",
@@ -104,7 +116,7 @@ VJSON_KEYED(us_legistar_phoenix_matters, "us-legistar-phoenix-matters", "Phoenix
 
 VJSON_KEYED(us_legistar_sanantonio_matters, "us-legistar-sanantonio-matters", "San Antonio TX City Council legislation (Legistar API)", "San Antonio TX City Council legislation (Legistar API)",
   "us_government", "government",
-  "https://webapi.legistar.com/v1/sanantonio/matters?$top=50",
+  "https://webapi.legistar.com/v1/sanantonio/matters?$top=1000&$orderby=MatterId%20desc",
   "",
   "en", "[\"us\",\"government\",\"batch16\",\"high-penetrancy\"]", 86400,
   "San Antonio ordinances and resolutions with sponsors, histories and meeting linkage.",
@@ -112,7 +124,7 @@ VJSON_KEYED(us_legistar_sanantonio_matters, "us-legistar-sanantonio-matters", "S
 
 VJSON_KEYED(us_legistar_sanjose_matters, "us-legistar-sanjose-matters", "San Jose CA City Council legislation (Legistar API)", "San Jose CA City Council legislation (Legistar API)",
   "us_government", "government",
-  "https://webapi.legistar.com/v1/sanjose/matters?$top=50",
+  "https://webapi.legistar.com/v1/sanjose/matters?$top=1000&$orderby=MatterId",
   "",
   "en", "[\"us\",\"government\",\"batch16\",\"high-penetrancy\"]", 86400,
   "San Jose legislative matters, sponsors, action histories, meetings and persons via the standard Legistar client resources.",

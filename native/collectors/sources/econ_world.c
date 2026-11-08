@@ -31,6 +31,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 /* ---- shared emit -------------------------------------------------------- */
 /* Emit one economic datum. title/summary/link/body are all real, parsed bytes.
@@ -78,9 +79,9 @@ static int ew_worldbank(const source_ctx *ctx, intel_sink *sink, const char *cod
     "?format=json&mrnev=1&per_page=400", enc);
   free(enc);
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "WORLDBANK_INDICATORS");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
   cJSON *root = cJSON_Parse(body);
   free(body);
   if (!cJSON_IsArray(root)) { cJSON_Delete(root); return 0; }
@@ -137,12 +138,12 @@ static int ew_imf(const source_ctx *ctx, intel_sink *sink, const char *ind) {
     "https://www.imf.org/external/datamapper/api/v1/%s", enc);
   free(enc);
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "IMF_DATA");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   cJSON *values = cJSON_GetObjectItem(root, "values");
   int emitted = 0;
   if (cJSON_IsObject(values)) {
@@ -209,12 +210,12 @@ static int ew_eurostat(const source_ctx *ctx, intel_sink *sink, const char *ds) 
     "?format=JSON&lang=EN", enc);
   free(enc);
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "EUROSTAT");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   cJSON *value = cJSON_GetObjectItem(root, "value");
   int emitted = 0;
   if (cJSON_IsObject(value)) {
@@ -263,12 +264,12 @@ static int ew_comtrade(const source_ctx *ctx, intel_sink *sink,
     "&subscription-key=%s", enc, key);
   free(enc);
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "UN_COMTRADE");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   cJSON *data = cJSON_GetObjectItem(root, "data");
   int emitted = 0;
   if (cJSON_IsArray(data)) {
@@ -330,12 +331,12 @@ static int ew_fred(const source_ctx *ctx, intel_sink *sink,
     enc, key);
   free(enc);
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "FRED_SERIES");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   cJSON *obs = cJSON_GetObjectItem(root, "observations");
   int emitted = 0;
   if (cJSON_IsArray(obs)) {
@@ -381,9 +382,9 @@ static int ew_stooq(const source_ctx *ctx, intel_sink *sink, const char *sym) {
     "https://stooq.com/q/l/?s=%s&f=sd2t2ohlcv&h&e=csv", enc);
   free(enc);
   const char *hdrs[] = { "Accept: text/csv, */*",
-                         "User-Agent: JapanOSINT/1.0", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "STOOQ_QUOTES");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   int emitted = 0;
   const char *line = body;
   int header = 1;
@@ -451,37 +452,31 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   if (strcmp(id, "WORLDBANK_INDICATORS") == 0) {
     /* entity = indicator code; default to GDP (current US$) for scheduled/blank */
-    ew_worldbank(ctx, sink, q ? q : "NY.GDP.MKTP.CD");
-    return 0;
+    return ew_worldbank(ctx, sink, q ? q : "NY.GDP.MKTP.CD") < 0 ? -1 : 0;
   }
   if (strcmp(id, "IMF_DATA") == 0) {
     /* entity = indicator id; default NGDP_RPCH (real GDP growth) */
-    ew_imf(ctx, sink, q ? q : "NGDP_RPCH");
-    return 0;
+    return ew_imf(ctx, sink, q ? q : "NGDP_RPCH") < 0 ? -1 : 0;
   }
   if (strcmp(id, "EUROSTAT") == 0) {
     if (!q) { fprintf(stderr, "[EUROSTAT] no entity (dataset code)\n"); return 0; }
-    ew_eurostat(ctx, sink, q);
-    return 0;
+    return ew_eurostat(ctx, sink, q) < 0 ? -1 : 0;
   }
   if (strcmp(id, "UN_COMTRADE") == 0) {
     const char *key = jo_env("COMTRADE_KEY");
-    if (!key) { fprintf(stderr, "[UN_COMTRADE] gated (no COMTRADE_KEY)\n"); return 0; }
+    if (!key) return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "UN_COMTRADE", "UN_COMTRADE", (const char *const[]){"COMTRADE_KEY", NULL}, NULL, NULL);
     if (!q) { fprintf(stderr, "[UN_COMTRADE] no entity (reporter code)\n"); return 0; }
-    ew_comtrade(ctx, sink, q, key);
-    return 0;
+    return ew_comtrade(ctx, sink, q, key) < 0 ? -1 : 0;
   }
   if (strcmp(id, "FRED_SERIES") == 0) {
     const char *key = jo_env("FRED_KEY");
-    if (!key) { fprintf(stderr, "[FRED_SERIES] gated (no FRED_KEY)\n"); return 0; }
+    if (!key) return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "FRED_SERIES", "FRED_SERIES", (const char *const[]){"FRED_KEY", NULL}, NULL, NULL);
     if (!q) { fprintf(stderr, "[FRED_SERIES] no entity (series id)\n"); return 0; }
-    ew_fred(ctx, sink, q, key);
-    return 0;
+    return ew_fred(ctx, sink, q, key) < 0 ? -1 : 0;
   }
   if (strcmp(id, "STOOQ_QUOTES") == 0) {
     if (!q) { fprintf(stderr, "[STOOQ_QUOTES] no entity (ticker symbol)\n"); return 0; }
-    ew_stooq(ctx, sink, q);
-    return 0;
+    return ew_stooq(ctx, sink, q) < 0 ? -1 : 0;
   }
   return -1;
 }

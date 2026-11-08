@@ -63,7 +63,7 @@ static cJSON *swx_identify(const source_ctx *ctx, const char *layer,
            "&imageDisplay=500,500,96&geometryFormat=geojson&sr=4326",
            lon, lat, layer, SWX_TOL,
            lon - SWX_HALF, lat - SWX_HALF, lon + SWX_HALF, lat + SWX_HALF);
-  const char *hdrs[] = { "Accept: application/json", AV_UA_HDR, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, tag);
   if (!body) return NULL;
   cJSON *doc = cJSON_Parse(body);

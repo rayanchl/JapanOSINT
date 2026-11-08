@@ -332,11 +332,9 @@ extension API {
 
     // ── Item 19: entity graph ──────────────────────────────────────────────
 
-    /// Named `entityEgoGraph` rather than `entityGraph` because API.swift
-    /// already has an `entityGraph(_:_:depth:)` returning the older
-    /// `Search/SearchModels.EntityGraph` shape. Two overloads answering the
-    /// same question with different types is how a call site quietly gets the
-    /// wrong one — so the richer roadmap-19 call is separately named.
+    /// GET /api/entities/:type/:id/graph — the one client for this route.
+    /// (API.swift used to carry a second, unused `entityGraph(_:_:depth:)`
+    /// decoding a poorer shape with no `meta`; it was removed 2026-11-07.)
     func entityEgoGraph(type: String, id: String, depth: Int = 1,
                         relTypes: [String]? = nil, excludeHubs: Int? = nil,
                         maxNodes: Int? = nil) async throws -> EntityEgoGraph {
@@ -635,7 +633,7 @@ extension API {
     /// Percent-escape a path segment. Ids here include uids like
     /// `geojson-file|fire-1` and `breach:email:ab…`, whose `|` and `:` must not
     /// reach the URL raw.
-    private func esc(_ s: String) -> String {
+    func esc(_ s: String) -> String {
         s.addingPercentEncoding(withAllowedCharacters: .alphanumerics
             .union(CharacterSet(charactersIn: "-._~"))) ?? s
     }

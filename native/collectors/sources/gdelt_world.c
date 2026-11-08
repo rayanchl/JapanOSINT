@@ -52,14 +52,15 @@ static int emit_article(intel_sink *sink, const cJSON *a) {
   if (dom)  cJSON_AddStringToObject(props, "domain", dom);
   if (ctry) cJSON_AddStringToObject(props, "source_country", ctry);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = url ? url : title;
   it.title           = title ? title : url;
   it.summary         = dom;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = lang ? lang : "en";
   it.published_at    = seen;
   it.link            = url;
@@ -67,7 +68,7 @@ static int emit_article(intel_sink *sink, const cJSON *a) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"GDELT\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -108,17 +109,18 @@ static int emit_geo(intel_sink *sink, const cJSON *f) {
   if (cntj && cJSON_IsNumber(cntj))
     cJSON_AddNumberToObject(props, "article_count", cntj->valuedouble);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char geoj[128];
   snprintf(geoj, sizeof geoj,
     "{\"type\":\"Point\",\"coordinates\":[%.6f,%.6f]}", lon, lat);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = name;
   it.title           = name;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "en";
   it.has_geo         = 1;
   it.lat             = lat;
@@ -128,7 +130,7 @@ static int emit_geo(intel_sink *sink, const cJSON *f) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"GDELT\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -142,7 +144,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (!enc) return 0;
 
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0", NULL };
+                         NULL };
   char url[1024];
   int emitted = 0;
 

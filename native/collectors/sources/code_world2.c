@@ -16,7 +16,6 @@
 #include <string.h>
 #include "_jp_osint.inc"
 
-static const char *CD_UA = "User-Agent: JapanOSINT/1.0 (osint@example.org)";
 
 /* Build the optional GitHub token header into buf; returns buf or NULL. */
 static const char *cd_gh_auth(char *buf, size_t cap) {
@@ -31,11 +30,11 @@ static int run_github_repos(const source_ctx *ctx, intel_sink *sink, const char 
   snprintf(url, sizeof url,
     "https://api.github.com/search/repositories?q=%s&per_page=20&sort=stars", enc);
   char authbuf[160]; const char *auth = cd_gh_auth(authbuf, sizeof authbuf);
-  const char *hdrs[] = { "Accept: application/vnd.github+json", CD_UA, auth, NULL };
+  const char *hdrs[] = { "Accept: application/vnd.github+json", auth, NULL };
   char *body = jo_get(ctx, url, hdrs, "GITHUB_REPO_SEARCH");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *items = cJSON_GetObjectItem(root, "items");
   int emitted = 0;
   if (cJSON_IsArray(items)) {
@@ -58,14 +57,15 @@ static int run_github_repos(const source_ctx *ctx, intel_sink *sink, const char 
       cJSON_AddStringToObject(p, "service", "GITHUB_REPO_SEARCH");
       cJSON_AddStringToObject(p, "repo", full);
       cJSON_AddBoolToObject(p, "success", 1);
-      char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
-      intel_item it = {0};
+      jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
       it.remote_key = full; it.title = full; it.summary = desc;
-      it.body = bj; it.link = html; it.lang = "en";
+      it.body = bt ? bt : bj; it.link = html; it.lang = "en";
       it.record_type = "github-repo";
       it.properties_json = pj; it.tags_json = "[\"osint-search\",\"GITHUB_REPO_SEARCH\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(pj);
+      free(bj); free(bt); free(pj);
     }
   }
   cJSON_Delete(root);
@@ -76,9 +76,9 @@ static int run_gitlab_projects(const source_ctx *ctx, intel_sink *sink, const ch
   char url[512];
   snprintf(url, sizeof url,
     "https://gitlab.com/api/v4/projects?search=%s&per_page=20&order_by=star_count&sort=desc", enc);
-  const char *hdrs[] = { "Accept: application/json", CD_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "GITLAB_PROJECT_SEARCH");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
   if (!cJSON_IsArray(root)) { if (root) cJSON_Delete(root); return 0; }
   int emitted = 0;
@@ -99,14 +99,15 @@ static int run_gitlab_projects(const source_ctx *ctx, intel_sink *sink, const ch
     cJSON_AddStringToObject(p, "service", "GITLAB_PROJECT_SEARCH");
     cJSON_AddStringToObject(p, "project", path);
     cJSON_AddBoolToObject(p, "success", 1);
-    char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
-    intel_item it = {0};
+    jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+    char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
     it.remote_key = path; it.title = path; it.summary = desc;
-    it.body = bj; it.link = web; it.lang = "en";
+    it.body = bt ? bt : bj; it.link = web; it.lang = "en";
     it.record_type = "gitlab-project";
     it.properties_json = pj; it.tags_json = "[\"osint-search\",\"GITLAB_PROJECT_SEARCH\"]";
     if (sink->emit(sink, &it) >= 0) emitted++;
-    free(bj); free(pj);
+    free(bj); free(bt); free(pj);
     /* (cap removed: every record of the fetched array is emitted —
      * docs/SOURCE_EXHAUSTIVENESS.md) */
   }
@@ -118,9 +119,9 @@ static int run_github_gists(const source_ctx *ctx, intel_sink *sink, const char 
   char url[512];
   snprintf(url, sizeof url, "https://api.github.com/users/%s/gists?per_page=20", enc);
   char authbuf[160]; const char *auth = cd_gh_auth(authbuf, sizeof authbuf);
-  const char *hdrs[] = { "Accept: application/vnd.github+json", CD_UA, auth, NULL };
+  const char *hdrs[] = { "Accept: application/vnd.github+json", auth, NULL };
   char *body = jo_get(ctx, url, hdrs, "GITHUB_GISTS");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
   cJSON *root = cJSON_Parse(body); free(body);
   if (!cJSON_IsArray(root)) { if (root) cJSON_Delete(root); return 0; }
   int emitted = 0;
@@ -145,16 +146,17 @@ static int run_github_gists(const source_ctx *ctx, intel_sink *sink, const char 
     cJSON_AddStringToObject(p, "service", "GITHUB_GISTS");
     cJSON_AddStringToObject(p, "gist_id", id);
     cJSON_AddBoolToObject(p, "success", 1);
-    char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+    jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
     char title[256];
     snprintf(title, sizeof title, "gist %s%s%s", id, (desc && desc[0]) ? " · " : "", (desc && desc[0]) ? desc : (fname ? fname : ""));
-    intel_item it = {0};
+    char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
     it.remote_key = id; it.title = title; it.summary = fname;
-    it.body = bj; it.link = html; it.lang = "en"; it.published_at = created;
+    it.body = bt ? bt : bj; it.link = html; it.lang = "en"; it.published_at = created;
     it.record_type = "github-gist";
     it.properties_json = pj; it.tags_json = "[\"osint-search\",\"GITHUB_GISTS\"]";
     if (sink->emit(sink, &it) >= 0) emitted++;
-    free(bj); free(pj);
+    free(bj); free(bt); free(pj);
   }
   cJSON_Delete(root);
   return emitted;
@@ -172,7 +174,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   else if (!strcmp(sid, "GITHUB_GISTS"))          n = run_github_gists(ctx, sink, enc);
   free(enc);
   fprintf(stderr, "[%s] emitted %d\n", sid, n);
-  return 0;
+  return n < 0 ? -1 : 0;
 }
 
 #define CD_DEF(sym, ID, NM, DESC) \

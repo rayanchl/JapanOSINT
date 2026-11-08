@@ -57,20 +57,21 @@ static int emit_station(intel_sink *sink, const cJSON *s) {
   if (bitrate) cJSON_AddNumberToObject(props, "bitrate", bitrate);
   if (url)     cJSON_AddStringToObject(props, "stream_url", url);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = uuid ? uuid : (url ? url : name);
   it.title           = name ? name : url;
   it.summary         = country;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.link            = homepage ? homepage : url;
   it.record_type     = "radio-station";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"RADIO_BROWSER\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -106,16 +107,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   free(enc);
 
   const char *hdrs[] = {
-    "User-Agent: JapanOSINT/1.0",
     "Accept: application/json",
     NULL
   };
   char *body = jo_get(ctx, url, hdrs, "radio_browser");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
 
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   int emitted = 0;
   if (cJSON_IsArray(root)) {

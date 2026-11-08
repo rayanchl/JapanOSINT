@@ -148,21 +148,31 @@ VRSS(sec_nknews, "sec-nknews", "NK News", "NK News（北朝鮮）",
   "en", "[\"north-korea\",\"dprk\",\"missile\"]", 3600,
   "North Korea reporting including missile tests, sanctions evasion and shipping activity.");
 
+/* ArcGIS rows in this file: `orderByFields=<the layer's own objectIdField>
+ * ASC` (2026-11-07). These walk on `resultOffset` (geojson_emit_paged's
+ * mechanism 1, on the server's own exceededTransferLimit) with no order
+ * clause, and ArcGIS promises no stable order without one. The field was READ
+ * per layer from `<layer>?f=json` (objectIdField, else the esriFieldTypeOID
+ * field — spellings here include OBJECTID, objectid, FID, OBJECTID_1, ObjectId,
+ * oid, RowID), every layer declares supportsOrderBy, and the sorted query was
+ * asked once (resultRecordCount=3 at offsets 0 and 3): HTTP 200, no error
+ * body, pages disjoint. This is STABILISING, not a recovery — no record was
+ * measured lost without it. */
 VGEO(sec_ntad_dams, "sec-ntad-dams", "NTAD Dams", "NTAD ダム",
   "geopolitics", "defence",
-  "https://services.arcgis.com/xOi1kZaI0eWDREZv/arcgis/rest/services/NTAD_Dams/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500",
+  "https://services.arcgis.com/xOi1kZaI0eWDREZv/arcgis/rest/services/NTAD_Dams/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"dam\",\"critical-infrastructure\",\"usa\"]", 604800,
   "US DOT National Transportation Atlas layer (NTAD Dams) with authoritative published geometry; useful as a persistent infrastructure base layer.");
 
 VGEO(sec_ntad_military_bases, "sec-ntad-military-bases", "NTAD Military Bases", "NTAD 軍事基地",
   "geopolitics", "defence",
-  "https://services.arcgis.com/xOi1kZaI0eWDREZv/arcgis/rest/services/NTAD_Military_Bases/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=60&geometryPrecision=5&outSR=4326&f=geojson",
+  "https://services.arcgis.com/xOi1kZaI0eWDREZv/arcgis/rest/services/NTAD_Military_Bases/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=60&geometryPrecision=5&outSR=4326&f=geojson&orderByFields=OBJECTID%20ASC",
   "en", "[\"military\",\"base\",\"installation\",\"ntad\",\"usa\"]", 604800,
   "US DOT National Transportation Atlas layer (NTAD Military Bases) with authoritative published geometry; useful as a persistent infrastructure base layer.");
 
 VGEO(sec_ntad_rail_yards, "sec-ntad-rail-yards", "NTAD Rail Yards", "NTAD 鉄道操車場",
   "geopolitics", "shipping",
-  "https://services.arcgis.com/xOi1kZaI0eWDREZv/arcgis/rest/services/NTAD_Rail_Yards/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500",
+  "https://services.arcgis.com/xOi1kZaI0eWDREZv/arcgis/rest/services/NTAD_Rail_Yards/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"rail\",\"yard\",\"logistics\",\"usa\"]", 604800,
   "US DOT National Transportation Atlas layer (NTAD Rail Yards) with authoritative published geometry; useful as a persistent infrastructure base layer.");
 

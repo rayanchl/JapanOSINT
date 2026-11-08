@@ -93,7 +93,7 @@ OBJS     := $(patsubst %.c,$(OBJ)/%.o,$(SRCS)) \
             $(OBJ)/third_party/mongoose.o $(OBJ)/third_party/sqlite-vec.o
 
 .PHONY: all clean selftest unit authtest pagewalktest htmlparsetest tsan tsan-test tsan-sched asan asan-test \
-        collectors-def collectors-def-check batch-gates \
+        collectors-def collectors-def-check batch-gates tools-selftest \
         lint-sources lint-baseline source-count
 all: $(BIN)
 
@@ -374,6 +374,21 @@ collectors-def-check: $(BIN)
 	python3 tools/gen_collectors_def.py .run/census-check.tsv > /dev/null && \
 	echo "collectors-def-check: every registered collector has a def line"
 
+# The measuring tools' own fixtures, offline. Each pins the tool's model of
+# the engine against fixtures the previous model got wrong (see each tool's
+# self_test). measure_thresholds and cleanup_stale_uids run from
+# tests/unit/run.sh already; the rest had a self-test nothing ran, or none.
+TOOLS_SELFTEST := ctable jo_http hpjson gen_hp_batch audit_idkeys \
+                  diagnose_emit_keys audit_page_two audit_batch_reachable \
+                  probe_hp_batch measure_thresholds
+tools-selftest:
+	@fail=0; for t in $(TOOLS_SELFTEST); do \
+	  python3 tools/$$t.py --self-test || { echo "tools-selftest: $$t FAILED"; fail=1; }; \
+	done; \
+	python3 tests/audit_source_exhaustiveness.py --selftest-only || { echo "tools-selftest: audit_source_exhaustiveness FAILED"; fail=1; }; \
+	python3 tools/audit_url_limits.py --self-test || { echo "tools-selftest: audit_url_limits FAILED"; fail=1; }; \
+	exit $$fail
+
 # Every manifest gate in one command, in the order they are meant to run:
 # duplicate ids/endpoints against the tree, paging declared where the endpoint
 # pages, reachability (rule 3), then the live probe. The probe's pass list is
@@ -454,9 +469,9 @@ registry-floor: $(BIN)
 	   echo "$$ovf row(s) DROPPED at registration — a table cap is eating sources"; exit 1; \
 	 fi; \
 	 if [ "$$dead" -ne 0 ]; then \
-	   echo "$$dead row(s) NEVER RUN — interval 0 under a collector that is not"; \
-	   echo "  \"osint\" and not an internal \"_\" lane, so neither the scheduler"; \
-	   echo "  nor is_entity_pivot() reaches them (house rule 3)"; exit 1; \
+	   echo "$$dead row(s) NEVER RUN — interval 0 and not an entity pivot by"; \
+	   echo "  registry_is_entity_pivot() (no {q…} token, no filter_query), so"; \
+	   echo "  neither the scheduler nor the dispatcher reaches them (house rule 3)"; exit 1; \
 	 fi; \
 	 echo "registry ok: $$now >= $$floor, 0 duplicates, 0 dropped, 0 never-runs"
 

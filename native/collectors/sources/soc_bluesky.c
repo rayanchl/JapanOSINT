@@ -42,7 +42,6 @@
 #define BSKY_HOST "https://public.api.bsky.app/xrpc/"
 
 static const char *const SOC_UA[] = {
-  "User-Agent: JapanOSINT-native/1.0 (OSINT research collector; +https://github.com/)",
   "Accept: application/json", NULL
 };
 

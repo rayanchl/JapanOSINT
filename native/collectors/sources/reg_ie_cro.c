@@ -16,6 +16,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 /* base64 (standard alphabet, padded). malloc'd; caller frees. */
 static char *cro_b64(const unsigned char *in, size_t n) {
@@ -104,14 +105,15 @@ static int emit_company(intel_sink *sink, const cJSON *c) {
   if (status) cJSON_AddStringToObject(props, "status", status);
   if (addr)   cJSON_AddStringToObject(props, "address", addr);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = num ? num : name;
   it.title           = name ? name : num;
   it.summary         = addr ? addr : status;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "en";
   it.published_at    = regdate;
   it.link            = link[0] ? link : NULL;
@@ -119,7 +121,7 @@ static int emit_company(intel_sink *sink, const cJSON *c) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"IE_CRO\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj); free(addr);
+  free(bj); free(bt); free(pj); free(addr);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -129,7 +131,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *key = jo_env("CRO_API_KEY");
   if (!key) {
     fprintf(stderr, "[ie_cro] gated (no CRO_API_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "ie_cro", "ie_cro", (const char *const[]){"CRO_API_KEY", NULL}, NULL, NULL);
   }
 
   char *enc = jo_urlencode(q);
@@ -148,10 +150,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *hdrs[] = { auth, "Accept: application/json", NULL };
 
   char *body = jo_get(ctx, url, hdrs, "ie_cro");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   int emitted = 0;
   /* CWS returns a bare JSON array of company objects; tolerate an object

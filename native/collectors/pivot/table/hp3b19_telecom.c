@@ -207,6 +207,7 @@ static const hp_source HP3B19_TELECOM[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://mastedatabasen.dk/Master/antenner.json?radius=400000&lat=56.0&long=10.5&maxantal=200000",
     .interval = 86400,
+    .timeout_ms = 90000,   /* 2026-11-07: the 35,678,971-byte body (71,865 antennas) took 23.2 s and 24.7 s, past the engine's 20 s default, so every run timed out */
     .lat_key = "wgs84koordinat.bredde",
     .lon_key = "wgs84koordinat.laengde",
     .title_keys = "vejnavn.navn",

@@ -680,6 +680,18 @@ static int dual_emit(struct intel_sink *s, const intel_item *it) {
   dual_sink *d = (dual_sink *)s->ctx;
   int rc = d->real ? d->real->emit(d->real, it) : 1;
   int notice = intel_item_is_notice(it);
+  /* A FETCH-FAILURE disclosure is stored as a record (the run line counts it,
+   * CLAUDE.md rule 1), but it is not an ANSWER: counted as one here, a pivot
+   * whose upstream refused it reported success=1, confidence 70 and
+   * record_count 1 — the disclosure handed to the analyst as a finding about
+   * the entity. It rides with the notices, and names the outcome. */
+  int failure = it && it->record_type &&
+                !strcmp(it->record_type, "collector-fetch-failure");
+  if (failure) {
+    notice = 1;
+    if (!d->notice_status[0])
+      snprintf(d->notice_status, sizeof d->notice_status, "fetch_failed");
+  }
   /* capture the service's payload: body preferred, else properties. Every
    * record is appended — parsed when it is JSON so downstream keeps the
    * structure, otherwise kept verbatim as a string. Notices go to their own
@@ -726,21 +738,9 @@ static int dual_emit(struct intel_sink *s, const intel_item *it) {
   return rc;
 }
 
-/* Byte-for-byte the same verdict core/scheduler.c:run_status() reaches, so a
- * source's fetch_log rows mean the same thing whichever path produced them. It
- * is duplicated rather than shared because the scheduler's copy is static and
- * lives behind a worker-pool header this file does not otherwise include; if a
- * third caller ever needs it, that is the moment to lift it into db.h. */
-static const char *dispatch_run_status(int rc, long records, int hosts,
-                                       int hosts_ok, const char **why) {
-  *why = NULL;
-  if (rc >= 0) return "ok";
-  if (records > 0) return "ok";
-  if (hosts > 0 && hosts_ok == hosts) return "ok";
-  *why = (hosts > 0) ? "run returned non-zero; no host answered"
-                     : "run returned non-zero";
-  return "error";
-}
+/* The run verdict is core/scheduler.c's run_status(), exported as
+ * sched_run_status(). This file used to carry a hand copy "byte-for-byte the
+ * same" — one more copy to drift (audit 2026-11-07). */
 
 static int dispatch_impl(db_handle *db, llm_client *llm, const char *service,
                          const char *entity, const char *entity_type,
@@ -846,6 +846,11 @@ static int dispatch_impl(db_handle *db, llm_client *llm, const char *service,
   ctx.http        = http;
   ctx.llm         = llm;
   ctx.cancel      = &cancel;
+  /* The operator's per-source body ceiling: the scheduler resolved it and this
+   * path did not, so `http_body_ceiling_bytes` was ignored on every pivot run
+   * (audit 2026-11-07). Bound for the whole run, as the scheduler does. */
+  ctx.body_ceiling = sched_body_ceiling_for(db, def->id);
+  size_t prev_ceiling = http_run_body_ceiling_set(ctx.body_ceiling);
 
   /* The four observability systems the scheduled path has always had and this
    * one never did. evidence and content-change are thread-local scopes that
@@ -859,6 +864,7 @@ static int dispatch_impl(db_handle *db, llm_client *llm, const char *service,
   content_change_scope_begin(db, def->id);
 
   int rc = def->run(&ctx, &ds.base);
+  http_run_body_ceiling_set(prev_ceiling);
 
   content_change_scope_end();
   evidence_scope_end();
@@ -872,6 +878,15 @@ static int dispatch_impl(db_handle *db, llm_client *llm, const char *service,
     int ok = 0;
     if (http_client_host_at(http, i, NULL, &ok) && ok) hosts_ok++;
   }
+  unsigned long long bytes_in = http_client_bytes_in(http);
+  /* The scheduler's disclosure, for the path that never filed one: a bespoke
+   * or VJSON pivot that was refused left NOTHING in the database, so "what do
+   * we have on X" could not tell a refusal from an honest no. Same triggers,
+   * same record, written to the real sink only — it is not an answer, so it
+   * must not enter the response's records (see dual_emit). */
+  if (db && def->collector && def->collector[0] != '_')
+    sched_disclose_if_silent(ds.real, def, entity, rc, ds.n_emit, ds.n_notices,
+                             http);
 
   out->success    = (rc >= 0 && ds.n_emit > 0) ? 1 : 0;
   out->confidence = out->success ? 70 : 0;     /* JS default */
@@ -993,8 +1008,9 @@ static int dispatch_impl(db_handle *db, llm_client *llm, const char *service,
    * duration_outlier on their own LLM calls. */
   if (db && def->collector && def->collector[0] != '_') {
     const char *why = NULL;
-    const char *status = dispatch_run_status(rc, ds.n_emit, hosts, hosts_ok, &why);
+    const char *status = sched_run_status(rc, ds.n_emit, hosts, hosts_ok, &why);
     long flid = fetch_log_write(db, def->id, status, ds.n_emit, duration_ms, why);
+    sched_fetch_log_set_bytes(db, flid, bytes_in);   /* as the scheduler records it */
     anomaly_detect(db, def->id, flid, status, ds.n_emit, duration_ms);
   }
 

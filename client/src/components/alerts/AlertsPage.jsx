@@ -479,6 +479,7 @@ function RuleEditorSheet({ open, rule, onClose, onSaved, preset }) {
                 <div className="flex items-center justify-between gap-2">
                   <BoundNote shown={aoiRows.length} more noun="areas" />
                   <Button size="sm" busy={aois.loadingMore} onClick={aois.loadMore}>Load more areas</Button>
+                  {aois.moreError && <span className="text-[11px] text-neon-red font-mono">next page failed — {errorMessage(aois.moreError)}</span>}
                 </div>
               )}
               <div className="text-[11px] text-osint-muted">Manage areas under <Link className="text-accent" to="/console/aoi">Console → Areas of interest</Link>.</div>

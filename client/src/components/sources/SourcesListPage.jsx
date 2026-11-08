@@ -56,12 +56,55 @@ function FacetSelect({ label, value, onChange, facet, labelled }) {
   );
 }
 
+/* GET /api/sources/semantic?q=&k= — the service-vector index over every
+ * source's card (sourceindexapi.c): vector + keyword candidates fused, each
+ * with its ranks, plus the coverage it searched. The route had no UI until
+ * 2026-11-07. A 503 `service_index_unavailable` is the server saying the
+ * index cannot answer, and is shown as such. */
+export function SemanticSourceResults({ q, k = 50 }) {
+  const res = useApi(q ? `/api/sources/semantic?q=${encodeURIComponent(q)}&k=${k}` : null, { deps: [q, k] });
+  if (!q) return <EmptyState title="Enter a query to search by meaning." />;
+  if (res.loading && !res.data) return <LoadingState label="Searching the source index by meaning…" />;
+  if (res.error) return <ErrorNotice error={res.error} title="Semantic source search failed" onRetry={res.reload} />;
+  const rows = Array.isArray(res.data?.results) ? res.data.results : [];
+  const cov = res.data?.coverage;
+  return (
+    <div className="space-y-2">
+      <div className="text-[11px] text-osint-muted font-mono">
+        top {rows.length} of k={res.data?.k ?? k} by meaning{res.data?.k_note ? ` (${res.data.k_note})` : ''}
+        {cov ? ` · ${fmtCount(cov.cards_searched)} source cards searched, ${fmtCount(cov.semantic_candidates)} vector + ${fmtCount(cov.keyword_candidates)} keyword candidates` : ''}
+        {cov?.unready_kinds?.length ? ` · not indexed yet: ${cov.unready_kinds.join(', ')}` : ''}
+      </div>
+      {rows.length === 0 && <EmptyState title="The index returned no source for this query." />}
+      {rows.length > 0 && (
+        <Card padded={false} className="overflow-x-auto">
+          <table className="w-full text-xs">
+            <thead><tr className="border-b border-osint-border text-osint-muted uppercase tracking-wider text-left"><th className="px-3 py-2">Source</th><th className="px-3 py-2">Kind</th><th className="px-3 py-2">Category</th><th className="px-3 py-2 text-right">Score</th><th className="px-3 py-2 text-right">Vector · keyword rank</th></tr></thead>
+            <tbody>
+              {rows.map((r) => (
+                <tr key={r.id} className="border-b border-osint-border/40 hover:bg-white/5">
+                  <td className="px-3 py-2"><Link to={`/console/sources/${encodeURIComponent(r.id)}`} className="text-osint-text hover:text-accent">{r.name || r.id}</Link><div className="font-mono text-[10px] text-osint-muted">{r.id}</div></td>
+                  <td className="px-3 py-2 font-mono text-[11px] text-osint-muted">{r.kind}</td>
+                  <td className="px-3 py-2 font-mono text-[11px] text-osint-muted">{r.category || '—'}</td>
+                  <td className="px-3 py-2 text-right font-mono">{Number.isFinite(r.score) ? r.score.toFixed(4) : '—'}</td>
+                  <td className="px-3 py-2 text-right font-mono text-osint-muted">{r.vector_rank ?? '—'} · {r.keyword_rank ?? '—'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </Card>
+      )}
+    </div>
+  );
+}
+
 export default function SourcesListPage() {
   const [sp, setSp] = useSearchParams();
   const filters = useMemo(() => readFilters(sp), [sp]);
   const [draft, setDraft] = useState(filters.q || '');
   useEffect(() => { setDraft(filters.q || ''); }, [filters.q]);
   const [showProbe, setShowProbe] = useState(false);
+  const [semantic, setSemantic] = useState(false);
 
   const set = (patch) => setSp(writeFilters({ ...filters, ...patch }), { replace: true });
   const path = useMemo(() => searchPath(filters), [filters]);
@@ -70,7 +113,12 @@ export default function SourcesListPage() {
   const collectors = useApi('/api/collectors');
   const sum = summary.data?.summary;
   const auth = useAuthOptional();
-  const canEditCadence = Boolean(auth?.isPlatformOperator || auth?.canManageWorkspace);
+  /* PUT /api/sources/cadence is platform-operator gated. This read
+   * `auth?.isPlatformOperator`, a field AuthContext never exposed (it is
+   * `isPlatformAdmin`), OR'd with workspace owner/admin — so an operator got
+   * no Change button and a workspace owner got one the server answered 403
+   * (2026-11-07). The card prefers the server's own `can_write`. */
+  const canEditCadence = auth?.isPlatformAdmin === true;
   const facets = list.meta?.facets;
 
   return (
@@ -101,6 +149,7 @@ export default function SourcesListPage() {
           <Input className="pl-7 w-full" placeholder="search id, name, 日本語, description, collector, host…" value={draft} onChange={(e) => setDraft(e.target.value)} />
         </div>
         <Button type="submit" variant="primary">Search</Button>
+        <Toggle on={semantic} onChange={setSemantic} label="by meaning" />
         <FacetSelect label="all groups" value={filters.group} onChange={(v) => set({ group: v })} facet={facets?.groups} labelled />
         <FacetSelect label="all collectors" value={filters.collector} onChange={(v) => set({ collector: v })} facet={facets?.collectors} labelled />
         <FacetSelect label="all categories" value={filters.category} onChange={(v) => set({ category: v })} facet={facets?.categories} />
@@ -116,6 +165,8 @@ export default function SourcesListPage() {
         {Object.keys(filters).length > 0 && <Button size="sm" variant="ghost" onClick={() => setSp(new URLSearchParams(), { replace: true })}>clear</Button>}
       </form>
 
+      {semantic && <SemanticSourceResults q={filters.q || ''} />}
+      {!semantic && <>
       {list.loading && list.rows.length === 0 && <LoadingState label="Searching the registry…" />}
       {list.error && <ErrorNotice error={list.error} title="Could not search sources" onRetry={list.reload} />}
       {!list.loading && !list.error && (
@@ -180,6 +231,7 @@ export default function SourcesListPage() {
         </Card>
       )}
       {list.rows.length > 0 && <PagedFooter shown={list.rows.length} total={list.page?.total} hasMore={list.page?.has_more} busy={list.loadingMore} onMore={list.loadMore} error={list.moreError} noun="sources" />}
+      </>}
     </Page>
   );
 }

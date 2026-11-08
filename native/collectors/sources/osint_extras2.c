@@ -18,9 +18,7 @@
 #include <string.h>
 #include "_jp_osint.inc"
 
-static const char *OE2_UA = "User-Agent: JapanOSINT/1.0 (osint@example.org)";
 /* SEC EDGAR requires a declared UA with contact. */
-static const char *SEC_UA = "User-Agent: JapanOSINT osint@example.org";
 
 static int oe2_emit(intel_sink *sink, const char *service, const char *rtype,
                     const char *rk, const char *title, const char *summary,
@@ -46,11 +44,11 @@ static int run_wikidata_ent(const source_ctx *ctx, intel_sink *sink, const char 
   char url[512];
   snprintf(url, sizeof url,
     "https://www.wikidata.org/w/api.php?action=wbsearchentities&search=%s&language=en&format=json&limit=20", enc);
-  const char *hdrs[] = { "Accept: application/json", OE2_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "WIKIDATA_ENTITY_SEARCH");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *search = cJSON_GetObjectItem(root, "search");
   int n = 0;
   if (cJSON_IsArray(search)) {
@@ -79,11 +77,11 @@ static int run_wikidata_ent(const source_ctx *ctx, intel_sink *sink, const char 
 static int run_sec_fulltext(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   char url[512];
   snprintf(url, sizeof url, "https://efts.sec.gov/LATEST/search-index?q=%s", enc);
-  const char *hdrs[] = { "Accept: application/json", SEC_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "SEC_FULLTEXT");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *hits = cJSON_GetObjectItem(root, "hits");
   const cJSON *hitarr = hits ? cJSON_GetObjectItem(hits, "hits") : NULL;
   int n = 0;
@@ -148,11 +146,11 @@ static int run_bigdatacloud(const source_ctx *ctx, intel_sink *sink, const char 
   char url[320];
   snprintf(url, sizeof url,
     "https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=%.6f&longitude=%.6f&localityLanguage=en", lat, lon);
-  const char *hdrs[] = { "Accept: application/json", OE2_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "BIGDATACLOUD_REVERSE");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const char *city = jo_sv(root, "city");
   const char *locality = jo_sv(root, "locality");
   const char *sub = jo_sv(root, "principalSubdivision");
@@ -176,11 +174,16 @@ static int run_bigdatacloud(const source_ctx *ctx, intel_sink *sink, const char 
 static int run_hn_user(const source_ctx *ctx, intel_sink *sink, const char *enc, const char *raw) {
   char url[256];
   snprintf(url, sizeof url, "https://hn.algolia.com/api/v1/users/%s", enc);
-  const char *hdrs[] = { "Accept: application/json", OE2_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "HN_USER");
-  if (!body) return 0;
+  /* Measured 2026-11-07: hn.algolia.com answers an invented username with
+   * HTTP 500 and an HTML error page (two names tried; "pg" answers 200), not
+   * 404. A 500 is therefore ambiguous between "no such user" and an outage,
+   * and is reported as a failure — the direction that cannot pass a broken
+   * upstream off as "nothing found". */
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const char *username = jo_sv(root, "username");
   if (!username) { cJSON_Delete(root); return 0; }
   const cJSON *karma = cJSON_GetObjectItem(root, "karma");
@@ -201,11 +204,11 @@ static int run_hn_user(const source_ctx *ctx, intel_sink *sink, const char *enc,
 static int run_openverse(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   char url[512];
   snprintf(url, sizeof url, "https://api.openverse.org/v1/images/?q=%s&page_size=20", enc);
-  const char *hdrs[] = { "Accept: application/json", OE2_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "OPENVERSE");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *results = cJSON_GetObjectItem(root, "results");
   int n = 0;
   if (cJSON_IsArray(results)) {
@@ -236,11 +239,11 @@ static int run_stackexchange(const source_ctx *ctx, intel_sink *sink, const char
   char url[640];
   snprintf(url, sizeof url,
     "https://api.stackexchange.com/2.3/search/advanced?order=desc&sort=relevance&q=%s&site=stackoverflow", enc);
-  const char *hdrs[] = { "Accept: application/json", OE2_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "STACKEXCHANGE_SEARCH");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);   /* fails if gzip not decompressed → honest empty */
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *items = cJSON_GetObjectItem(root, "items");
   int n = 0;
   if (cJSON_IsArray(items)) {
@@ -281,7 +284,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   else if (!strcmp(sid, "STACKEXCHANGE_SEARCH"))   n = run_stackexchange(ctx, sink, enc);
   free(enc);
   fprintf(stderr, "[%s] emitted %d\n", sid, n);
-  return 0;
+  return n < 0 ? -1 : 0;
 }
 
 #define OE2_DEF(sym, ID, NM, CAT, DESC) \

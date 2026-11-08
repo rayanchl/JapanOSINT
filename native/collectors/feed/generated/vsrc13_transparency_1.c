@@ -302,44 +302,57 @@ VJSON(cyb_findtender_ocds_tender, "cyb-findtender-ocds-tender", "UK Find a Tende
   "en", "[\"gbr\",\"procurement\",\"ocds\",\"contracts\"]", 21600,
   "High-value UK tender opportunities in OCDS form, the post-Brexit replacement for TED coverage of the UK.");
 
+/* Tweede Kamer / Folketing OData rows: `$orderby=<modified> desc,<key>`
+ * (2026-11-07), copied from the sorted siblings (GewijzigdOp desc on TK
+ * Besluit, opdateringsdato desc on ft.dk Sag/Sagstrin/Dokument) and made a
+ * TOTAL order with the entity key, because many records share one timestamp
+ * (TK Stemming/Document, ft.dk Stemme: identical GewijzigdOp/opdateringsdato
+ * on consecutive rows). Without an order these $top/$skip walks read an
+ * arbitrary slice — TK's default first rows are dated 2008, 2019, 2024 mixed —
+ * of collections up to 1,035,132 (TK Stemming) and 1,840,932 (ft.dk Stemme);
+ * neither server publishes a nextLink for these requests. With it, the
+ * 20-page ceiling is the most recently modified $top x 20, a window. Both
+ * servers read the clause: a bogus $orderby is HTTP 400 ("Could not find a
+ * property named 'Frobnicate'" on TK). Small entity sets (TK Zaal 64,
+ * Fractie 160, Commissie 234; ft.dk Aktørtype 13 …) read whole either way. */
 VJSON(cyb_folketing_afstemning, "cyb-folketing-afstemning", "Danish Parliament ODA — votes", "デンマーク議会 採決",
   "transparency", "politics",
-  "https://oda.ft.dk/api/Afstemning?%24top=50",
+  "https://oda.ft.dk/api/Afstemning?%24top=50&%24orderby=opdateringsdato%20desc,id",
   "value",
   "da", "[\"dnk\",\"parliament\",\"voting\",\"transparency\"]", 43200,
   "Folketing votes with conclusion and vote type.");
 
 VJSON(cyb_folketing_dokument, "cyb-folketing-dokument", "Danish Parliament ODA — documents", "デンマーク議会 文書",
   "transparency", "politics",
-  "https://oda.ft.dk/api/Dokument?%24top=50",
+  "https://oda.ft.dk/api/Dokument?%24top=50&%24orderby=opdateringsdato%20desc,id",
   "value",
   "da", "[\"dnk\",\"parliament\",\"legislation\",\"transparency\"]", 28800,
   "Documents tied to Folketing cases with type, date and title.");
 
 VJSON(cyb_folketing_oda_aktor, "cyb-folketing-oda-aktor", "Danish Parliament ODA — actors", "デンマーク議会 関係者",
   "transparency", "politics",
-  "https://oda.ft.dk/api/Akt%C3%B8r?%24top=50",
+  "https://oda.ft.dk/api/Akt%C3%B8r?%24top=50&%24orderby=opdateringsdato%20desc,id",
   "value",
   "da", "[\"dnk\",\"parliament\",\"politics\",\"transparency\"]", 86400,
   "Actors in the Folketing system: members, ministries, committees and external parties.");
 
 VJSON(cyb_folketing_oda_sag, "cyb-folketing-oda-sag", "Danish Parliament ODA — cases", "デンマーク議会 案件",
   "transparency", "politics",
-  "https://oda.ft.dk/api/Sag?%24top=50",
+  "https://oda.ft.dk/api/Sag?%24top=50&%24orderby=opdateringsdato%20desc,id",
   "value",
   "da", "[\"dnk\",\"parliament\",\"legislation\",\"transparency\"]", 21600,
   "Folketing cases including bills, motions and inquiries with status and type.");
 
 VJSON(cyb_folketing_sagstrin, "cyb-folketing-sagstrin", "Danish Parliament ODA — case stages", "デンマーク議会 審議段階",
   "transparency", "politics",
-  "https://oda.ft.dk/api/Sagstrin?%24top=50",
+  "https://oda.ft.dk/api/Sagstrin?%24top=50&%24orderby=opdateringsdato%20desc,id",
   "value",
   "da", "[\"dnk\",\"parliament\",\"legislation\",\"transparency\"]", 43200,
   "Stage-by-stage progress of Folketing cases through readings and committee.");
 
 VJSON(cyb_folketing_stemme, "cyb-folketing-stemme", "Danish Parliament ODA — individual votes", "デンマーク議会 個別投票",
   "transparency", "politics",
-  "https://oda.ft.dk/api/Stemme?%24top=50",
+  "https://oda.ft.dk/api/Stemme?%24top=50&%24orderby=opdateringsdato%20desc,id",
   "value",
   "da", "[\"dnk\",\"parliament\",\"voting\",\"transparency\"]", 57600,
   "Individual member votes attached to each Folketing division.");
@@ -519,42 +532,42 @@ VJSON(cyb_sejm_pl_processes, "cyb-sejm-pl-processes", "Sejm of Poland — legisl
 
 VJSON(cyb_tweedekamer_activiteit, "cyb-tweedekamer-activiteit", "Dutch House of Representatives — activities", "オランダ下院 議事活動",
   "transparency", "politics",
-  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Activiteit?%24top=50",
+  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Activiteit?%24top=50&%24orderby=GewijzigdOp%20desc,Id",
   "value",
   "nl", "[\"nld\",\"parliament\",\"politics\",\"transparency\"]", 21600,
   "Scheduled and held parliamentary activities including debates and committee sessions.");
 
 VJSON(cyb_tweedekamer_besluit, "cyb-tweedekamer-besluit", "Dutch House of Representatives — decisions", "オランダ下院 決定",
   "transparency", "politics",
-  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Besluit?%24top=50",
+  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Besluit?%24top=50&%24orderby=GewijzigdOp%20desc,Id",
   "value",
   "nl", "[\"nld\",\"parliament\",\"voting\",\"transparency\"]", 43200,
   "Decisions taken on parliamentary cases, with outcome and decision text.");
 
 VJSON(cyb_tweedekamer_document, "cyb-tweedekamer-document", "Dutch House of Representatives — documents", "オランダ下院 文書",
   "transparency", "politics",
-  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Document?%24top=50",
+  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Document?%24top=50&%24orderby=GewijzigdOp%20desc,Id",
   "value",
   "nl", "[\"nld\",\"parliament\",\"legislation\",\"transparency\"]", 21600,
   "Documents submitted to the Tweede Kamer with type, date and case linkage.");
 
 VJSON(cyb_tweedekamer_fractie, "cyb-tweedekamer-fractie", "Dutch House of Representatives — parliamentary groups", "オランダ下院 会派",
   "transparency", "politics",
-  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Fractie?%24top=50",
+  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Fractie?%24top=50&%24orderby=GewijzigdOp%20desc,Id",
   "value",
   "nl", "[\"nld\",\"parliament\",\"politics\",\"transparency\"]", 86400,
   "Parliamentary groups with seat counts and active periods.");
 
 VJSON(cyb_tweedekamer_stemming, "cyb-tweedekamer-stemming", "Dutch House of Representatives — votes", "オランダ下院 採決",
   "transparency", "politics",
-  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Stemming?%24top=50",
+  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Stemming?%24top=50&%24orderby=GewijzigdOp%20desc,Id",
   "value",
   "nl", "[\"nld\",\"parliament\",\"voting\",\"transparency\"]", 43200,
   "Individual and party votes recorded on Tweede Kamer decisions.");
 
 VJSON(cyb_tweedekamer_zaak, "cyb-tweedekamer-zaak", "Dutch House of Representatives — cases (Zaak)", "オランダ下院 案件",
   "transparency", "politics",
-  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Zaak?%24top=50",
+  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Zaak?%24top=50&%24orderby=GewijzigdOp%20desc,Id",
   "value",
   "nl", "[\"nld\",\"parliament\",\"legislation\",\"transparency\"]", 21600,
   "Parliamentary cases in the Tweede Kamer data warehouse, the spine linking documents, decisions and votes.");

@@ -337,6 +337,14 @@ cJSON *jsonlist_find_array(cJSON *doc, const char *path) {
   for (char *tok = strtok_r(buf, ".", &save); tok && cur;
        tok = strtok_r(NULL, ".", &save))
     cur = cJSON_GetObjectItem(cur, tok);
+  /* A KEY MAY CONTAIN A LITERAL DOT (OData's `@odata.…`, `odata.count`):
+   * the same fallback dotted() had and these record-path resolvers did not
+   * (2026-11-07 audit). Tried only when the split found no array, so every
+   * path that resolves today resolves to the same node. */
+  if (!(cur && cJSON_IsArray(cur)) && strchr(path, '.')) {
+    cJSON *lit = cJSON_GetObjectItem(doc, path);
+    if (lit && cJSON_IsArray(lit)) return lit;
+  }
   return (cur && cJSON_IsArray(cur)) ? cur : NULL;
 }
 
@@ -375,6 +383,12 @@ static cJSON *columnar_parent(cJSON *doc, const char *path) {
   for (char *tok = strtok_r(buf, ".", &save); tok && cur;
        tok = strtok_r(NULL, ".", &save))
     cur = cJSON_GetObjectItem(cur, tok);
+  /* The literal-dotted-key fallback (see jsonlist_find_array): when the whole
+   * path is ONE key of the document, its container is the document. Only
+   * when the split found nothing, so it is strictly additive. */
+  if (!(cur && cJSON_IsObject(cur)) && cJSON_IsObject(doc) &&
+      cJSON_GetObjectItem(doc, path))
+    return doc;
   return (cur && cJSON_IsObject(cur)) ? cur : NULL;
 }
 
@@ -443,6 +457,8 @@ static cJSON *jsonlist_node(cJSON *doc, const char *path) {
   for (char *tok = strtok_r(buf, ".", &save); tok && cur;
        tok = strtok_r(NULL, ".", &save))
     cur = cJSON_GetObjectItem(cur, tok);
+  /* The literal-dotted-key fallback (see jsonlist_find_array), additive. */
+  if (!cur && strchr(path, '.')) cur = cJSON_GetObjectItem(doc, path);
   return cur;
 }
 
@@ -1183,119 +1199,18 @@ int jsonlist_emit_ex(intel_sink *sink, const char *source_id, cJSON *doc,
  * has the upstream told us there is more? We answer it from what the upstream
  * actually said, and never from an assumption. */
 
-/* Dotted lookup that tolerates a missing level, for probing candidate keys. */
-/* A KEY MAY CONTAIN A LITERAL DOT, and splitting every path unconditionally
- * made such a key unreachable. OData spells its envelope fields `odata.count`
- * and `@odata.nextLink` — single keys, dots and all — so the split looked for
- * `doc["odata"]["count"]` and `doc["@odata"]["nextLink"]`, which no OData
- * server has ever published. `"@odata.nextLink"` therefore sat in
- * next_link()'s key list, under a comment naming OData as a supported
- * dialect, matching nothing: every OData v4 row in the tree stopped at page 1
- * with the capability claimed two lines above the code that could not deliver
- * it, and the same split hid the declared total.
+/* The server's own "next page" link: jo_next_link() in lib/pagewalk.c.
  *
- * The literal is tried only AFTER the split fails, and only for a path that
- * has a dot to split. That makes it strictly additive: a path that resolves
- * today resolves to the same node, so nothing that works can change. */
-static cJSON *dotted(cJSON *doc, const char *path) {
-  char buf[128];
-  snprintf(buf, sizeof buf, "%s", path);
-  cJSON *cur = doc;
-  char *save = NULL;
-  for (char *tok = strtok_r(buf, ".", &save); tok && cur;
-       tok = strtok_r(NULL, ".", &save))
-    cur = cJSON_GetObjectItem(cur, tok);
-  if (!cur && strchr(path, '.')) cur = cJSON_GetObjectItem(doc, path);
-  return cur;
-}
-
-/* The server's own "next page" link, if it published one. Ordered most- to
- * least-specific: `links.next` is the JSON:API/CKAN spelling, `@odata.nextLink`
- * is OData, the rest are common house styles. A next link that is present but
- * null/false/empty means "this is the last page" in every one of these
- * dialects, so it is treated as absent rather than followed. */
-/* Resolve a next-link against the page it came from. An absolute URL passes
- * through; "?page=2" and "/api/x?page=2" are the two relative spellings that
- * actually occur (bio.tools answers `"next": "?page=2&format=json"`, and that
- * one string was the whole reason 30,000 bio.tools rows stopped at page 1 —
- * the link WAS published, we just refused to read it). Anything else — a
- * scheme we do not speak, a bare token — is not a URL and is refused rather
- * than glued onto the base and hoped for. */
-static char *resolve_link(const char *base, const char *href) {
-  if (!href || !href[0]) return NULL;
-  if (!strncmp(href, "http://", 7) || !strncmp(href, "https://", 8))
-    return strdup(href);
-  size_t cap = strlen(base) + strlen(href) + 2;
-  char *out = malloc(cap);
-  if (!out) return NULL;
-  if (href[0] == '?') {                       /* same path, new query */
-    const char *q = strchr(base, '?');
-    size_t head = q ? (size_t)(q - base) : strlen(base);
-    memcpy(out, base, head);
-    snprintf(out + head, cap - head, "%s", href);
-    return out;
-  }
-  if (href[0] == '/') {                       /* same origin, new path */
-    const char *p = strstr(base, "://");
-    const char *slash = p ? strchr(p + 3, '/') : NULL;
-    size_t head = slash ? (size_t)(slash - base) : strlen(base);
-    memcpy(out, base, head);
-    snprintf(out + head, cap - head, "%s", href);
-    return out;
-  }
-  free(out);
-  return NULL;
-}
-
-/* The server's own "next page" link, if it published one. Ordered most- to
- * least-specific: `links.next` is the JSON:API/CKAN spelling, `@odata.nextLink`
- * is OData, the rest are common house styles. A next link that is present but
- * null/false/empty means "this is the last page" in every one of these
- * dialects, so it is treated as absent rather than followed. */
-static char *next_link(cJSON *doc, const char *base) {
-  static const char *const KEYS[] = {
-    "links.next", "next", "next_url", "nextUrl", "nextPageUrl",
-    "meta.next", "paging.next", "@odata.nextLink", "next_page",
-    "meta.pagination.next", "pagination.next", "pagination.next_page",
-    "meta.pagination.next_page", "links.next_url",
-    /* OCHA FTS (api.hpc.tools) puts it at meta.nextLink: ocha-fts-flow-2026
-     * stopped after its first 200 of 20,161 flows (measured 2026-09-15). */
-    "meta.nextLink", NULL };
-  for (int i = 0; KEYS[i]; i++) {
-    cJSON *v = dotted(doc, KEYS[i]);
-    if (v && cJSON_IsString(v) && v->valuestring && v->valuestring[0]) {
-      char *u = resolve_link(base, v->valuestring);
-      if (u) return u;
-    }
-    /* CKAN and some JSON:API servers nest it as {next: {href: "..."}}. */
-    if (v && cJSON_IsObject(v)) {
-      cJSON *h = cJSON_GetObjectItem(v, "href");
-      if (h && cJSON_IsString(h) && h->valuestring) {
-        char *u = resolve_link(base, h->valuestring);
-        if (u) return u;
-      }
-    }
-  }
-  /* The ARRAY form, {"links":[{"rel":"next","href":…},…]} — Oracle ORDS, HAL
-   * and OGC API. The same gap existed in lib/pagewalk.c's pw_next_link and was
-   * fixed there at the same time; this is the other copy. Selected by rel,
-   * never by position. */
-  cJSON *arr = cJSON_GetObjectItem(doc, "links");
-  if (arr && cJSON_IsArray(arr)) {
-    cJSON *l;
-    cJSON_ArrayForEach(l, arr) {
-      cJSON *rel = cJSON_GetObjectItem(l, "rel");
-      cJSON *h   = cJSON_GetObjectItem(l, "href");
-      if (rel && cJSON_IsString(rel) && rel->valuestring &&
-          strcasecmp(rel->valuestring, "next") == 0 &&
-          h && cJSON_IsString(h) && h->valuestring) {
-        char *u = resolve_link(base, h->valuestring);
-        if (u) return u;
-      }
-    }
-  }
-  return NULL;
-}
+ * This file used to carry its own reader (next_link, with resolve_link and
+ * dotted beside it), and lib/pagewalk.c and lib/geojson.c each carried
+ * another, with different key lists and different rules for a relative link
+ * (2026-11-07 audit; the union and its reasons are on jo_next_link). The
+ * literal-dotted-key fallback this file's dotted() introduced — OData's
+ * `@odata.nextLink` and `odata.count` are single keys, dots and all, and
+ * splitting every path unconditionally made them unreachable, so every OData
+ * v4 row stopped at page 1 while its key sat in the list — went with it, as
+ * pw_dotted(), and the same fallback now also covers this file's own record
+ * paths (jsonlist_find_array, columnar_parent, jsonlist_node). */
 
 /* Fingerprint of a page's records, used only to notice that the upstream is
  * handing back the SAME page again. That happens whenever a cursor guess is
@@ -1400,70 +1315,45 @@ int jsonlist_fps_has(const unsigned long long *fps, int n, cJSON *rec) {
   return 0;
 }
 
-/* The upstream's own count of what exists, for the in-band disclosure. -1 when
- * it did not say, which is itself worth recording: "unknown" is honest, a
- * guessed total is not. */
-static long declared_total(cJSON *doc) {
-  static const char *const KEYS[] = {
-    "total_count", "totalCount", "total", "count", "meta.count",
-    "numberMatched", "totalResults", "result.count", "meta.total",
-    "totalElements", "recordsTotal",
-    /* The families whose totals the walk was blind to. ROR answers
-     * `number_of_results: 108000` next to 20 items, Solr `response.numFound`,
-     * OpenDataSoft `nhits`, CORDIS `payload.totalHits`; each of those is the
-     * upstream telling us, in its own words, how much it is holding back. */
-    "number_of_results", "numFound", "response.numFound", "nhits",
-    "totalHits", "payload.totalHits", "totalResultCount", "total_results",
-    "resultCount", "hits.total", "meta.pagination.total", "pagination.total",
-    /* Cabo Verde's statistics office answers `totalItems: 2425` beside 50
-     * items, with a `currentPage` it echoes back as 0 whatever you send, so
-     * the row read 50 of 2,425 and nothing could say so. Added because a live
-     * row needed it, not on the chance that something might. */
-    "totalItems",
-    /* OData's own spelling of the same number, v4 and v3: single keys whose
-     * name contains a dot, which is why dotted() tries the literal first.
-     * LegCo Hong Kong answers `odata.count: 551619` beside 200 rows when the
-     * request carries `$inlinecount=allpages`. */
-    "@odata.count", "odata.count",
-    /* The Linked Data API's envelope puts it one level down, at
-     * `result.totalResults`, and `totalResults` at the root could not reach
-     * it: every lda.data.parliament.uk row in the tree read "the upstream
-     * declares no total" while the number sat beside the items it was holding
-     * back (71,323 Commons oral questions against the 10,000 a run reaches).
-     * Here rather than in the row, because it is the API family's envelope and
-     * not one row's quirk — the same reason `response.numFound` is here for
-     * Solr. Measured 2026-10-23. */
-    "result.totalResults",
-    /* Japan Search's `jps-cross` item API answers `hit: 5409` beside the 500
-     * records on a page, and 130 hp rows in this tree read that API — every one
-     * of them reading 2,000 of its collection (the API's own `from + size <=
-     * 2000` bound) and saying nothing, because no list here could reach the
-     * number. Singular `hit` is safe where bare `count` is not: "records in
-     * THIS page" is spelled `count`, `size` or `hits`, never `hit`. Added
-     * because a live family needed it, and measured on it. */
-    "hit",
-    NULL };
-  for (int i = 0; KEYS[i]; i++) {
-    cJSON *v = dotted(doc, KEYS[i]);
-    if (v && cJSON_IsNumber(v) && v->valuedouble >= 0)
-      return (long)v->valuedouble;
-  }
-  /* OData v2 verbose writes its total as a STRING, `d.__count: "46144"`, so no
-   * entry above can match it: every OData v2 row read "the upstream declares
-   * no total" while the number sat in the envelope. pagewalk.c's reader, so
-   * the two lists cannot disagree about it. */
-  return pw_odata_v2_count(doc);
+/* The upstream's own count of what exists, for the in-band disclosure: one
+ * reader for the whole tree, jo_declared_total() in lib/pagewalk.c. This
+ * file's list (declared_total) was one of three that disagreed — see the
+ * definition for the union and the bare-`count` decision.
+ *
+ * jsonlist_declared_total() is exported for hpengine's page_walk rows and
+ * keeps the rule those rows were measured under: a bare root `count` read as
+ * the total unconditionally (JO_TOTAL_TRUST_BARE_COUNT). InterPro's two rows
+ * (hp3b19_science.c) and the Austrian Parliament's seven (hp3b55_atparl.c)
+ * state their remainder through it. This file's OWN walk passes the page's
+ * record count instead, so a page-size `count` can no longer pass for a
+ * total there; hpengine should do the same (jo_declared_total with its
+ * page's record count). */
+long jsonlist_declared_total(cJSON *doc) {
+  return jo_declared_total(doc, JO_TOTAL_TRUST_BARE_COUNT, NULL, 0);
 }
 
-/* Read `name=<int>` out of a query string. Returns -1 if absent/unparseable. */
-/* declared_total(), exported for hpengine's page_walk rows (jsonlist.h). */
-long jsonlist_declared_total(cJSON *doc) { return declared_total(doc); }
-
-long jsonlist_query_int(const char *url, const char *name) {
+/* Where the query string of `url` starts ('?'), or NULL; a '?' inside a
+ * `#fragment` is not one. */
+static const char *jl_query_start(const char *url) {
   const char *q = strchr(url, '?');
+  const char *f = strchr(url, '#');
+  return (q && (!f || q < f)) ? q : NULL;
+}
+
+/* A `#fragment` ENDS the query (RFC 3986), and both helpers below used to
+ * read through it (fixed 2026-11-07, found by the audit that read every copy
+ * of the URL-parameter code): jsonlist_query_int scanned into the fragment
+ * and refused `offset=0#x` as "not an integer", and jsonlist_query_set,
+ * replacing the LAST parameter, copied only up to the next '&' — so
+ * `?limit=10&offset=0#sheet=2` came back `?limit=10&offset=10` with the
+ * fragment silently dropped, and appending put the new parameter AFTER the
+ * '#', where no server ever sees it. A fragment is a sheet selector on some
+ * rows here (CLAUDE.md), so dropping it changes what a row reads. */
+long jsonlist_query_int(const char *url, const char *name) {
+  const char *q = jl_query_start(url);
   if (!q) return -1;
   size_t nlen = strlen(name);
-  for (const char *p = q + 1; p && *p; ) {
+  for (const char *p = q + 1; p && *p && *p != '#'; ) {
     if (!strncmp(p, name, nlen) && p[nlen] == '=') {
       char *end = NULL;
       long v = strtol(p + nlen + 1, &end, 10);
@@ -1476,10 +1366,11 @@ long jsonlist_query_int(const char *url, const char *name) {
        * Requiring the value to end at the parameter boundary rejects every
        * date, timestamp and composite value while accepting every genuine
        * `offset=120` / `limit=20`. */
-      if (*end != '&' && *end != 0) return -1;
+      if (*end != '&' && *end != '#' && *end != 0) return -1;
       return v;
     }
-    p = strchr(p, '&');
+    p = strpbrk(p, "&#");
+    if (p && *p == '#') break;
     if (p) p++;
   }
   return -1;
@@ -1490,21 +1381,26 @@ char *jsonlist_query_set(const char *url, const char *name, long value) {
   size_t cap = strlen(url) + strlen(name) + 48;
   char *out = malloc(cap);
   if (!out) return NULL;
-  const char *q = strchr(url, '?');
+  const char *q = jl_query_start(url);
+  const char *frag = strchr(url, '#');
   size_t nlen = strlen(name);
   const char *hit = NULL;
   if (q) {
-    for (const char *p = q + 1; p && *p; ) {
+    for (const char *p = q + 1; p && *p && *p != '#'; ) {
       if (!strncmp(p, name, nlen) && p[nlen] == '=') { hit = p; break; }
-      p = strchr(p, '&');
+      p = strpbrk(p, "&#");
+      if (p && *p == '#') break;
       if (p) p++;
     }
   }
   if (!hit) {
-    snprintf(out, cap, "%s%c%s=%ld", url, q ? '&' : '?', name, value);
+    /* Appended to the QUERY, before any fragment. */
+    size_t head = frag ? (size_t)(frag - url) : strlen(url);
+    snprintf(out, cap, "%.*s%c%s=%ld%s", (int)head, url, q ? '&' : '?', name,
+             value, frag ? frag : "");
     return out;
   }
-  const char *tail = strchr(hit, '&');
+  const char *tail = strpbrk(hit, "&#");
   size_t head = (size_t)(hit - url);
   memcpy(out, url, head);
   int w = snprintf(out + head, cap - head, "%s=%ld", name, value);
@@ -1647,7 +1543,7 @@ int jsonlist_page_max(void) {
  * the condition the truncation notice discloses. */
 char *jsonlist_next_page(cJSON *doc, const char *page_url, int got,
                          long available, int total, int *full_unadvanced) {
-  char *next = next_link(doc, page_url);
+  char *next = jo_next_link(doc, page_url);
   if (!next && got > 0) {
     /* No server link. Advance a cursor only when the URL declares a page
      * size AND this page came back exactly full — a short page is the
@@ -1772,11 +1668,21 @@ int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
   int failed = 0, failed_page = 0;
   long failed_status = FEED_ST_UNKNOWN;
   char *failed_url = NULL;
+  char avail_key[48] = "";    /* which envelope key carried `available` */
 
   for (; pages < page_max && page_url; pages++) {
     feed_last_json_status_reset();
     cJSON *doc = feed_get_json(http, page_url, timeout_ms);
     if (!doc) {
+      /* Page 1 answered the upstream's own "nothing matched" (a 204, or a
+       * 404 whose body says so): rule 1's honest empty, rc 0, no notice. It
+       * used to be -1, so a quiet FDSN window on a VJSON row filed a
+       * fetch-failure (feed_status_body_is_declared_empty, 2026-11-07). */
+      if (pages == 0 && feed_status_declared_empty(feed_last_json_status())) {
+        fprintf(stderr, "[%s] the upstream answered with its own no-data "
+                        "status: an EMPTY result, not a refusal\n", source_id);
+        free(page_url); g_jl_shape.paged = 0; return 0;
+      }
       /* A failed FIRST fetch is a dead endpoint and belongs to the caller as
        * an error. A failure mid-walk is different: we already have real
        * records, so we keep them and stop — but the walk ended early, which is
@@ -1789,10 +1695,13 @@ int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
       failed_url = strdup(page_url);
       break;
     }
-    if (available < 0) available = declared_total(doc);
-
     cJSON *arr = jsonlist_find_array(doc, path);
     int got = arr ? cJSON_GetArraySize(arr) : 0;
+    /* The page's record count goes with it, so a bare `count` that is only
+     * the size of this page is not read as the upstream's total
+     * (jo_declared_total). */
+    if (available < 0)
+      available = jo_declared_total(doc, got, avail_key, sizeof avail_key);
 
     /* Did the upstream actually move? An ignored cursor parameter re-serves
      * the page we already have; that is the end of the data as far as this
@@ -1905,6 +1814,7 @@ int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
        * reason for it, as hpengine's notice. */
       cJSON_AddStringToObject(p, "records_available_basis",
                               "upstream declared this total");
+      if (avail_key[0]) cJSON_AddStringToObject(p, "records_available_key", avail_key);
     }
     else cJSON_AddStringToObject(p, "records_available", "unknown — upstream declared no total");
     cJSON_AddNumberToObject(p, "records_fetched", fetched);
@@ -1915,17 +1825,27 @@ int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
      * not read it as "more is coming". The authoritative signal is the pair
      * records_available / records_fetched above. */
     cJSON_AddBoolToObject(p, "more_pages_pending", declared_short ? 0 : 1);
-    char fdesc[64] = "", freason[256] = "";
+    /* The failing page's reason and remedy by what it answered, and the
+     * ceiling that bit by name — lib/pagewalk.c's describers, shared with
+     * pw_walk and geojson_emit_paged so the three cannot drift again. Before
+     * 2026-11-07 a failed page always read "needs a per-host minimum gap"
+     * (wrong for a deep-paging 400, which no gap moves) and a ceiling stop
+     * said "raise $JO_JSONLIST_PAGE_MAX" although $JO_PAGE_MAX wins when
+     * set. */
+    char fdesc[96] = "", freason[400] = "", ffix[400] = "";
+    char cwhy[200] = "", cfix[400] = "";
+    jo_page_ceiling_describe(page_max, 0, "JO_JSONLIST_PAGE_MAX",
+                             cwhy, sizeof cwhy, cfix, sizeof cfix);
     if (failed) {
       feed_status_describe(failed_status, fdesc, sizeof fdesc);
       cJSON_AddNumberToObject(p, "failed_page", failed_page);
       cJSON_AddNumberToObject(p, "failed_page_status", (double)failed_status);
       cJSON_AddStringToObject(p, "failed_page_url", failed_url ? failed_url : "");
-      snprintf(freason, sizeof freason, "page %d answered %s, so the walk stopped "
-               "before the upstream ran out", failed_page, fdesc);
+      pw_cut_describe(failed_page, failed_status, freason, sizeof freason,
+                      ffix, sizeof ffix);
     }
     cJSON_AddStringToObject(p, "reason", failed ? freason : truncated
-      ? "the page ceiling stopped the walk while the upstream still had pages"
+      ? cwhy
       : declared_short
       ? "the walk ended without reaching the upstream's own declared total — "
         "either it re-served a page it had already given (the repeat guard) or "
@@ -1934,10 +1854,9 @@ int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
         "read) and neither the response nor this URL offers a way to ask for "
         "the next page, so records may remain unread");
     cJSON_AddStringToObject(p, "remedy", failed
-      ? "re-run; a host that refuses or rate-limits later pages needs a "
-        "per-host minimum gap (core/hostgate.c) — see docs/SOURCE_EXHAUSTIVENESS.md"
+      ? ffix
       : truncated
-      ? "raise $JO_JSONLIST_PAGE_MAX — see docs/SOURCE_EXHAUSTIVENESS.md"
+      ? cfix
       : declared_short
       ? "ask the endpoint what ordering it HONOURS before paging it, with a "
         "control (an unknown field in a well-typed sort value): where a sort "

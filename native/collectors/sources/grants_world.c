@@ -78,14 +78,15 @@ static int nih_emit(intel_sink *sink, const cJSON *p) {
   if (orgn) cJSON_AddStringToObject(props, "organization", orgn);
   if (have_cost) cJSON_AddNumberToObject(props, "award_amount", cost);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = num ? num : title;
   it.title           = title ? title : num;
   it.summary         = orgn;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.author          = pis;
   it.lang            = "en";
   it.published_at    = start;
@@ -94,7 +95,7 @@ static int nih_emit(intel_sink *sink, const cJSON *p) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"NIH_REPORTER\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj); free(pis);
+  free(bj); free(bt); free(pj); free(pis);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -123,11 +124,13 @@ static int nih_run(const source_ctx *ctx, intel_sink *sink, const char *q) {
     hdrs, body, strlen(body), 20000, 1, &hr);
   if (hc != 0 || hr.status != 200 || !hr.body) {
     fprintf(stderr, "[nih_reporter] http status=%ld\n", hr.status);
-    http_response_free(&hr); return 0;
+    /* a refused POST is a failure, not "no projects" (2026-11-07) */
+    long st = hc != 0 ? 0 : hr.status;
+    http_response_free(&hr); return jo_fail_rc(st, 0);
   }
   cJSON *root = cJSON_Parse(hr.body);
   http_response_free(&hr);
-  if (!root) return 0;
+  if (!root) return -1;
   cJSON *results = cJSON_GetObjectItem(root, "results");
   int emitted = 0;
   if (cJSON_IsArray(results)) {
@@ -180,14 +183,15 @@ static int nsf_emit(intel_sink *sink, const cJSON *a) {
   if (inst) cJSON_AddStringToObject(props, "awardee", inst);
   if (amt)  cJSON_AddStringToObject(props, "funds_obligated", amt);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = id ? id : title;
   it.title           = title ? title : id;
   it.summary         = inst;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.author          = piname[0] ? piname : NULL;
   it.lang            = "en";
   it.published_at    = date;
@@ -196,7 +200,7 @@ static int nsf_emit(intel_sink *sink, const cJSON *a) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"NSF_AWARDS\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -212,10 +216,10 @@ static int nsf_run(const source_ctx *ctx, intel_sink *sink, const char *q) {
 
   const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "nsf_awards");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   /* shape: { "response": { "award": [ ... ] } } */
   cJSON *resp = cJSON_GetObjectItem(root, "response");
   cJSON *award = resp ? cJSON_GetObjectItem(resp, "award") : NULL;
@@ -259,14 +263,15 @@ static int ukri_emit(intel_sink *sink, const cJSON *p) {
   if (gref)   cJSON_AddStringToObject(props, "grant_reference", gref);
   if (status) cJSON_AddStringToObject(props, "status", status);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = gref ? gref : (id ? id : title);
   it.title           = title ? title : gref;
   it.summary         = status;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "en";
   it.published_at    = start;
   it.link            = link[0] ? link : NULL;
@@ -274,7 +279,7 @@ static int ukri_emit(intel_sink *sink, const cJSON *p) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"UKRI_GRANTS\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -288,10 +293,10 @@ static int ukri_run(const source_ctx *ctx, intel_sink *sink, const char *q) {
 
   const char *hdrs[] = { "Accept: application/vnd.rcuk.gtr.json-v7", NULL };
   char *body = jo_get(ctx, url, hdrs, "ukri_grants");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   /* shape: { "project": [ ... ] } */
   cJSON *proj = cJSON_GetObjectItem(root, "project");
   int emitted = 0;

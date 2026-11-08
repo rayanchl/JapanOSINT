@@ -106,21 +106,22 @@ static int emit_company(intel_sink *sink, const cJSON *r) {
   if (num)  cJSON_AddStringToObject(props, "company_number", num);
   if (stat) cJSON_AddStringToObject(props, "status", stat);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = num ? num : name;
   it.title           = name ? name : num;
   it.summary         = addr_show ? addr_show : stat;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "he";
   it.record_type     = "il-company";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"IL_COMPANIES\"]";
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   free(num); free(name); free(stat); free(addr); free(city); free(full_addr);
   return rc >= 0 ? 1 : 0;
 }
@@ -140,11 +141,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "il_companies");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
 
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   const cJSON *ok = cJSON_GetObjectItem(root, "success");
   const cJSON *result = cJSON_GetObjectItem(root, "result");

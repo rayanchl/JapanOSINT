@@ -136,6 +136,10 @@ static void row_source_repair(cJSON *r, sqlite3_stmt *s){
   col_text(r,"action",s,3); col_text(r,"patch",s,4); col_text(r,"gate",s,5);
   col_text(r,"model",s,6); col_text(r,"pr_url",s,7);
   col_text(r,"triage_class",s,8); col_text(r,"created_at",s,9);
+  /* source_id: every other repair list carries it, and the iOS RepairRow
+   * requires it — without it each row failed to decode and the per-source
+   * pipeline read "no repairs" whatever the table held. */
+  col_text(r,"source_id",s,10);
 }
 
 /* A repair bucket inside the window: one predicate, used by both statements. */
@@ -199,8 +203,8 @@ static const mlist ML_SOURCE_LISTS[] = {
     "ORDER BY created_at DESC,id DESC LIMIT ?2 OFFSET ?3", row_anomaly },
   { "repairs", MLB_SOURCE, 30,
     "SELECT COUNT(*) FROM collector_repair WHERE source_id=?1",
-    "SELECT id,anomaly_id,status,action,patch,gate,model,pr_url,triage_class,created_at "
-    "FROM collector_repair WHERE source_id=?1 "
+    "SELECT id,anomaly_id,status,action,patch,gate,model,pr_url,triage_class,created_at,"
+    "source_id FROM collector_repair WHERE source_id=?1 "
     "ORDER BY created_at DESC,id DESC LIMIT ?2 OFFSET ?3", row_source_repair },
 };
 

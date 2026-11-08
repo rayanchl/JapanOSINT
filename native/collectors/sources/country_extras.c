@@ -15,7 +15,6 @@
 #include <string.h>
 #include "_jp_osint.inc"
 
-static const char *CE_UA = "User-Agent: JapanOSINT/1.0 (osint@example.org)";
 
 static int run_de_postal(const source_ctx *ctx, intel_sink *sink, const char *raw) {
   char code[16]; int i = 0;
@@ -29,7 +28,7 @@ static int run_de_postal(const source_ctx *ctx, intel_sink *sink, const char *ra
   for (int page = 1; page <= 20; page++) {
     char url[320];
     snprintf(url, sizeof url, "https://openplzapi.org/de/Localities?postalCode=%s&page=%d&pageSize=20", code, page);
-    const char *hdrs[] = { "Accept: application/json", CE_UA, NULL };
+    const char *hdrs[] = { "Accept: application/json", NULL };
     char *body = jo_get(ctx, url, hdrs, "DE_POSTAL");
     if (!body) break;
     cJSON *root = cJSON_Parse(body); free(body);
@@ -53,14 +52,15 @@ static int run_de_postal(const source_ctx *ctx, intel_sink *sink, const char *ra
       char *bj = cJSON_PrintUnformatted(d); cJSON_Delete(d);
       cJSON *p = cJSON_CreateObject();
       cJSON_AddStringToObject(p, "service", "DE_POSTAL"); cJSON_AddBoolToObject(p, "success", 1);
-      char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+      jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
       char rk[96]; snprintf(rk, sizeof rk, "deplz:%s:%s", pc ? pc : code, name);
       char summ[160]; snprintf(summ, sizeof summ, "%s%s%s", mun ? mun : "", st ? ", " : "", st ? st : "");
-      intel_item it = {0};
-      it.remote_key = rk; it.title = name; it.summary = summ[0] ? summ : NULL; it.body = bj; it.lang = "de";
+      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
+      it.remote_key = rk; it.title = name; it.summary = summ[0] ? summ : NULL; it.body = bt ? bt : bj; it.lang = "de";
       it.record_type = "de-locality"; it.properties_json = pj; it.tags_json = "[\"osint-search\",\"DE_POSTAL\"]";
       if (sink->emit(sink, &it) >= 0) { n++; page_n++; }
-      free(bj); free(pj);
+      free(bj); free(bt); free(pj);
     }
     cJSON_Delete(root);
     if (page_n == 0) break;          /* upstream exhausted */
@@ -77,11 +77,11 @@ static int parse_point(const char *s, double *lat, double *lon) {
 static int run_nl_address(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   char url[512];
   snprintf(url, sizeof url, "https://api.pdok.nl/bzk/locatieserver/search/v3_1/free?q=%s&rows=10", enc);
-  const char *hdrs[] = { "Accept: application/json", CE_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "NL_ADDRESS");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *resp = cJSON_GetObjectItem(root, "response");
   const cJSON *docs = resp ? cJSON_GetObjectItem(resp, "docs") : NULL;
   int n = 0;
@@ -104,13 +104,14 @@ static int run_nl_address(const source_ctx *ctx, intel_sink *sink, const char *e
       char *bj = cJSON_PrintUnformatted(d); cJSON_Delete(d);
       cJSON *p = cJSON_CreateObject();
       cJSON_AddStringToObject(p, "service", "NL_ADDRESS"); cJSON_AddBoolToObject(p, "success", 1);
-      char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
-      intel_item it = {0};
-      it.remote_key = id ? id : naam; it.title = naam; it.summary = type; it.body = bj; it.lang = "nl";
+      jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
+      it.remote_key = id ? id : naam; it.title = naam; it.summary = type; it.body = bt ? bt : bj; it.lang = "nl";
       it.has_geo = hg; it.lat = lat; it.lon = lon;
       it.record_type = "nl-address"; it.properties_json = pj; it.tags_json = "[\"osint-search\",\"NL_ADDRESS\"]";
       if (sink->emit(sink, &it) >= 0) n++;
-      free(bj); free(pj);
+      free(bj); free(bt); free(pj);
     }
   }
   cJSON_Delete(root);
@@ -120,11 +121,11 @@ static int run_nl_address(const source_ctx *ctx, intel_sink *sink, const char *e
 static int run_ca_parliament(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   char url[512];
   snprintf(url, sizeof url, "https://api.openparliament.ca/politicians/?q=%s&format=json&limit=20", enc);
-  const char *hdrs[] = { "Accept: application/json", "API-Version: v1", CE_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", "API-Version: v1", NULL };
   char *body = jo_get(ctx, url, hdrs, "CA_PARLIAMENT");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *objs = cJSON_GetObjectItem(root, "objects");
   int n = 0;
   if (cJSON_IsArray(objs)) {
@@ -143,15 +144,16 @@ static int run_ca_parliament(const source_ctx *ctx, intel_sink *sink, const char
       char *bj = cJSON_PrintUnformatted(d); cJSON_Delete(d);
       cJSON *p = cJSON_CreateObject();
       cJSON_AddStringToObject(p, "service", "CA_PARLIAMENT"); cJSON_AddBoolToObject(p, "success", 1);
-      char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+      jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
       char link[256] = {0};
       if (urlf) snprintf(link, sizeof link, "https://openparliament.ca%s", urlf);
-      intel_item it = {0};
+      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
       it.remote_key = urlf ? urlf : name; it.title = name; it.summary = party;
-      it.body = bj; it.link = link[0] ? link : NULL; it.lang = "en";
+      it.body = bt ? bt : bj; it.link = link[0] ? link : NULL; it.lang = "en";
       it.record_type = "ca-politician"; it.properties_json = pj; it.tags_json = "[\"osint-search\",\"CA_PARLIAMENT\"]";
       if (sink->emit(sink, &it) >= 0) n++;
-      free(bj); free(pj);
+      free(bj); free(bt); free(pj);
     }
   }
   cJSON_Delete(root);
@@ -171,7 +173,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(enc);
   }
   fprintf(stderr, "[%s] emitted %d\n", sid, n);
-  return 0;
+  return n < 0 ? -1 : 0;
 }
 
 #define CE_DEF(sym, ID, NM, CAT, DESC) \

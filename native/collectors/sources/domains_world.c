@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 /* ---- CERTSPOTTER -------------------------------------------------------- */
 /* One issuance object → one intel_item. Fields per Cert Spotter v1 spec:
@@ -70,21 +71,22 @@ static int cs_emit(intel_sink *sink, const char *domain, const cJSON *iss) {
   cJSON_AddStringToObject(props, "domain", domain);
   if (na) cJSON_AddStringToObject(props, "not_after", na);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = id ? id : (tbs ? tbs : san);
   it.title           = san ? san : (id ? id : domain);
   it.summary         = na;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "en";
   it.published_at    = nb;
   it.record_type     = "certspotter-issuance";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"CERTSPOTTER\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj); free(san);
+  free(bj); free(bt); free(pj); free(san);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -103,10 +105,10 @@ static int run_certspotter(const source_ctx *ctx, intel_sink *sink,
   if (tok) { snprintf(auth, sizeof auth, "Authorization: Bearer %s", tok); hdrs = hdrs_key; }
 
   char *body = jo_get(ctx, url, hdrs, "certspotter");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   int emitted = 0;
   if (cJSON_IsArray(root)) {
     const cJSON *iss;
@@ -154,14 +156,15 @@ static int us_emit(intel_sink *sink, const char *domain, const cJSON *r) {
   if (pip) cJSON_AddStringToObject(props, "ip", pip);
   if (pcn) cJSON_AddStringToObject(props, "country", pcn);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = uid ? uid : purl;
   it.title           = purl ? purl : (pdom ? pdom : domain);
   it.summary         = pip;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "en";
   it.published_at    = ttime;
   it.link            = result ? result : purl;
@@ -169,7 +172,7 @@ static int us_emit(intel_sink *sink, const char *domain, const cJSON *r) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"URLSCAN\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -187,10 +190,10 @@ static int run_urlscan(const source_ctx *ctx, intel_sink *sink,
   if (key) { snprintf(auth, sizeof auth, "API-Key: %s", key); hdrs = hdrs_key; }
 
   char *body = jo_get(ctx, url, hdrs, "urlscan");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   cJSON *results = cJSON_GetObjectItem(root, "results");
   int emitted = 0;
   if (cJSON_IsArray(results)) {
@@ -232,24 +235,25 @@ static int pdns_emit(intel_sink *sink, const char *domain, const cJSON *rec) {
   if (rrtype) cJSON_AddStringToObject(props, "rrtype", rrtype);
   if (rdata)  cJSON_AddStringToObject(props, "rdata", rdata);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char title[512];
   snprintf(title, sizeof title, "%s %s %s",
            rrname ? rrname : "", rrtype ? rrtype : "", rdata ? rdata : "");
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = NULL;   /* sink derives; rrname+rdata combo not unique enough */
   it.title           = title;
   it.summary         = rdata;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "en";
   it.record_type     = "circl-pdns";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"CIRCL_PDNS\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -258,7 +262,7 @@ static int run_circl(const source_ctx *ctx, intel_sink *sink,
   const char *auth = jo_env("CIRCL_AUTH");   /* "user:pass" */
   if (!auth) {
     fprintf(stderr, "[circl_pdns] gated (no CIRCL_AUTH)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "circl_pdns", "circl_pdns", (const char *const[]){"CIRCL_AUTH", NULL}, NULL, NULL);
   }
   char url[1024];
   snprintf(url, sizeof url, "https://www.circl.lu/pdns/query/%s", domain);
@@ -285,7 +289,7 @@ static int run_circl(const source_ctx *ctx, intel_sink *sink,
   const char *hdrs[] = { hdr, "Accept: application/json", NULL };
 
   char *body = jo_get(ctx, url, hdrs, "circl_pdns");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
 
   /* newline-delimited JSON objects */
   int emitted = 0;
@@ -316,7 +320,7 @@ static int run_hackertarget(const source_ctx *ctx, intel_sink *sink,
     "https://api.hackertarget.com/hostsearch/?q=%s", enc);
   const char *hdrs[] = { "Accept: text/plain", NULL };
   char *body = jo_get(ctx, url, hdrs, "hackertarget");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
 
   /* API rate-limit / error responses are a single English sentence, no comma
    * splitting a valid host — reject any line without a comma or with a space. */
@@ -348,20 +352,21 @@ static int run_hackertarget(const source_ctx *ctx, intel_sink *sink,
         cJSON_AddStringToObject(props, "hostname", host);
         cJSON_AddStringToObject(props, "ip", ip);
         cJSON_AddBoolToObject(props, "success", 1);
-        char *pj = cJSON_PrintUnformatted(props);
+        jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
         cJSON_Delete(props);
 
-        intel_item it = {0};
+        char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
         it.remote_key      = host;
         it.title           = host;
         it.summary         = ip;
-        it.body            = bj;
+        it.body = bt ? bt : bj;
         it.lang            = "en";
         it.record_type     = "hackertarget-host";
         it.properties_json = pj;
         it.tags_json       = "[\"osint-search\",\"HACKERTARGET\"]";
         if (sink->emit(sink, &it) >= 0) emitted++;
-        free(bj); free(pj);
+        free(bj); free(bt); free(pj);
       }
     }
     if (!nl) break;

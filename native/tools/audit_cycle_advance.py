@@ -53,21 +53,15 @@ RUN_LINE = re.compile(r"\[sched\] (\S+) run rc=(-?\d+) records=(-?\d+) (\d+)ms s
 # Statuses a later page can answer and still be a transient reading rather than
 # a property of the endpoint: lib/hpengine.c's remedy text draws the same line.
 TRANSIENT = {0, 401, 403, 407, 408, 429}
-_opener = re.compile(r'\{\s*\.id\s*=\s*"([^"]+)"')
-
-
 def ids_from_tables(d):
-    out = []
-    for f in sorted(glob.glob(os.path.join(d, "**", "*.c"), recursive=True)):
-        t = open(f, encoding="utf-8", errors="replace").read()
-        if ".page_resume" not in t:
-            continue
-        starts = list(_opener.finditer(t))
-        for i, m in enumerate(starts):
-            end = starts[i + 1].start() if i + 1 < len(starts) else len(t)
-            if re.search(r"\.page_resume\s*=\s*1", t[m.end():end]):
-                out.append(m.group(1))
-    return out
+    """Every page_resume row under `d`, read with tools/ctable.py — the
+    shared row reader — rather than a span "up to the next `{ .id =`", in
+    which a commented `.page_resume = 1` or the last row of a table (whose
+    span ran to the end of the file) could count."""
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import ctable
+    return [r.s("id") for r in ctable.iter_rows(d, need=".page_resume")
+            if r.s("id") and r.i("page_resume") == 1]
 
 
 def read_back(db, sid):

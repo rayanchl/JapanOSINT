@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lib/seenset.h"   /* growable hashed dedupe (2026-11-07) */
 
 #define API_URL "https://www.jma.go.jp/bosai/quake/data/list.json"
 
@@ -88,25 +89,20 @@ static int parse_cod(const char *cod, double *lat, double *lon,
  * is per-event, so the old straight-through loop let the OLDEST (least
  * complete, often hypocentre-less) bulletin overwrite the final one. Keep the
  * FIRST occurrence of each eid — that is the latest bulletin. */
-#define SEEN_CAP 2048
-static int seen_has(char seen[][24], int n, const char *eid) {
-  for (int i = 0; i < n; i++) if (!strcmp(seen[i], eid)) return 1;
-  return 0;
-}
+/* Dedupe is lib/seenset.c (2026-11-07): the hand-rolled fixed array this
+ * replaces stopped RECORDING ids once full and then let every later repeat
+ * through (and scanned linearly); a seen_set grows and is hashed. */
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *arr = feed_get_json(ctx->http, API_URL, 20000);
   if (!arr || !cJSON_IsArray(arr)) { if (arr) cJSON_Delete(arr); return -1; }
-  int n = 0, nseen = 0;
-  static char seen[SEEN_CAP][24];
+  int n = 0;
+  seen_set seen = {0};   /* was a `static` array: shared between runs and threads */
   cJSON *eq;
   cJSON_ArrayForEach(eq, arr) {
     const cJSON *eid = cJSON_GetObjectItem(eq, "eid");
     if (!eid || !cJSON_IsString(eid) || !eid->valuestring[0]) continue;
-    if (nseen < SEEN_CAP) {
-      if (seen_has(seen, nseen, eid->valuestring)) continue;
-      snprintf(seen[nseen++], 24, "%s", eid->valuestring);
-    }
+    if (!seen_add(&seen, eid->valuestring)) continue;
 
     const char *ttl = jo_sv(eq, "ttl"), *anm = jo_sv(eq, "anm");
     const char *mag = jo_sv(eq, "mag"), *at = jo_sv(eq, "at");
@@ -181,6 +177,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON_Delete(props);
   }
   cJSON_Delete(arr);
+  seen_free(&seen);
   fprintf(stderr, "[jma-earthquake] emitted %d\n", n);
   /* run() is a STATUS code, not a row count: fetch/parse failures already
    * returned -1 above, so reaching here with zero rows is an honest empty.

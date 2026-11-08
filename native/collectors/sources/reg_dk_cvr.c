@@ -45,16 +45,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   free(enc);
 
   const char *hdrs[] = {
-    "User-Agent: JapanOSINT - contact",
     "Accept: application/json",
     NULL
   };
   char *body = jo_get(ctx, url, hdrs, "dk_cvr");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
 
   cJSON *c = cJSON_Parse(body);
   free(body);
-  if (!c) return 0;
+  if (!c) return -1;
 
   /* error responses carry an "error" field (e.g. NOT_FOUND); vat marks a hit. */
   const char *err = jo_sv(c, "error");
@@ -108,14 +107,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (industrydesc) cJSON_AddStringToObject(props, "industry", industrydesc);
   if (employees[0]) cJSON_AddStringToObject(props, "employees", employees);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = vat[0] ? vat : name;
   it.title           = name ? name : vat;
   it.summary         = addr;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "da";
   it.published_at    = startdate;
   it.record_type     = "cvr-company";
@@ -123,7 +123,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   it.tags_json       = "[\"osint-search\",\"DK_CVR\"]";
   int emitted = sink->emit(sink, &it) >= 0 ? 1 : 0;
 
-  free(bj); free(pj); free(addr);
+  free(bj); free(bt); free(pj); free(addr);
   cJSON_Delete(c);
   fprintf(stderr, "[dk_cvr] emitted %d\n", emitted);
   return 0;

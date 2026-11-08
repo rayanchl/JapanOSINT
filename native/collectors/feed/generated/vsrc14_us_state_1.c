@@ -217,198 +217,207 @@ VGEO(us_arcgishub_zoning, "us-arcgishub-zoning", "ArcGIS Hub — Zoning Layers",
   "en", "[\"usa\",\"gis\",\"arcgis\",\"hub\",\"catalog\",\"zoning\"]", 86400,
   "Public ArcGIS Hub datasets matching 'zoning', across US state, county and municipal GIS sites: title, owner organisation, extent, licence and the service URL each layer is served from.");
 
+/* Scoped Socrata catalogue rows below carry `order=createdAt` (2026-11-07),
+ * as their scoped siblings already do. Without it the catalogue answers in
+ * relevance order, which promises nothing stable across an offset walk.
+ * Measured on api.us.socrata.com: `order=createdAt` is NEWEST FIRST (NYC,
+ * 3,032 datasets, first 2026-09-29; `createdAt ASC` answers 2011), the total
+ * does not move, offset=3 continues the same order, and `order=frobnicate` is
+ * HTTP 400 "not a supported sort". Newest-first means a dataset created during
+ * the walk can repeat one record at a page seam, never skip one; the
+ * 20-page ceiling is then the newest 2,000 (limit=100) or 1,000 (limit=50). */
 VJSON(us_socrata_discovery_austin, "us-socrata-discovery-austin", "City of Austin Open Data — Asset Discovery", "オースティン市 データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.austintexas.gov",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.austintexas.gov&order=createdAt",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"austin\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on data.austintexas.gov, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
 
 VJSON(us_socrata_discovery_bts, "us-socrata-discovery-bts", "US Bureau of Transportation Statistics — Asset Discovery", "米国運輸統計局 データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.bts.gov",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.bts.gov&order=createdAt",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"bts\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on data.bts.gov, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
 
 VJSON(us_socrata_discovery_cambridge, "us-socrata-discovery-cambridge", "City of Cambridge Open Data — Asset Discovery", "ケンブリッジ市 データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.cambridgema.gov",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.cambridgema.gov&order=createdAt",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"cambridge\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on data.cambridgema.gov, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
 
 VJSON(us_socrata_discovery_cdc, "us-socrata-discovery-cdc", "US CDC Open Data — Asset Discovery", "米国CDC データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.cdc.gov",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.cdc.gov&order=createdAt",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"cdc\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on data.cdc.gov, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
 
 VJSON(us_socrata_discovery_chicago, "us-socrata-discovery-chicago", "City of Chicago Open Data — Asset Discovery", "シカゴ市 データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.cityofchicago.org",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.cityofchicago.org&order=createdAt",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"chicago\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on data.cityofchicago.org, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
 
 VJSON(us_socrata_discovery_chronicdata, "us-socrata-discovery-chronicdata", "US CDC Chronic Disease Data — Asset Discovery", "米国CDC 慢性疾患 データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=chronicdata.cdc.gov",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=chronicdata.cdc.gov&order=createdAt",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"chronicdata\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on chronicdata.cdc.gov, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
 
 VJSON(us_socrata_discovery_colorado, "us-socrata-discovery-colorado", "State of Colorado Open Data — Asset Discovery", "コロラド州 データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.colorado.gov",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.colorado.gov&order=createdAt",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"colorado\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on data.colorado.gov, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
 
 VJSON(us_socrata_discovery_connecticut, "us-socrata-discovery-connecticut", "State of Connecticut Open Data — Asset Discovery", "コネチカット州 データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.ct.gov",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.ct.gov&order=createdAt",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"connecticut\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on data.ct.gov, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
 
 VJSON(us_socrata_discovery_cook, "us-socrata-discovery-cook", "Cook County Open Data — Asset Discovery", "クック郡 データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=datacatalog.cookcountyil.gov",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=datacatalog.cookcountyil.gov&order=createdAt",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"cook\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on datacatalog.cookcountyil.gov, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
 
 VJSON(us_socrata_discovery_dallas, "us-socrata-discovery-dallas", "City of Dallas Open Data — Asset Discovery", "ダラス市 データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=www.dallasopendata.com",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=www.dallasopendata.com&order=createdAt",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"dallas\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on www.dallasopendata.com, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
 
 VJSON(us_socrata_discovery_delaware, "us-socrata-discovery-delaware", "State of Delaware Open Data — Asset Discovery", "デラウェア州 データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.delaware.gov",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.delaware.gov&order=createdAt",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"delaware\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on data.delaware.gov, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
 
 VJSON(us_socrata_discovery_dot, "us-socrata-discovery-dot", "US DOT Open Data — Asset Discovery", "米国運輸省 データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.transportation.gov",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.transportation.gov&order=createdAt",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"dot\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on data.transportation.gov, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
 
 VJSON(us_socrata_discovery_fcc, "us-socrata-discovery-fcc", "US FCC Open Data — Asset Discovery", "米国FCC データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=opendata.fcc.gov",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=opendata.fcc.gov&order=createdAt",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"fcc\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on opendata.fcc.gov, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
 
 VJSON(us_socrata_discovery_healthdata, "us-socrata-discovery-healthdata", "US HealthData.gov — Asset Discovery", "米国保健データ データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=healthdata.gov",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=healthdata.gov&order=createdAt",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"healthdata\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on healthdata.gov, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
 
 VJSON(us_socrata_discovery_illinois, "us-socrata-discovery-illinois", "State of Illinois Open Data — Asset Discovery", "イリノイ州 データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&search_context=data.illinois.gov",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&search_context=data.illinois.gov&order=createdAt",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"illinois\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on data.illinois.gov, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
 
 VJSON(us_socrata_discovery_kansascity, "us-socrata-discovery-kansascity", "Kansas City Open Data — Asset Discovery", "カンザスシティ データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.kcmo.org",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.kcmo.org&order=createdAt",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"kansascity\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on data.kcmo.org, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
 
 VJSON(us_socrata_discovery_kingcounty, "us-socrata-discovery-kingcounty", "King County Open Data — Asset Discovery", "キング郡 データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.kingcounty.gov",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.kingcounty.gov&order=createdAt",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"kingcounty\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on data.kingcounty.gov, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
 
 VJSON(us_socrata_discovery_losangeles, "us-socrata-discovery-losangeles", "City of Los Angeles Open Data — Asset Discovery", "ロサンゼルス市 データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.lacity.org",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.lacity.org&order=createdAt",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"losangeles\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on data.lacity.org, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
 
 VJSON(us_socrata_discovery_maryland, "us-socrata-discovery-maryland", "State of Maryland Open Data — Asset Discovery", "メリーランド州 データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=opendata.maryland.gov",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=opendata.maryland.gov&order=createdAt",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"maryland\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on opendata.maryland.gov, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
 
 VJSON(us_socrata_discovery_michigan, "us-socrata-discovery-michigan", "State of Michigan Open Data — Asset Discovery", "ミシガン州 データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.michigan.gov",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.michigan.gov&order=createdAt",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"michigan\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on data.michigan.gov, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
 
 VJSON(us_socrata_discovery_missouri, "us-socrata-discovery-missouri", "State of Missouri Open Data — Asset Discovery", "ミズーリ州 データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.mo.gov",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.mo.gov&order=createdAt",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"missouri\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on data.mo.gov, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
 
 VJSON(us_socrata_discovery_montgomery, "us-socrata-discovery-montgomery", "Montgomery County Open Data — Asset Discovery", "モンゴメリー郡 データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.montgomerycountymd.gov",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.montgomerycountymd.gov&order=createdAt",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"montgomery\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on data.montgomerycountymd.gov, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
 
 VJSON(us_socrata_discovery_newjersey, "us-socrata-discovery-newjersey", "State of New Jersey Open Data — Asset Discovery", "ニュージャージー州 データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.nj.gov",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.nj.gov&order=createdAt",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"newjersey\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on data.nj.gov, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
 
 VJSON(us_socrata_discovery_nyc, "us-socrata-discovery-nyc", "New York City Open Data — Asset Discovery", "ニューヨーク市 データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.cityofnewyork.us",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.cityofnewyork.us&order=createdAt",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"nyc\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on data.cityofnewyork.us, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
 
 VJSON(us_socrata_discovery_nyhealth, "us-socrata-discovery-nyhealth", "New York State Health Data — Asset Discovery", "ニューヨーク州保健 データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=health.data.ny.gov",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=health.data.ny.gov&order=createdAt",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"nyhealth\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on health.data.ny.gov, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
 
 VJSON(us_socrata_discovery_nystate, "us-socrata-discovery-nystate", "New York State Open Data — Asset Discovery", "ニューヨーク州 データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.ny.gov",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.ny.gov&order=createdAt",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"nystate\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on data.ny.gov, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
 
 VJSON(us_socrata_discovery_oakland, "us-socrata-discovery-oakland", "City of Oakland Open Data — Asset Discovery", "オークランド市 データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.oaklandca.gov",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.oaklandca.gov&order=createdAt",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"oakland\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on data.oaklandca.gov, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
 
 VJSON(us_socrata_discovery_oregon, "us-socrata-discovery-oregon", "State of Oregon Open Data — Asset Discovery", "オレゴン州 データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.oregon.gov",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.oregon.gov&order=createdAt",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"oregon\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on data.oregon.gov, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");

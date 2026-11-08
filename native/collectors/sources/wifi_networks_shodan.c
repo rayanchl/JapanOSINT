@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 /* Real coordinate or nothing. The JS this was ported from used
  * `loc.latitude || 35.6812` / `loc.longitude || 139.7671`, i.e. every Shodan
@@ -30,7 +31,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *k = getenv("SHODAN_API_KEY");
   if (!k || !*k) {
     fprintf(stderr, "[wifi-networks-shodan] gated (no SHODAN_API_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "wifi-networks-shodan", "wifi-networks-shodan", (const char *const[]){"SHODAN_API_KEY", NULL}, NULL, NULL);
   }
   /* encodeURIComponent('country:JP wifi OR "wireless" port:80,8080') */
   char url[512];

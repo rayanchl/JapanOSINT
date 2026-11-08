@@ -10,8 +10,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
-static const char *MR_UA = "User-Agent: JapanOSINT/1.0 (osint@example.org)";
 
 static int emit_vessel(intel_sink *sink, const cJSON *v) {
   const char *name = jo_sv(v, "name");
@@ -35,19 +35,20 @@ static int emit_vessel(intel_sink *sink, const cJSON *v) {
   cJSON_AddStringToObject(p, "service", "DATALASTIC_VESSEL");
   if (mmsi) cJSON_AddStringToObject(p, "mmsi", mmsi);
   cJSON_AddBoolToObject(p, "success", 1);
-  char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+  jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
   int has_geo = (cJSON_IsNumber(lat) && cJSON_IsNumber(lon));
   char link[256] = {0};
   if (mmsi) snprintf(link, sizeof link, "https://www.marinetraffic.com/en/ais/details/ships/mmsi:%s", mmsi);
   char summ[128]; snprintf(summ, sizeof summ, "%s%s%s", type ? type : "vessel", country ? " · " : "", country ? country : "");
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key = uuid ? uuid : (mmsi ? mmsi : name);
   it.title = name ? name : (mmsi ? mmsi : imo);
-  it.summary = summ; it.body = bj; it.link = link[0] ? link : NULL; it.lang = "en";
+  it.summary = summ; it.body = bt ? bt : bj; it.link = link[0] ? link : NULL; it.lang = "en";
   it.has_geo = has_geo; it.lat = has_geo ? lat->valuedouble : 0; it.lon = has_geo ? lon->valuedouble : 0;
   it.record_type = "vessel";
   it.properties_json = pj; it.tags_json = "[\"osint-search\",\"DATALASTIC_VESSEL\"]";
-  int rc = sink->emit(sink, &it); free(bj); free(pj);
+  int rc = sink->emit(sink, &it); free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -56,18 +57,18 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (!q || !*q) return 0;
   if (strcmp(ctx->source_id ? ctx->source_id : "", "DATALASTIC_VESSEL") != 0) return 0;
   const char *k = jo_env("DATALASTIC_KEY");
-  if (!k) { fprintf(stderr, "[DATALASTIC_VESSEL] no DATALASTIC_KEY\n"); return 0; }
+  if (!k) return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "DATALASTIC_VESSEL", "DATALASTIC_VESSEL", (const char *const[]){"DATALASTIC_KEY", NULL}, NULL, NULL);
   char *enc = jo_urlencode(q);
   if (!enc) return 0;
   char url[640];
   snprintf(url, sizeof url,
     "https://api.datalastic.com/api/v0/vessel_find?api-key=%s&name=%s", k, enc);
   free(enc);
-  const char *hdrs[] = { "Accept: application/json", MR_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "DATALASTIC_VESSEL");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   int emitted = 0;
   const cJSON *data = cJSON_GetObjectItem(root, "data");
   if (cJSON_IsArray(data)) {

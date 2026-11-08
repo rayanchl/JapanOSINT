@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 #define BASE "https://api.github.com/search/code"
 
@@ -52,7 +53,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
      * failure — but -1 makes the scheduler log status='error' and open a
      * collector_anomaly every tick. Gated is its own state (credtab.c). */
     fprintf(stderr, "[github-leaks-jp] gated (no GITHUB_TOKEN)\n");
-    return 0;                                      /* live=false, 0 rows */
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "github-leaks-jp", "github-leaks-jp", (const char *const[]){"GITHUB_TOKEN", NULL}, NULL, NULL);                                      /* live=false, 0 rows */
   }
   long per = env_int("GITHUB_LEAK_PER_QUERY", 20);
 
@@ -62,7 +63,6 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     "Accept: application/vnd.github+json",
     authh,
     "X-GitHub-Api-Version: 2022-11-28",
-    "User-Agent: JapanOSINT-leakcheck",
     NULL,
   };
 

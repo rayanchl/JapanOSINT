@@ -27,9 +27,9 @@ static int run_jgrants(const source_ctx *ctx, intel_sink *sink) {
   free(q);
   const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "jgrants");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   int emitted = 0;
   cJSON *res = cJSON_GetObjectItem(root, "result");
   cJSON *row = NULL;

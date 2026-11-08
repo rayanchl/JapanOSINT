@@ -17,18 +17,18 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
-static const char *AS_UA = "User-Agent: JapanOSINT/1.0 (osint@example.org)";
 
 /* Fetch a keyed GET and emit one summary item carrying the real (capped) body. */
 static int keyed_summary(const source_ctx *ctx, intel_sink *sink, const char *service,
                          const char *keyenv, const char *url, const char *authhdr,
                          const char *rtype, const char *link) {
-  const char *hdrs[] = { "Accept: application/json", AS_UA, authhdr, NULL };
+  const char *hdrs[] = { "Accept: application/json", authhdr, NULL };
   char *body = jo_get(ctx, url, hdrs, service);
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
-  if (!root) { free(body); return 0; }
+  if (!root) { free(body); return -1; }
   /* Compact + cap the real response so the stored body is bounded but faithful. */
   char *compact = cJSON_PrintUnformatted(root);
   cJSON_Delete(root);
@@ -51,16 +51,17 @@ static int keyed_summary(const source_ctx *ctx, intel_sink *sink, const char *se
   cJSON_AddStringToObject(p, "service", service);
   cJSON_AddStringToObject(p, "entity", ctx->entity);
   cJSON_AddBoolToObject(p, "success", 1);
-  char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+  jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
   char tags[96]; snprintf(tags, sizeof tags, "[\"osint-search\",\"%s\"]", service);
   char rk[320], title[320];
   snprintf(rk, sizeof rk, "%s:%s", service, ctx->entity);
   snprintf(title, sizeof title, "%s report: %s", service, ctx->entity);
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
-  it.remote_key = rk; it.title = title; it.body = bj; it.link = link; it.lang = "en";
+  it.remote_key = rk; it.title = title; it.body = bt ? bt : bj; it.link = link; it.lang = "en";
   it.record_type = rtype; it.properties_json = pj; it.tags_json = tags;
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -79,7 +80,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       snprintf(auth, sizeof auth, "Authorization: bearer %s", k);
       snprintf(link, sizeof link, "https://www.onyphe.io/search?q=%s", enc);
       n = keyed_summary(ctx, sink, "ONYPHE_SUMMARY", "ONYPHE_API_KEY", url, auth, "attack-surface", link);
-    } else fprintf(stderr, "[ONYPHE_SUMMARY] no ONYPHE_API_KEY\n");
+    } else n = jo_needs_credential(sink, "ONYPHE_SUMMARY", "ONYPHE_SUMMARY", (const char *const[]){"ONYPHE_API_KEY", NULL}, NULL, NULL);
   } else if (!strcmp(sid, "BINARYEDGE_IP")) {
     const char *k = jo_env("BINARYEDGE_API_KEY");
     if (k) {
@@ -87,7 +88,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       snprintf(auth, sizeof auth, "X-Key: %s", k);
       snprintf(link, sizeof link, "https://app.binaryedge.io/services/query?query=%s", enc);
       n = keyed_summary(ctx, sink, "BINARYEDGE_IP", "BINARYEDGE_API_KEY", url, auth, "attack-surface", link);
-    } else fprintf(stderr, "[BINARYEDGE_IP] no BINARYEDGE_API_KEY\n");
+    } else n = jo_needs_credential(sink, "BINARYEDGE_IP", "BINARYEDGE_IP", (const char *const[]){"BINARYEDGE_API_KEY", NULL}, NULL, NULL);
   } else if (!strcmp(sid, "FULLHUNT_DOMAIN")) {
     const char *k = jo_env("FULLHUNT_API_KEY");
     if (k) {
@@ -95,7 +96,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       snprintf(auth, sizeof auth, "X-API-KEY: %s", k);
       snprintf(link, sizeof link, "https://fullhunt.io/domain/%s", enc);
       n = keyed_summary(ctx, sink, "FULLHUNT_DOMAIN", "FULLHUNT_API_KEY", url, auth, "attack-surface", link);
-    } else fprintf(stderr, "[FULLHUNT_DOMAIN] no FULLHUNT_API_KEY\n");
+    } else n = jo_needs_credential(sink, "FULLHUNT_DOMAIN", "FULLHUNT_DOMAIN", (const char *const[]){"FULLHUNT_API_KEY", NULL}, NULL, NULL);
   } else if (!strcmp(sid, "CRIMINALIP_IP")) {
     const char *k = jo_env("CRIMINALIP_API_KEY");
     if (k) {
@@ -103,11 +104,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       snprintf(auth, sizeof auth, "x-api-key: %s", k);
       snprintf(link, sizeof link, "https://www.criminalip.io/asset/report/%s", enc);
       n = keyed_summary(ctx, sink, "CRIMINALIP_IP", "CRIMINALIP_API_KEY", url, auth, "attack-surface", link);
-    } else fprintf(stderr, "[CRIMINALIP_IP] no CRIMINALIP_API_KEY\n");
+    } else n = jo_needs_credential(sink, "CRIMINALIP_IP", "CRIMINALIP_IP", (const char *const[]){"CRIMINALIP_API_KEY", NULL}, NULL, NULL);
   }
   free(enc);
   fprintf(stderr, "[%s] emitted %d\n", sid, n);
-  return 0;
+  return n < 0 ? -1 : 0;
 }
 
 #define AS_DEF(sym, ID, NM, DESC) \

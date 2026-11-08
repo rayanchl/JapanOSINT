@@ -26,19 +26,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_emodnet_wfs.inc"
 
-#define WFS_URL "https://ows.emodnet-humanactivities.eu/wfs?service=WFS" \
-                "&version=2.0.0&request=GetFeature" \
-                "&outputFormat=application/json&typeName=emodnet:munitions" \
-                "&count=10000"
-
-static int run(const source_ctx *ctx, intel_sink *sink) {
-  cJSON *doc = feed_get_json(ctx->http, WFS_URL, 120000);
-  if (!doc) {
-    fprintf(stderr, "[emodnet-dumped-munitions] fetch/parse failed\n");
-    return -1;
-  }
-  cJSON *feats = cJSON_GetObjectItem(doc, "features");
+/* numberMatched 9,459 (2026-11-07): one page of 10,000. Paged through _emodnet_wfs.inc (startIndex, natural key order). */
+#define WFS_URL "https://ows.emodnet-humanactivities.eu/wfs?service=WFS&version=2.0.0&request=GetFeature&outputFormat=application/json&typeName=emodnet:munitions&count=10000&startIndex=0"
+static int emw_feats(const source_ctx *ctx, intel_sink *sink, cJSON *feats, void *ud) {
+  (void)ctx; (void)ud;
   int n = 0;
   cJSON *f;
   cJSON_ArrayForEach(f, feats) {
@@ -105,9 +98,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (sink->emit(sink, &it) >= 0) n++;
     free(pj);
   }
-  cJSON_Delete(doc);
+  return n;
+}
+
+static int run(const source_ctx *ctx, intel_sink *sink) {
+  int n = emw_walk(ctx, sink, ctx->source_id ? ctx->source_id : "emodnet-dumped-munitions", WFS_URL, 0, emw_feats, NULL);
   fprintf(stderr, "[emodnet-dumped-munitions] emitted %d\n", n);
-  return 0;
+  return n < 0 ? -1 : 0;   /* -1 only when the first page failed */
 }
 
 static const source_def mar_emodnet_dumped_munitions_def = {

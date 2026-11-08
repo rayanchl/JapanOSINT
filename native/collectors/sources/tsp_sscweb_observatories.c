@@ -46,7 +46,6 @@ static size_t xml_field(const char *blk, const char *blkend, const char *tag,
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *hdrs[] = {
-    "User-Agent: JapanOSINT/1.0 (OSINT collector; contact via repository)",
     "Accept: application/xml", NULL };
   http_response hr = {0};
   int rc = http_request(ctx->http, "GET", SSC_URL, hdrs, NULL, 0, 30000, 1, &hr);

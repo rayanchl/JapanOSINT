@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 /* cJSON number field as malloc'd string, or NULL. */
 static char *nw_num_str(const cJSON *o, const char *k) {
@@ -75,25 +76,26 @@ static int pp_emit_org(intel_sink *sink, const cJSON *o) {
   if (use_ein) cJSON_AddStringToObject(props, "ein", use_ein);
   if (loc[0])  cJSON_AddStringToObject(props, "location", loc);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char link[128] = {0};
   if (ein) snprintf(link, sizeof link,
     "https://projects.propublica.org/nonprofits/organizations/%s", ein);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = use_ein ? use_ein : name;
   it.title           = name ? name : use_ein;
   it.summary         = loc[0] ? loc : NULL;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "en";
   it.link            = link[0] ? link : NULL;
   it.record_type     = "nonprofit-org";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"PROPUBLICA_NONPROFIT\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj); free(ein); free(subsec);
+  free(bj); free(bt); free(pj); free(ein); free(subsec);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -109,12 +111,12 @@ static int run_propublica(const source_ctx *ctx, intel_sink *sink) {
   free(enc);
 
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "propublica_nonprofit");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   cJSON *orgs = cJSON_GetObjectItem(root, "organizations");
   int emitted = 0;
@@ -167,7 +169,7 @@ static int uk_emit_charity(intel_sink *sink, const cJSON *c) {
   if (regno) cJSON_AddStringToObject(props, "registered_number", regno);
   if (town)  cJSON_AddStringToObject(props, "town", town);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char link[160] = {0};
@@ -175,18 +177,19 @@ static int uk_emit_charity(intel_sink *sink, const cJSON *c) {
     "https://register-of-charities.charitycommission.gov.uk/charity-search/-/charity-details/%s",
     regno);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = regno ? regno : name;
   it.title           = name ? name : regno;
   it.summary         = town;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "en";
   it.link            = link[0] ? link : (web ? web : NULL);
   it.record_type     = "nonprofit-org";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"UK_CHARITIES\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj); free(regno);
+  free(bj); free(bt); free(pj); free(regno);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -196,7 +199,7 @@ static int run_uk(const source_ctx *ctx, intel_sink *sink) {
   const char *key = jo_env("UK_CHARITY_KEY");
   if (!key) {
     fprintf(stderr, "[uk_charities] gated (no UK_CHARITY_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "uk_charities", "uk_charities", (const char *const[]){"UK_CHARITY_KEY", NULL}, NULL, NULL);
   }
   char *enc = jo_urlencode(q);
   if (!enc) return 0;
@@ -212,10 +215,10 @@ static int run_uk(const source_ctx *ctx, intel_sink *sink) {
   const char *hdrs[] = { hdr, "Accept: application/json", NULL };
 
   char *body = jo_get(ctx, url, hdrs, "uk_charities");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   int emitted = 0;
   if (cJSON_IsArray(root)) {
@@ -241,7 +244,7 @@ static int run_canada(const source_ctx *ctx, intel_sink *sink) {
   const char *key = jo_env("CANADA_CHARITY_KEY");
   if (!key) {
     fprintf(stderr, "[canada_charities] gated (no CANADA_CHARITY_KEY)\n");
-    return 0;   /* honest empty — CRA has no free keyless search API */
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "canada_charities", "canada_charities", (const char *const[]){"CANADA_CHARITY_KEY", NULL}, NULL, NULL);   /* honest empty — CRA has no free keyless search API */
   }
   (void)sink;
   /* No universally-available keyless CRA charity search endpoint exists; keep

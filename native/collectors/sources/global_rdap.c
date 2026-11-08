@@ -86,11 +86,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   const char *hdrs[] = { "Accept: application/rdap+json, application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "rdap");   /* follows the bootstrap 302 */
-  if (!body) return 0;                            /* NXDOMAIN / no RDAP → empty */
+  if (!body) return jo_fail_rc(jo_last_status(), 1);                            /* NXDOMAIN / no RDAP → empty */
 
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   const char *ldh = jo_sv(root, "ldhName");       /* canonical domain */
   const char *domain = ldh ? ldh : q;
@@ -157,7 +157,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON_AddItemToObject(props, "statuses", statuses);      /* transferred */
   cJSON_AddItemToObject(props, "nameservers", nslist);     /* transferred */
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char summary[256];
@@ -168,11 +168,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   char link[512];
   snprintf(link, sizeof link, "https://rdap.org/domain/%s", domain);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = domain;
   it.title           = domain;
   it.summary         = summary;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.link            = link;
   it.lang            = "en";
   it.published_at    = registered;
@@ -181,7 +182,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   it.tags_json       = "[\"osint-search\",\"RDAP\",\"whois\"]";
   sink->emit(sink, &it);
 
-  free(bj); free(pj); free(registrar);
+  free(bj); free(bt); free(pj); free(registrar);
   cJSON_Delete(root);
   fprintf(stderr, "[rdap] emitted 1 (%s)\n", domain);
   return 0;

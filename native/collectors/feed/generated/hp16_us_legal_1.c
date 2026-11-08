@@ -116,7 +116,13 @@ static const hp_source T[] = {
     .collector = "us_legal", .category = "legal",
     .description = "Federal PACER/RECAP dockets. count 98124 dockets / document_count 520436 for one query. Each row carries docketNumber, caseName, court, assignedTo judge name + assigned_to_id, referredTo, dateFiled, dateTerminated, cause, natureOfSuit, juryDemand, and a nested recap_documents[] array with entry_number, description, is_available, filepath_local and page_count. This is the deep RECAP hop that works WITHOUT a token (the REST /dockets/ endpoint is 401 anonymously).  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
+    /* 2026-11-07: the v4 search is no longer anonymous — this URL answers HTTP
+     * 401 {"detail":"Authentication credentials were not provided."} — so it
+     * takes the token the hp_courts_legal.c rows use (CL_AUTH there). The
+     * description's "works WITHOUT a token" is the 2026-10 reading. */
     .url = "https://www.courtlistener.com/api/rest/v4/search/?q=Google&type=r",
+    .key_env = "COURTLISTENER_API_KEY",
+    .headers = { "Authorization: Token {key}", NULL },
     .array_path = "results",
     .id_keys = "docket_id",
     .detail_url = "https://www.courtlistener.com/api/rest/v4/people/{v}/", .detail_key = "assigned_to_id",

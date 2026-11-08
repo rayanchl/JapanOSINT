@@ -12,20 +12,20 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
-static const char *FN_UA = "User-Agent: JapanOSINT/1.0 (osint@example.org)";
 
 static int run_alphavantage(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   const char *k = jo_env("ALPHAVANTAGE_KEY");
-  if (!k) { fprintf(stderr, "[ALPHAVANTAGE_SEARCH] no ALPHAVANTAGE_KEY\n"); return 0; }
+  if (!k) return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "ALPHAVANTAGE_SEARCH", "ALPHAVANTAGE_SEARCH", (const char *const[]){"ALPHAVANTAGE_KEY", NULL}, NULL, NULL);
   char url[512];
   snprintf(url, sizeof url,
     "https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=%s&apikey=%s", enc, k);
-  const char *hdrs[] = { "Accept: application/json", FN_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "ALPHAVANTAGE_SEARCH");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *matches = cJSON_GetObjectItem(root, "bestMatches");
   int emitted = 0;
   if (cJSON_IsArray(matches)) {
@@ -49,15 +49,16 @@ static int run_alphavantage(const source_ctx *ctx, intel_sink *sink, const char 
       cJSON_AddStringToObject(p, "service", "ALPHAVANTAGE_SEARCH");
       cJSON_AddStringToObject(p, "symbol", sym);
       cJSON_AddBoolToObject(p, "success", 1);
-      char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+      jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
       char summ[160]; snprintf(summ, sizeof summ, "%s%s%s", sym, region ? " · " : "", region ? region : "");
-      intel_item it = {0};
+      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
       it.remote_key = sym; it.title = name ? name : sym; it.summary = summ;
-      it.body = bj; it.lang = "en";
+      it.body = bt ? bt : bj; it.lang = "en";
       it.record_type = "security";
       it.properties_json = pj; it.tags_json = "[\"osint-search\",\"ALPHAVANTAGE_SEARCH\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(pj);
+      free(bj); free(bt); free(pj);
     }
   }
   cJSON_Delete(root);
@@ -66,14 +67,14 @@ static int run_alphavantage(const source_ctx *ctx, intel_sink *sink, const char 
 
 static int run_finnhub(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   const char *k = jo_env("FINNHUB_KEY");
-  if (!k) { fprintf(stderr, "[FINNHUB_SEARCH] no FINNHUB_KEY\n"); return 0; }
+  if (!k) return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "FINNHUB_SEARCH", "FINNHUB_SEARCH", (const char *const[]){"FINNHUB_KEY", NULL}, NULL, NULL);
   char url[512];
   snprintf(url, sizeof url, "https://finnhub.io/api/v1/search?q=%s&token=%s", enc, k);
-  const char *hdrs[] = { "Accept: application/json", FN_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "FINNHUB_SEARCH");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *result = cJSON_GetObjectItem(root, "result");
   int emitted = 0;
   if (cJSON_IsArray(result)) {
@@ -95,14 +96,15 @@ static int run_finnhub(const source_ctx *ctx, intel_sink *sink, const char *enc)
       cJSON_AddStringToObject(p, "service", "FINNHUB_SEARCH");
       cJSON_AddStringToObject(p, "symbol", sym);
       cJSON_AddBoolToObject(p, "success", 1);
-      char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
-      intel_item it = {0};
+      jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
       it.remote_key = sym; it.title = desc ? desc : sym; it.summary = disp;
-      it.body = bj; it.lang = "en";
+      it.body = bt ? bt : bj; it.lang = "en";
       it.record_type = "security";
       it.properties_json = pj; it.tags_json = "[\"osint-search\",\"FINNHUB_SEARCH\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(pj);
+      free(bj); free(bt); free(pj);
       /* (cap removed: every record the upstream returned is emitted —
        * docs/SOURCE_EXHAUSTIVENESS.md) */
     }
@@ -122,7 +124,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   else if (!strcmp(sid, "FINNHUB_SEARCH"))      n = run_finnhub(ctx, sink, enc);
   free(enc);
   fprintf(stderr, "[%s] emitted %d\n", sid, n);
-  return 0;
+  return n < 0 ? -1 : 0;
 }
 
 #define FN_DEF(sym, ID, NM, DESC) \

@@ -91,16 +91,17 @@ static int emit_chain(intel_sink *sink, const char *chain, const char *addr,
   cJSON_AddStringToObject(props, "record", "balance");
   cJSON_AddBoolToObject(props, "success", 1);
   cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
 
   char rk[320], title[360];
   snprintf(rk, sizeof rk, "crypto:%s:%s", chain, addr);
   snprintf(title, sizeof title, "%s balance %s", chain, amount_str);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.summary         = "crypto balance";
   it.link            = url;
   it.record_type     = "osint_service_result";
@@ -108,7 +109,7 @@ static int emit_chain(intel_sink *sink, const char *chain, const char *addr,
   it.tags_json       = "[\"osint-search\",\"CRYPTO_TRACKER\",\"balance\"]";
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   cJSON_Delete(data); cJSON_Delete(props);
   return rc >= 0 ? 1 : 0;
 }
@@ -147,16 +148,17 @@ static int emit_tx(intel_sink *sink, const char *chain, const char *addr,
   cJSON_AddStringToObject(props, "record", "transaction");
   cJSON_AddBoolToObject(props, "success", 1);
   cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
 
   char rk[160], title[200];
   snprintf(rk, sizeof rk, "tx:%s", hash->valuestring);
   snprintf(title, sizeof title, "%s tx %.16s…", chain, hash->valuestring);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.summary         = "crypto transaction";
   it.published_at    = iso[0] ? iso : NULL;
   it.record_type     = "osint_service_result";
@@ -164,7 +166,7 @@ static int emit_tx(intel_sink *sink, const char *chain, const char *addr,
   it.tags_json       = "[\"osint-search\",\"CRYPTO_TRACKER\",\"transaction\"]";
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   cJSON_Delete(data); cJSON_Delete(props);
   return rc >= 0 ? 1 : 0;
 }

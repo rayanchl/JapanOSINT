@@ -1849,10 +1849,14 @@ char *camera_stills_list(db_handle *db, const char *camera_id, int limit,
     cJSON_Delete(c);
     char *enc = cj ? b64url(cj) : NULL;
     free(cj);
-    if (enc) { cJSON_AddStringToObject(page, "cursor", enc); free(enc); }
-    else cJSON_AddNullToObject(page, "cursor");
+    /* `next_cursor` is what every other cursor list in this API calls it;
+     * `cursor` is kept for clients that already read it (audit 2026-11-07). */
+    if (enc) { cJSON_AddStringToObject(page, "cursor", enc);
+               cJSON_AddStringToObject(page, "next_cursor", enc); free(enc); }
+    else { cJSON_AddNullToObject(page, "cursor"); cJSON_AddNullToObject(page, "next_cursor"); }
   } else {
     cJSON_AddNullToObject(page, "cursor");
+    cJSON_AddNullToObject(page, "next_cursor");
   }
 
   cJSON *meta = cJSON_CreateObject();

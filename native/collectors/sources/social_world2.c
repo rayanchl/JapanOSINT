@@ -10,26 +10,26 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
-static const char *SO_UA = "User-Agent: JapanOSINT/1.0 (osint@example.org)";
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *q = ctx->entity;
   if (!q || !*q) return 0;
   if (strcmp(ctx->source_id ? ctx->source_id : "", "YOUTUBE_SEARCH") != 0) return 0;
   const char *k = jo_env("YOUTUBE_API_KEY");
-  if (!k) { fprintf(stderr, "[YOUTUBE_SEARCH] no YOUTUBE_API_KEY\n"); return 0; }
+  if (!k) return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "YOUTUBE_SEARCH", "YOUTUBE_SEARCH", (const char *const[]){"YOUTUBE_API_KEY", NULL}, NULL, NULL);
   char *enc = jo_urlencode(q);
   if (!enc) return 0;
   char url[640];
   snprintf(url, sizeof url,
     "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=20&q=%s&key=%s", enc, k);
   free(enc);
-  const char *hdrs[] = { "Accept: application/json", SO_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "YOUTUBE_SEARCH");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *items = cJSON_GetObjectItem(root, "items");
   int emitted = 0;
   if (cJSON_IsArray(items)) {
@@ -54,15 +54,16 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       cJSON_AddStringToObject(p, "service", "YOUTUBE_SEARCH");
       cJSON_AddStringToObject(p, "video_id", vid);
       cJSON_AddBoolToObject(p, "success", 1);
-      char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+      jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
       char link[128]; snprintf(link, sizeof link, "https://www.youtube.com/watch?v=%s", vid);
-      intel_item it = {0};
-      it.remote_key = vid; it.title = title; it.summary = channel; it.body = bj;
+      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
+      it.remote_key = vid; it.title = title; it.summary = channel; it.body = bt ? bt : bj;
       it.author = channel; it.link = link; it.lang = "en"; it.published_at = pub;
       it.record_type = "youtube-video";
       it.properties_json = pj; it.tags_json = "[\"osint-search\",\"YOUTUBE_SEARCH\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(pj);
+      free(bj); free(bt); free(pj);
     }
   }
   cJSON_Delete(root);

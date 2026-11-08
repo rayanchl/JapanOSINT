@@ -50,7 +50,7 @@ static int rl_emit(intel_sink *sink, const cJSON *v) {
   if (group) cJSON_AddStringToObject(props, "group", group);
   if (date)  cJSON_AddStringToObject(props, "discovered", date);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char summary[512];
@@ -58,11 +58,12 @@ static int rl_emit(intel_sink *sink, const cJSON *v) {
            group ? " — group: " : "", group ? group : "",
            date ? " — " : "", date ? date : "");
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = org ? org : group;
   it.title           = org ? org : group;
   it.summary         = summary;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "en";
   it.published_at    = date;
   it.link            = link;
@@ -70,7 +71,7 @@ static int rl_emit(intel_sink *sink, const cJSON *v) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"RANSOMLOOK\",\"ransomware\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -109,11 +110,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "ransomlook");
-  if (!body) return 0;   /* honest empty on fetch failure */
+  if (!body) return jo_fail_rc(jo_last_status(), 0);   /* 2026-11-07: a refused fetch is -1, not an honest empty */
 
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   int emitted = rl_walk(sink, root);
   cJSON_Delete(root);

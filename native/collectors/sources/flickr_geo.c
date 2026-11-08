@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 #define JP_BBOX "122.0,24.0,146.0,46.0"
 
@@ -30,7 +31,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *k = getenv("FLICKR_API_KEY");
   if (!k || !*k) {
     fprintf(stderr, "[flickr-geo] gated (no FLICKR_API_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "flickr-geo", "flickr-geo", (const char *const[]){"FLICKR_API_KEY", NULL}, NULL, NULL);
   }
   char url[700];
   snprintf(url, sizeof url,

@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 #define SOURCE_ID "eight-sansan"
 
@@ -28,7 +29,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *session = getenv("EIGHT_SESSION");
   if (!session || !*session) {
     fprintf(stderr, "[eight-sansan] gated (no EIGHT_SESSION)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "eight-sansan", "eight-sansan", (const char *const[]){"EIGHT_SESSION", NULL}, NULL, NULL);
   }
   char cookie[1024];
   snprintf(cookie, sizeof cookie, "Cookie: %s", session);

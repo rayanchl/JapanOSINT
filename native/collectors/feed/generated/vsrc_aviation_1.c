@@ -150,129 +150,139 @@ VRSS(sec_eurocontrol, "sec-eurocontrol", "EUROCONTROL News", "ユーロコント
   "en", "[\"eurocontrol\",\"atm\",\"europe\",\"network-manager\"]", 3600,
   "EUROCONTROL network-manager and ATM news, including capacity, disruption and airspace-closure notices.");
 
+/* ArcGIS rows in this file: `orderByFields=<the layer's own objectIdField>
+ * ASC` (2026-11-07). These walk on `resultOffset` (geojson_emit_paged's
+ * mechanism 1, on the server's own exceededTransferLimit) with no order
+ * clause, and ArcGIS promises no stable order without one. The field was READ
+ * per layer from `<layer>?f=json` (objectIdField, else the esriFieldTypeOID
+ * field — spellings here include OBJECTID, objectid, FID, OBJECTID_1, ObjectId,
+ * oid, RowID), every layer declares supportsOrderBy, and the sorted query was
+ * asked once (resultRecordCount=3 at offsets 0 and 3): HTTP 200, no error
+ * body, pages disjoint. This is STABILISING, not a recovery — no record was
+ * measured lost without it. */
 VGEO(sec_faa_adhp, "sec-faa-adhp", "FAA Aerodromes and Heliports", "FAA 飛行場・ヘリポート",
   "aviation", "airspace",
-  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/ADHP/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500",
+  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/ADHP/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"airport\",\"aerodrome\",\"heliport\",\"nasr\"]", 86400,
   "FAA NASR aeronautical data published as ArcGIS features: FAA Aerodromes and Heliports. Real published US aeronautical geometry, refreshed on the 28-day AIRAC cycle.");
 
 VGEO(sec_faa_airspace, "sec-faa-airspace", "FAA Airspace Volumes", "FAA 空域ボリューム",
   "aviation", "airspace",
-  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/Airspace/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=300",
+  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/Airspace/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=300&orderByFields=OBJECTID%20ASC",
   "en", "[\"airspace\",\"volume\",\"nasr\"]", 86400,
   "FAA NASR aeronautical data published as ArcGIS features: FAA Airspace Volumes. Real published US aeronautical geometry, refreshed on the 28-day AIRAC cycle.");
 
 VGEO(sec_faa_airspace_boundary, "sec-faa-airspace-boundary", "FAA Airspace Boundaries", "FAA 空域境界",
   "aviation", "airspace",
-  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/Boundary_Airspace/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=200",
+  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/Boundary_Airspace/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"airspace\",\"boundary\"]", 86400,
   "FAA NASR aeronautical data published as ArcGIS features: FAA Airspace Boundaries. Real published US aeronautical geometry, refreshed on the 28-day AIRAC cycle.");
 
 VGEO(sec_faa_airspace_schedule, "sec-faa-airspace-schedule", "FAA Airspace Activation Schedules", "FAA 空域運用スケジュール",
   "aviation", "airspace",
-  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/Airspace_Schedule/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500",
+  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/Airspace_Schedule/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"airspace\",\"schedule\",\"activation\"]", 86400,
   "FAA NASR aeronautical data published as ArcGIS features: FAA Airspace Activation Schedules. Real published US aeronautical geometry, refreshed on the 28-day AIRAC cycle.");
 
 VGEO(sec_faa_am_runway, "sec-faa-am-runway", "FAA Airport Mapping Runways", "FAA 空港マッピング滑走路",
   "aviation", "airspace",
-  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/AM_Runway/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=300",
+  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/AM_Runway/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=300&orderByFields=OBJECTID%20ASC",
   "en", "[\"airport\",\"runway\",\"mapping\"]", 86400,
   "FAA NASR aeronautical data published as ArcGIS features: FAA Airport Mapping Runways. Real published US aeronautical geometry, refreshed on the 28-day AIRAC cycle.");
 
 VGEO(sec_faa_apron, "sec-faa-apron", "FAA Airport Aprons", "FAA 空港エプロン",
   "aviation", "airspace",
-  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/AM_Apron/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=300",
+  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/AM_Apron/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=300&orderByFields=OBJECTID%20ASC",
   "en", "[\"airport\",\"apron\",\"mapping\"]", 86400,
   "FAA NASR aeronautical data published as ArcGIS features: FAA Airport Aprons. Real published US aeronautical geometry, refreshed on the 28-day AIRAC cycle.");
 
 VGEO(sec_faa_ats_route, "sec-faa-ats-route", "FAA ATS Routes", "FAA ATS航空路",
   "aviation", "airspace",
-  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/ATS_Route/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=300",
+  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/ATS_Route/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=300&orderByFields=OBJECTID%20ASC",
   "en", "[\"route\",\"ats\",\"airway\"]", 86400,
   "FAA NASR aeronautical data published as ArcGIS features: FAA ATS Routes. Real published US aeronautical geometry, refreshed on the 28-day AIRAC cycle.");
 
 VGEO(sec_faa_beacon, "sec-faa-beacon", "FAA Airport Beacons", "FAA 空港標識灯",
   "aviation", "airspace",
-  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/AM_Beacon/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500",
+  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/AM_Beacon/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"airport\",\"beacon\",\"lighting\"]", 86400,
   "FAA NASR aeronautical data published as ArcGIS features: FAA Airport Beacons. Real published US aeronautical geometry, refreshed on the 28-day AIRAC cycle.");
 
 VGEO(sec_faa_changeover, "sec-faa-changeover", "FAA Changeover Points", "FAA 切替点",
   "aviation", "airspace",
-  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/ChangeOver/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500",
+  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/ChangeOver/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"navaid\",\"changeover\"]", 86400,
   "FAA NASR aeronautical data published as ArcGIS features: FAA Changeover Points. Real published US aeronautical geometry, refreshed on the 28-day AIRAC cycle.");
 
 VGEO(sec_faa_class_airspace, "sec-faa-class-airspace", "FAA Class Airspace", "FAA クラス空域",
   "aviation", "airspace",
-  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/Class_Airspace/FeatureServer/0/query?where=1%3D1&outFields=OBJECTID%2CIDENT%2CNAME%2CLOCAL_TYPE%2CCLASS&resultRecordCount=60&geometryPrecision=5&outSR=4326&f=geojson",
+  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/Class_Airspace/FeatureServer/0/query?where=1%3D1&outFields=OBJECTID%2CIDENT%2CNAME%2CLOCAL_TYPE%2CCLASS&resultRecordCount=60&geometryPrecision=5&outSR=4326&f=geojson&orderByFields=OBJECTID%20ASC",
   "en", "[\"airspace\",\"class\",\"controlled\"]", 86400,
   "FAA NASR aeronautical data published as ArcGIS features: FAA Class Airspace. Real published US aeronautical geometry, refreshed on the 28-day AIRAC cycle.");
 
 VGEO(sec_faa_clearance, "sec-faa-clearance", "FAA Clearance Delivery Points", "FAA クリアランス地点",
   "aviation", "airspace",
-  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/Clearances/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500",
+  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/Clearances/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"clearance\",\"atc\"]", 86400,
   "FAA NASR aeronautical data published as ArcGIS features: FAA Clearance Delivery Points. Real published US aeronautical geometry, refreshed on the 28-day AIRAC cycle.");
 
 VGEO(sec_faa_designated_point, "sec-faa-designated-point", "FAA Designated Points and Waypoints", "FAA 指定点・ウェイポイント",
   "aviation", "airspace",
-  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/DesignatedPoint/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500",
+  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/DesignatedPoint/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"waypoint\",\"fix\",\"navigation\"]", 86400,
   "FAA NASR aeronautical data published as ArcGIS features: FAA Designated Points and Waypoints. Real published US aeronautical geometry, refreshed on the 28-day AIRAC cycle.");
 
 VGEO(sec_faa_enroute_info, "sec-faa-enroute-info", "FAA Enroute Route Information", "FAA エンルート航路情報",
   "aviation", "airspace",
-  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/EnrouteInformation/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500",
+  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/EnrouteInformation/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"enroute\",\"route\",\"table\"]", 86400,
   "FAA NASR aeronautical data published as ArcGIS features: FAA Enroute Route Information. Real published US aeronautical geometry, refreshed on the 28-day AIRAC cycle.");
 
 VGEO(sec_faa_enroute_status, "sec-faa-enroute-status", "FAA Enroute Chart Status", "FAA エンルートチャート整備状況",
   "aviation", "airspace",
-  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/EnrouteStatus/FeatureServer/0/query?where=1%3D1&outFields=OBJECTID&resultRecordCount=60&geometryPrecision=5&outSR=4326&f=geojson",
+  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/EnrouteStatus/FeatureServer/0/query?where=1%3D1&outFields=OBJECTID&resultRecordCount=60&geometryPrecision=5&outSR=4326&f=geojson&orderByFields=OBJECTID%20ASC",
   "en", "[\"enroute\",\"chart\",\"status\"]", 86400,
   "FAA NASR aeronautical data published as ArcGIS features: FAA Enroute Chart Status. Real published US aeronautical geometry, refreshed on the 28-day AIRAC cycle.");
 
 VGEO(sec_faa_frequency, "sec-faa-frequency", "FAA Aeronautical Frequencies", "FAA 航空無線周波数",
   "aviation", "airspace",
-  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/Frequencies/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500",
+  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/Frequencies/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"frequency\",\"radio\",\"atc\"]", 86400,
   "FAA NASR aeronautical data published as ArcGIS features: FAA Aeronautical Frequencies. Real published US aeronautical geometry, refreshed on the 28-day AIRAC cycle.");
 
 VGEO(sec_faa_frz_rid, "sec-faa-frz-rid", "FAA Recognized Identification Areas", "FAA 公認識別区域（無人機）",
   "aviation", "airspace",
-  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/FAA_Recognized_Identification_Areas/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500",
+  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/FAA_Recognized_Identification_Areas/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&orderByFields=ObjectId%20ASC",
   "en", "[\"uas\",\"drone\",\"rid\"]", 86400,
   "FAA NASR aeronautical data published as ArcGIS features: FAA Recognized Identification Areas. Real published US aeronautical geometry, refreshed on the 28-day AIRAC cycle.");
 
 VGEO(sec_faa_holding_pattern, "sec-faa-holding-pattern", "FAA Holding Patterns", "FAA ホールディングパターン",
   "aviation", "airspace",
-  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/HoldingPattern/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500",
+  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/HoldingPattern/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"holding\",\"procedure\"]", 86400,
   "FAA NASR aeronautical data published as ArcGIS features: FAA Holding Patterns. Real published US aeronautical geometry, refreshed on the 28-day AIRAC cycle.");
 
 VGEO(sec_faa_hotspot, "sec-faa-hotspot", "FAA Runway Incursion Hot Spots", "FAA 滑走路誤進入ホットスポット",
   "aviation", "aviation-safety",
-  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/AM_Hotspot/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500",
+  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/AM_Hotspot/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"runway\",\"hotspot\",\"incursion\",\"safety\"]", 86400,
   "FAA NASR aeronautical data published as ArcGIS features: FAA Runway Incursion Hot Spots. Real published US aeronautical geometry, refreshed on the 28-day AIRAC cycle.");
 
 VGEO(sec_faa_ils_component, "sec-faa-ils-component", "FAA ILS Components", "FAA ILS構成要素",
   "aviation", "airspace",
-  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/ILS_Component/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500",
+  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/ILS_Component/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"ils\",\"approach\",\"navaid\"]", 86400,
   "FAA NASR aeronautical data published as ArcGIS features: FAA ILS Components. Real published US aeronautical geometry, refreshed on the 28-day AIRAC cycle.");
 
 VGEO(sec_faa_ils_system, "sec-faa-ils-system", "FAA ILS Systems", "FAA ILSシステム",
   "aviation", "airspace",
-  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/ILSSystemNew/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500",
+  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/ILSSystemNew/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"ils\",\"approach\",\"navaid\"]", 86400,
   "FAA NASR aeronautical data published as ArcGIS features: FAA ILS Systems. Real published US aeronautical geometry, refreshed on the 28-day AIRAC cycle.");
 
 VGEO(sec_faa_mtr_segment, "sec-faa-mtr-segment", "FAA Military Training Route Segments", "FAA 軍用訓練航路区間",
   "aviation", "defence",
-  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/MTRSegment/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=300",
+  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/MTRSegment/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=300&orderByFields=OBJECTID%20ASC",
   "en", "[\"military\",\"training-route\",\"mtr\"]", 86400,
   "FAA NASR aeronautical data published as ArcGIS features: FAA Military Training Route Segments. Real published US aeronautical geometry, refreshed on the 28-day AIRAC cycle.");
 
@@ -285,19 +295,19 @@ VJSON(sec_faa_nas_airport_events, "sec-faa-nas-airport-events", "FAA National Ai
 
 VGEO(sec_faa_navaid_component, "sec-faa-navaid-component", "FAA NAVAID Components", "FAA 航法援助施設構成要素",
   "aviation", "airspace",
-  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/NavaidComponent/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500",
+  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/NavaidComponent/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"navaid\",\"vor\",\"ndb\"]", 86400,
   "FAA NASR aeronautical data published as ArcGIS features: FAA NAVAID Components. Real published US aeronautical geometry, refreshed on the 28-day AIRAC cycle.");
 
 VGEO(sec_faa_navaid_system, "sec-faa-navaid-system", "FAA NAVAID Systems", "FAA 航法援助施設システム",
   "aviation", "airspace",
-  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/NAVAIDSystem/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500",
+  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/NAVAIDSystem/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"navaid\",\"vor\",\"dme\",\"tacan\"]", 86400,
   "FAA NASR aeronautical data published as ArcGIS features: FAA NAVAID Systems. Real published US aeronautical geometry, refreshed on the 28-day AIRAC cycle.");
 
 VGEO(sec_faa_ndz_tfr, "sec-faa-ndz-tfr", "FAA National Defense Airspace TFR Areas", "FAA 国防空域一時飛行制限区域",
   "aviation", "defence",
-  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/National_Defense_Airspace_TFR_Areas/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=300",
+  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/National_Defense_Airspace_TFR_Areas/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=300&orderByFields=OBJECTID%20ASC",
   "en", "[\"tfr\",\"national-defense\",\"restriction\"]", 86400,
   "FAA NASR aeronautical data published as ArcGIS features: FAA National Defense Airspace TFR Areas. Real published US aeronautical geometry, refreshed on the 28-day AIRAC cycle.");
 

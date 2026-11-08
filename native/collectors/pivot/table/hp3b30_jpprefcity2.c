@@ -22,13 +22,25 @@
 #include "lib/hpengine.h"
 
 static const hp_source HP3B30_JPPREFCITY2[] = {
+/* The 31 BODIK rows below used to walk package_search with
+ * `sort=metadata_modified desc`: an edit to any dataset during the walk moves
+ * it to the HEAD and shifts every later page boundary, so one dataset is read
+ * twice and another not at all — the skip whose only symptom is a collision.
+ * They read `sort=id asc` now, the stable order the batch-30 jplibrary rows
+ * and every CKAN bulk row in batch 34 already carry. Measured 2026-11-07 on
+ * organization 400009: the total is 1,003 plain, sorted ascending and sorted
+ * descending (the sort is not read as a filter); id asc and id desc answer
+ * different first pages; the ascending ids are monotonic; start=0 and
+ * start=100 are disjoint. NB `sort=frobnicate asc` also answers 200 / 1,003,
+ * so acceptance alone proves nothing on this host — the monotonic ids are the
+ * evidence. Each org's count the same day is under its page_max x 100. */
   { .id = "JO30_GOV_BODIK_FUKUOKA_PREF", .name = "BODIK open-data catalogue - Fukuoka Prefecture datasets",
     .name_ja = "BODIK オープンデータカタログ - 福岡県 データセット一覧",
     .category = "government", .portal = "https://data.bodik.jp/organization/400009",
     .record_type = "open-data-dataset",
     .tags = "\"japan\",\"open-data\",\"ckan\",\"bodik\",\"prefecture\",\"fukuoka\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:400009&rows=100&start=0&sort=metadata_modified%20desc",
+    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:400009&rows=100&start=0&sort=id%20asc",
     .array_path = "result.results",
     .date_keys = "metadata_modified",
     .id_keys = "id",
@@ -45,7 +57,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
       "facet reported 993 datasets on 2026-09-20; each record carries "
       "id, name, title, notes, license_id, "
       "metadata_created/metadata_modified, num_resources, tags and the "
-      "organization block, sorted newest-modified first. This "
+      "organization block, read in ascending id order. This "
       "publisher's catalogue is not registered anywhere else in the "
       "tree (only three data.bodik.jp package_show ids are)." },
 
@@ -55,7 +67,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
     .record_type = "open-data-dataset",
     .tags = "\"japan\",\"open-data\",\"ckan\",\"bodik\",\"prefecture\",\"kagoshima\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:460001&rows=100&start=0&sort=metadata_modified%20desc",
+    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:460001&rows=100&start=0&sort=id%20asc",
     .array_path = "result.results",
     .date_keys = "metadata_modified",
     .id_keys = "id",
@@ -72,7 +84,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
       "facet reported 597 datasets on 2026-09-20; each record carries "
       "id, name, title, notes, license_id, "
       "metadata_created/metadata_modified, num_resources, tags and the "
-      "organization block, sorted newest-modified first. This "
+      "organization block, read in ascending id order. This "
       "publisher's catalogue is not registered anywhere else in the "
       "tree (only three data.bodik.jp package_show ids are)." },
 
@@ -82,7 +94,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
     .record_type = "open-data-dataset",
     .tags = "\"japan\",\"open-data\",\"ckan\",\"bodik\",\"prefecture\",\"saga\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:410004&rows=100&start=0&sort=metadata_modified%20desc",
+    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:410004&rows=100&start=0&sort=id%20asc",
     .array_path = "result.results",
     .date_keys = "metadata_modified",
     .id_keys = "id",
@@ -99,7 +111,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
       "facet reported 526 datasets on 2026-09-20; each record carries "
       "id, name, title, notes, license_id, "
       "metadata_created/metadata_modified, num_resources, tags and the "
-      "organization block, sorted newest-modified first. This "
+      "organization block, read in ascending id order. This "
       "publisher's catalogue is not registered anywhere else in the "
       "tree (only three data.bodik.jp package_show ids are)." },
 
@@ -109,7 +121,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
     .record_type = "open-data-dataset",
     .tags = "\"japan\",\"open-data\",\"ckan\",\"bodik\",\"prefecture\",\"kyoto\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:260002&rows=100&start=0&sort=metadata_modified%20desc",
+    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:260002&rows=100&start=0&sort=id%20asc",
     .array_path = "result.results",
     .date_keys = "metadata_modified",
     .id_keys = "id",
@@ -126,7 +138,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
       "facet reported 509 datasets on 2026-09-20; each record carries "
       "id, name, title, notes, license_id, "
       "metadata_created/metadata_modified, num_resources, tags and the "
-      "organization block, sorted newest-modified first. This "
+      "organization block, read in ascending id order. This "
       "publisher's catalogue is not registered anywhere else in the "
       "tree (only three data.bodik.jp package_show ids are)." },
 
@@ -136,7 +148,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
     .record_type = "open-data-dataset",
     .tags = "\"japan\",\"open-data\",\"ckan\",\"bodik\",\"prefecture\",\"miyazaki\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:450006&rows=100&start=0&sort=metadata_modified%20desc",
+    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:450006&rows=100&start=0&sort=id%20asc",
     .array_path = "result.results",
     .date_keys = "metadata_modified",
     .id_keys = "id",
@@ -153,7 +165,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
       "facet reported 485 datasets on 2026-09-20; each record carries "
       "id, name, title, notes, license_id, "
       "metadata_created/metadata_modified, num_resources, tags and the "
-      "organization block, sorted newest-modified first. This "
+      "organization block, read in ascending id order. This "
       "publisher's catalogue is not registered anywhere else in the "
       "tree (only three data.bodik.jp package_show ids are)." },
 
@@ -163,7 +175,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
     .record_type = "open-data-dataset",
     .tags = "\"japan\",\"open-data\",\"ckan\",\"bodik\",\"prefecture\",\"kumamoto\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:430005&rows=100&start=0&sort=metadata_modified%20desc",
+    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:430005&rows=100&start=0&sort=id%20asc",
     .array_path = "result.results",
     .date_keys = "metadata_modified",
     .id_keys = "id",
@@ -180,7 +192,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
       "facet reported 426 datasets on 2026-09-20; each record carries "
       "id, name, title, notes, license_id, "
       "metadata_created/metadata_modified, num_resources, tags and the "
-      "organization block, sorted newest-modified first. This "
+      "organization block, read in ascending id order. This "
       "publisher's catalogue is not registered anywhere else in the "
       "tree (only three data.bodik.jp package_show ids are)." },
 
@@ -190,7 +202,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
     .record_type = "open-data-dataset",
     .tags = "\"japan\",\"open-data\",\"ckan\",\"bodik\",\"prefecture\",\"oita\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:440001&rows=100&start=0&sort=metadata_modified%20desc",
+    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:440001&rows=100&start=0&sort=id%20asc",
     .array_path = "result.results",
     .date_keys = "metadata_modified",
     .id_keys = "id",
@@ -207,7 +219,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
       "facet reported 422 datasets on 2026-09-20; each record carries "
       "id, name, title, notes, license_id, "
       "metadata_created/metadata_modified, num_resources, tags and the "
-      "organization block, sorted newest-modified first. This "
+      "organization block, read in ascending id order. This "
       "publisher's catalogue is not registered anywhere else in the "
       "tree (only three data.bodik.jp package_show ids are)." },
 
@@ -217,7 +229,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
     .record_type = "open-data-dataset",
     .tags = "\"japan\",\"open-data\",\"ckan\",\"bodik\",\"prefecture\",\"tochigi\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:090000&rows=100&start=0&sort=metadata_modified%20desc",
+    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:090000&rows=100&start=0&sort=id%20asc",
     .array_path = "result.results",
     .date_keys = "metadata_modified",
     .id_keys = "id",
@@ -234,7 +246,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
       "facet reported 293 datasets on 2026-09-20; each record carries "
       "id, name, title, notes, license_id, "
       "metadata_created/metadata_modified, num_resources, tags and the "
-      "organization block, sorted newest-modified first. This "
+      "organization block, read in ascending id order. This "
       "publisher's catalogue is not registered anywhere else in the "
       "tree (only three data.bodik.jp package_show ids are)." },
 
@@ -244,7 +256,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
     .record_type = "open-data-dataset",
     .tags = "\"japan\",\"open-data\",\"ckan\",\"bodik\",\"prefecture\",\"nagasaki\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:420000&rows=100&start=0&sort=metadata_modified%20desc",
+    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:420000&rows=100&start=0&sort=id%20asc",
     .array_path = "result.results",
     .date_keys = "metadata_modified",
     .id_keys = "id",
@@ -261,7 +273,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
       "facet reported 202 datasets on 2026-09-20; each record carries "
       "id, name, title, notes, license_id, "
       "metadata_created/metadata_modified, num_resources, tags and the "
-      "organization block, sorted newest-modified first. This "
+      "organization block, read in ascending id order. This "
       "publisher's catalogue is not registered anywhere else in the "
       "tree (only three data.bodik.jp package_show ids are)." },
 
@@ -271,7 +283,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
     .record_type = "open-data-dataset",
     .tags = "\"japan\",\"open-data\",\"ckan\",\"bodik\",\"prefecture\",\"okinawa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:470007&rows=100&start=0&sort=metadata_modified%20desc",
+    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:470007&rows=100&start=0&sort=id%20asc",
     .array_path = "result.results",
     .date_keys = "metadata_modified",
     .id_keys = "id",
@@ -288,7 +300,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
       "facet reported 141 datasets on 2026-09-20; each record carries "
       "id, name, title, notes, license_id, "
       "metadata_created/metadata_modified, num_resources, tags and the "
-      "organization block, sorted newest-modified first. This "
+      "organization block, read in ascending id order. This "
       "publisher's catalogue is not registered anywhere else in the "
       "tree (only three data.bodik.jp package_show ids are)." },
 
@@ -298,7 +310,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
     .record_type = "open-data-dataset",
     .tags = "\"japan\",\"open-data\",\"ckan\",\"bodik\",\"prefecture\",\"mie\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:240001&rows=100&start=0&sort=metadata_modified%20desc",
+    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:240001&rows=100&start=0&sort=id%20asc",
     .array_path = "result.results",
     .date_keys = "metadata_modified",
     .id_keys = "id",
@@ -315,7 +327,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
       "facet reported 135 datasets on 2026-09-20; each record carries "
       "id, name, title, notes, license_id, "
       "metadata_created/metadata_modified, num_resources, tags and the "
-      "organization block, sorted newest-modified first. This "
+      "organization block, read in ascending id order. This "
       "publisher's catalogue is not registered anywhere else in the "
       "tree (only three data.bodik.jp package_show ids are)." },
 
@@ -325,7 +337,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
     .record_type = "open-data-dataset",
     .tags = "\"japan\",\"open-data\",\"ckan\",\"bodik\",\"prefecture\",\"wakayama\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:300004&rows=100&start=0&sort=metadata_modified%20desc",
+    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:300004&rows=100&start=0&sort=id%20asc",
     .array_path = "result.results",
     .date_keys = "metadata_modified",
     .id_keys = "id",
@@ -342,7 +354,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
       "facet reported 109 datasets on 2026-09-20; each record carries "
       "id, name, title, notes, license_id, "
       "metadata_created/metadata_modified, num_resources, tags and the "
-      "organization block, sorted newest-modified first. This "
+      "organization block, read in ascending id order. This "
       "publisher's catalogue is not registered anywhere else in the "
       "tree (only three data.bodik.jp package_show ids are)." },
 
@@ -352,7 +364,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
     .record_type = "open-data-dataset",
     .tags = "\"japan\",\"open-data\",\"ckan\",\"bodik\",\"prefecture\",\"osaka\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:270008&rows=100&start=0&sort=metadata_modified%20desc",
+    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:270008&rows=100&start=0&sort=id%20asc",
     .array_path = "result.results",
     .date_keys = "metadata_modified",
     .id_keys = "id",
@@ -369,7 +381,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
       "facet reported 81 datasets on 2026-09-20; each record carries "
       "id, name, title, notes, license_id, "
       "metadata_created/metadata_modified, num_resources, tags and the "
-      "organization block, sorted newest-modified first. This "
+      "organization block, read in ascending id order. This "
       "publisher's catalogue is not registered anywhere else in the "
       "tree (only three data.bodik.jp package_show ids are)." },
 
@@ -379,7 +391,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
     .record_type = "open-data-dataset",
     .tags = "\"japan\",\"open-data\",\"ckan\",\"bodik\",\"city\",\"kitakyushu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:401005&rows=100&start=0&sort=metadata_modified%20desc",
+    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:401005&rows=100&start=0&sort=id%20asc",
     .array_path = "result.results",
     .date_keys = "metadata_modified",
     .id_keys = "id",
@@ -396,7 +408,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
       "facet reported 720 datasets on 2026-09-20; each record carries "
       "id, name, title, notes, license_id, "
       "metadata_created/metadata_modified, num_resources, tags and the "
-      "organization block, sorted newest-modified first. This "
+      "organization block, read in ascending id order. This "
       "publisher's catalogue is not registered anywhere else in the "
       "tree (only three data.bodik.jp package_show ids are)." },
 
@@ -406,7 +418,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
     .record_type = "open-data-dataset",
     .tags = "\"japan\",\"open-data\",\"ckan\",\"bodik\",\"city\",\"nagoya\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:231002&rows=100&start=0&sort=metadata_modified%20desc",
+    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:231002&rows=100&start=0&sort=id%20asc",
     .array_path = "result.results",
     .date_keys = "metadata_modified",
     .id_keys = "id",
@@ -423,7 +435,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
       "facet reported 618 datasets on 2026-09-20; each record carries "
       "id, name, title, notes, license_id, "
       "metadata_created/metadata_modified, num_resources, tags and the "
-      "organization block, sorted newest-modified first. This "
+      "organization block, read in ascending id order. This "
       "publisher's catalogue is not registered anywhere else in the "
       "tree (only three data.bodik.jp package_show ids are)." },
 
@@ -433,7 +445,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
     .record_type = "open-data-dataset",
     .tags = "\"japan\",\"open-data\",\"ckan\",\"bodik\",\"city\",\"funabashi\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:122041&rows=100&start=0&sort=metadata_modified%20desc",
+    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:122041&rows=100&start=0&sort=id%20asc",
     .array_path = "result.results",
     .date_keys = "metadata_modified",
     .id_keys = "id",
@@ -450,7 +462,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
       "facet reported 606 datasets on 2026-09-20; each record carries "
       "id, name, title, notes, license_id, "
       "metadata_created/metadata_modified, num_resources, tags and the "
-      "organization block, sorted newest-modified first. This "
+      "organization block, read in ascending id order. This "
       "publisher's catalogue is not registered anywhere else in the "
       "tree (only three data.bodik.jp package_show ids are)." },
 
@@ -460,7 +472,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
     .record_type = "open-data-dataset",
     .tags = "\"japan\",\"open-data\",\"ckan\",\"bodik\",\"city\",\"ishigaki\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:472077&rows=100&start=0&sort=metadata_modified%20desc",
+    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:472077&rows=100&start=0&sort=id%20asc",
     .array_path = "result.results",
     .date_keys = "metadata_modified",
     .id_keys = "id",
@@ -477,7 +489,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
       "facet reported 560 datasets on 2026-09-20; each record carries "
       "id, name, title, notes, license_id, "
       "metadata_created/metadata_modified, num_resources, tags and the "
-      "organization block, sorted newest-modified first. This "
+      "organization block, read in ascending id order. This "
       "publisher's catalogue is not registered anywhere else in the "
       "tree (only three data.bodik.jp package_show ids are)." },
 
@@ -487,7 +499,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
     .record_type = "open-data-dataset",
     .tags = "\"japan\",\"open-data\",\"ckan\",\"bodik\",\"city\",\"otsu\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:252018&rows=100&start=0&sort=metadata_modified%20desc",
+    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:252018&rows=100&start=0&sort=id%20asc",
     .array_path = "result.results",
     .date_keys = "metadata_modified",
     .id_keys = "id",
@@ -503,8 +515,8 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
       "organization 252018. The catalogue's organization facet reported "
       "521 datasets on 2026-09-20; each record carries id, name, title, "
       "notes, license_id, metadata_created/metadata_modified, "
-      "num_resources, tags and the organization block, sorted "
-      "newest-modified first. This publisher's catalogue is not "
+      "num_resources, tags and the organization block, read in "
+      "ascending id order. This publisher's catalogue is not "
       "registered anywhere else in the tree (only three data.bodik.jp "
       "package_show ids are)." },
 
@@ -514,7 +526,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
     .record_type = "open-data-dataset",
     .tags = "\"japan\",\"open-data\",\"ckan\",\"bodik\",\"city\",\"fukuoka\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:401307&rows=100&start=0&sort=metadata_modified%20desc",
+    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:401307&rows=100&start=0&sort=id%20asc",
     .array_path = "result.results",
     .date_keys = "metadata_modified",
     .id_keys = "id",
@@ -531,7 +543,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
       "facet reported 498 datasets on 2026-09-20; each record carries "
       "id, name, title, notes, license_id, "
       "metadata_created/metadata_modified, num_resources, tags and the "
-      "organization block, sorted newest-modified first. This "
+      "organization block, read in ascending id order. This "
       "publisher's catalogue is not registered anywhere else in the "
       "tree (only three data.bodik.jp package_show ids are)." },
 
@@ -541,7 +553,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
     .record_type = "open-data-dataset",
     .tags = "\"japan\",\"open-data\",\"ckan\",\"bodik\",\"city\",\"ikoma\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:292095&rows=100&start=0&sort=metadata_modified%20desc",
+    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:292095&rows=100&start=0&sort=id%20asc",
     .array_path = "result.results",
     .date_keys = "metadata_modified",
     .id_keys = "id",
@@ -557,8 +569,8 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
       "organization 292095. The catalogue's organization facet reported "
       "437 datasets on 2026-09-20; each record carries id, name, title, "
       "notes, license_id, metadata_created/metadata_modified, "
-      "num_resources, tags and the organization block, sorted "
-      "newest-modified first. This publisher's catalogue is not "
+      "num_resources, tags and the organization block, read in "
+      "ascending id order. This publisher's catalogue is not "
       "registered anywhere else in the tree (only three data.bodik.jp "
       "package_show ids are)." },
 
@@ -568,7 +580,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
     .record_type = "open-data-dataset",
     .tags = "\"japan\",\"open-data\",\"ckan\",\"bodik\",\"city\",\"miyakonojo\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:452025&rows=100&start=0&sort=metadata_modified%20desc",
+    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:452025&rows=100&start=0&sort=id%20asc",
     .array_path = "result.results",
     .date_keys = "metadata_modified",
     .id_keys = "id",
@@ -585,7 +597,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
       "facet reported 376 datasets on 2026-09-20; each record carries "
       "id, name, title, notes, license_id, "
       "metadata_created/metadata_modified, num_resources, tags and the "
-      "organization block, sorted newest-modified first. This "
+      "organization block, read in ascending id order. This "
       "publisher's catalogue is not registered anywhere else in the "
       "tree (only three data.bodik.jp package_show ids are)." },
 
@@ -595,7 +607,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
     .record_type = "open-data-dataset",
     .tags = "\"japan\",\"open-data\",\"ckan\",\"bodik\",\"city\",\"yokosuka\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:142018&rows=100&start=0&sort=metadata_modified%20desc",
+    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:142018&rows=100&start=0&sort=id%20asc",
     .array_path = "result.results",
     .date_keys = "metadata_modified",
     .id_keys = "id",
@@ -612,7 +624,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
       "facet reported 343 datasets on 2026-09-20; each record carries "
       "id, name, title, notes, license_id, "
       "metadata_created/metadata_modified, num_resources, tags and the "
-      "organization block, sorted newest-modified first. This "
+      "organization block, read in ascending id order. This "
       "publisher's catalogue is not registered anywhere else in the "
       "tree (only three data.bodik.jp package_show ids are)." },
 
@@ -622,7 +634,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
     .record_type = "open-data-dataset",
     .tags = "\"japan\",\"open-data\",\"ckan\",\"bodik\",\"city\",\"toyota\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:232114&rows=100&start=0&sort=metadata_modified%20desc",
+    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:232114&rows=100&start=0&sort=id%20asc",
     .array_path = "result.results",
     .date_keys = "metadata_modified",
     .id_keys = "id",
@@ -638,8 +650,8 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
       "organization 232114. The catalogue's organization facet reported "
       "331 datasets on 2026-09-20; each record carries id, name, title, "
       "notes, license_id, metadata_created/metadata_modified, "
-      "num_resources, tags and the organization block, sorted "
-      "newest-modified first. This publisher's catalogue is not "
+      "num_resources, tags and the organization block, read in "
+      "ascending id order. This publisher's catalogue is not "
       "registered anywhere else in the tree (only three data.bodik.jp "
       "package_show ids are)." },
 
@@ -649,7 +661,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
     .record_type = "open-data-dataset",
     .tags = "\"japan\",\"open-data\",\"ckan\",\"bodik\",\"city\",\"nisshin\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:232301&rows=100&start=0&sort=metadata_modified%20desc",
+    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:232301&rows=100&start=0&sort=id%20asc",
     .array_path = "result.results",
     .date_keys = "metadata_modified",
     .id_keys = "id",
@@ -666,7 +678,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
       "facet reported 331 datasets on 2026-09-20; each record carries "
       "id, name, title, notes, license_id, "
       "metadata_created/metadata_modified, num_resources, tags and the "
-      "organization block, sorted newest-modified first. This "
+      "organization block, read in ascending id order. This "
       "publisher's catalogue is not registered anywhere else in the "
       "tree (only three data.bodik.jp package_show ids are)." },
 
@@ -676,7 +688,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
     .record_type = "open-data-dataset",
     .tags = "\"japan\",\"open-data\",\"ckan\",\"bodik\",\"city\",\"fukuchiyama\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:262013&rows=100&start=0&sort=metadata_modified%20desc",
+    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:262013&rows=100&start=0&sort=id%20asc",
     .array_path = "result.results",
     .date_keys = "metadata_modified",
     .id_keys = "id",
@@ -693,7 +705,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
       "facet reported 258 datasets on 2026-09-20; each record carries "
       "id, name, title, notes, license_id, "
       "metadata_created/metadata_modified, num_resources, tags and the "
-      "organization block, sorted newest-modified first. This "
+      "organization block, read in ascending id order. This "
       "publisher's catalogue is not registered anywhere else in the "
       "tree (only three data.bodik.jp package_show ids are)." },
 
@@ -703,7 +715,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
     .record_type = "open-data-dataset",
     .tags = "\"japan\",\"open-data\",\"ckan\",\"bodik\",\"city\",\"okinawa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:472115&rows=100&start=0&sort=metadata_modified%20desc",
+    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:472115&rows=100&start=0&sort=id%20asc",
     .array_path = "result.results",
     .date_keys = "metadata_modified",
     .id_keys = "id",
@@ -720,7 +732,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
       "facet reported 258 datasets on 2026-09-20; each record carries "
       "id, name, title, notes, license_id, "
       "metadata_created/metadata_modified, num_resources, tags and the "
-      "organization block, sorted newest-modified first. This "
+      "organization block, read in ascending id order. This "
       "publisher's catalogue is not registered anywhere else in the "
       "tree (only three data.bodik.jp package_show ids are)." },
 
@@ -730,7 +742,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
     .record_type = "open-data-dataset",
     .tags = "\"japan\",\"open-data\",\"ckan\",\"bodik\",\"city\",\"shizuoka\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:221007&rows=100&start=0&sort=metadata_modified%20desc",
+    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:221007&rows=100&start=0&sort=id%20asc",
     .array_path = "result.results",
     .date_keys = "metadata_modified",
     .id_keys = "id",
@@ -747,7 +759,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
       "facet reported 232 datasets on 2026-09-20; each record carries "
       "id, name, title, notes, license_id, "
       "metadata_created/metadata_modified, num_resources, tags and the "
-      "organization block, sorted newest-modified first. This "
+      "organization block, read in ascending id order. This "
       "publisher's catalogue is not registered anywhere else in the "
       "tree (only three data.bodik.jp package_show ids are)." },
 
@@ -757,7 +769,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
     .record_type = "open-data-dataset",
     .tags = "\"japan\",\"open-data\",\"ckan\",\"bodik\",\"city\",\"sanda\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:282197&rows=100&start=0&sort=metadata_modified%20desc",
+    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:282197&rows=100&start=0&sort=id%20asc",
     .array_path = "result.results",
     .date_keys = "metadata_modified",
     .id_keys = "id",
@@ -773,8 +785,8 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
       "organization 282197. The catalogue's organization facet reported "
       "232 datasets on 2026-09-20; each record carries id, name, title, "
       "notes, license_id, metadata_created/metadata_modified, "
-      "num_resources, tags and the organization block, sorted "
-      "newest-modified first. This publisher's catalogue is not "
+      "num_resources, tags and the organization block, read in "
+      "ascending id order. This publisher's catalogue is not "
       "registered anywhere else in the tree (only three data.bodik.jp "
       "package_show ids are)." },
 
@@ -784,7 +796,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
     .record_type = "open-data-dataset",
     .tags = "\"japan\",\"open-data\",\"ckan\",\"bodik\",\"city\",\"kurume\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:402036&rows=100&start=0&sort=metadata_modified%20desc",
+    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:402036&rows=100&start=0&sort=id%20asc",
     .array_path = "result.results",
     .date_keys = "metadata_modified",
     .id_keys = "id",
@@ -801,7 +813,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
       "facet reported 212 datasets on 2026-09-20; each record carries "
       "id, name, title, notes, license_id, "
       "metadata_created/metadata_modified, num_resources, tags and the "
-      "organization block, sorted newest-modified first. This "
+      "organization block, read in ascending id order. This "
       "publisher's catalogue is not registered anywhere else in the "
       "tree (only three data.bodik.jp package_show ids are)." },
 
@@ -811,7 +823,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
     .record_type = "open-data-dataset",
     .tags = "\"japan\",\"open-data\",\"ckan\",\"bodik\",\"city\",\"oita\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:442011&rows=100&start=0&sort=metadata_modified%20desc",
+    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:442011&rows=100&start=0&sort=id%20asc",
     .array_path = "result.results",
     .date_keys = "metadata_modified",
     .id_keys = "id",
@@ -827,8 +839,8 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
       "organization 442011. The catalogue's organization facet reported "
       "207 datasets on 2026-09-20; each record carries id, name, title, "
       "notes, license_id, metadata_created/metadata_modified, "
-      "num_resources, tags and the organization block, sorted "
-      "newest-modified first. This publisher's catalogue is not "
+      "num_resources, tags and the organization block, read in "
+      "ascending id order. This publisher's catalogue is not "
       "registered anywhere else in the tree (only three data.bodik.jp "
       "package_show ids are)." },
 
@@ -838,7 +850,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
     .record_type = "open-data-dataset",
     .tags = "\"japan\",\"open-data\",\"ckan\",\"bodik\",\"ward\",\"meguro\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:131105&rows=100&start=0&sort=metadata_modified%20desc",
+    .url = "https://data.bodik.jp/api/3/action/package_search?fq=organization:131105&rows=100&start=0&sort=id%20asc",
     .array_path = "result.results",
     .date_keys = "metadata_modified",
     .id_keys = "id",
@@ -855,7 +867,7 @@ static const hp_source HP3B30_JPPREFCITY2[] = {
       "facet reported 171 datasets on 2026-09-20; each record carries "
       "id, name, title, notes, license_id, "
       "metadata_created/metadata_modified, num_resources, tags and the "
-      "organization block, sorted newest-modified first. This "
+      "organization block, read in ascending id order. This "
       "publisher's catalogue is not registered anywhere else in the "
       "tree (only three data.bodik.jp package_show ids are)." },
 

@@ -311,9 +311,22 @@ VGEO(geo_usgs_deep_quakes, "geo-usgs-deep-quakes", "USGS deep-focus earthquakes 
   "en", "[\"earthquake\",\"deep\",\"subduction\"]", 3600,
   "Deep-focus events that trace subducting slabs; rare and diagnostic.");
 
+/* WFS rows in this file: `startIndex=0` (2026-11-07). geojson_emit_paged()
+ * advances a WFS cursor only when the URL already names one AND the body's own
+ * numberMatched/totalFeatures exceeds what was read (mechanism 3), so a row
+ * without `startIndex` read ONE page of a declared total and stopped. Measured
+ * per row (count=5 at startIndex 0 and 5): where the server accepted paging
+ * without a sort — GeoServer does that only when it can order by the
+ * feature type's primary key — the two pages were disjoint and the row gets
+ * `startIndex=0` alone. Where it refused ("Cannot do natural order without a
+ * primary key"), the row also gets `sortBy=<a property distinct on the
+ * row's first 200 features>`, checked the same way (pages disjoint, total
+ * unchanged; a bogus sortBy is HTTP 400 "Illegal property name", so the
+ * server reads it). Probe-sized pages (count 2/3/20/50) are 1000 now. The
+ * 20-page geojson ceiling still bounds a run; the remainder is disclosed. */
 VGEO(geo_usgs_gv_holocene, "geo-usgs-gv-holocene", "Smithsonian GVP — Holocene volcanoes", "スミソニアン GVP — 完新世火山",
   "science", "volcano",
-  "https://webservices.volcano.si.edu/geoserver/GVP-VOTW/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=GVP-VOTW:Smithsonian_VOTW_Holocene_Volcanoes&outputFormat=application/json&count=1500",
+  "https://webservices.volcano.si.edu/geoserver/GVP-VOTW/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=GVP-VOTW:Smithsonian_VOTW_Holocene_Volcanoes&outputFormat=application/json&count=1500&sortBy=Volcano_Number&startIndex=0",
   "en", "[\"volcano\",\"gvp\",\"smithsonian\"]", 86400,
   "Authoritative global register of Holocene volcanoes with summit coordinates.");
 

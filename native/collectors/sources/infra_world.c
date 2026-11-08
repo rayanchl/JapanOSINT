@@ -116,12 +116,12 @@ static int iw_shodan(const source_ctx *ctx, intel_sink *sink, const char *ip) {
   char url[256];
   snprintf(url, sizeof url, "https://internetdb.shodan.io/%s", ip);
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0 (infra)", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "SHODAN_INTERNETDB");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   const char *rip = jo_sv(root, "ip");
   if (!rip) rip = ip;
@@ -176,12 +176,12 @@ static int iw_ipapi(const source_ctx *ctx, intel_sink *sink, const char *ip) {
     "http://ip-api.com/json/%s?fields=status,message,country,regionName,"
     "city,lat,lon,isp,org,as,asname,query,reverse", ip);
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0 (infra)", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "IPAPI_GLOBAL");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const char *status = jo_sv(root, "status");
   if (status && strcmp(status, "success") != 0) { cJSON_Delete(root); return 0; }
 
@@ -228,13 +228,14 @@ static int iw_ipapi(const source_ctx *ctx, intel_sink *sink, const char *ip) {
   char *bj = cJSON_PrintUnformatted(data);
   cJSON_AddStringToObject(props, "service", "IPAPI_GLOBAL");
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = key;
   it.title           = q;
   it.summary         = summary;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "en";
   it.record_type     = "infra-ip-geo";
   it.properties_json = pj;
@@ -243,7 +244,7 @@ static int iw_ipapi(const source_ctx *ctx, intel_sink *sink, const char *ip) {
     it.has_geo = 1; it.lat = jlat->valuedouble; it.lon = jlon->valuedouble;
   }
   int em = sink->emit(sink, &it) >= 0 ? 1 : 0;
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   cJSON_Delete(data); cJSON_Delete(props);
   cJSON_Delete(root);
   fprintf(stderr, "[IPAPI_GLOBAL] emitted %d\n", em);
@@ -269,11 +270,11 @@ static int iw_bgpview_ip(const source_ctx *ctx, intel_sink *sink, const char *ip
   char url[256];
   snprintf(url, sizeof url, "https://api.bgpview.io/ip/%s", ip);
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0 (infra)", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "BGPVIEW");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   cJSON *d = cJSON_GetObjectItem(root, "data");
   cJSON *prefixes = d ? cJSON_GetObjectItem(d, "prefixes") : NULL;
   int em = 0;
@@ -320,11 +321,11 @@ static int iw_bgpview_asn(const source_ctx *ctx, intel_sink *sink, long asn) {
   char url[128];
   snprintf(url, sizeof url, "https://api.bgpview.io/asn/%ld", asn);
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0 (infra)", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "BGPVIEW");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   cJSON *d = cJSON_GetObjectItem(root, "data");
   if (!d) { cJSON_Delete(root); return 0; }
   const char *name = jo_sv(d, "name");
@@ -366,11 +367,11 @@ static int iw_bgpview_search(const source_ctx *ctx, intel_sink *sink,
   snprintf(url, sizeof url, "https://api.bgpview.io/search?query_term=%s", enc);
   free(enc);
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0 (infra)", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "BGPVIEW");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   cJSON *d = cJSON_GetObjectItem(root, "data");
   cJSON *asns = d ? cJSON_GetObjectItem(d, "asns") : NULL;
   int em = 0;
@@ -421,11 +422,11 @@ static int iw_peeringdb(const source_ctx *ctx, intel_sink *sink, const char *q) 
     "https://www.peeringdb.com/api/net?name_search=%s", enc);
   free(enc);
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0 (infra)", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "PEERINGDB_GLOBAL");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   cJSON *arr = cJSON_GetObjectItem(root, "data");
   int em = 0;
   if (cJSON_IsArray(arr)) {
@@ -482,11 +483,11 @@ static int iw_ripestat_ip(const source_ctx *ctx, intel_sink *sink, const char *i
   snprintf(url, sizeof url,
     "https://stat.ripe.net/data/network-info/data.json?resource=%s", ip);
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0 (infra)", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "RIPESTAT_GLOBAL");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   cJSON *d = cJSON_GetObjectItem(root, "data");
   const char *prefix = d ? jo_sv(d, "prefix") : NULL;
   char asns[256]; asns[0] = 0;
@@ -521,11 +522,11 @@ static int iw_ripestat_asn(const source_ctx *ctx, intel_sink *sink, long asn) {
   snprintf(url, sizeof url,
     "https://stat.ripe.net/data/as-overview/data.json?resource=AS%ld", asn);
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0 (infra)", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "RIPESTAT_GLOBAL");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   cJSON *d = cJSON_GetObjectItem(root, "data");
   if (!d) { cJSON_Delete(root); return 0; }
   const char *holder = jo_sv(d, "holder");
@@ -563,6 +564,7 @@ static int iw_ripestat_asn(const source_ctx *ctx, intel_sink *sink, long asn) {
 
 /* ---- dispatch ----------------------------------------------------------- */
 static int run(const source_ctx *ctx, intel_sink *sink) {
+  int rc = 0;   /* a helper's -1 = refused/unparsable fetch (2026-11-07) */
   const char *q = (ctx->entity && *ctx->entity) ? ctx->entity : NULL;
   if (!q) return -1;
   const char *id = ctx->source_id;
@@ -571,30 +573,27 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   if (strcmp(id, "SHODAN_INTERNETDB") == 0) {
     if (!is_ip) { fprintf(stderr, "[SHODAN_INTERNETDB] entity not an IP\n"); return 0; }
-    iw_shodan(ctx, sink, q);
-    return 0;
+    return iw_shodan(ctx, sink, q) < 0 ? -1 : 0;
   }
   if (strcmp(id, "IPAPI_GLOBAL") == 0) {
     if (!is_ip) { fprintf(stderr, "[IPAPI_GLOBAL] entity not an IP\n"); return 0; }
-    iw_ipapi(ctx, sink, q);
-    return 0;
+    return iw_ipapi(ctx, sink, q) < 0 ? -1 : 0;
   }
   if (strcmp(id, "BGPVIEW") == 0) {
-    if (is_ip) iw_bgpview_ip(ctx, sink, q);
-    else if (asn) iw_bgpview_asn(ctx, sink, asn);
-    else iw_bgpview_search(ctx, sink, q);
-    return 0;
+    if (is_ip) rc = iw_bgpview_ip(ctx, sink, q);
+    else if (asn) rc = iw_bgpview_asn(ctx, sink, asn);
+    else rc = iw_bgpview_search(ctx, sink, q);
+    return rc < 0 ? -1 : 0;
   }
   if (strcmp(id, "PEERINGDB_GLOBAL") == 0) {
     /* name_search accepts free text; also fine for an ASN string */
-    iw_peeringdb(ctx, sink, q);
-    return 0;
+    return iw_peeringdb(ctx, sink, q) < 0 ? -1 : 0;
   }
   if (strcmp(id, "RIPESTAT_GLOBAL") == 0) {
-    if (is_ip) iw_ripestat_ip(ctx, sink, q);
-    else if (asn) iw_ripestat_asn(ctx, sink, asn);
+    if (is_ip) rc = iw_ripestat_ip(ctx, sink, q);
+    else if (asn) rc = iw_ripestat_asn(ctx, sink, asn);
     else fprintf(stderr, "[RIPESTAT_GLOBAL] entity not an IP/ASN\n");
-    return 0;
+    return rc < 0 ? -1 : 0;
   }
   return -1;
 }

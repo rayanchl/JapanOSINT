@@ -86,7 +86,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   snprintf(url, ulen, "%s%s", WSPR_HOST, q);
   free(q);
 
-  const char *hdrs[] = { "User-Agent: JapanOSINT/1.0 (wspr.live)", NULL };
+  const char *hdrs[] = { NULL };
   http_response hr = {0};
   int rc = http_request(ctx->http, "GET", url, hdrs, NULL, 0, 45000, 1, &hr);
   free(url);

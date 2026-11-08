@@ -10,7 +10,8 @@
  *   position, which is what the row is about. No coordinate is derived from
  *   the satellite (that would need propagation, which is out of scope here).
  * parse_notes honoured: "Top-level JSON array, 25 per page, newest scheduled
- *   first; use ?page=N"; we walk PAGES pages politely.
+ *   first; use ?page=N" — no longer true: ?page is refused since at least
+ *   2026-11-07 (see run()), so one page is read and the rest disclosed.
  * Licence: SatNOGS / Libre Space Foundation — CC-BY-SA, keyless.
  */
 #include "lib/jocore.h"
@@ -23,7 +24,6 @@
 #include <string.h>
 
 #define SATNOGS_OBS_BASE "https://network.satnogs.org/api/observations/?format=json"
-#define PAGES 4
 
 static int emit_page(cJSON *arr, intel_sink *sink) {
   int n = 0;
@@ -113,27 +113,50 @@ static int emit_page(cJSON *arr, intel_sink *sink) {
   return n;
 }
 
+/* A refusal served as an ARRAY: SatNOGS answers a deprecated request with
+ * `[{"error":"…"}]`, which passes cJSON_IsArray and used to be read as one
+ * observation-shaped page. Returns the message, or NULL for a real page. */
+static const char *sat_error_array(const cJSON *doc) {
+  if (!cJSON_IsArray(doc) || cJSON_GetArraySize(doc) != 1) return NULL;
+  const cJSON *e = cJSON_GetArrayItem(doc, 0);
+  if (!cJSON_IsObject(e) || cJSON_GetArraySize(e) != 1) return NULL;
+  return jo_sv(e, "error");
+}
+
+/* ONE page per run, disclosed (2026-11-07). The upstream retired `?page=N`:
+ * measured that day, `?format=json&page=2` answers HTTP 400 with
+ * `[{"error":"Parameter 'page' is now deprecated, please use 'Link' header
+ * for getting URLs for next/previous pages."}]`, and page 1 carries
+ * `Link: <…?cursor=…&format=json>; rel="next"`. So the PAGES loop below this
+ * comment's predecessor read page 1, was refused on page 2 and called that
+ * "the end" — three pages lost every run in silence. Following the cursor
+ * needs the response's Link header, which jo_get/feed_get_json do not expose
+ * (core/httpclient.h); until they do, the shortfall is a notice, not a guess. */
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  int total = 0, fetched_pages = 0;
-  for (int page = 1; page <= PAGES; page++) {
-    char url[192];
-    if (page == 1) snprintf(url, sizeof url, "%s", SATNOGS_OBS_BASE);
-    else           snprintf(url, sizeof url, "%s&page=%d", SATNOGS_OBS_BASE, page);
-    cJSON *doc = feed_get_json(ctx->http, url, 30000);
-    if (!doc) break;                   /* page N>1 missing is just the end */
-    if (!cJSON_IsArray(doc)) { cJSON_Delete(doc); break; }
-    fetched_pages++;
-    int got = cJSON_GetArraySize(doc);
-    total += emit_page(doc, sink);
-    cJSON_Delete(doc);
-    if (got == 0) break;
-  }
-  if (fetched_pages == 0) {
+  cJSON *doc = feed_get_json(ctx->http, SATNOGS_OBS_BASE, 30000);
+  if (!doc) {
     fprintf(stderr, "[satnogs-network-observations] fetch failed\n");
     return -1;
   }
-  fprintf(stderr, "[satnogs-network-observations] emitted %d over %d page(s)\n",
-          total, fetched_pages);
+  const char *err = sat_error_array(doc);
+  if (err) {
+    fprintf(stderr, "[satnogs-network-observations] upstream refused: %s\n", err);
+    cJSON_Delete(doc);
+    return -1;
+  }
+  if (!cJSON_IsArray(doc)) { cJSON_Delete(doc); return -1; }
+  int got = cJSON_GetArraySize(doc);
+  int total = emit_page(doc, sink);
+  cJSON_Delete(doc);
+  if (got > 0)
+    jo_trunc_notice_scoped(sink, "satnogs-network-observations", "link-cursor",
+                           SATNOGS_OBS_BASE, total, -1,
+                           "only page 1 was read: ?page=N is refused (HTTP 400, "
+                           "deprecated) and the next page is named only in the "
+                           "Link response header, which this client does not expose",
+                           "expose response headers from core/httpclient and follow "
+                           "Link rel=next (a cursor URL)");
+  fprintf(stderr, "[satnogs-network-observations] emitted %d (page 1 only)\n", total);
   return 0;
 }
 

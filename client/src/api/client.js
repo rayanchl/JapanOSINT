@@ -87,6 +87,22 @@ export function errorMessage(e) {
   return e.message || String(e);
 }
 
+/**
+ * Some routes answer HTTP 200 with `{"error": "..."}` and no payload (the
+ * transit station/vehicle lookups did until 2026-11-07; the database
+ * explorer's query route still does). A page that only checks `res.ok` then
+ * dereferences fields that are not there. This turns such a body into the same
+ * ApiError a 4xx would have produced, so one code path renders both. Returns
+ * the body unchanged when it carries no error.
+ */
+export function rejectBodyError(body, status = 200) {
+  if (body && typeof body === 'object' && !Array.isArray(body) && body.error) {
+    const msg = typeof body.error === 'string' ? body.error : (body.error.message || JSON.stringify(body.error));
+    throw new ApiError(status, msg, body);
+  }
+  return body;
+}
+
 /** True when the server says this account may not use an operator surface. */
 export function isForbidden(e) { return e instanceof ApiError && e.status === 403; }
 

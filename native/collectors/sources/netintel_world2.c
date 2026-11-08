@@ -14,7 +14,6 @@
 #include <strings.h>
 #include "_jp_osint.inc"
 
-static const char *NI_UA = "User-Agent: JapanOSINT/1.0 (osint@example.org)";
 
 /* GreyNoise Community answers a CLEAN ip with HTTP 404 and a fully-formed
  * JSON body: {"ip":…,"noise":false,"riot":false,"message":"IP not observed
@@ -22,7 +21,7 @@ static const char *NI_UA = "User-Agent: JapanOSINT/1.0 (osint@example.org)";
  * only accepts 200, so every quiet IP (the common case) silently produced
  * zero rows and the source looked dead. Do the request here so 404 is kept. */
 static char *gn_get(const source_ctx *ctx, const char *url) {
-  const char *hdrs[] = { "Accept: application/json", NI_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   http_response hr = {0};
   int rc = http_request(ctx->http, "GET", url, hdrs, NULL, 0, 20000, 1, &hr);
   if (rc != 0 || !hr.body || (hr.status != 200 && hr.status != 404)) {
@@ -40,9 +39,9 @@ static int run_greynoise(const source_ctx *ctx, intel_sink *sink, const char *en
   char url[512];
   snprintf(url, sizeof url, "https://api.greynoise.io/v3/community/%s", enc);
   char *body = gn_get(ctx, url);
-  if (!body) return 0;
+  if (!body) return -1;   /* gn_get already kept the 404 answer: NULL is a real failure */
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const char *ip = jo_sv(root, "ip");
   if (!ip) { cJSON_Delete(root); return 0; }
   const cJSON *noise = cJSON_GetObjectItem(root, "noise");
@@ -66,7 +65,7 @@ static int run_greynoise(const source_ctx *ctx, intel_sink *sink, const char *en
   cJSON_AddStringToObject(p, "service", "GREYNOISE_COMMUNITY");
   cJSON_AddStringToObject(p, "ip", ip);
   cJSON_AddBoolToObject(p, "success", 1);
-  char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+  jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
   char title[256];
   if (classification)
     snprintf(title, sizeof title, "%s — %s%s%s", ip, classification,
@@ -75,14 +74,15 @@ static int run_greynoise(const source_ctx *ctx, intel_sink *sink, const char *en
     snprintf(title, sizeof title, "%s — not observed scanning (GreyNoise)", ip);
   else
     snprintf(title, sizeof title, "%s — unknown", ip);
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key = ip; it.title = title;
   it.summary = classification ? classification : msg;
-  it.body = bj; it.link = link; it.lang = "en";
+  it.body = bt ? bt : bj; it.link = link; it.lang = "en";
   it.record_type = "ip-reputation";
   it.properties_json = pj; it.tags_json = "[\"osint-search\",\"GREYNOISE_COMMUNITY\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   cJSON_Delete(root);
   return rc >= 0 ? 1 : 0;
 }
@@ -97,11 +97,11 @@ static int run_redhat_cve(const source_ctx *ctx, intel_sink *sink, const char *r
   char enc[64]; { char *e = jo_urlencode(raw); if (!e) return 0; snprintf(enc, sizeof enc, "%s", e); free(e); }
   char url[512];
   snprintf(url, sizeof url, "https://access.redhat.com/hydra/rest/securitydata/cve/%s.json", enc);
-  const char *hdrs[] = { "Accept: application/json", NI_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "REDHAT_CVE");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const char *name = jo_sv(root, "name");
   if (!name) { cJSON_Delete(root); return 0; }
   const char *sev = jo_sv(root, "threat_severity");
@@ -121,17 +121,18 @@ static int run_redhat_cve(const source_ctx *ctx, intel_sink *sink, const char *r
   cJSON_AddStringToObject(p, "service", "REDHAT_CVE");
   cJSON_AddStringToObject(p, "cve", name);
   cJSON_AddBoolToObject(p, "success", 1);
-  char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+  jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
   char link[256], title[300];
   snprintf(link, sizeof link, "https://access.redhat.com/security/cve/%s", name);
   snprintf(title, sizeof title, "%s%s%s", name, sev ? " — " : "", sev ? sev : "");
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key = name; it.title = title; it.summary = sev;
-  it.body = bj; it.link = link; it.lang = "en"; it.published_at = pubdate;
+  it.body = bt ? bt : bj; it.link = link; it.lang = "en"; it.published_at = pubdate;
   it.record_type = "cve";
   it.properties_json = pj; it.tags_json = "[\"osint-search\",\"REDHAT_CVE\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   cJSON_Delete(root);
   return rc >= 0 ? 1 : 0;
 }
@@ -147,7 +148,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   else if (!strcmp(sid, "REDHAT_CVE"))          n = run_redhat_cve(ctx, sink, q);
   free(enc);
   fprintf(stderr, "[%s] emitted %d\n", sid, n);
-  return 0;
+  return n < 0 ? -1 : 0;
 }
 
 #define NI_DEF(sym, ID, NM, DESC) \

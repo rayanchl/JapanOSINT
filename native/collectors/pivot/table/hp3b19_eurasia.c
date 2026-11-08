@@ -692,8 +692,13 @@ static const hp_source HP3B19_EURASIA[] = {
     .record_type = "licensed-entity",
     .tags = "\"latvia\",\"finance\",\"licence\",\"credit\",\"register\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.gov.lv/dati/api/3/action/datastore_search?resource_id=9853bae0-2157-40f7-8d48-a8a5690d0c8a&limit=100",
+    /* `sort=_id asc` (2026-11-07): datastore_search promises no order without
+     * it. Measured on this resource: sort=frobnicate is HTTP 409 (validated),
+     * _id asc and desc answer different pages, the total (74) is unchanged
+     * by the sort, ascending _ids are monotonic and offset pages disjoint. */
+    .url = "https://data.gov.lv/dati/api/3/action/datastore_search?resource_id=9853bae0-2157-40f7-8d48-a8a5690d0c8a&limit=100&offset=0&sort=_id%20asc",
     .array_path = "result.records",
+    .id_keys = "_id",   /* none was declared and `_id` is not in the engine's ID fallback list, so records keyed on their title and collapsed across pages */
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
@@ -710,8 +715,13 @@ static const hp_source HP3B19_EURASIA[] = {
     .record_type = "licensed-entity",
     .tags = "\"latvia\",\"finance\",\"licence\",\"debt\",\"register\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.gov.lv/dati/api/3/action/datastore_search?resource_id=d2d285ba-b54b-4929-b973-5846efbb33e5&limit=100",
+    /* `sort=_id asc` (2026-11-07): datastore_search promises no order without
+     * it. Measured on this resource: sort=frobnicate is HTTP 409 (validated),
+     * _id asc and desc answer different pages, the total (52) is unchanged
+     * by the sort, ascending _ids are monotonic and offset pages disjoint. */
+    .url = "https://data.gov.lv/dati/api/3/action/datastore_search?resource_id=d2d285ba-b54b-4929-b973-5846efbb33e5&limit=100&offset=0&sort=_id%20asc",
     .array_path = "result.records",
+    .id_keys = "_id",   /* none was declared and `_id` is not in the engine's ID fallback list, so records keyed on their title and collapsed across pages */
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
@@ -728,7 +738,11 @@ static const hp_source HP3B19_EURASIA[] = {
     .record_type = "emissions-permit",
     .tags = "\"latvia\",\"environment\",\"emissions\",\"permit\",\"ghg\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.gov.lv/dati/api/3/action/datastore_search?resource_id=65e8f0b0-186d-4dc7-a100-9e151e2b3b19&limit=100",
+    /* `sort=_id asc` (2026-11-07): datastore_search promises no order without
+     * it. Measured on this resource: sort=frobnicate is HTTP 409 (validated),
+     * _id asc and desc answer different pages, the total (47) is unchanged
+     * by the sort, ascending _ids are monotonic and offset pages disjoint. */
+    .url = "https://data.gov.lv/dati/api/3/action/datastore_search?resource_id=65e8f0b0-186d-4dc7-a100-9e151e2b3b19&limit=100&offset=0&sort=_id%20asc",
     .array_path = "result.records",
     .id_keys = "_id",
     .interval = 86400,
@@ -828,7 +842,11 @@ static const hp_source HP3B19_EURASIA[] = {
     .record_type = "licensed-entity",
     .tags = "\"croatia\",\"licence\",\"security\",\"detective\",\"register\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.gov.hr/ckan/api/3/action/datastore_search?resource_id=4623749f-a3bf-4fb5-b2b8-4c01484b8003&limit=100",
+    /* `sort=_id asc` (2026-11-07): datastore_search promises no order without
+     * it. Measured on this resource: sort=frobnicate is HTTP 409 (validated),
+     * _id asc and desc answer different pages, the total (49) is unchanged
+     * by the sort, ascending _ids are monotonic and offset pages disjoint. */
+    .url = "https://data.gov.hr/ckan/api/3/action/datastore_search?resource_id=4623749f-a3bf-4fb5-b2b8-4c01484b8003&limit=100&offset=0&sort=_id%20asc",
     .array_path = "result.records",
     .id_keys = "_id",
     .interval = 86400,
@@ -847,8 +865,13 @@ static const hp_source HP3B19_EURASIA[] = {
     .record_type = "rail-line",
     .tags = "\"croatia\",\"rail\",\"infrastructure\",\"transport\",\"register\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.gov.hr/ckan/api/3/action/datastore_search?resource_id=457f3943-b4b8-4efe-a7fb-920420bed4d5&limit=100",
+    /* `sort=_id asc` (2026-11-07): datastore_search promises no order without
+     * it. Measured on this resource: sort=frobnicate is HTTP 409 (validated),
+     * _id asc and desc answer different pages, the total (56) is unchanged
+     * by the sort, ascending _ids are monotonic and offset pages disjoint. */
+    .url = "https://data.gov.hr/ckan/api/3/action/datastore_search?resource_id=457f3943-b4b8-4efe-a7fb-920420bed4d5&limit=100&offset=0&sort=_id%20asc",
     .array_path = "result.records",
+    .id_keys = "_id",   /* none was declared and `_id` is not in the engine's ID fallback list, so records keyed on their title and collapsed across pages */
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
@@ -873,6 +896,7 @@ static const hp_source HP3B19_EURASIA[] = {
      * `total` for the disclosure. */
     .url = "https://data.zagreb.hr/api/3/action/datastore_search?resource_id=b110b7b6-f9b6-4bbf-8db8-a9245895f316&limit=100&sort=_id%20asc",
     .array_path = "result.records",
+    .id_keys = "UL_JID,_id",   /* 2026-11-07: none was declared; UL_JID (the street id) is distinct on 5,489 of 5,489, the whole resource */
     .interval = 604800,
     .page_param = "offset",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -889,8 +913,13 @@ static const hp_source HP3B19_EURASIA[] = {
     .record_type = "lease-contract",
     .tags = "\"croatia\",\"zagreb\",\"property\",\"lease\",\"contract\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.zagreb.hr/api/3/action/datastore_search?resource_id=11d4b6d6-d54b-4c6e-9c85-0d1208f1c83c&limit=100",
+    /* `sort=_id asc` (2026-11-07): datastore_search promises no order without
+     * it. Measured on this resource: sort=frobnicate is HTTP 409 (validated),
+     * _id asc and desc answer different pages, the total (195) is unchanged
+     * by the sort, ascending _ids are monotonic and offset pages disjoint. The UNSORTED request answered HTTP 502 and the sorted one 200, so this row was failing without it. */
+    .url = "https://data.zagreb.hr/api/3/action/datastore_search?resource_id=11d4b6d6-d54b-4c6e-9c85-0d1208f1c83c&limit=100&offset=0&sort=_id%20asc",
     .array_path = "result.records",
+    .id_keys = "_id",   /* none was declared and `_id` is not in the engine's ID fallback list, so records keyed on their title and collapsed across pages */
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
@@ -907,8 +936,13 @@ static const hp_source HP3B19_EURASIA[] = {
     .record_type = "elected-official",
     .tags = "\"croatia\",\"zagreb\",\"politics\",\"council\",\"register\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.zagreb.hr/api/3/action/datastore_search?resource_id=b8bc32a8-4396-4e74-8072-84b3b5d1423a&limit=100",
+    /* `sort=_id asc` (2026-11-07): datastore_search promises no order without
+     * it. Measured on this resource: sort=frobnicate is HTTP 409 (validated),
+     * _id asc and desc answer different pages, the total (48) is unchanged
+     * by the sort, ascending _ids are monotonic and offset pages disjoint. */
+    .url = "https://data.zagreb.hr/api/3/action/datastore_search?resource_id=b8bc32a8-4396-4e74-8072-84b3b5d1423a&limit=100&offset=0&sort=_id%20asc",
     .array_path = "result.records",
+    .id_keys = "_id",   /* none was declared and `_id` is not in the engine's ID fallback list, so records keyed on their title and collapsed across pages */
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
@@ -958,8 +992,13 @@ static const hp_source HP3B19_EURASIA[] = {
     .record_type = "licensed-entity",
     .tags = "\"slovenia\",\"company\",\"register\",\"employment\",\"social\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://podatki.gov.si/api/3/action/datastore_search?resource_id=c33d8e51-dfb5-450e-9beb-bf44120ddf59&limit=100",
+    /* `sort=_id asc` (2026-11-07): datastore_search promises no order without
+     * it. Measured on this resource: sort=frobnicate is HTTP 409 (validated),
+     * _id asc and desc answer different pages, the total (71) is unchanged
+     * by the sort, ascending _ids are monotonic and offset pages disjoint. */
+    .url = "https://podatki.gov.si/api/3/action/datastore_search?resource_id=c33d8e51-dfb5-450e-9beb-bf44120ddf59&limit=100&offset=0&sort=_id%20asc",
     .array_path = "result.records",
+    .id_keys = "_id",   /* none was declared and `_id` is not in the engine's ID fallback list, so records keyed on their title and collapsed across pages */
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
@@ -977,8 +1016,13 @@ static const hp_source HP3B19_EURASIA[] = {
     .record_type = "licensed-entity",
     .tags = "\"slovenia\",\"health\",\"social\",\"licence\",\"register\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://podatki.gov.si/api/3/action/datastore_search?resource_id=fb609a9b-0183-430c-a438-ee4ca3ba973d&limit=100",
+    /* `sort=_id asc` (2026-11-07): datastore_search promises no order without
+     * it. Measured on this resource: sort=frobnicate is HTTP 409 (validated),
+     * _id asc and desc answer different pages, the total (2) is unchanged
+     * by the sort, ascending _ids are monotonic and offset pages disjoint. */
+    .url = "https://podatki.gov.si/api/3/action/datastore_search?resource_id=fb609a9b-0183-430c-a438-ee4ca3ba973d&limit=100&offset=0&sort=_id%20asc",
     .array_path = "result.records",
+    .id_keys = "_id",   /* none was declared and `_id` is not in the engine's ID fallback list, so records keyed on their title and collapsed across pages */
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
@@ -1103,8 +1147,13 @@ static const hp_source HP3B19_EURASIA[] = {
     .record_type = "licensed-entity",
     .tags = "\"ireland\",\"gambling\",\"licence\",\"register\",\"revenue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.gov.ie/api/3/action/datastore_search?resource_id=f9923f40-1243-405c-a158-bc746ce0c0d0&limit=100",
+    /* `sort=_id asc` (2026-11-07): datastore_search promises no order without
+     * it. Measured on this resource: sort=frobnicate is HTTP 409 (validated),
+     * _id asc and desc answer different pages, the total (92) is unchanged
+     * by the sort, ascending _ids are monotonic and offset pages disjoint. */
+    .url = "https://data.gov.ie/api/3/action/datastore_search?resource_id=f9923f40-1243-405c-a158-bc746ce0c0d0&limit=100&offset=0&sort=_id%20asc",
     .array_path = "result.records",
+    .id_keys = "_id",   /* none was declared and `_id` is not in the engine's ID fallback list, so records keyed on their title and collapsed across pages */
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
@@ -1121,8 +1170,13 @@ static const hp_source HP3B19_EURASIA[] = {
     .record_type = "property-record",
     .tags = "\"ireland\",\"dublin\",\"property\",\"vacant\",\"register\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.smartdublin.ie/api/3/action/datastore_search?resource_id=d3b5ed8b-e99b-46e0-a46e-4295af20ede8&limit=100",
+    /* `sort=_id asc` (2026-11-07): datastore_search promises no order without
+     * it. Measured on this resource: sort=frobnicate is HTTP 409 (validated),
+     * _id asc and desc answer different pages, the total (41) is unchanged
+     * by the sort, ascending _ids are monotonic and offset pages disjoint. */
+    .url = "https://data.smartdublin.ie/api/3/action/datastore_search?resource_id=d3b5ed8b-e99b-46e0-a46e-4295af20ede8&limit=100&offset=0&sort=_id%20asc",
     .array_path = "result.records",
+    .id_keys = "_id",   /* none was declared and `_id` is not in the engine's ID fallback list, so records keyed on their title and collapsed across pages */
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
@@ -1138,8 +1192,13 @@ static const hp_source HP3B19_EURASIA[] = {
     .record_type = "property-record",
     .tags = "\"ireland\",\"dublin\",\"property\",\"derelict\",\"register\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.smartdublin.ie/api/3/action/datastore_search?resource_id=969d35e5-e686-49e2-babc-3b66457d54e5&limit=100",
+    /* `sort=_id asc` (2026-11-07): datastore_search promises no order without
+     * it. Measured on this resource: sort=frobnicate is HTTP 409 (validated),
+     * _id asc and desc answer different pages, the total (16) is unchanged
+     * by the sort, ascending _ids are monotonic and offset pages disjoint. */
+    .url = "https://data.smartdublin.ie/api/3/action/datastore_search?resource_id=969d35e5-e686-49e2-babc-3b66457d54e5&limit=100&offset=0&sort=_id%20asc",
     .array_path = "result.records",
+    .id_keys = "_id",   /* none was declared and `_id` is not in the engine's ID fallback list, so records keyed on their title and collapsed across pages */
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
@@ -1157,8 +1216,13 @@ static const hp_source HP3B19_EURASIA[] = {
     .record_type = "licensed-entity",
     .tags = "\"ireland\",\"dublin\",\"environment\",\"solvent\",\"register\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.smartdublin.ie/api/3/action/datastore_search?resource_id=6094dd64-389a-41b0-9a61-e1c3dab17e48&limit=100",
+    /* `sort=_id asc` (2026-11-07): datastore_search promises no order without
+     * it. Measured on this resource: sort=frobnicate is HTTP 409 (validated),
+     * _id asc and desc answer different pages, the total (66) is unchanged
+     * by the sort, ascending _ids are monotonic and offset pages disjoint. */
+    .url = "https://data.smartdublin.ie/api/3/action/datastore_search?resource_id=6094dd64-389a-41b0-9a61-e1c3dab17e48&limit=100&offset=0&sort=_id%20asc",
     .array_path = "result.records",
+    .id_keys = "_id",   /* none was declared and `_id` is not in the engine's ID fallback list, so records keyed on their title and collapsed across pages */
     .interval = 604800,
     .page_param = "offset",
     .page_size = 100,
@@ -1505,12 +1569,17 @@ static const hp_source HP3B19_EURASIA[] = {
     .record_type = "address-record",
     .tags = "\"ukraine\",\"address\",\"register\",\"cadastre\",\"reference\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.gov.ua/api/3/action/datastore_search?resource_id=0d9f131a-389f-407d-8f49-cee60838af22&limit=100",
+    /* `sort=_id asc` (2026-11-07): datastore_search promises no order without
+     * it. Measured on this resource: sort=frobnicate is HTTP 409 (validated),
+     * _id asc and desc answer different pages, the total (27,500) is unchanged
+     * by the sort, ascending _ids are monotonic and offset pages disjoint. At 100 a page under the 20-page default the row read 2,000 of 27,500; limit=1000 is honoured (offset 1000 answers _id 1001..2000), so the whole resource is read each run. */
+    .url = "https://data.gov.ua/api/3/action/datastore_search?resource_id=0d9f131a-389f-407d-8f49-cee60838af22&limit=1000&offset=0&sort=_id%20asc",
     .array_path = "result.records",
     .id_keys = "_id",
     .interval = 86400,
     .page_param = "offset",
-    .page_size = 100,
+    .page_size = 1000,
+    .page_max = 30,   /* 27,500 records on 2026-11-07, with headroom */
     .page_start = 0,
     .title_keys = "addresspostname",
     .description = "The Ukrainian state address register as queryable rows: "
@@ -1582,8 +1651,13 @@ static const hp_source HP3B19_EURASIA[] = {
     .record_type = "facility-record",
     .tags = "\"ireland\",\"cork\",\"burial\",\"facility\",\"register\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.corkcity.ie/api/3/action/datastore_search?resource_id=4ee7dbf5-74f8-48a2-98a9-98e7ca2fa69c&limit=100",
+    /* `sort=_id asc` (2026-11-07): datastore_search promises no order without
+     * it. Measured on this resource: sort=frobnicate is HTTP 409 (validated),
+     * _id asc and desc answer different pages, the total (40) is unchanged
+     * by the sort, ascending _ids are monotonic and offset pages disjoint. */
+    .url = "https://data.corkcity.ie/api/3/action/datastore_search?resource_id=4ee7dbf5-74f8-48a2-98a9-98e7ca2fa69c&limit=100&offset=0&sort=_id%20asc",
     .array_path = "result.records",
+    .id_keys = "_id",   /* none was declared and `_id` is not in the engine's ID fallback list, so records keyed on their title and collapsed across pages */
     .interval = 604800,
     .lat_key = "Latitude",
     .lon_key = "Longitude",
@@ -2867,13 +2941,26 @@ static const hp_source HP3B19_EURASIA[] = {
     .record_type = "dataset-record",
     .tags = "\"ukraine\",\"opendata\",\"catalogue\",\"dataset\",\"resource\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.gov.ua/api/3/action/current_package_list_with_resources?limit=100",
-    .array_path = "result",
+    /* Re-pointed 2026-11-07 from current_package_list_with_resources, a BARE
+     * list ordered newest-modified first with no total: this row read its
+     * first 20 pages (2,000 of ~37,000) every run, and an edit mid-walk
+     * shifted every later page. package_search carries the same full package
+     * dicts with resources inline (checked: resource download URLs present),
+     * declares result.count, and takes a stable sort. Measured: count 36,759
+     * plain, id asc and id desc (the sort is not a filter); asc and desc
+     * first pages differ; ascending ids monotonic; start 0/100 disjoint;
+     * start=30000 read twice is identical; the last page (start=36700)
+     * holds 59. A page is ~2.1 MB, so the cycle reads 50 pages (~5,000
+     * datasets, ~105 MB) a run and comes round in about eight days. */
+    .url = "https://data.gov.ua/api/3/action/package_search?rows=100&start=0&sort=id+asc",
+    .array_path = "result.results",
     .id_keys = "name",
     .interval = 86400,
-    .page_param = "offset",
+    .page_max = 50,
+    .page_param = "start",
+    .page_resume = 1,
     .page_size = 100,
-    .page_start = 0,
+    .page_zero_based = 1,
     .title_keys = "title",
     .description = "Ukrainian government datasets returned with every distribution "
       "inline rather than as a metadata stub: the publishing body, "

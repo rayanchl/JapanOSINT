@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import LineChip from './LineChip.jsx';
 import DeparturesBoard from './DeparturesBoard.jsx';
-import apiUrl from '../../../utils/apiUrl.js';
+import { api, errorMessage, rejectBodyError } from '../../../api/client.js';
 
 // The popup is too small for an unbounded alert list; it shows this many and
 // states the bound.
@@ -17,12 +17,15 @@ export default function StationPopup({ properties }) {
     let cancelled = false;
     (async () => {
       try {
-        const r = await fetch(apiUrl(`/api/transit/station/${encodeURIComponent(stationUid)}/summary`));
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        const body = await r.json();
+        // The route answered HTTP 200 {"error":"station not found"} for an
+        // unknown station (2026-11-07), and `data.station.name` below then
+        // threw and unmounted the whole map. A body error is a failure
+        // whatever the status, and a payload without `station` is one too.
+        const body = rejectBodyError(await api.get(`/api/transit/station/${encodeURIComponent(stationUid)}/summary`));
+        if (!body || typeof body !== 'object' || !body.station) throw new Error('the server returned no station record');
         if (!cancelled) setData(body);
       } catch (e) {
-        if (!cancelled) setError(e.message);
+        if (!cancelled) setError(errorMessage(e));
       }
     })();
     return () => { cancelled = true; };
@@ -34,6 +37,8 @@ export default function StationPopup({ properties }) {
   const now = new Date();
   const nowSec = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
 
+  const lines = Array.isArray(data.lines) ? data.lines : [];
+  const alerts = Array.isArray(data.alerts) ? data.alerts : [];
   const isCluster = !!data.station?.cluster_uid;
   const memberCount = data.station?.member_count;
 
@@ -53,23 +58,23 @@ export default function StationPopup({ properties }) {
       {data.station.operator && (
         <div className="text-[10px] text-gray-500 font-mono">{data.station.operator}</div>
       )}
-      {data.lines.length > 0 && (
+      {lines.length > 0 && (
         <div className="flex flex-wrap gap-1">
-          {data.lines.map((l, i) => (
+          {lines.map((l, i) => (
             <LineChip key={i} color={l.color} refText={l.ref} name={l.name} />
           ))}
         </div>
       )}
-      {data.alerts.length > 0 && (
+      {alerts.length > 0 && (
         <div className="text-xs text-amber-300 bg-amber-900/30 rounded px-1.5 py-1 space-y-0.5">
-          {data.alerts.slice(0, ALERTS_SHOWN).map((a, i) => (
+          {alerts.slice(0, ALERTS_SHOWN).map((a, i) => (
             <div key={i}>{a.header_text || a.description_text}</div>
           ))}
           {/* Three fitted in the popup; the fourth disruption did not, and the
             * reader had no way to know it existed. */}
-          {data.alerts.length > ALERTS_SHOWN && (
+          {alerts.length > ALERTS_SHOWN && (
             <div className="text-amber-200/70">
-              Showing {ALERTS_SHOWN} of {data.alerts.length} active alerts.
+              Showing {ALERTS_SHOWN} of {alerts.length} active alerts.
             </div>
           )}
         </div>

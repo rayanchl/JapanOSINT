@@ -28,18 +28,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_emodnet_wfs.inc"
 
-#define WFS_URL "https://ows.emodnet-humanactivities.eu/wfs?service=WFS" \
-                "&version=2.0.0&request=GetFeature&outputFormat=application/json" \
-                "&typeName=emodnet:militaryareaspoly&count=1000"
-
-static int run(const source_ctx *ctx, intel_sink *sink) {
-  cJSON *doc = feed_get_json(ctx->http, WFS_URL, 120000);
-  if (!doc) {
-    fprintf(stderr, "[emodnet-military-areas] fetch/parse failed\n");
-    return -1;
-  }
-  cJSON *feats = cJSON_GetObjectItem(doc, "features");
+/* numberMatched 746 (2026-11-07): one page. Paged through _emodnet_wfs.inc (startIndex, natural key order). */
+#define WFS_URL "https://ows.emodnet-humanactivities.eu/wfs?service=WFS&version=2.0.0&request=GetFeature&outputFormat=application/json&typeName=emodnet:militaryareaspoly&count=1000&startIndex=0"
+static int emw_feats(const source_ctx *ctx, intel_sink *sink, cJSON *feats, void *ud) {
+  (void)ctx; (void)ud;
   int n = 0;
   cJSON *f;
   cJSON_ArrayForEach(f, feats) {
@@ -100,9 +94,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(pj);
     free(gj);
   }
-  cJSON_Delete(doc);
+  return n;
+}
+
+static int run(const source_ctx *ctx, intel_sink *sink) {
+  int n = emw_walk(ctx, sink, ctx->source_id ? ctx->source_id : "emodnet-military-areas", WFS_URL, 0, emw_feats, NULL);
   fprintf(stderr, "[emodnet-military-areas] emitted %d\n", n);
-  return 0;
+  return n < 0 ? -1 : 0;   /* -1 only when the first page failed */
 }
 
 static const source_def mar_emodnet_military_areas_def = {

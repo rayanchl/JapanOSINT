@@ -189,19 +189,20 @@ static int emit_entity(intel_sink *sink, cJSON *rec, const char *query,
   if (lists_j && cJSON_IsArray(lists_j))
     cJSON_AddItemToObject(props, "datasets", cJSON_Duplicate(lists_j, 1));
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.summary         = is_pep ? "Politically exposed person" : "Sanctions list match";
   it.record_type     = "osint_service_result";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"SANCTIONS_CHECK\"]";
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   cJSON_Delete(props);
   return rc >= 0 ? 1 : 0;
 }

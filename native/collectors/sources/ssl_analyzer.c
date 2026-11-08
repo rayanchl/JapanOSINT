@@ -254,24 +254,25 @@ static int emit_leaf(intel_sink *sink, const char *host, cJSON *cert /*owned*/) 
   cJSON *st = cJSON_GetObjectItem(cert, "status");
   if (st && cJSON_IsString(st)) cJSON_AddStringToObject(props, "status", st->valuestring);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
 
   char rk[300], title[360];
   snprintf(rk, sizeof rk, "cert:%s", host);
   cJSON *iss = cJSON_GetObjectItem(cert, "issuer");
   snprintf(title, sizeof title, "TLS certificate — %s", host);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.summary         = (iss && cJSON_IsString(iss)) ? iss->valuestring : "leaf certificate";
   it.record_type     = "osint_service_result";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"SSL_ANALYZER\"]";
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   cJSON_Delete(props);
   return rc >= 0 ? 1 : 0;
 }
@@ -305,17 +306,18 @@ static int emit_ct_cert(intel_sink *sink, const char *host, cJSON *cert) {
   cJSON_AddStringToObject(props, "host", host);
   cJSON_AddStringToObject(props, "kind", "ct_log");
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
 
   char rk[320], title[360];
   snprintf(rk, sizeof rk, "ctcert:%s:%lld", host, cert_id);
   snprintf(title, sizeof title, "CT cert — %s",
            (cn && cJSON_IsString(cn)) ? cn->valuestring : host);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.summary         = (iss && cJSON_IsString(iss)) ? iss->valuestring : "CT log certificate";
   it.published_at    = (nb && cJSON_IsString(nb)) ? nb->valuestring : NULL;
   it.record_type     = "osint_service_result";
@@ -323,7 +325,7 @@ static int emit_ct_cert(intel_sink *sink, const char *host, cJSON *cert) {
   it.tags_json       = "[\"osint-search\",\"SSL_ANALYZER\"]";
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   cJSON_Delete(body); cJSON_Delete(props);
   return rc >= 0 ? 1 : 0;
 }

@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 /* r.<k> ?? null (string/number passthrough) */
 static cJSON *nn(cJSON *o, const char *k) {
@@ -87,7 +88,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *apiKey = getenv("HOUMUKYOKU_API_KEY");
   if (!apiKey || !*apiKey) {
     fprintf(stderr, "[houmukyoku-commercial] gated (no HOUMUKYOKU_API_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "houmukyoku-commercial", "houmukyoku-commercial", (const char *const[]){"HOUMUKYOKU_API_KEY", NULL}, NULL, NULL);
   }
   const char *base = getenv("HOUMUKYOKU_API_BASE");
   if (!base || !*base) base = "https://www1.touki.or.jp/api/v1/commercial";

@@ -762,8 +762,15 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .record_type = "rail-node",
     .tags = "\"rail\",\"belgium\",\"infrabel\",\"network\",\"station\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.infrabel.be/api/explore/v2.1/catalog/datasets/operationele-punten-van-het-netwerk/records?limit=100",
+    /* `order_by=ptcarid` ascending + `offset=0` (2026-11-07): an offset walk with
+     * no sort over an ODS index that promises no order. The key is the
+     * dataset's own identity: ptcarid distinct over all 1,359 records read through
+     * /exports/json. Checked on this dataset: order_by=frobnicate is HTTP 400 (ODSQL
+     * validates it), asc and desc answer different pages, total_count is
+     * unchanged by the sort, offsets 0 and 100 are disjoint. */
+    .url = "https://opendata.infrabel.be/api/explore/v2.1/catalog/datasets/operationele-punten-van-het-netwerk/records?limit=100&offset=0&order_by=ptcarid%20asc",
     .array_path = "results",
+    .id_keys = "ptcarid",   /* none declared; 1,359 of 1,359 distinct (2026-11-07) */
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
@@ -780,8 +787,15 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .record_type = "level-crossing",
     .tags = "\"rail\",\"belgium\",\"infrabel\",\"crossing\",\"safety\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.infrabel.be/api/explore/v2.1/catalog/datasets/geoow/records?limit=100",
+    /* `order_by=fld_naam_ramses` ascending + `offset=0` (2026-11-07): an offset walk with
+     * no sort over an ODS index that promises no order. The key is the
+     * dataset's own identity: fld_naam_ramses distinct over all 1,369 records read through
+     * /exports/json. Checked on INFRABEL_OPERATIONAL_POINTS (same host): order_by=frobnicate is HTTP 400 (ODSQL
+     * validates it), asc and desc answer different pages, total_count is
+     * unchanged by the sort, offsets 0 and 100 are disjoint. */
+    .url = "https://opendata.infrabel.be/api/explore/v2.1/catalog/datasets/geoow/records?limit=100&offset=0&order_by=fld_naam_ramses%20asc",
     .array_path = "results",
+    .id_keys = "fld_naam_ramses",   /* none declared; 1,369 of 1,369 distinct (2026-11-07) */
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
@@ -797,7 +811,13 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .record_type = "rail-line",
     .tags = "\"rail\",\"belgium\",\"infrabel\",\"line\",\"track\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.infrabel.be/api/explore/v2.1/catalog/datasets/lijnsecties/records?limit=100",
+    /* `order_by=ls_id` ascending + `offset=0` (2026-11-07): an offset walk with
+     * no sort over an ODS index that promises no order. The key is the
+     * dataset's own identity: ls_id distinct over all 1,210 records read through
+     * /exports/json. Checked on INFRABEL_OPERATIONAL_POINTS (same host): order_by=frobnicate is HTTP 400 (ODSQL
+     * validates it), asc and desc answer different pages, total_count is
+     * unchanged by the sort, offsets 0 and 100 are disjoint. */
+    .url = "https://opendata.infrabel.be/api/explore/v2.1/catalog/datasets/lijnsecties/records?limit=100&offset=0&order_by=ls_id%20asc",
     .array_path = "results",
     .id_keys = "ls_id",
     .interval = 86400,
@@ -815,8 +835,15 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .record_type = "rail-siding",
     .tags = "\"rail\",\"belgium\",\"port\",\"freight\",\"siding\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.infrabel.be/api/explore/v2.1/catalog/datasets/spooraansluitingen-in-havenzones-in-vlaanderen/records?limit=100",
+    /* `order_by=jaar,havenzone` ascending + `offset=0` (2026-11-07): an offset walk with
+     * no sort over an ODS index that promises no order. The key is the
+     * dataset's own identity: jaar+havenzone distinct over all 104 records read through
+     * /exports/json. Checked on INFRABEL_OPERATIONAL_POINTS (same host): order_by=frobnicate is HTTP 400 (ODSQL
+     * validates it), asc and desc answer different pages, total_count is
+     * unchanged by the sort, offsets 0 and 100 are disjoint. */
+    .url = "https://opendata.infrabel.be/api/explore/v2.1/catalog/datasets/spooraansluitingen-in-havenzones-in-vlaanderen/records?limit=100&offset=0&order_by=jaar%20asc%2Chavenzone%20asc",
     .array_path = "results",
+    .id_keys = "jaar+havenzone",   /* none declared; 104 of 104 distinct (2026-11-07) */
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
@@ -851,7 +878,13 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .record_type = "rail-incident",
     .tags = "\"rail\",\"belgium\",\"incident\",\"delay\",\"safety\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.infrabel.be/api/explore/v2.1/catalog/datasets/belangrijkste-incidenten/records?limit=100",
+    /* `order_by=date,lijn,plaats,aard_van_incident,min_delay` ascending + `offset=0` (2026-11-07): an offset walk with
+     * no sort over an ODS index that promises no order. The key is the
+     * dataset's own identity: date+lijn+plaats+aard_van_incident+min_delay distinct over all 948 records read through
+     * /exports/json. Checked on INFRABEL_OPERATIONAL_POINTS (same host): order_by=frobnicate is HTTP 400 (ODSQL
+     * validates it), asc and desc answer different pages, total_count is
+     * unchanged by the sort, offsets 0 and 100 are disjoint. */
+    .url = "https://opendata.infrabel.be/api/explore/v2.1/catalog/datasets/belangrijkste-incidenten/records?limit=100&offset=0&order_by=date%20asc%2Clijn%20asc%2Cplaats%20asc%2Caard_van_incident%20asc%2Cmin_delay%20asc",
     .array_path = "results",
     /* ODS records carry no row id; live 2026-09-07 all 921 rows are distinct
      * on this tuple while date+line+place+cause alone collides (917). */
@@ -872,7 +905,13 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .record_type = "signal-box",
     .tags = "\"rail\",\"belgium\",\"signalling\",\"control\",\"infrastructure\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.infrabel.be/api/explore/v2.1/catalog/datasets/postes-de-signalisation/records?limit=100",
+    /* `order_by=jaar,area_nl` ascending + `offset=0` (2026-11-07): an offset walk with
+     * no sort over an ODS index that promises no order. The key is the
+     * dataset's own identity: jaar+area_nl distinct over all 130 records read through
+     * /exports/json. Checked on INFRABEL_OPERATIONAL_POINTS (same host): order_by=frobnicate is HTTP 400 (ODSQL
+     * validates it), asc and desc answer different pages, total_count is
+     * unchanged by the sort, offsets 0 and 100 are disjoint. */
+    .url = "https://opendata.infrabel.be/api/explore/v2.1/catalog/datasets/postes-de-signalisation/records?limit=100&offset=0&order_by=jaar%20asc%2Carea_nl%20asc",
     .array_path = "results",
     .id_keys = "jaar+areas",
     .interval = 86400,

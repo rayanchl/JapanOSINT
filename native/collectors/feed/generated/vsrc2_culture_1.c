@@ -6,6 +6,7 @@
  * since — this file, not the manifest, is the current copy. The
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
+#include "lib/pagewalk.h"   /* jo_page_max_for: the operator brake */
 
 /* jpx-jpsearch-*, 2026-09-15: the walk the note below asks for, done in these
  * rows. Two measured facts decide it. (1) Japan Search's relevance order is not
@@ -21,9 +22,7 @@
 #include "lib/jocore.h"
 static int jps_walk(const source_ctx *c, intel_sink *s, const char *id,
                     const char *base, const char *tags) {
-  int page_max = 20;   /* exhaustive-ok: JO_PAGE_MAX runaway ceiling (pagewalk's default), remainder disclosed as a truncation notice */
-  const char *pm = getenv("JO_PAGE_MAX");
-  if (pm && atoi(pm) > 0) page_max = atoi(pm);
+  int page_max = jo_page_max_for(0);   /* exhaustive-ok: JO_PAGE_MAX runaway ceiling (pagewalk's default, resolved there not re-read here), remainder disclosed as a truncation notice */
   long size = jsonlist_query_int(base, "size");
   if (size <= 0) size = 20;
   size_t cap = strlen(base) + 64;

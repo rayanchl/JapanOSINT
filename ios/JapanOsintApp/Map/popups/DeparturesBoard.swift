@@ -1,11 +1,15 @@
 import SwiftUI
 
-/// Pulls departures for a station from /api/transit/departures/<key> and
-/// auto-refreshes every 30s. Tolerates a missing endpoint (shows a friendly
-/// note instead of an error).
+/// Pulls departures for a station from `/api/transit/station/<key>/summary`
+/// (core/transitapi.c `station_summary`) and auto-refreshes. It used to call
+/// `/api/transit/departures/<key>` — a route the server never had — through a
+/// bare URLSession with no bearer, so every board read "No live board" whatever
+/// the station. It goes through `API.request` now: the same auth, the same
+/// credential guard, the same timeout handling as every other call.
 struct DeparturesBoard: View {
     let stationKey: String
     @EnvironmentObject var settings: AppSettings
+    @EnvironmentObject var apiClient: APIClient
     @Environment(\.theme) private var theme
 
     @State private var rows: [Departure] = []
@@ -81,37 +85,38 @@ struct DeparturesBoard: View {
     private func load() async {
         loading = true
         defer { loading = false }
-        let trimmed = settings.backendBaseURL.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
-        guard let url = URL(string: "\(trimmed)/api/transit/departures/\(stationKey)") else {
-            note = "Bad URL"
-            return
-        }
+        let api = apiClient.api
         do {
-            var req = URLRequest(url: url)
-            req.timeoutInterval = 10
-            let (data, resp) = try await URLSession.shared.data(for: req)
-            guard let http = resp as? HTTPURLResponse else { return }
-            guard (200..<300).contains(http.statusCode) else {
-                note = "No live board for this station."
-                rows = []
-                return
-            }
-            // Tolerant decoding — backend payload shape may vary.
+            let url = try api.makeURL("/api/transit/station/\(api.esc(stationKey))/summary")
+            let data = try await api.request(url, timeout: 10)
             let parsed = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
-            let arr = (parsed?["departures"] as? [[String: Any]]) ?? (parsed?["entries"] as? [[String: Any]]) ?? []
+            // GTFS rows: {trip_id, departure_sec, wall_sec, headsign, route_short,
+            // route_long, delay_s}; ODPT rows are a second list on the same body.
+            let gtfs = (parsed?["departures"] as? [[String: Any]]) ?? []
+            let odpt = (parsed?["odpt_departures"] as? [[String: Any]]) ?? []
+            let arr = gtfs.isEmpty ? odpt : gtfs
             rows = arr.prefix(max(1, settings.departuresShown)).enumerated().map { idx, r in
-                Departure(
-                    id: (r["id"] as? String) ?? "row-\(idx)",
-                    time:        (r["time"] as? String) ?? (r["scheduled"] as? String) ?? "—",
-                    route:       (r["route"] as? String) ?? (r["line"] as? String) ?? "",
-                    destination: (r["destination"] as? String) ?? (r["headsign"] as? String) ?? "",
-                    delayMin:    (r["delay_min"] as? Int) ?? (r["delay"] as? Int),
-                    track:       (r["track"] as? String) ?? (r["platform"] as? String)
+                let wall = (r["wall_sec"] as? NSNumber)?.intValue
+                    ?? (r["departure_sec"] as? NSNumber)?.intValue
+                let time = wall.map { String(format: "%02d:%02d", ($0 / 3600) % 24, ($0 / 60) % 60) }
+                    ?? (r["time"] as? String) ?? (r["departure_time"] as? String) ?? "—"
+                let delayS = (r["delay_s"] as? NSNumber)?.intValue
+                return Departure(
+                    id: (r["trip_id"] as? String) ?? (r["id"] as? String) ?? "row-\(idx)",
+                    time: time,
+                    route: (r["route_short"] as? String) ?? (r["route_long"] as? String)
+                        ?? (r["route"] as? String) ?? (r["line"] as? String) ?? "",
+                    destination: (r["headsign"] as? String) ?? (r["destination"] as? String) ?? "",
+                    delayMin: delayS.map { $0 / 60 } ?? (r["delay_min"] as? Int),
+                    track: (r["platform"] as? String) ?? (r["track"] as? String)
                 )
             }
-            note = rows.isEmpty ? "No upcoming trains." : nil
+            note = rows.isEmpty ? "No upcoming departures." : nil
+        } catch APIError.http(let code, _) where code == 404 {
+            note = "No live board for this station."
+            rows = []
         } catch {
-            note = "Could not fetch departures."
+            note = "Could not fetch departures: \(error.localizedDescription)"
         }
     }
 }

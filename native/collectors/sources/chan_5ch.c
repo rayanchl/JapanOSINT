@@ -24,7 +24,8 @@ static const char *BOARDS[] = {
 #define NBOARD ((int)(sizeof(BOARDS) / sizeof(BOARDS[0])))
 
 #define TIMEOUT_MS       12000
-#define PER_BOARD_LIMIT  40
+/* No per-board limit (2026-11-07): the old PER_BOARD_LIMIT of 40 dropped
+ * every thread after the 40th of a subject.txt already fetched (rule 2). */
 
 /* Parse one subject.txt line into tid / title / replies.
  *   JS: /^(\d+)\.dat\s*[<\t> ]+(.*?)\s*\((\d+)\)\s*$/  (fallback variant
@@ -82,7 +83,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     "Accept: text/plain, */*",
     NULL
   };
-  int n = 0;
+  int n = 0, boards_ok = 0;
   for (int b = 0; b < NBOARD; b++) {
     const char *spec = BOARDS[b];
     const char *colon = strchr(spec, ':');
@@ -116,15 +117,16 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
      * fire and the explicit csv_decode_sjis() below is still the sole decoder. */
     char *raw = jo_get_t(ctx, url, hdrs, "chan-5ch", TIMEOUT_MS);
     if (!raw) continue;
+    boards_ok++;
     /* feed_get_text returns the raw body bytes; subject.txt is Shift_JIS. */
     char *text = csv_decode_sjis(raw, strlen(raw));
     free(raw);
     if (!text) continue;
 
-    /* split on \r?\n, drop empties, slice(0, PER_BOARD_LIMIT) */
+    /* split on \r?\n, drop empties — every line */
     int count = 0;
     char *save = text;
-    while (count < PER_BOARD_LIMIT) {
+    for (;;) {
       char *nl = strpbrk(save, "\r\n");
       char *line = save;
       if (nl) {
@@ -180,8 +182,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     }
     free(text);
   }
-  fprintf(stderr, "[chan-5ch] emitted %d\n", n);
-  return n >= 0 ? 0 : -1;
+  fprintf(stderr, "[chan-5ch] emitted %d from %d board(s)\n", n, boards_ok);
+  /* every board refused: a failure, not a quiet hour (2026-11-07: the
+   * *.5ch.net hosts answer 308 to *.5ch.io, whose subject.txt is 404) */
+  return boards_ok == 0 ? -1 : 0;
 }
 
 static const source_def chan_5ch_def = {

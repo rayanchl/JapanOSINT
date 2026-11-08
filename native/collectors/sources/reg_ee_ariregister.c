@@ -57,25 +57,26 @@ static int emit_company(intel_sink *sink, const cJSON *c) {
   if (code) cJSON_AddStringToObject(props, "registry_code", code);
   if (stat) cJSON_AddStringToObject(props, "status", stat);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   /* real public profile URL, resolvable from the registry code */
   char link[128] = {0};
   if (code) snprintf(link, sizeof link, "https://ariregister.rik.ee/est/company/%s", code);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = code ? code : name;
   it.title           = name ? name : code;
   it.summary         = stat;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "et";
   it.link            = code ? link : NULL;
   it.record_type     = "ee-ariregister-company";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"EE_ARIREGISTER\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -122,13 +123,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   free(enc);
 
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "ee-ariregister");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
 
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   int count = 0;
   int emitted = walk(sink, root, 0, &count);

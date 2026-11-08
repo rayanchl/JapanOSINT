@@ -13,21 +13,21 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
-static const char *WL_UA = "User-Agent: JapanOSINT/1.0 (osint@example.org)";
 
 /* APRS.fi position lookup by station name/callsign. */
 static int run_aprs(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   const char *k = jo_env("APRS_FI_KEY");
-  if (!k) { fprintf(stderr, "[APRS_FI_LOC] no APRS_FI_KEY\n"); return 0; }
+  if (!k) return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "APRS_FI_LOC", "APRS_FI_LOC", (const char *const[]){"APRS_FI_KEY", NULL}, NULL, NULL);
   char url[640];
   snprintf(url, sizeof url,
     "https://api.aprs.fi/api/get?name=%s&what=loc&apikey=%s&format=json", enc, k);
-  const char *hdrs[] = { "Accept: application/json", WL_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "APRS_FI_LOC");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const char *result = jo_sv(root, "result");
   if (!result || strcmp(result, "ok") != 0) { cJSON_Delete(root); return 0; }
   const cJSON *entries = cJSON_GetObjectItem(root, "entries");
@@ -52,17 +52,18 @@ static int run_aprs(const source_ctx *ctx, intel_sink *sink, const char *enc) {
       cJSON_AddStringToObject(p, "service", "APRS_FI_LOC");
       cJSON_AddStringToObject(p, "callsign", name);
       cJSON_AddBoolToObject(p, "success", 1);
-      char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+      jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
       int has_geo = (lat && lng);
       char link[256]; snprintf(link, sizeof link, "https://aprs.fi/#!call=%s", name);
-      intel_item it = {0};
+      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
       it.remote_key = name; it.title = name; it.summary = comment;
-      it.body = bj; it.link = link; it.lang = "en";
+      it.body = bt ? bt : bj; it.link = link; it.lang = "en";
       it.has_geo = has_geo; it.lat = has_geo ? atof(lat) : 0; it.lon = has_geo ? atof(lng) : 0;
       it.record_type = "aprs-station";
       it.properties_json = pj; it.tags_json = "[\"osint-search\",\"APRS_FI_LOC\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(pj);
+      free(bj); free(bt); free(pj);
       (void)time;
     }
   }
@@ -73,7 +74,7 @@ static int run_aprs(const source_ctx *ctx, intel_sink *sink, const char *enc) {
 /* OpenCelliD cell tower geolocation. entity = "mcc,mnc,lac,cellid". */
 static int run_opencellid(const source_ctx *ctx, intel_sink *sink, const char *raw) {
   const char *k = jo_env("OPENCELLID_KEY");
-  if (!k) { fprintf(stderr, "[OPENCELLID_CELL] no OPENCELLID_KEY\n"); return 0; }
+  if (!k) return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "OPENCELLID_CELL", "OPENCELLID_CELL", (const char *const[]){"OPENCELLID_KEY", NULL}, NULL, NULL);
   int mcc = 0, mnc = 0, lac = 0; long cellid = 0;
   if (sscanf(raw, "%d,%d,%d,%ld", &mcc, &mnc, &lac, &cellid) != 4) {
     fprintf(stderr, "[OPENCELLID_CELL] entity must be 'mcc,mnc,lac,cellid'\n");
@@ -83,11 +84,11 @@ static int run_opencellid(const source_ctx *ctx, intel_sink *sink, const char *r
   snprintf(url, sizeof url,
     "https://opencellid.org/cell/get?key=%s&mcc=%d&mnc=%d&lac=%d&cellid=%ld&format=json",
     k, mcc, mnc, lac, cellid);
-  const char *hdrs[] = { "Accept: application/json", WL_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "OPENCELLID_CELL");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *lat = cJSON_GetObjectItem(root, "lat");
   const cJSON *lon = cJSON_GetObjectItem(root, "lon");
   if (!cJSON_IsNumber(lat) || !cJSON_IsNumber(lon)) { cJSON_Delete(root); return 0; }
@@ -103,17 +104,18 @@ static int run_opencellid(const source_ctx *ctx, intel_sink *sink, const char *r
   cJSON *p = cJSON_CreateObject();
   cJSON_AddStringToObject(p, "service", "OPENCELLID_CELL");
   cJSON_AddBoolToObject(p, "success", 1);
-  char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+  jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
   char rk[128], title[160];
   snprintf(rk, sizeof rk, "cell:%d-%d-%d-%ld", mcc, mnc, lac, cellid);
   snprintf(title, sizeof title, "Cell %d-%d-%d-%ld", mcc, mnc, lac, cellid);
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
-  it.remote_key = rk; it.title = title; it.body = bj; it.lang = "en";
+  it.remote_key = rk; it.title = title; it.body = bt ? bt : bj; it.lang = "en";
   it.has_geo = 1; it.lat = lat->valuedouble; it.lon = lon->valuedouble;
   it.record_type = "cell-tower";
   it.properties_json = pj; it.tags_json = "[\"osint-search\",\"OPENCELLID_CELL\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   cJSON_Delete(root);
   return rc >= 0 ? 1 : 0;
 }
@@ -130,7 +132,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     n = run_opencellid(ctx, sink, q);
   }
   fprintf(stderr, "[%s] emitted %d\n", sid, n);
-  return 0;
+  return n < 0 ? -1 : 0;
 }
 
 #define WL_DEF(sym, ID, NM, DESC) \

@@ -1048,7 +1048,13 @@ static const hp_source HP3B19_APAC[] = {
     .record_type = "development-application",
     .tags = "\"australia\",\"melbourne\",\"planning\",\"construction\",\"city\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.melbourne.vic.gov.au/api/explore/v2.1/catalog/datasets/development-activity-monitor/records?limit=100",
+    /* `order_by=development_key` ascending + `offset=0` (2026-11-07): an offset walk with
+     * no sort over an ODS index that promises no order. The key is the
+     * dataset's own identity: development_key distinct over all 1,451 records read through
+     * /exports/json. Checked on this dataset: order_by=frobnicate is HTTP 400 (ODSQL
+     * validates it), asc and desc answer different pages, total_count is
+     * unchanged by the sort, offsets 0 and 100 are disjoint. */
+    .url = "https://data.melbourne.vic.gov.au/api/explore/v2.1/catalog/datasets/development-activity-monitor/records?limit=100&offset=0&order_by=development_key%20asc",
     .array_path = "results",
     .id_keys = "development_key",
     .interval = 86400,

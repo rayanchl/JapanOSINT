@@ -80,6 +80,10 @@ int http_request(http_client *c, const char *method, const char *url,
  * thread-local and restored when this returns, so it never widens another
  * worker's fetch, and it is still enforced on the DECOMPRESSED stream: asking
  * for 192 MB does not make a gzip bomb reachable. */
+/* Set this thread's body ceiling for the rest of a collector run (0 = the
+ * process default) and return the previous value, to be restored when the run
+ * ends. See g_body_ceiling_run in httpclient.c. */
+size_t http_run_body_ceiling_set(size_t max_body);
 int http_request_max(http_client *c, const char *method, const char *url,
                      const char *const *headers, const char *body,
                      size_t body_len, int timeout_ms, int retries,
@@ -136,6 +140,11 @@ int http_last_tls_cause(void);
 /* One clause naming the cause, and one naming what to do about it. Both are
  * safe for any value, so a cause this build does not know still reads as a
  * sentence rather than as an empty string in a stored record. */
+/* The stable machine slug for a cause ("no_local_issuer", "expired", …) —
+ * the `tls_cause` field every fetch-failure record carries. It was a ternary
+ * chain written out twice, in lib/hpengine.c and core/scheduler.c; one copy
+ * now, beside its label and remedy. */
+const char *http_tls_cause_name(int cause);
 const char *http_tls_cause_label(int cause);
 const char *http_tls_cause_remedy(int cause);
 

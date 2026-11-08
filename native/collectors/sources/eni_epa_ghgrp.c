@@ -26,13 +26,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #define SRC "epa-ghgrp-emissions"
-#define YEAR "2023"
-
+/* THE REPORTING YEAR IS ASKED OF THE UPSTREAM, not frozen (2026-11-07). It
+ * was `#define YEAR "2023"`, which would have read 2023 for ever once a later
+ * year was published. Measured that day, the emission table's own /count:
+ * year 2023 → 26,272 rows, 2024 → 0, 2025 → 0 — so 2023 IS still the newest
+ * published year, and the run now picks the newest year (from last calendar
+ * year back GHG_YEARS_BACK years) whose /count is non-zero. Per run, per
+ * thread: a source runs once at a time, and __thread keeps two collectors on
+ * different workers from sharing it. */
+#define GHG_YEARS_BACK 6
+static __thread char g_year[8];
+static __thread char g_fac_table[64];
+static __thread char g_em_table[64];
+#define YEAR      g_year
 #define EF "https://data.epa.gov/efservice/"
-#define FAC_TABLE "pub_dim_facility/year/" YEAR
-#define EM_TABLE  "pub_facts_sector_ghg_emission/year/" YEAR
+#define FAC_TABLE g_fac_table
+#define EM_TABLE  g_em_table
 
 /* Rows per request. Envirofacts' window `rows/<a>:<b>` is INCLUSIVE at both
  * ends — rows/0:3 returns four rows — so a page is a:a+PAGE-1. This used to
@@ -198,7 +210,30 @@ static void em_key(const cJSON *e, char *out, size_t cap) {
            iv(e, "sector_id", -1), iv(e, "subsector_id", -1), iv(e, "gas_id", -1));
 }
 
+static int pick_year(const source_ctx *ctx) {
+  time_t now = time(NULL);
+  struct tm tmv;
+  if (!gmtime_r(&now, &tmv)) return -1;
+  int cur = tmv.tm_year + 1900;
+  for (int y = cur - 1; y >= cur - 1 - GHG_YEARS_BACK; y--) {
+    char t[64];
+    snprintf(t, sizeof t, "pub_facts_sector_ghg_emission/year/%d", y);
+    long c = table_count(ctx, t);
+    if (c > 0) {
+      snprintf(g_year, sizeof g_year, "%d", y);
+      snprintf(g_fac_table, sizeof g_fac_table, "pub_dim_facility/year/%d", y);
+      snprintf(g_em_table, sizeof g_em_table, "%s", t);
+      return y;
+    }
+  }
+  return -1;
+}
+
 static int run(const source_ctx *ctx, intel_sink *sink) {
+  if (pick_year(ctx) < 0) {
+    fprintf(stderr, "[" SRC "] no reporting year answered a non-zero /count\n");
+    return -1;
+  }
   /* ── facility dimension: the reporting year's own rows ──────────────────
    * pub_dim_facility holds one row per facility PER YEAR (136,005 rows across
    * all years). Only the reporting year's are joined, which is both the right

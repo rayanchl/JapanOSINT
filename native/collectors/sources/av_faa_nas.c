@@ -45,7 +45,7 @@
 
 /* ------------------------------------------------------------ faa-tfr-list */
 static int run_tfr(const source_ctx *ctx, intel_sink *sink) {
-  const char *hdrs[] = { "Accept: application/json", AV_UA_HDR, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, "https://tfr.faa.gov/tfrapi/exportTfrList", hdrs,
                       "faa-tfr-list");
   if (!body) { fprintf(stderr, "[faa-tfr-list] fetch failed\n"); return -1; }
@@ -173,7 +173,7 @@ static int ops_emit_list(const source_ctx *ctx, intel_sink *sink,
 }
 
 static int run_ops(const source_ctx *ctx, intel_sink *sink) {
-  const char *hdrs[] = { "Accept: application/json", AV_UA_HDR, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, "https://nasstatus.faa.gov/api/operations-plan",
                       hdrs, "faa-ops-plan");
   if (!body) { fprintf(stderr, "[faa-ops-plan] fetch failed\n"); return -1; }
@@ -351,7 +351,7 @@ static int nas_ground_stop(intel_sink *sink, const char *b, const char *e,
 }
 
 static int run_status(const source_ctx *ctx, intel_sink *sink) {
-  const char *hdrs[] = { "Accept: application/xml", AV_UA_HDR, NULL };
+  const char *hdrs[] = { "Accept: application/xml", NULL };
   char *xml = jo_get(ctx, "https://nasstatus.faa.gov/api/airport-status-information",
                      hdrs, "faa-airport-status");
   if (!xml) { fprintf(stderr, "[faa-airport-status] fetch failed\n"); return -1; }

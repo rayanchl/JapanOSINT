@@ -18,6 +18,13 @@ struct SourcePipelineView: View {
     @State private var clearing = false
     @State private var busyRepairs: Set<Int> = []
     @State private var busyAnomalies: Set<Int> = []
+    /// Rows past each list's first page (fetch_log 30, anomalies 20,
+    /// repairs 30), from GET /api/admin/maintenance/source/:id/<list>.
+    @State private var moreRuns: [FetchRun] = []
+    @State private var moreAnomalies: [AnomalyRow] = []
+    @State private var moreRepairs: [RepairRow] = []
+    @State private var lastPage: [String: OffsetPage] = [:]
+    @State private var loadingList: String?
 
     var body: some View {
         Group {
@@ -41,10 +48,18 @@ struct SourcePipelineView: View {
                     RepairUI.banner(actionError, color: theme.danger, theme: theme)
                 }
                 if let p = pipeline {
+                    let runs = p.fetchLog + moreRuns
+                    let anomalies = p.anomalies + moreAnomalies
+                    let repairs = p.repairs + moreRepairs
                     header(p.source)
-                    fetchSection(p.fetchLog)
-                    anomalySection(p.anomalies, repairs: p.repairs)
-                    if !p.repairs.isEmpty { repairSection(p.repairs, anomalies: p.anomalies) }
+                    fetchSection(runs)
+                    moreFooter("fetch_log", shown: runs.count, p)
+                    anomalySection(anomalies, repairs: repairs)
+                    moreFooter("anomalies", shown: anomalies.count, p)
+                    if !repairs.isEmpty {
+                        repairSection(repairs, anomalies: anomalies)
+                        moreFooter("repairs", shown: repairs.count, p)
+                    }
                 } else if loading {
                     ProgressView().frame(maxWidth: .infinity).padding(.top, Space.xxl)
                 }
@@ -138,7 +153,7 @@ struct SourcePipelineView: View {
     // MARK: Fetch runs
 
     @ViewBuilder private func fetchSection(_ runs: [FetchRun]) -> some View {
-        RepairUI.sectionHeader("Fetch runs", count: runs.count, theme: theme)
+        RepairUI.sectionHeader("Fetch runs", count: pipeline?.pages["fetch_log"]?.total ?? runs.count, theme: theme)
         if runs.isEmpty {
             RepairUI.emptyRow("No recorded runs yet.", theme: theme)
         } else {
@@ -152,7 +167,9 @@ struct SourcePipelineView: View {
             }
             .padding(.bottom, Space.xs)
             VStack(spacing: 0) {
-                ForEach(Array(runs.prefix(12).enumerated()), id: \.offset) { i, r in
+                // Every loaded run: this listed the first 12 under a header
+                // counting all of them, a silent slice of a 30-row page.
+                ForEach(Array(runs.enumerated()), id: \.offset) { i, r in
                     HStack {
                         Circle().fill(r.ok ? theme.success : theme.danger).frame(width: 6, height: 6)
                         Text(r.timestamp.map(RepairUI.shortTime) ?? "—")
@@ -164,7 +181,7 @@ struct SourcePipelineView: View {
                         }
                     }
                     .padding(.vertical, 5)
-                    if i < min(runs.count, 12) - 1 { Divider().overlay(theme.textMuted.opacity(0.12)) }
+                    if i < runs.count - 1 { Divider().overlay(theme.textMuted.opacity(0.12)) }
                 }
             }
             .padding(.horizontal, Space.md)
@@ -175,7 +192,7 @@ struct SourcePipelineView: View {
     // MARK: Anomalies + triage
 
     @ViewBuilder private func anomalySection(_ anomalies: [AnomalyRow], repairs: [RepairRow]) -> some View {
-        RepairUI.sectionHeader("Anomalies & triage", count: anomalies.count, theme: theme)
+        RepairUI.sectionHeader("Anomalies & triage", count: pipeline?.pages["anomalies"]?.total ?? anomalies.count, theme: theme)
         if anomalies.isEmpty {
             RepairUI.emptyRow("No anomalies — pipeline healthy.", theme: theme)
         } else {
@@ -191,14 +208,15 @@ struct SourcePipelineView: View {
     // MARK: Repairs
 
     @ViewBuilder private func repairSection(_ repairs: [RepairRow], anomalies: [AnomalyRow]) -> some View {
-        RepairUI.sectionHeader("Repair propositions", count: repairs.count, theme: theme)
+        RepairUI.sectionHeader("Repair propositions", count: pipeline?.pages["repairs"]?.total ?? repairs.count, theme: theme)
         ForEach(repairs) { r in
             // RepairCard shows Approve/Reject only when `row.isApprovable`, so
             // passing the handlers unconditionally is safe for display-only rows.
             RepairCard(row: r, theme: theme,
                        busy: busyRepairs.contains(r.id),
                        onApprove: { await approve(r) },
-                       onReject: { await reject(r) })
+                       onReject: { await reject(r) },
+                       onRevert: r.isRevertable ? { await revert(r) } : nil)
         }
     }
 
@@ -207,8 +225,59 @@ struct SourcePipelineView: View {
     private func load() async {
         loading = true; defer { loading = false }
         errorMessage = nil
-        do { pipeline = try await apiClient.api.maintenanceSourceDetail(sourceId) }
+        do {
+            pipeline = try await apiClient.api.maintenanceSourceDetail(sourceId)
+            moreRuns = []; moreAnomalies = []; moreRepairs = []; lastPage = [:]
+        }
         catch { if pipeline == nil { errorMessage = error.localizedDescription } }
+    }
+
+    /// "N of total" and "Load more" while the server's page block says more
+    /// remain — the pipeline served a first page of each list, not the list.
+    @ViewBuilder private func moreFooter(_ name: String, shown: Int, _ p: SourcePipeline) -> some View {
+        let pg = lastPage[name] ?? p.pages[name]
+        let total = p.pages[name]?.total
+        if pg?.has_more == true || (total.map { $0 > shown } ?? false) {
+            HStack {
+                Text("\(shown) of \(total.map(String.init) ?? "?") shown")
+                    .font(.caption2.monospacedDigit()).foregroundStyle(theme.textMuted)
+                Spacer()
+                if pg?.has_more == true {
+                    Button(loadingList == name ? "Loading…" : "Load more") {
+                        Task { await loadMore(name, shown: shown, p) }
+                    }
+                    .font(.caption).disabled(loadingList != nil)
+                }
+            }
+        }
+    }
+
+    private func loadMore(_ name: String, shown: Int, _ p: SourcePipeline) async {
+        let offset = (lastPage[name] ?? p.pages[name])?.nextOffset(fallback: shown) ?? shown
+        loadingList = name; defer { loadingList = nil }
+        let api = apiClient.api
+        do {
+            switch name {
+            case "fetch_log":
+                let r = try await api.maintenanceSourceList(sourceId, list: name, offset: offset, of: FetchRun.self)
+                moreRuns.append(contentsOf: r.rows); lastPage[name] = r.page
+            case "anomalies":
+                let r = try await api.maintenanceSourceList(sourceId, list: name, offset: offset, of: AnomalyRow.self)
+                moreAnomalies.append(contentsOf: r.rows); lastPage[name] = r.page
+            default:
+                let r = try await api.maintenanceSourceList(sourceId, list: name, offset: offset, of: RepairRow.self)
+                moreRepairs.append(contentsOf: r.rows); lastPage[name] = r.page
+            }
+        } catch {
+            actionError = "Loading more \(name) failed: \(error.localizedDescription)"
+        }
+    }
+
+    private func revert(_ r: RepairRow) async {
+        busyRepairs.insert(r.id); defer { busyRepairs.remove(r.id) }
+        actionError = nil
+        do { try await apiClient.api.revertRepair(r.id); Haptics.tap(.medium); await load() }
+        catch { actionError = "Revert failed: \(error.localizedDescription)"; Haptics.error() }
     }
 
     private func rerun() async {

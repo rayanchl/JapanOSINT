@@ -7,16 +7,24 @@
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
 
+/* datastore_search rows below carry `sort=_id asc` (2026-11-07). An offset
+ * walk with no declared order relies on the backend's default; CKAN's
+ * datastore `_id` is its own sequential row id. Measured one or two rows per
+ * host (izmir, data.gov.il, data.gov.au, QLD, VIC, Mauritius, Panama,
+ * data.gov.sg): `_id desc` answers the opposite end, a bogus sort is refused
+ * (409, or a 404 page on data.gov.il), and the total does not move. The
+ * unsorted first page was already _id 1,2,3 on every one, so this is
+ * STABILISING, not a recovery: 0 records were measured lost without it. */
 VJSON(au_acnc_annual_information_statement_2024, "au-acnc-annual-information-statement-2024", "ACNC — 2024 Annual Information Statement", "ACNC — 2024 Annual Information Statement",
   "au_finance", "finance",
-  "https://data.gov.au/data/api/3/action/datastore_search?resource_id=710630ea-1202-4bbb-95f7-3973a972ddf8&limit=100",
+  "https://data.gov.au/data/api/3/action/datastore_search?resource_id=710630ea-1202-4bbb-95f7-3973a972ddf8&limit=100&sort=_id%20asc",
   "result.records",
   "en", "[\"au\",\"finance\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 86400,
   "The financial and activity return each Australian charity files: abn, charity name, registration status, website, size, basic-religious-charity flag, AIS due date, dates the AIS and financial report were received, whether activities were conducted, and a long block of international-activity disclosures (transferring goods or services overseas, operating overseas).  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");
 
 VJSON(au_qld_health_grant_recipients, "au-qld-health-grant-recipients", "Queensland Health — grant funding recipients", "Queensland Health — grant funding recipients",
   "au_finance", "finance",
-  "https://www.data.qld.gov.au/api/3/action/datastore_search?resource_id=bad2b05f-10eb-4ff0-96a4-a9651b512dac&limit=100",
+  "https://www.data.qld.gov.au/api/3/action/datastore_search?resource_id=bad2b05f-10eb-4ff0-96a4-a9651b512dac&limit=100&sort=_id%20asc",
   "result.records",
   "en", "[\"au\",\"finance\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 86400,
   "Organisations funded by Queensland Health: Organisation Name, Project Title, description of the funded services, Contract End Date and the funding amount per financial year. Follows public money to named non-government providers.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");

@@ -53,21 +53,22 @@ static int emit_entity(intel_sink *sink, const cJSON *e) {
   if (type_ext) cJSON_AddStringToObject(props, "primary_ext", type_ext);
   if (idbuf[0]) cJSON_AddStringToObject(props, "littlesis_id", idbuf);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = idbuf[0] ? idbuf : name;
   it.title           = name;
   it.summary         = blurb ? blurb : type_ext;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "en";
   it.link            = uri;
   it.record_type     = "littlesis-entity";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"LITTLESIS\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -84,11 +85,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "littlesis");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
 
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   cJSON *data = cJSON_GetObjectItem(root, "data");
   int emitted = 0;

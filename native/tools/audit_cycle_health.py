@@ -78,36 +78,24 @@ def warm_template(binpath, path):
     checkpoint(path)
 
 
-ROW = re.compile(r'\{\s*\.id\s*=\s*"([^"]+)"')
-
-
 def cycling_ids(tree):
-    """Every row that declares page_resume, read from the C.
+    """Every row that declares page_resume, read from the C with
+    tools/ctable.py (the shared row reader: a row's span is its own braces,
+    comments are stripped, a .url spelled over adjacent literals or through a
+    string macro is one string). It used to take "everything up to the next
+    `{ .id =`" as a row, so a `.page_resume = 1` in a comment or in the NEXT
+    table counted, and the host came from the first literal only.
 
     The C and not a manifest, for the reason the batch-tooling section of
-    CLAUDE.md gives: after a beat ships the C is the maintained copy and 48 of
-    79 beats already differ from what their manifest generates.
+    CLAUDE.md gives: after a beat ships the C is the maintained copy.
 
     Returns (id, host) pairs: the HOST is what run_one serialises on, so a
     sweep never puts two rows of the same upstream in flight at once."""
-    out = []
-    for dirpath, _dirs, files in os.walk(tree):
-        for fn in files:
-            if not fn.endswith(".c"):
-                continue
-            p = os.path.join(dirpath, fn)
-            with open(p, encoding="utf-8", errors="replace") as f:
-                t = f.read()
-            if ".page_resume" not in t:
-                continue
-            for m in ROW.finditer(t):
-                nxt = t.find("{ .id =", m.end())
-                body = t[m.start():nxt if nxt > 0 else len(t)]
-                if not re.search(r"\.page_resume\s*=\s*1", body):
-                    continue
-                mu = re.search(r'\.url\s*=\s*"https?://([A-Za-z0-9._-]+)', body)
-                out.append((m.group(1), mu.group(1).lower() if mu else ""))
-    return out
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import ctable
+    return [(r.s("id"), ctable.host_of(r.s("url")))
+            for r in ctable.iter_rows(tree, need=".page_resume")
+            if r.s("id") and r.i("page_resume") == 1]
 
 
 def read_back(db, sid):

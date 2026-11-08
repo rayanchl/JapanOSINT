@@ -152,7 +152,7 @@ static int oa_emit(intel_sink *sink, char **f, int nf) {
   if (iata) cJSON_AddStringToObject(props, "iata_code", iata);
   if (ctry) cJSON_AddStringToObject(props, "iso_country", ctry);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char summary[256];
@@ -161,11 +161,12 @@ static int oa_emit(intel_sink *sink, char **f, int nf) {
            muni ? " · " : "", muni ? muni : "",
            ctry ? ", " : "", ctry ? ctry : "");
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = (icao && icao[0]) ? icao : (ident ? ident : name);
   it.title           = name;
   it.summary         = summary;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "en";
   it.link            = wiki;
   it.has_geo         = hasgeo; it.lat = lat; it.lon = lon;
@@ -173,7 +174,7 @@ static int oa_emit(intel_sink *sink, char **f, int nf) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"OURAIRPORTS\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -181,7 +182,7 @@ static int run_ourairports(const source_ctx *ctx, intel_sink *sink, const char *
   char *csv = jo_get(ctx,
       "https://davidmegginson.github.io/ourairports-data/airports.csv",
       NULL, "ourairports");
-  if (!csv) return 0;
+  if (!csv) return jo_fail_rc(jo_last_status(), 0);
 
   int emitted = 0, max = 40;
   char *save = NULL;
@@ -233,7 +234,7 @@ static int hexdb_emit(intel_sink *sink, const cJSON *r, const char *hex) {
   if (modes) cJSON_AddStringToObject(props, "mode_s", modes);
   if (reg)   cJSON_AddStringToObject(props, "registration", reg);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char title[192];
@@ -244,18 +245,19 @@ static int hexdb_emit(intel_sink *sink, const cJSON *r, const char *hex) {
   snprintf(link, sizeof link, "https://hexdb.io/registration?reg=%s",
            reg ? reg : (modes ? modes : ""));
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = modes ? modes : (reg ? reg : hex);
   it.title           = title;
   it.summary         = owner ? owner : manu;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "en";
   it.link            = (reg || modes) ? link : NULL;
   it.record_type     = "aircraft";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"HEXDB_AIRCRAFT\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -297,9 +299,9 @@ static int run_hexdb(const source_ctx *ctx, intel_sink *sink, const char *q) {
   snprintf(url, sizeof url, "https://hexdb.io/api/v1/aircraft/%s", hex);
   const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "hexdb");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   int emitted = 0;
   /* hexdb returns {"status":"404",...} for unknown hex; only emit real records */
   if (!cJSON_GetObjectItem(root, "status"))
@@ -347,7 +349,7 @@ static int adsbfi_emit(intel_sink *sink, const cJSON *a, const char *src) {
   if (hex) cJSON_AddStringToObject(props, "hex", hex);
   if (reg) cJSON_AddStringToObject(props, "registration", reg);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char title[128];
@@ -357,18 +359,19 @@ static int adsbfi_emit(intel_sink *sink, const cJSON *a, const char *src) {
   /* strip trailing spaces the ADS-B flight field pads with */
   for (int i = (int)strlen(title) - 1; i >= 0 && title[i] == ' '; i--) title[i] = 0;
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = hex ? hex : (reg ? reg : flt);
   it.title           = title;
   it.summary         = reg;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "en";
   it.has_geo         = hasgeo; it.lat = lat; it.lon = lon;
   it.record_type     = "aircraft-live";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"ADSB_FI\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -376,9 +379,9 @@ static int adsbfi_emit(intel_sink *sink, const cJSON *a, const char *src) {
 static int adsbfi_fetch(const source_ctx *ctx, intel_sink *sink,
                         const char *url, const char *src) {
   char *body = jo_get(ctx, url, NULL, "adsb_fi");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   int emitted = 0;
   cJSON *ac = cJSON_GetObjectItem(root, "ac");
   if (cJSON_IsArray(ac)) {
@@ -395,21 +398,21 @@ static int run_adsbfi(const source_ctx *ctx, intel_sink *sink, const char *q) {
                    : (strchr(q, ' ') ? "callsign"
                    : (strpbrk(q, "-") || strlen(q) <= 8 ? "registration" : "callsign"));
   char url[256];
-  int emitted = 0;
+  int emitted = 0, failed = 0;
 
   /* adsb.fi (primary) */
   snprintf(url, sizeof url, "https://opendata.adsb.fi/api/v2/%s/%s", kind, enc);
-  emitted += adsbfi_fetch(ctx, sink, url, "adsb.fi");
+  jo_acc(adsbfi_fetch(ctx, sink, url, "adsb.fi"), &emitted, &failed);
 
   /* adsb.lol (supplementary mirror; same v2 schema). Only try registration/
    * callsign/hex it supports; hex uses /icao on adsb.lol → use /hex compat. */
   const char *lol_kind = is_hex6(q) ? "hex" : kind;
   snprintf(url, sizeof url, "https://api.adsb.lol/v2/%s/%s", lol_kind, enc);
-  emitted += adsbfi_fetch(ctx, sink, url, "adsb.lol");
+  jo_acc(adsbfi_fetch(ctx, sink, url, "adsb.lol"), &emitted, &failed);
 
   free(enc);
   fprintf(stderr, "[adsb_fi] emitted %d\n", emitted);
-  return emitted;
+  return (failed == 2 && emitted == 0) ? -1 : emitted;  /* both mirrors refused: -1 (2026-11-07) */
 }
 
 /* ---- dispatch ---------------------------------------------------------- */
@@ -419,9 +422,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (!q || !*q) return -1;
   const char *sid = ctx->source_id ? ctx->source_id : "";
 
-  if (strcmp(sid, "OURAIRPORTS") == 0)    { run_ourairports(ctx, sink, q); return 0; }
-  if (strcmp(sid, "HEXDB_AIRCRAFT") == 0) { run_hexdb(ctx, sink, q);       return 0; }
-  if (strcmp(sid, "ADSB_FI") == 0)        { run_adsbfi(ctx, sink, q);      return 0; }
+  if (strcmp(sid, "OURAIRPORTS") == 0)    { return run_ourairports(ctx, sink, q) < 0 ? -1 : 0; }
+  if (strcmp(sid, "HEXDB_AIRCRAFT") == 0) { return run_hexdb(ctx, sink, q) < 0 ? -1 : 0; }
+  if (strcmp(sid, "ADSB_FI") == 0)        { return run_adsbfi(ctx, sink, q) < 0 ? -1 : 0; }
   return 0;
 }
 

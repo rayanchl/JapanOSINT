@@ -53,6 +53,7 @@ struct SourceDashboardTab: View {
             } else {
                 ScrollView {
                     VStack(alignment: .leading, spacing: Space.lg - 2) {
+                        browseLink
                         if apis.isEmpty && !loading {
                             emptyState
                         }
@@ -120,6 +121,32 @@ struct SourceDashboardTab: View {
             }
             .compatSheetSizing(.medium)
         }
+    }
+
+    // MARK: - Server-side browsing
+
+    /// This tab is the FLEET view: its charts, status dots and collector
+    /// grouping need every row, so it reads the whole of GET /api/status —
+    /// one body for the entire registry (~58,000 rows; core/sourceapi.h
+    /// measured it at 20 MB / 8 s). Browsing one collector, or searching for
+    /// a source by name, does not need that: CollectorsView asks the paged
+    /// /api/collectors and /api/sources/search routes instead.
+    private var browseLink: some View {
+        NavigationLink {
+            CollectorsView()
+        } label: {
+            HStack {
+                Image(systemName: "magnifyingglass").accessibilityHidden(true)
+                Text("Browse collectors · search every source on the server")
+                    .font(.caption)
+                Spacer()
+                Image(systemName: "chevron.right").font(.caption2).accessibilityHidden(true)
+            }
+            .foregroundStyle(theme.accent)
+            .padding(10)
+            .background(theme.surfaceElevated, in: RoundedRectangle(cornerRadius: Radius.md))
+        }
+        .buttonStyle(.plain)
     }
 
     // MARK: - Summary cards
@@ -570,8 +597,14 @@ struct SourceDashboardTab: View {
     /// its parent collector so the row is in view if the user dismisses
     /// the sheet. If the status data hasn't loaded yet, load first.
     private func openSource(_ id: String) async {
+        // One row is GET /api/status/:id. The whole /api/status is only loaded
+        // here when the fleet view has nothing yet — and a deep link to a row
+        // the fleet list does not hold is answered by that one-row route
+        // rather than dropped.
         if apis.isEmpty { await load() }
-        guard let row = apis.first(where: { $0.id == id }) else {
+        var found = apis.first(where: { $0.id == id })
+        if found == nil { found = try? await apiClient.api.statusRow(id) }
+        guard let row = found else {
             nav.pendingSourceId = nil
             return
         }
@@ -862,6 +895,20 @@ private struct SourceDetail: View {
             VStack(alignment: .leading, spacing: 12) {
                 header
 
+                // The full source page (GET /api/sources/:id/detail): engine,
+                // paging, why the cadence is what it is, the engine's notices,
+                // every run, and the operator settings. A breach row is a
+                // catalog entry, not a registered source, so it has none.
+                if !isBreach {
+                    NavigationLink {
+                        SourceDetailView(sourceId: row.id)
+                    } label: {
+                        Label("Full source page", systemImage: "doc.text.magnifyingglass")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.bordered)
+                }
+
                 if let desc = row.description, !desc.isEmpty {
                     Text(desc)
                         .font(.subheadline)
@@ -877,7 +924,8 @@ private struct SourceDetail: View {
                     kv("Collector", row.collectorLabel.map { "\($0) (\(row.collector ?? "?"))" } ?? row.collector ?? "not reported by this server")
                     kv("Engine",    row.engine ?? "not reported by this server")
                     kv("Kind",      row.kind ?? "not reported by this server")
-                    kv("Cadence",   row.overrideInterval.map { "every \(Int($0)) s (set for this source)" } ?? (row.policyInterval.map { "every \(Int($0)) s (policy)" } ?? (row.updateInterval.map { "every \(Int($0)) s (declared)" } ?? "on demand")))
+                    kv("Cadence",   cadenceText)
+                    if let alt = cadenceInputs { kv("Inputs", alt) }
                     kv("Layer",     row.layer ?? "none")
                     kv("Category",  row.category ?? "—")
                     kv("Type",      row.type ?? "—")
@@ -939,6 +987,54 @@ private struct SourceDetail: View {
                 Button("Close") { dismiss() }
             }
         }
+    }
+
+    // MARK: - Cadence
+    //
+    // `policyInterval` is the system-wide policy applied to the DECLARED
+    // interval (statusapi.c ~362-366), which is not necessarily what runs: the
+    // interval the scheduler keeps is `sched.effectiveInterval` (statusapi.c
+    // sched_obj, 271-298) — the composed cadence (an override, else the policy
+    // over a measured or declared interval) with failure backoff applied. This
+    // row used to label `policyInterval` "(policy)" as if it were the cadence.
+
+    private var cadenceText: String {
+        let sch = row.sched
+        if sch?.quarantined == true {
+            return "quarantined after \(sch?.consecutiveFailures ?? 0) failures — probed weekly until it answers"
+        }
+        if let eff = sch?.effectiveInterval, eff > 0 {
+            return "every \(fmtInterval(eff)) (\(cadenceBasis(eff)))"
+        }
+        // No scheduler state yet: say what WOULD run, and that it has not.
+        if let o = row.overrideInterval { return "every \(fmtInterval(o)) (set for this source) — not yet run" }
+        if let p = row.policyInterval { return "every \(fmtInterval(p)) (policy on the declared interval) — not yet run" }
+        if let d = row.updateInterval { return "every \(fmtInterval(d)) (declared) — not yet run" }
+        return "on demand"
+    }
+
+    /// Which figure the running interval came from, read only off fields the
+    /// row carries; "scheduler" when none of them matches, rather than a guess.
+    private func cadenceBasis(_ eff: Double) -> String {
+        let sch = row.sched
+        if sch?.backedOff == true {
+            return "backed off after \(sch?.consecutiveFailures ?? 0) consecutive failures, until \(relativeTime(sch?.backoffUntil))"
+        }
+        if let o = row.overrideInterval, o == eff { return "set for this source" }
+        if let m = sch?.measuredInterval, m == eff { return "measured from its newest item" }
+        if let p = row.policyInterval, p == eff, p != row.updateInterval { return "policy" }
+        if let d = row.updateInterval, d == eff { return "declared" }
+        return "scheduler"
+    }
+
+    /// The other figures, so a reader can see what the running one beat.
+    private var cadenceInputs: String? {
+        var parts: [String] = []
+        if let d = row.updateInterval { parts.append("declared \(fmtInterval(d))") }
+        if let m = row.sched?.measuredInterval { parts.append("measured \(fmtInterval(m))") }
+        if let p = row.policyInterval { parts.append("policy \(fmtInterval(p))") }
+        if let o = row.overrideInterval { parts.append("override \(fmtInterval(o))") }
+        return parts.isEmpty ? nil : parts.joined(separator: " · ")
     }
 
     // MARK: - Breach detail

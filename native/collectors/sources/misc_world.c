@@ -17,7 +17,6 @@
 #include <string.h>
 #include "_jp_osint.inc"
 
-static const char *MI_UA = "User-Agent: JapanOSINT/1.0 (osint@example.org)";
 
 static int mi_emit(intel_sink *sink, const char *service, const char *rtype,
                    const char *rk, const char *title, const char *summary,
@@ -61,11 +60,11 @@ static char *dblp_authors(const cJSON *info) {
 static int run_dblp(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   char url[512];
   snprintf(url, sizeof url, "https://dblp.org/search/publ/api?q=%s&format=json&h=20", enc);
-  const char *hdrs[] = { "Accept: application/json", MI_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "DBLP_SEARCH");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *result = cJSON_GetObjectItem(root, "result");
   const cJSON *hits = result ? cJSON_GetObjectItem(result, "hits") : NULL;
   const cJSON *hit = hits ? cJSON_GetObjectItem(hits, "hit") : NULL;
@@ -104,11 +103,11 @@ static int run_dblp(const source_ctx *ctx, intel_sink *sink, const char *enc) {
 static int run_codeberg(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   char url[512];
   snprintf(url, sizeof url, "https://codeberg.org/api/v1/repos/search?q=%s&limit=20", enc);
-  const char *hdrs[] = { "Accept: application/json", MI_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "CODEBERG_SEARCH");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *data = cJSON_GetObjectItem(root, "data");
   int emitted = 0;
   if (cJSON_IsArray(data)) {
@@ -138,11 +137,11 @@ static int run_codeberg(const source_ctx *ctx, intel_sink *sink, const char *enc
 static int run_nationalize(const source_ctx *ctx, intel_sink *sink, const char *enc, const char *raw) {
   char url[256];
   snprintf(url, sizeof url, "https://api.nationalize.io/?name=%s", enc);
-  const char *hdrs[] = { "Accept: application/json", MI_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "NATIONALIZE");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *country = cJSON_GetObjectItem(root, "country");
   if (!cJSON_IsArray(country) || cJSON_GetArraySize(country) == 0) { cJSON_Delete(root); return 0; }
   cJSON *d = cJSON_CreateObject();
@@ -172,11 +171,11 @@ static int run_nationalize(const source_ctx *ctx, intel_sink *sink, const char *
 static int run_genderize(const source_ctx *ctx, intel_sink *sink, const char *enc, const char *raw) {
   char url[256];
   snprintf(url, sizeof url, "https://api.genderize.io/?name=%s", enc);
-  const char *hdrs[] = { "Accept: application/json", MI_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "GENDERIZE");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const char *gender = jo_sv(root, "gender");
   if (!gender) { cJSON_Delete(root); return 0; }
   const cJSON *prob = cJSON_GetObjectItem(root, "probability");
@@ -200,11 +199,11 @@ static int run_frankfurter(const source_ctx *ctx, intel_sink *sink, const char *
   if (i < 3) return 0;
   char url[256];
   snprintf(url, sizeof url, "https://api.frankfurter.app/latest?from=%s", cur);
-  const char *hdrs[] = { "Accept: application/json", MI_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "FRANKFURTER_FX");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *rates = cJSON_GetObjectItem(root, "rates");
   const char *date = jo_sv(root, "date");
   if (!rates) { cJSON_Delete(root); return 0; }
@@ -234,7 +233,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   else if (!strcmp(sid, "FRANKFURTER_FX"))  n = run_frankfurter(ctx, sink, q);
   free(enc);
   fprintf(stderr, "[%s] emitted %d\n", sid, n);
-  return 0;
+  return n < 0 ? -1 : 0;
 }
 
 #define MI_DEF(sym, ID, NM, CAT, DESC) \

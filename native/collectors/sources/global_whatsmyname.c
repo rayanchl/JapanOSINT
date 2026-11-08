@@ -1,12 +1,20 @@
 /* collectors/sources/global_whatsmyname.c
  * OSINT service — WHATSMYNAME. On-demand username pivot (entity = username).
- * Fetches the community WhatsMyName dataset (wmn-data.json) once, then probes a
- * CAPPED subset (~40) of the dataset's sites: for each, a REAL HTTP GET of the
+ * Fetches the community WhatsMyName dataset (wmn-data.json) once, then probes
+ * EVERY site in it: for each, a REAL HTTP GET of the
  * site's uri_check with <entity> substituted for {account}, emitting a hit only
  * when the response actually matches the site's e_code/e_string rule (same
  * detection contract maigret.c uses). Real probes only — no synthesized rows;
- * if nothing matches, emits nothing (honest empty). LIVE but heavy, so the site
- * count is hard-capped. Free / keyless. */
+ * if nothing matches, emits nothing (honest empty). Free / keyless.
+ *
+ * UNCAPPED 2026-11-07. `WMN_MAX_SITES 40` probed the first 40 sites of the
+ * dataset in file order — measured that day, 692 sites of which 670 carry a
+ * `{account}` uri_check and a numeric e_code; Reddit is #260 and Instagram
+ * #460, so neither was ever asked — and said nothing about the other 630.
+ * maigret.c, the sibling, walks its whole table; this does too, sequentially
+ * (each site is a different host, so core/hostgate.c paces per host), under a
+ * wall-clock budget. A run the budget or a cancel stops files a
+ * collector-truncation-notice with how many of how many were probed. */
 #include "source.h"
 #include "third_party/cJSON.h"
 #include "core/httpclient.h"
@@ -14,11 +22,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "_jp_osint.inc"
 
 #define WMN_DATA_URL \
   "https://raw.githubusercontent.com/WebBreacher/WhatsMyName/main/wmn-data.json"
-#define WMN_MAX_SITES 40
+#define WMN_BUDGET_SEC 900   /* exhaustive-ok: a stop at this wall-clock budget files a collector-truncation-notice */
+#define WMN_PROBE_MS   10000
 
 /* Substitute the first "{account}" placeholder in `tmpl` with `user`. */
 static void wmn_fill(char *dst, size_t cap, const char *tmpl, const char *user) {
@@ -51,7 +61,7 @@ static int wmn_emit(intel_sink *sink, const char *username, const char *site,
   if (cat) cJSON_AddStringToObject(props, "category", cat);
   cJSON_AddStringToObject(props, "href", url);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char rk[512];
@@ -61,17 +71,18 @@ static int wmn_emit(intel_sink *sink, const char *username, const char *site,
   char summary[512];
   snprintf(summary, sizeof summary, "%s on %s", username, site);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
   it.summary         = summary;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.link            = url;
   it.record_type     = "osint_service_result";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"WHATSMYNAME\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -81,19 +92,29 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   /* 1) Fetch the dataset once. */
   char *body = jo_get(ctx, WMN_DATA_URL, NULL, "whatsmyname");
-  if (!body) return 0;                     /* honest empty on fetch failure */
+  if (!body) return jo_fail_rc(jo_last_status(), 0);                     /* 2026-11-07: a refused fetch is -1, not an honest empty */
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   cJSON *sites = cJSON_GetObjectItem(root, "sites");
-  if (!cJSON_IsArray(sites)) { cJSON_Delete(root); return 0; }
+  if (!cJSON_IsArray(sites)) { cJSON_Delete(root); return -1; }  /* the dataset's own shape changed */
 
-  int emitted = 0, probed = 0;
+  int emitted = 0, probed = 0, probeable = 0, stopped = 0, unanswered = 0;
+  time_t t0 = time(NULL);
   cJSON *s;
   cJSON_ArrayForEach(s, sites) {
-    if (probed >= WMN_MAX_SITES) break;
-    if (ctx->cancel && *ctx->cancel) break;
+    {
+      const char *c0 = jo_sv(s, "uri_check");
+      cJSON *e0 = cJSON_GetObjectItem(s, "e_code");
+      if (jo_sv(s, "name") && c0 && strstr(c0, "{account}") && cJSON_IsNumber(e0))
+        probeable++;
+    }
+    if (stopped) continue;               /* keep counting what was not asked */
+    if ((ctx->cancel && *ctx->cancel) || time(NULL) - t0 >= WMN_BUDGET_SEC) {
+      stopped = 1;
+      continue;
+    }
 
     const char *name  = jo_sv(s, "name");
     const char *check = jo_sv(s, "uri_check");
@@ -108,7 +129,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     probed++;
 
     http_response hr = {0};
-    int hc = http_request(ctx->http, "GET", url, NULL, NULL, 0, 15000, 1, &hr);
+    int hc = http_request(ctx->http, "GET", url, NULL, NULL, 0, WMN_PROBE_MS, 1, &hr);
+    if (hc != 0) unanswered++;
 
     int found = 0;
     if (hc == 0 && hr.body) {
@@ -124,8 +146,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   cJSON_Delete(root);
-  fprintf(stderr, "[whatsmyname] probed %d emitted %d\n", probed, emitted);
-  return 0;   /* honest empty is not an error */
+  if (stopped)
+    jo_trunc_notice_scoped(sink, "WHATSMYNAME", username, WMN_DATA_URL, probed,
+                           probeable,
+                           "the wall-clock budget or a cancel stopped the site walk; "
+                           "records_used/records_available count SITES probed of sites probeable",
+                           "raise WMN_BUDGET_SEC in global_whatsmyname.c, or re-ask");
+  fprintf(stderr, "[whatsmyname] probed %d of %d emitted %d (%d unanswered)\n",
+          probed, probeable, emitted, unanswered);
+  return 0;   /* honest empty is not an error; the dataset fetch failing is -1 above */
 }
 
 static const source_def whatsmyname_def = {
@@ -134,7 +163,7 @@ static const source_def whatsmyname_def = {
   .update_interval_sec = 0, .run = run,
   .category = "investigation", .type = "api",
   .url = "internal://osint/whatsmyname",
-  .description = "WhatsMyName dataset — live username-presence probes across a capped site subset (keyless)",
+  .description = "WhatsMyName dataset — live username-presence probes across every site in the dataset (keyless)",
   .layer = NULL, .free_tier = 1,
 };
 REGISTER_SOURCE(whatsmyname_def)

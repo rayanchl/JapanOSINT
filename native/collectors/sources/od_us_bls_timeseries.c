@@ -17,7 +17,6 @@ static const char *URL =
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0 (open-source OSINT collector)",
                          NULL };
   cJSON *doc = feed_get_json_h(ctx->http, URL, hdrs, 30000);
   if (!doc) return od_rc(SID, -1);

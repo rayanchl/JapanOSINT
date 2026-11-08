@@ -6,6 +6,7 @@
  * since — this file, not the manifest, is the current copy. The
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
+#include "lib/pagewalk.h"   /* jo_page_max_for: the operator brake */
 
 VJSON(cyb_apnic_aspop, "cyb-apnic-aspop", "APNIC AS Population Estimates", "APNIC AS 利用者人口推計",
   "infrastructure", "routing",
@@ -42,9 +43,11 @@ VJSON(cyb_bgpkit_broker, "cyb-bgpkit-broker", "BGPKIT Broker Latest MRT Files", 
 static int run_cyb_caida_asrank(const source_ctx *c, intel_sink *s) {
   static const char *const ID = "cyb-caida-asrank";
   const int first = 1000;
-  int page_max = 20; /* exhaustive-ok: page-walk ceiling shared with lib/jsonlist.c; a stop is disclosed below and $JO_JSONLIST_PAGE_MAX raises it */
-  const char *env = getenv("JO_JSONLIST_PAGE_MAX");
-  if (env && *env && atoi(env) > 0) page_max = atoi(env);
+  /* The tree's one ceiling, through the operator's brake: this used to read
+   * $JO_JSONLIST_PAGE_MAX only, so $JO_PAGE_MAX (which every engine obeys,
+   * downwards too) did not reach this walker. jo_page_max() keeps the legacy
+   * spelling as the fallback; jo_page_max_for() lets $JO_PAGE_MAX win. */
+  int page_max = jo_page_max_for(jo_page_max("JO_JSONLIST_PAGE_MAX")); /* exhaustive-ok: page-walk ceiling shared with lib/jsonlist.c; a stop is disclosed below */
   vidk_ctx kc = { s, ID, "asn" };
   intel_sink ks = { &kc, vidk_emit };
 

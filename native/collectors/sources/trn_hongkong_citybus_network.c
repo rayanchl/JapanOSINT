@@ -15,24 +15,24 @@
  * the per-stop payload the longitude key is "long", NOT "lon", and both lat and
  * long are STRINGS. Resolving every stop of every route would be thousands of
  * requests per run, so the routes are all emitted (they carry no coordinates,
- * so they go out with has_geo = 0) and stop geography is resolved for a bounded
- * number of routes and stops per run — no coordinate is ever guessed for the
- * rest (R2).
+ * so they go out with has_geo = 0) and stop geography is resolved for a
+ * cycling slice of routes per run (see HK_ROUTES_PER_RUN) — no coordinate is
+ * ever guessed for the rest (R2).
  */
 #include "lib/jocore.h"
 #include "trn_common.inc"
 
 #define HK_ROUTES  "https://rt.data.gov.hk/v2/transport/citybus/route/CTB"
-#define HK_MAX_ROUTES_RESOLVED 10
-#define HK_MAX_STOPS_RESOLVED  300
-
-/* Have we already emitted this stop id in this run? Tiny linear set — the cap
- * keeps it well under a few hundred entries. */
-static int seen(char seen_ids[][32], int count, const char *id) {
-  for (int i = 0; i < count; i++)
-    if (strcmp(seen_ids[i], id) == 0) return 1;
-  return 0;
-}
+/* A CYCLE over the route list, not "the first ten routes for ever"
+ * (2026-11-07). The run resolved stops for routes 0..9 of the list — 410
+ * routes measured that day — every day, and stopped at 300 stops, so the
+ * stops of the other 400 routes were never fetched and nothing said so. It
+ * now resolves HK_ROUTES_PER_RUN routes a run starting where the last run
+ * stopped (source_ctx resume_in/resume_out, token "r=<index>"), every stop of
+ * each (deduped with lib/seenset.c), and wraps at the end: ~41 daily runs a
+ * cycle. Each run files a notice saying which slice it resolved. */
+#define HK_ROUTES_PER_RUN 10  /* exhaustive-ok: a cycle slice; the position advances every run and is disclosed */
+#include "lib/seenset.h"
 
 static int emit_stop(const source_ctx *ctx, intel_sink *sink,
                      const char *stop_id) {
@@ -80,7 +80,7 @@ static int emit_stop(const source_ctx *ctx, intel_sink *sink,
 /* Resolve the ordered stop ids for one route/direction and emit each stop. */
 static int emit_route_stops(const source_ctx *ctx, intel_sink *sink,
                             const char *route, const char *dir,
-                            char seen_ids[][32], int *seen_count) {
+                            seen_set *seen_ids, int *seen_count) {
   char url[224];
   snprintf(url, sizeof url,
            "https://rt.data.gov.hk/v2/transport/citybus/route-stop/CTB/%s/%s",
@@ -92,10 +92,8 @@ static int emit_route_stops(const source_ctx *ctx, intel_sink *sink,
   cJSON *rs;
   cJSON_ArrayForEach(rs, cJSON_GetObjectItem(doc, "data")) {
     const char *sid = jo_sv(rs, "stop");
-    if (!sid || strlen(sid) >= 32) continue;
-    if (*seen_count >= HK_MAX_STOPS_RESOLVED) break;
-    if (seen(seen_ids, *seen_count, sid)) continue;
-    snprintf(seen_ids[*seen_count], 32, "%s", sid);
+    if (!sid) continue;
+    if (!seen_add(seen_ids, sid)) continue;
     (*seen_count)++;
     n += emit_stop(ctx, sink, sid);
   }
@@ -116,11 +114,18 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     return -1;
   }
 
-  char seen_ids[HK_MAX_STOPS_RESOLVED][32];
+  seen_set seen_ids = {0};
   int seen_count = 0, resolved_routes = 0, n = 0;
+  int nroutes = cJSON_GetArraySize(routes);
+  int start = 0;
+  if (ctx->resume_in && strncmp(ctx->resume_in, "r=", 2) == 0)
+    start = atoi(ctx->resume_in + 2);
+  if (start < 0 || start >= nroutes) start = 0;
+  int ri = -1;
 
   cJSON *r;
   cJSON_ArrayForEach(r, routes) {
+    ri++;
     const char *route = jo_sv(r, "route");
     if (!route) continue;
 
@@ -155,16 +160,34 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(pj);
     cJSON_Delete(pr);
 
-    if (resolved_routes < HK_MAX_ROUTES_RESOLVED &&
-        seen_count < HK_MAX_STOPS_RESOLVED) {
+    if (ri >= start && resolved_routes < HK_ROUTES_PER_RUN) {
       n += emit_route_stops(ctx, sink, route, "inbound",
-                            seen_ids, &seen_count);
+                            &seen_ids, &seen_count);
       n += emit_route_stops(ctx, sink, route, "outbound",
-                            seen_ids, &seen_count);
+                            &seen_ids, &seen_count);
       resolved_routes++;
     }
   }
   cJSON_Delete(doc);
+  seen_free(&seen_ids);
+  int next = start + resolved_routes;
+  if (next >= nroutes) next = 0;
+  if (ctx->resume_out) {
+    char tok[32];
+    snprintf(tok, sizeof tok, "r=%d", next);
+    ctx->resume_out(ctx, next ? tok : NULL);
+  }
+  if (resolved_routes < nroutes) {
+    char why[200];
+    snprintf(why, sizeof why,
+             "stops were resolved for routes %d..%d of %d this run (a cycle; "
+             "records count ROUTES whose stops were resolved)",
+             start, start + resolved_routes - 1, nroutes);
+    jo_trunc_notice_scoped(sink, "hongkong-citybus-network", "stop-cycle",
+                           HK_ROUTES, resolved_routes, nroutes, why,
+                           "the next run resolves the next slice; raise "
+                           "HK_ROUTES_PER_RUN to finish a cycle sooner");
+  }
   fprintf(stderr, "[hongkong-citybus-network] emitted %d (%d stops resolved)\n",
           n, seen_count);
   return 0;

@@ -16,7 +16,6 @@
 #include <string.h>
 #include "_jp_osint.inc"
 
-static const char *AV_UA = "User-Agent: JapanOSINT/1.0 (osint@example.org)";
 
 /* Heuristic: 6 hex chars → ICAO24 hex; contains digit+letter with '-' or len<=8 → reg;
  * else treat as callsign. Returns "hex" | "reg" | "callsign". */
@@ -70,7 +69,7 @@ static int av_emit_ac(intel_sink *sink, const char *service, const cJSON *ac) {
   cJSON_AddStringToObject(p, "service", service);
   if (hex) cJSON_AddStringToObject(p, "hex", hex);
   cJSON_AddBoolToObject(p, "success", 1);
-  char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+  jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
 
   char tags[96]; snprintf(tags, sizeof tags, "[\"osint-search\",\"%s\"]", service);
   char title[256];
@@ -79,11 +78,12 @@ static int av_emit_ac(intel_sink *sink, const char *service, const cJSON *ac) {
   char link[128] = {0};
   if (hex) snprintf(link, sizeof link, "https://globe.adsbexchange.com/?icao=%s", hex);
   int has_geo = (lat && cJSON_IsNumber(lat) && lon && cJSON_IsNumber(lon));
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = hex ? hex : (reg ? reg : flight);
   it.title           = title;
   it.summary         = reg ? reg : type;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.link            = link[0] ? link : NULL;
   it.lang            = "en";
   it.has_geo         = has_geo;
@@ -93,7 +93,7 @@ static int av_emit_ac(intel_sink *sink, const char *service, const cJSON *ac) {
   it.properties_json = pj;
   it.tags_json       = tags;
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -101,11 +101,11 @@ static int run_reapi(const source_ctx *ctx, intel_sink *sink, const char *host,
                      const char *service, const char *enc, const char *kind) {
   char url[512];
   snprintf(url, sizeof url, "https://%s/v2/%s/%s", host, kind, enc);
-  const char *hdrs[] = { "Accept: application/json", AV_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, service);
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *ac = cJSON_GetObjectItem(root, "ac");
   int emitted = 0;
   if (cJSON_IsArray(ac)) {
@@ -121,11 +121,11 @@ static int run_opensky(const source_ctx *ctx, intel_sink *sink, const char *enc,
   if (strcmp(kind, "hex") != 0) return 0;   /* OpenSky keyless filter is by icao24 */
   char url[512];
   snprintf(url, sizeof url, "https://opensky-network.org/api/states/all?icao24=%s", enc);
-  const char *hdrs[] = { "Accept: application/json", AV_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "OPENSKY_STATES");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *states = cJSON_GetObjectItem(root, "states");
   int emitted = 0;
   if (cJSON_IsArray(states)) {
@@ -153,20 +153,21 @@ static int run_opensky(const source_ctx *ctx, intel_sink *sink, const char *enc,
       cJSON_AddStringToObject(p, "service", "OPENSKY_STATES");
       cJSON_AddStringToObject(p, "hex", hex);
       cJSON_AddBoolToObject(p, "success", 1);
-      char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+      jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
       int has_geo = (cJSON_IsNumber(lat) && cJSON_IsNumber(lon));
       char link[128]; snprintf(link, sizeof link, "https://opensky-network.org/aircraft-profile?icao24=%s", hex);
-      intel_item it = {0};
+      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
       it.remote_key = hex;
       it.title = csv ? csv : hex;
       it.summary = cJSON_IsString(cc) ? cc->valuestring : NULL;
-      it.body = bj; it.link = link; it.lang = "en";
+      it.body = bt ? bt : bj; it.link = link; it.lang = "en";
       it.has_geo = has_geo; it.lat = has_geo ? lat->valuedouble : 0; it.lon = has_geo ? lon->valuedouble : 0;
       it.record_type = "aircraft-position";
       it.properties_json = pj;
       it.tags_json = "[\"osint-search\",\"OPENSKY_STATES\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(pj);
+      free(bj); free(bt); free(pj);
       /* (cap removed: every record the upstream returned is emitted —
        * docs/SOURCE_EXHAUSTIVENESS.md) */
     }
@@ -180,11 +181,11 @@ static int run_planespotters(const source_ctx *ctx, intel_sink *sink, const char
   const char *seg = strcmp(kind, "reg") == 0 ? "reg" : "hex";
   char url[512];
   snprintf(url, sizeof url, "https://api.planespotters.net/pub/photos/%s/%s", seg, enc);
-  const char *hdrs[] = { "Accept: application/json", AV_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "PLANESPOTTERS");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *photos = cJSON_GetObjectItem(root, "photos");
   int emitted = 0;
   if (cJSON_IsArray(photos)) {
@@ -205,18 +206,19 @@ static int run_planespotters(const source_ctx *ctx, intel_sink *sink, const char
       cJSON *p = cJSON_CreateObject();
       cJSON_AddStringToObject(p, "service", "PLANESPOTTERS");
       cJSON_AddBoolToObject(p, "success", 1);
-      char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+      jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
       char title[128]; snprintf(title, sizeof title, "Aircraft photo %s", enc);
-      intel_item it = {0};
+      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
       it.remote_key = id ? id : linkstr;
       it.title = title;
       it.summary = photographer;
-      it.body = bj; it.link = linkstr; it.lang = "en";
+      it.body = bt ? bt : bj; it.link = linkstr; it.lang = "en";
       it.record_type = "aircraft-photo";
       it.properties_json = pj;
       it.tags_json = "[\"osint-search\",\"PLANESPOTTERS\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(pj);
+      free(bj); free(bt); free(pj);
       /* (cap removed: every record the upstream returned is emitted —
        * docs/SOURCE_EXHAUSTIVENESS.md) */
     }
@@ -239,7 +241,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   else if (!strcmp(sid, "PLANESPOTTERS"))  n = run_planespotters(ctx, sink, enc, kind);
   free(enc);
   fprintf(stderr, "[%s] emitted %d\n", sid, n);
-  return 0;
+  return n < 0 ? -1 : 0;
 }
 
 #define AV_DEF(sym, ID, NM, DESC) \

@@ -78,14 +78,15 @@ static int emit_work(intel_sink *sink, const cJSON *w) {
   if (doi) cJSON_AddStringToObject(props, "doi", doi);
   if (yr && cJSON_IsNumber(yr)) cJSON_AddNumberToObject(props, "year", yr->valuedouble);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = id ? id : (doi ? doi : title);
   it.title           = title ? title : id;
   it.summary         = authors;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.author          = authors;
   it.lang            = "en";
   it.published_at    = pub;
@@ -94,7 +95,7 @@ static int emit_work(intel_sink *sink, const cJSON *w) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"OPENALEX\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj); free(authors);
+  free(bj); free(bt); free(pj); free(authors);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -128,34 +129,34 @@ static int emit_author(intel_sink *sink, const cJSON *a) {
   if (orcid) cJSON_AddStringToObject(props, "orcid", orcid);
   if (inst)  cJSON_AddStringToObject(props, "institution", inst);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = id ? id : name;
   it.title           = name ? name : id;
   it.summary         = inst;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "en";
   it.link            = orcid ? orcid : id;
   it.record_type     = "openalex-author";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"OPENALEX\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
 static int fetch_and_emit(const source_ctx *ctx, intel_sink *sink,
                           const char *url, int is_author) {
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0 (mailto:osint@example.org)",
                          NULL };
   char *body = jo_get(ctx, url, hdrs, "openalex");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   cJSON *results = cJSON_GetObjectItem(root, "results");
   int emitted = 0;
   if (cJSON_IsArray(results)) {
@@ -178,7 +179,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   char url[1024];
   snprintf(url, sizeof url,
     "https://api.openalex.org/works?search=%s&per_page=15", enc);
-  int emitted = fetch_and_emit(ctx, sink, url, 0);
+  int emitted = 0, failed = 0;
+  jo_acc(fetch_and_emit(ctx, sink, url, 0), &emitted, &failed);
 
   /* person-shaped entity → also search authors */
   int person = strchr(q, ' ') && !strchr(q, '@');
@@ -187,12 +189,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (person) {
     snprintf(url, sizeof url,
       "https://api.openalex.org/authors?search=%s&per_page=10", enc);
-    emitted += fetch_and_emit(ctx, sink, url, 1);
+    jo_acc(fetch_and_emit(ctx, sink, url, 1), &emitted, &failed);
   }
 
   free(enc);
   fprintf(stderr, "[openalex] emitted %d\n", emitted);
-  return 0;   /* honest empty is not an error */
+  return (failed && emitted == 0) ? -1 : 0;   /* honest empty 0; refused/unparsable fetch with nothing emitted is -1 (2026-11-07) */
 }
 
 static const source_def openalex_def = {

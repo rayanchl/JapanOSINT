@@ -37,7 +37,7 @@
 
 #define U3650_BASE "https://opendata.fcc.gov/resource/euz5-46g2.json"
 #define PAGE_SIZE 5000
-#define PAGES 4
+#define PAGES 4   /* 2026-11-07: $select=count(*) 7,829 → 2 pages of 5,000 */
 
 static int num_str(const char *s, double *out) {
   if (!s) return 0;
@@ -206,17 +206,18 @@ static int emit_page(cJSON *arr, intel_sink *sink, const char *today) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   char todaybuf[16];
   const char *today = today_iso(todaybuf, sizeof todaybuf) ? todaybuf : NULL;
-  int total = 0, pages = 0;
+  int total = 0, pages = 0, cut = 0, last_full = 0;
   for (int i = 0; i < PAGES; i++) {
     char url[256];
     snprintf(url, sizeof url, "%s?$limit=%d&$offset=%d&$order=u_call_sign",
              U3650_BASE, PAGE_SIZE, i * PAGE_SIZE);
     cJSON *doc = feed_get_json(ctx->http, url, 60000);
-    if (!doc) break;
-    if (!cJSON_IsArray(doc)) { cJSON_Delete(doc); break; }
+    if (!doc) { cut = pages > 0; break; }   /* a refused LATER page is disclosed below */
+    if (!cJSON_IsArray(doc)) { cJSON_Delete(doc); cut = pages > 0; break; }
     pages++;
     int got = cJSON_GetArraySize(doc);
     total += emit_page(doc, sink, today);
+    last_full = (got >= PAGE_SIZE);
     cJSON_Delete(doc);
     if (got < PAGE_SIZE) break;
   }
@@ -224,6 +225,18 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     fprintf(stderr, "[fcc-3650-locations] fetch failed\n");
     return -1;
   }
+  /* Every stop is disclosed (2026-11-07): a later page that failed used to
+   * `break` as if it were the end of the data, and a walk that used up its
+   * page budget on full pages said nothing. */
+  if (cut)
+    jo_trunc_notice_scoped(sink, "fcc-3650-locations", "walk-cut", U3650_BASE, total, -1,
+                           "a later page failed (transport, refusal or an "
+                           "unreadable body) and the walk stopped there",
+                           "re-run; one failed page is one reading");
+  else if (pages >= PAGES && last_full)
+    jo_trunc_notice_scoped(sink, "fcc-3650-locations", "page-ceiling", U3650_BASE, total, -1,
+                           "the PAGES ceiling stopped the walk on a full page",
+                           "raise PAGES in tsp_fcc_3650_locations.c");
   fprintf(stderr, "[fcc-3650-locations] emitted %d over %d page(s)\n", total, pages);
   return 0;
 }

@@ -1,5 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import apiUrl from '../../utils/apiUrl.js';
+import { errorMessage } from '../../api/client.js';
+import { probeSource, setProbeConsent } from '../../api/probe.js';
+import { useApi } from '../../hooks/useApi.js';
+import { usePagedList } from '../../hooks/usePagedList.js';
+import { searchPath } from '../../utils/sourceFormat.js';
 import { relativeTime } from '../../utils/time.js';
 import StatusBadge from '../ui/StatusBadge';
 import LoadingSpinner from '../ui/LoadingSpinner';
@@ -8,16 +12,35 @@ import FollowPanel from './FollowPanel';
 import DatabaseExplorerTab from './DatabaseExplorerTab';
 import DatabaseSchedulerTab from './DatabaseSchedulerTab';
 
+/* Each filter is a SERVER filter on GET /api/sources/search (2026-11-07):
+ * this panel used to download the whole /api/status catalogue every 30 s and
+ * filter it in the browser. `health=gated` is the search's state for a source
+ * that needs a credential it does not have; the old separate "Missing key"
+ * filter (requiresKey && !configured) has no search counterpart and is folded
+ * into it — a `requires_key` filter on search would bring it back. */
 const FILTERS = [
-  { key: 'all', label: 'All' },
-  { key: 'working', label: 'Working' },
-  { key: 'online', label: 'Online' },
-  { key: 'degraded', label: 'Degraded' },
-  { key: 'offline', label: 'Offline' },
-  { key: 'pending', label: 'Pending' },
-  { key: 'gated', label: 'Gated' },
-  { key: 'missingKey', label: 'Missing key' },
+  { key: 'all', label: 'All', q: {} },
+  { key: 'working', label: 'Working', q: { health: 'ok' } },
+  { key: 'online', label: 'Online', q: { status: 'online' } },
+  { key: 'degraded', label: 'Degraded', q: { status: 'degraded' } },
+  { key: 'offline', label: 'Offline', q: { status: 'offline' } },
+  { key: 'pending', label: 'Pending', q: { status: 'pending' } },
+  { key: 'gated', label: 'Gated (needs key)', q: { health: 'gated' } },
 ];
+
+/* A search row in the field names this panel's renderers were written for
+ * (statusapi's camelCase). Key/probe fields are not on a search row; they
+ * arrive from GET /api/status/:id when the card is opened. */
+function fromSearchRow(r) {
+  return {
+    id: r.id, name: r.name || r.id, nameJa: r.name_ja, category: r.category, type: r.type,
+    description: r.description, url: r.url, status: r.status || 'pending',
+    gated: r.health?.state === 'gated', health: r.health,
+    lastCheck: r.last_check, lastSuccess: r.last_success,
+    responseTimeMs: r.response_time_ms, recordsCount: r.records_last_run, errorMessage: r.error_message,
+    intelTotal: r.item_count, intelGeocoded: r.geocoded,
+  };
+}
 
 function prettyJson(str) {
   if (!str) return '';
@@ -127,7 +150,14 @@ function ProbeDetail({ api }) {
   );
 }
 
-function ApiRow({ api, expanded, onToggle, onApiUpdate }) {
+function ApiRow({ api: listRow, expanded, onToggle }) {
+  // The full status row (keys, probe request/response) for this one source,
+  // read when the card opens — GET /api/status/:id, not the whole catalogue.
+  const one = useApi(expanded ? `/api/status/${encodeURIComponent(listRow.id)}` : null, { enabled: expanded, deps: [expanded, listRow.id] });
+  const [patch, setPatch] = useState(null);
+  const api = { ...listRow, ...(one.data || {}), ...(patch || {}), name: (one.data?.name || listRow.name) };
+  const keysKnown = Boolean(one.data);
+  const onApiUpdate = (updated) => { const { ok: _ok, ...rest } = updated || {}; setPatch((p) => ({ ...(p || {}), ...rest })); };
   const [pinging, setPinging] = useState(false);
   const [consentBusy, setConsentBusy] = useState(false);
   const [actionError, setActionError] = useState(null);
@@ -137,14 +167,9 @@ function ApiRow({ api, expanded, onToggle, onApiUpdate }) {
     setActionError(null);
     setPinging(true);
     try {
-      const res = await fetch(apiUrl(`/api/status/${encodeURIComponent(api.id)}/probe`), {
-        method: 'POST',
-      });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const updated = await res.json();
-      onApiUpdate?.(updated);
+      onApiUpdate(await probeSource(api.id));
     } catch (err) {
-      setActionError(err.message || 'Ping failed');
+      setActionError(`Ping refused — ${errorMessage(err)}`);
     } finally {
       setPinging(false);
     }
@@ -155,17 +180,9 @@ function ApiRow({ api, expanded, onToggle, onApiUpdate }) {
     setActionError(null);
     setConsentBusy(true);
     try {
-      const res = await fetch(apiUrl(`/api/status/${encodeURIComponent(api.id)}/consent`), {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        // The server reads `consent` (httpd.c) and 400s anything else.
-        body: JSON.stringify({ consent: !api.probeConsent }),
-      });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const updated = await res.json();
-      onApiUpdate?.(updated);
+      onApiUpdate(await setProbeConsent(api.id, !api.probeConsent));
     } catch (err) {
-      setActionError(err.message || 'Consent update failed');
+      setActionError(`Consent update refused — ${errorMessage(err)}`);
     } finally {
       setConsentBusy(false);
     }
@@ -200,7 +217,9 @@ function ApiRow({ api, expanded, onToggle, onApiUpdate }) {
           <StatusBadge type="status" value={api.gated ? 'gated' : api.status} />
         </div>
         <div className="col-span-3 flex justify-end">
-          <KeyPills api={api} />
+          {keysKnown ? <KeyPills api={api} /> : (api.gated && api.health?.credentials_required?.length
+            ? <span className="px-1.5 py-0.5 rounded text-[9px] bg-status-offline/15 text-status-offline border border-status-offline/30 font-mono">needs {api.health.credentials_required.join(', ')}</span>
+            : null)}
         </div>
         <div className="col-span-1 text-osint-muted text-xs text-right">
           {expanded ? '▾' : '▸'}
@@ -209,6 +228,8 @@ function ApiRow({ api, expanded, onToggle, onApiUpdate }) {
 
       {expanded && (
         <div className="px-3 pb-2 pt-1 text-[10px] text-osint-muted border-t border-osint-border/40 space-y-1">
+          {one.loading && !one.data && <div>Loading this source's key and probe detail…</div>}
+          {one.error && <div className="text-status-offline">Key and probe detail unavailable — {errorMessage(one.error)}</div>}
           {api.description && (
             <div className="text-osint-text">{api.description}</div>
           )}
@@ -296,7 +317,7 @@ function ApiRow({ api, expanded, onToggle, onApiUpdate }) {
               </div>
             </div>
           )}
-          {api.requiresKey && (
+          {keysKnown && api.requiresKey && (
             <div className="pt-1 flex flex-wrap items-center gap-2">
               <button
                 type="button"
@@ -347,7 +368,7 @@ function ApiRow({ api, expanded, onToggle, onApiUpdate }) {
               </a>
             </div>
           )}
-          <ProbeDetail api={api} />
+          {keysKnown && <ProbeDetail api={api} />}
         </div>
       )}
     </div>
@@ -355,78 +376,24 @@ function ApiRow({ api, expanded, onToggle, onApiUpdate }) {
 }
 
 export default function SourcesPanel({ onClose }) {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [filter, setFilter] = useState('all');
+  const [draft, setDraft] = useState('');
   const [search, setSearch] = useState('');
   const [expandedId, setExpandedId] = useState(null);
   // Tabs: sources | discovery | follow | tables | scheduler
   const [tab, setTab] = useState('sources');
+  useEffect(() => { const t = setTimeout(() => setSearch(draft.trim()), 300); return () => clearTimeout(t); }, [draft]);
 
-  useEffect(() => {
-    let cancelled = false;
-    const load = async () => {
-      try {
-        const res = await fetch(apiUrl('/api/status'));
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const json = await res.json();
-        if (!cancelled) {
-          setData(json);
-          setError(null);
-        }
-      } catch (err) {
-        if (!cancelled) setError(err.message || 'Failed to load');
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    };
-    load();
-    const t = setInterval(load, 30_000);
-    return () => {
-      cancelled = true;
-      clearInterval(t);
-    };
-  }, []);
-
-  const filtered = useMemo(() => {
-    if (!data) return [];
-    const q = search.trim().toLowerCase();
-    return data.apis
-      .filter((a) => {
-        if (filter === 'working') {
-          return !a.gated && a.status === 'online' && (!a.requiresKey || a.configured);
-        }
-        if (filter === 'online') return !a.gated && a.status === 'online';
-        if (filter === 'degraded') return !a.gated && a.status === 'degraded';
-        if (filter === 'offline') return !a.gated && a.status === 'offline';
-        if (filter === 'pending') return !a.gated && a.status === 'pending';
-        if (filter === 'gated') return a.gated;
-        if (filter === 'missingKey') return a.requiresKey && !a.configured;
-        return true;
-      })
-      .filter((a) => {
-        if (!q) return true;
-        return (
-          a.name.toLowerCase().includes(q) ||
-          a.id.toLowerCase().includes(q) ||
-          (a.category && a.category.toLowerCase().includes(q))
-        );
-      })
-      .sort((a, b) => {
-        const rank = (x) => {
-          if (x.requiresKey && !x.configured) return 6;
-          if (x.gated) return 4;
-          if (x.status === 'online') return 0;
-          if (x.status === 'degraded') return 1;
-          if (x.status === 'offline') return 2;
-          if (x.status === 'pending') return 3;
-          return 5;
-        };
-        const r = rank(a) - rank(b);
-        return r !== 0 ? r : a.name.localeCompare(b.name);
-      });
-  }, [data, filter, search]);
+  // The counters: /api/status?summary=1, which counts every source server
+  // side and ships no rows. Polled every 30 s as the panel always was.
+  const sum = useApi(tab === 'sources' ? '/api/status?summary=1' : null, { enabled: tab === 'sources', poll: 30_000, deps: [tab] });
+  const f = FILTERS.find((x) => x.key === filter) || FILTERS[0];
+  const path = useMemo(() => searchPath({ q: search, ...f.q, sort: 'name' }), [search, f]);
+  const list = usePagedList(tab === 'sources' ? path : null, { pageSize: 50, enabled: tab === 'sources' });
+  const filtered = useMemo(() => list.rows.map(fromSearchRow), [list.rows]);
+  const data = sum.data;
+  const loading = list.loading;
+  const error = list.error ? errorMessage(list.error) : null;
 
   const summary = data?.summary;
 
@@ -538,9 +505,9 @@ export default function SourcesPanel({ onClose }) {
       <div className="px-3 py-2 border-b border-osint-border/40 space-y-2 flex-shrink-0">
         <input
           type="text"
-          placeholder="Search sources…"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search sources (server-side: id, name, 日本語, collector, host)…"
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
           className="w-full bg-osint-bg/60 border border-osint-border rounded px-2 py-1 text-xs text-osint-text placeholder:text-osint-muted/70 focus:outline-none focus:border-neon-cyan/50"
         />
         <div className="flex flex-wrap gap-1">
@@ -562,7 +529,7 @@ export default function SourcesPanel({ onClose }) {
       </div>
 
       <div className="flex-1 overflow-y-auto px-3 py-2 space-y-1">
-        {loading && !data && (
+        {loading && list.rows.length === 0 && (
           <div className="flex items-center justify-center py-6">
             <LoadingSpinner />
           </div>
@@ -573,16 +540,18 @@ export default function SourcesPanel({ onClose }) {
         {error && (
           <div className="text-status-offline text-xs px-2 py-3">
             Failed to load sources: {error}
-            {data && ' — the rows below are the last successful fetch, not current.'}
+            {list.rows.length > 0 && ' — the rows below are the last successful fetch, not current.'}
           </div>
         )}
-        {data && filtered.length === 0 && (
+        {sum.error && (
+          <div className="text-status-offline text-[10px] px-2">Fleet counters unavailable — {errorMessage(sum.error)}</div>
+        )}
+        {list.loaded && !error && filtered.length === 0 && (
           <div className="text-osint-muted text-xs px-2 py-4 text-center">
             No sources match the current filter.
           </div>
         )}
-        {data &&
-          filtered.map((api) => (
+        {filtered.map((api) => (
             <ApiRow
               key={api.id}
               api={api}
@@ -590,23 +559,24 @@ export default function SourcesPanel({ onClose }) {
               onToggle={() =>
                 setExpandedId((id) => (id === api.id ? null : api.id))
               }
-              onApiUpdate={(updated) =>
-                setData((prev) =>
-                  prev
-                    ? {
-                        ...prev,
-                        apis: prev.apis.map((a) => (a.id === updated.id ? { ...a, ...updated } : a)),
-                      }
-                    : prev,
-                )
-              }
             />
           ))}
+        {filtered.length > 0 && (
+          <div className="flex items-center gap-2 px-1 py-1 text-[10px] font-mono text-osint-muted">
+            <span>{filtered.length.toLocaleString()} of {list.total != null ? list.total.toLocaleString() : 'an unreported number of'} sources</span>
+            {list.hasMore && (
+              <button type="button" onClick={list.loadMore} disabled={list.loadingMore} className="px-2 py-0.5 rounded border border-osint-border hover:text-neon-cyan disabled:opacity-40">
+                {list.loadingMore ? 'Loading…' : 'Load more'}
+              </button>
+            )}
+            {list.moreError && <span className="text-status-offline">next page failed — {errorMessage(list.moreError)}</span>}
+          </div>
+        )}
       </div>
 
       {data && (
         <div className="px-3 py-1.5 border-t border-osint-border/40 text-[10px] text-osint-muted flex items-center justify-between flex-shrink-0">
-          <span>Auto-refresh 30s</span>
+          <span>Counters refresh every 30 s; the list is a server search (reload with the filter buttons)</span>
           <span className="font-mono">
             Updated {relativeTime(data.timestamp)}
           </span>

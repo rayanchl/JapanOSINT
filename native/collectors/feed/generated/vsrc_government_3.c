@@ -6,6 +6,7 @@
  * since — this file, not the manifest, is the current copy. The
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
+#include "lib/pagewalk.h"   /* jo_page_max_for: the operator brake */
 
 VJSON(gov_opensanctions_eu_fsf, "gov-opensanctions-eu-fsf", "OpenSanctions — EU Consolidated Sanctions", "OpenSanctions EU統合制裁リスト",
   "government", "sanctions",
@@ -140,23 +141,32 @@ VJSON(gov_si_data, "gov-si-data", "podatki.gov.si — Slovenian Open Data", "pod
   "sl", "[\"slovenia\",\"opendata\",\"catalogue\"]", 86400,
   "Newly published datasets on the Slovenian national open data portal.");
 
+/* Scoped Socrata catalogue rows below carry `order=createdAt` (2026-11-07),
+ * as their scoped siblings already do. Without it the catalogue answers in
+ * relevance order, which promises nothing stable across an offset walk.
+ * Measured on api.us.socrata.com: `order=createdAt` is NEWEST FIRST (NYC,
+ * 3,032 datasets, first 2026-09-29; `createdAt ASC` answers 2011), the total
+ * does not move, offset=3 continues the same order, and `order=frobnicate` is
+ * HTTP 400 "not a supported sort". Newest-first means a dataset created during
+ * the walk can repeat one record at a page seam, never skip one; the
+ * 20-page ceiling is then the newest 2,000 (limit=100) or 1,000 (limit=50). */
 VJSON(gov_socrata_data_ny, "gov-socrata-data-ny", "Open Data NY — Dataset Catalogue", "ニューヨーク州 公開データ目録",
   "government", "transparency",
-  "https://api.us.socrata.com/api/catalog/v1?domains=data.ny.gov&limit=50",
+  "https://api.us.socrata.com/api/catalog/v1?domains=data.ny.gov&limit=50&order=createdAt",
   "results",
   "en", "[\"usa\",\"newyork\",\"opendata\",\"catalogue\"]", 86400,
   "Catalogue of New York State open datasets including lobbying, licensing and enforcement data.");
 
 VJSON(gov_socrata_data_tx, "gov-socrata-data-tx", "Open Data Texas — Dataset Catalogue", "テキサス州 公開データ目録",
   "government", "transparency",
-  "https://api.us.socrata.com/api/catalog/v1?domains=data.texas.gov&limit=50",
+  "https://api.us.socrata.com/api/catalog/v1?domains=data.texas.gov&limit=50&order=createdAt",
   "results",
   "en", "[\"usa\",\"texas\",\"opendata\",\"catalogue\"]", 86400,
   "Catalogue of Texas state open datasets across agencies and regulators.");
 
 VJSON(gov_socrata_data_wa, "gov-socrata-data-wa", "Open Data Washington — Dataset Catalogue", "ワシントン州 公開データ目録",
   "government", "transparency",
-  "https://api.us.socrata.com/api/catalog/v1?domains=data.wa.gov&limit=50",
+  "https://api.us.socrata.com/api/catalog/v1?domains=data.wa.gov&limit=50&order=createdAt",
   "results",
   "en", "[\"usa\",\"washington\",\"opendata\",\"catalogue\"]", 86400,
   "Catalogue of Washington State open datasets across agencies and regulators.");
@@ -300,9 +310,11 @@ VJSON(gov_worldbank_indicators, "gov-worldbank-indicators", "World Bank — Indi
 static int run_gov_worldbank_procnotices(const source_ctx *c, intel_sink *s) {
   static const char *const ID = "gov-worldbank-procnotices";
   const int rows = 1000;
-  int page_max = 20; /* exhaustive-ok: page-walk ceiling shared with lib/jsonlist.c; a stop is disclosed below and $JO_JSONLIST_PAGE_MAX raises it */
-  const char *env = getenv("JO_JSONLIST_PAGE_MAX");
-  if (env && *env && atoi(env) > 0) page_max = atoi(env);
+  /* The tree's one ceiling, through the operator's brake: this used to read
+   * $JO_JSONLIST_PAGE_MAX only, so $JO_PAGE_MAX (which every engine obeys,
+   * downwards too) did not reach this walker. jo_page_max() keeps the legacy
+   * spelling as the fallback; jo_page_max_for() lets $JO_PAGE_MAX win. */
+  int page_max = jo_page_max_for(jo_page_max("JO_JSONLIST_PAGE_MAX")); /* exhaustive-ok: page-walk ceiling shared with lib/jsonlist.c; a stop is disclosed below */
 
   long total = 0, available = -1;
   int pages = 0, more = 0;

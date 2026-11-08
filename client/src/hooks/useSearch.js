@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { subscribe, startSearch, fetchSuggestions, fetchSuggestionSet, attachRun, getRun } from '../store/searchStore.js';
-import apiUrl from '../utils/apiUrl.js';
+import { api, errorMessage } from '../api/client.js';
 
 /** Subscribe to the live search store (active + completed runs). */
 export function useSearchStore() {
@@ -117,7 +117,13 @@ export function useRun(requestId) {
  * `setResults([])`, and the screen reading this hook then printed
  * "No matching entities." — an assertion about the corpus made out of a 500.
  * `error` keeps the two apart all the way to the render. */
-export function useEntitySearch(q, type) {
+/**
+ * `mode` 'hybrid' asks GET /api/entities/search?mode=hybrid — the FTS arm
+ * plus the entity_vec arm fused by RRF (entityapi.c), with the arms reported
+ * in meta.arms; without an embedding index the server answers the plain FTS
+ * result and says why. The route had no UI until 2026-11-07.
+ */
+export function useEntitySearch(q, type, mode) {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -125,6 +131,7 @@ export function useEntitySearch(q, type) {
   // before the debounce starts, so "not loading" alone does not mean the
   // results belong to the box's text — a caller recording a search needs this.
   const [resolved, setResolved] = useState(null);
+  const [meta, setMeta] = useState(null);
   useEffect(() => {
     const query = (q || '').trim();
     if (!query) { setResults([]); setError(null); setResolved(null); return undefined; }
@@ -132,19 +139,18 @@ export function useEntitySearch(q, type) {
     setLoading(true);
     const t = setTimeout(async () => {
       try {
-        const url = `/api/entities/search?q=${encodeURIComponent(query)}${type ? `&type=${type}` : ''}`;
-        const res = await fetch(apiUrl(url));
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const j = await res.json();
-        if (alive) { setResults(j.results || []); setError(null); setResolved(query); }
+        // Shared client (2026-11-07): the raw fetch reduced a refusal to
+        // "HTTP 500" and dropped the server's error body.
+        const j = await api.get('/api/entities/search', { query: { q: query, type: type || undefined, mode: mode || undefined } });
+        if (alive) { setResults(Array.isArray(j?.results) ? j.results : []); setMeta(j?.meta || null); setError(null); setResolved(query); }
       } catch (e) {
-        if (alive) { setResults([]); setError(e.message || 'request failed'); setResolved(null); }
+        if (alive) { setResults([]); setMeta(null); setError(errorMessage(e)); setResolved(null); }
       }
       finally { if (alive) setLoading(false); }
     }, 250);
     return () => { alive = false; clearTimeout(t); };
-  }, [q, type]);
-  return { results, loading, error, resolved };
+  }, [q, type, mode]);
+  return { results, loading, error, resolved, meta };
 }
 
 /** How many mentions the timeline asks for. EntityProfile prints this bound
@@ -168,24 +174,24 @@ export function useEntity(type, id) {
     const next = { profile: null, graph: null, mentions: null };
     const take = async (settled, key, onOk, onFail) => {
       if (settled.status === 'rejected') {
-        next[key] = settled.reason?.message || 'request failed';
+        next[key] = errorMessage(settled.reason);
         onFail();
         return;
       }
-      const res = settled.value;
-      if (!res.ok) { next[key] = `HTTP ${res.status}`; onFail(); return; }
-      try { onOk(await res.json()); }
+      try { onOk(settled.value); }
       catch (e) { next[key] = e.message || 'unreadable response'; onFail(); }
     };
     try {
+      // Through the shared client so a refusal carries the server's own
+      // error body (ApiError.detail), not a bare "HTTP 404" (2026-11-07).
       const [p, g, m] = await Promise.allSettled([
-        fetch(apiUrl(`/api/entities/${type}/${id}`)),
-        fetch(apiUrl(`/api/entities/${type}/${id}/graph?depth=${depth}`)),
-        fetch(apiUrl(`/api/entities/${type}/${id}/mentions?limit=${MENTION_LIMIT}`)),
+        api.get(`/api/entities/${type}/${id}`),
+        api.get(`/api/entities/${type}/${id}/graph?depth=${depth}`),
+        api.get(`/api/entities/${type}/${id}/mentions?limit=${MENTION_LIMIT}`),
       ]);
       await take(p, 'profile', (j) => setProfile(j), () => setProfile(null));
-      await take(g, 'graph', (j) => setGraph(j), () => setGraph({ nodes: [], edges: [] }));
-      await take(m, 'mentions', (j) => setMentions(j.mentions || []), () => setMentions([]));
+      await take(g, 'graph', (j) => setGraph(j && typeof j === 'object' ? { nodes: j.nodes || [], edges: j.edges || [], ...j } : { nodes: [], edges: [] }), () => setGraph({ nodes: [], edges: [] }));
+      await take(m, 'mentions', (j) => setMentions(Array.isArray(j?.mentions) ? j.mentions : []), () => setMentions([]));
     } finally {
       setErrors(next);
       setLoading(false);

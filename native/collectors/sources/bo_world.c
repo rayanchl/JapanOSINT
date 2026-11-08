@@ -91,17 +91,18 @@ static int bo_emit_lei(intel_sink *sink, const cJSON *rec, const char *query) {
   if (juris) cJSON_AddStringToObject(props, "jurisdiction", juris);
   if (query) cJSON_AddStringToObject(props, "query", query);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char link[128] = {0};
   if (lei) snprintf(link, sizeof link, "https://search.gleif.org/#/record/%s", lei);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = lei ? lei : name;
   it.title           = name ? name : lei;
   it.summary         = loc[0] ? loc : juris;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "en";
   it.published_at    = rdate;
   it.link            = link[0] ? link : NULL;
@@ -109,7 +110,7 @@ static int bo_emit_lei(intel_sink *sink, const cJSON *rec, const char *query) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"GLEIF_LEI\",\"legal-entity\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -122,12 +123,12 @@ static int bo_gleif_lei(const source_ctx *ctx, intel_sink *sink, const char *q) 
     enc);
   free(enc);
   const char *hdrs[] = { "Accept: application/vnd.api+json",
-                         "User-Agent: JapanOSINT/1.0", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "GLEIF_LEI");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   cJSON *arr = cJSON_GetObjectItem(root, "data");
   int emitted = 0;
   if (cJSON_IsArray(arr)) {
@@ -176,7 +177,7 @@ static int bo_emit_relation(intel_sink *sink, const cJSON *root,
   if (child_lei) cJSON_AddStringToObject(props, "child_lei", child_lei);
   if (plei) cJSON_AddStringToObject(props, "parent_lei", plei);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char title[512];
@@ -188,18 +189,19 @@ static int bo_emit_relation(intel_sink *sink, const cJSON *root,
   char link[128] = {0};
   if (plei) snprintf(link, sizeof link, "https://search.gleif.org/#/record/%s", plei);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = key;
   it.title           = title;
   it.summary         = juris;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "en";
   it.link            = link[0] ? link : NULL;
   it.record_type     = "gleif-relationship";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"GLEIF_RELATIONS\",\"ownership\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -214,12 +216,12 @@ static int bo_gleif_relations(const source_ctx *ctx, intel_sink *sink,
     enc);
   free(enc);
   const char *hdrs[] = { "Accept: application/vnd.api+json",
-                         "User-Agent: JapanOSINT/1.0", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "GLEIF_RELATIONS");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   char leis[5][32]; int nlei = 0;
   cJSON *arr = cJSON_GetObjectItem(root, "data");
@@ -295,21 +297,22 @@ static int bo_emit_oo(intel_sink *sink, const cJSON *rec, const char *query) {
   if (link[0]) cJSON_AddStringToObject(props, "href", link);
   if (query) cJSON_AddStringToObject(props, "query", query);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = id ? id : (link[0] ? link : name);
   it.title           = name ? name : id;
   it.summary         = ctry;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "en";
   it.link            = link[0] ? link : NULL;
   it.record_type     = "openownership-entity";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"OPENOWNERSHIP\",\"beneficial-ownership\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -321,12 +324,12 @@ static int bo_openownership(const source_ctx *ctx, intel_sink *sink, const char 
     "https://register.openownership.org/search.json?q=%s", enc);
   free(enc);
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "OPENOWNERSHIP");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   /* tolerate {results:[...]} or a bare [...] */
   cJSON *arr = cJSON_GetObjectItem(root, "results");
   if (!cJSON_IsArray(arr) && cJSON_IsArray(root)) arr = root;
@@ -342,6 +345,7 @@ static int bo_openownership(const source_ctx *ctx, intel_sink *sink, const char 
 
 /* ---- dispatch ---------------------------------------------------------- */
 static int run(const source_ctx *ctx, intel_sink *sink) {
+  int rc = 0;   /* a helper's -1 = refused/unparsable fetch (2026-11-07) */
   const char *q = (ctx->entity && *ctx->entity) ? ctx->entity : NULL;
   if (!q) return -1;
   if (strlen(q) < 3) {
@@ -349,11 +353,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     return 0;
   }
   const char *id = ctx->source_id;
-  if (strcmp(id, "GLEIF_LEI") == 0)        bo_gleif_lei(ctx, sink, q);
-  else if (strcmp(id, "GLEIF_RELATIONS") == 0) bo_gleif_relations(ctx, sink, q);
-  else if (strcmp(id, "OPENOWNERSHIP") == 0)   bo_openownership(ctx, sink, q);
+  if (strcmp(id, "GLEIF_LEI") == 0)        rc = bo_gleif_lei(ctx, sink, q);
+  else if (strcmp(id, "GLEIF_RELATIONS") == 0) rc = bo_gleif_relations(ctx, sink, q);
+  else if (strcmp(id, "OPENOWNERSHIP") == 0)   rc = bo_openownership(ctx, sink, q);
   else return -1;
-  return 0;   /* honest empty is not an error */
+  return rc < 0 ? -1 : 0;   /* honest empty 0, refused fetch -1 */
 }
 
 #define BO_DEF(SYM, ID, NAME, NAMEJA, URL, DESC) \

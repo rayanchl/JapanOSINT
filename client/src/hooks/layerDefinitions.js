@@ -17,6 +17,15 @@
 // now served from /api/layers/<id>/geojson through the catalogue; `landPrice`
 // has no server layer and was deleted; `crime` was deleted in favour of the
 // server's police-crime-points / police-crime-heatmap / police-facilities.
+//
+// Five more were deleted on 2026-11-07 for the same reason: nowphasWave
+// (/api/data/nowphas-wave), droneNofly (drone-nofly), jcgPatrol (jcg-patrol),
+// ccsProjects (ccs-projects) and niconicoRanking (niconico-ranking). None of
+// those slugs is a /api/layers id or a registered source id (searched across
+// native/ for each quoted slug), so every toggle was a 404 shown as an empty
+// layer. `nowphas-wave` is still named as a member in core/layers.def's
+// jma-ocean-data match list, but no source registers under it either; NOWPHAS
+// buoys reach the map through that server layer when a source exists.
 
 const LAYER_DEFINITIONS = {
   earthquakes: {
@@ -419,13 +428,6 @@ const LAYER_DEFINITIONS = {
     endpoint: '/api/data/jma-tide',
     category: 'Ocean',
   },
-  nowphasWave: {
-    name: 'NOWPHAS Buoys',
-    icon: '\u{1F535}',
-    color: '#1565c0',
-    endpoint: '/api/data/nowphas-wave',
-    category: 'Ocean',
-  },
   lighthouseMap: {
     name: 'Lighthouses',
     icon: '\u{1F3EE}',
@@ -441,20 +443,6 @@ const LAYER_DEFINITIONS = {
     endpoint: '/api/data/jartic-traffic',
     category: 'Transport',
     hidden: true,
-  },
-  droneNofly: {
-    name: 'Drone No-Fly',
-    icon: '\u{1F6F8}',
-    color: '#c62828',
-    endpoint: '/api/data/drone-nofly',
-    category: 'Safety',
-  },
-  jcgPatrol: {
-    name: 'JCG Patrol Bases',
-    icon: '\u{1F6E5}',
-    color: '#00838f',
-    endpoint: '/api/data/jcg-patrol',
-    category: 'Safety',
   },
 
   // Wave 4: Government + Defense
@@ -563,13 +551,6 @@ const LAYER_DEFINITIONS = {
     icon: '\u{1F6E2}',
     color: '#bf360c',
     endpoint: '/api/data/petroleum-stockpile',
-    category: 'Industry',
-  },
-  ccsProjects: {
-    name: 'CCS Projects',
-    icon: '\u{1F30D}',
-    color: '#0288d1',
-    endpoint: '/api/data/ccs-projects',
     category: 'Industry',
   },
   geothermalSprings: {
@@ -1270,13 +1251,6 @@ const LAYER_DEFINITIONS = {
     icon: '\u{1F98B}',
     color: '#0288d1',
     endpoint: '/api/data/bluesky-jetstream-jp',
-    category: 'Social',
-  },
-  niconicoRanking: {
-    name: 'Niconico Ranking',
-    icon: '\u{1F4FA}',
-    color: '#212121',
-    endpoint: '/api/data/niconico-ranking',
     category: 'Social',
   },
   wikipediaJaRecent: {

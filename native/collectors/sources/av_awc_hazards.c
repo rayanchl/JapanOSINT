@@ -93,7 +93,7 @@ static void awc_feature(cJSON *feats, const cJSON *b, const char *record_type,
 
 static cJSON *awc_fetch_array(const source_ctx *ctx, const char *url,
                               const char *tag) {
-  const char *hdrs[] = { "Accept: application/json", AV_UA_HDR, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, tag);
   if (!body) return NULL;
   cJSON *doc = cJSON_Parse(body);

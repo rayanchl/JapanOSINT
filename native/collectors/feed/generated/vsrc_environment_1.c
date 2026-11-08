@@ -146,33 +146,46 @@ VGEO(geo_dwd_biowetter_small, "geo-dwd-biowetter-small", "DWD — biometeorologi
   "en", "[\"germany\",\"biometeorology\",\"health\"]", 21600,
   "Health-relevant biometeorological forecast by area polygon.");
 
+/* WFS rows in this file: `startIndex=0` (2026-11-07). geojson_emit_paged()
+ * advances a WFS cursor only when the URL already names one AND the body's own
+ * numberMatched/totalFeatures exceeds what was read (mechanism 3), so a row
+ * without `startIndex` read ONE page of a declared total and stopped. Measured
+ * per row (count=5 at startIndex 0 and 5): where the server accepted paging
+ * without a sort — GeoServer does that only when it can order by the
+ * feature type's primary key — the two pages were disjoint and the row gets
+ * `startIndex=0` alone. Where it refused ("Cannot do natural order without a
+ * primary key"), the row also gets `sortBy=<a property distinct on the
+ * row's first 200 features>`, checked the same way (pages disjoint, total
+ * unchanged; a bogus sortBy is HTTP 400 "Illegal property name", so the
+ * server reads it). Probe-sized pages (count 2/3/20/50) are 1000 now. The
+ * 20-page geojson ceiling still bounds a run; the remainder is disclosed. */
 VGEO(geo_dwd_ceilometer, "geo-dwd-ceilometer", "DWD — ceilometer network", "ドイツ気象局 — シーロメータ観測網",
   "environment", "weather",
-  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:Ceilometer&outputFormat=application/json&count=500",
+  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:Ceilometer&outputFormat=application/json&count=500&startIndex=0",
   "en", "[\"germany\",\"cloud\",\"ceilometer\"]", 3600,
   "Cloud base and aerosol backscatter sites across Germany.");
 
 VGEO(geo_dwd_eprofile, "geo-dwd-eprofile", "DWD — E-PROFILE profiler network", "ドイツ気象局 — E-PROFILE 観測網",
   "environment", "weather",
-  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:E-PROFILE&outputFormat=application/json&count=500",
+  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:E-PROFILE&outputFormat=application/json&count=500&startIndex=0",
   "en", "[\"europe\",\"profiler\",\"aerosol\"]", 3600,
   "European ceilometer/wind-profiler network stations.");
 
 VGEO(geo_dwd_eucos_gbon, "geo-dwd-eucos-gbon", "DWD — GBON surface station network", "ドイツ気象局 — GBON 地上観測網",
   "environment", "weather",
-  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:EUCOS_surface_GBON&outputFormat=application/json&count=1000",
+  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:EUCOS_surface_GBON&outputFormat=application/json&count=1000&sortBy=ID&startIndex=0",
   "en", "[\"global\",\"stations\",\"gbon\"]", 86400,
   "WMO Global Basic Observing Network surface stations.");
 
 VGEO(geo_dwd_eucos_surface, "geo-dwd-eucos-surface", "DWD — EUCOS surface station network", "ドイツ気象局 — EUCOS 地上観測網",
   "environment", "weather",
-  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:EUCOS_surface_stations&outputFormat=application/json&count=1000",
+  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:EUCOS_surface_stations&outputFormat=application/json&count=1000&sortBy=FI_WMO_IDENT&startIndex=0",
   "en", "[\"europe\",\"stations\",\"eucos\"]", 86400,
   "European composite observing system surface stations.");
 
 VGEO(geo_dwd_euro24_poi, "geo-dwd-euro24-poi", "DWD — European city forecast points", "ドイツ気象局 — 欧州都市予報地点",
   "environment", "weather",
-  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:euro24_poi&outputFormat=application/json&count=1000",
+  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:euro24_poi&outputFormat=application/json&count=1000&startIndex=0",
   "en", "[\"europe\",\"forecast\",\"cities\"]", 10800,
   "24-hour forecast values at selected European points.");
 
@@ -184,31 +197,31 @@ VGEO(geo_dwd_pollenflug, "geo-dwd-pollenflug", "DWD — pollen forecast areas", 
 
 VGEO(geo_dwd_rbsn_ff, "geo-dwd-rbsn-ff", "DWD — WMO RBSN global wind", "ドイツ気象局 — WMO RBSN 全球風",
   "environment", "weather",
-  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:RBSN_FF&outputFormat=application/json&count=1000",
+  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:RBSN_FF&outputFormat=application/json&count=1000&startIndex=0",
   "en", "[\"global\",\"synop\",\"rbsn\",\"wind\"]", 3600,
   "Global RBSN wind speed/direction reports by station.");
 
 VGEO(geo_dwd_rbsn_rh, "geo-dwd-rbsn-rh", "DWD — WMO RBSN global humidity", "ドイツ気象局 — WMO RBSN 全球湿度",
   "environment", "weather",
-  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:RBSN_RH&outputFormat=application/json&count=1000",
+  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:RBSN_RH&outputFormat=application/json&count=1000&startIndex=0",
   "en", "[\"global\",\"synop\",\"rbsn\",\"humidity\"]", 3600,
   "Global RBSN relative humidity reports by station.");
 
 VGEO(geo_dwd_rbsn_rr, "geo-dwd-rbsn-rr", "DWD — WMO RBSN global precipitation", "ドイツ気象局 — WMO RBSN 全球降水",
   "environment", "weather",
-  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:RBSN_RR&outputFormat=application/json&count=1000",
+  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:RBSN_RR&outputFormat=application/json&count=1000&startIndex=0",
   "en", "[\"global\",\"synop\",\"rbsn\",\"precipitation\"]", 3600,
   "Global RBSN precipitation reports by station.");
 
 VGEO(geo_dwd_rbsn_t2m, "geo-dwd-rbsn-t2m", "DWD — WMO RBSN global 2 m temperature", "ドイツ気象局 — WMO RBSN 全球気温",
   "environment", "weather",
-  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:RBSN_T2m&outputFormat=application/json&count=1000",
+  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:RBSN_T2m&outputFormat=application/json&count=1000&startIndex=0",
   "en", "[\"global\",\"synop\",\"rbsn\",\"temperature\"]", 3600,
   "Global WMO Regional Basic Synoptic Network temperature observations with station coordinates.");
 
 VGEO(geo_dwd_uv_stationen, "geo-dwd-uv-stationen", "DWD — UV index stations", "ドイツ気象局 — UV指数観測地点",
   "environment", "weather",
-  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:Uv_Stationen&outputFormat=application/json&count=500",
+  "https://maps.dwd.de/geoserver/dwd/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=dwd:Uv_Stationen&outputFormat=application/json&count=500&sortBy=STATIONS_ID&startIndex=0",
   "en", "[\"uv\",\"germany\",\"health\"]", 21600,
   "UV index measurement sites and current values.");
 

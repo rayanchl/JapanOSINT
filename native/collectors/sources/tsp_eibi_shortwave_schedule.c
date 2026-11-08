@@ -139,7 +139,7 @@ static int season_candidates(char cand[4][16]) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   char cand[4][16];
   int ncand = season_candidates(cand);
-  const char *hdrs[] = { "User-Agent: JapanOSINT/1.0 (eibi-schedule)", NULL };
+  const char *hdrs[] = { NULL };
 
   char *body = NULL;
   char season[16] = "";

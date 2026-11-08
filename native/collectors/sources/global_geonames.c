@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 /* one geoname record → one intel_item. Returns 1 if emitted. */
 static int emit_place(intel_sink *sink, const cJSON *g) {
@@ -65,14 +66,15 @@ static int emit_place(intel_sink *sink, const cJSON *g) {
                   cJSON_AddNumberToObject(props, "lng", lon); }
   cJSON_AddBoolToObject(props, "has_geo", have_geo);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rkey;
   it.title           = disp;
   it.summary         = country;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.has_geo         = have_geo;
   it.lat             = lat;
   it.lon             = lon;
@@ -80,7 +82,7 @@ static int emit_place(intel_sink *sink, const cJSON *g) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"GEONAMES\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -90,7 +92,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *user = jo_env("GEONAMES_USER");
   if (!user) {
     fprintf(stderr, "[geonames] gated (no GEONAMES_USER)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "geonames", "geonames", (const char *const[]){"GEONAMES_USER", NULL}, NULL, NULL);
   }
 
   char *eq = jo_urlencode(q);
@@ -103,11 +105,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "geonames");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
 
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   cJSON *arr = cJSON_GetObjectItem(root, "geonames");
   int emitted = 0;

@@ -85,14 +85,15 @@ static int emit_dataset(intel_sink *sink, const cJSON *r) {
   if (dsid)   cJSON_AddStringToObject(props, "dataset_id", dsid);
   cJSON_AddStringToObject(props, "link", url);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = dsid ? dsid : url;
   it.title           = name;
   it.summary         = domain;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "en";
   it.published_at    = updat;
   it.link            = url;
@@ -100,7 +101,7 @@ static int emit_dataset(intel_sink *sink, const cJSON *r) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"OPENDATA_SOCRATA\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -111,12 +112,12 @@ static int query_domain(const source_ctx *ctx, intel_sink *sink,
     "https://api.us.socrata.com/api/catalog/v1?q=%s&domains=%s&limit=5",
     enc, domain);
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "opendata-socrata");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   cJSON *results = cJSON_GetObjectItem(root, "results");
   int emitted = 0;
   if (cJSON_IsArray(results)) {
@@ -137,13 +138,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   char *enc = jo_urlencode(q);
   if (!enc) return 0;
 
-  int emitted = 0;
+  int emitted = 0, failed = 0;
   for (int i = 0; i < SOCRATA_N; i++)
-    emitted += query_domain(ctx, sink, enc, SOCRATA_DOMAINS[i]);
+    jo_acc(query_domain(ctx, sink, enc, SOCRATA_DOMAINS[i]), &emitted, &failed);
 
   free(enc);
   fprintf(stderr, "[opendata-socrata] emitted %d\n", emitted);
-  return 0;   /* honest empty is not an error */
+  return (failed && emitted == 0) ? -1 : 0;   /* honest empty 0; refused/unparsable fetch with nothing emitted is -1 (2026-11-07) */
 }
 
 static const source_def opendata_socrata_def = {

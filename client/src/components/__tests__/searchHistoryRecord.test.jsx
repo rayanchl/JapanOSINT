@@ -12,7 +12,7 @@ import IntelPage from '../intel/IntelPage.jsx';
 import { rerunTarget } from '../search/SearchHistoryDropdown.jsx';
 import { routeFor } from '../alerts/SavedSearchesPage.jsx';
 
-vi.mock('../../auth/AuthContext.jsx', () => ({ useAuth: () => ({ isPlatformAdmin: false, role: 'viewer' }) }));
+vi.mock('../../auth/AuthContext.jsx', () => ({ useAuth: () => ({ isPlatformAdmin: false, role: 'viewer' }), useAuthOptional: () => ({ isPlatformAdmin: false, role: 'viewer' }) }));
 
 const realFetch = globalThis.fetch;
 afterEach(() => { cleanup(); globalThis.fetch = realFetch; vi.restoreAllMocks(); vi.useRealTimers(); });

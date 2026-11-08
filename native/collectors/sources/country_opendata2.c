@@ -12,17 +12,16 @@
 #include <string.h>
 #include "_jp_osint.inc"
 
-static const char *CO2_UA = "User-Agent: JapanOSINT/1.0 (osint@example.org)";
 
 static int ckan2_search(const source_ctx *ctx, intel_sink *sink, const char *service,
                         const char *api_base, const char *web_base, const char *enc) {
   char url[640];
   snprintf(url, sizeof url, "%s/api/3/action/package_search?q=%s&rows=20", api_base, enc);
-  const char *hdrs[] = { "Accept: application/json", CO2_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, service);
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *result = cJSON_GetObjectItem(root, "result");
   const cJSON *results = result ? cJSON_GetObjectItem(result, "results") : NULL;
   int n = 0;
@@ -44,16 +43,17 @@ static int ckan2_search(const source_ctx *ctx, intel_sink *sink, const char *ser
       char *bj = cJSON_PrintUnformatted(d); cJSON_Delete(d);
       cJSON *p = cJSON_CreateObject();
       cJSON_AddStringToObject(p, "service", service); cJSON_AddBoolToObject(p, "success", 1);
-      char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+      jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
       char tags[96]; snprintf(tags, sizeof tags, "[\"osint-search\",\"%s\"]", service);
       char link[512] = {0};
       if (name && web_base) snprintf(link, sizeof link, "%s/dataset/%s", web_base, name);
-      intel_item it = {0};
+      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
       it.remote_key = name ? name : title; it.title = title ? title : name; it.summary = orgt;
-      it.body = bj; it.link = link[0] ? link : NULL; it.lang = "en";
+      it.body = bt ? bt : bj; it.link = link[0] ? link : NULL; it.lang = "en";
       it.record_type = "open-dataset"; it.properties_json = pj; it.tags_json = tags;
       if (sink->emit(sink, &it) >= 0) n++;
-      free(bj); free(pj);
+      free(bj); free(bt); free(pj);
     }
   }
   cJSON_Delete(root);
@@ -72,7 +72,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   else if (!strcmp(sid, "UK_DATAGOV"))  n = ckan2_search(ctx, sink, "UK_DATAGOV", "https://data.gov.uk", "https://data.gov.uk", enc);
   free(enc);
   fprintf(stderr, "[%s] emitted %d\n", sid, n);
-  return 0;
+  return n < 0 ? -1 : 0;
 }
 
 #define CO2_DEF(sym, ID, NM, DESC) \

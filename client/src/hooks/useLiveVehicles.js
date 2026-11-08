@@ -12,7 +12,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { segmentLengthsMeters, advanceAlongLine } from '../utils/polylineTraversal';
 import { darkenHex } from '../utils/colorOps.js';
-import apiUrl from '../utils/apiUrl.js';
+import { api, errorMessage, rejectBodyError } from '../api/client.js';
 
 // Mode-specific constants.
 const MODE_SPEED_MPS = {
@@ -87,9 +87,8 @@ export default function useLiveVehicles(mode, enabled, viewport = null) {
     let cancelled = false;
     (async () => {
       try {
-        const res = await fetch(apiUrl(`/api/transit/routes?mode=${encodeURIComponent(mode)}`));
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
+        // Shared client (2026-11-07): a refusal keeps the server's error body.
+        const data = rejectBodyError(await api.get(`/api/transit/routes?mode=${encodeURIComponent(mode)}`)) || {};
         if (cancelled) return;
         const spawned = [];
         for (const f of data.features || []) {
@@ -98,7 +97,7 @@ export default function useLiveVehicles(mode, enabled, viewport = null) {
         }
         vehiclesRef.current = spawned;
       } catch (err) {
-        console.error('[useLiveVehicles] routes fetch failed', err);
+        console.error('[useLiveVehicles] routes fetch failed', errorMessage(err));
       }
     })();
     return () => { cancelled = true; };
@@ -118,12 +117,10 @@ export default function useLiveVehicles(mode, enabled, viewport = null) {
         const qs = new URLSearchParams();
         if (viewportKey) qs.set('bbox', viewportKey);
         qs.set('limit', '500');
-        const res = await fetch(apiUrl(`/api/transit/active-trips?${qs.toString()}`));
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const body = await res.json();
-        if (!cancelled) scheduleTripsRef.current = body.trips || [];
+        const body = rejectBodyError(await api.get(`/api/transit/active-trips?${qs.toString()}`)) || {};
+        if (!cancelled) scheduleTripsRef.current = Array.isArray(body.trips) ? body.trips : [];
       } catch (err) {
-        if (!cancelled) console.warn('[useLiveVehicles] active-trips', err?.message);
+        if (!cancelled) console.warn('[useLiveVehicles] active-trips', errorMessage(err));
       } finally {
         if (!cancelled) timer = setTimeout(poll, 20_000);
       }

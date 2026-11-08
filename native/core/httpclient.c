@@ -129,6 +129,22 @@ static size_t max_body_bytes(void) {
  * on_data(), so a row that asks for 192 MB still cannot be fed tens of GB. */
 static __thread size_t g_body_ceiling_once;
 
+/* The same ceiling for a whole collector RUN on this thread, set by the
+ * scheduler and the pivot dispatcher from the source's
+ * `http_body_ceiling_bytes` setting (http_run_body_ceiling_set). Without it
+ * the setting reached only a collector that read ctx->body_ceiling and passed
+ * it to http_request_max() itself — two of 61,527 — while the settings page
+ * offered it, saved it and read it back as enabled for every source (audit
+ * 2026-11-07). hpengine, VJSON, VGEO and every bespoke fetch now inherit it.
+ * Thread-local for the reason above; a per-call ceiling still outranks it. */
+static __thread size_t g_body_ceiling_run;
+
+size_t http_run_body_ceiling_set(size_t max_body) {
+  size_t prev = g_body_ceiling_run;
+  g_body_ceiling_run = max_body;
+  return prev;
+}
+
 /* An operator's EXPLICIT $JO_HTTP_MAX_BODY is a hard cap, and a per-call
  * override is clamped to it rather than silently exceeding it. Without this,
  * an operator who lowers the ceiling to 16 MB to bound a small deployment's
@@ -138,12 +154,13 @@ static __thread size_t g_body_ceiling_once;
  * somebody set on purpose. */
 static size_t body_ceiling(void) {
   size_t base = max_body_bytes();
-  if (!g_body_ceiling_once) return base;
+  size_t want = g_body_ceiling_once ? g_body_ceiling_once : g_body_ceiling_run;
+  if (!want) return base;
   if (g_max_body_explicit) {
-    if (base == 0) return g_body_ceiling_once;  /* 0 = the operator disabled it */
-    return g_body_ceiling_once < base ? g_body_ceiling_once : base;
+    if (base == 0) return want;  /* 0 = the operator disabled it */
+    return want < base ? want : base;
   }
-  return g_body_ceiling_once;
+  return want;
 }
 
 typedef struct { char *buf; size_t len, cap; int over; } sbuf;
@@ -497,6 +514,21 @@ static __thread int g_last_tls = HTTP_TLS_NONE;
 
 int http_last_tls_cause(void) { return g_last_tls; }
 
+const char *http_tls_cause_name(int cause) {
+  switch (cause) {
+    case HTTP_TLS_NO_LOCAL_ISSUER:   return "no_local_issuer";
+    case HTTP_TLS_EXPIRED:           return "expired";
+    case HTTP_TLS_NOT_YET_VALID:     return "not_yet_valid";
+    case HTTP_TLS_HOSTNAME_MISMATCH: return "hostname_mismatch";
+    case HTTP_TLS_SELF_SIGNED:       return "self_signed";
+    case HTTP_TLS_REVOKED:           return "revoked";
+    case HTTP_TLS_UNRECOGNIZED_NAME: return "unrecognized_name";
+    case HTTP_TLS_HANDSHAKE:         return "handshake";
+    case HTTP_TLS_NONE:              return "none";
+    default:                         return "other";
+  }
+}
+
 const char *http_tls_cause_label(int cause) {
   switch (cause) {
     case HTTP_TLS_NO_LOCAL_ISSUER:
@@ -576,7 +608,10 @@ const char *http_tls_cause_remedy(int cause) {
              "against tools/jo_tls.py, which lowers OpenSSL's CIPHER SECURITY "
              "LEVEL (verification and hostname checking stay on) and reaches "
              "hosts the default context refuses — yamaguchi-opendata.jp is the "
-             "measured case";
+             "measured case. Behind an egress proxy a handshake reset can be "
+             "the TUNNEL closing, not the host refusing: check the proxy's own "
+             "relay-failure log and re-read from another network before "
+             "changing anything";
     case HTTP_TLS_OTHER:
       return "read the libcurl message on the [http] line above: \"no local "
              "issuer\", \"expired\", \"hostname mismatch\" and \"self-signed\" "

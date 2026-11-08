@@ -104,14 +104,15 @@ def classify(table, name, desc):
 
 
 def rows_of(path):
-    """(id, name) per row of an hpengine table, adjacent string literals joined."""
-    txt = open(path, encoding='utf-8').read()
-    body = txt[txt.index('[] = {'):]
-    for r in re.split(r'\n\s*\{\s*(?=\.id\s*=)', body)[1:]:
-        def fld(name):
-            m = re.search(r'\.' + name + r'\s*=\s*((?:"(?:[^"\\]|\\.)*"\s*)+)', r)
-            return ''.join(re.findall(r'"((?:[^"\\]|\\.)*)"', m.group(1))).replace('\\"', '"') if m else ''
-        yield fld('id'), fld('name')
+    """(id, name) per row of an hpengine table, read with tools/ctable.py —
+    the shared C row reader (adjacent literals joined, comments stripped,
+    every table in the file rather than only the first `[] = {`)."""
+    import os
+    import sys
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import ctable
+    for r in ctable.rows_in_file(path):
+        yield r.s('id'), r.s('name')
 
 
 def cmd_plan(files):

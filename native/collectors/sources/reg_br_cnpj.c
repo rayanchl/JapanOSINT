@@ -61,11 +61,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   snprintf(url, sizeof url, "https://brasilapi.com.br/api/cnpj/v1/%s", digits);
   const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "br_cnpj");
-  if (!body) return 0;                 /* 404 not-found / network → honest empty */
+  if (!body) return jo_fail_rc(jo_last_status(), 1);                 /* 404 not-found → honest empty; network/5xx/429 → -1 (2026-11-07) */
 
   cJSON *r = cJSON_Parse(body);
   free(body);
-  if (!r) return 0;
+  if (!r) return -1;
 
   const char *razao = jo_sv(r, "razao_social");
   const char *fantasia = jo_sv(r, "nome_fantasia");
@@ -119,14 +119,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (addr) cJSON_AddStringToObject(props, "endereco", addr);
   cJSON_AddItemToObject(props, "socios", socios_out);   /* transfers ownership */
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = digits;
   it.title           = razao ? razao : fantasia;
   it.summary         = fantasia ? fantasia : situacao;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "pt";
   it.published_at    = abertura;
   it.link            = url;
@@ -135,7 +136,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   it.tags_json       = "[\"osint-search\",\"BR_CNPJ\"]";
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(pj); free(addr);
+  free(bj); free(bt); free(pj); free(addr);
   cJSON_Delete(r);
   fprintf(stderr, "[br_cnpj] emitted %d\n", rc >= 0 ? 1 : 0);
   return 0;

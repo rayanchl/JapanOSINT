@@ -289,13 +289,14 @@ static int emit_weather(intel_sink *sink, const char *loc, const char *rk,
   cJSON_AddStringToObject(props, "entity", loc);
   cJSON_AddBoolToObject(props, "success", 1);
   cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.summary         = summary;
   it.published_at    = published_at;
   it.has_geo         = has_geo;
@@ -306,7 +307,7 @@ static int emit_weather(intel_sink *sink, const char *loc, const char *rk,
   it.tags_json       = "[\"osint-search\",\"WEATHER_SERVICE\"]";
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   cJSON_Delete(env);
   cJSON_Delete(data);
   return rc >= 0 ? 1 : 0;

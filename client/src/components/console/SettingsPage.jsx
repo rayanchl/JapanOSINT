@@ -1,7 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { LuWifi, LuCircleCheck, LuCircleX, LuSun, LuMoon, LuRefreshCw } from 'react-icons/lu';
-import { api } from '../../api/client.js';
+import { api, errorMessage } from '../../api/client.js';
+import { usePagedList } from '../../hooks/usePagedList.js';
+import { useKeyedSources } from '../../hooks/useKeyedSources.js';
+import { searchPath } from '../../utils/sourceFormat.js';
 import { useApi } from '../../hooks/useApi.js';
 import { useAuth } from '../../auth/AuthContext.jsx';
 import { savedStore } from '../../store/savedStore.js';
@@ -10,16 +13,17 @@ import { ProbeActions, mergeStatusRow } from './ApiKeysPage.jsx';
 import { relativeTime, fmtAbs } from '../../utils/time.js';
 import {
   Page, Section, Row, Pill, Button, Input, Segmented, ConfirmDialog,
-  ErrorNotice, EmptyState, LoadingState, Spinner, cx, toast,
+  ErrorNotice, EmptyState, LoadingState, Spinner, PagedFooter, cx, toast,
 } from '../ui/kit.jsx';
 
 /**
  * Settings — port of the iOS `SettingsTab` (+ `SourceScheduleSettingsView`).
  * Device-only preferences live in localStorage; server-side settings talk to:
  *   GET /api/health                       {status,timestamp}
- *   GET /api/sources                      raw sources rows (schedule_mode)
+ *   GET /api/sources/search               the list (server-searched, paged)
+ *   GET /api/sources/:id                  one sources row (schedule_mode), per visible row
  *   PUT /api/sources/:id/schedule         {mode:"map_cron"|"search_only"}   (platform operator)
- *   GET /api/status                       {summary, apis[]}  (probe consent lives on apis[].probeConsent)
+ *   GET /api/status                       {summary, apis[]}  (probe consent; loaded on demand)
  */
 
 const THEME_KEY = 'osint:theme';
@@ -214,90 +218,83 @@ function DataCacheSection() {
 
 /* ---------------------------------------------------- source scheduling */
 
+/* Server-searched since 2026-11-07. This downloaded GET /api/sources — every
+ * row of the sources table — and filtered it in the browser to show 60. The
+ * list now comes from GET /api/sources/search (q, paged, measured total), and
+ * each visible row reads its own mode from GET /api/sources/:id, because
+ * search rows do not carry `schedule_mode`. What that costs, stated rather
+ * than hidden: the fleet-wide "N cron · M search" tally is gone — no route
+ * reports it without the whole table (a schedule_mode facet on search would). */
 function SourceScheduleSection() {
-  const { data, error, loading, reload, setData } = useApi('/api/sources');
+  const [draft, setDraft] = useState('');
   const [q, setQ] = useState('');
-  const [saving, setSaving] = useState(new Set());
-  const [saveError, setSaveError] = useState(null);
-  const [expanded, setExpanded] = useState(false);
+  const list = usePagedList(searchPath({ q }), { pageSize: 25 });
 
-  const rows = useMemo(() => (Array.isArray(data) ? data : []).map((r) => ({
-    id: r.id, name: r.name || r.id, category: r.category || '', mode: r.schedule_mode || 'map_cron',
-  })), [data]);
-  const filtered = useMemo(() => {
-    const qq = q.trim().toLowerCase();
-    const xs = qq ? rows.filter((r) => r.name.toLowerCase().includes(qq) || r.id.toLowerCase().includes(qq) || r.category.toLowerCase().includes(qq)) : rows;
-    return xs.sort((a, b) => a.category.localeCompare(b.category) || a.name.localeCompare(b.name));
-  }, [rows, q]);
-  const LIMIT = 60;
-  const shown = expanded ? filtered : filtered.slice(0, LIMIT);
-  const counts = useMemo(() => ({ cron: rows.filter((r) => r.mode === 'map_cron').length, search: rows.filter((r) => r.mode === 'search_only').length }), [rows]);
-
-  const setMode = async (row, mode) => {
-    if (row.mode === mode) return;
-    setSaving((s) => new Set(s).add(row.id)); setSaveError(null);
-    const prev = row.mode;
-    setData((d) => d.map((r) => (r.id === row.id ? { ...r, schedule_mode: mode } : r)));
-    try {
-      await api.put(`/api/sources/${encodeURIComponent(row.id)}/schedule`, { mode });
-    } catch (e) {
-      setData((d) => d.map((r) => (r.id === row.id ? { ...r, schedule_mode: prev } : r)));
-      setSaveError(new Error(`Save failed for ${row.name}: ${e.message}`));
-    } finally {
-      setSaving((s) => { const n = new Set(s); n.delete(row.id); return n; });
-    }
-  };
-
-  let lastCat = null;
   return (
-    <Section label="Source scheduling" right={<Button size="sm" variant="ghost" onClick={() => reload()}><LuRefreshCw size={12} /></Button>}>
+    <Section label="Source scheduling" right={<Button size="sm" variant="ghost" onClick={() => list.reload()}><LuRefreshCw size={12} /></Button>}>
       <div className="text-[11px] text-osint-muted">Map cron pre-collects on a schedule so the map is ready instantly. Search only skips the schedule and grabs live from the Search tab. Both still feed Intel everywhere. Server-wide: platform operators only.</div>
-      <div className="flex items-center gap-2 mt-2">
-        <Input placeholder="Filter sources…" value={q} onChange={(e) => setQ(e.target.value)} />
-        <span className="text-[10px] font-mono text-osint-muted whitespace-nowrap">{counts.cron} cron · {counts.search} search</span>
-      </div>
-      {loading && !data && <LoadingState label="Loading sources…" />}
-      {error && <ErrorNotice error={error} title="Could not load sources" onRetry={reload} className="mt-2" />}
-      {saveError && <ErrorNotice error={saveError} title="Schedule change failed" className="mt-2" />}
-      {data && (
+      <form className="flex items-center gap-2 mt-2" onSubmit={(e) => { e.preventDefault(); setQ(draft.trim()); }}>
+        <Input placeholder="Search sources (id, name, collector, host)…" value={draft} onChange={(e) => setDraft(e.target.value)} />
+        <Button type="submit" size="sm">Search</Button>
+      </form>
+      {list.loading && list.rows.length === 0 && <LoadingState label="Searching sources…" />}
+      {list.error && <ErrorNotice error={list.error} title="Could not search sources" onRetry={list.reload} className="mt-2" />}
+      {list.loaded && !list.error && (
         <div className="mt-2 max-h-[420px] overflow-auto -mx-1 px-1">
-          {shown.length === 0 && <EmptyState title="No sources match." />}
-          {shown.map((r) => {
-            const header = r.category !== lastCat; lastCat = r.category;
-            return (
-              <React.Fragment key={r.id}>
-                {header && <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-osint-muted pt-2 pb-1">{r.category || 'Uncategorized'}</div>}
-                <div className="flex items-center justify-between gap-2 py-1 border-b border-osint-border last:border-0">
-                  <span className="min-w-0">
-                    <span className="block text-xs text-osint-text truncate">{r.name}</span>
-                    <span className="block text-[10px] text-osint-muted font-mono truncate">{r.id}</span>
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    {saving.has(r.id) && <Spinner size={11} />}
-                    <Segmented value={r.mode} onChange={(m) => setMode(r, m)} options={[{ value: 'map_cron', label: 'Map cron' }, { value: 'search_only', label: 'Search only' }]} />
-                  </span>
-                </div>
-              </React.Fragment>
-            );
-          })}
-          {filtered.length > shown.length && (
-            <div className="flex items-center justify-between pt-2 text-[11px] font-mono text-accent">
-              <span>showing {shown.length} of {filtered.length} sources</span>
-              <Button size="sm" onClick={() => setExpanded(true)}>Show all</Button>
-            </div>
-          )}
+          {list.rows.length === 0 && <EmptyState title="No sources match." />}
+          {list.rows.map((r) => <ScheduleRow key={r.id} row={r} />)}
+          {list.rows.length > 0 && <PagedFooter shown={list.rows.length} total={list.total} hasMore={list.hasMore} busy={list.loadingMore} onMore={list.loadMore} error={list.moreError} noun="sources" className="pt-2" />}
         </div>
       )}
     </Section>
   );
 }
 
+function ScheduleRow({ row }) {
+  const one = useApi(`/api/sources/${encodeURIComponent(row.id)}`, { deps: [row.id] });
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState(null);
+  const mode = one.data?.schedule_mode || (one.data ? 'map_cron' : null);
+  const setMode = async (m) => {
+    if (!mode || mode === m) return;
+    setSaving(true); setSaveError(null);
+    const prev = one.data;
+    one.setData((d) => (d ? { ...d, schedule_mode: m } : d));
+    try {
+      await api.put(`/api/sources/${encodeURIComponent(row.id)}/schedule`, { mode: m });
+    } catch (e) {
+      one.setData(prev);
+      setSaveError(e);
+    } finally { setSaving(false); }
+  };
+  return (
+    <div className="py-1 border-b border-osint-border last:border-0">
+      <div className="flex items-center justify-between gap-2">
+        <span className="min-w-0">
+          <span className="block text-xs text-osint-text truncate">{row.name || row.id}</span>
+          <span className="block text-[10px] text-osint-muted font-mono truncate">{row.id}{row.category ? ` · ${row.category}` : ''}</span>
+        </span>
+        <span className="flex items-center gap-1.5">
+          {(saving || one.loading) && <Spinner size={11} />}
+          {one.error
+            ? <span className="text-[10px] text-neon-red font-mono">mode unreadable — {errorMessage(one.error)}</span>
+            : mode && <Segmented value={mode} onChange={setMode} options={[{ value: 'map_cron', label: 'Map cron' }, { value: 'search_only', label: 'Search only' }]} />}
+        </span>
+      </div>
+      {saveError && <div className="text-[10px] text-neon-red font-mono">Schedule change refused — {errorMessage(saveError)}</div>}
+    </div>
+  );
+}
+
 /* --------------------------------------------------------- probe consent */
 
 function ProbeConsentSection() {
-  const { data, error, loading, reload, setData } = useApi('/api/status');
+  /* Loaded on demand (useKeyedSources): this downloaded the whole
+   * /api/status catalogue every time Settings opened, to list the keyed
+   * sources, and no smaller route can filter to them yet. */
+  const keyed = useKeyedSources();
   const [q, setQ] = useState('');
-  const rows = useMemo(() => (data?.apis || []).filter((r) => r.requiresKey), [data]);
+  const rows = keyed.rows;
   const filtered = useMemo(() => {
     const qq = q.trim().toLowerCase();
     return qq ? rows.filter((r) => (r.name || '').toLowerCase().includes(qq) || r.id.toLowerCase().includes(qq)) : rows;
@@ -305,18 +302,26 @@ function ProbeConsentSection() {
   const LIMIT = 40;
   const [expanded, setExpanded] = useState(false);
   const shown = expanded ? filtered : filtered.slice(0, LIMIT);
-  const onUpdate = (updated) => setData((d) => (d ? { ...d, apis: mergeStatusRow(d.apis, updated) } : d));
+  const onUpdate = (updated) => keyed.setData((d) => (d ? { ...d, apis: mergeStatusRow(d.apis, updated) } : d));
 
   return (
     <Section label="Probe consent">
       <div className="text-[11px] text-osint-muted">Keyed sources are only auto-probed by the scheduler once you allow it here; a manual probe uses the configured key so the request actually reaches the upstream. Platform operators only.</div>
-      <div className="flex items-center gap-2 mt-2">
-        <Input placeholder="Filter keyed sources…" value={q} onChange={(e) => setQ(e.target.value)} />
-        <span className="text-[10px] font-mono text-osint-muted whitespace-nowrap">{rows.filter((r) => r.probeConsent).length}/{rows.length} allowed</span>
-      </div>
-      {loading && !data && <LoadingState label="Loading status…" />}
-      {error && <ErrorNotice error={error} title="Could not load source status" onRetry={reload} className="mt-2" />}
-      {data && (
+      {!keyed.wanted && (
+        <div className="flex items-center justify-between gap-2 mt-2 text-[11px] text-osint-muted">
+          <span>Not loaded: listing keyed sources downloads the full source-status catalogue (no smaller route filters to them).</span>
+          <Button size="sm" onClick={keyed.load}>Load keyed sources</Button>
+        </div>
+      )}
+      {keyed.wanted && (
+        <div className="flex items-center gap-2 mt-2">
+          <Input placeholder="Filter keyed sources…" value={q} onChange={(e) => setQ(e.target.value)} />
+          {keyed.loaded && <span className="text-[10px] font-mono text-osint-muted whitespace-nowrap">{rows.filter((r) => r.probeConsent).length}/{rows.length} allowed</span>}
+        </div>
+      )}
+      {keyed.loading && !keyed.data && <LoadingState label="Loading status…" />}
+      {keyed.error && <ErrorNotice error={keyed.error} title="Could not load source status" onRetry={keyed.load} className="mt-2" />}
+      {keyed.data && (
         <div className="mt-2 max-h-[420px] overflow-auto -mx-1 px-1">
           {shown.length === 0 && <EmptyState title={rows.length === 0 ? 'No keyed sources in the registry.' : 'No keyed sources match.'} />}
           {shown.map((r) => (
@@ -351,7 +356,7 @@ function CredentialsSection() {
   const auth = useAuth();
   return (
     <Section label="Credentials">
-      <Row label="API keys (BYOK)" hint="Paste a key once; it is encrypted per workspace and injected into every collector run.">
+      <Row label="API keys (BYOK)" hint="Stored encrypted per workspace. Not yet used by collectors, which run on the platform keys.">
         <Link to="/console/api-keys" className="text-accent hover:underline">Open ›</Link>
       </Row>
       {auth.role === 'owner' && (
@@ -360,7 +365,7 @@ function CredentialsSection() {
         </Row>
       )}
       {auth.isPlatformAdmin && (
-        <Row label="Platform keys" hint="Server-wide defaults every workspace falls back to.">
+        <Row label="Platform keys" hint="The credentials collectors actually run with.">
           <Link to="/console/api-keys?scope=platform" className="text-accent hover:underline">Open ›</Link>
         </Row>
       )}

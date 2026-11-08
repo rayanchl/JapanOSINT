@@ -138,7 +138,7 @@ export default function CaseDetailPage() {
 function FindingsPane({ caseId, counts, canWrite, onChanged, who }) {
   const [refType, setRefType] = useState('');
   const path = `/api/cases/${encodeURIComponent(caseId)}/items${refType ? `?ref_type=${encodeURIComponent(refType)}` : ''}`;
-  const { rows, setRows, hasMore, error, loading, loadingMore, reload, loadMore } = usePaged(path, { limit: 100, deps: [refType] });
+  const { rows, setRows, hasMore, error, moreError, loading, loadingMore, reload, loadMore } = usePaged(path, { limit: 100, deps: [refType] });
   const [busyKey, setBusyKey] = useState(null);
   const [unpinError, setUnpinError] = useState(null);
 
@@ -190,6 +190,7 @@ function FindingsPane({ caseId, counts, canWrite, onChanged, who }) {
             ? <span className="text-[11px] text-accent font-mono">showing {rows.length} loaded · more on the server</span>
             : <BoundNote shown={rows.length} total={rows.length} noun="pinned items" />}
           {hasMore && <Button busy={loadingMore} onClick={loadMore}>Load more</Button>}
+          {moreError && <span className="text-[11px] text-neon-red font-mono">next page failed — {errorMessage(moreError)}</span>}
         </div>
       )}
     </div>
@@ -255,7 +256,7 @@ function FindingRow({ item, canWrite, busy, onUnpin, who }) {
 
 function NotesPane({ caseId, canWrite, who }) {
   const path = `/api/annotations?case_id=${encodeURIComponent(caseId)}&include_deleted=1`;
-  const { rows, hasMore, error, loading, loadingMore, reload, loadMore } = usePaged(path, { limit: 200 });
+  const { rows, hasMore, error, moreError, loading, loadingMore, reload, loadMore } = usePaged(path, { limit: 200 });
   const items = usePaged(`/api/cases/${encodeURIComponent(caseId)}/items`, { limit: 100 });
   const [target, setTarget] = useState('');
   const [body, setBody] = useState('');
@@ -327,7 +328,7 @@ function NotesPane({ caseId, canWrite, who }) {
           </ul>
         </Section>
       )}
-      {hasMore && <div className="flex justify-end"><Button busy={loadingMore} onClick={loadMore}>Load more notes</Button></div>}
+      {hasMore && <div className="flex justify-end gap-2 items-center">{moreError && <span className="text-[11px] text-neon-red font-mono">next page failed — {errorMessage(moreError)}</span>}<Button busy={loadingMore} onClick={loadMore}>Load more notes</Button></div>}
       <div className="text-[11px] text-osint-muted">Tombstones for deleted notes are only returned to analyst-and-up accounts; below that role the server omits them and says so in its meta.</div>
       <Suspense fallback={null}><AnnotationsSection refType="case" refId={caseId} caseId={caseId} /></Suspense>
     </div>
@@ -338,7 +339,7 @@ function NotesPane({ caseId, canWrite, who }) {
 
 function ActivityPane({ caseId, canWrite, who }) {
   const path = `/api/cases/${encodeURIComponent(caseId)}/activity`;
-  const { rows, setRows, hasMore, error, loading, loadingMore, reload, loadMore } = usePaged(path, { limit: 100 });
+  const { rows, setRows, hasMore, error, moreError, loading, loadingMore, reload, loadMore } = usePaged(path, { limit: 100 });
   const [text, setText] = useState('');
   const [busy, setBusy] = useState(false);
   const [postError, setPostError] = useState(null);
@@ -386,7 +387,7 @@ function ActivityPane({ caseId, canWrite, who }) {
           </ul>
         </Card>
       )}
-      {hasMore && <div className="flex justify-end"><Button busy={loadingMore} onClick={loadMore}>Load older activity</Button></div>}
+      {hasMore && <div className="flex justify-end gap-2 items-center">{moreError && <span className="text-[11px] text-neon-red font-mono">next page failed — {errorMessage(moreError)}</span>}<Button busy={loadingMore} onClick={loadMore}>Load older activity</Button></div>}
     </div>
   );
 }

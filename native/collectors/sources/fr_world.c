@@ -14,16 +14,15 @@
 #include <string.h>
 #include "_jp_osint.inc"
 
-static const char *FR_UA = "User-Agent: JapanOSINT/1.0 (osint@example.org)";
 
 static int run_ban(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   char url[512];
   snprintf(url, sizeof url, "https://api-adresse.data.gouv.fr/search/?q=%s&limit=10", enc);
-  const char *hdrs[] = { "Accept: application/json", FR_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "FR_ADDRESS_BAN");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *feats = cJSON_GetObjectItem(root, "features");
   int n = 0;
   if (cJSON_IsArray(feats)) {
@@ -50,14 +49,15 @@ static int run_ban(const source_ctx *ctx, intel_sink *sink, const char *enc) {
       char *bj = cJSON_PrintUnformatted(d); cJSON_Delete(d);
       cJSON *p = cJSON_CreateObject();
       cJSON_AddStringToObject(p, "service", "FR_ADDRESS_BAN"); cJSON_AddBoolToObject(p, "success", 1);
-      char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+      jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
       char rk[96]; snprintf(rk, sizeof rk, "ban:%.6f,%.6f", lat, lon);
-      intel_item it = {0};
-      it.remote_key = rk; it.title = label; it.summary = pc; it.body = bj; it.lang = "fr";
+      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
+      it.remote_key = rk; it.title = label; it.summary = pc; it.body = bt ? bt : bj; it.lang = "fr";
       it.has_geo = 1; it.lat = lat; it.lon = lon;
       it.record_type = "fr-address"; it.properties_json = pj; it.tags_json = "[\"osint-search\",\"FR_ADDRESS_BAN\"]";
       if (sink->emit(sink, &it) >= 0) n++;
-      free(bj); free(pj);
+      free(bj); free(bt); free(pj);
     }
   }
   cJSON_Delete(root);
@@ -68,11 +68,11 @@ static int run_bodacc(const source_ctx *ctx, intel_sink *sink, const char *enc) 
   char url[640];
   snprintf(url, sizeof url,
     "https://bodacc-datadila.opendatasoft.com/api/explore/v2.1/catalog/datasets/annonces-commerciales/records?q=%s&limit=20", enc);
-  const char *hdrs[] = { "Accept: application/json", FR_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "FR_BODACC");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *results = cJSON_GetObjectItem(root, "results");
   int n = 0;
   if (cJSON_IsArray(results)) {
@@ -94,15 +94,16 @@ static int run_bodacc(const source_ctx *ctx, intel_sink *sink, const char *enc) 
       char *bj = cJSON_PrintUnformatted(d); cJSON_Delete(d);
       cJSON *p = cJSON_CreateObject();
       cJSON_AddStringToObject(p, "service", "FR_BODACC"); cJSON_AddBoolToObject(p, "success", 1);
-      char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+      jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
       char summ[200]; snprintf(summ, sizeof summ, "%s%s%s", famille ? famille : "", ville ? " · " : "", ville ? ville : "");
-      intel_item it = {0};
+      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
       it.remote_key = id ? id : (commercant ? commercant : registre);
       it.title = commercant ? commercant : "BODACC annonce"; it.summary = summ[0] ? summ : NULL;
-      it.body = bj; it.lang = "fr"; it.published_at = date;
+      it.body = bt ? bt : bj; it.lang = "fr"; it.published_at = date;
       it.record_type = "fr-bodacc-annonce"; it.properties_json = pj; it.tags_json = "[\"osint-search\",\"FR_BODACC\"]";
       if (sink->emit(sink, &it) >= 0) n++;
-      free(bj); free(pj);
+      free(bj); free(bt); free(pj);
     }
   }
   cJSON_Delete(root);
@@ -112,11 +113,11 @@ static int run_bodacc(const source_ctx *ctx, intel_sink *sink, const char *enc) 
 static int run_datagouv(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   char url[512];
   snprintf(url, sizeof url, "https://www.data.gouv.fr/api/1/datasets/?q=%s&page_size=20", enc);
-  const char *hdrs[] = { "Accept: application/json", FR_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "FR_DATAGOUV");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *data = cJSON_GetObjectItem(root, "data");
   int n = 0;
   if (cJSON_IsArray(data)) {
@@ -135,13 +136,14 @@ static int run_datagouv(const source_ctx *ctx, intel_sink *sink, const char *enc
       char *bj = cJSON_PrintUnformatted(d); cJSON_Delete(d);
       cJSON *p = cJSON_CreateObject();
       cJSON_AddStringToObject(p, "service", "FR_DATAGOUV"); cJSON_AddBoolToObject(p, "success", 1);
-      char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
-      intel_item it = {0};
+      jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
       it.remote_key = id ? id : title; it.title = title; it.summary = orgn;
-      it.body = bj; it.link = page; it.lang = "fr";
+      it.body = bt ? bt : bj; it.link = page; it.lang = "fr";
       it.record_type = "fr-dataset"; it.properties_json = pj; it.tags_json = "[\"osint-search\",\"FR_DATAGOUV\"]";
       if (sink->emit(sink, &it) >= 0) n++;
-      free(bj); free(pj);
+      free(bj); free(bt); free(pj);
     }
   }
   cJSON_Delete(root);
@@ -160,7 +162,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   else if (!strcmp(sid, "FR_DATAGOUV"))    n = run_datagouv(ctx, sink, enc);
   free(enc);
   fprintf(stderr, "[%s] emitted %d\n", sid, n);
-  return 0;
+  return n < 0 ? -1 : 0;
 }
 
 #define FR_DEF(sym, ID, NM, CAT, DESC) \

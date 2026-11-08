@@ -18,6 +18,9 @@ final class SearchStore: ObservableObject {
     @Published var lastError: String?
 
     private var tasks: [String: Task<Void, Never>] = [:]
+    /// request_id → the start response's `stream_key`, kept for re-opening a
+    /// stream (`resumeActive`) after the view tore it down.
+    private var streamKeys: [String: String] = [:]
 
     /// Each pipeline step's spinner is held on screen for at least this long so
     /// steps don't flash past faster than the eye can register them. The detail
@@ -34,6 +37,7 @@ final class SearchStore: ObservableObject {
         do {
             let resp = try await api.searchAnalyze(q)
             let id = resp.request_id
+            if let k = resp.stream_key, !k.isEmpty { streamKeys[id] = k }
             active.insert(Run(id: id, query: q, snapshot: nil, finished: false), at: 0)
             displayedPhase[id] = "queued"   // the placeholder stage shown first
             phaseShownAt[id] = Date()
@@ -93,7 +97,7 @@ final class SearchStore: ObservableObject {
         // unparseable — in which case there is no stream to open. Surface it
         // and reconcile once so the run can't wedge on the "Queued"
         // placeholder. (This used to force-unwrap inside `API` and crash.)
-        guard let req = api.searchStreamRequest(id) else {
+        guard let req = api.searchStreamRequest(id, streamKey: streamKeys[id]) else {
             lastError = "Backend URL is not a valid URL — check Settings."
             if let snap = try? await api.searchResults(id) { finish(id: id, snap: snap) }
             tasks[id] = nil
@@ -101,7 +105,22 @@ final class SearchStore: ObservableObject {
         }
         var sawTerminal = false
         do {
-            let (bytes, _) = try await URLSession.shared.bytes(for: req)
+            var (bytes, resp) = try await URLSession.shared.bytes(for: req)
+            // The status was never read, so a 401 or 5xx body was parsed as
+            // an empty event stream and the run fell through to the poll with
+            // no reason given. A 401 gets one token refresh and one retry —
+            // the same coalesced refresh API.request uses — and anything else
+            // non-2xx is named.
+            if let http = resp as? HTTPURLResponse, http.statusCode == 401 {
+                if await AuthTokenBox.shared.coalescedRefresh(),
+                   let again = api.searchStreamRequest(id, streamKey: streamKeys[id]) {
+                    (bytes, resp) = try await URLSession.shared.bytes(for: again)
+                }
+            }
+            if let http = resp as? HTTPURLResponse, !(200..<300).contains(http.statusCode) {
+                lastError = "Search progress stream answered HTTP \(http.statusCode)."
+                throw APIError.http(http.statusCode, "")
+            }
             var event = ""
             // The server frames each SSE event as `event: <type>\r\n
             // data: <single-line JSON>\n\n`. We cannot key dispatch off the
@@ -119,7 +138,12 @@ final class SearchStore: ObservableObject {
                     let data = String(line.dropFirst(5).trimmingCharacters(in: .whitespaces))
                     let ev = event.isEmpty ? "progress" : event
                     await handle(event: ev, data: data, id: id)
-                    if ev == "close" || ev == "error" { sawTerminal = true; break }
+                    if ev == "close" { sawTerminal = true; break }
+                    // `error` ({"error":"not_found"} — the run is unknown, or
+                    // its owner could not be proven — or "stream_capacity") is
+                    // not a finished run: say so and fall through to the
+                    // reconciling poll rather than leaving the run pinned.
+                    if ev == "error" { lastError = "Search progress stream: \(data)"; break }
                     event = ""
                 }
             }
@@ -173,6 +197,7 @@ final class SearchStore: ObservableObject {
     }
 
     private func finish(id: String, snap: SearchSnapshot) {
+        streamKeys[id] = nil
         phaseShownAt[id] = nil
         displayedPhase[id] = nil
         active.removeAll { $0.id == id }

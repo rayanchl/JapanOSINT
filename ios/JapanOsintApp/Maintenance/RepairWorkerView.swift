@@ -23,6 +23,16 @@ struct RepairWorkerView: View {
     @State private var busySources: Set<String> = []
     @State private var actionError: String?
 
+    /// Rows past each list's first page, fetched on demand from
+    /// GET /api/admin/maintenance/lists/:name, and the newest page block of
+    /// each so "load more" resumes where the server says it stopped. Reset
+    /// with every digest load (a new window is a different list).
+    @State private var moreRepairs: [String: [RepairRow]] = [:]
+    @State private var moreOverrides: [UrlOverrideRow] = []
+    @State private var moreWorst: [RepairSourceStat] = []
+    @State private var lastPage: [String: OffsetPage] = [:]
+    @State private var loadingList: String?
+
     enum RepairWindow: Int, CaseIterable, Identifiable {
         case day = 24, threeDays = 72, week = 168
         var id: Int { rawValue }
@@ -90,7 +100,7 @@ struct RepairWorkerView: View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())],
                   spacing: Space.sm) {
             RepairUI.statCard("Auto-fixed", t?.merged ?? 0, color: theme.success, theme: theme)
-            RepairUI.statCard("Awaiting", (d.awaitingReview?.all.count ?? 0), color: theme.warning, theme: theme)
+            RepairUI.statCard("Awaiting", awaitingTotal(d), color: theme.warning, theme: theme)
             RepairUI.statCard("Needs human", t?.needsHuman ?? 0, color: theme.accentAlt, theme: theme)
             RepairUI.statCard("Verified", t?.verified ?? 0, color: theme.warning, theme: theme)
             RepairUI.statCard("Rejected", t?.rejected ?? 0, color: theme.textMuted, theme: theme)
@@ -101,8 +111,10 @@ struct RepairWorkerView: View {
     // MARK: Awaiting review (actionable)
 
     @ViewBuilder private func awaitingSection(_ d: MaintenanceDigest) -> some View {
-        let rows = d.awaitingReview?.all ?? []
-        RepairUI.sectionHeader("Awaiting your review", count: rows.count, theme: theme)
+        let apply = repairs("awaiting_apply", d.awaitingReview?.awaitingApply ?? [])
+        let pr = repairs("awaiting_pr", d.awaitingReview?.awaitingPr ?? [])
+        let rows = apply + pr
+        RepairUI.sectionHeader("Awaiting your review", count: awaitingTotal(d), theme: theme)
         if rows.isEmpty {
             RepairUI.emptyRow("No staged fixes waiting.", theme: theme)
         } else {
@@ -113,16 +125,20 @@ struct RepairWorkerView: View {
                            onReject:  { await reject(r) })
             }
         }
+        moreFooter("awaiting_apply", label: "to apply", shown: apply.count, d)
+        moreFooter("awaiting_pr", label: "awaiting a PR", shown: pr.count, d)
     }
 
     // MARK: Needs human
 
     @ViewBuilder private func needsHumanSection(_ d: MaintenanceDigest) -> some View {
-        if !d.needsHuman.isEmpty {
-            RepairUI.sectionHeader("Needs human", count: d.needsHuman.count, theme: theme)
-            ForEach(d.needsHuman) { r in
+        let rows = repairs("needs_human", d.needsHuman)
+        if !rows.isEmpty {
+            RepairUI.sectionHeader("Needs human", count: d.pages["needs_human"]?.total ?? rows.count, theme: theme)
+            ForEach(rows) { r in
                 RepairCard(row: r, theme: theme, busy: false, onApprove: nil, onReject: nil)
             }
+            moreFooter("needs_human", label: "", shown: rows.count, d)
         }
     }
 
@@ -130,7 +146,8 @@ struct RepairWorkerView: View {
 
     @ViewBuilder private func quarantinedSection(_ d: MaintenanceDigest) -> some View {
         if !d.quarantined.isEmpty {
-            RepairUI.sectionHeader("Quarantined", count: d.quarantined.count, theme: theme)
+            // Served whole by the digest (its page block's limit is null).
+            RepairUI.sectionHeader("Quarantined", count: d.pages["quarantined"]?.total ?? d.quarantined.count, theme: theme)
             ForEach(d.quarantined) { q in
                 QuarantineCard(row: q, theme: theme,
                                busy: busySources.contains(q.sourceId),
@@ -141,29 +158,39 @@ struct RepairWorkerView: View {
 
     // MARK: Recently auto-fixed
 
+    // This section used to show `autoFixed.prefix(8)` under a header
+    // counting the whole first page — eight rows presented as the list. Every
+    // loaded row is shown now, with "N of total" and the rest on demand.
     @ViewBuilder private func autoFixedSection(_ d: MaintenanceDigest) -> some View {
-        if !d.autoFixed.isEmpty {
-            RepairUI.sectionHeader("Recently auto-fixed", count: d.autoFixed.count, theme: theme)
-            ForEach(Array(d.autoFixed.prefix(8))) { r in
-                RepairCard(row: r, theme: theme, busy: false, onApprove: nil, onReject: nil)
+        let rows = repairs("auto_fixed", d.autoFixed)
+        let overrides = d.urlOverrides + moreOverrides
+        if !rows.isEmpty {
+            RepairUI.sectionHeader("Recently auto-fixed", count: d.pages["auto_fixed"]?.total ?? rows.count, theme: theme)
+            ForEach(rows) { r in
+                RepairCard(row: r, theme: theme,
+                           busy: busyRepairs.contains(r.id),
+                           onApprove: nil, onReject: nil,
+                           onRevert: r.isRevertable ? { await revert(r) } : nil)
             }
-            if !d.urlOverrides.isEmpty {
-                DisclosureGroup {
-                    ForEach(d.urlOverrides) { o in
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(o.sourceId).font(Typography.display(11, weight: .semibold))
-                                .foregroundStyle(theme.text)
-                            RepairUI.urlDiff(old: o.oldURL, new: o.newURL, theme: theme)
-                        }
-                        .padding(.vertical, 4)
+            moreFooter("auto_fixed", label: "", shown: rows.count, d)
+        }
+        if !overrides.isEmpty {
+            DisclosureGroup {
+                ForEach(overrides) { o in
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(o.sourceId).font(Typography.display(11, weight: .semibold))
+                            .foregroundStyle(theme.text)
+                        RepairUI.urlDiff(old: o.oldURL, new: o.newURL, theme: theme)
                     }
-                } label: {
-                    Text("Active URL overrides (\(d.urlOverrides.count))")
-                        .font(.caption).foregroundStyle(theme.textMuted)
+                    .padding(.vertical, 4)
                 }
-                .tint(theme.accent)
-                .padding(.top, 2)
+                moreFooter("url_overrides", label: "", shown: overrides.count, d)
+            } label: {
+                Text("Active URL overrides (\(d.pages["url_overrides"]?.total ?? overrides.count))")
+                    .font(.caption).foregroundStyle(theme.textMuted)
             }
+            .tint(theme.accent)
+            .padding(.top, 2)
         }
     }
 
@@ -196,10 +223,11 @@ struct RepairWorkerView: View {
     // MARK: Worst sources (navigation)
 
     @ViewBuilder private func worstSourcesSection(_ d: MaintenanceDigest) -> some View {
-        if !d.worstSources.isEmpty {
-            RepairUI.sectionHeader("Worst sources", theme: theme)
+        let worst = d.worstSources + moreWorst
+        if !worst.isEmpty {
+            RepairUI.sectionHeader("Worst sources", count: d.pages["worst_sources"]?.total ?? worst.count, theme: theme)
             VStack(spacing: 0) {
-                ForEach(d.worstSources) { s in
+                ForEach(worst) { s in
                     NavigationLink {
                         SourcePipelineView(sourceId: s.sourceId)
                     } label: {
@@ -222,6 +250,82 @@ struct RepairWorkerView: View {
             }
             .padding(.horizontal, Space.md)
             .background(theme.surfaceElevated, in: RoundedRectangle(cornerRadius: Radius.md))
+            moreFooter("worst_sources", label: "", shown: worst.count, d)
+        }
+    }
+
+    // MARK: Paging the digest's lists
+
+    private func repairs(_ name: String, _ base: [RepairRow]) -> [RepairRow] {
+        base + (moreRepairs[name] ?? [])
+    }
+
+    private func awaitingTotal(_ d: MaintenanceDigest) -> Int {
+        let apply = d.pages["awaiting_apply"]?.total ?? (d.awaitingReview?.awaitingApply.count ?? 0)
+        let pr = d.pages["awaiting_pr"]?.total ?? (d.awaitingReview?.awaitingPr.count ?? 0)
+        return apply + pr
+    }
+
+    private func currentPage(_ name: String, _ d: MaintenanceDigest) -> OffsetPage? {
+        lastPage[name] ?? d.pages[name]
+    }
+
+    /// "N of total" for a list, and "Load more" while the server's page block
+    /// says more remain. Nothing when the list is complete and small.
+    @ViewBuilder private func moreFooter(_ name: String, label: String, shown: Int,
+                                         _ d: MaintenanceDigest) -> some View {
+        let pg = currentPage(name, d)
+        let total = d.pages[name]?.total
+        if pg?.has_more == true || (total.map { $0 > shown } ?? false) {
+            HStack {
+                Text("\(shown) of \(total.map(String.init) ?? "?")\(label.isEmpty ? "" : " " + label) shown")
+                    .font(.caption2.monospacedDigit()).foregroundStyle(theme.textMuted)
+                Spacer()
+                if pg?.has_more == true {
+                    Button(loadingList == name ? "Loading…" : "Load more") {
+                        Task { await loadMore(name, d) }
+                    }
+                    .font(.caption).disabled(loadingList != nil)
+                }
+            }
+            .padding(.vertical, 2)
+        }
+    }
+
+    private func loadMore(_ name: String, _ d: MaintenanceDigest) async {
+        let shown: Int
+        switch name {
+        case "url_overrides": shown = d.urlOverrides.count + moreOverrides.count
+        case "worst_sources": shown = d.worstSources.count + moreWorst.count
+        default:
+            let base: [RepairRow]
+            switch name {
+            case "awaiting_apply": base = d.awaitingReview?.awaitingApply ?? []
+            case "awaiting_pr":    base = d.awaitingReview?.awaitingPr ?? []
+            case "needs_human":    base = d.needsHuman
+            case "auto_fixed":     base = d.autoFixed
+            case "auto_dismissed": base = d.autoDismissed
+            default:               base = []
+            }
+            shown = repairs(name, base).count
+        }
+        let offset = currentPage(name, d)?.nextOffset(fallback: shown) ?? shown
+        loadingList = name; defer { loadingList = nil }
+        let hours = d.windowHours ?? window.rawValue
+        do {
+            switch name {
+            case "url_overrides":
+                let p = try await apiClient.api.maintenanceList(name, hours: hours, offset: offset, of: UrlOverrideRow.self)
+                moreOverrides.append(contentsOf: p.rows); lastPage[name] = p.page
+            case "worst_sources":
+                let p = try await apiClient.api.maintenanceList(name, hours: hours, offset: offset, of: RepairSourceStat.self)
+                moreWorst.append(contentsOf: p.rows); lastPage[name] = p.page
+            default:
+                let p = try await apiClient.api.maintenanceList(name, hours: hours, offset: offset, of: RepairRow.self)
+                moreRepairs[name, default: []].append(contentsOf: p.rows); lastPage[name] = p.page
+            }
+        } catch {
+            actionError = "Loading more \(name) failed: \(error.localizedDescription)"
         }
     }
 
@@ -242,8 +346,21 @@ struct RepairWorkerView: View {
     private func load() async {
         loading = true; defer { loading = false }
         errorMessage = nil
-        do { digest = try await apiClient.api.maintenanceDigest(hours: window.rawValue) }
+        do {
+            digest = try await apiClient.api.maintenanceDigest(hours: window.rawValue)
+            moreRepairs = [:]; moreOverrides = []; moreWorst = []; lastPage = [:]
+        }
         catch { if digest == nil { errorMessage = error.localizedDescription } }
+    }
+
+    private func revert(_ r: RepairRow) async {
+        busyRepairs.insert(r.id); defer { busyRepairs.remove(r.id) }
+        actionError = nil
+        do {
+            try await apiClient.api.revertRepair(r.id)
+            Haptics.tap(.medium)
+            await load()
+        } catch { actionError = "Revert failed: \(error.localizedDescription)"; Haptics.error() }
     }
 
     private func approve(_ r: RepairRow) async {
@@ -287,7 +404,12 @@ struct RepairCard: View {
     let busy: Bool
     let onApprove: (() async -> Void)?
     let onReject: (() async -> Void)?
+    /// DELETE /api/admin/repairs/:id — only offered for an applied url_swap
+    /// (`isRevertable`), behind a confirmation, because it changes where the
+    /// collector fetches from again.
+    var onRevert: (() async -> Void)? = nil
     @State private var confirmApprove = false
+    @State private var confirmRevert = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: Space.sm) {
@@ -349,6 +471,24 @@ struct RepairCard: View {
                     Button("Cancel", role: .cancel) {}
                 } message: {
                     Text("Writes a live runtime URL override for \(row.sourceId) and marks the repair merged.")
+                }
+            }
+            if row.isRevertable, onRevert != nil {
+                HStack(spacing: Space.sm) {
+                    Button(role: .destructive) {
+                        confirmRevert = true
+                    } label: {
+                        Label("Revert", systemImage: "arrow.uturn.backward.circle").font(.caption.weight(.semibold))
+                    }
+                    .buttonStyle(.bordered).tint(theme.danger)
+                    .disabled(busy)
+                    if busy { ProgressView().controlSize(.small) }
+                }
+                .confirmationDialog("Revert this applied fix?", isPresented: $confirmRevert, titleVisibility: .visible) {
+                    Button("Revert", role: .destructive) { Task { await onRevert?() } }
+                    Button("Cancel", role: .cancel) {}
+                } message: {
+                    Text("Removes the runtime URL override for \(row.sourceId), so it fetches its original URL again, and returns the repair to verified. The revert is audited.")
                 }
             }
         }

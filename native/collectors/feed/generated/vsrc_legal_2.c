@@ -149,37 +149,50 @@ VJSON(gov_kr_law_search, "gov-kr-law-search", "Korea Law Information — Statute
   "ko", "[\"korea\",\"legislation\",\"statute\",\"asia\"]", 86400,
   "Korean national statute search API returning law names, ministries and effective dates.");
 
+/* Tweede Kamer / Folketing OData rows: `$orderby=<modified> desc,<key>`
+ * (2026-11-07), copied from the sorted siblings (GewijzigdOp desc on TK
+ * Besluit, opdateringsdato desc on ft.dk Sag/Sagstrin/Dokument) and made a
+ * TOTAL order with the entity key, because many records share one timestamp
+ * (TK Stemming/Document, ft.dk Stemme: identical GewijzigdOp/opdateringsdato
+ * on consecutive rows). Without an order these $top/$skip walks read an
+ * arbitrary slice — TK's default first rows are dated 2008, 2019, 2024 mixed —
+ * of collections up to 1,035,132 (TK Stemming) and 1,840,932 (ft.dk Stemme);
+ * neither server publishes a nextLink for these requests. With it, the
+ * 20-page ceiling is the most recently modified $top x 20, a window. Both
+ * servers read the clause: a bogus $orderby is HTTP 400 ("Could not find a
+ * property named 'Frobnicate'" on TK). Small entity sets (TK Zaal 64,
+ * Fractie 160, Commissie 234; ft.dk Aktørtype 13 …) read whole either way. */
 VJSON(gov_nl_tweedekamer_besluit, "gov-nl-tweedekamer-besluit", "Tweede Kamer — Decisions", "オランダ下院 決定",
   "legal", "parliament",
-  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Besluit?$top=20&$format=json",
+  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Besluit?$top=20&$format=json&$orderby=GewijzigdOp%20desc,Id",
   "value",
   "nl", "[\"netherlands\",\"parliament\",\"decisions\"]", 3600,
   "Decisions taken by the Dutch House of Representatives on tabled business.");
 
 VJSON(gov_nl_tweedekamer_document, "gov-nl-tweedekamer-document", "Tweede Kamer — Parliamentary Documents", "オランダ下院 議会文書",
   "legal", "parliament",
-  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Document?$top=20&$format=json",
+  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Document?$top=20&$format=json&$orderby=GewijzigdOp%20desc,Id",
   "value",
   "nl", "[\"netherlands\",\"parliament\",\"documents\"]", 3600,
   "Documents tabled in the Dutch House of Representatives via the official OData magazine.");
 
 VJSON(gov_nl_tweedekamer_persoon, "gov-nl-tweedekamer-persoon", "Tweede Kamer — Person Registry", "オランダ下院 人物登録",
   "legal", "parliament",
-  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Persoon?$top=20&$format=json",
+  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Persoon?$top=20&$format=json&$orderby=GewijzigdOp%20desc,Id",
   "value",
   "nl", "[\"netherlands\",\"parliament\",\"members\",\"pep\"]", 86400,
   "Registry of persons appearing in Dutch parliamentary records: MPs, ministers and officials.");
 
 VJSON(gov_nl_tweedekamer_stemming, "gov-nl-tweedekamer-stemming", "Tweede Kamer — Votes", "オランダ下院 採決",
   "legal", "parliament",
-  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Stemming?$top=20&$format=json",
+  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Stemming?$top=20&$format=json&$orderby=GewijzigdOp%20desc,Id",
   "value",
   "nl", "[\"netherlands\",\"parliament\",\"votes\"]", 3600,
   "Vote records in the Dutch House of Representatives by party and motion.");
 
 VJSON(gov_nl_tweedekamer_zaak, "gov-nl-tweedekamer-zaak", "Tweede Kamer — Parliamentary Cases", "オランダ下院 議案",
   "legal", "parliament",
-  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Zaak?$top=20&$format=json",
+  "https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0/Zaak?$top=20&$format=json&$orderby=GewijzigdOp%20desc,Id",
   "value",
   "nl", "[\"netherlands\",\"parliament\",\"cases\"]", 3600,
   "Cases (zaken) before the Dutch House of Representatives with type and status.");

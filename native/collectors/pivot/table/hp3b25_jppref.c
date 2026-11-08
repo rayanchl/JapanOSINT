@@ -1843,7 +1843,11 @@ static const hp_source HP3B25_JPPREF[] = {
     .record_type = "dataset-record",
     .tags = "\"japan\",\"prefecture\",\"kanagawa\",\"opendata\",\"ckan\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://catalog.opendata.pref.kanagawa.jp/api/3/action/package_search?rows=100&start=0&sort=metadata_modified+desc",
+    /* `sort=id asc` (2026-11-07): a newest-modified-first walk shifts its page
+     * boundaries whenever a dataset is edited mid-walk. Measured: total 818
+     * plain, id asc and id desc; asc and desc first pages differ; ascending
+     * ids monotonic; start 0/100 disjoint. 818 fits the 20-page default. */
+    .url = "https://catalog.opendata.pref.kanagawa.jp/api/3/action/package_search?rows=100&start=0&sort=id+asc",
     .array_path = "result.results",
     .date_keys = "metadata_modified",
     .id_keys = "id,name",

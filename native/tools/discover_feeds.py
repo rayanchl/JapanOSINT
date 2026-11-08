@@ -4,15 +4,28 @@ second pass is not needed. Input: TSV with key, name, root columns (header).
 Output: key name root http effective declared anchors wp"""
 import sys, re, time, subprocess, concurrent.futures as cf
 from urllib.parse import urljoin, urlparse
+
+# Shelling out to curl still goes through THE trust set (jo_tls, rule 4c):
+# system roots + session CA + the intermediates the engine loads.
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+import jo_tls as _jo_tls
+JO_CURL_TLS = _jo_tls.curl_args()
+
 inp, out, jobs = sys.argv[1], sys.argv[2], int(sys.argv[3]) if len(sys.argv) > 3 else 8
 rows = [l.rstrip('\n').split('\t') for l in open(inp, encoding='utf-8').read().splitlines()[1:]]
 LINK = re.compile(r'<link\b[^>]*>', re.I)
 ATTR = re.compile(r'(\w+)\s*=\s*["\']([^"\']*)["\']')
 A = re.compile(r'<a\b[^>]*href\s*=\s*["\']([^"\']+)["\'][^>]*>(.{0,120}?)</a>', re.I | re.S)
 HINT = re.compile(r'(rss|atom|feed)', re.I)
-UA = 'Mozilla/5.0 (compatible; JapanOSINT feed discovery)'
+# The request is the ENGINE's (tools/jo_http.py): JO_USER_AGENT, or the
+# core/host_agents.def agent for a listed host, and the engine's Accept.
+# This tool used to send an agent of its own (one of eight spellings in
+# this directory, 2026-11-07), so a host walled against one agent read
+# differently here than in the engine.
+import jo_http as _jo_http
 def get(url):
-    r = subprocess.run(['curl', '-sS', '-L', '--compressed', '--max-time', '15', '-A', UA,
+    r = subprocess.run(['curl', *JO_CURL_TLS, '-sS', '-L', '--compressed', '--max-time', '15', *_jo_http.curl_header_args(url),
                         '-o', '-', '-w', '\n%{http_code}\n%{url_effective}', url], capture_output=True)
     parts = r.stdout.rsplit(b'\n', 2)
     if len(parts) < 3: return 'ERR', '', b''

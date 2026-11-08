@@ -65,7 +65,7 @@ static cJSON *adsbdb_get(const source_ctx *ctx, const char *path,
   char url[256];
   snprintf(url, sizeof url, "https://api.adsbdb.com/v0/%s/%s", path, enc);
   free(enc);
-  const char *hdrs[] = { "Accept: application/json", AV_UA_HDR, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, tag);   /* 404 → NULL → honest empty */
   if (!body) return NULL;
   cJSON *doc = cJSON_Parse(body);
@@ -112,7 +112,7 @@ static int run_aircraft(const source_ctx *ctx, intel_sink *sink) {
   cJSON_AddStringToObject(props, "service", "ADSBDB_AIRCRAFT");
   cJSON_AddStringToObject(props, "query", q);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
   cJSON_Delete(data);
 
@@ -124,11 +124,12 @@ static int run_aircraft(const source_ctx *ctx, intel_sink *sink) {
            owner ? owner : (itype ? itype : ""),
            (owner && ctry) ? " · " : "", ctry ? ctry : "");
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = mode_s ? mode_s : reg;
   it.title           = title;
   it.summary         = summary[0] ? summary : NULL;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.link            = photo;                 /* real photo URL when returned */
   it.lang            = "en";
   it.record_type     = "aircraft-registry";
@@ -137,7 +138,7 @@ static int run_aircraft(const source_ctx *ctx, intel_sink *sink) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"aviation\",\"ADSBDB\"]";
   int n = sink->emit(sink, &it) >= 0 ? 1 : 0;
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   cJSON_Delete(doc);
   fprintf(stderr, "[ADSBDB_AIRCRAFT] emitted %d (%s)\n", n, q);
   return 0;
@@ -180,7 +181,7 @@ static int adsbdb_airport_row(intel_sink *sink, const cJSON *ap,
   /* The coordinate is the AIRPORT's, never the aircraft's position. */
   if (geo) cJSON_AddStringToObject(props, "geo_precision", "airport");
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
   cJSON_Delete(data);
 
@@ -190,11 +191,12 @@ static int adsbdb_airport_row(intel_sink *sink, const cJSON *ap,
   snprintf(title, sizeof title, "%s %s: %s%s%s", callsign, role,
            icao ? icao : "", (icao && name) ? " " : "", name ? name : "");
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = uid;
   it.title           = title;
   it.summary         = jo_sv(ap, "municipality");
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "en";
   it.has_geo         = geo;
   it.lat             = geo ? lat : 0;
@@ -203,7 +205,7 @@ static int adsbdb_airport_row(intel_sink *sink, const cJSON *ap,
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"aviation\",\"ADSBDB\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -259,7 +261,7 @@ static int run_airline(const source_ctx *ctx, intel_sink *sink) {
     cJSON_AddStringToObject(props, "service", "ADSBDB_AIRLINE");
     cJSON_AddStringToObject(props, "query", q);
     cJSON_AddBoolToObject(props, "success", 1);
-    char *pj = cJSON_PrintUnformatted(props);
+    jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
     cJSON_Delete(props);
     cJSON_Delete(data);
 
@@ -271,18 +273,19 @@ static int run_airline(const source_ctx *ctx, intel_sink *sink) {
              jo_sv(al, "callsign") ? " · radio callsign " : "",
              jo_sv(al, "callsign") ? jo_sv(al, "callsign") : "");
 
-    intel_item it = {0};
+    char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
     it.remote_key      = uid;
     it.title           = name;
     it.summary         = summary[0] ? summary : NULL;
-    it.body            = bj;
+    it.body = bt ? bt : bj;
     it.lang            = "en";
     it.record_type     = "airline-operator";
     /* NO GEO — `country` is deliberately not geocoded (R2). */
     it.properties_json = pj;
     it.tags_json       = "[\"osint-search\",\"aviation\",\"ADSBDB\"]";
     if (sink->emit(sink, &it) >= 0) n++;
-    free(bj); free(pj);
+    free(bj); free(bt); free(pj);
   }
   cJSON_Delete(doc);
   fprintf(stderr, "[ADSBDB_AIRLINE] emitted %d (%s)\n", n, q);

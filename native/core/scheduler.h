@@ -4,6 +4,18 @@
 #include "../source.h"
 #include <time.h>
 int  scheduler_run_source(db_handle *db, const source_def *d, const char *entity);
+
+/* The scheduler's run bookkeeping, shared with the one other path that runs a
+ * source: core/osint_dispatch.c's entity pivots. Each was a hand copy there
+ * (or missing) until 2026-11-07. */
+#include "httpclient.h"
+const char *sched_run_status(int rc, long records, int hosts, int hosts_ok,
+                             const char **why);
+void sched_disclose_if_silent(intel_sink *sink, const source_def *d,
+                              const char *entity, int rc, long n_emit,
+                              long n_notices, http_client *http);
+void sched_fetch_log_set_bytes(db_handle *db, long flid, unsigned long long bytes);
+size_t sched_body_ceiling_for(db_handle *db, const char *source_id);
 void scheduler_loop(db_handle *db);
 /* Run scheduler_loop on a detached background thread so httpd_serve both
  * serves and refreshes collectors (parity with Node's in-process scheduler).

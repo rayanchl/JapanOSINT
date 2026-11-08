@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 /* r.lon ?? r.longitude ?? r.geometry.coordinates[0] (same for lat) */
 static int coord(cJSON *r, double *lon, double *lat) {
@@ -41,7 +42,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *key = getenv("DOCOMO_POPULATION_API_KEY");
   if (!key || !*key) {
     fprintf(stderr, "[docomo-population] gated (no DOCOMO_POPULATION_API_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "docomo-population", "docomo-population", (const char *const[]){"DOCOMO_POPULATION_API_KEY", NULL}, NULL, NULL);
   }
   char auth[600];
   snprintf(auth, sizeof auth, "Authorization: Bearer %s", key);

@@ -111,14 +111,15 @@ static int nvd_emit(intel_sink *sink, const cJSON *item) {
   if (score >= 0) cJSON_AddNumberToObject(props, "cvss_base_score", score);
   if (sev)  cJSON_AddStringToObject(props, "cvss_severity", sev);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = id;
   it.title           = id;
   it.summary         = desc;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "en";
   it.published_at    = pub;
   it.link            = ref ? ref : nvdurl;
@@ -126,7 +127,7 @@ static int nvd_emit(intel_sink *sink, const cJSON *item) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"vulnerability\",\"cve\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -143,12 +144,12 @@ static int nvd_run(const source_ctx *ctx, intel_sink *sink, const char *q) {
   free(enc);
 
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0 (vuln-intel)", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "NVD_CVE");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   int emitted = 0;
   const cJSON *vulns = cJSON_GetObjectItem(root, "vulnerabilities");
   if (cJSON_IsArray(vulns)) {
@@ -206,17 +207,18 @@ static int kev_emit(intel_sink *sink, const cJSON *r, const char *q) {
   if (prod) cJSON_AddStringToObject(props, "product", prod);
   cJSON_AddStringToObject(props, "known_exploited", "true");
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char link[128];
   snprintf(link, sizeof link, "https://nvd.nist.gov/vuln/detail/%s", cve);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = cve;
   it.title           = name ? name : cve;
   it.summary         = desc;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "en";
   it.published_at    = added;
   it.link            = link;
@@ -224,20 +226,20 @@ static int kev_emit(intel_sink *sink, const cJSON *r, const char *q) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"vulnerability\",\"known-exploited\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
 static int kev_run(const source_ctx *ctx, intel_sink *sink, const char *q) {
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0 (vuln-intel)", NULL };
+                         NULL };
   char *body = jo_get(ctx,
     "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
     hdrs, "CISA_KEV_GLOBAL");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   int emitted = 0;
   const cJSON *vulns = cJSON_GetObjectItem(root, "vulnerabilities");
   if (cJSON_IsArray(vulns)) {
@@ -347,11 +349,11 @@ static int edb_flush(intel_sink *sink, edb_pending *pd) {
 
 static int edb_run(const source_ctx *ctx, intel_sink *sink, const char *q) {
   const char *hdrs[] = { "Accept: text/csv, text/plain, */*",
-                         "User-Agent: JapanOSINT/1.0 (vuln-intel)", NULL };
+                         NULL };
   char *body = jo_get(ctx,
     "https://gitlab.com/exploit-database/exploitdb/-/raw/main/files_exploits.csv",
     hdrs, "EXPLOITDB");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
 
   char *cols[EDB_MAXCOL] = {0};
   int ncols = 0;
@@ -435,12 +437,12 @@ static int epss_run(const source_ctx *ctx, intel_sink *sink, const char *q) {
   free(enc);
 
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0 (vuln-intel)", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "EPSS_SCORES");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   int emitted = 0;
   const cJSON *arr = cJSON_GetObjectItem(root, "data");
   if (cJSON_IsArray(arr)) {
@@ -467,7 +469,7 @@ static int epss_run(const source_ctx *ctx, intel_sink *sink, const char *q) {
       if (epss) cJSON_AddStringToObject(props, "epss_score", epss);
       if (pct)  cJSON_AddStringToObject(props, "percentile", pct);
       cJSON_AddBoolToObject(props, "success", 1);
-      char *pj = cJSON_PrintUnformatted(props);
+      jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
       cJSON_Delete(props);
 
       char summary[128];
@@ -476,11 +478,12 @@ static int epss_run(const source_ctx *ctx, intel_sink *sink, const char *q) {
       char link[128];
       snprintf(link, sizeof link, "https://nvd.nist.gov/vuln/detail/%s", cve);
 
-      intel_item it = {0};
+      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
       it.remote_key      = cve;
       it.title           = cve;
       it.summary         = summary;
-      it.body            = bj;
+      it.body = bt ? bt : bj;
       it.lang            = "en";
       it.published_at    = date;
       it.link            = link;
@@ -488,7 +491,7 @@ static int epss_run(const source_ctx *ctx, intel_sink *sink, const char *q) {
       it.properties_json = pj;
       it.tags_json       = "[\"osint-search\",\"vulnerability\",\"epss\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(pj);
+      free(bj); free(bt); free(pj);
     }
   }
   cJSON_Delete(root);
@@ -498,6 +501,7 @@ static int epss_run(const source_ctx *ctx, intel_sink *sink, const char *q) {
 
 /* ---- dispatch ----------------------------------------------------------- */
 static int run(const source_ctx *ctx, intel_sink *sink) {
+  int rc = 0;   /* a helper's -1 = refused/unparsable fetch (2026-11-07) */
   const char *q = (ctx->entity && *ctx->entity) ? ctx->entity : NULL;
   if (!q) return -1;
   if (strlen(q) < 3) {
@@ -506,13 +510,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
   const char *id = ctx->source_id;
 
-  if (strcmp(id, "NVD_CVE") == 0)          nvd_run(ctx, sink, q);
-  else if (strcmp(id, "CISA_KEV_GLOBAL") == 0) kev_run(ctx, sink, q);
-  else if (strcmp(id, "EXPLOITDB") == 0)   edb_run(ctx, sink, q);
-  else if (strcmp(id, "EPSS_SCORES") == 0) epss_run(ctx, sink, q);
+  if (strcmp(id, "NVD_CVE") == 0)          rc = nvd_run(ctx, sink, q);
+  else if (strcmp(id, "CISA_KEV_GLOBAL") == 0) rc = kev_run(ctx, sink, q);
+  else if (strcmp(id, "EXPLOITDB") == 0)   rc = edb_run(ctx, sink, q);
+  else if (strcmp(id, "EPSS_SCORES") == 0) rc = epss_run(ctx, sink, q);
   else return -1;
 
-  return 0;   /* honest empty is not an error */
+  return rc < 0 ? -1 : 0;   /* honest empty 0, refused fetch -1 */
 }
 
 #define VW_DEF(SYM, ID, NAME, NAMEJA, URL, DESC) \

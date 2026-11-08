@@ -19,12 +19,16 @@ export function useApi(path, { deps = [], transform, enabled = true, poll = 0 } 
   const transformRef = useRef(transform);
   transformRef.current = transform;
 
-  const load = useCallback(async ({ silent = false } = {}) => {
+  /* `query` adds parameters to THIS read only — e.g. `{ fresh: 1 }` after a
+   * write, so a route that caches its answer (the source detail's 10 s
+   * snapshot) can be asked to skip it. A server that does not know the
+   * parameter ignores it. */
+  const load = useCallback(async ({ silent = false, query } = {}) => {
     if (!path || !enabled) { setLoading(false); return; }
     const my = ++seq.current;
     if (!silent) setLoading(true);
     try {
-      const j = await api.get(path);
+      const j = await api.get(path, query ? { query } : undefined);
       if (my !== seq.current) return;
       setData(transformRef.current ? transformRef.current(j) : j);
       setError(null);

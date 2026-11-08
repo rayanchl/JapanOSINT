@@ -192,16 +192,29 @@ VJSON(gov_de_openlegaldata_laws, "gov-de-openlegaldata-laws", "Open Legal Data �
   "de", "[\"germany\",\"legislation\",\"statute\"]", 86400,
   "Structured German federal statutes and individual code sections.");
 
+/* Tweede Kamer / Folketing OData rows: `$orderby=<modified> desc,<key>`
+ * (2026-11-07), copied from the sorted siblings (GewijzigdOp desc on TK
+ * Besluit, opdateringsdato desc on ft.dk Sag/Sagstrin/Dokument) and made a
+ * TOTAL order with the entity key, because many records share one timestamp
+ * (TK Stemming/Document, ft.dk Stemme: identical GewijzigdOp/opdateringsdato
+ * on consecutive rows). Without an order these $top/$skip walks read an
+ * arbitrary slice — TK's default first rows are dated 2008, 2019, 2024 mixed —
+ * of collections up to 1,035,132 (TK Stemming) and 1,840,932 (ft.dk Stemme);
+ * neither server publishes a nextLink for these requests. With it, the
+ * 20-page ceiling is the most recently modified $top x 20, a window. Both
+ * servers read the clause: a bogus $orderby is HTTP 400 ("Could not find a
+ * property named 'Frobnicate'" on TK). Small entity sets (TK Zaal 64,
+ * Fractie 160, Commissie 234; ft.dk Aktørtype 13 …) read whole either way. */
 VJSON(gov_dk_ft_afstemning, "gov-dk-ft-afstemning", "Folketinget — Votes", "デンマーク議会 採決",
   "legal", "parliament",
-  "https://oda.ft.dk/api/Afstemning?$top=50",
+  "https://oda.ft.dk/api/Afstemning?$top=50&$orderby=opdateringsdato%20desc,id",
   "value",
   "da", "[\"denmark\",\"parliament\",\"votes\"]", 3600,
   "Recorded votes in the Danish Folketing with outcome and vote counts.");
 
 VJSON(gov_dk_ft_aktoer, "gov-dk-ft-aktoer", "Folketinget — Actors Registry", "デンマーク議会 関係者登録",
   "legal", "parliament",
-  "https://oda.ft.dk/api/Akt%C3%B8r?$top=50",
+  "https://oda.ft.dk/api/Akt%C3%B8r?$top=50&$orderby=opdateringsdato%20desc,id",
   "value",
   "da", "[\"denmark\",\"parliament\",\"members\",\"pep\"]", 86400,
   "Registry of people and bodies in Danish parliamentary records: MPs, ministries, committees.");
@@ -215,7 +228,7 @@ VJSON(gov_dk_ft_dokument, "gov-dk-ft-dokument", "Folketinget — Documents", "�
 
 VJSON(gov_dk_ft_moede, "gov-dk-ft-moede", "Folketinget — Meetings", "デンマーク議会 会議",
   "legal", "parliament",
-  "https://oda.ft.dk/api/M%C3%B8de?$top=50",
+  "https://oda.ft.dk/api/M%C3%B8de?$top=50&$orderby=opdateringsdato%20desc,id",
   "value",
   "da", "[\"denmark\",\"parliament\",\"meetings\"]", 3600,
   "Danish Folketing sittings and committee meetings with agenda linkage.");

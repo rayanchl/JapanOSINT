@@ -76,7 +76,7 @@ static int emit_aircraft(intel_sink *sink, const cJSON *a, const char *entity) {
   if (hex)       cJSON_AddStringToObject(props, "hex", hex);
   if (reg)       cJSON_AddStringToObject(props, "registration", reg);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char title[96];
@@ -89,11 +89,12 @@ static int emit_aircraft(intel_sink *sink, const cJSON *a, const char *entity) {
   char rk[64];
   snprintf(rk, sizeof rk, "adsb:%s", hex ? hex : (reg ? reg : flight));
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
   it.summary         = "live aircraft state";
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.has_geo         = has_geo;
   it.lat             = lat;
   it.lon             = lon;
@@ -101,7 +102,7 @@ static int emit_aircraft(intel_sink *sink, const cJSON *a, const char *entity) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"ADSB_GLOBAL\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -109,10 +110,10 @@ static int emit_aircraft(intel_sink *sink, const cJSON *a, const char *entity) {
 static int fetch_and_emit(const source_ctx *ctx, intel_sink *sink,
                           const char *url, const char *entity) {
   char *body = jo_get(ctx, url, NULL, "adsb_global");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   int emitted = 0;
   cJSON *ac = cJSON_GetObjectItem(root, "ac");
   if (cJSON_IsArray(ac)) {
@@ -131,17 +132,18 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   char url[512];
   snprintf(url, sizeof url, "https://api.adsb.lol/v2/callsign/%s", enc);
-  int emitted = fetch_and_emit(ctx, sink, url, q);
+  int emitted = 0, failed = 0;
+  jo_acc(fetch_and_emit(ctx, sink, url, q), &emitted, &failed);
 
   /* No callsign hit → try registration/tail lookup. */
   if (emitted == 0) {
     snprintf(url, sizeof url, "https://api.adsb.lol/v2/registration/%s", enc);
-    emitted += fetch_and_emit(ctx, sink, url, q);
+    jo_acc(fetch_and_emit(ctx, sink, url, q), &emitted, &failed);
   }
   free(enc);
 
   fprintf(stderr, "[adsb_global] emitted %d\n", emitted);
-  return 0;   /* honest empty is not an error */
+  return (failed && emitted == 0) ? -1 : 0;   /* honest empty 0; refused/unparsable fetch with nothing emitted is -1 (2026-11-07) */
 }
 
 static const source_def global_adsb_def = {

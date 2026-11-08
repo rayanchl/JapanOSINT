@@ -40,10 +40,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
            qlat, qlon);
 
   char *body = jo_get(ctx, url, NULL, "GEBCO_BATHYMETRY");
-  if (!body) return 0;                 /* 429 over-quota etc. -> honest empty */
+  if (!body) return jo_fail_rc(jo_last_status(), 0);                 /* 2026-11-07: 429 over-quota is a refusal (-1), not an empty */
   cJSON *doc = cJSON_Parse(body);
   free(body);
-  if (!doc) return 0;
+  if (!doc) return -1;
 
   const char *status = jo_sv(doc, "status");
   if (!status || strcmp(status, "OK") != 0) { cJSON_Delete(doc); return 0; }

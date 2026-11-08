@@ -12,8 +12,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
-static const char *SE_UA = "User-Agent: JapanOSINT/1.0 (osint@example.org)";
 
 static int emit_result(intel_sink *sink, const char *service, const char *title,
                        const char *link, const char *snippet) {
@@ -26,26 +26,27 @@ static int emit_result(intel_sink *sink, const char *service, const char *title,
   char *bj = cJSON_PrintUnformatted(d); cJSON_Delete(d);
   cJSON *p = cJSON_CreateObject();
   cJSON_AddStringToObject(p, "service", service); cJSON_AddBoolToObject(p, "success", 1);
-  char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+  jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
   char tags[96]; snprintf(tags, sizeof tags, "[\"osint-search\",\"%s\"]", service);
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key = link ? link : title; it.title = title ? title : link;
-  it.summary = snippet; it.body = bj; it.link = link; it.lang = "en";
+  it.summary = snippet; it.body = bt ? bt : bj; it.link = link; it.lang = "en";
   it.record_type = "web-result"; it.properties_json = pj; it.tags_json = tags;
-  int rc = sink->emit(sink, &it); free(bj); free(pj);
+  int rc = sink->emit(sink, &it); free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
 static int run_serpapi(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   const char *k = jo_env("SERPAPI_KEY");
-  if (!k) { fprintf(stderr, "[SERPAPI_SEARCH] no SERPAPI_KEY\n"); return 0; }
+  if (!k) return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "SERPAPI_SEARCH", "SERPAPI_SEARCH", (const char *const[]){"SERPAPI_KEY", NULL}, NULL, NULL);
   char url[640];
   snprintf(url, sizeof url, "https://serpapi.com/search.json?engine=google&num=20&q=%s&api_key=%s", enc, k);
-  const char *hdrs[] = { "Accept: application/json", SE_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "SERPAPI_SEARCH");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *org = cJSON_GetObjectItem(root, "organic_results");
   int n = 0;
   if (cJSON_IsArray(org)) {
@@ -62,15 +63,15 @@ static int run_serpapi(const source_ctx *ctx, intel_sink *sink, const char *enc)
 
 static int run_bing(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   const char *k = jo_env("BING_SEARCH_KEY");
-  if (!k) { fprintf(stderr, "[BING_WEB_SEARCH] no BING_SEARCH_KEY\n"); return 0; }
+  if (!k) return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "BING_WEB_SEARCH", "BING_WEB_SEARCH", (const char *const[]){"BING_SEARCH_KEY", NULL}, NULL, NULL);
   char url[512];
   snprintf(url, sizeof url, "https://api.bing.microsoft.com/v7.0/search?count=20&q=%s", enc);
   char keyh[160]; snprintf(keyh, sizeof keyh, "Ocp-Apim-Subscription-Key: %s", k);
-  const char *hdrs[] = { "Accept: application/json", SE_UA, keyh, NULL };
+  const char *hdrs[] = { "Accept: application/json", keyh, NULL };
   char *body = jo_get(ctx, url, hdrs, "BING_WEB_SEARCH");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *web = cJSON_GetObjectItem(root, "webPages");
   const cJSON *values = web ? cJSON_GetObjectItem(web, "value") : NULL;
   int n = 0;
@@ -97,7 +98,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   else if (!strcmp(sid, "BING_WEB_SEARCH")) n = run_bing(ctx, sink, enc);
   free(enc);
   fprintf(stderr, "[%s] emitted %d\n", sid, n);
-  return 0;
+  return n < 0 ? -1 : 0;
 }
 
 #define SE_DEF(sym, ID, NM, DESC) \

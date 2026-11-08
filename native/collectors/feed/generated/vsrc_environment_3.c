@@ -94,9 +94,19 @@ VJSON(geo_tidesandcurrents_watertemp, "geo-tidesandcurrents-watertemp", "NOAA CO
   "en", "[\"usa\",\"watertemperature\",\"noaa\"]", 86400,
   "US stations reporting water temperature.");
 
+/* ArcGIS rows in this file: `orderByFields=<the layer's own objectIdField>
+ * ASC` (2026-11-07). These walk on `resultOffset` (geojson_emit_paged's
+ * mechanism 1, on the server's own exceededTransferLimit) with no order
+ * clause, and ArcGIS promises no stable order without one. The field was READ
+ * per layer from `<layer>?f=json` (objectIdField, else the esriFieldTypeOID
+ * field — spellings here include OBJECTID, objectid, FID, OBJECTID_1, ObjectId,
+ * oid, RowID), every layer declares supportsOrderBy, and the sorted query was
+ * asked once (resultRecordCount=3 at offsets 0 and 3): HTTP 200, no error
+ * body, pages disjoint. This is STABILISING, not a recovery — no record was
+ * measured lost without it. */
 VGEO(geo_usda_drought_arcgis, "geo-usda-drought-arcgis", "US Drought Monitor intensity polygons", "米国干ばつモニター 強度域",
   "environment", "weather",
-  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/US_Drought_Intensity_v1/FeatureServer/3/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500",
+  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/US_Drought_Intensity_v1/FeatureServer/3/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"drought\",\"usa\",\"monitor\"]", 86400,
   "Weekly US Drought Monitor intensity class polygons.");
 

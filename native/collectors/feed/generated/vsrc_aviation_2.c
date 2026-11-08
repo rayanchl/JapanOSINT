@@ -19,27 +19,37 @@ VGEO(sec_faa_sua, "sec-faa-sua", "FAA Special Use Airspace", "FAA 特別用途�
   "en", "[\"sua\",\"restricted\",\"warning-area\",\"military\"]", 86400,
   "FAA NASR aeronautical data published as ArcGIS features: FAA Special Use Airspace. Real published US aeronautical geometry, refreshed on the 28-day AIRAC cycle.");
 
+/* ArcGIS rows in this file: `orderByFields=<the layer's own objectIdField>
+ * ASC` (2026-11-07). These walk on `resultOffset` (geojson_emit_paged's
+ * mechanism 1, on the server's own exceededTransferLimit) with no order
+ * clause, and ArcGIS promises no stable order without one. The field was READ
+ * per layer from `<layer>?f=json` (objectIdField, else the esriFieldTypeOID
+ * field — spellings here include OBJECTID, objectid, FID, OBJECTID_1, ObjectId,
+ * oid, RowID), every layer declares supportsOrderBy, and the sorted query was
+ * asked once (resultRecordCount=3 at offsets 0 and 3): HTTP 200, no error
+ * body, pages disjoint. This is STABILISING, not a recovery — no record was
+ * measured lost without it. */
 VGEO(sec_faa_taxiway, "sec-faa-taxiway", "FAA Taxiways", "FAA 誘導路",
   "aviation", "airspace",
-  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/AM_Taxiway/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=200",
+  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/AM_Taxiway/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=200&orderByFields=OBJECTID%20ASC",
   "en", "[\"airport\",\"taxiway\",\"mapping\"]", 86400,
   "FAA NASR aeronautical data published as ArcGIS features: FAA Taxiways. Real published US aeronautical geometry, refreshed on the 28-day AIRAC cycle.");
 
 VGEO(sec_faa_uas_facility_map, "sec-faa-uas-facility-map", "FAA UAS Facility Maps (LAANC ceilings)", "FAA 無人機施設マップ（LAANC上限高度）",
   "aviation", "airspace",
-  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/FAA_UAS_FacilityMap_Data/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500",
+  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/FAA_UAS_FacilityMap_Data/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"uas\",\"drone\",\"laanc\",\"ceiling\"]", 86400,
   "FAA NASR aeronautical data published as ArcGIS features: FAA UAS Facility Maps (LAANC ceilings). Real published US aeronautical geometry, refreshed on the 28-day AIRAC cycle.");
 
 VGEO(sec_faa_us_airport, "sec-faa-us-airport", "FAA US Airports", "FAA 米国空港",
   "aviation", "airspace",
-  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/US_Airport/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500",
+  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/US_Airport/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"airport\",\"nasr\"]", 86400,
   "FAA NASR aeronautical data published as ArcGIS features: FAA US Airports. Real published US aeronautical geometry, refreshed on the 28-day AIRAC cycle.");
 
 VGEO(sec_faa_wind_indicator, "sec-faa-wind-indicator", "FAA Wind Indicators", "FAA 風向指示器",
   "aviation", "airspace",
-  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/AM_Wind_Indicator/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500",
+  "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/AM_Wind_Indicator/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"airport\",\"windsock\"]", 86400,
   "FAA NASR aeronautical data published as ArcGIS features: FAA Wind Indicators. Real published US aeronautical geometry, refreshed on the 28-day AIRAC cycle.");
 
@@ -128,25 +138,25 @@ VRSS(sec_nasa_news, "sec-nasa-news", "NASA News Releases", "NASA ニュースリ
 
 VGEO(sec_ntad_airport_parcels, "sec-ntad-airport-parcels", "NTAD Primary Airport Parcels", "NTAD 主要空港敷地",
   "aviation", "airspace",
-  "https://services.arcgis.com/xOi1kZaI0eWDREZv/arcgis/rest/services/NTAD_Hazard_Exposure_Primary_Airport_Parcels/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=300",
+  "https://services.arcgis.com/xOi1kZaI0eWDREZv/arcgis/rest/services/NTAD_Hazard_Exposure_Primary_Airport_Parcels/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=300&orderByFields=OBJECTID%20ASC",
   "en", "[\"airport\",\"parcel\",\"footprint\",\"usa\"]", 604800,
   "US DOT National Transportation Atlas layer (NTAD Primary Airport Parcels) with authoritative published geometry; useful as a persistent infrastructure base layer.");
 
 VGEO(sec_ntad_aviation_facilities, "sec-ntad-aviation-facilities", "NTAD Aviation Facilities", "NTAD 航空施設",
   "aviation", "airspace",
-  "https://services.arcgis.com/xOi1kZaI0eWDREZv/arcgis/rest/services/NTAD_Aviation_Facilities/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500",
+  "https://services.arcgis.com/xOi1kZaI0eWDREZv/arcgis/rest/services/NTAD_Aviation_Facilities/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"airport\",\"heliport\",\"ntad\",\"usa\"]", 604800,
   "US DOT National Transportation Atlas layer (NTAD Aviation Facilities) with authoritative published geometry; useful as a persistent infrastructure base layer.");
 
 VGEO(sec_ntad_intermodal_air_truck, "sec-ntad-intermodal-air-truck", "NTAD Air-to-Truck Freight Facilities", "NTAD 航空・トラック貨物施設",
   "aviation", "shipping",
-  "https://services.arcgis.com/xOi1kZaI0eWDREZv/arcgis/rest/services/NTAD_Intermodal_Freight_Facilities_Air_to_Truck/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500",
+  "https://services.arcgis.com/xOi1kZaI0eWDREZv/arcgis/rest/services/NTAD_Intermodal_Freight_Facilities_Air_to_Truck/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"intermodal\",\"air-cargo\",\"freight\",\"usa\"]", 604800,
   "US DOT National Transportation Atlas layer (NTAD Air-to-Truck Freight Facilities) with authoritative published geometry; useful as a persistent infrastructure base layer.");
 
 VGEO(sec_ntad_spaceports, "sec-ntad-spaceports", "NTAD Spaceports", "NTAD 宇宙港",
   "aviation", "space",
-  "https://services.arcgis.com/xOi1kZaI0eWDREZv/arcgis/rest/services/NTAD_Spaceports/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500",
+  "https://services.arcgis.com/xOi1kZaI0eWDREZv/arcgis/rest/services/NTAD_Spaceports/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"spaceport\",\"launch-site\",\"ntad\",\"usa\"]", 604800,
   "US DOT National Transportation Atlas layer (NTAD Spaceports) with authoritative published geometry; useful as a persistent infrastructure base layer.");
 

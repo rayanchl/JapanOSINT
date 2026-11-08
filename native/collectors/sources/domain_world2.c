@@ -13,20 +13,20 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
-static const char *DM_UA = "User-Agent: JapanOSINT/1.0 (osint@example.org)";
 
 /* host.io/api/full/<domain> → {domain, web:{}, dns:{}, ipinfo:{}, related:{}} */
 static int run_hostio(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   const char *k = jo_env("HOSTIO_TOKEN");
-  if (!k) { fprintf(stderr, "[HOST_IO_FULL] no HOSTIO_TOKEN\n"); return 0; }
+  if (!k) return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "HOST_IO_FULL", "HOST_IO_FULL", (const char *const[]){"HOSTIO_TOKEN", NULL}, NULL, NULL);
   char url[512];
   snprintf(url, sizeof url, "https://host.io/api/full/%s?token=%s", enc, k);
-  const char *hdrs[] = { "Accept: application/json", DM_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "HOST_IO_FULL");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const char *domain = jo_sv(root, "domain");
   if (!domain) { cJSON_Delete(root); return 0; }
   const cJSON *web = cJSON_GetObjectItem(root, "web");
@@ -45,30 +45,31 @@ static int run_hostio(const source_ctx *ctx, intel_sink *sink, const char *enc) 
   cJSON_AddStringToObject(p, "service", "HOST_IO_FULL");
   cJSON_AddStringToObject(p, "domain", domain);
   cJSON_AddBoolToObject(p, "success", 1);
-  char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+  jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
   char link[300]; snprintf(link, sizeof link, "https://host.io/%s", domain);
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key = domain; it.title = domain; it.summary = title_w;
-  it.body = bj; it.link = link; it.lang = "en";
+  it.body = bt ? bt : bj; it.link = link; it.lang = "en";
   it.record_type = "domain-profile";
   it.properties_json = pj; it.tags_json = "[\"osint-search\",\"HOST_IO_FULL\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   cJSON_Delete(root);
   return rc >= 0 ? 1 : 0;
 }
 
 static int run_whoisfreaks(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   const char *k = jo_env("WHOISFREAKS_API_KEY");
-  if (!k) { fprintf(stderr, "[WHOISFREAKS] no WHOISFREAKS_API_KEY\n"); return 0; }
+  if (!k) return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "WHOISFREAKS", "WHOISFREAKS", (const char *const[]){"WHOISFREAKS_API_KEY", NULL}, NULL, NULL);
   char url[640];
   snprintf(url, sizeof url,
     "https://api.whoisfreaks.com/v1.0/whois?apiKey=%s&whois=live&domainName=%s", k, enc);
-  const char *hdrs[] = { "Accept: application/json", DM_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "WHOISFREAKS");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const char *dn = jo_sv(root, "domain_name");
   if (!dn) { cJSON_Delete(root); return 0; }
   const char *created = jo_sv(root, "create_date");
@@ -86,28 +87,29 @@ static int run_whoisfreaks(const source_ctx *ctx, intel_sink *sink, const char *
   cJSON_AddStringToObject(p, "service", "WHOISFREAKS");
   cJSON_AddStringToObject(p, "domain", dn);
   cJSON_AddBoolToObject(p, "success", 1);
-  char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+  jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key = dn; it.title = dn; it.summary = registrar;
-  it.body = bj; it.lang = "en"; it.published_at = created;
+  it.body = bt ? bt : bj; it.lang = "en"; it.published_at = created;
   it.record_type = "whois-record";
   it.properties_json = pj; it.tags_json = "[\"osint-search\",\"WHOISFREAKS\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   cJSON_Delete(root);
   return rc >= 0 ? 1 : 0;
 }
 
 static int run_ipinfo(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   const char *k = jo_env("IPINFO_TOKEN");
-  if (!k) { fprintf(stderr, "[IPINFO_LOOKUP] no IPINFO_TOKEN\n"); return 0; }
+  if (!k) return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "IPINFO_LOOKUP", "IPINFO_LOOKUP", (const char *const[]){"IPINFO_TOKEN", NULL}, NULL, NULL);
   char url[512];
   snprintf(url, sizeof url, "https://ipinfo.io/%s?token=%s", enc, k);
-  const char *hdrs[] = { "Accept: application/json", DM_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "IPINFO_LOOKUP");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const char *ip = jo_sv(root, "ip");
   if (!ip) { cJSON_Delete(root); return 0; }
   const char *org = jo_sv(root, "org");
@@ -129,19 +131,20 @@ static int run_ipinfo(const source_ctx *ctx, intel_sink *sink, const char *enc) 
   cJSON_AddStringToObject(p, "service", "IPINFO_LOOKUP");
   cJSON_AddStringToObject(p, "ip", ip);
   cJSON_AddBoolToObject(p, "success", 1);
-  char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+  jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
   int has_geo = 0; double lat = 0, lon = 0;
   if (loc && strchr(loc, ',')) { lat = atof(loc); lon = atof(strchr(loc, ',') + 1); has_geo = 1; }
   char title[256];
   snprintf(title, sizeof title, "%s%s%s", ip, org ? " · " : "", org ? org : "");
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key = ip; it.title = title; it.summary = org;
-  it.body = bj; it.lang = "en";
+  it.body = bt ? bt : bj; it.lang = "en";
   it.has_geo = has_geo; it.lat = lat; it.lon = lon;
   it.record_type = "ip-geolocation";
   it.properties_json = pj; it.tags_json = "[\"osint-search\",\"IPINFO_LOOKUP\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   cJSON_Delete(root);
   return rc >= 0 ? 1 : 0;
 }
@@ -158,7 +161,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   else if (!strcmp(sid, "IPINFO_LOOKUP")) n = run_ipinfo(ctx, sink, enc);
   free(enc);
   fprintf(stderr, "[%s] emitted %d\n", sid, n);
-  return 0;
+  return n < 0 ? -1 : 0;
 }
 
 #define DM_DEF(sym, ID, NM, DESC) \

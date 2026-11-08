@@ -14,18 +14,17 @@
 #include <string.h>
 #include "_jp_osint.inc"
 
-static const char *OE3_UA = "User-Agent: JapanOSINT/1.0 (osint@example.org)";
 
 static int run_se_site(const source_ctx *ctx, intel_sink *sink, const char *service,
                        const char *site, const char *enc) {
   char url[640];
   snprintf(url, sizeof url,
     "https://api.stackexchange.com/2.3/search/advanced?order=desc&sort=relevance&q=%s&site=%s", enc, site);
-  const char *hdrs[] = { "Accept: application/json", OE3_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, service);
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *items = cJSON_GetObjectItem(root, "items");
   int n = 0;
   if (cJSON_IsArray(items)) {
@@ -44,14 +43,15 @@ static int run_se_site(const source_ctx *ctx, intel_sink *sink, const char *serv
       cJSON *p = cJSON_CreateObject();
       cJSON_AddStringToObject(p, "service", service); cJSON_AddStringToObject(p, "site", site);
       cJSON_AddBoolToObject(p, "success", 1);
-      char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+      jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
       char tags[96]; snprintf(tags, sizeof tags, "[\"osint-search\",\"%s\"]", service);
-      intel_item it = {0};
-      it.remote_key = link ? link : title; it.title = title; it.body = bj;
+      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
+      it.remote_key = link ? link : title; it.title = title; it.body = bt ? bt : bj;
       it.link = link; it.lang = "en"; it.record_type = "stackexchange-question";
       it.properties_json = pj; it.tags_json = tags;
       if (sink->emit(sink, &it) >= 0) n++;
-      free(bj); free(pj);
+      free(bj); free(bt); free(pj);
       /* (cap removed: every record of the fetched array is emitted —
        * docs/SOURCE_EXHAUSTIVENESS.md) */
     }
@@ -72,7 +72,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   else if (!strcmp(sid, "SERVERFAULT_SEARCH"))  n = run_se_site(ctx, sink, "SERVERFAULT_SEARCH", "serverfault", enc);
   free(enc);
   fprintf(stderr, "[%s] emitted %d\n", sid, n);
-  return 0;
+  return n < 0 ? -1 : 0;
 }
 
 #define OE3_DEF(sym, ID, NM, CAT, DESC) \

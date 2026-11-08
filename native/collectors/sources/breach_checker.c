@@ -17,6 +17,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 /* Emit one intel row for a single HIBP breach. Returns 1 if emitted. */
 static int emit_breach(intel_sink *sink, const char *account, cJSON *b) {
@@ -43,7 +44,7 @@ static int emit_breach(intel_sink *sink, const char *account, cJSON *b) {
   cJSON_AddStringToObject(props, "account", account);
   cJSON_AddStringToObject(props, "breach", nm->valuestring);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
 
   char rk[400], title[400];
   snprintf(rk, sizeof rk, "breach:%s:%s", nm->valuestring, account);
@@ -51,10 +52,11 @@ static int emit_breach(intel_sink *sink, const char *account, cJSON *b) {
            (title_j && cJSON_IsString(title_j)) ? title_j->valuestring : nm->valuestring,
            account);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.summary         = (dom && cJSON_IsString(dom)) ? dom->valuestring : nm->valuestring;
   it.published_at    = (bd && cJSON_IsString(bd)) ? bd->valuestring : NULL;
   it.record_type     = "osint_service_result";
@@ -62,7 +64,7 @@ static int emit_breach(intel_sink *sink, const char *account, cJSON *b) {
   it.tags_json       = "[\"osint-search\",\"BREACH_CHECKER\"]";
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   cJSON_Delete(body); cJSON_Delete(props);
   return rc >= 0 ? 1 : 0;
 }
@@ -75,7 +77,7 @@ int jo_breach_checker_run(const source_ctx *ctx, intel_sink *sink) {
   const char *key = getenv("HIBP_API_KEY");
   if (!key || !*key) {
     fprintf(stderr, "[BREACH_CHECKER] gated (no HIBP_API_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "BREACH_CHECKER", "BREACH_CHECKER", (const char *const[]){"HIBP_API_KEY", NULL}, NULL, NULL);
   }
 
   char enc[256];
@@ -88,7 +90,7 @@ int jo_breach_checker_run(const source_ctx *ctx, intel_sink *sink) {
   char keybuf[256];
   snprintf(keybuf, sizeof keybuf, "hibp-api-key: %s", key);
   const char *headers[3] = {
-    keybuf, "User-Agent: OSINT-SaaS-Platform/1.0", NULL
+    keybuf, NULL
   };
 
   http_response hr = {0};

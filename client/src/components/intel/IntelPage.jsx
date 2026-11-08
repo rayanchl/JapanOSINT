@@ -5,7 +5,10 @@ import { LuPlay, LuRefreshCw } from 'react-icons/lu';
 import { api, errorMessage } from '../../api/client.js';
 import { useApi } from '../../hooks/useApi.js';
 import { useIntelItems, SINCE_PRESETS, useSinceIso } from '../../hooks/useIntel.js';
-import { Page, Card, Pill, Button, Input, Select, Segmented, Toggle, ErrorNotice, EmptyState, LoadingState, BoundNote, SectionLabel, cx, toast } from '../ui/kit.jsx';
+import { Page, Card, Pill, Button, Input, Select, Segmented, Toggle, ErrorNotice, EmptyState, LoadingState, BoundNote, PagedFooter, SectionLabel, cx, toast } from '../ui/kit.jsx';
+import { usePagedList } from '../../hooks/usePagedList.js';
+import { useAuthOptional } from '../../auth/AuthContext.jsx';
+import { searchPath } from '../../utils/sourceFormat.js';
 import IntelItemRow from './IntelItemRow.jsx';
 import { relativeTime } from '../../utils/time.js';
 
@@ -27,64 +30,65 @@ export default function IntelPage() {
 /* ---------------------------------------------------------------- sources */
 
 function SourcesView() {
-  const { data, error, loading, reload } = useApi('/api/intel/sources');
-  const rows = Array.isArray(data?.data) ? data.data : [];
+  /* Searched and paged on the SERVER (GET /api/sources/search), 2026-11-07.
+   * This used to download GET /api/intel/sources — the whole registry with
+   * aggregates, tens of MB — and filter it in the browser to show a few
+   * cards. The search route takes q / category / has_items / sort and
+   * answers its own facets and a measured total. What it does not carry,
+   * compared with the old catalogue: `awaiting_geo`, `last_published` and
+   * `parent_id` per row, and breach-catalogue entries (they are not
+   * registry sources); those cards say less now rather than guess. */
+  const auth = useAuthOptional();
+  const canRun = auth?.isPlatformAdmin === true || Boolean(auth?.canManageWorkspace);
+  const [draft, setDraft] = useState('');
   const [q, setQ] = useState('');
   const [cat, setCat] = useState('');
   const [withItems, setWithItems] = useState(true);
   const [sort, setSort] = useState('items');
   const [running, setRunning] = useState({});
-
-  const categories = useMemo(() => Array.from(new Set(rows.map((r) => r.category).filter(Boolean))).sort(), [rows]);
-  const filtered = useMemo(() => {
-    const needle = q.trim().toLowerCase();
-    let xs = rows.filter((r) => (!withItems || r.item_count > 0)
-      && (!cat || r.category === cat)
-      && (!needle || [r.id, r.name, r.name_ja, r.description, r.category].some((s) => s && String(s).toLowerCase().includes(needle))));
-    xs = [...xs].sort((a, b) => sort === 'items' ? (b.item_count || 0) - (a.item_count || 0)
-      : sort === 'fetched' ? String(b.last_fetched || '').localeCompare(String(a.last_fetched || ''))
-      : String(a.name || a.id).localeCompare(String(b.name || b.id)));
-    return xs;
-  }, [rows, q, cat, withItems, sort]);
+  const path = useMemo(() => searchPath({ q, category: cat, has_items: withItems, sort, desc: sort !== 'name' }), [q, cat, withItems, sort]);
+  const list = usePagedList(path, { pageSize: 50 });
+  const rows = list.rows;
+  const categories = list.meta?.facets?.categories;
 
   const run = async (id) => {
     setRunning((m) => ({ ...m, [id]: true }));
     try {
       const r = await api.post(`/api/intel/sources/${encodeURIComponent(id)}/run`);
       toast(`${id}: ran, ${r?.ingested ?? '?'} new rows in ${r?.duration_ms ?? '?'} ms`, { tone: 'accent', ttl: 5000 });
-      reload({ silent: true });
+      list.reload({ silent: true });
     } catch (e) {
       toast(`${id}: ${e?.status === 409 ? 'a run is already in flight' : errorMessage(e)}`, { tone: 'danger', ttl: 5000 });
     } finally { setRunning((m) => ({ ...m, [id]: false })); }
   };
 
-  const totalItems = rows.reduce((s, r) => s + (r.item_count || 0), 0);
-
   return (
     <div className="space-y-3">
-      <div className="flex flex-wrap items-center gap-2">
-        <Input className="flex-1 min-w-[180px]" placeholder="filter sources (id, name, 日本語, category)…" value={q} onChange={(e) => setQ(e.target.value)} />
-        <Select value={cat} onChange={(e) => setCat(e.target.value)}>
-          <option value="">all categories</option>
-          {categories.map((c) => <option key={c} value={c}>{c}</option>)}
+      <form onSubmit={(e) => { e.preventDefault(); setQ(draft.trim()); }} className="flex flex-wrap items-center gap-2">
+        <Input className="flex-1 min-w-[180px]" placeholder="search sources (id, name, 日本語, description, collector, host)…" value={draft} onChange={(e) => setDraft(e.target.value)} />
+        <Button type="submit">Search</Button>
+        <Select value={cat} onChange={(e) => setCat(e.target.value)} title="category">
+          <option value="">all categories{categories?.total > categories?.shown ? ` (top ${categories.shown} of ${categories.total})` : ''}</option>
+          {cat && !(categories?.values || []).some((v) => v.key === cat) && <option value={cat}>{cat}</option>}
+          {(categories?.values || []).map((c) => <option key={c.key} value={c.key}>{c.key} ({c.count?.toLocaleString?.() ?? c.count})</option>)}
         </Select>
         <Segmented value={sort} onChange={setSort} options={[{ value: 'items', label: 'most items' }, { value: 'fetched', label: 'last fetched' }, { value: 'name', label: 'name' }]} />
         <Toggle on={withItems} onChange={setWithItems} label="with items only" />
-        <Button size="sm" onClick={() => reload()} title="Reload"><LuRefreshCw size={12} /></Button>
-      </div>
-      {loading && rows.length === 0 && <LoadingState label="Loading sources…" />}
-      {error && <ErrorNotice error={error} title="Could not list intel sources" onRetry={reload} />}
-      {!error && data && (
+        <Button size="sm" onClick={() => list.reload()} title="Reload"><LuRefreshCw size={12} /></Button>
+      </form>
+      {list.loading && rows.length === 0 && <LoadingState label="Searching sources…" />}
+      {list.error && <ErrorNotice error={list.error} title="Could not search sources" onRetry={list.reload} />}
+      {!list.error && list.loaded && (
         <div className="flex items-center justify-between">
-          <BoundNote shown={filtered.length} total={rows.length} noun="sources" />
-          <span className="font-mono text-[11px] text-osint-muted">{totalItems.toLocaleString()} items stored · registry {data.meta?.total ?? rows.length}</span>
+          <BoundNote shown={rows.length} total={list.total} more={list.hasMore} noun="sources" />
+          <span className="font-mono text-[11px] text-osint-muted">registry {list.meta?.registry_total?.toLocaleString?.() ?? '—'}</span>
         </div>
       )}
-      {!loading && !error && rows.length > 0 && filtered.length === 0 && (
-        <EmptyState title="No source matches these filters.">{withItems ? 'Sources with zero stored items are hidden — toggle "with items only".' : ''}</EmptyState>
+      {!list.loading && !list.error && list.loaded && rows.length === 0 && (
+        <EmptyState title="No source matches these filters.">{withItems ? 'Sources with zero stored items are hidden — toggle "with items only".' : 'The server searched the whole registry and found nothing.'}</EmptyState>
       )}
       <ul className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-        {filtered.map((s) => (
+        {rows.map((s) => (
           <li key={s.id}>
             <Card padded={false} className="flex items-stretch">
               <Link to={`/intel/sources/${encodeURIComponent(s.id)}`} className="flex-1 min-w-0 p-3 hover:bg-white/5 rounded-l-[10px]">
@@ -96,18 +100,15 @@ function SourcesView() {
                   <span className="truncate max-w-[200px]">{s.id}</span>
                   {s.category && <Pill>{s.category}</Pill>}
                   {s.category === 'breach' && <Pill tone="danger">operator-gated</Pill>}
-                  {s.parent_id && <Pill title={`sub-source of ${s.parent_id}`}>sub</Pill>}
                 </div>
                 <div className="flex flex-wrap gap-x-3 gap-y-0.5 mt-1.5 text-[11px] font-mono">
                   <span className="text-accent">{(s.item_count || 0).toLocaleString()} items</span>
                   {s.geocoded > 0 && <span className="text-osint-muted">{s.geocoded.toLocaleString()} geocoded</span>}
-                  {s.awaiting_geo > 0 && <span className="text-osint-muted">{s.awaiting_geo.toLocaleString()} awaiting geo</span>}
                   <span className="text-osint-muted" title={s.last_fetched || 'never fetched'}>fetched {relativeTime(s.last_fetched)}</span>
-                  {s.last_published && <span className="text-osint-muted" title={s.last_published}>latest {relativeTime(s.last_published)}</span>}
                 </div>
                 {s.description && <div className="text-[11px] text-osint-muted mt-1 line-clamp-2">{s.description}</div>}
               </Link>
-              {s.category !== 'breach' && (
+              {s.category !== 'breach' && s.kind !== 'internal' && canRun && (
                 <button type="button" onClick={() => run(s.id)} disabled={running[s.id]} title="Run this collector now"
                   className="px-3 border-l border-osint-border text-osint-muted hover:text-accent disabled:opacity-40 rounded-r-[10px]">
                   <LuPlay size={14} className={cx(running[s.id] && 'animate-pulse')} />
@@ -117,6 +118,7 @@ function SourcesView() {
           </li>
         ))}
       </ul>
+      {rows.length > 0 && <PagedFooter shown={rows.length} total={list.total} hasMore={list.hasMore} busy={list.loadingMore} onMore={list.loadMore} error={list.moreError} noun="sources" />}
     </div>
   );
 }

@@ -34,7 +34,7 @@
 #include <string.h>
 
 #define ATLAS_ANCHORS "https://atlas.ripe.net/api/v2/anchors/?format=json&page_size=500"
-#define PAGES 5
+#define PAGES 5   /* 2026-11-07: count 1,833 → 4 pages of 500 */
 
 static int emit_page(cJSON *res, intel_sink *sink) {
   int n = 0;
@@ -131,18 +131,19 @@ static int emit_page(cJSON *res, intel_sink *sink) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  int total = 0, pages = 0;
+  int total = 0, pages = 0, cut = 0, last_full = 0;
   for (int page = 1; page <= PAGES; page++) {
     char url[192];
     snprintf(url, sizeof url, "%s&page=%d", ATLAS_ANCHORS, page);
     cJSON *doc = feed_get_json(ctx->http, url, 45000);
-    if (!doc) break;
+    if (!doc) { cut = pages > 0; break; }   /* a refused LATER page is disclosed below */
     cJSON *res = cJSON_GetObjectItem(doc, "results");
-    if (!cJSON_IsArray(res)) { cJSON_Delete(doc); break; }
+    if (!cJSON_IsArray(res)) { cJSON_Delete(doc); cut = pages > 0; break; }
     pages++;
     int got = cJSON_GetArraySize(res);
     total += emit_page(res, sink);
     int done = !cJSON_IsString(cJSON_GetObjectItem(doc, "next"));
+    last_full = (!done);
     cJSON_Delete(doc);
     if (got == 0 || done) break;
   }
@@ -150,6 +151,18 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     fprintf(stderr, "[ripe-atlas-anchors] fetch failed\n");
     return -1;
   }
+  /* Every stop is disclosed (2026-11-07): a later page that failed used to
+   * `break` as if it were the end of the data, and a walk that used up its
+   * page budget on full pages said nothing. */
+  if (cut)
+    jo_trunc_notice_scoped(sink, "ripe-atlas-anchors", "walk-cut", ATLAS_ANCHORS, total, -1,
+                           "a later page failed (transport, refusal or an "
+                           "unreadable body) and the walk stopped there",
+                           "re-run; one failed page is one reading");
+  else if (pages >= PAGES && last_full)
+    jo_trunc_notice_scoped(sink, "ripe-atlas-anchors", "page-ceiling", ATLAS_ANCHORS, total, -1,
+                           "the PAGES ceiling stopped the walk on a full page",
+                           "raise PAGES in tsp_ripe_atlas_anchors.c");
   fprintf(stderr, "[ripe-atlas-anchors] emitted %d over %d page(s)\n", total, pages);
   return 0;
 }

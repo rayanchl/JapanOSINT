@@ -17,7 +17,6 @@
 #include <string.h>
 #include "_jp_osint.inc"
 
-static const char *OE_UA = "User-Agent: JapanOSINT/1.0 ( osint@example.org )";
 
 static int oe_emit(intel_sink *sink, const char *service, const char *rtype,
                    const char *rk, const char *title, const char *summary,
@@ -42,11 +41,11 @@ static int oe_emit(intel_sink *sink, const char *service, const char *rtype,
 static int run_onionoo(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   char url[512];
   snprintf(url, sizeof url, "https://onionoo.torproject.org/details?search=%s&limit=20", enc);
-  const char *hdrs[] = { "Accept: application/json", OE_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "TOR_ONIONOO");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *relays = cJSON_GetObjectItem(root, "relays");
   int emitted = 0;
   if (cJSON_IsArray(relays)) {
@@ -92,11 +91,11 @@ static int run_gh_commits(const source_ctx *ctx, intel_sink *sink, const char *r
   free(enc);
   char authbuf[160] = {0}; const char *tok = jo_env("GITHUB_TOKEN");
   if (tok) snprintf(authbuf, sizeof authbuf, "Authorization: Bearer %s", tok);
-  const char *hdrs[] = { "Accept: application/vnd.github.cloak-preview+json", OE_UA, tok ? authbuf : NULL, NULL };
+  const char *hdrs[] = { "Accept: application/vnd.github.cloak-preview+json", tok ? authbuf : NULL, NULL };
   char *body = jo_get(ctx, url, hdrs, "GITHUB_COMMITS_BY_EMAIL");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *items = cJSON_GetObjectItem(root, "items");
   int emitted = 0;
   if (cJSON_IsArray(items)) {
@@ -139,11 +138,11 @@ static int run_archive(const source_ctx *ctx, intel_sink *sink, const char *enc)
   snprintf(url, sizeof url,
     "https://archive.org/advancedsearch.php?q=%s&rows=20&output=json"
     "&fl[]=identifier&fl[]=title&fl[]=mediatype&fl[]=creator&fl[]=year", enc);
-  const char *hdrs[] = { "Accept: application/json", OE_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "ARCHIVE_ORG_SEARCH");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *resp = cJSON_GetObjectItem(root, "response");
   const cJSON *docs = resp ? cJSON_GetObjectItem(resp, "docs") : NULL;
   int emitted = 0;
@@ -176,11 +175,11 @@ static int run_archive(const source_ctx *ctx, intel_sink *sink, const char *enc)
 static int run_musicbrainz(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   char url[512];
   snprintf(url, sizeof url, "https://musicbrainz.org/ws/2/artist?query=%s&fmt=json&limit=20", enc);
-  const char *hdrs[] = { "Accept: application/json", OE_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "MUSICBRAINZ");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *artists = cJSON_GetObjectItem(root, "artists");
   int emitted = 0;
   if (cJSON_IsArray(artists)) {
@@ -214,11 +213,11 @@ static int run_musicbrainz(const source_ctx *ctx, intel_sink *sink, const char *
 static int run_photon(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   char url[512];
   snprintf(url, sizeof url, "https://photon.komoot.io/api?q=%s&limit=10", enc);
-  const char *hdrs[] = { "Accept: application/json", OE_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "PHOTON_GEOCODE");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *feats = cJSON_GetObjectItem(root, "features");
   int emitted = 0;
   if (cJSON_IsArray(feats)) {
@@ -243,16 +242,17 @@ static int run_photon(const source_ctx *ctx, intel_sink *sink, const char *enc) 
       char *bj = cJSON_PrintUnformatted(d); cJSON_Delete(d);
       cJSON *p = cJSON_CreateObject();
       cJSON_AddStringToObject(p, "service", "PHOTON_GEOCODE"); cJSON_AddBoolToObject(p, "success", 1);
-      char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+      jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
       char summ[160]; snprintf(summ, sizeof summ, "%s%s%s", city ? city : "", (city && country) ? ", " : "", country ? country : "");
       char rk[96]; snprintf(rk, sizeof rk, "photon:%.5f,%.5f", lat, lon);
-      intel_item it = {0};
+      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
       it.remote_key = rk; it.title = name ? name : summ; it.summary = summ[0] ? summ : NULL;
-      it.body = bj; it.lang = "en"; it.has_geo = 1; it.lat = lat; it.lon = lon;
+      it.body = bt ? bt : bj; it.lang = "en"; it.has_geo = 1; it.lat = lat; it.lon = lon;
       it.record_type = "geocode-result";
       it.properties_json = pj; it.tags_json = "[\"osint-search\",\"PHOTON_GEOCODE\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(pj);
+      free(bj); free(bt); free(pj);
       (void)osmid;
     }
   }
@@ -274,7 +274,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   else if (!strcmp(sid, "PHOTON_GEOCODE"))          n = run_photon(ctx, sink, enc);
   free(enc);
   fprintf(stderr, "[%s] emitted %d\n", sid, n);
-  return 0;
+  return n < 0 ? -1 : 0;
 }
 
 #define OE_DEF(sym, ID, NM, CAT, DESC) \

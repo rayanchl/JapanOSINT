@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 #define TIMEOUT_MS 20000
 
@@ -47,7 +48,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (!key || !*key) key = getenv("FIRMS_MAP_KEY");
   if (!key || !*key) {
     fprintf(stderr, "[nasa-firms-jp] no NASA_FIRMS_MAP_KEY — 0 rows\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "nasa-firms-jp", "nasa-firms-jp", (const char *const[]){"NASA_FIRMS_MAP_KEY", NULL}, NULL, NULL);
   }
   const char *sensor = getenv("FIRMS_SENSOR");
   if (!sensor || !*sensor) sensor = "VIIRS_NOAA20_NRT";

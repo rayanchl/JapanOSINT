@@ -23,6 +23,7 @@
 #include <time.h>
 #include "_jp_osint.inc"
 #include "_timefmt.inc"
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 /* ---- USGS earthquakes (GeoJSON FeatureCollection) ----------------------- *
  * features[].geometry.coordinates = [lon, lat, depth]
@@ -31,12 +32,12 @@ static int hz_usgs(const source_ctx *ctx, intel_sink *sink) {
   const char *url =
     "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&limit=50&orderby=time";
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0 (hazard-feed)", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "USGS_QUAKES");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) { fprintf(stderr, "[USGS_QUAKES] parse fail\n"); return 0; }
+  if (!root) { fprintf(stderr, "[USGS_QUAKES] parse fail\n"); return -1; }
 
   cJSON *feats = cJSON_GetObjectItem(root, "features");
   int emitted = 0;
@@ -82,14 +83,15 @@ static int hz_usgs(const source_ctx *ctx, intel_sink *sink) {
     cJSON_AddStringToObject(props, "hazard", "earthquake");
     if (cJSON_IsNumber(mag)) cJSON_AddNumberToObject(props, "magnitude", mag->valuedouble);
     cJSON_AddBoolToObject(props, "success", 1);
-    char *pj = cJSON_PrintUnformatted(props);
+    jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
     cJSON_Delete(props);
 
-    intel_item it = {0};
+    char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
     it.remote_key      = id ? id : (turl ? turl : (title ? title : "usgs"));
     it.title           = title ? title : place;
     it.summary         = place;
-    it.body            = bj;
+    it.body = bt ? bt : bj;
     it.lang            = "en";
     it.published_at    = iso[0] ? iso : NULL;
     it.link            = turl;
@@ -98,7 +100,7 @@ static int hz_usgs(const source_ctx *ctx, intel_sink *sink) {
     it.properties_json = pj;
     it.tags_json       = "[\"hazard\",\"earthquake\",\"USGS\"]";
     if (sink->emit(sink, &it) >= 0) emitted++;
-    free(bj); free(pj);
+    free(bj); free(bt); free(pj);
   }
   cJSON_Delete(root);
   fprintf(stderr, "[USGS_QUAKES] emitted %d\n", emitted);
@@ -112,12 +114,12 @@ static int hz_emsc(const source_ctx *ctx, intel_sink *sink) {
   const char *url =
     "https://www.seismicportal.eu/fdsnws/event/1/query?format=json&limit=50";
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0 (hazard-feed)", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "EMSC_QUAKES");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) { fprintf(stderr, "[EMSC_QUAKES] parse fail\n"); return 0; }
+  if (!root) { fprintf(stderr, "[EMSC_QUAKES] parse fail\n"); return -1; }
 
   cJSON *feats = cJSON_GetObjectItem(root, "features");
   int emitted = 0;
@@ -162,14 +164,15 @@ static int hz_emsc(const source_ctx *ctx, intel_sink *sink) {
     cJSON_AddStringToObject(props, "hazard", "earthquake");
     if (cJSON_IsNumber(mag)) cJSON_AddNumberToObject(props, "magnitude", mag->valuedouble);
     cJSON_AddBoolToObject(props, "success", 1);
-    char *pj = cJSON_PrintUnformatted(props);
+    jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
     cJSON_Delete(props);
 
-    intel_item it = {0};
+    char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
     it.remote_key      = unid ? unid : (id ? id : title);
     it.title           = title;
     it.summary         = region;
-    it.body            = bj;
+    it.body = bt ? bt : bj;
     it.lang            = "en";
     it.published_at    = when;
     it.link            = turl;
@@ -178,7 +181,7 @@ static int hz_emsc(const source_ctx *ctx, intel_sink *sink) {
     it.properties_json = pj;
     it.tags_json       = "[\"hazard\",\"earthquake\",\"EMSC\"]";
     if (sink->emit(sink, &it) >= 0) emitted++;
-    free(bj); free(pj);
+    free(bj); free(bt); free(pj);
   }
   cJSON_Delete(root);
   fprintf(stderr, "[EMSC_QUAKES] emitted %d\n", emitted);
@@ -192,9 +195,9 @@ static int hz_rss(const source_ctx *ctx, intel_sink *sink, const char *url,
                   const char *service, const char *rectype, const char *hazard,
                   const char *tags_json, int want_geo) {
   const char *hdrs[] = { "Accept: application/rss+xml, application/xml, text/xml, */*",
-                         "User-Agent: JapanOSINT/1.0 (hazard-feed)", NULL };
+                         NULL };
   char *xml = jo_get(ctx, url, hdrs, service);
-  if (!xml) return 0;
+  if (!xml) return jo_fail_rc(jo_last_status(), 0);
   int emitted = 0;
   const char *cur = xml;
   for (;;) {                     /* every <item>: the feed decides how many */
@@ -270,16 +273,16 @@ static int hz_rss(const source_ctx *ctx, intel_sink *sink, const char *url,
  * We parse latitude/longitude/acq_date/acq_time/confidence/frp positionally. */
 static int hz_firms(const source_ctx *ctx, intel_sink *sink) {
   const char *key = jo_env("FIRMS_MAP_KEY");
-  if (!key) { fprintf(stderr, "[FIRMS_GLOBAL] gated (no FIRMS_MAP_KEY)\n"); return 0; }
+  if (!key) return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "FIRMS_GLOBAL", "FIRMS_GLOBAL", (const char *const[]){"FIRMS_MAP_KEY", NULL}, NULL, NULL);
   char url[512];
   /* VIIRS_SNPP_NRT, world bbox (-180,-90,180,90), last 1 day */
   snprintf(url, sizeof url,
     "https://firms.modaps.eosdis.nasa.gov/api/area/csv/%s/VIIRS_SNPP_NRT/-180,-90,180,90/1",
     key);
   const char *hdrs[] = { "Accept: text/csv, */*",
-                         "User-Agent: JapanOSINT/1.0 (hazard-feed)", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "FIRMS_GLOBAL");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
 
   int emitted = 0;
   const char *line = body;
@@ -330,7 +333,7 @@ static int hz_firms(const source_ctx *ctx, intel_sink *sink) {
         cJSON_AddStringToObject(props, "hazard", "wildfire");
         if (conf && conf[0]) cJSON_AddStringToObject(props, "confidence", conf);
         cJSON_AddBoolToObject(props, "success", 1);
-        char *pj = cJSON_PrintUnformatted(props);
+        jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
         cJSON_Delete(props);
 
         char key_[128], title[128];
@@ -344,10 +347,11 @@ static int hz_firms(const source_ctx *ctx, intel_sink *sink) {
           else snprintf(iso, sizeof iso, "%s", acq_date);
         }
 
-        intel_item it = {0};
+        char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
         it.remote_key      = key_;
         it.title           = title;
-        it.body            = bj;
+        it.body = bt ? bt : bj;
         it.lang            = "en";
         it.published_at    = iso[0] ? iso : NULL;
         it.has_geo         = 1; it.lat = lat; it.lon = lon;
@@ -355,7 +359,7 @@ static int hz_firms(const source_ctx *ctx, intel_sink *sink) {
         it.properties_json = pj;
         it.tags_json       = "[\"hazard\",\"wildfire\",\"FIRMS\"]";
         if (sink->emit(sink, &it) >= 0) emitted++;
-        free(bj); free(pj);
+        free(bj); free(bt); free(pj);
       }
     }
     if (!nl) break;

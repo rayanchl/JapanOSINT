@@ -15,7 +15,6 @@
 #include <string.h>
 #include "_jp_osint.inc"
 
-static const char *CG_UA = "User-Agent: JapanOSINT/1.0 (osint@example.org)";
 
 /* first non-null nested {obj}.name among candidate keys */
 static const char *nested_name(const cJSON *o, const char *const *keys) {
@@ -38,7 +37,7 @@ static int run_openplz(const source_ctx *ctx, intel_sink *sink, const char *serv
   for (int page = 1; page <= 20; page++) {
     char url[320];
     snprintf(url, sizeof url, "https://openplzapi.org/%s/Localities?postalCode=%s&page=%d&pageSize=20", cc, code, page);
-    const char *hdrs[] = { "Accept: application/json", CG_UA, NULL };
+    const char *hdrs[] = { "Accept: application/json", NULL };
     char *body = jo_get(ctx, url, hdrs, service);
     if (!body) break;
     cJSON *root = cJSON_Parse(body); free(body);
@@ -62,15 +61,16 @@ static int run_openplz(const source_ctx *ctx, intel_sink *sink, const char *serv
       char *bj = cJSON_PrintUnformatted(d); cJSON_Delete(d);
       cJSON *p = cJSON_CreateObject();
       cJSON_AddStringToObject(p, "service", service); cJSON_AddBoolToObject(p, "success", 1);
-      char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+      jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
       char rk[96]; snprintf(rk, sizeof rk, "%s:%s:%s", cc, pc ? pc : code, name);
       char summ[160]; snprintf(summ, sizeof summ, "%s%s%s", mun ? mun : "", reg ? ", " : "", reg ? reg : "");
       char tags[64]; snprintf(tags, sizeof tags, "[\"osint-search\",\"%s\"]", service);
-      intel_item it = {0};
-      it.remote_key = rk; it.title = name; it.summary = summ[0] ? summ : NULL; it.body = bj; it.lang = "de";
+      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
+      it.remote_key = rk; it.title = name; it.summary = summ[0] ? summ : NULL; it.body = bt ? bt : bj; it.lang = "de";
       it.record_type = "locality"; it.properties_json = pj; it.tags_json = tags;
       if (sink->emit(sink, &it) >= 0) { n++; page_n++; }
-      free(bj); free(pj);
+      free(bj); free(bt); free(pj);
     }
     cJSON_Delete(root);
     if (page_n == 0) break;          /* upstream exhausted */
@@ -84,11 +84,11 @@ static int run_ch_address(const source_ctx *ctx, intel_sink *sink, const char *e
   char url[512];
   snprintf(url, sizeof url,
     "https://api3.geo.admin.ch/rest/services/api/SearchServer?searchText=%s&type=locations&limit=10", enc);
-  const char *hdrs[] = { "Accept: application/json", CG_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "CH_ADDRESS");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *results = cJSON_GetObjectItem(root, "results");
   int n = 0;
   if (cJSON_IsArray(results)) {
@@ -111,13 +111,14 @@ static int run_ch_address(const source_ctx *ctx, intel_sink *sink, const char *e
       char *bj = cJSON_PrintUnformatted(d); cJSON_Delete(d);
       cJSON *p = cJSON_CreateObject();
       cJSON_AddStringToObject(p, "service", "CH_ADDRESS"); cJSON_AddBoolToObject(p, "success", 1);
-      char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
-      intel_item it = {0};
-      it.remote_key = detail ? detail : label; it.title = label; it.body = bj; it.lang = "de";
+      jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
+      it.remote_key = detail ? detail : label; it.title = label; it.body = bt ? bt : bj; it.lang = "de";
       it.has_geo = hg; it.lat = hg ? lat->valuedouble : 0; it.lon = hg ? lon->valuedouble : 0;
       it.record_type = "ch-location"; it.properties_json = pj; it.tags_json = "[\"osint-search\",\"CH_ADDRESS\"]";
       if (sink->emit(sink, &it) >= 0) n++;
-      free(bj); free(pj); free(label);
+      free(bj); free(bt); free(pj); free(label);
     }
   }
   cJSON_Delete(root);
@@ -127,11 +128,11 @@ static int run_ch_address(const source_ctx *ctx, intel_sink *sink, const char *e
 static int run_no_address(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   char url[512];
   snprintf(url, sizeof url, "https://ws.geonorge.no/adresser/v1/sok?sok=%s&treffPerSide=10", enc);
-  const char *hdrs[] = { "Accept: application/json", CG_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "NO_ADDRESS");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *adr = cJSON_GetObjectItem(root, "adresser");
   int n = 0;
   if (cJSON_IsArray(adr)) {
@@ -155,14 +156,15 @@ static int run_no_address(const source_ctx *ctx, intel_sink *sink, const char *e
       char *bj = cJSON_PrintUnformatted(d); cJSON_Delete(d);
       cJSON *p = cJSON_CreateObject();
       cJSON_AddStringToObject(p, "service", "NO_ADDRESS"); cJSON_AddBoolToObject(p, "success", 1);
-      char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+      jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
       char summ[160]; snprintf(summ, sizeof summ, "%s%s%s", poststed ? poststed : "", kommune ? " · " : "", kommune ? kommune : "");
-      intel_item it = {0};
-      it.remote_key = text; it.title = text; it.summary = summ[0] ? summ : NULL; it.body = bj; it.lang = "no";
+      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
+      it.remote_key = text; it.title = text; it.summary = summ[0] ? summ : NULL; it.body = bt ? bt : bj; it.lang = "no";
       it.has_geo = hg; it.lat = hg ? lat->valuedouble : 0; it.lon = hg ? lon->valuedouble : 0;
       it.record_type = "no-address"; it.properties_json = pj; it.tags_json = "[\"osint-search\",\"NO_ADDRESS\"]";
       if (sink->emit(sink, &it) >= 0) n++;
-      free(bj); free(pj);
+      free(bj); free(bt); free(pj);
     }
   }
   cJSON_Delete(root);
@@ -183,7 +185,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(enc);
   }
   fprintf(stderr, "[%s] emitted %d\n", sid, n);
-  return 0;
+  return n < 0 ? -1 : 0;
 }
 
 #define CG_DEF(sym, ID, NM, DESC) \

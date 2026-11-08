@@ -42,165 +42,183 @@ or date token — those need a dispatch to render. `--all` drops the
     python3 tools/audit_idkeys.py --out /tmp/idkeys.tsv
     python3 tools/audit_idkeys.py --match ZA_MUNIMONEY --jobs 2
 
-Verdicts: OK, ID_KEYS_UNMATCHED (the finding), UNMEASURED (transport), UNPARSED
-(not JSON through this path — a `post_body` row cannot be asked with a GET),
-NO_RECORDS. Nothing is edited, and nothing is retired on one reading.
+Verdicts: OK, ID_KEYS_UNMATCHED (the finding: no record on the page carried
+the key — the engine's own `id-keys-unmatched` condition), ID_KEYS_PARTIAL
+(some records did; the rest fall back — informational), UNMEASURED
+(transport), HTTP_ERROR (a 4xx/5xx: its JSON error body is NOT judged as
+records), UNPARSED (not JSON through this path), NO_RECORDS. Nothing is
+edited, and nothing is retired on one reading.
+
+REBASED ON THE ENGINE'S RULES (2026-11-07), because this tool's first model
+disagreed with lib/hpengine.c in four ways, each pinned by --self-test:
+  * a `+` composite counts when AT LEAST ONE part is present (hp_pick_s joins
+    a missing part as ""); this required ALL of them;
+  * the flatten holds only non-empty strings, numbers and bools
+    (hp_flatten_c); this kept null and "", so a key that is always null read
+    OK while the engine fell back to another key;
+  * a declared array_path that does not resolve EMITS NOTHING; this fell back
+    to the densest array and judged records the engine never reads — and it
+    walked dict keys only (no index, `key=value`, `$last`, literal-dot key);
+  * the fetch ignored the HTTP status (a 4xx error body was judged as a
+    record) and the row's own `.headers`.
+The model is tools/hpjson.py, the request tools/jo_http.py, the row reader
+tools/ctable.py — each shared with the other tools that need it.
 """
 import argparse
-import glob
-import json
 import os
 import re
-import subprocess
 import sys
-import threading
-import time
+from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import ctable                                                    # noqa: E402
+import hpjson                                                    # noqa: E402
+import jo_http                                                   # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 NATIVE = os.path.dirname(HERE)
-UA = 'Mozilla/5.0 (compatible; JapanOSINT/1.0)'
-ENTITY_TOKEN = re.compile(r'\{(q|qd|qh|qu|date|ago|page|offset|size)')
-
-_gap, _lock = {}, threading.Lock()
-
-
-def paced(host, gap_s):
-    """One request per host per gap, across workers — the probe's own rule."""
-    with _lock:
-        last = _gap.get(host, 0.0)
-        wait = max(0.0, gap_s - (time.time() - last))
-        _gap[host] = time.time() + wait
-    if wait:
-        time.sleep(wait)
+# Tokens this one-request check cannot render: an entity (a pivot answers
+# about one), a date/window (its own rules), and the rest are rendered for the
+# FIRST page as hp_run renders them ({page} {offset} {offset1} {offset_end}
+# {size}) or, for {key}, from the row's key_env when it is set — a row whose
+# key is not set is skipped and counted, never fetched with a literal `{key}`.
+UNRENDERABLE = re.compile(r'\{(q[a-zA-Z]*|Q|date|ago|wstart|wend)\b')
 
 
-def rows_from_tree(match, want_resume):
+def first_page(text, r, key=None):
+    size = r.i('page_size')
+    page = r.i('page_start') or (0 if r.i('page_zero_based') else 1)
+    for tok, val in (('{page}', page), ('{offset}', 0), ('{offset1}', 1),
+                     ('{offset_end}', max(size, 1) - 1), ('{size}', size)):
+        text = text.replace(tok, str(val))
+    if key is not None:
+        text = text.replace('{key}', key)
+    return text
+
+
+SKIPPED = Counter()
+
+
+def rows_from_tree(match, want_resume, tree=None):
+    """(sid, file, id_keys, array_path, url, headers, post_body, content_type,
+    title_keys) for every HP_JSON row with an id_keys, read with ctable."""
     out = []
-    for f in sorted(glob.glob(os.path.join(NATIVE, 'collectors', '**', '*.c'),
-                              recursive=True)):
-        txt = open(f, encoding='utf-8', errors='replace').read()
-        if '.id_keys' not in txt:
+    for r in ctable.iter_rows(tree or os.path.join(NATIVE, 'collectors'), need='.id_keys'):
+        sid = r.s('id')
+        if not sid or (match and match not in sid):
             continue
-        starts = [m.start() for m in re.finditer(r'\{ \.id = "', txt)]
-        for i, s in enumerate(starts):
-            blk = txt[s:starts[i + 1] if i + 1 < len(starts) else len(txt)]
-            sid = re.match(r'\{ \.id = "([^"]+)"', blk).group(1)
-            if match and match not in sid:
+        if want_resume and r.i('page_resume') != 1:
+            continue
+        idk, url = r.s('id_keys'), r.s('url')
+        if not idk or not url or r.s('mode') != 'HP_JSON':
+            continue
+        body = r.s('post_body')
+        hdrs = r.get('headers') if isinstance(r.get('headers'), list) else []
+        if UNRENDERABLE.search(url) or UNRENDERABLE.search(body):
+            SKIPPED['entity/date token'] += 1
+            continue
+        key = None
+        if '{key}' in url + body + ' '.join(hdrs):
+            key = os.environ.get(r.s('key_env') or '\0')
+            if not key:
+                SKIPPED['needs %s' % (r.s('key_env') or 'a key')] += 1
                 continue
-            if want_resume and '.page_resume = 1' not in blk:
-                continue
-
-            def opt(name, blk=blk):
-                m = re.search(r'\.%s\s*=\s*((?:\s*"(?:[^"\\]|\\.)*")+)' % name, blk)
-                return ''.join(re.findall(r'"((?:[^"\\]|\\.)*)"', m.group(1))) if m else ''
-
-            mode = re.search(r'\.mode\s*=\s*(HP_[A-Z]+)', blk)
-            idk, url = opt('id_keys'), opt('url')
-            if not idk or not url or (mode.group(1) if mode else '') != 'HP_JSON':
-                continue
-            if ENTITY_TOKEN.search(url):
-                continue
-            out.append((sid, os.path.basename(f), idk, opt('array_path'), url))
+        out.append((sid, os.path.basename(r.file), idk, r.s('array_path'),
+                    first_page(url, r, key), [first_page(h, r, key) for h in hdrs],
+                    first_page(body, r, key), r.s('content_type'), r.s('title_keys')))
     return out
 
 
-def flat(node, prefix='', out=None):
-    """hp_flatten(): nested objects dotted, array elements indexed."""
-    if out is None:
-        out = {}
-    if isinstance(node, dict):
-        items = node.items()
-    elif isinstance(node, list):
-        items = ((str(i), v) for i, v in enumerate(node))
-    else:
-        return out
-    for k, v in items:
-        key = '%s%s' % (prefix, k)
-        if isinstance(v, (dict, list)):
-            flat(v, key + '.', out)
+def judge(doc, idk, apath, title_keys=''):
+    """(verdict, how, detail) for one parsed body, by the engine's rules."""
+    recs, how = hpjson.select_records(doc, apath or None)
+    if how == 'declared-missing':
+        return ('NO_RECORDS', how, 'declared array_path %r does not resolve: '
+                'the engine emits nothing from this body' % apath)
+    if how == 'root-record' and hpjson.json_error_doc(doc):
+        return ('NO_RECORDS', how, 'HTTP 200 error document, no records')
+    lists = (idk, title_keys)
+    flats = [f for f in (hpjson.json_flat(r, lists) for r in recs) if f]
+    if not flats:
+        return ('NO_RECORDS', how, 'no record with any content in the body')
+    hit, alts, falls = 0, Counter(), Counter()
+    for f in flats:
+        v, alt = hpjson.pick(f, idk)
+        if v is not None:
+            hit += 1
+            alts[alt] += 1
         else:
-            out[key.lower()] = v
-    return out
-
-
-def present(name, fields):
-    """hp_flat_get(): the exact flat key, else any key whose LAST dotted
-    segment matches case-insensitively, a leading `@` on that segment
-    skipped."""
-    n = name.lower()
-    if n in fields:
-        return True
-    for k in fields:
-        last = k.rsplit('.', 1)[-1]
-        if last.startswith('@') and not n.startswith('@'):
-            last = last[1:]
-        if last == n:
-            return True
-    return False
-
-
-def satisfied(spec, fields):
-    """`a+b,c`: a comma alternative counts when ALL its `+` parts are there."""
-    for alt in spec.split(','):
-        parts = [p.strip().lower() for p in alt.split('+') if p.strip()]
-        if parts and all(present(p, fields) for p in parts):
-            return True, alt
-    return False, ''
-
-
-def pick_array(doc, path):
-    node = doc
-    if path == '.':
-        node = doc
-    else:
-        for seg in (path.split('.') if path else []):
-            node = node.get(seg) if isinstance(node, dict) else None
-    if isinstance(node, list):
-        return node, 'declared'
-    best, bl = None, 0
-
-    def walk(n):
-        nonlocal best, bl
-        if isinstance(n, list):
-            k = sum(1 for x in n if isinstance(x, dict))
-            if k > bl:
-                best, bl = n, k
-            for x in n:
-                walk(x)
-        elif isinstance(n, dict):
-            for v in n.values():
-                walk(v)
-
-    walk(doc)
-    return best, ('fallback' if path else 'densest')
+            basis, _v, k = hpjson.record_key(f, None, title_keys)
+            falls['%s:%s' % (basis, k or '')] += 1
+    n = len(flats)
+    if hit == n:
+        return ('OK', how, 'matched %d of %d (%s)' % (hit, n, ','.join(a for a, _ in alts.most_common(2))))
+    fb = '; falls back to %s' % ', '.join('%s x%d' % kv for kv in falls.most_common(2))
+    if hit:
+        return ('ID_KEYS_PARTIAL', how, 'matched %d of %d%s' % (hit, n, fb))
+    sample = ','.join(sorted({k for k, _ in flats[0]})[:10])
+    return ('ID_KEYS_UNMATCHED', how, 'matched 0 of %d%s; record carries %s' % (n, fb, sample))
 
 
 def one(row, args):
-    sid, f, idk, apath, url = row
-    paced(url.split('/')[2], args.host_gap_ms / 1000.0)
-    # bytes, not text: one body that is not UTF-8 (Shift_JIS, Latin-1, a
-    # mislabelled page) killed the whole sweep when subprocess decoded it.
-    r = subprocess.run(['curl', '-sSg', '--max-time', str(args.timeout),
-                        '--max-filesize', str(args.max_bytes), '-A', UA, url],
-                       capture_output=True)
-    body = r.stdout.decode('utf-8', 'replace')
-    err = r.stderr.decode('utf-8', 'replace').strip()[:70]
-    if r.returncode != 0 or not body.strip():
-        return (sid, f, 'UNMEASURED', idk, '', err or 'empty body')
-    try:
-        doc = json.loads(body)
-    except Exception as e:
-        return (sid, f, 'UNPARSED', idk, '', str(e)[:70])
-    arr, how = pick_array(doc, apath)
-    rec = next((x for x in arr if isinstance(x, dict)), None) if arr else None
-    if rec is None:
-        return (sid, f, 'NO_RECORDS', idk, how, 'no array of objects in the body')
-    fields = flat(rec)
-    ok, alt = satisfied(idk, fields)
-    return (sid, f, 'OK' if ok else 'ID_KEYS_UNMATCHED', idk, how,
-            ('matched %s' % alt) if ok else
-            ('no part present; record carries %s' % ','.join(sorted(fields)[:10])))
+    sid, f, idk, apath, url, hdrs, body, ctype, tkeys = row
+    jo_http.PACER.gap_ms = args.host_gap_ms
+    h = jo_http.parse_header_lines(hdrs)
+    hd = {}
+    for k, v in h:
+        hd.setdefault(k, v)
+    if body and not any(k.lower() == 'content-type' for k in hd):
+        n, _, v = (ctype or 'Content-Type: application/json').partition(':')
+        hd[n.strip()] = v.strip()
+    st, _ct, raw, err = jo_http.fetch_any(url, hd, args.timeout, body or None,
+                                          args.max_bytes, mode='json')
+    if st < 0 or (st == 200 and not raw.strip()):
+        return (sid, f, 'UNMEASURED', idk, '', err[:70] or 'empty body')
+    if st != 200:
+        # hp_run reads a body only on success; a 4xx JSON error envelope is
+        # not a page of records and must not be judged as one.
+        wk = jo_http.wall_kind(raw.decode('utf-8', 'replace'), st)
+        return (sid, f, 'HTTP_ERROR', idk, '', 'HTTP %d%s' % (st, (' ' + wk) if wk else ''))
+    if len(raw) > args.max_bytes:
+        return (sid, f, 'UNMEASURED', idk, '', 'body over --max-bytes')
+    doc = hpjson.parse_body(raw.decode('utf-8', 'replace'))
+    if doc is hpjson.MISSING:
+        wk = jo_http.wall_kind(raw.decode('utf-8', 'replace'), st)
+        return (sid, f, 'UNPARSED', idk, '', wk or 'not JSON')
+    v, how, detail = judge(doc, idk, apath, tkeys)
+    return (sid, f, v, idk, how, detail)
+
+
+def self_test():
+    """Each case is one of the four disagreements with the engine named in the
+    module docstring; the old model gets every one of them wrong."""
+    cases = [
+        ('a composite with ONE part present matches (hp_pick_s)',
+         {'r': [{'year': 2020}]}, 'year+age', 'r', 'OK'),
+        ('an always-null key does NOT match (hp_flatten_c drops null)',
+         {'r': [{'k': None, 'id': 1}, {'k': None, 'id': 2}]}, 'k', 'r', 'ID_KEYS_UNMATCHED'),
+        ('an always-"" key does NOT match',
+         {'r': [{'k': '', 'n': 'x'}]}, 'k', 'r', 'ID_KEYS_UNMATCHED'),
+        ('a declared path that does not resolve emits nothing (no densest fallback)',
+         {'other': [{'k': 1}]}, 'k', 'results', 'NO_RECORDS'),
+        ('a path through a list index resolves',
+         {'d': [{'items': [{'k': 1}]}], 'decoy': [{'j': 1}, {'j': 2}]}, 'k', 'd.0.items', 'OK'),
+        ('a key=value selector resolves',
+         {'s': [{'name': 'a', 'v': [{'z': 1}]}, {'name': 'b', 'v': [{'k': 2}]}]},
+         'k', 's.name=b.v', 'OK'),
+        ('the literal-dot key resolves (OData)', {'odata.value': [{'k': 1}]}, 'k', 'odata.value', 'OK'),
+        ('the last-segment fallback still holds (ArcGIS attributes.*)',
+         {'features': [{'attributes': {'iata_code': 'RFN'}}]}, 'iata_code', 'features', 'OK'),
+        ('partial: some records carry it', {'r': [{'k': 1}, {'j': 2}]}, 'k', 'r', 'ID_KEYS_PARTIAL'),
+    ]
+    bad = 0
+    for label, doc, idk, ap, want in cases:
+        got = judge(doc, idk, ap)[0]
+        if got != want:
+            bad += 1
+            print('audit_idkeys SELF-TEST FAIL  %-66s got=%s want=%s' % (label, got, want))
+    return bad == 0
 
 
 def main():
@@ -213,10 +231,21 @@ def main():
     ap.add_argument('--host-gap-ms', type=int, default=1000)
     ap.add_argument('--timeout', type=int, default=45)
     ap.add_argument('--max-bytes', type=int, default=40_000_000)
+    ap.add_argument('--self-test', action='store_true', help='run the fixtures and exit')
+    ap.add_argument('--count', action='store_true', help='print how many rows are selected and exit')
     args = ap.parse_args()
 
+    if not self_test():
+        return 2
+    if args.self_test:
+        print('audit_idkeys fixtures: all pass')
+        return 0
     rows = rows_from_tree(args.match, not args.all)
     print('%d row(s) to check' % len(rows), file=sys.stderr)
+    for why, n in SKIPPED.most_common():
+        print('  skipped %d: %s' % (n, why), file=sys.stderr)
+    if args.count:
+        return 0
     res = []
     with ThreadPoolExecutor(max_workers=args.jobs) as ex:
         for i, out in enumerate(ex.map(lambda r: one(r, args), rows)):
@@ -230,7 +259,6 @@ def main():
             fh.write('id\tfile\tverdict\tid_keys\tarray\tdetail\n')
             for x in res:
                 fh.write('\t'.join(str(y).replace('\t', ' ') for y in x) + '\n')
-    from collections import Counter
     counts = Counter(x[2] for x in res)
     for v, n in counts.most_common():
         print('%6d %s' % (n, v))

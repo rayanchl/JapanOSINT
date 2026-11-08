@@ -104,9 +104,17 @@ static const hp_source T[] = {
     .collector = "us_research", .category = "research",
     .description = "Every work attributed to one OpenAlex author id (meta.count=68 for the probe), each row a full work object with co-authors, their institutions and countries, funders and citation counts. The author->publications hop.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "research-record", .tags = "\"us\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://api.openalex.org/works?filter=authorships.author.id:A5023888391&per_page=25",
+    /* 2026-11-07: keyless OpenAlex is an IP-SHARED daily budget — this URL
+     * answered HTTP 429 "This request has no API key, so it counts against
+     * the free daily budget shared by everyone on your network's IP address"
+     * — so the row is gated like the OPENALEX_INST_* rows in hp3b38_africa.c
+     * (`key_env` + `api_key={key}`). `page=1` is bound because the walk's
+     * collision was exactly one page size (25): an unbound first page is
+     * read bare and then again as page=1 (CLAUDE.md, rule 4b). */
+    .url = "https://api.openalex.org/works?filter=authorships.author.id:A5023888391&per_page=25&page=1&api_key={key}",
+    .key_env = "OPENALEX_API_KEY",
     .array_path = "results",
-    .detail_url = "https://api.openalex.org/works/{v}", .detail_key = "id",
+    .detail_url = "https://api.openalex.org/works/{v}?api_key={key}", .detail_key = "id",   /* keyed too: a keyless hop draws the same 429 */
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
@@ -115,9 +123,17 @@ static const hp_source T[] = {
     .collector = "us_research", .category = "research",
     .description = "All works with at least one author affiliated to a given ROR org (meta.count=499,568 for U. Washington), full work objects with co-author institutions and countries. Institution->output hop keyed on ROR rather than OpenAlex id.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "research-record", .tags = "\"us\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://api.openalex.org/works?filter=authorships.institutions.ror:https://ror.org/00cvxb145&per_page=10",
+    /* 2026-11-07: keyless OpenAlex is an IP-SHARED daily budget — this URL
+     * answered HTTP 429 "This request has no API key, so it counts against
+     * the free daily budget shared by everyone on your network's IP address"
+     * — so the row is gated like the OPENALEX_INST_* rows in hp3b38_africa.c
+     * (`key_env` + `api_key={key}`). `page=1` is bound because the walk's
+     * collision was exactly one page size (10): an unbound first page is
+     * read bare and then again as page=1 (CLAUDE.md, rule 4b). */
+    .url = "https://api.openalex.org/works?filter=authorships.institutions.ror:https://ror.org/00cvxb145&per_page=10&page=1&api_key={key}",
+    .key_env = "OPENALEX_API_KEY",
     .array_path = "results",
-    .detail_url = "https://api.openalex.org/works/{v}", .detail_key = "id",
+    .detail_url = "https://api.openalex.org/works/{v}?api_key={key}", .detail_key = "id",   /* keyed too: a keyless hop draws the same 429 */
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 

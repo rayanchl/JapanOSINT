@@ -46,7 +46,7 @@ static void add_num_str(cJSON *o, const char *k, const char *v) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *hdrs[] = { "User-Agent: JapanOSINT/1.0 (kiwisdr)", NULL };
+  const char *hdrs[] = { NULL };
   http_response hr = {0};
   int rc = http_request(ctx->http, "GET", KIWI_URL, hdrs, NULL, 0, 45000, 1, &hr);
   if (rc != 0 || hr.status != 200 || !hr.body) {

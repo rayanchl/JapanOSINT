@@ -12,20 +12,20 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
-static const char *CT_UA = "User-Agent: JapanOSINT/1.0 (osint@example.org)";
 
 static int run_emailrep(const source_ctx *ctx, intel_sink *sink, const char *enc, const char *raw) {
   const char *k = jo_env("EMAILREP_KEY");
-  if (!k) { fprintf(stderr, "[EMAILREP_LOOKUP] no EMAILREP_KEY\n"); return 0; }
+  if (!k) return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "EMAILREP_LOOKUP", "EMAILREP_LOOKUP", (const char *const[]){"EMAILREP_KEY", NULL}, NULL, NULL);
   char url[512];
   snprintf(url, sizeof url, "https://emailrep.io/%s", enc);
   char keyh[160]; snprintf(keyh, sizeof keyh, "Key: %s", k);
-  const char *hdrs[] = { "Accept: application/json", CT_UA, keyh, NULL };
+  const char *hdrs[] = { "Accept: application/json", keyh, NULL };
   char *body = jo_get(ctx, url, hdrs, "EMAILREP_LOOKUP");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const char *email = jo_sv(root, "email");
   if (!email) { cJSON_Delete(root); return 0; }
   const char *reputation = jo_sv(root, "reputation");
@@ -39,27 +39,28 @@ static int run_emailrep(const source_ctx *ctx, intel_sink *sink, const char *enc
   cJSON *p = cJSON_CreateObject();
   cJSON_AddStringToObject(p, "service", "EMAILREP_LOOKUP"); cJSON_AddStringToObject(p, "email", email);
   cJSON_AddBoolToObject(p, "success", 1);
-  char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+  jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
   char title[256]; snprintf(title, sizeof title, "%s — reputation %s", email, reputation ? reputation : "unknown");
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
-  it.remote_key = email; it.title = title; it.summary = reputation; it.body = bj; it.lang = "en";
+  it.remote_key = email; it.title = title; it.summary = reputation; it.body = bt ? bt : bj; it.lang = "en";
   it.record_type = "email-reputation";
   it.properties_json = pj; it.tags_json = "[\"osint-search\",\"EMAILREP_LOOKUP\"]";
-  int rc = sink->emit(sink, &it); free(bj); free(pj); cJSON_Delete(root);
+  int rc = sink->emit(sink, &it); free(bj); free(bt); free(pj); cJSON_Delete(root);
   (void)raw;
   return rc >= 0 ? 1 : 0;
 }
 
 static int run_numverify(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   const char *k = jo_env("NUMVERIFY_KEY");
-  if (!k) { fprintf(stderr, "[NUMVERIFY_PHONE] no NUMVERIFY_KEY\n"); return 0; }
+  if (!k) return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "NUMVERIFY_PHONE", "NUMVERIFY_PHONE", (const char *const[]){"NUMVERIFY_KEY", NULL}, NULL, NULL);
   char url[512];
   snprintf(url, sizeof url, "https://apilayer.net/api/validate?access_key=%s&number=%s", k, enc);
-  const char *hdrs[] = { "Accept: application/json", CT_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "NUMVERIFY_PHONE");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *valid = cJSON_GetObjectItem(root, "valid");
   if (!cJSON_IsBool(valid)) { cJSON_Delete(root); return 0; }
   const char *number = jo_sv(root, "international_format");
@@ -78,16 +79,17 @@ static int run_numverify(const source_ctx *ctx, intel_sink *sink, const char *en
   char *bj = cJSON_PrintUnformatted(d); cJSON_Delete(d);
   cJSON *p = cJSON_CreateObject();
   cJSON_AddStringToObject(p, "service", "NUMVERIFY_PHONE"); cJSON_AddBoolToObject(p, "success", 1);
-  char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+  jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
   char title[256];
   snprintf(title, sizeof title, "%s — %s%s%s", number ? number : ctx->entity,
            country ? country : "?", carrier ? " · " : "", carrier ? carrier : "");
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key = number ? number : ctx->entity; it.title = title; it.summary = carrier;
-  it.body = bj; it.lang = "en";
+  it.body = bt ? bt : bj; it.lang = "en";
   it.record_type = "phone-validation";
   it.properties_json = pj; it.tags_json = "[\"osint-search\",\"NUMVERIFY_PHONE\"]";
-  int rc = sink->emit(sink, &it); free(bj); free(pj); cJSON_Delete(root);
+  int rc = sink->emit(sink, &it); free(bj); free(bt); free(pj); cJSON_Delete(root);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -102,7 +104,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   else if (!strcmp(sid, "NUMVERIFY_PHONE")) n = run_numverify(ctx, sink, enc);
   free(enc);
   fprintf(stderr, "[%s] emitted %d\n", sid, n);
-  return 0;
+  return n < 0 ? -1 : 0;
 }
 
 #define CT_DEF(sym, ID, NM, CAT, DESC) \

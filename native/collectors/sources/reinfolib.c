@@ -14,6 +14,7 @@
 #include <string.h>
 #include <time.h>
 #include "_timefmt.inc"
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 #define API_URL "https://www.reinfolib.mlit.go.jp/ex-api/external/XIT001"
 
@@ -46,7 +47,7 @@ static const char *str_or(cJSON *r, const char *k, const char *def) {
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *key = getenv("REINFOLIB_API_KEY");
-  if (!key || !*key) { fprintf(stderr, "[reinfolib] gated\n"); return 0; }
+  if (!key || !*key) return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "reinfolib", "reinfolib", (const char *const[]){"REINFOLIB_API_KEY", NULL}, NULL, NULL);
 
   /* year/quarter ARE the query — there is no request to make without them. */
   int year, quarter;

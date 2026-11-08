@@ -192,7 +192,7 @@ static int fpds_run(const source_ctx *ctx, intel_sink *sink) {
 
   const char *hdrs[] = { "Accept: application/atom+xml, application/xml", NULL };
   char *xml = jo_get(ctx, url, hdrs, "us-fpds-contracts");
-  if (!xml) return 0;                     /* upstream unavailable -> empty */
+  if (!xml) return jo_fail_rc(jo_last_status(), 0);                     /* 2026-11-07: upstream unavailable is -1, not empty */
 
   int n = 0;
   const char *cur = xml;

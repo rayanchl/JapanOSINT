@@ -93,7 +93,7 @@ static int emit_company(intel_sink *sink, const cJSON *c) {
   if (activite) cJSON_AddStringToObject(props, "activite_principale", activite);
   cJSON_AddItemToObject(props, "dirigeants", dirs_out);   /* transfers ownership */
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char link[128];
@@ -101,11 +101,12 @@ static int emit_company(intel_sink *sink, const cJSON *c) {
                       "https://annuaire-entreprises.data.gouv.fr/entreprise/%s", siren);
   else link[0] = 0;
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = siren ? siren : nom;
   it.title           = nom ? nom : siren;
   it.summary         = addr;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "fr";
   it.published_at    = created;
   it.link            = siren ? link : NULL;
@@ -113,7 +114,7 @@ static int emit_company(intel_sink *sink, const cJSON *c) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"FR_ENTREPRISES\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj); free(addr);
+  free(bj); free(bt); free(pj); free(addr);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -130,11 +131,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "fr_entreprises");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
 
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   cJSON *results = cJSON_GetObjectItem(root, "results");
   int emitted = 0;

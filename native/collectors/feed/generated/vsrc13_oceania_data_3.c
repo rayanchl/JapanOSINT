@@ -77,9 +77,18 @@ VRSS(sas_pac_tahitiinfos, "sas-pac-tahitiinfos", "Tahiti Infos — French Polyne
   "fr", "[\"pyf\",\"news\"]", 3600,
   "Publisher-own news feed; headline, link and timestamp for each item.");
 
+/* Scoped Socrata catalogue rows below carry `order=createdAt` (2026-11-07),
+ * as their scoped siblings already do. Without it the catalogue answers in
+ * relevance order, which promises nothing stable across an offset walk.
+ * Measured on api.us.socrata.com: `order=createdAt` is NEWEST FIRST (NYC,
+ * 3,032 datasets, first 2026-09-29; `createdAt ASC` answers 2011), the total
+ * does not move, offset=3 continues the same order, and `order=frobnicate` is
+ * HTTP 400 "not a supported sort". Newest-first means a dataset created during
+ * the walk can repeat one record at a page seam, never skip one; the
+ * 20-page ceiling is then the newest 2,000 (limit=100) or 1,000 (limit=50). */
 VJSON(sas_socrata_act, "sas-socrata-act", "ACT Government — Socrata dataset catalogue", "ACT Government — Socrata dataset catalogue",
   "oceania_data", "opendata",
-  "https://api.us.socrata.com/api/catalog/v1?domains=www.data.act.gov.au&limit=100",
+  "https://api.us.socrata.com/api/catalog/v1?domains=www.data.act.gov.au&limit=100&order=createdAt",
   "results",
   "en", "[\"aus\",\"act\",\"opendata\"]", 86400,
   "Catalogue of Australian Capital Territory open datasets with owner, category and API endpoints.");

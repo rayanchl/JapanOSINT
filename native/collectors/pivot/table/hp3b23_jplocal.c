@@ -2022,13 +2022,19 @@ static const hp_source HP3B23_JPLOCAL[] = {
       "uuid so re-runs update in place; walked in pages of 100 from "
       "offset 0." },
 
-  { .id = "JPL_MIYAZAKI_CKAN_ALL_DATASETS", .name = "Miyazaki Prefecture CKAN - every dataset, newest modified first",
+  { .id = "JPL_MIYAZAKI_CKAN_ALL_DATASETS", .name = "Miyazaki Prefecture CKAN - every dataset",
     .name_ja = "宮崎県 CKAN データセット一覧",
     .category = "government", .portal = "https://ckan.pref.miyazaki.lg.jp",
     .record_type = "opendata-dataset",
     .tags = "\"japan\",\"opendata\",\"ckan\",\"catalogue\",\"miyazaki\",\"prefecture\",\"kyushu\",\"bosai\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://ckan.pref.miyazaki.lg.jp/api/3/action/package_search?rows=100&sort=metadata_modified+desc",
+    /* `sort=id asc` + `start=0` (2026-11-07), as the sibling org rows below
+     * carry: a newest-modified-first walk over 50 pages shifts every page
+     * boundary each time a dataset is edited mid-walk. Measured: total 4,937
+     * plain, id asc and id desc (not a filter); asc and desc first pages
+     * differ; ascending ids monotonic; start 0/100 disjoint. (A bogus sort
+     * key also answers 200 here, so the monotonic ids are the evidence.) */
+    .url = "https://ckan.pref.miyazaki.lg.jp/api/3/action/package_search?rows=100&start=0&sort=id+asc",
     .array_path = "result.results",
     .date_keys = "metadata_modified",
     .id_keys = "id,name",
@@ -2036,17 +2042,18 @@ static const hp_source HP3B23_JPLOCAL[] = {
     .page_param = "start",
     .page_size = 100,
     .page_zero_based = 1,
-    .page_max = 50,   /* 4,937 records at 100 a page, measured 2026-10-12; the 20-page default reached 2,000 */
+    .page_max = 55,   /* 4,937 records at 100 a page, measured 2026-10-12 and again 2026-11-07; 50 pages left 63 of headroom */
+    .page_resume = 1,   /* ascending: read past the ceiling over a cycle if it grows */
     .title_keys = "title,name",
     .description = "The full dataset catalogue of Miyazaki Prefecture's CKAN at "
-      "ckan.pref.miyazaki.lg.jp, walked newest-modified first: 4,937 "
+      "ckan.pref.miyazaki.lg.jp, walked in ascending id order: 4,937 "
       "datasets at authoring time, dominated by the prefecture's "
       "disaster-data distribution (road-regulation releases, "
       "evacuation-site tables, river and weather warnings) with the "
       "resource inventory and direct file URLs on each record. A "
-      "prefectural CKAN that no aggregator indexes; a run takes the "
-      "ten-page ceiling and states the remainder in a truncation "
-      "notice. No keyword pivot is declared because the portal's search "
+      "prefectural CKAN that no aggregator indexes; a run reads the "
+      "whole catalogue and a cycle covers growth past its ceiling. "
+      "No keyword pivot is declared because the portal's search "
       "matches an impossible keyword to 544 datasets (fuzzy matching), "
       "which would be a confident wrong answer." },
 

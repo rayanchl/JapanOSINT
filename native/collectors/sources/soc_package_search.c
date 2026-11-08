@@ -64,7 +64,6 @@
 #include "_timefmt.inc"
 
 static const char *const SOC_UA[] = {
-  "User-Agent: JapanOSINT-native/1.0 (OSINT research collector; +https://github.com/)",
   "Accept: application/json", NULL
 };
 

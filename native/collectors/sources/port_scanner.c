@@ -92,24 +92,25 @@ static int emit_open_port(intel_sink *sink, const char *host, int port,
   cJSON_AddStringToObject(props, "host", host);
   cJSON_AddNumberToObject(props, "port", port);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
 
   char rk[320];
   snprintf(rk, sizeof rk, "port:%s:%d", host, port);
   char title[360];
   snprintf(title, sizeof title, "%s:%d (%s) open", host, port, service);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.summary         = service;
   it.record_type     = "osint_service_result";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"PORT_SCANNER\"]";
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   cJSON_Delete(data); cJSON_Delete(props);
   return rc >= 0 ? 1 : 0;
 }

@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 /* number field → malloc'd string, or NULL. caller frees. */
 static char *sp_num(const cJSON *o, const char *k) {
@@ -50,14 +51,14 @@ static int sp_match(const cJSON *r, const char *q, const char *const *keys) {
  * MEAN_ANOMALY, ... (CelesTrak OMM/GP JSON schema). */
 static int sp_celestrak(const source_ctx *ctx, intel_sink *sink, const char *q, int max) {
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0 (satellite)", NULL };
+                         NULL };
   char *body = jo_get(ctx,
     "https://celestrak.org/NORAD/elements/gp.php?GROUP=active&FORMAT=json",
     hdrs, "CELESTRAK_TLE");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!cJSON_IsArray(root)) { if (root) cJSON_Delete(root); return 0; }
+  if (!cJSON_IsArray(root)) { if (!root) return -1; cJSON_Delete(root); return 0; }
 
   static const char *mkeys[] = { "OBJECT_NAME", "OBJECT_ID", NULL };
   int emitted = 0;
@@ -92,18 +93,19 @@ static int sp_celestrak(const source_ctx *ctx, intel_sink *sink, const char *q, 
     if (norad) cJSON_AddStringToObject(props, "norad_cat_id", norad);
     if (desig) cJSON_AddStringToObject(props, "intl_designator", desig);
     cJSON_AddBoolToObject(props, "success", 1);
-    char *pj = cJSON_PrintUnformatted(props);
+    jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
     cJSON_Delete(props);
 
     char link[256] = {0};
     if (norad) snprintf(link, sizeof link,
       "https://celestrak.org/satcat/table-satcat.php?CATNR=%s", norad);
 
-    intel_item it = {0};
+    char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
     it.remote_key      = norad ? norad : (desig ? desig : name);
     it.title           = name ? name : (norad ? norad : desig);
     it.summary         = desig;
-    it.body            = bj;
+    it.body = bt ? bt : bj;
     it.lang            = "en";
     it.published_at    = epoch;
     it.link            = link[0] ? link : NULL;
@@ -111,7 +113,7 @@ static int sp_celestrak(const source_ctx *ctx, intel_sink *sink, const char *q, 
     it.properties_json = pj;
     it.tags_json       = "[\"osint-search\",\"satellite\",\"CELESTRAK\"]";
     if (sink->emit(sink, &it) >= 0) emitted++;
-    free(bj); free(pj); free(norad); free(incl); free(ecc); free(mm);
+    free(bj); free(bt); free(pj); free(norad); free(incl); free(ecc); free(mm);
   }
   cJSON_Delete(root);
   fprintf(stderr, "[CELESTRAK_TLE] emitted %d\n", emitted);
@@ -123,13 +125,13 @@ static int sp_celestrak(const source_ctx *ctx, intel_sink *sink, const char *q, 
  * decayed, countries, ... (SatNOGS DB API schema). */
 static int sp_satnogs(const source_ctx *ctx, intel_sink *sink, const char *q, int max) {
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0 (satellite)", NULL };
+                         NULL };
   char *body = jo_get(ctx, "https://db.satnogs.org/api/satellites/",
                       hdrs, "SATNOGS");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!cJSON_IsArray(root)) { if (root) cJSON_Delete(root); return 0; }
+  if (!cJSON_IsArray(root)) { if (!root) return -1; cJSON_Delete(root); return 0; }
 
   static const char *mkeys[] = { "name", "names", "sat_id", NULL };
   int emitted = 0;
@@ -166,25 +168,26 @@ static int sp_satnogs(const source_ctx *ctx, intel_sink *sink, const char *q, in
     if (satid)  cJSON_AddStringToObject(props, "sat_id", satid);
     if (status) cJSON_AddStringToObject(props, "status", status);
     cJSON_AddBoolToObject(props, "success", 1);
-    char *pj = cJSON_PrintUnformatted(props);
+    jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
     cJSON_Delete(props);
 
     char link[256] = {0};
     if (satid) snprintf(link, sizeof link,
       "https://db.satnogs.org/satellite/%s", satid);
 
-    intel_item it = {0};
+    char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
     it.remote_key      = satid ? satid : (norad ? norad : name);
     it.title           = name ? name : (satid ? satid : norad);
     it.summary         = status;
-    it.body            = bj;
+    it.body = bt ? bt : bj;
     it.lang            = "en";
     it.link            = link[0] ? link : (image ? image : NULL);
     it.record_type     = "satellite-catalog";
     it.properties_json = pj;
     it.tags_json       = "[\"osint-search\",\"satellite\",\"SATNOGS\"]";
     if (sink->emit(sink, &it) >= 0) emitted++;
-    free(bj); free(pj); free(norad);
+    free(bj); free(bt); free(pj); free(norad);
   }
   cJSON_Delete(root);
   fprintf(stderr, "[SATNOGS] emitted %d\n", emitted);
@@ -200,7 +203,7 @@ static int sp_spacetrack(const source_ctx *ctx, intel_sink *sink, const char *q,
   const char *pass = jo_env("SPACETRACK_PASS");
   if (!user || !pass) {
     fprintf(stderr, "[SPACETRACK] gated (no SPACETRACK_USER/SPACETRACK_PASS)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "SPACETRACK", "SPACETRACK", (const char *const[]){"SPACETRACK_USER", "SPACETRACK_PASS", NULL}, NULL, NULL);
   }
 
   /* login (sets a session cookie handled by the http client) */
@@ -237,7 +240,7 @@ static int sp_spacetrack(const source_ctx *ctx, intel_sink *sink, const char *q,
   }
   const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "SPACETRACK");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
   if (!cJSON_IsArray(root)) { if (root) cJSON_Delete(root); return 0; }
@@ -271,18 +274,19 @@ static int sp_spacetrack(const source_ctx *ctx, intel_sink *sink, const char *q,
     if (norad)   cJSON_AddStringToObject(props, "norad_cat_id", norad);
     if (country) cJSON_AddStringToObject(props, "country", country);
     cJSON_AddBoolToObject(props, "success", 1);
-    char *pj = cJSON_PrintUnformatted(props);
+    jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
     cJSON_Delete(props);
 
     char link[256] = {0};
     if (norad) snprintf(link, sizeof link,
       "https://www.space-track.org/#/catalog/%s", norad);
 
-    intel_item it = {0};
+    char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
     it.remote_key      = norad ? norad : name;
     it.title           = name ? name : norad;
     it.summary         = desig;
-    it.body            = bj;
+    it.body = bt ? bt : bj;
     it.lang            = "en";
     it.published_at    = launch;
     it.link            = link[0] ? link : NULL;
@@ -290,7 +294,7 @@ static int sp_spacetrack(const source_ctx *ctx, intel_sink *sink, const char *q,
     it.properties_json = pj;
     it.tags_json       = "[\"osint-search\",\"satellite\",\"SPACETRACK\"]";
     if (sink->emit(sink, &it) >= 0) emitted++;
-    free(bj); free(pj);
+    free(bj); free(bt); free(pj);
   }
   cJSON_Delete(root);
   fprintf(stderr, "[SPACETRACK] emitted %d\n", emitted);
@@ -307,7 +311,7 @@ static int sp_n2yo(const source_ctx *ctx, intel_sink *sink, const char *q, int m
   const char *key = jo_env("N2YO_KEY");
   if (!key) {
     fprintf(stderr, "[N2YO] gated (no N2YO_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "N2YO", "N2YO", (const char *const[]){"N2YO_KEY", NULL}, NULL, NULL);
   }
   /* need a numeric NORAD id */
   if (!q || !*q) { fprintf(stderr, "[N2YO] no NORAD id entity\n"); return 0; }
@@ -319,10 +323,10 @@ static int sp_n2yo(const source_ctx *ctx, intel_sink *sink, const char *q, int m
     "https://api.n2yo.com/rest/v1/satellite/tle/%s&apiKey=%s", q, key);
   const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "N2YO");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   cJSON *info = cJSON_GetObjectItem(root, "info");
   const char *name = info ? jo_sv(info, "satname") : NULL;
@@ -343,23 +347,24 @@ static int sp_n2yo(const source_ctx *ctx, intel_sink *sink, const char *q, int m
     cJSON_AddStringToObject(props, "source", "N2YO");
     if (satid) cJSON_AddStringToObject(props, "norad_cat_id", satid);
     cJSON_AddBoolToObject(props, "success", 1);
-    char *pj = cJSON_PrintUnformatted(props);
+    jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
     cJSON_Delete(props);
 
     char link[256];
     snprintf(link, sizeof link, "https://www.n2yo.com/satellite/?s=%s", q);
 
-    intel_item it = {0};
+    char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
     it.remote_key      = satid ? satid : q;
     it.title           = name ? name : q;
-    it.body            = bj;
+    it.body = bt ? bt : bj;
     it.lang            = "en";
     it.link            = link;
     it.record_type     = "satellite-tle";
     it.properties_json = pj;
     it.tags_json       = "[\"osint-search\",\"satellite\",\"N2YO\"]";
     if (sink->emit(sink, &it) >= 0) emitted++;
-    free(bj); free(pj);
+    free(bj); free(bt); free(pj);
   }
   free(satid);
   cJSON_Delete(root);
@@ -370,10 +375,10 @@ static int sp_n2yo(const source_ctx *ctx, intel_sink *sink, const char *q, int m
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *q = (ctx->entity && *ctx->entity) ? ctx->entity : NULL;
   const char *id = ctx->source_id;
-  if (strcmp(id, "CELESTRAK_TLE") == 0) { sp_celestrak(ctx, sink, q, 60); return 0; }
-  if (strcmp(id, "SATNOGS") == 0)       { sp_satnogs(ctx, sink, q, 60);   return 0; }
-  if (strcmp(id, "SPACETRACK") == 0)    { sp_spacetrack(ctx, sink, q, 40); return 0; }
-  if (strcmp(id, "N2YO") == 0)          { sp_n2yo(ctx, sink, q, 1);        return 0; }
+  if (strcmp(id, "CELESTRAK_TLE") == 0) { return sp_celestrak(ctx, sink, q, 60) < 0 ? -1 : 0; }
+  if (strcmp(id, "SATNOGS") == 0)       { return sp_satnogs(ctx, sink, q, 60) < 0 ? -1 : 0; }
+  if (strcmp(id, "SPACETRACK") == 0)    { return sp_spacetrack(ctx, sink, q, 40) < 0 ? -1 : 0; }
+  if (strcmp(id, "N2YO") == 0)          { return sp_n2yo(ctx, sink, q, 1) < 0 ? -1 : 0; }
   return -1;
 }
 

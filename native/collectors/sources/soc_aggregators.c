@@ -45,7 +45,6 @@
 #include "_timefmt.inc"
 
 static const char *const SOC_UA[] = {
-  "User-Agent: JapanOSINT-native/1.0 (OSINT research collector; +https://github.com/)",
   "Accept: application/json", NULL
 };
 
@@ -274,7 +273,6 @@ static int run_4chan_news(const source_ctx *ctx, intel_sink *sink) {
   char ims[128];
   const char *hdrs[4];
   int hi = 0;
-  hdrs[hi++] = "User-Agent: JapanOSINT-native/1.0 (OSINT research collector; +https://github.com/)";
   hdrs[hi++] = "Accept: application/json";
   /* An unrenderable last_ok simply means no If-Modified-Since header — the
    * same request we send on the first pass, so nothing is lost. */

@@ -165,7 +165,7 @@ static int emit_hit(intel_sink *sink, cJSON *hit, const cJSON *retrieval) {
   cJSON_AddBoolToObject(props, "success", 1);
   if (retrieval)
     cJSON_AddItemToObject(props, "retrieval", cJSON_Duplicate(retrieval, 1));
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
 
   char rk[400];
   snprintf(rk, sizeof rk, "corpus:%s", uid ? uid : (title ? title : "?"));
@@ -175,10 +175,11 @@ static int emit_hit(intel_sink *sink, cJSON *hit, const cJSON *retrieval) {
   const char *srcid = (srcid_j && srcid_j->valuestring && *srcid_j->valuestring)
                       ? srcid_j->valuestring : "corpus";
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title ? title : (uid ? uid : "corpus hit");
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.summary         = summary ? summary : (title ? title : "corpus hit");
   it.link            = link;
   it.record_type     = "osint_service_result";
@@ -187,7 +188,7 @@ static int emit_hit(intel_sink *sink, cJSON *hit, const cJSON *retrieval) {
   it.tags_json       = "[\"osint-search\",\"JP_CORPUS_LOOKUP\"]";
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   cJSON_Delete(data); cJSON_Delete(props);
   return rc >= 0 ? 1 : 0;
 }

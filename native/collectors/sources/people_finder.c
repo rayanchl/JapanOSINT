@@ -37,6 +37,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 /* ── small helpers ──────────────────────────────────────────────────────── */
 static char *ps_b64(const char *in) {
@@ -77,14 +78,15 @@ static int ps_emit_data(intel_sink *sink, const char *service, const char *sourc
   cJSON_AddStringToObject(props, "entity", entity);
   cJSON_AddStringToObject(props, "source", source);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   char tags[96]; snprintf(tags, sizeof tags, "[\"osint-search\",\"%s\"]", service);
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
-  it.remote_key = remote_key; it.title = title; it.summary = summary; it.body = bj;
+  it.remote_key = remote_key; it.title = title; it.summary = summary; it.body = bt ? bt : bj;
   it.record_type = "osint_service_result"; it.sub_source_id = source;
   it.properties_json = pj; it.tags_json = tags;
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj); cJSON_Delete(props); cJSON_Delete(data);
+  free(bj); free(bt); free(pj); cJSON_Delete(props); cJSON_Delete(data);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -406,7 +408,7 @@ REGISTER_SOURCE(company_search_def)
 static int feed_emit(const source_ctx *ctx, intel_sink *sink, const char *url,
                      const char *service, const char *rectype, const char *tag) {
   char *body = jo_get(ctx, url, NULL, tag);
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   int emitted = 0;
   char *p = body, *e;
   for (;;) {                     /* every <item>/<entry> the feed carries */
@@ -490,7 +492,7 @@ static int run_mansion(const source_ctx *ctx, intel_sink *sink) {
 
 static int run_tdb_tsr(const source_ctx *ctx, intel_sink *sink) {
   (void)sink; (void)ctx;
-  if (!jo_env("TDB_TSR_API_KEY")) { fprintf(stderr, "[tdb-tsr] gated (no TDB_TSR_API_KEY, paid)\n"); return 0; }
+  if (!jo_env("TDB_TSR_API_KEY")) return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "tdb-tsr", "tdb-tsr", (const char *const[]){"TDB_TSR_API_KEY", NULL}, NULL, NULL);
   fprintf(stderr, "[tdb-tsr] key present but endpoint not provisioned\n");
   return 0;
 }

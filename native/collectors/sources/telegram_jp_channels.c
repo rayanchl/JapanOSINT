@@ -10,6 +10,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
+#include "lib/seenset.h"   /* growable hashed dedupe (2026-11-07) */
 
 static const char *QUERIES[] = {
   "\xE6\x97\xA5\xE6\x9C\xAC",            /* 日本 */
@@ -25,12 +27,9 @@ static const char *sv(cJSON *o, const char *k) {
   return (v && cJSON_IsString(v) && v->valuestring[0]) ? v->valuestring : NULL;
 }
 
-/* dedup set (small, linear) */
-#define MAX_SEEN 4096
-static int seen_has(char **seen, int ns, const char *id) {
-  for (int i = 0; i < ns; i++) if (!strcmp(seen[i], id)) return 1;
-  return 0;
-}
+/* Dedupe is lib/seenset.c (2026-11-07): the hand-rolled fixed array this
+ * replaces stopped RECORDING ids once full and then let every later repeat
+ * through (and scanned linearly); a seen_set grows and is hashed. */
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *tgstat = getenv("TGSTAT_API_KEY");
@@ -43,11 +42,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
                       "no MTProto session — honest empty\n");
     else
       fprintf(stderr, "[telegram-jp-channels] gated (no TGSTAT_API_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "telegram-jp-channels", "telegram-jp-channels", (const char *const[]){"TGSTAT_API_KEY", NULL}, NULL, NULL);
   }
 
-  char *seen[MAX_SEEN];
-  int ns = 0, n = 0;
+  seen_set seen = {0};
+  int n = 0;
   size_t nq = sizeof(QUERIES) / sizeof(QUERIES[0]);
   for (size_t qi = 0; qi < nq; qi++) {
     const char *q = QUERIES[qi];
@@ -90,8 +89,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
           }
         }
         if (!id) continue;
-        if (seen_has(seen, ns, id)) continue;
-        if (ns < MAX_SEEN) seen[ns++] = strdup(id);
+        if (!seen_add(&seen, id)) continue;
 
         /* link: username ? https://t.me/<u w/o @> : c.link || null */
         char linkbuf[256]; const char *link = NULL;
@@ -149,7 +147,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     }
     cJSON_Delete(data);
   }
-  for (int i = 0; i < ns; i++) free(seen[i]);
+  seen_free(&seen);
   fprintf(stderr, "[telegram-jp-channels] emitted %d\n", n);
   return n >= 0 ? 0 : -1;
 }

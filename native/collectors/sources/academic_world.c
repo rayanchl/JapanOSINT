@@ -9,7 +9,8 @@
  *   OPENLIBRARY      openlibrary.org/search.json?q=<e>           (JSON)
  *
  * Every source REAL-fetches and emits ONE intel_item per parsed record, or
- * honest-empty (return 0) on fetch failure / no matches. Nothing is fabricated;
+ * honest-empty (return 0) on no matches; -1 on a refused or unparsable fetch
+ * (2026-11-07 — it was 0 for both, so a 429 read as "nothing found"). Nothing is fabricated;
  * links are resolvable URLs taken from (or trivially derived from) the API's own
  * identifiers (DOI, arXiv id, PMID, OpenLibrary key). No API keys required. */
 #include "source.h"
@@ -21,8 +22,6 @@
 #include <string.h>
 #include "_jp_osint.inc"
 
-static const char *AW_UA =
-  "User-Agent: JapanOSINT/1.0 (mailto:osint@example.org)";
 
 /* ---- Crossref ----------------------------------------------------------- */
 /* Crossref work title/author arrays are arrays-of-strings / arrays-of-objects. */
@@ -84,17 +83,18 @@ static int aw_emit_crossref(intel_sink *sink, const cJSON *w) {
   cJSON_AddStringToObject(props, "source", "Crossref");
   if (doi) cJSON_AddStringToObject(props, "doi", doi);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props); cJSON_Delete(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props); cJSON_Delete(props);
 
   char link[512] = {0};
   if (url) snprintf(link, sizeof link, "%s", url);
   else if (doi) snprintf(link, sizeof link, "https://doi.org/%s", doi);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = doi ? doi : title;
   it.title           = title ? title : doi;
   it.summary         = authors ? authors : pub;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.author          = authors;
   it.lang            = "en";
   it.link            = link[0] ? link : NULL;
@@ -102,18 +102,18 @@ static int aw_emit_crossref(intel_sink *sink, const cJSON *w) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"CROSSREF\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj); free(authors);
+  free(bj); free(bt); free(pj); free(authors);
   return rc >= 0 ? 1 : 0;
 }
 static int run_crossref(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   char url[1024];
   snprintf(url, sizeof url,
     "https://api.crossref.org/works?query=%s&rows=15", enc);
-  const char *hdrs[] = { "Accept: application/json", AW_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "crossref");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *msg = cJSON_GetObjectItem(root, "message");
   const cJSON *items = msg ? cJSON_GetObjectItem(msg, "items") : NULL;
   int emitted = 0;
@@ -173,17 +173,18 @@ static int aw_emit_s2(intel_sink *sink, const cJSON *p) {
   cJSON_AddStringToObject(props, "source", "Semantic Scholar");
   if (pid) cJSON_AddStringToObject(props, "paper_id", pid);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props); cJSON_Delete(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props); cJSON_Delete(props);
 
   char link[512] = {0};
   if (urlf) snprintf(link, sizeof link, "%s", urlf);
   else if (pid) snprintf(link, sizeof link, "https://www.semanticscholar.org/paper/%s", pid);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = pid ? pid : title;
   it.title           = title ? title : pid;
   it.summary         = authors ? authors : venue;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.author          = authors;
   it.lang            = "en";
   it.link            = link[0] ? link : NULL;
@@ -191,7 +192,7 @@ static int aw_emit_s2(intel_sink *sink, const cJSON *p) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"SEMANTIC_SCHOLAR\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj); free(authors);
+  free(bj); free(bt); free(pj); free(authors);
   return rc >= 0 ? 1 : 0;
 }
 static int run_s2(const source_ctx *ctx, intel_sink *sink, const char *enc) {
@@ -199,11 +200,11 @@ static int run_s2(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   snprintf(url, sizeof url,
     "https://api.semanticscholar.org/graph/v1/paper/search?query=%s&limit=15"
     "&fields=title,abstract,venue,year,citationCount,url,authors", enc);
-  const char *hdrs[] = { "Accept: application/json", AW_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "semantic_scholar");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *data = cJSON_GetObjectItem(root, "data");
   int emitted = 0;
   if (cJSON_IsArray(data)) {
@@ -218,9 +219,9 @@ static int run_arxiv(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   char url[1024];
   snprintf(url, sizeof url,
     "https://export.arxiv.org/api/query?search_query=all:%s&max_results=15", enc);
-  const char *hdrs[] = { AW_UA, NULL };
+  const char *hdrs[] = { NULL };
   char *xml = jo_get(ctx, url, hdrs, "arxiv");
-  if (!xml) return 0;
+  if (!xml) return jo_fail_rc(jo_last_status(), 0);
   int emitted = 0;
   const char *cur = xml;
   /* skip the feed-level <title>/<id> by starting scan at first <entry> */
@@ -277,13 +278,14 @@ static int run_arxiv(const source_ctx *ctx, intel_sink *sink, const char *enc) {
       cJSON_AddStringToObject(props, "source", "arXiv");
       if (id) cJSON_AddStringToObject(props, "arxiv_url", id);
       cJSON_AddBoolToObject(props, "success", 1);
-      char *pj = cJSON_PrintUnformatted(props); cJSON_Delete(props);
+      jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props); cJSON_Delete(props);
 
-      intel_item it = {0};
+      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
       it.remote_key      = id ? id : title;
       it.title           = title ? title : id;
       it.summary         = an ? authors : NULL;
-      it.body            = bj;
+      it.body = bt ? bt : bj;
       it.author          = an ? authors : NULL;
       it.lang            = "en";
       it.published_at    = pub;
@@ -292,7 +294,7 @@ static int run_arxiv(const source_ctx *ctx, intel_sink *sink, const char *enc) {
       it.properties_json = pj;
       it.tags_json       = "[\"osint-search\",\"ARXIV\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(pj);
+      free(bj); free(bt); free(pj);
     }
     free(id); free(title); free(summ); free(pub);
     free(blk);
@@ -340,16 +342,17 @@ static int aw_emit_pubmed(intel_sink *sink, const cJSON *doc, const char *uid) {
   cJSON_AddStringToObject(props, "source", "PubMed");
   if (uid) cJSON_AddStringToObject(props, "pmid", uid);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props); cJSON_Delete(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props); cJSON_Delete(props);
 
   char link[256] = {0};
   if (uid) snprintf(link, sizeof link, "https://pubmed.ncbi.nlm.nih.gov/%s/", uid);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = uid ? uid : title;
   it.title           = title ? title : uid;
   it.summary         = an ? authors : source;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.author          = an ? authors : NULL;
   it.lang            = "en";
   it.published_at    = pubdate;
@@ -358,20 +361,20 @@ static int aw_emit_pubmed(intel_sink *sink, const cJSON *doc, const char *uid) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"PUBMED\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 static int run_pubmed(const source_ctx *ctx, intel_sink *sink, const char *enc) {
-  const char *hdrs[] = { "Accept: application/json", AW_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   /* 1. esearch → list of PMIDs */
   char url[1024];
   snprintf(url, sizeof url,
     "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
     "?db=pubmed&retmode=json&retmax=15&term=%s", enc);
   char *body = jo_get(ctx, url, hdrs, "pubmed");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *er = cJSON_GetObjectItem(root, "esearchresult");
   const cJSON *idlist = er ? cJSON_GetObjectItem(er, "idlist") : NULL;
   if (!cJSON_IsArray(idlist) || cJSON_GetArraySize(idlist) == 0) {
@@ -395,9 +398,9 @@ static int run_pubmed(const source_ctx *ctx, intel_sink *sink, const char *enc) 
     "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi"
     "?db=pubmed&retmode=json&id=%s", ids);
   body = jo_get(ctx, url, hdrs, "pubmed");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *result = cJSON_GetObjectItem(root, "result");
   int emitted = 0;
   if (result) {
@@ -451,16 +454,17 @@ static int aw_emit_openlibrary(intel_sink *sink, const cJSON *d) {
   cJSON_AddStringToObject(props, "source", "OpenLibrary");
   if (key) cJSON_AddStringToObject(props, "openlibrary_key", key);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props); cJSON_Delete(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props); cJSON_Delete(props);
 
   char link[256] = {0};
   if (key) snprintf(link, sizeof link, "https://openlibrary.org%s", key);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = key ? key : title;
   it.title           = title ? title : key;
   it.summary         = an ? authors : NULL;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.author          = an ? authors : NULL;
   it.lang            = "en";
   it.link            = link[0] ? link : NULL;
@@ -468,18 +472,18 @@ static int aw_emit_openlibrary(intel_sink *sink, const cJSON *d) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"OPENLIBRARY\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 static int run_openlibrary(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   char url[1024];
   snprintf(url, sizeof url,
     "https://openlibrary.org/search.json?q=%s&limit=15", enc);
-  const char *hdrs[] = { "Accept: application/json", AW_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "openlibrary");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *docs = cJSON_GetObjectItem(root, "docs");
   int emitted = 0;
   if (cJSON_IsArray(docs)) {
@@ -507,7 +511,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   free(enc);
   fprintf(stderr, "[%s] emitted %d\n", sid, emitted);
-  return 0;   /* honest empty is not an error */
+  /* An honest empty (the upstream answered, nothing matched) is 0; a refused
+   * or unparsable fetch is -1 (2026-11-07), so the dispatcher reports a
+   * service_error instead of "no_data" for a 429/5xx/transport failure. */
+  return emitted < 0 ? -1 : 0;
 }
 
 static const source_def crossref_def = {
@@ -591,12 +598,12 @@ static int ac_orcid(const source_ctx *ctx, intel_sink *sink, const char *q) {
     "https://pub.orcid.org/v3.0/expanded-search/?q=%s&rows=25", enc);
   free(enc);
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0 (osint@example.org)", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "ORCID_SEARCH");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   cJSON *arr = cJSON_GetObjectItem(root, "expanded-result");
   int emitted = 0;
   if (cJSON_IsArray(arr)) {
@@ -641,21 +648,22 @@ static int ac_orcid(const source_ctx *ctx, intel_sink *sink, const char *q) {
       cJSON_AddStringToObject(props, "orcid", oid);
       if (inst) cJSON_AddStringToObject(props, "institution", inst);
       cJSON_AddBoolToObject(props, "success", 1);
-      char *pj = cJSON_PrintUnformatted(props);
+      jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
       cJSON_Delete(props);
 
-      intel_item it = {0};
+      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
       it.remote_key      = oid;
       it.title           = name;
       it.summary         = inst;
-      it.body            = bj;
+      it.body = bt ? bt : bj;
       it.lang            = "en";
       it.link            = link;
       it.record_type     = "orcid-researcher";
       it.properties_json = pj;
       it.tags_json       = "[\"osint-search\",\"ORCID_SEARCH\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(pj);
+      free(bj); free(bt); free(pj);
     }
   }
   cJSON_Delete(root);
@@ -686,7 +694,7 @@ static int ac_ror(const source_ctx *ctx, intel_sink *sink, const char *q) {
   if (!enc) return 0;
   char url[1024];
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0", NULL };
+                         NULL };
   int emitted = 0, pages = 0, stopped = 0;
   long total = -1;
   for (int page = 1; ; page++) {
@@ -789,14 +797,15 @@ static int ac_ror(const source_ctx *ctx, intel_sink *sink, const char *q) {
       cJSON_AddStringToObject(props, "ror_id", id);
       if (country) cJSON_AddStringToObject(props, "country", country);
       cJSON_AddBoolToObject(props, "success", 1);
-      char *pj = cJSON_PrintUnformatted(props);
+      jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
       cJSON_Delete(props);
 
-      intel_item it = {0};
+      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
       it.remote_key      = id;
       it.title           = name;
       it.summary         = loc[0] ? loc : NULL;
-      it.body            = bj;
+      it.body = bt ? bt : bj;
       it.lang            = "en";
       it.link            = website ? website : id;
       it.has_geo         = has_geo;
@@ -806,7 +815,7 @@ static int ac_ror(const source_ctx *ctx, intel_sink *sink, const char *q) {
       it.properties_json = pj;
       it.tags_json       = "[\"osint-search\",\"ROR_ORGS\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(pj);
+      free(bj); free(bt); free(pj);
     }
   }
   cJSON_Delete(root);
@@ -814,6 +823,8 @@ static int ac_ror(const source_ctx *ctx, intel_sink *sink, const char *q) {
   if (pages >= ROR_PAGE_MAX) { stopped = 1; break; }
   }
   free(enc);
+  /* page 1 itself failed: a failure, not "no organisations" (2026-11-07) */
+  if (pages == 0 && emitted == 0) return -1;
   if (stopped)
     jo_trunc_notice_scoped(sink, "ROR_ORGS", q, url, emitted, total,
                            "the ROR page walk stopped (page ceiling or a failed "
@@ -836,12 +847,12 @@ static int ac_doaj(const source_ctx *ctx, intel_sink *sink, const char *q) {
     "https://doaj.org/api/search/articles/%s?pageSize=25", enc);
   free(enc);
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "DOAJ_ARTICLES");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   cJSON *results = cJSON_GetObjectItem(root, "results");
   int emitted = 0;
   if (cJSON_IsArray(results)) {
@@ -919,17 +930,18 @@ static int ac_doaj(const source_ctx *ctx, intel_sink *sink, const char *q) {
       if (doi)  cJSON_AddStringToObject(props, "doi", doi);
       if (year) cJSON_AddStringToObject(props, "year", year);
       cJSON_AddBoolToObject(props, "success", 1);
-      char *pj = cJSON_PrintUnformatted(props);
+      jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
       cJSON_Delete(props);
 
       char rkey[256];
       snprintf(rkey, sizeof rkey, "%s", doi ? doi : (doaj_id ? doaj_id : title));
 
-      intel_item it = {0};
+      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
       it.remote_key      = rkey;
       it.title           = title;
       it.summary         = jtitle;
-      it.body            = bj;
+      it.body = bt ? bt : bj;
       it.author          = authors[0] ? authors : NULL;
       it.lang            = "en";
       it.published_at    = year;
@@ -938,7 +950,7 @@ static int ac_doaj(const source_ctx *ctx, intel_sink *sink, const char *q) {
       it.properties_json = pj;
       it.tags_json       = "[\"osint-search\",\"DOAJ_ARTICLES\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(pj);
+      free(bj); free(bt); free(pj);
     }
   }
   cJSON_Delete(root);
@@ -968,7 +980,7 @@ static int ac_opencitations(const source_ctx *ctx, intel_sink *sink, const char 
   if (!encd) return 0;
 
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0", NULL };
+                         NULL };
 
   /* metadata for the cited paper (title/venue) — best-effort context. */
   char murl[512];
@@ -996,10 +1008,10 @@ static int ac_opencitations(const source_ctx *ctx, intel_sink *sink, const char 
     "https://opencitations.net/index/api/v1/citations/%s", encd);
   free(encd);
   char *body = jo_get(ctx, curl, hdrs, "OPENCITATIONS");
-  if (!body) { free(mtitle); free(mvenue); return 0; }
+  if (!body) { free(mtitle); free(mvenue); return jo_fail_rc(jo_last_status(), 1); }
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) { free(mtitle); free(mvenue); return 0; }
+  if (!root) { free(mtitle); free(mvenue); return -1; }
 
   int emitted = 0;
   if (cJSON_IsArray(root)) {
@@ -1033,14 +1045,15 @@ static int ac_opencitations(const source_ctx *ctx, intel_sink *sink, const char 
       cJSON_AddStringToObject(props, "cited_doi", doi);
       cJSON_AddStringToObject(props, "citing_doi", citing);
       cJSON_AddBoolToObject(props, "success", 1);
-      char *pj = cJSON_PrintUnformatted(props);
+      jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
       cJSON_Delete(props);
 
-      intel_item it = {0};
+      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
+  intel_item it = {0};
       it.remote_key      = oci ? oci : citing;
       it.title           = title;
       it.summary         = mtitle;
-      it.body            = bj;
+      it.body = bt ? bt : bj;
       it.lang            = "en";
       it.published_at    = crea;
       it.link            = link;
@@ -1048,7 +1061,7 @@ static int ac_opencitations(const source_ctx *ctx, intel_sink *sink, const char 
       it.properties_json = pj;
       it.tags_json       = "[\"osint-search\",\"OPENCITATIONS\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(pj);
+      free(bj); free(bt); free(pj);
     }
   }
   cJSON_Delete(root);
@@ -1061,13 +1074,14 @@ static int ac2_run(const source_ctx *ctx, intel_sink *sink) {
   const char *q = ctx->entity;
   if (!q || !*q) return -1;
 
-  if (strcmp(ctx->source_id, "ORCID_SEARCH") == 0)  ac_orcid(ctx, sink, q);
-  else if (strcmp(ctx->source_id, "ROR_ORGS") == 0) ac_ror(ctx, sink, q);
-  else if (strcmp(ctx->source_id, "DOAJ_ARTICLES") == 0) ac_doaj(ctx, sink, q);
-  else if (strcmp(ctx->source_id, "OPENCITATIONS") == 0) ac_opencitations(ctx, sink, q);
+  int n;
+  if (strcmp(ctx->source_id, "ORCID_SEARCH") == 0)  n = ac_orcid(ctx, sink, q);
+  else if (strcmp(ctx->source_id, "ROR_ORGS") == 0) n = ac_ror(ctx, sink, q);
+  else if (strcmp(ctx->source_id, "DOAJ_ARTICLES") == 0) n = ac_doaj(ctx, sink, q);
+  else if (strcmp(ctx->source_id, "OPENCITATIONS") == 0) n = ac_opencitations(ctx, sink, q);
   else return -1;
 
-  return 0;   /* honest empty is not an error */
+  return n < 0 ? -1 : 0;   /* honest empty 0; refused/unparsable fetch -1 */
 }
 
 #define AC2_DEF(SYM, ID, NAME, NAMEJA, URL, DESC) \

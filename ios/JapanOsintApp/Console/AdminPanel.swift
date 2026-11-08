@@ -208,9 +208,17 @@ struct AdminPanel: View {
         defer { restarting = false }
         do {
             try await apiClient.api.restartServer()
+        } catch APIError.http(let code, _) where code == 501 {
+            // The native server does not implement a self-restart
+            // (core/httpd.c answers 501 not_implemented). Polling /api/health
+            // after that answered at once and played the success haptic for a
+            // restart that never happened — say so instead.
+            restartError = "This server does not support restarting from the app. Restart it on the host."
+            Haptics.error()
+            return
         } catch {
             // Connection-reset is expected — the server kills the socket as
-            // it tears down. Treat any post-POST failure as "probably
+            // it tears down. Treat any other post-POST failure as "probably
             // restarting" and fall through to the health poll for liveness.
         }
         // Poll /api/health up to 30 s (1 s cadence) until the server is back.

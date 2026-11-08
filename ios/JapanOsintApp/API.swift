@@ -85,7 +85,7 @@ struct API: Sendable {
     /// but forbidding it here would break the working development loop while
     /// only half-addressing that; the real fix is to stop shipping a baked-in
     /// LAN default at all.
-    static func mayCarryCredentials(_ url: URL) -> Bool {
+    nonisolated static func mayCarryCredentials(_ url: URL) -> Bool {
         let scheme = (url.scheme ?? "").lowercased()
         if scheme == "https" { return true }
         guard scheme == "http", let host = url.host?.lowercased() else { return false }
@@ -220,8 +220,20 @@ struct API: Sendable {
     /// One-shot manual probe for a keyed source. Server uses the configured
     /// API key as the auth header so the request actually reaches the API
     /// instead of returning 401/403. Result is the refreshed StatusRow.
+    ///
+    /// The probe route answers `{id, probedAt, probeRequestUrl, …, reachable}`,
+    /// not a status row, so decoding it AS one nil'd every other field — the
+    /// row lost its name, status, collector and `requiresKey`, and the Ping
+    /// controls vanished after one tap. Re-read the row the server serves.
     func probeSource(_ id: String) async throws -> StatusRow {
-        try await post("/api/status/\(id)/probe")
+        struct Ignored: Decodable {}
+        let _: Ignored = try await post("/api/status/\(esc(id))/probe")
+        return try await statusRow(id)
+    }
+
+    /// GET /api/status/:id — one row, the same serialisation as `/api/status`.
+    func statusRow(_ id: String) async throws -> StatusRow {
+        try await get("/api/status/\(esc(id))")
     }
 
     /// Persist whether the scheduler is allowed to auto-probe a keyed
@@ -232,7 +244,10 @@ struct API: Sendable {
     /// two sides were reconciled.
     func setProbeConsent(_ id: String, allow: Bool) async throws -> StatusRow {
         let body = try JSONSerialization.data(withJSONObject: ["consent": allow])
-        return try await post("/api/status/\(id)/consent", body: body)
+        // `{ok, id, probeConsent}` — not a row; see probeSource.
+        struct Ignored: Decodable {}
+        let _: Ignored = try await post("/api/status/\(esc(id))/consent", body: body)
+        return try await statusRow(id)
     }
 
     /// Backfill for the Camera Discovery view. Returns historical discovery
@@ -274,6 +289,31 @@ struct API: Sendable {
         let url = try makeURL(layer.dataEndpoint, query: query)
         let bytes = try await request(url, timeout: 40)
         let layerId = layer.id
+        return try await Task.detached(priority: .userInitiated) {
+            do {
+                let raw = try JSONDecoder().decode(FeatureCollection.self, from: bytes)
+                return raw.tagged(layerId: layerId)
+            } catch {
+                throw APIError.decoding(error)
+            }
+        }.value
+    }
+
+    /// GET /api/layers/:layerId/geojson?limit=&offset= — the next page of a
+    /// layer's fused FeatureCollection (core/dataapi.c dataapi_layer_fc).
+    /// `/api/data/<layerId>` serves the FIRST page of that same builder at its
+    /// 10,000-feature default and says so in `_meta` (records_available,
+    /// truncated, next_offset); this route is how the rest is reached. Same
+    /// detached decode as `data(for:)`, same tagging, so features merge.
+    nonisolated func layerGeoJSONPage(layerId: String, limit: Int,
+                                      offset: Int) async throws -> FeatureCollection {
+        let seg = layerId.addingPercentEncoding(withAllowedCharacters: .alphanumerics
+            .union(CharacterSet(charactersIn: "-._~"))) ?? layerId
+        let url = try makeURL("/api/layers/\(seg)/geojson", query: [
+            URLQueryItem(name: "limit", value: String(limit)),
+            URLQueryItem(name: "offset", value: String(offset)),
+        ])
+        let bytes = try await request(url, timeout: 60)
         return try await Task.detached(priority: .userInitiated) {
             do {
                 let raw = try JSONDecoder().decode(FeatureCollection.self, from: bytes)
@@ -356,26 +396,24 @@ struct API: Sendable {
     /// item has no vector yet. The uid is percent-encoded: uids carry `|` and
     /// `:`, which a URL string cannot hold raw.
     func similarItems(uid: String, k: Int = 20) async throws -> SemanticEnvelope {
-        let enc = uid.addingPercentEncoding(
-            withAllowedCharacters: .alphanumerics.union(CharacterSet(charactersIn: "-._~"))) ?? uid
-        return try await get("/api/intel/items/\(enc)/similar",
+        return try await get("/api/intel/items/\(esc(uid))/similar",
                              query: [URLQueryItem(name: "k", value: String(k))])
     }
 
     func intelItem(uid: String) async throws -> IntelItem {
-        let env: IntelItemEnvelope = try await get("/api/intel/items/\(uid)")
+        let env: IntelItemEnvelope = try await get("/api/intel/items/\(esc(uid))")
         return env.data
     }
     /// Entities mentioned in an item (breach records + normal intel items).
     /// Empty array when the item has no extracted mentions.
     func itemEntities(uid: String) async throws -> [ItemEntity] {
-        let env: ItemEntitiesEnvelope = try await get("/api/intel/items/\(uid)/entities")
+        let env: ItemEntitiesEnvelope = try await get("/api/intel/items/\(esc(uid))/entities")
         return env.data
     }
     /// Operator-gated: decrypt a breach record's leaked secret(s). Throws
     /// `.http(403, …)` for non-operators; the caller surfaces that inline.
     func revealItem(uid: String, reason: String) async throws -> RevealResult {
-        try await get("/api/intel/items/\(uid)/reveal",
+        try await get("/api/intel/items/\(esc(uid))/reveal",
                       query: [URLQueryItem(name: "reason", value: reason)])
     }
     /// User-initiated trigger. Server runs the named intel collector and
@@ -486,9 +524,9 @@ struct API: Sendable {
         return try await put("/api/tenant-keys/policy", body: body)
     }
 
-    /// Triggers `node --watch` to respawn the server. The HTTP request races
-    /// the process teardown — caller should treat any post-POST connection
-    /// reset as expected and switch to /api/health polling for liveness.
+    /// Asks the server to restart. The native server answers 501
+    /// `not_implemented` (core/httpd.c); the caller must treat that as "not
+    /// supported", and only a connection reset as "probably restarting".
     func restartServer() async throws {
         let url = try makeURL("/api/admin/restart")
         _ = try await request(url, method: "POST", body: Data("{}".utf8), timeout: 10)
@@ -519,6 +557,44 @@ struct API: Sendable {
     func rejectRepair(_ id: Int) async throws -> OkResult {
         try await post("/api/admin/repairs/\(id)/reject", timeout: 15)
     }
+    /// DELETE /api/admin/repairs/:id — undo an APPLIED url_swap: removes the
+    /// runtime URL override approval installed and marks the repair verified
+    /// again (maintenance_repair_revert, maintenanceapi.c:635; audited as
+    /// `collector.repair.revert`, httpd.c ~3243-3256). 409 `not_revertable`
+    /// for anything that is not a merged url_swap.
+    @discardableResult
+    func revertRepair(_ id: Int) async throws -> OkResult {
+        let url = try makeURL("/api/admin/repairs/\(id)")
+        let data = try await request(url, method: "DELETE", timeout: 15)
+        do { return try JSONDecoder().decode(OkResult.self, from: data) }
+        catch { throw APIError.decoding(error) }
+    }
+
+    /// GET /api/admin/maintenance/lists/:name?hours=&limit=&offset= — the
+    /// next page of one of the digest's lists (needs_human, auto_fixed,
+    /// awaiting_apply, awaiting_pr, auto_dismissed, quarantined,
+    /// url_overrides, worst_sources). The server clamps `limit` to 200.
+    func maintenanceList<Row: Decodable>(_ name: String, hours: Int, limit: Int = 100,
+                                         offset: Int, of rowType: Row.Type) async throws -> OffsetPaged<Row> {
+        let env: MaintenanceListEnvelope<Row> = try await get(
+            "/api/admin/maintenance/lists/\(esc(name))",
+            query: [URLQueryItem(name: "hours", value: String(hours)),
+                    URLQueryItem(name: "limit", value: String(limit)),
+                    URLQueryItem(name: "offset", value: String(offset))])
+        return OffsetPaged(rows: env.rows, page: env.page)
+    }
+
+    /// GET /api/admin/maintenance/source/:id/{fetch_log,anomalies,repairs} —
+    /// the rest of a per-source pipeline list.
+    func maintenanceSourceList<Row: Decodable>(_ sourceId: String, list: String, limit: Int = 100,
+                                               offset: Int, of rowType: Row.Type) async throws -> OffsetPaged<Row> {
+        let env: MaintenanceListEnvelope<Row> = try await get(
+            "/api/admin/maintenance/source/\(esc(sourceId))/\(list)",
+            query: [URLQueryItem(name: "limit", value: String(limit)),
+                    URLQueryItem(name: "offset", value: String(offset))])
+        return OffsetPaged(rows: env.rows, page: env.page)
+    }
+
     /// Lift a circuit-breaker quarantine so the source can be scheduled again.
     @discardableResult
     func unquarantineSource(_ id: String) async throws -> OkResult {
@@ -786,10 +862,6 @@ struct API: Sendable {
     func entity(_ type: String, _ id: String) async throws -> EntityProfile {
         try await get("/api/entities/\(type)/\(id)")
     }
-    func entityGraph(_ type: String, _ id: String, depth: Int = 1) async throws -> EntityGraph {
-        try await get("/api/entities/\(type)/\(id)/graph",
-                      query: [URLQueryItem(name: "depth", value: String(depth))])
-    }
     func entityMentions(_ type: String, _ id: String, limit: Int = 50) async throws -> [EntityMention] {
         let env: MentionsEnvelope = try await get(
             "/api/entities/\(type)/\(id)/mentions",
@@ -804,19 +876,33 @@ struct API: Sendable {
     /// Returns nil when `baseURL` — which the user types into Settings — is not
     /// a parseable URL. This used to force-unwrap, so a typo'd backend URL
     /// crashed the app the moment a search was started.
-    func searchStreamRequest(_ requestId: String) -> URLRequest? {
+    ///
+    /// `streamKey` is the start response's `stream_key`. The server
+    /// (core/httpd.c ~2245-2262) checks ownership by the caller's tenant when a
+    /// valid bearer arrives, else by `?key=`; without either the stream answers
+    /// `event: error {"error":"not_found"}` — so a run whose bearer expired
+    /// mid-stream still opens with the key.
+    func searchStreamRequest(_ requestId: String, streamKey: String? = nil) -> URLRequest? {
         let base = baseURL.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
-        guard let url = URL(string: base + "/api/search/stream/\(requestId)") else {
+        guard var comps = URLComponents(string: base + "/api/search/stream/\(esc(requestId))") else {
             return nil
         }
+        if let streamKey, !streamKey.isEmpty {
+            comps.queryItems = [URLQueryItem(name: "key", value: streamKey)]
+        }
+        guard let url = comps.url else { return nil }
         var req = URLRequest(url: url)
         req.timeoutInterval = 600
         req.setValue("text/event-stream", forHTTPHeaderField: "Accept")
-        if let token = AuthTokenBox.shared.accessToken, !token.isEmpty {
-            req.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        }
-        if let tid = AuthTokenBox.shared.tenantId, !tid.isEmpty {
-            req.setValue(tid, forHTTPHeaderField: "X-Tenant-Id")
+        // The same guard as send(): never hand the bearer to a public host
+        // over plain http.
+        if API.mayCarryCredentials(url) {
+            if let token = AuthTokenBox.shared.accessToken, !token.isEmpty {
+                req.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+            }
+            if let tid = AuthTokenBox.shared.tenantId, !tid.isEmpty {
+                req.setValue(tid, forHTTPHeaderField: "X-Tenant-Id")
+            }
         }
         return req
     }

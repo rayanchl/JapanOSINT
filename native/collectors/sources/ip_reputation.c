@@ -199,7 +199,7 @@ static int emit_source(intel_sink *sink, const char *ip, const char *source,
   cJSON_AddStringToObject(props, "ip", ip);
   cJSON_AddStringToObject(props, "rep_source", source);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
 
   char rk[300], title[320];
   snprintf(rk, sizeof rk, "iprep:%s:%s", source, ip);
@@ -216,17 +216,18 @@ static int emit_source(intel_sink *sink, const char *ip, const char *source,
     summary = sbuf;
   }
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.summary         = summary;
   it.record_type     = "osint_service_result";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"IP_REPUTATION\"]";
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   cJSON_Delete(props);
   cJSON_Delete(data);
   return rc >= 0 ? 1 : 0;

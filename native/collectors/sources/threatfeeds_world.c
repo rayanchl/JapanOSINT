@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 /* trim CR/LF/space/quotes at both ends, in place. */
 static void tf_trim(char *s) {
@@ -183,14 +184,13 @@ static int tf_malwarebazaar(const source_ctx *ctx, intel_sink *sink,
   if (!authkey || !*authkey) {
     fprintf(stderr, "[MALWAREBAZAAR] gated (no ABUSECH_AUTH_KEY) — abuse.ch "
                     "retired anonymous API access, unauthenticated = HTTP 401\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "MALWAREBAZAAR", "MALWAREBAZAAR", (const char *const[]){"ABUSECH_AUTH_KEY", "MALWAREBAZAAR_AUTH_KEY", NULL}, NULL, NULL);
   }
   char authhdr[256];
   snprintf(authhdr, sizeof authhdr, "Auth-Key: %s", authkey);
   const char *body_post = "query=get_recent&selector=time";
   const char *hdrs[] = {
     "Content-Type: application/x-www-form-urlencoded",
-    "User-Agent: JapanOSINT/1.0 (threat-intel)",
     authhdr,
     NULL };
   http_response hr = {0};
@@ -426,10 +426,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
     const char *hdrs[] = {
       "Accept: application/json, text/csv, text/plain, */*",
-      "User-Agent: JapanOSINT/1.0 (threat-intel)",
       NULL };
     char *body = jo_get(ctx, r->url, hdrs, r->id);
-    if (!body) return 0;                     /* fetch failed → honest empty */
+    if (!body) return jo_fail_rc(jo_last_status(), 0);                     /* 2026-11-07: a failed fetch is -1, not an honest empty */
 
     switch (r->mode) {
       case M_URLHAUS:   tf_urlhaus(ctx, sink, body, q, max); break;

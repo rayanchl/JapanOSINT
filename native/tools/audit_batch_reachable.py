@@ -39,7 +39,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 # split_opts() and a FIRST-wins opt() lookup, while the generator resolved the
 # same duplicated key last-wins — and so reported OSM_API_CHANGESETS_BLACKSEA,
 # which runs daily, as a row that can never run. See tools/manifest.py.
-from manifest import COLS, parse_opts                      # noqa: E402
+from manifest import COLS, parse_opts, iter_lines          # noqa: E402
 
 # mirrors hp_uses_entity() exactly: every entity token starts "{q" (case
 # sensitive) EXCEPT the raw POST form "{Q}", which hp_uses_entity() checks
@@ -56,21 +56,13 @@ def rows(path):
     """(lno, raw, row|None, malformed) — a line that LOOKS like a row and is
     not comes back flagged rather than silently indistinguishable from a
     comment, because "skipped" and "checked and clean" are not the same
-    answer and this file used to give the second one for both."""
-    for lno, line in enumerate(io.open(path, encoding="utf-8"), 1):
-        # rstrip \r too, matching manifest.iter_lines(): manifest .txt files
-        # are not covered by .gitattributes' `eol=lf`, so a CRLF checkout
-        # leaves \r riding on the last column (opts). --fix below rewrites
-        # rows from these fields, so an un-stripped \r would get baked into
-        # the file as data at the join point.
-        s = line.rstrip("\n").rstrip("\r")
-        if not s.strip() or s.lstrip().startswith("#"):
-            yield lno, s, None, False
-            continue
-        if s.count("|") != len(COLS) - 1:
-            yield lno, s, None, True
-            continue
-        yield lno, s, dict(zip(COLS, s.split("|"))), False
+    answer and this file used to give the second one for both.
+
+    The line split is manifest.iter_lines() — the ONE manifest reader (rule
+    4c) — rather than a private copy of it; this used to split lines itself,
+    which is the duplication tools/manifest.py exists to remove."""
+    for lno, raw, kind, r in iter_lines(path):
+        yield lno, raw, r if kind == "row" else None, kind == "bad"
 
 
 # How often a static source is worth re-fetching. A blanket number would be
@@ -105,7 +97,52 @@ def cadence_for(r):
     return DEFAULT_CADENCE
 
 
+def self_test():
+    """A filter_query row has no entity token and no interval and IS reachable
+    (hp_run's third reach term); the old check called it "never runs"."""
+    import tempfile
+    fields = dict.fromkeys(COLS, "x")
+    lines = []
+    for sid, url, opts in (("FQ", "https://e.example/sdn.csv", "filter_query=1"),
+                           ("PIV", "https://e.example/?q={q}", ""),
+                           ("DEAD", "https://e.example/static.csv", ""),
+                           ("FQ0", "https://e.example/b.csv", "filter_query=0")):
+        f = dict(fields, id=sid, url=url, opts=opts)
+        lines.append("|".join(f[c] for c in COLS))
+    with tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False) as fh:
+        fh.write("\n".join(lines) + "\n")
+        path = fh.name
+    import contextlib
+    import io as _io
+    buf = _io.StringIO()
+    old = sys.argv
+    try:
+        sys.argv = ["x", "--quiet", path]
+        with contextlib.redirect_stdout(buf):
+            rc = main()
+        sys.argv = ["x", path]
+        buf2 = _io.StringIO()
+        with contextlib.redirect_stdout(buf2):
+            main()
+    finally:
+        sys.argv = old
+        os.unlink(path)
+    out = buf2.getvalue()
+    want_dead = {"DEAD", "FQ0"}
+    got_dead = {sid for sid in ("FQ", "PIV", "DEAD", "FQ0")
+                if re.search(r"\s%s\s+static URL" % sid, out)}
+    ok = got_dead == want_dead and rc == 1 and "2 of 4 rows can never run" in buf.getvalue()
+    if not ok:
+        print("audit_batch_reachable SELF-TEST FAIL  never-runs=%s want %s"
+              % (sorted(got_dead), sorted(want_dead)))
+    return ok
+
+
 def main():
+    if "--self-test" in sys.argv[1:]:
+        ok = self_test()
+        print("audit_batch_reachable fixtures: %s" % ("all pass" if ok else "FAILED"))
+        return 0 if ok else 2
     ap = argparse.ArgumentParser()
     ap.add_argument("manifests", nargs="+")
     ap.add_argument("--fix", action="store_true",
@@ -141,8 +178,17 @@ def main():
                          dups[0]))
                 out.append(raw)
                 continue
+            # hp_run's reach test is `hp_uses_entity(url) ||
+            # hp_uses_entity(post_body) || s->filter_query`
+            # (lib/hpengine.c): a bulk file filtered by the entity LOCALLY
+            # (filter_query=1, OFAC's sdn.csv) is a pivot with no token in its
+            # URL. Without the third term this reported those rows "never
+            # runs", and --fix would have bolted an interval onto a row that is
+            # an entity lookup (registry_is_entity_pivot() counts it too).
+            fq = (o.get("filter_query") or "").strip()
             pivotable = bool(ENTITY_TOKEN.search(r["url"]) or
-                             ENTITY_TOKEN.search(o.get("post_body", "")))
+                             ENTITY_TOKEN.search(o.get("post_body", "")) or
+                             (fq.lstrip("-").isdigit() and int(fq) != 0))
             interval = o.get("interval")
             scheduled = interval is not None and interval.isdigit() and int(interval) > 0
             if pivotable or scheduled:

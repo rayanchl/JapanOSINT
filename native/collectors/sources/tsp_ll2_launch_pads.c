@@ -26,7 +26,7 @@
 #include <string.h>
 
 #define LL2_PAD_BASE "https://ll.thespacedevs.com/2.2.0/pad/"
-#define PAGES 4
+#define PAGES 4   /* 2026-11-07: count 240 → 3 pages of 100 */
 #define PAGE_SIZE 100
 
 /* Launch Library returns coordinates as STRINGS. Accept either shape. */
@@ -118,19 +118,20 @@ static int emit_pads(cJSON *results, intel_sink *sink) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  int total = 0, pages = 0;
+  int total = 0, pages = 0, cut = 0, last_full = 0;
   for (int i = 0; i < PAGES; i++) {
     char url[192];
     snprintf(url, sizeof url, "%s?limit=%d&offset=%d",
              LL2_PAD_BASE, PAGE_SIZE, i * PAGE_SIZE);
     cJSON *doc = feed_get_json(ctx->http, url, 30000);
-    if (!doc) break;                 /* 429 / transport error: keep what we got */
+    if (!doc) { cut = pages > 0; break; }   /* a refused LATER page is disclosed below */
     cJSON *res = cJSON_GetObjectItem(doc, "results");
-    if (!cJSON_IsArray(res)) { cJSON_Delete(doc); break; }
+    if (!cJSON_IsArray(res)) { cJSON_Delete(doc); cut = pages > 0; break; }
     pages++;
     int got = cJSON_GetArraySize(res);
     total += emit_pads(res, sink);
     int done = !cJSON_IsString(cJSON_GetObjectItem(doc, "next"));
+    last_full = (!done);
     cJSON_Delete(doc);
     if (got == 0 || done) break;
   }
@@ -138,6 +139,18 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     fprintf(stderr, "[ll2-launch-pads] fetch failed (anonymous tier throttled?)\n");
     return -1;
   }
+  /* Every stop is disclosed (2026-11-07): a later page that failed used to
+   * `break` as if it were the end of the data, and a walk that used up its
+   * page budget on full pages said nothing. */
+  if (cut)
+    jo_trunc_notice_scoped(sink, "ll2-launch-pads", "walk-cut", LL2_PAD_BASE, total, -1,
+                           "a later page failed (transport, refusal or an "
+                           "unreadable body) and the walk stopped there",
+                           "re-run; one failed page is one reading");
+  else if (pages >= PAGES && last_full)
+    jo_trunc_notice_scoped(sink, "ll2-launch-pads", "page-ceiling", LL2_PAD_BASE, total, -1,
+                           "the PAGES ceiling stopped the walk on a full page",
+                           "raise PAGES in tsp_ll2_launch_pads.c");
   fprintf(stderr, "[ll2-launch-pads] emitted %d over %d page(s)\n", total, pages);
   return 0;
 }

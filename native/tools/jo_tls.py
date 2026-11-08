@@ -77,8 +77,11 @@ def context():
     if os.path.exists(extra):
         try:
             ctx.load_verify_locations(extra)
-        except Exception:
-            pass
+        except Exception as e:
+            # Not silent: without these the nine leaf-only hosts read as dead
+            # to this tool while the engine reaches them (CLAUDE.md, D1).
+            import sys
+            print("jo_tls: could not load %s: %s" % (extra, e), file=sys.stderr)
     try:
         ctx.set_ciphers("DEFAULT@SECLEVEL=1")
     except Exception:
@@ -88,6 +91,44 @@ def context():
     assert ctx.verify_mode == ssl.CERT_REQUIRED, "verification must stay on"
     assert ctx.check_hostname, "hostname checking must stay on"
     return ctx
+
+
+_BUNDLE = None
+
+
+def ca_bundle():
+    """A PEM file for tools that shell out to `curl`: the system roots, the
+    session CA and the extra intermediates, so `curl --cacert` trusts what
+    context() trusts — and NOTHING is skipped: this widens no trust, it only
+    lets curl complete the chains the engine completes (the entries are
+    intermediates, which can complete a chain and never anchor one).
+
+    curl's --cacert REPLACES its default store, which is why the system roots
+    are copied in first rather than the extras alone."""
+    global _BUNDLE
+    if _BUNDLE and os.path.exists(_BUNDLE):
+        return _BUNDLE
+    import tempfile
+    parts = []
+    dv = ssl.get_default_verify_paths()
+    for p in (dv.cafile, dv.openssl_cafile, "/etc/ssl/certs/ca-certificates.crt",
+              _CA, extra_intermediates_path()):
+        if p and os.path.isfile(p) and p not in parts:
+            parts.append(p)
+    fd, path = tempfile.mkstemp(prefix="jo_tls_", suffix=".pem")
+    with os.fdopen(fd, "wb") as out:
+        for p in parts:
+            with open(p, "rb") as f:
+                out.write(f.read().rstrip(b"\n") + b"\n")
+    import atexit
+    atexit.register(lambda: os.path.exists(path) and os.unlink(path))
+    _BUNDLE = path
+    return path
+
+
+def curl_args():
+    """`["--cacert", <bundle>]` — splice into a curl argv."""
+    return ["--cacert", ca_bundle()]
 
 
 if __name__ == "__main__":

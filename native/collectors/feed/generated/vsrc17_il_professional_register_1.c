@@ -7,44 +7,52 @@
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
 
+/* datastore_search rows below carry `sort=_id asc` (2026-11-07). An offset
+ * walk with no declared order relies on the backend's default; CKAN's
+ * datastore `_id` is its own sequential row id. Measured one or two rows per
+ * host (izmir, data.gov.il, data.gov.au, QLD, VIC, Mauritius, Panama,
+ * data.gov.sg): `_id desc` answers the opposite end, a bogus sort is refused
+ * (409, or a 404 page on data.gov.il), and the total does not move. The
+ * unsorted first page was already _id 1,2,3 on every one, so this is
+ * STABILISING, not a recovery: 0 records were measured lost without it. */
 VJSON(il_certified_accountants, "il-certified-accountants", "Israel — certified public accountants register", "Israel — certified public accountants register",
   "il_professional-register", "professional-register",
-  "https://data.gov.il/api/3/action/datastore_search?resource_id=7e86def9-0899-45f4-8942-d6fe38482b1a&limit=100",
+  "https://data.gov.il/api/3/action/datastore_search?resource_id=7e86def9-0899-45f4-8942-d6fe38482b1a&limit=100&sort=_id%20asc",
   "result.records",
   "he", "[\"il\",\"professional-register\",\"batch17\",\"high-penetrancy\"]", 86400,
   "CPA roll: licence number, date the licence was granted, first and last name, town, and practice status (including self-declared non-practising).");
 
 VJSON(il_land_appraisers, "il-land-appraisers", "Israel — licensed land appraisers (shamai mekarke'in)", "Israel — licensed land appraisers (shamai mekarke'in)",
   "il_professional-register", "professional-register",
-  "https://data.gov.il/api/3/action/datastore_search?resource_id=8540534a-eccd-4568-a677-652d589ed172&limit=100",
+  "https://data.gov.il/api/3/action/datastore_search?resource_id=8540534a-eccd-4568-a677-652d589ed172&limit=100&sort=_id%20asc",
   "result.records",
   "he", "[\"il\",\"professional-register\",\"batch17\",\"high-penetrancy\"]", 86400,
   "Appraiser roll: appraiser name, licence number, file number and city.");
 
 VJSON(il_notaries, "il-notaries", "Israel — licensed notaries register", "Israel — licensed notaries register",
   "il_professional-register", "professional-register",
-  "https://data.gov.il/api/3/action/datastore_search?resource_id=3ead5fae-3513-46f8-a458-959ea3e035ae&limit=100",
+  "https://data.gov.il/api/3/action/datastore_search?resource_id=3ead5fae-3513-46f8-a458-959ea3e035ae&limit=100&sort=_id%20asc",
   "result.records",
   "he", "[\"il\",\"professional-register\",\"batch17\",\"high-penetrancy\"]", 86400,
   "Named notaries with licence file number, full name, town and the languages they are certified to notarise in.");
 
 VJSON(il_patent_attorneys, "il-patent-attorneys", "Israel — register of patent attorneys", "Israel — register of patent attorneys",
   "il_professional-register", "professional-register",
-  "https://data.gov.il/api/3/action/datastore_search?resource_id=0ff306c2-1ad9-4974-a2be-0420acf35685&limit=100",
+  "https://data.gov.il/api/3/action/datastore_search?resource_id=0ff306c2-1ad9-4974-a2be-0420acf35685&limit=100&sort=_id%20asc",
   "result.records",
   "he", "[\"il\",\"professional-register\",\"batch17\",\"high-penetrancy\"]", 86400,
   "Patent attorney roll with licence number, title, surname and first name, year entered on the register, fee year paid, EMAIL ADDRESS, street address, town and postcode.");
 
 VJSON(il_private_investigators, "il-private-investigators", "Israel — licensed private investigators", "Israel — licensed private investigators",
   "il_professional-register", "professional-register",
-  "https://data.gov.il/api/3/action/datastore_search?resource_id=a9ddb445-825f-4635-a573-fe82d2a95bf0&limit=100",
+  "https://data.gov.il/api/3/action/datastore_search?resource_id=a9ddb445-825f-4635-a573-fe82d2a95bf0&limit=100&sort=_id%20asc",
   "result.records",
   "he", "[\"il\",\"professional-register\",\"batch17\",\"high-penetrancy\"]", 86400,
   "Named licensed private investigators with surname, first name and licence number.");
 
 VJSON(il_real_estate_brokers, "il-real-estate-brokers", "Israel — licensed real estate brokers", "Israel — licensed real estate brokers",
   "il_professional-register", "professional-register",
-  "https://data.gov.il/api/3/action/datastore_search?resource_id=a0f56034-88db-4132-8803-854bcdb01ca1&limit=100",
+  "https://data.gov.il/api/3/action/datastore_search?resource_id=a0f56034-88db-4132-8803-854bcdb01ca1&limit=100&sort=_id%20asc",
   "result.records",
   "he", "[\"il\",\"professional-register\",\"batch17\",\"high-penetrancy\"]", 86400,
   "Active licensed brokers: licence number, broker full name and city of residence.");

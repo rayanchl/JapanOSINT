@@ -13,21 +13,21 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
-static const char *IT_UA = "User-Agent: JapanOSINT/1.0 (osint@example.org)";
 
 static int run_abuseipdb(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   const char *k = jo_env("ABUSEIPDB_API_KEY");
-  if (!k) { fprintf(stderr, "[ABUSEIPDB_CHECK] no ABUSEIPDB_API_KEY\n"); return 0; }
+  if (!k) return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "ABUSEIPDB_CHECK", "ABUSEIPDB_CHECK", (const char *const[]){"ABUSEIPDB_API_KEY", NULL}, NULL, NULL);
   char url[512];
   snprintf(url, sizeof url,
     "https://api.abuseipdb.com/api/v2/check?ipAddress=%s&maxAgeInDays=90", enc);
   char keyh[160]; snprintf(keyh, sizeof keyh, "Key: %s", k);
-  const char *hdrs[] = { "Accept: application/json", IT_UA, keyh, NULL };
+  const char *hdrs[] = { "Accept: application/json", keyh, NULL };
   char *body = jo_get(ctx, url, hdrs, "ABUSEIPDB_CHECK");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *data = cJSON_GetObjectItem(root, "data");
   const char *ip = data ? jo_sv(data, "ipAddress") : NULL;
   if (!ip) { cJSON_Delete(root); return 0; }
@@ -48,28 +48,29 @@ static int run_abuseipdb(const source_ctx *ctx, intel_sink *sink, const char *en
   cJSON *p = cJSON_CreateObject();
   cJSON_AddStringToObject(p, "service", "ABUSEIPDB_CHECK"); cJSON_AddStringToObject(p, "ip", ip);
   cJSON_AddBoolToObject(p, "success", 1);
-  char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+  jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
   char link[256], title[200];
   snprintf(link, sizeof link, "https://www.abuseipdb.com/check/%s", ip);
   snprintf(title, sizeof title, "%s — abuse score %.0f", ip, (score && cJSON_IsNumber(score)) ? score->valuedouble : 0);
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
-  it.remote_key = ip; it.title = title; it.summary = isp; it.body = bj; it.link = link; it.lang = "en";
+  it.remote_key = ip; it.title = title; it.summary = isp; it.body = bt ? bt : bj; it.link = link; it.lang = "en";
   it.record_type = "ip-reputation";
   it.properties_json = pj; it.tags_json = "[\"osint-search\",\"ABUSEIPDB_CHECK\"]";
-  int rc = sink->emit(sink, &it); free(bj); free(pj); cJSON_Delete(root);
+  int rc = sink->emit(sink, &it); free(bj); free(bt); free(pj); cJSON_Delete(root);
   return rc >= 0 ? 1 : 0;
 }
 
 static int run_ipqs(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   const char *k = jo_env("IPQUALITYSCORE_KEY");
-  if (!k) { fprintf(stderr, "[IPQUALITYSCORE_IP] no IPQUALITYSCORE_KEY\n"); return 0; }
+  if (!k) return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "IPQUALITYSCORE_IP", "IPQUALITYSCORE_IP", (const char *const[]){"IPQUALITYSCORE_KEY", NULL}, NULL, NULL);
   char url[512];
   snprintf(url, sizeof url, "https://ipqualityscore.com/api/json/ip/%s/%s", k, enc);
-  const char *hdrs[] = { "Accept: application/json", IT_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "IPQUALITYSCORE_IP");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *success = cJSON_GetObjectItem(root, "success");
   if (!cJSON_IsTrue(success)) { cJSON_Delete(root); return 0; }
   const cJSON *fraud = cJSON_GetObjectItem(root, "fraud_score");
@@ -91,27 +92,28 @@ static int run_ipqs(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   cJSON *p = cJSON_CreateObject();
   cJSON_AddStringToObject(p, "service", "IPQUALITYSCORE_IP"); cJSON_AddStringToObject(p, "ip", ctx->entity);
   cJSON_AddBoolToObject(p, "success", 1);
-  char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+  jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
   char title[200];
   snprintf(title, sizeof title, "%s — fraud %.0f", ctx->entity, (fraud && cJSON_IsNumber(fraud)) ? fraud->valuedouble : 0);
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
-  it.remote_key = ctx->entity; it.title = title; it.summary = isp; it.body = bj; it.lang = "en";
+  it.remote_key = ctx->entity; it.title = title; it.summary = isp; it.body = bt ? bt : bj; it.lang = "en";
   it.record_type = "ip-reputation";
   it.properties_json = pj; it.tags_json = "[\"osint-search\",\"IPQUALITYSCORE_IP\"]";
-  int rc = sink->emit(sink, &it); free(bj); free(pj); cJSON_Delete(root);
+  int rc = sink->emit(sink, &it); free(bj); free(bt); free(pj); cJSON_Delete(root);
   return rc >= 0 ? 1 : 0;
 }
 
 static int run_pulsedive(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   const char *k = jo_env("PULSEDIVE_API_KEY");
-  if (!k) { fprintf(stderr, "[PULSEDIVE_INDICATOR] no PULSEDIVE_API_KEY\n"); return 0; }
+  if (!k) return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "PULSEDIVE_INDICATOR", "PULSEDIVE_INDICATOR", (const char *const[]){"PULSEDIVE_API_KEY", NULL}, NULL, NULL);
   char url[512];
   snprintf(url, sizeof url, "https://pulsedive.com/api/info.php?indicator=%s&pretty=1&key=%s", enc, k);
-  const char *hdrs[] = { "Accept: application/json", IT_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "PULSEDIVE_INDICATOR");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const char *indicator = jo_sv(root, "indicator");
   if (!indicator) { cJSON_Delete(root); return 0; }
   const char *type = jo_sv(root, "type");
@@ -125,17 +127,18 @@ static int run_pulsedive(const source_ctx *ctx, intel_sink *sink, const char *en
   cJSON *p = cJSON_CreateObject();
   cJSON_AddStringToObject(p, "service", "PULSEDIVE_INDICATOR");
   cJSON_AddBoolToObject(p, "success", 1);
-  char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+  jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
   char link[256], title[200];
   const char *iid = jo_sv(root, "iid");
   if (iid) snprintf(link, sizeof link, "https://pulsedive.com/indicator/?iid=%s", iid); else link[0] = 0;
   snprintf(title, sizeof title, "%s — risk %s", indicator, risk ? risk : "unknown");
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
-  it.remote_key = indicator; it.title = title; it.summary = risk; it.body = bj;
+  it.remote_key = indicator; it.title = title; it.summary = risk; it.body = bt ? bt : bj;
   it.link = link[0] ? link : NULL; it.lang = "en";
   it.record_type = "threat-indicator";
   it.properties_json = pj; it.tags_json = "[\"osint-search\",\"PULSEDIVE_INDICATOR\"]";
-  int rc = sink->emit(sink, &it); free(bj); free(pj); cJSON_Delete(root);
+  int rc = sink->emit(sink, &it); free(bj); free(bt); free(pj); cJSON_Delete(root);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -151,7 +154,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   else if (!strcmp(sid, "PULSEDIVE_INDICATOR")) n = run_pulsedive(ctx, sink, enc);
   free(enc);
   fprintf(stderr, "[%s] emitted %d\n", sid, n);
-  return 0;
+  return n < 0 ? -1 : 0;
 }
 
 #define IT_DEF(sym, ID, NM, DESC) \

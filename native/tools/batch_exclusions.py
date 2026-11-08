@@ -120,6 +120,7 @@ COLLECTORS = os.path.join(NATIVE, "collectors")
 
 sys.path.insert(0, HERE)
 from manifest import iter_lines                             # noqa: E402
+import ctable                                               # noqa: E402  (THE C row reader)
 
 URL_FIELD = re.compile(r'\.(?:url|detail_url)\s*=\s*"([^"]+)"')
 # The same field, with every adjacent literal of its value (after macro
@@ -294,6 +295,20 @@ def scan(skip_prefix=None):
                 u = "".join(unesc(x) for x in STRLIT.findall(run.group(1)))
                 if u.startswith("http") and keep_ep(norm(u)):
                     eps[norm(u)].add(rel)
+            # And every row as tools/ctable.py reads it (the shared C row
+            # reader): a url built from a string macro defined in terms of
+            # ANOTHER macro, or split around a comment, is one string there and
+            # was invisible to the regex above. A union, so the regex's reading
+            # (which also sees a `.url` in a non-table struct of the same file)
+            # is kept and nothing it found is lost.
+            for row in ctable.rows_in_text(t, rel):
+                for fld in ("url", "detail_url", "index_url"):
+                    u = row.s(fld)
+                    if u.startswith("http") and keep_ep(norm(u)):
+                        eps[norm(u)].add(rel)
+                sid = row.s("id")
+                if sid:
+                    ids.add(sid)
             continue
         lits = joined_literals(ex)
         for lit in lits:

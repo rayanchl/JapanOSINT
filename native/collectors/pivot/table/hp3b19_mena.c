@@ -346,8 +346,15 @@ static const hp_source HP3B19_MENA[] = {
     .record_type = "electricity-load",
     .tags = "\"saudi\",\"electricity\",\"ecra\",\"energy\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://datasource.kapsarc.org/api/explore/v2.1/catalog/datasets/saudi-arabia-electricity-load-monthly-by-region/records?limit=100",
+    /* `order_by=date,indicator` ascending + `offset=0` (2026-11-07): an offset walk with
+     * no sort over an ODS index that promises no order. The key is the
+     * dataset's own identity: date+indicator distinct over all 1,584 records read through
+     * /exports/json. Checked on this dataset: order_by=frobnicate is HTTP 400 (ODSQL
+     * validates it), asc and desc answer different pages, total_count is
+     * unchanged by the sort, offsets 0 and 100 are disjoint. */
+    .url = "https://datasource.kapsarc.org/api/explore/v2.1/catalog/datasets/saudi-arabia-electricity-load-monthly-by-region/records?limit=100&offset=0&order_by=date%20asc%2Cindicator%20asc",
     .array_path = "results",
+    .id_keys = "date+indicator",   /* none declared; 1,584 of 1,584 distinct (2026-11-07) */
     .interval = 3600,
     .page_param = "offset",
     .page_size = 100,
@@ -482,7 +489,13 @@ static const hp_source HP3B19_MENA[] = {
     .record_type = "cost-index",
     .tags = "\"saudi\",\"construction\",\"prices\",\"gastat\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://datasource.kapsarc.org/api/explore/v2.1/catalog/datasets/construction-cost-indices-by-sector-and-section/records?limit=100",
+    /* `order_by=time_period,section` ascending + `offset=0` (2026-11-07): an offset walk with
+     * no sort over an ODS index that promises no order. The key is the
+     * dataset's own identity: time_period+section distinct over all 1,472 records read through
+     * /exports/json. Checked on KAPSARC_SAUDI_POWER_LOAD (same host): order_by=frobnicate is HTTP 400 (ODSQL
+     * validates it), asc and desc answer different pages, total_count is
+     * unchanged by the sort, offsets 0 and 100 are disjoint. */
+    .url = "https://datasource.kapsarc.org/api/explore/v2.1/catalog/datasets/construction-cost-indices-by-sector-and-section/records?limit=100&offset=0&order_by=time_period%20asc%2Csection%20asc",
     .array_path = "results",
     .id_keys = "time_period+section",
     .interval = 3600,
@@ -581,7 +594,13 @@ static const hp_source HP3B19_MENA[] = {
     .record_type = "trade-certificate-statistic",
     .tags = "\"qatar\",\"trade\",\"chamber\",\"exports\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.gov.qa/api/explore/v2.1/catalog/datasets/annual-certificates-of-origin-by-type-and-importing-country-open-access-data/records?limit=100",
+    /* `order_by=year,certificate_type,ldwl_lmstwrd` ascending + `offset=0` (2026-11-07): an offset walk with
+     * no sort over an ODS index that promises no order. The key is the
+     * dataset's own identity: year+certificate_type+ldwl_lmstwrd distinct over all 974 records read through
+     * /exports/json. Checked on QATAR_HEALTH_CENTRE_VISITS (same host): order_by=frobnicate is HTTP 400 (ODSQL
+     * validates it), asc and desc answer different pages, total_count is
+     * unchanged by the sort, offsets 0 and 100 are disjoint. */
+    .url = "https://www.data.gov.qa/api/explore/v2.1/catalog/datasets/annual-certificates-of-origin-by-type-and-importing-country-open-access-data/records?limit=100&offset=0&order_by=year%20asc%2Ccertificate_type%20asc%2Cldwl_lmstwrd%20asc",
     .array_path = "results",
     /* + ldwl_lmstwrd (the Arabic importing-country name): the English
      * importing_country label is shared by distinct Arabic-named partners, so
@@ -642,7 +661,13 @@ static const hp_source HP3B19_MENA[] = {
     .record_type = "air-cargo-statistic",
     .tags = "\"qatar\",\"aviation\",\"cargo\",\"hamad\",\"logistics\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.gov.qa/api/explore/v2.1/catalog/datasets/cargo-and-mail-via-hamad-international-airport-by-month/records?limit=100",
+    /* `order_by=year,month,category,flow` ascending + `offset=0` (2026-11-07): an offset walk with
+     * no sort over an ODS index that promises no order. The key is the
+     * dataset's own identity: year+month+category+flow distinct over all 336 records read through
+     * /exports/json. Checked on QATAR_HEALTH_CENTRE_VISITS (same host): order_by=frobnicate is HTTP 400 (ODSQL
+     * validates it), asc and desc answer different pages, total_count is
+     * unchanged by the sort, offsets 0 and 100 are disjoint. */
+    .url = "https://www.data.gov.qa/api/explore/v2.1/catalog/datasets/cargo-and-mail-via-hamad-international-airport-by-month/records?limit=100&offset=0&order_by=year%20asc%2Cmonth%20asc%2Ccategory%20asc%2Cflow%20asc",
     .array_path = "results",
     .id_keys = "year+month+category+flow",
     .interval = 86400,
@@ -661,8 +686,15 @@ static const hp_source HP3B19_MENA[] = {
     .record_type = "health-facility-statistic",
     .tags = "\"qatar\",\"health\",\"clinics\",\"statistics\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.data.gov.qa/api/explore/v2.1/catalog/datasets/number-of-visitors-to-health-centers-by-health-center/records?limit=100",
+    /* `order_by=year_lsn,health_center` ascending + `offset=0` (2026-11-07): an offset walk with
+     * no sort over an ODS index that promises no order. The key is the
+     * dataset's own identity: year_lsn+health_center distinct over all 183 records read through
+     * /exports/json. Checked on this dataset: order_by=frobnicate is HTTP 400 (ODSQL
+     * validates it), asc and desc answer different pages, total_count is
+     * unchanged by the sort, offsets 0 and 100 are disjoint. */
+    .url = "https://www.data.gov.qa/api/explore/v2.1/catalog/datasets/number-of-visitors-to-health-centers-by-health-center/records?limit=100&offset=0&order_by=year_lsn%20asc%2Chealth_center%20asc",
     .array_path = "results",
+    .id_keys = "year_lsn+health_center",   /* none declared; 183 of 183 distinct (2026-11-07) */
     .interval = 86400,
     .page_param = "offset",
     .page_size = 100,
@@ -1541,12 +1573,17 @@ static const hp_source HP3B19_MENA[] = {
     .record_type = "fire-service-callout",
     .tags = "\"turkey\",\"izmir\",\"fire\",\"emergency\",\"disaster\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://acikveri.bizizmir.com/api/3/action/datastore_search?resource_id=e7b837ba-9435-4de9-8f6e-3b37807a9743&limit=100",
+    /* `sort=_id asc` (2026-11-07): datastore_search promises no order without
+     * it. Measured on this resource: sort=frobnicate is HTTP 409 (validated),
+     * _id asc and desc answer different pages, the total (8,740) is unchanged
+     * by the sort, ascending _ids are monotonic and offset pages disjoint. At 100 a page under the 20-page default the row read 2,000 of 8,740; limit=1000 is honoured (offset 1000 answers _id 1001..2000), so the whole resource is read each run. */
+    .url = "https://acikveri.bizizmir.com/api/3/action/datastore_search?resource_id=e7b837ba-9435-4de9-8f6e-3b37807a9743&limit=1000&offset=0&sort=_id%20asc",
     .array_path = "result.records",
     .id_keys = "_id",
     .interval = 3600,
     .page_param = "offset",
-    .page_size = 100,
+    .page_size = 1000,
+    .page_max = 15,   /* 8,740 records on 2026-11-07, with headroom */
     .title_keys = "SAAT",
     .description = "Izmir fire brigade inspection, safety and precaution service "
       "records for the current year, broken down by district and "
@@ -1561,12 +1598,17 @@ static const hp_source HP3B19_MENA[] = {
     .record_type = "search-rescue-callout",
     .tags = "\"turkey\",\"izmir\",\"rescue\",\"emergency\",\"disaster\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://acikveri.bizizmir.com/api/3/action/datastore_search?resource_id=ae8feb0e-0e41-4939-b9e8-529253762023&limit=100",
+    /* `sort=_id asc` (2026-11-07): datastore_search promises no order without
+     * it. Measured on this resource: sort=frobnicate is HTTP 409 (validated),
+     * _id asc and desc answer different pages, the total (9,479) is unchanged
+     * by the sort, ascending _ids are monotonic and offset pages disjoint. At 100 a page under the 20-page default the row read 2,000 of 9,479; limit=1000 is honoured (offset 1000 answers _id 1001..2000), so the whole resource is read each run. */
+    .url = "https://acikveri.bizizmir.com/api/3/action/datastore_search?resource_id=ae8feb0e-0e41-4939-b9e8-529253762023&limit=1000&offset=0&sort=_id%20asc",
     .array_path = "result.records",
     .id_keys = "_id",
     .interval = 3600,
     .page_param = "offset",
-    .page_size = 100,
+    .page_size = 1000,
+    .page_max = 15,   /* 9,479 records on 2026-11-07, with headroom */
     .title_keys = "CIKIS_SAATI",
     .description = "Search and rescue incidents handled through the Izmir AKS112 "
       "emergency line this year, by district, incident type and "
@@ -1631,8 +1673,14 @@ static const hp_source HP3B19_MENA[] = {
     .record_type = "wholesale-price",
     .tags = "\"turkey\",\"izmir\",\"prices\",\"food\",\"market\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://acikveri.bizizmir.com/api/3/action/datastore_search?resource_id=d243f67a-73bb-4915-a6a4-355c294fc38d&limit=100",
+    /* `sort=_id asc` (2026-11-07): datastore_search promises no order without
+     * it. Measured on this resource: sort=frobnicate is HTTP 409 (validated),
+     * _id asc and desc answer different pages, the total (1,289) is unchanged
+     * by the sort, ascending _ids are monotonic and offset pages disjoint. Unsorted, the first page is NOT the _id-ascending page here, i.e.
+     * the default order is arbitrary. */
+    .url = "https://acikveri.bizizmir.com/api/3/action/datastore_search?resource_id=d243f67a-73bb-4915-a6a4-355c294fc38d&limit=100&offset=0&sort=_id%20asc",
     .array_path = "result.records",
+    .id_keys = "_id",   /* none was declared and `_id` is not in the engine's ID fallback list, so records keyed on their title and collapsed across pages */
     .interval = 3600,
     .page_param = "offset",
     .page_size = 100,
@@ -1734,6 +1782,15 @@ static const hp_source HP3B19_MENA[] = {
     .record_type = "dataset-record",
     .tags = "\"turkey\",\"istanbul\",\"opendata\",\"bulk\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    /* OPEN (2026-11-07, unmeasured from here): current_package_list_with_resources
+     * is ordered newest-modified first, so `page_resume` here does not
+     * compose — every edit moves a dataset to the head and shifts the stored
+     * position. The measured fix elsewhere (UA_DATAGOV_BULK, batch 34) is
+     * package_search?sort=id+asc with `start`, array_path result.results.
+     * It was NOT applied: data.ibb.gov.tr reset every request from this
+     * container (agent proxy: ws_closed_mid_exchange, six in a row), so
+     * nothing about the host could be measured and a URL changed without
+     * a reading is unvalidated. */
     .url = "https://data.ibb.gov.tr/api/3/action/current_package_list_with_resources?limit=100",
     .array_path = "result",
     .id_keys = "name",

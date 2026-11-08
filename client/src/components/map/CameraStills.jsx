@@ -90,7 +90,9 @@ export default function CameraStills({ cameraId }) {
         status: 'ok',
         rows: cursor ? [...s.rows, ...(r?.data || [])] : (r?.data || []),
         meta: r?.meta || s.meta,
-        cursor: r?.page?.cursor || null,
+        // The stills route spells it `page.cursor`; everything else uses
+        // `page.next_cursor`. Accept both until the server has one name.
+        cursor: r?.page?.next_cursor || r?.page?.cursor || null,
         why: null,
       }));
     } catch (e) {

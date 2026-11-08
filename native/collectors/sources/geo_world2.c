@@ -13,7 +13,6 @@
 #include <string.h>
 #include "_jp_osint.inc"
 
-static const char *GW_UA = "User-Agent: JapanOSINT/1.0 (osint@example.org)";
 
 static int parse_latlon(const char *s, double *lat, double *lon) {
   return sscanf(s, "%lf , %lf", lat, lon) == 2 || sscanf(s, "%lf/%lf", lat, lon) == 2;
@@ -23,11 +22,11 @@ static int run_suntimes(const source_ctx *ctx, intel_sink *sink, double lat, dou
   char url[320];
   snprintf(url, sizeof url,
     "https://api.sunrise-sunset.org/json?lat=%.6f&lng=%.6f&formatted=0", lat, lon);
-  const char *hdrs[] = { "Accept: application/json", GW_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "SUN_TIMES");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const char *status = jo_sv(root, "status");
   const cJSON *res = cJSON_GetObjectItem(root, "results");
   if (!res || (status && strcmp(status, "OK") != 0)) { cJSON_Delete(root); return 0; }
@@ -46,17 +45,18 @@ static int run_suntimes(const source_ctx *ctx, intel_sink *sink, double lat, dou
   cJSON *p = cJSON_CreateObject();
   cJSON_AddStringToObject(p, "service", "SUN_TIMES");
   cJSON_AddBoolToObject(p, "success", 1);
-  char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+  jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
   char rk[96], title[160];
   snprintf(rk, sizeof rk, "sun:%.4f,%.4f", lat, lon);
   snprintf(title, sizeof title, "Sun times @ %.4f,%.4f", lat, lon);
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key = rk; it.title = title; it.summary = sunrise;
-  it.body = bj; it.lang = "en"; it.has_geo = 1; it.lat = lat; it.lon = lon;
+  it.body = bt ? bt : bj; it.lang = "en"; it.has_geo = 1; it.lat = lat; it.lon = lon;
   it.record_type = "sun-times";
   it.properties_json = pj; it.tags_json = "[\"osint-search\",\"SUN_TIMES\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   cJSON_Delete(root);
   return rc >= 0 ? 1 : 0;
 }
@@ -65,11 +65,11 @@ static int run_elevation(const source_ctx *ctx, intel_sink *sink, double lat, do
   char url[320];
   snprintf(url, sizeof url,
     "https://api.open-elevation.com/api/v1/lookup?locations=%.6f,%.6f", lat, lon);
-  const char *hdrs[] = { "Accept: application/json", GW_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "ELEVATION_LOOKUP");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body); free(body);
-  if (!root) return 0;
+  if (!root) return -1;
   const cJSON *res = cJSON_GetObjectItem(root, "results");
   const cJSON *r0 = cJSON_IsArray(res) ? cJSON_GetArrayItem(res, 0) : NULL;  /* exhaustive-ok: elevation of the ONE queried point */
   const cJSON *elev = r0 ? cJSON_GetObjectItem(r0, "elevation") : NULL;
@@ -82,17 +82,18 @@ static int run_elevation(const source_ctx *ctx, intel_sink *sink, double lat, do
   cJSON *p = cJSON_CreateObject();
   cJSON_AddStringToObject(p, "service", "ELEVATION_LOOKUP");
   cJSON_AddBoolToObject(p, "success", 1);
-  char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
+  jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
   char rk[96], title[160];
   snprintf(rk, sizeof rk, "elev:%.4f,%.4f", lat, lon);
   snprintf(title, sizeof title, "Elevation %.0f m @ %.4f,%.4f", elev->valuedouble, lat, lon);
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
-  it.remote_key = rk; it.title = title; it.body = bj; it.lang = "en";
+  it.remote_key = rk; it.title = title; it.body = bt ? bt : bj; it.lang = "en";
   it.has_geo = 1; it.lat = lat; it.lon = lon;
   it.record_type = "elevation";
   it.properties_json = pj; it.tags_json = "[\"osint-search\",\"ELEVATION_LOOKUP\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   cJSON_Delete(root);
   return rc >= 0 ? 1 : 0;
 }
@@ -110,7 +111,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if      (!strcmp(sid, "SUN_TIMES"))        n = run_suntimes(ctx, sink, lat, lon);
   else if (!strcmp(sid, "ELEVATION_LOOKUP")) n = run_elevation(ctx, sink, lat, lon);
   fprintf(stderr, "[%s] emitted %d\n", sid, n);
-  return 0;
+  return n < 0 ? -1 : 0;
 }
 
 #define GW_DEF(sym, ID, NM, DESC) \

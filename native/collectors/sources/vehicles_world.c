@@ -47,12 +47,12 @@ static int nhtsa_vin(const source_ctx *ctx, intel_sink *sink, const char *vin) {
   free(enc);
 
   const char *hdrs[] = { "Accept: application/json",
-                         "User-Agent: JapanOSINT/1.0 (vehicle-osint)", NULL };
+                         NULL };
   char *body = jo_get(ctx, url, hdrs, "NHTSA_VIN");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 1);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   cJSON *results = cJSON_GetObjectItem(root, "Results");
   if (!cJSON_IsArray(results)) { cJSON_Delete(root); return 0; }
@@ -91,13 +91,14 @@ static int nhtsa_vin(const source_ctx *ctx, intel_sink *sink, const char *vin) {
   if (model) cJSON_AddStringToObject(props, "model", model);
   if (year)  cJSON_AddStringToObject(props, "year", year);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = vin;
   it.title           = title;
   it.summary         = make ? make : NULL;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "en";
   it.link            = "https://vpic.nhtsa.dot.gov/decoder/";
   it.record_type     = "nhtsa-vin";
@@ -106,7 +107,7 @@ static int nhtsa_vin(const source_ctx *ctx, intel_sink *sink, const char *vin) {
   int emitted = (sink->emit(sink, &it) >= 0) ? 1 : 0;
 
   cJSON_Delete(data); cJSON_Delete(props); cJSON_Delete(root);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   fprintf(stderr, "[NHTSA_VIN] emitted %d\n", emitted);
   return emitted;
 }
@@ -192,7 +193,7 @@ static int faa_registry(const source_ctx *ctx, intel_sink *sink, const char *q) 
   free(enc);
 
   char *html = jo_get(ctx, url, NULL, "FAA_REGISTRY");
-  if (!html) return 0;
+  if (!html) return jo_fail_rc(jo_last_status(), 0);
 
   cJSON *props = cJSON_CreateObject();
   cJSON_AddStringToObject(props, "service", "FAA_REGISTRY");
@@ -273,17 +274,18 @@ static int uscg_psix(const source_ctx *ctx, intel_sink *sink, const char *q) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
+  int rc = 0;   /* a helper's -1 = refused/unparsable fetch (2026-11-07) */
   const char *q = (ctx->entity && *ctx->entity) ? ctx->entity : NULL;
   if (!q) return 0;   /* audit-09: no pivot is an honest empty, not an error */
 
   const char *id = ctx->source_id;
-  if      (!strcmp(id, "NHTSA_VIN"))     nhtsa_vin(ctx, sink, q);
-  else if (!strcmp(id, "FAA_REGISTRY"))  faa_registry(ctx, sink, q);
-  else if (!strcmp(id, "PARIS_MOU_PSC")) paris_mou(ctx, sink, q);
-  else if (!strcmp(id, "TOKYO_MOU_PSC")) tokyo_mou(ctx, sink, q);
-  else if (!strcmp(id, "USCG_PSIX"))     uscg_psix(ctx, sink, q);
+  if      (!strcmp(id, "NHTSA_VIN"))     rc = nhtsa_vin(ctx, sink, q);
+  else if (!strcmp(id, "FAA_REGISTRY"))  rc = faa_registry(ctx, sink, q);
+  else if (!strcmp(id, "PARIS_MOU_PSC")) rc = paris_mou(ctx, sink, q);
+  else if (!strcmp(id, "TOKYO_MOU_PSC")) rc = tokyo_mou(ctx, sink, q);
+  else if (!strcmp(id, "USCG_PSIX"))     rc = uscg_psix(ctx, sink, q);
   else return -1;
-  return 0;   /* honest empty is not an error */
+  return rc < 0 ? -1 : 0;   /* honest empty 0, refused fetch -1 */
 }
 
 #define VEH_DEF(SYM, ID, NAME, NAMEJA, TYPE, URL, DESC) \

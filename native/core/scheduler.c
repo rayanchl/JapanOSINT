@@ -95,6 +95,11 @@ static const char *run_status(int rc, long records, int hosts, int hosts_ok,
   return "error";
 }
 
+const char *sched_run_status(int rc, long records, int hosts, int hosts_ok,
+                             const char **why) {
+  return run_status(rc, records, hosts, hosts_ok, why);
+}
+
 /* fetch_log.stored — house rule 4b's number, kept next to records_fetched so
  * the two can be compared over history rather than only in the run a human
  * happened to be watching. The column is added by db.c's ensure_column()
@@ -125,6 +130,9 @@ static void fetch_log_set_bytes(db_handle *db, long flid, unsigned long long byt
   sqlite3_bind_int64(s, 2, flid);
   sqlite3_step(s);
   sqlite3_finalize(s);
+}
+void sched_fetch_log_set_bytes(db_handle *db, long flid, unsigned long long bytes) {
+  fetch_log_set_bytes(db, flid, bytes);
 }
 static void fetch_log_set_stored(db_handle *db, long flid, long stored,
                                  int exact) {
@@ -676,16 +684,7 @@ static void sched_disclose_fetch_failure(intel_sink *sink, const source_def *d,
   {
     int tls = http_last_tls_cause();
     if (tls != HTTP_TLS_NONE) {
-      cJSON_AddStringToObject(p, "tls_cause",
-        tls == HTTP_TLS_NO_LOCAL_ISSUER   ? "no_local_issuer"
-      : tls == HTTP_TLS_EXPIRED           ? "expired"
-      : tls == HTTP_TLS_NOT_YET_VALID     ? "not_yet_valid"
-      : tls == HTTP_TLS_HOSTNAME_MISMATCH ? "hostname_mismatch"
-      : tls == HTTP_TLS_SELF_SIGNED       ? "self_signed"
-      : tls == HTTP_TLS_REVOKED           ? "revoked"
-      : tls == HTTP_TLS_UNRECOGNIZED_NAME ? "unrecognized_name"
-      : tls == HTTP_TLS_HANDSHAKE         ? "handshake"
-                                          : "other");
+      cJSON_AddStringToObject(p, "tls_cause", http_tls_cause_name(tls));
       cJSON_AddStringToObject(p, "tls_detail", http_tls_cause_label(tls));
       cJSON_AddStringToObject(p, "tls_remedy", http_tls_cause_remedy(tls));
     }
@@ -760,6 +759,42 @@ static void sched_disclose_fetch_failure(intel_sink *sink, const source_def *d,
           rc, hosts_ok, hosts, bytes);
 }
 
+/* The disclosure for a run made OUTSIDE the worker pool (core/osint_dispatch.c,
+ * the entity-pivot path), with the transport evidence read off its own client.
+ * Same two triggers as the scheduled path below: the health verdict is not
+ * "ok", or the collector returned non-zero — and either way only when the run
+ * left nothing behind. */
+void sched_disclose_if_silent(intel_sink *sink, const source_def *d,
+                              const char *entity, int rc, long n_emit,
+                              long n_notices, http_client *http) {
+  if (!sink || !d || n_emit != 0 || n_notices != 0) return;
+  int hosts = http ? http_client_host_count(http) : 0, hosts_ok = 0;
+  char hosts_failed[256]; hosts_failed[0] = '\0';
+  for (int i = 0; i < hosts; i++) {
+    int ok = 0;
+    const char *h = http_client_host_at(http, i, NULL, &ok);
+    if (h && ok) { hosts_ok++; continue; }
+    if (!h) continue;
+    size_t have = strlen(hosts_failed), need = strlen(h) + (have ? 2 : 0);
+    if (have + need < sizeof hosts_failed - 1) {
+      if (have) strcat(hosts_failed, ", ");
+      strcat(hosts_failed, h);
+    }
+  }
+  const char *why = NULL;
+  const char *st = run_status(rc, n_emit, hosts, hosts_ok, &why);
+  if (strcmp(st, "ok") != 0 || rc < 0)
+    sched_disclose_fetch_failure(sink, d, entity, rc, hosts, hosts_ok,
+                                 hosts_failed,
+                                 http ? http_client_bytes_in(http) : 0,
+                                 http ? http_client_request_count(http) : 0, why);
+}
+
+size_t sched_body_ceiling_for(db_handle *db, const char *source_id) {
+  if (!db || !source_id) return 0;
+  return (size_t)source_settings_int(db, source_id, SRCSET_BODY_CEILING, 0);
+}
+
 int scheduler_run_source(db_handle *db, const source_def *d,
                          const char *entity) {
   intel_sink inner = intel_sink_make(db, d->id, "legacy");
@@ -807,7 +842,9 @@ int scheduler_run_source(db_handle *db, const source_def *d,
   /* Same thread-local pattern for content-change detection (roadmap 26): the
    * httpclient hook needs a db_handle and source_id it cannot otherwise see. */
   content_change_scope_begin(db, d->id);
+  size_t prev_ceiling = http_run_body_ceiling_set(ctx.body_ceiling);
   int rc = d->run(&ctx, &sink);
+  http_run_body_ceiling_set(prev_ceiling);
   content_change_scope_end();
   evidence_scope_end();
   clock_gettime(CLOCK_MONOTONIC, &t1);
@@ -1570,10 +1607,26 @@ void scheduler_loop(db_handle *db) {
       if (now < next[i]) continue;
       /* User-set per-source mode: search_only sources don't cron for the
        * map (the search tab triggers them on demand). */
-      if (is_search_only(db, d->id)) { next[i] = now + cadence_apply(d->update_interval_sec); continue; }
+      /* Both holds re-arm on the row's cadence AS IT RUNS — sched_row_interval,
+       * the one composition (override > policy ∘ measured) — not on the
+       * declared value under the policy, which ignored a per-source override
+       * and the measured interval (audit 2026-11-07). */
+      if (is_search_only(db, d->id)) {
+        pthread_mutex_lock(&g_q.mu);
+        long hold = sched_row_interval(&g_state[i], d);
+        pthread_mutex_unlock(&g_q.mu);
+        next[i] = now + hold;
+        continue;
+      }
       /* Circuit breaker: a quarantined source is benched until the cooldown
        * lapses (a later probe past quarantined_until runs and may clear it). */
-      if (is_quarantined_impl(db, d->id)) { next[i] = now + cadence_apply(d->update_interval_sec); continue; }
+      if (is_quarantined_impl(db, d->id)) {
+        pthread_mutex_lock(&g_q.mu);
+        long hold = sched_row_interval(&g_state[i], d);
+        pthread_mutex_unlock(&g_q.mu);
+        next[i] = now + hold;
+        continue;
+      }
       /* Cadence is measured from the DUE time, not from completion: a source
        * that takes 90 s on a 60 s interval stays due immediately rather than
        * silently drifting to 150 s. q_push's skip-if-running is what stops

@@ -25,9 +25,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"  /* key gates file a needs-credential notice */
 
 /* Descriptive UA per OSM usage policy (Overpass + Nominatim both require it). */
-#define GEO_UA "User-Agent: JapanOSINT/1.0 (OSINT geospatial pivot; +https://github.com/JapanOSINT)"
 
 /* ---- OVERPASS_GLOBAL ---------------------------------------------------- */
 
@@ -96,18 +96,19 @@ static int op_emit(intel_sink *sink, const cJSON *el) {
   cJSON_AddNumberToObject(props, "lat", lat);
   cJSON_AddNumberToObject(props, "lon", lon);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char keybuf[64];
   if (type && oid) snprintf(keybuf, sizeof keybuf, "%s/%lld", type, oid);
   else             snprintf(keybuf, sizeof keybuf, "%.60s", name);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = keybuf;
   it.title           = name;
   it.summary         = place ? place : (amenity ? amenity : city);
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "en";
   it.link            = osm_url[0] ? osm_url : NULL;
   it.has_geo         = 1;
@@ -117,7 +118,7 @@ static int op_emit(intel_sink *sink, const cJSON *el) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"OVERPASS_GLOBAL\",\"geospatial\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -166,12 +167,12 @@ static int run_overpass(const source_ctx *ctx, intel_sink *sink) {
     "https://overpass-api.de/api/interpreter?data=%s", enc);
   free(enc);
 
-  const char *hdrs[] = { "Accept: application/json", GEO_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "overpass_global");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   int emitted = 0;
   cJSON *els = cJSON_GetObjectItem(root, "elements");
@@ -222,7 +223,7 @@ static int nm_emit(intel_sink *sink, const cJSON *r) {
   cJSON_AddNumberToObject(props, "lat", lat);
   cJSON_AddNumberToObject(props, "lon", lon);
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char link[128] = {0};
@@ -232,11 +233,12 @@ static int nm_emit(intel_sink *sink, const cJSON *r) {
   if (osmt && osmid) snprintf(keybuf, sizeof keybuf, "%s/%lld", osmt, osmid);
   else               snprintf(keybuf, sizeof keybuf, "%.60s@%.8s,%.8s", disp, slat, slon);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = keybuf;
   it.title           = disp;
   it.summary         = typ ? typ : cls;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "en";
   it.link            = link[0] ? link : NULL;
   it.has_geo         = 1;
@@ -246,7 +248,7 @@ static int nm_emit(intel_sink *sink, const cJSON *r) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"NOMINATIM_GLOBAL\",\"geospatial\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -262,12 +264,12 @@ static int run_nominatim(const source_ctx *ctx, intel_sink *sink) {
     "&addressdetails=1&limit=20", enc);
   free(enc);
 
-  const char *hdrs[] = { "Accept: application/json", GEO_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "nominatim_global");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   int emitted = 0;
   if (cJSON_IsArray(root)) {
@@ -317,17 +319,18 @@ static int wm_emit(intel_sink *sink, const cJSON *p) {
   if (have) { cJSON_AddNumberToObject(props, "lat", lat);
               cJSON_AddNumberToObject(props, "lon", lon); }
   cJSON_AddBoolToObject(props, "success", 1);
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   char keybuf[48];
   if (id) snprintf(keybuf, sizeof keybuf, "wikimapia:%lld", id);
   else    snprintf(keybuf, sizeof keybuf, "%.40s", title);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = keybuf;
   it.title           = title ? title : keybuf;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.lang            = "en";
   it.link            = url;
   it.has_geo         = have;
@@ -337,7 +340,7 @@ static int wm_emit(intel_sink *sink, const cJSON *p) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"WIKIMAPIA_GLOBAL\",\"geospatial\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -347,7 +350,7 @@ static int run_wikimapia(const source_ctx *ctx, intel_sink *sink) {
   const char *key = jo_env("WIKIMAPIA_KEY");
   if (!key) {
     fprintf(stderr, "[wikimapia_global] gated (no WIKIMAPIA_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "wikimapia_global", "wikimapia_global", (const char *const[]){"WIKIMAPIA_KEY", NULL}, NULL, NULL);
   }
 
   char *enc = jo_urlencode(q);
@@ -358,12 +361,12 @@ static int run_wikimapia(const source_ctx *ctx, intel_sink *sink) {
     "&format=json&count=20&key=%s", enc, key);
   free(enc);
 
-  const char *hdrs[] = { "Accept: application/json", GEO_UA, NULL };
+  const char *hdrs[] = { "Accept: application/json", NULL };
   char *body = jo_get(ctx, url, hdrs, "wikimapia_global");
-  if (!body) return 0;
+  if (!body) return jo_fail_rc(jo_last_status(), 0);
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   int emitted = 0;
   cJSON *places = cJSON_GetObjectItem(root, "places");

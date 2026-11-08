@@ -60,21 +60,31 @@ VGEO(geo_jshis_pshm_avr, "geo-jshis-pshm-avr", "J-SHIS probabilistic seismic haz
   "ja", "[\"japan\",\"hazard\",\"jshis\"]", 86400,
   "NIED national seismic hazard mesh value at a queried coordinate.");
 
+/* ArcGIS rows in this file: `orderByFields=<the layer's own objectIdField>
+ * ASC` (2026-11-07). These walk on `resultOffset` (geojson_emit_paged's
+ * mechanism 1, on the server's own exceededTransferLimit) with no order
+ * clause, and ArcGIS promises no stable order without one. The field was READ
+ * per layer from `<layer>?f=json` (objectIdField, else the esriFieldTypeOID
+ * field — spellings here include OBJECTID, objectid, FID, OBJECTID_1, ObjectId,
+ * oid, RowID), every layer declares supportsOrderBy, and the sorted query was
+ * asked once (resultRecordCount=3 at offsets 0 and 3): HTTP 200, no error
+ * body, pages disjoint. This is STABILISING, not a recovery — no record was
+ * measured lost without it. */
 VGEO(geo_la_day_night_terminator, "geo-la-day-night-terminator", "Day/night terminator line", "昼夜境界線",
   "science", "spaceweather",
-  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/Day_Night_Terminator/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=20",
+  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/Day_Night_Terminator/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=20&orderByFields=OBJECTID%20ASC",
   "en", "[\"terminator\",\"solar\",\"global\"]", 3600,
   "Current solar terminator geometry, useful for imagery and outage context.");
 
 VGEO(geo_la_historical_quakes, "geo-la-historical-quakes", "Historical earthquakes layer (Esri)", "歴史地震レイヤ",
   "science", "seismic",
-  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/Historical_Quakes/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500",
+  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/Historical_Quakes/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=500&orderByFields=OBJECTID%20ASC",
   "en", "[\"earthquake\",\"historical\",\"layer\"]", 86400,
   "Historical significant earthquake points with magnitude and depth.");
 
 VGEO(geo_la_seaice_north, "geo-la-seaice-north", "Arctic median sea ice extent (Esri)", "北極海氷 中央値範囲",
   "science", "ocean",
-  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/seaice_extent_N_v1/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=20&geometryPrecision=2",
+  "https://services9.arcgis.com/RHVPKKiFTONKtxq3/arcgis/rest/services/seaice_extent_N_v1/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&resultRecordCount=20&geometryPrecision=2&orderByFields=OBJECTID%20ASC",
   "en", "[\"seaice\",\"arctic\",\"polygon\"]", 86400,
   "Median Arctic sea ice edge polygons by month, the anomaly reference.");
 
@@ -324,15 +334,34 @@ VJSON(geo_stac_cnes_geodes, "geo-stac-cnes-geodes", "CNES GEODES — STAC collec
   "en", "[\"stac\",\"france\",\"cnes\",\"catalog\"]", 86400,
   "French space agency Earth observation collections.");
 
+/* THE TWO DEA EXPLORER ROWS READ NEWEST-FIRST (2026-11-07).
+ *
+ * `/stac/collections/<c>/items?limit=50` 302s to `/stac/search?collection=<c>`
+ * and that search's default order is OLDEST FIRST: measured the same minute,
+ * Africa's first page is 2015-10-22 (6,643,582 matched) and Australia's
+ * 2013-03-19 (145,562 matched) — so these hourly rows re-stored the same
+ * twenty pages of 2013/2015 scenes every run while the archive grew behind
+ * them, the dea-stac shape CLAUDE.md records under rule 2. `sortby=-datetime`
+ * on the search path is honoured on both hosts (first page 2026-11-06 /
+ * 2026-11-04; the control `sortby=-frobnicate` answers the 2013 default),
+ * and the server's own `next` link carries the sort: page 2 continues
+ * strictly older with 0 overlap of 50 on both. The 20-page ceiling is now
+ * the newest 1,000 scenes, a window rather than an arbitrary slice.
+ *
+ * geo-stac-dea-africa-items now reads the same search as the hand-written
+ * `dea-stac` (collectors/sources/geoeo_stac_items.c), hourly at 50 a page
+ * against that row's six-hourly 100: a duplicate read of one upstream, kept
+ * and reported rather than removed, because removal changes the registry
+ * count. */
 VGEO(geo_stac_dea_africa_items, "geo-stac-dea-africa-items", "Digital Earth Africa — Sentinel-2 L2A", "Digital Earth Africa — Sentinel-2 L2A(アフリカ)",
   "science", "earthobs",
-  "https://explorer.digitalearth.africa/stac/collections/s2_l2a/items?limit=50",
+  "https://explorer.digitalearth.africa/stac/search?collections=s2_l2a&limit=50&sortby=-datetime",
   "en", "[\"stac\",\"africa\",\"sentinel2\"]", 3600,
   "Analysis-ready Sentinel-2 over Africa with scene footprints.");
 
 VGEO(geo_stac_dea_australia_items, "geo-stac-dea-australia-items", "Digital Earth Australia — Landsat 8 ARD", "Digital Earth Australia — Landsat 8 ARD(豪州)",
   "science", "earthobs",
-  "https://explorer.dea.ga.gov.au/stac/collections/ga_ls8c_ard_3/items?limit=50",
+  "https://explorer.dea.ga.gov.au/stac/search?collections=ga_ls8c_ard_3&limit=50&sortby=-datetime",
   "en", "[\"stac\",\"australia\",\"landsat\"]", 3600,
   "Australian analysis-ready Landsat scene index.");
 

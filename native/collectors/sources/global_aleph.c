@@ -87,23 +87,24 @@ static int emit_entity(intel_sink *sink, const cJSON *e) {
   if (coll)         cJSON_AddStringToObject(p, "collection", coll);
   if (countries[0]) cJSON_AddStringToObject(p, "countries", countries);
   cJSON_AddBoolToObject(p, "success", 1);
-  char *pj = cJSON_PrintUnformatted(p);
+  jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p);
   cJSON_Delete(p);
 
   char link[512] = {0};
   if (id) snprintf(link, sizeof link, "https://aleph.occrp.org/entities/%s", id);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = id ? id : name;
   it.title           = name ? name : id;
   it.summary         = schema;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.link            = link[0] ? link : NULL;
   it.record_type     = "aleph-entity";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"ALEPH_SEARCH\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(pj);
+  free(bj); free(bt); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -136,10 +137,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
 
   char *body = jo_get(ctx, url, hdrs, "aleph");
-  if (!body) return 0;                 /* non-200 → honest empty */
+  if (!body) return jo_fail_rc(jo_last_status(), 0);                 /* 2026-11-07: 404/204 empty, any other refusal -1 (was "non-200 → honest empty") */
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) return -1;
 
   cJSON *results = cJSON_GetObjectItem(root, "results");
   int emitted = 0;

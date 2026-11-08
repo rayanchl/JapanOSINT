@@ -203,7 +203,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int max_pages = (e && *e) ? atoi(e) : PAGES;
   if (max_pages < 1) max_pages = 1;
 
-  int total = 0, pages = 0, more = 0;
+  int total = 0, pages = 0, cut = 0, more = 0;
   long offset = 0;
   for (int i = 0; i < max_pages; i++) {
     char url[512];
@@ -212,9 +212,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
              "&resultRecordCount=%d&resultOffset=%ld&f=json",
              ISED_BASE, PAGE_SIZE, offset);
     cJSON *doc = feed_get_json(ctx->http, url, 60000);
-    if (!doc) break;
+    if (!doc) { cut = pages > 0; break; }   /* a refused LATER page is disclosed below */
     cJSON *feats = cJSON_GetObjectItem(doc, "features");
-    if (!cJSON_IsArray(feats)) { cJSON_Delete(doc); break; }
+    if (!cJSON_IsArray(feats)) { cJSON_Delete(doc); cut = pages > 0; break; }
     pages++;
     int got = cJSON_GetArraySize(feats);
     total += emit_features(feats, sink);
@@ -228,6 +228,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     fprintf(stderr, "[ised-spectrum-sites] fetch failed\n");
     return -1;
   }
+  /* Every stop is disclosed (2026-11-07): a later page that failed used to
+   * `break` as if it were the end of the data, and a walk that used up its
+   * page budget on full pages said nothing. */
+  if (cut)
+    jo_trunc_notice_scoped(sink, "ised-spectrum-sites", "walk-cut", ISED_BASE, total, -1,
+                           "a later page failed (transport, refusal or an "
+                           "unreadable body) and the walk stopped there",
+                           "re-run; one failed page is one reading");
   if (more) {
     long avail = ised_total_count(ctx);
     jo_trunc_notice(sink, "ised-spectrum-sites", ISED_BASE, total, avail,

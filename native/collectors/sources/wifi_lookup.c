@@ -291,17 +291,18 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON_AddStringToObject(props, "entity", bssid);
   cJSON_AddBoolToObject(props, "success", 1);
   cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
-  char *pj = cJSON_PrintUnformatted(props);
+  jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
   /* remote_key = wifi:<normalized-bssid>. */
   char rk[64]; snprintf(rk, sizeof rk, "wifi:%s", norm);
   char title[96]; snprintf(title, sizeof title, "WiFi AP %s", norm);
 
+  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body            = bj;
+  it.body = bt ? bt : bj;
   it.summary         = "located access point";
   it.has_geo         = 1;
   it.lat             = lat;
@@ -311,7 +312,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   it.tags_json       = "[\"osint-search\",\"WIFI_LOOKUP\"]";
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(pj); free(norm);
+  free(bj); free(bt); free(pj); free(norm);
   cJSON_Delete(env);
   cJSON_Delete(data);
   cJSON_Delete(myl);
