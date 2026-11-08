@@ -5243,6 +5243,102 @@ int main(void) {
        "reading it as a listing with nothing on it");
     (void)rc; }
 
+  /* ── 59. A SITE IN MAINTENANCE SERVES ONE PAGE TO EVERY PATH ────────────
+   *
+   * Measured 2026-11-07 on www.finmac.or.jp: `/news/` answers HTTP 200,
+   * `/tokei-siryo/index_03/` answers 200, and a path that cannot exist answers
+   * 404 — all three the same 7,249 bytes, md5 d5b3d549,
+   * `<title>メンテナンス中｜FINMAC</title>`. Two registered rows sat on those
+   * paths reading `rc=0 records=0` with no notice at all, and the identical
+   * byte count was the only hint that it was one host-level cause rather than
+   * two row bugs.
+   *
+   * Its remedy is the opposite of every other shape in hp_body_refusal: WAIT.
+   * A reader told "the endpoint may have moved" re-points a row whose
+   * publisher is back the next morning, which turns a validated row into an
+   * unvalidated one — so the three flags stay three flags.
+   *
+   * 59c is the control that makes the whole thing safe, and it is the reason
+   * the test reads the <title> and not the body: "maintenance" is ordinary
+   * data in this tree (road maintenance, aircraft maintenance, maintenance of
+   * a register), so a substring test over a body would read a works register
+   * as a refusal — the mistake 45b already blocks for "access denied". */
+
+  /* 59. The measured case, in Japanese, on an HTML row. */
+  fx_reset();
+  fx_add("/cal.html", 200,
+         "<!DOCTYPE html><html><head>"
+         "<title>\xe3\x83\xa1\xe3\x83\xb3\xe3\x83\x86\xe3\x83\x8a\xe3\x83\xb3"
+         "\xe3\x82\xb9\xe4\xb8\xad\xef\xbd\x9cFINMAC</title></head>"
+         "<body><p>ただいまメンテナンス中です</p></body></html>");
+  g_ncap = 0;
+  rc = run_source("T_HTML_CAL", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "SITE IS IN MAINTENANCE") != NULL &&
+       strstr(nt->props, "WAIT AND RE-READ THE ROW") != NULL,
+       "59: a maintenance page served as 200 is disclosed, with 'wait' as the "
+       "remedy rather than 're-point'");
+    (void)rc; }
+
+  /* 59b. The English spelling, and on a JSON row — the flag is shared by all
+   *      five mode drivers through hp_body_refusal, so a JSON endpoint behind
+   *      a maintenance page gets the same reading. */
+  fx_reset();
+  fx_add("/s?q=", 200,
+         "<!doctype html><html><head><title>Site Maintenance</title></head>"
+         "<body>We will be back shortly.</body></html>");
+  g_ncap = 0;
+  rc = run_source("T_JSON", "Acme AS 912345678");
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "SITE IS IN MAINTENANCE") != NULL,
+       "59b: the same reading on a JSON row — the test is shared, not per mode");
+    (void)rc; }
+
+  /* 59c. THE CONTROL. A page whose DATA is about maintenance, with a
+   *      data-shaped title. It must stay silent: this is a listing, and
+   *      reading it as a refusal would discard real records. */
+  fx_reset();
+  fx_add("/cal.html", 200,
+         "<!DOCTYPE html><html><head>"
+         "<title>Road maintenance notices 2026</title></head><body>"
+         "<p>Scheduled maintenance of the bridge deck is under maintenance "
+         "review this quarter.</p>"
+         "<a href=\"/ev/2026/0101\">Bridge deck maintenance closure</a>"
+         "</body></html>");
+  g_ncap = 0;
+  rc = run_source("T_HTML_CAL", NULL);
+  ok(cap_count("collector-fetch-failure", NULL) == 0,
+     "59c: a page ABOUT maintenance with a data-shaped title is not a refusal");
+
+  /* 59d. The second half of the control: a body with no <title> at all cannot
+   *      make a statement about itself, so it stays silent too. */
+  fx_reset();
+  fx_add("/cal.html", 200,
+         "<!DOCTYPE html><html><body>maintenance mode</body></html>");
+  g_ncap = 0;
+  rc = run_source("T_HTML_CAL", NULL);
+  ok(cap_count("collector-fetch-failure", NULL) == 0,
+     "59d: the phrase outside a <title> is data, not a self-description");
+
+  /* 59e. Precedence: a maintenance page that ALSO says "rate limit" is read as
+   *      the rate limit, because that remedy (a measured per-host gap) is
+   *      actionable while "wait" is not. The order in hp_body_refusal is the
+   *      assertion. */
+  fx_reset();
+  fx_add("/s?q=", 200,
+         "<!doctype html><html><head><title>Under Maintenance</title></head>"
+         "<body>rate limit exceeded</body></html>");
+  g_ncap = 0;
+  rc = run_source("T_JSON", "Acme AS 912345678");
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "RATE-LIMIT") != NULL &&
+       strstr(nt->props, "SITE IS IN MAINTENANCE") == NULL,
+       "59e: rate limit wins over maintenance — the actionable remedy first");
+    (void)rc; }
+
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;
 }

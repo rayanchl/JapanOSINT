@@ -1269,6 +1269,14 @@ typedef struct {
    * rate. Naming it keeps a reader from spending the afternoon on the wrong
    * two remedies. */
   int   unreadable_botwall;
+  /* A body whose own `<title>` says the SITE IS IN MAINTENANCE. Third remedy,
+   * third flag, and this one is "wait and re-read" rather than any change to
+   * the row — which is why it must not be folded into either of the two above.
+   * Measured on www.finmac.or.jp: one 7,249-byte page served to `/news/` and
+   * `/tokei-siryo/index_03/` at 200 and to an impossible path at 404, all three
+   * byte-identical. See hp_title_says_maintenance for why the test reads the
+   * title and not the body. */
+  int   unreadable_maintenance;
 
   /* Repeat guard on the RECORDS of a paged JSON walk (see hp_run_json).
    * Hashing the whole body could not see an ignored cursor when the envelope
@@ -2221,7 +2229,43 @@ static char *hp_jsonp_inner(const char *body) {
  * widened: each phrase is a vendor's own interstitial, not something a data
  * body carries. NOT "access denied" (permit decisions and FOI logs are full of
  * it) and NOT a bare "limit" (a legitimate parameter name, in half the URLs in
- * this tree). */
+ * this tree).
+ *
+ * A FOURTH SHAPE, AND IT IS THE ONLY ONE THAT READS ITS PHRASE OUT OF THE
+ * `<title>` RATHER THAN THE WHOLE BODY (2026-11-07). A SITE IN MAINTENANCE
+ * MODE SERVES ONE PAGE TO EVERY PATH. Measured on `www.finmac.or.jp`, the
+ * securities-ADR centre: `/news/` answers HTTP **200**,
+ * `/tokei-siryo/index_03/` answers **200**, and a path that cannot exist
+ * answers **404** — and all three bodies are the same 7,249 bytes, md5
+ * d5b3d549, `<title>メンテナンス中｜FINMAC</title>`. So the two registered rows
+ * on those paths read `rc=0 records=0` with no notice, and the identical byte
+ * count was the only hint that it was one host-level cause rather than two row
+ * bugs. The 404 control is what makes it certain: a real 404 serves the same
+ * page, so nothing about the status distinguishes a live path from a dead one
+ * while the site is down. rule 1 has met this before without naming it —
+ * `il-knesset-dates` returning "131,618 bytes of the OData service's HTML
+ * maintenance page" — and there it was only caught because the row returned
+ * non-zero.
+ *
+ * THE REMEDY IS THE OPPOSITE OF EVERY OTHER SHAPE HERE: not a gap, not an
+ * agent, not a re-point. It is to WAIT and read the row again, which is why
+ * naming it matters — a reader told "the endpoint may have moved" re-points a
+ * row whose publisher is back the next morning, and that is a validated row
+ * made unvalidated.
+ *
+ * WHY THE TITLE AND NOT THE BODY. "Maintenance" is ordinary data in this tree:
+ * road maintenance, aircraft maintenance, maintenance of a register. A
+ * substring test over the whole body would read a works register as a refusal,
+ * which is the mistake 45b already blocks for "access denied". A page whose
+ * TITLE says it is under maintenance is making the statement ABOUT ITSELF,
+ * which is exactly the "the body's own words" principle this comment opens
+ * with, sharpened to the one element that is never data. `hptest` 59-59e, with
+ * 59c the control that matters: a body carrying the word in its data and a
+ * data-shaped title stays silent. */
+/* One definition, in lib/jocore.h: the second sighting was a bespoke
+ * collector, which no engine-only test can reach (rule 4c). */
+#define hp_title_says_maintenance(b) jo_title_says_maintenance(b)
+
 static void hp_body_refusal(hp_run_state *st, const char *body) {
   if (!body) return;
   if (jo_strcasestr(body, "rate limit") || jo_strcasestr(body, "rate-limit") ||
@@ -2234,6 +2278,8 @@ static void hp_body_refusal(hp_run_state *st, const char *body) {
            jo_strcasestr(body, "cf-browser-verification") ||
            jo_strcasestr(body, "captcha"))
     st->unreadable_botwall = 1;
+  else if (hp_title_says_maintenance(body))
+    st->unreadable_maintenance = 1;
 }
 
 /* Is this body an HTML DOCUMENT? For every mode whose data is not HTML — JSON,
@@ -2272,9 +2318,11 @@ static void hp_body_refusal(hp_run_state *st, const char *body) {
  * second phrase there would be churn without a reader. */
 static void hp_unreadable_log(hp_run_state *st, const char *detail) {
   fprintf(stderr, "[hp:%s] unreadable body: %s%s\n", st->s->id, detail,
-          st->unreadable_ratelimit ? " — it is a RATE-LIMIT page served as 200"
-        : st->unreadable_botwall   ? " — it is a BOT-WALL page served as 200"
-                                   : "");
+          st->unreadable_ratelimit   ? " — it is a RATE-LIMIT page served as 200"
+        : st->unreadable_botwall     ? " — it is a BOT-WALL page served as 200"
+        : st->unreadable_maintenance ? " — the page's own <title> says the "
+                                       "SITE IS IN MAINTENANCE; wait and re-read the row rather than re-pointing it"
+                                     : "");
 }
 
 #define HP_HTML_SNIFF 2048
@@ -2301,9 +2349,11 @@ static int hp_run_json(hp_run_state *st, const char *body) {
     /* A 200 that is really a refusal — the shared test, see hp_body_refusal. */
     hp_body_refusal(st, body);
     fprintf(stderr, "[hp:%s] non-JSON body%s\n", s->id,
-            st->unreadable_ratelimit ? " — it is a RATE-LIMIT page served as 200"
-          : st->unreadable_botwall   ? " — it is a BOT-WALL page served as 200"
-                                     : "");
+            st->unreadable_ratelimit   ? " — it is a RATE-LIMIT page served as 200"
+          : st->unreadable_botwall     ? " — it is a BOT-WALL page served as 200"
+          : st->unreadable_maintenance ? " — the page's own <title> says the "
+                                         "SITE IS IN MAINTENANCE; wait and re-read the row rather than re-pointing it"
+                                       : "");
     st->unreadable = 1;
     return st->emitted;
   }
@@ -4221,7 +4271,8 @@ static int hp_run_html(hp_run_state *st, const char *html) {
    * limiter is named, and a quiet listing stays silent. */
   if (page_hits == 0) {
     hp_body_refusal(st, html);
-    if (st->unreadable_ratelimit || st->unreadable_botwall) {
+    if (st->unreadable_ratelimit || st->unreadable_botwall ||
+        st->unreadable_maintenance) {
       hp_unreadable_log(st, "a listing that matched no anchor");
       st->unreadable = 1;
     }
@@ -6123,6 +6174,12 @@ date_step_back:
         ? "the upstream answered 200 with a BOT-WALL interstitial instead of "
           "the data — a refusal wearing a success status, and one that pacing "
           "does not reach"
+      : st.unreadable_maintenance
+        ? "the body's own <title> says the SITE IS IN MAINTENANCE. A site in "
+          "that state serves ONE page to every path, so neither the status nor "
+          "the path says anything: measured on www.finmac.or.jp, two real "
+          "paths answered 200 and an impossible one answered 404 with the same "
+          "7,249 bytes, byte for byte"
       : first_status == 200
         ? "the upstream answered 200 and the body did not parse in this row's "
           "declared mode — a redirect to an HTML notice does this"
@@ -6144,6 +6201,13 @@ date_step_back:
         ? "rate limited behind a 200: give the host a per-host minimum gap in "
           "core/hostgate.c. Measure the budget before choosing one — a gap "
           "set on one reading is a guess"
+      : st.unreadable_maintenance
+        ? "WAIT AND RE-READ THE ROW. This is the one shape here whose remedy "
+          "is no change at all: do not re-point the URL, do not add a gap, do "
+          "not change the agent. A publisher in maintenance is back within "
+          "hours or days, and a row re-pointed on this reading is a validated "
+          "row made unvalidated. If it persists for weeks, read the site by "
+          "hand before touching the row"
       : first_status == 200 && st.unreadable_botwall
         ? "a bot wall, so do NOT reach for a hostgate gap or a moved endpoint: "
           "the wall refuses an automated client at any rate. Bisect the "
@@ -6160,7 +6224,11 @@ date_step_back:
     char key[320], title[256];
     snprintf(key, sizeof key, "%.150s|fetch-failure:%.120s", s->id,
              vars.raw ? vars.raw : "");
-    if (first_status == 200 && st.unreadable_botwall)
+    if (st.unreadable_maintenance)
+      snprintf(title, sizeof title,
+               "%s stored nothing: the site is in maintenance and served one "
+               "page to every path", s->id);
+    else if (first_status == 200 && st.unreadable_botwall)
       snprintf(title, sizeof title,
                "%s stored nothing: a bot wall answered 200 instead of the data",
                s->id);

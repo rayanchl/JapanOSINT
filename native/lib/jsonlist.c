@@ -1442,6 +1442,14 @@ static long declared_total(cJSON *doc) {
      * THIS page" is spelled `count`, `size` or `hits`, never `hit`. Added
      * because a live family needed it, and measured on it. */
     "hit",
+    /* NASA's PDS registry search answers `summary: {hits: 92789260, ...}`
+     * beside the page's records (measured 2026-11-07,
+     * pds.nasa.gov/api/search/1/products, which 307s to pds.mcp.nasa.gov).
+     * The DOTTED path is what makes this safe where the paragraph above rules
+     * bare `hits` out: namespaced under `summary` it cannot be the "records in
+     * this page" spelling that comment warns about, so the distinction it
+     * draws is preserved rather than widened. */
+    "summary.hits",
     NULL };
   for (int i = 0; KEYS[i]; i++) {
     cJSON *v = dotted(doc, KEYS[i]);
@@ -1933,9 +1941,34 @@ int jsonlist_emit_paged(intel_sink *sink, const char *source_id,
       : "the last page came back full (or the upstream declared more than was "
         "read) and neither the response nor this URL offers a way to ask for "
         "the next page, so records may remain unread");
+    /* A 4xx THAT IS NOT 429 IS THE ENDPOINT REJECTING THE REQUEST WE BUILT,
+     * and sending that reader to core/hostgate.c is a remedy naming a knob
+     * that cannot move — which this tree already calls worse than none.
+     * Measured 2026-11-07 on NASA's PDS registry search: the walk inferred
+     * `&offset=50`, and `offset`, `start`, `page` and `from` each answer HTTP
+     * 400 "Query parameter not enumerated in Security scheme" — the endpoint
+     * publishes an allow-list of parameters and has no paging one at all.
+     * That is the ENA `limit=0` shape (rule 1: "ENA honours NO offset at all,
+     * and `{"message":"Unsupported param offset"}` is what the 400 says"), and
+     * the remedy is to read the 400's BODY and then either find the
+     * upstream's own cursor or accept one page plus this notice — never a gap.
+     * A 429 or a 5xx is still the pacing/retry case it always was. */
     cJSON_AddStringToObject(p, "remedy", failed
-      ? "re-run; a host that refuses or rate-limits later pages needs a "
-        "per-host minimum gap (core/hostgate.c) — see docs/SOURCE_EXHAUSTIVENESS.md"
+      ? (failed_status == 429 || failed_status >= 500
+         ? "re-run; a host that refuses or rate-limits later pages needs a "
+           "per-host minimum gap (core/hostgate.c) — see "
+           "docs/SOURCE_EXHAUSTIVENESS.md"
+         : failed_status >= 400
+         ? "READ THE 400's OWN BODY before reaching for a gap: a non-429 4xx on "
+           "page 2 is usually the endpoint rejecting the paging parameter this "
+           "walk inferred, not pacing. If the upstream enumerates its "
+           "parameters and offers no offset, there is no page 2 to fetch — the "
+           "honest read is one page plus this notice, and the records beyond it "
+           "need a partitioned query (one row per node, per collection or per "
+           "date window) rather than a deeper walk"
+         : "re-run; a host that refuses or rate-limits later pages needs a "
+           "per-host minimum gap (core/hostgate.c) — see "
+           "docs/SOURCE_EXHAUSTIVENESS.md")
       : truncated
       ? "raise $JO_JSONLIST_PAGE_MAX — see docs/SOURCE_EXHAUSTIVENESS.md"
       : declared_short
