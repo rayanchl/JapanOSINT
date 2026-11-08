@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "_credential_notice.inc"
 
 static const char *QUERIES[] = {
   "\xE6\x97\xA5\xE6\x9C\xAC",            /* 日本 */
@@ -38,12 +39,18 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *apiHash = getenv("TELEGRAM_API_HASH");
 
   if (!(tgstat && *tgstat)) {
+    /* The inner test only chose the WORDING: both branches fell through to the
+     * same `return 0`, so the MTProto pair being set changed nothing but a log
+     * line. The credential this collector actually reads is TGSTAT_API_KEY —
+     * the MTProto route is not implemented here — so that is the one the
+     * notice names, and an operator who set the pair still gets told why it
+     * does not help. */
     if (apiId && *apiId && apiHash && *apiHash)
-      fprintf(stderr, "[telegram-jp-channels] TELEGRAM_API_ID/HASH present but "
-                      "no MTProto session — honest empty\n");
-    else
-      fprintf(stderr, "[telegram-jp-channels] gated (no TGSTAT_API_KEY)\n");
-    return 0;
+      fprintf(stderr, "[telegram-jp-channels] TELEGRAM_API_ID/HASH are set but "
+                      "this collector has no MTProto route; it reads TGStat\n");
+    return jo_needs_credential(sink, ctx->source_id, "telegram-jp-channels",
+                               (const char *[]){ "TGSTAT_API_KEY", NULL },
+                               NULL, NULL);
   }
 
   char *seen[MAX_SEEN];

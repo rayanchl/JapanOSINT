@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "_credential_notice.inc"
 
 /* JS Number.isFinite(x): true only for a real JSON number. */
 static int finite_num(cJSON *v, double *out) {
@@ -33,8 +34,9 @@ static void passthru(cJSON *p, const char *k, cJSON *m, const char *ik) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *k = getenv("SHODAN_API_KEY");
   if (!k || !*k) {
-    fprintf(stderr, "[shodan-iot] gated (no SHODAN_API_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "shodan-iot",
+                                (const char *[]){ "SHODAN_API_KEY", NULL },
+                                NULL, NULL);
   }
   char url[512];
   snprintf(url, sizeof url,

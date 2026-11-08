@@ -16,6 +16,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "_credential_notice.inc"
 
 static int opensanctions(const source_ctx *ctx, intel_sink *sink, const char *entity,
                          const char *service, const char *tags, int pep_only) {
@@ -24,8 +25,9 @@ static int opensanctions(const source_ctx *ctx, intel_sink *sink, const char *en
     /* honest empty without a key — but SAY so, otherwise a gated run is
      * indistinguishable from "screened and clean", which is the one wrong
      * conclusion a sanctions check must never invite. */
-    fprintf(stderr, "[%s] gated (no OPENSANCTIONS_API_KEY)\n", service);
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "%s",
+                                (const char *[]){ "OPENSANCTIONS_API_KEY", NULL },
+                                NULL, NULL);
   }
   char enc[512]; jo_urlencode_buf(entity, enc, sizeof enc);
   char url[700];

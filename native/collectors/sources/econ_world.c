@@ -31,6 +31,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"
 
 /* ---- shared emit -------------------------------------------------------- */
 /* Emit one economic datum. title/summary/link/body are all real, parsed bytes.
@@ -466,14 +467,18 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
   if (strcmp(id, "UN_COMTRADE") == 0) {
     const char *key = jo_env("COMTRADE_KEY");
-    if (!key) { fprintf(stderr, "[UN_COMTRADE] gated (no COMTRADE_KEY)\n"); return 0; }
+    if (!key) { return jo_needs_credential(sink, ctx->source_id, "UN_COMTRADE",
+                                (const char *[]){ "COMTRADE_KEY", NULL },
+                                NULL, NULL); }
     if (!q) { fprintf(stderr, "[UN_COMTRADE] no entity (reporter code)\n"); return 0; }
     ew_comtrade(ctx, sink, q, key);
     return 0;
   }
   if (strcmp(id, "FRED_SERIES") == 0) {
     const char *key = jo_env("FRED_KEY");
-    if (!key) { fprintf(stderr, "[FRED_SERIES] gated (no FRED_KEY)\n"); return 0; }
+    if (!key) { return jo_needs_credential(sink, ctx->source_id, "FRED_SERIES",
+                                (const char *[]){ "FRED_KEY", NULL },
+                                NULL, NULL); }
     if (!q) { fprintf(stderr, "[FRED_SERIES] no entity (series id)\n"); return 0; }
     ew_fred(ctx, sink, q, key);
     return 0;

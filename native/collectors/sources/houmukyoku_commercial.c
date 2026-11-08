@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "_credential_notice.inc"
 
 /* r.<k> ?? null (string/number passthrough) */
 static cJSON *nn(cJSON *o, const char *k) {
@@ -86,8 +87,9 @@ static int emit_record(intel_sink *sink, cJSON *r, const char *target) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *apiKey = getenv("HOUMUKYOKU_API_KEY");
   if (!apiKey || !*apiKey) {
-    fprintf(stderr, "[houmukyoku-commercial] gated (no HOUMUKYOKU_API_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "houmukyoku-commercial",
+                                (const char *[]){ "HOUMUKYOKU_API_KEY", NULL },
+                                NULL, NULL);
   }
   const char *base = getenv("HOUMUKYOKU_API_BASE");
   if (!base || !*base) base = "https://www1.touki.or.jp/api/v1/commercial";
@@ -97,8 +99,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     /* Gated, not failed: an unset watchlist is a configuration state, and -1
      * would log fetch_log status='error' plus a collector_anomaly every tick.
      * The genuine failures further down keep returning -1. */
-    fprintf(stderr, "[houmukyoku-commercial] gated (no HOUMUKYOKU_WATCHLIST)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "houmukyoku-commercial",
+                                (const char *[]){ "HOUMUKYOKU_WATCHLIST", NULL },
+                                NULL, NULL);
   }
   char *wlcopy = strdup(wl);
   int n = 0, gotAny = 0;

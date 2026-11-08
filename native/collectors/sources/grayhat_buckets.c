@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "_credential_notice.inc"
 
 #define KEYWORDS \
   "co.jp,go.jp,japan,tokyo,rakuten,mizuho,mufg,smbc," \
@@ -24,8 +25,9 @@ static const char *sor(const cJSON *o, const char *a, const char *b) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *key = getenv("GRAYHAT_API_KEY");
   if (!key || !*key) {
-    fprintf(stderr, "[grayhat-buckets] gated (no GRAYHAT_API_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "grayhat-buckets",
+                                (const char *[]){ "GRAYHAT_API_KEY", NULL },
+                                NULL, NULL);
   }
 
   const char *url =

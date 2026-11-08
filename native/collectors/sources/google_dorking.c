@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "_credential_notice.inc"
 
 static const char *DORKS[] = {
   "site:go.jp filetype:xlsx",
@@ -25,8 +26,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int hasCse  = cseKey && *cseKey && cseCx && *cseCx;
   int hasSerp = serpKey && *serpKey;
   if (!(hasCse || hasSerp)) {
-    fprintf(stderr, "[google-dorking] gated (no GOOGLE_CSE_KEY/CX or SERPAPI_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "google-dorking",
+                                (const char *[]){ "GOOGLE_CSE_KEY", "GOOGLE_CSE_CX", "SERPAPI_KEY", NULL },
+                                NULL, NULL);
   }
 
   int n = 0;

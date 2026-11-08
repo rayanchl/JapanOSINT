@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "_credential_notice.inc"
 
 /* METROS, URL-encoded (東京 大阪 名古屋 福岡 札幌). */
 static const char *METROS[] = {
@@ -23,8 +24,9 @@ static const char *METROS[] = {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *key = getenv("NAVITIME_API_KEY");
   if (!key || !*key) {
-    fprintf(stderr, "[navitime-api] gated (no NAVITIME_API_KEY)\n");
-    return 0;                       /* honest empty */
+    return jo_needs_credential(sink, ctx->source_id, "navitime-api",
+                                (const char *[]){ "NAVITIME_API_KEY", NULL },
+                                NULL, NULL);                       /* honest empty */
   }
   char keyhdr[256];
   snprintf(keyhdr, sizeof keyhdr, "X-RapidAPI-Key: %s", key);

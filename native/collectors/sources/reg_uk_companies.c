@@ -16,6 +16,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"
 
 /* base64 (standard alphabet, padded). malloc'd; caller frees. */
 static char *uk_b64(const unsigned char *in, size_t n) {
@@ -109,8 +110,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (!q || !*q) return -1;
   const char *key = jo_env("COMPANIES_HOUSE_API_KEY");
   if (!key) {
-    fprintf(stderr, "[uk_companies] gated (no COMPANIES_HOUSE_API_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "uk_companies",
+                                (const char *[]){ "COMPANIES_HOUSE_API_KEY", NULL },
+                                NULL, NULL);
   }
 
   char *enc = jo_urlencode(q);

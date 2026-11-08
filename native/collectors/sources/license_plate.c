@@ -15,15 +15,16 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "_credential_notice.inc"
 
 static int plate_run(const source_ctx *ctx, intel_sink *sink) {
   const char *plate = ctx->entity;
   if (!plate || !*plate) return 0;
   const char *tmpl = getenv("PLATE_LOOKUP_URL");   /* "%s" = url-encoded plate */
   if (!tmpl || !strstr(tmpl, "%s")) {              /* honest empty — no lawful public source */
-    fprintf(stderr, "[LICENSE_PLATE_LOOKUP] gated (no PLATE_LOOKUP_URL "
-                    "template configured; plate→owner has no lawful public API)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "LICENSE_PLATE_LOOKUP",
+                                (const char *[]){ "PLATE_LOOKUP_URL", NULL },
+                                NULL, NULL);
   }
 
   char enc[128]; jo_urlencode_buf(plate, enc, sizeof enc);

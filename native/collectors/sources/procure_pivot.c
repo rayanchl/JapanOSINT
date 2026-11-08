@@ -36,6 +36,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "_credential_notice.inc"
 
 /* Emit one row. `data` is TAKEN OVER (printed, then deleted). Returns 1 if
  * emitted. body == properties so the FTS mirror in core/intel.c indexes the
@@ -114,8 +115,9 @@ static int run_sam(const source_ctx *ctx, intel_sink *sink) {
   if (!jo_looks_like_keyword(ctx->entity)) return 0;
   const char *key = jo_env("SAM_GOV_API_KEY");
   if (!key) {
-    fprintf(stderr, "[sam-gov] gated (no SAM_GOV_API_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "sam-gov",
+                                (const char *[]){ "SAM_GOV_API_KEY", NULL },
+                                NULL, NULL);
   }
 
   /* SAM caps the posted window at one year and wants MM/dd/yyyy. */

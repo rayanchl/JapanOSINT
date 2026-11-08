@@ -31,6 +31,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"
 
 /* ---- generic single-record emit for the JSON registries ---------------- */
 static int em_emit(intel_sink *sink, const char *service, const char *country,
@@ -79,7 +80,9 @@ static int em_emit(intel_sink *sink, const char *service, const char *country,
  * apikey: <key>. Response: { resultaten: [ { kvkNummer, naam, adres:{...} } ] } */
 static int nl_kvk(const source_ctx *ctx, intel_sink *sink, const char *q) {
   const char *key = jo_env("KVK_API_KEY");
-  if (!key) { fprintf(stderr, "[NL_KVK] gated (no KVK_API_KEY)\n"); return 0; }
+  if (!key) { return jo_needs_credential(sink, ctx->source_id, "NL_KVK",
+                              (const char *[]){ "KVK_API_KEY", NULL },
+                              NULL, NULL); }
 
   int alldig = 1, len = 0;
   for (const char *p = q; *p; p++, len++) if (!isdigit((unsigned char)*p)) alldig = 0;

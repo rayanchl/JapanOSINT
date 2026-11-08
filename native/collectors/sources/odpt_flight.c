@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "_credential_notice.inc"
 
 static const char *BASES[] = {
   "https://api.odpt.org/api/v4/",
@@ -58,8 +59,9 @@ static const char *strip_prefix(const char *s, const char *pfx) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *tok = odpt_tok();
   if (!tok) {
-    fprintf(stderr, "[odpt-flight] gated (no ODPT token)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "odpt-flight",
+                                (const char *[]){ "ODPT_TOKEN", "ODPT_CONSUMER_KEY", "ODPT_CHALLENGE_TOKEN", NULL },
+                                NULL, NULL);
   }
   const char *RDF[] = {
     "odpt:FlightInformationArrival", "odpt:FlightInformationDeparture",

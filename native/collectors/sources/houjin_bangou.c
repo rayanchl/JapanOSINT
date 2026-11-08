@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "_credential_notice.inc"
 
 /* a || b (string-truthy). */
 static const char *sor(const cJSON *o, const char *a, const char *b) {
@@ -49,8 +50,9 @@ static const char *proc_label(const char *p) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *key = getenv("HOUJIN_BANGOU_KEY");
   if (!key || !*key) {
-    fprintf(stderr, "[houjin-bangou] gated (no HOUJIN_BANGOU_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "houjin-bangou",
+                                (const char *[]){ "HOUJIN_BANGOU_KEY", NULL },
+                                NULL, NULL);
   }
 
   /* to = now; from = now - 7d; ymd = toISOString().slice(0,10) (UTC). */

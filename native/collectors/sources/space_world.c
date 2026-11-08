@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"
 
 /* number field → malloc'd string, or NULL. caller frees. */
 static char *sp_num(const cJSON *o, const char *k) {
@@ -199,8 +200,9 @@ static int sp_spacetrack(const source_ctx *ctx, intel_sink *sink, const char *q,
   const char *user = jo_env("SPACETRACK_USER");
   const char *pass = jo_env("SPACETRACK_PASS");
   if (!user || !pass) {
-    fprintf(stderr, "[SPACETRACK] gated (no SPACETRACK_USER/SPACETRACK_PASS)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "SPACETRACK",
+                                (const char *[]){ "SPACETRACK_USER", "SPACETRACK_PASS", NULL },
+                                NULL, NULL);
   }
 
   /* login (sets a session cookie handled by the http client) */
@@ -306,8 +308,9 @@ static int sp_n2yo(const source_ctx *ctx, intel_sink *sink, const char *q, int m
   (void)max;
   const char *key = jo_env("N2YO_KEY");
   if (!key) {
-    fprintf(stderr, "[N2YO] gated (no N2YO_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "N2YO",
+                                (const char *[]){ "N2YO_KEY", NULL },
+                                NULL, NULL);
   }
   /* need a numeric NORAD id */
   if (!q || !*q) { fprintf(stderr, "[N2YO] no NORAD id entity\n"); return 0; }

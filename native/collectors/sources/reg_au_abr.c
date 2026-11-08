@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"
 
 /* Strip a JSONP callback wrapper `ident({...})` down to the inner `{...}`.
  * Returns a pointer into `body` at the first '{' and NUL-terminates at the
@@ -32,7 +33,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *q = ctx->entity;
   if (!q || !*q) return -1;
   const char *guid = jo_env("ABR_GUID");
-  if (!guid) { fprintf(stderr, "[au_abr] gated (no ABR_GUID)\n"); return 0; }
+  if (!guid) { return jo_needs_credential(sink, ctx->source_id, "au_abr",
+                              (const char *[]){ "ABR_GUID", NULL },
+                              NULL, NULL); }
 
   char *enc = jo_urlencode(q);
   if (!enc) return 0;

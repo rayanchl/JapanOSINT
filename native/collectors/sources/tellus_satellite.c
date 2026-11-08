@@ -10,12 +10,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "_credential_notice.inc"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *token = getenv("TELLUS_TOKEN");
   if (!token || !*token) {
-    fprintf(stderr, "[tellus-satellite] gated (no TELLUS_TOKEN)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "tellus-satellite",
+                                (const char *[]){ "TELLUS_TOKEN", NULL },
+                                NULL, NULL);
   }
 
   /* JP_BBOX = [122,24,146,46] -> intersects polygon */

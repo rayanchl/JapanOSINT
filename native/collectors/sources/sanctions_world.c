@@ -28,6 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"
 
 /* ---- small utils -------------------------------------------------------- */
 
@@ -683,8 +684,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     if (r->token_env) {
       const char *tok = jo_env(r->token_env);
       if (!tok) {
-        fprintf(stderr, "[%s] gated (no %s)\n", r->id, r->token_env);
-        return 0;
+        /* Data-driven: the env var is the ROW's, so the notice names whichever
+         * list was asked for rather than a spelling fixed at this call site. */
+        return jo_needs_credential(sink, ctx->source_id, r->id,
+                                    (const char *[]){ r->token_env, NULL },
+                                    r->url, NULL);
       }
       snprintf(url, sizeof url, "%s%s", r->url, tok);
     } else {

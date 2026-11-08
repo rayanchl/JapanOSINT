@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "_credential_notice.inc"
 
 static const char *BASES[] = {
   "https://api.odpt.org/api/v4/",
@@ -39,8 +40,9 @@ static cJSON *odpt_get(http_client *http, const char *rdf, const char *tok) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *tok = odpt_tok();
   if (!tok) {
-    fprintf(stderr, "[odpt-bus] gated (no ODPT token)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "odpt-bus",
+                                (const char *[]){ "ODPT_TOKEN", "ODPT_CONSUMER_KEY", "ODPT_CHALLENGE_TOKEN", NULL },
+                                NULL, NULL);
   }
   cJSON *rows = odpt_get(ctx->http, "odpt:Bus", tok);
 

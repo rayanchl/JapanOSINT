@@ -16,6 +16,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"
 
 /* Aleph nests entity attributes under .properties.<key> as arrays of strings.
  * Return the first string value of properties[key], or NULL. */
@@ -121,25 +122,45 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *key = jo_env("ALEPH_API_KEY");
   char authhdr[256];
   const char *hdrs_key[] = { authhdr, "Accept: application/json", NULL };
-  const char *hdrs_pub[] = { "Accept: application/json", NULL };
   const char *const *hdrs;
-  if (key) {
-    snprintf(authhdr, sizeof authhdr, "Authorization: ApiKey %s", key);
-    hdrs = hdrs_key;
-  } else {
+  if (!key) {
     /* Aleph closed anonymous API access: /api/2/entities now answers
      * 401 {"message":"You are not authorized to do this."} without a key, so
      * this is a gated source, not an empty one. Say so — otherwise it reads as
-     * "searched and found nothing". */
-    fprintf(stderr, "[aleph] gated (no ALEPH_API_KEY)\n");
-    hdrs = hdrs_pub;
+     * "searched and found nothing".
+     *
+     * THE LOG LINE WAS THE WHOLE DISCLOSURE, AND THEN IT SENT THE REQUEST
+     * ANYWAY. Having established that the keyless call is a guaranteed 401,
+     * the old code fell through to the public headers, spent the request, and
+     * read the failure as `if (!body) return 0;` under a comment calling a
+     * non-200 an honest empty — so the one thing the paragraph above says this
+     * must not read as is exactly what it read as, every run, at the cost of a
+     * request that could not succeed. The notice
+     * is the disclosure now and the doomed request is not made; 0 rather than
+     * -1 because gated is a state, not a run failure. */
+    return jo_needs_credential(sink, ctx->source_id, "aleph",
+                               (const char *[]){ "ALEPH_API_KEY", NULL },
+                               url, "an OCCRP Aleph account");
   }
+  snprintf(authhdr, sizeof authhdr, "Authorization: ApiKey %s", key);
+  hdrs = hdrs_key;
 
+  /* We are here only WITH a key, so a non-200 or an unreadable body is a
+   * failed fetch and not an honest empty — Aleph answers an unmatched search
+   * with 200 and an empty `results`, which is handled below. */
   char *body = jo_get(ctx, url, hdrs, "aleph");
-  if (!body) return 0;                 /* non-200 → honest empty */
+  if (!body) {
+    fprintf(stderr, "[aleph] fetch failed with a key present (%s) — reporting "
+                    "a failed fetch, not an empty search\n", url);
+    return -1;
+  }
   cJSON *root = cJSON_Parse(body);
   free(body);
-  if (!root) return 0;
+  if (!root) {
+    fprintf(stderr, "[aleph] unreadable body (not JSON) — reporting a failed "
+                    "fetch, not an empty search\n");
+    return -1;
+  }
 
   cJSON *results = cJSON_GetObjectItem(root, "results");
   int emitted = 0;

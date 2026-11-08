@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"
 
 /* One DART disclosure row (list.json "list" element) → one intel_item. */
 static int emit_disclosure(intel_sink *sink, const cJSON *r) {
@@ -134,8 +135,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   const char *key = jo_env("DART_API_KEY");
   if (!key) {
-    fprintf(stderr, "[kr_dart] gated (no DART_API_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "kr_dart",
+                                (const char *[]){ "DART_API_KEY", NULL },
+                                NULL, NULL);
   }
 
   /* 8-digit numeric entity → treat as DART corp_code → company profile. */

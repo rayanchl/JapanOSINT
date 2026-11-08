@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"
 
 /* Parse "lat,lon" (optionally with spaces) out of s. Returns 1 on success. */
 static int aq_parse_latlon(const char *s, double *lat, double *lon) {
@@ -222,9 +223,25 @@ static int run_openaq(const source_ctx *ctx, intel_sink *sink) {
   const char *hdrs[] = { "Accept: application/json",
                          "User-Agent: JapanOSINT/1.0 (air-quality)", NULL };
   char *body = jo_get(ctx, url, hdrs, "OPENAQ_GLOBAL");
+  /* THIS IS A FAILED FETCH, NOT A CREDENTIAL GATE, and the old log line said
+   * the opposite ("gated (no OPENAQ_KEY, v2 unreachable)") while returning 0.
+   * The condition is `!body` — jo_get() returns NULL for any transport error
+   * or non-200 — so the key is not what blocked: we are ON the keyless route,
+   * which is reached precisely BECAUSE there is no key, and it answered
+   * nothing. Naming the missing key as the cause is the mistake rule 1 records
+   * three times over (Archive-It's rate limit read as a move, the Imperva wall
+   * read as a move, FDSN's nodata=404 read as a refusal): a disclosure that
+   * invents the cause sends the reader somewhere there is nothing to find.
+   *
+   * So the credential notice does NOT belong here. -1 does: with no record and
+   * no notice, sched_disclose_fetch_failure names the host, the status class,
+   * the bytes and a remedy that points at the BODY. An operator who sets
+   * OPENAQ_KEY takes the v3 route above and never reaches this line. */
   if (!body) {
-    fprintf(stderr, "[OPENAQ_GLOBAL] gated (no OPENAQ_KEY, v2 unreachable)\n");
-    return 0;
+    fprintf(stderr, "[OPENAQ_GLOBAL] keyless v2 fallback fetch failed (%s) — "
+                    "reporting a failed fetch, not a credential gate and not "
+                    "an empty measurement\n", url);
+    return -1;
   }
   cJSON *root = cJSON_Parse(body);
   free(body);
@@ -245,7 +262,9 @@ static int run_openaq(const source_ctx *ctx, intel_sink *sink) {
  *   time:{iso}, iaqi:{ pm25:{v}, pm10:{v}, ... } } }. */
 static int run_waqi(const source_ctx *ctx, intel_sink *sink) {
   const char *token = jo_env("AQICN_TOKEN");
-  if (!token) { fprintf(stderr, "[WAQI_GLOBAL] gated (no AQICN_TOKEN)\n"); return 0; }
+  if (!token) { return jo_needs_credential(sink, ctx->source_id, "WAQI_GLOBAL",
+                              (const char *[]){ "AQICN_TOKEN", NULL },
+                              NULL, NULL); }
 
   const char *q = (ctx->entity && *ctx->entity) ? ctx->entity : NULL;
   double lat, lon;

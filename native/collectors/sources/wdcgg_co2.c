@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "_credential_notice.inc"
 
 #define TIMEOUT_MS 15000
 
@@ -50,8 +51,9 @@ static const char *col(char **f, int fn, int i) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *url = getenv("WDCGG_REGISTRY_URL");
   if (!url || !*url) {
-    fprintf(stderr, "[wdcgg-co2] gated (no WDCGG_REGISTRY_URL)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "wdcgg-co2",
+                                (const char *[]){ "WDCGG_REGISTRY_URL", NULL },
+                                NULL, NULL);
   }
 
   char *text = feed_get_text(ctx->http, url, TIMEOUT_MS);

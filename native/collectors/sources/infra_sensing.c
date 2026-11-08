@@ -16,12 +16,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"
 
 /* ---- ZoomEye host search (NEEDS_KEY) ------------------------------------- */
 static int run_zoomeye(const source_ctx *ctx, intel_sink *sink) {
   if (!ctx->entity || !*ctx->entity) return -1;
   const char *key = jo_env("ZOOMEYE_API_KEY");
-  if (!key) { fprintf(stderr, "[zoomeye] gated (no ZOOMEYE_API_KEY)\n"); return 0; }
+  if (!key) { return jo_needs_credential(sink, ctx->source_id, "zoomeye",
+                              (const char *[]){ "ZOOMEYE_API_KEY", NULL },
+                              NULL, NULL); }
   char *q = jo_urlencode(ctx->entity); if (!q) return 0;
   char url[640];
   snprintf(url, sizeof url, "https://api.zoomeye.org/host/search?query=%s+country:JP", q);
@@ -57,7 +60,9 @@ static int run_zoomeye(const source_ctx *ctx, intel_sink *sink) {
 static int run_hunter(const source_ctx *ctx, intel_sink *sink) {
   if (!ctx->entity || !*ctx->entity) return -1;
   const char *key = jo_env("HUNTER_API_KEY");
-  if (!key) { fprintf(stderr, "[hunter] gated (no HUNTER_API_KEY)\n"); return 0; }
+  if (!key) { return jo_needs_credential(sink, ctx->source_id, "hunter",
+                              (const char *[]){ "HUNTER_API_KEY", NULL },
+                              NULL, NULL); }
   char *q = jo_urlencode(ctx->entity); if (!q) return 0;
   char url[640];
   snprintf(url, sizeof url, "https://api.hunter.io/v2/domain-search?domain=%s&api_key=%s", q, key);

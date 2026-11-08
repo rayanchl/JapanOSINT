@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "_credential_notice.inc"
 
 /* L03-b 土地利用種別 code → label (Node LANDUSE_LABELS). */
 static const char *landuse_label(const char *code) {
@@ -33,8 +34,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (!url || !*url) {
     /* Gated, not failed: -1 logs fetch_log status='error' and opens a
      * collector_anomaly every tick for a source that was never configured. */
-    fprintf(stderr, "[nlni-landuse] gated (no MLIT_L03B_GEOJSON_URL)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "nlni-landuse",
+                                (const char *[]){ "MLIT_L03B_GEOJSON_URL", NULL },
+                                NULL, NULL);
   }
 
   cJSON *data = feed_get_json(ctx->http, url, 30000);

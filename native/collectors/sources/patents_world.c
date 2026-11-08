@@ -23,6 +23,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"
 
 /* ---- PatentsView (keyless, LIVE) --------------------------------------- */
 
@@ -126,8 +127,9 @@ static int run_epo_ops(const source_ctx *ctx, intel_sink *sink) {
   if (!q || !*q) return -1;
   const char *key = jo_env("EPO_OPS_KEY");
   if (!key) {
-    fprintf(stderr, "[epo_ops] gated (no EPO_OPS_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "epo_ops",
+                                (const char *[]){ "EPO_OPS_KEY", NULL },
+                                NULL, NULL);
   }
   /* OPS uses OAuth2 client-credentials then CQL search. Without a live token we
    * honest-empty rather than invent records. The published/register endpoint is
@@ -205,8 +207,9 @@ static int run_lens(const source_ctx *ctx, intel_sink *sink) {
   if (!q || !*q) return -1;
   const char *token = jo_env("LENS_TOKEN");
   if (!token) {
-    fprintf(stderr, "[lens_patents] gated (no LENS_TOKEN)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "lens_patents",
+                                (const char *[]){ "LENS_TOKEN", NULL },
+                                NULL, NULL);
   }
   /* Lens patent search: POST a JSON query to /patent/search.
    *

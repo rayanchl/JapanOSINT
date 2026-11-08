@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"
 
 /* ---- CERTSPOTTER -------------------------------------------------------- */
 /* One issuance object → one intel_item. Fields per Cert Spotter v1 spec:
@@ -257,8 +258,9 @@ static int run_circl(const source_ctx *ctx, intel_sink *sink,
                      const char *domain) {
   const char *auth = jo_env("CIRCL_AUTH");   /* "user:pass" */
   if (!auth) {
-    fprintf(stderr, "[circl_pdns] gated (no CIRCL_AUTH)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "circl_pdns",
+                                (const char *[]){ "CIRCL_AUTH", NULL },
+                                NULL, NULL);
   }
   char url[1024];
   snprintf(url, sizeof url, "https://www.circl.lu/pdns/query/%s", domain);

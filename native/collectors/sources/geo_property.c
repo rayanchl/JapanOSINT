@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"
 
 typedef struct { const char *id, *url, *base, *service, *rectype; } scrape_row;
 static const scrape_row ROWS[] = {
@@ -40,13 +41,17 @@ static int run_scrape(const source_ctx *ctx, intel_sink *sink) {
 
 static int run_touki(const source_ctx *ctx, intel_sink *sink) {
   (void)sink;
-  if (!jo_env("TOUKI_API_KEY")) { fprintf(stderr, "[touki] gated (no TOUKI_API_KEY, paid)\n"); return 0; }
+  if (!jo_env("TOUKI_API_KEY")) { return jo_needs_credential(sink, ctx->source_id, "touki",
+                              (const char *[]){ "TOUKI_API_KEY", NULL },
+                              NULL, "paid"); }
   fprintf(stderr, "[touki] key present but endpoint not provisioned\n");
   return 0;
 }
 static int run_zenrin(const source_ctx *ctx, intel_sink *sink) {
   (void)sink;
-  if (!jo_env("ZENRIN_API_KEY")) { fprintf(stderr, "[zenrin] gated (no ZENRIN_API_KEY, paid)\n"); return 0; }
+  if (!jo_env("ZENRIN_API_KEY")) { return jo_needs_credential(sink, ctx->source_id, "zenrin",
+                              (const char *[]){ "ZENRIN_API_KEY", NULL },
+                              NULL, "paid"); }
   fprintf(stderr, "[zenrin] key present but endpoint not provisioned\n");
   return 0;
 }

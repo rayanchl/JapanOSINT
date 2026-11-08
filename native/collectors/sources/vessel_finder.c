@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "_credential_notice.inc"
 
 /* JS: [lon,lat] = [parseFloat(v.LONGITUDE), parseFloat(v.LATITUDE)] */
 static double pf(cJSON *r, const char *k) {
@@ -30,8 +31,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   /* Gated, not failed: -1 would log fetch_log status='error' and open a
    * collector_anomaly on every tick for a source that simply has no key. */
   if (!key || !*key) {
-    fprintf(stderr, "[vessel-finder] gated (no VESSELFINDER_API_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "vessel-finder",
+                                (const char *[]){ "VESSELFINDER_API_KEY", NULL },
+                                NULL, NULL);
   }
 
   char url[256];

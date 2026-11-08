@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"
 
 /* trim CR/LF/space/quotes at both ends, in place. */
 static void tf_trim(char *s) {
@@ -181,9 +182,9 @@ static int tf_malwarebazaar(const source_ctx *ctx, intel_sink *sink,
   const char *authkey = getenv("ABUSECH_AUTH_KEY");
   if (!authkey || !*authkey) authkey = getenv("MALWAREBAZAAR_AUTH_KEY");
   if (!authkey || !*authkey) {
-    fprintf(stderr, "[MALWAREBAZAAR] gated (no ABUSECH_AUTH_KEY) — abuse.ch "
-                    "retired anonymous API access, unauthenticated = HTTP 401\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "MALWAREBAZAAR",
+                                (const char *[]){ "ABUSECH_AUTH_KEY", "MALWAREBAZAAR_AUTH_KEY", NULL },
+                                NULL, NULL);
   }
   char authhdr[256];
   snprintf(authhdr, sizeof authhdr, "Auth-Key: %s", authkey);

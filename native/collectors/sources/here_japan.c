@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "_credential_notice.inc"
 
 static const struct { double lat, lon; } SCAN[] = {
   { 35.6812, 139.7671 },  /* Tokyo */
@@ -21,8 +22,9 @@ static const struct { double lat, lon; } SCAN[] = {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *key = getenv("HERE_API_KEY");
   if (!key || !*key) {
-    fprintf(stderr, "[here-japan] gated (no HERE_API_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "here-japan",
+                                (const char *[]){ "HERE_API_KEY", NULL },
+                                NULL, NULL);
   }
 
   cJSON *features = cJSON_CreateArray();

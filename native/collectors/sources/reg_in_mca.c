@@ -30,6 +30,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"
 
 /* one company record → one intel_item. Returns 1 if emitted. */
 static int emit_company(intel_sink *sink, const cJSON *c) {
@@ -103,13 +104,15 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   const char *key = jo_env("INDIA_DATA_KEY");
   if (!key) {
-    fprintf(stderr, "[in_mca] gated (no INDIA_DATA_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "in_mca",
+                                (const char *[]){ "INDIA_DATA_KEY", NULL },
+                                NULL, NULL);
   }
   const char *rid = jo_env("INDIA_MCA_RESOURCE_ID");
   if (!rid) {
-    fprintf(stderr, "[in_mca] gated (no INDIA_MCA_RESOURCE_ID)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "in_mca",
+                                (const char *[]){ "INDIA_MCA_RESOURCE_ID", NULL },
+                                NULL, NULL);
   }
 
   char *enc = jo_urlencode(q);

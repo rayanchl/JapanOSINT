@@ -14,12 +14,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"
 
 /* ---- NTA Qualified-Invoice issuer registry (NEEDS_KEY) -------------------- */
 static int run_invoice(const source_ctx *ctx, intel_sink *sink) {
   if (!ctx->entity || !*ctx->entity) return -1;
   const char *app = jo_env("INVOICE_APP_ID");
-  if (!app) { fprintf(stderr, "[invoice] gated (no INVOICE_APP_ID)\n"); return 0; }
+  if (!app) { return jo_needs_credential(sink, ctx->source_id, "invoice",
+                              (const char *[]){ "INVOICE_APP_ID", NULL },
+                              NULL, NULL); }
   /* Lookup is by registration number (T + 13-digit corporate number). Accept a
    * bare 13-digit corporate number and prefix T, or a T-number as given. */
   char num[24] = {0};

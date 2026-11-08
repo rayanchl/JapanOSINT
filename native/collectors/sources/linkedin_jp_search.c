@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "_credential_notice.inc"
 
 #define SOURCE_ID "linkedin-jp-search"
 
@@ -47,8 +48,9 @@ static int seen_has(char **a, int n, const char *s) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *cookie = getenv("LINKEDIN_COOKIE");
   if (!cookie || !*cookie) {
-    fprintf(stderr, "[linkedin-jp-search] gated (no LINKEDIN_COOKIE)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "linkedin-jp-search",
+                                (const char *[]){ "LINKEDIN_COOKIE", NULL },
+                                NULL, NULL);
   }
   char csrf[256];
   if (!csrf_from_cookie(cookie, csrf, sizeof csrf)) {

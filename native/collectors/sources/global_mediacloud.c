@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "_jp_osint.inc"
+#include "_credential_notice.inc"
 
 /* one story → one intel_item. Returns 1 if emitted. */
 static int emit_story(intel_sink *sink, const cJSON *s) {
@@ -83,8 +84,9 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   const char *key = jo_env("MEDIACLOUD_API_KEY");
   if (!key) {
-    fprintf(stderr, "[mediacloud] gated (no MEDIACLOUD_API_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "mediacloud",
+                                (const char *[]){ "MEDIACLOUD_API_KEY", NULL },
+                                NULL, NULL);
   }
 
   char *enc = jo_urlencode(q);

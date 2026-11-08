@@ -23,6 +23,7 @@
 #include <time.h>
 #include "_jp_osint.inc"
 #include "_timefmt.inc"
+#include "_credential_notice.inc"
 
 /* ---- USGS earthquakes (GeoJSON FeatureCollection) ----------------------- *
  * features[].geometry.coordinates = [lon, lat, depth]
@@ -270,7 +271,9 @@ static int hz_rss(const source_ctx *ctx, intel_sink *sink, const char *url,
  * We parse latitude/longitude/acq_date/acq_time/confidence/frp positionally. */
 static int hz_firms(const source_ctx *ctx, intel_sink *sink) {
   const char *key = jo_env("FIRMS_MAP_KEY");
-  if (!key) { fprintf(stderr, "[FIRMS_GLOBAL] gated (no FIRMS_MAP_KEY)\n"); return 0; }
+  if (!key) { return jo_needs_credential(sink, ctx->source_id, "FIRMS_GLOBAL",
+                              (const char *[]){ "FIRMS_MAP_KEY", NULL },
+                              NULL, NULL); }
   char url[512];
   /* VIIRS_SNPP_NRT, world bbox (-180,-90,180,90), last 1 day */
   snprintf(url, sizeof url,

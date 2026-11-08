@@ -1557,12 +1557,137 @@ def check_detail_self_hop():
     return out
 
 
+# A credential gate: a log line saying the collector has no key, immediately
+# followed by a bare `return 0`. The string literal is what identifies it --
+# comments are stripped before the scan, so prose about gating cannot trip it.
+_GATE_LOG = re.compile(
+    r'fprintf\s*\(\s*stderr\s*,[^;]*?"[^"]*?gated[^"]*?'
+    r'(?:\(\s*(?:no|needs)\s|:\s*no\s)[^"]*"', re.S)
+_BARE_ZERO = re.compile(r"(?:^|[;{}])\s*return\s+0\s*;")
+
+_GATE_FIXTURES = [
+    # (source, expected finding count)
+    # 1. the shape itself -- the 85 sites this check was written for.
+    ('if (!k) { fprintf(stderr, "[x] gated (no X_KEY)\\n"); return 0; }', 1),
+    # 2. the same shape spread over two lines, which is how most of them read.
+    ('if (!k) {\n  fprintf(stderr, "[x] gated (no X_KEY)\\n");\n'
+     '  return 0;\n}', 1),
+    # 3. the fprintf's own arguments wrapped, as several of them are.
+    ('if (!k) {\n  fprintf(stderr, "[x] gated (no X_KEY, paid tier) for %s\\n",\n'
+     '          id);\n  return 0;\n}', 1),
+    # 4. CONTROL: already converted -- the helper call is not a bare return,
+    #    and the helper prints the same line from inside itself.
+    ('if (!k) return jo_needs_credential(sink, "x", "X",\n'
+     '                 (const char *[]){"X_KEY", NULL}, URL, "sign up");', 0),
+    # 5. CONTROL: a gate that returns -1. Wrong for a credential (it opens an
+    #    anomaly every tick) but it is NOT silent, so this check is not its
+    #    judge.
+    ('if (!k) { fprintf(stderr, "[x] gated (no X_KEY)\\n"); return -1; }', 0),
+    # 6. CONTROL: the word "gated" about something else entirely. The tree is
+    #    full of quarantine and rate-gate prose; only a key gate counts.
+    ('if (q) { fprintf(stderr, "[x] gated by quarantine\\n"); return 0; }', 0),
+    # 7. CONTROL: a marker means the author decided. Same escape hatch as
+    #    page-offset-ok.
+    ('if (!k) { /* gated-without-notice-ok: writes its own notice below */\n'
+     '  fprintf(stderr, "[x] gated (no X_KEY)\\n"); return 0; }', 0),
+    # 8. CONTROL -- and this one earned its place. The first version of
+    #    _BARE_ZERO was a plain `return 0` search, which matched the `0` of a
+    #    LATER statement in the same window, so a gate that returns a value
+    #    was reported. The boundary class is what fixed it.
+    ('if (!k) { fprintf(stderr, "[x] gated (no X_KEY)\\n");\n'
+     '  return emitted_before_the_gate; }\nint z = 0;', 0),
+]
+
+
+def _gate_fixtures_ok():
+    ok = True
+    for i, (src, want) in enumerate(_GATE_FIXTURES, 1):
+        got = len(_gate_findings("fixture.c", src, src))
+        if got != want:
+            sys.stderr.write("lint-sources: gated-without-notice fixture %d "
+                             "expected %d finding(s), got %d\n"
+                             % (i, want, got))
+            ok = False
+    return ok
+
+
+def _gate_findings(path, text, raw):
+    """The findings for one file. `text` is comment-stripped, `raw` is not --
+    the marker is a comment, so it is looked for in `raw`."""
+    out = []
+    for m in _GATE_LOG.finditer(text):
+        ln = text.count("\n", 0, m.start())
+        # The statement can wrap; find its terminating `;` and look at what
+        # comes next. A 3-line window is what the 85 measured sites need.
+        end = text.find(";", m.end())
+        if end < 0:
+            continue
+        after = "\n".join(text[end + 1:].split("\n")[:3])
+        if not _BARE_ZERO.match(after.lstrip("\n")) and \
+           not _BARE_ZERO.search(after.split("}")[0]):
+            continue
+        # The marker is read from the RAW text, within the gate's own lines.
+        rawlines = raw.split("\n")
+        window = "\n".join(rawlines[max(0, ln - 2):ln + 4])
+        if "gated-without-notice-ok" in window:
+            continue
+        out.append("%s:%d: credential gate logs and returns 0 -- no "
+                   "collector-status-notice is stored, so the database cannot "
+                   "tell it from a source that ran and found nothing; use "
+                   "jo_needs_credential() (collectors/sources/"
+                   "_credential_notice.inc)"
+                   % (path, ln + 1))
+    return out
+
+
+def check_gated_without_notice():
+    """A credential gate must store the notice, not just log a line.
+
+    `collectors/sources/_credential_notice.inc` opens by naming its own
+    population: "Twelve credential-gated collectors each degraded to a bare
+    fprintf(stderr, "... gated ..."); return 0;". It reached twelve. Measured
+    2026-11-07, **85 sites across 74 files still carried that exact shape and
+    not one of those files called the helper** -- the fifth time this tree has
+    fixed something in one of N parallel copies (the uid guard in three record
+    paths, the page ceiling in three places with two knobs, the refusal test
+    in one of five hpengine mode drivers, hpengine's fetch-failure record
+    without the scheduler's).
+
+    They are the last wholly silent class, and the reason is one line:
+    run_status() (core/scheduler.c) returns "ok" on its FIRST test, `if (rc >=
+    0)`, and sched_disclose_fetch_failure needs `run_st != "ok" || rc < 0`. A
+    gate returns 0, so both triggers are false and nothing is filed --
+    `records=0 stored=0`, which is rule 1's invisible nothing. Of the 89
+    source ids in those files, 37 appear in the 2026-10-25 registry sweep and
+    **37 of 37 read EMITS_NOTHING**, never GATED: that verdict keys on the
+    notice being stored, so these rows could not reach the bucket that exists
+    for them.
+
+    Unbaselined, because the population is zero after the conversion -- and
+    its zero was CHECKED rather than trusted: against the pre-change tree this
+    check reports 85 in 74 files.
+
+    A gate whose author means it says so with a `gated-without-notice-ok:
+    <reason>` marker, as `page-offset-ok` and `detail-self-hop-ok` do."""
+    if not _gate_fixtures_ok():
+        sys.exit(2)
+    out = []
+    for path in source_files():
+        raw = read(path)
+        if "gated" not in raw:
+            continue
+        out.extend(_gate_findings(os.path.relpath(path, REPO),
+                                  strip_comments(raw), raw))
+    return out
+
+
 CHECKS = [
     ("dup-id", check_dup_id),
     ("page-size-on-page-number", check_page_size_on_page_number),
     ("csv-delim-name", check_csv_delim_name),
     ("detail-self-hop", check_detail_self_hop),
     ("feed-format-twin", check_feed_format_twin),
+    ("gated-without-notice", check_gated_without_notice),
     ("dup-endpoint", check_dup_endpoint),
     ("unresolved-id", check_unresolved_id),
     ("registry-orphan", check_registry_orphan),

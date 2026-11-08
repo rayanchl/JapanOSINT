@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "_credential_notice.inc"
 
 static int coord(cJSON *r, double *lon, double *lat) {
   cJSON *v;
@@ -38,8 +39,9 @@ static int coord(cJSON *r, double *lon, double *lat) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *key = getenv("AGOOP_API_KEY");
   if (!key || !*key) {
-    fprintf(stderr, "[agoop-flow] gated (no AGOOP_API_KEY)\n");
-    return 0;
+    return jo_needs_credential(sink, ctx->source_id, "agoop-flow",
+                                (const char *[]){ "AGOOP_API_KEY", NULL },
+                                NULL, NULL);
   }
   char auth[600];
   snprintf(auth, sizeof auth, "Authorization: Bearer %s", key);
