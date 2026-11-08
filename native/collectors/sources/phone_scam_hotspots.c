@@ -105,16 +105,19 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   free(idx_html);
 
   cJSON *features = cJSON_CreateArray();
+  /* Which of the three `continue`s below ended each prefectural page, because
+   * the return used to collapse all three (and a clean parse) into 0. */
+  int nofetch = 0, noscam = 0, nofigure = 0;
   for (int i = 0; i < NPAGES; i++) {
     char url[256];
     snprintf(url, sizeof url, "https://%s%s", PAGES[i].host, PAGES[i].path);
     char *html = feed_get_text(ctx->http, url, 10000);
     if (!html) { fprintf(stderr, "[phone-scam-hotspots] unreachable: %s\n", url);
-                 continue; }
+                 nofetch++; continue; }
     if (!strstr(html, "特殊詐欺") && !strstr(html, "被害")
         && !strstr(html, "認知件数")) {
       fprintf(stderr, "[phone-scam-hotspots] no scam content: %s\n", url);
-      free(html); continue;
+      noscam++; free(html); continue;
     }
 
     /* incidents: /認知件数[^<>]{0,40}?([0-9,]+)\s*件/ */
@@ -137,7 +140,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       /* du==2 → 円, ×1 */
     }
 
-    if (!has_inc && !has_dmg) { free(html); continue; }
+    if (!has_inc && !has_dmg) { nofigure++; free(html); continue; }
 
     cJSON *f = gj_point_feature(PAGES[i].lon, PAGES[i].lat);
 
@@ -174,8 +177,40 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   int n = geojson_emit_features(sink, ctx->source_id, features);
   cJSON_Delete(features);
-  fprintf(stderr, "[phone-scam-hotspots] emitted %d\n", n);
-  return n >= 0 ? 0 : -1;
+  fprintf(stderr, "[phone-scam-hotspots] emitted %d of %d pages "
+                  "(%d unreachable, %d carried no scam wording, "
+                  "%d carried the wording but no figure)\n",
+          n, NPAGES, nofetch, noscam, nofigure);
+  /* `return n >= 0 ? 0 : -1` cannot be -1 (geojson_emit_features starts at 0
+   * and only increments), so ONLY the NPA gate above could ever report a
+   * failure: all ten prefectural-police pages could be refused and the run
+   * still read rc=0.
+   *
+   * The gate itself is why nobody looked. The 2026-07 note at NPA_GATE_URL
+   * fixed a real defect — the old /bureau/criminal/souni/tokushusagi/ path
+   * 404s, so the gate returned NULL and this source returned -1 on every run
+   * without reaching the pages at all — and once the gate passed, the pages
+   * behind it going quiet looked like the fix having worked.
+   *
+   * Measured 2026-11-07: 14 requests, 225,443 bytes, 0 records. Several pages
+   * really are unreachable (Hokkaido, and Fukuoka resets the TLS connection
+   * twice) and the rest answered with a real body that yielded no figure. The
+   * numbers here are YEARLY CUMULATIVE 認知件数 and 被害総額, not an event
+   * feed, so ten standing prefectural landing pages do not all stop
+   * publishing a running total on the same day: zero is always a defect. The
+   * likeliest cause for the pages that did load is the 40-character
+   * no-angle-bracket window in match_after_label, which cannot reach a number
+   * the page has since moved inside a <td> or <span>.
+   *
+   * The discriminator is the PARSE: one page yielding one figure leaves the
+   * run at 0, and the three counters above say which way each page failed. */
+  if (n == 0) {
+    fprintf(stderr, "[phone-scam-hotspots] no prefectural page yielded a "
+                    "figure — reporting a failed fetch, not an absence of "
+                    "scam reports\n");
+    return -1;
+  }
+  return 0;
 }
 
 static const source_def phone_scam_hotspots_def = {

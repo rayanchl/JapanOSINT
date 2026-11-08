@@ -116,9 +116,43 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (nofetch == NPREF)
     fprintf(stderr, "[homes-co] every page blocked: www.homes.co.jp answers "
                     "HTTP 403 from its CloudFront WAF for this client\n");
-  /* A page that loads but has no 件 count is an honest empty; only a total
-   * fetch failure is a real fault worth quarantining the source over. */
-  return nofetch == NPREF ? -1 : 0;
+  /* "A page that loads but has no 件 count is an honest empty; only a total
+   * fetch failure is a real fault worth quarantining the source over." That
+   * was the 2026-07 reading, and BOTH halves of it have now been measured
+   * false for this host.
+   *
+   * `nofetch == NPREF` could not fire: measured 2026-11-07, the run reports
+   * `10/47 unreachable` and `bytes=9190` over 47 requests — and 9,190 is
+   * exactly ten copies of the 919-byte CloudFront error page the host serves
+   * (`403`, `ERROR: The request could not be satisfied`, read by hand). So
+   * thirty-seven responses carried a 2xx with nothing in it and `html` was a
+   * non-NULL empty string for each, which left `nofetch` at ten. One response
+   * of forty-seven not being a hard failure was enough to suppress the -1 AND
+   * the "every page blocked" line directly above, which is the correct
+   * diagnosis this collector has been holding and not printing.
+   *
+   * And an empty 2xx is not a page that loaded: `lib/rss_atom.c` already
+   * argues it for feeds — no document is zero bytes long — and `parse_count`
+   * is the loosest probe there is, any `[0-9,]{2,}` run followed by 件
+   * anywhere in the body. Forty-seven prefecture landing pages of a national
+   * rental portal containing no such run is a changed page or a wall, never a
+   * quiet market.
+   *
+   * THE CONTROL IS `suumo`, AND IT IS NOT CHANGED: the same 47-prefecture
+   * shape over the same probe on another portal, which the 2026-10-25 sweep
+   * read OK with 45 of 47 prefectures storing. So the method works and this
+   * is about this host. The key is the PARSE, as reddit-jp-subs' is: a single
+   * prefecture yielding a count keeps the run honest at 0 (a rural pref with
+   * no number is what the `continue` above is legitimately for), and no
+   * prefecture yielding one is a failed fetch. */
+  if (n == 0) {
+    fprintf(stderr, "[homes-co] no prefecture page yielded a 件 count "
+                    "(%d/%d unreachable, the rest a 2xx with no count) — "
+                    "reporting a failed fetch, not an empty rental market\n",
+            nofetch, NPREF);
+    return -1;
+  }
+  return 0;
 }
 
 static const source_def homes_co_def = {

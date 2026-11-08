@@ -265,6 +265,23 @@ this file's "one probe is one reading" at the scale of a whole verdict column �
 and the cheapest way to avoid acting on it is to re-read before changing a row,
 not to re-reason about the note.
 
+**THAT TAIL IS NOW CLOSED — zero `OPEN` rows, and TWO of its own notes were
+wrong** (2026-11-07, the same TSV, re-measured per row). Both corrections are
+the kind this file exists to catch, and both were found by opening the file
+rather than the note:
+
+* **`real-estate` is `collectors/sources/real_estate.c`, not `suumo.c`.** The
+  2026-11-05 note named the wrong file, and the two are a different shape
+  entirely — real_estate.c reads 13 SUUMO slug pages and suumo.c reads 47
+  prefecture pages. A verdict attached to the wrong file is worse than no
+  verdict: the next reader fixes a working collector.
+* **`suumo` itself is HEALTHY and is the control that was nearly missed.** The
+  2026-10-25 sweep reads it OK with **45 of 47 prefectures storing** — the same
+  47-prefecture shape, the same loose `件` probe, and the same stale "only a
+  total fetch failure is a real error" comment as `homes-co`. So the method
+  works, `homes-co`'s zero is about that host's CloudFront WAF, and `suumo` is
+  left alone. A pass like this needs a row it does not touch.
+
 The largest apparent family in that tail dissolved the same way, and it is the
 better lesson of the two. **15 UK parish-council `/feed/` rows whose bodies
 were byte-identical at 33,245 bytes across 15 unrelated domains** read exactly
@@ -380,6 +397,142 @@ where a shared 7,249 bytes turned out to be two genuinely different paths.
   true — Japan's HPAI season holds zero outbreaks for months — and that
   collector already returns -1 for an unreachable index or season page. A pass
   like this needs one row it leaves alone, or the rule it applies is untested.
+
+  **AND THE WHOLE 254-SITE POPULATION WAS THEN NARROWED FOR FREE, BY JOINING
+  THE SWEEP'S OWN VERDICT AND DURATION COLUMNS** (2026-11-07). The paragraph
+  above says a scan cannot decide whether zero can be honest, which is true and
+  is not the same as being unable to RANK them. The files carrying
+  `>= 0 ? 0 : -1` declare 251 registered ids; of those the 2026-10-25 sweep read
+  **51 `EMITS_NOTHING`**, and subtracting the 29 the tail had already worked
+  leaves 35 — of which **28 ran in 0 seconds**, i.e. made no request at all,
+  because they are the credential gates two bullets down. Seven went and
+  looked, and three of those seven turned out healthy or already disclosing
+  (`ooni-jp` stores 200, `k-net` already returns -1, `github-leaks-jp` stores
+  78). So the actionable remainder of a 254-site population was **three rows**:
+  `chan-5ch`, `geothermal-springs` and `mlit-landprice`, each fixed below. The
+  **duration** column is the discriminator — a 0-second `EMITS_NOTHING` row did
+  not fetch — which is the 2026-10-25 byte-count lesson one column over, and it
+  cost no requests at all.
+
+* **A CREDENTIAL GATE THAT LOGS A LINE AND RETURNS 0 IS THE LAST WHOLLY SILENT
+  CLASS, AND THE HELPER THAT FIXES IT HAD REACHED TWELVE OF NINETY-SEVEN**
+  (2026-11-07, `docs/gated-without-notice-2026-11-07.tsv`).
+  `collectors/sources/_credential_notice.inc` opens by naming its own
+  population — *"Twelve credential-gated collectors each degraded to a bare
+  `fprintf(stderr, "… gated …"); return 0;`"* — and it reached twelve.
+  Measured: **83 sites across 72 files still carried that exact shape, and not
+  one of those files called `jo_needs_credential`.** Fifth instance of this
+  file's own "look for the other copies" (the uid guard in three record paths,
+  the page ceiling in three places with two knobs, the refusal test in one of
+  five mode drivers, hpengine's fetch-failure record without the scheduler's).
+
+  They are silent for a one-line reason worth knowing: `run_status()`
+  (`core/scheduler.c`) returns `"ok"` on its FIRST test, `if (rc >= 0)`, and
+  `sched_disclose_fetch_failure` needs `run_st != "ok" || rc < 0`. A gate
+  returns 0, so **both triggers are false** and nothing is filed. Of the 89
+  source ids in those files, 37 appear in the 2026-10-25 sweep and **37 of 37
+  read `EMITS_NOTHING`**, never `GATED` — and `audit_registry_emit.py`'s own
+  comment says why that is the wrong bucket ("a source behaving exactly as
+  designed does not belong in a defect bucket, and the remedy is not the
+  same — one needs a key, the other needs title_keys/id_keys"); its `GATED`
+  verdict keys on the notice being STORED, so these rows could not reach the
+  bucket that exists for them. Measured after: **36 of 37 flipped to `GATED`**,
+  and the 37th has a token in this environment and stores 78 records.
+
+  Nothing new was built. The helper already prints the same stderr line, upserts
+  ONE row on the constant `remote_key "collector-needs-credential"` however long
+  a source stays unconfigured, carries no observation, and still returns 0 —
+  because gated is a state, not a run failure, and -1 would open a
+  `collector_anomaly` every tick and bury real breakages. `make lint-sources`
+  has **`gated-without-notice`** now, unbaselined because the population is
+  zero, and its zero was CHECKED: against the pre-change tree it reports 83 in
+  72 files. Ten fixtures run before the check, and one of them earned its place
+  — the first `return 0` test matched a `0` in a LATER statement, so a gate
+  returning a value read as a finding.
+
+  **Three things the conversion measured that reasoning had got wrong, and the
+  claim only ever shrank:**
+
+  * **Neither the log line nor the nearby `getenv` calls name the right env
+    vars.** The log line abbreviates (`CENSYS_API_ID/SECRET` is two variables),
+    and the calls in the lines above pick up a PREVIOUS gate's key
+    (`econ_world.c`'s COMTRADE leaking into the FRED gate) and non-credential
+    configuration (`HOUMUKYOKU_WATCHLIST`, `PSN_XBOX_WATCHLIST`). The gate's
+    OWN condition, resolved back through the nearest preceding declaration, is
+    the only thing that names what blocked — 79 of 83 resolved from it, and the
+    four that did not are a helper call, a table field and one case that was not
+    a gate at all.
+  * **`airquality_world.c:226` was a FAILED FETCH wearing a gate's log line**,
+    and the condition resolver found it independently: the condition is `!body`,
+    on the KEYLESS v2 route, which is reached precisely BECAUSE there is no
+    key. Naming the missing key as the cause is the mistake this rule records
+    three times over. It returns -1 now.
+  * **A grep said 85 sites and the lint said 83, and the lint was right.**
+    `global_aleph.c` logged "gated" and then spent the guaranteed-401 request
+    anyway (its `if (!body) return 0;` sat under a comment calling a non-200 an
+    honest empty — the one reading its own paragraph above says it must not be);
+    and `reg_ro.c` falls back to a real public scrape through
+    `jo_emit_anchors`, which **already stores a `collector-fetch-error`
+    record**, so it was never silent and is NOT changed.
+
+  Deliberately not done: lowering the interval of gated rows that run every 30
+  minutes. The operator's system-wide cadence policy already sits above every
+  declared interval, and a row that later gets its key should run at the
+  cadence its author measured.
+
+* **A SITE IN MAINTENANCE SERVES ONE PAGE TO EVERY PATH, and that is a refusal
+  wearing a success status that no status and no path can see** (2026-11-07).
+  Measured on `www.finmac.or.jp`: `/news/` answers HTTP **200**,
+  `/tokei-siryo/index_03/` answers **200**, and a path that cannot exist answers
+  **404** — all three the same 7,249 bytes, md5 `d5b3d549`,
+  `<title>メンテナンス中｜FINMAC</title>`. Two registered rows sat on those paths
+  reading `rc=0 records=0` with no notice, and the identical byte count was the
+  only hint that it was ONE host-level cause rather than two row bugs. The 404
+  control is what makes it certain. rule 1 has met this before without naming
+  it — `il-knesset-dates` returning "131,618 bytes of the OData service's HTML
+  maintenance page" — and there it was only caught because the row returned
+  non-zero.
+
+  **Its remedy is the opposite of every other shape here: WAIT.** Not a gap,
+  not an agent, not a re-point. A reader told "the endpoint may have moved"
+  re-points a row whose publisher is back the next morning, and that is a
+  validated row made unvalidated — so it is a third flag beside the rate
+  limiter and the bot wall rather than folded into either.
+
+  **The test reads the body's own `<title>` and not the body**, which is the
+  narrowness that makes it trustworthy: "maintenance" is ordinary data in this
+  tree — road maintenance, aircraft maintenance, maintenance of a register — so
+  a substring test over a whole body would read a works register as a refusal,
+  the mistake `hptest` 45b already blocks for "access denied". A page whose
+  TITLE says it is under maintenance is making the statement ABOUT ITSELF.
+  `hptest` 59–59e: two assertions confirmed to fail against the old code, and
+  three controls — 59c is the one that matters (a page ABOUT maintenance with a
+  data-shaped title stays silent), 59d pins that the phrase outside a `<title>`
+  is data, and 59e pins that a rate limit still wins, because its remedy is
+  actionable and "wait" is not.
+
+  **And it went into hpengine first, which was wrong within the hour.** A
+  second maintenance page turned up the same afternoon on an unrelated host —
+  `gbank.gsj.jp` answering the 2020 hot-spring chemistry KML with 200 and
+  **160 bytes** of `<title>メンテナンス中</title>` — and `geothermal-springs` is
+  a BESPOKE collector that no engine test can reach. So
+  `jo_title_says_maintenance()` lives in `lib/jocore.h` and `lib/hpengine.c`
+  delegates to it: one definition, available to every collector. This file's own
+  recurring lesson, met again sixty minutes after writing the engine-only copy.
+
+* **AND THE FOUR ROWS IT EXPLAINS ARE KEPT, NOT RETIRED.** The plan for this
+  pass was to retire `JP25_JPFIN_FINMAC_NEWS`, because `JO45_WP_FINMAC_NEWS`
+  reads the same news better — 65 of a declared 65, with ids, dates, links and
+  rendered bodies, measured today while the HTML page is down. The duplication
+  is real and is written down. The retirement is not taken, because the measured
+  cause of that row's zero is MAINTENANCE, and deciding a row's fate on a
+  reading taken while its publisher is down is exactly the `kyushu-power`
+  mistake this file corrected two days earlier. `JO28_ADR_FINMAC` is read by
+  nothing else in the tree at all (`/tokei-siryo/` appears in no other row), and
+  `JO30_BANK_FINMAC_NEWS_RSS` — whose description claims a working 10-item feed
+  — answers **76 bytes** today. Three of four rows on one host, all explained by
+  one page. **Re-read this family before acting on any of it.**
+
 * **AN ANCHOR CALENDAR DEFEATS THE LABEL MINIMUM, and that was the fourth
   record path without a disclosure.** The US NRC's event-notification year
   pages carry 205 and 245 real `<a href>` anchors, every one matching the row's

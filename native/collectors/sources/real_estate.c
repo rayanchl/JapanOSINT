@@ -104,6 +104,10 @@ static const char *SLUGS[] = {
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *features = cJSON_CreateArray();
+  /* Which of the two breaks below ended each slug: a body that never arrived,
+   * or a body that arrived and carried no listing grid. The old code could not
+   * tell them apart at the return, and neither could the database. */
+  int nofetch = 0, nogrid = 0;
 
   for (int si = 0; si < NSLUG; si++) {
     for (int page = 1; page <= 5; page++) {
@@ -112,12 +116,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
         "https://suumo.jp/jj/chintai/ichiran/FR301FC001/?ar=030&bs=040&ta=%s&page=%d",
         SLUGS[si], page);
       char *html = feed_get_text(ctx->http, url, 12000);
-      if (!html) break;                       /* if (!html) break (next slug) */
+      if (!html) { nofetch++; break; }         /* if (!html) break (next slug) */
 
       /* items = html.split(/cassetteitem"/).slice(1) — iterate occurrences
        * of `cassetteitem"`; block = text up to next occurrence. */
       const char *first = strstr(html, "cassetteitem\"");
-      if (!first) { free(html); break; }      /* items.length===0 → break */
+      if (!first) { nogrid++; free(html); break; }  /* items.length===0 → break */
       int page_matched = 0;
       const char *bs = first + strlen("cassetteitem\"");
       while (bs) {
@@ -202,8 +206,35 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   int n = geojson_emit_features(sink, ctx->source_id, features);
   cJSON_Delete(features);
-  fprintf(stderr, "[real-estate] emitted %d\n", n);
-  return n >= 0 ? 0 : -1;
+  fprintf(stderr, "[real-estate] emitted %d (%d/%d slugs unreachable, "
+                  "%d served a body with no listing grid)\n",
+          n, nofetch, NSLUG, nogrid);
+  /* `return n >= 0 ? 0 : -1` CANNOT BE -1: n comes from geojson_emit_features,
+   * which starts at 0 and only increments. So this was the only return in the
+   * function and it was always 0 — all thirteen slugs could be refused and the
+   * run still read `rc=0 records=0 stored=0`, byte for byte what a quiet
+   * rental market would look like.
+   *
+   * The header of this file is where the reasoning went stale: "When the live
+   * scrape yields 0 rows JS falls back to SEED; we emit 0
+   * (correctness-neutral)". That was a true and important statement about NOT
+   * fabricating the seed rows, and it was then read as a licence for rc=0 —
+   * two different questions. Rule 1 asks for the shortfall as DATA, and until
+   * sched_disclose_fetch_failure (2026-10-22) there was nowhere to put it.
+   *
+   * Measured 2026-11-07: 13 requests, 161,694 bytes, 0 records — one request
+   * per slug, every one breaking at the `cassetteitem"` test, so SUUMO serves
+   * ~12.4 kB that no longer contains the server-rendered listing grid. Tokyo,
+   * Osaka and Kanagawa rentals are never empty, so zero here is a parse or
+   * access defect and never an honest empty, and the discriminator is the
+   * PARSE rather than the record count: a slug that yields one listing proves
+   * the grid is still there and leaves the run honest at 0. */
+  if (n == 0) {
+    fprintf(stderr, "[real-estate] no slug yielded a single listing — "
+                    "reporting a failed fetch, not an empty rental market\n");
+    return -1;
+  }
+  return 0;
 }
 
 static const source_def real_estate_def = {

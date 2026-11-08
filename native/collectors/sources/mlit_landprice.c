@@ -326,7 +326,29 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int n = geojson_emit_features(sink, ctx->source_id, features);
   cJSON_Delete(features);
   fprintf(stderr, "[mlit-landprice] emitted %d\n", n);
-  return n >= 0 ? 0 : -1;
+  /* `return n >= 0 ? 0 : -1` cannot be -1, and this row makes ~141 requests a
+   * run across every prefecture and quarter, so a total outage read as "no
+   * land transactions were registered anywhere in Japan".
+   *
+   * WHAT TODAY'S READING IS AND IS NOT. Measured 2026-11-07: 141 requests,
+   * **0 bytes**, rc=0, 72 s. The cause is NOT the publisher — `curl` gets
+   * `CONNECT tunnel failed, response 502` for the same URL and the agent
+   * proxy's own status lists `www.land.mlit.go.jp:443` under
+   * `recentRelayFailures` with "gateway answered 502 to CONNECT". That is this
+   * container's egress, the LOCAL_EGRESS shape rule 1 records, so the row's
+   * state at MLIT is **unmeasured from here** and nothing about its URL is
+   * changed on this reading.
+   *
+   * The return code is a separate question and is wrong either way: a run that
+   * transferred nothing has not measured an empty quarter. A single prefecture
+   * returning no transactions is normal and leaves the run at 0. */
+  if (n == 0) {
+    fprintf(stderr, "[mlit-landprice] no prefecture-quarter returned a "
+                    "transaction — reporting a failed fetch, not an empty "
+                    "land market\n");
+    return -1;
+  }
+  return 0;
 }
 
 static const source_def mlit_landprice_def = {

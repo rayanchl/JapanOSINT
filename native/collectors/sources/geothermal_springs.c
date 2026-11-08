@@ -7,6 +7,7 @@
 #include "lib/feedlib.h"
 #include "lib/htmlparse.h"
 #include "lib/geojson.h"
+#include "lib/jocore.h"      /* jo_title_says_maintenance */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -92,6 +93,23 @@ static cJSON *pick_number_json(const char *desc, const char *label) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   char *kml = feed_get_text(ctx->http, KML_URL, 60000);
   if (!kml) return -1;  /* JS: empty features on fetch fail */
+  /* A 200 can be a refusal, and here it is: measured 2026-11-07, gbank.gsj.jp
+   * answers this KML's URL with HTTP 200 and **160 bytes** whose whole content
+   * is `<title>メンテナンス中</title>`. The Placemark loop below then found
+   * nothing and the run reported `rc=0 records=0` — indistinguishable from a
+   * national hot-spring chemistry survey holding no springs.
+   *
+   * The remedy for this shape is to WAIT, never to re-point the URL, so it is
+   * named rather than folded into the generic failure below. */
+  int maint = jo_title_says_maintenance(kml);
+  if (maint) {
+    fprintf(stderr, "[geothermal-springs] %s answered 200 with a page whose "
+                    "own <title> says the SITE IS IN MAINTENANCE (%zu bytes) "
+                    "— reporting a failed fetch. Wait and re-read this row; do "
+                    "NOT re-point the URL.\n", KML_URL, strlen(kml));
+    free(kml);
+    return -1;
+  }
 
   cJSON *features = cJSON_CreateArray();
   const char *cur = kml;
@@ -169,7 +187,18 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   int n = geojson_emit_features(sink, ctx->source_id, features);
   cJSON_Delete(features);
   fprintf(stderr, "[geothermal-springs] emitted %d\n", n);
-  return n >= 0 ? 0 : -1;
+  /* `return n >= 0 ? 0 : -1` cannot be -1 (geojson_emit_features starts at 0
+   * and only increments), so the only failure this collector could ever report
+   * was the NULL body above. A KML download of a FIXED, PUBLISHED 2020 survey
+   * file has no quiet day: the file either has Placemarks or we did not get the
+   * file, so zero is always a defect here. */
+  if (n == 0) {
+    fprintf(stderr, "[geothermal-springs] the body carried no <Placemark> — "
+                    "reporting a failed fetch, not a survey with no springs "
+                    "in it\n");
+    return -1;
+  }
+  return 0;
 }
 
 static const source_def geothermal_springs_def = {

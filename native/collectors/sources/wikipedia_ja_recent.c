@@ -41,8 +41,26 @@ static void enc_uri_comp(const char *s, char *o, size_t cap) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *hdrs[] = { "user-agent: japanosint-collector", NULL };
-  cJSON *json = feed_get_json_h(ctx->http, API_URL, hdrs, 12000);
+  /* NO PER-ROW USER-AGENT. This row used to send `user-agent:
+   * japanosint-collector` — a bare product token with no URL and no contact
+   * route — and ja.wikipedia.org answers that with HTTP 429 "You are making
+   * too many requests", which is what Wikimedia's user-agent policy asks a
+   * client without contact details to expect. Measured 2026-11-07: 1 request,
+   * 3,443 bytes, 0 records.
+   *
+   * The remedy is subtraction rather than a new header. core/httpclient.c's
+   * precedence is "a host in core/host_agents.def gets the table's agent
+   * whatever the caller set; any other host keeps the caller's header, else
+   * JO_USER_AGENT" — and no wikimedia host is in that table, so this row's
+   * header was overriding the tree's own good default, which already carries
+   * the product, a repository URL and a contact route. Dropping it is the
+   * cheapest rung of host_agents.def's own admission ladder, and if 429
+   * persists the next rung is measured there rather than guessed here.
+   *
+   * No hostgate gap is added: a budget cannot be measured from behind the
+   * limit (rule 1's Archive-It note), and `http_request` retries ON 429, so
+   * each tick could spend up to three requests against it. */
+  cJSON *json = feed_get_json(ctx->http, API_URL, 12000);
 
   cJSON *query = json ? cJSON_GetObjectItem(json, "query") : NULL;
   cJSON *arr = query ? cJSON_GetObjectItem(query, "recentchanges") : NULL;
@@ -98,12 +116,26 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       i++;
     }
   }
+  int parsed = cJSON_IsArray(arr);
   if (json) cJSON_Delete(json);
 
   int n = geojson_emit_features(sink, ctx->source_id, features);
   cJSON_Delete(features);
   fprintf(stderr, "[wikipedia-ja-recent] emitted %d\n", n);
-  return n >= 0 ? 0 : -1;
+  /* The header said "Fetch-fail → 0 features (correctness-neutral)" and
+   * `return n >= 0 ? 0 : -1` cannot be -1, so a 429 read exactly like one of
+   * the busiest wikis in the world publishing nothing for ten minutes.
+   *
+   * The test is the PARSE and not the record count: `query.recentchanges` is
+   * an array even when it is empty, so a genuinely quiet ten minutes still
+   * returns 0 — only a body that did not give us that array is a failure. */
+  if (!parsed) {
+    fprintf(stderr, "[wikipedia-ja-recent] no query.recentchanges array in the "
+                    "response — reporting a failed fetch, not a wiki with no "
+                    "recent changes\n");
+    return -1;
+  }
+  return 0;
 }
 
 static const source_def wikipedia_ja_recent_def = {

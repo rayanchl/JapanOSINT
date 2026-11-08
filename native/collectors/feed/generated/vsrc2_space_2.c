@@ -368,12 +368,40 @@ VRSS(sci_universe_today, "sci-universe-today", "Universe Today", "ユニバー�
   "en", "[\"astronomy\",\"spaceflight\"]", 7200,
   "Daily astronomy and space exploration reporting.");
 
+/* array_path WAS `summary.properties`, AND THAT IS THE ENVELOPE'S SCHEMA BLOCK,
+ * NOT ITS RECORDS. Read 2026-11-07 (the url 307s to pds.mcp.nasa.gov, which
+ * libcurl follows): the response is `{summary: {hits, properties, ...}, data:
+ * [...]}`, where `summary.properties` is an array of property NAMES —
+ * "_package_id", "alternate_ids", "lid", "lidvid", … — so row_derive rejected
+ * every one of them for not being an object and the row stored 0 records from
+ * 395,932 bytes a day while filing its shape notices.
+ *
+ * It needs no keyed uid or title override: a `data` record carries exactly
+ * three top-level scalars, `id`, `type` and `title`, so VJSON's own uid
+ * precedence finds `id` and its title list finds `title`.
+ *
+ * `sort=lid` IS MEASURED AND NOT ASSUMED, in both directions. The control
+ * first: `frobnicate=7` answers HTTP **400**, so this endpoint validates its
+ * query string and an accepted parameter is being read rather than discarded
+ * (and `sort[]=lid` is a 400 too, so the spelling matters). Then the effect:
+ * `sort=lid` returns a different first page from the plain query with the same
+ * `hits`, so it is honoured. Without it the 50 records are an arbitrary slice
+ * redrawn every run — the `dea-stac` and `geo-copernicus-odata-s2` hazard,
+ * where an unordered walk re-stores one set and silently skips others.
+ *
+ * WHAT THIS ROW IS, STATED RATHER THAN IMPLIED: a 50-record sample of a
+ * declared **92,789,260** products, and `summary.hits` is in lib/jsonlist.c's
+ * declared-total list now so the row says that in a truncation notice every
+ * run instead of looking like a complete read. Reading the archive properly
+ * means partitioning it (by node, or by investigation) into rows of their own;
+ * that is a new-row decision with a cost, not a repair to this one. */
 VJSON(sci_usgs_astro_pds, "sci-usgs-astro-pds", "NASA Planetary Data System products", "NASA 惑星データシステム 製品検索",
   "space", "repository",
-  "https://pds.nasa.gov/api/search/1/products?limit=50",
-  "summary.properties",
+  "https://pds.nasa.gov/api/search/1/products?limit=50&sort=lid",
+  "data",
   "en", "[\"pds\",\"planetary\",\"nasa\"]", 86400,
-  "Planetary mission data products across PDS archives.");
+  "Planetary mission data products across PDS archives: a 50-record slice, by "
+  "logical identifier, of a registry declaring 92.8 million products.");
 
 /* Same VOTable-in-JSON shape as the SIMBAD block above; see the note there.
  * No alias is needed on these two: the GCVS row carries `VarName` and the TAP

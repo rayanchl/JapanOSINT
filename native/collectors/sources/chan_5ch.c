@@ -82,7 +82,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     "Accept: text/plain, */*",
     NULL
   };
-  int n = 0;
+  int n = 0, nfetched = 0;
   for (int b = 0; b < NBOARD; b++) {
     const char *spec = BOARDS[b];
     const char *colon = strchr(spec, ':');
@@ -116,6 +116,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
      * fire and the explicit csv_decode_sjis() below is still the sole decoder. */
     char *raw = jo_get_t(ctx, url, hdrs, "chan-5ch", TIMEOUT_MS);
     if (!raw) continue;
+    nfetched++;
     /* feed_get_text returns the raw body bytes; subject.txt is Shift_JIS. */
     char *text = csv_decode_sjis(raw, strlen(raw));
     free(raw);
@@ -180,8 +181,28 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     }
     free(text);
   }
-  fprintf(stderr, "[chan-5ch] emitted %d\n", n);
-  return n >= 0 ? 0 : -1;
+  fprintf(stderr, "[chan-5ch] emitted %d from %d/%d boards that answered\n",
+          n, nfetched, NBOARD);
+  /* `return n >= 0 ? 0 : -1` cannot be -1, so five of Japan's busiest boards
+   * "all published nothing" every 30 minutes — the same tautology
+   * reddit-jp-subs carried, on the same kind of source.
+   *
+   * Measured 2026-11-07: 5 requests, **765 bytes** in total, 0 records. A
+   * `subject.txt` for news+ alone is tens of kilobytes, and that endpoint is
+   * the client protocol one, so 153 bytes a board is a refusal body and not a
+   * thread list. The comment above the fetch already records that 5ch answers
+   * a Cloudflare 403 from most hosts.
+   *
+   * The key is the PARSE, as reddit-jp-subs' is: a board that answers with a
+   * genuinely empty subject.txt leaves the run honest at 0, and only no board
+   * yielding a single thread is a failure. */
+  if (n == 0) {
+    fprintf(stderr, "[chan-5ch] no board yielded a single thread "
+                    "(%d/%d answered) — reporting a failed fetch, not five "
+                    "silent boards\n", nfetched, NBOARD);
+    return -1;
+  }
+  return 0;
 }
 
 static const source_def chan_5ch_def = {
