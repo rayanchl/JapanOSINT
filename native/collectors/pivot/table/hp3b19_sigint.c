@@ -295,7 +295,11 @@ static const hp_source HP3B19_SIGINT[] = {
     .record_type = "equipment-authorisation",
     .tags = "\"sigint\",\"spectrum\",\"equipment\",\"fccid\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcc.gov/resource/3b3k-34jp.json?$limit=1000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on opendata.fcc.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://opendata.fcc.gov/resource/3b3k-34jp.json?$limit=1000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .interval = 21600,
     .page_param = "$offset",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -315,7 +319,11 @@ static const hp_source HP3B19_SIGINT[] = {
     .record_type = "broadcast-station",
     .tags = "\"sigint\",\"broadcast\",\"spectrum\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcc.gov/resource/2ah7-n9rk.json?$limit=1000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on opendata.fcc.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://opendata.fcc.gov/resource/2ah7-n9rk.json?$limit=1000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .interval = 21600,
     .page_param = "$offset",
     .page_size = 1000,
@@ -334,7 +342,11 @@ static const hp_source HP3B19_SIGINT[] = {
     .record_type = "conformity-body",
     .tags = "\"sigint\",\"spectrum\",\"equipment\",\"accreditation\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcc.gov/resource/nubx-v54a.json?$limit=1000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on opendata.fcc.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://opendata.fcc.gov/resource/nubx-v54a.json?$limit=1000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .interval = 21600,
     .page_param = "$offset",
     .page_size = 1000,
@@ -353,7 +365,11 @@ static const hp_source HP3B19_SIGINT[] = {
     .record_type = "conformity-body",
     .tags = "\"sigint\",\"spectrum\",\"equipment\",\"certification\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcc.gov/resource/6dwc-c4xx.json?$limit=1000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on opendata.fcc.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://opendata.fcc.gov/resource/6dwc-c4xx.json?$limit=1000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .interval = 21600,
     .page_param = "$offset",
     .page_size = 1000,
@@ -1081,7 +1097,11 @@ static const hp_source HP3B19_SIGINT[] = {
     .record_type = "filing-attachment",
     .tags = "\"sigint\",\"satellite\",\"earthstation\",\"spectrum\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcc.gov/resource/eg8u-shmc.json?$limit=1000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on opendata.fcc.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://opendata.fcc.gov/resource/eg8u-shmc.json?$limit=1000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .interval = 21600,
     .page_param = "$offset",
     .page_size = 1000,
@@ -1099,7 +1119,11 @@ static const hp_source HP3B19_SIGINT[] = {
     .record_type = "conformity-body",
     .tags = "\"sigint\",\"spectrum\",\"equipment\",\"accreditation\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcc.gov/resource/6cjf-vuh4.json?$limit=1000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on opendata.fcc.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://opendata.fcc.gov/resource/6cjf-vuh4.json?$limit=1000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .interval = 21600,
     .page_param = "$offset",
     .page_size = 1000,
@@ -1117,7 +1141,11 @@ static const hp_source HP3B19_SIGINT[] = {
     .record_type = "conformity-body",
     .tags = "\"sigint\",\"spectrum\",\"equipment\",\"certification\",\"us\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.fcc.gov/resource/cxk6-dh2v.json?$limit=1000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on opendata.fcc.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://opendata.fcc.gov/resource/cxk6-dh2v.json?$limit=1000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .interval = 21600,
     .page_param = "$offset",
     .page_size = 1000,

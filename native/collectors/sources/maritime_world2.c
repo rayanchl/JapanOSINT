@@ -40,15 +40,14 @@ static int emit_vessel(intel_sink *sink, const cJSON *v) {
   char link[256] = {0};
   if (mmsi) snprintf(link, sizeof link, "https://www.marinetraffic.com/en/ais/details/ships/mmsi:%s", mmsi);
   char summ[128]; snprintf(summ, sizeof summ, "%s%s%s", type ? type : "vessel", country ? " · " : "", country ? country : "");
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key = uuid ? uuid : (mmsi ? mmsi : name);
   it.title = name ? name : (mmsi ? mmsi : imo);
-  it.summary = summ; it.body = bt ? bt : bj; it.link = link[0] ? link : NULL; it.lang = "en";
+  it.summary = summ; it.body = bj; it.link = link[0] ? link : NULL; it.lang = "en";
   it.has_geo = has_geo; it.lat = has_geo ? lat->valuedouble : 0; it.lon = has_geo ? lon->valuedouble : 0;
   it.record_type = "vessel";
   it.properties_json = pj; it.tags_json = "[\"osint-search\",\"DATALASTIC_VESSEL\"]";
-  int rc = sink->emit(sink, &it); free(bj); free(bt); free(pj);
+  int rc = sink->emit(sink, &it); free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 

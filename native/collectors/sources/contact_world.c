@@ -41,12 +41,11 @@ static int run_emailrep(const source_ctx *ctx, intel_sink *sink, const char *enc
   cJSON_AddBoolToObject(p, "success", 1);
   jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
   char title[256]; snprintf(title, sizeof title, "%s — reputation %s", email, reputation ? reputation : "unknown");
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
-  it.remote_key = email; it.title = title; it.summary = reputation; it.body = bt ? bt : bj; it.lang = "en";
+  it.remote_key = email; it.title = title; it.summary = reputation; it.body = bj; it.lang = "en";
   it.record_type = "email-reputation";
   it.properties_json = pj; it.tags_json = "[\"osint-search\",\"EMAILREP_LOOKUP\"]";
-  int rc = sink->emit(sink, &it); free(bj); free(bt); free(pj); cJSON_Delete(root);
+  int rc = sink->emit(sink, &it); free(bj); free(pj); cJSON_Delete(root);
   (void)raw;
   return rc >= 0 ? 1 : 0;
 }
@@ -83,13 +82,12 @@ static int run_numverify(const source_ctx *ctx, intel_sink *sink, const char *en
   char title[256];
   snprintf(title, sizeof title, "%s — %s%s%s", number ? number : ctx->entity,
            country ? country : "?", carrier ? " · " : "", carrier ? carrier : "");
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key = number ? number : ctx->entity; it.title = title; it.summary = carrier;
-  it.body = bt ? bt : bj; it.lang = "en";
+  it.body = bj; it.lang = "en";
   it.record_type = "phone-validation";
   it.properties_json = pj; it.tags_json = "[\"osint-search\",\"NUMVERIFY_PHONE\"]";
-  int rc = sink->emit(sink, &it); free(bj); free(bt); free(pj); cJSON_Delete(root);
+  int rc = sink->emit(sink, &it); free(bj); free(pj); cJSON_Delete(root);
   return rc >= 0 ? 1 : 0;
 }
 

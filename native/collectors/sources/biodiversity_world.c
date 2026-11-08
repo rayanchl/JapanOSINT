@@ -59,12 +59,11 @@ static int bio_emit(intel_sink *sink, const char *service, const char *rectype,
   jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = key ? key : title;
   it.title           = title;
   it.summary         = locality ? locality : sci;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.published_at    = observed;
   it.link            = link;
@@ -75,7 +74,7 @@ static int bio_emit(intel_sink *sink, const char *service, const char *rectype,
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"biodiversity\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 

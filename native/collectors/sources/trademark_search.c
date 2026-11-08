@@ -57,18 +57,17 @@ static int emit_mark(intel_sink *sink, const char *office, const cJSON *d,
   char title[400];
   snprintf(title, sizeof title, "%s — %s", office, name ? name : "trademark");
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.summary         = name ? name : "trademark";
   it.record_type     = "osint_service_result";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"TRADEMARK_SEARCH\"]";
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 

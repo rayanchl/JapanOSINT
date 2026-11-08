@@ -110,11 +110,10 @@ static int emit_eth_tx(intel_sink *sink, const char *addr, cJSON *tx) {
   snprintf(rk, sizeof rk, "tx:%s", h->valuestring);
   snprintf(title, sizeof title, "tx %.16s…", h->valuestring);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.summary         = "whale transaction";
   it.published_at    = iso[0] ? iso : NULL;
   it.record_type     = "osint_service_result";
@@ -122,7 +121,7 @@ static int emit_eth_tx(intel_sink *sink, const char *addr, cJSON *tx) {
   it.tags_json       = "[\"osint-search\",\"WHALE_ALERT\",\"transaction\"]";
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   cJSON_Delete(data); cJSON_Delete(props);
   return rc >= 0 ? 1 : 0;
 }
@@ -180,11 +179,10 @@ static int emit_wa_tx(intel_sink *sink, cJSON *tx) {
   else
     snprintf(title, sizeof title, "whale tx %.16s…", hs->valuestring);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.summary         = "whale transaction";
   it.published_at    = iso[0] ? iso : NULL;
   it.record_type     = "osint_service_result";
@@ -192,7 +190,7 @@ static int emit_wa_tx(intel_sink *sink, cJSON *tx) {
   it.tags_json       = "[\"osint-search\",\"WHALE_ALERT\",\"transaction\"]";
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   cJSON_Delete(data); cJSON_Delete(props);
   return rc >= 0 ? 1 : 0;
 }
@@ -239,18 +237,17 @@ static int emit_defi(intel_sink *sink, cJSON *pr) {
   snprintf(rk, sizeof rk, "defi:%s", slug);
   snprintf(title, sizeof title, "%s — TVL $%.0f", nm->valuestring, tvl);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.summary         = "DeFi protocol";
   it.record_type     = "osint_service_result";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"WHALE_ALERT\",\"defi\"]";
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   cJSON_Delete(data); cJSON_Delete(props);
   return rc >= 0 ? 1 : 0;
 }
@@ -300,18 +297,17 @@ static int emit_addr_balance(intel_sink *sink, http_client *http, const char *ad
   if (w) snprintf(title, sizeof title, "%s — %.4f ETH", w->label, eth);
   else   snprintf(title, sizeof title, "%.20s… — %.4f ETH", addr, eth);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.summary         = "wallet balance";
   it.record_type     = "osint_service_result";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"WHALE_ALERT\",\"address\"]";
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   cJSON_Delete(data); cJSON_Delete(props);
   return rc >= 0 ? 1 : 0;
 }
@@ -395,18 +391,17 @@ static int emit_btc_stats(intel_sink *sink, http_client *http) {
   cJSON_AddItemToObject(props, "confidence", cJSON_CreateNull());
   jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = "btcnet:stats";
   it.title           = "Bitcoin network stats";
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.summary         = "exchange flows / network";
   it.record_type     = "osint_service_result";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"WHALE_ALERT\",\"network\"]";
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   cJSON_Delete(data); cJSON_Delete(props);
   return rc >= 0 ? 1 : 0;
 }

@@ -47,13 +47,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     cJSON *p = cJSON_CreateObject();
     cJSON_AddStringToObject(p, "service", "DK_ADDRESS"); cJSON_AddBoolToObject(p, "success", 1);
     jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
-    char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
-    it.remote_key = id ? id : bet; it.title = bet; it.summary = postnrnavn; it.body = bt ? bt : bj; it.lang = "da";
+    intel_item it = {0};
+    it.remote_key = id ? id : bet; it.title = bet; it.summary = postnrnavn; it.body = bj; it.lang = "da";
     it.has_geo = hg; it.lat = hg ? y->valuedouble : 0; it.lon = hg ? x->valuedouble : 0;
     it.record_type = "dk-address"; it.properties_json = pj; it.tags_json = "[\"osint-search\",\"DK_ADDRESS\"]";
     if (sink->emit(sink, &it) >= 0) n++;
-    free(bj); free(bt); free(pj);
+    free(bj); free(pj);
   }
   cJSON_Delete(root);
   fprintf(stderr, "[DK_ADDRESS] emitted %d\n", n);

@@ -99,19 +99,18 @@ static int run_mempool(const source_ctx *ctx, intel_sink *sink) {
   char title[256];
   snprintf(title, sizeof title, "BTC %s", addr);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = addr;
   it.title           = title;
   it.summary         = have_bal ? "on-chain address stats" : "address stats";
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.link            = link;
   it.record_type     = "crypto-address";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"BTC_MEMPOOL\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj); free(funded); free(spent); free(txc);
+  free(bj); free(pj); free(funded); free(spent); free(txc);
   cJSON_Delete(root);
   fprintf(stderr, "[btc_mempool] emitted %d\n", rc >= 0 ? 1 : 0);
   return 0;
@@ -189,12 +188,11 @@ static int run_blockchair(const source_ctx *ctx, intel_sink *sink) {
   char title[256];
   snprintf(title, sizeof title, "%s %s", chain, addr);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = addr;
   it.title           = title;
   it.summary         = txc ? "address dashboard" : "address";
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.published_at    = ltx;
   it.link            = link;
@@ -202,7 +200,7 @@ static int run_blockchair(const source_ctx *ctx, intel_sink *sink) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"BLOCKCHAIR\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj); free(bal); free(recv); free(spent); free(txc);
+  free(bj); free(pj); free(bal); free(recv); free(spent); free(txc);
   cJSON_Delete(root);
   fprintf(stderr, "[blockchair] emitted %d\n", rc >= 0 ? 1 : 0);
   return 0;
@@ -316,19 +314,18 @@ static int run_ofac(const source_ctx *ctx, intel_sink *sink) {
     snprintf(title, sizeof title, "OFAC-sanctioned %s address — %s",
              chain[0] ? chain : "crypto", name);
 
-    char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+    intel_item it = {0};
     it.remote_key      = addr;
     it.title           = title;
     it.summary         = "Address on OFAC SDN sanctions list";
-    it.body = bt ? bt : bj;
+    it.body = bj;
     it.lang            = "en";
     it.link            = "https://sanctionssearch.ofac.treas.gov/";
     it.record_type     = "crypto-sanction";
     it.properties_json = pj;
     it.tags_json       = "[\"osint-search\",\"OFAC_CRYPTO\",\"sanctions\"]";
     if (sink->emit(sink, &it) >= 0) emitted++;
-    free(bj); free(bt); free(pj);
+    free(bj); free(pj);
     break;   /* one authoritative hit is enough */
   }
   free(csv);
@@ -455,19 +452,18 @@ static int c2_blockscout(const source_ctx *ctx, intel_sink *sink, const char *ad
   char link[256];
   snprintf(link, sizeof link, "https://eth.blockscout.com/address/%s", hash);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = hash;
   it.title           = name ? name : hash;
   it.summary         = is_contract ? "Ethereum contract" : "Ethereum account";
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.link            = link;
   it.record_type     = "eth-address";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"crypto\",\"ethereum\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   cJSON_Delete(root);
   fprintf(stderr, "[ETH_BLOCKSCOUT] emitted %d\n", rc >= 0 ? 1 : 0);
   return 0;
@@ -555,19 +551,18 @@ static int c2_tronscan(const source_ctx *ctx, intel_sink *sink, const char *addr
   else
     snprintf(title, sizeof title, "Tron account %s", addr);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = addr;
   it.title           = title;
   it.summary         = "Tron account";
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.link            = link;
   it.record_type     = "tron-address";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"crypto\",\"tron\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   cJSON_Delete(root);
   fprintf(stderr, "[TRON_SCAN] emitted %d\n", rc >= 0 ? 1 : 0);
   return 0;
@@ -652,19 +647,18 @@ static int c2_solana(const source_ctx *ctx, intel_sink *sink, const char *addr) 
   char link[256];
   snprintf(link, sizeof link, "https://explorer.solana.com/address/%s", addr);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = addr;
   it.title           = addr;
   it.summary         = executable ? "Solana program" : "Solana account";
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.link            = link;
   it.record_type     = "solana-address";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"crypto\",\"solana\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   cJSON_Delete(root);
   fprintf(stderr, "[SOLANA_RPC] emitted %d\n", rc >= 0 ? 1 : 0);
   return 0;
@@ -723,19 +717,18 @@ static int c2_ens(const source_ctx *ctx, intel_sink *sink, const char *nameq) {
   char link[256];
   snprintf(link, sizeof link, "https://app.ens.domains/%s", name ? name : nameq);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = address;
   it.title           = disp ? disp : (name ? name : address);
   it.summary         = address;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.link            = link;
   it.record_type     = "ens-resolution";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"crypto\",\"ens\",\"ethereum\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   cJSON_Delete(root);
   fprintf(stderr, "[ENS_RESOLVE] emitted %d\n", rc >= 0 ? 1 : 0);
   return 0;

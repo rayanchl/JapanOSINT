@@ -35,6 +35,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "lib/pagewalk.h"   /* jo_page_max_for */
 
 #define ISED_BASE \
   "https://services.arcgis.com/wjcPoefzjpzCgffS/ArcGIS/rest/services/" \
@@ -198,9 +199,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
    * A full walk is 844 requests and, at the sink's throughput, hours — so this
    * stays a BOUNDED walk on a daily cadence, and the bound is DISCLOSED as a
    * record carrying the real total rather than left in a log line. Raise
-   * $JO_ISED_MAX_PAGES to take more per run. */
-  const char *e = getenv("JO_ISED_MAX_PAGES");
-  int max_pages = (e && *e) ? atoi(e) : PAGES;
+   * $JO_PAGE_MAX to take more per run. */
+  /* The operator's brake: $JO_PAGE_MAX reaches this ceiling in both directions
+   * (jo_page_max_for, lib/pagewalk.h). The private variable that used to sit
+   * here (JO_ISED_MAX_PAGES) ignored it — dropped 2026-11-07, since jo_page_max_for takes no
+   * legacy name beside a declared default. */
+  int max_pages = jo_page_max_for(PAGES);
   if (max_pages < 1) max_pages = 1;
 
   int total = 0, pages = 0, cut = 0, more = 0;
@@ -242,7 +246,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
                     "the layer is larger than one run's page budget; a full "
                     "walk of it is ~844 requests at the server's 1000-feature "
                     "maxRecordCount",
-                    "raise $JO_ISED_MAX_PAGES, or narrow the query with a "
+                    "raise $JO_PAGE_MAX, or narrow the query with a "
                     "`where` clause on province or licence class");
   }
   fprintf(stderr, "[ised-spectrum-sites] emitted %d over %d page(s)%s\n",

@@ -42,6 +42,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "av_common.inc"
+#include "lib/jocore.h"   /* jo_props_absorb */
 
 #define ADSBDB_LICENSE \
   "Keyless open API (adsbdb, open-source). Route data is community-sourced — " \
@@ -124,12 +125,11 @@ static int run_aircraft(const source_ctx *ctx, intel_sink *sink) {
            owner ? owner : (itype ? itype : ""),
            (owner && ctry) ? " · " : "", ctry ? ctry : "");
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = mode_s ? mode_s : reg;
   it.title           = title;
   it.summary         = summary[0] ? summary : NULL;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.link            = photo;                 /* real photo URL when returned */
   it.lang            = "en";
   it.record_type     = "aircraft-registry";
@@ -138,7 +138,7 @@ static int run_aircraft(const source_ctx *ctx, intel_sink *sink) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"aviation\",\"ADSBDB\"]";
   int n = sink->emit(sink, &it) >= 0 ? 1 : 0;
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   cJSON_Delete(doc);
   fprintf(stderr, "[ADSBDB_AIRCRAFT] emitted %d (%s)\n", n, q);
   return 0;
@@ -191,12 +191,11 @@ static int adsbdb_airport_row(intel_sink *sink, const cJSON *ap,
   snprintf(title, sizeof title, "%s %s: %s%s%s", callsign, role,
            icao ? icao : "", (icao && name) ? " " : "", name ? name : "");
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = uid;
   it.title           = title;
   it.summary         = jo_sv(ap, "municipality");
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.has_geo         = geo;
   it.lat             = geo ? lat : 0;
@@ -205,7 +204,7 @@ static int adsbdb_airport_row(intel_sink *sink, const cJSON *ap,
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"aviation\",\"ADSBDB\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -273,19 +272,18 @@ static int run_airline(const source_ctx *ctx, intel_sink *sink) {
              jo_sv(al, "callsign") ? " · radio callsign " : "",
              jo_sv(al, "callsign") ? jo_sv(al, "callsign") : "");
 
-    char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+    intel_item it = {0};
     it.remote_key      = uid;
     it.title           = name;
     it.summary         = summary[0] ? summary : NULL;
-    it.body = bt ? bt : bj;
+    it.body = bj;
     it.lang            = "en";
     it.record_type     = "airline-operator";
     /* NO GEO — `country` is deliberately not geocoded (R2). */
     it.properties_json = pj;
     it.tags_json       = "[\"osint-search\",\"aviation\",\"ADSBDB\"]";
     if (sink->emit(sink, &it) >= 0) n++;
-    free(bj); free(bt); free(pj);
+    free(bj); free(pj);
   }
   cJSON_Delete(doc);
   fprintf(stderr, "[ADSBDB_AIRLINE] emitted %d (%s)\n", n, q);

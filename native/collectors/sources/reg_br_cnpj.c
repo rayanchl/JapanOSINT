@@ -122,12 +122,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = digits;
   it.title           = razao ? razao : fantasia;
   it.summary         = fantasia ? fantasia : situacao;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "pt";
   it.published_at    = abertura;
   it.link            = url;
@@ -136,7 +135,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   it.tags_json       = "[\"osint-search\",\"BR_CNPJ\"]";
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(bt); free(pj); free(addr);
+  free(bj); free(pj); free(addr);
   cJSON_Delete(r);
   fprintf(stderr, "[br_cnpj] emitted %d\n", rc >= 0 ? 1 : 0);
   return 0;

@@ -175,11 +175,10 @@ static int emit_hit(intel_sink *sink, cJSON *hit, const cJSON *retrieval) {
   const char *srcid = (srcid_j && srcid_j->valuestring && *srcid_j->valuestring)
                       ? srcid_j->valuestring : "corpus";
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title ? title : (uid ? uid : "corpus hit");
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.summary         = summary ? summary : (title ? title : "corpus hit");
   it.link            = link;
   it.record_type     = "osint_service_result";
@@ -188,7 +187,7 @@ static int emit_hit(intel_sink *sink, cJSON *hit, const cJSON *retrieval) {
   it.tags_json       = "[\"osint-search\",\"JP_CORPUS_LOOKUP\"]";
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   cJSON_Delete(data); cJSON_Delete(props);
   return rc >= 0 ? 1 : 0;
 }
@@ -530,7 +529,12 @@ static int corpus_hybrid(const source_ctx *ctx, intel_sink *sink, sqlite3 *db,
                            "the question was routed to the 4096 nearest scheduled "
                            "sources the index can return, and the farthest of them "
                            "still passed the similarity floor, so more may be related",
-                           "raise JO_ROUTE_MIN_COS to narrow the routing");
+                           /* a remedy must name the knob that moves: a stored
+                            * override outranks $JO_ROUTE_MIN_COS in
+                            * core/thresholds.c (2026-11-07) */
+                           "raise route_min_cos to narrow the routing: Admin › "
+                           "Thresholds, or PUT /api/admin/thresholds/route_min_cos "
+                           "(a stored override outranks $JO_ROUTE_MIN_COS)");
   }
 
   fprintf(stderr, "[corpus] hybrid %s: %d emitted (fts arm %d, vector arm %d, "

@@ -83,18 +83,17 @@ static int ro_emit_company(intel_sink *sink, const cJSON *c) {
   jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = cui ? cui : name;
   it.title           = name ? name : cui;
   it.summary         = addr ? addr : city;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "ro";
   it.record_type     = "ro-company";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"RO_COMPANIES\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 

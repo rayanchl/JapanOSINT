@@ -52,12 +52,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       cJSON_AddStringToObject(p, "service", "JP_POSTAL"); cJSON_AddStringToObject(p, "zipcode", zip);
       cJSON_AddBoolToObject(p, "success", 1);
       jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
-      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
-      it.remote_key = zip; it.title = full; it.summary = a1; it.body = bt ? bt : bj; it.lang = "ja";
+      intel_item it = {0};
+      it.remote_key = zip; it.title = full; it.summary = a1; it.body = bj; it.lang = "ja";
       it.record_type = "jp-postal-address"; it.properties_json = pj; it.tags_json = "[\"osint-search\",\"JP_POSTAL\"]";
       if (sink->emit(sink, &it) >= 0) n++;
-      free(bj); free(bt); free(pj);
+      free(bj); free(pj);
     }
   }
   cJSON_Delete(root);

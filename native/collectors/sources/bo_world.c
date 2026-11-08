@@ -97,12 +97,11 @@ static int bo_emit_lei(intel_sink *sink, const cJSON *rec, const char *query) {
   char link[128] = {0};
   if (lei) snprintf(link, sizeof link, "https://search.gleif.org/#/record/%s", lei);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = lei ? lei : name;
   it.title           = name ? name : lei;
   it.summary         = loc[0] ? loc : juris;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.published_at    = rdate;
   it.link            = link[0] ? link : NULL;
@@ -110,7 +109,7 @@ static int bo_emit_lei(intel_sink *sink, const cJSON *rec, const char *query) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"GLEIF_LEI\",\"legal-entity\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -189,19 +188,18 @@ static int bo_emit_relation(intel_sink *sink, const cJSON *root,
   char link[128] = {0};
   if (plei) snprintf(link, sizeof link, "https://search.gleif.org/#/record/%s", plei);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = key;
   it.title           = title;
   it.summary         = juris;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.link            = link[0] ? link : NULL;
   it.record_type     = "gleif-relationship";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"GLEIF_RELATIONS\",\"ownership\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -300,19 +298,18 @@ static int bo_emit_oo(intel_sink *sink, const cJSON *rec, const char *query) {
   jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = id ? id : (link[0] ? link : name);
   it.title           = name ? name : id;
   it.summary         = ctry;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.link            = link[0] ? link : NULL;
   it.record_type     = "openownership-entity";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"OPENOWNERSHIP\",\"beneficial-ownership\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 

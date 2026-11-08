@@ -47,13 +47,12 @@ static int ckan2_search(const source_ctx *ctx, intel_sink *sink, const char *ser
       char tags[96]; snprintf(tags, sizeof tags, "[\"osint-search\",\"%s\"]", service);
       char link[512] = {0};
       if (name && web_base) snprintf(link, sizeof link, "%s/dataset/%s", web_base, name);
-      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+      intel_item it = {0};
       it.remote_key = name ? name : title; it.title = title ? title : name; it.summary = orgt;
-      it.body = bt ? bt : bj; it.link = link[0] ? link : NULL; it.lang = "en";
+      it.body = bj; it.link = link[0] ? link : NULL; it.lang = "en";
       it.record_type = "open-dataset"; it.properties_json = pj; it.tags_json = tags;
       if (sink->emit(sink, &it) >= 0) n++;
-      free(bj); free(bt); free(pj);
+      free(bj); free(pj);
     }
   }
   cJSON_Delete(root);

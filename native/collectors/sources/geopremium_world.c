@@ -47,13 +47,12 @@ static int run_w3w(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
   char title[200];
   snprintf(title, sizeof title, "///%s → %.5f,%.5f", words ? words : ctx->entity, lat->valuedouble, lng->valuedouble);
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key = words ? words : ctx->entity; it.title = title; it.summary = nearest;
-  it.body = bt ? bt : bj; it.lang = "en"; it.has_geo = 1; it.lat = lat->valuedouble; it.lon = lng->valuedouble;
+  it.body = bj; it.lang = "en"; it.has_geo = 1; it.lat = lat->valuedouble; it.lon = lng->valuedouble;
   it.record_type = "what3words";
   it.properties_json = pj; it.tags_json = "[\"osint-search\",\"WHAT3WORDS_CONVERT\"]";
-  int rc = sink->emit(sink, &it); free(bj); free(bt); free(pj); cJSON_Delete(root);
+  int rc = sink->emit(sink, &it); free(bj); free(pj); cJSON_Delete(root);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -88,14 +87,13 @@ static int run_opencage(const source_ctx *ctx, intel_sink *sink, const char *enc
       cJSON_AddStringToObject(p, "service", "OPENCAGE_GEOCODE");
       cJSON_AddBoolToObject(p, "success", 1);
       jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
-      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
-      it.remote_key = formatted; it.title = formatted; it.body = bt ? bt : bj; it.lang = "en";
+      intel_item it = {0};
+      it.remote_key = formatted; it.title = formatted; it.body = bj; it.lang = "en";
       it.has_geo = 1; it.lat = lat->valuedouble; it.lon = lng->valuedouble;
       it.record_type = "geocode-result";
       it.properties_json = pj; it.tags_json = "[\"osint-search\",\"OPENCAGE_GEOCODE\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(bt); free(pj);
+      free(bj); free(pj);
     }
   }
   cJSON_Delete(root);

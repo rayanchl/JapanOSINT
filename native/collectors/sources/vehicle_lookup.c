@@ -166,17 +166,16 @@ static int emit_recalls(intel_sink *sink, http_client *http, const char *vin,
       snprintf(title, sizeof title, "Recall %s — %s",
                cid ? cid : "?", (co && cJSON_IsString(co)) ? co->valuestring : "vehicle");
 
-      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+      intel_item it = {0};
       it.remote_key      = rk;
       it.title           = title;
-      it.body = bt ? bt : bj;
+      it.body = bj;
       it.summary         = (co && cJSON_IsString(co)) ? co->valuestring : "recall";
       it.record_type     = "osint_service_result";
       it.properties_json = pj;
       it.tags_json       = "[\"osint-search\",\"VEHICLE_LOOKUP\"]";
       int rc = sink->emit(sink, &it);
-      free(bj); free(bt); free(pj);
+      free(bj); free(pj);
       if (rc >= 0) emitted++;
     }
   }
@@ -227,17 +226,16 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   char rk[64]; snprintf(rk, sizeof rk, "vin:%s", q);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = ttl;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.summary         = "VIN decode";
   it.record_type     = "osint_service_result";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"VEHICLE_LOOKUP\"]";
   sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
 
   /* Emit one item per recall when make/model/year decoded. */
   if (mk && md && yr && cJSON_IsString(mk) && cJSON_IsString(md) && cJSON_IsString(yr))

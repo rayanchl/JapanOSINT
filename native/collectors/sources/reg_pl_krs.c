@@ -153,12 +153,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = q;
   it.title           = name;
   it.summary         = addr;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "pl";
   it.link            = url;
   it.record_type     = "krs-entity";
@@ -166,7 +165,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   it.tags_json       = "[\"osint-search\",\"PL_KRS\"]";
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(bt); free(pj); free(addr); free(board);
+  free(bj); free(pj); free(addr); free(board);
   cJSON_Delete(root);
   fprintf(stderr, "[pl_krs] emitted %d\n", rc >= 0 ? 1 : 0);
   return 0;   /* honest empty is not an error */

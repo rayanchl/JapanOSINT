@@ -616,38 +616,6 @@ static inline void jo_props_absorb(cJSON *p, const char *json) {
   cJSON_Delete(d);
 }
 
-/* A TEXT body from a JSON object's values: "key: value · key: value", nested
- * values printed compactly. A record's body is text, never its JSON (see
- * CLAUDE.md rule 4's note on the sink). malloc'd; NULL when `json` is not an
- * object or empty. */
-static inline char *jo_values_text(const char *json) {
-  cJSON *d = json ? cJSON_Parse(json) : NULL;
-  if (!cJSON_IsObject(d)) { cJSON_Delete(d); return NULL; }
-  size_t cap = 256, len = 0;
-  char *out = malloc(cap);
-  if (!out) { cJSON_Delete(d); return NULL; }
-  out[0] = 0;
-  for (cJSON *c = d->child; c; c = c->next) {
-    if (!c->string || cJSON_IsNull(c)) continue;
-    char *v = cJSON_IsString(c) ? NULL : cJSON_PrintUnformatted(c);
-    const char *vs = cJSON_IsString(c) ? c->valuestring : v;
-    if (!vs || !*vs) { free(v); continue; }
-    size_t need = len + strlen(c->string) + strlen(vs) + 8;
-    if (need > cap) {
-      while (cap < need) cap *= 2;
-      char *no = realloc(out, cap);
-      if (!no) { free(v); break; }
-      out = no;
-    }
-    len += (size_t)snprintf(out + len, cap - len, "%s%s: %s",
-                            len ? " · " : "", c->string, vs);
-    free(v);
-  }
-  cJSON_Delete(d);
-  if (!len) { free(out); return NULL; }
-  return out;
-}
-
 /* ------------------------------------------- exhaustive-use disclosure (R7) */
 
 /* Emit the shared `collector-truncation-notice` row.

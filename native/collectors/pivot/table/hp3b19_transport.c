@@ -254,7 +254,11 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .record_type = "port-constraint",
     .tags = "\"maritime\",\"port\",\"bridge\",\"airdraft\",\"usa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bts.gov/resource/dasz-28ip.json?$limit=1000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on data.bts.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://data.bts.gov/resource/dasz-28ip.json?$limit=1000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .interval = 604800,
     .page_param = "$offset",
     .page_size = 1000,
@@ -270,7 +274,11 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .record_type = "port-throughput",
     .tags = "\"maritime\",\"port\",\"teu\",\"container\",\"usa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bts.gov/resource/sn74-xpkp.json?$limit=1000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on data.bts.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://data.bts.gov/resource/sn74-xpkp.json?$limit=1000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .interval = 86400,
     .page_param = "$offset",
     .page_size = 1000,
@@ -285,7 +293,11 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .record_type = "port-throughput",
     .tags = "\"maritime\",\"port\",\"teu\",\"container\",\"timeseries\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bts.gov/resource/iahn-a7j4.json?$limit=1000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on data.bts.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://data.bts.gov/resource/iahn-a7j4.json?$limit=1000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .interval = 86400,
     .page_param = "$offset",
     .page_size = 1000,
@@ -300,7 +312,11 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .record_type = "port-performance",
     .tags = "\"maritime\",\"port\",\"dwell\",\"container\",\"congestion\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bts.gov/resource/nfsh-p62e.json?$limit=1000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on data.bts.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://data.bts.gov/resource/nfsh-p62e.json?$limit=1000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .date_keys = "month_year",
     .interval = 86400,
     .page_param = "$offset",
@@ -316,7 +332,11 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .record_type = "port-performance",
     .tags = "\"maritime\",\"port\",\"dwell\",\"tanker\",\"congestion\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bts.gov/resource/abu9-jbyq.json?$limit=1000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on data.bts.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://data.bts.gov/resource/abu9-jbyq.json?$limit=1000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .date_keys = "month_year",
     .interval = 86400,
     .page_param = "$offset",
@@ -334,7 +354,11 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .record_type = "fleet-capacity",
     .tags = "\"maritime\",\"container\",\"capacity\",\"fleet\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bts.gov/resource/x6rh-cpwu.json?$limit=1000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on data.bts.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://data.bts.gov/resource/x6rh-cpwu.json?$limit=1000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .date_keys = "date",
     .interval = 86400,
     .page_param = "$offset",
@@ -350,7 +374,11 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .record_type = "terminal-facility",
     .tags = "\"maritime\",\"port\",\"rail\",\"intermodal\",\"terminal\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bts.gov/resource/ht7p-2x5y.json?$limit=1000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on data.bts.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://data.bts.gov/resource/ht7p-2x5y.json?$limit=1000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .interval = 604800,
     .page_param = "$offset",
     .page_size = 1000,
@@ -367,7 +395,11 @@ static const hp_source HP3B19_TRANSPORT[] = {
     .record_type = "freight-rate",
     .tags = "\"maritime\",\"barge\",\"inland\",\"grain\",\"mississippi\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.bts.gov/resource/t48m-82hq.json?$limit=1000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on data.bts.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://data.bts.gov/resource/t48m-82hq.json?$limit=1000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .date_keys = "date",
     .interval = 86400,
     .page_param = "$offset",

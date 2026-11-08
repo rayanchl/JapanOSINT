@@ -21,7 +21,7 @@
  *            response) and follows nextPage, which is SEVEN requests for that window — still
  *            far inside the DEMO_KEY budget. nextPage omits the api_key, so it is re-appended.
  *            The ceiling is disclosed as a collector-truncation-notice against the API's own
- *            `count`; $JO_GOVINFO_PAGE_MAX raises it.
+ *            `count`; $JO_PAGE_MAX raises it.
  * Emits    : case caption, GovInfo packageId, the court code and docket number decoded from
  *            that id, date issued, last modified and the package summary link.
  * Geometry : NONE (R2).
@@ -34,14 +34,17 @@
  *            appellate courts without scraping PACER.
  */
 #include "sanc_common.inc"
+#include "lib/pagewalk.h"   /* jo_page_max_for */
 
 #define GOVINFO_PAGE_SIZE 1000
-#define GOVINFO_PAGE_MAX  25   /* exhaustive-ok: disclosed page ceiling; an early stop emits a collector-truncation-notice against the API's own count, and $JO_GOVINFO_PAGE_MAX raises it */
+#define GOVINFO_PAGE_MAX  25   /* exhaustive-ok: disclosed page ceiling; an early stop emits a collector-truncation-notice against the API's own count, and $JO_PAGE_MAX raises it */
 
 static int govinfo_page_max(void) {
-  const char *e = getenv("JO_GOVINFO_PAGE_MAX");
-  if (e && *e) { int v = atoi(e); if (v > 0) return v; }
-  return GOVINFO_PAGE_MAX;
+  /* The operator's brake: $JO_PAGE_MAX reaches this ceiling in both directions
+   * (jo_page_max_for, lib/pagewalk.h). The private variable that used to sit
+   * here (JO_GOVINFO_PAGE_MAX) ignored it — dropped 2026-11-07, since jo_page_max_for takes no
+   * legacy name beside a declared default. */
+  return jo_page_max_for(GOVINFO_PAGE_MAX);
 }
 
 /* `nextPage` is an absolute URL built by GPO but stripped of the api_key, so
@@ -196,7 +199,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     jo_trunc_notice(sink, "govinfo-uscourts-opinions", safe, n, available,
                     "page ceiling reached, or a mid-walk fetch failed, before "
                     "GovInfo ran out of packages for this window",
-                    "raise $JO_GOVINFO_PAGE_MAX, or set GOVINFO_API_KEY to lift "
+                    "raise $JO_PAGE_MAX, or set GOVINFO_API_KEY to lift "
                     "the DEMO_KEY rate limit");
 
   fprintf(stderr, "[govinfo-uscourts] emitted %d across %d page(s) (since %s)%s\n",

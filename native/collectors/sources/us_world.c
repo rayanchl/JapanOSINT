@@ -49,13 +49,12 @@ static int run_fedreg(const source_ctx *ctx, intel_sink *sink, const char *enc) 
       cJSON *p = cJSON_CreateObject();
       cJSON_AddStringToObject(p, "service", "FEDERAL_REGISTER"); cJSON_AddBoolToObject(p, "success", 1);
       jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
-      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+      intel_item it = {0};
       it.remote_key = docnum ? docnum : title; it.title = title; it.summary = agency;
-      it.body = bt ? bt : bj; it.link = html; it.lang = "en"; it.published_at = date;
+      it.body = bj; it.link = html; it.lang = "en"; it.published_at = date;
       it.record_type = "federal-register-doc"; it.properties_json = pj; it.tags_json = "[\"osint-search\",\"FEDERAL_REGISTER\"]";
       if (sink->emit(sink, &it) >= 0) n++;
-      free(bj); free(bt); free(pj);
+      free(bj); free(pj);
     }
   }
   cJSON_Delete(root);
@@ -123,13 +122,12 @@ static int run_npi(const source_ctx *ctx, intel_sink *sink, const char *raw) {
       cJSON_AddBoolToObject(p, "success", 1);
       jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
       char summ[160]; snprintf(summ, sizeof summ, "%s%s%s", desc ? desc : "", (city && state) ? " · " : "", (city && state) ? city : "");
-      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+      intel_item it = {0};
       it.remote_key = npi[0] ? npi : name; it.title = name; it.summary = summ[0] ? summ : NULL;
-      it.body = bt ? bt : bj; it.lang = "en"; it.record_type = "us-healthcare-provider";
+      it.body = bj; it.lang = "en"; it.record_type = "us-healthcare-provider";
       it.properties_json = pj; it.tags_json = "[\"osint-search\",\"US_NPI_PROVIDER\"]";
       if (sink->emit(sink, &it) >= 0) n++;
-      free(bj); free(bt); free(pj);
+      free(bj); free(pj);
     }
   }
   cJSON_Delete(root);
@@ -165,13 +163,12 @@ static int run_courtlistener(const source_ctx *ctx, intel_sink *sink, const char
       jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
       char link[320] = {0};
       if (absu) snprintf(link, sizeof link, "https://www.courtlistener.com%s", absu);
-      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+      intel_item it = {0};
       it.remote_key = absu ? absu : cn; it.title = cn; it.summary = court;
-      it.body = bt ? bt : bj; it.link = link[0] ? link : NULL; it.lang = "en"; it.published_at = date;
+      it.body = bj; it.link = link[0] ? link : NULL; it.lang = "en"; it.published_at = date;
       it.record_type = "us-court-opinion"; it.properties_json = pj; it.tags_json = "[\"osint-search\",\"COURTLISTENER\"]";
       if (sink->emit(sink, &it) >= 0) n++;
-      free(bj); free(bt); free(pj);
+      free(bj); free(pj);
       /* (cap removed: every record of the fetched array is emitted —
        * docs/SOURCE_EXHAUSTIVENESS.md) */
     }

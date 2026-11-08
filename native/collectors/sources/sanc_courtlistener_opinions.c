@@ -25,6 +25,7 @@
  * how a previous audit ended up matching "PUTIN" inside "COMPUTING".
  */
 #include "sanc_common.inc"
+#include "lib/jocore.h"   /* jo_props_absorb */
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *q = ctx->entity;
@@ -109,12 +110,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
     cJSON_Delete(props);
 
-    char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+    intel_item it = {0};
     it.remote_key = link[0] ? link : cname;
     it.title = cname;
     it.summary = summary;
-    it.body = bt ? bt : bj;
+    it.body = bj;
     it.link = link[0] ? link : NULL;
     it.lang = "en";
     it.published_at = filed;
@@ -122,7 +122,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     it.properties_json = pj ? pj : "{}";
     it.tags_json = "[\"osint-search\",\"court\",\"opinion\",\"us\"]";
     if (sink->emit(sink, &it) >= 0) n++;
-    free(bj); free(bt);
+    free(bj);
     free(pj);
   }
   cJSON_Delete(doc);

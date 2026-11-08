@@ -51,14 +51,13 @@ static int run_alphavantage(const source_ctx *ctx, intel_sink *sink, const char 
       cJSON_AddBoolToObject(p, "success", 1);
       jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
       char summ[160]; snprintf(summ, sizeof summ, "%s%s%s", sym, region ? " · " : "", region ? region : "");
-      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+      intel_item it = {0};
       it.remote_key = sym; it.title = name ? name : sym; it.summary = summ;
-      it.body = bt ? bt : bj; it.lang = "en";
+      it.body = bj; it.lang = "en";
       it.record_type = "security";
       it.properties_json = pj; it.tags_json = "[\"osint-search\",\"ALPHAVANTAGE_SEARCH\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(bt); free(pj);
+      free(bj); free(pj);
     }
   }
   cJSON_Delete(root);
@@ -97,14 +96,13 @@ static int run_finnhub(const source_ctx *ctx, intel_sink *sink, const char *enc)
       cJSON_AddStringToObject(p, "symbol", sym);
       cJSON_AddBoolToObject(p, "success", 1);
       jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
-      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+      intel_item it = {0};
       it.remote_key = sym; it.title = desc ? desc : sym; it.summary = disp;
-      it.body = bt ? bt : bj; it.lang = "en";
+      it.body = bj; it.lang = "en";
       it.record_type = "security";
       it.properties_json = pj; it.tags_json = "[\"osint-search\",\"FINNHUB_SEARCH\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(bt); free(pj);
+      free(bj); free(pj);
       /* (cap removed: every record the upstream returned is emitted —
        * docs/SOURCE_EXHAUSTIVENESS.md) */
     }

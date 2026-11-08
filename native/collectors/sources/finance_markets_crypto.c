@@ -9,6 +9,7 @@
 #include <string.h>
 
 #include "_source_macros.inc"
+#include "lib/pagewalk.h"   /* jo_page_max_for */
 
 RSSX(fin_coindesk, "coindesk", "CoinDesk", "CoinDesk", "finance_press", "economy",
   "https://www.coindesk.com/arc/outboundfeeds/rss/", "en", "[\"economy\",\"crypto\",\"markets\"]", 3600,
@@ -147,8 +148,11 @@ static int te_emit(intel_sink *s, cJSON *e) {
 
 static int run_fin_trading_econ(const source_ctx *c, intel_sink *s) {
   int pages = TE_PAGES;
-  const char *penv = getenv("JO_TRADINGECON_PAGES");
-  if (penv && *penv) { int v = atoi(penv); if (v > 0) pages = v; }
+  /* The operator's brake: $JO_PAGE_MAX reaches this ceiling in both directions
+   * (jo_page_max_for, lib/pagewalk.h). The private variable that used to sit
+   * here (JO_TRADINGECON_PAGES) ignored it — dropped 2026-11-07, since jo_page_max_for takes no
+   * legacy name beside a declared default. */
+  pages = jo_page_max_for(pages);
 
   int n = 0, start = 0, got_pages = 0, more_pending = 0;
   char url[160];
@@ -188,7 +192,7 @@ static int run_fin_trading_econ(const source_ctx *c, intel_sink *s) {
              "read %d item(s) back to offset %d and stopped at its own page "
              "bound, with older items still available", n, start);
     jo_trunc_notice(s, "trading-econ", TE_URL, n, -1, reason,
-                    "raise $JO_TRADINGECON_PAGES to walk further back");
+                    "raise $JO_PAGE_MAX to walk further back");
   }
   return 0;
 }

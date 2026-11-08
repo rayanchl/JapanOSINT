@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "_timefmt.inc"
+#include "lib/jocore.h"   /* jo_props_absorb */
 
 /* Emit one intel row for a single USGS feature. Returns 1 if emitted. */
 static int emit_quake(intel_sink *sink, cJSON *ft) {
@@ -82,11 +83,10 @@ static int emit_quake(intel_sink *sink, cJSON *ft) {
   snprintf(title, sizeof title, "M%.1f — %s", m,
            place && place->valuestring ? place->valuestring : "earthquake");
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key   = rk;
   it.title        = title;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.summary      = place && place->valuestring ? place->valuestring : "earthquake";
   it.published_at = iso[0] ? iso : NULL;
   it.has_geo      = has_geo;
@@ -97,7 +97,7 @@ static int emit_quake(intel_sink *sink, cJSON *ft) {
   it.tags_json    = "[\"osint-search\",\"EARTHQUAKE_MONITOR\"]";
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   cJSON_Delete(data); cJSON_Delete(props_out);
   return rc >= 0 ? 1 : 0;
 }

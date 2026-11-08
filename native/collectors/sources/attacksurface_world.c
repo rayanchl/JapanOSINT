@@ -56,12 +56,11 @@ static int keyed_summary(const source_ctx *ctx, intel_sink *sink, const char *se
   char rk[320], title[320];
   snprintf(rk, sizeof rk, "%s:%s", service, ctx->entity);
   snprintf(title, sizeof title, "%s report: %s", service, ctx->entity);
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
-  it.remote_key = rk; it.title = title; it.body = bt ? bt : bj; it.link = link; it.lang = "en";
+  it.remote_key = rk; it.title = title; it.body = bj; it.link = link; it.lang = "en";
   it.record_type = rtype; it.properties_json = pj; it.tags_json = tags;
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 

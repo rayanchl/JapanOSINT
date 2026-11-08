@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <regex.h>
+#include "lib/jocore.h"   /* jo_props_absorb */
 
 typedef struct {
   const char *name, *category, *pattern, *header, *header_pattern;
@@ -81,18 +82,17 @@ static int emit_tech(intel_sink *sink, const char *url, const char *name,
   char rk[640];
   snprintf(rk, sizeof rk, "tech:%s:%s", url, name);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = name;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.summary         = category;
   it.record_type     = "osint_service_result";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"TECH_STACK_DETECTION\"]";
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   cJSON_Delete(body); cJSON_Delete(props);
   return rc >= 0 ? 1 : 0;
 }

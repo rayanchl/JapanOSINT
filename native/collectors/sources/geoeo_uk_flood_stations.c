@@ -30,6 +30,7 @@
 #include "lib/feedlib.h"
 #include "lib/jocore.h"          /* jo_trunc_notice — the shared R7 disclosure */
 #include "geoeo_common.inc"
+#include "lib/pagewalk.h"   /* jo_page_max_for */
 
 #define EA_STATIONS                                                           \
   "https://environment.data.gov.uk/flood-monitoring/id/stations"              \
@@ -175,8 +176,11 @@ static int stations_page(const source_ctx *ctx, intel_sink *sink, int *emitted,
 /* Walk the offsets until the EA stops handing back full pages. */
 static int stations(const source_ctx *ctx, intel_sink *sink, int *emitted) {
   int max_pages = EA_MAX_PAGES;
-  const char *penv = getenv("JO_EA_STATION_PAGES");
-  if (penv && *penv) { int v = atoi(penv); if (v > 0) max_pages = v; }
+  /* The operator's brake: $JO_PAGE_MAX reaches this ceiling in both directions
+   * (jo_page_max_for, lib/pagewalk.h). The private variable that used to sit
+   * here (JO_EA_STATION_PAGES) ignored it — dropped 2026-11-07, since jo_page_max_for takes no
+   * legacy name beside a declared default. */
+  max_pages = jo_page_max_for(max_pages);
 
   int total_seen = 0, offset = 0;
   for (int page = 0; page < max_pages; page++) {
@@ -198,7 +202,7 @@ static int stations(const source_ctx *ctx, intel_sink *sink, int *emitted) {
                       -1,
                       "the page-walk ceiling stopped the run while the EA was "
                       "still returning full pages of stations",
-                      "raise $JO_EA_STATION_PAGES");
+                      "raise $JO_PAGE_MAX");
   }
   return total_seen;
 }

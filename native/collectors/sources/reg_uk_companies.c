@@ -89,12 +89,11 @@ static int emit_company(intel_sink *sink, const cJSON *c) {
   jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = number ? number : title;
   it.title           = title ? title : number;
   it.summary         = snippet ? snippet : status;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.published_at    = created;
   it.link            = link[0] ? link : NULL;
@@ -102,7 +101,7 @@ static int emit_company(intel_sink *sink, const cJSON *c) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"UK_COMPANIES\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 

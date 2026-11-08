@@ -115,11 +115,10 @@ static int emit_result(intel_sink *sink, const char *svc, const char *entity,
   char tags[96];
   snprintf(tags, sizeof tags, "[\"osint-search\",\"%s\"]", svc);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key = rk;
   it.title = title;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.summary = summary;
   it.has_geo = 1;
   it.lat = dlat;
@@ -129,7 +128,7 @@ static int emit_result(intel_sink *sink, const char *svc, const char *entity,
   it.tags_json = tags;
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   cJSON_Delete(data); cJSON_Delete(props);
   return rc >= 0 ? 1 : 0;
 }

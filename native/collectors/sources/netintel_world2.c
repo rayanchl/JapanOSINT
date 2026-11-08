@@ -74,15 +74,14 @@ static int run_greynoise(const source_ctx *ctx, intel_sink *sink, const char *en
     snprintf(title, sizeof title, "%s — not observed scanning (GreyNoise)", ip);
   else
     snprintf(title, sizeof title, "%s — unknown", ip);
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key = ip; it.title = title;
   it.summary = classification ? classification : msg;
-  it.body = bt ? bt : bj; it.link = link; it.lang = "en";
+  it.body = bj; it.link = link; it.lang = "en";
   it.record_type = "ip-reputation";
   it.properties_json = pj; it.tags_json = "[\"osint-search\",\"GREYNOISE_COMMUNITY\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   cJSON_Delete(root);
   return rc >= 0 ? 1 : 0;
 }
@@ -125,14 +124,13 @@ static int run_redhat_cve(const source_ctx *ctx, intel_sink *sink, const char *r
   char link[256], title[300];
   snprintf(link, sizeof link, "https://access.redhat.com/security/cve/%s", name);
   snprintf(title, sizeof title, "%s%s%s", name, sev ? " — " : "", sev ? sev : "");
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key = name; it.title = title; it.summary = sev;
-  it.body = bt ? bt : bj; it.link = link; it.lang = "en"; it.published_at = pubdate;
+  it.body = bj; it.link = link; it.lang = "en"; it.published_at = pubdate;
   it.record_type = "cve";
   it.properties_json = pj; it.tags_json = "[\"osint-search\",\"REDHAT_CVE\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   cJSON_Delete(root);
   return rc >= 0 ? 1 : 0;
 }

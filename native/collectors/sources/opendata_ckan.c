@@ -135,12 +135,11 @@ static int emit_dataset(intel_sink *sink, const cJSON *pkg,
   jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = link;
   it.title           = title;
   it.summary         = orgname ? orgname : pt->label;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.published_at    = meta;
   it.link            = link;
@@ -148,7 +147,7 @@ static int emit_dataset(intel_sink *sink, const cJSON *pkg,
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"OPENDATA_CKAN\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 

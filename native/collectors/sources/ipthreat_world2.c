@@ -52,12 +52,11 @@ static int run_abuseipdb(const source_ctx *ctx, intel_sink *sink, const char *en
   char link[256], title[200];
   snprintf(link, sizeof link, "https://www.abuseipdb.com/check/%s", ip);
   snprintf(title, sizeof title, "%s — abuse score %.0f", ip, (score && cJSON_IsNumber(score)) ? score->valuedouble : 0);
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
-  it.remote_key = ip; it.title = title; it.summary = isp; it.body = bt ? bt : bj; it.link = link; it.lang = "en";
+  it.remote_key = ip; it.title = title; it.summary = isp; it.body = bj; it.link = link; it.lang = "en";
   it.record_type = "ip-reputation";
   it.properties_json = pj; it.tags_json = "[\"osint-search\",\"ABUSEIPDB_CHECK\"]";
-  int rc = sink->emit(sink, &it); free(bj); free(bt); free(pj); cJSON_Delete(root);
+  int rc = sink->emit(sink, &it); free(bj); free(pj); cJSON_Delete(root);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -95,12 +94,11 @@ static int run_ipqs(const source_ctx *ctx, intel_sink *sink, const char *enc) {
   jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
   char title[200];
   snprintf(title, sizeof title, "%s — fraud %.0f", ctx->entity, (fraud && cJSON_IsNumber(fraud)) ? fraud->valuedouble : 0);
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
-  it.remote_key = ctx->entity; it.title = title; it.summary = isp; it.body = bt ? bt : bj; it.lang = "en";
+  it.remote_key = ctx->entity; it.title = title; it.summary = isp; it.body = bj; it.lang = "en";
   it.record_type = "ip-reputation";
   it.properties_json = pj; it.tags_json = "[\"osint-search\",\"IPQUALITYSCORE_IP\"]";
-  int rc = sink->emit(sink, &it); free(bj); free(bt); free(pj); cJSON_Delete(root);
+  int rc = sink->emit(sink, &it); free(bj); free(pj); cJSON_Delete(root);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -132,13 +130,12 @@ static int run_pulsedive(const source_ctx *ctx, intel_sink *sink, const char *en
   const char *iid = jo_sv(root, "iid");
   if (iid) snprintf(link, sizeof link, "https://pulsedive.com/indicator/?iid=%s", iid); else link[0] = 0;
   snprintf(title, sizeof title, "%s — risk %s", indicator, risk ? risk : "unknown");
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
-  it.remote_key = indicator; it.title = title; it.summary = risk; it.body = bt ? bt : bj;
+  it.remote_key = indicator; it.title = title; it.summary = risk; it.body = bj;
   it.link = link[0] ? link : NULL; it.lang = "en";
   it.record_type = "threat-indicator";
   it.properties_json = pj; it.tags_json = "[\"osint-search\",\"PULSEDIVE_INDICATOR\"]";
-  int rc = sink->emit(sink, &it); free(bj); free(bt); free(pj); cJSON_Delete(root);
+  int rc = sink->emit(sink, &it); free(bj); free(pj); cJSON_Delete(root);
   return rc >= 0 ? 1 : 0;
 }
 

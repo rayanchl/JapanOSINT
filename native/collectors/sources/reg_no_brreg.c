@@ -89,12 +89,11 @@ static int emit_enhet(intel_sink *sink, const cJSON *c) {
   jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = orgnr ? orgnr : name;
   it.title           = name ? name : orgnr;
   it.summary         = addr ? addr : formdesc;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "no";
   it.published_at    = reg;
   it.link            = orgnr ? link : NULL;
@@ -102,7 +101,7 @@ static int emit_enhet(intel_sink *sink, const cJSON *c) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"NO_BRREG\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj); free(addr);
+  free(bj); free(pj); free(addr);
   return rc >= 0 ? 1 : 0;
 }
 

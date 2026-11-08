@@ -33,10 +33,11 @@
  * The walk now takes 500 at a time and advances `start`. The page ceiling below is a
  * deliberate, DISCLOSED bound — pulling all 89,944 judgments twice a day is load the Council
  * of Europe never agreed to — so a run that stops early emits a collector-truncation-notice
- * carrying the upstream's own resultcount, and $JO_HUDOC_PAGE_MAX lifts it for a backfill.
+ * carrying the upstream's own resultcount, and $JO_PAGE_MAX lifts it for a backfill.
  */
 #include "sanc_common.inc"
 #include "lib/seenset.h"
+#include "lib/pagewalk.h"   /* jo_page_max_for */
 
 #define HUDOC_QUERY \
   "https://hudoc.echr.coe.int/app/query/results?query=contentsitename%3DECHR%20AND%20" \
@@ -47,12 +48,14 @@
 #define HUDOC_URL HUDOC_QUERY "&start=0&length=500"   /* exhaustive-ok: first page of a walk; run() advances start to the ceiling and discloses an early stop */
 
 #define HUDOC_PAGE_SIZE 500
-#define HUDOC_PAGE_MAX  20   /* exhaustive-ok: disclosed page ceiling; an early stop emits a collector-truncation-notice against resultcount, and $JO_HUDOC_PAGE_MAX raises it */
+#define HUDOC_PAGE_MAX  20   /* exhaustive-ok: disclosed page ceiling; an early stop emits a collector-truncation-notice against resultcount, and $JO_PAGE_MAX raises it */
 
 static int hudoc_page_max(void) {
-  const char *e = getenv("JO_HUDOC_PAGE_MAX");
-  if (e && *e) { int v = atoi(e); if (v > 0) return v; }
-  return HUDOC_PAGE_MAX;
+  /* The operator's brake: $JO_PAGE_MAX reaches this ceiling in both directions
+   * (jo_page_max_for, lib/pagewalk.h). The private variable that used to sit
+   * here (JO_HUDOC_PAGE_MAX) ignored it — dropped 2026-11-07, since jo_page_max_for takes no
+   * legacy name beside a declared default. */
+  return jo_page_max_for(HUDOC_PAGE_MAX);
 }
 
 /* Emit every judgment on one page. `seen` spans the whole walk so the EN/FR
@@ -183,7 +186,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
                     "one scheduled run pulls (records_used counts result rows "
                     "read; emitted rows are fewer because the EN/FR pair of a "
                     "judgment collapses to one)",
-                    "raise $JO_HUDOC_PAGE_MAX to backfill the archive");
+                    "raise $JO_PAGE_MAX to backfill the archive");
 
   fprintf(stderr, "[echr-hudoc] emitted %d judgments across %d page(s)%s\n",
           n, pages, truncated ? " (TRUNCATED — notice emitted)" : "");

@@ -64,19 +64,18 @@ static int emit_company(intel_sink *sink, const cJSON *c) {
   char link[128] = {0};
   if (code) snprintf(link, sizeof link, "https://ariregister.rik.ee/est/company/%s", code);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = code ? code : name;
   it.title           = name ? name : code;
   it.summary         = stat;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "et";
   it.link            = code ? link : NULL;
   it.record_type     = "ee-ariregister-company";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"EE_ARIREGISTER\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 

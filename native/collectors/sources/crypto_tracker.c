@@ -28,6 +28,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "_timefmt.inc"
+#include "lib/jocore.h"   /* jo_props_absorb */
 
 typedef enum { C_UNKNOWN, C_BTC, C_ETH, C_LTC, C_DOGE, C_DASH,
                C_BCH, C_MONERO } ctype_t;
@@ -97,11 +98,10 @@ static int emit_chain(intel_sink *sink, const char *chain, const char *addr,
   snprintf(rk, sizeof rk, "crypto:%s:%s", chain, addr);
   snprintf(title, sizeof title, "%s balance %s", chain, amount_str);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.summary         = "crypto balance";
   it.link            = url;
   it.record_type     = "osint_service_result";
@@ -109,7 +109,7 @@ static int emit_chain(intel_sink *sink, const char *chain, const char *addr,
   it.tags_json       = "[\"osint-search\",\"CRYPTO_TRACKER\",\"balance\"]";
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   cJSON_Delete(data); cJSON_Delete(props);
   return rc >= 0 ? 1 : 0;
 }
@@ -154,11 +154,10 @@ static int emit_tx(intel_sink *sink, const char *chain, const char *addr,
   snprintf(rk, sizeof rk, "tx:%s", hash->valuestring);
   snprintf(title, sizeof title, "%s tx %.16s…", chain, hash->valuestring);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.summary         = "crypto transaction";
   it.published_at    = iso[0] ? iso : NULL;
   it.record_type     = "osint_service_result";
@@ -166,7 +165,7 @@ static int emit_tx(intel_sink *sink, const char *chain, const char *addr,
   it.tags_json       = "[\"osint-search\",\"CRYPTO_TRACKER\",\"transaction\"]";
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   cJSON_Delete(data); cJSON_Delete(props);
   return rc >= 0 ? 1 : 0;
 }

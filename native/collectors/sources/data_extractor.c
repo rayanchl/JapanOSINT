@@ -19,6 +19,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "lib/jocore.h"   /* jo_props_absorb */
 
 /* Extraction is local (POSIX regex over the input text) — there is no upstream
  * to be polite to, so every match is reported. The old MAX_MATCHES=100 dropped
@@ -145,18 +146,17 @@ static int emit_ioc(intel_sink *sink, sset *seen,
   char title[600];
   snprintf(title, sizeof title, "%s: %s", type, value);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.summary         = type;
   it.record_type     = "osint_service_result";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"DATA_EXTRACTOR\"]";
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   cJSON_Delete(data); cJSON_Delete(props);
   return rc >= 0 ? 1 : 0;
 }

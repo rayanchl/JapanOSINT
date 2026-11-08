@@ -93,18 +93,17 @@ static int emit_entity(intel_sink *sink, const cJSON *e) {
   char link[512] = {0};
   if (id) snprintf(link, sizeof link, "https://aleph.occrp.org/entities/%s", id);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = id ? id : name;
   it.title           = name ? name : id;
   it.summary         = schema;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.link            = link[0] ? link : NULL;
   it.record_type     = "aleph-entity";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"ALEPH_SEARCH\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 

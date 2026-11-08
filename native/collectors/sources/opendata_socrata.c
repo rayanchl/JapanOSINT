@@ -88,12 +88,11 @@ static int emit_dataset(intel_sink *sink, const cJSON *r) {
   jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = dsid ? dsid : url;
   it.title           = name;
   it.summary         = domain;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.published_at    = updat;
   it.link            = url;
@@ -101,7 +100,7 @@ static int emit_dataset(intel_sink *sink, const cJSON *r) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"OPENDATA_SOCRATA\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 

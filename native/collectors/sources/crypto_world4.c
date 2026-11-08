@@ -60,14 +60,13 @@ static int etherscan_family(const source_ctx *ctx, intel_sink *sink,
   snprintf(rk, sizeof rk, "%s:%s", chain, ctx->entity);
   snprintf(link, sizeof link, "https://%s/address/%s", explorer, ctx->entity);
   snprintf(title, sizeof title, "%s %s (%.6f %s)", chain, ctx->entity, coin, symbol);
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key = rk; it.title = title; it.summary = symbol;
-  it.body = bt ? bt : bj; it.link = link; it.lang = "en";
+  it.body = bj; it.link = link; it.lang = "en";
   it.record_type = "crypto-address";
   it.properties_json = pj; it.tags_json = tags;
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   cJSON_Delete(root);
   return rc >= 0 ? 1 : 0;
 }

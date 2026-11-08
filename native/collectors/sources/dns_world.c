@@ -83,18 +83,17 @@ static int dw_emit_answer(intel_sink *sink, const char *domain,
   char key[600];
   snprintf(key, sizeof key, "%s|%s|%d|%.400s", domain, rtype, idx, rdata);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = key;
   it.title           = title;
   it.summary         = rdata;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.record_type     = "dns-record";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"dns\",\"doh\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -286,18 +285,17 @@ static int dw_run_rdap(const source_ctx *ctx, intel_sink *sink) {
   char key[256];
   snprintf(key, sizeof key, "RDAP_IP|%s", handle ? handle : ip);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = key;
   it.title           = title;
   it.summary         = org ? org : name;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.record_type     = "ip-whois";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"rdap\",\"whois\"]";
   sink->emit(sink, &it);
-  free(bj); free(bt); free(pj); free(org);
+  free(bj); free(pj); free(org);
   cJSON_Delete(root);
   fprintf(stderr, "[RDAP_IP] emitted 1\n");
   return 0;

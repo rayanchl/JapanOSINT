@@ -18,6 +18,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "_credential_notice.inc"  /* key gates file a needs-credential notice */
+#include "lib/jocore.h"   /* jo_props_absorb */
 
 #define CENSYS_BASE "https://search.censys.io/api/v2"
 
@@ -77,11 +78,10 @@ static int emit_item(intel_sink *sink, const char *rk, const char *title,
   cJSON_AddBoolToObject(props, "success", 1);
   jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.summary         = summary;
   it.has_geo         = has_geo;
   it.lat             = lat;
@@ -90,7 +90,7 @@ static int emit_item(intel_sink *sink, const char *rk, const char *title,
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"CENSYS_SEARCH\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   cJSON_Delete(props);
   return rc >= 0 ? 1 : 0;
 }

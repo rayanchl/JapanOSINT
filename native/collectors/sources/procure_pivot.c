@@ -37,6 +37,7 @@
 #include <string.h>
 #include <time.h>
 #include "_credential_notice.inc"  /* key gates file a needs-credential notice */
+#include "lib/pagewalk.h"   /* jo_page_max_for */
 
 /* Emit one row. `data` is TAKEN OVER (printed, then deleted). Returns 1 if
  * emitted. body == properties so the FTS mirror in core/intel.c indexes the
@@ -88,12 +89,14 @@ static void pp_iso_to_us(const char *iso, char *out, size_t n) {
  * Each walk now runs to the upstream's own end signal, with a ceiling that is
  * DISCLOSED as a collector-truncation-notice rather than a silent stop. These
  * are on-demand entity pivots, so the ceiling is per-query, not per-day. */
-#define PP_PAGE_MAX 20   /* exhaustive-ok: page-walk ceiling; a stop with pages left emits a collector-truncation-notice, and $JO_PROCURE_PAGE_MAX raises it */
+#define PP_PAGE_MAX 20   /* exhaustive-ok: page-walk ceiling; a stop with pages left emits a collector-truncation-notice, and $JO_PAGE_MAX raises it */
 
 static int pp_page_max(void) {
-  const char *e = jo_env("JO_PROCURE_PAGE_MAX");
-  if (e && *e) { int v = atoi(e); if (v > 0) return v; }
-  return PP_PAGE_MAX;
+  /* The operator's brake: $JO_PAGE_MAX reaches this ceiling in both directions
+   * (jo_page_max_for, lib/pagewalk.h). The private variable that used to sit
+   * here (JO_PROCURE_PAGE_MAX) ignored it — dropped 2026-11-07, since jo_page_max_for takes no
+   * legacy name beside a declared default. */
+  return jo_page_max_for(PP_PAGE_MAX);
 }
 
 /* The upstream's own declared total for a search, or -1 when it declines to
@@ -188,7 +191,7 @@ static int run_sam(const source_ctx *ctx, intel_sink *sink) {
     jo_trunc_notice_scoped(sink, "SAM_GOV_OPPORTUNITIES", ctx->entity, disclose, n, available,
                     "page ceiling reached, or a mid-walk fetch failed, while "
                     "SAM.gov was still returning full pages",
-                    "raise $JO_PROCURE_PAGE_MAX, or narrow the title keyword");
+                    "raise $JO_PAGE_MAX, or narrow the title keyword");
 
   fprintf(stderr, "[sam-gov] emitted %d across %d page(s)%s\n",
           n, pages, truncated ? " (TRUNCATED — notice emitted)" : "");
@@ -321,7 +324,7 @@ static int run_ted(const source_ctx *ctx, intel_sink *sink) {
                     "https://api.ted.europa.eu/v3/notices/search", n, available,
                     "page ceiling reached, or a mid-walk fetch failed, while "
                     "TED was still returning full pages of notices",
-                    "raise $JO_PROCURE_PAGE_MAX, or narrow the full-text query "
+                    "raise $JO_PAGE_MAX, or narrow the full-text query "
                     "or its publication-date bound");
 
   fprintf(stderr, "[ted-eu] emitted %d across %d page(s)%s\n",
@@ -461,7 +464,7 @@ static int usa_walk(const source_ctx *ctx, intel_sink *sink,
                     "page ceiling reached, or a mid-walk fetch failed, while "
                     "USAspending still reported page_metadata.hasNext (it "
                     "publishes no award total)",
-                    "raise $JO_PROCURE_PAGE_MAX, or narrow the recipient name");
+                    "raise $JO_PAGE_MAX, or narrow the recipient name");
 
   fprintf(stderr, "[%s] emitted %d across %d page(s)%s\n", tag, n, pages,
           truncated ? " (TRUNCATED — notice emitted)" : "");

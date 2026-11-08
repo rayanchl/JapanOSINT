@@ -146,11 +146,10 @@ static int ww_openmeteo(const source_ctx *ctx, intel_sink *sink, const char *q) 
       char key[384];
       snprintf(key, sizeof key, "OPENMETEO|%.3f,%.3f|%s", lat, lon, day);
 
-      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+      intel_item it = {0};
       it.remote_key      = key;
       it.title           = title;
-      it.body = bt ? bt : bj;
+      it.body = bj;
       it.summary         = place[0] ? place : q;
       it.lang            = "en";
       it.published_at    = day;
@@ -161,7 +160,7 @@ static int ww_openmeteo(const source_ctx *ctx, intel_sink *sink, const char *q) 
       it.properties_json = pj;
       it.tags_json       = "[\"osint-search\",\"weather\",\"OPENMETEO_GLOBAL\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(bt); free(pj);
+      free(bj); free(pj);
     }
   }
   cJSON_Delete(root);
@@ -247,11 +246,10 @@ static int ww_nws(const source_ctx *ctx, intel_sink *sink, const char *q) {
       char key[384];
       snprintf(key, sizeof key, "NWS|%.3f,%.3f|%s", lat, lon, pname);
 
-      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+      intel_item it = {0};
       it.remote_key      = key;
       it.title           = title;
-      it.body = bt ? bt : bj;
+      it.body = bj;
       it.summary         = detail ? detail : shortf;
       it.lang            = "en";
       it.published_at    = start;
@@ -262,7 +260,7 @@ static int ww_nws(const source_ctx *ctx, intel_sink *sink, const char *q) {
       it.properties_json = pj;
       it.tags_json       = "[\"osint-search\",\"weather\",\"NWS_US\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(bt); free(pj);
+      free(bj); free(pj);
     }
   }
   cJSON_Delete(froot);
@@ -332,11 +330,10 @@ static int ww_metar(const source_ctx *ctx, intel_sink *sink, const char *q) {
       char key[256];
       snprintf(key, sizeof key, "METAR|%s|%s", icao ? icao : q, rt ? rt : "");
 
-      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+      intel_item it = {0};
       it.remote_key      = key;
       it.title           = title;
-      it.body = bt ? bt : bj;
+      it.body = bj;
       it.summary         = raw;
       it.lang            = "en";
       it.published_at    = rt;
@@ -345,7 +342,7 @@ static int ww_metar(const source_ctx *ctx, intel_sink *sink, const char *q) {
       it.properties_json = pj;
       it.tags_json       = "[\"osint-search\",\"weather\",\"AVIATION_METAR\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(bt); free(pj);
+      free(bj); free(pj);
     }
   }
   cJSON_Delete(root);

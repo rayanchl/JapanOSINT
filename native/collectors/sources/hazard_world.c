@@ -86,12 +86,11 @@ static int hz_usgs(const source_ctx *ctx, intel_sink *sink) {
     jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
     cJSON_Delete(props);
 
-    char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+    intel_item it = {0};
     it.remote_key      = id ? id : (turl ? turl : (title ? title : "usgs"));
     it.title           = title ? title : place;
     it.summary         = place;
-    it.body = bt ? bt : bj;
+    it.body = bj;
     it.lang            = "en";
     it.published_at    = iso[0] ? iso : NULL;
     it.link            = turl;
@@ -100,7 +99,7 @@ static int hz_usgs(const source_ctx *ctx, intel_sink *sink) {
     it.properties_json = pj;
     it.tags_json       = "[\"hazard\",\"earthquake\",\"USGS\"]";
     if (sink->emit(sink, &it) >= 0) emitted++;
-    free(bj); free(bt); free(pj);
+    free(bj); free(pj);
   }
   cJSON_Delete(root);
   fprintf(stderr, "[USGS_QUAKES] emitted %d\n", emitted);
@@ -167,12 +166,11 @@ static int hz_emsc(const source_ctx *ctx, intel_sink *sink) {
     jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
     cJSON_Delete(props);
 
-    char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+    intel_item it = {0};
     it.remote_key      = unid ? unid : (id ? id : title);
     it.title           = title;
     it.summary         = region;
-    it.body = bt ? bt : bj;
+    it.body = bj;
     it.lang            = "en";
     it.published_at    = when;
     it.link            = turl;
@@ -181,7 +179,7 @@ static int hz_emsc(const source_ctx *ctx, intel_sink *sink) {
     it.properties_json = pj;
     it.tags_json       = "[\"hazard\",\"earthquake\",\"EMSC\"]";
     if (sink->emit(sink, &it) >= 0) emitted++;
-    free(bj); free(bt); free(pj);
+    free(bj); free(pj);
   }
   cJSON_Delete(root);
   fprintf(stderr, "[EMSC_QUAKES] emitted %d\n", emitted);
@@ -347,11 +345,10 @@ static int hz_firms(const source_ctx *ctx, intel_sink *sink) {
           else snprintf(iso, sizeof iso, "%s", acq_date);
         }
 
-        char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+        intel_item it = {0};
         it.remote_key      = key_;
         it.title           = title;
-        it.body = bt ? bt : bj;
+        it.body = bj;
         it.lang            = "en";
         it.published_at    = iso[0] ? iso : NULL;
         it.has_geo         = 1; it.lat = lat; it.lon = lon;
@@ -359,7 +356,7 @@ static int hz_firms(const source_ctx *ctx, intel_sink *sink) {
         it.properties_json = pj;
         it.tags_json       = "[\"hazard\",\"wildfire\",\"FIRMS\"]";
         if (sink->emit(sink, &it) >= 0) emitted++;
-        free(bj); free(bt); free(pj);
+        free(bj); free(pj);
       }
     }
     if (!nl) break;

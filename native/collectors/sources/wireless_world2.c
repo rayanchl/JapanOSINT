@@ -55,15 +55,14 @@ static int run_aprs(const source_ctx *ctx, intel_sink *sink, const char *enc) {
       jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
       int has_geo = (lat && lng);
       char link[256]; snprintf(link, sizeof link, "https://aprs.fi/#!call=%s", name);
-      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+      intel_item it = {0};
       it.remote_key = name; it.title = name; it.summary = comment;
-      it.body = bt ? bt : bj; it.link = link; it.lang = "en";
+      it.body = bj; it.link = link; it.lang = "en";
       it.has_geo = has_geo; it.lat = has_geo ? atof(lat) : 0; it.lon = has_geo ? atof(lng) : 0;
       it.record_type = "aprs-station";
       it.properties_json = pj; it.tags_json = "[\"osint-search\",\"APRS_FI_LOC\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(bt); free(pj);
+      free(bj); free(pj);
       (void)time;
     }
   }
@@ -108,14 +107,13 @@ static int run_opencellid(const source_ctx *ctx, intel_sink *sink, const char *r
   char rk[128], title[160];
   snprintf(rk, sizeof rk, "cell:%d-%d-%d-%ld", mcc, mnc, lac, cellid);
   snprintf(title, sizeof title, "Cell %d-%d-%d-%ld", mcc, mnc, lac, cellid);
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
-  it.remote_key = rk; it.title = title; it.body = bt ? bt : bj; it.lang = "en";
+  it.remote_key = rk; it.title = title; it.body = bj; it.lang = "en";
   it.has_geo = 1; it.lat = lat->valuedouble; it.lon = lon->valuedouble;
   it.record_type = "cell-tower";
   it.properties_json = pj; it.tags_json = "[\"osint-search\",\"OPENCELLID_CELL\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   cJSON_Delete(root);
   return rc >= 0 ? 1 : 0;
 }

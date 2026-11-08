@@ -56,14 +56,13 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       cJSON_AddBoolToObject(p, "success", 1);
       jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
       char link[128]; snprintf(link, sizeof link, "https://www.youtube.com/watch?v=%s", vid);
-      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
-      it.remote_key = vid; it.title = title; it.summary = channel; it.body = bt ? bt : bj;
+      intel_item it = {0};
+      it.remote_key = vid; it.title = title; it.summary = channel; it.body = bj;
       it.author = channel; it.link = link; it.lang = "en"; it.published_at = pub;
       it.record_type = "youtube-video";
       it.properties_json = pj; it.tags_json = "[\"osint-search\",\"YOUTUBE_SEARCH\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(bt); free(pj);
+      free(bj); free(pj);
     }
   }
   cJSON_Delete(root);

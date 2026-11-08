@@ -49,14 +49,13 @@ static int run_suntimes(const source_ctx *ctx, intel_sink *sink, double lat, dou
   char rk[96], title[160];
   snprintf(rk, sizeof rk, "sun:%.4f,%.4f", lat, lon);
   snprintf(title, sizeof title, "Sun times @ %.4f,%.4f", lat, lon);
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key = rk; it.title = title; it.summary = sunrise;
-  it.body = bt ? bt : bj; it.lang = "en"; it.has_geo = 1; it.lat = lat; it.lon = lon;
+  it.body = bj; it.lang = "en"; it.has_geo = 1; it.lat = lat; it.lon = lon;
   it.record_type = "sun-times";
   it.properties_json = pj; it.tags_json = "[\"osint-search\",\"SUN_TIMES\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   cJSON_Delete(root);
   return rc >= 0 ? 1 : 0;
 }
@@ -86,14 +85,13 @@ static int run_elevation(const source_ctx *ctx, intel_sink *sink, double lat, do
   char rk[96], title[160];
   snprintf(rk, sizeof rk, "elev:%.4f,%.4f", lat, lon);
   snprintf(title, sizeof title, "Elevation %.0f m @ %.4f,%.4f", elev->valuedouble, lat, lon);
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
-  it.remote_key = rk; it.title = title; it.body = bt ? bt : bj; it.lang = "en";
+  it.remote_key = rk; it.title = title; it.body = bj; it.lang = "en";
   it.has_geo = 1; it.lat = lat; it.lon = lon;
   it.record_type = "elevation";
   it.properties_json = pj; it.tags_json = "[\"osint-search\",\"ELEVATION_LOOKUP\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   cJSON_Delete(root);
   return rc >= 0 ? 1 : 0;
 }

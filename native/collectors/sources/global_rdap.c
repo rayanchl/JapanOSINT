@@ -168,12 +168,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   char link[512];
   snprintf(link, sizeof link, "https://rdap.org/domain/%s", domain);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = domain;
   it.title           = domain;
   it.summary         = summary;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.link            = link;
   it.lang            = "en";
   it.published_at    = registered;
@@ -182,7 +181,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   it.tags_json       = "[\"osint-search\",\"RDAP\",\"whois\"]";
   sink->emit(sink, &it);
 
-  free(bj); free(bt); free(pj); free(registrar);
+  free(bj); free(pj); free(registrar);
   cJSON_Delete(root);
   fprintf(stderr, "[rdap] emitted 1 (%s)\n", domain);
   return 0;

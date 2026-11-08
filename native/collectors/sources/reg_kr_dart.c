@@ -61,12 +61,11 @@ static int emit_disclosure(intel_sink *sink, const cJSON *r) {
   jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rcept ? rcept : rept;
   it.title           = rept ? rept : corp;
   it.summary         = corp;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "ko";
   it.published_at    = rcept_dt;
   it.link            = link[0] ? link : NULL;
@@ -74,7 +73,7 @@ static int emit_disclosure(intel_sink *sink, const cJSON *r) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"KR_DART\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -114,12 +113,11 @@ static int emit_company(intel_sink *sink, const cJSON *c) {
   jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = code ? code : corp;
   it.title           = corp ? corp : corp_e;
   it.summary         = ceo;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "ko";
   it.published_at    = est;
   it.link            = hp;
@@ -127,7 +125,7 @@ static int emit_company(intel_sink *sink, const cJSON *c) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"KR_DART\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 

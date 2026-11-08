@@ -20,7 +20,7 @@
  * held 4,826 CPEs of which the collector kept 200, and keywordSearch=fortinet
  * held 3,664 of which it kept 100 — silently, with no notice. Pages are now
  * NVD_CPE_PAGE records (the API allows up to 10,000), at most
- * JO_NVD_CPE_PAGE_MAX of them (default 25) per query; when that ceiling or a
+ * $JO_PAGE_MAX of them (default 25, jo_page_max_for) per query; when that ceiling or a
  * failed later page stops a walk short of totalResults, the shortfall is
  * emitted as a collector-truncation-notice, scoped to the query.
  *
@@ -48,6 +48,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "lib/pagewalk.h"   /* jo_page_max_for */
 
 static char *urlenc(const char *s) {
   static const char hx[] = "0123456789ABCDEF";
@@ -172,9 +173,11 @@ static int walk(cJSON *doc, intel_sink *s, int *seen) {
 #define NVD_CPE_PAGE 2000
 
 static int nvd_page_max(void) {
-  const char *e = getenv("JO_NVD_CPE_PAGE_MAX");
-  int v = e ? atoi(e) : 0;
-  return v > 0 ? v : 25;
+  /* The operator's brake: $JO_PAGE_MAX reaches this ceiling in both directions
+   * (jo_page_max_for, lib/pagewalk.h). The private variable that used to sit
+   * here (JO_NVD_CPE_PAGE_MAX) ignored it — dropped 2026-11-07, since jo_page_max_for takes no
+   * legacy name beside a declared default. */
+  return jo_page_max_for(25);
 }
 
 static void nvd_pause(int keyed) {
@@ -218,7 +221,7 @@ static int nvd_walk(const source_ctx *c, intel_sink *s, const char *const *hdrs,
              "the walk stopped after %d page(s) of %d at startIndex %ld",
              pages, NVD_CPE_PAGE, start);
     jo_trunc_notice_scoped(s, "nvd-cpe-dictionary", scope, base, emitted, total,
-                           why, "raise JO_NVD_CPE_PAGE_MAX (pages per query), "
+                           why, "raise JO_PAGE_MAX (pages per query), "
                            "set NVD_API_KEY for the faster rate, or re-run");
   }
   fprintf(stderr, "[nvd-cpe-dictionary] %s: %d emitted across %d page(s), "

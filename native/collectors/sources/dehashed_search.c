@@ -189,18 +189,17 @@ static int emit_breach(intel_sink *sink, const char *q, const char *prov,
   char rk[640]; snprintf(rk, sizeof rk, "breach:%s:%s", src_name, q);
   char title[420]; snprintf(title, sizeof title, "Breach: %s — %s", src_name, q);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.summary         = "breach exposure";
   it.record_type     = "osint_service_result";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"DEHASHED_SEARCH\"]";
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   cJSON_Delete(data); cJSON_Delete(env);
   return rc >= 0 ? 1 : 0;
 }

@@ -114,12 +114,11 @@ static int nvd_emit(intel_sink *sink, const cJSON *item) {
   jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = id;
   it.title           = id;
   it.summary         = desc;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.published_at    = pub;
   it.link            = ref ? ref : nvdurl;
@@ -127,7 +126,7 @@ static int nvd_emit(intel_sink *sink, const cJSON *item) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"vulnerability\",\"cve\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -213,12 +212,11 @@ static int kev_emit(intel_sink *sink, const cJSON *r, const char *q) {
   char link[128];
   snprintf(link, sizeof link, "https://nvd.nist.gov/vuln/detail/%s", cve);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = cve;
   it.title           = name ? name : cve;
   it.summary         = desc;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.published_at    = added;
   it.link            = link;
@@ -226,7 +224,7 @@ static int kev_emit(intel_sink *sink, const cJSON *r, const char *q) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"vulnerability\",\"known-exploited\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -478,12 +476,11 @@ static int epss_run(const source_ctx *ctx, intel_sink *sink, const char *q) {
       char link[128];
       snprintf(link, sizeof link, "https://nvd.nist.gov/vuln/detail/%s", cve);
 
-      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+      intel_item it = {0};
       it.remote_key      = cve;
       it.title           = cve;
       it.summary         = summary;
-      it.body = bt ? bt : bj;
+      it.body = bj;
       it.lang            = "en";
       it.published_at    = date;
       it.link            = link;
@@ -491,7 +488,7 @@ static int epss_run(const source_ctx *ctx, intel_sink *sink, const char *q) {
       it.properties_json = pj;
       it.tags_json       = "[\"osint-search\",\"vulnerability\",\"epss\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(bt); free(pj);
+      free(bj); free(pj);
     }
   }
   cJSON_Delete(root);

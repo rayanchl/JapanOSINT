@@ -69,12 +69,11 @@ static int emit_place(intel_sink *sink, const cJSON *g) {
   jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rkey;
   it.title           = disp;
   it.summary         = country;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.has_geo         = have_geo;
   it.lat             = lat;
   it.lon             = lon;
@@ -82,7 +81,7 @@ static int emit_place(intel_sink *sink, const cJSON *g) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"GEONAMES\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 

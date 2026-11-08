@@ -110,12 +110,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = vat[0] ? vat : name;
   it.title           = name ? name : vat;
   it.summary         = addr;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "da";
   it.published_at    = startdate;
   it.record_type     = "cvr-company";
@@ -123,7 +122,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   it.tags_json       = "[\"osint-search\",\"DK_CVR\"]";
   int emitted = sink->emit(sink, &it) >= 0 ? 1 : 0;
 
-  free(bj); free(bt); free(pj); free(addr);
+  free(bj); free(pj); free(addr);
   cJSON_Delete(c);
   fprintf(stderr, "[dk_cvr] emitted %d\n", emitted);
   return 0;

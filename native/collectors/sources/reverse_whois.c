@@ -239,11 +239,10 @@ static int emit_domain(intel_sink *sink, const char *domain, const char *source,
   else
     snprintf(summ, sizeof summ, "%s", source ? source : "viewdns");
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = domain;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.summary         = summ;
   it.link            = NULL;
   it.published_at    = (registered && *registered) ? registered : NULL;
@@ -252,7 +251,7 @@ static int emit_domain(intel_sink *sink, const char *domain, const char *source,
   it.tags_json       = "[\"osint-search\",\"HISTORICAL_WHOIS\"]";
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   cJSON_Delete(data); cJSON_Delete(props);
   return rc >= 0 ? 1 : 0;
 }

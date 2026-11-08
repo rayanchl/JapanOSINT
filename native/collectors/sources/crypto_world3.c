@@ -62,14 +62,13 @@ static int run_ethplorer(const source_ctx *ctx, intel_sink *sink, const char *en
   snprintf(link, sizeof link, "https://etherscan.io/address/%s", addr);
   double b = (ethbal && cJSON_IsNumber(ethbal)) ? ethbal->valuedouble : 0;
   snprintf(title, sizeof title, "ETH %s (%.6f ETH, %d tokens)", addr, b, tokcount);
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key = rk; it.title = title; it.summary = "ETH address";
-  it.body = bt ? bt : bj; it.link = link; it.lang = "en";
+  it.body = bj; it.link = link; it.lang = "en";
   it.record_type = "crypto-address";
   it.properties_json = pj; it.tags_json = "[\"osint-search\",\"ETHPLORER_ADDR\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   cJSON_Delete(root);
   return rc >= 0 ? 1 : 0;
 }
@@ -113,14 +112,13 @@ static int run_mempool(const source_ctx *ctx, intel_sink *sink, const char *enc)
   snprintf(rk, sizeof rk, "btcmp:%s", addr);
   snprintf(link, sizeof link, "https://mempool.space/address/%s", addr);
   snprintf(title, sizeof title, "BTC %s (%.8f BTC, %d tx)", addr, bal, txc);
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key = rk; it.title = title; it.summary = "BTC address";
-  it.body = bt ? bt : bj; it.link = link; it.lang = "en";
+  it.body = bj; it.link = link; it.lang = "en";
   it.record_type = "crypto-address";
   it.properties_json = pj; it.tags_json = "[\"osint-search\",\"MEMPOOL_ADDR\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   cJSON_Delete(root);
   return rc >= 0 ? 1 : 0;
 }

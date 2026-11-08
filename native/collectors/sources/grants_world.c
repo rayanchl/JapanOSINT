@@ -81,12 +81,11 @@ static int nih_emit(intel_sink *sink, const cJSON *p) {
   jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = num ? num : title;
   it.title           = title ? title : num;
   it.summary         = orgn;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.author          = pis;
   it.lang            = "en";
   it.published_at    = start;
@@ -95,7 +94,7 @@ static int nih_emit(intel_sink *sink, const cJSON *p) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"NIH_REPORTER\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj); free(pis);
+  free(bj); free(pj); free(pis);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -186,12 +185,11 @@ static int nsf_emit(intel_sink *sink, const cJSON *a) {
   jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = id ? id : title;
   it.title           = title ? title : id;
   it.summary         = inst;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.author          = piname[0] ? piname : NULL;
   it.lang            = "en";
   it.published_at    = date;
@@ -200,7 +198,7 @@ static int nsf_emit(intel_sink *sink, const cJSON *a) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"NSF_AWARDS\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -266,12 +264,11 @@ static int ukri_emit(intel_sink *sink, const cJSON *p) {
   jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = gref ? gref : (id ? id : title);
   it.title           = title ? title : gref;
   it.summary         = status;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.published_at    = start;
   it.link            = link[0] ? link : NULL;
@@ -279,7 +276,7 @@ static int ukri_emit(intel_sink *sink, const cJSON *p) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"UKRI_GRANTS\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 

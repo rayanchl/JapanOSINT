@@ -139,19 +139,18 @@ static int sw_emit(intel_sink *sink, const char *service, const char *rectype,
   char key[512];
   snprintf(key, sizeof key, "%s|%d|%.400s", service, idx, name);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = key;
   it.title           = name;
   it.summary         = program ? program : detail;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.link            = link ? link : listing_url;
   it.record_type     = rectype;
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"sanctions\",\"screening\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 

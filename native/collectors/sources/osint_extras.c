@@ -245,14 +245,13 @@ static int run_photon(const source_ctx *ctx, intel_sink *sink, const char *enc) 
       jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
       char summ[160]; snprintf(summ, sizeof summ, "%s%s%s", city ? city : "", (city && country) ? ", " : "", country ? country : "");
       char rk[96]; snprintf(rk, sizeof rk, "photon:%.5f,%.5f", lat, lon);
-      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+      intel_item it = {0};
       it.remote_key = rk; it.title = name ? name : summ; it.summary = summ[0] ? summ : NULL;
-      it.body = bt ? bt : bj; it.lang = "en"; it.has_geo = 1; it.lat = lat; it.lon = lon;
+      it.body = bj; it.lang = "en"; it.has_geo = 1; it.lat = lat; it.lon = lon;
       it.record_type = "geocode-result";
       it.properties_json = pj; it.tags_json = "[\"osint-search\",\"PHOTON_GEOCODE\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(bt); free(pj);
+      free(bj); free(pj);
       (void)osmid;
     }
   }

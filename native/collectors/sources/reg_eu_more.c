@@ -60,19 +60,18 @@ static int em_emit(intel_sink *sink, const char *service, const char *country,
   jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = reg_no ? reg_no : name;
   it.title           = name ? name : reg_no;
   it.summary         = addr ? addr : status;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = lang;
   it.link            = link;
   it.record_type     = rectype;
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 

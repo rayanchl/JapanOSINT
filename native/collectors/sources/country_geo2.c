@@ -65,12 +65,11 @@ static int run_openplz(const source_ctx *ctx, intel_sink *sink, const char *serv
       char rk[96]; snprintf(rk, sizeof rk, "%s:%s:%s", cc, pc ? pc : code, name);
       char summ[160]; snprintf(summ, sizeof summ, "%s%s%s", mun ? mun : "", reg ? ", " : "", reg ? reg : "");
       char tags[64]; snprintf(tags, sizeof tags, "[\"osint-search\",\"%s\"]", service);
-      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
-      it.remote_key = rk; it.title = name; it.summary = summ[0] ? summ : NULL; it.body = bt ? bt : bj; it.lang = "de";
+      intel_item it = {0};
+      it.remote_key = rk; it.title = name; it.summary = summ[0] ? summ : NULL; it.body = bj; it.lang = "de";
       it.record_type = "locality"; it.properties_json = pj; it.tags_json = tags;
       if (sink->emit(sink, &it) >= 0) { n++; page_n++; }
-      free(bj); free(bt); free(pj);
+      free(bj); free(pj);
     }
     cJSON_Delete(root);
     if (page_n == 0) break;          /* upstream exhausted */
@@ -112,13 +111,12 @@ static int run_ch_address(const source_ctx *ctx, intel_sink *sink, const char *e
       cJSON *p = cJSON_CreateObject();
       cJSON_AddStringToObject(p, "service", "CH_ADDRESS"); cJSON_AddBoolToObject(p, "success", 1);
       jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
-      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
-      it.remote_key = detail ? detail : label; it.title = label; it.body = bt ? bt : bj; it.lang = "de";
+      intel_item it = {0};
+      it.remote_key = detail ? detail : label; it.title = label; it.body = bj; it.lang = "de";
       it.has_geo = hg; it.lat = hg ? lat->valuedouble : 0; it.lon = hg ? lon->valuedouble : 0;
       it.record_type = "ch-location"; it.properties_json = pj; it.tags_json = "[\"osint-search\",\"CH_ADDRESS\"]";
       if (sink->emit(sink, &it) >= 0) n++;
-      free(bj); free(bt); free(pj); free(label);
+      free(bj); free(pj); free(label);
     }
   }
   cJSON_Delete(root);
@@ -158,13 +156,12 @@ static int run_no_address(const source_ctx *ctx, intel_sink *sink, const char *e
       cJSON_AddStringToObject(p, "service", "NO_ADDRESS"); cJSON_AddBoolToObject(p, "success", 1);
       jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
       char summ[160]; snprintf(summ, sizeof summ, "%s%s%s", poststed ? poststed : "", kommune ? " · " : "", kommune ? kommune : "");
-      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
-      it.remote_key = text; it.title = text; it.summary = summ[0] ? summ : NULL; it.body = bt ? bt : bj; it.lang = "no";
+      intel_item it = {0};
+      it.remote_key = text; it.title = text; it.summary = summ[0] ? summ : NULL; it.body = bj; it.lang = "no";
       it.has_geo = hg; it.lat = hg ? lat->valuedouble : 0; it.lon = hg ? lon->valuedouble : 0;
       it.record_type = "no-address"; it.properties_json = pj; it.tags_json = "[\"osint-search\",\"NO_ADDRESS\"]";
       if (sink->emit(sink, &it) >= 0) n++;
-      free(bj); free(bt); free(pj);
+      free(bj); free(pj);
     }
   }
   cJSON_Delete(root);

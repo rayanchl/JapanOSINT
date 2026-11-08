@@ -36,6 +36,7 @@
 #include <time.h>
 #include "_jp_osint.inc"
 #include "cyi_common.inc"
+#include "lib/pagewalk.h"   /* jo_page_max_for */
 
 /* The endpoint's own page size, not an editorial bound: `limit` caps a page
  * and `count` is the total the server will serve. This collector used to send
@@ -242,8 +243,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   free(enc);
 
   int max_pages = PDNS_MAX_PAGES;
-  const char *penv = getenv("JO_PDNS_MAX_PAGES");
-  if (penv && *penv) { int v = atoi(penv); if (v > 0) max_pages = v; }
+  /* The operator's brake: $JO_PAGE_MAX reaches this ceiling in both directions
+   * (jo_page_max_for, lib/pagewalk.h). The private variable that used to sit
+   * here (JO_PDNS_MAX_PAGES) ignored it — dropped 2026-11-07, since jo_page_max_for takes no
+   * legacy name beside a declared default. */
+  max_pages = jo_page_max_for(max_pages);
 
   /* Optional Argus API key: lifts the anonymous quota. Never logged. */
   const char *key = getenv("MNEMONIC_API_KEY");
@@ -361,7 +365,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
                     (stop_status == 402 || stop_status == 429)
                       ? "set MNEMONIC_API_KEY (sent as Argus-API-Key), or re-run "
                         "the pivot after the quota window"
-                      : "re-run the pivot, or raise $JO_PDNS_MAX_PAGES");
+                      : "re-run the pivot, or raise $JO_PAGE_MAX");
   }
   return 0;                       /* no passive DNS history is not an error */
 }

@@ -93,19 +93,18 @@ static int eu_emit_org(intel_sink *sink, const cJSON *o) {
   if (ident) snprintf(link, sizeof link,
     "https://ec.europa.eu/transparencyregister/public/consultation/displaylobbyist.do?id=%s", ident);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = ident ? ident : name;
   it.title           = name ? name : ident;
   it.summary         = category;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.link            = link[0] ? link : web;
   it.record_type     = "eu-transparency-org";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"EU_TRANSPARENCY\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -195,12 +194,11 @@ static int uk_emit_donation(intel_sink *sink, const cJSON *d) {
   if (ecref) snprintf(link, sizeof link,
     "https://search.electoralcommission.org.uk/English/Donations/%s", ecref);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = ecref ? ecref : title;
   it.title           = title;
   it.summary         = value;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.published_at    = accepted;
   it.link            = link[0] ? link : NULL;
@@ -208,7 +206,7 @@ static int uk_emit_donation(intel_sink *sink, const cJSON *d) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"UK_DONATIONS\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -300,19 +298,18 @@ static int os_emit_org(intel_sink *sink, const cJSON *attr, const char *orgid) {
   if (cid) snprintf(link, sizeof link,
     "https://www.opensecrets.org/orgs/summary?id=%s", cid);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = cid ? cid : name;
   it.title           = name;
   it.summary         = total;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.link            = link[0] ? link : NULL;
   it.record_type     = "opensecrets-org";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"OPENSECRETS\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 

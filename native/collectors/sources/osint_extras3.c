@@ -45,13 +45,12 @@ static int run_se_site(const source_ctx *ctx, intel_sink *sink, const char *serv
       cJSON_AddBoolToObject(p, "success", 1);
       jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
       char tags[96]; snprintf(tags, sizeof tags, "[\"osint-search\",\"%s\"]", service);
-      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
-      it.remote_key = link ? link : title; it.title = title; it.body = bt ? bt : bj;
+      intel_item it = {0};
+      it.remote_key = link ? link : title; it.title = title; it.body = bj;
       it.link = link; it.lang = "en"; it.record_type = "stackexchange-question";
       it.properties_json = pj; it.tags_json = tags;
       if (sink->emit(sink, &it) >= 0) n++;
-      free(bj); free(bt); free(pj);
+      free(bj); free(pj);
       /* (cap removed: every record of the fetched array is emitted —
        * docs/SOURCE_EXHAUSTIVENESS.md) */
     }

@@ -256,7 +256,11 @@ static const hp_source HP3B19_USSTATE[] = {
     .record_type = "lobbying-client",
     .tags = "\"us\",\"newyork\",\"lobbying\",\"ethics\",\"procurement\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.ny.gov/resource/8bmh-tuz3.json?$limit=1000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on data.ny.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://data.ny.gov/resource/8bmh-tuz3.json?$limit=1000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .date_keys = "reporting_period",
     .interval = 86400,
     .page_param = "$offset",
@@ -295,7 +299,11 @@ static const hp_source HP3B19_USSTATE[] = {
     .record_type = "salary-schedule",
     .tags = "\"us\",\"newyork\",\"salary\",\"payroll\",\"reference\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.ny.gov/resource/t3vp-5tka.json?$limit=1000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on data.ny.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://data.ny.gov/resource/t3vp-5tka.json?$limit=1000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .date_keys = "effective_date",
     .interval = 604800,
     .page_param = "$offset",
@@ -1009,7 +1017,11 @@ static const hp_source HP3B19_USSTATE[] = {
     .record_type = "campaign-contribution",
     .tags = "\"us\",\"washington\",\"politics\",\"campaign-finance\",\"elections\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.wa.gov/resource/mppc-zjn9.json?$limit=1000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on data.wa.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://data.wa.gov/resource/mppc-zjn9.json?$limit=1000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .date_keys = "contribution_date",
     .interval = 21600,
     .page_param = "$offset",
@@ -1292,7 +1304,11 @@ static const hp_source HP3B19_USSTATE[] = {
     .record_type = "crime-statistic",
     .tags = "\"us\",\"washington\",\"crime\",\"police\",\"nibrs\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.wa.gov/resource/vvfu-ry7f.json?$limit=1000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on data.wa.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://data.wa.gov/resource/vvfu-ry7f.json?$limit=1000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .date_keys = "indexyear",
     .interval = 604800,
     .page_param = "$offset",
@@ -1315,7 +1331,11 @@ static const hp_source HP3B19_USSTATE[] = {
     .record_type = "inspection-record",
     .tags = "\"us\",\"washington\",\"inspection\",\"food\",\"health\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.wa.gov/resource/tb2x-p7u5.json?$limit=1000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on data.wa.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://data.wa.gov/resource/tb2x-p7u5.json?$limit=1000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .interval = 86400,
     .page_param = "$offset",
     .page_size = 1000,
@@ -1676,7 +1696,11 @@ static const hp_source HP3B19_USSTATE[] = {
     .record_type = "procurement-customer",
     .tags = "\"us\",\"texas\",\"procurement\",\"it\",\"contracts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.texas.gov/resource/4v6c-qfkr.json?$limit=1000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on data.texas.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://data.texas.gov/resource/4v6c-qfkr.json?$limit=1000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .interval = 604800,
     .page_param = "$offset",
     .page_size = 1000,
@@ -1878,7 +1902,11 @@ static const hp_source HP3B19_USSTATE[] = {
     .record_type = "lobbyist-registration",
     .tags = "\"us\",\"connecticut\",\"lobbying\",\"ethics\",\"influence\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.ct.gov/resource/4ixq-tnwe.json?$limit=1000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on data.ct.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://data.ct.gov/resource/4ixq-tnwe.json?$limit=1000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .date_keys = "register_date",
     .interval = 86400,
     .page_param = "$offset",
@@ -2134,7 +2162,11 @@ static const hp_source HP3B19_USSTATE[] = {
     .record_type = "well-inspection",
     .tags = "\"us\",\"pennsylvania\",\"oil\",\"gas\",\"inspection\",\"dep\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.pa.gov/resource/f8fx-8zip.json?$limit=1000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on data.pa.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://data.pa.gov/resource/f8fx-8zip.json?$limit=1000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .date_keys = "inspection_date",
     .interval = 86400,
     .page_param = "$offset",
@@ -2308,7 +2340,11 @@ static const hp_source HP3B19_USSTATE[] = {
     .record_type = "crash-record",
     .tags = "\"us\",\"delaware\",\"crash\",\"traffic\",\"safety\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.delaware.gov/resource/827n-m6xc.json?$limit=1000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on data.delaware.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://data.delaware.gov/resource/827n-m6xc.json?$limit=1000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .interval = 86400,
     .lat_key = "latitude",
     .lon_key = "longitude",
@@ -2563,7 +2599,11 @@ static const hp_source HP3B19_USSTATE[] = {
     .record_type = "agency-directory",
     .tags = "\"us\",\"missouri\",\"police\",\"agencies\",\"reference\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.mo.gov/resource/cgbu-k38b.json?$limit=1000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on data.mo.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://data.mo.gov/resource/cgbu-k38b.json?$limit=1000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .interval = 604800,
     .page_param = "$offset",
     .page_size = 1000,
@@ -2745,7 +2785,11 @@ static const hp_source HP3B19_USSTATE[] = {
     .record_type = "financial-licence",
     .tags = "\"canada\",\"novascotia\",\"lending\",\"licence\",\"consumer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.novascotia.ca/resource/hwep-2s8y.json?$limit=1000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on data.novascotia.ca: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://data.novascotia.ca/resource/hwep-2s8y.json?$limit=1000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .interval = 604800,
     .page_param = "$offset",
     .page_size = 1000,
@@ -2762,7 +2806,11 @@ static const hp_source HP3B19_USSTATE[] = {
     .record_type = "financial-licence",
     .tags = "\"canada\",\"novascotia\",\"payday\",\"lending\",\"licence\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.novascotia.ca/resource/kjbw-et7g.json?$limit=1000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on data.novascotia.ca: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://data.novascotia.ca/resource/kjbw-et7g.json?$limit=1000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .interval = 604800,
     .page_param = "$offset",
     .page_size = 1000,
@@ -2780,7 +2828,11 @@ static const hp_source HP3B19_USSTATE[] = {
     .record_type = "financial-licence",
     .tags = "\"canada\",\"novascotia\",\"debt\",\"collection\",\"licence\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://data.novascotia.ca/resource/et8e-is7k.json?$limit=1000&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on data.novascotia.ca: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://data.novascotia.ca/resource/et8e-is7k.json?$limit=1000&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .interval = 604800,
     .page_param = "$offset",
     .page_size = 1000,

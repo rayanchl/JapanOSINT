@@ -56,19 +56,18 @@ static int emit_entity(intel_sink *sink, const cJSON *e) {
   jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = idbuf[0] ? idbuf : name;
   it.title           = name;
   it.summary         = blurb ? blurb : type_ext;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.link            = uri;
   it.record_type     = "littlesis-entity";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"LITTLESIS\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 

@@ -28,7 +28,7 @@
  * The fetch is now one offset-paged walk. There is no declared total and the
  * asset set is far larger than a daily run should pull, so the page ceiling is
  * a real bound — which means it is stated in the data as a
- * collector-truncation-notice, and $JO_CLIMATETRACE_PAGES raises it. */
+ * collector-truncation-notice, and $JO_PAGE_MAX raises it. */
 #include "lib/jocore.h"
 #include "source.h"
 #include "lib/feedlib.h"
@@ -36,6 +36,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lib/pagewalk.h"   /* jo_page_max_for */
 
 #define SRC "climatetrace-assets"
 #define WANT_GAS "co2e_100yr"
@@ -190,8 +191,11 @@ static int collect_page(const source_ctx *ctx, intel_sink *sink, int offset,
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   int max_pages = CT_MAX_PAGES;
-  const char *penv = getenv("JO_CLIMATETRACE_PAGES");
-  if (penv && *penv) { int v = atoi(penv); if (v > 0) max_pages = v; }
+  /* The operator's brake: $JO_PAGE_MAX reaches this ceiling in both directions
+   * (jo_page_max_for, lib/pagewalk.h). The private variable that used to sit
+   * here (JO_CLIMATETRACE_PAGES) ignored it — dropped 2026-11-07, since jo_page_max_for takes no
+   * legacy name beside a declared default. */
+  max_pages = jo_page_max_for(max_pages);
 
   int total = 0, fetched = 0, offset = 0, pages = 0, more_pending = 0;
   long assets_seen = 0;
@@ -217,7 +221,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
                     "the offset walk reached its page ceiling while Climate "
                     "TRACE was still returning full pages; assets past this "
                     "offset were not requested",
-                    "raise $JO_CLIMATETRACE_PAGES");
+                    "raise $JO_PAGE_MAX");
   return 0;
 }
 

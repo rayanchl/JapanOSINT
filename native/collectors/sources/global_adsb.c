@@ -89,12 +89,11 @@ static int emit_aircraft(intel_sink *sink, const cJSON *a, const char *entity) {
   char rk[64];
   snprintf(rk, sizeof rk, "adsb:%s", hex ? hex : (reg ? reg : flight));
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
   it.summary         = "live aircraft state";
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.has_geo         = has_geo;
   it.lat             = lat;
   it.lon             = lon;
@@ -102,7 +101,7 @@ static int emit_aircraft(intel_sink *sink, const cJSON *a, const char *entity) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"ADSB_GLOBAL\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 

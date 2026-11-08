@@ -1614,7 +1614,11 @@ static const hp_source HP3B19_HEALTH[] = {
      * accepted percent-encoded, stable over two reads, offsets 0 and 3 share
      * no row, and DESC answers a different set — so the parameter is honoured
      * rather than silently ignored, which is what rule 4d says to check. */
-    .url = "https://data.cdc.gov/resource/g653-rqe2.json?%24limit=1000&%24order=%3Aid",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on data.cdc.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://data.cdc.gov/resource/g653-rqe2.json?%24limit=1000&%24order=%3Aid&%24select=*,:id",
+    .id_keys = ":id",
     .date_keys = "date",
     .interval = 86400,
     .page_param = "%24offset",
@@ -1643,7 +1647,11 @@ static const hp_source HP3B19_HEALTH[] = {
      * accepted percent-encoded, stable over two reads, offsets 0 and 3 share
      * no row, and DESC answers a different set — so the parameter is honoured
      * rather than silently ignored, which is what rule 4d says to check. */
-    .url = "https://data.cdc.gov/resource/x9gk-5huc.json?%24limit=1000&%24order=%3Aid",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on data.cdc.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://data.cdc.gov/resource/x9gk-5huc.json?%24limit=1000&%24order=%3Aid&%24select=*,:id",
+    .id_keys = ":id",
     .interval = 86400,
     .page_param = "%24offset",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -1672,7 +1680,11 @@ static const hp_source HP3B19_HEALTH[] = {
      * accepted percent-encoded, stable over two reads, offsets 0 and 3 share
      * no row, and DESC answers a different set — so the parameter is honoured
      * rather than silently ignored, which is what rule 4d says to check. */
-    .url = "https://data.cdc.gov/resource/r8kw-7aab.json?%24limit=1000&%24order=%3Aid",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on data.cdc.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://data.cdc.gov/resource/r8kw-7aab.json?%24limit=1000&%24order=%3Aid&%24select=*,:id",
+    .id_keys = ":id",
     .date_keys = "week_ending_date",
     .interval = 86400,
     .page_param = "%24offset",
@@ -1701,7 +1713,11 @@ static const hp_source HP3B19_HEALTH[] = {
      * accepted percent-encoded, stable over two reads, offsets 0 and 3 share
      * no row, and DESC answers a different set — so the parameter is honoured
      * rather than silently ignored, which is what rule 4d says to check. */
-    .url = "https://data.cdc.gov/resource/ite7-j2w7.json?%24limit=1000&%24order=%3Aid",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on data.cdc.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://data.cdc.gov/resource/ite7-j2w7.json?%24limit=1000&%24order=%3Aid&%24select=*,:id",
+    .id_keys = ":id",
     .date_keys = "week_ending_date",
     .interval = 86400,
     .page_param = "%24offset",
@@ -1773,7 +1789,11 @@ static const hp_source HP3B19_HEALTH[] = {
      * accepted percent-encoded, stable over two reads, offsets 0 and 3 share
      * no row, and DESC answers a different set — so the parameter is honoured
      * rather than silently ignored, which is what rule 4d says to check. */
-    .url = "https://healthdata.gov/resource/g62h-syeh.json?%24limit=1000&%24order=%3Aid",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on healthdata.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://healthdata.gov/resource/g62h-syeh.json?%24limit=1000&%24order=%3Aid&%24select=*,:id",
+    .id_keys = ":id",
     .date_keys = "date",
     .interval = 86400,
     .page_param = "%24offset",

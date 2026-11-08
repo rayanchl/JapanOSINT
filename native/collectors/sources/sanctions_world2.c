@@ -50,17 +50,16 @@ static int run_fbi(const source_ctx *ctx, intel_sink *sink, const char *enc) {
       if (uid) cJSON_AddStringToObject(p, "uid", uid);
       cJSON_AddBoolToObject(p, "success", 1);
       jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
-      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+      intel_item it = {0};
       it.remote_key = uid ? uid : title;
       it.title = title ? title : uid;
       it.summary = subj;
-      it.body = bt ? bt : bj; it.link = urlf; it.lang = "en";
+      it.body = bj; it.link = urlf; it.lang = "en";
       it.record_type = "wanted-person";
       it.properties_json = pj;
       it.tags_json = "[\"osint-search\",\"FBI_WANTED\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(bt); free(pj);
+      free(bj); free(pj);
     }
   }
   cJSON_Delete(root);
@@ -103,17 +102,16 @@ static int run_opensanctions(const source_ctx *ctx, intel_sink *sink, const char
       jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
       char link[256] = {0};
       if (id) snprintf(link, sizeof link, "https://www.opensanctions.org/entities/%s/", id);
-      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+      intel_item it = {0};
       it.remote_key = id ? id : caption;
       it.title = caption ? caption : id;
       it.summary = schema;
-      it.body = bt ? bt : bj; it.link = link[0] ? link : NULL; it.lang = "en";
+      it.body = bj; it.link = link[0] ? link : NULL; it.lang = "en";
       it.record_type = "sanctions-entity";
       it.properties_json = pj;
       it.tags_json = "[\"osint-search\",\"OPENSANCTIONS\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(bt); free(pj);
+      free(bj); free(pj);
     }
   }
   cJSON_Delete(root);

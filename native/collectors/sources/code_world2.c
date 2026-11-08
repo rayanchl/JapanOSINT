@@ -58,14 +58,13 @@ static int run_github_repos(const source_ctx *ctx, intel_sink *sink, const char 
       cJSON_AddStringToObject(p, "repo", full);
       cJSON_AddBoolToObject(p, "success", 1);
       jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
-      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+      intel_item it = {0};
       it.remote_key = full; it.title = full; it.summary = desc;
-      it.body = bt ? bt : bj; it.link = html; it.lang = "en";
+      it.body = bj; it.link = html; it.lang = "en";
       it.record_type = "github-repo";
       it.properties_json = pj; it.tags_json = "[\"osint-search\",\"GITHUB_REPO_SEARCH\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(bt); free(pj);
+      free(bj); free(pj);
     }
   }
   cJSON_Delete(root);
@@ -100,14 +99,13 @@ static int run_gitlab_projects(const source_ctx *ctx, intel_sink *sink, const ch
     cJSON_AddStringToObject(p, "project", path);
     cJSON_AddBoolToObject(p, "success", 1);
     jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
-    char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+    intel_item it = {0};
     it.remote_key = path; it.title = path; it.summary = desc;
-    it.body = bt ? bt : bj; it.link = web; it.lang = "en";
+    it.body = bj; it.link = web; it.lang = "en";
     it.record_type = "gitlab-project";
     it.properties_json = pj; it.tags_json = "[\"osint-search\",\"GITLAB_PROJECT_SEARCH\"]";
     if (sink->emit(sink, &it) >= 0) emitted++;
-    free(bj); free(bt); free(pj);
+    free(bj); free(pj);
     /* (cap removed: every record of the fetched array is emitted —
      * docs/SOURCE_EXHAUSTIVENESS.md) */
   }
@@ -149,14 +147,13 @@ static int run_github_gists(const source_ctx *ctx, intel_sink *sink, const char 
     jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
     char title[256];
     snprintf(title, sizeof title, "gist %s%s%s", id, (desc && desc[0]) ? " · " : "", (desc && desc[0]) ? desc : (fname ? fname : ""));
-    char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+    intel_item it = {0};
     it.remote_key = id; it.title = title; it.summary = fname;
-    it.body = bt ? bt : bj; it.link = html; it.lang = "en"; it.published_at = created;
+    it.body = bj; it.link = html; it.lang = "en"; it.published_at = created;
     it.record_type = "github-gist";
     it.properties_json = pj; it.tags_json = "[\"osint-search\",\"GITHUB_GISTS\"]";
     if (sink->emit(sink, &it) >= 0) emitted++;
-    free(bj); free(bt); free(pj);
+    free(bj); free(pj);
   }
   cJSON_Delete(root);
   return emitted;

@@ -168,19 +168,18 @@ static int emit_release(intel_sink *sink, const cJSON *rel, const char *portal) 
   else if (has_amt && cur)     snprintf(summ, sizeof summ, "%.0f %s", amt, cur);
   else summ[0] = 0;
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = ocid ? ocid : (tid ? tid : title);
   it.title           = title ? title : ocid;
   it.summary         = summ[0] ? summ : NULL;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.published_at    = date;
   it.record_type     = "ocds-release";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"PROCUREMENT_OCDS\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 

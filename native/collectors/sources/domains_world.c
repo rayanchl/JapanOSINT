@@ -74,19 +74,18 @@ static int cs_emit(intel_sink *sink, const char *domain, const cJSON *iss) {
   jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = id ? id : (tbs ? tbs : san);
   it.title           = san ? san : (id ? id : domain);
   it.summary         = na;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.published_at    = nb;
   it.record_type     = "certspotter-issuance";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"CERTSPOTTER\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj); free(san);
+  free(bj); free(pj); free(san);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -159,12 +158,11 @@ static int us_emit(intel_sink *sink, const char *domain, const cJSON *r) {
   jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = uid ? uid : purl;
   it.title           = purl ? purl : (pdom ? pdom : domain);
   it.summary         = pip;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.published_at    = ttime;
   it.link            = result ? result : purl;
@@ -172,7 +170,7 @@ static int us_emit(intel_sink *sink, const char *domain, const cJSON *r) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"URLSCAN\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -242,18 +240,17 @@ static int pdns_emit(intel_sink *sink, const char *domain, const cJSON *rec) {
   snprintf(title, sizeof title, "%s %s %s",
            rrname ? rrname : "", rrtype ? rrtype : "", rdata ? rdata : "");
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = NULL;   /* sink derives; rrname+rdata combo not unique enough */
   it.title           = title;
   it.summary         = rdata;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.record_type     = "circl-pdns";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"CIRCL_PDNS\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -355,18 +352,17 @@ static int run_hackertarget(const source_ctx *ctx, intel_sink *sink,
         jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
         cJSON_Delete(props);
 
-        char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+        intel_item it = {0};
         it.remote_key      = host;
         it.title           = host;
         it.summary         = ip;
-        it.body = bt ? bt : bj;
+        it.body = bj;
         it.lang            = "en";
         it.record_type     = "hackertarget-host";
         it.properties_json = pj;
         it.tags_json       = "[\"osint-search\",\"HACKERTARGET\"]";
         if (sink->emit(sink, &it) >= 0) emitted++;
-        free(bj); free(bt); free(pj);
+        free(bj); free(pj);
       }
     }
     if (!nl) break;

@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "_credential_notice.inc"  /* key gates file a needs-credential notice */
+#include "lib/jocore.h"   /* jo_props_absorb */
 
 /* Emit one intel row for a single satellite. Returns 1 if emitted. */
 static int emit_satellite(intel_sink *sink, cJSON *s,
@@ -60,11 +61,10 @@ static int emit_satellite(intel_sink *sink, cJSON *s,
   snprintf(title, sizeof title, "%s (NORAD %d)",
            (nm && nm->valuestring) ? nm->valuestring : "satellite", norad);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.summary         = (nm && nm->valuestring) ? nm->valuestring : "satellite overhead";
   it.has_geo         = has_geo;
   it.lat             = lat;
@@ -74,7 +74,7 @@ static int emit_satellite(intel_sink *sink, cJSON *s,
   it.tags_json       = "[\"osint-search\",\"SATELLITE_TRACKER\"]";
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   cJSON_Delete(body); cJSON_Delete(props);
   return rc >= 0 ? 1 : 0;
 }

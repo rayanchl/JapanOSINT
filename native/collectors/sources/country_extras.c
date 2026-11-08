@@ -55,12 +55,11 @@ static int run_de_postal(const source_ctx *ctx, intel_sink *sink, const char *ra
       jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
       char rk[96]; snprintf(rk, sizeof rk, "deplz:%s:%s", pc ? pc : code, name);
       char summ[160]; snprintf(summ, sizeof summ, "%s%s%s", mun ? mun : "", st ? ", " : "", st ? st : "");
-      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
-      it.remote_key = rk; it.title = name; it.summary = summ[0] ? summ : NULL; it.body = bt ? bt : bj; it.lang = "de";
+      intel_item it = {0};
+      it.remote_key = rk; it.title = name; it.summary = summ[0] ? summ : NULL; it.body = bj; it.lang = "de";
       it.record_type = "de-locality"; it.properties_json = pj; it.tags_json = "[\"osint-search\",\"DE_POSTAL\"]";
       if (sink->emit(sink, &it) >= 0) { n++; page_n++; }
-      free(bj); free(bt); free(pj);
+      free(bj); free(pj);
     }
     cJSON_Delete(root);
     if (page_n == 0) break;          /* upstream exhausted */
@@ -105,13 +104,12 @@ static int run_nl_address(const source_ctx *ctx, intel_sink *sink, const char *e
       cJSON *p = cJSON_CreateObject();
       cJSON_AddStringToObject(p, "service", "NL_ADDRESS"); cJSON_AddBoolToObject(p, "success", 1);
       jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
-      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
-      it.remote_key = id ? id : naam; it.title = naam; it.summary = type; it.body = bt ? bt : bj; it.lang = "nl";
+      intel_item it = {0};
+      it.remote_key = id ? id : naam; it.title = naam; it.summary = type; it.body = bj; it.lang = "nl";
       it.has_geo = hg; it.lat = lat; it.lon = lon;
       it.record_type = "nl-address"; it.properties_json = pj; it.tags_json = "[\"osint-search\",\"NL_ADDRESS\"]";
       if (sink->emit(sink, &it) >= 0) n++;
-      free(bj); free(bt); free(pj);
+      free(bj); free(pj);
     }
   }
   cJSON_Delete(root);
@@ -147,13 +145,12 @@ static int run_ca_parliament(const source_ctx *ctx, intel_sink *sink, const char
       jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
       char link[256] = {0};
       if (urlf) snprintf(link, sizeof link, "https://openparliament.ca%s", urlf);
-      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+      intel_item it = {0};
       it.remote_key = urlf ? urlf : name; it.title = name; it.summary = party;
-      it.body = bt ? bt : bj; it.link = link[0] ? link : NULL; it.lang = "en";
+      it.body = bj; it.link = link[0] ? link : NULL; it.lang = "en";
       it.record_type = "ca-politician"; it.properties_json = pj; it.tags_json = "[\"osint-search\",\"CA_PARLIAMENT\"]";
       if (sink->emit(sink, &it) >= 0) n++;
-      free(bj); free(bt); free(pj);
+      free(bj); free(pj);
     }
   }
   cJSON_Delete(root);

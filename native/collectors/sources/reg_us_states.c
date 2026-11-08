@@ -214,19 +214,18 @@ static int emit_ny_socrata(const source_ctx *ctx, intel_sink *sink,
     jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
     cJSON_Delete(props);
 
-    char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+    intel_item it = {0};
     it.remote_key      = dosid ? dosid : name;
     it.title           = name;
     it.summary         = county;
-    it.body = bt ? bt : bj;
+    it.body = bj;
     it.lang            = "en";
     it.published_at    = ist;
     it.record_type     = "us-company";
     it.properties_json = pj;
     it.tags_json       = "[\"osint-search\",\"US_STATES_SOS\"]";
     if (sink->emit(sink, &it) >= 0) emitted++;
-    free(bj); free(bt); free(pj);
+    free(bj); free(pj);
   }
   cJSON_Delete(root);
   fprintf(stderr, "[us_states_sos.NY] socrata emitted %d\n", emitted);

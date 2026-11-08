@@ -73,11 +73,10 @@ static int emit_snapshot(intel_sink *sink, const cJSON *row) {
   snprintf(title, sizeof title, "%s — %s", date[0] ? date : ts->valuestring,
            orig->valuestring);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.summary         = orig->valuestring;
   it.link            = playback;
   it.published_at    = date[0] ? date : NULL;
@@ -86,7 +85,7 @@ static int emit_snapshot(intel_sink *sink, const cJSON *row) {
   it.tags_json       = "[\"osint-search\",\"WAYBACK_MACHINE\"]";
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 

@@ -56,13 +56,12 @@ static int run_police(const source_ctx *ctx, intel_sink *sink, const char *raw) 
      * same long street name collide onto one row and silently dedupe each
      * other away. 8 + 199 + NUL = 208. */
     char rk[224]; snprintf(rk, sizeof rk, "ukcrime:%s", pid ? pid : title);
-    char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
-    it.remote_key = rk; it.title = title; it.summary = month; it.body = bt ? bt : bj; it.lang = "en";
+    intel_item it = {0};
+    it.remote_key = rk; it.title = title; it.summary = month; it.body = bj; it.lang = "en";
     it.has_geo = hg; it.lat = clat; it.lon = clon;
     it.record_type = "uk-crime"; it.properties_json = pj; it.tags_json = "[\"osint-search\",\"UK_POLICE_CRIME\"]";
     if (sink->emit(sink, &it) >= 0) n++;
-    free(bj); free(bt); free(pj);
+    free(bj); free(pj);
     /* (cap removed: every record the upstream returned is emitted —
      * docs/SOURCE_EXHAUSTIVENESS.md) */
   }
@@ -99,12 +98,11 @@ static int run_postcode(const source_ctx *ctx, intel_sink *sink, const char *enc
   char *bj = cJSON_PrintUnformatted(d); cJSON_Delete(d);
   cJSON_AddStringToObject(p, "service", "UK_POSTCODES"); cJSON_AddBoolToObject(p, "success", 1);
   jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
-  it.remote_key = pc; it.title = pc; it.summary = summ[0] ? summ : NULL; it.body = bt ? bt : bj; it.lang = "en";
+  it.remote_key = pc; it.title = pc; it.summary = summ[0] ? summ : NULL; it.body = bj; it.lang = "en";
   it.has_geo = hg; it.lat = hg ? lat->valuedouble : 0; it.lon = hg ? lon->valuedouble : 0;
   it.record_type = "uk-postcode"; it.properties_json = pj; it.tags_json = "[\"osint-search\",\"UK_POSTCODES\"]";
-  int rc = sink->emit(sink, &it); free(bj); free(bt); free(pj); cJSON_Delete(root);
+  int rc = sink->emit(sink, &it); free(bj); free(pj); cJSON_Delete(root);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -138,12 +136,11 @@ static int run_fsa(const source_ctx *ctx, intel_sink *sink, const char *enc) {
       cJSON_AddStringToObject(p, "service", "UK_FSA_RATINGS"); cJSON_AddBoolToObject(p, "success", 1);
       jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
       char title[220]; snprintf(title, sizeof title, "%s — rating %s", name, rating ? rating : "?");
-      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
-      it.remote_key = fhrsid ? fhrsid : name; it.title = title; it.summary = pc; it.body = bt ? bt : bj; it.lang = "en";
+      intel_item it = {0};
+      it.remote_key = fhrsid ? fhrsid : name; it.title = title; it.summary = pc; it.body = bj; it.lang = "en";
       it.record_type = "uk-food-rating"; it.properties_json = pj; it.tags_json = "[\"osint-search\",\"UK_FSA_RATINGS\"]";
       if (sink->emit(sink, &it) >= 0) n++;
-      free(bj); free(bt); free(pj);
+      free(bj); free(pj);
     }
   }
   cJSON_Delete(root);

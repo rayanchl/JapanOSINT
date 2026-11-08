@@ -83,19 +83,18 @@ static int pp_emit_org(intel_sink *sink, const cJSON *o) {
   if (ein) snprintf(link, sizeof link,
     "https://projects.propublica.org/nonprofits/organizations/%s", ein);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = use_ein ? use_ein : name;
   it.title           = name ? name : use_ein;
   it.summary         = loc[0] ? loc : NULL;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.link            = link[0] ? link : NULL;
   it.record_type     = "nonprofit-org";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"PROPUBLICA_NONPROFIT\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj); free(ein); free(subsec);
+  free(bj); free(pj); free(ein); free(subsec);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -177,19 +176,18 @@ static int uk_emit_charity(intel_sink *sink, const cJSON *c) {
     "https://register-of-charities.charitycommission.gov.uk/charity-search/-/charity-details/%s",
     regno);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = regno ? regno : name;
   it.title           = name ? name : regno;
   it.summary         = town;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.link            = link[0] ? link : (web ? web : NULL);
   it.record_type     = "nonprofit-org";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"UK_CHARITIES\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj); free(regno);
+  free(bj); free(pj); free(regno);
   return rc >= 0 ? 1 : 0;
 }
 

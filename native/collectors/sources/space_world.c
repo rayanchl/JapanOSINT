@@ -100,12 +100,11 @@ static int sp_celestrak(const source_ctx *ctx, intel_sink *sink, const char *q, 
     if (norad) snprintf(link, sizeof link,
       "https://celestrak.org/satcat/table-satcat.php?CATNR=%s", norad);
 
-    char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+    intel_item it = {0};
     it.remote_key      = norad ? norad : (desig ? desig : name);
     it.title           = name ? name : (norad ? norad : desig);
     it.summary         = desig;
-    it.body = bt ? bt : bj;
+    it.body = bj;
     it.lang            = "en";
     it.published_at    = epoch;
     it.link            = link[0] ? link : NULL;
@@ -113,7 +112,7 @@ static int sp_celestrak(const source_ctx *ctx, intel_sink *sink, const char *q, 
     it.properties_json = pj;
     it.tags_json       = "[\"osint-search\",\"satellite\",\"CELESTRAK\"]";
     if (sink->emit(sink, &it) >= 0) emitted++;
-    free(bj); free(bt); free(pj); free(norad); free(incl); free(ecc); free(mm);
+    free(bj); free(pj); free(norad); free(incl); free(ecc); free(mm);
   }
   cJSON_Delete(root);
   fprintf(stderr, "[CELESTRAK_TLE] emitted %d\n", emitted);
@@ -175,19 +174,18 @@ static int sp_satnogs(const source_ctx *ctx, intel_sink *sink, const char *q, in
     if (satid) snprintf(link, sizeof link,
       "https://db.satnogs.org/satellite/%s", satid);
 
-    char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+    intel_item it = {0};
     it.remote_key      = satid ? satid : (norad ? norad : name);
     it.title           = name ? name : (satid ? satid : norad);
     it.summary         = status;
-    it.body = bt ? bt : bj;
+    it.body = bj;
     it.lang            = "en";
     it.link            = link[0] ? link : (image ? image : NULL);
     it.record_type     = "satellite-catalog";
     it.properties_json = pj;
     it.tags_json       = "[\"osint-search\",\"satellite\",\"SATNOGS\"]";
     if (sink->emit(sink, &it) >= 0) emitted++;
-    free(bj); free(bt); free(pj); free(norad);
+    free(bj); free(pj); free(norad);
   }
   cJSON_Delete(root);
   fprintf(stderr, "[SATNOGS] emitted %d\n", emitted);
@@ -281,12 +279,11 @@ static int sp_spacetrack(const source_ctx *ctx, intel_sink *sink, const char *q,
     if (norad) snprintf(link, sizeof link,
       "https://www.space-track.org/#/catalog/%s", norad);
 
-    char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+    intel_item it = {0};
     it.remote_key      = norad ? norad : name;
     it.title           = name ? name : norad;
     it.summary         = desig;
-    it.body = bt ? bt : bj;
+    it.body = bj;
     it.lang            = "en";
     it.published_at    = launch;
     it.link            = link[0] ? link : NULL;
@@ -294,7 +291,7 @@ static int sp_spacetrack(const source_ctx *ctx, intel_sink *sink, const char *q,
     it.properties_json = pj;
     it.tags_json       = "[\"osint-search\",\"satellite\",\"SPACETRACK\"]";
     if (sink->emit(sink, &it) >= 0) emitted++;
-    free(bj); free(bt); free(pj);
+    free(bj); free(pj);
   }
   cJSON_Delete(root);
   fprintf(stderr, "[SPACETRACK] emitted %d\n", emitted);
@@ -353,18 +350,17 @@ static int sp_n2yo(const source_ctx *ctx, intel_sink *sink, const char *q, int m
     char link[256];
     snprintf(link, sizeof link, "https://www.n2yo.com/satellite/?s=%s", q);
 
-    char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+    intel_item it = {0};
     it.remote_key      = satid ? satid : q;
     it.title           = name ? name : q;
-    it.body = bt ? bt : bj;
+    it.body = bj;
     it.lang            = "en";
     it.link            = link;
     it.record_type     = "satellite-tle";
     it.properties_json = pj;
     it.tags_json       = "[\"osint-search\",\"satellite\",\"N2YO\"]";
     if (sink->emit(sink, &it) >= 0) emitted++;
-    free(bj); free(bt); free(pj);
+    free(bj); free(pj);
   }
   free(satid);
   cJSON_Delete(root);

@@ -93,12 +93,11 @@ static int nhtsa_vin(const source_ctx *ctx, intel_sink *sink, const char *vin) {
   cJSON_AddBoolToObject(props, "success", 1);
   jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = vin;
   it.title           = title;
   it.summary         = make ? make : NULL;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.link            = "https://vpic.nhtsa.dot.gov/decoder/";
   it.record_type     = "nhtsa-vin";
@@ -107,7 +106,7 @@ static int nhtsa_vin(const source_ctx *ctx, intel_sink *sink, const char *vin) {
   int emitted = (sink->emit(sink, &it) >= 0) ? 1 : 0;
 
   cJSON_Delete(data); cJSON_Delete(props); cJSON_Delete(root);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   fprintf(stderr, "[NHTSA_VIN] emitted %d\n", emitted);
   return emitted;
 }

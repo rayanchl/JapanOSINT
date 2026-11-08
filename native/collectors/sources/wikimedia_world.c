@@ -92,19 +92,18 @@ static int wd_emit_binding(intel_sink *sink, const cJSON *b, const char *qid) {
   snprintf(title, sizeof title, "%s: %s",
            plab ? plab : "related", vlab ? vlab : (vuri ? vuri : "?"));
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = vuri ? vuri : title;
   it.title           = title;
   it.summary         = plab;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.link            = vuri;
   it.record_type     = "wikidata-relationship";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"WIKIDATA_SPARQL\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -208,19 +207,18 @@ static int dbp_emit_doc(intel_sink *sink, const cJSON *doc) {
   jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = uri ? uri : lab;
   it.title           = lab[0] ? lab : uri;
   it.summary         = dsc[0] ? dsc : NULL;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.link            = uri;
   it.record_type     = "dbpedia-resource";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"DBPEDIA\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -303,11 +301,10 @@ static int wc_emit_page(intel_sink *sink, const cJSON *pg, int has_geo,
   jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = link;
   it.title           = title;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.link            = link;
   it.has_geo         = has_geo;
@@ -317,7 +314,7 @@ static int wc_emit_page(intel_sink *sink, const cJSON *pg, int has_geo,
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"WIKIMEDIA_COMMONS\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 

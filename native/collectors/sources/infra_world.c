@@ -230,12 +230,11 @@ static int iw_ipapi(const source_ctx *ctx, intel_sink *sink, const char *ip) {
   cJSON_AddBoolToObject(props, "success", 1);
   jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = key;
   it.title           = q;
   it.summary         = summary;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.record_type     = "infra-ip-geo";
   it.properties_json = pj;
@@ -244,7 +243,7 @@ static int iw_ipapi(const source_ctx *ctx, intel_sink *sink, const char *ip) {
     it.has_geo = 1; it.lat = jlat->valuedouble; it.lon = jlon->valuedouble;
   }
   int em = sink->emit(sink, &it) >= 0 ? 1 : 0;
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   cJSON_Delete(data); cJSON_Delete(props);
   cJSON_Delete(root);
   fprintf(stderr, "[IPAPI_GLOBAL] emitted %d\n", em);

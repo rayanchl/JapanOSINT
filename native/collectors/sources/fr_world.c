@@ -51,13 +51,12 @@ static int run_ban(const source_ctx *ctx, intel_sink *sink, const char *enc) {
       cJSON_AddStringToObject(p, "service", "FR_ADDRESS_BAN"); cJSON_AddBoolToObject(p, "success", 1);
       jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
       char rk[96]; snprintf(rk, sizeof rk, "ban:%.6f,%.6f", lat, lon);
-      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
-      it.remote_key = rk; it.title = label; it.summary = pc; it.body = bt ? bt : bj; it.lang = "fr";
+      intel_item it = {0};
+      it.remote_key = rk; it.title = label; it.summary = pc; it.body = bj; it.lang = "fr";
       it.has_geo = 1; it.lat = lat; it.lon = lon;
       it.record_type = "fr-address"; it.properties_json = pj; it.tags_json = "[\"osint-search\",\"FR_ADDRESS_BAN\"]";
       if (sink->emit(sink, &it) >= 0) n++;
-      free(bj); free(bt); free(pj);
+      free(bj); free(pj);
     }
   }
   cJSON_Delete(root);
@@ -96,14 +95,13 @@ static int run_bodacc(const source_ctx *ctx, intel_sink *sink, const char *enc) 
       cJSON_AddStringToObject(p, "service", "FR_BODACC"); cJSON_AddBoolToObject(p, "success", 1);
       jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
       char summ[200]; snprintf(summ, sizeof summ, "%s%s%s", famille ? famille : "", ville ? " · " : "", ville ? ville : "");
-      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+      intel_item it = {0};
       it.remote_key = id ? id : (commercant ? commercant : registre);
       it.title = commercant ? commercant : "BODACC annonce"; it.summary = summ[0] ? summ : NULL;
-      it.body = bt ? bt : bj; it.lang = "fr"; it.published_at = date;
+      it.body = bj; it.lang = "fr"; it.published_at = date;
       it.record_type = "fr-bodacc-annonce"; it.properties_json = pj; it.tags_json = "[\"osint-search\",\"FR_BODACC\"]";
       if (sink->emit(sink, &it) >= 0) n++;
-      free(bj); free(bt); free(pj);
+      free(bj); free(pj);
     }
   }
   cJSON_Delete(root);
@@ -137,13 +135,12 @@ static int run_datagouv(const source_ctx *ctx, intel_sink *sink, const char *enc
       cJSON *p = cJSON_CreateObject();
       cJSON_AddStringToObject(p, "service", "FR_DATAGOUV"); cJSON_AddBoolToObject(p, "success", 1);
       jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
-      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+      intel_item it = {0};
       it.remote_key = id ? id : title; it.title = title; it.summary = orgn;
-      it.body = bt ? bt : bj; it.link = page; it.lang = "fr";
+      it.body = bj; it.link = page; it.lang = "fr";
       it.record_type = "fr-dataset"; it.properties_json = pj; it.tags_json = "[\"osint-search\",\"FR_DATAGOUV\"]";
       if (sink->emit(sink, &it) >= 0) n++;
-      free(bj); free(bt); free(pj);
+      free(bj); free(pj);
     }
   }
   cJSON_Delete(root);

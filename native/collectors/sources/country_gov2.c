@@ -53,13 +53,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       if (idn && cJSON_IsNumber(idn)) { snprintf(rk, sizeof rk, "ukmp:%.0f", idn->valuedouble); snprintf(link, sizeof link, "https://members.parliament.uk/member/%.0f", idn->valuedouble); }
       else snprintf(rk, sizeof rk, "ukmp:%s", name);
       char summ[160]; snprintf(summ, sizeof summ, "%s%s%s", pn ? pn : "", from ? " · " : "", from ? from : "");
-      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+      intel_item it = {0};
       it.remote_key = rk; it.title = name; it.summary = summ[0] ? summ : NULL;
-      it.body = bt ? bt : bj; it.link = link[0] ? link : NULL; it.lang = "en";
+      it.body = bj; it.link = link[0] ? link : NULL; it.lang = "en";
       it.record_type = "uk-mp"; it.properties_json = pj; it.tags_json = "[\"osint-search\",\"UK_PARLIAMENT\"]";
       if (sink->emit(sink, &it) >= 0) n++;
-      free(bj); free(bt); free(pj);
+      free(bj); free(pj);
     }
   }
   cJSON_Delete(root);

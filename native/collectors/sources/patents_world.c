@@ -55,11 +55,10 @@ static int pv_emit(intel_sink *sink, const cJSON *p) {
   jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = id ? id : title;
   it.title           = title ? title : id;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.published_at    = date;
   it.link            = id ? link : NULL;
@@ -67,7 +66,7 @@ static int pv_emit(intel_sink *sink, const cJSON *p) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"PATENTSVIEW\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -187,11 +186,10 @@ static int lens_emit(intel_sink *sink, const cJSON *p) {
   jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = lens_id ? lens_id : title;
   it.title           = title ? title : lens_id;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.published_at    = date;
   it.link            = lens_id ? link : NULL;
@@ -199,7 +197,7 @@ static int lens_emit(intel_sink *sink, const cJSON *p) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"LENS_PATENTS\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 

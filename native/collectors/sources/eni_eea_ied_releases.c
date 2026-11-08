@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lib/pagewalk.h"   /* jo_page_max_for */
 
 #define SRC "eea-ied-pollutant-release"
 
@@ -179,8 +180,11 @@ static int collect_page(const source_ctx *ctx, intel_sink *sink, int page,
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   int max_pages = EEA_MAX_PAGES;
-  const char *penv = getenv("JO_EEA_IED_PAGES");
-  if (penv && *penv) { int v = atoi(penv); if (v > 0) max_pages = v; }
+  /* The operator's brake: $JO_PAGE_MAX reaches this ceiling in both directions
+   * (jo_page_max_for, lib/pagewalk.h). The private variable that used to sit
+   * here (JO_EEA_IED_PAGES) ignored it — dropped 2026-11-07, since jo_page_max_for takes no
+   * legacy name beside a declared default. */
+  max_pages = jo_page_max_for(max_pages);
 
   int n = 0, pages = 0, more_pending = 0;
   long rows_seen = 0;
@@ -208,7 +212,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     jo_trunc_notice(sink, SRC, URL, n, -1,
                     "the page-walk ceiling stopped the run while DiscoData was "
                     "still returning full pages of the IED join",
-                    "raise $JO_EEA_IED_PAGES");
+                    "raise $JO_PAGE_MAX");
   return 0;
 }
 

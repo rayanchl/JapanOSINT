@@ -1126,7 +1126,11 @@ static const hp_source HP3B19_FINANCE[] = {
     .record_type = "derivatives-position",
     .tags = "\"us\",\"derivatives\",\"commodities\",\"cftc\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://publicreporting.cftc.gov/resource/kh3c-gbw2.json?$limit=500&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on publicreporting.cftc.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://publicreporting.cftc.gov/resource/kh3c-gbw2.json?$limit=500&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .interval = 21600,
     .page_param = "$offset",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -1146,7 +1150,11 @@ static const hp_source HP3B19_FINANCE[] = {
     .record_type = "derivatives-position",
     .tags = "\"us\",\"derivatives\",\"financial\",\"cftc\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://publicreporting.cftc.gov/resource/gpe5-46if.json?$limit=500&$order=:id",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on publicreporting.cftc.gov: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://publicreporting.cftc.gov/resource/gpe5-46if.json?$limit=500&$order=:id&$select=*,:id",
+    .id_keys = ":id",
     .interval = 21600,
     .page_param = "$offset",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */

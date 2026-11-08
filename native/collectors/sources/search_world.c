@@ -28,12 +28,11 @@ static int emit_result(intel_sink *sink, const char *service, const char *title,
   cJSON_AddStringToObject(p, "service", service); cJSON_AddBoolToObject(p, "success", 1);
   jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
   char tags[96]; snprintf(tags, sizeof tags, "[\"osint-search\",\"%s\"]", service);
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key = link ? link : title; it.title = title ? title : link;
-  it.summary = snippet; it.body = bt ? bt : bj; it.link = link; it.lang = "en";
+  it.summary = snippet; it.body = bj; it.link = link; it.lang = "en";
   it.record_type = "web-result"; it.properties_json = pj; it.tags_json = tags;
-  int rc = sink->emit(sink, &it); free(bj); free(bt); free(pj);
+  int rc = sink->emit(sink, &it); free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 

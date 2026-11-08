@@ -52,11 +52,10 @@ static int emit_breach(intel_sink *sink, const char *account, cJSON *b) {
            (title_j && cJSON_IsString(title_j)) ? title_j->valuestring : nm->valuestring,
            account);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.summary         = (dom && cJSON_IsString(dom)) ? dom->valuestring : nm->valuestring;
   it.published_at    = (bd && cJSON_IsString(bd)) ? bd->valuestring : NULL;
   it.record_type     = "osint_service_result";
@@ -64,7 +63,7 @@ static int emit_breach(intel_sink *sink, const char *account, cJSON *b) {
   it.tags_json       = "[\"osint-search\",\"BREACH_CHECKER\"]";
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   cJSON_Delete(body); cJSON_Delete(props);
   return rc >= 0 ? 1 : 0;
 }

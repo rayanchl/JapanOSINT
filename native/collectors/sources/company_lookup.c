@@ -17,6 +17,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "lib/jocore.h"   /* jo_props_absorb */
 
 /* Emit one intel row for a single OpenCorporates company object. Returns 1 if
  * emitted. */
@@ -61,11 +62,10 @@ static int emit_company(intel_sink *sink, const cJSON *c) {
   snprintf(rk, sizeof rk, "company:%s:%s",
            jur ? jur : "?", num ? num : (name ? name : "?"));
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = name ? name : "company";
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.summary         = name ? name : "company";
   it.link            = (url && cJSON_IsString(url)) ? url->valuestring : NULL;
   it.record_type     = "osint_service_result";
@@ -73,7 +73,7 @@ static int emit_company(intel_sink *sink, const cJSON *c) {
   it.tags_json       = "[\"osint-search\",\"COMPANY_LOOKUP\"]";
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 

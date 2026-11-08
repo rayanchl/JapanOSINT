@@ -71,18 +71,17 @@ static int wmn_emit(intel_sink *sink, const char *username, const char *site,
   char summary[512];
   snprintf(summary, sizeof summary, "%s on %s", username, site);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
   it.summary         = summary;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.link            = url;
   it.record_type     = "osint_service_result";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"WHATSMYNAME\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 

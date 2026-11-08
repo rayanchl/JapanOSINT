@@ -330,12 +330,11 @@ static int mw_google_books(const source_ctx *ctx, intel_sink *sink, const char *
       jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
       cJSON_Delete(props);
 
-      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+      intel_item it = {0};
       it.remote_key      = id ? id : title;
       it.title           = title;
       it.summary         = authors[0] ? authors : desc;
-      it.body = bt ? bt : bj;
+      it.body = bj;
       it.author          = authors[0] ? authors : NULL;
       it.link            = link;
       it.published_at    = pub;
@@ -344,7 +343,7 @@ static int mw_google_books(const source_ctx *ctx, intel_sink *sink, const char *
       it.properties_json = pj;
       it.tags_json       = "[\"osint-search\",\"GOOGLE_BOOKS\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(bt); free(pj);
+      free(bj); free(pj);
     }
   }
   cJSON_Delete(root);

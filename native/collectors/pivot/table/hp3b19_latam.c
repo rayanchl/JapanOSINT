@@ -732,7 +732,10 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "mining-licence",
     .tags = "\"colombia\",\"mining\",\"anm\",\"licence\",\"register\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.datos.gov.co/resource/42ha-fhvj.json?%24limit=1000",
+    /* 2026-11-07: `$order=:id`: a paged walk with no order. Measured on www.datos.gov.co: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://www.datos.gov.co/resource/42ha-fhvj.json?%24limit=1000&%24order=%3Aid",
     .interval = 86400,
     .page_param = "%24offset",
     .page_size = 1000,
@@ -795,7 +798,11 @@ static const hp_source HP3B19_LATAM[] = {
      * accepted percent-encoded, stable over two reads, offsets 0 and 3 share
      * no row, and DESC answers a different set — so the parameter is honoured
      * rather than silently ignored, which is what rule 4d says to check. */
-    .url = "https://www.datos.gov.co/resource/r85m-vv6c.json?%24limit=1000&%24order=%3Aid",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on www.datos.gov.co: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://www.datos.gov.co/resource/r85m-vv6c.json?%24limit=1000&%24order=%3Aid&%24select=*,:id",
+    .id_keys = ":id",
     .interval = 21600,
     .page_param = "%24offset",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -840,7 +847,11 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "sanction-record",
     .tags = "\"colombia\",\"procurement\",\"sanction\",\"secop\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.datos.gov.co/resource/it5q-hg94.json?%24limit=1000",
+    /* 2026-11-07: `$order=:id`: a paged walk with no order; `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on www.datos.gov.co: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://www.datos.gov.co/resource/it5q-hg94.json?%24limit=1000&%24select=*,:id&%24order=%3Aid",
+    .id_keys = ":id",
     .interval = 3600,
     .page_param = "%24offset",
     .page_size = 1000,
@@ -932,7 +943,10 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "enforcement-action",
     .tags = "\"colombia\",\"invima\",\"enforcement\",\"health\",\"sanction\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.datos.gov.co/resource/rq4n-pzga.json?%24limit=1000",
+    /* 2026-11-07: `$order=:id`: a paged walk with no order. Measured on www.datos.gov.co: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://www.datos.gov.co/resource/rq4n-pzga.json?%24limit=1000&%24order=%3Aid",
     .id_keys = "numero_proceso",
     .interval = 3600,
     .page_param = "%24offset",
@@ -951,7 +965,11 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "sanction-record",
     .tags = "\"colombia\",\"accountant\",\"sanction\",\"professional\",\"register\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.datos.gov.co/resource/fs36-azrv.json?%24limit=1000",
+    /* 2026-11-07: `$order=:id`: a paged walk with no order; `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on www.datos.gov.co: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://www.datos.gov.co/resource/fs36-azrv.json?%24limit=1000&%24select=*,:id&%24order=%3Aid",
+    .id_keys = ":id",
     .interval = 3600,
     .page_param = "%24offset",
     .page_size = 1000,
@@ -970,7 +988,11 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "licence-record",
     .tags = "\"colombia\",\"cannabis\",\"licence\",\"minjusticia\",\"regulation\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.datos.gov.co/resource/9m2f-pdxx.json?%24limit=1000",
+    /* 2026-11-07: `$order=:id`: a paged walk with no order; `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on www.datos.gov.co: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://www.datos.gov.co/resource/9m2f-pdxx.json?%24limit=1000&%24select=*,:id&%24order=%3Aid",
+    .id_keys = ":id",
     .interval = 21600,
     .page_param = "%24offset",
     .page_size = 1000,
@@ -995,7 +1017,11 @@ static const hp_source HP3B19_LATAM[] = {
      * accepted percent-encoded, stable over two reads, offsets 0 and 3 share
      * no row, and DESC answers a different set — so the parameter is honoured
      * rather than silently ignored, which is what rule 4d says to check. */
-    .url = "https://www.datos.gov.co/resource/8hqm-7fdt.json?%24limit=1000&%24order=%3Aid",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on www.datos.gov.co: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://www.datos.gov.co/resource/8hqm-7fdt.json?%24limit=1000&%24order=%3Aid&%24select=*,:id",
+    .id_keys = ":id",
     .interval = 86400,
     .page_param = "%24offset",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -1048,7 +1074,11 @@ static const hp_source HP3B19_LATAM[] = {
      * accepted percent-encoded, stable over two reads, offsets 0 and 3 share
      * no row, and DESC answers a different set — so the parameter is honoured
      * rather than silently ignored, which is what rule 4d says to check. */
-    .url = "https://www.datos.gov.co/resource/my8c-6xkk.json?%24limit=1000&%24order=%3Aid",
+    /* 2026-11-07: `id_keys = ":id"` + `$select=*,:id`: no id_keys was declared, so a record keyed on a fallback field or its title and could collapse across pages; Socrata serves its row id only when asked (CLAUDE.md, TCEQ). Measured on www.datos.gov.co: $order=frobnicate is HTTP 400,
+     * :id ascending and descending answer different pages, every row
+     * carries a distinct :id, and $offset pages are disjoint. */
+    .url = "https://www.datos.gov.co/resource/my8c-6xkk.json?%24limit=1000&%24order=%3Aid&%24select=*,:id",
+    .id_keys = ":id",
     .interval = 86400,
     .page_param = "%24offset",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */

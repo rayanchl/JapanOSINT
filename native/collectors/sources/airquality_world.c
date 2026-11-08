@@ -97,12 +97,11 @@ static int aq_emit_openaq_v3(intel_sink *sink, const cJSON *loc) {
   if (idn && cJSON_IsNumber(idn)) snprintf(key, sizeof key, "openaq|loc|%.0f", idn->valuedouble);
   else snprintf(key, sizeof key, "openaq|loc|%.200s", name);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = key;
   it.title           = name ? name : "OpenAQ location";
   it.summary         = cc;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.has_geo         = hasgeo;
   it.lat = lat; it.lon = lon;
@@ -110,7 +109,7 @@ static int aq_emit_openaq_v3(intel_sink *sink, const cJSON *loc) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"air-quality\",\"OpenAQ\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -157,12 +156,11 @@ static int aq_emit_openaq_v2(intel_sink *sink, const cJSON *m, int idx) {
   snprintf(key, sizeof key, "openaq|m|%s|%.150s|%s", param, locn ? locn : city ? city : "", utc ? utc : "");
   (void)idx;
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = key;
   it.title           = title;
   it.summary         = city ? city : ctry;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.published_at    = utc;
   it.has_geo         = hasgeo;
@@ -171,7 +169,7 @@ static int aq_emit_openaq_v2(intel_sink *sink, const cJSON *m, int idx) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"air-quality\",\"OpenAQ\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -332,12 +330,11 @@ static int run_waqi(const source_ctx *ctx, intel_sink *sink) {
   if (idxo && cJSON_IsNumber(idxo)) snprintf(key, sizeof key, "waqi|%.0f", idxo->valuedouble);
   else snprintf(key, sizeof key, "waqi|%.200s", cname ? cname : station);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = key;
   it.title           = title;
   it.summary         = domin;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.published_at    = iso;
   it.link            = curl;
@@ -347,7 +344,7 @@ static int run_waqi(const source_ctx *ctx, intel_sink *sink) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"air-quality\",\"WAQI\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   cJSON_Delete(root);
   fprintf(stderr, "[WAQI_GLOBAL] emitted %d\n", rc >= 0 ? 1 : 0);
   return 0;
@@ -428,12 +425,11 @@ static int run_openmeteo(const source_ctx *ctx, intel_sink *sink) {
   char key[128];
   snprintf(key, sizeof key, "openmeteo-aq|%.4f,%.4f|%s", rlat, rlon, ctime ? ctime : "");
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = key;
   it.title           = title;
   it.summary         = NULL;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.published_at    = ctime;
   it.has_geo         = 1;
@@ -442,7 +438,7 @@ static int run_openmeteo(const source_ctx *ctx, intel_sink *sink) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"air-quality\",\"Open-Meteo\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   cJSON_Delete(root);
   fprintf(stderr, "[OPENMETEO_AQ] emitted %d\n", rc >= 0 ? 1 : 0);
   return 0;

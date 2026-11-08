@@ -64,14 +64,13 @@ static int run_wikipedia(const source_ctx *ctx, intel_sink *sink, const char *en
       jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
       char link[512]; { char *e = jo_urlencode(title);
         snprintf(link, sizeof link, "https://en.wikipedia.org/wiki/%s", e ? e : ""); free(e); }
-      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+      intel_item it = {0};
       it.remote_key = title; it.title = title; it.summary = snippet;
-      it.body = bt ? bt : bj; it.link = link; it.lang = "en";
+      it.body = bj; it.link = link; it.lang = "en";
       it.record_type = "wikipedia-article";
       it.properties_json = pj; it.tags_json = "[\"osint-search\",\"WIKIPEDIA_SEARCH\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(bt); free(pj); free(snippet);
+      free(bj); free(pj); free(snippet);
     }
   }
   cJSON_Delete(root);
@@ -115,15 +114,14 @@ static int run_hackernews(const source_ctx *ctx, intel_sink *sink, const char *e
       char link[256];
       if (oid) snprintf(link, sizeof link, "https://news.ycombinator.com/item?id=%s", oid);
       else snprintf(link, sizeof link, "%s", urlf ? urlf : "");
-      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+      intel_item it = {0};
       it.remote_key = oid ? oid : ttl; it.title = ttl ? ttl : oid;
-      it.summary = author; it.body = bt ? bt : bj; it.author = author;
+      it.summary = author; it.body = bj; it.author = author;
       it.link = link[0] ? link : NULL; it.lang = "en"; it.published_at = created;
       it.record_type = "hackernews-item";
       it.properties_json = pj; it.tags_json = "[\"osint-search\",\"HACKERNEWS_SEARCH\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(bt); free(pj);
+      free(bj); free(pj);
     }
   }
   cJSON_Delete(root);
@@ -169,15 +167,14 @@ static int run_pullpush(const source_ctx *ctx, intel_sink *sink, const char *enc
       else if (perm) snprintf(link, sizeof link, "https://www.reddit.com%s", perm);
       else link[0] = 0;
       char summ[128]; snprintf(summ, sizeof summ, "r/%s · u/%s", sub ? sub : "?", author ? author : "?");
-      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+      intel_item it = {0};
       it.remote_key = id ? id : title; it.title = title ? title : id;
-      it.summary = summ; it.body = bt ? bt : bj; it.author = author;
+      it.summary = summ; it.body = bj; it.author = author;
       it.link = link[0] ? link : NULL; it.lang = "en";
       it.record_type = "reddit-submission";
       it.properties_json = pj; it.tags_json = "[\"osint-search\",\"REDDIT_PULLPUSH\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(bt); free(pj);
+      free(bj); free(pj);
     }
   }
   cJSON_Delete(root);
@@ -214,13 +211,12 @@ static int run_core(const source_ctx *ctx, intel_sink *sink, const char *enc) {
       cJSON_AddStringToObject(p, "service", "CORE_SEARCH");
       cJSON_AddBoolToObject(p, "success", 1);
       jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
-      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
-      it.remote_key = doi ? doi : title; it.title = title; it.body = bt ? bt : bj;
+      intel_item it = {0};
+      it.remote_key = doi ? doi : title; it.title = title; it.body = bj;
       it.link = dl; it.lang = "en"; it.record_type = "core-work";
       it.properties_json = pj; it.tags_json = "[\"osint-search\",\"CORE_SEARCH\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(bt); free(pj);
+      free(bj); free(pj);
     }
   }
   cJSON_Delete(root);

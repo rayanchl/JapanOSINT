@@ -40,6 +40,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lib/pagewalk.h"   /* jo_page_max_for */
 
 #define SRC "luchtmeetnet-nl"
 #define MAXST 128
@@ -192,8 +193,11 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (env && *env) { int b = atoi(env); if (b > 0 && b <= MAXST) budget = b; }
 
   int max_pages = LM_MAX_PAGES;
-  const char *penv = getenv("JO_LUCHTMEETNET_PAGES");
-  if (penv && *penv) { int v = atoi(penv); if (v > 0) max_pages = v; }
+  /* The operator's brake: $JO_PAGE_MAX reaches this ceiling in both directions
+   * (jo_page_max_for, lib/pagewalk.h). The private variable that used to sit
+   * here (JO_LUCHTMEETNET_PAGES) ignored it — dropped 2026-11-07, since jo_page_max_for takes no
+   * legacy name beside a declared default. */
+  max_pages = jo_page_max_for(max_pages);
 
   /* Pin the window explicitly, so `page` survives the 302 (see the header
    * note), and keep it to the run cadence so the walk can actually reach the
@@ -248,7 +252,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     jo_trunc_notice(sink, SRC,
                     "https://api.luchtmeetnet.nl/open_api/measurements", n, -1,
                     reason,
-                    "re-run the collector, or raise $JO_LUCHTMEETNET_PAGES");
+                    "re-run the collector, or raise $JO_PAGE_MAX");
   }
   return 0;
 }

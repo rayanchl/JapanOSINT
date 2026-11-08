@@ -80,13 +80,12 @@ static int ps_emit_data(intel_sink *sink, const char *service, const char *sourc
   cJSON_AddBoolToObject(props, "success", 1);
   jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   char tags[96]; snprintf(tags, sizeof tags, "[\"osint-search\",\"%s\"]", service);
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
-  it.remote_key = remote_key; it.title = title; it.summary = summary; it.body = bt ? bt : bj;
+  it.remote_key = remote_key; it.title = title; it.summary = summary; it.body = bj;
   it.record_type = "osint_service_result"; it.sub_source_id = source;
   it.properties_json = pj; it.tags_json = tags;
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj); cJSON_Delete(props); cJSON_Delete(data);
+  free(bj); free(pj); cJSON_Delete(props); cJSON_Delete(data);
   return rc >= 0 ? 1 : 0;
 }
 

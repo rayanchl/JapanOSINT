@@ -47,14 +47,13 @@ static int run_hostio(const source_ctx *ctx, intel_sink *sink, const char *enc) 
   cJSON_AddBoolToObject(p, "success", 1);
   jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
   char link[300]; snprintf(link, sizeof link, "https://host.io/%s", domain);
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key = domain; it.title = domain; it.summary = title_w;
-  it.body = bt ? bt : bj; it.link = link; it.lang = "en";
+  it.body = bj; it.link = link; it.lang = "en";
   it.record_type = "domain-profile";
   it.properties_json = pj; it.tags_json = "[\"osint-search\",\"HOST_IO_FULL\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   cJSON_Delete(root);
   return rc >= 0 ? 1 : 0;
 }
@@ -88,14 +87,13 @@ static int run_whoisfreaks(const source_ctx *ctx, intel_sink *sink, const char *
   cJSON_AddStringToObject(p, "domain", dn);
   cJSON_AddBoolToObject(p, "success", 1);
   jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key = dn; it.title = dn; it.summary = registrar;
-  it.body = bt ? bt : bj; it.lang = "en"; it.published_at = created;
+  it.body = bj; it.lang = "en"; it.published_at = created;
   it.record_type = "whois-record";
   it.properties_json = pj; it.tags_json = "[\"osint-search\",\"WHOISFREAKS\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   cJSON_Delete(root);
   return rc >= 0 ? 1 : 0;
 }
@@ -136,15 +134,14 @@ static int run_ipinfo(const source_ctx *ctx, intel_sink *sink, const char *enc) 
   if (loc && strchr(loc, ',')) { lat = atof(loc); lon = atof(strchr(loc, ',') + 1); has_geo = 1; }
   char title[256];
   snprintf(title, sizeof title, "%s%s%s", ip, org ? " · " : "", org ? org : "");
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key = ip; it.title = title; it.summary = org;
-  it.body = bt ? bt : bj; it.lang = "en";
+  it.body = bj; it.lang = "en";
   it.has_geo = has_geo; it.lat = lat; it.lon = lon;
   it.record_type = "ip-geolocation";
   it.properties_json = pj; it.tags_json = "[\"osint-search\",\"IPINFO_LOOKUP\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   cJSON_Delete(root);
   return rc >= 0 ? 1 : 0;
 }

@@ -43,6 +43,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "lib/pagewalk.h"   /* jo_page_max_for */
 
 #define ARCH_URL   "https://security.archlinux.org/json"
 #define ALPINE_URL "https://secdb.alpinelinux.org/v3.21/main.json"
@@ -76,9 +77,11 @@
 #define DISTRO_PAGE_MAX 200   /* exhaustive-ok: page-walk runaway guard; an early stop emits a collector-truncation-notice */
 
 static int distro_page_max(void) {
-  const char *e = getenv("JO_DISTRO_PAGE_MAX");
-  if (e && *e) { int v = atoi(e); if (v > 0) return v; }
-  return DISTRO_PAGE_MAX;
+  /* The operator's brake: $JO_PAGE_MAX reaches this ceiling in both directions
+   * (jo_page_max_for, lib/pagewalk.h). The private variable that used to sit
+   * here (JO_DISTRO_PAGE_MAX) ignored it — dropped 2026-11-07, since jo_page_max_for takes no
+   * legacy name beside a declared default. */
+  return jo_page_max_for(DISTRO_PAGE_MAX);
 }
 
 /* Join an array of strings into "a, b, c" (bounded). */
@@ -435,7 +438,7 @@ static int rocky_run(const source_ctx *c, intel_sink *s) {
     jo_trunc_notice(s, "rockylinux-errata-api", url, n,
                     total > 0 ? (long)total : -1,
                     "the page-walk ceiling stopped the run before the advisory "
-                    "set was exhausted", "raise $JO_DISTRO_PAGE_MAX");
+                    "set was exhausted", "raise $JO_PAGE_MAX");
   return 0;
 }
 
@@ -536,7 +539,7 @@ static int redhat_run(const source_ctx *c, intel_sink *s) {
   if (hit_ceiling)
     jo_trunc_notice(s, "redhat-csaf-advisories", url, n, -1,
                     "the page-walk ceiling stopped the run before the RHSA "
-                    "index was exhausted", "raise $JO_DISTRO_PAGE_MAX");
+                    "index was exhausted", "raise $JO_PAGE_MAX");
   return 0;
 }
 

@@ -103,12 +103,11 @@ static int op_emit(intel_sink *sink, const cJSON *el) {
   if (type && oid) snprintf(keybuf, sizeof keybuf, "%s/%lld", type, oid);
   else             snprintf(keybuf, sizeof keybuf, "%.60s", name);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = keybuf;
   it.title           = name;
   it.summary         = place ? place : (amenity ? amenity : city);
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.link            = osm_url[0] ? osm_url : NULL;
   it.has_geo         = 1;
@@ -118,7 +117,7 @@ static int op_emit(intel_sink *sink, const cJSON *el) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"OVERPASS_GLOBAL\",\"geospatial\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -233,12 +232,11 @@ static int nm_emit(intel_sink *sink, const cJSON *r) {
   if (osmt && osmid) snprintf(keybuf, sizeof keybuf, "%s/%lld", osmt, osmid);
   else               snprintf(keybuf, sizeof keybuf, "%.60s@%.8s,%.8s", disp, slat, slon);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = keybuf;
   it.title           = disp;
   it.summary         = typ ? typ : cls;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.link            = link[0] ? link : NULL;
   it.has_geo         = 1;
@@ -248,7 +246,7 @@ static int nm_emit(intel_sink *sink, const cJSON *r) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"NOMINATIM_GLOBAL\",\"geospatial\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -326,11 +324,10 @@ static int wm_emit(intel_sink *sink, const cJSON *p) {
   if (id) snprintf(keybuf, sizeof keybuf, "wikimapia:%lld", id);
   else    snprintf(keybuf, sizeof keybuf, "%.40s", title);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = keybuf;
   it.title           = title ? title : keybuf;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.link            = url;
   it.has_geo         = have;
@@ -340,7 +337,7 @@ static int wm_emit(intel_sink *sink, const cJSON *p) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"WIKIMAPIA_GLOBAL\",\"geospatial\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 

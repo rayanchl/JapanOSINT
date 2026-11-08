@@ -62,6 +62,7 @@
 #include <string.h>
 #include <time.h>
 #include "_timefmt.inc"
+#include "lib/pagewalk.h"   /* jo_page_max_for */
 
 static const char *const SOC_UA[] = {
   "Accept: application/json", NULL
@@ -234,12 +235,14 @@ REGISTER_SOURCE(soc_nuget_def)
 /* hex.pm serves exactly 100 packages per page and offers no total, so a full
  * page means "ask for the next one" and a short page means it is done. */
 #define HEXPM_PAGE_SIZE 100
-#define HEXPM_PAGE_MAX  20   /* exhaustive-ok: page-walk ceiling; an early stop emits a collector-truncation-notice, and $JO_HEXPM_PAGE_MAX raises it */
+#define HEXPM_PAGE_MAX  20   /* exhaustive-ok: page-walk ceiling; an early stop emits a collector-truncation-notice, and $JO_PAGE_MAX raises it */
 
 static int hexpm_page_max(void) {
-  const char *e = getenv("JO_HEXPM_PAGE_MAX");
-  if (e && *e) { int v = atoi(e); if (v > 0) return v; }
-  return HEXPM_PAGE_MAX;
+  /* The operator's brake: $JO_PAGE_MAX reaches this ceiling in both directions
+   * (jo_page_max_for, lib/pagewalk.h). The private variable that used to sit
+   * here (JO_HEXPM_PAGE_MAX) ignored it — dropped 2026-11-07, since jo_page_max_for takes no
+   * legacy name beside a declared default. */
+  return jo_page_max_for(HEXPM_PAGE_MAX);
 }
 
 static int hexpm_emit_page(intel_sink *sink, const cJSON *doc, const char *q) {
@@ -350,7 +353,7 @@ static int run_hexpm(const source_ctx *ctx, intel_sink *sink) {
                     "page ceiling reached, or a mid-walk fetch failed, while "
                     "hex.pm was still returning full pages (it publishes no "
                     "result total)",
-                    "raise $JO_HEXPM_PAGE_MAX, or narrow the search term");
+                    "raise $JO_PAGE_MAX, or narrow the search term");
 
   fprintf(stderr, "[HEXPM_PACKAGE_SEARCH] emitted %d across %d page(s) for %s%s\n",
           n, pages, q, truncated ? " (TRUNCATED — notice emitted)" : "");

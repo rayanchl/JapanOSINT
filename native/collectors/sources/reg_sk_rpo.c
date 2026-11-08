@@ -123,19 +123,18 @@ static int emit_entity(intel_sink *sink, const cJSON *e) {
   jo_props_absorb(props, bj); char *pj = cJSON_PrintUnformatted(props);
   cJSON_Delete(props);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = ico ? ico : name;
   it.title           = name ? name : ico;
   it.summary         = addr ? addr : status;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "sk";
   it.published_at    = est;
   it.record_type     = "sk-rpo-entity";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"SK_RPO\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj); free(addr);
+  free(bj); free(pj); free(addr);
   return rc >= 0 ? 1 : 0;
 }
 

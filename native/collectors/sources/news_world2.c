@@ -33,14 +33,13 @@ static int nw_emit_article(intel_sink *sink, const char *service, const char *ti
   cJSON_AddBoolToObject(p, "success", 1);
   jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
   char tags[96]; snprintf(tags, sizeof tags, "[\"osint-search\",\"%s\"]", service);
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key = url ? url : title; it.title = title ? title : url;
-  it.summary = src; it.body = bt ? bt : bj; it.author = author;
+  it.summary = src; it.body = bj; it.author = author;
   it.link = url; it.lang = "en"; it.published_at = pub;
   it.record_type = "news-article"; it.properties_json = pj; it.tags_json = tags;
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 

@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include "lib/jocore.h"   /* jo_props_absorb */
 
 typedef struct { int s, e; const char *c; } mid_range_t;
 static const mid_range_t MID_CODES[] = {
@@ -184,18 +185,17 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   char rk[300]; snprintf(rk, sizeof rk, "vessel:%s", q);
   char title[320]; snprintf(title, sizeof title, "%s %s", id_kind, q);
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = rk;
   it.title           = title;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.summary         = "vessel identity";
   it.record_type     = "osint_service_result";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"VESSEL_TRACKER\"]";
   int rc = sink->emit(sink, &it);
 
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   cJSON_Delete(env);
   cJSON_Delete(data);
   return rc >= 0 ? 0 : -1;

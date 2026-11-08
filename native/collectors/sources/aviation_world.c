@@ -161,12 +161,11 @@ static int oa_emit(intel_sink *sink, char **f, int nf) {
            muni ? " · " : "", muni ? muni : "",
            ctry ? ", " : "", ctry ? ctry : "");
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = (icao && icao[0]) ? icao : (ident ? ident : name);
   it.title           = name;
   it.summary         = summary;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.link            = wiki;
   it.has_geo         = hasgeo; it.lat = lat; it.lon = lon;
@@ -174,7 +173,7 @@ static int oa_emit(intel_sink *sink, char **f, int nf) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"OURAIRPORTS\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -245,19 +244,18 @@ static int hexdb_emit(intel_sink *sink, const cJSON *r, const char *hex) {
   snprintf(link, sizeof link, "https://hexdb.io/registration?reg=%s",
            reg ? reg : (modes ? modes : ""));
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = modes ? modes : (reg ? reg : hex);
   it.title           = title;
   it.summary         = owner ? owner : manu;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.link            = (reg || modes) ? link : NULL;
   it.record_type     = "aircraft";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"HEXDB_AIRCRAFT\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
@@ -359,19 +357,18 @@ static int adsbfi_emit(intel_sink *sink, const cJSON *a, const char *src) {
   /* strip trailing spaces the ADS-B flight field pads with */
   for (int i = (int)strlen(title) - 1; i >= 0 && title[i] == ' '; i--) title[i] = 0;
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = hex ? hex : (reg ? reg : flt);
   it.title           = title;
   it.summary         = reg;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.has_geo         = hasgeo; it.lat = lat; it.lon = lon;
   it.record_type     = "aircraft-live";
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"ADSB_FI\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 

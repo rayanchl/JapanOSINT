@@ -63,15 +63,14 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       jo_props_absorb(p, bj); char *pj = cJSON_PrintUnformatted(p); cJSON_Delete(p);
       char summ[160];
       snprintf(summ, sizeof summ, "%s%s%s", jur ? jur : "", (jur && num) ? " · " : "", num ? num : "");
-      char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
-  intel_item it = {0};
+      intel_item it = {0};
       it.remote_key = ocurl ? ocurl : name; it.title = name ? name : num;
-      it.summary = summ[0] ? summ : NULL; it.body = bt ? bt : bj; it.link = ocurl;
+      it.summary = summ[0] ? summ : NULL; it.body = bj; it.link = ocurl;
       it.lang = "en"; it.published_at = inc;
       it.record_type = "company";
       it.properties_json = pj; it.tags_json = "[\"osint-search\",\"OPENCORPORATES\"]";
       if (sink->emit(sink, &it) >= 0) emitted++;
-      free(bj); free(bt); free(pj);
+      free(bj); free(pj);
     }
   }
   cJSON_Delete(root);

@@ -58,12 +58,11 @@ static int rl_emit(intel_sink *sink, const cJSON *v) {
            group ? " — group: " : "", group ? group : "",
            date ? " — " : "", date ? date : "");
 
-  char *bt = jo_values_text(bj);   /* text body; fields in properties (2026-11-07) */
   intel_item it = {0};
   it.remote_key      = org ? org : group;
   it.title           = org ? org : group;
   it.summary         = summary;
-  it.body = bt ? bt : bj;
+  it.body = bj;
   it.lang            = "en";
   it.published_at    = date;
   it.link            = link;
@@ -71,7 +70,7 @@ static int rl_emit(intel_sink *sink, const cJSON *v) {
   it.properties_json = pj;
   it.tags_json       = "[\"osint-search\",\"RANSOMLOOK\",\"ransomware\"]";
   int rc = sink->emit(sink, &it);
-  free(bj); free(bt); free(pj);
+  free(bj); free(pj);
   return rc >= 0 ? 1 : 0;
 }
 
