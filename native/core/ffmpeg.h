@@ -417,28 +417,9 @@ int ffmpeg_extract_series(const char *input, int count, int max_width,
 
 /* ── probe / metadata ────────────────────────────────────────────────────── */
 
-/* `ffprobe -show_format -show_streams -print_format json`, parsed.
- *
- * The document is PARSED here rather than passed through: a caller that stores
- * or re-serves this must not be handed whatever a subprocess wrote to stdout,
- * and a truncated or non-JSON document is a failure (FFMPEG_ERR_PARSE) rather
- * than something to discover downstream. What comes back is ffprobe's own
- * object with ONE addition — a top-level "jo" block carrying the normalised
- * facts, so no caller has to re-implement the ISO-6709 grammar or the
- * "which of eleven tag spellings holds the coordinate" question:
- *
- *   {"format":{…},"streams":[…],
- *    "jo":{"duration_sec":n|null,"width":n|null,"height":n|null,"fps":n|null,
- *          "video_codec":…|null,"audio_codec":…|null,"format_name":…|null,
- *          "bit_rate":n|null,"creation_time":…|null,"make":…|null,
- *          "model":…|null,"has_gps":bool,"lat":n|null,"lon":n|null,
- *          "altitude_m":n|null}}
- *
- * Returns malloc'd JSON the CALLER FREES, or NULL on failure with `err` set. */
-char *ffmpeg_probe(const char *input, int timeout_ms, char *err, size_t errcap);
-
-/* The normalised subset of the above as a struct, for callers that want the
- * facts and not a document. Fixed-size, no allocation, safe on the stack;
+/* `ffprobe -show_format -show_streams -print_format json`, parsed and
+ * normalised into a struct. (A JSON-returning ffmpeg_probe() that re-served
+ * ffprobe's document with a "jo" block had no caller; removed 2026-11-07.) Fixed-size, no allocation, safe on the stack;
  * fully zeroed on entry including on every failure path, so it is safe to read
  * either way. Strings are truncated to fit and always NUL-terminated.
  *

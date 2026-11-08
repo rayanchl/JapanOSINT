@@ -12,6 +12,11 @@
  * register lookup. */
 #include "lib/hpengine.h"
 
+/* `.lang = "ja"` (2026-11-07) on the Japanese-language rows below: an unset
+ * lang is stamped "en" by lib/hpengine.c, so `lang=` filters in /api/intel and
+ * semantic search missed them. Set where the host is .jp or the row's name or
+ * description carries kana; English pages (/en/, /english/, *_en collections)
+ * keep the default. */
 static const hp_source HP2_WORLD_CRITICAL[] = {
   /* ── Multilateral development bank debarment ───────────────────────────── */
   { .id = "ADB_SANCTIONS_LIST", .name = "Asian Development Bank — sanctioned entities",
@@ -91,6 +96,7 @@ static const hp_source HP2_WORLD_CRITICAL[] = {
   { .id = "JP_METI_END_USER_LIST", .name = "Japan METI — foreign end user list",
     .name_ja = "経済産業省 外国ユーザーリスト", .category = "government",
     .portal = "https://www.meti.go.jp", .record_type = "jp-export-control",
+    .lang = "ja",
     .tags = "\"jp\",\"export-control\",\"blacklist\"",
     .type = "scraped", .mode = HP_HTML, .free_tier = 1,
     .url = "https://www.meti.go.jp/policy/anpo/law05.html",
@@ -104,6 +110,7 @@ static const hp_source HP2_WORLD_CRITICAL[] = {
   { .id = "JP_MOF_ASSET_FREEZE", .name = "Japan MOF — economic sanctions & asset freeze list",
     .name_ja = "財務省 経済制裁/資産凍結リスト", .category = "government",
     .portal = "https://www.mof.go.jp", .record_type = "jp-sanction",
+    .lang = "ja",
     .tags = "\"jp\",\"sanctions\",\"asset-freeze\"",
     .type = "scraped", .mode = HP_HTML, .free_tier = 1,
     .url = "https://www.mof.go.jp/policy/international_policy/gaitame_kawase/"

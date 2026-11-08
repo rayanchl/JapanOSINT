@@ -1,4 +1,5 @@
 #include "cadence.h"
+#include "../lib/jocore.h"
 #include "source_interval.h"
 #include "statusapi.h"
 #include "collectortab.h"
@@ -31,20 +32,7 @@ static void add_num_or_null(cJSON *o, const char *k, sqlite3_stmt *s, int i) {
   cJSON_AddItemToObject(o, k, sqlite3_column_type(s, i) == SQLITE_NULL
     ? cJSON_CreateNull() : cJSON_CreateNumber(sqlite3_column_double(s, i)));
 }
-static void iso_now(char *buf, size_t n) {
-  struct timeval tv; gettimeofday(&tv, NULL);
-  struct tm tm; gmtime_r(&tv.tv_sec, &tm);
-  /* The %0Nd widths are minimums, not caps: to -Wformat-truncation
-   * `tm_year + 1900` is a plain int worth up to 11 characters, so this
-   * fixed 24-char stamp "may be truncated". The modulos are identity for
-   * every value gmtime_r can return and make the 24 provable, not merely
-   * true. */
-  snprintf(buf, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
-           (unsigned)(tm.tm_year + 1900) % 10000u, (unsigned)(tm.tm_mon + 1) % 100u,
-           (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
-           (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u,
-           (unsigned)(tv.tv_usec / 1000) % 1000u);
-}
+/* ISO-8601 UTC with milliseconds: jo_iso_now_ms() (lib/jocore.h). */
 /* The Node entrypoint runs applyOverlayToEnv() (apiKeysStore.js) BEFORE the
  * routes load: every non-empty string in data/api-keys.json (the iOS
  * API-keys tab store) is written into process.env, overriding .env/ambient.
@@ -707,7 +695,7 @@ char *statusapi_build_view(db_handle *db, int include_breach,
   cJSON_AddNumberToObject(summary,"schedQuarantined", c_hquar);
   cJSON_AddNumberToObject(summary,"repairQuarantined", c_rquar);
 
-  char ts[40]; iso_now(ts, sizeof ts);
+  char ts[40]; jo_iso_now_ms(ts, sizeof ts);
   cJSON *env = cJSON_CreateObject();
   cJSON_AddItemToObject(env,"summary", summary);
   cJSON_AddItemToObject(env,"apis", apis);
@@ -852,7 +840,7 @@ char *statusapi_probe(db_handle *db, const char *id, int *st) {
   http_response_free(&r);
   http_client_free(hc);
 
-  char now[40]; iso_now(now, sizeof now);
+  char now[40]; jo_iso_now_ms(now, sizeof now);
 
   sqlite3_stmt *s = NULL;
   if (sqlite3_prepare_v2(db->h,

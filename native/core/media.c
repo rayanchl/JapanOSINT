@@ -66,6 +66,7 @@
  * media.h.
  */
 #include "media.h"
+#include "jo_codec.h"
 #include "ffmpeg.h"   /* the one decoder: pHash + video frames + probe */
 #include "evidence.h"
 #include "fts.h"
@@ -131,13 +132,6 @@ static int env_int(const char *k, int dflt) {
   return (int)n;
 }
 
-static void sha256_hex(const void *b, size_t n, char out[65]) {
-  unsigned char d[SHA256_DIGEST_LENGTH];
-  SHA256((const unsigned char *)b, n, d);
-  for (int i = 0; i < SHA256_DIGEST_LENGTH; i++)
-    snprintf(out + i * 2, 3, "%02x", d[i]);
-  out[64] = '\0';
-}
 
 /* ═══════════════════════════════════════════════════════════════════════════
  * EXIF — pure byte parsing, no decoding, no allocation, re-entrant.
@@ -1928,7 +1922,7 @@ static int upload_bytes(sqlite3 *h, const char *uid, const char *sha, long maxb,
   size_t got = b ? fread(b, 1, (size_t)st.st_size, f) : 0;
   fclose(f);
   char hex[65];
-  if (b) sha256_hex(b, got, hex);
+  if (b) jo_sha256_hex(b, got, hex);
   if (!b || got != (size_t)st.st_size || strcmp(hex, sha)) { free(b); return -1; }
   b[got] = 0;
   r->status = 200; r->body = b; r->body_len = got;
@@ -2058,7 +2052,7 @@ int media_analyze_batch(db_handle *db, http_client *http, int limit,
 
     const char *ct = media_sniff_type(r.body, r.body_len);
     char sha[65];
-    sha256_hex(r.body, r.body_len, sha);
+    jo_sha256_hex(r.body, r.body_len, sha);
 
     long w = 0, hh = 0;
     media_exif ex;

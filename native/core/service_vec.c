@@ -1,5 +1,6 @@
 /* core/service_vec.c — see service_vec.h for why this exists. */
 #include "service_vec.h"
+#include "../lib/jocore.h"
 #include "embed_pod.h"
 #include "llm.h"
 #include "source_card.h"
@@ -219,12 +220,7 @@ static void svec_sig_key(char *out, size_t cap, int kind) {
   snprintf(out, cap, "sig_%s", source_kind_name((source_kind)kind));
 }
 
-static void now_iso(char *at, size_t cap) {
-  time_t t = time(NULL);
-  struct tm tm;
-  gmtime_r(&t, &tm);
-  strftime(at, cap, "%Y-%m-%dT%H:%M:%SZ", &tm);
-}
+/* ISO-8601 UTC, whole seconds: jo_iso_now_sec() (lib/jocore.h). */
 
 /* Is kind `kind` ready for the registry as it stands right now? */
 static int svec_kind_ready(db_handle *db, int kind) {
@@ -548,7 +544,7 @@ int service_vec_build(db_handle *db) {
   vecindex_ensure_side_tables(db, &svec_spec);
   svec_meta_set(db, "state", "building");
   char now[40];
-  now_iso(now, sizeof now);
+  jo_iso_now_sec(now, sizeof now);
   long budget = svec_max_per_run();
   if (budget == 0) budget = -1;                  /* -1 = no cap */
   vecindex_stats st = {0};

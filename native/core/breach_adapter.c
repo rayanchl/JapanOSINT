@@ -1,5 +1,6 @@
 /* core/breach_adapter.c — see breach_adapter.h. */
 #include "breach_adapter.h"
+#include "../lib/jocore.h"
 #include "breach_index.h"
 #include "audit.h"
 #include "../third_party/cJSON.h"
@@ -13,16 +14,7 @@ static void add_sn(cJSON *o, const char *k, const char *v) {
   else   cJSON_AddNullToObject(o, k);
 }
 
-static void iso_now(char *out, size_t n) {
-  time_t t = time(NULL);
-  struct tm g;
-#if defined(_WIN32)
-  gmtime_s(&g, &t);
-#else
-  gmtime_r(&t, &g);
-#endif
-  strftime(out, n, "%Y-%m-%dT%H:%M:%SZ", &g);
-}
+/* ISO-8601 UTC, whole seconds: jo_iso_now_sec() (lib/jocore.h). */
 
 /* Wrap a user term as a single quoted FTS5 phrase (doubles embedded quotes) so
  * it is never parsed as query syntax. Mirrors breach_store.c's fts_phrase. */
@@ -208,7 +200,7 @@ char *breach_adapter_list(db_handle *db, const char *source_id,
   cJSON_AddNullToObject(filters, "sub_source_id");
   cJSON_AddNullToObject(filters, "has_geom");
 
-  char ts[40]; iso_now(ts, sizeof ts);
+  char ts[40]; jo_iso_now_sec(ts, sizeof ts);
   cJSON *meta = cJSON_CreateObject();
   cJSON_AddStringToObject(meta, "fetched_at", ts);
   cJSON_AddItemToObject(meta, "filters", filters);

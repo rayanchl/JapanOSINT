@@ -959,6 +959,31 @@ int main(void) {
   }
 #endif
 
+  printf("[12] UK Parliament's take/skip pager, in all three spellings\n");
+  {
+    /* 18 VJSON rows on *.parliament.uk read ONE `take=` page because PAGERS
+     * had no take/skip family (2026-11-07). Each case FAILS against the
+     * previous lib/jsonlist.c: the walk made one call and stopped. */
+    static const char *J2d = "{\"items\":[{\"title\":\"d1\"},{\"title\":\"d2\"}]}";
+    script_t sc = { .body = { J3a, J3b, J2d }, .n_body = 3 };
+    cap_t cap; run_jl("https://x/api/v1/Bills?take=3&skip=0", &sc, &cap);
+    ok(sc.calls == 3 && strstr(sc.seen[1], "skip=3") && strstr(sc.seen[2], "skip=6") &&
+       cap.records == 8, "take/skip: a full page advances skip by take, a short page ends it");
+    script_t s2 = { .body = { J3a, J3b, J2d }, .n_body = 3 };
+    run_jl("https://x/data/divisions.json/search?queryParameters.take=3&queryParameters.skip=0", &s2, &cap);
+    ok(s2.calls == 3 && strstr(s2.seen[1], "queryParameters.skip=3") &&
+       !strstr(s2.seen[1], "&skip="),
+       "queryParameters.take moves queryParameters.skip, never a bare skip");
+    script_t s3 = { .body = { J3a, J2d }, .n_body = 2 };
+    run_jl("https://x/EarlyDayMotions/list?parameters.take=3&parameters.skip=0", &s3, &cap);
+    ok(s3.calls == 2 && strstr(s3.seen[1], "parameters.skip=3"),
+       "parameters.take moves parameters.skip (the EDM API)");
+    script_t s4 = { .body = { J2d }, .n_body = 1 };
+    run_jl("https://x/api/v1/Bills?take=3&skip=0", &s4, &cap);
+    ok(s4.calls == 1 && cap.notices == 0,
+       "control: a short first page is the end of data, no second request, no notice");
+  }
+
   printf(failures ? "\n%d FAILED\n" : "\nall passed\n", failures);
   return failures ? 1 : 0;
 }

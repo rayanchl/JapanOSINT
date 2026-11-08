@@ -21,11 +21,17 @@
  */
 #include "lib/hpengine.h"
 
+/* `.lang = "ja"` (2026-11-07) on the Japanese-language rows below: an unset
+ * lang is stamped "en" by lib/hpengine.c, so `lang=` filters in /api/intel and
+ * semantic search missed them. Set where the host is .jp or the row's name or
+ * description carries kana; English pages (/en/, /english/, *_en collections)
+ * keep the default. */
 static const hp_source HP3B45_JPWPGOV[] = {
   { .id = "JO45_WP_CITYASOKUMAMOTO_POSTS", .name = "www.city.aso.kumamoto.jp — posts (WordPress REST)",
     .name_ja = "www.city.aso.kumamoto.jp 投稿（WordPress REST）",
     .category = "government", .portal = "https://www.city.aso.kumamoto.jp/",
     .record_type = "site-post",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.city.aso.kumamoto.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
@@ -51,6 +57,7 @@ static const hp_source HP3B45_JPWPGOV[] = {
     .name_ja = "www.city.aso.kumamoto.jp 固定ページ（WordPress REST）",
     .category = "government", .portal = "https://www.city.aso.kumamoto.jp/",
     .record_type = "site-page",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.city.aso.kumamoto.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc",
@@ -77,6 +84,7 @@ static const hp_source HP3B45_JPWPGOV[] = {
     .name_ja = "www.city.aso.kumamoto.jp 利用者一覧（WordPress REST）",
     .category = "government", .portal = "https://www.city.aso.kumamoto.jp/",
     .record_type = "site-user",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.city.aso.kumamoto.jp/wp-json/wp/v2/users?per_page=100",

@@ -551,14 +551,6 @@ void progress_finish(osint_request *r, const char *phase) {
   pthread_mutex_unlock(&g_lock);
 }
 
-int progress_is_done(osint_request *r) {
-  if (!r) return 0;
-  pthread_mutex_lock(&g_lock);
-  int d = r->done;
-  pthread_mutex_unlock(&g_lock);
-  return d;
-}
-
 /* ---- toJSON() ---- */
 static cJSON *ent_array(entity_t *p, int n) {
   cJSON *a = cJSON_CreateArray();

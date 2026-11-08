@@ -1,4 +1,6 @@
 #include "intelapi.h"
+#include "jo_codec.h"
+#include "../lib/jocore.h"
 #include "source_registry.h"
 #include "../source.h"          /* registry_all/registry_count/registry_get */
 #include "fts.h"
@@ -44,70 +46,9 @@ static void add_str_or_null(cJSON *o, const char *k, const char *v) {
   cJSON_AddItemToObject(o, k, v ? cJSON_CreateString(v) : cJSON_CreateNull());
 }
 
-/* Node's new Date().toISOString(): YYYY-MM-DDTHH:MM:SS.mmmZ */
-static void iso_now(char *buf, size_t n) {
-  struct timeval tv; gettimeofday(&tv, NULL);
-  struct tm tm; gmtime_r(&tv.tv_sec, &tm);
-  /* The %0Nd widths are minimums, not caps: to -Wformat-truncation
-   * `tm_year + 1900` is a plain int worth up to 11 characters, so this
-   * fixed 24-char stamp "may be truncated". The modulos are identity for
-   * every value gmtime_r can return and make the 24 provable, not merely
-   * true. */
-  snprintf(buf, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
-           (unsigned)(tm.tm_year + 1900) % 10000u, (unsigned)(tm.tm_mon + 1) % 100u,
-           (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
-           (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u,
-           (unsigned)(tv.tv_usec / 1000) % 1000u);
-}
+/* ISO-8601 UTC with milliseconds: jo_iso_now_ms() (lib/jocore.h). */
 
-/* Buffer.from(str,'utf8').toString('base64url') — no padding, +/ → -_ */
-static char *b64url(const char *in) {
-  static const char T[] =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
-  size_t len = strlen(in);
-  char *out = malloc(((len + 2) / 3) * 4 + 1);
-  if (!out) return NULL;   /* the sibling copies in aoiapi.c and timelineapi.c already check */
-  size_t o = 0;
-  for (size_t i = 0; i < len; i += 3) {
-    unsigned a = (unsigned char)in[i];
-    unsigned b = i + 1 < len ? (unsigned char)in[i + 1] : 0;
-    unsigned c = i + 2 < len ? (unsigned char)in[i + 2] : 0;
-    unsigned v = (a << 16) | (b << 8) | c;
-    out[o++] = T[(v >> 18) & 63];
-    out[o++] = T[(v >> 12) & 63];
-    if (i + 1 < len) out[o++] = T[(v >> 6) & 63];
-    if (i + 2 < len) out[o++] = T[v & 63];
-  }
-  out[o] = 0;
-  return out;
-}
 
-/* Inverse of b64url() — base64url (no padding) → malloc'd NUL-terminated
- * bytes, or NULL on an invalid char (treated like Node's bad-cursor catch:
- * caller ignores the cursor). Single-threaded httpd loop → static table ok. */
-static char *b64url_decode(const char *in) {
-  static signed char R[256];
-  static int init = 0;
-  if (!init) {
-    for (int i = 0; i < 256; i++) R[i] = -1;
-    const char *T =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
-    for (int i = 0; i < 64; i++) R[(unsigned char)T[i]] = (signed char)i;
-    init = 1;
-  }
-  size_t len = strlen(in);
-  char *out = malloc(len / 4 * 3 + 4);
-  if (!out) return NULL;
-  size_t o = 0; unsigned v = 0; int bits = 0;
-  for (size_t i = 0; i < len; i++) {
-    signed char d = R[(unsigned char)in[i]];
-    if (d < 0) { free(out); return NULL; }
-    v = (v << 6) | (unsigned)d; bits += 6;
-    if (bits >= 8) { bits -= 8; out[o++] = (char)((v >> bits) & 0xFF); }
-  }
-  out[o] = 0;
-  return out;
-}
 
 /* Build the rowToItem(row,{full}) object in EXACT Node key order. The stmt
  * must have stepped to a row selecting ITEM_COLS. Exported (intelapi.h) so
@@ -491,7 +432,7 @@ char *intelapi_list_items_st(db_handle *db, const intel_items_query *Q,
   double cur_rank = 0; long cur_off = 0;
   int cursor_given = Q && Q->cursor && *Q->cursor, cursor_used = 0;
   if (cursor_given) {
-    char *dec = b64url_decode(Q->cursor);
+    char *dec = jo_b64url_decode_str(Q->cursor);
     if (dec) {
       curj = cJSON_Parse(dec); free(dec);
       if (curj) {
@@ -722,7 +663,7 @@ char *intelapi_list_items_st(db_handle *db, const intel_items_query *Q,
     free(cands);
     if (more) {
       char cj[64]; snprintf(cj, sizeof cj, "{\"o\":%ld}", cur_off + shown);
-      char *enc = b64url(cj);
+      char *enc = jo_b64url_encode_str(cj);
       cJSON_AddStringToObject(page, "next_cursor", enc); free(enc);
     } else cJSON_AddNullToObject(page, "next_cursor");
   } else if (n == fetch_n) {
@@ -736,7 +677,7 @@ char *intelapi_list_items_st(db_handle *db, const intel_items_query *Q,
     cJSON_AddStringToObject(cur, "u", last_uid);
     char *cj = cJSON_PrintUnformatted(cur);
     cJSON_Delete(cur);
-    char *enc = b64url(cj);
+    char *enc = jo_b64url_encode_str(cj);
     cJSON_AddStringToObject(page, "next_cursor", enc);
     free(cj); free(enc);
   } else {
@@ -760,7 +701,7 @@ char *intelapi_list_items_st(db_handle *db, const intel_items_query *Q,
   add_str_or_null(filters, "sub_source_id", Q ? Q->sub_source_id : NULL);
   add_str_or_null(filters, "has_geom",      Q ? Q->has_geom : NULL);
 
-  char ts[40]; iso_now(ts, sizeof ts);
+  char ts[40]; jo_iso_now_ms(ts, sizeof ts);
   cJSON *meta = cJSON_CreateObject();
   cJSON_AddStringToObject(meta, "fetched_at", ts);
   cJSON_AddItemToObject(meta, "filters", filters);
@@ -1323,7 +1264,7 @@ char *intelapi_intel_sources_view(db_handle *db, int limit, int offset,
     else cJSON_Delete(SR[i].obj);
   }
 
-  char ts[40]; iso_now(ts, sizeof ts);
+  char ts[40]; jo_iso_now_ms(ts, sizeof ts);
   cJSON *meta = cJSON_CreateObject();
   cJSON_AddStringToObject(meta, "fetched_at", ts);
   cJSON_AddNumberToObject(meta, "total", nout);

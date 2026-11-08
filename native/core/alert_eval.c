@@ -1,4 +1,5 @@
 #include "alert_eval.h"
+#include "jo_page.h"
 #include "alert_sem.h"
 #include "embed_pod.h"
 #include "story.h"
@@ -1290,10 +1291,13 @@ static char *preview_envelope(int *status, long matches, long scanned,
                               cJSON *semantic) {
   cJSON *w = cJSON_CreateObject();
   cJSON_AddItemToObject(w, "data", samples ? samples : cJSON_CreateArray());
-  cJSON *pg = cJSON_CreateObject();
-  cJSON_AddNumberToObject(pg, "limit", PREVIEW_SAMPLES);
-  cJSON_AddBoolToObject(pg, "has_more", matches > PREVIEW_SAMPLES);
-  cJSON_AddItemToObject(w, "page", pg);
+  /* The full page block like every other list (it was {limit, has_more}).
+   * total is the match count, or null when the scan was cut short and the
+   * count is only a floor (meta.truncated says the same). */
+  cJSON *data = cJSON_GetObjectItem(w, "data");
+  cJSON_AddItemToObject(w, "page",
+    jo_page_new(PREVIEW_SAMPLES, 0, cJSON_GetArraySize(data),
+                truncated ? -1 : matches, matches > PREVIEW_SAMPLES));
   cJSON *m = cJSON_CreateObject();
   cJSON_AddNumberToObject(m, "match_count", (double)matches);
   cJSON_AddNumberToObject(m, "scanned", (double)scanned);

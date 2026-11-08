@@ -20,6 +20,11 @@
  */
 #include "lib/hpengine.h"
 
+/* `.lang = "ja"` (2026-11-07) on the Japanese-language rows below: an unset
+ * lang is stamped "en" by lib/hpengine.c, so `lang=` filters in /api/intel and
+ * semantic search missed them. Set where the host is .jp or the row's name or
+ * description carries kana; English pages (/en/, /english/, *_en collections)
+ * keep the default. */
 static const hp_source HP3B24_JPBBS[] = {
   { .id = "JPBBS_MACHI_CYUGOKU", .name = "Machi BBS — Chugoku board thread list",
     .name_ja = "まちBBS 中国板",
@@ -394,6 +399,7 @@ static const hp_source HP3B24_JPBBS[] = {
     .name_ja = "おーぷん2ちゃんねる なんJ",
     .category = "social", .portal = "https://hayabusa.open2ch.net/livejupiter/",
     .record_type = "forum-thread",
+    .lang = "ja",
     .tags = "\"japan\",\"bbs\",\"forum\",\"open2ch\",\"2channel\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://hayabusa.open2ch.net/livejupiter/subject.txt",
@@ -418,6 +424,7 @@ static const hp_source HP3B24_JPBBS[] = {
     .name_ja = "おーぷん2ちゃんねる ニュー速VIP",
     .category = "social", .portal = "https://hayabusa.open2ch.net/news4vip/",
     .record_type = "forum-thread",
+    .lang = "ja",
     .tags = "\"japan\",\"bbs\",\"forum\",\"open2ch\",\"2channel\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://hayabusa.open2ch.net/news4vip/subject.txt",
@@ -442,6 +449,7 @@ static const hp_source HP3B24_JPBBS[] = {
     .name_ja = "おーぷん2ちゃんねる ニュース速報+",
     .category = "social", .portal = "https://hayabusa.open2ch.net/newsplus/",
     .record_type = "forum-thread",
+    .lang = "ja",
     .tags = "\"japan\",\"bbs\",\"forum\",\"open2ch\",\"2channel\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://hayabusa.open2ch.net/newsplus/subject.txt",

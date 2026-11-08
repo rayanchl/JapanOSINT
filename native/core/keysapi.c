@@ -1,4 +1,5 @@
 #include "keysapi.h"
+#include "jo_codec.h"
 #include "credtab.h"
 #include "../source.h"          /* registry_all — the rows' own key_env names */
 #include "../lib/hpengine.h"   /* hp_source_get */
@@ -614,17 +615,6 @@ static void totp_at(const unsigned char *key,int klen,long step,char out[7]){
                ((mac[off+2]&0xFF)<<8)|(mac[off+3]&0xFF);
   snprintf(out,7,"%06u",bin%1000000u);
 }
-static char *b64url(const unsigned char *in,int len){
-  static const char T[]="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
-  char *o=malloc(((len+2)/3)*4+1); int p=0;
-  for (int i=0;i<len;i+=3){
-    unsigned a=in[i],b=i+1<len?in[i+1]:0,c=i+2<len?in[i+2]:0,v=(a<<16)|(b<<8)|c;
-    o[p++]=T[(v>>18)&63]; o[p++]=T[(v>>12)&63];
-    if(i+1<len)o[p++]=T[(v>>6)&63];
-    if(i+2<len)o[p++]=T[v&63];
-  }
-  o[p]=0; return o;
-}
 
 char *keysapi_breakglass(db_handle *db, const char *body,
                          const char *ip, const char *ua, int *st) {
@@ -692,12 +682,12 @@ char *keysapi_breakglass(db_handle *db, const char *body,
   cJSON_AddNumberToObject(pl,"iat",(double)now);
   cJSON_AddNumberToObject(pl,"exp",(double)(now+BREAK_GLASS_TTL_SEC));
   char *pj=cJSON_PrintUnformatted(pl); cJSON_Delete(pl);
-  char *h64=b64url((unsigned char*)hj,strlen(hj));
-  char *p64=b64url((unsigned char*)pj,strlen(pj));
+  char *h64=jo_b64url_encode((unsigned char*)hj, strlen(hj));
+  char *p64=jo_b64url_encode((unsigned char*)pj, strlen(pj));
   char si[4096]; snprintf(si,sizeof si,"%s.%s",h64,p64);
   unsigned char mac[32]; unsigned int ml=32;
   HMAC(EVP_sha256(),jwt,(int)strlen(jwt),(unsigned char*)si,strlen(si),mac,&ml);
-  char *s64=b64url(mac,32);
+  char *s64=jo_b64url_encode(mac, 32);
   char tok[4608]; snprintf(tok,sizeof tok,"%s.%s.%s",h64,p64,s64);
   free(hj);free(pj);free(h64);free(p64);free(s64);
   if(jb)cJSON_Delete(jb);

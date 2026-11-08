@@ -21,11 +21,17 @@
  */
 #include "lib/hpengine.h"
 
+/* `.lang = "ja"` (2026-11-07) on the Japanese-language rows below: an unset
+ * lang is stamped "en" by lib/hpengine.c, so `lang=` filters in /api/intel and
+ * semantic search missed them. Set where the host is .jp or the row's name or
+ * description carries kana; English pages (/en/, /english/, *_en collections)
+ * keep the default. */
 static const hp_source HP3B32_JPMARKET[] = {
   { .id = "JO32_MKT_MOF_JGB_YIELDS_ALL", .name = "MOF JGB benchmark yield curve (all days since 1974)",
     .name_ja = "国債金利情報（過去の金利情報 1974年9月～）",
     .category = "finance", .portal = "https://www.mof.go.jp/jgbs/reference/interest_rate/index.htm",
     .record_type = "jgb-yield-curve-day",
+    .lang = "ja",
     .tags = "\"japan\",\"finance\",\"jgb\",\"interest-rate\",\"yield-curve\",\"mof\",\"time-series\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.mof.go.jp/jgbs/reference/interest_rate/data/jgbcm_all.csv",
@@ -47,6 +53,7 @@ static const hp_source HP3B32_JPMARKET[] = {
     .name_ja = "貸借取引残高（銘柄別・取引所別）",
     .category = "finance", .portal = "https://www.taisyaku.jp/download/",
     .record_type = "securities-lending-balance",
+    .lang = "ja",
     .tags = "\"japan\",\"finance\",\"margin-trading\",\"short-selling\",\"securities-lending\",\"jsf\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.taisyaku.jp/data/zandaka.csv",
@@ -67,6 +74,7 @@ static const hp_source HP3B32_JPMARKET[] = {
     .name_ja = "貸借取引対象銘柄一覧",
     .category = "finance", .portal = "https://www.taisyaku.jp/download/",
     .record_type = "lendable-issue",
+    .lang = "ja",
     .tags = "\"japan\",\"finance\",\"margin-trading\",\"securities-lending\",\"jsf\",\"listed-issues\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.taisyaku.jp/data/meigara.csv",
@@ -85,6 +93,7 @@ static const hp_source HP3B32_JPMARKET[] = {
     .name_ja = "東証上場銘柄一覧",
     .category = "finance", .portal = "https://www.jpx.co.jp/markets/statistics-equities/misc/01.html",
     .record_type = "listed-issue",
+    .lang = "ja",
     .tags = "\"japan\",\"finance\",\"equities\",\"tse\",\"listed-companies\",\"jpx\",\"industry-classification\"",
     .mode = HP_XLSX, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.jpx.co.jp/markets/statistics-equities/misc/tvdivq0000001vg2-att/data_j.xlsx",
@@ -104,6 +113,7 @@ static const hp_source HP3B32_JPMARKET[] = {
     .name_ja = "無担保コールＯ／Ｎ物レート（日次）",
     .category = "finance", .portal = "https://www.stat-search.boj.or.jp/ssi/mtshtml/fm01_d_1.html",
     .record_type = "money-market-rate-day",
+    .lang = "ja",
     .tags = "\"japan\",\"finance\",\"boj\",\"call-rate\",\"interest-rate\",\"time-series\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.stat-search.boj.or.jp/ssi/mtshtml/csv/fm01_d_1.csv",
@@ -123,6 +133,7 @@ static const hp_source HP3B32_JPMARKET[] = {
     .name_ja = "為替相場（東京インターバンク相場）ドル・円（日次）",
     .category = "finance", .portal = "https://www.stat-search.boj.or.jp/ssi/mtshtml/fm08_d_1.html",
     .record_type = "fx-rate-day",
+    .lang = "ja",
     .tags = "\"japan\",\"finance\",\"boj\",\"fx\",\"usdjpy\",\"exchange-rate\",\"time-series\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.stat-search.boj.or.jp/ssi/mtshtml/csv/fm08_d_1.csv",
@@ -254,6 +265,7 @@ static const hp_source HP3B32_JPMARKET[] = {
     .name_ja = "Zaif BTC/JPY 取引履歴",
     .category = "finance", .portal = "https://zaif-api-document.readthedocs.io/ja/latest/PublicAPI.html",
     .record_type = "crypto-trade",
+    .lang = "ja",
     .tags = "\"japan\",\"finance\",\"crypto\",\"bitcoin\",\"zaif\",\"trades\",\"market-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.zaif.jp/api/1/trades/btc_jpy",
@@ -286,6 +298,7 @@ static const hp_source HP3B32_JPMARKET[] = {
     .name_ja = "OKJ BTC/JPY 約定履歴",
     .category = "finance", .portal = "https://www.okcoin.jp/",
     .record_type = "crypto-trade",
+    .lang = "ja",
     .tags = "\"japan\",\"finance\",\"crypto\",\"bitcoin\",\"okj\",\"trades\",\"market-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.okcoin.jp/api/spot/v3/instruments/BTC-JPY/trades?limit=100",
@@ -302,6 +315,7 @@ static const hp_source HP3B32_JPMARKET[] = {
     .name_ja = "ビットトレード BTC/JPY 約定履歴",
     .category = "finance", .portal = "https://www.bittrade.co.jp/",
     .record_type = "crypto-trade",
+    .lang = "ja",
     .tags = "\"japan\",\"finance\",\"crypto\",\"bitcoin\",\"bittrade\",\"trades\",\"market-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api-cloud.bittrade.co.jp/market/history/trade?symbol=btcjpy&size=2000",
@@ -321,6 +335,7 @@ static const hp_source HP3B32_JPMARKET[] = {
     .name_ja = "ビットトレード ETH/JPY 約定履歴",
     .category = "finance", .portal = "https://www.bittrade.co.jp/",
     .record_type = "crypto-trade",
+    .lang = "ja",
     .tags = "\"japan\",\"finance\",\"crypto\",\"ethereum\",\"bittrade\",\"trades\",\"market-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api-cloud.bittrade.co.jp/market/history/trade?symbol=ethjpy&size=2000",
@@ -338,6 +353,7 @@ static const hp_source HP3B32_JPMARKET[] = {
     .name_ja = "ビットトレード XRP/JPY 約定履歴",
     .category = "finance", .portal = "https://www.bittrade.co.jp/",
     .record_type = "crypto-trade",
+    .lang = "ja",
     .tags = "\"japan\",\"finance\",\"crypto\",\"xrp\",\"bittrade\",\"trades\",\"market-data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://api-cloud.bittrade.co.jp/market/history/trade?symbol=xrpjpy&size=2000",
@@ -354,6 +370,7 @@ static const hp_source HP3B32_JPMARKET[] = {
     .name_ja = "ジャパンネクスト証券 PTS 銘柄別売買代金",
     .category = "finance", .portal = "https://www.japannext.co.jp/en/market",
     .record_type = "pts-issue-turnover",
+    .lang = "ja",
     .tags = "\"japan\",\"finance\",\"equities\",\"pts\",\"japannext\",\"market-data\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.japannext.co.jp/csv_download/dnd_by_turnover",

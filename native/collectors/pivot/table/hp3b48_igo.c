@@ -21,6 +21,15 @@
  */
 #include "lib/hpengine.h"
 
+/* `.lang = "ja"` (2026-11-07) on the Japanese-language rows below: an unset
+ * lang is stamped "en" by lib/hpengine.c, so `lang=` filters in /api/intel and
+ * semantic search missed them. Set where the host is .jp or the row's name or
+ * description carries kana; English pages (/en/, /english/, *_en collections)
+ * keep the default. */
+/* Feed cadence (2026-11-07): the rows below that lacked `adaptive_interval`
+ * now carry it, as every other row of this beat does. Their interval stays
+ * 3600: the press and IGO beats stay hourly by their own measurement
+ * (tools/tune_intervals.py's docstring, CLAUDE.md). */
 static const hp_source HP3B48_IGO[] = {
   { .id = "JO48_IGO_Q677691", .name = "ICLEI – Local Governments for Sustainability - ICLEI",
     .name_ja = "ICLEI – Local Governments for Sustainability - ICLEI",
@@ -6372,6 +6381,7 @@ static const hp_source HP3B48_IGO[] = {
     .name_ja = "Game Arts - 株式会社ゲームアーツ 公式サイト",
     .category = "international", .portal = "https://www.gamearts.co.jp/",
     .record_type = "organisation-notice",
+    .lang = "ja",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.gamearts.co.jp/ja/rss/news.xml",
@@ -6754,6 +6764,7 @@ static const hp_source HP3B48_IGO[] = {
     .name_ja = "Arc System Works - ARC SYSTEM WORKS OFFICIAL WEB SITE",
     .category = "international", .portal = "https://www.arcsystemworks.jp/",
     .record_type = "organisation-notice",
+    .lang = "ja",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.arcsystemworks.jp/feed/",
@@ -7573,6 +7584,7 @@ static const hp_source HP3B48_IGO[] = {
     .name_ja = "Tactics - Tactics.ne.jp – オンラインカジノ",
     .category = "international", .portal = "https://tactics.ne.jp/",
     .record_type = "organisation-notice",
+    .lang = "ja",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://tactics.ne.jp/feed/",
@@ -7611,6 +7623,7 @@ static const hp_source HP3B48_IGO[] = {
     .name_ja = "Overdose - love-juice.jp",
     .category = "international", .portal = "https://www.love-juice.jp/",
     .record_type = "organisation-notice",
+    .lang = "ja",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.love-juice.jp/feed/",
@@ -7649,6 +7662,7 @@ static const hp_source HP3B48_IGO[] = {
     .name_ja = "3goo - 3GOO Japan",
     .category = "international", .portal = "https://3goo.co.jp/",
     .record_type = "organisation-notice",
+    .lang = "ja",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://3goo.co.jp/feed/",
@@ -7915,6 +7929,7 @@ static const hp_source HP3B48_IGO[] = {
     .name_ja = "Toshiba EMI Ltd. - SHOTO Creative Studio",
     .category = "international", .portal = "https://toshiba-emi.co.jp/",
     .record_type = "organisation-notice",
+    .lang = "ja",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://toshiba-emi.co.jp/feed/",
@@ -8010,6 +8025,7 @@ static const hp_source HP3B48_IGO[] = {
     .name_ja = "8-4 - 8-4",
     .category = "international", .portal = "https://8-4.jp/",
     .record_type = "organisation-notice",
+    .lang = "ja",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://8-4.jp/feed/",
@@ -8353,6 +8369,7 @@ static const hp_source HP3B48_IGO[] = {
     .name_ja = "Onion Games - Onion Games",
     .category = "international", .portal = "https://oniongames.jp/",
     .record_type = "organisation-notice",
+    .lang = "ja",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://oniongames.jp/feed",
@@ -8372,6 +8389,7 @@ static const hp_source HP3B48_IGO[] = {
     .name_ja = "Onion Games - Onion Games",
     .category = "international", .portal = "https://oniongames.jp/",
     .record_type = "organisation-notice",
+    .lang = "ja",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://oniongames.jp/feed/atom",
@@ -8753,6 +8771,7 @@ static const hp_source HP3B48_IGO[] = {
     .name_ja = "Tokuma Shoten - 徳間書店｜お知らせRSS",
     .category = "international", .portal = "https://www.tokuma.jp/",
     .record_type = "organisation-notice",
+    .lang = "ja",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.tokuma.jp/rss/news/",
@@ -9152,6 +9171,7 @@ static const hp_source HP3B48_IGO[] = {
     .name_ja = "Zoo Corporation - ZOO GAMES",
     .category = "international", .portal = "https://game.zoo.jp/",
     .record_type = "organisation-notice",
+    .lang = "ja",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://game.zoo.jp/feed/",
@@ -9285,6 +9305,7 @@ static const hp_source HP3B48_IGO[] = {
     .name_ja = "Capcom - 株式会社カプコン｜更新情報",
     .category = "international", .portal = "https://www.capcom.co.jp/",
     .record_type = "organisation-notice",
+    .lang = "ja",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.capcom.co.jp/rss/news.xml",
@@ -9458,6 +9479,7 @@ static const hp_source HP3B48_IGO[] = {
     .name_ja = "Q1142226 - 日本ファルコム 公式サイト",
     .category = "international", .portal = "https://www.falcom.co.jp/",
     .record_type = "organisation-notice",
+    .lang = "ja",
     .tags = "\"igo\",\"international\",\"organisation\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.falcom.co.jp/feed/rss",
@@ -9791,6 +9813,7 @@ static const hp_source HP3B48_IGO[] = {
     .date_keys = "pubDate,dc:date",
     .id_keys = "guid,link",
     .interval = 3600,
+    .adaptive_interval = 1,
     .link_keys = "link",
     .timeout_ms = 30000,
     .title_keys = "title",
@@ -9811,6 +9834,7 @@ static const hp_source HP3B48_IGO[] = {
     .date_keys = "pubDate,dc:date",
     .id_keys = "guid,link",
     .interval = 3600,
+    .adaptive_interval = 1,
     .link_keys = "link",
     .timeout_ms = 30000,
     .title_keys = "title",
@@ -9834,6 +9858,7 @@ static const hp_source HP3B48_IGO[] = {
     .date_keys = "pubDate,dc:date",
     .id_keys = "guid,link",
     .interval = 3600,
+    .adaptive_interval = 1,
     .link_keys = "link",
     .timeout_ms = 30000,
     .title_keys = "title",
@@ -9853,6 +9878,7 @@ static const hp_source HP3B48_IGO[] = {
     .date_keys = "pubDate,dc:date",
     .id_keys = "guid,link",
     .interval = 3600,
+    .adaptive_interval = 1,
     .link_keys = "link",
     .timeout_ms = 30000,
     .title_keys = "title",

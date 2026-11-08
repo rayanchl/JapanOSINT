@@ -1,5 +1,6 @@
 /* core/cadence.c — see cadence.h. */
 #include "cadence.h"
+#include "../lib/jocore.h"
 #include "../source.h"
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
@@ -39,10 +40,7 @@ static long env_long(const char *name) {
   return (end && *end == 0 && n > 0) ? n : 0;
 }
 
-static void iso_now(char *out, size_t n) {
-  time_t t = time(NULL); struct tm tm; gmtime_r(&t, &tm);
-  strftime(out, n, "%Y-%m-%dT%H:%M:%SZ", &tm);
-}
+/* ISO-8601 UTC, whole seconds: jo_iso_now_sec() (lib/jocore.h). */
 
 static int ensure_table(db_handle *db) {
   return db_exec(db,
@@ -153,7 +151,7 @@ int cadence_set(db_handle *db, const cadence_policy *p, const char *who, const c
   const char *e = validate(p);
   if (e) { if (err) *err = e; return -1; }
   if (!db || ensure_table(db) != 0) { if (err) *err = "settings table unavailable"; return -1; }
-  char at[32]; iso_now(at, sizeof at);
+  char at[32]; jo_iso_now_sec(at, sizeof at);
   if (db_exec(db, "BEGIN", NULL) != 0) { if (err) *err = "database busy"; return -1; }
   if (write_key(db, K_GLOBAL, p->global_sec, at, who) || write_key(db, K_MIN, p->min_sec, at, who) ||
       write_key(db, K_MAX, p->max_sec, at, who) || db_exec(db, "COMMIT", NULL) != 0) {

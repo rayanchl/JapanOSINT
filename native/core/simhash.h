@@ -222,7 +222,9 @@
  *    first ingested row pays for the migration", not to a failure.
  *
  * 2) core/intel.c — the ingest chokepoint. ONE call in emit(), AFTER the
- *    commit, right next to the existing alert_eval_on_item() call:
+ *    commit, right next to the existing alert_eval_on_item() call. (As wired
+ *    it is simhash_on_item_segmented(), the zero-extra-MeCab variant below;
+ *    the raw-text simhash_on_item() shown here was removed 2026-11-07.)
  *
  *        #include "simhash.h"                     // with the other includes
  *        ...
@@ -255,7 +257,10 @@
  *    optimisation and is deliberately NOT required, because it would mean
  *    editing the hot path for a saving that only matters at high ingest rates.
  *
- * 3) core/httpd.c — ?collapse=1 on GET /api/intel/items. The collapse is a
+ * 3) core/httpd.c — ?collapse=1 on GET /api/intel/items. (Superseded: the
+ *    collapse is applied inside intelapi_list_items(), rank-aware, and the
+ *    post-pass simhash_collapse() sketched here had no caller and was removed
+ *    2026-11-07.) The collapse is a
  *    post-pass over the envelope intelapi_list_items() already produced, so
  *    every existing filter, the FTS branch, the keyset cursor and the breach
  *    adapter path all keep working untouched:
@@ -386,50 +391,14 @@ int simhash_distance(uint64_t a, uint64_t b);
  *
  * `tenant_id` is a hint only — the row's own tenant_id is read back and is
  * authoritative for candidate selection and relabelling, so a mislabelled call
- * can never cluster one tenant's items into another's. `title`/`body` are RAW
- * text; they are segmented here. */
-void simhash_on_item(db_handle *db, const char *tenant_id, const char *uid,
-                     const char *title, const char *body);
-
-/* Same, for callers that already hold MeCab-segmented title/body (see the
- * zero-extra-MeCab note in wiring 2). Identical fingerprints, one less pass. */
+ * can never cluster one tenant's items into another's. `seg_title`/`seg_body`
+ * are ALREADY MeCab-segmented (fts_segment / fts_segment_body): core/intel.c
+ * hands over the strings fts_write() produced, so the segmentation is not
+ * repeated. The raw-text wrapper simhash_on_item() had no caller and was
+ * removed 2026-11-07. */
 void simhash_on_item_segmented(db_handle *db, const char *tenant_id,
                                const char *uid, const char *seg_title,
                                const char *seg_body);
-
-/* ?collapse=1 — collapse an intelapi_list_items() envelope to one row per
- * cluster. `list_json` is the malloc'd envelope from intelapi_list_items()
- * (or breach_adapter_list(); same shape). Returns a NEW malloc'd envelope,
- * caller frees BOTH, or NULL if the input is not a recognisable envelope, in
- * which case the caller keeps the uncollapsed one.
- *
- * Each surviving row gains four keys, appended after its existing ones:
- *   "cluster_id"           uid of the earliest-published member
- *   "cluster_size"         TOTAL members corpus-wide, not just on this page
- *   "cluster_source_count" distinct source_ids in the cluster
- *   "duplicates"           [{"source_id":…,"uid":…}, …] — the OTHER members,
- *                          publication order, at most
- *                          SIMHASH_MAX_DUPLICATES_LISTED entries
- *   "duplicates_truncated" true when that cap cut the list
- *
- * `duplicates` is the POINT of this feature, not a leftover. "Twenty
- * independent sources reported this" is corroboration and is often the most
- * valuable thing on the row; the duplicates are folded into the row, never
- * dropped. Membership is read from the whole corpus by cluster_id, NOT from
- * the current page, so a cluster whose other nineteen members are on page
- * seven still reports twenty.
- *
- * Rows whose uid has no intel_items row (breach adapter synthetics) and rows
- * not yet fingerprinted are passed through as singletons — collapse is always
- * safe to enable, including mid-backfill.
- *
- * `page` is left untouched ON PURPOSE: the cursor is a property of the
- * UNDERLYING scan, so paging stays lossless and complete even though `data`
- * is shorter than `limit`. meta.collapse reports rows_in/rows_out so a client
- * can tell how much was folded. Singletons keep the same shape (size 1, empty
- * duplicates) so a client never has to branch. */
-char *simhash_collapse(db_handle *db, const char *tenant_id,
-                       const char *list_json);
 
 /* Resumable backfill for rows with simhash IS NULL, in ASCENDING publication
  * order — which is what makes it free of representative migration (see point

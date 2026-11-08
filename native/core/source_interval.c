@@ -1,5 +1,6 @@
 /* core/source_interval.c — see source_interval.h. */
 #include "source_interval.h"
+#include "../lib/jocore.h"
 #include "cadence.h"
 #include "scheduler.h"
 #include "../source.h"
@@ -28,10 +29,7 @@ static int cmp_key(const void *k, const void *e) {
   return strcmp((const char *)k, ((const si_entry *)e)->id);
 }
 
-static void iso_now(char *out, size_t n) {
-  time_t t = time(NULL); struct tm tm; gmtime_r(&t, &tm);
-  strftime(out, n, "%Y-%m-%dT%H:%M:%SZ", &tm);
-}
+/* ISO-8601 UTC, whole seconds: jo_iso_now_sec() (lib/jocore.h). */
 
 static int ensure_table(db_handle *db) {
   return db_exec(db,
@@ -125,7 +123,7 @@ int source_interval_set(db_handle *db, const char *id, long interval_sec,
   else if (interval_sec > SI_MAX_SEC)   e = "an interval longer than a year is a typo";
   if (e) { if (err) *err = e; return -1; }
   if (ensure_table(db) != 0) { if (err) *err = "could not create source_interval_override"; return -1; }
-  char at[32]; iso_now(at, sizeof at);
+  char at[32]; jo_iso_now_sec(at, sizeof at);
   sqlite3_stmt *s = NULL;
   if (sqlite3_prepare_v2(db->h,
         "INSERT INTO source_interval_override(source_id,interval_sec,enabled,updated_at,updated_by) "

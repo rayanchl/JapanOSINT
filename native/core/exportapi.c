@@ -17,8 +17,8 @@
  *     struct and failing loudly here. If intelapi ever exports its builder,
  *     delete build_intel_sql() and call it.
  *
- *  2. b64url_decode() is copied from intelapi.c (also static there) so the
- *     export honours the exact same keyset cursor token the items endpoint
+ *  2. The cursor is decoded with jo_b64url_decode_str() (core/jo_codec.h),
+ *     the decoder intelapi.c uses, so the export honours the exact same keyset cursor token the items endpoint
  *     hands out — an export can resume where a page left off.
  *
  * Number formatting for CSV uses SQLite's own text rendering of the stored
@@ -27,6 +27,8 @@
  * output for the same row.
  */
 #include "exportapi.h"
+#include "jo_codec.h"
+#include "../lib/jocore.h"
 #include "intelapi.h"
 #include "audit.h"
 #include "fts.h"
@@ -119,50 +121,12 @@ static const char *ctext(sqlite3_stmt *s, int i) {
   return sqlite3_column_type(s, i) == SQLITE_NULL
            ? NULL : (const char *)sqlite3_column_text(s, i);
 }
-static void iso_now(char *buf, size_t n) {
-  struct timeval tv; gettimeofday(&tv, NULL);
-  struct tm tm; gmtime_r(&tv.tv_sec, &tm);
-  /* The %0Nd widths are minimums, not caps: to -Wformat-truncation
-   * `tm_year + 1900` is a plain int worth up to 11 characters, so this
-   * fixed 24-char stamp "may be truncated". The modulos are identity for
-   * every value gmtime_r can return and make the 24 provable, not merely
-   * true. */
-  snprintf(buf, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
-           (unsigned)(tm.tm_year + 1900) % 10000u, (unsigned)(tm.tm_mon + 1) % 100u,
-           (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
-           (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u,
-           (unsigned)(tv.tv_usec / 1000) % 1000u);
-}
+/* ISO-8601 UTC with milliseconds: jo_iso_now_ms() (lib/jocore.h). */
 static void stamp_now(char *buf, size_t n) {          /* filename-safe */
   time_t t = time(NULL); struct tm g; gmtime_r(&t, &g);
   strftime(buf, n, "%Y%m%dT%H%M%SZ", &g);
 }
 
-/* base64url (no padding) → malloc'd bytes; NULL on an invalid char (bad
- * cursor is ignored, == intelapi.c). Copy of intelapi.c's private decoder. */
-static char *b64url_decode(const char *in) {
-  static signed char R[256];
-  static int init = 0;
-  if (!init) {
-    for (int i = 0; i < 256; i++) R[i] = -1;
-    const char *T =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
-    for (int i = 0; i < 64; i++) R[(unsigned char)T[i]] = (signed char)i;
-    init = 1;
-  }
-  size_t len = strlen(in);
-  char *out = malloc(len / 4 * 3 + 4);
-  if (!out) return NULL;
-  size_t o = 0; unsigned v = 0; int bits = 0;
-  for (size_t i = 0; i < len; i++) {
-    signed char d = R[(unsigned char)in[i]];
-    if (d < 0) { free(out); return NULL; }
-    v = (v << 6) | (unsigned)d; bits += 6;
-    if (bits >= 8) { bits -= 8; out[o++] = (char)((v >> bits) & 0xFF); }
-  }
-  out[o] = 0;
-  return out;
-}
 
 /* Wrap a user term as one quoted FTS5 phrase so it can never be parsed as
  * query syntax (== breach_adapter.c fts_phrase / breach_store.c). */
@@ -395,7 +359,7 @@ static void parse_params(ekind k, const char *qs, const tenant_ctx *t,
     if (p->iq.cursor)        ep_filter(p, "cursor",        p->iq.cursor);
 
     if (p->iq.cursor && *p->iq.cursor) {              /* {"p":..,"u":..} */
-      char *dec = b64url_decode(p->iq.cursor);
+      char *dec = jo_b64url_decode_str(p->iq.cursor);
       if (dec) {
         cJSON *cj = cJSON_Parse(dec);
         free(dec);
@@ -1016,7 +980,7 @@ int export_run(db_handle *db, const tenant_ctx *t, const char *kind,
 
   /* ── epilogue ── */
   if (!o->broken) {
-    char ts[40]; iso_now(ts, sizeof ts);
+    char ts[40]; jo_iso_now_ms(ts, sizeof ts);
     if (f == F_CSV) {
       if (incomplete) {
         char note[416];

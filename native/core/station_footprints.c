@@ -367,15 +367,3 @@ char *station_footprints_fc_json(db_handle *db) {
   return js;
 }
 
-int station_footprints_count(db_handle *db) {
-  if (!db || !db->h) return -1;
-  sqlite3_stmt *s;
-  if (sqlite3_prepare_v2(db->h,
-        "SELECT COUNT(*) FROM station_footprints", -1, &s, NULL)
-      != SQLITE_OK)
-    return -1;
-  int n = -1;
-  if (sqlite3_step(s) == SQLITE_ROW) n = sqlite3_column_int(s, 0);
-  sqlite3_finalize(s);
-  return n;
-}

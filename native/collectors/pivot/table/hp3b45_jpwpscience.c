@@ -21,11 +21,17 @@
  */
 #include "lib/hpengine.h"
 
+/* `.lang = "ja"` (2026-11-07) on the Japanese-language rows below: an unset
+ * lang is stamped "en" by lib/hpengine.c, so `lang=` filters in /api/intel and
+ * semantic search missed them. Set where the host is .jp or the row's name or
+ * description carries kana; English pages (/en/, /english/, *_en collections)
+ * keep the default. */
 static const hp_source HP3B45_JPWPSCIENCE[] = {
   { .id = "JO45_WP_KEK_POSTS", .name = "KEK / 高エネルギー加速器研究機構 — posts (WordPress REST)",
     .name_ja = "KEK / 高エネルギー加速器研究機構 投稿（WordPress REST）",
     .category = "physics", .portal = "https://www.kek.jp/",
     .record_type = "site-post",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.kek.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=desc",
@@ -50,6 +56,7 @@ static const hp_source HP3B45_JPWPSCIENCE[] = {
     .name_ja = "KEK / 高エネルギー加速器研究機構 固定ページ（WordPress REST）",
     .category = "physics", .portal = "https://www.kek.jp/",
     .record_type = "site-page",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.kek.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc",
@@ -75,6 +82,7 @@ static const hp_source HP3B45_JPWPSCIENCE[] = {
     .name_ja = "KEK / 高エネルギー加速器研究機構 プレスリリース（WordPress REST）",
     .category = "physics", .portal = "https://www.kek.jp/",
     .record_type = "cpt-press-releases",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.kek.jp/wp-json/wp/v2/press-releases?per_page=100&orderby=date&order=desc",
@@ -101,6 +109,7 @@ static const hp_source HP3B45_JPWPSCIENCE[] = {
     .name_ja = "KEK / 高エネルギー加速器研究機構 トピックス（WordPress REST）",
     .category = "physics", .portal = "https://www.kek.jp/",
     .record_type = "cpt-topics",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.kek.jp/wp-json/wp/v2/topics?per_page=100&orderby=date&order=desc",
@@ -127,6 +136,7 @@ static const hp_source HP3B45_JPWPSCIENCE[] = {
     .name_ja = "KEK / 高エネルギー加速器研究機構 イベント（WordPress REST）",
     .category = "physics", .portal = "https://www.kek.jp/",
     .record_type = "cpt-events",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.kek.jp/wp-json/wp/v2/events?per_page=100&orderby=date&order=desc",
@@ -153,6 +163,7 @@ static const hp_source HP3B45_JPWPSCIENCE[] = {
     .name_ja = "KEK / 高エネルギー加速器研究機構 メディア掲載（WordPress REST）",
     .category = "physics", .portal = "https://www.kek.jp/",
     .record_type = "cpt-coverages",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.kek.jp/wp-json/wp/v2/coverages?per_page=100&orderby=date&order=desc",
@@ -179,6 +190,7 @@ static const hp_source HP3B45_JPWPSCIENCE[] = {
     .name_ja = "KEK / 高エネルギー加速器研究機構 フォトギャラリー / Photo Gallery（WordPress REST）",
     .category = "physics", .portal = "https://www.kek.jp/",
     .record_type = "cpt-photos",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.kek.jp/wp-json/wp/v2/photos?per_page=100&orderby=date&order=desc",
@@ -205,6 +217,7 @@ static const hp_source HP3B45_JPWPSCIENCE[] = {
     .name_ja = "KEK / 高エネルギー加速器研究機構 採用情報（WordPress REST）",
     .category = "physics", .portal = "https://www.kek.jp/",
     .record_type = "cpt-jobs",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.kek.jp/wp-json/wp/v2/jobs?per_page=100&orderby=date&order=desc",
@@ -231,6 +244,7 @@ static const hp_source HP3B45_JPWPSCIENCE[] = {
     .name_ja = "KEK / 高エネルギー加速器研究機構 会議とセミナー（WordPress REST）",
     .category = "physics", .portal = "https://www.kek.jp/",
     .record_type = "cpt-conferences",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.kek.jp/wp-json/wp/v2/conferences?per_page=100&orderby=date&order=desc",
@@ -257,6 +271,7 @@ static const hp_source HP3B45_JPWPSCIENCE[] = {
     .name_ja = "KEK / 高エネルギー加速器研究機構 用語集（WordPress REST）",
     .category = "physics", .portal = "https://www.kek.jp/",
     .record_type = "cpt-glossaries",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.kek.jp/wp-json/wp/v2/glossaries?per_page=100&orderby=date&order=desc",
@@ -282,6 +297,7 @@ static const hp_source HP3B45_JPWPSCIENCE[] = {
     .name_ja = "KEK / 高エネルギー加速器研究機構 利用者一覧（WordPress REST）",
     .category = "physics", .portal = "https://www.kek.jp/",
     .record_type = "site-user",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"users\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.kek.jp/wp-json/wp/v2/users?per_page=100",

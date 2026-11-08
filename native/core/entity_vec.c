@@ -1,5 +1,6 @@
 /* core/entity_vec.c — see entity_vec.h. */
 #include "entity_vec.h"
+#include "../lib/jocore.h"
 #include "thresholds.h"         /* operator-tunable similarity cut-offs */
 #include "entitystore.h"
 #include "../source.h"
@@ -48,12 +49,8 @@ char *entity_vec_text(const char *canonical, const char *romaji) {
   return b;
 }
 
-static void iso_now(char *buf, size_t n) {
-  time_t t = time(NULL);
-  struct tm tm;
-  gmtime_r(&t, &tm);
-  strftime(buf, n, "%Y-%m-%dT%H:%M:%S.000Z", &tm);
-}
+/* ISO-8601 UTC as "...SS.000Z" (whole seconds, a literal .000 — the
+ * shape this file has always stored): jo_iso_fmt(time(NULL), 0, ...). */
 
 int entity_vec_ready(db_handle *db) {
   const vecindex_spec *s = &entity_vec_spec;
@@ -117,7 +114,7 @@ int entity_vec_tick(db_handle *db, struct http_client *http, int max_walk) {
   vecindex_ensure_meta(db, s);
   vecindex_ensure_side_tables(db, s);
   char now[40];
-  iso_now(now, sizeof now);
+  jo_iso_fmt(time(NULL), 0, now, sizeof now);
 
   char model[256];
   if (vecindex_detect_model(http, base, model, sizeof model) != 0) {

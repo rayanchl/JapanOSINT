@@ -63,8 +63,9 @@ static void slugify(sqlite3 *h, const char *email, char *out, size_t cap) {
   snprintf(out, cap, "%s-%s", s, u);
 }
 
-int tenant_resolve(db_handle *db, const auth_user *u,
-                   const char *x_tenant_id, tenant_ctx *out) {
+static int resolve_impl(db_handle *db, const auth_user *u,
+                        const char *x_tenant_id, tenant_ctx *out,
+                        int lenient) {
   if (!u || !u->id[0]) return -401;
   sqlite3 *h = db->h;
   sqlite3_stmt *st;
@@ -210,6 +211,18 @@ int tenant_resolve(db_handle *db, const auth_user *u,
     snprintf(first_role, sizeof first_role, "owner");
   }
 
+  /* An X-Tenant-Id naming a workspace the caller is NOT a member of used to
+   * fall back silently to their FIRST workspace (probed 2026-11-07:
+   * `X-Tenant-Id: platform` answered 200 with the operator's own data, and a
+   * write aimed at another workspace landed in the personal one). A header
+   * the caller cannot use is now an error — except on the lenient path,
+   * which GET /api/me alone takes, so a client holding a stale id can learn
+   * the workspace it actually has and recover. Provisioning above has
+   * already run either way, so a first sign-in with a stale header still
+   * gets its personal workspace. */
+  if (x_tenant_id && *x_tenant_id && !picked_tid[0] && !lenient)
+    return TENANT_NOT_MEMBER;
+
   const char *use_tid  = picked_tid[0]  ? picked_tid  : first_tid;
   const char *use_role = picked_tid[0]  ? picked_role : first_role;
 
@@ -230,6 +243,16 @@ int tenant_resolve(db_handle *db, const auth_user *u,
   sqlite3_finalize(st);
   snprintf(out->role, sizeof out->role, "%s", use_role);
   return 0;
+}
+
+int tenant_resolve(db_handle *db, const auth_user *u,
+                   const char *x_tenant_id, tenant_ctx *out) {
+  return resolve_impl(db, u, x_tenant_id, out, 0);
+}
+
+int tenant_resolve_lenient(db_handle *db, const auth_user *u,
+                           const char *x_tenant_id, tenant_ctx *out) {
+  return resolve_impl(db, u, x_tenant_id, out, 1);
 }
 
 char *tenantapi_me(db_handle *db, const tenant_ctx *t) {

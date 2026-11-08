@@ -1,5 +1,6 @@
 /* core/breach_store.c — see breach_store.h. */
 #include "breach_store.h"
+#include "jo_page.h"
 #include "../third_party/cJSON.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -259,16 +260,12 @@ char *breach_search(db_handle *db, const char *q, const char *type, int limit,
   cJSON *root = cJSON_CreateObject();
   cJSON_AddStringToObject(root, "query", has_q ? q : "");
   if (has_type) cJSON_AddStringToObject(root, "type", type);
-  cJSON_AddNumberToObject(root, "count", n);        /* kept: rows on this page */
-  cJSON_AddNumberToObject(root, "shown", n);
-  cJSON_AddNumberToObject(root, "offset", (double)offset);
-  cJSON_AddNumberToObject(root, "limit", limit);
-  if (total >= 0) cJSON_AddNumberToObject(root, "total", (double)total);
-  else            cJSON_AddNullToObject(root, "total");
-  cJSON_AddBoolToObject(root, "total_is_floor", is_floor || total < 0);
   /* A short page is the last one whatever the count says. */
   int more = n == limit && (is_floor || total < 0 || offset + n < total);
-  cJSON_AddBoolToObject(root, "has_more", more);
+  /* At the ROOT on this route; "count" is kept as the rows on this page. */
+  jo_page_fields(root, limit, offset, n, total, more, NULL);
+  cJSON_AddNumberToObject(root, "shown", n);
+  cJSON_AddBoolToObject(root, "total_is_floor", is_floor || total < 0);
   if (more) cJSON_AddNumberToObject(root, "next_offset", (double)(offset + n));
   cJSON_AddItemToObject(root, "results", arr);
   char *out = cJSON_PrintUnformatted(root);

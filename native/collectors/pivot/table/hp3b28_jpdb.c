@@ -20,11 +20,17 @@
  */
 #include "lib/hpengine.h"
 
+/* `.lang = "ja"` (2026-11-07) on the Japanese-language rows below: an unset
+ * lang is stamped "en" by lib/hpengine.c, so `lang=` filters in /api/intel and
+ * semantic search missed them. Set where the host is .jp or the row's name or
+ * description carries kana; English pages (/en/, /english/, *_en collections)
+ * keep the default. */
 static const hp_source HP3B28_JPDB[] = {
   { .id = "JO28_CINII_RESEARCH_OPENSEARCH", .name = "CiNii Research — OpenSearch article/metadata search",
     .name_ja = "CiNii Research オープンサーチ",
     .category = "reference", .portal = "https://cir.nii.ac.jp",
     .record_type = "academic-article-record",
+    .lang = "ja",
     .tags = "\"japan\",\"cinii\",\"academic\",\"research\",\"bibliography\",\"articles\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "http://cir.nii.ac.jp/opensearch/articles?q={q}&count=20&lang=ja&format=rss",

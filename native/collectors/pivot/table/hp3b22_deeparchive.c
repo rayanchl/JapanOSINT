@@ -20,6 +20,11 @@
  */
 #include "lib/hpengine.h"
 
+/* `.lang = "ja"` (2026-11-07) on the Japanese-language rows below: an unset
+ * lang is stamped "en" by lib/hpengine.c, so `lang=` filters in /api/intel and
+ * semantic search missed them. Set where the host is .jp or the row's name or
+ * description carries kana; English pages (/en/, /english/, *_en collections)
+ * keep the default. */
 static const hp_source HP3B22_DEEPARCHIVE[] = {
   { .id = "WAYBACK_AVAILABILITY_PIVOT", .name = "Wayback Machine availability API - closest snapshot for a URL",
     .category = "investigation", .portal = "https://archive.org/help/wayback_api.php",
@@ -2363,6 +2368,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .name_ja = "ジャパンサーチ横断検索",
     .category = "investigation", .portal = "https://jpsearch.go.jp",
     .record_type = "cultural-heritage-record",
+    .lang = "ja",
     .tags = "\"japan\",\"jpsearch\",\"ndl\",\"heritage\",\"search\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://jpsearch.go.jp/api/item/search/jps-cross?keyword={q}&size=100",
@@ -3560,6 +3566,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .name_ja = "CiNii Research 論文検索",
     .category = "investigation", .portal = "https://cir.nii.ac.jp",
     .record_type = "scholarly-record",
+    .lang = "ja",
     .tags = "\"japan\",\"cinii\",\"nii\",\"search\",\"articles\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://cir.nii.ac.jp/opensearch/articles?q={q}&format=json&count=100",
@@ -3581,6 +3588,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .name_ja = "CiNii Research 研究データ検索",
     .category = "investigation", .portal = "https://cir.nii.ac.jp",
     .record_type = "scholarly-record",
+    .lang = "ja",
     .tags = "\"japan\",\"cinii\",\"nii\",\"search\",\"data\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://cir.nii.ac.jp/opensearch/data?q={q}&format=json&count=100",
@@ -3602,6 +3610,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .name_ja = "CiNii Research プロジェクト検索",
     .category = "investigation", .portal = "https://cir.nii.ac.jp",
     .record_type = "scholarly-record",
+    .lang = "ja",
     .tags = "\"japan\",\"cinii\",\"nii\",\"search\",\"projects\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://cir.nii.ac.jp/opensearch/projects?q={q}&format=json&count=100",
@@ -3623,6 +3632,7 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .name_ja = "CiNii Research 博士論文検索",
     .category = "investigation", .portal = "https://cir.nii.ac.jp",
     .record_type = "scholarly-record",
+    .lang = "ja",
     .tags = "\"japan\",\"cinii\",\"nii\",\"search\",\"dissertations\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://cir.nii.ac.jp/opensearch/dissertations?q={q}&format=json&count=100",

@@ -1,5 +1,6 @@
 /* core/semsearchapi.c — see semsearchapi.h. */
 #include "semsearchapi.h"
+#include "jo_codec.h"
 #include "embed_pod.h"
 #include "intelapi.h"
 #include "breach_meta.h"
@@ -618,17 +619,6 @@ char *semsearchapi_query(db_handle *db, const char *tenant, const char *q,
 
 /* ---- the raw query string ------------------------------------------------ */
 
-/* mg_http_get_var: -3 = the value would not fit. A clipped filter is a
- * DIFFERENT filter, so that is a 414, never half of what was asked
- * (httpd.c qvar() is the same rule). */
-static int qs_get(const char *qs, const char *k, char *out, size_t cap,
-                  int *too_long) {
-  struct mg_str s = mg_str(qs ? qs : "");
-  int n = mg_http_get_var(&s, k, out, cap);
-  if (n == -3) *too_long = 1;
-  if (n <= 0) out[0] = 0;
-  return n > 0;
-}
 
 typedef struct {
   char q[1024], mode[16], source[1024], rtype[64], since[48], until[48],
@@ -639,16 +629,16 @@ typedef struct {
 static int parse_params(const char *qs, sem_params *p, semsearch_filters *f) {
   int tl = 0;
   memset(p, 0, sizeof *p);
-  qs_get(qs, "q", p->q, sizeof p->q, &tl);
-  qs_get(qs, "mode", p->mode, sizeof p->mode, &tl);
-  qs_get(qs, "limit", p->limit, sizeof p->limit, &tl);
-  qs_get(qs, "k", p->k, sizeof p->k, &tl);
-  qs_get(qs, "source", p->source, sizeof p->source, &tl);
-  qs_get(qs, "record_type", p->rtype, sizeof p->rtype, &tl);
-  qs_get(qs, "since", p->since, sizeof p->since, &tl);
-  qs_get(qs, "until", p->until, sizeof p->until, &tl);
-  qs_get(qs, "lang", p->lang, sizeof p->lang, &tl);
-  qs_get(qs, "bbox", p->bbox, sizeof p->bbox, &tl);
+  jo_qs_get_mg(qs, "q", p->q, sizeof p->q, &tl);
+  jo_qs_get_mg(qs, "mode", p->mode, sizeof p->mode, &tl);
+  jo_qs_get_mg(qs, "limit", p->limit, sizeof p->limit, &tl);
+  jo_qs_get_mg(qs, "k", p->k, sizeof p->k, &tl);
+  jo_qs_get_mg(qs, "source", p->source, sizeof p->source, &tl);
+  jo_qs_get_mg(qs, "record_type", p->rtype, sizeof p->rtype, &tl);
+  jo_qs_get_mg(qs, "since", p->since, sizeof p->since, &tl);
+  jo_qs_get_mg(qs, "until", p->until, sizeof p->until, &tl);
+  jo_qs_get_mg(qs, "lang", p->lang, sizeof p->lang, &tl);
+  jo_qs_get_mg(qs, "bbox", p->bbox, sizeof p->bbox, &tl);
   *f = (semsearch_filters){ p->source, p->rtype, p->since, p->until, p->lang,
                             p->bbox };
   return tl ? -1 : 0;
@@ -675,7 +665,7 @@ char *semsearchapi_http(db_handle *db, const char *tenant, const char *id,
 static char *lang_view(db_handle *db, const char *qs, char *body) {
   char lv[16];
   int tl = 0;
-  if (!body || !qs_get(qs, "lang_view", lv, sizeof lv, &tl)) return body;
+  if (!body || !(jo_qs_get_mg(qs, "lang_view", lv, sizeof lv, &tl) > 0)) return body;
   char *sh = translate_shape_items(db, body, translate_view_parse(lv));
   if (!sh) return body;
   free(body);
@@ -690,7 +680,7 @@ char *semsearchapi_items_hybrid(db_handle *db, const char *tenant,
        ssid[120], hg[8], tag[120], cur[2048], lim[16], kk[16];
   int tl = 0, ctl = 0;
   intel_items_query Q = {0};
-#define QV(name, buf, field) if (qs_get(qs, name, buf, sizeof buf, &tl)) Q.field = buf
+#define QV(name, buf, field) if ((jo_qs_get_mg(qs, name, buf, sizeof buf, &tl) > 0)) Q.field = buf
   QV("source", src, source); QV("q", q, q); QV("qAlt", qalt, q_alt);
   QV("lang", lang, lang); QV("since", since, since); QV("until", until, until);
   QV("record_type", rt, record_type); QV("sub_source_id", ssid, sub_source_id);
@@ -698,10 +688,10 @@ char *semsearchapi_items_hybrid(db_handle *db, const char *tenant,
 #undef QV
   /* A cursor too long even for this buffer is not one of this sort's
    * ("hybrid:<offset>"): ignored and disclosed below, as the feed does. */
-  int cur_given = qs_get(qs, "cursor", cur, sizeof cur, &ctl);
+  int cur_given = (jo_qs_get_mg(qs, "cursor", cur, sizeof cur, &ctl) > 0);
   if (ctl) { cur[0] = 0; cur_given = 1; }
-  qs_get(qs, "limit", lim, sizeof lim, &tl);
-  qs_get(qs, "k", kk, sizeof kk, &tl);
+  jo_qs_get_mg(qs, "limit", lim, sizeof lim, &tl);
+  jo_qs_get_mg(qs, "k", kk, sizeof kk, &tl);
   if (tl) return too_long(status);
   Q.tenant = tenant;
   if (!Q.q || !*Q.q)

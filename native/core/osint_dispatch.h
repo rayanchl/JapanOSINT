@@ -140,12 +140,12 @@ char *osint_services_list(void);
  * services + per-entity services) rebuilt from the LIVE registry, so the
  * analysis LLM can recommend exactly the services that exist — no manual enum
  * maintenance on registry changes. malloc'd; caller frees. NULL → fall back to
- * the static schema_load("osint_analysis"). */
-char *osint_analysis_schema_dynamic(void);
-
-/* Same, but the enums hold only the first `limit` entity-pivot services —
- * pass osint_catalogue_note.shown so what the model is ALLOWED to answer is
- * exactly what it was SHOWN. `limit` <= 0 means no limit. */
+ * the static schema_load("osint_analysis").
+ *
+ * The enums hold only the first `limit` entity-pivot services — pass
+ * osint_catalogue_note.shown so what the model is ALLOWED to answer is
+ * exactly what it was SHOWN. `limit` <= 0 means no limit. (The unlimited
+ * osint_analysis_schema_dynamic() had no caller; removed 2026-11-07.) */
 char *osint_analysis_schema_dynamic_limited(int limit);
 
 /* Same, but the enums hold exactly these ids — the counterpart to the semantic

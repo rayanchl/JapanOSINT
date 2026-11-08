@@ -23,6 +23,8 @@
  *     disagree about what is representable.
  */
 #include "savedsearchapi.h"
+#include "jo_page.h"
+#include "jo_codec.h"
 #include "alertsapi.h"
 #include "audit.h"
 #include "../third_party/cJSON.h"
@@ -75,94 +77,7 @@ static void add_str_or_null(cJSON *o, const char *k, const char *v) {
   cJSON_AddItemToObject(o, k, v ? cJSON_CreateString(v) : cJSON_CreateNull());
 }
 
-/* Buffer.from(str,'utf8').toString('base64url') — no padding, +/ → -_ */
-static char *b64url(const char *in) {
-  static const char T[] =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
-  size_t len = strlen(in);
-  char *out = malloc(((len + 2) / 3) * 4 + 1);
-  if (!out) return NULL;
-  size_t o = 0;
-  for (size_t i = 0; i < len; i += 3) {
-    unsigned a = (unsigned char)in[i];
-    unsigned b = i + 1 < len ? (unsigned char)in[i + 1] : 0;
-    unsigned c = i + 2 < len ? (unsigned char)in[i + 2] : 0;
-    unsigned v = (a << 16) | (b << 8) | c;
-    out[o++] = T[(v >> 18) & 63];
-    out[o++] = T[(v >> 12) & 63];
-    if (i + 1 < len) out[o++] = T[(v >> 6) & 63];
-    if (i + 2 < len) out[o++] = T[v & 63];
-  }
-  out[o] = 0;
-  return out;
-}
-/* Inverse of b64url(). NULL on any character outside the alphabet — for a
- * permalink that is a hard reject, not a "best effort": a token that decodes
- * to something other than what was minted is worse than an error page. */
-static char *b64url_decode(const char *in) {
-  static signed char R[256];
-  static int init = 0;
-  if (!init) {
-    for (int i = 0; i < 256; i++) R[i] = -1;
-    const char *T =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
-    for (int i = 0; i < 64; i++) R[(unsigned char)T[i]] = (signed char)i;
-    init = 1;
-  }
-  size_t len = strlen(in);
-  char *out = malloc(len / 4 * 3 + 4);
-  if (!out) return NULL;
-  size_t o = 0; unsigned v = 0; int bits = 0;
-  for (size_t i = 0; i < len; i++) {
-    signed char d = R[(unsigned char)in[i]];
-    if (d < 0) { free(out); return NULL; }
-    v = (v << 6) | (unsigned)d; bits += 6;
-    if (bits >= 8) { bits -= 8; out[o++] = (char)((v >> bits) & 0xFF); }
-  }
-  out[o] = 0;
-  return out;
-}
 
-/* ── query string ────────────────────────────────────────────────────────── */
-static int hexv(int c) {
-  if (c >= '0' && c <= '9') return c - '0';
-  if (c >= 'a' && c <= 'f') return c - 'a' + 10;
-  if (c >= 'A' && c <= 'F') return c - 'A' + 10;
-  return -1;
-}
-static void url_decode(const char *s, size_t n, char *out, size_t cap) {
-  size_t o = 0;
-  for (size_t i = 0; i < n && o + 1 < cap; i++) {
-    int c = (unsigned char)s[i];
-    if (c == '+') { out[o++] = ' '; continue; }
-    if (c == '%' && i + 2 < n) {
-      int h = hexv((unsigned char)s[i + 1]), l = hexv((unsigned char)s[i + 2]);
-      if (h >= 0 && l >= 0) { out[o++] = (char)((h << 4) | l); i += 2; continue; }
-    }
-    out[o++] = (char)c;
-  }
-  out[o] = 0;
-}
-static int qget(const char *query, const char *key, char *out, size_t cap) {
-  out[0] = 0;
-  if (!query || !*query) return 0;
-  size_t klen = strlen(key);
-  const char *p = query;
-  while (*p) {
-    const char *amp = strchr(p, '&');
-    const char *seg_end = amp ? amp : p + strlen(p);
-    const char *eq = memchr(p, '=', (size_t)(seg_end - p));
-    size_t kn = eq ? (size_t)(eq - p) : (size_t)(seg_end - p);
-    if (kn == klen && memcmp(p, key, klen) == 0) {
-      const char *vstart = eq ? eq + 1 : seg_end;
-      url_decode(vstart, (size_t)(seg_end - vstart), out, cap);
-      return 1;
-    }
-    if (!amp) break;
-    p = amp + 1;
-  }
-  return 0;
-}
 static int truthy(const char *v) {
   return v && (!strcmp(v,"1") || !strcmp(v,"true") || !strcmp(v,"yes"));
 }
@@ -235,14 +150,7 @@ static long long count_where(db_handle *db, const char *table,
 }
 static cJSON *page_block(int lim, int off, int n, long long total, int more) {
   if (total >= 0 && (long long)off + n < total) more = 1;
-  cJSON *pg = cJSON_CreateObject();
-  cJSON_AddNumberToObject(pg, "limit", (double)lim);
-  cJSON_AddNumberToObject(pg, "offset", (double)off);
-  cJSON_AddNumberToObject(pg, "count", (double)n);
-  if (total >= 0) cJSON_AddNumberToObject(pg, "total", (double)total);
-  else            cJSON_AddNullToObject(pg, "total");
-  cJSON_AddBoolToObject(pg, "has_more", more);
-  return pg;
+  return jo_page_new(lim, off, n, total, more);     /* core/jo_page.h */
 }
 
 /* ── saved_searches: decode + validation ─────────────────────────────────── */
@@ -508,10 +416,10 @@ char *searchhistoryapi(db_handle *db, const tenant_ctx *t, const char *method,
 
   if (!strcmp(method, "GET")) {
     char v_kind[32] = {0}, v_lim[24] = {0}, v_off[24] = {0}, v_mine[8] = {0};
-    qget(qs, "kind", v_kind, sizeof v_kind);
-    qget(qs, "limit", v_lim, sizeof v_lim);
-    qget(qs, "offset", v_off, sizeof v_off);
-    qget(qs, "mine", v_mine, sizeof v_mine);
+    jo_qs_get(qs, "kind", v_kind, sizeof v_kind, JO_QS_DECODE | JO_QS_BARE_KEY);
+    jo_qs_get(qs, "limit", v_lim, sizeof v_lim, JO_QS_DECODE | JO_QS_BARE_KEY);
+    jo_qs_get(qs, "offset", v_off, sizeof v_off, JO_QS_DECODE | JO_QS_BARE_KEY);
+    jo_qs_get(qs, "mine", v_mine, sizeof v_mine, JO_QS_DECODE | JO_QS_BARE_KEY);
     if (v_kind[0] && !kind_valid(v_kind)) return err(st, 400, "invalid_kind");
     int lim = clamp_limit(v_lim, 50);
     int off = clamp_offset(v_off);
@@ -762,7 +670,7 @@ static char *pl_token(cJSON *canon, int *too_big) {
   cJSON_Delete(cm);
   if (!j) return NULL;
   if (strlen(j) > PL_STATE_MAX) { free(j); *too_big = 1; return NULL; }
-  char *b = b64url(j); free(j);
+  char *b = jo_b64url_encode_str(j); free(j);
   if (!b) return NULL;
   size_t n = strlen(b) + 4;
   if (n > PL_TOKEN_MAX) { free(b); *too_big = 1; return NULL; }
@@ -782,7 +690,7 @@ char *permalink_decode(const char *token) {
   if (strncmp(token, "v1.", 3) != 0) return NULL;
   const char *b = token + 3;
   if (!*b) return NULL;
-  char *raw = b64url_decode(b);
+  char *raw = jo_b64url_decode_str(b);
   if (!raw) return NULL;
   if (strlen(raw) > PL_STATE_MAX) { free(raw); return NULL; }
   cJSON *in = cJSON_Parse(raw);
@@ -1129,11 +1037,11 @@ char *savedsearchapi(db_handle *db, const tenant_ctx *t, const char *method,
     if (is_get) {
       char v_kind[32] = {0}, v_lim[24] = {0}, v_off[24] = {0}, v_pin[16] = {0},
            v_mine[8] = {0};
-      qget(qs, "kind", v_kind, sizeof v_kind);
-      qget(qs, "limit", v_lim, sizeof v_lim);
-      qget(qs, "offset", v_off, sizeof v_off);
-      qget(qs, "pinned", v_pin, sizeof v_pin);
-      qget(qs, "mine", v_mine, sizeof v_mine);
+      jo_qs_get(qs, "kind", v_kind, sizeof v_kind, JO_QS_DECODE | JO_QS_BARE_KEY);
+      jo_qs_get(qs, "limit", v_lim, sizeof v_lim, JO_QS_DECODE | JO_QS_BARE_KEY);
+      jo_qs_get(qs, "offset", v_off, sizeof v_off, JO_QS_DECODE | JO_QS_BARE_KEY);
+      jo_qs_get(qs, "pinned", v_pin, sizeof v_pin, JO_QS_DECODE | JO_QS_BARE_KEY);
+      jo_qs_get(qs, "mine", v_mine, sizeof v_mine, JO_QS_DECODE | JO_QS_BARE_KEY);
       if (v_kind[0] && !kind_valid(v_kind)) {
         out = err(st, 400, "invalid_kind"); goto done;
       }

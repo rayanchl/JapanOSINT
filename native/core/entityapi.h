@@ -35,7 +35,6 @@
  * `entities` and `intel_items` are tenant-scoped; the extraction-pipeline and
  * mention/relationship counters are corpus-wide because those tables have no
  * tenant column to filter on. */
-char *entityapi_stats(db_handle *db, const char *tenant);
 /* `entities` and `mentions` exclude the breach scope unless is_operator. */
 char *entityapi_stats_scoped(db_handle *db, const char *tenant, int is_operator);
 
@@ -78,8 +77,6 @@ char *entityapi_search_route(db_handle *db, const char *tenant, const char *id,
 
 /* GET /api/entities/:type/:id — profile. NULL if missing, type mismatch, or
  * not visible to `tenant` (caller → 404 {"error":"not_found"}). */
-char *entityapi_get(db_handle *db, const char *type, const char *id,
-                    const char *tenant);
 /* Non-operator: `exposure` is null and `exposure_withheld` says why. It is not
  * zeroed — a fabricated {breach_count:0} reads as "clean" and the count itself
  * is the disclosure. */
@@ -101,9 +98,6 @@ char *entityapi_get_scoped(db_handle *db, const char *type, const char *id,
  * The response carries a `meta` block (node_count, max_nodes, hubs_collapsed,
  * nodes_over_cap, truncated) so the client can say "showing 300 of N" instead
  * of silently presenting a partial graph as if it were complete. */
-char *entityapi_graph(db_handle *db, const char *type, const char *id, int depth,
-                      const char *rel_types, int exclude_hubs, int max_nodes,
-                      const char *tenant);
 char *entityapi_graph_scoped(db_handle *db, const char *type, const char *id,
                              int depth, const char *rel_types, int exclude_hubs,
                              int max_nodes, const char *tenant, int is_operator);
@@ -112,8 +106,6 @@ char *entityapi_graph_scoped(db_handle *db, const char *type, const char *id,
  * {mentions:[...], page:{limit,offset,total}, meta:{...}}. `total` counts
  * through the same tenant predicate the list uses, so it never reveals the
  * existence of another tenant's items. */
-char *entityapi_mentions(db_handle *db, const char *type, const char *id,
-                         int limit, int offset, const char *tenant);
 /* Breach mentions (m.surface = the cleartext identifier, m.source_id = the
  * breach) are excluded unless is_operator. The response carries a `scope`
  * block saying the view is filtered — deliberately WITHOUT a withheld count,
@@ -146,8 +138,6 @@ char *entityapi_mentions_scoped(db_handle *db, const char *type, const char *id,
  * DISTINCT source_id — the grouped population `data` is a slice of — and is
  * NOT the same figure as exposure.breach_count, which is a summary about the
  * entity rather than about this page. */
-char *entityapi_breaches(db_handle *db, const char *type, const char *id,
-                         int limit, int offset, const char *tenant);
 /* Non-operator → NULL, i.e. denied, for EVERY entity (breached or not) so the
  * response cannot be used to distinguish the two. core/httpd.c replies 403
  * before calling this; the NULL is the second line of defence. */
@@ -167,8 +157,6 @@ char *entityapi_breaches_scoped(db_handle *db, const char *type, const char *id,
  *
  * The response carries `meta` (returned/total/limit/offset/has_more) so a
  * bounded page says how much exists, per house rule 2. */
-char *entityapi_merges(db_handle *db, const char *type, const char *id,
-                       int limit, int offset, const char *tenant);
 /* The COUNTERPART of each merge is joined under the same visibility disjunct
  * as every other read here — entity_by_id only bounds the node you entered
  * from, so without this a merge row would hand a viewer the id and canonical

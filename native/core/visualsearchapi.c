@@ -1,5 +1,6 @@
 /* core/visualsearchapi.c — see visualsearchapi.h. */
 #include "visualsearchapi.h"
+#include "jo_codec.h"
 #include "camera_feed.h"
 #include "camera_refframe.h"
 #include "camera_stills.h"
@@ -37,13 +38,6 @@ static char *unavailable(int *status, const char *reason) {
   return err_json(status, 503, "visual_search_unavailable", reason);
 }
 
-/* 1 = got it, 0 = absent, -1 = too long for its buffer. */
-static int qs_get(const char *qs, const char *k, char *out, size_t cap) {
-  struct mg_str s = mg_str(qs ? qs : "");
-  int n = mg_http_get_var(&s, k, out, cap);
-  if (n <= 0) out[0] = 0;
-  return n == -3 ? -1 : n > 0;
-}
 
 /* w,s,e,n with the ranges a coordinate can have. */
 static int parse_bbox(const char *t, double v[4]) {
@@ -184,9 +178,9 @@ typedef struct {
 
 static int arg_get(const char *primary, const char *fallback, const char *k,
                    char *out, size_t cap) {
-  int r = qs_get(primary, k, out, cap);
+  int r = jo_qs_get_mg(primary, k, out, cap, NULL);
   if (r != 0) return r;
-  return qs_get(fallback, k, out, cap);
+  return jo_qs_get_mg(fallback, k, out, cap, NULL);
 }
 
 static char *parse_params(db_handle *db, const char *primary, const char *fallback,
@@ -381,7 +375,7 @@ char *visualsearchapi_route(db_handle *db, const char *tenant, const char *id,
   (void)tenant; (void)id; (void)is_operator;
   const vecindex_spec *s = &image_vec_spec;
   char q[1024];
-  if (qs_get(qs, "q", q, sizeof q) < 0)
+  if (jo_qs_get_mg(qs, "q", q, sizeof q, NULL) < 0)
     return err_json(status, 414, "query_parameter_too_long", NULL);
   vs_params p;
   char *e = parse_params(db, NULL, qs, &p, status);
@@ -591,8 +585,8 @@ char *visualsearchapi_by_image_route(db_handle *db, const char *tenant,
                                      int is_operator, int *status) {
   (void)is_operator;
   char still_id[256], upload_id[64];
-  if (qs_get(id, "still_id", still_id, sizeof still_id) < 0 ||
-      qs_get(id, "upload_id", upload_id, sizeof upload_id) < 0)
+  if (jo_qs_get_mg(id, "still_id", still_id, sizeof still_id, NULL) < 0 ||
+      jo_qs_get_mg(id, "upload_id", upload_id, sizeof upload_id, NULL) < 0)
     return err_json(status, 400, "bad_request", "id too long");
   vs_params p;
   char *e = parse_params(db, id, qs, &p, status);

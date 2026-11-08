@@ -30,6 +30,10 @@ static const hp_source HP3B19_DEFENCE[] = {
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=CONTRACTING_AGENCY_NAME%3A%22DEPT+OF+THE+NAVY%22",
     .array_path = "entry",
     .date_keys = "modified",
+    /* id_keys as FPDS_PSC_GUIDED_MISSILES (2026-11-07): an FPDS entry has no
+     * <id> and one generic <link>; title+modified was distinct on 30 of 30
+     * Navy entries (start=0,10,20) as on that row's 100. */
+    .id_keys = "title+modified",
     .interval = 21600,
     .page_param = "start",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -55,6 +59,10 @@ static const hp_source HP3B19_DEFENCE[] = {
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=CONTRACTING_AGENCY_NAME%3A%22DEPT+OF+THE+ARMY%22",
     .array_path = "entry",
     .date_keys = "modified",
+    /* id_keys as FPDS_PSC_GUIDED_MISSILES (2026-11-07): an FPDS entry has no
+     * <id> and one generic <link>; title+modified was distinct on 30 of 30
+     * Navy entries (start=0,10,20) as on that row's 100. */
+    .id_keys = "title+modified",
     .interval = 21600,
     .page_param = "start",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -79,6 +87,10 @@ static const hp_source HP3B19_DEFENCE[] = {
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=CONTRACTING_AGENCY_NAME%3A%22DEPT+OF+THE+AIR+FORCE%22",
     .array_path = "entry",
     .date_keys = "modified",
+    /* id_keys as FPDS_PSC_GUIDED_MISSILES (2026-11-07): an FPDS entry has no
+     * <id> and one generic <link>; title+modified was distinct on 30 of 30
+     * Navy entries (start=0,10,20) as on that row's 100. */
+    .id_keys = "title+modified",
     .interval = 21600,
     .page_param = "start",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -103,6 +115,10 @@ static const hp_source HP3B19_DEFENCE[] = {
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=CONTRACTING_AGENCY_NAME%3A%22DEFENSE+LOGISTICS+AGENCY%22",
     .array_path = "entry",
     .date_keys = "modified",
+    /* id_keys as FPDS_PSC_GUIDED_MISSILES (2026-11-07): an FPDS entry has no
+     * <id> and one generic <link>; title+modified was distinct on 30 of 30
+     * Navy entries (start=0,10,20) as on that row's 100. */
+    .id_keys = "title+modified",
     .interval = 21600,
     .page_param = "start",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -126,6 +142,10 @@ static const hp_source HP3B19_DEFENCE[] = {
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=CONTRACTING_AGENCY_NAME%3A%22DEPT+OF+DEFENSE%22",
     .array_path = "entry",
     .date_keys = "modified",
+    /* id_keys as FPDS_PSC_GUIDED_MISSILES (2026-11-07): an FPDS entry has no
+     * <id> and one generic <link>; title+modified was distinct on 30 of 30
+     * Navy entries (start=0,10,20) as on that row's 100. */
+    .id_keys = "title+modified",
     .interval = 21600,
     .page_param = "start",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -148,6 +168,10 @@ static const hp_source HP3B19_DEFENCE[] = {
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%221510%22",
     .array_path = "entry",
     .date_keys = "modified",
+    /* id_keys as FPDS_PSC_GUIDED_MISSILES (2026-11-07): an FPDS entry has no
+     * <id> and one generic <link>; title+modified was distinct on 30 of 30
+     * Navy entries (start=0,10,20) as on that row's 100. */
+    .id_keys = "title+modified",
     .interval = 21600,
     .page_param = "start",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -171,6 +195,10 @@ static const hp_source HP3B19_DEFENCE[] = {
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%221520%22",
     .array_path = "entry",
     .date_keys = "modified",
+    /* id_keys as FPDS_PSC_GUIDED_MISSILES (2026-11-07): an FPDS entry has no
+     * <id> and one generic <link>; title+modified was distinct on 30 of 30
+     * Navy entries (start=0,10,20) as on that row's 100. */
+    .id_keys = "title+modified",
     .interval = 21600,
     .page_param = "start",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -193,6 +221,10 @@ static const hp_source HP3B19_DEFENCE[] = {
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%221550%22",
     .array_path = "entry",
     .date_keys = "modified",
+    /* id_keys as FPDS_PSC_GUIDED_MISSILES (2026-11-07): an FPDS entry has no
+     * <id> and one generic <link>; title+modified was distinct on 30 of 30
+     * Navy entries (start=0,10,20) as on that row's 100. */
+    .id_keys = "title+modified",
     .interval = 21600,
     .page_param = "start",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -215,6 +247,10 @@ static const hp_source HP3B19_DEFENCE[] = {
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%221005%22",
     .array_path = "entry",
     .date_keys = "modified",
+    /* id_keys as FPDS_PSC_GUIDED_MISSILES (2026-11-07): an FPDS entry has no
+     * <id> and one generic <link>; title+modified was distinct on 30 of 30
+     * Navy entries (start=0,10,20) as on that row's 100. */
+    .id_keys = "title+modified",
     .interval = 21600,
     .page_param = "start",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -268,6 +304,10 @@ static const hp_source HP3B19_DEFENCE[] = {
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%221420%22",
     .array_path = "entry",
     .date_keys = "modified",
+    /* id_keys as FPDS_PSC_GUIDED_MISSILES (2026-11-07): an FPDS entry has no
+     * <id> and one generic <link>; title+modified was distinct on 30 of 30
+     * Navy entries (start=0,10,20) as on that row's 100. */
+    .id_keys = "title+modified",
     .interval = 21600,
     .page_param = "start",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -290,6 +330,10 @@ static const hp_source HP3B19_DEFENCE[] = {
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%221810%22",
     .array_path = "entry",
     .date_keys = "modified",
+    /* id_keys as FPDS_PSC_GUIDED_MISSILES (2026-11-07): an FPDS entry has no
+     * <id> and one generic <link>; title+modified was distinct on 30 of 30
+     * Navy entries (start=0,10,20) as on that row's 100. */
+    .id_keys = "title+modified",
     .interval = 21600,
     .page_param = "start",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -313,6 +357,10 @@ static const hp_source HP3B19_DEFENCE[] = {
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%221905%22",
     .array_path = "entry",
     .date_keys = "modified",
+    /* id_keys as FPDS_PSC_GUIDED_MISSILES (2026-11-07): an FPDS entry has no
+     * <id> and one generic <link>; title+modified was distinct on 30 of 30
+     * Navy entries (start=0,10,20) as on that row's 100. */
+    .id_keys = "title+modified",
     .interval = 21600,
     .page_param = "start",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -335,6 +383,10 @@ static const hp_source HP3B19_DEFENCE[] = {
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%225840%22",
     .array_path = "entry",
     .date_keys = "modified",
+    /* id_keys as FPDS_PSC_GUIDED_MISSILES (2026-11-07): an FPDS entry has no
+     * <id> and one generic <link>; title+modified was distinct on 30 of 30
+     * Navy entries (start=0,10,20) as on that row's 100. */
+    .id_keys = "title+modified",
     .interval = 21600,
     .page_param = "start",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -357,6 +409,10 @@ static const hp_source HP3B19_DEFENCE[] = {
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%225865%22",
     .array_path = "entry",
     .date_keys = "modified",
+    /* id_keys as FPDS_PSC_GUIDED_MISSILES (2026-11-07): an FPDS entry has no
+     * <id> and one generic <link>; title+modified was distinct on 30 of 30
+     * Navy entries (start=0,10,20) as on that row's 100. */
+    .id_keys = "title+modified",
     .interval = 21600,
     .page_param = "start",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -381,6 +437,10 @@ static const hp_source HP3B19_DEFENCE[] = {
     .url = "https://www.fpds.gov/ezsearch/FEEDS/ATOM?FEEDNAME=PUBLIC&templateName=1.5.3&q=PRODUCT_OR_SERVICE_CODE%3A%226665%22",
     .array_path = "entry",
     .date_keys = "modified",
+    /* id_keys as FPDS_PSC_GUIDED_MISSILES (2026-11-07): an FPDS entry has no
+     * <id> and one generic <link>; title+modified was distinct on 30 of 30
+     * Navy entries (start=0,10,20) as on that row's 100. */
+    .id_keys = "title+modified",
     .interval = 21600,
     .page_param = "start",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */

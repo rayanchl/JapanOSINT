@@ -390,16 +390,51 @@ static inline void jo_abs_url(const char *href, const char *base,
 
 /* -------------------------------------------------------------------- time */
 
-/* "now" as ISO-8601 UTC with milliseconds — the shape core/intel.c stores. */
-static inline void jo_iso_now(char *o, size_t n) {
+/* ISO-8601 UTC timestamps: ONE implementation for the two shapes the tree
+ * stores (2026-11-07: core/ held 24 private iso_now/now_iso copies).
+ *
+ *   ms  >= 0   "YYYY-MM-DDTHH:MM:SS.mmmZ"   (Node's toISOString; 24 chars)
+ *   ms  <  0   "YYYY-MM-DDTHH:MM:SSZ"       (20 chars)
+ *
+ * The two shapes are NOT interchangeable: a stored timestamp's spelling is
+ * part of the data, and the two sort differently as strings ('.' < 'Z'), so
+ * each caller keeps the shape it always wrote. The %0Nd widths are minimums,
+ * not caps: to -Wformat-truncation `tm_year + 1900` is a plain int worth up
+ * to 11 characters, so the fixed stamp "may be truncated"; the modulos are
+ * identity for every value gmtime_r can return and make the length provable.
+ * On a gmtime_r failure (impossible in practice) it writes "" rather than a
+ * plausible time. */
+static inline void jo_iso_fmt(time_t sec, int ms, char *o, size_t n) {
+  struct tm tm;
+  if (!o || !n) return;
+  if (!gmtime_r(&sec, &tm)) { o[0] = 0; return; }
+  if (ms >= 0)
+    snprintf(o, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
+             (unsigned)(tm.tm_year + 1900) % 10000u, (unsigned)(tm.tm_mon + 1) % 100u,
+             (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
+             (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u,
+             (unsigned)ms % 1000u);
+  else
+    snprintf(o, n, "%04u-%02u-%02uT%02u:%02u:%02uZ",
+             (unsigned)(tm.tm_year + 1900) % 10000u, (unsigned)(tm.tm_mon + 1) % 100u,
+             (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
+             (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u);
+}
+
+/* "now", milliseconds — the shape core/intel.c stores in fetched_at. */
+static inline void jo_iso_now_ms(char *o, size_t n) {
   struct timeval tv;
   gettimeofday(&tv, NULL);
-  struct tm tm;
-  gmtime_r(&tv.tv_sec, &tm);
-  char base[32];
-  strftime(base, sizeof base, "%Y-%m-%dT%H:%M:%S", &tm);
-  snprintf(o, n, "%s.%03dZ", base, (int)(tv.tv_usec / 1000));
+  jo_iso_fmt(tv.tv_sec, (int)(tv.tv_usec / 1000), o, n);
 }
+
+/* "now", whole seconds. */
+static inline void jo_iso_now_sec(char *o, size_t n) {
+  jo_iso_fmt(time(NULL), -1, o, n);
+}
+
+/* The original name, kept for the collectors that call it: same shape. */
+static inline void jo_iso_now(char *o, size_t n) { jo_iso_now_ms(o, n); }
 
 /* `days` before now as a bare ISO date (UTC) — the `from=` half of every
  * windowed API query. On the (impossible in practice) gmtime failure it writes

@@ -17,9 +17,19 @@ typedef struct {
 
 /* resolveTenant: first-seen provisioning (users + personal tenant + owner
  * membership), X-Tenant-Id pick. Returns 0 on success (out filled), or a
- * negative auth/500 marker: -401 (no user), -500 (db failure). */
+ * negative auth/500 marker: -401 (no user), -500 (db failure), or
+ * TENANT_NOT_MEMBER when a NON-EMPTY x_tenant_id names a workspace the caller
+ * is not a member of (2026-11-07: it used to fall back silently to the first
+ * workspace). NULL or "" picks the caller's first workspace. */
+#define TENANT_NOT_MEMBER (-403)
 int tenant_resolve(db_handle *db, const auth_user *u,
                    const char *x_tenant_id, tenant_ctx *out);
+
+/* The same, except a non-member x_tenant_id falls back to the first workspace
+ * instead of failing. ONLY for GET /api/me, which reports the workspace it
+ * actually used, so a client holding a stale id can recover. */
+int tenant_resolve_lenient(db_handle *db, const auth_user *u,
+                           const char *x_tenant_id, tenant_ctx *out);
 
 /* GET /api/me — identity + active tenant + memberships. malloc'd. */
 char *tenantapi_me(db_handle *db, const tenant_ctx *t);

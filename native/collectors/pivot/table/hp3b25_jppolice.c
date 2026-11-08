@@ -77,12 +77,18 @@
  * the uid it already had, so no row already stored is re-keyed. */
 #include "lib/hpengine.h"
 
+/* `.lang = "ja"` (2026-11-07) on the Japanese-language rows below: an unset
+ * lang is stamped "en" by lib/hpengine.c, so `lang=` filters in /api/intel and
+ * semantic search missed them. Set where the host is .jp or the row's name or
+ * description carries kana; English pages (/en/, /english/, *_en collections)
+ * keep the default. */
 static const hp_source HP3B25_JPPOLICE[] = {
   { .id = "JP25_JPPOLICE_IWATE_2024_BUHINNERAI", .name = "Iwate Police — 2024 vehicle-parts theft incidents (crime open "
       "data)",
     .name_ja = "岩手県警察 犯罪オープンデータ 部品ねらい（2024年）",
     .category = "police", .portal = "https://www.pref.iwate.jp/kenkei/koho/opendata/3000711.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"iwate\",\"buhinnerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -105,6 +111,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "岩手県警察 犯罪オープンデータ オートバイ盗（2024年）",
     .category = "police", .portal = "https://www.pref.iwate.jp/kenkei/koho/opendata/3000711.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"iwate\",\"ootobaitou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -128,6 +135,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "岩手県警察 犯罪オープンデータ 車上ねらい（2024年）",
     .category = "police", .portal = "https://www.pref.iwate.jp/kenkei/koho/opendata/3000711.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"iwate\",\"syazyounerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -151,6 +159,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "岩手県警察 犯罪オープンデータ 自動販売機ねらい（2024年）",
     .category = "police", .portal = "https://www.pref.iwate.jp/kenkei/koho/opendata/3000711.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"iwate\",\"zidouhanbaikinerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -173,6 +182,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "岩手県警察 犯罪オープンデータ 自動車盗（2024年）",
     .category = "police", .portal = "https://www.pref.iwate.jp/kenkei/koho/opendata/3000711.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"iwate\",\"zidousyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -195,6 +205,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "岩手県警察 犯罪オープンデータ 自転車盗（2024年）",
     .category = "police", .portal = "https://www.pref.iwate.jp/kenkei/koho/opendata/3000711.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"iwate\",\"zitensyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -218,6 +229,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "山形県警察 犯罪オープンデータ 部品ねらい（2025年）",
     .category = "police", .portal = "https://www.pref.yamagata.jp/020051/kensei/shoukai/toukeijouhou/tokeijoho-opendate/opendata/cata1.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"yamagata\",\"buhinnerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -241,6 +253,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "山形県警察 犯罪オープンデータ オートバイ盗（2025年）",
     .category = "police", .portal = "https://www.pref.yamagata.jp/020051/kensei/shoukai/toukeijouhou/tokeijoho-opendate/opendata/cata1.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"yamagata\",\"ootobaitou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -264,6 +277,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "山形県警察 犯罪オープンデータ 車上ねらい（2025年）",
     .category = "police", .portal = "https://www.pref.yamagata.jp/020051/kensei/shoukai/toukeijouhou/tokeijoho-opendate/opendata/cata1.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"yamagata\",\"syazyounerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -286,6 +300,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "山形県警察 犯罪オープンデータ 自動車盗（2025年）",
     .category = "police", .portal = "https://www.pref.yamagata.jp/020051/kensei/shoukai/toukeijouhou/tokeijoho-opendate/opendata/cata1.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"yamagata\",\"zidousyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -308,6 +323,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "山形県警察 犯罪オープンデータ 自転車盗（2025年）",
     .category = "police", .portal = "https://www.pref.yamagata.jp/020051/kensei/shoukai/toukeijouhou/tokeijoho-opendate/opendata/cata1.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"yamagata\",\"zitensyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -331,6 +347,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "長野県警察 犯罪オープンデータ 部品ねらい（2025年）",
     .category = "police", .portal = "https://www.pref.nagano.lg.jp/police/toukei/hanzai/opendata.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"nagano\",\"buhinnerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -353,6 +370,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "長野県警察 犯罪オープンデータ ひったくり（2025年）",
     .category = "police", .portal = "https://www.pref.nagano.lg.jp/police/toukei/hanzai/opendata.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"nagano\",\"hittakuri\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -376,6 +394,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "長野県警察 犯罪オープンデータ オートバイ盗（2025年）",
     .category = "police", .portal = "https://www.pref.nagano.lg.jp/police/toukei/hanzai/opendata.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"nagano\",\"ootobaitou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -399,6 +418,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "長野県警察 犯罪オープンデータ 車上ねらい（2025年）",
     .category = "police", .portal = "https://www.pref.nagano.lg.jp/police/toukei/hanzai/opendata.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"nagano\",\"syazyounerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -422,6 +442,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "長野県警察 犯罪オープンデータ 自動販売機ねらい（2025年）",
     .category = "police", .portal = "https://www.pref.nagano.lg.jp/police/toukei/hanzai/opendata.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"nagano\",\"zidouhanbaikinerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -444,6 +465,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "長野県警察 犯罪オープンデータ 自動車盗（2025年）",
     .category = "police", .portal = "https://www.pref.nagano.lg.jp/police/toukei/hanzai/opendata.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"nagano\",\"zidousyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -466,6 +488,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "長野県警察 犯罪オープンデータ 自転車盗（2025年）",
     .category = "police", .portal = "https://www.pref.nagano.lg.jp/police/toukei/hanzai/opendata.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"nagano\",\"zitensyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -489,6 +512,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "静岡県警察 犯罪オープンデータ 部品ねらい（2025年）",
     .category = "police", .portal = "https://www.pref.shizuoka.jp/police/kurashi/hanzai/nenkan/opendata.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"shizuoka\",\"buhinnerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -511,6 +535,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "静岡県警察 犯罪オープンデータ ひったくり（2025年）",
     .category = "police", .portal = "https://www.pref.shizuoka.jp/police/kurashi/hanzai/nenkan/opendata.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"shizuoka\",\"hittakuri\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -534,6 +559,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "静岡県警察 犯罪オープンデータ オートバイ盗（2025年）",
     .category = "police", .portal = "https://www.pref.shizuoka.jp/police/kurashi/hanzai/nenkan/opendata.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"shizuoka\",\"ootobaitou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -557,6 +583,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "静岡県警察 犯罪オープンデータ 車上ねらい（2025年）",
     .category = "police", .portal = "https://www.pref.shizuoka.jp/police/kurashi/hanzai/nenkan/opendata.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"shizuoka\",\"syazyounerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -580,6 +607,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "静岡県警察 犯罪オープンデータ 自動販売機ねらい（2025年）",
     .category = "police", .portal = "https://www.pref.shizuoka.jp/police/kurashi/hanzai/nenkan/opendata.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"shizuoka\",\"zidouhanbaikinerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -602,6 +630,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "静岡県警察 犯罪オープンデータ 自動車盗（2025年）",
     .category = "police", .portal = "https://www.pref.shizuoka.jp/police/kurashi/hanzai/nenkan/opendata.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"shizuoka\",\"zidousyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -624,6 +653,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "静岡県警察 犯罪オープンデータ 自転車盗（2025年）",
     .category = "police", .portal = "https://www.pref.shizuoka.jp/police/kurashi/hanzai/nenkan/opendata.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"shizuoka\",\"zitensyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -647,6 +677,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "鳥取県警察 犯罪オープンデータ 部品ねらい（2025年）",
     .category = "police", .portal = "https://www.pref.tottori.lg.jp/286309.htm",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"tottori\",\"buhinnerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -670,6 +701,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "鳥取県警察 犯罪オープンデータ オートバイ盗（2025年）",
     .category = "police", .portal = "https://www.pref.tottori.lg.jp/286309.htm",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"tottori\",\"ootobaitou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -693,6 +725,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "鳥取県警察 犯罪オープンデータ 車上ねらい（2025年）",
     .category = "police", .portal = "https://www.pref.tottori.lg.jp/286309.htm",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"tottori\",\"syazyounerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -716,6 +749,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "鳥取県警察 犯罪オープンデータ 自動販売機ねらい（2025年）",
     .category = "police", .portal = "https://www.pref.tottori.lg.jp/286309.htm",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"tottori\",\"zidouhanbaikinerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -738,6 +772,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "鳥取県警察 犯罪オープンデータ 自動車盗（2025年）",
     .category = "police", .portal = "https://www.pref.tottori.lg.jp/286309.htm",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"tottori\",\"zidousyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -760,6 +795,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "鳥取県警察 犯罪オープンデータ 自転車盗（2025年）",
     .category = "police", .portal = "https://www.pref.tottori.lg.jp/286309.htm",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"tottori\",\"zitensyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -783,6 +819,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "徳島県警察 犯罪オープンデータ 部品ねらい（2025年）",
     .category = "police", .portal = "https://www.police.pref.tokushima.jp/28opendata/index.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"tokushima\",\"buhinnerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -806,6 +843,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "徳島県警察 犯罪オープンデータ オートバイ盗（2025年）",
     .category = "police", .portal = "https://www.police.pref.tokushima.jp/28opendata/index.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"tokushima\",\"ootobaitou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -829,6 +867,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "徳島県警察 犯罪オープンデータ 車上ねらい（2025年）",
     .category = "police", .portal = "https://www.police.pref.tokushima.jp/28opendata/index.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"tokushima\",\"syazyounerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -852,6 +891,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "徳島県警察 犯罪オープンデータ 自動販売機ねらい（2025年）",
     .category = "police", .portal = "https://www.police.pref.tokushima.jp/28opendata/index.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"tokushima\",\"zidouhanbaikinerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -874,6 +914,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "徳島県警察 犯罪オープンデータ 自動車盗（2025年）",
     .category = "police", .portal = "https://www.police.pref.tokushima.jp/28opendata/index.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"tokushima\",\"zidousyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -897,6 +938,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "徳島県警察 犯罪オープンデータ 自転車盗（2025年）",
     .category = "police", .portal = "https://www.police.pref.tokushima.jp/28opendata/index.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"tokushima\",\"zitensyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -920,6 +962,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "福井県警察 犯罪オープンデータ 部品ねらい（2025年）",
     .category = "police", .portal = "https://www.pref.fukui.lg.jp/kenkei/doc/kenkei/naka2-naka1600.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"fukui\",\"buhinnerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -942,6 +985,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "福井県警察 犯罪オープンデータ オートバイ盗（2025年）",
     .category = "police", .portal = "https://www.pref.fukui.lg.jp/kenkei/doc/kenkei/naka2-naka1600.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"fukui\",\"ootobaitou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -965,6 +1009,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "福井県警察 犯罪オープンデータ 車上ねらい（2025年）",
     .category = "police", .portal = "https://www.pref.fukui.lg.jp/kenkei/doc/kenkei/naka2-naka1600.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"fukui\",\"syazyounerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -987,6 +1032,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "福井県警察 犯罪オープンデータ 自動車盗（2025年）",
     .category = "police", .portal = "https://www.pref.fukui.lg.jp/kenkei/doc/kenkei/naka2-naka1600.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"fukui\",\"zidousyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -1009,6 +1055,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "福井県警察 犯罪オープンデータ 自転車盗（2025年）",
     .category = "police", .portal = "https://www.pref.fukui.lg.jp/kenkei/doc/kenkei/naka2-naka1600.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"fukui\",\"zitensyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -1032,6 +1079,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "新潟県警察 犯罪オープンデータ ひったくり（LATEST年）",
     .category = "police", .portal = "https://www.pref.niigata.lg.jp/site/kenkei/anzen-ansin-open-open.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"niigata\",\"hittakuri\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -1057,6 +1105,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "新潟県警察 犯罪オープンデータ 車上ねらい（LATEST年）",
     .category = "police", .portal = "https://www.pref.niigata.lg.jp/site/kenkei/anzen-ansin-open-open.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"niigata\",\"syazyounerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -1082,6 +1131,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "新潟県警察 犯罪オープンデータ 部品ねらい（LATEST年）",
     .category = "police", .portal = "https://www.pref.niigata.lg.jp/site/kenkei/anzen-ansin-open-open.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"niigata\",\"buhinnerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -1107,6 +1157,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "新潟県警察 犯罪オープンデータ 自動販売機ねらい（LATEST年）",
     .category = "police", .portal = "https://www.pref.niigata.lg.jp/site/kenkei/anzen-ansin-open-open.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"niigata\",\"zidouhanbaikinerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -1131,6 +1182,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "新潟県警察 犯罪オープンデータ 自動車盗（LATEST年）",
     .category = "police", .portal = "https://www.pref.niigata.lg.jp/site/kenkei/anzen-ansin-open-open.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"niigata\",\"zidousyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -1156,6 +1208,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "新潟県警察 犯罪オープンデータ オートバイ盗（LATEST年）",
     .category = "police", .portal = "https://www.pref.niigata.lg.jp/site/kenkei/anzen-ansin-open-open.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"niigata\",\"ootobaitou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -1181,6 +1234,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "新潟県警察 犯罪オープンデータ 自転車盗（LATEST年）",
     .category = "police", .portal = "https://www.pref.niigata.lg.jp/site/kenkei/anzen-ansin-open-open.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"niigata\",\"zitensyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -1206,6 +1260,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "滋賀県警察 犯罪オープンデータ 部品ねらい（LATEST年）",
     .category = "police", .portal = "https://www.pref.shiga.lg.jp/police/seikatu/seikatu/anmachi/306453.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"shiga\",\"buhinnerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -1231,6 +1286,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "滋賀県警察 犯罪オープンデータ オートバイ盗（LATEST年）",
     .category = "police", .portal = "https://www.pref.shiga.lg.jp/police/seikatu/seikatu/anmachi/306453.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"shiga\",\"ootobaitou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -1255,6 +1311,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "滋賀県警察 犯罪オープンデータ 車上ねらい（LATEST年）",
     .category = "police", .portal = "https://www.pref.shiga.lg.jp/police/seikatu/seikatu/anmachi/306453.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"shiga\",\"syazyounerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -1280,6 +1337,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "滋賀県警察 犯罪オープンデータ 自動販売機ねらい（LATEST年）",
     .category = "police", .portal = "https://www.pref.shiga.lg.jp/police/seikatu/seikatu/anmachi/306453.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"shiga\",\"zidouhanbaikinerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -1304,6 +1362,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "滋賀県警察 犯罪オープンデータ 自動車盗（LATEST年）",
     .category = "police", .portal = "https://www.pref.shiga.lg.jp/police/seikatu/seikatu/anmachi/306453.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"shiga\",\"zidousyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -1327,6 +1386,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "滋賀県警察 犯罪オープンデータ 自転車盗（LATEST年）",
     .category = "police", .portal = "https://www.pref.shiga.lg.jp/police/seikatu/seikatu/anmachi/306453.html",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"shiga\",\"zitensyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -1350,6 +1410,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "岐阜県警察 犯罪オープンデータ ひったくり（2024年）",
     .category = "police", .portal = "https://gifu-opendata.pref.gifu.lg.jp/dataset/c18879-007",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"gifu\",\"hittakuri\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -1373,6 +1434,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "岐阜県警察 犯罪オープンデータ 自動販売機ねらい（2024年）",
     .category = "police", .portal = "https://gifu-opendata.pref.gifu.lg.jp/dataset/c18879-007",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"gifu\",\"zidouhanbaikinerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -1396,6 +1458,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "岐阜県警察 犯罪オープンデータ オートバイ盗（2024年）",
     .category = "police", .portal = "https://gifu-opendata.pref.gifu.lg.jp/dataset/c18879-007",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"gifu\",\"ootobaitou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -1418,6 +1481,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "岐阜県警察 犯罪オープンデータ 自転車盗（2024年）",
     .category = "police", .portal = "https://gifu-opendata.pref.gifu.lg.jp/dataset/c18879-007",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"gifu\",\"zitensyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -1440,6 +1504,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "岐阜県警察 犯罪オープンデータ 自動車盗（2024年）",
     .category = "police", .portal = "https://gifu-opendata.pref.gifu.lg.jp/dataset/c18879-007",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"gifu\",\"zidousyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -1463,6 +1528,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "岐阜県警察 犯罪オープンデータ 車上ねらい（2024年）",
     .category = "police", .portal = "https://gifu-opendata.pref.gifu.lg.jp/dataset/c18879-007",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"gifu\",\"syazyounerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -1486,6 +1552,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "岐阜県警察 犯罪オープンデータ 部品ねらい（2024年）",
     .category = "police", .portal = "https://gifu-opendata.pref.gifu.lg.jp/dataset/c18879-007",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"gifu\",\"buhinnerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -1509,6 +1576,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "島根県警察 犯罪オープンデータ 自転車盗（LATEST年）",
     .category = "police", .portal = "https://shimane-opendata.jp/datasets/1055",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"shimane\",\"zitensyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -1534,6 +1602,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "島根県警察 犯罪オープンデータ オートバイ盗（LATEST年）",
     .category = "police", .portal = "https://shimane-opendata.jp/datasets/1055",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"shimane\",\"ootobaitou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -1558,6 +1627,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "島根県警察 犯罪オープンデータ 自動車盗（LATEST年）",
     .category = "police", .portal = "https://shimane-opendata.jp/datasets/1055",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"shimane\",\"zidousyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -1583,6 +1653,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "島根県警察 犯罪オープンデータ 部品ねらい（LATEST年）",
     .category = "police", .portal = "https://shimane-opendata.jp/datasets/1055",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"shimane\",\"buhinnerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -1608,6 +1679,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "島根県警察 犯罪オープンデータ 車上ねらい（LATEST年）",
     .category = "police", .portal = "https://shimane-opendata.jp/datasets/1055",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"shimane\",\"syazyounerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -1633,6 +1705,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "広島県警察 犯罪オープンデータ ひったくり（2020年）",
     .category = "police", .portal = "https://hiroshima-opendata.dataeye.jp/datasets?group=gr_0200",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"hiroshima\",\"hittakuri\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -1658,6 +1731,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "広島県警察 犯罪オープンデータ 車上ねらい（2020年）",
     .category = "police", .portal = "https://hiroshima-opendata.dataeye.jp/datasets?group=gr_0200",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"hiroshima\",\"syazyounerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -1684,6 +1758,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "広島県警察 犯罪オープンデータ 部品ねらい（2020年）",
     .category = "police", .portal = "https://hiroshima-opendata.dataeye.jp/datasets?group=gr_0200",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"hiroshima\",\"buhinnerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -1710,6 +1785,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "広島県警察 犯罪オープンデータ 自動販売機ねらい（2020年）",
     .category = "police", .portal = "https://hiroshima-opendata.dataeye.jp/datasets?group=gr_0200",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"hiroshima\",\"zidouhanbaikinerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -1735,6 +1811,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "広島県警察 犯罪オープンデータ 自動車盗（2020年）",
     .category = "police", .portal = "https://hiroshima-opendata.dataeye.jp/datasets?group=gr_0200",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"hiroshima\",\"zidousyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -1760,6 +1837,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "広島県警察 犯罪オープンデータ オートバイ盗（2020年）",
     .category = "police", .portal = "https://hiroshima-opendata.dataeye.jp/datasets?group=gr_0200",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"hiroshima\",\"ootobaitou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -1786,6 +1864,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "広島県警察 犯罪オープンデータ 自転車盗（2020年）",
     .category = "police", .portal = "https://hiroshima-opendata.dataeye.jp/datasets?group=gr_0200",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"hiroshima\",\"zitensyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -1811,6 +1890,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "岡山県警察 犯罪オープンデータ 部品ねらい（2020年）",
     .category = "police", .portal = "https://www.okayama-opendata.jp/datasets?tag=%E9%98%B2%E7%8A%AF",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"okayama\",\"buhinnerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -1834,6 +1914,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "岡山県警察 犯罪オープンデータ ひったくり（2020年）",
     .category = "police", .portal = "https://www.okayama-opendata.jp/datasets?tag=%E9%98%B2%E7%8A%AF",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"okayama\",\"hittakuri\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -1857,6 +1938,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "岡山県警察 犯罪オープンデータ オートバイ盗（2020年）",
     .category = "police", .portal = "https://www.okayama-opendata.jp/datasets?tag=%E9%98%B2%E7%8A%AF",
     .record_type = "crime-incident",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"crime\",\"opendata\",\"okayama\",\"ootobaitou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
@@ -1879,6 +1961,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "京都府警察 新着情報 RSS",
     .category = "police", .portal = "https://www.pref.kyoto.jp/fukei/",
     .record_type = "police-notice",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"kyoto\",\"rss\",\"update\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.pref.kyoto.jp/fukei/shinchaku/shinchaku.xml",
@@ -1898,6 +1981,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "山形県警察 トピックス RSS",
     .category = "police", .portal = "https://www.pref.yamagata.jp/kensei/police/",
     .record_type = "police-notice",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"yamagata\",\"rss\",\"update\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.pref.yamagata.jp/kensei/police/topic.xml",
@@ -1916,6 +2000,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "香川県警察 注目情報 RSS",
     .category = "police", .portal = "https://www.pref.kagawa.lg.jp/police/",
     .record_type = "police-notice",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"kagawa\",\"rss\",\"featured\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.pref.kagawa.lg.jp/police/chumoku/chumoku.xml",
@@ -1933,6 +2018,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "香川県警察 新着情報 RSS",
     .category = "police", .portal = "https://www.pref.kagawa.lg.jp/police/",
     .record_type = "police-notice",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"kagawa\",\"rss\",\"update\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.pref.kagawa.lg.jp/police/shinchaku/shinchaku.xml",
@@ -1951,6 +2037,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "鹿児島県警察 注目情報 RSS",
     .category = "police", .portal = "https://www.pref.kagoshima.jp/police/",
     .record_type = "police-notice",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"kagoshima\",\"rss\",\"featured\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.pref.kagoshima.jp/police/chuumoku/chuumoku.xml",
@@ -1968,6 +2055,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "鹿児島県警察 最新情報 RSS",
     .category = "police", .portal = "https://www.pref.kagoshima.jp/police/",
     .record_type = "police-notice",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"kagoshima\",\"rss\",\"update\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.pref.kagoshima.jp/police/saishin/saishin.xml",
@@ -1985,6 +2073,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "富山県警察 注目情報 RSS",
     .category = "police", .portal = "https://police.pref.toyama.jp/",
     .record_type = "police-notice",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"toyama\",\"rss\",\"featured\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://police.pref.toyama.jp/chumoku.xml",
@@ -2003,6 +2092,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "富山県警察 イベント情報 RSS",
     .category = "police", .portal = "https://police.pref.toyama.jp/",
     .record_type = "police-event",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"toyama\",\"rss\",\"event\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://police.pref.toyama.jp/event.xml",
@@ -2020,6 +2110,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "石川県警察本部 RSS",
     .category = "police", .portal = "https://www2.police.pref.ishikawa.lg.jp/",
     .record_type = "police-notice",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"ishikawa\",\"rss\",\"update\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www2.police.pref.ishikawa.lg.jp/rss.xml",
@@ -2039,6 +2130,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "海上保安庁 海の安全情報 緊急情報 RSS",
     .category = "maritime", .portal = "https://www6.kaiho.mlit.go.jp/",
     .record_type = "maritime-safety-alert",
+    .lang = "ja",
     .tags = "\"japan\",\"coastguard\",\"jcg\",\"maritime\",\"navigation\",\"alert\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www6.kaiho.mlit.go.jp/rss.xml",
@@ -2060,6 +2152,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "海上保安庁 新着情報 Atom",
     .category = "maritime", .portal = "https://www.kaiho.mlit.go.jp/",
     .record_type = "coastguard-notice",
+    .lang = "ja",
     .tags = "\"japan\",\"coastguard\",\"jcg\",\"maritime\",\"press\",\"atom\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.kaiho.mlit.go.jp/atom.xml",
@@ -2081,6 +2174,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "東京都オープンデータカタログ 警視庁データセット",
     .category = "police", .portal = "https://catalog.data.metro.tokyo.lg.jp/",
     .record_type = "dataset-record",
+    .lang = "ja",
     .tags = "\"japan\",\"tokyo\",\"keishicho\",\"opendata\",\"catalogue\",\"police\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://catalog.data.metro.tokyo.lg.jp/api/3/action/package_search?q=%E8%AD%A6%E8%A6%96%E5%BA%81&rows=100&sort=id%20asc",
@@ -2103,6 +2197,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "北海道オープンデータポータル 警察関連データセット",
     .category = "police", .portal = "https://www.harp.lg.jp/opendata/",
     .record_type = "dataset-record",
+    .lang = "ja",
     .tags = "\"japan\",\"hokkaido\",\"police\",\"opendata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.harp.lg.jp/opendata/api/package_search?q=%E8%AD%A6%E5%AF%9F",
@@ -2123,6 +2218,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "横浜市オープンデータ 警察・治安関連データセット",
     .category = "police", .portal = "https://data.city.yokohama.lg.jp/",
     .record_type = "dataset-record",
+    .lang = "ja",
     .tags = "\"japan\",\"yokohama\",\"police\",\"opendata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.city.yokohama.lg.jp/api/3/action/package_search?q=%E8%AD%A6%E5%AF%9F&rows=100&sort=id%20asc",
@@ -2141,6 +2237,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "港区オープンデータ 防犯関連データセット",
     .category = "police", .portal = "https://opendata.city.minato.tokyo.jp/",
     .record_type = "dataset-record",
+    .lang = "ja",
     .tags = "\"japan\",\"tokyo\",\"minato\",\"bouhan\",\"opendata\",\"catalogue\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://opendata.city.minato.tokyo.jp/api/3/action/package_search?q=%E9%98%B2%E7%8A%AF&sort=id%20asc",
@@ -2158,6 +2255,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "出入国在留管理庁 プレスリリース",
     .category = "government", .portal = "https://www.moj.go.jp/isa/",
     .record_type = "press-release",
+    .lang = "ja",
     .tags = "\"japan\",\"immigration\",\"isa\",\"moj\",\"press\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.moj.go.jp/isa/publications/press/index.html",
@@ -2176,6 +2274,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "出入国在留管理庁 更新情報（報道発表）",
     .category = "government", .portal = "https://www.moj.go.jp/isa/",
     .record_type = "press-release",
+    .lang = "ja",
     .tags = "\"japan\",\"immigration\",\"isa\",\"moj\",\"update\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.moj.go.jp/isa/publications/newslist/list-press.html",
@@ -2193,6 +2292,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "出入国在留管理庁 更新情報（手続）",
     .category = "government", .portal = "https://www.moj.go.jp/isa/",
     .record_type = "government-notice",
+    .lang = "ja",
     .tags = "\"japan\",\"immigration\",\"isa\",\"moj\",\"procedures\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.moj.go.jp/isa/publications/newslist/list-procedures.html",
@@ -2211,6 +2311,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "公安調査庁 公表資料",
     .category = "government", .portal = "https://www.moj.go.jp/psia/",
     .record_type = "government-notice",
+    .lang = "ja",
     .tags = "\"japan\",\"psia\",\"intelligence\",\"moj\",\"press\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.moj.go.jp/psia/kouan_press_index.html",
@@ -2230,6 +2331,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "公安調査庁 内外情勢の回顧と展望",
     .category = "government", .portal = "https://www.moj.go.jp/psia/",
     .record_type = "government-report",
+    .lang = "ja",
     .tags = "\"japan\",\"psia\",\"intelligence\",\"moj\",\"report\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.moj.go.jp/psia/kouan_naigai_index.html",
@@ -2248,6 +2350,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "日本サイバー犯罪対策センター 脅威情報トピックス",
     .category = "cyber", .portal = "https://www.jc3.or.jp/",
     .record_type = "threat-report",
+    .lang = "ja",
     .tags = "\"japan\",\"jc3\",\"cybercrime\",\"threat\",\"report\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.jc3.or.jp/threats/topics/",
@@ -2266,6 +2369,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "日本サイバー犯罪対策センター お知らせ",
     .category = "cyber", .portal = "https://www.jc3.or.jp/",
     .record_type = "organisation-notice",
+    .lang = "ja",
     .tags = "\"japan\",\"jc3\",\"cybercrime\",\"news\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.jc3.or.jp/news/",
@@ -2282,6 +2386,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "福井県警察 お知らせ一覧",
     .category = "police", .portal = "https://www.pref.fukui.lg.jp/kenkei/",
     .record_type = "police-notice",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"fukui\",\"news\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.pref.fukui.lg.jp/kenkei/news/index.html",
@@ -2300,6 +2405,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "徳島県警察 更新履歴",
     .category = "police", .portal = "https://www.police.pref.tokushima.jp/",
     .record_type = "police-notice",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"tokushima\",\"update\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.police.pref.tokushima.jp/01rireki/index.html",
@@ -2318,6 +2424,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "栃木県警察 サイバー犯罪対策 ニュース",
     .category = "cyber", .portal = "https://www.pref.tochigi.lg.jp/keisatu/",
     .record_type = "police-notice",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"tochigi\",\"cyber\",\"alert\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.pref.tochigi.lg.jp/keisatu/n33/ccat/ccatnews.html",
@@ -2336,6 +2443,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "長野県警察 刑法犯認知・検挙状況（確定値）",
     .category = "police", .portal = "https://www.pref.nagano.lg.jp/police/",
     .record_type = "crime-statistics",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"nagano\",\"statistics\",\"crime\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.pref.nagano.lg.jp/police/toukei/jikonippou.html",
@@ -2354,6 +2462,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "宮崎県警察 犯罪統計",
     .category = "police", .portal = "https://www.pref.miyazaki.lg.jp/police/",
     .record_type = "crime-statistics",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"miyazaki\",\"statistics\",\"crime\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.pref.miyazaki.lg.jp/police/hanzaitokei/index.html",
@@ -2371,6 +2480,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "茨城県警察 お知らせ",
     .category = "police", .portal = "https://www.pref.ibaraki.jp/kenkei/",
     .record_type = "police-notice",
+    .lang = "ja",
     .tags = "\"japan\",\"police\",\"ibaraki\",\"notice\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     /* MOVED (2026-10-25, docs/html-reachability-2026-10.md): the force's
@@ -2396,6 +2506,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "全国防犯メール速報 北海道 配信メール一覧",
     .category = "police", .portal = "https://anzen.m47.jp/",
     .record_type = "safety-alert",
+    .lang = "ja",
     .tags = "\"japan\",\"bouhan\",\"alert\",\"mail\",\"hokkaido\",\"aggregator\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://anzen.m47.jp/mailpref-1.html",
@@ -2416,6 +2527,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "全国防犯メール速報 埼玉県 配信メール一覧",
     .category = "police", .portal = "https://anzen.m47.jp/",
     .record_type = "safety-alert",
+    .lang = "ja",
     .tags = "\"japan\",\"bouhan\",\"alert\",\"mail\",\"saitama\",\"aggregator\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://anzen.m47.jp/mailpref-11.html",
@@ -2435,6 +2547,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "全国防犯メール速報 千葉県 配信メール一覧",
     .category = "police", .portal = "https://anzen.m47.jp/",
     .record_type = "safety-alert",
+    .lang = "ja",
     .tags = "\"japan\",\"bouhan\",\"alert\",\"mail\",\"chiba\",\"aggregator\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://anzen.m47.jp/mailpref-12.html",
@@ -2454,6 +2567,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "全国防犯メール速報 東京都 配信メール一覧",
     .category = "police", .portal = "https://anzen.m47.jp/",
     .record_type = "safety-alert",
+    .lang = "ja",
     .tags = "\"japan\",\"bouhan\",\"alert\",\"mail\",\"tokyo\",\"aggregator\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://anzen.m47.jp/mailpref-13.html",
@@ -2474,6 +2588,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "全国防犯メール速報 神奈川県 配信メール一覧",
     .category = "police", .portal = "https://anzen.m47.jp/",
     .record_type = "safety-alert",
+    .lang = "ja",
     .tags = "\"japan\",\"bouhan\",\"alert\",\"mail\",\"kanagawa\",\"aggregator\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://anzen.m47.jp/mailpref-14.html",
@@ -2494,6 +2609,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "全国防犯メール速報 静岡県 配信メール一覧",
     .category = "police", .portal = "https://anzen.m47.jp/",
     .record_type = "safety-alert",
+    .lang = "ja",
     .tags = "\"japan\",\"bouhan\",\"alert\",\"mail\",\"shizuoka\",\"aggregator\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://anzen.m47.jp/mailpref-22.html",
@@ -2513,6 +2629,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "全国防犯メール速報 愛知県 配信メール一覧",
     .category = "police", .portal = "https://anzen.m47.jp/",
     .record_type = "safety-alert",
+    .lang = "ja",
     .tags = "\"japan\",\"bouhan\",\"alert\",\"mail\",\"aichi\",\"aggregator\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://anzen.m47.jp/mailpref-23.html",
@@ -2532,6 +2649,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "全国防犯メール速報 京都府 配信メール一覧",
     .category = "police", .portal = "https://anzen.m47.jp/",
     .record_type = "safety-alert",
+    .lang = "ja",
     .tags = "\"japan\",\"bouhan\",\"alert\",\"mail\",\"kyoto\",\"aggregator\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://anzen.m47.jp/mailpref-26.html",
@@ -2551,6 +2669,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "全国防犯メール速報 大阪府 配信メール一覧",
     .category = "police", .portal = "https://anzen.m47.jp/",
     .record_type = "safety-alert",
+    .lang = "ja",
     .tags = "\"japan\",\"bouhan\",\"alert\",\"mail\",\"osaka\",\"aggregator\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://anzen.m47.jp/mailpref-27.html",
@@ -2570,6 +2689,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "全国防犯メール速報 兵庫県 配信メール一覧",
     .category = "police", .portal = "https://anzen.m47.jp/",
     .record_type = "safety-alert",
+    .lang = "ja",
     .tags = "\"japan\",\"bouhan\",\"alert\",\"mail\",\"hyogo\",\"aggregator\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://anzen.m47.jp/mailpref-28.html",
@@ -2590,6 +2710,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "全国防犯メール速報 福岡県 配信メール一覧",
     .category = "police", .portal = "https://anzen.m47.jp/",
     .record_type = "safety-alert",
+    .lang = "ja",
     .tags = "\"japan\",\"bouhan\",\"alert\",\"mail\",\"fukuoka\",\"aggregator\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://anzen.m47.jp/mailpref-40.html",
@@ -2610,6 +2731,7 @@ static const hp_source HP3B25_JPPOLICE[] = {
     .name_ja = "全国防犯メール速報 沖縄県 配信メール一覧",
     .category = "police", .portal = "https://anzen.m47.jp/",
     .record_type = "safety-alert",
+    .lang = "ja",
     .tags = "\"japan\",\"bouhan\",\"alert\",\"mail\",\"okinawa\",\"aggregator\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://anzen.m47.jp/mailpref-47.html",

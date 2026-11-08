@@ -15,6 +15,7 @@
  * (the read endpoints + enricher are separate plan items, §C/§D.3-12).
  */
 #include "camera_store.h"
+#include "../lib/jocore.h"
 #include "../third_party/sqlite3.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -41,21 +42,7 @@
  * if anything else ever adopts that record_type. */
 #define CAMERA_UID_LIKE CAMERA_SOURCE_ID "|%"
 
-/* Node `new Date().toISOString()` — YYYY-MM-DDTHH:MM:SS.mmmZ. */
-static void iso_now(char *b, size_t n) {
-  struct timeval tv; gettimeofday(&tv, NULL);
-  struct tm tm; gmtime_r(&tv.tv_sec, &tm);
-  /* The %0Nd widths are minimums, not caps: to -Wformat-truncation
-   * `tm_year + 1900` is a plain int worth up to 11 characters, so this
-   * fixed 24-char stamp "may be truncated". The modulos are identity for
-   * every value gmtime_r can return and make the 24 provable, not merely
-   * true. */
-  snprintf(b, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
-           (unsigned)(tm.tm_year + 1900) % 10000u, (unsigned)(tm.tm_mon + 1) % 100u,
-           (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
-           (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u,
-           (unsigned)(tv.tv_usec / 1000) % 1000u);
-}
+/* ISO-8601 UTC with milliseconds: jo_iso_now_ms() (lib/jocore.h). */
 
 /* prevProps.<k> as a non-empty STRING, else NULL (=== JS `||` truthiness for
  * the merged string fields: '' and null and absent all fall through). */
@@ -190,7 +177,7 @@ int camera_upsert(db_handle *db, intel_sink *sink, cJSON *feature,
   if (!m_ctry) m_ctry = str_or_null(p, "country");
   if (!m_ctry) m_ctry = "JP";
 
-  char now_iso[40]; iso_now(now_iso, sizeof now_iso);
+  char now_iso[40]; jo_iso_now_ms(now_iso, sizeof now_iso);
   const char *m_first = str_or_null(pp, "first_seen_at");
   char first_buf[40];
   if (!m_first) { snprintf(first_buf, sizeof first_buf, "%s", now_iso);
@@ -388,7 +375,7 @@ char *camera_fc_json(db_handle *db) {
   cJSON *fc = cJSON_CreateObject();
   cJSON_AddStringToObject(fc, "type", "FeatureCollection");
   cJSON_AddItemToObject(fc, "features", features);
-  char ts[40]; iso_now(ts, sizeof ts);
+  char ts[40]; jo_iso_now_ms(ts, sizeof ts);
   cJSON *meta = cJSON_CreateObject();        /* getAllCameras _meta block */
   cJSON_AddStringToObject(meta, "source", "camera_store");
   cJSON_AddNumberToObject(meta, "recordCount", count);

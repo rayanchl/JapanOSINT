@@ -60,6 +60,7 @@
  *    this generic endpoint. The general collector path is ported.
  */
 #include "dataapi.h"
+#include "../lib/jocore.h"
 #include "collcache.h"
 #include "layertab.h"           /* curated taxonomy + source→layer resolver */
 #include "../source.h"
@@ -81,20 +82,7 @@
  * `age <= ttl_ms` freshness test — which has been removed in favour of the
  * shared one. Behaviour is unchanged. */
 
-static void iso_now(char *o, size_t n) {
-  struct timeval tv; gettimeofday(&tv, NULL);
-  struct tm g; gmtime_r(&tv.tv_sec, &g);
-  /* The %0Nd widths are minimums, not caps: to -Wformat-truncation
-   * `tm_year + 1900` is a plain int worth up to 11 characters, so this
-   * fixed 24-char stamp "may be truncated". The modulos are identity for
-   * every value gmtime_r can return and make the 24 provable, not merely
-   * true. */
-  snprintf(o, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
-           (unsigned)(g.tm_year + 1900) % 10000u, (unsigned)(g.tm_mon + 1) % 100u,
-           (unsigned)g.tm_mday % 100u, (unsigned)g.tm_hour % 100u,
-           (unsigned)g.tm_min % 100u, (unsigned)g.tm_sec % 100u,
-           (unsigned)(tv.tv_usec / 1000) % 1000u);
-}
+/* ISO-8601 UTC with milliseconds: jo_iso_now_ms() (lib/jocore.h). */
 
 /* getTtlMs(key): collector_ttls row else DEFAULT_TTL_MS. The table is
  * created/seeded by the Node side (collectorCache.js / database.js); we read
@@ -458,7 +446,7 @@ char *dataapi_layer_fc(db_handle *db, const char *layer_id,
     (row && row->modality) ? cJSON_CreateString(row->modality)
                            : cJSON_CreateNull());
   cJSON_AddNumberToObject(m, "member_count", member_count);
-  char ts[40]; iso_now(ts, sizeof ts);
+  char ts[40]; jo_iso_now_ms(ts, sizeof ts);
   cJSON_AddStringToObject(m, "fetchedAt", ts);
   /* Rule 2, in-band: the bound and how much lies beyond it. `truncated` is
    * false only when this page really is the whole predicate. */
@@ -521,7 +509,7 @@ static void add_meta(cJSON *fc, const char *source, int record_count,
   cJSON *m = cJSON_AddObjectToObject(fc, "_meta");
   if (source) cJSON_AddStringToObject(m, "source", source);
   else        cJSON_AddNullToObject(m, "source");
-  char ts[40]; iso_now(ts, sizeof ts);
+  char ts[40]; jo_iso_now_ms(ts, sizeof ts);
   cJSON_AddStringToObject(m, "fetchedAt", ts);
   cJSON_AddNumberToObject(m, "recordCount", record_count);
   cJSON_AddBoolToObject(m, "live", live ? 1 : 0);
@@ -618,7 +606,7 @@ char *dataapi_layer_admit(db_handle *db, const char *id,
     cJSON_AddArrayToObject(o, "features");
     cJSON *m = cJSON_AddObjectToObject(o, "_meta");
     cJSON_AddStringToObject(m, "source", id);
-    char ts[40]; iso_now(ts, sizeof ts);
+    char ts[40]; jo_iso_now_ms(ts, sizeof ts);
     cJSON_AddStringToObject(m, "fetchedAt", ts);
     cJSON_AddNumberToObject(m, "recordCount", 0);
     cJSON_AddBoolToObject(m, "live", 0);
@@ -750,7 +738,7 @@ char *dataapi_layer_admit(db_handle *db, const char *id,
       cJSON_AddItemToObject(fc, "features", feats);   /* empty */
       cJSON *m = cJSON_AddObjectToObject(fc, "_meta");
       cJSON_AddStringToObject(m, "source", id);
-      char ts[40]; iso_now(ts, sizeof ts);
+      char ts[40]; jo_iso_now_ms(ts, sizeof ts);
       cJSON_AddStringToObject(m, "fetchedAt", ts);
       cJSON_AddNumberToObject(m, "recordCount", 0);
       cJSON_AddBoolToObject(m, "live", 0);

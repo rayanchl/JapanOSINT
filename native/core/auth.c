@@ -1,4 +1,5 @@
 #include "auth.h"
+#include "jo_codec.h"
 #include "httpclient.h"
 #include "../third_party/cJSON.h"
 #include <openssl/hmac.h>
@@ -54,30 +55,6 @@ void auth_init(void) {
   if (g_url) jwks_start();
 }
 
-/* base64url -> bytes. Returns malloc'd buffer, sets *out_len. NULL on error. */
-static unsigned char *b64url_decode(const char *in, size_t in_len, size_t *out_len) {
-  static const char *T =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
-  int rev[256]; memset(rev, -1, sizeof rev);
-  for (int i = 0; i < 64; i++) rev[(unsigned char)T[i]] = i;
-  size_t cap = (in_len / 4 + 1) * 3 + 3;
-  unsigned char *out = malloc(cap);
-  if (!out) return NULL;
-  /* `val` is UNSIGNED and masked to the 16 bits the loop can still need.
-   * As a signed int it overflowed on the third accumulated sextet — UBSan:
-   * "left shift of 805815650 by 6 places cannot be represented in type
-   * 'int'" — and this runs on the Authorization header of every request,
-   * before any authentication, so the input is fully attacker-chosen. It
-   * wraps benignly today; signed overflow is UB and need not. */
-  size_t o = 0; unsigned val = 0; int bits = -8;
-  for (size_t i = 0; i < in_len; i++) {
-    int c = rev[(unsigned char)in[i]];
-    if (c < 0) continue;
-    val = ((val << 6) | (unsigned)c) & 0xFFFFu; bits += 6;
-    if (bits >= 0) { out[o++] = (unsigned char)((val >> bits) & 0xFF); bits -= 8; }
-  }
-  *out_len = o; return out;
-}
 
 static int verify_hs256(const char *secret, const char *signing_input,
                         size_t si_len, const char *sig_b64, size_t sig_len) {
@@ -86,7 +63,7 @@ static int verify_hs256(const char *secret, const char *signing_input,
   HMAC(EVP_sha256(), secret, (int)strlen(secret),
        (const unsigned char *)signing_input, si_len, mac, &mlen);
   size_t glen = 0;
-  unsigned char *given = b64url_decode(sig_b64, sig_len, &glen);
+  unsigned char *given = jo_b64url_decode(sig_b64, sig_len, &glen, JO_B64_SKIP_INVALID);
   int ok = (given && glen == 32 && mlen == 32 &&
             CRYPTO_memcmp(mac, given, 32) == 0);
   free(given);
@@ -273,8 +250,8 @@ static EVP_PKEY *jwk_to_pkey(cJSON *jwk) {
     cJSON *N = cJSON_GetObjectItem(jwk, "n"), *E = cJSON_GetObjectItem(jwk, "e");
     if (!cJSON_IsString(N) || !cJSON_IsString(E)) return NULL;
     size_t nl = 0, el = 0;
-    unsigned char *nb = b64url_decode(N->valuestring, strlen(N->valuestring), &nl);
-    unsigned char *eb = b64url_decode(E->valuestring, strlen(E->valuestring), &el);
+    unsigned char *nb = jo_b64url_decode(N->valuestring, strlen(N->valuestring), &nl, JO_B64_SKIP_INVALID);
+    unsigned char *eb = jo_b64url_decode(E->valuestring, strlen(E->valuestring), &el, JO_B64_SKIP_INVALID);
     EVP_PKEY *pk = NULL;
     if (nb && eb) {
       BIGNUM *bn = BN_bin2bn(nb, nl, NULL), *be = BN_bin2bn(eb, el, NULL);
@@ -296,8 +273,8 @@ static EVP_PKEY *jwk_to_pkey(cJSON *jwk) {
     cJSON *X = cJSON_GetObjectItem(jwk, "x"), *Y = cJSON_GetObjectItem(jwk, "y");
     if (!cJSON_IsString(X) || !cJSON_IsString(Y)) return NULL;
     size_t xl = 0, yl = 0;
-    unsigned char *xb = b64url_decode(X->valuestring, strlen(X->valuestring), &xl);
-    unsigned char *yb = b64url_decode(Y->valuestring, strlen(Y->valuestring), &yl);
+    unsigned char *xb = jo_b64url_decode(X->valuestring, strlen(X->valuestring), &xl, JO_B64_SKIP_INVALID);
+    unsigned char *yb = jo_b64url_decode(Y->valuestring, strlen(Y->valuestring), &yl, JO_B64_SKIP_INVALID);
     EVP_PKEY *pk = NULL;
     if (xb && yb && xl && yl && xl <= 32 && yl <= 32) {
       unsigned char pt[65] = {0};             /* 0x04 || X(32) || Y(32) */
@@ -325,7 +302,7 @@ static EVP_PKEY *jwk_to_pkey(cJSON *jwk) {
 static int verify_asym(const char *si, size_t si_len, const char *sig_b64,
                        size_t sig_b64_len, EVP_PKEY *pk, const char *alg) {
   size_t sl = 0;
-  unsigned char *sg = b64url_decode(sig_b64, sig_b64_len, &sl);
+  unsigned char *sg = jo_b64url_decode(sig_b64, sig_b64_len, &sl, JO_B64_SKIP_INVALID);
   if (!sg) return 0;
   int ok = 0;
   EVP_MD_CTX *ctx = EVP_MD_CTX_new();
@@ -358,7 +335,7 @@ static int jwt_header(const char *tok, const char *d1, char *alg, size_t an,
                       char *kid, size_t kn) {
   alg[0] = 0; kid[0] = 0;
   size_t hl = 0;
-  unsigned char *hb = b64url_decode(tok, (size_t)(d1 - tok), &hl);
+  unsigned char *hb = jo_b64url_decode(tok, (size_t)(d1 - tok), &hl, JO_B64_SKIP_INVALID);
   if (!hb) return 0;
   char *hj = malloc(hl + 1);
   if (!hj) { free(hb); return 0; }
@@ -552,7 +529,7 @@ auth_result auth_check(const char *hdr, auth_user *out) {
   if (!verified) return AUTH_401_INVALID;
 
   size_t plen = 0;
-  unsigned char *pl = b64url_decode(d1 + 1, (size_t)(d2 - d1 - 1), &plen);
+  unsigned char *pl = jo_b64url_decode(d1 + 1, (size_t)(d2 - d1 - 1), &plen, JO_B64_SKIP_INVALID);
   if (!pl) return AUTH_401_INVALID;
   char *pjson = malloc(plen + 1);
   /* Unchecked malloc here was a NULL-pointer memcpy: this runs on the

@@ -1170,10 +1170,6 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
           degraded ? " DEGRADED (see stage_errors)" : "");
 }
 
-char *osint_suggest(llm_client *llm, const char *query) {
-  return osint_suggest_db(NULL, llm, query);
-}
-
 char *osint_suggest_db(db_handle *db, llm_client *llm, const char *query) {
   /* Native /completion path (raw few-shot prompt + GBNF), NOT llm_chat:
      prompt_suggestions() is a completion-style few-shot prompt. Routed

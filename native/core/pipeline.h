@@ -25,11 +25,9 @@ void osint_pipeline_run(db_handle *db, llm_client *llm,
                         int max_rounds);
 
 /* Suggestions path (port of getSuggestions): returns a malloc'd JSON array
- * string of ≤9 strings (or "[]"). Caller frees. */
-char *osint_suggest(llm_client *llm, const char *query);
-
-/* osint_suggest() with the exact-response cache (core/llmcache.h) on `db`
- * when JO_LLM_CACHE_TTL_SEC is set; `db` NULL = osint_suggest(). */
+ * string of ≤9 strings (or "[]"). Caller frees. Uses the exact-response cache
+ * (core/llmcache.h) on `db` when JO_LLM_CACHE_TTL_SEC is set; `db` NULL = no
+ * cache. (The cache-less osint_suggest() had no caller; removed 2026-11-07.) */
 char *osint_suggest_db(db_handle *db, llm_client *llm, const char *query);
 
 #endif

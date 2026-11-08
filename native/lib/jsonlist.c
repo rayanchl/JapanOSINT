@@ -1458,6 +1458,26 @@ static const struct pager PAGERS[] = {
    * the same API family, spelled the way SODA spells it. */
   { "$limit",    "$offset", NULL,    0 },   /* Socrata SODA                    */
   { "$top",      "$skip",  NULL,     0 },   /* OData                           */
+  /* UK Parliament's REST APIs (bills-, committees-, members-, interests-,
+   * treaties-, statutoryinstruments-, commonsvotes-, lordsvotes-api) page on
+   * `take` + `skip`; the Commons divisions API ALSO accepts the bound-model
+   * spelling `queryParameters.take`/`queryParameters.skip`, and the EDM API
+   * (oralquestionsandmotions-api) spells it `parameters.take`/`.skip`.
+   * Missing until 2026-11-07, so 18 VJSON rows on *.parliament.uk read ONE
+   * `take=` page a run and disclosed nothing: committees-api Publications
+   * declares totalResults 52,959 and stored 50. Measured 2026-11-07, one
+   * request per URL, take=3: `skip=0` and `skip=3` answer disjoint ids on all
+   * nine hosts (EDM's `parameters.skip` too: 61,453 declared, 66885.. then
+   * 66882..), the control `frobnicate=3` answers exactly the skip=0 page, and
+   * totalResults is unchanged by skip (it is a cursor, not a filter). On
+   * commonsvotes-api `take=7&skip=7` and `queryParameters.take=7&
+   * queryParameters.skip=7` answer the same 7 divisions (2467..2461), so both
+   * spellings are honoured there. The prefixed entries cannot collide with
+   * the bare one: jsonlist_query_int() matches a name from the START of a
+   * parameter, so `take` never reads `queryParameters.take`. */
+  { "take",      "skip",   NULL,     0 },   /* UK Parliament REST APIs         */
+  { "queryParameters.take", "queryParameters.skip", NULL, 0 },  /* commonsvotes */
+  { "parameters.take", "parameters.skip", NULL, 0 },            /* EDM API      */
   { "maxRecords","offset", NULL,     0 },   /* Airtable-style                  */
   /* ArcGIS REST and WFS 1.x. Both spellings lived on jl_declared_size()'s
    * EXTRA list — "a size we can disclose but cannot move", and the reason

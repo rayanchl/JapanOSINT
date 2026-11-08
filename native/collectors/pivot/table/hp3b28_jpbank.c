@@ -20,11 +20,17 @@
  */
 #include "lib/hpengine.h"
 
+/* `.lang = "ja"` (2026-11-07) on the Japanese-language rows below: an unset
+ * lang is stamped "en" by lib/hpengine.c, so `lang=` filters in /api/intel and
+ * semantic search missed them. Set where the host is .jp or the row's name or
+ * description carries kana; English pages (/en/, /english/, *_en collections)
+ * keep the default. */
 static const hp_source HP3B28_JPBANK[] = {
   { .id = "JO28_JVCEA_SELFREG_RULES", .name = "JVCEA Self-Regulatory Rules Library",
     .name_ja = "定款・諸規則",
     .category = "regulator", .portal = "https://jvcea.or.jp/",
     .record_type = "regulatory-rule-document",
+    .lang = "ja",
     .tags = "\"japan\",\"crypto\",\"jvcea\",\"selfregulation\",\"rules\",\"compliance\",\"exchange\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://jvcea.or.jp/about/rule/",
@@ -47,6 +53,7 @@ static const hp_source HP3B28_JPBANK[] = {
     .name_ja = "信託の受託概況",
     .category = "finance", .portal = "https://www.shintaku-kyokai.or.jp/",
     .record_type = "trust-overview-document",
+    .lang = "ja",
     .tags = "\"japan\",\"trust\",\"shintaku\",\"assets\",\"banking\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.shintaku-kyokai.or.jp/data/trust/",
@@ -66,6 +73,7 @@ static const hp_source HP3B28_JPBANK[] = {
     .name_ja = "加盟会社財務諸表等",
     .category = "disclosure", .portal = "https://www.shintaku-kyokai.or.jp/",
     .record_type = "trust-company-financial-statement",
+    .lang = "ja",
     .tags = "\"japan\",\"trust\",\"shintaku\",\"disclosure\",\"financialstatements\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.shintaku-kyokai.or.jp/data/financialstatements/",
@@ -86,6 +94,7 @@ static const hp_source HP3B28_JPBANK[] = {
     .name_ja = "投資信託の主要統計等ファクトブック",
     .category = "finance", .portal = "https://www.imaj.or.jp/statistics/factbook/",
     .record_type = "investment-trust-factbook-document",
+    .lang = "ja",
     .tags = "\"japan\",\"investmenttrust\",\"reit\",\"funds\",\"statistics\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.imaj.or.jp/statistics/factbook/",
@@ -106,6 +115,7 @@ static const hp_source HP3B28_JPBANK[] = {
     .name_ja = "月次統計資料",
     .category = "finance", .portal = "https://www.j-fsa.or.jp/",
     .record_type = "moneylending-survey-document",
+    .lang = "ja",
     .tags = "\"japan\",\"moneylending\",\"consumerfinance\",\"statistics\",\"jfsa\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.j-fsa.or.jp/material/monthly_survey/",
@@ -126,6 +136,7 @@ static const hp_source HP3B28_JPBANK[] = {
     .name_ja = "信用組合業界概況",
     .category = "finance", .portal = "https://www.shinyokumiai.or.jp/",
     .record_type = "credit-cooperative-statistics-document",
+    .lang = "ja",
     .tags = "\"japan\",\"shinyokumiai\",\"creditcooperative\",\"banking\",\"statistics\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.shinyokumiai.or.jp/credit_cooperative/outline.html",
@@ -145,6 +156,7 @@ static const hp_source HP3B28_JPBANK[] = {
     .name_ja = "業務と財務の状況",
     .category = "disclosure", .portal = "https://www.jfc.go.jp/",
     .record_type = "policy-bank-financial-statement",
+    .lang = "ja",
     .tags = "\"japan\",\"jfc\",\"policybank\",\"disclosure\",\"financialstatements\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.jfc.go.jp/n/company/f_statements.html",
@@ -165,6 +177,7 @@ static const hp_source HP3B28_JPBANK[] = {
     .name_ja = "毎月の融資実績、業務統計年報",
     .category = "finance", .portal = "https://www.jfc.go.jp/",
     .record_type = "policy-bank-lending-report",
+    .lang = "ja",
     .tags = "\"japan\",\"jfc\",\"policybank\",\"lending\",\"statistics\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.jfc.go.jp/n/company/national/g_gaikyo.html",
@@ -184,6 +197,7 @@ static const hp_source HP3B28_JPBANK[] = {
     .name_ja = "設備投資計画調査",
     .category = "finance", .portal = "https://www.dbj.jp/investigate/equip/",
     .record_type = "capex-survey-report",
+    .lang = "ja",
     .tags = "\"japan\",\"dbj\",\"capex\",\"investment\",\"survey\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.dbj.jp/investigate/equip/national/",
@@ -204,6 +218,7 @@ static const hp_source HP3B28_JPBANK[] = {
     .name_ja = "照会に対する回答（金融商品取引法）",
     .category = "regulator", .portal = "https://www.fsa.go.jp/common/noact/index.html",
     .record_type = "no-action-letter-response",
+    .lang = "ja",
     .tags = "\"japan\",\"fsa\",\"noaction\",\"fiea\",\"securities\",\"regulator\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.fsa.go.jp/common/noact/kaitou_2/kinsyou/index.html",
@@ -224,6 +239,7 @@ static const hp_source HP3B28_JPBANK[] = {
     .name_ja = "照会に対する回答（保険業法）",
     .category = "regulator", .portal = "https://www.fsa.go.jp/common/noact/index.html",
     .record_type = "no-action-letter-response",
+    .lang = "ja",
     .tags = "\"japan\",\"fsa\",\"noaction\",\"insurance\",\"regulator\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.fsa.go.jp/common/noact/kaitou_2/hoken/index.html",
@@ -243,6 +259,7 @@ static const hp_source HP3B28_JPBANK[] = {
     .name_ja = "照会に対する回答（貸金業法）",
     .category = "regulator", .portal = "https://www.fsa.go.jp/common/noact/index.html",
     .record_type = "no-action-letter-response",
+    .lang = "ja",
     .tags = "\"japan\",\"fsa\",\"noaction\",\"moneylending\",\"regulator\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.fsa.go.jp/common/noact/kaitou_2/kashikin/index.html",
@@ -264,6 +281,7 @@ static const hp_source HP3B28_JPBANK[] = {
     .name_ja = "日本貸金業協会 年次報告書",
     .category = "finance", .portal = "https://www.j-fsa.or.jp",
     .record_type = "annual-report-index",
+    .lang = "ja",
     .tags = "\"japan\",\"jfsa\",\"moneylending\",\"whitepaper\",\"finance\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.j-fsa.or.jp/material/white_paper/",

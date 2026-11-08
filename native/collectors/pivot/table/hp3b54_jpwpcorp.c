@@ -21,12 +21,18 @@
  */
 #include "lib/hpengine.h"
 
+/* `.lang = "ja"` (2026-11-07) on the Japanese-language rows below: an unset
+ * lang is stamped "en" by lib/hpengine.c, so `lang=` filters in /api/intel and
+ * semantic search missed them. Set where the host is .jp or the row's name or
+ * description carries kana; English pages (/en/, /english/, *_en collections)
+ * keep the default. */
 static const hp_source HP3B54_JPWPCORP[] = {
   { .id = "JO54_WP_NEOPARK_INFORMATION", .name = "名護市 ネオパークオキナワ — custom post type `information` (AGT会員お知らせ) "
       "(WordPress REST)",
     .name_ja = "名護市 ネオパークオキナワ AGT会員お知らせ（WordPress REST）",
     .category = "corporate", .portal = "https://www.neopark.co.jp/",
     .record_type = "cpt-information",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.neopark.co.jp/wp-json/wp/v2/information?per_page=100&orderby=date&order=desc",
@@ -53,6 +59,7 @@ static const hp_source HP3B54_JPWPCORP[] = {
     .name_ja = "群馬サファリパーク公式 / マイカー・周遊バスで楽しむ家族向けサファリ イベント（WordPress REST）",
     .category = "corporate", .portal = "https://safari.co.jp/",
     .record_type = "cpt-xo-event",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://safari.co.jp/wp-json/wp/v2/xo_event?per_page=100&orderby=date&order=desc",

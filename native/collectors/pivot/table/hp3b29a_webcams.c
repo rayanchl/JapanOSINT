@@ -21,6 +21,11 @@
  */
 #include "lib/hpengine.h"
 
+/* `.lang = "ja"` (2026-11-07) on the Japanese-language rows below: an unset
+ * lang is stamped "en" by lib/hpengine.c, so `lang=` filters in /api/intel and
+ * semantic search missed them. Set where the host is .jp or the row's name or
+ * description carries kana; English pages (/en/, /english/, *_en collections)
+ * keep the default. */
 static const hp_source HP3B29A_WEBCAMS[] = {
   { .id = "JO29A_CAM_BALTIMORE_CITIWATCH_CCTV", .name = "Baltimore City (CitiWatch) — CCTV_Camera (ArcGIS camera layer)",
     .name_ja = "ボルチモア市 CitiWatch 防犯カメラ（ArcGISカメラレイヤー）",
@@ -3355,6 +3360,7 @@ static const hp_source HP3B29A_WEBCAMS[] = {
     .name_ja = "徳島県ライブカメラ等一覧",
     .category = "disaster", .portal = "https://www.geospatial.jp/ckan/dataset/15d10935-2193-4137-a3d0-c6fc937714af",
     .record_type = "live-camera",
+    .lang = "ja",
     .tags = "\"japan\",\"tokushima\",\"prefecture\",\"live-camera\",\"csv\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.geospatial.jp/ckan/dataset/15d10935-2193-4137-a3d0-c6fc937714af/resource/eaf4588f-ed62-4abb-9d1e-1788a11fb33d/download/livecamera.csv",
@@ -3376,6 +3382,7 @@ static const hp_source HP3B29A_WEBCAMS[] = {
     .name_ja = "東京都港湾局 海面ライブカメラ位置情報",
     .category = "maritime", .portal = "https://portal.data.metro.tokyo.lg.jp",
     .record_type = "port-camera",
+    .lang = "ja",
     .tags = "\"japan\",\"tokyo\",\"port-and-harbor-bureau\",\"floodgate\",\"sea\",\"live-camera\",\"csv\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.opendata.metro.tokyo.lg.jp/kouwan/130001_sea-camera.csv",
@@ -3401,6 +3408,7 @@ static const hp_source HP3B29A_WEBCAMS[] = {
     .name_ja = "東京都港湾局 伊豆・小笠原諸島港湾ライブカメラ位置情報",
     .category = "maritime", .portal = "https://portal.data.metro.tokyo.lg.jp",
     .record_type = "port-camera",
+    .lang = "ja",
     .tags = "\"japan\",\"tokyo\",\"izu\",\"ogasawara\",\"port\",\"live-camera\",\"csv\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.opendata.metro.tokyo.lg.jp/kouwan/position_information_of_port_live_cameras_at_Izu-Ogasawara_Islands.csv",
@@ -3419,6 +3427,7 @@ static const hp_source HP3B29A_WEBCAMS[] = {
     .name_ja = "東京都建設局 河川監視カメラ位置情報",
     .category = "disaster", .portal = "https://portal.data.metro.tokyo.lg.jp",
     .record_type = "river-camera",
+    .lang = "ja",
     .tags = "\"japan\",\"tokyo\",\"construction-bureau\",\"river\",\"flood\",\"live-camera\",\"csv\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.opendata.metro.tokyo.lg.jp/kensetsu/R4/130001_river-monitoring-cameras.csv",
@@ -3438,6 +3447,7 @@ static const hp_source HP3B29A_WEBCAMS[] = {
     .name_ja = "茅野市 防災ガイドマップ 河川カメラ",
     .category = "disaster", .portal = "https://data.bodik.jp/dataset/783af5af-677c-45c1-a513-99b751164e4e",
     .record_type = "river-camera",
+    .lang = "ja",
     .tags = "\"japan\",\"nagano\",\"chino\",\"river\",\"flood\",\"camera\",\"csv\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.bodik.jp/dataset/783af5af-677c-45c1-a513-99b751164e4e/resource/f83cea81-b7c6-4790-8f27-25bd0fea4223/download/.csv",
@@ -3455,6 +3465,7 @@ static const hp_source HP3B29A_WEBCAMS[] = {
     .name_ja = "【京丹後市】ライブカメラ一覧",
     .category = "environment", .portal = "https://data.bodik.jp/dataset/8c3c8e3d-b118-47c3-a1b5-079ad54aff73",
     .record_type = "live-camera",
+    .lang = "ja",
     .tags = "\"japan\",\"kyoto\",\"kyotango\",\"beach\",\"live-camera\",\"csv\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.bodik.jp/dataset/8c3c8e3d-b118-47c3-a1b5-079ad54aff73/resource/85fbe68e-b348-4b35-abe4-a48d3300b11e/download/262129_livecameralist.csv",
@@ -3473,6 +3484,7 @@ static const hp_source HP3B29A_WEBCAMS[] = {
     .name_ja = "南阿蘇村 ライブカメラ情報一覧",
     .category = "environment", .portal = "https://data.bodik.jp/dataset/01cadf8b-90c7-487e-8aaf-b025fba2a2fe",
     .record_type = "live-camera",
+    .lang = "ja",
     .tags = "\"japan\",\"kumamoto\",\"minamiaso\",\"aso\",\"live-camera\",\"csv\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.bodik.jp/dataset/01cadf8b-90c7-487e-8aaf-b025fba2a2fe/resource/09d96df3-1560-4646-b74f-badd34c91682/download/434337_webcom_service.csv",
@@ -3493,6 +3505,7 @@ static const hp_source HP3B29A_WEBCAMS[] = {
     .name_ja = "山都町ライブカメラ情報",
     .category = "environment", .portal = "https://data.bodik.jp/dataset/c9fdc43b-52e4-4ddc-8a3e-6b44d81370c3",
     .record_type = "live-camera",
+    .lang = "ja",
     .tags = "\"japan\",\"kumamoto\",\"yamato\",\"tsujunkyo\",\"live-camera\",\"csv\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://data.bodik.jp/dataset/c9fdc43b-52e4-4ddc-8a3e-6b44d81370c3/resource/c8d86b52-9c8f-453f-a2df-d6a567b5c463/download/434477_livecamera.csv",
@@ -3512,6 +3525,7 @@ static const hp_source HP3B29A_WEBCAMS[] = {
     .name_ja = "市川市 街頭防犯カメラ",
     .category = "security", .portal = "https://www.geospatial.jp/ckan/dataset/d3f93bb3-6703-40f2-b631-a82cdbb0b0f5",
     .record_type = "cctv-camera",
+    .lang = "ja",
     .tags = "\"japan\",\"chiba\",\"ichikawa\",\"crime-prevention\",\"cctv\",\"csv\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.geospatial.jp/ckan/dataset/d3f93bb3-6703-40f2-b631-a82cdbb0b0f5/resource/1671dbac-f7a7-4de0-8626-0b515ac63e6a/download/bouhannkamera.csv",

@@ -20,6 +20,11 @@
  */
 #include "lib/hpengine.h"
 
+/* `.lang = "ja"` (2026-11-07) on the Japanese-language rows below: an unset
+ * lang is stamped "en" by lib/hpengine.c, so `lang=` filters in /api/intel and
+ * semantic search missed them. Set where the host is .jp or the row's name or
+ * description carries kana; English pages (/en/, /english/, *_en collections)
+ * keep the default. */
 static const hp_source HP3_THREAT[] = {
   { .id = "BINARYDEFENSE_BANLIST", .name = "Binary Defense — artillery threat intelligence banlist",
     .name_ja = "Binary Defense 脅威IP一覧",
@@ -178,6 +183,7 @@ static const hp_source HP3_THREAT[] = {
     .name_ja = "JVN 脆弱性対策情報",
     .category = "threat", .portal = "https://jvndb.jvn.jp",
     .record_type = "vulnerability",
+    .lang = "ja",
     .tags = "\"threat\",\"vulnerability\",\"japan\",\"cert\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://jvndb.jvn.jp/myjvn?method=getVulnOverviewList&feed=hnd&rangeDatePublished=n&maxCountItem=50",

@@ -13,6 +13,7 @@
  *   · a filesystem path is built ONLY from a validated uuid and a range-checked
  *     integer seq. `filename` is data, never a path component. */
 #include "uploadapi.h"
+#include "jo_codec.h"
 #include "audit.h"
 #include "docmeta.h"
 #include "evidence.h"
@@ -138,49 +139,7 @@ static int role_rank(const char *r) {
   if (!strcmp(r, "viewer"))  return 1;
   return 0;
 }
-static void sha256_hex_bytes(const void *b, size_t n, char out[65]) {
-  unsigned char d[SHA256_DIGEST_LENGTH];
-  SHA256((const unsigned char *)b, n, d);
-  for (int i = 0; i < SHA256_DIGEST_LENGTH; i++)
-    snprintf(out + i * 2, 3, "%02x", d[i]);
-}
 
-/* Percent/plus-decoding lookup over the raw query string. Local copy of
- * timelineapi.c's qs_get shape — this module reads exactly one parameter and
- * pulling in that file's whole surface for it would be worse. */
-static int hexv(int c) {
-  if (c >= '0' && c <= '9') return c - '0';
-  if (c >= 'a' && c <= 'f') return c - 'a' + 10;
-  if (c >= 'A' && c <= 'F') return c - 'A' + 10;
-  return -1;
-}
-static int qs_get(const char *qs, const char *key, char *out, size_t n) {
-  if (!out || n == 0) return 0;
-  out[0] = 0;
-  if (!qs || !*qs) return 0;
-  size_t kl = strlen(key);
-  const char *p = qs;
-  for (;;) {
-    const char *amp = strchr(p, '&');
-    const char *end = amp ? amp : p + strlen(p);
-    const char *eqp = memchr(p, '=', (size_t)(end - p));
-    if (eqp && (size_t)(eqp - p) == kl && strncmp(p, key, kl) == 0) {
-      size_t o = 0;
-      for (const char *v = eqp + 1; v < end && o + 1 < n; v++) {
-        if (*v == '+') { out[o++] = ' '; continue; }
-        if (*v == '%' && v + 2 < end) {
-          int h = hexv((unsigned char)v[1]), l = hexv((unsigned char)v[2]);
-          if (h >= 0 && l >= 0) { out[o++] = (char)(h * 16 + l); v += 2; continue; }
-        }
-        out[o++] = *v;
-      }
-      out[o] = 0;
-      return 1;
-    }
-    if (!amp) return 0;
-    p = amp + 1;
-  }
-}
 
 /* ── input validation ─────────────────────────────────────────────────────── */
 
@@ -620,7 +579,7 @@ static char *h_part(db_handle *db, const tenant_ctx *t, const char *id,
                     const char *qs, const char *body, size_t body_len,
                     int *st) {
   char sv[24] = {0};
-  if (!qs_get(qs, "seq", sv, sizeof sv) || !sv[0]) return err(st, 400, "invalid_seq");
+  if (!jo_qs_get(qs, "seq", sv, sizeof sv, JO_QS_DECODE) || !sv[0]) return err(st, 400, "invalid_seq");
   for (const char *p = sv; *p; p++)
     if (*p < '0' || *p > '9') return err(st, 400, "invalid_seq");
   long seq = strtol(sv, NULL, 10);
@@ -934,7 +893,7 @@ static char *h_commit(db_handle *db, const tenant_ctx *t, const char *id,
   }
 
   char sha[65];
-  sha256_hex_bytes(buf, (size_t)assembled, sha);
+  jo_sha256_hex(buf, (size_t)assembled, sha);
 
   /* THE handoff. See uploadapi.h for why each of these arguments is what it
    * is — in particular why method is "UPLOAD", status is 0 and both header

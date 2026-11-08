@@ -572,58 +572,85 @@ VJSON(cyb_tweedekamer_zaak, "cyb-tweedekamer-zaak", "Dutch House of Representati
   "nl", "[\"nld\",\"parliament\",\"legislation\",\"transparency\"]", 21600,
   "Parliamentary cases in the Tweede Kamer data warehouse, the spine linking documents, decisions and votes.");
 
+/* 2026-11-07: pages on take/skip now (lib/jsonlist.c PAGERS); skip=0 bound so page 1
+ * is the same ordering as the pages after it. Measured: skip=0 vs skip=<take> answer
+ * disjoint ids, the API's totalResults (where it publishes one) unchanged by skip. */
 VJSON(cyb_ukparl_committee_publications, "cyb-ukparl-committee-publications", "UK Parliament — committee publications", "英国議会 委員会刊行物",
   "transparency", "politics",
-  "https://committees-api.parliament.uk/api/Publications?take=50",
+  "https://committees-api.parliament.uk/api/Publications?take=50&skip=0",
   "items",
   "en", "[\"gbr\",\"parliament\",\"committee\",\"transparency\"]", 21600,
   "Committee reports, written and oral evidence as published.");
 
+/* 2026-11-07: pages on take/skip now (lib/jsonlist.c PAGERS); skip=0 bound so page 1
+ * is the same ordering as the pages after it. Measured: skip=0 vs skip=<take> answer
+ * disjoint ids, the API's totalResults (where it publishes one) unchanged by skip. */
 VJSON(cyb_ukparl_committees, "cyb-ukparl-committees", "UK Parliament — select committees", "英国議会 特別委員会",
   "transparency", "politics",
-  "https://committees-api.parliament.uk/api/Committees?take=50",
+  "https://committees-api.parliament.uk/api/Committees?take=50&skip=0",
   "items",
   "en", "[\"gbr\",\"parliament\",\"committee\",\"transparency\"]", 86400,
   "Select committees of both Houses with remit, membership and current status.");
 
+/* 2026-11-07: pages on take/skip now (lib/jsonlist.c PAGERS); skip=0 bound so page 1
+ * is the same ordering as the pages after it. Measured: skip=0 vs skip=<take> answer
+ * disjoint ids, the API's totalResults (where it publishes one) unchanged by skip.
+ * take 50 -> 25: the API caps a page at 25 (take=50 answered 25), and a capped page reads as SHORT, which ends the walk at page 1. */
 VJSON(cyb_ukparl_commons_divisions, "cyb-ukparl-commons-divisions", "UK Parliament — Commons division results", "英国議会 下院採決結果",
   "transparency", "politics",
-  "https://commonsvotes-api.parliament.uk/data/divisions.json/search?queryParameters.take=50",
+  "https://commonsvotes-api.parliament.uk/data/divisions.json/search?queryParameters.take=25&queryParameters.skip=0",
   "",
   "en", "[\"gbr\",\"parliament\",\"voting\",\"transparency\"]", 21600,
   "Recorded House of Commons votes with aye and no counts per division.");
 
+/* 2026-11-07: pages on take/skip now (lib/jsonlist.c PAGERS); skip=0 bound so page 1
+ * is the same ordering as the pages after it. Measured: skip=0 vs skip=<take> answer
+ * disjoint ids, the API's totalResults (where it publishes one) unchanged by skip.
+ * take 50 -> 20: the API caps a page at 20 (take=50 answered 20 of 650), which read as a short page and ended the walk. */
 VJSON(cyb_ukparl_constituencies, "cyb-ukparl-constituencies", "UK Parliament — constituency search", "英国議会 選挙区検索",
   "transparency", "politics",
-  "https://members-api.parliament.uk/api/Location/Constituency/Search?take=50",
+  "https://members-api.parliament.uk/api/Location/Constituency/Search?take=20&skip=0",
   "items",
   "en", "[\"gbr\",\"parliament\",\"politics\",\"geo\"]", 86400,
   "Westminster constituencies with current sitting member and boundary period.");
 
+/* 2026-11-07: pages on take/skip now (lib/jsonlist.c PAGERS); skip=0 bound so page 1
+ * is the same ordering as the pages after it. Measured: skip=0 vs skip=<take> answer
+ * disjoint ids, the API's totalResults (where it publishes one) unchanged by skip. */
 VJSON(cyb_ukparl_edm_list, "cyb-ukparl-edm-list", "UK Parliament — early day motions", "英国議会 早期動議",
   "transparency", "politics",
-  "https://oralquestionsandmotions-api.parliament.uk/EarlyDayMotions/list?parameters.take=50",
+  "https://oralquestionsandmotions-api.parliament.uk/EarlyDayMotions/list?parameters.take=50&parameters.skip=0",
   "response",
   "en", "[\"gbr\",\"parliament\",\"motions\",\"transparency\"]", 21600,
   "Early day motions with sponsors and signature counts, a read on backbench political attention.");
 
+/* 2026-11-07: pages on take/skip now (lib/jsonlist.c PAGERS); skip=0 bound so page 1
+ * is the same ordering as the pages after it. Measured: skip=0 vs skip=<take> answer
+ * disjoint ids, the API's totalResults (where it publishes one) unchanged by skip.
+ * take 50 -> 20: the API caps a page at 20 (take=50 answered 20 of 4,169), which read as a short page and ended the walk. */
 VJSON(cyb_ukparl_interests, "cyb-ukparl-interests", "UK Parliament — registered financial interests", "英国議会 議員利害関係登録",
   "transparency", "politics",
-  "https://interests-api.parliament.uk/api/v1/Interests/?take=50",
+  "https://interests-api.parliament.uk/api/v1/Interests/?take=20&skip=0",
   "items",
   "en", "[\"gbr\",\"parliament\",\"lobbying\",\"transparency\"]", 43200,
   "Members' registered financial interests, gifts, donations and outside employment.");
 
+/* 2026-11-07: pages on take/skip now (lib/jsonlist.c PAGERS); skip=0 bound so page 1
+ * is the same ordering as the pages after it. Measured: skip=0 vs skip=<take> answer
+ * disjoint ids, the API's totalResults (where it publishes one) unchanged by skip. */
 VJSON(cyb_ukparl_lords_divisions, "cyb-ukparl-lords-divisions", "UK Parliament — Lords division results", "英国議会 上院採決結果",
   "transparency", "politics",
-  "https://lordsvotes-api.parliament.uk/data/Divisions/search?take=50",
+  "https://lordsvotes-api.parliament.uk/data/Divisions/search?take=50&skip=0",
   "",
   "en", "[\"gbr\",\"parliament\",\"voting\",\"transparency\"]", 21600,
   "Recorded House of Lords votes with content and not-content tallies.");
 
+/* 2026-11-07: pages on take/skip now (lib/jsonlist.c PAGERS); skip=0 bound so page 1
+ * is the same ordering as the pages after it. Measured: skip=0 vs skip=<take> answer
+ * disjoint ids, the API's totalResults (where it publishes one) unchanged by skip. */
 VJSON(cyb_ukparl_members_search, "cyb-ukparl-members-search", "UK Parliament — members search API", "英国議会 議員検索API",
   "transparency", "politics",
-  "https://members-api.parliament.uk/api/Members/Search?take=20",
+  "https://members-api.parliament.uk/api/Members/Search?take=20&skip=0",
   "items",
   "en", "[\"gbr\",\"parliament\",\"politics\",\"transparency\"]", 86400,
   "Current and former members of both Houses with party, constituency and service dates.");
@@ -635,16 +662,22 @@ VJSON(cyb_ukparl_parties_commons, "cyb-ukparl-parties-commons", "UK Parliament �
   "en", "[\"gbr\",\"parliament\",\"politics\",\"transparency\"]", 86400,
   "Parties currently represented in the House of Commons with seat counts.");
 
+/* 2026-11-07: pages on take/skip now (lib/jsonlist.c PAGERS); skip=0 bound so page 1
+ * is the same ordering as the pages after it. Measured: skip=0 vs skip=<take> answer
+ * disjoint ids, the API's totalResults (where it publishes one) unchanged by skip. */
 VJSON(cyb_ukparl_statutory_instruments, "cyb-ukparl-statutory-instruments", "UK Parliament — statutory instruments", "英国議会 委任立法",
   "transparency", "politics",
-  "https://statutoryinstruments-api.parliament.uk/api/v2/StatutoryInstrument?take=50",
+  "https://statutoryinstruments-api.parliament.uk/api/v2/StatutoryInstrument?take=50&skip=0",
   "items",
   "en", "[\"gbr\",\"parliament\",\"legislation\",\"transparency\"]", 43200,
   "Statutory instruments before Parliament, the delegated-legislation pipeline including sanctions regulations.");
 
+/* 2026-11-07: pages on take/skip now (lib/jsonlist.c PAGERS); skip=0 bound so page 1
+ * is the same ordering as the pages after it. Measured: skip=0 vs skip=<take> answer
+ * disjoint ids, the API's totalResults (where it publishes one) unchanged by skip. */
 VJSON(cyb_ukparl_treaties, "cyb-ukparl-treaties", "UK Parliament — treaties laid before Parliament", "英国議会 提出条約",
   "transparency", "politics",
-  "https://treaties-api.parliament.uk/api/Treaty?take=50",
+  "https://treaties-api.parliament.uk/api/Treaty?take=50&skip=0",
   "items",
   "en", "[\"gbr\",\"parliament\",\"treaty\",\"transparency\"]", 86400,
   "Treaties laid before the UK Parliament with scrutiny status and department.");

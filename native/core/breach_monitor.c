@@ -19,6 +19,7 @@
  *    scan must never be able to roll back the corpus load that produced it.
  */
 #include "breach_monitor.h"
+#include "jo_codec.h"
 #include "audit.h"
 #include "httpclient.h"   /* DoH TXT lookup for domain ownership proof */
 #include "../third_party/cJSON.h"
@@ -102,56 +103,10 @@ static const char *jstr(const cJSON *o, const char *k) {
   const cJSON *v = o ? cJSON_GetObjectItem(o, k) : NULL;
   return (v && cJSON_IsString(v) && v->valuestring[0]) ? v->valuestring : NULL;
 }
-/* Buffer.from(str,'utf8').toString('base64url') — no padding, +/ → -_ */
-static char *b64url(const char *in) {
-  static const char T[] =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
-  size_t len = strlen(in);
-  char *out = malloc(((len + 2) / 3) * 4 + 1);
-  if (!out) return NULL;
-  size_t o = 0;
-  for (size_t i = 0; i < len; i += 3) {
-    unsigned a = (unsigned char)in[i];
-    unsigned b = i + 1 < len ? (unsigned char)in[i + 1] : 0;
-    unsigned c = i + 2 < len ? (unsigned char)in[i + 2] : 0;
-    unsigned v = (a << 16) | (b << 8) | c;
-    out[o++] = T[(v >> 18) & 63];
-    out[o++] = T[(v >> 12) & 63];
-    if (i + 1 < len) out[o++] = T[(v >> 6) & 63];
-    if (i + 2 < len) out[o++] = T[v & 63];
-  }
-  out[o] = 0;
-  return out;
-}
-/* Inverse of b64url(). NULL on an invalid char — a bad cursor is ignored, not
- * an error (same stance as intelapi.c: pagination tokens are advisory). */
-static char *b64url_decode(const char *in) {
-  static signed char R[256];
-  static int init = 0;
-  if (!init) {
-    for (int i = 0; i < 256; i++) R[i] = -1;
-    const char *T =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
-    for (int i = 0; i < 64; i++) R[(unsigned char)T[i]] = (signed char)i;
-    init = 1;
-  }
-  size_t len = strlen(in);
-  char *out = malloc(len / 4 * 3 + 4);
-  if (!out) return NULL;
-  size_t o = 0; unsigned v = 0; int bits = 0;
-  for (size_t i = 0; i < len; i++) {
-    signed char d = R[(unsigned char)in[i]];
-    if (d < 0) { free(out); return NULL; }
-    v = (v << 6) | (unsigned)d; bits += 6;
-    if (bits >= 8) { bits -= 8; out[o++] = (char)((v >> bits) & 0xFF); }
-  }
-  out[o] = 0;
-  return out;
-}
 /* keyset cursor {"p":<sort_val>,"u":<uid>} — the house encoder. */
 static int cursor_split(const char *cur, char *p, size_t pn, char *u, size_t un) {
   if (!cur || !*cur) return 0;
-  char *dec = b64url_decode(cur);
+  char *dec = jo_b64url_decode_str(cur);
   if (!dec) return 0;
   cJSON *j = cJSON_Parse(dec); free(dec);
   if (!j) return 0;
@@ -170,7 +125,7 @@ static char *cursor_make(const char *p, const char *u) {
   cJSON_AddStringToObject(o, "p", p ? p : "");
   cJSON_AddStringToObject(o, "u", u ? u : "");
   char *j = cJSON_PrintUnformatted(o); cJSON_Delete(o);
-  char *e = b64url(j); free(j); return e;
+  char *e = jo_b64url_encode_str(j); free(j); return e;
 }
 static int clamp_limit(int n) {
   if (n <= 0) n = 50;

@@ -21,12 +21,18 @@
  */
 #include "lib/hpengine.h"
 
+/* `.lang = "ja"` (2026-11-07) on the Japanese-language rows below: an unset
+ * lang is stamped "en" by lib/hpengine.c, so `lang=` filters in /api/intel and
+ * semantic search missed them. Set where the host is .jp or the row's name or
+ * description carries kana; English pages (/en/, /english/, *_en collections)
+ * keep the default. */
 static const hp_source HP3B54_JPWPORG[] = {
   { .id = "JO54_WP_JAKOUKASHINOBI_FARMINGINFORMATION", .name = "JAこうか — custom post type `farming_information` (営農情報) (WordPress "
       "REST)",
     .name_ja = "JAこうか 営農情報（WordPress REST）",
     .category = "organization", .portal = "https://ja-kouka.shinobi.or.jp/",
     .record_type = "cpt-farming-information",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://ja-kouka.shinobi.or.jp/wp-json/wp/v2/farming_information?per_page=100&orderby=date&order=desc",
@@ -52,6 +58,7 @@ static const hp_source HP3B54_JPWPORG[] = {
     .name_ja = "水土里ネット神奈川 各種様式（WordPress REST）",
     .category = "organization", .portal = "https://kanagawa-totiren.or.jp/",
     .record_type = "cpt-format",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://kanagawa-totiren.or.jp/wp-json/wp/v2/format?per_page=100&orderby=date&order=desc",
@@ -78,6 +85,7 @@ static const hp_source HP3B54_JPWPORG[] = {
     .name_ja = "千葉県行政書士会 会員専用お知らせ（WordPress REST）",
     .category = "organization", .portal = "https://www.chiba-gyosei.or.jp/",
     .record_type = "cpt-members-information",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.chiba-gyosei.or.jp/wp-json/wp/v2/members_information?per_page=100&orderby=date&order=desc",
@@ -104,6 +112,7 @@ static const hp_source HP3B54_JPWPORG[] = {
     .name_ja = "福山商工会議所 会員情報（WordPress REST）",
     .category = "organization", .portal = "https://www.fukuyama.or.jp/",
     .record_type = "cpt-member-information",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.fukuyama.or.jp/wp-json/wp/v2/member-information?per_page=100&orderby=date&order=desc",
@@ -155,6 +164,7 @@ static const hp_source HP3B54_JPWPORG[] = {
     .name_ja = "JA堺市(堺市農業協同組合) JAバンク各種規定／お知らせ（WordPress REST）",
     .category = "organization", .portal = "https://www.ja-sakai.or.jp/",
     .record_type = "cpt-bank-information",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.ja-sakai.or.jp/wp-json/wp/v2/bank-information?per_page=100&orderby=date&order=desc",
@@ -181,6 +191,7 @@ static const hp_source HP3B54_JPWPORG[] = {
     .name_ja = "www.ja-sapporo.or.jp その他のお知らせ（WordPress REST）",
     .category = "organization", .portal = "https://www.ja-sapporo.or.jp/",
     .record_type = "cpt-information",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.ja-sapporo.or.jp/wp-json/wp/v2/information?per_page=100&orderby=date&order=desc",
@@ -207,6 +218,7 @@ static const hp_source HP3B54_JPWPORG[] = {
     .name_ja = "公益社団法人川崎北法人会 Webサイト イベント（WordPress REST）",
     .category = "organization", .portal = "https://www.kawa-kita.or.jp/",
     .record_type = "cpt-xo-event",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.kawa-kita.or.jp/wp-json/wp/v2/xo_event?per_page=100&orderby=date&order=desc",
@@ -232,6 +244,7 @@ static const hp_source HP3B54_JPWPORG[] = {
     .name_ja = "川越商工会議所 イベント（WordPress REST）",
     .category = "organization", .portal = "https://www.kawagoe.or.jp/",
     .record_type = "cpt-xo-event",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.kawagoe.or.jp/wp-json/wp/v2/xo_event?per_page=100&orderby=date&order=desc",
@@ -258,6 +271,7 @@ static const hp_source HP3B54_JPWPORG[] = {
     .name_ja = "公益社団法人京都青年会議所 2026年度HP 覧古恒心~愛を貫き、未来を拓く~ 事業・例会（WordPress REST）",
     .category = "organization", .portal = "https://www.kyoto-jc.or.jp/2026/",
     .record_type = "cpt-information",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.kyoto-jc.or.jp/2026/wp-json/wp/v2/information?per_page=100&orderby=date&order=desc",
@@ -284,6 +298,7 @@ static const hp_source HP3B54_JPWPORG[] = {
     .name_ja = "益田市医師会 医師会からの健康情報（WordPress REST）",
     .category = "organization", .portal = "https://www.masuda-med.or.jp/",
     .record_type = "cpt-health-information",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.masuda-med.or.jp/wp-json/wp/v2/health_information?per_page=100&orderby=date&order=desc",
@@ -309,6 +324,7 @@ static const hp_source HP3B54_JPWPORG[] = {
     .name_ja = "益田市医師会 情報公開（WordPress REST）",
     .category = "organization", .portal = "https://www.masuda-med.or.jp/",
     .record_type = "cpt-information",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.masuda-med.or.jp/wp-json/wp/v2/information?per_page=100&orderby=date&order=desc",
@@ -335,6 +351,7 @@ static const hp_source HP3B54_JPWPORG[] = {
     .name_ja = "一般社団法人 西京医師会 お知らせ（WordPress REST）",
     .category = "organization", .portal = "https://www.nishikyo-med.or.jp/",
     .record_type = "cpt-information",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.nishikyo-med.or.jp/wp-json/wp/v2/information?per_page=100&orderby=date&order=desc",
@@ -361,6 +378,7 @@ static const hp_source HP3B54_JPWPORG[] = {
     .name_ja = "一般社団法人 大阪青年会議所 お知らせ（WordPress REST）",
     .category = "organization", .portal = "https://www.osaka-jc.or.jp/",
     .record_type = "cpt-information",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.osaka-jc.or.jp/wp-json/wp/v2/information?per_page=100&orderby=date&order=desc",
@@ -387,6 +405,7 @@ static const hp_source HP3B54_JPWPORG[] = {
     .name_ja = "公益社団法人山梨県看護協会 お知らせ（WordPress REST）",
     .category = "organization", .portal = "https://www.yna.or.jp/",
     .record_type = "cpt-information",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.yna.or.jp/wp-json/wp/v2/information?per_page=100&orderby=date&order=desc",

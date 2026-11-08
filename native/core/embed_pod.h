@@ -116,12 +116,9 @@ struct http_client;
 int embed_detect_model(struct http_client *http, const char *base, char *out,
                        size_t cap);
 
-/* embed_detect_model() for the configured JO_EMBED_URL, with successful
- * answers cached for a few seconds — for request paths that compare the live
- * model with the one an index was built with on every query. */
-int embed_live_model(char *out, size_t cap);
-
-/* embed_live_model(), plus — when JO_EMBED_QUERY_URL names a different URL —
+/* The model behind the configured JO_EMBED_URL (embed_detect_model(), with
+ * successful answers cached for a few seconds, via vecindex_live_model()),
+ * plus — when JO_EMBED_QUERY_URL names a different URL —
  * proof that the query server serves the same model as JO_EMBED_URL (both
  * asked over /v1/models). Returns -1 with `out` holding the reason when the
  * two disagree or either cannot be asked: the query side must then refuse,

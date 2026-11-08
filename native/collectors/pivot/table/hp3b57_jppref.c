@@ -21,17 +21,32 @@
  */
 #include "lib/hpengine.h"
 
+/* `.lang = "ja"` (2026-11-07) on the Japanese-language rows below: an unset
+ * lang is stamped "en" by lib/hpengine.c, so `lang=` filters in /api/intel and
+ * semantic search missed them. Set where the host is .jp or the row's name or
+ * description carries kana; English pages (/en/, /english/, *_en collections)
+ * keep the default. */
+/* Feed cadence (2026-11-07): RSS/Atom rows that still carried the authoring
+ * default `interval = 3600` with no `adaptive_interval` were re-bucketed by
+ * tools/tune_intervals.py's rule from the `newest <date>` each description
+ * records, measured against its own "Fetched" date (<=3 d hourly, <=30 d
+ * 6-hourly, <=1 y daily, else weekly), and given `adaptive_interval = 1` so
+ * core/scheduler.c keeps re-measuring it, as this beat's other rows are. */
 static const hp_source HP3B57_JPPREF[] = {
   { .id = "JO57_Q130290", .name = "Hyōgo Prefecture (prefecture of Japan) - 兵庫県 緊急時用トップページ",
     .name_ja = "Hyōgo Prefecture (prefecture of Japan) - 兵庫県 緊急時用トップページ",
     .category = "government", .portal = "https://web.pref.hyogo.lg.jp/",
     .record_type = "government-notice",
+    .lang = "ja",
     .tags = "\"jppref\",\"japan\",\"prefecture\",\"notice\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://web.pref.hyogo.lg.jp/kinkyu.xml",
     .array_path = "item",
     .date_keys = "pubDate,dc:date",
     .id_keys = "guid,link",
+    /* Kept hourly and NOT adaptive (2026-11-07): an emergency / disaster-
+     * notice channel is quiet until the day it matters, so its newest-item
+     * age says nothing about how fresh it must be read. */
     .interval = 3600,
     .link_keys = "link",
     .timeout_ms = 30000,
@@ -44,6 +59,7 @@ static const hp_source HP3B57_JPPREF[] = {
     .name_ja = "Hyōgo Prefecture (prefecture of Japan) - 兵庫県 新着情報一覧",
     .category = "government", .portal = "https://web.pref.hyogo.lg.jp/",
     .record_type = "government-notice",
+    .lang = "ja",
     .tags = "\"jppref\",\"japan\",\"prefecture\",\"notice\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://web.pref.hyogo.lg.jp/shinchaku/shinchaku.xml",
@@ -51,6 +67,7 @@ static const hp_source HP3B57_JPPREF[] = {
     .date_keys = "pubDate,dc:date",
     .id_keys = "guid,link",
     .interval = 3600,
+    .adaptive_interval = 1,
     .link_keys = "link",
     .timeout_ms = 30000,
     .title_keys = "title",
@@ -62,6 +79,7 @@ static const hp_source HP3B57_JPPREF[] = {
     .name_ja = "Hyōgo Prefecture (prefecture of Japan) - 兵庫県 ホーム",
     .category = "government", .portal = "https://web.pref.hyogo.lg.jp/",
     .record_type = "government-notice",
+    .lang = "ja",
     .tags = "\"jppref\",\"japan\",\"prefecture\",\"notice\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://web.pref.hyogo.lg.jp/shinchaku.xml",
@@ -69,6 +87,7 @@ static const hp_source HP3B57_JPPREF[] = {
     .date_keys = "pubDate,dc:date",
     .id_keys = "guid,link",
     .interval = 3600,
+    .adaptive_interval = 1,
     .link_keys = "link",
     .timeout_ms = 30000,
     .title_keys = "title",

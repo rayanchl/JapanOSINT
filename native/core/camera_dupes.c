@@ -1,5 +1,6 @@
 /* core/camera_dupes.c — see camera_dupes.h. */
 #include "camera_dupes.h"
+#include "jo_page.h"
 #include "thresholds.h"         /* operator-tunable similarity cut-offs */
 #include "camera_feed.h"
 #include "camera_refframe.h"
@@ -373,12 +374,8 @@ char *camera_dupes_route(db_handle *db, const char *tenant, const char *id,
 
   cJSON *root = cJSON_CreateObject();
   cJSON_AddItemToObject(root, "data", data);
-  cJSON *pg = cJSON_AddObjectToObject(root, "page");
-  cJSON_AddNumberToObject(pg, "limit", limit);
-  cJSON_AddNumberToObject(pg, "offset", offset);
-  cJSON_AddNumberToObject(pg, "count", count);
-  cJSON_AddNumberToObject(pg, "total", np);
-  cJSON_AddBoolToObject(pg, "has_more", offset + count < np);
+  cJSON_AddItemToObject(root, "page",
+                        jo_page_new(limit, offset, count, np, offset + count < np));
   cJSON *meta = cJSON_AddObjectToObject(root, "meta");
   cJSON *th = cJSON_AddObjectToObject(meta, "thresholds");
   cJSON_AddNumberToObject(th, "phash_max_distance", CAM_DUP_PHASH_MAX);

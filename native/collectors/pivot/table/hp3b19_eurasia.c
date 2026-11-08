@@ -199,6 +199,14 @@ static const hp_source HP3B19_EURASIA[] = {
     .tags = "\"hungary\",\"statistics\",\"gdp\",\"economy\",\"macro\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.ksh.hu/stadat_files/gdp/hu/gdp0001.csv",
+    /* As HU_KSH_TRANSPORT (measured 2026-11-07, one request): line 0 is a
+     * TITLE, line 1 the header, 9 ";"-separated fields; "Év" is distinct on 31
+     * of 31 data rows. windows-1250, not ISO-8859-2: no byte in 0x80-0xBF, so
+     * it decodes identically under either, and the family is CP1250 (LABOUR
+     * and ENVIRONMENT prove it). */
+    .charset = "windows-1250",
+    .csv_delim = "semi", .csv_skip_lines = 1,
+    .id_keys = "Év", .title_keys = "Év",
     .interval = 604800,
     .description = "The KSH STADAT macro table as machine-readable CSV: annual "
       "Hungarian GDP at current and constant prices, per head, and its "
@@ -213,6 +221,13 @@ static const hp_source HP3B19_EURASIA[] = {
     .tags = "\"hungary\",\"statistics\",\"labour\",\"employment\",\"economy\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.ksh.hu/stadat_files/mun/hu/mun0001.csv",
+    /* As HU_KSH_TRANSPORT (measured 2026-11-07, one request): line 0 is a
+     * TITLE, line 1 the header, 16 ";"-separated fields; "Év" is distinct on
+     * 17 of 17 data rows. windows-1250, not ISO-8859-2: it carries 0x85/0x96
+     * ("…", "–"), which ISO-8859-2 reads as C1 controls or "ľ". */
+    .charset = "windows-1250",
+    .csv_delim = "semi", .csv_skip_lines = 1,
+    .id_keys = "Év", .title_keys = "Év",
     .interval = 604800,
     .description = "Annual Hungarian labour-market aggregates as CSV: activity, "
       "employment and unemployment rates for the 15-74 population, "
@@ -226,6 +241,14 @@ static const hp_source HP3B19_EURASIA[] = {
     .tags = "\"hungary\",\"statistics\",\"inflation\",\"prices\",\"economy\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.ksh.hu/stadat_files/ara/hu/ara0001.csv",
+    /* As HU_KSH_TRANSPORT (measured 2026-11-07, one request): line 0 is a
+     * TITLE, line 1 the header, 9 ";"-separated fields; "Év" is distinct on 16
+     * of 16 data rows. windows-1250, not ISO-8859-2: no byte in 0x80-0xBF, so
+     * it decodes identically under either, and the family is CP1250 (LABOUR
+     * and ENVIRONMENT prove it). */
+    .charset = "windows-1250",
+    .csv_delim = "semi", .csv_skip_lines = 1,
+    .id_keys = "Év", .title_keys = "Év",
     .interval = 604800,
     .description = "Hungary's headline price indices as CSV: consumer price index, "
       "industrial producer price index, construction price index and "
@@ -239,6 +262,14 @@ static const hp_source HP3B19_EURASIA[] = {
     .tags = "\"hungary\",\"statistics\",\"energy\",\"production\",\"economy\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.ksh.hu/stadat_files/ene/hu/ene0001.csv",
+    /* As HU_KSH_TRANSPORT (measured 2026-11-07, one request): line 0 is a
+     * TITLE, line 1 the header, 9 ";"-separated fields; "Év" is distinct on 26
+     * of 26 data rows. windows-1250, not ISO-8859-2: no byte in 0x80-0xBF, so
+     * it decodes identically under either, and the family is CP1250 (LABOUR
+     * and ENVIRONMENT prove it). */
+    .charset = "windows-1250",
+    .csv_delim = "semi", .csv_skip_lines = 1,
+    .id_keys = "Év", .title_keys = "Év",
     .interval = 604800,
     .description = "Hungary's annual energy balance as CSV: primary energy "
       "production in petajoules, the renewable share, imports, total "
@@ -288,6 +319,13 @@ static const hp_source HP3B19_EURASIA[] = {
     .tags = "\"hungary\",\"statistics\",\"environment\",\"emissions\",\"waste\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.ksh.hu/stadat_files/kor/hu/kor0001.csv",
+    /* As HU_KSH_TRANSPORT (measured 2026-11-07, one request): line 0 is a
+     * TITLE, line 1 the header, 5 ";"-separated fields; "Év" is distinct on 26
+     * of 26 data rows. windows-1250, not ISO-8859-2: it carries 0xb5 ("µ" in
+     * "2,5 µm"), which ISO-8859-2 reads as C1 controls or "ľ". */
+    .charset = "windows-1250",
+    .csv_delim = "semi", .csv_skip_lines = 1,
+    .id_keys = "Év", .title_keys = "Év",
     .interval = 604800,
     .description = "Hungary's annual environmental indicators as CSV: carbon dioxide "
       "and other greenhouse-gas emissions, the share of symptom-free "
@@ -1622,6 +1660,14 @@ static const hp_source HP3B19_EURASIA[] = {
     .tags = "\"hungary\",\"statistics\",\"forest\",\"land\",\"environment\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.ksh.hu/stadat_files/kor/hu/kor0002.csv",
+    /* As HU_KSH_TRANSPORT (measured 2026-11-07, one request): line 0 is a
+     * TITLE, line 1 the header, 27 ";"-separated fields; "Megnevezés" is
+     * distinct on 7 of 7 data rows. windows-1250, not ISO-8859-2: no byte in
+     * 0x80-0xBF, so it decodes identically under either, and the family is
+     * CP1250 (LABOUR and ENVIRONMENT prove it). */
+    .charset = "windows-1250",
+    .csv_delim = "semi", .csv_skip_lines = 1,
+    .id_keys = "Megnevezés", .title_keys = "Megnevezés",
     .interval = 604800,
     .description = "The distribution of Hungarian forest area by form of ownership "
       "at 31 December each year, in hectares, as CSV. Land-ownership "
@@ -3324,6 +3370,14 @@ static const hp_source HP3B19_EURASIA[] = {
     .tags = "\"hungary\",\"statistics\",\"health\",\"hospital\",\"society\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.ksh.hu/stadat_files/ege/hu/ege0001.csv",
+    /* As HU_KSH_TRANSPORT (measured 2026-11-07, one request): line 0 is a
+     * TITLE, line 1 the header, 12 ";"-separated fields; "Év" is distinct on
+     * 66 of 66 data rows. windows-1250, not ISO-8859-2: no byte in 0x80-0xBF,
+     * so it decodes identically under either, and the family is CP1250 (LABOUR
+     * and ENVIRONMENT prove it). */
+    .charset = "windows-1250",
+    .csv_delim = "semi", .csv_skip_lines = 1,
+    .id_keys = "Év", .title_keys = "Év",
     .interval = 604800,
     .description = "Annual Hungarian health-system aggregates as CSV: health "
       "expenditure as a share of GDP, practising doctors and dentists, "
@@ -3337,6 +3391,14 @@ static const hp_source HP3B19_EURASIA[] = {
     .tags = "\"hungary\",\"statistics\",\"housing\",\"property\",\"construction\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.ksh.hu/stadat_files/lak/hu/lak0001.csv",
+    /* As HU_KSH_TRANSPORT (measured 2026-11-07, one request): line 0 is a
+     * TITLE, line 1 the header, 10 ";"-separated fields; "Év" is distinct on
+     * 27 of 27 data rows. windows-1250, not ISO-8859-2: no byte in 0x80-0xBF,
+     * so it decodes identically under either, and the family is CP1250 (LABOUR
+     * and ENVIRONMENT prove it). */
+    .charset = "windows-1250",
+    .csv_delim = "semi", .csv_skip_lines = 1,
+    .id_keys = "Év", .title_keys = "Év",
     .interval = 604800,
     .description = "Hungarian dwelling stock as CSV: total dwellings at 1 January, "
       "the municipally owned stock, permits issued and dwellings "
@@ -3351,6 +3413,14 @@ static const hp_source HP3B19_EURASIA[] = {
     .tags = "\"hungary\",\"statistics\",\"industry\",\"manufacturing\",\"economy\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.ksh.hu/stadat_files/ipa/hu/ipa0001.csv",
+    /* As HU_KSH_TRANSPORT (measured 2026-11-07, one request): line 0 is a
+     * TITLE, line 1 the header, 10 ";"-separated fields; "Év" is distinct on
+     * 25 of 25 data rows. windows-1250, not ISO-8859-2: no byte in 0x80-0xBF,
+     * so it decodes identically under either, and the family is CP1250 (LABOUR
+     * and ENVIRONMENT prove it). */
+    .charset = "windows-1250",
+    .csv_delim = "semi", .csv_skip_lines = 1,
+    .id_keys = "Év", .title_keys = "Év",
     .interval = 604800,
     .description = "Hungarian industrial aggregates as CSV: industry share of gross "
       "value added, output at current prices, the volume index, export "
@@ -3365,6 +3435,14 @@ static const hp_source HP3B19_EURASIA[] = {
     .tags = "\"hungary\",\"statistics\",\"agriculture\",\"farming\",\"land\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.ksh.hu/stadat_files/mez/hu/mez0001.csv",
+    /* As HU_KSH_TRANSPORT (measured 2026-11-07, one request): line 0 is a
+     * TITLE, line 1 the header, 6 ";"-separated fields; "Év" is distinct on 31
+     * of 31 data rows. windows-1250, not ISO-8859-2: no byte in 0x80-0xBF, so
+     * it decodes identically under either, and the family is CP1250 (LABOUR
+     * and ENVIRONMENT prove it). */
+    .charset = "windows-1250",
+    .csv_delim = "semi", .csv_skip_lines = 1,
+    .id_keys = "Év", .title_keys = "Év",
     .interval = 604800,
     .description = "Hungarian agricultural aggregates as CSV: the sector share of "
       "gross value added, output volume, cultivated area and "
@@ -3379,6 +3457,14 @@ static const hp_source HP3B19_EURASIA[] = {
     .tags = "\"hungary\",\"statistics\",\"welfare\",\"social\",\"society\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.ksh.hu/stadat_files/szo/hu/szo0001.csv",
+    /* As HU_KSH_TRANSPORT (measured 2026-11-07, one request): line 0 is a
+     * TITLE, line 1 the header, 5 ";"-separated fields; "Év" is distinct on 27
+     * of 27 data rows. windows-1250, not ISO-8859-2: no byte in 0x80-0xBF, so
+     * it decodes identically under either, and the family is CP1250 (LABOUR
+     * and ENVIRONMENT prove it). */
+    .charset = "windows-1250",
+    .csv_delim = "semi", .csv_skip_lines = 1,
+    .id_keys = "Év", .title_keys = "Év",
     .interval = 604800,
     .description = "Hungarian social protection spending as CSV: social benefits as "
       "a share of GDP, family support, pension and unemployment "
@@ -3392,6 +3478,14 @@ static const hp_source HP3B19_EURASIA[] = {
     .tags = "\"hungary\",\"statistics\",\"construction\",\"building\",\"economy\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.ksh.hu/stadat_files/epi/hu/epi0001.csv",
+    /* As HU_KSH_TRANSPORT (measured 2026-11-07, one request): line 0 is a
+     * TITLE, line 1 the header, 4 ";"-separated fields; "Év" is distinct on 36
+     * of 36 data rows. windows-1250, not ISO-8859-2: no byte in 0x80-0xBF, so
+     * it decodes identically under either, and the family is CP1250 (LABOUR
+     * and ENVIRONMENT prove it). */
+    .charset = "windows-1250",
+    .csv_delim = "semi", .csv_skip_lines = 1,
+    .id_keys = "Év", .title_keys = "Év",
     .interval = 604800,
     .description = "Hungarian construction sector aggregates as CSV: share of gross "
       "value added, output volume index and employment, by year. Public "

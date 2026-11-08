@@ -196,9 +196,15 @@ VGEO(geo_eccc_hurricane_windradii, "geo-eccc-hurricane-windradii", "Environment 
   "en", "[\"canada\",\"hurricane\",\"windradii\"]", 1800,
   "Wind radii polygons by threshold for active cyclones.");
 
+/* 2026-11-07: Unsorted, this collection answers OLDEST first (2026-10-09T07:00 at the head of an 18,134,117-record
+ * 30-day store, measured 2026-11-07), so 20 pages of 500 were the oldest month-old readings. Newest
+ * first now, IDENTIFIER as the tiebreak, inside a 7-hour window ({ago:25200}: the 6 h system cadence
+ * plus slack) so numberMatched names the slice between runs: 132,038 then, of which a run reads the
+ * newest 10,000 and discloses the rest. Bogus sortby is HTTP 400, the total is unchanged by the
+ * sort, and page 1 vs the next link overlap 0 of 500. */
 VGEO(geo_eccc_hydrometric, "geo-eccc-hydrometric", "Environment Canada — real-time hydrometric data", "カナダ環境省 — リアルタイム水文データ",
   "disaster", "flood",
-  "https://api.weather.gc.ca/collections/hydrometric-realtime/items?f=json&limit=500",
+  "https://api.weather.gc.ca/collections/hydrometric-realtime/items?f=json&limit=500&sortby=-DATETIME,IDENTIFIER&datetime={ago:25200}/..",
   "en", "[\"canada\",\"hydrology\",\"realtime\"]", 1800,
   "Real-time Canadian river level and discharge with station coordinates.");
 

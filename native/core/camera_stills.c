@@ -68,6 +68,7 @@
  * leaving it to be discovered in production.
  */
 #include "camera_stills.h"
+#include "jo_codec.h"
 #include "audit.h"
 #include "camera_feed.h"    /* properties → capture targets (views, upstream names) */
 #include "camera_privacy.h" /* may this camera's frames be indexed            */
@@ -140,13 +141,6 @@ static int env_int(const char *k, int dflt) {
   return (int)n;
 }
 
-static void sha256_hex(const void *b, size_t n, char out[65]) {
-  unsigned char d[SHA256_DIGEST_LENGTH];
-  SHA256((const unsigned char *)b, n, d);
-  for (int i = 0; i < SHA256_DIGEST_LENGTH; i++)
-    snprintf(out + i * 2, 3, "%02x", d[i]);
-  out[64] = '\0';
-}
 
 static char *cs_err(int *st, int code, const char *msg) {
   if (st) *st = code;
@@ -172,53 +166,7 @@ static int ci_has(const char *hay, const char *needle) {
   return 0;
 }
 
-/* Buffer.from(str,'utf8').toString('base64url') — no padding, +/ → -_
- * (verbatim from core/intelapi.c so cursors are the same currency here as
- * everywhere else in the API). */
-static char *b64url(const char *in) {
-  static const char T[] =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
-  size_t len = strlen(in);
-  char *out = malloc(((len + 2) / 3) * 4 + 1);
-  if (!out) return NULL;
-  size_t o = 0;
-  for (size_t i = 0; i < len; i += 3) {
-    unsigned a = (unsigned char)in[i];
-    unsigned b = i + 1 < len ? (unsigned char)in[i + 1] : 0;
-    unsigned c = i + 2 < len ? (unsigned char)in[i + 2] : 0;
-    unsigned v = (a << 16) | (b << 8) | c;
-    out[o++] = T[(v >> 18) & 63];
-    out[o++] = T[(v >> 12) & 63];
-    if (i + 1 < len) out[o++] = T[(v >> 6) & 63];
-    if (i + 2 < len) out[o++] = T[v & 63];
-  }
-  out[o] = 0;
-  return out;
-}
 
-static char *b64url_decode(const char *in) {
-  static signed char R[256];
-  static int init = 0;
-  if (!init) {
-    for (int i = 0; i < 256; i++) R[i] = -1;
-    const char *T =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
-    for (int i = 0; i < 64; i++) R[(unsigned char)T[i]] = (signed char)i;
-    init = 1;
-  }
-  size_t len = strlen(in);
-  char *out = malloc(len / 4 * 3 + 4);
-  if (!out) return NULL;
-  size_t o = 0; unsigned v = 0; int bits = 0;
-  for (size_t i = 0; i < len; i++) {
-    signed char d = R[(unsigned char)in[i]];
-    if (d < 0) { free(out); return NULL; }
-    v = (v << 6) | (unsigned)d; bits += 6;
-    if (bits >= 8) { bits -= 8; out[o++] = (char)((v >> bits) & 0xFF); }
-  }
-  out[o] = 0;
-  return out;
-}
 
 /* ══════════════════════════════════════════════════════════════════════════
  * Configuration. Every default is stated in camera_stills.h; the clamps here
@@ -1205,7 +1153,7 @@ static int capture_frame(db_handle *db, http_client *http, const char *cam,
   }
 
   char sha[65];
-  sha256_hex(frame, flen, sha);
+  jo_sha256_hex(frame, flen, sha);
   long w = 0, hgt = 0;
   media_image_dims(frame, flen, &w, &hgt);
 
@@ -1609,7 +1557,7 @@ char *camera_stills_list(db_handle *db, const char *camera_id, int limit,
   char *cur_p = NULL, *cur_u = NULL;
   cJSON *curj = NULL;
   if (cursor && *cursor) {
-    char *dec = b64url_decode(cursor);
+    char *dec = jo_b64url_decode_str(cursor);
     if (dec) {
       curj = cJSON_Parse(dec);
       free(dec);
@@ -1847,7 +1795,7 @@ char *camera_stills_list(db_handle *db, const char *camera_id, int limit,
     cJSON_AddStringToObject(c, "u", last_u);
     char *cj = cJSON_PrintUnformatted(c);
     cJSON_Delete(c);
-    char *enc = cj ? b64url(cj) : NULL;
+    char *enc = cj ? jo_b64url_encode_str(cj) : NULL;
     free(cj);
     /* `next_cursor` is what every other cursor list in this API calls it;
      * `cursor` is kept for clients that already read it (audit 2026-11-07). */
@@ -1974,7 +1922,7 @@ char *camera_stills_raw(db_handle *db, const auth_user *u, const char *still_id,
    * evidence_capture(), so the stored bytes, the sha256 and this check are all
    * over the same extent. */
   char actual[65];
-  sha256_hex(buf, len, actual);
+  jo_sha256_hex(buf, len, actual);
   if (strcmp(actual, sha) != 0) {
     fprintf(stderr, "[camera-stills] blob %s hashes to %s — refusing to serve\n",
             sha, actual);

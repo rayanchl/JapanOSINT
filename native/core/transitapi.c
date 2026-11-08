@@ -20,6 +20,7 @@
  * rather than papered over. (transitapi.h's DEVIATIONS list is owned
  * elsewhere; this note belongs there too.) */
 #include "transitapi.h"
+#include "jo_codec.h"
 #include "../third_party/sqlite3.h"
 #include "../third_party/cJSON.h"
 #include <stdio.h>
@@ -55,54 +56,8 @@ static char *err_not_implemented(const char *detail) {
   return dup_json(o);
 }
 
-/* hex 2-char → byte, or -1 */
-static int hexv(int c) {
-  if (c >= '0' && c <= '9') return c - '0';
-  if (c >= 'a' && c <= 'f') return c - 'a' + 10;
-  if (c >= 'A' && c <= 'F') return c - 'A' + 10;
-  return -1;
-}
 
-/* In-place-ish percent + '+' decode of a query-string token into `out`
- * (NUL-terminated, truncated to cap). */
-static void url_decode(const char *s, size_t n, char *out, size_t cap) {
-  size_t o = 0;
-  for (size_t i = 0; i < n && o + 1 < cap; i++) {
-    int c = (unsigned char)s[i];
-    if (c == '+') { out[o++] = ' '; continue; }
-    if (c == '%' && i + 2 < n) {
-      int h = hexv((unsigned char)s[i + 1]);
-      int l = hexv((unsigned char)s[i + 2]);
-      if (h >= 0 && l >= 0) { out[o++] = (char)((h << 4) | l); i += 2; continue; }
-    }
-    out[o++] = (char)c;
-  }
-  out[o] = 0;
-}
 
-/* Extract query param `key` from raw query string into `out`. Returns 1 if
- * present (even if empty value), else 0 and out[0]=0. */
-static int qget(const char *query, const char *key, char *out, size_t cap) {
-  out[0] = 0;
-  if (!query || !*query) return 0;
-  size_t klen = strlen(key);
-  const char *p = query;
-  while (*p) {
-    const char *amp = strchr(p, '&');
-    const char *seg_end = amp ? amp : p + strlen(p);
-    const char *eq = memchr(p, '=', (size_t)(seg_end - p));
-    const char *kstart = p;
-    size_t kn = eq ? (size_t)(eq - p) : (size_t)(seg_end - p);
-    if (kn == klen && memcmp(kstart, key, klen) == 0) {
-      const char *vstart = eq ? eq + 1 : seg_end;
-      url_decode(vstart, (size_t)(seg_end - vstart), out, cap);
-      return 1;
-    }
-    if (!amp) break;
-    p = amp + 1;
-  }
-  return 0;
-}
 
 /* Math.min(hi, Math.max(lo, Number(raw)||def)) — JS verbatim. Note the
  * `|| def` is JS falsy: Number("")===0, 0||def===def; NaN||def===def. */
@@ -111,7 +66,7 @@ static double js_number(const char *s);
 static int qint(const char *query, const char *key, int def, int lo, int hi) {
   char buf[32];
   double v = def;
-  if (qget(query, key, buf, sizeof buf) && buf[0]) {
+  if (jo_qs_get(query, key, buf, sizeof buf, JO_QS_DECODE | JO_QS_BARE_KEY) && buf[0]) {
     double n = js_number(buf);
     v = (n != n || n == 0.0) ? (double)def : n;    /* Number(x) || def */
   }
@@ -138,7 +93,7 @@ static double js_number(const char *s) {
 
 static int parse_bbox(const char *query, bbox_t *b) {
   char raw[256];
-  if (!qget(query, "bbox", raw, sizeof raw) || !raw[0]) return 0;  /* !raw → null */
+  if (!jo_qs_get(query, "bbox", raw, sizeof raw, JO_QS_DECODE | JO_QS_BARE_KEY) || !raw[0]) return 0;  /* !raw → null */
   /* String(raw).split(',').map(Number); length must be exactly 4 and all
    * Number.isFinite. Split strictly on ',' (== JS, empty token → Number("")
    * → 0). */
@@ -233,7 +188,7 @@ static const char *mode_to_source_id(const char *mode) {
 
 static char *route_routes(db_handle *db, const char *query) {
   char mode[32];
-  qget(query, "mode", mode, sizeof mode);
+  jo_qs_get(query, "mode", mode, sizeof mode, JO_QS_DECODE | JO_QS_BARE_KEY);
   for (char *p = mode; *p; p++) *p = (char)tolower((unsigned char)*p);
   if (strcmp(mode, "train") && strcmp(mode, "subway") && strcmp(mode, "bus"))
     return err_json("mode must be train|subway|bus");
@@ -388,7 +343,7 @@ static char *route_stop_departures(db_handle *db, const char *stopId,
                                     const char *query) {
   if (!stopId || !*stopId) return err_json("missing stopId");
   char tbuf[64];
-  int has_t = qget(query, "t", tbuf, sizeof tbuf);
+  int has_t = jo_qs_get(query, "t", tbuf, sizeof tbuf, JO_QS_DECODE | JO_QS_BARE_KEY);
   /* We accept only the default-now path precisely (JS new Date()); an
    * explicit ?t= is parsed for validity but service-day math uses local
    * now exactly as JS would for "now". A malformed explicit t → 400. */
@@ -634,7 +589,7 @@ static int parse_iso_utc(const char *s, time_t *out) {
 
 static char *route_active_trips(db_handle *db, const char *query) {
   char tbuf[64];
-  int has_t = qget(query, "t", tbuf, sizeof tbuf);
+  int has_t = jo_qs_get(query, "t", tbuf, sizeof tbuf, JO_QS_DECODE | JO_QS_BARE_KEY);
   time_t at_utc = 0;
   int have_at = 0;
   if (has_t && tbuf[0]) {
@@ -1497,7 +1452,7 @@ char *transitapi(db_handle *db, const char *path, const char *query) {
     char enc[512];
     if (n >= sizeof enc) n = sizeof enc - 1;
     memcpy(enc, rest, n); enc[n] = 0;
-    url_decode(enc, n, stopId, sizeof stopId);
+    jo_url_decode(enc, n, stopId, sizeof stopId);
     return route_stop_departures(db, stopId, query);
   }
 
@@ -1510,7 +1465,7 @@ char *transitapi(db_handle *db, const char *path, const char *query) {
     size_t n = (size_t)(tail - rest);
     if (n >= sizeof enc) n = sizeof enc - 1;
     memcpy(enc, rest, n); enc[n] = 0;
-    url_decode(enc, n, uid, sizeof uid);
+    jo_url_decode(enc, n, uid, sizeof uid);
     return station_summary(db, uid);
   }
 
@@ -1523,7 +1478,7 @@ char *transitapi(db_handle *db, const char *path, const char *query) {
     size_t n = (size_t)(tail - rest);
     if (n >= sizeof enc) n = sizeof enc - 1;
     memcpy(enc, rest, n); enc[n] = 0;
-    url_decode(enc, n, tid, sizeof tid);
+    jo_url_decode(enc, n, tid, sizeof tid);
     return vehicle_info(db, tid);
   }
 

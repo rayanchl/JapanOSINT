@@ -1,5 +1,6 @@
 /* core/image_vec.c — see image_vec.h. */
 #include "image_vec.h"
+#include "../lib/jocore.h"
 #include "camera_feed.h"
 #include "camera_refframe.h"
 #include "camera_privacy.h"
@@ -57,12 +58,8 @@ static long env_long(const char *k, long dflt) {
   return (end && end != e && v > 0) ? v : dflt;
 }
 
-static void iso_now(char *buf, size_t n) {
-  time_t t = time(NULL);
-  struct tm tm;
-  gmtime_r(&t, &tm);
-  strftime(buf, n, "%Y-%m-%dT%H:%M:%S.000Z", &tm);
-}
+/* ISO-8601 UTC as "...SS.000Z" (whole seconds, a literal .000 — the
+ * shape this file has always stored): jo_iso_fmt(time(NULL), 0, ...). */
 
 /* Blob root, matching evidence.c exactly. */
 static const char *ev_root(void) {
@@ -881,7 +878,7 @@ int image_vec_tick(db_handle *db, http_client *http, int max_walk) {
   camera_stills_migrate(db);
   image_vec_migrate(db);
   char now[40];
-  iso_now(now, sizeof now);
+  jo_iso_fmt(time(NULL), 0, now, sizeof now);
   char why[600];
   if (vecindex_refused(db, s, why, sizeof why)) {
     fprintf(stderr, "[image-vec] refused: %s\n", why);

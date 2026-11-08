@@ -9,6 +9,11 @@
  * from here before. */
 #include "lib/hpengine.h"
 
+/* `.lang = "ja"` (2026-11-07) on the Japanese-language rows below: an unset
+ * lang is stamped "en" by lib/hpengine.c, so `lang=` filters in /api/intel and
+ * semantic search missed them. Set where the host is .jp or the row's name or
+ * description carries kana; English pages (/en/, /english/, *_en collections)
+ * keep the default. */
 static const hp_source HP2_ASIA_EAST[] = {
   /* ── Korea ─────────────────────────────────────────────────────────────── */
   { .id = "KR_NTS_BUSINESS_STATUS", .name = "Korea NTS — business registration status",
@@ -149,6 +154,7 @@ static const hp_source HP2_ASIA_EAST[] = {
   { .id = "JP_MLIT_NEGATIVE_LIST", .name = "Japan MLIT — construction penalty & disposition list",
     .name_ja = "国交省 — 建設業者処分情報", .category = "government",
     .portal = "https://www.mlit.go.jp", .record_type = "jp-sanction",
+    .lang = "ja",
     .tags = "\"jp\",\"enforcement\",\"construction\"", .type = "scraped",
     .mode = HP_HTML, .free_tier = 1,
     .url = "https://www.mlit.go.jp/nega-inf/cgi-bin/search.cgi?NAME={q}",
@@ -160,6 +166,7 @@ static const hp_source HP2_ASIA_EAST[] = {
   { .id = "JP_JICA_CONTRACTS", .name = "Japan JICA — aid contracts & debarment",
     .name_ja = "JICA — 契約と資格停止", .category = "government",
     .portal = "https://www.jica.go.jp", .record_type = "jp-aid-contract",
+    .lang = "ja",
     .tags = "\"jp\",\"aid\",\"procurement\"", .type = "scraped", .mode = HP_HTML,
     .free_tier = 1,
     .url = "https://www.jica.go.jp/search/index.html?q={q}",
@@ -171,6 +178,7 @@ static const hp_source HP2_ASIA_EAST[] = {
   { .id = "JP_NITE_RECALLS", .name = "Japan NITE — product accident & recall records",
     .name_ja = "NITE — 製品事故情報", .category = "safety",
     .portal = "https://www.nite.go.jp", .record_type = "jp-product-accident",
+    .lang = "ja",
     .tags = "\"jp\",\"recalls\",\"safety\"", .type = "scraped", .mode = HP_HTML,
     .free_tier = 1,
     .url = "https://www.jiko.nite.go.jp/php/jiko/keyword/index.php?kw={q}",

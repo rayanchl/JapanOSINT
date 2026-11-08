@@ -1,5 +1,6 @@
 /* core/sourceindexapi.c — see sourceindexapi.h. */
 #include "sourceindexapi.h"
+#include "jo_codec.h"
 #include "service_vec.h"
 #include "source_card.h"
 #include "source_category.h"
@@ -13,17 +14,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* mg_http_get_var: -3 = the value would not fit. A clipped query is a
- * DIFFERENT query, so that is a 414, never half of what was asked
- * (semsearchapi.c qs_get is the same rule). */
-static int qs_get(const char *qs, const char *k, char *out, size_t cap,
-                  int *too_long) {
-  struct mg_str s = mg_str(qs ? qs : "");
-  int n = mg_http_get_var(&s, k, out, cap);
-  if (n == -3) *too_long = 1;
-  if (n <= 0) out[0] = 0;
-  return n > 0;
-}
 
 static char *err_body(int *status, int code, const char *err, const char *reason,
                       cJSON *coverage) {
@@ -240,10 +230,10 @@ char *sourceindexapi_search(db_handle *db, const char *tenant, const char *id,
   (void)tenant; (void)id; (void)is_operator;
   char q[1024], kind[16], kk[16], ent[160];
   int tl = 0;
-  qs_get(qs, "q", q, sizeof q, &tl);
-  qs_get(qs, "kind", kind, sizeof kind, &tl);
-  qs_get(qs, "k", kk, sizeof kk, &tl);
-  qs_get(qs, "entity", ent, sizeof ent, &tl);
+  jo_qs_get_mg(qs, "q", q, sizeof q, &tl);
+  jo_qs_get_mg(qs, "kind", kind, sizeof kind, &tl);
+  jo_qs_get_mg(qs, "k", kk, sizeof kk, &tl);
+  jo_qs_get_mg(qs, "entity", ent, sizeof ent, &tl);
   if (tl) return err_body(status, 414, "query_param_too_long", NULL, NULL);
   if (!q[0]) return err_body(status, 400, "q_required", NULL, NULL);
   if (kind[0] && source_kind_parse(kind) < 0)

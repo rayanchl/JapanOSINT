@@ -20,11 +20,17 @@
  */
 #include "lib/hpengine.h"
 
+/* `.lang = "ja"` (2026-11-07) on the Japanese-language rows below: an unset
+ * lang is stamped "en" by lib/hpengine.c, so `lang=` filters in /api/intel and
+ * semantic search missed them. Set where the host is .jp or the row's name or
+ * description carries kana; English pages (/en/, /english/, *_en collections)
+ * keep the default. */
 static const hp_source HP3B24_JPBULK[] = {
   { .id = "JPOD_DATAGOJP_INDEX", .name = "data.go.jp — complete dataset index",
     .name_ja = "データカタログサイト 全データセット一覧",
     .category = "government", .portal = "https://www.data.go.jp",
     .record_type = "dataset-index",
+    .lang = "ja",
     .tags = "\"japan\",\"opendata\",\"datagojp\",\"catalogue\",\"index\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.data.go.jp/data/api/3/action/package_list",
@@ -45,6 +51,7 @@ static const hp_source HP3B24_JPBULK[] = {
     .name_ja = "J-STAGE 論文コーパス",
     .category = "research", .portal = "https://www.jstage.jst.go.jp",
     .record_type = "journal-article",
+    .lang = "ja",
     .tags = "\"japan\",\"jstage\",\"research\",\"journal\",\"corpus\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
     .url = "https://api.jstage.jst.go.jp/searchapi/do?service=3&text=%E6%97%A5%E6%9C%AC&count=100",

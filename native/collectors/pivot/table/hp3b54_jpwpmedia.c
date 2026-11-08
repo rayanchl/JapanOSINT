@@ -21,12 +21,18 @@
  */
 #include "lib/hpengine.h"
 
+/* `.lang = "ja"` (2026-11-07) on the Japanese-language rows below: an unset
+ * lang is stamped "en" by lib/hpengine.c, so `lang=` filters in /api/intel and
+ * semantic search missed them. Set where the host is .jp or the row's name or
+ * description carries kana; English pages (/en/, /english/, *_en collections)
+ * keep the default. */
 static const hp_source HP3B54_JPWPMEDIA[] = {
   { .id = "JO54_WP_HIGASHIOMIISHIKAI_XOEVENT", .name = "一般社団法人 東近江医師会公式サイト — custom post type `xo_event` (イベント) "
       "(WordPress REST)",
     .name_ja = "一般社団法人 東近江医師会公式サイト イベント（WordPress REST）",
     .category = "media", .portal = "https://higashiomi-ishikai.jp/",
     .record_type = "cpt-xo-event",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://higashiomi-ishikai.jp/wp-json/wp/v2/xo_event?per_page=100&orderby=date&order=desc",
@@ -53,6 +59,7 @@ static const hp_source HP3B54_JPWPMEDIA[] = {
     .name_ja = "平川動物公園公式サイト 重要なお知らせ（WordPress REST）",
     .category = "media", .portal = "https://hirakawazoo.jp/",
     .record_type = "cpt-importantinformation",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://hirakawazoo.jp/wp-json/wp/v2/importantinformation?per_page=100&orderby=date&order=desc",
@@ -79,6 +86,7 @@ static const hp_source HP3B54_JPWPMEDIA[] = {
     .name_ja = "JAながさき西海 お知らせ（WordPress REST）",
     .category = "media", .portal = "https://ja-nagasakisaikai.com/",
     .record_type = "cpt-information",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://ja-nagasakisaikai.com/wp-json/wp/v2/information?per_page=100&orderby=date&order=desc",
@@ -131,6 +139,7 @@ static const hp_source HP3B54_JPWPMEDIA[] = {
     .name_ja = "埼玉土地家屋調査士会 お知らせ（WordPress REST）",
     .category = "media", .portal = "https://saitama-chosashi.jp/",
     .record_type = "cpt-information-item",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://saitama-chosashi.jp/wp-json/wp/v2/information_item?per_page=100&orderby=date&order=desc",
@@ -183,6 +192,7 @@ static const hp_source HP3B54_JPWPMEDIA[] = {
     .name_ja = "一般社団法人日本魚類学会 information（WordPress REST）",
     .category = "media", .portal = "https://www.fish-isj.jp/",
     .record_type = "cpt-information",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.fish-isj.jp/wp-json/wp/v2/information?per_page=100&orderby=date&order=desc",
@@ -209,6 +219,7 @@ static const hp_source HP3B54_JPWPMEDIA[] = {
     .name_ja = "届けよう看護の声を!私たちの未来へ INFORMATION（WordPress REST）",
     .category = "media", .portal = "https://kango-renmei.gr.jp/",
     .record_type = "cpt-informations",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://kango-renmei.gr.jp/wp-json/wp/v2/informations?per_page=100&orderby=date&order=desc",
@@ -235,6 +246,7 @@ static const hp_source HP3B54_JPWPMEDIA[] = {
     .name_ja = "一般社団法人 千葉南法人会 お知らせ（WordPress REST）",
     .category = "media", .portal = "https://minamihoujinkai.com/",
     .record_type = "cpt-information",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://minamihoujinkai.com/wp-json/wp/v2/information?per_page=100&orderby=date&order=desc",
@@ -261,6 +273,7 @@ static const hp_source HP3B54_JPWPMEDIA[] = {
     .name_ja = "宮崎市フェニックス自然動物園サイト イベント（WordPress REST）",
     .category = "media", .portal = "https://www.miyazaki-city-zoo.jp/",
     .record_type = "cpt-xo-event",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.miyazaki-city-zoo.jp/wp-json/wp/v2/xo_event?per_page=100&orderby=date&order=desc",
@@ -287,6 +300,7 @@ static const hp_source HP3B54_JPWPMEDIA[] = {
     .name_ja = "中津川青年会議所 事業のお知らせ（WordPress REST）",
     .category = "media", .portal = "https://nakatsugawa-jc.com/",
     .record_type = "cpt-information",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://nakatsugawa-jc.com/wp-json/wp/v2/information?per_page=100&orderby=date&order=desc",
@@ -313,6 +327,7 @@ static const hp_source HP3B54_JPWPMEDIA[] = {
     .name_ja = "大阪市社会福祉協議会 区社協の採用情報（WordPress REST）",
     .category = "media", .portal = "https://www.osaka-sishakyo.jp/",
     .record_type = "cpt-kushakyo-information",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.osaka-sishakyo.jp/wp-json/wp/v2/kushakyo_information?per_page=100&orderby=date&order=desc",
@@ -338,6 +353,7 @@ static const hp_source HP3B54_JPWPMEDIA[] = {
     .name_ja = "柳川山門医師会 イベント（WordPress REST）",
     .category = "media", .portal = "http://www.yanagawa-med.com/",
     .record_type = "cpt-xo-event",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "http://www.yanagawa-med.com/wp-json/wp/v2/xo_event?per_page=100&orderby=date&order=desc",
@@ -363,6 +379,7 @@ static const hp_source HP3B54_JPWPMEDIA[] = {
     .name_ja = "輸液製剤協議会 イベント（WordPress REST）",
     .category = "media", .portal = "https://www.yueki.com/",
     .record_type = "cpt-xo-event",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.yueki.com/wp-json/wp/v2/xo_event?per_page=100&orderby=date&order=desc",
@@ -389,6 +406,7 @@ static const hp_source HP3B54_JPWPMEDIA[] = {
     .name_ja = "よつ葉生協 インフォメーション（WordPress REST）",
     .category = "media", .portal = "https://yotsubacoop.jp/",
     .record_type = "cpt-information",
+    .lang = "ja",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://yotsubacoop.jp/wp-json/wp/v2/information?per_page=100&orderby=date&order=desc",

@@ -21,11 +21,17 @@
  */
 #include "lib/hpengine.h"
 
+/* `.lang = "ja"` (2026-11-07) on the Japanese-language rows below: an unset
+ * lang is stamped "en" by lib/hpengine.c, so `lang=` filters in /api/intel and
+ * semantic search missed them. Set where the host is .jp or the row's name or
+ * description carries kana; English pages (/en/, /english/, *_en collections)
+ * keep the default. */
 static const hp_source HP3B39_TBL39[] = {
   { .id = "JO39_TBL_ISMS_CERTIFIED_ORGS", .name = "ISMS-AC register of ISMS (ISO/IEC 27001) certified organisations",
     .name_ja = "ISMS認証取得組織一覧（ISMS-AC 認証取得組織検索）",
     .category = "registry", .portal = "https://isms.jp/lst/ind/index.html",
     .record_type = "isms-certified-organisation",
+    .lang = "ja",
     .tags = "\"japan\",\"isms\",\"iso27001\",\"information-security\",\"certification\",\"registry\",\"jipdec\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://isms.jp/lst/ind/search.cgi",
@@ -51,6 +57,7 @@ static const hp_source HP3B39_TBL39[] = {
     .name_ja = "防災科研 F-net メカニズム解カタログ（当月）",
     .category = "geo", .portal = "https://www.fnet.bosai.go.jp/event/mcata/index.php",
     .record_type = "earthquake-moment-tensor",
+    .lang = "ja",
     .tags = "\"japan\",\"nied\",\"f-net\",\"earthquake\",\"seismology\",\"moment-tensor\",\"focal-mechanism\",\"telemetry\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.fnet.bosai.go.jp/event/mcata/data/{date:%Y}/{date:%Y%m}_UT.txt",
@@ -82,6 +89,7 @@ static const hp_source HP3B39_TBL39[] = {
     .name_ja = "北陸電力送配電 停電情報（過去7日分）",
     .category = "infrastructure", .portal = "https://www.rikuden.co.jp/nw/teiden/otj010.html",
     .record_type = "power-outage",
+    .lang = "ja",
     .tags = "\"japan\",\"hokuriku\",\"rikuden\",\"electricity\",\"power-outage\",\"toyama\",\"ishikawa\",\"fukui\",\"telemetry\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.rikuden.co.jp/nw/teiden/f1/sevendays/{date:%Y%m%d}/otj600.html",
@@ -111,6 +119,7 @@ static const hp_source HP3B39_TBL39[] = {
     .name_ja = "国土地理院 電子基準点 観測停止予定",
     .category = "infrastructure", .portal = "https://terras.gsi.go.jp/denshi_teiden.php",
     .record_type = "gnss-station-outage",
+    .lang = "ja",
     .tags = "\"japan\",\"gsi\",\"geonet\",\"gnss\",\"gps\",\"cors\",\"maintenance\",\"telemetry\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://terras.gsi.go.jp/denshi_teiden.php",
@@ -133,6 +142,7 @@ static const hp_source HP3B39_TBL39[] = {
     .name_ja = "日本取引所グループ 上場廃止銘柄一覧（当年・予定）",
     .category = "finance", .portal = "https://www.jpx.co.jp/listing/stocks/delisted/index.html",
     .record_type = "delisted-issue",
+    .lang = "ja",
     .tags = "\"japan\",\"jpx\",\"tse\",\"equities\",\"delisting\",\"listed-companies\",\"m-and-a\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.jpx.co.jp/listing/stocks/delisted/index.html",
@@ -153,6 +163,7 @@ static const hp_source HP3B39_TBL39[] = {
     .name_ja = "日本取引所グループ 市場区分変更銘柄一覧",
     .category = "finance", .portal = "https://www.jpx.co.jp/listing/stocks/transfers/index.html",
     .record_type = "market-segment-change",
+    .lang = "ja",
     .tags = "\"japan\",\"jpx\",\"tse\",\"equities\",\"market-segment\",\"listed-companies\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.jpx.co.jp/listing/stocks/transfers/index.html",
@@ -173,6 +184,7 @@ static const hp_source HP3B39_TBL39[] = {
     .name_ja = "日本取引所グループ 上場廃止銘柄一覧（前年）",
     .category = "finance", .portal = "https://www.jpx.co.jp/listing/stocks/delisted/index.html",
     .record_type = "delisted-issue",
+    .lang = "ja",
     .tags = "\"japan\",\"jpx\",\"tse\",\"equities\",\"delisting\",\"listed-companies\",\"archive\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.jpx.co.jp/listing/stocks/delisted/archives-01.html",
@@ -191,6 +203,7 @@ static const hp_source HP3B39_TBL39[] = {
     .name_ja = "日本取引所グループ 上場廃止銘柄一覧（2年前）",
     .category = "finance", .portal = "https://www.jpx.co.jp/listing/stocks/delisted/index.html",
     .record_type = "delisted-issue",
+    .lang = "ja",
     .tags = "\"japan\",\"jpx\",\"tse\",\"equities\",\"delisting\",\"listed-companies\",\"archive\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.jpx.co.jp/listing/stocks/delisted/archives-02.html",
@@ -207,6 +220,7 @@ static const hp_source HP3B39_TBL39[] = {
     .name_ja = "日本取引所グループ 上場廃止銘柄一覧（3年前）",
     .category = "finance", .portal = "https://www.jpx.co.jp/listing/stocks/delisted/index.html",
     .record_type = "delisted-issue",
+    .lang = "ja",
     .tags = "\"japan\",\"jpx\",\"tse\",\"equities\",\"delisting\",\"listed-companies\",\"archive\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.jpx.co.jp/listing/stocks/delisted/archives-03.html",
@@ -223,6 +237,7 @@ static const hp_source HP3B39_TBL39[] = {
     .name_ja = "日本取引所グループ 上場廃止銘柄一覧（4年前）",
     .category = "finance", .portal = "https://www.jpx.co.jp/listing/stocks/delisted/index.html",
     .record_type = "delisted-issue",
+    .lang = "ja",
     .tags = "\"japan\",\"jpx\",\"tse\",\"equities\",\"delisting\",\"listed-companies\",\"archive\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.jpx.co.jp/listing/stocks/delisted/archives-04.html",
@@ -239,6 +254,7 @@ static const hp_source HP3B39_TBL39[] = {
     .name_ja = "日本取引所グループ 上場廃止銘柄一覧（5年前）",
     .category = "finance", .portal = "https://www.jpx.co.jp/listing/stocks/delisted/index.html",
     .record_type = "delisted-issue",
+    .lang = "ja",
     .tags = "\"japan\",\"jpx\",\"tse\",\"equities\",\"delisting\",\"listed-companies\",\"archive\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.jpx.co.jp/listing/stocks/delisted/archives-05.html",
@@ -256,6 +272,7 @@ static const hp_source HP3B39_TBL39[] = {
     .name_ja = "日本取引所グループ 上場廃止銘柄一覧（6年前）",
     .category = "finance", .portal = "https://www.jpx.co.jp/listing/stocks/delisted/index.html",
     .record_type = "delisted-issue",
+    .lang = "ja",
     .tags = "\"japan\",\"jpx\",\"tse\",\"equities\",\"delisting\",\"listed-companies\",\"archive\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.jpx.co.jp/listing/stocks/delisted/archives-06.html",
@@ -273,6 +290,7 @@ static const hp_source HP3B39_TBL39[] = {
     .name_ja = "消費者庁 特定商取引法ガイド 行政処分事業者検索（国・都道府県）",
     .category = "regulatory", .portal = "https://www.no-trouble.caa.go.jp/search/",
     .record_type = "consumer-protection-action",
+    .lang = "ja",
     .tags = "\"japan\",\"caa\",\"consumer-affairs\",\"tokushoho\",\"enforcement\",\"administrative-disposition\",\"door-to-door-sales\",\"mlm\"",
     .mode = HP_HTML, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.no-trouble.caa.go.jp/search/result{page}.html",

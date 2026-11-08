@@ -42,7 +42,4 @@ int station_footprints_link_clusters_tx(db_handle *db, cJSON *clusters);
  * mode_set. Empty table -> features:[]. NULL only on a DB/alloc error. */
 char *station_footprints_fc_json(db_handle *db);
 
-/* footprintCount() — SELECT COUNT(*) FROM station_footprints. -1 on error. */
-int station_footprints_count(db_handle *db);
-
 #endif

@@ -1369,25 +1369,6 @@ static cJSON *jo_block(const ffmpeg_media_info *mi) {
   return jo;
 }
 
-char *ffmpeg_probe(const char *input, int timeout_ms, char *err, size_t errcap) {
-  int rc = FFMPEG_OK;
-  cJSON *root = probe_root(input, timeout_ms, err, errcap, &rc);
-  if (!root) return NULL;
-
-  ffmpeg_media_info mi;
-  memset(&mi, 0, sizeof mi);
-  info_from_root(root, &mi);
-  cJSON *jo = jo_block(&mi);
-  if (jo) {
-    cJSON_DeleteItemFromObjectCaseSensitive(root, "jo");   /* never two */
-    cJSON_AddItemToObject(root, "jo", jo);
-  }
-  char *out = cJSON_PrintUnformatted(root);
-  cJSON_Delete(root);
-  if (!out) ff_seterr(err, errcap, FFMPEG_ERR_OOM, NULL);
-  return out;
-}
-
 /* ══════════════════════════════════════════════════════════════════════════
  * 32x32 grayscale — the pixels core/media.h's pHash needs and this host has
  * never had. See the pinning note in the header: the scaler and pixel format

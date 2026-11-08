@@ -518,15 +518,6 @@ static cJSON *osint_service_id_array(int limit) {
   return a;
 }
 
-/* The osint_analysis JSON schema with its `recommended_services` and per-entity
- * `services` enums replaced by the LIVE registry, so the analysis LLM can only
- * recommend services that actually exist — and EVERY registered service is
- * recommendable — with zero manual enum maintenance when the registry changes.
- * malloc'd; caller frees. NULL → caller falls back to the static schema file. */
-char *osint_analysis_schema_dynamic(void) {
-  return osint_analysis_schema_dynamic_limited(0);
-}
-
 /* The enum builder both public entry points share. `ids` is the permitted
  * vocabulary and is consumed here. Split out so the semantic router can pass
  * the exact ids IT listed: the schema is what the model is ALLOWED to answer
