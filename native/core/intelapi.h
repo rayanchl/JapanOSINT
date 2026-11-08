@@ -12,11 +12,17 @@
  * that ranks intel_items — /api/intel/semantic, sort=hybrid, /similar,
  * /related (semsearchapi.c) — renders the SAME object rather than a copy that
  * drifts (that copy existed and had already lost cluster_id). A caller may
- * append its own columns after these 20; the builder reads 0..19 only. */
+ * append its own columns after these INTELAPI_ITEM_NCOLS; the builder reads
+ * 0..INTELAPI_ITEM_NCOLS-1 only. */
 #define INTELAPI_ITEM_COLS \
   "uid,source_id,title,body,summary,link,author,language," \
   "published_at,fetched_at,tags,properties,keywords,lat,lon,geom_source," \
-  "geom_at,record_type,sub_source_id,cluster_id"
+  "geom_at,record_type,sub_source_id,cluster_id,story_id,novelty"
+/* How many columns INTELAPI_ITEM_COLS selects: a caller appending its own
+ * columns reads them from this index on, never from a literal — story_id and
+ * novelty were added at the end (2026-11-07: the story hook assigned them and
+ * no route returned them) and two callers read a hard-coded index 20. */
+#define INTELAPI_ITEM_NCOLS 22
 cJSON *intelapi_row_to_item(sqlite3_stmt *s, int full);
 
 /* GET /api/intel/items/:uid body. Returns malloc'd `{"data":{...}}` (200) or

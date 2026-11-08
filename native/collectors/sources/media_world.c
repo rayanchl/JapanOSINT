@@ -194,12 +194,16 @@ static int mw_commoncrawl(const source_ctx *ctx, intel_sink *sink, const char *q
   const char *hdrs[] = { "Accept: application/json", NULL };
   char api[256] = "";
   {
+    /* A LOOKUP, not a source: nothing from this document is stored here (the
+     * catalogue itself is commoncrawl-index-catalog in soc_webarchive.c), so
+     * the dup-endpoint lint's premise — the same records stored twice — does
+     * not apply; it is recorded in tools/lint_baseline.json for that reason. */
     char *ci = jo_get(ctx, "https://index.commoncrawl.org/collinfo.json", hdrs,
                       "COMMONCRAWL_CDX");
     if (!ci) { free(enc); return jo_fail_rc(jo_last_status(), 0); }
     cJSON *cj = cJSON_Parse(ci);
     free(ci);
-    const char *cdx = jo_sv(cJSON_GetArrayItem(cj, 0), "cdx-api");
+    const char *cdx = jo_sv(cJSON_GetArrayItem(cj, 0), "cdx-api");  /* exhaustive-ok: collinfo.json is newest-first; element 0 IS the newest crawl */
     if (cdx) snprintf(api, sizeof api, "%s", cdx);
     cJSON_Delete(cj);
     if (!api[0]) { free(enc); return -1; }      /* the list's shape changed */

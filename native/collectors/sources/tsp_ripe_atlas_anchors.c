@@ -34,7 +34,7 @@
 #include <string.h>
 
 #define ATLAS_ANCHORS "https://atlas.ripe.net/api/v2/anchors/?format=json&page_size=500"
-#define PAGES 5   /* 2026-11-07: count 1,833 → 4 pages of 500 */
+#define PAGES 5  /* exhaustive-ok: page ceiling; a stop on a full page or a failed later page files a collector-truncation-notice — 2026-11-07: count 1,833 → 4 pages of 500 */
 
 static int emit_page(cJSON *res, intel_sink *sink) {
   int n = 0;

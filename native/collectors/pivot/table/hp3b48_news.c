@@ -56978,7 +56978,9 @@ static const hp_source HP3B48_NEWS[] = {
     .record_type = "news-article",
     .tags = "\"news\",\"press\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://homenewshere.com/search/?f=rss&t=article&l=50&s=start_time&sd=desc&k%5B%5D=%23topstory",
+    /* `k[]=#topstory` dropped: that keyword selects an EMPTY channel on this
+     * TownNews site, so the row stored nothing. 2026-11-07 (coordinator's reading, not re-taken here: TownNews 429s this IP): without the tag 50 items, of which 11 are news — the rest are the site's other article types. */
+    .url = "http://homenewshere.com/search/?f=rss&t=article&l=50&s=start_time&sd=desc",
     .array_path = "channel.item",
     .date_keys = "pubDate,dc:date",
     .id_keys = "guid,link",
@@ -58006,7 +58008,9 @@ static const hp_source HP3B48_NEWS[] = {
     .record_type = "news-article",
     .tags = "\"news\",\"press\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.newsminer.com/search/?f=rss&t=article&l=50&s=start_time&sd=desc&k%5B%5D=%23topstory",
+    /* `k[]=#topstory` dropped: that keyword selects an EMPTY channel on this
+     * TownNews site, so the row stored nothing. 2026-11-07 (coordinator's reading, not re-taken here): without the tag 50 items, ALL wire press releases — this row now reads a press-release stream, not the paper's own reporting. */
+    .url = "http://www.newsminer.com/search/?f=rss&t=article&l=50&s=start_time&sd=desc",
     .array_path = "channel.item",
     .date_keys = "pubDate,dc:date",
     .id_keys = "guid,link",
@@ -59328,7 +59332,9 @@ static const hp_source HP3B48_NEWS[] = {
     .record_type = "news-article",
     .tags = "\"news\",\"press\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.cecildaily.com/search/?f=rss&t=article&l=50&s=start_time&sd=desc&k%5B%5D=%23topstory",
+    /* `k[]=#topstory` dropped: that keyword selects an EMPTY channel on this
+     * TownNews site, so the row stored nothing. 2026-11-07: with the tag HTTP 200, 829 bytes, 0 items; without it 200, 51,105 bytes, 50 items. */
+    .url = "http://www.cecildaily.com/search/?f=rss&t=article&l=50&s=start_time&sd=desc",
     .array_path = "channel.item",
     .date_keys = "pubDate,dc:date",
     .id_keys = "guid,link",
@@ -67092,7 +67098,9 @@ static const hp_source HP3B48_NEWS[] = {
     .record_type = "news-article",
     .tags = "\"news\",\"press\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://lufkindailynews.com/search/?f=rss&t=article&l=50&s=start_time&sd=desc&k%5B%5D=%23topstory",
+    /* `k[]=#topstory` dropped: that keyword selects an EMPTY channel on this
+     * TownNews site, so the row stored nothing. 2026-11-07: with the tag 429 here (coordinator: 0-item channel); without it 200, 40,109 bytes, 50 items. */
+    .url = "http://lufkindailynews.com/search/?f=rss&t=article&l=50&s=start_time&sd=desc",
     .array_path = "channel.item",
     .date_keys = "pubDate,dc:date",
     .id_keys = "guid,link",
@@ -68936,7 +68944,9 @@ static const hp_source HP3B48_NEWS[] = {
     .record_type = "news-article",
     .tags = "\"news\",\"press\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.westernherald.com/search/?f=rss&t=article&l=50&s=start_time&sd=desc&k%5B%5D=%23topstory",
+    /* `k[]=#topstory` dropped: that keyword selects an EMPTY channel on this
+     * TownNews site, so the row stored nothing. 2026-11-07: with the tag HTTP 200, 841 bytes, 0 items; without it 200, 40,451 bytes, 50 items. */
+    .url = "http://www.westernherald.com/search/?f=rss&t=article&l=50&s=start_time&sd=desc",
     .array_path = "channel.item",
     .date_keys = "pubDate,dc:date",
     .id_keys = "guid,link",
@@ -70378,7 +70388,9 @@ static const hp_source HP3B48_NEWS[] = {
     .record_type = "news-article",
     .tags = "\"news\",\"press\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.cadillacnews.com/search/?f=rss&t=article&l=50&s=start_time&sd=desc&k%5B%5D=%23topstory",
+    /* `k[]=#topstory` dropped: that keyword selects an EMPTY channel on this
+     * TownNews site, so the row stored nothing. 2026-11-07: with the tag 429 here (coordinator: 0-item channel); without it 200, 42,457 bytes, 50 items. */
+    .url = "http://www.cadillacnews.com/search/?f=rss&t=article&l=50&s=start_time&sd=desc",
     .array_path = "channel.item",
     .date_keys = "pubDate,dc:date",
     .id_keys = "guid,link",
@@ -71036,7 +71048,9 @@ static const hp_source HP3B48_NEWS[] = {
     .record_type = "news-article",
     .tags = "\"news\",\"press\",\"rss\"",
     .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "http://www.timesdaily.com/search/?f=rss&t=article&l=50&s=start_time&sd=desc&k%5B%5D=%23topstory",
+    /* `k[]=#topstory` dropped: that keyword selects an EMPTY channel on this
+     * TownNews site, so the row stored nothing. 2026-11-07: with the tag 429 (TownNews budget; the coordinator's same-day reading was an empty 0-item channel); without it HTTP 200, 46,266 bytes, 50 items. */
+    .url = "http://www.timesdaily.com/search/?f=rss&t=article&l=50&s=start_time&sd=desc",
     .array_path = "channel.item",
     .date_keys = "pubDate,dc:date",
     .id_keys = "guid,link",

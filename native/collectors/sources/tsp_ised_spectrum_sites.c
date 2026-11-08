@@ -44,7 +44,7 @@
  * returns 1000 with exceededTransferLimit set, so requesting 2000 only made the
  * request and the reply disagree about how far the walk had got. */
 #define PAGE_SIZE 1000
-#define PAGES 3
+#define PAGES 3  /* exhaustive-ok: page ceiling; a stop on a full page or a failed later page files a collector-truncation-notice */
 
 /* epoch milliseconds -> ISO-8601 UTC */
 /* The gmtime failure was handled; strftime's 0 was not — and on that path the

@@ -144,13 +144,26 @@ static cJSON *overlay_read(void) {
   if (!j || !cJSON_IsObject(j)) { cJSON_Delete(j); j=cJSON_CreateObject(); }
   return j;
 }
-static void overlay_write(cJSON *o) {
+/* 0 on success, -1 when the overlay could not be written. It returned
+ * nothing, so a failed write (no data/ directory, a full disk) answered
+ * `"set":true` from the in-memory copy and the next GET read null — a key the
+ * operator was told was saved, and was not (probed 2026-11-07). */
+static int overlay_write(cJSON *o) {
   char p[1024], tmp[1056]; overlay_path(p, sizeof p);
   snprintf(tmp, sizeof tmp, "%s.tmp", p);
   char *txt = cJSON_Print(o);            /* pretty, like JSON.stringify(,,2) */
+  if (!txt) return -1;
+  int ok = 0;
   FILE *f = fopen(tmp, "wb");
-  if (f) { fwrite(txt, 1, strlen(txt), f); fclose(f); rename(tmp, p); }
+  if (f) {
+    size_t n = strlen(txt);
+    ok = fwrite(txt, 1, n, f) == n;
+    if (fclose(f) != 0) ok = 0;
+    if (ok && rename(tmp, p) != 0) ok = 0;
+    if (!ok) remove(tmp);
+  }
   free(txt);
+  return ok ? 0 : -1;
 }
 /* resolved value: overlay non-empty string wins, else process env. */
 static const char *resolved_env(cJSON *ov, const char *name) {
@@ -339,7 +352,11 @@ char *keysapi_platform(db_handle *db, const tenant_ctx *t, const char *method,
     const char *val = (jv&&cJSON_IsString(jv))?jv->valuestring:"";
     cJSON_DeleteItemFromObject(ov,name);          /* clear */
     if (val[0]) cJSON_AddStringToObject(ov,name,val);  /* set when non-empty */
-    overlay_write(ov);
+    if (overlay_write(ov) != 0) {
+      if (jb) cJSON_Delete(jb);
+      cJSON_Delete(ov);
+      return jerr(st, 500, "key_store_write_failed");
+    }
     if (jb) cJSON_Delete(jb);
     cJSON *o=cJSON_CreateObject();
     cJSON_AddStringToObject(o,"name",name);

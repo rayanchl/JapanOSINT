@@ -15,6 +15,9 @@ void sched_disclose_if_silent(intel_sink *sink, const source_def *d,
                               const char *entity, int rc, long n_emit,
                               long n_notices, http_client *http);
 void sched_fetch_log_set_bytes(db_handle *db, long flid, unsigned long long bytes);
+void sched_fetch_log_set_stored(db_handle *db, long flid, long stored, int exact);
+void sched_sources_row_record(db_handle *db, const char *id, const char *status,
+                              long records, long duration_ms, const char *why);
 size_t sched_body_ceiling_for(db_handle *db, const char *source_id);
 void scheduler_loop(db_handle *db);
 /* Run scheduler_loop on a detached background thread so httpd_serve both

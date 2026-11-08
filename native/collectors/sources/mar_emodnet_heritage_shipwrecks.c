@@ -30,7 +30,7 @@
 #include "_emodnet_wfs.inc"
 
 /* numberMatched 7,073 (2026-11-07) against the old count=2000: it stored 2,000; now 2 pages. Paged through _emodnet_wfs.inc (startIndex, natural key order). */
-#define WFS_URL "https://ows.emodnet-humanactivities.eu/wfs?service=WFS&version=2.0.0&request=GetFeature&outputFormat=application/json&typeName=emodnet:heritageshipwrecks&count=5000&startIndex=0"
+#define WFS_URL "https://ows.emodnet-humanactivities.eu/wfs?service=WFS&version=2.0.0&request=GetFeature&outputFormat=application/json&typeName=emodnet:heritageshipwrecks&count=5000&startIndex=0"  /* exhaustive-ok: walked to its end by emw_walk (_emodnet_wfs.inc), every stop disclosed */
 static const char *hsv(const cJSON *o, const char *k) {
   const char *s = jo_sv(o, k);
   if (!s) return NULL;

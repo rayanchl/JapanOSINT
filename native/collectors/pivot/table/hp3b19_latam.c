@@ -79,7 +79,14 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "market-expectation",
     .tags = "\"brazil\",\"centralbank\",\"bcb\",\"forecast\",\"economy\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativasMercadoAnuais?%24top=100&%24format=json",
+    /* `$orderby=Data desc, <id tuple>` + `$skip=0` (2026-11-07). Unsorted, this
+     * hourly row read an ARBITRARY 2,000 Focus forecasts: page 1 was dated
+     * 2017-06-19 and $skip=2000 2003-05-05. Newest-first on the row's own
+     * identity tuple makes the run a stated window (pages 1..20 measured
+     * 2026-10-30 .. 2026-10-22); it does not cycle, so desc is the question.
+     * $orderby=frobnicate is HTTP 400; 100 of 100 distinct on page 1 and
+     * $skip 0 / 100 disjoint. */
+    .url = "https://olinda.bcb.gov.br/olinda/servico/Expectativas/versao/v1/odata/ExpectativasMercadoAnuais?%24top=100&%24format=json&%24skip=0&%24orderby=Data%20desc,Indicador,IndicadorDetalhe,DataReferencia,baseCalculo",
     .array_path = "value",
     .interval = 3600,
     .page_param = "%24skip",

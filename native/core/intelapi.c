@@ -27,7 +27,7 @@
   "intel_items.language,intel_items.published_at,intel_items.fetched_at," \
   "intel_items.tags,intel_items.properties,intel_items.keywords," \
   "intel_items.lat,intel_items.lon,intel_items.geom_source," \
-  "intel_items.geom_at,intel_items.record_type,intel_items.sub_source_id,"   "intel_items.cluster_id"
+  "intel_items.geom_at,intel_items.record_type,intel_items.sub_source_id,"   "intel_items.cluster_id,intel_items.story_id,intel_items.novelty"
 
 /* JSON.parse(text) → cJSON, or fallback. Node does JSON.parse then the value
  * is re-serialized by JSON.stringify; cJSON parse+print round-trips
@@ -176,6 +176,15 @@ cJSON *intelapi_row_to_item(sqlite3_stmt *s, int full) {
    * a row that is not in any cluster carries no key rather than a null, so
    * the pre-simhash contract fixtures stay byte-identical. */
   if (c_cl && *c_cl) cJSON_AddStringToObject(out,"cluster_id", c_cl);
+  /* The story this item joined (core/story.h; separate from simhash's
+   * cluster_id) and how novel it was against its nearest neighbours. Both
+   * were computed by the embed hook and returned by no route, so the stories
+   * feature was write-only (audit 2026-11-07); GET /api/stories/:id now has
+   * an id to be called with. Absent until the item has been embedded. */
+  { const char *sid = ctext(s, 20);
+    if (sid && *sid) cJSON_AddStringToObject(out, "story_id", sid);
+    if (sqlite3_column_type(s, 21) != SQLITE_NULL)
+      cJSON_AddNumberToObject(out, "novelty", sqlite3_column_double(s, 21)); }
   cJSON_AddItemToObject(out,"provenance", pv);
   if (full) {
     /* getItem → full:true : body, properties, [keywords] */
@@ -613,7 +622,7 @@ char *intelapi_list_items_st(db_handle *db, const intel_items_query *Q,
     const char *p = ctext(s, 8); if (!p) p = ctext(s, 9);
     snprintf(last_pub, sizeof last_pub, "%s", p ? p : "");
     snprintf(last_uid, sizeof last_uid, "%s", uid);
-    last_rank = sqlite3_column_double(s, 20);
+    last_rank = sqlite3_column_double(s, INTELAPI_ITEM_NCOLS);
 
     if (sort != SORT_TRUST && Q && Q->collapse && cl && *cl && CL_SEEN(cl)) {
       collapsed++; continue;

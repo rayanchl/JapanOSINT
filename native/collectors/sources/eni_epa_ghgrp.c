@@ -38,7 +38,7 @@
  * thread: a source runs once at a time, and __thread keeps two collectors on
  * different workers from sharing it. */
 #define GHG_YEARS_BACK 6
-static __thread char g_year[8];
+static __thread char g_year[16];
 static __thread char g_fac_table[64];
 static __thread char g_em_table[64];
 #define YEAR      g_year

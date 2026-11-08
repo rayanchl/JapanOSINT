@@ -999,6 +999,11 @@ static int dispatch_impl(db_handle *db, llm_client *llm, const char *service,
   cJSON_Delete(ds.notes);
 
   http_client_free(http);   /* after reading its host log */
+  /* The distinct rows this run left, read BEFORE the rebound sink is freed —
+   * the scheduler's fetch_log.stored and sources-row figures (rule 4b). */
+  int stored_exact = 1;
+  long stored = own_ok ? intel_sink_stored(&own, &stored_exact) : -1;
+  long stored_notices = own_ok ? intel_sink_stored_notices(&own) : 0;
   if (own_ok) intel_sink_free(&own);
 
   /* Stage 0+1, exactly as scheduler_run_source() does it: log the run and let
@@ -1011,6 +1016,10 @@ static int dispatch_impl(db_handle *db, llm_client *llm, const char *service,
     const char *status = sched_run_status(rc, ds.n_emit, hosts, hosts_ok, &why);
     long flid = fetch_log_write(db, def->id, status, ds.n_emit, duration_ms, why);
     sched_fetch_log_set_bytes(db, flid, bytes_in);   /* as the scheduler records it */
+    if (stored >= 0) sched_fetch_log_set_stored(db, flid, stored, stored_exact);
+    sched_sources_row_record(db, def->id, status,
+                             stored >= 0 ? stored - stored_notices : ds.n_emit,
+                             duration_ms, why);
     anomaly_detect(db, def->id, flid, status, ds.n_emit, duration_ms);
   }
 

@@ -18,7 +18,13 @@ static const hp_source T[] = {
     .collector = "eu_corporate", .category = "corporate",
     .description = "The raw Solr index behind the ESMA register UI, far deeper than the searchRegister HTML endpoint already in the tree. Parent docs are entities (ae_entityName, ae_entityTypeCode MIF/CI/…, ae_lei, ae_headOfficeLei, ae_officeType Branch/Head office, ae_competentAuthority, ae_lastUpdate); child docs (type_s:child, _root_) are the individual authorised activities/services (ac_serviceName, ac_authorisationNotificationDateStr, ac_status). Supports full Solr syntax, e.g. q=ae_entityName:*Deutsche* → 46 hits.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "corporate-record", .tags = "\"eu\",\"corporate\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://registers.esma.europa.eu/solr/esma_registers_upreg/select?q=*:*&wt=json&rows=100",
+    /* `sort=id asc` + `start=0` (2026-11-07): a Solr offset walk over the core's
+     * default (score/insertion) order. Measured on esma_registers_upreg: sort=
+     * frobnicate is HTTP 400; id asc (ae1000, ae10001…) and id desc
+     * (lastModification, aeNotHostMmbSt970…) differ; numFound 102,931
+     * unchanged; start 0 / 5 disjoint. Unsorted, page 1 began aeActivity147,
+     * aeActivity214807 — no order at all. */
+    .url = "https://registers.esma.europa.eu/solr/esma_registers_upreg/select?q=*:*&wt=json&rows=100&start=0&sort=id%20asc",
     .array_path = "response.docs",
     .detail_url = "https://registers.esma.europa.eu/publication/details?core=esma_registers_upreg&docId={v}", .detail_key = "id",
     .page_walk = 1,

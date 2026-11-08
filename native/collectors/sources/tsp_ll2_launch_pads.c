@@ -26,7 +26,7 @@
 #include <string.h>
 
 #define LL2_PAD_BASE "https://ll.thespacedevs.com/2.2.0/pad/"
-#define PAGES 4   /* 2026-11-07: count 240 → 3 pages of 100 */
+#define PAGES 4  /* exhaustive-ok: page ceiling; a stop on a full page or a failed later page files a collector-truncation-notice — 2026-11-07: count 240 → 3 pages of 100 */
 #define PAGE_SIZE 100
 
 /* Launch Library returns coordinates as STRINGS. Accept either shape. */

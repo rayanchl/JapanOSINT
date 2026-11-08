@@ -16,8 +16,10 @@
  * dataapi_layer). */
 char *sweepapi_data(db_handle *db, const char *id);
 
-/* WRITE-TIME heavy build (stitch + Chaikin/RDP smooth, full scan) — invoked
- * by the scheduler after a map_cron source runs, NOT on the HTTP path.
+/* WRITE-TIME heavy build (stitch + Chaikin/RDP smooth, full scan). NOT
+ * called by anything today, deliberately: for unified-trains the result is
+ * ~300 MB, which no map response can carry, so the read path serves bounded
+ * raw points with an in-band total instead. Kept for an offline export.
  * Returns the full malloc'd FC for a sweep `id`, or NULL if not a sweep
  * layer. Caller persists it via collcache_set(). */
 char *sweepapi_build(db_handle *db, const char *id);

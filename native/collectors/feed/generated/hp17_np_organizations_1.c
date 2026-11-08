@@ -18,7 +18,15 @@ static const hp_source T[] = {
     .collector = "np_organizations", .category = "organizations",
     .description = "Organization register: title (e.g. DAO Sindhupalchok), shortName, longName, description, level, startingDateAd, point geometry, and the province/district/municipality/ward it is bound to plus responsibleFor scope. Detail endpoint verified with id 2.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "organizations-record", .tags = "\"np\",\"organizations\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://bipadportal.gov.np/api/v1/organization/?format=json&limit=50",
+    /* `ordering=id` (2026-11-07): this row CYCLES on the API's own `next` link,
+     * which is an OFFSET link (`…&limit=50&offset=50`) over Django REST
+     * Framework's default order — not an id order here (default [2,1,5,6], id [1,2,5,6], -id [114,…]).
+     * With `ordering=id` the next link carries it (`…&offset=50&ordering=id`),
+     * so every page keeps the order. NB `ordering=frobnicate` is silently
+     * ignored (default order back), so the id-monotonic pages are the
+     * evidence, not acceptance; and `count` reads 9223372036854775807 on
+     * this host, so it is not a total. */
+    .url = "https://bipadportal.gov.np/api/v1/organization/?format=json&limit=50&ordering=id",
     .array_path = "results",
     .detail_url = "https://bipadportal.gov.np/api/v1/organization/{v}/?format=json", .detail_key = "id",
     .page_walk = 1,

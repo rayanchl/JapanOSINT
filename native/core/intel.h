@@ -93,4 +93,8 @@ int intel_item_is_notice(const intel_item *it);
  * path resets it (translate.c's rowid watermark is what restores it). */
 int intel_fts_remirror(db_handle *db, const char *uid);
 
+/* Forget the cached set of credential values the sink redacts from every
+ * stored record (see emit() in intel.c); for tests. */
+void intel_secrets_reset(void);
+
 #endif

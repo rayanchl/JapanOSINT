@@ -196,8 +196,29 @@ static char *cold_points_fc(db_handle *db, const char *id) {
   cJSON_AddBoolToObject(meta, "live", 0);
   cJSON_AddStringToObject(meta, "cache_status", "cold");
   cJSON_AddBoolToObject(meta, "capped", n >= LIM);
+  /* Rule 2: a bounded view states how much exists, in band. And the old note
+   * promised "until the scheduled prebuild runs" — no prebuild is scheduled
+   * (sweepapi_build has no caller, deliberately: the stitched nationwide FC is
+   * ~300 MB for unified-trains), so the promise was false (audit 2026-11-07). */
+  long long avail = -1;
+  if (n >= LIM) {
+    sqlite3_stmt *cs = NULL;
+    if (sqlite3_prepare_v2(db->h, "SELECT COUNT(*) FROM intel_items "
+                           "WHERE source_id=?1 AND lat IS NOT NULL", -1, &cs,
+                           NULL) == SQLITE_OK) {
+      sqlite3_bind_text(cs, 1, id, -1, SQLITE_TRANSIENT);
+      if (sqlite3_step(cs) == SQLITE_ROW) avail = sqlite3_column_int64(cs, 0);
+    }
+    sqlite3_finalize(cs);
+  } else {
+    avail = n;
+  }
+  if (avail >= 0) cJSON_AddNumberToObject(meta, "records_available", (double)avail);
+  else            cJSON_AddNullToObject(meta, "records_available");
   cJSON_AddStringToObject(meta, "description",
-    "Cold map cache — bounded points until the scheduled prebuild runs.");
+    "Raw stored points, bounded by JO_SWEEP_LIMIT (records_available says how "
+    "many exist). The stitched, smoothed line build is not served for these "
+    "layers: nationwide it is ~300 MB, too large for one map response.");
   char *out = cJSON_PrintUnformatted(fc);
   cJSON_Delete(fc);
   return out;

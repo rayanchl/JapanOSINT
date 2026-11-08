@@ -23,7 +23,8 @@
  * column holds it (EMBED_ROW_TS), so a post-filter on the date reads the
  * same rule the KNN filter did. */
 #define SEL_ROW "SELECT " INTELAPI_ITEM_COLS ", " EMBED_ROW_TS " FROM intel_items"
-enum { C_SRC = 1, C_LANG = 7, C_LAT = 13, C_LON = 14, C_RTYPE = 17, C_TS = 20 };
+enum { C_SRC = 1, C_LANG = 7, C_LAT = 13, C_LON = 14, C_RTYPE = 17,
+       C_TS = INTELAPI_ITEM_NCOLS };
 
 static char *fail(int *status, int code, const char *err, const char *detail,
                   cJSON *coverage) {

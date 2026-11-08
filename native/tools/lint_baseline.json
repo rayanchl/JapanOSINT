@@ -13,6 +13,8 @@
     "Checks sitting at 0 stay scalar; there is nothing to mask."
   ],
   "checks": {
+    "csv-delim-name": 0,
+    "detail-self-hop": 0,
     "dup-endpoint": {
       "%.*s.wikipedia.org/wiki": 1,
       "%s": 1,
@@ -127,6 +129,7 @@
       "haveibeenpwned.com/api/v3/breaches": 1,
       "helix-tools-api.idmcdb.org/external-api/idus/last-180-days?client_id=IDMCWSHSOLO009": 1,
       "himawari.asia/img/D531106/latest.json": 1,
+      "index.commoncrawl.org/collinfo.json": 1,
       "indiankanoon.org": 1,
       "indiankanoon.org/search?formInput=%s": 1,
       "insightcrime.org/feed": 1,
@@ -749,9 +752,9 @@
     "unresolved-id": 0
   },
   "registered_sources": {
-    "direct": 1178,
-    "macro_expanded": 56230,
-    "total": 57408,
+    "direct": 1180,
+    "macro_expanded": 60347,
+    "total": 61527,
     "unresolved": 0
   }
 }

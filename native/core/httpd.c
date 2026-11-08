@@ -1728,6 +1728,40 @@ static char *audit_verify_route(db_handle *db, const char *tenant,
   return body;
 }
 
+/* Three heavy builders that ran ON the event loop, so one request held every
+ * other connection, /api/health included (probed 2026-11-07): GET /api/layers
+ * (31 s, an O(n^2) scan since fixed — still a 61,527-row build), GET
+ * /api/sources (48.6 MB, 0.67 s, 8 concurrent held /api/health 5.2 s) and GET
+ * /api/layers/:id/geojson (up to 50,000 features, 23 MB). They run through
+ * sem_spawn's worker like every other heavy read now. */
+static char *layers_list_route(db_handle *db, const char *tenant, const char *id,
+                               const char *qs, int op, int *status) {
+  (void)tenant; (void)id; (void)qs; (void)op;
+  char *b = miscapi_list_layers(db);
+  *status = b ? 200 : 500;
+  return b ? b : strdup("{\"error\":\"Failed to list layers\"}");
+}
+static char *sources_list_route(db_handle *db, const char *tenant, const char *id,
+                                const char *qs, int op, int *status) {
+  (void)tenant; (void)id; (void)qs; (void)op;
+  char *b = api_sources_list(db);
+  *status = b ? 200 : 500;
+  return b ? b : strdup("{\"error\":\"Failed to list sources\"}");
+}
+static char *layer_geojson_route(db_handle *db, const char *tenant, const char *id,
+                                 const char *qs, int op, int *status) {
+  (void)tenant; (void)op;
+  struct mg_str q = mg_str(qs ? qs : "");
+  int lim = 0, off = 0;
+  char v[32] = {0};
+  if (mg_http_get_var(&q, "limit", v, sizeof v) > 0) lim = atoi(v);
+  v[0] = 0;
+  if (mg_http_get_var(&q, "offset", v, sizeof v) > 0) off = atoi(v);
+  char *b = dataapi_layer_fc(db, id, lim, off);
+  *status = b ? 200 : 404;
+  return b ? b : strdup("{\"error\":\"Layer not found\"}");
+}
+
 /* Run `fn` on a worker; always replies (now, or deferred to MG_EV_WAKEUP). */
 static void sem_spawn(struct mg_connection *c, struct mg_http_message *hm,
                       semsearch_route_fn fn, const char *tenant, const char *id,
@@ -2492,7 +2526,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           cJSON_Delete(cj);
           if (nb) { free(body); body = nb; }
         } }
-      reply_json(c, 200, body ? body : "{\"error\":\"server_error\"}"); free(body); return;
+      reply_json(c, body ? 200 : 500, body ? body : "{\"error\":\"server_error\"}"); free(body); return;
     }
     if (eq(u, "/api/sources/stats")) { route_sources_stats(c); return; }
     /* GET /api/sources/semantic?q=&kind=&k= — the registry by MEANING
@@ -2601,10 +2635,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
 
     /* GET /api/sources — full source registry/probe rows. */
     if (eq(u, "/api/sources")) {
-      char *body = api_sources_list(g_db);
-      if (!body) { reply_json(c, 500, "{\"error\":\"Failed to list sources\"}"); return; }
-      reply_json(c, 200, body);
-      free(body);
+      sem_spawn(c, hm, sources_list_route, "", "", 0);
       return;
     }
 
@@ -2614,10 +2645,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
      * keeps every geocoded intel_items row reachable. Bare array (v1 shape);
      * contract fixture tests/contract/_api_layers_v2.json. */
     if (eq(u, "/api/layers")) {
-      char *body = miscapi_list_layers(g_db);
-      if (!body) { reply_json(c, 500, "{\"error\":\"Failed to list layers\"}"); return; }
-      reply_json(c, 200, body);
-      free(body);
+      sem_spawn(c, hm, layers_list_route, "", "", 0);
       return;
     }
 
@@ -3000,16 +3028,8 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
      * records_available/truncated/next_offset meta; limit/offset page the
      * rest (dataapi.h). */
     if (seg(u, "/api/layers/", "/geojson", p, sizeof p)) {
-      int lim = 0, off = 0;
-      { char v[32] = {0};
-        if (mg_http_get_var(&hm->query, "limit", v, sizeof v) > 0)
-          lim = atoi(v);
-        v[0] = 0;
-        if (mg_http_get_var(&hm->query, "offset", v, sizeof v) > 0)
-          off = atoi(v); }
-      char *body = dataapi_layer_fc(g_db, p, lim, off);
-      if (!body) { reply_json(c, 404, "{\"error\":\"Layer not found\"}"); return; }
-      reply_json(c, 200, body); free(body); return;
+      sem_spawn(c, hm, layer_geojson_route, "", p, 0);
+      return;
     }
 
     /* GET /api/intel/semantic?q=&mode=hybrid|vector&limit=&k=[&source=a,b
@@ -3086,6 +3106,22 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         }
       }
       const source_def *d = registry_get(p);
+      /* A MAINTENANCE POD (`_` collector) is platform machinery — the WAL
+       * checkpoint, log retention, the translator, embedding backfill, the
+       * breach catalogue loader, collector repair — and the owner/admin
+       * allowance above is about COLLECTING. Every user owns a personal
+       * workspace, so that allowance let anyone start any of them: probed
+       * 2026-11-07, a non-operator owner got `"ran":true` for wal-checkpoint,
+       * translate, log-retention and entity-stats, while the operator-only
+       * routes for the same jobs (breach catalog load, translate backfill)
+       * refused them. A pod is operator-only here as it is there. */
+      if (d && d->collector && d->collector[0] == '_' && opgate_check(&usr) != 0) {
+        reply_json(c, 403, "{\"error\":\"forbidden\",\"detail\":\"a maintenance "
+                   "pod is run by the platform operator only\"}");
+        return;
+      }
+      /* Who ran what, in the chain: a run writes the shared corpus. */
+      if (d) audit_write(g_db, "platform", usr.id, "collector.run", p, NULL);
       /* `p` is a URL-DECODED path segment of up to 1023 bytes, so it can carry
        * a literal '"' (from %22) and it can outrun any fixed body buffer. The
        * snprintf pair that used to build these two replies did neither escape
@@ -3189,8 +3225,10 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           char mv[16] = {0};
           int hv = mg_http_get_var(&hm->query, "max_items", mv, sizeof mv);
           body = translate_backfill_start(g_db, hv > 0 ? atoi(mv) : 0, &status);
+          audit_write(g_db, "platform", usr.id, "translate.backfill.start", "translate", NULL);
         } else if (hm->method.len == 6 && memcmp(hm->method.buf, "DELETE", 6) == 0) {
           body = translate_backfill_cancel(&status);
+          audit_write(g_db, "platform", usr.id, "translate.backfill.cancel", "translate", NULL);
         } else {
           reply_json(c, 405, "{\"error\":\"method_not_allowed\"}"); return;
         }
@@ -3250,7 +3288,9 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       if (eq(u,"/api/admin/maintenance")) {
         char hv[16]={0}; int hh=mg_http_get_var(&hm->query,"hours",hv,sizeof hv);
         char *b=maintenance_digest(g_db, hh>0?atoi(hv):24);
-        reply_json(c,200,b); free(b); return;
+        /* NULL is a failed build, not an empty digest: 500, never a 200 with
+         * no body (audit 2026-11-07; the same for the routes below). */
+        reply_json(c,b?200:500,b?b:"{\"error\":\"server_error\"}"); free(b); return;
       }
       /* The next pages of the digest's and the pipeline view's lists:
        *   GET /api/admin/maintenance/lists/:name?hours=&limit=&offset=
@@ -3292,11 +3332,15 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         if (seg(u,"/api/admin/repairs/","/approve",idb,sizeof idb)) {
           if (!is_post){ reply_json(c,405,"{\"error\":\"method_not_allowed\"}"); return; }
           b=maintenance_repair_action(g_db,atol(idb),1,&st);
+          /* Approve installs a URL override that steers collector fetches;
+           * the revert below was audited and this was not (audit 2026-11-07). */
+          if (st == 200) audit_write(g_db,"platform",usr.id,"collector.repair.approve",idb,b);
           reply_json(c,st,b); free(b); return;
         }
         if (seg(u,"/api/admin/repairs/","/reject",idb,sizeof idb)) {
           if (!is_post){ reply_json(c,405,"{\"error\":\"method_not_allowed\"}"); return; }
           b=maintenance_repair_action(g_db,atol(idb),0,&st);
+          if (st == 200) audit_write(g_db,"platform",usr.id,"collector.repair.reject",idb,NULL);
           reply_json(c,st,b); free(b); return;
         }
         /* DELETE /api/admin/repairs/:id — undo an APPLIED url_swap. Approval
@@ -3320,6 +3364,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         if (seg(u,"/api/admin/sources/","/unquarantine",idb,sizeof idb)) {
           if (!is_post){ reply_json(c,405,"{\"error\":\"method_not_allowed\"}"); return; }
           b=maintenance_unquarantine(g_db,idb,&st);
+          if (st == 200) audit_write(g_db,"platform",usr.id,"source.unquarantine",idb,NULL);
           reply_json(c,st,b); free(b); return;
         }
         /* Roadmap 17 — the switch that makes evidence capture reachable.
@@ -3438,6 +3483,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         if (seg(u,"/api/admin/anomalies/","/requeue",idb,sizeof idb)) {
           if (!is_post){ reply_json(c,405,"{\"error\":\"method_not_allowed\"}"); return; }
           b=maintenance_requeue_anomaly(g_db,atol(idb),&st);
+          if (st == 200) audit_write(g_db,"platform",usr.id,"anomaly.requeue",idb,NULL);
           reply_json(c,st,b); free(b); return;
         }
       }
@@ -3461,6 +3507,9 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         } else {
           rb = breach_job_fetch(jget_str(j,"source_id"), jget_str(j,"url"), &st);
         }
+        audit_write(g_db, "platform", usr.id,
+                    eq(u,"/api/admin/breach/ingest") ? "breach.ingest" : "breach.fetch",
+                    jget_str(j,"source_id") ? jget_str(j,"source_id") : "", NULL);
         if (j) cJSON_Delete(j);
         reply_json(c,st,rb); free(rb); return;
       }
@@ -3573,6 +3622,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
             n, stt.rows_read, stt.rows_skipped, stt.rows_new, stt.rows_existing);
         else
           snprintf(rb,sizeof rb,"{\"loaded\":%d,\"format\":\"json\"}", n);
+        audit_write(g_db, "platform", usr.id, "breach.catalog.load", "breach_meta", rb);
         reply_json(c,200,rb); return;
       }
       if (eq(u,"/api/admin/breach/jobs")) {
@@ -3580,7 +3630,16 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       }
       { char jid[32]={0};
         if (seg(u,"/api/admin/breach/jobs/","",jid,sizeof jid)) {
-          char *b=breach_job_status(jid); reply_json(c,200,b); free(b); return;
+          /* An unknown job id answered 200 {"jobs":[]}: a client polling a
+           * mistyped or expired id read "no jobs" rather than "no such job". */
+          char *b=breach_job_status(jid);
+          cJSON *bj = b ? cJSON_Parse(b) : NULL;
+          const cJSON *ja = bj ? cJSON_GetObjectItem(bj,"jobs") : NULL;
+          int none = cJSON_IsArray(ja) && cJSON_GetArraySize(ja) == 0;
+          cJSON_Delete(bj);
+          if (!b) { reply_json(c,500,"{\"error\":\"server_error\"}"); return; }
+          if (none) { free(b); reply_json(c,404,"{\"error\":\"job_not_found\"}"); return; }
+          reply_json(c,200,b); free(b); return;
         }
       }
       /* ---- /api/admin/pagination — the pagination survey ----------------
@@ -3608,15 +3667,24 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       }
       { char pjid[32]={0};
         if (seg(u,"/api/admin/pagination/jobs/","",pjid,sizeof pjid)) {
-          char *b=pagination_probe_status(pjid); reply_json(c,200,b); free(b); return;
+          char *b=pagination_probe_status(pjid);
+          cJSON *bj = b ? cJSON_Parse(b) : NULL;
+          const cJSON *dj = bj ? cJSON_GetObjectItem(bj,"data") : NULL;
+          int none = bj && (!dj || cJSON_IsNull(dj));
+          cJSON_Delete(bj);
+          if (!b) { reply_json(c,500,"{\"error\":\"server_error\"}"); return; }
+          if (none) { free(b); reply_json(c,404,"{\"error\":\"job_not_found\"}"); return; }
+          reply_json(c,200,b); free(b); return;
         }
       }
 
       if (eq(u,"/api/db/tables")) {
-        char *b=dbexplorer_tables(g_db); reply_json(c,200,b); free(b); return;
+        char *b=dbexplorer_tables(g_db);
+        reply_json(c,b?200:500,b?b:"{\"error\":\"server_error\"}"); free(b); return;
       }
       if (eq(u,"/api/db/scheduler")) {
-        char *b=dbexplorer_scheduler(g_db); reply_json(c,200,b); free(b); return;
+        char *b=dbexplorer_scheduler(g_db);
+        reply_json(c,b?200:500,b?b:"{\"error\":\"server_error\"}"); free(b); return;
       }
       /* /api/db/tables/:name
        *
@@ -4757,6 +4825,15 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       }
       if (tenantk) body = keysapi_tenant(g_db,&tc,meth,seg,bdy,&status);
       else         body = keysapi_platform(g_db,&tc,meth,seg,bdy,&status);
+      /* A platform key read (GET /api/keys/:name returns it in cleartext) or
+       * write is a credential event; the workspace-key reveal was audited and
+       * these were not (audit 2026-11-07). The value is never logged. */
+      if (!tenantk && seg[0] && status >= 200 && status < 300 &&
+          (strcmp(meth,"GET") == 0 || strcmp(meth,"PUT") == 0 ||
+           strcmp(meth,"POST") == 0 || strcmp(meth,"DELETE") == 0))
+        audit_write(g_db, "platform", usr.id,
+                    strcmp(meth,"GET") == 0 ? "platform.key.reveal" : "platform.key.write",
+                    seg, NULL);
       free(bdy);
       if (!body) { reply_json(c,status,"{\"error\":\"server_error\"}"); return; }
       reply_json(c,status,body); free(body); return;
@@ -5056,6 +5133,35 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       if (hm->method.len != 4 || memcmp(hm->method.buf, "POST", 4) != 0) {
         reply_json(c, 405, "{\"error\":\"method_not_allowed\"}"); return;
       }
+      /* A fleet-wide run of 16 scrapers: the same gate as running ONE source
+       * (/api/intel/sources/:id/run — operator, or workspace owner/admin under
+       * a per-user budget). It had none, so any signed-in user could start the
+       * whole fan-out (probed 2026-11-07). Audited like a run. */
+      if (opgate_check(&usr) != 0) {
+        struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
+        char xtid[128] = {0};
+        if (xt && xt->len < sizeof xtid) { memcpy(xtid, xt->buf, xt->len); xtid[xt->len] = 0; }
+        tenant_ctx ctc;
+        int tr = tenant_resolve(g_db, &usr, xt ? xtid : NULL, &ctc);
+        if (tr == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
+        if (tr != 0)    { reply_json(c, 500, "{\"error\":\"Tenant resolution failed\"}"); return; }
+        if (strcmp(ctc.role, "owner") != 0 && strcmp(ctc.role, "admin") != 0) {
+          reply_json(c, 403, "{\"error\":\"forbidden\",\"detail\":\"running the "
+                     "camera discovery requires platform operator or workspace "
+                     "owner/admin\"}");
+          return;
+        }
+        char rk[160]; int retry = 0;
+        snprintf(rk, sizeof rk, "run:%s", usr.id);
+        if (!ratelimit_allow(RL_COLLECTOR_RUN, rk, 10, 60, &retry)) {
+          char rb[128];
+          snprintf(rb, sizeof rb, "{\"error\":\"collector_run_rate_limited\","
+                   "\"retry_after_sec\":%d}", retry);
+          reply_json(c, 429, rb);
+          return;
+        }
+      }
+      audit_write(g_db, "platform", usr.id, "collector.run", "camera-discovery", NULL);
       const source_def *ch[CAM_MAX_CHANNELS];
       int nch = cam_channels(ch, CAM_MAX_CHANNELS);
       /* No channels registered is a real fault, not a quiet no-op — the old

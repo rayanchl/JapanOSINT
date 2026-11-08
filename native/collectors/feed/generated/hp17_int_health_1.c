@@ -18,7 +18,12 @@ static const hp_source T[] = {
     .collector = "int_health", .category = "health",
     .description = "Designated WHO Collaborating Centres worldwide: reference code (e.g. KOR-106), TitleOfTheCentre (the actual institution), host website, date of designation, last redesignation, expiry date, WHOCC portal URL. Institution-level records tying named research bodies to WHO. Detail hop verified with a real GUID.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "health-record", .tags = "\"int\",\"health\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://www.who.int/api/news/collaboratingcentres?%24top=50&%24format=json",
+    /* 2026-11-07: `$orderby=Id asc` and `id_keys = "Id"` — a 4-page walk (199
+     * centres) with no order and no declared identity. Measured: $orderby=
+     * frobnicate is HTTP 400, Id asc / desc answer different pages, @odata.count
+     * 199 unchanged by the sort, $skip 0 / 50 disjoint. Id is the record GUID. */
+    .url = "https://www.who.int/api/news/collaboratingcentres?%24top=50&%24format=json&%24skip=0&%24orderby=Id%20asc",
+    .id_keys = "Id",
     .array_path = "value",
     .detail_url = "https://www.who.int/api/news/collaboratingcentres({v})?%24format=json", .detail_key = "Id",
     .page_walk = 1,

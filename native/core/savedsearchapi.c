@@ -1188,6 +1188,12 @@ char *savedsearchapi(db_handle *db, const tenant_ctx *t, const char *method,
     }
 
     if (is_post) {
+      /* A saved search is workspace content every member reads, so creating
+       * one is a write like an AOI, an annotation or a watchlist — all of
+       * which refuse a viewer. This one did not (probed 2026-11-07); to_alert
+       * below already required analyst+. Search HISTORY stays open to every
+       * role: it is the caller's own trail. */
+      if (role_rank(t->role) < 2) { out = err(st, 403, "forbidden"); goto done; }
       if (!jb || !cJSON_IsObject(jb)) {
         out = err(st, 400, "body_required"); goto done;
       }

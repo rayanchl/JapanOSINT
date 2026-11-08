@@ -274,6 +274,14 @@ static void test_row_interval_composition(db_handle *db) {
   assert(sched_row_interval(&st, &d) == 900);               /* a global outranks both */
   source_def pivot = { .id = "UNIT_PIVOT", .update_interval_sec = 0, .adaptive_interval = 1 };
   assert(sched_row_interval(&st, &pivot) == 0);             /* an entity pivot passes through */
+  /* A maintenance pod asks no upstream, so the collection cadence policy must
+   * not reach it: under the default global 6 h, embedding-backfill ran every
+   * 6 h instead of every 120 s (audit 2026-11-07). */
+  source_def pod = { .id = "UNIT_POD", .collector = "_maint", .update_interval_sec = 120 };
+  sched_state pst = {0};
+  assert(sched_row_interval(&pst, &pod) == 120);            /* a pod keeps its own cadence */
+  source_def coll = { .id = "UNIT_COLL", .collector = "feeds", .update_interval_sec = 120 };
+  assert(sched_row_interval(&pst, &coll) == 900);           /* its control: a collector does not */
   assert(cadence_set(db, &none, "test", &err) == 0);        /* leave no policy behind */
 }
 

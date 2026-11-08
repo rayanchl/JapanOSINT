@@ -59,7 +59,12 @@ static const hp_source HP3B19_SIGINT[] = {
     .record_type = "broadcast-transmitter",
     .tags = "\"sigint\",\"spectrum\",\"television\",\"finland\",\"register\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.traficom.fi/api/v1/TVAsematiedot?$top=1000",
+    /* `$orderby=ID asc` + `$skip=0`: 1,066 transmitters over two $skip pages,
+     * no order. ID is the register's row id.
+     * Measured 2026-11-07: $orderby=frobnicate is HTTP 400 (the service validates
+     * the clause), ascending and descending answer different pages, the
+     * service's own count is unchanged by the sort, and $skip pages are disjoint. */
+    .url = "https://opendata.traficom.fi/api/v1/TVAsematiedot?$top=1000&$skip=0&$orderby=ID%20asc",
     .array_path = "value",
     .date_keys = "EndingDate",
     .id_keys = "LicenseNumber",
@@ -105,7 +110,12 @@ static const hp_source HP3B19_SIGINT[] = {
     .record_type = "ship-station-licence",
     .tags = "\"sigint\",\"maritime\",\"mmsi\",\"ais\",\"finland\",\"register\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://opendata.traficom.fi/api/v1/Meriradionumerot?$top=1000",
+    /* `$orderby=ID asc` + `$skip=0`: a $skip walk over 14,048 licences (15 pages)
+     * with no order; the register's own ID is the row identity (above).
+     * Measured 2026-11-07: $orderby=frobnicate is HTTP 400 (the service validates
+     * the clause), ascending and descending answer different pages, the
+     * service's own count is unchanged by the sort, and $skip pages are disjoint. */
+    .url = "https://opendata.traficom.fi/api/v1/Meriradionumerot?$top=1000&$skip=0&$orderby=ID%20asc",
     .array_path = "value",
     /* MMSINumber is not unique in this register: a number re-issued to another
      * vessel keeps both licences, differing in ID/ShipName/ShipCallSign, and the

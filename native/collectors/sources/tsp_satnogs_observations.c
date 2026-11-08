@@ -118,7 +118,7 @@ static int emit_page(cJSON *arr, intel_sink *sink) {
  * observation-shaped page. Returns the message, or NULL for a real page. */
 static const char *sat_error_array(const cJSON *doc) {
   if (!cJSON_IsArray(doc) || cJSON_GetArraySize(doc) != 1) return NULL;
-  const cJSON *e = cJSON_GetArrayItem(doc, 0);
+  const cJSON *e = cJSON_GetArrayItem(doc, 0);  /* exhaustive-ok: a refusal is a ONE-element array (size checked above) */
   if (!cJSON_IsObject(e) || cJSON_GetArraySize(e) != 1) return NULL;
   return jo_sv(e, "error");
 }

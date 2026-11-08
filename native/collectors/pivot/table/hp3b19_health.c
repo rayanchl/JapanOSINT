@@ -334,7 +334,12 @@ static const hp_source HP3B19_HEALTH[] = {
     .record_type = "treaty-party-record",
     .tags = "\"who\",\"fctc\",\"tobacco\",\"treaty\",\"compliance\",\"policy\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://xmart-api-public.who.int/TOBACCO/TREATY_PARTIES?%24format=json&%24top=1000",
+    /* `$orderby=_RecordID asc` + `$skip=0`: 1,162 records over two $skip pages,
+     * no order — and unsorted, page 1 is NOT the _RecordID-ordered page.
+     * Measured 2026-11-07: $orderby=frobnicate is HTTP 400 (the service validates
+     * the clause), ascending and descending answer different pages, the
+     * service's own count is unchanged by the sort, and $skip pages are disjoint. */
+    .url = "https://xmart-api-public.who.int/TOBACCO/TREATY_PARTIES?%24format=json&%24top=1000&%24skip=0&%24orderby=_RecordID%20asc",
     .array_path = "value",
     .id_keys = "_RecordID",
     .interval = 604800,

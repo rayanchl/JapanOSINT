@@ -347,8 +347,13 @@ char *miscapi_list_layers(db_handle *db) {
       layer = make_layer(lid, name, m->category, NULL, NULL, "declared");
       cJSON_AddItemToArray(layers, layer);
     }
+    /* No membership scan: the registry's ids are unique (`make
+     * registry-floor` fails on a duplicate), so each source reaches this line
+     * once. The old sources_has() walked the layer's whole list for every
+     * source — O(n²) over 61,527 rows, 31 s for one GET /api/layers, with the
+     * event loop (and /api/health) held the whole time (probed 2026-11-07). */
     cJSON *srcs = cJSON_GetObjectItem(layer, "sources");
-    if (!sources_has(srcs, m->id)) add_source_ref(srcs, m);
+    add_source_ref(srcs, m);
   }
 
   /* 3. Measured per-layer record counts + the generated catch-all layers.

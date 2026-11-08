@@ -569,7 +569,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.kyodo.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 25240, 100 ids ascending on page 1. */
+    .url = "https://www.kyodo.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -1429,7 +1436,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.dailyshincho.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 46003, 100 ids ascending on page 1. */
+    .url = "https://www.dailyshincho.jp/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -3547,7 +3561,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.waseda.jp/top/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 12618, 100 ids ascending on page 1. */
+    .url = "https://www.waseda.jp/top/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -3575,7 +3596,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.webcartop.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 26991, 100 ids ascending on page 1. */
+    .url = "https://www.webcartop.jp/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -3723,7 +3751,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.the-miyanichi.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 109854, 100 ids ascending on page 1. */
+    .url = "https://www.the-miyanichi.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -3800,7 +3835,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.roomie.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total None, 100 ids ascending on page 1. */
+    .url = "https://www.roomie.jp/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -4003,7 +4045,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.neweconomy.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 17816, 100 ids ascending on page 1. */
+    .url = "https://www.neweconomy.jp/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -4031,7 +4080,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.mens-ex.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 13198, 100 ids ascending on page 1. */
+    .url = "https://www.mens-ex.jp/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -4107,7 +4163,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.lisani.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 34063, 100 ids ascending on page 1. */
+    .url = "https://www.lisani.jp/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -4187,7 +4250,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "cpt-shop",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.seikatsu110.jp/wp-json/wp/v2/shop?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 49875, 100 ids ascending on page 1. */
+    .url = "https://www.seikatsu110.jp/wp-json/wp/v2/shop?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -4289,7 +4359,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "cpt-shop-service",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.seikatsu110.jp/wp-json/wp/v2/shop_service?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 86720, 100 ids ascending on page 1. */
+    .url = "https://www.seikatsu110.jp/wp-json/wp/v2/shop_service?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -4318,7 +4395,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.moshimoshi-nippon.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 12595, 100 ids ascending on page 1. */
+    .url = "https://www.moshimoshi-nippon.jp/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -4623,7 +4707,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.isenp.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 10072, 100 ids ascending on page 1. */
+    .url = "https://www.isenp.co.jp/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -4725,7 +4816,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "cpt-service-reviews",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.seikatsu110.jp/wp-json/wp/v2/service_reviews?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 126949, 100 ids ascending on page 1. */
+    .url = "https://www.seikatsu110.jp/wp-json/wp/v2/service_reviews?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -5177,7 +5275,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.automesseweb.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 22231, 100 ids ascending on page 1. */
+    .url = "https://www.automesseweb.jp/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -5230,7 +5335,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://woman.mynavi.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 108959, 100 ids ascending on page 1. */
+    .url = "https://woman.mynavi.jp/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -5284,7 +5396,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://videosalon.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 13902, 100 ids ascending on page 1. */
+    .url = "https://videosalon.jp/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -5313,7 +5432,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://thebridge.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 27919, 100 ids ascending on page 1. */
+    .url = "https://thebridge.jp/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -5440,7 +5566,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://volleyballking.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 7273, 100 ids ascending on page 1. */
+    .url = "https://volleyballking.jp/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -5468,7 +5601,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.as-web.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 102144, 100 ids ascending on page 1. */
+    .url = "https://www.as-web.jp/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -5569,7 +5709,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "cpt-artist",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://barks.jp/wp-json/wp/v2/artist?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 28987, 100 ids ascending on page 1. */
+    .url = "https://barks.jp/wp-json/wp/v2/artist?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -5818,7 +5965,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://serai.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 20970, 100 ids ascending on page 1. */
+    .url = "https://serai.jp/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -5966,7 +6120,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://rensai.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 39662, 100 ids ascending on page 1. */
+    .url = "https://rensai.jp/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -6187,7 +6348,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://oggi.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 70330, 100 ids ascending on page 1. */
+    .url = "https://oggi.jp/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -6241,7 +6409,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://realsound.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 70477, 100 ids ascending on page 1. */
+    .url = "https://realsound.jp/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -6318,7 +6493,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://nikkan-spa.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 50373, 100 ids ascending on page 1. */
+    .url = "https://nikkan-spa.jp/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -6418,7 +6600,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://sotokoto-online.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 17720, 100 ids ascending on page 1. */
+    .url = "https://sotokoto-online.jp/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -6715,7 +6904,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://omocoro.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 22574, 100 ids ascending on page 1. */
+    .url = "https://omocoro.jp/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -6790,7 +6986,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://news.careerconnection.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 32116, 100 ids ascending on page 1. */
+    .url = "https://news.careerconnection.jp/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -7488,7 +7691,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://jisin.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 64259, 100 ids ascending on page 1. */
+    .url = "https://jisin.jp/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -7639,7 +7849,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://iphone-mania.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 47913, 100 ids ascending on page 1. */
+    .url = "https://iphone-mania.jp/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -7667,7 +7884,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://iotnews.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 20955, 100 ids ascending on page 1. */
+    .url = "https://iotnews.jp/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -7817,7 +8041,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "cpt-news",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://otocoto.jp/wp-json/wp/v2/news?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 7269, 100 ids ascending on page 1. */
+    .url = "https://otocoto.jp/wp-json/wp/v2/news?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -7972,7 +8203,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "cpt-media",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.jbja.jp/wp-json/wp/v2/media?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 34493, 100 ids ascending on page 1. */
+    .url = "https://www.jbja.jp/wp-json/wp/v2/media?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -8123,7 +8361,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://getnavi.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 38521, 100 ids ascending on page 1. */
+    .url = "https://getnavi.jp/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -8492,7 +8737,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://doope.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 79265, 100 ids ascending on page 1. */
+    .url = "https://doope.jp/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -8695,7 +8947,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://digiday.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 14950, 100 ids ascending on page 1. */
+    .url = "https://digiday.jp/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -8918,7 +9177,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://buzzmag.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 40640, 100 ids ascending on page 1. */
+    .url = "https://buzzmag.jp/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -8946,7 +9212,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://baseballking.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 64187, 100 ids ascending on page 1. */
+    .url = "https://baseballking.jp/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -8974,7 +9247,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://brutus.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 17220, 100 ids ascending on page 1. */
+    .url = "https://brutus.jp/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -9194,7 +9474,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://basketballking.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 51631, 100 ids ascending on page 1. */
+    .url = "https://basketballking.jp/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -9318,7 +9605,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cancam.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 68736, 100 ids ascending on page 1. */
+    .url = "https://cancam.jp/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -9498,7 +9792,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-post",
     .tags = "\"japan\",\"wordpress\",\"posts\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://bestcarweb.jp/wp-json/wp/v2/posts?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 42771, 100 ids ascending on page 1. */
+    .url = "https://bestcarweb.jp/wp-json/wp/v2/posts?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -9700,7 +10001,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "cpt-images",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://bestcarweb.jp/wp-json/wp/v2/images?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 26845, 100 ids ascending on page 1. */
+    .url = "https://bestcarweb.jp/wp-json/wp/v2/images?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -9829,7 +10137,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "site-page",
     .tags = "\"japan\",\"wordpress\",\"pages\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://cancam.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 7564, 100 ids ascending on page 1. */
+    .url = "https://cancam.jp/wp-json/wp/v2/pages?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -9858,7 +10173,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "cpt-foodsnews",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://news.nissyoku.co.jp/wp-json/wp/v2/foodsnews?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 113284, 100 ids ascending on page 1. */
+    .url = "https://news.nissyoku.co.jp/wp-json/wp/v2/foodsnews?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -10145,7 +10467,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "cpt-hyakusai",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://news.nissyoku.co.jp/wp-json/wp/v2/hyakusai?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 7843, 100 ids ascending on page 1. */
+    .url = "https://news.nissyoku.co.jp/wp-json/wp/v2/hyakusai?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -10354,7 +10683,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "cpt-kojocho",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://news.nissyoku.co.jp/wp-json/wp/v2/kojocho?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 8590, 100 ids ascending on page 1. */
+    .url = "https://news.nissyoku.co.jp/wp-json/wp/v2/kojocho?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",
@@ -10592,7 +10928,14 @@ static const hp_source HP3B45_JPWPMEDIA[] = {
     .record_type = "cpt-restaurant",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://news.nissyoku.co.jp/wp-json/wp/v2/restaurant?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 19269, 100 ids ascending on page 1. */
+    .url = "https://news.nissyoku.co.jp/wp-json/wp/v2/restaurant?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",

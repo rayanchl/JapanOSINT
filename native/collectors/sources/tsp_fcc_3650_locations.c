@@ -37,7 +37,7 @@
 
 #define U3650_BASE "https://opendata.fcc.gov/resource/euz5-46g2.json"
 #define PAGE_SIZE 5000
-#define PAGES 4   /* 2026-11-07: $select=count(*) 7,829 → 2 pages of 5,000 */
+#define PAGES 4  /* exhaustive-ok: page ceiling; a stop on a full page or a failed later page files a collector-truncation-notice — 2026-11-07: $select=count(*) 7,829 → 2 pages of 5,000 */
 
 static int num_str(const char *s, double *out) {
   if (!s) return 0;

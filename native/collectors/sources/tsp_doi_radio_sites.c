@@ -37,7 +37,7 @@
   "https://services1.arcgis.com/Hp6G80Pky0om7QvQ/arcgis/rest/services/" \
   "DOI_Radio_Sites_20180226/FeatureServer/0/query"
 #define PAGE_SIZE 2000
-#define PAGES 3
+#define PAGES 3  /* exhaustive-ok: page ceiling; a stop on a full page or a failed later page files a collector-truncation-notice — 2026-11-07: returnCountOnly 2,043 → 2 pages of 2,000 */
 
 static int emit_features(cJSON *feats, intel_sink *sink) {
   int n = 0;

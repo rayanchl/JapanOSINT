@@ -81,7 +81,14 @@ static const hp_source HP3B45_JPWPCULTURE[] = {
     .record_type = "cpt-car",
     .tags = "\"japan\",\"wordpress\",\"cpt\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://current.ndl.go.jp/wp-json/wp/v2/car?per_page=100&orderby=date&order=asc",
+    /* `orderby=id` (2026-11-07), as the 2026-10-22 batch did: post DATES tie and
+     * are not monotonic with id, so a date-ordered cycle can reorder a tie
+     * block between runs. Measured on kyodo, cancam, bestcarweb and webcartop:
+     * orderby=frobnicate is HTTP 400, id asc / desc differ, X-WP-Total is
+     * unchanged, pages 1 and 2 disjoint, and a date-ordered page holds
+     * ids out of order (kyodo: 13 date ties on one page). This URL: HTTP 200,
+     * X-WP-Total 43533, 100 ids ascending on page 1. */
+    .url = "https://current.ndl.go.jp/wp-json/wp/v2/car?per_page=100&orderby=id&order=asc",
     .array_path = ".",
     .body_keys = "content.rendered",
     .date_keys = "date",

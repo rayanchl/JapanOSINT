@@ -35,7 +35,7 @@
 #include "lib/seenset.h"
 
 /* numberMatched 67,391 (2026-11-07) against the old single count=5000 page; 14 pages, ceiling 20 for headroom. Paged through _emodnet_wfs.inc (startIndex, natural key order). */
-#define WFS_URL "https://ows.emodnet-humanactivities.eu/wfs?service=WFS&version=2.0.0&request=GetFeature&outputFormat=application/json&typeName=emodnet:wwshipwrecks&count=5000&startIndex=0"
+#define WFS_URL "https://ows.emodnet-humanactivities.eu/wfs?service=WFS&version=2.0.0&request=GetFeature&outputFormat=application/json&typeName=emodnet:wwshipwrecks&count=5000&startIndex=0"  /* exhaustive-ok: walked to its end by emw_walk (_emodnet_wfs.inc), every stop disclosed */
 /* string field, with the literal "n/a" treated as missing */
 static const char *wsv(const cJSON *o, const char *k) {
   const char *s = jo_sv(o, k);

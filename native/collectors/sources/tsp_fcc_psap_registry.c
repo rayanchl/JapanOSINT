@@ -30,7 +30,7 @@
 
 #define PSAP_BASE "https://opendata.fcc.gov/resource/dpq5-ta9j.json"
 #define PAGE_SIZE 5000
-#define PAGES 3   /* 2026-11-07: $select=count(*) 8,557 → 2 pages of 5,000 */
+#define PAGES 3  /* exhaustive-ok: page ceiling; a stop on a full page or a failed later page files a collector-truncation-notice — 2026-11-07: $select=count(*) 8,557 → 2 pages of 5,000 */
 
 static int emit_page(cJSON *arr, intel_sink *sink) {
   int n = 0;

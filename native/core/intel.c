@@ -499,7 +499,120 @@ static int content_hash(sink_state *st, const intel_item *it,
   return 1;
 }
 
+/* ── no credential in a stored record ─────────────────────────────────────
+ *
+ * Rows put API keys in request URLs (23 hp rows with `api_key={key}` /
+ * `key={key}`, plus bespoke collectors), and collectors copy URLs into what
+ * they store: hpengine's fetch-failure `url`, a notice's `failed_page_url` and
+ * `next_run_resumes_at`, a record link the upstream built from the request.
+ * Those rows live in the SHARED corpus (tenant legacy), readable by every user
+ * through /api/intel and /api/export, so one 401 or timeout on such a row
+ * published the platform key (audit 2026-11-07). core/evidence.c redacts its
+ * custody record by parameter NAME; this is the net under every collector: the
+ * VALUE of every credential-named environment variable that is set (…_KEY,
+ * …_TOKEN, …_SECRET, …_PASSWORD, …APIKEY…, ≥ 12 characters so a short common
+ * value is never mistaken for one) is replaced by "[redacted]" in each string
+ * field before the row is written. Re-read every 60 s, because PUT /api/keys
+ * sets a key at runtime. The request itself is untouched. */
+#include <pthread.h>
+#include <ctype.h>
+extern char **environ;
+#define SECRET_MAX 128
+static pthread_mutex_t g_sec_mu = PTHREAD_MUTEX_INITIALIZER;
+static char  *g_sec[SECRET_MAX];
+static size_t g_sec_len[SECRET_MAX];
+static int    g_nsec;
+static time_t g_sec_at;
+
+static int secret_name(const char *n, size_t len) {
+  char u[128];
+  if (len >= sizeof u) return 0;
+  for (size_t i = 0; i < len; i++) u[i] = (char)toupper((unsigned char)n[i]);
+  u[len] = 0;
+  size_t l = len;
+  #define ENDS(x) (l >= sizeof(x) - 1 && !strcmp(u + l - (sizeof(x) - 1), x))
+  int hit = ENDS("_KEY") || ENDS("_TOKEN") || ENDS("_SECRET") ||
+            ENDS("_PASSWORD") || ENDS("_PASS") || strstr(u, "APIKEY") ||
+            strstr(u, "API_KEY") || strstr(u, "ACCESS_TOKEN");
+  #undef ENDS
+  return hit;
+}
+
+static void secrets_refresh_locked(time_t now) {
+  for (int i = 0; i < g_nsec; i++) free(g_sec[i]);
+  g_nsec = 0;
+  for (char **e = environ; e && *e && g_nsec < SECRET_MAX; e++) {
+    const char *eq = strchr(*e, '=');
+    if (!eq || !secret_name(*e, (size_t)(eq - *e))) continue;
+    size_t vl = strlen(eq + 1);
+    if (vl < 12) continue;
+    char *v = strdup(eq + 1);
+    if (!v) continue;
+    g_sec[g_nsec] = v; g_sec_len[g_nsec] = vl; g_nsec++;
+  }
+  g_sec_at = now;
+}
+
+/* A malloc'd copy of `v` with every secret value replaced, or NULL when `v`
+ * holds none (the common case, which costs one strstr per secret). Caller
+ * holds g_sec_mu. */
+static char *secrets_scrub_locked(const char *v) {
+  if (!v || !*v || g_nsec == 0) return NULL;
+  char *cur = NULL;
+  for (int i = 0; i < g_nsec; i++) {
+    const char *src = cur ? cur : v;
+    if (!strstr(src, g_sec[i])) continue;
+    size_t n = 0, kl = g_sec_len[i];
+    for (const char *p = strstr(src, g_sec[i]); p; p = strstr(p + kl, g_sec[i])) n++;
+    static const char RED[] = "[redacted]";
+    size_t ol = strlen(src) - n * kl + n * (sizeof RED - 1);
+    char *o = malloc(ol + 1), *w = o;
+    if (!o) continue;
+    const char *r = src;
+    for (const char *p = strstr(r, g_sec[i]); p; p = strstr(r, g_sec[i])) {
+      memcpy(w, r, (size_t)(p - r)); w += p - r;
+      memcpy(w, RED, sizeof RED - 1); w += sizeof RED - 1;
+      r = p + kl;
+    }
+    strcpy(w, r);
+    free(cur);
+    cur = o;
+  }
+  return cur;
+}
+
+static int emit_raw(struct intel_sink *self, const intel_item *it);
 static int emit(struct intel_sink *self, const intel_item *it) {
+  pthread_mutex_lock(&g_sec_mu);
+  time_t now = time(NULL);
+  if (now - g_sec_at >= 60) secrets_refresh_locked(now);
+  if (g_nsec == 0) { pthread_mutex_unlock(&g_sec_mu); return emit_raw(self, it); }
+  intel_item c = *it;
+  const char **f[] = { &c.uid, &c.remote_key, &c.title, &c.body, &c.summary,
+                       &c.link, &c.author, &c.properties_json, &c.tags_json,
+                       &c.geometry_geojson };
+  enum { NF = (int)(sizeof f / sizeof f[0]) };
+  char *own[NF] = {0};
+  int any = 0;
+  for (int i = 0; i < NF; i++) {
+    own[i] = secrets_scrub_locked(*f[i]);
+    if (own[i]) { *f[i] = own[i]; any = 1; }
+  }
+  pthread_mutex_unlock(&g_sec_mu);
+  int rc = emit_raw(self, any ? &c : it);
+  for (int i = 0; i < NF; i++) free(own[i]);
+  return rc;
+}
+
+/* Test hook: forget the cached secret set so the next emit re-reads the
+ * environment (tests set a key and emit within the same second). */
+void intel_secrets_reset(void) {
+  pthread_mutex_lock(&g_sec_mu);
+  g_sec_at = 0;
+  pthread_mutex_unlock(&g_sec_mu);
+}
+
+static int emit_raw(struct intel_sink *self, const intel_item *it) {
   sink_state *st = self->ctx;
   sqlite3 *h = st->db->h;
   /* Statements belong to a connection; a sink re-pointed at another handle

@@ -33,7 +33,7 @@
 
 #define FSS_BASE "https://opendata.fcc.gov/resource/acbv-jbb4.json"
 #define PAGE_SIZE 5000
-#define PAGES 4   /* 2026-11-07: $select=count(*) 469 → 1 page */
+#define PAGES 4  /* exhaustive-ok: page ceiling; a stop on a full page or a failed later page files a collector-truncation-notice — 2026-11-07: $select=count(*) 469 → 1 page */
 
 /* Socrata numbers arrive as strings, sometimes with thousands separators and
  * unit suffixes. Strip ',' then strtod. Returns 1 on success. */

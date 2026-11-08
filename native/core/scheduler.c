@@ -134,6 +134,10 @@ static void fetch_log_set_bytes(db_handle *db, long flid, unsigned long long byt
 void sched_fetch_log_set_bytes(db_handle *db, long flid, unsigned long long bytes) {
   fetch_log_set_bytes(db, flid, bytes);
 }
+static void fetch_log_set_stored(db_handle *db, long flid, long stored, int exact);
+void sched_fetch_log_set_stored(db_handle *db, long flid, long stored, int exact) {
+  fetch_log_set_stored(db, flid, stored, exact);
+}
 static void fetch_log_set_stored(db_handle *db, long flid, long stored,
                                  int exact) {
   if (!db || !db->h || flid < 0 || stored < 0) return;
@@ -296,6 +300,18 @@ long sched_row_interval(const sched_state *st, const source_def *d) {
     long ov = source_interval_for(d->id);
     if (ov > 0) return ov;
   }
+  /* The cadence policy is about COLLECTING: how often the fleet asks its
+   * upstreams. A maintenance pod (`_` collector — the embedding backfill, the
+   * WAL checkpoint, anomaly triage, collector repair, translation, the vector
+   * indexers) asks no upstream, and the compiled default (global 6 h) was
+   * applied to it all the same: embedding-backfill went from every 120 s to
+   * every 6 h (~1.44 M rows a day to 8,000, with stories, novelty and semantic
+   * alerts riding its hook just as late), the WAL checkpoint from 300 s to
+   * 6 h, triage from 60 s to four times a day (audit 2026-11-07). A pod runs
+   * at its own declared cadence; an explicit per-source override above still
+   * reaches it. */
+  if (d->collector && d->collector[0] == '_')
+    return sched_state_base(st, d->update_interval_sec, d->adaptive_interval);
   return cadence_apply(sched_state_base(st, d->update_interval_sec, d->adaptive_interval));
 }
 
@@ -535,6 +551,15 @@ static void sched_state_record(db_handle *db, const source_def *d,
  * only the seed writes. records_count is the DISTINCT uids this run stored
  * (the run line's second number), falling back to emits when the sink could
  * not count. last_success moves only on a successful run. */
+static void sources_row_record(db_handle *db, const char *id, const char *status,
+                               long records, long duration_ms, const char *why);
+/* The pivot path's copy of the sources-row update (core/osint_dispatch.c):
+ * without it every entity pivot that ever ran read "pending (never ran)" and
+ * records_count 0 on the Sources page and in /api/status (audit 2026-11-07). */
+void sched_sources_row_record(db_handle *db, const char *id, const char *status,
+                              long records, long duration_ms, const char *why) {
+  sources_row_record(db, id, status, records, duration_ms, why);
+}
 static void sources_row_record(db_handle *db, const char *id, const char *status,
                                long records, long duration_ms, const char *why) {
   int ok = status && !strcmp(status, "ok");
