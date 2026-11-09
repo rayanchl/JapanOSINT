@@ -1036,6 +1036,10 @@ static const hp_source T[] = {
     .array_path = "items", .title_keys = "name", .id_keys = "num",
     .detail_url = "https://x.test/hd/{v}", .detail_key = "num",
     .interval = 3600, .record_type = "t-deephdr", .free_tier = 1, .description = "d" },
+  /* A detail hop on a row that declares NO id_keys (37f). */
+  { .id = "T_DEEP_NOID", .name = "detail hop, no id_keys", .url = "https://x.test/hn",
+    .array_path = "items", .detail_url = "https://x.test/hnd/{v}", .detail_key = "num",
+    .interval = 3600, .record_type = "t-deepnoid", .free_tier = 1, .description = "d" },
   /* A CSV row whose detail hop is keyed on a column. */
   { .id = "T_CSV_DEEP", .name = "csv with a detail hop", .url = "https://x.test/cd.csv",
     .mode = HP_CSV, .title_keys = "name", .id_keys = "id",
@@ -3511,6 +3515,46 @@ int main(void) {
   ok(strstr(g_cap[0].props, "\"detail.kind\":\"profile\"") != NULL &&
      strstr(g_cap[1].props, "detail body is not JSON") != NULL,
      "37c: JSON merges; an HTML detail body is stamped, not passed off as empty");
+
+  /* 37e. Two leading UTF-8 BOMs (a theme and a plugin each emitting one):
+   * cJSON skips one, so the body read as non-JSON every run. */
+  fx_reset();
+  fx_add("/hl", 200, "\xEF\xBB\xBF\xEF\xBB\xBF{\"items\":[{\"name\":\"P\",\"num\":\"9\"}]}");
+  fx_add("/hd/", 200, "{\"role\":\"registered\"}");
+  setenv("HP_TEST_DKEY", "s3cret", 1);
+  rc = run_source("T_DEEP_HDR", "");
+  unsetenv("HP_TEST_DKEY");
+  ok(rc == 0 && g_ncap == 1,
+     "37e: a body behind two BOMs parses and its record is emitted");
+
+  /* 37f. Identity comes from the LIST record, before the hop. The detail
+   * carries an `id` the list record lacks; hp_flat_get's last-segment match
+   * used to key the record on detail.id when the hop ran and on its title when
+   * the budget ran out — two uids for one record across runs. */
+  fx_reset();
+  fx_add("/hnd/", 200, "{\"id\":\"D1\",\"role\":\"registered\"}");
+  fx_add("/hn", 200, "{\"items\":[{\"name\":\"P\",\"num\":\"9\"}]}");
+  rc = run_source("T_DEEP_NOID", "");
+  ok(rc == 0 && g_ncap == 1 && strstr(g_cap[0].props, "\"detail.id\":\"D1\"") &&
+     !strstr(g_cap[0].key, "D1") && strstr(g_cap[0].key, "|P"),
+     "37f: a deepened record keeps the uid its list record gives it, not detail.id");
+
+  /* 37d. Records that point at the SAME detail record share one hop: the
+   * second merges the first's fields from this run's cache and spends no
+   * request and no budget (DHS: thousands of data points per indicator). */
+  fx_reset();
+  fx_add("/cdd/r2", 200, "{\"owner\":\"Bo\"}");
+  fx_add("/cdd/r1", 200, "{\"owner\":\"Al\"}");
+  fx_add("/cd.csv", 200, "id,name\nr1,one\nr1,again\nr2,two\n");
+  rc = run_source("T_CSV_DEEP", "");
+  ok(rc == 0 && cap_count("t-csvdeep", NULL) == 3 && g_ncalls == 3,
+     "37d: two records naming one detail make ONE hop between them (1 list + 2 hops)");
+  ok(g_ncap == 3 && strstr(g_cap[0].props, "\"detail.owner\":\"Al\"") &&
+     strstr(g_cap[1].props, "\"detail.owner\":\"Al\"") &&
+     strstr(g_cap[1].props, "\"detail_url\"") &&
+     strstr(g_cap[2].props, "\"detail.owner\":\"Bo\"") &&
+     !strstr(g_cap[1].props, "_detail_pending"),
+     "37d: the cached record carries the same merged fields, nothing stamped pending");
 
   /* 38. The TIME budget: 3 records, 600 ms per request, a 1 s clock armed at
    * the first hop. Hops 1 and 2 start inside it, the third does not. */

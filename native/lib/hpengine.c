@@ -1157,6 +1157,15 @@ typedef struct {
   int   deep_done, deep_failed, deep_pending;
   int   deep_by_time;       /* the clock, not the count, stopped the hops    */
   double deep_deadline;
+  /* Detail URLs already fetched successfully this run → the fields that hop
+   * merged. Many list records can point at ONE detail record (every DHS data
+   * point names its indicator; 17,451 Ethiopian values share a few hundred
+   * indicator definitions), and the hop used to re-fetch it per record —
+   * spending the run's whole budget on duplicates and stamping the rest
+   * _detail_pending. A cache hit merges the same bytes the fetch would have
+   * and spends no budget. Bounded by HP_DETAIL_CACHE_MAX entries. */
+  cJSON *dcache;
+  int    dcache_n, dcache_hits;
   char *next_url;      /* next-page URL from the response, when declared  */
   /* HTML mode: the href dedupe set spans the WHOLE walk, not one page. Per
    * page it could not tell "page 2 is new content" from "the site ignored our
@@ -1467,6 +1476,44 @@ static int hp_html_kv(const char *html, cJSON *flat) {
  * "detail.". Never silent: a missing id, a failed fetch or an un-reached record
  * is stamped on the record (`_detail_error`, `_detail_pending`) so an absent
  * detail block is distinguishable from a detail block that came back empty. */
+#define HP_DETAIL_CACHE_MAX 4096
+
+/* The detail URL this record's hop would fetch, or NULL (no key on the record,
+ * or a key that is not a scalar). Shared by the cache lookup and the hop. */
+static char *hp_detail_url_for(hp_run_state *st, const cJSON *flat) {
+  const hp_source *s = st->s;
+  if (!s->detail_url || !s->detail_key) return NULL;
+  const cJSON *idv = hp_flat_get(flat, s->detail_key);
+  if (!idv) return NULL;
+  char idbuf[256];
+  if (cJSON_IsString(idv)) snprintf(idbuf, sizeof idbuf, "%s", idv->valuestring);
+  else if (cJSON_IsNumber(idv)) snprintf(idbuf, sizeof idbuf, "%.0f", idv->valuedouble);
+  else return NULL;
+  if (!idbuf[0]) return NULL;
+  int whole = !strncmp(s->detail_url, "{v}", 3) &&
+              (!strncmp(idbuf, "https://", 8) || !strncmp(idbuf, "http://", 7));
+  char *enc = whole ? NULL : hp_urlenc(idbuf);
+  char *url = hp_expand(s->detail_url, st->vars, "v", enc ? enc : idbuf);
+  free(enc);
+  return url;
+}
+
+/* Merge a cached hop into `flat`. Returns 1 on a hit. */
+static int hp_detail_from_cache(hp_run_state *st, cJSON *flat) {
+  if (!st->dcache) return 0;
+  char *url = hp_detail_url_for(st, flat);
+  if (!url) return 0;
+  const cJSON *hit = cJSON_GetObjectItemCaseSensitive(st->dcache, url);
+  free(url);
+  if (!cJSON_IsObject(hit)) return 0;
+  const cJSON *f;
+  cJSON_ArrayForEach(f, hit)
+    if (!cJSON_GetObjectItemCaseSensitive(flat, f->string))
+      cJSON_AddItemToObject(flat, f->string, cJSON_Duplicate(f, 1));
+  st->dcache_hits++;
+  return 1;
+}
+
 static void hp_deepen(hp_run_state *st, cJSON *flat) {
   const hp_source *s = st->s;
   if (!s->detail_url || !s->detail_key) return;
@@ -1481,6 +1528,9 @@ static void hp_deepen(hp_run_state *st, cJSON *flat) {
   else if (cJSON_IsNumber(idv)) snprintf(idbuf, sizeof idbuf, "%.0f", idv->valuedouble);
   else return;
   if (!idbuf[0]) return;
+  /* The keys `flat` held before the hop, so a success can cache exactly what
+   * the hop merged and nothing of the list record. */
+  int before = cJSON_GetArraySize(flat);
 
   /* A template that IS the value ("{v}") hands over a whole URL — GBFS's
    * systems.csv publishes each system's Auto-Discovery URL and the hop is
@@ -1510,12 +1560,33 @@ static void hp_deepen(hp_run_state *st, cJSON *flat) {
     cJSON *doc = s->detail_html_kv ? NULL
                                    : cJSON_Parse(djp ? djp : dutf8 ? dutf8 : hr.body);
     int kv = s->detail_html_kv ? hp_html_kv(dutf8 ? dutf8 : hr.body, flat) : 0;
+    const int parsed = (doc != NULL);
     free(djp);
     free(dutf8);
     if (doc) {
       cJSON *node = s->detail_path ? hp_path(doc, s->detail_path) : doc;
       if (node) hp_flatten(node, "detail", flat, 1);
       cJSON_Delete(doc);
+    }
+    if (parsed || (s->detail_html_kv && kv > 0)) {
+      /* Cache what this hop merged (the members appended after `before`). */
+      if (st->dcache_n < HP_DETAIL_CACHE_MAX) {
+        if (!st->dcache) st->dcache = cJSON_CreateObject();
+        cJSON *entry = st->dcache ? cJSON_CreateObject() : NULL;
+        if (entry) {
+          int i = 0; const cJSON *f;
+          cJSON_ArrayForEach(f, flat) {
+            if (i++ >= before && f->string)
+              cJSON_AddItemToObject(entry, f->string, cJSON_Duplicate(f, 1));
+          }
+          cJSON_AddStringToObject(entry, "detail_url", url);
+          cJSON_AddItemToObject(st->dcache, url, entry);
+          st->dcache_n++;
+        }
+      }
+    }
+    if (parsed) {
+      /* merged above */
     } else if (s->detail_html_kv) {
       if (kv == 0) {
         st->deep_failed++;
@@ -1905,7 +1976,26 @@ static void hp_emit_record(hp_run_state *st, cJSON *flat) {
      * in with `available` overstated what the endpoint offered for this query. */
     if (!hit) { st->filtered++; return; }
   }
-  if (hp_detail_admit(st)) hp_deepen(st, flat);
+  /* THE RECORD'S IDENTITY IS TAKEN HERE, BEFORE THE DETAIL HOP, exactly as
+   * hp_collision_map() takes it (same keys, fallbacks, buffer sizes, modes).
+   * It used to be derived after the merge, so on a row with no id in its list
+   * record a fallback could resolve to a `detail.*` field (hp_flat_get's
+   * last-segment match: `id` finds `detail.id`, a title finds detail.Label):
+   * the uid then depended on whether THIS run's hop budget reached the record
+   * — a deepened run and a pending run stored the same record twice — and the
+   * guard, keyed on the list record, never saw the key the emitter used, so
+   * two DHS indicators sharing a detail label collapsed unguarded (measured
+   * 2026-11-08). The hop still enriches the record and its DISPLAY title. */
+  char idk_t[HP_PICK_TEXT_CAP], idk_r[64], idk_last[64], idkey[HP_PICK_TEXT_CAP];
+  {
+    const char *it_ = hp_pick_s(flat, s->title_keys, TITLE_FALLBACK, idk_t, sizeof idk_t, HP_PICK_DISPLAY);
+    const char *ir_ = hp_pick_s(flat, s->id_keys,    ID_FALLBACK,    idk_r, sizeof idk_r, HP_PICK_IDENT);
+    if (!it_ && !ir_) ir_ = hp_first_scalar(flat, idk_last, sizeof idk_last);
+    snprintf(idkey, sizeof idkey, "%s", ir_ ? ir_ : it_ ? it_ : "");
+  }
+
+  if (hp_detail_from_cache(st, flat)) { /* merged from this run's earlier hop */ }
+  else if (hp_detail_admit(st)) hp_deepen(st, flat);
   else if (s->detail_url)
     /* The row has a second hop but this record was past the per-run detail
      * budget. Say so — an un-fetched detail is not an absent detail — and
@@ -1996,7 +2086,7 @@ static void hp_emit_record(hp_run_state *st, cJSON *flat) {
    *     suffix — see the note there on why the precision, and the choice of a
    *     content hash, matter. */
   char keybuf[320];
-  const char *kpart = rkey ? rkey : title;
+  const char *kpart = idkey[0] ? idkey : rkey ? rkey : title;
   char khash[17];
   if (strlen(kpart) > 120) { hp_fnv_hex(kpart, khash); kpart = khash; }
 
@@ -2283,6 +2373,15 @@ static int hp_body_is_challenge(const char *body) {
 
 static int hp_run_json(hp_run_state *st, const char *body) {
   const hp_source *s = st->s;
+  /* Every leading UTF-8 BOM, not one: cJSON skips a single BOM itself, and a
+   * WordPress install whose theme and a plugin each emit one serves TWO —
+   * JO41_WP_CORP_4012 answered 100 posts behind `EF BB BF EF BB BF` and the
+   * row read "non-JSON body" every run (measured 2026-11-08). */
+  while (body && (unsigned char)body[0] == 0xEF && (unsigned char)body[1] == 0xBB &&
+         (unsigned char)body[2] == 0xBF) {
+    body += 3;
+    while (*body == ' ' || *body == '\t' || *body == '\r' || *body == '\n') body++;
+  }
   char *jsonp = hp_jsonp_inner(body);                  /* see hp_jsonp_inner */
   cJSON *doc = cJSON_Parse(jsonp ? jsonp : body);
   free(jsonp);
@@ -5727,6 +5826,11 @@ dated_restart:;
   free(st.pw_next);
   free(st.probe_fps);
   html_seen_free(&st.hseen);
+  if (st.dcache_hits)
+    fprintf(stderr, "[hp:%s] detail cache: %d record(s) merged from %d hop(s) "
+            "already made this run, no request spent\n", s->id, st.dcache_hits,
+            st.dcache_n);
+  cJSON_Delete(st.dcache); st.dcache = NULL;
   if (0) {
 date_step_back:
     /* The first request for a dated row found no data for that day: a

@@ -150,9 +150,14 @@ static const hp_source HP3B36_UK[] = {
     .record_type = "govuk-content",
     .tags = "\"uk\",\"government\",\"search\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.gov.uk/api/search.json?q={q}&count=50",
+    /* 2026-11-09: count=50 under page_size = 100 asked start=0, then 100,
+     * 200 … — records 50-99 of every hundred were never requested. count=100
+     * is honoured (q=toyota: 100 then 100 distinct links of total 305). Keyed
+     * on `link` as its 47 GOV.UK siblings are; `description` is free text and
+     * can repeat across pages (two notices sharing one boilerplate summary). */
+    .url = "https://www.gov.uk/api/search.json?q={q}&count=100&start=0",
     .array_path = "results",
-    .id_keys = "description",
+    .id_keys = "link",
     .page_param = "start",
     .page_size = 100,
     .page_zero_based = 1,

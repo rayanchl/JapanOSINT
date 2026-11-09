@@ -19,6 +19,7 @@ static const hp_source T[] = {
     .description = "MHRA monthly drug safety bulletins - product-level warnings, restrictions and label changes (e.g. botulinum toxin type A iatrogenic botulism warning). Title, link, summary, first_published_at; Content API detail hop returns the full article with the affected products and the regulatory action taken. NOTE: country should read GB.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "health-record", .tags = "\"us\",\"health\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://www.gov.uk/api/search.json?filter_format=drug_safety_update&count=100&order=public_timestamp&fields=title,link,description,first_published_at",
+    .id_keys = "link",   /* 2026-11-09: as its siblings; a GOV.UK search result is one page, its link */
     .array_path = "results",
     .detail_url = "https://www.gov.uk/api/content{v}", .detail_key = "link",
     .page_param = "start",
@@ -33,6 +34,7 @@ static const hp_source T[] = {
     .description = "MHRA device safety information and national patient safety alerts, e.g. devices supplied without valid UKCA/CE conformity marking ordered removed from use. Per row: title with alert reference (DSI/2026/007), alert_type, issued_date, medical specialism. Content API detail hop returns the full alert naming the manufacturer, affected models and required action. NOTE: country should read GB.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "health-record", .tags = "\"us\",\"health\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://www.gov.uk/api/search.json?filter_format=medical_safety_alert&count=100&order=public_timestamp&fields=title,link,description,alert_type,issued_date,medical_specialism",
+    .id_keys = "link",   /* 2026-11-09: as its siblings; a GOV.UK search result is one page, its link */
     .array_path = "results",
     .detail_url = "https://www.gov.uk/api/content{v}", .detail_key = "link",
     .page_param = "start",

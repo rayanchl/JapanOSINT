@@ -7,9 +7,17 @@
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
 
-VJSON(dhs_data_bf, "dhs-data-bf", "DHS Program indicator data - Burkina Faso", "DHS Program indicator data - Burkina Faso",
+/* 2026-11-09: DHS answered 100 of its declared RecordCount (Uganda 20,391) a
+ * run, and keyed on VJSON's title fallback — the Indicator label, shared by
+ * every survey, sex and region breakdown of that indicator. Measured:
+ * perpage=5000 is honoured, page=2 answers the next 5,000, and DataId is
+ * distinct on every record (5,000 of 5,000 per page; 150,718 = RecordCount
+ * summed over eight countries). `page=1` is bound so lib/jsonlist.c advances
+ * it against the declared RecordCount; keyed on DataId. */
+VJSON_KEYED(dhs_data_bf, "dhs-data-bf", "DHS Program indicator data - Burkina Faso", "DHS Program indicator data - Burkina Faso",
   "bf_health", "health",
-  "https://api.dhsprogram.com/rest/dhs/data?countryIds=BF&f=json&perpage=100",
+  "https://api.dhsprogram.com/rest/dhs/data?countryIds=BF&f=json&perpage=5000&page=1",
   "data",
   "en", "[\"bf\",\"health\",\"batch17\",\"high-penetrancy\"]", 43200,
-  "DHS observations for Burkina Faso: indicator label, value, precision, survey id and year.");
+  "DHS observations for Burkina Faso: indicator label, value, precision, survey id and year.",
+  "DataId");

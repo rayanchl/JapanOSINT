@@ -121,8 +121,16 @@ static const hp_source HP3_CORP[] = {
     .record_type = "derivatives-position",
     .tags = "\"finance\",\"derivatives\",\"cftc\",\"commodities\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://publicreporting.cftc.gov/resource/6dca-aqww.json?$limit=200&$order=:id",
-    .interval = 900,
+    /* 2026-11-09: as its two siblings in hp3b19_finance.c read the same host.
+     * It made ONE request, every 15 minutes, for the 200 OLDEST of 291,909
+     * rows (report weeks 1986-01-15 .. 2026-11-03) — a weekly series — and
+     * keyed on a fallback. Now: $select=*,:id + id_keys :id (Socrata serves
+     * its row id only when asked), $offset paging over a cycle, 6-hourly. */
+    .url = "https://publicreporting.cftc.gov/resource/6dca-aqww.json?$limit=500&$order=:id&$select=*,:id",
+    .id_keys = ":id",
+    .page_param = "$offset", .page_size = 500, .page_start = 0,
+    .page_resume = 1,
+    .interval = 21600,
     .description = "Weekly Commitments of Traders data: open interest in each "
       "futures market broken down by commercial hedgers, managed money "
       "and other reportable traders, long and short. The positioning of "

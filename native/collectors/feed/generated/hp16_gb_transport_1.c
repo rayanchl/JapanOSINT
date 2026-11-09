@@ -48,7 +48,7 @@ static const hp_source T[] = {
     .name = "TfL stop point detail",
     .collector = "gb_transport", .category = "transport",
     .description = "One station/interchange: naptanId, hubNaptanCode, stopType, all modes, every line calling there, lineGroup and lineModeGroups, children stops (platforms, entrances, bus stands) and additionalProperties (zone, WiFi, toilets, accessibility).  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
-    .record_type = "transport-record", .tags = "\"gb\",\"transport\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = ".en",
+    .record_type = "transport-record", .tags = "\"gb\",\"transport\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://api.tfl.gov.uk/StopPoint/940GZZLUVIC",
     .array_path = ".",
     .detail_url = "https://api.tfl.gov.uk/StopPoint/{v}/Arrivals", .detail_key = "naptanId",

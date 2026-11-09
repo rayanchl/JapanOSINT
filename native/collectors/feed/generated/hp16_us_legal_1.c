@@ -19,6 +19,7 @@ static const hp_source T[] = {
     .description = "2,573 Competition and Markets Authority cases (mergers, cartels, market investigations, consumer enforcement). Per row: title naming the parties, link, description of the transaction/conduct, case_type, case_state (open/closed), opened_date, closed_date, market_sector. Detail hop via the GOV.UK Content API returns the full case page including every published document (decision notices, provisional findings, undertakings, penalty notices) with dates and file URLs. NOTE: country should read GB.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://www.gov.uk/api/search.json?filter_format=cma_case&count=100&order=public_timestamp&fields=title,link,description,case_type,case_state,opened_date,closed_date,market_sector",
+    .id_keys = "link",   /* 2026-11-09: as its siblings; a GOV.UK search result is one page, its link */
     .array_path = "results",
     .detail_url = "https://www.gov.uk/api/content{v}", .detail_key = "link",
     .page_param = "start",
@@ -33,6 +34,7 @@ static const hp_source T[] = {
     .description = "Employment Tribunal judgments, title carries claimant v respondent employer and case number (e.g. 2600557/2024), plus decision categories and decision date. Detail hop via the Content API yields the full decision page with the downloadable judgment documents. Names employers found liable for discrimination, unfair dismissal, whistleblowing detriment. NOTE: country should read GB.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://www.gov.uk/api/search.json?filter_format=employment_tribunal_decision&count=100&order=public_timestamp&fields=title,link,description,tribunal_decision_categories,tribunal_decision_decision_date",
+    .id_keys = "link",   /* 2026-11-09: as its siblings; a GOV.UK search result is one page, its link */
     .array_path = "results",
     .detail_url = "https://www.gov.uk/api/content{v}", .detail_key = "link",
     .page_param = "start",
@@ -47,6 +49,7 @@ static const hp_source T[] = {
     .description = "Upper Tribunal Tax and Chancery decisions - HMRC v taxpayer, financial-services regulatory references, VAT and avoidance-scheme litigation. Neutral citation, parties, category and decision date; Content API detail hop returns the full judgment. NOTE: country should read GB.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://www.gov.uk/api/search.json?filter_format=tax_tribunal_decision&count=100&order=public_timestamp&fields=title,link,description,tribunal_decision_category,tribunal_decision_decision_date",
+    .id_keys = "link",   /* 2026-11-09: as its siblings; a GOV.UK search result is one page, its link */
     .array_path = "results",
     .detail_url = "https://www.gov.uk/api/content{v}", .detail_key = "link",
     .page_param = "start",
@@ -61,6 +64,7 @@ static const hp_source T[] = {
     .description = "Upper Tribunal AAC decisions with neutral citation ([2026] UKUT 276 (AAC)), parties, subject categories, decision date and the judges. Content API detail hop returns the full decision document. NOTE: country should read GB.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://www.gov.uk/api/search.json?filter_format=utaac_decision&count=100&order=public_timestamp&fields=title,link,description,tribunal_decision_categories,tribunal_decision_decision_date,tribunal_decision_judges",
+    .id_keys = "link",   /* 2026-11-09: as its siblings; a GOV.UK search result is one page, its link */
     .array_path = "results",
     .detail_url = "https://www.gov.uk/api/content{v}", .detail_key = "link",
     .page_param = "start",

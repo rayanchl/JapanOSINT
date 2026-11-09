@@ -319,6 +319,9 @@ long jo_declared_total(const cJSON *doc, long page_records,
      * it). */
     "resultSetSize", "PagingInfo.Total", "page_metadata.total",
     "page_metadata.count", "numberOfRecords",
+    /* The DHS Program API: `RecordCount: 20391` beside `RecordsReturned`
+     * (this page) and `TotalPages` (2026-11-09). */
+    "RecordCount",
     NULL };
   for (int i = 0; KEYS[i]; i++) {
     const cJSON *v = pw_dotted(doc, KEYS[i]);

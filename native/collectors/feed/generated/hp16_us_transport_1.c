@@ -49,6 +49,7 @@ static const hp_source T[] = {
      * the next run is disclosed by the run line's UID-COLLISION, not by a
      * notice; it is NOT a key defect, so do not widen id_keys for it. */
     .url = "https://www.gov.uk/api/search.json?filter_format=maib_report&count=100&order=-public_timestamp&fields=title,link,description,date_of_occurrence,vessel_type",
+    .id_keys = "link",   /* 2026-11-09: as its siblings; a GOV.UK search result is one page, its link */
     .array_path = "results",
     .detail_url = "https://www.gov.uk/api/content{v}", .detail_key = "link",
     .page_walk = 1,
@@ -62,6 +63,7 @@ static const hp_source T[] = {
     /* count=100, newest first, measured 2026-10-20: 604 reports in 7 pages,
      * the whole register every run (see the MAIB row above). */
     .url = "https://www.gov.uk/api/search.json?filter_format=raib_report&count=100&order=-public_timestamp&fields=title,link,description,date_of_occurrence,railway_type",
+    .id_keys = "link",   /* 2026-11-09: as its siblings; a GOV.UK search result is one page, its link */
     .array_path = "results",
     .detail_url = "https://www.gov.uk/api/content{v}", .detail_key = "link",
     .page_walk = 1,
