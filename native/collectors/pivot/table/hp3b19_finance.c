@@ -29,6 +29,10 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap03_R",
     .interval = 86400,
+    /* 2026-11-09: no id_keys, so the uid fell back to title `CompanyName`
+     * (367 distinct). One live read: 367 records, 367 distinct whole,
+     * `SecuritiesCompanyCode` distinct on 367. */
+    .id_keys = "SecuritiesCompanyCode",
     .description = "Every company quoted on Taiwan emerging stock board with its "
       "securities code, full and abbreviated Chinese name, unified "
       "business number, registered address, industry code, chairman, "
@@ -45,6 +49,11 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap02_O",
     .interval = 86400,
+    /* 2026-11-09: no id_keys, so the uid fell back to title `CompanyName`
+     * (619 distinct). One live read: 952 records, 952 distinct whole,
+     * `SecuritiesCompanyCode+大股東名稱` distinct on 952 (SecuritiesCompanyCode
+     * alone 619). */
+    .id_keys = "SecuritiesCompanyCode+大股東名稱",
     .description = "The name of every shareholder holding above 10 percent of any "
       "TPEx-listed company, keyed to the issuer securities code and "
       "name. This is a beneficial-ownership disclosure in primary form "
@@ -86,6 +95,12 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap12_O",
     .interval = 21600,
+    /* 2026-11-09: no id_keys, so the uid fell back to title `CompanyName` (1
+     * distinct). One live read: 16 records, 16 distinct whole,
+     * `SecuritiesCompanyCode+姓名+有效轉讓期間` distinct on 16 (SecuritiesCompanyCode
+     * alone 1). One company today; the period separates a later filing by the
+     * same person. */
+    .id_keys = "SecuritiesCompanyCode+姓名+有效轉讓期間",
     .description = "Taiwanese insiders must declare a share transfer before making "
       "it. Each record names the issuer, the declarant and his "
       "relationship to the company, the intended method of transfer and "
@@ -101,6 +116,11 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap22_O",
     .interval = 21600,
+    /* 2026-11-09: no id_keys, so the uid fell back to title `CompanyName` (18
+     * distinct). One live read: 20 records, 20 distinct whole,
+     * `SecuritiesCompanyCode+發函日期` distinct on 20 (SecuritiesCompanyCode
+     * alone 18). */
+    .id_keys = "SecuritiesCompanyCode+發函日期",
     .description = "Sanctions imposed by Taiwan Financial Supervisory Commission on "
       "TPEx-listed issuers and securities firms with the letter date, "
       "the issuer code and name, the conduct found and the penalty. A "
@@ -116,6 +136,11 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap23_O",
     .interval = 21600,
+    /* 2026-11-09: no id_keys, so the uid fell back to title `CompanyName` (16
+     * distinct). One live read: 19 records, 19 distinct whole,
+     * `SecuritiesCompanyCode+發函日期` distinct on 19 (SecuritiesCompanyCode
+     * alone 16). */
+    .id_keys = "SecuritiesCompanyCode+發函日期",
     .description = "Companies found to have violated the information-filing, "
       "material-information or press-conference rules, with the letter "
       "date, issuer code, the specific failure and the sanction. "
@@ -130,6 +155,11 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap24_O",
     .interval = 21600,
+    /* 2026-11-09: no id_keys, so the uid fell back to title `CompanyName` (19
+     * distinct). One live read: 19 records, 19 distinct whole,
+     * `SecuritiesCompanyCode+經營權異動日期` distinct on 19 (SecuritiesCompanyCode
+     * alone 19). */
+    .id_keys = "SecuritiesCompanyCode+經營權異動日期",
     .description = "Issuers that have undergone a change of control, with the date "
       "it occurred and a narrative of how the board was replaced. A "
       "control change followed by a change of business scope is the "
@@ -144,6 +174,11 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap25_O",
     .interval = 21600,
+    /* 2026-11-09: no id_keys, so the uid fell back to title `CompanyName` (13
+     * distinct). One live read: 20 records, 20 distinct whole,
+     * `SecuritiesCompanyCode+年度+季別` distinct on 20 (SecuritiesCompanyCode
+     * alone 13). 序號 is a row sequence number, not an identity. */
+    .id_keys = "SecuritiesCompanyCode+年度+季別",
     .description = "TPEx issuers that have materially changed what they do, with the "
       "year and quarter, the issuer code and name and the narrative "
       "explanation of the change. Read against the control-change file "
@@ -159,6 +194,10 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap09_O",
     .interval = 604800,
+    /* 2026-11-09: no id_keys, so the uid fell back to title `CompanyName` (9
+     * distinct). One live read: 9 records, 9 distinct whole, `CompanyName`
+     * distinct on 9. The feed publishes no company code; unchanged uid. */
+    .id_keys = "CompanyName",
     .description = "TPEx companies ranked by the share of director and supervisor "
       "holdings that has been pledged, banded at 90, 80 and 70 percent. "
       "A board that has pledged nearly all of its own stock has already "
@@ -173,6 +212,10 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap33_O",
     .interval = 604800,
+    /* 2026-11-09: no id_keys, so the uid fell back to title `CompanyName`
+     * (897 distinct). One live read: 897 records, 897 distinct whole,
+     * `SecuritiesCompanyCode` distinct on 897. */
+    .id_keys = "SecuritiesCompanyCode",
     .description = "For every TPEx issuer, the named chairman, the named general "
       "manager and an explicit flag for whether they are the same "
       "person together with the company stated justification. Combined "
@@ -187,6 +230,10 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap29_A_O",
     .interval = 604800,
+    /* 2026-11-09: no id_keys, so the uid fell back to title `CompanyName`
+     * (851 distinct). One live read: 851 records, 851 distinct whole,
+     * `SecuritiesCompanyCode` distinct on 851. */
+    .id_keys = "SecuritiesCompanyCode",
     .description = "Board remuneration for every TPEx company by industry and "
       "issuer, with the amounts paid across reporting years and the "
       "ratio of board pay to earnings. Pay that rises while earnings "
@@ -200,6 +247,10 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.tpex.org.tw/openapi/v1/tpex_gisa_company",
     .interval = 86400,
+    /* 2026-11-09: no id_keys, so the uid fell back to title `CompanyName`
+     * (144 distinct). One live read: 144 records, 144 distinct whole,
+     * `SecuritiesCompanyCode` distinct on 144. */
+    .id_keys = "SecuritiesCompanyCode",
     .description = "Companies registered on Taiwan GISA board, the pre-public tier "
       "for small and start-up issuers, with the assigned code, company "
       "name and registration date. GISA registration is the earliest "
@@ -214,6 +265,10 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.tpex.org.tw/openapi/v1/tpex_esb_applicant_companies",
     .interval = 21600,
+    /* 2026-11-09: no id_keys, so the uid fell back to title `CompanyName` (39
+     * distinct). One live read: 39 records, 39 distinct whole,
+     * `SecuritiesCompanyCode` distinct on 39. */
+    .id_keys = "SecuritiesCompanyCode",
     .description = "Every pending TPEx listing application with the applicant "
       "securities code and name, the chairman, the capital at the time "
       "of application, the screening-committee date, the approval date "
@@ -229,6 +284,11 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.tpex.org.tw/openapi/v1/tpex_esb_recommended_dealer",
     .interval = 86400,
+    /* 2026-11-09: no id_keys, so the uid fell back to title `CompanyName`
+     * (367 distinct). One live read: 1133 records, 1133 distinct whole,
+     * `SecuritiesCompanyCode+DealerCode` distinct on 1133
+     * (SecuritiesCompanyCode alone 367). */
+    .id_keys = "SecuritiesCompanyCode+DealerCode",
     .description = "Which securities firms sponsor which emerging-board issuer, with "
       "the issuer code and name, the recommendation number and the "
       "dealer code and name. The sponsor is legally responsible for the "
@@ -243,6 +303,11 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.tpex.org.tw/openapi/v1/tpex_international_bond_issue_investor",
     .interval = 86400,
+    /* 2026-11-09: no id_keys, so the uid fell back to first scalar `Date`,
+     * identical on every record, so every uid was a content hash and a
+     * revised record landed as a new row. One live read: 7 records, 7
+     * distinct whole, `BondCode` distinct on 7. */
+    .id_keys = "BondCode",
     .title_keys = "ShortName",
     .description = "Formosa bonds and other international bonds listed in Taipei, "
       "each with its bond code, short name, issuer, issue and maturity "
@@ -258,6 +323,11 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.tpex.org.tw/openapi/v1/bond_ISSBD1_data",
     .interval = 86400,
+    /* 2026-11-09: no id_keys, so the uid fell back to first scalar `Date`,
+     * identical on every record, so every uid was a content hash and a
+     * revised record landed as a new row. One live read: 198 records, 198
+     * distinct whole, `BondCode` distinct on 198. */
+    .id_keys = "BondCode",
     .title_keys = "ShortName",
     .description = "The full issuance register for Taiwan central government bonds "
       "with issuer code and name, bond code, type, series and tranche, "
@@ -273,6 +343,13 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.tpex.org.tw/openapi/v1/bond_ISSBD5_data",
     .interval = 86400,
+    /* 2026-11-09: no id_keys, so the uid fell back to first scalar `Date`,
+     * identical on every record, so every uid was a content hash and a
+     * revised record landed as a new row. One live read: 424 records, 424
+     * distinct whole, `IssuerCode+SeriesNumber+TrancheNumber` distinct on 424
+     * (IssuerCode alone 339). BondCode is EMPTY on 24 private placements (400
+     * distinct), so it cannot be the key. */
+    .id_keys = "IssuerCode+SeriesNumber+TrancheNumber",
     .title_keys = "ShortName",
     .description = "Every convertible or exchangeable corporate bond issued in "
       "Taiwan with the issuer code and name, bond code and type, series "
@@ -288,6 +365,10 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.tpex.org.tw/openapi/v1/tpex_warrant_issue",
     .interval = 86400,
+    /* 2026-11-09: no id_keys, so the uid fell back to id fallback `Code`
+     * (12654 distinct). One live read: 12654 records, 12654 distinct whole,
+     * `Code` distinct on 12654. Unchanged uid (the fallback found Code). */
+    .id_keys = "Code",
     .description = "Every warrant listed on TPEx with its code and name, listing and "
       "expiry dates, the underlying stock code and name, the issuing "
       "securities firm, strike, ratio and issued units. Warrant "
@@ -302,6 +383,11 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap01",
     .interval = 604800,
+    /* 2026-11-09: no id_keys, so the uid fell back to first scalar `出表日期`,
+     * identical on every record, so every uid was a content hash and a
+     * revised record landed as a new row. One live read: 4 records, 4
+     * distinct whole, `職位` distinct on 4. Four job-title rows. */
+    .id_keys = "職位",
     .title_keys = "驗證人員-模型管理",
     .description = "Headcount across Taiwanese securities firms by licensed role, "
       "covering brokerage, derivatives sales, internal audit, margin "
@@ -317,6 +403,11 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.tpex.org.tw/openapi/v1/t187ap46_O_9",
     .interval = 604800,
+    /* 2026-11-09: no id_keys, so the uid fell back to first scalar `出表日期`,
+     * identical on every record, so every uid was a content hash and a
+     * revised record landed as a new row. One live read: 886 records, 886
+     * distinct whole, `公司代號+報告年度` distinct on 886 (公司代號 alone 886). */
+    .id_keys = "公司代號+報告年度",
     .title_keys = "公司名稱",
     .description = "Every TPEx issuer functional-committee disclosure for the "
       "reporting year with committee seats, independent-director "
@@ -332,6 +423,11 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://openapi.twse.com.tw/v1/opendata/t187ap45_L",
     .interval = 21600,
+    /* 2026-11-09: no id_keys, so the uid fell back to first scalar `出表日期`,
+     * identical on every record, so every uid was a content hash and a
+     * revised record landed as a new row. One live read: 1248 records, 1248
+     * distinct whole, `公司代號+股利所屬期間+期別` distinct on 1248 (公司代號 alone 1116). */
+    .id_keys = "公司代號+股利所屬期間+期別",
     .title_keys = "本期淨利(淨損)(元)",
     .description = "Dividend decisions of every TWSE-listed company with the issuer "
       "code and name, the stage the decision has reached, the dividend "
@@ -347,6 +443,11 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://openapi.twse.com.tw/v1/opendata/t187ap47_L",
     .interval = 86400,
+    /* 2026-11-09: no id_keys, so the uid fell back to first scalar `出表日期`,
+     * identical on every record, so every uid was a content hash and a
+     * revised record landed as a new row. One live read: 276 records, 276
+     * distinct whole, `基金代號` distinct on 276. */
+    .id_keys = "基金代號",
     .title_keys = "發行單位數/轉換數",
     .description = "Every listed fund and ETF with its fund code, abbreviated and "
       "full Chinese name, fund type and the manager behind it. The fund "
@@ -361,6 +462,11 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://openapi.twse.com.tw/v1/opendata/t187ap05_P",
     .interval = 86400,
+    /* 2026-11-09: no id_keys, so the uid fell back to first scalar `出表日期`,
+     * identical on every record, so every uid was a content hash and a
+     * revised record landed as a new row. One live read: 302 records, 302
+     * distinct whole, `公司代號+資料年月` distinct on 302 (公司代號 alone 302). */
+    .id_keys = "公司代號+資料年月",
     .title_keys = "公司名稱",
     .description = "Monthly operating revenue for every public company in Taiwan, "
       "listed or not, with the company code and name, industry, this "
@@ -393,6 +499,13 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://openapi.twse.com.tw/v1/exchangeReport/TWTAWU",
     .interval = 3600,
+    /* 2026-11-09: no id_keys, so the uid fell back to id fallback `Number` (1
+     * distinct). One live read: 1 records, 1 distinct whole,
+     * `Code+TradingHaltDate+TradingHaltTime` distinct on 1 (Code alone 1).
+     * The fallback was `Number`, the row's POSITION, so halt #1 overwrote the
+     * last halt #1. One record live today: unique by meaning, not by
+     * measurement. */
+    .id_keys = "Code+TradingHaltDate+TradingHaltTime",
     .description = "Stocks currently halted on the Taiwan Stock Exchange with the "
       "code, name, the date and time trading was halted and the date "
       "and time it is due to resume. A halt is the exchange saying in "
@@ -407,6 +520,10 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://openapi.twse.com.tw/v1/exchangeReport/TWT85U",
     .interval = 86400,
+    /* 2026-11-09: no id_keys, so the uid fell back to id fallback `Code` (10
+     * distinct). One live read: 10 records, 10 distinct whole, `Code`
+     * distinct on 10. Unchanged uid (the fallback found Code). */
+    .id_keys = "Code",
     .description = "Listed securities moved off continuous trading into periodic "
       "call auction, by code and name. Being moved to call auction is "
       "the exchange formal statement that a stock price formation is "
@@ -421,6 +538,10 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://openapi.twse.com.tw/v1/fund/MI_QFIIS_sort_20",
     .interval = 86400,
+    /* 2026-11-09: no id_keys, so the uid fell back to id fallback `Code` (20
+     * distinct). One live read: 20 records, 20 distinct whole, `Code`
+     * distinct on 20. Unchanged uid (the fallback found Code). */
+    .id_keys = "Code",
     .description = "The twenty TWSE stocks with the highest foreign and "
       "mainland-Chinese ownership, each with the issued share count, "
       "shares still available to foreigners, shares held, the held "
@@ -436,6 +557,10 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://openapi.twse.com.tw/v1/exchangeReport/MI_MARGN",
     .interval = 21600,
+    /* 2026-11-09: no id_keys, so the uid fell back to first scalar `股票代號`
+     * (1306 distinct). One live read: 1306 records, 1306 distinct whole,
+     * `股票代號` distinct on 1306. Unchanged uid (it was the first scalar). */
+    .id_keys = "股票代號",
     .description = "Per-stock margin purchase, margin sale, cash redemption, "
       "previous and current margin balance, the margin ceiling and the "
       "equivalent short-sale figures. Leverage concentrated in one name "
@@ -465,6 +590,11 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://openapi.twse.com.tw/v1/ETFReport/ETFRank",
     .interval = 604800,
+    /* 2026-11-09: no id_keys, so the uid fell back to first scalar `No` (20
+     * distinct). One live read: 20 records, 20 distinct whole, `No` distinct
+     * on 20. Each record is a RANK pairing two independent top-20 lists, so
+     * the rank is the identity; unchanged uid. */
+    .id_keys = "No",
     .description = "Monthly ranking of the stocks and ETFs held through regular "
       "retail savings plans, with each security code and name and the "
       "number of accounts holding it. This is one of the few public "
@@ -478,6 +608,11 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://openapi.twse.com.tw/v1/opendata/t187ap46_L_18",
     .interval = 604800,
+    /* 2026-11-09: no id_keys, so the uid fell back to first scalar `出表日期`,
+     * identical on every record, so every uid was a content hash and a
+     * revised record landed as a new row. One live read: 1077 records, 1077
+     * distinct whole, `公司代號+報告年度` distinct on 1077 (公司代號 alone 1077). */
+    .id_keys = "公司代號+報告年度",
     .title_keys = "公司名稱",
     .description = "The shareholding and control section of the ESG summary for "
       "every TWSE issuer, including a link to the filed document "
@@ -492,6 +627,11 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://openapi.twse.com.tw/v1/opendata/t187ap46_L_19",
     .interval = 604800,
+    /* 2026-11-09: no id_keys, so the uid fell back to first scalar `出表日期`,
+     * identical on every record, so every uid was a content hash and a
+     * revised record landed as a new row. One live read: 822 records, 822
+     * distinct whole, `公司代號+報告年度` distinct on 822 (公司代號 alone 822). */
+    .id_keys = "公司代號+報告年度",
     .title_keys = "公司名稱",
     .description = "Each TWSE issuer stated risk-management policy for material "
       "events, in its own words, keyed to the issuer code, name and "
@@ -1587,6 +1727,11 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.tpex.org.tw/openapi/v1/tpex_trading_warning_information",
     .interval = 21600,
+    /* 2026-11-09: no id_keys, so the uid fell back to title `CompanyName` (43
+     * distinct). One live read: 50 records, 50 distinct whole,
+     * `Date+SecuritiesCompanyCode` distinct on 50 (Date alone 2). Date is the
+     * notice date here (2 values), not a file stamp. */
+    .id_keys = "Date+SecuritiesCompanyCode",
     .description = "Stocks the exchange has publicly flagged for abnormal trading, "
       "with the issuer code and name and the exact quantitative "
       "criterion that was breached, such as a cumulative price rise "
@@ -1602,6 +1747,10 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.tpex.org.tw/openapi/v1/tpex_margin_trading_margin_used",
     .interval = 21600,
+    /* 2026-11-09: no id_keys, so the uid fell back to title `CompanyName` (20
+     * distinct). One live read: 20 records, 20 distinct whole,
+     * `SecuritiesCompanyCode` distinct on 20. */
+    .id_keys = "SecuritiesCompanyCode",
     .description = "TPEx stocks ranked by how much of their permitted margin "
       "capacity is already used, with the issuer code, name and the "
       "utilisation percentage. A stock at 98 percent of its margin "
@@ -1617,6 +1766,10 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.tpex.org.tw/openapi/v1/tpex_3insti_qfii",
     .interval = 86400,
+    /* 2026-11-09: no id_keys, so the uid fell back to title `CompanyName`
+     * (898 distinct). One live read: 898 records, 898 distinct whole,
+     * `SecuritiesCompanyCode` distinct on 898. */
+    .id_keys = "SecuritiesCompanyCode",
     .description = "Every TPEx issuer ranked by combined foreign and "
       "mainland-Chinese shareholding, with issued shares, shares still "
       "available for foreign investment, shares held and the held "
@@ -1632,6 +1785,10 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap31_O",
     .interval = 604800,
+    /* 2026-11-09: no id_keys, so the uid fell back to title `CompanyName`
+     * (896 distinct). One live read: 896 records, 896 distinct whole,
+     * `SecuritiesCompanyCode` distinct on 896. */
+    .id_keys = "SecuritiesCompanyCode",
     .description = "For each TPEx issuer, whether it has established an audit "
       "committee and who issued the review report on the current "
       "financial statements. Whether the accounts were approved by a "
@@ -1671,6 +1828,11 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap35_O",
     .interval = 604800,
+    /* 2026-11-09: no id_keys, so the uid fell back to title `CompanyName`
+     * (896 distinct). One live read: 899 records, 899 distinct whole,
+     * `SecuritiesCompanyCode+召開股東會日期` distinct on 899 (SecuritiesCompanyCode
+     * alone 896). */
+    .id_keys = "SecuritiesCompanyCode+召開股東會日期",
     .description = "Every TPEx company general meeting at which a shareholder "
       "exercised the statutory right to put a proposal, with the "
       "meeting date and what happened to the proposal. Shareholder "
@@ -1686,6 +1848,11 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap08_O",
     .interval = 604800,
+    /* 2026-11-09: no id_keys, so the uid fell back to first scalar `出表日期`,
+     * identical on every record, so every uid was a content hash and a
+     * revised record landed as a new row. One live read: 15 records, 15
+     * distinct whole, `公司代號` distinct on 15. */
+    .id_keys = "公司代號",
     .title_keys = "已發行股份總額",
     .description = "TPEx companies whose directors or supervisors hold fewer shares "
       "than Taiwanese law requires, with the total issued shares, the "
@@ -1701,6 +1868,11 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.tpex.org.tw/openapi/v1/tpex_gisa_financing_history",
     .interval = 86400,
+    /* 2026-11-09: no id_keys, so the uid fell back to title `CompanyName` (3
+     * distinct). One live read: 3 records, 3 distinct whole,
+     * `SecuritiesCompanyCode+現金增資期別` distinct on 3 (SecuritiesCompanyCode
+     * alone 3). */
+    .id_keys = "SecuritiesCompanyCode+現金增資期別",
     .description = "Each capital raise completed through the GISA fundraising "
       "system, with the company code and name, the tranche, the class "
       "of new shares issued and the declared use of proceeds. Declared "

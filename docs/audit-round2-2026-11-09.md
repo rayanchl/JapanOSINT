@@ -47,7 +47,7 @@ one carrying this file.
 | row(s) | before | after |
 | --- | --- | --- |
 | `UK_LORDS_REGISTER_INTERESTS` | 20 a run (API caps a page at 20; `Skip` stepped 100; keys named a `value.` wrapper the records lack) | **4,169 of 4,169**, 210 requests, daily |
-| 19 DHS Program rows (9 hp, 10 VJSON) | 100 of RecordCount, keyed on the indicator label | `perpage=5000`, paged, keyed on `DataId`: Uganda **20,391/20,391**, Côte d'Ivoire **12,711/12,711** |
+| 19 DHS Program rows (9 hp, 10 VJSON) | 100 of RecordCount each (1,900 a pass), keyed on the indicator label | `perpage=5000`, paged, keyed on `DataId`: **333,097 a pass, stored = emitted on all 19** (Senegal 38,088, Rwanda 24,848, Uganda 20,391 …) |
 | `eu-emodnet-ha-desalination` | 11 of 3,911 merged at page seams (`properties.id` is the plant) | one request, **3,911/3,911** |
 | `us-socrata-discovery-seattle` | `order=createdAt` ties: 2 datasets served twice, 2 never | `order=dataset_id`, **696/696** |
 | `us-usaspending-agency-program-activity` | 100 of 456 | **456/456** |
@@ -57,7 +57,8 @@ one carrying this file.
 | 6 d-portal transaction rows | title fallback | the 8-part composite their siblings carry |
 | `CFTC_SWAPS_REPORT` | the oldest 200 of 291,909, every 15 minutes | its siblings' `:id` keyset over a cycle, 6-hourly |
 | `co-dnp-proyectos-sgr`, `lat-co-siri` | fallback key lost 1 and 3 a run | `:id` (35,010 and 10,000 distinct) |
-| 56 Tokyo incident rows | 16 of 1,377 identical-byte incidents merged (2023 parts theft) | `occurrence_rows = 1` |
+| 56 Tokyo incident rows | 16 of 1,377 identical-byte incidents merged (2023 parts theft) | `occurrence_rows = 1`: **1,377/1,377** |
+| `JO41_WP_CORP_4012` | "non-JSON body" every run (two BOMs) | **142/142** |
 | WhatsMyName | one site at a time, up to 15 minutes a pivot | a 12-worker pool, same budget and disclosure |
 
 Plus the round-two agents' changes (in `2f8cd994`): UK Parliament take/skip
