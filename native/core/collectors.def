@@ -493,7 +493,8 @@ COLLECTOR("mg_health", "Madagascar — health", NULL, NULL, "grp_health")  /* 1 
 COLLECTOR("ml_health", "Mali — health", NULL, NULL, "grp_health")  /* 1 src; health 1 */
 COLLECTOR("sn_health", "Senegal — health", NULL, NULL, "grp_health")  /* 1 src; health 1 */
 
-/* Environment, climate & hazards: 36 collector(s), 1398 sources */
+/* Environment, climate & hazards: 37 collector(s), 2982 sources */
+COLLECTOR("hp3b58_arcgis", "arcgis (batch 58)", NULL, NULL, "grp_environment")  /* 1584 src; environment 890, geospatial 694 */
 COLLECTOR("environment", "Environment", "環境", NULL, "grp_environment")  /* 258 src; environment 100, weather 45,  27 */
 COLLECTOR("disaster", "Disaster and hazard", "災害・ハザード", NULL, "grp_environment")  /* 253 src; weather 69, wildfire 66, seismic 46 */
 COLLECTOR("frgov_environnement", "France — environment, nature & maritime affairs", "フランス — 環境・自然・海事", "Hunting and fishing federations, regional nature parks, botanical conservatories, water agencies, maritime directorates, CAUE.", "grp_environment")  /* 185 src; environment 185 */
