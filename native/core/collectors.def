@@ -662,7 +662,8 @@ COLLECTOR("marketplace", "Marketplaces", "マーケットプレイス", NULL, "g
 COLLECTOR("classifieds", "Classifieds", "クラシファイド広告", NULL, "grp_social")  /* 2 src;  2 */
 COLLECTOR("np_people", "Nepal — people", NULL, NULL, "grp_social")  /* 1 src; people 1 */
 
-/* Geospatial & mapping: 17 collector(s), 303 sources */
+/* Geospatial & mapping: 18 collector(s), 1016 sources */
+COLLECTOR("hp3b58_arcgis2", "arcgis2 (batch 58)", NULL, NULL, "grp_geo")  /* 713 src; geospatial 713 */
 COLLECTOR("hp3b25_jpgeospatial", "jpgeospatial (batch 25)", NULL, NULL, "grp_geo")  /* 88 src; government 88 */
 COLLECTOR("hp3b32_jparcgis", "jparcgis (batch 32)", NULL, NULL, "grp_geo")  /* 53 src; infrastructure 18, public-safety 12, environment 8 */
 COLLECTOR("hp3b19_osm", "osm (batch 19)", NULL, NULL, "grp_geo")  /* 33 src; reference 13, transport 8, osint 6 */
