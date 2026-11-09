@@ -10,8 +10,9 @@
 /* 2026-11-07: maximumRecords=1 was the authoring probe's, and from=2026-01-01 a lower bound that grew
  * forever: the row read ONE sitting of 401 (measured 2026-11-07). 10 is the meeting API's
  * maximum (11 is error 19011). The API pages on startRecord/nextRecordPosition and states its
- * size as numberOfRecords, neither of which VJSON reads, so this row is a bounded read that
- * CANNOT disclose its remainder: a 3-day window keeps it inside one page on most days (the
+ * size as numberOfRecords. VJSON cannot advance startRecord, but since 2026-11-09 it reads
+ * numberOfRecords as the declared total (lib/pagewalk.c), so a window holding more than 10
+ * files a truncation notice naming the remainder. A 3-day window keeps it inside one page on most days (the
  * week of 2026-06-01, in session, held 19 sittings, about 8 per 3 days; the last 7 days hold 0,
  * the Diet being out of session). A complete read wants an hp row: page_param=startRecord,
  * page_size=10, page_start=1, array_path=meetingRecord, id_keys=issueID. */

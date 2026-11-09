@@ -7,20 +7,8 @@
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
 
-/* 2026-11-07: this is a newest-first offset walk over a live head, the drift hp3_inat.c
- * measured (page 1 vs page 2 overlapped 10 of 200 there; 0 of 100 here on one draw, 1 of 200 on
- * the threatened row below). iNaturalist's keyset cursor, `order_by=id&order=desc&id_below=<last
- * id>`, is clean for this filter too (100 then 100, overlap 0, every id below the first page's,
- * measured 2026-11-07), but VJSON cannot follow it: jsonlist pages on a server link or a
- * size/cursor pair, never on a value read out of the last record. The fix is to move this row
- * to hp3_inat.c as a keyset row (spec in that file's pattern; not done here). Until then it reads
- * up to 20 pages of 100 of 52,498,208 bird observations, with seams that can repeat or skip. */
-VJSON(geo_inat_birds, "geo-inat-birds", "iNaturalist — bird observations", "iNaturalist — 鳥類の観測",
-  "science", "biodiversity",
-  "https://api.inaturalist.org/v1/observations?per_page=100&taxon_id=3&geo=true&order_by=created_at",
-  "results",
-  "en", "[\"inaturalist\",\"birds\",\"aves\"]", 10800,
-  "Recent bird observations worldwide.");
+/* geo-inat-birds: moved to collectors/pivot/table/hp3_inat.c (2026-11-09) — a
+   keyset row (id_below), as its three siblings already are. */
 
 /* geo-inat-observations-japan: moved to collectors/pivot/table/hp3_inat.c (2026-10-24).
    A descending order over a live head drifts under the walk — page 1
@@ -48,17 +36,8 @@ VJSON(geo_inat_birds, "geo-inat-birds", "iNaturalist — bird observations", "iN
    against page 2 overlapped by 10 of 200 — so it reads down the API's own
    keyset cursor (id_below) instead. The measurement is in that file. */
 
-/* 2026-11-07: the same offset-over-a-live-head walk as geo-inat-birds above (page 1 vs page 2
- * overlap 1 of 200, measured 2026-11-07; no order_by, so iNaturalist's default newest-first).
- * The keyset `order_by=id&order=desc&id_below=<last id>` is clean here (200 then 200, overlap 0;
- * the control frobnicate=7 answers the identical page) and needs an hp row (hp3_inat.c). Reads
- * up to 20 pages of 200 of 17,460,341. */
-VJSON(geo_inaturalist_obs_threatened, "geo-inaturalist-obs-threatened", "iNaturalist — threatened species observations", "iNaturalist — 絶滅危惧種の観測",
-  "science", "biodiversity",
-  "https://api.inaturalist.org/v1/observations?per_page=200&threatened=true&geo=true",
-  "results",
-  "en", "[\"inaturalist\",\"threatened\",\"conservation\"]", 21600,
-  "Observations of taxa listed as threatened.");
+/* geo-inaturalist-obs-threatened: moved to collectors/pivot/table/hp3_inat.c (2026-11-09) — a
+   keyset row (id_below), as its three siblings already are. */
 
 VJSON(geo_jma_himawari_targettimes_jp, "geo-jma-himawari-targettimes-jp", "JMA Himawari imagery timestamps (Japan sector)", "気象庁 ひまわり画像時刻(日本域)",
   "science", "earthobs",

@@ -114,6 +114,55 @@ static const hp_source HP3_INAT[] = {
     .description = "Observations that have reached research grade — community "
       "identification plus date and coordinates — newest first down a keyset "
       "cursor" },
+
+  /* geo-inat-birds and geo-inaturalist-obs-threatened moved here from
+   * vsrc_science_2.c (2026-11-09). Both were newest-first OFFSET walks over a
+   * live head — the drift this file measured — and VJSON cannot follow a
+   * cursor read out of the last record. The keyset is clean for both
+   * filters, measured 2026-11-07: taxon_id=3 100 then 100 and threatened=true
+   * 200 then 200, overlap 0, every id below the first page's, and the control
+   * frobnicate=7 answers the identical page. Page sizes are the rows' own. */
+  { .id = "geo-inat-birds",
+    .name = "iNaturalist — bird observations",
+    .name_ja = "iNaturalist — 鳥類の観測",
+    .category = "biodiversity", .portal = "https://www.inaturalist.org",
+    .record_type = "species-observation",
+    .tags = "\"inaturalist\",\"birds\",\"aves\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://api.inaturalist.org/v1/observations?per_page=100&taxon_id=3&geo=true&order_by=id&order=desc",
+    .array_path = "results",
+    .next_path = "results.$last.id",
+    .next_tmpl = "https://api.inaturalist.org/v1/observations?per_page=100&taxon_id=3&geo=true&order_by=id&order=desc&id_below={v}",
+    .page_max = 20,   /* exhaustive-ok: a recency window over the bird subset, disclosed against the upstream's total */
+    .id_keys = "id",
+    .title_keys = "species_guess,place_guess",
+    .date_keys = "created_at",
+    .latlon_key = "location",
+    .link_keys = "uri",
+    .interval = 10800,
+    .description = "Recent bird observations worldwide (taxon Aves), newest "
+      "first down a keyset cursor" },
+
+  { .id = "geo-inaturalist-obs-threatened",
+    .name = "iNaturalist — threatened species observations",
+    .name_ja = "iNaturalist — 絶滅危惧種の観測",
+    .category = "biodiversity", .portal = "https://www.inaturalist.org",
+    .record_type = "species-observation",
+    .tags = "\"inaturalist\",\"threatened\",\"conservation\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://api.inaturalist.org/v1/observations?per_page=200&threatened=true&geo=true&order_by=id&order=desc",
+    .array_path = "results",
+    .next_path = "results.$last.id",
+    .next_tmpl = "https://api.inaturalist.org/v1/observations?per_page=200&threatened=true&geo=true&order_by=id&order=desc&id_below={v}",
+    .page_max = 20,   /* exhaustive-ok: a recency window over the threatened subset, disclosed against the upstream's total */
+    .id_keys = "id",
+    .title_keys = "species_guess,place_guess",
+    .date_keys = "created_at",
+    .latlon_key = "location",
+    .link_keys = "uri",
+    .interval = 21600,
+    .description = "Observations of taxa listed as threatened, newest first "
+      "down a keyset cursor" },
 };
 
 HP_REGISTER_TABLE(HP3_INAT)

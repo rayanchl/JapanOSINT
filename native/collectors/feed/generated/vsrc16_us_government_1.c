@@ -218,9 +218,14 @@ VJSON(us_usaspending_agency_object_class, "us-usaspending-agency-object-class", 
  * `offset` (offset=100 re-serves page 1), which VJSON cannot advance with `limit`: the row reads
  * 100 of 456 and the walk's repeat guard discloses it. A complete read wants an hp row with
  * page_param=page. */
+/* 2026-11-09: `page=1` bound. limit caps at 100 and offset is ignored, but
+ * `page` pages (page 2 answers different activities, page_metadata.total 456
+ * unchanged), and lib/jsonlist.c advances a page number the URL carries when
+ * the upstream's own total says more remains — page_metadata.total is read
+ * as that total since today (lib/pagewalk.c). */
 VJSON(us_usaspending_agency_program_activity, "us-usaspending-agency-program-activity", "USAspending agency program-activity breakdown", "USAspending agency program-activity breakdown",
   "us_government", "government",
-  "https://api.usaspending.gov/api/v2/agency/012/program_activity/?fiscal_year={date-21m:%Y}&limit=100",
+  "https://api.usaspending.gov/api/v2/agency/012/program_activity/?fiscal_year={date-21m:%Y}&limit=100&page=1",
   "results",
   "en", "[\"us\",\"government\",\"batch16\",\"high-penetrancy\"]", 86400,
   "457 named program activities for USDA FY2024 with obligated_amount and gross_outlay_amount (BENEFITS ISSUED, BELOW 130 OF POVERTY...). The programme dimension, finer than object class and usable as a filter back into award search.");

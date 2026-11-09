@@ -983,6 +983,23 @@ int main(void) {
        "control: a short first page is the end of data, no second request, no notice");
   }
 
+  printf("[13] limit + a bound page number: the page dial, not an invented offset\n");
+  {
+    /* OpenAerialMap and USAspending answer `offset=` with the same page and
+     * honour `page=` (measured 2026-11-09). The walk used to pair `limit` with
+     * an `offset` the URL never named, get page 1 again and stop. */
+    static const char *J2e = "{\"results\":[{\"title\":\"e1\"},{\"title\":\"e2\"}]}";
+    script_t sc = { .body = { J3a, J3b, J2e }, .n_body = 3 };
+    cap_t cap; run_jl("https://x/meta?limit=3&page=1", &sc, &cap);
+    ok(sc.calls == 3 && strstr(sc.seen[1], "page=2") && strstr(sc.seen[2], "page=3") &&
+       !strstr(sc.seen[1], "offset="),
+       "limit+page: a full page advances page, never adds offset");
+    script_t s2 = { .body = { J3a, J3b, J2e }, .n_body = 3 };
+    run_jl("https://x/meta?limit=3&offset=0&page=1", &s2, &cap);
+    ok(s2.calls == 3 && strstr(s2.seen[1], "offset=3") && strstr(s2.seen[1], "page=1"),
+       "control: a URL that names its offset keeps advancing the offset");
+  }
+
   printf(failures ? "\n%d FAILED\n" : "\nall passed\n", failures);
   return failures ? 1 : 0;
 }

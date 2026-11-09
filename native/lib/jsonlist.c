@@ -1562,6 +1562,23 @@ char *jsonlist_next_page(cJSON *doc, const char *page_url, int got,
       if (PAGERS[i].alt_cursor && jsonlist_query_int(page_url, PAGERS[i].alt_cursor) >= 0)
         cursor = PAGERS[i].alt_cursor;
       long cur = jsonlist_query_int(page_url, cursor);
+      /* An OFFSET family whose cursor the URL does not name, on a URL that
+       * already binds a page NUMBER (`limit=100&page=1`): the author wrote the
+       * page dial, so turn that one rather than invent an offset. Measured
+       * 2026-11-09 on both URLs in the tree of this shape, OpenAerialMap and
+       * USAspending: `page=2` answers the next records and `offset=100` is
+       * IGNORED (the same page again), so the walk stopped on the repeat guard
+       * after one page — while lib/pagewalk.c, reading the same OpenAerialMap
+       * URL for its bespoke collector, has always advanced `page`. */
+      if (!PAGERS[i].page_numbered && cur < 0) {
+        static const char *const PNUM[] = { "page", "p", "pageNumber",
+                                            "pagina", "pageNum", NULL };
+        for (int k = 0; PNUM[k] && !next; k++) {
+          long pn = jsonlist_query_int(page_url, PNUM[k]);
+          if (pn >= 1) next = jsonlist_query_set(page_url, PNUM[k], pn + 1);
+        }
+        if (next) break;
+      }
       /* A page NUMBER the URL does not state (or states as 0) is followed by
        * page 1, not 2. This used to be `cur > 0 ? cur + 1 : 2`, which is right
        * for a 1-based API and silently skips page 1 of a 0-based one (Spring
