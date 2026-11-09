@@ -53,9 +53,9 @@ one carrying this file.
 | `us-usaspending-agency-program-activity` | 100 of 456 | **456/456** |
 | `geo-inat-birds`, `geo-inaturalist-obs-threatened` | VJSON offset walks over a live head | hp keyset rows: **2,000/2,000**, **4,000/4,000** |
 | `UK_GOVUK_SEARCH` (pivot) | `count=50` stepped by 100: half of every block never asked | `count=100`, keyed on `link`: **305 of 305** for a test query |
-| 8 GOV.UK search rows | no `id_keys` (39 siblings key on `link`) | `id_keys = "link"` |
-| 6 d-portal transaction rows | title fallback | the 8-part composite their siblings carry |
-| `CFTC_SWAPS_REPORT` | the oldest 200 of 291,909, every 15 minutes | its siblings' `:id` keyset over a cycle, 6-hourly |
+| 8 GOV.UK search rows | no `id_keys` (39 siblings key on `link`) | `id_keys = "link"`: all 8 OK, stored = emitted + notices (MAIB 1,106, RAIB 605, the rest 300) |
+| 6 d-portal transaction rows | title fallback | the 8-part composite their siblings carry. **Unmeasured**: all 11 d-portal rows, siblings included, run past the sweep's kill line (SLOW on 2026-10-25 at 90 s and today at 400 s) |
+| `CFTC_SWAPS_REPORT` | the oldest 200 of 291,909, every 15 minutes | its siblings' `:id` keyset over a cycle, 6-hourly: **10,000/10,000** a run |
 | `co-dnp-proyectos-sgr`, `lat-co-siri` | fallback key lost 1 and 3 a run | `:id` (35,010 and 10,000 distinct) |
 | 56 Tokyo incident rows | 16 of 1,377 identical-byte incidents merged (2023 parts theft) | `occurrence_rows = 1`: **1,377/1,377** |
 | `JO41_WP_CORP_4012` | "non-JSON body" every run (two BOMs) | **142/142** |
