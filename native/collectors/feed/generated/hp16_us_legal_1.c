@@ -303,10 +303,18 @@ static const hp_source T[] = {
     .collector = "us_legal", .category = "legal",
     .description = "Keyless SCOTUS case index. Each case: ID, name, href (api.oyez.org/cases/{term}/{docket}), docket_number, additional_docket_numbers, timeline[] of events (Granted/Argued/Decided with unix dates), lower_court, facts_of_the_case, question, conclusion, term, and labelled issue areas.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "legal-record", .tags = "\"us\",\"legal\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://api.oyez.org/cases?filter=term:2022&labels=true&per_page=100",
-    .detail_url = "https://api.oyez.org/cases/2022/{v}", .detail_key = "docket_number",
+    /* 2026-11-09: the term was frozen at 2022 (decided in June 2023), in
+     * the list URL AND the detail hop. {date-9m:%Y} is the SITTING term: a
+     * term YYYY opens in October YYYY, so it reads 2026 from Oct 2026 to
+     * Sep 2027. Measured that day: term:2026 answers 38 cases (38 distinct
+     * docket numbers), term:2027 an empty array, term:2025 60, term:2022 62;
+     * /cases/2026/25-170 answers HTTP 200 for its case. page_resume is gone:
+     * a term is under 100 cases, one page, so the cycle was a no-op, and the
+     * engine refuses page_resume on a row with a date token anyway. Records
+     * key on Oyez's own case `ID` (fallback list), unique across terms. */
+    .url = "https://api.oyez.org/cases?filter=term:{date-9m:%Y}&labels=true&per_page=100",
+    .detail_url = "https://api.oyez.org/cases/{date-9m:%Y}/{v}", .detail_key = "docket_number",
     .page_walk = 1,
-    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .page_max = 2,   /* 2 x 100 records a run. This row has a detail hop, and the per-run hop budget is 1,000 OR 120 SECONDS — the CLOCK is what binds on a slow host, measured on api.safecast.org, which reached 116 hops of 1,000 before its 120s ran out (2026-10-20). So a run is sized to what can plausibly be deepened rather than to what the API will serve: records past the budget are stamped _detail_pending and, because the budget is spent in page order, never deepened on a later run either. The per-host hop rate is NOT measured for this row — 200 is the family default and the number to revisit if its detail-truncation notice shows pending records. See docs/probe-sized-pages-2026-10-20.md */
     .interval = 43200, .free_tier = 1 },
 

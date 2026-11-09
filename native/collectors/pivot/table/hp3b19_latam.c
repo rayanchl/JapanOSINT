@@ -399,8 +399,19 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "budget-report",
     .tags = "\"brazil\",\"treasury\",\"budget\",\"fiscal\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://apidatalake.tesouro.gov.br/ords/siconfi/tt/rreo?an_exercicio=2023&nr_periodo=1&co_tipo_demonstrativo=RREO&no_anexo=RREO-Anexo%2001&co_esfera=E&id_ente=41&limit=500",
+    /* 2026-11-09: an_exercicio was frozen at 2023 (and nr_periodo at the
+     * year's FIRST bimester). It is now LAST year's 6th bimester, which RREO
+     * reports cumulatively ("até o bimestre"), i.e. the whole executed year,
+     * stepping back a year while it is not yet filed (due end of January):
+     * measured that day, 2025/6 answers 690 rows over two 500-row pages
+     * (500 + 190, hasMore true then false) and 2026/6 `count: 0`. A
+     * bimester-by-bimester read of the CURRENT year cannot be expressed: no
+     * date token renders ceil(month/2). The records carry `exercicio` and
+     * `periodo`, so they now lead id_keys: cod_conta+coluna alone (690 of
+     * 690 within one report) would have overwritten each year with the next. */
+    .url = "https://apidatalake.tesouro.gov.br/ords/siconfi/tt/rreo?an_exercicio={date-1y:%Y}&nr_periodo=6&co_tipo_demonstrativo=RREO&no_anexo=RREO-Anexo%2001&co_esfera=E&id_ente=41&limit=500",
     .array_path = "items",
+    .date_back = 1, .date_step = "y",
     .interval = 21600,
     /* ORDS returns up to `limit` rows per request and defaults that to 5000, so
      * an undeclared limit made every page the WHOLE result set while the offset
@@ -411,7 +422,7 @@ static const hp_source HP3B19_LATAM[] = {
     .page_param = "offset",
     .page_size = 500,
     .page_start = 0,
-    .id_keys = "cod_conta+coluna",
+    .id_keys = "exercicio+periodo+cod_conta+coluna",
     .title_keys = "conta,coluna",
     .description = "Line-by-line budget execution as every Brazilian state and "
       "municipality reported it to the National Treasury: the reporting "
@@ -427,8 +438,14 @@ static const hp_source HP3B19_LATAM[] = {
     .record_type = "annual-account",
     .tags = "\"brazil\",\"treasury\",\"accounts\",\"fiscal\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://apidatalake.tesouro.gov.br/ords/siconfi/tt/dca?an_exercicio=2023&id_ente=41&no_anexo=DCA-Anexo%20I-C&limit=500",
+    /* 2026-11-09: an_exercicio was frozen at 2023. It is now LAST year,
+     * stepping back a year while the annual accounts are not yet filed (due
+     * 30 April): measured that day, 2025 answers 347 rows (hasMore false,
+     * 347 distinct whole) and 2026 `count: 0`. `exercicio` now leads
+     * id_keys (347 of 347), so each year is kept rather than overwritten. */
+    .url = "https://apidatalake.tesouro.gov.br/ords/siconfi/tt/dca?an_exercicio={date-1y:%Y}&id_ente=41&no_anexo=DCA-Anexo%20I-C&limit=500",
     .array_path = "items",
+    .date_back = 1, .date_step = "y",
     .interval = 21600,
     /* Same ORDS defect as BR_SICONFI_RREO above: the undeclared limit made the
      * server return the whole 301-row set on every 25-row offset step. Verified
@@ -437,7 +454,7 @@ static const hp_source HP3B19_LATAM[] = {
     .page_param = "offset",
     .page_size = 500,
     .page_start = 0,
-    .id_keys = "cod_conta+coluna",
+    .id_keys = "exercicio+cod_conta+coluna",
     .title_keys = "conta,coluna",
     .description = "The annual balance-sheet filing every Brazilian federative "
       "entity makes to the National Treasury, by account line: entity "

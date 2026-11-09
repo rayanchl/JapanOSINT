@@ -203,7 +203,15 @@ static const hp_source HP3_GEO[] = {
     .record_type = "near-earth-object",
     .tags = "\"space\",\"asteroid\",\"nasa\",\"orbital\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.nasa.gov/neo/rest/v1/feed?start_date=2024-01-01&end_date=2024-01-07&api_key=DEMO_KEY",
+    /* 2026-11-09: the window was frozen at 2024-01-01..07. It is now TODAY
+     * only, and the one-day width is deliberate: the feed nests records
+     * under one array PER DATE (`near_earth_objects.<date>`), and with no
+     * array_path the engine mines the densest single array, so a 7-day window
+     * stored one day's objects and dropped six. Run every 6 h, each day is
+     * read while it is today. Rendered URL measured: start_date=end_date=
+     * 2026-11-09, HTTP 200, element_count 10, 10 objects in the one array.
+     * Records key on the asteroid's own `id` (fallback list), unchanged. */
+    .url = "https://api.nasa.gov/neo/rest/v1/feed?start_date={date}&end_date={date}&api_key=DEMO_KEY",
     .interval = 21600,
     .description = "Near-Earth objects making close approaches in a date window with "
       "estimated diameter, relative velocity, miss distance and whether "
@@ -266,7 +274,18 @@ static const hp_source HP3_GEO[] = {
     .record_type = "weather-history",
     .tags = "\"weather\",\"history\",\"openmeteo\",\"climate\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://archive-api.open-meteo.com/v1/archive?latitude=35.7&longitude=139.7&start_date=2024-01-01&end_date=2024-01-31&daily=temperature_2m_max,precipitation_sum",
+    /* 2026-11-09: the window was frozen at 2024-01-01..31. It is now the
+     * month-to-date of the day 7 days ago, the same shape as
+     * NASA_POWER_CLIMATE in hp3_energy.c: the archive answered every day to
+     * 2026-11-09 that day, but its newest days are later replaced by the
+     * reanalysis, so the lag lets a month be re-read for a week after it
+     * ends. The response is ONE root record (parallel `daily.*` arrays) whose
+     * fallback key was its first scalar, `latitude` — constant, so each
+     * window overwrote the last; `daily.time.0` (the window's first date,
+     * YYYY-MM-01) keys one record per month. Rendered URL measured:
+     * start_date=2026-11-01&end_date=2026-11-02, HTTP 200, 2 days. */
+    .url = "https://archive-api.open-meteo.com/v1/archive?latitude=35.7&longitude=139.7&start_date={date-7d:%Y-%m-01}&end_date={date-7d}&daily=temperature_2m_max,precipitation_sum",
+    .id_keys = "daily.time.0",
     .interval = 3600,
     .description = "Reanalysis weather for any coordinate back to 1940. Establishing "
       "what the weather actually was at a place and time is a routine "

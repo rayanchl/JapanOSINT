@@ -160,9 +160,18 @@ static const hp_source HP3_CORP[] = {
     .record_type = "trade-flow",
     .tags = "\"trade\",\"customs\",\"comtrade\",\"economy\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://comtradeapi.un.org/public/v1/preview/C/A/HS?reporterCode=392&period=2022&cmdCode=TOTAL&flowCode=X",
+    /* 2026-11-09: period was frozen at 2022. It is now LAST calendar year,
+     * stepping back a year while that year is not yet published: measured
+     * that day, period=2025 answers 219 partner rows, 2024 218, 2022 217, and
+     * 2026 `count: 0` (no records, which is what date_back steps on).
+     * id_keys was `refPeriodId`, which is ONE value over all 219 rows (every
+     * row is the same year), so every uid was a content hash and a revised
+     * figure landed as a new row; refPeriodId+partnerCode is 219 of 219
+     * (also 217/217 for 2022, 218/218 for 2024) and keeps each year apart. */
+    .url = "https://comtradeapi.un.org/public/v1/preview/C/A/HS?reporterCode=392&period={date-1y:%Y}&cmdCode=TOTAL&flowCode=X",
     .array_path = "data",
-    .id_keys = "refPeriodId",
+    .id_keys = "refPeriodId+partnerCode",
+    .date_back = 1, .date_step = "y",
     .interval = 21600,
     .title_keys = "reporterDesc,partnerDesc",
     .description = "Reported merchandise trade between every pair of countries by HS "

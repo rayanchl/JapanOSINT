@@ -460,9 +460,19 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "defence-budget-line",
     .tags = "\"defence\",\"budget\",\"spending\",\"usa\",\"dod\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.usaspending.gov/api/v2/agency/097/sub_agency/?fiscal_year=2025&limit=100",
+    /* 2026-11-09: fiscal_year was frozen at 2025. {date-9m:%Y} is the most
+     * recent CLOSED US fiscal year (FY ends 30 Sep; FY2027 answered HTTP 400
+     * "outside the range of current submissions" on 2026-11-07), and
+     * date_back steps one year back if the year answers no records. The
+     * records carry no year, so date_field stamps the rendered one into id_keys
+     * — without it each year would overwrite the last year's figures.
+     * Measured that day: FY2026 answers 25 sub-agencies, 25 distinct `name`;
+     * the old key `abbreviation` is EMPTY on 4 of the 25 (21 distinct where
+     * present), which sent those 4 to the fallback list. */
+    .url = "https://api.usaspending.gov/api/v2/agency/097/sub_agency/?fiscal_year={date-9m:%Y}&limit=100",
     .array_path = "results",
-    .id_keys = "abbreviation",
+    .date_back = 1, .date_step = "y", .date_field = "fiscal_year",
+    .id_keys = "name+fiscal_year",
     .interval = 21600,
     .page_param = "page",
     .title_keys = "name",
@@ -480,9 +490,18 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "defence-budget-line",
     .tags = "\"defence\",\"budget\",\"appropriation\",\"usa\",\"dod\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.usaspending.gov/api/v2/agency/097/federal_account/?fiscal_year=2025&limit=100",
+    /* 2026-11-09: fiscal_year was frozen at 2025. {date-9m:%Y} is the most
+     * recent CLOSED US fiscal year (FY ends 30 Sep; FY2027 answered HTTP 400
+     * "outside the range of current submissions" on 2026-11-07), and
+     * date_back steps one year back if the year answers no records. The
+     * records carry no year, so date_field stamps the rendered one into id_keys
+     * — without it each year would overwrite the last year's figures.
+     * Measured that day: FY2026 answers 153 federal accounts over two pages
+     * (100 + 53), 153 distinct `code`. */
+    .url = "https://api.usaspending.gov/api/v2/agency/097/federal_account/?fiscal_year={date-9m:%Y}&limit=100",
     .array_path = "results",
-    .id_keys = "code",
+    .date_back = 1, .date_step = "y", .date_field = "fiscal_year",
+    .id_keys = "code+fiscal_year",
     .interval = 21600,
     .page_param = "page",
     .title_keys = "name",
@@ -501,17 +520,31 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "defence-budget-line",
     .tags = "\"defence\",\"budget\",\"program\",\"usa\",\"dod\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    /* `sort=name&order=asc` because this row cycles. The API names its
-     * allowed set in its own error: `Field 'sort' is outside valid values
+    /* `sort=name&order=asc` because this row cycled (until 2026-11-09, see
+     * below; the sort still makes the three-page walk repeatable). The API
+     * names its allowed set in its own error: `Field 'sort' is outside valid values
      * ['name', 'obligated_amount', 'gross_outlay_amount']` — the money
      * columns move between runs, the name does not. Measured 2026-10-24:
      * accepted, honoured, total unchanged at 209 (three pages, so the
      * cycle is a no-op and the sort is what makes it repeatable). */
-    .url = "https://api.usaspending.gov/api/v2/agency/097/program_activity/?fiscal_year=2025&limit=100&sort=name&order=asc",
+    /* 2026-11-09: fiscal_year was frozen at 2025. {date-9m:%Y} is the most
+     * recent CLOSED US fiscal year (FY ends 30 Sep; FY2027 answered HTTP 400
+     * "outside the range of current submissions" on 2026-11-07), and
+     * date_back steps one year back if the year answers no records. The
+     * records carry no year, so date_field stamps the rendered one into id_keys
+     * — without it each year would overwrite the last year's figures.
+     * This is the row date_back is for: measured that day, FY2026 answers
+     * HTTP 200 with `total: 0` (USDA's agency 012 too), so the run steps to
+     * FY2025, which answers 209 activities over three pages (100 + 100 + 9),
+     * 209 distinct `name`. page_resume is gone: three pages complete inside
+     * the ceiling (the 2026-10-24 note above says the cycle was a no-op), and
+     * the engine refuses page_resume on a row with a date token. */
+    .url = "https://api.usaspending.gov/api/v2/agency/097/program_activity/?fiscal_year={date-9m:%Y}&limit=100&sort=name&order=asc",
     .array_path = "results",
+    .date_back = 1, .date_step = "y", .date_field = "fiscal_year",
+    .id_keys = "name+fiscal_year",
     .interval = 21600,
     .page_param = "page",
-    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
     .title_keys = "name",
     .description = "Every program activity the Department of Defense obligated "
       "against in the fiscal year, named as it appears in the budget "
@@ -527,8 +560,18 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "defence-budget-line",
     .tags = "\"defence\",\"budget\",\"objectclass\",\"usa\",\"dod\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.usaspending.gov/api/v2/agency/097/object_class/?fiscal_year=2025&limit=100",
+    /* 2026-11-09: fiscal_year was frozen at 2025. {date-9m:%Y} is the most
+     * recent CLOSED US fiscal year (FY ends 30 Sep; FY2027 answered HTTP 400
+     * "outside the range of current submissions" on 2026-11-07), and
+     * date_back steps one year back if the year answers no records. The
+     * records carry no year, so date_field stamps the rendered one into id_keys
+     * — without it each year would overwrite the last year's figures.
+     * Measured that day: FY2026 answers 35 object classes, 35 distinct `name`
+     * (the records carry no code). */
+    .url = "https://api.usaspending.gov/api/v2/agency/097/object_class/?fiscal_year={date-9m:%Y}&limit=100",
     .array_path = "results",
+    .date_back = 1, .date_step = "y", .date_field = "fiscal_year",
+    .id_keys = "name+fiscal_year",
     .interval = 21600,
     .page_param = "page",
     .title_keys = "name",
@@ -547,8 +590,17 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "defence-budget-line",
     .tags = "\"defence\",\"budget\",\"function\",\"usa\",\"dod\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.usaspending.gov/api/v2/agency/097/budget_function/?fiscal_year=2025",
+    /* 2026-11-09: fiscal_year was frozen at 2025. {date-9m:%Y} is the most
+     * recent CLOSED US fiscal year (FY ends 30 Sep; FY2027 answered HTTP 400
+     * "outside the range of current submissions" on 2026-11-07), and
+     * date_back steps one year back if the year answers no records. The
+     * records carry no year, so date_field stamps the rendered one into id_keys
+     * — without it each year would overwrite the last year's figures.
+     * Measured that day: FY2026 answers 6 budget functions, 6 distinct `name`. */
+    .url = "https://api.usaspending.gov/api/v2/agency/097/budget_function/?fiscal_year={date-9m:%Y}",
     .array_path = "results",
+    .date_back = 1, .date_step = "y", .date_field = "fiscal_year",
+    .id_keys = "name+fiscal_year",
     .interval = 21600,
     .title_keys = "name",
     .description = "Department of Defense obligations grouped by budget function and "
@@ -585,8 +637,18 @@ static const hp_source HP3B19_DEFENCE[] = {
     .record_type = "defence-budget-line",
     .tags = "\"defence\",\"budget\",\"award\",\"usa\",\"dod\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.usaspending.gov/api/v2/agency/097/obligations_by_award_category/?fiscal_year=2025",
+    /* 2026-11-09: fiscal_year was frozen at 2025. {date-9m:%Y} is the most
+     * recent CLOSED US fiscal year (FY ends 30 Sep; FY2027 answered HTTP 400
+     * "outside the range of current submissions" on 2026-11-07), and
+     * date_back steps one year back if the year answers no records. The
+     * records carry no year, so date_field stamps the rendered one into id_keys
+     * — without it each year would overwrite the last year's figures.
+     * Measured that day: FY2026 answers 6 award categories, 6 distinct
+     * `category`. */
+    .url = "https://api.usaspending.gov/api/v2/agency/097/obligations_by_award_category/?fiscal_year={date-9m:%Y}",
     .array_path = "results",
+    .date_back = 1, .date_step = "y", .date_field = "fiscal_year",
+    .id_keys = "category+fiscal_year",
     .interval = 21600,
     .title_keys = "category",
     .description = "Department of Defense obligations split across the award "

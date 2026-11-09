@@ -60,6 +60,8 @@ one carrying this file.
 | 56 Tokyo incident rows | 16 of 1,377 identical-byte incidents merged (2023 parts theft) | `occurrence_rows = 1`: **1,377/1,377** |
 | `JO41_WP_CORP_4012` | "non-JSON body" every run (two BOMs) | **142/142** |
 | WhatsMyName | one site at a time, up to 15 minutes a pivot | a 12-worker pool, same budget and disclosure |
+| 36 TPEx/TWSE rows (`hp3b19_finance.c`) | 14 keyed on a field equal on every record (`出表日期`/`Date`), 17 on `CompanyName`, `TWSE_TRADING_HALTS` on its list POSITION (each new halt #1 overwrote the last) | a key distinct over every record and equal to the distinct-whole-record count, the reporting period included where the record carries one; **all 36 OK** through the engine |
+| 16 frozen-date rows (USAspending ×9, NASA POWER, Open-Meteo, NASA NEO, Comtrade, SICONFI ×2, Oyez) | a fixed year/window re-read for ever | `{date…}` tokens tracking the latest published period, with a step back where a period can be unpublished; a year stamped into records that carry none. **15 OK**; `us-usaspending-agency-overview` then needed its own `fiscal_year` (the default is the empty current year): **16/16** |
 
 Plus the round-two agents' changes (in `2f8cd994`): UK Parliament take/skip
 paging on 18 rows, Environment Canada sorts and windows on 6, UNHCR,
@@ -83,6 +85,12 @@ User-Agent was removed.
   filter); the seam is disclosed.
 
 ## Owner's decisions
+
+* `TWSE_BROKER_LICENCE`, `TWSE_ESG_INFOSEC` and `TWSE_ESG_RISKPOLICY` answer
+  the exchange's 947-byte "FOR SECURITY REASONS" page under every agent
+  while sibling paths answer; `TWSE_PUBCO_BALANCE` returns one record with
+  every field empty. New keys orphan old rows in existing databases
+  (`tools/cleanup_stale_uids.py`).
 
 * **Twin rows**: `gov-ukparl-interests` and `cyb-ukparl-interests` read the
   same URL (recorded in the lint baseline, not hidden); the

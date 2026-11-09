@@ -160,8 +160,20 @@ static const hp_source T[] = {
     .collector = "us_government", .category = "government",
     .description = "157 federal accounts for USDA FY2024, each with code, name, obligated_amount, gross_outlay_amount and children[] listing the treasury account symbols beneath it. The appropriations map of an agency.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "government-record", .tags = "\"us\",\"government\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://api.usaspending.gov/api/v2/agency/012/federal_account/?fiscal_year=2024&limit=100",
+    /* 2026-11-09: fiscal_year was frozen at 2024. {date-9m:%Y} is the most
+     * recent CLOSED fiscal year (FY ends 30 Sep), as the VJSON siblings in
+     * vsrc16_us_government_1.c measured on 2026-11-07. Measured again here:
+     * FY2026 answers 154 federal accounts (100 + 54 over two pages, 154
+     * distinct `code`), FY2027 HTTP 400 "outside the range of current
+     * submissions"; date_back steps a year back if the year answers no
+     * records. The records carry no year, so date_field stamps the
+     * rendered one and id_keys composes it: `code` alone (the fallback the
+     * row keyed on) would have overwritten each year's figures with the next
+     * year's. */
+    .url = "https://api.usaspending.gov/api/v2/agency/012/federal_account/?fiscal_year={date-9m:%Y}&limit=100",
     .array_path = "results",
+    .date_back = 1, .date_step = "y", .date_field = "fiscal_year",
+    .id_keys = "code+fiscal_year",
     .detail_url = "https://api.usaspending.gov/api/v2/federal_accounts/{v}/", .detail_key = "code",
     .page_max = 2,   /* 2 x 100 records a run. This row has a detail hop, and the per-run hop budget is 1,000 OR 120 SECONDS — the CLOCK is what binds on a slow host, measured on api.safecast.org, which reached 116 hops of 1,000 before its 120s ran out (2026-10-20). So a run is sized to what can plausibly be deepened rather than to what the API will serve: records past the budget are stamped _detail_pending and, because the budget is spent in page order, never deepened on a later run either. The per-host hop rate is NOT measured for this row — 200 is the family default and the number to revisit if its detail-truncation notice shows pending records. See docs/probe-sized-pages-2026-10-20.md */
     .page_param = "page",
@@ -173,9 +185,16 @@ static const hp_source T[] = {
     .collector = "us_government", .category = "government",
     .description = "Detail hop off a toptier agency code: fiscal_year, toptier_code, name, abbreviation, agency_id, mission statement, website, congressional_justification_url, subtier_agency_count, and def_codes[] listing every disaster/emergency funding statute the agency draws on (code, public_law, title, govinfo URL, disaster type).  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "government-record", .tags = "\"us\",\"government\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://api.usaspending.gov/api/v2/agency/012/",
+    /* 2026-11-09: no fiscal_year meant the CURRENT one (FY2027), whose
+     * def_codes list is empty, so the row stored nothing (EMITS_NOTHING on
+     * 2026-10-25 and today). The last closed year answers 16 codes (FY2026
+     * and FY2025 both); {date-9m:%Y} is that year, as its siblings read. */
+    .url = "https://api.usaspending.gov/api/v2/agency/012/?fiscal_year={date-9m:%Y}",
     .array_path = "def_codes",
-    .detail_url = "https://api.usaspending.gov/api/v2/agency/{v}/sub_agency/?fiscal_year=2024", .detail_key = "toptier_code",
+    /* 2026-11-09: the detail hop's fiscal_year was frozen at 2024; now the
+     * latest closed FY, as the list rows above. Measured: agency/020
+     * sub_agency FY2026 answers 9 sub-agencies, HTTP 200. */
+    .detail_url = "https://api.usaspending.gov/api/v2/agency/{v}/sub_agency/?fiscal_year={date-9m:%Y}", .detail_key = "toptier_code",
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
@@ -184,9 +203,27 @@ static const hp_source T[] = {
     .collector = "us_government", .category = "government",
     .description = "111 agencies with agency_name, abbreviation, toptier_code, agency_id, current_total_budget_authority_amount, recent_publication_date, discrepancy_count, obligation_difference, unlinked contract/assistance award counts and assurance statement URL. This is the metadata that tells you how trustworthy an agency's reported spending is.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "government-record", .tags = "\"us\",\"government\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://api.usaspending.gov/api/v2/reporting/agencies/overview/?fiscal_year=2024&fiscal_period=9&limit=100",
+    /* 2026-11-09: fiscal_year and fiscal_period were frozen at FY2024 P9.
+     * Both now render from one date — (today + 3 months - 75 days) — whose
+     * year is the fiscal year and whose month is the fiscal period (Oct =
+     * P1). /api/v2/references/submission_periods/ measured the lag: a period
+     * is revealed 29-48 days after it ends (P12 47-67), so 75 days back lands
+     * on a revealed period. Two cases it cannot see, both stepped over by
+     * date_back one MONTH at a time: P1 does not exist (HTTP 422 "below min
+     * '2'"), and a late reveal (an unrevealed P12 is HTTP 400 "outside the
+     * range of current submissions"). Measured that day: rendered FY2026 P11,
+     * 111 agencies (100 + 11 over two pages, 111 distinct toptier_code);
+     * P12 400; P1 422; `fiscal_period=08` (the rendered zero pad) accepted,
+     * 111 rows. The detail hop renders the same date, so it asks the same
+     * period. date_field stamps the fiscal year (the first token), so a
+     * record is one agency per FY, updated each month until P12 is final;
+     * the fallback key, agency_name, would have overwritten every year. */
+    .url = "https://api.usaspending.gov/api/v2/reporting/agencies/overview/?fiscal_year={date+3m:%Y:-75}&fiscal_period={date+3m:%m:-75}&limit=100",
     .array_path = "results",
-    .detail_url = "https://api.usaspending.gov/api/v2/reporting/agencies/{v}/differences/?fiscal_year=2024&fiscal_period=9", .detail_key = "toptier_code",
+    .date_back = 2, .date_step = "m",
+    .date_field = "fiscal_year",
+    .id_keys = "toptier_code+fiscal_year",
+    .detail_url = "https://api.usaspending.gov/api/v2/reporting/agencies/{v}/differences/?fiscal_year={date+3m:%Y:-75}&fiscal_period={date+3m:%m:-75}", .detail_key = "toptier_code",
     .page_max = 2,   /* 2 x 100 records a run. This row has a detail hop, and the per-run hop budget is 1,000 OR 120 SECONDS — the CLOCK is what binds on a slow host, measured on api.safecast.org, which reached 116 hops of 1,000 before its 120s ran out (2026-10-20). So a run is sized to what can plausibly be deepened rather than to what the API will serve: records past the budget are stamped _detail_pending and, because the budget is spent in page order, never deepened on a later run either. The per-host hop rate is NOT measured for this row — 200 is the family default and the number to revisit if its detail-truncation notice shows pending records. See docs/probe-sized-pages-2026-10-20.md */
     .page_param = "page",
     .page_start = 1,
