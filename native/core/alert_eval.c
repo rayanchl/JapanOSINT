@@ -1114,7 +1114,17 @@ static void cursor_write(db_handle *db, const char *ts, long long rid) {
   sqlite3_finalize(s);
 }
 
-int alert_eval_sweep_entities(db_handle *db) {
+/* Run ONE sweep pass and return the number of items re-evaluated. Walks
+ * entity_mentions written since the persisted watermark (alert_eval_cursor)
+ * and re-evaluates each newly-mentioned item against the enabled rules that
+ * carry an entity term, via the same eval path the live ingest uses.
+ *
+ * Idempotent, restart-safe, and bounded: at most ~10k mentions per call, and
+ * the watermark only advances over ranges it actually drained. Swallows every
+ * SQLite error. Safe to call from any thread; safe to call when no watchlist
+ * exists (it just advances the watermark). Exposed separately from the worker
+ * so a CLI/test can drive one deterministic pass. */
+static int alert_eval_sweep_entities(db_handle *db) {
   if (!db || !db->h) return 0;
 
   /* Upper bound of this pass, lagged into the past — see SWEEP_LAG_SEC. */

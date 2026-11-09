@@ -25,9 +25,15 @@ VGEO(geo_asf_sentinel1, "geo-asf-sentinel1", "ASF — Sentinel-1 archive search"
   "en", "[\"sar\",\"sentinel1\",\"asf\",\"insar\"]", 3600,
   "Alaska Satellite Facility SAR search returning GeoJSON scene footprints.");
 
-VGEO(geo_asf_sentinel1_recent, "geo-asf-sentinel1-recent", "ASF — Sentinel-1 acquisitions since August 2026", "ASF — Sentinel-1 最新取得",
+/* 2026-11-07: start was frozen at 2026-08-01, a lower bound that grew forever (3,405,051 products since then,
+ * measured 2026-11-07). ASF answers newest first and maxResults=300 is one request with no
+ * paging and no total in the GeoJSON, so the row reads the newest 300 either way; the 7-hour
+ * window ({ago:25200}: the 6 h system cadence plus slack, ~9,000 products) keeps the query
+ * bounded and the name true. A complete read of the window wants paging ASF's GeoJSON does not
+ * publish; output=count gives the window's size in a separate request. */
+VGEO(geo_asf_sentinel1_recent, "geo-asf-sentinel1-recent", "ASF — Sentinel-1 acquisitions, newest 300", "ASF — Sentinel-1 最新取得",
   "science", "earthobs",
-  "https://api.daac.asf.alaska.edu/services/search/param?platform=SENTINEL-1&start=2026-08-01T00:00:00Z&output=geojson&maxResults=300",
+  "https://api.daac.asf.alaska.edu/services/search/param?platform=SENTINEL-1&start={ago:25200}&output=geojson&maxResults=300",
   "en", "[\"sar\",\"sentinel1\",\"asf\"]", 3600,
   "Recent Sentinel-1 acquisitions, the InSAR change-detection feed.");
 
@@ -402,16 +408,20 @@ VJSON(geo_gbif_datasets, "geo-gbif-datasets", "GBIF — dataset registry", "GBIF
   "en", "[\"gbif\",\"catalog\"]", 86400,
   "Registry of datasets published to GBIF.");
 
+/* 2026-11-07: year was frozen at 2026 and freezes on 2027-01-01; {date:%Y} is the current year (year=2026
+ * answers count 66,408,245 tree-wide, measured 2026-11-07). */
 VJSON(geo_gbif_occ_oceania, "geo-gbif-occ-oceania", "GBIF — Oceania occurrences", "GBIF — オセアニアの記録",
   "science", "biodiversity",
-  "https://api.gbif.org/v1/occurrence/search?hasCoordinate=true&limit=300&continent=OCEANIA&year=2026",
+  "https://api.gbif.org/v1/occurrence/search?hasCoordinate=true&limit=300&continent=OCEANIA&year={date:%Y}",
   "results",
   "en", "[\"gbif\",\"oceania\",\"occurrence\"]", 86400,
   "Georeferenced occurrences across the Pacific, an under-sampled region.");
 
-VJSON(geo_gbif_recent_geo, "geo-gbif-recent-geo", "GBIF — georeferenced occurrences, 2026", "GBIF — 位置情報付き記録(2026年)",
+/* 2026-11-07: year was frozen at 2026 and freezes on 2027-01-01; {date:%Y} is the current year (year=2026
+ * answers count 66,408,245, measured 2026-11-07). The walk reads 20 pages of 300 of that. */
+VJSON(geo_gbif_recent_geo, "geo-gbif-recent-geo", "GBIF — georeferenced occurrences, current year", "GBIF — 位置情報付き記録(当年)",
   "science", "biodiversity",
-  "https://api.gbif.org/v1/occurrence/search?hasCoordinate=true&limit=300&year=2026",
+  "https://api.gbif.org/v1/occurrence/search?hasCoordinate=true&limit=300&year={date:%Y}",
   "results",
   "en", "[\"gbif\",\"biodiversity\",\"occurrence\"]", 21600,
   "Species occurrence records with verified coordinates from the global aggregator.");

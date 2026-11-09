@@ -124,11 +124,6 @@
  * two orders of headroom and still a bound. */
 #define FF_PROBE_MAX_BYTES (1u << 20)
 
-/* Frames one ffmpeg_extract_series() call will ever exec for. A caller asking
- * for 100,000 evenly spaced frames is asking for 100,000 forks; this is an
- * absurdity bound, not a policy. */
-#define FF_MAX_SERIES 512
-
 /* ══════════════════════════════════════════════════════════════════════════
  * Small helpers
  * ══════════════════════════════════════════════════════════════════════════ */
@@ -817,11 +812,16 @@ static void probe_snapshot(int *ff_ok, int *fp_ok) {
 }
 
 int ffmpeg_available(void)  { int a; probe_snapshot(&a, NULL); return a; }
-int ffprobe_available(void) { int b; probe_snapshot(NULL, &b); return b; }
-const char *ffmpeg_version(void)  { int a; probe_snapshot(&a, NULL); return a ? g_ff_ver : NULL; }
-const char *ffprobe_version(void) { int b; probe_snapshot(NULL, &b); return b ? g_fp_ver : NULL; }
+static int ffprobe_available(void) { int b; probe_snapshot(NULL, &b); return b; }
+/* First line of `ffmpeg -version`, e.g. "ffmpeg version 6.1.1 Copyright …".
+ * NULL when ffmpeg is absent or disabled. Static storage, do not free. */
+static const char *ffmpeg_version(void)  { int a; probe_snapshot(&a, NULL); return a ? g_ff_ver : NULL; }
+/* The same three for ffprobe. ffprobe is probed INDEPENDENTLY: a build can ship
+ * one without the other, and reporting "no video metadata" because the frame
+ * extractor is missing would be wrong. */
+static const char *ffprobe_version(void) { int b; probe_snapshot(NULL, &b); return b ? g_fp_ver : NULL; }
 const char *ffmpeg_path(void)  { int a; probe_snapshot(&a, NULL); return a ? g_ff_path : NULL; }
-const char *ffprobe_path(void) { int b; probe_snapshot(NULL, &b); return b ? g_fp_path : NULL; }
+static const char *ffprobe_path(void) { int b; probe_snapshot(NULL, &b); return b ? g_fp_path : NULL; }
 
 /* The gate every entry point opens with. Distinguishing DISABLED from
  * NOT_INSTALLED is not pedantry: one is a configuration an operator chose and
@@ -938,74 +938,6 @@ int ffmpeg_extract_frame(const char *input, double at_sec, int max_width,
                                      out, out_len, err, errcap);
 }
 
-int ffmpeg_extract_series(const char *input, int count, int max_width,
-                          int timeout_ms, ffmpeg_frame_cb cb, void *ctx,
-                          char *err, size_t errcap) {
-  if (err && errcap) err[0] = '\0';
-  if (!cb || count <= 0) {
-    ff_seterr(err, errcap, FFMPEG_ERR_BAD_INPUT, NULL);
-    return FFMPEG_ERR_BAD_INPUT;
-  }
-  if (count > FF_MAX_SERIES) count = FF_MAX_SERIES;
-  char sc[32];
-  const char *wl = NULL;
-  int plan = NJ_NONE;
-  int rc = classify(input, sc, sizeof sc, &wl, &plan);
-  if (rc != FFMPEG_OK) { ff_seterr(err, errcap, rc, input); return rc; }
-  if (timeout_ms <= 0) timeout_ms = cfg_timeout_ms();
-
-  long long deadline = ff_now_ms() + timeout_ms;
-
-  /* The probe is charged to the same budget — a quarter of it, capped at 10s.
-   * "Evenly spaced" is meaningless without a duration, so this is not optional
-   * work that can be skipped when ffprobe is missing. */
-  int pbudget = timeout_ms / 4;
-  if (pbudget > 10000) pbudget = 10000;
-  if (pbudget < 1000) pbudget = 1000;
-
-  ffmpeg_media_info mi;
-  rc = ffmpeg_info(input, pbudget, &mi, err, errcap);
-  if (rc != FFMPEG_OK) return rc;
-  if (!(mi.duration_sec > 0.0)) {
-    ff_seterr(err, errcap, FFMPEG_ERR_NO_DURATION, input);
-    return FFMPEG_ERR_NO_DURATION;
-  }
-
-  int delivered = 0, last_rc = FFMPEG_OK;
-  for (int i = 0; i < count; i++) {
-    long long left = deadline - ff_now_ms();
-    if (left <= 0) break;
-    int remaining = count - i;
-    int per = (int)(left / remaining);
-    if (per < 1000) per = 1000;           /* a 200ms slice cannot decode      */
-
-    /* MIDPOINT of slice i, not its start: sampling at 0 lands on a fade-in or
-     * a black leader on a large fraction of real recordings, and sampling at
-     * `duration` lands past the last frame. */
-    double at = mi.duration_sec * ((double)i + 0.5) / (double)count;
-
-    unsigned char *buf = NULL;
-    size_t len = 0;
-    int frc = ffmpeg_extract_frame_capped(input, at, max_width, per, 0,
-                                          &buf, &len, err, errcap);
-    if (frc != FFMPEG_OK) {
-      /* One unseekable position must not take the whole series down. The reason
-       * is remembered so a series that delivered NOTHING can report why rather
-       * than looking like an empty video. */
-      last_rc = frc;
-      continue;
-    }
-    int stop = cb(i, at, buf, len, ctx);
-    free(buf);
-    delivered++;
-    if (stop) break;
-  }
-
-  if (delivered == 0 && last_rc != FFMPEG_OK) return last_rc;
-  if (err && errcap) err[0] = '\0';
-  return delivered;
-}
-
 /* ══════════════════════════════════════════════════════════════════════════
  * ISO 6709 — where a video says it was shot.
  *
@@ -1061,7 +993,25 @@ static int iso_deg(const char *f, int is_lon, double *out) {
   return 1;
 }
 
-int ffmpeg_parse_iso6709(const char *s, double *lat, double *lon, double *alt) {
+/* ISO 6709 → decimal degrees. Pure, no I/O, re-entrant — and the single most
+ * test-worthy function in this file, because it is the one that decides where a
+ * video says it was shot.
+ *
+ * Accepts every form the wild actually produces:
+ *   "+35.6586+139.7454/"                 iPhone, degrees
+ *   "+35.6586+139.7454+012.345/"         with altitude in metres
+ *   "+3539.5160+13944.7240/"             degrees + decimal minutes
+ *   "+353935.16+1394442.40/"             degrees + minutes + decimal seconds
+ *   "+35.6586+139.7454CRSWGS_84/"        with a CRS suffix
+ *   "35.6586,139.7454"                   the comma form some muxers emit
+ * The DDMM / DDMMSS forms are distinguished from plain degrees by the COUNT OF
+ * DIGITS BEFORE THE DECIMAL POINT (2/4/6 for latitude, 3/5/7 for longitude) —
+ * that is how the standard encodes it, and guessing by magnitude instead gets
+ * "+1394442.40" wrong in a way that puts the pin in the sea.
+ *
+ * `alt` may be NULL. Returns 1 only when both coordinates parsed, are in range
+ * and are not exactly (0,0); 0 otherwise, with the outputs untouched. */
+static int ffmpeg_parse_iso6709(const char *s, double *lat, double *lon, double *alt) {
   if (!s || !lat || !lon) return 0;
   while (*s == ' ' || *s == '\t') s++;
 
@@ -1327,46 +1277,6 @@ int ffmpeg_info(const char *input, int timeout_ms, ffmpeg_media_info *out,
   info_from_root(root, out);
   cJSON_Delete(root);
   return FFMPEG_OK;
-}
-
-/* The normalised block appended to the raw probe document, so no caller has to
- * re-implement the ISO-6709 grammar or the eleven-tag-spellings question. */
-static cJSON *jo_block(const ffmpeg_media_info *mi) {
-  cJSON *jo = cJSON_CreateObject();
-  if (!jo) return NULL;
-  if (mi->duration_sec > 0) cJSON_AddNumberToObject(jo, "duration_sec", mi->duration_sec);
-  else                      cJSON_AddNullToObject(jo, "duration_sec");
-  if (mi->width)  cJSON_AddNumberToObject(jo, "width", mi->width);
-  else            cJSON_AddNullToObject(jo, "width");
-  if (mi->height) cJSON_AddNumberToObject(jo, "height", mi->height);
-  else            cJSON_AddNullToObject(jo, "height");
-  if (mi->fps > 0) cJSON_AddNumberToObject(jo, "fps", mi->fps);
-  else             cJSON_AddNullToObject(jo, "fps");
-  if (mi->bit_rate) cJSON_AddNumberToObject(jo, "bit_rate", (double)mi->bit_rate);
-  else              cJSON_AddNullToObject(jo, "bit_rate");
-  if (mi->video_codec[0]) cJSON_AddStringToObject(jo, "video_codec", mi->video_codec);
-  else                    cJSON_AddNullToObject(jo, "video_codec");
-  if (mi->audio_codec[0]) cJSON_AddStringToObject(jo, "audio_codec", mi->audio_codec);
-  else                    cJSON_AddNullToObject(jo, "audio_codec");
-  if (mi->format_name[0]) cJSON_AddStringToObject(jo, "format_name", mi->format_name);
-  else                    cJSON_AddNullToObject(jo, "format_name");
-  if (mi->creation_time[0]) cJSON_AddStringToObject(jo, "creation_time", mi->creation_time);
-  else                      cJSON_AddNullToObject(jo, "creation_time");
-  if (mi->make[0])  cJSON_AddStringToObject(jo, "make", mi->make);
-  else              cJSON_AddNullToObject(jo, "make");
-  if (mi->model[0]) cJSON_AddStringToObject(jo, "model", mi->model);
-  else              cJSON_AddNullToObject(jo, "model");
-  cJSON_AddBoolToObject(jo, "has_gps", mi->have_gps);
-  if (mi->have_gps) {
-    cJSON_AddNumberToObject(jo, "lat", mi->lat);
-    cJSON_AddNumberToObject(jo, "lon", mi->lon);
-  } else {
-    cJSON_AddNullToObject(jo, "lat");
-    cJSON_AddNullToObject(jo, "lon");
-  }
-  if (mi->have_alt) cJSON_AddNumberToObject(jo, "altitude_m", mi->altitude_m);
-  else              cJSON_AddNullToObject(jo, "altitude_m");
-  return jo;
 }
 
 /* ══════════════════════════════════════════════════════════════════════════

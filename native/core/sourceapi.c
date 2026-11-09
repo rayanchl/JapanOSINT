@@ -17,6 +17,7 @@
 #include "hostgate.h"
 #include "cadence.h"
 #include "source_interval.h"
+#include "scheduler.h"
 #include "../lib/hpengine.h"
 #include "../lib/jocore.h"
 #include "../third_party/cJSON.h"
@@ -458,7 +459,15 @@ static cJSON *health_json(const srow_t *r, const health_t *h) {
 
 /* ── the compact row every list shares ──────────────────────────────────── */
 
-static cJSON *sched_json(const sched_t *r, const char *id, long declared, int adaptive, long long now) {
+/* The scheduler's backoff policy (env-derived, read once). */
+static sched_policy g_sj_pol;
+static pthread_once_t g_sj_pol_once = PTHREAD_ONCE_INIT;
+static void sj_pol_load(void) { sched_policy_load(&g_sj_pol); }
+
+static cJSON *sched_json(const sched_t *r, const source_def *d, long long now) {
+  const char *id = d->id;
+  long declared = d->update_interval_sec;
+  int adaptive = d->adaptive_interval;
   cJSON *o = cJSON_CreateObject();
   cJSON_AddBoolToObject(o, "tracked", r != NULL);
   cJSON_AddNumberToObject(o, "declaredInterval", (double)declared);
@@ -492,14 +501,37 @@ static cJSON *sched_json(const sched_t *r, const char *id, long declared, int ad
    * 21600, next due in 6 h" while the scheduler had already re-planned to one
    * hour, and a never-run row printed "as declared" under the 6 h global
    * default (audit 2026-11-07). */
-  long live = declared <= 0 ? 0 : ov > 0 ? ov : cadence_apply(base);
-  long eff  = live;
-  if (r && r->effective > live && r->failures > 0) eff = r->effective;
+  /* 2026-11-07 review: both halves are now the scheduler's OWN functions,
+   * not a re-derivation beside them — sched_row_interval() (which also knows
+   * that a `_` maintenance pod runs at its declared cadence, outside the
+   * policy) and sched_state_interval(), which is what the due-time loop adds
+   * after a run: the quarantine probe cadence while quarantined, else
+   * max(stored effective, live). The max holds after a SUCCESS too: once an
+   * override is lowered, the interval stored by the last run still governs
+   * until the next run stores the new one. */
+  sched_state st; memset(&st, 0, sizeof st);
+  if (r) {
+    st.consecutive_failures = r->failures;
+    st.consecutive_empties  = r->empties;
+    st.effective_interval   = r->effective;
+    st.backoff_until        = (time_t)r->backoff_until;
+    st.quarantined          = r->quarantined;
+    st.freshness_interval   = r->freshness;
+  }
+  long live = declared <= 0 ? 0 : sched_row_interval(&st, d);
+  long eff  = 0;
+  if (live > 0) {
+    pthread_once(&g_sj_pol_once, sj_pol_load);
+    eff = sched_state_interval(&st, &g_sj_pol, live);
+  }
   if (eff > 0) cJSON_AddNumberToObject(o, "effectiveInterval", (double)eff);
   else cJSON_AddNullToObject(o, "effectiveInterval");
   cJSON_AddStringToObject(o, "effectiveBasis",
                           eff <= 0 ? "on demand"
-                        : eff != live ? "health backoff"
+                        : st.quarantined ? "quarantine probe"
+                        : eff != live ? (st.consecutive_failures > 0
+                                           ? "health backoff"
+                                           : "last run's interval (until the next run)")
                         : ov > 0 ? "override" : "cadence");
   cJSON_AddNumberToObject(o, "consecutiveFailures", r ? r->failures : 0);
   cJSON_AddNumberToObject(o, "consecutiveEmpties", r ? r->empties : 0);
@@ -560,7 +592,7 @@ static cJSON *row_json(const reg_ent *e, const snapshot *s, long long now) {
     cJSON_AddStringToObject(tr, "grade", t->grade);
   } else { cJSON_AddNullToObject(tr, "reliability"); cJSON_AddNullToObject(tr, "grade"); }
   cJSON_AddItemToObject(o, "trust", tr);
-  cJSON_AddItemToObject(o, "sched", sched_json(sc, d->id, d->update_interval_sec, d->adaptive_interval, now));
+  cJSON_AddItemToObject(o, "sched", sched_json(sc, d, now));
   return o;
 }
 
@@ -1456,7 +1488,7 @@ char *sourceapi_detail(db_handle *db, const char *id) {
   const source_trust *t = snap_trust(s, id);
   const agg_t *a = snap_agg(s, id);
 
-  cJSON *schedule = sched_json(sc, d->id, d->update_interval_sec, d->adaptive_interval, now);
+  cJSON *schedule = sched_json(sc, d, now);
   add_str_or_null(schedule, "schedule_mode", r && r->schedule_mode[0] ? r->schedule_mode : NULL);
   cJSON_AddStringToObject(schedule, "kind", e ? e->kind : derive_kind(d));
   cJSON_AddItemToObject(o, "schedule", schedule);

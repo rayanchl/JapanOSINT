@@ -367,18 +367,6 @@
  * Never fails loudly — a failure degrades this module to a no-op. */
 void simhash_ensure_schema(db_handle *db);
 
-/* Pure fingerprint over ALREADY-SEGMENTED text (either argument may be NULL).
- * Returns the 64-bit simhash, or 0 when the document is unclusterable.
- * `out_tokens`, if non-NULL, receives the DISTINCT content-token count, which
- * is what SIMHASH_MIN_TOKENS is compared against. No DB, no allocation,
- * thread-safe. Exposed for tests and for callers that already hold segmented
- * text. */
-uint64_t simhash_text(const char *seg_title, const char *seg_body,
-                      int *out_tokens);
-
-/* Hamming distance between two fingerprints. */
-int simhash_distance(uint64_t a, uint64_t b);
-
 /* THE INGEST HOOK. Fingerprints the item, refreshes its band rows and settles
  * its cluster membership. Call AFTER the ingest transaction has committed
  * (see wiring note 2).

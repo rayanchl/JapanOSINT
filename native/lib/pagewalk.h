@@ -109,8 +109,8 @@ long pw_odata_v2_count(const cJSON *doc);
  * page_records (a count of the page's own records cannot be larger than the
  * page). Pass -1 when the page size is unknown, and bare `count` is not read.
  * JO_TOTAL_TRUST_BARE_COUNT reads it unconditionally — the old jsonlist rule,
- * kept ONLY for jsonlist_declared_total()'s existing callers until they pass a
- * page count. Matching is case-insensitive; a value must be a non-negative
+ * kept for hptest 58c's fixture, which states no page size; production
+ * callers pass the page's record count. Matching is case-insensitive; a value must be a non-negative
  * integer. Why each of those is so: the comment on the definition. */
 #define JO_TOTAL_TRUST_BARE_COUNT (-2L)
 long jo_declared_total(const cJSON *doc, long page_records,

@@ -214,7 +214,10 @@ char *breach_adapter_list(db_handle *db, const char *source_id,
   return js;
 }
 
-char *breach_adapter_reveal_by_uid(db_handle *db, const char *uid) {
+/* Operator-gated reveal: decrypts the leaked secret(s) for a breach uid via
+ * breach_index_lookup(reveal=1) → {found,count,type,breaches:[{breach,secret?}]}.
+ * Requires SECRETS_MASTER_KEY. NULL if not a breach uid / not found. Caller frees. */
+static char *breach_adapter_reveal_by_uid(db_handle *db, const char *uid) {
   if (!db || !db->h || !uid || strncmp(uid, "breach:", 7) != 0) return NULL;
   const char *keyid = uid + 7;
 

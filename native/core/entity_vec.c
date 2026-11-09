@@ -35,7 +35,9 @@ double entity_vec_cos_floor(void) {
   return threshold_get("entity_vec_cos_floor");
 }
 
-char *entity_vec_text(const char *canonical, const char *romaji) {
+/* "canonical (romaji)" — the romaji only when present and different from the
+ * canonical. malloc'd, bounded on a UTF-8 boundary. */
+static char *entity_vec_text(const char *canonical, const char *romaji) {
   if (!canonical) canonical = "";
   size_t n = strlen(canonical) + (romaji ? strlen(romaji) : 0) + 4;
   char *t = malloc(n);

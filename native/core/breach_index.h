@@ -42,6 +42,16 @@ int breach_index_ingest(const char *source_id, const char *path, breach_type typ
                         unsigned long long *rows_in, unsigned long long *rows_new,
                         db_handle *db, int materialize, int dry_run);
 
+/* The same, also reporting `rows_skipped`: lines lib/bigfile.c dropped for
+ * exceeding its line bound (BF_MAXLINE) — never truncated, never read. Those
+ * rows are NOT in rows_in. They used to be dropped in silence (house rule 2,
+ * 2026-11-07); both entry points now log a non-zero count, and the job
+ * status (core/breach_jobs.c) carries it as data. */
+int breach_index_ingest_ex(const char *source_id, const char *path, breach_type type,
+                           unsigned long long *rows_in, unsigned long long *rows_new,
+                           unsigned long long *rows_skipped,
+                           db_handle *db, int materialize, int dry_run);
+
 /* Look up one value. reveal!=0 decrypts leaked plaintext into each breach entry
  * — ONLY after verifying the caller owns the identifier. *out gets a new cJSON
  * {found,count,type,breaches:[{breach,secret?}]} (password: {found,count,pwn_count,

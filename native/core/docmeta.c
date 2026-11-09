@@ -1027,7 +1027,22 @@ static int looks_texty(const unsigned char *b, size_t len) {
   return ctrl * 20 <= n;
 }
 
-const char *docmeta_sniff(const void *buf, size_t len) {
+/* Best-effort type label from the MAGIC BYTES of a buffer, one of:
+ *   "pdf" "docx" "xlsx" "pptx" "zip" "png" "jpeg" "gif"
+ *   "text" "html" "json" "csv" "unknown"
+ * Returns a static string and NEVER NULL — a NULL buffer, a zero length or an
+ * unrecognisable one all yield "unknown".
+ *
+ * Exists so a caller can gate on what a buffer IS rather than on what a client
+ * SAID it is. A Content-Type header is a claim from the other end of a socket;
+ * these are the file's own bytes. Where the two disagree, this is right.
+ *
+ * "docx"/"xlsx"/"pptx" require walking the ZIP central directory (bounded by
+ * DOCMETA_ZIP_MAX_ENTRIES), so this is cheap but not free on ZIP input; every
+ * other answer is decided from at most DOCMETA_SNIFF_WINDOW head bytes.
+ * "text"/"html"/"json"/"csv" are heuristics over that window and are labelled
+ * as heuristics in docmeta_extract()'s output. */
+static const char *docmeta_sniff(const void *buf, size_t len) {
   const unsigned char *b = (const unsigned char *)buf;
   if (!b || len == 0) return "unknown";
 

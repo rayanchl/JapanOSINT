@@ -7,6 +7,14 @@
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
 
+/* 2026-11-07: this is a newest-first offset walk over a live head, the drift hp3_inat.c
+ * measured (page 1 vs page 2 overlapped 10 of 200 there; 0 of 100 here on one draw, 1 of 200 on
+ * the threatened row below). iNaturalist's keyset cursor, `order_by=id&order=desc&id_below=<last
+ * id>`, is clean for this filter too (100 then 100, overlap 0, every id below the first page's,
+ * measured 2026-11-07), but VJSON cannot follow it: jsonlist pages on a server link or a
+ * size/cursor pair, never on a value read out of the last record. The fix is to move this row
+ * to hp3_inat.c as a keyset row (spec in that file's pattern; not done here). Until then it reads
+ * up to 20 pages of 100 of 52,498,208 bird observations, with seams that can repeat or skip. */
 VJSON(geo_inat_birds, "geo-inat-birds", "iNaturalist — bird observations", "iNaturalist — 鳥類の観測",
   "science", "biodiversity",
   "https://api.inaturalist.org/v1/observations?per_page=100&taxon_id=3&geo=true&order_by=created_at",
@@ -40,6 +48,11 @@ VJSON(geo_inat_birds, "geo-inat-birds", "iNaturalist — bird observations", "iN
    against page 2 overlapped by 10 of 200 — so it reads down the API's own
    keyset cursor (id_below) instead. The measurement is in that file. */
 
+/* 2026-11-07: the same offset-over-a-live-head walk as geo-inat-birds above (page 1 vs page 2
+ * overlap 1 of 200, measured 2026-11-07; no order_by, so iNaturalist's default newest-first).
+ * The keyset `order_by=id&order=desc&id_below=<last id>` is clean here (200 then 200, overlap 0;
+ * the control frobnicate=7 answers the identical page) and needs an hp row (hp3_inat.c). Reads
+ * up to 20 pages of 200 of 17,460,341. */
 VJSON(geo_inaturalist_obs_threatened, "geo-inaturalist-obs-threatened", "iNaturalist — threatened species observations", "iNaturalist — 絶滅危惧種の観測",
   "science", "biodiversity",
   "https://api.inaturalist.org/v1/observations?per_page=200&threatened=true&geo=true",
@@ -240,9 +253,15 @@ VJSON(geo_obis_occurrence, "geo-obis-occurrence", "OBIS — marine species occur
   "en", "[\"obis\",\"marine\",\"occurrence\"]", 21600,
   "Ocean Biodiversity Information System occurrence records with coordinates.");
 
-VJSON(geo_obis_occurrence_recent, "geo-obis-occurrence-recent", "OBIS — marine occurrences since 2026", "OBIS — 2026年以降の海洋記録",
+/* 2026-11-07: startdate was frozen at 2026-01-01 (3,321,365 records by 2026-11-07) and the walk read 200
+ * of them in uuid order, an arbitrary slice: OBIS ignores `page` (page=2 re-serves page 1) and
+ * pages only on an `after` keyset VJSON cannot follow. A rolling 30-day eventDate window holds
+ * 4,134 (measured 2026-11-07) and size=10000 is OBIS's maximum (10001 is HTTP 400), so one
+ * request reads the window COMPLETE (11 MB); a window over 10,000 comes back full and the walk
+ * discloses it against `total`. */
+VJSON(geo_obis_occurrence_recent, "geo-obis-occurrence-recent", "OBIS — marine occurrences, last 30 days", "OBIS — 直近30日の海洋記録",
   "science", "biodiversity",
-  "https://api.obis.org/v3/occurrence?size=200&startdate=2026-01-01",
+  "https://api.obis.org/v3/occurrence?size=10000&startdate={date-30d}",
   "results",
   "en", "[\"obis\",\"marine\",\"recent\"]", 21600,
   "Recent marine biodiversity records.");

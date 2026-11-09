@@ -24,9 +24,15 @@ VJSON(us_socrata_discovery_pennsylvania, "us-socrata-discovery-pennsylvania", "C
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"pennsylvania\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on data.pa.gov, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
 
+/* 2026-11-09: order=dataset_id, not createdAt. createdAt has TIES, and the
+ * walk read 696 of resultSetSize 696 with 2 datasets twice (vgcx-wfte,
+ * arai-ggjv) — so 2 others were never served. dataset_id is unique, honoured
+ * (a different first page; `order=frobnicate` is 400) and the total does not
+ * move. This catalogue completes inside the 20-page ceiling, so a total order
+ * reads all of it; the larger catalogues keep createdAt's newest 2,000. */
 VJSON(us_socrata_discovery_seattle, "us-socrata-discovery-seattle", "City of Seattle Open Data — Asset Discovery", "シアトル市 データ資産一覧",
   "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.seattle.gov&search_context=data.seattle.gov&order=createdAt",
+  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=data.seattle.gov&search_context=data.seattle.gov&order=dataset_id",
   "results",
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"seattle\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on data.seattle.gov, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
@@ -289,7 +295,15 @@ VJSON(us_socrata_metadata_washington, "us-socrata-metadata-washington", "Washing
  * sweep's 2-8% per-query losses came from (assets have a unique permalink;
  * the same asset re-served twice upserts onto itself while the one it
  * displaced is never fetched). `order=createdAt` is accepted by the API and
- * makes the walk repeatable (identical pages on re-fetch, 0 overlap). */
+ * makes the walk repeatable (identical pages on re-fetch, 0 overlap).
+ *
+ * 2026-11-07: bare `order=createdAt` is DESCENDING, newest first (Chicago's scoped catalogue:
+ * 2026-10-26 first, `createdAt ASC` answers 2010, the control `order=frobnicate` is HTTP 400).
+ * So these rows read the NEWEST limit x 20 pages (2,000 at limit=100), not the whole match set:
+ * every query measured that day fits (311 service requests 483, arrests 450, building permits
+ * 1,079, school enrollment 934), and one that outgrows it stops at the page ceiling and files
+ * the ceiling's truncation notice. That notice cannot yet name the match set's size, because
+ * the catalogue's `resultSetSize` is not a declared-total spelling (lib/pagewalk.c). */
 VJSON(us_socrata_search_311_requests, "us-socrata-search-311-requests", "Socrata Cross-Portal Search — 311 Service Requests", "Socrata 横断検索 311 service requests",
   "us_state", "government",
   "https://api.us.socrata.com/api/catalog/v1?limit=100&q=311%20service%20requests&order=createdAt",

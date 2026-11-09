@@ -122,6 +122,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     start = atoi(ctx->resume_in + 2);
   if (start < 0 || start >= nroutes) start = 0;
   int ri = -1;
+  int last_ri = start - 1;   /* the last route index whose stops were resolved */
 
   cJSON *r;
   cJSON_ArrayForEach(r, routes) {
@@ -166,12 +167,17 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
       n += emit_route_stops(ctx, sink, route, "outbound",
                             &seen_ids, &seen_count);
       resolved_routes++;
+      last_ri = ri;
     }
   }
   cJSON_Delete(doc);
   seen_free(&seen_ids);
-  int next = start + resolved_routes;
-  if (next >= nroutes) next = 0;
+  /* The index AFTER the last route resolved — not start + resolved_routes,
+   * which lags whenever the slice held a record with no `route` field (it is
+   * skipped above but still occupies an index), so the next run would re-read
+   * the tail of this slice instead of moving on. */
+  int next = last_ri + 1;
+  if (resolved_routes < HK_ROUTES_PER_RUN || next >= nroutes) next = 0;
   if (ctx->resume_out) {
     char tok[32];
     snprintf(tok, sizeof tok, "r=%d", next);
@@ -182,7 +188,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     snprintf(why, sizeof why,
              "stops were resolved for routes %d..%d of %d this run (a cycle; "
              "records count ROUTES whose stops were resolved)",
-             start, start + resolved_routes - 1, nroutes);
+             start, last_ri, nroutes);
     jo_trunc_notice_scoped(sink, "hongkong-citybus-network", "stop-cycle",
                            HK_ROUTES, resolved_routes, nroutes, why,
                            "the next run resolves the next slice; raise "

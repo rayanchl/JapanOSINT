@@ -210,32 +210,6 @@ void search_history_record(db_handle *db, const char *tenant_id,
 char *permalinkapi(const char *method, const char *token, const char *body,
                    int *status);
 
-/* The decoder, exported so any other module (export links, alert
- * notification deep-links, the iOS bridge) reads tokens the same way instead
- * of inventing a second format. Encoding is done by permalinkapi() (POST),
- * which is the only mint point.
- *
- * Canonical state object (all keys optional; decode always emits all of them,
- * using null / [] for absent, so clients get one stable shape):
- *
- *   { "kind":      "intel"|"osint"|"entity"|"breach"|"map" | null,
- *     "params":    {...} | null,                 (search params, ≤SS_PARAMS_MAX)
- *     "map":       {"lat":,"lon":,"zoom":,"bearing":,"pitch":} | null,
- *     "layers":    ["…"],                        (≤32 names, ≤64 chars each)
- *     "time":      {"from":"…","to":"…"} | null, (≤40 chars each)
- *     "entity_id": "…" | null,                   (≤128 chars)
- *     "case_id":   "…" | null }                  (≤128 chars)
- *
- * Wire form is "v1." + base64url(compact JSON with one-letter keys). The
- * version prefix is what lets v2 add fields without a v1 link decoding into
- * a plausible-but-wrong view; an unknown prefix is rejected outright rather
- * than best-effort parsed. The decoder accepts either the long keys above or
- * the short wire keys as input, so a token round-trips byte-stably.
- *
- * permalink_decode: NULL for any malformed, over-long, wrong-version or
- * non-object token. malloc'd; caller frees. */
-char *permalink_decode(const char *token);
-
 #endif
 
 /* ── WIRING (orchestrator: add to core/httpd.c) ──────────────────────────────

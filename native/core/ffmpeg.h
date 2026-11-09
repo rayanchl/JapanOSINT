@@ -308,21 +308,10 @@ const char *ffmpeg_strerror(int rc);
  * iterating cameras. Thread-safe. */
 int ffmpeg_available(void);
 
-/* First line of `ffmpeg -version`, e.g. "ffmpeg version 6.1.1 Copyright …".
- * NULL when ffmpeg is absent or disabled. Static storage, do not free. */
-const char *ffmpeg_version(void);
-
 /* Absolute path of the resolved ffmpeg binary, or NULL. Static storage, do not
  * free. Exposed because an ops/capabilities route wants to show WHICH ffmpeg
  * answered — "available: true" is not much help when two are installed. */
 const char *ffmpeg_path(void);
-
-/* The same three for ffprobe. ffprobe is probed INDEPENDENTLY: a build can ship
- * one without the other, and reporting "no video metadata" because the frame
- * extractor is missing would be wrong. */
-int ffprobe_available(void);
-const char *ffprobe_version(void);
-const char *ffprobe_path(void);
 
 /* ── input validation (pure; no I/O, no spawn) ───────────────────────────── */
 
@@ -378,48 +367,15 @@ int ffmpeg_extract_frame_capped(const char *input, double at_sec, int max_width,
                                 unsigned char **out, size_t *out_len,
                                 char *err, size_t errcap);
 
-/* Called once per extracted frame. `jpeg`/`len` are borrowed for the duration
- * of the call ONLY — copy or write them, do not retain the pointer. Return 0 to
- * continue, non-zero to stop the series cleanly (already-delivered frames
- * count; it is not an error). */
-typedef int (*ffmpeg_frame_cb)(int index, double at_sec,
-                               const unsigned char *jpeg, size_t len,
-                               void *ctx);
-
-/* `count` frames evenly spaced across the media — the timelapse / scene-change
- * path. Frame i is taken at duration*(i+0.5)/count, i.e. at the MIDPOINT of its
- * slice: sampling at 0 lands on a fade-in or a black leader on a large fraction
- * of real recordings, and sampling at `duration` lands past the last frame.
- *
- * Requires a KNOWN DURATION and therefore an ffprobe: a live stream has no
- * "evenly spaced" and asking for it is a caller bug, answered with
- * FFMPEG_ERR_NO_DURATION rather than a guess. Use ffmpeg_extract_frame() with
- * at_sec < 0 for live sources.
- *
- * ONE EXEC PER FRAME, deliberately. A single `-vf fps=…` pass would be cheaper
- * and produces a concatenated MJPEG stream that then has to be split by
- * scanning for frame boundaries; per-frame execs cost more forks and buy exact
- * timestamps, an independent bound on every frame (one unseekable position
- * cannot take the whole series down), and the ability to stop the instant the
- * callback says so. At the batch sizes anything in this product asks for
- * (single digits per item) the fork cost is irrelevant.
- *
- * `timeout_ms` is the budget for the WHOLE call including the probe, not per
- * frame — one number the caller can reason about. It is divided across the
- * frames remaining, with a 1s floor per frame, and the series stops early with
- * whatever it has if the budget runs out.
- *
- * Returns the number of frames DELIVERED to the callback (>= 0), or a negative
- * FFMPEG_ERR_*. A partial series is a success with a smaller number. */
-int ffmpeg_extract_series(const char *input, int count, int max_width,
-                          int timeout_ms, ffmpeg_frame_cb cb, void *ctx,
-                          char *err, size_t errcap);
+/* (ffmpeg_extract_series(), N evenly spaced frames through a callback, had no
+ * caller and was removed 2026-11-07, with its ffmpeg_frame_cb type.) */
 
 /* ── probe / metadata ────────────────────────────────────────────────────── */
 
 /* `ffprobe -show_format -show_streams -print_format json`, parsed and
  * normalised into a struct. (A JSON-returning ffmpeg_probe() that re-served
- * ffprobe's document with a "jo" block had no caller; removed 2026-11-07.) Fixed-size, no allocation, safe on the stack;
+ * ffprobe's document with a "jo" block had no caller; removed 2026-11-07.)
+ * Fixed-size, no allocation, safe on the stack;
  * fully zeroed on entry including on every failure path, so it is safe to read
  * either way. Strings are truncated to fit and always NUL-terminated.
  *
@@ -447,26 +403,6 @@ typedef struct {
  * FFMPEG_ERR_*; `out` is zeroed on entry regardless. */
 int ffmpeg_info(const char *input, int timeout_ms, ffmpeg_media_info *out,
                 char *err, size_t errcap);
-
-/* ISO 6709 → decimal degrees. Pure, no I/O, re-entrant — and the single most
- * test-worthy function in this file, because it is the one that decides where a
- * video says it was shot.
- *
- * Accepts every form the wild actually produces:
- *   "+35.6586+139.7454/"                 iPhone, degrees
- *   "+35.6586+139.7454+012.345/"         with altitude in metres
- *   "+3539.5160+13944.7240/"             degrees + decimal minutes
- *   "+353935.16+1394442.40/"             degrees + minutes + decimal seconds
- *   "+35.6586+139.7454CRSWGS_84/"        with a CRS suffix
- *   "35.6586,139.7454"                   the comma form some muxers emit
- * The DDMM / DDMMSS forms are distinguished from plain degrees by the COUNT OF
- * DIGITS BEFORE THE DECIMAL POINT (2/4/6 for latitude, 3/5/7 for longitude) —
- * that is how the standard encodes it, and guessing by magnitude instead gets
- * "+1394442.40" wrong in a way that puts the pin in the sea.
- *
- * `alt` may be NULL. Returns 1 only when both coordinates parsed, are in range
- * and are not exactly (0,0); 0 otherwise, with the outputs untouched. */
-int ffmpeg_parse_iso6709(const char *s, double *lat, double *lon, double *alt);
 
 /* ── generic seam (see WIRING note 3) ────────────────────────────────────── */
 

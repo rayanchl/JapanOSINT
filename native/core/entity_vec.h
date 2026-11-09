@@ -51,10 +51,6 @@ extern const vecindex_spec entity_vec_spec;
  * when set to a number in [0.01,1], else the default. core/thresholds.h. */
 double entity_vec_cos_floor(void);
 
-/* "canonical (romaji)" — the romaji only when present and different from the
- * canonical. malloc'd, bounded on a UTF-8 boundary. */
-char *entity_vec_text(const char *canonical, const char *romaji);
-
 /* One pod tick on `db` (the caller's own connection). Returns entities
  * embedded this tick, or -1 (reason in entity_vec_meta last_error). 0 and no
  * network when JO_EMBED_URL is unset. */

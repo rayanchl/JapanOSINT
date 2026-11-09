@@ -240,59 +240,119 @@ static int es_emit_file(intel_sink *sink, const char *xml, seen_set *done,
   return n;
 }
 
+/* The host of a URL, into `out`; "" when there is none. */
+static void es_host(const char *u, char *out, size_t cap) {
+  out[0] = 0;
+  const char *p = u ? strstr(u, "://") : NULL;
+  if (!p) return;
+  p += 3;
+  size_t k = strcspn(p, "/?#:");
+  if (k >= cap) k = cap - 1;
+  memcpy(out, p, k); out[k] = 0;
+}
+
+/* THE WATERMARK MUST NEVER PASS AN ENTRY NOT READ (review 2026-11-08). The
+ * walk stops at ES_MAX_FILES or on a refused archive file; storing this run's
+ * head as the watermark then told the next run it had everything back to it,
+ * and the entries between where this run stopped and the old watermark were
+ * never fetched. So the token carries three things:
+ *   w=<epoch>  everything at or after this has been read, CONTIGUOUSLY;
+ *   h=<epoch>  the head this backfill was started from (becomes w when the
+ *              backfill reaches w);
+ *   p=<url>    where an unfinished backfill continues.
+ * A run with a pending backfill continues IT (newer entries wait in the
+ * archive and are read once the backfill completes — delayed, never lost); a
+ * run with none walks from the head down to w. A position on another host is
+ * refused, the rule hpengine and pw_walk_max_resume apply. */
 static int es_run(const source_ctx *ctx, intel_sink *sink) {
   const char *hdrs[] = { "Accept: application/atom+xml, application/xml", NULL };
-  long wm = 0;
-  if (ctx->resume_in && strncmp(ctx->resume_in, "w=", 2) == 0)
-    wm = strtol(ctx->resume_in + 2, NULL, 10);
+  long wm = 0, hold = 0;
+  char *resume_url = NULL;
+  if (ctx->resume_in && *ctx->resume_in) {
+    const char *t = ctx->resume_in;
+    const char *w = strstr(t, "w="), *h = strstr(t, "h="), *pp = strstr(t, "p=");
+    if (w) wm = strtol(w + 2, NULL, 10);
+    if (h) hold = strtol(h + 2, NULL, 10);
+    if (pp) resume_url = strdup(pp + 2);           /* p= is last: the rest is the URL */
+  }
+  char feed_host[256], next_host[256];
+  es_host(ES_FEED, feed_host, sizeof feed_host);
+  if (resume_url) {
+    es_host(resume_url, next_host, sizeof next_host);
+    if (strcmp(next_host, feed_host) != 0) { free(resume_url); resume_url = NULL; hold = 0; }
+  }
+  int backfill = resume_url != NULL;
 
   seen_set done = {0};
-  char *url = strdup(ES_FEED);
-  int n = 0, files = 0, ceiling = 0, cut = 0;
+  char *url = backfill ? resume_url : strdup(ES_FEED);
+  int n = 0, files = 0, ceiling = 0, cut = 0, caught_up = 0, at_start = 0;
   long head_newest = 0, reached = 0;
+  char *stop_next = NULL;                           /* where an unfinished walk continues */
   while (url) {
     char *xml = jo_get_t(ctx, url, hdrs, "es-contratacion-estado", 90000);
     if (!xml) {
-      if (files == 0) {
+      if (files == 0 && !backfill) {
         free(url); seen_free(&done);
         fprintf(stderr, "[es-contratacion-estado] fetch failed\n");
         return jo_fail_rc(jo_last_status(), 0);
       }
       cut = 1;
+      stop_next = url; url = NULL;                  /* retry this file next run */
       break;
     }
     long oldest = 0, newest = 0;
     n += es_emit_file(sink, xml, &done, &oldest, &newest);
     files++;
-    if (files == 1) head_newest = newest;
+    if (files == 1 && !backfill) head_newest = newest;
     if (oldest) reached = oldest;
     char *next = es_next_file(xml);
     free(xml);
     free(url);
     url = NULL;
-    if (!next) break;                          /* the start of the archive */
-    if (wm && oldest && oldest <= wm) { free(next); break; }  /* caught up */
-    if (files >= ES_MAX_FILES) { ceiling = 1; free(next); break; }
+    if (next) {
+      es_host(next, next_host, sizeof next_host);
+      if (strcmp(next_host, feed_host) != 0) {      /* never follow off-host */
+        fprintf(stderr, "[es-contratacion-estado] rel=next points off %s; "
+                "stopped\n", feed_host);
+        free(next); next = NULL;
+      }
+    }
+    if (!next) { at_start = 1; break; }             /* the start of the archive */
+    if (wm && oldest && oldest <= wm) { caught_up = 1; free(next); break; }
+    if (files >= ES_MAX_FILES) { ceiling = 1; stop_next = next; break; }
     url = next;
   }
   free(url);
   seen_free(&done);
+  int complete = caught_up || at_start || !wm;      /* nothing between here and w unread */
   if (ceiling || cut) {
     char why[320];
     snprintf(why, sizeof why,
              "%s after %d archive file(s); entries older than epoch %ld were not "
              "read this run%s", cut ? "an archive file failed" : "the file-chain ceiling stopped the walk",
-             files, reached, wm ? " and the gap to the previous run's newest entry remains" : "");
+             files, reached, wm ? "; the next run continues from that file, and "
+             "the watermark does not move until the gap is closed" : "");
     jo_trunc_notice_scoped(sink, "es-contratacion-estado", "archive-chain", ES_FEED,
                            n, -1, why,
                            cut ? "re-run; a refused archive file is one reading"
-                               : "raise ES_MAX_FILES in reg2_es_contratacion.c, or run more often");
+                               : "none needed: the backfill continues next run; "
+                                 "raise ES_MAX_FILES or run more often to close it sooner");
   }
-  if (ctx->resume_out && head_newest) {
-    char tok[48];
-    snprintf(tok, sizeof tok, "w=%ld", head_newest);
+  if (ctx->resume_out) {
+    char tok[1100];
+    long new_head = backfill ? hold : head_newest;
+    if (!(ceiling || cut) && complete) {
+      /* contiguous down to w: the head this walk started from is the new w */
+      snprintf(tok, sizeof tok, "w=%ld", new_head ? new_head : wm);
+    } else if (stop_next && wm) {
+      snprintf(tok, sizeof tok, "w=%ld;h=%ld;p=%.1000s", wm, new_head, stop_next);
+    } else {
+      /* first run ever (no w): there is no older read to protect */
+      snprintf(tok, sizeof tok, "w=%ld", new_head);
+    }
     ctx->resume_out(ctx, tok);
   }
+  free(stop_next);
   fprintf(stderr, "[es-contratacion-estado] emitted %d from %d file(s)\n", n, files);
   return 0;
 }

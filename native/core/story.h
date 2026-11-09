@@ -66,14 +66,10 @@
 
 double story_tau(void);
 int    story_max_members(void);
-int    novelty_days(void);
 
 /* ensure_column intel_items.story_id / .novelty, the story index and the
  * pending/meta tables. Idempotent; called from db_open(). */
 void story_migrate(db_handle *db);
-
-/* The story id for a seed uid ("st-" + 16 hex). out >= 20 bytes. */
-void story_id_for(const char *seed_uid, char *out, size_t cap);
 
 /* Novelty of one embedded row, computed from the index (no embed). The
  * stored value when the hook already wrote one. 0 with *out set, -1 when the

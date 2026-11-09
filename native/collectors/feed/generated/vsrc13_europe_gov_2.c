@@ -456,7 +456,14 @@ REGISTER_SOURCE(eur_sejm_eli_mp);
 /* Interpellation records carry their identity in `num` (no id field), so the
  * uid was a hash of (title, link, date) and repeated titles on different
  * offset pages collapsed: sweep 2026-09-14 2,000 emitted, 1,982 stored. A
- * 20-page walk 2026-09-15 returned 2,000 distinct num values. */
+ * 20-page walk 2026-09-15 returned 2,000 distinct num values.
+ *
+ * 2026-11-07: the id is a MISNOMER — this row reads interpellations, not committee sittings,
+ * and has since it was written (its name says so). Sittings exist only per committee
+ * (/sejm/term10/committees/<code>/sittings: 40 committees, ASW alone 147 sittings), which one
+ * VJSON URL cannot reach, so the id is left for a registry decision. The collection answers
+ * ascending by num (1, 2, 3 ...), so this row reads the OLDEST 2,000 of 20,935 every run;
+ * cyb-sejm-pl-interpellations now reads the newest 2,000 (sort_by=-num). */
 VJSON_KEYED(eur_sejm_term10_committees_sits, "eur-sejm-term10-committees-sits", "Sejm Poland — interpellations", "Sejm Poland — interpellations",
   "europe_gov", "politics",
   "https://api.sejm.gov.pl/sejm/term10/interpellations?limit=100&offset=0",

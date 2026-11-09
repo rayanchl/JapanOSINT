@@ -128,13 +128,6 @@
  * Force a full rescore with: UPDATE entity_relationships SET stats_at=NULL. */
 #define ENTITY_STATS_TTL_SEC 21600   /* 6h */
 
-/* Idempotent guarded migration for the four columns above (PRAGMA table_info
- * then ALTER only what is missing). Safe to call on every boot and on every
- * run; entity_stats_recompute() calls it itself, so wiring it into db.c is
- * optional and only buys read paths the columns before the first pod tick.
- * Returns 0 on success, -1 if a column is missing AND could not be added. */
-int entity_stats_ensure_columns(db_handle *db);
-
 /* Recompute significance for existing relationship edges. Returns number of
  * edges updated, or negative on failure.
  *

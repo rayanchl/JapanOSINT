@@ -1315,22 +1315,6 @@ int jsonlist_fps_has(const unsigned long long *fps, int n, cJSON *rec) {
   return 0;
 }
 
-/* The upstream's own count of what exists, for the in-band disclosure: one
- * reader for the whole tree, jo_declared_total() in lib/pagewalk.c. This
- * file's list (declared_total) was one of three that disagreed — see the
- * definition for the union and the bare-`count` decision.
- *
- * jsonlist_declared_total() is exported for hpengine's page_walk rows and
- * keeps the rule those rows were measured under: a bare root `count` read as
- * the total unconditionally (JO_TOTAL_TRUST_BARE_COUNT). InterPro's two rows
- * (hp3b19_science.c) and the Austrian Parliament's seven (hp3b55_atparl.c)
- * state their remainder through it. This file's OWN walk passes the page's
- * record count instead, so a page-size `count` can no longer pass for a
- * total there; hpengine should do the same (jo_declared_total with its
- * page's record count). */
-long jsonlist_declared_total(cJSON *doc) {
-  return jo_declared_total(doc, JO_TOTAL_TRUST_BARE_COUNT, NULL, 0);
-}
 
 /* Where the query string of `url` starts ('?'), or NULL; a '?' inside a
  * `#fragment` is not one. */

@@ -433,9 +433,11 @@ VJSON(geo_hko_current, "geo-hko-current", "Hong Kong Observatory — current wea
   "en", "[\"hongkong\",\"observations\"]", 1800,
   "Hong Kong district temperature, rainfall and humidity readings.");
 
+/* 2026-11-07: year was frozen at 2026; the predictions are published a year ahead (year=2027 answers 365
+ * daily rows, measured 2026-11-07), so {date:%Y} reads the current year's table every year. */
 VJSON(geo_hko_tides, "geo-hko-tides", "Hong Kong Observatory — tidal predictions", "香港天文台 — 潮汐予測",
   "environment", "ocean",
-  "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php?dataType=HHOT&lang=en&rformat=json&station=CLK&year=2026",
+  "https://data.weather.gov.hk/weatherAPI/opendata/opendata.php?dataType=HHOT&lang=en&rformat=json&station=CLK&year={date:%Y}",
   "data",
   "en", "[\"hongkong\",\"tide\",\"sealevel\"]", 86400,
   "Hourly tidal height predictions for a Hong Kong station.");

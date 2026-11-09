@@ -395,7 +395,11 @@ int camera_stills_jpeg_frame(const void *buf, size_t len,
  * Feed classification and resolution
  * ══════════════════════════════════════════════════════════════════════════ */
 
-int camera_stills_classify(const char *url) {
+/* Classify a feed URL. Pure, no I/O. SNAPSHOT vs MJPEG is a HEURISTIC over the
+ * URL shape (see the routing note above); the true distinction is only known
+ * once bytes arrive, and the capture path handles being wrong in either
+ * direction. Returns one of CAM_FEED_*. */
+static int camera_stills_classify(const char *url) {
   if (!url || !*url) return CAM_FEED_NONE;
   if (strncasecmp(url, "rtsp://", 7) == 0 ||
       strncasecmp(url, "rtsps://", 8) == 0) return CAM_FEED_RTSP;
@@ -786,7 +790,17 @@ static int temp_write(const void *b, size_t n, char *out, size_t cap) {
   return 1;
 }
 
-int camera_stills_scene(const char *prev_sha, uint64_t prev_phash,
+/* Compare a new frame with the camera's previous one. `prev_sha`/`sha` are
+ * 64-hex strings (prev_sha may be NULL for the first frame ever). A pHash of 0
+ * means "absent" — 0 is media.h's documented no-usable-hash sentinel, so it can
+ * never be a real hash and needs no separate flag.
+ *
+ * Returns CAM_SCENE_CHANGED / CAM_SCENE_SAME when it can prove one, and
+ * CAM_SCENE_UNKNOWN when it cannot — which on a host with no image decoder is
+ * every pair whose bytes differ. Reporting SAME there would be a lie; see the
+ * long note above. The first frame of a camera is CHANGED (there was nothing,
+ * now there is something). */
+static int camera_stills_scene(const char *prev_sha, uint64_t prev_phash,
                         const char *sha, uint64_t phash) {
   if (!prev_sha || !*prev_sha) return CAM_SCENE_CHANGED;   /* first frame    */
   if (sha && strcmp(prev_sha, sha) == 0) return CAM_SCENE_SAME;  /* provable */
@@ -907,7 +921,11 @@ int camera_stills_prune_camera(db_handle *db, const char *camera_id) {
   return n;
 }
 
-int camera_stills_sweep(db_handle *db, int limit, volatile int *cancel) {
+/* Retention sweep over EVERY camera that has rows, including ones no longer
+ * opted in or no longer present in intel_items — those are exactly the ones
+ * the on-write prune can never reach again. `limit` (<=0 → all) caps cameras
+ * examined per call; `cancel` stops it cleanly. Returns rows deleted. */
+static int camera_stills_sweep(db_handle *db, int limit, volatile int *cancel) {
   if (!db || !db->h) return 0;
   camera_stills_migrate(db);
   sqlite3 *h = db->h;

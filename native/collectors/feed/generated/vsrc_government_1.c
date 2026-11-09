@@ -154,16 +154,25 @@ VJSON(gov_co_socrata_catalog, "gov-co-socrata-catalog", "datos.gov.co — Colomb
   "es", "[\"colombia\",\"opendata\",\"catalogue\",\"latam\"]", 86400,
   "Catalogue of Colombian government open datasets, the discovery layer above SECOP and others.");
 
+/* 2026-11-07: publishedFrom was frozen at 2026-07-01, a lower bound that grew forever. The search answers
+ * newest first, 100 a page, with a links.next cursor the walk follows, and the host rate-limits at
+ * 12 requests per 120 s (HTTP 429 "Rate limit of 12 exceeded", Retry-After 120, measured
+ * 2026-11-07), so a walk over four months of releases at 100 a page runs into the limit
+ * before it ends. A rolling 7 days ({date-7d}) is ~350 releases (100 covered 2026-11-06T12:18 to
+ * 2026-11-08T10:14), about four requests: complete, and well inside the limit. */
 VJSON(gov_contractsfinder_ocds, "gov-contractsfinder-ocds", "Contracts Finder — UK OCDS Feed", "英国契約検索 OCDSフィード",
   "government", "procurement",
-  "https://www.contractsfinder.service.gov.uk/Published/Notices/OCDS/Search?publishedFrom=2026-07-01",
+  "https://www.contractsfinder.service.gov.uk/Published/Notices/OCDS/Search?publishedFrom={date-7d}",
   "releases",
   "en", "[\"uk\",\"procurement\",\"contracts\",\"ocds\"]", 3600,
   "OCDS releases for below-threshold UK public contracts and awards from Contracts Finder.");
 
+/* 2026-11-07: RecallDateStart was frozen at 2026-01-01 (a lower bound that grows through the year and then
+ * goes stale). {date-1y} is a rolling year: 574 recalls, newest 2026-11-05, one complete root
+ * array (measured 2026-11-07; 514 from 2026-01-01). */
 VJSON(gov_cpsc_recalls, "gov-cpsc-recalls", "CPSC — Consumer Product Recalls", "米国CPSC 製品リコール",
   "government", "regulator",
-  "https://www.saferproducts.gov/RestWebServices/Recall?format=json&RecallDateStart=2026-01-01",
+  "https://www.saferproducts.gov/RestWebServices/Recall?format=json&RecallDateStart={date-1y}",
   "",
   "en", "[\"usa\",\"cpsc\",\"recalls\",\"consumer\"]", 21600,
   "US Consumer Product Safety Commission recall records with hazard, remedy, importer and units.");

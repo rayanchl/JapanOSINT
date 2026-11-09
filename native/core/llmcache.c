@@ -44,7 +44,8 @@ int llmcache_model(llm_client *c, char *out, size_t cap) {
   return 0;
 }
 
-void llmcache_key(const char *prompt, const char *params, char out[65]) {
+/* hex sha256 of prompt + "\n" + params into out[65]. */
+static void llmcache_key(const char *prompt, const char *params, char out[65]) {
   unsigned char d[EVP_MAX_MD_SIZE];
   unsigned int dl = 0;
   out[0] = 0;

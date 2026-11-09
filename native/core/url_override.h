@@ -23,20 +23,6 @@ void url_override_reload(db_handle *db);
  * `url` unchanged. The returned pointer is stable for the process lifetime. */
 const char *url_override_apply(const char *url);
 
-/* Would this (old,new) pair be accepted? Returns 0 when the rewrite is safe to
- * store, else a hostgate HG_URL_* code (hostgate_url_reason() explains it).
- *
- * WHY. An override is proposed by the LLM maintenance pod, i.e. by text that
- * came off the internet, and it steers EVERY outbound fetch for the matching
- * URL. Without this, "repairing" a collector to http://169.254.169.254/... is
- * a one-row SSRF with the collector's own credentials attached. Both sides are
- * checked with the strict ruleset (no loopback, no RFC1918, no link-local),
- * because a repair pointing inward is never a legitimate repair.
- *
- * The credential half of that risk is handled in httpclient.c: a rewrite that
- * crosses hosts drops the request's auth headers. */
-int url_override_validate(const char *old_url, const char *new_url);
-
 /* Removes the override for `old_url` (all matching entries). Returns the number
  * removed. A misapplied repair used to be irreversible without a restart —
  * the list was append-only and nothing ever unset an entry.

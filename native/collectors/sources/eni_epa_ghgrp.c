@@ -219,6 +219,15 @@ static int pick_year(const source_ctx *ctx) {
     char t[64];
     snprintf(t, sizeof t, "pub_facts_sector_ghg_emission/year/%d", y);
     long c = table_count(ctx, t);
+    /* Step back ONLY on a measured zero — the year is not published yet. An
+     * unreadable count (-1: refused, timed out, unparsed) says nothing about
+     * the year, and falling back on it would ship last year's emissions as
+     * the current reading with nothing saying so (review, 2026-11-08). */
+    if (c < 0) {
+      fprintf(stderr, "[" SRC "] /count for %d was unreadable — not stepping "
+              "back to an older year on a failed read\n", y);
+      return -1;
+    }
     if (c > 0) {
       snprintf(g_year, sizeof g_year, "%d", y);
       snprintf(g_fac_table, sizeof g_fac_table, "pub_dim_facility/year/%d", y);
@@ -231,7 +240,8 @@ static int pick_year(const source_ctx *ctx) {
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   if (pick_year(ctx) < 0) {
-    fprintf(stderr, "[" SRC "] no reporting year answered a non-zero /count\n");
+    fprintf(stderr, "[" SRC "] no reporting year answered a readable, "
+            "non-zero /count\n");
     return -1;
   }
   /* ── facility dimension: the reporting year's own rows ──────────────────

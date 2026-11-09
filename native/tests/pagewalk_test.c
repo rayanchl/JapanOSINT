@@ -718,8 +718,7 @@ int main(void) {
        "a bare `count` above the page is, and the basis names the key");
     ok(jo_declared_total(a, -1, NULL, 0) == -1,
        "an unknown page size never reads a bare `count`");
-    ok(jo_declared_total(a, JO_TOTAL_TRUST_BARE_COUNT, NULL, 0) == 20 &&
-       jsonlist_declared_total(a) == 20,
+    ok(jo_declared_total(a, JO_TOTAL_TRUST_BARE_COUNT, NULL, 0) == 20,
        "the legacy rule hpengine's page_walk rows were measured under is kept");
     ok(jo_declared_total(b, 3, NULL, 0) == -1, "a fractional `total` is not a record count");
     ok(jo_declared_total(c, 3, NULL, 0) == 40, "matching is case-insensitive, as jsonlist's was");

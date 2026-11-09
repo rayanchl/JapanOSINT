@@ -3205,7 +3205,7 @@ static int hp_xml_record_tag(const char *body, char *out, size_t cap) {
 /* The upstream's own count of what exists, read out of an XML ENVELOPE.
  *
  * hp_run_json has read a declared total since the truncation notice needed one
- * (jsonlist_declared_total), and the XML path never did — so NO XML row in the
+ * (now jo_declared_total, lib/pagewalk.c), and the XML path never did — so NO XML row in the
  * tree could ever state a real remainder. Japan's KKJ procurement API is the
  * case that found it: it answers `<SearchHits>50530</SearchHits>` beside 100
  * results, which is the upstream saying exactly how much it is holding back.
@@ -5267,13 +5267,25 @@ dated_restart:;
       http_response_free(&hr);
       break;
     }
-    if (page == 0) {
-      st.p1_challenge = hp_body_is_challenge(hr.body);
-      st.p1_ratelimit = !st.p1_challenge && hp_body_is_ratelimit(hr.body);
-      st.p1_botwall   = st.p1_challenge ||
-                        (!st.p1_ratelimit && hp_body_is_botwall(hr.body));
-      st.p1_maint     = !st.p1_botwall && !st.p1_ratelimit &&
-                        hp_body_is_maintenance(hr.body);
+    /* Judged on a SMALL page only, and on its head: an interstitial is a few
+     * KB (Cloudflare's challenge ~6 KB, Imperva's ~1 KB, a WordPress
+     * maintenance page ~3 KB), while a real HTML listing that carries a
+     * reCAPTCHA contact form in its footer, or an XML feed whose item mentions
+     * "一時停止", is neither. Bounding it also keeps a 100 MB bulk body from
+     * paying six case-insensitive scans for a verdict only an empty run uses. */
+    if (page == 0 && hr.body && hr.body_len > 0 && hr.body_len <= 256 * 1024) {
+      size_t hn = hr.body_len < 16384 ? hr.body_len : 16384;
+      char *head = malloc(hn + 1);
+      if (head) {
+        memcpy(head, hr.body, hn); head[hn] = 0;
+        st.p1_challenge = hp_body_is_challenge(head);
+        st.p1_ratelimit = !st.p1_challenge && hp_body_is_ratelimit(head);
+        st.p1_botwall   = st.p1_challenge ||
+                          (!st.p1_ratelimit && hp_body_is_botwall(head));
+        st.p1_maint     = !st.p1_botwall && !st.p1_ratelimit &&
+                          hp_body_is_maintenance(head);
+        free(head);
+      }
     }
     /* Shape notice (d): the same bytes as the previous page. A server that
      * ignores the page parameter re-serves page 1 with HTTP 200, and the walk

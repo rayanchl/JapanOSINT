@@ -728,3 +728,22 @@ HOST_AGENT_KIND(HA_SEC,         "JapanOSINT/1.0 research (rayanchouialkessal@gma
   HOST_AGENT("www.limousis.fr", HA_NOCOLLECTOR)
   HOST_AGENT("www.mairie-esperce.fr", HA_NOCOLLECTOR)
   HOST_AGENT("www.salemcountynj.gov", HA_NOCOLLECTOR)
+
+  /* ── hosts a removed per-call User-Agent had been carrying (2026-11-08) ──
+   * The bespoke collectors lost their own `User-Agent:` headers in this
+   * branch's audit, so the engine agent now reaches these hosts. Each was
+   * asked with the engine agent and the removed one, twice, and then bisected
+   * down the ladder above (curl through the proxy, -L, two readings per kind):
+   *   www.cbc.ca  rss-world / rss-topstories: engine, HA_NOCOLLECTOR and
+   *     HA_COMPAT 000 (HTTP/2 stream INTERNAL_ERROR, the newspromotion.jp
+   *     shape); HA_CONTACT 200, 20 items. Also serves world_outlets_1.c.
+   *   www.rt.com  /rss/news/: engine 403 (nginx); HA_NOCOLLECTOR 200, 100
+   *     items (/rss/ 301 the same way). Also serves world_outlets_1.c.
+   *   datos.gob.mx + www.datos.gob.mx (its 308 target)  package_search:
+   *     engine, HA_NOCOLLECTOR and HA_COMPAT 403 (Akamai "Access Denied");
+   *     HA_CONTACT 200 with CKAN JSON. Both names, because the 308 crosses
+   *     hosts. Also serves hp2_northam_ca_mx.c's MX_DATOS_ABIERTOS. */
+  HOST_AGENT("www.cbc.ca", HA_CONTACT)
+  HOST_AGENT("www.rt.com", HA_NOCOLLECTOR)
+  HOST_AGENT("datos.gob.mx", HA_CONTACT)
+  HOST_AGENT("www.datos.gob.mx", HA_CONTACT)

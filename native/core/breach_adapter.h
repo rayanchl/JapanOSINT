@@ -19,11 +19,6 @@ char *breach_adapter_item_by_uid(db_handle *db, const char *uid);
 char *breach_adapter_list(db_handle *db, const char *source_id,
                           const char *q, const char *cursor, int limit);
 
-/* Operator-gated reveal: decrypts the leaked secret(s) for a breach uid via
- * breach_index_lookup(reveal=1) → {found,count,type,breaches:[{breach,secret?}]}.
- * Requires SECRETS_MASTER_KEY. NULL if not a breach uid / not found. Caller frees. */
-char *breach_adapter_reveal_by_uid(db_handle *db, const char *uid);
-
 /* THE route-facing reveal: requires a non-empty `reason` (400 otherwise),
  * writes the 'platform' audit row action "breach.reveal", target = uid,
  * payload {requester, requester_email?, reason} BEFORE decrypting, and reveals

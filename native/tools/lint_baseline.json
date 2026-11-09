@@ -133,6 +133,7 @@
       "indiankanoon.org": 1,
       "indiankanoon.org/search?formInput=%s": 1,
       "insightcrime.org/feed": 1,
+      "interests-api.parliament.uk/api/v1/Interests?take=20&skip=0": 1,
       "internetdb.shodan.io/%s": 1,
       "internetdb.shodan.io/<ip>": 1,
       "ipqualityscore.com/api/json/ip/%s/%s": 1,

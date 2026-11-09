@@ -112,11 +112,6 @@ unsigned long long jsonlist_page_fp(cJSON *arr);
  * The array is malloc'd and the caller frees it. */
 unsigned long long *jsonlist_page_fps(cJSON *arr, int *n_out);
 int jsonlist_fps_has(const unsigned long long *fps, int n, cJSON *rec);
-/* The upstream's own count of the whole match set; -1 when it did not say.
- * jo_declared_total() (lib/pagewalk.h) with a bare root `count` trusted
- * unconditionally — the rule hpengine's page_walk rows were measured under.
- * New callers should call jo_declared_total() with the page's record count. */
-long jsonlist_declared_total(cJSON *doc);
 /* The page ceiling of that walk: jo_page_max("JO_JSONLIST_PAGE_MAX") —
  * $JO_PAGE_MAX when set (it wins), else the older $JO_JSONLIST_PAGE_MAX, else
  * 20. */

@@ -178,7 +178,9 @@ char *jo_next_link(const cJSON *doc, const char *base) {
     "meta.nextLink",
     /* pagewalk's spellings jsonlist lacked. */
     "nextLink", "next_page_url", "nextRecordsUrl",
-    "links.nextLink", "paging.nextLink", "pagination.nextLink", NULL };
+    "links.nextLink", "paging.nextLink", "pagination.nextLink",
+    /* USAspending's envelope (2026-11-08). */
+    "page_metadata.next", NULL };
   for (int i = 0; KEYS[i]; i++) {
     const cJSON *v = pw_dotted(doc, KEYS[i]);
     if (cJSON_IsString(v) && v->valuestring && v->valuestring[0]) {
@@ -308,6 +310,15 @@ long jo_declared_total(const cJSON *doc, long page_records,
     "totalRecords", "total_rows", "totalFeatures",
     /* geojson's: `matchedCount`. */
     "matchedCount",
+    /* Measured 2026-11-08 on rows that disclosed "no total" with one in the
+     * body: Socrata's catalogue `resultSetSize`, the UK EDM API's
+     * `PagingInfo.Total`, USAspending's `page_metadata.total` /
+     * `page_metadata.count` (176 beside 176 records; nested, so not bare
+     * `count`'s ambiguity), and the Kokkai search API's `numberOfRecords`
+     * (SRU's own name for the match set; hpengine's XML list already reads
+     * it). */
+    "resultSetSize", "PagingInfo.Total", "page_metadata.total",
+    "page_metadata.count", "numberOfRecords",
     NULL };
   for (int i = 0; KEYS[i]; i++) {
     const cJSON *v = pw_dotted(doc, KEYS[i]);
@@ -938,7 +949,13 @@ static int pw_walk_impl(const source_ctx *c, intel_sink *s, const char *id,
    *   - the upstream counted more than we emitted;
    *   - or the last page came back exactly full and nothing in the response or
    *     the URL let us ask for the rest, which is the 2,592-source case. */
-  int more_known    = (available >= 0 && available > total);
+  /* Not on a RESUMED walk: `total` is then this run's slice of the cycle and
+   * the upstream's total is the whole collection, so a cycle that reached its
+   * end would read "the upstream reports more records than were collected"
+   * every time it completed — a false disclosure on exactly the run that read
+   * the last of it. A resumed walk that stopped short says so through
+   * stopped_at_ceiling or failed_page instead. */
+  int more_known    = (!resumed && available >= 0 && available > total);
   /* Name the ceiling that actually bit, and the failing page's status-specific
    * reason and remedy (jo_page_ceiling_describe, pw_cut_describe). The
    * ceiling used to read "JO_PAGE_MAX" always, which is wrong for a source

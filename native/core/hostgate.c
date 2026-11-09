@@ -504,7 +504,15 @@ static int v6_class(const unsigned char *a) {
   return 0;
 }
 
-int hostgate_addr_check(const char *ip_text, int strict) {
+/* Classifies one already-resolved address in its textual form ("93.184.216.34",
+ * "::1"). `strict` selects the same two strengths as above. This is what the
+ * per-connection callback in httpclient.c reaches (through
+ * hostgate_addr_check_floor), so a redirect or a rebound DNS
+ * answer is judged on the address we actually connected to rather than on the
+ * name we started from. Unparseable text is allowed (fail open: the floor check
+ * has already run on the URL, and a curl-reported peer we cannot parse is not
+ * evidence of an attack). */
+static int hostgate_addr_check(const char *ip_text, int strict) {
   if (!ip_text || !*ip_text) return HG_URL_OK;
   struct in_addr  v4;
   struct in6_addr v6;
@@ -521,9 +529,16 @@ int hostgate_addr_check(const char *ip_text, int strict) {
 }
 
 /* JO_HTTP_BLOCK_PRIVATE=1 raises the floor to the strict ruleset for every
- * outbound fetch. Off by default because llama-server lives on 127.0.0.1 and
- * LAN cameras are a shipped feature — turning it on is a deployment decision,
- * not something this file may make on the operator's behalf. */
+ * outbound fetch. It is OFF by default. The reason this comment used to give —
+ * "llama-server lives on 127.0.0.1 and LAN cameras are a shipped feature" — is
+ * half stale: the LAN-camera opt-in (JO_CAMERA_ALLOW_LAN) was removed
+ * 2026-10-20 and the camera paths now apply their own strict policy always
+ * (camera_strict() below, core/netjail.c for ffmpeg). What still argues for
+ * the default is that the embedding/LLM servers are configured as loopback
+ * URLs and are fetched through this same client. Whether the general floor
+ * should now default to strict (with those configured endpoints exempted) is
+ * an OPEN DECISION for the repository owner (flagged 2026-11-07); the default
+ * is deliberately left unchanged here. */
 static int floor_is_strict(void) {
   const char *e = getenv("JO_HTTP_BLOCK_PRIVATE");
   return (e && *e && strcmp(e, "0") != 0) ? 1 : 0;

@@ -1402,7 +1402,27 @@ static int capture_inner(db_handle *db, const char *source_id,
   return CC_CHANGED;
 }
 
-int content_change_capture(db_handle *db, const char *source_id,
+/* THE CAPTURE ENTRY POINT. Extracts text from `body`, normalizes it, hashes the
+ * normalized text and compares against the most recent snapshot for
+ * (source_id, ref_key). First sighting stores a baseline and emits NOTHING. A
+ * differing hash stores a new snapshot, prunes to JO_CCHANGE_KEEP, hands the
+ * raw bytes to evidence_capture() and emits ONE intel item through the standard
+ * intel_sink with record_type='content_change', its properties carrying the
+ * unified diff.
+ *
+ * CONTRACT: this can never fail the fetch or the ingest that triggered it. It
+ * has no error path that propagates — every allocation failure, SQLite error,
+ * malformed document and absent table is swallowed and reported only through
+ * the advisory return code and stderr. It never longjmps, never aborts, never
+ * blocks on the network, and is re-entrancy guarded (an emit that provokes an
+ * outbound request cannot recurse into capture on the same thread).
+ *
+ * `ref_key` identifies the thing being watched WITHIN the source — a URL for a
+ * scraped page, an item uid for a document inside a feed. NULL means "use the
+ * canonicalized `url`", which is the right answer for every scraped source.
+ * `content_type` may be NULL (HTML is then sniffed from the first byte).
+ * `body` need not be NUL-terminated; `body_len` is authoritative. */
+static int content_change_capture(db_handle *db, const char *source_id,
                            const char *ref_key, const char *url,
                            const void *body, size_t body_len,
                            const char *content_type) {

@@ -118,15 +118,6 @@ int         hostgate_url_check_strict(const char *url);
 int         hostgate_url_check_strict_nodns(const char *url);
 const char *hostgate_url_reason(int rc);
 
-/* Classifies one already-resolved address in its textual form ("93.184.216.34",
- * "::1"). `strict` selects the same two strengths as above. This is what the
- * per-connection callback in httpclient.c calls, so a redirect or a rebound DNS
- * answer is judged on the address we actually connected to rather than on the
- * name we started from. Unparseable text is allowed (fail open: the floor check
- * has already run on the URL, and a curl-reported peer we cannot parse is not
- * evidence of an attack). */
-int hostgate_addr_check(const char *ip_text, int strict);
-
 /* hostgate_addr_check() at the CURRENT floor, i.e. honouring
  * JO_HTTP_BLOCK_PRIVATE. Use this — not hostgate_addr_check(ip, 0) — anywhere
  * on the outbound fetch path: url_check() can only judge a literal address, so

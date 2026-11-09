@@ -388,6 +388,15 @@ static int dedup_seen(bloom *b, const void *key, size_t len) {
 int breach_index_ingest(const char *source_id, const char *path, breach_type type,
                         unsigned long long *rows_in, unsigned long long *rows_new,
                         db_handle *db, int materialize, int dry_run) {
+  return breach_index_ingest_ex(source_id, path, type, rows_in, rows_new, NULL,
+                                db, materialize, dry_run);
+}
+
+int breach_index_ingest_ex(const char *source_id, const char *path, breach_type type,
+                           unsigned long long *rows_in, unsigned long long *rows_new,
+                           unsigned long long *rows_skipped,
+                           db_handle *db, int materialize, int dry_run) {
+  if (rows_skipped) *rows_skipped = 0;
   bigfile *bf = bigfile_open(path);
   if (!bf) return -1;
   const unsigned long long expect = estimate_rows(path, type);
@@ -544,9 +553,17 @@ int breach_index_ingest(const char *source_id, const char *path, breach_type typ
     }
     if (blooms[t]) bloom_free(blooms[t]);
   }
+  /* lib/bigfile.h: over-long lines are skipped and COUNTED; a pass that
+   * dropped some is incomplete and must say so (house rule 2). */
+  const unsigned long long skipped = bigfile_skipped(bf);
+  if (skipped)
+    fprintf(stderr, "[breach_index] %s: %llu line(s) of %s exceeded the reader's "
+            "line bound and were NOT ingested (%llu read)\n",
+            source_id ? source_id : "?", skipped, path, bigfile_lines(bf));
   bigfile_close(bf);
   if (rows_in) *rows_in = ri;
   if (rows_new) *rows_new = rn;
+  if (rows_skipped) *rows_skipped = skipped;
   return 0;
 }
 

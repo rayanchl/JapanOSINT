@@ -2925,7 +2925,19 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         reply_json(c, 400, "{\"error\":\"mode must be map_cron or search_only\"}"); return; }
       if (!strcmp(body, "\1err")) { free(body);
         reply_json(c, 500, "{\"error\":\"schedule_update_failed\"}"); return; }
-      audit_write(g_db, "platform", usr.id, "source.schedule.put", p, b);
+      /* The audit payload is a JSON object built from the accepted mode, not
+       * the raw client body (which may not be JSON, and was "" for a body of
+       * 256+ bytes) — review 2026-11-07. miscapi_set_schedule() has just
+       * accepted the mode, so it is one of the two known values. */
+      { char payload[96];
+        cJSON *j = cJSON_Parse(b);
+        const cJSON *mo = j ? cJSON_GetObjectItemCaseSensitive(j, "mode") : NULL;
+        const char *mv = (cJSON_IsString(mo) && mo->valuestring) ? mo->valuestring : "";
+        snprintf(payload, sizeof payload, "{\"mode\":\"%s\"}",
+                 !strcmp(mv, "search_only") ? "search_only"
+               : !strcmp(mv, "map_cron")    ? "map_cron" : "unknown");
+        cJSON_Delete(j);
+        audit_write(g_db, "platform", usr.id, "source.schedule.put", p, payload); }
       sa_drop_detail(p);
       reply_json(c, 200, body); free(body); return;
     }
@@ -5203,7 +5215,12 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
          * an error object and nothing else gets the status it describes;
          * unported routes keep their 501. */
         int code = 200;
-        cJSON *ej = cJSON_Parse(body);
+        /* Only a body that can BE an error object is parsed: every one
+         * transitapi() writes is a few dozen bytes, while a successful
+         * timetable or feed body runs to megabytes and was being parsed on
+         * the event loop just to find no "error" (review 2026-11-07). */
+        cJSON *ej = (strnlen(body, 4096) < 4096 && strstr(body, "\"error\""))
+                    ? cJSON_Parse(body) : NULL;
         const cJSON *ev = ej ? cJSON_GetObjectItem(ej, "error") : NULL;
         if (cJSON_IsString(ev) && ev->valuestring) {
           const char *m = ev->valuestring;

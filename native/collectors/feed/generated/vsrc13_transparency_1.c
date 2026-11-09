@@ -509,12 +509,25 @@ VJSON(cyb_scotparl_regions, "cyb-scotparl-regions", "Scottish Parliament — reg
   "en", "[\"gbr\",\"scotland\",\"parliament\",\"geo\"]", 86400,
   "Scottish Parliament electoral regions used for list seats.");
 
-VJSON(cyb_sejm_pl_interpellations, "cyb-sejm-pl-interpellations", "Sejm of Poland — interpellations", "ポーランド下院 質問書",
+/* 2026-11-07: this row asked for the bare collection, which answers the FIRST 50
+ * interpellations by num (1..50) and nothing past them: one page, no size the walk could
+ * advance, every run, of 20,935. And it keyed on VJSON's fallback (title, link, date)
+ * although the record's identity is `num`, the key eur-sejm-term10-committees-sits
+ * (vsrc13_europe_gov_2.c) already measured (2,000 emitted / 1,982 stored on the fallback).
+ * Now: VJSON_KEYED on num, limit=100&offset=0 so the walk pages, and sort_by=-num so the
+ * twenty pages a run are the NEWEST 2,000 rather than the oldest (the sibling reads the
+ * collection from num=1 upward). Measured 2026-11-07: sort_by=-num answers 20935, 20934 ...;
+ * sort_by=num and the control sort_by=frobnicate both answer 1..5 (an unknown key is
+ * ignored, so the direction is the evidence the parameter is read); offset=100 answers
+ * 101..200, disjoint. Interpellations arrive at ~30 a day, so a newest-first walk barely
+ * drifts inside one run; the 16,935 in the middle need a cycling hp row (page_resume). */
+VJSON_KEYED(cyb_sejm_pl_interpellations, "cyb-sejm-pl-interpellations", "Sejm of Poland — interpellations", "ポーランド下院 質問書",
   "transparency", "politics",
-  "https://api.sejm.gov.pl/sejm/term10/interpellations",
+  "https://api.sejm.gov.pl/sejm/term10/interpellations?limit=100&offset=0&sort_by=-num",
   "",
   "pl", "[\"pol\",\"parliament\",\"questions\",\"transparency\"]", 21600,
-  "Written interpellations to Polish ministers with sender, recipient and reply status.");
+  "Written interpellations to Polish ministers with sender, recipient and reply status.",
+  "num");
 
 VJSON(cyb_sejm_pl_prints, "cyb-sejm-pl-prints", "Sejm of Poland — parliamentary prints", "ポーランド下院 議案文書",
   "transparency", "politics",

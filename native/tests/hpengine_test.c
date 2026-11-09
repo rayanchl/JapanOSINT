@@ -4734,7 +4734,8 @@ int main(void) {
     ok(pw_odata_v2_count(a) == 46144 && pw_odata_v2_count(b) == -1 &&
        pw_odata_v2_count(c) == -1 && pw_odata_v2_count(d) == 7 &&
        pw_odata_v2_count(e) == -1 && pw_odata_v2_count(f) == -1 &&
-       jsonlist_declared_total(a) == 46144 && jsonlist_declared_total(b) == -1,
+       jo_declared_total(a, JO_TOTAL_TRUST_BARE_COUNT, NULL, 0) == 46144 &&
+       jo_declared_total(b, JO_TOTAL_TRUST_BARE_COUNT, NULL, 0) == -1,
        "58c: digits only; a number is kept, a sign, a letter or an empty string is not");
     cJSON_Delete(a); cJSON_Delete(b); cJSON_Delete(c);
     cJSON_Delete(d); cJSON_Delete(e); cJSON_Delete(f); }

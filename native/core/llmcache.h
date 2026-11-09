@@ -34,8 +34,6 @@ long llmcache_ttl(void);
 /* The model the server at c->base_url serves (cached), into `out`. 0 / -1. */
 int llmcache_model(llm_client *c, char *out, size_t cap);
 
-/* hex sha256 of prompt + "\n" + params into out[65]. */
-void llmcache_key(const char *prompt, const char *params, char out[65]);
 /* llmcache_key() with the prompt's random fence id masked (prompts.c builds
  * every prompt with a per-call id; it changes nothing the model answers). An
  * out[0] == 0 means the key could not be computed: do not cache. */

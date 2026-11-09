@@ -172,7 +172,13 @@ static void acc_text(sh_acc *a, const char *s, int w) {
   }
 }
 
-uint64_t simhash_text(const char *seg_title, const char *seg_body,
+/* Pure fingerprint over ALREADY-SEGMENTED text (either argument may be NULL).
+ * Returns the 64-bit simhash, or 0 when the document is unclusterable.
+ * `out_tokens`, if non-NULL, receives the DISTINCT content-token count, which
+ * is what SIMHASH_MIN_TOKENS is compared against. No DB, no allocation,
+ * thread-safe. Exposed for tests and for callers that already hold segmented
+ * text. */
+static uint64_t simhash_text(const char *seg_title, const char *seg_body,
                       int *out_tokens) {
   /* Heap, not stack: this runs on collector threads whose stack size is not
    * ours to assume, and the accumulator is ~33 KB. */
@@ -190,7 +196,8 @@ uint64_t simhash_text(const char *seg_title, const char *seg_body,
   return (d >= SIMHASH_MIN_TOKENS) ? out : 0;
 }
 
-int simhash_distance(uint64_t a, uint64_t b) {
+/* Hamming distance between two fingerprints. */
+static int simhash_distance(uint64_t a, uint64_t b) {
   return __builtin_popcountll(a ^ b);
 }
 

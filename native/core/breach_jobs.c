@@ -24,6 +24,9 @@ typedef struct {
   char state[12];      /* "queued" | "running" | "done" | "error" */
   char msg[192];
   unsigned long long rows_in, rows_new;
+  /* lines the reader skipped as over-long (breach_index_ingest_ex) — NOT in
+   * rows_in, and reported so an incomplete pass does not read as clean */
+  unsigned long long rows_skipped;
   long started, ended;
 } bjob;
 
@@ -153,13 +156,15 @@ static void set_state(int slot, const char *state, const char *msg) {
 }
 
 static void finish(int slot, const char *state, const char *msg,
-                   unsigned long long in, unsigned long long nw) {
+                   unsigned long long in, unsigned long long nw,
+                   unsigned long long skipped) {
   pthread_mutex_lock(&g_lock);
   if (slot >= 0 && slot < BJ_MAX && g_jobs[slot].used) {
     snprintf(g_jobs[slot].state, sizeof g_jobs[slot].state, "%s", state);
     if (msg) snprintf(g_jobs[slot].msg, sizeof g_jobs[slot].msg, "%s", msg);
     g_jobs[slot].rows_in = in;
     g_jobs[slot].rows_new = nw;
+    g_jobs[slot].rows_skipped = skipped;
     g_jobs[slot].ended = (long)time(NULL);
   }
   pthread_mutex_unlock(&g_lock);
@@ -172,7 +177,7 @@ typedef struct { int slot; char source[80]; char *path; char type[16];
 static void *ingest_thread(void *vp) {
   ing_arg *a = vp;
   set_state(a->slot, "running", "ingesting");
-  unsigned long long in = 0, nw = 0;
+  unsigned long long in = 0, nw = 0, sk = 0;
 
   /* Own WAL connection — never the server's shared handle (its bulk transaction
    * + pragmas would otherwise engulf the event loop's writes). DB only needed
@@ -185,21 +190,25 @@ static void *ingest_thread(void *vp) {
   db_handle db = {0}; db_handle *dbp = NULL; int opened = 0;
   if (a->materialize && !a->dry_run) {
     if (db_attach(&db, NULL) == 0) { dbp = &db; opened = 1; }
-    else finish(a->slot, "error", "db open failed", 0, 0);
+    else finish(a->slot, "error", "db open failed", 0, 0, 0);
   }
   if (!(a->materialize && !a->dry_run) || opened) {
     breach_type t = breach_type_parse(a->type[0] ? a->type : NULL);
-    int rc = breach_index_ingest(a->source, a->path, t, &in, &nw,
-                                 dbp, a->materialize, a->dry_run);
+    int rc = breach_index_ingest_ex(a->source, a->path, t, &in, &nw, &sk,
+                                    dbp, a->materialize, a->dry_run);
     if (opened) db_close(&db);
     if (rc != 0)
-      finish(a->slot, "error", "ingest failed (cannot open file?)", in, nw);
-    else
-      finish(a->slot, "done",
-             a->dry_run ? "dry-run complete"
-                        : (a->materialize ? "materialized to breach_items"
-                                          : "ingested to shard corpus"),
-             in, nw);
+      finish(a->slot, "error", "ingest failed (cannot open file?)", in, nw, sk);
+    else {
+      const char *what = a->dry_run ? "dry-run complete"
+                       : (a->materialize ? "materialized to breach_items"
+                                         : "ingested to shard corpus");
+      char m[192];
+      if (sk) snprintf(m, sizeof m, "%s; %llu over-long line(s) skipped, not "
+                       "ingested", what, sk);
+      else    snprintf(m, sizeof m, "%s", what);
+      finish(a->slot, "done", m, in, nw, sk);
+    }
   }
 
   pthread_mutex_lock(&g_lock); g_ingest_busy = 0; pthread_mutex_unlock(&g_lock);
@@ -294,11 +303,11 @@ static void *fetch_thread(void *vp) {
       char m[192];
       snprintf(m, sizeof m, "staged %zu bytes -> %.120s (status %ld)",
                r.body_len, path, r.status);
-      finish(a->slot, "done", m, 0, 0);
-    } else finish(a->slot, "error", "cannot write staging file", 0, 0);
+      finish(a->slot, "done", m, 0, 0, 0);
+    } else finish(a->slot, "error", "cannot write staging file", 0, 0, 0);
   } else {
     char m[128]; snprintf(m, sizeof m, "download failed (status %ld)", r.status);
-    finish(a->slot, "error", m, 0, 0);
+    finish(a->slot, "error", m, 0, 0, 0);
   }
   http_response_free(&r);
   if (h) http_client_free(h);
@@ -393,6 +402,7 @@ static void job_to_json(cJSON *arr, const bjob *j) {
   if (j->msg[0]) cJSON_AddStringToObject(o, "message", j->msg);
   cJSON_AddNumberToObject(o, "rows_in", (double)j->rows_in);
   cJSON_AddNumberToObject(o, "rows_new", (double)j->rows_new);
+  cJSON_AddNumberToObject(o, "rows_skipped", (double)j->rows_skipped);
   cJSON_AddNumberToObject(o, "started", (double)j->started);
   if (j->ended) cJSON_AddNumberToObject(o, "ended", (double)j->ended);
   cJSON_AddItemToArray(arr, o);

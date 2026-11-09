@@ -20,9 +20,17 @@
  * unchanged; a bogus sortBy is HTTP 400 "Illegal property name", so the
  * server reads it). Probe-sized pages (count 2/3/20/50) are 1000 now. The
  * 20-page geojson ceiling still bounds a run; the remainder is disclosed. */
+/* 2026-11-09: ONE request for the whole layer (numberMatched 3,911). Its
+ * `properties.id` is the PLANT and repeats across that plant's units (943
+ * distinct over 3,911 features), and VGEO keys on properties.id before the
+ * feature's own unique `desalination.N`, so at count=1000 a plant split across
+ * a page seam collapsed: 11 of 3,911 lost in the engine while all 3,911 are
+ * distinct whole records. Inside one page the collision guard keeps every
+ * distinct feature. count=5000 leaves headroom; a layer that outgrows it
+ * pages again (startIndex is bound) and the seam returns, disclosed. */
 VGEO(eu_emodnet_ha_desalination, "eu-emodnet-ha-desalination", "EMODnet desalination plants", "EMODnet desalination plants",
   "eu_infrastructure", "infrastructure",
-  "https://ows.emodnet-humanactivities.eu/wfs?service=WFS&version=2.0.0&request=GetFeature&typeName=emodnet:desalination&outputFormat=application/json&count=1000&startIndex=0",
+  "https://ows.emodnet-humanactivities.eu/wfs?service=WFS&version=2.0.0&request=GetFeature&typeName=emodnet:desalination&outputFormat=application/json&count=5000&startIndex=0",
   "en", "[\"eu\",\"infrastructure\",\"batch16\",\"high-penetrancy\"]", 86400,
   "Desalination facilities: objectid, location and comm_name, country, NUTS3, project name, award_date and online_date, location_type, capacity_m3d, unit count and unit_size_m3d, technology (RO etc.), feedwater type, plant_status and customer_type.");
 

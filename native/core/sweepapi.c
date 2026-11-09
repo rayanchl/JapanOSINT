@@ -113,7 +113,8 @@ static char *unified_fc(db_handle *db, const char *id) {
   return out;
 }
 
-int sweepapi_is_sweep(const char *id) {
+/* 1 if `id` is one of the sweep layers handled here. */
+static int sweepapi_is_sweep(const char *id) {
   if (!id || !*id) return 0;
   return !strcmp(id, "cameras")
       || !strcmp(id, "unified-station-footprints")

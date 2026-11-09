@@ -228,7 +228,9 @@ static void tpl_copy(sqlite3_stmt *s, int col, char *dst, size_t n) {
   const char *v = col >= 0 ? ctext(s, col) : NULL;
   if (v) snprintf(dst, n, "%s", v);
 }
-int report_template_load(db_handle *db, const char *tenant_id,
+/* Never fails: on any error (no table, no row, SQL failure) `out` is zeroed
+ * and present=0. Returns 1 if a template row was applied, 0 otherwise. */
+static int report_template_load(db_handle *db, const char *tenant_id,
                          report_template *out) {
   memset(out, 0, sizeof *out);
   if (!db || !db->h || !tenant_id || !*tenant_id) return 0;

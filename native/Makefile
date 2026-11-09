@@ -238,7 +238,7 @@ pagewalktest:
 authtest:
 	@mkdir -p bin
 	$(CC) $(CFLAGS) -o bin/auth_jwk_test tests/auth_jwk_test.c \
-	  third_party/cJSON.c $(LDLIBS)
+	  core/jo_codec.c third_party/cJSON.c $(LDLIBS)
 	./bin/auth_jwk_test
 
 # Unit/contract tests. Each test #includes the .c it exercises so it can reach

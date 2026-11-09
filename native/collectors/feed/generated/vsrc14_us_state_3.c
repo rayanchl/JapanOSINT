@@ -10,7 +10,15 @@
 /* `order=createdAt`: the catalog defaults to relevance order, which is not
  * stable across offset pages (live 2026-09-06: 2 of 100 assets on page 2
  * were repeats of page 1, and as many were skipped; with createdAt the
- * overlap is 0). Seven of these eleven rows measured 2-12% collapsed. */
+ * overlap is 0). Seven of these eleven rows measured 2-12% collapsed.
+ *
+ * 2026-11-07: bare `order=createdAt` is DESCENDING, newest first (Chicago's scoped catalogue:
+ * 2026-10-26 first, `createdAt ASC` answers 2010, the control `order=frobnicate` is HTTP 400).
+ * So these rows read the NEWEST limit x 20 pages (2,000 at limit=100), not the whole match set:
+ * every query measured that day fits (311 service requests 483, arrests 450, building permits
+ * 1,079, school enrollment 934), and one that outgrows it stops at the page ceiling and files
+ * the ceiling's truncation notice. That notice cannot yet name the match set's size, because
+ * the catalogue's `resultSetSize` is not a declared-total spelling (lib/pagewalk.c). */
 VJSON(us_socrata_search_school_enrollment, "us-socrata-search-school-enrollment", "Socrata Cross-Portal Search — School Enrollment", "Socrata 横断検索 school enrollment",
   "us_state", "education",
   "https://api.us.socrata.com/api/catalog/v1?limit=100&q=school%20enrollment&order=createdAt",

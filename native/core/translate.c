@@ -122,7 +122,38 @@ static int lang_says_ja(const char *language) {
          (language[1] == 'a' || language[1] == 'A');
 }
 
-int translate_is_japanese(const char *language, const char *title,
+/* THE DETECTOR. Returns 1 if this item should be treated as Japanese.
+ *
+ * Rule, over the concatenation of title+summary+body:
+ *   cjk    = codepoints in hiragana U+3040-309F, katakana U+30A0-30FF,
+ *            CJK U+4E00-9FFF, CJK ext-A U+3400-4DBF, halfwidth katakana
+ *            U+FF66-FF9F   (the same set core/fts.c uses for JP detection)
+ *   latin  = ASCII letters
+ *   japanese  iff  cjk >= 4  AND  cjk*100 >= (cjk+latin)*20
+ *   OR        iff  `language` begins with "ja" AND cjk >= 1
+ *
+ * WHY 20%. Digits, punctuation, whitespace and symbols are excluded from the
+ * denominator, so the ratio is CJK share of *letter* mass. Real Japanese
+ * OSINT text sits at 60-95%; the tail that sits low is Japanese wrapped
+ * around Latin payload (URLs, romanised names, product codes, ticker
+ * symbols), which is common in this corpus and must still be translated.
+ * English text contaminated with a Japanese proper noun — an English article
+ * mentioning トヨタ — sits under 10%. 20% separates those two populations
+ * with margin on both sides while erring, deliberately, toward translating:
+ * a wrongly-translated English row costs one LLM call, a wrongly-skipped
+ * Japanese row costs the analyst the feature.
+ *
+ * WHY THE FLOOR OF 4. Without it a two-character Latin string containing one
+ * kana is 33% and "Japanese". Four CJK codepoints is roughly the shortest
+ * genuinely Japanese title in the corpus (地震速報).
+ *
+ * WHY `language` IS NOT TRUSTED ALONE. It is NULL on most rows and derived
+ * from feed metadata where present. It is used only as a positive signal
+ * (lowering the floor to 1), never as a veto: a row tagged "en" whose text is
+ * plainly Japanese is translated.
+ *
+ * Any argument may be NULL. Thresholds are env-overridable (see above). */
+static int translate_is_japanese(const char *language, const char *title,
                           const char *summary, const char *body) {
   long cjk = 0, latin = 0;
   cp_counts(title, &cjk, &latin);
@@ -294,7 +325,16 @@ static int fts_put_en_by_rowid(sqlite3 *h, sqlite3_int64 rid, const char *kw) {
   return ok;
 }
 
-int translate_fts_resync(db_handle *db, int limit, volatile int *cancel) {
+/* Re-push English into intel_items_fts for items whose FTS row was recreated
+ * by a re-ingest since the last pass (see the watermark discussion above).
+ * No LLM involved, so this runs even when llama-server is down. Examines at
+ * most `limit` (<=0 → TRANSLATE_RESYNC_BATCH, default 2000) uid_map rows per
+ * call and is fully resumable — the watermark only advances over rows it
+ * actually processed. Returns the number of FTS rows rewritten.
+ *
+ * First-ever call seeds the watermark to MAX(rowid) and returns 0: enabling
+ * this module never sweeps an existing corpus. */
+static int translate_fts_resync(db_handle *db, int limit, volatile int *cancel) {
   if (!db || !db->h) return 0;
   translate_migrate(db);
   sqlite3 *h = db->h;

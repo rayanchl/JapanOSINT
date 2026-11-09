@@ -8,6 +8,8 @@
 #include "source_trust.h"
 #include "breach_meta.h"
 #include "credtab.h"
+#include "ratelimit.h"          /* counters: ratelimit_denials */
+#include "respcache.h"          /* counters: respcache_stats */
 #include "../lib/vecindex.h"  /* vectorIndexes: every registered vector index's coverage */
 #include "httpclient.h"       /* the probe fetch — hostgated, protocol-pinned */
 #include "../source.h"        /* registry_get — the probe URL comes from the registry */
@@ -564,12 +566,22 @@ char *statusapi_one(db_handle *db, const char *id) {
   return js;
 }
 
-char *statusapi_build(db_handle *db, int include_breach) {
-  return statusapi_build_view(db, include_breach, 0, 0, 0);
-}
-
-/* The bounded form. `limit <= 0` means "every row", which is what
- * statusapi_build() asks for and what both clients still get by default.
+/* Returns malloc'd {summary,apis,view,vectorIndexes,timestamp} (200). NULL →
+ * caller 500. `vectorIndexes` is {"<index>": {embedded, eligible, failed,
+ * refused, backlog, model, dim, state, last_run}} for every lib/vecindex
+ * index — eligible/backlog null until measured, never estimated.
+ *
+ * `include_breach` appends the breach_meta catalog (~1k rows) to `apis` as
+ * synthesized sources with category "breach", so the app's Sources screen can
+ * show them next to real collectors. It is operator-only and the caller decides:
+ * httpd.c passes opgate_check(&usr)==0. Ordinary users get the payload they
+ * always got — this is why it is a parameter and not a query flag. `summary`
+ * always carries breachTotal/breachMaterialized (0 when not included) so a
+ * client can decode them unconditionally.
+ *
+ * `limit <= 0` means "every row", which is what both clients still get by
+ * default. (The unbounded wrapper statusapi_build() had no caller; removed
+ * 2026-11-07.)
  *
  * The rows outside the window are still BUILT — the summary tallies are read
  * back off each row object, so skipping construction would change the numbers —
@@ -694,6 +706,34 @@ char *statusapi_build_view(db_handle *db, int include_breach,
   cJSON_AddNumberToObject(summary,"schedBackedOff", c_backed);
   cJSON_AddNumberToObject(summary,"schedQuarantined", c_hquar);
   cJSON_AddNumberToObject(summary,"repairQuarantined", c_rquar);
+  /* Process counters nothing used to read (2026-11-07): the rate limiter's
+   * denials, the response cache's hits/misses/bytes (both since boot, this
+   * process), and the story hook's running totals from story_meta (core/
+   * story.h: every row is processed or queued, and both counts live there).
+   * stories is null until the hook has written its table — never 0 when
+   * nothing was measured. */
+  { cJSON *ctr = cJSON_CreateObject();
+    cJSON_AddNumberToObject(ctr, "rateLimitDenials", (double)ratelimit_denials());
+    long long rh = 0, rm = 0; size_t rb = 0;
+    respcache_stats(&rh, &rm, &rb);
+    cJSON *rc = cJSON_AddObjectToObject(ctr, "responseCache");
+    cJSON_AddNumberToObject(rc, "hits", (double)rh);
+    cJSON_AddNumberToObject(rc, "misses", (double)rm);
+    cJSON_AddNumberToObject(rc, "bytes", (double)rb);
+    cJSON *st = NULL;
+    sqlite3_stmt *q;
+    if (db && db->h &&
+        sqlite3_prepare_v2(db->h, "SELECT k, CAST(v AS INTEGER) FROM story_meta",
+                           -1, &q, NULL) == SQLITE_OK) {
+      st = cJSON_CreateObject();
+      while (sqlite3_step(q) == SQLITE_ROW) {
+        const char *k = (const char *)sqlite3_column_text(q, 0);
+        if (k) cJSON_AddNumberToObject(st, k, (double)sqlite3_column_int64(q, 1));
+      }
+      sqlite3_finalize(q);
+    }
+    cJSON_AddItemToObject(ctr, "stories", st ? st : cJSON_CreateNull());
+    cJSON_AddItemToObject(summary, "counters", ctr); }
 
   char ts[40]; jo_iso_now_ms(ts, sizeof ts);
   cJSON *env = cJSON_CreateObject();

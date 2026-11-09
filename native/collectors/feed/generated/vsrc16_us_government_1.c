@@ -200,30 +200,49 @@ VJSON(us_phl_arcgis_zoning_basedistricts, "us-phl-arcgis-zoning-basedistricts", 
   "en", "[\"us\",\"government\",\"batch16\",\"high-penetrancy\"]", 86400,
   "Zoning district polygons with code/long_code attributes. The org id fLeGjb7u4uXqeF9q hosts the rest of Philadelphia's authoritative feature services (the service directory at /arcgis/rest/services?f=json enumerates them) and complements the Carto tables with the spatial layer.");
 
+/* 2026-11-07: fiscal_year was frozen at 2024. {date-9m:%Y} is the most recent CLOSED US fiscal year (FY ends
+ * 30 Sep: FY2026 from now until Oct 2027); FY2027 answers "outside the range of current
+ * submissions" (measured 2026-11-07). limit=100: without it the API pages 10 at a time and the
+ * row read 10 of 31 object classes; at 100 FY2026 answers 31 of 31, hasNext false. */
 VJSON(us_usaspending_agency_object_class, "us-usaspending-agency-object-class", "USAspending agency object-class breakdown", "USAspending agency object-class breakdown",
   "us_government", "government",
-  "https://api.usaspending.gov/api/v2/agency/012/object_class/?fiscal_year=2024",
+  "https://api.usaspending.gov/api/v2/agency/012/object_class/?fiscal_year={date-9m:%Y}&limit=100",
   "results",
   "en", "[\"us\",\"government\",\"batch16\",\"high-penetrancy\"]", 86400,
   "30 object classes per agency-year with name, obligated_amount and gross_outlay_amount - what the money was spent ON (Grants subsidies and contributions, Insurance claims and indemnities, Personnel compensation, Equipment). Detects an agency's spending mix shifting.");
 
+/* 2026-11-07: fiscal_year was frozen at 2024, and limit=3 was the authoring probe's (3 of 457). Measured
+ * 2026-11-07: FY2026 answers total 0 for this endpoint while FY2025 answers 456, so this row reads
+ * the year BEFORE the most recent closed one ({date-21m:%Y}: FY2025 until Oct 2027). 100 is the
+ * API's maximum (limit=500 is refused, "above max '100'"), and the API pages on `page`, not
+ * `offset` (offset=100 re-serves page 1), which VJSON cannot advance with `limit`: the row reads
+ * 100 of 456 and the walk's repeat guard discloses it. A complete read wants an hp row with
+ * page_param=page. */
 VJSON(us_usaspending_agency_program_activity, "us-usaspending-agency-program-activity", "USAspending agency program-activity breakdown", "USAspending agency program-activity breakdown",
   "us_government", "government",
-  "https://api.usaspending.gov/api/v2/agency/012/program_activity/?fiscal_year=2024&limit=3",
+  "https://api.usaspending.gov/api/v2/agency/012/program_activity/?fiscal_year={date-21m:%Y}&limit=100",
   "results",
   "en", "[\"us\",\"government\",\"batch16\",\"high-penetrancy\"]", 86400,
   "457 named program activities for USDA FY2024 with obligated_amount and gross_outlay_amount (BENEFITS ISSUED, BELOW 130 OF POVERTY...). The programme dimension, finer than object class and usable as a filter back into award search.");
 
+/* 2026-11-07: fiscal_year was frozen at 2024, and limit=3 was the authoring probe's. {date-9m:%Y} is the most
+ * recent closed fiscal year; FY2026 at limit=100 answers 22 of 22 sub-agencies, hasNext false
+ * (measured 2026-11-07). */
 VJSON(us_usaspending_agency_subagency, "us-usaspending-agency-subagency", "USAspending agency sub-agency and office breakdown", "USAspending agency sub-agency and office breakdown",
   "us_government", "government",
-  "https://api.usaspending.gov/api/v2/agency/012/sub_agency/?fiscal_year=2024&limit=3",
+  "https://api.usaspending.gov/api/v2/agency/012/sub_agency/?fiscal_year={date-9m:%Y}&limit=100",
   "results",
   "en", "[\"us\",\"government\",\"batch16\",\"high-penetrancy\"]", 86400,
   "Detail hop: each sub-tier agency (abbreviation, name, total_obligations, transaction_count, new_award_count) with a nested children[] array of the individual CONTRACTING OFFICES (code like 1234HK, name, obligations, transaction and new-award counts). Resolves federal money down to the specific office that signed it - 23 sub-agencies for USDA.");
 
+/* 2026-11-07: fiscal_year was frozen at 2024, and limit=3 was the authoring probe's (3 of 176). {date-9m:%Y}
+ * is the most recent closed fiscal year (FY2027 answers count 0, measured 2026-11-07); at
+ * limit=200 FY2026 answers all 176 accounts in one page, has_next_page false. The API ignores
+ * `offset` (offset=100 re-serves page 1) and its next link sits at page_metadata.next, which the
+ * shared next-link reader does not read, so the one page has to hold the whole set. */
 VJSON(us_usaspending_federal_obligations, "us-usaspending-federal-obligations", "USAspending federal obligations by account", "USAspending federal obligations by account",
   "us_government", "government",
-  "https://api.usaspending.gov/api/v2/federal_obligations/?fiscal_year=2024&funding_agency_id=1173&limit=3",
+  "https://api.usaspending.gov/api/v2/federal_obligations/?fiscal_year={date-9m:%Y}&funding_agency_id=1173&limit=200",
   "results",
   "en", "[\"us\",\"government\",\"batch16\",\"high-penetrancy\"]", 86400,
   "176 account rows per agency-year with account_title, account_number and obligated_amount, plus page_metadata carrying explicit next/current/previous URLs for exhaustive pagination.");

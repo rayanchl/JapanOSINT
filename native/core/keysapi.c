@@ -49,6 +49,12 @@ typedef struct { const char **N, **R; int n; } known_list;
  * told the operator to set. Built once from the registry: the names are
  * string literals in the tables and live for the process. */
 static const char **g_row_keys;
+/* Per key: 1 when at least one SCHEDULED row (interval > 0) declares it — a
+ * run on the scheduler needs it, so it is "required". A key named only by
+ * entity pivots is needed only when someone asks that pivot, and is labelled
+ * "row" (review 2026-11-07: every row-declared name used to read "required",
+ * which overstated it on /api/keys). is_known() accepts both alike. */
+static unsigned char *g_row_sched;
 static int g_row_nkeys;
 static pthread_once_t g_row_keys_once = PTHREAD_ONCE_INIT;
 static void row_keys_build(void) {
@@ -56,14 +62,20 @@ static void row_keys_build(void) {
   const source_def **all = registry_all();
   if (n <= 0 || !all) return;
   g_row_keys = calloc((size_t)n, sizeof *g_row_keys);
-  if (!g_row_keys) return;
+  g_row_sched = calloc((size_t)n, 1);
+  if (!g_row_keys || !g_row_sched) {
+    free(g_row_keys); free(g_row_sched); g_row_keys = NULL; g_row_sched = NULL;
+    return;
+  }
   for (int i = 0; i < n; i++) {
     const hp_source *h = all[i] ? hp_source_get(all[i]->id) : NULL;
     const char *k = h ? h->key_env : NULL;
     if (!k || !*k) continue;
-    int dup = 0;
-    for (int j = 0; j < g_row_nkeys && !dup; j++) dup = !strcmp(g_row_keys[j], k);
-    if (!dup) g_row_keys[g_row_nkeys++] = k;
+    int sched = all[i]->update_interval_sec > 0;
+    int at = -1;
+    for (int j = 0; j < g_row_nkeys && at < 0; j++) if (!strcmp(g_row_keys[j], k)) at = j;
+    if (at < 0) { at = g_row_nkeys++; g_row_keys[at] = k; }
+    if (sched) g_row_sched[at] = 1;
   }
 }
 
@@ -79,7 +91,11 @@ static int known_load(known_list *k) {
   for (int i = 0; i < g_row_nkeys && k->n < cap; i++) {
     int dup = 0;
     for (int j = 0; j < k->n && !dup; j++) dup = !strcmp(k->N[j], g_row_keys[i]);
-    if (!dup) { k->N[k->n] = g_row_keys[i]; k->R[k->n] = "required"; k->n++; }
+    if (!dup) {
+      k->N[k->n] = g_row_keys[i];
+      k->R[k->n] = g_row_sched[i] ? "required" : "row";
+      k->n++;
+    }
   }
   return 0;
 }

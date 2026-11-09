@@ -90,7 +90,7 @@ static int idx_of(const char *key) {
   for (int i = 0; i < NDEFS; i++) if (!strcmp(DEFS[i].key, key)) return i;
   return -1;
 }
-const threshold_def *threshold_find(const char *key) {
+static const threshold_def *threshold_find(const char *key) {
   int i = idx_of(key);
   return i < 0 ? NULL : &DEFS[i];
 }

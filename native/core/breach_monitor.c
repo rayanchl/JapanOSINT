@@ -485,7 +485,33 @@ long long breach_monitor_scan_new(db_handle *db, const char *source_id,
 
 /* ── public: full rescan ───────────────────────────────────────────────── */
 
-int breach_monitor_rescan_all(db_handle *shared_db, const char *tenant_id,
+/* FULL RESCAN — the reason this module is not just the ingest hook. A monitor
+ * created today would otherwise only ever see FUTURE breaches and would miss
+ * the entire already-ingested 1,018-breach corpus, which is the point of the
+ * feature. Runs the batched value_domain backfill, then matches every selected
+ * monitor against the whole of breach_items.
+ *
+ * `tenant_id` NULL/"" = every tenant. `monitor_id` NULL/"" = every monitor of
+ * that scope; set it to rescan exactly one. `cancel` may be NULL; checked
+ * between backfill windows, between monitor batches and between monitors, so a
+ * shutdown returns within one batch. Progress is durable: work already
+ * committed is not undone, and re-running skips it via the existence check.
+ * `*out_monitors` / `*out_hits` (either may be NULL) receive the number of
+ * monitors examined and alert_events rows COMMITTED.
+ *
+ * Returns 0, or <0 on a bad handle AND when any monitor's events could not be
+ * committed. `*out_hits` still counts only what did commit, so it is safe to
+ * report; the non-zero return is what stops a caller from serving a partial
+ * pass as a complete one. Re-running is the repair.
+ *
+ * NOT FOR A REQUEST THREAD when a domain monitor exists anywhere: the
+ * value_domain backfill it starts with walks the whole of breach_items in
+ * 50,000-row UPDATE batches, and a `cancel` of NULL cannot stop it. The HTTP
+ * create path checks that (any domain monitor → detached thread, and the
+ * response carries meta.scan="running" with a null initial_hits rather than a
+ * count nobody measured); POST /rescan waits for it, on an httpd worker thread
+ * rather than the event loop. Both hold the one rescan slot below. */
+static int breach_monitor_rescan_all(db_handle *shared_db, const char *tenant_id,
                               const char *monitor_id, volatile int *cancel,
                               long long *out_monitors, long long *out_hits) {
   if (out_monitors) *out_monitors = 0;

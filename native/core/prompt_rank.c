@@ -93,7 +93,9 @@ static const char *const TEXT_KEYS[] = {
   "value", "text", "body", NULL
 };
 
-char *prompt_rank_record_text(const cJSON *rec) {
+/* The text a record is judged by: its title/name/summary/description-like
+ * fields when it has them, else its JSON. Malloc'd; never NULL on success. */
+static char *prompt_rank_record_text(const cJSON *rec) {
   if (cJSON_IsString(rec)) return strdup(rec->valuestring ? rec->valuestring : "");
   size_t cap = 1024, len = 0;
   char *b = malloc(cap);

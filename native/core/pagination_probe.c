@@ -98,7 +98,9 @@ static int is_candidate(const source_def *d, long *size, const char **sp) {
   return 1;
 }
 
-int pagination_probe_candidates(void) {
+/* Candidate count without running anything — what the survey WOULD ask for.
+ * Used by the status route so an operator can see the scope before starting. */
+static int pagination_probe_candidates(void) {
   const source_def **all = registry_all();
   int n = registry_count(), c = 0;
   long sz; const char *sp;

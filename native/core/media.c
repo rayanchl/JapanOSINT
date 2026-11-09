@@ -508,7 +508,15 @@ int media_exif_parse(const void *buf, size_t len, media_exif *out) {
   return 1;
 }
 
-char *media_exif_to_json(const media_exif *e) {
+/* Render a media_exif as the JSON stored in media_assets.exif_json:
+ *   {"gps":{"lat":…,"lon":…,"alt_m":…}, "camera":{"make":…,"model":…,
+ *    "software":…,"lens":…}, "time":{"original":…,"digitized":…,"modified":…,
+ *    "gps_date":…,"gps_time":…}, "image":{"width":…,"height":…,
+ *    "orientation":…}, "byte_order":"II"|"MM", "truncated":bool}
+ * Absent groups are omitted entirely rather than filled with nulls, so the
+ * document stays small on the overwhelming majority of images that carry only
+ * a couple of tags. NULL only on OOM. Caller frees. */
+static char *media_exif_to_json(const media_exif *e) {
   if (!e) return NULL;
   cJSON *o = cJSON_CreateObject();
   if (!o) return NULL;
@@ -675,7 +683,29 @@ const char *media_sniff_type(const void *buf, size_t len) {
  * grayscale downscale is delegated. See media.h for the normative definition.
  * ═══════════════════════════════════════════════════════════════════════════ */
 
-uint64_t media_phash_gray32(const unsigned char *px) {
+/* THE HASH DEFINITION, so two implementations can agree:
+ *   input   32x32 8-bit grayscale, row-major, 1024 bytes
+ *   DCT-II  separable, unnormalised: C[v][u] = ΣΣ p[y][x]
+ *           cos(π(2x+1)u/64) cos(π(2y+1)v/64)
+ *   take    the top-left 8x8 of C
+ *   median  of those 64 coefficients EXCLUDING the DC term C[0][0]
+ *   bit i   (i = v*8 + u, MSB-first: bit i occupies 1<<(63-i)) is set when
+ *           C[v][u] > median. The DC term participates in the BITS but not in
+ *           the MEDIAN — the standard formulation, restated here because the
+ *           variants that include DC in the median produce different, silently
+ *           incomparable hashes.
+ * Returns 0 — the "no usable hash" sentinel — for a NULL buffer and for a
+ * FEATURELESS image. The second case is deliberate and matters: a solid-colour
+ * tile (blank scan, placeholder, upscaled tracking pixel — all present in this
+ * corpus) has mathematically zero AC energy, so its coefficients are floating-
+ * point noise around zero and the median falls inside that noise. Every bit
+ * would then be decided by accumulation order: the hash would be stable for
+ * one binary, different for the next, and — worse — two identical blank images
+ * would get two different fingerprints instead of matching. Such images are
+ * detected (max |AC| <= 1e-6 * |DC|; real images sit thirteen orders above
+ * that) and reported as "no hash", so the column is NULL rather than
+ * confidently wrong. */
+static uint64_t media_phash_gray32(const unsigned char *px) {
   if (!px) return 0;
 
   /* cos table on the stack rather than a lazily-initialised static: 1024
@@ -1434,7 +1464,11 @@ static void scan_body(const char *body, urlset *u, int max) {
   }
 }
 
-int media_discover_for_item(db_handle *db, const char *item_uid) {
+/* Find image URLs on ONE item and record them (INSERT OR IGNORE against
+ * UNIQUE(item_uid,url)), then stamp intel_items.media_scanned_at so the item
+ * leaves the discovery index. Returns the number of NEW assets recorded, or
+ * -1 if the uid has no row. No network. */
+static int media_discover_for_item(db_handle *db, const char *item_uid) {
   if (!db || !db->h || !item_uid || !*item_uid) return -1;
   media_migrate(db);
   sqlite3 *h = db->h;
@@ -1497,7 +1531,12 @@ int media_discover_for_item(db_handle *db, const char *item_uid) {
   return added;
 }
 
-int media_discover_batch(db_handle *db, int limit, volatile int *cancel) {
+/* One discovery batch: up to `limit` (<=0 → MEDIA_DISCOVER_BATCH) items with
+ * media_scanned_at IS NULL, newest first via idx_intel_items_media_pending.
+ * Returns assets recorded. `cancel` may be NULL; when non-NULL it is polled
+ * between items and stops the batch cleanly. No network — pure local work, so
+ * the whole batch is one short transaction. */
+static int media_discover_batch(db_handle *db, int limit, volatile int *cancel) {
   if (!db || !db->h) return 0;
   media_migrate(db);
   sqlite3 *h = db->h;
@@ -1541,7 +1580,15 @@ int media_discover_batch(db_handle *db, int limit, volatile int *cancel) {
  * Geolocation back-write
  * ═══════════════════════════════════════════════════════════════════════════ */
 
-int media_geo_backfill(db_handle *db, const char *item_uid, double lat,
+/* Write an EXIF coordinate onto an item. Sets lat/lon, geom_source='exif' and
+ * geom_at, and returns 1 only if it wrote.
+ *
+ * NEVER OVERWRITES: the UPDATE carries `AND lat IS NULL AND lon IS NULL AND
+ * geom_source IS NULL`, so a native coordinate from the collector, an LLM
+ * geocode and an earlier EXIF fix are all left exactly as they are. There is
+ * no force flag and there should not be one — silently moving a pin an analyst
+ * has already seen is worse than not placing it. */
+static int media_geo_backfill(db_handle *db, const char *item_uid, double lat,
                        double lon) {
   if (!db || !db->h || !item_uid || !*item_uid) return 0;
   if (!(lat >= -90.0 && lat <= 90.0 && lon >= -180.0 && lon <= 180.0)) return 0;
@@ -1564,7 +1611,13 @@ int media_geo_backfill(db_handle *db, const char *item_uid, double lat,
   return (ok && sqlite3_changes(db->h) > 0) ? 1 : 0;
 }
 
-int media_geo_reapply(db_handle *db, int limit, volatile int *cancel) {
+/* Re-apply EXIF coordinates that a re-ingest wiped (see the geom_source hazard
+ * above). Reads GPS back out of media_assets.exif_json via json_extract, driven
+ * by idx_media_assets_exif, and writes it through media_geo_backfill() — so it
+ * inherits the never-overwrite rule and can only ever fill a hole. Examines at
+ * most `limit` (<=0 → MEDIA_GEO_BATCH) assets. Returns coordinates restored;
+ * 0 is the normal steady state. */
+static int media_geo_reapply(db_handle *db, int limit, volatile int *cancel) {
   if (!db || !db->h) return 0;
   media_migrate(db);
   sqlite3 *h = db->h;
@@ -1779,7 +1832,15 @@ static int media_fts_put(sqlite3 *h, const char *uid) {
   return wrote;
 }
 
-int media_fts_sync(db_handle *db, int limit, volatile int *cancel) {
+/* Rebuild intel_items_fts.keywords for items whose OCR text is missing from
+ * the index — the repair half of the co-write with core/translate.c described
+ * at length above. Reads the current keywords back and writes only when the
+ * OCR payload is genuinely absent, so a settled corpus does zero writes.
+ * Examines at most `limit` (<=0 → MEDIA_FTS_BATCH) items per call, cycling
+ * through the corpus with a cursor kept in media_state; the cursor wraps when
+ * it runs off the end, so this is a loop, not a one-shot migration. Returns
+ * FTS rows rewritten. No LLM, no network. */
+static int media_fts_sync(db_handle *db, int limit, volatile int *cancel) {
   if (!db || !db->h) return 0;
   media_migrate(db);
   sqlite3 *h = db->h;

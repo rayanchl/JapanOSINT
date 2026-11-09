@@ -24,7 +24,4 @@ char *sweepapi_data(db_handle *db, const char *id);
  * layer. Caller persists it via collcache_set(). */
 char *sweepapi_build(db_handle *db, const char *id);
 
-/* 1 if `id` is one of the sweep layers handled here. */
-int   sweepapi_is_sweep(const char *id);
-
 #endif

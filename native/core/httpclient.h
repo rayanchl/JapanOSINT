@@ -165,6 +165,13 @@ const char *http_client_host_at(http_client *c, int i,
  * fetch_log.bytes_fetched records and the source detail page shows. */
 unsigned long long http_client_bytes_in(const http_client *c);
 int                http_client_request_count(const http_client *c);
+/* Fold a worker's client into the run's: bytes, attempts and the host log.
+ * A collector that fans out over its own clients (one per thread, since a
+ * client is not shared across threads) calls this as each worker finishes —
+ * under its own lock — so the run line, fetch_log.bytes_fetched and the
+ * fetch-failure disclosure's hosts see every request the run made, not only
+ * the ones on ctx->http. */
+void               http_client_absorb(http_client *dst, const http_client *src);
 
 /* TESTS ONLY: record a host in the log as though a request had been made,
  * without making one. `core/scheduler.c`'s fetch-failure disclosure branches on

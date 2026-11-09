@@ -7,6 +7,14 @@
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
 
+/* Socrata catalogue rows in this file (`/api/catalog/v1?...&order=createdAt`), 2026-11-07:
+ * bare `order=createdAt` is DESCENDING, newest first, on the portals' own hosts as on
+ * api.us.socrata.com (data.honolulu.gov: 2026-11-02 first, `createdAt ASC` 2012-06-01, total
+ * 455 unchanged; www.dati.lombardia.it: 2026-11-05 first, ASC 2012-01-10, total 5,132). So
+ * each row reads the NEWEST limit x 20 pages (2,000 at limit=100), not the whole catalogue: a
+ * catalogue that fits is read complete, and a larger one (Lombardia's 5,132) stops at the page
+ * ceiling and files the ceiling's truncation notice. The notice cannot yet name the
+ * catalogue's size: `resultSetSize` is not a declared-total spelling (lib/pagewalk.c). */
 VJSON(us_health_data_ny_gov_catalog, "us-health-data-ny-gov-catalog", "health.data.ny.gov — catalog (United States)", "health.data.ny.gov — catalog (United States)",
   "us_opendata", "opendata",
   "https://health.data.ny.gov/api/catalog/v1?limit=100&domains=health.data.ny.gov&search_context=health.data.ny.gov&order=createdAt",

@@ -53,8 +53,4 @@ int prompt_rank_select(prompt_rank *pr, cJSON *records, int keep, int *ranked_ou
 /* Texts sent to the embedding server by this ranker so far (tests, logs). */
 long prompt_rank_sent(const prompt_rank *pr);
 
-/* The text a record is judged by: its title/name/summary/description-like
- * fields when it has them, else its JSON. Malloc'd; never NULL on success. */
-char *prompt_rank_record_text(const cJSON *rec);
-
 #endif

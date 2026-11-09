@@ -35,9 +35,14 @@ VJSON(iaticloud_transaction, "iaticloud-transaction", "IATI Datastore (iati.clou
   "en", "[\"int\",\"aid\",\"batch17\",\"high-penetrancy\"]", 86400,
   "Individual aid transactions under each activity: transaction_ref, type (commitment/disbursement/expenditure), date, value in original currency and USD, provider and receiver organisation refs and narratives, recipient country and sector. Money-level granularity beneath the activity. Same fl=id requirement as the activity endpoint.");
 
-VJSON(ocha_fts_flow_2026, "ocha-fts-flow-2026", "UN OCHA FTS — humanitarian funding flows 2026", "UN OCHA FTS — humanitarian funding flows 2026",
+/* 2026-11-07: year was frozen at 2026 and freezes on 2027-01-01. {date:%Y} is the current calendar year;
+ * measured 2026-11-07, year=2026 answers meta.count 24,509 and year=2027 already 3,460 (pledges),
+ * so from January this row reads the new year. The id keeps its authoring year (an id is a
+ * registry decision); late-reported flows for a closed year are not re-read. 24,509 at 1000 a
+ * page is 25 pages, over the 20-page ceiling: the walk discloses the rest. */
+VJSON(ocha_fts_flow_2026, "ocha-fts-flow-2026", "UN OCHA FTS — humanitarian funding flows, current year", "UN OCHA FTS — humanitarian funding flows, current year",
   "int_aid", "aid",
-  "https://api.hpc.tools/v1/public/fts/flow?year=2026&limit=1000", /* limit=1000 is the server's page cap (5000 is answered with 1000); 20,161 flows on 2026-09-15 = 21 pages, followed through meta.nextLink */
+  "https://api.hpc.tools/v1/public/fts/flow?year={date:%Y}&limit=1000", /* limit=1000 is the server's page cap (5000 is answered with 1000); 20,161 flows on 2026-09-15 = 21 pages, followed through meta.nextLink */
   "data.flows",
   "en", "[\"int\",\"aid\",\"batch17\",\"high-penetrancy\"]", 86400,
   "Donor-to-recipient money movements: amountUSD, original amount and currency, exchange rate, contribution type, flow type, earmarking, decision/first-reported dates, sourceObjects and destinationObjects (naming the donor organisation, the receiving agency, the plan, the cluster and the location), parent/child flow ids and reportDetails. Note the array is data.flows — the auto-detector would pick a metadata array instead.");

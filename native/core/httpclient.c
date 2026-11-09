@@ -947,3 +947,34 @@ void http_response_free(http_response *r) {
 
 unsigned long long http_client_bytes_in(const http_client *c) { return c ? c->bytes_in : 0; }
 int http_client_request_count(const http_client *c) { return c ? c->requests : 0; }
+
+/* See httpclient.h. Each host of `src` is merged into `dst` the way log_host
+ * records one: requests summed, `ok` if either side ever answered. */
+void http_client_absorb(http_client *dst, const http_client *src) {
+  if (!dst || !src || dst == src) return;
+  dst->bytes_in += src->bytes_in;
+  dst->requests += src->requests;
+  for (int i = 0; i < src->n_hosts; i++) {
+    const host_log *h = &src->hosts[i];
+    int j = 0;
+    for (; j < dst->n_hosts; j++)
+      if (strcmp(dst->hosts[j].host, h->host) == 0) break;
+    if (j < dst->n_hosts) {
+      dst->hosts[j].requests += h->requests;
+      if (h->ok) dst->hosts[j].ok = 1;
+      continue;
+    }
+    if (dst->n_hosts >= dst->cap_hosts) {
+      int nc = dst->cap_hosts ? dst->cap_hosts * 2 : 4;
+      host_log *q = realloc(dst->hosts, (size_t)nc * sizeof *q);
+      if (!q) return;
+      dst->hosts = q; dst->cap_hosts = nc;
+    }
+    char *dup = strdup(h->host);
+    if (!dup) return;
+    dst->hosts[dst->n_hosts].host = dup;
+    dst->hosts[dst->n_hosts].requests = h->requests;
+    dst->hosts[dst->n_hosts].ok = h->ok;
+    dst->n_hosts++;
+  }
+}
