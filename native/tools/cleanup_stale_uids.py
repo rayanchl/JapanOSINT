@@ -181,6 +181,145 @@ SOURCES = [
     _src("fra-grade-crossing-inventory",
          "collectors/sources/trn_fra_grade_crossing_inventory.c", 0, _fra_disc),
 ]
+# ── re-keyed sources (audit round two, 2026-11-09/11) ───────────────────────
+# Rows whose identity was CORRECTED: each now keys on fields of its own record
+# (docs/audit-round2-2026-11-09.md). An existing database still holds the rows
+# written under the old key — a title, a constant date column, a list
+# position, a content hash — as second copies of records that now live under
+# the new uid. The rule ("rekeyed"): rows of the source are grouped by the
+# NEW key's fields, read from each row's stored properties; inside a group the
+# newest row is the current copy, and an older row with a DIFFERENT uid is
+# stale only when that newest row holds every DATA field it stored (engine
+# bookkeeping and detail-hop fields excluded, because a record deepened in one
+# run can be pending in the next). A row whose stored properties lack a key
+# field is never judged — which is why CFTC_SWAPS_REPORT, co-dnp-proyectos-sgr
+# and lat-co-siri (keyed on Socrata's `:id`, which their old rows never
+# stored) and the year-stamped date rows are NOT listed: nothing the old row
+# kept can prove its replacement.
+#
+# Keys are read from the source's own C definition at run time (rekey_fields),
+# so this list names sources and never restates a key that could drift.
+REKEYED = (
+    ["af-dhs-data-" + c for c in ("et", "gh", "ke", "ng", "rw", "tz", "ug", "za", "zm")]
+    + ["dhs-data-" + c for c in ("bf", "bj", "cd", "ci", "cm", "eg", "ma", "mg", "ml", "sn")]
+    + ["af-dportal-trans-" + c for c in ("gh", "ke", "ng", "rw", "ug", "za")]
+    + ["uk-govuk-search-" + c for c in ("cma-cases", "drug-safety-update", "employment-tribunal",
+                                        "maib-reports", "medical-safety-alerts", "raib-reports",
+                                        "tax-tribunal", "utaac-decisions")]
+    + ["UK_GOVUK_SEARCH", "UK_LORDS_REGISTER_INTERESTS",
+       "geo-inat-birds", "geo-inaturalist-obs-threatened"]
+    + ["@hp3b19_finance:TPEX_", "@hp3b19_finance:TWSE_"]   # every keyed TPEx/TWSE row there
+)
+# Stored by the engine around every record, or by a detail hop that may or may
+# not have run: never part of a record's identity or content proof.
+VOLATILE = {"service", "source_id", "query", "endpoint", "real_fetch", "_page",
+            "_detail_pending", "_detail_error", "_detail_status", "detail_url",
+            "_fields_dropped", "_array_truncated"}
+
+
+def _data(props):
+    return {k: v for k, v in (props or {}).items()
+            if k not in VOLATILE and not k.startswith("detail.") and not k.startswith("detail_")}
+
+
+def data_contained(old, new):
+    """props_contained over the DATA fields only (see VOLATILE)."""
+    return props_contained(_data(old), _data(new)) if old else False
+
+
+_HERE = os.path.dirname(os.path.abspath(__file__))
+_COLL = os.path.join(_HERE, "..", "collectors")
+
+
+def _c_rows(ids, bases):
+    """(id_keys or IDFIELD, file base) for the given ids, from hp rows and
+    VJSON_KEYED/VJSON_IDKEYS rows. Only files that mention one of them (or
+    whose base is named) are parsed, and each row is cut at its own boundary,
+    so this stays a fraction of a second over the whole tree."""
+    import glob, re
+    out = {}
+    for f in glob.glob(os.path.join(_COLL, "**", "*.c"), recursive=True):
+        base = os.path.basename(f)[:-2]
+        t = open(f, encoding="utf-8", errors="replace").read()
+        if base not in bases and not any(('"%s"' % i) in t for i in ids):
+            continue
+        for chunk in re.split(r"\n  \{ \.id = ", t)[1:]:
+            m = re.match(r'"([^"]+)"', chunk)
+            if not m:
+                continue
+            body = chunk.split("\n  {", 1)[0]
+            k = re.search(r'\.id_keys = "([^"]+)"', body)
+            if k:
+                out[m.group(1)] = (k.group(1), base)
+        # String-aware: a description may itself contain ';' or '",'.
+        for m in re.finditer(r'VJSON_(?:KEYED|IDKEYS)\(\w+, "([^"]+)",(?:[^";]|"(?:[^"\\]|\\.)*")*?,\s*"([^"]+)"\);', t):
+            out[m.group(1)] = (m.group(2), base)
+    return out
+
+
+def rekey_fields(only=None):
+    """{source id: [field, ...]} for REKEYED, the composite's first alternative
+    (`a+b,c` keys on a+b; `,` CHOOSES and the first choice is what a record
+    carrying it is keyed on)."""
+    plain = [e for e in REKEYED if not e.startswith("@")]
+    bases = {e[1:].split(":")[0] for e in REKEYED if e.startswith("@")}
+    rows = _c_rows(plain, bases)
+    want = {}
+    for entry in REKEYED:
+        if entry.startswith("@"):
+            base, pre = entry[1:].split(":")
+            ids = [i for i, (_, b) in rows.items() if b == base and i.startswith(pre)]
+        else:
+            ids = [entry]
+        for i in ids:
+            if i in rows and (not only or i in only):
+                want[i] = [x for x in rows[i][0].split(",")[0].split("+") if x]
+    return want
+
+
+def _field(props, name):
+    """A stored field as the engine resolves a key token: the exact flat key,
+    else a key whose last dotted segment matches case-insensitively."""
+    if name in props:
+        return props[name]
+    low = name.lower()
+    for k, v in props.items():
+        if k.rsplit(".", 1)[-1].lower() == low:
+            return v
+    return None
+
+
+def judge_rekeyed(con, sid, fields):
+    groups = {}
+    for r in con.execute("SELECT uid, fetched_at, properties FROM intel_items "
+                         "WHERE source_id=?1 AND COALESCE(record_type,'') NOT LIKE 'collector-%'",
+                         (sid,)):
+        row = Row(*r)
+        if row.props is None:
+            continue
+        vals = [_field(row.props, f) for f in fields]
+        if any(v is None or v == "" for v in vals):
+            continue                       # cannot be placed: never judged
+        groups.setdefault(tuple(_canon(v) for v in vals), []).append(row)
+    out = []
+    for rows in groups.values():
+        if len(rows) < 2:
+            continue
+        rows.sort(key=lambda x: x.fetched_at)
+        cur = rows[-1]
+        for row in rows[:-1]:
+            if row.uid == cur.uid:
+                continue
+            if row.fetched_at >= cur.fetched_at:
+                verdict, rep, how = "kept-newer", None, None
+            elif data_contained(row.props, cur.props):
+                verdict, rep, how = "stale", cur.uid, "rekeyed"
+            else:
+                verdict, rep, how = "kept-unproven", None, None
+            out.append(verdict_of(row, "rekeyed", verdict, rep, how, source=sid))
+    return out
+
+
 WAYBACK = "wayback-jp"                         # collectors/sources/wayback_jp.c
 RDW = "netherlands-rdw-parking-garages"
 NOTICE = "collector-truncation-notice"
@@ -418,6 +557,8 @@ def find(con, only=None):
         rows += judge_rdw_old_repeat(con)
     if not only or WAYBACK in only:
         rows += judge_wayback(con)
+    for sid, fields in rekey_fields(only).items():
+        rows += judge_rekeyed(con, sid, fields)
     # A replacement that is itself about to be deleted proves nothing: the row
     # is kept, never deleted along a chain.
     doomed = {r["uid"] for r in rows if r["verdict"] == "stale"}
@@ -507,6 +648,8 @@ def recheck(con, r):
     if r["kind"] != "wayback" and not (rep[0] or "") > r["fetched_at"]:
         return "its replacement is no longer newer than it"
     if r["proof"] == "content" and not props_contained(_props(r["text"]), _props(rep[1])):
+        return "its replacement no longer holds every property it stored"
+    if r["proof"] == "rekeyed" and not data_contained(_props(r["text"]), _props(rep[1])):
         return "its replacement no longer holds every property it stored"
     if references(con, r["uid"]):
         return "something references it now"
@@ -632,6 +775,22 @@ def self_test():
     con.execute("INSERT INTO cases(id,tenant_id,name) VALUES ('k1','tA','k')")
     con.execute("INSERT INTO case_items(case_id,ref_type,ref_id) VALUES ('k1','intel_item','us-chicago-contracts|C3')")
     want_kept["us-chicago-contracts|C3"] = "kept-referenced"
+
+    # Re-keyed (audit round two): DHS keyed on its indicator label before, on
+    # DataId now. The old row was deepened (detail.*), the new one pending —
+    # the hop's fields are not part of the proof.
+    dhs = "af-dhs-data-ug"
+    put(dhs + "|Women age 15-49", dhs, {"DataId": 7, "Value": 5, "Indicator": "Women age 15-49",
+                                          "detail.Label": "L", "_page": 3}, T0)
+    put(dhs + "|7", dhs, {"DataId": 7, "Value": 5, "Indicator": "Women age 15-49",
+                          "_detail_pending": True, "_page": 1}, T1)
+    want_stale.add(dhs + "|Women age 15-49")
+    # The same DataId, a different value since: not proven the same record.
+    put(dhs + "|Men age 15-49", dhs, {"DataId": 8, "Value": 4}, T0)
+    put(dhs + "|8", dhs, {"DataId": 8, "Value": 9}, T1)
+    want_kept[dhs + "|Men age 15-49"] = "kept-unproven"
+    # No DataId stored: cannot be placed, never judged (and stays).
+    put(dhs + "|orphan", dhs, {"Value": 1}, T0)
 
     # Colorado (no key2: hash-qualified): content proof.
     co = "us-co-business-entities"
@@ -825,7 +984,7 @@ def main():
         return self_test()
     if not a.db:
         ap.error("a database path is required (or --self-test)")
-    known = {s["id"] for s in SOURCES} | {WAYBACK}
+    known = {s["id"] for s in SOURCES} | {WAYBACK} | set(rekey_fields())
     for s in a.source or []:
         if s not in known:
             ap.error("%s is not a source this tool covers: %s" % (s, ", ".join(sorted(known))))

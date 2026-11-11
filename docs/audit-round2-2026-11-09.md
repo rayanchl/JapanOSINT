@@ -84,29 +84,53 @@ User-Agent was removed.
 * **SWOB**: no tie-free newest-first sort exists (any second key reads as a
   filter); the seam is disclosed.
 
-## Owner's decisions
+## Decided by the owner and done (2026-11-11)
 
-* `TWSE_BROKER_LICENCE`, `TWSE_ESG_INFOSEC` and `TWSE_ESG_RISKPOLICY` answer
-  the exchange's 947-byte "FOR SECURITY REASONS" page under every agent
-  while sibling paths answer; `TWSE_PUBCO_BALANCE` returns one record with
-  every field empty. New keys orphan old rows in existing databases
-  (`tools/cleanup_stale_uids.py`).
+* **Twins removed** (12 rows, `docs/removed-sources-2026-11-11-twins.tsv`):
+  six `gov-ukparl-*` rows that read the same endpoint as a `cyb-ukparl-*`
+  row (interests, committees, committee publications, Commons divisions,
+  Lords divisions, treaties; the `members` pair differs by a current-member
+  filter and both stay); five `chronicdata.cdc.gov` inventory rows (the host
+  is an alias: catalogue 1,480 = 1,480, identical ids and metadata); and
+  `JP25_JPNATGOV_JISHIN_HQ_POSTS`, whose survivor gains its body field.
+* **OpenAlex scheduled rows gated** on `OPENALEX_API_KEY` (26 VJSON rows via a
+  new `VJSON_KEYQ` macro, 8 hp rows via `key_env`); the on-demand pivots stay
+  keyless. Without the key a row files one needs-credential notice and makes
+  no request; with it the key is sent as `api_key=` and never stored (central
+  redaction, checked with a fake key: 0 stored rows carry it).
+* **law.go.kr gated** on `LAW_GO_KR_OC` (13 rows sent `OC=test`): 11 hp rows
+  `OC={key}`, 2 VJSON rows `VJSON_KEYQ` with `OC`.
+* **TWSE fixed.** The "FOR SECURITY REASONS" page is a CDN miss: the
+  exchange's origin refuses this container and the CDN answers 307 with no
+  Location, while cached copies answer 200. `core/httpclient.c` now retries a
+  3xx that names no target (as it does a 5xx or 429); test
+  `test_http_dangling_redirect.c` (checked to fail without it). Measured
+  after: `TWSE_BROKER_LICENCE` 22, `TWSE_ESG_INFOSEC` 832,
+  `TWSE_ESG_RISKPOLICY` 822 stored. `TWSE_PUBCO_BALANCE` is empty upstream
+  until the quarter is published (one placeholder row with only its table
+  date filled): a new `require_keys` row field (hptest 37g) treats such a row
+  as a placeholder, so the run is an honest empty instead of storing it.
+* **Dead rows**: `JO41_WP_CITY_324485` re-pointed to the town's new site feed
+  (1,125 items); five removed with their evidence in
+  `docs/removed-sources-2026-11-11-dead.tsv` — `CERT_PH_WP_POSTS` and
+  `cyb-ncert-ph` (Cloudflare challenge / login), the JBSTORECSS route (gone),
+  and the two old Misato WordPress routes.
+* **Old rows**: `tools/cleanup_stale_uids.py` gained a `rekeyed` rule for the
+  re-keyed sources (DHS, d-portal, GOV.UK search, the UK interests register,
+  the moved iNaturalist rows, every keyed TPEx/TWSE row): rows are grouped by
+  the source's new key fields, read from the source's own C definition, and
+  an older row is stale only when a newer row with a different uid holds
+  every data field it stored. CFTC, the two Colombia `:id` rows and the
+  year-stamped rows are not covered: their old rows never stored the new key.
+  Report first: `python3 native/tools/cleanup_stale_uids.py "$JO_DB"`, then
+  `--delete` when you choose.
 
-* **Twin rows**: `gov-ukparl-interests` and `cyb-ukparl-interests` read the
-  same URL (recorded in the lint baseline, not hidden); the
-  `cyb-ukparl-*`/`gov-ukparl-*` families overlap on six endpoints;
-  `chronicdata.cdc.gov` is an alias of `data.cdc.gov`; `www.jishin.go.jp`
-  posts are registered twice.
-* **OpenAlex keyless rows**: keyless requests from this container draw the
-  shared-IP 429. Some siblings are already gated on `OPENALEX_API_KEY`; ~20
-  keyless rows and ten pivots are not. Gating them stops them for an install
-  without a key.
-* **law.go.kr** (19 rows) sends the placeholder `OC=test` and is refused;
-  it needs a registered key.
+Registered sources: **61,510** (61,527 − 12 twins − 5 dead), both floors
+re-recorded from that build.
+
+## Still open
+
 * **`cvrapi.dk`** answers `QUOTA_EXCEEDED` per agent; switching agents to get
   a fresh quota would be evading it, so nothing was added.
-* Possible removals the diagnosis found: `CERT_PH_WP_POSTS` (REST needs a
-  login), `JO49_..._JBSTORECSS` (route gone), `JO41_WP_CITY_324485`
-  (site re-platformed).
 * `JO_HTTP_BLOCK_PRIVATE` default, and rate limits keyed on client IP behind
   a proxy.

@@ -107,12 +107,8 @@ VJSON(us_socrata_metadata_chicago, "us-socrata-metadata-chicago", "City of Chica
   "en", "[\"usa\",\"opendata\",\"socrata\",\"metadata\",\"chicago\"]", 86400,
   "Portal-side metadata for the assets hosted on data.cityofchicago.org: name, description, category, tags, attribution, licence, owner and provenance for each view.");
 
-VJSON(us_socrata_metadata_chronicdata, "us-socrata-metadata-chronicdata", "US CDC Chronic Disease Data — Asset Metadata", "米国CDC 慢性疾患 メタデータ",
-  "us_state", "opendata",
-  "https://chronicdata.cdc.gov/api/views/metadata/v1?limit=500&page_size=500&page=1",
-  "",
-  "en", "[\"usa\",\"opendata\",\"socrata\",\"metadata\",\"chronicdata\"]", 86400,
-  "Portal-side metadata for the assets hosted on chronicdata.cdc.gov: name, description, category, tags, attribution, licence, owner and provenance for each view.");
+/* us-socrata-metadata-chronicdata: removed 2026-11-11 (owner's decision) — a twin of us-socrata-metadata-cdc: alias host; identical metadata id sets.
+   docs/removed-sources-2026-11-11-twins.tsv */
 
 VJSON(us_socrata_metadata_colorado, "us-socrata-metadata-colorado", "State of Colorado Open Data — Asset Metadata", "コロラド州 メタデータ",
   "us_state", "opendata",

@@ -207,6 +207,12 @@ typedef struct hp_source {
    * because truncation would manufacture collisions in the very field meant
    * to prevent them. */
   const char *id_keys;
+  /* `a+b` — fields EVERY real record carries. A record missing any of them
+   * (absent, or empty, which the flattener drops) is the upstream's
+   * placeholder, not a record: counted with the empty slots and not stored.
+   * For a dataset that publishes one all-blank row while a period is not out
+   * yet (TWSE's t187ap07_X_ci: only the table date filled). Off when NULL. */
+  const char *require_keys;
   const char *link_keys;
   const char *link_tmpl;      /* {v} = link_keys value; else the raw value  */
   const char *date_keys;

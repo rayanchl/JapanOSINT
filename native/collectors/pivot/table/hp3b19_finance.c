@@ -482,8 +482,28 @@ static const hp_source HP3B19_FINANCE[] = {
     .tags = "\"taiwan\",\"securities\",\"financials\",\"filings\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://openapi.twse.com.tw/v1/opendata/t187ap07_X_ci",
+    /* 2026-11-11: while the quarter is unpublished this file serves ONE
+     * placeholder row with only 出表日期 filled (measured; the listed-company
+     * file has 532 Q3 sheets). A record without a company code is that
+     * placeholder, not a balance sheet. */
+    .require_keys = "公司代號",
     .interval = 604800,
-    .title_keys = "非流動資產",
+    /* 2026-11-11: the ONE all-empty record is the upstream's own between-
+     * quarters placeholder, not a moved dataset. The t187ap07 files hold the
+     * CURRENT period only, and it has rolled to 115Q3: the same minute
+     * t187ap07_X_basi held 3 Q3 balance sheets, _X_bd 5, the listed
+     * general-industry file _L_ci 532 (年度 115, 季別 3), while _X_ci,
+     * _X_mim, _X_fh and _X_ins each held one record with every field empty
+     * but 出表日期 — the unlisted general-industry Q3 filings are not published
+     * yet (Last-Modified 2026-11-11 21:30 GMT, so the file IS maintained).
+     * URL unchanged. Because the file is replaced every quarter, the key must
+     * carry the period or next quarter's sheet would overwrite this one:
+     * `公司代號+年度+季別`, distinct on 532 of 532 in _L_ci (same columns). The
+     * title was `非流動資產`, a number; it is the company name now. Until the
+     * engine skips an all-empty record, the placeholder still lands as one
+     * row titled by its 出表日期 (the id_keys-unmatched notice says so). */
+    .id_keys = "公司代號+年度+季別",
+    .title_keys = "公司名稱",
     .description = "Quarterly balance sheets for every Taiwanese public company "
       "outside the financial sector, with current and non-current "
       "assets, liabilities, equity attributable to owners and "
@@ -575,6 +595,26 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://openapi.twse.com.tw/v1/brokerService/secRegData",
     .interval = 604800,
+    /* 2026-11-11: no id_keys, so the uid fell back to the first scalar. One
+     * live read (a cache HIT): 22 records, 22 distinct whole,
+     * `SecuritiesFirmCode` distinct on 22; `Name` is the title.
+     * WALL READING (2026-11-09 audit: a 947-byte "FOR SECURITY REASONS"
+     * page under every agent) re-measured 2026-11-11: it is NOT a property
+     * of this path or of our agent. openapi.twse.com.tw is fronted by
+     * HiNetCDN; a cache HIT (X-Cache: HIT) answers 200 JSON, and a request
+     * that reaches the origin (X-Cache: EXPIRED, EXPIRED, EXPIRED) is
+     * answered HTTP 307 with that page and no Location. The origin refuses
+     * THIS container for every agent tried (engine, bare JapanOSINT/1.0,
+     * curl's default, the compat prefix) and on every TWSE host asked —
+     * www.twse.com.tw's homepage, mops.twse.com.tw and
+     * mopsfin.twse.com.tw/opendata/<id>.csv, the files data.gov.tw's own
+     * dataset records point at — so no other publisher URL reads better,
+     * no host_agents.def line can move it, and an egress elsewhere may not
+     * see it at all. Sibling paths "answer" only because they are more
+     * often warm in the cache. Measured: secRegData 2 of 4 paced reads
+     * served, the ESG paths 4 of 4 that minute. URL unchanged. */
+    .id_keys = "SecuritiesFirmCode",
+    .title_keys = "Name",
     .description = "Securities firms authorised to run regular-investment and "
       "wealth-management businesses, each with the firm code, name and "
       "the dates each licence took effect. Licence start dates "
@@ -630,7 +670,23 @@ static const hp_source HP3B19_FINANCE[] = {
     /* 2026-11-09: no id_keys, so the uid fell back to first scalar `出表日期`,
      * identical on every record, so every uid was a content hash and a
      * revised record landed as a new row. One live read: 822 records, 822
-     * distinct whole, `公司代號+報告年度` distinct on 822 (公司代號 alone 822). */
+     * distinct whole, `公司代號+報告年度` distinct on 822 (公司代號 alone 822).
+     * 2026-11-11: re-read, 822 / 822 again (報告年度 114).
+     * WALL READING (2026-11-09 audit: a 947-byte "FOR SECURITY REASONS"
+     * page under every agent) re-measured 2026-11-11: it is NOT a property
+     * of this path or of our agent. openapi.twse.com.tw is fronted by
+     * HiNetCDN; a cache HIT (X-Cache: HIT) answers 200 JSON, and a request
+     * that reaches the origin (X-Cache: EXPIRED, EXPIRED, EXPIRED) is
+     * answered HTTP 307 with that page and no Location. The origin refuses
+     * THIS container for every agent tried (engine, bare JapanOSINT/1.0,
+     * curl's default, the compat prefix) and on every TWSE host asked —
+     * www.twse.com.tw's homepage, mops.twse.com.tw and
+     * mopsfin.twse.com.tw/opendata/<id>.csv, the files data.gov.tw's own
+     * dataset records point at — so no other publisher URL reads better,
+     * no host_agents.def line can move it, and an egress elsewhere may not
+     * see it at all. Sibling paths "answer" only because they are more
+     * often warm in the cache. Measured: secRegData 2 of 4 paced reads
+     * served, the ESG paths 4 of 4 that minute. URL unchanged. */
     .id_keys = "公司代號+報告年度",
     .title_keys = "公司名稱",
     .description = "Each TWSE issuer stated risk-management policy for material "
@@ -1888,6 +1944,28 @@ static const hp_source HP3B19_FINANCE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://openapi.twse.com.tw/v1/opendata/t187ap46_L_16",
     .interval = 604800,
+    /* 2026-11-11: no id_keys, so the uid fell back to first scalar `出表日期`,
+     * identical on every record (1151112), so every uid was a content hash
+     * and a revised record landed as a new row. One live read (a cache HIT):
+     * 832 records, 832 distinct whole, `公司代號+報告年度` distinct on 832
+     * (公司代號 alone 832; 報告年度 114 on all, so the year keeps next year's
+     * report from overwriting this one).
+     * WALL READING (2026-11-09 audit: a 947-byte "FOR SECURITY REASONS"
+     * page under every agent) re-measured 2026-11-11: it is NOT a property
+     * of this path or of our agent. openapi.twse.com.tw is fronted by
+     * HiNetCDN; a cache HIT (X-Cache: HIT) answers 200 JSON, and a request
+     * that reaches the origin (X-Cache: EXPIRED, EXPIRED, EXPIRED) is
+     * answered HTTP 307 with that page and no Location. The origin refuses
+     * THIS container for every agent tried (engine, bare JapanOSINT/1.0,
+     * curl's default, the compat prefix) and on every TWSE host asked —
+     * www.twse.com.tw's homepage, mops.twse.com.tw and
+     * mopsfin.twse.com.tw/opendata/<id>.csv, the files data.gov.tw's own
+     * dataset records point at — so no other publisher URL reads better,
+     * no host_agents.def line can move it, and an egress elsewhere may not
+     * see it at all. Sibling paths "answer" only because they are more
+     * often warm in the cache. Measured: secRegData 2 of 4 paced reads
+     * served, the ESG paths 4 of 4 that minute. URL unchanged. */
+    .id_keys = "公司代號+報告年度",
     .title_keys = "公司名稱",
     .description = "Each TWSE issuer own count of information-security breaches for "
       "the reporting year, split into total incidents and those "

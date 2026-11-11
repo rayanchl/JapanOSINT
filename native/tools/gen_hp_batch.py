@@ -108,7 +108,7 @@ WANT = {"any": "HP_ANY", "domain": "HP_DOMAIN", "ip": "HP_IP",
         "icao24": "HP_ICAO24", "eth": "HP_ETH", "btc": "HP_BTC",
         "asn": "HP_ASN"}
 
-STR_OPTS = {"array_path", "title_keys", "id_keys", "link_keys", "link_tmpl",
+STR_OPTS = {"array_path", "title_keys", "id_keys", "require_keys", "link_keys", "link_tmpl",
             "charset", "next_tmpl",
             # A JSON "table": records that are ARRAYS, with the column names in
             # a sibling array this names. Without it such rows key on POSITIONS.

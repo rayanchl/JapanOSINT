@@ -2627,32 +2627,7 @@ static const hp_source HP3B49_JPWPFIRE[] = {
       "Post-shaped: title.rendered, date, link and content.rendered are "
       "kept." },
 
-  { .id = "JO49_WP_KHFD119KOGAFUKUOKA_JBSTORECSS", .name = "粕屋北部消防本部 — custom post type `jb_store_css` (Posts) (WordPress "
-      "REST)",
-    .name_ja = "粕屋北部消防本部 Posts（WordPress REST）",
-    .category = "public-safety", .portal = "https://khfd-119.koga.fukuoka.jp/",
-    .record_type = "cpt-jb-store-css",
-    .lang = "ja",
-    .tags = "\"japan\",\"wordpress\",\"cpt\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://khfd-119.koga.fukuoka.jp/wp-json/wp/v2/jb_store_css?per_page=100&orderby=date&order=desc",
-    .array_path = ".",
-    .body_keys = "content.rendered",
-    .date_keys = "date",
-    .id_keys = "id",
-    .interval = 21600,
-    .link_keys = "link",
-    .page_max = 60,
-    .page_param = "page",
-    .page_start = 1,
-    .timeout_ms = 30000,
-    .title_keys = "title.rendered",
-    .description = "WordPress REST custom post type `jb_store_css` (Posts) of "
-      "粕屋北部消防本部 (www.khfd-119.koga.fukuoka.jp). Fetched 2026-10-20: the "
-      "collection answered with 5 record(s) and declares 5 in "
-      "X-WP-Total. Discovered from this host's own REST root "
-      "(/wp/v2/types), not guessed. Post-shaped: title.rendered, date, "
-      "link and content.rendered are kept." },
+  /* JO49_WP_KHFD119KOGAFUKUOKA_JBSTORECSS: removed 2026-11-11 (owner's decision) — the route is 404 and the site no longer lists the jb_store_css post type (a theme's CSS store); its posts and pages are read by sibling rows. docs/removed-sources-2026-11-11-dead.tsv */
 
   { .id = "JO49_WP_KIKUCHIKR_USERS", .name = "菊池広域連合 — author/staff register (WordPress REST)",
     .name_ja = "菊池広域連合 利用者一覧（WordPress REST）",

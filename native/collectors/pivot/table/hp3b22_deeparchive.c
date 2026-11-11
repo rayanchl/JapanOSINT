@@ -3314,7 +3314,8 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .record_type = "scholarly-work",
     .tags = "\"openalex\",\"sdg16\",\"peace-justice\",\"institutions\",\"latest\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.openalex.org/works?filter=sustainable_development_goals.id:https://metadata.un.org/sdg/16&per-page=100&sort=publication_date:desc&mailto=rayanchouialkessal@gmail.com",
+    .url = "https://api.openalex.org/works?filter=sustainable_development_goals.id:https://metadata.un.org/sdg/16&per-page=100&sort=publication_date:desc&mailto=rayanchouialkessal@gmail.com&api_key={key}",
+    .key_env = "OPENALEX_API_KEY",   /* 2026-11-11, owner's decision: keyless OpenAlex is an IP-shared daily budget (HTTP 429 "no API key"); gated like its siblings */
     .array_path = "results",
     .date_keys = "publication_date",
     .id_keys = "id",
@@ -3334,7 +3335,8 @@ static const hp_source HP3B22_DEEPARCHIVE[] = {
     .record_type = "scholarly-work",
     .tags = "\"openalex\",\"repository\",\"grey-literature\",\"latest\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://api.openalex.org/works?filter=locations.source.type:repository&per-page=100&sort=publication_date:desc&mailto=rayanchouialkessal@gmail.com",
+    .url = "https://api.openalex.org/works?filter=locations.source.type:repository&per-page=100&sort=publication_date:desc&mailto=rayanchouialkessal@gmail.com&api_key={key}",
+    .key_env = "OPENALEX_API_KEY",   /* 2026-11-11, owner's decision: keyless OpenAlex is an IP-shared daily budget (HTTP 429 "no API key"); gated like its siblings */
     .array_path = "results",
     .date_keys = "publication_date",
     .id_keys = "id",

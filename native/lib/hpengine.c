@@ -1965,6 +1965,26 @@ static void hp_emit_record(hp_run_state *st, cJSON *flat) {
    * caller has already added this slot to `available` and the difference read
    * as a one-record shortfall that never happened. */
   if (cJSON_GetArraySize(flat) == 0) { st->empty++; return; }
+  /* require_keys: a placeholder row the upstream serves while a period is
+   * unpublished carries none of a record's identifying fields. */
+  if (s->require_keys && *s->require_keys) {
+    char tok[128];
+    const char *p = s->require_keys;
+    while (*p) {
+      size_t n = strcspn(p, "+");
+      if (n > 0 && n < sizeof tok) {
+        memcpy(tok, p, n); tok[n] = 0;
+        const cJSON *v = hp_flat_get(flat, tok);
+        if (!v || cJSON_IsNull(v) ||
+            (cJSON_IsString(v) && (!v->valuestring || !v->valuestring[0]))) {
+          st->empty++;
+          return;
+        }
+      }
+      p += n;
+      if (*p == '+') p++;
+    }
+  }
   hp_stamp_date(s, st->vars, flat);
 
   if (s->filter_query && st->vars->raw) {
@@ -6647,6 +6667,7 @@ char *hp_describe_json(const char *id) {
   hp_desc_str(pa, "array_path", s->array_path);
   hp_desc_str(pa, "title_keys", s->title_keys);
   hp_desc_str(pa, "id_keys", s->id_keys);
+  hp_desc_str(pa, "require_keys", s->require_keys);
   hp_desc_str(pa, "link_keys", s->link_keys);
   hp_desc_str(pa, "link_tmpl", s->link_tmpl);
   hp_desc_str(pa, "date_keys", s->date_keys);

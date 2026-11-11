@@ -261,12 +261,8 @@ VJSON(us_socrata_discovery_chicago, "us-socrata-discovery-chicago", "City of Chi
   "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"chicago\"]", 86400,
   "Every dataset, chart, map, filtered view and file published on data.cityofchicago.org, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
 
-VJSON(us_socrata_discovery_chronicdata, "us-socrata-discovery-chronicdata", "US CDC Chronic Disease Data — Asset Discovery", "米国CDC 慢性疾患 データ資産一覧",
-  "us_state", "registry",
-  "https://api.us.socrata.com/api/catalog/v1?limit=100&domains=chronicdata.cdc.gov&order=createdAt",
-  "results",
-  "en", "[\"usa\",\"opendata\",\"socrata\",\"discovery\",\"chronicdata\"]", 86400,
-  "Every dataset, chart, map, filtered view and file published on chronicdata.cdc.gov, via the Socrata federated discovery API: identifier, owner, category, column schema and update time.");
+/* us-socrata-discovery-chronicdata: removed 2026-11-11 (owner's decision) — a twin of us-socrata-discovery-cdc: alias host; same 1,480-dataset catalogue.
+   docs/removed-sources-2026-11-11-twins.tsv */
 
 VJSON(us_socrata_discovery_colorado, "us-socrata-discovery-colorado", "State of Colorado Open Data — Asset Discovery", "コロラド州 データ資産一覧",
   "us_state", "registry",

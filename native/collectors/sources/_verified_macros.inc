@@ -11,6 +11,7 @@
 #include "lib/jsonstream.h"
 #include "lib/csv.h"
 #include "lib/datetok.h"   /* {date…} — the same tokens hp rows use */
+#include "_credential_notice.inc"   /* VJSON_KEYQ's needs-credential notice */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>   /* strcmp — vgeo_cat_emit; strstr/strncmp — vsrc_url_dates */
@@ -170,6 +171,52 @@ static inline int vgeo_cat_emit(struct intel_sink *s, const intel_item *it) {
     int n = jsonlist_emit_paged(s, ID, c->http, du ? du : URL, 25000,         \
                                 PATH, CAT, LANG, TAGS);                       \
     free(du);                                                                 \
+    if (n < 0) { fprintf(stderr, "[%s] fetch failed\n", ID); return -1; }     \
+    return 0; }                                                               \
+  static const source_def SYM = {                                            \
+    .id = ID, .collector = COLL, .engine = "vjson", .name = NAME, .name_ja = NAMEJA,             \
+    .update_interval_sec = IVAL, .run = run_##SYM,                            \
+    .category = CAT, .type = "api", .url = URL,                               \
+    .description = DESC, .layer = NULL, .free_tier = 1 };                     \
+  REGISTER_SOURCE(SYM)
+
+/* As VJSON, but the upstream wants a KEY in the query string (KEYPARAM=<the
+ * value of $KEYENV>), and without one the row files the standard
+ * collector-status-notice (_credential_notice.inc) instead of spending a
+ * request. Added 2026-11-11 for OpenAlex, whose keyless budget is shared by
+ * every client on the caller's IP — from a container that budget is gone by
+ * the first scheduled run (HTTP 429 "This request has no API key"), and its
+ * hp rows were already gated the same way. The key never reaches a stored
+ * record: core/intel.c redacts the value of every *_KEY variable. */
+static inline char *vsrc_url_with_key(const char *url, const char *param,
+                                      const char *key) {
+  size_t n = strlen(url) + strlen(param) + 3 * strlen(key) + 4;
+  char *o = malloc(n);
+  if (!o) return NULL;
+  size_t k = (size_t)snprintf(o, n, "%s%c%s=", url, strchr(url, '?') ? '&' : '?', param);
+  static const char hex[] = "0123456789ABCDEF";
+  for (const unsigned char *c = (const unsigned char *)key; *c && k + 4 < n; c++) {
+    if ((*c >= 'A' && *c <= 'Z') || (*c >= 'a' && *c <= 'z') ||
+        (*c >= '0' && *c <= '9') || *c == '-' || *c == '_' || *c == '.' || *c == '~')
+      o[k++] = (char)*c;
+    else { o[k++] = '%'; o[k++] = hex[*c >> 4]; o[k++] = hex[*c & 15]; }
+  }
+  o[k] = 0;
+  return o;
+}
+#define VJSON_KEYQ(SYM, ID, NAME, NAMEJA, COLL, CAT, URL, PATH, LANG, TAGS, IVAL, DESC, KEYENV, KEYPARAM, HOW) \
+  static int run_##SYM(const source_ctx *c, intel_sink *s) {                  \
+    const char *key = getenv(KEYENV);                                         \
+    if (!key || !*key)                                                        \
+      return jo_needs_credential(s, ID, NAME,                                 \
+                                 (const char *const[]){ KEYENV, NULL }, URL, HOW); \
+    char *du = vsrc_url_dates(URL);                                           \
+    char *ku = vsrc_url_with_key(du ? du : URL, KEYPARAM, key);               \
+    free(du);                                                                 \
+    if (!ku) return -1;                                                       \
+    int n = jsonlist_emit_paged(s, ID, c->http, ku, 25000,                    \
+                                PATH, CAT, LANG, TAGS);                       \
+    free(ku);                                                                 \
     if (n < 0) { fprintf(stderr, "[%s] fetch failed\n", ID); return -1; }     \
     return 0; }                                                               \
   static const source_def SYM = {                                            \

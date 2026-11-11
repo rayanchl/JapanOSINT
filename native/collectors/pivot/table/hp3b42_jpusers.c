@@ -7694,30 +7694,7 @@ static const hp_source HP3B42_JPUSERS[] = {
       "the user id with name as the title: a user record carries no "
       "date field." },
 
-  { .id = "JO42_WP_CITY_324485_USERS", .name = "島根県美郷町 — author/staff register (WordPress REST)",
-    .name_ja = "島根県美郷町 利用者一覧（WordPress REST）",
-    .category = "government", .portal = "https://www.town.shimane-misato.lg.jp/",
-    .record_type = "site-user",
-    .lang = "ja",
-    .tags = "\"japan\",\"municipality\",\"localgov\",\"wordpress\",\"users\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.town.shimane-misato.lg.jp/wp-json/wp/v2/users?per_page=100",
-    .array_path = ".",
-    .body_keys = "description",
-    .id_keys = "id",
-    .interval = 86400,
-    .link_keys = "link",
-    .page_max = 60,
-    .page_param = "page",
-    .page_start = 1,
-    .timeout_ms = 30000,
-    .title_keys = "name",
-    .description = "WordPress REST author/staff register of 島根県美郷町 "
-      "(www.town.shimane-misato.lg.jp). Fetched 2026-10-12: the "
-      "collection answered with records and declares 1 in X-WP-Total. "
-      "Discovered from this host's own /wp-json route table, not "
-      "guessed. Keyed on the user id with name as the title: a user "
-      "record carries no date field." },
+  /* JO42_WP_CITY_324485_USERS: removed 2026-11-11 (owner's decision) — the old Misato WordPress host now redirects to a non-WordPress site (/wp-json/ 404). docs/removed-sources-2026-11-11-dead.tsv */
 
   { .id = "JO42_WP_CITY_014648_USERS", .name = "北海道和寒町 — author/staff register (WordPress REST)",
     .name_ja = "北海道和寒町 利用者一覧（WordPress REST）",

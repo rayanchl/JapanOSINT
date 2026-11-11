@@ -64,7 +64,7 @@ void         http_client_free(http_client *);
 
 /* method: "GET"/"POST"/... ; headers: NULL-terminated array or NULL;
  * body/body_len for POST (may be NULL). timeout_ms<=0 → 30000. retries: extra
- * attempts on transport error, 429 or 5xx (exp backoff; a Retry-After on a
+ * attempts on transport error, 429, 5xx or a 3xx naming no redirect target (exp backoff; a Retry-After on a
  * 429/503 is honoured when <= 30 s and <= timeout, and a longer one stops the
  * retries and returns that status). Returns 0 on a completed
  * HTTP exchange (any status), non-zero only on hard failure. */

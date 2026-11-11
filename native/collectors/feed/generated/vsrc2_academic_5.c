@@ -7,124 +7,149 @@
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
 
-VJSON(sci_openalex_institutions_japan, "sci-openalex-institutions-japan", "OpenAlex Japanese institutions", "OpenAlex 日本の研究機関",
+/* 2026-11-11 (owner's decision): the scheduled OpenAlex rows below are
+ * VJSON_KEYQ — gated on OPENALEX_API_KEY, sent as api_key=. Keyless, OpenAlex
+ * answers HTTP 429 "This request has no API key, so it counts against the
+ * free daily budget shared by everyone on your network's IP address", which a
+ * scheduler exhausts on its first pass; the hp OpenAlex rows were gated the
+ * same way already. Without the key each row files one needs-credential
+ * notice and makes no request. The on-demand pivots stay keyless. */
+
+VJSON_KEYQ(sci_openalex_institutions_japan, "sci-openalex-institutions-japan", "OpenAlex Japanese institutions", "OpenAlex 日本の研究機関",
   "academic", "policy",
   "https://api.openalex.org/institutions?per_page=100&filter=country_code:jp",
   "results",
   "ja", "[\"openalex\",\"japan\",\"institutions\"]", 86400,
-  "Japanese research institutions with output and citation profiles.");
+  "Japanese research institutions with output and citation profiles.",
+  "OPENALEX_API_KEY", "api_key", "a free API key from the OpenAlex account settings page");
 
-VJSON(sci_openalex_institutions_korea, "sci-openalex-institutions-korea", "OpenAlex Korean institutions", "OpenAlex 韓国の研究機関",
+VJSON_KEYQ(sci_openalex_institutions_korea, "sci-openalex-institutions-korea", "OpenAlex Korean institutions", "OpenAlex 韓国の研究機関",
   "academic", "policy",
   "https://api.openalex.org/institutions?per_page=100&filter=country_code:kr",
   "results",
   "en", "[\"openalex\",\"korea\",\"institutions\"]", 86400,
-  "South Korean research institutions and their output.");
+  "South Korean research institutions and their output.",
+  "OPENALEX_API_KEY", "api_key", "a free API key from the OpenAlex account settings page");
 
-VJSON(sci_openalex_institutions_top, "sci-openalex-institutions-top", "OpenAlex most-cited institutions", "OpenAlex 被引用上位機関",
+VJSON_KEYQ(sci_openalex_institutions_top, "sci-openalex-institutions-top", "OpenAlex most-cited institutions", "OpenAlex 被引用上位機関",
   "academic", "policy",
   "https://api.openalex.org/institutions?per_page=100&sort=cited_by_count:desc",
   "results",
   "en", "[\"openalex\",\"institutions\",\"rankings\"]", 86400,
-  "Global research institutions ranked by citation impact.");
+  "Global research institutions ranked by citation impact.",
+  "OPENALEX_API_KEY", "api_key", "a free API key from the OpenAlex account settings page");
 
-VJSON(sci_openalex_keywords, "sci-openalex-keywords", "OpenAlex keywords", "OpenAlex キーワード",
+VJSON_KEYQ(sci_openalex_keywords, "sci-openalex-keywords", "OpenAlex keywords", "OpenAlex キーワード",
   "academic", "policy",
   "https://api.openalex.org/keywords?per_page=100",
   "results",
   "en", "[\"openalex\",\"keywords\"]", 86400,
-  "Emerging research keywords extracted across the OpenAlex corpus.");
+  "Emerging research keywords extracted across the OpenAlex corpus.",
+  "OPENALEX_API_KEY", "api_key", "a free API key from the OpenAlex account settings page");
 
-VJSON(sci_openalex_publishers, "sci-openalex-publishers", "OpenAlex publishers", "OpenAlex 出版社",
+VJSON_KEYQ(sci_openalex_publishers, "sci-openalex-publishers", "OpenAlex publishers", "OpenAlex 出版社",
   "academic", "policy",
   "https://api.openalex.org/publishers?per_page=100&sort=works_count:desc",
   "results",
   "en", "[\"openalex\",\"publishers\"]", 86400,
-  "Scholarly publishers ranked by works published.");
+  "Scholarly publishers ranked by works published.",
+  "OPENALEX_API_KEY", "api_key", "a free API key from the OpenAlex account settings page");
 
-VJSON(sci_openalex_sources_japan, "sci-openalex-sources-japan", "OpenAlex Japanese journals", "OpenAlex 日本の学術誌",
+VJSON_KEYQ(sci_openalex_sources_japan, "sci-openalex-sources-japan", "OpenAlex Japanese journals", "OpenAlex 日本の学術誌",
   "academic", "policy",
   "https://api.openalex.org/sources?filter=country_code:jp&per_page=100",
   "results",
   "ja", "[\"openalex\",\"japan\",\"journals\"]", 86400,
-  "Journals published from Japan with output and citation metrics.");
+  "Journals published from Japan with output and citation metrics.",
+  "OPENALEX_API_KEY", "api_key", "a free API key from the OpenAlex account settings page");
 
-VJSON(sci_openalex_sources_oa, "sci-openalex-sources-oa", "OpenAlex open-access sources", "OpenAlex オープンアクセス誌",
+VJSON_KEYQ(sci_openalex_sources_oa, "sci-openalex-sources-oa", "OpenAlex open-access sources", "OpenAlex オープンアクセス誌",
   "academic", "policy",
   "https://api.openalex.org/sources?per_page=100&filter=is_oa:true",
   "results",
   "en", "[\"openalex\",\"open-access\",\"journals\"]", 86400,
-  "Fully open-access journals and repositories indexed by OpenAlex.");
+  "Fully open-access journals and repositories indexed by OpenAlex.",
+  "OPENALEX_API_KEY", "api_key", "a free API key from the OpenAlex account settings page");
 
-VJSON(sci_openalex_topics, "sci-openalex-topics", "OpenAlex topic taxonomy", "OpenAlex トピック分類",
+VJSON_KEYQ(sci_openalex_topics, "sci-openalex-topics", "OpenAlex topic taxonomy", "OpenAlex トピック分類",
   "academic", "policy",
   "https://api.openalex.org/topics?per_page=100",
   "results",
   "en", "[\"openalex\",\"topics\",\"taxonomy\"]", 86400,
-  "Hierarchical research topic taxonomy with work counts.");
+  "Hierarchical research topic taxonomy with work counts.",
+  "OPENALEX_API_KEY", "api_key", "a free API key from the OpenAlex account settings page");
 
-VJSON(sci_openalex_works_china, "sci-openalex-works-china", "OpenAlex works from Chinese institutions", "OpenAlex 中国の機関による著作物",
+VJSON_KEYQ(sci_openalex_works_china, "sci-openalex-works-china", "OpenAlex works from Chinese institutions", "OpenAlex 中国の機関による著作物",
   "academic", "literature",
   "https://api.openalex.org/works?filter=institutions.country_code:cn&per_page=100&sort=publication_date:desc",
   "results",
   "en", "[\"openalex\",\"china\",\"bibliometrics\"]", 7200,
-  "Latest research output affiliated with Chinese institutions.");
+  "Latest research output affiliated with Chinese institutions.",
+  "OPENALEX_API_KEY", "api_key", "a free API key from the OpenAlex account settings page");
 
-VJSON(sci_openalex_works_datasets, "sci-openalex-works-datasets", "OpenAlex datasets", "OpenAlex データセット",
+VJSON_KEYQ(sci_openalex_works_datasets, "sci-openalex-works-datasets", "OpenAlex datasets", "OpenAlex データセット",
   "academic", "repository",
   "https://api.openalex.org/works?filter=type:dataset&per_page=100&sort=publication_date:desc",
   "results",
   "en", "[\"openalex\",\"dataset\"]", 21600,
-  "Dataset-type research outputs indexed by OpenAlex.");
+  "Dataset-type research outputs indexed by OpenAlex.",
+  "OPENALEX_API_KEY", "api_key", "a free API key from the OpenAlex account settings page");
 
-VJSON(sci_openalex_works_india, "sci-openalex-works-india", "OpenAlex works from Indian institutions", "OpenAlex インドの機関による著作物",
+VJSON_KEYQ(sci_openalex_works_india, "sci-openalex-works-india", "OpenAlex works from Indian institutions", "OpenAlex インドの機関による著作物",
   "academic", "literature",
   "https://api.openalex.org/works?filter=institutions.country_code:in&per_page=100&sort=publication_date:desc",
   "results",
   "en", "[\"openalex\",\"india\",\"bibliometrics\"]", 7200,
-  "Latest research output affiliated with Indian institutions.");
+  "Latest research output affiliated with Indian institutions.",
+  "OPENALEX_API_KEY", "api_key", "a free API key from the OpenAlex account settings page");
 
-VJSON(sci_openalex_works_japan, "sci-openalex-works-japan", "OpenAlex works from Japanese institutions", "OpenAlex 日本の機関による著作物",
+VJSON_KEYQ(sci_openalex_works_japan, "sci-openalex-works-japan", "OpenAlex works from Japanese institutions", "OpenAlex 日本の機関による著作物",
   "academic", "literature",
   "https://api.openalex.org/works?filter=institutions.country_code:jp&per_page=100&sort=publication_date:desc",
   "results",
   "ja", "[\"openalex\",\"japan\",\"bibliometrics\"]", 7200,
-  "Latest research output affiliated with Japanese institutions.");
+  "Latest research output affiliated with Japanese institutions.",
+  "OPENALEX_API_KEY", "api_key", "a free API key from the OpenAlex account settings page");
 
-VJSON(sci_openalex_works_japan_topics, "sci-openalex-works-japan-topics", "OpenAlex Japanese preprints", "OpenAlex 日本発プレプリント",
+VJSON_KEYQ(sci_openalex_works_japan_topics, "sci-openalex-works-japan-topics", "OpenAlex Japanese preprints", "OpenAlex 日本発プレプリント",
   "academic", "preprint",
   "https://api.openalex.org/works?filter=institutions.country_code:jp,type:preprint&per_page=100&sort=publication_date:desc",
   "results",
   "ja", "[\"openalex\",\"japan\",\"preprint\"]", 21600,
-  "Preprints from Japanese institutions before journal publication.");
+  "Preprints from Japanese institutions before journal publication.",
+  "OPENALEX_API_KEY", "api_key", "a free API key from the OpenAlex account settings page");
 
-VJSON(sci_openalex_works_open_access, "sci-openalex-works-open-access", "OpenAlex open-access works", "OpenAlex オープンアクセス著作物",
+VJSON_KEYQ(sci_openalex_works_open_access, "sci-openalex-works-open-access", "OpenAlex open-access works", "OpenAlex オープンアクセス著作物",
   "academic", "literature",
   "https://api.openalex.org/works?filter=is_oa:true&per_page=100&sort=publication_date:desc",
   "results",
   "en", "[\"openalex\",\"open-access\"]", 7200,
-  "Newly indexed open-access research outputs.");
+  "Newly indexed open-access research outputs.",
+  "OPENALEX_API_KEY", "api_key", "a free API key from the OpenAlex account settings page");
 
-VJSON(sci_openalex_works_preprints, "sci-openalex-works-preprints", "OpenAlex preprints", "OpenAlex プレプリント",
+VJSON_KEYQ(sci_openalex_works_preprints, "sci-openalex-works-preprints", "OpenAlex preprints", "OpenAlex プレプリント",
   "academic", "preprint",
   "https://api.openalex.org/works?filter=type:preprint&per_page=100&sort=publication_date:desc",
   "results",
   "en", "[\"openalex\",\"preprint\"]", 7200,
-  "Preprints newly indexed across every server OpenAlex covers.");
+  "Preprints newly indexed across every server OpenAlex covers.",
+  "OPENALEX_API_KEY", "api_key", "a free API key from the OpenAlex account settings page");
 
-VJSON(sci_openalex_works_recent, "sci-openalex-works-recent", "OpenAlex recent works", "OpenAlex 最新著作物",
+VJSON_KEYQ(sci_openalex_works_recent, "sci-openalex-works-recent", "OpenAlex recent works", "OpenAlex 最新著作物",
   "academic", "literature",
   "https://api.openalex.org/works?per_page=100&sort=publication_date:desc",
   "results",
   "en", "[\"openalex\",\"bibliometrics\"]", 3600,
-  "Every scholarly work newly indexed by OpenAlex, with open-access status and topics.");
+  "Every scholarly work newly indexed by OpenAlex, with open-access status and topics.",
+  "OPENALEX_API_KEY", "api_key", "a free API key from the OpenAlex account settings page");
 
-VJSON(sci_openalex_works_retracted, "sci-openalex-works-retracted", "OpenAlex retracted works", "OpenAlex 撤回済み著作物",
+VJSON_KEYQ(sci_openalex_works_retracted, "sci-openalex-works-retracted", "OpenAlex retracted works", "OpenAlex 撤回済み著作物",
   "academic", "literature",
   "https://api.openalex.org/works?filter=is_retracted:true&per_page=100&sort=publication_date:desc",
   "results",
   "en", "[\"openalex\",\"retraction\",\"research-integrity\"]", 21600,
-  "Works flagged as retracted in OpenAlex, with citation counts still accruing.");
+  "Works flagged as retracted in OpenAlex, with citation counts still accruing.",
+  "OPENALEX_API_KEY", "api_key", "a free API key from the OpenAlex account settings page");
 
 VJSON(sci_osf_preprints_africarxiv, "sci-osf-preprints-africarxiv", "AfricArXiv preprints", "アフリカ研究プレプリント（AfricArXiv）",
   "academic", "preprint",

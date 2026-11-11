@@ -593,23 +593,7 @@ static const hp_source HP3B36_USA[] = {
       "332131 bytes. First record's fields: "
       "id,name,assetType,averageRating,category,createdAt,description,diciBackend,displayType,downloadCount,hideFromCatalog,hideFromDataJson." },
 
-  { .id = "US_SOC_CHRONICCDC", .name = "Socrata portal inventory — Soc Chroniccdc",
-    .category = "government", .portal = "https://chronicdata.cdc.gov",
-    .record_type = "socrata-dataset",
-    .tags = "\"usa\",\"opendata\",\"socrata\",\"catalogue\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://chronicdata.cdc.gov/api/views.json?limit=1000",
-    .page_max = 100,
-    .timeout_ms = 120000,
-    .array_path = ".",
-    .id_keys = "id",
-    .interval = 86400,
-    .page_param = "page",
-    .title_keys = "name",
-    .description = "Socrata portal inventory on chronicdata.cdc.gov. Fetched live "
-      "2026-10-05 under the engine's own User-Agent: 100 records in "
-      "533049 bytes. First record's fields: "
-      "id,name,assetType,averageRating,category,createdAt,description,diciBackend,displayType,downloadCount,hideFromCatalog,hideFromDataJson." },
+  /* US_SOC_CHRONICCDC: removed 2026-11-11 (owner's decision) — a twin of CDC_SOCRATA_DATASETS: alias host; /api/views.json is the same inventory. */
 
   { .id = "US_SOC_CITYOFBERKELEY_INFO", .name = "Socrata portal inventory — Soc Cityofberkeley Info",
     .category = "government", .portal = "https://data.cityofberkeley.info",

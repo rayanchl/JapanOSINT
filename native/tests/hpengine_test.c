@@ -1036,6 +1036,10 @@ static const hp_source T[] = {
     .array_path = "items", .title_keys = "name", .id_keys = "num",
     .detail_url = "https://x.test/hd/{v}", .detail_key = "num",
     .interval = 3600, .record_type = "t-deephdr", .free_tier = 1, .description = "d" },
+  /* require_keys (37g): a placeholder row with only the table date filled. */
+  { .id = "T_REQKEYS", .name = "require_keys", .url = "https://x.test/rq",
+    .array_path = ".", .require_keys = "code", .id_keys = "code", .title_keys = "name",
+    .interval = 3600, .record_type = "t-reqkeys", .free_tier = 1, .description = "d" },
   /* A detail hop on a row that declares NO id_keys (37f). */
   { .id = "T_DEEP_NOID", .name = "detail hop, no id_keys", .url = "https://x.test/hn",
     .array_path = "items", .detail_url = "https://x.test/hnd/{v}", .detail_key = "num",
@@ -3538,6 +3542,19 @@ int main(void) {
   ok(rc == 0 && g_ncap == 1 && strstr(g_cap[0].props, "\"detail.id\":\"D1\"") &&
      !strstr(g_cap[0].key, "D1") && strstr(g_cap[0].key, "|P"),
      "37f: a deepened record keeps the uid its list record gives it, not detail.id");
+
+  /* 37g. require_keys: TWSE serves one all-blank row (only its table date
+   * filled) while a quarter is unpublished — a placeholder, not a record. */
+  fx_reset();
+  fx_add("/rq", 200, "[{\"date\":\"1151112\",\"code\":\"\",\"name\":\"\"},"
+                     "{\"date\":\"1151112\",\"code\":\"2330\",\"name\":\"TSMC\"}]");
+  rc = run_source("T_REQKEYS", "");
+  ok(rc == 0 && g_ncap == 1 && strstr(g_cap[0].key, "2330"),
+     "37g: a row missing a require_keys field is a placeholder, not stored");
+  fx_reset();
+  fx_add("/rq", 200, "[{\"date\":\"1151112\",\"code\":\"\"}]");
+  rc = run_source("T_REQKEYS", "");
+  ok(rc == 0 && g_ncap == 0, "37g: a file holding only the placeholder stores nothing and is not an error");
 
   /* 37d. Records that point at the SAME detail record share one hop: the
    * second merges the first's fields from this run's cache and spends no

@@ -139,54 +139,34 @@ VJSON(gov_ukparl_bills, "gov-ukparl-bills", "UK Parliament — Bills API", "英�
 /* 2026-11-07: pages on take/skip now (lib/jsonlist.c PAGERS); skip=0 bound so page 1
  * is the same ordering as the pages after it. Measured: skip=0 vs skip=<take> answer
  * disjoint ids, the API's totalResults (where it publishes one) unchanged by skip. */
-VJSON(gov_ukparl_committees, "gov-ukparl-committees", "UK Parliament — Committees", "英国議会 委員会一覧",
-  "legal", "parliament",
-  "https://committees-api.parliament.uk/api/Committees?take=30&skip=0",
-  "items",
-  "en", "[\"uk\",\"parliament\",\"committees\"]", 86400,
-  "Registry of UK parliamentary select and joint committees with membership and remit.");
+/* gov-ukparl-committees: removed 2026-11-11 (owner's decision) — a twin of cyb-ukparl-committees: same endpoint, take=30 vs 50.
+   docs/removed-sources-2026-11-11-twins.tsv */
 
 /* 2026-11-07: pages on take/skip now (lib/jsonlist.c PAGERS); skip=0 bound so page 1
  * is the same ordering as the pages after it. Measured: skip=0 vs skip=<take> answer
  * disjoint ids, the API's totalResults (where it publishes one) unchanged by skip.
  * take 50 -> 25: the API caps a page at 25; bare take/skip is honoured here as well as queryParameters.* (take=7&skip=7 = divisions 2467..2461 either way). */
-VJSON(gov_ukparl_commons_divisions, "gov-ukparl-commons-divisions", "UK Commons — Division Votes", "英国下院 採決記録",
-  "legal", "parliament",
-  "https://commonsvotes-api.parliament.uk/data/divisions.json/search?take=25&skip=0",
-  "",
-  "en", "[\"uk\",\"parliament\",\"votes\",\"commons\"]", 3600,
-  "Recorded division votes in the UK House of Commons with aye/no counts.");
+/* gov-ukparl-commons-divisions: removed 2026-11-11 (owner's decision) — a twin of cyb-ukparl-commons-divisions: same endpoint; take/skip and queryParameters.take/skip answer the same divisions (measured 2026-11-07).
+   docs/removed-sources-2026-11-11-twins.tsv */
 
 /* 2026-11-07: pages on take/skip now (lib/jsonlist.c PAGERS); skip=0 bound so page 1
  * is the same ordering as the pages after it. Measured: skip=0 vs skip=<take> answer
  * disjoint ids, the API's totalResults (where it publishes one) unchanged by skip. */
-VJSON(gov_ukparl_cttee_publications, "gov-ukparl-cttee-publications", "UK Parliament — Committee Publications", "英国議会 委員会刊行物",
-  "legal", "parliament",
-  "https://committees-api.parliament.uk/api/Publications?take=30&skip=0",
-  "items",
-  "en", "[\"uk\",\"parliament\",\"committees\",\"reports\"]", 3600,
-  "Committee reports, evidence sessions and written submissions published by UK Parliament.");
+/* gov-ukparl-cttee-publications: removed 2026-11-11 (owner's decision) — a twin of cyb-ukparl-committee-publications: same endpoint, take=30 vs 50.
+   docs/removed-sources-2026-11-11-twins.tsv */
 
 /* 2026-11-07: pages on take/skip now (lib/jsonlist.c PAGERS); skip=0 bound so page 1
  * is the same ordering as the pages after it. Measured: skip=0 vs skip=<take> answer
  * disjoint ids, the API's totalResults (where it publishes one) unchanged by skip.
  * take 25 -> 20: the API caps a page at 20 (take=25 answered 20), which read as a short page and ended the walk. */
-VJSON(gov_ukparl_interests, "gov-ukparl-interests", "UK Parliament — Register of Members' Interests", "英国議会 議員利益登録",
-  "legal", "transparency",
-  "https://interests-api.parliament.uk/api/v1/Interests/?take=20&skip=0",
-  "items",
-  "en", "[\"uk\",\"parliament\",\"lobbying\",\"conflicts\"]", 86400,
-  "Declared financial interests, gifts and outside employment of UK parliamentarians.");
+/* gov-ukparl-interests: removed 2026-11-11 (owner's decision) — a twin of cyb-ukparl-interests: identical URL (take=20&skip=0); UK_LORDS_REGISTER_INTERESTS also reads the whole register.
+   docs/removed-sources-2026-11-11-twins.tsv */
 
 /* 2026-11-07: pages on take/skip now (lib/jsonlist.c PAGERS); skip=0 bound so page 1
  * is the same ordering as the pages after it. Measured: skip=0 vs skip=<take> answer
  * disjoint ids, the API's totalResults (where it publishes one) unchanged by skip. */
-VJSON(gov_ukparl_lords_divisions, "gov-ukparl-lords-divisions", "UK Lords — Division Votes", "英国上院 採決記録",
-  "legal", "parliament",
-  "https://lordsvotes-api.parliament.uk/data/Divisions/search?take=25&skip=0",
-  "",
-  "en", "[\"uk\",\"parliament\",\"votes\",\"lords\"]", 3600,
-  "Recorded division votes in the UK House of Lords.");
+/* gov-ukparl-lords-divisions: removed 2026-11-11 (owner's decision) — a twin of cyb-ukparl-lords-divisions: same endpoint, take=25 vs 50.
+   docs/removed-sources-2026-11-11-twins.tsv */
 
 /* 2026-11-07: pages on take/skip now (lib/jsonlist.c PAGERS); skip=0 bound so page 1
  * is the same ordering as the pages after it. Measured: skip=0 vs skip=<take> answer
@@ -201,12 +181,8 @@ VJSON(gov_ukparl_members, "gov-ukparl-members", "UK Parliament — Members API",
 /* 2026-11-07: pages on take/skip now (lib/jsonlist.c PAGERS); skip=0 bound so page 1
  * is the same ordering as the pages after it. Measured: skip=0 vs skip=<take> answer
  * disjoint ids, the API's totalResults (where it publishes one) unchanged by skip. */
-VJSON(gov_ukparl_treaties, "gov-ukparl-treaties", "UK Parliament — Treaty Scrutiny", "英国議会 条約審査",
-  "legal", "parliament",
-  "https://treaties-api.parliament.uk/api/Treaty?take=25&skip=0",
-  "items",
-  "en", "[\"uk\",\"treaties\",\"parliament\",\"international\"]", 86400,
-  "Treaties laid before the UK Parliament under CRaG with scrutiny status.");
+/* gov-ukparl-treaties: removed 2026-11-11 (owner's decision) — a twin of cyb-ukparl-treaties: same endpoint, take=25 vs 50.
+   docs/removed-sources-2026-11-11-twins.tsv */
 
 VJSON(gov_za_pmg_bills, "gov-za-pmg-bills", "PMG — South African Bills Tracker", "PMG 南アフリカ法案追跡",
   "legal", "parliament",

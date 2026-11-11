@@ -329,30 +329,7 @@ static const hp_source HP3B25_JPNATGOV[] = {
       "withdrawn government dataset is noticed, and the ids are the "
       "join key to the search rows above." },
 
-  { .id = "JP25_JPNATGOV_JISHIN_HQ_POSTS", .name = "Headquarters for Earthquake Research Promotion — posts",
-    .name_ja = "地震調査研究推進本部 投稿",
-    .category = "disaster", .portal = "https://www.jishin.go.jp",
-    .record_type = "announcement",
-    .lang = "ja",
-    .tags = "\"japan\",\"earthquake\",\"research\",\"headquarters\",\"mext\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.jishin.go.jp/wp-json/wp/v2/posts?per_page=100",
-    .body_keys = "content.rendered",
-    .date_keys = "modified,date",
-    .id_keys = "id",
-    .interval = 21600,
-    .link_keys = "link",
-    .page_param = "page",
-    .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
-    /* no page_size: `page` is a page NUMBER (2026-10-05: page v and v+1 disjoint); with page_size the engine walked it as an offset, 1, 1+N, 1+2N, and kept 1 page in N */
-    .page_start = 1,
-    .title_keys = "title.rendered",
-    .description = "The government's earthquake research headquarters (under MEXT) "
-      "runs WordPress and exposes 100 posts a page: long-term "
-      "evaluations of named faults and subduction zones, monthly "
-      "seismic assessments and committee outputs, with full rendered "
-      "body text and dates. This is the source the media summarise when "
-      "a fault's probability is revised." },
+  /* JP25_JPNATGOV_JISHIN_HQ_POSTS: removed 2026-11-11 (owner's decision) — a twin of JP25_JPINFRA_HERP_POSTS: the same WordPress posts (1,759); the survivor gains this row's body_keys. */
 
   { .id = "JP25_JPNATGOV_NISE_POSTS", .name = "National Institute of Special Needs Education — posts",
     .name_ja = "国立特別支援教育総合研究所 投稿",

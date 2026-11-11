@@ -1,0 +1,13 @@
+removed_id	file	kept_id	evidence
+gov-ukparl-interests	native/collectors/feed/generated/vsrc_legal_3.c	cyb-ukparl-interests	identical URL interests-api.parliament.uk/api/v1/Interests/?take=20&skip=0 (lint dup-endpoint); UK_LORDS_REGISTER_INTERESTS also reads the whole register, 4,169/4,169
+gov-ukparl-committees	native/collectors/feed/generated/vsrc_legal_3.c	cyb-ukparl-committees	same endpoint committees-api.parliament.uk/api/Committees, take=30 vs take=50
+gov-ukparl-cttee-publications	native/collectors/feed/generated/vsrc_legal_3.c	cyb-ukparl-committee-publications	same endpoint committees-api.parliament.uk/api/Publications, take=30 vs take=50
+gov-ukparl-commons-divisions	native/collectors/feed/generated/vsrc_legal_3.c	cyb-ukparl-commons-divisions	same endpoint commonsvotes-api.parliament.uk/data/divisions.json/search; take/skip and queryParameters.take/skip answer the same divisions (2467..2461, measured 2026-11-07)
+gov-ukparl-lords-divisions	native/collectors/feed/generated/vsrc_legal_3.c	cyb-ukparl-lords-divisions	same endpoint lordsvotes-api.parliament.uk/data/Divisions/search, take=25 vs take=50
+gov-ukparl-treaties	native/collectors/feed/generated/vsrc_legal_3.c	cyb-ukparl-treaties	same endpoint treaties-api.parliament.uk/api/Treaty, take=25 vs take=50
+us-chronicdata-cdc-gov-catalog	native/collectors/feed/generated/vsrc15_us_opendata_1.c	us-data-cdc-gov-catalog	chronicdata.cdc.gov is an alias of data.cdc.gov: Socrata catalogue resultSetSize 1,480 on both, identical first ids under order=dataset_id (measured 2026-11-11)
+us-chronicdata-cdc-gov-views	native/collectors/feed/generated/vsrc15_us_opendata_1.c	us-data-cdc-gov-views	alias host; /api/views/metadata/v1 page of 500: identical id sets on both hosts (2026-11-11)
+us-socrata-discovery-chronicdata	native/collectors/feed/generated/vsrc14_us_state_1.c	us-socrata-discovery-cdc	alias host; same 1,480-dataset discovery catalogue
+us-socrata-metadata-chronicdata	native/collectors/feed/generated/vsrc14_us_state_2.c	us-socrata-metadata-cdc	alias host; identical metadata id sets
+US_SOC_CHRONICCDC	native/collectors/pivot/table/hp3b36_usa.c	CDC_SOCRATA_DATASETS	alias host; /api/views.json?limit=1000 is the same portal inventory
+JP25_JPNATGOV_JISHIN_HQ_POSTS	native/collectors/pivot/table/hp3b25_jpnatgov.c	JP25_JPINFRA_HERP_POSTS	the same WordPress posts endpoint www.jishin.go.jp/wp-json/wp/v2/posts (X-WP-Total 1,759, 18 pages); the survivor binds page=1 and gains this row's body_keys = content.rendered

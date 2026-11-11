@@ -994,6 +994,7 @@ static const hp_source HP3B25_JPINFRA[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.jishin.go.jp/wp-json/wp/v2/posts?per_page=100&page=1",
     .array_path = "",
+    .body_keys = "content.rendered",   /* from JP25_JPNATGOV_JISHIN_HQ_POSTS, its removed twin (2026-11-11) */
     .date_keys = "date",
     .id_keys = "id",
     .interval = 43200,

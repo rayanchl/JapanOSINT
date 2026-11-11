@@ -21,19 +21,11 @@ VGEO(us_bostonopendata_boston_opendata_arcgis_co_datasets, "us-bostonopendata-bo
  * catalogue that fits is read complete, and a larger one (Lombardia's 5,132) stops at the page
  * ceiling and files the ceiling's truncation notice. The notice cannot yet name the
  * catalogue's size: `resultSetSize` is not a declared-total spelling (lib/pagewalk.c). */
-VJSON(us_chronicdata_cdc_gov_catalog, "us-chronicdata-cdc-gov-catalog", "chronicdata.cdc.gov — catalog (United States)", "chronicdata.cdc.gov — catalog (United States)",
-  "us_opendata", "opendata",
-  "https://chronicdata.cdc.gov/api/catalog/v1?limit=100&domains=chronicdata.cdc.gov&search_context=chronicdata.cdc.gov&order=createdAt",
-  "results",
-  "en", "[\"us\",\"socrata\",\"opendata\",\"catalog\"]", 86400,
-  "Socrata discovery catalogue: every dataset with owner, category, provenance, update cadence and column metadata. Served by the SOCRATA platform at chronicdata.cdc.gov.");
+/* us-chronicdata-cdc-gov-catalog: removed 2026-11-11 (owner's decision) — a twin of us-data-cdc-gov-catalog: chronicdata.cdc.gov is an alias of data.cdc.gov: catalogue 1,480 = 1,480, same ids (measured 2026-11-11).
+   docs/removed-sources-2026-11-11-twins.tsv */
 
-VJSON(us_chronicdata_cdc_gov_views, "us-chronicdata-cdc-gov-views", "chronicdata.cdc.gov — views (United States)", "chronicdata.cdc.gov — views (United States)",
-  "us_opendata", "opendata",
-  "https://chronicdata.cdc.gov/api/views/metadata/v1",
-  "",
-  "en", "[\"us\",\"socrata\",\"opendata\",\"views\"]", 86400,
-  "Per-view metadata for every dataset on the domain. Served by the SOCRATA platform at chronicdata.cdc.gov.");
+/* us-chronicdata-cdc-gov-views: removed 2026-11-11 (owner's decision) — a twin of us-data-cdc-gov-views: alias host; /api/views/metadata/v1 identical id sets (500 = 500).
+   docs/removed-sources-2026-11-11-twins.tsv */
 
 VJSON(us_data_austintexas_gov_catalog, "us-data-austintexas-gov-catalog", "data.austintexas.gov — catalog (United States)", "data.austintexas.gov — catalog (United States)",
   "us_opendata", "opendata",

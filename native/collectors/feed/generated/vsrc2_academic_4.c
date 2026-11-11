@@ -7,6 +7,14 @@
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
 
+/* 2026-11-11 (owner's decision): the scheduled OpenAlex rows below are
+ * VJSON_KEYQ — gated on OPENALEX_API_KEY, sent as api_key=. Keyless, OpenAlex
+ * answers HTTP 429 "This request has no API key, so it counts against the
+ * free daily budget shared by everyone on your network's IP address", which a
+ * scheduler exhausts on its first pass; the hp OpenAlex rows were gated the
+ * same way already. Without the key each row files one needs-credential
+ * notice and makes no request. The on-demand pivots stay keyless. */
+
 VRSS(sci_nature_npjimaging, "sci-nature-npjimaging", "npj Imaging", "npj イメージング",
   "academic", "clinical",
   "https://www.nature.com/npjimaging.rss",
@@ -345,44 +353,50 @@ VJSON(sci_openaire_organizations, "sci-openaire-organizations", "OpenAIRE organi
   "en", "[\"openaire\",\"institutions\",\"graph\"]", 86400,
   "Research organisations in the OpenAIRE scholarly knowledge graph.");
 
-VJSON(sci_openalex_authors_top, "sci-openalex-authors-top", "OpenAlex most-cited authors", "OpenAlex 被引用上位著者",
+VJSON_KEYQ(sci_openalex_authors_top, "sci-openalex-authors-top", "OpenAlex most-cited authors", "OpenAlex 被引用上位著者",
   "academic", "policy",
   "https://api.openalex.org/authors?per_page=100&sort=cited_by_count:desc",
   "results",
   "en", "[\"openalex\",\"authors\"]", 86400,
-  "Most-cited researchers with institutional affiliation history.");
+  "Most-cited researchers with institutional affiliation history.",
+  "OPENALEX_API_KEY", "api_key", "a free API key from the OpenAlex account settings page");
 
-VJSON(sci_openalex_concepts, "sci-openalex-concepts", "OpenAlex concept taxonomy", "OpenAlex 概念分類",
+VJSON_KEYQ(sci_openalex_concepts, "sci-openalex-concepts", "OpenAlex concept taxonomy", "OpenAlex 概念分類",
   "academic", "policy",
   "https://api.openalex.org/concepts?per_page=100",
   "results",
   "en", "[\"openalex\",\"concepts\"]", 86400,
-  "Legacy OpenAlex concept hierarchy with per-concept output.");
+  "Legacy OpenAlex concept hierarchy with per-concept output.",
+  "OPENALEX_API_KEY", "api_key", "a free API key from the OpenAlex account settings page");
 
-VJSON(sci_openalex_funders, "sci-openalex-funders", "OpenAlex funders", "OpenAlex 助成機関",
+VJSON_KEYQ(sci_openalex_funders, "sci-openalex-funders", "OpenAlex funders", "OpenAlex 助成機関",
   "academic", "funding",
   "https://api.openalex.org/funders?per_page=100&sort=works_count:desc",
   "results",
   "en", "[\"openalex\",\"funders\"]", 86400,
-  "Research funders ranked by works funded.");
+  "Research funders ranked by works funded.",
+  "OPENALEX_API_KEY", "api_key", "a free API key from the OpenAlex account settings page");
 
-VJSON(sci_openalex_institutions_africa, "sci-openalex-institutions-africa", "OpenAlex African institutions", "OpenAlex アフリカの研究機関",
+VJSON_KEYQ(sci_openalex_institutions_africa, "sci-openalex-institutions-africa", "OpenAlex African institutions", "OpenAlex アフリカの研究機関",
   "academic", "policy",
   "https://api.openalex.org/institutions?per_page=100&filter=continent:africa",
   "results",
   "en", "[\"openalex\",\"africa\",\"institutions\"]", 86400,
-  "Research institutions across Africa — an under-covered region in bibliometric monitoring.");
+  "Research institutions across Africa — an under-covered region in bibliometric monitoring.",
+  "OPENALEX_API_KEY", "api_key", "a free API key from the OpenAlex account settings page");
 
-VJSON(sci_openalex_institutions_brazil, "sci-openalex-institutions-brazil", "OpenAlex Brazilian institutions", "OpenAlex ブラジルの研究機関",
+VJSON_KEYQ(sci_openalex_institutions_brazil, "sci-openalex-institutions-brazil", "OpenAlex Brazilian institutions", "OpenAlex ブラジルの研究機関",
   "academic", "policy",
   "https://api.openalex.org/institutions?per_page=100&filter=country_code:br",
   "results",
   "en", "[\"openalex\",\"brazil\",\"institutions\"]", 86400,
-  "Brazilian research institutions and their output.");
+  "Brazilian research institutions and their output.",
+  "OPENALEX_API_KEY", "api_key", "a free API key from the OpenAlex account settings page");
 
-VJSON(sci_openalex_institutions_india, "sci-openalex-institutions-india", "OpenAlex Indian institutions", "OpenAlex インドの研究機関",
+VJSON_KEYQ(sci_openalex_institutions_india, "sci-openalex-institutions-india", "OpenAlex Indian institutions", "OpenAlex インドの研究機関",
   "academic", "policy",
   "https://api.openalex.org/institutions?per_page=100&filter=country_code:in",
   "results",
   "en", "[\"openalex\",\"india\",\"institutions\"]", 86400,
-  "Indian research institutions and their output.");
+  "Indian research institutions and their output.",
+  "OPENALEX_API_KEY", "api_key", "a free API key from the OpenAlex account settings page");

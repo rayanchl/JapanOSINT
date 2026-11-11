@@ -9354,31 +9354,7 @@ static const hp_source HP3B42_JPPAGES[] = {
       "/wp-json route table, not guessed. Post-shaped: title.rendered, "
       "date, link and content.rendered are kept." },
 
-  { .id = "JO42_WP_CITY_324485_PAGES", .name = "島根県美郷町 — static pages (WordPress REST)",
-    .name_ja = "島根県美郷町 固定ページ（WordPress REST）",
-    .category = "government", .portal = "https://www.town.shimane-misato.lg.jp/",
-    .record_type = "site-page",
-    .lang = "ja",
-    .tags = "\"japan\",\"municipality\",\"localgov\",\"wordpress\",\"pages\"",
-    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.town.shimane-misato.lg.jp/wp-json/wp/v2/pages?per_page=100&orderby=date&order=desc",
-    .array_path = ".",
-    .body_keys = "content.rendered",
-    .date_keys = "date",
-    .id_keys = "id",
-    .interval = 21600,
-    .link_keys = "link",
-    .page_max = 60,
-    .page_param = "page",
-    .page_start = 1,
-    .timeout_ms = 30000,
-    .title_keys = "title.rendered",
-    .description = "WordPress REST static pages of 島根県美郷町 "
-      "(www.town.shimane-misato.lg.jp). Fetched 2026-10-12: the "
-      "collection answered with records and declares 2 in X-WP-Total. "
-      "Discovered from this host's own /wp-json route table, not "
-      "guessed. Post-shaped: title.rendered, date, link and "
-      "content.rendered are kept." },
+  /* JO42_WP_CITY_324485_PAGES: removed 2026-11-11 (owner's decision) — the old Misato WordPress host now redirects to gov.town.shimane-misato.lg.jp, which is not WordPress (/wp-json/ 404); its feed is read by JO41_WP_CITY_324485. docs/removed-sources-2026-11-11-dead.tsv */
 
   { .id = "JO42_WP_CITY_014648_PAGES", .name = "北海道和寒町 — static pages (WordPress REST)",
     .name_ja = "北海道和寒町 固定ページ（WordPress REST）",

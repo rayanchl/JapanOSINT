@@ -349,6 +349,15 @@ that replaced them survive, so no coverage is lost. **A sweep's verdict is
 about the URL it sent, not about the row's name** — re-read a removal against
 the row as it stands now.
 
+**The registered count is 61,510** (2026-11-11, `make source-count`, both
+floors re-recorded from that build): 61,527 less 12 twin registrations
+(`docs/removed-sources-2026-11-11-twins.tsv` — six UK Parliament endpoints
+read twice, five rows on `chronicdata.cdc.gov`, which is an alias of
+`data.cdc.gov`, and one jishin.go.jp feed) and 5 dead rows
+(`docs/removed-sources-2026-11-11-dead.tsv`), each the owner's decision with
+its evidence recorded. Round two of the audit and what it measured:
+`docs/audit-round2-2026-11-09.md`.
+
 **The registered count is 61,527** (2026-10-30, `make source-count`, both
 floors re-recorded from that build): 57,905 plus **batch 57's 3,622 Japanese
 rows** — eight beats in `collectors/pivot/table/hp3b57_*.c`, every one measured

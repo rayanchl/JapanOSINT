@@ -7,6 +7,14 @@
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
 
+/* 2026-11-11 (owner's decision): the scheduled OpenAlex rows below are
+ * VJSON_KEYQ — gated on OPENALEX_API_KEY, sent as api_key=. Keyless, OpenAlex
+ * answers HTTP 429 "This request has no API key, so it counts against the
+ * free daily budget shared by everyone on your network's IP address", which a
+ * scheduler exhausts on its first pass; the hp OpenAlex rows were gated the
+ * same way already. Without the key each row files one needs-credential
+ * notice and makes no request. The on-demand pivots stay keyless. */
+
 VJSON(sci_res_datacite_clients, "sci-res-datacite-clients", "DataCite — repository registry", "DataCite — repository registry",
   "earthobs", "science",
   "https://api.datacite.org/clients?page%5Bsize%5D=100",
@@ -56,26 +64,29 @@ VJSON(sci_res_europepmc_seismic, "sci-res-europepmc-seismic", "Europe PMC — se
   "en", "[\"int\",\"science\",\"literature\",\"seismic\"]", 45000,
   "Newest indexed seismic-hazard papers with bibliographic metadata and identifiers.");
 
-VJSON(sci_res_openalex_funders, "sci-res-openalex-funders", "OpenAlex — research funder registry", "OpenAlex — research funder registry",
+VJSON_KEYQ(sci_res_openalex_funders, "sci-res-openalex-funders", "OpenAlex — research funder registry", "OpenAlex — research funder registry",
   "earthobs", "science",
   "https://api.openalex.org/funders?per-page=100",
   "results",
   "en", "[\"int\",\"science\",\"funding\",\"registry\"]", 90000,
-  "Research funders with country, alternate names, grant counts and linked works.");
+  "Research funders with country, alternate names, grant counts and linked works.",
+  "OPENALEX_API_KEY", "api_key", "a free API key from the OpenAlex account settings page");
 
-VJSON(sci_res_openalex_institutions, "sci-res-openalex-institutions", "OpenAlex — research institution registry", "OpenAlex — research institution registry",
+VJSON_KEYQ(sci_res_openalex_institutions, "sci-res-openalex-institutions", "OpenAlex — research institution registry", "OpenAlex — research institution registry",
   "earthobs", "science",
   "https://api.openalex.org/institutions?per-page=100",
   "results",
   "en", "[\"int\",\"science\",\"institution\",\"registry\"]", 88200,
-  "Research institutions with ROR id, country, geo coordinates and publication counts.");
+  "Research institutions with ROR id, country, geo coordinates and publication counts.",
+  "OPENALEX_API_KEY", "api_key", "a free API key from the OpenAlex account settings page");
 
-VJSON(sci_res_openalex_sources, "sci-res-openalex-sources", "OpenAlex — journal and repository registry", "OpenAlex — journal and repository registry",
+VJSON_KEYQ(sci_res_openalex_sources, "sci-res-openalex-sources", "OpenAlex — journal and repository registry", "OpenAlex — journal and repository registry",
   "earthobs", "science",
   "https://api.openalex.org/sources?per-page=100",
   "results",
   "en", "[\"int\",\"science\",\"bibliometrics\",\"registry\"]", 86400,
-  "Scholarly sources with ISSN, publisher, open-access status and works counts.");
+  "Scholarly sources with ISSN, publisher, open-access status and works counts.",
+  "OPENALEX_API_KEY", "api_key", "a free API key from the OpenAlex account settings page");
 
 VJSON(sci_res_osf_eartharxiv, "sci-res-osf-eartharxiv", "EarthArXiv — recent preprints", "EarthArXiv — recent preprints",
   "earthobs", "science",

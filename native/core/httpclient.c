@@ -879,7 +879,17 @@ int http_request(http_client *c, const char *method, const char *url,
     /* Every attempt's body counts, retried ones included: transfer is what
      * the upstream sent us, not what we kept. */
     if (c) { c->bytes_in += (unsigned long long)r.body_len; c->requests++; }   /* NULL client: do_once answered a hard failure */
-    int retryable = hard || (r.status >= 500 && r.status <= 599) || r.status == 429;
+    /* A redirect status with NO target is an incomplete answer, not a
+     * verdict: libcurl follows every 3xx that names a Location (and a loop
+     * is a hard CURLE_TOO_MANY_REDIRECTS), so a 3xx that reaches here — 304
+     * aside — named none. Measured 2026-11-11 on openapi.twse.com.tw: its CDN
+     * answers from cache with 200 JSON and, on a miss its origin refuses,
+     * with a 307 carrying a 947-byte "FOR SECURITY REASONS" page and no
+     * Location; the cached copy is served on 7 of 12 rapid reads. Retrying
+     * it is what a second request is for. */
+    int dangling_3xx = !hard && r.status >= 300 && r.status <= 399 && r.status != 304;
+    int retryable = hard || (r.status >= 500 && r.status <= 599) || r.status == 429 ||
+                    dangling_3xx;
     long ra_wait = hard ? -2 : retry_after_decision(r.status, ra_ms, timeout_ms);
     if (ra_wait != -2) {
       /* Every other fetch to this host honours the server's delay too. */

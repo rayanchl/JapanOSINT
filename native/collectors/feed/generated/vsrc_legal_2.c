@@ -142,12 +142,14 @@ VRSS(gov_justice_news, "gov-justice-news", "US Department of Justice — All New
   "en", "[\"usa\",\"doj\",\"prosecution\",\"enforcement\"]", 3600,
   "All Department of Justice news items: indictments, settlements, policy and leadership announcements.");
 
-VJSON(gov_kr_law_search, "gov-kr-law-search", "Korea Law Information — Statute Search", "韓国法令情報 法令検索",
+/* 2026-11-11 (owner's decision): OC=test is refused by law.go.kr ("register your server IP"); gated on LAW_GO_KR_OC, sent as OC=. */
+VJSON_KEYQ(gov_kr_law_search, "gov-kr-law-search", "Korea Law Information — Statute Search", "韓国法令情報 法令検索",
   "legal", "parliament",
-  "https://www.law.go.kr/DRF/lawSearch.do?OC=test&target=law&type=JSON&display=20",
+  "https://www.law.go.kr/DRF/lawSearch.do?target=law&type=JSON&display=20",
   "lawsearch.law",
   "ko", "[\"korea\",\"legislation\",\"statute\",\"asia\"]", 86400,
-  "Korean national statute search API returning law names, ministries and effective dates.");
+  "Korean national statute search API returning law names, ministries and effective dates.",
+  "LAW_GO_KR_OC", "OC", "an OC account id from the open.law.go.kr developer portal (free; tied to a registered server IP)");
 
 /* Tweede Kamer / Folketing OData rows: `$orderby=<modified> desc,<key>`
  * (2026-11-07), copied from the sorted siblings (GewijzigdOp desc on TK
