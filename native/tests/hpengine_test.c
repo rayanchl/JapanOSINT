@@ -5339,6 +5339,96 @@ int main(void) {
        "59e: rate limit wins over maintenance — the actionable remedy first");
     (void)rc; }
 
+  /* ── 60. A WALL DOES NOT ALWAYS PICK A 200 ──────────────────────────────
+   *
+   * hp_body_refusal() reached all five mode drivers on 2026-11-05, which fixed
+   * WHERE it runs and left WHEN: every caller was a 2xx whose body would not
+   * parse, so a 403 never got the test and its remedy came from the status
+   * alone — "check whether the row needs a credential (key_env) or a
+   * User-Agent it is not sending".
+   *
+   * Measured 2026-11-11 on the 738 rows carrying exactly that remedy
+   * (docs/refused-403-sample-2026-11-11.tsv): 555 hosts, 40 sampled across all
+   * four rungs of core/host_agents.def's ladder, and NOT ONE host recovered by
+   * any rung. Of the 27 refusing every agent, 22 answer 403 with a Cloudflare
+   * challenge, 1 with a 1005 ASN block, and only 4 with a plain server 403 —
+   * so the advice was wrong for 23 of 27, and told the row to try the agent it
+   * had already tried.
+   *
+   * 60d is the control that bounds the change: a plain 403 with no wall
+   * wording keeps the credential/agent remedy, because for those 4 of 27 it is
+   * the right advice. */
+
+  /* 60. A Cloudflare challenge served as 403 is named as the wall it is. */
+  fx_reset();
+  fx_add("/s?q=", 403,
+         "<!doctype html><html><head><title>Just a moment...</title></head>"
+         "<body>Enable JavaScript and cookies to continue</body></html>");
+  g_ncap = 0;
+  rc = run_source("T_JSON", "Acme AS 912345678");
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "BOT-WALL") != NULL &&
+       strstr(nt->props, "credential (key_env)") == NULL,
+       "60: a 403 carrying a bot wall is reported as a wall, not as a missing "
+       "credential");
+    (void)rc; }
+
+  /* 60b. Cloudflare 1005 is an ASN block, named apart because nothing reaches
+   *      it — measured on machi.to: 403 with a 17-byte body. */
+  fx_reset();
+  fx_add("/s?q=", 403, "error code: 1005");
+  g_ncap = 0;
+  rc = run_source("T_JSON", "Acme AS 912345678");
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "1005") != NULL &&
+       strstr(nt->props, "unmeasurable from this network") != NULL,
+       "60b: Cloudflare 1005 is named as an ASN block whose remedy is to "
+       "record it, not to hunt an agent");
+    (void)rc; }
+
+  /* 60c. The same on an HTML row, so this is the shared test and not a
+   *      per-mode one. */
+  fx_reset();
+  fx_add("/cal.html", 403,
+         "<!doctype html><html><head><title>Just a moment...</title></head>"
+         "<body>cf-browser-verification</body></html>");
+  g_ncap = 0;
+  rc = run_source("T_HTML_CAL", NULL);
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "BOT-WALL") != NULL,
+       "60c: the refusing-status test is shared by the mode drivers");
+    (void)rc; }
+
+  /* 60d. THE CONTROL. A plain server 403 with no wall wording keeps the
+   *      credential/agent remedy — right for the 4 of 27 that are genuinely
+   *      a server-level deny, and the thing this change must not break. */
+  fx_reset();
+  fx_add("/s?q=", 403,
+         "<html><head><title>403 Forbidden</title></head><body>"
+         "<h1>403 Forbidden</h1><hr>nginx</body></html>");
+  g_ncap = 0;
+  rc = run_source("T_JSON", "Acme AS 912345678");
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "credential (key_env)") != NULL &&
+       strstr(nt->props, "BOT-WALL") == NULL,
+       "60d: a plain 403 keeps the credential/agent remedy — the change is "
+       "bounded to bodies that carry a wall's own words");
+    (void)rc; }
+
+  /* 60e. THE SECOND CONTROL, and the one that keeps rule 1 safe: a 404 whose
+   *      body is a service's own no-data wording is still an HONEST EMPTY and
+   *      files nothing, even though 404 is now a status the words test sees. */
+  fx_reset();
+  fx_add("/s?q=", 404, "No data available for the requested window\n");
+  g_ncap = 0;
+  rc = run_source("T_JSON", "Acme AS 912345678");
+  ok(cap_count("collector-fetch-failure", NULL) == 0,
+     "60e: a declared-empty 404 stays an honest empty and files nothing");
+
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;
 }

@@ -1277,6 +1277,10 @@ typedef struct {
    * byte-identical. See hp_title_says_maintenance for why the test reads the
    * title and not the body. */
   int   unreadable_maintenance;
+  /* Cloudflare's `error code: 1005`, an ASN-level block. Named apart from the
+   * bot wall because it is the one refusal here with no remedy: see
+   * hp_body_refusal. */
+  int   unreadable_ipblock;
 
   /* Repeat guard on the RECORDS of a paged JSON walk (see hp_run_json).
    * Hashing the whole body could not see an ignored cursor when the envelope
@@ -2280,6 +2284,20 @@ static void hp_body_refusal(hp_run_state *st, const char *body) {
     st->unreadable_botwall = 1;
   else if (hp_title_says_maintenance(body))
     st->unreadable_maintenance = 1;
+  /* A FIFTH shape, and it is the one case here with NO remedy at all, which is
+   * why it is named apart from the bot wall it otherwise resembles.
+   * Cloudflare's `error code: 1005` is an ASN block — the whole datacenter
+   * range is refused before any request detail is looked at — so neither an
+   * agent nor a gap nor a browser profile reaches it. The tree has met it
+   * before: collectors/sources/cam_webcamtaxi.c records webcamtaxi.com
+   * answering "error 1005, a hard IP block, NOT a JS challenge" to cloud
+   * hosts. Measured again 2026-11-11 on machi.to: HTTP 403 with a
+   * SEVENTEEN-BYTE body, `error code: 1005`, under all four agent rungs.
+   * Telling it apart from a challenge matters because the challenge's remedy
+   * is an agent to try and this one's is "record it as unmeasurable". */
+  else if (jo_strcasestr(body, "error code: 1005") ||
+           jo_strcasestr(body, "error 1005"))
+    st->unreadable_ipblock = 1;
 }
 
 /* Is this body an HTML DOCUMENT? For every mode whose data is not HTML — JSON,
@@ -2322,6 +2340,8 @@ static void hp_unreadable_log(hp_run_state *st, const char *detail) {
         : st->unreadable_botwall     ? " — it is a BOT-WALL page served as 200"
         : st->unreadable_maintenance ? " — the page's own <title> says the "
                                        "SITE IS IN MAINTENANCE; wait and re-read the row rather than re-pointing it"
+        : st->unreadable_ipblock     ? " — it is Cloudflare 1005, an ASN block: "
+                                       "no agent or gap reaches it"
                                      : "");
 }
 
@@ -5318,6 +5338,31 @@ dated_restart:;
         if (first_nodata)
           fprintf(stderr, "[hp:%s] the upstream answered HTTP %ld with its own "
                   "no-data wording: an EMPTY result, not a refusal\n", s->id, fst);
+        /* THE WORDS TEST RAN ONLY ON A NON-PARSING 200, AND A WALL DOES NOT
+         * ALWAYS PICK THAT STATUS. hp_body_refusal() reached all five mode
+         * drivers on 2026-11-05, which fixed WHERE it runs and left WHEN:
+         * every caller is a 2xx whose body would not parse. A 403 never got
+         * the test at all, so its remedy came from the status alone — "check
+         * whether the row needs a credential (key_env) or a User-Agent it is
+         * not sending".
+         *
+         * Measured 2026-11-11 against the 738 rows whose fetch-failure record
+         * carried exactly that remedy (docs/refused-403-sample-2026-11-11.tsv):
+         * they sit on 555 hosts, 40 were sampled across the whole of
+         * core/host_agents.def's own agent ladder — the engine agent, the
+         * agent without "collector", a bare JapanOSINT/1.0, the compat prefix
+         * — and **not one host was recovered by any rung**. Of the 27 that
+         * refuse every agent, **22 answer 403 with a CLOUDFLARE CHALLENGE**
+         * (`cf-mitigated: challenge`, `<title>Just a moment...</title>`), one
+         * is a 1005 ASN block and only 4 are a plain server-level 403. So the
+         * remedy the record gave was wrong for 23 of 27, and the row had
+         * already tried the agent it was being told to try.
+         *
+         * So the test runs on a refusing status too. It cannot change an
+         * honest empty: a declared no-data reply is settled above and keeps
+         * its own path, and a body with none of the words sets no flag, which
+         * leaves the status-based arms exactly as they were (hptest 60d). */
+        if (!first_nodata && fst >= 400) hp_body_refusal(&st, hr.body);
       }
       if (page == 0 && (fst < 0 || fst >= 500 || (fst == 304 && !first_conditional)))
         hard_error = 1;
@@ -6166,14 +6211,19 @@ date_step_back:
         ? http_tls_cause_label(first_tls)
       : first_status == -1
         ? "the request failed at the transport level"
-      : first_status == 200 && st.unreadable_ratelimit
-        ? "the upstream answered 200 with a RATE-LIMIT page instead of the "
-          "data — a refusal wearing a success status, which no status check "
-          "can see"
-      : first_status == 200 && st.unreadable_botwall
-        ? "the upstream answered 200 with a BOT-WALL interstitial instead of "
-          "the data — a refusal wearing a success status, and one that pacing "
-          "does not reach"
+      : st.unreadable_ipblock
+        ? "the body carries Cloudflare's `error code: 1005` — an ASN-level "
+          "block, so the whole datacenter range is refused before any request "
+          "detail is looked at. Not a challenge: there is nothing to pass"
+      : st.unreadable_ratelimit
+        ? "the upstream served a RATE-LIMIT page instead of the data — a "
+          "refusal that the status alone does not show (it is often a 200, and "
+          "is read on a 4xx too since 2026-11-11)"
+      : st.unreadable_botwall
+        ? "the upstream served a BOT-WALL interstitial instead of the data — a "
+          "refusal that pacing does not reach. Measured 2026-11-11: 22 of 27 "
+          "hosts that refuse every agent answer 403 with a Cloudflare "
+          "challenge, so this is NOT only a 200-with-a-wall shape"
       : st.unreadable_maintenance
         ? "the body's own <title> says the SITE IS IN MAINTENANCE. A site in "
           "that state serves ONE page to every path, so neither the status nor "
@@ -6194,9 +6244,22 @@ date_step_back:
       : first_status == 429
         ? "rate limited: give the host a per-host minimum gap in "
           "core/hostgate.c, as crates.io has"
+      : st.unreadable_ipblock
+        ? "NOTHING here reaches this: Cloudflare 1005 blocks the ASN, so no "
+          "agent, no per-host gap and no browser profile changes the answer. "
+          "Record the row as unmeasurable from this network and re-read it "
+          "from another one before treating it as the publisher's state"
+      : st.unreadable_botwall
+        ? "a bot wall, so do NOT reach for a hostgate gap or a moved endpoint. "
+          "Bisect the User-Agent as core/host_agents.def's ladder does — but "
+          "read docs/refused-403-sample-2026-11-11.tsv first: over 40 hosts "
+          "and all four rungs, NOT ONE was recovered by an agent change, so "
+          "if the wall is Cloudflare's challenge expect to record the row as "
+          "unmeasurable rather than to find an agent that passes"
       : first_status == 401 || first_status == 403
-        ? "the upstream refused this client: check whether the row needs a "
-          "credential (key_env) or a User-Agent it is not sending"
+        ? "the upstream refused this client with no wall wording in the body, "
+          "which is the minority case (4 of 27 sampled): check whether the row "
+          "needs a credential (key_env) or a User-Agent it is not sending"
       : first_status == 200 && st.unreadable_ratelimit
         ? "rate limited behind a 200: give the host a per-host minimum gap in "
           "core/hostgate.c. Measure the budget before choosing one — a gap "
@@ -6211,10 +6274,14 @@ date_step_back:
       : first_status == 200 && st.unreadable_botwall
         ? "a bot wall, so do NOT reach for a hostgate gap or a moved endpoint: "
           "the wall refuses an automated client at any rate. Bisect the "
-          "User-Agent as core/host_agents.def's table does — a word "
-          "in the agent is the measured cause on every host in it so far — and "
-          "if no agent clears it, record the row as unmeasurable from here "
-          "rather than guessing at a gap"
+          "User-Agent as core/host_agents.def's table does — a word in the "
+          "agent was the measured cause on the Imperva family (the table's "
+          "HA_COMPAT hosts) — but WHICH wall this is decides whether that can "
+          "work at all: over 40 Cloudflare-challenge hosts and all four rungs "
+          "of that ladder, not one was recovered by an agent change "
+          "(docs/refused-403-sample-2026-11-11.tsv). Read the body's own "
+          "wording first, and if no agent clears it, record the row as "
+          "unmeasurable from here rather than guessing at a gap"
       : first_status == 200
         ? "re-read the body by hand: the endpoint may have moved, started "
           "redirecting to an HTML page, or changed shape"
@@ -6228,10 +6295,14 @@ date_step_back:
       snprintf(title, sizeof title,
                "%s stored nothing: the site is in maintenance and served one "
                "page to every path", s->id);
-    else if (first_status == 200 && st.unreadable_botwall)
+    else if (st.unreadable_ipblock)
       snprintf(title, sizeof title,
-               "%s stored nothing: a bot wall answered 200 instead of the data",
+               "%s stored nothing: Cloudflare 1005 blocks this network's ASN",
                s->id);
+    else if (st.unreadable_botwall)
+      snprintf(title, sizeof title,
+               "%s stored nothing: a bot wall answered HTTP %ld instead of the "
+               "data", s->id, first_status);
     else if (first_status == 200)
       snprintf(title, sizeof title,
                "%s stored nothing: the body did not parse in its declared mode",

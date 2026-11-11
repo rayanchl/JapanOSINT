@@ -1398,6 +1398,63 @@ The lessons from batches 43–48 that a new batch must not relearn:
   first as a header on each row, since 2026-10-21 as an `HA_COMPAT` line in
   `core/host_agents.def`; the four that refused twice stay out. Try that
   agent before calling a 403 dead.
+
+  **AND THREE WEEKS LATER THAT REMEDY RECOVERS NOTHING, WHICH IS WHY IT WAS
+  SAMPLED BEFORE 555 HOSTS WERE BISECTED** (2026-11-11,
+  `docs/refused-403-sample-2026-11-11.tsv`). The engine's own fetch-failure
+  remedy still says to check "a User-Agent it is not sending", and 738 rows of
+  the 2026-10-25 sweep carry it. The 731 of them that still exist sit on **555
+  distinct hosts, 503 of them carrying a single row**, so the 2026-10-20 shape
+  — one concentrated population, one agent line, 491 rows back — could not
+  apply, and bisecting 555 hosts to buy one row each 503 times is not a
+  measurement anyone should pay for. 40 hosts were sampled instead (the 10 with the most rows plus 30
+  from the single-row tail) and walked up `core/host_agents.def`'s own ladder:
+  the engine agent, the agent without "collector", a bare `JapanOSINT/1.0`, the
+  `Mozilla/5.0 (compatible; …)` compat prefix. 160 requests.
+
+  **0 of 40 recovered under any rung.** 12 answered 200 to the FIRST rung —
+  their 403 was transient and nothing needed changing — and the 27 that
+  refused all four refused identically on all four. So **no `HA_COMPAT` line
+  was added**, which is the deliverable: the rate, written down, in place of
+  503 bisections.
+
+  The one apparent recovery is why the raw readings are kept per rung.
+  `www.icmatteotti.edu.it` reads `000 200 200 200`, which looks exactly like a
+  rung-1 refusal that an agent lifted — and `000` is a TRANSPORT failure, not a
+  refusal: nothing was refused and no agent fixed anything. It is labelled
+  `TRANSPORT_THEN_200` rather than counted.
+
+  **What the 27 hard refusals are: 22 Cloudflare challenges, 4 plain 403s, 1
+  Cloudflare 1005 IP block** (`cf-mitigated`, the interstitial's own wording,
+  and a 16-byte body for the IP block). A challenge is the bot wall rule 1
+  already names, whose remedy is the agent TABLE and not pacing — and the
+  measurement says the table does not reach these either, because current
+  Cloudflare is not keyed on the agent string at all. That is a finding about
+  the remedy, so **the remedy text is the thing to fix, not the rows.**
+
+  **And the classifier got 27 rows wrong first, from reading the wrong
+  column.** The map of host → URL was built with `$1"\t"$NF`, and the last
+  field of that TSV is the NOTE, not the url — so every curl was handed prose,
+  returned nothing, and fell through to the `PLAIN_403` default with an empty
+  `server`. It was caught because two hosts already confirmed by hand as
+  Cloudflare came back `PLAIN_403`: **a classifier that disagrees with a
+  reading you already took is reporting on its own input.**
+
+  **Then the 738 were re-read through the binary, and 299 simply worked**
+  (`docs/refused-403-recovery-2026-11-11.tsv`): **299 OK storing 16,615
+  records**, 428 still FETCH_FAILED (414 of them 403), 3 EMITS_NOTHING, 1 SLOW
+  — **40.9% of a 403 population was transient**, with no code change at all.
+  Seven of the 738 are not in the file because they no longer exist: they are
+  feed-format twins this branch retired, so a sweep's id list goes stale too.
+  One probe is one reading, at the scale of a whole verdict column, for the
+  third time in this file.
+
+  **Reading what the recovered rows STORE is what paid for the pass.** The top
+  two were clean (2,355 real Japanese association titles; 2,273 corporate
+  news-release titles). The third, `au-asic-registered-auditors` at 2,002, had
+  every one of its 2,000 records titled `registry-record _id` — the
+  `FAA_NNUMBER_REGISTRY` lesson, and it opened the 13-row detail-hop family
+  recorded under rule 2.
 * **A URL changed after validation is unvalidated** (an unescaped `&amp;`
   made Joomla serve Atom where rows declared RSS), **a well-formed feed with
   zero items is `EMPTY_RESULTSET`**, **a substring count of `<item` counts the
@@ -2463,6 +2520,85 @@ container, which is written down rather than filed as a verdict.
 `VJSON_PREP` is deliberately NOT converted: its extra argument is a C function
 that reshapes each page before emit, and a declarative row cannot hold code.
 VRSS and VGEO stay out too — hpengine has no RSS or FeatureCollection mode.
+
+**AND THE LINT COULD NOT SEE A SELF-HOP THAT SELECTS THE RECORD BY A QUERY
+PARAMETER, WHICH IS 13 MORE ROWS** (2026-11-11). `detail-self-hop` matches on
+identical query strings and a difference in the last PATH segment, which is
+the shape it was written for and is one of two. The other selects the record
+with a FILTER: 13 rows read `data.gov.au`'s CKAN
+`datastore_search?resource_id=R&limit=100` and declare
+`detail_url = …?resource_id=R&filters={"_id":{v}}` — same host, same path, the
+record picked out of the SAME resource by the row id already in hand. The
+mechanism settles it without a sweep (CKAN's `filters` selects rows of the
+resource being read), and it was measured anyway on three of them: the list
+and detail representations are identical field for field.
+
+It was found by applying this file's own rule — **when a fix lets a refused
+row through, read what it STORES** — to the 403 recovery pass under rule 1
+above, and the finding was not the one being looked for.
+
+* The cost is a request per record. `au-asic-registered-auditors`'s own notice
+  said `deepened 400 of 2000 records (1600 pending)`, so 420 requests a run of
+  which 400 re-fetched records it held; it is 20 now. And the 1,600
+  `_detail_pending` stamps said there was more behind each record when there
+  was not — a FABRICATED disclosure, which is rule 1's subject wearing rule
+  2's clothes, and precisely the "notice that fires when nothing was lost"
+  this file says teaches a reader to ignore notices.
+* **IT ALSO DECIDED THE RECORD'S IDENTITY, which is why this is not merely
+  wasted traffic.** None of the 13 declared `id_keys`, so hpengine fell to
+  `ID_FALLBACK`, whose `"id"` entry resolves through `hp_flat_get`'s
+  last-dotted-segment match — and the merged detail envelope carries
+  `detail.result.fields.0.id`, whose VALUE is the string `"_id"`. So all 400
+  deepened records were keyed AND titled `"_id"`, a constant, and only the
+  in-page content-hash guard kept their uids apart. **A detail body is merged
+  under `detail.*` and then competes in the fallback lists on equal terms, so
+  a detail response's SCHEMA BLOCK can supply a record's identity.**
+* The other 1,600 records of the same run were titled `REGISTER_NAME` —
+  "Registered Auditors", also a constant — because `hp_first_scalar()` skips
+  `_`-prefixed keys as the engine's own annotations, so **CKAN's `_id` was
+  invisible to the last-resort fallback too.** Two conventions, the datastore's
+  row id and the engine's annotation marker, colliding on one character.
+* Each row now declares `id_keys = "_id"` and a `title_keys` naming the
+  register's own name column. Measured, all 13 serially: 2,000 of 2,000 on the
+  ten that reach the page ceiling, and three COMPLETE — banned organisations
+  15 of 15 in ONE request, liquidators 661, the government organisations
+  register 1,381 — every uid distinct, zero records titled `_id`, and real
+  names stored ("ABBOTT, BILL", "Australian Centre for Disease Control").
+* **The register's own number would be more stable and is NOT used**, written
+  down rather than guessed at: a re-upload renumbers `_id`, but no register
+  number here is known to be unique per ROW, and the data says the doubt is
+  real — 2,000 financial-adviser rows carry **946 distinct names** (one row per
+  adviser x role x licence) and 2,000 SMSF-auditor rows carry **249**. Keying
+  on `ADV_NUMBER` would have collapsed them. `_id` is no worse than the content
+  hash it replaces on stability and strictly better on correctness.
+* The `"detail-hop"` and `"deep-record"` TAGS went too. A tag is user-visible
+  and searchable, so one claiming a hop that no longer exists is the same
+  staleness this file keeps correcting in comments and remedies.
+
+**The remaining 78 of those 91 rows are candidates, not a family** — the same
+correction the 15 byte-identical parish feeds forced. 35 are d-portal `/q`
+reads and 16 are `data.gov.ie`'s platform API, where the detail query may well
+select something the list does not carry; each needs one request. And the
+identity hazard is bounded by a bigger number than 13: **604 rows declare a
+`detail_url` and 300 of them declare no `id_keys`** (617 and 313 before this
+change), so any of those 300 whose detail body carries a key whose last dotted
+segment is one of `ID_FALLBACK`'s names is keyed on whatever that envelope
+happens to hold. Both counts are recorded here rather than acted on, because a
+count is where this work starts and never where it ends — and the scan that
+produces them costs no requests, since it imports `tools/lint_sources.py`'s own
+row parser and reads only the C.
+
+**`detail-self-hop` was deliberately NOT widened to the query-filter shape**,
+and the reason is the one `feed-format-twin` and `gated-without-notice` record
+from the other side: both of those ship UNBASELINED because their population
+is zero, so any new finding is a regression. Widening the predicate here would
+report 78 rows that nobody has measured, and the only ways to make the build
+pass would be to baseline them — a number nobody reads — or to stamp 78
+`detail-self-hop-ok` markers, which asserts a judgement that has not been
+made. A gate must not put a row whose status is unknown in a defect bucket;
+that is the same correction `POD`, `GATED` and `WINDOW_EMPTY` each forced. The
+13 that WERE measured are fixed, and the check can be widened the day the
+other 78 have a reading each.
 
 ```sh
 cd native
