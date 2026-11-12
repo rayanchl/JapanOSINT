@@ -87,10 +87,23 @@
  * DIFFER, varying in height (6 of 6), elev (4) and name (2) — two STACK/LGT-D
  * at 33.694,-94.419 of 77 ft and 69 ft are two stacks in one plant, not one
  * stack served twice. `height` is in the key now: 399 distinct, which is
- * exactly that tile's count of distinct WHOLE records, so it reaches the
- * ceiling and `elev` would add nothing. Coordinate precision is NOT raised —
- * the feed does not publish more, so a tighter format would invent a
- * distinction (rule 1).
+ * exactly THAT TILE's count of distinct WHOLE records, so it reaches the
+ * ceiling there. Coordinate precision is NOT raised — the feed does not
+ * publish more, so a tighter format would invent a distinction (rule 1).
+ *
+ * AND ONE TILE WAS NOT ENOUGH TO SETTLE IT, which the new run line said within
+ * one run of shipping. With the height in the key the full sweep still reports
+ * **109 tiles holding same-key groups, 1,333 features flagged, the worst 84 in
+ * one page (28.5% of it)** — about 1.9% of the 68,605 emitted. So the first
+ * draft of this note said "`elev` would add nothing", which was true of the
+ * probed tile and is an over-claim about the country: a transmission line of
+ * identical poles at one height inside a 111 m cell is exactly the shape that
+ * tile did not contain. Whether those remaining groups are byte-identical
+ * (correct dedupe, as both of the probed tile's survivors were) or merely
+ * share the key (kept by the guard, exposed at the seam) is UNMEASURED — it
+ * needs one probe of a heavy tile, and the disclosure is what makes the
+ * question answerable from a run line instead of by hand. Do not widen the key
+ * on this paragraph alone; measure first.
  *
  * WHY NO RECORD COUNT COULD SHOW IT. The sink's in-page guard
  * (lib/geojson.c gj_collision_map) content-hashes differing same-key features

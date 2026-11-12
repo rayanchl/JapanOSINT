@@ -888,9 +888,24 @@ where a shared 7,249 bytes turned out to be two genuinely different paths.
     groups differed in height, elev or name — two STACK/LGT-D at
     33.694,-94.419 of 77 ft and 69 ft are two stacks in one plant. Adding the
     published `height` gives 399, exactly that tile's count of distinct WHOLE
-    records, so it reaches the ceiling and `elev` would add nothing; the
-    coordinate precision is NOT raised, because the feed does not publish more
-    and a tighter format would invent a distinction.
+    records, so it reaches the ceiling THERE; the coordinate precision is NOT
+    raised, because the feed does not publish more and a tighter format would
+    invent a distinction.
+
+    **And one tile was not enough to settle it — the new run line said so
+    within one run of shipping.** With the height in the key the full sweep
+    still reports **109 tiles holding same-key groups, 1,333 features flagged,
+    the worst 84 in one page (28.5% of it)**, about 1.9% of the 68,605 emitted.
+    So the first draft of this bullet said "`elev` would add nothing", which
+    was true of the probed tile and an over-claim about the country: a
+    transmission line of identical poles at one height inside a 111 m cell is
+    exactly the shape that tile did not contain. **"TWO PAGES CAN BE TOO FEW"
+    caught me having quoted it in my own plan**, which is the fourth sighting
+    in this file. Whether those groups are byte-identical (correct dedupe, as
+    both of the probed tile's survivors were) or merely share the key is
+    UNMEASURED and written down rather than guessed — and the disclosure is
+    what turned it from invisible into a number, on the first row it ran
+    against.
   * **NO RECORD COUNT COULD HAVE SHOWN IT, and that is now fixed for the whole
     fleet.** `lib/geojson.c`'s in-page guard content-hashes differing same-key
     features WITHIN one FeatureCollection, so inside a tile nothing is lost and
