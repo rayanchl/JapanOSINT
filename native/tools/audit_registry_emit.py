@@ -56,8 +56,14 @@ eight of them as dead sources.
 
 Exit status: 1 if any selected source came back EMITS_NOTHING, COLLISION,
 SINK_MISMATCH, NO_RUN_LINE, UNREADABLE_DB or UNREGISTERED, or if an --only id
-is not registered; else 0. SLOW does not fail the run on its own — it is
-"unmeasured", not "broken". The others used to be in that bucket too and are
+is not registered; else 0. SLOW and SIZE_CAPPED do not fail the run on their
+own — they are "unmeasured", not "broken", and they are TWO verdicts because
+there are two kill lines and they want opposite knobs: SLOW is the clock
+(`--timeout`), SIZE_CAPPED is the scratch database passing `--file-limit`
+(SIGXFSZ). Measured on the 2026-11-12 SLOW re-read at 600 s: 54 of 73 were the
+file ceiling, one of them having stored 210,340 records in 37.8 seconds, so
+reporting them as slow sent the reader to a knob that could not move them.
+The others used to be in that bucket too and are
 not: SINK_MISMATCH is the two independent readings DISAGREEING (the one thing
 this tool exists to refuse to paper over), NO_RUN_LINE is a process that died
 before its run returned, UNREADABLE_DB means the verdict rests on the process's
@@ -67,6 +73,7 @@ entirely of those used to exit 0.
 import atexit
 import argparse
 import io
+import signal
 import os
 import re
 import shutil
@@ -78,6 +85,9 @@ import tempfile
 import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import jo_ulimit                                          # noqa: E402
 
 # `[sched] <id> run rc=<rc> records=<n> <ms>ms stored=<s>` — `stored=` is
 # appended after the duration (core/scheduler.c explains why it is not next to
@@ -517,6 +527,44 @@ def verdict_for(sid, blob, rc, rows, secs, timed_out, notices=0, gated=None,
     if "unknown source" in blob:
         return (sid, "UNREGISTERED", rc, 0, -1, -1, -1, -1, secs,
                 "the binary does not know this id")
+    if sched is None and rc == -int(signal.SIGXFSZ) and rows:
+        # THE OTHER KILL LINE, and it is not the clock. `--file-limit` imposes
+        # `ulimit -f` on the run (build_cmd), so a row whose scratch database
+        # and WAL together pass that ceiling is killed with SIGXFSZ — and until
+        # 2026-11-12 that landed in SLOW, whose note says "hit --timeout" and
+        # whose remedy everywhere in this tree is to raise the clock. Measured
+        # on the 600 s SLOW re-read: 54 of 73 SLOW verdicts were THIS, and the
+        # clock had nothing to do with any of them — PACKAGIST_ALL_PACKAGE_NAMES
+        # stored 210,340 records in 37.8 SECONDS and was reported as slow.
+        # Raising --timeout cannot move a row killed at 37.8 s by a file size,
+        # so the verdict has to name the ceiling that actually bit. Same
+        # correction as POD, GATED and WINDOW_EMPTY: a source behaving exactly
+        # as designed does not belong in a bucket whose remedy is about it.
+        #
+        # It is NOT a defect verdict. The row was storing when it was killed,
+        # and the only honest statement is that this tool could not finish
+        # measuring it at this ceiling. Conditioned on `sched is None` so a run
+        # that printed its line is never relabelled: that row IS measured, and
+        # its numbers stand whatever a later signal did to the scratch file.
+        #
+        # And conditioned on `rows`, which the self-test is what forced: the
+        # first version returned this for a SIGXFSZ kill that stored NOTHING
+        # too, which moved the runaway WAL this ceiling exists to catch out of
+        # a FAILING verdict and into a non-failing one. Storing is the evidence
+        # that the ceiling was reached by a large collection rather than by a
+        # loop writing one page for ever, so a zero-row kill stays NO_RUN_LINE
+        # — with the signal named in its note, which is the fact that was
+        # missing. Same discrimination as the `if rows:` below it, for the same
+        # reason.
+        return (sid, "SIZE_CAPPED", rc, 0, -1, -1,
+                rows if rows is not None else -1, available, secs,
+                "killed by SIGXFSZ at the --file-limit ceiling after %.1fs, "
+                "having stored %d rows: this is a SIZE, not a duration — "
+                "raising --timeout changes nothing. Re-read with a larger "
+                "--file-limit (and the disk to back it) to measure it, and "
+                "treat a row that stores this much as expensive and working "
+                "until something says otherwise."
+                % (secs, rows if rows is not None else 0))
     if sched is None:
         # The database is the only witness when the process never printed its
         # run line. A row killed after landing 96,244 records is NOT the same
@@ -530,6 +578,13 @@ def verdict_for(sid, blob, rc, rows, secs, timed_out, notices=0, gated=None,
                     "returned, but the database holds %d rows for it, so it "
                     "was working: unmeasured, not failed" % rows)
         n = "no [sched] line — the process died before the run returned"
+        if rc == -int(signal.SIGXFSZ):
+            # The one cause we can name. Stored nothing, so this is NOT the
+            # SIZE_CAPPED case above; it is the runaway write the ceiling was
+            # added for, and saying so beats "the process died".
+            n += (" (SIGXFSZ: it passed the --file-limit ceiling having stored "
+                  "no rows at all, so the bytes went somewhere other than "
+                  "records — read the run by hand before raising the limit)")
         return (sid, "NO_RUN_LINE", rc if rc is not None else -1, 0,
                 -1, -1, rows if rows is not None else -1, available, secs, n)
     if rows is None:
@@ -700,7 +755,7 @@ def already_done(path):
 
 
 def self_test():
-    """The COLLISION arithmetic, against four fixtures. -> 0 ok, 1 broken.
+    """The COLLISION arithmetic and the two kill lines. -> 0 ok, 1 broken.
 
     This exists because the verdict was wrong for as long as the tool has had
     a database reading, and nothing could have caught it: `emitted` is the run
@@ -729,6 +784,33 @@ def self_test():
         sys.stderr.write("%s  %-28s e=%-5d s=%-5d n=%-2d rows=%-5d -> %s\n"
                          % ("ok  " if got == want else "FAIL", name, em, st,
                             nt, rows, got))
+    # Which KILL LINE stopped a run, which is a second thing the verdict could
+    # not say. Four cases: the file ceiling (a real reading —
+    # PACKAGIST_ALL_PACKAGE_NAMES, 210,340 rows in 37.8 s, shell rc -25), and
+    # three controls. The clock control is the one that matters: a timeout kill
+    # must stay SLOW, or this fix would empty the verdict it is narrowing. The
+    # run-line control pins that a row which PRINTED its line is never
+    # relabelled on a signal, because that row is measured.
+    SIGX = -int(signal.SIGXFSZ)
+    kills = [
+        ("file ceiling, rows stored",  SIGX, 210340, 37.8,  False, "",
+         "SIZE_CAPPED"),
+        ("file ceiling, nothing yet",  SIGX, 0,      9.1,   False, "",
+         "NO_RUN_LINE"),
+        ("the clock, rows stored",     -9,   77835,  600.1, True,  "",
+         "SLOW"),
+        ("signal AFTER the run line",  SIGX, 500,    12.0,  False,
+         "[sched] T_ROW run rc=0 records=500 10ms stored=500 notices=0 "
+         "bytes=90 requests=1\n", "OK"),
+    ]
+    for name, rc, rows, secs, tmo, blob, want in kills:
+        got = verdict_for("T_ROW", blob, rc, rows, secs, tmo)[1]
+        if got != want:
+            bad += 1
+        sys.stderr.write("%s  %-28s rc=%-4d rows=%-7d %5.1fs -> %-12s "
+                         "(want %s)\n"
+                         % ("ok  " if got == want else "FAIL", name, rc, rows,
+                            secs, got, want))
     sys.stderr.write("self-test: %s\n" % ("%d FAILURES" % bad if bad else "ok"))
     return 1 if bad else 0
 
@@ -743,7 +825,7 @@ def main():
         description="Prove registered sources EMIT and STORE, not merely fetch.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="verdicts: OK | EMITS_NOTHING | COLLISION | FETCH_FAILED | "
-               "SLOW | NEEDS_ENTITY | GATED | POD"
+               "SLOW | SIZE_CAPPED | NEEDS_ENTITY | GATED | POD"
                " | SINK_MISMATCH | UNREADABLE_DB | NO_RUN_LINE | UNREGISTERED")
     ap.add_argument("--bin", required=True, help="path to the japanosint binary")
     sel = ap.add_argument_group("source selection (combined with AND)")
@@ -766,7 +848,9 @@ def main():
                     help="seconds before a run is killed and called SLOW (220)")
     ap.add_argument("--file-limit", type=int, default=1024,
                     help="MB ceiling on any file a run writes; a runaway WAL "
-                         "dies here instead of on the host volume (1024)")
+                         "dies here instead of on the host volume. A row that "
+                         "legitimately stores more is reported SIZE_CAPPED, "
+                         "never SLOW (1024)")
     ap.add_argument("--workdir",
                     help="where per-run databases live (default /dev/shm, else "
                          "a temp dir). Must have room for --jobs of them.")
@@ -816,7 +900,19 @@ def main():
             print("pinned binary: %s (a rebuild cannot disturb this run)"
                   % _pin, flush=True)
         a.bin = _pin
-    a.file_limit_kb = a.file_limit * 1024      # `ulimit -f` counts 1K blocks
+    # MB -> `ulimit -f` blocks, through the MEASURED block size. This line read
+    # `a.file_limit * 1024` under a comment saying "`ulimit -f` counts 1K
+    # blocks", which is true of bash and false of the /bin/sh this tool invokes:
+    # measured 2026-11-12, dash allows 512 bytes for `ulimit -f 1` and bash
+    # 3072 for 3, so the same flag meant 512 MB here and 1 GB on an image where
+    # /bin/sh is bash. The ceiling's real size was a property of the host, and
+    # the halved one is what capped 54 rows of the SLOW re-read with up to
+    # 262,290 records already stored. jo_ulimit measures it once.
+    a.file_limit_kb = jo_ulimit.file_limit_blocks(a.file_limit)
+    if a.file_limit and not a.quiet:
+        print("file ceiling: %d MB (ulimit -f %d, %d-byte blocks, measured)"
+              % (a.file_limit, a.file_limit_kb, jo_ulimit.ulimit_block_bytes()),
+              flush=True)
 
     own_tmp = None
     if not a.workdir:
@@ -971,8 +1067,8 @@ def main():
     skipped = len(res) - len(measured) - len(failed)
     if skipped > 0:
         print("(%d source(s) contributed no comparable pair — SLOW, "
-              "NO_RUN_LINE or UNREADABLE_DB — and are excluded from those "
-              "totals rather than counted as zero)" % skipped)
+              "SIZE_CAPPED, NO_RUN_LINE or UNREADABLE_DB — and are excluded "
+              "from those totals rather than counted as zero)" % skipped)
 
     coll = sorted([r for r in res if r[1] == "COLLISION"],
                   key=lambda r: r[6] - r[4])
@@ -992,6 +1088,15 @@ def main():
               "(re-run these with a larger --timeout)" % len(slow))
         for r in slow[:20]:
             print("  %-38s %s" % (r[0], r[9]))
+    big = [r for r in res if r[1] == "SIZE_CAPPED"]
+    if big:
+        # Printed apart from SLOW because the remedy is a different knob. A
+        # reader handed these under SLOW raises --timeout and measures nothing.
+        print("\nunmeasured — hit --file-limit, NOT judged: %d "
+              "(re-run these with a larger --file-limit; the clock is not the "
+              "ceiling that stopped them)" % len(big))
+        for r in sorted(big, key=lambda x: -x[6])[:20]:
+            print("  %-38s %d rows stored in %.1fs" % (r[0], r[6], r[8]))
     broken = [r for r in res if r[1] in ("SINK_MISMATCH", "NO_RUN_LINE",
                                          "UNREADABLE_DB", "UNREGISTERED")]
     if broken:

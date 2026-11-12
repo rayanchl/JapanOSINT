@@ -47,8 +47,18 @@ printed a tally and passed — "no row drops everything" because no row ran. Now
 HTTP_<code> and TRANSPORT_FAIL are the UPSTREAM's answer, not a verdict on the
 row's keys, so they are listed in a section of their own rather than mixed into
 the tally — a dead endpoint is probe_hp_batch.py's finding to make. SLOW,
-NEEDS_KEY, NEEDS_ENTITY, ENTITY_SHAPE and NO_ENTITY_RECOVERED are unmeasured,
-and say so.
+SIZE_CAPPED, NEEDS_KEY, NEEDS_ENTITY, ENTITY_SHAPE and NO_ENTITY_RECOVERED are
+unmeasured, and say so.
+
+THERE ARE TWO KILL LINES AND THEY WANT OPPOSITE KNOBS. SLOW is the clock
+(`--timeout`); SIZE_CAPPED is `--file-limit`, the ceiling on any file a run
+writes, which this tool had none of until 2026-11-12 although its registry-wide
+twin has had one since a single row filled a 14 GB WAL and wedged the machine.
+Without a verdict of its own such a kill read as NO_RUN_LINE, which is FATAL
+and blames the batch for a limit this tool imposed. Measured on the 2026-11-12
+SLOW re-read: 54 of 73 SLOW verdicts in the twin were the file ceiling, one of
+them having stored 210,340 records in 37.8 SECONDS, so the clock was never what
+stopped them.
 
 EVERY RUN GETS ITS OWN SCRATCH DATABASE. Runs used to inherit JO_DB, and with
 it unset the binary wrote every audited row into the developer's live
@@ -63,6 +73,7 @@ Usage:
 """
 import argparse
 import io
+import signal
 import os
 import re
 import shutil
@@ -74,6 +85,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from manifest import COLS, iter_lines                       # noqa: E402
+import jo_ulimit                                            # noqa: E402
 
 # Every entity token hp_uses_entity() recognises starts "{q" EXCEPT the raw
 # POST form "{Q}" -- see lib/hpengine.c. Without it, entity_of() cannot find
@@ -202,9 +214,22 @@ def warm_template(binpath, path):
 
 
 def run_one(args):
-    binpath, r, timeout, tmpl, workdir, slot = args
+    binpath, r, timeout, tmpl, workdir, slot, file_limit_kb = args
     ent = entity_of(r)
     cmd = [binpath, "--run", r["id"]] + ([ent] if ent else [])
+    # A FILE-SIZE ceiling, which this tool had none of until 2026-11-12 while
+    # its registry-wide twin has had one since the day a single row filled a
+    # 14 GB SQLite WAL in two minutes and wedged the machine. Same binary, same
+    # kind of row, no protection — and the 2026-11-12 SLOW re-read measured the
+    # exposure rather than supposing it: `ua-police-stolen-phones` passes 1 GB
+    # in 107 seconds, and 54 rows of that re-read pass it at all. Imposed with
+    # `ulimit` in a shell that then `exec`s the binary, NOT preexec_fn, which is
+    # documented as unsafe in a thread pool and this is one; `exec` replaces the
+    # shell, so the pid subprocess waits on and kills at --timeout is the binary.
+    if file_limit_kb and os.path.exists("/bin/sh"):
+        sh = 'ulimit -f %d; exec "$0" --run "$1"%s' % (
+            file_limit_kb, ' "$2"' if ent else "")
+        cmd = ["/bin/sh", "-c", sh, binpath, r["id"]] + ([ent] if ent else [])
     # The slot is the row's index, never index % jobs: the pool does not hand
     # work out in queue order, and two runs sharing a file corrupt both.
     db = os.path.join(workdir, "r%d.db" % slot)
@@ -228,6 +253,17 @@ def run_one(args):
     finally:
         _unlink_db(db)
     blob = (p.stdout or "") + (p.stderr or "")
+    if p.returncode == -int(signal.SIGXFSZ):
+        # OUR ceiling, not the row's defect. This tool reads no database, so
+        # with no verdict of its own such a run would fall through to
+        # NO_RUN_LINE — which is FATAL and means "the process died before the
+        # run returned (a defect in the batch, or in the binary it was pointed
+        # at)". That sentence is false for a row killed by a limit this tool
+        # set, and charging our ceiling to the batch is exactly the mistake
+        # this pass is about. Unmeasured, named by cause, and not fatal; the
+        # partial counts the engine printed before the kill are kept.
+        em, av = partial_of(blob)
+        return (r["id"], "SIZE_CAPPED", em, av, ent or "")
     if "unknown source" in blob:
         return (r["id"], "UNREGISTERED", 0, 0, ent or "")
     m = EMITTED.search(blob)
@@ -266,6 +302,12 @@ def main():
     ap.add_argument("--bin", required=True)
     ap.add_argument("--only")
     ap.add_argument("--jobs", type=int, default=4)
+    ap.add_argument("--file-limit", type=int, default=1024,
+                    help="MB ceiling on any file a run writes, so one large row "
+                         "cannot fill the disk with a scratch WAL (1024; 0 "
+                         "disables). A row that legitimately stores more is "
+                         "reported SIZE_CAPPED, which is unmeasured and not a "
+                         "failure")
     ap.add_argument("--timeout", type=int, default=180,
                     help="seconds before a run is killed and called SLOW "
                          "(180). SLOW is unmeasured, not failed — raise this "
@@ -297,7 +339,9 @@ def main():
     try:
         tmpl = warm_template(a.bin, os.path.join(workdir, "warm.db"))
         with ThreadPoolExecutor(max_workers=a.jobs) as ex:
-            res = list(ex.map(run_one, [(a.bin, r, a.timeout, tmpl, workdir, i)
+            res = list(ex.map(run_one, [(a.bin, r, a.timeout, tmpl, workdir, i,
+                                         jo_ulimit.file_limit_blocks(
+                                             a.file_limit))
                                         for i, r in enumerate(rs)]))
     finally:
         shutil.rmtree(workdir, ignore_errors=True)
@@ -324,6 +368,16 @@ def main():
         print("\nUNMEASURED — killed at --timeout %ds, NOT judged (re-run "
               "these with a larger --timeout):" % a.timeout)
         for x in sorted(slow, key=lambda y: -y[2]):
+            print("  %-34s %s" % (x[0], "reached emitted %d of %d" % (x[2], x[3])
+                                  if x[3] else "printed no progress at all"))
+    big = [x for x in res if x[1] == "SIZE_CAPPED"]
+    if big:
+        # Apart from SLOW because the remedy is a different knob: a reader
+        # handed these under SLOW raises --timeout and measures nothing.
+        print("\nUNMEASURED — killed at --file-limit %dMB, NOT judged. This is "
+              "a SIZE and not a duration, so raise --file-limit (and have the "
+              "disk for it), not --timeout:" % a.file_limit)
+        for x in sorted(big, key=lambda y: -y[2]):
             print("  %-34s %s" % (x[0], "reached emitted %d of %d" % (x[2], x[3])
                                   if x[3] else "printed no progress at all"))
     upstream = [x for x in res if x[1].startswith("HTTP_")
