@@ -642,16 +642,39 @@ def verdict_for(sid, blob, rc, rows, secs, timed_out, notices=0, gated=None,
         return (sid, "EMITS_NOTHING", rc, sched_rc, emitted, stored, rows,
                 available, secs,
                 (note or "no records reached intel_items") + transfer)
-    if emitted > 0 and rows < emitted:
+    # A NOTICE IS NOT A COLLAPSED RECORD, and this comparison counted it as
+    # one. `emitted` is the run line's records=, which includes every engine
+    # notice (rule 1 made that deliberate: a dead source must report records=1
+    # so the run line cannot hide it), while `rows` is the database read, which
+    # excludes them by design. So `rows < emitted` fired on ANY row that filed
+    # a truncation or shape notice, by exactly the notice count, with nothing
+    # lost at all.
+    #
+    # This is the same arithmetic this file already corrected for
+    # collector-fetch-failure (see the _NOTICE_SQL comment: emitted=1 against
+    # db=0 "tallied as a record lost to uid collision"), left in place for a
+    # HEALTHY row whose notice is doing its job. Measured 2026-11-12 on the
+    # SLOW re-read: of the first 9 COLLISION verdicts, **5 had
+    # emitted == stored** — the engine's own distinct-uid count says nothing
+    # collapsed — and were in a defect bucket for having disclosed something.
+    # That is the POD / GATED / WINDOW_EMPTY correction a fourth time: a source
+    # behaving exactly as designed does not belong in a defect bucket, and here
+    # the bucket punished the disclosure rule 2 asks for.
+    #
+    # The two readings are still independent, which is the point of reading the
+    # database at all — only the notice rows are taken out of the one that
+    # excludes them.
+    if emitted > 0 and rows + notices < emitted:
         return (sid, "COLLISION", rc, sched_rc, emitted, stored, rows,
                 available, secs,
                 "%d of %d emitted records collapsed onto an already-written "
-                "uid (rule 4b). EITHER the declared id is a dimension, not a "
+                "uid (rule 4b; %d engine notice(s) excluded from both sides). "
+                "EITHER the declared id is a dimension, not a "
                 "record key (real loss — fix id_keys) OR the upstream genuinely "
                 "repeats identical records (correct dedupe — not a bug). This "
                 "tool cannot tell which: fetch the url and compare distinct id "
                 "values to record count before treating it as a defect"
-                % (emitted - rows, emitted))
+                % (emitted - notices - rows, emitted - notices, notices))
     return (sid, "OK", rc, sched_rc, emitted, stored, rows, available, secs,
             note)
 
@@ -676,7 +699,46 @@ def already_done(path):
     return done
 
 
+def self_test():
+    """The COLLISION arithmetic, against four fixtures. -> 0 ok, 1 broken.
+
+    This exists because the verdict was wrong for as long as the tool has had
+    a database reading, and nothing could have caught it: `emitted` is the run
+    line's records=, which counts every engine notice, while the database read
+    excludes them, so `rows < emitted` fired on any row that DISCLOSED
+    something — by exactly the notice count, with nothing lost. The first two
+    fixtures are real readings from the 2026-11-12 SLOW re-read
+    (dportal-iati-bj and uk-govuk-search-maib-reports), and both were confirmed
+    to come back COLLISION against the old line, the first with a note reading
+    "0 of 5929 emitted records collapsed" — zero offered as its own evidence.
+
+    The last two are the controls that keep the fix from hiding real loss."""
+    cases = [
+        ("healthy row, 1 notice",     5930, 5930, 1, 5929, "OK"),
+        ("healthy row, 3 notices",    1106, 1106, 3, 1103, "OK"),
+        ("real collision + 1 notice", 9845, 9844, 1, 9843, "COLLISION"),
+        ("real collision, no notice", 2000, 1500, 0, 1500, "COLLISION"),
+    ]
+    bad = 0
+    for name, em, st, nt, rows, want in cases:
+        blob = ("[sched] T_ROW run rc=0 records=%d 1000ms stored=%d notices=%d "
+                "bytes=900000 requests=20\n" % (em, st, nt))
+        got = verdict_for("T_ROW", blob, 0, rows, 1.0, False, notices=nt)[1]
+        if got != want:
+            bad += 1
+        sys.stderr.write("%s  %-28s e=%-5d s=%-5d n=%-2d rows=%-5d -> %s\n"
+                         % ("ok  " if got == want else "FAIL", name, em, st,
+                            nt, rows, got))
+    sys.stderr.write("self-test: %s\n" % ("%d FAILURES" % bad if bad else "ok"))
+    return 1 if bad else 0
+
+
 def main():
+    # Before the parser, because --bin is required for every real run and the
+    # self-test needs no binary at all.
+    if "--self-test" in sys.argv[1:]:
+        raise SystemExit(self_test())
+
     ap = argparse.ArgumentParser(
         description="Prove registered sources EMIT and STORE, not merely fetch.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -718,7 +780,10 @@ def main():
     ap.add_argument("--no-pin", action="store_true",
                     help="run the binary in place instead of a pinned copy "
                          "(only to measure the binary as it changes)")
-    a = ap.parse_args()
+    ap.add_argument("--self-test", action="store_true",
+                    help="check the COLLISION arithmetic against four "
+                         "fixtures and exit; needs no binary and no network")
+    a = ap.parse_args()    # --self-test already handled above
 
     a.bin = os.path.abspath(a.bin)
     ents = {}

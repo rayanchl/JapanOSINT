@@ -708,6 +708,38 @@ Four lessons from working it, each costing more than the number it corrected:
   is precisely what the engine stored. That took the list worth reading from
   419 rows to the handful that make more than one request.
 
+* **AND SOME OF THAT COLUMN WAS NEVER A COLLISION: THE VERDICT COUNTED A
+  DISCLOSURE AS A LOST RECORD** (2026-11-12, `tools/audit_registry_emit.py
+  --self-test`). `emitted` is the run line's `records=`, which counts every
+  engine notice — rule 1 made that deliberate, so a dead source reports
+  `records=1` and the run line cannot hide it — while the database read
+  excludes notices by design. The test was `rows < emitted`, so it fired on ANY
+  row that filed a truncation or shape notice, by exactly the notice count,
+  with nothing lost. Measured on the SLOW re-read: of the first nine COLLISION
+  verdicts, **five had `emitted == stored`** — the engine's own distinct-uid
+  count saying nothing collapsed — and were in a defect bucket for having
+  disclosed something. The old note read "**0 of 5929 emitted records
+  collapsed**", zero offered as its own evidence.
+
+  This is the arithmetic the same file already corrected for
+  `collector-fetch-failure` (its `_NOTICE_SQL` comment: `emitted=1` against
+  `db=0` "tallied as a record lost to uid collision"), left in place for a
+  HEALTHY row whose notice is doing its job — so it is the "look for the other
+  copies" lesson inside ONE function. And it is the `POD` / `GATED` /
+  `WINDOW_EMPTY` correction a fourth time: a source behaving exactly as
+  designed does not belong in a defect bucket, and here the bucket punished the
+  disclosure rule 2 asks for. The two readings stay independent, which is the
+  whole reason the database is read at all; only the notice rows come out of
+  the side that excludes them. **It also means the sweep's own `COLLISION=461`
+  is an upper bound** — re-read a collision count before ranking off it, which
+  is the bullet above with one more reason behind it.
+
+  The fix ships with the tool's first `--self-test` (four fixtures, no binary
+  and no network, run from `make unit`), because nothing could have caught
+  this: the wrong answer looks exactly like the right one unless the
+  arithmetic is checked, and the two real readings in it were confirmed to come
+  back COLLISION against the old line.
+
 **Every registered source is now proof-of-life verified.** Batch 14's 1,001
 unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `vsrc14_*`); batch 15 added 1,029 more (`vsrc15_*`, see

@@ -210,4 +210,16 @@ python3 tools/cleanup_stale_uids.py --self-test || { echo "FAILED"; fail=1; }
 echo "--- measure_thresholds self-test ---"
 python3 tools/measure_thresholds.py --self-test || { echo "FAILED"; fail=1; }
 
+# tools/audit_registry_emit.py decides the verdict every registry sweep is read
+# by, and its COLLISION arithmetic was wrong for as long as it has had a
+# database reading: `emitted` counts engine notices and the database read
+# excludes them, so a row that DISCLOSED something was reported as having lost
+# records, by exactly the notice count. Measured 2026-11-12. Nothing could have
+# caught it, because the wrong answer looks exactly like the right one unless
+# you check the arithmetic — so the arithmetic is checked here, on four
+# fixtures, two of them real readings confirmed to come back COLLISION against
+# the old line. No binary and no network.
+echo "--- audit_registry_emit self-test ---"
+python3 tools/audit_registry_emit.py --self-test || { echo "FAILED"; fail=1; }
+
 exit $fail
