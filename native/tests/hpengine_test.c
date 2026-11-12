@@ -5547,6 +5547,46 @@ int main(void) {
        "61e: a plain 503 keeps \"re-run; may have moved or retired\"");
     (void)rc; }
 
+  /* ── 62. A DISCLOSURE MUST NOT REPORT A PARSE NOBODY ATTEMPTED ──────────
+   *
+   * `body_parsed` was `!st.unreadable`, and `unreadable` is only ever set by a
+   * mode driver — which only sees a 2xx body. So every refused fetch said
+   * `body_parsed: true` about bytes no parser had been handed. Found
+   * 2026-11-12 on the `*.repo.nii.ac.jp` family, where the same record now
+   * quotes what the body SAYS, which makes the contradiction visible.
+   *
+   * core/sourceapi.c has carried the third state since it was written
+   * (`-1 unknown`, served as JSON null), so omitting the field is what that
+   * layer already expects, and audit_registry_emit.py keys on `is False` and
+   * cannot read an absent field as a failed parse. */
+
+  /* 62. A 503: the parser never ran, so the field is absent rather than true. */
+  fx_reset();
+  fx_add("/s?q=", 503, "<!doctype html><html><body>Service "
+                       "Unavailable</body></html>");
+  g_ncap = 0;
+  rc = run_source("T_JSON", "Acme AS 912345678");
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "\"body_parsed\"") == NULL,
+       "62: a refused fetch reports no body_parsed at all — the parser was "
+       "never called");
+    (void)rc; }
+
+  /* 62b. THE CONTROL. A 200 whose body does not parse still reports
+   *      `body_parsed: false`, which is a real measurement and the thing 3662
+   *      above already pins. The change removes a claim; it adds none. */
+  fx_reset();
+  fx_add("/s?q=", 200, "this is not JSON");
+  g_ncap = 0;
+  rc = run_source("T_JSON", "Acme AS 912345678");
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "\"body_parsed\":false") != NULL,
+       "62b: a 200 that did not parse still says so — only the unmeasured "
+       "case is dropped");
+    (void)rc; }
+
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;
 }

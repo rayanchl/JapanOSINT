@@ -6199,7 +6199,19 @@ date_step_back:
     cJSON_AddStringToObject(p, "query", vars.raw ? vars.raw : "");
     cJSON_AddStringToObject(p, "url", url ? url : "");
     cJSON_AddNumberToObject(p, "http_status", (double)first_status);
-    cJSON_AddBoolToObject(p, "body_parsed", !st.unreadable);
+    /* OMITTED WHEN NO PARSE WAS ATTEMPTED, which `!st.unreadable` reported as
+     * TRUE. A mode driver only ever sees a 2xx body, so on a 503 the parser
+     * was never called — and the record said `body_parsed: true` about bytes
+     * nobody had read. Found 2026-11-12 on the `*.repo.nii.ac.jp` maintenance
+     * family, where the same record now explains what the body SAYS: a
+     * disclosure stating a thing it did not measure is rule 1's own subject,
+     * and it is worse here than anywhere because this record exists to be
+     * believed. core/sourceapi.c has modelled the third state all along
+     * (`-1 unknown`, served as JSON null) and the engine simply never produced
+     * it; audit_registry_emit.py keys on `is False`, so an absent field
+     * cannot be read as a failed parse. `hptest` 62/62b. */
+    if (first_status >= 200 && first_status < 300)
+      cJSON_AddBoolToObject(p, "body_parsed", !st.unreadable);
     /* D1-bis: "the request failed at the transport level" sent a reader to
      * guess, and of 30 hosts written off that way 24 were one fixable cause.
      * Named only when there IS a TLS verdict, so a connect refusal or a

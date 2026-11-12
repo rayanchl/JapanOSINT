@@ -591,6 +591,37 @@ where a shared 7,249 bytes turned out to be two genuinely different paths.
   code, 61c and 61e controls, and **61d is the one that matters** — on a 200
   the body is still not read, so 59d's line holds beside it.
 
+  **AND THE SAME RECORD WAS REPORTING A PARSE NOBODY ATTEMPTED.** Reading the
+  new disclosure on a real row showed `body_parsed: true` beside a cause
+  quoting what the body says — because the field was `!st.unreadable` and
+  `unreadable` is only ever set by a mode driver, which only sees a 2xx body.
+  So every refused fetch in the tree claimed its body parsed, about bytes no
+  parser had been handed. It is omitted now when the status was not a 2xx:
+  `core/sourceapi.c` has modelled that third state since it was written
+  (`-1 unknown`, served as JSON `null`) and the engine simply never produced
+  it, and `audit_registry_emit.py` keys on `is False`, so an absent field
+  cannot be read as a failed parse. The change removes a claim and adds none —
+  `hptest` 62b is the control, a 200 that did not parse still says so, and 62
+  was confirmed to fail against the old line. **A disclosure that states one
+  thing it did not measure is worse than a quiet one, because this record
+  exists to be believed.**
+
+  **WHAT IT CANNOT REACH, measured rather than assumed.** The other caller of
+  the title test is a BESPOKE collector (`collectors/sources/geothermal_springs.c`),
+  and the body route cannot help it: `feed_get_text()` returns NULL on a
+  non-2xx and keeps neither the status nor the body, so that collector's
+  `if (!kml) return -1` is all it can ever know. Its own 200-with-a-title case
+  still works. So this fix reaches every hpengine row — all 324 on this
+  platform are hp table rows, checked — and a bespoke collector behind a
+  maintenance 503 still cannot tell it from any other failure. That is the TEXT
+  fetch path having no recorded status, which `core/scheduler.c`'s disclosure
+  already says of itself ("this collector never reported one"), now with a
+  concrete consequence rather than a count. Written down, not half-fixed: the
+  slot and the describe function exist (`feed_last_json_status`,
+  `feed_status_describe`), and setting them from the text path changes nothing
+  observable until the call sites READ them, which is the real size of that
+  piece.
+
   **And SLOW was a true reading, which is the methodological half.** The sweep
   ran on 2026-10-25, three days BEFORE the window opened, so it measured a
   working-but-slow platform; the 503 is a true reading of today; neither is the
