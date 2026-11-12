@@ -442,7 +442,17 @@ where a shared 7,249 bytes turned out to be two genuinely different paths.
   **CONSUMERS of the one it fixed.** Four of the six KSJ rows that repair
   covers are read by a fusion (`mlit-c02-ports`, `mlit-n02-stations`,
   `mlit-p02-airports`, `mlit-p11-bus-stops`), and every one of those fusions
-  reported `rc=0`.
+  reported `rc=0`. **And the KSJ repair is not the only one that was being
+  swallowed**: `unified-highway`'s second upstream is `jartic-traffic`, the row
+  the bullet above says "cannot emit a record at all" and left disclosing — its
+  404 is the fusion's whole 146 bytes. Two separate
+  repairs, both landing on a row, both inaudible through their consumer, which
+  is how a consumer-shaped copy differs from a parallel implementation: fixing
+  the function does not fix it, and nothing in the function's own file points
+  at it. Three of the four KSJ fusions disclose now; the fourth (`unified-buses`,
+  which reads `mlit-p11-bus-stops`) still reports `rc=0` and is RIGHT to —
+  another of its upstreams serves 56,996 records, which is the partial case
+  below rather than a row left unfixed.
 
   **Only TOTAL failure returns -1, and the reason partial stays silent is a
   measurement rather than a preference**: all 22 upstream ids the nine fusions
@@ -453,12 +463,43 @@ where a shared 7,249 bytes turned out to be two genuinely different paths.
   `sched_disclose_fetch_failure` naming all five hosts (`nlftp.mlit.go.jp` and
   the four Overpass mirrors), `hosts_answered 0`, `bytes_fetched 41188`.
 
-  **The live control is worth more than the fixture**: `unified-flights` reads
-  one upstream, it served, and the row is unchanged at **513 records, rc=0,
-  silent** — so the new -1 does not fire on a fusion that works. The three
-  outcomes are counted and printed per run (`2 served, 0 refused, 0 not
-  registered`), which is also how a dangling upstream id would now show; that
-  count is zero today and the zero was checked rather than assumed.
+  **The live controls are worth more than the fixture, and the second one is
+  the strong one.** `unified-flights` reads one upstream, it served, and the
+  row is unchanged at **513 records, rc=0, silent**. `unified-buses` is the
+  control that matters, because it is a fusion that PARTLY failed and must
+  still stay silent: `mlit-p11-bus-stops` and one Overpass beat refused while
+  `gtfs-jp` and the tiled Overpass beat served, and it stores **56,996
+  records, rc=0, silent** — so the new -1 fires on total failure and not on
+  the design's own case. The three outcomes are counted and printed per run
+  (`2 served, 2 refused, 0 not registered`), which is also how a dangling
+  upstream id would now show; that count is zero today and the zero was
+  checked rather than assumed.
+
+  **ALL TWELVE AFFECTED ROWS WERE THEN MEASURED, one per scratch database at a
+  6 GB ceiling, and the readings corrected three things this bullet said when
+  it was written hours earlier.** Six disclose where they were silent
+  (`unified-port-infra` 41,188 B, `unified-trains` 41,188 B, `unified-subways`
+  41,883 B, `unified-highway` 146 B, `shadowserver-jp` 0 B, `national-parks`
+  0 B — each `rc=-1 records=1 stored=1` with a stored `collector-fetch-failure`
+  naming its hosts), four are healthy and unchanged (`unified-flights` 513,
+  `hazard-map-portal` 190, `gtfs-jp` 50,000, `unified-buses` 56,996), and two
+  stay `rc=0` and silent for a reason worth its own paragraph below.
+
+  **A GATED UPSTREAM COUNTS AS SERVED, so a fusion every live upstream of
+  which refused can still read rc=0.** `unified-ais-ships` is the case: both
+  Overpass beats answered "no endpoint answered" and `vessel-finder` was
+  gated on `VESSELFINDER_API_KEY`, so the run printed `1 of 3 upstreams
+  served` and returned 0 with nothing stored. That is CORRECT rather than a
+  gap in the fix, and for the same reason partial failure stays silent: a gate
+  calls `jo_needs_credential`, which upserts one `collector-needs-credential`
+  row under the UPSTREAM's own id, so the state is disclosed on that row's own
+  schedule and a second notice under the fusion's id would be the duplicate
+  noise rule 1 excludes. It is written down because `1 of 3 served` reads like
+  a success to anyone skimming the log, and the 1 fetched nothing.
+  `wifi-networks` is the same shape at its limit — two gated upstreams and one
+  whose publisher is RETIRED (Mozilla Location Service), so the row runs in
+  **2 ms making 0 requests** and will store nothing until a key arrives, with
+  all three upstreams either disclosing or honestly empty.
 
   **`shadowserver-jp` is the same shape without the helper**: ten datasets,
   each skipped on failure under a comment that is RIGHT about not fabricating
@@ -481,31 +522,44 @@ where a shared 7,249 bytes turned out to be two genuinely different paths.
   *"collector run failed; an empty result here is a FAILURE"*. Two consumers,
   one knew.
 
-  **Two rows of that nine are still unmeasured, and they are named rather than
-  guessed at.** `hazard-map-portal` and `national-parks` read Overpass and
-  returned `rc=0` at an identical **1,034 bytes over 4 requests** — which means
-  some mirror DID answer parseable JSON with zero elements, because
-  `lib/overpass.c` already separates the two cases correctly
-  (`fetched_ok ? 0 : -1`, with the reasoning in its own comment). Japan has
-  hundreds of `natural=volcano` nodes in OSM, so zero is not plausibly an
-  honest empty — but that is reasoning, and the reading cannot be reproduced
-  from here: asked directly, three of the four mirrors are transport failures
-  through this container's egress and the fourth answers **HTTP 504 with 695
-  bytes of HTML** (the same 695 bytes `unified-ais-ships` recorded, which is
-  how that row's number is accounted for). What IS established without a
+  **THE TWO ROWS THIS BULLET CALLED UNMEASURED ARE MEASURED NOW, AND ONE OF
+  THEM IS SIMPLY HEALTHY.** They were named rather than guessed at —
+  `hazard-map-portal` and `national-parks` had both returned `rc=0` at an
+  identical **1,034 bytes over 4 requests**, and the reasoning was that Japan
+  holds hundreds of `natural=volcano` nodes so zero is not plausibly an honest
+  empty. Re-read the same day: **`hazard-map-portal` stores 190 records from
+  ONE request** (53,172 bytes, rc=0), and `national-parks` gets **0 bytes from
+  all four mirrors** and now discloses (`rc=-1 records=1 stored=1`) — which is
+  `lib/overpass.c`'s own correct `fetched_ok ? 0 : -1` surfacing through
+  `sched_disclose_fetch_failure`, not anything this change added. So the
+  1,034-byte reading was the MOMENT for both of them, and the "identical byte
+  count" that paired them was the parish-council mistake one bullet over: it
+  groups candidates, it does not make them a family. **Re-read a row before
+  acting on a note about it** — this file's own rule, turned on a note three
+  hours old.
+
+  What survives the correction is the general finding, which needed no
   request: **Overpass reports a runtime error or timeout in a `remark` field
   inside a parseable HTTP 200, and `remark` is read NOWHERE in this tree** —
   the Archive-It shape in a new place, with the publisher's own dedicated
-  field for it. No test for it was written, because writing the phrase list
-  from memory of Overpass's format is exactly the mistake the JAIRO
-  misspelling records ("A phrase list copied from the sibling test would have
-  found nothing"). It needs one reachable mirror, and then it is a two-line
-  change.
+  field for it. A mirror that times out mid-query therefore reads as an
+  honest empty on any row that reaches one. No test for it was written,
+  because writing the phrase list from memory of Overpass's format is exactly
+  the mistake the JAIRO misspelling records ("A phrase list copied from the
+  sibling test would have found nothing"), and the mirror that did answer here
+  answered with DATA rather than a remark. It needs one mirror caught
+  mid-timeout, and then it is a two-line change.
 
-  `gtfs-jp` and `unified-buses` are the third unmeasured pair, for the other
-  reason: both passed the re-read's **file ceiling** having stored nothing
-  (SIGXFSZ, `db=0`), which is the runaway-write case that verdict exists to
-  catch, so they are re-read at a larger ceiling rather than diagnosed.
+  **`gtfs-jp` and `unified-buses` were the third pair, and both are healthy
+  and merely expensive.** They had passed the re-read's **file ceiling**
+  having stored nothing (SIGXFSZ, `db=0`), which is the runaway-write case
+  that verdict exists to catch, so they were re-read at a larger ceiling
+  rather than diagnosed — the right order, and the answer was cost: `gtfs-jp`
+  stores **50,000 stop features in 428 s over 543 requests and 84 MB**, with a
+  `collector-truncation-notice` disclosing the rest, and `unified-buses`
+  **56,996 in 1,069 s over 553 requests and 90 MB**. At ~18 minutes and 90 MB
+  a run that is the most expensive row this pass touched, and it is correct;
+  the halved `ulimit -f` block above is why both looked like defects.
 
 * **A CREDENTIAL GATE THAT LOGS A LINE AND RETURNS 0 IS THE LAST WHOLLY SILENT
   CLASS, AND THE HELPER THAT FIXES IT HAD REACHED TWELVE OF NINETY-SEVEN**
