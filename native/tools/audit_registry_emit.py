@@ -853,7 +853,11 @@ def main():
                          "never SLOW (1024)")
     ap.add_argument("--workdir",
                     help="where per-run databases live (default /dev/shm, else "
-                         "a temp dir). Must have room for --jobs of them.")
+                         "a temp dir). Must have room for --jobs of them — and "
+                         "/dev/shm is RAM, so it is --jobs x --file-limit of "
+                         "MEMORY. Raise --file-limit for a large row and move "
+                         "this to disk in the same breath, or the ceiling stops "
+                         "protecting the machine it was added for.")
     ap.add_argument("--template",
                     help="reuse this warm template DB instead of building one")
     ap.add_argument("--keep-logs", help="directory to write each run's output to")
