@@ -40,6 +40,77 @@
  * run. Duplicate rows across parent/child tiles collapse on the sink's uid
  * upsert.
  *
+ * ON `emitted` vs `stored` FOR ALL FOUR BBOX SWEEPS IN THIS FILE — pirep,
+ * airport-info, station-info and obstacles. This note lived inside the airport
+ * section and said "both bbox sweeps" (2026-09-07, when there were two); two
+ * more were added and the sentence stayed, so it under-claimed its own scope by
+ * half and three outside documents inherited the error, calling this family
+ * "the two awc-* rows" and "the three awc-* bbox rows" while four of them
+ * collide. It is in the header now because a note that scopes itself by
+ * COUNTING goes stale the moment the file grows.
+ *
+ * av_bbox_sweep refines breadth-first: a tile that comes back FULL is queried
+ * again as four children covering the same ground, so every record the parent
+ * already emitted is emitted a second time by whichever child contains it. A
+ * run therefore reports far more emit() calls than distinct rows, and that gap
+ * is the refinement working rather than a uid defect. Measured:
+ *
+ *     airport-info   1,605 emitted /   503 distinct   (2026-09-07, and the
+ *                                                      same at 2026-10-22)
+ *     pirep          1,686 /   886                    (2026-09-07)
+ *                      885 /   485                    (2026-10-22)
+ *     station-info  18,782 / 9,576                    (2026-10-22)
+ *     obstacles     68,605 / 43,035                   (2026-11-12,
+ *                                        docs/slow-reread-2026-11-12.tsv)
+ *
+ * The obstacles reading is dated five weeks after the others because the
+ * 2026-10-22 and 2026-10-25 sweeps both KILLED that row at their 200 s clock
+ * with 25,613 rows stored: its gap had never been read at all, and a kill line
+ * hides the reading that would have ranked the row.
+ *
+ * THREE of the four identities are the upstream's own — `icaoId`/`faaId` (an
+ * airport), `station|obsTime|rawOb` (a PIREP's own fields), and `id` (a
+ * station; the reasoning is at its tile function). The same physical airport
+ * really is one row. Do NOT "fix" any of these by keying a record on its tile:
+ * that would store one row per tile per airport and invent distinctions the
+ * data has not got. Coverage is bounded by the request budget and that bound
+ * is logged every run.
+ *
+ * OBSTACLES IS THE EXCEPTION AND WAS A REAL DEFECT. That feed serves six keys —
+ * name, type, lat, lon, elev, height — and NO identifier, so its uid is
+ * constructed here, and it was `lat,lon|type` with the coordinate rounded to
+ * 5 dp. Measured 2026-11-12 on one tile the sweep really queries
+ * (`bbox=30.7500,-100.2500,34.1875,-93.0000`, HTTP 200, 401 records): the feed
+ * publishes lat/lon to only THREE decimals, so that key is a ~111 m grid cell
+ * plus a type code — a DIMENSION — giving 393 distinct keys for 401 records.
+ * Eight groups collided: two byte-identical (correct dedupe) and six that
+ * DIFFER, varying in height (6 of 6), elev (4) and name (2) — two STACK/LGT-D
+ * at 33.694,-94.419 of 77 ft and 69 ft are two stacks in one plant, not one
+ * stack served twice. `height` is in the key now: 399 distinct, which is
+ * exactly that tile's count of distinct WHOLE records, so it reaches the
+ * ceiling and `elev` would add nothing. Coordinate precision is NOT raised —
+ * the feed does not publish more, so a tighter format would invent a
+ * distinction (rule 1).
+ *
+ * WHY NO RECORD COUNT COULD SHOW IT. The sink's in-page guard
+ * (lib/geojson.c gj_collision_map) content-hashes differing same-key features
+ * WITHIN one FeatureCollection, so inside a tile nothing is lost and `stored`
+ * looks healthy; `tests/unit/test_awc_obstacle_uid.c` has an assertion that
+ * passes under the old key for exactly this reason. The cost is at the TILE
+ * SEAM, because the guard's scope is one response: a colliding pair split
+ * across a parent and its child stores bare in one and `|c:`-suffixed in the
+ * other — the same obstruction as two rows. lib/geojson.c's own header records
+ * that mechanism costing nam-ags-california-transit-stops 805 features a pass.
+ * Since 2026-11-12 geojson_emit_features prints the flagged count every run, so
+ * the next source in this shape says so on its own run line.
+ *
+ * The ~43,000 rows an older database holds under the pre-fix uid are left
+ * alone, deliberately. tools/cleanup_stale_uids.py deletes only where the
+ * replacement is PROVEN to exist, and this sweep is bounded by a 250-request
+ * budget on a weekly cadence — a given obstruction may not be re-fetched for
+ * weeks, so a judge would either wait indefinitely or delete a real reading
+ * before its successor arrived.
+ *
  * R3: an empty tile is an honest empty. A source returns -1 only when its very
  * first tile request fails, i.e. the endpoint itself is unreachable.
  *
@@ -221,20 +292,11 @@ static int airport_tile(const source_ctx *ctx, intel_sink *sink, double a,
   return raw;
 }
 
-/* On `emitted` vs `stored` for both bbox sweeps in this file. av_bbox_sweep
- * refines breadth-first: a tile that comes back FULL is queried again as four
- * children covering the same ground, so every record the parent already
- * emitted is emitted a second time by whichever child contains it. A run
- * therefore reports far more emit() calls than distinct rows — measured
- * 2026-09-07: airport-info 1605 emitted / 503 distinct, pirep 1686 / 886 —
- * and that gap is the refinement working, not a uid defect. The identity is
- * the upstream's own (icaoId/faaId for an airport; station|obsTime|rawOb for
- * a PIREP), the same physical airport really is one row, and nothing the
- * upstream handed over is dropped: the union of parent and child tiles is
- * what lands. Do not "fix" this by keying a record on its tile — that would
- * store one row per tile per airport and invent distinctions the data has
- * not got. Coverage is bounded by the request budget and that bound is
- * logged on every run. */
+/* `emitted` vs `stored` on this row, and on the other three sweeps: see the
+ * file header, which carries the measured readings for all four and the reason
+ * the gap is the quadtree refinement rather than a uid defect. It is one copy,
+ * in the header, because this note used to sit here and say "both bbox sweeps"
+ * while governing four. */
 static int run_airport(const source_ctx *ctx, intel_sink *sink) {
   awc_acc acc = { 0, "awc-airport-info" };
   int ok = 1;
@@ -310,6 +372,64 @@ static int run_station(const source_ctx *ctx, intel_sink *sink) {
 /* --------------------------------------------------------- awc-obstacles -- */
 static const char *OBST_KEYS[] = { "name","type","elev","height", NULL };
 
+/* One obstacle record -> one Feature, or NULL when the row carries no
+ * coordinate. Extracted from obstacle_tile (2026-11-12) for ONE reason: the
+ * identity this function builds is the only constructed uid in this file, and
+ * nothing could test it. awc_tile hardcodes its host, jo_get is a static
+ * inline, obj/core/httpclient.o is always on the test link line and
+ * url_override_validate refuses loopback by design, so there is no honest way
+ * to drive this through HTTP in a unit test — extracting the record builder is
+ * the alternative, and tests/unit/test_awc_obstacle_uid.c drives the real emit
+ * path through it. The other three sweeps in this file are left as they are:
+ * their uids are the upstream's own identifiers and want no fixture. */
+static cJSON *obst_feature(const cJSON *r) {
+  const char *name = jo_sv(r, "name");
+  const char *type = jo_sv(r, "type");
+  cJSON *geom = awc_point(r);
+  if (!geom) return NULL;   /* this endpoint is a spatial query: a row with
+                             * no coordinate carries nothing to emit */
+  double lat = 0, lon = 0, hgt_n = 0;
+  av_dbl(r, "lat", &lat); av_dbl(r, "lon", &lon);
+  const char *hgt = jo_sv(r, "height");     /* strings in this feed TODAY */
+  int have_hgt = av_dbl(r, "height", &hgt_n);
+
+  /* IDENTITY (measured 2026-11-12, one tile of 401 records — see the file
+   * header). `height` is in the key because without it this key is a
+   * DIMENSION: the feed serves lat/lon to THREE decimals, so the grid is
+   * ~111 m, and two charted obstructions in one industrial plant share a cell
+   * and a type. Six such groups in that tile differed only in height/elev/name
+   * (e.g. two STACK/LGT-D at 33.694,-94.419 of 77 and 69 ft). Adding height
+   * takes the tile from 393 distinct keys to 399, which is exactly its count of
+   * distinct WHOLE records — the ceiling, so nothing further can be separated
+   * and `elev` would add nothing. It is read with av_dbl, never jo_sv: the AWC
+   * products disagree on whether a numeric field is a JSON string or a number
+   * (av_common.inc), and a key read as text silently re-keys all 43,000 rows
+   * the day this feed serves 51 instead of "51". Feet are integers in the DOF,
+   * so %.0f is the whole value. Coordinate precision is NOT raised: the feed
+   * publishes 3 decimals, so a tighter format would invent a distinction. */
+  char uid[160];
+  int ul = snprintf(uid, sizeof uid, "%.5f,%.5f|%s", lat, lon,
+                    type ? type : "OBST");
+  if (have_hgt && ul > 0 && (size_t)ul < sizeof uid)
+    snprintf(uid + ul, sizeof uid - (size_t)ul, "|%.0f", hgt_n);
+
+  char title[224];
+  snprintf(title, sizeof title, "%s%s%s%s", name ? name : "Obstruction",
+           hgt ? " · " : "", hgt ? hgt : "", hgt ? " ft AGL" : "");
+
+  cJSON *p = cJSON_CreateObject();
+  cJSON_AddStringToObject(p, "uid", uid);
+  cJSON_AddStringToObject(p, "title", title);
+  awc_keys(p, r, OBST_KEYS);
+  cJSON_AddStringToObject(p, "record_type", "vertical-obstruction");
+  cJSON_AddStringToObject(p, "source", "NWS AWC (FAA Digital Obstacle File)");
+  cJSON *tags = cJSON_CreateArray();
+  cJSON_AddItemToArray(tags, cJSON_CreateString("aviation"));
+  cJSON_AddItemToArray(tags, cJSON_CreateString("obstacle"));
+  cJSON_AddItemToObject(p, "tags", tags);
+  return av_feature(geom, p);
+}
+
 static int obstacle_tile(const source_ctx *ctx, intel_sink *sink, double a,
                          double b, double c, double d, void *user) {
   awc_acc *acc = (awc_acc *)user;
@@ -320,31 +440,8 @@ static int obstacle_tile(const source_ctx *ctx, intel_sink *sink, double a,
   cJSON *r;
   cJSON_ArrayForEach(r, doc) {
     if (!cJSON_IsObject(r)) continue;
-    const char *name = jo_sv(r, "name");
-    const char *type = jo_sv(r, "type");
-    cJSON *geom = awc_point(r);
-    if (!geom) continue;      /* this endpoint is a spatial query: a row with
-                               * no coordinate carries nothing to emit */
-    double lat = 0, lon = 0;
-    av_dbl(r, "lat", &lat); av_dbl(r, "lon", &lon);
-    const char *hgt = jo_sv(r, "height");     /* strings in this feed */
-    char uid[128];
-    snprintf(uid, sizeof uid, "%.5f,%.5f|%s", lat, lon, type ? type : "OBST");
-    char title[224];
-    snprintf(title, sizeof title, "%s%s%s%s", name ? name : "Obstruction",
-             hgt ? " · " : "", hgt ? hgt : "", hgt ? " ft AGL" : "");
-
-    cJSON *p = cJSON_CreateObject();
-    cJSON_AddStringToObject(p, "uid", uid);
-    cJSON_AddStringToObject(p, "title", title);
-    awc_keys(p, r, OBST_KEYS);
-    cJSON_AddStringToObject(p, "record_type", "vertical-obstruction");
-    cJSON_AddStringToObject(p, "source", "NWS AWC (FAA Digital Obstacle File)");
-    cJSON *tags = cJSON_CreateArray();
-    cJSON_AddItemToArray(tags, cJSON_CreateString("aviation"));
-    cJSON_AddItemToArray(tags, cJSON_CreateString("obstacle"));
-    cJSON_AddItemToObject(p, "tags", tags);
-    cJSON_AddItemToArray(feats, av_feature(geom, p));
+    cJSON *f = obst_feature(r);
+    if (f) cJSON_AddItemToArray(feats, f);
   }
   acc->emitted += geojson_emit_features(sink, ctx->source_id, feats);
   cJSON_Delete(feats);

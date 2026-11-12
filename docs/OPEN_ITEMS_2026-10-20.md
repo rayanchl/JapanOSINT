@@ -893,8 +893,24 @@ notice id, `:id` is the record: 19,631 -> 20,001) and
 re-stored hourly: 1,703 -> 8,620). Left alone with their arithmetic:
 `PUBDEV_ALL_PACKAGES` (head-insertion drift, no sort exists, controls sent),
 `nam-providenceri-providence-tree-inventory`, `eur-soc-cat-b5rw-yz3c`,
-`gr-diavgeia-positions`, the three `awc-*` bbox rows and the Japan Search
-family.
+`gr-diavgeia-positions`, three of the four `awc-*` bbox rows and the Japan
+Search family.
+
+**CORRECTION (2026-11-12) — it is three of FOUR, and the fourth was a real
+defect.** The rows left alone here are `awc-airport-info`, `awc-pirep` and
+`awc-station-info`, each keyed on the upstream's own identifier and verified
+not-a-defect on 2026-09-04 (`docs/systemwide-audit-2026-09-04.md`), whose
+collisions are the quadtree re-querying a full tile as four children. The
+fourth, **`awc-obstacles`, was never in this collision tail at all**: this
+sweep read it `SLOW`, the 200 s clock killing it at 25,613 rows stored, so its
+gap was unmeasured. Re-read on 2026-11-12 at **68,605 emitted / 43,035
+stored** (`docs/slow-reread-2026-11-12.tsv`) and then probed: it is the only
+one of the four whose uid is CONSTRUCTED rather than the upstream's own, and
+the constructed key was a dimension — the feed publishes lat/lon to three
+decimals, so `lat,lon|type` is a ~111 m cell and 401 records carried 393
+distinct keys. Fixed by adding the published `height`. The count in this line
+came from a file-local comment that said "both bbox sweeps" while governing
+four; that comment is now in `av_awc_bbox.c`'s header with all four readings.
 
 **Both classes have now been re-read with causes.**
 `docs/fetch-failed-reread-2026-10-25.tsv` (4,737 of the 4,761 re-run; the other

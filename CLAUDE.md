@@ -854,6 +854,76 @@ where a shared 7,249 bytes turned out to be two genuinely different paths.
   than re-measured, because the fix landed after the streams started and the
   output carries both numbers.
 
+  **AND A KILL LINE HIDES THE READING THAT WOULD HAVE RANKED THE ROW**
+  (2026-11-12, `awc-obstacles`). Its gap — **68,605 emitted / 43,035 stored**,
+  the largest in that column — had never been seen, because the 2026-10-22 and
+  2026-10-25 sweeps both killed the row at their 200 s clock with 25,613 rows
+  stored. A `SLOW` verdict costs more than the row's count: it withholds the
+  arithmetic that would have put the row in a queue at all.
+
+  Three things that cost more than the number:
+
+  * **The row is one of FOUR quadtree bbox sweeps in `av_awc_bbox.c`, and its
+    do-not-re-key note said "both bbox sweeps".** That note was written when
+    there were two, two more were added, and the sentence stayed — so it
+    under-claimed its own scope by half, and it enumerated the identities of
+    two of the four. Three outside documents inherited the error, calling the
+    family "the two `awc-*` rows" (2026-09-15) and "the three `awc-*` bbox
+    rows" (2026-10-20) while four of them collide. **A note that scopes itself
+    by COUNTING goes stale the moment the file grows**, so it lives in the
+    header now with all four readings. Worse, the 2026-09-15 file filed two of
+    them under *plausibly real loss* **eleven days after** the 2026-09-04 audit
+    had verified them not-a-defect and commented them "so nobody 'fixes' it
+    later" — and omitted the one row in the family that was genuinely wrong.
+    That list was wrong in both directions at once.
+  * **Three of the four key on the upstream's own identifier and are correct**
+    (`icaoId`/`faaId`, `id`, `station|obsTime|rawOb`): a tile at the endpoint's
+    cap is re-queried as four children covering the same ground, so the
+    parent's records are emitted again and the gap is the refinement working.
+    **`awc-obstacles` is the only CONSTRUCTED uid in the file**, because that
+    feed serves six keys and no identifier — and it was a dimension. Measured
+    on one tile the sweep really queries (401 records, HTTP 200): the feed
+    publishes lat/lon to **three** decimals, so `lat,lon|type` is a ~111 m grid
+    cell plus a type code, giving **393 distinct keys for 401 records**. Six
+    groups differed in height, elev or name — two STACK/LGT-D at
+    33.694,-94.419 of 77 ft and 69 ft are two stacks in one plant. Adding the
+    published `height` gives 399, exactly that tile's count of distinct WHOLE
+    records, so it reaches the ceiling and `elev` would add nothing; the
+    coordinate precision is NOT raised, because the feed does not publish more
+    and a tighter format would invent a distinction.
+  * **NO RECORD COUNT COULD HAVE SHOWN IT, and that is now fixed for the whole
+    fleet.** `lib/geojson.c`'s in-page guard content-hashes differing same-key
+    features WITHIN one FeatureCollection, so inside a tile nothing is lost and
+    `stored` looks healthy — `test_awc_obstacle_uid.c` keeps an assertion that
+    passes under the OLD key for exactly that reason. The cost is at the tile
+    seam, the guard's scope being one response: a colliding pair split across a
+    parent and its child stores bare in one and `|c:`-suffixed in the other,
+    the same obstruction as two rows. **That is inflation, not a shortfall, so
+    the emitted/stored arithmetic is blind to it in BOTH directions.** The
+    guard had counted its flagged features since it was written and thrown the
+    number away, while the content-hash fallback ten lines below it has had a
+    run line all along; `geojson_emit_features` prints it now, so the next
+    source in this shape says so on its own run line instead of needing a hand
+    probe. `test_geojson.c` pins it with a clean page as the control, because a
+    line that fires on healthy sources is the noise these disclosures cannot
+    afford.
+
+  **AND THE FIX RECOVERED NO RECORDS, WHICH IS THE RIGHT ANSWER AND HAS TO BE
+  SAID PLAINLY.** Re-read through the binary after the change: **68,605
+  emitted / 43,033 stored** against 68,605 / 43,035 before — two rows FEWER,
+  not 25,570 more. That is what the arithmetic predicted before the probe was
+  sent: a 250-request budget at depth 5 bounds the refinement surplus at about
+  `400 x (1+4+16+41) ~ 24,800` against a measured 25,570, so refinement
+  saturates the gap and there was never a pile of lost records behind it. What
+  the key buys is identity, not volume: the uid no longer depends on which tile
+  a record arrived in, so the same obstruction cannot store twice across a
+  seam — which is why the honest number moved DOWN. **A 37% collision is not a
+  37% loss, and on a row whose duplicates are manufactured by our own paging it
+  may be no loss at all** — the same lesson `gr-diavgeia-positions` teaches
+  from the upstream's side, here from ours. Had the commit claimed a recovery
+  it would have been inventing one; this file's rule is that a collision count
+  ranks rows to look at and is never a budget of what they cost.
+
 * **AN ANCHOR CALENDAR DEFEATS THE LABEL MINIMUM, and that was the fourth
   record path without a disclosure.** The US NRC's event-notification year
   pages carry 205 and 245 real `<a href>` anchors, every one matching the row's
@@ -965,6 +1035,47 @@ SIGXFSZ, median 108.7 s against a ~200 s kill line). Rule 1's note on the
   this: the wrong answer looks exactly like the right one unless the
   arithmetic is checked, and the two real readings in it were confirmed to come
   back COLLISION against the old line.
+
+  **AND THE WHOLE COLUMN HAS NOW BEEN CLASSIFIED, FOR NO REQUESTS AT ALL**
+  (2026-11-12, `docs/collision-column-2026-11-12.tsv`). The paragraph above
+  called 461 an upper bound from a sample of nine; the number behind it is in
+  that file. All 461 rows, 63,208 records:
+
+  * **42 rows had `emitted == stored`** — the engine's own distinct-uid count
+    saying nothing collapsed — and were in a defect bucket purely for having
+    filed a notice. **Zero records.** That is the arithmetic above, measured
+    across the column instead of sampled.
+  * **53 rows / 45,218 records are EXPLAINED** by readings already on record:
+    `gr-diavgeia-positions` alone is 25,054 of it (two fields, 233 position
+    titles repeated 25,188 times byte for byte), the Japan Search family is
+    ~3,850 across 12 rows whose 2,000 records hold 1,732 distinct ids AND
+    1,732 distinct whole records, and the three correctly-keyed `awc-*` sweeps
+    are the quadtree refinement.
+  * **12 rows / 6,845 records are FIXED_SINCE** — repaired after the sweep ran,
+    so the reading is stale (UKPARL's `uin`, Catalonia's two atlases,
+    copernicus, secop1, dataeuropa, the iNaturalist keyset, TX TCEQ, the JCG
+    CSV, and `awc-obstacles` itself).
+  * **160 rows lose 1–2 records** and belong to no named family — 209 records
+    in total, where an inclusive cursor, a sort tie and an upstream duplicate
+    are indistinguishable without a probe.
+  * **194 rows / 10,936 records are genuinely OPEN**, and only two of them lose
+    more than a thousand: `sci-exoarchive-stellarhosts` 3,015 and
+    `ifrc-go-appeal-document` 1,896.
+
+  So "461 collision rows" was really **10,936 records across 194 rows**, with
+  a third of the column's apparent loss belonging to one correct source. Two
+  method notes worth more than the split: six rows first classified OPEN turned
+  out to be answered already in files this repo had written (`AP19_TW_TWSE_AP11`
+  measured at 26,789 distinct triples of 27,528, `lat-co-dispositivos-med`
+  deliberately left alone, `geo-jrc-inform-scores` validated at 46,079 distinct
+  whole records) — **check the tree before calling a row open**, which is the
+  same staleness this bullet's own neighbours keep correcting. And one row was
+  kept OPEN as a LEAD rather than fixed: `JO30_TOKYO_CRIME_BICYCLE_2024` is the
+  occurrence-register shape the JCG and Gifu CSVs were repaired for, but it
+  lives in `hp30tokyo_tokyocrime.c`, which the 85-row `occurrence_rows=1` pass
+  never reached — checked, that file declares the flag nowhere. Whether zero
+  can be honest there is the author's measurement, so it wants a read of the
+  published file and not a flag set on inference.
 
 **Every registered source is now proof-of-life verified.** Batch 14's 1,001
 unverified `csrc14_*` candidates were probed and promoted (594 PASS →

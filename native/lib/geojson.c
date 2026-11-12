@@ -317,7 +317,17 @@ static int gj_keyed_cmp(const void *a, const void *b) {
   return strcmp(((const gj_keyed *)a)->key, ((const gj_keyed *)b)->key);
 }
 
+/* How many features the last map flagged. gj_collision_map has always counted
+ * them and thrown the number away, so the one signal that says a key is a
+ * DIMENSION rather than an identity was computed on every run and never
+ * reported — while the content-hash fallback beside it has had a run line
+ * since it was written. See the disclosure in geojson_emit_features(). */
+static int gj_last_flagged;
+
+int geojson_last_collisions(void) { return gj_last_flagged; }
+
 static unsigned char *gj_collision_map(cJSON *features, int n) {
+  gj_last_flagged = 0;
   if (n < 2) return NULL;
   gj_keyed *k = malloc((size_t)n * sizeof *k);
   unsigned char *dup = calloc((size_t)n, 1);
@@ -339,6 +349,7 @@ static unsigned char *gj_collision_map(cJSON *features, int n) {
     a = b;
   }
   free(k);
+  gj_last_flagged = flagged;
   if (!flagged) { free(dup); return NULL; }
   return dup;
 }
@@ -347,6 +358,7 @@ int geojson_emit_features(intel_sink *sink, const char *sid, cJSON *features) {
   if (!cJSON_IsArray(features)) return 0;
   int n = 0, hashed = 0, out_of_range = 0; cJSON *feat;
   unsigned char *dupmap = gj_collision_map(features, cJSON_GetArraySize(features));
+  int collided = gj_last_flagged;   /* read now: a nested emit would clobber it */
   int fi = -1;
   cJSON_ArrayForEach(feat, features) {
     fi++;
@@ -413,6 +425,20 @@ int geojson_emit_features(intel_sink *sink, const char *sid, cJSON *features) {
     fprintf(stderr, "[%s] %d/%d features had no native id — uid'd by content "
                     "hash (add a stable `uid` property if these change)\n",
             sid, hashed, n);
+  /* The guard above kept these apart, and that is exactly why the run line
+   * could not show them: a key shared by features that DIFFER is a dimension,
+   * not a record identity, and the sink's emitted/stored arithmetic sees
+   * nothing because the guard turned the collision into a suffixed row rather
+   * than a missing one. The cost is at the PAGE SEAM — the map's scope is one
+   * FeatureCollection, so when a colliding pair is split across two pages the
+   * same feature stores bare in one and `|c:`-suffixed in the other. That is
+   * measured, not supposed: the header of this file records
+   * nam-ags-california-transit-stops losing 805 features a pass that way. */
+  if (collided)
+    fprintf(stderr, "[%s] %d/%d features shared an upstream id and were "
+                    "disambiguated by content hash within this page — a key "
+                    "that is not a record identity loses them at the page "
+                    "seam\n", sid, collided, n);
   if (out_of_range)
     fprintf(stderr, "[%s] %d/%d features had coordinates outside lon±180/lat±90 "
                     "(projected CRS? add srsName=EPSG:4326) — stored without "

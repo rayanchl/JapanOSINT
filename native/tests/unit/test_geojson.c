@@ -243,6 +243,57 @@ static void test_group_key_collisions(void) {
   eq(c.uid[2], "src|999", "the uncollided feature keeps its plain uid");
 }
 
+/* ── 4b. the guard's count is REPORTED ──────────────────────────────────── */
+
+/* gj_collision_map has always counted the features it flags and thrown the
+ * number away, so the one signal that says a key is a DIMENSION was computed
+ * on every run of every geo source and never surfaced — while the content-hash
+ * fallback ten lines below it has had a run line since it was written. That
+ * asymmetry is why the awc-obstacles key took a hand probe to diagnose
+ * (2026-11-12): a page-seam collision shows up as an extra row, not a missing
+ * one, so no emitted/stored arithmetic anywhere in this tree can see it.
+ *
+ * The CONTROL is the half that matters: a page whose keys are all distinct must
+ * report ZERO, or the line fires on healthy sources and becomes noise — the one
+ * thing CLAUDE.md says these disclosures cannot afford.
+ *
+ * Confirmed against the old code by deleting the one line that keeps the count
+ * (`gj_last_flagged = flagged;`), which is literally what gj_collision_map did
+ * before:
+ *     ok    CONTROL: a page with six distinct ids reports no collisions
+ *     FAIL  two features sharing a key are counted  (got 0, want 2)
+ *     FAIL  the uncollided third feature is not counted  (got 0, want 2)
+ *     ok    CONTROL: a later clean page resets it
+ * Two assertions and two controls, which is what makes the pair meaningful. */
+static void test_collision_count_is_reported(void) {
+  printf("-- the guard's flagged count is readable, and silent when clean\n");
+  cap c;
+
+  emit_doc(&c, PAGE_WITH_IDS);
+  eqi(geojson_last_collisions(), 0,
+      "CONTROL: a page with six distinct ids reports no collisions");
+
+  emit_doc(&c,
+    "{\"features\":["
+    "{\"properties\":{\"stop_id\":\"105\",\"name\":\"a\"}},"
+    "{\"properties\":{\"stop_id\":\"105\",\"name\":\"b\"}}]}");
+  eqi(geojson_last_collisions(), 2,
+      "two features sharing a key are counted (both members, not the surplus)");
+
+  /* Only the colliding members count: the uncollided neighbour must not be
+   * tallied, or the number overstates and a reader learns to discount it. */
+  emit_doc(&c,
+    "{\"features\":["
+    "{\"properties\":{\"stop_id\":\"105\",\"name\":\"a\"}},"
+    "{\"properties\":{\"stop_id\":\"105\",\"name\":\"b\"}},"
+    "{\"properties\":{\"stop_id\":\"999\",\"name\":\"z\"}}]}");
+  eqi(geojson_last_collisions(), 2, "the uncollided third feature is not counted");
+
+  /* And the count must not persist from a previous call. */
+  emit_doc(&c, "{\"features\":[{\"id\":42,\"properties\":{\"stop_id\":\"105\"}}]}");
+  eqi(geojson_last_collisions(), 0, "CONTROL: a later clean page resets it");
+}
+
 /* ── 5. identity across pages ───────────────────────────────────────────── */
 
 static void test_identity_across_pages(void) {
@@ -271,6 +322,7 @@ int main(void) {
   test_hash_fallback_is_frozen();
   test_measured_page();
   test_group_key_collisions();
+  test_collision_count_is_reported();
   test_identity_across_pages();
   if (g_fail) printf("\nFAILED (%d)\n", g_fail);
   else printf("\nall geojson identity tests passed\n");
