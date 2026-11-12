@@ -1,0 +1,6 @@
+id	beat	verdict	note	url
+JO59_JPGIS_4D982406FF	jpgis	FETCH_FAILED	NO CERTIFICATE WAS JUDGED and no status was measured, which is also what this container's own egress looks lik	https://services2.arcgis.com/VAR6wQHRWPfCSEW6/arcgis/rest/services/dourochuushin/FeatureServer/0/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&orderByFields=FID%20ASC&resultRecordCount=2000&f=json
+JO59_JPGIS_3EFC3DB242	jpgis	EMITS_NOTHING	no records reached intel_items — it transferred 131 bytes over 1 request(s), so the upstream really did hand o	https://services3.arcgis.com/D8JllYrM6IjqoX8o/arcgis/rest/services/PublicMapM_v20_View_ShiminKokaiJitsusaigai/FeatureServer/3/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&orderByFields=OBJECTID%20ASC&resultRecordCount=2000&f=json
+JO59_CN_SXXINGXIAN_A450B	cngov	FETCH_FAILED	HTTP 503 | remedy: re-run; if the status persists the endpoint has moved or retired	http://www.sxxingxian.gov.cn/
+JO59_CN_LANXIAN_E6A7C	cngov	FETCH_FAILED	HTTP 503 | remedy: re-run; if the status persists the endpoint has moved or retired	http://www.lanxian.gov.cn/
+JO59_CN_KJT_JL_AD53C	cngov	FETCH_FAILED	TLS handshake; the TLS handshake was refused before any certificate was jud; NO CERTIFICATE WAS JUDGED and no 	https://kjt.jl.gov.cn/
