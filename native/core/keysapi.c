@@ -111,34 +111,6 @@ static int is_known(const char *name, const char **role) {
   known_free(&k);
   return hit;
 }
-static int b64_rev[256];
-static void b64_rev_init(void) {
-  for (int i=0;i<256;i++) b64_rev[i]=-1;
-  const char *T="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-  for (int i=0;i<64;i++) b64_rev[(unsigned char)T[i]]=i;
-}
-static int b64_decode(const char *in, unsigned char *out, int outcap) {
-  /* `static int init=0; if(!init){...}` here was an unsynchronized
-   * check-then-fill on shared state: this runs inside master_key(), which
-   * every /api/tenant-keys request re-derives on its own httpd worker
-   * thread, so concurrent first calls raced on writing the same 256-int
-   * table. The writes happen to be idempotent (same table every time), so
-   * this was silent in practice, but it is the exact data race this
-   * codebase uses pthread_once to close everywhere else (see
-   * http_client_global_init, hostgate.c's cfg_once). */
-  static pthread_once_t once = PTHREAD_ONCE_INIT;
-  pthread_once(&once, b64_rev_init);
-  int *rev = b64_rev;
-  int val=0,bits=-8,o=0;
-  for (const char *p=in; *p; p++) {
-    if (*p=='=' ) break;
-    int c=rev[(unsigned char)*p]; if (c<0) continue;
-    val=(val<<6)|c; bits+=6;
-    if (bits>=0){ if(o<outcap) out[o++]=(unsigned char)((val>>bits)&0xFF); bits-=8; }
-  }
-  return o;
-}
-
 /* ── api-keys.json overlay (apiKeysStore.js) ──────────────────────────── */
 static void overlay_path(char *p, size_t n) {
   snprintf(p, n, "%s/data/api-keys.json", JO_REPO_ROOT);
@@ -207,11 +179,18 @@ static int master_key(unsigned char out[32]) {
     for (int i = 0; i < 32; i++) { unsigned x; sscanf(raw+2*i,"%2x",&x); out[i]=(unsigned char)x; }
     return 1;
   }
-  unsigned char buf[256];
-  int n = b64_decode(raw, buf, sizeof buf);
-  if (n < 32) return 0;
-  memcpy(out, buf, 32);
-  return 1;
+  /* Standard base64 through jo_codec.h (2026-11-12): this file kept its own
+   * decoder, one of three copies in core/, with a pthread_once-filled table and
+   * a signed accumulator. jo_b64_decode() keeps its behaviour — stop at '=',
+   * skip bytes outside the alphabet — and the decoded bytes are cleansed. */
+  size_t n = 0;
+  unsigned char *buf = jo_b64_decode(raw, L, &n);
+  if (!buf) return 0;
+  int ok = n >= 32;
+  if (ok) memcpy(out, buf, 32);
+  OPENSSL_cleanse(buf, n);
+  free(buf);
+  return ok;
 }
 static int derive_key(const char *tenant_id, unsigned char out[32]) {
   unsigned char mk[32];

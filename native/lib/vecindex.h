@@ -232,7 +232,7 @@ unsigned long long vecindex_vals_hash(const vecindex_spec *s, const vecindex_val
 /* ---- incremental embedding ---------------------------------------------- */
 
 /* One row to embed. key/text/vals are borrowed. in_done/in_failed and the
- * stored hashes come from the done/fail tables (vecindex_item_state() or the
+ * stored hashes come from the done/fail tables (vecindex_items_state() or the
  * caller's own join). */
 typedef struct {
   const char *key;
@@ -243,10 +243,11 @@ typedef struct {
   unsigned long long done_hash, done_meta_hash, failed_hash;
 } vecindex_item;
 
-/* Fill in_done/in_failed and the stored hashes from the side tables. Also
- * sets item->hash (from text) and item->meta_hash (from vals). */
-void vecindex_item_state(db_handle *db, const vecindex_spec *s, vecindex_item *it);
-/* The same for n items in one read transaction (statements prepared once). */
+/* Fill in_done/in_failed and the stored hashes from the side tables for n
+ * items in one read transaction (statements prepared once). Also sets each
+ * item's hash (from text) and meta_hash (from vals). A single-item wrapper,
+ * vecindex_item_state(), was removed 2026-11-12: nothing in the repository
+ * called it — pass n = 1. */
 void vecindex_items_state(db_handle *db, const vecindex_spec *s,
                           vecindex_item *items, int n);
 
@@ -311,8 +312,9 @@ typedef struct {
 typedef void (*vecindex_hook_fn)(db_handle *db, const vecindex_batch *b, void *user);
 
 /* Register a hook for one index. Up to 16 hooks in all; -1 when full. */
+/* There is no unregister: hooks live for the process (removed 2026-11-12,
+ * no caller anywhere in the repository). */
 int  vecindex_hook_register(const vecindex_spec *s, vecindex_hook_fn fn, void *user);
-void vecindex_hook_unregister(const vecindex_spec *s, vecindex_hook_fn fn, void *user);
 /* Call every hook registered for b->spec. */
 void vecindex_fire_hooks(db_handle *db, const vecindex_batch *b);
 

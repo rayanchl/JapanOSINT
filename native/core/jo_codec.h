@@ -45,6 +45,26 @@ unsigned char *jo_b64url_decode(const char *in, size_t len, size_t *out_len,
 /* The cursor modules' string form: strict decode of a NUL-terminated string. */
 char *jo_b64url_decode_str(const char *in);
 
+/* STANDARD base64 (RFC 4648 §4 alphabet "+/", '=' padding) — the spelling
+ * Node's Buffer.toString('base64') writes, RFC 2047 encoded-words use, and
+ * operators paste into SECRETS_MASTER_KEY. Three private copies of it existed
+ * (keysapi.c's master-key decoder, camera_store.c's discovery cursor,
+ * alert_deliver.c's Subject encoder — measured 2026-11-12), each with its own
+ * table; this is the one.
+ *
+ * Encode: malloc'd, NUL-terminated, always padded to a multiple of 4;
+ * NULL on allocation failure. */
+char *jo_b64_encode(const void *in, size_t len);
+
+/* Decode, LENIENT — the behaviour all three copies shared: decoding stops at
+ * the first '=' (padding ends the data) and any other byte outside the
+ * alphabet is skipped (whitespace, a line-wrapped PEM-style value). Output is
+ * malloc'd and always NUL-terminated; *out_len (nullable) gets the byte count
+ * without the NUL. NULL only for a NULL input or allocation failure — a
+ * malformed input decodes to whatever whole bytes it carried, possibly zero,
+ * so a caller that needs a length (a 32-byte key) checks *out_len. */
+unsigned char *jo_b64_decode(const char *in, size_t len, size_t *out_len);
+
 /* application/x-www-form-urlencoded decode of s[0..n) into out (cap bytes,
  * always NUL-terminated when cap > 0): '+' -> ' ', %XX -> byte, a '%' that
  * is not followed by two hex digits is kept literally. Returns 1 when the

@@ -663,17 +663,6 @@ int vecindex_hook_register(const vecindex_spec *s, vecindex_hook_fn fn, void *us
   return rc;
 }
 
-void vecindex_hook_unregister(const vecindex_spec *s, vecindex_hook_fn fn, void *user) {
-  pthread_mutex_lock(&g_hook_mu);
-  for (int i = 0; i < g_nhooks; i++) {
-    if (g_hooks[i].s != s || g_hooks[i].fn != fn || g_hooks[i].user != user) continue;
-    memmove(&g_hooks[i], &g_hooks[i + 1], (size_t)(g_nhooks - i - 1) * sizeof g_hooks[0]);
-    g_nhooks--;
-    break;
-  }
-  pthread_mutex_unlock(&g_hook_mu);
-}
-
 void vecindex_fire_hooks(db_handle *db, const vecindex_batch *b) {
   if (!b || b->n <= 0) return;
   /* Copy under the lock, call outside it: a hook that registers another (or
@@ -744,10 +733,6 @@ void vecindex_items_state(db_handle *db, const vecindex_spec *s,
   sqlite3_finalize(done);
   sqlite3_finalize(fail);
   if (own) sqlite3_exec(db->h, "COMMIT", NULL, NULL, NULL);
-}
-
-void vecindex_item_state(db_handle *db, const vecindex_spec *s, vecindex_item *it) {
-  vecindex_items_state(db, s, it, 1);
 }
 
 int vecindex_item_unchanged(const vecindex_item *it) {

@@ -83,6 +83,59 @@ char *jo_b64url_decode_str(const char *in) {
   return (char *)jo_b64url_decode(in, strlen(in), NULL, 0);
 }
 
+static const char B64STD[] =
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+/* Reverse of B64STD, computed (no table, no first-use race — the keysapi copy
+ * needed a pthread_once to fill one safely). */
+static int b64std_val(unsigned char c) {
+  if (c >= 'A' && c <= 'Z') return c - 'A';
+  if (c >= 'a' && c <= 'z') return c - 'a' + 26;
+  if (c >= '0' && c <= '9') return c - '0' + 52;
+  if (c == '+') return 62;
+  if (c == '/') return 63;
+  return -1;
+}
+
+char *jo_b64_encode(const void *inv, size_t len) {
+  const unsigned char *in = (const unsigned char *)inv;
+  char *out = malloc(((len + 2) / 3) * 4 + 1);
+  if (!out) return NULL;
+  size_t o = 0;
+  for (size_t i = 0; i < len; i += 3) {
+    unsigned a = in[i];
+    unsigned b = i + 1 < len ? in[i + 1] : 0;
+    unsigned c = i + 2 < len ? in[i + 2] : 0;
+    unsigned v = (a << 16) | (b << 8) | c;
+    out[o++] = B64STD[(v >> 18) & 63];
+    out[o++] = B64STD[(v >> 12) & 63];
+    out[o++] = i + 1 < len ? B64STD[(v >> 6) & 63] : '=';
+    out[o++] = i + 2 < len ? B64STD[v & 63] : '=';
+  }
+  out[o] = 0;
+  return out;
+}
+
+unsigned char *jo_b64_decode(const char *in, size_t len, size_t *out_len) {
+  if (out_len) *out_len = 0;
+  if (!in) return NULL;
+  unsigned char *out = malloc(len / 4 * 3 + 4);
+  if (!out) return NULL;
+  /* `val` unsigned and masked, as in jo_b64url_decode: keysapi's copy kept it
+   * in a signed int that every sextet shifted left, overflowing past four. */
+  size_t o = 0; unsigned val = 0; int bits = 0;
+  for (size_t i = 0; i < len; i++) {
+    if (in[i] == '=') break;
+    int d = b64std_val((unsigned char)in[i]);
+    if (d < 0) continue;
+    val = ((val << 6) | (unsigned)d) & 0xFFFFu; bits += 6;
+    if (bits >= 8) { bits -= 8; out[o++] = (unsigned char)((val >> bits) & 0xFF); }
+  }
+  out[o] = 0;
+  if (out_len) *out_len = o;
+  return out;
+}
+
 int jo_url_decode(const char *s, size_t n, char *out, size_t cap) {
   if (!out || cap == 0) return n > 0;
   size_t o = 0, i = 0;
