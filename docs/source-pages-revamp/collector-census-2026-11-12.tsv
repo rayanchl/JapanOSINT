@@ -1,4 +1,4 @@
-# collector census - ./bin/japanosint --collector-census (registry 71215 sources)
+# collector census - ./bin/japanosint --collector-census (registry 75912 sources)
 key	sources	categories
 _breach	1	breach:1
 _enrich	3	enrichment:3
@@ -394,6 +394,9 @@ hp3b59_cngov	439	government:439
 hp3b59_jpgis	2543	geospatial:954;safety:620;infrastructure:445
 hp3b60_eu	1264	geospatial:523;infrastructure:401;environment:117
 hp3b60_us	2495	infrastructure:945;safety:652;geospatial:476
+hp3b61_cn	28	government:28
+hp3b61_jp	761	geospatial:370;safety:204;infrastructure:109
+hp3b61_us	3908	infrastructure:1358;geospatial:829;safety:816
 hp_americas_deep	21	government:15;economy:3;health:2
 hp_apac_deep	18	government:14;economy:3;legal:1
 hp_chain_finance	20	cyber:12;economy:8
