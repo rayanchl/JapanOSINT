@@ -36,8 +36,15 @@ static cJSON *coalesce2(cJSON *last, const char *ka, const char *kb) {
   return cJSON_CreateNull();
 }
 
+/* How many of the ten datasets the API actually HANDED OVER, parseable,
+ * whatever the series then held. An empty series is the upstream speaking and
+ * is an honest empty; a body we never received is not, and the two used to
+ * share one log line and one return value. */
+typedef struct { int fetched, failed; } ss_tally;
+
 static cJSON *run_fetch(const char *key, const source_ctx *ctx, void *ud) {
-  (void)key; (void)ud;
+  (void)key;
+  ss_tally *tally = (ss_tally *)ud;
   const char *de = getenv("SHADOWSERVER_DAYS");
   long days = (de && *de) ? strtol(de, NULL, 10) : 14;
   if (days <= 0) days = 14;
@@ -51,6 +58,7 @@ static cJSON *run_fetch(const char *key, const source_ctx *ctx, void *ud) {
       SS_BASE, dataset, days);
     const char *hdrs[] = { "Accept: application/json", NULL };
     cJSON *json = feed_get_json_h(ctx->http, url, hdrs, 15000);
+    if (tally) { if (json) tally->fetched++; else tally->failed++; }
 
     /* arr = Array.isArray(json) ? json : (json?.results || []) */
     cJSON *arr = NULL;
@@ -106,7 +114,22 @@ static cJSON *run_fetch(const char *key, const source_ctx *ctx, void *ud) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  int n = threatintel_collect(ctx, sink, NULL, NULL, run_fetch, NULL);
+  ss_tally tally = { 0, 0 };
+  int n = threatintel_collect(ctx, sink, NULL, NULL, run_fetch, &tally);
+  /* `n >= 0 ? 0 : -1` alone is the tautology CLAUDE.md names: n counts emitted
+   * features and cannot go negative, so TEN failed fetches returned 0 — and
+   * the skip above logs "empty series" and "fetch failed" through one return
+   * value. Measured 2026-11-12: 0 bytes over 30 requests (ten datasets, three
+   * attempts each) for rc=0 records=0 stored=0. Only the all-refused case
+   * returns -1; a dataset with a genuinely empty series is the upstream
+   * speaking and stays an honest empty.
+   *
+   * What the 0 bytes mean is NOT claimed: dashboard.shadowserver.org is in
+   * this container's own proxy relay-failure list (ws_closed_mid_exchange),
+   * and curl gets http=000 at 10.4 s here too, so the host is UNMEASURED FROM
+   * THIS ENVIRONMENT rather than down. The defect being fixed is the return
+   * value, which is wrong whoever is at fault for the failure. */
+  if (n <= 0 && tally.fetched == 0 && tally.failed > 0) return -1;
   return n >= 0 ? 0 : -1;
 }
 

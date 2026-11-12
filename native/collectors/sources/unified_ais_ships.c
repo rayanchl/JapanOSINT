@@ -74,9 +74,10 @@ typedef struct { char key[320]; cJSON *feat; long fresh; } slot_t;
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *raw = cJSON_CreateArray();
-  unified_capture(ctx, "marine-traffic", raw);   /* JS allSettled order */
-  unified_capture(ctx, "vessel-finder",  raw);
-  unified_capture(ctx, "maritime-ais",   raw);
+  int served = 0;                         /* 0 => every upstream refused */
+  unified_capture(ctx, "marine-traffic", raw, &served); /* JS allSettled order */
+  unified_capture(ctx, "vessel-finder",  raw, &served);
+  unified_capture(ctx, "maritime-ais",   raw, &served);
 
   int cap = 256, ns = 0;
   slot_t *S = malloc(sizeof(slot_t) * cap);
@@ -166,7 +167,12 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON_Delete(raw);
   int n = geojson_emit_features(sink, "unified-ais-ships", result);
   cJSON_Delete(result);
-  fprintf(stderr, "[unified-ais-ships] emitted %d\n", n);
+  fprintf(stderr, "[unified-ais-ships] emitted %d (%d of 3 upstreams served)\n",
+          n, served);
+  /* Three AIS feeds all refusing is a failed fetch, not an empty sea; see
+   * lib/unified.h. Measured 2026-11-12: 418 s, 695 bytes over 8 requests,
+   * rc=0 records=0 stored=0 — indistinguishable from a quiet run. */
+  if (n <= 0 && served == 0) return -1;
   return n >= 0 ? 0 : -1;
 }
 

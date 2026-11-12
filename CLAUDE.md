@@ -414,6 +414,99 @@ where a shared 7,249 bytes turned out to be two genuinely different paths.
   not fetch — which is the 2026-10-25 byte-count lesson one column over, and it
   cost no requests at all.
 
+* **A FUSION COLLECTOR SWALLOWS ITS UPSTREAMS' FAILURES, SO IT IS THE ONE PLACE
+  A FIXED UPSTREAM CANNOT BE HEARD** (2026-11-12, `lib/unified.c`,
+  `make unit` → `test_unified`). Found in the SLOW re-read's own tail: nine
+  bespoke rows spent 3.5 to 9.5 minutes each and stored nothing, seven of them
+  in silence. Six are `unified-*` rows, which fuse several ALREADY-REGISTERED
+  sources by running each one through an in-memory capture sink — and
+  `unified.h` states the rule it was built to: *"Promise.allSettled parity: an
+  upstream whose run() returns rc<0 contributes 0 features (rejected)."* A
+  faithful port of the JS, and nobody had asked what it does when EVERY
+  upstream rejects.
+
+  `unified-airports` answers it, both upstreams refusing in as many words:
+
+      [mlit-p02-airports] no mirror served a parseable P02 GeoJSON —
+                          reporting a failed fetch, not an empty register
+      [overpass] airport-infra no endpoint answered
+      [unified-airports] emitted 0
+      [sched] unified-airports run rc=0 records=0 135718ms stored=0
+              bytes=41188 requests=6
+
+  **The first of those two sentences is this file's own 2026-11-05
+  `lib/mlit_ksj.h` repair talking, and its consumer threw it away** — 41,188
+  bytes is that repair's own recorded byte count for the dead KSJ mirrors. So
+  this is "look for the other copies" in a form that pass could not have seen:
+  the other copies were not parallel implementations of a function but
+  **CONSUMERS of the one it fixed.** Four of the six KSJ rows that repair
+  covers are read by a fusion (`mlit-c02-ports`, `mlit-n02-stations`,
+  `mlit-p02-airports`, `mlit-p11-bus-stops`), and every one of those fusions
+  reported `rc=0`.
+
+  **Only TOTAL failure returns -1, and the reason partial stays silent is a
+  measurement rather than a preference**: all 22 upstream ids the nine fusions
+  name are themselves REGISTERED sources — checked against the binary's own
+  registry, 22 of 22 — so each discloses on its own schedule, and a second
+  notice under the fusion's id would be the duplicate noise rule 1 says these
+  disclosures cannot afford. Measured after: `rc=-1 records=1 stored=1` with
+  `sched_disclose_fetch_failure` naming all five hosts (`nlftp.mlit.go.jp` and
+  the four Overpass mirrors), `hosts_answered 0`, `bytes_fetched 41188`.
+
+  **The live control is worth more than the fixture**: `unified-flights` reads
+  one upstream, it served, and the row is unchanged at **513 records, rc=0,
+  silent** — so the new -1 does not fire on a fusion that works. The three
+  outcomes are counted and printed per run (`2 served, 0 refused, 0 not
+  registered`), which is also how a dangling upstream id would now show; that
+  count is zero today and the zero was checked rather than assumed.
+
+  **`shadowserver-jp` is the same shape without the helper**: ten datasets,
+  each skipped on failure under a comment that is RIGHT about not fabricating
+  ("An honest empty beats a fake row") and then returns `n >= 0 ? 0 : -1` —
+  the tautology above — so an empty series and a body never received shared
+  one return value. Measured: **0 bytes over 30 requests** for
+  `rc=0 records=0`, now `rc=-1 records=1 stored=1`. What the 0 bytes MEAN is
+  not claimed: `dashboard.shadowserver.org` is in this container's own proxy
+  relay-failure list and curl gets `http=000` at 10.4 s here too, so the host
+  is **unmeasured from this environment** rather than down — and the defect
+  being fixed is the return value, which is wrong whoever is at fault.
+  `wayback-jp` reads 0 bytes over 30 requests for the same local reason
+  (`web.archive.org:443`, 18 entries in that list) and is **NOT changed**: it
+  already returns -1 and stores its notices, which is the second control.
+
+  **And the OTHER consumer of this exact pattern already had it right**, which
+  is what makes the gap a gap rather than an unexplored idea: `core/dataapi.c`
+  runs a registered source through the same kind of capture sink for
+  `/api/data/<id>`, and it carries `meta_mark_run_failed()` and a note reading
+  *"collector run failed; an empty result here is a FAILURE"*. Two consumers,
+  one knew.
+
+  **Two rows of that nine are still unmeasured, and they are named rather than
+  guessed at.** `hazard-map-portal` and `national-parks` read Overpass and
+  returned `rc=0` at an identical **1,034 bytes over 4 requests** — which means
+  some mirror DID answer parseable JSON with zero elements, because
+  `lib/overpass.c` already separates the two cases correctly
+  (`fetched_ok ? 0 : -1`, with the reasoning in its own comment). Japan has
+  hundreds of `natural=volcano` nodes in OSM, so zero is not plausibly an
+  honest empty — but that is reasoning, and the reading cannot be reproduced
+  from here: asked directly, three of the four mirrors are transport failures
+  through this container's egress and the fourth answers **HTTP 504 with 695
+  bytes of HTML** (the same 695 bytes `unified-ais-ships` recorded, which is
+  how that row's number is accounted for). What IS established without a
+  request: **Overpass reports a runtime error or timeout in a `remark` field
+  inside a parseable HTTP 200, and `remark` is read NOWHERE in this tree** —
+  the Archive-It shape in a new place, with the publisher's own dedicated
+  field for it. No test for it was written, because writing the phrase list
+  from memory of Overpass's format is exactly the mistake the JAIRO
+  misspelling records ("A phrase list copied from the sibling test would have
+  found nothing"). It needs one reachable mirror, and then it is a two-line
+  change.
+
+  `gtfs-jp` and `unified-buses` are the third unmeasured pair, for the other
+  reason: both passed the re-read's **file ceiling** having stored nothing
+  (SIGXFSZ, `db=0`), which is the runaway-write case that verdict exists to
+  catch, so they are re-read at a larger ceiling rather than diagnosed.
+
 * **A CREDENTIAL GATE THAT LOGS A LINE AND RETURNS 0 IS THE LAST WHOLLY SILENT
   CLASS, AND THE HELPER THAT FIXES IT HAD REACHED TWELVE OF NINETY-SEVEN**
   (2026-11-07, `docs/gated-without-notice-2026-11-07.tsv`).
@@ -2861,6 +2954,14 @@ definition" and exits 1, exactly as the final link does — so a stale object
 that redefines a symbol still fails the build, once instead of 84 times. And
 run.sh now removes each test binary after running it: at 128 MB a test, the old
 script left **~10 GB** in `$TMPDIR` until the suite ended.
+
+**`JO_UNIT_MATCH=<substring>` runs ONE test** (2026-11-12), for iterating on a
+new fixture: the suite is ~8 minutes natively and ~40 under TSan, and a fixture
+is usually wrong three times before it is right. Nothing in CI reads it, so
+`make unit` unset is still every test — and a filtered run ends with
+`PARTIAL RUN: only tests matching '…'`, because a green partial run printing
+the same last line as a green suite is the shape this file keeps correcting: a
+tool reporting on a set it never opened.
 
 **AND LINKING WAS NOT THE WHOLE BILL: THE JOB CAME IN AT 82.8 MIN, NOT THE ~45
 THAT PREDICTED** (2026-10-24, CI run 554, all six jobs green). `ci.yml`'s own

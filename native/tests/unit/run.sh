@@ -171,8 +171,17 @@ else
 fi
 
 fail=0
+# $JO_UNIT_MATCH limits the loop to tests whose name contains it, for
+# iterating on ONE test: the whole suite is ~8 minutes (~40 under TSan) and a
+# new fixture is usually wrong three times before it is right. It is a
+# developer convenience and nothing reads it in CI, so `make unit` with the
+# variable unset is still every test — and a run that skipped some says so on
+# the last line rather than printing the same "all passed" as a full one.
 for src in tests/unit/test_*.c; do
   name=$(basename "$src" .c)
+  if [ -n "${JO_UNIT_MATCH:-}" ]; then
+    case "$name" in *"$JO_UNIT_MATCH"*) ;; *) continue ;; esac
+  fi
   # Which object does this test include? (duplicate symbols if also linked.)
   under=$(under_of "$src")
   objs=$(objs_for "$under")
@@ -222,4 +231,10 @@ python3 tools/measure_thresholds.py --self-test || { echo "FAILED"; fail=1; }
 echo "--- audit_registry_emit self-test ---"
 python3 tools/audit_registry_emit.py --self-test || { echo "FAILED"; fail=1; }
 
+if [ -n "${JO_UNIT_MATCH:-}" ]; then
+  # Never let a filtered run be mistaken for a full one: a green partial run
+  # printing the same last line as a green suite is the shape this tree keeps
+  # correcting — a tool reporting on a set it never opened.
+  echo "PARTIAL RUN: only tests matching '$JO_UNIT_MATCH' were built and run."
+fi
 exit $fail

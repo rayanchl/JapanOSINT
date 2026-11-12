@@ -81,12 +81,17 @@ static void label_feature(cJSON *f) {
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   cJSON *raw = cJSON_CreateArray();
-  unified_capture(ctx, "flight-adsb", raw);   /* == flight-adsb snapshot */
+  int served = 0;                         /* 0 => the one upstream refused */
+  unified_capture(ctx, "flight-adsb", raw, &served); /* == flight-adsb snapshot */
   cJSON *f;
   cJSON_ArrayForEach(f, raw) label_feature(f);
   int n = geojson_emit_features(sink, "unified-flights", raw);
   cJSON_Delete(raw);
-  fprintf(stderr, "[unified-flights] emitted %d\n", n);
+  fprintf(stderr, "[unified-flights] emitted %d (%d of 1 upstream served)\n",
+          n, served);
+  /* This fusion reads ONE upstream, so its refusal is unambiguously a failed
+   * fetch and not an empty sky; see lib/unified.h. */
+  if (n <= 0 && served == 0) return -1;
   return n >= 0 ? 0 : -1;
 }
 
