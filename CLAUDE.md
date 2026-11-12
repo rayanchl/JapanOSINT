@@ -633,6 +633,80 @@ where a shared 7,249 bytes turned out to be two genuinely different paths.
   duration column discriminating again** — the same free signal that split the
   254-site tautology population, one verdict over.
 
+  **AND THE WHOLE COLUMN IS NOW READ: 463 rows, and `SLOW` TURNED OUT TO BE
+  TWO KILL LINES WANTING OPPOSITE KNOBS** (2026-11-12, the same TSV). Every
+  one of the 2026-10-25 sweep's unique `SLOW` ids re-run at ONE generous
+  ceiling — 600 s, four per-host-serial streams plus the 164-row NII stream:
+  **201 FETCH_FAILED (164 of them the platform above), 148 OK, 59
+  SIZE_CAPPED, 27 SLOW, 19 COLLISION, 7 EMITS_NOTHING, 2 NO_RUN_LINE.** So
+  **a third of the column was simply healthy** — 148 rows storing 3,279,991
+  records, 135 of them taking longer than the old 90 s kill line and 61 longer
+  than the 200 s one, which is a COST finding and not a defect — and only 27
+  were ever about the clock.
+
+  The other 59 were killed by a ceiling nobody was looking at. The tool caps a
+  run's writes with `ulimit -f` (added the day one row filled a 14 GB scratch
+  WAL in two minutes), so a capped run dies of **SIGXFSZ** — and `verdict_for`
+  read that as `SLOW`, whose remedy everywhere in this tree, this file's own
+  verdict list included, is to raise `--timeout`. `EPA_GHG_SUBPART_EMISSIONS`
+  was filed SLOW having stored 212,992 rows **in 75.1 s against a 600 s
+  clock**; the 59 had stored 5,605,531 rows between them, median 180 s, the
+  fastest at 45.6 s. **A knob that cannot move the ceiling that stopped a run
+  is worse than no remedy**, which is this file's own rule, and the verdict was
+  pointing at it — the fifth instance of the `POD` / `GATED` / `WINDOW_EMPTY` /
+  collision-notice correction, a tool's own limit filed as a property of the
+  row. `SIZE_CAPPED` says which ceiling bit and that raising the clock changes
+  nothing; it is NOT given to a SIGXFSZ kill that stored **nothing**, because
+  that is the runaway write the ceiling exists to catch and it must stay in the
+  FAILING `NO_RUN_LINE` bucket. That narrowing came from a fixture, not from
+  reasoning: the first predicate was over-broad and its own test caught it.
+
+  **And the ceiling was HALF the number its flag states, because `ulimit -f`
+  counts BLOCKS and the shells disagree.** Measured on this image: `/bin/sh`
+  (dash) allows **512 bytes** for `ulimit -f 1` — POSIX's block — and
+  `/bin/bash` 1024. The tool computed `file_limit * 1024` under a comment
+  reading "`ulimit -f` counts 1K blocks": true of bash, false of the `/bin/sh`
+  it actually invokes, so `--file-limit 1024` imposed **512 MB here and 1 GB
+  where /bin/sh is bash**. The unit was a property of the HOST wearing a
+  flag's clothing. `tools/jo_ulimit.py` measures it once, with the same shell
+  the auditors use and with no external command — the shell writes the bytes
+  itself, is killed part-way, and the file it leaves behind IS the block — and
+  both auditors import that one copy, for the reason `tools/jo_tls.py` is one
+  copy (rule 4c). The run line now prints the measured block beside the MB.
+
+  **The arithmetic was then confirmed by doubling it.** `PYPI_SIMPLE_INDEX`
+  stores 209,263 rows at the old (halved) 512 MB, **425,929 at the corrected
+  1 GB** and all **936,405 of 936,405 at 6 GB** in 431.0 s; Packagist 210,340,
+  425,923 and all 474,509. A doubled ceiling doubled the rows to within 2%,
+  which no duration limit can do — so the halved unit is the measured cause of
+  the 59 caps rather than a plausible one. Both rows are healthy and merely
+  expensive; `af-dportal-trans-tz` reads 367 rows against a 90 s kill line,
+  96,055 at 512 MB and 99,895 of 100,000 at 6 GB, its 0.105% collapse matching
+  the 0.035% this file already measured as that family's own upstream
+  duplicates, so its 8-part composite key is right and is NOT changed.
+  **Three ceilings, three numbers, one healthy row.**
+
+  **The default stays 1,024 MB, and the reason is a second coupling worth
+  knowing**: `--workdir` defaults to `/dev/shm`, which is RAM, so the scratch
+  databases cost `--jobs x --file-limit` of MEMORY — at 6 jobs the corrected
+  1 GB is already 6 GB of a 15 GB machine. The two flags are ONE decision and
+  the help text says so now. The three rows above were measured at 6 GB on
+  disk with `--jobs 1`.
+
+  **And `audit_batch_emit.py` was the other copy, with NO ceiling at all** —
+  the same binary, the same kind of rows, and the exposure is measured rather
+  than supposed (`ua-police-stolen-phones` passes 1 GB in 107 s). It has
+  `--file-limit` and `SIZE_CAPPED` now, the verdict being necessary there
+  because that tool reads no database, so such a kill fell through to
+  `NO_RUN_LINE` — which is FATAL and blames the batch for a limit the tool
+  imposed. Fifth sighting of "when you fix something, look for the other
+  copies", in the pair of tools that report on everything else.
+
+  Eleven of the re-read's COLLISION verdicts are the notice arithmetic this
+  file corrects two bullets up, recomputed from `stored` and `db_rows` rather
+  than re-measured, because the fix landed after the streams started and the
+  output carries both numbers.
+
 * **AN ANCHOR CALENDAR DEFEATS THE LABEL MINIMUM, and that was the fourth
   record path without a disclosure.** The US NRC's event-notification year
   pages carry 205 and 245 real `<a href>` anchors, every one matching the row's
@@ -665,6 +739,11 @@ run through the real binary against a fresh copy of a warm template database:
 **55,834 rows — 49,375 OK, 4,761 FETCH_FAILED, 631 EMITS_NOTHING, 472 SLOW
 (unmeasured, not failed), 461 COLLISION, 114 GATED, 19 POD, 1 SINK_MISMATCH.**
 Four lessons from working it, each costing more than the number it corrected:
+
+**Its SLOW column has since been read — 463 unique ids, a third of them simply
+healthy — and 33 of its own 472 were never about the clock either** (rc=-25,
+SIGXFSZ, median 108.7 s against a ~200 s kill line). Rule 1's note on the
+2026-11-12 re-read has the distribution and the two kill lines.
 
 * **A GATE THAT RUNS EVERY ROW IN A FRESH DATABASE CANNOT SEE A CYCLE'S
   POSITION, so it reads window 1 of N and calls it dead.** All 47 KKJ
@@ -3293,7 +3372,7 @@ says why.
 | `tools/audit_page_param.py` | rows whose URL already binds their own `page_param`. The engine used to APPEND (`…&pagina=1&pagina=2`) and a server binding the first occurrence then served page 1 for the whole walk — N pages emitted, one stored, `rc=0`. Fixed in `hp_url_set_param` and pinned by `hptest` "9f-bis"; the lint stays because 103 of 1,431 paged rows are that shape and their paging depends on the replacement being right |
 | `tools/audit_page_two.py` | whether page TWO actually returns something different from page 1 — the one question no record count asks. Page 1 is the row's URL as written; page 2 is that URL with the row's own parameter advanced the way `hp_url_set_param` advances it. `SAME_AS_PAGE1` is THE finding (an upstream that takes a page parameter and ignores it answers every page with page 1: N pages emitted, one stored, `rc=0`), `REFUSED` carries a remedy classification, and `PAGE1_IS_ALL` is the benign majority. **`LOCAL_EGRESS` is a verdict about THIS ENVIRONMENT and never about a source** — see the note below on what the first run did to itself. Full run: `docs/page-two-2026-10-20.tsv` |
 | `tools/discover_search_endpoints.py` | where a stale SEARCH path went, asked of the HOST rather than guessed: its own search form with the field names a pivot must send, its API/developer links, its declared sitemaps. Batch 42's and 46's lesson one level over. **Read, never gated, and a candidate is not a fix** — of the eight it found for B2's 44 rows that answered 200 with a plausible page, SIX ignore the query parameter (`docs/b2-path-stale-triage-2026-10-21.md`). Everything it finds goes through `--check-filter` first |
-| `tools/audit_batch_emit.py` | rule 4 below: runs each MANIFEST row through the real binary and reads back `emitted N of M`. `--timeout S` moves the kill line; a run that hits it is **`SLOW`**, carrying its partial counts — unmeasured, not failed. Each run gets a scratch DB from a warm template (it used to write the developer's live DB), and it exits non-zero on UNREGISTERED, UNPARSEABLE, NO_RUN_LINE or when nothing was measured |
+| `tools/audit_batch_emit.py` | rule 4 below: runs each MANIFEST row through the real binary and reads back `emitted N of M`. `--timeout S` moves the kill line; a run that hits it is **`SLOW`**, carrying its partial counts — unmeasured, not failed. **`--file-limit MB` is the OTHER kill line** (2026-11-12): it caps a run's writes through `tools/jo_ulimit.py`'s measured block size, a run that hits it is **`SIZE_CAPPED`**, and the verdict is necessary rather than cosmetic — this tool reads no database, so such a kill used to fall through to the FATAL `NO_RUN_LINE` and blame the batch for a limit the tool imposed. Each run gets a scratch DB from a warm template (it used to write the developer's live DB), and it exits non-zero on UNREGISTERED, UNPARSEABLE, NO_RUN_LINE or when nothing was measured |
 | `tools/audit_registry_emit.py` | rule 4 **and** 4b for the whole REGISTRY, manifest or not — `--list-sources` is the source list, so nothing registered can hide. Measures emitted *and* stored, per run, against a fresh copy of a warm template DB. `--scheduled`/`--match`/`--only`/`--ids-file`, `--jobs`, `--timeout`, TSV out, `--resume`. A MAINTENANCE POD is reported `POD` and not run (2026-10-22): a collector whose name begins with `_` writes its own tables and nothing to `intel_items` by design, so the first registry-wide sweep reported eight of them — the embedding backfill, the translator, the camera stills lane, the vector indexers — as EMITS_NOTHING, which is this tool making the very confusion that verdict exists to expose. **`GATED`** is the same correction for a key-gated row (2026-10-23): it stores one `collector-status-notice` naming the env var it needs — rule 1's gated note — and until the database read mirrored the ENGINE's definition of a notice (`collector-%-notice` plus `collector-fetch-failure`, not a copied list of three kinds) the run line counted that row as a notice while this tool counted it as a RECORD, and the verdict was `SINK_MISMATCH`: "a collector emitting under another id, or a bug", about two rows behaving exactly as designed |
 | `tools/diagnose_emit_keys.py` | why a row emitted nothing, and which `title_keys`/`id_keys` fix it |
 | `tools/cleanup_stale_uids.py` | the rows identity fixes left in an OLD database: a plain-key row whose qualified siblings now hold the same record (the keyqual collectors and FRA), and wayback_jp's captures from before digest+timestamp+URL. Reports by default. `--delete` removes, in one transaction, only rows whose replacement is proven to exist and that nothing references. `--self-test` runs it on a scratch DB (also from `make unit`) |
@@ -3663,7 +3742,9 @@ stored count back out of that database as well as off the run line — two
 independent readings, because a checker that believes one self-report is how
 260 silent sources got through in the first place. Verdicts: `OK`,
 `EMITS_NOTHING`, `COLLISION`, `SLOW` (hit `--timeout`; unmeasured, not failed),
-`NEEDS_ENTITY`, `SINK_MISMATCH`.
+**`SIZE_CAPPED`** (hit `--file-limit`; also unmeasured, and raising `--timeout`
+cannot move it — the two kill lines want opposite knobs, see rule 1's note on
+the 2026-11-12 SLOW re-read), `NEEDS_ENTITY`, `SINK_MISMATCH`.
 
 ### 4d. Answering is not answering THE QUESTION
 
