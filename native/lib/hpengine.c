@@ -2270,7 +2270,14 @@ static char *hp_jsonp_inner(const char *body) {
  * collector, which no engine-only test can reach (rule 4c). */
 #define hp_title_says_maintenance(b) jo_title_says_maintenance(b)
 
-static void hp_body_refusal(hp_run_state *st, const char *body) {
+/* THE ONE WORD TEST, and it takes the STATUS because one of its five shapes
+ * may only be looked for once the status has already failed. Every mode driver
+ * reaches this with a body the engine chose to parse, so they go through the
+ * `hp_body_refusal` macro below and pass 200; the refusing-status arm in
+ * hp_run passes what the server said. See jo_body_says_maintenance for why
+ * that distinction is the whole safety argument for reading the body there. */
+static void hp_body_refusal_at(hp_run_state *st, const char *body,
+                               long status) {
   if (!body) return;
   if (jo_strcasestr(body, "rate limit") || jo_strcasestr(body, "rate-limit") ||
       jo_strcasestr(body, "too many requests"))
@@ -2284,6 +2291,16 @@ static void hp_body_refusal(hp_run_state *st, const char *body) {
     st->unreadable_botwall = 1;
   else if (hp_title_says_maintenance(body))
     st->unreadable_maintenance = 1;
+  /* The SAME finding by its second route: a maintenance notice with no
+   * <title> at all, read only because the caller already has a refusing
+   * status. jo_body_says_maintenance's comment carries the measurement (164
+   * `*.repo.nii.ac.jp` rows, one 690-byte 503) and the argument for why the
+   * body may be read here when it may not on a 200. The value is 2 rather
+   * than 1 so every notice below can say which route found it: a record that
+   * claimed "the page's own <title> says" of a body with no title would be
+   * this disclosure inventing its own evidence. */
+  else if (status >= 400 && jo_body_says_maintenance(body))
+    st->unreadable_maintenance = 2;
   /* A FIFTH shape, and it is the one case here with NO remedy at all, which is
    * why it is named apart from the bot wall it otherwise resembles.
    * Cloudflare's `error code: 1005` is an ASN block — the whole datacenter
@@ -2299,6 +2316,9 @@ static void hp_body_refusal(hp_run_state *st, const char *body) {
            jo_strcasestr(body, "error 1005"))
     st->unreadable_ipblock = 1;
 }
+
+/* A body the engine chose to parse: the five mode drivers' case. */
+#define hp_body_refusal(st, body) hp_body_refusal_at((st), (body), 200)
 
 /* Is this body an HTML DOCUMENT? For every mode whose data is not HTML — JSON,
  * XML, CSV, NDJSON — a body that is one is a redirect to a notice, a wall, or
@@ -2338,6 +2358,8 @@ static void hp_unreadable_log(hp_run_state *st, const char *detail) {
   fprintf(stderr, "[hp:%s] unreadable body: %s%s\n", st->s->id, detail,
           st->unreadable_ratelimit   ? " — it is a RATE-LIMIT page served as 200"
         : st->unreadable_botwall     ? " — it is a BOT-WALL page served as 200"
+        : st->unreadable_maintenance == 2
+                                     ? " — the body says the SITE IS IN MAINTENANCE; wait and re-read the row rather than re-pointing it"
         : st->unreadable_maintenance ? " — the page's own <title> says the "
                                        "SITE IS IN MAINTENANCE; wait and re-read the row rather than re-pointing it"
         : st->unreadable_ipblock     ? " — it is Cloudflare 1005, an ASN block: "
@@ -2345,20 +2367,10 @@ static void hp_unreadable_log(hp_run_state *st, const char *detail) {
                                      : "");
 }
 
-#define HP_HTML_SNIFF 2048
-static int hp_body_is_html(const char *body) {
-  if (!body) return 0;
-  const char *p = body;
-  if ((unsigned char)p[0] == 0xEF && (unsigned char)p[1] == 0xBB &&
-      (unsigned char)p[2] == 0xBF) p += 3;                      /* UTF-8 BOM */
-  while (*p && isspace((unsigned char)*p)) p++;
-  if (*p != '<') return 0;
-  char head[HP_HTML_SNIFF + 1];
-  size_t n = strnlen(p, HP_HTML_SNIFF);
-  memcpy(head, p, n);
-  head[n] = 0;
-  return jo_strcasestr(head, "<!doctype html") || jo_strcasestr(head, "<html");
-}
+/* One definition, in lib/jocore.h, for the reason the maintenance tests live
+ * there: three phrase tests depend on knowing what kind of body they read, and
+ * the newest of them is consulted by a bespoke collector's path too. */
+#define hp_body_is_html(b) jo_body_is_html(b)
 
 static int hp_run_json(hp_run_state *st, const char *body) {
   const hp_source *s = st->s;
@@ -2371,8 +2383,8 @@ static int hp_run_json(hp_run_state *st, const char *body) {
     fprintf(stderr, "[hp:%s] non-JSON body%s\n", s->id,
             st->unreadable_ratelimit   ? " — it is a RATE-LIMIT page served as 200"
           : st->unreadable_botwall     ? " — it is a BOT-WALL page served as 200"
-          : st->unreadable_maintenance ? " — the page's own <title> says the "
-                                         "SITE IS IN MAINTENANCE; wait and re-read the row rather than re-pointing it"
+          : st->unreadable_maintenance ? " — the page says the SITE IS IN "
+                                         "MAINTENANCE; wait and re-read the row rather than re-pointing it"
                                        : "");
     st->unreadable = 1;
     return st->emitted;
@@ -5362,7 +5374,8 @@ dated_restart:;
          * honest empty: a declared no-data reply is settled above and keeps
          * its own path, and a body with none of the words sets no flag, which
          * leaves the status-based arms exactly as they were (hptest 60d). */
-        if (!first_nodata && fst >= 400) hp_body_refusal(&st, hr.body);
+        if (!first_nodata && fst >= 400)
+          hp_body_refusal_at(&st, hr.body, fst);
       }
       if (page == 0 && (fst < 0 || fst >= 500 || (fst == 304 && !first_conditional)))
         hard_error = 1;
@@ -6224,6 +6237,13 @@ date_step_back:
           "refusal that pacing does not reach. Measured 2026-11-11: 22 of 27 "
           "hosts that refuse every agent answer 403 with a Cloudflare "
           "challenge, so this is NOT only a 200-with-a-wall shape"
+      : st.unreadable_maintenance == 2
+        ? "the body states that the SITE IS IN MAINTENANCE — in its text, not "
+          "in a <title>, which is why this needed a second route into the same "
+          "finding (measured 2026-11-12 on 164 `*.repo.nii.ac.jp` rows all "
+          "answering 503 with one 690-byte notice whose whole <head> is a "
+          "<meta>). A site in that state serves ONE page to every path, so "
+          "neither the status nor the path says anything"
       : st.unreadable_maintenance
         ? "the body's own <title> says the SITE IS IN MAINTENANCE. A site in "
           "that state serves ONE page to every path, so neither the status nor "
@@ -6267,10 +6287,13 @@ date_step_back:
       : st.unreadable_maintenance
         ? "WAIT AND RE-READ THE ROW. This is the one shape here whose remedy "
           "is no change at all: do not re-point the URL, do not add a gap, do "
-          "not change the agent. A publisher in maintenance is back within "
-          "hours or days, and a row re-pointed on this reading is a validated "
-          "row made unvalidated. If it persists for weeks, read the site by "
-          "hand before touching the row"
+          "not change the agent. A row re-pointed on this reading is a "
+          "validated row made unvalidated. Read the notice: a publisher often "
+          "prints the window, and it can be a START DATE WITH NO END — "
+          "`*.repo.nii.ac.jp` has been down since 2026-10-28 and was still "
+          "down fifteen days later, which is long enough to look like a "
+          "retirement and is not one. Check the parent site before touching "
+          "the row (www.nii.ac.jp answered 200 throughout)"
       : first_status == 200 && st.unreadable_botwall
         ? "a bot wall, so do NOT reach for a hostgate gap or a moved endpoint: "
           "the wall refuses an automated client at any rate. Bisect the "

@@ -5429,6 +5429,124 @@ int main(void) {
   ok(cap_count("collector-fetch-failure", NULL) == 0,
      "60e: a declared-empty 404 stays an honest empty and files nothing");
 
+  /* ── 61. A MAINTENANCE NOTICE WITH NO <title> AT ALL ────────────────────
+   *
+   * 59 reads the body's own <title> and 59d pins that the phrase outside one
+   * is data. That is right for a 200 — and it could not see the largest
+   * instance of this shape in the tree.
+   *
+   * Measured 2026-11-12: 164 of the 463 rows the 2026-10-25 sweep read SLOW
+   * are JAIRO Cloud / WEKO3 institutional repositories on 164 distinct
+   * `*.repo.nii.ac.jp` subdomains (226 such rows are registered), and all 164
+   * answer **HTTP 503 with the same 690 bytes**, md5 1c018096, whose entire
+   * <head> is one `<meta charset>`:
+   *
+   *   現在システムメンテナンスのためリポジトリをご利用いただけません。
+   *   停止期間： 2026年10月28日 (15:00-)
+   *   Repository is temporary unavaliable due to system maintenance.
+   *
+   * So the publisher names the cause in two languages with a start date and no
+   * end, and the engine's 5xx remedy said "re-run; if the status persists the
+   * endpoint has moved or retired". Fifteen days on, a reader following it
+   * re-points or retires 226 live rows.
+   *
+   * WHY THE BODY MAY BE READ HERE. 59's narrowness exists because reading a
+   * 200's body would reclassify a HEALTHY row — a works register — as a
+   * refusal. On a status that already failed there is no such move: the row
+   * failed either way and only the remedy changes, between two answers that
+   * both begin "re-run". 61c and 61d are the controls that hold that line, and
+   * 61d is the one that matters: the 200 case is unchanged, so 59d still
+   * passes beside this.
+   *
+   * 61 and 61b were confirmed to fail against the old code (no notice text
+   * mentioning maintenance; the remedy read "moved or retired"). */
+
+  /* 61. The measured case: a titleless 503 maintenance notice, on a JSON row
+   *     whose endpoint sits behind the platform. */
+  fx_reset();
+  fx_add("/s?q=", 503,
+         "<!DOCTYPE html>\n<head>\n"
+         "<meta http-equiv=\"content-type\" charset=\"utf-8\">\n</head>\n<body>\n"
+         "\xe7\x8f\xbe\xe5\x9c\xa8\xe3\x82\xb7\xe3\x82\xb9\xe3\x83\x86\xe3\x83"
+         "\xa0\xe3\x83\xa1\xe3\x83\xb3\xe3\x83\x86\xe3\x83\x8a\xe3\x83\xb3\xe3"
+         "\x82\xb9\xe3\x81\xae\xe3\x81\x9f\xe3\x82\x81<br>\n"
+         "Repository is temporary unavaliable due to system maintenance.<br>\n"
+         "</body>");
+  g_ncap = 0;
+  rc = run_source("T_JSON", "Acme AS 912345678");
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "SITE IS IN MAINTENANCE") != NULL &&
+       strstr(nt->props, "WAIT AND RE-READ THE ROW") != NULL &&
+       strstr(nt->props, "moved or retired") == NULL,
+       "61: a titleless maintenance notice on a 503 gets the WAIT remedy, not "
+       "\"moved or retired\"");
+    (void)rc; }
+
+  /* 61b. The record must not claim evidence it does not have. 59's text says
+   *      "the body's own <title> says"; this body has no title, so the cause
+   *      must say so instead — a disclosure that invents its own evidence is
+   *      the defect rule 1 exists to prevent. */
+  fx_reset();
+  fx_add("/s?q=", 503,
+         "<!doctype html><html><body>Scheduled maintenance until further "
+         "notice.</body></html>");
+  g_ncap = 0;
+  rc = run_source("T_JSON", "Acme AS 912345678");
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "not \\nin a <title>") == NULL &&
+       strstr(nt->props, "in its text") != NULL,
+       "61b: the cause says the statement was in the text, not in a <title>");
+    (void)rc; }
+
+  /* 61c. CONTROL. The body must be an HTML DOCUMENT. A 503 carrying a DATA
+   *      payload that happens to mention system maintenance is not a notice
+   *      about itself — the 58f lesson, which caught the first version of the
+   *      markup test reading a CSV cell containing <html> as a page. */
+  fx_reset();
+  fx_add("/s?q=", 503,
+         "{\"error\":\"backend down\",\"note\":\"system maintenance window "
+         "for the bridge deck register\"}");
+  g_ncap = 0;
+  rc = run_source("T_JSON", "Acme AS 912345678");
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "SITE IS IN MAINTENANCE") == NULL,
+       "61c: a 503 whose body is a DATA payload is not read as a notice about "
+       "itself");
+    (void)rc; }
+
+  /* 61d. THE CONTROL THAT BOUNDS THE CHANGE, and the reason 59's narrowness
+   *      survives: on a 200 the body is still not read for this. The very
+   *      body of 61b, served as a 200, must stay silent exactly as 59d does,
+   *      because there the row has NOT failed and reading it as a refusal
+   *      would discard a works register's real records. */
+  fx_reset();
+  fx_add("/cal.html", 200,
+         "<!doctype html><html><body>Scheduled maintenance until further "
+         "notice.<a href=\"/ev/2026/0101\">Bridge deck closure notice</a>"
+         "</body></html>");
+  g_ncap = 0;
+  rc = run_source("T_HTML_CAL", NULL);
+  ok(cap_count("collector-fetch-failure", NULL) == 0,
+     "61d: on a 200 the body is still not read for maintenance — 59d's line "
+     "holds");
+
+  /* 61e. CONTROL. A plain 503 with no maintenance wording keeps the remedy it
+   *      had, so the change adds a reading and replaces none. */
+  fx_reset();
+  fx_add("/s?q=", 503, "<!doctype html><html><body>Service "
+                       "Unavailable</body></html>");
+  g_ncap = 0;
+  rc = run_source("T_JSON", "Acme AS 912345678");
+  { const cap *nt = NULL;
+    ok(cap_count("collector-fetch-failure", &nt) == 1 && nt &&
+       strstr(nt->props, "SITE IS IN MAINTENANCE") == NULL &&
+       strstr(nt->props, "moved or retired") != NULL,
+       "61e: a plain 503 keeps \"re-run; may have moved or retired\"");
+    (void)rc; }
+
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;
 }

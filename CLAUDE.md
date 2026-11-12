@@ -533,6 +533,75 @@ where a shared 7,249 bytes turned out to be two genuinely different paths.
   — answers **76 bytes** today. Three of four rows on one host, all explained by
   one page. **Re-read this family before acting on any of it.**
 
+* **AND FIVE DAYS LATER THAT TEST MISSED THE LARGEST INSTANCE OF ITS OWN
+  SHAPE, BECAUSE THE NOTICE HAD NO `<title>` AT ALL** (2026-11-12,
+  `docs/slow-reread-2026-11-12.tsv`). Found while re-reading the 2026-10-25
+  sweep's 472 `SLOW` rows at one honest ceiling: **164 of the 463 unique ids —
+  35% of that whole verdict column — are ONE platform**, JAIRO Cloud / WEKO3
+  institutional repositories on 164 distinct `*.repo.nii.ac.jp` subdomains, and
+  all 164 answer **HTTP 503 with the same 690 bytes**, md5 `1c018096`, in a mean
+  of **1.19 s** (max 2.4; the whole 164-row read cost 194.5 seconds). The body
+  names the cause in two languages with a start date and no end — 現在システム
+  メンテナンスのため…停止期間 2026年10月28日 (15:00-), "Repository is temporary
+  unavaliable due to system maintenance" — and the engine's remedy for a 5xx
+  read *"re-run; if the status persists the endpoint has moved or retired"*. It
+  had persisted for fifteen days. **324 registered rows sit on that platform**
+  (226 hosts, four table files; 170 scheduled, 154 entity pivots), so a reader
+  following that remedy re-points or retires them all: rule 1's recurring
+  mistake, the fifth sighting, and the one with the most rows behind it.
+
+  `jo_title_says_maintenance()` could not see it. That body's entire `<head>`
+  is one `<meta charset>` — there is no `<title>` element — so the test written
+  five days earlier for exactly this shape returned 0 on its first line.
+  `jo_body_says_maintenance()` is the second route into the same finding, and
+  **it is read ONLY on a status that has already failed**, which is the whole
+  safety argument: 59's narrowness exists because reading a 200's body would
+  reclassify a HEALTHY row — a works register, "maintenance" being ordinary
+  data here — as a refusal, and on a failed status nothing moves from success
+  to failure. Only the remedy changes, between two answers that both begin
+  "re-run". Two things still hold it narrow: the body must be an HTML DOCUMENT
+  (so a 503 carrying a data payload is not read as a notice about itself), and
+  the phrases are STATEMENTS about the service rather than the bare word. No
+  size ceiling — rule 1 declined to guess one across services and that holds.
+  `hp_body_is_html` moved to `lib/jocore.h` as `jo_body_is_html` in the same
+  change, because three phrase tests now depend on knowing what kind of body
+  they are reading and two copies of that rule would drift (rule 4c).
+
+  **The publisher's own misspelling is why the phrase list had to be measured
+  rather than written.** Their English sentence reads "temporary unavaliable",
+  so `jo_title_says_maintenance`'s "temporarily unavailable" does not match
+  this body at all; only `システムメンテナンス` and "due to system maintenance"
+  do. A phrase list copied from the sibling test would have found nothing.
+
+  **The flag is 2 rather than 1 so the record can say which route found it.**
+  59's text reads "the body's own `<title>` says"; a record claiming that of a
+  body with no title would be the disclosure inventing its own evidence, which
+  is the defect rule 1 exists to prevent.
+
+  **TWO CONTROLS, and the second is what makes "maintenance" rather than
+  "retired" a measurement.** The OAI endpoint, the site root AND a path that
+  cannot exist each answer 503 with that identical body while `www.nii.ac.jp`
+  answers 200 — one page to every path, the FINMAC control repeated. And **six
+  rows on this platform STORED RECORDS in the 2026-10-25 sweep**; three of the
+  six, re-read today, answer the same 503. So the platform was serving three
+  days before its window opened and is in maintenance now. Nothing was
+  re-pointed, retired, paced or re-agented; the remedy says WAIT and now also
+  says that a window can be a start date with no end, with the parent site as
+  the check. `hptest` 61–61e: 61 and 61b confirmed to fail against the old
+  code, 61c and 61e controls, and **61d is the one that matters** — on a 200
+  the body is still not read, so 59d's line holds beside it.
+
+  **And SLOW was a true reading, which is the methodological half.** The sweep
+  ran on 2026-10-25, three days BEFORE the window opened, so it measured a
+  working-but-slow platform; the 503 is a true reading of today; neither is the
+  row's state in general. `SLOW` is a property of the TOOL — that sweep used
+  three different kill lines (~200 s for 340 rows, ~90 s for 98, 120 s for 1,
+  none for 33) and the column's `secs` are pinned at the ceiling, median 200.1,
+  max 200.3, so nothing was known about those rows beyond "longer than the tool
+  allowed". **A row that answers in 1.2 seconds inside a SLOW bucket is the
+  duration column discriminating again** — the same free signal that split the
+  254-site tautology population, one verdict over.
+
 * **AN ANCHOR CALENDAR DEFEATS THE LABEL MINIMUM, and that was the fourth
   record path without a disclosure.** The US NRC's event-notification year
   pages carry 205 and 245 real `<a href>` anchors, every one matching the row's

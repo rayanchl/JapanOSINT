@@ -296,6 +296,89 @@ static inline int jo_title_says_maintenance(const char *body) {
          jo_strcasestr(title, "temporarily unavailable");
 }
 
+/* IS THIS BODY AN HTML DOCUMENT? Markup at the START of the body, never
+ * anywhere in it: `hptest` 58f caught the first version of this reading a CSV
+ * cell that contained `<html>` as a page. One definition, because three
+ * separate phrase tests depend on knowing what kind of body they are reading —
+ * rule 1's "a phrase test is a test of the body's OWN words, so it needs to
+ * know what kind of body it is reading". lib/hpengine.c's hp_body_is_html
+ * delegates here. */
+#define JO_HTML_SNIFF 2048
+static inline int jo_body_is_html(const char *body) {
+  if (!body) return 0;
+  const char *p = body;
+  if ((unsigned char)p[0] == 0xEF && (unsigned char)p[1] == 0xBB &&
+      (unsigned char)p[2] == 0xBF) p += 3;                      /* UTF-8 BOM */
+  while (*p && isspace((unsigned char)*p)) p++;
+  if (*p != '<') return 0;
+  char head[JO_HTML_SNIFF + 1];
+  size_t n = strnlen(p, JO_HTML_SNIFF);
+  memcpy(head, p, n);
+  head[n] = 0;
+  return jo_strcasestr(head, "<!doctype html") || jo_strcasestr(head, "<html");
+}
+
+/* A MAINTENANCE NOTICE WITH NO <title> AT ALL, on a status that already
+ * failed. This is the second route to the same finding as
+ * jo_title_says_maintenance above, and it exists because that one could not
+ * see the largest instance of it in the tree.
+ *
+ * Measured 2026-11-12. 164 of the 463 rows the 2026-10-25 registry sweep read
+ * SLOW are JAIRO Cloud / WEKO3 institutional repositories on 164 distinct
+ * `*.repo.nii.ac.jp` subdomains (226 such rows are registered), and every one
+ * answers **HTTP 503 with the same 690 bytes**, md5 1c018096, whose whole
+ * <head> is one `<meta charset>`:
+ *
+ *   平素より本リポジトリをご利用いただき…
+ *   現在システムメンテナンスのためリポジトリをご利用いただけません。
+ *   停止期間： 2026年10月28日 (15:00-)
+ *   Repository is temporary unavaliable due to system maintenance.
+ *
+ * So the publisher states the cause, in two languages, with a start date and
+ * no end — and the engine's remedy for a 5xx read "re-run; if the status
+ * persists the endpoint has moved or retired". It has persisted for fifteen
+ * days. A reader following that remedy re-points or retires 226 live rows
+ * whose publisher has posted a return notice: rule 1's recurring mistake, the
+ * fifth sighting, and the one with the most rows behind it.
+ *
+ * The CONTROL is what makes it a host-level finding rather than a row bug, and
+ * it is the same control FINMAC needed: the OAI endpoint, the site root AND a
+ * path that cannot exist all answer 503 with that identical body, while
+ * www.nii.ac.jp answers 200. One page to every path.
+ *
+ * WHY THIS MAY READ THE BODY WHERE THE TITLE TEST MAY NOT. The title test's
+ * own comment gives the reason it is narrow: "maintenance" is ordinary data
+ * here — road maintenance, aircraft maintenance, maintenance of a register —
+ * and a substring test over a 200's body would read a works register as a
+ * refusal, reclassifying a HEALTHY row. That risk does not exist here, because
+ * the caller only asks on a status that already failed: nothing moves from
+ * success to failure, and the only thing that changes is WHICH remedy a failed
+ * row carries. Both candidate remedies begin "re-run"; the question is whether
+ * the second half says "it may have moved" or "wait".
+ *
+ * Two conditions still hold it narrow. The body must be an HTML DOCUMENT, so a
+ * data payload mentioning maintenance is not read as a notice about itself.
+ * And the phrases are STATEMENTS about the service, never the bare word —
+ * which is also why the measured body needed the two it actually carries: its
+ * English sentence reads "temporary unavaliable", the publisher's own
+ * misspelling, so "temporarily unavailable" does not match it at all. No size
+ * ceiling is used: rule 1 declined to guess one across services and that holds
+ * here. `hptest` 61-61e. */
+static inline int jo_body_says_maintenance(const char *body) {
+  if (!body || !jo_body_is_html(body)) return 0;
+  return jo_strcasestr(body, "\xe3\x82\xb7\xe3\x82\xb9\xe3\x83\x86\xe3\x83"
+                             "\xa0\xe3\x83\xa1\xe3\x83\xb3\xe3\x83\x86\xe3"
+                             "\x83\x8a\xe3\x83\xb3\xe3\x82\xb9") ||
+         jo_strcasestr(body, "\xe3\x83\xa1\xe3\x83\xb3\xe3\x83\x86\xe3\x83"
+                             "\x8a\xe3\x83\xb3\xe3\x82\xb9\xe4\xb8\xad") ||
+         jo_strcasestr(body, "due to system maintenance") ||
+         jo_strcasestr(body, "due to maintenance") ||
+         jo_strcasestr(body, "under maintenance") ||
+         jo_strcasestr(body, "maintenance mode") ||
+         jo_strcasestr(body, "scheduled maintenance") ||
+         jo_strcasestr(body, "system maintenance");
+}
+
 /* memmem(), portably — the same story as jo_strcasestr: glibc declares it
  * only under _GNU_SOURCE. Byte search of `needle` (nl bytes) in `hay` (hl
  * bytes); an empty needle matches at `hay`. */
