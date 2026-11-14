@@ -231,9 +231,6 @@ struct API: Sendable {
     func layers() async throws -> [LayerDef] {
         try await get("/api/layers")
     }
-    func sources() async throws -> [DBRowAny] {
-        try await get("/api/sources")
-    }
     /// Set whether a source is cron-scheduled for the map (`map_cron`) or
     /// only grabbed live from the search tab (`search_only`). Both modes
     /// still write intel_items shown everywhere. Returns the updated row.
@@ -241,9 +238,10 @@ struct API: Sendable {
         let body = try JSONSerialization.data(withJSONObject: ["mode": mode])
         return try await put("/api/sources/\(API.pathEscape(id))/schedule", body: body)
     }
-    func status() async throws -> StatusEnvelope {
-        try await get("/api/status")
-    }
+    // The full `/api/status` and `/api/sources` dumps (every registered
+    // source, tens of MB) are deliberately NOT wrapped here any more: use
+    // `statusSummary()`, `collectorTree()` and `searchSources(...)` in
+    // API+Sources.swift.
 
     /// One-shot manual probe for a keyed source. Server uses the configured
     /// API key as the auth header so the request actually reaches the API
@@ -313,9 +311,6 @@ struct API: Sendable {
     }
 
     // ── Intel (non-spatial sources) ────────────────────────────────────────
-    func intelSources() async throws -> IntelSourcesEnvelope {
-        try await get("/api/intel/sources")
-    }
     /// Server-side ordering of /api/intel/items. `.relevance` and `.trust`
     /// require `q` (the server answers 400 otherwise), so callers pass them
     /// only alongside a non-empty query.

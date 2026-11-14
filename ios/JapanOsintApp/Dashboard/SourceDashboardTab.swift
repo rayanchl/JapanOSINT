@@ -934,7 +934,7 @@ struct CollectorRow: View {
             }
             .padding(.horizontal, 8)
             .padding(.top, 4)
-            if collector.pivots > 0 && collector.sourceCount <= SourceDashboardTab.runAllMax {
+            if collector.pivotCount > 0 && collector.sourceCount <= SourceDashboardTab.runAllMax {
                 Text("Entity pivots are skipped: open one to run it with an entity.")
                     .font(.caption2)
                     .foregroundStyle(theme.textMuted)

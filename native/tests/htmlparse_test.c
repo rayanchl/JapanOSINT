@@ -334,8 +334,8 @@ int main(void) {
     ok(r == 1 && t.nrows == 2 && !strcmp(t.rows[0].cells[0].text, "needle"),
        "LIB-02: the first table containing `must` is selected, its nested table folded in");
     html_table_free(&t);
-    r = html_table_parse(h, "inner", 1, &t);
-    ok(r == 0, "LIB-02: table_index counts only tables that contain `must`");
+    r = html_table_parse(h, "inner", 2, &t);
+    ok(r == 0, "LIB-02: table_index counts only tables that contain `must` (outer + nested = 2)");
     html_table_free(&t);
     r = html_table_parse(h, "inner", 0, &t);
     ok(r == 1 && t.nrows == 2, "LIB-02: an outer table whose nested table holds `must` matches");
@@ -346,7 +346,7 @@ int main(void) {
     html_table t;
     int r = html_table_parse("<table><tr><td>a&#1114112;b&#-5;c&#xD800;d&#65;</td></tr></table>", NULL, 0, &t);
     ok(r == 1 && t.nrows == 1 &&
-       !strcmp(t.rows[0].cells[0].text, "a\xEF\xBF\xBDb&#-5;c\xEF\xBF\xBDdA"),
+       !strcmp(t.rows[0].cells[0].text, "a\xEF\xBF\xBD" "b&#-5;c\xEF\xBF\xBD" "dA"),
        "LIB-14: >U+10FFFF and a surrogate become U+FFFD, '&#-5;' stays text, '&#65;' is 'A'");
     html_table_free(&t);
   }
