@@ -349,7 +349,11 @@ that replaced them survive, so no coverage is lost. **A sweep's verdict is
 about the URL it sent, not about the row's name** — re-read a removal against
 the row as it stands now.
 
-**The registered count is 88,499** (2026-11-14, `make source-count`, both
+**The registered count is 93,142** (2026-11-14, `make source-count` on the
+merge of main's batch 65, both floors re-recorded from that build): main's
+93,163 less this branch's net 21 (the 16 below and these five).
+
+**This branch's count was 88,499** (2026-11-14, `make source-count`, both
 floors re-recorded from that build): 88,504 less five rows that read strict
 subsets of another row — three Sejm interpellation rows, a second reading of
 BC's mineral-tenure layer and a twin Europe PMC search pivot, whose

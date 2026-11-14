@@ -219,7 +219,8 @@ from the merged build.
 * **Workspace-key records are private**: stored under the workspace and a
   `ws:`-qualified uid (`test_tenant_pivot_key.c` pins both halves).
 
-Registered sources: **88,499**, both floors re-recorded.
+Registered sources: **88,499**, then **93,142** after merging main's batch 65
+(93,163 less this branch's net 21), both floors re-recorded from that build.
 
 ## Still open
 
