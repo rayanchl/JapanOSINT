@@ -254,7 +254,7 @@ CATEGORY_GROUP = {
     "corporate": "grp_corporate", "economy": "grp_corporate", "finance": "grp_corporate", "business": "grp_corporate",
     "company-registry": "grp_corporate", "commerce": "grp_corporate", "commercial": "grp_corporate", "industry": "grp_corporate",
     "disclosure": "grp_corporate", "markets": "grp_corporate", "trade": "grp_corporate", "registry": "grp_corporate",
-    "opendata": "grp_opendata", "statistics": "grp_opendata", "microdata": "grp_opendata", "demographics": "grp_opendata",
+    "open-data": "grp_opendata", "opendata": "grp_opendata", "statistics": "grp_opendata", "microdata": "grp_opendata", "demographics": "grp_opendata",
     "research": "grp_science", "literature": "grp_science", "genomics": "grp_science", "education": "grp_education",
     "health": "grp_health", "clinical": "grp_health", "outbreak": "grp_health", "agriculture": "grp_health", "food": "grp_health",
     "environment": "grp_environment", "weather": "grp_environment", "wildfire": "grp_environment", "seismic": "grp_environment",

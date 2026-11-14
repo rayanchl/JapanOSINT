@@ -200,7 +200,9 @@ engine's, not the probe's.
 
 Removed: `mercari-trending` (endpoint 404 three readings, site alive;
 `docs/removed-sources-2026-11-11-dead.tsv`) and `gov-no-stortinget-saker`
-(fused). Registered sources: **61,511**, both floors re-recorded.
+(fused). Registered sources: **61,511** on this branch, **85,751** after
+merging main (85,767 less this branch's net 16), both floors re-recorded
+from the merged build.
 
 ## Still open
 

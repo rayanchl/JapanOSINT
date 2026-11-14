@@ -349,7 +349,14 @@ that replaced them survive, so no coverage is lost. **A sweep's verdict is
 about the URL it sent, not about the row's name** — re-read a removal against
 the row as it stands now.
 
-**The registered count is 61,511** (2026-11-14, `make source-count`, both
+**The registered count is 85,751** (2026-11-14, measured with `make
+source-count` on the merge of main and both floors re-recorded from that
+build): main's 85,767 — batches 59 to 63, which main's own commits record —
+less this branch's net 16 since the merge base (12 twins and 5 dead rows
+removed on 2026-11-11, then the round below: one fused, one dead, four added).
+The arithmetic and the measurement agree to the row.
+
+**This branch's count was 61,511** (2026-11-14, `make source-count`, both
 floors re-recorded from that build): 61,510 less `gov-no-stortinget-saker`
 (fused into `eur-stortinget-saker`, which now reads the current session and
 cycles through every past one — the owner's decision "they are one source
