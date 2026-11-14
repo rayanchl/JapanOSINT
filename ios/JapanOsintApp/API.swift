@@ -239,7 +239,7 @@ struct API: Sendable {
     /// still write intel_items shown everywhere. Returns the updated row.
     func setSourceSchedule(_ id: String, mode: String) async throws -> DBRowAny {
         let body = try JSONSerialization.data(withJSONObject: ["mode": mode])
-        return try await put("/api/sources/\(id)/schedule", body: body)
+        return try await put("/api/sources/\(API.pathEscape(id))/schedule", body: body)
     }
     func status() async throws -> StatusEnvelope {
         try await get("/api/status")
@@ -249,7 +249,7 @@ struct API: Sendable {
     /// API key as the auth header so the request actually reaches the API
     /// instead of returning 401/403. Result is the refreshed StatusRow.
     func probeSource(_ id: String) async throws -> StatusRow {
-        try await post("/api/status/\(id)/probe")
+        try await post("/api/status/\(API.pathEscape(id))/probe")
     }
 
     /// Persist whether the scheduler is allowed to auto-probe a keyed
@@ -260,7 +260,7 @@ struct API: Sendable {
     /// two sides were reconciled.
     func setProbeConsent(_ id: String, allow: Bool) async throws -> StatusRow {
         let body = try JSONSerialization.data(withJSONObject: ["consent": allow])
-        return try await post("/api/status/\(id)/consent", body: body)
+        return try await post("/api/status/\(API.pathEscape(id))/consent", body: body)
     }
 
     /// Backfill for the Camera Discovery view. Returns historical discovery

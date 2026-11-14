@@ -2,74 +2,90 @@ import SwiftUI
 import Charts
 import Combine
 
+/// The Sources dashboard.
+///
+/// The registry is ~61k sources, so nothing here downloads it. It asks the
+/// server for exactly what is on screen, the way the web client's Sources
+/// page does:
+///
+///   · the tiles        — `GET /api/status?summary=1` (counters only)
+///   · the collector tree — `GET /api/collectors` (a few hundred tallies)
+///   · rows             — `GET /api/sources/search`, 50 at a time, with
+///                        `has_more` driving "load more" on scroll
+///   · search + filters — the same search route (`q`, `kind`, `status`,
+///                        `health`, `category`), so a search covers the whole
+///                        registry instead of whatever happened to be loaded
+///
+/// A bounded list always says how much it is showing out of how much exists.
 struct SourceDashboardTab: View {
     @EnvironmentObject var apiClient: APIClient
     @EnvironmentObject var favs: CollectorFavorites
     @EnvironmentObject var nav: MapNavigation
     @Environment(\.theme) private var theme
 
+    /// Rows per request, as on the web Sources page.
+    static let pageSize = 50
+
+    // Fleet counters and the collector tree.
     @State private var summary: StatusSummary?
-    @State private var apis: [StatusRow] = []
+    @State private var collectorList: [CollectorSummary] = []
+    @State private var registryTotal: Int?
+    @State private var overviewFacets: SourceFacets?
     @State private var loading = false
     @State private var errorMessage: String?
+
     @State private var search = ""
-    @State private var selected: StatusRow?
+    @State private var selected: SourceRef?
     @State private var expanded: Set<String> = []
     /// Groups whose fold of single-source collectors is open (see collectorsList).
     @State private var singlesOpen: Set<String> = []
     @State private var refreshing: Set<String> = []
     @State private var refreshError: [String: String] = [:]
 
+    // Rows of each expanded collector, paged on demand.
+    @State private var collectorRows: [String: [SourceSearchRow]] = [:]
+    @State private var collectorPages: [String: SourcePageInfo] = [:]
+    @State private var collectorBusy: Set<String> = []
+    @State private var collectorErrors: [String: String] = [:]
+
+    // Flat results of a search or a filter, paged on demand.
+    @State private var flatRows: [SourceSearchRow] = []
+    @State private var flatPage: SourcePageInfo?
+    @State private var flatLoading = false
+    @State private var flatError: String?
+    /// Bumped per fetch; a response whose token is stale is dropped, so a slow
+    /// answer to an old query can never overwrite a newer one.
+    @State private var flatToken = 0
+
+    // Server-side filters (single choice each, from the registry's facets).
     @State private var showFilters = false
-    @State private var selectedTypes: Set<String> = []
-    @State private var selectedCategories: Set<String> = []
-    @State private var statusFilter: StatusChoice = .all
-    @State private var accessFilter: AccessChoice = .all
-
-    enum StatusChoice: String, FilterChoice {
-        case all, online, degraded, offline, gated
-        var id: String { rawValue }
-        var label: String { self == .all ? "All" : rawValue.capitalized }
-    }
-
-    enum AccessChoice: String, FilterChoice {
-        case all, free, key
-        var id: String { rawValue }
-        var label: String {
-            switch self {
-            case .all:  return "All"
-            case .free: return "Free"
-            case .key:  return "Needs key"
-            }
-        }
-    }
+    @State private var kindFilter: String?
+    @State private var statusFilter: String?
+    @State private var healthFilter: String?
+    @State private var categoryFilter: String?
 
     var body: some View {
         Group {
-            if apis.isEmpty && !loading && errorMessage != nil {
+            if collectorList.isEmpty && summary == nil && !loading && errorMessage != nil {
                 // Matches the Database tab's offline state exactly — full-
                 // area `OfflineStateView` with no outline / no red banner.
                 OfflineStateView(retry: { Task { await load() } })
             } else {
                 ScrollView {
                     VStack(alignment: .leading, spacing: Space.lg - 2) {
-                        if apis.isEmpty && !loading {
+                        if collectorList.isEmpty && !loading {
                             emptyState
                         }
-                        // While searching, surface matched collectors at
-                        // the top so the user sees results above charts.
-                        if isSearching {
-                            collectorsList
+                        if isFlat {
+                            // Matching collectors first (a handful, filtered
+                            // by name locally), then the server's source hits.
+                            if isSearching { collectorsList }
+                            flatResults
                             summaryCards
-                            if !apis.isEmpty {
-                                statusChart
-                                categoryChart
-                                if hasBreaches { breachStrip }
-                            }
                         } else {
                             summaryCards
-                            if !apis.isEmpty {
-                                statusChart
+                            if summary != nil {
+                                statusBreakdown
                                 categoryChart
                                 if hasBreaches { breachStrip }
                             }
@@ -97,26 +113,25 @@ struct SourceDashboardTab: View {
                 .accessibilityLabel("Reload collectors")
             }
         }
-        .searchable(text: $search, prompt: "Filter collectors")
+        .searchable(text: $search, prompt: "Search sources and collectors")
         .sheet(isPresented: $showFilters) { filtersSheet }
         .task {
-            if apis.isEmpty { await load() }
+            if collectorList.isEmpty { await load() }
             // Cross-tab deep link: when Console pushed us in response to a
             // `showSource(_:)` call, the value was published before we mounted
             // — `.onReceive` would miss it. Consume the current value here.
-            if let id = nav.pendingSourceId { await openSource(id) }
+            if let id = nav.pendingSourceId { openSource(id) }
         }
+        // Search text and filters drive ONE debounced server query; changing
+        // either cancels the previous one (`.task(id:)`), so keystrokes never
+        // pile up requests.
+        .task(id: flatKey) { await runFlatSearch() }
         .onReceive(nav.$pendingSourceId.compactMap { $0 }) { id in
-            Task { await openSource(id) }
+            openSource(id)
         }
-        .sheet(item: $selected) { row in
+        .sheet(item: $selected) { ref in
             NavigationStack {
-                SourceDetail(row: row, onUpdate: { updated in
-                    if let i = apis.firstIndex(where: { $0.id == updated.id }) {
-                        apis[i] = updated
-                    }
-                    selected = updated
-                })
+                SourceDetailView(sourceId: ref.id)
             }
             .compatSheetSizing(.medium)
         }
@@ -128,11 +143,12 @@ struct SourceDashboardTab: View {
         let s = summary
         let cols = [GridItem(.flexible(), spacing: 8), GridItem(.flexible(), spacing: 8)]
         return LazyVGrid(columns: cols, spacing: 8) {
-            statCard("Total",    s?.total ?? apis.count, color: theme.accent,  icon: "square.stack.3d.up.fill")
+            statCard("Total",    s?.total ?? registryTotal ?? 0, color: theme.accent,  icon: "square.stack.3d.up.fill")
             statCard("Online",   s?.online ?? 0,         color: theme.success, icon: "checkmark.circle.fill")
             statCard("Degraded", s?.degraded ?? 0,       color: theme.warning, icon: "exclamationmark.triangle.fill")
             statCard("Offline",  s?.offline ?? 0,        color: theme.danger,  icon: "xmark.octagon.fill")
             statCard("Gated",    s?.gated ?? 0,          color: theme.textMuted, icon: "lock.fill")
+            statCard("Pending",  s?.pending ?? 0,        color: theme.textMuted, icon: "clock")
             if hasBreaches {
                 statCard("Breaches", breachTotal, color: theme.danger,
                          icon: "lock.trianglebadge.exclamationmark")
@@ -145,7 +161,8 @@ struct SourceDashboardTab: View {
     // The server inlines the breach catalog into /api/status for platform
     // operators only, so these are 0 for everyone else and the whole section
     // simply doesn't render. No client-side role check is needed — or wanted,
-    // since the server is the actual gate.
+    // since the server is the actual gate. The catalog entries are not part of
+    // the searchable registry; Admin → Breach corpus is where they are worked.
 
     private var breachTotal: Int { summary?.breachTotal ?? 0 }
     private var breachMaterialized: Int { summary?.breachMaterialized ?? 0 }
@@ -229,251 +246,304 @@ struct SourceDashboardTab: View {
         .background(theme.surfaceElevated, in: RoundedRectangle(cornerRadius: Radius.md))
     }
 
-    // MARK: - Charts
+    // MARK: - Status breakdown (counts, not one dot per source)
 
-    private var sourcesByStatus: [(OsintSource.StatusKind, [StatusRow], Color, String)] {
-        // Breaches are excluded for the same reason as in `categoryBuckets`:
-        // this chart draws one dot per source, and ~1k catalog entries would
-        // bury every real collector under a wall of pending dots. `breachStrip`
-        // reports them on their own scale.
-        let charted = apis.filter { $0.category != "breach" }
-        let groups = Dictionary(grouping: charted) { row -> OsintSource.StatusKind in
-            let k = row.statusKind
-            return (k == .unknown) ? .pending : k
-        }
-        let order: [(OsintSource.StatusKind, Color, String)] = [
-            (.online,   theme.success,   "checkmark.circle.fill"),
-            (.degraded, theme.warning,   "exclamationmark.triangle.fill"),
-            (.offline,  theme.danger,    "xmark.octagon.fill"),
-            (.gated,    theme.textMuted, "lock.fill"),
-            (.pending,  theme.textMuted, "clock"),
+    private var statusParts: [(label: String, count: Int, color: Color)] {
+        let s = summary
+        return [
+            (label: "Online",   count: s?.online ?? 0,   color: theme.success),
+            (label: "Degraded", count: s?.degraded ?? 0, color: theme.warning),
+            (label: "Offline",  count: s?.offline ?? 0,  color: theme.danger),
+            (label: "Gated",    count: s?.gated ?? 0,    color: theme.textMuted),
+            (label: "Pending",  count: s?.pending ?? 0,  color: theme.textMuted.opacity(0.5)),
         ]
-        return order.compactMap { (status, color, icon) in
-            let bucket = groups[status] ?? []
-            return bucket.isEmpty ? nil : (status, bucket, color, icon)
-        }
     }
 
-    private var statusChart: some View {
-        // Bound ONCE. Read twice, this full filter + Dictionary(grouping:) over
-        // ~1,700 status rows ran twice per body pass — and `search` is @State
-        // driven by `.searchable`, so that is every keystroke, on the main actor.
-        let buckets = sourcesByStatus
+    private var statusBreakdown: some View {
+        // Bound ONCE: the parts array is rebuilt on every access.
+        let parts = statusParts
+        let total = max(1, parts.reduce(0) { $0 + $1.count })
         return VStack(alignment: .leading, spacing: 8) {
             Text("Status").font(.headline).foregroundStyle(theme.text)
-            if buckets.isEmpty {
-                Text("No sources").font(.caption).foregroundStyle(theme.textMuted)
-            } else {
-                ForEach(Array(buckets.enumerated()), id: \.offset) { _, entry in
-                    let (status, rows, color, icon) = entry
-                    bucketRect(status: status, rows: rows, color: color, icon: icon)
+            GeometryReader { geo in
+                HStack(spacing: 2) {
+                    ForEach(Array(parts.enumerated()), id: \.offset) { _, p in
+                        if p.count > 0 {
+                            RoundedRectangle(cornerRadius: 2).fill(p.color)
+                                .frame(width: max(2, geo.size.width * CGFloat(p.count) / CGFloat(total)))
+                        }
+                    }
                 }
             }
+            .frame(height: 8)
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 96), spacing: 6, alignment: .leading)],
+                      alignment: .leading, spacing: 6) {
+                ForEach(Array(parts.enumerated()), id: \.offset) { _, p in
+                    HStack(spacing: 4) {
+                        Circle().fill(p.color).frame(width: 8, height: 8)
+                            .accessibilityHidden(true)
+                        Text("\(p.label) \(p.count.formatted())")
+                            .font(.caption2.monospacedDigit())
+                            .foregroundStyle(theme.textMuted)
+                    }
+                }
+            }
+            Text("Counts for the whole registry, from the server. Search or filter to see the sources themselves.")
+                .font(.caption2).foregroundStyle(theme.textMuted)
         }
         .padding(12)
         .background(theme.surfaceElevated, in: RoundedRectangle(cornerRadius: 12))
     }
 
-    private func bucketRect(
-        status: OsintSource.StatusKind,
-        rows: [StatusRow],
-        color: Color,
-        icon: String
-    ) -> some View {
-        let cols = [GridItem(.adaptive(minimum: 10, maximum: 10), spacing: 4, alignment: .leading)]
-        return VStack(alignment: .leading, spacing: 6) {
-            HStack(spacing: 6) {
-                Image(systemName: icon).font(.caption2).foregroundStyle(color)
-                    .accessibilityHidden(true)   // status name follows
-                Text(status.rawValue.capitalized)
-                    .font(.caption.bold()).foregroundStyle(theme.text)
-                Text("\(rows.count)")
-                    .font(.caption2.monospacedDigit()).foregroundStyle(theme.textMuted)
-                Spacer()
-            }
-            LazyVGrid(columns: cols, alignment: .leading, spacing: 4) {
-                ForEach(rows) { r in
-                    Circle()
-                        .fill(color)
-                        .frame(width: 10, height: 10)
-                        .help(r.name ?? r.id)
-                        .accessibilityLabel("\(r.name ?? r.id) — \(status.rawValue)")
-                }
-            }
-        }
-        .padding(8)
-        .background(color.opacity(0.10), in: RoundedRectangle(cornerRadius: 10))
+    // MARK: - Category chart (the registry's own facet, top 12)
+
+    private struct CategoryBucket: Identifiable {
+        let name: String
+        let count: Int
+        var id: String { name }
     }
 
-    /// (category, total collectors, fav collectors). Sort key:
-    ///   1. fav count descending  → favoriting any collector in a category
-    ///      bumps that category to the top of the chart immediately
-    ///   2. total count descending → bigger categories above smaller
-    ///   3. name ascending → stable tie-breaker so equal counts don't
-    ///      flicker around on every re-render (Dictionary iteration order
-    ///      is not guaranteed in Swift)
-    private var categoryBuckets: [(String, Int, Int)] {
-        var totals: [String: Int] = [:]
-        var favCounts: [String: Int] = [:]
-        // Breaches are excluded deliberately — see `breachStrip`, which shows
-        // them on their own scale instead of dwarfing every real category here.
-        for c in apis.groupedAsCollectors() where c.category != "breach" {
-            let cat = c.category ?? "Other"
-            totals[cat, default: 0] += 1
-            if favs.contains(c.id) { favCounts[cat, default: 0] += 1 }
+    private var categoryBuckets: [CategoryBucket] {
+        let values = overviewFacets?.categories?.values ?? []
+        var out: [CategoryBucket] = []
+        for v in values {
+            let name = v.keyText
+            // Breaches are excluded deliberately — see `breachStrip`.
+            if name.isEmpty || name == "breach" { continue }
+            out.append(CategoryBucket(name: name, count: v.count ?? 0))
+            if out.count == 12 { break }
         }
-        return totals
-            .map { (cat, total) in (cat, total, favCounts[cat] ?? 0) }
-            .sorted { lhs, rhs in
-                if lhs.2 != rhs.2 { return lhs.2 > rhs.2 }      // favs ↓
-                if lhs.1 != rhs.1 { return lhs.1 > rhs.1 }      // total ↓
-                return lhs.0.lowercased() < rhs.0.lowercased()  // name ↑
-            }
-            .prefix(12)
-            .map { ($0.0, $0.1, $0.2) }
+        return out
     }
 
+    @ViewBuilder
     private var categoryChart: some View {
-        // Bound once — `categoryBuckets` groups every status row into collectors
-        // before sorting, and it was being read twice per body pass.
+        // Bound once — read twice per body pass otherwise.
         let buckets = categoryBuckets
-        return VStack(alignment: .leading, spacing: 6) {
-            Text("Collectors by category (top 12)").font(.headline).foregroundStyle(theme.text)
-            Chart(buckets, id: \.0) { (cat, count, favs) in
-                BarMark(
-                    x: .value("Count", count),
-                    y: .value("Category", cat)
-                )
-                .foregroundStyle(favs > 0 ? theme.warning : theme.accent)
+        if !buckets.isEmpty {
+            VStack(alignment: .leading, spacing: 6) {
+                Text("Sources by category (top 12)").font(.headline).foregroundStyle(theme.text)
+                Chart(buckets) { b in
+                    BarMark(
+                        x: .value("Sources", b.count),
+                        y: .value("Category", b.name)
+                    )
+                    .foregroundStyle(theme.accent)
+                }
+                .frame(height: CGFloat(max(140, buckets.count * 18)))
             }
-            .frame(height: CGFloat(max(140, buckets.count * 18)))
+            .padding(12)
+            .background(theme.surfaceElevated, in: RoundedRectangle(cornerRadius: 12))
         }
-        .padding(12)
-        .background(theme.surfaceElevated, in: RoundedRectangle(cornerRadius: 12))
     }
 
-    // MARK: - Collectors list
+    // MARK: - Search + filters (all on the server)
 
-    private var isSearching: Bool {
-        !search.trimmingCharacters(in: .whitespaces).isEmpty
-    }
-
-    // MARK: - Filtering
+    private var trimmedSearch: String { search.trimmingCharacters(in: .whitespaces) }
+    private var isSearching: Bool { !trimmedSearch.isEmpty }
 
     private var filtersAreActive: Bool {
-        !selectedTypes.isEmpty || !selectedCategories.isEmpty
-            || statusFilter != .all || accessFilter != .all
+        kindFilter != nil || statusFilter != nil || healthFilter != nil || categoryFilter != nil
     }
 
-    /// Type / category / status / access filter applied before grouping into
-    /// collectors so the chips narrow the list the same way they read.
-    private var filteredApis: [StatusRow] {
-        apis.filter { row in
-            if !selectedTypes.isEmpty {
-                guard let t = row.type, selectedTypes.contains(t) else { return false }
+    /// A search or any filter switches the screen from the collector tree to
+    /// the server's flat, paged result list.
+    private var isFlat: Bool { isSearching || filtersAreActive }
+
+    private var flatQuery: SourceSearchQuery {
+        var q = SourceSearchQuery()
+        q.q = trimmedSearch
+        q.kind = kindFilter
+        q.status = statusFilter
+        q.health = healthFilter
+        q.category = categoryFilter
+        return q
+    }
+
+    /// Identity of the current query; `.task(id:)` re-runs when it changes.
+    private var flatKey: String {
+        [trimmedSearch, kindFilter ?? "", statusFilter ?? "",
+         healthFilter ?? "", categoryFilter ?? ""].joined(separator: "|")
+    }
+
+    private func runFlatSearch() async {
+        guard isFlat else {
+            flatToken += 1          // drop any answer still in flight
+            flatRows = []
+            flatPage = nil
+            flatError = nil
+            flatLoading = false
+            return
+        }
+        // Debounce: a keystroke cancels this task before the request is sent.
+        do { try await Task.sleep(nanoseconds: 300_000_000) } catch { return }
+        await fetchFlat(reset: true)
+    }
+
+    private func fetchFlat(reset: Bool) async {
+        let api = apiClient.api
+        let query = flatQuery
+        let offset = reset ? 0 : flatRows.count
+        flatToken += 1
+        let token = flatToken
+        flatLoading = true
+        do {
+            let env = try await api.searchSources(query, limit: Self.pageSize, offset: offset)
+            guard token == flatToken else { return }
+            let rows = env.data ?? []
+            flatRows = reset ? rows : flatRows + rows
+            flatPage = env.page
+            flatError = nil
+        } catch {
+            guard token == flatToken else { return }
+            flatError = error.localizedDescription
+        }
+        flatLoading = false
+    }
+
+    private var flatResults: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack {
+                Text(isSearching ? "Matching sources" : "Filtered sources")
+                    .font(.headline)
+                    .foregroundStyle(theme.text)
+                Spacer()
+                if let t = flatPage?.total {
+                    Text("\(t.formatted()) match")
+                        .font(.caption.monospacedDigit())
+                        .foregroundStyle(theme.textMuted)
+                }
             }
-            if !selectedCategories.isEmpty {
-                guard let c = row.category, selectedCategories.contains(c) else { return false }
+            if flatRows.isEmpty && !flatLoading && flatError == nil && flatPage != nil {
+                Text("No source matches. The server searched the whole registry.")
+                    .font(.caption)
+                    .foregroundStyle(theme.textMuted)
+                    .padding(.vertical, 8)
             }
-            switch statusFilter {
-            case .all:      break
-            case .online:   if row.statusKind != .online   { return false }
-            case .degraded: if row.statusKind != .degraded { return false }
-            case .offline:  if row.statusKind != .offline  { return false }
-            case .gated:    if row.statusKind != .gated    { return false }
+            LazyVStack(spacing: 1) {
+                ForEach(flatRows) { src in
+                    SourceRow(row: src) { selected = SourceRef(id: src.id) }
+                }
             }
-            switch accessFilter {
-            case .all:  break
-            case .free: if row.free != true { return false }
-            case .key:  if row.requiresKey != true { return false }
-            }
-            return true
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+            PagedFooter(shown: flatRows.count,
+                        total: flatPage?.total,
+                        hasMore: flatPage?.has_more == true,
+                        loading: flatLoading,
+                        error: flatError,
+                        noun: "sources",
+                        loadMore: { Task { await fetchFlat(reset: false) } })
         }
     }
 
-    private func sortedUnique(_ values: [String?]) -> [String] {
-        var counts: [String: Int] = [:]
-        for v in values { if let v { counts[v, default: 0] += 1 } }
-        return counts.keys.sorted {
-            counts[$0]! == counts[$1]! ? $0 < $1 : counts[$0]! > counts[$1]!
+    // Facet helpers for the filter sheet. They read the registry-wide facets
+    // from the unfiltered overview, so every option stays selectable.
+
+    private func facetItems(_ set: SourceFacetSet?) -> [String] {
+        (set?.values ?? []).compactMap { v in
+            let k = v.keyText
+            return k.isEmpty ? nil : k
         }
     }
 
-    private var availableTypes: [String] { sortedUnique(apis.map(\.type)) }
-    private var availableCategories: [String] { sortedUnique(apis.map(\.category)) }
+    private func facetCount(_ set: SourceFacetSet?, _ key: String) -> Int {
+        (set?.values ?? []).first(where: { $0.keyText == key })?.count ?? 0
+    }
 
-    private func toggle(_ set: inout Set<String>, _ v: String) {
-        if set.contains(v) { set.remove(v) } else { set.insert(v) }
+    private func choose(_ current: String?, _ v: String) -> String? {
+        current == v ? nil : v
     }
 
     private var filtersSheet: some View {
-        FilterSheet(
+        let f = overviewFacets
+        return FilterSheet(
             isActive: filtersAreActive,
             onReset: {
-                selectedTypes.removeAll()
-                selectedCategories.removeAll()
-                statusFilter = .all
-                accessFilter = .all
+                kindFilter = nil
+                statusFilter = nil
+                healthFilter = nil
+                categoryFilter = nil
             },
             onDone: { showFilters = false }
         ) {
-            FilterSegmentedSection(title: "Status", selection: $statusFilter)
-            FilterSegmentedSection(title: "Access", selection: $accessFilter)
             FilterMultiSelectSection(
-                title: "Type",
-                items: availableTypes,
-                emptyText: "No sources yet",
-                label: { $0.uppercased() },
-                count: { t in apis.filter { $0.type == t }.count },
-                isSelected: { selectedTypes.contains($0) },
-                toggle: { toggle(&selectedTypes, $0) }
+                title: "Kind",
+                items: facetItems(f?.kinds),
+                emptyText: "No facets loaded yet",
+                label: { $0 },
+                count: { facetCount(f?.kinds, $0) },
+                isSelected: { kindFilter == $0 },
+                toggle: { kindFilter = choose(kindFilter, $0) }
+            )
+            FilterMultiSelectSection(
+                title: "Health",
+                items: facetItems(f?.healths),
+                emptyText: "No facets loaded yet",
+                label: { $0 },
+                count: { facetCount(f?.healths, $0) },
+                isSelected: { healthFilter == $0 },
+                toggle: { healthFilter = choose(healthFilter, $0) }
+            )
+            FilterMultiSelectSection(
+                title: "Last run status",
+                items: facetItems(f?.statuses),
+                emptyText: "No facets loaded yet",
+                label: { $0 },
+                count: { facetCount(f?.statuses, $0) },
+                isSelected: { statusFilter == $0 },
+                toggle: { statusFilter = choose(statusFilter, $0) }
             )
             FilterMultiSelectSection(
                 title: "Category",
-                items: availableCategories,
-                emptyText: "No sources yet",
+                items: facetItems(f?.categories),
+                emptyText: "No facets loaded yet",
                 label: { $0.capitalized },
-                count: { c in apis.filter { $0.category == c }.count },
-                isSelected: { selectedCategories.contains($0) },
-                toggle: { toggle(&selectedCategories, $0) }
+                count: { facetCount(f?.categories, $0) },
+                isSelected: { categoryFilter == $0 },
+                toggle: { categoryFilter = choose(categoryFilter, $0) }
             )
         }
     }
 
-    private var collectors: [Collector] {
-        let s = search.trimmingCharacters(in: .whitespaces).lowercased()
-        let all = filteredApis.groupedAsCollectors()
+    // MARK: - Collectors list (from /api/collectors)
+
+    /// Collectors matching the search box by name, key or description. The
+    /// tree is a few hundred rows, so this is cheap; the SOURCES inside a
+    /// collector are never held until it is opened.
+    private var collectors: [CollectorSummary] {
+        let s = trimmedSearch.lowercased()
+        let all = collectorList.filter { $0.is_group != true }
         let filtered = s.isEmpty ? all : all.filter { c in
-            c.name.lowercased().contains(s)
-                || c.id.lowercased().contains(s)
-                || (c.category ?? "").lowercased().contains(s)
-                || c.sources.contains { ($0.name ?? "").lowercased().contains(s) }
+            c.key.lowercased().contains(s)
+                || (c.label ?? "").lowercased().contains(s)
+                || (c.description ?? "").lowercased().contains(s)
         }
         return filtered.sorted { lhs, rhs in
             let lf = favs.contains(lhs.id)
             let rf = favs.contains(rhs.id)
             if lf != rf { return lf && !rf }   // favs first
-            return lhs.name.lowercased() < rhs.name.lowercased()
+            return lhs.displayName.lowercased() < rhs.displayName.lowercased()
         }
     }
 
     /// Collectors sectioned by their server-side GROUP (collectors.def
     /// headings), groups ordered by source count, each group's collectors in
     /// the `collectors` order (favourites first, then name). Every collector
-    /// is in exactly one section; a collector the server could not place sits
-    /// under "Unassigned" rather than being dropped.
+    /// is in exactly one section; one the server could not place sits under
+    /// "Unassigned" rather than being dropped.
     private struct CollectorGroupSection: Identifiable {
         let id: String
         let label: String
-        let collectors: [Collector]
+        let collectors: [CollectorSummary]
         var sourceCount: Int { collectors.reduce(0) { $0 + $1.sourceCount } }
     }
-    private var collectorSections: [CollectorGroupSection] {
-        var byGroup: [String: [Collector]] = [:]
+    private func sections(of items: [CollectorSummary]) -> [CollectorGroupSection] {
+        var byGroup: [String: [CollectorSummary]] = [:]
         var labels: [String: String] = [:]
-        for c in collectors {
-            byGroup[c.group, default: []].append(c)
-            labels[c.group] = c.groupLabel
+        for c in items {
+            let g = c.group ?? "grp_unassigned"
+            byGroup[g, default: []].append(c)
+            labels[g] = c.group_label ?? g
         }
         return byGroup.map { CollectorGroupSection(id: $0.key, label: labels[$0.key] ?? $0.key, collectors: $0.value) }
             .sorted { lhs, rhs in
@@ -483,28 +553,27 @@ struct SourceDashboardTab: View {
     }
 
     private var collectorsList: some View {
-        // Bound once: `collectors` filters, groups and sorts ~1,700 rows, and
-        // the count in the header plus the ForEach made that twice per keystroke.
+        // Bound once: filtering, grouping and sorting the tree per read.
         let items = collectors
-        let sections = collectorSections
+        let secs = sections(of: items)
         return VStack(alignment: .leading, spacing: 6) {
             HStack {
-                Text("Collectors (\(items.count)) in \(sections.count) groups")
+                Text("Collectors (\(items.count)) in \(secs.count) groups")
                     .font(.headline.monospacedDigit())
                     .foregroundStyle(theme.text)
                 Spacer()
-                Text("\(apis.count) sources")
+                Text("\((registryTotal ?? 0).formatted()) sources")
                     .font(.caption.monospacedDigit())
                     .foregroundStyle(theme.textMuted)
             }
             VStack(spacing: 8) {
-                ForEach(sections) { section in
+                ForEach(secs) { section in
                   HStack {
                     Text(section.label)
                         .font(.subheadline.bold())
                         .foregroundStyle(section.id == "grp_unassigned" ? theme.danger : theme.text)
                     Spacer()
-                    Text("\(section.collectors.count) collector\(section.collectors.count == 1 ? "" : "s") · \(section.sourceCount) sources")
+                    Text("\(section.collectors.count) collector\(section.collectors.count == 1 ? "" : "s") · \(section.sourceCount.formatted()) sources")
                         .font(.caption2.monospacedDigit())
                         .foregroundStyle(theme.textMuted)
                   }
@@ -517,17 +586,7 @@ struct SourceDashboardTab: View {
                   let multi = section.collectors.filter { $0.sourceCount != 1 }
                   let singles = section.collectors.filter { $0.sourceCount == 1 }
                   ForEach(multi) { c in
-                    CollectorRow(
-                        collector: c,
-                        isFavorite: favs.contains(c.id),
-                        isExpanded: expanded.contains(c.id),
-                        isRefreshing: refreshing.contains(c.id),
-                        refreshError: refreshError[c.id],
-                        toggleFavorite: { favs.toggle(c.id) },
-                        toggleExpand: { toggleExpand(c.id) },
-                        refresh: { Task { await refresh(c.id) } },
-                        selectSource: { selected = $0 }
-                    )
+                    collectorRow(c)
                   }
                   if !singles.isEmpty {
                     Button {
@@ -547,17 +606,7 @@ struct SourceDashboardTab: View {
                     .accessibilityLabel("\(singles.count) single-source collectors in \(section.label)")
                     if singlesOpen.contains(section.id) {
                         ForEach(singles) { c in
-                            CollectorRow(
-                                collector: c,
-                                isFavorite: favs.contains(c.id),
-                                isExpanded: expanded.contains(c.id),
-                                isRefreshing: refreshing.contains(c.id),
-                                refreshError: refreshError[c.id],
-                                toggleFavorite: { favs.toggle(c.id) },
-                                toggleExpand: { toggleExpand(c.id) },
-                                refresh: { Task { await refresh(c.id) } },
-                                selectSource: { selected = $0 }
-                            )
+                            collectorRow(c)
                         }
                     }
                   }
@@ -566,46 +615,95 @@ struct SourceDashboardTab: View {
         }
     }
 
-    /// Cross-tab nav target: open the source detail for `id`, expanding
-    /// its parent collector so the row is in view if the user dismisses
-    /// the sheet. If the status data hasn't loaded yet, load first.
-    private func openSource(_ id: String) async {
-        if apis.isEmpty { await load() }
-        guard let row = apis.first(where: { $0.id == id }) else {
-            nav.pendingSourceId = nil
-            return
-        }
-        if let parent = collectors.first(where: { c in
-            c.sources.contains(where: { $0.id == id })
-        }) {
-            expanded.insert(parent.id)
-        }
-        selected = row
+    private func collectorRow(_ c: CollectorSummary) -> some View {
+        CollectorRow(
+            collector: c,
+            rows: collectorRows[c.id] ?? [],
+            page: collectorPages[c.id],
+            isFavorite: favs.contains(c.id),
+            isExpanded: expanded.contains(c.id),
+            isLoadingRows: collectorBusy.contains(c.id),
+            rowsError: collectorErrors[c.id],
+            isRefreshing: refreshing.contains(c.id),
+            refreshError: refreshError[c.id],
+            toggleFavorite: { favs.toggle(c.id) },
+            toggleExpand: { toggleExpand(c.id) },
+            loadMore: { Task { await loadCollectorRows(c.id, reset: false) } },
+            refresh: { Task { await refresh(c.id) } },
+            selectSource: { selected = SourceRef(id: $0.id) }
+        )
+    }
+
+    /// Cross-tab nav target: open the source detail for `id`. The sheet loads
+    /// the source itself, so nothing has to be searched for first.
+    private func openSource(_ id: String) {
+        selected = SourceRef(id: id)
         nav.pendingSourceId = nil
     }
 
     private func toggleExpand(_ id: String) {
-        if expanded.contains(id) { expanded.remove(id) }
-        else { expanded.insert(id) }
+        if expanded.contains(id) {
+            expanded.remove(id)
+        } else {
+            expanded.insert(id)
+            if collectorRows[id] == nil {
+                Task { await loadCollectorRows(id, reset: true) }
+            }
+        }
     }
 
-    /// Runs every source of a collector, one at a time, through the same
-    /// POST /api/intel/sources/:id/run the web client uses. It used to fetch
-    /// a map LAYER named after the group — a collector key is not a layer, so
-    /// that request answered nothing about these sources. Bounded to
+    /// One page of one collector's sources, from the same search route (the
+    /// `collector` filter). `reset` starts again from the first page.
+    private func loadCollectorRows(_ key: String, reset: Bool) async {
+        if collectorBusy.contains(key) { return }
+        if !reset, collectorPages[key]?.has_more != true { return }
+        collectorBusy.insert(key)
+        defer { collectorBusy.remove(key) }
+        let have = reset ? 0 : (collectorRows[key]?.count ?? 0)
+        var q = SourceSearchQuery()
+        q.collector = key
+        do {
+            let env = try await apiClient.api.searchSources(q, limit: Self.pageSize, offset: have)
+            let rows = env.data ?? []
+            collectorRows[key] = reset ? rows : (collectorRows[key] ?? []) + rows
+            collectorPages[key] = env.page
+            collectorErrors.removeValue(forKey: key)
+        } catch {
+            collectorErrors[key] = error.localizedDescription
+        }
+    }
+
+    /// Runs the sources of ONE collector, one at a time, through the same
+    /// POST /api/intel/sources/:id/run the web client uses. Bounded to
     /// `runAllMax` sources: a 500-source beat is not something to fire from a
     /// phone, and the button says so instead of silently running the first N.
+    /// Entity pivots are skipped (they need an entity; the server would
+    /// answer 422), and the result says how many.
     static let runAllMax = 12
     private func refresh(_ collectorId: String) async {
-        guard let c = apis.groupedAsCollectors().first(where: { $0.id == collectorId }),
+        guard let c = collectorList.first(where: { $0.id == collectorId }),
               c.sourceCount <= Self.runAllMax else { return }
         refreshing.insert(collectorId)
         refreshError.removeValue(forKey: collectorId)
         defer { refreshing.remove(collectorId) }
+
+        var q = SourceSearchQuery()
+        q.collector = collectorId
         var failures: [String] = []
-        for row in c.sources where row.category != "breach" {
-            do { _ = try await apiClient.api.intelRunSource(row.id) }
-            catch { failures.append("\(row.id): \(error.localizedDescription)") }
+        do {
+            let env = try await apiClient.api.searchSources(q, limit: Self.runAllMax, offset: 0)
+            var skipped = 0
+            for row in env.data ?? [] {
+                if row.category == "breach" || row.isInternal { continue }
+                if row.needsEntity { skipped += 1; continue }
+                do { _ = try await apiClient.api.intelRunSource(row.id) }
+                catch { failures.append("\(row.id): \(API.runFailureMessage(error))") }
+            }
+            if skipped > 0 {
+                failures.append("\(skipped) entity pivot\(skipped == 1 ? "" : "s") skipped: open one to run it with an entity")
+            }
+        } catch {
+            failures.append(error.localizedDescription)
         }
         if !failures.isEmpty { refreshError[collectorId] = failures.joined(separator: "\n") }
         await load()
@@ -617,27 +715,103 @@ struct SourceDashboardTab: View {
         let api = apiClient.api
         loading = true
         defer { loading = false }
+        async let summaryTask = api.statusSummary()
+        async let treeTask = api.collectorTree()
+        async let facetTask = api.searchSources(SourceSearchQuery(), limit: 1)
         do {
-            let env = try await api.status()
-            summary = env.summary
-            apis = env.apis
+            let sumEnv = try await summaryTask
+            let treeEnv = try await treeTask
+            summary = sumEnv.summary
+            collectorList = treeEnv.data ?? []
+            registryTotal = treeEnv.meta?.registry_total ?? treeEnv.meta?.sources
             errorMessage = nil
         } catch {
             errorMessage = error.localizedDescription
+        }
+        // The facets only decorate (category chart, filter options); a
+        // failure there must not hide the tree.
+        if let f = try? await facetTask {
+            overviewFacets = f.meta?.facets
+            if registryTotal == nil { registryTotal = f.meta?.registry_total }
+        }
+        // Open collectors re-read their first page so counts and health are
+        // current after a reload or a run.
+        for key in expanded { await loadCollectorRows(key, reset: true) }
+        if isFlat { await fetchFlat(reset: true) }
+    }
+}
+
+// ── A bounded list's footer ────────────────────────────────────────────────
+
+/// "Showing N of M" plus load-more for any server-paged list. A list that is
+/// not showing everything must say how much it is showing out of how much
+/// exists; the footer also loads the next page as it scrolls into view.
+struct PagedFooter: View {
+    let shown: Int
+    let total: Int?
+    let hasMore: Bool
+    let loading: Bool
+    let error: String?
+    let noun: String
+    let loadMore: () -> Void
+
+    @Environment(\.theme) private var theme
+
+    private var countLine: String {
+        if let total {
+            return "Showing \(shown.formatted()) of \(total.formatted()) \(noun)"
+        }
+        return "Showing \(shown.formatted()) \(noun) (total not reported)"
+    }
+
+    var body: some View {
+        VStack(spacing: 6) {
+            if shown > 0 || hasMore {
+                Text(countLine)
+                    .font(.caption2.monospacedDigit())
+                    .foregroundStyle(theme.textMuted)
+            }
+            if loading {
+                ProgressView().controlSize(.small)
+            }
+            if let error {
+                Text(error)
+                    .font(.caption2)
+                    .foregroundStyle(theme.danger)
+                    .multilineTextAlignment(.center)
+                Button("Retry", action: loadMore)
+                    .buttonStyle(.bordered)
+                    .controlSize(.small)
+            } else if hasMore && !loading {
+                Button("Load more", action: loadMore)
+                    .buttonStyle(.bordered)
+                    .controlSize(.small)
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 6)
+        // Scrolling the footer into view asks for the next page.
+        .onAppear {
+            if hasMore && !loading && error == nil { loadMore() }
         }
     }
 }
 
 struct CollectorRow: View {
-    let collector: Collector
+    let collector: CollectorSummary
+    let rows: [SourceSearchRow]
+    let page: SourcePageInfo?
     let isFavorite: Bool
     let isExpanded: Bool
+    let isLoadingRows: Bool
+    let rowsError: String?
     let isRefreshing: Bool
     let refreshError: String?
     let toggleFavorite: () -> Void
     let toggleExpand: () -> Void
+    let loadMore: () -> Void
     let refresh: () -> Void
-    let selectSource: (StatusRow) -> Void
+    let selectSource: (SourceSearchRow) -> Void
 
     @Environment(\.theme) private var theme
 
@@ -665,15 +839,15 @@ struct CollectorRow: View {
                     .frame(width: 10, height: 10)
 
                 VStack(alignment: .leading, spacing: 1) {
-                    Text(collector.name)
+                    Text(collector.displayName)
                         .font(.subheadline.bold())
                         .foregroundStyle(theme.text)
                         .lineLimit(1)
                     HStack(spacing: Space.sm - 2) {
-                        Text("\(collector.sourceCount) source\(collector.sourceCount == 1 ? "" : "s")")
+                        Text("\(collector.sourceCount.formatted()) source\(collector.sourceCount == 1 ? "" : "s")")
                             .font(.caption2.monospacedDigit())
                             .foregroundStyle(theme.textMuted)
-                        if let cat = collector.category {
+                        if let cat = collector.topCategory {
                             Text("· \(cat)").font(.caption2).foregroundStyle(theme.textMuted)
                         }
                     }
@@ -688,7 +862,7 @@ struct CollectorRow: View {
             .padding(10)
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(collector.name)
+        .accessibilityLabel(collector.displayName)
         .accessibilityValue(isExpanded ? "Expanded" : "Collapsed")
         .accessibilityHint("Double tap to \(isExpanded ? "collapse" : "expand") this collector")
     }
@@ -707,21 +881,24 @@ struct CollectorRow: View {
                 Pill(text: "\(collector.offlineCount)", tone: .danger,
                      icon: "xmark.octagon.fill", solid: true)
             }
-            if collector.gatedCount > 0 {
-                Pill(text: "\(collector.gatedCount)", tone: .neutral,
-                     icon: "lock.fill", solid: true)
-            }
         }
     }
 
-    /// `LazyVStack`, not `VStack`: the breach collector groups the whole catalog
-    /// (~1k sources) under a single row, and eagerly materialising every child
-    /// on expand is a visible stall.
+    /// `LazyVStack`, not `VStack`: a large collector holds thousands of
+    /// sources, so only the pages the user has scrolled to are materialised,
+    /// and each next page is requested as the footer scrolls into view.
     private var expandedBody: some View {
         LazyVStack(spacing: 1) {
-            ForEach(collector.sources) { src in
+            ForEach(rows) { src in
                 SourceRow(row: src) { selectSource(src) }
             }
+            PagedFooter(shown: rows.count,
+                        total: page?.total ?? collector.sourceCount,
+                        hasMore: page?.has_more == true,
+                        loading: isLoadingRows,
+                        error: rowsError,
+                        noun: "sources",
+                        loadMore: loadMore)
             refreshFooter
         }
         .padding(.horizontal, 6)
@@ -747,10 +924,7 @@ struct CollectorRow: View {
                             Image(systemName: "arrow.clockwise")
                                 .accessibilityHidden(true)   // button title follows
                         }
-                        Text(isRefreshing ? "Running…"
-                             : collector.sourceCount > SourceDashboardTab.runAllMax
-                               ? "Run all: too many (\(collector.sourceCount) > \(SourceDashboardTab.runAllMax)) — run one from its sheet"
-                               : "Run all \(collector.sourceCount) source\(collector.sourceCount == 1 ? "" : "s") now")
+                        Text(runLabel)
                     }
                 }
                 .buttonStyle(.borderedProminent)
@@ -760,7 +934,20 @@ struct CollectorRow: View {
             }
             .padding(.horizontal, 8)
             .padding(.top, 4)
+            if collector.pivots > 0 && collector.sourceCount <= SourceDashboardTab.runAllMax {
+                Text("Entity pivots are skipped: open one to run it with an entity.")
+                    .font(.caption2)
+                    .foregroundStyle(theme.textMuted)
+            }
         }
+    }
+
+    private var runLabel: String {
+        if isRefreshing { return "Running…" }
+        if collector.sourceCount > SourceDashboardTab.runAllMax {
+            return "Run all: too many (\(collector.sourceCount) > \(SourceDashboardTab.runAllMax)) — run one from its sheet"
+        }
+        return "Run all \(collector.sourceCount) source\(collector.sourceCount == 1 ? "" : "s") now"
     }
 
     private var statusColor: Color {
@@ -773,58 +960,45 @@ struct CollectorRow: View {
     }
 }
 
+extension CollectorSummary {
+    /// Sources in a collector that are entity pivots (the "run all" skips them).
+    var pivotCount: Int { pivots ?? 0 }
+}
+
 struct SourceRow: View {
-    let row: StatusRow
+    let row: SourceSearchRow
     let onTap: () -> Void
     @Environment(\.theme) private var theme
-
-    private var isBreach: Bool { row.category == "breach" }
 
     var body: some View {
         Button(action: onTap) {
             HStack(spacing: 8) {
-                // Breach rows carry the same glyph + danger tint they get in the
-                // intel list (Intel/IntelSourceRow.swift), so a breach reads the
-                // same wherever it appears.
-                if isBreach {
-                    Image(systemName: "lock.trianglebadge.exclamationmark")
-                        .font(.caption2)
-                        .foregroundStyle(theme.danger)
-                        .frame(width: 10, height: 10)
-                        // The only marker that this row is a breach source.
-                        .accessibilityLabel("Breach source")
-                } else {
-                    Circle().fill(statusColor)
-                        .frame(width: 10, height: 10)
-                }
+                Circle().fill(statusColor)
+                    .frame(width: 10, height: 10)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(row.name ?? row.id).font(.subheadline).lineLimit(1)
+                    Text(row.displayName).font(.subheadline).lineLimit(1)
                         .foregroundStyle(theme.text)
                     HStack(spacing: 6) {
                         if let c = row.category {
                             Text(c).font(.caption2).foregroundStyle(theme.textMuted)
                         }
-                        if let t = row.type {
-                            Text("· \(t)").font(.caption2).foregroundStyle(theme.textMuted)
+                        if let k = row.kind {
+                            Text("· \(k)").font(.caption2).foregroundStyle(theme.textMuted)
                         }
-                        if row.requiresKey == true {
-                            Text(row.configured == true ? "key✓" : "key✗")
-                                .font(.caption2.bold())
-                                .foregroundStyle(row.configured == true ? theme.success : theme.warning)
+                        if let n = row.item_count, n > 0 {
+                            Text("· \(n.formatted()) items").font(.caption2.monospacedDigit())
+                                .foregroundStyle(theme.textMuted)
                         }
                     }
-                    if row.gated == true {
-                        Text("Probing needs API credentials — manual ping in card settings")
+                    if let note = reasonLine {
+                        Text(note)
                             .font(.caption2)
-                            .foregroundStyle(theme.warning)
-                            .padding(.horizontal, 6).padding(.vertical, 3)
-                            .background(theme.warning.opacity(0.15),
-                                        in: RoundedRectangle(cornerRadius: 4))
+                            .foregroundStyle(row.healthState == "gated" ? theme.warning : theme.textMuted)
                             .lineLimit(2)
                     }
                 }
                 Spacer()
-                if let ms = row.responseTimeMs, row.gated != true {
+                if let ms = row.response_time_ms, row.healthState != "gated" {
                     Text("\(Int(ms)) ms")
                         .font(.system(.caption2, design: .monospaced))
                         .foregroundStyle(theme.textMuted)
@@ -836,328 +1010,23 @@ struct SourceRow: View {
         .buttonStyle(.plain)
     }
 
+    /// The server's own reason a source is not healthy (a missing credential,
+    /// a refused fetch), shown under the name; nothing is composed here.
+    private var reasonLine: String? {
+        guard row.healthState != "ok", row.healthState != "pending" else { return nil }
+        if let creds = row.health?.credentials_required, !creds.isEmpty {
+            return "needs " + creds.joined(separator: ", ")
+        }
+        if let note = row.health?.note, !note.isEmpty { return note }
+        return nil
+    }
+
     private var statusColor: Color {
         switch row.statusKind {
         case .online:   return theme.success
         case .degraded: return theme.warning
         case .offline:  return theme.danger
         default:        return theme.textMuted
-        }
-    }
-}
-
-private struct SourceDetail: View {
-    let row: StatusRow
-    var onUpdate: (StatusRow) -> Void = { _ in }
-    @EnvironmentObject var nav: MapNavigation
-    @EnvironmentObject var settings: AppSettings
-    @EnvironmentObject var apiClient: APIClient
-    @Environment(\.theme) private var theme
-    @Environment(\.dismiss) private var dismiss
-    @State private var running = false
-    @State private var runNote: String?
-
-    var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 12) {
-                header
-
-                if let desc = row.description, !desc.isEmpty {
-                    Text(desc)
-                        .font(.subheadline)
-                        .foregroundStyle(theme.text)
-                        .padding(10)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(theme.surfaceElevated, in: RoundedRectangle(cornerRadius: 8))
-                }
-
-                section("Identity") {
-                    kv("ID",        row.id)
-                    kv("Group",     row.collectorGroupLabel ?? row.collectorGroup ?? "not reported by this server")
-                    kv("Collector", row.collectorLabel.map { "\($0) (\(row.collector ?? "?"))" } ?? row.collector ?? "not reported by this server")
-                    kv("Engine",    row.engine ?? "not reported by this server")
-                    kv("Kind",      row.kind ?? "not reported by this server")
-                    kv("Cadence",   row.overrideInterval.map { "every \(Int($0)) s (set for this source)" } ?? (row.policyInterval.map { "every \(Int($0)) s (policy)" } ?? (row.updateInterval.map { "every \(Int($0)) s (declared)" } ?? "on demand")))
-                    kv("Layer",     row.layer ?? "none")
-                    kv("Category",  row.category ?? "—")
-                    kv("Type",      row.type ?? "—")
-                    kv("Free?",     row.free.map { $0 ? "yes" : "no" } ?? "—")
-                }
-
-                section("Health") {
-                    kv("Status",       row.status ?? "—",
-                       valueColor: statusColor(row.status))
-                    if let trust = row.trust { trustRow(trust) }
-                    kv("Last check",   relativeTime(row.lastCheck))
-                    kv("Last success", relativeTime(row.lastSuccess))
-                    kv("Latency",      row.responseTimeMs.map { "\(Int($0)) ms" } ?? "—")
-                    kv("Records",      row.recordsCount.map(String.init) ?? "—")
-                }
-
-                if isBreach { breachSection } else { runSection }
-
-                if row.requiresKey == true {
-                    section("API key") {
-                        if let env = row.envVars, !env.isEmpty {
-                            ForEach(env, id: \.name) { v in envVarRowApiStyle(v) }
-                        }
-                    }
-                    probeActions
-                }
-
-                if let url = row.url, let u = URL(string: url) {
-                    Link(destination: u) {
-                        Label("Open source URL", systemImage: "safari")
-                            .frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(.borderedProminent)
-                }
-
-                if let err = row.errorMessage, !err.isEmpty {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Label("Last error", systemImage: "exclamationmark.triangle.fill")
-                            .font(.caption.bold())
-                            .foregroundStyle(theme.danger)
-                        Text(err)
-                            .font(.caption2)
-                            .foregroundStyle(theme.text)
-                            .textSelection(.enabled)
-                    }
-                    .padding(10)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(theme.danger.opacity(0.1),
-                                in: RoundedRectangle(cornerRadius: 8))
-                }
-            }
-            .padding()
-        }
-        .themedScreenBackground(theme)
-        .navigationTitle(row.name ?? row.id)
-        .compatInlineTitle()
-        .toolbar {
-            ToolbarItem(placement: .compatPrimary) {
-                Button("Close") { dismiss() }
-            }
-        }
-    }
-
-    // MARK: - Breach detail
-    //
-    // There is nothing to probe and no credential to configure for a breach, so
-    // the "API key" section and ProbeActionsView stay hidden — they already are,
-    // because the server reports requiresKey:false for these rows.
-
-    private var isBreach: Bool { row.category == "breach" }
-
-    /// `recordsCount` is the ingested record count once records exist, and falls
-    /// back to the catalog's account figure before then. Only `status` tells the
-    /// two apart, so label the number for what it actually is rather than
-    /// implying a corpus that hasn't been ingested.
-    private var hasRecords: Bool { row.status == "online" }
-
-    private var breachSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            section("Breach") {
-                if hasRecords {
-                    kv("Records ingested", (row.recordsCount ?? 0).formatted())
-                } else {
-                    kv("Accounts (catalog)", (row.recordsCount ?? 0).formatted())
-                    kv("Records ingested", "none yet", valueColor: theme.textMuted)
-                }
-                kv("Last seen", relativeTime(row.lastSuccess))
-            }
-            if hasRecords {
-                NavigationLink {
-                    IntelSourceItemsView(source: breachAsIntelSource)
-                } label: {
-                    Label("View records", systemImage: "list.bullet.rectangle")
-                        .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.borderedProminent)
-            } else {
-                Text("Ingest a dataset for this breach from Admin → Breach corpus to make its records searchable.")
-                    .font(.caption2)
-                    .foregroundStyle(theme.textMuted)
-            }
-        }
-    }
-
-    /// Breach records serve through the ordinary intel item list
-    /// (`GET /api/intel/items?source=<slug>` → breach_adapter_list), so the
-    /// existing viewer works as-is once given a matching source descriptor.
-    private var breachAsIntelSource: IntelSource {
-        IntelSource(id: row.id,
-                    name: row.name ?? row.id,
-                    name_ja: row.nameJa,
-                    category: row.category,
-                    description: row.description,
-                    url: row.url,
-                    item_count: row.recordsCount ?? 0,
-                    last_fetched: row.lastSuccess,
-                    last_published: row.lastSuccess,
-                    ttl_ms: nil,
-                    parent_id: nil)
-    }
-
-    /// POST /api/intel/sources/:id/run — the same call the web client's "Run
-    /// now" makes. The result line is the server's own numbers (ingested rows,
-    /// duration) or its error, never a guess; the row's counts refresh on the
-    /// dashboard's next load.
-    private var runSection: some View {
-        section("Run") {
-            HStack {
-                Button {
-                    running = true; runNote = nil
-                    Task {
-                        defer { running = false }
-                        do {
-                            let r = try await apiClient.api.intelRunSource(row.id)
-                            runNote = r.error.map { "failed: \($0)" }
-                                ?? "ran: \(r.ingested.map(String.init) ?? "?") new rows in \(r.duration_ms.map(String.init) ?? "?") ms"
-                        } catch { runNote = "failed: \(error.localizedDescription)" }
-                    }
-                } label: {
-                    HStack(spacing: 6) {
-                        if running { ProgressView().scaleEffect(0.7) } else { Image(systemName: "play.fill").accessibilityHidden(true) }
-                        Text(running ? "Running…" : "Run now")
-                    }
-                }
-                .buttonStyle(.borderedProminent)
-                .controlSize(.small)
-                .disabled(running || row.kind == "internal")
-                if let n = runNote {
-                    Text(n).font(.caption2).foregroundStyle(n.hasPrefix("failed") ? theme.danger : theme.textMuted)
-                }
-                Spacer()
-            }
-        }
-    }
-
-    private var probeActions: some View {
-        ProbeActionsView(row: row, onUpdate: onUpdate)
-            .padding(10)
-            .frame(maxWidth: .infinity)
-            .background(theme.surfaceElevated, in: RoundedRectangle(cornerRadius: 8))
-    }
-
-    private var header: some View {
-        HStack(alignment: .top, spacing: 10) {
-            Circle().fill(headerDotColor)
-                .frame(width: 14, height: 14)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(row.name ?? row.id)
-                    .font(.title3.bold())
-                    .foregroundStyle(theme.text)
-                if let ja = row.nameJa, !ja.isEmpty {
-                    Text(ja).font(.subheadline).foregroundStyle(theme.textMuted)
-                }
-            }
-            Spacer()
-        }
-    }
-
-    private var headerDotColor: Color {
-        switch row.statusKind {
-        case .online:   return theme.success
-        case .degraded: return theme.warning
-        case .offline:  return theme.danger
-        default:        return theme.textMuted
-        }
-    }
-
-    @ViewBuilder
-    private func section<Content: View>(_ title: String,
-                                        @ViewBuilder content: () -> Content) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(title).font(.caption.bold()).foregroundStyle(theme.textMuted)
-            VStack(spacing: 1) { content() }
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-        }
-    }
-
-    /// Reliability, laid out like a `kv` row so it sits in the Health block
-    /// without breaking the rhythm. `TrustBadge` owns the hard part: a
-    /// `rated:false` source renders as a neutral "—", NEVER as a zero score —
-    /// "no evidence" and "evidence of badness" are different claims.
-    private func trustRow(_ trust: SourceTrust) -> some View {
-        HStack(alignment: .firstTextBaseline) {
-            Text("Reliability").font(.caption.bold()).foregroundStyle(theme.textMuted)
-                .frame(width: 100, alignment: .leading)
-            TrustBadge(trust: trust, sourceName: row.name ?? row.id)
-            Spacer(minLength: 0)
-        }
-        .padding(8)
-        .background(theme.surfaceElevated)
-    }
-
-    private func kv(_ k: String, _ v: String, valueColor: Color? = nil) -> some View {
-        HStack(alignment: .firstTextBaseline) {
-            Text(k).font(.caption.bold()).foregroundStyle(theme.textMuted)
-                .frame(width: 100, alignment: .leading)
-            Text(v).font(.caption).foregroundStyle(valueColor ?? theme.text)
-                .textSelection(.enabled)
-                .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        .padding(8)
-        .background(theme.surfaceElevated)
-    }
-
-    /// One env-var row styled to match `ApiKeysView.row` exactly: icon →
-    /// monospaced name → role pill → trailing SET/UNSET pill, on the same
-    /// surfaceElevated background. Source of truth for the visual: ApiKeys/
-    /// ApiKeysView.swift:105-151.
-    private func envVarRowApiStyle(_ spec: EnvVarSpec) -> some View {
-        Button {
-            let target = spec.name
-            dismiss()
-            nav.showApiKey(target)
-        } label: {
-            HStack(spacing: 10) {
-                Image(systemName: spec.set == true ? "key.fill" : "key.slash")
-                    .foregroundStyle(spec.set == true ? theme.success : theme.textMuted)
-                    .frame(width: 22)
-                    .accessibilityHidden(true)   // restated by envStatusPill
-                Text(spec.name)
-                    .font(.system(.body, design: .monospaced).weight(.medium))
-                    .foregroundStyle(theme.text)
-                    .lineLimit(1)
-                if let role = spec.role {
-                    envRolePill(role)
-                }
-                Spacer()
-                envStatusPill(spec.set == true)
-            }
-            .padding(.horizontal, 12).padding(.vertical, 8)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(theme.surfaceElevated)
-            .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
-        .accessibilityLabel("Open API key page for \(spec.name)")
-    }
-
-    private func envRolePill(_ role: String) -> some View {
-        Pill(text: role.uppercased(), tone: envRoleTone(role))
-    }
-
-    private func envStatusPill(_ set: Bool) -> some View {
-        Pill(text: set ? "SET" : "UNSET", tone: set ? .success : .warning, size: .md)
-    }
-
-    private func envRoleTone(_ role: String) -> Pill.Tone {
-        switch role {
-        case "required": return .accent
-        case "anyOf":    return .warning
-        default:         return .neutral
-        }
-    }
-
-    private func statusColor(_ s: String?) -> Color {
-        switch s {
-        case "online":   return theme.success
-        case "degraded": return theme.warning
-        case "offline":  return theme.danger
-        default:         return theme.textMuted
         }
     }
 }

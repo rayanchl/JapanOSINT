@@ -3,7 +3,8 @@ import SwiftUI
 /// Single home for every platform-operator-only surface. These all hit
 /// server endpoints gated by `requirePlatformOperator`
 /// (server/src/middleware/keyAccess.js) and affect every workspace on the
-/// host, so the whole panel is gated to the super-admin account via
+/// host, so the whole panel is gated to the platform operator (as the server
+/// reports it) via
 /// `AuthSession.isPlatformAdmin`. The Console row that pushes this is gated
 /// the same way; the inner `isPlatformAdmin` check is belt-and-suspenders.
 ///
@@ -34,6 +35,7 @@ struct AdminPanel: View {
 
     private let operatorFooter =
         "Platform keys are the server-wide defaults every workspace falls back to."
+
     private var panel: some View {
         #if os(macOS)
         // macOS: lay the sections out as separator-free `surfaceElevated`

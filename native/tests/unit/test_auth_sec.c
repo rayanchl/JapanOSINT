@@ -182,6 +182,13 @@ int main(void) {
   const char *tok = cJSON_GetObjectItem(jr, "token")->valuestring;
   char *b = malloc(strlen(tok) + 8); sprintf(b, "Bearer %s", tok);
 
+  /* API-11: a TOTP code is single-use — the same valid code is refused the
+   * second time (and any older step with it), though the window is ±1 step. */
+  { int st2 = 0;
+    char *again = keysapi_breakglass(&db, body, "192.0.2.1", "t", &st2);
+    assert(st2 == 401 && "a replayed TOTP code is refused");
+    free(again); }
+
   auth_user u;
   assert(check(b, &u) == AUTH_ALLOW && "the issued break-glass token verifies");
   assert(u.break_glass == 1 && strcmp(u.id, "break-glass-admin") == 0);
@@ -242,6 +249,19 @@ int main(void) {
   assert(check(b, &u) == AUTH_ALLOW && u.break_glass == 0);
   setenv("PLATFORM_OPERATOR_IDS", "someone-else", 1);
   assert(opgate_check(&u) != 0 && "the claim alone grants nothing");
+  free(b);
+
+  /* API-15: an audience is configured (default "authenticated"), so a
+   * correctly signed token with NO `aud` is refused, not skipped. */
+  snprintf(pl, sizeof pl, "{\"sub\":\"someone\",\"iss\":\"https://iss.test/auth/v1\","
+           "\"iat\":%ld,\"exp\":%ld}", now, now + 600);
+  b = bearer(HS, pl, "supabase-secret-for-test");
+  assert(check(b, &u) == AUTH_401_INVALID && "no aud is refused when one is configured");
+  free(b);
+  snprintf(pl, sizeof pl, "{\"sub\":\"someone\",\"aud\":\"authenticated\","
+           "\"iss\":\"https://iss.test/auth/v1\",\"iat\":%ld,\"exp\":%ld}", now, now + 600);
+  b = bearer(HS, pl, "supabase-secret-for-test");
+  assert(check(b, &u) == AUTH_ALLOW && "the same token WITH the audience verifies");
   free(b);
 
   /* Break-glass secret reused as the Supabase secret: refused outright. */

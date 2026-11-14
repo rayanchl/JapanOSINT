@@ -20,7 +20,13 @@ struct ApiKeyDetailView: View {
     @State private var revealedValue: String?
     @State private var newValue: String = ""
     @State private var workingRow: KeyRow
-    @State private var statusRows: [StatusRow]
+    /// Sources the SERVER reports as waiting for this key (a filtered, paged
+    /// search of `health=gated`, whose rows carry `credentials_required`), not
+    /// a scan of the whole registry. Best-effort.
+    @State private var usingRows: [SourceSearchRow] = []
+    @State private var usingTotal: Int?
+    @State private var usingLoading = false
+    @State private var usingError: String?
     @State private var inFlight: Bool = false
     @State private var error: String?
     @State private var savedHint: Bool = false
@@ -28,14 +34,12 @@ struct ApiKeyDetailView: View {
     init(row: KeyRow,
          scope: KeyScope,
          canManage: Bool,
-         statusRows: [StatusRow] = [],
          onUpdate: @escaping (KeyRow) -> Void) {
         self.row = row
         self.scope = scope
         self.canManage = canManage
         self.onUpdate = onUpdate
         self._workingRow = State(initialValue: row)
-        self._statusRows = State(initialValue: statusRows)
     }
 
     private var api: API { apiClient.api }
@@ -44,14 +48,33 @@ struct ApiKeyDetailView: View {
     /// (tenant key for workspace, overlay value for platform).
     private var hasOwnValue: Bool { workingRow.byok }
 
-    private var sourcesUsingKey: [StatusRow] {
-        statusRows.filter { r in
-            r.envVars?.contains { $0.name == row.name } == true
-        }
-    }
+    /// Most rows listed (each may fetch its own probe state), with the
+    /// remainder stated rather than silently cut.
+    private static let usingMax = 50
 
-    private func role(for r: StatusRow) -> String? {
-        r.envVars?.first(where: { $0.name == row.name })?.role
+    private func loadUsing() async {
+        usingLoading = true
+        defer { usingLoading = false }
+        var q = SourceSearchQuery()
+        q.health = "gated"
+        var found: [SourceSearchRow] = []
+        var offset = 0
+        // Walk the gated sources 500 at a time (a bounded number of pages) and
+        // keep those that name this key.
+        for _ in 0..<10 {
+            do {
+                let env = try await api.searchSources(q, limit: 500, offset: offset)
+                let rows = env.data ?? []
+                found += rows.filter { $0.health?.credentials_required?.contains(row.name) == true }
+                offset += rows.count
+                if env.page?.has_more != true || rows.isEmpty { break }
+            } catch {
+                usingError = error.localizedDescription
+                break
+            }
+        }
+        usingTotal = found.count
+        usingRows = Array(found.prefix(Self.usingMax))
     }
 
     /// Shown when Reveal returns no value. For workspace scope an admin-set
@@ -233,91 +256,34 @@ struct ApiKeyDetailView: View {
     @ViewBuilder
     private var usedBySection: some View {
         Section {
-            if sourcesUsingKey.isEmpty {
-                Text("No sources reference this key in the current registry.")
+            if usingLoading && usingRows.isEmpty {
+                ProgressView()
+            } else if let usingError, usingRows.isEmpty {
+                Text("Couldn't look up which sources use this key: \(usingError)")
+                    .font(.caption)
+                    .foregroundStyle(theme.warning)
+            } else if usingRows.isEmpty {
+                Text("No source is currently waiting for this key.")
                     .font(.caption)
                     .foregroundStyle(theme.textMuted)
             } else {
-                ForEach(sourcesUsingKey.groupedAsCollectors()) { collector in
-                    VStack(alignment: .leading, spacing: 4) {
-                        HStack(spacing: 6) {
-                            Text(collector.name)
-                                .font(.caption.bold())
-                                .foregroundStyle(theme.text)
-                            Text("\(collector.sourceCount) source\(collector.sourceCount == 1 ? "" : "s")")
-                                .font(.caption2.monospacedDigit())
-                                .foregroundStyle(theme.textMuted)
-                            if let cat = collector.category {
-                                Text("· \(cat)")
-                                    .font(.caption2)
-                                    .foregroundStyle(theme.textMuted)
-                            }
-                        }
-                        VStack(spacing: 1) {
-                            ForEach(collector.sources) { r in
-                                usedByRow(r)
-                            }
-                        }
-                        .clipShape(RoundedRectangle(cornerRadius: 6))
+                ForEach(usingRows) { r in
+                    UsedByRow(source: r, keyName: row.name) {
+                        dismiss()
+                        nav.showSource(r.id)
                     }
+                }
+                if let total = usingTotal, total > usingRows.count {
+                    Text("Showing \(usingRows.count) of \(total) sources waiting for this key.")
+                        .font(.caption2)
+                        .foregroundStyle(theme.textMuted)
                 }
             }
         } header: {
-            Text("Used by")
+            Text("Waiting for this key")
         } footer: {
-            if !sourcesUsingKey.isEmpty {
-                Text("Tap a source to jump to its detail in the Sources tab.")
-                    .font(.caption2)
-            }
-        }
-    }
-
-    private func usedByRow(_ r: StatusRow) -> some View {
-        VStack(spacing: 6) {
-            Button {
-                let target = r.id
-                dismiss()
-                nav.showSource(target)
-            } label: {
-                HStack(spacing: 8) {
-                    Circle().fill(statusColor(r.status))
-                        .frame(width: 8, height: 8)
-                    VStack(alignment: .leading, spacing: 1) {
-                        Text(r.name ?? r.id)
-                            .font(.caption)
-                            .foregroundStyle(theme.text)
-                            .lineLimit(1)
-                        if let cat = r.category {
-                            Text(cat)
-                                .font(.caption2)
-                                .foregroundStyle(theme.textMuted)
-                        }
-                    }
-                    Spacer()
-                    if let rl = role(for: r) {
-                        rolePill(rl)
-                    }
-                    Image(systemName: "chevron.right")
-                        .font(.caption2)
-                        .foregroundStyle(theme.textMuted)
-                        .accessibilityHidden(true)   // navigation affordance
-                }
-                .padding(.vertical, 4)
-                .contentShape(Rectangle())
-            }
-            .buttonStyle(.plain)
-
-            if r.requiresKey == true {
-                ProbeActionsView(row: r) { updated in
-                    applyStatusUpdate(updated)
-                }
-            }
-        }
-    }
-
-    private func applyStatusUpdate(_ updated: StatusRow) {
-        if let i = statusRows.firstIndex(where: { $0.id == updated.id }) {
-            statusRows[i] = updated
+            Text("Sources the server reports as gated on this key. A source whose key is already set is no longer gated and is not listed. Tap one to open its detail.")
+                .font(.caption2)
         }
     }
 
