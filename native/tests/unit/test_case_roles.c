@@ -146,6 +146,44 @@ int main(void) {
   list_roles(&db, "uA", "analyst", NULL,          NULL,          NULL);
   list_roles(&db, "",   "viewer",  NULL,          NULL,          NULL);   /* no user id */
   printf("  the list carries each caller's role on each case: ok\n");
+
+  /* API-01: pinning an intel_item resolves through the TENANT-scoped lookup,
+   * and `breach:` refs take no content copy unless the caller is an operator,
+   * nor a client-supplied one from anyone. */
+  exec_ok(&db, "INSERT INTO intel_items(uid,source_id,title,fetched_at,tenant_id) VALUES "
+               "('src|own','src','own row','2026-01-01','tA'),"
+               "('src|shared','src','shared row','2026-01-01','legacy'),"
+               "('src|other','src','other workspace row','2026-01-01','tB')");
+  {
+    struct { const char *rid; int resolved; } pins[] = {
+      { "src|own", 1 }, { "src|shared", 1 }, { "src|other", 0 },
+    };
+    tenant_ctx t = as("uA", "analyst");
+    for (size_t i = 0; i < sizeof pins / sizeof pins[0]; i++) {
+      char body[256]; int st = 0;
+      snprintf(body, sizeof body, "{\"ref_type\":\"intel_item\",\"ref_id\":\"%s\"}", pins[i].rid);
+      char *r = casesapi(&db, &t, "POST", "case-a", "items", body, NULL, &st);
+      assert(st == 200 || st == 201);
+      cJSON *j = cJSON_Parse(r); free(r);
+      cJSON *snap = cJSON_GetObjectItem(cJSON_GetObjectItem(j, "data"), "snapshot");
+      assert(snap);
+      assert(cJSON_IsTrue(cJSON_GetObjectItem(snap, "resolved")) == pins[i].resolved);
+      cJSON_Delete(j);
+    }
+    /* a client snapshot for a breach ref is ignored (origin stays server) */
+    const char *bb = "{\"ref_type\":\"intel_item\",\"ref_id\":\"breach:zz\","
+                     "\"snapshot_json\":{\"value\":\"victim@example.com\"}}";
+    int st = 0;
+    char *r = casesapi(&db, &t, "POST", "case-a", "items", bb, NULL, &st);
+    assert(st == 200 || st == 201);
+    assert(!strstr(r, "victim@example.com") && "a client copy of breach content is not stored");
+    assert(strstr(r, "\"server\""));
+    free(r);
+    r = casesapi_ex(&db, &t, "POST", "case-a", "items", bb, NULL, &st, 1);
+    assert(!strstr(r, "victim@example.com") && "not even for an operator: client snapshots are refused");
+    free(r);
+  }
+  printf("  case pins are tenant-scoped; breach refs take no client copy: ok\n");
   db_close(&db);
   printf("test_case_roles: ok\n");
   return 0;

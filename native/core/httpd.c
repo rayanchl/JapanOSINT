@@ -11,6 +11,7 @@
 #include "alertsapi.h"
 #include "alert_eval.h"
 #include "casesapi.h"
+#include "metricsapi.h"
 #include "annotationsapi.h"
 #include "timelineapi.h"
 #include "exportapi.h"
@@ -2565,6 +2566,9 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           "{\"error\":\"too_many_searches\",\"detail\":\"concurrent search limit "
           "reached; retry shortly\"}"); return;
       }
+      if (!body && ast == 413) {
+        reply_json(c, 413, "{\"error\":\"query_too_long\",\"limit_bytes\":16384}");
+        return; }
       if (!body && ast == 500) {
         reply_json(c, 500, "{\"error\":\"search_not_started\"}"); return; }
       if (!body) { reply_json(c, 400, "{\"error\":\"query_required\"}"); return; }
@@ -2797,6 +2801,24 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       fa.op   = (opgate_check(&usr) == 0);
       fleet_params(hm, &fa);
       fleet_serve(c, &fa);
+      return;
+    }
+
+    /* GET /api/metrics — Prometheus text exposition (OPS-14), platform
+     * operator only: registry shape and run volume are operational detail,
+     * and the route is meant for a scraper holding an operator token. Two
+     * indexed one-hour COUNTs over fetch_log; no sem_spawn needed. */
+    if (eq(u, "/api/metrics")) {
+      if (hm->method.len != 3 || memcmp(hm->method.buf, "GET", 3) != 0) {
+        reply_json(c, 405, "{\"error\":\"method_not_allowed\"}"); return; }
+      if (breach_gate(c, &usr)) return;     /* the operator gate's own replies */
+      char *mb = metricsapi_render(g_db);
+      if (!mb) { reply_json(c, 500, "{\"error\":\"server_error\"}"); return; }
+      char hb[CORS_HDR_MAX + 96];
+      snprintf(hb, sizeof hb, "Content-Type: text/plain; version=0.0.4; "
+               "charset=utf-8\r\n%s", cors_h(c));
+      mg_http_reply(c, 200, hb, "%s", mb);
+      free(mb);
       return;
     }
 

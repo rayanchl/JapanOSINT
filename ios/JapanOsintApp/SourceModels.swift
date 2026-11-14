@@ -475,3 +475,47 @@ enum SourceFormat {
         return n.formatted()
     }
 }
+
+/// Reads the explanation out of a `collector-*-notice` / fetch-failure
+/// record's `properties`: why it fired and what to do about it, plus the HTTP
+/// status and TLS cause the engine measured when it carries them. Nothing is
+/// composed beyond what the server wrote; an empty result means the record
+/// carried none of those fields.
+enum NoticeText {
+    static func detail(from props: [String: AnyCodable]?) -> [(label: String, text: String)] {
+        guard let p = props else { return [] }
+        var out: [(label: String, text: String)] = []
+        func read(_ key: String) -> String? {
+            guard let v = p[key]?.value else { return nil }
+            if let s = v as? String { return s.isEmpty ? nil : s }
+            if let i = v as? Int { return String(i) }
+            if let d = v as? Double { return String(d) }
+            if let b = v as? Bool { return b ? "yes" : "no" }
+            return nil
+        }
+        for key in ["reason", "note", "error", "message", "outcome"] {
+            if let t = read(key) { out.append((label: key, text: t)); break }
+        }
+        if let t = read("http_status") { out.append((label: "http status", text: t)) }
+        if let t = read("tls_cause") { out.append((label: "tls cause", text: t)) }
+        if let t = read("tls_detail") { out.append((label: "tls detail", text: t)) }
+        if let t = read("remedy") { out.append((label: "remedy", text: t)) }
+        return out
+    }
+
+    /// Short label for a notice record type.
+    static func label(forKind rt: String?) -> String {
+        guard var t = rt else { return "notice" }
+        switch t {
+        case "collector-status-notice":     return "needs credential"
+        case "collector-truncation-notice": return "truncated"
+        case "collector-fetch-failure",
+             "collector-fetch-error":       return "fetch failed"
+        case "collector-shape-notice":      return "unexpected shape"
+        default:
+            if t.hasPrefix("collector-") { t.removeFirst("collector-".count) }
+            if t.hasSuffix("-notice") { t.removeLast("-notice".count) }
+            return t.replacingOccurrences(of: "-", with: " ")
+        }
+    }
+}

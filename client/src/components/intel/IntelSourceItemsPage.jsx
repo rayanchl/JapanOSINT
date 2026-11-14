@@ -73,10 +73,10 @@ export default function IntelSourceItemsPage() {
       )}
 
       <form onSubmit={(e) => { e.preventDefault(); setQApplied(q.trim()); }} className="flex flex-wrap items-center gap-2">
-        <Input className="flex-1 min-w-[180px]" placeholder="search within this source…" value={q} onChange={(e) => setQ(e.target.value)} />
+        <Input className="flex-1 min-w-[180px]" aria-label="Search within this source" placeholder="search within this source…" value={q} onChange={(e) => setQ(e.target.value)} />
         <Button type="submit">Search</Button>
         <Segmented value={since} onChange={setSince} options={SINCE_PRESETS} />
-        <Input className="w-[140px]" placeholder="record_type" value={rt} onChange={(e) => setRt(e.target.value)} />
+        <Input className="w-[140px]" aria-label="Record type filter" placeholder="record_type" value={rt} onChange={(e) => setRt(e.target.value)} />
         <Toggle on={geo} onChange={setGeo} label="geolocated" />
         {qApplied && <Segmented value={sort} onChange={setSort} options={[{ value: 'newest', label: 'newest' }, { value: 'relevance', label: 'relevance' }, { value: 'trust', label: 'trust' }]} />}
         <Segmented value={view} onChange={setView} options={[{ value: 'original', label: '原文' }, { value: 'translated', label: 'EN' }, { value: 'both', label: 'both' }]} />

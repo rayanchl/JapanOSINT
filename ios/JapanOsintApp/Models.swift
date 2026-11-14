@@ -735,21 +735,7 @@ struct IntelItem: Codable, Identifiable, Hashable {
     }
 
     /// Short human label for the notice kind, from the record type.
-    var noticeLabel: String {
-        guard let rt = record_type else { return "notice" }
-        switch rt {
-        case "collector-status-notice":     return "needs credential"
-        case "collector-truncation-notice": return "truncated"
-        case "collector-fetch-failure",
-             "collector-fetch-error":       return "fetch failed"
-        case "collector-shape-notice":      return "unexpected shape"
-        default:
-            var t = rt
-            if t.hasPrefix("collector-") { t.removeFirst("collector-".count) }
-            if t.hasSuffix("-notice") { t.removeLast("-notice".count) }
-            return t.replacingOccurrences(of: "-", with: " ")
-        }
-    }
+    var noticeLabel: String { NoticeText.label(forKind: record_type) }
 
     /// The notice's own explanation, read from `properties`: why it fired
     /// (`reason`, `note`, `error`, `message`, `outcome`) and what to do about
@@ -757,24 +743,7 @@ struct IntelItem: Codable, Identifiable, Hashable {
     /// it carries them. Nothing is composed here beyond joining what the
     /// server wrote; an empty result means the row carried no such field.
     var noticeDetail: [(label: String, text: String)] {
-        guard let p = properties else { return [] }
-        var out: [(label: String, text: String)] = []
-        func text(_ key: String) -> String? {
-            guard let v = p[key]?.value else { return nil }
-            if let s = v as? String { return s.isEmpty ? nil : s }
-            if let i = v as? Int { return String(i) }
-            if let d = v as? Double { return String(d) }
-            if let b = v as? Bool { return b ? "yes" : "no" }
-            return nil
-        }
-        for key in ["reason", "note", "error", "message", "outcome"] {
-            if let t = text(key) { out.append((label: key, text: t)); break }
-        }
-        if let t = text("http_status") { out.append((label: "http status", text: t)) }
-        if let t = text("tls_cause") { out.append((label: "tls cause", text: t)) }
-        if let t = text("tls_detail") { out.append((label: "tls detail", text: t)) }
-        if let t = text("remedy") { out.append((label: "remedy", text: t)) }
-        return out
+        NoticeText.detail(from: properties)
     }
 
     static func == (lhs: IntelItem, rhs: IntelItem) -> Bool { lhs.uid == rhs.uid }

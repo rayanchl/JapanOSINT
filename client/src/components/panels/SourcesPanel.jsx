@@ -546,6 +546,7 @@ export default function SourcesPanel({ onClose }) {
             <button
               key={f.key}
               type="button"
+              aria-pressed={filter === f.key}
               onClick={() => setFilter(f.key)}
               className={`px-2 py-0.5 rounded text-[10px] border transition-colors ${
                 filter === f.key

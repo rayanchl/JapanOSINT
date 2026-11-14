@@ -177,23 +177,23 @@ function SearchView() {
       {mode === 'semantic' && (
         <div className="flex flex-wrap items-center gap-2">
           <SectionLabel>filters</SectionLabel>
-          <Input mono className="w-[220px]" placeholder="source ids, comma-separated" value={semSource} onChange={(e) => setSemSource(e.target.value)} />
-          <Input mono className="w-[150px]" placeholder="record_type" value={semType} onChange={(e) => setSemType(e.target.value)} />
+          <Input mono className="w-[220px]" aria-label="Source ids, comma-separated" placeholder="source ids, comma-separated" value={semSource} onChange={(e) => setSemSource(e.target.value)} />
+          <Input mono className="w-[150px]" aria-label="Record type" placeholder="record_type" value={semType} onChange={(e) => setSemType(e.target.value)} />
           <Segmented value={semSince} onChange={setSemSince} options={SINCE_PRESETS} />
-          <Input mono className="w-[200px]" placeholder="bbox w,s,e,n" value={semBbox} onChange={(e) => setSemBbox(e.target.value)} />
+          <Input mono className="w-[200px]" aria-label="Bounding box west,south,east,north" placeholder="bbox w,s,e,n" value={semBbox} onChange={(e) => setSemBbox(e.target.value)} />
         </div>
       )}
       <form onSubmit={submit} className="flex flex-wrap gap-2">
         {mode === 'near' && (
           <>
-            <Input mono className="w-[200px]" placeholder="lat,lon" value={near} onChange={(e) => setNear(e.target.value)} />
-            <Input mono className="w-[110px]" type="number" min="50" step="50" placeholder="radius m" value={radius} onChange={(e) => setRadius(e.target.value)} />
+            <Input mono className="w-[200px]" aria-label="Latitude, longitude" placeholder="lat,lon" value={near} onChange={(e) => setNear(e.target.value)} />
+            <Input mono className="w-[110px]" aria-label="Radius in metres" type="number" min="50" step="50" placeholder="radius m" value={radius} onChange={(e) => setRadius(e.target.value)} />
           </>
         )}
         {/* In Nearby mode q RANKS the radius by similarity when the server has
           * an embedding index (nearapi.c, meta.q_mode "semantic"), and falls
           * back to the full-text filter without one (meta.q_mode "fts"). */}
-        <Input className="flex-1 min-w-[200px]" placeholder={mode === 'semantic' ? 'describe what you are looking for…' : mode === 'near' ? 'optional: rank the radius by meaning (kanji or romaji)…' : 'search every stored item (kanji or romaji)…'} value={draft} onChange={(e) => setDraft(e.target.value)} />
+        <Input className="flex-1 min-w-[200px]" aria-label="Search query" placeholder={mode === 'semantic' ? 'describe what you are looking for…' : mode === 'near' ? 'optional: rank the radius by meaning (kanji or romaji)…' : 'search every stored item (kanji or romaji)…'} value={draft} onChange={(e) => setDraft(e.target.value)} />
         <Button type="submit" variant="primary">Search</Button>
       </form>
       {mode === 'fts' && q && <FtsResults q={q} sort={sort} view={view} />}
@@ -335,7 +335,7 @@ function RecentView() {
       <div className="flex flex-wrap items-center gap-2">
         <SectionLabel>since</SectionLabel>
         <Segmented value={since} onChange={setSince} options={SINCE_PRESETS} />
-        <Input className="w-[150px]" placeholder="record_type" value={rt} onChange={(e) => setRt(e.target.value)} />
+        <Input className="w-[150px]" aria-label="Record type" placeholder="record_type" value={rt} onChange={(e) => setRt(e.target.value)} />
         <Select value={lang} onChange={(e) => setLang(e.target.value)}><option value="">any language</option><option value="ja">ja</option><option value="en">en</option></Select>
         <Toggle on={geo} onChange={setGeo} label="geolocated only" />
         <Segmented value={view} onChange={setView} options={[{ value: 'original', label: '原文' }, { value: 'translated', label: 'EN' }, { value: 'both', label: 'both' }]} />

@@ -110,29 +110,53 @@ static cJSON *analyze_ssl_direct(const char *hostname, int port) {
     return NULL;
   }
 
-  int sock = socket(AF_INET, SOCK_STREAM, 0);
+  /* Resolve ONCE and judge the address that will be connected to (LIB-11).
+   * hostgate_host_check() above resolved the name, and this used to resolve it
+   * AGAIN and connect to the first answer unjudged — a name answering public
+   * to the check and 127.0.0.1 to the connect (DNS rebinding) passed the
+   * strict gate. Every address of this one answer is judged with the same
+   * strict ruleset (any blocked address refuses the name, as the check above
+   * does) and connect() goes to the judged sockaddr. */
+  struct addrinfo hints = {0}, *res = NULL;
+  hints.ai_family = AF_UNSPEC;
+  hints.ai_socktype = SOCK_STREAM;
+  if (getaddrinfo(hostname, NULL, &hints, &res) != 0 || !res) {
+    if (res) freeaddrinfo(res);
+    SSL_CTX_free(ctx);
+    return NULL;
+  }
+  struct sockaddr_storage addr; socklen_t alen = 0; int have = 0;
+  for (struct addrinfo *ai = res; ai; ai = ai->ai_next) {
+    char ip[INET6_ADDRSTRLEN] = "";
+    if (ai->ai_family == AF_INET)
+      inet_ntop(AF_INET, &((struct sockaddr_in *)ai->ai_addr)->sin_addr, ip, sizeof ip);
+    else if (ai->ai_family == AF_INET6)
+      inet_ntop(AF_INET6, &((struct sockaddr_in6 *)ai->ai_addr)->sin6_addr, ip, sizeof ip);
+    else continue;
+    if (hostgate_addr_check(ip, 1) != HG_URL_OK) {
+      fprintf(stderr, "[SSL_ANALYZER] refusing %s: resolves to a blocked address\n", hostname);
+      freeaddrinfo(res); SSL_CTX_free(ctx);
+      return NULL;
+    }
+    if (!have && ai->ai_addrlen <= sizeof addr) {
+      memcpy(&addr, ai->ai_addr, ai->ai_addrlen);
+      alen = (socklen_t)ai->ai_addrlen;
+      have = 1;
+    }
+  }
+  freeaddrinfo(res);
+  if (!have) { SSL_CTX_free(ctx); return NULL; }
+  if (addr.ss_family == AF_INET) ((struct sockaddr_in *)&addr)->sin_port = htons((unsigned short)port);
+  else ((struct sockaddr_in6 *)&addr)->sin6_port = htons((unsigned short)port);
+
+  int sock = socket(addr.ss_family, SOCK_STREAM, 0);
   if (sock < 0) { SSL_CTX_free(ctx); return NULL; }
 
   struct timeval tv = { .tv_sec = 10, .tv_usec = 0 };
   setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof tv);
   setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof tv);
 
-  struct addrinfo hints = {0}, *res = NULL;
-  hints.ai_family = AF_INET;
-  hints.ai_socktype = SOCK_STREAM;
-  if (getaddrinfo(hostname, NULL, &hints, &res) != 0 || !res) {
-    if (res) freeaddrinfo(res);
-    close(sock); SSL_CTX_free(ctx);
-    return NULL;
-  }
-  struct sockaddr_in addr;
-  memset(&addr, 0, sizeof addr);
-  addr.sin_family = AF_INET;
-  addr.sin_port = htons((unsigned short)port);
-  addr.sin_addr = ((struct sockaddr_in *)res->ai_addr)->sin_addr;
-  freeaddrinfo(res);
-
-  if (connect(sock, (struct sockaddr *)&addr, sizeof addr) < 0) {
+  if (connect(sock, (struct sockaddr *)&addr, alen) < 0) {
     close(sock); SSL_CTX_free(ctx);
     return NULL;
   }

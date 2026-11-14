@@ -62,6 +62,7 @@ export default function RunControl({ source, onDone, compact = false, label }) {
   const go = async (e) => {
     e?.preventDefault();
     if (busy) return;
+    if (pivot && !entity.trim()) { setNote((await runSource(id, { kind: source.kind, entity })).message); return; }
     setBusy(true); setNote(null);
     const r = await runSource(id, { kind: source.kind, entity });
     setBusy(false);
