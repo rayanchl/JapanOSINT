@@ -349,7 +349,13 @@ that replaced them survive, so no coverage is lost. **A sweep's verdict is
 about the URL it sent, not about the row's name** — re-read a removal against
 the row as it stands now.
 
-**The registered count is 85,751** (2026-11-14, measured with `make
+**The registered count is 88,504** (2026-11-14, `make source-count` on the
+second merge of main that day, both floors re-recorded from that build): main's
+88,520 after batch 64, less this branch's same net 16. Main moved twice while
+this branch's PR waited, and each time only the two floor files conflicted —
+which is why they are re-measured and never hand-merged.
+
+**It was 85,751 an hour earlier** (measured with `make
 source-count` on the merge of main and both floors re-recorded from that
 build): main's 85,767 — batches 59 to 63, which main's own commits record —
 less this branch's net 16 since the merge base (12 twins and 5 dead rows
