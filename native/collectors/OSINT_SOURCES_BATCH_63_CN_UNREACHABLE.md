@@ -29,3 +29,30 @@ empty/notice otherwise, to be re-pointed. The shape-learner is
 environment, fetch each homepage, detect its real pattern, and rewrite
 `href_must`. Tagged `shape-inferred` so they are easy to find and refine.
 They are deliberately NOT a claim of verified emission.
+
+---
+
+# Batch 63 (euwfs) — European national/regional INSPIRE WFS feature types
+
+591 WFS 2.0 feature types enumerated from 34 national/regional European
+geoportals' own GetCapabilities (IGN France `data.geopf.fr` 119, Statistics
+Finland 120, Portugal ICNF 118, Italian regioni 101, PDOK Netherlands 66,
+Poland 51, Germany BKG/Länder 16; FR/NL/DE/IT/ES/BE/AT/NO/SE/FI/IE/PT/PL/CZ/
+DK/CH/GR seeded). Each row does GetFeature as GeoJSON, paging on `startIndex`
+where the type has a primary key.
+
+Measured through the engine: 499 store records (OK/SLOW/COLLISION). 123 first
+failed HTTP 400 — GeoServer's documented refusal of `startIndex` without a
+primary key (the BC_MINERAL_TENURE case in this file); those rows were
+rewritten to read one 1,000-feature page and disclose the remainder, after
+which 63 store. The rest are kept per the owner's keep-all instruction: ~60
+return 400 for a per-type reason (the DATA exists but that type does not serve
+GeoJSON as requested — fixable by output-format in a deployment) and ~30 are
+this container's own egress (`no certificate judged`). All disclose their own
+fetch-failure; none is a fabricated or silent-empty row (the WFS set had zero
+EMITS_NOTHING).
+
+New tool: `wfs_enum.py` (session scratch) — GetCapabilities version
+negotiation (2.0.0 then 1.1.0), namespace-aware FeatureType/Name parsing,
+`resulttype=hits` counts. Only 2.0.0 types (clean count/startIndex/JSON) were
+registered.
