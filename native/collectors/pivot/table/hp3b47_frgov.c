@@ -121635,7 +121635,8 @@ static const hp_source HP3B47_FRGOV[] = {
     .url = "https://www.agglo-larochelle.fr/les-flux-rss-de-l-agglo/-/data-agglo/all-10036441.rss",
     .array_path = "channel.item",
     .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
+    .id_keys = "title+pubDate",   /* id_keys "title+pubDate", MEASURED 2026-11-14 (tools/audit_distinctness.py, the TINY pass):
+       this feed gives all 50 items ONE guid and ONE link (the archive page), so `guid,link` was a constant and every uid a content hash. title+pubDate is 48 = the ceiling (2 items are byte-identical). */
     .interval = 3600,
     .adaptive_interval = 1,
     .link_keys = "link",
@@ -161910,26 +161911,6 @@ static const hp_source HP3B47_FRGOV[] = {
     .description = "Fetched 2026-10-18: 10 items, RSS2 feed, newest "
       "2026-10-16T12:46:17Z. A feed the organisation itself declares or "
       "links on its site root." },
-
-  { .id = "JO47_FR_ED9EEF8C_F443_48FF_83BC_40F08BF2437A", .name = "Point d'information local dédié aux personnes âgées - Athis-Mons "
-      "(SL, INSEE 91027) - Depannage Volet Roulant",
-    .name_ja = "Point d'information local dédié aux personnes âgées - Athis-Mons (SL, INSEE 91027) - Depannage Volet Roulant",
-    .category = "local-gov", .collector = "frgov_social", .portal = "https://www.portesessonne.fr/",
-    .record_type = "government-notice",
-    .tags = "\"frgov\",\"government\",\"notice\",\"rss\"",
-    .mode = HP_XML, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.portesessonne.fr/feed.xml",
-    .array_path = "channel.item",
-    .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
-    .interval = 3600,
-    .adaptive_interval = 1,
-    .link_keys = "link",
-    .timeout_ms = 30000,
-    .title_keys = "title",
-    .description = "Fetched 2026-10-18: 78 items, RSS2 feed, newest Sun, 18 Oct 2026 "
-      "09:02:33 +0000. A feed the organisation itself declares or links "
-      "on its site root." },
 
   { .id = "JO47_FR_EDB3B4D0_8B3E_4F4D_8C65_0731ED5EE2E2", .name = "Mairie - Allerey-sur-Saône (SL, INSEE 71003) - "
       "6b18b68948894b9b87059f74b0c76e8d",

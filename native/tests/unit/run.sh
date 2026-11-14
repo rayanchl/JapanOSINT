@@ -238,13 +238,21 @@ python3 tools/audit_registry_emit.py --self-test || { echo "FAILED"; fail=1; }
 # the content-hash fallback, so declaring a "real" id can make it WORSE, which
 # CLAUDE.md records for four Socrata rows measured, applied and reverted. Its
 # arithmetic has the same property as audit_registry_emit's: the wrong answer
-# looks exactly like the right one unless it is checked. Twenty-one fixtures,
-# no binary and no network; three of them were confirmed to FAIL when the piece
+# looks exactly like the right one unless it is checked. Its fixtures need
+# no binary and no network (the count grows, so it is not written here — a
+# number in a comment went stale within a day); the first three were confirmed to FAIL when the piece
 # they cover is broken (the hp_flat_get resolver, `,` composing like `+`, and
 # the ceiling read as the record count), and that exercise found a real defect
 # — a key resolving on no record at all had read as KEY_IS_IDENTITY.
 echo "--- audit_distinctness self-test ---"
 python3 tools/audit_distinctness.py --self-test || { echo "FAILED"; fail=1; }
+
+# socrata_id_churn: whether a Socrata `:id` survives the publisher's refresh.
+# The comparison itself needs two readings a day apart; what is pinned here is
+# its judgement — that only a row whose CONTENT survived can say anything, and
+# that system fields never enter the content hash.
+echo "--- socrata_id_churn self-test ---"
+python3 tools/socrata_id_churn.py --self-test || { echo "FAILED"; fail=1; }
 
 if [ -n "${JO_UNIT_MATCH:-}" ]; then
   # Never let a filtered run be mistaken for a full one: a green partial run

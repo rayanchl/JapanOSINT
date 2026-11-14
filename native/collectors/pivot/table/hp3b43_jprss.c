@@ -7909,7 +7909,8 @@ static const hp_source HP3B43_JPRSS[] = {
     .url = "https://www.city.higashimatsuyama.lg.jp/rss/10/list5.xml",
     .array_path = "item",
     .date_keys = "pubDate,dc:date",
-    .id_keys = "guid,link",
+    .id_keys = "link+title",   /* id_keys "link+title", MEASURED 2026-11-14 (tools/audit_distinctness.py, the TINY pass):
+       two different events share one link (36 distinct of 37), so the link alone merges them at any seam; link+title is 37 of 37. */
     .interval = 3600,
     .adaptive_interval = 1,
     .link_keys = "link",

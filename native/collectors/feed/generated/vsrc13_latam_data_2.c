@@ -11,12 +11,15 @@
  * first row that needs it now. */
 #include "_vjson_idkeys.inc"
 
-VJSON(lat_co_covid, "lat-co-covid", "Datos Abiertos Colombia - COVID-19 confirmed cases", "コロンビア：保健 - Datos Abiertos Colombia - COVID-19 confirmed cases",
+/* id_keys "id_de_caso", MEASURED 2026-11-14 (tools/audit_distinctness.py, the TINY pass):
+   the publisher's own case id, 2,000 of 2,000; the fallback was 37 distinct of 1,500. */
+VJSON_IDKEYS(lat_co_covid, "lat-co-covid", "Datos Abiertos Colombia - COVID-19 confirmed cases", "コロンビア：保健 - Datos Abiertos Colombia - COVID-19 confirmed cases",
   "latam_data", "health",
   "https://www.datos.gov.co/resource/gt2j-8ykr.json?$limit=500&$order=:id",
   "",
   "es", "[\"col\",\"health\",\"data\"]", 86400,
-  "Case-level national COVID-19 register with date, municipality, age, sex and outcome.");
+  "Case-level national COVID-19 register with date, municipality, age, sex and outcome.",
+  "id_de_caso");
 
 VJSON(lat_co_cuadrantes_policia, "lat-co-cuadrantes-policia", "Datos Abiertos Colombia - National Police quadrant directory", "コロンビア：治安 - Datos Abiertos Colombia - National Police quadrant directory",
   "latam_data", "security",
@@ -77,12 +80,19 @@ VJSON(lat_co_empresas_grandes, "lat-co-empresas-grandes", "Datos Abiertos Colomb
   "es", "[\"col\",\"economy\",\"data\"]", 86400,
   "Supersociedades ranking of the largest Colombian companies with revenue, assets and sector.");
 
-VJSON(lat_co_eva_agro, "lat-co-eva-agro", "Datos Abiertos Colombia - Municipal agricultural evaluations (EVA)", "コロンビア：環境 - Datos Abiertos Colombia - Municipal agricultural evaluations (EVA)",
+/* id_keys ":id", MEASURED 2026-11-14 with tools/audit_distinctness.py. This row
+   declared no key, so it keyed on hash(title, link, date) —
+   25 of 1,500 over the pages read, in a body holding no byte-identical
+   records. The in-page guard hid most of that, and every pair split across
+   two pages collapsed: different records lost, with rc=0.
+   Evidence for this key: every sampled row created 2019-11-24 (static since). */
+VJSON_IDKEYS(lat_co_eva_agro, "lat-co-eva-agro", "Datos Abiertos Colombia - Municipal agricultural evaluations (EVA)", "コロンビア：環境 - Datos Abiertos Colombia - Municipal agricultural evaluations (EVA)",
   "latam_data", "environment",
-  "https://www.datos.gov.co/resource/2pnw-mmge.json?$limit=500&$order=:id",
+  "https://www.datos.gov.co/resource/2pnw-mmge.json?$select=*,:id&$limit=500&$order=:id",
   "",
   "es", "[\"col\",\"environment\",\"data\"]", 86400,
-  "Crop area, production and yield per municipality and crop from the national agricultural survey.");
+  "Crop area, production and yield per municipality and crop from the national agricultural survey.",
+  ":id");
 
 /* $order=:id already pinned the page order, but the records themselves carried
  * no field jsonlist's id precedence knows, so each row keyed on a hash of its
@@ -118,12 +128,19 @@ VJSON_IDKEYS(lat_co_ideam_estaciones, "lat-co-ideam-estaciones", "Datos Abiertos
   "IDEAM's national hydro-meteorological station register with coordinates, altitude, status and operator.",
   "codigo");
 
-VJSON(lat_co_inspeccion_sanitaria, "lat-co-inspeccion-sanitaria", "Datos Abiertos Colombia - Sanitary inspection certificates", "コロンビア：保健 - Datos Abiertos Colombia - Sanitary inspection certificates",
+/* id_keys ":id", MEASURED 2026-11-14 with tools/audit_distinctness.py. This row
+   declared no key, so it keyed on hash(title, link, date) —
+   12 of 1,500 over the pages read, in a body holding no byte-identical
+   records. The in-page guard hid most of that, and every pair split across
+   two pages collapsed: different records lost, with rc=0.
+   Evidence for this key: every sampled row created 2023-09-28. */
+VJSON_IDKEYS(lat_co_inspeccion_sanitaria, "lat-co-inspeccion-sanitaria", "Datos Abiertos Colombia - Sanitary inspection certificates", "コロンビア：保健 - Datos Abiertos Colombia - Sanitary inspection certificates",
   "latam_data", "health",
-  "https://www.datos.gov.co/resource/qu3n-jbd7.json?$limit=500&$order=:id",
+  "https://www.datos.gov.co/resource/qu3n-jbd7.json?$select=*,:id&$limit=500&$order=:id",
   "",
   "es", "[\"col\",\"health\",\"data\"]", 86400,
-  "Import/export sanitary inspection certificates issued by INVIMA.");
+  "Import/export sanitary inspection certificates issued by INVIMA.",
+  ":id");
 
 VJSON(lat_co_ips_nivel, "lat-co-ips-nivel", "Datos Abiertos Colombia - Health institutions by complexity level", "コロンビア：保健 - Datos Abiertos Colombia - Health institutions by complexity level",
   "latam_data", "health",
@@ -157,12 +174,19 @@ VJSON(lat_co_pdet, "lat-co-pdet", "Datos Abiertos Colombia - PDET priority munic
   "es", "[\"col\",\"conflict\",\"data\"]", 86400,
   "The 170 municipalities designated for post-conflict development programmes.");
 
-VJSON(lat_co_pep, "lat-co-pep", "Datos Abiertos Colombia - Politically exposed persons (PEP) register", "コロンビア：治安 - Datos Abiertos Colombia - Politically exposed persons (PEP) register",
+/* id_keys ":id", MEASURED 2026-11-14 with tools/audit_distinctness.py. This row
+   declared no key, so it keyed on hash(title, link, date) —
+   1,230 of 1,500 over the pages read, in a body holding no byte-identical
+   records. The in-page guard hid most of that, and every pair split across
+   two pages collapsed: different records lost, with rc=0.
+   Evidence for this key: every sampled row created 2026-04-10. */
+VJSON_IDKEYS(lat_co_pep, "lat-co-pep", "Datos Abiertos Colombia - Politically exposed persons (PEP) register", "コロンビア：治安 - Datos Abiertos Colombia - Politically exposed persons (PEP) register",
   "latam_data", "security",
-  "https://www.datos.gov.co/resource/3qxn-uc22.json?$limit=500&$order=:id",
+  "https://www.datos.gov.co/resource/3qxn-uc22.json?$select=*,:id&$limit=500&$order=:id",
   "",
   "es", "[\"col\",\"security\",\"data\"]", 86400,
-  "Colombian officials classified as politically exposed persons, with post and entity.");
+  "Colombian officials classified as politically exposed persons, with post and entity.",
+  ":id");
 
 VJSON(lat_co_precio_max_medic, "lat-co-precio-max-medic", "Datos Abiertos Colombia - Regulated maximum medicine prices", "コロンビア：保健 - Datos Abiertos Colombia - Regulated maximum medicine prices",
   "latam_data", "health",
@@ -189,12 +213,19 @@ VJSON_IDKEYS(lat_co_procuraduria, "lat-co-procuraduria", "Datos Abiertos Colombi
   "Named officials of Colombia's Inspector General office with post and duty station.",
   "correo_electronico+cargo");
 
-VJSON(lat_co_reps, "lat-co-reps", "Datos Abiertos Colombia - Special register of health providers and sites (REPS)", "コロンビア：保健 - Datos Abiertos Colombia - Special register of health providers and sites (REPS)",
+/* id_keys ":id", MEASURED 2026-11-14 with tools/audit_distinctness.py. This row
+   declared no key, so it keyed on hash(title, link, date) —
+   1,063 of 1,500 over the pages read, in a body holding no byte-identical
+   records. The in-page guard hid most of that, and every pair split across
+   two pages collapsed: different records lost, with rc=0.
+   Evidence for this key: every sampled row created 2026-04-17. */
+VJSON_IDKEYS(lat_co_reps, "lat-co-reps", "Datos Abiertos Colombia - Special register of health providers and sites (REPS)", "コロンビア：保健 - Datos Abiertos Colombia - Special register of health providers and sites (REPS)",
   "latam_data", "health",
-  "https://www.datos.gov.co/resource/c36g-9fc2.json?$limit=500&$order=:id",
+  "https://www.datos.gov.co/resource/c36g-9fc2.json?$select=*,:id&$limit=500&$order=:id",
   "",
   "es", "[\"col\",\"health\",\"data\"]", 86400,
-  "Every registered Colombian health provider and service location with services enabled and status.");
+  "Every registered Colombian health provider and service location with services enabled and status.",
+  ":id");
 
 /* Registry sweep 2026-10-22: 10,000 emitted / 5,111 stored. VJSON's id precedence
    list finds no field in this Socrata record, so it fell back and collapsed
@@ -207,12 +238,19 @@ VJSON_IDKEYS(lat_co_runt_actores, "lat-co-runt-actores", "Datos Abiertos Colombi
   "Registered transport-system actors (drivers, operators, centres) per municipality and department.",
   "id_empresa+a_o+mes_nombre+tipo_actor");
 
-VJSON(lat_co_rups, "lat-co-rups", "Datos Abiertos Colombia - Register of public-utility providers (RUPS)", "コロンビア：政府 - Datos Abiertos Colombia - Register of public-utility providers (RUPS)",
+/* id_keys ":id", MEASURED 2026-11-14 with tools/audit_distinctness.py. This row
+   declared no key, so it keyed on hash(title, link, date) —
+   677 of 1,500 over the pages read, in a body holding no byte-identical
+   records. The in-page guard hid most of that, and every pair split across
+   two pages collapsed: different records lost, with rc=0.
+   Evidence for this key: every sampled row created 2021-07-26 (static since). */
+VJSON_IDKEYS(lat_co_rups, "lat-co-rups", "Datos Abiertos Colombia - Register of public-utility providers (RUPS)", "コロンビア：政府 - Datos Abiertos Colombia - Register of public-utility providers (RUPS)",
   "latam_data", "gov",
-  "https://www.datos.gov.co/resource/4qkq-csdn.json?$limit=500&$order=:id",
+  "https://www.datos.gov.co/resource/4qkq-csdn.json?$select=*,:id&$limit=500&$order=:id",
   "",
   "es", "[\"col\",\"gov\",\"data\"]", 86400,
-  "Companies registered as providers of water, energy, gas or waste services, with service and area.");
+  "Companies registered as providers of water, energy, gas or waste services, with service and area.",
+  ":id");
 
 VJSON(lat_co_secop_integrado, "lat-co-secop-integrado", "Datos Abiertos Colombia - SECOP integrated procurement register", "コロンビア：経済 - Datos Abiertos Colombia - SECOP integrated procurement register",
   "latam_data", "economy",
@@ -261,19 +299,33 @@ VJSON_KEYED(lat_co_secop2_procesos, "lat-co-secop2-procesos", "Datos Abiertos Co
   "Open and closed SECOP II tender processes with entity, estimated value, modality and status.",
   ":id");
 
-VJSON(lat_co_secop2_proveedores, "lat-co-secop2-proveedores", "Datos Abiertos Colombia - SECOP II registered suppliers", "コロンビア：経済 - Datos Abiertos Colombia - SECOP II registered suppliers",
+/* id_keys ":id", MEASURED 2026-11-14 with tools/audit_distinctness.py. This row
+   declared no key, so it keyed on hash(title, link, date) —
+   1,497 of 1,500 over the pages read, in a body holding no byte-identical
+   records. The in-page guard hid most of that, and every pair split across
+   two pages collapsed: different records lost, with rc=0.
+   Evidence for this key: rows created on 10 different days, newest 2026-11-14: the dataset ACCUMULATES, so a row id survives. */
+VJSON_IDKEYS(lat_co_secop2_proveedores, "lat-co-secop2-proveedores", "Datos Abiertos Colombia - SECOP II registered suppliers", "コロンビア：経済 - Datos Abiertos Colombia - SECOP II registered suppliers",
   "latam_data", "economy",
-  "https://www.datos.gov.co/resource/qmzu-gj57.json?$limit=500&$order=:id",
+  "https://www.datos.gov.co/resource/qmzu-gj57.json?$select=*,:id&$limit=500&$order=:id",
   "",
   "es", "[\"col\",\"economy\",\"data\"]", 86400,
-  "Suppliers registered on SECOP II with tax id, legal form, size and registration state.");
+  "Suppliers registered on SECOP II with tax id, legal form, size and registration state.",
+  ":id");
 
-VJSON(lat_co_simit, "lat-co-simit", "Datos Abiertos Colombia - SIMIT traffic fines register", "コロンビア：交通 - Datos Abiertos Colombia - SIMIT traffic fines register",
+/* id_keys ":id", MEASURED 2026-11-14 with tools/audit_distinctness.py. This row
+   declared no key, so it keyed on hash(title, link, date) —
+   6 of 1,499 over the pages read, in a body holding no byte-identical
+   records. The in-page guard hid most of that, and every pair split across
+   two pages collapsed: different records lost, with rc=0.
+   Evidence for this key: every sampled row created 2026-09-23. */
+VJSON_IDKEYS(lat_co_simit, "lat-co-simit", "Datos Abiertos Colombia - SIMIT traffic fines register", "コロンビア：交通 - Datos Abiertos Colombia - SIMIT traffic fines register",
   "latam_data", "transport",
-  "https://www.datos.gov.co/resource/72nf-y4v3.json?$limit=500&$order=:id",
+  "https://www.datos.gov.co/resource/72nf-y4v3.json?$select=*,:id&$limit=500&$order=:id",
   "",
   "es", "[\"col\",\"transport\",\"data\"]", 86400,
-  "Traffic fines recorded in the national SIMIT system by infraction code and territory.");
+  "Traffic fines recorded in the national SIMIT system by infraction code and territory.",
+  ":id");
 
 VJSON(lat_co_siri, "lat-co-siri", "Datos Abiertos Colombia - SIRI disciplinary records", "コロンビア：司法 - Datos Abiertos Colombia - SIRI disciplinary records",
   "latam_data", "legal",
@@ -321,12 +373,19 @@ VJSON(lat_co_tasas_captacion, "lat-co-tasas-captacion", "Datos Abiertos Colombia
   "es", "[\"col\",\"economy\",\"data\"]", 86400,
   "Deposit-taking rates and money-market operation rates reported to the financial supervisor.");
 
-VJSON(lat_co_tienda_virtual, "lat-co-tienda-virtual", "Datos Abiertos Colombia - Tienda Virtual del Estado Colombiano orders", "コロンビア：経済 - Datos Abiertos Colombia - Tienda Virtual del Estado Colombiano orders",
+/* id_keys "identificador_de_la_orden", MEASURED 2026-11-14 with tools/audit_distinctness.py. This row
+   declared no key, so it keyed on hash(title, link, date) —
+   4 of 1,500 over the pages read, in a body holding no byte-identical
+   records. The in-page guard hid most of that, and every pair split across
+   two pages collapsed: different records lost, with rc=0.
+   Evidence for this key: REPLACED wholesale (every sampled row created 2026-10-28), so `:id` would re-key the dataset on each refresh; this is the publisher's own order identifier and is 2,000 of 2,000. */
+VJSON_IDKEYS(lat_co_tienda_virtual, "lat-co-tienda-virtual", "Datos Abiertos Colombia - Tienda Virtual del Estado Colombiano orders", "コロンビア：経済 - Datos Abiertos Colombia - Tienda Virtual del Estado Colombiano orders",
   "latam_data", "economy",
   "https://www.datos.gov.co/resource/rgxm-mmea.json?$limit=500&$order=:id",
   "",
   "es", "[\"col\",\"economy\",\"data\"]", 86400,
-  "Framework-agreement purchase orders placed through the state virtual store.");
+  "Framework-agreement purchase orders placed through the state virtual store.",
+  "identificador_de_la_orden");
 
 VJSON(lat_co_trafico_portuario, "lat-co-trafico-portuario", "Datos Abiertos Colombia - Maritime port traffic", "コロンビア：交通 - Datos Abiertos Colombia - Maritime port traffic",
   "latam_data", "transport",
@@ -335,12 +394,19 @@ VJSON(lat_co_trafico_portuario, "lat-co-trafico-portuario", "Datos Abiertos Colo
   "es", "[\"col\",\"transport\",\"data\"]", 86400,
   "Cargo and vessel movements through Colombian ports by port, cargo type and period.");
 
-VJSON(lat_co_tratados, "lat-co-tratados", "Datos Abiertos Colombia - International treaties of Colombia", "コロンビア：政府 - Datos Abiertos Colombia - International treaties of Colombia",
+/* id_keys ":id", MEASURED 2026-11-14 with tools/audit_distinctness.py. This row
+   declared no key, so it keyed on hash(title, link, date) —
+   1,094 of 1,115 over the pages read, in a body holding no byte-identical
+   records. The in-page guard hid most of that, and every pair split across
+   two pages collapsed: different records lost, with rc=0.
+   Evidence for this key: rows created on 4 days, newest 2026-10-09. */
+VJSON_IDKEYS(lat_co_tratados, "lat-co-tratados", "Datos Abiertos Colombia - International treaties of Colombia", "コロンビア：政府 - Datos Abiertos Colombia - International treaties of Colombia",
   "latam_data", "gov",
-  "https://www.datos.gov.co/resource/fdir-hk5z.json?$limit=500&$order=:id",
+  "https://www.datos.gov.co/resource/fdir-hk5z.json?$select=*,:id&$limit=500&$order=:id",
   "",
   "es", "[\"col\",\"gov\",\"data\"]", 86400,
-  "Treaty register with counterpart, subject, signature and entry-into-force dates.");
+  "Treaty register with counterpart, subject, signature and entry-into-force dates.",
+  ":id");
 
 /* Registry sweep 2026-10-22: 8,372 / 8,288. VJSON's id precedence
    list finds no field in this Socrata record, so it fell back and collapsed

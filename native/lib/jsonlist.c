@@ -1408,6 +1408,7 @@ static long declared_total(cJSON *doc) {
     "total_count", "totalCount", "total", "count", "meta.count",
     "numberMatched", "totalResults", "result.count", "meta.total",
     "totalElements", "recordsTotal",
+    "RecordCount",                 /* DHS Program: beside TotalPages and Page */
     /* The families whose totals the walk was blind to. ROR answers
      * `number_of_results: 108000` next to 20 items, Solr `response.numFound`,
      * OpenDataSoft `nhits`, CORDIS `payload.totalHits`; each of those is the
@@ -1535,6 +1536,15 @@ static const struct pager PAGERS[] = {
   { "page_size", "page",   NULL,     1 },   /* DRF                             */
   { "pageSize",  "page",   NULL,     1 },   /* ArcGIS Hub, many .NET APIs      */
   { "perPage",   "page",   NULL,     1 },   /* house style                     */
+  /* The DHS Program API's spelling, all lower case. Missing until 2026-11-14:
+   * 19 `api.dhsprogram.com/rest/dhs/data?...&perpage=100` rows (ten VJSON, nine
+   * hp `page_walk`) each read ONE page — 1,900 records of the 333,097 their
+   * own `RecordCount` declares — and every one read OK at a round 100. Found by
+   * tools/audit_distinctness.py refusing to call one page a measurement, not
+   * by any record count. The `count`/`start` lesson below, a second time: a
+   * walk that reads exactly one page of a declared size deserves one look at
+   * this table. */
+  { "perpage",   "page",   NULL,     1 },
   { "rp",        "page",   NULL,     1 },   /* flexigrid — taginfo (OSM)       */
   { "itemsPerPage", "page",NULL,     1 },   /* ERDDAP index.json               */
   { "size",      "page",   NULL,     1 },   /* Spring Data / Apollo (RESF)     */

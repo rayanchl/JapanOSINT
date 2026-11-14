@@ -960,6 +960,12 @@ static const hp_source HP3B19_HEALTH[] = {
     .tags = "\"nlm\",\"dailymed\",\"drug-name\",\"brand\",\"generic\",\"reference\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://dailymed.nlm.nih.gov/dailymed/services/v2/drugnames.json?pagesize=100",
+    /* id_keys MEASURED 2026-11-14 with tools/audit_distinctness.py. The row
+       declared none, so hpengine keyed on its fallback — the record's first
+       scalar here — which is 2 distinct values over 300 records. `drug_name`
+       alone is 259 of 300 (one name is listed once per name TYPE, brand and
+       generic); `drug_name+name_type` is 300 of 300 over three pages. */
+    .id_keys = "drug_name+name_type",
     .array_path = "data",
     .interval = 604800,
     .page_param = "page",

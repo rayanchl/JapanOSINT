@@ -2570,6 +2570,8 @@ static const hp_source HP3B19_EURASIA[] = {
     .array_path = "dcat:Distribution",
     .date_keys = "dct:modified",
     .interval = 86400,
+    .id_keys = "dcat:accessURL.@rdf:resource",   /* id_keys "dcat:accessURL.@rdf:resource", MEASURED 2026-11-14 (tools/audit_distinctness.py, the TINY pass):
+       no key was declared and the fallback landed on dct:title, 3,527 distinct of 4,059 distributions (one dataset's XLSX, CSV and JSON share a title). The access URL is 4,058 of 4,059. */
     .title_keys = "dct:title",
     .description = "The entire Cypriot national catalogue serialised as DCAT-AP 2.0 "
       "in a single document: six thousand datasets and four thousand "

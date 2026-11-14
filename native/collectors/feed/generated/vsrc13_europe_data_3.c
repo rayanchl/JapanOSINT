@@ -6,6 +6,7 @@
  * since — this file, not the manifest, is the current copy. The
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
+#include "_vjson_idkeys.inc"
 
 VJSON(eur_ods_bzh_aires_et_produits_aocaop_et_igp, "eur-ods-bzh-aires-et-produits-aocaop-et-igp", "Region Bretagne open data — Aires et produits AOC/AOP et IGP - Bretagne", "Region Bretagne open data — Aires et produits AOC/AOP et IGP - Bretagne",
   "europe_data", "opendata",
@@ -169,12 +170,29 @@ VJSON(eur_ods_idf_sections_des_continuites_ecologiqu, "eur-ods-idf-sections-des-
   "fr", "[\"fra\",\"opendata\"]", 86400,
   "Records of the 'Sections des continuités écologiques, coupures d'urbanisation, liaisons agricoles ou liaisons vertes localisées d'Île-de-France sur la CDGT du Sdrif approuvé par décret le 27 décembre 2013' dataset published by Region Ile-de-France open data.");
 
-VJSON(eur_ods_idfm_actualites_locales_idfm, "eur-ods-idfm-actualites-locales-idfm", "Ile-de-France Mobilites open data — Actualités locales Île-de-France Mobilités", "Ile-de-France Mobilites open data — Actualités locales Île-de-France Mobilités",
+/* order_by=article_urlcomplet, measured 2026-11-14 with a control: asc and desc
+   answer different pages and order_by=frobnicate is HTTP 400 ("unknown field"),
+   so the parameter is validated and honoured. The dataset publishes no id —
+   `order_by=id` is itself a 400 — and the article URL is the one field that is
+   a stable, near-unique handle. The walk was an unordered offset over 216
+   records in three pages; its collisions moved 4 -> 1 between two readings.
+
+   AND THE SORT ALONE MADE IT WORSE (6 collapsed), which is what exposed the
+   real defect: this row declared no key, and VJSON's fallback is not a hash of
+   the record but hash(title, link, date) — here only 36 distinct values for
+   216 records, with the in-page guard hiding most of it and every cross-page
+   pair collapsing. The dataset read WHOLE in one request (exports/json) is 216
+   rows and 216 distinct whole records, so it holds no duplicates at all and
+   every collapse was a different article lost. `article_urlcomplet` alone is
+   205 (one article is published for several territories);
+   `article_urlcomplet+territory` is 216 of 216, every token on every row. */
+VJSON_IDKEYS(eur_ods_idfm_actualites_locales_idfm, "eur-ods-idfm-actualites-locales-idfm", "Ile-de-France Mobilites open data — Actualités locales Île-de-France Mobilités", "Ile-de-France Mobilites open data — Actualités locales Île-de-France Mobilités",
   "europe_data", "opendata",
-  "https://data.iledefrance-mobilites.fr/api/explore/v2.1/catalog/datasets/actualites_locales_idfm/records?limit=100",
+  "https://data.iledefrance-mobilites.fr/api/explore/v2.1/catalog/datasets/actualites_locales_idfm/records?limit=100&order_by=article_urlcomplet",
   "results",
   "fr", "[\"fra\",\"opendata\"]", 86400,
-  "Records of the 'Actualités locales Île-de-France Mobilités' dataset published by Ile-de-France Mobilites open data.");
+  "Records of the 'Actualités locales Île-de-France Mobilités' dataset published by Ile-de-France Mobilites open data.",
+  "article_urlcomplet+territory");
 
 VJSON(eur_ods_idfm_gares_routieres_idf, "eur-ods-idfm-gares-routieres-idf", "Ile-de-France Mobilites open data — Eco-stations Bus en Île-de-France", "Ile-de-France Mobilites open data — Eco-stations Bus en Île-de-France",
   "europe_data", "opendata",

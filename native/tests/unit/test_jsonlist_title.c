@@ -104,6 +104,39 @@ int main(void) {
   ok(!strcmp(title_of("{\"nome\":\"Nome\"}"), "Nome"), "the non-English key list still works");
   ok(!strcmp(title_of("{\"nothing\":\"here\"}"), ""), "no title key is still no title");
 
+  /* 9. Not a title case, but this is the test that links lib/jsonlist.c
+   *    directly. The DHS Program API pages by `perpage` + `page`, all lower
+   *    case, and declares its size as `RecordCount`. Neither was known until
+   *    2026-11-14, so 19 rows each read ONE page: 1,900 records of the 333,097
+   *    declared, every row green at a round 100. Both assertions below were
+   *    confirmed to fail with the PAGERS entry and the KEYS entry removed. */
+  printf("-- 9. `perpage` is a page size the walk can advance\n");
+  {
+    char body[4096] = "{\"TotalPages\":194,\"Page\":\"1\",\"RecordCount\":19342,\"Data\":[";
+    for (int i = 0; i < 100; i++)
+      snprintf(body + strlen(body), sizeof body - strlen(body), "%s{\"DataId\":%d}", i ? "," : "", i);
+    strcat(body, "]}");
+    cJSON *doc = cJSON_Parse(body);
+    assert(doc);
+    ok(declared_total(doc) == 19342, "RecordCount is read as the declared total");
+    int full = 0;
+    char *next = jsonlist_next_page(doc,
+        "https://api.dhsprogram.com/rest/dhs/data?countryIds=GH&f=json&perpage=100&page=1",
+        100, -1, 100, &full);
+    /* `available` is -1 ON PURPOSE. With the total passed in, a URL that
+     * carries a page number advances on the total alone and this assertion
+     * passes without the PAGERS entry — checked: it did, on the first draft.
+     * The pager is what moves the walk when no total is known. */
+    ok(next && strstr(next, "page=2") && strstr(next, "perpage=100"),
+       "a full page of `perpage` advances to page=2 with no total to lean on");
+    free(next);
+    /* CONTROL: a size parameter nobody knows is still never advanced by guess. */
+    next = jsonlist_next_page(doc, "https://x.example/api?chunk=100&page=1", 100, -1, 100, &full);
+    ok(next == NULL, "CONTROL: an unknown size parameter is not paged on a guess");
+    free(next);
+    cJSON_Delete(doc);
+  }
+
   printf(fails ? "\nFAILED (%d)\n" : "\nall passed\n", fails);
   return fails ? 1 : 0;
 }

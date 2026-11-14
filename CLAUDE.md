@@ -1206,6 +1206,26 @@ SIGXFSZ, median 108.7 s against a ~200 s kill line). Rule 1's note on the
     `nam-delaware-...-organization-d` at 386 over a completed walk, and the
     rest at 160 or less. **A re-read is not just a staleness check: the pair of
     readings answers a question neither reading can.**
+
+    **AND THAT SPLIT WAS TOO CONFIDENT IN BOTH HALVES, as working the rows
+    showed** (the per-row outcome is the `resolution` column of
+    `docs/collision-open57-reread-2026-11-14.tsv`). The two readings are
+    TWENTY DAYS apart, so a number can also move because the DATASET changed;
+    "a key defect gives the same number twice" is a rule about two runs in one
+    hour. Of the 23 filed as drift, six turned out to be key defects with a
+    moving symptom (`NLM_DAILYMED_DRUGNAMES` keyed 300 records on 2 values,
+    OONI on 2, the idfm row on 36 of 216, three Socrata rows), four ignore
+    every sort spelling against a bogus control (PMG x3, ROR), four are
+    declared newest-first recency rows where an insertion at the head RE-SERVES
+    a record across a boundary — a duplicate, not a skip, and the sink collapses
+    it correctly — and only **two were what the label said**: BGS's unordered
+    offset walk (`sortby=landslide_number`, honoured, a bogus value is HTTP
+    400: 69 lost → **18,700 of 18,700**) and UK flood stations, whose `_sort`
+    is ignored and whose whole register is one request (`_limit=10000`:
+    **5,541 of 5,541**). And of the 25 "key questions", four are the upstream's
+    own byte-identical features — `nam-delaware-…-organization-d`, the row that
+    headed the queue at 386, read whole over twelve pages holds 3,917 distinct
+    whole features, which is what the engine stores.
   * **`JO30_TOKYO_CRIME_BICYCLE_2024` WAS A REAL DEFECT, and it was 65 rows
     rather than one.** The LEAD said it needed a read of the published file, so
     the file was read. It is the NPA-standard crime layout byte for byte — 15
@@ -1304,15 +1324,38 @@ SIGXFSZ, median 108.7 s against a ~200 s kill line). Rule 1's note on the
   **It reports TWO comparisons, and the second is the one that gets skipped.**
   Against the CEILING — the count of distinct WHOLE records, which no key can
   beat because two byte-identical records are one record — and against WHAT THE
-  ROW DOES TODAY, because a row that declares nothing already reaches the
-  ceiling through the content-hash fallback. That is why declaring a "real" id
-  can make a row WORSE, as four Socrata rows and `gov-co-secop2` record, and it
-  is exactly the comparison the d-portal pass above skipped.
+  ROW DOES TODAY, because a row that declares nothing is keyed on its engine's
+  FALLBACK, and a declared "real" id can be worse than that — as four Socrata
+  rows and `gov-co-secop2` record. It is exactly the comparison the d-portal
+  pass above skipped.
 
-  Run on the 25-row queue: **18 rows are content-hash-at-ceiling and lose
-  nothing by count**, 1 was already correct, 1 unmeasurable, 1 one-page-only,
-  and **three were real findings** — so that queue's "key questions" were mostly
-  not key defects at all.
+  **THE FIRST RUN'S HEADLINE WAS WRONG, AND IT STOOD IN THIS FILE FOR SIX
+  HOURS**: "18 rows are content-hash-at-ceiling and lose nothing by count …
+  that queue's key questions were mostly not key defects at all." The tool had
+  ASSUMED the no-key fallback is a hash of the whole record. It is, in one
+  engine of three, and each was then read out of the code that owns it:
+
+  * **VGEO** (`lib/geojson.c`) — a native id, else the Feature `id`, else
+    `hash(geometry, properties)`. Genuinely the whole feature.
+  * **VJSON** (`lib/jsonlist.c`) — the top-level `K_ID` list, else
+    **`hash(title, link, date)`**, where an unmatched title is the record's
+    first scalar. Three fields, not the record.
+  * **hpengine** — `ID_FALLBACK` through `hp_flat_get`, else **the record's
+    first scalar**.
+
+  So an unkeyed VJSON or hp row is keyed on a DIMENSION whenever its first
+  scalar is one — an entity name, a year, a status — and only the in-page guard
+  keeps its records apart, which is why its loss reads as a handful at the page
+  seams. What exposed it was a control: `eur-ods-idfm-actualites-locales-idfm`
+  was given a stable sort and STILL collapsed 6, on a dataset holding no
+  byte-identical rows, which a whole-record hash cannot do. Re-run with each
+  engine's real fallback, **18 of the queue's rows flipped to
+  `NO_KEY_FALLBACK_IS_DIMENSION`** — `eur-soc-cat-qa4t-5ptr` keyed 3,000
+  records on ONE value, `lat-co-simit` on 6, NY lobbying on 8. Both readings
+  are kept side by side in `docs/distinctness-2026-11-14.tsv` (`verdict` and
+  `verdict_v1_WRONG_MODEL`). **A tool that models the engine is a claim about
+  the engine; read the fallback out of the code, per engine, before trusting a
+  verdict that says "nothing to do".**
 
   * **Seven of NINE `FAA_AMD_PENDING_*` layers keyed on the AIRPORT**
     (`FAA_ID`) while each row is one record per ITEM: 115 distinct of 2,000 for
@@ -1364,6 +1407,105 @@ SIGXFSZ, median 108.7 s against a ~200 s kill line). Rule 1's note on the
   put in an `id_keys`. **A new check passing its own fixtures proves nothing
   until the fixtures are shown to fail.**
 
+  **AND THE 160 TINY ROWS I HAD CLOSED AS "DO NOT PROBE" WERE THEN READ IN ONE
+  PASS, AND THE REASONING THAT CLOSED THEM WAS WRONG** (2026-11-14,
+  `docs/distinctness-tiny-2026-11-14.tsv`). The argument two bullets up was
+  that a row losing one or two records has, at worst, one or two byte-identical
+  duplicates. The loss count is a reading of what SURVIVED the in-page guard,
+  so it says nothing about the key underneath: **42 of the 159 distinct rows
+  have a key that is not the record's identity**, and the pass found three
+  things no collision count could have ranked at all.
+
+  * **NINETEEN ROWS READ ONE PAGE OF A COLLECTION TWO HUNDRED PAGES LONG.** The
+    nine `af-dhs-data-*` rows were in the TINY class for losing 1–2 of **100**
+    records. The DHS Program API declares `RecordCount: 19342` for Ghana in the
+    same envelope: the rows page by `perpage` + `page`, all lower case, which
+    `lib/jsonlist.c`'s `PAGERS` did not know (it had `per_page`, `perPage`,
+    `page_size`, `pageSize`), and `RecordCount` was on neither declared-total
+    list, so nothing could say a remainder existed. Ten VJSON siblings
+    (`dhs-data-*`) read OK at 100 of 100. **1,900 records of 333,097**, every
+    gate green — the `count`/`start` lesson a second time, found because the
+    tool refused to call one page a measurement (`ONE_PAGE_ONLY`) rather than
+    by anything counting records. Fixed in the shared table and in both total
+    lists in one change; `test_jsonlist_title.c` section 9 pins both halves,
+    each confirmed to fail alone — and the first draft of the pager assertion
+    passed WITHOUT the entry, because a URL that carries a page number advances
+    on a known total, so the fixture passes `available = -1`.
+    Paging then exposed the key: no name on either engine's fallback list
+    matches a DHS record, so **838 of Morocco's 4,092 collapsed the moment the
+    row paged**, and on the hp rows the uid came from the merged detail
+    envelope (the 2026-11-11 CKAN finding again). `DataId` is 4,092 of 4,092,
+    13,057 of 13,057 and 38,088 of 38,088 over three countries read WHOLE.
+    Measured after: `dhs-data-ma` 100 → **4,092**, `dhs-data-bf` 100 →
+    **15,742**, both complete at `perpage=1000`; the hp rows cycle
+    (`page_resume`) at `page_max = 7`, because **the detail budget is a count
+    OR A CLOCK and here the clock bites first** — at ten pages a run made 788
+    hops in its 120 s and stamped 212 records `_detail_pending`, which a cycle
+    never revisits. Mali (21,021) and Senegal (38,088) exceed one run's 20,000
+    and disclose the rest against the declared total.
+  * **A TAKEN-OVER DOMAIN**, above.
+  * **Nineteen keys**, each measured and then confirmed in the engine: Hub'Eau
+    stations on `code_station` (6,543 of 6,543), Colombia's COVID cases on
+    `id_de_caso`, two Catalan/Lombard Socrata sets, the FRA railroad reference
+    (`railroadcompanycode+rrcostartdate` — a code is reused by a later company,
+    and NOT `:id`, since every row was created today), TfL lift disruptions
+    (`icsCode` is the STATION: 18 distinct for 27 lifts), ONS code lists
+    (`links` is an object and matched nothing), a French feed whose 50 items
+    share ONE guid and ONE link, Cyprus's DCAT catalogue (no key, titled
+    fallback 3,527 of 4,059), and **all 29 JPCERT phishing-URL months, where
+    `id_keys = "URL,date"` CHOSE the URL** — the comma-for-plus mistake this
+    file calls its most repeated, in a batch nobody had re-read.
+
+  **"TWO PAGES CAN BE TOO FEW" BIT TWICE MORE IN THE SAME PASS, once on me.**
+  Lombardy's `codsif` read 2,000 of 2,000 on two pages, was applied, and the
+  engine collapsed 14 of 2,942: fourteen codes each name two wells at different
+  coordinates and none is in the first 2,000 rows. `codsif+coordx+coordy` is
+  2,942 of 2,942 over the whole set. The rule that holds is the one this pass
+  ended up following for every later row: **a key is applied only after the
+  ENGINE has run the whole collection on it**, and a tool reading is what
+  chooses the candidate, never what certifies it.
+
+  **THE TOOL HAD THREE MORE SILENT SKIPS, each the shape this file keeps
+  correcting in tools.** It read `HP_JSON` only and dropped every other mode
+  without a word (72 of the 160 were `HP_CSV` or `HP_XML`; both are read now,
+  with fixtures shown to fail — a pipe-delimited body read as comma, a
+  Shift_JIS file, a repeated XML child, a prefixed key token). It required the
+  WORD `HP_JSON`, and that is enum 0, so every hp row declaring no `.mode` —
+  the whole generated `hp16`/`hp17` fleet, the DHS rows among them — was
+  invisible. And its macro splitter did not skip comments, so the nineteen rows
+  went `NOT_READABLE` the hour a note was written into their argument lists:
+  the `gen_detail_hop_upgrade.py` defect, re-made in a tool written the same
+  day by the same hand. An id the tool cannot open is now a ROW in its output
+  (`NOT_READABLE`), never a line on stderr — 31 remain (VRSS/RSSX, where
+  `lib/rss_atom.c` already documents and guards PACER's guid-is-the-docket;
+  `HP_XLSX`; `VCSV`; `VJSON_PREP`), which is a count of what is unmeasured and
+  not of what is clean.
+
+  **Left alone, with the reason in the TSV rather than here**: the 21 police
+  and Tokyo crime rows (occurrence registers; no identity by design), four
+  Wikidata SPARQL rows (an item repeats per value of a multi-valued property —
+  the fix is the query's `GROUP BY`, not a key), `IRIS_IMS_CHANNELS` (a Channel
+  record does not carry its STATION, the parent element, so no key reaches the
+  ceiling: that missing code is the real gap), and the 16-row FPDS family,
+  unkeyed and titled by the Atom entry title (59 of 60 on one sibling) — its
+  5-part `awardID` composite is 60 of 60 and resolves only on AWARD entries,
+  so it was not applied on sixty records.
+
+  **AND `:id` IS NOT ALWAYS A STABLE KEY, which the 2026-10-22 Socrata passes
+  did not ask.** A row id is minted when the ROW is created, and many
+  publishers refresh by replacing the dataset wholesale — every row re-created,
+  every `:id` new. Keyed on `:id`, such a source re-keys its whole dataset on
+  each refresh: nothing updates and the table grows without bound, with no
+  error anywhere. `:created_at` is one request (`$select=:id,:created_at`):
+  Honolulu's cameras were created in 2015 and `:id` is right there; WA
+  contractor insurance and the FRA railroad reference were created TODAY and
+  got a measured semantic composite instead. Of the tree's 155 existing `:id`
+  rows read on 2026-11-14, **40 serve a sample created within two days**
+  (`docs/socrata-id-created-at-2026-11-14.tsv`). That those ids therefore
+  churn is an INFERENCE; `tools/socrata_id_churn.py` took a content-hash
+  snapshot (`docs/socrata-id-snapshot-2026-11-14.tsv`) and its `compare` a day
+  later is the measurement. Nothing was re-keyed on the inference.
+
 **Every registered source is now proof-of-life verified.** Batch 14's 1,001
 unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `vsrc14_*`); batch 15 added 1,029 more (`vsrc15_*`, see
@@ -1394,7 +1536,20 @@ that replaced them survive, so no coverage is lost. **A sweep's verdict is
 about the URL it sent, not about the row's name** — re-read a removal against
 the row as it stands now.
 
-**The registered count is 60,620** (2026-11-05, `make source-count`; the
+**The registered count is 60,619** (2026-11-14, `make source-count`, the
+binary's registry agreeing, both floors re-recorded): 60,620 less ONE row, a
+feed on a lapsed official domain. `www.portesessonne.fr` belonged to an
+agglomeration that no longer exists and now serves roller-shutter repair spam
+("Depannage Volet Roulant Corbeil Essonnes", 78 items); the row's own generated
+NAME already ended "- Depannage Volet Roulant", so the takeover predates batch
+47's probe and passed probe and emit with healthy numbers for four weeks.
+Evidence: `docs/removed-sources-2026-11-14-takeover.tsv`. It was found by a
+tool printing one record's fields while looking for something else, which is
+this file's "read what it stores" again — **and the title scan that caught 52
+of these in October looks for gambling and pharma vocabulary, so a takeover
+selling home repairs in the source's own language passes it.**
+
+**The registered count was 60,620** (2026-11-05, `make source-count`; the
 binary's registry agrees at 60,620 with 0 duplicates, 0 dropped and 0
 never-runs, both floors re-recorded from that build): 60,829 less **209 more
 rows that read a feed the tree already read**, found by asking the SAME

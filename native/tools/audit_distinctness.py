@@ -60,8 +60,8 @@ were its own fault, for want of that resolver.
     python3 tools/audit_distinctness.py --self-test      # no network, no DB
 
 Verdicts: KEY_IS_IDENTITY, KEY_IS_DIMENSION (the finding), KEY_UNMATCHED,
-NO_KEY_HASH_AT_CEILING,
-NO_KEY_FALLBACK_LOSES (the other finding), UPSTREAM_DUPLICATES, ONE_PAGE_ONLY,
+NO_KEY_FALLBACK_AT_CEILING,
+NO_KEY_FALLBACK_IS_DIMENSION (the other finding), UPSTREAM_DUPLICATES, ONE_PAGE_ONLY,
 UNMEASURED, UNPARSED, NO_RECORDS.
 """
 import argparse
@@ -100,10 +100,25 @@ FALLBACK = {
 # for the way the engine would ask. Mirrors lib/jsonlist.c PAGERS and
 # lib/geojson.c's Socrata and ArcGIS branches; a row whose URL carries none of
 # these is read as ONE_PAGE_ONLY rather than guessed at.
-PAGERS = [('$limit', '$offset'), ('limit', 'offset'), ('rows', 'start'),
-          ('per_page', 'page'), ('page_size', 'page'), ('count', 'start'),
-          ('resultRecordCount', 'resultOffset'), ('maxFeatures', 'startIndex'),
-          ('$top', '$skip'), ('pageSize', 'page')]
+PAGERS = [('$limit', '$offset', 'offset'), ('limit', 'offset', 'offset'),
+          ('rows', 'start', 'offset'), ('count', 'start', 'offset'),
+          ('resultRecordCount', 'resultOffset', 'offset'),
+          ('maxFeatures', 'startIndex', 'offset'), ('$top', '$skip', 'offset'),
+          ('_limit', '_offset', 'offset'),
+          # A page NUMBER advances by one, not by the size. Treating these as
+          # offsets asks for page 101 as the second request — the
+          # page-size-on-page-number defect `make lint-sources` exists for, and
+          # this tool's first version had it.
+          ('per_page', 'page', 'page'), ('page_size', 'page', 'page'),
+          ('pageSize', 'page', 'page'), ('pagesize', 'page', 'page'),
+          ('perpage', 'page', 'page'), ('perPage', 'page', 'page'),
+          ('c', 'sp', 'page')]
+
+# Where a server publishes its own next link. Checked after every page when the
+# URL itself gave nothing to advance (lib/jsonlist.c next_link's list).
+NEXT_PATHS = ['next', 'links.next', 'links.next.href', 'meta.next',
+              'meta.nextLink', '@odata.nextLink', 'pagination.next',
+              'next_page', 'nextLink']
 
 MACRO = re.compile(
     r'\b(VJSON|VJSONBIG|VJSON_KEYED|VJSON_IDKEYS|VGEO|VGEO_IDKEYS)\s*\(',)
@@ -120,6 +135,18 @@ def _args_of(text, open_paren):
             if c == '"':
                 instr = False
             cur.append(c)
+        elif c == '/' and text[i:i + 2] == '/*':
+            # This tree comments INSIDE argument lists, and a comment holds
+            # commas, parentheses and apostrophes: gen_detail_hop_upgrade.py
+            # parsed 86 rows as 15 arguments for want of this, and this tool
+            # read 19 rows as NOT_READABLE the hour a note was written into one.
+            j = text.find('*/', i + 2)
+            i = len(text) if j < 0 else j + 2
+            continue
+        elif c == '/' and text[i:i + 2] == '//':
+            j = text.find('\n', i)
+            i = len(text) if j < 0 else j
+            continue
         elif c == '"':
             instr = True; cur.append(c)
         elif c in '([{':
@@ -199,17 +226,34 @@ def rows_from_hp(match):
                 mm = re.search(r'\.%s\s*=\s*((?:\s*"(?:[^"\\]|\\.)*")+)' % name, blk)
                 return ''.join(re.findall(r'"((?:[^"\\]|\\.)*)"', mm.group(1))) if mm else ''
 
+            def iopt(name, blk=blk):
+                mm = re.search(r'\.%s\s*=\s*(\d+)' % name, blk)
+                return int(mm.group(1)) if mm else 0
+
             mode = re.search(r'\.mode\s*=\s*(HP_[A-Z]+)', blk)
             url = opt('url')
             if not url.startswith('http'):
                 continue
-            if (mode.group(1) if mode else '') != 'HP_JSON':
+            # HP_JSON is enum 0, so a row that declares no .mode IS a JSON
+            # row — and requiring the word dropped every such row unread
+            # (the whole hp16/hp17 generated fleet), silently.
+            mname = mode.group(1) if mode else 'HP_JSON'
+            if mname not in READ_MODES:
                 continue
             if AK.ENTITY_TOKEN.search(url):
                 continue
+            psz = re.search(r'\.page_size\s*=\s*(\d+)', blk)
             out.append(dict(id=sid, file=os.path.basename(f),
                             key=opt('id_keys'), path=opt('array_path'),
-                            url=url, engine='hp'))
+                            url=url, engine='hp',
+                            page_param=opt('page_param'),
+                            page_size=int(psz.group(1)) if psz else 0,
+                            next_path=opt('next_path'), mode=mname,
+                            csv_delim=opt('csv_delim'),
+                            csv_comment=opt('csv_comment'),
+                            csv_skip=iopt('csv_skip_lines'),
+                            csv_no_header=iopt('csv_no_header'),
+                            occurrence=iopt('occurrence_rows')))
     return out
 
 
@@ -258,6 +302,82 @@ def fallback_key(fields, engine):
     return None, None
 
 
+# VJSON's fallback uid when no id resolves is NOT a hash of the record. It is
+# hash(title, link, date) — lib/jsonlist.c row_hash — and the whole record joins
+# the hash ONLY when the in-page guard flagged a collision. So across pages, two
+# records that differ but share those three values collapse. This tool's first
+# version called every unkeyed row "content hash, which IS the ceiling"; for
+# VJSON and hpengine that was false, and it was found the usual way: a dataset
+# read whole in one request held 216 rows and 216 distinct whole records, and
+# the row still collapsed six.
+VJ_TITLE = ["title", "name", "headline", "subject", "label", "event_name",
+            "common_name", "display_name", "full_name", "short_name", "station",
+            "site", "location", "place", "area", "region", "country_name",
+            "country", "indicator", "event", "nome", "nom", "nombre", "naam",
+            "navn", "namn", "nimi", "nazwa", "nazev", "n\u00e1zev", "denumire",
+            "naziv", "titulo", "t\u00edtulo", "titre", "titel", "tytul",
+            "summary", "description", "text"]
+VJ_LINK = ["url", "link", "href", "permalink", "web_url", "uri", "detail"]
+VJ_DATE = ["published_at", "published", "pubDate", "pub_date",
+           "date_published", "updated_at", "updated", "created_at", "datetime",
+           "date", "timestamp", "acq_date", "obs_date", "observed_at",
+           "observed", "time_tag", "time-tag", "captured_at", "measured_at",
+           "start_time", "event_time", "seen", "time", "last_modified"]
+
+
+def _top_pick(rec, names):
+    """lib/jsonlist.c pick(): a TOP-LEVEL key, exact then case-insensitive,
+    whose value is a scalar. Nested values are skipped and the walk continues."""
+    if not isinstance(rec, dict):
+        return None
+    low = {k.lower(): k for k in rec}
+    for n in names:
+        k = n if n in rec else low.get(n.lower())
+        if k is None:
+            continue
+        v = rec[k]
+        if isinstance(v, (str, int, float, bool)) and v != '':
+            return str(v)
+    return None
+
+
+def _first_scalar(rec, skip_underscore=False):
+    if not isinstance(rec, dict):
+        return ''
+    for k, v in rec.items():
+        if skip_underscore and k.startswith('_'):
+            continue
+        if isinstance(v, (str, int, float, bool)) and v != '':
+            return str(v)
+    return ''
+
+
+def effective_fallback(rec, flat_fields, engine):
+    """(what the engine keys on, the value) for a row declaring no id_keys."""
+    if engine == 'vjson':
+        rid = _top_pick(rec, FALLBACK['vjson'])
+        if rid is not None:
+            return 'the K_ID list', ('id', rid)
+        title = _top_pick(rec, VJ_TITLE) or _first_scalar(rec)
+        return ('hash(title, link, date)',
+                (title, _top_pick(rec, VJ_LINK) or '', _top_pick(rec, VJ_DATE) or ''))
+    if engine == 'vgeo':
+        props = rec.get('properties') if isinstance(rec.get('properties'), dict) else {}
+        for n in FALLBACK['vgeo']:
+            if props.get(n) not in (None, ''):
+                return 'properties.%s' % n, ('p', str(props[n]))
+        if rec.get('id') not in (None, ''):
+            return 'the Feature id', ('fid', str(rec['id']))
+        return 'hash(geometry, properties)', ('h', canon(rec))
+    # hpengine: ID_FALLBACK through hp_flat_get, else the record's first scalar
+    # (CLAUDE.md, the Web NDL Authorities case: "the no-id_keys fallback ends at
+    # the record's FIRST SCALAR").
+    for n in FALLBACK['hp']:
+        if AK.present(n, flat_fields):
+            return 'ID_FALLBACK `%s`' % n, ('f', _val(flat_fields, n))
+    return "the record's first scalar", ('s', _first_scalar(rec, True))
+
+
 def features_of(doc):
     """VGEO reads a FeatureCollection; its records are the features."""
     if isinstance(doc, dict) and isinstance(doc.get('features'), list):
@@ -265,46 +385,232 @@ def features_of(doc):
     return None
 
 
-def page_urls(url, pages):
-    """The row's URL, then the same URL with its own offset advanced the way the
-    engine advances it. Returns fewer than `pages` when nothing can be moved —
-    the caller reports ONE_PAGE_ONLY rather than inventing a parameter."""
+def _set_param(url, name, value):
+    pat = r'([?&]%s=)[^&]*' % re.escape(name)
+    if re.search(pat, url):
+        return re.sub(pat, lambda mm: mm.group(1) + str(value), url)
+    return url + ('&' if '?' in url else '?') + '%s=%s' % (name, value)
+
+
+def _get_param(url, name):
+    m = re.search(r'[?&]%s=(\d+)' % re.escape(name), url)
+    return int(m.group(1)) if m else None
+
+
+def page_urls(url, pages, row=None):
+    """The row's URL, then the same URL advanced the way the ENGINE advances it.
+    An hp row's own page_param wins (with page_size it is an offset, without it
+    a page number — lib/hpengine.h); else a known size/cursor pair in the URL.
+    Returns one URL when nothing can be moved; the caller then tries the
+    server's own next link before settling for ONE_PAGE_ONLY."""
     urls = [url]
-    for size_p, off_p in PAGERS:
-        m = re.search(r'[?&]%s=(\d+)' % re.escape(size_p), url)
-        if not m:
-            continue
-        size = int(m.group(1))
-        if size <= 0:
-            continue
-        cur = re.search(r'[?&]%s=(\d+)' % re.escape(off_p), url)
-        base = int(cur.group(1)) if cur else 0
+    row = row or {}
+    pp = row.get('page_param')
+    if pp:
+        stride = row.get('page_size') or 0
+        cur = _get_param(url, pp)
         for p in range(1, pages):
-            off = base + size * p
-            if cur:
-                nxt = re.sub(r'([?&]%s=)\d+' % re.escape(off_p),
-                             lambda mm: mm.group(1) + str(off), url)
+            if stride:
+                urls.append(_set_param(url, pp, (cur or 0) + stride * p))
             else:
-                nxt = url + ('&' if '?' in url else '?') + '%s=%d' % (off_p, off)
-            urls.append(nxt)
+                urls.append(_set_param(url, pp, (cur if cur is not None else 1) + p))
         return urls
+    for size_p, cur_p, kind in PAGERS:
+        size = _get_param(url, size_p)
+        if not size:
+            continue
+        cur = _get_param(url, cur_p)
+        for p in range(1, pages):
+            if kind == 'offset':
+                urls.append(_set_param(url, cur_p, (cur or 0) + size * p))
+            else:
+                urls.append(_set_param(url, cur_p, (cur if cur is not None else 1) + p))
+        return urls
+    # A bare page cursor with no size beside it (ROR's ?page=1).
+    cur = _get_param(url, 'page')
+    if cur is not None:
+        for p in range(1, pages):
+            urls.append(_set_param(url, 'page', cur + p))
     return urls
 
 
-def fetch(url, args):
+def next_link(doc, row):
+    """The server's own next-page URL, or ''. The hp row's next_path is tried
+    first when it is a plain dotted path; `$last` cursors need a template and
+    are not followed here."""
+    cands = list(NEXT_PATHS)
+    np_ = (row or {}).get('next_path') or ''
+    if np_ and '$' not in np_ and '=' not in np_:
+        cands.insert(0, np_)
+    for path in cands:
+        node = doc
+        if isinstance(doc, dict) and path in doc:
+            node = doc[path]
+        else:
+            for seg in path.split('.'):
+                node = node.get(seg) if isinstance(node, dict) else None
+                if node is None:
+                    break
+        if isinstance(node, dict):
+            node = node.get('href')
+        if isinstance(node, str) and node.startswith('http'):
+            return node
+    links = doc.get('links') if isinstance(doc, dict) else None
+    if isinstance(links, list):
+        for l in links:
+            if isinstance(l, dict) and l.get('rel') == 'next' and \
+                    str(l.get('href', '')).startswith('http'):
+                return l['href']
+    return ''
+
+
+def fetch_raw(url, args):
     AK.paced(url.split('/')[2], args.host_gap_ms / 1000.0)
-    r = subprocess.run(['curl', '-sSg', '--max-time', str(args.timeout),
-                        '--max-filesize', str(args.max_bytes), '-A', AK.UA, url],
+    r = subprocess.run(['curl', '-sSgL', '--compressed', '--max-time', str(args.timeout),
+                        '--max-filesize', str(args.max_bytes), '-A', AK.UA,
+                        '-w', '\n%{http_code}', url],
                        capture_output=True)
     if r.returncode != 0:
         return None, r.stderr.decode('utf-8', 'replace').strip()[:70] or 'curl failed'
-    body = r.stdout.decode('utf-8', 'replace')
-    if not body.strip():
+    b = r.stdout
+    i = b.rfind(b'\n')
+    code = b[i + 1:].decode('ascii', 'replace')
+    b = b[:i]
+    if not code.startswith('2'):
+        return None, 'HTTP %s' % code
+    if not b.strip():
         return None, 'empty body'
+    return b, ''
+
+
+def fetch(url, args):
+    b, err = fetch_raw(url, args)
+    if b is None:
+        return None, err
     try:
-        return json.loads(body), ''
+        return json.loads(b.decode('utf-8', 'replace')), ''
     except Exception as e:
         return None, 'unparsed: %s' % str(e)[:50]
+
+
+# ── CSV and XML (hpengine HP_CSV / HP_XML) ────────────────────────────────────
+# The first version of this tool read JSON only, and its row reader dropped
+# every other mode without a word — so "the tool measured the queue" was true of
+# what it could open and silent about the rest, the shape CLAUDE.md keeps
+# correcting in tools. These two readers mirror what the engine does to a body
+# BEFORE the key is resolved; the arithmetic after that is the same.
+READ_MODES = ('HP_JSON', 'HP_CSV', 'HP_XML')
+_DELIMS = {'': ',', 'comma': ',', 'tab': '\t', 'pipe': '|', 'semi': ';'}
+
+
+def csv_delim_of(name):
+    """lib/hpengine.c's resolver: a named delimiter, else ONE literal
+    character. `ws` and `lit:<token>` are not modelled and return None, so the
+    row reads UNMEASURED rather than being parsed on a guess."""
+    if name in _DELIMS:
+        return _DELIMS[name]
+    if len(name) == 1:
+        return name
+    return None
+
+
+def parse_csv(raw, row):
+    """-> (records, err). Records are dicts in column order, as hp flattens a
+    CSV line: header names, or col0..colN under csv_no_header."""
+    import csv, io
+    delim = csv_delim_of(row.get('csv_delim', ''))
+    if delim is None:
+        return None, 'csv_delim %r is not modelled by this tool' % row.get('csv_delim')
+    try:
+        text = raw.decode('utf-8-sig')
+    except UnicodeDecodeError:
+        try:
+            text = raw.decode('cp932')
+        except UnicodeDecodeError:
+            text = raw.decode('utf-8', 'replace')
+    lines = text.splitlines(True)
+    com = row.get('csv_comment', '')
+    if com:
+        lines = [l for l in lines if not l.startswith(com)]
+    lines = lines[row.get('csv_skip', 0):]
+    rd = list(csv.reader(io.StringIO(''.join(lines)), delimiter=delim,
+                         skipinitialspace=True))
+    rd = [r for r in rd if any(c.strip() for c in r)]
+    if not rd:
+        return [], ''
+    if row.get('csv_no_header'):
+        hdr, data = None, rd
+    else:
+        hdr, data = [h.strip() for h in rd[0]], rd[1:]
+    out = []
+    for r in data:
+        rec = {}
+        for i, c in enumerate(r):
+            name = hdr[i] if hdr and i < len(hdr) and hdr[i] else 'col%d' % i
+            rec[name] = c.strip()
+        out.append(rec)
+    return out, ''
+
+
+def _xml_local(tag):
+    return tag.rsplit('}', 1)[-1] if isinstance(tag, str) else ''
+
+
+def _xml_flatten(el, prefix, out):
+    """hp_xml_flatten's keyspace: child elements dotted, a repeated child
+    indexed (`name`, `name.1`), an attribute as `@attr`, and text beside
+    children as `#text`. Namespace prefixes are dropped — see xml_spec()."""
+    for a, v in el.attrib.items():
+        k = (prefix + '.' if prefix else '') + '@' + _xml_local(a)
+        out.setdefault(k, v.strip())
+    kids = list(el)
+    text = (el.text or '').strip()
+    if not kids:
+        if prefix and text:
+            out.setdefault(prefix, text)
+        return
+    if text:
+        out.setdefault((prefix + '.' if prefix else '') + '#text', text)
+    seen = {}
+    for c in kids:
+        n = _xml_local(c.tag)
+        if not n:
+            continue
+        i = seen.get(n, 0)
+        seen[n] = i + 1
+        k = (prefix + '.' if prefix else '') + n + ('.%d' % i if i else '')
+        _xml_flatten(c, k, out)
+
+
+def parse_xml(raw, row):
+    """-> (records, err). The record element is the row's array_path (its last
+    segment), else `item`, else `entry` — RSS and Atom, which is what an
+    undeclared HP_XML row in this tree reads."""
+    import xml.etree.ElementTree as ET
+    try:
+        root = ET.fromstring(raw)
+    except Exception as e:
+        return None, 'xml unparsed: %s' % str(e)[:50]
+    want = (row.get('path') or '').split('.')[-1].split(':')[-1]
+    names = [want] if want else ['item', 'entry']
+    for n in names:
+        els = [e for e in root.iter() if _xml_local(e.tag) == n]
+        if els:
+            recs = []
+            for e in els:
+                d = {}
+                _xml_flatten(e, '', d)
+                if d:
+                    recs.append(d)
+            return recs, ''
+    return [], ''
+
+
+def xml_spec(spec):
+    """An id_keys token may name a prefixed element (`dc:identifier`). This
+    reader drops prefixes, so the token loses its own the same way — otherwise
+    every such row would read KEY_UNMATCHED for a reason that is this tool's."""
+    return re.sub(r'(^|[+,.])\s*[A-Za-z_][\w-]*:(?=[A-Za-z_])', r'\1', spec or '')
 
 
 def measure(records, spec, engine):
@@ -343,13 +649,15 @@ def measure(records, spec, engine):
                     diffs[fk] += 1
         res['differing_fields'] = [f for f, _ in diffs.most_common(6)]
     else:
-        name, _ = fallback_key(flats[0], engine) if flats else (None, None)
-        res['fallback_field'] = name or '(content hash)'
-        if name:
-            vals = [_val(f, name) for f in flats]
-            res['fallback_distinct'] = len(set(vals))
-        else:
-            res['fallback_distinct'] = ceiling
+        eff = [effective_fallback(r, f, engine) for r, f in zip(records, flats)]
+        res['fallback_field'] = collections.Counter(
+            how for how, _ in eff).most_common(1)[0][0] if eff else ''
+        res['fallback_distinct'] = len({v for _, v in eff})
+        groups = collections.defaultdict(set)
+        for (_, v), r in zip(eff, records):
+            groups[v].add(canon(r))
+        res['key_groups_differing'] = sum(len(g) - 1 for g in groups.values()
+                                          if len(g) > 1)
     return res
 
 
@@ -420,27 +728,23 @@ def verdict(res, spec):
                    (', differing in: %s' % ', '.join(res['differing_fields']))
                    if res.get('differing_fields') else '',
                    ceil - kd, ceil))
-    fd = res['fallback_distinct']
-    if res['fallback_field'] == '(content hash)':
-        return ('NO_KEY_HASH_AT_CEILING',
-                'no id_keys declared and no precedence field resolves, so every '
-                'uid is a content hash: %d distinct, which IS the ceiling. '
-                'Nothing is lost by count. Declaring a key can only help if it '
-                'also reaches %d — measure it before declaring, because a key '
-                'below the ceiling makes the row worse. What a hash costs is '
-                'stability: a record the publisher REVISES arrives as a new row '
-                'instead of updating the one it corrects.' % (fd, ceil))
+    fd, how = res['fallback_distinct'], res['fallback_field']
     if fd >= ceil:
-        return ('NO_KEY_HASH_AT_CEILING',
-                'no id_keys declared; the engine falls back to `%s`, which is '
-                '%d distinct and reaches the ceiling.'
-                % (res['fallback_field'], fd))
-    return ('NO_KEY_FALLBACK_LOSES',
-            'no id_keys declared, and the engine\'s precedence list resolves '
-            '`%s`, which is only %d distinct against a ceiling of %d — so this '
-            'row silently loses %d a run to a field nobody chose. Declare an '
-            'id_keys that reaches the ceiling.'
-            % (res['fallback_field'], fd, ceil, ceil - fd))
+        return ('NO_KEY_FALLBACK_AT_CEILING',
+                'no id_keys declared; the engine keys on %s, which is %d '
+                'distinct and reaches the ceiling over these pages. Nothing is '
+                'lost here. That is a reading of THESE pages — a fallback is a '
+                'key nobody chose, so it is worth one --try-key against a field '
+                'the publisher calls an identifier.' % (how, fd))
+    return ('NO_KEY_FALLBACK_IS_DIMENSION',
+            'no id_keys declared, and what the engine keys on instead — %s — is '
+            'only %d distinct against a ceiling of %d (%d groups hold records '
+            'that DIFFER). The in-page guard keeps differing records that '
+            'collide inside ONE page, so the run line shows less than this gap; '
+            'the loss is ACROSS pages, where two different records sharing that '
+            'value collapse to one and nothing reports it. Declare an id_keys '
+            'that reaches %d (--try-key measures a candidate).'
+            % (how, fd, ceil, res.get('key_groups_differing', 0), ceil))
 
 
 def one(row, args):
@@ -450,18 +754,39 @@ def one(row, args):
     # the alternative is editing, rebuilding and running the engine to find out
     # — which is how a key gets chosen off one page and a sibling's convention.
     spec = args.try_key if args.try_key else row['key']
-    urls = page_urls(row['url'], args.pages)
-    records, note = [], ''
-    for u in urls:
-        doc, err = fetch(u, args)
-        if doc is None:
-            if not records:
-                return dict(row, verdict='UNMEASURED', detail=err, res={})
-            note = 'page %d: %s' % (len(records) and urls.index(u) + 1, err)
+    urls = page_urls(row['url'], args.pages, row)
+    records, note, pages_read = [], '', 0
+    queue, seen_urls = list(urls), set()
+    while queue and pages_read < args.pages:
+        u = queue.pop(0)
+        if u in seen_urls:
             break
-        arr = features_of(doc) if engine == 'vgeo' else None
-        if arr is None:
-            arr, _how = AK.pick_array(doc, row['path'])
+        seen_urls.add(u)
+        mode = row.get('mode', 'HP_JSON')
+        if mode in ('HP_CSV', 'HP_XML'):
+            raw, err = fetch_raw(u, args)
+            doc = None
+            arr = None
+            if raw is not None:
+                arr, err = (parse_csv if mode == 'HP_CSV' else parse_xml)(raw, row)
+            if arr is None:
+                if not records:
+                    return dict(row, verdict='UNMEASURED', detail=err, res={})
+                note = 'page %d: %s' % (pages_read + 1, err)
+                break
+            if records and arr and len(arr) == len(records[-len(arr):]) and \
+                    [canon(x) for x in arr] == [canon(x) for x in records[-len(arr):]]:
+                break            # the server re-served the page: not a second page
+        else:
+            doc, err = fetch(u, args)
+            if doc is None:
+                if not records:
+                    return dict(row, verdict='UNMEASURED', detail=err, res={})
+                note = 'page %d: %s' % (pages_read + 1, err)
+                break
+            arr = features_of(doc) if engine == 'vgeo' else None
+            if arr is None:
+                arr, _how = AK.pick_array(doc, row['path'])
         if not arr:
             if not records:
                 return dict(row, verdict='NO_RECORDS',
@@ -471,15 +796,29 @@ def one(row, args):
         if not recs:
             break
         records.extend(recs)
-        if len(recs) < 2:
-            break
+        pages_read += 1
+        if len(urls) == 1 and not queue and doc is not None:
+            nl = next_link(doc, row)
+            if nl:
+                queue.append(nl)
     if not records:
         return dict(row, verdict='NO_RECORDS', detail='no records', res={})
+    if row.get('mode') == 'HP_XML':
+        spec = xml_spec(spec)
     res = measure(records, spec, engine)
     v, detail = verdict(res, spec)
-    if len(urls) == 1 and args.pages > 1:
-        v = 'ONE_PAGE_ONLY' if v.startswith('KEY_IS') or v.startswith('NO_KEY') else v
-        detail = ('the URL carries no offset/size pair this tool can advance, so '
+    whole_file = row.get('mode') == 'HP_CSV' or \
+        (row.get('mode') == 'HP_XML' and not row.get('page_param') and not row.get('next_path'))
+    if row.get('occurrence') and res.get('dup_identical'):
+        detail += ('  [occurrence_rows=1: the %d byte-identical repeat(s) are '
+                   'KEPT by the engine, keyed on their occurrence number]'
+                   % res['dup_identical'])
+    if pages_read == 1 and whole_file:
+        detail = 'one request is the whole file. ' + detail
+    elif pages_read == 1 and len(records) > 1 and args.pages > 1 and not note \
+            and len(urls) == 1:
+        v = 'ONE_PAGE_ONLY' if v in ('KEY_IS_IDENTITY', 'NO_KEY_FALLBACK_AT_CEILING') else v
+        detail = ('neither the URL nor the body gave this tool a next page, so '
                   'this is ONE page and "two pages can be too few" applies. '
                   + detail)
     if note:
@@ -540,20 +879,46 @@ def self_test():
     check('a key matching NO record is not called an identity',
           verdict(r_broken, 'iata_code')[0], 'KEY_UNMATCHED')
 
-    # 5. No declared key, nothing on the precedence list -> content hash, which
-    #    IS the ceiling. The comparison people skip.
-    recs = [{'entidad': 'DANE', 'v': 1}, {'entidad': 'DANE', 'v': 2}]
+    # 5. THE FIXTURE THIS TOOL'S FIRST VERSION GOT WRONG. An unkeyed VJSON row
+    #    does not hash the record: it hashes (title, link, date). Two records
+    #    that differ only in a field outside those three share a uid.
+    recs = [{'title': 'A', 'url': 'u', 'territory': 'north'},
+            {'title': 'A', 'url': 'u', 'territory': 'south'}]
     r = measure(recs, '', 'vjson')
-    check('unkeyed: no precedence field -> hash', r['fallback_field'], '(content hash)')
-    check('unkeyed hash reaches the ceiling',
-          verdict(r, '')[0], 'NO_KEY_HASH_AT_CEILING')
+    check('VJSON fallback is hash(title, link, date)', r['fallback_field'],
+          'hash(title, link, date)')
+    check('...so records differing elsewhere COLLIDE', r['fallback_distinct'], 1)
+    check('...and that is a finding, not "at the ceiling"',
+          verdict(r, '')[0], 'NO_KEY_FALLBACK_IS_DIMENSION')
+    recs = [{'title': 'A', 'url': 'u1'}, {'title': 'B', 'url': 'u2'}]
+    check('CONTROL: distinct triples reach the ceiling',
+          verdict(measure(recs, '', 'vjson'), '')[0], 'NO_KEY_FALLBACK_AT_CEILING')
 
-    # 6. No declared key but the precedence list DOES resolve, onto a dimension.
+    # 6. VJSON's K_ID list is TOP-LEVEL only (pick()), unlike hp_flat_get.
     recs = [{'code': 'A', 'v': 1}, {'code': 'A', 'v': 2}, {'code': 'B', 'v': 3}]
     r = measure(recs, '', 'vjson')
-    check('unkeyed fallback field found', r['fallback_field'], 'code')
-    check('fallback below ceiling -> finding',
-          verdict(r, '')[0], 'NO_KEY_FALLBACK_LOSES')
+    check('VJSON K_ID field found at top level', r['fallback_field'], 'the K_ID list')
+    check('a K_ID dimension is a finding',
+          verdict(r, '')[0], 'NO_KEY_FALLBACK_IS_DIMENSION')
+    recs = [{'attributes': {'id': 1}, 'n': 'x'}, {'attributes': {'id': 2}, 'n': 'x'}]
+    check('VJSON does NOT see a nested id (hp would)',
+          measure(recs, '', 'vjson')['fallback_field'], 'hash(title, link, date)')
+    check('hpengine DOES, through hp_flat_get',
+          measure(recs, '', 'hp')['fallback_field'], 'ID_FALLBACK `id`')
+
+    # 6b. An unkeyed hp row with nothing on ID_FALLBACK keys on its FIRST
+    #     SCALAR (the Web NDL Authorities case: @context on every record).
+    recs = [{'@context': 'c', 'label': 'x'}, {'@context': 'c', 'label': 'y'}]
+    r = measure(recs, '', 'hp')
+    check('hp falls to the first scalar', r['fallback_field'], "the record's first scalar")
+    check('...which collapses a constant-first-field API', r['fallback_distinct'], 1)
+
+    # 6c. VGEO's last resort really IS a whole-feature hash, so it is the one
+    #     engine where "the fallback reaches the ceiling" holds by construction.
+    recs = [{'type': 'Feature', 'geometry': None, 'properties': {'a': 1}},
+            {'type': 'Feature', 'geometry': None, 'properties': {'a': 2}}]
+    check('CONTROL: VGEO hash fallback reaches the ceiling',
+          verdict(measure(recs, '', 'vgeo'), '')[0], 'NO_KEY_FALLBACK_AT_CEILING')
 
     # 7. Paging: the offset is advanced the way the engine advances it, and a
     #    URL with nothing to advance yields ONE page rather than an invented
@@ -564,6 +929,23 @@ def self_test():
     check('existing offset advanced, not appended',
           page_urls('https://h/x?$limit=500&$offset=0', 2)[1],
           'https://h/x?$limit=500&$offset=500')
+    check('a page NUMBER advances by one, not by the size',
+          page_urls('https://h/x?per_page=100&page=1', 2)[1],
+          'https://h/x?per_page=100&page=2')
+    check('an hp row page_param with page_size is an offset',
+          page_urls('https://h/x?a=1', 2, dict(page_param='$offset', page_size=1000))[1],
+          'https://h/x?a=1&$offset=1000')
+    check('an hp row page_param without page_size is a page number',
+          page_urls('https://h/x?a=1', 2, dict(page_param='sp'))[1],
+          'https://h/x?a=1&sp=2')
+    check('the server next link is followed',
+          next_link({'next': 'https://h/x?page=2', 'results': []}, {}),
+          'https://h/x?page=2')
+    check('a links[] rel=next array is followed',
+          next_link({'links': [{'rel': 'self', 'href': 'https://h/a'},
+                               {'rel': 'next', 'href': 'https://h/b'}]}, {}),
+          'https://h/b')
+    check('CONTROL: no next link -> empty', next_link({'results': []}, {}), '')
     check('CONTROL: no size param -> a single page',
           len(page_urls('https://h/x?q=1', 2)), 1)
 
@@ -578,6 +960,71 @@ def self_test():
     #    clean sweep could mean "nothing was read".
     found = len(rows_from_macros('lat-co-'))
     check('CONTROL: macro reader sees lat-co- rows', found > 5, True)
+
+    # 10. CSV. A pipe-delimited body read as comma puts the whole line in ONE
+    #     field — the FDSN and `csv_delim = "comma"` mistakes CLAUDE.md records
+    #     — and a key then matches nothing while the record count looks fine.
+    body = b'# banner\nnet|sta|lat\nIM|AB01|1.0\nIM|AB02|2.0\nIU|AB01|3.0\n'
+    recs, _e = parse_csv(body, {'csv_delim': 'pipe', 'csv_comment': '#'})
+    check('csv: pipe + comment -> named fields', sorted(recs[0]), ['lat', 'net', 'sta'])
+    r = measure(recs, 'sta', 'hp')
+    check('csv: a station code is a DIMENSION across networks',
+          verdict(r, 'sta')[0], 'KEY_IS_DIMENSION')
+    check('csv: net+sta is the identity',
+          verdict(measure(recs, 'net+sta', 'hp'), 'net+sta')[0], 'KEY_IS_IDENTITY')
+    wrong, _e = parse_csv(body, {'csv_delim': '', 'csv_comment': '#'})
+    check('csv: the same body as COMMA is one field (the trap)', len(wrong[0]), 1)
+    nh, _e = parse_csv(b'a,b\nc,d\n', {'csv_no_header': 1})
+    check('csv: no header -> col0..colN, first line is DATA',
+          (len(nh), sorted(nh[0])), (2, ['col0', 'col1']))
+    sk, _e = parse_csv(b'title block\n\nk,v\n1,2\n', {'csv_skip': 1})
+    check('csv: csv_skip_lines drops the title block', sorted(sk[0]), ['k', 'v'])
+    check('csv: an unmodelled delimiter is refused, not guessed',
+          parse_csv(b'a b\n', {'csv_delim': 'ws'})[0], None)
+    sj, _e = parse_csv('\u7f6a\u540d,\u65e5\n\u7a83\u76d7,1\n'.encode('cp932'), {})
+    check('csv: a Shift_JIS file is decoded, not mangled', sorted(sj[0])[0], '\u65e5')
+
+    # 11. XML. Records by element name, repeated children indexed, attributes
+    #     in the same keyspace — and a prefixed key token must still resolve.
+    xml = (b'<rss xmlns:dc="http://purl.org/dc/elements/1.1/"><channel>'
+           b'<item><title>a</title><guid>g1</guid><category>x</category>'
+           b'<category>y</category><dc:identifier>d1</dc:identifier></item>'
+           b'<item><title>b</title><guid>g1</guid><dc:identifier>d2</dc:identifier></item>'
+           b'</channel></rss>')
+    recs, _e = parse_xml(xml, {'path': ''})
+    check('xml: items found without a declared path', len(recs), 2)
+    check('xml: a repeated child is indexed, not overwritten',
+          recs[0].get('category.1'), 'y')
+    check('xml: a guid shared by two different items -> DIMENSION',
+          verdict(measure(recs, 'guid', 'hp'), 'guid')[0], 'KEY_IS_DIMENSION')
+    sp = xml_spec('dc:identifier')
+    r = measure(recs, sp, 'hp')
+    check('xml: a prefixed token resolves (not KEY_UNMATCHED)',
+          (verdict(r, sp)[0], r.get('key_unmatched', 0)), ('KEY_IS_IDENTITY', 0))
+    recs, _e = parse_xml(b'<r><Channel code="BHZ"><Lat>1</Lat></Channel>'
+                         b'<Channel code="BHN"><Lat>1</Lat></Channel></r>',
+                         {'path': 'Channel'})
+    # key_distinct alone does NOT discriminate here (checked by removing the
+    # attribute reader: the key then matches nothing and the count is still 2,
+    # for the opposite reason) — the field itself has to be asserted.
+    check('xml: the record element\'s own attribute is a field',
+          [x.get('@code') for x in recs], ['BHZ', 'BHN'])
+    check('xml: ...and `code` resolves to it, as hp_flat_get skips the @',
+          measure(recs, 'code', 'hp').get('key_unmatched', 0), 0)
+    check('xml: a body that is not XML is refused',
+          parse_xml(b'<html><body>Just a moment', {})[0], None)
+
+    # 11b. A comment INSIDE a macro's argument list must not split it.
+    src = 'VJSON(f, "x", "n", /* a note, with (parens), commas and an apostrophe\'s */ "u")'
+    args, _end = _args_of(src, src.index('('))
+    check('macro args: a comment inside the list is skipped',
+          (len(args), _lit(args[3])), (4, 'u'))
+
+    # 12. CONTROL: an hp row that declares no .mode is HP_JSON (enum 0) and
+    #     must be read. Confirmed to fail against the reader that required
+    #     the word.
+    check('CONTROL: hp reader sees a row with no .mode',
+          any(r['id'] == 'af-dhs-data-gh' for r in rows_from_hp('af-dhs-data-gh')), True)
 
     print('self-test: %s' % ('%d FAILURES' % bad if bad else 'ok'))
     return 1 if bad else 0
@@ -614,9 +1061,8 @@ def main():
     if want:
         rows = [r for r in rows if r['id'] in want]
         missing = want - {r['id'] for r in rows}
-        if missing:
-            print('not found as an HP_JSON/VJSON/VGEO row with a literal URL: %s'
-                  % ', '.join(sorted(missing)), file=sys.stderr)
+    else:
+        missing = set()
     print('%d row(s) to measure, %d page(s) each' % (len(rows), args.pages),
           file=sys.stderr)
 
@@ -626,6 +1072,15 @@ def main():
             res.append(out)
             print('%-56s %-24s %s' % (out['id'], out['verdict'],
                                       out['detail'][:96]), flush=True)
+    # An id this tool could not open is a ROW IN THE OUTPUT, never a line on
+    # stderr: "skipped" and "checked and clean" must not look alike.
+    for sid in sorted(missing):
+        res.append(dict(id=sid, file='', engine='', key='', verdict='NOT_READABLE',
+                        detail='not an HP_JSON/HP_CSV/HP_XML/VJSON/VGEO row with a '
+                               'literal GET URL (a bespoke collector, VRSS/RSSX, VCSV, '
+                               'VJSON_PREP, HP_XLSX, or an entity/date token): '
+                               'unmeasured by this tool, not clean', res={}))
+        print('%-56s %-24s' % (sid, 'NOT_READABLE'), flush=True)
     if args.out:
         cols = ['id', 'file', 'engine', 'verdict', 'key', 'records', 'ceiling',
                 'key_distinct', 'fallback_distinct', 'dup_identical', 'detail']
@@ -646,7 +1101,7 @@ def main():
         print('%6d %s' % (n, v), file=sys.stderr)
     # A finding is a property of the row; a transport failure is a property of
     # this path and is NOT an exit code (audit_idkeys' own rule).
-    return 1 if (c.get('KEY_IS_DIMENSION') or c.get('NO_KEY_FALLBACK_LOSES')
+    return 1 if (c.get('KEY_IS_DIMENSION') or c.get('NO_KEY_FALLBACK_IS_DIMENSION')
                 or c.get('KEY_UNMATCHED')) else 0
 
 
