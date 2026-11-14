@@ -21,6 +21,13 @@ decided it, failures, last run and seconds until next due.
 > the same 6.2 s mean run, 90,907 sources every 6 h need **27 workers or
 > more**, and the default 8 lap the fleet in about 20 h.
 
+> **Follow-up, same day: the real-time feeds are now outside the policy.** A
+> source declaring an interval under 300 s runs as declared under any policy
+> (`CAD_REALTIME_SEC`, `core/cadence.h`), with 64 queue slots reserved for
+> such rows and first place in the queue. Live boot at 8 workers under a full
+> backlog: `wolfx-eew` (10 s) ran 21 times in 240 s, the 60 s feeds 4 times.
+> Section 2's "22 real-time feeds" paragraph describes the state before this.
+
 ## 1. The registry, by how it is reached
 
 | kind | sources | how it runs |

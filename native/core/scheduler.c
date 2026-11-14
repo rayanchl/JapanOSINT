@@ -1066,6 +1066,7 @@ static int sched_row_benched(db_handle *db, const char *id) {
  * already true — it is the reason this port is a pool and not a rewrite.  */
 
 #define SCHED_QCAP 2048
+#define SCHED_RT_RESERVE 64        /* queue slots only a real-time row may take */
 
 enum { LANE_COLLECT = 0, LANE_MAINT = 1, LANE_N = 2 };
 
@@ -1640,7 +1641,12 @@ void scheduler_loop(db_handle *db) {
         continue;
       }
       int ln = lane_of(d);
-      if (room[ln] <= 0) { deferred++; if (first_deferred < 0) first_deferred = i; continue; }
+      /* The last SCHED_RT_RESERVE slots of a lane are for real-time rows
+       * (cadence.h): under a standing backlog the queue is always full, and
+       * a 10 s feed waiting its round-robin turn behind 90,000 rows would be
+       * hours late whatever its interval says. */
+      int need = cadence_is_realtime(d->update_interval_sec) ? 0 : SCHED_RT_RESERVE;
+      if (room[ln] <= need) { deferred++; if (first_deferred < 0) first_deferred = i; continue; }
       room[ln]--;
       cand[nc++] = i;
     }
@@ -1661,7 +1667,13 @@ void scheduler_loop(db_handle *db) {
         then = now + (time_t)base;            /* search_only or benched: look again */
       } else {
         double overdue = (double)(now - was_due) / (double)(base > 0 ? base : 1);
-        if (q_push(i, sched_priority(&st, source_trust_score(db, d->id), overdue)) < 0)
+        double key = sched_priority(&st, source_trust_score(db, d->id), overdue);
+        /* ...and a healthy real-time row leaves the queue first too: its
+         * key sits below every band (sched_priority's lowest is -4). A
+         * failing one keeps its band — backoff is not bypassed. */
+        if (cadence_is_realtime(d->update_interval_sec) && st.consecutive_failures == 0)
+          key -= 8.0;
+        if (q_push(i, key) < 0)
           continue;                           /* stays due */
         /* Provisional — planned from the state before the run, and corrected
          * from its outcome by sched_publish. */
