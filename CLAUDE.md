@@ -1243,7 +1243,17 @@ SIGXFSZ, median 108.7 s against a ~200 s kill line). Rule 1's note on the
     activity), `aid+trans_id` 1,737, and the 8-part composite 5,000, the
     ceiling. The 9-part two rows carry adds `trans_sector_group`, worth **0**
     extra distinct, so the 8-part is the identity and the narrower of the two
-    that reach it. The six rows that declared NOTHING now carry it; the two
+    that reach it.
+
+    **AND THAT PROBE WAS ONE PAGE, WHICH THIS FILE SAYS CAN BE TOO FEW — so the
+    full walk was read too, and it moves the claim.** Through the engine,
+    `af-dportal-trans-bw` reads **100,000 records over 20 pages (776 requests,
+    166 MB, 397 s) and stores 99,975 — 27 collapsing, 0.027%.** So the 8-part
+    is exact within a page and not quite exact across the walk, which is the
+    same order as the **0.035%** this family's upstream duplicates were already
+    measured at across 19 COLLISION verdicts. The key is right and the
+    remainder is the upstream's; what would have been wrong is quoting the
+    single-page 5,000 of 5,000 as if it settled the walk. The six rows that declared NOTHING now carry it; the two
     9-part rows are deliberately NOT re-keyed, because they also reach the
     ceiling and re-keying would change every stored uid for nothing. **This
     recovers no records** — all six already stored 5,000 distinct through the
