@@ -349,9 +349,12 @@ that replaced them survive, so no coverage is lost. **A sweep's verdict is
 about the URL it sent, not about the row's name** — re-read a removal against
 the row as it stands now.
 
-**The registered count is 98,707** (2026-11-14, `make source-count` on the
-merge of main's batch 66, both floors re-recorded from that build): main's
-98,728 less this branch's same net 21.
+**The registered count is 105,208** (2026-11-14, `make source-count` on the
+merge of main's batch 67 and its scheduling audit, both floors re-recorded from
+that build): main's 105,229 less this branch's same net 21.
+
+**It was 98,707 earlier that evening** (the merge of main's batch 66): main's
+98,728 less the same net 21.
 
 **It was 93,142 an hour earlier** (`make source-count` on the
 merge of main's batch 65, both floors re-recorded from that build): main's
@@ -2576,14 +2579,49 @@ uses writes it (audited `source.setting.put`). `tests/unit/test_source_interval.
 pins the refusals, the precedence under a global policy, disable, persistence
 and clear.
 
+**WHEN a row is next due is ONE function too: `sched_next_due()`**
+(2026-11-14, audit and report in `docs/source-scheduling-audit-2026-11-14.md`).
+The dispatcher, the boot plan and the source pages all read it, and
+`./bin/japanosint --schedule` prints the result for every source as TSV — the
+interval that runs, what decided it, health and next due. What the audit found
+by reading the dispatcher rather than the interval arithmetic, each fixed and
+pinned in `test_sched_backoff.c` / `test_sched_pool.c`:
+
+* **A maintenance pod is exempt from the cadence policy.** The policy is about
+  collection; under the compiled global 6 h the WAL checkpoint, the embedding
+  backfill and anomaly triage ran once at boot and then every six hours.
+* **The plan is corrected from a run's OUTCOME** (`sched_publish`). The next
+  run used to be fixed at dispatch from the state before the run, so every
+  change landed a cycle late: a released quarantine waited 7 more days, a
+  recovered source its last backoff.
+* **A row the queue has no room for STAYS DUE.** It used to lose the cycle —
+  and with 83,511 scheduled rows against a 2,048 queue, the same rows lost
+  every cycle. The heartbeat's `deferred=N` is the standing backlog.
+* **A restart does not re-fetch the fleet**: a source whose last run is less
+  than one interval old keeps its own time.
+* **A health hold survives a cadence edit**, and a healthy row's stored
+  interval is not a floor (6 h → 1 h used to run once and then wait 6 h).
+
+Two numbers it measured that are decisions rather than defects: at a mean run
+of 6.2 s (uniform sample of 400) the default 8 workers lap the fleet in about
+18 h, so **the 6 h policy needs `JO_SCHED_WORKERS=24`** (27 on the 90,907
+scheduled rows main held by the time this merged); and the policy held
+the 22 real-time feeds (`wolfx-eew` 10 s, `jma-tsunami` 60 s) at six hours
+until each was given its own interval — which the next paragraph's rule ended
+the same day.
+
 **Realtime rows run outside the policy** (2026-11-14, the owner's decision:
 "let all transport or live-needing sources be real time"). A transport source
 (category `transport`) or any source declaring an interval under an hour runs
 at its OWN cadence — declared, or measured for an adaptive row — the same way
 a `_` maintenance pod always has. One rule, `cadence_exempt_reason()` in
-`core/cadence.c`, read by `sched_row_interval()`, the cost estimate and every
-source page (`policy`/`cadenceBasis` say `realtime` or `pod`), through
-`cadence_apply_for()`. An operator's per-source interval still outranks it. Why
+`core/cadence.c`, applied in ONE place — `source_interval_default()`, through
+`cadence_apply_for()` — which `sched_row_interval()`, `sched_next_due()` and
+every source page already read (`policy`/`cadenceBasis` say `realtime` or
+`pod`); the cost estimate counts the same rows as `exempt_rows`. The two
+sessions met on this in a merge: main exempted pods inside that function, this
+branch exempted pods and realtime rows beside it, and the merge keeps main's
+one composition with the wider rule in it. An operator's per-source interval still outranks it. Why
 the boundary is an hour, measured: 1,024 rows declare under an hour and only
 ONE of them between 30 and 60 minutes, while 2,006 of the 2,239 transport rows
 declare LONGER than six hours (static timetables), so for those "real time"

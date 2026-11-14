@@ -4152,11 +4152,62 @@ int main(void) {
     fx_reset();
     fx_add("/wt?d=", 200, "{\"items\":[{\"name\":\"a\",\"id\":\"1\"}]}");
     rc = run_source_resume("T_WINDOW_TAIL", NULL, tok);
-    char tail[16], want[32];
+    /* What it READS is the trailing window; what it STORES is today (41d-iii
+     * below says why that is not the tail's own start, as it used to be). */
+    char tail[16], hi[16], want[32], wurl[64];
     datetok_iso_from_day(today - 2, tail, sizeof tail);
-    snprintf(want, sizeof want, "w=%s", tail);
-    ok(rc == 0 && g_res_set && strcmp(g_res_out, want) == 0,
+    datetok_iso_from_day(today, hi, sizeof hi);
+    snprintf(wurl, sizeof wurl, "d=%.4s%.2s%.2s-%.4s%.2s%.2s",
+             tail, tail + 5, tail + 8, hi, hi + 5, hi + 8);
+    snprintf(want, sizeof want, "w=%s", hi);
+    ok(rc == 0 && strstr(g_last_url, wurl) != NULL &&
+       g_res_set && strcmp(g_res_out, want) == 0,
        "41d: a caught-up row pins to the trailing window and stays there");
+
+    /* 41d-iii. THE NEXT DAY's first run reads the window ending TODAY. The
+     *          stored position used to be clamped to the run's own tail, which
+     *          is a day behind by the next morning — and on a row with a
+     *          window_from (so the floor does not lift it) that run re-read
+     *          yesterday's window: a daily row never saw the current day.
+     *          A caught-up run now stores its own TODAY; fed yesterday's such
+     *          token, this run must land on today's tail. */
+    char d6[16], d1[16], d7[16];
+    datetok_iso_from_day(today - 6, d6, sizeof d6);   /* T_WINDOW: 7 days */
+    datetok_iso_from_day(today - 1, d1, sizeof d1);
+    datetok_iso_from_day(today - 7, d7, sizeof d7);
+    snprintf(tok, sizeof tok, "w=%s", d6);            /* at the tail */
+    fx_reset();
+    fx_add("/wz?from=", 200, "{\"items\":[{\"name\":\"a\",\"id\":\"1\"}]}");
+    rc = run_source_resume("T_WINDOW", NULL, tok);
+    ok(rc == 0 && g_res_set && strcmp(g_res_out, want) == 0,
+       "41d-iii: a caught-up run stores TODAY, not its own tail's start");
+    snprintf(tok, sizeof tok, "w=%s", d1);            /* yesterday's "today" */
+    snprintf(wurl, sizeof wurl, "from=%s&to=%s", d6, hi);
+    fx_reset();
+    fx_add("/wz?from=", 200, "{\"items\":[{\"name\":\"a\",\"id\":\"1\"}]}");
+    rc = run_source_resume("T_WINDOW", NULL, tok);
+    ok(rc == 0 && strstr(g_last_url, wurl) != NULL &&
+       g_res_set && strcmp(g_res_out, want) == 0,
+       "41d-iii: a caught-up row reads the window ending TODAY on the next day");
+
+    /* 41d-iv. A position stored BEFORE that fix (yesterday's tail start) is
+     *         still followed, not skipped: one lagging read, then caught up. */
+    snprintf(tok, sizeof tok, "w=%s", d7);
+    snprintf(wurl, sizeof wurl, "from=%s&to=%s", d7, d1);
+    fx_reset();
+    fx_add("/wz?from=", 200, "{\"items\":[{\"name\":\"a\",\"id\":\"1\"}]}");
+    rc = run_source_resume("T_WINDOW", NULL, tok);
+    ok(rc == 0 && strstr(g_last_url, wurl) != NULL &&
+       g_res_set && strcmp(g_res_out, want) == 0,
+       "41d-iv: a pre-fix stored tail is read once more, then stores today");
+
+    /* 41d-v. NOT SERVED at the tail: the position does not move. */
+    snprintf(tok, sizeof tok, "w=%s", d6);
+    fx_reset();
+    fx_add("/wz?from=", 500, NULL);
+    rc = run_source_resume("T_WINDOW", NULL, tok);
+    ok(g_res_set && strcmp(g_res_out, tok) == 0,
+       "41d-v: an unserved trailing window is not advanced");
   }
 
   /* 41d-ii. A token the engine does not recognise is treated as ABSENT — the

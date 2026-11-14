@@ -1,0 +1,986 @@
+sample	id	verdict	shell_rc	sched_rc	emitted	stored	db_rows	available	secs	note
+per-collector	gnews-mon-aviation-incident	OK	0	0	91	91	91	-1	0.9	
+per-collector	openaire-project-by-id	OK	0	0	1	1	1	1	1.3	
+per-collector	gnews-it-world	OK	0	0	70	70	70	-1	1.5	
+per-collector	ch-entscheidsuche-elasticsearch	OK	0	0	10	10	10	10	1.5	
+per-collector	europepmc-search-by-grant-id	OK	0	0	110	110	110	110	3.0	
+per-collector	opencitations-meta-author	OK	0	0	9	9	9	9	0.6	
+per-collector	gr-diavgeia-dictionaries	OK	0	0	19	19	19	19	4.5	
+per-collector	no-brreg-underenhet-detail	OK	0	0	4	4	4	4	0.9	
+per-collector	pl-mf-whitelist-bank-account	FETCH_FAILED	0	0	1	1	0	-1	0.7	HTTP 200; body did not parse | remedy: re-read the body by hand: the endpoint may have moved, started redirecting to an HTML page, or changed shape
+per-collector	eu-transitous-map-stops	OK	0	0	79	79	79	79	13.8	
+per-collector	sk-rpo-by-ico	OK	0	0	1	1	1	1	2.1	
+per-collector	global-osm-changesets-by-user	OK	0	0	100	100	100	100	16.4	
+per-collector	global-peeringdb-carrierfac	FETCH_FAILED	0	0	1	1	0	-1	0.3	HTTP 429 | remedy: rate limited: give the host a per-host minimum gap in core/hostgate.c, as crates.io has
+per-collector	littlesis-entity-connections	OK	0	0	15	15	15	15	3.6	
+per-collector	theses-fr-search	FETCH_FAILED	1	-1	1	1	0	-1	20.7	TLS handshake; the TLS handshake was refused before any certificate was jud; NO CERTIFICATE WAS JUDGED and no status was measured, which is also what this container's own egress looks like — check $HTTPS_PROXY/__agentproxy/status and re-read from another network before treating this as the source's (CLAUDE.md: a peer reset here can be ours) | remedy: no certificate was judged, so this is not about trust: compare against tools/jo_tls.py, which lowers OpenSSL's CIPHER SECURITY LEVEL (verification and hostname checking stay on) and reaches hosts the 
+per-collector	global-osm-node-history	OK	0	0	170	170	170	170	28.0	
+per-collector	datacite-dois-by-orcid	OK	0	0	35	35	35	35	30.1	
+per-collector	esma-solr-upreg	OK	0	0	200	201	200	200	31.9	
+per-collector	gleif-lei-filter-nonconforming	OK	0	0	200	201	200	200	51.6	
+per-collector	esma-solr-sanctions	OK	0	0	1316	1317	1316	1316	51.7	
+per-collector	ihsn-microdata-bf	OK	0	0	50	50	50	50	11.9	
+per-collector	au-asic-banned-disqualified-persons	OK	0	0	200	201	200	200	52.7	
+per-collector	au-asic-afs-licensees	OK	0	0	200	201	200	200	51.5	
+per-collector	br-cnpjws-publica	OK	0	0	5	5	5	5	0.9	
+per-collector	ihsn-microdata-bj	OK	0	0	50	50	50	50	10.0	
+per-collector	au-government-organisations-register	OK	0	0	200	201	200	200	52.0	
+per-collector	au-ipgod-ip-rights-2022	OK	0	0	200	201	200	200	47.5	
+per-collector	bo-ine-anda-microdatos	OK	0	0	50	50	50	50	9.1	
+per-collector	au-asic-liquidators	OK	0	0	200	201	200	200	50.1	
+per-collector	af-nada-bw-statsbots-microdata	FETCH_FAILED	1	-1	1	1	0	-1	13.0	NO CERTIFICATE WAS JUDGED and no status was measured, which is also what this container's own egress looks like — check $HTTPS_PROXY/__agentproxy/status and re-read from another network before treating this as the source's (CLAUDE.md: a peer reset here can be ours) | remedy: re-run; if the status persists the endpoint has moved or retired
+per-collector	eu-eib-projects-list	SLOW	-1	0	-1	-1	143	-1	90.1	hit --timeout 90.1s; 143 rows already stored
+per-collector	af-gleif-lei-bw	OK	0	0	77	77	77	77	17.5	
+per-collector	uk-elexon-remit-list	SLOW	-1	0	-1	-1	9	-1	90.0	hit --timeout 90.0s; 9 rows already stored
+per-collector	br-ibge-censo-nomes	FETCH_FAILED	1	-1	1	1	0	-1	20.8	TLS handshake; the TLS handshake was refused before any certificate was jud; NO CERTIFICATE WAS JUDGED and no status was measured, which is also what this container's own egress looks like — check $HTTPS_PROXY/__agentproxy/status and re-read from another network before treating this as the source's (CLAUDE.md: a peer reset here can be ours) | remedy: no certificate was judged, so this is not about trust: compare against tools/jo_tls.py, which lowers OpenSSL's CIPHER SECURITY LEVEL (verification and hostname checking stay on) and reaches hosts the 
+per-collector	jp-peeringdb-fac-country-depth1	SLOW	-1	0	-1	-1	42	-1	90.0	hit --timeout 90.0s; 42 rows already stored
+per-collector	pl-bzp-board-search	SLOW	-1	0	-1	-1	38	-1	90.1	hit --timeout 90.1s; 38 rows already stored
+per-collector	ihsn-microdata-ci	OK	0	0	50	50	50	50	10.4	
+per-collector	ihsn-microdata-cm	OK	0	0	50	50	50	50	10.0	
+per-collector	co-dane-microdatos-nada	OK	0	0	50	50	50	50	8.9	
+per-collector	ihsn-microdata-cd	OK	0	0	98	98	98	98	22.9	
+per-collector	undp-projects-cm	OK	0	0	91	91	91	91	14.3	
+per-collector	undp-projects-dz	OK	0	0	85	85	85	85	13.3	
+per-collector	ihsn-microdata-dz	OK	0	0	50	50	50	50	9.7	
+per-collector	af-gleif-lei-et	OK	0	0	16	16	16	16	4.8	
+per-collector	ihsn-microdata-eg	OK	0	0	50	50	50	50	9.4	
+per-collector	af-ihsn-et	OK	0	0	50	50	50	50	8.5	
+per-collector	af-ihsn-gh	OK	0	0	50	50	50	50	11.0	
+per-collector	pdh-microdata-catalog	FETCH_FAILED	0	0	1	1	0	-1	0.5	HTTP 403 | remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+per-collector	dportal-iati-bf	SLOW	-1	0	-1	-1	565	-1	90.1	hit --timeout 90.1s; 565 rows already stored
+per-collector	af-gleif-lei-gh	OK	0	0	141	141	141	141	30.8	
+per-collector	dportal-iati-bj	SLOW	-1	0	-1	-1	557	-1	90.1	hit --timeout 90.1s; 557 rows already stored
+per-collector	kr-supreme-court-precedents	EMITS_NOTHING	0	0	0	0	0	-1	1.1	no records reached intel_items — it transferred 215 bytes over 1 request(s), so the upstream really did hand over nothing
+per-collector	kr-administrative-appeal-rulings	EMITS_NOTHING	0	0	0	0	0	-1	1.3	no records reached intel_items — it transferred 215 bytes over 1 request(s), so the upstream really did hand over nothing
+per-collector	af-wbmicro-ke	OK	0	0	50	50	50	50	18.0	
+per-collector	af-dportal-trans-bw	SLOW	-1	0	-1	-1	538	-1	90.1	hit --timeout 90.1s; 538 rows already stored
+per-collector	ihsn-microdata-ma	OK	0	0	50	50	50	50	9.5	
+per-collector	dportal-iati-cd	SLOW	-1	0	-1	-1	494	-1	90.1	hit --timeout 90.1s; 494 rows already stored
+per-collector	ihsn-microdata-mg	OK	0	0	50	50	50	50	9.8	
+per-collector	dportal-iati-ci	SLOW	-1	0	-1	-1	560	-1	90.0	hit --timeout 90.0s; 560 rows already stored
+per-collector	undp-projects-mg	OK	0	0	134	134	134	134	20.6	
+per-collector	ihsn-microdata-ml	OK	0	0	50	50	50	50	10.1	
+per-collector	mx-dof-sidof-notas	FETCH_FAILED	0	0	1	1	0	-1	0.5	HTTP 406 | remedy: re-run; if the status persists the endpoint has moved or retired
+per-collector	dportal-iati-eg	SLOW	-1	0	-1	-1	564	-1	90.1	hit --timeout 90.1s; 564 rows already stored
+per-collector	undp-projects-mu	OK	0	0	85	85	85	85	13.1	
+per-collector	af-dportal-trans-et	SLOW	-1	0	-1	-1	497	-1	90.1	hit --timeout 90.1s; 497 rows already stored
+per-collector	ihsn-microdata-mu	OK	0	0	50	50	50	50	9.8	
+per-collector	af-dportal-act-gh	SLOW	-1	0	-1	-1	587	-1	90.1	hit --timeout 90.1s; 587 rows already stored
+per-collector	il-knesset-israel-law	SLOW	-1	0	-1	-1	475	-1	90.1	hit --timeout 90.1s; 475 rows already stored
+per-collector	il-knesset-bill-name	SLOW	-1	0	-1	-1	431	-1	90.1	hit --timeout 90.1s; 431 rows already stored
+per-collector	af-wbmicro-na	OK	0	0	50	50	50	50	13.3	
+per-collector	af-dportal-trans-ke	SLOW	-1	0	-1	-1	451	-1	90.1	hit --timeout 90.1s; 451 rows already stored
+per-collector	af-wbmicro-ng	OK	0	0	50	50	50	50	13.1	
+per-collector	af-gleif-lei-ke	SLOW	-1	0	-1	-1	238	-1	90.0	hit --timeout 90.0s; 238 rows already stored
+per-collector	af-gleif-lei-rw	OK	0	0	29	29	29	29	6.9	
+per-collector	af-gleif-lei-na	OK	0	0	109	109	109	109	28.8	
+per-collector	af-wbmicro-rw	OK	0	0	50	50	50	50	13.1	
+per-collector	dportal-iati-ma	SLOW	-1	0	-1	-1	475	-1	90.1	hit --timeout 90.1s; 475 rows already stored
+per-collector	ihsn-microdata-sn	OK	0	0	50	50	50	50	9.5	
+per-collector	undp-projects-sn	OK	0	0	118	118	118	118	18.2	
+per-collector	tw-gcis-company-business-scope	OK	0	0	17	17	17	17	1.0	
+per-collector	af-nada-sl-stats-microdata	FETCH_FAILED	1	-1	1	1	0	-1	21.6	TLS handshake; the TLS handshake was refused before any certificate was jud; NO CERTIFICATE WAS JUDGED and no status was measured, which is also what this container's own egress looks like — check $HTTPS_PROXY/__agentproxy/status and re-read from another network before treating this as the source's (CLAUDE.md: a peer reset here can be ours) | remedy: no certificate was judged, so this is not about trust: compare against tools/jo_tls.py, which lowers OpenSSL's CIPHER SECURITY LEVEL (verification and hostname checking stay on) and reaches hosts the 
+per-collector	np-bipad-organization	OK	0	0	106	106	106	106	34.5	
+per-collector	ihsn-microdata-tn	OK	0	0	50	50	50	50	9.4	
+per-collector	undp-projects-tn	OK	0	0	132	132	132	132	20.4	
+per-collector	af-gleif-lei-tz	OK	0	0	85	85	85	85	19.6	
+per-collector	dportal-iati-ml	SLOW	-1	0	-1	-1	568	-1	90.1	hit --timeout 90.1s; 568 rows already stored
+per-collector	af-nada-tz-nbs-microdata	OK	0	0	65	65	65	65	27.4	
+per-collector	af-wbmicro-ug	OK	0	0	50	50	50	50	12.5	
+per-collector	af-dportal-trans-na	SLOW	-1	0	-1	-1	499	-1	90.0	hit --timeout 90.0s; 499 rows already stored
+per-collector	af-gleif-lei-ug	OK	0	0	101	101	101	101	22.6	
+per-collector	af-dportal-trans-ng	SLOW	-1	0	-1	-1	530	-1	90.1	hit --timeout 90.1s; 530 rows already stored
+per-collector	af-gleif-lei-ng	SLOW	-1	0	-1	-1	324	-1	90.0	hit --timeout 90.0s; 324 rows already stored
+per-collector	af-wbmicro-za	OK	0	0	50	50	50	50	13.3	
+per-collector	np-bipad-earthquake	SLOW	-1	0	-1	-1	273	-1	90.1	hit --timeout 90.1s; 273 rows already stored
+per-collector	afr-ekur-ekurhuleni-ekurhuleni-poi-map-nature-1	OK	0	0	45	45	45	-1	2.1	
+per-collector	afr-ke-kenyans	OK	0	0	20	20	20	-1	0.7	
+per-collector	np-bipad-resource	SLOW	-1	0	-1	-1	259	-1	90.0	hit --timeout 90.0s; 259 rows already stored
+per-collector	nam-ckan-bcgov-water	OK	0	0	322	322	322	-1	1.9	
+per-collector	cyb-drupal-psa-rss	OK	0	0	20	20	20	-1	0.3	
+per-collector	sci-sta-hamburg-obsprops	OK	0	0	30	30	30	-1	1.0	
+per-collector	sci-bio-gbif-network	OK	0	0	23	23	23	-1	0.8	
+per-collector	eas-hk-carpark-vacancy	OK	0	0	577	577	577	-1	1.7	
+per-collector	eur-soc-lomb-dn4s-jx87	OK	0	0	440	440	440	-1	1.3	
+per-collector	af-gleif-lei-zm	OK	0	0	69	69	69	69	15.7	
+per-collector	eur-ipma-cities	OK	0	0	27	27	27	-1	0.9	
+per-collector	eur-news-mbl-is	OK	0	0	13	13	13	-1	0.3	
+per-collector	cyb-boc-bond-yields	OK	0	0	10	10	10	-1	0.3	
+per-collector	eas-jma-forecast-310000	OK	0	0	2	2	2	-1	0.7	
+per-collector	eur-ine-es-ops	OK	0	0	166	166	166	-1	1.7	
+per-collector	eas-krnews-khan-society	OK	0	0	50	50	50	-1	1.1	
+per-collector	lat-mx-wscatgeo-estados	OK	0	0	32	32	32	-1	0.7	
+per-collector	lat-reg-latinnews	FETCH_FAILED	1	-1	1	1	0	-1	0.3	transport none recorded; 0 of 1 hosts answered; silent: www.latinamericanpost.com; 5609 bytes | remedy: run the source directly (`--run <id>`) and read its stderr for the status the collector saw. Then: a 401/403 wants a credential or the per-host agent table in core/host_agents.def; a 429 wants a per-h
+per-collector	af-dportal-trans-rw	SLOW	-1	0	-1	-1	571	-1	90.1	hit --timeout 90.1s; 571 rows already stored
+per-collector	lat-ni-bcn	OK	0	0	10	10	10	-1	1.1	
+per-collector	afr-il-jpost-israel	OK	0	0	30	30	30	-1	0.2	
+per-collector	cyb-atlassian-status	OK	0	0	34	34	34	-1	0.3	
+per-collector	sci-ocean-coops-currents	OK	0	0	84	84	84	-1	0.5	
+per-collector	lat-pa-sinaproc-feed	OK	0	0	10	10	10	-1	1.6	
+per-collector	sas-news-onlinekhabar	OK	0	0	55	55	55	-1	0.3	
+per-collector	sas-mfe-sets	OK	0	0	4	4	4	-1	1.7	
+per-collector	sas-hdx-pak	OK	0	0	267	267	267	-1	1.6	
+per-collector	sas-bmkg-adm-16	FETCH_FAILED	1	-1	1	1	0	-1	0.3	transport none recorded; 0 of 1 hosts answered; silent: cuaca.bmkg.go.id; 39 bytes | remedy: run the source directly (`--run <id>`) and read its stderr for the status the collector saw. Then: a 401/403 wants a credential or the per-host agent table in core/host_agents.def; a 429 wants a per-h
+per-collector	sas-sg-datasets4	OK	0	0	10	10	10	-1	0.7	
+per-collector	nam-md-md-coastalresiliencyassessment-shoreline-hazard-in	OK	0	0	4000	4001	4000	-1	3.8	
+per-collector	eas-twse-index-intraday	OK	0	0	10	10	10	-1	1.1	
+per-collector	cyb-prh-fi-companies	OK	0	0	100	101	100	-1	2.1	
+per-collector	nam-michigan-hospitalization-by-county	OK	0	0	747	747	747	-1	1.0	
+per-collector	afr-ilgov-ds-recall-2c3352	OK	0	0	2000	2001	2000	-1	9.2	
+per-collector	fr-entreprises-biotechnologie	OK	0	0	192	192	192	-1	2.8	
+per-collector	fr-geoapi-communes-15	OK	0	0	250	250	250	-1	1.1	
+per-collector	fr-schools-annuaire-972	OK	0	0	405	405	405	-1	1.9	
+per-collector	jp-ckan-yokohama-q-byouin	OK	0	0	3	3	3	-1	1.8	
+per-collector	us-caltrans-cctv-d04	OK	0	0	773	773	773	-1	1.7	
+per-collector	nam-norfolk-better-buildings-challenge-properties	OK	0	0	8000	8001	8000	-1	8.9	
+per-collector	ch-data-bl-ch-facets	OK	0	0	5	5	5	-1	1.0	
+per-collector	be-data-namur-be-publisher-service-public-de-wallonie-spw	OK	0	0	14	14	14	-1	1.3	
+per-collector	de-opendata-schleswig-holstein-de-org-amt-suedangeln	OK	0	0	4	4	4	-1	0.7	
+per-collector	es-opendata-aragon-es-org-consorcio-de-transportes-del-area-de-zar	EMITS_NOTHING	0	0	0	0	0	-1	0.8	no records reached intel_items — it transferred 194 bytes over 1 request(s), so the upstream really did hand over nothing
+per-collector	fr-data-centrevaldeloire-fr-publisher-anfr	OK	0	0	1	1	1	-1	0.7	
+per-collector	hu-www-opendata-hu-org-k-monitor	OK	0	0	9	9	9	-1	1.3	
+per-collector	gb-data-gov-uk-org-arun-district-council	OK	0	0	6	6	6	-1	1.9	
+per-collector	it-dati-comune-matera-it-groups	OK	0	0	13	13	13	-1	1.7	
+per-collector	jp-data-city-yokohama-lg-jp-org-o0050	OK	0	0	16	16	16	-1	1.6	
+per-collector	lv-data-gov-lv-org-lvm	OK	0	0	9	9	9	-1	1.4	
+per-collector	afr-ibb-ds-itfai-istatistikler-yangin-794a5d	FETCH_FAILED	1	-1	1	1	0	-1	32.2	TLS handshake; the TLS handshake was refused before any certificate was jud; transport other; NO CERTIFICATE WAS JUDGED and no status was measured, which is also what this container's own egress looks like — check $HTTPS_PROXY/__agentproxy/status and re-read from another network before treating this as the source's (CLAUDE.md: a peer reset here can be ours); 0 of 1 hosts answered; silent: data.ibb.gov.tr; 0 bytes | remedy: run the source directly (`--run <id>`) and read its stderr for the status the collector saw. Then: a 401/403 wants a credential or the per-host agent table in core/host_agents.def; a 429 wants a per-h
+per-collector	si-podatki-gov-si-groups	OK	0	0	4	4	4	-1	1.0	
+per-collector	af-dhs-data-zm	FETCH_FAILED	1	-1	1	1	0	-1	40.4	NO CERTIFICATE WAS JUDGED and no status was measured, which is also what this container's own egress looks like — check $HTTPS_PROXY/__agentproxy/status and re-read from another network before treating this as the source's (CLAUDE.md: a peer reset here can be ours) | remedy: re-run; if the status persists the endpoint has moved or retired
+per-collector	uk-ckan-publishing-service-gov-uk-org-arts-council-england	OK	0	0	20	20	20	-1	1.0	
+per-collector	us-data-raleighnc-gov-datasets	OK	0	0	194	194	194	-1	1.2	
+per-collector	ae-careem-gbfs-discovery	OK	0	0	8	8	8	-1	0.5	
+per-collector	de-opensensemap-box-detail	OK	0	0	5	5	5	-1	1.0	
+per-collector	eu-emodnet-ha-bshcontiscables	OK	0	0	2	3	2	-1	0.8	
+per-collector	dk-erst-offentliggoerelser	OK	0	0	3	4	3	-1	0.5	
+per-collector	de-gesetze-im-internet-toc	OK	0	0	500	501	500	-1	1.8	
+per-collector	af-dportal-trans-tz	SLOW	-1	0	-1	-1	557	-1	90.1	hit --timeout 90.1s; 557 rows already stored
+per-collector	ee-elering-nps-price	OK	0	0	193	193	193	-1	1.0	
+per-collector	es-bdns-sectores	OK	0	0	24	24	24	-1	0.8	
+per-collector	eu-emodnet-ha-platforms	OK	0	0	3	4	3	-1	0.7	
+per-collector	eu-emodnet-ha-dischargepoints	OK	0	0	3	4	3	-1	0.7	
+per-collector	eu-emodnet-ha-desalination	OK	0	0	3	4	3	-1	0.9	
+per-collector	eu-emodnet-ha-militaryareas	OK	0	0	2	3	2	-1	1.0	
+per-collector	eu-emodnet-ha-portlocations	OK	0	0	3	4	3	-1	0.4	
+per-collector	fi-digitraffic-rail-operators	OK	0	0	32	32	32	-1	0.7	
+per-collector	dk-retsinformation-documentsearch	OK	0	0	200	201	200	-1	4.9	
+per-collector	eu-emodnet-ha-shomcables	OK	0	0	2	3	2	-1	0.7	
+per-collector	uk-tfl-place-carpark	OK	0	0	58	58	58	-1	0.4	
+per-collector	uk-tfl-line-meta-modes	OK	0	0	18	18	18	-1	0.3	
+per-collector	jp-moe-soramame-duplicate-names	OK	0	0	40	40	40	-1	0.7	
+per-collector	global-taginfo-search-by-value	OK	0	0	46	46	46	-1	1.3	
+per-collector	eu-emodnet-ha-rijkscables	FETCH_FAILED	1	-1	1	1	0	-1	0.9	transport none recorded; 0 of 1 hosts answered; silent: ows.emodnet-humanactivities.eu; 548 bytes | remedy: run the source directly (`--run <id>`) and read its stderr for the status the collector saw. Then: a 401/403 wants a credential or the per-host agent table in core/host_agents.def; a 429 wants a per-h
+per-collector	af-dportal-act-ug	SLOW	-1	0	-1	-1	588	-1	90.1	hit --timeout 90.1s; 588 rows already stored
+per-collector	nl-rechtspraak-uitspraken-modified-feed	OK	0	0	5	5	5	-1	0.6	
+per-collector	sci-celestrak-spire	FETCH_FAILED	1	-1	1	1	0	-1	31.2	TLS handshake; the TLS handshake was refused before any certificate was jud; transport other; NO CERTIFICATE WAS JUDGED and no status was measured, which is also what this container's own egress looks like — check $HTTPS_PROXY/__agentproxy/status and re-read from another network before treating this as the source's (CLAUDE.md: a peer reset here can be ours); 0 of 1 hosts answered; silent: celestrak.org; 0 bytes | remedy: run the source directly (`--run <id>`) and read its stderr for the status the collector saw. Then: a 401/403 wants a credential or the per-host agent table in core/host_agents.def; a 429 wants a per-h
+per-collector	global-peeringdb-carrier-detail	OK	0	0	1	1	1	-1	0.5	
+per-collector	ua-prozorro-plans	OK	0	0	5	5	5	-1	0.8	
+per-collector	pl-saos-dump-sc-chambers	OK	0	0	4	4	4	-1	1.4	
+per-collector	sk-rpvs-kvalifikovane-podnety	OK	0	0	114	114	114	-1	2.1	
+per-collector	gr-diavgeia-dictionary-cpv	OK	0	0	10357	10357	10357	-1	4.2	
+per-collector	us-fpds-atom-vendor	OK	0	0	10	10	10	-1	0.6	
+per-collector	ar-georef-provincias	OK	0	0	24	24	24	-1	0.6	
+per-collector	us-pacer-rss-cacb	OK	0	0	500	501	500	-1	2.1	
+per-collector	us-epa-envirofacts-frs-facility-site	OK	0	0	2	2	2	-1	3.2	
+per-collector	au-apvma-pubcris-products	FETCH_FAILED	1	-1	1	1	0	-1	0.4	transport none recorded; 0 of 1 hosts answered; silent: data.gov.au; 919 bytes | remedy: run the source directly (`--run <id>`) and read its stderr for the status the collector saw. Then: a 401/403 wants a credential or the per-host agent table in core/host_agents.def; a 429 wants a per-h
+per-collector	dhs-data-bf	OK	0	0	100	100	100	-1	1.0	
+per-collector	insd-burkina-rss	OK	0	0	10	10	10	-1	1.4	
+per-collector	bh-travel-cargo-establishments	OK	0	0	100	101	100	-1	1.1	
+per-collector	au-qld-supplier-arrangements	OK	0	0	269	269	269	-1	3.4	
+per-collector	bh-monitoring-stations	OK	0	0	20	20	20	-1	0.9	
+per-collector	dhs-data-bj	OK	0	0	100	100	100	-1	0.7	
+per-collector	ie-data-gov-ie-activity	OK	0	0	2000	2001	2000	-1	26.7	
+per-collector	us-fra-highway-rail-crossing-incidents	COLLISION	0	0	40	37	36	-1	6.1	4 of 40 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+per-collector	af-dportal-trans-za	SLOW	-1	0	-1	-1	552	-1	90.1	hit --timeout 90.1s; 552 rows already stored
+per-collector	bn-deps-statistics-notices	OK	0	0	20	21	20	-1	8.0	
+per-collector	ro-data-gov-ro-org-asociatia-chinologica-romana	FETCH_FAILED	1	-1	1	1	0	-1	32.0	TLS handshake; the TLS handshake was refused before any certificate was jud; transport other; NO CERTIFICATE WAS JUDGED and no status was measured, which is also what this container's own egress looks like — check $HTTPS_PROXY/__agentproxy/status and re-read from another network before treating this as the source's (CLAUDE.md: a peer reset here can be ours); 0 of 1 hosts answered; silent: data.gov.ro; 0 bytes | remedy: run the source directly (`--run <id>`) and read its stderr for the status the collector saw. Then: a 401/403 wants a credential or the per-host agent table in core/host_agents.def; a 429 wants a per-h
+per-collector	br-pncp-compra-arquivos	OK	0	0	4	4	4	-1	2.0	
+per-collector	br-tcu-inidoneos	OK	0	0	88	88	88	-1	1.8	
+per-collector	bh-total-exports-2026	OK	0	0	36915	36915	36915	-1	14.6	
+per-collector	af-gleif-lei-za	SLOW	-1	0	-1	-1	220	-1	90.0	hit --timeout 90.0s; 220 rows already stored
+per-collector	bn-mofe-tender-notices	OK	0	0	144	144	144	-1	14.7	
+per-collector	bt-mfa-search	OK	0	0	88	88	88	-1	3.7	
+per-collector	dhs-data-cd	OK	0	0	100	100	100	-1	1.0	
+per-collector	af-pmg-policy-documents	SLOW	-1	0	-1	-1	296	-1	90.1	hit --timeout 90.1s; 296 rows already stored
+per-collector	bt-ecb-search	OK	0	0	122	122	122	-1	6.7	
+per-collector	dhs-data-ci	OK	0	0	100	100	100	-1	0.9	
+per-collector	brvm-rss	OK	0	0	10	10	10	-1	0.8	
+per-collector	dhs-data-cm	OK	0	0	100	100	100	-1	0.9	
+per-collector	bt-oag-search	FETCH_FAILED	1	-1	1	1	0	-1	5.3	TLS self_signed; the certificate is self-signed, so no public CA vouches for ; transport other; 0 of 1 hosts answered; silent: www.oag.gov.bt; 0 bytes | remedy: run the source directly (`--run <id>`) and read its stderr for the status the collector saw. Then: a 401/403 wants a credential or the per-host agent table in core/host_agents.def; a 429 wants a per-h
+per-collector	co-concesionarios-vehiculos	OK	0	0	93	93	93	-1	0.7	
+per-collector	bt-acc-search	OK	0	0	649	649	649	-1	10.1	
+per-collector	bt-drc-search	OK	0	0	59	59	59	-1	5.7	
+per-collector	us-openfda-other-historicaldocument	COLLISION	0	0	8858	8854	8854	-1	28.7	4 of 8858 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+per-collector	dhs-data-eg	OK	0	0	100	100	100	-1	0.9	
+per-collector	co-reps-directorio-georreferenciado	OK	0	0	688	688	688	-1	3.6	
+per-collector	ins-cameroun-rss	OK	0	0	10	10	10	-1	5.5	
+per-collector	co-dnp-proyectos-sgr	COLLISION	0	0	1000	1000	999	-1	4.4	1 of 1000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+per-collector	af-dportal-trans-zm	SLOW	-1	0	-1	-1	490	-1	90.0	hit --timeout 90.0s; 490 rows already stored
+per-collector	co-secop2-plan-anual-adq	OK	0	0	1000	1001	1000	-1	5.7	
+per-collector	capmas-head	FETCH_FAILED	1	-1	1	1	0	-1	7.2	TLS handshake; the TLS handshake was refused before any certificate was jud; transport other; NO CERTIFICATE WAS JUDGED and no status was measured, which is also what this container's own egress looks like — check $HTTPS_PROXY/__agentproxy/status and re-read from another network before treating this as the source's (CLAUDE.md: a peer reset here can be ours); 0 of 1 hosts answered; silent: www.capmas.gov.eg; 0 bytes | remedy: run the source directly (`--run <id>`) and read its stderr for the status the collector saw. Then: a 401/403 wants a credential or the per-host agent table in core/host_agents.def; a 429 wants a per-h
+per-collector	capmas-country	FETCH_FAILED	1	-1	1	1	0	-1	7.2	TLS handshake; the TLS handshake was refused before any certificate was jud; transport other; NO CERTIFICATE WAS JUDGED and no status was measured, which is also what this container's own egress looks like — check $HTTPS_PROXY/__agentproxy/status and re-read from another network before treating this as the source's (CLAUDE.md: a peer reset here can be ours); 0 of 1 hosts answered; silent: www.capmas.gov.eg; 0 bytes | remedy: run the source directly (`--run <id>`) and read its stderr for the status the collector saw. Then: a 401/403 wants a credential or the per-host agent table in core/host_agents.def; a 429 wants a per-h
+per-collector	il-knesset-gov-ministry	OK	0	0	922	922	922	-1	3.1	
+per-collector	il-moj-amutot-foreign-state-donations	OK	0	0	2000	2001	2000	-1	9.8	
+per-collector	il-trademark-holders	OK	0	0	2000	2001	2000	-1	7.6	
+per-collector	il-state-lawyer-engagements	OK	0	0	252	252	252	-1	1.4	
+per-collector	id-jakarta-imb-building-permits	OK	0	0	13137	13137	13137	-1	13.3	
+per-collector	il-police-crime-records	OK	0	0	2000	2001	2000	-1	8.1	
+per-collector	il-official-receiver-bankruptcies	OK	0	0	2000	2001	2000	-1	9.3	
+per-collector	in-mfapi-scheme-search	OK	0	0	15	15	15	-1	1.0	
+per-collector	ifc-disclosures-investment	OK	0	0	5	5	5	-1	1.1	
+per-collector	iaticloud-transaction	OK	0	0	10	11	10	-1	1.5	
+per-collector	unhcr-solutions	OK	0	0	848	848	848	-1	1.2	
+per-collector	who-speeches	OK	0	0	50	50	50	-1	1.2	
+per-collector	br-ibge-municipio-distritos	FETCH_FAILED	1	-1	1	1	0	-1	31.7	TLS handshake; the TLS handshake was refused before any certificate was jud; transport other; NO CERTIFICATE WAS JUDGED and no status was measured, which is also what this container's own egress looks like — check $HTTPS_PROXY/__agentproxy/status and re-read from another network before treating this as the source's (CLAUDE.md: a peer reset here can be ours); 0 of 1 hosts answered; silent: servicodados.ibge.gov.br; 0 bytes | remedy: run the source directly (`--run <id>`) and read its stderr for the status the collector saw. Then: a 401/403 wants a credential or the per-host agent table in core/host_agents.def; a 429 wants a per-h
+per-collector	ohada-rss	OK	0	0	10	10	10	-1	0.8	
+per-collector	lk-customs-search	OK	0	0	106	106	106	-1	2.7	
+per-collector	il-real-estate-brokers	OK	0	0	2000	2001	2000	-1	6.7	
+per-collector	lk-riskinfo-documents	OK	0	0	41	41	41	-1	3.3	
+per-collector	lk-riskinfo-maps	OK	0	0	1	1	1	-1	1.2	
+per-collector	lk-slbfe-search	OK	0	0	3	3	3	-1	1.9	
+per-collector	lk-agrimin-search	OK	0	0	7	7	7	-1	2.1	
+per-collector	lk-riskinfo-keywords	OK	0	0	2	2	2	-1	1.3	
+per-collector	dhs-data-ma	OK	0	0	100	100	100	-1	0.6	
+per-collector	hcp-maroc-atom	OK	0	0	5	5	5	-1	0.7	
+per-collector	lk-pucsl-search	OK	0	0	2	2	2	-1	2.1	
+per-collector	dhs-data-mg	OK	0	0	100	100	100	-1	0.7	
+per-collector	dhs-data-ml	OK	0	0	100	100	100	-1	0.8	
+per-collector	mm-mimu-geonode-layers	FETCH_FAILED	1	-1	1	1	0	-1	0.5	transport none recorded; 0 of 1 hosts answered; silent: geonode.themimu.info; 5625 bytes | remedy: run the source directly (`--run <id>`) and read its stderr for the status the collector saw. Then: a 401/403 wants a credential or the per-host agent table in core/host_agents.def; a 429 wants a per-h
+per-collector	gcf-projects	OK	0	0	393	393	393	-1	12.7	
+per-collector	bh-quarterly-fdi-stocks	OK	0	0	4460	4460	4460	-1	53.3	
+per-collector	mauritius-accident-prone-areas	FETCH_FAILED	1	-1	1	1	0	-1	1.5	transport none recorded; 1 of 1 hosts answered; 7517 bytes | remedy: READ THE BODY, not the status: `--run <id>` and look at what came back for the byte count on the run line. A maintenance or rate-limit page served as 200 is the common case (il-knesset-dates fetches 1
+per-collector	my-flood-warning-stations	OK	0	0	1276	1276	1276	-1	2.1	
+per-collector	mv-statistics-search	OK	0	0	56	56	56	-1	3.0	
+per-collector	np-bipad-pollution-stations	OK	0	0	31	31	31	-1	2.5	
+per-collector	np-bipad-disaster-profile	OK	0	0	75	75	75	-1	2.4	
+per-collector	np-bipad-openspace-detail	OK	0	0	10	11	10	-1	3.2	
+per-collector	np-bipad-incident-relief	OK	0	0	12	12	12	-1	1.3	
+per-collector	ifrc-go-personnel	OK	0	0	3847	3847	3847	-1	20.8	
+per-collector	np-bipad-municipality-contact	OK	0	0	26	26	26	-1	2.0	
+per-collector	np-bipad-project	OK	0	0	1	1	1	-1	1.3	
+per-collector	np-bipad-priority-activity	OK	0	0	271	271	271	-1	3.4	
+per-collector	np-bipad-rain-stations	OK	0	0	667	667	667	-1	8.1	
+per-collector	id-jakarta-land-nominative-list	OK	0	0	6410	6410	6410	-1	37.5	
+per-collector	hr-data-zagreb-hr-activity	SLOW	-1	0	-1	-1	600	-1	90.1	hit --timeout 90.1s; 600 rows already stored
+per-collector	pa-idaan-tomas-agua	OK	0	0	58	58	58	-1	1.5	
+per-collector	pa-asep-concesiones-2025	OK	0	0	540	540	540	-1	2.5	
+per-collector	mv-trade-search	OK	0	0	275	275	275	-1	15.9	
+per-collector	pa-sertv-contrataciones-2026	OK	0	0	535	535	535	-1	3.0	
+per-collector	np-bipad-vulnerability	OK	0	0	753	753	753	-1	6.4	
+per-collector	pa-iphe-planilla-2025	OK	0	0	1000	1001	1000	-1	4.5	
+per-collector	pa-migracion-viaticos-2023	OK	0	0	29	29	29	-1	0.6	
+per-collector	np-bipad-inventory	OK	0	0	1000	1001	1000	-1	12.9	
+per-collector	pk-pbc-search	OK	0	0	3	3	3	-1	0.6	
+per-collector	ph-psgc-regions	OK	0	0	17	17	17	-1	1.1	
+per-collector	pa-meduca-fece-2022	OK	0	0	1000	1001	1000	-1	4.0	
+per-collector	pk-pdma-search	OK	0	0	35	35	35	-1	1.2	
+per-collector	np-bipad-inventory-item	OK	0	0	809	809	809	-1	9.5	
+per-collector	dhs-data-sn	OK	0	0	100	100	100	-1	0.7	
+per-collector	pk-pbs-search	OK	0	0	49	49	49	-1	2.1	
+per-collector	tr-izmir-council-members	FETCH_FAILED	1	-1	1	1	0	-1	1.0	transport none recorded; 0 of 1 hosts answered; silent: acikveri.bizizmir.com; 26073 bytes | remedy: run the source directly (`--run <id>`) and read its stderr for the status the collector saw. Then: a 401/403 wants a credential or the per-host agent table in core/host_agents.def; a 429 wants a per-h
+per-collector	vn-vietqr-banks	OK	0	0	76	76	76	-1	0.5	
+per-collector	sci-frontiers-pediatrics	OK	0	0	20	20	20	-1	0.7	
+per-collector	vn-admin-districts	OK	0	0	696	696	696	-1	1.7	
+per-collector	kh-mptc-announcements	OK	0	0	400	401	400	-1	33.9	
+per-collector	qa-environmental-monitoring	OK	0	0	728	728	728	-1	4.4	
+per-collector	th-thaiwater-rain-today	OK	0	0	4591	4591	4591	-1	3.8	
+per-collector	sec-aviationweek	OK	0	0	10	10	10	-1	0.4	
+per-collector	sci-pmda-rss-020	OK	0	0	15	15	15	-1	1.1	
+per-collector	jpx-pref-kumamoto-rss10-6	OK	0	0	4	4	4	-1	2.3	
+per-collector	lk-energymin-search	FETCH_FAILED	1	-1	1	1	0	-1	32.5	TLS handshake; the TLS handshake was refused before any certificate was jud; transport other; NO CERTIFICATE WAS JUDGED and no status was measured, which is also what this container's own egress looks like — check $HTTPS_PROXY/__agentproxy/status and re-read from another network before treating this as the source's (CLAUDE.md: a peer reset here can be ours); 0 of 1 hosts answered; silent: www.energymin.gov.lk; 0 bytes | remedy: run the source directly (`--run <id>`) and read its stderr for the status the collector saw. Then: a 401/403 wants a credential or the per-host agent table in core/host_agents.def; a 429 wants a per-h
+per-collector	gov-fed-feds-papers	OK	0	0	15	15	15	-1	0.3	
+per-collector	eco-eurostat-gdp	OK	0	0	16	16	16	-1	1.2	
+per-collector	geo-meteoalarm-croatia	OK	0	0	126	126	126	-1	1.6	
+per-collector	bn-jpm-pmo-notices	FETCH_FAILED	1	-1	1	1	0	-1	75.9	transport connect; NO CERTIFICATE WAS JUDGED and no status was measured, which is also what this container's own egress looks like — check $HTTPS_PROXY/__agentproxy/status and re-read from another network before treating this as the source's (CLAUDE.md: a peer reset here can be ours); 0 of 1 hosts answered; silent: www.jpm.gov.bn; 0 bytes | remedy: run the source directly (`--run <id>`) and read its stderr for the status the collector saw. Then: a 401/403 wants a credential or the per-host agent table in core/host_agents.def; a 429 wants a per-h
+per-collector	eco-statnett-flow	OK	0	0	34	34	34	-1	1.3	
+per-collector	sec-fcdo-ta-russia	OK	0	0	1	1	1	-1	0.5	
+per-collector	cyb-snyk-blog	OK	0	0	50	50	50	-1	0.8	
+per-collector	id-jakarta-dsda-drainage-contractors	OK	0	0	20000	20001	20000	-1	52.6	
+per-collector	sci-satnogs-satellites	OK	0	0	2851	2851	2851	-1	4.3	
+per-collector	cyb-certee-news	OK	0	0	316	316	316	-1	3.0	
+per-collector	gov-nl-tweedekamer-stemming	OK	0	0	400	401	400	-1	3.6	
+per-collector	sec-fedreg-marad	OK	0	0	2000	2001	2000	-1	3.8	
+per-collector	JO30_TOKYO_CRIME_VENDING_2023	OK	0	0	92	92	92	92	1.7	
+per-collector	JO30_TOKYO_GRP_KANKO	OK	0	0	208	208	208	208	2.4	
+per-collector	OPENMETEO_ARCHIVE	OK	0	0	1	1	1	1	0.6	
+per-collector	UN_COMTRADE_SUMMARY	OK	0	0	217	217	217	217	1.6	
+per-collector	np-nrb-search	OK	0	0	625	625	625	-1	19.1	
+per-collector	NOAA_CO_OPS_CURRENTS	OK	0	0	6	6	6	6	0.6	
+per-collector	GDACS_VOLCANO	OK	0	0	7	7	7	7	2.5	
+per-collector	UNHCR_POPULATION	OK	0	0	75	75	75	75	1.9	
+per-collector	ODS_PARIS	OK	0	0	100	101	100	100	1.4	
+per-collector	EMSC_SEISMIC_EVENTS	OK	0	0	200	200	200	200	1.6	
+per-collector	worldbank-debarred-firms	GATED	0	0	0	1	0	-1	0.1	waiting for a credential, and said so as data: needs WORLDBANK_SANCTIONS_APIKEY (rule 1's gated note, not a defect)
+per-collector	OVERPASS_TELECOM_EXCHANGE	FETCH_FAILED	1	-1	1	1	0	-1	5.1	TLS handshake; the TLS handshake was refused before any certificate was jud; NO CERTIFICATE WAS JUDGED and no status was measured, which is also what this container's own egress looks like — check $HTTPS_PROXY/__agentproxy/status and re-read from another network before treating this as the source's (CLAUDE.md: a peer reset here can be ours) | remedy: no certificate was judged, so this is not about trust: compare against tools/jo_tls.py, which lowers OpenSSL's CIPHER SECURITY LEVEL (verification and hostname checking stay on) and reaches hosts the 
+per-collector	AP19_NZ_WELLINGTON_HUB	OK	0	0	139	139	139	139	1.7	
+per-collector	OFAC_SANCTIONED_CRYPTO_BTC	OK	0	0	532	532	532	532	0.3	
+per-collector	DATAPLANE_SSH_CLIENT	OK	0	0	25134	25134	25134	25134	5.0	
+per-collector	pk-nab-search	OK	0	0	230	230	230	-1	24.2	
+per-collector	UK_GOVUK_SSRO_PUBS	OK	0	0	435	435	435	435	5.7	
+per-collector	ENERGINET_PRODCONSUM_SETTLEMENT	OK	0	0	50	51	50	50	1.3	
+per-collector	TPEX_BOND_GOVT	OK	0	0	197	197	197	197	1.7	
+per-collector	FAO_FIRMS_FISHERY_POINTS	OK	0	0	378	378	378	378	0.5	
+per-collector	AM_ARMSTATBANK_INDEX	OK	0	0	8	8	8	8	3.6	
+per-collector	UNHCR_IDMC_DISPLACEMENT	OK	0	0	36	36	36	36	0.8	
+per-collector	IANA_AS_NUMBERS	OK	0	0	88	88	88	88	0.4	
+per-collector	ua-mvs-wanted-persons	OK	0	0	73106	73106	73106	-1	21.9	
+per-collector	UNHCR_COUNTRY_LIST	OK	0	0	232	232	232	232	1.2	
+per-collector	ES_CATASTRO_PROVINCIAS	OK	0	0	48	48	48	48	0.7	
+per-collector	LACNIC_DELEGATED_STATS	OK	0	0	97710	97710	97710	97710	20.2	
+per-collector	id-jakarta-green-space-violations	SLOW	-1	0	-1	-1	16000	-1	90.1	hit --timeout 90.1s; 16000 rows already stored
+per-collector	geo-stac-dea-africa-items	OK	0	0	1000	1001	1000	-1	36.6	
+per-collector	WIKIMEDIA_FEATURED_FEED	FETCH_FAILED	0	0	1	1	0	-1	0.4	HTTP 429 | remedy: rate limited: give the host a per-host minimum gap in core/hostgate.c, as crates.io has
+per-collector	BW_UB_UBRISA_REPOSITORY	FETCH_FAILED	1	-1	1	1	0	-1	31.0	HTTP 503 | remedy: re-run; if the status persists the endpoint has moved or retired
+per-collector	geo-eccc-climate-daily	OK	0	0	4000	4001	4000	-1	41.1	
+per-collector	NHTSA_VPIC_MAKES	OK	0	0	12427	12427	12427	12427	3.6	
+per-collector	OVERPASS_TAXIWAY	FETCH_FAILED	1	-1	1	1	0	-1	5.4	TLS handshake; the TLS handshake was refused before any certificate was jud; NO CERTIFICATE WAS JUDGED and no status was measured, which is also what this container's own egress looks like — check $HTTPS_PROXY/__agentproxy/status and re-read from another network before treating this as the source's (CLAUDE.md: a peer reset here can be ours) | remedy: no certificate was judged, so this is not about trust: compare against tools/jo_tls.py, which lowers OpenSSL's CIPHER SECURITY LEVEL (verification and hostname checking stay on) and reaches hosts the 
+per-collector	FCC_EAS_TFAB	OK	0	0	30	30	30	30	1.1	
+per-collector	WD_SEMICONDUCTOR_FABS	COLLISION	0	0	500	499	499	500	5.0	1 of 500 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+per-collector	CNAC_CO_CODE_INDEX	OK	0	0	117	117	117	117	0.3	
+per-collector	WDID_IATA_AIRPORT	OK	0	0	5000	5000	5000	5000	23.5	
+per-collector	WORLDBANK_ARMS_IMPORTS	FETCH_FAILED	1	-1	1	1	0	-1	40.4	NO CERTIFICATE WAS JUDGED and no status was measured, which is also what this container's own egress looks like — check $HTTPS_PROXY/__agentproxy/status and re-read from another network before treating this as the source's (CLAUDE.md: a peer reset here can be ours) | remedy: re-run; if the status persists the endpoint has moved or retired
+per-collector	UKPARL_LDA_ORAL_Q_TIMES	FETCH_FAILED	1	-1	1	1	0	-1	0.5	HTTP 503 | remedy: re-run; if the status persists the endpoint has moved or retired
+per-collector	BGS_GENERIC_SAMPLES_REGISTER	OK	0	0	2000	2001	2000	2000	11.4	
+per-collector	FAA_ARCGIS_RUNWAYS	OK	0	0	10000	10001	10000	10000	7.5	
+per-collector	QATAR_MME_IZBAH	OK	0	0	5001	5001	5001	5001	16.7	
+per-collector	BIS_SDMX_CONCEPTSCHEME	OK	0	0	6	6	6	6	0.8	
+per-collector	FAA_AMD_PENDING_TAXIWAY	COLLISION	0	0	20000	19994	19993	20000	7.7	7 of 20000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+per-collector	NL_OVERHEID_SRU_TUCHTRECHT	OK	0	0	2000	2001	2000	2000	21.9	
+per-collector	FSA_AUTHORITIES_BASIC	OK	0	0	363	363	363	363	1.2	
+per-collector	RDW_DEFECT_CODES	OK	0	0	1002	1002	1002	1002	1.5	
+per-collector	IETF_DT_PERSON	OK	0	0	2000	2001	2000	2000	3.5	
+per-collector	MISPGAL_HUMAN_KILL_CHAIN	OK	0	0	17	17	17	17	0.2	
+per-collector	GDPRHUB_LAG_DUSSELDORF_GERMANY	OK	0	0	5	5	5	5	1.0	
+per-collector	HC_MDALL_COMPANY_ALL	OK	0	0	7696	7696	7696	7696	2.4	
+per-collector	DISCOURSE_CATEGORIES_DISCUSS_ELASTIC_CO	OK	0	0	10	10	10	10	0.5	
+per-collector	JPC_CYBOZU_IMPORTANT_RSS	OK	0	0	20	20	20	20	0.8	
+per-collector	TOR_METRICS_HIDSERV_RELAYED_CELLS	OK	0	0	4310	4310	4310	4310	2.5	
+per-collector	JPL_YAMAGUCHI_CKAN_ORG_35203	OK	0	0	44	44	44	44	2.6	
+per-collector	DERIB_LEGISLATION_ALL	OK	0	0	2000	2001	2000	2000	5.8	
+per-collector	JPOD_GSP_TOKYO_131091	OK	0	0	21	21	21	21	1.5	
+per-collector	NADA_FAO_CATALOG	OK	0	0	1804	1804	1804	1804	5.6	
+per-collector	JPBBS_OPEN2CH_NEWSPLUS	FETCH_FAILED	0	0	1	1	0	-1	0.3	HTTP 403 | remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+per-collector	JPMUNI_YUKUHASHI_UPDATE	OK	0	0	100	100	100	100	5.8	
+per-collector	JPREPO_SOPHIA_OAI	FETCH_FAILED	1	-1	1	1	0	-1	1.2	HTTP 503 | remedy: re-run; if the status persists the endpoint has moved or retired
+per-collector	NY_PROPERTY_ASSESSMENT_ROLLS	OK	0	0	20000	20001	20000	20000	19.3	
+per-collector	AR_DATOS_MENDOZA	FETCH_FAILED	1	-1	1	1	0	-1	40.4	NO CERTIFICATE WAS JUDGED and no status was measured, which is also what this container's own egress looks like — check $HTTPS_PROXY/__agentproxy/status and re-read from another network before treating this as the source's (CLAUDE.md: a peer reset here can be ours) | remedy: re-run; if the status persists the endpoint has moved or retired
+per-collector	JP25_JPARCH_KOBE_DA_RECENT	OK	0	0	52	52	52	52	2.5	
+per-collector	JP25_JPBIZ_KKJ_PREF_43_KUMAMOTO	WINDOW_EMPTY	0	0	0	1	0	-1	1.3	date-window row: the window 2021-01-01..2021-02-22 is honestly empty and the walk advanced (rule 1). This gate gives every source a fresh database, so a window row reads window 1 of N from its declared window_from — this says where the walk STARTS, not whether the source works. Re-read it with a window near today before treating it as a finding
+per-collector	JP25_JPDEEP_CANON_SUPPORT_INFO_HTML	OK	0	0	275	275	275	275	1.6	
+per-collector	JP25_JPFIN_JPLIFE_DISCLOSURE	OK	0	0	45	45	45	45	1.7	
+per-collector	JPBIZ_TOKUBEN	OK	0	0	10	10	10	10	3.6	
+per-collector	JP25_JPINFRA_TOKYU_INFO	OK	0	0	10	10	10	10	1.1	
+per-collector	JPOD_GSP_MOJ_41SAGA_2022_2023	OK	0	0	26	26	26	26	1.3	
+per-collector	JPKEIZAI_HAMAMATSU	OK	0	0	10	10	10	10	0.7	
+per-collector	JPMEDIA_CNET_JAPAN	FETCH_FAILED	0	0	1	1	0	-1	0.2	HTTP 403 | remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+per-collector	JP25_JPMEDIA_FM_KURASHIKI	OK	0	0	100	100	100	100	2.5	
+per-collector	JP25_JPMUNI2_ISE_MUNICIPAL_UPDATE_FEED	OK	0	0	58	58	58	58	2.2	
+per-collector	JP25_JPNATGOV_ROUDOU_NARA_NEWS	OK	0	0	8	8	8	8	0.5	
+per-collector	EGOV_LAW_LIST_ACT	OK	0	0	2165	2166	2165	2165	14.7	
+per-collector	JPMUNI_KURAYOSHI_UPDATE_2	OK	0	0	15	15	15	15	2.3	
+per-collector	JP25_JPREC_YAMAHA_RT_SECURITY	OK	0	0	70	70	70	70	1.1	
+per-collector	JP25_JPPOLICE_TOKUSHIMA_2025_ZIDOUHANBAIKINERAI	OK	0	0	3	3	3	3	2.4	
+per-collector	JP25_JPPREF_HOKKAIDO_GIKAI_OSHIRASE	OK	0	0	39	39	39	39	1.6	
+per-collector	JO28_LAC_WATCH_FEED	OK	0	0	20	20	20	20	1.0	
+per-collector	JO28_LRC_TOKYO_INDEX	OK	0	0	5	5	5	5	1.3	
+per-collector	JO28_075_MAFF_LIVESTOCK_STATS_RELEASES	OK	0	0	29	29	29	29	0.8	
+per-collector	JO28_JFSA_MONTHLY_SURVEY	OK	0	0	19	19	19	19	2.3	
+per-collector	JO28_ASAI_DIARY_VIEWS	OK	0	0	7	7	7	7	1.1	
+per-collector	JO29A_FGT_HONOLULU_SOCRATA	OK	0	0	455	455	455	455	1.3	
+per-collector	JO28_JNET21_EVENT_HEADLINES	OK	0	0	95	95	95	95	1.7	
+per-collector	JO28_JCG_OKINAWA_MARITIME_ACCIDENT_REPORTS	OK	0	0	11	11	11	11	2.2	
+per-collector	JO29A_CAM_FR_ANGLET_BEACH_WEBCAMS	OK	0	0	7	7	7	7	1.1	
+per-collector	JO29B_GOVUK_SFO_CASES	OK	0	0	29	29	29	29	1.2	
+per-collector	JO30_CAM_JMA_VOLCANO_CAMERAS	OK	0	0	94	94	94	94	0.4	
+per-collector	JO30_LIB_CALIL_AICHI	OK	0	0	376	376	376	376	1.1	
+per-collector	JO30_GOV_SADO_FACILITY	OK	0	0	126	126	126	126	0.8	
+per-collector	sg-acra-corp-a	SLOW	-1	0	-1	-1	15000	-1	90.1	hit --timeout 90.1s; 15000 rows already stored
+per-collector	JPKAIGO_DAY_CARE_CENTRES	OK	0	0	24705	24705	24705	24705	15.9	
+per-collector	JO29B_GOVUK_IMPACT_ASSESSMENTS	OK	0	0	1953	1953	1953	1953	5.1	
+per-collector	JO30_ICS_KAWABOU_SECT_ALL	COLLISION	0	0	916	907	907	916	2.2	9 of 916 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+per-collector	CAM_WSDOT_HIGHWAY	GATED	0	0	0	1	0	-1	0.1	waiting for a credential, and said so as data: needs WSDOT_ACCESS_CODE (rule 1's gated note, not a defect)
+per-collector	CLOUDFLARE_RADAR_TRAFFIC	GATED	0	0	0	1	0	-1	0.1	waiting for a credential, and said so as data: needs CLOUDFLARE_API_TOKEN (rule 1's gated note, not a defect)
+per-collector	OPENAQ_LOCATIONS	GATED	0	0	0	1	0	-1	0.1	waiting for a credential, and said so as data: needs OPENAQ_API_KEY (rule 1's gated note, not a defect)
+per-collector	JP_ODPT_TRANSPORT	GATED	0	0	0	1	0	-1	0.1	waiting for a credential, and said so as data: needs ODPT_CONSUMER_KEY (rule 1's gated note, not a defect)
+per-collector	JP_PMDA_NEW_DRUG_APPROVALS	OK	0	0	95	95	95	95	1.5	
+per-collector	IE_OIREACHTAS_MEMBERS	OK	0	0	1929	1929	1929	1929	2.0	
+per-collector	EU_EP_CORPORATE_BODIES	COLLISION	0	0	3973	3971	3971	3973	4.4	2 of 3973 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+per-collector	JO32_FEED_YAHOO_TV_MMT	OK	0	0	50	50	50	50	1.6	
+per-collector	JSTAGE_CORPUS_BULK	OK	0	0	2000	2001	2000	2000	28.4	
+per-collector	JO30_BANK_FFG_RSS	OK	0	0	120	120	120	120	9.6	
+per-collector	JO32_REPO_KAIT_OAI	FETCH_FAILED	1	-1	1	1	0	-1	1.1	HTTP 503 | remedy: re-run; if the status persists the endpoint has moved or retired
+per-collector	JO32_MKT_JSF_LENDABLE_ISSUES	OK	0	0	4348	4348	4348	4348	2.6	
+per-collector	SCIELO_JOURNALS_MX	OK	0	0	281	281	281	281	44.9	
+per-collector	DOCKERHUB_OFFICIAL_IMAGES	OK	0	0	100	101	100	100	0.5	
+per-collector	JO32_REG_OSAKA_INDUSTRIAL_WASTE_TRANSPORT	FETCH_FAILED	0	0	1	1	0	-1	2.8	HTTP 408 | remedy: re-run; if the status persists the endpoint has moved or retired
+per-collector	JO32_JPS_ARC_MAPS	COLLISION	0	0	2000	1838	1837	2000	3.1	163 of 2000 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+per-collector	geo-inat-research-small	SLOW	-1	0	-1	-1	1900	-1	90.1	hit --timeout 90.1s; 1900 rows already stored
+per-collector	CAIDA_ASRANK_ORG	SLOW	-1	0	-1	-1	14000	-1	90.1	hit --timeout 90.1s; 14000 rows already stored
+per-collector	JO34_FDSNSTA_WWW_ORFEUS_EU_ORG	OK	0	0	2412	2412	2412	2412	1.6	
+per-collector	JO34_CKANRES_OPENDATA_CITY_MACHIDA_TOKYO_JP	OK	0	0	144	144	144	144	3.6	
+per-collector	JO32_TEL_JARTIC_LOOP_5MIN_EAST	OK	0	0	3876	3876	3876	3876	4.9	
+per-collector	GO_MODULE_INDEX	COLLISION	0	0	2733	2731	2731	2733	5.0	2 of 2733 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+per-collector	QIITA_ITEMS_RECENT	OK	0	0	2000	2001	2000	2000	39.4	
+per-collector	FR_ODS_NAMUR	OK	0	0	294	294	294	294	4.6	
+per-collector	CN_HK_CKAN_CURRENT_PACKAGE_LIST_WITH_RESOURCES	OK	0	0	1300	1301	1300	1300	10.4	
+per-collector	US_SOCRATA_KCMO	OK	0	0	374	374	374	374	9.2	
+per-collector	FR_ODS_REUNION	OK	0	0	285	285	285	285	3.0	
+per-collector	UK_FSA_FOOD_ALERTS	SLOW	-1	0	-1	-1	523	-1	90.1	hit --timeout 90.1s; 523 rows already stored
+per-collector	US_SOC_ILLINOIS	OK	0	0	404	404	404	404	1.7	
+per-collector	PUBDEV_ALL_PACKAGE_NAMES	OK	0	0	95531	95531	95531	95531	17.9	
+per-collector	GLEIF_LEI_TG	OK	0	0	19	19	19	19	1.2	
+per-collector	OPENALEX_INST_FR	GATED	0	0	0	1	0	-1	0.1	waiting for a credential, and said so as data: needs OPENALEX_API_KEY (rule 1's gated note, not a defect)
+per-collector	JO34_FDSNEVT_EIDA_GEIN_NOA_GR	OK	0	0	1857	1857	1857	1857	28.3	
+per-collector	OPENALEX_INST_US	GATED	0	0	0	1	0	-1	0.1	waiting for a credential, and said so as data: needs OPENALEX_API_KEY (rule 1's gated note, not a defect)
+per-collector	JO32_ARC_MLIT_EARTHWORK	OK	0	0	24442	24442	24442	24442	36.8	
+per-collector	UK_HYDROLOGY_STATIONS	OK	0	0	9537	9538	9537	9537	31.1	
+per-collector	JO39_TBL_JPX_DELISTED_ARCH05	OK	0	0	86	86	86	86	0.7	
+per-collector	JPN_NDL_OAIPMH_ONLINE_PUB_B00019	OK	0	0	1555	1555	1555	1555	77.5	
+per-collector	AF_WB_COD	FETCH_FAILED	1	-1	1	1	0	-1	40.4	NO CERTIFICATE WAS JUDGED and no status was measured, which is also what this container's own egress looks like — check $HTTPS_PROXY/__agentproxy/status and re-read from another network before treating this as the source's (CLAUDE.md: a peer reset here can be ours) | remedy: re-run; if the status persists the endpoint has moved or retired
+per-collector	JO39_CN_HK_CR_NEW_LOCAL_COMPANIES	OK	0	0	4902	4902	4902	4902	16.5	
+per-collector	GBIF_OCC_CN	OK	0	0	6000	6001	6000	6000	27.2	
+per-collector	JO40_CNSAR_CR_MONEY_LENDERS	OK	0	0	1926	1926	1926	1926	4.7	
+per-collector	JO41_WP_BANK_ISHISHIN	OK	0	0	55	55	55	55	1.7	
+per-collector	JO40_JPGEO_HIDAKA_BUILDING_CONFIRMATIONS	OK	0	0	9235	9235	9235	9235	5.5	
+per-collector	JO41_WP_CITY_013323	OK	0	0	7	7	7	7	1.8	
+per-collector	PL_SEJM_API	OK	0	0	15000	15001	15000	15000	61.4	
+per-collector	JO41_WP_UNIV_BAIKO	OK	0	0	1	1	1	1	1.6	
+per-collector	GBIF_OCC_GB	OK	0	0	6000	6001	6000	6000	34.1	
+per-collector	JO42_WP_CORP_5820_CASE	OK	0	0	5	5	5	5	2.0	
+per-collector	JO42_WP_CITY_223026_GIKAIDAYORI	OK	0	0	76	76	76	76	3.2	
+per-collector	JO42_WP_BANK_TSURUOKASK_IMPORTANTNOTIC	OK	0	0	9	9	9	9	5.6	
+per-collector	JO42_WP_CORP_2303_USERS	OK	0	0	1	1	1	1	1.8	
+per-collector	JO42_WP_CORP_6570_PAGES	OK	0	0	38	38	38	38	2.8	
+per-collector	JO41_WP_CORP_1965	OK	0	0	963	963	963	963	11.9	
+per-collector	JO44_US_DEERPARKFDNY_GOV	OK	0	0	10	10	10	10	0.3	
+per-collector	JO44_UK_GILCRUXPARISHCOUNCIL_GOV_UK	OK	0	0	5	5	5	5	1.2	
+per-collector	JO45_WP_LIBRARYPREFYAMAGUCHI_FURUSATOGALLERY	OK	0	0	47	47	47	47	2.3	
+per-collector	JO45_WP_SUMITOMORD_OKYAKUSAMA	OK	0	0	148	148	148	148	3.2	
+per-collector	JO45_WP_ERIUTOKYO_GIHOU	OK	0	0	31	31	31	31	1.6	
+per-collector	JO45_WP_CACCO_USERS	OK	0	0	5	5	5	5	2.7	
+per-collector	JO43_MUNI_364011	FETCH_FAILED	1	-1	1	1	0	-1	7.3	TLS handshake; the TLS handshake was refused before any certificate was jud; NO CERTIFICATE WAS JUDGED and no status was measured, which is also what this container's own egress looks like — check $HTTPS_PROXY/__agentproxy/status and re-read from another network before treating this as the source's (CLAUDE.md: a peer reset here can be ours) | remedy: no certificate was judged, so this is not about trust: compare against tools/jo_tls.py, which lowers OpenSSL's CIPHER SECURITY LEVEL (verification and hostname checking stay on) and reaches hosts the 
+per-collector	JO45_WP_NEWECONOMY_POSTS	FETCH_FAILED	0	0	1	1	0	-1	1.1	HTTP 403 | remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+per-collector	JO45_WP_CITYASOKUMAMOTO_USERS	OK	0	0	26	26	26	26	2.7	
+per-collector	JO42_WP_UNIV_NAKAMURAU_UNDISTRIBTOPIC	OK	0	0	409	409	409	409	17.6	
+per-collector	JO47_FR_3A5B358C_9093_427F_B7E6_C3A4793BCE5A	OK	0	0	4	4	4	4	1.4	
+per-collector	JO47_FR_075496CB_14D4_4CDA_96B4_4573343208CE	OK	0	0	10	10	10	10	2.7	
+per-collector	JO47_FR_E43DEB53_C1F8_4A2D_BE6A_2A7645CF4EC9	OK	0	0	8	8	8	8	0.7	
+per-collector	JO40_CNMKT_SSE_REG_MEASURES	OK	0	0	5578	5578	5578	5578	36.2	
+per-collector	JO47_FR_F11570BE_65EA_44D2_8626_C2C6BFABA9C8	OK	0	0	10	10	10	10	1.3	
+per-collector	JO47_FR_30910845_DC1E_4678_A1F3_3749B0D63A80	OK	0	0	20	20	20	20	1.4	
+per-collector	JO47_FR_56D572C2_DC2A_461A_AE6D_007D1344062E	OK	0	0	5	5	5	5	1.8	
+per-collector	JO47_FR_45555958_0333_40B5_9DD1_FD21CF61C4BD	OK	0	0	10	10	10	10	1.2	
+per-collector	JO47_FR_18336D96_68CB_4EF1_BAA8_AD9539E44501	OK	0	0	10	10	10	10	1.0	
+per-collector	JO32_MUNI_HIOKI_PARCELS	SLOW	-25	0	-1	-1	179720	-1	88.4	no [sched] line — the process was killed before the run returned, but the database holds 179720 rows for it, so it was working: unmeasured, not failed
+per-collector	JO47_FR_F4A49C4C_9A6A_43A4_B042_08BB4F5AAD3C	OK	0	0	10	10	10	10	1.9	
+per-collector	JO46_AGS_GISWEB_LOCALBUSINESSTAX	OK	0	0	20000	20001	20000	20000	15.9	
+per-collector	JO47_FR_373872F2_E957_483B_B40D_F6438E599A46	OK	0	0	20	20	20	20	1.2	
+per-collector	JO47_IT_ATSCN	OK	0	0	10	10	10	10	1.4	
+per-collector	JO47_IT_AFMCG	OK	0	0	10	10	10	10	2.7	
+per-collector	JO47_IT_C_E610	OK	0	0	10	10	10	10	1.1	
+per-collector	JO47_IT_ASPRCR	OK	0	0	9	9	9	9	3.2	
+per-collector	JO47_IT_CCWAVI	OK	0	0	9	9	9	9	1.1	
+per-collector	JO47_IT_ISTSC_PGEE01700A	OK	0	0	15	15	15	15	1.3	
+per-collector	JO47_IT_ODADFMI	OK	0	0	10	10	10	10	1.3	
+per-collector	JO47_IT_ISTSC_AGIC85100R	OK	0	0	10	10	10	10	2.2	
+per-collector	JO47_IT_SGNSS	OK	0	0	10	10	10	10	1.4	
+per-collector	JO47_IT_UCC_2	OK	0	0	7	7	7	7	1.5	
+per-collector	JO47_IT_PMMA	OK	0	0	10	10	10	10	2.7	
+per-collector	JO47_WD_Q116882255	OK	0	0	10	10	10	10	1.2	
+per-collector	JO48_IGO_Q62501511	OK	0	0	3	3	3	3	1.0	
+per-collector	JO48_NEWS_Q85868301	OK	0	0	10	10	10	10	1.6	
+per-collector	JO48_NEWS_Q16525375	OK	0	0	10	10	10	10	1.2	
+per-collector	JO48_NEWS_Q5369234	OK	0	0	10	10	10	10	1.9	
+per-collector	JO48_NEWS_Q134433392	OK	0	0	25	25	25	25	0.4	
+per-collector	JO48_NEWS_Q60740702_6	OK	0	0	50	50	50	50	0.5	
+per-collector	JO48_NEWS_Q2055060	OK	0	0	100	100	100	100	0.7	
+per-collector	JO48_NEWS_Q141216690	OK	0	0	20	20	20	20	0.6	
+per-collector	JO49_WP_NISHIHOUJINKAI_USERS	OK	0	0	2	2	2	2	2.7	
+per-collector	CH_OPENDATASWISS	SLOW	-1	0	-1	-1	10000	-1	90.0	hit --timeout 90.0s; 10000 rows already stored
+per-collector	JO49_WP_UMITAMAGO_EXTERNALLINKSMALL	OK	0	0	2	2	2	2	1.1	
+per-collector	JO49_WP_AIZUYOTUBA_PAGES	OK	0	0	76	76	76	76	4.7	
+per-collector	JO49_WP_KYOIKUPRESS_PAGES	FETCH_FAILED	1	-1	1	1	0	-1	2.0	HTTP 503 | remedy: re-run; if the status persists the endpoint has moved or retired
+per-collector	JO47_FR_D76900B3_557F_400E_A758_E359A73AD5EE	FETCH_FAILED	1	-1	1	1	0	-1	21.3	TLS handshake; the TLS handshake was refused before any certificate was jud; NO CERTIFICATE WAS JUDGED and no status was measured, which is also what this container's own egress looks like — check $HTTPS_PROXY/__agentproxy/status and re-read from another network before treating this as the source's (CLAUDE.md: a peer reset here can be ours) | remedy: no certificate was judged, so this is not about trust: compare against tools/jo_tls.py, which lowers OpenSSL's CIPHER SECURITY LEVEL (verification and hostname checking stay on) and reaches hosts the 
+per-collector	JO49_WP_OBAMAYEG_POSTS	OK	0	0	53	53	53	53	7.6	
+per-collector	JO49_WP_GOTEMBAJC_USERS	OK	0	0	2	2	2	2	2.0	
+per-collector	JO49_WP_KAWASAKIKANAGAWAMED_FAX	OK	0	0	30	30	30	30	2.7	
+per-collector	JO49_WP_KYOSHAKYO_TIIKIFUKUSHI	OK	0	0	8	8	8	8	2.9	
+per-collector	JP_CKAN_BODIK	SLOW	-1	0	-1	-1	10387	-1	90.1	hit --timeout 90.1s; 10387 rows already stored
+per-collector	CA_ALBERTA	SLOW	-1	0	-1	-1	19000	-1	90.1	hit --timeout 90.1s; 19000 rows already stored
+per-collector	ansd-concours-formations	FETCH_FAILED	1	-1	1	1	0	-1	1.8	TLS no_local_issuer; the certificate chain could not be completed — no client her | remedy: this is the fixable one and it is not a trust problem: read the leaf's AIA CA-Issuers extension, fetch that intermediate, verify it against the SYSTEM root store, and add it to native/data/tls/extra-i
+per-collector	JO53_AGS_SERVICES_DOROHYOUSHIKI	OK	0	0	63	63	63	63	0.9	
+per-collector	JO49_WP_BISANFDTOGOAICHI_PAGES	OK	0	0	287	287	287	287	8.0	
+per-collector	JO54_WP_NEOPARK_INFORMATION	OK	0	0	1	1	1	1	4.6	
+per-collector	JO54_WP_KANGORENMEI_INFORMATIONS	OK	0	0	18	18	18	18	4.3	
+per-collector	pk-pcrwr-posts	OK	0	0	134	134	134	134	7.3	
+per-collector	JO57IQ107388954	OK	0	0	10	10	10	10	2.4	
+per-collector	JO54_WP_IIZUKACCI_INFORMATION	OK	0	0	2	2	2	2	6.5	
+per-collector	JO57IQ11290630	OK	0	0	10	10	10	10	1.5	
+per-collector	JO57_WP_KCUA_MAINVIS	OK	0	0	11	11	11	11	2.1	
+per-collector	JO57_Q637901_2	OK	0	0	30	30	30	30	1.1	
+per-collector	JO45_WP_KEK_TOPICS	OK	0	0	865	865	865	865	49.2	
+per-collector	JO57_Q130290_3	OK	0	0	10	10	10	10	1.0	
+per-collector	JO58_AGS_US_GAS_STATION_1_D0D250	FETCH_FAILED	1	-1	1	1	0	-1	0.6	transport none recorded; 1 of 1 hosts answered; 90 bytes | remedy: READ THE BODY, not the status: `--run <id>` and look at what came back for the byte count on the run line. A maintenance or rate-limit page served as 200 is the common case (il-knesset-dates fetches 1
+per-collector	JO57_Q11426807_2	OK	0	0	20	20	20	20	2.6	
+per-collector	JO58_AGS_US_ADMINISTRATION_KINGCO_AD_3_BAA310	OK	0	0	3	3	3	3	0.6	
+per-collector	JO57IQ1499172	OK	0	0	10	10	10	10	1.8	
+per-collector	JO57_WP_ISHIKIRISEIKI_POSTS	OK	0	0	97	97	97	97	5.1	
+per-collector	JO58_AGS_US_LQ_NATURALRESOURCESATRIS_342_6C1AC4	OK	0	0	100	100	100	100	1.2	
+per-collector	JO60_EUGIS_559097FDC3	OK	0	0	9	9	9	9	0.6	
+per-collector	JO39_JP_CAA_ACCIDENT_DATABANK	SLOW	-1	0	-1	-1	10000	-1	90.1	hit --timeout 90.1s; 10000 rows already stored
+per-collector	JO59_JPGIS_5EAE69BB41	OK	0	0	1	1	1	1	1.5	
+per-collector	JO60_USGIS_30F35E704B	OK	0	0	1034	1034	1034	1034	1.5	
+per-collector	JO61_JPGIS_681574278D	OK	0	0	1	1	1	1	0.7	
+per-collector	JO62_EUGIS_BC1A39091F	OK	0	0	8	8	8	8	0.9	
+per-collector	JO59_CN_YCXIXIA_82C03	OK	0	0	143	143	143	143	3.1	
+per-collector	JO63_EUODS_AA7D26DD36	OK	0	0	57	57	57	57	1.2	
+per-collector	JO61_CN_SPT_AD6A1	OK	0	0	67	67	67	67	4.0	
+per-collector	ECHR_HUDOC_INDEX	OK	0	0	3	4	3	3	0.6	
+per-collector	arxiv-cs-si	EMITS_NOTHING	0	0	0	0	0	-1	0.4	no records reached intel_items — it transferred 892 bytes over 1 request(s), so the upstream really did hand over nothing
+per-collector	JO63_EUWFS_404B0AEB8B	OK	0	0	7	7	7	7	3.0	
+per-collector	JO49_WP_GIFUSYAROUSI_MEMBER	OK	0	0	437	437	437	437	22.3	
+per-collector	JP_MLIT_KAWABOU_EMGINFO	EMITS_NOTHING	0	0	0	0	0	-1	1.3	no records reached intel_items — it transferred 16 bytes over 1 request(s), so the upstream really did hand over nothing
+per-collector	bird-flu-outbreaks	EMITS_NOTHING	0	0	0	0	0	-1	1.6	no records reached intel_items — but it FETCHED 99212 bytes over 2 request(s) and found no records in them, so this is a body that is not what the row expects (a maintenance or error page, a moved endpoint, a changed shape), not an empty upstream: read the body
+per-collector	cam-worldcams	OK	0	0	30	30	30	-1	1.1	
+per-collector	PRTIMES	OK	0	0	200	200	200	-1	0.5	
+per-collector	tweetfeed-live	OK	0	0	24	24	24	-1	0.5	
+per-collector	coindesk	OK	0	0	25	25	25	-1	0.5	
+per-collector	chan-5ch	EMITS_NOTHING	0	0	0	0	0	-1	3.3	no records reached intel_items — it transferred 765 bytes over 5 request(s), so the upstream really did hand over nothing
+per-collector	JO40_CNGOV_SAMR_GB_STANDARDS	SLOW	-1	0	-1	-1	29500	-1	90.1	hit --timeout 90.1s; 29500 rows already stored
+per-collector	fr-b50-montrevaultsurevre-fr	OK	0	0	10	10	10	-1	1.8	
+per-collector	gsi-geocode	OK	0	0	1	1	1	-1	0.8	
+per-collector	bellingcat	OK	0	0	10	10	10	-1	0.3	
+per-collector	intl-b50-hrw-org	OK	0	0	20	20	20	-1	0.3	
+per-collector	himawari-realtime	OK	0	0	1	1	1	-1	1.2	
+per-collector	JO63_CN_DONGJIANG_1197A	OK	0	0	2	2	2	2	8.5	
+per-collector	jp-b50-maff-go-jp-j-new	OK	0	0	10	10	10	-1	0.8	
+per-collector	jp-magcul	OK	0	0	10	10	10	-1	1.4	
+per-collector	jp-b50-nao-ac-jp-en	OK	0	0	20	20	20	-1	1.4	
+per-collector	mercari-trending	FETCH_FAILED	1	-1	1	1	0	-1	0.6	transport none recorded; 0 of 1 hosts answered; silent: jp.mercari.com; 519618 bytes | remedy: run the source directly (`--run <id>`) and read its stderr for the status the collector saw. Then: a 401/403 wants a credential or the per-host agent table in core/host_agents.def; a 429 wants a per-h
+per-collector	jp-b50-jca-home-jp	OK	0	0	10	10	10	-1	0.9	
+per-collector	cidrap	OK	0	0	10	10	10	-1	0.3	
+per-collector	reddit-group-intel	OK	0	0	100	100	100	-1	1.2	
+per-collector	oc-media	OK	0	0	16	16	16	-1	0.8	
+per-collector	resas-population	GATED	0	0	0	1	0	-1	0.2	waiting for a credential, and said so as data: needs RESAS_API_KEY (rule 1's gated note, not a defect)
+per-collector	JO40_JPNAT_TEIKOKU_GIKAI_PEERS	SLOW	-1	0	-1	-1	3700	-1	90.1	hit --timeout 90.1s; 3700 rows already stored
+per-collector	os-nz-russia-sanctions	OK	0	0	1902	1902	1902	-1	2.2	
+per-collector	quanta	OK	0	0	5	5	5	-1	0.4	
+per-collector	stimson	OK	0	0	12	12	12	-1	0.3	
+per-collector	cbp-border-wait-times	OK	0	0	85	85	85	-1	0.4	
+per-collector	ised-spectrum-sites	OK	0	0	3000	3001	3000	-1	2.4	
+per-collector	uk-b50-govuk-northern-ireland-police-fund	OK	0	0	3	3	3	-1	0.4	
+per-collector	uk-b50-govuk-uk-defence-innovation	OK	0	0	20	20	20	-1	0.3	
+per-collector	uk-b50-govuk-civil-service-intelligence-analysis-profession	OK	0	0	3	3	3	-1	0.6	
+per-collector	unesco-heritage	FETCH_FAILED	1	-1	1	1	0	-1	0.5	transport none recorded; 0 of 1 hosts answered; silent: whc.unesco.org; 5579 bytes | remedy: run the source directly (`--run <id>`) and read its stderr for the status the collector saw. Then: a 401/403 wants a credential or the per-host agent table in core/host_agents.def; a 429 wants a per-h
+per-collector	us-b50-councilofthesouthernmountains-com-blog-feed	OK	0	0	1	1	1	-1	0.3	
+per-collector	us-b50-federalregister-gov-api-v1-documents-conditions-5bagencies-5d-5b-5d-national-aer	EMITS_NOTHING	0	0	0	0	0	-1	0.3	no records reached intel_items — it transferred 791 bytes over 1 request(s), so the upstream really did hand over nothing
+per-collector	JO55_ATPARL_GP_XXV	OK	0	0	51979	51979	51979	51979	44.1	
+per-collector	JO45_WP_JCER_POSTS	SLOW	-1	0	-1	-1	1800	-1	90.1	hit --timeout 90.1s; 1800 rows already stored
+per-collector	hk-legco-bills	OK	0	0	6891	6891	6891	6891	53.3	
+per-collector	JO61_USGIS_9F244D6BF9	OK	0	0	40000	40001	40000	40000	40.6	
+per-collector	JO49_WP_GINGA_POSTS	OK	0	0	2547	2547	2547	2547	69.3	
+per-collector	convenience-stores	SLOW	-1	0	-1	-1	0	-1	90.0	hit --timeout 90.0s
+per-collector	epa-echo-facilities	SLOW	-1	0	-1	-1	24000	-1	90.1	hit --timeout 90.1s; 24000 rows already stored
+per-collector	japan-post-offices	SLOW	-1	0	-1	-1	0	-1	90.1	hit --timeout 90.1s
+per-collector	npa-traffic-accidents	SLOW	-1	0	-1	-1	0	-1	90.1	hit --timeout 90.1s
+per-collector	onsen-map	SLOW	-1	0	-1	-1	0	-1	90.0	hit --timeout 90.0s
+per-collector	sake-breweries	SLOW	-1	0	-1	-1	0	-1	90.0	hit --timeout 90.0s
+uniform	gnews-bd-science	OK	0	0	3	3	3	-1	0.9	
+uniform	gnews-mon-br-amazon-deforestation	OK	0	0	16	16	16	-1	1.1	
+uniform	eur-wfs-geopf-limites-administratives-express-latest-6	OK	0	0	200	201	200	-1	1.3	
+uniform	gnews-top-gb	OK	0	0	38	38	38	-1	1.3	
+uniform	eur-ipma-sea-d1	OK	0	0	12	12	12	-1	1.4	
+uniform	eas-jpnews-asahi	OK	0	0	40	40	40	-1	0.3	
+uniform	eur-news-insajder	OK	0	0	100	100	100	-1	0.9	
+uniform	sci-stac-geobon-gfw-treecover2000	OK	0	0	504	504	504	-1	2.0	
+uniform	eas-gkukan-topic-medical	OK	0	0	110	110	110	-1	2.2	
+uniform	eas-datagojp-topic-fire-service	FETCH_FAILED	1	-1	1	1	0	-1	2.4	TLS expired; the server's certificate has expired; transport other; 0 of 1 hosts answered; silent: www.data.go.jp; 0 bytes | remedy: run the source directly (`--run <id>`) and read its stderr for the status the collector saw. Then: a 401/403 wants a credential or the per-host agent table in core/host_agents.def; a 429 wants a per-h
+uniform	eur-news-pravda-sk	OK	0	0	20	20	20	-1	1.2	
+uniform	lat-cl-ckan-mineria	OK	0	0	75	75	75	-1	1.2	
+uniform	jp-jma-warning-100000	OK	0	0	37	37	37	-1	0.2	
+uniform	eur-wfs-sandre-bassindce-mtq	OK	0	0	1	1	1	-1	2.9	
+uniform	jp-jma-warning-350000	OK	0	0	23	23	23	-1	0.7	
+uniform	us-socrata-search-emergency-shelters	OK	0	0	298	298	298	-1	1.2	
+uniform	jp-ckan-yokohama-q-gomi	OK	0	0	17	17	17	-1	1.8	
+uniform	jp-ckan-yokohama-q-jishin	OK	0	0	10	10	10	-1	1.9	
+uniform	ch-opendata-fr-ch-publisher-service-de-la-statistique-et-de-la-donn-	OK	0	0	15	15	15	-1	1.2	
+uniform	fr-data-ampmetropole-fr-publisher-dfci	OK	0	0	2	2	2	-1	1.0	
+uniform	us-data-boston-gov-org-data-cityofboston-gov	OK	0	0	2	2	2	-1	0.4	
+uniform	sas-ckan-mm-disaster	OK	0	0	195	195	195	-1	3.1	
+uniform	fr-data-iledefrance-fr-publisher-dgccrf	OK	0	0	2	2	2	-1	1.0	
+uniform	fr-data-nantesmetropole-fr-publisher-orvault	OK	0	0	24	24	24	-1	1.1	
+uniform	sci-oscar-can	OK	0	0	3103	3103	3103	-1	5.7	
+uniform	sci-nature-nclimate	OK	0	0	8	8	8	-1	0.2	
+uniform	us-cms-revalidation-clinic-group-reassignment	OK	0	0	2	2	2	-1	1.1	
+uniform	bh-fdi-stocks-by-country	OK	0	0	1913	1913	1913	-1	1.6	
+uniform	jpx-city-himeji-rss-rss-xml	OK	0	0	30	30	30	-1	1.2	
+uniform	jpx-pref-hiroshima-rss10-1	OK	0	0	99	99	99	-1	0.9	
+uniform	cyb-status-newrelic	OK	0	0	115	115	115	-1	0.4	
+uniform	eur-ine-es-publ	OK	0	0	466	466	466	-1	6.7	
+uniform	jpx-city-sendai-shinchaku-shinchaku-xml	OK	0	0	10	10	10	-1	1.9	
+uniform	geo-swpc-kindex-forecast	OK	0	0	81	81	81	-1	0.3	
+uniform	eur-ods-bl-11080	OK	0	0	2000	2001	2000	-1	7.9	
+uniform	cyb-ncsc-uk-guidance	OK	0	0	20	20	20	-1	0.4	
+uniform	gov-pacer-mied	COLLISION	0	0	429	428	428	-1	0.9	1 of 429 emitted records collapsed onto an already-written uid (rule 4b). EITHER the declared id is a dimension, not a record key (real loss — fix id_keys) OR the upstream genuinely repeats identical records (correct dedupe — not a bug). This tool cannot tell which: fetch the url and compare distinct id values to record count before treating it as a defect
+uniform	JO30_TOKYO_WARD_T132292	OK	0	0	37	37	37	37	0.8	
+uniform	cyb-atlas-probes-100	OK	0	0	2000	2001	2000	-1	6.9	
+uniform	JO30_TOKYO_CRIME_PARTS_2020	OK	0	0	1397	1397	1397	1397	2.0	
+uniform	AP19_TW_TPEX_PERATIO	OK	0	0	894	894	894	894	2.2	
+uniform	BLOCKSTREAM_RECENT_BLOCKS	OK	0	0	10	10	10	10	0.5	
+uniform	UK_NHSBSA_PRESCRIBING_EPD	FETCH_FAILED	0	0	1	1	0	-1	1.1	HTTP 400 | remedy: re-run; if the status persists the endpoint has moved or retired
+uniform	il-knesset-plm-session-item	OK	0	0	2000	2001	2000	-1	6.7	
+uniform	PR_PRSN_EARTHQUAKES	OK	0	0	6	6	6	6	0.5	
+uniform	SK_RPVS_OFFICIALS	OK	0	0	400	401	400	400	3.8	
+uniform	sec-faa-radial-bearing	OK	0	0	10000	10001	10000	-1	6.3	
+uniform	lat-fortaleza-ckan-recent	OK	0	0	639	639	639	-1	12.1	
+uniform	il-ica-companies-for-deletion	OK	0	0	2000	2001	2000	-1	9.1	
+uniform	PORTWATCH_CONTAINER_METRICS	OK	0	0	465	465	465	465	1.3	
+uniform	gov-dk-ft-sag	OK	0	0	1000	1001	1000	-1	8.7	
+uniform	GDPRHUB_KHO_FINLAND	OK	0	0	7	7	7	7	1.3	
+uniform	ZA_MUNIMONEY_OFFICIALS	OK	0	0	2000	2001	2000	2000	9.4	
+uniform	AR_DATOS_MININTERIOR	OK	0	0	15	15	15	15	5.4	
+uniform	NOSTR_RELAY_YABU_ME	OK	0	0	1	1	1	1	0.8	
+uniform	JPC_METI_RELEASES_ATOM	OK	0	0	25	25	25	25	1.1	
+uniform	JPMUNI_KAMOGAWA_UPDATE	OK	0	0	100	100	100	100	1.6	
+uniform	JPMUNI_MITO_UPDATE	OK	0	0	100	100	100	100	2.2	
+uniform	JPOD_GSP_MOJ_29NARA	OK	0	0	39	39	39	39	1.8	
+uniform	JPOD_GSP_MOJ_37KAGAWA	OK	0	0	17	17	17	17	1.8	
+uniform	JPOD_GSP_TOCHIGIPREF	OK	0	0	12	12	12	12	1.2	
+uniform	JPBIZ_SEVENANDI_DISCLOSE	OK	0	0	20	20	20	20	0.5	
+uniform	JPOD_GSP_CHIBA_122033	OK	0	0	56	56	56	56	2.0	
+uniform	JPOD_GSP_MOJ_28HYOGO_2024_2025	OK	0	0	49	49	49	49	0.8	
+uniform	JPKEIZAI_MEIEKI	OK	0	0	10	10	10	10	0.7	
+uniform	JP25_JPBIZ_AKITA_KENSETSU_KANA	OK	0	0	3579	3579	3579	3579	2.4	
+uniform	JP25_JPPREF_SAGA_NEW	OK	0	0	46	46	46	46	0.9	
+uniform	JP25_JPPOLICE_TOTTORI_2025_ZIDOUSYATOU	OK	0	0	5	5	5	5	2.3	
+uniform	JO28_KYOTO_STAT_YEARBOOK_ARCHIVE	OK	0	0	9	9	9	9	1.6	
+uniform	JO29A_CAM_ES_FGC_SKI_WEBCAMS	OK	0	0	30	30	30	30	1.2	
+uniform	TX_INSURANCE_COMPLAINTS	OK	0	0	20000	20001	20000	20000	13.0	
+uniform	JO30_GOV_URAYASU_HUB_DCAT	OK	0	0	46	46	46	46	0.9	
+uniform	JO30_ICS_JRW_ST_KOSEI	OK	0	0	24	24	24	24	0.4	
+uniform	JO30_ICS_JRW_ST_KANSAI	OK	0	0	12	12	12	12	1.0	
+uniform	JO34_CKANRES_DATOS_JUS_GOB_AR	OK	0	0	63	63	63	63	2.7	
+uniform	JO30_GOV_BODIK_OTSU_CITY	OK	0	0	522	522	522	522	5.4	
+uniform	US_TREAS_MSPD_TABLE_4	OK	0	0	930	930	930	930	2.0	
+uniform	afr-ibb-org-iett-genel-mudurlugu	FETCH_FAILED	1	-1	1	1	0	-1	32.0	TLS handshake; the TLS handshake was refused before any certificate was jud; transport other; NO CERTIFICATE WAS JUDGED and no status was measured, which is also what this container's own egress looks like — check $HTTPS_PROXY/__agentproxy/status and re-read from another network before treating this as the source's (CLAUDE.md: a peer reset here can be ours); 0 of 1 hosts answered; silent: data.ibb.gov.tr; 0 bytes | remedy: run the source directly (`--run <id>`) and read its stderr for the status the collector saw. Then: a 401/403 wants a credential or the per-host agent table in core/host_agents.def; a 429 wants a per-h
+uniform	PNCP_BR_ARMY_CONTRACTS	OK	0	0	976	976	976	976	25.8	
+uniform	JO42_WP_CORP_3807_FISCOIR	OK	0	0	80	80	80	80	3.8	
+uniform	JO42_WP_CORP_6360_MPLAN	OK	0	0	4	4	4	4	2.2	
+uniform	JO42_WP_CORP_8074_YUASAGROUPCN	OK	0	0	35	35	35	35	2.5	
+uniform	JO42_WP_CORP_2668_PAGES	FETCH_FAILED	0	0	1	1	0	-1	1.4	HTTP 404 | remedy: re-run; if the status persists the endpoint has moved or retired
+uniform	JO41_WP_CORP_4376	OK	0	0	536	536	536	536	10.8	
+uniform	JO42_WP_CORP_9820_PAGES	OK	0	0	7	7	7	7	2.7	
+uniform	JO42_WP_CORP_9978_PAGES	OK	0	0	22	22	22	22	3.8	
+uniform	JO42_WP_CORP_3047_USERS	FETCH_FAILED	0	0	1	1	0	-1	1.2	HTTP 401 | remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+uniform	JO42_WP_CORP_2683_USERS	OK	0	0	1	1	1	1	1.8	
+uniform	JO43_MUNI_012092_3	OK	0	0	1	1	1	1	2.0	
+uniform	WHO_XMART_WIISE_HPV_ADMIN	OK	0	0	20000	20001	20000	20000	45.1	
+uniform	JO43_MUNI_012301_4	OK	0	0	10	10	10	10	2.2	
+uniform	JO42_WP_CORP_9778_PAGES	OK	0	0	62	62	62	62	8.8	
+uniform	JO43_MUNI_022101	OK	0	0	15	15	15	15	1.3	
+uniform	JO43_MUNI_014001	OK	0	0	5	5	5	5	2.2	
+uniform	JO43_MUNI_122238_6	OK	0	0	100	100	100	100	1.9	
+uniform	JO43_MUNI_222135_4	OK	0	0	21	21	21	21	1.5	
+uniform	JO43_MUNI_302031	OK	0	0	20	20	20	20	1.9	
+uniform	JO44_UK_WORPLESDON_PC_GOV_UK	OK	0	0	10	10	10	10	1.3	
+uniform	JO43_MUNI_364894	OK	0	0	100	100	100	100	3.2	
+uniform	JO44_UK_POTTONTOWNCOUNCIL_GOV_UK	OK	0	0	10	10	10	10	1.6	
+uniform	JO44_US_BRADLEYBEACHNJ_GOV	OK	0	0	10	10	10	10	1.2	
+uniform	JO43_MUNI_472085_5	OK	0	0	10	10	10	10	5.3	
+uniform	JO44_US_EUREKA_MT_GOV	OK	0	0	4	4	4	4	1.2	
+uniform	JO44_US_CLARKTWPMI_GOV	OK	0	0	5	5	5	5	1.7	
+uniform	JO44_US_HURRICANES_GOV_38	OK	0	0	1	1	1	1	0.9	
+uniform	JO44_US_JUSFC_GOV	OK	0	0	10	10	10	10	1.7	
+uniform	JO45_WP_BARKS_USERS	OK	0	0	7	7	7	7	2.3	
+uniform	JO45_WP_GETNAVI_MAGAZINE	OK	0	0	23	23	23	23	2.8	
+uniform	JO47_FR_4430A06A_BAF2_4055_9360_828F6B0A22E6	OK	0	0	57	57	57	57	1.9	
+uniform	JO46_AGS_GISN_DCED	OK	0	0	84	84	84	84	3.5	
+uniform	JO47_FR_4D1AEF47_BA70_4743_99F0_BA4E6F0E7FDD	OK	0	0	10	10	10	10	2.0	
+uniform	JO47_FR_111F4474_00D6_4379_BBED_00F465973C81	OK	0	0	7	7	7	7	2.3	
+uniform	JO47_FR_51457A83_FC31_4157_9AEE_DD901C4AC5DF	OK	0	0	10	10	10	10	2.5	
+uniform	JO47_FR_BCBB5A8A_528E_4EDB_8039_489D1A8FD839	OK	0	0	10	10	10	10	2.3	
+uniform	JO47_FR_2331A612_A2DA_4CDF_B556_9A2B8B801F87	OK	0	0	1	1	1	1	0.8	
+uniform	JO47_FR_D96DC9BF_49A8_412C_9166_5FA8ECA630BE	OK	0	0	10	10	10	10	1.9	
+uniform	JO47_FR_F67F764B_2C50_4E4B_9A03_7A714E234481	OK	0	0	10	10	10	10	1.6	
+uniform	JO47_FR_2659E20E_4E14_48E0_BA80_BE04148EA807	OK	0	0	10	10	10	10	1.1	
+uniform	JO47_FR_26D2A678_20CD_476A_9FFF_AA5592E4B980	OK	0	0	10	10	10	10	1.9	
+uniform	JO47_FR_404FED26_CB8D_4140_94C1_2F86CE8A8C0A	OK	0	0	7	7	7	7	1.6	
+uniform	JO47_FR_CD7C7F5E_109B_4E94_A6E6_4830FE449E36	OK	0	0	10	10	10	10	1.9	
+uniform	JO47_FR_F5938C5C_EEB9_48FF_BC4B_E26749420D1A	OK	0	0	4	4	4	4	1.5	
+uniform	JO47_FR_48DAED63_F10E_4C03_89DF_9F0269C4F81E	OK	0	0	1	1	1	1	1.2	
+uniform	JO47_FR_60EF8C48_85DB_4DDE_8D54_AC97A6433B8D	OK	0	0	10	10	10	10	1.7	
+uniform	JO47_FR_55A7F483_3100_45E2_8A15_C06C56E49A45	OK	0	0	10	10	10	10	2.1	
+uniform	JO47_FR_5672342D_1A94_4AB2_86E4_D9E963143505	OK	0	0	10	10	10	10	2.0	
+uniform	JO47_FR_10A55405_F178_471B_AA7F_41CDF97FB858	OK	0	0	1	1	1	1	0.7	
+uniform	JO47_FR_33D5EBF6_B09A_45F3_B8F4_5128B8E32EFB	OK	0	0	20	20	20	20	1.1	
+uniform	JO47_FR_A5701093_7482_43F1_8621_19825C557C54	OK	0	0	2	2	2	2	1.0	
+uniform	JO47_FR_CDAA4B91_D5DF_4C26_9D72_6D37D2385372	OK	0	0	10	10	10	10	1.4	
+uniform	JO47_FR_56000E74_16E6_4DEF_A209_E20DD66868AA	OK	0	0	10	10	10	10	1.5	
+uniform	JO47_FR_F117E092_5EFB_472F_92D2_DF520F56F8BF	OK	0	0	5	5	5	5	2.1	
+uniform	JO47_FR_955BA607_D36C_4668_8555_23CC59BC88E8	OK	0	0	20	20	20	20	1.3	
+uniform	JO47_FR_01AD87B8_354D_4D24_91FB_284ED175148A	OK	0	0	6	6	6	6	1.7	
+uniform	JO47_FR_F1BE3F36_6CF4_4D6B_AF3C_6E28221E8A48	OK	0	0	10	10	10	10	1.5	
+uniform	JO47_FR_45555958_0333_40B5_9DD1_FD21CF61C4BD	OK	0	0	10	10	10	10	1.1	
+uniform	JO47_FR_B46559C0_2A0E_44C7_ABED_F224B8DA6247	OK	0	0	10	10	10	10	3.0	
+uniform	JO47_FR_51095AFF_7865_443A_9F07_B42135486328	OK	0	0	1	1	1	1	0.9	
+uniform	JO47_FR_5253702B_D6CA_488A_9064_CAB9D78294F8	OK	0	0	10	10	10	10	2.0	
+uniform	JO39_CN_BSE_IPO_REVIEW	OK	0	0	874	874	874	874	58.9	
+uniform	JO47_FR_19ED53DB_1C30_4AD5_B65E_2607D30ABB8C	OK	0	0	20	20	20	20	2.1	
+uniform	JP25_JPBIZ_MEXT_SCHOOLCODE_4	OK	0	0	24594	24594	24594	24594	72.2	
+uniform	JO47_FR_304C1374_B51B_4536_8111_B3836DAC0C1C	FETCH_FAILED	1	-1	1	1	0	-1	21.3	TLS handshake; the TLS handshake was refused before any certificate was jud; NO CERTIFICATE WAS JUDGED and no status was measured, which is also what this container's own egress looks like — check $HTTPS_PROXY/__agentproxy/status and re-read from another network before treating this as the source's (CLAUDE.md: a peer reset here can be ours) | remedy: no certificate was judged, so this is not about trust: compare against tools/jo_tls.py, which lowers OpenSSL's CIPHER SECURITY LEVEL (verification and hostname checking stay on) and reaches hosts the 
+uniform	JO47_FR_9D32500E_0977_42E9_BBD7_D9F297EF3305	OK	0	0	10	10	10	10	2.1	
+uniform	JO47_FR_265DD5D7_41D1_4FFA_B253_A15F589F1BE9	OK	0	0	12	12	12	12	1.7	
+uniform	JO47_FR_6E0AA07F_6AC7_4DB5_A9AA_BC8863A009F0	OK	0	0	10	10	10	10	1.3	
+uniform	JO47_FR_6E50761D_0996_413E_AB28_794008C2B905	OK	0	0	17	17	17	17	0.8	
+uniform	JO40_JPGEO_NIES_AIR_SPM	OK	0	0	68854	68854	68854	68854	64.3	
+uniform	JO47_FR_174BC019_DB81_4EBE_927B_D02CAA5991D9	OK	0	0	10	10	10	10	7.1	
+uniform	JO47_FR_854FFC78_B692_44B1_9566_0E89DE383D9E	OK	0	0	10	10	10	10	0.9	
+uniform	JO47_FR_005B5ECC_34E3_4349_A25C_7611BC121340	OK	0	0	10	10	10	10	1.8	
+uniform	JO47_FR_69590620_3370_4D9C_BC34_3D9D5588030E_2	OK	0	0	1	1	1	1	1.4	
+uniform	JO47_FR_37B23362_35D2_433B_85E1_6BB467984046	OK	0	0	10	10	10	10	2.3	
+uniform	JO47_FR_DFC18B1E_C5C9_4010_A10F_F33CE0029057	OK	0	0	10	10	10	10	2.0	
+uniform	JO47_FR_6EA4F4E1_2258_4DF7_981C_588D02326211_7	OK	0	0	1	1	1	1	0.8	
+uniform	JO47_FR_9AED9FBA_0A41_4715_B95A_F132A5B6F98D	OK	0	0	5	5	5	5	0.8	
+uniform	JO47_FR_444B6C46_2FAE_4AFB_A3BA_D74AAC441CE9	OK	0	0	10	10	10	10	0.9	
+uniform	JO47_FR_D3DE1146_E641_4904_AEF3_93624C0C5399	OK	0	0	10	10	10	10	1.8	
+uniform	JO47_FR_EC7772CE_DD96_4531_B6F5_F5967C85C682	OK	0	0	9	9	9	9	1.5	
+uniform	JO47_FR_AC7E59FC_BB92_4C03_B374_7D4C169FAADB	OK	0	0	10	10	10	10	2.1	
+uniform	JO47_IT_AU2FU7OC	OK	0	0	10	10	10	10	0.4	
+uniform	JO47_FR_05ABC4F0_0351_493F_9C6F_95BB8229EA13_2	OK	0	0	10	10	10	10	1.6	
+uniform	JO47_FR_7783F629_5C98_4309_84C7_01390EFD1735_2	OK	0	0	2	2	2	2	0.8	
+uniform	JO47_IT_AOCSS_0_2	OK	0	0	9	9	9	9	1.4	
+uniform	JO47_IT_C_A689	OK	0	0	10	10	10	10	1.2	
+uniform	JO47_IT_C_D222	OK	0	0	6	6	6	6	0.9	
+uniform	JO47_IT_C_B120_3	OK	0	0	15	15	15	15	1.4	
+uniform	JO47_IT_C_F773	OK	0	0	10	10	10	10	1.2	
+uniform	JO47_IT_C_D559	OK	0	0	10	10	10	10	2.2	
+uniform	JO47_IT_CGGL_027	OK	0	0	10	10	10	10	1.8	
+uniform	JO47_IT_FCSR_2	OK	0	0	2	2	2	2	1.5	
+uniform	JO47_IT_IISPP	OK	0	0	8	8	8	8	1.3	
+uniform	JO47_IT_IISSBA	OK	0	0	10	10	10	10	1.3	
+uniform	JO47_IT_ISTSC_BNIC86100D	OK	0	0	10	10	10	10	1.7	
+uniform	JO47_IT_IDBB	OK	0	0	2	2	2	2	2.5	
+uniform	JO47_IT_ISTSC_LOIS001003	OK	0	0	10	10	10	10	2.3	
+uniform	JO47_IT_ISTSC_MIIC8D200D	OK	0	0	10	10	10	10	2.5	
+uniform	JO47_IT_ISTSC_CZIS001002	OK	0	0	10	10	10	10	3.0	
+uniform	JO47_IT_ISTSC_MIIC8CT00T	OK	0	0	10	10	10	10	2.6	
+uniform	JO47_IT_ISTSC_PEEE052003	OK	0	0	10	10	10	10	1.6	
+uniform	JO47_FR_59EEA5DA_DFA6_472B_8DEE_8A2D2411D2E5	FETCH_FAILED	1	-1	1	1	0	-1	21.2	TLS handshake; the TLS handshake was refused before any certificate was jud; NO CERTIFICATE WAS JUDGED and no status was measured, which is also what this container's own egress looks like — check $HTTPS_PROXY/__agentproxy/status and re-read from another network before treating this as the source's (CLAUDE.md: a peer reset here can be ours) | remedy: no certificate was judged, so this is not about trust: compare against tools/jo_tls.py, which lowers OpenSSL's CIPHER SECURITY LEVEL (verification and hostname checking stay on) and reaches hosts the 
+uniform	JO47_IT_ODDADAL	OK	0	0	10	10	10	10	1.1	
+uniform	JO47_IT_ISTSC_PZIC86200E	OK	0	0	7	7	7	7	1.4	
+uniform	JO47_IT_ISTSC_RMIC88600Q	OK	0	0	10	10	10	10	2.1	
+uniform	JO47_IT_UDC_106	OK	0	0	10	10	10	10	1.2	
+uniform	DFT_COUNT_POINTS	OK	0	0	46754	46754	46754	46754	98.1	
+uniform	JO47_IT_OPDMCT_2	OK	0	0	3	3	3	3	1.6	
+uniform	JO47_WD_Q901361	OK	0	0	3	3	3	3	1.1	
+uniform	JO47_WD_Q137298552	OK	0	0	10	10	10	10	1.8	
+uniform	JO47_IT_VL6YTUB2	OK	0	0	15	15	15	15	2.2	
+uniform	JO48_IGO_Q30644872	OK	0	0	10	10	10	10	0.3	
+uniform	JO47_WD_Q10524874	OK	0	0	10	10	10	10	1.3	
+uniform	JO48_NEWS_Q5372553_3	OK	0	0	20	20	20	20	0.4	
+uniform	JO47_WD_Q29514145	OK	0	0	3	3	3	3	1.5	
+uniform	JO48_IGO_Q24256223	OK	0	0	10	10	10	10	1.0	
+uniform	JO48_NEWS_Q390216_7	OK	0	0	20	20	20	20	0.3	
+uniform	JO48_IGO_Q3777372	OK	0	0	10	10	10	10	1.1	
+uniform	JO48_NEWS_Q113516715_7	OK	0	0	33	33	33	33	0.3	
+uniform	JO47_FR_F2BB6BCA_4F4D_400D_B23F_FA3C5E9C36F5	FETCH_FAILED	1	-1	1	1	0	-1	21.3	TLS handshake; the TLS handshake was refused before any certificate was jud; NO CERTIFICATE WAS JUDGED and no status was measured, which is also what this container's own egress looks like — check $HTTPS_PROXY/__agentproxy/status and re-read from another network before treating this as the source's (CLAUDE.md: a peer reset here can be ours) | remedy: no certificate was judged, so this is not about trust: compare against tools/jo_tls.py, which lowers OpenSSL's CIPHER SECURITY LEVEL (verification and hostname checking stay on) and reaches hosts the 
+uniform	JO48_NEWS_Q556902_2	OK	0	0	73	73	73	73	0.5	
+uniform	JO48_IGO_Q111342754	OK	0	0	10	10	10	10	2.2	
+uniform	JO48_NEWS_Q139731007_2	OK	0	0	50	50	50	50	0.3	
+uniform	JO48_NEWS_Q114267317_3	OK	0	0	25	25	25	25	0.5	
+uniform	JO48_NEWS_Q56117634_6	OK	0	0	20	20	20	20	0.9	
+uniform	JO48_NEWS_Q4051706	OK	0	0	10	10	10	10	1.6	
+uniform	JO48_NEWS_Q584472_3	OK	0	0	30	30	30	30	0.9	
+uniform	JO48_NEWS_Q66317372_2	OK	0	0	25	25	25	25	1.2	
+uniform	JO48_NEWS_Q114273679_14	OK	0	0	50	50	50	50	0.9	
+uniform	JO48_NEWS_Q4376388	OK	0	0	25	25	25	25	0.8	
+uniform	JO48_NEWS_Q19389742	OK	0	0	80	80	80	80	1.9	
+uniform	JO48_NEWS_Q4456292_3	OK	0	0	8	8	8	8	1.9	
+uniform	JO48_NEWS_Q12132447	FETCH_FAILED	1	-1	1	1	0	-1	2.2	TLS other; the certificate failed verification for a reason this build ; NO CERTIFICATE WAS JUDGED and no status was measured, which is also what this container's own egress looks like — check $HTTPS_PROXY/__agentproxy/status and re-read from another network before treating this as the source's (CLAUDE.md: a peer reset here can be ours) | remedy: read the libcurl message on the [http] line above: "no local issuer", "expired", "hostname mismatch" and "self-signed" are four findings with four remedies
+uniform	JO49_WP_KPCA_USERS	OK	0	0	2	2	2	2	1.5	
+uniform	JO48_IGO_Q1371744	OK	0	0	10	10	10	10	4.8	
+uniform	JO48_NEWS_Q7755324	OK	0	0	10	10	10	10	2.5	
+uniform	JO49_WP_IBJA_POSTS	OK	0	0	1	1	1	1	2.3	
+uniform	JO49_WP_SETOYEG_YEGSPONSOR	OK	0	0	8	8	8	8	1.6	
+uniform	af-dportal-trans-ng	SLOW	-1	0	-1	-1	634	-1	120.1	hit --timeout 120.1s; 634 rows already stored
+uniform	JO49_WP_SUITAYEG_USERS	OK	0	0	4	4	4	4	2.2	
+uniform	JO49_WP_TAMAGAWA_FILE	OK	0	0	23	23	23	23	1.7	
+uniform	JO49_WP_JAESASHI_POSTS	OK	0	0	186	186	186	186	3.5	
+uniform	JO49_WP_OSAKAJC_POSTS	OK	0	0	26	26	26	26	2.5	
+uniform	JO49_WP_KUROISONASUJC_USERS	OK	0	0	4	4	4	4	2.9	
+uniform	JO49_WP_OTOKUNIJC_STAFF	OK	0	0	41	41	41	41	2.2	
+uniform	JO49_WP_MITOMED_PAGES	OK	0	0	7	7	7	7	1.7	
+uniform	JO49_WP_OITAHIGASHIISHIKAI_PAGES	OK	0	0	17	17	17	17	2.7	
+uniform	JO49_WP_KASHIWARAJC_OLD	OK	0	0	19	19	19	19	5.6	
+uniform	JO49_WP_SHIGATAKKEN_NEWS2	FETCH_FAILED	0	0	1	1	0	-1	1.6	HTTP 403 | remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+uniform	JO49_WP_HC_POSTS	OK	0	0	277	277	277	277	8.4	
+uniform	JO49_WP_SAISEIKAI_SYMPTOM	EMITS_NOTHING	0	0	0	0	0	-1	1.1	no records reached intel_items — it transferred 2 bytes over 1 request(s), so the upstream really did hand over nothing
+uniform	JO49_WP_TAGATAISHIKAI_PAGES	OK	0	0	7	7	7	7	3.9	
+uniform	JO53_AGS_SERVICES1_OFFICIAL_NGDA_LIST	OK	0	0	150	150	150	150	0.7	
+uniform	JO57IQ11670668	OK	0	0	10	10	10	10	1.6	
+uniform	JO49_WP_OMUTAJC_POSTS	OK	0	0	51	51	51	51	8.0	
+uniform	JO57IQ11468661	OK	0	0	10	10	10	10	2.2	
+uniform	JO57_WP_KENBIPREFGIFU_USERS	OK	0	0	2	2	2	2	1.3	
+uniform	JO57IQ38266963	OK	0	0	10	10	10	10	2.4	
+uniform	JO57IQ11568009	OK	0	0	7	7	7	7	2.6	
+uniform	HN_TSC_DOCUMENTOS	SLOW	-1	0	-1	-1	200	-1	120.1	hit --timeout 120.1s; 200 rows already stored
+uniform	JO57_WP_EIKEI_VOICE	OK	0	0	45	45	45	45	2.6	
+uniform	JO57IQ7677464	OK	0	0	10	10	10	10	2.9	
+uniform	JO57_WP_IWATEUHMS_USERS	OK	0	0	2	2	2	2	1.9	
+uniform	IETF_IPR_HOLDER_DISCLOSURES	SLOW	-1	0	-1	-1	777	-1	120.1	hit --timeout 120.1s; 777 rows already stored
+uniform	UNLOCODE_CODELIST_MIRROR	SLOW	-1	0	-1	-1	0	-1	120.1	hit --timeout 120.1s
+uniform	JO57_WP_SHOZOKANNICH_EXHIBITIONS	OK	0	0	138	138	138	138	4.8	
+uniform	JO57_WP_SHUNANU_PRMAGAZINE	OK	0	0	11	11	11	11	1.9	
+uniform	JO57IQ131106115	OK	0	0	10	10	10	10	1.9	
+uniform	JO57_WP_KUMAMOTOHSU_ALUMNINEWS	OK	0	0	10	10	10	10	2.8	
+uniform	JO57_Q498023_3	OK	0	0	30	30	30	30	1.0	
+uniform	JO57_WP_TOMINAGA_ECLOSE	OK	0	0	1	1	1	1	1.6	
+uniform	JO58_AGS_US_FEMA_DECS_10_EB4B7F	OK	0	0	1	1	1	1	0.7	
+uniform	JO58_AGS_US_NYS_TAX_PARCELS_STATE_OW_0_B85447	FETCH_FAILED	1	-1	1	1	0	-1	0.6	transport none recorded; 1 of 1 hosts answered; 80 bytes | remedy: READ THE BODY, not the status: `--run <id>` and look at what came back for the byte count on the run line. A maintenance or rate-limit page served as 200 is the common case (il-knesset-dates fetches 1
+uniform	JO58_AGS_US_VCGI_SERVICES_OPENDATA_T_1888_BBE81D	OK	0	0	6	6	6	6	0.9	
+uniform	JO57_Q387136	OK	0	0	20	20	20	20	3.5	
+uniform	JO57_WP_SHOBARAJRC_POSTS	OK	0	0	262	262	262	262	4.6	
+uniform	JO57_WP_NUHW_TEACHER	OK	0	0	325	325	325	325	6.2	
+uniform	JO58_AGS_EU_CORINE_CHA2012_2018_WM_7_6C6A87	OK	0	0	37	37	37	37	1.0	
+uniform	JO57_Q1350904	OK	0	0	50	50	50	50	4.4	
+uniform	JO57IQ132551264	OK	0	0	10	10	10	10	4.1	
+uniform	JO58_AGS_US_AQUATICS_AQ_ENC_PUBLIC_P_58_47EC9A	OK	0	0	16	16	16	16	1.1	
+uniform	JO59_JPGIS_2B5008FA28	OK	0	0	26	26	26	26	0.7	
+uniform	JO58_AGS_EU_FLOODSDIRECTIVE_FLOODS20_2_3CFAC7	OK	0	0	1156	1156	1156	1156	2.0	
+uniform	JO59_JPGIS_4347393F75	OK	0	0	73	73	73	73	0.7	
+uniform	JO59_JPGIS_2569E65918	OK	0	0	579	579	579	579	1.0	
+uniform	JO59_JPGIS_51E9A7A391	OK	0	0	2	2	2	2	0.7	
+uniform	JO49_WP_YAMAGUCHIKENSYAKYO_POSTS	OK	0	0	410	410	410	410	17.0	
+uniform	JO59_JPGIS_CF7C0002F3	OK	0	0	76	76	76	76	1.0	
+uniform	JO59_JPGIS_6177E6AFEC	OK	0	0	1	1	1	1	0.7	
+uniform	JO59_JPGIS_B190237F1F	OK	0	0	71	71	71	71	0.9	
+uniform	JO59_JPGIS_884B2CBFE2	OK	0	0	421	421	421	421	1.5	
+uniform	JO59_JPGIS_C84CFFC605	OK	0	0	1	1	1	1	0.9	
+uniform	JO49_WP_JAIBUSUKI_POSTS	OK	0	0	818	818	818	818	29.0	
+uniform	JO58_AGS_EU_BIO_NATURA2000_DYNA_WM_6_49DF58	OK	0	0	5572	5572	5572	5572	6.9	
+uniform	JO53_AGS_SERVICES5_CHIBAN	OK	0	0	40000	40001	40000	40000	19.3	
+uniform	JO59_JPGIS_77CF0148F7	OK	0	0	82	82	82	82	1.3	
+uniform	JO59_JPGIS_FA48D3FE69	OK	0	0	357	357	357	357	1.3	
+uniform	JO59_JPGIS_CD18235899	OK	0	0	133	133	133	133	1.5	
+uniform	JO59_JPGIS_259D640C80	OK	0	0	21	21	21	21	1.3	
+uniform	JO59_JPGIS_7541732C77	OK	0	0	68	68	68	68	1.2	
+uniform	JO59_JPGIS_5DE14D590E	OK	0	0	48	48	48	48	1.1	
+uniform	JO59_JPGIS_A1AC6B7D27	OK	0	0	6	6	6	6	0.8	
+uniform	JO59_JPGIS_7AB66C2DD1	OK	0	0	7	7	7	7	0.8	
+uniform	JO59_JPGIS_1DEFD18881	OK	0	0	9	9	9	9	1.2	
+uniform	JO60_EUGIS_79B5432C6A	OK	0	0	3	3	3	3	1.0	
+uniform	JO60_EUGIS_F76F95A0AC	OK	0	0	32	32	32	32	1.5	
+uniform	JO34_CKANRES_GEOSCIENCE_DATA_QLD_GOV_AU	SLOW	-1	0	-1	-1	7900	-1	120.1	hit --timeout 120.1s; 7900 rows already stored
+uniform	JO59_JPGIS_162B447AD8	OK	0	0	433	433	433	433	2.0	
+uniform	JO60_EUGIS_E69E98CA4A	OK	0	0	12	12	12	12	1.0	
+uniform	JO60_USGIS_F82DB67867	OK	0	0	15	15	15	15	0.7	
+uniform	JO59_JPGIS_B87F2E28E0	OK	0	0	5866	5866	5866	5866	7.1	
+uniform	JO60_EUGIS_82E8705BEC	OK	0	0	265	265	265	265	2.0	
+uniform	JO60_USGIS_97EC0B2BE3	OK	0	0	29	29	29	29	0.9	
+uniform	JO60_USGIS_272951CD47	OK	0	0	3	3	3	3	1.0	
+uniform	JO60_USGIS_B392AF2BC1	OK	0	0	1	1	1	1	0.9	
+uniform	JO60_USGIS_0EDCC25D1B	OK	0	0	673	673	673	673	1.8	
+uniform	JO60_USGIS_790CD76F3D	OK	0	0	538	538	538	538	1.3	
+uniform	JO60_USGIS_88B6371957	OK	0	0	1	1	1	1	0.9	
+uniform	JO60_USGIS_393066D8A5	OK	0	0	48	48	48	48	0.9	
+uniform	JO60_USGIS_C345AE9716	OK	0	0	209	209	209	209	1.1	
+uniform	JO57_WP_KLC_POSTS	OK	0	0	787	787	787	787	21.3	
+uniform	JO61_JPGIS_36045D3525	OK	0	0	205	205	205	205	0.8	
+uniform	JO60_EUGIS_0223E77030	OK	0	0	3716	3716	3716	3716	5.5	
+uniform	JO60_USGIS_5D0AD2FA43	OK	0	0	350	350	350	350	3.9	
+uniform	JO60_USGIS_F419F25D52	OK	0	0	854	854	854	854	1.8	
+uniform	JO61_USGIS_9FDA484CAD	OK	0	0	146	146	146	146	0.7	
+uniform	JO61_USGIS_AD8BECC861	OK	0	0	599	599	599	599	1.9	
+uniform	JO61_USGIS_DFFAA0355A	OK	0	0	26	26	26	26	0.9	
+uniform	JO61_USGIS_D0901AA280	OK	0	0	40	40	40	40	2.6	
+uniform	JO61_USGIS_0B3C382DE2	OK	0	0	790	790	790	790	1.9	
+uniform	JO49_WP_JAPANARTS_CONCERT	OK	0	0	918	918	918	918	37.3	
+uniform	JO61_USGIS_A5EC928D84	OK	0	0	7	7	7	7	1.2	
+uniform	JO61_USGIS_31AC7CA787	OK	0	0	80	80	80	80	1.3	
+uniform	JO61_USGIS_5080FE32BD	OK	0	0	3	3	3	3	1.0	
+uniform	JO61_USGIS_2EB55EA009	OK	0	0	6	6	6	6	0.8	
+uniform	JO61_USGIS_E9BD7EA60B	OK	0	0	28	28	28	28	0.9	
+uniform	JO61_USGIS_854E6509BF	OK	0	0	3	3	3	3	0.9	
+uniform	JO61_USGIS_463D928958	OK	0	0	976	976	976	976	1.7	
+uniform	JO61_USGIS_EB289CDB80	OK	0	0	34	34	34	34	1.1	
+uniform	JO61_USGIS_187E5F9E73	OK	0	0	3	3	3	3	1.0	
+uniform	JO61_USGIS_80447D00A8	OK	0	0	4	4	4	4	1.3	
+uniform	JO61_USGIS_60478E1032	OK	0	0	2	2	2	2	1.2	
+uniform	JO61_USGIS_3F4AEDDA6E	OK	0	0	1	1	1	1	0.9	
+uniform	JO61_USGIS_FE54235EB4	OK	0	0	1	1	1	1	1.0	
+uniform	JO61_USGIS_97A0947253	OK	0	0	1467	1467	1467	1467	2.4	
+uniform	JO62_EUGIS_EEE9B689F5	OK	0	0	8	8	8	8	0.9	
+uniform	JO62_EUGIS_9C4B6AE267	OK	0	0	49	49	49	49	1.3	
+uniform	JO61_USGIS_E4AA8BDC54	OK	0	0	133	133	133	133	5.6	
+uniform	JO62_EUGIS_952395FA4C	OK	0	0	13	13	13	13	1.3	
+uniform	JO62_EUGIS_653FF49738	OK	0	0	16	16	16	16	1.2	
+uniform	JO62_EUGIS_75332531DA	OK	0	0	523	523	523	523	1.7	
+uniform	JO62_EUGIS_8A4E79942C	OK	0	0	72	72	72	72	1.8	
+uniform	JO62_EUGIS_E62C61049A	OK	0	0	26	26	26	26	1.4	
+uniform	JO59_JPGIS_CD16BA32FB	OK	0	0	3725	3725	3725	3725	23.5	
+uniform	JO62_EUGIS_E127AC2241	OK	0	0	1352	1352	1352	1352	2.0	
+uniform	JO62_EUGIS_77AF7B4AB6	OK	0	0	12	12	12	12	1.2	
+uniform	JO62_EUGIS_71A3AFDA4A	OK	0	0	62	62	62	62	2.5	
+uniform	JO62_EUGIS_804E0C4781	OK	0	0	202	202	202	202	1.4	
+uniform	JO62_EUGIS_F37A0EAAA5	OK	0	0	1347	1347	1347	1347	3.2	
+uniform	JO63_CN_WANGJIANG_AEB52	FETCH_FAILED	0	0	1	1	0	-1	2.7	HTTP 403 | remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+uniform	JO63_CN_JINGCHUAN_8B45B	FETCH_FAILED	0	0	1	1	0	-1	1.6	HTTP 403 | remedy: the upstream refused this client: check whether the row needs a credential (key_env) or a User-Agent it is not sending
+uniform	JO63_CN_ANRENZF_848D6	FETCH_FAILED	1	-1	1	1	0	-1	4.8	HTTP 503 | remedy: re-run; if the status persists the endpoint has moved or retired
+uniform	JO60_USGIS_AD070F9121	OK	0	0	30934	30934	30934	30934	27.1	
+uniform	JO61_USGIS_3344093EF8	OK	0	0	32983	32983	32983	32983	25.9	
+uniform	JO60_USGIS_101E9B342F	OK	0	0	40000	40001	40000	40000	33.3	
+uniform	JO63_CN_FJXWGD_FCCA4	FETCH_FAILED	1	-1	1	1	0	-1	0.5	NO CERTIFICATE WAS JUDGED and no status was measured, which is also what this container's own egress looks like — check $HTTPS_PROXY/__agentproxy/status and re-read from another network before treating this as the source's (CLAUDE.md: a peer reset here can be ours) | remedy: re-run; if the status persists the endpoint has moved or retired
+uniform	JO58_AGS_EU_BATHINGWATER_BATHINGWATE_0_0C5079	OK	0	0	40000	40001	40000	40000	46.5	
+uniform	JO58_AGS_EU_BATHINGWATER_BATHINGWATE_0_B40429	OK	0	0	40000	40001	40000	40000	47.5	
+uniform	JO63_EUODS_1F87B6C7AB	OK	0	0	61	61	61	61	1.2	
+uniform	JO63_EUODS_9459E480E0	FETCH_FAILED	1	-1	1	1	0	-1	1.6	HTTP 500 | remedy: re-run; if the status persists the endpoint has moved or retired
+uniform	JO60_USGIS_F48BEA7ADD	OK	0	0	12214	12214	12214	12214	36.4	
+uniform	JO63_EUODS_2F737B6B50	OK	0	0	248	248	248	248	1.6	
+uniform	JO63_EUODS_AD0252D987	OK	0	0	265	265	265	265	1.8	
+uniform	JO63_EUODS_C71C3000BA	OK	0	0	2000	2001	2000	2000	8.3	
+uniform	JO63_EUODS_40FCD408A5	OK	0	0	1287	1287	1287	1287	4.5	
+uniform	JO63_EUODS_9A1FBDF5FE	OK	0	0	35	35	35	35	1.6	
+uniform	JO63_EUODS_29D044CBB1	OK	0	0	220	220	220	220	1.5	
+uniform	JO63_EUODS_01E2329D32	OK	0	0	39	39	39	39	2.0	
+uniform	arxiv-physics-med-ph	EMITS_NOTHING	0	0	0	0	0	-1	0.3	no records reached intel_items — it transferred 928 bytes over 1 request(s), so the upstream really did hand over nothing
+uniform	JO63_EUWFS_CC984064B8	OK	0	0	333	333	333	333	1.4	
+uniform	cn-b50-scmp-com-6	OK	0	0	50	50	50	-1	1.0	
+uniform	elering-system-ee	OK	0	0	8	8	8	-1	0.9	
+uniform	JO63_CN_ZHENGYANG_85957	FETCH_FAILED	1	-1	1	1	0	-1	31.5	HTTP 503 | remedy: re-run; if the status persists the endpoint has moved or retired
+uniform	JO63_CN_PUXIAN_F2F27	FETCH_FAILED	1	-1	1	1	0	-1	31.1	HTTP 504 | remedy: re-run; if the status persists the endpoint has moved or retired
+uniform	JO63_EUODS_6C47106355	OK	0	0	2000	2001	2000	2000	6.9	
+uniform	jp-b44-engineering-meetsmore-com	OK	0	0	30	30	30	-1	0.9	
+uniform	JO63_CN_XC_276A5	FETCH_FAILED	1	-1	1	1	0	-1	32.5	HTTP 503 | remedy: re-run; if the status persists the endpoint has moved or retired
+uniform	fr-b50-chemille-en-anjou-fr-post-type-contacts	OK	0	0	40	40	40	-1	3.0	
+uniform	jp-b50-city-sapporo-jp-shiroishi-topics-shiroishi-attention	OK	0	0	1	1	1	-1	1.7	
+uniform	jp-b50-apstj-jp	OK	0	0	10	10	10	-1	1.4	
+uniform	jp-b50-town-oe-yamagata-jp-news	OK	0	0	20	20	20	-1	1.7	
+uniform	jp-b50-jtua-or-jp-rss-jtua-news	OK	0	0	10	10	10	-1	1.4	
+uniform	jp-b43-labs-gree-jp	OK	0	0	10	10	10	-1	3.3	
+uniform	fr-b50-ville-grasse-fr-post-type-contacts	OK	0	0	40	40	40	-1	4.7	
+uniform	uk-b50-govuk-asset-protection-agency	OK	0	0	4	4	4	-1	0.4	
+uniform	jp-b50-legika-jp	OK	0	0	10	10	10	-1	1.5	
+uniform	jp-b50-sjve-org	OK	0	0	10	10	10	-1	1.3	
+uniform	uk-b50-govuk-criminal-injuries-compensation-appeals-panel	OK	0	0	1	1	1	-1	0.6	
+uniform	jp-b50-kuramoto-co-jp	OK	0	0	10	10	10	-1	2.3	
+uniform	uk-b50-govuk-independent-living-fund	OK	0	0	20	20	20	-1	0.8	
+uniform	jp-b50-kmes-kanagawa-or-jp	OK	0	0	10	10	10	-1	2.9	
+uniform	uk-b50-govuk-institute-for-apprenticeships	OK	0	0	14	14	14	-1	0.7	
+uniform	uk-b50-govuk-national-protective-security-authority	OK	0	0	4	4	4	-1	0.5	
+uniform	uk-b50-govuk-scottish-arts-council	OK	0	0	5	5	5	-1	0.6	
+uniform	uk-b50-govuk-national-employment-savings-trust	OK	0	0	20	20	20	-1	0.8	
+uniform	uk-b50-feeds-bbci-co-uk-news-entertainment-and-arts	OK	0	0	26	26	26	-1	0.4	
+uniform	uk-b50-govuk-office-of-the-health-professions-adjudicator	OK	0	0	4	4	4	-1	0.7	
+uniform	us-b50-moorehaven-org	OK	0	0	4	4	4	-1	0.4	
+uniform	uk-b50-govuk-life-sciences-organisation	OK	0	0	20	20	20	-1	0.8	
+uniform	us-b50-spaceforce-mil-desktopmodules-articlecs-rss-ashx-contenttype-1-site-1060-max-10	OK	0	0	10	10	10	-1	0.7	
+uniform	urlscan-jp	OK	0	0	100	100	100	-1	0.8	
+uniform	us-b50-plattsmouth-org-index-format-feed-type-atom	OK	0	0	8	8	8	-1	0.5	
+uniform	us-b50-ndm-edu	OK	0	0	10	10	10	-1	0.5	
+uniform	us-b50-uftl-edu	OK	0	0	4	4	4	-1	0.6	
+uniform	jp-b50-rite-or-jp-en	OK	0	0	15	15	15	-1	4.5	
+uniform	JO63_CN_ZJKKB_EE1AB	FETCH_FAILED	1	-1	1	1	0	-1	34.0	HTTP 503 | remedy: re-run; if the status persists the endpoint has moved or retired
+uniform	JO63_CN_YINGJING_CF8A6	FETCH_FAILED	1	-1	1	1	0	-1	32.2	HTTP 503 | remedy: re-run; if the status persists the endpoint has moved or retired
+uniform	JO63_CN_XZND_EED97	FETCH_FAILED	1	-1	1	1	0	-1	31.3	HTTP 503 | remedy: re-run; if the status persists the endpoint has moved or retired
+uniform	JO63_EUWFS_9DA7C82255	OK	0	0	2573	2573	2573	2573	18.9	
+uniform	JO63_CN_YLFM_3D87E	FETCH_FAILED	1	-1	1	1	0	-1	60.4	NO CERTIFICATE WAS JUDGED and no status was measured, which is also what this container's own egress looks like — check $HTTPS_PROXY/__agentproxy/status and re-read from another network before treating this as the source's (CLAUDE.md: a peer reset here can be ours) | remedy: re-run; if the status persists the endpoint has moved or retired
+uniform	JO63_CN_GLXSQZF_2936E	FETCH_FAILED	1	-1	1	1	0	-1	60.5	NO CERTIFICATE WAS JUDGED and no status was measured, which is also what this container's own egress looks like — check $HTTPS_PROXY/__agentproxy/status and re-read from another network before treating this as the source's (CLAUDE.md: a peer reset here can be ours) | remedy: re-run; if the status persists the endpoint has moved or retired

@@ -59,7 +59,13 @@ int datetok_render(const char *spec, size_t n, time_t now_in, int tz_min,
   if (i < n && (spec[i] == '+' || spec[i] == '-')) {
     int sign = spec[i++] == '-' ? -1 : 1;
     if (i >= n || !isdigit((unsigned char)spec[i])) return 0;
-    while (i < n && isdigit((unsigned char)spec[i])) amount = amount * 10 + (spec[i++] - '0');
+    /* 7 digits at most: more is no real shift and would overflow `amount`
+     * (and amount*12 / amount*7 below). The token is then left verbatim. */
+    int nd = 0;
+    while (i < n && isdigit((unsigned char)spec[i])) {
+      if (++nd > 7) return 0;
+      amount = amount * 10 + (spec[i++] - '0');
+    }
     if (i < n && strchr("dwmy", spec[i])) unit = spec[i++];
     amount *= sign;
   }
@@ -69,15 +75,16 @@ int datetok_render(const char *spec, size_t n, time_t now_in, int tz_min,
     if (spec[i] != ':' || n - i - 1 == 0 || n - i - 1 >= sizeof fmt) return 0;
     memcpy(fmt, spec + i + 1, n - i - 1);
     fmt[n - i - 1] = 0;
-    /* The second spelling of a day offset, {date:FORMAT:+N} / {date:FORMAT:N},
+    /* The second spelling of a day offset, {date:FORMAT:+N} / {date:FORMAT:-N},
      * which the engine shipped first (hp_date_token on main): the text after
-     * the LAST ':' is a day offset when it is a signed or unsigned integer of
-     * 1-5 digits, so a format holding ':' itself (%H:%M) still parses. Both
+     * the LAST ':' is a day offset when it is a SIGNED integer of 1-5 digits.
+     * The sign is required: an unsigned tail is part of the format, or
+     * {date:%Y-%m-%dT00:00:00} would lose its ":00" as "offset 0" (no row in
+     * the tree wrote an unsigned offset when this was tightened). Both
      * spellings render through this one function. */
     char *colon = strrchr(fmt, ':');
-    if (colon) {
-      const char *d = colon + 1;
-      if (*d == '+' || *d == '-') d++;
+    if (colon && (colon[1] == '+' || colon[1] == '-')) {
+      const char *d = colon + 2;
       int digits = 0;
       while (isdigit((unsigned char)d[digits])) digits++;
       if (digits > 0 && digits <= 5 && d[digits] == 0) {
@@ -123,7 +130,8 @@ static int datetok_ago(const char *spec, size_t n, time_t now_in, char *out, siz
   memcpy(num, spec + 4, k); num[k] = 0;
   long secs = strtol(num, NULL, 10);   /* as main: "{ago:x}" reads as 0 = now */
   if (secs < 0) secs = 0;
-  time_t t = (now_in ? now_in : time(NULL)) - (time_t)secs;
+  time_t t = now_in ? now_in : time(NULL);
+  t = (long long)secs >= (long long)t ? 0 : t - (time_t)secs;   /* never before 1970 */
   struct tm g;
   if (!gmtime_r(&t, &g)) return 0;
   return strftime(out, cap, "%Y-%m-%dT%H:%M:%SZ", &g) > 0;
@@ -137,7 +145,7 @@ int datetok_render_any(const char *spec, size_t n, time_t now_in, int tz_min,
 
 int datetok_present(const char *s) {
   for (const char *p = s ? strstr(s, "{date") : NULL; p; p = strstr(p + 1, "{date"))
-    if (strchr("}+-:", p[5])) return 1;
+    if (p[5] && strchr("}+-:", p[5])) return 1;   /* strchr matches the NUL too */
   return 0;
 }
 
@@ -150,10 +158,12 @@ char *datetok_expand(const char *tmpl, time_t now_in, int tz_min,
   if (!out) return NULL;
   for (const char *p = tmpl; *p; ) {
     char dbuf[128];
-    const char *close = (*p == '{' && ((!strncmp(p + 1, "date", 4) && strchr("}+-:", p[5])) ||
+    const char *close = (*p == '{' && ((!strncmp(p + 1, "date", 4) && p[5] && strchr("}+-:", p[5])) ||
                                        !strncmp(p + 1, "ago:", 4)))
                         ? strchr(p, '}') : NULL;
-    if (close && close - p < 112 &&
+    /* A '{' inside the body means THIS token was never closed and the '}'
+     * belongs to the next one ("{date:%Y&b={q}"): leave it verbatim. */
+    if (close && close - p < 112 && !memchr(p + 1, '{', (size_t)(close - p - 1)) &&
         datetok_render_any(p + 1, (size_t)(close - p - 1), now_in, tz_min, shift,
                            shift_unit, dbuf, sizeof dbuf)) {
       size_t dl = strlen(dbuf);

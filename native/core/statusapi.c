@@ -1,6 +1,7 @@
 #include "cadence.h"
 #include "../lib/jocore.h"
 #include "source_interval.h"
+#include "scheduler.h"
 #include "statusapi.h"
 #include "collectortab.h"
 #include "intelapi.h"           /* intelapi_is_intel_id — INTEL_SOURCE_IDS */
@@ -215,14 +216,37 @@ typedef struct {
 typedef struct {
   char src[256]; int failures, empties, quarantined; long effective; long long backoff_until;
   long freshness;   /* the adaptive measurement (freshness_interval), 0 = none */
+  long long last_probe, last_run;   /* last_run = source_sched_state.updated_at */
 } sched_t;
+
+static const sched_t *sched_find(const sched_t *S, int ns, const char *id) {
+  for (int k = 0; k < ns; k++) if (strcmp(S[k].src, id) == 0) return &S[k];
+  return NULL;
+}
+
+/* The bulk row as the scheduler's own struct, so the intervals below come
+ * from core/scheduler.c's arithmetic; NULL (never ran) is the zeroed state. */
+static sched_state sched_as_state(const sched_t *r) {
+  sched_state st = {0};
+  if (!r) return st;
+  st.consecutive_failures = r->failures;
+  st.consecutive_empties  = r->empties;
+  st.effective_interval   = r->effective;
+  st.backoff_until        = (time_t)r->backoff_until;
+  st.quarantined          = r->quarantined;
+  st.last_probe           = (time_t)r->last_probe;
+  st.freshness_interval   = r->freshness;
+  st.last_run             = (time_t)r->last_run;
+  return st;
+}
 
 static sched_t *load_sched(db_handle *db, int *out_n) {
   *out_n = 0;
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(db->h,
         "SELECT source_id,consecutive_failures,consecutive_empties,quarantined,"
-        "effective_interval,backoff_until,freshness_interval FROM source_sched_state",
+        "effective_interval,backoff_until,freshness_interval,last_probe,updated_at "
+        "FROM source_sched_state",
         -1, &s, NULL) != SQLITE_OK) return NULL;
   int cap = 64, n = 0;
   sched_t *S = malloc((size_t)cap * sizeof *S);
@@ -242,6 +266,8 @@ static sched_t *load_sched(db_handle *db, int *out_n) {
     r->backoff_until = sqlite3_column_type(s,5) == SQLITE_NULL
                          ? 0 : sqlite3_column_int64(s,5);
     r->freshness   = (long)sqlite3_column_int64(s,6);   /* NULL -> 0 */
+    r->last_probe  = sqlite3_column_int64(s,7);
+    r->last_run    = sqlite3_column_int64(s,8);
   }
   sqlite3_finalize(s);
   *out_n = n;
@@ -260,10 +286,9 @@ static void iso_epoch(long long t, char *buf, size_t n) {
  * code (sources.quarantined_until; cleared by an operator or by time). A row
  * with no state yet (never run since the table existed) says so with
  * `tracked:false` and a null effectiveInterval rather than inventing zeros. */
-static cJSON *sched_obj(const sched_t *S, int ns, const char *id,
+static cJSON *sched_obj(const sched_t *r, const source_def *d,
+                        const sched_policy *pol,
                         const src_meta *m, int repair_q, time_t now) {
-  const sched_t *r = NULL;
-  for (int k = 0; k < ns; k++) if (strcmp(S[k].src, id) == 0) { r = &S[k]; break; }
   cJSON *o = cJSON_CreateObject();
   cJSON_AddBoolToObject(o, "tracked", r != NULL);
   cJSON_AddItemToObject(o, "declaredInterval",
@@ -273,9 +298,16 @@ static cJSON *sched_obj(const sched_t *S, int ns, const char *id,
     r ? cJSON_CreateNumber((double)r->effective) : cJSON_CreateNull());
   /* what an adaptive row's own newest item re-bucketed it to (core/scheduler.c
    * sched_freshness_measure); null when the row is not adaptive or has stored
-   * no dated item yet. The policy (below) applies on top of this figure. */
+   * no dated item yet. The policy (below) applies on top of this figure. A
+   * stored measurement on a row that is not adaptive is not what runs. */
   cJSON_AddItemToObject(o, "measuredInterval",
-    (r && r->freshness > 0) ? cJSON_CreateNumber((double)r->freshness) : cJSON_CreateNull());
+    (d && d->adaptive_interval && r && r->freshness > 0) ? cJSON_CreateNumber((double)r->freshness) : cJSON_CreateNull());
+  /* what the scheduler will actually space attempts by (sched_next_delay):
+   * override, policy, measurement and backoff composed. effectiveInterval
+   * above is only what the last run stored. */
+  { sched_state st = sched_as_state(r);
+    long run = (d && pol) ? sched_next_delay(&st, pol, d) : 0;
+    cJSON_AddItemToObject(o, "runInterval", run > 0 ? cJSON_CreateNumber((double)run) : cJSON_CreateNull()); }
   cJSON_AddNumberToObject(o, "consecutiveFailures", r ? r->failures : 0);
   cJSON_AddNumberToObject(o, "consecutiveEmpties",  r ? r->empties  : 0);
   int backed = r && r->backoff_until > (long long)now;
@@ -293,8 +325,9 @@ static cJSON *sched_obj(const sched_t *S, int ns, const char *id,
  * 19-col sources query below; `A`/`na` the intel-aggregate table. */
 static cJSON *status_row(sqlite3_stmt *s, agg_t *A, int na,
                          const source_trust *TT, int nt,
-                         const sched_t *S, int ns, time_t now) {
+                         const sched_t *S, int ns, const sched_policy *pol, time_t now) {
   const char *id = ctext(s,0);
+  const sched_t *sr = sched_find(S, ns, id);
   const src_meta *m = src_meta_get(id);
   const char *status = ctext(s,5);
   int probeConsent = sqlite3_column_int(s,18) == 1;
@@ -352,8 +385,11 @@ static cJSON *status_row(sqlite3_stmt *s, agg_t *A, int na,
     (m && m->update_interval > 0) ? cJSON_CreateNumber((double)m->update_interval)
                                   : cJSON_CreateNull());
   { const source_def *pd = registry_get(id);   /* the system-wide cadence policy applied to this row */
+    /* as the detail page and the scheduler compose it: over the measured
+     * base for an adaptive row, and not at all for a maintenance pod */
+    sched_state pst = sched_as_state(sr);
     cJSON_AddItemToObject(o,"policyInterval",
-      (pd && pd->update_interval_sec > 0) ? cJSON_CreateNumber((double)cadence_apply_for(pd, pd->update_interval_sec))
+      (pd && pd->update_interval_sec > 0) ? cJSON_CreateNumber((double)source_interval_default(&pst, pd))
                                           : cJSON_CreateNull());
     long ov = (pd && pd->update_interval_sec > 0) ? source_interval_for(id) : 0;   /* set for this one source */
     cJSON_AddItemToObject(o,"overrideInterval", ov > 0 ? cJSON_CreateNumber((double)ov) : cJSON_CreateNull()); }
@@ -409,7 +445,7 @@ static cJSON *status_row(sqlite3_stmt *s, agg_t *A, int na,
         sqlite3_finalize(qs);
       }
     }
-    cJSON_AddItemToObject(o,"sched", sched_obj(S, ns, id, m, repair_q, now));
+    cJSON_AddItemToObject(o,"sched", sched_obj(sr, registry_get(id), pol, m, repair_q, now));
   }
 
   add_str_or_null(o,"probeRequestUrl", ctext(s,11));
@@ -483,7 +519,7 @@ static cJSON *breach_status_row(const breach_src_row *br) {
   cJSON_AddNullToObject(tr, "grade");
   cJSON_AddItemToObject(o, "trust", tr);
   /* not a scheduled collector: tracked:false, everything null/0 */
-  cJSON_AddItemToObject(o, "sched", sched_obj(NULL, 0, br->breach_id, NULL, 0, 0));
+  cJSON_AddItemToObject(o, "sched", sched_obj(NULL, NULL, NULL, NULL, 0, 0));
 
   cJSON_AddNullToObject(o, "probeRequestUrl");
   cJSON_AddNullToObject(o, "probeRequestMethod");
@@ -548,6 +584,7 @@ char *statusapi_one(db_handle *db, const char *id) {
   agg_t *A = load_aggs(db, &na);
   source_trust *TT = source_trust_load(db, &nt);
   sched_t *S = load_sched(db, &ns);
+  sched_policy pol; sched_policy_load(&pol);
   time_t now = time(NULL);
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(db->h, STATUS_SRC_COLS " WHERE id=?1", -1, &s, NULL)
@@ -555,7 +592,7 @@ char *statusapi_one(db_handle *db, const char *id) {
   sqlite3_bind_text(s, 1, id, -1, SQLITE_TRANSIENT);
   char *js = NULL;
   if (sqlite3_step(s) == SQLITE_ROW) {
-    cJSON *o = status_row(s, A, na, TT, nt, S, ns, now);
+    cJSON *o = status_row(s, A, na, TT, nt, S, ns, &pol, now);
     js = cJSON_PrintUnformatted(o);
     cJSON_Delete(o);
   }
@@ -603,6 +640,7 @@ char *statusapi_build_view(db_handle *db, int include_breach,
   agg_t *A = load_aggs(db, &na);
   source_trust *TT = source_trust_load(db, &nt);
   sched_t *S = load_sched(db, &ns);
+  sched_policy pol; sched_policy_load(&pol);
   time_t now = time(NULL);
   sqlite3_stmt *s;
   /* getAllSources(): SELECT * FROM sources ORDER BY category, name */
@@ -620,7 +658,7 @@ char *statusapi_build_view(db_handle *db, int include_breach,
     if (statusapi_strip_has(id)) continue;
     if (m && statusapi_strip_has(m->layer)) continue;
 
-    cJSON *o = status_row(s, A, na, TT, nt, S, ns, now);
+    cJSON *o = status_row(s, A, na, TT, nt, S, ns, &pol, now);
     int in_window = !windowed ||
                     (!summary_only && row_idx >= offset && kept < limit);
     row_idx++;

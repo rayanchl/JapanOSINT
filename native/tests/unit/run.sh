@@ -173,6 +173,9 @@ fi
 fail=0
 for src in tests/unit/test_*.c; do
   name=$(basename "$src" .c)
+  # JO_UNIT_ONLY=<regex>: run only the tests whose name matches (the suite is
+  # ~8 minutes; a change to one module should not need all of it to iterate).
+  if [ -n "${JO_UNIT_ONLY:-}" ] && ! [[ $name =~ $JO_UNIT_ONLY ]]; then continue; fi
   # Which object does this test include? (duplicate symbols if also linked.)
   under=$(under_of "$src")
   objs=$(objs_for "$under")

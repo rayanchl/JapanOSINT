@@ -180,7 +180,11 @@ static void overrides_init(void) {
     char *eq = strchr(tok, '=');
     if (!eq) continue;
     *eq = 0;
-    while (*tok == ' ') tok++;
+    /* Hosts are compared lowercased (hostgate_url_host), so " Reddit.com =1"
+     * must mean reddit.com rather than silently match nothing. */
+    while (isspace((unsigned char)*tok)) tok++;
+    for (char *e2 = eq; e2 > tok && isspace((unsigned char)e2[-1]); ) *--e2 = 0;
+    for (char *c = tok; *c; c++) *c = (char)tolower((unsigned char)*c);
     int ms = atoi(eq + 1);
     if (*tok && ms >= 0) override_set(tok, ms);
   }
@@ -320,6 +324,10 @@ static hg_slot *slot_for(const char *host) {
   memset(s, 0, sizeof *s);
   snprintf(s->host, sizeof s->host, "%s", host);
   s->gap_ms = gap_for_host(host);
+  /* A gap separates two starts; a fresh slot has had none. Left at 0, the
+   * first request to a 30 s host waited until UPTIME reached 30 s — the
+   * monotonic clock starts near zero in a fresh VM or container. */
+  s->last_start_ms = mono_ms() - s->gap_ms;
   unsigned b = hg_hash(host) & (HG_BUCKETS - 1);
   s->next = g_bucket[b];
   g_bucket[b] = idx + 1;
@@ -358,6 +366,10 @@ int hostgate_acquire(const char *url, int max_wait_ms) {
   s->waiters++;                            /* pins `s`: see slot_evictable()  */
   for (;;) {
     long long now = mono_ms();
+    /* Re-read every pass: a 429 that lands while we are parked here set its
+     * penalty AFTER the deadline above was computed, and failing open inside
+     * it is walking into the wall the server just named. */
+    if (s->penalty_until_ms > deadline) deadline = s->penalty_until_ms;
     int conc_ok = (g_max_conc == 0) || (s->in_flight < g_max_conc);
     long long ready_at = slot_ready_at(s);
     int gap_ok  = (now >= ready_at);
@@ -374,6 +386,9 @@ int hostgate_acquire(const char *url, int max_wait_ms) {
     if (now >= deadline) {                 /* fail open — see header          */
       s->waiters--;
       g_timeouts++;
+      /* The caller fetches now, so this IS a start: later arrivals gap from
+       * it instead of following straight behind an ungated request. */
+      if (now > s->last_start_ms) s->last_start_ms = now;
       pthread_mutex_unlock(&g_mu);
       return 0;
     }
@@ -711,8 +726,15 @@ int hostgate_same_host(const char *a, const char *b) {
 
 int hostgate_pace_ms(const char *host) {
   if (!host || !*host) return 0;
+  /* Before the first fetch nothing has read the config yet, and the table is
+   * then empty: the source page said 0 for reddit.com instead of 30000. */
+  cfg_once();
+  char lc[HG_HOSTLEN];
+  size_t n = strlen(host);
+  if (n >= sizeof lc) return g_min_gap_ms;
+  for (size_t i = 0; i <= n; i++) lc[i] = (char)tolower((unsigned char)host[i]);
   pthread_mutex_lock(&g_mu);
-  int gap = gap_for_host(host);
+  int gap = gap_for_host(lc);
   pthread_mutex_unlock(&g_mu);
   return gap;
 }

@@ -8,6 +8,8 @@
  * JSON names what the policy costs. */
 #include "../../core/cadence.h"
 #include "../../core/db.h"
+#include "../../core/scheduler.h"
+#include "../../source.h"
 #include "../../third_party/cJSON.h"
 #include <assert.h>
 #include <stdio.h>
@@ -73,6 +75,8 @@ int main(void) {
   cadence_policy bad2 = {5, 0, 0};   assert(cadence_set(&db, &bad2, NULL, &err) != 0 && strstr(err, "under 10"));
   cadence_policy bad3 = {0, 86400, 900}; assert(cadence_set(&db, &bad3, NULL, &err) != 0 && strstr(err, "exceeds"));
   cadence_policy bad4 = {0, 0, 400L * 86400L}; assert(cadence_set(&db, &bad4, NULL, &err) != 0 && strstr(err, "year"));
+  cadence_policy bad5 = {0, 0, 1};   assert(cadence_set(&db, &bad5, NULL, &err) != 0 && strstr(err, "max_interval_sec under 10"));
+  cadence_policy ok10 = {0, 0, 10};  assert(cadence_set(&db, &ok10, NULL, &err) == 0 && cadence_set(&db, &none, NULL, &err) == 0);
   printf("  refusals name the field\n");
 
   /* parse: absent fields keep the base, non-numbers refused */
@@ -81,6 +85,9 @@ int main(void) {
   assert(cadence_parse("{\"max_interval_sec\": null}", &base, &out, &err) == 0 && out.max_sec == 0);
   assert(cadence_parse("{\"global_interval_sec\": \"1h\"}", &base, &out, &err) != 0 && strstr(err, "numbers"));
   assert(cadence_parse("[1]", &base, &out, &err) != 0);
+  assert(cadence_parse("{\"min_interval_sec\": 0.5}", &base, &out, &err) != 0 && strstr(err, "whole"));
+  assert(cadence_parse("{\"max_interval_sec\": 1e999}", &base, &out, &err) != 0 && strstr(err, "range"));
+  assert(cadence_parse("{\"global_interval_sec\": 1e12}", &base, &out, &err) != 0 && strstr(err, "range"));
   printf("  parse: partial bodies merge onto the current policy\n");
 
   /* the JSON: policy, provenance, cost */
@@ -97,15 +104,33 @@ int main(void) {
   double eff = cJSON_GetObjectItem(est, "runs_per_day_effective")->valuedouble;
   /* daily global: one run per row per day — for the rows the policy governs.
    * Realtime rows (transport, or declared under an hour) and maintenance pods
-   * run at their own cadence (2026-11-14), and the estimate counts them so. */
+   * run at their own cadence (2026-11-14), and the estimate counts them so:
+   * recomputed here from the registry by the same rule, not from the reply. */
   double ex_rows = cJSON_GetObjectItem(est, "exempt_rows")->valuedouble;
-  double ex_rpd = cJSON_GetObjectItem(est, "exempt_runs_per_day")->valuedouble;
-  assert(rows > 0 && ex_rows > 0 && ex_rows < rows);
-  double want = (rows - ex_rows) + ex_rpd;
-  assert(eff >= want - 1 && eff <= want + 1);      /* two independently rounded sums */
+  double want = 0, want_ex = 0; const source_def **all = registry_all();
+  for (int i = 0; i < registry_count(); i++) {
+    long d = all[i]->update_interval_sec;
+    if (d <= 0) continue;
+    if (cadence_exempt_reason(all[i])) { want += 86400.0 / (double)d; want_ex++; }
+    else want += 1.0;
+  }
+  assert(rows > 0 && ex_rows > 0 && ex_rows < rows && ex_rows == want_ex);
+  assert(eff == (double)(long)(want + 0.5));
   printf("  json: %0.f scheduled rows, %0.f runs/day under a daily global policy "
          "(%0.f realtime/pod rows at their own cadence)\n", rows, eff, ex_rows);
   cJSON_Delete(j); free(js);
+
+  /* a stored policy no PUT would accept is not honoured at boot: the next
+   * source is (the env set above), and an invalid env falls to the default */
+  assert(db_exec(&db, "UPDATE app_settings SET value='1' WHERE key='sched.max_interval_sec'", NULL) == 0);
+  assert(db_exec(&db, "UPDATE app_settings SET value='0' WHERE key='sched.global_interval_sec'", NULL) == 0);
+  cadence_init(&db);
+  assert(!strcmp(cadence_source(), "env") && cadence_apply(60) == 7200);
+  unsetenv("JO_SCHED_INTERVAL_SEC"); setenv("JO_SCHED_MAX_INTERVAL_SEC", "5", 1);
+  cadence_init(&db);
+  assert(!strcmp(cadence_source(), "default") && cadence_apply(60) == 21600);
+  unsetenv("JO_SCHED_MAX_INTERVAL_SEC");
+  printf("  boot: an invalid stored or env policy is ignored, not honoured\n");
 
   assert(cadence_set(&db, &none, "ops@example.test", &err) == 0);
   db_close(&db);

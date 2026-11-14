@@ -14,7 +14,9 @@
 #include <time.h>
 
 
-typedef struct { char id[160]; long sec; } si_entry;
+/* 256: the width every other per-source table in core/ gives an id; at 160 a
+ * longer id was cut and its override never matched. */
+typedef struct { char id[256]; long sec; } si_entry;
 
 static pthread_mutex_t g_mu = PTHREAD_MUTEX_INITIALIZER;
 static si_entry       *g_cache;      /* sorted by id, ENABLED rows only */
@@ -45,24 +47,35 @@ static int ensure_table(db_handle *db) {
 static void reload(db_handle *db) {
   sqlite3_stmt *s = NULL;
   si_entry *rows = NULL; int n = 0, cap = 0;
+  /* A read that fails keeps the cache we have: installing an empty one would
+   * silently drop every override the scheduler is honouring. */
   if (sqlite3_prepare_v2(db->h,
         "SELECT source_id, interval_sec FROM source_interval_override "
-        "WHERE enabled=1 AND interval_sec>0", -1, &s, NULL) == SQLITE_OK) {
-    while (sqlite3_step(s) == SQLITE_ROW) {
-      const unsigned char *id = sqlite3_column_text(s, 0);
-      if (!id) continue;
-      if (n == cap) {
-        int nc = cap ? cap * 2 : 16;
-        si_entry *nr = realloc(rows, (size_t)nc * sizeof *nr);
-        if (!nr) break;
-        rows = nr; cap = nc;
-      }
-      snprintf(rows[n].id, sizeof rows[n].id, "%s", (const char *)id);
-      rows[n].sec = (long)sqlite3_column_int64(s, 1);
-      n++;
-    }
-    sqlite3_finalize(s);
+        "WHERE enabled=1 AND interval_sec>0", -1, &s, NULL) != SQLITE_OK) {
+    fprintf(stderr, "[interval] could not read source_interval_override; keeping the %d override(s) loaded\n", atomic_load(&g_n_atomic));
+    return;
   }
+  while (sqlite3_step(s) == SQLITE_ROW) {
+    const unsigned char *id = sqlite3_column_text(s, 0);
+    if (!id) continue;
+    sqlite3_int64 sec = sqlite3_column_int64(s, 1);
+    /* a row source_interval_set would refuse (older build, hand edit) */
+    if (sec < SI_MIN_SEC || sec > SI_MAX_SEC || strlen((const char *)id) >= sizeof rows[0].id) {
+      fprintf(stderr, "[interval] %s: ignoring stored interval %lld s (outside %ld..%ld, or the id is too long)\n",
+              (const char *)id, (long long)sec, SI_MIN_SEC, SI_MAX_SEC);
+      continue;
+    }
+    if (n == cap) {
+      int nc = cap ? cap * 2 : 16;
+      si_entry *nr = realloc(rows, (size_t)nc * sizeof *nr);
+      if (!nr) { free(rows); sqlite3_finalize(s); return; }   /* a partial cache is a wrong one */
+      rows = nr; cap = nc;
+    }
+    snprintf(rows[n].id, sizeof rows[n].id, "%s", (const char *)id);
+    rows[n].sec = (long)sec;
+    n++;
+  }
+  sqlite3_finalize(s);
   if (n > 1) qsort(rows, (size_t)n, sizeof *rows, cmp_entry);
   pthread_mutex_lock(&g_mu);
   free(g_cache); g_cache = rows; g_n = n;
@@ -163,6 +176,26 @@ int source_interval_clear(db_handle *db, const char *id, const char **err) {
   return 0;
 }
 
+long source_interval_default(const sched_state *st, const source_def *d) {
+  if (!d) return 0;
+  /* The cadence policy is about COLLECTION — how often the fleet asks its
+   * upstreams. A maintenance pod asks nobody: under the compiled global 6 h
+   * the WAL checkpoint (300 s), the embedding backfill (120 s), anomaly
+   * triage (60 s) and log retention each ran once at boot and then every six
+   * hours. A pod keeps the interval it declares. */
+  if (sched_is_pod(d)) return d->update_interval_sec;
+  /* And since 2026-11-14 a REALTIME row the same way (transport, or declared
+   * under an hour — cadence_exempt_reason in core/cadence.c): the owner's
+   * decision that live data runs live. It runs at its own base, declared or
+   * measured; cadence_apply_for is the one place that rule is applied. */
+  return cadence_apply_for(d, sched_state_base(st, d->update_interval_sec, d->adaptive_interval));
+}
+
+const char *source_interval_policy_mode(const sched_state *st, const source_def *d) {
+  if (!d || cadence_exempt_reason(d)) return "declared";   /* a pod or realtime row: the policy did nothing */
+  return cadence_mode_for(sched_state_base(st, d->update_interval_sec, d->adaptive_interval));
+}
+
 char *source_interval_json(db_handle *db, const char *id, int can_write) {
   const source_def *d = id ? registry_get(id) : NULL;
   if (!d) return NULL;
@@ -171,14 +204,15 @@ char *source_interval_json(db_handle *db, const char *id, int can_write) {
   if (db) sched_state_load_one(db, id, &st);
   long declared = d->update_interval_sec;
   long measured = (d->adaptive_interval && st.freshness_interval > 0) ? st.freshness_interval : 0;
-  long base     = sched_state_base(&st, declared, d->adaptive_interval);
-  long policy   = cadence_apply_for(d, base);
+  long policy   = source_interval_default(&st, d);
+  const char *mode = source_interval_policy_mode(&st, d);
   long eff      = sched_row_interval(&st, d);
-  const char *exempt = cadence_exempt_reason(d);
+  /* "override" from the cache the scheduler reads, not from the stored row:
+   * a row the cache refused (out of range) is not what runs */
   const char *basis = declared <= 0 ? "on demand"
-                    : (ov.present && ov.enabled && ov.interval_sec > 0) ? "override"
-                    : exempt ? exempt
-                    : strcmp(cadence_mode_for(base), "declared") ? "policy"
+                    : source_interval_for(id) > 0 ? "override"
+                    : cadence_exempt_reason(d) ? cadence_exempt_reason(d)   /* "realtime" | "pod" */
+                    : strcmp(mode, "declared") ? "policy"
                     : measured > 0 ? "measured" : "declared";
   cJSON *o = cJSON_CreateObject();
   cJSON_AddStringToObject(o, "source", id);
@@ -187,7 +221,7 @@ char *source_interval_json(db_handle *db, const char *id, int can_write) {
   if (measured > 0) cJSON_AddNumberToObject(o, "measured_interval_sec", (double)measured);
   else cJSON_AddNullToObject(o, "measured_interval_sec");
   cJSON_AddNumberToObject(o, "policy_interval_sec", (double)policy);
-  cJSON_AddStringToObject(o, "policy", exempt ? exempt : cadence_mode_for(base));
+  cJSON_AddStringToObject(o, "policy", cadence_exempt_reason(d) ? cadence_exempt_reason(d) : mode);
   if (ov.present) {
     cJSON *j = cJSON_CreateObject();
     cJSON_AddNumberToObject(j, "interval_sec", (double)ov.interval_sec);

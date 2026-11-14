@@ -80,7 +80,11 @@ int cadence_set(db_handle *db, const cadence_policy *p, const char *who, const c
 int cadence_parse(const char *json, const cadence_policy *base, cadence_policy *out, const char **err);
 
 /* The policy, its provenance and what it costs: the registry's scheduled
- * rows, runs/day as declared and runs/day under the policy. Malloc'd JSON. */
+ * rows, runs/day as declared and runs/day under the policy — per-source
+ * intervals honoured, realtime rows and maintenance pods exempt, as the
+ * scheduler runs them (exempt_rows / exempt_runs_per_day count them);
+ * the adaptive measurement and health backoff are per-row state and are not
+ * counted. Malloc'd JSON. */
 char *cadence_json(db_handle *db);
 
 #endif

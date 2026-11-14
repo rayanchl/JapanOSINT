@@ -221,7 +221,12 @@ from the merged build.
 
 Registered sources: **88,499**, then **93,142** after merging main's batch 65
 (93,163 less this branch's net 21), then **98,707** after merging main's batch
-66 (98,728 less the same net 21), both floors re-recorded from each build.
+66 (98,728 less the same net 21), then **105,208** after merging main's batch
+67 and its scheduling audit (105,229 less the same net 21), both floors
+re-recorded from each build. That merge is where main's one next-due rule and
+this branch's realtime exemption met: the realtime rule now lives inside main's
+`source_interval_default()`, so the scheduler, `--schedule`, the pages and the
+cost estimate all read one decision (3,149 realtime rows and 19 pods exempt).
 
 ## Still open
 

@@ -418,13 +418,17 @@ static char *hp_expand(const char *tmpl, const hp_vars *v,
     if (*p == '{' && !strncmp(p + 1, "ago:", 4)) {
       const char *close = strchr(p, '}');
       if (close && close - p < 12 &&    /* main's token-length bound */
+          !memchr(p + 1, '{', (size_t)(close - p - 1)) &&   /* unterminated */
           datetok_render_any(p + 1, (size_t)(close - p - 1), v->now, 0, 0, 'd', dbuf, sizeof dbuf)) {
         sub = dbuf;
         skip = (size_t)(close - p) + 1;
       }
-    } else if (*p == '{' && !strncmp(p + 1, "date", 4) && strchr("}+-:", p[5])) {
+    } else if (*p == '{' && !strncmp(p + 1, "date", 4) && p[5] && strchr("}+-:", p[5])) {
       const char *close = strchr(p, '}');
+      /* A '{' in the body: this token was never closed and the '}' is the
+       * next token's ("{date:%Y&b={q}") — leave it verbatim. */
       if (close && close - p < 112 &&
+          !memchr(p + 1, '{', (size_t)(close - p - 1)) &&
           hp_render_date(p + 1, (size_t)(close - p - 1), v, dbuf, sizeof dbuf)) {
         sub = dbuf;
         skip = (size_t)(close - p) + 1;
@@ -433,6 +437,7 @@ static char *hp_expand(const char *tmpl, const hp_vars *v,
                (!strncmp(p + 1, "wstart", 6) || !strncmp(p + 1, "wend", 4))) {
       const char *close = strchr(p, '}');
       if (close && close - p < 112 &&
+          !memchr(p + 1, '{', (size_t)(close - p - 1)) &&
           hp_render_window(p + 1, (size_t)(close - p - 1), v, dbuf, sizeof dbuf)) {
         sub = dbuf;
         skip = (size_t)(close - p) + 1;
@@ -5823,6 +5828,14 @@ dated_restart:;
      * exact opposite of the refusal case this clause exists for. */
     int served = (first_status == 200 || first_nodata) && !hard_error;
     long next = served ? win_at + s->window_days : win_at;
+    /* The STORED position is clamped to today, not to this run's tail. The
+     * tail moves a day every day, so a stored tail is behind it by the next
+     * morning and that run would re-read yesterday's window, ending yesterday:
+     * a daily row never saw today. The read side clamps a position past the
+     * tail back onto it, so storing today lands the next run on ITS tail.
+     * Today and not tomorrow, because today was read while incomplete: a row
+     * idle for longer than its window then resumes from today, not after it. */
+    long store = next > win_today ? win_today : next;
     if (next > win_tail) next = win_tail;
     /* Computed whether or not there is anywhere to store it, so the notice can
      * name the next window even on a caller that keeps no position (a bare
@@ -5830,8 +5843,9 @@ dated_restart:;
      * than one that says where the cycle would go. */
     datetok_iso_from_day(next, win_next_iso, sizeof win_next_iso);
     if (ctx->resume_out) {
-      char tok[32];
-      snprintf(tok, sizeof tok, "w=%s", win_next_iso);
+      char tok[32], store_iso[16];
+      datetok_iso_from_day(store, store_iso, sizeof store_iso);
+      snprintf(tok, sizeof tok, "w=%s", store_iso);
       ctx->resume_out(ctx, tok);
     }
     if (!served)

@@ -30,6 +30,7 @@
 #ifndef JO_SOURCE_INTERVAL_H
 #define JO_SOURCE_INTERVAL_H
 #include "db.h"
+#include "scheduler.h"   /* sched_state */
 
 /* The bounds an interval may take; shared with core/source_settings.c, which
  * offers the same knob as the `interval_sec` key of the Settings section. */
@@ -71,6 +72,15 @@ unsigned source_interval_generation(void);
 
 /* How many enabled overrides the cache holds (for the pages' cost line). */
 int source_interval_count(void);
+
+/* What the row runs at WITHOUT a per-source interval: a maintenance pod's
+ * declared interval (the system-wide policy does not reach pods), else the
+ * policy over the measured-or-declared base — sched_row_interval() minus the
+ * override. The "default" every page shows beside the override knob. */
+long source_interval_default(const sched_state *st, const source_def *d);
+/* "declared" | "global" | "clamped": what the policy did to that figure
+ * (always "declared" for a pod). */
+const char *source_interval_policy_mode(const sched_state *st, const source_def *d);
 
 /* The composition for one source as JSON (malloc'd): declared, measured,
  * policy, the override row, and the effective figure with what decided it.
