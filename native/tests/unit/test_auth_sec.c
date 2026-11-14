@@ -198,7 +198,8 @@ int main(void) {
                      " AND action='break_glass.login.ok' AND row_hash IS NOT NULL"
                      " AND ip='192.0.2.1'") == 1 && "login audited, chained");
   assert(scalar(&db, "SELECT COUNT(*) FROM audit_events WHERE tenant_id='platform'"
-                     " AND action='break_glass.login.denied' AND row_hash IS NOT NULL") == 1);
+                     " AND action='break_glass.login.denied' AND row_hash IS NOT NULL") == 2
+         && "two denials audited: the wrong code, and the replay of the right one");
 
   /* Disabled after issue: refused. */
   setenv("BREAK_GLASS_ENABLED", "0", 1);

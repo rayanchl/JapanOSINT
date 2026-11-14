@@ -4,7 +4,7 @@
 
 Every variable the native tree reads, found by a static scan of `core/`, `lib/`, `collectors/`, `main.c` and `registry.c` for `getenv("NAME")` and the `env_int`/`env_long`/`env_ll`/`env_double`/`env_days`/`env_pos`/`env_nonempty`/`env_truthy`/`env_str`/`jo_env`/`sanc_env_int` helpers. **Default** is shown only where the call site spells a literal (a blank means the default is computed, handled by the caller, or the variable is optional). Names assembled at runtime are not seen by a text scan.
 
-463 variables. A first-boot subset, with example values, is in `.env.example`.
+464 variables. A first-boot subset, with example values, is in `.env.example`.
 
 | Variable | Default | Read in |
 | --- | --- | --- |
@@ -303,6 +303,7 @@ Every variable the native tree reads, found by a static scan of `core/`, `lib/`,
 | `JO_VISION_EMBED_URL` |  | `core/image_vec.c` |
 | `JO_VISION_QUERY_TIMEOUT_MS` | `15000` | `core/image_vec.c` |
 | `JO_WAYBACK_PAGES` |  | `collectors/sources/wayback_jp.c` |
+| `JO_WS_MAX_MSG_BYTES` |  | `lib/ws.c` |
 | `JO_XLSX_MAX_BYTES` |  | `lib/xlsx.c` |
 | `JO_XLSX_MAX_CELLS` |  | `lib/xlsx.c` |
 | `JO_ZIP_MAX_OUT` |  | `lib/zipread.c` |
