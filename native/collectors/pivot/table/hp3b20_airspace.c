@@ -780,7 +780,19 @@ static const hp_source HP3B20_AIRSPACE[] = {
      * honoured and the pages are disjoint. */
     .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_AM_Apron/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&orderByFields=OBJECTID%20ASC",
     .array_path = "features",
-    .id_keys = "FAA_ID",
+    /* OBJECTID, not FAA_ID: measured 2026-11-14 over two pages with
+       tools/audit_distinctness.py. FAA_ID is the AIRPORT and this row is
+       one record per ITEM, so it was a dimension — 115 distinct of 2,000. OBJECTID
+       reaches the ceiling (every record distinct), and the sibling
+       FAA_AMD_PENDING_BUILDING in this file has keyed on it all along.
+       The semantic alternative was measured and is WORSE: FAA_ID+DESIGNATOR
+       gives 418 of 2,000 on the apron layer, 1,035 of 2,000 on the taxiway
+       layer, and resolves on NO hotspot record. The layer publishes this
+       spelling (objectIdField=OBJECTID, confirmed per layer); it is an
+       ArcGIS row id and a re-publish renumbers it, which is no worse than
+       the content hash the collision guard was falling back to and strictly
+       better on correctness, since it ends the page-seam inflation. */
+    .id_keys = "OBJECTID",
     .interval = 86400,
     .page_param = "resultOffset",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -810,7 +822,19 @@ static const hp_source HP3B20_AIRSPACE[] = {
      * honoured and the pages are disjoint. */
     .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_AM_Taxiway/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json&orderByFields=OBJECTID%20ASC",
     .array_path = "features",
-    .id_keys = "FAA_ID",
+    /* OBJECTID, not FAA_ID: measured 2026-11-14 over two pages with
+       tools/audit_distinctness.py. FAA_ID is the AIRPORT and this row is
+       one record per ITEM, so it was a dimension — 55 of 2,000. OBJECTID
+       reaches the ceiling (every record distinct), and the sibling
+       FAA_AMD_PENDING_BUILDING in this file has keyed on it all along.
+       The semantic alternative was measured and is WORSE: FAA_ID+DESIGNATOR
+       gives 418 of 2,000 on the apron layer, 1,035 of 2,000 on the taxiway
+       layer, and resolves on NO hotspot record. The layer publishes this
+       spelling (objectIdField=OBJECTID, confirmed per layer); it is an
+       ArcGIS row id and a re-publish renumbers it, which is no worse than
+       the content hash the collision guard was falling back to and strictly
+       better on correctness, since it ends the page-seam inflation. */
+    .id_keys = "OBJECTID",
     .interval = 86400,
     .page_param = "resultOffset",
     .page_resume = 1,   /* pages past its ceiling and the upstream declares no total (measured 2026-10-12): read over a cycle */
@@ -830,7 +854,19 @@ static const hp_source HP3B20_AIRSPACE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_AM_Runway/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json",
     .array_path = "features",
-    .id_keys = "FAA_ID",
+    /* OBJECTID, not FAA_ID: measured 2026-11-14 over two pages with
+       tools/audit_distinctness.py. FAA_ID is the AIRPORT and this row is
+       one record per ITEM, so it was a dimension — 227 of 502. OBJECTID
+       reaches the ceiling (every record distinct), and the sibling
+       FAA_AMD_PENDING_BUILDING in this file has keyed on it all along.
+       The semantic alternative was measured and is WORSE: FAA_ID+DESIGNATOR
+       gives 418 of 2,000 on the apron layer, 1,035 of 2,000 on the taxiway
+       layer, and resolves on NO hotspot record. The layer publishes this
+       spelling (objectIdField=OBJECTID, confirmed per layer); it is an
+       ArcGIS row id and a re-publish renumbers it, which is no worse than
+       the content hash the collision guard was falling back to and strictly
+       better on correctness, since it ends the page-seam inflation. */
+    .id_keys = "OBJECTID",
     .interval = 86400,
     .page_param = "resultOffset",
     .page_size = 1000,
@@ -848,7 +884,19 @@ static const hp_source HP3B20_AIRSPACE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_AM_Stopway/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json",
     .array_path = "features",
-    .id_keys = "FAA_ID",
+    /* OBJECTID, not FAA_ID: measured 2026-11-14 over two pages with
+       tools/audit_distinctness.py. FAA_ID is the AIRPORT and this row is
+       one record per ITEM, so it was a dimension — 157 of 626. OBJECTID
+       reaches the ceiling (every record distinct), and the sibling
+       FAA_AMD_PENDING_BUILDING in this file has keyed on it all along.
+       The semantic alternative was measured and is WORSE: FAA_ID+DESIGNATOR
+       gives 418 of 2,000 on the apron layer, 1,035 of 2,000 on the taxiway
+       layer, and resolves on NO hotspot record. The layer publishes this
+       spelling (objectIdField=OBJECTID, confirmed per layer); it is an
+       ArcGIS row id and a re-publish renumbers it, which is no worse than
+       the content hash the collision guard was falling back to and strictly
+       better on correctness, since it ends the page-seam inflation. */
+    .id_keys = "OBJECTID",
     .interval = 86400,
     .page_param = "resultOffset",
     .page_size = 1000,
@@ -914,7 +962,19 @@ static const hp_source HP3B20_AIRSPACE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_AM_Wind_Indicator/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json",
     .array_path = "features",
-    .id_keys = "FAA_ID",
+    /* OBJECTID, not FAA_ID: measured 2026-11-14 over two pages with
+       tools/audit_distinctness.py. FAA_ID is the AIRPORT and this row is
+       one record per ITEM, so it was a dimension — 227 of 786. OBJECTID
+       reaches the ceiling (every record distinct), and the sibling
+       FAA_AMD_PENDING_BUILDING in this file has keyed on it all along.
+       The semantic alternative was measured and is WORSE: FAA_ID+DESIGNATOR
+       gives 418 of 2,000 on the apron layer, 1,035 of 2,000 on the taxiway
+       layer, and resolves on NO hotspot record. The layer publishes this
+       spelling (objectIdField=OBJECTID, confirmed per layer); it is an
+       ArcGIS row id and a re-publish renumbers it, which is no worse than
+       the content hash the collision guard was falling back to and strictly
+       better on correctness, since it ends the page-seam inflation. */
+    .id_keys = "OBJECTID",
     .interval = 86400,
     .page_param = "resultOffset",
     .page_size = 1000,
@@ -933,7 +993,19 @@ static const hp_source HP3B20_AIRSPACE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_AM_Hotspot/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json",
     .array_path = "features",
-    .id_keys = "HOT_ID",
+    /* OBJECTID, not FAA_ID: measured 2026-11-14 over two pages with
+       tools/audit_distinctness.py. FAA_ID is the AIRPORT and this row is
+       one record per ITEM, so it was a dimension — 9 of 163 (keyed HOT_ID). OBJECTID
+       reaches the ceiling (every record distinct), and the sibling
+       FAA_AMD_PENDING_BUILDING in this file has keyed on it all along.
+       The semantic alternative was measured and is WORSE: FAA_ID+DESIGNATOR
+       gives 418 of 2,000 on the apron layer, 1,035 of 2,000 on the taxiway
+       layer, and resolves on NO hotspot record. The layer publishes this
+       spelling (objectIdField=OBJECTID, confirmed per layer); it is an
+       ArcGIS row id and a re-publish renumbers it, which is no worse than
+       the content hash the collision guard was falling back to and strictly
+       better on correctness, since it ends the page-seam inflation. */
+    .id_keys = "OBJECTID",
     .interval = 86400,
     .page_param = "resultOffset",
     .page_size = 1000,
@@ -954,7 +1026,19 @@ static const hp_source HP3B20_AIRSPACE[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Pending_AM_Special_Movement/FeatureServer/0/query?where=1%3D1&outFields=*&resultRecordCount=1000&returnGeometry=false&f=json",
     .array_path = "features",
-    .id_keys = "FAA_ID",
+    /* OBJECTID, not FAA_ID: measured 2026-11-14 over two pages with
+       tools/audit_distinctness.py. FAA_ID is the AIRPORT and this row is
+       one record per ITEM, so it was a dimension — 49 of 270. OBJECTID
+       reaches the ceiling (every record distinct), and the sibling
+       FAA_AMD_PENDING_BUILDING in this file has keyed on it all along.
+       The semantic alternative was measured and is WORSE: FAA_ID+DESIGNATOR
+       gives 418 of 2,000 on the apron layer, 1,035 of 2,000 on the taxiway
+       layer, and resolves on NO hotspot record. The layer publishes this
+       spelling (objectIdField=OBJECTID, confirmed per layer); it is an
+       ArcGIS row id and a re-publish renumbers it, which is no worse than
+       the content hash the collision guard was falling back to and strictly
+       better on correctness, since it ends the page-seam inflation. */
+    .id_keys = "OBJECTID",
     .interval = 86400,
     .page_param = "resultOffset",
     .page_size = 1000,

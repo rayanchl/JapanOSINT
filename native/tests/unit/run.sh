@@ -231,6 +231,21 @@ python3 tools/measure_thresholds.py --self-test || { echo "FAILED"; fail=1; }
 echo "--- audit_registry_emit self-test ---"
 python3 tools/audit_registry_emit.py --self-test || { echo "FAILED"; fail=1; }
 
+# tools/audit_distinctness.py answers the question the COLLISION verdict only
+# RAISES: is a row's declared id_keys the record's identity, and does it beat
+# the content hash it replaces. Both halves matter and the second is the one
+# that gets skipped — a row with no id_keys already reaches the ceiling through
+# the content-hash fallback, so declaring a "real" id can make it WORSE, which
+# CLAUDE.md records for four Socrata rows measured, applied and reverted. Its
+# arithmetic has the same property as audit_registry_emit's: the wrong answer
+# looks exactly like the right one unless it is checked. Twenty-one fixtures,
+# no binary and no network; three of them were confirmed to FAIL when the piece
+# they cover is broken (the hp_flat_get resolver, `,` composing like `+`, and
+# the ceiling read as the record count), and that exercise found a real defect
+# — a key resolving on no record at all had read as KEY_IS_IDENTITY.
+echo "--- audit_distinctness self-test ---"
+python3 tools/audit_distinctness.py --self-test || { echo "FAILED"; fail=1; }
+
 if [ -n "${JO_UNIT_MATCH:-}" ]; then
   # Never let a filtered run be mistaken for a full one: a green partial run
   # printing the same last line as a green suite is the shape this tree keeps

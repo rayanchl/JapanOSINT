@@ -1289,6 +1289,81 @@ SIGXFSZ, median 108.7 s against a ~200 s kill line). Rule 1's note on the
     11 `af-dportal-act-*` siblings were checked in the same pass and are
     uniformly keyed `aid`, which is right for one row per activity.
 
+  **AND THE MISSING INSTRUMENT EXISTS NOW: `tools/audit_distinctness.py`**
+  (2026-11-14, `docs/distinctness-2026-11-14.tsv`). Every fix in this bullet's
+  history did the same arithmetic by hand — Catalonia, Colombia, TWSE, TX TCEQ,
+  UK Parliament, `awc-obstacles`, d-portal — so it is a tool now, built by
+  IMPORTING `tools/audit_idkeys.py`'s C row parser, `hp_flatten` mirror,
+  `hp_flat_get` resolver and `+`/`,` semantics rather than copying them (rule
+  4c; that tool's own first run was 30 false positives of 35 for want of the
+  resolver). It adds a reader for the generated `VJSON`/`VGEO` macro rows, the
+  three engines' uid precedence lists copied from the engines that own them, and
+  `--try-key`, which measures a CANDIDATE instead of the declared key so an
+  author can compare specs without editing a live row.
+
+  **It reports TWO comparisons, and the second is the one that gets skipped.**
+  Against the CEILING — the count of distinct WHOLE records, which no key can
+  beat because two byte-identical records are one record — and against WHAT THE
+  ROW DOES TODAY, because a row that declares nothing already reaches the
+  ceiling through the content-hash fallback. That is why declaring a "real" id
+  can make a row WORSE, as four Socrata rows and `gov-co-secop2` record, and it
+  is exactly the comparison the d-portal pass above skipped.
+
+  Run on the 25-row queue: **18 rows are content-hash-at-ceiling and lose
+  nothing by count**, 1 was already correct, 1 unmeasurable, 1 one-page-only,
+  and **three were real findings** — so that queue's "key questions" were mostly
+  not key defects at all.
+
+  * **Seven of NINE `FAA_AMD_PENDING_*` layers keyed on the AIRPORT**
+    (`FAA_ID`) while each row is one record per ITEM: 115 distinct of 2,000 for
+    aprons, 55 of 2,000 for taxiways, 9 of 163 for hotspots. The sweep had
+    flagged only TWO of the nine, so six came out of a family scan rather than
+    the queue. **The fix was already in the file**: `FAA_AMD_PENDING_BUILDING`
+    has keyed on `OBJECTID` all along — the `UKPARL_LDA_EDMS` lesson again, one
+    row of nine getting it right. `OBJECTID` reaches the ceiling on all seven,
+    the layer publishes that spelling (`objectIdField`, confirmed per layer),
+    and the semantic alternative was MEASURED and is worse
+    (`FAA_ID+DESIGNATOR` is 418 of 2,000 on aprons, 1,035 of 2,000 on taxiways
+    and resolves on NO hotspot record). `FAA_AMD_PENDING_BEACON` is the control
+    and is NOT re-keyed: one beacon per airport, so its `FAA_ID` is 227 of 227.
+  * **`JO29A_CAM_US_HI_HONOLULU` ran TWO identity schemes at once.** Its
+    four-part composite resolved on 153 of 253 records — `cameraimageurl` and
+    both coordinates are absent on 100 — so part of the row keyed on the
+    composite and the rest fell through to a content hash. `description` is the
+    only field on all 253 and is 244 distinct, so not an identity either. Keyed
+    on Socrata's `:id` with `$select=*,:id`, the repair
+    `TX_TCEQ_NOTICES_OF_ENFORCEMENT` already carries: 253 of 253, and the
+    ceiling RISES from 249 to 253, because the four records that were
+    byte-identical differ in `:id` — four real cameras the row was collapsing.
+
+  Measured after, through the engine: aprons **4,734 of 4,734**, taxiways
+  **20,000** plus its truncation notice, Honolulu **253 of 253**.
+
+  **THE TOOL'S OWN FIRST VERDICT WORDING WAS WRONG, AND THE DATA CAUGHT IT.**
+  It called the apron row "LOSES 1,885 a run" where the registry sweep had
+  measured that row losing **3**. The in-page guard content-hashes same-key
+  records that DIFFER inside one page, so they are stored, and the gap between a
+  dimension key and the ceiling is NOT a record loss — it is inflation at the
+  page seam, exactly what `awc-obstacles` records, with a record's uid depending
+  on which page it arrived in. A verdict that sends a reader after records
+  already in the database is worse than no verdict, so it is `KEY_IS_DIMENSION`
+  now and says where the cost really falls. **The real recovery was 3 + 6 + 4
+  records a run; what these fixes buy is identity, and claiming otherwise would
+  have been this file's own disclosure-inventing-its-evidence mistake.**
+
+  Two more things the build cost, both the same shape. Its `--self-test` (21
+  fixtures, no binary and no network, wired into `make unit`) passed first
+  time — so each piece was BROKEN to check the fixtures discriminate, and one
+  did not: **a key resolving on NO record read as `KEY_IS_IDENTITY`**, because
+  every record then falls to a content hash and the count equals the ceiling.
+  That is the very defect `audit_idkeys.py` exists for, reported as perfect
+  health. `KEY_UNMATCHED` exists now and the fixture asserts `key_unmatched`,
+  which is what the resolver actually buys. And the differing-field report named
+  `attributes` for every ArcGIS row until it was flattened — a top-level
+  comparison on `{attributes:{…},geometry:{…}}` can name nothing a reader could
+  put in an `id_keys`. **A new check passing its own fixtures proves nothing
+  until the fixtures are shown to fail.**
+
 **Every registered source is now proof-of-life verified.** Batch 14's 1,001
 unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `vsrc14_*`); batch 15 added 1,029 more (`vsrc15_*`, see
