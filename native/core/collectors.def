@@ -368,11 +368,13 @@ COLLECTOR("pa_public-finance", "Panama — public finance", NULL, NULL, "grp_pro
 COLLECTOR("pk_anti-corruption", "Pakistan — anti corruption", NULL, NULL, "grp_procurement")  /* 1 src; anti-corruption 1 */
 COLLECTOR("pl_procurement", "Poland — procurement", NULL, NULL, "grp_procurement")  /* 1 src; procurement 1 */
 
-/* Open data portals & statistics: 70 collector(s), 13236 sources */
+/* Open data portals & statistics: 73 collector(s), 18801 sources */
+COLLECTOR("hp3b66_socrata", "socrata (batch 66)", NULL, NULL, "grp_opendata")  /* 3627 src; open-data 3627 */
 COLLECTOR("hp3b65_ods", "ods (batch 65)", NULL, NULL, "grp_opendata")  /* 2580 src; open-data 2580 */
 COLLECTOR("hp3b64_ods", "ods (batch 64)", NULL, NULL, "grp_opendata")  /* 2575 src; open-data 2575 */
 COLLECTOR("hp3b64_ckands", "ckands (batch 64)", NULL, NULL, "grp_opendata")  /* 2197 src; open-data 2197 */
 COLLECTOR("hp3b65_ckands", "ckands (batch 65)", NULL, NULL, "grp_opendata")  /* 2063 src; open-data 2063 */
+COLLECTOR("hp3b66_ckands", "ckands (batch 66)", NULL, NULL, "grp_opendata")  /* 1910 src; open-data 1910 */
 COLLECTOR("hp3b63_euods", "euods (batch 63)", NULL, NULL, "grp_opendata")  /* 1859 src; open-data 1859 */
 COLLECTOR("europe_data", "European open data", "欧州オープンデータ", NULL, "grp_opendata")  /* 343 src; opendata 343 */
 COLLECTOR("fr_opendata", "France — open data", "フランス オープンデータ", NULL, "grp_opendata")  /* 287 src; opendata 261, government 11, registry 6 */
@@ -389,6 +391,7 @@ COLLECTOR("jp_opendata", "Japan — opendata", NULL, NULL, "grp_opendata")  /* 3
 COLLECTOR("ro_opendata", "Romania — opendata", NULL, NULL, "grp_opendata")  /* 35 src; opendata 35 */
 COLLECTOR("uk_opendata", "UK — opendata", NULL, NULL, "grp_opendata")  /* 34 src; opendata 34 */
 COLLECTOR("ie_opendata", "Ireland — opendata", NULL, NULL, "grp_opendata")  /* 32 src; opendata 32 */
+COLLECTOR("hp3b66_ods", "ods (batch 66)", NULL, NULL, "grp_opendata")  /* 28 src; open-data 28 */
 COLLECTOR("lv_opendata", "Latvia — opendata", NULL, NULL, "grp_opendata")  /* 24 src; opendata 24 */
 COLLECTOR("it_opendata", "Italy — opendata", NULL, NULL, "grp_opendata")  /* 22 src; opendata 22 */
 COLLECTOR("gb_opendata", "UK — opendata", NULL, NULL, "grp_opendata")  /* 20 src; opendata 20 */
