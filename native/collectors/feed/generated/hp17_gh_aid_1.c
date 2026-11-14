@@ -41,7 +41,23 @@ static const hp_source T[] = {
      Across the FULL walk, not just one page: af-dportal-trans-bw reads 100,000
      records over 20 pages and stores 99,975 — 27 collapsing, 0.027%, the same
      order as the 0.035% this family's upstream duplicates were measured at.
-     Exact within a page, near-exact across the walk; the remainder is theirs. */
+     Exact within a page, near-exact across the walk; the remainder is theirs.
+
+     AND THE DECIDING COMPARISON, made after this key shipped rather than
+     before: this row carried NO id_keys, so every uid was a content hash, and
+     a declared key is only right if it keeps at least as much. Fetched page by
+     page over the whole walk of af-dportal-trans-gh (20 pages, 100,000 rows):
+     distinct WHOLE records 99,915 and distinct 8-part keys 99,915 — IDENTICAL.
+     The hash and the key collapse the same 85 rows and those are the
+     upstream's own byte-identical duplicates, so the key costs nothing and
+     buys a stable identity. Do NOT revert it to the content hash.
+
+     The engine reports more than 85 collapsing (gh: 239 of 100,000) because
+     these rows page by offset with NO order parameter, so the walk is
+     unordered and re-serves rows across page boundaries which the key then
+     correctly collapses as the same transaction. Part of any collision count
+     here is our own paging; the remedy for that half is a sort, and whether
+     d-portal honours one is unmeasured. */
   { .id = "af-dportal-trans-gh",
     .name = "d-portal (IATI) — aid transactions in Ghana",
     .collector = "gh_aid", .category = "aid",

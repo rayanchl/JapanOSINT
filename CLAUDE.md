@@ -1253,7 +1253,34 @@ SIGXFSZ, median 108.7 s against a ~200 s kill line). Rule 1's note on the
     same order as the **0.035%** this family's upstream duplicates were already
     measured at across 19 COLLISION verdicts. The key is right and the
     remainder is the upstream's; what would have been wrong is quoting the
-    single-page 5,000 of 5,000 as if it settled the walk. The six rows that declared NOTHING now carry it; the two
+    single-page 5,000 of 5,000 as if it settled the walk.
+
+    **AND THE QUESTION THAT SHOULD HAVE DECIDED IT WAS NOT ASKED UNTIL AFTER
+    THE CHANGE SHIPPED.** The six repaired rows previously had NO `id_keys`, so
+    every uid was a content hash — and this file records four Socrata rows
+    where declaring the dataset's own documented id was measured, applied and
+    **REVERTED** because the hash kept more. The rule is "compare the candidate
+    key against the row's CURRENT loss", and the first pass compared it against
+    nothing: it measured one page and copied a sibling. `af-dportal-trans-gh`
+    then read **239 of 100,000 collapsing — ten times `bw`'s rate** — which is
+    exactly what a key that is worse than the hash looks like.
+
+    Measured properly, on that row's whole walk fetched page by page (20 pages,
+    100,000 rows): **distinct WHOLE records 99,915 and distinct 8-part keys
+    99,915 — identical.** So the hash and the key collapse the same 85 rows,
+    those 85 are the upstream's own byte-identical duplicates, and the key
+    costs nothing while buying a stable identity. The six rows KEEP it, and the
+    verdict is now a measurement rather than a copy.
+
+    **The 239 against the data's 85 is the second finding, and it is not about
+    the key.** All 11 rows page by `offset` with NO order parameter declared, so
+    the walk is unordered and drifts: the engine's twenty pages are a different
+    draw from mine, re-serving rows across boundaries that the key then
+    correctly collapses as the same transaction. That is this file's own
+    newest-first/unordered-walk hazard, so **part of any collision count on
+    these rows is our own paging and not the upstream's data** — and the remedy
+    for THAT half is a sort, which is recorded here rather than applied,
+    because whether d-portal honours one is unmeasured. The six rows that declared NOTHING now carry it; the two
     9-part rows are deliberately NOT re-keyed, because they also reach the
     ceiling and re-keying would change every stored uid for nothing. **This
     recovers no records** — all six already stored 5,000 distinct through the
