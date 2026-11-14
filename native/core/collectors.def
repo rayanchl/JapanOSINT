@@ -67,8 +67,9 @@ COLLECTOR("grp_unassigned", "Unassigned — add to core/collectors.def", "未分
           "Collectors the registry carries that collectors.def does not list yet. Should be empty.", NULL)
 
 /* ── collectors (parent = group) ─────────────────────────────────────── */
-/* Government & public administration: 136 collector(s), 25488 sources */
+/* Government & public administration: 137 collector(s), 28358 sources */
 COLLECTOR("frgov_mairies", "France — mairies (municipal councils)", "フランス — 市町村役場", "Town halls (mairies, mairies déléguées) from the service-public.fr local directory; municipal news feeds.", "grp_government")  /* 6442 src; local-gov 6442 */
+COLLECTOR("hp3b63_cn", "cn (batch 63)", NULL, NULL, "grp_government")  /* 2870 src; government 2870 */
 COLLECTOR("hp3b44_usgov", "usgov (batch 44)", NULL, NULL, "grp_government")  /* 2072 src; government 2072 */
 COLLECTOR("hp3b44_ukgov", "ukgov (batch 44)", NULL, NULL, "grp_government")  /* 1726 src; government 1726 */
 COLLECTOR("hp3b47_wdgov", "wdgov (batch 47)", NULL, NULL, "grp_government")  /* 1559 src; government 1559 */
@@ -368,7 +369,8 @@ COLLECTOR("pa_public-finance", "Panama — public finance", NULL, NULL, "grp_pro
 COLLECTOR("pk_anti-corruption", "Pakistan — anti corruption", NULL, NULL, "grp_procurement")  /* 1 src; anti-corruption 1 */
 COLLECTOR("pl_procurement", "Poland — procurement", NULL, NULL, "grp_procurement")  /* 1 src; procurement 1 */
 
-/* Open data portals & statistics: 65 collector(s), 1962 sources */
+/* Open data portals & statistics: 66 collector(s), 3821 sources */
+COLLECTOR("hp3b63_euods", "euods (batch 63)", NULL, NULL, "grp_opendata")  /* 1859 src; open-data 1859 */
 COLLECTOR("europe_data", "European open data", "欧州オープンデータ", NULL, "grp_opendata")  /* 343 src; opendata 343 */
 COLLECTOR("fr_opendata", "France — open data", "フランス オープンデータ", NULL, "grp_opendata")  /* 287 src; opendata 261, government 11, registry 6 */
 COLLECTOR("ch_opendata", "Switzerland — open data", "スイス オープンデータ", NULL, "grp_opendata")  /* 208 src; opendata 208 */
@@ -666,13 +668,14 @@ COLLECTOR("marketplace", "Marketplaces", "マーケットプレイス", NULL, "g
 COLLECTOR("classifieds", "Classifieds", "クラシファイド広告", NULL, "grp_social")  /* 2 src;  2 */
 COLLECTOR("np_people", "Nepal — people", NULL, NULL, "grp_social")  /* 1 src; people 1 */
 
-/* Geospatial & mapping: 23 collector(s), 10769 sources */
+/* Geospatial & mapping: 24 collector(s), 11360 sources */
 COLLECTOR("hp3b62_eu", "eu (batch 62)", NULL, NULL, "grp_geo")  /* 4535 src; geospatial 2936, infrastructure 910, transport 337 */
 COLLECTOR("hp3b59_jpgis", "jpgis (batch 59)", NULL, NULL, "grp_geo")  /* 2543 src; geospatial 954, safety 620, infrastructure 445 */
 COLLECTOR("hp3b60_eu", "eu (batch 60)", NULL, NULL, "grp_geo")  /* 1264 src; geospatial 523, infrastructure 401, environment 117 */
 COLLECTOR("hp3b61_jp", "jp (batch 61)", NULL, NULL, "grp_geo")  /* 761 src; geospatial 370, safety 204, infrastructure 109 */
 COLLECTOR("hp3b58_arcgis2", "arcgis2 (batch 58)", NULL, NULL, "grp_geo")  /* 713 src; geospatial 713 */
 COLLECTOR("hp3b58_arcgis3", "arcgis3 (batch 58)", NULL, NULL, "grp_geo")  /* 650 src; geospatial 650 */
+COLLECTOR("hp3b63_euwfs", "euwfs (batch 63)", NULL, NULL, "grp_geo")  /* 591 src; geospatial 591 */
 COLLECTOR("hp3b25_jpgeospatial", "jpgeospatial (batch 25)", NULL, NULL, "grp_geo")  /* 88 src; government 88 */
 COLLECTOR("hp3b32_jparcgis", "jparcgis (batch 32)", NULL, NULL, "grp_geo")  /* 53 src; infrastructure 18, public-safety 12, environment 8 */
 COLLECTOR("hp3b19_osm", "osm (batch 19)", NULL, NULL, "grp_geo")  /* 33 src; reference 13, transport 8, osint 6 */
