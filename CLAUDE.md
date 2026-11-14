@@ -905,7 +905,13 @@ where a shared 7,249 bytes turned out to be two genuinely different paths.
     both of the probed tile's survivors were) or merely share the key is
     UNMEASURED and written down rather than guessed — and the disclosure is
     what turned it from invisible into a number, on the first row it ran
-    against.
+    against. **Measured 2026-11-14 from one sweep's stored uids, for no
+    extra requests** (the guard suffixes every member of a same-key group with
+    `|c:<hash>`, so the database says which groups differed): 327 key groups,
+    **182 byte-identical and 145 holding records that differ** (298 rows
+    kept), and exactly ONE key stored both bare and suffixed — the seam double,
+    one row in 43,033. So the answer was "both", and no key term is added on
+    it.
   * **NO RECORD COUNT COULD HAVE SHOWN IT, and that is now fixed for the whole
     fleet.** `lib/geojson.c`'s in-page guard content-hashes differing same-key
     features WITHIN one FeatureCollection, so inside a tile nothing is lost and
@@ -1300,7 +1306,8 @@ SIGXFSZ, median 108.7 s against a ~200 s kill line). Rule 1's note on the
     newest-first/unordered-walk hazard, so **part of any collision count on
     these rows is our own paging and not the upstream's data** — and the remedy
     for THAT half is a sort, which is recorded here rather than applied,
-    because whether d-portal honours one is unmeasured. The six rows that declared NOTHING now carry it; the two
+    because whether d-portal honours one is unmeasured (it does: measured
+    and applied the same evening, see the correction below). The six rows that declared NOTHING now carry it; the two
     9-part rows are deliberately NOT re-keyed, because they also reach the
     ceiling and re-keying would change every stored uid for nothing. **This
     recovers no records** — all six already stored 5,000 distinct through the
@@ -1308,6 +1315,54 @@ SIGXFSZ, median 108.7 s against a ~200 s kill line). Rule 1's note on the
     publisher revises updates its row instead of arriving as a second one. The
     11 `af-dportal-act-*` siblings were checked in the same pass and are
     uniformly keyed `aid`, which is right for one row per activity.
+
+    **AND EVERY NUMBER IN THE THREE PARAGRAPHS ABOVE WAS MEASURED ON THE WRONG
+    COLLECTION, BECAUSE THESE ELEVEN ROWS NEVER FILTERED BY COUNTRY**
+    (2026-11-14, found the same evening). They asked
+    `from=act,trans&trans_country_code=BW`, and d-portal IGNORES that
+    parameter: BW, GH and an impossible `ZZ` return the same first rows, with
+    and without an order. So `af-dportal-trans-bw`, `-gh`, `-ke` … each stored
+    **the same global transactions under eleven country names, 100,000 a run
+    apiece**, every gate green — rule 4d on a SCHEDULED row, where
+    `--check-filter` never looks because the filter value is a literal and not
+    an entity token. "Botswana's 5,000 rows", the 492 `trans_id`s and
+    "99,915 == 99,915 on gh" are all readings of that one global slice. The
+    KEY conclusion survives, because it was a statement about the record shape
+    and was re-measured on the filtered set (below); the country attribution of
+    everything those rows ever stored does not.
+
+    It was caught by a control nobody planned: giving the rows an order, the
+    engine read Ghana at 191,177,171 bytes and Botswana at 191,164,430 — two
+    "countries" within 13 KB of each other on a 191 MB read. **This file
+    already says an identical byte count across unrelated rows groups
+    candidates; across rows that are supposed to DIFFER BY A FILTER it is the
+    filter being ignored.** Whether the earlier unordered runs showed the same
+    coincidence was not checked — an unordered walk draws different pages per
+    row, which would have hidden it, and may be why it lasted. The form that filters is the join,
+    `from=act,trans,country&country_code=XX`: `select=count` answers 1,057,799
+    for Botswana and 3,570,722 for Ghana, and the activity form answers 0 for
+    an impossible `QQ` — which is also the control showing the 11
+    `af-dportal-act-*` rows and the 12 bare `country_code=` rows DO filter.
+
+    Three things changed on the eleven, each measured: the join; an order
+    (`orderby=aid,trans_day,trans_value,trans_code` — d-portal honours several
+    columns: asc, desc as `col-` and the default all differ, a bogus column
+    returns the default, two reads agree, offset 0 and offset 8 are disjoint
+    and continuous); and `page_resume`, since a country is in the millions.
+    Through the engine, two runs against one database: **99,926 then 199,882
+    distinct records, every one carrying `country_code: BW`**, the position
+    advancing `offset=100000` → `offset=200000`, with 74 and 44 collapsing as
+    the upstream's own byte-identical rows (43 of the first 15,000 are). The
+    8-part key reaches the ceiling on the filtered set for both countries read
+    (14,957 of 14,957; 15,000 of 15,000).
+
+    **A scheduled row that carries a filter VALUE is a pivot frozen at
+    authoring time, and it needs the pivot's check**: ask the same URL for a
+    value that cannot exist. Nothing in the tree does that for scheduled rows
+    yet, and country-, state- and agency-sliced families are exactly what a
+    generator emits in bulk. That sweep is the named follow-up; it is not
+    claimed done. Rows already stored under the wrong country in an OLD
+    database are a cleanup decision for whoever holds one.
 
   **AND THE MISSING INSTRUMENT EXISTS NOW: `tools/audit_distinctness.py`**
   (2026-11-14, `docs/distinctness-2026-11-14.tsv`). Every fix in this bullet's

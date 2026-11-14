@@ -105,6 +105,18 @@
  * question answerable from a run line instead of by hand. Do not widen the key
  * on this paragraph alone; measure first.
  *
+ * MEASURED 2026-11-14, from the stored uids of one full sweep (68,605 emitted,
+ * 43,033 stored, 142 tiles flagging 1,587 features): the guard suffixes every
+ * member of a same-key group with `|c:<content hash>`, so the database says
+ * which groups differed. **327 key groups: 182 are byte-identical** (one row
+ * each — correct dedupe) **and 145 hold records that DIFFER** (298 rows kept).
+ * So the answer is "both", and 145 is the count of co-located obstructions the
+ * published columns cannot tell apart by lat/lon/type/height. Exactly ONE base
+ * key is stored both bare and suffixed — the seam double this note describes —
+ * so the inflation is one row in 43,033. No further key term is added: `elev`
+ * was not tried against these 145, and a term added without that reading
+ * would be the over-claim two paragraphs up, a third time.
+ *
  * WHY NO RECORD COUNT COULD SHOW IT. The sink's in-page guard
  * (lib/geojson.c gj_collision_map) content-hashes differing same-key features
  * WITHIN one FeatureCollection, so inside a tile nothing is lost and `stored`
