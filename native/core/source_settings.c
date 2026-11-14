@@ -177,14 +177,15 @@ char *source_settings_json(db_handle *db, const char *source_id,
     if (delegated(k)) {
       /* The interval knob exists only for a row that has a schedule, and its
        * "default" is not a constant: it is what runs WITHOUT an override —
-       * the declared or measured interval under the system-wide policy
-       * (sched_state_base + cadence_apply), which differs per source. */
+       * source_interval_default(): the declared or measured interval under
+       * the system-wide policy, or a maintenance pod's declared interval.
+       * What runs is the scheduler's sched_row_interval(), not a copy. */
       if (!sd || sd->update_interval_sec <= 0) continue;
       sched_state st = {0};
       if (db && db->h) sched_state_load_one(db, source_id, &st);
-      long base   = cadence_apply(sched_state_base(&st, sd->update_interval_sec, sd->adaptive_interval));
+      long base   = source_interval_default(&st, sd);
       source_interval ov; source_interval_get(db, source_id, &ov);
-      long eff = (ov.present && ov.enabled && ov.interval_sec > 0) ? ov.interval_sec : base;
+      long eff = sched_row_interval(&st, sd);
       cJSON *o = cJSON_CreateObject();
       cJSON_AddStringToObject(o, "key", k->key);
       cJSON_AddStringToObject(o, "label", k->label);
@@ -193,7 +194,7 @@ char *source_settings_json(db_handle *db, const char *source_id,
       cJSON_AddNumberToObject(o, "min", (double)k->lo);
       cJSON_AddNumberToObject(o, "max", (double)k->hi);
       cJSON_AddNumberToObject(o, "default", (double)base);
-      cJSON_AddStringToObject(o, "default_basis", strcmp(cadence_mode_for(sched_state_base(&st, sd->update_interval_sec, sd->adaptive_interval)), "declared")
+      cJSON_AddStringToObject(o, "default_basis", strcmp(source_interval_policy_mode(&st, sd), "declared")
                               ? "the system-wide policy" : (sd->adaptive_interval && st.freshness_interval > 0) ? "measured from its newest item" : "as declared");
       cJSON_AddNumberToObject(o, "value", (double)(ov.present ? ov.interval_sec : base));
       cJSON_AddBoolToObject(o, "enabled", ov.present && ov.enabled);

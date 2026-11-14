@@ -102,6 +102,26 @@ int main(void) {
   cJSON_Delete(o); free(j);
   printf("  cleared: row deleted, basis policy, generation moved\n");
 
+  /* a stored row source_interval_set would refuse is not loaded */
+  assert(db_exec(&db, "INSERT INTO source_interval_override(source_id,interval_sec,enabled,updated_at) "
+                      "VALUES('HAND_EDITED_ROW',1,1,'2026-01-01T00:00:00Z')", NULL) == 0);
+  source_interval_init(&db);
+  assert(source_interval_for("HAND_EDITED_ROW") == 0 && source_interval_count() == 0);
+  assert(db_exec(&db, "DELETE FROM source_interval_override", NULL) == 0);
+  printf("  a stored interval outside the bounds is ignored at load\n");
+
+  /* the default beside the knob: the policy for a collector, the declared
+   * interval for a maintenance pod (the policy does not reach pods) */
+  assert(source_interval_default(&st, sched) == 21600 && !strcmp(source_interval_policy_mode(&st, sched), "global"));
+  for (int i = 0; i < n; i++) {
+    if (all[i]->update_interval_sec <= 0 || !sched_is_pod(all[i])) continue;
+    assert(source_interval_default(&st, all[i]) == all[i]->update_interval_sec);
+    assert(!strcmp(source_interval_policy_mode(&st, all[i]), "declared"));
+    assert(sched_row_interval(&st, all[i]) == all[i]->update_interval_sec);
+    printf("  pod %s: default is its declared %d s under a global 21600\n", all[i]->id, all[i]->update_interval_sec);
+    break;
+  }
+
   cadence_policy none = {0, 0, 0};
   assert(cadence_set(&db, &none, NULL, &err) == 0);
   /* The connection must be CLOSED, as test_cadence.c beside it does. Left

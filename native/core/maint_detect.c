@@ -1,5 +1,5 @@
 /* core/maint_detect.c — see maint_detect.h. Inline sqlite3 prepared statements
- * via db->h (pattern: scheduler.c:is_search_only). */
+ * via db->h (pattern: scheduler.c:sched_row_benched). */
 #include "maint_detect.h"
 #include "../third_party/sqlite3.h"
 #include <stdio.h>
