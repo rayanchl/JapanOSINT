@@ -220,7 +220,8 @@ from the merged build.
   `ws:`-qualified uid (`test_tenant_pivot_key.c` pins both halves).
 
 Registered sources: **88,499**, then **93,142** after merging main's batch 65
-(93,163 less this branch's net 21), both floors re-recorded from that build.
+(93,163 less this branch's net 21), then **98,707** after merging main's batch
+66 (98,728 less the same net 21), both floors re-recorded from each build.
 
 ## Still open
 

@@ -349,7 +349,11 @@ that replaced them survive, so no coverage is lost. **A sweep's verdict is
 about the URL it sent, not about the row's name** — re-read a removal against
 the row as it stands now.
 
-**The registered count is 93,142** (2026-11-14, `make source-count` on the
+**The registered count is 98,707** (2026-11-14, `make source-count` on the
+merge of main's batch 66, both floors re-recorded from that build): main's
+98,728 less this branch's same net 21.
+
+**It was 93,142 an hour earlier** (`make source-count` on the
 merge of main's batch 65, both floors re-recorded from that build): main's
 93,163 less this branch's net 21 (the 16 below and these five).
 
