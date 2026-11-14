@@ -456,6 +456,14 @@ VRSS(geo_jma_xml_regular, "geo-jma-xml-regular", "JMA XML — regular bulletins"
   "ja", "[\"japan\",\"jma\",\"forecast\"]", 900,
   "JMA scheduled bulletin feed (forecasts, observations).");
 
+/* NOT A COLLISION DEFECT, AND IT WAS VALIDATED RATHER THAN ARGUED. The registry
+   sweep reads this row COLLISION, and it is a SINGLE-REQUEST row: the in-page
+   collision guard content-hashes records that collide within one response, so
+   whatever survives it inside ONE response is byte-identical and collapsing it
+   is real dedupe. That argument holds by construction for every single-request
+   row, so it was checked against the data here instead of taken on trust —
+   INFORM serves 46,461 rows carrying exactly 46,079 DISTINCT WHOLE RECORDS,
+   which is precisely what the engine stored. Do not re-key. */
 VJSON(geo_jrc_inform_scores, "geo-jrc-inform-scores", "JRC INFORM — country risk index scores", "JRC INFORM — 国別リスク指数",
   "disaster", "humanitarian",
   "https://drmkc.jrc.ec.europa.eu/inform-index/API/InformAPI/countries/Scores/?WorkflowId=468",

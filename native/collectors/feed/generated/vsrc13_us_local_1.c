@@ -125,6 +125,17 @@ VJSON_IDKEYS(nam_chicago_food_inspections, "nam-chicago-food-inspections", "City
   "Chicago food inspection outcomes with risk level, violations and facility location.",
   "inspection_id");
 
+/* KEEPS THE CONTENT-HASH FALLBACK DELIBERATELY — measured, changed, REVERTED.
+   The registry sweep reads this row COLLISION and the dataset does publish a
+   documented row id, so the obvious repair is to declare it. It was declared
+   and it made the row WORSE: the id gives 140 collisions where the fallback's
+   hash of (title, link, date) gives 78. Chicago's pound records do not carry a
+   stable per-vehicle identity, and where a record has none, hashing its content
+   separates rows that a weak id merges. So the rule here is the opposite of
+   Catalonia's and Colombia's, reached from an identical starting symptom:
+   compare the candidate key against the row's CURRENT loss, and keep the
+   fallback when it wins. Do not declare an id_keys for this row without
+   re-measuring both numbers. */
 VJSON(nam_chicago_towed_vehicles, "nam-chicago-towed-vehicles", "City of Chicago — towed vehicles", "City of Chicago — towed vehicles",
   "us_local", "transport",
   "https://data.cityofchicago.org/resource/ygr5-vcbg.json?$limit=500&$order=:id",

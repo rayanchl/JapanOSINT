@@ -46,6 +46,16 @@ VJSON(lat_co_detenidos_ext, "lat-co-detenidos-ext", "Datos Abiertos Colombia - C
   "es", "[\"col\",\"security\",\"data\"]", 86400,
   "Consular register of Colombian nationals detained overseas, by country and cause category.");
 
+/* LEFT ALONE DELIBERATELY, and the measurement is the result. Ten sibling rows
+   on this portal were re-keyed in the 2026-10-20 pass; this one was measured and
+   NOT, because no key available reaches the record's granularity: the best
+   single field is 961 of 1,000 — no better than the 3.85% the content hash
+   already loses — and 1,000 of 1,000 needs NINE fields, of which 539 of 1,000
+   rows are missing at least one. That is a key that degrades for half the
+   collection, which is worse than the loss it would fix. INVIMA's device
+   register repeats a medicine's row per active ingredient and per role and does
+   not expose its own record granularity; writing that down IS the outcome.
+   A longer key is not automatically a better one. */
 VJSON(lat_co_dispositivos_med, "lat-co-dispositivos-med", "Datos Abiertos Colombia - Sanitary registrations of medical devices", "コロンビア：保健 - Datos Abiertos Colombia - Sanitary registrations of medical devices",
   "latam_data", "health",
   "https://www.datos.gov.co/resource/y4qt-w6tk.json?$limit=500&$order=:id",

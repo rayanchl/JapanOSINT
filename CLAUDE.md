@@ -1092,6 +1092,101 @@ SIGXFSZ, median 108.7 s against a ~200 s kill line). Rule 1's note on the
   can be honest there is the author's measurement, so it wants a read of the
   published file and not a flag set on inference.
 
+  **AND TWO DAYS LATER THOSE 194 OPEN ROWS CAME TO 57, FOR ONE REQUEST**
+  (2026-11-14, `docs/collision-column-resolved-2026-11-14.tsv`; the 11-12 file
+  stands as the reading of its day). **57 rows / 1,758 records**, so the
+  column's honest remainder went 461 / 63,208 → 194 / 10,936 → **57 / 1,758**,
+  and not one row's numbers changed — only what is known about them. Three
+  discriminators the first classification had, and did not apply:
+
+  * **17 rows / 6,512 records were already answered in the file that declares
+    them**, the top TWO being 45% of the whole open total:
+    `sci-exoarchive-stellarhosts` measured against `select *` over all 136
+    columns (47,903 rows → 44,929 distinct, "real dedupe, not a projection
+    artefact", and that query unusable at 157 MB / 108 s against a 25 s
+    timeout) and `ifrc-go-appeal-document`'s repeats measured byte-identical.
+    This bullet's own last paragraph says **check the tree before calling a row
+    open**, and the classifier committed that mistake four paragraphs after
+    recording it: it read the sweep TSV plus a hand-written family list and
+    never opened a collector.
+  * **105 rows / 2,576 records cannot have lost a differing record at all**,
+    because the in-page guard content-hashes same-key records inside one
+    response, so what survives it there is byte-identical and collapsing it is
+    correct dedupe. Verified in the source rather than from the note:
+    `paged = (next_path || page_param || path_paged)` then
+    `if (!paged && !page_walk) page_max = 1` (`lib/hpengine.c:5110`), and
+    `hp_collision_map` is called from ALL FOUR mode drivers — json 2621, csv
+    2843, xml 3462, recjar 3712 — so the guard is not JSON-only.
+  * **15 rows were a stale reading, and measuring them was not optional.**
+    Every `JP25_JPPOLICE_*` / `JO28_AOMORI_*` row already carries
+    `occurrence_rows = 1`, and the sweep still reported the PRE-flag loss,
+    byte-identical to the 2026-09-04 audit — which reads exactly like a flag
+    that does not work, i.e. an engine defect across the 85 rows carrying it.
+    Measured through the binary instead of reasoned about: Gifu 1630/1630,
+    Shizuoka 2938/2938, Aomori 794/794. The flag works and the sweep's binary
+    predated it. **A reading that implies a defect in shared machinery is the
+    one to re-take first**, and three rows across both declaring files cost
+    three runs.
+
+  **THE DISCRIMINATOR IS THE EMIT BATCH, NOT THE REQUEST, and getting that
+  wrong cost the largest remaining row.** The first draft of this pass keyed the
+  second bullet on "one request" and so left `chiriin-place` — 749 records, 30%
+  of what was then left — in OPEN as a ten-request row. It makes ten requests
+  and **one emit**: `features` is created at `chiriin_place.c:35`, all ten
+  queries append to it, and the single `geojson_emit_features` is at `:84`, so
+  the guard spans all ten and a differing same-key feature from any two of them
+  is kept. `classifieds` is the same shape at up to 60 requests with one emit
+  (`:277`). The guard's scope is the array it is handed, which is what the
+  `awc-obstacles` seam finding is about from the other side — so a row's request
+  count says nothing until you know how many times it emits.
+
+  **TWO OF MY OWN READINGS IN THIS PASS WERE WRONG, both caught by re-checking
+  rather than by reasoning**, and they are the same mistake this file keeps
+  recording about tools:
+
+  * **A sample that looked in the wrong place.** Checking whether an EXPLAINED
+    row carries its arithmetic in its own file, the window read the 30 lines
+    ABOVE `.id` — and an `hp_source` row's comment sits INSIDE the block, below
+    `.id`. It reported 4 of 7 rows missing a note when the real figure was 2.
+    Widening the window then said 44 of 53, which is also wrong: ~40 of those
+    are covered by a FILE-LEVEL family note (Japan Search at
+    `hp3b30_jplibrary.c:43` and `hp3b32_jpsearch2.c:43`, the four `awc-*`
+    sweeps at `av_awc_bbox.c:56`), which a per-row window cannot see and which
+    is the RIGHT place for a note governing 130 rows. **The real gap is four
+    rows, every one a generated `vsrc*` row** — where no file-level family note
+    exists — and all four now carry their recorded arithmetic:
+    `geo-jrc-inform-scores` (46,461 rows, 46,079 distinct whole records, the
+    single-request argument validated rather than assumed),
+    `lat-co-dispositivos-med` (left alone: the best field is 961 of 1,000 and
+    1,000 needs nine fields of which 539 rows miss one),
+    `nam-chicago-towed-vehicles` (140 collisions on the documented id against
+    the fallback's 78 — measured, changed, REVERTED) and
+    `nam-norfolk-streetlights-and-outages-reports` (168 against 155).
+  * **A note that hardcoded a ceiling onto a row that did not hit one.**
+    "emitted 8,000 = 20x400, the ceiling" was written onto
+    `nam-delaware-...-organization-d`, which emitted **4,299**. Three of its
+    siblings really are at 8,000; this one COMPLETED. The reach is computed
+    from each row's own emitted count now, because that is the difference
+    between a collapse over an arbitrary slice and a collapse over the whole
+    collection — and a note attached to the wrong row is worse than none.
+
+  What is left is **57 rows, and the duration column says they are key
+  questions rather than ordering ones** (128 of the original 194 ran under 10 s;
+  none at 200 s+, so no walk was slow enough to reshuffle under itself). They
+  split **20 whose walk COMPLETED** — the real queue, a collapse over a whole
+  collection — and **37 that stopped on a page ceiling**, where the collapse is
+  over an arbitrary slice. Every one is multi-request AND multi-emit, so the
+  collision is at a page seam the in-page guard cannot see, and settling one
+  needs the distinctness arithmetic over TWO pages that every fix on record did
+  BY HAND. **That instrument still does not exist**:
+  `tools/feed_collision_check.py` does exactly the right counting (items,
+  distinct keys, repeated keys, byte-identical surplus) for RSS only, and
+  `tools/audit_idkeys.py` holds the two hard pieces — the C row parser and the
+  `hp_flat_get` last-dotted-segment mirror, whose absence made its own first
+  run 30 false positives out of 35 — while saying in its header that it "does
+  not answer whether the field is UNIQUE", which is the entire collision
+  question.
+
 **Every registered source is now proof-of-life verified.** Batch 14's 1,001
 unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `vsrc14_*`); batch 15 added 1,029 more (`vsrc15_*`, see
