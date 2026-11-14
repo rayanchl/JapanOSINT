@@ -172,10 +172,12 @@ char *source_interval_json(db_handle *db, const char *id, int can_write) {
   long declared = d->update_interval_sec;
   long measured = (d->adaptive_interval && st.freshness_interval > 0) ? st.freshness_interval : 0;
   long base     = sched_state_base(&st, declared, d->adaptive_interval);
-  long policy   = cadence_apply(base);
+  long policy   = cadence_apply_for(d, base);
   long eff      = sched_row_interval(&st, d);
+  const char *exempt = cadence_exempt_reason(d);
   const char *basis = declared <= 0 ? "on demand"
                     : (ov.present && ov.enabled && ov.interval_sec > 0) ? "override"
+                    : exempt ? exempt
                     : strcmp(cadence_mode_for(base), "declared") ? "policy"
                     : measured > 0 ? "measured" : "declared";
   cJSON *o = cJSON_CreateObject();
@@ -185,7 +187,7 @@ char *source_interval_json(db_handle *db, const char *id, int can_write) {
   if (measured > 0) cJSON_AddNumberToObject(o, "measured_interval_sec", (double)measured);
   else cJSON_AddNullToObject(o, "measured_interval_sec");
   cJSON_AddNumberToObject(o, "policy_interval_sec", (double)policy);
-  cJSON_AddStringToObject(o, "policy", cadence_mode_for(base));
+  cJSON_AddStringToObject(o, "policy", exempt ? exempt : cadence_mode_for(base));
   if (ov.present) {
     cJSON *j = cJSON_CreateObject();
     cJSON_AddNumberToObject(j, "interval_sec", (double)ov.interval_sec);

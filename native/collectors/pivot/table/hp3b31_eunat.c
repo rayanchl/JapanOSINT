@@ -349,19 +349,10 @@ static const hp_source HP3B31_EUNAT[] = {
       "participants, the winner and the amounts paid — plus the "
       "white-list and interdiction records for mafia infiltration" },
 
-  { .id = "PL_SEJM_API", .name = "Poland Sejm — parliamentary API",
-    .name_ja = "ポーランド下院 API", .category = "government",
-    .portal = "https://api.sejm.gov.pl", .record_type = "pl-parliamentary-record",
-    .tags = "\"pl\",\"parliament\"", .free_tier = 1,
-    .url = "https://api.sejm.gov.pl/sejm/term10/interpellations?limit=500",
-    .filter_query = 1, .title_keys = "title,from",
-    .id_keys = "num", .date_keys = "receiptDate",
-    .page_param = "offset", .page_size = 500, .page_start = 0, .page_max = 30,
-    .interval = 21600,
-    .description = "The Sejm's open API — interpellations and the ministries' "
-      "written answers, MP records, votes and committee sittings. Polish "
-      "ministries answer interpellations with contract and inspection detail "
-      "they publish nowhere else" },
+  /* PL_SEJM_API removed 2026-11-14 (the owner's decision): it read the oldest
+   * 15,000 interpellations of the term, a strict subset of what
+   * cyb-sejm-pl-interpellations below reads whole (21,033 of 21,033).
+   * docs/removed-sources-2026-11-14-overlaps.tsv. */
 
   /* MOVED HERE 2026-11-12 from a VJSON_KEYED row in
    * collectors/feed/generated/vsrc13_transparency_1.c, same id, so the row

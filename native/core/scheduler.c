@@ -280,7 +280,8 @@ long sched_state_base(const sched_state *st, long declared, int adaptive) {
  * (2026-10-20, when they met in a merge): the row's own measurement inside,
  * the operator's system-wide policy outside.
  *
- *   sched_row_interval = cadence_apply( sched_state_base(st, declared, adaptive) )
+ *   sched_row_interval = cadence_apply_for( d, sched_state_base(st, declared, adaptive) )
+ *   (cadence_apply_for leaves a realtime row or a pod as it is: core/cadence.h)
  *
  * So a feed whose items say "hourly" runs hourly under no policy, six-hourly
  * under an operator floor of six hours, and at the global cadence when one is
@@ -310,9 +311,11 @@ long sched_row_interval(const sched_state *st, const source_def *d) {
    * 6 h, triage from 60 s to four times a day (audit 2026-11-07). A pod runs
    * at its own declared cadence; an explicit per-source override above still
    * reaches it. */
-  if (d->collector && d->collector[0] == '_')
-    return sched_state_base(st, d->update_interval_sec, d->adaptive_interval);
-  return cadence_apply(sched_state_base(st, d->update_interval_sec, d->adaptive_interval));
+  /* And since 2026-11-14 a REALTIME row the same way (transport, or declared
+   * under an hour — core/cadence.h cadence_exempt_reason): the owner's
+   * decision that live data runs live. One rule, read by this function, the
+   * cadence cost estimate and every source page. */
+  return cadence_apply_for(d, sched_state_base(st, d->update_interval_sec, d->adaptive_interval));
 }
 
 long sched_freshness_measure(db_handle *db, const char *id, time_t now) {

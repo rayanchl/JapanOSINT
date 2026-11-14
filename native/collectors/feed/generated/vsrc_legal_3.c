@@ -47,16 +47,10 @@ VJSON(gov_pl_sejm_committees, "gov-pl-sejm-committees", "Sejm — Committees", "
   "pl", "[\"poland\",\"parliament\",\"committees\"]", 604800,
   "Standing and special committees of the Polish Sejm.");
 
-/* Sejm interpellations carry no "id"; within a term the record identity is
- * "num" (live 2026-09-06). The hash fallback collapsed same-titled
- * interpellations (sweep: 1000 emitted, 988 stored). */
-VJSON_KEYED(gov_pl_sejm_interpellations, "gov-pl-sejm-interpellations", "Sejm — Interpellations", "ポーランド下院 質問書",
-  "legal", "parliament",
-  "https://api.sejm.gov.pl/sejm/term10/interpellations?limit=50",
-  "",
-  "pl", "[\"poland\",\"parliament\",\"questions\",\"oversight\"]", 3600,
-  "Written interpellations to Polish ministers with subject, author and reply status.",
-  "num");
+/* gov-pl-sejm-interpellations removed 2026-11-14 (the owner's decision): 50
+ * interpellations a run, a subset of cyb-sejm-pl-interpellations
+ * (collectors/pivot/table/hp3b31_eunat.c), which reads the whole term.
+ * docs/removed-sources-2026-11-14-overlaps.tsv. */
 
 VJSON(gov_pl_sejm_mps, "gov-pl-sejm-mps", "Sejm — Polish MPs", "ポーランド下院 議員",
   "legal", "parliament",

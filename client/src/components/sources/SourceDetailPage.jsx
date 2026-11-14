@@ -230,7 +230,8 @@ function Hist({ values, keyName, shown, total, noun }) {
  * for every row the scheduler has not stored a state for — even under the
  * default global 6 h policy, i.e. it asserted the opposite of what runs
  * (2026-11-07). The server sends the basis it decided on (`cadenceBasis`:
- * override | policy | measured | declared | on demand) and the inputs, so
+ * override | realtime | pod | policy | measured | declared | on demand — a
+ * realtime row or a pod runs at its own cadence, outside the policy) and the inputs, so
  * this states that rather than inferring one. When the stored effective
  * interval is absent the value is the one the basis names, and it says the
  * scheduler has not yet recorded one.

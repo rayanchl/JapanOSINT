@@ -466,13 +466,9 @@ REGISTER_SOURCE(eur_sejm_eli_mp);
  * cyb-sejm-pl-interpellations now reads the newest 2,000 (sort_by=-num).
  * 2026-11-12: it now reads the WHOLE term in one request (hp3b31_eunat.c,
  * 20,989 of 20,989), so this row's 2,000 are a subset of it. */
-VJSON_KEYED(eur_sejm_term10_committees_sits, "eur-sejm-term10-committees-sits", "Sejm Poland — interpellations", "Sejm Poland — interpellations",
-  "europe_gov", "politics",
-  "https://api.sejm.gov.pl/sejm/term10/interpellations?limit=100&offset=0",
-  "",
-  "pl", "[\"pol\",\"politics\"]", 21600,
-  "Written interpellations tabled by Polish MPs with recipient ministry.",
-  "num");
+/* eur-sejm-term10-committees-sits removed 2026-11-14 (the owner's
+ * decision): despite its id it read interpellations, 100 a page — a subset of
+ * cyb-sejm-pl-interpellations. docs/removed-sources-2026-11-14-overlaps.tsv. */
 
 VJSON(eur_sejm_term9_mp, "eur-sejm-term9-mp", "Sejm Poland — MPs of the 9th term", "Sejm Poland — MPs of the 9th term",
   "europe_gov", "politics",

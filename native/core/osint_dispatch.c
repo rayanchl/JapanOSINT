@@ -763,6 +763,33 @@ int osint_dispatch_operator(db_handle *db, llm_client *llm, const char *service,
                        NULL);
 }
 
+/* Qualifies every uid with the workspace (dispatch_impl, "workspace-private"):
+ * "<source>|ws:<tenant>|<remote_key>", or "ws:<tenant>|<explicit uid>". The
+ * key is never cut: the sink's own make_uid() hashes an over-long uid instead
+ * of truncating it, so this allocates exactly what it needs. */
+typedef struct {
+  intel_sink base;
+  intel_sink *inner;
+  const char *source_id, *tenant;
+} ws_uid_sink;
+
+static int ws_uid_emit(intel_sink *self, const intel_item *it) {
+  ws_uid_sink *w = (ws_uid_sink *)self->ctx;
+  const char *explicit_uid = (it->uid && *it->uid) ? it->uid : NULL;
+  const char *key = explicit_uid ? explicit_uid : it->remote_key;
+  if (!key || !*key) return w->inner->emit(w->inner, it);  /* refused there */
+  size_t n = strlen(w->source_id) + strlen(w->tenant) + strlen(key) + 8;
+  char *uid = malloc(n);
+  if (!uid) return -1;
+  if (explicit_uid) snprintf(uid, n, "ws:%s|%s", w->tenant, explicit_uid);
+  else              snprintf(uid, n, "%s|ws:%s|%s", w->source_id, w->tenant, key);
+  intel_item c = *it;
+  c.uid = uid;
+  int rc = w->inner->emit(w->inner, &c);
+  free(uid);
+  return rc;
+}
+
 static int dispatch_impl(db_handle *db, llm_client *llm, const char *service,
                          const char *entity, const char *entity_type,
                          intel_sink *persist, osint_result *out,
@@ -827,12 +854,33 @@ static int dispatch_impl(db_handle *db, llm_client *llm, const char *service,
    * run-wide "osint-search" sink. See intel_sink_rebind() for why. Falls back
    * to the caller's sink when it is not an intel sink (main.c --dispatch and
    * the offline tests both pass one that is, but this must not assume it). */
-  intel_sink own; int own_ok = intel_sink_rebind(persist, def->id, &own);
+  /* THE WORKSPACE'S OWN KEY, looked up FIRST because it decides where the
+   * rows go (see the key block below for how the key itself is handled). */
+  const hp_source *hps = hp_source_get(def->id);
+  char *tkey = (tenant_id && *tenant_id && hps && hps->key_env)
+               ? keysapi_tenant_secret(db, tenant_id, hps->key_env) : NULL;
+
+  /* A run made with a workspace's own key stores its records as THAT
+   * WORKSPACE'S (2026-11-14, the owner's decision "workspace-private"): a paid
+   * or licensed key's results stay with whoever holds the key. They are
+   * written under the workspace's tenant AND under a workspace-qualified uid
+   * (ws_uid_emit), because the upsert never rewrites tenant_id: under the
+   * plain uid a record the shared corpus already holds would stay shared, and
+   * one stored here first would hide the shared copy from every other
+   * workspace. Reads already give a workspace "its own rows + the shared
+   * corpus", so its members see both. A run with no workspace key — the
+   * environment's, or none — stores in the shared corpus as before. */
+  intel_sink own;
+  int own_ok = tkey ? intel_sink_rebind_tenant(persist, def->id, tenant_id, &own)
+                    : intel_sink_rebind(persist, def->id, &own);
+  ws_uid_sink wsu = { .base = { .ctx = &wsu, .emit = ws_uid_emit },
+                      .inner = own_ok ? &own : persist,
+                      .source_id = def->id, .tenant = tenant_id };
 
   dual_sink ds = {0};
   ds.base.ctx = &ds;
   ds.base.emit = dual_emit;
-  ds.real = own_ok ? &own : persist;
+  ds.real = (tkey && own_ok) ? &wsu.base : own_ok ? &own : persist;
 
   http_client *http = http_client_new();
   volatile int cancel = 0;
@@ -867,9 +915,6 @@ static int dispatch_impl(db_handle *db, llm_client *llm, const char *service,
    * then cleansed and freed. A hand-written collector reads its key through
    * jo_env() (lib/jocore.h), which this does not reach yet. */
   ctx.tenant_id = tenant_id;
-  const hp_source *hps = hp_source_get(def->id);
-  char *tkey = (tenant_id && *tenant_id && hps && hps->key_env)
-               ? keysapi_tenant_secret(db, tenant_id, hps->key_env) : NULL;
   if (tkey) hp_run_key_set(hps->key_env, tkey);
   keysapi_scrub_sink scrub_run, scrub_real;
   keysapi_scrub_sink_init(&scrub_run, &ds.base, tkey);

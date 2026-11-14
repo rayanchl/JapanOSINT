@@ -182,7 +182,7 @@ char *source_settings_json(db_handle *db, const char *source_id,
       if (!sd || sd->update_interval_sec <= 0) continue;
       sched_state st = {0};
       if (db && db->h) sched_state_load_one(db, source_id, &st);
-      long base   = cadence_apply(sched_state_base(&st, sd->update_interval_sec, sd->adaptive_interval));
+      long base   = cadence_apply_for(sd, sched_state_base(&st, sd->update_interval_sec, sd->adaptive_interval));
       source_interval ov; source_interval_get(db, source_id, &ov);
       long eff = (ov.present && ov.enabled && ov.interval_sec > 0) ? ov.interval_sec : base;
       cJSON *o = cJSON_CreateObject();
@@ -193,7 +193,9 @@ char *source_settings_json(db_handle *db, const char *source_id,
       cJSON_AddNumberToObject(o, "min", (double)k->lo);
       cJSON_AddNumberToObject(o, "max", (double)k->hi);
       cJSON_AddNumberToObject(o, "default", (double)base);
-      cJSON_AddStringToObject(o, "default_basis", strcmp(cadence_mode_for(sched_state_base(&st, sd->update_interval_sec, sd->adaptive_interval)), "declared")
+      cJSON_AddStringToObject(o, "default_basis",
+                              cadence_exempt_reason(sd) ? "realtime or maintenance: its own cadence, outside the system-wide policy"
+                              : strcmp(cadence_mode_for(sched_state_base(&st, sd->update_interval_sec, sd->adaptive_interval)), "declared")
                               ? "the system-wide policy" : (sd->adaptive_interval && st.freshness_interval > 0) ? "measured from its newest item" : "as declared");
       cJSON_AddNumberToObject(o, "value", (double)(ov.present ? ov.interval_sec : base));
       cJSON_AddBoolToObject(o, "enabled", ov.present && ov.enabled);

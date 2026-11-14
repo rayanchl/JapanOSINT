@@ -483,14 +483,17 @@ static cJSON *sched_json(const sched_t *r, const source_def *d, long long now) {
   cJSON_AddBoolToObject(o, "adaptive", adaptive != 0);
   if (adaptive && r && r->freshness > 0) cJSON_AddNumberToObject(o, "measuredInterval", (double)r->freshness);
   else cJSON_AddNullToObject(o, "measuredInterval");
-  cJSON_AddNumberToObject(o, "policyInterval", (double)cadence_apply(base));
-  cJSON_AddStringToObject(o, "policy", cadence_mode_for(base));
+  const char *exempt = declared > 0 ? cadence_exempt_reason(d) : NULL;
+  cJSON_AddNumberToObject(o, "policyInterval", (double)cadence_apply_for(d, base));
+  /* "realtime" / "pod": the policy does not move this row (core/cadence.h). */
+  cJSON_AddStringToObject(o, "policy", exempt ? exempt : cadence_mode_for(base));
   /* And the one figure that outranks them (core/source_interval.h): an
    * interval the operator set for THIS source. Null when none is enabled. */
   long ov = declared > 0 ? source_interval_for(id) : 0;
   if (ov > 0) cJSON_AddNumberToObject(o, "overrideInterval", (double)ov);
   else cJSON_AddNullToObject(o, "overrideInterval");
   cJSON_AddStringToObject(o, "cadenceBasis", declared <= 0 ? "on demand" : ov > 0 ? "override"
+                          : exempt ? exempt
                           : strcmp(cadence_mode_for(base), "declared") ? "policy"
                           : (adaptive && r && r->freshness > 0) ? "measured" : "declared");
   /* The interval that runs NOW — the scheduler's own composition

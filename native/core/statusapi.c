@@ -353,7 +353,7 @@ static cJSON *status_row(sqlite3_stmt *s, agg_t *A, int na,
                                   : cJSON_CreateNull());
   { const source_def *pd = registry_get(id);   /* the system-wide cadence policy applied to this row */
     cJSON_AddItemToObject(o,"policyInterval",
-      (pd && pd->update_interval_sec > 0) ? cJSON_CreateNumber((double)cadence_apply(pd->update_interval_sec))
+      (pd && pd->update_interval_sec > 0) ? cJSON_CreateNumber((double)cadence_apply_for(pd, pd->update_interval_sec))
                                           : cJSON_CreateNull());
     long ov = (pd && pd->update_interval_sec > 0) ? source_interval_for(id) : 0;   /* set for this one source */
     cJSON_AddItemToObject(o,"overrideInterval", ov > 0 ? cJSON_CreateNumber((double)ov) : cJSON_CreateNull()); }

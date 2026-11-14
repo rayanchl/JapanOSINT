@@ -349,7 +349,14 @@ that replaced them survive, so no coverage is lost. **A sweep's verdict is
 about the URL it sent, not about the row's name** — re-read a removal against
 the row as it stands now.
 
-**The registered count is 88,504** (2026-11-14, `make source-count` on the
+**The registered count is 88,499** (2026-11-14, `make source-count`, both
+floors re-recorded from that build): 88,504 less five rows that read strict
+subsets of another row — three Sejm interpellation rows, a second reading of
+BC's mineral-tenure layer and a twin Europe PMC search pivot, whose
+`resultType=core` moved onto the row kept (the owner's decision,
+`docs/removed-sources-2026-11-14-overlaps.tsv`).
+
+**It was 88,504 earlier that day** (`make source-count` on the
 second merge of main that day, both floors re-recorded from that build): main's
 88,520 after batch 64, less this branch's same net 16. Main moved twice while
 this branch's PR waited, and each time only the two floor files conflicted —
@@ -2561,6 +2568,22 @@ uses writes it (audited `source.setting.put`). `tests/unit/test_source_interval.
 pins the refusals, the precedence under a global policy, disable, persistence
 and clear.
 
+**Realtime rows run outside the policy** (2026-11-14, the owner's decision:
+"let all transport or live-needing sources be real time"). A transport source
+(category `transport`) or any source declaring an interval under an hour runs
+at its OWN cadence — declared, or measured for an adaptive row — the same way
+a `_` maintenance pod always has. One rule, `cadence_exempt_reason()` in
+`core/cadence.c`, read by `sched_row_interval()`, the cost estimate and every
+source page (`policy`/`cadenceBasis` say `realtime` or `pod`), through
+`cadence_apply_for()`. An operator's per-source interval still outranks it. Why
+the boundary is an hour, measured: 1,024 rows declare under an hour and only
+ONE of them between 30 and 60 minutes, while 2,006 of the 2,239 transport rows
+declare LONGER than six hours (static timetables), so for those "real time"
+means as declared and they run less often than the policy would make them. The
+cost: about +122,000 runs a day on ~345,000. It is what makes the departures
+board's GTFS-RT delays live, since the board ignores a delay older than 30
+minutes. `test_sched_backoff.c` pins both halves and the 3,599 / 3,600 s edge.
+
 What a choice costs is in the response, measured over the registry, not
 guessed: `estimate.runs_per_day_declared` against
 `estimate.runs_per_day_effective`. Measured 2026-10-20 on 19,954 scheduled
@@ -4754,7 +4777,12 @@ failing tests repaired. What it guarantees, and the knobs it adds:
   workspace's saved key (`keysapi_tenant_secret()`) before the environment, and
   a scrub sink redacts the key from every record the run emits or stores —
   `core/intel.c` only redacts environment values. Scheduled runs keep the
-  environment. Hand-written collectors that read keys through `jo_env()` do not
+  environment. **The records such a run fetches are that workspace's**
+  (2026-11-14, the owner's decision): stored under its tenant and a
+  workspace-qualified uid (`<source>|ws:<tenant>|<key>`), because the upsert
+  never rewrites `tenant_id` — under the plain uid a record the shared corpus
+  already held would stay shared. A run with no workspace key stores in the
+  shared corpus as before. Hand-written collectors that read keys through `jo_env()` do not
   see workspace keys yet. `test_tenant_pivot_key.c` pins it end to end.
 * **The platform audit chain is readable**: `GET /api/audit[/verify]?scope=platform`
   reads the rows written under the reserved `platform` tenant (break-glass,

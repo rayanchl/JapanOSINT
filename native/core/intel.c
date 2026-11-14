@@ -839,6 +839,16 @@ int intel_sink_rebind(const intel_sink *base, const char *source_id,
   return 1;
 }
 
+int intel_sink_rebind_tenant(const intel_sink *base, const char *source_id,
+                             const char *tenant_id, intel_sink *out) {
+  if (!base || !base->ctx || !source_id || !*source_id || !out ||
+      !tenant_id || !*tenant_id) return 0;
+  const sink_state *b = (const sink_state *)base->ctx;
+  if (b->magic != SINK_MAGIC) return 0;    /* not an intel sink — refuse */
+  *out = intel_sink_make(b->db, source_id, tenant_id);
+  return 1;
+}
+
 void intel_sink_free(intel_sink *k) {
   if (!k || !k->ctx) return;
   sink_state *st = k->ctx;

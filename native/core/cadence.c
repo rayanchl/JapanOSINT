@@ -116,6 +116,19 @@ long cadence_apply(long declared) {
   return apply(&p, declared);
 }
 
+const char *cadence_exempt_reason(const struct source_def *d) {
+  if (!d || d->update_interval_sec <= 0) return NULL;
+  if (d->collector && d->collector[0] == '_') return "pod";
+  if (d->category && !strcmp(d->category, "transport")) return "realtime";
+  if (d->update_interval_sec < CAD_REALTIME_BELOW_SEC) return "realtime";
+  return NULL;
+}
+
+long cadence_apply_for(const struct source_def *d, long base) {
+  if (base <= 0) return base;
+  return cadence_exempt_reason(d) ? base : cadence_apply(base);
+}
+
 const char *cadence_mode_for(long declared) {
   if (declared <= 0) return "declared";
   cadence_policy p = cadence_get();
@@ -206,11 +219,16 @@ char *cadence_json(db_handle *db) {
   pthread_mutex_unlock(&g_mu);
   /* what it costs, measured over the registry */
   const source_def **a = registry_all(); int n = registry_count();
-  long rows = 0; double decl = 0, eff = 0; long fastest = 0, slowest = 0;
+  long rows = 0, exempt_rows = 0; double decl = 0, eff = 0, exempt_rpd = 0;
+  long fastest = 0, slowest = 0;
   for (int i = 0; i < n; i++) {
     long d = a[i]->update_interval_sec;
     if (d <= 0) continue;
-    long e = apply(&p, d);
+    /* The same exemption the scheduler applies (cadence_exempt_reason), so
+     * the cost shown is the cost that runs. */
+    int ex = cadence_exempt_reason(a[i]) != NULL;
+    long e = ex ? d : apply(&p, d);
+    if (ex) { exempt_rows++; exempt_rpd += 86400.0 / (double)d; }
     rows++; decl += 86400.0 / (double)d; eff += 86400.0 / (double)e;
     if (!fastest || e < fastest) fastest = e;
     if (e > slowest) slowest = e;
@@ -221,7 +239,9 @@ char *cadence_json(db_handle *db) {
   cJSON_AddNumberToObject(est, "runs_per_day_effective", (double)(long)(eff + 0.5));
   cJSON_AddNumberToObject(est, "fastest_effective_sec", (double)fastest);
   cJSON_AddNumberToObject(est, "slowest_effective_sec", (double)slowest);
-  cJSON_AddStringToObject(est, "basis", "every scheduled row's declared interval, with the policy applied; pivots excluded");
+  cJSON_AddNumberToObject(est, "exempt_rows", (double)exempt_rows);
+  cJSON_AddNumberToObject(est, "exempt_runs_per_day", (double)(long)(exempt_rpd + 0.5));
+  cJSON_AddStringToObject(est, "basis", "every scheduled row's declared interval, with the policy applied except to realtime rows (transport, or declared under an hour) and maintenance pods, which run as declared; pivots excluded");
   cJSON_AddItemToObject(o, "estimate", est);
   char *js = cJSON_PrintUnformatted(o);
   cJSON_Delete(o);

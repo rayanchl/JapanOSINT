@@ -204,17 +204,27 @@ Removed: `mercari-trending` (endpoint 404 three readings, site alive;
 merging main through batch 64 (88,520 less this branch's net 16), both floors re-recorded
 from the merged build.
 
+## Decided by the owner and done (2026-11-14)
+
+* **Realtime runs live.** Transport sources and any source declaring under an
+  hour run at their own cadence, outside the system-wide policy
+  (`cadence_exempt_reason()`, `core/cadence.c`). 3,168 rows with the pods;
+  under the default 6 h policy about 467,000 runs a day against ~345,000. The
+  GTFS-RT board's delays are live by default now.
+* **Overlaps removed** (`docs/removed-sources-2026-11-14-overlaps.tsv`): the
+  three Sejm subset rows, `bc-mineral-tenure` and `EUROPEPMC_SEARCH`. The
+  kept Europe PMC pivot took over `resultType=core`: 2,000 of 2,000 stored for
+  one query, 1,938 with affiliations and 1,487 with grant lists (lite records
+  carry neither, though the row's description promised both).
+* **Workspace-key records are private**: stored under the workspace and a
+  `ws:`-qualified uid (`test_tenant_pivot_key.c` pins both halves).
+
+Registered sources: **88,499**, both floors re-recorded.
+
 ## Still open
 
-* **Owner decisions** surfaced by this round, not acted on:
-  * `PL_SEJM_API`, `gov-pl-sejm-interpellations` and
-    `eur-sejm-term10-committees-sits` read strict subsets of what
-    `cyb-sejm-pl-interpellations` now reads whole;
-  * `bc-mineral-tenure` and `BC_MINERAL_TENURE` read the same layer;
-  * `EUROPEPMC_SEARCH` and `EUROPE_PMC_SEARCH` are two pivots on one endpoint;
-  * records a pivot fetches with a workspace's key land in the shared corpus;
-  * `dataset.gov.md` is down host-wide (not removed: the government still
-    links it).
+* `dataset.gov.md` is down host-wide (not removed: the government still links
+  it).
 * Hand-written collectors that read keys through `jo_env()` do not see
   workspace keys yet; `twitter-geo` caps its own database read at 5,000.
 * Rate limits keyed on client IP behind a proxy.

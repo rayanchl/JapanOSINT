@@ -20,7 +20,12 @@
  *      dispatched with no tenant, or for a workspace with no saved key, the
  *      same row uses the environment's value. The env variable deliberately
  *      has a name core/intel.c does not treat as secret, so its value staying
- *      visible proves which key the request carried. */
+ *      visible proves which key the request carried;
+ *   4. WHERE the rows go (2026-11-14, the owner's decision "workspace-private"):
+ *      the run made with tA's own key stores under tenant tA and a
+ *      workspace-qualified uid ("<source>|ws:tA|…"), so it neither lands in nor
+ *      overwrites the shared corpus; runs with no workspace key (the env's, or
+ *      tB with none saved) store in the shared corpus ("legacy") as before. */
 #include "core/keysapi.h"
 #include "core/osint_dispatch.h"
 #include "core/intel.h"
@@ -71,6 +76,22 @@ static char *stored_text(db_handle *db) {
     }
   sqlite3_finalize(s);
   return out;
+}
+
+/* Rows of the test source whose entity text contains `needle`, by tenant. */
+static long rows_for(db_handle *db, const char *needle, const char *tenant,
+                     int ws_uid) {
+  char q[512];
+  snprintf(q, sizeof q,
+    "SELECT count(*) FROM intel_items WHERE source_id='T_TENANT_PIVOT_KEY' "
+    "AND (title LIKE '%%%s%%' OR body LIKE '%%%s%%' OR properties LIKE '%%%s%%') "
+    "AND tenant_id='%s' AND (%d=0 OR uid LIKE 'T_TENANT_PIVOT_KEY|ws:%s|%%')",
+    needle, needle, needle, tenant, ws_uid, tenant);
+  sqlite3_stmt *s; long v = -1;
+  assert(sqlite3_prepare_v2(db->h, q, -1, &s, NULL) == SQLITE_OK);
+  if (sqlite3_step(s) == SQLITE_ROW) v = sqlite3_column_int64(s, 0);
+  sqlite3_finalize(s);
+  return v;
 }
 
 /* A sink that keeps the last item's link and properties. */
@@ -163,6 +184,8 @@ int main(void) {
   assert(strstr(txt, "[redacted]"));
   assert(!r.data || !strstr(r.data, TENANT_A));
   assert(!r.error || !strstr(r.error, TENANT_A));
+  assert(rows_for(&db, "acme-tenant", "tA", 1) >= 1 && "stored as tA's, under a ws uid");
+  assert(rows_for(&db, "acme-tenant", "legacy", 0) == 0 && "and not in the shared corpus");
   free(txt);
   osint_result_free(&r);
 
@@ -170,6 +193,7 @@ int main(void) {
   txt = stored_text(&db);
   assert(strstr(txt, "acme-env") && strstr(txt, ENV_VAL)
          && "no workspace: the environment's key, as before");
+  assert(rows_for(&db, "acme-env", "legacy", 0) >= 1 && "shared, as before");
   free(txt);
   osint_result_free(&r);
 
@@ -177,6 +201,8 @@ int main(void) {
   txt = stored_text(&db);
   assert(strstr(txt, "acme-tb") && !strstr(txt, TENANT_A)
          && "a workspace with no saved key falls back to the environment");
+  assert(rows_for(&db, "acme-tb", "legacy", 0) >= 1 && rows_for(&db, "acme-tb", "tB", 0) == 0
+         && "no workspace key used: the shared corpus");
   free(txt);
   osint_result_free(&r);
 
@@ -187,6 +213,7 @@ int main(void) {
   free(txt);
   osint_result_free(&r);
   printf("  a pivot for workspace tA used its key and stored none of it: ok\n");
+  printf("  its records are tA's own; runs without a workspace key stay shared: ok\n");
 
   db_close(&db);
   printf("test_tenant_pivot_key: all passed\n");
