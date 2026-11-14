@@ -218,8 +218,13 @@ void http_easy_harden(void *curl_easy) {
  * a 30 s Retry-After is 3e10 µs. */
 static void sleep_ms(long ms) {
   if (ms <= 0) return;
-  struct timespec ts = { (time_t)(ms / 1000), (long)(ms % 1000) * 1000000L };
-  while (nanosleep(&ts, &ts) != 0 && errno == EINTR) {}
+  /* In slices, so a cancelled run does not sleep out a 30 s Retry-After. */
+  while (ms > 0 && !hostgate_cancelled()) {
+    long step = ms > 200 ? 200 : ms;
+    struct timespec ts = { (time_t)(step / 1000), (long)(step % 1000) * 1000000L };
+    while (nanosleep(&ts, &ts) != 0 && errno == EINTR) {}
+    ms -= step;
+  }
 }
 
 /* Header names that must not follow a URL rewrite onto a different host. */
@@ -496,6 +501,11 @@ int http_last_transport_error(void) { return g_last_te; }
 static __thread int g_last_tls = HTTP_TLS_NONE;
 
 int http_last_tls_cause(void) { return g_last_tls; }
+/* Both are per-THREAD and a scheduler worker outlives the run it is on, so a
+ * run that made no request used to read the previous source's cause back out
+ * of them and print it in its own fetch-failure notice. The scheduler clears
+ * them at the start of every run. */
+void http_reset_last_error(void) { g_last_te = HTTP_TE_NONE; g_last_tls = HTTP_TLS_NONE; }
 
 const char *http_tls_cause_label(int cause) {
   switch (cause) {
@@ -729,7 +739,8 @@ static int do_once(http_client *c, const char *method, const char *url,
    * spend 30 s on the network can spend some of it queueing. Fails open, so a
    * saturated host degrades to "as rude as before", never to a fetch error. */
   int gated = hostgate_acquire(url, timeout_ms > 0 ? timeout_ms : 30000);
-  CURLcode rc = curl_easy_perform(e);
+  /* A cancelled run makes no request: the gate returned without a slot. */
+  CURLcode rc = hostgate_cancelled() ? CURLE_ABORTED_BY_CALLBACK : curl_easy_perform(e);
   if (gated) hostgate_release(url);
   long code = 0;
   curl_easy_getinfo(e, CURLINFO_RESPONSE_CODE, &code);

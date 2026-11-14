@@ -5051,8 +5051,11 @@ dated_restart:;
     }
 
     http_response hr = {0};
-    if (page > 0 && s->page_delay_ms > 0)          /* see hpengine.h */
-      usleep((useconds_t)s->page_delay_ms * 1000);
+    if (page > 0 && s->page_delay_ms > 0) {        /* see hpengine.h */
+      /* in slices: a cancelled walk must not sleep out its pacing */
+      for (long left = s->page_delay_ms; left > 0 && !(ctx->cancel && *ctx->cancel); left -= 200)
+        usleep((useconds_t)(left > 200 ? 200 : left) * 1000);
+    }
     const char *req_body = page_body ? page_body : body;
     const char *const *req_hdrs = page > 0 ? later_hdrs : hdrs;
     /* A later page gets five retries (0.25, 0.5, 1, 2, 4 s backoff on a 5xx,

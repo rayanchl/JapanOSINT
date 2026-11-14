@@ -227,6 +227,35 @@ static void test_first_request_never_waits(void) {
   g_clock_skew_ms = saved;
 }
 
+/* 8b. A cancelled run does not sit in the gate. The second request to a
+ * 30 s-gap host would wait ~30 s (and up to HG_OVERRIDE_MAX_WAIT_MS); with the
+ * thread's cancel flag raised it returns at once and takes no slot, and with
+ * the flag cleared the thread waits again as before. */
+static void test_cancel_leaves_the_gate(void) {
+  reset_table();
+  long long saved = g_clock_skew_ms;
+  g_clock_skew_ms = 0;
+  g_clock_skew_ms = 5 - mono_ms();
+  assert(hostgate_acquire("https://old.reddit.com/r/x.json", 0) == 1);
+  hostgate_release("https://old.reddit.com/r/x.json");
+  volatile int cancel = 1;
+  hostgate_set_cancel(&cancel);
+  assert(hostgate_cancelled());
+  struct timespec a, b;
+  clock_gettime(CLOCK_MONOTONIC, &a);
+  assert(hostgate_acquire("https://old.reddit.com/r/y.json", 30000) == 0);
+  clock_gettime(CLOCK_MONOTONIC, &b);
+  long el = (long)((b.tv_sec - a.tv_sec) * 1000 + (b.tv_nsec - a.tv_nsec) / 1000000);
+  assert(el < 500);
+  hg_slot *s = lookup("old.reddit.com");
+  assert(s && s->in_flight == 0 && s->waiters == 0);
+  cancel = 0;
+  assert(!hostgate_cancelled());
+  hostgate_set_cancel(NULL);
+  assert(!hostgate_cancelled());
+  g_clock_skew_ms = saved;
+}
+
 /* 9. hostgate_pace_ms answers from the configured table even when it is the
  * first hostgate call of the process (main calls it before anything else),
  * and JO_HOST_MIN_GAP_OVERRIDES entries are trimmed and lowercased. */
@@ -301,6 +330,7 @@ int main(void) {
   test_penalize();
   test_penalty_reaches_a_parked_waiter();
   test_first_request_never_waits();
+  test_cancel_leaves_the_gate();
   test_camera_policy();
   printf("test_hostgate: OK\n");
   return 0;

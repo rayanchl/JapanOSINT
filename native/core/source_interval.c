@@ -46,7 +46,18 @@ static int ensure_table(db_handle *db) {
 /* Rebuild the cache from the database: the whole table is small (an
  * operator sets these one source at a time), so a reload on every change is
  * simpler than keeping two copies in step. */
+static pthread_mutex_t g_reload_mu = PTHREAD_MUTEX_INITIALIZER;
+static void reload_locked(db_handle *db);
+/* One reload at a time, read and swap together. Two writers on two connections
+ * each reload after their own write; unserialised, the older read could be
+ * swapped in LAST and drop the newer override from the cache while its row sat
+ * in the table. Serialised, whichever reload runs last also read last. */
 static void reload(db_handle *db) {
+  pthread_mutex_lock(&g_reload_mu);
+  reload_locked(db);
+  pthread_mutex_unlock(&g_reload_mu);
+}
+static void reload_locked(db_handle *db) {
   sqlite3_stmt *s = NULL;
   si_entry *rows = NULL; int n = 0, cap = 0;
   /* A read that fails keeps the cache we have: installing an empty one would

@@ -58,6 +58,7 @@
 #include "breach_jobs.h"
 #include "pagination_probe.h"
 #include "breach_meta.h"
+#include "../lib/jocore.h"   /* jo_iso_now */
 #include "breach_adapter.h"
 #include "../third_party/mongoose.h"
 #include "../third_party/sqlite3.h"
@@ -74,21 +75,6 @@
 
 static db_handle *g_db;
 
-/* Node's new Date().toISOString(): YYYY-MM-DDTHH:MM:SS.mmmZ */
-static void iso_now(char *buf, size_t n) {
-  struct timeval tv; gettimeofday(&tv, NULL);
-  struct tm tm; gmtime_r(&tv.tv_sec, &tm);
-  /* The %0Nd widths are minimums, not caps: to -Wformat-truncation
-   * `tm_year + 1900` is a plain int worth up to 11 characters, so this
-   * fixed 24-char stamp "may be truncated". The modulos are identity for
-   * every value gmtime_r can return and make the 24 provable, not merely
-   * true. */
-  snprintf(buf, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
-           (unsigned)(tm.tm_year + 1900) % 10000u, (unsigned)(tm.tm_mon + 1) % 100u,
-           (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
-           (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u,
-           (unsigned)(tv.tv_usec / 1000) % 1000u);
-}
 
 /* Escape `s` for embedding inside a JSON string literal, truncating only on a
  * COMPLETE escape sequence so the result is always valid JSON.
@@ -2233,7 +2219,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
 
   /* ---- pre-auth ---- */
   if (eq(u, "/api/health")) {
-    char ts[40]; iso_now(ts, sizeof ts);
+    char ts[40]; jo_iso_now(ts, sizeof ts);
     char body[96];
     snprintf(body, sizeof body, "{\"status\":\"ok\",\"timestamp\":\"%s\"}", ts);
     reply_json(c, 200, body);
@@ -5041,7 +5027,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       g_cam.channels_skipped = 0;
       g_cam.ingested = 0;
       g_cam.current[0] = 0;
-      iso_now(g_cam.started_at, sizeof g_cam.started_at);
+      jo_iso_now(g_cam.started_at, sizeof g_cam.started_at);
       snprintf(g_cam.run_id, sizeof g_cam.run_id, "cam-%llu",
                (unsigned long long)mg_millis());
       char run_id[40];

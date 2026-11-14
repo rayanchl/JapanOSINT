@@ -414,7 +414,7 @@ int sched_state_load_one(db_handle *db, const char *id, sched_state *st) {
  * The column is on source_sched_state because that table is already one row
  * per scheduled source with the same lifetime. A row that is not scheduled has
  * no resume position by construction: only this path sets the callbacks. */
-#define SCHED_RESUME_MAX 1024
+#define SCHED_RESUME_MAX 8192
 
 static int sched_resume_load(db_handle *db, const char *id, char *out, size_t cap) {
   if (out && cap) out[0] = 0;
@@ -828,6 +828,9 @@ int scheduler_run_source(db_handle *db, const source_def *d,
    * answer from the start of the result set for the entity it was just asked
    * about — resuming there would hand back page 37 of whatever the previous
    * caller asked. source.h says this; here is where it is true. */
+  /* A worker thread carries the last transport/TLS verdict of whatever it ran
+   * before; clear it so this run's disclosure can only name its own. */
+  http_reset_last_error();
   char resume_tok[SCHED_RESUME_MAX];
   if (!entity && sched_resume_load(db, d->id, resume_tok, sizeof resume_tok))
     ctx.resume_in = resume_tok;
@@ -849,7 +852,9 @@ int scheduler_run_source(db_handle *db, const source_def *d,
   /* Same thread-local pattern for content-change detection (roadmap 26): the
    * httpclient hook needs a db_handle and source_id it cannot otherwise see. */
   content_change_scope_begin(db, d->id);
+  hostgate_set_cancel(cancel);
   int rc = d->run(&ctx, &sink);
+  hostgate_set_cancel(NULL);
   content_change_scope_end();
   evidence_scope_end();
   clock_gettime(CLOCK_MONOTONIC, &t1);
@@ -896,6 +901,13 @@ int scheduler_run_source(db_handle *db, const source_def *d,
    * own, and it is the one that reaches the 32 rows in 10,252 whose host
    * answered with a maintenance page. Both require that the run left NOTHING
    * behind, which is what makes this a disclosure rather than a second status. */
+  /* What the COLLECTOR emitted, read before our own disclosure goes through
+   * the same counting sink. The disclosure is a record on the run line (the
+   * convention hp rows set), but it is not evidence the feed had rows: counted
+   * into the empties streak it reset consecutive_empties on every run of a
+   * source that was being refused with a success status, so the one counter
+   * meant to show "empty for 200 runs" read 0 for exactly those sources. */
+  long collector_records = cs.n;
   if (real_collector && cs.n == 0 && cs.notices == 0 &&
       (strcmp(run_st, "ok") != 0 || rc < 0))
     sched_disclose_fetch_failure(&sink, d, entity, rc, hosts, hosts_ok,
@@ -975,7 +987,7 @@ int scheduler_run_source(db_handle *db, const source_def *d,
     fetch_log_set_bytes(db, flid, bytes_in);
     sources_row_record(db, d->id, status, stored >= 0 ? stored_data : cs.n,
                        duration_ms, why);
-    if (!entity) sched_state_record(db, d, status, cs.n);
+    if (!entity) sched_state_record(db, d, status, collector_records);
   }
   return rc;
 }

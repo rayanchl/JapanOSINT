@@ -335,6 +335,19 @@ static hg_slot *slot_for(const char *host) {
   return s;
 }
 
+/* The cancel flag of the run this THREAD is executing, or NULL. Every wait on
+ * the fetch path (this gate, the retry backoff, a row's page delay) used to
+ * sleep through a cancellation: a run the watchdog or a shutdown had already
+ * told to stop could stay parked here for HG_OVERRIDE_MAX_WAIT_MS. The
+ * scheduler sets it around each run; a thread that never set one behaves
+ * exactly as before. */
+static __thread volatile int *g_hg_cancel;
+void hostgate_set_cancel(volatile int *flag) { g_hg_cancel = flag; }
+int hostgate_cancelled(void) {
+  volatile int *f = g_hg_cancel;
+  return f && __atomic_load_n((int *)f, __ATOMIC_ACQUIRE);
+}
+
 int hostgate_acquire(const char *url, int max_wait_ms) {
   char host[HG_HOSTLEN];
   if (!url_host(url, host, sizeof host)) return 0;
@@ -383,6 +396,11 @@ int hostgate_acquire(const char *url, int max_wait_ms) {
       pthread_mutex_unlock(&g_mu);
       return 1;
     }
+    if (hostgate_cancelled()) {            /* the run was told to stop        */
+      s->waiters--;
+      pthread_mutex_unlock(&g_mu);
+      return 0;                            /* not gated; the caller must not fetch */
+    }
     if (now >= deadline) {                 /* fail open — see header          */
       s->waiters--;
       g_timeouts++;
@@ -401,6 +419,8 @@ int hostgate_acquire(const char *url, int max_wait_ms) {
     if (!gap_ok && ready_at < wake) wake = ready_at;
     long long delta = wake - now;
     if (delta < 1) delta = 1;
+    /* nothing broadcasts on a cancel, so a cancellable wait re-checks */
+    if (g_hg_cancel && delta > 250) delta = 250;
 
     struct timespec ts;
     clock_gettime(CLOCK_REALTIME, &ts);

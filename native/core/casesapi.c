@@ -20,6 +20,7 @@
 #include <string.h>
 #include <sys/time.h>
 #include <time.h>
+#include "../lib/jocore.h"   /* jo_iso_now */
 
 /* ── shared idioms (verbatim from alertsapi.c / intelapi.c) ─────────────── */
 
@@ -47,21 +48,6 @@ static cJSON *safe_json(const char *s, int as_array) {
 }
 static void add_str_or_null(cJSON *o, const char *k, const char *v) {
   cJSON_AddItemToObject(o, k, v ? cJSON_CreateString(v) : cJSON_CreateNull());
-}
-/* Node's new Date().toISOString() — meta.fetched_at + snapshot.captured_at. */
-static void iso_now(char *buf, size_t n) {
-  struct timeval tv; gettimeofday(&tv, NULL);
-  struct tm tm; gmtime_r(&tv.tv_sec, &tm);
-  /* The %0Nd widths are minimums, not caps: to -Wformat-truncation
-   * `tm_year + 1900` is a plain int worth up to 11 characters, so this
-   * fixed 24-char stamp "may be truncated". The modulos are identity for
-   * every value gmtime_r can return and make the 24 provable, not merely
-   * true. */
-  snprintf(buf, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
-           (unsigned)(tm.tm_year + 1900) % 10000u, (unsigned)(tm.tm_mon + 1) % 100u,
-           (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
-           (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u,
-           (unsigned)(tv.tv_usec / 1000) % 1000u);
 }
 /* Buffer.from(str,'utf8').toString('base64url') — no padding, +/ → -_ */
 static char *b64url(const char *in) {
@@ -149,7 +135,7 @@ static char *paged(cJSON *data, char *next, int limit, int *st) {
   free(next);
   cJSON_AddNumberToObject(page, "limit", limit);
   cJSON_AddNullToObject(page, "total");          /* keyset: no COUNT(*) */
-  char ts[40]; iso_now(ts, sizeof ts);
+  char ts[40]; jo_iso_now(ts, sizeof ts);
   cJSON *meta = cJSON_CreateObject();
   cJSON_AddStringToObject(meta, "fetched_at", ts);
   cJSON *w = cJSON_CreateObject();
@@ -364,7 +350,7 @@ static char *snapshot_wrap(const char *ref_type, const char *ref_id,
   cJSON_AddStringToObject(o, "ref_id", ref_id);
   cJSON_AddStringToObject(o, "origin", origin);
   cJSON_AddBoolToObject(o, "resolved", data != NULL);
-  char ts[40]; iso_now(ts, sizeof ts);
+  char ts[40]; jo_iso_now(ts, sizeof ts);
   cJSON_AddStringToObject(o, "captured_at", ts);
   cJSON_AddItemToObject(o, "data", data ? data : cJSON_CreateNull());
   char *j = cJSON_PrintUnformatted(o);

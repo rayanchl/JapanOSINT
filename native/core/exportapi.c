@@ -39,6 +39,7 @@
 #include <string.h>
 #include <time.h>
 #include <sys/time.h>
+#include "../lib/jocore.h"   /* jo_iso_now */
 
 /* ── output stream: bounded batches through the caller's writer ─────────── */
 
@@ -118,20 +119,6 @@ static const ecol COLS_ALERT_EVENTS[] = {
 static const char *ctext(sqlite3_stmt *s, int i) {
   return sqlite3_column_type(s, i) == SQLITE_NULL
            ? NULL : (const char *)sqlite3_column_text(s, i);
-}
-static void iso_now(char *buf, size_t n) {
-  struct timeval tv; gettimeofday(&tv, NULL);
-  struct tm tm; gmtime_r(&tv.tv_sec, &tm);
-  /* The %0Nd widths are minimums, not caps: to -Wformat-truncation
-   * `tm_year + 1900` is a plain int worth up to 11 characters, so this
-   * fixed 24-char stamp "may be truncated". The modulos are identity for
-   * every value gmtime_r can return and make the 24 provable, not merely
-   * true. */
-  snprintf(buf, n, "%04u-%02u-%02uT%02u:%02u:%02u.%03uZ",
-           (unsigned)(tm.tm_year + 1900) % 10000u, (unsigned)(tm.tm_mon + 1) % 100u,
-           (unsigned)tm.tm_mday % 100u, (unsigned)tm.tm_hour % 100u,
-           (unsigned)tm.tm_min % 100u, (unsigned)tm.tm_sec % 100u,
-           (unsigned)(tv.tv_usec / 1000) % 1000u);
 }
 static void stamp_now(char *buf, size_t n) {          /* filename-safe */
   time_t t = time(NULL); struct tm g; gmtime_r(&t, &g);
@@ -1016,7 +1003,7 @@ int export_run(db_handle *db, const tenant_ctx *t, const char *kind,
 
   /* ── epilogue ── */
   if (!o->broken) {
-    char ts[40]; iso_now(ts, sizeof ts);
+    char ts[40]; jo_iso_now(ts, sizeof ts);
     if (f == F_CSV) {
       if (incomplete) {
         char note[416];

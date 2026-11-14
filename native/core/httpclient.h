@@ -133,6 +133,8 @@ enum { HTTP_TLS_NONE = 0,
                                       * cipher or security level              */
        HTTP_TLS_OTHER };             /* a verification failure none of the above */
 int http_last_tls_cause(void);
+/* Clear this thread's last transport error and TLS cause (start of a run). */
+void http_reset_last_error(void);
 /* One clause naming the cause, and one naming what to do about it. Both are
  * safe for any value, so a cause this build does not know still reads as a
  * sentence rather than as an empty string in a stored record. */
