@@ -12,6 +12,9 @@
 #include "relevance.h"      /* run-time rule-4d check on a pivot's answer */
 #include "service_vec.h"    /* the resolver's embedding fallback asks the router */
 #include "qembed.h"
+#include "keysapi.h"        /* a workspace's own key for its pivots */
+#include "../lib/hpengine.h" /* hp_source_get, hp_run_key_set */
+#include <openssl/crypto.h>  /* OPENSSL_cleanse */
 #include <time.h>
 #include "../third_party/cJSON.h"
 #include <stdio.h>
@@ -736,24 +739,34 @@ static int dual_emit(struct intel_sink *s, const intel_item *it) {
 static int dispatch_impl(db_handle *db, llm_client *llm, const char *service,
                          const char *entity, const char *entity_type,
                          intel_sink *persist, osint_result *out,
-                         int operator_call);
+                         int operator_call, const char *tenant_id);
 
 int osint_dispatch(db_handle *db, llm_client *llm, const char *service,
                    const char *entity, const char *entity_type,
                    intel_sink *persist, osint_result *out) {
-  return dispatch_impl(db, llm, service, entity, entity_type, persist, out, 0);
+  return dispatch_impl(db, llm, service, entity, entity_type, persist, out, 0,
+                       NULL);
+}
+
+int osint_dispatch_tenant(db_handle *db, llm_client *llm, const char *service,
+                          const char *entity, const char *entity_type,
+                          intel_sink *persist, osint_result *out,
+                          const char *tenant_id) {
+  return dispatch_impl(db, llm, service, entity, entity_type, persist, out, 0,
+                       tenant_id);
 }
 
 int osint_dispatch_operator(db_handle *db, llm_client *llm, const char *service,
                             const char *entity, const char *entity_type,
                             intel_sink *persist, osint_result *out) {
-  return dispatch_impl(db, llm, service, entity, entity_type, persist, out, 1);
+  return dispatch_impl(db, llm, service, entity, entity_type, persist, out, 1,
+                       NULL);
 }
 
 static int dispatch_impl(db_handle *db, llm_client *llm, const char *service,
                          const char *entity, const char *entity_type,
                          intel_sink *persist, osint_result *out,
-                         int operator_call) {
+                         int operator_call, const char *tenant_id) {
   memset(out, 0, sizeof *out);
   char canon[64];
   if (!osint_canon(service, canon, sizeof canon)) {
@@ -843,6 +856,25 @@ static int dispatch_impl(db_handle *db, llm_client *llm, const char *service,
   ctx.body_ceiling = sched_body_ceiling_for(db, def->id);
   size_t prev_ceiling = http_run_body_ceiling_set(ctx.body_ceiling);
 
+  /* THE WORKSPACE'S OWN KEY (2026-11-12, the repository owner's decision: "use
+   * them for pivots"). A pivot dispatched for a workspace resolves the row's
+   * key_env from that workspace's saved key (core/keysapi.c) before the
+   * environment; scheduled runs never come through here and keep the env. The
+   * plaintext lives only for this run: handed to hpengine through a
+   * thread-local, scrubbed out of everything the collector emits — the
+   * response's captured records AND the stored rows — because core/intel.c
+   * redacts environment values only and these rows land in the SHARED corpus,
+   * then cleansed and freed. A hand-written collector reads its key through
+   * jo_env() (lib/jocore.h), which this does not reach yet. */
+  ctx.tenant_id = tenant_id;
+  const hp_source *hps = hp_source_get(def->id);
+  char *tkey = (tenant_id && *tenant_id && hps && hps->key_env)
+               ? keysapi_tenant_secret(db, tenant_id, hps->key_env) : NULL;
+  if (tkey) hp_run_key_set(hps->key_env, tkey);
+  keysapi_scrub_sink scrub_run, scrub_real;
+  keysapi_scrub_sink_init(&scrub_run, &ds.base, tkey);
+  keysapi_scrub_sink_init(&scrub_real, ds.real, tkey);
+
   /* The four observability systems the scheduled path has always had and this
    * one never did. evidence and content-change are thread-local scopes that
    * core/httpclient.c's hooks read (they have no db_handle or source_id of
@@ -854,8 +886,9 @@ static int dispatch_impl(db_handle *db, llm_client *llm, const char *service,
   evidence_scope_begin(db, def->id, entity);
   content_change_scope_begin(db, def->id);
 
-  int rc = def->run(&ctx, &ds.base);
+  int rc = def->run(&ctx, &scrub_run.base);
   http_run_body_ceiling_set(prev_ceiling);
+  if (tkey) hp_run_key_set(NULL, NULL);
 
   content_change_scope_end();
   evidence_scope_end();
@@ -876,8 +909,9 @@ static int dispatch_impl(db_handle *db, llm_client *llm, const char *service,
    * same record, written to the real sink only — it is not an answer, so it
    * must not enter the response's records (see dual_emit). */
   if (db && def->collector && def->collector[0] != '_')
-    sched_disclose_if_silent(ds.real, def, entity, rc, ds.n_emit, ds.n_notices,
-                             http);
+    sched_disclose_if_silent(&scrub_real.base, def, entity, rc, ds.n_emit,
+                             ds.n_notices, http);
+  if (tkey) { OPENSSL_cleanse(tkey, strlen(tkey)); free(tkey); tkey = NULL; }
 
   out->success    = (rc >= 0 && ds.n_emit > 0) ? 1 : 0;
   out->confidence = out->success ? 70 : 0;     /* JS default */

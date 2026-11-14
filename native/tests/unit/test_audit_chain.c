@@ -6,7 +6,12 @@
  *   - N writes verify ok over N rows, per tenant, interleaved tenants apart;
  *   - legacy NULL-hash rows are reported as "unchained", not skipped silently;
  *   - an edited row breaks the walk AT that row, a deleted row as a gap;
- *   - four writers on four connections cannot fork one tenant's chain. */
+ *   - four writers on four connections cannot fork one tenant's chain;
+ *   - (2026-11-12) GET /api/audit[/verify]?scope=platform reads the reserved
+ *     "platform" chain for a PLATFORM OPERATOR only: tenantapi_audit_chain()
+ *     is the route's decision (core/httpd.c), 403 for anyone else, 400 for an
+ *     unknown scope, and the chain it names lists and verifies only the
+ *     platform rows — never a workspace's. */
 #include "../../core/audit.c"
 #include "core/tenantapi.h"
 #include "core/db.h"
@@ -15,6 +20,7 @@
 #include <assert.h>
 #include <pthread.h>
 #include <stdlib.h>
+#include <string.h>
 
 static void exec_ok(db_handle *db, const char *sql) {
   char *e = NULL;
@@ -180,6 +186,39 @@ int main(void) {
   o = verify(&db, "tC");
   assert(cJSON_IsTrue(cJSON_GetObjectItem(o, "ok")) && num(o, "count") == 201);
   cJSON_Delete(o);
+
+  /* ?scope=platform — the route's decision, then what it reads. */
+  { const char *ch = (const char *)1;
+    assert(tenantapi_audit_chain(NULL, 0, "tA", &ch) == 0 && !strcmp(ch, "tA"));
+    assert(tenantapi_audit_chain("", 1, "tA", &ch) == 0 && !strcmp(ch, "tA"));
+    assert(tenantapi_audit_chain("workspace", 0, "tA", &ch) == 0 && !strcmp(ch, "tA"));
+    assert(tenantapi_audit_chain("platform", 0, "tA", &ch) == 403 && ch == NULL
+           && "a workspace owner/admin is not a platform operator");
+    assert(tenantapi_audit_chain("platform", 1, "tA", &ch) == 0
+           && !strcmp(ch, "platform"));
+    assert(tenantapi_audit_chain("Platform", 1, "tA", &ch) == 400 && ch == NULL);
+    assert(tenantapi_audit_chain("tenant", 1, "tA", &ch) == 400
+           && "an unknown scope is refused, never read as the workspace"); }
+  for (int i = 0; i < 3; i++)
+    audit_write(&db, TENANTAPI_PLATFORM_CHAIN, "op", "threshold.set", "story_tau", NULL);
+  { char *js = tenantapi_audit_list(&db, TENANTAPI_PLATFORM_CHAIN, 100, 0);
+    assert(js);
+    cJSON *l = cJSON_Parse(js); free(js);
+    cJSON *data = cJSON_GetObjectItem(l, "data");
+    assert(cJSON_GetArraySize(data) == 3 && "the platform rows, and only them");
+    cJSON *r;
+    cJSON_ArrayForEach(r, data)
+      assert(!strcmp(cJSON_GetObjectItem(r, "action")->valuestring, "threshold.set"));
+    cJSON_Delete(l);
+    o = verify(&db, TENANTAPI_PLATFORM_CHAIN);
+    assert(cJSON_IsTrue(cJSON_GetObjectItem(o, "ok")) && num(o, "count") == 3);
+    cJSON_Delete(o);
+    js = tenantapi_audit_list(&db, "tA", 500, 0);
+    l = cJSON_Parse(js); free(js);
+    cJSON_ArrayForEach(r, cJSON_GetObjectItem(l, "data"))
+      assert(strcmp(cJSON_GetObjectItem(r, "action")->valuestring, "threshold.set") != 0
+             && "a workspace list never carries a platform row");
+    cJSON_Delete(l); }
 
   db_close(&db);
   printf("test_audit_chain: ok\n");

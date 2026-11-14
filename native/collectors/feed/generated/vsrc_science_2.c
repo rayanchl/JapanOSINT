@@ -172,9 +172,14 @@ VJSON(geo_noaa_hazel_quakes, "geo-noaa-hazel-quakes", "NOAA NCEI significant ear
   "en", "[\"earthquake\",\"historical\",\"ncei\"]", 86400,
   "Curated historical significant earthquakes with damage and fatality fields.");
 
-VJSON(geo_noaa_hazel_quakes_recent, "geo-noaa-hazel-quakes-recent", "NOAA NCEI significant earthquakes since 2024", "NOAA NCEI 顕著地震(2024年以降)",
+/* 2026-11-12: `minYear=2024` was frozen at authoring; `{date-2y:%Y}` keeps
+ * "this year and the two before" rolling. Rendered 2024 it answered
+ * totalItems 100 on ONE page of itemsPerPage 200 (totalPages 1), dated
+ * 2024-01-01 .. 2026-10, so the read is complete. The name says "last three
+ * calendar years" now instead of the frozen year. */
+VJSON(geo_noaa_hazel_quakes_recent, "geo-noaa-hazel-quakes-recent", "NOAA NCEI significant earthquakes, last three calendar years", "NOAA NCEI 顕著地震(直近3暦年)",
   "science", "seismic",
-  "https://www.ngdc.noaa.gov/hazel/hazard-service/api/v1/earthquakes?minYear=2024",
+  "https://www.ngdc.noaa.gov/hazel/hazard-service/api/v1/earthquakes?minYear={date-2y:%Y}",
   "items",
   "en", "[\"earthquake\",\"historical\",\"ncei\"]", 86400,
   "Recent slice of the NCEI significant earthquake database.");

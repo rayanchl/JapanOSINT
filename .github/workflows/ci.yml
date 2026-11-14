@@ -154,6 +154,14 @@ jobs:
         working-directory: native
         run: make rsstest
 
+      # The GTFS Realtime protobuf decoder (lib/gtfsrt.c): hand-encoded bytes
+      # only, no network — a negative delay, two translations, unknown fields
+      # skipped, truncation refused at every cut, and an empty body told apart
+      # from a header-only feed (an honest empty).
+      - name: GTFS Realtime decoder
+        working-directory: native
+        run: make gtfsrttest
+
       - name: Lint collector sources
         working-directory: native
         run: make lint-sources
@@ -532,6 +540,14 @@ jobs:
       - name: RSS/Atom toolkit (a dead feed is not an empty feed)
         working-directory: native
         run: make rsstest
+
+      # The GTFS Realtime protobuf decoder (lib/gtfsrt.c): hand-encoded bytes
+      # only, no network — a negative delay, two translations, unknown fields
+      # skipped, truncation refused at every cut, and an empty body told apart
+      # from a header-only feed (an honest empty).
+      - name: GTFS Realtime decoder
+        working-directory: native
+        run: make gtfsrttest
 
       # Deliberately NOT repeated here: lint-sources and audit-sources. Both
       # are pure python3 over the source text with no platform-dependent

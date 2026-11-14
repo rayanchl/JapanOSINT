@@ -81,6 +81,69 @@ static unsigned char *ref_auth_decode(const char *in, size_t in_len, size_t *out
   }
   *out_len = o; return out;
 }
+/* STANDARD base64 (2026-11-12): camera_store.c's encoder/decoder and
+ * keysapi.c's master-key decoder, verbatim (renamed; keysapi's pthread_once
+ * table filled inline). jo_b64_encode/jo_b64_decode must match all three. */
+static char *ref_cam_b64_enc(const char *in, size_t len) {
+  static const char T[] =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+  char *o = malloc(((len + 2) / 3) * 4 + 1);
+  if (!o) return NULL;
+  size_t j = 0;
+  for (size_t i = 0; i < len; i += 3) {
+    unsigned a = (unsigned char)in[i];
+    unsigned b = i + 1 < len ? (unsigned char)in[i + 1] : 0;
+    unsigned cc = i + 2 < len ? (unsigned char)in[i + 2] : 0;
+    unsigned v = (a << 16) | (b << 8) | cc;
+    o[j++] = T[(v >> 18) & 63];
+    o[j++] = T[(v >> 12) & 63];
+    o[j++] = i + 1 < len ? T[(v >> 6) & 63] : '=';
+    o[j++] = i + 2 < len ? T[v & 63] : '=';
+  }
+  o[j] = 0;
+  return o;
+}
+static int ref_cam_b64_val(int ch) {
+  if (ch >= 'A' && ch <= 'Z') return ch - 'A';
+  if (ch >= 'a' && ch <= 'z') return ch - 'a' + 26;
+  if (ch >= '0' && ch <= '9') return ch - '0' + 52;
+  if (ch == '+') return 62;
+  if (ch == '/') return 63;
+  return -1;
+}
+static char *ref_cam_b64_dec(const char *in, size_t *jl) {  /* +jl: a decoded NUL hides the length */
+  size_t len = strlen(in);
+  char *o = malloc(len / 4 * 3 + 4);
+  if (!o) return NULL;
+  size_t j = 0; unsigned v = 0; int bits = 0;
+  for (size_t i = 0; i < len; i++) {
+    if (in[i] == '=') break;
+    int d = ref_cam_b64_val((unsigned char)in[i]);
+    if (d < 0) continue;
+    v = (v << 6) | (unsigned)d; bits += 6;
+    if (bits >= 8) { bits -= 8; o[j++] = (char)((v >> bits) & 0xFF); }
+  }
+  o[j] = 0;
+  *jl = j;
+  return o;
+}
+static int ref_keys_b64_decode(const char *in, unsigned char *out, int outcap) {
+  int rev[256];
+  for (int i=0;i<256;i++) rev[i]=-1;
+  const char *T="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+  for (int i=0;i<64;i++) rev[(unsigned char)T[i]]=i;
+  /* `val` widened to unsigned+masked here only: the original's signed int
+   * overflowed (UB) on long inputs, which is the defect jo_b64_decode fixes;
+   * the low 16 bits it actually read are unchanged. */
+  unsigned val=0; int bits=-8,o=0;
+  for (const char *p=in; *p; p++) {
+    if (*p=='=' ) break;
+    int c=rev[(unsigned char)*p]; if (c<0) continue;
+    val=((val<<6)|(unsigned)c)&0xFFFFu; bits+=6;
+    if (bits>=0){ if(o<outcap) out[o++]=(unsigned char)((val>>bits)&0xFF); bits-=8; }
+  }
+  return o;
+}
 static int ref_hexv(int c) {
   if (c >= '0' && c <= '9') return c - '0';
   if (c >= 'a' && c <= 'f') return c - 'a' + 10;
@@ -247,6 +310,34 @@ int main(void) {
     raw[rn] = 0;
     char *e1 = jo_b64url_encode_str(raw), *e2 = ref_b64url(raw);
     same_str(e1, e2); free(e1); free(e2);
+    checked++;
+  }
+
+  /* STANDARD base64: encode against camera_store's, decode against
+   * camera_store's and keysapi's (all three stop at '=' and skip strays). */
+  { char *e = jo_b64_encode("fo", 2); assert(!strcmp(e, "Zm8=")); free(e);   /* padded */
+    e = jo_b64_encode("f", 1); assert(!strcmp(e, "Zg==")); free(e);
+    e = jo_b64_encode("", 0); assert(!strcmp(e, "")); free(e);
+    e = jo_b64_encode("\xfb\xff", 2); assert(!strcmp(e, "+/8=")); free(e); }
+  for (int r = 0; r < 3000; r++) {
+    char raw[80]; size_t rn = rnd() % 60;
+    for (size_t i = 0; i < rn; i++) raw[i] = (char)(1 + rnd() % 255);
+    raw[rn] = 0;
+    char *e1 = jo_b64_encode(raw, rn), *e2 = ref_cam_b64_enc(raw, rn);
+    same_str(e1, e2);
+    size_t dl = 0; unsigned char *d = jo_b64_decode(e1, strlen(e1), &dl);
+    assert(d && dl == rn && memcmp(d, raw, rn) == 0);                  /* round trip */
+    free(e1); free(e2); free(d);
+    char in[80]; size_t n = rnd() % 70;
+    rand_str(in, n, r % 3 ? "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+                          : "ABCxyz09+/=-_ .\n");
+    size_t la = 0;
+    unsigned char *x = jo_b64_decode(in, n, &la);
+    size_t yl = 0; char *y = ref_cam_b64_dec(in, &yl);
+    assert(x && y && la == yl && memcmp(x, y, la) == 0);
+    unsigned char kb[256]; int kn = ref_keys_b64_decode(in, kb, sizeof kb);
+    assert((size_t)kn == la && memcmp(x, kb, la) == 0);
+    free(x); free(y);
     checked++;
   }
 

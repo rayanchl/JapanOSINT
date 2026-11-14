@@ -10,7 +10,12 @@
  * (python3 http.server, 127.0.0.1):
  *   1. 307-without-Location, then 200: http_request returns the 200, two calls;
  *   2. 307-without-Location every time: the 307 comes back after 1 + retries;
- *   3. 304 Not Modified: returned at once, no retry (it IS the answer). */
+ *   3. 304 Not Modified: returned at once, no retry (it IS the answer).
+ *   4. (2026-11-12) the outbound floor is STRICT BY DEFAULT: with
+ *      JO_HTTP_BLOCK_PRIVATE unset, http_request() to the 127.0.0.1 stub is
+ *      refused before a byte leaves (the stub never sees it), while
+ *      http_request_service() — the explicit operator-service exemption the
+ *      LLM/embedding clients use — reaches it. The rest of the test opts out. */
 #include "../../core/httpclient.h"
 
 #include <assert.h>
@@ -99,6 +104,9 @@ static long count(http_client *hc, int port, const char *path) {
 }
 
 int main(void) {
+  /* The stub is on 127.0.0.1 and the outbound floor refuses loopback by
+   * default (2026-11-12); opt out for cases 1-3. Case 4 unsets it again. */
+  setenv("JO_HTTP_BLOCK_PRIVATE", "0", 1);
   http_client_global_init();
   int port = 18733;
   if (stub_start(port) != 0) {
@@ -124,6 +132,24 @@ int main(void) {
   assert(st == 304);
   assert(count(hc, port, "/notmod") == 1);
   printf("  a 304 is the answer, not retried: ok\n");
+
+  { long before = count(hc, port, "/up");
+    char url[160];
+    snprintf(url, sizeof url, "http://127.0.0.1:%d/up", port);
+    unsetenv("JO_HTTP_BLOCK_PRIVATE");
+    http_response hr = {0};
+    int rc = http_request(hc, "GET", url, NULL, NULL, 0, 3000, 0, &hr);
+    assert(rc != 0 && hr.status == 0 && !hr.body);        /* refused locally */
+    http_response_free(&hr);
+    rc = http_request_service(hc, "GET", url, NULL, NULL, 0, 3000, 0, &hr);
+    assert(rc == 0 && hr.status == 200);                   /* the exemption */
+    http_response_free(&hr);
+    rc = http_request(hc, "GET", url, NULL, NULL, 0, 3000, 0, &hr);
+    assert(rc != 0 && hr.status == 0);                     /* scope restored */
+    http_response_free(&hr);
+    setenv("JO_HTTP_BLOCK_PRIVATE", "0", 1);
+    assert(count(hc, port, "/up") == before + 1);          /* only one arrived */
+    printf("  default floor refuses loopback; the service call reaches it: ok\n"); }
 
   http_client_free(hc);
   stub_stop();

@@ -15,7 +15,12 @@
  *   5. hostgate_penalize() delays the next start, capped at 60 s.
  *   6. The camera policy: always strict (the JO_CAMERA_ALLOW_LAN opt-in is
  *      gone and setting it changes nothing); the test seam admits LAN; metadata and
- *      link-local refused regardless; JO_HTTP_BLOCK_PRIVATE=1 wins.
+ *      link-local refused regardless; the strict floor (the default) wins
+ *      over the seam, so a fixture test sets JO_HTTP_BLOCK_PRIVATE=0.
+ *   7. The general floor (2026-11-12): STRICT BY DEFAULT — unset, empty or
+ *      any value but "0" refuses loopback/RFC1918 — and "0" restores the old
+ *      floor; hostgate_service_scope() gives an operator-configured service
+ *      call the lenient floor without the variable, and never metadata.
  *
  * Includes hostgate.c to reach the table and the test clock. */
 
@@ -193,8 +198,8 @@ static void test_camera_policy(void) {
   assert(hostgate_camera_addr_check("10.1.2.3") == HG_URL_PRIVATE);
   assert(hostgate_camera_addr_check("127.0.0.1") == HG_URL_PRIVATE);
   assert(hostgate_camera_addr_check("8.8.8.8") == HG_URL_OK);
-  /* The general floor is unchanged: llama-server on loopback still works. */
-  assert(hostgate_url_check("http://127.0.0.1:8080/v1") == HG_URL_OK);
+  /* The general floor refuses loopback by default since 2026-11-12 (7.). */
+  assert(hostgate_url_check("http://127.0.0.1:8080/v1") == HG_URL_PRIVATE);
 
   /* The removed operator opt-in opens nothing. */
   setenv("JO_CAMERA_ALLOW_LAN", "1", 1);
@@ -203,7 +208,11 @@ static void test_camera_policy(void) {
   assert(hostgate_camera_addr_check("10.1.2.3") == HG_URL_PRIVATE);
   unsetenv("JO_CAMERA_ALLOW_LAN");
 
+  /* The seam opens the LAN only under a lowered floor: the default (strict)
+   * floor beats it, which is why every fixture test sets "0". */
   hostgate_camera_test_allow_lan(1);
+  assert(hostgate_camera_url_check("http://192.168.1.10/snap.jpg", 0) == HG_URL_PRIVATE);
+  setenv("JO_HTTP_BLOCK_PRIVATE", "0", 1);
   assert(hostgate_camera_url_check("http://192.168.1.10/snap.jpg", 0) == HG_URL_OK);
   assert(hostgate_camera_url_check("rtsp://127.0.0.1:554/live", 0) == HG_URL_OK);
   assert(hostgate_camera_addr_check("10.1.2.3") == HG_URL_OK);
@@ -222,6 +231,46 @@ static void test_camera_policy(void) {
   assert(hostgate_camera_url_check("http://192.168.1.10/", 0) == HG_URL_PRIVATE);
 }
 
+/* 7. The general outbound floor and the service scope. */
+static void test_general_floor(void) {
+  const char *priv[] = { "http://127.0.0.1:8080/v1", "http://10.0.0.5/",
+                         "http://192.168.1.10/", "http://[::1]/",
+                         "http://localhost:8080/", "http://100.64.0.1/", NULL };
+  /* default: unset, empty, "1", "yes" are all strict */
+  const char *strict_vals[] = { NULL, "", "1", "yes" };
+  for (int v = 0; v < 4; v++) {
+    if (strict_vals[v]) setenv("JO_HTTP_BLOCK_PRIVATE", strict_vals[v], 1);
+    else unsetenv("JO_HTTP_BLOCK_PRIVATE");
+    for (int i = 0; priv[i]; i++)
+      assert(hostgate_url_check(priv[i]) == HG_URL_PRIVATE);
+    assert(hostgate_addr_check_floor("127.0.0.1") == HG_URL_PRIVATE);
+    assert(hostgate_addr_check_floor("172.16.3.4") == HG_URL_PRIVATE);
+    assert(hostgate_url_check("https://93.184.216.34/x") == HG_URL_OK);
+    assert(hostgate_addr_check_floor("8.8.8.8") == HG_URL_OK);
+  }
+  /* the service scope: lenient floor, restored on exit, metadata still out */
+  unsetenv("JO_HTTP_BLOCK_PRIVATE");
+  int prev = hostgate_service_scope(1);
+  assert(prev == 0);
+  assert(hostgate_url_check("http://127.0.0.1:8080/v1") == HG_URL_OK);
+  assert(hostgate_url_check("http://localhost:8080/") == HG_URL_OK);
+  assert(hostgate_addr_check_floor("127.0.0.1") == HG_URL_OK);
+  assert(hostgate_addr_check_floor("10.0.0.5") == HG_URL_OK);
+  assert(hostgate_url_check("http://169.254.169.254/latest/") == HG_URL_PRIVATE);
+  assert(hostgate_url_check("http://metadata.google.internal/") == HG_URL_PRIVATE);
+  assert(hostgate_addr_check_floor("169.254.169.254") == HG_URL_PRIVATE);
+  assert(hostgate_addr_check_floor("fe80::1") == HG_URL_PRIVATE);
+  /* a camera is never a service: the scope does not touch the camera policy */
+  assert(hostgate_camera_url_check("rtsp://127.0.0.1:554/live", 0) == HG_URL_PRIVATE);
+  assert(hostgate_service_scope(prev) == 1);
+  assert(hostgate_url_check("http://127.0.0.1:8080/v1") == HG_URL_PRIVATE);
+  /* "0" is the operator's opt-out: the old floor for every fetch */
+  setenv("JO_HTTP_BLOCK_PRIVATE", "0", 1);
+  for (int i = 0; priv[i]; i++) assert(hostgate_url_check(priv[i]) == HG_URL_OK);
+  assert(hostgate_url_check("http://169.254.169.254/") == HG_URL_PRIVATE);
+  unsetenv("JO_HTTP_BLOCK_PRIVATE");
+}
+
 int main(void) {
   /* Shrink nothing: the real TTL and the real capacity, with a fake clock. */
   test_many_hosts_all_gated();
@@ -229,6 +278,7 @@ int main(void) {
   test_full_table_fail_open_counted();
   test_penalize();
   test_camera_policy();
+  test_general_floor();
   printf("test_hostgate: OK\n");
   return 0;
 }

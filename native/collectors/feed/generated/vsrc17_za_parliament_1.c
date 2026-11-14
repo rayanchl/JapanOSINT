@@ -7,17 +7,8 @@
  * generator refuses to overwrite it without --force. */
 #include "_verified_macros.inc"
 
-VJSON(af_pmg_daily_schedule, "af-pmg-daily-schedule", "PMG South Africa — parliamentary daily programme", "PMG South Africa — parliamentary daily programme",
-  "za_parliament", "parliament",
-  "https://api.pmg.org.za/daily-schedule/",
-  "results",
-  "en", "[\"za\",\"parliament\",\"batch17\",\"high-penetrancy\"]", 86400,
-  "3,674 daily order papers for both houses. Row: id, title, start_date, body (the full day's programme listing committees, venues and times), nid, house_id, url and an embedded house object. No detail hop: /daily-schedule/{id}/ returns 404 even for a real id from the list, so the list body is the complete record.");
-
-
-VJSON(af_pmg_committee_meetings, "af-pmg-committee-meetings", "PMG South Africa — parliamentary committee meetings", "PMG South Africa — parliamentary committee meetings",
-  "za_parliament", "parliament",
-  "https://api.pmg.org.za/committee-meeting/",
-  "results",
-  "en", "[\"za\",\"parliament\",\"batch17\",\"high-penetrancy\",\"detail-hop\"]", 86400,
-  "Paginated feed of every monitored National Assembly / NCOP committee meeting. Row: id, date, title, type, body (full minutes), summary, member_id, committee_id, house_id, chairperson, public_participation, actual and scheduled start/end times, pmg_monitor, url. Detail by id returns the complete verbatim report.  A per-record detail endpoint was verified for this source; see the batch's detail-hops side-car. This collector fetches the list endpoint only.");
+/* af-pmg-daily-schedule and af-pmg-committee-meetings: MOVED 2026-11-12 to
+ * collectors/feed/generated/hp17_za_parliament_1.c (same ids), because a VJSON
+ * row cannot declare `page_resume` and both stopped at the 20-page default —
+ * 1,000 records of the 3,757 and 35,240 the API counted that day. The rows
+ * there read each register over a cycle. */

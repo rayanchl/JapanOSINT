@@ -585,6 +585,102 @@ char *keysapi_tenant(db_handle *db, const tenant_ctx *t, const char *method,
   cJSON_Delete(ov); return jerr(st,404,"not_found");
 }
 
+/* ── a workspace's key for its pivots (see keysapi.h) ────────────────────── */
+char *keysapi_tenant_secret(db_handle *db, const char *tenant_id,
+                            const char *name) {
+  if (!db || !db->h || !tenant_id || !*tenant_id || !name || !*name) return NULL;
+  /* The shared corpus pseudo-tenant and the operator chain own no workspace
+   * keys: a run attributed to them is the platform's, which uses the env. */
+  if (!strcmp(tenant_id, "legacy") || !strcmp(tenant_id, "platform")) return NULL;
+  sqlite3_stmt *s;
+  char *val = NULL;
+  if (sqlite3_prepare_v2(db->h,
+        "SELECT encrypted_value FROM tenant_secrets WHERE tenant_id=?1 AND key_name=?2",
+        -1, &s, NULL) != SQLITE_OK) return NULL;
+  sqlite3_bind_text(s, 1, tenant_id, -1, SQLITE_TRANSIENT);
+  sqlite3_bind_text(s, 2, name, -1, SQLITE_TRANSIENT);
+  if (sqlite3_step(s) == SQLITE_ROW && sqlite3_column_type(s, 0) == SQLITE_BLOB)
+    val = secret_decrypt(tenant_id, sqlite3_column_blob(s, 0),
+                         sqlite3_column_bytes(s, 0));
+  sqlite3_finalize(s);
+  if (!val) return NULL;
+  /* The scrub sink matches the key's exact bytes in what a collector stores;
+   * a key this short would match ordinary text and redact real data (intel.c
+   * draws the same line at 12 for env values it only GUESSES are secrets).
+   * Such a value is not used — the run falls back to the environment, and the
+   * log says so rather than silently ignoring the workspace's setting. */
+  if (strlen(val) < KEYSAPI_PIVOT_KEY_MIN) {
+    fprintf(stderr, "[keys] workspace %s: stored %s is shorter than %d "
+                    "characters — not used for pivots, environment used\n",
+            tenant_id, name, KEYSAPI_PIVOT_KEY_MIN);
+    OPENSSL_cleanse(val, strlen(val));
+    free(val);
+    return NULL;
+  }
+  if (sqlite3_prepare_v2(db->h,
+        "UPDATE tenant_secrets SET last_used_at=datetime('now') "
+        "WHERE tenant_id=?1 AND key_name=?2", -1, &s, NULL) == SQLITE_OK) {
+    sqlite3_bind_text(s, 1, tenant_id, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(s, 2, name, -1, SQLITE_TRANSIENT);
+    sqlite3_step(s);
+    sqlite3_finalize(s);
+  }
+  return val;
+}
+
+/* Every occurrence of w->secret in v replaced, malloc'd; NULL when v holds
+ * none (the common case: one memmem-equivalent scan per field). */
+static char *scrub_str(const keysapi_scrub_sink *w, const char *v) {
+  if (!v || !*v || !strstr(v, w->secret)) return NULL;
+  static const char RED[] = "[redacted]";
+  size_t n = 0, kl = w->secret_len;
+  for (const char *p = strstr(v, w->secret); p; p = strstr(p + kl, w->secret)) n++;
+  char *o = malloc(strlen(v) - n * kl + n * (sizeof RED - 1) + 1), *d = o;
+  if (!o) return NULL;
+  const char *r = v;
+  for (const char *p = strstr(r, w->secret); p; p = strstr(r, w->secret)) {
+    memcpy(d, r, (size_t)(p - r)); d += p - r;
+    memcpy(d, RED, sizeof RED - 1); d += sizeof RED - 1;
+    r = p + kl;
+  }
+  strcpy(d, r);
+  return o;
+}
+
+static int scrub_emit(intel_sink *self, const intel_item *it) {
+  keysapi_scrub_sink *w = (keysapi_scrub_sink *)self->ctx;
+  if (!w->secret_len) return w->inner->emit(w->inner, it);
+  intel_item c = *it;
+  const char **f[] = { &c.uid, &c.remote_key, &c.title, &c.body, &c.summary,
+                       &c.link, &c.author, &c.lang, &c.published_at,
+                       &c.geometry_geojson, &c.record_type, &c.sub_source_id,
+                       &c.properties_json, &c.tags_json };
+  enum { NF = (int)(sizeof f / sizeof f[0]) };
+  char *own[NF] = {0};
+  int any = 0;
+  for (int i = 0; i < NF; i++) {
+    own[i] = scrub_str(w, *f[i]);
+    if (own[i]) { *f[i] = own[i]; any = 1; }
+  }
+  /* A field that holds the key and could not be scrubbed (allocation
+   * failure) must not be written as-is: refuse the item, as a failed write. */
+  int leak = 0;
+  for (int i = 0; i < NF; i++)
+    if (!own[i] && *f[i] && strstr(*f[i], w->secret)) leak = 1;
+  int rc = leak ? -1 : w->inner->emit(w->inner, any ? &c : it);
+  for (int i = 0; i < NF; i++) free(own[i]);
+  return rc;
+}
+
+void keysapi_scrub_sink_init(keysapi_scrub_sink *w, intel_sink *inner,
+                             const char *secret) {
+  w->inner = inner;
+  w->secret = secret ? secret : "";
+  w->secret_len = secret ? strlen(secret) : 0;
+  w->base.ctx = w;
+  w->base.emit = scrub_emit;
+}
+
 /* ── /admin/break-glass/login (breakGlass.js) ─────────────────────────── */
 static int base32_decode(const char *s, unsigned char *out, int cap) {
   int val=0,bits=0,o=0;

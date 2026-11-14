@@ -184,6 +184,17 @@ int  osint_dispatch(db_handle *db, llm_client *llm, const char *service,
                     const char *entity, const char *entity_type,
                     intel_sink *persist, osint_result *out);
 
+/* osint_dispatch() on behalf of a WORKSPACE (2026-11-12): the pivot's key_env
+ * resolves from that workspace's saved key (core/keysapi.c,
+ * keysapi_tenant_secret) before the process environment, and the key is
+ * scrubbed from every record the run emits. tenant_id NULL, "" or "legacy" is
+ * exactly osint_dispatch(). For a search or run started in a tenant
+ * (core/pipeline.c passes the run's owner tenant). */
+int  osint_dispatch_tenant(db_handle *db, llm_client *llm, const char *service,
+                           const char *entity, const char *entity_type,
+                           intel_sink *persist, osint_result *out,
+                           const char *tenant_id);
+
 /* osint_dispatch() for a LOCAL OPERATOR (main.c --dispatch): also runs a
  * registered source that is not an entity pivot, e.g. `--dispatch
  * PORT_SCANNER <host>` or an exhaustiveness check on a scheduled row. Never

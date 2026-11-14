@@ -520,14 +520,12 @@ VJSON(cyb_scotparl_regions, "cyb-scotparl-regions", "Scottish Parliament — reg
  * sort_by=num and the control sort_by=frobnicate both answer 1..5 (an unknown key is
  * ignored, so the direction is the evidence the parameter is read); offset=100 answers
  * 101..200, disjoint. Interpellations arrive at ~30 a day, so a newest-first walk barely
- * drifts inside one run; the 16,935 in the middle need a cycling hp row (page_resume). */
-VJSON_KEYED(cyb_sejm_pl_interpellations, "cyb-sejm-pl-interpellations", "Sejm of Poland — interpellations", "ポーランド下院 質問書",
-  "transparency", "politics",
-  "https://api.sejm.gov.pl/sejm/term10/interpellations?limit=100&offset=0&sort_by=-num",
-  "",
-  "pl", "[\"pol\",\"parliament\",\"questions\",\"transparency\"]", 21600,
-  "Written interpellations to Polish ministers with sender, recipient and reply status.",
-  "num");
+ * drifts inside one run; the 16,935 in the middle need a cycling hp row (page_resume).
+ *
+ * 2026-11-12: MOVED to collectors/pivot/table/hp3b31_eunat.c, same id. No
+ * cycle was needed after all: `limit=50000` answers the whole term in ONE
+ * request (20,989 records, nums 1..20,989, 28 MB in 47 s), which a VJSON row
+ * cannot wait for (over its timeout) and an hp row can (`timeout_ms`). */
 
 VJSON(cyb_sejm_pl_prints, "cyb-sejm-pl-prints", "Sejm of Poland — parliamentary prints", "ポーランド下院 議案文書",
   "transparency", "politics",

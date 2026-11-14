@@ -255,12 +255,20 @@ VRSS(sci_nistep_news, "sci-nistep-news", "NISTEP science and technology policy r
   "ja", "[\"japan\",\"science-policy\",\"nistep\"]", 86400,
   "Japanese national science and technology policy research reports and indicators.");
 
+/* 2026-11-12: `dateStart=01/01/2026` was frozen at authoring, a floor that only
+ * grows — 6,667 awards matched it, and the row reads ONE page of 25 in no date
+ * order (that page held awards dated 07/31..09/11/2026), so it re-read an
+ * arbitrary slice of the year. `{date-7d:%m/%d/%Y}` is the last week of award
+ * dates (`date`, MM/DD/YYYY): rendered 11/05/2026 it answered totalCount 14,
+ * dates 11/05..11/10; 30 days back answered 57. VJSON cannot walk this API's
+ * `rpp`/`offset` pair (not in jsonlist's PAGERS), so 25 a run is the read and a
+ * recent window is what keeps it the newest 25 rather than a random 25. */
 VJSON(sci_nsf_awards_active, "sci-nsf-awards-active", "NSF award listing", "NSF 助成一覧",
   "academic", "funding",
-  "https://api.nsf.gov/services/v1/awards.json?dateStart=01/01/2026&rpp=25&offset=1",
+  "https://api.nsf.gov/services/v1/awards.json?dateStart={date-7d:%m/%d/%Y}&rpp=25&offset=1",
   "response.award",
   "en", "[\"nsf\",\"funding\",\"awards\"]", 86400,
-  "Paginated NSF award records.");
+  "NSF awards made in the last seven days (up to 25 a run).");
 
 VJSON(sci_nsf_awards_artificial_intelligence, "sci-nsf-awards-artificial-intelligence", "NSF artificial intelligence awards", "NSF 人工知能助成",
   "academic", "funding",
@@ -339,16 +347,20 @@ VJSON(sci_nsf_awards_space, "sci-nsf-awards-space", "NSF astronomy awards", "NSF
   "en", "[\"nsf\",\"astronomy\",\"funding\"]", 86400,
   "NSF awards in astronomy and astrophysics.");
 
+/* `&page=1` bound 2026-11-12 on both OpenAIRE Graph rows: the API is 1-based
+ * (no page and page=1 answer the same first ids, header page 1; page=2 the
+ * next; page=0 is HTTP 400), and a pageSize URL with no page number makes
+ * jsonlist_next_page() probe page=1 — a repeat of the page just read. */
 VJSON(sci_openaire_data_sources, "sci-openaire-data-sources", "OpenAIRE data source registry", "OpenAIRE データソース登録簿",
   "academic", "repository",
-  "https://api.openaire.eu/graph/v1/dataSources?pageSize=50",
+  "https://api.openaire.eu/graph/v1/dataSources?pageSize=50&page=1",
   "results",
   "en", "[\"openaire\",\"repositories\"]", 86400,
   "Registered repositories and aggregators feeding the OpenAIRE graph.");
 
 VJSON(sci_openaire_organizations, "sci-openaire-organizations", "OpenAIRE organization graph", "OpenAIRE 機関グラフ",
   "academic", "policy",
-  "https://api.openaire.eu/graph/v1/organizations?pageSize=50",
+  "https://api.openaire.eu/graph/v1/organizations?pageSize=50&page=1",
   "results",
   "en", "[\"openaire\",\"institutions\",\"graph\"]", 86400,
   "Research organisations in the OpenAIRE scholarly knowledge graph.");

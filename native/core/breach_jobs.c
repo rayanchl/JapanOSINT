@@ -324,9 +324,12 @@ char *breach_job_fetch(const char *source_id, const char *url, int *http_status)
 
   /* `url` is a caller-supplied fetch destination, which is exactly the class
    * alertsapi.c's webhook target belongs to — and it was going out through
-   * http_request()'s floor check (hostgate_url_check), which permits loopback
-   * and RFC1918 by default because llama-server lives on 127.0.0.1 and LAN
-   * cameras are a shipped feature. So
+   * http_request()'s floor check (hostgate_url_check), which then permitted
+   * loopback and RFC1918 by default because llama-server lives on 127.0.0.1
+   * and LAN cameras are a shipped feature. (Since 2026-11-12 the floor is
+   * strict by default and the operator's own service URLs go through
+   * http_request_service(); this save-time check stays because an operator
+   * who sets JO_HTTP_BLOCK_PRIVATE=0 must still not get this primitive.) So
    *
    *     POST /api/admin/breach/fetch {"url":"http://127.0.0.1:4712/api/health"}
    *

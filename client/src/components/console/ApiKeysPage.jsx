@@ -98,13 +98,16 @@ export default function ApiKeysPage() {
     <Page
       title={scope === 'platform' ? 'Platform keys' : 'API keys'}
       subtitle={scope === 'platform'
-        /* Stated as it is (2026-11-07): core/keysapi.c stores workspace keys in
-         * tenant_secrets and NOTHING outside keysapi.c reads them — collectors
-         * read the process environment, i.e. the platform keys. The page used
-         * to say a workspace key was "injected into collectors at run time",
-         * which told people a key was in use when it was not. */
+        /* Stated as it is (2026-11-12): a workspace key is used for THIS
+         * workspace's on-demand pivots (an entity lookup run from its searches),
+         * resolved before the platform key, and scrubbed from what the run
+         * stores (core/osint_dispatch.c, core/keysapi.c). Scheduled collection
+         * into the shared corpus still uses the platform keys, and so do the
+         * hand-written collectors that read their key outside the declarative
+         * engine. Until 2026-11-12 nothing read workspace keys at all, which is
+         * what this line used to say. */
         ? 'The credentials collectors actually use (the server process environment, plus any overlay set here). Platform operators only.'
-        : 'Workspace keys are stored encrypted for this workspace, but collectors do NOT use them yet: every collector run uses the platform keys (Platform keys / PUT /api/keys).'}
+        : "Workspace keys are stored encrypted and used for this workspace's on-demand pivots (entity lookups run from its searches), before the platform key. Scheduled collection still uses the platform keys (Platform keys / PUT /api/keys)."}
       actions={(
         <>
           {auth.isPlatformAdmin && (
@@ -272,7 +275,7 @@ function KeyDetailSheet({ row, scope, canManage, statusRows, statusLoaded, onLoa
           <Row label="Role">{working.role}</Row>
           <Row label="Status"><span className={working.set ? 'text-neon-green' : 'text-accent'}>{working.set ? 'Set' : 'Unset'}</span></Row>
           <Row label="Source"><span className={working.byok ? 'text-accent' : ''}>{sourceLabel}</span></Row>
-          {scope === 'workspace' && <div className="text-[11px] text-osint-muted pt-2">Your key is stored encrypted for this workspace. It is NOT used by any collector yet — collectors read the platform keys only, whether or not a workspace key is set.</div>}
+          {scope === 'workspace' && <div className="text-[11px] text-osint-muted pt-2">Your key is stored encrypted for this workspace and used for this workspace's on-demand pivots, in place of the platform key; it is redacted from everything those runs store. Scheduled collection uses the platform keys, and a source whose collector is hand-written (not a declarative row) still reads the platform key.</div>}
         </Section>
 
         <Section label="Current value">

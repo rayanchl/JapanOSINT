@@ -53,7 +53,14 @@ static const hp_source T[] = {
     .collector = "eu_research", .category = "research",
     .description = "Repositories and aggregators OpenAIRE harvests: official/English name, type scheme, OpenAIRE compatibility level, website, logo, original ids. Provenance registry - tells you which repository a record actually came from.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "research-record", .tags = "\"eu\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://api.openaire.eu/graph/v1/dataSources?search=Zenodo&pageSize=100",
+    /* `&page=1` bound 2026-11-12 on this and the four graph/v1 page_walk rows
+     * below: the OpenAIRE Graph API is 1-based (measured on organizations: no
+     * page and page=1 answer the same first five ids with header page 1,
+     * page=2 the next five, page=0 is HTTP 400; numFound 117 unchanged by
+     * page), so an unbound first page cost the page_walk probe a repeat
+     * request of page 1 (CLAUDE.md, "A UID-COLLISION of exactly one page size
+     * on a page_walk row"). */
+    .url = "https://api.openaire.eu/graph/v1/dataSources?search=Zenodo&pageSize=100&page=1",
     .array_path = "results",
     .detail_url = "https://api.openaire.eu/graph/v1/dataSources?search={v}&pageSize=50", .detail_key = "officialName",
     .page_walk = 1,
@@ -65,7 +72,7 @@ static const hp_source T[] = {
     .collector = "eu_research", .category = "research",
     .description = "118 org records for a name query: legal name, legal short name, website, country, OpenAIRE org id, pids and originalIds. The id used to attribute research products and projects to an institution.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "research-record", .tags = "\"eu\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://api.openaire.eu/graph/v1/organizations?search=Kyoto&pageSize=100",
+    .url = "https://api.openaire.eu/graph/v1/organizations?search=Kyoto&pageSize=100&page=1",   /* page 1 bound 2026-11-12, see openaire-datasources-search */
     .array_path = "results",
     .detail_url = "https://api.openaire.eu/graph/v1/organizations?search={v}&pageSize=50", .detail_key = "legalName",
     .page_walk = 1,
@@ -78,7 +85,7 @@ static const hp_source T[] = {
     .collector = "eu_research", .category = "research",
     .description = "25 outputs produced under one funded project, full product records with authors and ORCIDs. The grant->deliverables hop, and the reason the project id above matters. Verified with a real project id pulled from the projects search.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "research-record", .tags = "\"eu\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://api.openaire.eu/graph/v1/researchProducts?relProjectId=corda__h2020::6c228bea4ee8a4ef22cd1d4fa079b63a&pageSize=100",
+    .url = "https://api.openaire.eu/graph/v1/researchProducts?relProjectId=corda__h2020::6c228bea4ee8a4ef22cd1d4fa079b63a&pageSize=100&page=1",   /* page 1 bound 2026-11-12, see openaire-datasources-search */
     .array_path = "results",
     .detail_url = "https://api.openaire.eu/graph/v1/researchProducts?relProjectId={v}&pageSize=100", .detail_key = "id",
     .page_walk = 1,
@@ -102,7 +109,7 @@ static const hp_source T[] = {
     .collector = "eu_research", .category = "research",
     .description = "5,202 funded projects: OpenAIRE project id, national/EU grant code, acronym, title, start/end dates, call identifier, keywords, and the fundings array (funder short name, jurisdiction, funding stream). Covers national funders (Czech TA, DFG, ANR...) as well as EU.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "research-record", .tags = "\"eu\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://api.openaire.eu/graph/v1/projects?search=hydrogen&pageSize=10",
+    .url = "https://api.openaire.eu/graph/v1/projects?search=hydrogen&pageSize=10&page=1",   /* page 1 bound 2026-11-12, see openaire-datasources-search */
     .array_path = "results",
     .detail_url = "https://api.openaire.eu/graph/v1/projects?id={v}", .detail_key = "id",
     .page_walk = 1,
@@ -125,7 +132,7 @@ static const hp_source T[] = {
     .collector = "eu_research", .category = "research",
     .description = "1.93M hits; each result is a merged research product with authors and their ORCIDs, type, language, descriptions, subjects with provenance, pids, publication venue, and the OpenAIRE id used for project/organisation joins.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "research-record", .tags = "\"eu\",\"research\",\"batch16\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://api.openaire.eu/graph/v1/researchProducts?search=climate&pageSize=10",
+    .url = "https://api.openaire.eu/graph/v1/researchProducts?search=climate&pageSize=10&page=1",   /* page 1 bound 2026-11-12, see openaire-datasources-search */
     .array_path = "results",
     .detail_url = "https://api.openaire.eu/graph/v1/researchProducts?pid={v}", .detail_key = "id",
     .page_walk = 1,

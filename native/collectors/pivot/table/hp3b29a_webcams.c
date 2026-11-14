@@ -2512,7 +2512,13 @@ static const hp_source HP3B29A_WEBCAMS[] = {
     .record_type = "traffic-camera",
     .tags = "\"usa\",\"virginia\",\"vdot\",\"511\",\"traffic\",\"camera\",\"video\",\"geojson\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://511.vdot.virginia.gov/services/map/layers/map/cams",
+    /* 2026-11-12: the old /services/map/layers/map/cams answers 404 "Cannot
+     * GET". The site's own assets/config/config.json now names
+     * NODE_ENDPOINT.foo = "/services/511", and its map chunk builds
+     * `${foo}/map/layers/map` — so the layer moved under /services/511.
+     * Measured: 200, 1,536,280 bytes (served as text/html, body is GeoJSON),
+     * 1,713 features, 1,713 distinct properties.id, same 19 property keys. */
+    .url = "https://511.vdot.virginia.gov/services/511/map/layers/map/cams",
     .array_path = "features",
     .id_keys = "properties.id+properties.name",
     .interval = 86400,

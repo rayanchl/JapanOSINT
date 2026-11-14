@@ -6,6 +6,8 @@ import { useApi } from '../../hooks/useApi.js';
 import { useMoreRows } from '../../hooks/usePagedList.js';
 import { useAuth } from '../../auth/AuthContext.jsx';
 import ThresholdsTab from './ThresholdsTab.jsx';
+import CollectorTtlsTab from './CollectorTtlsTab.jsx';
+import StationMergesTab from './StationMergesTab.jsx';
 import {
   Page, Section, Row, Card, Pill, Button, Input, Field, Segmented, Sheet, Toggle,
   ConfirmDialog, ErrorNotice, EmptyState, LoadingState, BoundNote, PagedFooter, KV, Spinner, cx, toast,
@@ -22,6 +24,8 @@ const TABS = [
   { value: 'breach', label: 'Breach corpus' },
   { value: 'pagination', label: 'Pagination' },
   { value: 'thresholds', label: 'Thresholds' },
+  { value: 'ttls', label: 'Cache TTLs' },
+  { value: 'station-merges', label: 'Station merges' },
   { value: 'audit', label: 'Audit log' },
   { value: 'server', label: 'Server' },
 ];
@@ -97,6 +101,8 @@ export default function AdminPage() {
       {tab === 'breach' && <BreachTab />}
       {tab === 'pagination' && <PaginationTab />}
       {tab === 'thresholds' && <ThresholdsTab />}
+      {tab === 'ttls' && <CollectorTtlsTab />}
+      {tab === 'station-merges' && <StationMergesTab />}
       {tab === 'audit' && <AuditTab />}
       {tab === 'server' && <ServerTab />}
       <SourcePipelineSheet sourceId={pipelineId} onClose={() => setPipelineId(null)} />
@@ -115,9 +121,19 @@ export default function AdminPage() {
  * Neither had a UI until 2026-11-07. The list route answers
  * {limit, offset, count} and no total, so a full page means "there may be
  * more", which is what the footer says.
+ *
+ * `?scope=platform` (2026-11-12) reads the OPERATOR chain instead — rows the
+ * server writes under the reserved "platform" tenant (break-glass logins,
+ * cadence/schedule/threshold edits, collector runs, raw evidence reads),
+ * which no page could show before. The server answers it to a platform
+ * operator only and 403s anyone else, so the switch is offered to operators
+ * and a refusal is still rendered as the server's.
  */
 const AUDIT_PAGE = 100;
 export function AuditTab() {
+  const auth = useAuth();
+  const [chain, setChain] = useState('workspace');
+  const scopeQuery = chain === 'platform' ? { scope: 'platform' } : {};
   const [rows, setRows] = useState([]);
   const [page, setPage] = useState(null);
   const [state, setState] = useState({ loading: true, error: null, moreError: null, loadingMore: false });
@@ -127,7 +143,7 @@ export function AuditTab() {
     const my = offset === 0 ? ++seq.current : seq.current;
     setState((s) => (offset === 0 ? { ...s, loading: true, error: null } : { ...s, loadingMore: true, moreError: null }));
     try {
-      const j = await api.get('/api/audit', { query: { limit: AUDIT_PAGE, offset } });
+      const j = await api.get('/api/audit', { query: { limit: AUDIT_PAGE, offset, ...scopeQuery } });
       if (my !== seq.current) return;
       const d = Array.isArray(j?.data) ? j.data : [];
       setRows((xs) => (offset === 0 ? d : [...xs, ...d]));
@@ -138,18 +154,24 @@ export function AuditTab() {
       setState((s) => (offset === 0 ? { ...s, loading: false, error: e } : { ...s, loadingMore: false, moreError: e }));
     }
   };
-  useEffect(() => { load(0); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { setRows([]); setPage(null); setVerify({ busy: false, data: null, error: null }); load(0); }, [chain]); // eslint-disable-line react-hooks/exhaustive-deps
   const runVerify = async () => {
     setVerify({ busy: true, data: null, error: null });
-    try { setVerify({ busy: false, data: await api.get('/api/audit/verify'), error: null }); }
+    try { setVerify({ busy: false, data: await api.get('/api/audit/verify', { query: scopeQuery }), error: null }); }
     catch (e) { setVerify({ busy: false, data: null, error: e }); }
   };
   const mayHaveMore = page && Number.isFinite(page.count) && page.count >= (page.limit || AUDIT_PAGE);
   const v = verify.data;
   return (
     <div className="space-y-4">
+      {auth?.isPlatformAdmin && (
+        <div className="flex items-center gap-2 text-[11px] text-osint-muted">
+          <Segmented value={chain} onChange={setChain} options={[{ value: 'workspace', label: 'This workspace' }, { value: 'platform', label: 'Platform (operators)' }]} />
+          <span>{chain === 'platform' ? 'Operator actions recorded under the platform chain. Platform operators only.' : 'The active workspace\'s own chain.'}</span>
+        </div>
+      )}
       <Section label="Chain verification" right={<Button size="sm" busy={verify.busy} onClick={runVerify}>Verify the whole chain</Button>}>
-        <div className="text-[11px] text-osint-muted">Re-hashes every audit row of this workspace in order. Rows written without a hash cannot be verified and are counted, not skipped.</div>
+        <div className="text-[11px] text-osint-muted">Re-hashes every audit row of {chain === 'platform' ? 'the platform chain' : 'this workspace'} in order. Rows written without a hash cannot be verified and are counted, not skipped.</div>
         {verify.error && <ErrorNotice error={verify.error} title="Verification could not run" />}
         {v && (
           <KV className="mt-2" pairs={[
@@ -165,7 +187,7 @@ export function AuditTab() {
       <Section label="Audit events" right={<Button size="sm" variant="ghost" onClick={() => load(0)}><LuRefreshCw size={12} /></Button>} padded={false}>
         {state.loading && rows.length === 0 && <LoadingState label="Loading audit events…" />}
         {state.error && <div className="p-2"><ErrorNotice error={state.error} title={opError(state.error) || 'Could not load the audit log'} onRetry={() => load(0)} /></div>}
-        {!state.loading && !state.error && rows.length === 0 && <EmptyState title="No audit events recorded for this workspace." />}
+        {!state.loading && !state.error && rows.length === 0 && <EmptyState title={chain === 'platform' ? 'No audit events recorded in the platform chain.' : 'No audit events recorded for this workspace.'} />}
         {rows.length > 0 && (
           <div className="overflow-x-auto">
             <table className="w-full text-[11px]">

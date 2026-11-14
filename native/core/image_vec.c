@@ -306,7 +306,7 @@ static cJSON *sidecar_post(http_client *http, const char *path, const char *body
   static const char *const H[] = { "Content-Type: application/json", NULL };
   http_response r = {0};
   cJSON *j = NULL;
-  if (http_request(http, "POST", url, H, body, blen, timeout_ms, 0, &r) != 0 ||
+  if (http_request_service(http, "POST", url, H, body, blen, timeout_ms, 0, &r) != 0 ||
       r.status == 0)
     snprintf(err, ecap, "POST %s: no answer from the vision sidecar", path);
   else if (r.status < 200 || r.status >= 300 || !r.body)

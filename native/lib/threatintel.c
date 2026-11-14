@@ -38,11 +38,6 @@ const char *abusech_auth_header(void) {
   return g_abusech_ok ? g_abusech_hdr : NULL;
 }
 
-int abusech_have_key(void) {
-  pthread_once(&g_abusech_once, abusech_init);
-  return g_abusech_ok;
-}
-
 int threatintel_collect(const source_ctx *ctx, intel_sink *sink,
                          const char *env_key, const char *const *fallbacks,
                          ti_run run, void *ud) {

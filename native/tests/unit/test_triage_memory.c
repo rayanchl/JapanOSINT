@@ -26,6 +26,9 @@ static void sql(const char *q) {
 }
 
 int main(void) {
+  /* The outbound floor refuses loopback by default (2026-11-12); this test's
+   * stub servers are on 127.0.0.1, so it opts out before any request. */
+  setenv("JO_HTTP_BLOCK_PRIVATE", "0", 1);
   const char *dbp = getenv("JO_DB");
   if (!dbp || !*dbp) { fprintf(stderr, "set JO_DB to a scratch path\n"); return 2; }
   assert(db_open(&g_db, NULL, NULL) == 0);

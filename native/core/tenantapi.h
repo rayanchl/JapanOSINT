@@ -41,6 +41,26 @@ char *tenantapi_audit_list(db_handle *db, const char *tenant_id,
 /* GET /api/audit/verify — re-walk the tenant's hash chain. malloc'd. */
 char *tenantapi_audit_verify(db_handle *db, const char *tenant_id);
 
+/* Which chain GET /api/audit[/verify] reads, from its `?scope=` parameter
+ * (2026-11-12). Operator actions — break-glass logins, cadence and schedule
+ * changes, threshold edits, collector runs, raw evidence reads — are written
+ * under the reserved tenant "platform" (TENANTAPI_PLATFORM_CHAIN), which no
+ * workspace route could read, so the one chain recording what operators did
+ * had no reader at all. `scope=platform` reads it, for a PLATFORM OPERATOR
+ * only (opgate_check() == 0, the gate /api/admin/thresholds sits behind);
+ * workspace owner/admin is not enough, because that chain is every
+ * workspace's business and none of theirs alone.
+ *
+ *   scope NULL / "" / "workspace"  -> *chain = tenant_id, returns 0
+ *   scope "platform", operator     -> *chain = "platform", returns 0
+ *   scope "platform", not operator -> 403
+ *   anything else                  -> 400 (an unknown scope is not silently
+ *                                     the workspace: a typo would read as the
+ *                                     wrong chain) */
+#define TENANTAPI_PLATFORM_CHAIN "platform"
+int tenantapi_audit_chain(const char *scope, int is_operator,
+                          const char *tenant_id, const char **chain);
+
 /* /api/members[...] — member roster + pending-invite management. seg/act are
  * the two path segments after /api/members/ (parsed in httpd.c): GET ""
  * lists; POST "invite"; PATCH ":userId"/"role"; DELETE ":userId"; DELETE

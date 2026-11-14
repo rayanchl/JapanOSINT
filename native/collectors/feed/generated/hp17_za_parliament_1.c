@@ -76,11 +76,31 @@ static const hp_source T[] = {
     .collector = "za_parliament", .category = "parliament",
     .description = "Green papers, white papers and departmental policy documents before Parliament. Row: id, title, effective_date, start_date, nid, url, files[] with title, mime, byte size, original filename and download url. Detail by id returns the record with its files.  Second hop: the record behind each list hit is fetched from the row's detail endpoint and merged in under detail.*, so the row returns the record and not just the search result. Records past the per-run detail budget ($JO_HP_DETAIL_MAX) are stamped _detail_pending rather than shipped as though nothing was behind them.",
     .record_type = "parliament-record", .tags = "\"za\",\"parliament\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
-    .url = "https://api.pmg.org.za/policy-document/",
+    /* RE-READ UNTIL COMPLETE (2026-11-12, the owner's decision). The list is
+     * ORDER BY start_date DESC with no tie-break (pmg-cms-2's
+     * PolicyDocument.list()), so a LIMIT/OFFSET walk splits each tie group
+     * that straddles a page boundary and serves one record twice and another
+     * never. Measured 2026-11-12: count 1,270; a 26-page walk at the default
+     * 50 emits 1,270 and holds 1,256 distinct ids, the SAME 14 missing on two
+     * reads and on a cache-busted third, so re-reading one geometry never
+     * converges. The server caps per_page at 50 (per_page/page_size/limit/
+     * size=2000 and the control frobnicate=7 all answer the identical
+     * 50-record page 1), so one request cannot read it whole, and no filter
+     * slices it (filter[] is equality-only; an unknown field is HTTP 500).
+     * What moves the seams is the PAGE SIZE: per_page 41..47 hold 1,256,
+     * 1,254, 1,260, 1,255, 1,260, 1,261 and 1,256 distinct and their union
+     * is 1,270 of 1,270 (every pair of them reaches >= 1,267). So the size is
+     * the ISO weekday, 41 on Monday to 47 on Sunday, and seven consecutive
+     * days of runs store the whole collection by upsert; each single run's
+     * seam duplicates show as its UID-COLLISION. page=0 is bound so page 1
+     * is the same query the server's own next link continues. page_max 40 is
+     * 1,640 at 41 a page: 31 pages are needed, and an exact ceiling files a
+     * false truncation notice. */
+    .url = "https://api.pmg.org.za/policy-document/?per_page=4{date:%u}&page=0",
     .array_path = "results",
     .detail_url = "https://api.pmg.org.za/policy-document/{v}/", .detail_key = "id",
     .page_walk = 1,
-    .page_max = 26,   /* 1,270 records at 50 a page, measured 2026-10-12; the 20-page default reached 1,000 */
+    .page_max = 40,   /* 1,270 records at 41-47 a page, measured 2026-11-12 (was 26 at 50, exactly the pages needed) */
     .interval = 86400, .free_tier = 1 },
 
   { .id = "af-pmg-question-replies",
@@ -104,6 +124,55 @@ static const hp_source T[] = {
     .detail_url = "https://api.pmg.org.za/tabled-committee-report/{v}/", .detail_key = "id",
     .page_walk = 1,
     .page_max = 134,   /* 6,696 records at 50 a page, measured 2026-10-12; the 20-page default reached 1,000 */
+    .interval = 86400, .free_tier = 1 },
+
+  /* The next two rows were VJSON rows in vsrc17_za_parliament_1.c until
+   * 2026-11-12 and moved here for `page_resume`, which VJSON cannot declare
+   * (the owner's decision for the PMG rows: re-read until complete). Same
+   * ids, same list endpoint, same paging decision (page_walk is
+   * jsonlist_next_page(), the function the VJSON walk used), keyed on `id`
+   * as VJSON keyed them; record_type stays "parliament", the VJSON row's.
+   * Measured 2026-11-12: the server caps per_page at 50 (2000 under four
+   * spellings answers the same 50-record page as the control frobnicate=7),
+   * pages are 0-based and the envelope's own `next` link pages them, and the
+   * list is ORDER BY date DESC with no sort parameter the v1 API reads — so
+   * the cycle cannot be put on an ascending order. Head inserts during a
+   * cycle shift every later page down, which makes a resumed walk RE-READ a
+   * record at the seam, not skip one; a tie group split by a page boundary
+   * can skip one, and those seams move as the register grows, so successive
+   * cycles reach what one cycle missed. Each run's notice names its slice.
+   * The VJSON reads stopped at the 20-page default: 1,000 records against the
+   * 3,757 and 35,240 each API's `count` declared on 2026-11-12. */
+  { .id = "af-pmg-daily-schedule",
+    .name = "PMG South Africa — parliamentary daily programme",
+    .collector = "za_parliament", .category = "parliament",
+    .description = "Daily order papers for both houses (3,757 on 2026-11-12). Row: id, title, start_date, body (the full day's programme listing committees, venues and times), nid, house_id, url and an embedded house object. No detail hop: /daily-schedule/{id}/ returns 404 even for a real id from the list, so the list body is the complete record. Read over a cycle of about four runs, 20 pages a run.",
+    .record_type = "parliament", .tags = "\"za\",\"parliament\",\"batch17\",\"high-penetrancy\"", .lang = "en",
+    .url = "https://api.pmg.org.za/daily-schedule/",
+    .array_path = "results", .date_keys = "start_date",
+    .page_walk = 1,
+    /* 3,757 records = 76 pages; pages measured 0.2-8.9 MB (bodies are whole
+     * programmes), so 20 pages a run keeps the per-run cost of the VJSON read
+     * and the cycle is 4 runs: under the default 6 h cadence the register is
+     * re-read whole once per its declared day. */
+    .page_max = 20, .page_resume = 1,
+    .interval = 86400, .free_tier = 1 },
+
+  { .id = "af-pmg-committee-meetings",
+    .name = "PMG South Africa — parliamentary committee meetings",
+    .collector = "za_parliament", .category = "parliament",
+    .description = "Every monitored National Assembly / NCOP committee meeting (35,240 on 2026-11-12). Row: id, date, title, type, nid, member_id, committee_id, house_id, chairperson, public_participation, featured, actual and scheduled start/end times, pmg_monitor, url, attendance_url and an embedded committee object. The per-meeting detail endpoint is not walked (35,240 hops a cycle), as the VJSON row did not walk it. Read over a cycle of about 36 runs, 20 pages a run.",
+    .record_type = "parliament", .tags = "\"za\",\"parliament\",\"batch17\",\"high-penetrancy\",\"detail-hop\"", .lang = "en",
+    .url = "https://api.pmg.org.za/committee-meeting/",
+    .array_path = "results", .date_keys = "date",
+    .page_walk = 1,
+    /* 35,240 records = 705 pages (page 704 holds the last 40), 1.2-2.3 MB a
+     * page measured. 200 pages a run would make the cycle 4 runs at ~380 MB
+     * a run, ~10x the VJSON read's bytes; 20 pages keeps the old row's cost
+     * (~38 MB) and reads the whole register over a 36-run cycle — nine days
+     * under the 6 h default. Cost kept, completeness reached over the cycle
+     * (2026-11-14). */
+    .page_max = 20, .page_resume = 1,
     .interval = 86400, .free_tier = 1 },
 
 };

@@ -89,6 +89,18 @@ int http_request_max(http_client *c, const char *method, const char *url,
                      size_t body_len, int timeout_ms, int retries,
                      size_t max_body, http_response *out);
 
+/* http_request() for an OPERATOR-CONFIGURED SERVICE ENDPOINT (LLM, embedding,
+ * vision sidecar, the IdP's JWKS). The outbound floor refuses loopback and
+ * private ranges by default since 2026-11-12 (JO_HTTP_BLOCK_PRIVATE=0 lowers
+ * it); this call is judged at the lenient floor instead — metadata and
+ * link-local still refused, on every redirect hop — because its URL came from
+ * operator configuration, not from a collector row, a tenant or an LLM. Never
+ * route a collector, pivot or caller-supplied URL through it. */
+int http_request_service(http_client *c, const char *method, const char *url,
+                         const char *const *headers, const char *body,
+                         size_t body_len, int timeout_ms, int retries,
+                         http_response *out);
+
 void http_response_free(http_response *r);
 
 /* Why the most recent attempt made by http_request() ON THE CALLING THREAD

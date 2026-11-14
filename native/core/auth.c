@@ -110,7 +110,7 @@ static char *http_get_jwks(void) {
   http_client *c = http_client_new();
   if (!c) return NULL;
   http_response r = {0};
-  int rc = http_request(c, "GET", url, NULL, NULL, 0, 8000, 1, &r);
+  int rc = http_request_service(c, "GET", url, NULL, NULL, 0, 8000, 1, &r);
   char *doc = NULL;
   if (rc == 0 && r.status >= 200 && r.status < 300 && r.body)
     doc = strdup(r.body);

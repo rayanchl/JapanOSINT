@@ -200,14 +200,21 @@ static const hp_source HP3B40_CNGOV[] = {
     .record_type = "policy-document",
     .tags = "\"china\",\"state-council\",\"policy\",\"law\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://sousuo.www.gov.cn/search-gov/data?t=zhengcelibrary_gw&q=&timetype=timeqb&mintime=&maxtime=&sort=pubtime&sortType=1&searchfield=title&p=1&n=500",
+    /* 2026-11-12: the search API now refuses n>150 per page — n=200 and n=500
+     * answer 302 to www.gov.cn/gonggong/ymbcz/ (its page-not-found), which
+     * read as HTTP 404 on every run, while n=100 and n=150 answer 200 for all
+     * four libraries (gw, bm, gb, or). Read at n=100, below the bound; page
+     * 1 and 2 share no id. totalCount 6,229 -> 63 pages; page_max 80 leaves
+     * headroom (a page past the end answers an empty listVO and ends the walk).
+     * The figures below at 500 per page are the 2026-10 reading. */
+    .url = "https://sousuo.www.gov.cn/search-gov/data?t=zhengcelibrary_gw&q=&timetype=timeqb&mintime=&maxtime=&sort=pubtime&sortType=1&searchfield=title&p=1&n=100",
     .array_path = "searchVO.catMap.gongwen.listVO",
     .body_keys = "summary",
     .date_keys = "pubtimeStr",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
-    .page_max = 20,
+    .page_max = 80,
     .page_param = "p",
     .title_keys = "title",
     .description = "The search API behind the gov.cn policy document library, State "
@@ -224,14 +231,21 @@ static const hp_source HP3B40_CNGOV[] = {
     .record_type = "policy-document",
     .tags = "\"china\",\"ministries\",\"policy\",\"regulation\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://sousuo.www.gov.cn/search-gov/data?t=zhengcelibrary_bm&q=&timetype=timeqb&mintime=&maxtime=&sort=pubtime&sortType=1&searchfield=title&p=1&n=500",
+    /* 2026-11-12: the search API now refuses n>150 per page — n=200 and n=500
+     * answer 302 to www.gov.cn/gonggong/ymbcz/ (its page-not-found), which
+     * read as HTTP 404 on every run, while n=100 and n=150 answer 200 for all
+     * four libraries (gw, bm, gb, or). Read at n=100, below the bound; page
+     * 1 and 2 share no id. totalCount 12,822 -> 129 pages; page_max 150 leaves
+     * headroom (a page past the end answers an empty listVO and ends the walk).
+     * The figures below at 500 per page are the 2026-10 reading. */
+    .url = "https://sousuo.www.gov.cn/search-gov/data?t=zhengcelibrary_bm&q=&timetype=timeqb&mintime=&maxtime=&sort=pubtime&sortType=1&searchfield=title&p=1&n=100",
     .array_path = "searchVO.catMap.bumenfile.listVO",
     .body_keys = "summary",
     .date_keys = "pubtimeStr",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
-    .page_max = 35,
+    .page_max = 150,
     .page_param = "p",
     .title_keys = "title",
     .description = "Ministry and commission documents (部门文件) in the gov.cn policy "
@@ -248,14 +262,21 @@ static const hp_source HP3B40_CNGOV[] = {
     .record_type = "gazette-item",
     .tags = "\"china\",\"state-council\",\"gazette\",\"law\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://sousuo.www.gov.cn/search-gov/data?t=zhengcelibrary_gb&q=&timetype=timeqb&mintime=&maxtime=&sort=pubtime&sortType=1&searchfield=title&p=1&n=500",
+    /* 2026-11-12: the search API now refuses n>150 per page — n=200 and n=500
+     * answer 302 to www.gov.cn/gonggong/ymbcz/ (its page-not-found), which
+     * read as HTTP 404 on every run, while n=100 and n=150 answer 200 for all
+     * four libraries (gw, bm, gb, or). Read at n=100, below the bound; page
+     * 1 and 2 share no id. totalCount 15,074 -> 151 pages; page_max 175 leaves
+     * headroom (a page past the end answers an empty listVO and ends the walk).
+     * The figures below at 500 per page are the 2026-10 reading. */
+    .url = "https://sousuo.www.gov.cn/search-gov/data?t=zhengcelibrary_gb&q=&timetype=timeqb&mintime=&maxtime=&sort=pubtime&sortType=1&searchfield=title&p=1&n=100",
     .array_path = "searchVO.catMap.gongbao.listVO",
     .body_keys = "summary",
     .date_keys = "pubtimeStr",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
-    .page_max = 40,
+    .page_max = 175,
     .page_param = "p",
     .title_keys = "title",
     .description = "Every item published in the State Council Gazette (国务院公报) since "
@@ -393,14 +414,21 @@ static const hp_source HP3B40_CNGOV[] = {
     .record_type = "policy-interpretation",
     .tags = "\"china\",\"state-council\",\"policy\",\"government\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://sousuo.www.gov.cn/search-gov/data?t=zhengcelibrary_or&q=&timetype=timeqb&mintime=&maxtime=&sort=pubtime&sortType=1&searchfield=title&p=1&n=500",
+    /* 2026-11-12: the search API now refuses n>150 per page — n=200 and n=500
+     * answer 302 to www.gov.cn/gonggong/ymbcz/ (its page-not-found), which
+     * read as HTTP 404 on every run, while n=100 and n=150 answer 200 for all
+     * four libraries (gw, bm, gb, or). Read at n=100, below the bound; page
+     * 1 and 2 share no id. totalCount 8,644 -> 87 pages; page_max 100 leaves
+     * headroom (a page past the end answers an empty listVO and ends the walk).
+     * The figures below at 500 per page are the 2026-10 reading. */
+    .url = "https://sousuo.www.gov.cn/search-gov/data?t=zhengcelibrary_or&q=&timetype=timeqb&mintime=&maxtime=&sort=pubtime&sortType=1&searchfield=title&p=1&n=100",
     .array_path = "searchVO.catMap.otherfile.listVO",
     .body_keys = "summary",
     .date_keys = "pubtimeStr",
     .id_keys = "id",
     .interval = 86400,
     .link_keys = "url",
-    .page_max = 25,
+    .page_max = 100,
     .page_param = "p",
     .title_keys = "title",
     .description = "The fourth collection of the gov.cn policy library (otherfile): "

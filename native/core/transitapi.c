@@ -829,7 +829,19 @@ static char *route_active_trips(db_handle *db, const char *query) {
 /* ===================================================================== */
 
 /* departures (dir=1) or arrivals (dir=0) for a stop_id at >= nowSec.
- * Appends rows to `arr` with the JS spread {...d, wall_sec, [member_mode]}. */
+ * Appends rows to `arr` with the JS spread {...d, wall_sec, [member_mode]}.
+ *
+ * The delay falls back to the other half of the stop update (2026-11-12): a
+ * GTFS-RT StopTimeUpdate that gives only an arrival means the departure is
+ * that late too, and the measured Japanese feeds split both ways — buscatch
+ * publishes arrival only (1,093 of 14,616 updates), Nagai departure only —
+ * so reading one column left those operators' boards without delays they
+ * publish. A delay counts only if it was RECEIVED in the last 30 minutes: it
+ * is minute-scale data, gtfs_rt_jp.c replaces an operator's rows only when it
+ * runs, and under the default 6 h system cadence an unrefreshed row would show
+ * a six-hour-old delay as live. A board with no fresh update shows the
+ * timetable, which is what it showed before any realtime row existed. `routeIdSet` collects "org_id<US>route_id" pairs, because a route
+ * id like "3" exists at many operators and an alert must stay with its own. */
 static void query_stop_times(db_handle *db, const char *stopId, int nowSec,
                              int departures, cJSON *arr,
                              const char *member_mode /* NULL = single */,
@@ -838,22 +850,24 @@ static void query_stop_times(db_handle *db, const char *stopId, int nowSec,
     "SELECT st.trip_id, st.stop_sequence, st.departure_sec, "
     " tr.headsign, tr.route_id, r.short_name AS route_short, "
     " r.long_name AS route_long, r.color AS route_color, "
-    " rt.departure_delay_s AS delay_s "
+    " COALESCE(rt.departure_delay_s, rt.arrival_delay_s) AS delay_s, st.org_id "
     "FROM gtfs_stop_times st "
     "JOIN gtfs_trips tr ON tr.org_id=st.org_id AND tr.feed_id=st.feed_id AND tr.trip_id=st.trip_id "
     "LEFT JOIN gtfs_routes r ON r.org_id=tr.org_id AND r.feed_id=tr.feed_id AND r.route_id=tr.route_id "
     "LEFT JOIN gtfs_rt_trip_updates rt ON rt.org_id=st.org_id AND rt.trip_id=st.trip_id AND rt.stop_sequence=st.stop_sequence "
+    " AND rt.received_at >= strftime('%Y-%m-%dT%H:%M:%SZ','now','-30 minutes') "
     "WHERE st.stop_id=?1 AND st.departure_sec>=?2 "
     "ORDER BY st.departure_sec ASC LIMIT 10"
    :
     "SELECT st.trip_id, st.stop_sequence, st.arrival_sec, "
     " tr.headsign, tr.route_id, r.short_name AS route_short, "
     " r.long_name AS route_long, r.color AS route_color, "
-    " rt.arrival_delay_s AS delay_s "
+    " COALESCE(rt.arrival_delay_s, rt.departure_delay_s) AS delay_s, st.org_id "
     "FROM gtfs_stop_times st "
     "JOIN gtfs_trips tr ON tr.org_id=st.org_id AND tr.feed_id=st.feed_id AND tr.trip_id=st.trip_id "
     "LEFT JOIN gtfs_routes r ON r.org_id=tr.org_id AND r.feed_id=tr.feed_id AND r.route_id=tr.route_id "
     "LEFT JOIN gtfs_rt_trip_updates rt ON rt.org_id=st.org_id AND rt.trip_id=st.trip_id AND rt.stop_sequence=st.stop_sequence "
+    " AND rt.received_at >= strftime('%Y-%m-%dT%H:%M:%SZ','now','-30 minutes') "
     "WHERE st.stop_id=?1 AND st.arrival_sec>=?2 "
     "ORDER BY st.arrival_sec ASC LIMIT 10";
 
@@ -880,7 +894,10 @@ static void query_stop_times(db_handle *db, const char *stopId, int nowSec,
                               (double)sqlite3_column_int64(s, 2));
     if (member_mode) cJSON_AddStringToObject(d, "member_mode", member_mode);
     if (routeIdSet && sqlite3_column_type(s, 4) != SQLITE_NULL) {
-      const char *rid = col_text(s, 4);
+      char ridbuf[512];
+      const char *r0 = col_text(s, 4), *org = col_text(s, 9);
+      snprintf(ridbuf, sizeof ridbuf, "%s\x1f%s", org ? org : "", r0 ? r0 : "");
+      const char *rid = r0 ? ridbuf : NULL;
       int seen = 0, m = cJSON_GetArraySize(routeIdSet);
       for (int i = 0; i < m; i++) {
         cJSON *e = cJSON_GetArrayItem(routeIdSet, i);
@@ -941,14 +958,22 @@ static int is_cluster_uid(const char *u) {
   return n == 40;
 }
 
-/* alerts: for each route id, gtfs_rt_alerts WHERE route_ids LIKE %"rid"%,
- * up to 10 total. `dedupe` => skip dup header|description (cluster path). */
+/* alerts: for each (operator, route id), gtfs_rt_alerts of THAT operator
+ * whose route_ids JSON contains "rid", up to 10 total. `dedupe` => skip dup
+ * header|description (cluster path).
+ *
+ * Scoped to the operator since 2026-11-12, when gtfs_rt_jp.c began writing
+ * this table: route ids are an operator's own namespace, so matching on the id
+ * alone showed one bus company's alert on another's board wherever both had a
+ * route "3". The id is LIKE-escaped, because "_" (common in route ids) is a
+ * LIKE wildcard. */
 static void collect_alerts(db_handle *db, cJSON *routeIds, int dedupe,
                            cJSON *alerts) {
   sqlite3_stmt *s = NULL;
   if (sqlite3_prepare_v2(db->h,
         "SELECT header_text, description_text, effect FROM gtfs_rt_alerts "
-        "WHERE route_ids LIKE ?1 LIMIT 10", -1, &s, NULL) != SQLITE_OK)
+        "WHERE org_id=?2 AND route_ids LIKE ?1 ESCAPE '\\' LIMIT 10", -1, &s, NULL)
+        != SQLITE_OK)
     return;
   cJSON *seen = dedupe ? cJSON_CreateArray() : NULL;
   int m = cJSON_GetArraySize(routeIds);
@@ -956,10 +981,20 @@ static void collect_alerts(db_handle *db, cJSON *routeIds, int dedupe,
     if (cJSON_GetArraySize(alerts) >= 10) break;
     cJSON *re = cJSON_GetArrayItem(routeIds, i);
     if (!re || !cJSON_IsString(re)) continue;
-    char needle[256];
-    snprintf(needle, sizeof needle, "%%\"%s\"%%", re->valuestring);
+    const char *sep = strchr(re->valuestring, '\x1f');
+    if (!sep) continue;
+    char org[256], esc[512], needle[600];
+    snprintf(org, sizeof org, "%.*s", (int)(sep - re->valuestring), re->valuestring);
+    size_t k = 0;
+    for (const char *c = sep + 1; *c && k + 2 < sizeof esc; c++) {
+      if (*c == '%' || *c == '_' || *c == '\\') esc[k++] = '\\';
+      esc[k++] = *c;
+    }
+    esc[k] = 0;
+    snprintf(needle, sizeof needle, "%%\"%s\"%%", esc);
     sqlite3_reset(s);
     sqlite3_bind_text(s, 1, needle, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(s, 2, org, -1, SQLITE_TRANSIENT);
     while (sqlite3_step(s) == SQLITE_ROW) {
       const char *h = col_text(s, 0);
       const char *d = col_text(s, 1);
@@ -1355,9 +1390,10 @@ static char *vehicle_info(db_handle *db, const char *tripIdRaw) {
   sqlite3_stmt *ns = NULL;
   if (sqlite3_prepare_v2(db->h,
         "SELECT st.stop_sequence, st.stop_id, st.arrival_sec, st.departure_sec, "
-        "rt.arrival_delay_s AS delay_s "
+        "COALESCE(rt.arrival_delay_s, rt.departure_delay_s) AS delay_s "
         "FROM gtfs_stop_times st LEFT JOIN gtfs_rt_trip_updates rt "
         "ON rt.org_id=st.org_id AND rt.trip_id=st.trip_id AND rt.stop_sequence=st.stop_sequence "
+        " AND rt.received_at >= strftime('%Y-%m-%dT%H:%M:%SZ','now','-30 minutes') "
         "WHERE st.org_id=?1 AND st.feed_id=?2 AND st.trip_id=?3 "
         "AND st.arrival_sec>=?4 ORDER BY st.arrival_sec ASC LIMIT 1",
         -1, &ns, NULL) == SQLITE_OK) {

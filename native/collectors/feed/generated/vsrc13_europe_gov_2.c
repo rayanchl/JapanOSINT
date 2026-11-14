@@ -463,7 +463,9 @@ REGISTER_SOURCE(eur_sejm_eli_mp);
  * (/sejm/term10/committees/<code>/sittings: 40 committees, ASW alone 147 sittings), which one
  * VJSON URL cannot reach, so the id is left for a registry decision. The collection answers
  * ascending by num (1, 2, 3 ...), so this row reads the OLDEST 2,000 of 20,935 every run;
- * cyb-sejm-pl-interpellations now reads the newest 2,000 (sort_by=-num). */
+ * cyb-sejm-pl-interpellations now reads the newest 2,000 (sort_by=-num).
+ * 2026-11-12: it now reads the WHOLE term in one request (hp3b31_eunat.c,
+ * 20,989 of 20,989), so this row's 2,000 are a subset of it. */
 VJSON_KEYED(eur_sejm_term10_committees_sits, "eur-sejm-term10-committees-sits", "Sejm Poland — interpellations", "Sejm Poland — interpellations",
   "europe_gov", "politics",
   "https://api.sejm.gov.pl/sejm/term10/interpellations?limit=100&offset=0",
@@ -637,12 +639,177 @@ VJSON(eur_stortinget_publikasjoner, "eur-stortinget-publikasjoner", "Stortinget 
   "no", "[\"nor\",\"politics\"]", 21600,
   "Published verbatim proceedings of the Norwegian parliament.");
 
-VJSON(eur_stortinget_saker, "eur-stortinget-saker", "Stortinget Norway — parliamentary cases", "Stortinget Norway — parliamentary cases",
-  "europe_gov", "politics",
-  "https://data.stortinget.no/eksport/saker?format=json",
-  "saker_liste",
-  "no", "[\"nor\",\"politics\"]", 21600,
-  "Cases before the Norwegian parliament with status and committee.");
+#include "lib/seenset.h"
+
+/* eur-stortinget-saker: the CURRENT session every run, and every PAST session
+ * over a cycle — one source (the owner's decision, 2026-11-12: "Fuse current
+ * and history, they are one source after all"). It was a VJSON row reading
+ * the bare export, which is the current session only; its twin
+ * gov-no-stortinget-saker (vsrc_legal_2.c, removed, see
+ * docs/removed-sources-2026-11-11-twins.tsv) was pinned to
+ * `sesjonid=2025-2026`, a session that has since closed.
+ *
+ * Measured 2026-11-12. /eksport/sesjoner lists 43 sessions newest first,
+ * 2028-2029 down to 1986-87, and names the running one in
+ * `innevaerende_sesjon` (2026-2027); the two future sessions answer an empty
+ * saker_liste. /eksport/saker takes `sesjonid` (a bogus one is HTTP 400) and
+ * answers one session whole: 2026-2027 232 cases (538 KB), 2025-2026 664
+ * (1.8 MB), 2010-2011 674, 1986-87 432 — no paging, no session too large for
+ * one request. So: the session list, the current session, and
+ * STORTINGET_HIST_PER_RUN past sessions a run, newest past first, the next
+ * one stored as `s=<sesjonid>` (source_ctx resume_in/out). 40 past sessions
+ * at 3 a run is 14 runs, about 3.5 days at a six-hour cadence; each run is 5
+ * requests and ~5 MB.
+ *
+ * Identity is the case `id` (Stortinget's sak id), as before, and it spans
+ * sessions: 134 of the current session's 232 cases are also in 2025-2026's
+ * export, and all 134 are identical there once the per-response
+ * `respons_dato_tid` stamps are set aside (compared recursively) — the export
+ * serves a case's current state whichever session it is listed under. So a
+ * case already emitted THIS run is skipped when a later session lists it
+ * again: real dedupe, counted on the run log, and it keeps the run line's
+ * UID-COLLISION count meaning what it says. Across runs the re-read upserts
+ * the same content. A past session that fails to load is NOT stepped over:
+ * the position stays on it so the next run retries it, and the cycle notice
+ * names it. */
+#define STORTINGET_SAKER "https://data.stortinget.no/eksport/saker?format=json"
+#define STORTINGET_HIST_PER_RUN 3
+
+/* One session's cases (NULL = the export's own default, the current
+ * session). Returns records emitted, or -1 when the listing did not load. */
+static int stortinget_saker_session(const source_ctx *c, intel_sink *s,
+                                    const char *sesjon, seen_set *seen,
+                                    int *dupes) {
+  char url[192];
+  if (sesjon) snprintf(url, sizeof url, STORTINGET_SAKER "&sesjonid=%s", sesjon);
+  else        snprintf(url, sizeof url, "%s", STORTINGET_SAKER);
+  cJSON *doc = feed_get_json(c->http, url, 60000);
+  cJSON *arr = doc ? cJSON_GetObjectItemCaseSensitive(doc, "saker_liste") : NULL;
+  if (!cJSON_IsArray(arr)) {
+    fprintf(stderr, "[eur-stortinget-saker] session listing failed: %s\n", url);
+    cJSON_Delete(doc);
+    return -1;
+  }
+  cJSON *rec = arr->child;
+  while (rec) {
+    cJSON *next = rec->next;
+    cJSON *id = cJSON_GetObjectItemCaseSensitive(rec, "id");
+    char key[64] = "";
+    if (cJSON_IsNumber(id))
+      snprintf(key, sizeof key, "%.0f", id->valuedouble);
+    else if (cJSON_IsString(id) && id->valuestring)
+      snprintf(key, sizeof key, "%s", id->valuestring);
+    if (key[0] && !seen_add(seen, key)) {
+      cJSON_Delete(cJSON_DetachItemViaPointer(arr, rec));
+      (*dupes)++;
+    }
+    rec = next;
+  }
+  int e = jsonlist_emit_ex(s, "eur-stortinget-saker", doc, "saker_liste",
+                           "politics", "no", "[\"nor\",\"politics\"]", NULL);
+  cJSON_Delete(doc);
+  return e > 0 ? e : 0;
+}
+
+static int run_eur_stortinget_saker(const source_ctx *c, intel_sink *s) {
+  const char *ID = "eur-stortinget-saker";
+  seen_set seen = {0};
+  int dupes = 0, n = 0;
+  cJSON *ses = feed_get_json(c->http,
+                             "https://data.stortinget.no/eksport/sesjoner?format=json",
+                             30000);
+  cJSON *list = ses ? cJSON_GetObjectItemCaseSensitive(ses, "sesjoner_liste") : NULL;
+  cJSON *cur  = ses ? cJSON_GetObjectItemCaseSensitive(ses, "innevaerende_sesjon") : NULL;
+  cJSON *cid  = cJSON_IsObject(cur) ? cJSON_GetObjectItemCaseSensitive(cur, "id") : NULL;
+  const char *cur_s = (cJSON_IsString(cid) && cid->valuestring && cid->valuestring[0])
+                        ? cid->valuestring : NULL;
+
+  int ec = stortinget_saker_session(c, s, cur_s, &seen, &dupes);
+  if (ec > 0) n += ec;
+
+  /* The past sessions: the entries AFTER the current one in the
+   * newest-first list. Nothing is guessed when the list or the current
+   * session cannot be found in it — the history is skipped this run, the
+   * stored position kept, and the notice says so. */
+  int nlist = cJSON_IsArray(list) ? cJSON_GetArraySize(list) : 0;
+  const char **past = nlist > 0 ? calloc((size_t)nlist, sizeof *past) : NULL;
+  int npast = 0, found = 0;
+  if (past && cur_s) {
+    cJSON *it;
+    cJSON_ArrayForEach(it, list) {
+      cJSON *sid = cJSON_GetObjectItemCaseSensitive(it, "id");
+      if (!cJSON_IsString(sid) || !sid->valuestring || !sid->valuestring[0]) continue;
+      if (!found) { found = !strcmp(sid->valuestring, cur_s); continue; }
+      past[npast++] = sid->valuestring;   /* npast < nlist: one slot per entry */
+    }
+  }
+
+  int hist = 0, start = 0, next = 0, read = 0;
+  const char *failed = NULL;
+  char why[400];
+  if (!found || npast == 0) {
+    snprintf(why, sizeof why,
+             "the session list did not load or did not name the running "
+             "session, so only the current session's export was read this "
+             "run; the history position is kept");
+  } else {
+    const char *ri = c->resume_in;
+    if (ri && !strncmp(ri, "s=", 2))
+      for (int i = 0; i < npast; i++)
+        if (!strcmp(past[i], ri + 2)) { start = i; break; }
+    next = start;
+    while (next < npast && read < STORTINGET_HIST_PER_RUN) {
+      int e = stortinget_saker_session(c, s, past[next], &seen, &dupes);
+      if (e < 0) { failed = past[next]; break; }
+      hist += e;
+      read++;
+      next++;
+    }
+    n += hist;
+    if (c->resume_out) {
+      char tok[64];
+      snprintf(tok, sizeof tok, "s=%s", next < npast ? past[next] : "");
+      c->resume_out(c, next < npast ? tok : NULL);
+    }
+    snprintf(why, sizeof why,
+             "the current session %s is read whole every run; the %d past "
+             "sessions are read %d a run, and this run read %d (%s .. %s)%s%s",
+             cur_s, npast, STORTINGET_HIST_PER_RUN, read,
+             read ? past[start] : "-", read ? past[start + read - 1] : "-",
+             failed ? "; FAILED to load " : "", failed ? failed : "");
+  }
+  cJSON *extra = cJSON_CreateObject();
+  if (extra) {
+    cJSON_AddNumberToObject(extra, "past_sessions", npast);
+    cJSON_AddNumberToObject(extra, "past_sessions_read", read);
+    cJSON_AddNumberToObject(extra, "repeated_cases_skipped", dupes);
+    cJSON_AddStringToObject(extra, "next_run_resumes_at",
+                            !found || npast == 0 ? "unchanged"
+                            : next < npast ? past[next]
+                            : "the newest past session — this run completed the cycle");
+  }
+  jo_truncation_notice_ex(s, ID, "session-history-cycle", hist, -1, why,
+                          "the next run reads the next past sessions; raise "
+                          "STORTINGET_HIST_PER_RUN to finish a cycle sooner",
+                          extra);
+  fprintf(stderr, "[%s] emitted %d case(s) (current %d, history %d from %d "
+          "session(s)); %d repeated case(s) skipped\n",
+          ID, n, ec > 0 ? ec : 0, hist, read, dupes);
+  seen_free(&seen);
+  free(past);
+  cJSON_Delete(ses);
+  return ec < 0 ? -1 : 0;
+}
+static const source_def eur_stortinget_saker = {
+  .id = "eur-stortinget-saker", .collector = "europe_gov",
+  .name = "Stortinget Norway — parliamentary cases",
+  .name_ja = "Stortinget Norway — parliamentary cases",
+  .update_interval_sec = 21600, .run = run_eur_stortinget_saker,
+  .category = "politics", .type = "api",
+  .url = STORTINGET_SAKER,
+  .description = "Cases before the Norwegian parliament with status and committee: the current session every run, and every past session back to 1986-87 over a cycle.",
+  .layer = NULL, .free_tier = 1 };
+REGISTER_SOURCE(eur_stortinget_saker);
 
 /* Tweede Kamer / Folketing OData rows: `$orderby=<modified> desc,<key>`
  * (2026-11-07), copied from the sorted siblings (GewijzigdOp desc on TK

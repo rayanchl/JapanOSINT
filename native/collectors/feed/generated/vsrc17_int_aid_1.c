@@ -54,18 +54,9 @@ VJSON(ocha_fts_location, "ocha-fts-location", "UN OCHA FTS — location registry
   "en", "[\"int\",\"aid\",\"batch17\",\"high-penetrancy\"]", 86400,
   "258 countries/territories with FTS internal id, ISO3, pcode, admin level and isRegion flag — the join key that turns an FTS flow's destination id into a country.");
 
-/* `project_id` is not in the uid precedence list, so every project fell back
- * to a hash of (title, link, date) and UNDP reuses a project title across
- * countries and phases — 4,000 emitted, 3,968 stored. Verified live
- * 2026-09-07 on one page: 200 records, 200 distinct project_id, 199 distinct
- * titles, which is the collision itself. `offset=0` is added because the
- * keyed path walks with lib/pagewalk.c, which advances only a cursor the URL
- * already names; without it the walk would stop at page 1. Verified live:
- * offset=200 returns a different first project. */
-VJSON_KEYED(undp_transparency_projects, "undp-transparency-projects", "UNDP — transparency portal projects", "UNDP — transparency portal projects",
-  "int_aid", "aid",
-  "https://api.open.undp.org/api/project_list/?year=2024&limit=200&offset=0",
-  "data.data",
-  "en", "[\"int\",\"aid\",\"batch17\",\"high-penetrancy\"]", 86400,
-  "UNDP project register: project_id, title, description, budget and expense in USD, country, sector list with codes, SDG mappings, signature solution, donor list and gender/policy markers. The year parameter is mandatory — without it the API returns 400.",
-  "project_id");
+/* undp-transparency-projects MOVED 2026-11-12 to collectors/pivot/table/
+ * hp3_gov.c, same id: its frozen `year=2024` became `{date:%Y}` with a
+ * one-year step back, and because a record's budget and expense are that
+ * year's with no year field, the row needs hpengine's `date_field` to key on
+ * project_id+year. The old row's keying note (project_id, 2026-09-07) is
+ * carried there. */

@@ -229,6 +229,17 @@ pagewalktest:
 	  third_party/cJSON.c
 	./bin/pagewalk_test
 
+# Offline test for the GTFS Realtime protobuf decoder (lib/gtfsrt.c). Every
+# fixture is hand-encoded bytes: a negative int32 delay (a ten-byte varint),
+# an alert with two translations, unknown fields of every wire type skipped,
+# truncation rejected at every cut, and a zero-byte body refused as "not a
+# feed" while a bare FeedHeader is an honest empty. No network.
+.PHONY: gtfsrttest
+gtfsrttest:
+	@mkdir -p bin
+	$(CC) $(CFLAGS) -o bin/gtfsrt_test tests/gtfsrt_test.c lib/gtfsrt.c -lm
+	./bin/gtfsrt_test
+
 # Offline round-trip for the JWT public-key path (core/auth.c). Generates real
 # RSA-2048 and P-256 keys, publishes them as JWKs, signs real JWTs and runs the
 # real jwk_to_pkey/verify_asym — because the failure mode of a wrong public key

@@ -20,6 +20,8 @@
 #include <errno.h>
 #include <time.h>
 #include <pthread.h>
+#include <netdb.h>
+#include <sys/socket.h>
 
 typedef struct { char *host; int requests; int ok; } host_log;
 
@@ -189,12 +191,87 @@ static size_t on_data(void *ptr, size_t sz, size_t nm, void *ud) {
  * 169.254.169.254 (or a DNS answer that rebinds between our check and curl's
  * own resolve) is caught here rather than being followed. */
 #if LIBCURL_VERSION_NUM >= 0x075000            /* 7.80.0: CURLOPT_PREREQFUNCTION */
+/* The operator's egress proxy, as libcurl itself will use it: the proxy
+ * variables in the process environment. Behind a proxy the connected peer
+ * this callback sees is the PROXY, never the destination — and an egress
+ * proxy commonly listens on loopback. Measured 2026-11-14 in this tree's own
+ * cloud container: HTTPS_PROXY=http://127.0.0.1:<port>, and with private
+ * addresses refused by default every fetch the engine made was aborted here
+ * ("blocked connection to 127.0.0.1") in under a second, while the same run
+ * with JO_HTTP_BLOCK_PRIVATE=0 stored 429 records. So a peer that is EXACTLY
+ * a configured proxy endpoint — address AND port — is the operator's egress,
+ * not a target. Matching the port matters: a collector URL whose name
+ * resolves to the same loopback address on any other port (this server's own
+ * API, a local database) is still refused. What this cannot judge is where
+ * the proxy then connects: the destination's literal is still checked by
+ * hostgate_url_check() before any socket opens, and resolving a name behind a
+ * proxy is the proxy's job (as it was before strict became the default). */
+#define EGRESS_PROXY_MAX 8
+static struct { char ip[64]; int port; } g_egress[EGRESS_PROXY_MAX];
+static int g_egress_n;
+static pthread_once_t g_egress_once = PTHREAD_ONCE_INIT;
+
+static void egress_add(const char *url) {
+  if (!url || !*url) return;
+  const char *h = strstr(url, "://");
+  h = h ? h + 3 : url;
+  const char *at = strchr(h, '@');                 /* user:pass@ */
+  const char *slash = strchr(h, '/');
+  if (at && (!slash || at < slash)) h = at + 1;
+  char host[256]; int port = 1080;                 /* libcurl's proxy default */
+  const char *end = h;
+  if (*h == '[') {                                 /* [v6]:port */
+    const char *rb = strchr(h, ']');
+    if (!rb) return;
+    snprintf(host, sizeof host, "%.*s", (int)(rb - h - 1), h + 1);
+    end = rb + 1;
+  } else {
+    while (*end && *end != ':' && *end != '/') end++;
+    snprintf(host, sizeof host, "%.*s", (int)(end - h), h);
+  }
+  if (*end == ':') port = atoi(end + 1);
+  if (!host[0] || port <= 0 || port > 65535) return;
+  struct addrinfo hints = {0}, *res = NULL;
+  hints.ai_socktype = SOCK_STREAM;
+  if (getaddrinfo(host, NULL, &hints, &res) != 0) return;
+  for (struct addrinfo *ai = res; ai && g_egress_n < EGRESS_PROXY_MAX; ai = ai->ai_next) {
+    char ip[64];
+    if (getnameinfo(ai->ai_addr, ai->ai_addrlen, ip, sizeof ip, NULL, 0,
+                    NI_NUMERICHOST) != 0) continue;
+    int dup = 0;
+    for (int i = 0; i < g_egress_n; i++)
+      if (g_egress[i].port == port && !strcmp(g_egress[i].ip, ip)) dup = 1;
+    if (dup) continue;
+    snprintf(g_egress[g_egress_n].ip, sizeof g_egress[0].ip, "%s", ip);
+    g_egress[g_egress_n++].port = port;
+  }
+  freeaddrinfo(res);
+}
+
+static void egress_init(void) {
+  static const char *const VARS[] = {
+    "https_proxy", "HTTPS_PROXY", "http_proxy", "HTTP_PROXY",
+    "all_proxy", "ALL_PROXY", NULL };
+  for (int i = 0; VARS[i]; i++) egress_add(getenv(VARS[i]));
+}
+
+static int is_egress_proxy(const char *ip, int port) {
+  pthread_once(&g_egress_once, egress_init);
+  if (!ip) return 0;
+  for (int i = 0; i < g_egress_n; i++)
+    if (g_egress[i].port == port && !strcmp(g_egress[i].ip, ip)) return 1;
+  return 0;
+}
+
 static int on_prereq(void *ud, char *conn_primary_ip, char *conn_local_ip,
                      int conn_primary_port, int conn_local_port) {
-  (void)ud; (void)conn_local_ip; (void)conn_primary_port; (void)conn_local_port;
-  /* The FLOOR as configured, not a hardcoded 0: with JO_HTTP_BLOCK_PRIVATE=1
-   * the operator asked for RFC1918/loopback to be refused, and a hostname is
-   * only ever caught here (url_check() sees a name, not an address). */
+  (void)ud; (void)conn_local_ip; (void)conn_local_port;
+  /* The FLOOR as configured, not a hardcoded 0: strict by default since
+   * 2026-11-12 (RFC1918/loopback refused unless JO_HTTP_BLOCK_PRIVATE=0 or the
+   * call is http_request_service()), and a hostname is only ever caught here
+   * (url_check() sees a name, not an address). The operator's egress proxy is
+   * the one private peer that is not a target (above). */
+  if (is_egress_proxy(conn_primary_ip, conn_primary_port)) return CURL_PREREQFUNC_OK;
   if (hostgate_addr_check_floor(conn_primary_ip) != HG_URL_OK) {
     fprintf(stderr, "[http] blocked connection to %s (private/link-local)\n",
             conn_primary_ip ? conn_primary_ip : "?");
@@ -765,6 +842,24 @@ static int do_once(http_client *c, const char *method, const char *url,
    * saturated host degrades to "as rude as before", never to a fetch error. */
   int gated = hostgate_acquire(url, timeout_ms > 0 ? timeout_ms : 30000);
   CURLcode rc = curl_easy_perform(e);
+  /* A server that sends a header HTTP/2 forbids — measured 2026-11-12 on a
+   * French commune's feed (JO47_FR_8CAA…): nghttp2 rejects an `upgrade: h2,h2c`
+   * response header on stream 1, intermittently (0 of 10 paced reads from
+   * curl, yet the engine's run failed on it) — fails the transfer with
+   * CURLE_HTTP2 / CURLE_HTTP2_STREAM although the same request answers 200 over
+   * HTTP/1.1. That is a framing fault in the protocol negotiation, not a
+   * refusal, so the request is made once more on the same handle with
+   * HTTP/1.1 pinned, inside the same host-gate slot. Any other failure is
+   * returned as before; a second HTTP/2 error cannot occur on the retry. */
+  if (rc == CURLE_HTTP2 || rc == CURLE_HTTP2_STREAM) {
+    fprintf(stderr, "[http] %s: %s; retrying once over HTTP/1.1\n", url,
+            ebuf[0] ? ebuf : curl_easy_strerror(rc));
+    free(b.buf); b.buf = NULL; b.len = 0; b.over = 0;
+    hs.retry_after_ms = -1;
+    ebuf[0] = 0;
+    curl_easy_setopt(e, CURLOPT_HTTP_VERSION, (long)CURL_HTTP_VERSION_1_1);
+    rc = curl_easy_perform(e);
+  }
   if (gated) hostgate_release(url);
   long code = 0;
   curl_easy_getinfo(e, CURLINFO_RESPONSE_CODE, &code);
@@ -948,6 +1043,26 @@ int http_request_max(http_client *c, const char *method, const char *url,
   int rc = http_request(c, method, url, headers, body, body_len,
                         timeout_ms, retries, out);
   g_body_ceiling_once = prev;
+  return rc;
+}
+
+/* http_request() to an OPERATOR-CONFIGURED SERVICE ENDPOINT — the
+ * LLM/embedding/vision server, the identity provider. Since 2026-11-12 the
+ * floor refuses loopback and private ranges by default (core/hostgate.c,
+ * floor_is_strict), and those servers are normally configured as
+ * http://127.0.0.1:<port>. This is the explicit exemption: the caller states
+ * that the URL came from operator configuration, and the call is judged at the
+ * lenient floor (metadata/link-local still refused, on every redirect hop).
+ * The scope is thread-local and restored on every exit, like the body ceiling
+ * above, so it cannot leak into the next fetch this worker makes. */
+int http_request_service(http_client *c, const char *method, const char *url,
+                         const char *const *headers, const char *body,
+                         size_t body_len, int timeout_ms, int retries,
+                         http_response *out) {
+  int prev = hostgate_service_scope(1);
+  int rc = http_request(c, method, url, headers, body, body_len,
+                        timeout_ms, retries, out);
+  hostgate_service_scope(prev);
   return rc;
 }
 

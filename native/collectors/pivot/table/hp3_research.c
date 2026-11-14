@@ -88,6 +88,15 @@ static const hp_source HP3_RESEARCH[] = {
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query={q}&format=json&pageSize=100",
     .array_path = "resultList.result",
+    /* 2026-11-12: this pivot read ONE page of 100 and stopped, though every
+     * response carries `nextPageUrl` (a cursorMark URL; malaria declares
+     * hitCount 292,969). Following it answers the next page (measured: ids
+     * 42780481 ... after 42685739 ...), whereas `page=` is ignored by this
+     * endpoint (page=2 answers page 1's ids). A Europe PMC record is
+     * identified by (source, id) — MED, PMC, PPR, PAT ... each number their
+     * own — so the walk keys on both rather than the first scalar. */
+    .next_path = "nextPageUrl",
+    .id_keys = "source+id",
     .description = "Biomedical and life-science literature including preprints, "
       "patents, clinical guidelines and NHS evidence, with author "
       "affiliations, grant acknowledgements and full text where open. "

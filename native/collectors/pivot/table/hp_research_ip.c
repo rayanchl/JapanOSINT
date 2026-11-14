@@ -150,7 +150,14 @@ static const hp_source HP_RESEARCH[] = {
            "&format=json&pageSize=40&resultType=core",
     .array_path = "resultList.result", .title_keys = "title", .id_keys = "id",
     .date_keys = "firstPublicationDate",
-    .page_param = "page", .page_start = 1,
+    /* Was `page_param = "page"`, which the search endpoint IGNORES (measured
+     * 2026-11-12, query=malaria pageSize=3: no page, page=1 and page=2 all
+     * answer the same three ids 42685739, 42685738, 42866579), so page 2 was
+     * page 1 again and the walk stopped there. The endpoint pages by cursor:
+     * every response carries `nextPageUrl` (a cursorMark URL), and following
+     * it answered the next three ids (42780481 ...). The same cursor
+     * EUROPEPMC_BOOKS walks. */
+    .next_path = "nextPageUrl",
     .description = "Europe PMC records including preprints, patents citing papers, "
       "grant acknowledgements and author affiliations — the grant IDs in the core "
       "result set link a paper to a specific funded project" },

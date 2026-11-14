@@ -37,6 +37,9 @@
 #include "cadence.h"           /* GET/PUT /api/sources/cadence */
 #include "source_interval.h"   /* GET/PUT/DELETE /api/sources/:id/interval */
 #include "thresholds.h"        /* /api/admin/thresholds */
+#include "collector_ttl.h"     /* /api/admin/collector-ttls */
+#include "station_merges.h"    /* /api/admin/station-merges */
+#include "report_template.h"   /* /api/reports/template */
 #include "cameraproxy.h"
 #include "uploadapi.h"
 #include "ffmpeg.h"
@@ -3280,6 +3283,65 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
         }
       }
 
+      /* collector_ttls (core/collector_ttl.h): the per-source cache TTL the
+       * /api/data and source-list readers use, which nothing wrote. Same gate
+       * as the thresholds above (this whole block); every write audited. */
+      if (eq(u,"/api/admin/collector-ttls")) {
+        if (mg_strcmp(hm->method, mg_str("GET")) != 0) {
+          reply_json(c,405,"{\"error\":\"method_not_allowed\"}"); return; }
+        int st = 200;
+        char *b = collector_ttl_api_list(g_db, &st);
+        if (!b) { reply_json(c,500,"{\"error\":\"server_error\"}"); return; }
+        reply_json(c,st,b); free(b); return;
+      }
+      {
+        char ckey[256] = {0};
+        if (seg(u,"/api/admin/collector-ttls/","",ckey,sizeof ckey)) {
+          int st = 200; char *b = NULL;
+          if (mg_strcmp(hm->method, mg_str("GET")) == 0)
+            b = collector_ttl_api_get(g_db, ckey, &st);
+          else if (mg_strcmp(hm->method, mg_str("PUT")) == 0)
+            b = collector_ttl_api_put(g_db, ckey, hm->body.buf, hm->body.len,
+                                      usr.id, &st);
+          else if (mg_strcmp(hm->method, mg_str("DELETE")) == 0)
+            b = collector_ttl_api_delete(g_db, ckey, usr.id, &st);
+          else { reply_json(c,405,"{\"error\":\"method_not_allowed\"}"); return; }
+          if (!b) { reply_json(c,500,"{\"error\":\"server_error\"}"); return; }
+          reply_json(c,st,b); free(b); return;
+        }
+      }
+
+      /* llm_station_merges review queue (core/station_merges.h): the LLM
+       * judge records 'pending' verdicts; only an approved same=1 row merges
+       * on the clusterer's next run. Decisions audited. */
+      if (eq(u,"/api/admin/station-merges")) {
+        if (mg_strcmp(hm->method, mg_str("GET")) != 0) {
+          reply_json(c,405,"{\"error\":\"method_not_allowed\"}"); return; }
+        char sv[16]={0}, lv[16]={0}, ov[16]={0};
+        mg_http_get_var(&hm->query,"status",sv,sizeof sv);
+        int hl = mg_http_get_var(&hm->query,"limit",lv,sizeof lv);
+        int ho = mg_http_get_var(&hm->query,"offset",ov,sizeof ov);
+        int st = 200;
+        char *b = station_merges_api_list(g_db, sv, hl>0?atoi(lv):0,
+                                          ho>0?atoi(ov):0, &st);
+        if (!b) { reply_json(c,500,"{\"error\":\"server_error\"}"); return; }
+        reply_json(c,st,b); free(b); return;
+      }
+      {
+        char mid[72] = {0}; int appr = -1;
+        if (seg(u,"/api/admin/station-merges/","/approve",mid,sizeof mid)) appr = 1;
+        else if (seg(u,"/api/admin/station-merges/","/reject",mid,sizeof mid)) appr = 0;
+        if (appr >= 0) {
+          if (mg_strcmp(hm->method, mg_str("POST")) != 0) {
+            reply_json(c,405,"{\"error\":\"method_not_allowed\"}"); return; }
+          int st = 200;
+          char *b = station_merges_api_review(g_db, mid, appr, hm->body.buf,
+                                              hm->body.len, usr.id, &st);
+          if (!b) { reply_json(c,500,"{\"error\":\"server_error\"}"); return; }
+          reply_json(c,st,b); free(b); return;
+        }
+      }
+
       if (eq(u,"/api/admin/restart")) {
         reply_json(c,501,"{\"error\":\"not_implemented\",\"detail\":"
           "\"restart is not supported by the native server\"}"); return;
@@ -4061,6 +4123,23 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
     }
 
 
+    /* ---- GET/PUT /api/reports/template — the workspace's report branding
+     * (core/report_template.h), which reportapi.c reads and nothing wrote.
+     * Any member reads; the owner/admin role check is inside the PUT, as
+     * tenantapi_members does it, so the unit test reaches the gate. ---- */
+    if (eq(u, "/api/reports/template")) {
+      tenant_ctx tc;
+      if (tenant_or_reply(c, hm, &usr, &tc) != 0) return;
+      int st = 200; char *b = NULL;
+      if (mg_strcmp(hm->method, mg_str("GET")) == 0)
+        b = report_template_api_get(g_db, &tc, &st);
+      else if (mg_strcmp(hm->method, mg_str("PUT")) == 0)
+        b = report_template_api_put(g_db, &tc, hm->body.buf, hm->body.len, &st);
+      else { reply_json(c, 405, "{\"error\":\"method_not_allowed\"}"); return; }
+      if (!b) { reply_json(c, 500, "{\"error\":\"server_error\"}"); return; }
+      reply_json(c, st, b); free(b); return;
+    }
+
     /* ---- Roadmap 16: POST /api/cases/:id/report — streaming report.
      * MUST precede the /api/cases block, which matches "/api/cases/" and
      * would otherwise swallow this route and 404 on act="report". ---- */
@@ -4753,6 +4832,47 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
       /* GET /api/me resolves LENIENTLY: a stale X-Tenant-Id falls back to
        * the first workspace and the reply names the one used, so a client
        * can recover. /api/audit[/verify] are strict like every other route. */
+
+      /* ?scope=platform (2026-11-12): the operator chain — rows written under
+       * the reserved "platform" tenant (break-glass, cadence/schedule/threshold
+       * edits, collector runs, raw evidence reads) — had no reader. Platform
+       * operator only, decided BEFORE tenant resolution so an operator with no
+       * workspace membership (a break-glass session) can still read it; a
+       * workspace owner/admin gets 403. The decision is
+       * tenantapi_audit_chain(), pinned in tests/unit/test_audit_chain.c. */
+      if (!eq(u, "/api/me")) {
+        char scv[24] = {0};
+        int hs = mg_http_get_var(&hm->query, "scope", scv, sizeof scv);
+        if (hs < 0) { reply_json(c, 400, "{\"error\":\"bad_scope\"}"); return; }
+        if (hs > 0 && strcmp(scv, "workspace") != 0) {
+          int oc = opgate_check(&usr);
+          if (oc == -401) { reply_json(c, 401, "{\"error\":\"Auth required\"}"); return; }
+          const char *chain = NULL;
+          int ast = tenantapi_audit_chain(scv, oc == 0, NULL, &chain);
+          if (ast == 400) {
+            reply_json(c, 400, "{\"error\":\"bad_scope\",\"detail\":\"scope is "
+                       "'workspace' (the default) or 'platform'\"}");
+            return;
+          }
+          if (ast != 0 || !chain) {
+            reply_json(c, 403, "{\"error\":\"forbidden\",\"detail\":\"the "
+                       "platform audit chain requires the platform operator role\"}");
+            return;
+          }
+          if (eq(u, "/api/audit/verify")) {
+            sem_spawn(c, hm, audit_verify_route, chain, "", 1);
+            return;
+          }
+          char lv[16] = {0}, ov[16] = {0};
+          int hl = mg_http_get_var(&hm->query, "limit", lv, sizeof lv);
+          int ho = mg_http_get_var(&hm->query, "offset", ov, sizeof ov);
+          char *pb = tenantapi_audit_list(g_db, chain,
+                                          hl > 0 ? atoi(lv) : 100, ho > 0 ? atoi(ov) : 0);
+          if (!pb) { reply_json(c, 500, "{\"error\":\"server_error\"}"); return; }
+          reply_json(c, 200, pb); free(pb); return;
+        }
+      }
+
       tenant_ctx tc;
       if (tenant_or_reply_ex(c, hm, &usr, &tc, eq(u, "/api/me")) != 0) return;
 

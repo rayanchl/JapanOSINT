@@ -187,7 +187,7 @@ size_t llm_ctx_chars(llm_client *c, int reserve_tokens) {
     http_response r = {0};
     /* Short timeout and no retry: this is a hint, not the work. A server that
      * will not answer /props in two seconds leaves the caller on its default. */
-    if (http_request(c ? c->http : NULL, "GET", url, NULL, NULL, 0, 2000, 0, &r) == 0
+    if (http_request_service(c ? c->http : NULL, "GET", url, NULL, NULL, 0, 2000, 0, &r) == 0
         && r.status >= 200 && r.status < 300 && r.body) {
       cJSON *j = cJSON_Parse(r.body);
       if (j) {
@@ -303,7 +303,7 @@ int llm_healthy(llm_client *c) {
   char *url = url_join(c->base_url, "/health");
   if (!url) return 0;
   http_response r = {0};
-  int rc = http_request(c->http, "GET", url, NULL, NULL, 0, 5000, 0, &r);
+  int rc = http_request_service(c->http, "GET", url, NULL, NULL, 0, 5000, 0, &r);
   free(url);
   int ok = (rc == 0 && r.status >= 200 && r.status < 300);
   http_response_free(&r);

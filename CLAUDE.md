@@ -349,7 +349,17 @@ that replaced them survive, so no coverage is lost. **A sweep's verdict is
 about the URL it sent, not about the row's name** — re-read a removal against
 the row as it stands now.
 
-**The registered count is 61,510** (2026-11-11, `make source-count`, both
+**The registered count is 61,511** (2026-11-14, `make source-count`, both
+floors re-recorded from that build): 61,510 less `gov-no-stortinget-saker`
+(fused into `eur-stortinget-saker`, which now reads the current session and
+cycles through every past one — the owner's decision "they are one source
+after all") and `mercari-trending` (its endpoint 404s while the site answers;
+`docs/removed-sources-2026-11-11-dead.tsv`), plus `gtfs-rt-jp` (the GTFS
+Realtime collector, `lib/gtfsrt.c`) and the two layers New York DEC split its
+remediation register into (`us-ny-dec-remediation-noaction`, `-closed`).
+Round three of the audit: `docs/audit-round2-2026-11-09.md`.
+
+**The registered count was 61,510** (2026-11-11, `make source-count`, both
 floors re-recorded from that build): 61,527 less 12 twin registrations
 (`docs/removed-sources-2026-11-11-twins.tsv` — six UK Parliament endpoints
 read twice, five rows on `chronicdata.cdc.gov`, which is an alias of
@@ -4704,6 +4714,41 @@ failing tests repaired. What it guarantees, and the knobs it adds:
   rtmp/tcp/udp network inputs have no boxed path and are refused.
   `test_netjail.c` decodes a real HLS frame through the box when ffmpeg is
   installed (CI installs it), as root and as an unprivileged user.
+  **Every outbound fetch refuses private addresses BY DEFAULT** (2026-11-12,
+  the owner's decision "block by default"): loopback, RFC1918, CGNAT,
+  unique-local, link-local and metadata, on the URL, every redirect and the
+  resolved address. `JO_HTTP_BLOCK_PRIVATE=0` restores the old floor (metadata
+  and link-local only). The operator's own service endpoints — the LLM,
+  embedding and vision servers, the IdP's JWKS — are exempt by an explicit
+  per-call flag, `http_request_service()`, never by a host list (a list built
+  from those URLs would also admit a collector URL naming the same
+  `127.0.0.1:8080`). A unit test talking to a 127.0.0.1 stub sets
+  `JO_HTTP_BLOCK_PRIVATE=0` before its first request; `test_llm_queue` does not,
+  on purpose, so it proves the exemption end to end. **The operator's egress
+  proxy is not a target either** (2026-11-14): behind a forward proxy the peer
+  libcurl connects to is the PROXY, and this tree's own cloud container runs
+  one on `127.0.0.1` — the first strict build refused every fetch the engine
+  made, in under a second, while `JO_HTTP_BLOCK_PRIVATE=0` stored 429 records
+  for the same run. A peer that is exactly an endpoint named in the proxy
+  variables libcurl reads (`https_proxy`, `http_proxy`, `all_proxy`) is
+  allowed, matched on address AND port, so another port on the same loopback
+  address is still refused (`test_http_egress_proxy.c`). **A security default
+  must be measured through the real egress before it ships**: every unit test
+  passed, because no unit test runs behind a proxy.
+* **Workspace keys are used for that workspace's pivots** (2026-11-12, the
+  owner's decision): a pivot dispatched for a workspace
+  (`osint_dispatch_tenant()`) resolves the hp row's `key_env` from that
+  workspace's saved key (`keysapi_tenant_secret()`) before the environment, and
+  a scrub sink redacts the key from every record the run emits or stores —
+  `core/intel.c` only redacts environment values. Scheduled runs keep the
+  environment. Hand-written collectors that read keys through `jo_env()` do not
+  see workspace keys yet. `test_tenant_pivot_key.c` pins it end to end.
+* **The platform audit chain is readable**: `GET /api/audit[/verify]?scope=platform`
+  reads the rows written under the reserved `platform` tenant (break-glass,
+  cadence/threshold edits, collector runs, raw evidence reads), for a platform
+  operator only (`opgate_check`, the `/api/admin/thresholds` gate) and 403
+  otherwise; an unknown scope is a 400, never the workspace's chain
+  (`tenantapi_audit_chain()`, `test_audit_chain.c`).
 * **LLM queue**: bounded lanes (`JO_LLM_QUEUE_MAX`, default 64 waiting; a job
   waits at most `JO_LLM_QUEUE_WAIT_FACTOR` × its timeout, default 4), no retry
   after a timeout, queue time reported apart from model time;

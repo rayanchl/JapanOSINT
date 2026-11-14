@@ -92,11 +92,44 @@ VJSON(us_ny_dec_remediation_spills, "us-ny-dec-remediation-spills", "New York St
    *
    * The uids this row has written are field names and are now orphaned;
    * tools/cleanup_stale_uids.py is the tool for that, and it has NOT been run
-   * here because the live database is mid-integrity-check. */
-  "https://gisservices.dec.ny.gov/arcgis/rest/services/der/RemediationSpills/MapServer/0/query?where=1%3D1&outFields=*&orderByFields=OBJECTID&resultRecordCount=2000&f=geojson",
+   * here because the live database is mid-integrity-check.
+   *
+   * MOVED 2026-11-12. der/RemediationSpills answers HTTP 200 carrying
+   * {"error":{"code":500,"message":"Service der/RemediationSpills/MapServer
+   * not started"}} (the query itself: a 7,058-byte Web Adaptor "Could not
+   * access any server machines" page), and the `der` folder now lists no
+   * services. DEC reorganised the server into folders the same way elsewhere
+   * (root dil_permits_and_regs is "not started", dil/dil_permits_and_regs is
+   * live). The register lives on as DECinfo Locator's dil/dil_clean_up,
+   * split by status into three point layers carrying the SAME 21 fields
+   * (OBJECTID .. CLASS_URL): 2 Active Sites 2,138, 3 No-Action Sites 2,074,
+   * 4 Closed Sites 1,717 (returnCountOnly) = 5,929 against the 6,072 of the
+   * old single layer. One row per layer, because a MapServer query reads one
+   * layer; this id keeps the ACTIVE sites. maxRecordCount is 1,000 now, and
+   * resultOffset 0 and 1000 answer disjoint OBJECTID ranges under
+   * orderByFields=OBJECTID (its esriFieldTypeOID field); the offset is bound
+   * in the URL so page 1 sits on the same ordering as the rest. */
+  "https://gisservices.dec.ny.gov/arcgis/rest/services/dil/dil_clean_up/MapServer/2/query?where=1%3D1&outFields=*&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0&f=geojson",
   "features",
   "en", "[\"us\",\"environment\",\"batch16\",\"high-penetrancy\"]", 10800,
-  "NY Division of Environmental Remediation site register: SITECODE, SITENAME, PROGRAM, SITECLASS, ADDRESS1/2, LOCALITY, ZIPCODE, COUNTY, TOWN, REGION, UTMX/UTMY, METHOD, and per-record DETAIL_URL, DOC_URL, BROWN_URL, CLASS_URL fields that link straight to the DEC case file and documents. Rate-sensitive: it reset the connection on repeated rapid hits.");
+  "NY Division of Environmental Remediation site register, ACTIVE sites (DECinfo Locator clean-up layer 2): SITECODE, SITENAME, PROGRAM, SITECLASS, ADDRESS1/2, LOCALITY, ZIPCODE, COUNTY, TOWN, REGION, UTMX/UTMY, METHOD, and per-record DETAIL_URL, DOC_URL, BROWN_URL, CLASS_URL fields that link straight to the DEC case file and documents. Rate-sensitive: it reset the connection on repeated rapid hits.");
+
+/* The other two status layers of the register us-ny-dec-remediation-spills
+ * reads (see its note, 2026-11-12): same server, same 21 fields, same paging
+ * shape. No-Action Sites 2,074 and Closed Sites 1,717 (returnCountOnly). */
+VJSON(us_ny_dec_remediation_noaction, "us-ny-dec-remediation-noaction", "New York State DEC - remediation register, no-action sites", "New York State DEC - remediation register, no-action sites",
+  "us_environment", "environment",
+  "https://gisservices.dec.ny.gov/arcgis/rest/services/dil/dil_clean_up/MapServer/3/query?where=1%3D1&outFields=*&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0&f=geojson",
+  "features",
+  "en", "[\"us\",\"environment\",\"batch16\",\"high-penetrancy\"]", 86400,
+  "NY Division of Environmental Remediation site register, NO-ACTION sites (DECinfo Locator clean-up layer 3): SITECODE, SITENAME, PROGRAM, SITECLASS, address, county, town, region, UTM, and DETAIL_URL / DOC_URL / BROWN_URL / CLASS_URL links to the DEC case file.");
+
+VJSON(us_ny_dec_remediation_closed, "us-ny-dec-remediation-closed", "New York State DEC - remediation register, closed sites", "New York State DEC - remediation register, closed sites",
+  "us_environment", "environment",
+  "https://gisservices.dec.ny.gov/arcgis/rest/services/dil/dil_clean_up/MapServer/4/query?where=1%3D1&outFields=*&orderByFields=OBJECTID&resultRecordCount=1000&resultOffset=0&f=geojson",
+  "features",
+  "en", "[\"us\",\"environment\",\"batch16\",\"high-penetrancy\"]", 86400,
+  "NY Division of Environmental Remediation site register, CLOSED sites (DECinfo Locator clean-up layer 4): SITECODE, SITENAME, PROGRAM, SITECLASS, address, county, town, region, UTM, and DETAIL_URL / DOC_URL / BROWN_URL / CLASS_URL links to the DEC case file.");
 
 VJSON(us_sdwis_water_system_facility, "us-sdwis-water-system-facility", "EPA SDWIS — physical facilities within a water system", "EPA SDWIS — physical facilities within a water system",
   "us_environment", "environment",

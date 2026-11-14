@@ -4790,6 +4790,18 @@ static void hp_cut_reason(long status, int unreadable, char *out, size_t cap) {
              "collection ends exactly on a page boundary", status);
 }
 
+/* See hp_run_key_set() in hpengine.h. Thread-local: the dispatcher runs the
+ * pivot on its own thread, and the key is read once, at the top of hp_run(). */
+static __thread const char *g_run_key_name, *g_run_key_val;
+void hp_run_key_set(const char *name, const char *value) {
+  g_run_key_name = (name && *name && value && *value) ? name : NULL;
+  g_run_key_val  = g_run_key_name ? value : NULL;
+}
+static const char *hp_run_key_for(const char *name) {
+  return (g_run_key_name && name && !strcmp(g_run_key_name, name))
+         ? g_run_key_val : NULL;
+}
+
 static int hp_run(const source_ctx *ctx, intel_sink *sink) {
   const hp_source *s = hp_lookup(ctx->source_id);
   if (!s) return -1;
@@ -4834,7 +4846,10 @@ static int hp_run(const source_ctx *ctx, intel_sink *sink) {
   }
   const char *key = NULL;
   if (s->key_env) {
-    key = getenv(s->key_env);
+    /* A workspace's own key first, when the dispatcher handed one down for
+     * this pivot (hp_run_key_set, 2026-11-12), else the environment. */
+    key = hp_run_key_for(s->key_env);
+    if (!key) key = getenv(s->key_env);
     if (!key || !*key) {
       /* NOT a bare `return 0` with a log line. That is the invisible nothing
        * house rule 1 names: fetch_log status='ok' records=0, /api/status green,

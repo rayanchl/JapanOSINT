@@ -436,7 +436,17 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
     .record_type = "permit-record",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\",\"permit\",\"water\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://gisservices.dec.ny.gov/arcgis/rest/services/dil_permits_and_regs/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&returnCentroid=true&outSR=4326&orderByFields=OBJECTID%20ASC&resultRecordCount=1000&f=json",
+    /* 2026-11-12: root dil_permits_and_regs answers {"error":{"code":500,
+     * "message":"Service dil_permits_and_regs/MapServer not started"}}; DEC
+     * moved its services into folders and this one is live at
+     * dil/dil_permits_and_regs, layer 0 still "Municipal Storm Sewer System
+     * (MS4)" with the same fields (OBJECTID, REGION, TOWN, MUNI_TYPE, ...,
+     * WEBSITE), 1,502 records (returnCountOnly), page 1 = 1,000 distinct
+     * OBJECTIDs. NOTE: this MapServer IGNORES returnCentroid — the reply
+     * carries attributes only, so these records have no location until a
+     * geometry is requested (full rings: 16.2 MB per 1,000 records; with
+     * maxAllowableOffset=0.001 and geometryPrecision=5: 2.3 MB). */
+    .url = "https://gisservices.dec.ny.gov/arcgis/rest/services/dil/dil_permits_and_regs/MapServer/0/query?where=1%3D1&outFields=*&returnGeometry=false&returnCentroid=true&outSR=4326&orderByFields=OBJECTID%20ASC&resultRecordCount=1000&f=json",
     .array_path = "features",
     .id_keys = "attributes.OBJECTID",
     .interval = 83700,
@@ -4075,12 +4085,20 @@ static const hp_source HP3B53_ARCGISLAYERS[] = {
       "directory advertises the rest." },
 
   { .id = "JO53_AGS_GISSERVICES_BOAT_LAUNCH", .name = "gisservices.dec.ny.gov — Boat Launch (ArcGIS "
-      "dec_backcountry_features layer 3)",
+      "dil_water_activities layer 5)",
     .category = "transport", .portal = "https://gisservices.dec.ny.gov",
     .record_type = "gis-feature",
     .tags = "\"arcgis\",\"gis\",\"feature-layer\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
-    .url = "https://gisservices.dec.ny.gov/arcgis/rest/services/dec_backcountry_features/MapServer/3/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&orderByFields=OBJECTID%20ASC&resultRecordCount=1000&f=json",
+    /* 2026-11-12: dec_backcountry_features answers {"error":{"code":500,
+     * "message":"Service dec_backcountry_features/MapServer not started"}}.
+     * The boat-launch layer now lives at dil/dil_water_activities layer 5
+     * "Boat Launches": the same fields this row describes (OBJECTID,
+     * COUNTY, WATERBODY, TOWN, MAPS, LATITUDE, LONGITUDE, ACCESS_TYP, PARK,
+     * INVASIVE, COMMENTS, AGENCY, + UNIV_ACCES, WEBLINK), 803 records
+     * (returnCountOnly) answered in one page, 803 distinct OBJECTIDs,
+     * WGS84 point geometry. */
+    .url = "https://gisservices.dec.ny.gov/arcgis/rest/services/dil/dil_water_activities/MapServer/5/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&orderByFields=OBJECTID%20ASC&resultRecordCount=1000&f=json",
     .array_path = "features",
     .id_keys = "attributes.OBJECTID",
     .interval = 91800,

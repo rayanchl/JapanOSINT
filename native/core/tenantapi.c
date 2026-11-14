@@ -343,6 +343,22 @@ char *tenantapi_audit_list(db_handle *db, const char *tenant_id,
   return js;
 }
 
+/* See tenantapi.h. Pure, so the gate is unit-testable without the router. */
+int tenantapi_audit_chain(const char *scope, int is_operator,
+                          const char *tenant_id, const char **chain) {
+  if (chain) *chain = NULL;
+  if (!scope || !*scope || !strcmp(scope, "workspace")) {
+    if (chain) *chain = tenant_id;
+    return 0;
+  }
+  if (!strcmp(scope, TENANTAPI_PLATFORM_CHAIN)) {
+    if (!is_operator) return 403;
+    if (chain) *chain = TENANTAPI_PLATFORM_CHAIN;
+    return 0;
+  }
+  return 400;
+}
+
 /* ── auditChain.verifyAuditChain ──────────────────────────────────────────
  * Re-walks the tenant's chain with audit_row_hash() (core/audit.c), the same
  * function audit_write() chains with. Rows with no row_hash — written before

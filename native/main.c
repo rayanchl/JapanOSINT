@@ -288,20 +288,31 @@ int main(int argc, char **argv) {
         }
         dbp = &mdb;
       }
-      unsigned long long in = 0, nw = 0;
-      int rc = breach_index_ingest(sid, file, t, &in, &nw, dbp, materialize, dry_run);
+      /* _ex, not breach_index_ingest (2026-11-12): the _ex form is the
+       * superset that also returns the lines lib/bigfile.c skipped as
+       * over-long (never read, NOT in rows_in). The HTTP job path
+       * (core/breach_jobs.c) already carried that count as data; the CLI
+       * summary dropped it, so a skip showed only as a separate stderr line.
+       * It is appended to the summary when non-zero, after the existing
+       * fields, so the line's established prefix is unchanged. */
+      unsigned long long in = 0, nw = 0, sk = 0;
+      int rc = breach_index_ingest_ex(sid, file, t, &in, &nw, &sk,
+                                      dbp, materialize, dry_run);
       if (dbp) db_close(&mdb);
       if (rc != 0) { fprintf(stderr, "[ingest] cannot open %s\n", file); return 1; }
+      char skipped[96] = "";
+      if (sk) snprintf(skipped, sizeof skipped,
+                       " rows_skipped=%llu (over-long, not ingested)", sk);
       if (dry_run) {
         /* rough breach_items footprint: ~150 B/row incl. the FTS index. */
         double mb = (double)nw * 150.0 / (1024.0 * 1024.0);
         printf("[ingest:dry-run] source=%s type=%s rows_in=%llu rows_new=%llu "
-               "est_breach_items=%llu est_disk=%.1f MB (nothing written)\n",
-               sid, breach_type_name(t), in, nw, nw, mb);
+               "est_breach_items=%llu est_disk=%.1f MB (nothing written)%s\n",
+               sid, breach_type_name(t), in, nw, nw, mb, skipped);
       } else {
-        printf("[ingest] source=%s type=%s rows_in=%llu rows_new=%llu%s\n",
+        printf("[ingest] source=%s type=%s rows_in=%llu rows_new=%llu%s%s\n",
                sid, breach_type_name(t), in, nw,
-               materialize ? " (materialized to breach_items)" : "");
+               materialize ? " (materialized to breach_items)" : "", skipped);
       }
       return 0;
     }

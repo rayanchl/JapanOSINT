@@ -40,6 +40,7 @@
       "api.github.com": 1,
       "api.github.com/search/code?q=%s&per_page=30": 1,
       "api.github.com/users/%s": 1,
+      "api.gtfs-data.jp/v2/feeds": 1,
       "api.llama.fi/protocols": 1,
       "api.mainnet-beta.solana.com": 1,
       "api.mercadopublico.cl/servicios/v1/publico/licitaciones.json": 1,
@@ -91,6 +92,7 @@
       "data.opensanctions.org/datasets/latest/index.json": 1,
       "data.overheid.nl/data": 1,
       "data.sec.gov/submissions/CIK%s.json": 1,
+      "data.stortinget.no/eksport/sesjoner?format=json": 1,
       "data.transportation.gov/resource/keg4-3bc2.json": 1,
       "datawarehouse.dbd.go.th": 1,
       "datawarehouse.dbd.go.th/searchJuristicInfo?keyword=%s": 1,
@@ -752,9 +754,9 @@
     "unresolved-id": 0
   },
   "registered_sources": {
-    "direct": 1180,
+    "direct": 1181,
     "macro_expanded": 60330,
-    "total": 61510,
+    "total": 61511,
     "unresolved": 0
   }
 }

@@ -177,7 +177,17 @@ static const hp_source HP3B32_JPREGISTER[] = {
     .lang = "ja",
     .tags = "\"japan\",\"gifu\",\"industrial-waste\",\"licence\",\"registry\",\"environment\"",
     .mode = HP_XLSX, .want = HP_ANY, .free_tier = 1,
-    .url = "https://www.pref.gifu.lg.jp/uploaded/attachment/506980.xlsx",
+    .url = "https://www.pref.gifu.lg.jp/uploaded/attachment/516362.xlsx",
+    /* 2026-11-12: 506980.xlsx answers 404 — the register is re-published under
+     * a new attachment id each edition (now 516362.xlsx, 1,148,100 bytes, one
+     * sheet 産業廃棄物収集運搬業, same header: 許可番号, 業者氏名, …,
+     * 5,689 data rows). So the row follows the portal page each run. The hrefs
+     * carry only the numeric id, so ".xlsx" is the only discriminator: the
+     * page links FOUR workbooks and this register is the FIRST (then 処分業者,
+     * 特別管理 収集運搬, 特別管理 処分). If the page is reordered the row
+     * reads another register — a re-read of its title_keys would show it. */
+    .index_url = "https://www.pref.gifu.lg.jp/page/3670.html",
+    .index_href_must = ".xlsx",
     .csv_skip_lines = 0,
     .id_keys = "許可番号+積替保管場所の所在地",
     .interval = 604800,

@@ -173,7 +173,7 @@ static void model_name(llm_client *llm, http_client *http, char *out, size_t cap
   snprintf(url, sizeof url, "%.*s/v1/models", (int)(n && llm->base_url[n - 1] == '/' ? n - 1 : n), llm->base_url);
   http_response r = {0};
   g_model[0] = 0;
-  if (http_request(http, "GET", url, NULL, NULL, 0, 3000, 0, &r) == 0 && r.status == 200 && r.body) {
+  if (http_request_service(http, "GET", url, NULL, NULL, 0, 3000, 0, &r) == 0 && r.status == 200 && r.body) {
     cJSON *j = cJSON_Parse(r.body);
     const cJSON *data = j ? cJSON_GetObjectItem(j, "data") : NULL;
     const cJSON *first = data ? cJSON_GetArrayItem(data, 0) : NULL;

@@ -293,6 +293,7 @@ typedef struct {
   int             next;            /* next unclaimed job index */
   pthread_mutex_t mu;
   osint_request  *rp;
+  const char     *tenant;          /* the run's owner workspace ("" = none) */
 } disp_pool;
 
 /* Builds one task's result object. Runs on a worker; touches only `job`,
@@ -305,7 +306,12 @@ static void dispatch_one(disp_pool *p, disp_job *job, db_handle *db,
   progress_service_status(p->rp, t->service, "running", msg, -1, t->entity);
 
   osint_result r;
-  osint_dispatch(db, llm, t->service, t->entity, t->type, sink, &r);
+  /* On behalf of the run's owner workspace, so a pivot resolves its key_env
+   * from that workspace's saved key before the environment (the owner's
+   * decision of 2026-11-12; core/osint_dispatch.h). An ownerless run is
+   * exactly osint_dispatch(). */
+  osint_dispatch_tenant(db, llm, t->service, t->entity, t->type, sink, &r,
+                        p->tenant);
 
   cJSON *sr = cJSON_CreateObject();
   /* `name` is what actually RAN. When the dispatcher resolved a name the
@@ -438,7 +444,8 @@ static char *results_view_for_prompt(const cJSON *results, prompt_rank *pr) {
 }
 
 static void run_tasks(osint_request *rp, db_handle *db, llm_client *llm,
-                      intel_sink *sink, tasklist *tl, cJSON *results) {
+                      intel_sink *sink, tasklist *tl, cJSON *results,
+                      const char *tenant) {
   if (tl->n <= 0) return;
 
   int fanout = 6;
@@ -453,6 +460,7 @@ static void run_tasks(osint_request *rp, db_handle *db, llm_client *llm,
   if (!p.jobs) return;
   p.n = tl->n;
   p.rp = rp;
+  p.tenant = tenant;
   for (int i = 0; i < tl->n; i++) p.jobs[i].t = &tl->t[i];
   pthread_mutex_init(&p.mu, NULL);
 
@@ -632,6 +640,10 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
                         int max_rounds) {
   osint_request *rp = progress_get(request_id);
   if (!rp) return;
+  /* The workspace this run belongs to, read once: its pivots use that
+   * workspace's saved keys (dispatch_one). Empty for an ownerless run. */
+  char run_tenant[64];
+  progress_owner_tenant(request_id, run_tenant, sizeof run_tenant);
   /* This function IS the off-loop thread (searchapi.c spawns it detached), and
    * everything below writes through emit()'s BEGIN/COMMIT. On the caller's
    * shared handle those transactions interleave with the event loop's own
@@ -874,7 +886,7 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
   progress_set_phase(rp, "agents_working", 25);
   cJSON *results = cJSON_CreateArray();
   cJSON *discovered = cJSON_CreateArray();   /* for searchIngest step-2 */
-  run_tasks(rp, db, llm, &sink, &tasks, results);
+  run_tasks(rp, db, llm, &sink, &tasks, results, run_tenant);
   progress_set_phase(rp, "preliminary_results", 60);
   tasklist_free(&tasks);
 
@@ -965,7 +977,7 @@ void osint_pipeline_run(db_handle *shared_db, llm_client *llm,
     strset_free(&rexec);
     if (rtasks.n == 0) { tasklist_free(&rtasks); cJSON_Delete(ph2); break; }
     assign_services(rp, &rtasks);
-    run_tasks(rp, db, llm, &sink, &rtasks, results);
+    run_tasks(rp, db, llm, &sink, &rtasks, results, run_tenant);
     tasklist_free(&rtasks);
     need_more = ph2 && cJSON_IsTrue(cJSON_GetObjectItem(ph2, "needs_newphase"));
     cJSON_Delete(ph2);

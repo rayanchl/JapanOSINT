@@ -182,7 +182,10 @@ static int run_boxed(netjail *j, const char *const argv[], char *out, size_t cap
 }
 
 int main(void) {
-  unsetenv("JO_HTTP_BLOCK_PRIVATE");
+  /* The strict outbound floor is the default since 2026-11-12 and beats the
+   * camera test seam; this test's fixtures are on 127.0.0.1, so it lowers the
+   * floor explicitly (the camera policy itself stays strict without the seam). */
+  setenv("JO_HTTP_BLOCK_PRIVATE", "0", 1);
   signal(SIGPIPE, SIG_IGN);
   printf("  sandbox mode on this host: %s\n", netjail_mode());
 

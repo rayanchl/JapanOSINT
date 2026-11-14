@@ -128,9 +128,91 @@ User-Agent was removed.
 Registered sources: **61,510** (61,527 − 12 twins − 5 dead), both floors
 re-recorded from that build.
 
+## Round three: the owner's second set of decisions (2026-11-12/14)
+
+Each change was run through the real binary after it was made (paced engine
+runs, a fresh copy of a warm database per row); the readings below are the
+engine's, not the probe's.
+
+**Security and core**
+
+* **Private addresses are refused by default** (`JO_HTTP_BLOCK_PRIVATE=0`
+  opts out). The operator's own service URLs (LLM, embeddings, vision, JWKS,
+  the source summary model) go through `http_request_service()`, an explicit
+  per-call exemption, at seven call sites. **The first strict build refused
+  every fetch in this container**: the egress proxy listens on `127.0.0.1`,
+  and behind a proxy the peer libcurl connects to is the proxy. A configured
+  proxy endpoint (address AND port, from the variables libcurl reads) is now
+  allowed; `test_http_egress_proxy.c` fails without that and passes with it.
+  Every unit test had passed before the fix, because none runs behind a proxy.
+* **Workspace keys for pivots**: a search run's pivots are dispatched for the
+  run's owner workspace (`core/pipeline.c` → `osint_dispatch_tenant()`), so a
+  pivot's `key_env` resolves from that workspace's saved key first and the key
+  is scrubbed from every record. Scheduled runs keep the environment.
+* **Platform audit chain**: `GET /api/audit[/verify]?scope=platform`,
+  operator-only (403 otherwise, 400 for an unknown scope).
+* **HTTP/2 framing fault retried once over HTTP/1.1** (`core/httpclient.c`):
+  the French commune feed whose server intermittently sends a forbidden
+  `upgrade:` header now stores 10 of 10.
+* **Three tables that were read and never written now have writers**:
+  `collector_ttls` (`/api/admin/collector-ttls`, operator, audited, bounded to
+  the cache's own clamp), `tenant_report_templates` (`/api/reports/template`,
+  workspace owner/admin, audited, bounded to the renderer's buffers) and
+  `llm_station_merges` (written by the station clusterer's judge as PENDING;
+  only an operator-APPROVED merge is applied; review at
+  `/api/admin/station-merges`). Client forms for all three.
+* **GTFS Realtime**: `lib/gtfsrt.c` (protobuf decoder, no external library,
+  `make gtfsrttest` 269 checks, in CI) and `gtfs-rt-jp`, which reads the
+  realtime URLs the gtfs-data.jp catalogue declares and replaces each
+  operator's rows in `gtfs_rt_trip_updates`, `gtfs_rt_positions` and
+  `gtfs_rt_alerts`. One engine run at 00:40 JST stored 222 records (the
+  agent's daytime harness run: 1,148). The departures board now falls back to
+  the other half of a stop update's delay, scopes alerts to their own operator
+  (two operators' route "3" used to share alerts), and uses only delays
+  received in the last 30 minutes (`test_transit_rt.c`). **Under the default
+  6 h cadence the board will show the timetable, not delays**: set
+  `gtfs-rt-jp`'s interval from its Settings page for live delays.
+* Tidy-ups: four dead library functions removed; one base64 implementation
+  (`core/jo_codec`) for keysapi, camera_store and alert_deliver, checked
+  byte-identical against the removed copies; `--ingest` reports over-long
+  lines it skipped.
+
+**Rows** (engine readings, 2026-11-14)
+
+| row(s) | after |
+| --- | --- |
+| `cyb-sejm-pl-interpellations` | the whole term in one request: **21,033 of 21,033** (was a recent slice) |
+| `eur-stortinget-saker` (fused with `gov-no-stortinget-saker`) | current session plus 3 past sessions a run, cycling: 1,942 then 2,297, **3,889 distinct over two runs**, resume `s=2022-2023` → `s=2019-2020` |
+| `undp-transparency-projects` | year-stamped, keyed project+year: **5,636 of 5,636** |
+| `us-cfpb-hmda-filers` | latest published year, keyed `lei+period`: **1,122 of 1,122** (a name key merged six lenders) |
+| 4 `JO40_CNGOV_*` libraries | `n=100` (the API now refuses >150): **6,229 / 12,823 / 15,074 / 8,645**, each its declared total |
+| `JO29A_CAM_US_VA_VDOT_CAMS` | the site's own `/services/511` path: **1,713 of 1,713** |
+| `JO32_REG_GIFU_INDUSTRIAL_WASTE_TRANSPORT` | `index_url` on the portal page: **5,689 of 5,689** |
+| `us-ny-dec-remediation-*` (1 re-pointed, 2 new) | the register split into three layers: **2,138 + 2,074 + 1,717** |
+| `JO53_AGS_GISSERVICES_MUNICIPAL_STORM`, `_BOAT_LAUNCH` | re-pointed: **1,502** and **803**, complete |
+| `classifieds` | prefecture labels in short form are now read: 3,490 emitted / 3,312 stored (was 285 / 278); the repeats are promoted ads served on several pages under one article id |
+| `real-estate` | `{ar, ta}` pairs: 1,800 / 1,798 (was SUUMO's error page for every slug) |
+| Europe PMC / OpenAIRE (16 rows) | first page bound or `nextPageUrl` followed: all OK, e.g. `EUROPE_PMC_SEARCH` 2,000 / 2,000, `OPENAIRE_SOFTWARE` 159 / 159 |
+| 6 frozen-date VJSON rows | date tokens; all OK (NSF 8, Kokkai 30, NASA 100, NOAA 100, HMDA, UNDP above) |
+| PMG ×3 | policy documents re-read at a weekday-varying page size (1,261 distinct of 1,270 this run; seven days cover all 1,270); daily schedule and committee meetings cycle 20 pages a run (resume `page=20` → `page=40`, 1,987 distinct over two runs) |
+| `DK_CVR` + 3 cvrapi rows, `nlni-landuse` | gated with a needs-credential notice (`CVRAPI_TOKEN`; `MLIT_L03B_GEOJSON_URL`): no official keyless CVR lookup answered (Virk's index wants credentials, its gateway a challenge) |
+| d-portal transaction rows | measured at last, with a 6 GB file limit: Ethiopia 100,000 / 100,000, South Africa 99,983 / 100,000 |
+
+Removed: `mercari-trending` (endpoint 404 three readings, site alive;
+`docs/removed-sources-2026-11-11-dead.tsv`) and `gov-no-stortinget-saker`
+(fused). Registered sources: **61,511**, both floors re-recorded.
+
 ## Still open
 
-* **`cvrapi.dk`** answers `QUOTA_EXCEEDED` per agent; switching agents to get
-  a fresh quota would be evading it, so nothing was added.
-* `JO_HTTP_BLOCK_PRIVATE` default, and rate limits keyed on client IP behind
-  a proxy.
+* **Owner decisions** surfaced by this round, not acted on:
+  * `PL_SEJM_API`, `gov-pl-sejm-interpellations` and
+    `eur-sejm-term10-committees-sits` read strict subsets of what
+    `cyb-sejm-pl-interpellations` now reads whole;
+  * `bc-mineral-tenure` and `BC_MINERAL_TENURE` read the same layer;
+  * `EUROPEPMC_SEARCH` and `EUROPE_PMC_SEARCH` are two pivots on one endpoint;
+  * records a pivot fetches with a workspace's key land in the shared corpus;
+  * `dataset.gov.md` is down host-wide (not removed: the government still
+    links it).
+* Hand-written collectors that read keys through `jo_env()` do not see
+  workspace keys yet; `twitter-geo` caps its own database read at 5,000.
+* Rate limits keyed on client IP behind a proxy.

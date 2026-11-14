@@ -854,7 +854,7 @@ char *api_sources_list(db_handle *db) {
 static const char *INTEL_IDS[] = {
   "certstream-jp","bird-makeup-jp","chan-5ch","fofa-jp",
   "github-leaks-jp","grayhat-buckets","greynoise-jp","hatena-bookmark",
-  "houjin-bangou","mercari-trending","misskey-timeline","note-com-trending",
+  "houjin-bangou","misskey-timeline","note-com-trending",
   "urlscan-jp","wayback-jp",
   "edinet-filings","data-go-jp-ckan","egov-laws",
   "geospatial-jp-ckan","kyodo-rss","nhk-world-rss",

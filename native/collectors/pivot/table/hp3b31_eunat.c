@@ -363,6 +363,46 @@ static const hp_source HP3B31_EUNAT[] = {
       "ministries answer interpellations with contract and inspection detail "
       "they publish nowhere else" },
 
+  /* MOVED HERE 2026-11-12 from a VJSON_KEYED row in
+   * collectors/feed/generated/vsrc13_transparency_1.c, same id, so the row
+   * reads the WHOLE term in one request instead of the newest 2,000.
+   *
+   * Measured 2026-11-12: `limit` is honoured far past any page size — 5,000
+   * answers nums 1..5,000, and `limit=25000` and `limit=50000` each answer
+   * 20,989 records, nums 1..20,989, every num distinct, 28,459,392 bytes in
+   * 45 and 47 s. The collection publishes no total (a bare JSON array), so
+   * "complete" is that 20,989 equals the highest num and none is missing.
+   * One request is the whole term: a recency/archive pair is not needed, and
+   * every run re-reads the old interpellations too, which is where replies
+   * land (`lastModified` moves on records years old). The old row read the
+   * newest 2,000 by `sort_by=-num`; the 2026-11-07 sort measurement on it
+   * stands (sort_by=num and the control sort_by=frobnicate both answer 1..5)
+   * but no order is needed for a complete read.
+   *
+   * `timeout_ms` because 45-47 s is over the engine's 20 s default.
+   * `page_param`/`page_size` 50,000 is a guard, not a walk: page 1 comes back
+   * short (20,989), which ends it, and a term that ever reached 50,000 would
+   * ask for offset 50,000 rather than stop silently. The host answers 503 to
+   * a request a second or two after another (seen four times today, each
+   * retried 20-40 s later and served), so one request a run is also the
+   * kindest shape for it. Identity is (term, num): `num` restarts each term,
+   * and every record carries `term`. */
+  { .id = "cyb-sejm-pl-interpellations", .name = "Sejm of Poland — interpellations",
+    .name_ja = "ポーランド下院 質問書",
+    .collector = "transparency", .category = "politics", .record_type = "politics",
+    .portal = "https://api.sejm.gov.pl", .lang = "pl",
+    .tags = "\"pol\",\"parliament\",\"questions\",\"transparency\"",
+    .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
+    .url = "https://api.sejm.gov.pl/sejm/term10/interpellations?limit=50000&offset=0",
+    .array_path = ".",
+    .id_keys = "term+num", .title_keys = "title", .date_keys = "receiptDate",
+    .page_param = "offset", .page_size = 50000, .page_start = 0, .page_max = 2,
+    .timeout_ms = 180000,
+    .interval = 21600,
+    .description = "Every written interpellation of the Sejm's 10th term to "
+      "Polish ministers, with sender, recipient, receipt date, reply status "
+      "and the replies, read whole each run" },
+
   { .id = "CZ_NEN_PROCUREMENT", .name = "Czech Republic NEN — electronic procurement",
     .name_ja = "チェコ 電子調達", .category = "government",
     .portal = "https://nen.nipez.cz", .record_type = "cz-tender",

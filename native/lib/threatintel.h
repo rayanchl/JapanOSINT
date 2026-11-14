@@ -51,7 +51,7 @@ int threatintel_collect(const source_ctx *ctx, intel_sink *sink,
  * contract R6 — never report "needs a key" as a data row or a failed fetch. */
 const char *abusech_auth_header(void);
 
-/* 1 if an abuse.ch credential is configured. */
-int abusech_have_key(void);
+/* (abusech_have_key() was removed 2026-11-12: no caller anywhere in the
+ * repository; abusech_auth_header() != NULL is the same test.) */
 
 #endif

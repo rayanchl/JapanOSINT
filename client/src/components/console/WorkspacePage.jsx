@@ -7,6 +7,7 @@ import { useApi } from '../../hooks/useApi.js';
 import { useAuth } from '../../auth/AuthContext.jsx';
 import { useSearchStore } from '../../hooks/useSearch.js';
 import { KeyPolicySheet } from './ApiKeysPage.jsx';
+import ReportTemplateTab from './ReportTemplateTab.jsx';
 import {
   Page, Section, Row, Card, Pill, Button, Input, Field, Select, Segmented,
   ConfirmDialog, ErrorNotice, EmptyState, LoadingState, BoundNote, Spinner, cx, toast,
@@ -36,10 +37,12 @@ export default function WorkspacePage() {
   const isOwner = auth.role === 'owner';
   // Members and Queries are owner/admin surfaces; Switch is for every member.
   // The whole page used to sit behind an owner/admin gate, which left
-  // analysts and viewers with no way to change workspace at all.
+  // analysts and viewers with no way to change workspace at all. The report
+  // template is readable by every member and editable by owner/admin — the
+  // server enforces that (GET/PUT /api/reports/template) and says which.
   const tabs = canManage
-    ? [{ value: 'members', label: 'Members' }, { value: 'queries', label: 'Queries' }, { value: 'switch', label: 'Switch' }]
-    : [{ value: 'switch', label: 'Switch' }];
+    ? [{ value: 'members', label: 'Members' }, { value: 'queries', label: 'Queries' }, { value: 'reports', label: 'Report template' }, { value: 'switch', label: 'Switch' }]
+    : [{ value: 'switch', label: 'Switch' }, { value: 'reports', label: 'Report template' }];
   const tab = tabs.some((t) => t.value === picked) ? picked : tabs[0].value;
 
   return (
@@ -57,6 +60,7 @@ export default function WorkspacePage() {
       {tab === 'members' && <MembersView />}
       {tab === 'queries' && <QueryView />}
       {tab === 'switch' && <SwitchView />}
+      {tab === 'reports' && <ReportTemplateTab />}
 
       {isOwner && (
         <Section label="Credentials">

@@ -79,7 +79,7 @@ int vecindex_served_model(http_client *http, const char *base, char *out,
   http_response r = {0};
   int rc = -1;
   if (!http) snprintf(out, cap, "no http client");
-  else if (http_request(http, "GET", url, NULL, NULL, 0, 5000, 0, &r) != 0 ||
+  else if (http_request_service(http, "GET", url, NULL, NULL, 0, 5000, 0, &r) != 0 ||
            r.status == 0)
     snprintf(out, cap, "GET /v1/models: no answer");
   else if (r.status < 200 || r.status >= 300 || !r.body)

@@ -213,12 +213,12 @@ VJSON(gov_no_stortinget_representanter, "gov-no-stortinget-representanter", "Sto
   "no", "[\"norway\",\"parliament\",\"members\",\"pep\"]", 86400,
   "Sitting members of the Norwegian Storting with party and county.");
 
-VJSON(gov_no_stortinget_saker, "gov-no-stortinget-saker", "Stortinget — Parliamentary Cases", "ノルウェー議会 議案",
-  "legal", "parliament",
-  "https://data.stortinget.no/eksport/saker?format=json&sesjonid=2025-2026",
-  "saker_liste",
-  "no", "[\"norway\",\"parliament\",\"bills\"]", 3600,
-  "All cases before the Norwegian Storting for the current session with committee and status.");
+/* gov-no-stortinget-saker REMOVED 2026-11-12, fused into eur-stortinget-saker
+ * (vsrc13_europe_gov_2.c), which now reads the current session every run and
+ * every past session over a cycle — the owner's decision ("Fuse current and
+ * history, they are one source after all"). This row was pinned to
+ * `sesjonid=2025-2026`, closed since the 2026-2027 session began; evidence in
+ * docs/removed-sources-2026-11-11-twins.tsv. */
 
 VJSON(gov_no_stortinget_sesjoner, "gov-no-stortinget-sesjoner", "Stortinget — Sessions", "ノルウェー議会 会期",
   "legal", "parliament",
