@@ -56,3 +56,27 @@ New tool: `wfs_enum.py` (session scratch) — GetCapabilities version
 negotiation (2.0.0 then 1.1.0), namespace-aware FeatureType/Name parsing,
 `resulttype=hits` counts. Only 2.0.0 types (clean count/startIndex/JSON) were
 registered.
+
+---
+
+# Batch 63 (euods) — European OpenDataSoft portal datasets
+
+1,859 individual datasets from 15 reachable European OpenDataSoft portals
+(Rennes, Nantes, Toulouse, Île-de-France, Occitanie/laregion, Pays de la
+Loire, Aix-Marseille, Issy, Loire-Atlantique, Strasbourg, Paris, STAR, SmartIDF,
+Aude, public.opendatasoft.com). The portal *catalog* row already existed for
+most of these; this beat registers each portal's own datasets as record rows
+(Explore v2.1 records API, offset paging) — the actual data, not just the
+dataset list.
+
+Only each portal's OWN datasets: FEDERATED datasets (pulled from another
+domain into a portal's catalogue) were excluded, because their records API
+404s on the federating host (`NoDomainMatchingException`) — the records live on
+the source domain. 2,179 → 1,872 after dropping federated.
+
+Engine-measured: 1,598 OK, 259 COLLISION (ODS v2.1 records carry no universal
+id, so the engine content-hashes uids; the collisions are byte-identical
+upstream duplicates, correctly deduped — kept), 2 egress failures (kept). 13
+EMITS_NOTHING dropped (has_records was stale — empty in any environment).
+Titles fall back to record_type where a dataset's own fields use no common
+name key; the body carries the real per-dataset attributes regardless.

@@ -369,7 +369,8 @@ COLLECTOR("pa_public-finance", "Panama — public finance", NULL, NULL, "grp_pro
 COLLECTOR("pk_anti-corruption", "Pakistan — anti corruption", NULL, NULL, "grp_procurement")  /* 1 src; anti-corruption 1 */
 COLLECTOR("pl_procurement", "Poland — procurement", NULL, NULL, "grp_procurement")  /* 1 src; procurement 1 */
 
-/* Open data portals & statistics: 65 collector(s), 1962 sources */
+/* Open data portals & statistics: 66 collector(s), 3821 sources */
+COLLECTOR("hp3b63_euods", "euods (batch 63)", NULL, NULL, "grp_opendata")  /* 1859 src; open-data 1859 */
 COLLECTOR("europe_data", "European open data", "欧州オープンデータ", NULL, "grp_opendata")  /* 343 src; opendata 343 */
 COLLECTOR("fr_opendata", "France — open data", "フランス オープンデータ", NULL, "grp_opendata")  /* 287 src; opendata 261, government 11, registry 6 */
 COLLECTOR("ch_opendata", "Switzerland — open data", "スイス オープンデータ", NULL, "grp_opendata")  /* 208 src; opendata 208 */
