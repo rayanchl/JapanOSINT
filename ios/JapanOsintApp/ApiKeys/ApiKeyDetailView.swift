@@ -249,6 +249,7 @@ struct ApiKeyDetailView: View {
             }
         }
         .compatSheetSizing(.medium)
+        .task { await loadUsing() }
     }
 
     // MARK: - Used by
@@ -403,6 +404,69 @@ struct ApiKeyDetailView: View {
         case .platform:
             let m = try await api.apiKeySet(name: workingRow.name, value: value)
             return KeyRow(m)
+        }
+    }
+}
+
+
+/// One source waiting on a key: its name and status, a jump to its detail, and
+/// — once its own `/api/status/:id` row has loaded — the probe controls for a
+/// key-gated source. The row is fetched per visible source (at most a few
+/// dozen), never as part of a registry dump.
+private struct UsedByRow: View {
+    let source: SourceSearchRow
+    let keyName: String
+    let open: () -> Void
+
+    @EnvironmentObject var apiClient: APIClient
+    @Environment(\.theme) private var theme
+    @State private var statusRow: StatusRow?
+
+    var body: some View {
+        VStack(spacing: 6) {
+            Button(action: open) {
+                HStack(spacing: 8) {
+                    Circle().fill(dotColor)
+                        .frame(width: 8, height: 8)
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text(source.displayName)
+                            .font(.caption)
+                            .foregroundStyle(theme.text)
+                            .lineLimit(1)
+                        if let cat = source.category {
+                            Text(cat)
+                                .font(.caption2)
+                                .foregroundStyle(theme.textMuted)
+                        }
+                    }
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                        .font(.caption2)
+                        .foregroundStyle(theme.textMuted)
+                        .accessibilityHidden(true)   // navigation affordance
+                }
+                .padding(.vertical, 4)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+
+            if let row = statusRow, row.requiresKey == true {
+                ProbeActionsView(row: row) { updated in
+                    statusRow = updated
+                }
+            }
+        }
+        .task(id: source.id) {
+            statusRow = try? await apiClient.api.statusRow(source.id)
+        }
+    }
+
+    private var dotColor: Color {
+        switch source.statusKind {
+        case .online:   return theme.success
+        case .degraded: return theme.warning
+        case .offline:  return theme.danger
+        default:        return theme.textMuted
         }
     }
 }

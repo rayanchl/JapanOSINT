@@ -16,6 +16,7 @@
  * the attribute name). */
 #include "../lib/htmlparse.h"
 #include <stdio.h>
+#include <time.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -311,6 +312,44 @@ int main(void) {
     html_seen_free(&sn);
   }
 
+
+  /* LIB-02. Repeated / unclosed <table> with a `must` that misses is linear:
+   * it was O(n^2) (140 KB 3.4 s, 560 KB 60 s). */
+  {
+    size_t n = 100000;                       /* 700 KB of "<table>" */
+    char *b = malloc(n * 7 + 1);
+    for (size_t i = 0; i < n; i++) memcpy(b + i * 7, "<table>", 7);
+    b[n * 7] = 0;
+    clock_t t0 = clock();
+    html_table t;
+    int r = html_table_parse(b, "zzz", 0, &t);
+    double secs = (double)(clock() - t0) / CLOCKS_PER_SEC;
+    ok(r == 0 && secs < 2.0, "LIB-02: 100,000 unclosed <table> with a missing must is linear");
+    html_table_free(&t);
+    free(b);
+    /* same answers as before on nested/must selection */
+    const char *h = "<table><tr><td>a</td></tr></table>"
+                    "<table><tr><td>needle</td></tr><tr><td><table><tr><td>inner</td></tr></table></td></tr></table>";
+    r = html_table_parse(h, "needle", 0, &t);
+    ok(r == 1 && t.nrows == 2 && !strcmp(t.rows[0].cells[0].text, "needle"),
+       "LIB-02: the first table containing `must` is selected, its nested table folded in");
+    html_table_free(&t);
+    r = html_table_parse(h, "inner", 1, &t);
+    ok(r == 0, "LIB-02: table_index counts only tables that contain `must`");
+    html_table_free(&t);
+    r = html_table_parse(h, "inner", 0, &t);
+    ok(r == 1 && t.nrows == 2, "LIB-02: an outer table whose nested table holds `must` matches");
+    html_table_free(&t);
+  }
+  /* LIB-14. Numeric entities: out of range -> U+FFFD, malformed -> verbatim. */
+  {
+    html_table t;
+    int r = html_table_parse("<table><tr><td>a&#1114112;b&#-5;c&#xD800;d&#65;</td></tr></table>", NULL, 0, &t);
+    ok(r == 1 && t.nrows == 1 &&
+       !strcmp(t.rows[0].cells[0].text, "a\xEF\xBF\xBDb&#-5;c\xEF\xBF\xBDdA"),
+       "LIB-14: >U+10FFFF and a surrogate become U+FFFD, '&#-5;' stays text, '&#65;' is 'A'");
+    html_table_free(&t);
+  }
   printf(g_fail ? "\n%d FAILURES\n" : "\nall passed\n", g_fail);
   return g_fail ? 1 : 0;
 }
