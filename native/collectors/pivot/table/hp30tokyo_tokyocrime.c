@@ -18,6 +18,52 @@
  * that justify them, which the manifest has nowhere to put. Regenerating over
  * it reverts them, so the generator refuses to without --force. See CLAUDE.md,
  * "Batch tooling".
+ *
+ * ── 2026-11-14: 65 of these 82 rows are OCCURRENCE REGISTERS ───────────────
+ * `.occurrence_rows = 1` (lib/hpengine.h) is set on every `crime-incident`
+ * (56) and `precursor-incident` (9) row here, and on NONE of the 17
+ * `crime-statistics` rows. The flag states what the FILE is, so it is applied
+ * by record_type and not by any one run's numbers.
+ *
+ * WHY. These files are the NPA-standard crime open-data layout, in which every
+ * column is CATEGORICAL and no column is an identifier — so the published file
+ * expresses two different offences as the same bytes, and a content hash
+ * cannot tell them apart. That is correct for a CATALOGUE (sec-nga-tod serves
+ * one product 14 times byte for byte and storing it once is real dedupe) and
+ * wrong for a register of events, where collapsing a repeat puts fewer crimes
+ * in the database than the police published. This is the same reversal
+ * hp3b25_jppolice.c records for Gifu and Shizuoka on 2026-10-24; this file was
+ * simply never reached by that pass, and CLAUDE.md carried it as an open LEAD
+ * until the published files were read.
+ *
+ * MEASURED on the published bytes, 2026-11-14, not inferred from the sibling:
+ *   tokyo_2024zitensyatou.csv (JO30_TOKYO_CRIME_BICYCLE_2024), 15 columns,
+ *   28,831 data rows: 28,779 distinct WHOLE rows and 28,683 distinct under
+ *   this row's declared 10-part id_keys. Of the 148 that collide on that key,
+ *   96 DIFFER in a later column (発生場所／被害者の年齢／施錠関係 …) and the
+ *   in-page content-hash guard already keeps them — which is why the registry
+ *   sweep reports 52 and not 148. The remaining 52 are byte-identical, and
+ *   only this flag can keep them. The largest group is THREE bicycles taken
+ *   from one parking area in 羽村市五ノ神３丁目 on 2024-02-24 at 09:00, all
+ *   locked, victim in their 50s: three thefts, and the database held one.
+ *
+ *   zencho.files/R6.csv (JO30_TOKYO_ZENCHO_R6), 11 columns, 5,490 data rows,
+ *   5,470 distinct whole, 20 byte-identical repeats — read separately because
+ *   the precursor files are a different family and the flag must not be set on
+ *   inference. The largest group is THREE 痴漢 reports in 八王子市大塚 on a
+ *   Friday at 20:00 in May 2024, victim a female teenager, on the road,
+ *   suspect on foot: three reported offences stored as one.
+ *
+ * WHY THE 17 STATISTICS ROWS ARE EXCLUDED, and the check that they are: the
+ * CHOME rows read 認知件数 — one row per 市区町丁 carrying COUNTS, keyed on
+ * 市区町丁 alone. An occurrence number there would manufacture rows rather than
+ * preserve them. The `crime-statistics` set and the `CHOME` set were confirmed
+ * to be the same 17 rows, so the record_type test and the file family agree.
+ *
+ * The flag keys a repeat on its occurrence number WITHIN the published file,
+ * which is a fact about that document and not an invented identity, and the
+ * FIRST of a group keeps the uid it already had — so turning it on adds rows
+ * and re-keys none.
  */
 #include "lib/hpengine.h"
 
@@ -493,6 +539,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"buhinnerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2018buhinnerai.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -513,6 +560,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"hittakuri\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2018hittakuri.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -533,6 +581,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"ootobaitou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2018ootobaitou.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -555,6 +604,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"syazyounerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2018syazyounerai.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -577,6 +627,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"zidouhanbaikinerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2018zidouhanbaikinerai.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -598,6 +649,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"zidousyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2018zidousyatou.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -618,6 +670,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"zitensyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2018zitensyatou.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -639,6 +692,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"buhinnerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2019buhinnerai.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -660,6 +714,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"hittakuri\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2019hittakuri.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -680,6 +735,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"ootobaitou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2019ootobaitou.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -701,6 +757,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"syazyounerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2019syazyounerai.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -723,6 +780,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"zidouhanbaikinerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2019zidouhanbaikinerai.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -744,6 +802,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"zidousyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2019zidousyatou.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -764,6 +823,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"zitensyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2019zitensyatou.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -785,6 +845,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"buhinnerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2020buhinnerai.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -805,6 +866,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"hittakuri\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2020hittakuri.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -825,6 +887,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"ootobaitou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2020ootobaitou.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -847,6 +910,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"syazyounerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2020syazyounerai.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -869,6 +933,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"zidouhanbaikinerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2020zidouhanbaikinerai.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -889,6 +954,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"zidousyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2020zidousyatou.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -909,6 +975,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"zitensyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2020zitensyatou.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -930,6 +997,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"buhinnerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2021buhinnerai.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -951,6 +1019,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"hittakuri\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2021hittakuri.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -971,6 +1040,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"ootobaitou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2021ootobaitou.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -992,6 +1062,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"syazyounerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2021syazyounerai.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -1014,6 +1085,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"zidouhanbaikinerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2021zidouhanbaikinerai.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -1034,6 +1106,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"zidousyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2021zidousyatou.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -1055,6 +1128,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"zitensyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2021zitensyatou.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -1076,6 +1150,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"buhinnerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2022buhinnerai.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -1097,6 +1172,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"hittakuri\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2022hittakuri.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -1117,6 +1193,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"ootobaitou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2022ootobaitou.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -1139,6 +1216,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"syazyounerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2022syazyounerai.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -1161,6 +1239,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"zidouhanbaikinerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2022zidouhanbaikinerai.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -1181,6 +1260,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"zidousyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2022zidousyatou.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -1201,6 +1281,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"zitensyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2022zitensyatou.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -1222,6 +1303,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"buhinnerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2023buhinnerai.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -1243,6 +1325,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"hittakuri\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2023hittakuri.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -1263,6 +1346,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"ootobaitou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2023ootobaitou.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -1284,6 +1368,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"syazyounerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2023syazyounerai.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -1306,6 +1391,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"zidouhanbaikinerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2023zidouhanbaikinerai.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -1326,6 +1412,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"zidousyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2023zidousyatou.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -1347,6 +1434,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"zitensyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2023zitensyatou.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -1368,6 +1456,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"buhinnerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2024buhinnerai.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -1389,6 +1478,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"hittakuri\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2024hittakuri.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -1409,6 +1499,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"ootobaitou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2024ootobaitou.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -1431,6 +1522,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"syazyounerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2024syazyounerai.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -1453,6 +1545,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"zidouhanbaikinerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2024zidouhanbaikinerai.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -1474,6 +1567,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"zidousyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2024zidousyatou.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -1494,6 +1588,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"zitensyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2024zitensyatou.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -1515,6 +1610,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"buhinnerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2025buhinnerai.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -1536,6 +1632,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"hittakuri\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2025hittakuri.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -1556,6 +1653,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"ootobaitou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2025ootobaitou.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -1578,6 +1676,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"syazyounerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2025syazyounerai.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -1600,6 +1699,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"zidouhanbaikinerai\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2025zidouhanbaikinerai.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -1621,6 +1721,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"zidousyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2025zidousyatou.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -1642,6 +1743,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "crime-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"incident\",\"geocoded\",\"zitensyatou\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/hanzaihasseijyouhou.files/tokyo_2025zitensyatou.csv",
     .charset = "cp932",
     .id_keys = "罪名+手口+管轄警察署（発生地）+管轄交番・駐在所（発生地）+市区町村コード（発生地）+都道府県（発生地）+市区町村（発生地）+町丁目（発生地）+発生年月日（始期）+発生時（始期）",
@@ -1664,6 +1766,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "precursor-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"fraud\",\"precursor\",\"incident\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/zencho.files/R6.csv",
     .charset = "cp932",
     .id_keys = "事案名+発生年月+発生曜日+発生時+発生区市町村+発生場所+発生場所詳細+被害者性別+被害者年代+被害者学職別+被疑者の交通手段",
@@ -1685,6 +1788,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "precursor-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"fraud\",\"precursor\",\"incident\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/zencho.files/R7.csv",
     .charset = "cp932",
     .id_keys = "事案名+発生年月+発生曜日+発生時+発生区市町村+発生場所+発生場所詳細+被害者性別+被害者年代+被害者学職別+被疑者の交通手段",
@@ -1706,6 +1810,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "precursor-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"fraud\",\"precursor\",\"incident\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/zencho.files/R8.1.csv",
     .charset = "cp932",
     .id_keys = "事案名+発生年月+発生曜日+発生時+発生区市町村+発生場所+発生場所詳細+被害者性別+被害者年代+被害者学職別+被疑者の交通手段",
@@ -1727,6 +1832,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "precursor-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"fraud\",\"precursor\",\"incident\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/zencho.files/R8.2.csv",
     .charset = "cp932",
     .id_keys = "事案名+発生年月+発生曜日+発生時+発生区市町村+発生場所+発生場所詳細+被害者性別+被害者年代+被害者学職別+被疑者の交通手段",
@@ -1748,6 +1854,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "precursor-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"fraud\",\"precursor\",\"incident\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/zencho.files/R8.3.csv",
     .charset = "cp932",
     .id_keys = "事案名+発生年月+発生曜日+発生時+発生区市町村+発生場所+発生場所詳細+被害者性別+被害者年代+被害者学職別+被疑者の交通手段",
@@ -1769,6 +1876,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "precursor-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"fraud\",\"precursor\",\"incident\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/zencho.files/R8.4.csv",
     .charset = "cp932",
     .id_keys = "事案名+発生年月+発生曜日+発生時+発生区市町村+発生場所+発生場所詳細+被害者性別+被害者年代+被害者学職別+被疑者の交通手段",
@@ -1790,6 +1898,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "precursor-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"fraud\",\"precursor\",\"incident\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/zencho.files/R8.5.csv",
     .charset = "cp932",
     .id_keys = "事案名+発生年月+発生曜日+発生時+発生区市町村+発生場所+発生場所詳細+被害者性別+被害者年代+被害者学職別+被疑者の交通手段",
@@ -1811,6 +1920,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "precursor-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"fraud\",\"precursor\",\"incident\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/zencho.files/R8.6.csv",
     .charset = "cp932",
     .id_keys = "事案名+発生年月+発生曜日+発生時+発生区市町村+発生場所+発生場所詳細+被害者性別+被害者年代+被害者学職別+被疑者の交通手段",
@@ -1832,6 +1942,7 @@ static const hp_source HP30TOKYO_TOKYOCRIME[] = {
     .record_type = "precursor-incident",
     .tags = "\"japan\",\"tokyo\",\"crime\",\"police\",\"keishicho\",\"fraud\",\"precursor\",\"incident\"",
     .mode = HP_CSV, .want = HP_ANY, .free_tier = 1,
+    .occurrence_rows = 1,   /* a register of EVENTS: see the file header */
     .url = "https://www.keishicho.metro.tokyo.lg.jp/about_mpd/jokyo_tokei/jokyo/zencho.files/R8.csv",
     .charset = "cp932",
     .id_keys = "事案名+発生年月+発生曜日+発生時+発生区市町村+発生場所+発生場所詳細+被害者性別+被害者年代+被害者学職別+被疑者の交通手段",

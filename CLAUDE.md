@@ -1187,6 +1187,71 @@ SIGXFSZ, median 108.7 s against a ~200 s kill line). Rule 1's note on the
   not answer whether the field is UNIQUE", which is the entire collision
   question.
 
+  **AND THE THREE THINGS THAT PASS DECLINED TO DO WERE THEN DONE, AND TWO OF
+  THEM WERE REAL** (2026-11-14). Each had been written off for a defensible
+  reason and each reason turned out to be weaker than it read:
+
+  * **The sweep was NOT re-run wholesale — the 57 were, and the SECOND READING
+    IS ITSELF THE DISCRIMINATOR.** Re-run through the binary at a 600 s clock
+    and a 2 GB write ceiling: **7 came back OK with no code change** (12.3% of
+    the queue transient, the fourth time a verdict column has gone stale here),
+    2 fetch-failed, 48 still collided. Then the two readings were compared row
+    by row, which costs nothing and is what this file's own rule asks for — "a
+    key defect gives the same number twice and a reshuffle does not":
+    **25 reproduced their loss exactly and 23 MOVED** (`LOC_BOOKS_LATEST`
+    32→99, `sci-pmc-open-access` 61→106, `gov-za-pmg-bills` 93→108 against
+    `sci-datacite-latest` 35→2, `eco-entsog-tariffs` 104→75). A moving number
+    is drift under a live head, whose remedy is a stable sort or a keyset
+    cursor and NOT a key. So the honest queue is **25 rows**, headed by
+    `nam-delaware-...-organization-d` at 386 over a completed walk, and the
+    rest at 160 or less. **A re-read is not just a staleness check: the pair of
+    readings answers a question neither reading can.**
+  * **`JO30_TOKYO_CRIME_BICYCLE_2024` WAS A REAL DEFECT, and it was 65 rows
+    rather than one.** The LEAD said it needed a read of the published file, so
+    the file was read. It is the NPA-standard crime layout byte for byte — 15
+    all-categorical columns, no identifier — i.e. the shape
+    `hp3b25_jppolice.c` reversed its position on for Gifu and Shizuoka on
+    2026-10-24, in a file that pass never reached. 28,831 data rows, 28,779
+    distinct whole, and **28,683 distinct under the row's own 10-part key**:
+    of the 148 that collide on it, **96 differ in a later column and the
+    in-page content-hash guard already keeps them**, which is exactly why the
+    sweep reports 52 and not 148 — so a sweep's collision count is a reading of
+    what SURVIVED the guard, not of what the key collapses. The remaining 52
+    are byte-identical and only `occurrence_rows` can keep them; the largest
+    group is **three bicycles taken from one parking area in 羽村市五ノ神３丁目 on
+    2024-02-24 at 09:00, all locked, victim in their 50s.** The precursor
+    family was read separately rather than inferred from the sibling
+    (`zencho.files/R6.csv`, 11 columns, 5,490 rows, 5,470 distinct, 20
+    byte-identical — the largest being **three 痴漢 reports in 八王子市大塚 on a
+    Friday at 20:00 in May 2024**, a female teenager, on the road, suspect on
+    foot: three reported sexual offences stored as one). `occurrence_rows = 1`
+    is on all 56 `crime-incident` and 9 `precursor-incident` rows and on NONE
+    of the 17 `crime-statistics` rows, which read 認知件数 — one row per
+    市区町丁 carrying COUNTS, keyed on 市区町丁 alone, where an occurrence number
+    would MANUFACTURE rows. The exclusion was checked rather than asserted: the
+    `crime-statistics` set and the `CHOME` set are the same 17 rows. Measured
+    after: **28,831 of 28,831 and 5,490 of 5,490.** Unlike `awc-obstacles`
+    this one recovers real records, because the duplicates are the publisher's
+    and not our paging's.
+  * **The 11 `af-dportal-trans-*` keys needed no bigger ceiling to settle —
+    just the upstream, once.** They were held as "SIZE_CAPPED, so no verdict",
+    which confused a reading of the ROW with a reading of the KEY: the question
+    is whether a candidate is unique in a body, and one body answers it.
+    Botswana at the row's own `limit=5000`: 5,000 rows, 5,000 distinct whole
+    records, and **`trans_id` alone is 492** — not an identity despite the
+    name, the `uin`/`noe_id` lesson a third time — with `aid` 169 (the
+    activity), `aid+trans_id` 1,737, and the 8-part composite 5,000, the
+    ceiling. The 9-part two rows carry adds `trans_sector_group`, worth **0**
+    extra distinct, so the 8-part is the identity and the narrower of the two
+    that reach it. The six rows that declared NOTHING now carry it; the two
+    9-part rows are deliberately NOT re-keyed, because they also reach the
+    ceiling and re-keying would change every stored uid for nothing. **This
+    recovers no records** — all six already stored 5,000 distinct through the
+    content-hash fallback — and what it buys is that a transaction the
+    publisher revises updates its row instead of arriving as a second one. The
+    11 `af-dportal-act-*` siblings were checked in the same pass and are
+    uniformly keyed `aid`, which is right for one row per activity.
+
 **Every registered source is now proof-of-life verified.** Batch 14's 1,001
 unverified `csrc14_*` candidates were probed and promoted (594 PASS →
 `vsrc14_*`); batch 15 added 1,029 more (`vsrc15_*`, see

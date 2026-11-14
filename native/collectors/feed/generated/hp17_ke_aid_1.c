@@ -25,6 +25,18 @@ static const hp_source T[] = {
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
 
+  /* id_keys MEASURED, 2026-11-14, on Botswana's real body (5,000 rows at this
+     row's own limit=5000, 5,000 distinct WHOLE records): aid alone is 169
+     distinct (the activity — a dimension), trans_id alone is 492 and is NOT an
+     identity despite the name, aid+trans_id is 1,737, and this 8-part
+     composite is 5,000 — the ceiling. DO NOT shorten it to trans_id: that
+     collapses 90% of the ledger. The sibling tz/zm rows add
+     trans_sector_group, which measured 0 extra distinct and is redundant; they
+     are left as they are because re-keying them would change stored uids for
+     nothing. This row previously declared no id_keys at all and stored the
+     same 5,000 via the content-hash fallback — so this changes no count, only
+     identity: a revised transaction now updates its row instead of arriving as
+     a new one. */
   { .id = "af-dportal-trans-ke",
     .name = "d-portal (IATI) — aid transactions in Kenya",
     .collector = "ke_aid", .category = "aid",
@@ -32,6 +44,7 @@ static const hp_source T[] = {
     .record_type = "aid-record", .tags = "\"ke\",\"aid\",\"batch17\",\"detail-hop\",\"deep-record\"", .lang = "en",
     .url = "https://d-portal.org/q?from=act,trans&trans_country_code=KE&limit=5000&form=json",
     .array_path = "rows",
+    .id_keys = "aid+trans_id+trans_ref+trans_day+trans_value+trans_code+trans_sector+trans_country",
     .detail_url = "https://d-portal.org/q?from=trans&aid={v}&form=json", .detail_key = "aid",
     .page_walk = 1,
     .interval = 86400, .free_tier = 1 },
