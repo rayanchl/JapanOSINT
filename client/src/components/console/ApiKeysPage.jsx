@@ -3,10 +3,11 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { LuKey, LuKeyRound, LuLock, LuRefreshCw } from 'react-icons/lu';
 import { api, ApiError, isForbidden } from '../../api/client.js';
 import { useApi } from '../../hooks/useApi.js';
+import { usePagedList } from '../../hooks/usePagedList.js';
 import { useAuth } from '../../auth/AuthContext.jsx';
 import {
   Page, Section, Row, Card, Pill, Button, Input, Field, Select, Segmented, Sheet,
-  ConfirmDialog, ErrorNotice, EmptyState, LoadingState, CopyButton, cx, toast,
+  ConfirmDialog, ErrorNotice, EmptyState, LoadingState, CopyButton, PagedFooter, cx, toast,
 } from '../ui/kit.jsx';
 
 /**
@@ -20,7 +21,9 @@ import {
  *              GET/PUT /api/tenant-keys/policy {policy,memberId,members[]}
  *   platform   GET /api/keys                   [{name,role,set,hasOverlay}]   (platform operator + admin role)
  *              GET/PUT /api/keys/:name
- * "Used by" comes from GET /api/status → apis[].envVars[{name,role}].
+ * "Used by" comes from the paged search of sources that are waiting on a
+ * credential (GET /api/sources/search?health=gated → health.credentials_required).
+ * The whole /api/status registry dump is no longer downloaded for it.
  */
 
 const ROLE_TONE = { required: 'accent', anyOf: 'warning', optional: 'neutral' };
@@ -45,7 +48,11 @@ export default function ApiKeysPage() {
 
   const listPath = scope === 'platform' ? '/api/keys' : '/api/tenant-keys';
   const { data, error, loading, reload, setData } = useApi(listPath, { deps: [scope] });
-  const status = useApi('/api/status');
+  // Sources the server reports as waiting on a credential, paged. This is NOT
+  // every keyed source (a source whose key is already set is healthy and is not
+  // listed by any cheap route), and the page says so where it is shown.
+  const gated = usePagedList('/api/sources/search?health=gated', { pageSize: 200 });
+  const statusRows = useMemo(() => gated.rows.map(gatedAsStatusRow), [gated.rows]);
 
   const [q, setQ] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -60,7 +67,6 @@ export default function ApiKeysPage() {
   }, [data, scope]);
   const canManage = scope === 'platform' ? true : (data?.canManage ?? true);
   const policy = scope === 'platform' ? null : data?.policy;
-  const statusRows = status.data?.apis || [];
 
   const roles = useMemo(() => [...new Set(rows.map((r) => r.role))].sort((a, b) => (ROLE_RANK[a] ?? 9) - (ROLE_RANK[b] ?? 9)), [rows]);
   const filtered = useMemo(() => {
@@ -101,7 +107,7 @@ export default function ApiKeysPage() {
           {auth.isPlatformAdmin && (
             <Segmented value={scope} onChange={setScope} options={[{ value: 'workspace', label: 'Workspace' }, { value: 'platform', label: 'Platform' }]} />
           )}
-          <Button size="sm" onClick={() => { reload(); status.reload(); }} title="Reload"><LuRefreshCw size={13} /></Button>
+          <Button size="sm" onClick={() => { reload(); gated.reload(); }} title="Reload"><LuRefreshCw size={13} /></Button>
         </>
       )}
       wide
@@ -142,7 +148,7 @@ export default function ApiKeysPage() {
           {isForbidden(error) && scope === 'platform' && 'Platform keys need the platform-operator allowlist AND an owner/admin role in the active workspace.'}
         </ErrorNotice>
       )}
-      {status.error && <ErrorNotice error={status.error} title="Source status unavailable (the “used by” lists will be empty)" onRetry={status.reload} />}
+      {gated.error && <ErrorNotice error={gated.error} title="Source list unavailable (the “used by” lists will be empty)" onRetry={gated.reload} />}
 
       {!loading && !error && (
         filtered.length === 0 ? (
@@ -163,7 +169,7 @@ export default function ApiKeysPage() {
                           {scope === 'workspace' && r.byok && <Pill tone="accent">YOUR KEY</Pill>}
                           {scope === 'workspace' && !r.byok && r.source === 'platform' && <Pill>ADMIN</Pill>}
                           {scope === 'platform' && r.byok && <Pill tone="accent">OVERLAY</Pill>}
-                          {usedBy > 0 && <span className="text-[10px] text-osint-muted font-mono ml-1">{usedBy} source{usedBy === 1 ? '' : 's'}</span>}
+                          {usedBy > 0 && <span className="text-[10px] text-osint-muted font-mono ml-1">{usedBy} source{usedBy === 1 ? '' : 's'} waiting</span>}
                         </span>
                       </span>
                       <Pill tone={r.set ? 'success' : 'warning'}>{r.set ? 'SET' : 'UNSET'}</Pill>
@@ -182,7 +188,7 @@ export default function ApiKeysPage() {
         scope={scope}
         canManage={canManage}
         statusRows={statusRows}
-        onStatusUpdate={(updated) => status.setData((d) => (d ? { ...d, apis: mergeStatusRow(d.apis, updated) } : d))}
+        gatedPaging={gated}
         onClose={() => setSelected(null)}
         onUpdated={onUpdated}
       />
@@ -193,7 +199,7 @@ export default function ApiKeysPage() {
 
 /* ------------------------------------------------------------------------ */
 
-function KeyDetailSheet({ row, scope, canManage, statusRows, onStatusUpdate, onClose, onUpdated }) {
+function KeyDetailSheet({ row, scope, canManage, statusRows, gatedPaging, onClose, onUpdated }) {
   const navigate = useNavigate();
   const [working, setWorking] = useState(row);
   const [revealed, setRevealed] = useState(null);
@@ -293,9 +299,10 @@ function KeyDetailSheet({ row, scope, canManage, statusRows, onStatusUpdate, onC
         {error && <ErrorNotice error={error} title={error instanceof ApiError && error.status === 403 ? 'The server refused this account' : 'Request failed'} />}
         {saved && !error && <div className="text-xs text-neon-green">Saved.</div>}
 
-        <Section label={`Used by · ${usedBy.length}`}>
+        <Section label={`Waiting on this key · ${usedBy.length}`}>
+          <div className="text-[11px] text-osint-muted mb-1">Sources the server reports as waiting on a credential. Sources whose key is already set are healthy and are not listed here.</div>
           {usedBy.length === 0 ? (
-            <div className="text-xs text-osint-muted">No sources reference this key in the current registry{statusRows.length === 0 ? ' (source status did not load)' : ''}.</div>
+            <div className="text-xs text-osint-muted">No loaded source is waiting on this key{gatedPaging?.hasMore ? ' — more sources are still unloaded, use Load more below' : ''}.</div>
           ) : (
             <ul className="divide-y divide-osint-border -my-1">
               {usedBy.map((s) => (
@@ -308,11 +315,12 @@ function KeyDetailSheet({ row, scope, canManage, statusRows, onStatusUpdate, onC
                     </button>
                     {roleFor(s) && <Pill tone={ROLE_TONE[roleFor(s)] || 'neutral'}>{String(roleFor(s)).toUpperCase()}</Pill>}
                   </div>
-                  {s.requiresKey && <ProbeActions row={s} onUpdate={onStatusUpdate} />}
+                  <LazyProbeActions id={s.id} />
                 </li>
               ))}
             </ul>
           )}
+          {gatedPaging && <PagedFooter className="mt-2" shown={gatedPaging.rows.length} total={gatedPaging.total} hasMore={gatedPaging.hasMore} busy={gatedPaging.loadingMore} onMore={gatedPaging.loadMore} error={gatedPaging.moreError} noun="gated sources" />}
         </Section>
       </div>
 
@@ -351,6 +359,32 @@ export function probeSummary(r) {
   if (r.reachable === true) return `Probe: reachable${code ? ` (${code})` : ''}`;
   if (r.reachable === false) return `Probe: unreachable — ${r.error || code || 'no response'}`;
   return `Probe finished${code ? ` (${code})` : ''}`;
+}
+
+/** A search row (health.credentials_required) in the shape the key sheet reads. */
+export function gatedAsStatusRow(r) {
+  const need = r.health?.credentials_required || [];
+  return {
+    id: r.id, name: r.name || r.id, category: r.category, status: r.status || 'pending', gated: true,
+    requiresKey: true, configured: false, missingVars: need,
+    envVars: need.map((name) => ({ name, role: 'required', set: false })),
+  };
+}
+
+/** Probe controls load ONE source's status row on demand (GET /api/status/:id),
+ *  and only an operator is offered them (the server refuses anyone else). */
+export function LazyProbeActions({ id }) {
+  const auth = useAuth();
+  const [open, setOpen] = useState(false);
+  const full = useApi(open ? `/api/status/${encodeURIComponent(id)}` : null);
+  const [upd, setUpd] = useState(null);
+  if (!auth.isPlatformAdmin) return <div className="mt-1 ml-4 text-[10px] text-osint-muted">Probe controls are an operator action (read-only for you).</div>;
+  const row = upd || full.data;
+  if (!open) return <div className="mt-1 ml-4"><Button size="sm" onClick={() => setOpen(true)}>Probe controls…</Button></div>;
+  if (full.error) return <div className="mt-1 ml-4 text-[10px] text-neon-red font-mono">{full.error.message}</div>;
+  if (!row) return <div className="mt-1 ml-4 text-[10px] text-osint-muted">Loading…</div>;
+  if (!row.requiresKey) return <div className="mt-1 ml-4 text-[10px] text-osint-muted">This source reports no credential requirement.</div>;
+  return <ProbeActions row={row} onUpdate={(u) => setUpd({ ...row, ...u })} />;
 }
 
 export function ProbeActions({ row, onUpdate }) {

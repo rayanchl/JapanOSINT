@@ -189,6 +189,28 @@ static int seen_add(sink_state *st, const char *uid) {
  * the coordinate, and the item would silently drop off the map again. A
  * collector that DOES supply geometry still wins: excluded.lat is checked
  * first, because a real upstream coordinate outranks an inferred one. */
+/* A re-fetched record whose TRANSLATED text changed must not keep the English
+ * rendering of the old text, nor stay marked translated (translate.c selects
+ * only rows with translated_at IS NULL, so the stale translation would be
+ * shown beside the new Japanese for good). When title, body or summary differ
+ * from what is stored, clear the *_en columns and the translation state so
+ * the row is pending again (translate_failed back to 0 also lifts the -1
+ * "not Japanese" sentinel and a burned retry count, both of which judged the
+ * OLD text). Judged on the text itself rather than content_hash: a row
+ * stored before the hash existed has none, and a properties-only change leaves
+ * the translation valid. fts_write() wipes `keywords` on every rewrite and
+ * translate_fts_resync restores it from the *_en columns, which are now empty
+ * until the retranslation lands. */
+#define TR_TEXT_CHANGED \
+  "(intel_items.title IS NOT excluded.title OR intel_items.body IS NOT excluded.body" \
+  " OR intel_items.summary IS NOT excluded.summary)"
+#define TR_STALE_SET \
+ "  title_en=CASE WHEN " TR_TEXT_CHANGED " THEN NULL ELSE intel_items.title_en END,"   \
+ "  body_en=CASE WHEN " TR_TEXT_CHANGED " THEN NULL ELSE intel_items.body_en END,"     \
+ "  summary_en=CASE WHEN " TR_TEXT_CHANGED " THEN NULL ELSE intel_items.summary_en END," \
+ "  translated_at=CASE WHEN " TR_TEXT_CHANGED " THEN NULL ELSE intel_items.translated_at END," \
+ "  translate_failed=CASE WHEN " TR_TEXT_CHANGED " THEN 0 ELSE intel_items.translate_failed END,"
+
 static const char *SQL_UPSERT =
  "INSERT INTO intel_items"
  " (uid,source_id,title,body,summary,link,author,language,published_at,"
@@ -202,6 +224,7 @@ static const char *SQL_UPSERT =
  "  link=excluded.link, author=excluded.author, language=excluded.language,"
  "  published_at=excluded.published_at, fetched_at=excluded.fetched_at,"
  "  tags=excluded.tags, properties=excluded.properties,"
+ TR_STALE_SET
  "  lat=CASE WHEN excluded.lat IS NOT NULL THEN excluded.lat"
  "          WHEN intel_items.geom_source IN ('llm','exif') THEN intel_items.lat"
  "          ELSE excluded.lat END,"

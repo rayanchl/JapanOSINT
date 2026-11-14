@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useSearchParams, Link, useParams } from 'react-router-dom';
-import { LuPlay } from 'react-icons/lu';
-import { api, errorMessage } from '../../api/client.js';
+import RunControl from '../sources/RunControl.jsx';
 import { useApi } from '../../hooks/useApi.js';
 import { useIntelItems, SINCE_PRESETS, useSinceIso } from '../../hooks/useIntel.js';
 import { useRecordSearch } from '../../api/searchHistory.js';
@@ -13,8 +12,19 @@ import { relativeTime, fmtAbs } from '../../utils/time.js';
 /** Items of one source — iOS `IntelSourceItemsView`. */
 export default function IntelSourceItemsPage() {
   const { id } = useParams();
-  const sources = useApi('/api/intel/sources');
-  const source = useMemo(() => (Array.isArray(sources.data?.data) ? sources.data.data.find((s) => s.id === id) : null), [sources.data, id]);
+  // ONE source's metadata: the detail route, not the whole registry joined to
+  // its aggregates (which this page used to download to find() a single row).
+  const sources = useApi(`/api/sources/${encodeURIComponent(id)}/detail`);
+  const source = useMemo(() => {
+    const d = sources.data;
+    if (!d?.registry) return null;
+    return {
+      id: d.registry.id, name: d.registry.name, name_ja: d.registry.name_ja, description: d.registry.description,
+      category: d.registry.category, kind: d.registry.kind, url: d.registry.url,
+      item_count: d.data?.item_count, geocoded: d.data?.geocoded, awaiting_geo: d.data?.awaiting_geo,
+      last_fetched: d.data?.last_fetched, last_published: d.data?.last_published,
+    };
+  }, [sources.data]);
   // ?q= reopens a search made here (a history or shared link).
   const [urlParams] = useSearchParams();
   const [q, setQ] = useState(() => urlParams.get('q') || '');
@@ -24,7 +34,6 @@ export default function IntelSourceItemsPage() {
   const [geo, setGeo] = useState(false);
   const [sort, setSort] = useState('newest');
   const [view, setView] = useState('original');
-  const [running, setRunning] = useState(false);
 
   // Pinned per preset choice — sinceIso() per render refetched forever.
   const sinceAt = useSinceIso(since);
@@ -40,25 +49,15 @@ export default function IntelSourceItemsPage() {
   });
   const { items, error, loading, loadingMore, hasMore, loadMore, reload, total, totalGte, meta } = feed;
 
-  const run = async () => {
-    setRunning(true);
-    try {
-      const r = await api.post(`/api/intel/sources/${encodeURIComponent(id)}/run`);
-      toast(`ran: ${r?.ingested ?? '?'} new rows in ${r?.duration_ms ?? '?'} ms`, { tone: 'accent', ttl: 5000 });
-      reload(); sources.reload({ silent: true });
-    } catch (e) { toast(e?.status === 409 ? 'a run is already in flight' : errorMessage(e), { tone: 'danger', ttl: 5000 }); }
-    finally { setRunning(false); }
-  };
-
   const isBreach = source?.category === 'breach';
 
   return (
     <Page wide
       title={<span className="flex items-center gap-2 flex-wrap">{source?.name || id}{source?.name_ja && source.name_ja !== source.name && <span className="text-sm text-osint-muted font-normal">{source.name_ja}</span>}</span>}
       subtitle={<span><Link to="/intel?view=sources" className="hover:text-accent">← all sources</Link> · <span className="font-mono">{id}</span> · <Link to={`/console/sources/${encodeURIComponent(id)}`} className="text-accent hover:underline">how this source works →</Link>{source?.description ? ` — ${source.description}` : ''}</span>}
-      actions={!isBreach && <Button variant="primary" busy={running} onClick={run}><LuPlay size={13} /> Run now</Button>}
+      actions={!isBreach && source && <RunControl source={source} onDone={() => { reload(); sources.reload({ silent: true }); }} />}
     >
-      {sources.error && <ErrorNotice error={sources.error} title="Could not load source metadata" onRetry={sources.reload} />}
+      {sources.error && sources.error.status !== 404 && <ErrorNotice error={sources.error} title="Could not load source metadata" onRetry={sources.reload} />}
       {source && (
         <Card>
           <KV pairs={[

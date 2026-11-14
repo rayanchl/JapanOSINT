@@ -85,6 +85,24 @@ int http_request_max(http_client *c, const char *method, const char *url,
                      size_t body_len, int timeout_ms, int retries,
                      size_t max_body, http_response *out);
 
+/* Set the calling thread's standing body ceiling (0 = the default) and return
+ * the previous one, which the caller restores. See http_request_max() for what
+ * the ceiling is and how $JO_HTTP_MAX_BODY clamps it. */
+size_t http_body_ceiling_set(size_t max_body);
+
+/* http_request() for a destination the caller did not choose (an alert
+ * webhook, an image URL scraped from an upstream item): the URL is checked at
+ * the STRICT ruleset (loopback, RFC1918, CGNAT, link-local and metadata
+ * refused, name resolved and every answer judged), the connected address is
+ * checked strictly again by the per-connection hook — on every hop when
+ * follow_redirects is non-zero, and with follow_redirects == 0 redirects are
+ * NOT followed: a 3xx comes back as the response (webhooks). Thread-local and restored when
+ * this returns, like http_request_max(). */
+int http_request_strict(http_client *c, const char *method, const char *url,
+                        const char *const *headers, const char *body,
+                        size_t body_len, int timeout_ms, int retries,
+                        int follow_redirects, http_response *out);
+
 void http_response_free(http_response *r);
 
 /* Why the most recent attempt made by http_request() ON THE CALLING THREAD

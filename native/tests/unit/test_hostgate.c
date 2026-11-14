@@ -318,6 +318,37 @@ static void test_camera_policy(void) {
   assert(hostgate_camera_url_check("http://192.168.1.10/", 0) == HG_URL_PRIVATE);
 }
 
+/* ENG-15: the metadata ranges and the IPv6 forms that embed an IPv4 address
+ * are judged at the FLOOR (non-strict), by the address they embed. */
+static void test_floor_address_classes(void) {
+  unsetenv("JO_HTTP_BLOCK_PRIVATE");
+  /* floor: blocked even when not strict */
+  assert(hostgate_addr_check("100.100.100.200", 0) == HG_URL_PRIVATE);
+  assert(hostgate_addr_check("100.64.0.1", 0) == HG_URL_PRIVATE);
+  assert(hostgate_addr_check("100.127.255.254", 0) == HG_URL_PRIVATE);
+  assert(hostgate_addr_check("100.63.0.1", 0) == HG_URL_OK);
+  assert(hostgate_addr_check("100.128.0.1", 0) == HG_URL_OK);
+  assert(hostgate_addr_check("192.0.0.192", 0) == HG_URL_PRIVATE);
+  assert(hostgate_addr_check("192.0.1.1", 0) == HG_URL_OK);
+  assert(hostgate_addr_check("64:ff9b::a9fe:a9fe", 0) == HG_URL_PRIVATE);   /* 169.254.169.254 */
+  assert(hostgate_addr_check("2002:a9fe:a9fe::1", 0) == HG_URL_PRIVATE);   /* 6to4 of it */
+  assert(hostgate_addr_check("::a9fe:a9fe", 0) == HG_URL_PRIVATE);         /* v4-compatible */
+  assert(hostgate_addr_check("::ffff:169.254.169.254", 0) == HG_URL_PRIVATE);
+  /* embedded private address: strict only, like the bare v4 */
+  assert(hostgate_addr_check("64:ff9b::a00:5", 0) == HG_URL_OK);           /* 10.0.0.5 */
+  assert(hostgate_addr_check("64:ff9b::a00:5", 1) == HG_URL_PRIVATE);
+  assert(hostgate_addr_check("2002:7f00:1::", 1) == HG_URL_PRIVATE);       /* 127.0.0.1 */
+  assert(hostgate_addr_check("2002:7f00:1::", 0) == HG_URL_OK);
+  /* embedded PUBLIC address stays reachable */
+  assert(hostgate_addr_check("64:ff9b::808:808", 1) == HG_URL_OK);         /* 8.8.8.8 */
+  assert(hostgate_addr_check("2002:808:808::1", 1) == HG_URL_OK);
+  assert(hostgate_addr_check("2606:4700:4700::1111", 1) == HG_URL_OK);
+  /* unchanged: loopback v6 is strict-only, unspecified is floor */
+  assert(hostgate_addr_check("::1", 0) == HG_URL_OK);
+  assert(hostgate_addr_check("::1", 1) == HG_URL_PRIVATE);
+  assert(hostgate_addr_check("::", 0) == HG_URL_PRIVATE);
+}
+
 int main(void) {
   setenv("JO_HOST_MIN_GAP_OVERRIDES",
          " Padded.Example = 700 ,\tTABBED.example\t=900,plain.example=300", 1);
@@ -332,6 +363,7 @@ int main(void) {
   test_first_request_never_waits();
   test_cancel_leaves_the_gate();
   test_camera_policy();
+  test_floor_address_classes();
   printf("test_hostgate: OK\n");
   return 0;
 }

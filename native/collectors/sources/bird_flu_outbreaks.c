@@ -77,7 +77,8 @@ static int pref_before(const char *base, const char *to, size_t span,
  * r7 …). We follow the highest r-number, which is the current season — the
  * index page ITSELF stopped carrying case entries, which is why this collector
  * used to return zero rows. Returns 1 and fills url[] on success. */
-static int newest_season_url(const char *html, char *url, size_t cap) {
+static int newest_season_url(const char *html, char *url, size_t cap,
+                             int below, int *season_no) {
   const char *NEEDLE = "_hpai_kokunai.html";
   int best = -1; char bestpath[256] = {0};
   for (const char *p = html; (p = strstr(p, NEEDLE)) != NULL; p++) {
@@ -94,9 +95,10 @@ static int newest_season_url(const char *html, char *url, size_t cap) {
     if (*d < '0' || *d > '9') continue;
     while (*d >= '0' && *d <= '9') { n = n * 10 + (*d - '0'); d++; }
     if (d != p) continue;                       /* digits must run up to "_" */
-    if (n > best) { best = n; memcpy(bestpath, s, len); bestpath[len] = 0; }
+    if (n < below && n > best) { best = n; memcpy(bestpath, s, len); bestpath[len] = 0; }
   }
   if (best < 0) return 0;
+  if (season_no) *season_no = best;
   if (!strncmp(bestpath, "http", 4))
     snprintf(url, cap, "%s", bestpath);
   else if (bestpath[0] == '/')
@@ -150,23 +152,28 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
     free(idx); fprintf(stderr, "[bird-flu-outbreaks] index unavailable\n");
     return -1;
   }
-  char season_url[512];
-  int have = newest_season_url(idx, season_url, sizeof season_url);
-  free(idx);
-  if (!have) {
-    fprintf(stderr, "[bird-flu-outbreaks] no season page linked from index\n");
-    return 0;                       /* honest empty, not an error */
-  }
-
+  /* A new 令和 season page (r8 on 2026-11-13) opens with NO case lines — MAFF
+   * publishes the early cases as PDFs — so the highest r-number can be a page
+   * that is honestly empty while the previous season's page still holds the
+   * outbreak list. Walk down from the newest until a season page yields cases
+   * (at most MAX_SEASONS pages), rather than stopping at the first. */
+  int below = 1000, tried = 0, fetched_ok = 0;
+  const int MAX_SEASONS = 3;
+  while (tried < MAX_SEASONS) {
+  char season_url[512]; int season_no = 0;
+  int have = newest_season_url(idx, season_url, sizeof season_url, below, &season_no);
+  if (!have) break;
+  below = season_no; tried++;
   char *html = feed_get_text(ctx->http, season_url, 15000);
   if (!html || strlen(html) < 50) {
     free(html);
     fprintf(stderr, "[bird-flu-outbreaks] season page unavailable: %s\n", season_url);
-    return -1;
+    continue;
   }
+  fetched_ok++;
   char *text = html_strip(html);   /* strip tags, collapse whitespace */
   free(html);
-  if (!text) { fprintf(stderr, "[bird-flu-outbreaks] strip failed\n"); return -1; }
+  if (!text) { fprintf(stderr, "[bird-flu-outbreaks] strip failed\n"); continue; }
 
   cJSON *features = cJSON_CreateArray();
   int seen[MAX_CASES]; int nseen = 0;
@@ -248,13 +255,21 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   if (cJSON_GetArraySize(features) == 0) {
     cJSON_Delete(features);
-    fprintf(stderr, "[bird-flu-outbreaks] no cases on %s\n", season_url);
-    return 0;                       /* an empty season is honest, not an error */
+    fprintf(stderr, "[bird-flu-outbreaks] no cases on %s; trying the previous season\n", season_url);
+    continue;
   }
   int n = geojson_emit_features(sink, ctx->source_id, features);
   cJSON_Delete(features);
   fprintf(stderr, "[bird-flu-outbreaks] emitted %d from %s\n", n, season_url);
+  free(idx);
   return 0;
+  }
+  free(idx);
+  /* Bodies were fetched and no season page yielded a case line: the page
+   * layout changed (or every linked season is empty). Say so (-1 → the
+   * scheduler files a fetch-failure record) rather than rc=0 with nothing. */
+  fprintf(stderr, "[bird-flu-outbreaks] %d season page(s) fetched, no case lines parsed\n", fetched_ok);
+  return -1;
 }
 
 static const source_def bird_flu_outbreaks_def = {

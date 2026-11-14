@@ -5232,28 +5232,52 @@ dated_restart:;
       break;
     }
     if (zip_body && s->zip_all_entries) {
-      int nent = zip_entry_count(hr.body, hr.body_len);
-      st.sh_zip_entries = nent > 0 ? nent : 0;
-      for (int zi = 0; zi < nent; zi++) {
-        char zname[512]; size_t zn = 0;
-        char *one = zip_entry_at(hr.body, hr.body_len, zi, zname, sizeof zname, &zn);
-        if (!one) {
-          st.sh_zip_entries_failed++;
-          size_t w = strlen(st.sh_zip_failed);
-          if (w + 24 < sizeof st.sh_zip_failed)
-            snprintf(st.sh_zip_failed + w, sizeof st.sh_zip_failed - w,
-                     "%s#%d", w ? "; " : "", zi);
-          continue;
+      /* ONE walk of the central directory (zip_iter), not zip_entry_at(i) per
+       * member, which restarts from entry 0 each time: 19,165 members was 183
+       * million directory-record parses. ZIP64 archives (>65,535 members, or
+       * members past 4 GiB) are read through the ZIP64 records; whatever the
+       * directory declares and the walk could not reach is counted as
+       * unreadable and disclosed below, never skipped silently. */
+      zip_iter zit;
+      int zi = 0;
+      long long nent_walked = 0;
+      if (zip_iter_open(&zit, hr.body, hr.body_len) == 0) {
+        char zname[512]; size_t zn = 0; char *one = NULL; int zrc;
+        while ((zrc = zip_iter_next(&zit, zname, sizeof zname, &one, &zn)) != 0) {
+          zi = (int)(zit.walked - 1);
+          nent_walked++;
+          if (zrc < 0 || !one) {
+            st.sh_zip_entries_failed++;
+            size_t w = strlen(st.sh_zip_failed);
+            if (w + 24 < sizeof st.sh_zip_failed)
+              snprintf(st.sh_zip_failed + w, sizeof st.sh_zip_failed - w,
+                       "%s#%d", w ? "; " : "", zi);
+            continue;
+          }
+          /* A member that is a directory entry, or empty, is not a record. */
+          if (zn == 0 || zname[strlen(zname) - 1] == '/') { free(one); continue; }
+          char *eutf8 = hp_body_to_utf8(s, page_url, one, zn);
+          const char *eb = eutf8 ? eutf8 : one;
+          if (s->mode == HP_NDJSON) hp_run_ndjson(&st, eb);
+          else                      hp_run_json(&st, eb);
+          free(eutf8);
+          free(one);
         }
-        /* A member that is a directory entry, or empty, is not a record. */
-        if (zn == 0 || zname[strlen(zname) - 1] == '/') { free(one); continue; }
-        char *eutf8 = hp_body_to_utf8(s, page_url, one, zn);
-        const char *eb = eutf8 ? eutf8 : one;
-        if (s->mode == HP_NDJSON) hp_run_ndjson(&st, eb);
-        else                      hp_run_json(&st, eb);
-        free(eutf8);
-        free(one);
+        if (zit.declared > (unsigned long long)nent_walked) {
+          /* The directory declared more members than it could be walked to:
+           * those are unread, and said so (the failed list names where the
+           * walk stopped). */
+          long long missing = (long long)(zit.declared - (unsigned long long)nent_walked);
+          st.sh_zip_entries_failed += (int)(missing > 0x7fffffff ? 0x7fffffff : missing);
+          size_t w = strlen(st.sh_zip_failed);
+          if (w + 40 < sizeof st.sh_zip_failed)
+            snprintf(st.sh_zip_failed + w, sizeof st.sh_zip_failed - w,
+                     "%s#%lld+ (directory not walkable)", w ? "; " : "", nent_walked);
+        }
+        nent_walked = nent_walked > (long long)zit.declared ? nent_walked : (long long)zit.declared;
       }
+      int nent = nent_walked > 0x7fffffff ? 0x7fffffff : (int)nent_walked;
+      st.sh_zip_entries = nent > 0 ? nent : 0;
       if (nent > 0 && st.sh_zip_entries_failed >= nent && page == 0) hard_error = 1;
       out = st.emitted;
       free(unz);

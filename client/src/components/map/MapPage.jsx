@@ -180,6 +180,19 @@ export default function MapPage() {
     }
   }, [searchParams, setSearchParams]);
 
+  // `?layer=<id>` (from a source page: "this source feeds layer X") switches
+  // that layer on once the catalogue has delivered it, then drops the param.
+  const layerParamApplied = useRef(false);
+  useEffect(() => {
+    const want = searchParams.get('layer');
+    if (!want || layerParamApplied.current || !(want in layers)) return;
+    layerParamApplied.current = true;
+    if (!layers[want]?.visible) toggleLayer(want);
+    const next = new URLSearchParams(searchParams);
+    next.delete('layer');
+    setSearchParams(next, { replace: true });
+  }, [searchParams, layers, toggleLayer, setSearchParams]);
+
   // `?p=<token>` restores a shared view: camera, layers, time window.
   const permalinkApplied = useRef(false);
   useEffect(() => {

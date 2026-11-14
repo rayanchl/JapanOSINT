@@ -853,7 +853,14 @@ int scheduler_run_source(db_handle *db, const source_def *d,
    * httpclient hook needs a db_handle and source_id it cannot otherwise see. */
   content_change_scope_begin(db, d->id);
   hostgate_set_cancel(cancel);
+  /* The operator's per-source ceiling applies to EVERY engine's requests, not
+   * only to the collectors that read ctx.body_ceiling: hpengine and VJSON rows
+   * never do, so the setting was a no-op for them. Restored on return — a
+   * worker thread outlives the run, and a leaked ceiling would widen the next
+   * source's fetch. An explicit $JO_HTTP_MAX_BODY still clamps it. */
+  size_t prev_ceiling = http_body_ceiling_set(ctx.body_ceiling);
   int rc = d->run(&ctx, &sink);
+  http_body_ceiling_set(prev_ceiling);
   hostgate_set_cancel(NULL);
   content_change_scope_end();
   evidence_scope_end();

@@ -16,12 +16,6 @@ struct AdminPanel: View {
     @EnvironmentObject var apiClient: APIClient
     @Environment(\.theme) private var theme
 
-    /// Server-restart UI state. Restarting forces every collector to re-read
-    /// API keys + other env vars after editing them in the API Keys tab.
-    @State private var restarting: Bool = false
-    @State private var restartError: String?
-    @State private var confirmRestart: Bool = false
-
     var body: some View {
         Group {
             if auth.isPlatformAdmin {
@@ -40,9 +34,6 @@ struct AdminPanel: View {
 
     private let operatorFooter =
         "Platform keys are the server-wide defaults every workspace falls back to."
-    private let serverFooter =
-        "Restart forces every collector to re-read API keys and other env vars; the dev server respawns automatically in 2–4 s."
-
     private var panel: some View {
         #if os(macOS)
         // macOS: lay the sections out as separator-free `surfaceElevated`
@@ -55,16 +46,12 @@ struct AdminPanel: View {
                 card(header: "Operator tools", footer: operatorFooter) {
                     operatorRows
                 }
-                card(header: "Server", footer: serverFooter) {
-                    serverRestartButton
-                }
             }
             .padding(Space.lg)
             .frame(maxWidth: 680, alignment: .leading)
             .frame(maxWidth: .infinity, alignment: .top)
         }
         .themedScreenBackground(theme)
-        .disabled(restarting)
         #else
         List {
             Section {
@@ -74,18 +61,9 @@ struct AdminPanel: View {
             } footer: {
                 Text(operatorFooter).font(.caption2)
             }
-
-            Section {
-                serverRestartButton
-            } header: {
-                sectionLabel("Server")
-            } footer: {
-                Text(serverFooter).font(.caption2)
-            }
         }
         .compatInsetGroupedListStyle()
         .themedScreenBackground(theme)
-        .disabled(restarting)
         #endif
     }
 
@@ -143,88 +121,6 @@ struct AdminPanel: View {
         }
     }
     #endif
-
-    // MARK: - Server control
-
-    /// Restarting the backend affects every workspace on the host. A
-    /// confirmation dialog is enough friction for this destructive action.
-    @ViewBuilder
-    private var serverRestartButton: some View {
-        restartTrigger
-            // Dialog attached to the trigger, not the Section. Section-hosted
-            // .confirmationDialog renders the body buttons but swallows the
-            // `message:` text on iOS 17+; per-trigger hosting works.
-            .confirmationDialog("Restart server?",
-                                isPresented: $confirmRestart,
-                                titleVisibility: .visible) {
-                Button("Restart", role: .destructive) {
-                    Haptics.tap(.medium)
-                    Task { await doRestart() }
-                }
-                Button("Cancel", role: .cancel) {}
-            } message: {
-                Text("All in-flight requests will be dropped. The app reconnects automatically once the server is back.")
-            }
-        if let restartError {
-            Text(restartError)
-                .font(.caption)
-                .foregroundStyle(theme.warning)
-        }
-    }
-
-    /// The restart Button itself. iOS fills the grouped row edge-to-edge; macOS
-    /// renders an intrinsically-sized bordered button pinned to the leading edge
-    /// instead of a full-window-wide tap target.
-    @ViewBuilder
-    private var restartTrigger: some View {
-        let button = Button(role: .destructive) {
-            confirmRestart = true
-        } label: {
-            HStack(spacing: Space.sm) {
-                Image(systemName: "arrow.clockwise.circle.fill")
-                    .accessibilityHidden(true)   // the button title follows
-                Text(restarting ? "Restarting…" : "Restart server")
-                #if os(iOS)
-                Spacer()
-                #endif
-                if restarting { ProgressView().controlSize(.small) }
-            }
-        }
-        .disabled(restarting)
-
-        #if os(macOS)
-        HStack {
-            button.buttonStyle(.bordered)
-            Spacer()
-        }
-        #else
-        button
-        #endif
-    }
-
-    private func doRestart() async {
-        restartError = nil
-        restarting = true
-        defer { restarting = false }
-        do {
-            try await apiClient.api.restartServer()
-        } catch {
-            // Connection-reset is expected — the server kills the socket as
-            // it tears down. Treat any post-POST failure as "probably
-            // restarting" and fall through to the health poll for liveness.
-        }
-        // Poll /api/health up to 30 s (1 s cadence) until the server is back.
-        let deadline = Date().addingTimeInterval(30)
-        while Date() < deadline {
-            try? await Task.sleep(for: .seconds(1))
-            if (try? await apiClient.api.health()) != nil {
-                Haptics.success()
-                return
-            }
-        }
-        restartError = "Server didn't come back within 30 s. Check the host."
-        Haptics.error()
-    }
 
     // MARK: - Row styling (mirrors ConsoleHub.row)
 

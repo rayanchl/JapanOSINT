@@ -26,19 +26,46 @@ struct API: Sendable {
         return raw > 0 ? TimeInterval(raw) : 25
     }
 
+    /// Longest a manual collector run may keep the connection open. Big
+    /// sources really take this long (a 945-page CKAN walk at 1.5 s a page is
+    /// ~25 min), and the server keeps running them after we stop listening.
+    nonisolated static let runTimeout: TimeInterval = 30 * 60
+
     /// Dedicated session so we control the resource ceiling. `URLSession.shared`
-    /// defaults `timeoutIntervalForResource` to 7 days, so the `timeout: nil`
-    /// POST path (long collector runs) could otherwise hang effectively
-    /// forever if the server stalls without closing the connection. We bound
-    /// the whole request leg to 120s and give every request a 30s default
-    /// unless the call site overrides it explicitly.
+    /// defaults `timeoutIntervalForResource` to 7 days, which would let a
+    /// stalled server hang a request effectively forever. Ordinary calls are
+    /// bounded to 120 s for the whole request leg (30 s idle, and every call
+    /// site may pass its own shorter per-request timeout).
+    ///
+    /// `waitsForConnectivity` is OFF on purpose: with it on, an offline
+    /// request waited out the 120 s resource ceiling before failing, so the
+    /// offline state appeared two minutes late. Offline now fails fast.
     nonisolated static let session: URLSession = {
         let cfg = URLSessionConfiguration.default
         cfg.timeoutIntervalForRequest = 30
         cfg.timeoutIntervalForResource = 120
-        cfg.waitsForConnectivity = true
+        cfg.waitsForConnectivity = false
         return URLSession(configuration: cfg)
     }()
+
+    /// Separate session for manual collector runs (`longRunning: true`). The
+    /// resource ceiling is a property of the SESSION, not of one request, so a
+    /// 30-minute run cannot share `session`'s 120 s one.
+    nonisolated static let longSession: URLSession = {
+        let cfg = URLSessionConfiguration.default
+        cfg.timeoutIntervalForRequest = API.runTimeout
+        cfg.timeoutIntervalForResource = API.runTimeout
+        cfg.waitsForConnectivity = false
+        return URLSession(configuration: cfg)
+    }()
+
+    /// Percent-encodes one path segment. Ids and uids carry `|`, `:` and
+    /// spaces, which a URL string cannot hold raw (`URLComponents(string:)`
+    /// returns nil for them).
+    nonisolated static func pathEscape(_ s: String) -> String {
+        s.addingPercentEncoding(
+            withAllowedCharacters: .alphanumerics.union(CharacterSet(charactersIn: "-._~"))) ?? s
+    }
 
     nonisolated func makeURL(_ path: String, query: [URLQueryItem] = []) throws -> URL {
         let trimmed = baseURL.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
@@ -50,14 +77,15 @@ struct API: Sendable {
         return url
     }
 
-    /// Pass `timeout: nil` to skip client-side timeout enforcement entirely
-    /// — only the server's internal collector timeouts will bound the wait.
-    /// Used by `post()` for long-running endpoints like intel collector runs
-    /// (Wayback CDX, GitHub leaks, etc.) which can take 30–60 s legitimately.
+    /// `timeout: nil` means "no per-call override": the request gets the
+    /// ordinary 120 s ceiling, NOT unbounded. A call that really can run
+    /// longer (a manual collector run) passes `longRunning: true`, which uses
+    /// `longSession` and its 30-minute ceiling.
     func request(_ url: URL, method: String = "GET",
-                         body: Data? = nil, timeout: TimeInterval? = API.userDefaultTimeout) async throws -> Data {
+                         body: Data? = nil, timeout: TimeInterval? = API.userDefaultTimeout,
+                         longRunning: Bool = false) async throws -> Data {
         do {
-            return try await send(url, method: method, body: body, timeout: timeout)
+            return try await send(url, method: method, body: body, timeout: timeout, longRunning: longRunning)
         } catch APIError.http(401, let detail) {
             // Access token expired mid-session. Refresh once (against
             // Supabase directly — not via API, so no recursion). All
@@ -69,7 +97,7 @@ struct API: Sendable {
             // DELETE could double-create a rule, double-trigger a collector,
             // etc. — surface the auth error and let the caller decide.
             guard method == "GET" else { throw APIError.http(401, detail) }
-            return try await send(url, method: method, body: body, timeout: timeout)
+            return try await send(url, method: method, body: body, timeout: timeout, longRunning: longRunning)
         }
     }
 
@@ -102,17 +130,15 @@ struct API: Sendable {
     }
 
     private func send(_ url: URL, method: String,
-                      body: Data?, timeout: TimeInterval?) async throws -> Data {
+                      body: Data?, timeout: TimeInterval?, longRunning: Bool = false) async throws -> Data {
         var req = URLRequest(url: url)
-        if let timeout {
+        if longRunning {
+            req.timeoutInterval = API.runTimeout
+        } else if let timeout {
             req.timeoutInterval = timeout
         } else {
-            // "No client-side timeout" really means "bounded by the slow
-            // collector ceiling". The session's 30s `timeoutIntervalForRequest`
-            // would kill a legitimately long collector run that hasn't sent
-            // bytes yet, so lift the per-request idle budget to the session's
-            // 120s resource ceiling — that is now the true hard cap (vs. the
-            // old 7-day URLSession.shared default that hung forever).
+            // No per-call override: the session's 120 s resource ceiling is
+            // the real cap, so lift the idle budget to match it.
             req.timeoutInterval = 120
         }
         req.httpMethod = method
@@ -138,7 +164,7 @@ struct API: Sendable {
             }
         }
         req.httpBody = body
-        let (data, resp) = try await API.session.data(for: req)
+        let (data, resp) = try await (longRunning ? API.longSession : API.session).data(for: req)
         guard let http = resp as? HTTPURLResponse else { throw APIError.http(-1, "no response") }
         guard (200..<300).contains(http.statusCode) else {
             throw APIError.http(http.statusCode, String(data: data, encoding: .utf8) ?? "")
@@ -153,13 +179,15 @@ struct API: Sendable {
         catch { throw APIError.decoding(error) }
     }
 
-    /// POST helper. By default, no client-side timeout — the server's own
-    /// per-collector AbortController bounds the wait. Pass `timeout:` to
-    /// re-enable a client cap if needed.
+    /// POST helper. With no `timeout` the request gets the ordinary 120 s
+    /// ceiling. A call that can legitimately run for many minutes passes
+    /// `longRunning: true` (30-minute ceiling, see `longSession`).
     func post<T: Decodable>(_ path: String, query: [URLQueryItem] = [],
-                                     body: Data? = nil, timeout: TimeInterval? = nil) async throws -> T {
+                                     body: Data? = nil, timeout: TimeInterval? = nil,
+                                     longRunning: Bool = false) async throws -> T {
         let url = try makeURL(path, query: query)
-        let data = try await request(url, method: "POST", body: body ?? Data(), timeout: timeout)
+        let data = try await request(url, method: "POST", body: body ?? Data(), timeout: timeout,
+                                     longRunning: longRunning)
         do { return try JSONDecoder().decode(T.self, from: data) }
         catch { throw APIError.decoding(error) }
     }
@@ -356,36 +384,69 @@ struct API: Sendable {
     /// item has no vector yet. The uid is percent-encoded: uids carry `|` and
     /// `:`, which a URL string cannot hold raw.
     func similarItems(uid: String, k: Int = 20) async throws -> SemanticEnvelope {
-        let enc = uid.addingPercentEncoding(
-            withAllowedCharacters: .alphanumerics.union(CharacterSet(charactersIn: "-._~"))) ?? uid
+        let enc = API.pathEscape(uid)
         return try await get("/api/intel/items/\(enc)/similar",
                              query: [URLQueryItem(name: "k", value: String(k))])
     }
 
     func intelItem(uid: String) async throws -> IntelItem {
-        let env: IntelItemEnvelope = try await get("/api/intel/items/\(uid)")
+        let env: IntelItemEnvelope = try await get("/api/intel/items/\(API.pathEscape(uid))")
         return env.data
     }
     /// Entities mentioned in an item (breach records + normal intel items).
     /// Empty array when the item has no extracted mentions.
     func itemEntities(uid: String) async throws -> [ItemEntity] {
-        let env: ItemEntitiesEnvelope = try await get("/api/intel/items/\(uid)/entities")
+        let env: ItemEntitiesEnvelope = try await get("/api/intel/items/\(API.pathEscape(uid))/entities")
         return env.data
     }
     /// Operator-gated: decrypt a breach record's leaked secret(s). Throws
     /// `.http(403, …)` for non-operators; the caller surfaces that inline.
     func revealItem(uid: String, reason: String) async throws -> RevealResult {
-        try await get("/api/intel/items/\(uid)/reveal",
+        try await get("/api/intel/items/\(API.pathEscape(uid))/reveal",
                       query: [URLQueryItem(name: "reason", value: reason)])
     }
-    /// User-initiated trigger. Server runs the named intel collector and
-    /// upserts items synchronously; the response carries the result count.
-    /// No client-side timeout — long-running collectors (Wayback CDX,
-    /// GitHub leaks, …) are bounded by their own internal AbortController
-    /// timeouts on the server side. The user keeps seeing the spinner
-    /// until the server actually replies.
-    func intelRunSource(_ id: String) async throws -> IntelRunResult {
-        try await post("/api/intel/sources/\(id)/run")
+    /// User-initiated trigger. The server runs the named collector and
+    /// upserts items; the response carries the result count.
+    ///
+    /// Uses the 30-minute `longSession`: a big source legitimately runs for
+    /// many minutes. If even that elapses, the SERVER is still running it
+    /// (it holds the single-flight slot, so a second tap answers 409
+    /// `run_in_flight`); callers report that with `runFailureMessage`, not as
+    /// a failure of the source.
+    ///
+    /// `entity` is required by an entity pivot (`kind == "pivot"`): the server
+    /// answers HTTP 422 `{"error":"needs_entity"}` without one, which
+    /// `API.isNeedsEntity` recognises. It is ignored by every other source.
+    func intelRunSource(_ id: String, entity: String? = nil) async throws -> IntelRunResult {
+        var body: Data? = nil
+        if let e = entity?.trimmingCharacters(in: .whitespacesAndNewlines), !e.isEmpty {
+            body = try JSONSerialization.data(withJSONObject: ["entity": e])
+        }
+        return try await post("/api/intel/sources/\(API.pathEscape(id))/run",
+                              body: body, longRunning: true)
+    }
+
+    /// True when a run was refused because a pivot needs an entity (HTTP 422).
+    static func isNeedsEntity(_ error: Error) -> Bool {
+        if case APIError.http(let code, let body) = error, code == 422 {
+            return body.contains("needs_entity")
+        }
+        return false
+    }
+
+    /// The honest sentence for a failed run. A client-side timeout is NOT a
+    /// failed run: the server keeps going.
+    static func runFailureMessage(_ error: Error) -> String {
+        if let u = error as? URLError, u.code == .timedOut {
+            return "still running on the server (the app stopped waiting after 30 min) — check the source's runs later"
+        }
+        if isNeedsEntity(error) {
+            return "this source is an entity pivot: enter an entity to look up"
+        }
+        if case APIError.http(let code, let body) = error, code == 409, body.contains("run_in_flight") {
+            return "already running on the server"
+        }
+        return "failed: \(error.localizedDescription)"
     }
 
     // ── Geocoding ──────────────────────────────────────────────────────────
@@ -484,14 +545,6 @@ struct API: Sendable {
         if let memberId { obj["memberId"] = memberId }
         let body = try JSONSerialization.data(withJSONObject: obj)
         return try await put("/api/tenant-keys/policy", body: body)
-    }
-
-    /// Triggers `node --watch` to respawn the server. The HTTP request races
-    /// the process teardown — caller should treat any post-POST connection
-    /// reset as expected and switch to /api/health polling for liveness.
-    func restartServer() async throws {
-        let url = try makeURL("/api/admin/restart")
-        _ = try await request(url, method: "POST", body: Data("{}".utf8), timeout: 10)
     }
 
     // ── Repair worker / self-healing maintenance (operator only) ────────────
@@ -812,11 +865,15 @@ struct API: Sendable {
         var req = URLRequest(url: url)
         req.timeoutInterval = 600
         req.setValue("text/event-stream", forHTTPHeaderField: "Accept")
-        if let token = AuthTokenBox.shared.accessToken, !token.isEmpty {
-            req.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        }
-        if let tid = AuthTokenBox.shared.tenantId, !tid.isEmpty {
-            req.setValue(tid, forHTTPHeaderField: "X-Tenant-Id")
+        // The same credential-origin guard `send()` applies: never put the
+        // bearer or tenant id on a plain-http request to a public host.
+        if API.mayCarryCredentials(url) {
+            if let token = AuthTokenBox.shared.accessToken, !token.isEmpty {
+                req.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+            }
+            if let tid = AuthTokenBox.shared.tenantId, !tid.isEmpty {
+                req.setValue(tid, forHTTPHeaderField: "X-Tenant-Id")
+            }
         }
         return req
     }

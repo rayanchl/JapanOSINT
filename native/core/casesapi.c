@@ -411,12 +411,24 @@ static cJSON *client_snapshot(cJSON *v) {
  * analyst's intent while an unresolved pin merely renders thinly. */
 static char *build_snapshot(db_handle *db, const tenant_ctx *t,
                             const char *ref_type, const char *ref_id,
-                            cJSON *supplied) {
-  cJSON *data = client_snapshot(supplied);
+                            cJSON *supplied, int is_operator) {
+  /* A breach reference never takes a client-supplied content copy: the
+   * snapshot is persisted and served to every case reader, so accepting it
+   * would let any analyst write breached identifiers into a case. */
+  const int breach_ref = !strcmp(ref_type, "breach_item") ||
+                         (!strcmp(ref_type, "intel_item") &&
+                          !strncmp(ref_id, "breach:", 7));
+  cJSON *data = breach_ref ? NULL : client_snapshot(supplied);
   if (data) return snapshot_wrap(ref_type, ref_id, "client", data);
 
   if (!strcmp(ref_type, "intel_item")) {
-    data = unwrap_data(intelapi_item_by_uid(db, ref_id));
+    /* Tenant-scoped (this tenant + the shared corpus), never the unscoped
+     * helper: a uid of another workspace's private row must not be copyable
+     * into this case. `breach:` uids reroute inside the lookup to the breach
+     * adapter, which returns the breached identifier in cleartext, so they
+     * resolve for a platform operator only. */
+    if (breach_ref && !is_operator) data = NULL;
+    else data = unwrap_data(intelapi_item_by_uid_tenant(db, ref_id, t->tenant_id));
   } else if (!strcmp(ref_type, "entity")) {
     data = entity_snapshot(db, t, ref_id);
   } else if (!strcmp(ref_type, "breach_item")) {
@@ -557,9 +569,9 @@ static char *case_detail(db_handle *db, const tenant_ctx *t, const char *id,
 
 /* ── dispatcher ─────────────────────────────────────────────────────────── */
 
-char *casesapi(db_handle *db, const tenant_ctx *t, const char *method,
-               const char *seg, const char *act, const char *body,
-               const cases_query *q, int *st) {
+char *casesapi_ex(db_handle *db, const tenant_ctx *t, const char *method,
+                  const char *seg, const char *act, const char *body,
+                  const cases_query *q, int *st, int is_operator) {
   if (!db || !db->h || !t || !method || !seg || !act)
     return err(st, 500, "server_error");
 
@@ -973,7 +985,8 @@ char *casesapi(db_handle *db, const tenant_ctx *t, const char *method,
         sqlite3_finalize(s);
       }
       char *snap = build_snapshot(db, t, rt, rid,
-                                  cJSON_GetObjectItem(jb, "snapshot_json"));
+                                  cJSON_GetObjectItem(jb, "snapshot_json"),
+                                  is_operator);
       sqlite3_stmt *s = NULL;
       if (sqlite3_prepare_v2(db->h,
             "INSERT INTO case_items (case_id,ref_type,ref_id,label,snapshot_json,"
@@ -1268,4 +1281,10 @@ char *casesapi(db_handle *db, const tenant_ctx *t, const char *method,
 done:
   if (jb) cJSON_Delete(jb);
   return out;
+}
+
+char *casesapi(db_handle *db, const tenant_ctx *t, const char *method,
+               const char *seg, const char *act, const char *body,
+               const cases_query *q, int *st) {
+  return casesapi_ex(db, t, method, seg, act, body, q, st, 0);
 }

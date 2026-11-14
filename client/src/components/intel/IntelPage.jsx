@@ -2,10 +2,12 @@ import React, { useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useRecordSearch } from '../../api/searchHistory.js';
 import { LuPlay, LuRefreshCw } from 'react-icons/lu';
-import { api, errorMessage } from '../../api/client.js';
 import { useApi } from '../../hooks/useApi.js';
+import { usePagedList } from '../../hooks/usePagedList.js';
+import RunControl, { runSource, isPivotKind, useCanRun } from '../sources/RunControl.jsx';
+import { searchPath } from '../../utils/sourceFormat.js';
 import { useIntelItems, SINCE_PRESETS, useSinceIso } from '../../hooks/useIntel.js';
-import { Page, Card, Pill, Button, Input, Select, Segmented, Toggle, ErrorNotice, EmptyState, LoadingState, BoundNote, SectionLabel, cx, toast } from '../ui/kit.jsx';
+import { Page, Card, Pill, Button, Input, Select, Segmented, Toggle, ErrorNotice, EmptyState, LoadingState, BoundNote, PagedFooter, SectionLabel, cx, toast } from '../ui/kit.jsx';
 import IntelItemRow from './IntelItemRow.jsx';
 import { relativeTime } from '../../utils/time.js';
 
@@ -27,97 +29,106 @@ export default function IntelPage() {
 /* ---------------------------------------------------------------- sources */
 
 function SourcesView() {
-  const { data, error, loading, reload } = useApi('/api/intel/sources');
-  const rows = Array.isArray(data?.data) ? data.data : [];
   const [q, setQ] = useState('');
+  const [qApplied, setQApplied] = useState('');
   const [cat, setCat] = useState('');
   const [withItems, setWithItems] = useState(true);
   const [sort, setSort] = useState('items');
-  const [running, setRunning] = useState({});
 
-  const categories = useMemo(() => Array.from(new Set(rows.map((r) => r.category).filter(Boolean))).sort(), [rows]);
-  const filtered = useMemo(() => {
-    const needle = q.trim().toLowerCase();
-    let xs = rows.filter((r) => (!withItems || r.item_count > 0)
-      && (!cat || r.category === cat)
-      && (!needle || [r.id, r.name, r.name_ja, r.description, r.category].some((s) => s && String(s).toLowerCase().includes(needle))));
-    xs = [...xs].sort((a, b) => sort === 'items' ? (b.item_count || 0) - (a.item_count || 0)
-      : sort === 'fetched' ? String(b.last_fetched || '').localeCompare(String(a.last_fetched || ''))
-      : String(a.name || a.id).localeCompare(String(b.name || b.id)));
-    return xs;
-  }, [rows, q, cat, withItems, sort]);
-
-  const run = async (id) => {
-    setRunning((m) => ({ ...m, [id]: true }));
-    try {
-      const r = await api.post(`/api/intel/sources/${encodeURIComponent(id)}/run`);
-      toast(`${id}: ran, ${r?.ingested ?? '?'} new rows in ${r?.duration_ms ?? '?'} ms`, { tone: 'accent', ttl: 5000 });
-      reload({ silent: true });
-    } catch (e) {
-      toast(`${id}: ${e?.status === 409 ? 'a run is already in flight' : errorMessage(e)}`, { tone: 'danger', ttl: 5000 });
-    } finally { setRunning((m) => ({ ...m, [id]: false })); }
-  };
-
-  const totalItems = rows.reduce((s, r) => s + (r.item_count || 0), 0);
+  // The server searches, sorts and pages the registry (GET /api/sources/search);
+  // this screen used to download every source with its aggregates and sort
+  // them in the browser.
+  const path = useMemo(() => searchPath({
+    q: qApplied, category: cat, has_items: withItems,
+    sort, desc: sort !== 'name',
+  }), [qApplied, cat, withItems, sort]);
+  const list = usePagedList(path, { pageSize: 50 });
+  const rows = list.rows;
+  const cats = list.meta?.facets?.categories;
+  const canRun = useCanRun();
 
   return (
     <div className="space-y-3">
-      <div className="flex flex-wrap items-center gap-2">
-        <Input className="flex-1 min-w-[180px]" placeholder="filter sources (id, name, 日本語, category)…" value={q} onChange={(e) => setQ(e.target.value)} />
-        <Select value={cat} onChange={(e) => setCat(e.target.value)}>
-          <option value="">all categories</option>
-          {categories.map((c) => <option key={c} value={c}>{c}</option>)}
+      <form onSubmit={(e) => { e.preventDefault(); setQApplied(q.trim()); }} className="flex flex-wrap items-center gap-2">
+        <Input className="flex-1 min-w-[180px]" aria-label="Search sources" placeholder="search sources (id, name, 日本語, category) — Enter to search" value={q} onChange={(e) => setQ(e.target.value)} />
+        <Button type="submit">Search</Button>
+        <Select value={cat} onChange={(e) => setCat(e.target.value)} aria-label="Category">
+          <option value="">all categories{cats?.total > cats?.shown ? ` (top ${cats.shown} of ${cats.total})` : ''}</option>
+          {cat && !(cats?.values || []).some((v) => v.key === cat) && <option value={cat}>{cat}</option>}
+          {(cats?.values || []).map((v) => <option key={v.key} value={v.key}>{v.key} ({v.count})</option>)}
         </Select>
         <Segmented value={sort} onChange={setSort} options={[{ value: 'items', label: 'most items' }, { value: 'fetched', label: 'last fetched' }, { value: 'name', label: 'name' }]} />
         <Toggle on={withItems} onChange={setWithItems} label="with items only" />
-        <Button size="sm" onClick={() => reload()} title="Reload"><LuRefreshCw size={12} /></Button>
-      </div>
-      {loading && rows.length === 0 && <LoadingState label="Loading sources…" />}
-      {error && <ErrorNotice error={error} title="Could not list intel sources" onRetry={reload} />}
-      {!error && data && (
+        <Button size="sm" onClick={() => list.reload()} title="Reload" aria-label="Reload sources"><LuRefreshCw size={12} /></Button>
+      </form>
+      {list.loading && rows.length === 0 && <LoadingState label="Searching sources…" />}
+      {list.error && <ErrorNotice error={list.error} title="Could not list intel sources" onRetry={list.reload} />}
+      {!list.error && list.loaded && (
         <div className="flex items-center justify-between">
-          <BoundNote shown={filtered.length} total={rows.length} noun="sources" />
-          <span className="font-mono text-[11px] text-osint-muted">{totalItems.toLocaleString()} items stored · registry {data.meta?.total ?? rows.length}</span>
+          <BoundNote shown={rows.length} total={list.total} more={list.hasMore} noun="sources" />
+          <span className="font-mono text-[11px] text-osint-muted">registry {list.meta?.registry_total ?? '—'}</span>
         </div>
       )}
-      {!loading && !error && rows.length > 0 && filtered.length === 0 && (
+      {!list.loading && !list.error && list.loaded && rows.length === 0 && (
         <EmptyState title="No source matches these filters.">{withItems ? 'Sources with zero stored items are hidden — toggle "with items only".' : ''}</EmptyState>
       )}
       <ul className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-        {filtered.map((s) => (
+        {rows.map((s) => (
           <li key={s.id}>
-            <Card padded={false} className="flex items-stretch">
-              <Link to={`/intel/sources/${encodeURIComponent(s.id)}`} className="flex-1 min-w-0 p-3 hover:bg-white/5 rounded-l-[10px]">
-                <div className="flex items-center gap-2 min-w-0">
-                  <span className="text-sm text-osint-text truncate">{s.name || s.id}</span>
-                  {s.name_ja && s.name_ja !== s.name && <span className="text-xs text-osint-muted truncate">{s.name_ja}</span>}
+            <Card padded={false}>
+              <div className="flex items-stretch">
+                <Link to={`/intel/sources/${encodeURIComponent(s.id)}`} className="flex-1 min-w-0 p-3 hover:bg-white/5 rounded-l-[10px]">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="text-sm text-osint-text truncate">{s.name || s.id}</span>
+                    {s.name_ja && s.name_ja !== s.name && <span className="text-xs text-osint-muted truncate">{s.name_ja}</span>}
+                  </div>
+                  <div className="flex flex-wrap items-center gap-1.5 mt-1 text-[10px] font-mono text-osint-muted">
+                    <span className="truncate max-w-[200px]">{s.id}</span>
+                    {s.category && <Pill>{s.category}</Pill>}
+                    {s.category === 'breach' && <Pill tone="danger">operator-gated</Pill>}
+                    {isPivotKind(s.kind) && <Pill tone="cyan" mono={false}>entity pivot</Pill>}
+                  </div>
+                  <div className="flex flex-wrap gap-x-3 gap-y-0.5 mt-1.5 text-[11px] font-mono">
+                    <span className="text-accent">{(s.item_count || 0).toLocaleString()} items</span>
+                    {s.geocoded > 0 && <span className="text-osint-muted">{s.geocoded.toLocaleString()} geocoded</span>}
+                    <span className="text-osint-muted" title={s.last_fetched || 'never fetched'}>fetched {relativeTime(s.last_fetched)}</span>
+                  </div>
+                  {s.description && <div className="text-[11px] text-osint-muted mt-1 line-clamp-2">{s.description}</div>}
+                </Link>
+                {!isPivotKind(s.kind) && s.kind !== 'internal' && s.category !== 'breach' && (canRun
+                  ? <RowRunButton source={s} onDone={() => list.reload({ silent: true })} />
+                  : null)}
+              </div>
+              {isPivotKind(s.kind) && s.category !== 'breach' && (
+                <div className="border-t border-osint-border px-3 py-2">
+                  <RunControl source={s} compact onDone={() => list.reload({ silent: true })} />
                 </div>
-                <div className="flex flex-wrap items-center gap-1.5 mt-1 text-[10px] font-mono text-osint-muted">
-                  <span className="truncate max-w-[200px]">{s.id}</span>
-                  {s.category && <Pill>{s.category}</Pill>}
-                  {s.category === 'breach' && <Pill tone="danger">operator-gated</Pill>}
-                  {s.parent_id && <Pill title={`sub-source of ${s.parent_id}`}>sub</Pill>}
-                </div>
-                <div className="flex flex-wrap gap-x-3 gap-y-0.5 mt-1.5 text-[11px] font-mono">
-                  <span className="text-accent">{(s.item_count || 0).toLocaleString()} items</span>
-                  {s.geocoded > 0 && <span className="text-osint-muted">{s.geocoded.toLocaleString()} geocoded</span>}
-                  {s.awaiting_geo > 0 && <span className="text-osint-muted">{s.awaiting_geo.toLocaleString()} awaiting geo</span>}
-                  <span className="text-osint-muted" title={s.last_fetched || 'never fetched'}>fetched {relativeTime(s.last_fetched)}</span>
-                  {s.last_published && <span className="text-osint-muted" title={s.last_published}>latest {relativeTime(s.last_published)}</span>}
-                </div>
-                {s.description && <div className="text-[11px] text-osint-muted mt-1 line-clamp-2">{s.description}</div>}
-              </Link>
-              {s.category !== 'breach' && (
-                <button type="button" onClick={() => run(s.id)} disabled={running[s.id]} title="Run this collector now"
-                  className="px-3 border-l border-osint-border text-osint-muted hover:text-accent disabled:opacity-40 rounded-r-[10px]">
-                  <LuPlay size={14} className={cx(running[s.id] && 'animate-pulse')} />
-                </button>
               )}
             </Card>
           </li>
         ))}
       </ul>
+      {rows.length > 0 && <PagedFooter shown={rows.length} total={list.total} hasMore={list.hasMore} busy={list.loadingMore} onMore={list.loadMore} error={list.moreError} noun="sources" />}
     </div>
+  );
+}
+
+/* The icon-only Run button of a scheduled-feed card (a pivot gets the entity
+ * form instead, see RunControl). */
+function RowRunButton({ source, onDone }) {
+  const [busy, setBusy] = useState(false);
+  const go = async () => {
+    setBusy(true);
+    const r = await runSource(source.id, { kind: source.kind });
+    setBusy(false);
+    toast(`${source.id}: ${r.message}`, { tone: r.tone, ttl: 5000 });
+    if (r.ok) onDone?.();
+  };
+  return (
+    <button type="button" onClick={go} disabled={busy} title="Run this collector now" aria-label={`Run ${source.id} now`}
+      className="px-3 border-l border-osint-border text-osint-muted hover:text-accent disabled:opacity-40 rounded-r-[10px]">
+      <LuPlay size={14} className={cx(busy && 'animate-pulse')} />
+    </button>
   );
 }
 
