@@ -8,6 +8,7 @@
  *   --dispatch <id> <entity>  run one source through the OSINT dispatcher and
  *                         print the captured {record_count,records} JSON
  *   --list-sources        list the registered sources and exit
+ *   --schedule            how each source is actually scheduled, as TSV
  *   --dump-source-cards   print every source's index card (core/source_card.h)
  *   --ingest <id> <file> [--type email|username|phone|password|auto]
  *                         offline breach-dump ingest (no DB, no network)
@@ -38,6 +39,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <strings.h>           /* strcasecmp — --type validation below */
 #include <unistd.h>            /* _exit — see the serve-path shutdown below */
 
@@ -89,6 +91,8 @@ static void usage(FILE *out) {
     "  --dispatch <id> <entity>   run one source through the OSINT dispatcher and\n"
     "                             print the captured {record_count,records} JSON\n"
     "  --list-sources             list the registered sources and exit\n"
+    "  --schedule                 TSV: how each source is actually scheduled (interval\n"
+    "                             that runs, what decided it, health, next due)\n"
     "  --collector-census         TSV of collector key, source count, top categories (for tools/gen_collectors_def.py)\n"
     "  --dump-source-cards        print id<TAB>kind<TAB>category<TAB>card for every\n"
     "                             source: the exact text the service index embeds\n"
@@ -161,7 +165,7 @@ int main(int argc, char **argv) {
    * into a hard failure of the CI step that runs it, so the flag is now real:
    * an explicit request for the run that used to happen by accident. */
   static const char *KNOWN[] = {
-    "--serve", "--sched", "--list-sources", "--collector-census", "--dump-source-cards",
+    "--serve", "--sched", "--list-sources", "--schedule", "--collector-census", "--dump-source-cards",
     "--discover-feeds", "--jobs", "--host-agents",
     "--run", "--dispatch",
     "--ingest", "--type", "--materialize", "--dry-run",
@@ -349,6 +353,41 @@ int main(int argc, char **argv) {
       for (int k = 0; k < registry_count(); k++)
         printf("%-22s collector=%-12s interval=%d\n",
                a[k]->id, a[k]->collector, a[k]->update_interval_sec);
+      db_close(&db);
+      return 0;
+    }
+    if (!strcmp(argv[i], "--schedule")) {
+      /* How every registered source is ACTUALLY scheduled, from the functions
+       * the dispatcher itself plans with (sched_next_delay / sched_next_due)
+       * under the policy, overrides and health state in this database — one
+       * TSV row per source. `runs_every` is the figure that runs; the columns
+       * before it are what composed it. */
+      const source_def **a = registry_all();
+      sched_policy pol; sched_policy_load(&pol);
+      time_t now = time(NULL);
+      printf("id\tcollector\tkind\tdeclared\tadaptive\tmeasured\toverride\t"
+             "runs_every\tbasis\tfailures\tlast_run\tnext_due_in\n");
+      for (int k = 0; k < registry_count(); k++) {
+        const source_def *d = a[k];
+        sched_state st; sched_state_load_one(&db, d->id, &st);
+        int sched = d->update_interval_sec > 0, pod = sched_is_pod(d);
+        long ov = sched ? source_interval_for(d->id) : 0;
+        long base = sched_state_base(&st, d->update_interval_sec, d->adaptive_interval);
+        const char *basis = !sched ? "on-demand" : ov > 0 ? "override"
+                          : st.quarantined ? "quarantine-probe"
+                          : st.consecutive_failures > 0 ? "backoff"
+                          : pod ? "declared" : strcmp(cadence_mode_for(base), "declared")
+                          ? cadence_mode_for(base)
+                          : base != d->update_interval_sec ? "measured" : "declared";
+        time_t due = sched_next_due(&st, &pol, d, st.last_run);
+        printf("%s\t%s\t%s\t%d\t%d\t%ld\t%ld\t%ld\t%s\t%d\t%ld\t",
+               d->id, d->collector, !sched ? "pivot" : pod ? "pod" : "scheduled",
+               d->update_interval_sec, d->adaptive_interval, st.freshness_interval,
+               ov, sched_next_delay(&st, &pol, d), basis,
+               st.consecutive_failures, (long)st.last_run);
+        if (!sched) printf("\n");
+        else printf("%ld\n", due > now ? (long)(due - now) : 0L);
+      }
       db_close(&db);
       return 0;
     }

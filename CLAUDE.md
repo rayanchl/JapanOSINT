@@ -2485,6 +2485,35 @@ uses writes it (audited `source.setting.put`). `tests/unit/test_source_interval.
 pins the refusals, the precedence under a global policy, disable, persistence
 and clear.
 
+**WHEN a row is next due is ONE function too: `sched_next_due()`**
+(2026-11-14, audit and report in `docs/source-scheduling-audit-2026-11-14.md`).
+The dispatcher, the boot plan and the source pages all read it, and
+`./bin/japanosint --schedule` prints the result for every source as TSV — the
+interval that runs, what decided it, health and next due. What the audit found
+by reading the dispatcher rather than the interval arithmetic, each fixed and
+pinned in `test_sched_backoff.c` / `test_sched_pool.c`:
+
+* **A maintenance pod is exempt from the cadence policy.** The policy is about
+  collection; under the compiled global 6 h the WAL checkpoint, the embedding
+  backfill and anomaly triage ran once at boot and then every six hours.
+* **The plan is corrected from a run's OUTCOME** (`sched_publish`). The next
+  run used to be fixed at dispatch from the state before the run, so every
+  change landed a cycle late: a released quarantine waited 7 more days, a
+  recovered source its last backoff.
+* **A row the queue has no room for STAYS DUE.** It used to lose the cycle —
+  and with 83,511 scheduled rows against a 2,048 queue, the same rows lost
+  every cycle. The heartbeat's `deferred=N` is the standing backlog.
+* **A restart does not re-fetch the fleet**: a source whose last run is less
+  than one interval old keeps its own time.
+* **A health hold survives a cadence edit**, and a healthy row's stored
+  interval is not a floor (6 h → 1 h used to run once and then wait 6 h).
+
+Two numbers it measured that are decisions rather than defects: at a mean run
+of 6.2 s (uniform sample of 400) the default 8 workers lap the fleet in about
+18 h, so **the 6 h policy needs `JO_SCHED_WORKERS=24`**; and the policy holds
+the 22 real-time feeds (`wolfx-eew` 10 s, `jma-tsunami` 60 s) at six hours
+until each is given its own interval.
+
 What a choice costs is in the response, measured over the registry, not
 guessed: `estimate.runs_per_day_declared` against
 `estimate.runs_per_day_effective`. Measured 2026-10-20 on 19,954 scheduled

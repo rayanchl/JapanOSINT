@@ -274,7 +274,59 @@ static void test_row_interval_composition(db_handle *db) {
   assert(sched_row_interval(&st, &d) == 900);               /* a global outranks both */
   source_def pivot = { .id = "UNIT_PIVOT", .update_interval_sec = 0, .adaptive_interval = 1 };
   assert(sched_row_interval(&st, &pivot) == 0);             /* an entity pivot passes through */
+  /* a maintenance pod asks no upstream: the collection policy does not
+   * stretch the WAL checkpoint or the embedding backfill to the fleet's 6 h */
+  source_def pod = { .id = "UNIT_POD", .collector = "_maint", .update_interval_sec = 120 };
+  assert(sched_is_pod(&pod) && !sched_is_pod(&d));
+  assert(sched_row_interval(&st, &pod) == 120);
   assert(cadence_set(db, &none, "test", &err) == 0);        /* leave no policy behind */
+}
+
+/* 10. WHEN a row is next due is one rule (sched_next_due), read by the
+ *     dispatcher, the boot plan and the source pages. */
+static void test_next_due(db_handle *db) {
+  const char *err = NULL;
+  cadence_policy none = {0, 0, 0};
+  assert(cadence_set(db, &none, "test", &err) == 0);
+  sched_policy p = { .backoff_cap_sec = 86400, .quarantine_after = 12,
+                     .quarantine_probe_sec = 604800 };
+  source_def d = { .id = "UNIT_DUE", .update_interval_sec = 3600 };
+  /* a healthy row's stored interval is NOT a floor: after a policy, override
+   * or measurement made it faster, the old base must not hold it one more
+   * cycle (6 h -> 1 h used to run once at 1 h and then wait 6 h) */
+  sched_state stale = { .effective_interval = 21600 };
+  assert(sched_state_interval(&stale, &p, 3600) == 3600);
+  assert(sched_next_delay(&stale, &p, &d) == 3600);
+  assert(sched_next_due(&stale, &p, &d, 1000) == 4600);
+  assert(sched_next_due(&stale, &p, &d, 0) == 0);           /* never ran: due now */
+  /* while failing it IS the backoff, and the hold is where the backoff ends */
+  sched_state failing = { .consecutive_failures = 2, .effective_interval = 14400,
+                          .backoff_until = 99000 };
+  assert(sched_next_delay(&failing, &p, &d) == 14400);
+  assert(sched_hold_until(&failing, &p) == 99000);
+  assert(sched_next_due(&failing, &p, &d, 1000) == 99000);
+  /* quarantined: the next probe, whatever the backoff says */
+  sched_state q = { .consecutive_failures = 12, .quarantined = 1, .last_probe = 5000,
+                    .effective_interval = 86400, .backoff_until = 91400 };
+  assert(sched_next_due(&q, &p, &d, 1000) == 5000 + 604800);
+  /* the run that releases it re-plans from the declared interval at once —
+   * not from the 7-day probe cadence it was dispatched under */
+  sched_state_apply(&q, &p, sched_row_interval(&q, &d), "ok", 3, 700000);
+  assert(sched_hold_until(&q, &p) == 0);
+  assert(sched_next_due(&q, &p, &d, 700000) == 703600);
+  /* an entity pivot is never due, even with a stale state row */
+  source_def pivot = { .id = "UNIT_DUE_PIVOT", .update_interval_sec = 0 };
+  assert(sched_next_due(&failing, &p, &pivot, 1000) == 0);
+  assert(sched_next_delay(&stale, &p, &pivot) == 0);
+}
+
+/* 11. a JO_SCHED_* value that is not a number is the default, not 0 */
+static void test_env_garbage(void) {
+  setenv("JO_SCHED_QUARANTINE_AFTER", "abc", 1);
+  setenv("JO_SCHED_BACKOFF_CAP_SEC", "", 1);
+  sched_policy p; sched_policy_load(&p);
+  assert(p.quarantine_after == 12 && p.backoff_cap_sec == 86400);
+  unsetenv("JO_SCHED_QUARANTINE_AFTER"); unsetenv("JO_SCHED_BACKOFF_CAP_SEC");
 }
 
 int main(void) {
@@ -294,6 +346,8 @@ int main(void) {
   test_freshness_base();
   test_freshness_measure(&db);
   test_row_interval_composition(&db);
+  test_next_due(&db);
+  test_env_garbage();
 
   db_close(&db);
   printf("test_sched_backoff: ok\n");
