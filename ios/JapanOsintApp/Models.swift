@@ -717,12 +717,65 @@ struct IntelItem: Codable, Identifiable, Hashable {
     /// True for the engine's self-disclosure rows. Every list that shows intel
     /// must either style these as notices or filter them — never present them
     /// as findings.
+    ///
+    /// The server's rule (core/intel.c) is every `collector-*-notice` —
+    /// truncation, status, shape, … — PLUS `collector-fetch-failure` (written
+    /// when a fetch was refused) and `collector-fetch-error`. Matching the
+    /// kinds by name alone missed the shape and fetch-failure rows, which then
+    /// rendered as findings.
     var isCollectorNotice: Bool {
         guard let rt = record_type else { return false }
-        return rt == "collector-truncation-notice" || rt == "collector-status-notice"
+        if rt == "collector-fetch-failure" || rt == "collector-fetch-error" { return true }
+        return rt.hasPrefix("collector-") && rt.hasSuffix("-notice")
     }
     var isTruncationNotice: Bool { record_type == "collector-truncation-notice" }
     var isStatusNotice: Bool { record_type == "collector-status-notice" }
+    var isFetchFailure: Bool {
+        record_type == "collector-fetch-failure" || record_type == "collector-fetch-error"
+    }
+
+    /// Short human label for the notice kind, from the record type.
+    var noticeLabel: String {
+        guard let rt = record_type else { return "notice" }
+        switch rt {
+        case "collector-status-notice":     return "needs credential"
+        case "collector-truncation-notice": return "truncated"
+        case "collector-fetch-failure",
+             "collector-fetch-error":       return "fetch failed"
+        case "collector-shape-notice":      return "unexpected shape"
+        default:
+            var t = rt
+            if t.hasPrefix("collector-") { t.removeFirst("collector-".count) }
+            if t.hasSuffix("-notice") { t.removeLast("-notice".count) }
+            return t.replacingOccurrences(of: "-", with: " ")
+        }
+    }
+
+    /// The notice's own explanation, read from `properties`: why it fired
+    /// (`reason`, `note`, `error`, `message`, `outcome`) and what to do about
+    /// it (`remedy`), with the HTTP status / TLS cause the engine measured when
+    /// it carries them. Nothing is composed here beyond joining what the
+    /// server wrote; an empty result means the row carried no such field.
+    var noticeDetail: [(label: String, text: String)] {
+        guard let p = properties else { return [] }
+        var out: [(label: String, text: String)] = []
+        func text(_ key: String) -> String? {
+            guard let v = p[key]?.value else { return nil }
+            if let s = v as? String { return s.isEmpty ? nil : s }
+            if let i = v as? Int { return String(i) }
+            if let d = v as? Double { return String(d) }
+            if let b = v as? Bool { return b ? "yes" : "no" }
+            return nil
+        }
+        for key in ["reason", "note", "error", "message", "outcome"] {
+            if let t = text(key) { out.append((label: key, text: t)); break }
+        }
+        if let t = text("http_status") { out.append((label: "http status", text: t)) }
+        if let t = text("tls_cause") { out.append((label: "tls cause", text: t)) }
+        if let t = text("tls_detail") { out.append((label: "tls detail", text: t)) }
+        if let t = text("remedy") { out.append((label: "remedy", text: t)) }
+        return out
+    }
 
     static func == (lhs: IntelItem, rhs: IntelItem) -> Bool { lhs.uid == rhs.uid }
     func hash(into hasher: inout Hasher) { hasher.combine(uid) }

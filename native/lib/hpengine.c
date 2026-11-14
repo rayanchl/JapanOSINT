@@ -5275,6 +5275,11 @@ dated_restart:;
                      "%s#%lld+ (directory not walkable)", w ? "; " : "", nent_walked);
         }
         nent_walked = nent_walked > (long long)zit.declared ? nent_walked : (long long)zit.declared;
+      } else {
+        fprintf(stderr, "[hp:%s] body is a ZIP but its central directory could not "
+                        "be read (truncated or not an archive); zip_all_entries "
+                        "reads NOTHING\n", s->id);
+        if (page == 0) hard_error = 1;
       }
       int nent = nent_walked > 0x7fffffff ? 0x7fffffff : (int)nent_walked;
       st.sh_zip_entries = nent > 0 ? nent : 0;

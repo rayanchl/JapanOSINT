@@ -515,7 +515,12 @@ static int v4_class(unsigned a) {
    * 192.0.0.192), so these two are the FLOOR and not strict-only: the default
    * non-strict floor must not let a collector URL, an LLM-proposed override
    * or a webhook reach them. */
-  if (b1 == 100 && b2 >= 64 && b2 <= 127) return 1;  /* CGNAT 100.64/10      */
+  /* Only the metadata ADDRESS in 100.64/10 is floor. The rest of that range
+   * is carrier-grade NAT and is what Tailscale hands out, so an operator's
+   * model server on a tailnet address must keep working at the default
+   * floor; it is private under strict like loopback and RFC1918. */
+  if (a == 0x646464C8u)              return 1;   /* 100.100.100.200          */
+  if (b1 == 100 && b2 >= 64 && b2 <= 127) return 2;  /* CGNAT 100.64/10      */
   if (b1 == 192 && b2 == 0 && ((a >> 8) & 0xFF) == 0) return 1;  /* 192.0.0/24 */
   if (b1 == 198 && (b2 == 18 || b2 == 19)) return 2; /* benchmark 198.18/15  */
   return 0;

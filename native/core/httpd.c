@@ -297,7 +297,7 @@ static char *sa_build(db_handle *db, const sa_arg *a, int *st) {
   switch (a->kind) {
     case SA_DETAIL:     b = sourceapi_detail(db, a->id); break;
     case SA_SEARCH:     b = sourceapi_search(db, &q); break;
-    case SA_COLLECTORS: b = sourceapi_collectors(db); break;
+    case SA_COLLECTORS: b = sourceapi_collectors_q(db, a->q); break;
     case SA_COLLECTOR:  b = sourceapi_collector(db, a->id, &q); break;
     case SA_SUMMARY:    b = sourceapi_summary(db, a->id, a->refresh); break;
   }

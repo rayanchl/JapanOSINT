@@ -25,6 +25,12 @@ final class AuthSession: ObservableObject {
     /// "Server settings" escape so a returning user isn't trapped on the
     /// spinner with no way to fix the backend URL.
     @Published var connectionStalled = false
+    /// Whether the SERVER says this caller is a platform operator. Learned by
+    /// probing an operator-gated route once per session (never from an email
+    /// address baked into the app), cached until sign-out.
+    @Published private(set) var isOperator = false
+    /// The user id the cached `isOperator` answer belongs to.
+    private var operatorProbedFor: String?
 
     private unowned let settings: AppSettings
 
@@ -171,6 +177,8 @@ final class AuthSession: ObservableObject {
         KeychainStore.delete(KeychainStore.Account.refreshToken)
         AuthTokenBox.shared.set(accessToken: nil, tenantId: nil)
         me = nil
+        isOperator = false
+        operatorProbedFor = nil
         settings.onboardingCompleted = false
         gate = .onboarding
     }
@@ -207,11 +215,24 @@ final class AuthSession: ObservableObject {
     /// resolved tenant id so subsequent requests pin to it.
     private func adopt(_ m: MeResponse) {
         me = m
+        // Learn the operator role from the server, once per user per session.
+        Task { await probeOperatorIfNeeded() }
         let tenantId = m.tenant?.id ?? (settings.activeTenantId.isEmpty ? nil : settings.activeTenantId)
         if let tid = m.tenant?.id { settings.activeTenantId = tid }
         AuthTokenBox.shared.set(
             accessToken: KeychainStore.get(KeychainStore.Account.accessToken),
             tenantId: tenantId)
+    }
+
+    /// Probes an operator-gated route (see `API.probeOperator`) and caches the
+    /// verdict for this user. An unknown answer (network error) is not cached,
+    /// so the next `adopt` tries again; it leaves `isOperator` unchanged.
+    func probeOperatorIfNeeded() async {
+        guard let uid = me?.user?.id else { return }
+        if operatorProbedFor == uid { return }
+        guard let verdict = await api.probeOperator() else { return }
+        isOperator = verdict
+        operatorProbedFor = uid
     }
 
     private func applyToken(_ token: String?) {

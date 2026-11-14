@@ -324,8 +324,9 @@ static void test_floor_address_classes(void) {
   unsetenv("JO_HTTP_BLOCK_PRIVATE");
   /* floor: blocked even when not strict */
   assert(hostgate_addr_check("100.100.100.200", 0) == HG_URL_PRIVATE);
-  assert(hostgate_addr_check("100.64.0.1", 0) == HG_URL_PRIVATE);
-  assert(hostgate_addr_check("100.127.255.254", 0) == HG_URL_PRIVATE);
+  /* the rest of CGNAT (Tailscale's range) is strict-only, like RFC1918 */
+  assert(hostgate_addr_check("100.64.0.1", 0) == HG_URL_OK);
+  assert(hostgate_addr_check("100.127.255.254", 0) == HG_URL_OK);
   assert(hostgate_addr_check("100.63.0.1", 0) == HG_URL_OK);
   assert(hostgate_addr_check("100.128.0.1", 0) == HG_URL_OK);
   assert(hostgate_addr_check("192.0.0.192", 0) == HG_URL_PRIVATE);
