@@ -14,6 +14,13 @@ plans with (`sched_next_delay`, `sched_next_due`): declared interval, adaptive
 flag, measured interval, per-source override, **the interval that runs**, what
 decided it, failures, last run and seconds until next due.
 
+> **After merging main at `61929b56` (batches 64 and 65) the registry is
+> 93,163 sources — 90,907 scheduled, 2,237 pivots, 19 pods** (`--schedule` on
+> the merged build). The tables below are the measurement as taken, on
+> 85,767; the only conclusion the larger fleet moves is the worker count: at
+> the same 6.2 s mean run, 90,907 sources every 6 h need **27 workers or
+> more**, and the default 8 lap the fleet in about 20 h.
+
 ## 1. The registry, by how it is reached
 
 | kind | sources | how it runs |
