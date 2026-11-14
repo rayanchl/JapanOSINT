@@ -53,7 +53,7 @@ td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 .pill{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:1px 7px;border-radius:3px;white-space:nowrap}
 .critical{background:var(--crit-bg);color:var(--crit)}.high{background:var(--high-bg);color:var(--high)}
 .medium{background:var(--med-bg);color:var(--med)}.low{background:var(--low-bg);color:var(--low)}
-.okp{background:var(--ok-bg);color:var(--ok)}
+.okp{background:var(--ok-bg);color:var(--ok)}.fixedp{background:var(--accent-soft);color:var(--accent)}
 figure{margin:0;display:flex;flex-direction:column;gap:8px}
 figure .scroll{padding:10px}
 figcaption{font-size:13px;color:var(--muted);max-width:80ch}
@@ -106,18 +106,19 @@ a{color:var(--accent)}
     <div><b>654</b><span>collectors in 23 groups</span></div>
     <div><b>83,530</b><span>scheduled, 2,237 on-demand pivots, 22 pods</span></div>
     <div><b id="f-total">–</b><span>issues listed below</span></div>
-    <div><b id="f-ch">–</b><span>critical or high</span></div>
+    <div><b id="f-ch">–</b><span>critical or high, still open</span></div>
     <div><b>10 / 10</b><span>static and offline gates pass</span></div>
   </div>
   <h3>The five things to fix first</h3>
   <div class="scroll"><table>
     <tr><th>What</th><th>Why it matters</th><th>Ref</th></tr>
-    <tr><td>The 6 h cadence default also retimes the maintenance pods</td><td>WAL checkpoint (declared 5 min), embedding backfill (2 min), triage, repair and the enricher all run every 6 hours on an unmodified install. Embedding coverage cannot keep up and the WAL can grow for 6 hours.</td><td class="mono">ENG-02</td></tr>
-    <tr><td>A full scheduler queue drops a run and still pushes it one interval out</td><td>The queue holds 2,048 entries; the 15-minute boot ramp pushes about 83,000 rows at 8 workers. Dropped rows wait another 6 hours and meet the same burst.</td><td class="mono">ENG-01</td></tr>
+    <tr><td>The 6 h cadence default also retimes the maintenance pods</td><td>WAL checkpoint (declared 5 min), embedding backfill (2 min), triage, repair and the enricher all run every 6 hours on an unmodified install. Embedding coverage cannot keep up and the WAL can grow for 6 hours.</td><td class="mono">ENG-02 <span class="pill fixedp">fixed on scheduling branch</span></td></tr>
+    <tr><td>A full scheduler queue drops a run and still pushes it one interval out</td><td>The queue holds 2,048 entries; the 15-minute boot ramp pushes about 83,000 rows at 8 workers. Dropped rows wait another 6 hours and meet the same burst.</td><td class="mono">ENG-01 <span class="pill fixedp">fixed on scheduling branch</span></td></tr>
     <tr><td>Entity pivots cannot be run by a user, and "Run now" on one reports success</td><td>The run route passes no entity, the engine returns quietly, and both clients print "ran: 0 new rows". 2,237 sources are reachable only through the LLM router.</td><td class="mono">WEB-01 IOS-05</td></tr>
     <tr><td>iOS downloads the whole registry on every open and has a "Run all" button</td><td>An unpaged <code>/api/status</code> is roughly 100 MB at this registry size against a 120 s timeout; "Run all" posts a run for every source with no confirmation.</td><td class="mono">IOS-01..04</td></tr>
     <tr><td>Authorization gaps on three routes</td><td>Pinning <code>breach:&lt;id&gt;</code> into a case bypasses the breach gate; <code>GET /api/data/&lt;id&gt;</code> lets any signed-in user run any collector or pod; webhooks are SSRF-checked only when saved.</td><td class="mono">API-01 API-02 ENG-04</td></tr>
   </table></div>
+  <p class="note"><b>Update, same day.</b> A parallel session audited the scheduler and pushed fixes to <code>claude/nifty-archimedes-6a6rt4</code> (one commit on main, not merged). Reading that commit against this report: pods are now exempt from the cadence policy (ENG-02), a row that does not fit the queue stays due instead of losing its cycle (ENG-01), a finished run re-plans its own next run (ENG-12), and the date-token offset bug is fixed (LIB-17). Still open there: stale per-thread error in failure notices (ENG-06), a refusal page reading healthy (ENG-07), the 1,024-byte resume token (ENG-11) and the interval cache race (ENG-13, hardened but not locked). I read the diff; I did not build or test that branch. Its own measurements add two findings: 22 real-time feeds run every 6 hours by default (ENG-17) and the default 8 workers need about 18 hours per lap (ENG-18).</p>
   <p class="note">How to read confidence: findings marked <span class="pill okp">verified</span> were re-read in the code by the lead after the reviewer reported them, or reproduced under a sanitizer. The rest were read end to end by one reviewer and not exercised against a running server. Nothing here was fixed except the collector classification.</p>
 </section>
 
@@ -392,8 +393,8 @@ a{color:var(--accent)}
   <h2>Plan</h2>
   <div class="plan">
     <div><h3>1. Stop the bleeding<small>small, contained changes</small></h3><ul>
-      <li>Exempt pods from the cadence policy; show on the policy page which rows it does not touch. <span class="mono">ENG-02</span></li>
-      <li>On a full queue do not advance the due time; retry in seconds. Size the ramp by row count. Expose <code>dropped</code> in <code>/api/status</code>. <span class="mono">ENG-01</span></li>
+      <li>Merge the scheduling branch: it exempts pods from the cadence policy and stops a full queue costing a source its cycle. <span class="mono">ENG-01 ENG-02 ENG-12 LIB-17</span></li>
+      <li>Decide the two settings it left to you: overrides for the 22 real-time feeds, and the worker count (8 gives an 18-hour lap). <span class="mono">ENG-17 ENG-18</span></li>
       <li>Scope the case-pin lookup to the tenant and refuse <code>breach:</code> uids for non-operators. <span class="mono">API-01</span></li>
       <li>Gate <code>GET /api/data/:id</code>: no pods, operator or real workspace role, single-flight. <span class="mono">API-02</span></li>
       <li>Re-check webhook targets strictly at delivery, no redirects, do not store response bytes. <span class="mono">ENG-04 API-03</span></li>
@@ -437,8 +438,8 @@ const SEV=["critical","high","medium","low"];
 const AREAS={ENG:"Engine",API:"API and security",LIB:"Parsers",WEB:"Web client",IOS:"iOS",OPS:"Build and repo",SRC:"Sources",DOC:"Docs"};
 // [id, severity, verified(1/0), title, where, fix]
 const ISS=[
-["ENG-01","high",1,"A full scheduler queue drops the run and still advances its due time by a whole interval","core/scheduler.c:1029, 1152-1162, 1593","Do not advance next[] on a drop; retry within seconds; scale the ramp with row count; report dropped in /api/status."],
-["ENG-02","high",1,"The 6 h cadence default retimes maintenance pods (WAL checkpoint, embedding backfill, triage, repair, enricher, simhash)","core/cadence.c:107-114; core/scheduler.c:280-292","Exempt collectors starting with _ from cadence_apply, or give pods their own policy."],
+["ENG-01","high",1,"A full scheduler queue drops the run and still advances its due time by a whole interval","core/scheduler.c:1029, 1152-1162, 1593","Do not advance next[] on a drop; retry within seconds; scale the ramp with row count; report dropped in /api/status.",1],
+["ENG-02","high",1,"The 6 h cadence default retimes maintenance pods (WAL checkpoint, embedding backfill, triage, repair, enricher, simhash)","core/cadence.c:107-114; core/scheduler.c:280-292","Exempt collectors starting with _ from cadence_apply, or give pods their own policy.",1],
 ["ENG-03","high",0,"Repair pod sends upstream bytes to the model unfenced and auto-merges the URL it proposes as a live override, any host","collectors/pod/collector_repair.c:316, 706-718, 103-112, 836-862","Fence bundle and sample; allow same-host swaps only; cross-domain needs an operator."],
 ["ENG-04","high",0,"Webhook SSRF check runs once at save; delivery uses the lenient floor and follows redirects (DNS rebinding reaches loopback and private ranges)","core/alertsapi.c:491; core/alert_deliver.c:163; core/hostgate.c:511-541","Strict check at delivery, redirects off, do not store response bytes."],
 ["ENG-05","medium",0,"Custom credential headers (X-API-Key and similar) survive a cross-host redirect","core/httpclient.c:193, 671","Follow redirects manually when a credential header is present and drop it on a host change."],
@@ -448,7 +449,7 @@ const ISS=[
 ["ENG-09","medium",0,"A re-fetched record whose text changed keeps its old English translation and stays marked translated","core/intel.c:205-232; core/translate.c:160","Clear translated_at and *_en in the upsert when content_hash changes."],
 ["ENG-10","medium",0,"The per-source body-ceiling setting does nothing for hpengine and VJSON rows; only two bespoke collectors read it","core/scheduler.c:798; lib/hpengine.c; lib/jsonlist.c","Apply the ceiling around d->run in the scheduler so every engine inherits it."],
 ["ENG-11","low",0,"A resume token of 1,024 bytes or more is dropped, so a long-URL cycle restarts from page 1 every run","core/scheduler.c:378-409","Raise the cap to 4096+ or return an error the collector can disclose."],
-["ENG-12","low",0,"Backoff lags one cycle; quarantine triggers on failure 13, not 12","core/scheduler.c:1583-1594","Recompute next[] after the worker refreshes state."],
+["ENG-12","low",0,"Backoff lags one cycle; quarantine triggers on failure 13, not 12","core/scheduler.c:1583-1594","Recompute next[] after the worker refreshes state.",1],
 ["ENG-13","low",0,"Concurrent per-source interval writes can leave the cache stale","core/source_interval.c:47-148","One mutex around write plus reload."],
 ["ENG-14","low",0,"Missing TLS intermediates bundle fails silently when the repo path does not resolve","core/catrust.c:9-69","Log the count loaded; warn on absence when a no_local_issuer is seen."],
 ["ENG-15","low",0,"SSRF floor misses 100.64/10, 192.0.0/24 and embedded-IPv4 IPv6 forms (cloud metadata addresses)","core/hostgate.c:511-535","Add them to the always-blocked class."],
@@ -549,10 +550,16 @@ const ISS=[
 ["LIB-14","low",0,"Numeric HTML entities out of range are silently dropped","lib/htmlparse.c:354","Use the checked decoder hpengine already has."],
 ["LIB-15","low",0,"RSS items with no guid, link or title are skipped with no notice; loose date validation","lib/rss_atom.c","File a notice with the count."],
 ["LIB-16","low",0,"zipread: no ZIP64 or >65,535 entries; all-entries read re-walks the directory per member; allocation sized by the declared length","lib/zipread.c","Walk once; disclose unreachable members."],
-["LIB-17","low",0,"A date format ending in a literal :NN has it consumed as a day offset","lib/datetok.c","Only treat a signed suffix as an offset."],
+["LIB-17","low",0,"A date format ending in a literal :NN has it consumed as a day offset","lib/datetok.c","Only treat a signed suffix as an offset.",1],
 ["LIB-18","low",0,"Websocket client: unbounded fragment buffer, no SSRF check, no agent policy","lib/ws.c","Bound the buffer; share the HTTP policy hook."],
 ["LIB-19","low",0,"Many same-named XML siblings in one record are indexed quadratically","lib/hpengine.c","Keep a per-name counter."],
 ["LIB-20","low",0,"academic_world caps author lists at 20 without disclosure","collectors/sources/academic_world.c","Remove the cap or disclose it."],
+["ENG-17","medium",1,"22 real-time feeds (earthquake early warning declared at 10 s, tsunami, train and flight positions) run once every 6 hours under the default cadence; nothing ships with an exception","core/cadence.c; measured by the scheduling audit","Owner decision: ship per-source overrides for the real-time rows, or let a row declare itself exempt."],
+["ENG-18","medium",1,"The fleet cannot keep the 6 h cadence at the default 8 workers: one lap of 83,511 sources takes about 18 hours (mean run 6.2 s over a 400-source sample); 24 workers are needed","measured by the scheduling audit, docs/source-scheduling-audit-2026-11-14.md on its branch","Raise JO_SCHED_WORKERS after measuring database write contention at 24."],
+["ENG-19","low",1,"No sleep on the fetch path checks the cancel flag, so a cancelled run can stay parked up to 300 s in the host gate","core/hostgate.c; core/httpclient.c:219, 883; lib/hpengine.c page_delay_ms","Pass the cancel flag into the waits and wake on it."],
+["ENG-20","low",1,"The database explorer reports hard-coded cron strings as each job's next run; they do not come from the real scheduler","core/dbexplorerapi.c:218-227","Read next due from the scheduler's own functions, or drop the field."],
+["ARC-05","low",1,"About 22 private copies of an ISO-timestamp helper and about 10 of a monotonic-milliseconds helper across core/, although lib/jocore.h has jo_iso_now","native/core, native/collectors/pod","Replace with the shared helper."],
+["OPS-16","low",1,"test_source_interval.c closes the database twice at the end (on the scheduling branch, lines 134 and 136)","native/tests/unit/test_source_interval.c","Remove the second close."],
 ["SRC-01","medium",1,"Three hand-written collectors fetch 99–227 KB and store nothing with no notice: bird-flu-outbreaks, real-estate, phone-scam-hotspots (live run)","native/collectors/sources","Read the bodies; the pages likely changed shape. Return non-zero so the scheduler discloses it."],
 ["SRC-02","medium",1,"Four Korean law rows (kr-supreme-court-precedents, kr-constitutional-court-decisions, kr-local-ordinances, kr-treaties) each receive a 215-byte answer and store nothing silently (live run)","native/collectors","Read the 215 bytes: probably an API-key or parameter error served as 200."],
 ["SRC-03","low",1,"ifrc-go-appeal-document loses 1,897 of 7,708 records to uid collisions (live run)","native/collectors","Measure the key against the upstream before changing it."],
@@ -569,7 +576,7 @@ document.getElementById("grp").insertAdjacentHTML("beforeend",GRP.map(g=>`<tr><t
 document.getElementById("sweep").insertAdjacentHTML("beforeend",SWEEP.map(r=>`<tr><td><span class="mono">${r[0]}</span></td><td class="n">${fmt(r[1])}</td><td>${r[2]}</td></tr>`).join(""));
 document.getElementById("sweep-note").textContent=SWEEPNOTE; if(!SWEEPNOTE)document.getElementById("sweep-note").hidden=true;
 document.getElementById("f-total").textContent=ISS.length;
-document.getElementById("f-ch").textContent=ISS.filter(i=>i[1]==="critical"||i[1]==="high").length;
+document.getElementById("f-ch").textContent=ISS.filter(i=>(i[1]==="critical"||i[1]==="high")&&!i[6]).length;
 let sev=new Set(),area=new Set();
 function btns(host,keys,label,set){host.innerHTML=keys.map(k=>`<button type="button" aria-pressed="false" data-k="${k}">${label(k)}</button>`).join(" ");
   host.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;const k=b.dataset.k;set.has(k)?set.delete(k):set.add(k);b.setAttribute("aria-pressed",set.has(k));draw()})}
@@ -579,7 +586,7 @@ const q=document.getElementById("q");q.addEventListener("input",draw);
 function draw(){const t=q.value.trim().toLowerCase();
   const rows=ISS.filter(i=>(!sev.size||sev.has(i[1]))&&(!area.size||area.has(i[0].split("-")[0]))&&(!t||i.join(" ").toLowerCase().includes(t)))
     .sort((a,b)=>SEV.indexOf(a[1])-SEV.indexOf(b[1]));
-  document.querySelector("#iss tbody").innerHTML=rows.map(i=>`<tr><td class="mono" style="white-space:nowrap">${i[0]}</td><td><span class="pill ${i[1]}">${i[1]}</span>${i[2]?' <span class="pill okp">verified</span>':''}</td><td>${esc(i[3])}<div class="where">${esc(i[4])}</div></td><td class="fix">${esc(i[5])}</td></tr>`).join("")||`<tr><td colspan="4">No issue matches these filters.</td></tr>`;
+  document.querySelector("#iss tbody").innerHTML=rows.map(i=>`<tr><td class="mono" style="white-space:nowrap">${i[0]}</td><td><span class="pill ${i[1]}">${i[1]}</span>${i[2]?' <span class="pill okp">verified</span>':''}${i[6]?' <span class="pill fixedp">fixed on scheduling branch</span>':''}</td><td>${esc(i[3])}<div class="where">${esc(i[4])}</div></td><td class="fix">${esc(i[5])}</td></tr>`).join("")||`<tr><td colspan="4">No issue matches these filters.</td></tr>`;
   document.getElementById("count").textContent=rows.length+" of "+ISS.length+" shown"}
 draw();
 </script>
