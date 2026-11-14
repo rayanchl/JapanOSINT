@@ -141,7 +141,11 @@ static cJSON *facts_from_detail(db_handle *db, const char *id, const cJSON *det)
   cJSON_AddItemToObject(f, "status", s);
   const cJSON *sch = cJSON_GetObjectItem(det, "schedule");
   cJSON *c = cJSON_CreateObject();
-  copy_if(c, sch, "kind"); copy_if(c, sch, "declaredInterval"); copy_if(c, sch, "effectiveInterval");
+  /* runInterval is what the scheduler spaces attempts by now. The stored
+   * effectiveInterval is not passed: it is the last run's figure and goes
+   * stale on a policy or override change, and the model reads it as fact. */
+  copy_if(c, sch, "kind"); copy_if(c, sch, "declaredInterval"); copy_if(c, sch, "runInterval");
+  copy_if(c, sch, "cadenceBasis"); copy_if(c, sch, "backedOff"); copy_if(c, sch, "quarantined");
   cJSON_AddItemToObject(f, "schedule", c);
   const cJSON *cred = cJSON_GetObjectItem(det, "credentials");
   cJSON *cr = cJSON_CreateObject();

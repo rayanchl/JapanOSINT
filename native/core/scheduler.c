@@ -1,9 +1,10 @@
-/* core/scheduler.c — timer-wheel cron (scheduleGuardedRun parity: per-source
- * interval, skip-if-running). P4: minimal single-thread loop; the bulk waves
- * (P5) reuse it unchanged. */
+/* core/scheduler.c — the collection scheduler: one dispatcher thread that
+ * decides WHEN each source is due (sched_next_due — the one rule), and a
+ * worker pool per lane that runs them (skip-if-running, health backoff). */
 #include "cadence.h"
 #include "source_interval.h"
 #include "scheduler.h"
+#include <limits.h>
 #include "../source.h"
 #include "intel.h"
 #include "evidence.h"
@@ -166,18 +167,24 @@ static void fetch_log_set_stored(db_handle *db, long flid, long stored,
  * and released by the first successful probe. Both counters are persisted so
  * a restart does not turn 11 failures back into 0. */
 
-static long env_long(const char *name, long dflt, long lo) {
+/* The ONE reader of a numeric JO_SCHED_* knob: unset, empty or not a number
+ * is the default (atol used to read "abc" as 0, which for
+ * JO_SCHED_DEADLINE_SEC silently switched the watchdog off); a number is
+ * clamped into [lo, hi]. */
+static long env_long(const char *name, long dflt, long lo, long hi) {
   const char *v = getenv(name);
   if (!v || !*v) return dflt;
-  long x = atol(v);
-  return x < lo ? lo : x;
+  char *end = NULL;
+  long x = strtol(v, &end, 10);
+  if (end == v) return dflt;
+  return x < lo ? lo : (x > hi ? hi : x);
 }
 
 void sched_policy_load(sched_policy *p) {
-  p->backoff_cap_sec      = env_long("JO_SCHED_BACKOFF_CAP_SEC", 86400, 1);
-  p->quarantine_after     = (int)env_long("JO_SCHED_QUARANTINE_AFTER", 12, 1);
+  p->backoff_cap_sec      = env_long("JO_SCHED_BACKOFF_CAP_SEC", 86400, 1, LONG_MAX / 4);
+  p->quarantine_after     = (int)env_long("JO_SCHED_QUARANTINE_AFTER", 12, 1, INT_MAX);
   p->quarantine_probe_sec = env_long("JO_SCHED_QUARANTINE_PROBE_SEC",
-                                     7L * 86400L, 1);
+                                     7L * 86400L, 1, LONG_MAX / 4);
 }
 
 void sched_state_apply(sched_state *st, const sched_policy *p, long declared,
@@ -217,7 +224,14 @@ long sched_state_interval(const sched_state *st, const sched_policy *p,
                           long declared) {
   if (declared < 1) declared = 1;
   if (st->quarantined) return p->quarantine_probe_sec;
-  return st->effective_interval > declared ? st->effective_interval : declared;
+  /* The stored effective_interval is a BACKOFF only while the source is
+   * failing. On a healthy row it is whatever base the last run saved, and
+   * reading it as a floor held a row at its OLD cadence for one more cycle
+   * after the policy, a per-source interval or the freshness measurement
+   * made it faster (6 h -> 1 h ran once at 1 h, then waited 6 h). */
+  if (st->consecutive_failures > 0 && st->effective_interval > declared)
+    return st->effective_interval;
+  return declared;
 }
 
 /* ── freshness-adaptive cadence ──────────────────────────────────────────
@@ -277,6 +291,10 @@ long sched_state_base(const sched_state *st, long declared, int adaptive) {
  * hourly, held at 6 h by policy" rather than hiding one behind the other.
  * The health backoff (sched_state_apply / sched_state_interval) then works
  * from this figure. An entity pivot (interval 0) passes through untouched. */
+int sched_is_pod(const source_def *d) {
+  return d && d->collector && d->collector[0] == '_';
+}
+
 long sched_row_interval(const sched_state *st, const source_def *d) {
   if (!d) return 0;
   /* Third mechanism (2026-10-21, core/source_interval.h): an interval the
@@ -288,7 +306,27 @@ long sched_row_interval(const sched_state *st, const source_def *d) {
     long ov = source_interval_for(d->id);
     if (ov > 0) return ov;
   }
-  return cadence_apply(sched_state_base(st, d->update_interval_sec, d->adaptive_interval));
+  return source_interval_default(st, d);   /* the policy over the row's base; a pod is exempt */
+}
+
+long sched_next_delay(const sched_state *st, const sched_policy *p,
+                      const source_def *d) {
+  long iv = sched_row_interval(st, d);
+  return iv > 0 ? sched_state_interval(st, p, iv) : 0;
+}
+
+time_t sched_hold_until(const sched_state *st, const sched_policy *p) {
+  if (st->quarantined && st->last_probe > 0)
+    return st->last_probe + (time_t)p->quarantine_probe_sec;
+  return st->backoff_until > 0 ? st->backoff_until : 0;
+}
+
+time_t sched_next_due(const sched_state *st, const sched_policy *p,
+                      const source_def *d, time_t last) {
+  if (!d || d->update_interval_sec <= 0) return 0;
+  time_t h = sched_hold_until(st, p);
+  if (h > 0) return h;
+  return last > 0 ? last + (time_t)sched_next_delay(st, p, d) : 0;
 }
 
 long sched_freshness_measure(db_handle *db, const char *id, time_t now) {
@@ -345,8 +383,8 @@ int sched_state_load_one(db_handle *db, const char *id, sched_state *st) {
   sqlite3_stmt *s;
   if (sqlite3_prepare_v2(db->h,
         "SELECT consecutive_failures,consecutive_empties,effective_interval,"
-        "backoff_until,quarantined,quarantined_at,last_probe,freshness_interval "
-        "FROM source_sched_state WHERE source_id=?1", -1, &s, NULL) != SQLITE_OK)
+        "backoff_until,quarantined,quarantined_at,last_probe,freshness_interval,"
+        "updated_at FROM source_sched_state WHERE source_id=?1", -1, &s, NULL) != SQLITE_OK)
     return -1;
   sqlite3_bind_text(s, 1, id, -1, SQLITE_TRANSIENT);
   int rc = 0;
@@ -359,6 +397,7 @@ int sched_state_load_one(db_handle *db, const char *id, sched_state *st) {
     st->quarantined_at       = (time_t)sqlite3_column_int64(s, 5);
     st->last_probe           = (time_t)sqlite3_column_int64(s, 6);
     st->freshness_interval   = (long)sqlite3_column_int64(s, 7);   /* NULL → 0 */
+    st->last_run             = (time_t)sqlite3_column_int64(s, 8);
     rc = 1;
   }
   sqlite3_finalize(s);
@@ -472,6 +511,8 @@ int sched_state_save(db_handle *db, const char *id, const sched_state *st,
  * Failure to persist is logged, not fatal: the run itself succeeded or not
  * on its own terms, and a database without the table (a unit-test fixture
  * booted without schema.sql) must not make it look failed. */
+static void sched_publish(const source_def *d, const sched_state *st, time_t now);
+
 static void sched_state_record(db_handle *db, const source_def *d,
                                const char *status, long records) {
   if (!d || d->update_interval_sec <= 0) return;
@@ -502,6 +543,7 @@ static void sched_state_record(db_handle *db, const source_def *d,
   sched_state_apply(&st, &pol, base, status, records, now);
   if (sched_state_save(db, d->id, &st, base, now) != 0)
     fprintf(stderr, "[sched] %s: could not persist sched state\n", d->id);
+  sched_publish(d, &st, now);
   if (st.consecutive_failures > 0)
     fprintf(stderr, "[sched] %s backoff: %d consecutive failure(s), next in %lds%s\n",
             d->id, st.consecutive_failures, st.effective_interval,
@@ -947,10 +989,10 @@ int scheduler_run_source(db_handle *db, const source_def *d,
  * skipped anomaly_detect, pivot traffic could never bench it in the first
  * place. Two halves of one loop; sched_is_quarantined() closes both.
  *
- * is_search_only() deliberately stays static and scheduler-only: a search-only
+ * The search_only test (sched_row_benched) stays scheduler-only: a search-only
  * source is one that EXISTS to be dispatched, so applying it here would refuse
  * exactly the sources the pivot path is for. */
-static int is_quarantined_impl(db_handle *db, const char *id) {
+int sched_is_quarantined(db_handle *db, const char *id) {
   sqlite3_stmt *s; int q = 0;
   if (sqlite3_prepare_v2(db->h,
         "SELECT 1 FROM sources WHERE id=?1 AND quarantined_until IS NOT NULL"
@@ -963,23 +1005,20 @@ static int is_quarantined_impl(db_handle *db, const char *id) {
   return q;
 }
 
-int sched_is_quarantined(db_handle *db, const char *id) {
-  return is_quarantined_impl(db, id);
-}
-
-/* sources.schedule_mode for `id` (default 'map_cron' if row/col absent).
- * Returns 1 if search_only (scheduler must NOT run it for the map). */
-static int is_search_only(db_handle *db, const char *id) {
-  sqlite3_stmt *s; int so = 0;
+/* 1 when the dispatcher must not run `id` now: the user set it search_only
+ * (the search tab triggers it on demand; default 'map_cron' if the row or
+ * column is absent), or the breaker has it benched. One query per due row. */
+static int sched_row_benched(db_handle *db, const char *id) {
+  sqlite3_stmt *s; int b = 0;
   if (sqlite3_prepare_v2(db->h,
-        "SELECT schedule_mode FROM sources WHERE id=?1", -1, &s, NULL)
-      == SQLITE_OK) {
-    sqlite3_bind_text(s, 1, id, -1, SQLITE_TRANSIENT);
-    if (sqlite3_step(s) == SQLITE_ROW && sqlite3_column_type(s,0)!=SQLITE_NULL)
-      so = strcmp((const char *)sqlite3_column_text(s,0), "search_only") == 0;
-    sqlite3_finalize(s);
-  }
-  return so;
+        "SELECT 1 FROM sources WHERE id=?1 AND (schedule_mode='search_only' OR "
+        "(quarantined_until IS NOT NULL AND quarantined_until>datetime('now')))"
+        " LIMIT 1", -1, &s, NULL) != SQLITE_OK)
+    return sched_is_quarantined(db, id);        /* a database without schedule_mode */
+  sqlite3_bind_text(s, 1, id, -1, SQLITE_TRANSIENT);
+  b = (sqlite3_step(s) == SQLITE_ROW);
+  sqlite3_finalize(s);
+  return b;
 }
 
 /* ── worker pool ──────────────────────────────────────────────────────────
@@ -1039,6 +1078,7 @@ enum { LANE_COLLECT = 0, LANE_MAINT = 1, LANE_N = 2 };
 typedef struct {
   int          idx[SCHED_QCAP];      /* registry indices awaiting a worker    */
   double       key[SCHED_QCAP];      /* sched_priority() at push time         */
+  unsigned long seq[SCHED_QCAP];     /* push order: equal keys run first-in-first-out */
   int          count;
   int          workers;              /* threads serving this lane             */
   long         dropped;              /* enqueues refused because it was full  */
@@ -1051,6 +1091,14 @@ typedef struct {
   char        *claimed;              /* per-source: held by scheduler_claim()  */
   time_t      *started;              /* pool run start, 0 = not running in it  */
   time_t      *warned;               /* last deadline warning for this run     */
+  /* The plan. next[i] is when source i is next due; due[i] is when its
+   * current/last pooled run was dispatched, which the following run is
+   * measured from. Both under `mu`: the dispatcher plans, and the thread
+   * that finishes a run corrects the plan from the run's outcome
+   * (sched_publish). */
+  time_t      *next;
+  time_t      *due;
+  unsigned long pushes;
   /* ctx->cancel for a claimed or pooled run. Written only under `mu`, with
    * __atomic stores; read by collectors through a volatile pointer. */
   volatile int *cancel;
@@ -1081,7 +1129,7 @@ static atomic_int     g_ready = 0;
 static atomic_long    g_attach_failures = 0;
 
 static int lane_of(const source_def *d) {
-  return (d && d->collector && d->collector[0] == '_') ? LANE_MAINT : LANE_COLLECT;
+  return sched_is_pod(d) ? LANE_MAINT : LANE_COLLECT;
 }
 
 /* Allocate the per-source arrays for `all[0..n)`. Separate from
@@ -1094,10 +1142,12 @@ static int sched_pool_init(const source_def **all, int n) {
   g_q.claimed = calloc((size_t)n, 1);
   g_q.started = calloc((size_t)n, sizeof(time_t));
   g_q.warned  = calloc((size_t)n, sizeof(time_t));
+  g_q.next    = calloc((size_t)(n > 0 ? n : 1), sizeof(time_t));
+  g_q.due     = calloc((size_t)(n > 0 ? n : 1), sizeof(time_t));
   g_q.cancel  = calloc((size_t)n, sizeof(int));
   g_state     = calloc((size_t)n, sizeof(sched_state));
   if (!g_q.running || !g_q.claimed || !g_q.started || !g_q.warned ||
-      !g_q.cancel || !g_state)
+      !g_q.next || !g_q.due || !g_q.cancel || !g_state)
     return -1;
   atomic_store(&g_ready, 1);
   return 0;
@@ -1140,34 +1190,49 @@ void scheduler_release(const char *id) {
   pthread_mutex_unlock(&g_q.mu);
 }
 
-static void q_push(int i, double key) {
-  sched_lane *L = &g_q.lane[lane_of(g_all[i])];
+/* A finished run's outcome reaches the plan HERE, from whichever thread ran
+ * it (a pool worker or a manual/claimed run). The dispatcher plans a row's
+ * next attempt when it dispatches it, from the state BEFORE the run — so
+ * until this existed every change landed one cycle late: a source released
+ * from quarantine by a successful probe still waited out the 7-day probe
+ * cadence, a recovered source its last backoff, a first failure was retried
+ * at 1x not 2x, and a manual run's verdict never reached the dispatcher. */
+static void sched_publish(const source_def *d, const sched_state *st, time_t now) {
+  if (!atomic_load(&g_ready)) return;
+  int i = registry_index(d->id);
+  if (i < 0 || i >= g_n) return;
   pthread_mutex_lock(&g_q.mu);
-  if (g_q.running[i]) {
-    /* Already queued, in flight, or claimed by a manual run. Serial execution
-     * gave this for free (next[i] only advanced after the run returned); with
-     * a pool it has to be explicit or a source slower than its own interval
-     * re-queues itself forever. Not a drop — the run in flight IS this
-     * cycle's refresh. */
-  } else if (L->count >= SCHED_QCAP) {
-    /* Backlog deeper than the queue: this source loses a cycle. Counted and
-     * logged rather than swallowed — a silently truncated refresh reads as
-     * "the source is stale" with no way to tell it apart from a broken
-     * upstream. A standing nonzero count means the pool is undersized. */
-    L->dropped++;
-    fprintf(stderr, "[sched] queue full (%d), skipping this cycle of %s "
-                    "(dropped=%ld) — raise %s\n",
-            SCHED_QCAP, g_all[i]->id, L->dropped,
-            L == &g_q.lane[LANE_MAINT] ? "JO_SCHED_MAINT_WORKERS"
-                                       : "JO_SCHED_WORKERS");
-  } else {
+  g_state[i] = *st;
+  g_state[i].last_run = now;
+  /* A pooled run is measured from its dispatch (a 90 s run on a 60 s interval
+   * is due again at once, not at 150 s); a manual run from now. */
+  time_t last = (g_q.started[i] && g_q.due[i]) ? g_q.due[i] : now;
+  time_t nd = sched_next_due(st, &g_pol, d, last);
+  if (nd > 0) g_q.next[i] = nd;
+  pthread_mutex_unlock(&g_q.mu);
+}
+
+/* 1 = queued; 0 = already queued, in flight or claimed by a manual run (the
+ * run in flight IS this cycle's refresh); -1 = the lane is full. The
+ * dispatcher reserves room before it pushes, so -1 is not expected there —
+ * it is counted, and the caller leaves the row due. */
+static int q_push(int i, double key) {
+  sched_lane *L = &g_q.lane[lane_of(g_all[i])];
+  int r;
+  pthread_mutex_lock(&g_q.mu);
+  if (g_q.running[i]) r = 0;
+  else if (L->count >= SCHED_QCAP) { L->dropped++; r = -1; }
+  else {
     g_q.running[i] = 1;
     L->idx[L->count] = i;
     L->key[L->count] = key;
+    L->seq[L->count] = g_q.pushes++;
     L->count++;
     pthread_cond_signal(&L->cv);
+    r = 1;
   }
   pthread_mutex_unlock(&g_q.mu);
+  return r;
 }
 
 /* Next index for lane `ln`, or -1 once shutdown has begun. */
@@ -1179,12 +1244,14 @@ static int q_pop(int ln) {
   if (atomic_load(&g_shutdown)) { pthread_mutex_unlock(&g_q.mu); return -1; }
   int best = 0;
   for (int k = 1; k < L->count; k++)
-    if (L->key[k] < L->key[best]) best = k;
+    if (L->key[k] < L->key[best] ||
+        (L->key[k] == L->key[best] && L->seq[k] < L->seq[best])) best = k;
   int i = L->idx[best];
   /* swap-remove: order inside the array carries no meaning, the key does */
   L->count--;
   L->idx[best] = L->idx[L->count];
   L->key[best] = L->key[L->count];
+  L->seq[best] = L->seq[L->count];
   g_q.started[i] = time(NULL);
   g_q.warned[i]  = 0;
   set_cancel(i, 0);
@@ -1235,15 +1302,8 @@ static void *worker_thread(void *arg) {
     atomic_fetch_add(&g_inflight, 1);
     scheduler_run_source(&own, g_all[i], NULL);
     atomic_fetch_sub(&g_inflight, 1);
-    /* scheduler_run_source persisted the new health state; bring the
-     * dispatcher's in-memory copy up to date before releasing the slot so the
-     * next due-check already sees the backed-off interval. */
-    sched_state fresh;
-    if (sched_state_load_one(&own, g_all[i]->id, &fresh) >= 0) {
-      pthread_mutex_lock(&g_q.mu);
-      g_state[i] = fresh;
-      pthread_mutex_unlock(&g_q.mu);
-    }
+    /* scheduler_run_source persisted the new health state and published it
+     * to the plan (sched_publish) while this slot was still held. */
     q_done(i);
   }
   db_close(&own);
@@ -1333,7 +1393,7 @@ static void watchdog_scan(void) {
       g_q.warned[i] = now;
       fprintf(stderr, "[sched] WARN %s has held a worker slot for %lds "
                       "(deadline %ds, interval %ds)%s\n", g_all[i]->id, over,
-              g_deadline_sec, g_all[i]->update_interval_sec,
+              g_deadline_sec, (int)sched_row_interval(&g_state[i], g_all[i]),
               first ? " — cancel requested"
                     : asked ? " — still running after cancel" : "");
     }
@@ -1428,22 +1488,17 @@ static void boot_skip_set(db_handle *db, char *skip, int n) {
   }
 }
 
-static int env_int_clamp(const char *name, int dflt, int lo, int hi) {
-  const char *v = getenv(name);
-  int x = (v && *v) ? atoi(v) : dflt;
-  return x < lo ? lo : (x > hi ? hi : x);
-}
-
 void scheduler_loop(db_handle *db) {
   int n = registry_count();
-  time_t *next = calloc((size_t)(n > 0 ? n : 1), sizeof(time_t));
-  if (!next || sched_pool_init(registry_all(), n) != 0) {
+  sched_policy_load(&g_pol);
+  int *cand = malloc(sizeof(int) * SCHED_QCAP * LANE_N);
+  if (!cand || sched_pool_init(registry_all(), n) != 0) {
     fprintf(stderr, "[sched] out of memory; scheduler off\n");
     return;
   }
+  time_t *next = g_q.next;
   const char *dbf = (db && db->h) ? sqlite3_db_filename(db->h, "main") : NULL;
   if (dbf && *dbf) snprintf(g_db_path, sizeof g_db_path, "%s", dbf);
-  sched_policy_load(&g_pol);
   /* Health state survives restarts: a source that was on its 11th failure
    * yesterday is on its 11th failure now, not its 0th. */
   int n_restored = 0, n_q0 = 0;
@@ -1465,15 +1520,14 @@ void scheduler_loop(db_handle *db) {
    * upstream politeness (hostgate) and sqlite write contention, not cores. 8
    * is the conservative default for a first deploy; raise it once the
    * heartbeat below shows a standing backlog. 1 = the old serial behaviour. */
-  int workers = env_int_clamp("JO_SCHED_WORKERS", 8, 1, 32);
+  int workers = (int)env_long("JO_SCHED_WORKERS", 8, 1, 32);
   /* The pods are few, mostly short, and must never wait on the fleet. Two, so
    * one long LLM-bound pod (repair, enrichment) cannot hold the WAL
    * checkpoint or retention behind it. */
-  int mworkers = env_int_clamp("JO_SCHED_MAINT_WORKERS", 2, 1, 8);
+  int mworkers = (int)env_long("JO_SCHED_MAINT_WORKERS", 2, 1, 8);
   g_q.lane[LANE_COLLECT].workers = workers;
   g_q.lane[LANE_MAINT].workers   = mworkers;
-  const char *dl = getenv("JO_SCHED_DEADLINE_SEC");
-  g_deadline_sec = dl ? atoi(dl) : 300;
+  g_deadline_sec = (int)env_long("JO_SCHED_DEADLINE_SEC", 300, 0, INT_MAX);   /* 0 = watchdog off */
 
   time_t now0 = time(NULL);
   /* Stagger first runs so the fleet doesn't storm upstreams at boot (many do
@@ -1481,29 +1535,26 @@ void scheduler_loop(db_handle *db) {
    * (3 s), compressed into JO_SCHED_RAMP_SEC (900 s) and into each source's
    * own interval — see sched_boot_offset(). JO_SCHED_STAGGER_SEC=0 disables
    * the ramp. */
-  long stag = env_long("JO_SCHED_STAGGER_SEC", 3, 0);
-  long ramp = env_long("JO_SCHED_RAMP_SEC", 900, 0);
+  long stag = env_long("JO_SCHED_STAGGER_SEC", 3, 0, 86400);
+  long ramp = env_long("JO_SCHED_RAMP_SEC", 900, 0, 7L * 86400L);
   char *skip = calloc((size_t)(n > 0 ? n : 1), 1);
   if (skip) boot_skip_set(db, skip, n);
-  /* Pass 1: which sources start on the ramp, per lane. A source with a
-   * restored backoff or quarantine hold starts at the hold instead, so it is
-   * not given a ramp slot — nor is anything the dispatcher will not run. */
+  /* Pass 1: which sources start on the ramp, per lane. A source that is not
+   * due yet starts when it IS due and takes no ramp slot: a restored backoff
+   * or quarantine probe (the outage did not end because the process did),
+   * and — the same rule — a healthy source whose last run was less than one
+   * interval ago. The cadence is the source's, not the process's: a restart
+   * used to re-fetch the whole fleet inside the ramp whatever ran an hour
+   * before. Nor is anything the dispatcher will not run given a slot. */
   time_t *hold = calloc((size_t)(n > 0 ? n : 1), sizeof(time_t));
-  int m[LANE_N] = {0};
+  int m[LANE_N] = {0}, n_wait = 0;
   for (int i = 0; i < n; i++) {
-    const sched_state *st = &g_state[i];
-    time_t h = 0;
-    /* A restored backoff is honoured across the restart: the outage did not
-     * end because the process did. A quarantined source waits out its probe
-     * cadence from the last probe, not from boot. */
-    if (st->quarantined && st->last_probe > 0)
-      h = st->last_probe + (time_t)g_pol.quarantine_probe_sec;
-    else if (st->backoff_until > 0)
-      h = st->backoff_until;
+    time_t h = sched_next_due(&g_state[i], &g_pol, g_all[i], g_state[i].last_run);
     if (hold) hold[i] = h;
     next[i] = h > now0 ? h : now0;
-    if (g_all[i]->update_interval_sec > 0 && !(skip && skip[i]) && h <= now0)
-      m[lane_of(g_all[i])]++;
+    if (g_all[i]->update_interval_sec <= 0 || (skip && skip[i])) continue;
+    if (h > now0) n_wait++;
+    else m[lane_of(g_all[i])]++;
   }
   /* Pass 2: place them. */
   int k[LANE_N] = {0};
@@ -1521,9 +1572,10 @@ void scheduler_loop(db_handle *db) {
   free(skip);
   free(hold);
   fprintf(stderr, "[sched] boot ramp: %d scheduled source(s) start within %lds, "
-                  "%d pod(s) within %lds (stagger %lds, ramp cap %lds)\n",
+                  "%d pod(s) within %lds (stagger %lds, ramp cap %lds); %d not "
+                  "due yet keep their own time\n",
           m[LANE_COLLECT], last[LANE_COLLECT], m[LANE_MAINT], last[LANE_MAINT],
-          stag, ramp);
+          stag, ramp, n_wait);
 
   for (int ln = 0; ln < LANE_N; ln++)
     for (int i = 0; i < g_q.lane[ln].workers; i++) {
@@ -1537,6 +1589,7 @@ void scheduler_loop(db_handle *db) {
                   "worker(s)\n", n, workers, mworkers);
 
   unsigned long tick = 0;
+  int cursor = 0, deferred = 0;
   unsigned cad_gen = cadence_generation();
   unsigned ovr_gen = source_interval_generation();
   for (;;) {
@@ -1544,54 +1597,80 @@ void scheduler_loop(db_handle *db) {
     time_t now = time(NULL);
     /* The cadence policy changed (PUT /api/sources/cadence), or a per-source
      * interval was set or cleared (PUT/DELETE /api/sources/:id/interval): a
-     * row whose next due time is further away than its NEW interval is
-     * pulled in to now + interval, so a faster cadence takes effect within
-     * one interval and a slower one lets the already-planned run happen and
-     * then stretches. */
+     * row whose next due time is further away than its NEW spacing is pulled
+     * in to now + spacing, so a faster cadence takes effect within one
+     * interval and a slower one lets the already-planned run happen and then
+     * stretches. A row under a health hold keeps it — an edit to one
+     * source's interval must not re-probe every quarantined source. */
     if (cadence_generation() != cad_gen || source_interval_generation() != ovr_gen) {
       cad_gen = cadence_generation();
       ovr_gen = source_interval_generation();
       long pulled = 0;
+      pthread_mutex_lock(&g_q.mu);
       for (int i = 0; i < n; i++) {
-        pthread_mutex_lock(&g_q.mu);
-        long e = sched_row_interval(&g_state[i], g_all[i]);
-        pthread_mutex_unlock(&g_q.mu);
-        if (e <= 0) continue;
+        long e = sched_next_delay(&g_state[i], &g_pol, g_all[i]);
+        if (e <= 0 || sched_hold_until(&g_state[i], &g_pol) > now) continue;
         if (next[i] > now + (time_t)e) { next[i] = now + (time_t)e; pulled++; }
       }
+      pthread_mutex_unlock(&g_q.mu);
       fprintf(stderr, "[sched] cadence changed (policy or a per-source interval): %ld row(s) re-planned\n", pulled);
     }
-    for (int i = 0; i < n; i++) {
+    /* Pick this tick's due rows, never more than the lanes have room for. A
+     * row that does not fit STAYS DUE: it used to lose the whole cycle, and
+     * since the boot ramp makes ~92 rows a second due against a queue of
+     * 2,048, most of an 83,000-row fleet lost it — then came due together
+     * again one interval later and lost the next one, the same rows each
+     * time because the walk is in registry order. The walk now starts where
+     * the last tick ran out of room, so a standing backlog is served round
+     * robin, and a deferred row's overdue ratio (which the priority reads)
+     * finally grows. On-demand sources (interval <= 0) are the pipeline's. */
+    int nc = 0, first_deferred = -1;
+    deferred = 0;
+    pthread_mutex_lock(&g_q.mu);
+    int room[LANE_N];
+    for (int ln = 0; ln < LANE_N; ln++) room[ln] = SCHED_QCAP - g_q.lane[ln].count;
+    for (int k = 0; k < n; k++) {
+      int i = cursor + k < n ? cursor + k : cursor + k - n;
       const source_def *d = g_all[i];
-      /* Unified: schedule any source with an interval; on-demand sources
-       * (interval<=0, e.g. OSINT-pivot) are run by the pipeline, not here.
-       * No source_kind branch — a source is a source. */
-      if (d->update_interval_sec <= 0) continue;
-      if (now < next[i]) continue;
-      /* User-set per-source mode: search_only sources don't cron for the
-       * map (the search tab triggers them on demand). */
-      if (is_search_only(db, d->id)) { next[i] = now + cadence_apply(d->update_interval_sec); continue; }
-      /* Circuit breaker: a quarantined source is benched until the cooldown
-       * lapses (a later probe past quarantined_until runs and may clear it). */
-      if (is_quarantined_impl(db, d->id)) { next[i] = now + cadence_apply(d->update_interval_sec); continue; }
-      /* Cadence is measured from the DUE time, not from completion: a source
-       * that takes 90 s on a 60 s interval stays due immediately rather than
-       * silently drifting to 150 s. q_push's skip-if-running is what stops
-       * that from queueing it twice. The interval is the HEALTH-ADJUSTED one:
-       * declared when healthy, doubled per failure, the probe cadence while
-       * quarantined (see sched_state_apply). */
+      if (d->update_interval_sec <= 0 || now < next[i]) continue;
+      if (g_q.running[i]) {
+        /* Still queued, in flight or claimed: that run is this cycle's
+         * refresh. Look again one spacing on; its outcome re-plans it. */
+        next[i] = now + (time_t)sched_next_delay(&g_state[i], &g_pol, d);
+        continue;
+      }
+      int ln = lane_of(d);
+      if (room[ln] <= 0) { deferred++; if (first_deferred < 0) first_deferred = i; continue; }
+      room[ln]--;
+      cand[nc++] = i;
+    }
+    pthread_mutex_unlock(&g_q.mu);
+    if (first_deferred >= 0) cursor = first_deferred;
+    for (int c = 0; c < nc; c++) {
+      int i = cand[c];
+      const source_def *d = g_all[i];
       pthread_mutex_lock(&g_q.mu);
       sched_state st = g_state[i];
+      time_t was_due = next[i];
       pthread_mutex_unlock(&g_q.mu);
-      /* "declared" here is this row's interval under BOTH mechanisms
-       * (sched_row_interval): the cadence its own stored items measured when
-       * the row is adaptive — the worker refreshed that into g_state[i] —
-       * with the operator's cadence policy (cadence.h) applied on top.
-       * Backoff doubles from it and the overdue ratio is measured against it. */
-      long declared = sched_row_interval(&st, d);
-      double overdue = (double)(now - next[i]) / (double)(declared > 0 ? declared : 1);
-      q_push(i, sched_priority(&st, source_trust_score(db, d->id), overdue));
-      next[i] = now + sched_state_interval(&st, &g_pol, declared);
+      /* The row's cadence under every mechanism (sched_row_interval): backoff
+       * doubles from it and the overdue ratio is measured against it. */
+      long base = sched_row_interval(&st, d);
+      time_t then;
+      if (sched_row_benched(db, d->id)) {
+        then = now + (time_t)base;            /* search_only or benched: look again */
+      } else {
+        double overdue = (double)(now - was_due) / (double)(base > 0 ? base : 1);
+        if (q_push(i, sched_priority(&st, source_trust_score(db, d->id), overdue)) < 0)
+          continue;                           /* stays due */
+        /* Provisional — planned from the state before the run, and corrected
+         * from its outcome by sched_publish. */
+        then = now + (time_t)sched_state_interval(&st, &g_pol, base);
+      }
+      pthread_mutex_lock(&g_q.mu);
+      g_q.due[i] = now;
+      next[i] = then;
+      pthread_mutex_unlock(&g_q.mu);
     }
     watchdog_scan();
     /* Once a minute: how much of the pool is busy, how deep the backlog is,
@@ -1615,9 +1694,10 @@ void scheduler_loop(db_handle *db) {
        * trails the run line). */
       fprintf(stderr, "[sched] busy=%d/%d queued=%d | hostgate inflight=%ld "
                       "waited=%ld over_budget=%ld | backed_off=%d quarantined=%d"
-                      " | maint busy=%d/%d queued=%d | attach_failures=%ld\n",
+                      " | maint busy=%d/%d queued=%d | attach_failures=%ld"
+                      " | deferred=%d\n",
               busy, workers, queued, inflight, waits, timeouts, backed, quar,
-              mbusy, mworkers, mqueued, atomic_load(&g_attach_failures));
+              mbusy, mworkers, mqueued, atomic_load(&g_attach_failures), deferred);
     }
     sleep(1);
   }

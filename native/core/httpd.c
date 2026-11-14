@@ -2817,6 +2817,10 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
           cJSON *cl = j ? cJSON_GetObjectItemCaseSensitive(j, "clear") : NULL;
           if (cl && cJSON_IsTrue(cl)) rc = source_interval_clear(g_db, p, &err);
           else if (!iv || !cJSON_IsNumber(iv)) { err = "interval_sec (seconds, a number) is required"; rc = -1; }
+          else if (!(iv->valuedouble >= 0 && iv->valuedouble <= 1e9) ||
+                   iv->valuedouble != (double)(long)iv->valuedouble) {
+            err = "interval_sec must be a whole number of seconds"; rc = -1;   /* 0.5 used to truncate to 0 */
+          }
           else rc = source_interval_set(g_db, p, (long)iv->valuedouble, en ? cJSON_IsTrue(en) : 1, usr.email, &err);
           cJSON_Delete(j);
         }

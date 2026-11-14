@@ -16,6 +16,7 @@
 #include "hostgate.h"
 #include "cadence.h"
 #include "source_interval.h"
+#include "scheduler.h"
 #include "../lib/hpengine.h"
 #include "../lib/jocore.h"
 #include "../third_party/cJSON.h"
@@ -144,7 +145,25 @@ typedef struct {
   char id[256];
   int failures, empties, quarantined; long effective; long long backoff_until;
   long freshness;   /* the adaptive measurement (source_sched_state.freshness_interval), 0 = none */
+  long long last_probe, last_run;   /* last_run = source_sched_state.updated_at */
 } sched_t;
+
+/* The snapshot row as the scheduler's own struct, so every figure below comes
+ * from core/scheduler.c's arithmetic and not from a copy of it. NULL (never
+ * ran) is the zeroed state. */
+static sched_state sched_as_state(const sched_t *r) {
+  sched_state st = {0};
+  if (!r) return st;
+  st.consecutive_failures = r->failures;
+  st.consecutive_empties  = r->empties;
+  st.effective_interval   = r->effective;
+  st.backoff_until        = (time_t)r->backoff_until;
+  st.quarantined          = r->quarantined;
+  st.last_probe           = (time_t)r->last_probe;
+  st.freshness_interval   = r->freshness;
+  st.last_run             = (time_t)r->last_run;
+  return st;
+}
 
 /* ── why a source is not working, in the row that says it is not ────────────
  *
@@ -268,7 +287,8 @@ static void snap_load(db_handle *db, snapshot *s) {
   }
   if (sqlite3_prepare_v2(db->h,
         "SELECT source_id,consecutive_failures,consecutive_empties,quarantined,"
-        "effective_interval,backoff_until,freshness_interval FROM source_sched_state", -1, &st, NULL) == SQLITE_OK) {
+        "effective_interval,backoff_until,freshness_interval,last_probe,updated_at "
+        "FROM source_sched_state", -1, &st, NULL) == SQLITE_OK) {
     int cap = 0;
     while (sqlite3_step(st) == SQLITE_ROW) {
       GROW(s->sched, s->nsched, cap, sched_t);
@@ -282,6 +302,8 @@ static void snap_load(db_handle *db, snapshot *s) {
       r->effective = (long)sqlite3_column_int64(st, 4);
       r->backoff_until = sqlite3_column_type(st, 5) == SQLITE_NULL ? 0 : sqlite3_column_int64(st, 5);
       r->freshness = (long)sqlite3_column_int64(st, 6);   /* NULL -> 0 */
+      r->last_probe = sqlite3_column_int64(st, 7);
+      r->last_run = sqlite3_column_int64(st, 8);
     }
     sqlite3_finalize(st);
     qsort(s->sched, (size_t)s->nsched, sizeof *s->sched, id_cmp_sched);
@@ -465,7 +487,10 @@ static cJSON *health_json(const srow_t *r, const health_t *h) {
 
 /* ── the compact row every list shares ──────────────────────────────────── */
 
-static cJSON *sched_json(const sched_t *r, const char *id, long declared, int adaptive, long long now) {
+static cJSON *sched_json(const sched_t *r, const source_def *d, long long now) {
+  const char *id = d->id; long declared = d->update_interval_sec; int adaptive = d->adaptive_interval;
+  sched_state sst = sched_as_state(r);
+  sched_policy pol; sched_policy_load(&pol);
   cJSON *o = cJSON_CreateObject();
   cJSON_AddBoolToObject(o, "tracked", r != NULL);
   cJSON_AddNumberToObject(o, "declaredInterval", (double)declared);
@@ -475,22 +500,28 @@ static cJSON *sched_json(const sched_t *r, const char *id, long declared, int ad
    * it to (null: not adaptive, or no dated item yet); and `policyInterval`,
    * the operator's system-wide policy (core/cadence.h) applied to the
    * measured figure when there is one, else to the declared — so a page can
-   * say "measured hourly, held at 6 h by policy". `effectiveInterval` is what
-   * the health backoff made of that after the last run. */
-  long base = (adaptive && r && r->freshness > 0) ? r->freshness : declared;
+   * say "measured hourly, held at 6 h by policy" (a maintenance pod is
+   * exempt: its policyInterval is its declared one). `effectiveInterval` is
+   * the figure the last run STORED — a backoff only while failures > 0, and
+   * stale after a policy or override change; `runInterval` is what the
+   * scheduler will actually space attempts by now (sched_next_delay). */
   cJSON_AddBoolToObject(o, "adaptive", adaptive != 0);
   if (adaptive && r && r->freshness > 0) cJSON_AddNumberToObject(o, "measuredInterval", (double)r->freshness);
   else cJSON_AddNullToObject(o, "measuredInterval");
-  cJSON_AddNumberToObject(o, "policyInterval", (double)cadence_apply(base));
-  cJSON_AddStringToObject(o, "policy", cadence_mode_for(base));
+  const char *mode = source_interval_policy_mode(&sst, d);
+  cJSON_AddNumberToObject(o, "policyInterval", (double)source_interval_default(&sst, d));
+  cJSON_AddStringToObject(o, "policy", mode);
   /* And the one figure that outranks them (core/source_interval.h): an
    * interval the operator set for THIS source. Null when none is enabled. */
   long ov = declared > 0 ? source_interval_for(id) : 0;
   if (ov > 0) cJSON_AddNumberToObject(o, "overrideInterval", (double)ov);
   else cJSON_AddNullToObject(o, "overrideInterval");
   cJSON_AddStringToObject(o, "cadenceBasis", declared <= 0 ? "on demand" : ov > 0 ? "override"
-                          : strcmp(cadence_mode_for(base), "declared") ? "policy"
+                          : strcmp(mode, "declared") ? "policy"
                           : (adaptive && r && r->freshness > 0) ? "measured" : "declared");
+  long run = sched_next_delay(&sst, &pol, d);
+  if (run > 0) cJSON_AddNumberToObject(o, "runInterval", (double)run);
+  else cJSON_AddNullToObject(o, "runInterval");
   if (r && r->effective > 0) cJSON_AddNumberToObject(o, "effectiveInterval", (double)r->effective);
   else cJSON_AddNullToObject(o, "effectiveInterval");
   cJSON_AddNumberToObject(o, "consecutiveFailures", r ? r->failures : 0);
@@ -552,7 +583,7 @@ static cJSON *row_json(const reg_ent *e, const snapshot *s, long long now) {
     cJSON_AddStringToObject(tr, "grade", t->grade);
   } else { cJSON_AddNullToObject(tr, "reliability"); cJSON_AddNullToObject(tr, "grade"); }
   cJSON_AddItemToObject(o, "trust", tr);
-  cJSON_AddItemToObject(o, "sched", sched_json(sc, d->id, d->update_interval_sec, d->adaptive_interval, now));
+  cJSON_AddItemToObject(o, "sched", sched_json(sc, d, now));
   return o;
 }
 
@@ -1451,7 +1482,7 @@ char *sourceapi_detail(db_handle *db, const char *id) {
   const source_trust *t = snap_trust(s, id);
   const agg_t *a = snap_agg(s, id);
 
-  cJSON *schedule = sched_json(sc, d->id, d->update_interval_sec, d->adaptive_interval, now);
+  cJSON *schedule = sched_json(sc, d, now);
   add_str_or_null(schedule, "schedule_mode", r && r->schedule_mode[0] ? r->schedule_mode : NULL);
   cJSON_AddStringToObject(schedule, "kind", e ? e->kind : derive_kind(d));
   cJSON_AddItemToObject(o, "schedule", schedule);
@@ -1542,17 +1573,22 @@ char *sourceapi_detail(db_handle *db, const char *id) {
     cJSON_AddItemToObject(o, "runs", runs);
     cJSON *sch = cJSON_GetObjectItem(o, "schedule");
     if (stats) cJSON_AddItemToObject(sch, "stats_30d", stats);
-    /* next due = the last run + the interval the scheduler is actually
-     * keeping (effective when the health policy set one, else declared).
-     * Only for a scheduled row that has run at least once; pivots and
-     * never-run rows say null rather than a guess. */
+    /* next due = the scheduler's own answer (sched_next_due): the end of a
+     * backoff or the next quarantine probe when the row is held, else its
+     * last run + the interval that actually runs (override, policy,
+     * measurement, backoff). Null for a pivot — even one with a stale state
+     * row — and for a row that never ran, rather than a guess. */
     const cJSON *lr = stats ? cJSON_GetObjectItem(stats, "last_run_at") : NULL;
-    long long last = (lr && cJSON_IsString(lr)) ? parse_ts(lr->valuestring) : 0;
-    long iv = (sc && sc->effective > 0) ? sc->effective : d->update_interval_sec;
-    if (last > 0 && iv > 0) {
-      char ts[32]; iso_epoch(last + iv, ts, sizeof ts);
+    sched_state sst = sched_as_state(sc);
+    sched_policy pol; sched_policy_load(&pol);
+    /* the scheduler's own stamp; fetch_log only when it has no state row */
+    long long last = sst.last_run > 0 ? (long long)sst.last_run
+                   : (lr && cJSON_IsString(lr)) ? parse_ts(lr->valuestring) : 0;
+    long long due = (long long)sched_next_due(&sst, &pol, d, (time_t)last);
+    if (due > 0) {
+      char ts[32]; iso_epoch(due, ts, sizeof ts);
       cJSON_AddStringToObject(sch, "next_due", ts);
-      cJSON_AddBoolToObject(sch, "overdue", last + iv < now);
+      cJSON_AddBoolToObject(sch, "overdue", due < now);
     } else {
       cJSON_AddNullToObject(sch, "next_due");
       cJSON_AddNullToObject(sch, "overdue");

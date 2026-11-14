@@ -116,6 +116,41 @@ int main(void) {
   assert(i_slow >= 0 && i_pod >= 0);
   assert(lane_of(&D_SLOW) == LANE_COLLECT && lane_of(&D_POD) == LANE_MAINT);
 
+  /* 1b. equal priority is first-in-first-out (swap-remove used to serve the
+   * NEWEST equal-key entry next, so under a backlog the oldest starved), a
+   * second push of a queued row is refused, and a full lane says so. */
+  int fifo[4], nf = 0;
+  for (int i = 0; i < registry_count() && nf < 4; i++)
+    if (i != i_slow && lane_of(registry_all()[i]) == LANE_COLLECT) fifo[nf++] = i;
+  assert(nf == 4);
+  for (int k = 0; k < 4; k++) assert(q_push(fifo[k], 1.0) == 1);
+  assert(q_push(fifo[0], 1.0) == 0);
+  for (int k = 0; k < 4; k++) {
+    int got = q_pop(LANE_COLLECT);
+    assert(got == fifo[k] && "equal keys must run in push order");
+    q_done(got);
+  }
+  g_q.lane[LANE_COLLECT].count = SCHED_QCAP;
+  assert(q_push(fifo[0], 1.0) == -1 && g_q.running[fifo[0]] == 0);
+  g_q.lane[LANE_COLLECT].count = 0;
+  printf("  queue: FIFO among equal keys, full lane reported not swallowed\n");
+
+  /* 1c. a finished run corrects the plan from its OUTCOME: the dispatcher
+   * planned it from the state before the run, so a recovery or a failure
+   * used to land one cycle late (a released quarantine waited 7 more days). */
+  sched_policy_load(&g_pol);
+  sched_state ok = {0};
+  sched_publish(&D_SLOW, &ok, 1000);
+  assert(g_q.next[i_slow] == 1000 + sched_row_interval(&ok, &D_SLOW));
+  assert(g_state[i_slow].last_run == 1000);
+  sched_state bad = { .consecutive_failures = 3, .effective_interval = 40,
+                      .backoff_until = 5000 };
+  sched_publish(&D_SLOW, &bad, 1000);
+  assert(g_q.next[i_slow] == 5000 && g_state[i_slow].consecutive_failures == 3);
+  memset(&g_state[i_slow], 0, sizeof g_state[i_slow]);
+  g_q.next[i_slow] = 0;
+  printf("  plan: a run's outcome re-plans the row at once\n");
+
   pthread_t wc, wm, wbad;
   assert(pthread_create(&wc, NULL, worker_wrap, (void *)(intptr_t)LANE_COLLECT) == 0);
   assert(pthread_create(&wm, NULL, worker_wrap, (void *)(intptr_t)LANE_MAINT) == 0);

@@ -53,7 +53,7 @@ long sched_boot_offset(int k, int m, int workers, long stag, long ramp,
 typedef struct {
   int    consecutive_failures;   /* error runs since the last ok run          */
   int    consecutive_empties;    /* ok runs with 0 records since the last >0  */
-  long   effective_interval;     /* seconds; == declared when healthy          */
+  long   effective_interval;     /* seconds; a backoff only while failures > 0 */
   time_t backoff_until;          /* 0 = not backed off                         */
   int    quarantined;            /* health quarantine (not the repair pod's)   */
   time_t quarantined_at;
@@ -64,6 +64,10 @@ typedef struct {
    * stands. Persisted so a restart does not drop a quiet feed back to its
    * authoring-time cadence. */
   long   freshness_interval;
+  /* When the source's state row was last written, i.e. when its last
+   * scheduled run finished (source_sched_state.updated_at); 0 = never ran.
+   * Read-only: sched_state_save stamps the column with its own `now`. */
+  time_t last_run;
 } sched_state;
 
 typedef struct {
@@ -100,6 +104,24 @@ long sched_state_base(const sched_state *st, long declared, int adaptive);
  * What the due-time loop, the boot ramp, the cancel window and the backoff
  * work from. */
 long sched_row_interval(const sched_state *st, const source_def *d);
+/* Seconds between attempts as the scheduler will actually space them:
+ * sched_state_interval() over sched_row_interval() — the row's cadence under
+ * all three mechanisms, stretched by backoff or the quarantine probe cadence.
+ * 0 for a row that is not scheduled. THE figure to show as "runs every". */
+long sched_next_delay(const sched_state *st, const sched_policy *p,
+                      const source_def *d);
+/* The instant a health hold ends — the next quarantine probe, else the end of
+ * the backoff — or 0 when the row is under neither. */
+time_t sched_hold_until(const sched_state *st, const sched_policy *p);
+/* When the row is next due given that its last attempt was dispatched at
+ * `last`: the health hold when there is one, else last + sched_next_delay().
+ * 0 = not scheduled, or never ran and no hold (due now). The dispatcher, the
+ * boot plan and the source pages all read this one function. */
+time_t sched_next_due(const sched_state *st, const sched_policy *p,
+                      const source_def *d, time_t last);
+/* 1 for a maintenance pod (collector name begins with `_`): it runs in its
+ * own lane and the system-wide cadence policy does not apply to it. */
+int sched_is_pod(const source_def *d);
 /* Newest ISO `published_at` among the source's stored intel_items, aged
  * against `now` and bucketed; 0 when the source stored nothing dated. One
  * index seek (idx_intel_items_source). */
