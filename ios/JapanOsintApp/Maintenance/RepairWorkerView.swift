@@ -170,7 +170,7 @@ struct RepairWorkerView: View {
                 RepairCard(row: r, theme: theme,
                            busy: busyRepairs.contains(r.id),
                            onApprove: nil, onReject: nil,
-                           onRevert: r.isRevertable ? { await revert(r) } : nil)
+                           onRevert: revertAction(r))
             }
             moreFooter("auto_fixed", label: "", shown: rows.count, d)
         }
@@ -351,6 +351,15 @@ struct RepairWorkerView: View {
             moreRepairs = [:]; moreOverrides = []; moreWorst = []; lastPage = [:]
         }
         catch { if digest == nil { errorMessage = error.localizedDescription } }
+    }
+
+    /// The revert handler for a row that can be reverted, else nil. A
+    /// function rather than `cond ? { await … } : nil` inline: that ternary
+    /// inside a @ViewBuilder made Xcode 26.6's type checker fail with "failed to
+    /// produce diagnostic" (CI, 2026-11-14).
+    private func revertAction(_ r: RepairRow) -> (() async -> Void)? {
+        guard r.isRevertable else { return nil }
+        return { await revert(r) }
     }
 
     private func revert(_ r: RepairRow) async {

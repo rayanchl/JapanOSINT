@@ -216,7 +216,7 @@ struct SourcePipelineView: View {
                        busy: busyRepairs.contains(r.id),
                        onApprove: { await approve(r) },
                        onReject: { await reject(r) },
-                       onRevert: r.isRevertable ? { await revert(r) } : nil)
+                       onRevert: revertAction(r))
         }
     }
 
@@ -271,6 +271,15 @@ struct SourcePipelineView: View {
         } catch {
             actionError = "Loading more \(name) failed: \(error.localizedDescription)"
         }
+    }
+
+    /// The revert handler for a row that can be reverted, else nil. A
+    /// function rather than `cond ? { await … } : nil` inline: that ternary
+    /// inside a @ViewBuilder made Xcode 26.6's type checker fail with "failed to
+    /// produce diagnostic" (CI, 2026-11-14).
+    private func revertAction(_ r: RepairRow) -> (() async -> Void)? {
+        guard r.isRevertable else { return nil }
+        return { await revert(r) }
     }
 
     private func revert(_ r: RepairRow) async {
