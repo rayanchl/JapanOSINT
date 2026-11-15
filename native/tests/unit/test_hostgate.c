@@ -181,10 +181,20 @@ static void test_penalize(void) {
 /* 7. A penalty that lands while a thread is ALREADY parked is honoured: the
  * waiter's deadline was computed before the 429 arrived and used to fail open
  * inside the back-off. */
+/* The race this test must not lose to its own runner: the penalty has to land
+ * BEFORE the waiter's budget runs out, or the waiter fails open on the budget
+ * and the assertion reads a timing accident as a defect. A bare 30 ms nap was
+ * the whole margin (100 ms budget), and a macOS runner coalescing timers
+ * overslept it (CI run 656, 2026-11-14; the same test passed on main's own
+ * run). So the main thread waits until the waiter is PARKED (its `waiters`
+ * count, read under the lock), and the budget and penalty are wide enough that
+ * only a half-second stall could still lose the race. */
+#define LATE_BUDGET_MS  500
+#define LATE_PENALTY_MS 1500
 static void *late_waiter(void *arg) {
   struct timespec a, b;
   clock_gettime(CLOCK_MONOTONIC, &a);
-  int got = hostgate_acquire((const char *)arg, 100);
+  int got = hostgate_acquire((const char *)arg, LATE_BUDGET_MS);
   clock_gettime(CLOCK_MONOTONIC, &b);
   long el = (long)((b.tv_sec - a.tv_sec) * 1000 + (b.tv_nsec - a.tv_nsec) / 1000000);
   if (got) hostgate_release((const char *)arg);
@@ -198,12 +208,21 @@ static void test_penalty_reaches_a_parked_waiter(void) {
   assert(hostgate_acquire(u, 1000) == 1);   /* host now at its concurrency cap */
   pthread_t th;
   pthread_create(&th, NULL, late_waiter, (void *)u);
-  struct timespec nap = { 0, 30 * 1000000L };
-  nanosleep(&nap, NULL);                    /* the waiter is parked, budget 100 ms */
-  hostgate_penalize(u, 400);
+  /* wait until the waiter is parked on this host (bounded: 5 s) */
+  for (int i = 0; i < 5000; i++) {
+    pthread_mutex_lock(&g_mu);
+    hg_slot *ps = slot_lookup("late.example");   /* lookup() would re-take g_mu */
+    int parked = ps && ps->waiters > 0;
+    pthread_mutex_unlock(&g_mu);
+    if (parked) break;
+    struct timespec nap = { 0, 1000000L };
+    nanosleep(&nap, NULL);
+  }
+  hostgate_penalize(u, LATE_PENALTY_MS);
   void *ret;
   pthread_join(th, &ret);
-  assert((long)(intptr_t)ret >= 350);       /* waited the penalty, not 100 ms */
+  /* waited the penalty, not the budget */
+  assert((long)(intptr_t)ret >= LATE_PENALTY_MS - 200);
   /* It failed open at the cap, and that start is stamped. */
   hg_slot *s = lookup("late.example");
   assert(s && mono_ms() - s->last_start_ms < 200);
