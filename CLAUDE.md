@@ -706,8 +706,7 @@ automated-access policy asks every client to declare. That agent had been in
 NINE places — a `#define` in `collectors/sources/sec_edgar.c`, another in
 `sec_filing_diff.c`, and a `.headers` User-Agent on each of seven rows — and
 the two collectors announced **`contact@example.com`**, which passes the filter
-and is not a contact route. One line per host now (the repository owner's
-address, their decision of 2026-10-24), and **`$SEC_CONTACT_UA` replaces it**
+and is not a contact route. One line per host now (`HA_SEC`), and **`$SEC_CONTACT_UA` replaces it**
 for a deployment that is not this one. That variable used to be read inside
 `sec_filing_diff.c`, where the per-host table would then have overruled it —
 an operator knob a later change silently defeated, exactly the shape
@@ -719,6 +718,21 @@ and `probe_hp_batch.py` all read. Measured after, all nine SEC sources store:
 320/53/37/32/31, `SEC_RISK_FACTOR_DIFF` 1 — and unchanged with the variable
 set. **A 403 that every honest agent draws is not always a token: ask whether
 the host wants a contact address.**
+
+**THE CONTACT IS NOW A CREDENTIAL, `SEC_CONTACT`** (2026-11-16, the owner's
+decision; no personal address is in the tree any more). `HA_SEC`'s string is a
+template (`JapanOSINT/1.0 research (%CONTACT%)`) filled by `http_contact_ua()`
+from `$SEC_CONTACT_UA` (full string, still wins) else `SEC_CONTACT` (an address
+or a full agent string), which resolves like any API key: `PUT /api/keys/
+SEC_CONTACT` (validated at set time: an `@` address, no CR/LF; a 400 otherwise)
+writes `data/api-keys.json` and the process environment. **Unset, no request
+goes to an SEC host**: `http_request()` refuses it with a named reason
+(`http_credential_refusal()`), and hpengine rows, the three bespoke SEC
+collectors and, as the catch-all, `core/scheduler.c` file the same
+`collector-status-notice` a key-gated source does (`audit_registry_emit.py`
+reads it as `GATED`). `--host-agents` shows `(unset: SEC_CONTACT)`. The same
+sweep moved the two Unpaywall rows onto `key_env = UNPAYWALL_EMAIL` and dropped
+the optional `mailto=` from the Crossref/OpenAlex rows.
 
 **Two sessions measured SEC on the same day and agree**, which is worth more
 than either reading alone. The agent kept is the one that passed all THREE

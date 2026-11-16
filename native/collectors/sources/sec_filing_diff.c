@@ -242,10 +242,10 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   /* SEC refuses a User-Agent with no contact address, so with SEC_CONTACT
    * unset every request is a certain 403: say so as data (rule 1's gated
    * note), spend no request, and return 0 like every key-gated sibling. */
-  if (http_host_needs_credential("https://data.sec.gov/"))
+  if (http_host_needs_credential("https://www.sec.gov/files/"))
     return jo_needs_credential(sink, "SEC_RISK_FACTOR_DIFF", "SEC risk-factor diff",
                                (const char *[]){ "SEC_CONTACT", NULL },
-                               "https://data.sec.gov/",
+                               "https://www.sec.gov/files/",
                                "an e-mail address SEC can reach, set from the "
                                "Keys screen or the environment");
 

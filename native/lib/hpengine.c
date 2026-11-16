@@ -6139,6 +6139,7 @@ date_step_back:
                         "an e-mail address SEC can reach, set from the Keys "
                         "screen or the environment — SEC answers 403 to a "
                         "User-Agent without one");
+    hard_error = 0;       /* gated is a state, not a failure — rc 0 like key_env */
   } else if (out == 0 && (first_status != 200 || st.unreadable) && !first_nodata) {
     cJSON *p = cJSON_CreateObject();
     cJSON_AddStringToObject(p, "source_id", s->id);

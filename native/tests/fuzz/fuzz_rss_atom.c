@@ -26,6 +26,8 @@ int http_request(http_client *c, const char *method, const char *url,
 void http_response_free(http_response *r) { if (r) { free(r->body); r->body = NULL; } }
 int http_last_transport_error(void) { return HTTP_TE_NONE; }
 int http_last_tls_cause(void) { return HTTP_TLS_NONE; }
+const char *http_credential_refusal(void) { return NULL; }
+void http_credential_refusal_reset(void) {}
 const char *http_tls_cause_label(int cause) { (void)cause; return ""; }
 const char *http_tls_cause_remedy(int cause) { (void)cause; return ""; }
 int http_request_max(http_client *c, const char *method, const char *url,

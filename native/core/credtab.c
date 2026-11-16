@@ -131,6 +131,26 @@ static const cred_def CREDS[] = {
   {"tiktok-geo",                {"TIKTOK_MS_TOKEN"},{0},{0}},
   {"windy-japan",               {"WINDY_API_KEY"},{0},{0}},
   {"yahoo-map-api",             {"YAHOO_APP_ID"},{0},{0}},
+  /* SEC answers 403 to a User-Agent with no contact address, so every SEC
+   * source needs the deployment's own (SEC_CONTACT; see core/httpclient.h).
+   * Unpaywall's API requires an email query parameter, the same kind of thing. */
+  {"US_SEC_ALJ_ACTIONS",                    {"SEC_CONTACT"},{0},{0}},
+  {"US_SEC_LITIGATION_RELEASES",            {"SEC_CONTACT"},{0},{0}},
+  {"US_SEC_TRADING_SUSPENSIONS",            {"SEC_CONTACT"},{0},{0}},
+  {"SEC_EDGAR_FRAMES",                      {"SEC_CONTACT"},{0},{0}},
+  {"SEC_EDGAR_DAILY_INDEX_LISTING",         {"SEC_CONTACT"},{0},{0}},
+  {"SEC_EDGAR_DAILY_INDEX_CURRENT_QTR_LISTING",{"SEC_CONTACT"},{0},{0}},
+  {"SEC_EDGAR_FULL_INDEX_LISTING",          {"SEC_CONTACT"},{0},{0}},
+  {"SEC_EDGAR_FEED_LISTING",                {"SEC_CONTACT"},{0},{0}},
+  {"SEC_EDGAR_OLDLOADS_LISTING",            {"SEC_CONTACT"},{0},{0}},
+  {"SEC_EDGAR_CIK_DIRECTORY_PIVOT",         {"SEC_CONTACT"},{0},{0}},
+  {"SEC_COMPANY_FACTS",                     {"SEC_CONTACT"},{0},{0}},
+  {"SEC_COMPANY_CONCEPT",                   {"SEC_CONTACT"},{0},{0}},
+  {"SEC_EDGAR_SEARCH",                      {"SEC_CONTACT"},{0},{0}},
+  {"SEC_RISK_FACTOR_DIFF",                  {"SEC_CONTACT"},{0},{0}},
+  {"SEC_FULLTEXT",                          {"SEC_CONTACT"},{0},{0}},
+  {"UNPAYWALL_DOI",                         {"UNPAYWALL_EMAIL"},{0},{0}},
+  {"unpaywall-doi",                         {"UNPAYWALL_EMAIL"},{0},{0}},
 };
 
 const cred_def *cred_get(const char *id) {
