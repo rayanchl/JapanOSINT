@@ -96,6 +96,16 @@ typedef struct {
   sqlite3_stmt *q_probe, *q_upsert, *q_touch;
   fts_stmts     fts;
   EVP_MD_CTX   *md;           /* content-hash context, reused across emits */
+  /* BATCHED WRITES (see the block above emit()). */
+  struct pend **buf;          /* records accepted, not yet written          */
+  int    nbuf, bufcap;
+  size_t nbytes;              /* rough size of what is buffered             */
+  long long t0_ms;            /* when the oldest buffered record arrived    */
+  int    batch_max;           /* records per transaction; <=1 = per-record  */
+  int    batch_ms;            /* oldest buffered record's age that flushes  */
+  size_t batch_bytes;
+  long   owed_rec, owed_notice;  /* refusals not yet returned by an emit()  */
+  long   failed_total;        /* every record the database refused          */
 } sink_state;
 
 static void fts_stmts_free(fts_stmts *f) {
@@ -256,10 +266,35 @@ static void bind_txt(sqlite3_stmt *s, int i, const char *v) {
  * `seg_title`/`seg_body` arrive ALREADY SEGMENTED: emit() hands the same two
  * strings to simhash_on_item_segmented() after the commit, which used to run
  * MeCab over title and body a second time to get them. */
-static void fts_write(sqlite3 *h, fts_stmts *fs, const char *uid,
-                      const char *seg_title, const char *seg_body,
-                      const char *summary, const char *link, const char *author,
-                      const char *tags_json, const char *props_json) {
+/* The five derived strings the FTS insert binds, computed WITHOUT touching the
+ * database. Split out of fts_write() so the batched sink can run MeCab and the
+ * JSON flattening on the collector's thread at emit() time and hold the write
+ * lock only for the statements (see BATCHED WRITES below). */
+typedef struct { char *ss, *sl, *sa, *sg, *sp; } fts_prep;
+
+static void fts_prep_make(fts_prep *p, const char *summary, const char *link,
+                          const char *author, const char *tags_json,
+                          const char *props_json) {
+  p->ss = fts_segment(summary ? summary : "");
+  /* Latin passes fts_segment straight through, so segmenting the URL/author
+   * costs nothing on the common case and still tokenizes a Japanese byline. */
+  p->sl = fts_segment(link ? link : "");
+  p->sa = fts_segment(author ? author : "");
+  char *ftags = fts_flatten_json(tags_json);
+  char *fprops = fts_flatten_json(props_json);
+  p->sg = fts_segment(ftags);
+  p->sp = fts_segment(fprops);
+  free(ftags); free(fprops);
+}
+
+static void fts_prep_free(fts_prep *p) {
+  free(p->ss); free(p->sl); free(p->sa); free(p->sg); free(p->sp);
+  memset(p, 0, sizeof *p);
+}
+
+static void fts_write_prepped(sqlite3 *h, fts_stmts *fs, const char *uid,
+                              const char *seg_title, const char *seg_body,
+                              const fts_prep *pp) {
   sqlite3_stmt *s;
   sqlite3_int64 old = -1;
   if ((s = stmt_get(h, &fs->map_sel,
@@ -268,16 +303,6 @@ static void fts_write(sqlite3 *h, fts_stmts *fs, const char *uid,
     if (sqlite3_step(s) == SQLITE_ROW) old = sqlite3_column_int64(s, 0);
     sqlite3_reset(s);
   }
-  char *ss = fts_segment(summary ? summary : "");
-  /* Latin passes fts_segment straight through, so segmenting the URL/author
-   * costs nothing on the common case and still tokenizes a Japanese byline. */
-  char *sl = fts_segment(link ? link : "");
-  char *sa = fts_segment(author ? author : "");
-  char *ftags = fts_flatten_json(tags_json);
-  char *fprops = fts_flatten_json(props_json);
-  char *sg = fts_segment(ftags);
-  char *sp = fts_segment(fprops);
-  free(ftags); free(fprops);
   /* The rowid must come from THIS insert. Reading last_insert_rowid()
    * unconditionally meant that when the FTS insert failed or was never prepared,
    * the map recorded whatever rowid the preceding intel_items upsert produced —
@@ -314,14 +339,14 @@ static void fts_write(sqlite3 *h, fts_stmts *fs, const char *uid,
     sqlite3_bind_text(s, 1, uid, -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(s, 2, seg_title ? seg_title : "", -1, SQLITE_TRANSIENT);
     sqlite3_bind_text(s, 3, seg_body ? seg_body : "", -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(s, 4, ss, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(s, 4, pp->ss, -1, SQLITE_TRANSIENT);
     /* ?5..?8 exist only in the v2 statement; binding an unused index on the
      * v1 one is a no-op range error, not a failure, but skip it anyway. */
     if (fts_index_is_v2(h)) {
-      sqlite3_bind_text(s, 5, sl, -1, SQLITE_TRANSIENT);
-      sqlite3_bind_text(s, 6, sa, -1, SQLITE_TRANSIENT);
-      sqlite3_bind_text(s, 7, sg, -1, SQLITE_TRANSIENT);
-      sqlite3_bind_text(s, 8, sp, -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text(s, 5, pp->sl, -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text(s, 6, pp->sa, -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text(s, 7, pp->sg, -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text(s, 8, pp->sp, -1, SQLITE_TRANSIENT);
     }
     inserted = (sqlite3_step(s) == SQLITE_DONE);
     sqlite3_reset(s);
@@ -330,7 +355,6 @@ static void fts_write(sqlite3 *h, fts_stmts *fs, const char *uid,
                     "existing index row is left in place\n",
             uid, sqlite3_errmsg(h));
   }
-  free(ss); free(sl); free(sa); free(sg); free(sp);
   if (!inserted) {
     fprintf(stderr, "[intel] fts insert failed for %s: %s\n", uid, sqlite3_errmsg(h));
     return;                       /* leave the existing map row alone */
@@ -343,6 +367,16 @@ static void fts_write(sqlite3 *h, fts_stmts *fs, const char *uid,
     sqlite3_bind_int64(s, 2, rid);
     sqlite3_step(s); sqlite3_reset(s);
   }
+}
+
+static void fts_write(sqlite3 *h, fts_stmts *fs, const char *uid,
+                      const char *seg_title, const char *seg_body,
+                      const char *summary, const char *link, const char *author,
+                      const char *tags_json, const char *props_json) {
+  fts_prep pp;
+  fts_prep_make(&pp, summary, link, author, tags_json, props_json);
+  fts_write_prepped(h, fs, uid, seg_title, seg_body, &pp);
+  fts_prep_free(&pp);
 }
 
 /* See intel.h. Deliberately routed through the same fts_write() the ingest
@@ -499,28 +533,149 @@ static int content_hash(sink_state *st, const intel_item *it,
   return 1;
 }
 
-static int emit(struct intel_sink *self, const intel_item *it) {
-  sink_state *st = self->ctx;
-  sqlite3 *h = st->db->h;
-  /* Statements belong to a connection; a sink re-pointed at another handle
-   * (never done today) must not step a statement from the old one. */
-  if (st->stmt_db != h) { sink_stmts_free(st); st->stmt_db = h; }
-
-  /* uid: explicit → "<source>|<remote_key>" (see make_uid for the long-key
-   * rule). */
+/* ── BATCHED WRITES ───────────────────────────────────────────────────────
+ *
+ * One BEGIN…COMMIT per record cost 132.9 KB of WAL per REWRITTEN record
+ * (tests/bench/bench_sink_rewrite.c) and a second transaction for the simhash
+ * fingerprint — a WAL frame is a whole page however few bytes changed, so the
+ * per-commit page set (the row, its ten-plus index pages, the FTS shadow
+ * tables, the uid_map) was paid again for every record. A scheduled run emits
+ * hundreds to hundreds of thousands of records through ONE sink, so the sink
+ * now groups them.
+ *
+ * WHAT IS BATCHED, AND WHAT IS NOT. emit() does everything that needs no
+ * database on the collector's own thread — uid, timestamp, content hash,
+ * MeCab segmentation of title/body/summary/link/author/tags/properties — and
+ * parks the finished record in memory (`pend`). Nothing is written, and NO
+ * TRANSACTION IS OPEN, while the collector goes off to fetch the next page.
+ * flush() then runs the same probe / upsert / FTS statements the per-record
+ * path ran, for up to JO_SINK_BATCH records inside ONE `BEGIN IMMEDIATE …
+ * COMMIT`, and afterwards the side effects that always ran after the commit:
+ * alert_eval_on_item for each NEW row, then simhash_on_item_segmented for each
+ * written row (these in one more transaction, simhash joins an open one).
+ *
+ * WHY DEFER INSTEAD OF HOLDING A TRANSACTION OPEN. The collector's emit()
+ * calls are interleaved with network fetches (a page, a detail hop). A write
+ * transaction left open across one of those holds the WAL's single writer
+ * lock for as long as the upstream takes — tens of seconds on a slow host —
+ * and every other worker, the HTTP loop included, then waits on busy_timeout
+ * (5 s) and fails. A buffered record holds no lock at all. The lock is held
+ * only inside flush(), whose cost is statements only (the CPU-heavy
+ * segmentation was done at emit() time): ~0.1 ms a record, ~20 ms a batch of
+ * 200 on the bench, and it is BEGIN IMMEDIATE so the wait for the lock is
+ * taken up front under busy_timeout rather than discovered halfway as an
+ * un-retryable SQLITE_BUSY_SNAPSHOT.
+ *
+ * WHEN IT FLUSHES: the buffer reaches JO_SINK_BATCH records (default 200) or
+ * JO_SINK_BATCH_BYTES (8 MB, one 5 MB body must not pin 200 of them in
+ * memory), or the OLDEST buffered record is JO_SINK_BATCH_MS old (500) when an
+ * emit() arrives, and always when the stored counters are read, on
+ * intel_sink_flush() and on intel_sink_free(). A buffer left alone while the
+ * collector waits on HTTP is not written until the next emit or the end of
+ * the run: that costs VISIBILITY (the rows are not in the database yet), never
+ * a lock and never a record, because the scheduler always reads the counters
+ * and frees the sink. JO_SINK_BATCH=1 restores the per-record path exactly:
+ * emit() returns 1/0/-1 as source.h documents and nothing is deferred. The
+ * entity-pivot dispatcher's sinks (intel_sink_rebind) are always that kind: its
+ * dual_emit counts emit()'s answer into record_count/any_new and reads
+ * nothing back from the table, but the answer must be exact.
+ *
+ * WHAT A BATCHED emit() RETURNS. 0 for an accepted record (new-ness is not
+ * known until the batch is written; nothing in the tree branches on 1), -1
+ * for an item with no uid, exactly as before. A record the DATABASE refuses
+ * is learned at flush time, so it is reported on a LATER emit() of the same
+ * kind (record or notice) as -1, once per refused record, which is what the
+ * scheduler's `failed=` counter reads; whatever is still owed when the run
+ * ends is intel_sink_failed_pending().
+ *
+ * FAILURE. If anything in a batch fails — a statement refused, the COMMIT
+ * refused — the batch is rolled back and its records are committed ONE BY
+ * ONE, each in its own transaction, with the per-record code's own verdict: so
+ * one bad record cannot cost its neighbours, and only a record that fails on
+ * its own is counted failed. If two consecutive records cannot even BEGIN (a
+ * lock storm, which busy_timeout already waited out twice) the rest of the
+ * batch is counted failed at once instead of waiting 5 s each. `stored` counts a
+ * uid only after the commit that wrote it. */
+typedef struct pend {
   char uid[UID_CAP];
-  if (make_uid(uid, st->source_id, it) != 0) {
+  char fetched[40];
+  unsigned char ch[CONTENT_HASH_LEN];
+  int  have_hash, is_notice, has_geo;
+  double lat, lon;
+  char *title, *body, *summary, *link, *author, *lang, *published_at,
+       *geojson, *rtype, *subsrc, *tags, *props;
+  char *seg_title, *seg_body;
+  fts_prep fp;
+  size_t bytes;
+} pend;
+
+static char *dup0(const char *s, size_t *bytes) {
+  if (!s) return NULL;
+  size_t n = strlen(s);
+  *bytes += n;
+  char *d = malloc(n + 1);
+  if (d) memcpy(d, s, n + 1);
+  return d;
+}
+
+static void pend_free(pend *p) {
+  if (!p) return;
+  free(p->title); free(p->body); free(p->summary); free(p->link);
+  free(p->author); free(p->lang); free(p->published_at); free(p->geojson);
+  free(p->rtype); free(p->subsrc); free(p->tags); free(p->props);
+  free(p->seg_title); free(p->seg_body);
+  fts_prep_free(&p->fp);
+  free(p);
+}
+
+static long long mono_ms(void) {
+  struct timespec ts; clock_gettime(CLOCK_MONOTONIC, &ts);
+  return (long long)ts.tv_sec * 1000 + ts.tv_nsec / 1000000;
+}
+
+/* Everything about a record that needs no database. NULL when the item has no
+ * uid/remote_key (the caller reports -1, as before) or on OOM. */
+static pend *pend_make(sink_state *st, const intel_item *it, int *no_uid) {
+  *no_uid = 0;
+  pend *p = calloc(1, sizeof *p);
+  if (!p) return NULL;
+  if (make_uid(p->uid, st->source_id, it) != 0) {
     fprintf(stderr, "[intel] %s: item without uid/remote_key skipped\n",
             st->source_id);
-    return -1;
+    *no_uid = 1; free(p); return NULL;
   }
+  iso_now(p->fetched, sizeof p->fetched);
+  p->have_hash = content_hash(st, it, p->ch);
+  p->is_notice = intel_item_is_notice(it);
+  p->has_geo = it->has_geo; p->lat = it->lat; p->lon = it->lon;
+  size_t b = 0;
+  p->title = dup0(it->title, &b);       p->body = dup0(it->body, &b);
+  p->summary = dup0(it->summary, &b);   p->link = dup0(it->link, &b);
+  p->author = dup0(it->author, &b);     p->lang = dup0(it->lang, &b);
+  p->published_at = dup0(it->published_at, &b);
+  p->geojson = dup0(it->geometry_geojson, &b);
+  p->rtype = dup0(it->record_type, &b); p->subsrc = dup0(it->sub_source_id, &b);
+  p->tags  = dup0(it->tags_json ? it->tags_json : "[]", &b);
+  p->props = dup0(it->properties_json ? it->properties_json : "{}", &b);
+  /* Segmented once, used twice: the FTS mirror inside the transaction and the
+   * simhash fingerprint after it. */
+  p->seg_title = fts_segment(it->title ? it->title : "");
+  p->seg_body  = fts_segment_body(it->body);
+  fts_prep_make(&p->fp, it->summary, it->link, it->author,
+                p->tags ? p->tags : "[]", p->props ? p->props : "{}");
+  p->bytes = b * 2 + sizeof *p;     /* the segmented copies are about as big again */
+  return p;
+}
 
-  char fetched[40]; iso_now(fetched, sizeof fetched);
-  int has_geo = it->has_geo;
-  const char *geom_src = has_geo ? "native" : NULL;
-  unsigned char ch[CONTENT_HASH_LEN];
-  int have_hash = content_hash(st, it, ch);
+enum { RW_FAIL = -1, RW_UNCHANGED = 0, RW_WRITTEN = 1 };
 
+/* The per-record statements, with NO transaction handling — the caller owns
+ * BEGIN/COMMIT. Returns RW_FAIL, RW_UNCHANGED (only last_seen_at moved) or
+ * RW_WRITTEN with *is_new set. Counts nothing and runs no side effect: those
+ * belong to what the caller knows about the COMMIT. */
+static int rec_write(sink_state *st, sqlite3 *h, const pend *p, int *is_new_out) {
+  const char *uid = p->uid;
+  *is_new_out = 0;
   /* Is this genuinely a new row? source.h documents emit() as "1 if a NEW
    * row, 0 if updated", but that was never true: after
    * "INSERT ... ON CONFLICT(uid) DO UPDATE" sqlite3_changes() is 1 either
@@ -530,11 +685,13 @@ static int emit(struct intel_sink *self, const intel_item *it) {
    * This matters now that alert_eval hangs off ingest: without it, a rule
    * with dedup_window_sec=0 would re-fire on every scheduled refresh of an
    * unchanged item — a collector on a 60s interval would emit an alert a
-   * minute, forever. No existing caller branches on the return value
-   * (checked across all 569 emit() call sites), so tightening it is safe.
+   * minute, forever.
    *
    * The same probe reads the row's content hash and whether it has a search
-   * index row, for the unchanged-re-fetch decision below. */
+   * index row, for the unchanged-re-fetch decision below. Inside a batch it
+   * also sees the batch's own earlier writes (same connection), so a uid that
+   * repeats within a batch is probed exactly as it would have been when each
+   * record had its own commit. */
   int is_new = 1, unchanged = 0;
   {
     sqlite3_stmt *ex = stmt_get(h, &st->q_probe,
@@ -546,9 +703,9 @@ static int emit(struct intel_sink *self, const intel_item *it) {
       if (sqlite3_step(ex) == SQLITE_ROW) {
         is_new = 0;
         const void *old = sqlite3_column_blob(ex, 0);
-        unchanged = have_hash && old &&
+        unchanged = p->have_hash && old &&
                     sqlite3_column_bytes(ex, 0) == CONTENT_HASH_LEN &&
-                    memcmp(old, ch, CONTENT_HASH_LEN) == 0 &&
+                    memcmp(old, p->ch, CONTENT_HASH_LEN) == 0 &&
                     sqlite3_column_int(ex, 1);
       }
       sqlite3_reset(ex);
@@ -573,7 +730,7 @@ static int emit(struct intel_sink *self, const intel_item *it) {
    * date-fallback filters (COALESCE(published_at, fetched_at)) would otherwise
    * show an undated, unchanged record as new on every refresh. The one reader
    * that means "last time the source was fetched" — the per-source freshness
-   * in intelapi_intel_sources_view() — reads last_seen_at.
+   * in intel_sources_view() — reads last_seen_at.
    *
    * `stored` counts it exactly as before (distinct uids left behind), and it
    * is not new, so no alert fires — the same answers the full path gives. */
@@ -583,100 +740,262 @@ static int emit(struct intel_sink *self, const intel_item *it) {
     int trc = SQLITE_ERROR;
     if (t) {
       sqlite3_bind_text(t, 1, uid, -1, SQLITE_TRANSIENT);
-      sqlite3_bind_text(t, 2, fetched, -1, SQLITE_TRANSIENT);
+      sqlite3_bind_text(t, 2, p->fetched, -1, SQLITE_TRANSIENT);
       trc = sqlite3_step(t);
       sqlite3_reset(t);
     }
     if (trc != SQLITE_DONE) {
       fprintf(stderr, "[intel] %s: last_seen_at update failed for %s (%s) — "
                       "row not counted\n", st->source_id, uid, sqlite3_errmsg(h));
-      return -1;
+      return RW_FAIL;
     }
-    if (seen_add(st, uid) && intel_item_is_notice(it)) st->seen_notice_n++;
-    return 0;
+    return RW_UNCHANGED;
   }
 
-  /* Segmented once, used twice: the FTS mirror inside the transaction and the
-   * simhash fingerprint after it. */
-  char *seg_title = fts_segment(it->title ? it->title : "");
-  char *seg_body  = fts_segment_body(it->body);
-
-  sqlite3_exec(h, "BEGIN", NULL, NULL, NULL);
   sqlite3_stmt *s = stmt_get(h, &st->q_upsert, SQL_UPSERT);
-  if (!s) {
-    sqlite3_exec(h, "ROLLBACK", NULL, NULL, NULL);
-    free(seg_title); free(seg_body);
-    return -1;
-  }
+  if (!s) return RW_FAIL;
   bind_txt(s, 1, uid);
   bind_txt(s, 2, st->source_id);
-  bind_txt(s, 3, it->title);
-  bind_txt(s, 4, it->body);
-  bind_txt(s, 5, it->summary);
-  bind_txt(s, 6, it->link);
-  bind_txt(s, 7, it->author);
-  bind_txt(s, 8, it->lang);
-  bind_txt(s, 9, it->published_at);
-  bind_txt(s, 10, fetched);
-  bind_txt(s, 11, it->tags_json ? it->tags_json : "[]");
-  bind_txt(s, 12, it->properties_json ? it->properties_json : "{}");
-  if (has_geo) { sqlite3_bind_double(s, 13, it->lat); sqlite3_bind_double(s, 14, it->lon); }
+  bind_txt(s, 3, p->title);
+  bind_txt(s, 4, p->body);
+  bind_txt(s, 5, p->summary);
+  bind_txt(s, 6, p->link);
+  bind_txt(s, 7, p->author);
+  bind_txt(s, 8, p->lang);
+  bind_txt(s, 9, p->published_at);
+  bind_txt(s, 10, p->fetched);
+  bind_txt(s, 11, p->tags);
+  bind_txt(s, 12, p->props);
+  if (p->has_geo) { sqlite3_bind_double(s, 13, p->lat); sqlite3_bind_double(s, 14, p->lon); }
   else { sqlite3_bind_null(s, 13); sqlite3_bind_null(s, 14); }
-  bind_txt(s, 15, geom_src);
-  bind_txt(s, 16, has_geo ? fetched : NULL);
-  bind_txt(s, 17, it->record_type);
-  bind_txt(s, 18, it->sub_source_id);
-  bind_txt(s, 19, it->geometry_geojson);
+  bind_txt(s, 15, p->has_geo ? "native" : NULL);
+  bind_txt(s, 16, p->has_geo ? p->fetched : NULL);
+  bind_txt(s, 17, p->rtype);
+  bind_txt(s, 18, p->subsrc);
+  bind_txt(s, 19, p->geojson);
   bind_txt(s, 20, st->tenant_id[0] ? st->tenant_id : "legacy");
-  if (have_hash) sqlite3_bind_blob(s, 21, ch, CONTENT_HASH_LEN, SQLITE_TRANSIENT);
-  else           sqlite3_bind_null(s, 21);
+  if (p->have_hash) sqlite3_bind_blob(s, 21, p->ch, CONTENT_HASH_LEN, SQLITE_TRANSIENT);
+  else              sqlite3_bind_null(s, 21);
   int rc = sqlite3_step(s);
   sqlite3_reset(s);
-  if (rc != SQLITE_DONE) {
-    sqlite3_exec(h, "ROLLBACK", NULL, NULL, NULL);
-    free(seg_title); free(seg_body);
-    return -1;
-  }
+  if (rc != SQLITE_DONE) return RW_FAIL;
 
   int changes = sqlite3_changes(h); /* 1 insert, or update */
-  fts_write(h, &st->fts, uid, seg_title, seg_body, it->summary, it->link,
-            it->author, it->tags_json ? it->tags_json : "[]",
-            it->properties_json ? it->properties_json : "{}");
+  fts_write_prepped(h, &st->fts, uid, p->seg_title, p->seg_body, &p->fp);
+  *is_new_out = (changes && is_new);
+  return RW_WRITTEN;
+}
+
+/* One transaction around a run of records. Returns 1 when every record in
+ * [lo,hi) was written and the COMMIT took; 0 after a ROLLBACK otherwise (a
+ * record refused, BEGIN or COMMIT failed — *begin_failed says which of the
+ * last two was BEGIN). res[] is filled for the records written. */
+static int txn_write(sink_state *st, sqlite3 *h, pend **b, int lo, int hi,
+                     int *res, int *isnew, int *begin_failed) {
+  *begin_failed = 0;
+  if (sqlite3_exec(h, "BEGIN IMMEDIATE", NULL, NULL, NULL) != SQLITE_OK) {
+    fprintf(stderr, "[intel] %s: BEGIN failed (%s)\n", st->source_id,
+            sqlite3_errmsg(h));
+    *begin_failed = 1;
+    return 0;
+  }
+  for (int i = lo; i < hi; i++) {
+    res[i] = rec_write(st, h, b[i], &isnew[i]);
+    if (res[i] == RW_FAIL) {
+      fprintf(stderr, "[intel] %s: write failed for %s (%s)\n", st->source_id,
+              b[i]->uid, sqlite3_errmsg(h));
+      sqlite3_exec(h, "ROLLBACK", NULL, NULL, NULL);
+      return 0;
+    }
+  }
   /* THE COMMIT IS THE WRITE. Its return code used to be ignored, so a COMMIT
    * that failed (SQLITE_FULL on a full volume, SQLITE_IOERR, a lock that
    * could not be had) left emit() returning success for a row that was never
    * written, and `stored` counting it. Roll back explicitly — some failures
-   * leave the transaction open on this connection, and the next emit's BEGIN
-   * would then fail and fold it into an unrelated row's transaction. */
+   * leave the transaction open on this connection, and the next BEGIN would
+   * then fail and fold it into an unrelated row's transaction. */
   if (sqlite3_exec(h, "COMMIT", NULL, NULL, NULL) != SQLITE_OK) {
-    fprintf(stderr, "[intel] %s: COMMIT failed for %s (%s) — row not stored\n",
-            st->source_id, uid, sqlite3_errmsg(h));
+    fprintf(stderr, "[intel] %s: COMMIT failed for %d record(s) starting at %s "
+                    "(%s) — not stored\n", st->source_id, hi - lo, b[lo]->uid,
+            sqlite3_errmsg(h));
     sqlite3_exec(h, "ROLLBACK", NULL, NULL, NULL);
-    free(seg_title); free(seg_body);
-    return -1;
+    return 0;
   }
-  /* Rule 4b (see the block at the top of this file). Counted only once the
-   * COMMIT has succeeded, so the set holds exactly the uids that are now
-   * rows. */
-  if (seen_add(st, uid) && intel_item_is_notice(it)) st->seen_notice_n++;
+  return 1;
+}
 
+/* Write every buffered record, then run the post-commit side effects. Returns
+ * the verdict of the LAST record (RW_WRITTEN with *new_out, RW_UNCHANGED or
+ * RW_FAIL) — which is what emit() returns for a batch of one. */
+static int flush_buf(sink_state *st, int *new_out) {
+  int n = st->nbuf;
+  if (new_out) *new_out = 0;
+  if (n == 0) return RW_UNCHANGED;
+  sqlite3 *h = st->db->h;
+  if (st->stmt_db != h) { sink_stmts_free(st); st->stmt_db = h; }
+  pend **b = st->buf;
+  int *res = calloc((size_t)n, sizeof *res), *isnew = calloc((size_t)n, sizeof *isnew);
+  if (!res || !isnew) {
+    /* Cannot even hold the verdicts: refuse the batch, loudly, as failed. */
+    fprintf(stderr, "[intel] %s: OOM flushing %d record(s) — counted failed\n",
+            st->source_id, n);
+    free(res); free(isnew);
+    for (int i = 0; i < n; i++) {
+      if (b[i]->is_notice) st->owed_notice++; else st->owed_rec++;
+      st->failed_total++;
+      pend_free(b[i]);
+    }
+    st->nbuf = 0; st->nbytes = 0;
+    return RW_FAIL;
+  }
+
+  int bf = 0;
+  if (!txn_write(st, h, b, 0, n, res, isnew, &bf)) {
+    if (n == 1) {
+      res[0] = RW_FAIL;                 /* the per-record verdict, as before */
+    } else {
+      /* One bad record (or one failed COMMIT) must not take its neighbours
+       * with it: redo the batch a record at a time. Two BEGINs refused in a
+       * row is a lock storm — busy_timeout has waited twice already — so the
+       * remainder is failed at once rather than at 5 s apiece. */
+      int storm = 0;
+      for (int i = 0; i < n; i++) {
+        if (storm >= 2) { res[i] = RW_FAIL; continue; }
+        int one_bf = 0;
+        int ok = txn_write(st, h, b, i, i + 1, res, isnew, &one_bf);
+        if (!ok) res[i] = RW_FAIL;
+        storm = one_bf ? storm + 1 : 0;
+      }
+    }
+  }
+
+  /* From here a record is either committed (res >= 0) or refused. */
+  int last = res[n - 1], last_new = isnew[n - 1];
+  const char *ten = st->tenant_id[0] ? st->tenant_id : "legacy";
+  int nsimhash = 0;
+  for (int i = 0; i < n; i++) {
+    if (res[i] == RW_FAIL) {
+      if (b[i]->is_notice) st->owed_notice++; else st->owed_rec++;
+      st->failed_total++;
+      continue;
+    }
+    /* Rule 4b (see the block at the top of this file). Counted only once the
+     * COMMIT has succeeded, so the set holds exactly the uids that are now
+     * rows. */
+    if (seen_add(st, b[i]->uid) && b[i]->is_notice) st->seen_notice_n++;
+    if (res[i] == RW_WRITTEN) nsimhash++;
+  }
   /* Alert matching (roadmap P0.1) — AFTER the commit, never inside it. An
    * alert write must not be able to roll back the ingest that produced it,
    * and a rule evaluation must see the row it is evaluating. Only new rows
    * are evaluated; re-ingest of an unchanged item is not news. */
-  if (changes && is_new)
-    alert_eval_on_item(st->db, st->tenant_id[0] ? st->tenant_id : "legacy", uid);
-
+  for (int i = 0; i < n; i++)
+    if (res[i] == RW_WRITTEN && isnew[i])
+      alert_eval_on_item(st->db, ten, b[i]->uid);
   /* Near-duplicate clustering (roadmap 25). Deliberately NOT gated on is_new:
    * an UPDATE can change title/body, and a stale fingerprint would cluster the
-   * row by text it no longer has. */
-  if (changes)
-    simhash_on_item_segmented(st->db, st->tenant_id[0] ? st->tenant_id : "legacy",
-                              uid, seg_title, seg_body);
-  free(seg_title); free(seg_body);
+   * row by text it no longer has. simhash joins a transaction that is already
+   * open on the connection, so a batch of them shares one commit instead of
+   * paying one each; a failure there leaves simhash NULL for the backfill, as
+   * it always has, and cannot touch the ingest, which is already committed. */
+  if (nsimhash > 0) {
+    int wrap = nsimhash > 1 &&
+               sqlite3_exec(h, "BEGIN IMMEDIATE", NULL, NULL, NULL) == SQLITE_OK;
+    for (int i = 0; i < n; i++)
+      if (res[i] == RW_WRITTEN)
+        simhash_on_item_segmented(st->db, ten, b[i]->uid, b[i]->seg_title,
+                                  b[i]->seg_body);
+    if (wrap && sqlite3_exec(h, "COMMIT", NULL, NULL, NULL) != SQLITE_OK) {
+      fprintf(stderr, "[intel] %s: simhash batch COMMIT failed (%s) — "
+                      "fingerprints left for the backfill\n", st->source_id,
+              sqlite3_errmsg(h));
+      sqlite3_exec(h, "ROLLBACK", NULL, NULL, NULL);
+    }
+  }
 
-  return (changes && is_new) ? 1 : 0;
+  for (int i = 0; i < n; i++) pend_free(b[i]);
+  st->nbuf = 0; st->nbytes = 0;
+  free(res); free(isnew);
+  if (new_out) *new_out = last_new;
+  return last;
 }
+
+static int env_int(const char *name, int dflt, int lo, int hi) {
+  const char *v = getenv(name);
+  if (!v || !*v) return dflt;
+  char *e = NULL;
+  long x = strtol(v, &e, 10);
+  if (e == v) return dflt;
+  return x < lo ? lo : x > hi ? hi : (int)x;
+}
+
+static int emit(struct intel_sink *self, const intel_item *it) {
+  sink_state *st = self->ctx;
+  sqlite3 *h = st->db->h;
+  /* Statements belong to a connection; a sink re-pointed at another handle
+   * (never done today) must not step a statement from the old one. */
+  if (st->stmt_db != h) { sink_stmts_free(st); st->stmt_db = h; }
+
+  int no_uid = 0;
+  pend *p = pend_make(st, it, &no_uid);
+  if (!p) return -1;
+
+  /* A refusal learned at an earlier flush is reported here, on an emit of the
+   * same kind, so the scheduler's per-call `failed=` sees it. The record being
+   * emitted now is still buffered and written normally. */
+  int owed = 0;
+  if (p->is_notice ? st->owed_notice > 0 : st->owed_rec > 0) {
+    if (p->is_notice) st->owed_notice--; else st->owed_rec--;
+    owed = 1;
+  }
+
+  if (st->batch_max <= 1) {                       /* per-record: exact answer */
+    if (!st->buf && !(st->buf = malloc(sizeof *st->buf))) { pend_free(p); return -1; }
+    st->bufcap = 1;
+    st->buf[st->nbuf++] = p;
+    int isnew = 0, notice = p->is_notice;
+    int r = flush_buf(st, &isnew);
+    if (r == RW_FAIL) {
+      /* The caller is told by the return value; it is not "owed" as well. */
+      if (notice) st->owed_notice--; else st->owed_rec--;
+      return -1;
+    }
+    return isnew ? 1 : 0;
+  }
+
+  if (st->nbuf == st->bufcap) {
+    int ncap = st->bufcap ? st->bufcap * 2 : 64;
+    pend **nb = realloc(st->buf, sizeof *nb * (size_t)ncap);
+    if (!nb) { pend_free(p); return -1; }
+    st->buf = nb; st->bufcap = ncap;
+  }
+  if (st->nbuf == 0) st->t0_ms = mono_ms();
+  st->buf[st->nbuf++] = p;
+  st->nbytes += p->bytes;
+  if (st->nbuf >= st->batch_max || st->nbytes >= st->batch_bytes ||
+      (st->batch_ms > 0 && mono_ms() - st->t0_ms >= st->batch_ms))
+    flush_buf(st, NULL);
+  return owed ? -1 : 0;
+}
+
+/* See intel.h. */
+void intel_sink_flush(intel_sink *k) {
+  if (!k || !k->ctx || k->emit != emit) return;
+  sink_state *st = k->ctx;
+  if (st->nbuf > 0) flush_buf(st, NULL);
+}
+
+long intel_sink_failed(const intel_sink *k) {
+  if (!k || !k->ctx || k->emit != emit) return -1;
+  return ((const sink_state *)k->ctx)->failed_total;
+}
+
+long intel_sink_failed_pending(const intel_sink *k) {
+  if (!k || !k->ctx || k->emit != emit) return -1;
+  const sink_state *st = k->ctx;
+  return st->owed_rec + st->owed_notice;
+}
+
 
 /* emit() for a sink that failed to allocate its state. This runs on every
  * collector/dispatch worker thread once per source per cycle — under real
@@ -703,6 +1022,9 @@ intel_sink intel_sink_make(db_handle *db, const char *source_id,
   st->magic = SINK_MAGIC;
   st->db = db;
   st->seen_exact = 1;
+  st->batch_max   = env_int("JO_SINK_BATCH", 200, 1, 100000);
+  st->batch_ms    = env_int("JO_SINK_BATCH_MS", 500, 0, 600000);
+  st->batch_bytes = (size_t)env_int("JO_SINK_BATCH_BYTES", 8 << 20, 1 << 16, 1 << 30);
   snprintf(st->source_id, sizeof st->source_id, "%s", source_id ? source_id : "unknown");
   if (tenant_id) snprintf(st->tenant_id, sizeof st->tenant_id, "%s", tenant_id);
   intel_sink k; k.ctx = st; k.emit = emit;
@@ -716,6 +1038,9 @@ intel_sink intel_sink_make(db_handle *db, const char *source_id,
 long intel_sink_stored(const intel_sink *k, int *exact) {
   if (exact) *exact = 1;
   if (!k || !k->ctx || k->emit != emit) return -1;
+  /* The count is of COMMITTED rows, so anything still buffered is written
+   * first (the scheduler reads this before it frees the sink). */
+  intel_sink_flush((intel_sink *)k);
   const sink_state *st = k->ctx;
   if (exact) *exact = st->seen_exact;
   return (long)st->seen_n;
@@ -723,6 +1048,7 @@ long intel_sink_stored(const intel_sink *k, int *exact) {
 
 long intel_sink_stored_notices(const intel_sink *k) {
   if (!k || !k->ctx || k->emit != emit) return -1;
+  intel_sink_flush((intel_sink *)k);
   const sink_state *st = k->ctx;
   return (long)st->seen_notice_n;
 }
@@ -735,12 +1061,20 @@ int intel_sink_rebind(const intel_sink *base, const char *source_id,
   const sink_state *b = (const sink_state *)base->ctx;
   if (b->magic != SINK_MAGIC) return 0;    /* not an intel sink — refuse */
   *out = intel_sink_make(b->db, source_id, b->tenant_id[0] ? b->tenant_id : NULL);
+  /* The dispatcher counts emit()'s answer (refused / new) into its response,
+   * so a pivot sink writes per record and answers exactly. */
+  if (out->ctx) ((sink_state *)out->ctx)->batch_max = 1;
   return 1;
 }
 
 void intel_sink_free(intel_sink *k) {
   if (!k || !k->ctx) return;
   sink_state *st = k->ctx;
+  /* A sink freed with records still buffered writes them first. A free() that
+   * dropped them would be the silent loss this file exists to prevent. Only a
+   * sink this file made has a buffer (emit_oom has no ctx at all). */
+  if (k->emit == emit) intel_sink_flush(k);
+  free(st->buf);
   /* Before the connection closes: sqlite3_close() refuses (SQLITE_BUSY) a
    * connection that still has prepared statements. */
   sink_stmts_free(st);

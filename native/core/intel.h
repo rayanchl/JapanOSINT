@@ -25,6 +25,30 @@ intel_sink intel_sink_make(db_handle *db, const char *source_id,
 int intel_sink_rebind(const intel_sink *base, const char *source_id,
                       intel_sink *out);
 
+/* BATCHED WRITES (core/intel.c, the block above emit()). A sink made here
+ * groups its records into one transaction per JO_SINK_BATCH records (200) or
+ * JO_SINK_BATCH_MS (500) of the oldest record's age, whichever comes first; the
+ * work that needs no database runs in emit() and nothing is held open between
+ * calls. emit() returns 0 for an accepted record (1/0/-1 as source.h says only
+ * with JO_SINK_BATCH=1, and always for a sink from intel_sink_rebind()), -1 for
+ * an item with no uid, and -1 for a record the database refused — reported
+ * LATER, on a following emit of the same kind (record or notice), because the
+ * refusal is learned at flush time.
+ *
+ * Writes whatever is buffered now. Called by intel_sink_stored(),
+ * intel_sink_stored_notices() and intel_sink_free(); public for a caller that
+ * is about to wait a long time. No-op for a NULL or foreign sink. */
+void intel_sink_flush(intel_sink *k);
+
+/* Records the database refused since make(): the TRUE failed count. -1 for a
+ * foreign sink. */
+long intel_sink_failed(const intel_sink *k);
+
+/* Refusals not yet returned through an emit() as -1 (the last batch's, when no
+ * later emit came). A caller that counts emit() failures adds this after
+ * reading intel_sink_stored(), which is what flushes. -1 for a foreign sink. */
+long intel_sink_failed_pending(const intel_sink *k);
+
 /* Releases the state intel_sink_make() allocated. There was no such call
  * until the scheduler became a worker pool: every make() heap-allocates a
  * sink_state and no caller freed it, so the process leaked one per source run
