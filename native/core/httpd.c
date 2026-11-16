@@ -2967,7 +2967,17 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
 
     /* GET /api/sources — full source registry/probe rows. */
     if (eq(u, "/api/sources")) {
-      char *body = api_sources_list(g_db);
+      /* Bounded by default (500 rows, page{} in-band); the bare full array is
+       * an operator's, asked for with ?all=1. */
+      char lv[16] = {0}, ov[16] = {0}, av[8] = {0};
+      int hl = mg_http_get_var(&hm->query, "limit", lv, sizeof lv);
+      int ho = mg_http_get_var(&hm->query, "offset", ov, sizeof ov);
+      int all = mg_http_get_var(&hm->query, "all", av, sizeof av) > 0 && av[0] == '1'
+                && opgate_check(&usr) == 0;
+      int lim = hl > 0 ? atoi(lv) : 0;
+      if (lim <= 0 || lim > FLEET_PAGE_MAX) lim = FLEET_PAGE_MAX;
+      char *body = all ? api_sources_list(g_db)
+                       : api_sources_list_page(g_db, lim, ho > 0 ? atoi(ov) : 0);
       if (!body) { reply_json(c, 500, "{\"error\":\"Failed to list sources\"}"); return; }
       reply_json(c, 200, body);
       free(body);
@@ -3571,8 +3581,8 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
     if (starts(u,"/api/admin/") ||
         eq(u,"/api/db/tables") || starts(u,"/api/db/tables/") ||
         eq(u,"/api/db/scheduler")) {
-      /* operator: enforced by the route table. Every /api/admin/* and
-       * /api/db/* row is RG_OPERATOR (tests/unit/test_routes.c pins it), and a
+      /* operator: enforced by the route table. Every /api/admin/(any) and
+       * /api/db/(any) row is RG_OPERATOR (tests/unit/test_routes.c pins it), and a
        * path with no row never gets here, so the check that used to open this
        * block is redundant and gone. */
 
@@ -5129,7 +5139,7 @@ static void fn(struct mg_connection *c, int ev, void *ev_data) {
        * decision; DIVERGES from Node, which mounts /api/keys with NO
        * requirePlatformOperator). /api/tenant-keys* keeps its existing
        * tenant-resolution guard so tenant admins retain BYOK self-service. */
-      /* (the operator gate for /api/keys* is the route table's: keys / key) */
+      /* (the operator gate for the /api/keys family is the route table's: keys / key) */
       struct mg_str *xt = mg_http_get_header(hm, "X-Tenant-Id");
       char xtid[128] = {0};
       if (xt && xt->len < sizeof xtid) { memcpy(xtid, xt->buf, xt->len); xtid[xt->len]=0; }

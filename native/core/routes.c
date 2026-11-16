@@ -10,7 +10,7 @@
  *   - The gate here is the FLOOR. A handler may demand more (a role for one
  *     method, an owner of one object, the operator for a breach uid) and
  *     those finer checks stay in the handler.
- *   - Every /api/admin/* and /api/db/* row must be RG_OPERATOR; the unit test
+ *   - Every /api/admin/(any) and /api/db/(any) row must be RG_OPERATOR; the unit test
  *     fails otherwise.
  */
 #include "routes.h"
@@ -93,7 +93,7 @@ static const route_row ROUTES[] = {
   R(RM_POST, "/api/intel/sources/:id/run", RG_RUN,  RR_WORKER, RF_STRICT, "source-run"),
   R(RM_ANY,  "/api/follow/recent",       RG_OPERATOR, RR_LOOP, 0, "follow-recent"),
 
-  /* ---- /api/admin/* and /api/db/*: platform operator, every row ------- */
+  /* ---- /api/admin/(any) and /api/db/(any): platform operator, every row ------- */
   R(RM_GET,  "/api/admin/routes",        RG_OPERATOR, RR_LOOP,   RF_STRICT, "admin-routes"),
   R(RM_ANY,  "/api/admin/translate/backfill",     RG_OPERATOR, RR_LOOP,   0, "admin-translate-backfill"),
   R(RM_ANY,  "/api/admin/layers/review",          RG_OPERATOR, RR_WORKER, 0, "admin-layers-review"),
@@ -189,7 +189,7 @@ static const route_row ROUTES[] = {
   R(RM_ANY,  "/api/members/*",           RG_TENANT, RR_LOOP,   0, "member"),
 
   /* ---- credentials ---------------------------------------------------- */
-  /* /api/keys* is the PLATFORM credential store. */
+  /* the /api/keys family is the PLATFORM credential store. */
   R(RM_ANY,  "/api/keys",                RG_OPERATOR, RR_LOOP, 0, "keys"),
   R(RM_ANY,  "/api/keys/*",              RG_OPERATOR, RR_LOOP, 0, "key"),
   /* A workspace's own keys: tenant admins keep BYOK self-service, but the

@@ -15,7 +15,7 @@
  *
  * Pattern syntax
  *   "/api/health"            exact path
- *   "/api/alerts/*"          prefix: everything that starts with "/api/alerts/"
+ *   "/api/alerts/" + star    prefix: everything that starts with "/api/alerts/"
  *                            (a '*' may also follow a literal with no slash,
  *                            "/api/transit*", as the chain's starts() did)
  *   "/api/status/:id"        :name as the LAST element is exactly one non-empty

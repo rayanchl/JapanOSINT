@@ -119,6 +119,8 @@ int intelapi_relevance_uids(db_handle *db, const intel_items_query *Q, int k,
 
 /* GET /api/sources — malloc'd JSON array of all `sources` rows. */
 char *api_sources_list(db_handle *db);
+/* Bounded: {data,page:{limit,offset,total,has_more}}; limit<=0 = the bare array. */
+char *api_sources_list_page(db_handle *db, int limit, int offset);
 
 /* GET /api/intel/sources — malloc'd envelope {data,meta}: registry joined
  * with per-source intel_items aggregates, ttl + is_intel, freshness-sorted.

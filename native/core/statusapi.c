@@ -754,6 +754,13 @@ char *statusapi_build_view(db_handle *db, int include_breach,
                      "describe every source. Use ?offset= to walk the rest."
                    : "every registered source (no ?limit given)");
     cJSON_AddItemToObject(env, "view", view);
+    /* The same window in the envelope every other list route uses. */
+    cJSON *pg = cJSON_CreateObject();
+    cJSON_AddNumberToObject(pg, "limit", limit);
+    cJSON_AddNumberToObject(pg, "offset", offset);
+    cJSON_AddNumberToObject(pg, "total", row_idx);
+    cJSON_AddBoolToObject(pg, "has_more", windowed && offset + kept < row_idx);
+    cJSON_AddItemToObject(env, "page", pg);
   }
   /* Every vector index (lib/vecindex registry), compact: embedded / eligible
    * / failed / refused / backlog / model / dim / state / last_run. Read from
