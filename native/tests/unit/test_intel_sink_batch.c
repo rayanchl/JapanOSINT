@@ -74,10 +74,17 @@ static char *dump(db_handle *d, const char *q) {
 
 static db_handle open_db(const char *path) {
   db_handle d = {0};
-  unlink(path);
+  /* Start from a copy of the seeded template run.sh hands this test as JO_DB
+   * (schema plus the translate columns the upsert names), not from an empty
+   * file. */
+  const char *tpl = getenv("JO_DB");
+  assert(tpl && *tpl);
   char w[1100];
+  unlink(path);
   snprintf(w, sizeof w, "%s-wal", path); unlink(w);
   snprintf(w, sizeof w, "%s-shm", path); unlink(w);
+  snprintf(w, sizeof w, "cp '%s' '%s'", tpl, path);
+  assert(system(w) == 0);
   assert(db_open(&d, path, NULL) == 0);
   return d;
 }

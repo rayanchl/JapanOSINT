@@ -107,6 +107,7 @@ typedef struct {
   size_t batch_bytes;
   long   owed_rec, owed_notice;  /* refusals not yet returned by an emit()  */
   long   failed_total;        /* every record the database refused          */
+  int    trace;               /* JO_SINK_TRACE: report each flush's cost    */
 } sink_state;
 
 static void fts_stmts_free(fts_stmts *f) {
@@ -859,6 +860,7 @@ static int flush_buf(sink_state *st, int *new_out) {
     return RW_FAIL;
   }
 
+  long long tr0 = mono_ms();
   int bf = 0;
   if (!txn_write(st, h, b, 0, n, res, isnew, &bf)) {
     if (n == 1) {
@@ -880,6 +882,7 @@ static int flush_buf(sink_state *st, int *new_out) {
   }
 
   /* From here a record is either committed (res >= 0) or refused. */
+  long long tr1 = mono_ms();      /* end of the write transaction(s) */
   int last = res[n - 1], last_new = isnew[n - 1];
   const char *ten = st->tenant_id[0] ? st->tenant_id : "legacy";
   int nsimhash = 0;
@@ -923,6 +926,9 @@ static int flush_buf(sink_state *st, int *new_out) {
     }
   }
 
+  if (st->trace)       /* JO_SINK_TRACE=1: what a flush costs, i.e. the lock hold */
+    fprintf(stderr, "[intel-trace] %s flush n=%d write_txn=%lldms post=%lldms\n",
+            st->source_id, n, tr1 - tr0, mono_ms() - tr1);
   for (int i = 0; i < n; i++) pend_free(b[i]);
   st->nbuf = 0; st->nbytes = 0;
   free(res); free(isnew);
@@ -1033,6 +1039,7 @@ intel_sink intel_sink_make(db_handle *db, const char *source_id,
   st->db = db;
   st->seen_exact = 1;
   st->batch_max   = env_int("JO_SINK_BATCH", 200, 1, 100000);
+  st->trace       = getenv("JO_SINK_TRACE") != NULL;
   st->batch_ms    = env_int("JO_SINK_BATCH_MS", 500, 0, 600000);
   st->batch_bytes = (size_t)env_int("JO_SINK_BATCH_BYTES", 8 << 20, 1 << 16, 1 << 30);
   snprintf(st->source_id, sizeof st->source_id, "%s", source_id ? source_id : "unknown");
