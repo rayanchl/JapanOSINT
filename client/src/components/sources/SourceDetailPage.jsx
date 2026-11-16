@@ -1,9 +1,12 @@
 import React, { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { LuPlay, LuRefreshCw, LuExternalLink } from 'react-icons/lu';
+import { LuRefreshCw, LuExternalLink } from 'react-icons/lu';
 import { api, errorMessage } from '../../api/client.js';
 import { useApi } from '../../hooks/useApi.js';
-import { Page, Card, Section, Pill, Button, KV, ErrorNotice, EmptyState, LoadingState, BoundNote, Mono, Toggle, Input, Field, cx, toast } from '../ui/kit.jsx';
+import { usePagedList } from '../../hooks/usePagedList.js';
+import RunControl from './RunControl.jsx';
+import { useAuthOptional } from '../../auth/AuthContext.jsx';
+import { Page, Card, Section, Pill, Button, KV, ErrorNotice, EmptyState, LoadingState, BoundNote, PagedFooter, Mono, Toggle, Input, Field, cx, toast } from '../ui/kit.jsx';
 import { isSafeUrl } from '../../utils/safeUrl.js';
 import { relativeTime, fmtAbs } from '../../utils/time.js';
 import {
@@ -172,7 +175,7 @@ export function SummaryCard({ summary, loading, error, onRegenerate, busy }) {
             <span className="text-osint-muted"> · {summary.error}{summary.http_status ? ` (HTTP ${summary.http_status})` : ''} · {summary.llm_base_url}</span>
             <p className="text-osint-muted mt-1">Nothing was generated, so nothing is shown as prose. These are the {summary.facts_used} facts the model would have been given:</p>
           </div>
-          <Button size="sm" busy={busy} onClick={onRegenerate}><LuRefreshCw size={12} /> Retry</Button>
+          {onRegenerate && <Button size="sm" busy={busy} onClick={onRegenerate}><LuRefreshCw size={12} /> Retry</Button>}
         </div>
         <pre className="mt-2 text-[10px] font-mono text-osint-muted whitespace-pre-wrap break-all max-h-56 overflow-auto">{JSON.stringify(summary.facts, null, 1)}</pre>
       </Card>
@@ -190,7 +193,7 @@ export function SummaryCard({ summary, loading, error, onRegenerate, busy }) {
             </ul>
           )}
         </div>
-        <Button size="sm" busy={busy} onClick={onRegenerate} title="Ask the model again, ignoring the cache"><LuRefreshCw size={12} /></Button>
+        {onRegenerate && <Button size="sm" busy={busy} onClick={onRegenerate} title="Ask the model again, ignoring the cache" aria-label="Regenerate summary"><LuRefreshCw size={12} /></Button>}
       </div>
       <div className="mt-2 text-[10px] font-mono text-osint-muted">
         model {summary.model} · {summary.facts_used} facts · {summary.cached ? 'cached' : 'generated'} {summary.generated_at ? relativeTime(summary.generated_at) : ''} · written from measured facts only
@@ -216,24 +219,64 @@ function Hist({ values, keyName, shown, total, noun }) {
   );
 }
 
+/* The run table, shared by the latest-runs block and the paged full history. */
+function RunsTable({ runs }) {
+  if (!runs.length) return <span className="text-xs text-osint-muted">this source has never run</span>;
+  return (
+    <table className="w-full text-[11px]">
+      <caption className="sr-only">Fetch runs, newest first</caption>
+      <thead><tr className="text-osint-muted text-left"><th scope="col" className="py-1 pr-2">when</th><th scope="col" className="pr-2">status</th><th scope="col" className="pr-2 text-right">fetched</th><th scope="col" className="pr-2 text-right">stored</th><th scope="col" className="pr-2 text-right">ms</th><th scope="col" className="pr-2 text-right">bytes</th><th scope="col">error</th></tr></thead>
+      <tbody>
+        {runs.map((r) => (
+          <tr key={r.id} className="border-t border-osint-border/40">
+            <td className="py-1 pr-2 font-mono whitespace-nowrap" title={r.timestamp}>{relativeTime(r.timestamp)}</td>
+            <td className="pr-2"><Pill tone={r.status === 'ok' ? 'success' : 'danger'}>{r.status}</Pill></td>
+            <td className="pr-2 text-right font-mono">{fmtCount(r.records_fetched)}</td>
+            <td className="pr-2 text-right font-mono">{r.stored == null ? NOT_MEASURED : fmtCount(r.stored)}</td>
+            <td className="pr-2 text-right font-mono">{r.duration_ms == null ? '—' : r.duration_ms}</td>
+            <td className="pr-2 text-right font-mono" title={r.bytes_fetched == null ? 'run predates byte accounting' : `${r.bytes_fetched} bytes`}>{r.bytes_fetched == null ? NOT_MEASURED : fmtBytes(r.bytes_fetched)}</td>
+            <td className="text-osint-muted break-all">{r.error || ''}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
+/* Every run of the source, paged in place through the API client (the route
+ * is bearer-gated, so a plain link to it could never have worked). */
+export function RunHistory({ sourceId }) {
+  const list = usePagedList(`/api/sources/${encodeURIComponent(sourceId)}/logs`, { pageSize: 50 });
+  if (list.loading && list.rows.length === 0) return <LoadingState label="Loading run history…" />;
+  if (list.error) return <ErrorNotice error={list.error} title="Could not load the run history" onRetry={list.reload} />;
+  return (
+    <>
+      <RunsTable runs={list.rows} />
+      <PagedFooter className="mt-1" shown={list.rows.length} total={list.total} hasMore={list.hasMore} busy={list.loadingMore} onMore={list.loadMore} error={list.moreError} noun="runs" />
+    </>
+  );
+}
+
+/* Which map layer this source feeds, from the server's resolved layer id, and
+ * the plain fact that a source with no geocoded record can never be on the map. */
+export function MapLayerNote({ layerId, geocoded }) {
+  if (geocoded === 0) return <span>no geocoded records: not on the map{layerId ? ` (it would feed layer ${layerId})` : ''}</span>;
+  if (layerId) return <Link to={`/?layer=${encodeURIComponent(layerId)}`} className="text-accent hover:underline">{layerId} → open on the map</Link>;
+  if (geocoded == null) return <span>{NOT_MEASURED}</span>;
+  return <span>no layer resolved by the server (it has {fmtCount(geocoded)} geocoded records)</span>;
+}
+
 export default function SourceDetailPage() {
   const { id } = useParams();
   const detail = useApi(`/api/sources/${encodeURIComponent(id)}/detail`);
   const summary = useApi(`/api/sources/${encodeURIComponent(id)}/summary`);
   const samples = useApi(`/api/intel/items?source=${encodeURIComponent(id)}&limit=3`);
-  const [running, setRunning] = useState(false);
+  const auth = useAuthOptional();
+  const isOperator = Boolean(auth?.isPlatformAdmin);
+  const [allRuns, setAllRuns] = useState(false);
   const [regen, setRegen] = useState(false);
   const d = detail.data;
 
-  const run = async () => {
-    setRunning(true);
-    try {
-      const r = await api.post(`/api/intel/sources/${encodeURIComponent(id)}/run`);
-      toast(`ran: ${r?.ingested ?? '?'} new rows in ${r?.duration_ms ?? '?'} ms`, { tone: 'accent', ttl: 5000 });
-      detail.reload({ silent: true }); samples.reload({ silent: true });
-    } catch (e) { toast(e?.status === 409 ? 'a run is already in flight' : errorMessage(e), { tone: 'danger', ttl: 5000 }); }
-    finally { setRunning(false); }
-  };
   const regenerate = async () => {
     setRegen(true);
     try { summary.setData(await api.get(`/api/sources/${encodeURIComponent(id)}/summary?refresh=1`)); }
@@ -272,13 +315,14 @@ export default function SourceDetailPage() {
       actions={<div className="flex gap-2">
         {reg.url && isSafeUrl(reg.url) && <a href={reg.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-xs text-accent hover:underline"><LuExternalLink size={12} /> upstream</a>}
         <Link to={`/intel/sources/${encodeURIComponent(reg.id)}`} className="inline-flex items-center text-xs text-osint-muted hover:text-accent">stored items →</Link>
-        {reg.kind !== 'internal' && <Button variant="primary" busy={running} onClick={run}><LuPlay size={13} /> Run now</Button>}
+        <RunControl source={{ id: reg.id, kind: reg.kind }} onDone={() => { detail.reload({ silent: true }); samples.reload({ silent: true }); }} />
       </div>}
     >
       {reg.description && <p className="text-xs text-osint-muted -mt-2">{reg.description}</p>}
 
       <Section label="What it is">
-        <SummaryCard summary={summary.data} loading={summary.loading && !summary.data} error={summary.error} onRegenerate={regenerate} busy={regen} />
+        <SummaryCard summary={summary.data} loading={summary.loading && !summary.data} error={summary.error} onRegenerate={isOperator ? regenerate : null} busy={regen} />
+        {!isOperator && <p className="text-[10px] text-osint-muted mt-1">Regenerating the summary is an operator action (read-only for you).</p>}
       </Section>
 
       <Section label="Engine and mechanism" right={<span className="text-[10px] font-mono text-osint-muted">{kindLabel(reg.kind)}</span>}>
@@ -364,7 +408,7 @@ export default function SourceDetailPage() {
             ['portal', reg.url && isSafeUrl(reg.url) ? <a href={reg.url} target="_blank" rel="noreferrer" className="text-accent hover:underline">{reg.url}</a> : (reg.url || NOT_MEASURED)],
             ['fetch host', reg.host || NOT_MEASURED],
             ['license', reg.license || NOT_MEASURED],
-            ['map layer', reg.layer || 'none'],
+            ['map layer', <MapLayerNote layerId={d.layer_id ?? reg.layer ?? null} geocoded={d.records_geocoded ?? data.geocoded} />],
             ['geocoded records', `${fmtCount(data.geocoded)} of ${fmtCount(data.item_count)}`],
             ['bounding box', data.bbox ? `${data.bbox.min_lat.toFixed(3)},${data.bbox.min_lon.toFixed(3)} → ${data.bbox.max_lat.toFixed(3)},${data.bbox.max_lon.toFixed(3)}` : 'no geocoded records'],
           ]} />
@@ -409,28 +453,15 @@ export default function SourceDetailPage() {
         </div>
       </Section>
 
-      <Section label="Testing" right={<Link to={`/api/sources/${encodeURIComponent(reg.id)}/logs`} className="text-[10px] text-osint-muted hover:text-accent" target="_blank" rel="noreferrer">all runs (JSON) →</Link>}>
+      <Section label="Testing" right={!allRuns && <button type="button" className="text-[10px] text-accent hover:underline" onClick={() => setAllRuns(true)}>full run history →</button>}>
         <Card>
           <div className="text-[10px] uppercase tracking-wider text-osint-muted mb-1">recent runs</div>
-          {(d.runs?.recent || []).length === 0 ? <span className="text-xs text-osint-muted">this source has never run</span> : (
-            <table className="w-full text-[11px]">
-              <thead><tr className="text-osint-muted text-left"><th className="py-1 pr-2">when</th><th className="pr-2">status</th><th className="pr-2 text-right">fetched</th><th className="pr-2 text-right">stored</th><th className="pr-2 text-right">ms</th><th className="pr-2 text-right">bytes</th><th>error</th></tr></thead>
-              <tbody>
-                {d.runs.recent.map((r) => (
-                  <tr key={r.id} className="border-t border-osint-border/40">
-                    <td className="py-1 pr-2 font-mono whitespace-nowrap" title={r.timestamp}>{relativeTime(r.timestamp)}</td>
-                    <td className="pr-2"><Pill tone={r.status === 'ok' ? 'success' : 'danger'}>{r.status}</Pill></td>
-                    <td className="pr-2 text-right font-mono">{fmtCount(r.records_fetched)}</td>
-                    <td className="pr-2 text-right font-mono">{r.stored == null ? NOT_MEASURED : fmtCount(r.stored)}</td>
-                    <td className="pr-2 text-right font-mono">{r.duration_ms == null ? '—' : r.duration_ms}</td>
-                    <td className="pr-2 text-right font-mono" title={r.bytes_fetched == null ? 'run predates byte accounting' : `${r.bytes_fetched} bytes`}>{r.bytes_fetched == null ? NOT_MEASURED : fmtBytes(r.bytes_fetched)}</td>
-                    <td className="text-osint-muted break-all">{r.error || ''}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-          <BoundNote shown={d.runs?.shown ?? 0} total={d.runs?.total} noun="runs" className="mt-1" />
+          {allRuns
+            ? <RunHistory sourceId={reg.id} />
+            : <>
+                <RunsTable runs={d.runs?.recent || []} />
+                <BoundNote shown={d.runs?.shown ?? 0} total={d.runs?.total} noun="runs" className="mt-1" />
+              </>}
         </Card>
         <Card className="mt-3">
           <div className="text-[10px] uppercase tracking-wider text-osint-muted mb-1">engine notices (latest of each kind)</div>

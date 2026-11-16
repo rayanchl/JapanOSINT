@@ -1,0 +1,17 @@
+.git
+node_modules
+client/
+ios/
+docs/
+models/
+*.db
+*.db-shm
+*.db-wal
+.env
+native/obj
+native/obj-*
+native/bin
+native/.run
+native/llama
+native/tests
+**/__pycache__

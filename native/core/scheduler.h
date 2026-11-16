@@ -33,6 +33,19 @@ void scheduler_release(const char *id);
  * Diagnostic only — see scheduler.c for why the wal-checkpoint pod needs it. */
 void scheduler_running_summary(char *buf, size_t cap, const char *exclude_id);
 
+/* The dispatcher's walk over the registry: position k -> source index, a
+ * permutation of 0..n-1 whose consecutive members are far apart, so a queue
+ * of rows is a queue of different hosts rather than one table's cluster. */
+int sched_walk_stride(int n);
+int sched_walk_index(int k, int n, int stride);
+
+/* Seconds the wall clock moved that a steady clock did not, between two
+ * readings of each — 0 when the difference is slew or rounding (under 5 s).
+ * The dispatcher shifts its whole plan by a non-zero answer, so setting the
+ * date neither freezes the fleet nor makes every source due at once. */
+long sched_clock_step(time_t wall_prev, time_t wall_now,
+                      long long steady_prev, long long steady_now);
+
 /* First-run offset (seconds after boot) of the k-th of m scheduled sources in
  * one lane — see the boot ramp note in scheduler.c. Pure, for tests. */
 long sched_boot_offset(int k, int m, int workers, long stag, long ramp,

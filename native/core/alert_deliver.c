@@ -22,6 +22,7 @@
  */
 #include "alert_deliver.h"
 #include "httpclient.h"
+#include "hostgate.h"
 #include "intelapi.h"
 #include "../third_party/cJSON.h"
 #include "../third_party/sqlite3.h"
@@ -160,13 +161,25 @@ static void deliver_webhook(const char *url, const char *secret,
   if (sig_hdr[0]) hdrs[h++] = sig_hdr;
   hdrs[h] = NULL;
 
+  /* The rule's URL was checked when it was SAVED (alertsapi.c), which says
+   * nothing about where the name points now: a rebinding resolver answers a
+   * public address then and 127.0.0.1 (llama-server, the admin API) or an
+   * RFC1918 host at delivery. So the target is judged again here, strictly,
+   * and the request itself runs under http_request_strict(): strict address
+   * check on the connected IP and no redirect following. */
+  int gk = hostgate_url_check_strict(url);
+  if (gk != HG_URL_OK) {
+    o->status = "failed";
+    o->error = fmtdup("target_refused: %s", hostgate_url_reason(gk));
+    return;
+  }
   http_client *c = http_client_new();
   if (!c) { o->status = "failed"; o->error = xdup("http_client_alloc_failed"); return; }
   http_response res = {0};
   /* retries=0: the alert_deliveries ladder owns retry, so one wire attempt
    * per ledger attempt — otherwise "attempt 3" would mean 9 real POSTs. */
-  int hard = http_request(c, "POST", url, hdrs, body, strlen(body),
-                          WEBHOOK_TIMEOUT_MS, 0, &res);
+  int hard = http_request_strict(c, "POST", url, hdrs, body, strlen(body),
+                                 WEBHOOK_TIMEOUT_MS, 0, 0, &res);
   o->http_code = res.status;
   if (hard || res.status == 0) {
     o->status = "failed";
@@ -175,19 +188,11 @@ static void deliver_webhook(const char *url, const char *secret,
     o->status = "ok";
   } else {
     o->status = "failed";
-    /* A 120-char slice of the body is usually the entire reason a webhook is
-     * rejected ("invalid signature", "unknown tenant"); keeping it turns a
-     * silent 400 loop into a one-glance fix. */
-    char snip[121] = {0};
-    if (res.body) {
-      size_t n = res.body_len < 120 ? res.body_len : 120;
-      for (size_t i = 0; i < n; i++) {
-        unsigned char ch = (unsigned char)res.body[i];
-        snip[i] = (ch == '\n' || ch == '\r' || ch == '\t') ? ' '
-                : (ch < 0x20 ? '.' : (char)ch);
-      }
-    }
-    o->error = fmtdup("http_%ld %s", res.status, snip);
+    /* Status only. The first 120 bytes of the response used to be stored here
+     * and are readable through GET /api/alert-events/:id/deliveries — a
+     * partial read-back of whatever internal service a webhook was pointed at.
+     * A 3xx lands here too (redirects are not followed). */
+    o->error = fmtdup("http_%ld", res.status);
   }
   http_response_free(&res);
   http_client_free(c);

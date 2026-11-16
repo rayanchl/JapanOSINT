@@ -1,10 +1,12 @@
 import SwiftUI
 
-/// Level-1 surface for non-spatial OSINT sources. Always lists every
-/// catalogued `kind:'intel'` source — even ones with zero ingested items.
-/// Each row has a Run button to trigger its collector on demand. A toolbar
-/// "Run all" action fires every source in parallel (capped). A search bar
-/// runs cross-source FTS via `/api/intel/items`.
+/// Level-1 surface for non-spatial OSINT sources. The registry is ~61k
+/// sources, so this lists ONE SERVER-SEARCHED PAGE at a time
+/// (`/api/sources/search`, 50 rows, load more on scroll) — by default only
+/// the sources that hold items, with a toggle for the rest. Each row has a Run
+/// button for its collector. There is deliberately NO "run all": firing every
+/// registered source from a phone is not an action anyone should be one tap
+/// from. A search bar runs cross-source FTS via `/api/intel/items`.
 struct IntelTab: View {
     @EnvironmentObject var apiClient: APIClient
     @EnvironmentObject var registry: LayerRegistry
@@ -18,28 +20,32 @@ struct IntelTab: View {
     /// Filled by BilingualSearchModifier — carries the original query plus
     /// Apple's translated counterpart when auto-translate is on.
     @State private var bilingual: BilingualQuery = .empty
-    @State private var runningAll = false
-    @State private var runAllProgress: (done: Int, total: Int)?
+    @State private var page: SourcePageInfo?
+    @State private var loadingMore = false
+    /// Ids of entity pivots among the loaded rows (they cannot be run without
+    /// an entity, so their Run button explains that instead of running).
+    @State private var pivotIds: Set<String> = []
+    @State private var categoryFacet: SourceFacetSet?
+    /// Bumped per fetch so a stale answer is dropped.
+    @State private var fetchToken = 0
+    /// The filter signature the list was last loaded for. Starts at the
+    /// default signature so the first appearance loads once, not twice.
+    @State private var lastLoadedSignature = "|hasItems"
 
     @State private var showFilters = false
-    @State private var selectedCategories: Set<String> = []
-    @State private var itemPresence: ItemPresence = .all
-    /// Parent source ids whose nested channel list is open. Empty = all
-    /// collapsed, which is the point: the camera channels were showing up as a
-    /// dozen sibling rows next to the parent whose counts they belong to.
-    @State private var expandedParents: Set<String> = []
+    @State private var selectedCategory: String?
+    @State private var itemPresence: ItemPresence = .hasItems
 
-    /// "data feed or no" for non-spatial sources: a source can be catalogued
-    /// yet have ingested zero items, so filtering on presence is the intel
-    /// equivalent of the cameras tab's feed-availability toggle.
+    /// Which registered sources the catalogue lists. The default is the ones
+    /// that hold items (what the tab is for); "All" pages through the whole
+    /// registry, empty sources included.
     enum ItemPresence: String, FilterChoice {
-        case all, hasItems, empty
+        case hasItems, all
         var id: String { rawValue }
         var label: String {
             switch self {
-            case .all:      return "All"
             case .hasItems: return "Has items"
-            case .empty:    return "Empty"
+            case .all:      return "All sources"
             }
         }
     }
@@ -76,32 +82,12 @@ struct IntelTab: View {
                         showFilters = true
                     }
                 }
-                ToolbarItem(placement: .compatPrimary) {
-                    Button {
-                        Task { await runAll() }
-                    } label: {
-                        if runningAll {
-                            HStack(spacing: 6) {
-                                if let p = runAllProgress {
-                                    Text("\(p.done)/\(p.total)")
-                                        .font(.caption.monospacedDigit())
-                                }
-                                ProgressView().controlSize(.mini)
-                            }
-                        } else {
-                            Image(systemName: "play.circle.fill")
-                        }
-                    }
-                    .disabled(runningAll)
-                    .accessibilityLabel(runningAll ? "Running all sources…" : "Run all sources")
-                }
             }
             .sheet(isPresented: $showFilters) { filtersSheet }
-            // Changing the filter changes which parents exist, so every open
-            // disclosure is stale — collapse them instead of letting the set
-            // accumulate ids for rows that are no longer rendered.
-            .onChange(of: filterSignature) { _, _ in
-                expandedParents.removeAll()
+            // A filter change is a new server query.
+            .task(id: filterSignature) {
+                if lastLoadedSignature == filterSignature { return }
+                await reload()
             }
         }
         .task {
@@ -127,31 +113,17 @@ struct IntelTab: View {
         }
     }
 
-    /// The catalogue list.
-    ///
-    /// `filtered` and `split` are bound ONCE per body pass, deliberately.
-    /// Reading the `filteredSources` / `topLevelSources` / `childSources`
-    /// computed properties from inside the `ForEach` re-ran the whole filter
-    /// (plus a Set build) for every materialised row — at ~2,000 sources that
-    /// is thousands of array passes per scroll frame, on the main actor.
-    /// `SourceDashboardTab.statusChart` documents and avoids the same trap.
+    /// The catalogue list: the pages loaded so far, then a "showing N of M"
+    /// footer that loads the next page as it scrolls into view.
     private var catalogueList: some View {
-        let filtered = filteredSources
-        let split = partition(filtered)
-        return List {
-            if !sources.isEmpty && filtered.isEmpty {
-                Section {
-                    Text("No sources match the current filters.")
-                        .font(.caption)
-                        .foregroundStyle(theme.textMuted)
-                }
-            } else if filtered.allSatisfy({ $0.item_count == 0 }) {
+        List {
+            if !sources.isEmpty && sources.allSatisfy({ $0.item_count == 0 }) {
                 Section {
                     VStack(alignment: .leading, spacing: 4) {
                         Label("No items collected yet", systemImage: "info.circle")
                             .font(.caption.weight(.semibold))
                             .foregroundStyle(theme.textMuted)
-                        Text("Tap the play button on any source to fetch its data, or use Run all in the top bar.")
+                        Text("Tap the play button on a source to fetch its data.")
                             .font(.caption2)
                             .foregroundStyle(theme.textMuted)
                     }
@@ -159,23 +131,21 @@ struct IntelTab: View {
                 }
             }
             Section {
-                ForEach(split.top) { src in
+                ForEach(sources) { src in
                     sourceRow(src)
-                    // Camera discovery channels are collectors in their own
-                    // right — own schedule, own Run button — but they are
-                    // this row's channels, not its siblings, and their item
-                    // counts are already summed into it. Collapsed by
-                    // default so the catalogue reads as one camera source.
-                    if let kids = split.children[src.id], !kids.isEmpty {
-                        DisclosureGroup(isExpanded: expansionBinding(for: src.id)) {
-                            ForEach(kids) { kid in sourceRow(kid) }
-                        } label: {
-                            Text("\(kids.count) discovery channels")
-                                .font(.caption)
-                                .foregroundStyle(theme.textMuted)
-                        }
-                    }
                 }
+                if sources.isEmpty && !loading {
+                    Text("No sources match the current filters.")
+                        .font(.caption)
+                        .foregroundStyle(theme.textMuted)
+                }
+                PagedFooter(shown: sources.count,
+                            total: page?.total,
+                            hasMore: page?.has_more == true,
+                            loading: loadingMore,
+                            error: nil,
+                            noun: "sources",
+                            loadMore: { Task { await loadMore() } })
             }
         }
         .compatInsetGroupedListStyle()
@@ -190,174 +160,121 @@ struct IntelTab: View {
     private func sourceRow(_ src: IntelSource) -> some View {
         ZStack {
             NavigationLink(value: src) { EmptyView() }.opacity(0)
-            IntelSourceRow(source: src, onRunComplete: {
-                Task { await reload() }
-            })
+            IntelSourceRow(source: src,
+                           onRunComplete: {
+                Task { await refreshRow(src.id) }
+            },
+                           needsEntity: pivotIds.contains(src.id))
         }
     }
 
-    private func expansionBinding(for id: String) -> Binding<Bool> {
-        Binding(
-            get: { expandedParents.contains(id) },
-            set: { open in
-                if open { expandedParents.insert(id) }
-                else    { expandedParents.remove(id) }
-            }
-        )
-    }
-
-    // ── Filtering ───────────────────────────────────────────────────────────
+    // ── Filtering (server-side) ─────────────────────────────────────────────
 
     private var filtersAreActive: Bool {
-        !selectedCategories.isEmpty || itemPresence != .all
+        selectedCategory != nil || itemPresence != .hasItems
     }
 
-    /// Category + item-presence filter. Search is handled separately by the
-    /// cross-source FTS branch, so this only narrows the catalogue list.
-    private var filteredSources: [IntelSource] {
-        sources.filter { src in
-            if !selectedCategories.isEmpty {
-                guard let cat = src.category, selectedCategories.contains(cat) else { return false }
-            }
-            switch itemPresence {
-            case .all:      break
-            case .hasItems: if src.item_count == 0 { return false }
-            case .empty:    if src.item_count > 0  { return false }
-            }
-            return true
-        }
-    }
-
-    /// Split the filtered catalogue into top-level rows and their children in
-    /// ONE pass. Called exactly once per body pass by `catalogueList`.
-    ///
-    /// A source the API stamped with a `parent_id` belongs under that parent —
-    /// unless the parent itself was filtered out, in which case the child is
-    /// promoted rather than silently dropped (its parent's category is not
-    /// necessarily its own: bosai-volcano-cam is a camera channel filed under
-    /// "seismic"). The two buckets are complementary, so one loop produces
-    /// both. Order follows the server's freshness sort.
-    private func partition(
-        _ filtered: [IntelSource]
-    ) -> (top: [IntelSource], children: [String: [IntelSource]]) {
-        let shown = Set(filtered.map(\.id))
-        var top: [IntelSource] = []
-        var children: [String: [IntelSource]] = [:]
-        top.reserveCapacity(filtered.count)
-        for src in filtered {
-            if let parent = src.parent_id, shown.contains(parent) {
-                children[parent, default: []].append(src)
-            } else {
-                top.append(src)
-            }
-        }
-        return (top, children)
-    }
-
-    /// Comparable summary of the active filters. Drives the `expandedParents`
-    /// prune: a parent id that is no longer on screen must not stay in the set
-    /// (it grew for the app's lifetime and was never cleared).
+    /// Identity of the active filters; a change is a new server query.
     private var filterSignature: String {
-        selectedCategories.sorted().joined(separator: ",") + "|" + itemPresence.rawValue
+        (selectedCategory ?? "") + "|" + itemPresence.rawValue
     }
 
-    /// Categories present in the catalogue, by descending source count then
-    /// alphabetical — same ordering rule the Saved/Cameras chips use.
     private var availableCategories: [String] {
-        var counts: [String: Int] = [:]
-        for s in sources {
-            guard let c = s.category else { continue }
-            counts[c, default: 0] += 1
-        }
-        return counts.keys.sorted {
-            counts[$0]! == counts[$1]! ? $0 < $1 : counts[$0]! > counts[$1]!
+        (categoryFacet?.values ?? []).compactMap { v in
+            let k = v.keyText
+            return k.isEmpty ? nil : k
         }
     }
 
     private func categoryCount(_ c: String) -> Int {
-        sources.filter { $0.category == c }.count
-    }
-
-    private func toggleCategory(_ c: String) {
-        if selectedCategories.contains(c) { selectedCategories.remove(c) }
-        else { selectedCategories.insert(c) }
+        (categoryFacet?.values ?? []).first(where: { $0.keyText == c })?.count ?? 0
     }
 
     private var filtersSheet: some View {
         FilterSheet(
             isActive: filtersAreActive,
             onReset: {
-                selectedCategories.removeAll()
-                itemPresence = .all
+                selectedCategory = nil
+                itemPresence = .hasItems
             },
             onDone: { showFilters = false }
         ) {
-            FilterSegmentedSection(title: "Data", selection: $itemPresence)
+            FilterSegmentedSection(title: "Show", selection: $itemPresence)
             FilterMultiSelectSection(
                 title: "Category",
                 items: availableCategories,
-                emptyText: "No sources yet",
+                emptyText: "No categories loaded yet",
                 label: { $0.capitalized },
                 count: { categoryCount($0) },
-                isSelected: { selectedCategories.contains($0) },
-                toggle: { toggleCategory($0) }
+                isSelected: { selectedCategory == $0 },
+                toggle: { selectedCategory = (selectedCategory == $0) ? nil : $0 }
             )
         }
     }
 
     // ── Loading + actions ───────────────────────────────────────────────────
 
+    private func currentQuery() -> SourceSearchQuery {
+        var q = SourceSearchQuery()
+        q.hasItems = (itemPresence == .hasItems)
+        q.category = selectedCategory
+        q.sort = "fetched"
+        q.desc = true
+        return q
+    }
+
+    /// First page of the current query. Only the rows on screen are cached.
     private func reload() async {
         loading = true
-        defer { loading = false }
+        fetchToken += 1
+        let token = fetchToken
+        lastLoadedSignature = filterSignature
         do {
-            let env = try await apiClient.api.intelSources()
-            sources = env.data
-            // Drop expansion state for parents the server no longer returns.
-            expandedParents.formIntersection(Set(env.data.map(\.id)))
-            intelCache.cacheSources(env.data)
+            let env = try await apiClient.api.searchSources(currentQuery(), limit: 50, offset: 0)
+            guard token == fetchToken else { return }
+            let rows = env.data ?? []
+            sources = rows.map(\.asIntelSource)
+            pivotIds = Set(rows.filter(\.needsEntity).map(\.id))
+            page = env.page
+            if let f = env.meta?.facets?.categories { categoryFacet = f }
+            intelCache.cacheSources(sources)
             error = nil
         } catch let err {
+            guard token == fetchToken else { return }
             error = err.localizedDescription
             // Leave previously-rendered cached sources on screen so the
             // user isn't stranded by a flaky network.
         }
+        if token == fetchToken { loading = false }
     }
 
-    /// Fire every source's collector with a concurrency cap. Reloads after
-    /// completion so item counts + last_fetched reflect the new state.
-    private func runAll() async {
-        runningAll = true
-        runAllProgress = (0, sources.count)
-        defer {
-            runningAll = false
-            runAllProgress = nil
+    private func loadMore() async {
+        guard !loadingMore, !loading, page?.has_more == true else { return }
+        loadingMore = true
+        defer { loadingMore = false }
+        let token = fetchToken
+        do {
+            let env = try await apiClient.api.searchSources(currentQuery(), limit: 50, offset: sources.count)
+            guard token == fetchToken else { return }
+            let rows = env.data ?? []
+            sources += rows.map(\.asIntelSource)
+            pivotIds.formUnion(rows.filter(\.needsEntity).map(\.id))
+            page = env.page
+        } catch let err {
+            error = err.localizedDescription
         }
-        let api = apiClient.api
-        let cap = 4
-        var index = 0
-        let total = sources.count
+    }
 
-        await withTaskGroup(of: Void.self) { group in
-            // Seed `cap` initial tasks.
-            for _ in 0..<min(cap, total) {
-                if index >= total { break }
-                let id = sources[index].id
-                index += 1
-                group.addTask { _ = try? await api.intelRunSource(id) }
-            }
-            // Replace finished tasks with new ones until exhausted.
-            for await _ in group {
-                await MainActor.run {
-                    runAllProgress = ((runAllProgress?.done ?? 0) + 1, total)
-                }
-                if index < total {
-                    let id = sources[index].id
-                    index += 1
-                    group.addTask { _ = try? await api.intelRunSource(id) }
-                }
-            }
-        }
-        await reload()
+    /// After a manual run, refresh ONLY that row (and its cache entry) instead
+    /// of re-downloading and re-caching the catalogue.
+    private func refreshRow(_ id: String) async {
+        var q = SourceSearchQuery()
+        q.q = id
+        guard let env = try? await apiClient.api.searchSources(q, limit: 20, offset: 0),
+              let fresh = (env.data ?? []).first(where: { $0.id == id }),
+              let idx = sources.firstIndex(where: { $0.id == id }) else { return }
+        let updated = fresh.asIntelSource
+        sources[idx] = updated
+        intelCache.upsertSource(updated)
     }
 }

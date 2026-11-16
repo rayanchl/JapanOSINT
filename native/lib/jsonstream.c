@@ -1,6 +1,7 @@
 /* lib/jsonstream.c — see jsonstream.h. */
 #include "jsonstream.h"
 #include "jsonlist.h"
+#include "jsonbig.h"
 #include "core/hostgate.h"
 #include "core/httpclient.h"   /* the one curl_global_init, UA, transport policy */
 #include "core/url_override.h"
@@ -116,7 +117,7 @@ static void js_emit_elem(js_ctx *c, const char *s, size_t n) {
   if (!z) { c->malformed++; return; }
   memcpy(z, s, n);
   z[n] = 0;
-  cJSON *el = cJSON_Parse(z);
+  cJSON *el = jo_json_parse(z);
   free(z);
   /* "counted" used to mean only `scanned`, which nothing reads: an element the
    * boundary scan handed over but cJSON could not parse was dropped with no

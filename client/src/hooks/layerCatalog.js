@@ -189,3 +189,19 @@ export function truncationNotice(fc) {
   const total = Number.isFinite(c.available) ? c.available.toLocaleString() : 'unknown';
   return `Showing ${c.count.toLocaleString()} of ${total} records`;
 }
+
+/**
+ * Per-layer loading progress from the collection's own `_meta` (written by
+ * fetchLayerGeojsonPaged while pages are still arriving): "Loading 5,000 of
+ * 123,456 records (page 1)". Null once the load is finished or not paged.
+ * The total is the server's `records_available`; when it did not publish one
+ * the line says so instead of inventing a denominator.
+ */
+export function loadProgress(fc) {
+  const meta = fc?._meta;
+  if (!meta?.client_loading) return null;
+  const used = Number.isFinite(meta.records_used) ? meta.records_used : (Array.isArray(fc.features) ? fc.features.length : 0);
+  const total = Number.isFinite(meta.records_available) ? meta.records_available.toLocaleString() : 'an unreported total';
+  const page = Number.isFinite(meta.pages) ? ` (page ${meta.pages})` : '';
+  return `Loading ${used.toLocaleString()} of ${total} records${page}`;
+}

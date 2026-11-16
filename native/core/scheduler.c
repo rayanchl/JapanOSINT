@@ -414,7 +414,7 @@ int sched_state_load_one(db_handle *db, const char *id, sched_state *st) {
  * The column is on source_sched_state because that table is already one row
  * per scheduled source with the same lifetime. A row that is not scheduled has
  * no resume position by construction: only this path sets the callbacks. */
-#define SCHED_RESUME_MAX 1024
+#define SCHED_RESUME_MAX 8192
 
 static int sched_resume_load(db_handle *db, const char *id, char *out, size_t cap) {
   if (out && cap) out[0] = 0;
@@ -828,6 +828,9 @@ int scheduler_run_source(db_handle *db, const source_def *d,
    * answer from the start of the result set for the entity it was just asked
    * about — resuming there would hand back page 37 of whatever the previous
    * caller asked. source.h says this; here is where it is true. */
+  /* A worker thread carries the last transport/TLS verdict of whatever it ran
+   * before; clear it so this run's disclosure can only name its own. */
+  http_reset_last_error();
   char resume_tok[SCHED_RESUME_MAX];
   if (!entity && sched_resume_load(db, d->id, resume_tok, sizeof resume_tok))
     ctx.resume_in = resume_tok;
@@ -849,7 +852,16 @@ int scheduler_run_source(db_handle *db, const source_def *d,
   /* Same thread-local pattern for content-change detection (roadmap 26): the
    * httpclient hook needs a db_handle and source_id it cannot otherwise see. */
   content_change_scope_begin(db, d->id);
+  hostgate_set_cancel(cancel);
+  /* The operator's per-source ceiling applies to EVERY engine's requests, not
+   * only to the collectors that read ctx.body_ceiling: hpengine and VJSON rows
+   * never do, so the setting was a no-op for them. Restored on return — a
+   * worker thread outlives the run, and a leaked ceiling would widen the next
+   * source's fetch. An explicit $JO_HTTP_MAX_BODY still clamps it. */
+  size_t prev_ceiling = http_body_ceiling_set(ctx.body_ceiling);
   int rc = d->run(&ctx, &sink);
+  http_body_ceiling_set(prev_ceiling);
+  hostgate_set_cancel(NULL);
   content_change_scope_end();
   evidence_scope_end();
   clock_gettime(CLOCK_MONOTONIC, &t1);
@@ -896,6 +908,13 @@ int scheduler_run_source(db_handle *db, const source_def *d,
    * own, and it is the one that reaches the 32 rows in 10,252 whose host
    * answered with a maintenance page. Both require that the run left NOTHING
    * behind, which is what makes this a disclosure rather than a second status. */
+  /* What the COLLECTOR emitted, read before our own disclosure goes through
+   * the same counting sink. The disclosure is a record on the run line (the
+   * convention hp rows set), but it is not evidence the feed had rows: counted
+   * into the empties streak it reset consecutive_empties on every run of a
+   * source that was being refused with a success status, so the one counter
+   * meant to show "empty for 200 runs" read 0 for exactly those sources. */
+  long collector_records = cs.n;
   if (real_collector && cs.n == 0 && cs.notices == 0 &&
       (strcmp(run_st, "ok") != 0 || rc < 0))
     sched_disclose_fetch_failure(&sink, d, entity, rc, hosts, hosts_ok,
@@ -975,7 +994,7 @@ int scheduler_run_source(db_handle *db, const source_def *d,
     fetch_log_set_bytes(db, flid, bytes_in);
     sources_row_record(db, d->id, status, stored >= 0 ? stored_data : cs.n,
                        duration_ms, why);
-    if (!entity) sched_state_record(db, d, status, cs.n);
+    if (!entity) sched_state_record(db, d, status, collector_records);
   }
   return rc;
 }
@@ -1066,6 +1085,17 @@ static int sched_row_benched(db_handle *db, const char *id) {
  * already true — it is the reason this port is a pool and not a rewrite.  */
 
 #define SCHED_QCAP 2048
+/* Measured 2026-11-16 on 180 s boots of the full registry (96,472 scheduled
+ * rows), fresh database each: 8 workers 1.38 runs/s, 24 workers 2.09, 48
+ * workers 2.50 — and not one refused write (EMIT-FAILED 0, attach failures 0)
+ * at any of them, so SQLite contention is not what bounds the pool. The
+ * return past 24 is small and was not monotonic across readings, so 24 is the
+ * default; JO_SCHED_WORKERS moves it (1..128). The 6 h policy needs ~4.5
+ * runs/s at this registry size, which no setting reached from the measuring
+ * container: the heartbeat's deferred=N is how to see the backlog. */
+/* (the default itself is the literal in env_long("JO_SCHED_WORKERS", …),
+ * written there so tools/gen_env_doc.py can read it) */
+#define SCHED_RT_RESERVE 64        /* queue slots only a real-time row may take */
 
 enum { LANE_COLLECT = 0, LANE_MAINT = 1, LANE_N = 2 };
 
@@ -1453,6 +1483,65 @@ void scheduler_running_summary(char *buf, size_t cap, const char *exclude_id) {
  * one instant). ramp <= 0 disables the compression; stag <= 0 disables the
  * ramp altogether. Politeness per upstream is hostgate's job, which is what
  * makes a tighter ramp safe. */
+/* ── the wall clock can step; the plan must not ────────────────────────────
+ *
+ * Every due time here is a wall-clock time_t, because the health state it is
+ * planned from (backoff_until, last_probe, last run) is persisted as one. So
+ * an NTP correction or an operator setting the date used to move the whole
+ * plan: a step BACK of N seconds froze the fleet for N seconds, and a step
+ * FORWARD made every source due at once and tripped the watchdog on every
+ * running one.
+ *
+ * The dispatcher compares the wall clock's progress with a clock that cannot
+ * be set (CLOCK_BOOTTIME where there is one — it counts a suspended machine's
+ * sleep, so a laptop that slept eight hours is correctly eight hours overdue —
+ * else CLOCK_MONOTONIC). A difference of SCHED_CLOCK_STEP_MIN or more is a
+ * step, and every time in the plan is shifted by it, so what was due in ten
+ * minutes is still due in ten minutes. Smaller differences are slew and tick
+ * rounding, and are left alone. */
+#define SCHED_CLOCK_STEP_MIN 5
+
+long sched_clock_step(time_t wall_prev, time_t wall_now,
+                      long long steady_prev, long long steady_now) {
+  long long d = ((long long)wall_now - (long long)wall_prev) - (steady_now - steady_prev);
+  return (d >= SCHED_CLOCK_STEP_MIN || d <= -SCHED_CLOCK_STEP_MIN) ? (long)d : 0;
+}
+
+/* ── walk order ───────────────────────────────────────────────────────────
+ *
+ * The registry is in LINK order, so neighbours are one table's rows — which
+ * are very often one upstream's: 122 consecutive rows on one open-data host,
+ * 68 Google News editions. Walking it 0,1,2… fills the queue with whole
+ * clusters, and since hostgate serves one request per host per gap, most of
+ * the pool then stands in line for the same few hosts. Measured on a 180 s
+ * boot, 48 workers: 2 requests in flight, median run 4.1 s against 1.2 s at 8.
+ *
+ * sched_walk_index(k) visits every source exactly once in a stride that is
+ * coprime with the registry size, so consecutive picks are thousands of rows
+ * apart and a queue's worth of rows is a queue's worth of hosts. */
+int sched_walk_stride(int n) {
+  if (n < 3) return 1;
+  int s = n / 3 > 7919 ? 7919 : n / 3 + 1;
+  for (;; s++) {
+    int a = n, b = s;
+    while (b) { int t = a % b; a = b; b = t; }
+    if (a == 1) return s;
+  }
+}
+
+int sched_walk_index(int k, int n, int stride) {
+  return n > 0 ? (int)(((long long)k * stride) % n) : 0;
+}
+
+static long long sched_steady_sec(void) {
+  struct timespec ts;
+#ifdef CLOCK_BOOTTIME
+  if (clock_gettime(CLOCK_BOOTTIME, &ts) == 0) return (long long)ts.tv_sec;
+#endif
+  clock_gettime(CLOCK_MONOTONIC, &ts);
+  return (long long)ts.tv_sec;
+}
+
 long sched_boot_offset(int k, int m, int workers, long stag, long ramp,
                        long interval) {
   if (stag <= 0 || k <= 0 || m <= 1) return 0;
@@ -1517,10 +1606,10 @@ void scheduler_loop(db_handle *db) {
    * was the only variable: 1 worker → 5 runs (a single 55.8 s `5g-coverage`
    * consumed the whole window and the fleet never got past "a"); 8 → 63 runs;
    * 16 → 97 runs. The work is network-bound, not CPU-bound, so the ceiling is
-   * upstream politeness (hostgate) and sqlite write contention, not cores. 8
-   * is the conservative default for a first deploy; raise it once the
-   * heartbeat below shows a standing backlog. 1 = the old serial behaviour. */
-  int workers = (int)env_long("JO_SCHED_WORKERS", 8, 1, 32);
+   * upstream politeness (hostgate), not cores. The default and the 2026-11-16
+   * measurement behind it are in the comment dated 2026-11-16 above. 1 = the old serial
+   * behaviour. */
+  int workers = (int)env_long("JO_SCHED_WORKERS", 24, 1, 128);
   /* The pods are few, mostly short, and must never wait on the fleet. Two, so
    * one long LLM-bound pod (repair, enrichment) cannot hold the WAL
    * checkpoint or retention behind it. */
@@ -1559,7 +1648,9 @@ void scheduler_loop(db_handle *db) {
   /* Pass 2: place them. */
   int k[LANE_N] = {0};
   long last[LANE_N] = {0};
-  for (int i = 0; i < n; i++) {
+  int stride = sched_walk_stride(n);
+  for (int w = 0; w < n; w++) {
+    int i = sched_walk_index(w, n, stride);       /* spread hosts along the ramp too */
     const source_def *d = g_all[i];
     if (d->update_interval_sec <= 0 || (skip && skip[i])) continue;
     if (hold && hold[i] > now0) continue;
@@ -1589,12 +1680,32 @@ void scheduler_loop(db_handle *db) {
                   "worker(s)\n", n, workers, mworkers);
 
   unsigned long tick = 0;
+  time_t wall_prev = time(NULL);
+  long long steady_prev = sched_steady_sec();
   int cursor = 0, deferred = 0;
   unsigned cad_gen = cadence_generation();
   unsigned ovr_gen = source_interval_generation();
   for (;;) {
     if (atomic_load(&g_shutdown)) { sleep(1); continue; }
     time_t now = time(NULL);
+    long long steady = sched_steady_sec();
+    long step = sched_clock_step(wall_prev, now, steady_prev, steady);
+    wall_prev = now; steady_prev = steady;
+    if (step) {
+      pthread_mutex_lock(&g_q.mu);
+      for (int i = 0; i < n; i++) {
+        if (next[i])          next[i]          += step;
+        if (g_q.due[i])       g_q.due[i]       += step;
+        if (g_q.started[i])   g_q.started[i]   += step;
+        if (g_q.warned[i])    g_q.warned[i]    += step;
+        if (g_state[i].backoff_until) g_state[i].backoff_until += step;
+        if (g_state[i].last_probe)    g_state[i].last_probe    += step;
+        if (g_state[i].last_run)      g_state[i].last_run      += step;
+      }
+      pthread_mutex_unlock(&g_q.mu);
+      fprintf(stderr, "[sched] the wall clock stepped %+lds; the plan moved with it "
+                      "(no source was made due or held back by the step)\n", step);
+    }
     /* The cadence policy changed (PUT /api/sources/cadence), or a per-source
      * interval was set or cleared (PUT/DELETE /api/sources/:id/interval): a
      * row whose next due time is further away than its NEW spacing is pulled
@@ -1630,7 +1741,8 @@ void scheduler_loop(db_handle *db) {
     int room[LANE_N];
     for (int ln = 0; ln < LANE_N; ln++) room[ln] = SCHED_QCAP - g_q.lane[ln].count;
     for (int k = 0; k < n; k++) {
-      int i = cursor + k < n ? cursor + k : cursor + k - n;
+      int pos = cursor + k < n ? cursor + k : cursor + k - n;
+      int i = sched_walk_index(pos, n, stride);
       const source_def *d = g_all[i];
       if (d->update_interval_sec <= 0 || now < next[i]) continue;
       if (g_q.running[i]) {
@@ -1640,7 +1752,12 @@ void scheduler_loop(db_handle *db) {
         continue;
       }
       int ln = lane_of(d);
-      if (room[ln] <= 0) { deferred++; if (first_deferred < 0) first_deferred = i; continue; }
+      /* The last SCHED_RT_RESERVE slots of a lane are for real-time rows
+       * (cadence.h): under a standing backlog the queue is always full, and
+       * a 10 s feed waiting its round-robin turn behind 90,000 rows would be
+       * hours late whatever its interval says. */
+      int need = cadence_is_realtime(d->update_interval_sec) ? 0 : SCHED_RT_RESERVE;
+      if (room[ln] <= need) { deferred++; if (first_deferred < 0) first_deferred = pos; continue; }
       room[ln]--;
       cand[nc++] = i;
     }
@@ -1661,7 +1778,13 @@ void scheduler_loop(db_handle *db) {
         then = now + (time_t)base;            /* search_only or benched: look again */
       } else {
         double overdue = (double)(now - was_due) / (double)(base > 0 ? base : 1);
-        if (q_push(i, sched_priority(&st, source_trust_score(db, d->id), overdue)) < 0)
+        double key = sched_priority(&st, source_trust_score(db, d->id), overdue);
+        /* ...and a healthy real-time row leaves the queue first too: its
+         * key sits below every band (sched_priority's lowest is -4). A
+         * failing one keeps its band — backoff is not bypassed. */
+        if (cadence_is_realtime(d->update_interval_sec) && st.consecutive_failures == 0)
+          key -= 8.0;
+        if (q_push(i, key) < 0)
           continue;                           /* stays due */
         /* Provisional — planned from the state before the run, and corrected
          * from its outcome by sched_publish. */

@@ -1,10 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { LuRefreshCw, LuSearch } from 'react-icons/lu';
+import { api } from '../../api/client.js';
 import { useApi } from '../../hooks/useApi.js';
 import { usePagedList } from '../../hooks/usePagedList.js';
 import { Page, Card, Pill, Button, Input, Select, Segmented, Toggle, ErrorNotice, EmptyState, LoadingState, BoundNote, PagedFooter, cx } from '../ui/kit.jsx';
 import SourcesPanel from '../panels/SourcesPanel.jsx';
+import Typeahead from '../ui/Typeahead.jsx';
+import RunControl, { isPivotKind } from './RunControl.jsx';
 import { relativeTime } from '../../utils/time.js';
 import CadenceCard from './CadenceCard.jsx';
 import { useAuthOptional } from '../../auth/AuthContext.jsx';
@@ -48,11 +51,65 @@ function Tile({ label, value, sub, tone }) {
 function FacetSelect({ label, value, onChange, facet, labelled }) {
   const vals = facet?.values || [];
   return (
-    <Select value={value || ''} onChange={(e) => onChange(e.target.value)} title={label}>
+    <Select value={value || ''} onChange={(e) => onChange(e.target.value)} title={label} aria-label={label}>
       <option value="">{label}{facet?.total > facet?.shown ? ` (top ${facet.shown} of ${facet.total})` : ''}</option>
       {value && !vals.some((v) => v.key === value) && <option value={value}>{value}</option>}
       {vals.map((v) => <option key={v.key} value={v.key}>{labelled && v.label ? `${v.label} · ${v.key}` : v.key} ({fmtCount(v.count)})</option>)}
     </Select>
+  );
+}
+
+/* Find a source — a pivot above all — by what it does rather than by its id:
+ * GET /api/sources/semantic?q=&kind=&k=. The answer says what it searched; a
+ * 503 (index not ready) is shown as such, never as "no pivot matches". Each
+ * pivot hit carries its own entity form, so the entity goes straight in. */
+function PivotFinder() {
+  const [draft, setDraft] = useState('');
+  const [kind, setKind] = useState('pivot');
+  const [state, setState] = useState({ busy: false, error: null, data: null, asked: null });
+  const ask = async (e) => {
+    e.preventDefault();
+    const q = draft.trim();
+    if (!q) return;
+    setState({ busy: true, error: null, data: null, asked: q });
+    try {
+      const sp = new URLSearchParams({ q, k: '10' });
+      if (kind) sp.set('kind', kind);
+      setState({ busy: false, error: null, data: await api.get(`/api/sources/semantic?${sp.toString()}`), asked: q });
+    } catch (err) { setState({ busy: false, error: err, data: null, asked: q }); }
+  };
+  const results = Array.isArray(state.data?.results) ? state.data.results : [];
+  return (
+    <Card className="space-y-2" data-testid="pivot-finder">
+      <form onSubmit={ask} className="flex flex-wrap items-center gap-2">
+        <span className="text-[10px] uppercase tracking-widest text-osint-muted">find by meaning</span>
+        <Input className="flex-1 min-w-[220px]" aria-label="Describe what you want to look up" placeholder="e.g. company ownership registry, sanctions list, vessel tracking…" value={draft} onChange={(e) => setDraft(e.target.value)} />
+        <Select value={kind} onChange={(e) => setKind(e.target.value)} aria-label="Kind of source to find">
+          <option value="pivot">entity pivots</option>
+          <option value="scheduled">scheduled feeds</option>
+          <option value="">any kind</option>
+        </Select>
+        <Button type="submit" busy={state.busy} disabled={!draft.trim()}>Find</Button>
+      </form>
+      {state.error && <ErrorNotice error={state.error} title={state.error.status === 503 ? 'The meaning index is not ready' : 'Could not search by meaning'} />}
+      {state.data && results.length === 0 && <div className="text-xs text-osint-muted">Nothing in the index matches “{state.asked}”.</div>}
+      {results.length > 0 && (
+        <>
+          <BoundNote shown={results.length} total={null} noun="matches" />
+          <ul className="divide-y divide-osint-border/40">
+            {results.map((r) => (
+              <li key={r.id} className="py-2 flex flex-wrap items-center justify-between gap-2">
+                <div className="min-w-0">
+                  <Link to={`/console/sources/${encodeURIComponent(r.id)}`} className="text-sm text-osint-text hover:text-accent">{r.name || r.id}</Link>
+                  <div className="font-mono text-[10px] text-osint-muted truncate">{r.id} · {r.kind}{r.category ? ` · ${r.category}` : ''}{(r.entity_types || []).length ? ` · for ${r.entity_types.join(', ')}` : ''}</div>
+                </div>
+                {isPivotKind(r.kind) && <RunControl source={{ id: r.id, kind: r.kind }} compact />}
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+    </Card>
   );
 }
 
@@ -70,7 +127,9 @@ export default function SourcesListPage() {
   const collectors = useApi('/api/collectors');
   const sum = summary.data?.summary;
   const auth = useAuthOptional();
-  const canEditCadence = Boolean(auth?.isPlatformOperator || auth?.canManageWorkspace);
+  // The server's PUT /api/sources/cadence is platform-operator only, and
+  // AuthContext exports that fact as `isPlatformAdmin` (never `isPlatformOperator`).
+  const canEditCadence = auth?.isPlatformAdmin === true;
   const facets = list.meta?.facets;
 
   return (
@@ -78,7 +137,7 @@ export default function SourcesListPage() {
       subtitle={<span>Every registered source, searched on the server · <Link to="/console/collectors" className="text-accent hover:underline">collectors</Link></span>}
       actions={<div className="flex items-center gap-2">
         <Button size="sm" onClick={() => setShowProbe((v) => !v)} className={cx(showProbe && 'border-accent/40 text-accent')} title="Live probe detail (operator tool)">Probe detail</Button>
-        <Button size="sm" onClick={() => { list.reload(); summary.reload({ silent: true }); }} title="Reload"><LuRefreshCw size={12} /></Button>
+        <Button size="sm" onClick={() => { list.reload(); summary.reload({ silent: true }); }} title="Reload" aria-label="Reload"><LuRefreshCw size={12} /></Button>
       </div>}
     >
       {showProbe && <div className="absolute top-3 right-3 z-40"><SourcesPanel onClose={() => setShowProbe(false)} /></div>}
@@ -97,12 +156,17 @@ export default function SourcesListPage() {
 
       <form onSubmit={(e) => { e.preventDefault(); set({ q: draft.trim() }); }} className="flex flex-wrap items-center gap-2">
         <div className="relative flex-1 min-w-[220px]">
-          <LuSearch size={13} className="absolute left-2 top-2.5 text-osint-muted" />
-          <Input className="pl-7 w-full" placeholder="search id, name, 日本語, description, collector, host…" value={draft} onChange={(e) => setDraft(e.target.value)} />
+          <LuSearch aria-hidden="true" size={13} className="absolute left-2 top-2.5 text-osint-muted" />
+          <Input className="pl-7 w-full" aria-label="Search sources" placeholder="search id, name, 日本語, description, collector, host…" value={draft} onChange={(e) => setDraft(e.target.value)} />
         </div>
         <Button type="submit" variant="primary">Search</Button>
         <FacetSelect label="all groups" value={filters.group} onChange={(v) => set({ group: v })} facet={facets?.groups} labelled />
-        <FacetSelect label="all collectors" value={filters.collector} onChange={(v) => set({ collector: v })} facet={facets?.collectors} labelled />
+        {/* ~640 collectors but the facet carries the top N: a typeahead on the
+            collectors route reaches every one of them. */}
+        <Typeahead label="Collector" value={filters.collector} clearLabel="all collectors" placeholder="all collectors — type to search" className="w-[220px]"
+          onChange={(v) => set({ collector: v })}
+          pathFor={(t) => `/api/collectors${t ? `?q=${encodeURIComponent(t)}` : ''}`}
+          pick={(j) => (Array.isArray(j?.data) ? j.data : []).slice(0, 30).map((c) => ({ value: c.key, label: c.label || c.key, sub: `${c.key}${c.sources != null ? ` · ${fmtCount(c.sources)} sources` : ''}` }))} />
         <FacetSelect label="all categories" value={filters.category} onChange={(v) => set({ category: v })} facet={facets?.categories} />
         <FacetSelect label="all engines" value={filters.engine} onChange={(v) => set({ engine: v })} facet={facets?.engines} />
         <FacetSelect label="all kinds" value={filters.kind} onChange={(v) => set({ kind: v })} facet={facets?.kinds} />
@@ -110,11 +174,14 @@ export default function SourcesListPage() {
         {/* "broken" is every state that is not ok — one query, so a state added
             later cannot be missed by adding four counts together. */}
         <FacetSelect label="all health" value={filters.health} onChange={(v) => set({ health: v })} facet={facets?.healths} />
+        <Button size="sm" type="button" aria-pressed={filters.kind === 'pivot'} className={cx(filters.kind === 'pivot' && 'border-accent/40 text-accent')} title="Entity pivots: sources you run with an entity" onClick={() => set({ kind: filters.kind === 'pivot' ? '' : 'pivot' })}>pivots only</Button>
         <Toggle on={Boolean(filters.has_items)} onChange={(v) => set({ has_items: v })} label="with items only" />
         <Segmented value={filters.sort || 'name'} onChange={(v) => set({ sort: v })} options={[{ value: 'name', label: 'name' }, { value: 'items', label: 'items' }, { value: 'fetched', label: 'fetched' }, { value: 'grade', label: 'grade' }, { value: 'collector', label: 'collector' }]} />
         <Toggle on={Boolean(filters.desc)} onChange={(v) => set({ desc: v })} label="desc" />
         {Object.keys(filters).length > 0 && <Button size="sm" variant="ghost" onClick={() => setSp(new URLSearchParams(), { replace: true })}>clear</Button>}
       </form>
+
+      <PivotFinder />
 
       {list.loading && list.rows.length === 0 && <LoadingState label="Searching the registry…" />}
       {list.error && <ErrorNotice error={list.error} title="Could not search sources" onRetry={list.reload} />}
@@ -131,9 +198,10 @@ export default function SourcesListPage() {
       {list.rows.length > 0 && (
         <Card padded={false} className="overflow-x-auto">
           <table className="w-full text-xs">
+            <caption className="sr-only">Registered sources</caption>
             <thead>
               <tr className="border-b border-osint-border text-osint-muted uppercase tracking-wider text-left">
-                <th className="px-3 py-2">Status</th><th className="px-3 py-2">Source</th><th className="px-3 py-2">Collector</th><th className="px-3 py-2">Engine · kind</th><th className="px-3 py-2">Interval</th><th className="px-3 py-2 text-right">Items</th><th className="px-3 py-2">Last fetched</th><th className="px-3 py-2">Grade</th>
+                <th scope="col" className="px-3 py-2">Status</th><th scope="col" className="px-3 py-2">Source</th><th scope="col" className="px-3 py-2">Collector</th><th scope="col" className="px-3 py-2">Engine · kind</th><th scope="col" className="px-3 py-2">Interval</th><th scope="col" className="px-3 py-2 text-right">Items</th><th scope="col" className="px-3 py-2">Last fetched</th><th scope="col" className="px-3 py-2">Grade</th>
               </tr>
             </thead>
             <tbody>

@@ -51,9 +51,6 @@ struct ApiKeysView: View {
     /// — the route itself is admin-gated, so reaching it implies the right.
     @State private var canManage: Bool = true
     @State private var policy: String = ""
-    /// Snapshot of `/api/status` used by the detail sheet to show which
-    /// sources/collectors reference each key. Best-effort.
-    @State private var statusRows: [StatusRow] = []
     @State private var loading: Bool = true
     @State private var error: String?
 
@@ -124,8 +121,7 @@ struct ApiKeysView: View {
         .sheet(item: $selected) { row in
             ApiKeyDetailView(row: row,
                              scope: scope,
-                             canManage: canManage,
-                             statusRows: statusRows) { updated in
+                             canManage: canManage) { updated in
                 if let i = items.firstIndex(where: { $0.id == updated.id }) {
                     items[i] = updated
                 }
@@ -297,7 +293,6 @@ struct ApiKeysView: View {
         loading = true
         defer { loading = false }
         let api = apiClient.api
-        async let statusTask = api.status()
         do {
             var fresh: [KeyRow] = []
             var manage = true
@@ -311,12 +306,10 @@ struct ApiKeysView: View {
             case .platform:
                 fresh = try await api.apiKeys().map(KeyRow.init)
             }
-            let env = try? await statusTask
             await MainActor.run {
                 self.items = fresh
                 self.canManage = manage
                 self.policy = pol
-                self.statusRows = env?.apis ?? []
                 self.error = nil
             }
         } catch {

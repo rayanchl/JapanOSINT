@@ -45,29 +45,35 @@ int main(void) {
   unsigned g0 = cadence_generation();
   assert(cadence_set(&db, &p, "ops@example.test", &err) == 0);
   assert(cadence_generation() == g0 + 1);
-  assert(cadence_apply(60) == 21600 && cadence_apply(604800) == 21600 && cadence_apply(0) == 0);
-  assert(!strcmp(cadence_mode_for(60), "global") && !strcmp(cadence_mode_for(0), "declared"));
+  assert(cadence_apply(600) == 21600 && cadence_apply(604800) == 21600 && cadence_apply(0) == 0);
+  /* a real-time feed (declared under five minutes) is outside the policy: an
+   * earthquake early warning every six hours is not a slower feed */
+  assert(cadence_is_realtime(10) && cadence_is_realtime(299) && !cadence_is_realtime(300) && !cadence_is_realtime(0));
+  assert(cadence_apply(10) == 10 && cadence_apply(60) == 60 && cadence_apply(299) == 299 && cadence_apply(300) == 21600);
+  assert(!strcmp(cadence_mode_for(60), "declared"));
+  assert(!strcmp(cadence_mode_for(600), "global") && !strcmp(cadence_mode_for(0), "declared"));
   printf("  global 21600: every scheduled row at 6 h, pivots untouched\n");
 
   cadence_policy c = {0, 900, 86400};
   assert(cadence_set(&db, &c, "ops@example.test", &err) == 0);
-  assert(cadence_apply(60) == 900 && cadence_apply(3600) == 3600 && cadence_apply(604800) == 86400);
-  assert(!strcmp(cadence_mode_for(60), "clamped") && !strcmp(cadence_mode_for(3600), "declared"));
+  assert(cadence_apply(600) == 900 && cadence_apply(3600) == 3600 && cadence_apply(604800) == 86400);
+  assert(cadence_apply(60) == 60);            /* nor does an operator's floor hold one */
+  assert(!strcmp(cadence_mode_for(600), "clamped") && !strcmp(cadence_mode_for(3600), "declared"));
   printf("  clamp [900, 86400]: floor and ceiling apply, the middle stands\n");
 
   /* persistence: a fresh init reads the database back */
   cadence_init(&db);
   assert(!strcmp(cadence_source(), "db"));
-  assert(cadence_apply(60) == 900 && cadence_apply(604800) == 86400);
+  assert(cadence_apply(600) == 900 && cadence_apply(604800) == 86400);
   printf("  persisted: re-init reads the clamp back from app_settings\n");
 
   /* the environment bootstraps only when the database holds no policy */
   setenv("JO_SCHED_INTERVAL_SEC", "7200", 1);
   cadence_init(&db);
-  assert(!strcmp(cadence_source(), "db") && cadence_apply(60) == 900);
+  assert(!strcmp(cadence_source(), "db") && cadence_apply(600) == 900);
   cadence_policy none = {0, 0, 0};
   assert(cadence_set(&db, &none, "ops@example.test", &err) == 0);
-  assert(cadence_apply(60) == 60 && !strcmp(cadence_mode_for(60), "declared"));
+  assert(cadence_apply(600) == 600 && !strcmp(cadence_mode_for(600), "declared"));
   printf("  cleared: zeros mean declared again, env ignored while a db row exists\n");
 
   /* refusals, each by name */
@@ -102,12 +108,13 @@ int main(void) {
   cJSON *est = cJSON_GetObjectItem(j, "estimate");
   double rows = cJSON_GetObjectItem(est, "scheduled_rows")->valuedouble;
   double eff = cJSON_GetObjectItem(est, "runs_per_day_effective")->valuedouble;
-  /* daily global: one run per row per day — except a maintenance pod, which
-   * the policy does not reach and which keeps the interval it declares */
+  /* daily global: one run per row per day — except a maintenance pod and a
+   * real-time feed, which the policy does not reach: each keeps the interval
+   * it declares */
   double want = 0; const source_def **all = registry_all();
   for (int i = 0; i < registry_count(); i++) {
     long d = all[i]->update_interval_sec;
-    if (d > 0) want += sched_is_pod(all[i]) ? 86400.0 / (double)d : 1.0;
+    if (d > 0) want += (sched_is_pod(all[i]) || cadence_is_realtime(d)) ? 86400.0 / (double)d : 1.0;
   }
   assert(rows > 0 && eff == (double)(long)(want + 0.5) && eff >= rows);
   printf("  json: %0.f scheduled rows, %0.f runs/day under a daily global policy\n", rows, eff);
@@ -118,10 +125,10 @@ int main(void) {
   assert(db_exec(&db, "UPDATE app_settings SET value='1' WHERE key='sched.max_interval_sec'", NULL) == 0);
   assert(db_exec(&db, "UPDATE app_settings SET value='0' WHERE key='sched.global_interval_sec'", NULL) == 0);
   cadence_init(&db);
-  assert(!strcmp(cadence_source(), "env") && cadence_apply(60) == 7200);
+  assert(!strcmp(cadence_source(), "env") && cadence_apply(600) == 7200);
   unsetenv("JO_SCHED_INTERVAL_SEC"); setenv("JO_SCHED_MAX_INTERVAL_SEC", "5", 1);
   cadence_init(&db);
-  assert(!strcmp(cadence_source(), "default") && cadence_apply(60) == 21600);
+  assert(!strcmp(cadence_source(), "default") && cadence_apply(600) == 21600);
   unsetenv("JO_SCHED_MAX_INTERVAL_SEC");
   printf("  boot: an invalid stored or env policy is ignored, not honoured\n");
 

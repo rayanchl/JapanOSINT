@@ -120,8 +120,16 @@ const char *cadence_source(void) {
 }
 unsigned cadence_generation(void) { return atomic_load(&g_gen); }
 
+int cadence_is_realtime(long declared) {
+  return declared > 0 && declared < CAD_REALTIME_SEC;
+}
+
 static long apply(const cadence_policy *p, long declared) {
   if (declared <= 0) return declared;
+  /* A real-time feed is outside the policy (cadence.h, CAD_REALTIME_SEC): an
+   * earthquake early warning read every six hours is not a slower feed, it
+   * is a different and useless one. */
+  if (cadence_is_realtime(declared)) return declared;
   if (p->global_sec > 0) return p->global_sec;
   long v = declared;
   if (p->min_sec > 0 && v < p->min_sec) v = p->min_sec;
@@ -135,7 +143,7 @@ long cadence_apply(long declared) {
 }
 
 const char *cadence_mode_for(long declared) {
-  if (declared <= 0) return "declared";
+  if (declared <= 0 || cadence_is_realtime(declared)) return "declared";
   cadence_policy p = cadence_get();
   if (p.global_sec > 0) return "global";
   return apply(&p, declared) != declared ? "clamped" : "declared";
@@ -221,6 +229,7 @@ char *cadence_json(db_handle *db) {
   cJSON_AddNumberToObject(pj, "global_interval_sec", (double)p.global_sec);
   cJSON_AddNumberToObject(pj, "min_interval_sec", (double)p.min_sec);
   cJSON_AddNumberToObject(pj, "max_interval_sec", (double)p.max_sec);
+  cJSON_AddNumberToObject(pj, "realtime_below_sec", (double)CAD_REALTIME_SEC);
   cJSON_AddStringToObject(pj, "mode", p.global_sec > 0 ? "global" : (p.min_sec > 0 || p.max_sec > 0) ? "clamped" : "declared");
   cJSON_AddItemToObject(o, "policy", pj);
   pthread_mutex_lock(&g_mu);

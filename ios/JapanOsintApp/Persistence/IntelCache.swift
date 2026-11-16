@@ -2,7 +2,7 @@ import Foundation
 import Combine
 import SwiftData
 
-/// SwiftData-backed cache for `/api/intel/sources` and `/api/intel/items`.
+/// SwiftData-backed cache for the Intel tab's first page of sources and `/api/intel/items`.
 ///
 /// Why: previously these endpoints were re-fetched from scratch on every
 /// view appearance. With the cache, opening Intel paints instantly from the
@@ -30,15 +30,37 @@ final class IntelCache: ObservableObject {
         }
     }
 
-    /// Replace the source catalogue wholesale. The catalogue is small
-    /// (dozens of rows) and every fresh API response is authoritative,
-    /// so a delete-then-insert is simpler than diffing.
+    /// Most rows the offline catalogue keeps. The registry is ~61k sources;
+    /// the cache holds only what the Intel tab has on screen (its first page),
+    /// never the catalogue.
+    static let maxCachedSources = 100
+
+    /// Replace the cache with the rows the Intel tab is showing — at most
+    /// `maxCachedSources`, so the write is bounded whatever the registry size.
+    /// (It used to delete and re-insert EVERY source on the main actor after
+    /// each load and each Run tap.)
     func cacheSources(_ sources: [IntelSource]) {
         try? context.delete(model: CachedIntelSource.self)
         let now = Date()
-        for source in sources {
+        for source in sources.prefix(Self.maxCachedSources) {
             guard let data = try? JSONEncoder().encode(source) else { continue }
             context.insert(CachedIntelSource(id: source.id, rawJSON: data, fetchedAt: now))
+        }
+        save()
+    }
+
+    /// Refresh ONE cached row (after a manual run). Inserts it if absent.
+    func upsertSource(_ source: IntelSource) {
+        guard let data = try? JSONEncoder().encode(source) else { return }
+        let id = source.id
+        let descriptor = FetchDescriptor<CachedIntelSource>(
+            predicate: #Predicate { $0.id == id }
+        )
+        if let existing = (try? context.fetch(descriptor))?.first {
+            existing.rawJSON = data
+            existing.fetchedAt = Date()
+        } else {
+            context.insert(CachedIntelSource(id: id, rawJSON: data, fetchedAt: Date()))
         }
         save()
     }

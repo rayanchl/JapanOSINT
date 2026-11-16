@@ -182,6 +182,12 @@ typedef struct {
 char *casesapi(db_handle *db, const tenant_ctx *t, const char *method,
                const char *seg, const char *act, const char *body,
                const cases_query *q, int *status);
+/* Same, with the caller's platform-operator flag (opgate_check()==0). Only an
+ * operator may pin a `breach:` intel item with its content; casesapi() above
+ * is this with is_operator=0. */
+char *casesapi_ex(db_handle *db, const tenant_ctx *t, const char *method,
+                  const char *seg, const char *act, const char *body,
+                  const cases_query *q, int *status, int is_operator);
 
 #endif
 
