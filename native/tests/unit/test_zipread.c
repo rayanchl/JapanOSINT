@@ -161,7 +161,7 @@ int main(void) {
     ok(zip_find_entry((char *)c, z.n, "readme.txt", &n) == NULL, "unsupported compression method -> NULL");
     memcpy(c, z.b, z.n); set32(c, cdpos[1] + 24, 0xffffffffUL);
     r = zip_find_entry((char *)c, z.n, "readme.txt", &n);
-    ok(r && n <= z.n, "stored entry declaring size > buffer is clamped to bytes that exist");
+    ok(r == NULL, "stored entry whose declared size exceeds the bytes present is unreadable (NULL), not returned short");
     free(r);
     memcpy(c, z.b, z.n); memset(c + lhpos[0] + 30 + strlen(es[0].name), 0xff, 4);
     ok(zip_find_entry((char *)c, z.n, "stop_times.txt", &n) == NULL, "corrupt deflate stream -> NULL");

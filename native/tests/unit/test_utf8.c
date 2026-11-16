@@ -52,9 +52,14 @@ int main(void) {
   ok(dec("\xff", 1, &a) == 0xFF && a == 1, "0xFF");
   ok(dec("\xc3\x28", 2, &a) == 0xC3 && a == 1, "lead followed by a non-continuation");
   ok(dec("\xe6\x9dX", 3, &a) == 0xE6 && a == 1, "3-byte lead, bad third byte");
-  /* documented: overlongs and surrogates are decoded as written */
-  ok(dec("\xc0\x80", 2, &a) == 0 && a == 2, "overlong NUL (C0 80) decodes as 0 with adv 2, as documented");
-  ok(dec("\xed\xa0\x80", 3, &a) == 0xD800 && a == 3, "surrogate half decoded as written, as documented");
+  /* well-framed but not a valid scalar value: U+FFFD, advancing ONE byte so the
+   * caller steps byte by byte through the hostile bytes (post-audit behaviour) */
+  ok(dec("\xc0\x80", 2, &a) == 0xFFFD && a == 1, "overlong NUL (C0 80) -> U+FFFD, adv 1 (no embedded NUL smuggled)");
+  ok(dec("\xe0\x80\xaf", 3, &a) == 0xFFFD && a == 1, "overlong '/' as 3 bytes -> U+FFFD");
+  ok(dec("\xed\xa0\x80", 3, &a) == 0xFFFD && a == 1, "UTF-16 surrogate half -> U+FFFD");
+  ok(dec("\xf4\x90\x80\x80", 4, &a) == 0xFFFD && a == 1, "above U+10FFFF -> U+FFFD");
+  ok(dec("\xf4\x8f\xbf\xbf", 4, &a) == 0x10FFFF && a == 4, "U+10FFFF itself is valid");
+  ok(dec("\xed\x9f\xbf", 3, &a) == 0xD7FF && a == 3, "U+D7FF (just below the surrogates) is valid");
 
   printf("-- walk every prefix and every byte value without spinning or overrunning\n");
   {
