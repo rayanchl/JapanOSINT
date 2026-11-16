@@ -1448,6 +1448,7 @@ static const hp_source HP3B68_WEBCAMS[] = {
     .tags = "\"webcam\",\"camera\",\"traffic\",\"houston\",\"texas\",\"transtar\",\"usa\"",
     .mode = HP_JSON, .want = HP_ANY, .free_tier = 1,
     .url = "https://traffic.houstontranstar.org/data/layers/cctvSnapshots_json.js",
+    .headers = { "Accept: */*" },
     .array_path = "cameras",
     .body_keys = "dir",
     .id_keys = "id+dir+url",
