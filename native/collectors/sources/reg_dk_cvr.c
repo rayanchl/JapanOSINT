@@ -60,7 +60,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
 
   /* No token → the standard needs-credential notice and NO request (header
    * comment: the keyless quota is spent per IP range). */
-  const char *tok = getenv("CVRAPI_TOKEN");
+  const char *tok = jo_getenv("CVRAPI_TOKEN");
   if (!tok || !*tok)
     return jo_needs_credential(sink, "DK_CVR", "cvrapi.dk (Danish CVR)",
         (const char *const[]){ "CVRAPI_TOKEN", NULL },

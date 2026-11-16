@@ -19,9 +19,9 @@
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   (void)ctx;
-  const char *appId = getenv("ESTAT_APP_ID");
+  const char *appId = jo_getenv("ESTAT_APP_ID");
   if (!appId || !*appId) return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "estat-household", "estat-household", (const char *const[]){"ESTAT_APP_ID", NULL}, NULL, NULL);
-  const char *sdi = getenv("ESTAT_HOUSEHOLD_STATS_DATA_ID");
+  const char *sdi = jo_getenv("ESTAT_HOUSEHOLD_STATS_DATA_ID");
   if (!sdi || !*sdi) sdi = DEFAULT_STATS_DATA_ID;
 
   /* e-Stat serves a table in slices: while rows remain, RESULT_INF.NEXT_KEY

@@ -37,7 +37,7 @@ static int coord(cJSON *r, double *lon, double *lat) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *key = getenv("AGOOP_API_KEY");
+  const char *key = jo_getenv("AGOOP_API_KEY");
   if (!key || !*key) {
     fprintf(stderr, "[agoop-flow] gated (no AGOOP_API_KEY)\n");
     return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "agoop-flow", "agoop-flow", (const char *const[]){"AGOOP_API_KEY", NULL}, NULL, NULL);

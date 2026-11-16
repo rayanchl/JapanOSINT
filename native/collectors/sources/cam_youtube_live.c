@@ -5,7 +5,7 @@
  *
  * JS behaviour reproduced faithfully (the API-fetch + feature build):
  *   apiKey = envFor('YOUTUBE_API_KEY'); if (!apiKey) return [].
- *     → here: getenv("YOUTUBE_API_KEY"); unset/empty → 0 rows, return 0 (ran).
+ *     → here: jo_getenv("YOUTUBE_API_KEY"); unset/empty → 0 rows, return 0 (ran).
  *   1) search.list:
  *      https://www.googleapis.com/youtube/v3/search?part=snippet&type=video
  *        &eventType=live&regionCode=JP&maxResults=50&key=<urlenc key>
@@ -121,7 +121,7 @@ static const char *thumb_url(cJSON *sn, const char *which) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *apiKey = getenv("YOUTUBE_API_KEY");
+  const char *apiKey = jo_getenv("YOUTUBE_API_KEY");
   if (!apiKey || !*apiKey) {
     fprintf(stderr,
       "[cam-youtube_live] YOUTUBE_API_KEY not set, skipping (0 cameras)\n");

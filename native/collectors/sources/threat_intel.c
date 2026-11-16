@@ -133,7 +133,7 @@ static int otx_query(http_client *http, const char *target, const char *itype,
 
 /* AbuseIPDB: one row for the IP report. Key-gated — no key → skip (return 0). */
 static int abuseipdb_query(http_client *http, const char *ip, intel_sink *sink) {
-  const char *key = getenv("ABUSEIPDB_API_KEY");
+  const char *key = jo_getenv("ABUSEIPDB_API_KEY");
   if (!key || !*key) return 0;   /* degrade gracefully w/o key, no fabricated row */
   char url[512];
   snprintf(url, sizeof url,

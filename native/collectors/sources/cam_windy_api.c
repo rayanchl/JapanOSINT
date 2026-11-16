@@ -5,7 +5,7 @@
  *
  * JS behaviour reproduced faithfully:
  *   key = envFor('WINDY_API_KEY'); if (!key) { log; return []; }
- *     → here: getenv("WINDY_API_KEY"); unset/empty → 0 rows, return 0 (ran).
+ *     → here: jo_getenv("WINDY_API_KEY"); unset/empty → 0 rows, return 0 (ran).
  *   pageSize = 50 (Windy v3 caps `limit` at 50).
  *   for offset = 0; offset < 2000; offset += 50:
  *     url = https://api.windy.com/webcams/api/v3/webcams
@@ -100,7 +100,7 @@ static const char *getstr2(cJSON *o, const char *a, const char *b) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *key = getenv("WINDY_API_KEY");
+  const char *key = jo_getenv("WINDY_API_KEY");
   if (!key || !*key) {
     fprintf(stderr,
       "[cam-windy_api] WINDY_API_KEY not set, skipping (0 cameras)\n");

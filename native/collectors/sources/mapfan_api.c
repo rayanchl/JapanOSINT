@@ -38,7 +38,7 @@ static int coord(cJSON *r, double *lon, double *lat) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *key = getenv("MAPFAN_API_KEY");
+  const char *key = jo_getenv("MAPFAN_API_KEY");
   if (!key || !*key) {
     fprintf(stderr, "[mapfan-api] gated (no MAPFAN_API_KEY)\n");
     return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "mapfan-api", "mapfan-api", (const char *const[]){"MAPFAN_API_KEY", NULL}, NULL, NULL);

@@ -20,9 +20,9 @@ static const char *DORKS[] = {
 };
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *cseKey = getenv("GOOGLE_CSE_KEY");
-  const char *cseCx  = getenv("GOOGLE_CSE_CX");
-  const char *serpKey = getenv("SERPAPI_KEY");
+  const char *cseKey = jo_getenv("GOOGLE_CSE_KEY");
+  const char *cseCx  = jo_getenv("GOOGLE_CSE_CX");
+  const char *serpKey = jo_getenv("SERPAPI_KEY");
   int hasCse  = cseKey && *cseKey && cseCx && *cseCx;
   int hasSerp = serpKey && *serpKey;
   if (!(hasCse || hasSerp)) {

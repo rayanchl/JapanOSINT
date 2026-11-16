@@ -31,7 +31,7 @@ static const char *landuse_label(const char *code) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *url = getenv("MLIT_L03B_GEOJSON_URL");
+  const char *url = jo_getenv("MLIT_L03B_GEOJSON_URL");
   if (!url || !*url) {
     /* Gated, not failed: -1 logs fetch_log status='error' and opens a
      * collector_anomaly every tick for a source that was never configured.

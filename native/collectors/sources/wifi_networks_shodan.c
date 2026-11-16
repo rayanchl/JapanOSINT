@@ -28,7 +28,7 @@ static void passthru(cJSON *p, const char *k, cJSON *m, const char *ik) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *k = getenv("SHODAN_API_KEY");
+  const char *k = jo_getenv("SHODAN_API_KEY");
   if (!k || !*k) {
     fprintf(stderr, "[wifi-networks-shodan] gated (no SHODAN_API_KEY)\n");
     return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "wifi-networks-shodan", "wifi-networks-shodan", (const char *const[]){"SHODAN_API_KEY", NULL}, NULL, NULL);

@@ -27,7 +27,7 @@ static void passthru(cJSON *p, const char *outk, cJSON *r, const char *ink) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *key = getenv("VESSELFINDER_API_KEY");
+  const char *key = jo_getenv("VESSELFINDER_API_KEY");
   /* Gated, not failed: -1 would log fetch_log status='error' and open a
    * collector_anomaly on every tick for a source that simply has no key. */
   if (!key || !*key) {

@@ -45,8 +45,8 @@ static int centroid(cJSON *geom, double *cx, double *cy) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *cid = getenv("SENTINELHUB_CLIENT_ID");
-  const char *csec = getenv("SENTINELHUB_CLIENT_SECRET");
+  const char *cid = jo_getenv("SENTINELHUB_CLIENT_ID");
+  const char *csec = jo_getenv("SENTINELHUB_CLIENT_SECRET");
   if (!cid || !*cid || !csec || !*csec) {
     static const char *const envs[] = { "SENTINELHUB_CLIENT_ID",
                                         "SENTINELHUB_CLIENT_SECRET", NULL };

@@ -141,7 +141,7 @@ static cJSON *analyze_file(const char *path) {
 }
 
 static cJSON *perform_ocr(http_client *h, const char *image_url) {
-  const char *key = getenv("OCR_SPACE_API_KEY");
+  const char *key = jo_getenv("OCR_SPACE_API_KEY");
   cJSON *r = cJSON_CreateObject();
   cJSON_AddStringToObject(r, "service", "OCR.space");
   if (!key || !*key) {

@@ -27,7 +27,7 @@ static void put_dup_or_null(cJSON *p, const char *k, cJSON *v) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *key = getenv("URLSCAN_API_KEY");
+  const char *key = jo_getenv("URLSCAN_API_KEY");
   char keyh[256];
   const char *hdrs_anon[] = { "accept: application/json", NULL };
   const char *hdrs_key[]  = { "accept: application/json", keyh, NULL };

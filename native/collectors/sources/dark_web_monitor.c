@@ -110,7 +110,7 @@ static cJSON *search_pastebin(http_client *h, const char *q) {
 }
 
 static cJSON *search_intelx(http_client *h, const char *q) {
-  const char *key = getenv("INTELX_API_KEY");
+  const char *key = jo_getenv("INTELX_API_KEY");
   if (!key || !*key) {
     fprintf(stderr, "[DARK_WEB_MONITOR] intelx skipped (no INTELX_API_KEY)\n");
     return NULL;   /* upstream returns NULL → key omitted from output */

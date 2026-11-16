@@ -125,7 +125,7 @@ static cJSON *validate_phone(const char *norm) {
 
 /* NumVerify enrichment (real). NULL when no key or no usable response. */
 static cJSON *query_numverify(http_client *http, const char *norm) {
-  const char *key = getenv("NUMVERIFY_API_KEY");
+  const char *key = jo_getenv("NUMVERIFY_API_KEY");
   if (!key || !*key) return NULL;
   const char *num = norm[0] == '+' ? norm + 1 : norm;
   char url[512];

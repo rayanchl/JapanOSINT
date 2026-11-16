@@ -16,14 +16,14 @@
 #define DEFAULT_STATS_DATA_ID "0003445078"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *appId = getenv("ESTAT_APP_ID");
+  const char *appId = jo_getenv("ESTAT_APP_ID");
   if (!appId || !*appId) {
     static const char *const envs[] = { "ESTAT_APP_ID", NULL };
     return jo_needs_credential(sink, "jstat-map",
         "jSTAT MAP (e-Stat regional mesh population)",
         envs, API_BASE, "free appId at e-stat.go.jp/api");
   }
-  const char *sdi = getenv("JSTAT_MAP_STATS_DATA_ID");
+  const char *sdi = jo_getenv("JSTAT_MAP_STATS_DATA_ID");
   if (!sdi || !*sdi) sdi = DEFAULT_STATS_DATA_ID;
 
   /* e-Stat serves a table in slices: while rows remain, RESULT_INF.NEXT_KEY

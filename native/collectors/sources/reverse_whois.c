@@ -260,8 +260,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *entity = ctx->entity;
   if (!entity || !*entity) return -1;
 
-  const char *whoisxml_key = getenv("WHOISXML_API_KEY");
-  const char *securitytrails_key = getenv("SECURITYTRAILS_API_KEY");
+  const char *whoisxml_key = jo_getenv("WHOISXML_API_KEY");
+  const char *securitytrails_key = jo_getenv("SECURITYTRAILS_API_KEY");
 
   cJSON *combined = cJSON_CreateArray();
   query_viewdns_reverse(ctx->http, entity, combined);

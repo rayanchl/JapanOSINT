@@ -254,7 +254,7 @@ static int emit_defi(intel_sink *sink, cJSON *pr) {
 
 /* Emit the address-balance item (Etherscan). Returns 1 if emitted. */
 static int emit_addr_balance(intel_sink *sink, http_client *http, const char *addr) {
-  const char *ek = getenv("ETHERSCAN_API_KEY");
+  const char *ek = jo_getenv("ETHERSCAN_API_KEY");
   char url[512];
   if (ek && *ek)
     snprintf(url, sizeof url,
@@ -327,7 +327,7 @@ static int emit_addr_balance(intel_sink *sink, http_client *http, const char *ad
 #define WHALE_ETH_MAX_PAGES 20   /* exhaustive-ok: page-walk runaway guard; an early stop emits a collector-truncation-notice */
 
 static int emit_eth_txs(intel_sink *sink, http_client *http, const char *addr) {
-  const char *ek = getenv("ETHERSCAN_API_KEY");
+  const char *ek = jo_getenv("ETHERSCAN_API_KEY");
   int emitted = 0, capped = 0;
   int page;
   for (page = 1; page <= WHALE_ETH_MAX_PAGES; page++) {
@@ -419,7 +419,7 @@ static int emit_btc_stats(intel_sink *sink, http_client *http) {
 
 static int emit_whale_alert_feed(intel_sink *sink, http_client *http,
                                  long minv, time_t since) {
-  const char *key = getenv("WHALE_ALERT_API_KEY");
+  const char *key = jo_getenv("WHALE_ALERT_API_KEY");
   if (!key || !*key) return 0;     /* gated: no key → skip, no fabricated row */
   int emitted = 0, pages = 0, failed = 0, capped = 0;
   char cursor[256] = "";

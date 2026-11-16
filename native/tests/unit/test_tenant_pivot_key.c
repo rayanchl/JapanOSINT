@@ -25,7 +25,15 @@
  *      the run made with tA's own key stores under tenant tA and a
  *      workspace-qualified uid ("<source>|ws:tA|…"), so it neither lands in nor
  *      overwrites the shared corpus; runs with no workspace key (the env's, or
- *      tB with none saved) store in the shared corpus ("legacy") as before. */
+ *      tB with none saved) store in the shared corpus ("legacy") as before;
+ *   5. a HAND-WRITTEN collector (2026-11-16) that reads its credential through
+ *      jo_getenv() gets the workspace's key the same way, with the same
+ *      privacy and scrubbing: stored under tA and a "ws:" uid, the key
+ *      redacted; with no workspace, the environment's value and the shared
+ *      corpus; and the resolver is cleared when the run ends;
+ *   6. a stray tenant_secrets row under a CONFIGURATION name
+ *      (JO_HTTP_BLOCK_PRIVATE) never resolves, so a workspace cannot reach a
+ *      collector's configuration through its key store. */
 #include "core/keysapi.h"
 #include "core/osint_dispatch.h"
 #include "core/intel.h"
@@ -51,6 +59,26 @@ static const hp_source T_ROWS[] = {
     .key_env = KEY_ENV },
 };
 HP_REGISTER_TABLE(T_ROWS)
+
+/* A hand-written pivot: reads its credential the way the bespoke collectors
+ * do, and puts it in the record's link — exactly where a key leaks. */
+static int run_bespoke(const source_ctx *c, intel_sink *s) {
+  const char *k = jo_getenv(KEY_ENV);
+  char link[256], key[160];
+  snprintf(link, sizeof link, "https://bespoke.example/?q=%s&api_key=%s",
+           c->entity ? c->entity : "", k ? k : "none");
+  snprintf(key, sizeof key, "bespoke-%s", c->entity ? c->entity : "");
+  intel_item it = {0};
+  it.remote_key = key;
+  it.title = c->entity;
+  it.link = link;
+  it.record_type = "test-record";
+  return s->emit(s, &it) > 0 ? 0 : -1;
+}
+static const source_def t_bespoke = {
+  .id = "T_TENANT_BESPOKE", .collector = "osint_test", .name = "bespoke key test",
+  .update_interval_sec = 0, .run = run_bespoke, .category = "test" };
+REGISTER_SOURCE(t_bespoke)
 
 static void exec_ok(db_handle *db, const char *sql) {
   char *e = NULL;
@@ -205,6 +233,54 @@ int main(void) {
          && "no workspace key used: the shared corpus");
   free(txt);
   osint_result_free(&r);
+
+  /* 5. the hand-written collector */
+  { intel_sink sink = intel_sink_make(&db, "osint-search", "legacy");
+    osint_dispatch_tenant(&db, NULL, "T_TENANT_BESPOKE", "acme-bespoke", "name",
+                          &sink, &r, "tA");
+    intel_sink_free(&sink); }
+  { sqlite3_stmt *q;
+    assert(sqlite3_prepare_v2(db.h,
+      "SELECT tenant_id, uid, link FROM intel_items WHERE source_id='T_TENANT_BESPOKE' "
+      "AND title='acme-bespoke'", -1, &q, NULL) == SQLITE_OK);
+    int rows = 0;
+    while (sqlite3_step(q) == SQLITE_ROW) {
+      rows++;
+      const char *tn = (const char *)sqlite3_column_text(q, 0);
+      const char *uid = (const char *)sqlite3_column_text(q, 1);
+      const char *ln = (const char *)sqlite3_column_text(q, 2);
+      assert(tn && !strcmp(tn, "tA") && "the workspace's own row");
+      assert(uid && strstr(uid, "|ws:tA|") && "under a workspace uid");
+      assert(ln && strstr(ln, "api_key=[redacted]") && "the workspace key was used and scrubbed");
+      assert(!strstr(ln, TENANT_A) && !strstr(ln, ENV_VAL));
+    }
+    sqlite3_finalize(q);
+    assert(rows == 1); }
+  assert(!r.data || !strstr(r.data, TENANT_A));
+  osint_result_free(&r);
+  { intel_sink sink = intel_sink_make(&db, "osint-search", "legacy");
+    osint_dispatch(&db, NULL, "T_TENANT_BESPOKE", "acme-bespoke-env", "name", &sink, &r);
+    intel_sink_free(&sink); }
+  { sqlite3_stmt *q;
+    assert(sqlite3_prepare_v2(db.h,
+      "SELECT tenant_id, link FROM intel_items WHERE source_id='T_TENANT_BESPOKE' "
+      "AND title='acme-bespoke-env'", -1, &q, NULL) == SQLITE_OK);
+    assert(sqlite3_step(q) == SQLITE_ROW);
+    assert(!strcmp((const char *)sqlite3_column_text(q, 0), "legacy"));
+    assert(strstr((const char *)sqlite3_column_text(q, 1), ENV_VAL)
+           && "no workspace: the environment's key, shared corpus");
+    sqlite3_finalize(q); }
+  osint_result_free(&r);
+  assert(jo_getenv(KEY_ENV) && !strcmp(jo_getenv(KEY_ENV), ENV_VAL)
+         && "the resolver is cleared when the run ends");
+  printf("  a hand-written collector gets the workspace key through jo_getenv, privately: ok\n");
+
+  /* 6. a configuration name never resolves from the key store */
+  exec_ok(&db, "INSERT OR REPLACE INTO tenant_secrets(tenant_id,key_name,encrypted_value) "
+               "SELECT tenant_id,'JO_HTTP_BLOCK_PRIVATE',encrypted_value FROM tenant_secrets "
+               "WHERE tenant_id='tA' AND key_name='" KEY_ENV "'");
+  assert(!keysapi_tenant_secret(&db, "tA", "JO_HTTP_BLOCK_PRIVATE"));
+  printf("  a stray key-store row under a configuration name never resolves: ok\n");
 
   /* nothing left behind for the next run on this thread */
   run_pivot(&db, "acme-after", NULL, &r);

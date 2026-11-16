@@ -250,7 +250,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   max_pages = jo_page_max_for(max_pages);
 
   /* Optional Argus API key: lifts the anonymous quota. Never logged. */
-  const char *key = getenv("MNEMONIC_API_KEY");
+  const char *key = jo_getenv("MNEMONIC_API_KEY");
   int keyed = key && *key;
   char keyhdr[320];
   const char *hdrs[3] = { "Accept: application/json", NULL, NULL };

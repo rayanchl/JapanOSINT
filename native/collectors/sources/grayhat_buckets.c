@@ -23,7 +23,7 @@ static const char *sor(const cJSON *o, const char *a, const char *b) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *key = getenv("GRAYHAT_API_KEY");
+  const char *key = jo_getenv("GRAYHAT_API_KEY");
   if (!key || !*key) {
     fprintf(stderr, "[grayhat-buckets] gated (no GRAYHAT_API_KEY)\n");
     return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "grayhat-buckets", "grayhat-buckets", (const char *const[]){"GRAYHAT_API_KEY", NULL}, NULL, NULL);

@@ -80,7 +80,7 @@ static int emit_satellite(intel_sink *sink, cJSON *s,
 }
 
 static int run_satellite(const source_ctx *ctx, intel_sink *sink) {
-  const char *key = getenv("N2YO_API_KEY");
+  const char *key = jo_getenv("N2YO_API_KEY");
   if (!key || !*key) {
     fprintf(stderr, "[SATELLITE_TRACKER] gated (no N2YO_API_KEY)\n");
     return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "SATELLITE_TRACKER", "SATELLITE_TRACKER", (const char *const[]){"N2YO_API_KEY", NULL}, NULL, NULL);                              /* key-gated: emit nothing */
@@ -99,7 +99,7 @@ static int run_satellite(const source_ctx *ctx, intel_sink *sink) {
       lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180)
     have_obs = 1;
   if (!have_obs) {
-    const char *o = getenv("SATELLITE_OBSERVER");   /* "lat,lon" */
+    const char *o = jo_getenv("SATELLITE_OBSERVER");   /* "lat,lon" */
     if (o && sscanf(o, "%lf , %lf", &lat, &lon) == 2 &&
         lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180)
       have_obs = 1;

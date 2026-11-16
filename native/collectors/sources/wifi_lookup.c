@@ -134,8 +134,8 @@ static cJSON *query_mylnikov(http_client *http, const char *bssid) {
 }
 
 static cJSON *query_wigle(http_client *http, const char *bssid) {
-  const char *nm = getenv("WIGLE_API_NAME");
-  const char *tk = getenv("WIGLE_API_TOKEN");
+  const char *nm = jo_getenv("WIGLE_API_NAME");
+  const char *tk = jo_getenv("WIGLE_API_TOKEN");
   if (!nm || !tk || !*nm || !*tk) return NULL;   /* graceful: caller adds note */
   cJSON *r = cJSON_CreateObject();
   cJSON_AddStringToObject(r, "source", "WiGLE");

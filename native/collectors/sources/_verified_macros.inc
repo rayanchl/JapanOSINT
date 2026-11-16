@@ -206,7 +206,7 @@ static inline char *vsrc_url_with_key(const char *url, const char *param,
 }
 #define VJSON_KEYQ(SYM, ID, NAME, NAMEJA, COLL, CAT, URL, PATH, LANG, TAGS, IVAL, DESC, KEYENV, KEYPARAM, HOW) \
   static int run_##SYM(const source_ctx *c, intel_sink *s) {                  \
-    const char *key = getenv(KEYENV);                                         \
+    const char *key = jo_getenv(KEYENV);                                         \
     if (!key || !*key)                                                        \
       return jo_needs_credential(s, ID, NAME,                                 \
                                  (const char *const[]){ KEYENV, NULL }, URL, HOW); \

@@ -75,7 +75,7 @@ static int emit_company(intel_sink *sink, const cJSON *c) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *q = ctx->entity;
   if (!q || !*q) return -1;
-  const char *token = getenv("GBIZINFO_TOKEN");
+  const char *token = jo_getenv("GBIZINFO_TOKEN");
   if (!token || !*token) {
     fprintf(stderr, "[gbizinfo] gated (no GBIZINFO_TOKEN)\n");
     return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "gbizinfo", "gbizinfo", (const char *const[]){"GBIZINFO_TOKEN", NULL}, NULL, NULL);

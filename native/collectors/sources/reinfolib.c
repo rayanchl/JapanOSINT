@@ -46,7 +46,7 @@ static const char *str_or(cJSON *r, const char *k, const char *def) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *key = getenv("REINFOLIB_API_KEY");
+  const char *key = jo_getenv("REINFOLIB_API_KEY");
   if (!key || !*key) return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "reinfolib", "reinfolib", (const char *const[]){"REINFOLIB_API_KEY", NULL}, NULL, NULL);
 
   /* year/quarter ARE the query — there is no request to make without them. */

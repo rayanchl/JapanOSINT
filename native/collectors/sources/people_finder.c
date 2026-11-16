@@ -242,7 +242,7 @@ static int ps_reddit(const source_ctx *ctx, intel_sink *sink, const char *name, 
 
 /* UK Companies House officer search (key-gated). */
 static int ps_uk_companies(const source_ctx *ctx, intel_sink *sink, const char *name, const char *svc) {
-  const char *key = getenv("COMPANIES_HOUSE_API_KEY");
+  const char *key = jo_getenv("COMPANIES_HOUSE_API_KEY");
   if (!key || !*key) return 0;
   char enc[256]; jo_urlencode_buf(name, enc, sizeof enc);
   char url[500];
@@ -282,7 +282,7 @@ static int ps_opencorporates(const source_ctx *ctx, intel_sink *sink, const char
   char url[400];
   snprintf(url, sizeof url,
     "https://api.opencorporates.com/v0.4/officers/search?q=%s&per_page=5", enc);
-  const char *tok = getenv("OPENCORPORATES_API_KEY");
+  const char *tok = jo_getenv("OPENCORPORATES_API_KEY");
   char tokurl[480];
   if (tok && *tok) { snprintf(tokurl, sizeof tokurl, "%s&api_token=%s", url, tok); }
   cJSON *j = ps_get_json(ctx->http, (tok && *tok) ? tokurl : url, NULL);

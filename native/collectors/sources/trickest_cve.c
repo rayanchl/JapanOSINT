@@ -43,7 +43,7 @@ static int contains(const char *h, const char *n) {
 static int run(const source_ctx *ctx, intel_sink *sink) {
   /* SAMPLE_LIMIT = Number(process.env.TRICKEST_CVE_LIMIT || 50) */
   long limit = 50;
-  const char *lenv = getenv("TRICKEST_CVE_LIMIT");
+  const char *lenv = jo_getenv("TRICKEST_CVE_LIMIT");
   if (lenv && lenv[0]) { long v = strtol(lenv, NULL, 10); if (v > 0) limit = v; }
 
   /* year = new Date().getUTCFullYear(); try [year, year-1] */
@@ -57,7 +57,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   }
   int year = gt.tm_year + 1900;
 
-  const char *token = getenv("GITHUB_TOKEN");
+  const char *token = jo_getenv("GITHUB_TOKEN");
   const char *hdrs[5];
   int hi = 0;
   hdrs[hi++] = "accept: application/vnd.github+json";

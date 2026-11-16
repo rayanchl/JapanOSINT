@@ -343,7 +343,7 @@ static int run_weather(const source_ctx *ctx, intel_sink *sink) {
   if (!current && om_raw) current = open_meteo_current(om_raw, lat, lon);
 
   if (!current) {
-    const char *owm = getenv("OPENWEATHERMAP_API_KEY");
+    const char *owm = jo_getenv("OPENWEATHERMAP_API_KEY");
     if (owm && *owm) {
       cJSON *o = get_weather_owm(ctx->http, loc, owm);
       if (o && !cJSON_GetObjectItem(o, "status")) current = o;

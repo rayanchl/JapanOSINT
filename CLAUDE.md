@@ -4702,6 +4702,21 @@ measured those worse here and defaults them off. Full readings:
   was changed.** `docs/threshold-labels.jsonl` is the next step and it is human
   work.
 
+  **The tool for that human work is `tools/threshold_label.py`** (2026-11-16,
+  the owner's decision: a labelling page, not a guessed value). `candidates`
+  draws pairs for the seven pair-judgeable keys from a REAL, populated
+  database (questions from `search_run_owners`/`search_history`, records,
+  entities, semantic alert rules, and source cards from
+  `--dump-source-cards`); with `--embed-url` they are spread over the whole
+  score range so the verdicts land around the boundary, without it
+  word-overlap pairs are mixed with random ones. A pool the database does not
+  have yields NO pairs and says so — a never-searched database offers no
+  question-based pairs rather than invented questions. `serve` is a page on
+  127.0.0.1 that shows one pair at a time, hides the score so it cannot anchor
+  the verdict, and appends `{"key","a","b","same","note"}` lines to the labels
+  file `measure_thresholds.py --labels` reads; a resumed session skips what is
+  already labelled. Its `--self-test` is in `make tools-selftest`.
+
 Running the harness for real also found three defects in it, the worst being
 that **its negative set was EMPTY on a real database**: `pairs_story` read a
 prefix `order by cluster_id` and then required two different sources, and on a
@@ -4828,8 +4843,21 @@ failing tests repaired. What it guarantees, and the knobs it adds:
   workspace-qualified uid (`<source>|ws:<tenant>|<key>`), because the upsert
   never rewrites `tenant_id` — under the plain uid a record the shared corpus
   already held would stay shared. A run with no workspace key stores in the
-  shared corpus as before. Hand-written collectors that read keys through `jo_env()` do not
-  see workspace keys yet. `test_tenant_pivot_key.c` pins it end to end.
+  shared corpus as before. `test_tenant_pivot_key.c` pins it end to end.
+  **Hand-written collectors see workspace keys too** (2026-11-16): a
+  collector names its credential only when it reads it, so the dispatcher
+  installs a thread-local resolver for the run (`jo_env_resolver_set`,
+  `lib/joenv.c`) and decides privacy and scrubbing LAZILY — from the first emit
+  after a workspace key was handed out, the rows are the workspace's (tenant +
+  `ws:` uid) and every value handed out is redacted. **So a collector reads a
+  credential through `jo_getenv()` or `jo_env()`, never `getenv()`** — 177
+  such reads across 123 collector files and `lib/threatintel.c` were moved
+  when this landed, because a direct `getenv` is a workspace key that silently
+  never arrives. Only a known-credential name resolves
+  (`keysapi_tenant_secret` checks the list on READ, not only on save), so a
+  stray `tenant_secrets` row named `JO_HTTP_BLOCK_PRIVATE` cannot reach a
+  collector's configuration; both halves are pinned, and each fails the test
+  when removed.
 * **The platform audit chain is readable**: `GET /api/audit[/verify]?scope=platform`
   reads the rows written under the reserved `platform` tenant (break-glass,
   cadence/threshold edits, collector runs, raw evidence reads), for a platform
@@ -4844,7 +4872,19 @@ failing tests repaired. What it guarantees, and the knobs it adds:
   translation inputs are FENCED as untrusted text; a run's synthesis row is
   neither translated nor mined for entities. An LLM outage is NOT charged to
   the items it was asked about (only an answer the model gave is).
-* **Scheduler**: a boot ramp (`JO_SCHED_RAMP_SEC`, 900 s) instead of a stampede,
+* **Scheduler**: `JO_SCHED_WORKERS` defaults to **40** (ceiling 64; was 8 and
+  32, the owner's decision of 2026-11-16) — the fleet needs ~38 busy workers to
+  hold the 6 h policy (~529,000 runs a day at a 6.2 s mean run), and the old
+  ceiling SILENTLY clamped a request for 40 to 32 (`busy=32/32`); every
+  scheduler knob now says on stderr when its value is clamped. Measured
+  against one database, 240 s each, boot ramp off: 8 workers 250 runs (median
+  run 1.8 s), 32 483 (3.8 s), 40 479 (5.2 s); no `EMIT-FAILED` and no
+  "database is locked" at any of them, so SQLite is not the limit. **In this
+  container throughput plateaus at ~2 runs/s between 32 and 40** — extra
+  workers only lengthened each run, which is this container's egress, not the
+  database — so whether 40 delivers the ~6 runs/s the 6 h lap needs is a
+  property of the deployment's network and is unmeasured from here. Read the
+  heartbeat's `deferred=N` on the real host before raising it further. A boot ramp (`JO_SCHED_RAMP_SEC`, 900 s) instead of a stampede,
   a maintenance lane (`JO_SCHED_MAINT_WORKERS`, 2) that collectors and pods
   never share, real cancellation; `log-retention` prunes fetch_log, anomalies,
   repairs and alert deliveries/events in `JO_RETAIN_BATCH` (5,000) batches.

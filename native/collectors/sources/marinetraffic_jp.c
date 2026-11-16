@@ -43,7 +43,7 @@ static void s2_or_null(cJSON *p, const char *outk, cJSON *r,
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *key = getenv("MARINETRAFFIC_API_KEY");
+  const char *key = jo_getenv("MARINETRAFFIC_API_KEY");
   if (!key || !*key) {
     fprintf(stderr, "[marinetraffic-jp] gated (no MARINETRAFFIC_API_KEY)\n");
     return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "marinetraffic-jp", "marinetraffic-jp", (const char *const[]){"MARINETRAFFIC_API_KEY", NULL}, NULL, NULL);                       /* honest empty */

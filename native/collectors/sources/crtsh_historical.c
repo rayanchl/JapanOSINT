@@ -44,7 +44,7 @@ static cJSON *dup_or_null(cJSON *r, const char *k) {
 
 static cJSON *run_fetch(const char *key, const source_ctx *ctx, void *ud) {
   (void)key; (void)ud;
-  const char *pe = getenv("CRTSH_PER_TARGET");
+  const char *pe = jo_getenv("CRTSH_PER_TARGET");
   long per_target = (pe && *pe) ? strtol(pe, NULL, 10) : 60;
   if (per_target <= 0) per_target = 60;
 

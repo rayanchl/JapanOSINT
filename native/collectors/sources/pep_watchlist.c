@@ -20,7 +20,7 @@
 
 static int opensanctions(const source_ctx *ctx, intel_sink *sink, const char *entity,
                          const char *service, const char *tags, int pep_only) {
-  const char *key = getenv("OPENSANCTIONS_API_KEY");
+  const char *key = jo_getenv("OPENSANCTIONS_API_KEY");
   if (!key || !*key) {
     /* honest empty without a key — but SAY so, otherwise a gated run is
      * indistinguishable from "screened and clean", which is the one wrong

@@ -54,8 +54,8 @@ static int emit_hit(intel_sink *sink, const char *entity, cJSON *item) {
 static int cred_run(const source_ctx *ctx, intel_sink *sink) {
   const char *entity = ctx->entity;
   if (!entity || !*entity) return 0;
-  const char *token = getenv("GITHUB_TOKEN");
-  if (!token || !*token) token = getenv("GITHUB_API_TOKEN");
+  const char *token = jo_getenv("GITHUB_TOKEN");
+  if (!token || !*token) token = jo_getenv("GITHUB_API_TOKEN");
   if (!token || !*token) {
     /* AUDIT NOTE (slice a3): this returned a silent 0 with no log, so the
      * source was indistinguishable from "ran and found nothing". Say it is

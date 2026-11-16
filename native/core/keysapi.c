@@ -592,6 +592,13 @@ char *keysapi_tenant_secret(db_handle *db, const char *tenant_id,
   /* The shared corpus pseudo-tenant and the operator chain own no workspace
    * keys: a run attributed to them is the platform's, which uses the env. */
   if (!strcmp(tenant_id, "legacy") || !strcmp(tenant_id, "platform")) return NULL;
+  /* Only a KNOWN CREDENTIAL name resolves (2026-11-16). A hand-written
+   * collector's every jo_getenv() — configuration included — now asks this
+   * function first during a workspace's pivot (core/osint_dispatch.c), so a
+   * row in tenant_secrets under a configuration name (JO_HTTP_BLOCK_PRIVATE,
+   * say) must never be able to answer. The save path already refuses unknown
+   * names; this holds even for a row written another way. */
+  if (is_known(name, NULL) != 1) return NULL;
   sqlite3_stmt *s;
   char *val = NULL;
   if (sqlite3_prepare_v2(db->h,

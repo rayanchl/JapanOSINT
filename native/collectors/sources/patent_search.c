@@ -17,7 +17,7 @@
 static int patent_run(const source_ctx *ctx, intel_sink *sink) {
   const char *q = ctx->entity;
   if (!q || !*q) return 0;
-  const char *key = getenv("PATENTSVIEW_API_KEY");
+  const char *key = jo_getenv("PATENTSVIEW_API_KEY");
   if (!key || !*key) {                          /* honest empty without key */
     fprintf(stderr, "[patent-search] gated (no PATENTSVIEW_API_KEY)\n");
     return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "patent-search", "patent-search", (const char *const[]){"PATENTSVIEW_API_KEY", NULL}, NULL, NULL);

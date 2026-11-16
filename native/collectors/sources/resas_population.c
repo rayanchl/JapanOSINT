@@ -17,7 +17,7 @@
 #define RESAS_URL "https://opendata.resas-portal.go.jp/api/v1/population/composition/perYear"
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *key = getenv("RESAS_API_KEY");
+  const char *key = jo_getenv("RESAS_API_KEY");
   if (!key || !*key) {
     static const char *const envs[] = { "RESAS_API_KEY", NULL };
     return jo_needs_credential(sink, "resas-population",

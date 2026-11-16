@@ -790,6 +790,70 @@ static int ws_uid_emit(intel_sink *self, const intel_item *it) {
   return rc;
 }
 
+/* ── a workspace's key for a HAND-WRITTEN collector (2026-11-16) ─────────
+ * An hp row names its credential up front (key_env), so dispatch_impl
+ * resolves it before the run. A hand-written collector names its credential
+ * only when it reads it, through jo_getenv()/jo_env() (source.h). So for such
+ * a run the dispatcher installs a resolver on the run's thread that answers
+ * from the workspace's saved keys, and decides where the rows go and what to
+ * scrub LAZILY: from the first emit after a workspace key was handed out, rows
+ * are the workspace's (tenant + "ws:" uid, as for an hp row) and every value
+ * handed out is redacted. A collector reads its key before it fetches, so
+ * nothing it fetched with the key is emitted before that. */
+#define WS_KEY_MAX 8
+typedef struct {
+  db_handle *db;
+  const char *tenant;
+  struct { char name[96]; char *val; } k[WS_KEY_MAX];
+  int n;
+  int used;                       /* a workspace key was handed out */
+} ws_key_resolver;
+
+static const char *ws_key_resolve(void *ctx, const char *name) {
+  ws_key_resolver *r = (ws_key_resolver *)ctx;
+  for (int i = 0; i < r->n; i++)
+    if (!strcmp(r->k[i].name, name)) return r->k[i].val;   /* cached, hit or miss */
+  if (r->n >= WS_KEY_MAX || strlen(name) >= sizeof r->k[0].name) return NULL;
+  /* keysapi_tenant_secret answers only names on the known-credential list, so
+   * configuration (JO_*) can never be supplied by a workspace. */
+  char *v = keysapi_tenant_secret(r->db, r->tenant, name);
+  snprintf(r->k[r->n].name, sizeof r->k[0].name, "%s", name);
+  r->k[r->n].val = v;
+  r->n++;
+  if (v) r->used = 1;
+  return v;
+}
+
+static void ws_key_resolver_free(ws_key_resolver *r) {
+  for (int i = 0; i < r->n; i++)
+    if (r->k[i].val) { OPENSSL_cleanse(r->k[i].val, strlen(r->k[i].val)); free(r->k[i].val); }
+  r->n = 0;
+}
+
+/* Redacts every value the resolver has handed out so far (a scrub chain built
+ * per item, since the set can grow during the run). */
+typedef struct { intel_sink base; intel_sink *inner; ws_key_resolver *r; } ws_dyn_scrub;
+static int ws_dyn_scrub_emit(intel_sink *self, const intel_item *it) {
+  ws_dyn_scrub *w = (ws_dyn_scrub *)self->ctx;
+  keysapi_scrub_sink chain[WS_KEY_MAX];
+  intel_sink *next = w->inner;
+  for (int i = w->r->n - 1; i >= 0; i--) {
+    if (!w->r->k[i].val) continue;
+    keysapi_scrub_sink_init(&chain[i], next, w->r->k[i].val);
+    next = &chain[i].base;
+  }
+  return next->emit(next, it);
+}
+
+/* Where a hand-written collector's rows go: the shared corpus until a
+ * workspace key has been handed out, the workspace's own rows from then on. */
+typedef struct { intel_sink base; ws_key_resolver *r; intel_sink *shared, *ws; } ws_route;
+static int ws_route_emit(intel_sink *self, const intel_item *it) {
+  ws_route *w = (ws_route *)self->ctx;
+  intel_sink *dst = w->r->used ? w->ws : w->shared;
+  return dst->emit(dst, it);
+}
+
 static int dispatch_impl(db_handle *db, llm_client *llm, const char *service,
                          const char *entity, const char *entity_type,
                          intel_sink *persist, osint_result *out,
@@ -877,10 +941,27 @@ static int dispatch_impl(db_handle *db, llm_client *llm, const char *service,
                       .inner = own_ok ? &own : persist,
                       .source_id = def->id, .tenant = tenant_id };
 
+  /* A hand-written collector dispatched for a workspace (no hp key_env to
+   * resolve up front): the lazy resolver above, with the workspace's own sink
+   * prepared beside the shared one so the route can switch at the first emit
+   * after a key is handed out. */
+  int lazy = tenant_id && *tenant_id && strcmp(tenant_id, "legacy") &&
+             strcmp(tenant_id, "platform") && !hps && !tkey;   /* hp rows: key_env above */
+  ws_key_resolver wkr = { .db = db, .tenant = tenant_id };
+  intel_sink own_t;
+  int own_t_ok = lazy ? intel_sink_rebind_tenant(persist, def->id, tenant_id, &own_t) : 0;
+  ws_uid_sink wsu_t = { .base = { .ctx = &wsu_t, .emit = ws_uid_emit },
+                        .inner = own_t_ok ? &own_t : persist,
+                        .source_id = def->id, .tenant = tenant_id };
+  ws_route route = { .base = { .ctx = &route, .emit = ws_route_emit }, .r = &wkr,
+                     .shared = own_ok ? &own : persist, .ws = &wsu_t.base };
+  if (lazy && !own_t_ok) lazy = 0;      /* cannot keep the rows private: env only */
+
   dual_sink ds = {0};
   ds.base.ctx = &ds;
   ds.base.emit = dual_emit;
-  ds.real = (tkey && own_ok) ? &wsu.base : own_ok ? &own : persist;
+  ds.real = lazy ? &route.base
+          : (tkey && own_ok) ? &wsu.base : own_ok ? &own : persist;
 
   http_client *http = http_client_new();
   volatile int cancel = 0;
@@ -919,6 +1000,15 @@ static int dispatch_impl(db_handle *db, llm_client *llm, const char *service,
   keysapi_scrub_sink scrub_run, scrub_real;
   keysapi_scrub_sink_init(&scrub_run, &ds.base, tkey);
   keysapi_scrub_sink_init(&scrub_real, ds.real, tkey);
+  /* The hand-written-collector path: its keys are only known once read, so
+   * the scrub is the dynamic one over whatever the resolver handed out. */
+  ws_dyn_scrub dyn_run  = { .base = { .ctx = &dyn_run,  .emit = ws_dyn_scrub_emit },
+                            .inner = &ds.base, .r = &wkr };
+  ws_dyn_scrub dyn_real = { .base = { .ctx = &dyn_real, .emit = ws_dyn_scrub_emit },
+                            .inner = ds.real, .r = &wkr };
+  intel_sink *run_sink  = lazy ? &dyn_run.base  : &scrub_run.base;
+  intel_sink *real_sink = lazy ? &dyn_real.base : &scrub_real.base;
+  if (lazy) jo_env_resolver_set(ws_key_resolve, &wkr);
 
   /* The four observability systems the scheduled path has always had and this
    * one never did. evidence and content-change are thread-local scopes that
@@ -931,9 +1021,10 @@ static int dispatch_impl(db_handle *db, llm_client *llm, const char *service,
   evidence_scope_begin(db, def->id, entity);
   content_change_scope_begin(db, def->id);
 
-  int rc = def->run(&ctx, &scrub_run.base);
+  int rc = def->run(&ctx, run_sink);
   http_run_body_ceiling_set(prev_ceiling);
   if (tkey) hp_run_key_set(NULL, NULL);
+  if (lazy) jo_env_resolver_set(NULL, NULL);
 
   content_change_scope_end();
   evidence_scope_end();
@@ -954,9 +1045,11 @@ static int dispatch_impl(db_handle *db, llm_client *llm, const char *service,
    * same record, written to the real sink only — it is not an answer, so it
    * must not enter the response's records (see dual_emit). */
   if (db && def->collector && def->collector[0] != '_')
-    sched_disclose_if_silent(&scrub_real.base, def, entity, rc, ds.n_emit,
+    sched_disclose_if_silent(real_sink, def, entity, rc, ds.n_emit,
                              ds.n_notices, http);
   if (tkey) { OPENSSL_cleanse(tkey, strlen(tkey)); free(tkey); tkey = NULL; }
+  int lazy_used = lazy && wkr.used;
+  ws_key_resolver_free(&wkr);
 
   out->success    = (rc >= 0 && ds.n_emit > 0) ? 1 : 0;
   out->confidence = out->success ? 70 : 0;     /* JS default */
@@ -1072,9 +1165,14 @@ static int dispatch_impl(db_handle *db, llm_client *llm, const char *service,
   /* The distinct rows this run left, read BEFORE the rebound sink is freed —
    * the scheduler's fetch_log.stored and sources-row figures (rule 4b). */
   int stored_exact = 1;
-  long stored = own_ok ? intel_sink_stored(&own, &stored_exact) : -1;
-  long stored_notices = own_ok ? intel_sink_stored_notices(&own) : 0;
+  /* a hand-written collector that used a workspace key stored into the
+   * workspace's own sink, not the shared one */
+  intel_sink *counted = lazy_used ? &own_t : &own;
+  int counted_ok = lazy_used ? own_t_ok : own_ok;
+  long stored = counted_ok ? intel_sink_stored(counted, &stored_exact) : -1;
+  long stored_notices = counted_ok ? intel_sink_stored_notices(counted) : 0;
   if (own_ok) intel_sink_free(&own);
+  if (own_t_ok) intel_sink_free(&own_t);
 
   /* Stage 0+1, exactly as scheduler_run_source() does it: log the run and let
    * the breaker see it. Without this a pivot source could fail every time and

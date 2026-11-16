@@ -340,8 +340,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   if (!entity || !*entity) return 0;
   if (strchr(entity, '@')) return 0;       /* upstream skips emails */
 
-  const char *id = getenv("CENSYS_API_ID");
-  const char *secret = getenv("CENSYS_API_SECRET");
+  const char *id = jo_getenv("CENSYS_API_ID");
+  const char *secret = jo_getenv("CENSYS_API_SECRET");
   if (!(id && secret && *id && *secret)) {
     fprintf(stderr, "[CENSYS_SEARCH] gated (no CENSYS_API_ID/SECRET)\n");
     return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "CENSYS_SEARCH", "CENSYS_SEARCH", (const char *const[]){"CENSYS_API_ID", "CENSYS_API_SECRET", NULL}, NULL, NULL);                              /* key-gated: emit nothing */

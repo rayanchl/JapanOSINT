@@ -34,13 +34,13 @@ static const char *str_or_null(const cJSON *o, const char *k) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *dis = getenv("MISSKEY_DISABLED");
+  const char *dis = jo_getenv("MISSKEY_DISABLED");
   if (dis && !strcmp(dis, "1")) {
     fprintf(stderr, "[misskey-timeline] disabled (MISSKEY_DISABLED=1)\n");
     return 0;
   }
 
-  const char *token = getenv("MISSKEY_TOKEN");
+  const char *token = jo_getenv("MISSKEY_TOKEN");
   cJSON *req = cJSON_CreateObject();
   cJSON_AddNumberToObject(req, "limit", 30);
   if (token && *token) cJSON_AddStringToObject(req, "i", token);

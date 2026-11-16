@@ -39,7 +39,7 @@ static const char *pick_str(cJSON *row, const char *const *keys, int nk) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *url = getenv("POLICE_INCIDENTS_CSV_URL");
+  const char *url = jo_getenv("POLICE_INCIDENTS_CSV_URL");
   if (!url || !*url) {
     /* Gated, not failed: -1 logs fetch_log status='error' and opens a
      * collector_anomaly every tick for a source that was never configured. */

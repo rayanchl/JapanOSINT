@@ -189,7 +189,13 @@ static long env_long(const char *name, long dflt, long lo, long hi) {
   char *end = NULL;
   long x = strtol(v, &end, 10);
   if (end == v) return dflt;
-  return x < lo ? lo : (x > hi ? hi : x);
+  long c = x < lo ? lo : (x > hi ? hi : x);
+  /* Say so: JO_SCHED_WORKERS=40 under a ceiling of 32 used to run 32 with
+   * nothing anywhere saying the operator's value was not what ran. */
+  if (c != x)
+    fprintf(stderr, "[sched] %s=%ld is outside %ld..%ld — using %ld\n",
+            name, x, lo, hi, c);
+  return c;
 }
 
 void sched_policy_load(sched_policy *p) {
@@ -1571,8 +1577,22 @@ void scheduler_loop(db_handle *db) {
    * 16 → 97 runs. The work is network-bound, not CPU-bound, so the ceiling is
    * upstream politeness (hostgate) and sqlite write contention, not cores. 8
    * is the conservative default for a first deploy; raise it once the
-   * heartbeat below shows a standing backlog. 1 = the old serial behaviour. */
-  int workers = (int)env_long("JO_SCHED_WORKERS", 8, 1, 32);
+   * heartbeat below shows a standing backlog. 1 = the old serial behaviour.
+   *
+   * 40 since 2026-11-16 (the owner's decision). The fleet, not a guess, sets
+   * it: 102,953 scheduled rows make ~529,000 runs a day under the 6 h policy
+   * (126,000 of them the 1,024 realtime rows that run at their own cadence),
+   * and at the measured 6.2 s mean run that is ~38 workers kept busy — at 8 a
+   * lap took ~18-24 h, so "every six hours" was not what ran. The ceiling is
+   * 64 because 32 SILENTLY clamped a request for 40 to 32 (heartbeat
+   * busy=32/32), the knob's value not being what ran. Write contention was
+   * measured before the change, 240 s per setting against one database:
+   * 8 → 250 runs (median 1.8 s), 32 → 483 (3.8 s), 40 → 479 (5.2 s); no
+   * EMIT-FAILED and no "database is locked" at any of them. The plateau
+   * between 32 and 40 was the measuring container's egress, not SQLite, so on
+   * a deployment the ceiling is its network: read the heartbeat's deferred=N
+   * there before raising this further. */
+  int workers = (int)env_long("JO_SCHED_WORKERS", 40, 1, 64);
   /* The pods are few, mostly short, and must never wait on the fleet. Two, so
    * one long LLM-bound pod (repair, enrichment) cannot hold the WAL
    * checkpoint or retention behind it. */

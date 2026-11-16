@@ -73,7 +73,7 @@ int jo_breach_checker_run(const source_ctx *ctx, intel_sink *sink) {
   if (!email || !*email) return 0;
 
   /* Key-gated: without HIBP_API_KEY, emit nothing (HIBP 401s anyway). */
-  const char *key = getenv("HIBP_API_KEY");
+  const char *key = jo_getenv("HIBP_API_KEY");
   if (!key || !*key) {
     fprintf(stderr, "[BREACH_CHECKER] gated (no HIBP_API_KEY)\n");
     return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "BREACH_CHECKER", "BREACH_CHECKER", (const char *const[]){"HIBP_API_KEY", NULL}, NULL, NULL);

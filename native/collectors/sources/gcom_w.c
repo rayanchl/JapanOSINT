@@ -12,7 +12,7 @@
 #include <string.h>
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *gportal = getenv("JAXA_GPORTAL_TOKEN");
+  const char *gportal = jo_getenv("JAXA_GPORTAL_TOKEN");
   int has_gp = gportal && *gportal;
 
   /* CMR rejects an unconstrained keyword granule search with HTTP 400

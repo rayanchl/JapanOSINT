@@ -230,7 +230,7 @@ static int nvd_walk(const source_ctx *c, intel_sink *s, const char *const *hdrs,
 }
 
 static int run(const source_ctx *c, intel_sink *s) {
-  const char *key = getenv("NVD_API_KEY");
+  const char *key = jo_getenv("NVD_API_KEY");
   const char *h_key[] = { "accept: application/json", NULL, NULL };
   char keyhdr[128] = {0};
   int keyed = key && *key;

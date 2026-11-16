@@ -303,7 +303,7 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   /* upstream skips emails */
   if (strchr(entity, '@')) return 0;
 
-  const char *api_key = getenv("SHODAN_API_KEY");
+  const char *api_key = jo_getenv("SHODAN_API_KEY");
 
   if (is_valid_ip(entity)) {
     emit_ip(sink, ctx->http, entity, api_key);

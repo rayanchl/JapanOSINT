@@ -179,8 +179,8 @@ static int tf_malwarebazaar(const source_ctx *ctx, intel_sink *sink,
    * this one moved behind an Auth-Key you obtain from an abuse.ch account.
    * Declare the gate honestly instead of emitting nothing and logging an
    * opaque 401: no key → no fetch, no rows, clear log. */
-  const char *authkey = getenv("ABUSECH_AUTH_KEY");
-  if (!authkey || !*authkey) authkey = getenv("MALWAREBAZAAR_AUTH_KEY");
+  const char *authkey = jo_getenv("ABUSECH_AUTH_KEY");
+  if (!authkey || !*authkey) authkey = jo_getenv("MALWAREBAZAAR_AUTH_KEY");
   if (!authkey || !*authkey) {
     fprintf(stderr, "[MALWAREBAZAAR] gated (no ABUSECH_AUTH_KEY) — abuse.ch "
                     "retired anonymous API access, unauthenticated = HTTP 401\n");

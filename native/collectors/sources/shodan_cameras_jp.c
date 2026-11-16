@@ -49,7 +49,7 @@ static const char *product_of(cJSON *m) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *k = getenv("SHODAN_API_KEY");
+  const char *k = jo_getenv("SHODAN_API_KEY");
   if (!k || !*k) {
     fprintf(stderr, "[shodan-cameras-jp] gated (no SHODAN_API_KEY)\n");
     return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "shodan-cameras-jp", "shodan-cameras-jp", (const char *const[]){"SHODAN_API_KEY", NULL}, NULL, NULL);

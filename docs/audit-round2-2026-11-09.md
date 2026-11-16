@@ -228,10 +228,44 @@ this branch's realtime exemption met: the realtime rule now lives inside main's
 `source_interval_default()`, so the scheduler, `--schedule`, the pages and the
 cost estimate all read one decision (3,149 realtime rows and 19 pods exempt).
 
+## Closed on 2026-11-16
+
+* **`dataset.gov.md` answers again**, so the decision to keep its rows
+  registered held. Both rows were re-measured through the engine:
+  * `JO34_CKANRES_DATASET_GOV_MD` stores 1,310 of 1,310, the portal's own
+    `package_search` count, in 15 requests;
+  * `MD_DATASET_GOV_CATALOGUE` returns 95 of 95 for "buget", and an impossible
+    term returns 0, so the filter is honoured.
+* **Hand-written collectors see workspace keys.**
+  * During a workspace pivot, `jo_getenv()`/`jo_env()` (`lib/joenv.c`) ask the
+    dispatcher's per-run resolver first.
+  * The run's rows become the workspace's (tenant + `ws:` uid), and every
+    handed-out value is scrubbed, from the first emit after a key is read.
+  * 177 direct `getenv()` credential reads in 123 collector files and
+    `lib/threatintel.c` now go through `jo_getenv()`.
+  * `keysapi_tenant_secret()` answers only known-credential names, checked on
+    read, so a configuration name such as `JO_HTTP_BLOCK_PRIVATE` can never
+    resolve from the key store.
+  * `test_tenant_pivot_key.c` 5 and 6 pin both halves. Each assertion fails
+    when its guard is removed (checked).
+* **Scheduler workers default to 40**, with a ceiling of 64 (the owner's
+  decision).
+  * The fleet makes about 529,000 runs a day under the 6 h policy, which is
+    about 38 busy workers at a 6.2 s mean run.
+  * The old ceiling of 32 silently clamped a request for 40. Clamping now
+    prints a line.
+  * Measured: 8 workers made 250 runs in 240 s, 32 made 483 and 40 made 479.
+    There were no refused emits and no lock errors at any setting.
+  * The plateau between 32 and 40 is this container's egress, so the
+    deployment's own heartbeat (`deferred=N`) is the reading that decides any
+    further raise.
+* **Similarity thresholds: a labelling tool** (the owner's decision, instead of
+  a guessed value). `tools/threshold_label.py` draws pairs from a real
+  database, serves a local page that hides the scores, and writes
+  `docs/threshold-labels.jsonl` for `measure_thresholds.py --labels`. The
+  labels themselves are the owner's to make, on the production database.
+
 ## Still open
 
-* `dataset.gov.md` is down host-wide (not removed: the government still links
-  it).
-* Hand-written collectors that read keys through `jo_env()` do not see
-  workspace keys yet; `twitter-geo` caps its own database read at 5,000.
+* `twitter-geo` caps its own database read at 5,000.
 * Rate limits keyed on client IP behind a proxy.

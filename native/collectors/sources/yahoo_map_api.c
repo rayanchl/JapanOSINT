@@ -19,7 +19,7 @@ static const struct { double lat, lon; } SCAN[] = {
 };
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *appId = getenv("YAHOO_APP_ID");
+  const char *appId = jo_getenv("YAHOO_APP_ID");
   if (!appId || !*appId) {
     fprintf(stderr, "[yahoo-map-api] gated (no YAHOO_APP_ID)\n");
     return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "yahoo-map-api", "yahoo-map-api", (const char *const[]){"YAHOO_APP_ID", NULL}, NULL, NULL);

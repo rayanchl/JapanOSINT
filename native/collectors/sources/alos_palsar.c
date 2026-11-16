@@ -62,7 +62,7 @@ static char *wkt_polygon_to_geojson(const char *wkt, double *out_lat,
 #define ALOS_MAX_RESULTS 50   /* exhaustive-ok: request page size, and a full page emits a collector-truncation-notice */
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *gportal = getenv("JAXA_GPORTAL_TOKEN");
+  const char *gportal = jo_getenv("JAXA_GPORTAL_TOKEN");
   int has_gp = gportal && *gportal;
 
   /* ASF's SearchAPI has no offset/cursor: `maxResults` is the only bound it

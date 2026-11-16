@@ -62,7 +62,7 @@ static const char *safe_iso(const char *s) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *env = getenv("BIRD_HANDLES");
+  const char *env = jo_getenv("BIRD_HANDLES");
   char list[1024];
   snprintf(list, sizeof list, "%s",
            (env && *env) ? env : DEFAULT_HANDLES);

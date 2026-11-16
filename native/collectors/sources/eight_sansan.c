@@ -26,7 +26,7 @@ static int card_id(const cJSON *c, char *out, size_t cap) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *session = getenv("EIGHT_SESSION");
+  const char *session = jo_getenv("EIGHT_SESSION");
   if (!session || !*session) {
     fprintf(stderr, "[eight-sansan] gated (no EIGHT_SESSION)\n");
     return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "eight-sansan", "eight-sansan", (const char *const[]){"EIGHT_SESSION", NULL}, NULL, NULL);

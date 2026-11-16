@@ -46,7 +46,7 @@ static int seen_has(char **a, int n, const char *s) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *cookie = getenv("LINKEDIN_COOKIE");
+  const char *cookie = jo_getenv("LINKEDIN_COOKIE");
   if (!cookie || !*cookie) {
     fprintf(stderr, "[linkedin-jp-search] gated (no LINKEDIN_COOKIE)\n");
     return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "linkedin-jp-search", "linkedin-jp-search", (const char *const[]){"LINKEDIN_COOKIE", NULL}, NULL, NULL);

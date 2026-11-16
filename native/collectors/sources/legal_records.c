@@ -27,7 +27,7 @@ static int courtlistener(const source_ctx *ctx, intel_sink *sink,
   snprintf(url, sizeof url,
     "https://www.courtlistener.com/api/rest/v4/search/?q=%s&type=o", enc);
   /* CourtListener works unauthenticated (rate-limited); a token raises limits. */
-  const char *key = getenv("COURTLISTENER_API_KEY");
+  const char *key = jo_getenv("COURTLISTENER_API_KEY");
   char auth[160] = {0};
   const char *headers[2] = { NULL, NULL };
   if (key && *key) { snprintf(auth, sizeof auth, "Authorization: Token %s", key); headers[0] = auth; }

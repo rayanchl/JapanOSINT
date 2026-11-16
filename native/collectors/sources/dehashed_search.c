@@ -96,8 +96,8 @@ static char *b64(const char *in) {
  * Returns the parsed JSON `entries` array (caller owns the duplicated array)
  * or NULL on any failure/no-data. */
 static cJSON *query_dehashed(http_client *http, const char *q, dtype_t t) {
-  const char *email = getenv("DEHASHED_EMAIL");
-  const char *key = getenv("DEHASHED_API_KEY");
+  const char *email = jo_getenv("DEHASHED_EMAIL");
+  const char *key = jo_getenv("DEHASHED_API_KEY");
   if (!email || !key || !*email || !*key) return NULL;   /* skip silently */
 
   char enc[512];

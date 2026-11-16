@@ -36,9 +36,9 @@ static const char *setting(const cJSON *prof, const char *id) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *npsso  = getenv("PSN_NPSSO");
-  const char *xblKey = getenv("XBOX_API_KEY");
-  const char *wl     = getenv("PSN_XBOX_WATCHLIST");
+  const char *npsso  = jo_getenv("PSN_NPSSO");
+  const char *xblKey = jo_getenv("XBOX_API_KEY");
+  const char *wl     = jo_getenv("PSN_XBOX_WATCHLIST");
 
   if ((!npsso || !*npsso) && (!xblKey || !*xblKey)) {
     fprintf(stderr, "[psn-xbox-jp] gated (no PSN_NPSSO / XBOX_API_KEY)\n");

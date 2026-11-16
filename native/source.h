@@ -226,6 +226,22 @@ int                registry_index(const char *id);
  * lookup. Idempotent and thread-safe; main() calls it first thing. */
 void               registry_freeze(void);
 
+/* ── credentials a collector reads (2026-11-16) ──────────────────────────
+ * jo_getenv(name) is getenv(name) — same "" for set-but-empty, same NULL for
+ * unset — except that a thread-local RESOLVER installed for the run in
+ * progress is asked first. core/osint_dispatch.c installs one for a pivot
+ * dispatched for a workspace, so a hand-written collector's credential read
+ * resolves to THAT WORKSPACE's saved key (core/keysapi.c), the way an hp row's
+ * key_env already does (hp_run_key_set). Only names a workspace can save —
+ * the known-credential list — ever resolve; every other name, configuration
+ * included, falls through to the environment. Collectors read credentials
+ * through this (or jo_env, which calls it), never through getenv directly,
+ * or a workspace's key silently does not reach them. lib/joenv.c. */
+const char        *jo_getenv(const char *name);
+typedef const char *(*jo_env_resolver_fn)(void *ctx, const char *name);
+/* Installs (fn non-NULL) or clears the calling thread's resolver. */
+void               jo_env_resolver_set(jo_env_resolver_fn fn, void *ctx);
+
 #define REGISTER_SOURCE(defsym) \
   __attribute__((constructor)) static void reg_##defsym(void) { \
     registry_add(&defsym); }

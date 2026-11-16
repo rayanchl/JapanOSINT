@@ -48,7 +48,7 @@ static const char *proc_label(const char *p) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *key = getenv("HOUJIN_BANGOU_KEY");
+  const char *key = jo_getenv("HOUJIN_BANGOU_KEY");
   if (!key || !*key) {
     fprintf(stderr, "[houjin-bangou] gated (no HOUJIN_BANGOU_KEY)\n");
     return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "houjin-bangou", "houjin-bangou", (const char *const[]){"HOUJIN_BANGOU_KEY", NULL}, NULL, NULL);

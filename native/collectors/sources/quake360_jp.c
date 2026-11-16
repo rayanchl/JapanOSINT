@@ -41,13 +41,13 @@ static cJSON *str_pair_or_null(const cJSON *loc, const char *ka,
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *key = getenv("QUAKE_API_KEY");
+  const char *key = jo_getenv("QUAKE_API_KEY");
   if (!key || !*key) {
     fprintf(stderr, "[quake360-jp] gated (no QUAKE_API_KEY)\n");
     return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "quake360-jp", "quake360-jp", (const char *const[]){"QUAKE_API_KEY", NULL}, NULL, NULL);
   }
 
-  const char *q = getenv("QUAKE_QUERY");
+  const char *q = jo_getenv("QUAKE_QUERY");
   if (!q || !*q) q = "country: \"Japan\"";
 
   cJSON *req = cJSON_CreateObject();

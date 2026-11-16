@@ -50,9 +50,9 @@ static void urlenc(const char *s, char *o, size_t n) {
 
 static cJSON *run_fetch(const char *key, const source_ctx *ctx, void *ud) {
   (void)ud;
-  const char *q = getenv("NETLAS_QUERY");
+  const char *q = jo_getenv("NETLAS_QUERY");
   if (!q || !*q) q = "geo.country:\"Japan\"";
-  const char *szs = getenv("NETLAS_LIMIT");
+  const char *szs = jo_getenv("NETLAS_LIMIT");
   long size = (szs && *szs) ? strtol(szs, NULL, 10) : 100;
   char enc[512];
   urlenc(q, enc, sizeof enc);

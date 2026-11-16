@@ -55,7 +55,7 @@ static int is_private_ip(const char *ip) {
 /* query_abuseipdb: key-gated; returns NULL without ABUSEIPDB_API_KEY or on any
  * transport/parse failure (no real data → caller emits nothing). */
 static cJSON *query_abuseipdb(http_client *http, const char *ip) {
-  const char *api_key = getenv("ABUSEIPDB_API_KEY");
+  const char *api_key = jo_getenv("ABUSEIPDB_API_KEY");
   if (!api_key || !*api_key) return NULL;
 
   char url[512];
@@ -141,7 +141,7 @@ static cJSON *query_abuseipdb(http_client *http, const char *ip) {
 
 /* query_ipqs: key-gated on IPQS_API_KEY; NULL without key or on failure. */
 static cJSON *query_ipqs(http_client *http, const char *ip) {
-  const char *api_key = getenv("IPQS_API_KEY");
+  const char *api_key = jo_getenv("IPQS_API_KEY");
   if (!api_key || !*api_key) return NULL;
 
   char url[512];

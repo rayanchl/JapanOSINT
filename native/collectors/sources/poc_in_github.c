@@ -73,7 +73,7 @@ static cJSON *str_or_null(const cJSON *o, const char *k) {
 static cJSON *gh_listing(const source_ctx *ctx, int year) {
   char url[160];
   snprintf(url, sizeof url, "%s/%d", REPO_API, year);
-  const char *tok = getenv("GITHUB_TOKEN");
+  const char *tok = jo_getenv("GITHUB_TOKEN");
   char authbuf[256];
   const char *hdrs_tok[] = {
     "accept: application/vnd.github+json",

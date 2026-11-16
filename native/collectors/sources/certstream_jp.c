@@ -95,7 +95,7 @@ static int on_msg(const char *data, size_t len, void *udp) {
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
   (void)ctx;
-  const char *we = getenv("CERTSTREAM_WINDOW_MS");
+  const char *we = jo_getenv("CERTSTREAM_WINDOW_MS");
   int window = we ? atoi(we) : 10000;
   if (window <= 0) window = 10000;
   const char *hdrs[] = { NULL };

@@ -391,7 +391,7 @@ collectors-def-check: $(BIN)
 # tests/unit/run.sh already; the rest had a self-test nothing ran, or none.
 TOOLS_SELFTEST := ctable jo_http hpjson gen_hp_batch audit_idkeys \
                   diagnose_emit_keys audit_page_two audit_batch_reachable \
-                  probe_hp_batch measure_thresholds
+                  probe_hp_batch measure_thresholds threshold_label
 tools-selftest:
 	@fail=0; for t in $(TOOLS_SELFTEST); do \
 	  python3 tools/$$t.py --self-test || { echo "tools-selftest: $$t FAILED"; fail=1; }; \

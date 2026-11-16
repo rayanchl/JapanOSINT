@@ -28,7 +28,7 @@ static int num_nz(const cJSON *v, double *out) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *k = getenv("FLICKR_API_KEY");
+  const char *k = jo_getenv("FLICKR_API_KEY");
   if (!k || !*k) {
     fprintf(stderr, "[flickr-geo] gated (no FLICKR_API_KEY)\n");
     return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "flickr-geo", "flickr-geo", (const char *const[]){"FLICKR_API_KEY", NULL}, NULL, NULL);

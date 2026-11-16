@@ -22,7 +22,7 @@ static const char *sv(const cJSON *o, const char *k) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *key = getenv("EDINET_API_KEY");
+  const char *key = jo_getenv("EDINET_API_KEY");
   if (!key || !*key) {
     fprintf(stderr, "[edinet-filings] gated (no EDINET_API_KEY)\n");
     return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "edinet-filings", "edinet-filings", (const char *const[]){"EDINET_API_KEY", NULL}, NULL, NULL);

@@ -80,7 +80,7 @@ static cJSON *osm_map(cJSON *el, int i, double lon, double lat, void *ud) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *key = getenv("HOTPEPPER_API_KEY");
+  const char *key = jo_getenv("HOTPEPPER_API_KEY");
   if (key && *key) {
     char url[320];
     snprintf(url, sizeof url,

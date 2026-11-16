@@ -22,7 +22,7 @@ static const char *LOCATION_IDS[] = {
 #define NL ((int)(sizeof(LOCATION_IDS)/sizeof(LOCATION_IDS[0])))
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *cookie = getenv("INSTAGRAM_SESSION_COOKIE");
+  const char *cookie = jo_getenv("INSTAGRAM_SESSION_COOKIE");
   if (!cookie || !*cookie) {
     fprintf(stderr, "[instagram-locations] gated (no INSTAGRAM_SESSION_COOKIE)\n");
     return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "instagram-locations", "instagram-locations", (const char *const[]){"INSTAGRAM_SESSION_COOKIE", NULL}, NULL, NULL);

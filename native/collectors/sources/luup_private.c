@@ -49,7 +49,7 @@ static int emit_row(intel_sink *sink, intel_item *it) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *token = getenv("LUUP_MOBILE_TOKEN");
+  const char *token = jo_getenv("LUUP_MOBILE_TOKEN");
   int has_key = token && *token;
   int portal_live = probe_head(ctx->http, HOMEPAGE);
   char now[32]; probe_iso_now(now, sizeof now);

@@ -32,9 +32,9 @@ static const char *sv(cJSON *o, const char *k) {
  * through (and scanned linearly); a seen_set grows and is hashed. */
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *tgstat = getenv("TGSTAT_API_KEY");
-  const char *apiId  = getenv("TELEGRAM_API_ID");
-  const char *apiHash = getenv("TELEGRAM_API_HASH");
+  const char *tgstat = jo_getenv("TGSTAT_API_KEY");
+  const char *apiId  = jo_getenv("TELEGRAM_API_ID");
+  const char *apiHash = jo_getenv("TELEGRAM_API_HASH");
 
   if (!(tgstat && *tgstat)) {
     if (apiId && *apiId && apiHash && *apiHash)

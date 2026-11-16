@@ -86,7 +86,7 @@ static int aid_reliefweb(const source_ctx *ctx, intel_sink *sink, const char *q)
    * rejects unregistered appnames with 403, so this stays empty until an
    * appname is registered at apidoc.reliefweb.int/parameters#appname and
    * exported as RELIEFWEB_APPNAME. No fallback that invents rows. */
-  const char *appname = getenv("RELIEFWEB_APPNAME");
+  const char *appname = jo_getenv("RELIEFWEB_APPNAME");
   if (!appname || !*appname) appname = "japanosint";
   char url[1024];
   snprintf(url, sizeof url,

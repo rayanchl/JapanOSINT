@@ -512,7 +512,7 @@ static inline void jo_uri_encode_buf(const char *in, char *out, size_t cap) {
 /* Non-empty env var value, or NULL. Key-gated sources use this to return an
  * honest empty instead of firing a credential-less request. */
 static inline const char *jo_env(const char *name) {
-  const char *v = getenv(name);
+  const char *v = jo_getenv(name);   /* a workspace's key first (source.h) */
   return (v && *v) ? v : NULL;
 }
 

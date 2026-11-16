@@ -39,7 +39,7 @@ static int coord(cJSON *r, double *lon, double *lat) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *key = getenv("DOCOMO_POPULATION_API_KEY");
+  const char *key = jo_getenv("DOCOMO_POPULATION_API_KEY");
   if (!key || !*key) {
     fprintf(stderr, "[docomo-population] gated (no DOCOMO_POPULATION_API_KEY)\n");
     return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "docomo-population", "docomo-population", (const char *const[]){"DOCOMO_POPULATION_API_KEY", NULL}, NULL, NULL);

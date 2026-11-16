@@ -291,8 +291,8 @@ static int run(const source_ctx *ctx, intel_sink *sink) {
   const char *q = ctx->entity;
   if (!q || !*q) return -1;
 
-  const char *tok = getenv("GITHUB_TOKEN");
-  if (!tok) tok = getenv("GITHUB_API_TOKEN");
+  const char *tok = jo_getenv("GITHUB_TOKEN");
+  if (!tok) tok = jo_getenv("GITHUB_API_TOKEN");
   int have_tok = tok && *tok;
 
   cJSON *gc = github_code(ctx->http, q, have_tok);

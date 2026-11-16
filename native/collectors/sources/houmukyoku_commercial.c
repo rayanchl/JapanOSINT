@@ -85,15 +85,15 @@ static int emit_record(intel_sink *sink, cJSON *r, const char *target) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *apiKey = getenv("HOUMUKYOKU_API_KEY");
+  const char *apiKey = jo_getenv("HOUMUKYOKU_API_KEY");
   if (!apiKey || !*apiKey) {
     fprintf(stderr, "[houmukyoku-commercial] gated (no HOUMUKYOKU_API_KEY)\n");
     return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "houmukyoku-commercial", "houmukyoku-commercial", (const char *const[]){"HOUMUKYOKU_API_KEY", NULL}, NULL, NULL);
   }
-  const char *base = getenv("HOUMUKYOKU_API_BASE");
+  const char *base = jo_getenv("HOUMUKYOKU_API_BASE");
   if (!base || !*base) base = "https://www1.touki.or.jp/api/v1/commercial";
 
-  const char *wl = getenv("HOUMUKYOKU_WATCHLIST");
+  const char *wl = jo_getenv("HOUMUKYOKU_WATCHLIST");
   if (!wl || !*wl) {
     /* Gated, not failed: an unset watchlist is a configuration state, and -1
      * would log fetch_log status='error' plus a collector_anomaly every tick.

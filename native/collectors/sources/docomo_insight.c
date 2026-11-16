@@ -37,7 +37,7 @@ static int coord(cJSON *r, double *lon, double *lat) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *key = getenv("DOCOMO_INSIGHT_API_KEY");
+  const char *key = jo_getenv("DOCOMO_INSIGHT_API_KEY");
   if (!key || !*key) {
     fprintf(stderr, "[docomo-insight] gated (no DOCOMO_INSIGHT_API_KEY)\n");
     return jo_needs_credential(sink, ctx->source_id ? ctx->source_id : "docomo-insight", "docomo-insight", (const char *const[]){"DOCOMO_INSIGHT_API_KEY", NULL}, NULL, NULL);

@@ -45,7 +45,7 @@ static int prop_num(cJSON *p, const char *const *keys, int nk, double *out) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *url = getenv("BEAR_ENCOUNTERS_GEOJSON_URL");
+  const char *url = jo_getenv("BEAR_ENCOUNTERS_GEOJSON_URL");
   if (!url || !*url) {
     /* Unconfigured is not a failure. Returning -1 makes scheduler_run_source
      * write fetch_log status='error' AND open a collector_anomaly every single

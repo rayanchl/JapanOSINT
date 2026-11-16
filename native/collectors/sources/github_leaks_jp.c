@@ -47,7 +47,7 @@ static long env_int(const char *k, long def) {
 }
 
 static int run(const source_ctx *ctx, intel_sink *sink) {
-  const char *token = getenv("GITHUB_TOKEN");
+  const char *token = jo_getenv("GITHUB_TOKEN");
   if (!token || !*token) {
     /* The comment below already said what this should be — "0 rows", not a
      * failure — but -1 makes the scheduler log status='error' and open a

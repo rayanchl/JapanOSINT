@@ -56,7 +56,7 @@ static const char *const SOC_UA[] = { "Accept: application/json", NULL };
 /* ---- github-public-events ---------------------------------------------- */
 
 static int run_gh_events(const source_ctx *ctx, intel_sink *sink) {
-  const char *tok = getenv("GITHUB_TOKEN");
+  const char *tok = jo_getenv("GITHUB_TOKEN");
   char auth[256];
   const char *hdrs[5];
   int hi = 0;
@@ -189,7 +189,7 @@ REGISTER_SOURCE(soc_gh_events_def)
 /* ---- github-public-gists ------------------------------------------------ */
 
 static int run_gh_gists(const source_ctx *ctx, intel_sink *sink) {
-  const char *tok = getenv("GITHUB_TOKEN");
+  const char *tok = jo_getenv("GITHUB_TOKEN");
   char auth[256];
   const char *hdrs[5];
   int hi = 0;

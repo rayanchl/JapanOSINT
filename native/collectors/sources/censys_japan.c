@@ -51,7 +51,7 @@ static cJSON *opt2(cJSON *o, const char *k1, const char *k2) {
 static cJSON *run_fetch(const char *key, const source_ctx *ctx, void *ud) {
   (void)ud;
   const char *id = key;                        /* CENSYS_API_ID */
-  const char *secret = getenv("CENSYS_API_SECRET");
+  const char *secret = jo_getenv("CENSYS_API_SECRET");
   if (!id || !*id || !secret || !*secret) return NULL; /* JS throws → 0 rows */
 
   char creds[512];

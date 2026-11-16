@@ -193,8 +193,8 @@ static const char *CATEGORY_LABELS[] = {
 
 /* OAuth2 client-credentials token; NULL when creds absent or request fails. */
 static char *opensky_token(const source_ctx *ctx) {
-  const char *cid = getenv("OPENSKY_CLIENT_ID");
-  const char *csec = getenv("OPENSKY_CLIENT_SECRET");
+  const char *cid = jo_getenv("OPENSKY_CLIENT_ID");
+  const char *csec = jo_getenv("OPENSKY_CLIENT_SECRET");
   if (!cid || !*cid || !csec || !*csec) return NULL;
   char body[1024];
   snprintf(body, sizeof body,
@@ -504,7 +504,7 @@ static const char *str_or_null(cJSON *o, const char *k) {
 /* Appends Features to `out` for one airport. Key-gated: 0 rows when unset. */
 static void try_aerodatabox_airport(const source_ctx *ctx,
                                     const adb_airport *ap, cJSON *out) {
-  const char *key = getenv("AERODATABOX_KEY");
+  const char *key = jo_getenv("AERODATABOX_KEY");
   if (!key || !*key) return;                          /* RULE 9: 0 rows     */
 
   time_t now = time(NULL);
